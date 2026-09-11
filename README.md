@@ -58,6 +58,77 @@ npm run performance
 npm run report
 ```
 
+## Video Whiteboard Worker
+
+The screenshot extractor remains focused on the dated `revere_*.png` image set. Video harvesting for the GRO/TURBO whiteboard starts in a separate worker so playlist state, retries, and large temporary downloads do not complicate the existing OCR flow.
+
+Current scope of the worker:
+
+- initialize a resumable workspace under `data/video_pipeline/`
+- persist playlist catalog state in SQLite
+- import a YouTube playlist or channel catalog through `yt-dlp`
+
+Current non-goals of this first pass:
+
+- downloading videos
+- scanning frames
+- selecting final whiteboard screenshots
+- parsing harvested whiteboard screenshots into CSVs
+
+Prerequisites:
+
+- Python 3 available through `py -3`, `python`, or `python3`
+- `yt-dlp` installed and available on `PATH` for the catalog import step
+
+Initialize the worker state:
+
+```bash
+npm run video:init
+```
+
+Inspect the current worker state:
+
+```bash
+npm run video:status
+```
+
+Include a few recent catalog rows in the status output:
+
+```bash
+npm run video:status -- --list-limit 10
+```
+
+Import a playlist or channel catalog into SQLite:
+
+```bash
+npm run video:catalog -- --source-url "https://www.youtube.com/playlist?list=..."
+```
+
+Download the next pending videos at low resolution and mark them ready for scanning:
+
+```bash
+npm run video:download -- --limit 5
+```
+
+Useful catalog options:
+
+- `--limit 10` to test on a small subset first
+- `--cookies-from-browser firefox` if playlist metadata requires a logged-in browser session
+- `--yt-dlp-bin C:\\path\\to\\yt-dlp.exe` if `yt-dlp` is not on `PATH`
+
+Useful download options:
+
+- `--limit 5` to process a small batch per run
+- `--video-id VIDEO_ID` to retry one specific row
+- `--cookies-from-browser firefox` or `--cookies-file path.txt` when YouTube requires a logged-in session
+- `--format "bv*[height<=480]+ba/b[height<=480]"` to override the default low-resolution selector
+
+The worker stores its state at `data/video_pipeline/state.sqlite` and creates local directories for `catalog`, `downloads`, `frames`, `logs`, `review`, and `screenshots`. Those artifacts stay inside this workspace and are ignored by git.
+
+Each successful catalog import also saves the raw `yt-dlp` output to `data/video_pipeline/catalog/` so the playlist snapshot can be inspected or replayed later.
+
+The download step also keeps a local `download_archive.txt` under `data/video_pipeline/` so interrupted runs can resume without re-downloading completed video IDs.
+
 ## Accessing Final Processed Data
 
 - The final processed datasets live under `data/` inside this workspace.

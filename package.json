@@ -9,7 +9,11 @@
     "extract": "node src/index.js extract",
     "extract:sample": "node src/index.js extract --limit 5",
     "performance": "node src/index.js performance",
-    "report": "node src/index.js report"
+    "report": "node src/index.js report",
+    "video:init": "node tools/runWhiteboardWorker.js init",
+    "video:status": "node tools/runWhiteboardWorker.js status",
+    "video:catalog": "node tools/runWhiteboardWorker.js catalog",
+    "video:download": "node tools/runWhiteboardWorker.js download"
   },
   "dependencies": {
     "sharp": "^0.34.3",
