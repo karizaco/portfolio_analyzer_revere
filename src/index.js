@@ -2,9 +2,11 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 
 const { discoverScreenshots } = require('./io/discoverScreenshots');
+const { loadTickerRepairConfig } = require('./io/loadTickerConfig');
 const { resolveShortcutTarget } = require('./io/resolveShortcut');
 
 const WORKSPACE_ROOT = path.resolve(__dirname, '..');
+const CONFIG_DIRECTORY = path.join(WORKSPACE_ROOT, 'config');
 const DEFAULT_SHORTCUT = path.join(WORKSPACE_ROOT, 'sample_screenshots.lnk');
 const OUTPUT_DIRECTORY = path.join(WORKSPACE_ROOT, 'data');
 
@@ -130,6 +132,7 @@ async function runExtract(options) {
   if (!selectedScreenshots.length) {
     throw new Error('No screenshots matched the current filters.');
   }
+  const tickerRepairConfig = await loadTickerRepairConfig(CONFIG_DIRECTORY);
 
   console.log(`Resolved screenshot directory: ${inputPath}`);
   console.log(`Found ${screenshots.length} dated screenshot files.`);
@@ -143,7 +146,7 @@ async function runExtract(options) {
     snapshotRows.push(parsed);
   }
 
-  const repairedSnapshotRows = repairSnapshotRows(snapshotRows);
+  const repairedSnapshotRows = repairSnapshotRows(snapshotRows, tickerRepairConfig);
 
   await writeCsv(
     path.join(OUTPUT_DIRECTORY, 'portfolio_snapshots.csv'),

@@ -2,6 +2,11 @@
 
 This workspace contains a small Node.js CLI that reads the linked screenshot directory in read-only mode, OCRs each PNG, extracts the portfolio snapshot fields, and writes CSV outputs inside this workspace.
 
+## Editable Inputs
+
+- `config/ticker_lexicon_seed.csv`: recurring tickers that should be treated as known symbols during cleanup.
+- `config/manual_ticker_overrides.csv`: exact per-file or global corrections for OCR mistakes. `replacement` accepts one ticker or a pipe-delimited list such as `TQQQ|IBIT`.
+
 ## Outputs
 
 - `data/portfolio_snapshots.csv`: canonical extracted snapshot rows, one per dated screenshot.

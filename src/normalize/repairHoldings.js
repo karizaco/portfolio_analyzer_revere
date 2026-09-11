@@ -95,6 +95,10 @@ function appendIssueCode(row, issueCode) {
 function buildCandidateScores(knowledge, contextTickers = []) {
   const candidateScores = new Map();
 
+  for (const [token, count] of knowledge.seedTokenScores.entries()) {
+    addScore(candidateScores, token, count + 15);
+  }
+
   for (const [token, count] of knowledge.exactTokenScores.entries()) {
     addScore(candidateScores, token, count);
   }
@@ -112,6 +116,10 @@ function buildCandidateScores(knowledge, contextTickers = []) {
 
 function buildReferenceScores(knowledge, contextTickers = []) {
   const referenceScores = new Map();
+
+  for (const [token, count] of knowledge.seedTokenScores.entries()) {
+    addScore(referenceScores, token, count + 25);
+  }
 
   for (const [token, count] of knowledge.strongTokenScores.entries()) {
     addScore(referenceScores, token, count + 20);
@@ -346,6 +354,53 @@ function extractLooseTickerCandidates(text) {
   return dedupePreserveOrder(result);
 }
 
+function buildOverrideKey(sourceFile, portfolioKey, token) {
+  return `${sourceFile || '*'}::${portfolioKey || '*'}::${token}`;
+}
+
+function buildManualOverrideIndex(manualOverrides = []) {
+  const overrideIndex = new Map();
+
+  for (const override of manualOverrides) {
+    const key = buildOverrideKey(override.sourceFile, override.portfolio.toLowerCase(), override.rawToken);
+    overrideIndex.set(key, override);
+  }
+
+  return overrideIndex;
+}
+
+function findManualOverride(overrideIndex, sourceFile, portfolioKey, token) {
+  const portfolio = portfolioKey.toLowerCase();
+  return overrideIndex.get(buildOverrideKey(sourceFile, portfolio, token))
+    || overrideIndex.get(buildOverrideKey('', portfolio, token))
+    || overrideIndex.get(buildOverrideKey(sourceFile, '', token))
+    || overrideIndex.get(buildOverrideKey('', '', token))
+    || null;
+}
+
+function applyManualOverrides(tokens, options) {
+  const repairedTokens = [];
+  const notes = [];
+
+  for (const token of tokens) {
+    const override = findManualOverride(options.overrideIndex, options.sourceFile, options.portfolioKey, token);
+    if (!override) {
+      repairedTokens.push(token);
+      continue;
+    }
+
+    repairedTokens.push(...override.replacementTokens);
+    const replacementText = override.replacementTokens.join('+') || 'DROP';
+    const noteSuffix = override.note ? `:${override.note}` : '';
+    notes.push(`OVERRIDE:${token}->${replacementText}${noteSuffix}`);
+  }
+
+  return {
+    notes,
+    tokens: repairedTokens
+  };
+}
+
 function extractRawHoldingCandidates(text) {
   const prepared = normalizeOcrFragment(text || '')
     .replace(/[()]/g, ' ')
@@ -457,8 +512,14 @@ function buildTickerKnowledge(rows) {
   const highConfidenceScores = new Map();
   const actionTokenScores = new Map();
   const rawHoldingTokenScores = new Map();
+  const seedTokenScores = new Map();
 
-  for (const row of rows) {
+  const seedTickers = rows.seedTickers || [];
+  for (const ticker of seedTickers) {
+    addScore(seedTokenScores, normalizeTickerVariant(ticker), 20);
+  }
+
+  for (const row of rows.rows || rows) {
     for (const portfolioKey of ['gro', 'turbo']) {
       const holdings = Array.isArray(row[`${portfolioKey}_holdings`]) ? row[`${portfolioKey}_holdings`] : [];
       for (const holding of holdings) {
@@ -485,6 +546,7 @@ function buildTickerKnowledge(rows) {
 
   const strongTokenScores = new Map();
   const allTokens = new Set([
+    ...seedTokenScores.keys(),
     ...exactTokenScores.keys(),
     ...highConfidenceScores.keys(),
     ...rawHoldingTokenScores.keys(),
@@ -496,10 +558,11 @@ function buildTickerKnowledge(rows) {
     const highConfidenceCount = highConfidenceScores.get(token) || 0;
     const rawHoldingCount = rawHoldingTokenScores.get(token) || 0;
     const actionCount = actionTokenScores.get(token) || 0;
-    if (actionCount > 0 || exactCount > 1 || highConfidenceCount > 0 || rawHoldingCount > 1) {
+    const seedCount = seedTokenScores.get(token) || 0;
+    if (seedCount > 0 || actionCount > 0 || exactCount > 1 || highConfidenceCount > 0 || rawHoldingCount > 1) {
       strongTokenScores.set(
         token,
-        exactCount + (highConfidenceCount * 2) + rawHoldingCount + (actionCount * 3)
+        (seedCount * 3) + exactCount + (highConfidenceCount * 2) + rawHoldingCount + (actionCount * 3)
       );
     }
   }
@@ -508,6 +571,7 @@ function buildTickerKnowledge(rows) {
     actionTokenScores,
     exactTokenScores,
     rawHoldingTokenScores,
+    seedTokenScores,
     strongTokenScores
   };
 }
@@ -797,9 +861,10 @@ function repairHoldingTokens(rawTokens, options) {
     .map(normalizeTickerVariant)
     .filter(Boolean)
     .flatMap((token) => splitOnSeparators(token));
-  const mergeResult = mergeAdjacentFragments(initialTokens, candidateScores, rowContext.lowConfidence || rowContext.noChanges);
+  const overrideResult = applyManualOverrides(initialTokens, options);
+  const mergeResult = mergeAdjacentFragments(overrideResult.tokens, candidateScores, rowContext.lowConfidence || rowContext.noChanges);
   const repaired = [];
-  const notes = [...mergeResult.notes];
+  const notes = [...overrideResult.notes, ...mergeResult.notes];
 
   for (const token of mergeResult.tokens) {
     const normalized = normalizeTickerVariant(token);
@@ -822,11 +887,12 @@ function repairHoldingTokens(rawTokens, options) {
       continue;
     }
 
-    const needsCorrection = !isSupportedTicker(normalized, referenceScores)
-      || rowContext.lowConfidence
-      || rowContext.noChanges
-      || normalized.includes('.')
-      || alphaOnly(normalized).length > MAX_TICKER_ALPHA_LENGTH;
+    const strictAndSupported = isStrictTicker(normalized) && isSupportedTicker(normalized, referenceScores);
+    const needsCorrection = !strictAndSupported
+      && (!isSupportedTicker(normalized, referenceScores)
+        || normalized.includes('.')
+        || alphaOnly(normalized).length > MAX_TICKER_ALPHA_LENGTH
+        || (!isStrictTicker(normalized) && (rowContext.lowConfidence || rowContext.noChanges)));
     if (needsCorrection) {
       const correction = findBestCorrection(alphaOnly(normalized), referenceScores, rowContext.lowConfidence || rowContext.noChanges);
       if (correction && correction.candidate !== normalized) {
@@ -883,6 +949,7 @@ function inheritPreviousHoldings(row, previousRow, portfolioKey) {
 }
 
 function repairSnapshotRows(rows) {
+  const options = arguments[1] || {};
   const workingRows = rows.map((row) => ({
     ...row,
     gro_holdings: Array.isArray(row.gro_holdings) ? [...row.gro_holdings] : [],
@@ -896,9 +963,13 @@ function repairSnapshotRows(rows) {
     gro: [...row.gro_holdings],
     turbo: [...row.turbo_holdings]
   }));
+  const overrideIndex = buildManualOverrideIndex(options.manualOverrides || []);
 
   for (let passIndex = 0; passIndex < 2; passIndex += 1) {
-    const knowledge = buildTickerKnowledge(workingRows);
+    const knowledge = buildTickerKnowledge({
+      rows: workingRows,
+      seedTickers: options.tickerSeeds || []
+    });
     const actionSignalsByRow = workingRows.map((row) => ({
       gro: extractActionSignals(row.gro_action_text || '', knowledge.strongTokenScores),
       turbo: extractActionSignals(row.turbo_action_text || '', knowledge.strongTokenScores)
@@ -911,7 +982,10 @@ function repairSnapshotRows(rows) {
           contextTickers: collectContextTickers(workingRows, actionSignalsByRow, rowIndex, portfolioKey, passIndex),
           knowledge,
           noChanges: row[`${portfolioKey}_no_changes`] === 'true',
-          ocrConfidence: Number(row.ocr_confidence || 0)
+          ocrConfidence: Number(row.ocr_confidence || 0),
+          overrideIndex,
+          portfolioKey,
+          sourceFile: row.source_file
         });
 
         row[`${portfolioKey}_holdings`] = repairResult.tokens;
