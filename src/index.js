@@ -69,6 +69,43 @@ function normalizeDateKey(value) {
   return value ? value.replace(/-/g, '') : '';
 }
 
+function summarizeDateRange(rows) {
+  let minDate = '';
+  let maxDate = '';
+
+  for (const row of rows) {
+    if (!row || !row.as_of_date) {
+      continue;
+    }
+
+    if (!minDate || row.as_of_date < minDate) {
+      minDate = row.as_of_date;
+    }
+
+    if (!maxDate || row.as_of_date > maxDate) {
+      maxDate = row.as_of_date;
+    }
+  }
+
+  return {
+    maxDate,
+    minDate
+  };
+}
+
+function collectPerformanceTickers(snapshots) {
+  const tickers = [];
+
+  for (const row of snapshots) {
+    for (const portfolioKey of ['gro', 'turbo']) {
+      const holdings = Array.isArray(row[`${portfolioKey}_holdings`]) ? row[`${portfolioKey}_holdings`] : [];
+      tickers.push(...holdings);
+    }
+  }
+
+  return tickers;
+}
+
 function filterScreenshots(screenshots, options) {
   const fromKey = normalizeDateKey(options.from);
   const toKey = normalizeDateKey(options.to);
@@ -225,11 +262,20 @@ async function runPerformance() {
     throw new Error('No extracted action-ledger data found. Re-run `npm run extract` with the current extractor first.');
   }
 
+  const snapshotDateRange = summarizeDateRange(snapshots);
+
   const priceProvider = process.env.REVERE_PRICE_SOURCE === 'none'
     ? createUnconfiguredPriceProvider()
     : createYahooPriceProvider({
-      cacheDirectory: path.join(OUTPUT_DIRECTORY, 'price_cache', 'yahoo')
+      cacheDirectory: path.join(OUTPUT_DIRECTORY, 'price_cache', 'yahoo'),
+      defaultFromDate: snapshotDateRange.minDate,
+      defaultToDate: snapshotDateRange.maxDate
     });
+
+  if (typeof priceProvider.prefetchTickers === 'function') {
+    await priceProvider.prefetchTickers(collectPerformanceTickers(snapshots));
+  }
+
   const performance = await calculatePerformance({
     actionReviewRows: portfolioActionReviews,
     actionRows: portfolioActions,

@@ -1,0 +1,1227 @@
+portfolio,action_date,sequence,action_type,ticker,source_file,action_context,raw_fragment,parsed_percent_text,parsed_percent_value,action_status,parse_basis
+GRO,2022-09-22,1,SELL,CMG,revere_20220922.png,"SELL 4% CMG, 1.5% TSLA, 10% SSO",4% CMG,4%,4,trusted,single_ticker_fragment
+GRO,2022-09-22,1,SELL,SSO,revere_20220922.png,"SELL 4% CMG, 1.5% TSLA, 10% SSO",10% SSO,10%,10,trusted,single_ticker_fragment
+GRO,2022-09-22,1,SELL,TSLA,revere_20220922.png,"SELL 4% CMG, 1.5% TSLA, 10% SSO",1.5% TSLA,1.5%,1.5,trusted,single_ticker_fragment
+GRO,2022-11-29,1,ADD,TSLL,revere_20221129.png,BUY 4% QD SELL FSLR TRIM % SHLS ADD 5% T-BILL,5% T-BILL,5%,5,trusted,single_ticker_fragment
+GRO,2022-11-29,1,BUY,QD,revere_20221129.png,BUY 4% QD SELL FSLR TRIM % SHLS ADD 5% T-BILL,4% QD,4%,4,trusted,single_ticker_fragment
+GRO,2022-11-29,1,SELL,FSLR,revere_20221129.png,BUY 4% QD SELL FSLR TRIM % SHLS ADD 5% T-BILL,FSLR,,,trusted,single_ticker_fragment
+GRO,2022-11-29,1,TRIM,SHLS,revere_20221129.png,BUY 4% QD SELL FSLR TRIM % SHLS ADD 5% T-BILL,% SHLS,,,trusted,single_ticker_fragment
+GRO,2022-12-27,1,BUY,DIA,revere_20221227.png,BUY 2% FCX & 5% DIA ADD 10% T-BILLS,5% DIA,5%,5,trusted,single_ticker_fragment
+GRO,2022-12-27,1,BUY,FCX,revere_20221227.png,BUY 2% FCX & 5% DIA ADD 10% T-BILLS,2% FCX,2%,2,trusted,single_ticker_fragment
+GRO,2023-02-01,1,ADD,BA,revere_20230201.png,ADD BA+GDX+BROS BUY DT O-SELL TNA+AL TRIM 550,BA+GDX+BROS,,,trusted,multi_ticker_fragment
+GRO,2023-02-01,1,ADD,BROS,revere_20230201.png,ADD BA+GDX+BROS BUY DT O-SELL TNA+AL TRIM 550,BA+GDX+BROS,,,trusted,multi_ticker_fragment
+GRO,2023-02-01,1,ADD,GDX,revere_20230201.png,ADD BA+GDX+BROS BUY DT O-SELL TNA+AL TRIM 550,BA+GDX+BROS,,,trusted,multi_ticker_fragment
+GRO,2023-02-01,1,BUY,DT,revere_20230201.png,ADD BA+GDX+BROS BUY DT O-SELL TNA+AL TRIM 550,DT O-,,,trusted,multi_ticker_fragment
+GRO,2023-02-01,1,BUY,O,revere_20230201.png,ADD BA+GDX+BROS BUY DT O-SELL TNA+AL TRIM 550,DT O-,,,trusted,multi_ticker_fragment
+GRO,2023-02-01,1,SELL,AL,revere_20230201.png,ADD BA+GDX+BROS BUY DT O-SELL TNA+AL TRIM 550,TNA+AL,,,trusted,multi_ticker_fragment
+GRO,2023-02-01,1,SELL,TNA,revere_20230201.png,ADD BA+GDX+BROS BUY DT O-SELL TNA+AL TRIM 550,TNA+AL,,,trusted,multi_ticker_fragment
+GRO,2023-02-01,1,TRIM,SSO,revere_20230201.png,ADD BA+GDX+BROS BUY DT O-SELL TNA+AL TRIM 550,550,,,trusted,single_ticker_fragment
+GRO,2023-02-27,1,ADD,NVDA,revere_20230227.png,"ADD TO SSO,NVDA,PANW TRIM TBT",NVDA,,,trusted,single_ticker_fragment
+GRO,2023-02-27,1,ADD,PANW,revere_20230227.png,"ADD TO SSO,NVDA,PANW TRIM TBT",PANW,,,trusted,single_ticker_fragment
+GRO,2023-02-27,1,ADD,SSO,revere_20230227.png,"ADD TO SSO,NVDA,PANW TRIM TBT",TO SSO,,,trusted,single_ticker_fragment
+GRO,2023-02-27,1,TRIM,TBT,revere_20230227.png,"ADD TO SSO,NVDA,PANW TRIM TBT",TBT,,,trusted,single_ticker_fragment
+GRO,2023-03-16,1,ADD,QLD,revere_20230316.png,ADD TO QLD BUY UPRO O-TRIM ANET,TO QLD,,,trusted,single_ticker_fragment
+GRO,2023-03-16,1,BUY,O,revere_20230316.png,ADD TO QLD BUY UPRO O-TRIM ANET,UPRO O-,,,trusted,multi_ticker_fragment
+GRO,2023-03-16,1,BUY,UPRO,revere_20230316.png,ADD TO QLD BUY UPRO O-TRIM ANET,UPRO O-,,,trusted,multi_ticker_fragment
+GRO,2023-03-16,1,TRIM,ANET,revere_20230316.png,ADD TO QLD BUY UPRO O-TRIM ANET,ANET,,,trusted,single_ticker_fragment
+GRO,2023-03-22,1,ADD,ONON,revere_20230322.png,ADD TO ONON SELL UPRO TRIM QLD,TO ONON,,,trusted,single_ticker_fragment
+GRO,2023-03-22,1,SELL,UPRO,revere_20230322.png,ADD TO ONON SELL UPRO TRIM QLD,UPRO,,,trusted,single_ticker_fragment
+GRO,2023-03-22,1,TRIM,QLD,revere_20230322.png,ADD TO ONON SELL UPRO TRIM QLD,QLD,,,trusted,single_ticker_fragment
+GRO,2023-05-09,1,ADD,LULU,revere_20230509.png,ADD TO LULU + UBER,TO LULU + UBER,,,trusted,multi_ticker_fragment
+GRO,2023-05-09,1,ADD,UBER,revere_20230509.png,ADD TO LULU + UBER,TO LULU + UBER,,,trusted,multi_ticker_fragment
+GRO,2023-06-30,1,ADD,CHAT,revere_20230630.png,ADD TO CHAT BUY DRV,TO CHAT,,,trusted,single_ticker_fragment
+GRO,2023-06-30,1,BUY,DRV,revere_20230630.png,ADD TO CHAT BUY DRV,DRV,,,trusted,single_ticker_fragment
+GRO,2023-08-23,1,ADD,UBER,revere_20230823.png,ADD TO UBER,TO UBER,,,trusted,single_ticker_fragment
+GRO,2023-10-30,1,BUY,BITO,revere_20231030.png,BUY BITO,BITO,,,trusted,single_ticker_fragment
+GRO,2023-11-28,1,ADD,QLD,revere_20231128.png,SELL DKNG BUY PDD ADD TO QLD + TSLA,TO QLD + TSLA,,,trusted,multi_ticker_fragment
+GRO,2023-11-28,1,ADD,TSLA,revere_20231128.png,SELL DKNG BUY PDD ADD TO QLD + TSLA,TO QLD + TSLA,,,trusted,multi_ticker_fragment
+GRO,2023-11-28,1,BUY,PDD,revere_20231128.png,SELL DKNG BUY PDD ADD TO QLD + TSLA,PDD,,,trusted,single_ticker_fragment
+GRO,2023-11-28,1,SELL,DKNG,revere_20231128.png,SELL DKNG BUY PDD ADD TO QLD + TSLA,DKNG,,,trusted,single_ticker_fragment
+GRO,2024-03-01,1,ADD,TA,revere_20240301.png,BUY TNA ADD TA WFRD,TA WFRD,,,trusted,multi_ticker_fragment
+GRO,2024-03-01,1,ADD,WFRD,revere_20240301.png,BUY TNA ADD TA WFRD,TA WFRD,,,trusted,multi_ticker_fragment
+GRO,2024-03-01,1,BUY,TNA,revere_20240301.png,BUY TNA ADD TA WFRD,TNA,,,trusted,single_ticker_fragment
+GRO,2024-04-16,1,SELL,CLOSE,revere_20240416.png,"SELL MU, LLY, VDE CLOSE HEDGE/SPXS",VDE CLOSE HEDGE/SPXS,,,trusted,multi_ticker_fragment
+GRO,2024-04-16,1,SELL,HEDGE,revere_20240416.png,"SELL MU, LLY, VDE CLOSE HEDGE/SPXS",VDE CLOSE HEDGE/SPXS,,,trusted,multi_ticker_fragment
+GRO,2024-04-16,1,SELL,LLY,revere_20240416.png,"SELL MU, LLY, VDE CLOSE HEDGE/SPXS",LLY,,,trusted,single_ticker_fragment
+GRO,2024-04-16,1,SELL,MU,revere_20240416.png,"SELL MU, LLY, VDE CLOSE HEDGE/SPXS",MU,,,trusted,single_ticker_fragment
+GRO,2024-04-16,1,SELL,SPXS,revere_20240416.png,"SELL MU, LLY, VDE CLOSE HEDGE/SPXS",VDE CLOSE HEDGE/SPXS,,,trusted,multi_ticker_fragment
+GRO,2024-04-16,1,SELL,VDE,revere_20240416.png,"SELL MU, LLY, VDE CLOSE HEDGE/SPXS",VDE CLOSE HEDGE/SPXS,,,trusted,multi_ticker_fragment
+GRO,2024-05-17,1,ADD,IBIT,revere_20240517.png,ADD TO IBIT BUY ERX,TO IBIT,,,trusted,single_ticker_fragment
+GRO,2024-05-17,1,BUY,ERX,revere_20240517.png,ADD TO IBIT BUY ERX,ERX,,,trusted,single_ticker_fragment
+GRO,2024-06-13,1,BUY,SMCI,revere_20240613.png,BUY SMCI,SMCI,,,trusted,single_ticker_fragment
+GRO,2024-07-10,1,BUY,CCL,revere_20240710.png,SELL TMDX + CAVA TRIM CRWD BUY GLW + CCL,GLW + CCL,,,trusted,multi_ticker_fragment
+GRO,2024-07-10,1,BUY,GLW,revere_20240710.png,SELL TMDX + CAVA TRIM CRWD BUY GLW + CCL,GLW + CCL,,,trusted,multi_ticker_fragment
+GRO,2024-07-10,1,SELL,CAVA,revere_20240710.png,SELL TMDX + CAVA TRIM CRWD BUY GLW + CCL,TMDX + CAVA,,,trusted,multi_ticker_fragment
+GRO,2024-07-10,1,SELL,TMDX,revere_20240710.png,SELL TMDX + CAVA TRIM CRWD BUY GLW + CCL,TMDX + CAVA,,,trusted,multi_ticker_fragment
+GRO,2024-07-10,1,TRIM,CRWD,revere_20240710.png,SELL TMDX + CAVA TRIM CRWD BUY GLW + CCL,CRWD,,,trusted,single_ticker_fragment
+GRO,2024-07-25,1,BUY,FAS,revere_20240725.png,BUY FAS FRI,FAS FRI,,,trusted,single_ticker_fragment
+GRO,2024-08-23,1,BUY,CAVA,revere_20240823.png,BUY CAVA SELL CEG TRIM META BUY MIDU MON,CAVA,,,trusted,single_ticker_fragment
+GRO,2024-08-23,1,BUY,MIDU,revere_20240823.png,BUY CAVA SELL CEG TRIM META BUY MIDU MON,MIDU MON,,,trusted,single_ticker_fragment
+GRO,2024-08-23,1,SELL,CEG,revere_20240823.png,BUY CAVA SELL CEG TRIM META BUY MIDU MON,CEG,,,trusted,single_ticker_fragment
+GRO,2024-08-23,1,TRIM,META,revere_20240823.png,BUY CAVA SELL CEG TRIM META BUY MIDU MON,META,,,trusted,single_ticker_fragment
+GRO,2024-09-25,1,ADD,FLUT,revere_20240925.png,ADD FLUT TRIM }% NOW NAIL,FLUT,,,trusted,single_ticker_fragment
+GRO,2024-09-25,1,TRIM,NAIL,revere_20240925.png,ADD FLUT TRIM }% NOW NAIL,}% NOW NAIL,,,trusted,multi_ticker_fragment
+GRO,2024-09-25,1,TRIM,NOW,revere_20240925.png,ADD FLUT TRIM }% NOW NAIL,}% NOW NAIL,,,trusted,multi_ticker_fragment
+GRO,2024-09-25,2,ADD,FLUT,revere_20240925_2.png,ADD FLUT TRIM % NOW NAIL,FLUT,,,trusted,single_ticker_fragment
+GRO,2024-09-25,2,TRIM,NAIL,revere_20240925_2.png,ADD FLUT TRIM % NOW NAIL,% NOW NAIL,,,trusted,multi_ticker_fragment
+GRO,2024-09-25,2,TRIM,NOW,revere_20240925_2.png,ADD FLUT TRIM % NOW NAIL,% NOW NAIL,,,trusted,multi_ticker_fragment
+GRO,2024-12-02,1,ADD,VRT,revere_20241202.png,ADD TO VRT,TO VRT,,,trusted,single_ticker_fragment
+GRO,2024-12-07,1,BUY,COIN,revere_20241207.png,TRIM GTLB BUY COIN + $50,COIN + $50,,,trusted,multi_ticker_fragment
+GRO,2024-12-07,1,BUY,SO,revere_20241207.png,TRIM GTLB BUY COIN + $50,COIN + $50,,,trusted,multi_ticker_fragment
+GRO,2024-12-07,1,TRIM,GTLB,revere_20241207.png,TRIM GTLB BUY COIN + $50,GTLB,,,trusted,single_ticker_fragment
+GRO,2025-01-03,1,ADD,GEV,revere_20250103.png,BUY MRVL TWLO ADD PLTR GEV ~~ SELL AR,PLTR GEV ~~,,,trusted,multi_ticker_fragment
+GRO,2025-01-03,1,ADD,PLTR,revere_20250103.png,BUY MRVL TWLO ADD PLTR GEV ~~ SELL AR,PLTR GEV ~~,,,trusted,multi_ticker_fragment
+GRO,2025-01-03,1,BUY,MRVL,revere_20250103.png,BUY MRVL TWLO ADD PLTR GEV ~~ SELL AR,MRVL TWLO,,,trusted,multi_ticker_fragment
+GRO,2025-01-03,1,BUY,TWLO,revere_20250103.png,BUY MRVL TWLO ADD PLTR GEV ~~ SELL AR,MRVL TWLO,,,trusted,multi_ticker_fragment
+GRO,2025-01-03,1,SELL,AR,revere_20250103.png,BUY MRVL TWLO ADD PLTR GEV ~~ SELL AR,AR,,,trusted,single_ticker_fragment
+GRO,2025-01-30,1,ADD,SNOW,revere_20250130.png,BUY CEG GEV ADD TO SNOW TRIM TSLA,TO SNOW,,,trusted,single_ticker_fragment
+GRO,2025-01-30,1,BUY,CEG,revere_20250130.png,BUY CEG GEV ADD TO SNOW TRIM TSLA,CEG GEV,,,trusted,multi_ticker_fragment
+GRO,2025-01-30,1,BUY,GEV,revere_20250130.png,BUY CEG GEV ADD TO SNOW TRIM TSLA,CEG GEV,,,trusted,multi_ticker_fragment
+GRO,2025-01-30,1,TRIM,TSLA,revere_20250130.png,BUY CEG GEV ADD TO SNOW TRIM TSLA,TSLA,,,trusted,single_ticker_fragment
+GRO,2025-02-10,1,ADD,CAVA,revere_20250210.png,ADD TO CAVA BUY AFRM,TO CAVA,,,trusted,single_ticker_fragment
+GRO,2025-02-10,1,BUY,AFRM,revere_20250210.png,ADD TO CAVA BUY AFRM,AFRM,,,trusted,single_ticker_fragment
+GRO,2025-02-27,1,ADD,T,revere_20250227.png,ADD TTORSP SELL UPRO,TTORSP,,,trusted,multi_ticker_fragment
+GRO,2025-02-27,1,ADD,URSP,revere_20250227.png,ADD TTORSP SELL UPRO,TTORSP,,,trusted,multi_ticker_fragment
+GRO,2025-02-27,1,SELL,UPRO,revere_20250227.png,ADD TTORSP SELL UPRO,UPRO,,,trusted,single_ticker_fragment
+GRO,2025-03-12,1,BUY,SQ,revere_20250312.png,BUY £SQ,£SQ,,,trusted,single_ticker_fragment
+GRO,2025-03-25,1,BUY,BROS,revere_20250325.png,BUY BROSDOCS,BROSDOCS,,,trusted,multi_ticker_fragment
+GRO,2025-03-25,1,BUY,DOCN,revere_20250325.png,BUY BROSDOCS,BROSDOCS,,,trusted,multi_ticker_fragment
+GRO,2025-07-14,1,BUY,AVAV,revere_20250714.png,BUY AVAV,AVAV,,,trusted,single_ticker_fragment
+TURBO,2025-07-14,1,ADD,ASTS,revere_20250714.png,ADD TO ASTS,TO ASTS,,,trusted,single_ticker_fragment
+GRO,2025-07-16,1,SELL,UBER,revere_20250716.png,SELL UBER,UBER,,,trusted,single_ticker_fragment
+TURBO,2025-07-16,1,SELL,RDDT,revere_20250716.png,SELL RDDT,RDDT,,,trusted,single_ticker_fragment
+TURBO,2025-08-27,1,SELL,BMNR,revere_20250827.png,SELL BMNR,BMNR,,,trusted,single_ticker_fragment
+GRO,2025-09-03,1,BUY,NAIL,revere_20250903.png,BUY TSLA + NAIL,TSLA + NAIL,,,trusted,multi_ticker_fragment
+GRO,2025-09-03,1,BUY,TSLA,revere_20250903.png,BUY TSLA + NAIL,TSLA + NAIL,,,trusted,multi_ticker_fragment
+TURBO,2025-09-03,1,BUY,SOLT,revere_20250903.png,SELL GEV TRIM TQQQ + HOOD BUY SOLT,SOLT,,,trusted,single_ticker_fragment
+TURBO,2025-09-03,1,SELL,GEV,revere_20250903.png,SELL GEV TRIM TQQQ + HOOD BUY SOLT,GEV,,,trusted,single_ticker_fragment
+TURBO,2025-09-03,1,TRIM,HOOD,revere_20250903.png,SELL GEV TRIM TQQQ + HOOD BUY SOLT,TQQQ + HOOD,,,trusted,multi_ticker_fragment
+TURBO,2025-09-03,1,TRIM,TQQQ,revere_20250903.png,SELL GEV TRIM TQQQ + HOOD BUY SOLT,TQQQ + HOOD,,,trusted,multi_ticker_fragment
+TURBO,2025-09-04,1,BUY,BABA,revere_20250904.png,BUY TEM + BABA,TEM + BABA,,,trusted,multi_ticker_fragment
+TURBO,2025-09-04,1,BUY,TEM,revere_20250904.png,BUY TEM + BABA,TEM + BABA,,,trusted,multi_ticker_fragment
+GRO,2025-09-05,1,BUY,NAIL,revere_20250905.png,BUY TSLA + NAIL,TSLA + NAIL,,,trusted,multi_ticker_fragment
+GRO,2025-09-05,1,BUY,TSLA,revere_20250905.png,BUY TSLA + NAIL,TSLA + NAIL,,,trusted,multi_ticker_fragment
+TURBO,2025-09-05,1,BUY,SOLT,revere_20250905.png,SELL GEV TRIM TQQQ + HOOD BUY SOLT,SOLT,,,trusted,single_ticker_fragment
+TURBO,2025-09-05,1,SELL,GEV,revere_20250905.png,SELL GEV TRIM TQQQ + HOOD BUY SOLT,GEV,,,trusted,single_ticker_fragment
+TURBO,2025-09-05,1,TRIM,HOOD,revere_20250905.png,SELL GEV TRIM TQQQ + HOOD BUY SOLT,TQQQ + HOOD,,,trusted,multi_ticker_fragment
+TURBO,2025-09-05,1,TRIM,TQQQ,revere_20250905.png,SELL GEV TRIM TQQQ + HOOD BUY SOLT,TQQQ + HOOD,,,trusted,multi_ticker_fragment
+GRO,2025-09-12,1,ADD,HOOD,revere_20250912.png,ADD TO TSLA + HOOD,TO TSLA + HOOD,,,trusted,multi_ticker_fragment
+GRO,2025-09-12,1,ADD,TSLA,revere_20250912.png,ADD TO TSLA + HOOD,TO TSLA + HOOD,,,trusted,multi_ticker_fragment
+GRO,2025-09-26,1,ADD,MP,revere_20250926.png,ADD TO MP,TO MP,,,trusted,single_ticker_fragment
+GRO,2025-10-09,1,TRIM,SSO,revere_20251009.png,TRIM SSO,SSO,,,trusted,single_ticker_fragment
+TURBO,2025-10-09,1,TRIM,ETHA,revere_20251009.png,TRIM ETHA,ETHA,,,trusted,single_ticker_fragment
+GRO,2025-10-13,1,TRIM,BE,revere_20251013.png,TRIM BE + MP +NBIS,BE + MP +NBIS,,,trusted,multi_ticker_fragment
+GRO,2025-10-13,1,TRIM,MP,revere_20251013.png,TRIM BE + MP +NBIS,BE + MP +NBIS,,,trusted,multi_ticker_fragment
+GRO,2025-10-13,1,TRIM,NBIS,revere_20251013.png,TRIM BE + MP +NBIS,BE + MP +NBIS,,,trusted,multi_ticker_fragment
+TURBO,2025-10-13,1,TRIM,MP,revere_20251013.png,TRIM MP,MP,,,trusted,single_ticker_fragment
+GRO,2025-10-15,1,BUY,SSO,revere_20251015.png,BUY SSO,SSO,,,trusted,single_ticker_fragment
+TURBO,2025-10-15,1,ADD,GEV,revere_20251015.png,BUY FIG SNDK ARKG SERV ADD TO GEV,TO GEV,,,trusted,single_ticker_fragment
+TURBO,2025-10-15,1,BUY,ARKG,revere_20251015.png,BUY FIG SNDK ARKG SERV ADD TO GEV,FIG SNDK ARKG SERV,,,trusted,multi_ticker_fragment
+TURBO,2025-10-15,1,BUY,FIG,revere_20251015.png,BUY FIG SNDK ARKG SERV ADD TO GEV,FIG SNDK ARKG SERV,,,trusted,multi_ticker_fragment
+TURBO,2025-10-15,1,BUY,SERV,revere_20251015.png,BUY FIG SNDK ARKG SERV ADD TO GEV,FIG SNDK ARKG SERV,,,trusted,multi_ticker_fragment
+TURBO,2025-10-15,1,BUY,SNDK,revere_20251015.png,BUY FIG SNDK ARKG SERV ADD TO GEV,FIG SNDK ARKG SERV,,,trusted,multi_ticker_fragment
+GRO,2025-10-16,1,BUY,STK,revere_20251016.png,BUY STK SELL PPH IONQ DASH TRIM HOOD,STK,,,trusted,single_ticker_fragment
+GRO,2025-10-16,1,SELL,DASH,revere_20251016.png,BUY STK SELL PPH IONQ DASH TRIM HOOD,PPH IONQ DASH,,,trusted,multi_ticker_fragment
+GRO,2025-10-16,1,SELL,IONQ,revere_20251016.png,BUY STK SELL PPH IONQ DASH TRIM HOOD,PPH IONQ DASH,,,trusted,multi_ticker_fragment
+GRO,2025-10-16,1,SELL,PPH,revere_20251016.png,BUY STK SELL PPH IONQ DASH TRIM HOOD,PPH IONQ DASH,,,trusted,multi_ticker_fragment
+GRO,2025-10-16,1,TRIM,HOOD,revere_20251016.png,BUY STK SELL PPH IONQ DASH TRIM HOOD,HOOD,,,trusted,single_ticker_fragment
+TURBO,2025-10-16,1,SELL,FIG,revere_20251016.png,SELL GEV SERV FIG,GEV SERV FIG,,,trusted,multi_ticker_fragment
+TURBO,2025-10-16,1,SELL,GEV,revere_20251016.png,SELL GEV SERV FIG,GEV SERV FIG,,,trusted,multi_ticker_fragment
+TURBO,2025-10-16,1,SELL,SERV,revere_20251016.png,SELL GEV SERV FIG,GEV SERV FIG,,,trusted,multi_ticker_fragment
+GRO,2025-10-20,1,TRIM,UPRO,revere_20251020.png,TRIM UPRO,UPRO,,,trusted,single_ticker_fragment
+TURBO,2025-10-20,1,SELL,GH,revere_20251020.png,SELL SNDK GH UPRO,SNDK GH UPRO,,,trusted,multi_ticker_fragment
+TURBO,2025-10-20,1,SELL,SNDK,revere_20251020.png,SELL SNDK GH UPRO,SNDK GH UPRO,,,trusted,multi_ticker_fragment
+TURBO,2025-10-20,1,SELL,UPRO,revere_20251020.png,SELL SNDK GH UPRO,SNDK GH UPRO,,,trusted,multi_ticker_fragment
+GRO,2025-10-29,1,BUY,O,revere_20251029.png,BUY TER O-TRIM SSO SELL NAIL,TER O-,,,trusted,multi_ticker_fragment
+GRO,2025-10-29,1,BUY,TER,revere_20251029.png,BUY TER O-TRIM SSO SELL NAIL,TER O-,,,trusted,multi_ticker_fragment
+GRO,2025-10-29,1,SELL,NAIL,revere_20251029.png,BUY TER O-TRIM SSO SELL NAIL,NAIL,,,trusted,single_ticker_fragment
+GRO,2025-10-29,1,TRIM,SSO,revere_20251029.png,BUY TER O-TRIM SSO SELL NAIL,SSO,,,trusted,single_ticker_fragment
+TURBO,2025-10-29,1,BUY,TER,revere_20251029.png,BUY TER,TER,,,trusted,single_ticker_fragment
+TURBO,2025-10-30,1,ADD,URTY,revere_20251030.png,BUY MDB + PATH ADD TO UULIL URTY,TO UULIL URTY,,,trusted,multi_ticker_fragment
+TURBO,2025-10-30,1,ADD,UULIL,revere_20251030.png,BUY MDB + PATH ADD TO UULIL URTY,TO UULIL URTY,,,trusted,multi_ticker_fragment
+TURBO,2025-10-30,1,BUY,MDB,revere_20251030.png,BUY MDB + PATH ADD TO UULIL URTY,MDB + PATH,,,trusted,multi_ticker_fragment
+TURBO,2025-10-30,1,BUY,PATH,revere_20251030.png,BUY MDB + PATH ADD TO UULIL URTY,MDB + PATH,,,trusted,multi_ticker_fragment
+GRO,2025-10-31,1,ADD,SSO,revere_20251031.png,ADD TO SSO,TO SSO,,,trusted,single_ticker_fragment
+TURBO,2025-10-31,1,BUY,AMZN,revere_20251031.png,BUY AMZN,AMZN,,,trusted,single_ticker_fragment
+GRO,2025-11-04,1,ADD,TER,revere_20251104.png,ADD TO TER TRIM SSO,TO TER,,,trusted,single_ticker_fragment
+GRO,2025-11-04,1,TRIM,SSO,revere_20251104.png,ADD TO TER TRIM SSO,SSO,,,trusted,single_ticker_fragment
+TURBO,2025-11-04,1,ADD,IO,revere_20251104.png,ADD 10 SSO SELL URA TRIM BABA,10 SSO,,,trusted,multi_ticker_fragment
+TURBO,2025-11-04,1,ADD,SSO,revere_20251104.png,ADD 10 SSO SELL URA TRIM BABA,10 SSO,,,trusted,multi_ticker_fragment
+TURBO,2025-11-04,1,SELL,URA,revere_20251104.png,ADD 10 SSO SELL URA TRIM BABA,URA,,,trusted,single_ticker_fragment
+TURBO,2025-11-04,1,TRIM,BABA,revere_20251104.png,ADD 10 SSO SELL URA TRIM BABA,BABA,,,trusted,single_ticker_fragment
+GRO,2025-11-05,1,ADD,TER,revere_20251105.png,ADD TO TER BUY CCJ TRIM HOOD,TO TER,,,trusted,single_ticker_fragment
+GRO,2025-11-05,1,BUY,CCJ,revere_20251105.png,ADD TO TER BUY CCJ TRIM HOOD,CCJ,,,trusted,single_ticker_fragment
+GRO,2025-11-05,1,TRIM,HOOD,revere_20251105.png,ADD TO TER BUY CCJ TRIM HOOD,HOOD,,,trusted,single_ticker_fragment
+TURBO,2025-11-05,1,ADD,AMZN,revere_20251105.png,"ADD TO AMZN,SSO BUY, LMND, SOFI",TO AMZN,,,trusted,single_ticker_fragment
+TURBO,2025-11-05,1,ADD,SSO,revere_20251105.png,"ADD TO AMZN,SSO BUY, LMND, SOFI",SSO,,,trusted,single_ticker_fragment
+TURBO,2025-11-05,1,BUY,LMND,revere_20251105.png,"ADD TO AMZN,SSO BUY, LMND, SOFI",LMND,,,trusted,single_ticker_fragment
+TURBO,2025-11-05,1,BUY,SOFI,revere_20251105.png,"ADD TO AMZN,SSO BUY, LMND, SOFI",SOFI,,,trusted,single_ticker_fragment
+TURBO,2025-11-19,1,BUY,GH,revere_20251119.png,SELL MU IREN BUY GLD GH,GLD GH,,,trusted,multi_ticker_fragment
+TURBO,2025-11-19,1,BUY,GLD,revere_20251119.png,SELL MU IREN BUY GLD GH,GLD GH,,,trusted,multi_ticker_fragment
+TURBO,2025-11-19,1,SELL,IREN,revere_20251119.png,SELL MU IREN BUY GLD GH,MU IREN,,,trusted,multi_ticker_fragment
+TURBO,2025-11-19,1,SELL,MU,revere_20251119.png,SELL MU IREN BUY GLD GH,MU IREN,,,trusted,multi_ticker_fragment
+GRO,2025-12-30,1,SELL,PLTR,revere_20251230.png,SELL PLTR,PLTR,,,trusted,single_ticker_fragment
+TURBO,2025-12-30,1,BUY,ALAB,revere_20251230.png,BUY ALAB TRIM TSLA 4,ALAB,,,trusted,single_ticker_fragment
+TURBO,2025-12-30,1,TRIM,TSLA,revere_20251230.png,BUY ALAB TRIM TSLA 4,TSLA 4,,,trusted,single_ticker_fragment
+GRO,2025-12-31,1,BUY,MU,revere_20251231.png,BUY MU SELL STV TAN,MU,,,trusted,single_ticker_fragment
+GRO,2025-12-31,1,SELL,STV,revere_20251231.png,BUY MU SELL STV TAN,STV TAN,,,trusted,multi_ticker_fragment
+GRO,2025-12-31,1,SELL,TAN,revere_20251231.png,BUY MU SELL STV TAN,STV TAN,,,trusted,multi_ticker_fragment
+TURBO,2025-12-31,1,SELL,URTY,revere_20251231.png,SELL URTY TRIM GLD NUGT,URTY,,,trusted,single_ticker_fragment
+TURBO,2025-12-31,1,TRIM,GLD,revere_20251231.png,SELL URTY TRIM GLD NUGT,GLD NUGT,,,trusted,multi_ticker_fragment
+TURBO,2025-12-31,1,TRIM,NUGT,revere_20251231.png,SELL URTY TRIM GLD NUGT,GLD NUGT,,,trusted,multi_ticker_fragment
+GRO,2026-01-02,1,SELL,TSLA,revere_20260102.png,TRIM S50 SELL TSLA,TSLA,,,trusted,single_ticker_fragment
+GRO,2026-01-02,1,TRIM,SSO,revere_20260102.png,TRIM S50 SELL TSLA,S50,,,trusted,single_ticker_fragment
+TURBO,2026-01-02,1,BUY,RDDT,revere_20260102.png,BUY RDDT TRIM TSLA SELL NUGT LQDA,RDDT,,,trusted,single_ticker_fragment
+TURBO,2026-01-02,1,SELL,LQDA,revere_20260102.png,BUY RDDT TRIM TSLA SELL NUGT LQDA,NUGT LQDA,,,trusted,multi_ticker_fragment
+TURBO,2026-01-02,1,SELL,NUGT,revere_20260102.png,BUY RDDT TRIM TSLA SELL NUGT LQDA,NUGT LQDA,,,trusted,multi_ticker_fragment
+TURBO,2026-01-02,1,TRIM,TSLA,revere_20260102.png,BUY RDDT TRIM TSLA SELL NUGT LQDA,TSLA,,,trusted,single_ticker_fragment
+GRO,2026-01-05,1,ADD,CCJ,revere_20260105.png,ADD TO SSO GOOG CCJ BUY RDOT,TO SSO GOOG CCJ,,,trusted,multi_ticker_fragment
+GRO,2026-01-05,1,ADD,GOOG,revere_20260105.png,ADD TO SSO GOOG CCJ BUY RDOT,TO SSO GOOG CCJ,,,trusted,multi_ticker_fragment
+GRO,2026-01-05,1,ADD,SSO,revere_20260105.png,ADD TO SSO GOOG CCJ BUY RDOT,TO SSO GOOG CCJ,,,trusted,multi_ticker_fragment
+GRO,2026-01-05,1,BUY,RDOT,revere_20260105.png,ADD TO SSO GOOG CCJ BUY RDOT,RDOT,,,trusted,single_ticker_fragment
+TURBO,2026-01-05,1,ADD,RKLB,revere_20260105.png,ADD TO RKLB BUY RKT,TO RKLB,,,trusted,single_ticker_fragment
+TURBO,2026-01-05,1,BUY,RKT,revere_20260105.png,ADD TO RKLB BUY RKT,RKT,,,trusted,single_ticker_fragment
+GRO,2026-01-06,1,BUY,RKT,revere_20260106.png,BUY RKT SNDK,RKT SNDK,,,trusted,multi_ticker_fragment
+GRO,2026-01-06,1,BUY,SNDK,revere_20260106.png,BUY RKT SNDK,RKT SNDK,,,trusted,multi_ticker_fragment
+TURBO,2026-01-06,1,ADD,RKT,revere_20260106.png,ADD TO RKT BUY ZETA VSCO BTU SELL TSLA ALAB,TO RKT,,,trusted,single_ticker_fragment
+TURBO,2026-01-06,1,BUY,BTU,revere_20260106.png,ADD TO RKT BUY ZETA VSCO BTU SELL TSLA ALAB,ZETA VSCO BTU,,,trusted,multi_ticker_fragment
+TURBO,2026-01-06,1,BUY,VSCO,revere_20260106.png,ADD TO RKT BUY ZETA VSCO BTU SELL TSLA ALAB,ZETA VSCO BTU,,,trusted,multi_ticker_fragment
+TURBO,2026-01-06,1,BUY,ZETA,revere_20260106.png,ADD TO RKT BUY ZETA VSCO BTU SELL TSLA ALAB,ZETA VSCO BTU,,,trusted,multi_ticker_fragment
+TURBO,2026-01-06,1,SELL,ALAB,revere_20260106.png,ADD TO RKT BUY ZETA VSCO BTU SELL TSLA ALAB,TSLA ALAB,,,trusted,multi_ticker_fragment
+TURBO,2026-01-06,1,SELL,TSLA,revere_20260106.png,ADD TO RKT BUY ZETA VSCO BTU SELL TSLA ALAB,TSLA ALAB,,,trusted,multi_ticker_fragment
+GRO,2026-01-07,1,BUY,LABU,revere_20260107.png,BUY LABU SLV,LABU SLV,,,trusted,multi_ticker_fragment
+GRO,2026-01-07,1,BUY,SLV,revere_20260107.png,BUY LABU SLV,LABU SLV,,,trusted,multi_ticker_fragment
+GRO,2026-01-08,1,ADD,SNDK,revere_20260108.png,ADD TO SNDK BUY BE,TO SNDK,,,trusted,single_ticker_fragment
+GRO,2026-01-08,1,BUY,BE,revere_20260108.png,ADD TO SNDK BUY BE,BE,,,trusted,single_ticker_fragment
+TURBO,2026-01-08,1,TRIM,PL,revere_20260108.png,TRIM PL,PL,,,trusted,single_ticker_fragment
+GRO,2026-01-09,1,ADD,RDDT,revere_20260109.png,ADD TO RDDT,TO RDDT,,,trusted,single_ticker_fragment
+TURBO,2026-01-09,1,BUY,INTC,revere_20260109.png,BUY INTC,INTC,,,trusted,single_ticker_fragment
+GRO,2026-01-12,1,BUY,AFRM,revere_20260112.png,"BUY AFRM,APH,& TSLL",AFRM,,,trusted,single_ticker_fragment
+GRO,2026-01-12,1,BUY,APH,revere_20260112.png,"BUY AFRM,APH,& TSLL",APH,,,trusted,single_ticker_fragment
+GRO,2026-01-12,1,BUY,TSLL,revere_20260112.png,"BUY AFRM,APH,& TSLL",TSLL,,,trusted,single_ticker_fragment
+GRO,2026-01-12,2,BUY,AFRM,revere_20260112_2.png,"BUY AFRM,APH,& TSLL",AFRM,,,trusted,single_ticker_fragment
+GRO,2026-01-12,2,BUY,APH,revere_20260112_2.png,"BUY AFRM,APH,& TSLL",APH,,,trusted,single_ticker_fragment
+GRO,2026-01-12,2,BUY,TSLL,revere_20260112_2.png,"BUY AFRM,APH,& TSLL",TSLL,,,trusted,single_ticker_fragment
+GRO,2026-01-14,1,ADD,BE,revere_20260114.png,TRIM SLV TRIM SSO SELL NVDA TSLL BUY EOSE ADD TO MU BE,TO MU BE,,,trusted,multi_ticker_fragment
+GRO,2026-01-14,1,ADD,MU,revere_20260114.png,TRIM SLV TRIM SSO SELL NVDA TSLL BUY EOSE ADD TO MU BE,TO MU BE,,,trusted,multi_ticker_fragment
+GRO,2026-01-14,1,BUY,EOSE,revere_20260114.png,TRIM SLV TRIM SSO SELL NVDA TSLL BUY EOSE ADD TO MU BE,EOSE,,,trusted,single_ticker_fragment
+GRO,2026-01-14,1,SELL,NVDA,revere_20260114.png,TRIM SLV TRIM SSO SELL NVDA TSLL BUY EOSE ADD TO MU BE,NVDA TSLL,,,trusted,multi_ticker_fragment
+GRO,2026-01-14,1,SELL,TSLL,revere_20260114.png,TRIM SLV TRIM SSO SELL NVDA TSLL BUY EOSE ADD TO MU BE,NVDA TSLL,,,trusted,multi_ticker_fragment
+GRO,2026-01-14,1,TRIM,SLV,revere_20260114.png,TRIM SLV TRIM SSO SELL NVDA TSLL BUY EOSE ADD TO MU BE,SLV,,,trusted,single_ticker_fragment
+GRO,2026-01-14,1,TRIM,SSO,revere_20260114.png,TRIM SLV TRIM SSO SELL NVDA TSLL BUY EOSE ADD TO MU BE,SSO,,,trusted,single_ticker_fragment
+TURBO,2026-01-14,1,BUY,LABU,revere_20260114.png,BUY LABU LEU SELL ZETA,LABU LEU,,,trusted,multi_ticker_fragment
+TURBO,2026-01-14,1,BUY,LEU,revere_20260114.png,BUY LABU LEU SELL ZETA,LABU LEU,,,trusted,multi_ticker_fragment
+TURBO,2026-01-14,1,SELL,ZETA,revere_20260114.png,BUY LABU LEU SELL ZETA,ZETA,,,trusted,single_ticker_fragment
+GRO,2026-01-15,1,ADD,APH,revere_20260115.png,ADD TO APH TRIM LLY SELL RDDT,TO APH,,,trusted,single_ticker_fragment
+GRO,2026-01-15,1,SELL,RDDT,revere_20260115.png,ADD TO APH TRIM LLY SELL RDDT,RDDT,,,trusted,single_ticker_fragment
+GRO,2026-01-15,1,TRIM,LLY,revere_20260115.png,ADD TO APH TRIM LLY SELL RDDT,LLY,,,trusted,single_ticker_fragment
+TURBO,2026-01-15,1,SELL,RDDT,revere_20260115.png,TRIM SNDK PL SELL RDDT *,RDDT *,,,trusted,single_ticker_fragment
+TURBO,2026-01-15,1,TRIM,PL,revere_20260115.png,TRIM SNDK PL SELL RDDT *,SNDK PL,,,trusted,multi_ticker_fragment
+TURBO,2026-01-15,1,TRIM,SNDK,revere_20260115.png,TRIM SNDK PL SELL RDDT *,SNDK PL,,,trusted,multi_ticker_fragment
+GRO,2026-01-16,1,TRIM,AOD,revere_20260116.png,TRIM RKB AOD TO LABU [INN,RKB AOD TO LABU [INN,,,trusted,multi_ticker_fragment
+GRO,2026-01-16,1,TRIM,INN,revere_20260116.png,TRIM RKB AOD TO LABU [INN,RKB AOD TO LABU [INN,,,trusted,multi_ticker_fragment
+GRO,2026-01-16,1,TRIM,LABU,revere_20260116.png,TRIM RKB AOD TO LABU [INN,RKB AOD TO LABU [INN,,,trusted,multi_ticker_fragment
+GRO,2026-01-16,1,TRIM,RKB,revere_20260116.png,TRIM RKB AOD TO LABU [INN,RKB AOD TO LABU [INN,,,trusted,multi_ticker_fragment
+TURBO,2026-01-16,1,ADD,LEU,revere_20260116.png,TRIM RKLB ADD TO LEU,TO LEU,,,trusted,single_ticker_fragment
+TURBO,2026-01-16,1,TRIM,RKLB,revere_20260116.png,TRIM RKLB ADD TO LEU,RKLB,,,trusted,single_ticker_fragment
+GRO,2026-01-22,1,ADD,RKLB,revere_20260122.png,BUY TSLL ADD TO URSP RKLB,TO URSP RKLB,,,trusted,multi_ticker_fragment
+GRO,2026-01-22,1,ADD,URSP,revere_20260122.png,BUY TSLL ADD TO URSP RKLB,TO URSP RKLB,,,trusted,multi_ticker_fragment
+GRO,2026-01-22,1,BUY,TSLL,revere_20260122.png,BUY TSLL ADD TO URSP RKLB,TSLL,,,trusted,single_ticker_fragment
+TURBO,2026-01-22,1,ADD,LEU,revere_20260122.png,BUY ARKG ADD TO LEU,TO LEU,,,trusted,single_ticker_fragment
+TURBO,2026-01-22,1,BUY,ARKG,revere_20260122.png,BUY ARKG ADD TO LEU,ARKG,,,trusted,single_ticker_fragment
+GRO,2026-01-23,1,SELL,ONG,revere_20260123.png,SELL ONG,ONG,,,trusted,single_ticker_fragment
+TURBO,2026-01-23,1,SELL,SE,revere_20260123.png,SELL SE(,SE(,,,trusted,single_ticker_fragment
+TURBO,2026-01-26,1,ADD,BABA,revere_20260126.png,ADD 10 BABA O-TRIM SLV REMX SELL LEU,10 BABA O-,,,trusted,multi_ticker_fragment
+TURBO,2026-01-26,1,ADD,IO,revere_20260126.png,ADD 10 BABA O-TRIM SLV REMX SELL LEU,10 BABA O-,,,trusted,multi_ticker_fragment
+TURBO,2026-01-26,1,ADD,O,revere_20260126.png,ADD 10 BABA O-TRIM SLV REMX SELL LEU,10 BABA O-,,,trusted,multi_ticker_fragment
+TURBO,2026-01-26,1,SELL,LEU,revere_20260126.png,ADD 10 BABA O-TRIM SLV REMX SELL LEU,LEU,,,trusted,single_ticker_fragment
+TURBO,2026-01-26,1,TRIM,REMX,revere_20260126.png,ADD 10 BABA O-TRIM SLV REMX SELL LEU,SLV REMX,,,trusted,multi_ticker_fragment
+TURBO,2026-01-26,1,TRIM,SLV,revere_20260126.png,ADD 10 BABA O-TRIM SLV REMX SELL LEU,SLV REMX,,,trusted,multi_ticker_fragment
+TURBO,2026-01-27,1,BUY,CRWD,revere_20260127.png,BUY CRWD FIGR SELL VSCO,CRWD FIGR,,,trusted,multi_ticker_fragment
+TURBO,2026-01-27,1,BUY,FIGR,revere_20260127.png,BUY CRWD FIGR SELL VSCO,CRWD FIGR,,,trusted,multi_ticker_fragment
+TURBO,2026-01-27,1,SELL,VSCO,revere_20260127.png,BUY CRWD FIGR SELL VSCO,VSCO,,,trusted,single_ticker_fragment
+GRO,2026-01-28,1,SELL,DUST,revere_20260128.png,SELL DUST TRIM APH,DUST,,,trusted,single_ticker_fragment
+GRO,2026-01-28,1,TRIM,APH,revere_20260128.png,SELL DUST TRIM APH,APH,,,trusted,single_ticker_fragment
+TURBO,2026-01-28,1,BUY,GEV,revere_20260128.png,BUY GEV,GEV,,,trusted,single_ticker_fragment
+TURBO,2026-01-29,1,SELL,CRWD,revere_20260129.png,SELL FIGR CRWD O-TRMA GLD,FIGR CRWD O-TRMA GLD,,,trusted,multi_ticker_fragment
+TURBO,2026-01-29,1,SELL,FIGR,revere_20260129.png,SELL FIGR CRWD O-TRMA GLD,FIGR CRWD O-TRMA GLD,,,trusted,multi_ticker_fragment
+TURBO,2026-01-29,1,SELL,GLD,revere_20260129.png,SELL FIGR CRWD O-TRMA GLD,FIGR CRWD O-TRMA GLD,,,trusted,multi_ticker_fragment
+TURBO,2026-01-30,1,SELL,ARKG,revere_20260130.png,TRIM SNOK SELL ARKG LABU REMX GLD SLV PPLT,ARKG LABU REMX GLD SLV PPLT,,,trusted,multi_ticker_fragment
+TURBO,2026-01-30,1,SELL,GLD,revere_20260130.png,TRIM SNOK SELL ARKG LABU REMX GLD SLV PPLT,ARKG LABU REMX GLD SLV PPLT,,,trusted,multi_ticker_fragment
+TURBO,2026-01-30,1,SELL,LABU,revere_20260130.png,TRIM SNOK SELL ARKG LABU REMX GLD SLV PPLT,ARKG LABU REMX GLD SLV PPLT,,,trusted,multi_ticker_fragment
+TURBO,2026-01-30,1,SELL,PPLT,revere_20260130.png,TRIM SNOK SELL ARKG LABU REMX GLD SLV PPLT,ARKG LABU REMX GLD SLV PPLT,,,trusted,multi_ticker_fragment
+TURBO,2026-01-30,1,SELL,REMX,revere_20260130.png,TRIM SNOK SELL ARKG LABU REMX GLD SLV PPLT,ARKG LABU REMX GLD SLV PPLT,,,trusted,multi_ticker_fragment
+TURBO,2026-01-30,1,SELL,SLV,revere_20260130.png,TRIM SNOK SELL ARKG LABU REMX GLD SLV PPLT,ARKG LABU REMX GLD SLV PPLT,,,trusted,multi_ticker_fragment
+TURBO,2026-01-30,1,TRIM,SNOK,revere_20260130.png,TRIM SNOK SELL ARKG LABU REMX GLD SLV PPLT,SNOK,,,trusted,single_ticker_fragment
+GRO,2026-02-02,1,ADD,URSP,revere_20260202.png,BUY AAPL ADD TO URSP,TO URSP,,,trusted,single_ticker_fragment
+GRO,2026-02-02,1,BUY,AAPL,revere_20260202.png,BUY AAPL ADD TO URSP,AAPL,,,trusted,single_ticker_fragment
+TURBO,2026-02-02,1,SELL,PL,revere_20260202.png,SELL PL,PL,,,trusted,single_ticker_fragment
+GRO,2026-02-03,1,ADD,AAPL,revere_20260203.png,ADD TO AAPL SELL APH [ENE,TO AAPL,,,trusted,single_ticker_fragment
+GRO,2026-02-03,1,SELL,APH,revere_20260203.png,ADD TO AAPL SELL APH [ENE,APH [ENE,,,trusted,multi_ticker_fragment
+GRO,2026-02-03,1,SELL,ENE,revere_20260203.png,ADD TO AAPL SELL APH [ENE,APH [ENE,,,trusted,multi_ticker_fragment
+TURBO,2026-02-03,1,SELL,BAA,revere_20260203.png,SELL BAA [EEN =UV RO,BAA [EEN =UV RO,,,trusted,multi_ticker_fragment
+TURBO,2026-02-03,1,SELL,EEN,revere_20260203.png,SELL BAA [EEN =UV RO,BAA [EEN =UV RO,,,trusted,multi_ticker_fragment
+TURBO,2026-02-03,1,SELL,RO,revere_20260203.png,SELL BAA [EEN =UV RO,BAA [EEN =UV RO,,,trusted,multi_ticker_fragment
+TURBO,2026-02-03,1,SELL,UV,revere_20260203.png,SELL BAA [EEN =UV RO,BAA [EEN =UV RO,,,trusted,multi_ticker_fragment
+GRO,2026-02-04,1,BUY,RSP,revere_20260204.png,BUY RSP SELL SSO CC) TRIM BE,RSP,,,trusted,single_ticker_fragment
+GRO,2026-02-04,1,SELL,CC,revere_20260204.png,BUY RSP SELL SSO CC) TRIM BE,SSO CC),,,trusted,multi_ticker_fragment
+GRO,2026-02-04,1,SELL,SSO,revere_20260204.png,BUY RSP SELL SSO CC) TRIM BE,SSO CC),,,trusted,multi_ticker_fragment
+GRO,2026-02-04,1,TRIM,BE,revere_20260204.png,BUY RSP SELL SSO CC) TRIM BE,BE,,,trusted,single_ticker_fragment
+TURBO,2026-02-04,1,BUY,ENPH,revere_20260204.png,BUY ENPH SELL TSEM RKL8 BTU,ENPH,,,trusted,single_ticker_fragment
+TURBO,2026-02-04,1,SELL,BTU,revere_20260204.png,BUY ENPH SELL TSEM RKL8 BTU,TSEM RKL8 BTU,,,trusted,multi_ticker_fragment
+TURBO,2026-02-04,1,SELL,RKLB,revere_20260204.png,BUY ENPH SELL TSEM RKL8 BTU,TSEM RKL8 BTU,,,trusted,multi_ticker_fragment
+TURBO,2026-02-04,1,SELL,TSEM,revere_20260204.png,BUY ENPH SELL TSEM RKL8 BTU,TSEM RKL8 BTU,,,trusted,multi_ticker_fragment
+TURBO,2026-02-05,1,SELL,ENPH,revere_20260205.png,SELL ENPH UPRO TRIM GOOGL O-TRIM MLTZ,ENPH UPRO,,,trusted,multi_ticker_fragment
+TURBO,2026-02-05,1,SELL,UPRO,revere_20260205.png,SELL ENPH UPRO TRIM GOOGL O-TRIM MLTZ,ENPH UPRO,,,trusted,multi_ticker_fragment
+TURBO,2026-02-05,1,TRIM,GOOGL,revere_20260205.png,SELL ENPH UPRO TRIM GOOGL O-TRIM MLTZ,GOOGL O-,,,trusted,multi_ticker_fragment
+TURBO,2026-02-05,1,TRIM,MLTZ,revere_20260205.png,SELL ENPH UPRO TRIM GOOGL O-TRIM MLTZ,MLTZ,,,trusted,single_ticker_fragment
+TURBO,2026-02-05,1,TRIM,O,revere_20260205.png,SELL ENPH UPRO TRIM GOOGL O-TRIM MLTZ,GOOGL O-,,,trusted,multi_ticker_fragment
+GRO,2026-02-06,1,BUY,GEV,revere_20260206.png,"BUY GEV, TNA",GEV,,,trusted,single_ticker_fragment
+GRO,2026-02-06,1,BUY,TNA,revere_20260206.png,"BUY GEV, TNA",TNA,,,trusted,single_ticker_fragment
+GRO,2026-02-09,1,BUY,NVOA,revere_20260209.png,BUY NVOA « SOK,NVOA « SOK,,,trusted,multi_ticker_fragment
+GRO,2026-02-09,1,BUY,SOK,revere_20260209.png,BUY NVOA « SOK,NVOA « SOK,,,trusted,multi_ticker_fragment
+GRO,2026-02-10,1,ADD,ENE,revere_20260210.png,ADD TO [HI ENE,TO [HI ENE,,,trusted,multi_ticker_fragment
+GRO,2026-02-10,1,ADD,HI,revere_20260210.png,ADD TO [HI ENE,TO [HI ENE,,,trusted,multi_ticker_fragment
+TURBO,2026-02-10,1,ADD,AA,revere_20260210.png,BUY ENPH ADD 10 AA COPX,10 AA COPX,,,trusted,multi_ticker_fragment
+TURBO,2026-02-10,1,ADD,COPX,revere_20260210.png,BUY ENPH ADD 10 AA COPX,10 AA COPX,,,trusted,multi_ticker_fragment
+TURBO,2026-02-10,1,ADD,IO,revere_20260210.png,BUY ENPH ADD 10 AA COPX,10 AA COPX,,,trusted,multi_ticker_fragment
+TURBO,2026-02-10,1,BUY,ENPH,revere_20260210.png,BUY ENPH ADD 10 AA COPX,ENPH,,,trusted,single_ticker_fragment
+TURBO,2026-02-11,1,ADD,INTC,revere_20260211.png,SELL TNA ENPH ADD TO INTC BUY VRT,TO INTC,,,trusted,single_ticker_fragment
+TURBO,2026-02-11,1,BUY,VRT,revere_20260211.png,SELL TNA ENPH ADD TO INTC BUY VRT,VRT,,,trusted,single_ticker_fragment
+TURBO,2026-02-11,1,SELL,ENPH,revere_20260211.png,SELL TNA ENPH ADD TO INTC BUY VRT,TNA ENPH,,,trusted,multi_ticker_fragment
+TURBO,2026-02-11,1,SELL,TNA,revere_20260211.png,SELL TNA ENPH ADD TO INTC BUY VRT,TNA ENPH,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,SELL,AA,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",TOL TER SNDX AA. DOCH.VRTESLY,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,SELL,COPX,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",550.C0PX JIINTC GEV,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,SELL,DOCH,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",TOL TER SNDX AA. DOCH.VRTESLY,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,SELL,GEV,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",550.C0PX JIINTC GEV,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,SELL,GOOG,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",GOOG XME TURBO HOLOWNGS: 5#YM,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,SELL,HALO,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",GOOG XME TURBO HOLOWNGS: 5#YM,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,SELL,J,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",550.C0PX JIINTC GEV,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,SELL,JINTC,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",550.C0PX JIINTC GEV,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,SELL,SNDX,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",TOL TER SNDX AA. DOCH.VRTESLY,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,SELL,SPYM,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",GOOG XME TURBO HOLOWNGS: 5#YM,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,SELL,SSO,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",550.C0PX JIINTC GEV,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,SELL,TER,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",TOL TER SNDX AA. DOCH.VRTESLY,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,SELL,TOL,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",TOL TER SNDX AA. DOCH.VRTESLY,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,SELL,WNGS,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",GOOG XME TURBO HOLOWNGS: 5#YM,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,SELL,XME,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",GOOG XME TURBO HOLOWNGS: 5#YM,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,TRIM,AAPL,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",AAPL TNA BE,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,TRIM,BE,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",AAPL TNA BE,,,trusted,multi_ticker_fragment
+GRO,2026-02-12,1,TRIM,TNA,revere_20260212.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",AAPL TNA BE,,,trusted,multi_ticker_fragment
+TURBO,2026-02-12,1,BUY,FSL,revere_20260212.png,SELL GOOGL TRIM INTC BUY FSL¥,FSL¥,,,trusted,single_ticker_fragment
+TURBO,2026-02-12,1,SELL,GOOGL,revere_20260212.png,SELL GOOGL TRIM INTC BUY FSL¥,GOOGL,,,trusted,single_ticker_fragment
+TURBO,2026-02-12,1,TRIM,INTC,revere_20260212.png,SELL GOOGL TRIM INTC BUY FSL¥,INTC,,,trusted,single_ticker_fragment
+GRO,2026-02-13,1,SELL,AAPL,revere_20260213.png,TRIM PLTD SELL AAPL NVDA BE,AAPL NVDA BE,,,trusted,multi_ticker_fragment
+GRO,2026-02-13,1,SELL,BE,revere_20260213.png,TRIM PLTD SELL AAPL NVDA BE,AAPL NVDA BE,,,trusted,multi_ticker_fragment
+GRO,2026-02-13,1,SELL,NVDA,revere_20260213.png,TRIM PLTD SELL AAPL NVDA BE,AAPL NVDA BE,,,trusted,multi_ticker_fragment
+GRO,2026-02-13,1,TRIM,PLTD,revere_20260213.png,TRIM PLTD SELL AAPL NVDA BE,PLTD,,,trusted,single_ticker_fragment
+TURBO,2026-02-13,1,ADD,DOCN,revere_20260213.png,SELL VRT BUY FTI FCX ADD TO DOCN,TO DOCN,,,trusted,single_ticker_fragment
+TURBO,2026-02-13,1,BUY,FCX,revere_20260213.png,SELL VRT BUY FTI FCX ADD TO DOCN,FTI FCX,,,trusted,multi_ticker_fragment
+TURBO,2026-02-13,1,BUY,FTI,revere_20260213.png,SELL VRT BUY FTI FCX ADD TO DOCN,FTI FCX,,,trusted,multi_ticker_fragment
+TURBO,2026-02-13,1,SELL,VRT,revere_20260213.png,SELL VRT BUY FTI FCX ADD TO DOCN,VRT,,,trusted,single_ticker_fragment
+GRO,2026-02-17,1,ADD,CEV,revere_20260217.png,ADD TO CEV [INE,TO CEV [INE,,,trusted,multi_ticker_fragment
+GRO,2026-02-17,1,ADD,INE,revere_20260217.png,ADD TO CEV [INE,TO CEV [INE,,,trusted,multi_ticker_fragment
+TURBO,2026-02-17,1,BUY,NET,revere_20260217.png,SELL AA BUY NET,NET,,,trusted,single_ticker_fragment
+TURBO,2026-02-17,1,SELL,AA,revere_20260217.png,SELL AA BUY NET,AA,,,trusted,single_ticker_fragment
+GRO,2026-02-18,1,ADD,FSLY,revere_20260218.png,BUY COPX UFO ADD TO FSLY TRIM SHORT VIA PLTD,TO FSLY,,,trusted,single_ticker_fragment
+GRO,2026-02-18,1,BUY,COPX,revere_20260218.png,BUY COPX UFO ADD TO FSLY TRIM SHORT VIA PLTD,COPX UFO,,,trusted,multi_ticker_fragment
+GRO,2026-02-18,1,BUY,UFO,revere_20260218.png,BUY COPX UFO ADD TO FSLY TRIM SHORT VIA PLTD,COPX UFO,,,trusted,multi_ticker_fragment
+GRO,2026-02-18,1,TRIM,PLTD,revere_20260218.png,BUY COPX UFO ADD TO FSLY TRIM SHORT VIA PLTD,SHORT VIA PLTD,,,trusted,multi_ticker_fragment
+GRO,2026-02-18,1,TRIM,SHORT,revere_20260218.png,BUY COPX UFO ADD TO FSLY TRIM SHORT VIA PLTD,SHORT VIA PLTD,,,trusted,multi_ticker_fragment
+GRO,2026-02-18,1,TRIM,VIA,revere_20260218.png,BUY COPX UFO ADD TO FSLY TRIM SHORT VIA PLTD,SHORT VIA PLTD,,,trusted,multi_ticker_fragment
+TURBO,2026-02-18,1,ADD,FCX,revere_20260218.png,BUY MU ADD TO FCX,TO FCX,,,trusted,single_ticker_fragment
+TURBO,2026-02-18,1,BUY,MU,revere_20260218.png,BUY MU ADD TO FCX,MU,,,trusted,single_ticker_fragment
+GRO,2026-02-19,1,ADD,ANET,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",ECX FTALNET MU,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,ADD,COR,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",COR,,,trusted,single_ticker_fragment
+GRO,2026-02-19,1,ADD,DOCH,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",DOCH FSLY SNDK,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,ADD,ECX,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",ECX FTALNET MU,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,ADD,FSLY,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",DOCH FSLY SNDK,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,ADD,FSLY,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",TO FSLY TURBO HOLOINGS: 5PM 550,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,ADD,FTA,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",ECX FTALNET MU,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,ADD,HALO,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",TO FSLY TURBO HOLOINGS: 5PM 550,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,ADD,INGD,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",TO FSLY TURBO HOLOINGS: 5PM 550,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,ADD,INTC,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",JIIIGEV. TOL INTC TER,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,ADD,JGEV,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",JIIIGEV. TOL INTC TER,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,ADD,JI,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",JIIIGEV. TOL INTC TER,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,ADD,MU,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",ECX FTALNET MU,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,ADD,SNDK,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",DOCH FSLY SNDK,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,ADD,SPM,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",TO FSLY TURBO HOLOINGS: 5PM 550,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,ADD,SSO,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",TO FSLY TURBO HOLOINGS: 5PM 550,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,ADD,TER,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",JIIIGEV. TOL INTC TER,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,ADD,TOL,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",JIIIGEV. TOL INTC TER,,,trusted,multi_ticker_fragment
+GRO,2026-02-19,1,BUY,ILE,revere_20260219.png,"BUY ILE ADD TO FSLY TURBO HOLOINGS: 5PM 550,COR,JIIIGEV. TOL INTC TER, DOCH FSLY SNDK,ECX FTALNET MU",ILE,,,trusted,single_ticker_fragment
+TURBO,2026-02-19,1,ADD,SNDK,revere_20260219.png,ADD TO SNDK,TO SNDK,,,trusted,single_ticker_fragment
+GRO,2026-02-23,1,BUY,XLP,revere_20260223.png,BUY XLP TRIM ITB UFO,XLP,,,trusted,single_ticker_fragment
+GRO,2026-02-23,1,TRIM,ITB,revere_20260223.png,BUY XLP TRIM ITB UFO,ITB UFO,,,trusted,multi_ticker_fragment
+GRO,2026-02-23,1,TRIM,UFO,revere_20260223.png,BUY XLP TRIM ITB UFO,ITB UFO,,,trusted,multi_ticker_fragment
+TURBO,2026-02-23,1,ADD,TOMU,revere_20260223.png,SELL DOCN ADD TOMU,TOMU,,,trusted,single_ticker_fragment
+TURBO,2026-02-23,1,SELL,DOCN,revere_20260223.png,SELL DOCN ADD TOMU,DOCN,,,trusted,single_ticker_fragment
+GRO,2026-02-24,1,ADD,ILF,revere_20260224.png,BUY SNDK ADD TO ILF SELL PLTD,TO ILF,,,trusted,single_ticker_fragment
+GRO,2026-02-24,1,BUY,SNDK,revere_20260224.png,BUY SNDK ADD TO ILF SELL PLTD,SNDK,,,trusted,single_ticker_fragment
+GRO,2026-02-24,1,SELL,PLTD,revere_20260224.png,BUY SNDK ADD TO ILF SELL PLTD,PLTD,,,trusted,single_ticker_fragment
+TURBO,2026-02-24,1,BUY,AA,revere_20260224.png,BUY VR BE AA SELL RGTZ QBTZ,VR BE AA,,,trusted,multi_ticker_fragment
+TURBO,2026-02-24,1,BUY,BE,revere_20260224.png,BUY VR BE AA SELL RGTZ QBTZ,VR BE AA,,,trusted,multi_ticker_fragment
+TURBO,2026-02-24,1,BUY,VR,revere_20260224.png,BUY VR BE AA SELL RGTZ QBTZ,VR BE AA,,,trusted,multi_ticker_fragment
+TURBO,2026-02-24,1,SELL,QBTZ,revere_20260224.png,BUY VR BE AA SELL RGTZ QBTZ,RGTZ QBTZ,,,trusted,multi_ticker_fragment
+TURBO,2026-02-24,1,SELL,RGTZ,revere_20260224.png,BUY VR BE AA SELL RGTZ QBTZ,RGTZ QBTZ,,,trusted,multi_ticker_fragment
+GRO,2026-02-25,1,ADD,UPRO,revere_20260225.png,BUY CCJ ADD TO UPRO SELL ITB T,TO UPRO,,,trusted,single_ticker_fragment
+GRO,2026-02-25,1,BUY,CCJ,revere_20260225.png,BUY CCJ ADD TO UPRO SELL ITB T,CCJ,,,trusted,single_ticker_fragment
+GRO,2026-02-25,1,SELL,ITB,revere_20260225.png,BUY CCJ ADD TO UPRO SELL ITB T,ITB T,,,trusted,multi_ticker_fragment
+GRO,2026-02-25,1,SELL,T,revere_20260225.png,BUY CCJ ADD TO UPRO SELL ITB T,ITB T,,,trusted,multi_ticker_fragment
+TURBO,2026-02-25,1,BUY,UPRD,revere_20260225.png,BUY UPRD SELL IONZ OKLS,UPRD,,,trusted,single_ticker_fragment
+TURBO,2026-02-25,1,SELL,IONZ,revere_20260225.png,BUY UPRD SELL IONZ OKLS,IONZ OKLS,,,trusted,multi_ticker_fragment
+TURBO,2026-02-25,1,SELL,OKLS,revere_20260225.png,BUY UPRD SELL IONZ OKLS,IONZ OKLS,,,trusted,multi_ticker_fragment
+GRO,2026-02-27,1,SELL,TNA,revere_20260227.png,"SELL TNA, UFO TRIM UPRO",TNA,,,trusted,single_ticker_fragment
+GRO,2026-02-27,1,SELL,UFO,revere_20260227.png,"SELL TNA, UFO TRIM UPRO",UFO,,,trusted,single_ticker_fragment
+GRO,2026-02-27,1,TRIM,UPRO,revere_20260227.png,"SELL TNA, UFO TRIM UPRO",UPRO,,,trusted,single_ticker_fragment
+TURBO,2026-02-27,1,SELL,BE,revere_20260227.png,SELL BE,BE,,,trusted,single_ticker_fragment
+GRO,2026-03-02,1,SELL,SQQQ,revere_20260302.png,SELL SQQQ TRIM MU,SQQQ,,,trusted,single_ticker_fragment
+GRO,2026-03-02,1,TRIM,MU,revere_20260302.png,SELL SQQQ TRIM MU,MU,,,trusted,single_ticker_fragment
+TURBO,2026-03-02,1,SELL,TOL,revere_20260302.png,SELL TOL,TOL,,,trusted,single_ticker_fragment
+GRO,2026-03-03,1,SELL,COPX,revere_20260303.png,SELL COPX MU SNDK TRIM ILF FTAI,COPX MU SNDK,,,trusted,multi_ticker_fragment
+GRO,2026-03-03,1,SELL,MU,revere_20260303.png,SELL COPX MU SNDK TRIM ILF FTAI,COPX MU SNDK,,,trusted,multi_ticker_fragment
+GRO,2026-03-03,1,SELL,SNDK,revere_20260303.png,SELL COPX MU SNDK TRIM ILF FTAI,COPX MU SNDK,,,trusted,multi_ticker_fragment
+GRO,2026-03-03,1,TRIM,FTAI,revere_20260303.png,SELL COPX MU SNDK TRIM ILF FTAI,ILF FTAI,,,trusted,multi_ticker_fragment
+GRO,2026-03-03,1,TRIM,ILF,revere_20260303.png,SELL COPX MU SNDK TRIM ILF FTAI,ILF FTAI,,,trusted,multi_ticker_fragment
+TURBO,2026-03-03,1,SELL,AA,revere_20260303.png,SELL AA FTA! ILF MU SNDK UPRO VAT TRIM COPX FCX,AA FTA! ILF MU SNDK UPRO VAT,,,trusted,multi_ticker_fragment
+TURBO,2026-03-03,1,SELL,FTA,revere_20260303.png,SELL AA FTA! ILF MU SNDK UPRO VAT TRIM COPX FCX,AA FTA! ILF MU SNDK UPRO VAT,,,trusted,multi_ticker_fragment
+TURBO,2026-03-03,1,SELL,ILF,revere_20260303.png,SELL AA FTA! ILF MU SNDK UPRO VAT TRIM COPX FCX,AA FTA! ILF MU SNDK UPRO VAT,,,trusted,multi_ticker_fragment
+TURBO,2026-03-03,1,SELL,MU,revere_20260303.png,SELL AA FTA! ILF MU SNDK UPRO VAT TRIM COPX FCX,AA FTA! ILF MU SNDK UPRO VAT,,,trusted,multi_ticker_fragment
+TURBO,2026-03-03,1,SELL,SNDK,revere_20260303.png,SELL AA FTA! ILF MU SNDK UPRO VAT TRIM COPX FCX,AA FTA! ILF MU SNDK UPRO VAT,,,trusted,multi_ticker_fragment
+TURBO,2026-03-03,1,SELL,UPRO,revere_20260303.png,SELL AA FTA! ILF MU SNDK UPRO VAT TRIM COPX FCX,AA FTA! ILF MU SNDK UPRO VAT,,,trusted,multi_ticker_fragment
+TURBO,2026-03-03,1,SELL,VAT,revere_20260303.png,SELL AA FTA! ILF MU SNDK UPRO VAT TRIM COPX FCX,AA FTA! ILF MU SNDK UPRO VAT,,,trusted,multi_ticker_fragment
+TURBO,2026-03-03,1,TRIM,COPX,revere_20260303.png,SELL AA FTA! ILF MU SNDK UPRO VAT TRIM COPX FCX,COPX FCX,,,trusted,multi_ticker_fragment
+TURBO,2026-03-03,1,TRIM,FCX,revere_20260303.png,SELL AA FTA! ILF MU SNDK UPRO VAT TRIM COPX FCX,COPX FCX,,,trusted,multi_ticker_fragment
+GRO,2026-03-04,1,BUY,CRCL,revere_20260304.png,BUY CRCL +,CRCL,,,trusted,single_ticker_fragment
+TURBO,2026-03-04,1,BUY,CC,revere_20260304.png,BUY CC),CC),,,trusted,single_ticker_fragment
+GRO,2026-03-05,1,SELL,LF,revere_20260305.png,SELL LF XTP TRIM GEV KEVS [INN,LF XTP,,,trusted,multi_ticker_fragment
+GRO,2026-03-05,1,SELL,XTP,revere_20260305.png,SELL LF XTP TRIM GEV KEVS [INN,LF XTP,,,trusted,multi_ticker_fragment
+GRO,2026-03-05,1,TRIM,GEV,revere_20260305.png,SELL LF XTP TRIM GEV KEVS [INN,GEV KEVS [INN,,,trusted,multi_ticker_fragment
+GRO,2026-03-05,1,TRIM,INN,revere_20260305.png,SELL LF XTP TRIM GEV KEVS [INN,GEV KEVS [INN,,,trusted,multi_ticker_fragment
+GRO,2026-03-05,1,TRIM,KEVS,revere_20260305.png,SELL LF XTP TRIM GEV KEVS [INN,GEV KEVS [INN,,,trusted,multi_ticker_fragment
+TURBO,2026-03-06,1,SELL,AVS,revere_20260306.png,SELL AVS GEV CC) TRIM TER SSO,AVS GEV CC),,,trusted,multi_ticker_fragment
+TURBO,2026-03-06,1,SELL,CC,revere_20260306.png,SELL AVS GEV CC) TRIM TER SSO,AVS GEV CC),,,trusted,multi_ticker_fragment
+TURBO,2026-03-06,1,SELL,GEV,revere_20260306.png,SELL AVS GEV CC) TRIM TER SSO,AVS GEV CC),,,trusted,multi_ticker_fragment
+TURBO,2026-03-06,1,TRIM,SSO,revere_20260306.png,SELL AVS GEV CC) TRIM TER SSO,TER SSO,,,trusted,multi_ticker_fragment
+TURBO,2026-03-06,1,TRIM,TER,revere_20260306.png,SELL AVS GEV CC) TRIM TER SSO,TER SSO,,,trusted,multi_ticker_fragment
+GRO,2026-03-11,1,ADD,CRCL,revere_20260311.png,ADD TO CRCL TRIN SPXS BUY SOXL,TO CRCL TRIN SPXS,,,trusted,multi_ticker_fragment
+GRO,2026-03-11,1,ADD,SPXS,revere_20260311.png,ADD TO CRCL TRIN SPXS BUY SOXL,TO CRCL TRIN SPXS,,,trusted,multi_ticker_fragment
+GRO,2026-03-11,1,ADD,TRIN,revere_20260311.png,ADD TO CRCL TRIN SPXS BUY SOXL,TO CRCL TRIN SPXS,,,trusted,multi_ticker_fragment
+GRO,2026-03-11,1,BUY,SOXL,revere_20260311.png,ADD TO CRCL TRIN SPXS BUY SOXL,SOXL,,,trusted,single_ticker_fragment
+TURBO,2026-03-11,1,TRIM,FSLY,revere_20260311.png,TRIM FSLY,FSLY,,,trusted,single_ticker_fragment
+GRO,2026-03-12,1,BUY,NET,revere_20260312.png,SELL SOXL RSP BUY NET,NET,,,trusted,single_ticker_fragment
+GRO,2026-03-12,1,SELL,RSP,revere_20260312.png,SELL SOXL RSP BUY NET,SOXL RSP,,,trusted,multi_ticker_fragment
+GRO,2026-03-12,1,SELL,SOXL,revere_20260312.png,SELL SOXL RSP BUY NET,SOXL RSP,,,trusted,multi_ticker_fragment
+GRO,2026-03-16,1,ADD,TOMET,revere_20260316.png,ADD TOMET TRIM HEDGE SPU,TOMET,,,trusted,single_ticker_fragment
+GRO,2026-03-16,1,TRIM,HEDGE,revere_20260316.png,ADD TOMET TRIM HEDGE SPU,HEDGE SPU,,,trusted,multi_ticker_fragment
+GRO,2026-03-16,1,TRIM,SPU,revere_20260316.png,ADD TOMET TRIM HEDGE SPU,HEDGE SPU,,,trusted,multi_ticker_fragment
+TURBO,2026-03-16,1,BUY,INTC,revere_20260316.png,BUY INTC,INTC,,,trusted,single_ticker_fragment
+GRO,2026-03-18,1,TRIM,AE,revere_20260318.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",AE TER SUV,,,trusted,multi_ticker_fragment
+GRO,2026-03-18,1,TRIM,FSLY,revere_20260318.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",FSLY,,,trusted,single_ticker_fragment
+GRO,2026-03-18,1,TRIM,HEOGE,revere_20260318.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",HEOGE/SPXU TUNA WOWOWAS SEAS,,,trusted,multi_ticker_fragment
+GRO,2026-03-18,1,TRIM,IO,revere_20260318.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",[IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE,,,trusted,multi_ticker_fragment
+GRO,2026-03-18,1,TRIM,IO,revere_20260318.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",HEOGE/SPXU TUNA WOWOWAS SEAS,,,trusted,multi_ticker_fragment
+GRO,2026-03-18,1,TRIM,IR,revere_20260318.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",[IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE,,,trusted,multi_ticker_fragment
+GRO,2026-03-18,1,TRIM,IURSO,revere_20260318.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",[IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE,,,trusted,multi_ticker_fragment
+GRO,2026-03-18,1,TRIM,NEE,revere_20260318.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",[IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE,,,trusted,multi_ticker_fragment
+GRO,2026-03-18,1,TRIM,SEAS,revere_20260318.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",HEOGE/SPXU TUNA WOWOWAS SEAS,,,trusted,multi_ticker_fragment
+GRO,2026-03-18,1,TRIM,SO,revere_20260318.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",SO,,,trusted,single_ticker_fragment
+GRO,2026-03-18,1,TRIM,SPXU,revere_20260318.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",HEOGE/SPXU TUNA WOWOWAS SEAS,,,trusted,multi_ticker_fragment
+GRO,2026-03-18,1,TRIM,SUV,revere_20260318.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",AE TER SUV,,,trusted,multi_ticker_fragment
+GRO,2026-03-18,1,TRIM,TER,revere_20260318.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",AE TER SUV,,,trusted,multi_ticker_fragment
+GRO,2026-03-18,1,TRIM,TUNA,revere_20260318.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",HEOGE/SPXU TUNA WOWOWAS SEAS,,,trusted,multi_ticker_fragment
+GRO,2026-03-18,1,TRIM,WOWAS,revere_20260318.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",HEOGE/SPXU TUNA WOWOWAS SEAS,,,trusted,multi_ticker_fragment
+GRO,2026-03-19,1,TRIM,BE,revere_20260319.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",BE,,,trusted,single_ticker_fragment
+GRO,2026-03-19,1,TRIM,EEE,revere_20260319.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",6L0 EEE UNO HOLOINGS: SPYM,,,trusted,multi_ticker_fragment
+GRO,2026-03-19,1,TRIM,FSEV,revere_20260319.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",TER FSEV,,,trusted,multi_ticker_fragment
+GRO,2026-03-19,1,TRIM,GLO,revere_20260319.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",6L0 EEE UNO HOLOINGS: SPYM,,,trusted,multi_ticker_fragment
+GRO,2026-03-19,1,TRIM,HALO,revere_20260319.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",6L0 EEE UNO HOLOINGS: SPYM,,,trusted,multi_ticker_fragment
+GRO,2026-03-19,1,TRIM,INGD,revere_20260319.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",6L0 EEE UNO HOLOINGS: SPYM,,,trusted,multi_ticker_fragment
+GRO,2026-03-19,1,TRIM,SE,revere_20260319.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",SE,,,trusted,single_ticker_fragment
+GRO,2026-03-19,1,TRIM,SPYM,revere_20260319.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",6L0 EEE UNO HOLOINGS: SPYM,,,trusted,multi_ticker_fragment
+GRO,2026-03-19,1,TRIM,TER,revere_20260319.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",TER FSEV,,,trusted,multi_ticker_fragment
+GRO,2026-03-19,1,TRIM,UNO,revere_20260319.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",6L0 EEE UNO HOLOINGS: SPYM,,,trusted,multi_ticker_fragment
+GRO,2026-03-20,1,ADD,BE,revere_20260320.png,"SELL VRT NBIS GLO ADD TO SOS [IEE RUSEO HOOINGS: BE, TER FSLY, [NNEC",TO SOS [IEE RUSEO HOOINGS: BE,,,trusted,multi_ticker_fragment
+GRO,2026-03-20,1,ADD,FSLY,revere_20260320.png,"SELL VRT NBIS GLO ADD TO SOS [IEE RUSEO HOOINGS: BE, TER FSLY, [NNEC",TER FSLY,,,trusted,multi_ticker_fragment
+GRO,2026-03-20,1,ADD,HOOD,revere_20260320.png,"SELL VRT NBIS GLO ADD TO SOS [IEE RUSEO HOOINGS: BE, TER FSLY, [NNEC",TO SOS [IEE RUSEO HOOINGS: BE,,,trusted,multi_ticker_fragment
+GRO,2026-03-20,1,ADD,IEE,revere_20260320.png,"SELL VRT NBIS GLO ADD TO SOS [IEE RUSEO HOOINGS: BE, TER FSLY, [NNEC",TO SOS [IEE RUSEO HOOINGS: BE,,,trusted,multi_ticker_fragment
+GRO,2026-03-20,1,ADD,NGL,revere_20260320.png,"SELL VRT NBIS GLO ADD TO SOS [IEE RUSEO HOOINGS: BE, TER FSLY, [NNEC",TO SOS [IEE RUSEO HOOINGS: BE,,,trusted,multi_ticker_fragment
+GRO,2026-03-20,1,ADD,NNEC,revere_20260320.png,"SELL VRT NBIS GLO ADD TO SOS [IEE RUSEO HOOINGS: BE, TER FSLY, [NNEC",[NNEC,,,trusted,single_ticker_fragment
+GRO,2026-03-20,1,ADD,RUSEO,revere_20260320.png,"SELL VRT NBIS GLO ADD TO SOS [IEE RUSEO HOOINGS: BE, TER FSLY, [NNEC",TO SOS [IEE RUSEO HOOINGS: BE,,,trusted,multi_ticker_fragment
+GRO,2026-03-20,1,ADD,SOS,revere_20260320.png,"SELL VRT NBIS GLO ADD TO SOS [IEE RUSEO HOOINGS: BE, TER FSLY, [NNEC",TO SOS [IEE RUSEO HOOINGS: BE,,,trusted,multi_ticker_fragment
+GRO,2026-03-20,1,ADD,TER,revere_20260320.png,"SELL VRT NBIS GLO ADD TO SOS [IEE RUSEO HOOINGS: BE, TER FSLY, [NNEC",TER FSLY,,,trusted,multi_ticker_fragment
+GRO,2026-03-20,1,SELL,GLO,revere_20260320.png,"SELL VRT NBIS GLO ADD TO SOS [IEE RUSEO HOOINGS: BE, TER FSLY, [NNEC",VRT NBIS GLO,,,trusted,multi_ticker_fragment
+GRO,2026-03-20,1,SELL,NBIS,revere_20260320.png,"SELL VRT NBIS GLO ADD TO SOS [IEE RUSEO HOOINGS: BE, TER FSLY, [NNEC",VRT NBIS GLO,,,trusted,multi_ticker_fragment
+GRO,2026-03-20,1,SELL,VRT,revere_20260320.png,"SELL VRT NBIS GLO ADD TO SOS [IEE RUSEO HOOINGS: BE, TER FSLY, [NNEC",VRT NBIS GLO,,,trusted,multi_ticker_fragment
+GRO,2026-03-23,1,TRIM,CRCL,revere_20260323.png,"TRIM SDS CRCL UREO HOLOINGS: TER FSLY, [NRG",SDS CRCL UREO HOLOINGS: TER FSLY,,,trusted,multi_ticker_fragment
+GRO,2026-03-23,1,TRIM,FSLY,revere_20260323.png,"TRIM SDS CRCL UREO HOLOINGS: TER FSLY, [NRG",SDS CRCL UREO HOLOINGS: TER FSLY,,,trusted,multi_ticker_fragment
+GRO,2026-03-23,1,TRIM,HALO,revere_20260323.png,"TRIM SDS CRCL UREO HOLOINGS: TER FSLY, [NRG",SDS CRCL UREO HOLOINGS: TER FSLY,,,trusted,multi_ticker_fragment
+GRO,2026-03-23,1,TRIM,INGD,revere_20260323.png,"TRIM SDS CRCL UREO HOLOINGS: TER FSLY, [NRG",SDS CRCL UREO HOLOINGS: TER FSLY,,,trusted,multi_ticker_fragment
+GRO,2026-03-23,1,TRIM,NRG,revere_20260323.png,"TRIM SDS CRCL UREO HOLOINGS: TER FSLY, [NRG",[NRG,,,trusted,single_ticker_fragment
+GRO,2026-03-23,1,TRIM,SDS,revere_20260323.png,"TRIM SDS CRCL UREO HOLOINGS: TER FSLY, [NRG",SDS CRCL UREO HOLOINGS: TER FSLY,,,trusted,multi_ticker_fragment
+GRO,2026-03-23,1,TRIM,TER,revere_20260323.png,"TRIM SDS CRCL UREO HOLOINGS: TER FSLY, [NRG",SDS CRCL UREO HOLOINGS: TER FSLY,,,trusted,multi_ticker_fragment
+GRO,2026-03-23,1,TRIM,UREO,revere_20260323.png,"TRIM SDS CRCL UREO HOLOINGS: TER FSLY, [NRG",SDS CRCL UREO HOLOINGS: TER FSLY,,,trusted,multi_ticker_fragment
+TURBO,2026-03-23,1,SELL,BE,revere_20260323.png,SELL PLTZ BE,PLTZ BE,,,trusted,multi_ticker_fragment
+TURBO,2026-03-23,1,SELL,PLTZ,revere_20260323.png,SELL PLTZ BE,PLTZ BE,,,trusted,multi_ticker_fragment
+GRO,2026-03-24,1,SELL,CRCL,revere_20260324.png,SELL CRCL TRIM NET TUREO HOOS: [IN TER FS Y,CRCL,,,trusted,single_ticker_fragment
+GRO,2026-03-24,1,TRIM,FS,revere_20260324.png,SELL CRCL TRIM NET TUREO HOOS: [IN TER FS Y,NET TUREO HOOS: [IN TER FS Y,,,trusted,multi_ticker_fragment
+GRO,2026-03-24,1,TRIM,HOOS,revere_20260324.png,SELL CRCL TRIM NET TUREO HOOS: [IN TER FS Y,NET TUREO HOOS: [IN TER FS Y,,,trusted,multi_ticker_fragment
+GRO,2026-03-24,1,TRIM,NET,revere_20260324.png,SELL CRCL TRIM NET TUREO HOOS: [IN TER FS Y,NET TUREO HOOS: [IN TER FS Y,,,trusted,multi_ticker_fragment
+GRO,2026-03-24,1,TRIM,TER,revere_20260324.png,SELL CRCL TRIM NET TUREO HOOS: [IN TER FS Y,NET TUREO HOOS: [IN TER FS Y,,,trusted,multi_ticker_fragment
+GRO,2026-03-24,1,TRIM,TUREO,revere_20260324.png,SELL CRCL TRIM NET TUREO HOOS: [IN TER FS Y,NET TUREO HOOS: [IN TER FS Y,,,trusted,multi_ticker_fragment
+GRO,2026-03-24,1,TRIM,Y,revere_20260324.png,SELL CRCL TRIM NET TUREO HOOS: [IN TER FS Y,NET TUREO HOOS: [IN TER FS Y,,,trusted,multi_ticker_fragment
+GRO,2026-03-26,1,BUY,AVS,revere_20260326.png,SELL NET TRIM FSLY ADD TO HEDGE SDS TUREO WOLOINGS: [I VER. FS. B+ TURBO RVAB/REBAR: (+ : //-2.49%) BUY AVS,AVS,,,trusted,single_ticker_fragment
+GRO,2026-03-26,1,SELL,NET,revere_20260326.png,SELL NET TRIM FSLY ADD TO HEDGE SDS TUREO WOLOINGS: [I VER. FS. B+ TURBO RVAB/REBAR: (+ : //-2.49%) BUY AVS,NET,,,trusted,single_ticker_fragment
+GRO,2026-03-26,1,TRIM,FSLY,revere_20260326.png,SELL NET TRIM FSLY ADD TO HEDGE SDS TUREO WOLOINGS: [I VER. FS. B+ TURBO RVAB/REBAR: (+ : //-2.49%) BUY AVS,FSLY,,,trusted,single_ticker_fragment
+GRO,2026-03-27,1,ADD,HEDGE,revere_20260327.png,ADD TO HEDGE SDS. SELL FLSY 1UREO WAROIES: [ING TER FS,TO HEDGE SDS.,,,trusted,multi_ticker_fragment
+GRO,2026-03-27,1,ADD,SDS,revere_20260327.png,ADD TO HEDGE SDS. SELL FLSY 1UREO WAROIES: [ING TER FS,TO HEDGE SDS.,,,trusted,multi_ticker_fragment
+GRO,2026-03-27,1,SELL,AA,revere_20260327.png,ADD TO HEDGE SDS. SELL FLSY 1UREO WAROIES: [ING TER FS,FLSY 1UREO WAROIES: [ING TER FS,,,trusted,multi_ticker_fragment
+GRO,2026-03-27,1,SELL,FLSY,revere_20260327.png,ADD TO HEDGE SDS. SELL FLSY 1UREO WAROIES: [ING TER FS,FLSY 1UREO WAROIES: [ING TER FS,,,trusted,multi_ticker_fragment
+GRO,2026-03-27,1,SELL,FS,revere_20260327.png,ADD TO HEDGE SDS. SELL FLSY 1UREO WAROIES: [ING TER FS,FLSY 1UREO WAROIES: [ING TER FS,,,trusted,multi_ticker_fragment
+GRO,2026-03-27,1,SELL,ING,revere_20260327.png,ADD TO HEDGE SDS. SELL FLSY 1UREO WAROIES: [ING TER FS,FLSY 1UREO WAROIES: [ING TER FS,,,trusted,multi_ticker_fragment
+GRO,2026-03-27,1,SELL,IUREO,revere_20260327.png,ADD TO HEDGE SDS. SELL FLSY 1UREO WAROIES: [ING TER FS,FLSY 1UREO WAROIES: [ING TER FS,,,trusted,multi_ticker_fragment
+GRO,2026-03-27,1,SELL,ROIES,revere_20260327.png,ADD TO HEDGE SDS. SELL FLSY 1UREO WAROIES: [ING TER FS,FLSY 1UREO WAROIES: [ING TER FS,,,trusted,multi_ticker_fragment
+GRO,2026-03-27,1,SELL,TER,revere_20260327.png,ADD TO HEDGE SDS. SELL FLSY 1UREO WAROIES: [ING TER FS,FLSY 1UREO WAROIES: [ING TER FS,,,trusted,multi_ticker_fragment
+TURBO,2026-03-30,1,TRIM,FSLY,revere_20260330.png,TRIM 1ONZ R6TZ 572 JEN TRIM FSLY,FSLY,,,trusted,single_ticker_fragment
+TURBO,2026-03-30,1,TRIM,IONZ,revere_20260330.png,TRIM 1ONZ R6TZ 572 JEN TRIM FSLY,1ONZ R6TZ 572 JEN,,,trusted,multi_ticker_fragment
+TURBO,2026-03-30,1,TRIM,JEN,revere_20260330.png,TRIM 1ONZ R6TZ 572 JEN TRIM FSLY,1ONZ R6TZ 572 JEN,,,trusted,multi_ticker_fragment
+TURBO,2026-03-30,1,TRIM,RGTZ,revere_20260330.png,TRIM 1ONZ R6TZ 572 JEN TRIM FSLY,1ONZ R6TZ 572 JEN,,,trusted,multi_ticker_fragment
+TURBO,2026-03-30,1,TRIM,SE,revere_20260330.png,TRIM 1ONZ R6TZ 572 JEN TRIM FSLY,1ONZ R6TZ 572 JEN,,,trusted,multi_ticker_fragment
+GRO,2026-04-01,1,SELL,HEDGE,revere_20260401.png,SELL HEDGE SPXS,HEDGE SPXS,,,trusted,multi_ticker_fragment
+GRO,2026-04-01,1,SELL,SPXS,revere_20260401.png,SELL HEDGE SPXS,HEDGE SPXS,,,trusted,multi_ticker_fragment
+GRO,2026-04-06,1,SELL,SES,revere_20260406.png,SELL SOS YURSO WOLOWES: {VC SV,SOS YURSO WOLOWES: {VC SV,,,trusted,multi_ticker_fragment
+GRO,2026-04-06,1,SELL,SOS,revere_20260406.png,SELL SOS YURSO WOLOWES: {VC SV,SOS YURSO WOLOWES: {VC SV,,,trusted,multi_ticker_fragment
+GRO,2026-04-06,1,SELL,SV,revere_20260406.png,SELL SOS YURSO WOLOWES: {VC SV,SOS YURSO WOLOWES: {VC SV,,,trusted,multi_ticker_fragment
+GRO,2026-04-06,1,SELL,VC,revere_20260406.png,SELL SOS YURSO WOLOWES: {VC SV,SOS YURSO WOLOWES: {VC SV,,,trusted,multi_ticker_fragment
+GRO,2026-04-06,1,SELL,WOLF,revere_20260406.png,SELL SOS YURSO WOLOWES: {VC SV,SOS YURSO WOLOWES: {VC SV,,,trusted,multi_ticker_fragment
+GRO,2026-04-06,1,SELL,YURSO,revere_20260406.png,SELL SOS YURSO WOLOWES: {VC SV,SOS YURSO WOLOWES: {VC SV,,,trusted,multi_ticker_fragment
+TURBO,2026-04-06,1,SELL,SBIT,revere_20260406.png,SELL SBIT,SBIT,,,trusted,single_ticker_fragment
+TURBO,2026-04-07,1,BUY,ARM,revere_20260407.png,SELL AVS BUY ARM + GLW,ARM + GLW,,,trusted,multi_ticker_fragment
+TURBO,2026-04-07,1,BUY,GLW,revere_20260407.png,SELL AVS BUY ARM + GLW,ARM + GLW,,,trusted,multi_ticker_fragment
+TURBO,2026-04-07,1,SELL,AVS,revere_20260407.png,SELL AVS BUY ARM + GLW,AVS,,,trusted,single_ticker_fragment
+GRO,2026-04-08,1,BUY,DOCN,revere_20260408.png,"BUY DOCN LNG TRIM HEDGE SPXS TURE WOLOINES: SEV, ER <M. GL. TER FSLY. BWXT.50LS",DOCN LNG,,,trusted,multi_ticker_fragment
+GRO,2026-04-08,1,BUY,LNG,revere_20260408.png,"BUY DOCN LNG TRIM HEDGE SPXS TURE WOLOINES: SEV, ER <M. GL. TER FSLY. BWXT.50LS",DOCN LNG,,,trusted,multi_ticker_fragment
+GRO,2026-04-08,1,TRIM,BWXT,revere_20260408.png,"BUY DOCN LNG TRIM HEDGE SPXS TURE WOLOINES: SEV, ER <M. GL. TER FSLY. BWXT.50LS",ER <M. GL. TER FSLY. BWXT.50LS,,,trusted,multi_ticker_fragment
+GRO,2026-04-08,1,TRIM,ER,revere_20260408.png,"BUY DOCN LNG TRIM HEDGE SPXS TURE WOLOINES: SEV, ER <M. GL. TER FSLY. BWXT.50LS",ER <M. GL. TER FSLY. BWXT.50LS,,,trusted,multi_ticker_fragment
+GRO,2026-04-08,1,TRIM,FSLY,revere_20260408.png,"BUY DOCN LNG TRIM HEDGE SPXS TURE WOLOINES: SEV, ER <M. GL. TER FSLY. BWXT.50LS",ER <M. GL. TER FSLY. BWXT.50LS,,,trusted,multi_ticker_fragment
+GRO,2026-04-08,1,TRIM,GL,revere_20260408.png,"BUY DOCN LNG TRIM HEDGE SPXS TURE WOLOINES: SEV, ER <M. GL. TER FSLY. BWXT.50LS",ER <M. GL. TER FSLY. BWXT.50LS,,,trusted,multi_ticker_fragment
+GRO,2026-04-08,1,TRIM,HEDGE,revere_20260408.png,"BUY DOCN LNG TRIM HEDGE SPXS TURE WOLOINES: SEV, ER <M. GL. TER FSLY. BWXT.50LS",HEDGE SPXS TURE WOLOINES: SEV,,,trusted,multi_ticker_fragment
+GRO,2026-04-08,1,TRIM,INE,revere_20260408.png,"BUY DOCN LNG TRIM HEDGE SPXS TURE WOLOINES: SEV, ER <M. GL. TER FSLY. BWXT.50LS",HEDGE SPXS TURE WOLOINES: SEV,,,trusted,multi_ticker_fragment
+GRO,2026-04-08,1,TRIM,M,revere_20260408.png,"BUY DOCN LNG TRIM HEDGE SPXS TURE WOLOINES: SEV, ER <M. GL. TER FSLY. BWXT.50LS",ER <M. GL. TER FSLY. BWXT.50LS,,,trusted,multi_ticker_fragment
+GRO,2026-04-08,1,TRIM,SEV,revere_20260408.png,"BUY DOCN LNG TRIM HEDGE SPXS TURE WOLOINES: SEV, ER <M. GL. TER FSLY. BWXT.50LS",HEDGE SPXS TURE WOLOINES: SEV,,,trusted,multi_ticker_fragment
+GRO,2026-04-08,1,TRIM,SOLS,revere_20260408.png,"BUY DOCN LNG TRIM HEDGE SPXS TURE WOLOINES: SEV, ER <M. GL. TER FSLY. BWXT.50LS",ER <M. GL. TER FSLY. BWXT.50LS,,,trusted,multi_ticker_fragment
+GRO,2026-04-08,1,TRIM,SPXS,revere_20260408.png,"BUY DOCN LNG TRIM HEDGE SPXS TURE WOLOINES: SEV, ER <M. GL. TER FSLY. BWXT.50LS",HEDGE SPXS TURE WOLOINES: SEV,,,trusted,multi_ticker_fragment
+GRO,2026-04-08,1,TRIM,TER,revere_20260408.png,"BUY DOCN LNG TRIM HEDGE SPXS TURE WOLOINES: SEV, ER <M. GL. TER FSLY. BWXT.50LS",ER <M. GL. TER FSLY. BWXT.50LS,,,trusted,multi_ticker_fragment
+GRO,2026-04-08,1,TRIM,TURE,revere_20260408.png,"BUY DOCN LNG TRIM HEDGE SPXS TURE WOLOINES: SEV, ER <M. GL. TER FSLY. BWXT.50LS",HEDGE SPXS TURE WOLOINES: SEV,,,trusted,multi_ticker_fragment
+GRO,2026-04-08,1,TRIM,WOLF,revere_20260408.png,"BUY DOCN LNG TRIM HEDGE SPXS TURE WOLOINES: SEV, ER <M. GL. TER FSLY. BWXT.50LS",HEDGE SPXS TURE WOLOINES: SEV,,,trusted,multi_ticker_fragment
+TURBO,2026-04-08,1,BUY,BWXT,revere_20260408.png,BUY SPYM BWXTSOLS TRIM NVD,SPYM BWXTSOLS,,,trusted,multi_ticker_fragment
+TURBO,2026-04-08,1,BUY,SOLS,revere_20260408.png,BUY SPYM BWXTSOLS TRIM NVD,SPYM BWXTSOLS,,,trusted,multi_ticker_fragment
+TURBO,2026-04-08,1,BUY,SPYM,revere_20260408.png,BUY SPYM BWXTSOLS TRIM NVD,SPYM BWXTSOLS,,,trusted,multi_ticker_fragment
+TURBO,2026-04-08,1,TRIM,NVD,revere_20260408.png,BUY SPYM BWXTSOLS TRIM NVD,NVD,,,trusted,single_ticker_fragment
+GRO,2026-04-09,1,BUY,FSLY,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",FSLY,,,trusted,single_ticker_fragment
+GRO,2026-04-09,1,TRIM,BWA,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",BWA SOLS,,,trusted,multi_ticker_fragment
+GRO,2026-04-09,1,TRIM,CLOSE,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-09,1,TRIM,DOCN,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-09,1,TRIM,FL,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",TER FL,,,trusted,multi_ticker_fragment
+GRO,2026-04-09,1,TRIM,GLW,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",GLW,,,trusted,single_ticker_fragment
+GRO,2026-04-09,1,TRIM,HEDGE,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-09,1,TRIM,I,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-09,1,TRIM,LNG,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-09,1,TRIM,OOL,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-09,1,TRIM,RM,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-09,1,TRIM,SEV,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-09,1,TRIM,SNINI,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-09,1,TRIM,SOLS,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",BWA SOLS,,,trusted,multi_ticker_fragment
+GRO,2026-04-09,1,TRIM,SPXL,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-09,1,TRIM,TER,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",TER FL,,,trusted,multi_ticker_fragment
+GRO,2026-04-09,1,TRIM,TUNA,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-09,1,TRIM,URA,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-09,1,TRIM,WGN,revere_20260409.png,"BUY FSLY TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM, GLW, TER FL, BWA SOLS",DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM,,,trusted,multi_ticker_fragment
+TURBO,2026-04-09,1,ADD,ARM,revere_20260409.png,SELL NVD ADD TO SPYM ARM,TO SPYM ARM,,,trusted,multi_ticker_fragment
+TURBO,2026-04-09,1,ADD,SPYM,revere_20260409.png,SELL NVD ADD TO SPYM ARM,TO SPYM ARM,,,trusted,multi_ticker_fragment
+TURBO,2026-04-09,1,SELL,NVD,revere_20260409.png,SELL NVD ADD TO SPYM ARM,NVD,,,trusted,single_ticker_fragment
+GRO,2026-04-10,1,BUY,BWXT,revere_20260410.png,"SELL DOCN FSLY LNG BUY UFO LABU 1UREO HOLOINGS: SEYM, [ER ~M, LW, TER, BWXT SOLS",BWXT SOLS,,,trusted,multi_ticker_fragment
+GRO,2026-04-10,1,BUY,ER,revere_20260410.png,"SELL DOCN FSLY LNG BUY UFO LABU 1UREO HOLOINGS: SEYM, [ER ~M, LW, TER, BWXT SOLS",[ER ~M,,,trusted,multi_ticker_fragment
+GRO,2026-04-10,1,BUY,HALO,revere_20260410.png,"SELL DOCN FSLY LNG BUY UFO LABU 1UREO HOLOINGS: SEYM, [ER ~M, LW, TER, BWXT SOLS",UFO LABU 1UREO HOLOINGS: SEYM,,,trusted,multi_ticker_fragment
+GRO,2026-04-10,1,BUY,INGD,revere_20260410.png,"SELL DOCN FSLY LNG BUY UFO LABU 1UREO HOLOINGS: SEYM, [ER ~M, LW, TER, BWXT SOLS",UFO LABU 1UREO HOLOINGS: SEYM,,,trusted,multi_ticker_fragment
+GRO,2026-04-10,1,BUY,IUREO,revere_20260410.png,"SELL DOCN FSLY LNG BUY UFO LABU 1UREO HOLOINGS: SEYM, [ER ~M, LW, TER, BWXT SOLS",UFO LABU 1UREO HOLOINGS: SEYM,,,trusted,multi_ticker_fragment
+GRO,2026-04-10,1,BUY,LABU,revere_20260410.png,"SELL DOCN FSLY LNG BUY UFO LABU 1UREO HOLOINGS: SEYM, [ER ~M, LW, TER, BWXT SOLS",UFO LABU 1UREO HOLOINGS: SEYM,,,trusted,multi_ticker_fragment
+GRO,2026-04-10,1,BUY,LW,revere_20260410.png,"SELL DOCN FSLY LNG BUY UFO LABU 1UREO HOLOINGS: SEYM, [ER ~M, LW, TER, BWXT SOLS",LW,,,trusted,single_ticker_fragment
+GRO,2026-04-10,1,BUY,M,revere_20260410.png,"SELL DOCN FSLY LNG BUY UFO LABU 1UREO HOLOINGS: SEYM, [ER ~M, LW, TER, BWXT SOLS",[ER ~M,,,trusted,multi_ticker_fragment
+GRO,2026-04-10,1,BUY,SEYM,revere_20260410.png,"SELL DOCN FSLY LNG BUY UFO LABU 1UREO HOLOINGS: SEYM, [ER ~M, LW, TER, BWXT SOLS",UFO LABU 1UREO HOLOINGS: SEYM,,,trusted,multi_ticker_fragment
+GRO,2026-04-10,1,BUY,SOLS,revere_20260410.png,"SELL DOCN FSLY LNG BUY UFO LABU 1UREO HOLOINGS: SEYM, [ER ~M, LW, TER, BWXT SOLS",BWXT SOLS,,,trusted,multi_ticker_fragment
+GRO,2026-04-10,1,BUY,TER,revere_20260410.png,"SELL DOCN FSLY LNG BUY UFO LABU 1UREO HOLOINGS: SEYM, [ER ~M, LW, TER, BWXT SOLS",TER,,,trusted,single_ticker_fragment
+GRO,2026-04-10,1,BUY,UFO,revere_20260410.png,"SELL DOCN FSLY LNG BUY UFO LABU 1UREO HOLOINGS: SEYM, [ER ~M, LW, TER, BWXT SOLS",UFO LABU 1UREO HOLOINGS: SEYM,,,trusted,multi_ticker_fragment
+GRO,2026-04-10,1,SELL,DOCN,revere_20260410.png,"SELL DOCN FSLY LNG BUY UFO LABU 1UREO HOLOINGS: SEYM, [ER ~M, LW, TER, BWXT SOLS",DOCN FSLY LNG,,,trusted,multi_ticker_fragment
+GRO,2026-04-10,1,SELL,FSLY,revere_20260410.png,"SELL DOCN FSLY LNG BUY UFO LABU 1UREO HOLOINGS: SEYM, [ER ~M, LW, TER, BWXT SOLS",DOCN FSLY LNG,,,trusted,multi_ticker_fragment
+GRO,2026-04-10,1,SELL,LNG,revere_20260410.png,"SELL DOCN FSLY LNG BUY UFO LABU 1UREO HOLOINGS: SEYM, [ER ~M, LW, TER, BWXT SOLS",DOCN FSLY LNG,,,trusted,multi_ticker_fragment
+TURBO,2026-04-10,1,SELL,FSLY,revere_20260410.png,SELL FSLY,FSLY,,,trusted,single_ticker_fragment
+GRO,2026-04-13,1,ADD,UPRO,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",TO UPRO,,,trusted,single_ticker_fragment
+GRO,2026-04-13,1,BUY,ASTS,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",GLW. TER BWXT SOLS ASTS LUNR,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,BWXT,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",GLW. TER BWXT SOLS ASTS LUNR,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,CAT,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,CAVA,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,DELL,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",DELL,,,trusted,single_ticker_fragment
+GRO,2026-04-13,1,BUY,GLW,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",GLW. TER BWXT SOLS ASTS LUNR,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,IURBO,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,JIE,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,LABU,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",LABU,,,trusted,single_ticker_fragment
+GRO,2026-04-13,1,BUY,LUNR,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",GLW. TER BWXT SOLS ASTS LUNR,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,MU,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,ONDS,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,RKLS,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",RKLS,,,trusted,single_ticker_fragment
+GRO,2026-04-13,1,BUY,RM,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,SEV,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,SOLS,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",GLW. TER BWXT SOLS ASTS LUNR,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,TER,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",GLW. TER BWXT SOLS ASTS LUNR,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,TOL,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,TPR,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,UPRO,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,BUY,URA,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM,,,trusted,multi_ticker_fragment
+GRO,2026-04-13,1,SELL,ORCS,revere_20260413.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",ORCS,,,trusted,single_ticker_fragment
+TURBO,2026-04-13,1,BUY,ASTS,revere_20260413.png,BUY ASTS LUNR RKLB LABU DELL SELL RGTZ,ASTS LUNR RKLB LABU DELL,,,trusted,multi_ticker_fragment
+TURBO,2026-04-13,1,BUY,DELL,revere_20260413.png,BUY ASTS LUNR RKLB LABU DELL SELL RGTZ,ASTS LUNR RKLB LABU DELL,,,trusted,multi_ticker_fragment
+TURBO,2026-04-13,1,BUY,LABU,revere_20260413.png,BUY ASTS LUNR RKLB LABU DELL SELL RGTZ,ASTS LUNR RKLB LABU DELL,,,trusted,multi_ticker_fragment
+TURBO,2026-04-13,1,BUY,LUNR,revere_20260413.png,BUY ASTS LUNR RKLB LABU DELL SELL RGTZ,ASTS LUNR RKLB LABU DELL,,,trusted,multi_ticker_fragment
+TURBO,2026-04-13,1,BUY,RKLB,revere_20260413.png,BUY ASTS LUNR RKLB LABU DELL SELL RGTZ,ASTS LUNR RKLB LABU DELL,,,trusted,multi_ticker_fragment
+TURBO,2026-04-13,1,SELL,RGTZ,revere_20260413.png,BUY ASTS LUNR RKLB LABU DELL SELL RGTZ,RGTZ,,,trusted,single_ticker_fragment
+GRO,2026-04-14,1,ADD,CAVA,revere_20260414.png,ADD TO CAVA BUY PL LITE CEN,TO CAVA,,,trusted,single_ticker_fragment
+GRO,2026-04-14,1,BUY,CEN,revere_20260414.png,ADD TO CAVA BUY PL LITE CEN,PL LITE CEN,,,trusted,multi_ticker_fragment
+GRO,2026-04-14,1,BUY,LITE,revere_20260414.png,ADD TO CAVA BUY PL LITE CEN,PL LITE CEN,,,trusted,multi_ticker_fragment
+GRO,2026-04-14,1,BUY,PL,revere_20260414.png,ADD TO CAVA BUY PL LITE CEN,PL LITE CEN,,,trusted,multi_ticker_fragment
+TURBO,2026-04-14,1,ADD,AKLE,revere_20260414.png,BUY BE ADD TO GLW AKLE SELL ASTS QBTZ IONZ,TO GLW AKLE,,,trusted,multi_ticker_fragment
+TURBO,2026-04-14,1,ADD,GLW,revere_20260414.png,BUY BE ADD TO GLW AKLE SELL ASTS QBTZ IONZ,TO GLW AKLE,,,trusted,multi_ticker_fragment
+TURBO,2026-04-14,1,BUY,BE,revere_20260414.png,BUY BE ADD TO GLW AKLE SELL ASTS QBTZ IONZ,BE,,,trusted,single_ticker_fragment
+TURBO,2026-04-14,1,SELL,ASTS,revere_20260414.png,BUY BE ADD TO GLW AKLE SELL ASTS QBTZ IONZ,ASTS QBTZ IONZ,,,trusted,multi_ticker_fragment
+TURBO,2026-04-14,1,SELL,IONZ,revere_20260414.png,BUY BE ADD TO GLW AKLE SELL ASTS QBTZ IONZ,ASTS QBTZ IONZ,,,trusted,multi_ticker_fragment
+TURBO,2026-04-14,1,SELL,QBTZ,revere_20260414.png,BUY BE ADD TO GLW AKLE SELL ASTS QBTZ IONZ,ASTS QBTZ IONZ,,,trusted,multi_ticker_fragment
+GRO,2026-04-15,1,BUY,DRAM,revere_20260415.png,BUY DRAM TER GLW,DRAM TER GLW,,,trusted,multi_ticker_fragment
+GRO,2026-04-15,1,BUY,GLW,revere_20260415.png,BUY DRAM TER GLW,DRAM TER GLW,,,trusted,multi_ticker_fragment
+GRO,2026-04-15,1,BUY,TER,revere_20260415.png,BUY DRAM TER GLW,DRAM TER GLW,,,trusted,multi_ticker_fragment
+TURBO,2026-04-15,1,BUY,CC,revere_20260415.png,BUY SATS CC) IL *,SATS CC) IL *,,,trusted,multi_ticker_fragment
+TURBO,2026-04-15,1,BUY,IL,revere_20260415.png,BUY SATS CC) IL *,SATS CC) IL *,,,trusted,multi_ticker_fragment
+TURBO,2026-04-15,1,BUY,SATS,revere_20260415.png,BUY SATS CC) IL *,SATS CC) IL *,,,trusted,multi_ticker_fragment
+TURBO,2026-04-16,1,ADD,ARM,revere_20260416.png,BUY AMPX PL ADD TO ARM BOTFOM UNE: + .,TO ARM BOTFOM UNE: + .,,,trusted,multi_ticker_fragment
+TURBO,2026-04-16,1,ADD,BIT,revere_20260416.png,BUY AMPX PL ADD TO ARM BOTFOM UNE: + .,TO ARM BOTFOM UNE: + .,,,trusted,multi_ticker_fragment
+TURBO,2026-04-16,1,ADD,FOX,revere_20260416.png,BUY AMPX PL ADD TO ARM BOTFOM UNE: + .,TO ARM BOTFOM UNE: + .,,,trusted,multi_ticker_fragment
+TURBO,2026-04-16,1,ADD,UNE,revere_20260416.png,BUY AMPX PL ADD TO ARM BOTFOM UNE: + .,TO ARM BOTFOM UNE: + .,,,trusted,multi_ticker_fragment
+TURBO,2026-04-16,1,BUY,AMPX,revere_20260416.png,BUY AMPX PL ADD TO ARM BOTFOM UNE: + .,AMPX PL,,,trusted,multi_ticker_fragment
+TURBO,2026-04-16,1,BUY,PL,revere_20260416.png,BUY AMPX PL ADD TO ARM BOTFOM UNE: + .,AMPX PL,,,trusted,multi_ticker_fragment
+GRO,2026-04-17,1,BUY,CADO,revere_20260417.png,BUY WUGT CADO,WUGT CADO,,,trusted,multi_ticker_fragment
+GRO,2026-04-17,1,BUY,WUGT,revere_20260417.png,BUY WUGT CADO,WUGT CADO,,,trusted,multi_ticker_fragment
+TURBO,2026-04-17,1,BUY,BITX,revere_20260417.png,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,,,trusted,multi_ticker_fragment
+TURBO,2026-04-17,1,BUY,CC,revere_20260417.png,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,,,trusted,multi_ticker_fragment
+TURBO,2026-04-17,1,BUY,ETHA,revere_20260417.png,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,,,trusted,multi_ticker_fragment
+TURBO,2026-04-17,1,BUY,FRO,revere_20260417.png,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,,,trusted,multi_ticker_fragment
+TURBO,2026-04-17,1,BUY,I,revere_20260417.png,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,,,trusted,multi_ticker_fragment
+TURBO,2026-04-17,1,BUY,MU,revere_20260417.png,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,,,trusted,multi_ticker_fragment
+TURBO,2026-04-17,1,BUY,NE,revere_20260417.png,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,,,trusted,multi_ticker_fragment
+TURBO,2026-04-17,1,BUY,O,revere_20260417.png,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,,,trusted,multi_ticker_fragment
+TURBO,2026-04-17,1,BUY,OT,revere_20260417.png,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,,,trusted,multi_ticker_fragment
+TURBO,2026-04-17,1,BUY,TALS,revere_20260417.png,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,,,trusted,multi_ticker_fragment
+GRO,2026-04-20,1,ADD,GLW,revere_20260420.png,ADD TA GLW.,TA GLW.,,,trusted,multi_ticker_fragment
+GRO,2026-04-20,1,ADD,TA,revere_20260420.png,ADD TA GLW.,TA GLW.,,,trusted,multi_ticker_fragment
+TURBO,2026-04-20,1,BUY,BEBE,revere_20260420.png,"BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE, LEA DESTE 015I",NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE,,,trusted,multi_ticker_fragment
+TURBO,2026-04-20,1,BUY,DESTE,revere_20260420.png,"BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE, LEA DESTE 015I",LEA DESTE 015I,,,trusted,multi_ticker_fragment
+TURBO,2026-04-20,1,BUY,HS,revere_20260420.png,"BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE, LEA DESTE 015I",NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE,,,trusted,multi_ticker_fragment
+TURBO,2026-04-20,1,BUY,I,revere_20260420.png,"BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE, LEA DESTE 015I",NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE,,,trusted,multi_ticker_fragment
+TURBO,2026-04-20,1,BUY,IO,revere_20260420.png,"BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE, LEA DESTE 015I",NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE,,,trusted,multi_ticker_fragment
+TURBO,2026-04-20,1,BUY,LEA,revere_20260420.png,"BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE, LEA DESTE 015I",LEA DESTE 015I,,,trusted,multi_ticker_fragment
+TURBO,2026-04-20,1,BUY,NBIS,revere_20260420.png,"BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE, LEA DESTE 015I",NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE,,,trusted,multi_ticker_fragment
+TURBO,2026-04-20,1,BUY,OISI,revere_20260420.png,"BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE, LEA DESTE 015I",LEA DESTE 015I,,,trusted,multi_ticker_fragment
+TURBO,2026-04-20,1,BUY,OOL,revere_20260420.png,"BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE, LEA DESTE 015I",NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE,,,trusted,multi_ticker_fragment
+TURBO,2026-04-20,1,BUY,SE,revere_20260420.png,"BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE, LEA DESTE 015I",NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE,,,trusted,multi_ticker_fragment
+TURBO,2026-04-20,1,BUY,SPOT,revere_20260420.png,"BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE, LEA DESTE 015I",NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE,,,trusted,multi_ticker_fragment
+TURBO,2026-04-20,1,BUY,THIE,revere_20260420.png,"BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE, LEA DESTE 015I",NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE,,,trusted,multi_ticker_fragment
+TURBO,2026-04-20,1,BUY,TOL,revere_20260420.png,"BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE, LEA DESTE 015I",NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE,,,trusted,multi_ticker_fragment
+TURBO,2026-04-20,1,BUY,UNE,revere_20260420.png,"BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE, LEA DESTE 015I",NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE,,,trusted,multi_ticker_fragment
+GRO,2026-04-21,1,ADD,UPRO,revere_20260421.png,ADD TO UPRO SELL NUGT,TO UPRO,,,trusted,single_ticker_fragment
+GRO,2026-04-21,1,SELL,NUGT,revere_20260421.png,ADD TO UPRO SELL NUGT,NUGT,,,trusted,single_ticker_fragment
+TURBO,2026-04-21,1,BUY,MU,revere_20260421.png,"BUY UPRD + MU SELL BITX, ETHA BWXT, SATS, FRO, £CJ",UPRD + MU,,,trusted,multi_ticker_fragment
+TURBO,2026-04-21,1,BUY,UPRD,revere_20260421.png,"BUY UPRD + MU SELL BITX, ETHA BWXT, SATS, FRO, £CJ",UPRD + MU,,,trusted,multi_ticker_fragment
+TURBO,2026-04-21,1,SELL,BITX,revere_20260421.png,"BUY UPRD + MU SELL BITX, ETHA BWXT, SATS, FRO, £CJ",BITX,,,trusted,single_ticker_fragment
+TURBO,2026-04-21,1,SELL,BWXT,revere_20260421.png,"BUY UPRD + MU SELL BITX, ETHA BWXT, SATS, FRO, £CJ",ETHA BWXT,,,trusted,multi_ticker_fragment
+TURBO,2026-04-21,1,SELL,CJ,revere_20260421.png,"BUY UPRD + MU SELL BITX, ETHA BWXT, SATS, FRO, £CJ",£CJ,,,trusted,single_ticker_fragment
+TURBO,2026-04-21,1,SELL,ETHA,revere_20260421.png,"BUY UPRD + MU SELL BITX, ETHA BWXT, SATS, FRO, £CJ",ETHA BWXT,,,trusted,multi_ticker_fragment
+TURBO,2026-04-21,1,SELL,FRO,revere_20260421.png,"BUY UPRD + MU SELL BITX, ETHA BWXT, SATS, FRO, £CJ",FRO,,,trusted,single_ticker_fragment
+TURBO,2026-04-21,1,SELL,SATS,revere_20260421.png,"BUY UPRD + MU SELL BITX, ETHA BWXT, SATS, FRO, £CJ",SATS,,,trusted,single_ticker_fragment
+GRO,2026-04-22,1,BUY,TNA,revere_20260422.png,BUY TNA SELL TPR,TNA,,,trusted,single_ticker_fragment
+GRO,2026-04-22,1,SELL,TPR,revere_20260422.png,BUY TNA SELL TPR,TPR,,,trusted,single_ticker_fragment
+TURBO,2026-04-22,1,ADD,MU,revere_20260422.png,BUY CIFR ADD TO MU,TO MU,,,trusted,single_ticker_fragment
+TURBO,2026-04-22,1,BUY,CIFR,revere_20260422.png,BUY CIFR ADD TO MU,CIFR,,,trusted,single_ticker_fragment
+GRO,2026-04-23,1,ADD,TNA,revere_20260423.png,BUY NBISEWZ ~~ ADD TOCRDOTNA SELL LABU,TOCRDOTNA,,,trusted,multi_ticker_fragment
+GRO,2026-04-23,1,ADD,TOCRD,revere_20260423.png,BUY NBISEWZ ~~ ADD TOCRDOTNA SELL LABU,TOCRDOTNA,,,trusted,multi_ticker_fragment
+GRO,2026-04-23,1,BUY,EWZ,revere_20260423.png,BUY NBISEWZ ~~ ADD TOCRDOTNA SELL LABU,NBISEWZ ~~,,,trusted,multi_ticker_fragment
+GRO,2026-04-23,1,BUY,NBIS,revere_20260423.png,BUY NBISEWZ ~~ ADD TOCRDOTNA SELL LABU,NBISEWZ ~~,,,trusted,multi_ticker_fragment
+GRO,2026-04-23,1,SELL,LABU,revere_20260423.png,BUY NBISEWZ ~~ ADD TOCRDOTNA SELL LABU,LABU,,,trusted,single_ticker_fragment
+TURBO,2026-04-23,1,BUY,APLD,revere_20260423.png,BUY IREN APLD,IREN APLD,,,trusted,multi_ticker_fragment
+TURBO,2026-04-23,1,BUY,IREN,revere_20260423.png,BUY IREN APLD,IREN APLD,,,trusted,multi_ticker_fragment
+GRO,2026-04-24,1,SELL,UFO,revere_20260424.png,SELL UFO TRIM PL,UFO,,,trusted,single_ticker_fragment
+GRO,2026-04-24,1,TRIM,PL,revere_20260424.png,SELL UFO TRIM PL,PL,,,trusted,single_ticker_fragment
+TURBO,2026-04-24,1,SELL,NBIS,revere_20260424.png,TRIM ARM SELL NBIS,NBIS,,,trusted,single_ticker_fragment
+TURBO,2026-04-24,1,TRIM,ARM,revere_20260424.png,TRIM ARM SELL NBIS,ARM,,,trusted,single_ticker_fragment
+GRO,2026-04-27,1,ADD,WGMI,revere_20260427.png,TRIM NBIS PL GLW ADD TO WGMI BUY CC),TO WGMI,,,trusted,single_ticker_fragment
+GRO,2026-04-27,1,BUY,CC,revere_20260427.png,TRIM NBIS PL GLW ADD TO WGMI BUY CC),CC),,,trusted,single_ticker_fragment
+GRO,2026-04-27,1,TRIM,GLW,revere_20260427.png,TRIM NBIS PL GLW ADD TO WGMI BUY CC),NBIS PL GLW,,,trusted,multi_ticker_fragment
+GRO,2026-04-27,1,TRIM,NBIS,revere_20260427.png,TRIM NBIS PL GLW ADD TO WGMI BUY CC),NBIS PL GLW,,,trusted,multi_ticker_fragment
+GRO,2026-04-27,1,TRIM,PL,revere_20260427.png,TRIM NBIS PL GLW ADD TO WGMI BUY CC),NBIS PL GLW,,,trusted,multi_ticker_fragment
+TURBO,2026-04-27,1,BUY,ONDS,revere_20260427.png,SELL APLD PL TRIM GLW BUY ONDS REMX,ONDS REMX,,,trusted,multi_ticker_fragment
+TURBO,2026-04-27,1,BUY,REMX,revere_20260427.png,SELL APLD PL TRIM GLW BUY ONDS REMX,ONDS REMX,,,trusted,multi_ticker_fragment
+TURBO,2026-04-27,1,SELL,APLD,revere_20260427.png,SELL APLD PL TRIM GLW BUY ONDS REMX,APLD PL,,,trusted,multi_ticker_fragment
+TURBO,2026-04-27,1,SELL,PL,revere_20260427.png,SELL APLD PL TRIM GLW BUY ONDS REMX,APLD PL,,,trusted,multi_ticker_fragment
+TURBO,2026-04-27,1,TRIM,GLW,revere_20260427.png,SELL APLD PL TRIM GLW BUY ONDS REMX,GLW,,,trusted,single_ticker_fragment
+GRO,2026-04-28,1,BUY,NVDA,revere_20260428.png,SELL NEIS LITE BUY NVDA,NVDA,,,trusted,single_ticker_fragment
+GRO,2026-04-28,1,SELL,LITE,revere_20260428.png,SELL NEIS LITE BUY NVDA,NEIS LITE,,,trusted,multi_ticker_fragment
+GRO,2026-04-28,1,SELL,NEIS,revere_20260428.png,SELL NEIS LITE BUY NVDA,NEIS LITE,,,trusted,multi_ticker_fragment
+TURBO,2026-04-28,1,SELL,CIFR,revere_20260428.png,SELL CIFR IREN LABY SOLS.,CIFR IREN LABY SOLS.,,,trusted,multi_ticker_fragment
+TURBO,2026-04-28,1,SELL,IREN,revere_20260428.png,SELL CIFR IREN LABY SOLS.,CIFR IREN LABY SOLS.,,,trusted,multi_ticker_fragment
+TURBO,2026-04-28,1,SELL,LABY,revere_20260428.png,SELL CIFR IREN LABY SOLS.,CIFR IREN LABY SOLS.,,,trusted,multi_ticker_fragment
+TURBO,2026-04-28,1,SELL,SOLS,revere_20260428.png,SELL CIFR IREN LABY SOLS.,CIFR IREN LABY SOLS.,,,trusted,multi_ticker_fragment
+GRO,2026-04-29,1,SELL,AE,revere_20260429.png,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,,,trusted,multi_ticker_fragment
+GRO,2026-04-29,1,SELL,AL,revere_20260429.png,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,,,trusted,multi_ticker_fragment
+GRO,2026-04-29,1,SELL,APS,revere_20260429.png,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,,,trusted,multi_ticker_fragment
+GRO,2026-04-29,1,SELL,ATV,revere_20260429.png,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,,,trusted,multi_ticker_fragment
+GRO,2026-04-29,1,SELL,CW,revere_20260429.png,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,,,trusted,multi_ticker_fragment
+GRO,2026-04-29,1,SELL,HOOD,revere_20260429.png,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,,,trusted,multi_ticker_fragment
+GRO,2026-04-29,1,SELL,INGD,revere_20260429.png,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,,,trusted,multi_ticker_fragment
+GRO,2026-04-29,1,SELL,LL,revere_20260429.png,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,,,trusted,multi_ticker_fragment
+GRO,2026-04-29,1,SELL,MI,revere_20260429.png,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,,,trusted,multi_ticker_fragment
+GRO,2026-04-29,1,SELL,SE,revere_20260429.png,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,,,trusted,multi_ticker_fragment
+GRO,2026-04-29,1,SELL,SERV,revere_20260429.png,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,,,trusted,multi_ticker_fragment
+GRO,2026-04-29,1,SELL,TERPL,revere_20260429.png,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS,,,trusted,multi_ticker_fragment
+TURBO,2026-04-29,1,SELL,LUNR,revere_20260429.png,SELL LUNR ONDS TER,LUNR ONDS TER,,,trusted,multi_ticker_fragment
+TURBO,2026-04-29,1,SELL,ONDS,revere_20260429.png,SELL LUNR ONDS TER,LUNR ONDS TER,,,trusted,multi_ticker_fragment
+TURBO,2026-04-29,1,SELL,TER,revere_20260429.png,SELL LUNR ONDS TER,LUNR ONDS TER,,,trusted,multi_ticker_fragment
+GRO,2026-04-30,1,ADD,TNA,revere_20260430.png,BUY SBUX BE ADD TO TNA,TO TNA,,,trusted,single_ticker_fragment
+GRO,2026-04-30,1,BUY,BE,revere_20260430.png,BUY SBUX BE ADD TO TNA,SBUX BE,,,trusted,multi_ticker_fragment
+GRO,2026-04-30,1,BUY,SBUX,revere_20260430.png,BUY SBUX BE ADD TO TNA,SBUX BE,,,trusted,multi_ticker_fragment
+TURBO,2026-04-30,1,ADD,AMPX,revere_20260430.png,BUY TNA AEHR ADD TO AMPX UPRO REMX,TO AMPX UPRO REMX,,,trusted,multi_ticker_fragment
+TURBO,2026-04-30,1,ADD,REMX,revere_20260430.png,BUY TNA AEHR ADD TO AMPX UPRO REMX,TO AMPX UPRO REMX,,,trusted,multi_ticker_fragment
+TURBO,2026-04-30,1,ADD,UPRO,revere_20260430.png,BUY TNA AEHR ADD TO AMPX UPRO REMX,TO AMPX UPRO REMX,,,trusted,multi_ticker_fragment
+TURBO,2026-04-30,1,BUY,AEHR,revere_20260430.png,BUY TNA AEHR ADD TO AMPX UPRO REMX,TNA AEHR,,,trusted,multi_ticker_fragment
+TURBO,2026-04-30,1,BUY,TNA,revere_20260430.png,BUY TNA AEHR ADD TO AMPX UPRO REMX,TNA AEHR,,,trusted,multi_ticker_fragment
+TURBO,2026-05-01,1,ADD,GLW,revere_20260501.png,ADD TO GLW TNA,TO GLW TNA,,,trusted,multi_ticker_fragment
+TURBO,2026-05-01,1,ADD,TNA,revere_20260501.png,ADD TO GLW TNA,TO GLW TNA,,,trusted,multi_ticker_fragment
+GRO,2026-05-04,1,ADD,CLS,revere_20260504.png,ADD 10 CLS O-TRIM MU TRIM NVDA EWZ,10 CLS O-,,,trusted,multi_ticker_fragment
+GRO,2026-05-04,1,ADD,IO,revere_20260504.png,ADD 10 CLS O-TRIM MU TRIM NVDA EWZ,10 CLS O-,,,trusted,multi_ticker_fragment
+GRO,2026-05-04,1,ADD,O,revere_20260504.png,ADD 10 CLS O-TRIM MU TRIM NVDA EWZ,10 CLS O-,,,trusted,multi_ticker_fragment
+GRO,2026-05-04,1,TRIM,EWZ,revere_20260504.png,ADD 10 CLS O-TRIM MU TRIM NVDA EWZ,NVDA EWZ,,,trusted,multi_ticker_fragment
+GRO,2026-05-04,1,TRIM,MU,revere_20260504.png,ADD 10 CLS O-TRIM MU TRIM NVDA EWZ,MU,,,trusted,single_ticker_fragment
+GRO,2026-05-04,1,TRIM,NVDA,revere_20260504.png,ADD 10 CLS O-TRIM MU TRIM NVDA EWZ,NVDA EWZ,,,trusted,multi_ticker_fragment
+TURBO,2026-05-04,1,BUY,BIT,revere_20260504.png,BUY UUUU URA BOTYOM LINE:,UUUU URA BOTYOM LINE:,,,trusted,multi_ticker_fragment
+TURBO,2026-05-04,1,BUY,URA,revere_20260504.png,BUY UUUU URA BOTYOM LINE:,UUUU URA BOTYOM LINE:,,,trusted,multi_ticker_fragment
+TURBO,2026-05-04,1,BUY,UUUU,revere_20260504.png,BUY UUUU URA BOTYOM LINE:,UUUU URA BOTYOM LINE:,,,trusted,multi_ticker_fragment
+TURBO,2026-05-04,1,BUY,WOM,revere_20260504.png,BUY UUUU URA BOTYOM LINE:,UUUU URA BOTYOM LINE:,,,trusted,multi_ticker_fragment
+GRO,2026-05-05,1,ADD,CCJO,revere_20260505.png,ADD TO CCJO-TRIM MU + DRAM,TO CCJO-,,,trusted,single_ticker_fragment
+GRO,2026-05-05,1,TRIM,DRAM,revere_20260505.png,ADD TO CCJO-TRIM MU + DRAM,MU + DRAM,,,trusted,multi_ticker_fragment
+GRO,2026-05-05,1,TRIM,MU,revere_20260505.png,ADD TO CCJO-TRIM MU + DRAM,MU + DRAM,,,trusted,multi_ticker_fragment
+TURBO,2026-05-05,1,BUY,CIFR,revere_20260505.png,BUY CRCL + CIFR SELL UUUU O-TRIM MU,CRCL + CIFR,,,trusted,multi_ticker_fragment
+TURBO,2026-05-05,1,BUY,CRCL,revere_20260505.png,BUY CRCL + CIFR SELL UUUU O-TRIM MU,CRCL + CIFR,,,trusted,multi_ticker_fragment
+TURBO,2026-05-05,1,SELL,O,revere_20260505.png,BUY CRCL + CIFR SELL UUUU O-TRIM MU,UUUU O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-05,1,SELL,UUUU,revere_20260505.png,BUY CRCL + CIFR SELL UUUU O-TRIM MU,UUUU O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-05,1,TRIM,MU,revere_20260505.png,BUY CRCL + CIFR SELL UUUU O-TRIM MU,MU,,,trusted,single_ticker_fragment
+GRO,2026-05-06,1,ADD,GLW,revere_20260506.png,ADD TO GLW BUY AEHR,TO GLW,,,trusted,single_ticker_fragment
+GRO,2026-05-06,1,BUY,AEHR,revere_20260506.png,ADD TO GLW BUY AEHR,AEHR,,,trusted,single_ticker_fragment
+TURBO,2026-05-06,1,ADD,CRCL,revere_20260506.png,BUY SOXS MP ADD TO CRCL,TO CRCL,,,trusted,single_ticker_fragment
+TURBO,2026-05-06,1,BUY,MP,revere_20260506.png,BUY SOXS MP ADD TO CRCL,SOXS MP,,,trusted,multi_ticker_fragment
+TURBO,2026-05-06,1,BUY,SOXS,revere_20260506.png,BUY SOXS MP ADD TO CRCL,SOXS MP,,,trusted,multi_ticker_fragment
+TURBO,2026-05-07,1,SELL,AMPX,revere_20260507.png,SELL AMPX RKLB CRCL MP O-TRIM ARM,AMPX RKLB CRCL MP O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-07,1,SELL,CRCL,revere_20260507.png,SELL AMPX RKLB CRCL MP O-TRIM ARM,AMPX RKLB CRCL MP O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-07,1,SELL,MP,revere_20260507.png,SELL AMPX RKLB CRCL MP O-TRIM ARM,AMPX RKLB CRCL MP O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-07,1,SELL,O,revere_20260507.png,SELL AMPX RKLB CRCL MP O-TRIM ARM,AMPX RKLB CRCL MP O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-07,1,SELL,RKLB,revere_20260507.png,SELL AMPX RKLB CRCL MP O-TRIM ARM,AMPX RKLB CRCL MP O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-07,1,TRIM,ARM,revere_20260507.png,SELL AMPX RKLB CRCL MP O-TRIM ARM,ARM,,,trusted,single_ticker_fragment
+TURBO,2026-05-08,1,ADD,AEHR,revere_20260508.png,ADD TO AEHR BUY AKAM O-TRIM DELL,TO AEHR,,,trusted,single_ticker_fragment
+TURBO,2026-05-08,1,BUY,AKAM,revere_20260508.png,ADD TO AEHR BUY AKAM O-TRIM DELL,AKAM O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-08,1,BUY,O,revere_20260508.png,ADD TO AEHR BUY AKAM O-TRIM DELL,AKAM O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-08,1,TRIM,DELL,revere_20260508.png,ADD TO AEHR BUY AKAM O-TRIM DELL,DELL,,,trusted,single_ticker_fragment
+GRO,2026-05-11,1,SELL,MU,revere_20260511.png,SELL MU,MU,,,trusted,single_ticker_fragment
+TURBO,2026-05-11,1,ADD,CIFR,revere_20260511.png,SELL SOXS BUY LABU CRCL SCCO ADD TO CIFR,TO CIFR,,,trusted,single_ticker_fragment
+TURBO,2026-05-11,1,BUY,CRCL,revere_20260511.png,SELL SOXS BUY LABU CRCL SCCO ADD TO CIFR,LABU CRCL SCCO,,,trusted,multi_ticker_fragment
+TURBO,2026-05-11,1,BUY,LABU,revere_20260511.png,SELL SOXS BUY LABU CRCL SCCO ADD TO CIFR,LABU CRCL SCCO,,,trusted,multi_ticker_fragment
+TURBO,2026-05-11,1,BUY,SCCO,revere_20260511.png,SELL SOXS BUY LABU CRCL SCCO ADD TO CIFR,LABU CRCL SCCO,,,trusted,multi_ticker_fragment
+TURBO,2026-05-11,1,SELL,SOXS,revere_20260511.png,SELL SOXS BUY LABU CRCL SCCO ADD TO CIFR,SOXS,,,trusted,single_ticker_fragment
+TURBO,2026-05-12,1,ADD,SCCO,revere_20260512.png,ADD TO SCCO TRIM CIFR SELL URA,TO SCCO,,,trusted,single_ticker_fragment
+TURBO,2026-05-12,1,SELL,URA,revere_20260512.png,ADD TO SCCO TRIM CIFR SELL URA,URA,,,trusted,single_ticker_fragment
+TURBO,2026-05-12,1,TRIM,CIFR,revere_20260512.png,ADD TO SCCO TRIM CIFR SELL URA,CIFR,,,trusted,single_ticker_fragment
+GRO,2026-05-13,1,ADD,CRDO,revere_20260513.png,SELL CCJ TRIM TNA ADD TO TWLO + CRDO BUY MRVL,TO TWLO + CRDO,,,trusted,multi_ticker_fragment
+GRO,2026-05-13,1,ADD,TWLO,revere_20260513.png,SELL CCJ TRIM TNA ADD TO TWLO + CRDO BUY MRVL,TO TWLO + CRDO,,,trusted,multi_ticker_fragment
+GRO,2026-05-13,1,BUY,MRVL,revere_20260513.png,SELL CCJ TRIM TNA ADD TO TWLO + CRDO BUY MRVL,MRVL,,,trusted,single_ticker_fragment
+GRO,2026-05-13,1,SELL,CCJ,revere_20260513.png,SELL CCJ TRIM TNA ADD TO TWLO + CRDO BUY MRVL,CCJ,,,trusted,single_ticker_fragment
+GRO,2026-05-13,1,TRIM,TNA,revere_20260513.png,SELL CCJ TRIM TNA ADD TO TWLO + CRDO BUY MRVL,TNA,,,trusted,single_ticker_fragment
+TURBO,2026-05-13,1,BUY,AAO,revere_20260513.png,BUY AAO! + NXT,AAO! + NXT,,,trusted,multi_ticker_fragment
+TURBO,2026-05-13,1,BUY,NXT,revere_20260513.png,BUY AAO! + NXT,AAO! + NXT,,,trusted,multi_ticker_fragment
+GRO,2026-05-14,1,BUY,DDOG,revere_20260514.png,BUY DOCN DDOG,DOCN DDOG,,,trusted,multi_ticker_fragment
+GRO,2026-05-14,1,BUY,DOCN,revere_20260514.png,BUY DOCN DDOG,DOCN DDOG,,,trusted,multi_ticker_fragment
+TURBO,2026-05-14,1,SELL,NXT,revere_20260514.png,SELL NXT REMX,NXT REMX,,,trusted,multi_ticker_fragment
+TURBO,2026-05-14,1,SELL,REMX,revere_20260514.png,SELL NXT REMX,NXT REMX,,,trusted,multi_ticker_fragment
+GRO,2026-05-15,1,SELL,CROQ,revere_20260515.png,SELL TNA CROQ,TNA CROQ,,,trusted,multi_ticker_fragment
+GRO,2026-05-15,1,SELL,TNA,revere_20260515.png,SELL TNA CROQ,TNA CROQ,,,trusted,multi_ticker_fragment
+TURBO,2026-05-15,1,SELL,LABU,revere_20260515.png,SELL LABU SCCO,LABU SCCO,,,trusted,multi_ticker_fragment
+TURBO,2026-05-15,1,SELL,SCCO,revere_20260515.png,SELL LABU SCCO,LABU SCCO,,,trusted,multi_ticker_fragment
+GRO,2026-05-18,1,SELL,AEHR,revere_20260518.png,SELL WGMI DRAM CIEN AEHR,WGMI DRAM CIEN AEHR,,,trusted,multi_ticker_fragment
+GRO,2026-05-18,1,SELL,CIEN,revere_20260518.png,SELL WGMI DRAM CIEN AEHR,WGMI DRAM CIEN AEHR,,,trusted,multi_ticker_fragment
+GRO,2026-05-18,1,SELL,DRAM,revere_20260518.png,SELL WGMI DRAM CIEN AEHR,WGMI DRAM CIEN AEHR,,,trusted,multi_ticker_fragment
+GRO,2026-05-18,1,SELL,WGMI,revere_20260518.png,SELL WGMI DRAM CIEN AEHR,WGMI DRAM CIEN AEHR,,,trusted,multi_ticker_fragment
+TURBO,2026-05-18,1,SELL,AAO,revere_20260518.png,SELL AAO! AEHR CRCL CIFR,AAO! AEHR CRCL CIFR,,,trusted,multi_ticker_fragment
+TURBO,2026-05-18,1,SELL,AEHR,revere_20260518.png,SELL AAO! AEHR CRCL CIFR,AAO! AEHR CRCL CIFR,,,trusted,multi_ticker_fragment
+TURBO,2026-05-18,1,SELL,CIFR,revere_20260518.png,SELL AAO! AEHR CRCL CIFR,AAO! AEHR CRCL CIFR,,,trusted,multi_ticker_fragment
+TURBO,2026-05-18,1,SELL,CRCL,revere_20260518.png,SELL AAO! AEHR CRCL CIFR,AAO! AEHR CRCL CIFR,,,trusted,multi_ticker_fragment
+GRO,2026-05-19,1,SELL,CAT,revere_20260519.png,TRIM BE DOCN SELL CAT GLW TSLA,CAT GLW TSLA,,,trusted,multi_ticker_fragment
+GRO,2026-05-19,1,SELL,GLW,revere_20260519.png,TRIM BE DOCN SELL CAT GLW TSLA,CAT GLW TSLA,,,trusted,multi_ticker_fragment
+GRO,2026-05-19,1,SELL,TSLA,revere_20260519.png,TRIM BE DOCN SELL CAT GLW TSLA,CAT GLW TSLA,,,trusted,multi_ticker_fragment
+GRO,2026-05-19,1,TRIM,BE,revere_20260519.png,TRIM BE DOCN SELL CAT GLW TSLA,BE DOCN,,,trusted,multi_ticker_fragment
+GRO,2026-05-19,1,TRIM,DOCN,revere_20260519.png,TRIM BE DOCN SELL CAT GLW TSLA,BE DOCN,,,trusted,multi_ticker_fragment
+TURBO,2026-05-19,1,BUY,SEDG,revere_20260519.png,BUY SEDG SELL TNA AKAM,SEDG,,,trusted,single_ticker_fragment
+TURBO,2026-05-19,1,SELL,AKAM,revere_20260519.png,BUY SEDG SELL TNA AKAM,TNA AKAM,,,trusted,multi_ticker_fragment
+TURBO,2026-05-19,1,SELL,TNA,revere_20260519.png,BUY SEDG SELL TNA AKAM,TNA AKAM,,,trusted,multi_ticker_fragment
+TURBO,2026-05-20,1,ADD,SEDG,revere_20260520.png,BUY SPXL + NBIS ADD TO SEDG,TO SEDG,,,trusted,single_ticker_fragment
+TURBO,2026-05-20,1,BUY,NBIS,revere_20260520.png,BUY SPXL + NBIS ADD TO SEDG,SPXL + NBIS,,,trusted,multi_ticker_fragment
+TURBO,2026-05-20,1,BUY,SPXL,revere_20260520.png,BUY SPXL + NBIS ADD TO SEDG,SPXL + NBIS,,,trusted,multi_ticker_fragment
+GRO,2026-05-21,1,ADD,UPRO,revere_20260521.png,ADD TO UPRO TRIM TWLO,TO UPRO,,,trusted,single_ticker_fragment
+GRO,2026-05-21,1,TRIM,TWLO,revere_20260521.png,ADD TO UPRO TRIM TWLO,TWLO,,,trusted,single_ticker_fragment
+TURBO,2026-05-21,1,ADD,SPYM,revere_20260521.png,ADD TO SPYM BUY TSLA INGD NOK O-TRIM ARM,TO SPYM,,,trusted,single_ticker_fragment
+TURBO,2026-05-21,1,BUY,INGD,revere_20260521.png,ADD TO SPYM BUY TSLA INGD NOK O-TRIM ARM,TSLA INGD NOK O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-21,1,BUY,NOK,revere_20260521.png,ADD TO SPYM BUY TSLA INGD NOK O-TRIM ARM,TSLA INGD NOK O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-21,1,BUY,O,revere_20260521.png,ADD TO SPYM BUY TSLA INGD NOK O-TRIM ARM,TSLA INGD NOK O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-21,1,BUY,TSLA,revere_20260521.png,ADD TO SPYM BUY TSLA INGD NOK O-TRIM ARM,TSLA INGD NOK O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-21,1,TRIM,ARM,revere_20260521.png,ADD TO SPYM BUY TSLA INGD NOK O-TRIM ARM,ARM,,,trusted,single_ticker_fragment
+GRO,2026-05-22,1,ADD,UPRO,revere_20260522.png,BUY AAO! CSCO GNC ADD TO UPRO SELL SBUX,TO UPRO,,,trusted,single_ticker_fragment
+GRO,2026-05-22,1,BUY,AAO,revere_20260522.png,BUY AAO! CSCO GNC ADD TO UPRO SELL SBUX,AAO! CSCO GNC,,,trusted,multi_ticker_fragment
+GRO,2026-05-22,1,BUY,CSCO,revere_20260522.png,BUY AAO! CSCO GNC ADD TO UPRO SELL SBUX,AAO! CSCO GNC,,,trusted,multi_ticker_fragment
+GRO,2026-05-22,1,BUY,GNC,revere_20260522.png,BUY AAO! CSCO GNC ADD TO UPRO SELL SBUX,AAO! CSCO GNC,,,trusted,multi_ticker_fragment
+GRO,2026-05-22,1,SELL,SBUX,revere_20260522.png,BUY AAO! CSCO GNC ADD TO UPRO SELL SBUX,SBUX,,,trusted,single_ticker_fragment
+TURBO,2026-05-22,1,BUY,AAOI,revere_20260522.png,BUY AAOI FLY CRCL O-TRIM DELL,AAOI FLY CRCL O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-22,1,BUY,CRCL,revere_20260522.png,BUY AAOI FLY CRCL O-TRIM DELL,AAOI FLY CRCL O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-22,1,BUY,FLY,revere_20260522.png,BUY AAOI FLY CRCL O-TRIM DELL,AAOI FLY CRCL O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-22,1,BUY,O,revere_20260522.png,BUY AAOI FLY CRCL O-TRIM DELL,AAOI FLY CRCL O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-22,1,TRIM,DELL,revere_20260522.png,BUY AAOI FLY CRCL O-TRIM DELL,DELL,,,trusted,single_ticker_fragment
+GRO,2026-05-26,1,ADD,BE,revere_20260526.png,BUY NBIS + GH ADD TO BE,TO BE,,,trusted,single_ticker_fragment
+GRO,2026-05-26,1,BUY,GH,revere_20260526.png,BUY NBIS + GH ADD TO BE,NBIS + GH,,,trusted,multi_ticker_fragment
+GRO,2026-05-26,1,BUY,NBIS,revere_20260526.png,BUY NBIS + GH ADD TO BE,NBIS + GH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-26,1,BUY,INTC,revere_20260526.png,BUY INTC O-TRIM MU SELL CRCL,INTC O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-26,1,BUY,O,revere_20260526.png,BUY INTC O-TRIM MU SELL CRCL,INTC O-,,,trusted,multi_ticker_fragment
+TURBO,2026-05-26,1,SELL,CRCL,revere_20260526.png,BUY INTC O-TRIM MU SELL CRCL,CRCL,,,trusted,single_ticker_fragment
+TURBO,2026-05-26,1,TRIM,MU,revere_20260526.png,BUY INTC O-TRIM MU SELL CRCL,MU,,,trusted,single_ticker_fragment
+GRO,2026-05-28,1,BUY,LABU,revere_20260528.png,BUY LABU O-TRIM MRVL,LABU O-,,,trusted,multi_ticker_fragment
+GRO,2026-05-28,1,BUY,O,revere_20260528.png,BUY LABU O-TRIM MRVL,LABU O-,,,trusted,multi_ticker_fragment
+GRO,2026-05-28,1,TRIM,MRVL,revere_20260528.png,BUY LABU O-TRIM MRVL,MRVL,,,trusted,single_ticker_fragment
+TURBO,2026-05-28,1,ADD,NBIS,revere_20260528.png,TRIM SEDG SELL AAOI ADD TO NBIS.,TO NBIS.,,,trusted,single_ticker_fragment
+TURBO,2026-05-28,1,SELL,AAOI,revere_20260528.png,TRIM SEDG SELL AAOI ADD TO NBIS.,AAOI,,,trusted,single_ticker_fragment
+TURBO,2026-05-28,1,TRIM,SEDG,revere_20260528.png,TRIM SEDG SELL AAOI ADD TO NBIS.,SEDG,,,trusted,single_ticker_fragment
+GRO,2026-05-29,1,BUY,DPST,revere_20260529.png,BUY DPST SELL NVDA,DPST,,,trusted,single_ticker_fragment
+GRO,2026-05-29,1,SELL,NVDA,revere_20260529.png,BUY DPST SELL NVDA,NVDA,,,trusted,single_ticker_fragment
+TURBO,2026-05-29,1,ADD,BE,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,ADD,BERAR,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,ADD,CF,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,ADD,CROD,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,ADD,GH,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,ADD,I,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,ADD,INE,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,ADD,INTC,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,ADD,IO,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,ADD,IR,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,ADD,LEU,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,ADD,MU,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,ADD,SSO,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,ADD,T,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,ADD,TATFI,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,ADD,TH,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,TRIM,ARM,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,ARM DELL GLW,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,TRIM,DELL,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,ARM DELL GLW,,,trusted,multi_ticker_fragment
+TURBO,2026-05-29,1,TRIM,GLW,revere_20260529.png,TRIM ARM DELL GLW ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH,ARM DELL GLW,,,trusted,multi_ticker_fragment
+GRO,2026-05-30,1,BUY,INTC,revere_20260530.png,SELL DDOG BUY INTC TRIM BE SELL AAO!,INTC,,,trusted,single_ticker_fragment
+GRO,2026-05-30,1,SELL,AAO,revere_20260530.png,SELL DDOG BUY INTC TRIM BE SELL AAO!,AAO!,,,trusted,single_ticker_fragment
+GRO,2026-05-30,1,SELL,DDOG,revere_20260530.png,SELL DDOG BUY INTC TRIM BE SELL AAO!,DDOG,,,trusted,single_ticker_fragment
+GRO,2026-05-30,1,TRIM,BE,revere_20260530.png,SELL DDOG BUY INTC TRIM BE SELL AAO!,BE,,,trusted,single_ticker_fragment
+TURBO,2026-05-30,1,BUY,DOCN,revere_20260530.png,SELL DELL BUY DOCN SELL GLW FLY,DOCN,,,trusted,single_ticker_fragment
+TURBO,2026-05-30,1,SELL,DELL,revere_20260530.png,SELL DELL BUY DOCN SELL GLW FLY,DELL,,,trusted,single_ticker_fragment
+TURBO,2026-05-30,1,SELL,FLY,revere_20260530.png,SELL DELL BUY DOCN SELL GLW FLY,GLW FLY,,,trusted,multi_ticker_fragment
+TURBO,2026-05-30,1,SELL,GLW,revere_20260530.png,SELL DELL BUY DOCN SELL GLW FLY,GLW FLY,,,trusted,multi_ticker_fragment
+GRO,2026-06-01,1,BUY,O,revere_20260601.png,BUY QBTS O-TRIM DDOG NBIS TWLO,QBTS O-,,,trusted,multi_ticker_fragment
+GRO,2026-06-01,1,BUY,QBTS,revere_20260601.png,BUY QBTS O-TRIM DDOG NBIS TWLO,QBTS O-,,,trusted,multi_ticker_fragment
+GRO,2026-06-01,1,TRIM,DDOG,revere_20260601.png,BUY QBTS O-TRIM DDOG NBIS TWLO,DDOG NBIS TWLO,,,trusted,multi_ticker_fragment
+GRO,2026-06-01,1,TRIM,NBIS,revere_20260601.png,BUY QBTS O-TRIM DDOG NBIS TWLO,DDOG NBIS TWLO,,,trusted,multi_ticker_fragment
+GRO,2026-06-01,1,TRIM,TWLO,revere_20260601.png,BUY QBTS O-TRIM DDOG NBIS TWLO,DDOG NBIS TWLO,,,trusted,multi_ticker_fragment
+TURBO,2026-06-01,1,ADD,BE,revere_20260601.png,SELL ARM SELL INTC ADD TO BE BUY COPX IREN USAR,TO BE,,,trusted,single_ticker_fragment
+TURBO,2026-06-01,1,BUY,COPX,revere_20260601.png,SELL ARM SELL INTC ADD TO BE BUY COPX IREN USAR,COPX IREN USAR,,,trusted,multi_ticker_fragment
+TURBO,2026-06-01,1,BUY,IREN,revere_20260601.png,SELL ARM SELL INTC ADD TO BE BUY COPX IREN USAR,COPX IREN USAR,,,trusted,multi_ticker_fragment
+TURBO,2026-06-01,1,BUY,USAR,revere_20260601.png,SELL ARM SELL INTC ADD TO BE BUY COPX IREN USAR,COPX IREN USAR,,,trusted,multi_ticker_fragment
+TURBO,2026-06-01,1,SELL,ARM,revere_20260601.png,SELL ARM SELL INTC ADD TO BE BUY COPX IREN USAR,ARM,,,trusted,single_ticker_fragment
+TURBO,2026-06-01,1,SELL,INTC,revere_20260601.png,SELL ARM SELL INTC ADD TO BE BUY COPX IREN USAR,INTC,,,trusted,single_ticker_fragment
+GRO,2026-06-02,1,ADD,D,revere_20260602.png,BUY LLYX ADD TO GH D-TRIM MRVL TRIM (NTC SELL LABU,TO GH D-,,,trusted,multi_ticker_fragment
+GRO,2026-06-02,1,ADD,GH,revere_20260602.png,BUY LLYX ADD TO GH D-TRIM MRVL TRIM (NTC SELL LABU,TO GH D-,,,trusted,multi_ticker_fragment
+GRO,2026-06-02,1,BUY,LLYX,revere_20260602.png,BUY LLYX ADD TO GH D-TRIM MRVL TRIM (NTC SELL LABU,LLYX,,,trusted,single_ticker_fragment
+GRO,2026-06-02,1,SELL,LABU,revere_20260602.png,BUY LLYX ADD TO GH D-TRIM MRVL TRIM (NTC SELL LABU,LABU,,,trusted,single_ticker_fragment
+GRO,2026-06-02,1,TRIM,MRVL,revere_20260602.png,BUY LLYX ADD TO GH D-TRIM MRVL TRIM (NTC SELL LABU,MRVL,,,trusted,single_ticker_fragment
+GRO,2026-06-02,1,TRIM,NTC,revere_20260602.png,BUY LLYX ADD TO GH D-TRIM MRVL TRIM (NTC SELL LABU,(NTC,,,trusted,single_ticker_fragment
+TURBO,2026-06-02,1,ADD,IREN,revere_20260602.png,BUY AEHR ADD TA TSLA + IREN,TA TSLA + IREN,,,trusted,multi_ticker_fragment
+TURBO,2026-06-02,1,ADD,TA,revere_20260602.png,BUY AEHR ADD TA TSLA + IREN,TA TSLA + IREN,,,trusted,multi_ticker_fragment
+TURBO,2026-06-02,1,ADD,TSLA,revere_20260602.png,BUY AEHR ADD TA TSLA + IREN,TA TSLA + IREN,,,trusted,multi_ticker_fragment
+TURBO,2026-06-02,1,BUY,AEHR,revere_20260602.png,BUY AEHR ADD TA TSLA + IREN,AEHR,,,trusted,single_ticker_fragment
+GRO,2026-06-03,1,ADD,CLOSE,revere_20260603.png,ADD TO LLYX O-CLOSEMAVL SELL DRST INTC,TO LLYX O-CLOSEMAVL,,,trusted,multi_ticker_fragment
+GRO,2026-06-03,1,ADD,LLYX,revere_20260603.png,ADD TO LLYX O-CLOSEMAVL SELL DRST INTC,TO LLYX O-CLOSEMAVL,,,trusted,multi_ticker_fragment
+GRO,2026-06-03,1,ADD,MRVL,revere_20260603.png,ADD TO LLYX O-CLOSEMAVL SELL DRST INTC,TO LLYX O-CLOSEMAVL,,,trusted,multi_ticker_fragment
+GRO,2026-06-03,1,SELL,DRST,revere_20260603.png,ADD TO LLYX O-CLOSEMAVL SELL DRST INTC,DRST INTC,,,trusted,multi_ticker_fragment
+GRO,2026-06-03,1,SELL,INTC,revere_20260603.png,ADD TO LLYX O-CLOSEMAVL SELL DRST INTC,DRST INTC,,,trusted,multi_ticker_fragment
+GRO,2026-06-04,1,BUY,COPX,revere_20260604.png,BUY SOXL PICK COPX,SOXL PICK COPX,,,trusted,multi_ticker_fragment
+GRO,2026-06-04,1,BUY,PICK,revere_20260604.png,BUY SOXL PICK COPX,SOXL PICK COPX,,,trusted,multi_ticker_fragment
+GRO,2026-06-04,1,BUY,SOXL,revere_20260604.png,BUY SOXL PICK COPX,SOXL PICK COPX,,,trusted,multi_ticker_fragment
+TURBO,2026-06-04,1,BUY,SNOW,revere_20260604.png,SELL USAR BUY SNOW,SNOW,,,trusted,single_ticker_fragment
+TURBO,2026-06-04,1,SELL,USAR,revere_20260604.png,SELL USAR BUY SNOW,USAR,,,trusted,single_ticker_fragment
+GRO,2026-06-08,1,SELL,TWLO,revere_20260608.png,SELL TWLO,TWLO,,,trusted,single_ticker_fragment
+TURBO,2026-06-09,1,BUY,SNOW,revere_20260609.png,BUY SNOW SELL NBIS DOCN SEDG MU,SNOW,,,trusted,single_ticker_fragment
+TURBO,2026-06-09,1,SELL,DOCN,revere_20260609.png,BUY SNOW SELL NBIS DOCN SEDG MU,NBIS DOCN SEDG MU,,,trusted,multi_ticker_fragment
+TURBO,2026-06-09,1,SELL,MU,revere_20260609.png,BUY SNOW SELL NBIS DOCN SEDG MU,NBIS DOCN SEDG MU,,,trusted,multi_ticker_fragment
+TURBO,2026-06-09,1,SELL,NBIS,revere_20260609.png,BUY SNOW SELL NBIS DOCN SEDG MU,NBIS DOCN SEDG MU,,,trusted,multi_ticker_fragment
+TURBO,2026-06-09,1,SELL,SEDG,revere_20260609.png,BUY SNOW SELL NBIS DOCN SEDG MU,NBIS DOCN SEDG MU,,,trusted,multi_ticker_fragment
+GRO,2026-06-10,1,SELL,GNRC,revere_20260610.png,SELL GNRC TRIM UPRO,GNRC,,,trusted,single_ticker_fragment
+GRO,2026-06-10,1,TRIM,UPRO,revere_20260610.png,SELL GNRC TRIM UPRO,UPRO,,,trusted,single_ticker_fragment
+GRO,2026-06-12,1,ADD,DOCN,revere_20260612.png,ADD TO DOCN BUY CRDO SNOW FTNT VIAV MRVL NBIS,TO DOCN,,,trusted,single_ticker_fragment
+GRO,2026-06-12,1,BUY,CRDO,revere_20260612.png,ADD TO DOCN BUY CRDO SNOW FTNT VIAV MRVL NBIS,CRDO SNOW FTNT VIAV MRVL NBIS,,,trusted,multi_ticker_fragment
+GRO,2026-06-12,1,BUY,FTNT,revere_20260612.png,ADD TO DOCN BUY CRDO SNOW FTNT VIAV MRVL NBIS,CRDO SNOW FTNT VIAV MRVL NBIS,,,trusted,multi_ticker_fragment
+GRO,2026-06-12,1,BUY,MRVL,revere_20260612.png,ADD TO DOCN BUY CRDO SNOW FTNT VIAV MRVL NBIS,CRDO SNOW FTNT VIAV MRVL NBIS,,,trusted,multi_ticker_fragment
+GRO,2026-06-12,1,BUY,NBIS,revere_20260612.png,ADD TO DOCN BUY CRDO SNOW FTNT VIAV MRVL NBIS,CRDO SNOW FTNT VIAV MRVL NBIS,,,trusted,multi_ticker_fragment
+GRO,2026-06-12,1,BUY,SNOW,revere_20260612.png,ADD TO DOCN BUY CRDO SNOW FTNT VIAV MRVL NBIS,CRDO SNOW FTNT VIAV MRVL NBIS,,,trusted,multi_ticker_fragment
+GRO,2026-06-12,1,BUY,VIAV,revere_20260612.png,ADD TO DOCN BUY CRDO SNOW FTNT VIAV MRVL NBIS,CRDO SNOW FTNT VIAV MRVL NBIS,,,trusted,multi_ticker_fragment
+TURBO,2026-06-12,1,ADD,SPYM,revere_20260612.png,BUY GH BE VIAV MRVL NBIS ADD TO SPYM,TO SPYM,,,trusted,single_ticker_fragment
+TURBO,2026-06-12,1,BUY,BE,revere_20260612.png,BUY GH BE VIAV MRVL NBIS ADD TO SPYM,GH BE VIAV MRVL NBIS,,,trusted,multi_ticker_fragment
+TURBO,2026-06-12,1,BUY,GH,revere_20260612.png,BUY GH BE VIAV MRVL NBIS ADD TO SPYM,GH BE VIAV MRVL NBIS,,,trusted,multi_ticker_fragment
+TURBO,2026-06-12,1,BUY,MRVL,revere_20260612.png,BUY GH BE VIAV MRVL NBIS ADD TO SPYM,GH BE VIAV MRVL NBIS,,,trusted,multi_ticker_fragment
+TURBO,2026-06-12,1,BUY,NBIS,revere_20260612.png,BUY GH BE VIAV MRVL NBIS ADD TO SPYM,GH BE VIAV MRVL NBIS,,,trusted,multi_ticker_fragment
+TURBO,2026-06-12,1,BUY,VIAV,revere_20260612.png,BUY GH BE VIAV MRVL NBIS ADD TO SPYM,GH BE VIAV MRVL NBIS,,,trusted,multi_ticker_fragment
+GRO,2026-06-15,1,ADD,DOCN,revere_20260615.png,ADD TO NBIS SNOW VIAV DOCN BUY WGMI BE,TO NBIS SNOW VIAV DOCN,,,trusted,multi_ticker_fragment
+GRO,2026-06-15,1,ADD,NBIS,revere_20260615.png,ADD TO NBIS SNOW VIAV DOCN BUY WGMI BE,TO NBIS SNOW VIAV DOCN,,,trusted,multi_ticker_fragment
+GRO,2026-06-15,1,ADD,SNOW,revere_20260615.png,ADD TO NBIS SNOW VIAV DOCN BUY WGMI BE,TO NBIS SNOW VIAV DOCN,,,trusted,multi_ticker_fragment
+GRO,2026-06-15,1,ADD,VIAV,revere_20260615.png,ADD TO NBIS SNOW VIAV DOCN BUY WGMI BE,TO NBIS SNOW VIAV DOCN,,,trusted,multi_ticker_fragment
+GRO,2026-06-15,1,BUY,BE,revere_20260615.png,ADD TO NBIS SNOW VIAV DOCN BUY WGMI BE,WGMI BE,,,trusted,multi_ticker_fragment
+GRO,2026-06-15,1,BUY,WGMI,revere_20260615.png,ADD TO NBIS SNOW VIAV DOCN BUY WGMI BE,WGMI BE,,,trusted,multi_ticker_fragment
+TURBO,2026-06-15,1,ADD,SNOW,revere_20260615.png,ADD TO SNOW,TO SNOW,,,trusted,single_ticker_fragment
+GRO,2026-06-16,1,ADD,BE,revere_20260616.png,ADD TO WGMI BE BUY INTC,TO WGMI BE,,,trusted,multi_ticker_fragment
+GRO,2026-06-16,1,ADD,WGMI,revere_20260616.png,ADD TO WGMI BE BUY INTC,TO WGMI BE,,,trusted,multi_ticker_fragment
+GRO,2026-06-16,1,BUY,INTC,revere_20260616.png,ADD TO WGMI BE BUY INTC,INTC,,,trusted,single_ticker_fragment
+TURBO,2026-06-16,1,ADD,BE,revere_20260616.png,ADD TO BE SNOW BUY WOLF FROG FLNC DDOG SELL GH,TO BE SNOW,,,trusted,multi_ticker_fragment
+TURBO,2026-06-16,1,ADD,SNOW,revere_20260616.png,ADD TO BE SNOW BUY WOLF FROG FLNC DDOG SELL GH,TO BE SNOW,,,trusted,multi_ticker_fragment
+TURBO,2026-06-16,1,BUY,DDOG,revere_20260616.png,ADD TO BE SNOW BUY WOLF FROG FLNC DDOG SELL GH,WOLF FROG FLNC DDOG,,,trusted,multi_ticker_fragment
+TURBO,2026-06-16,1,BUY,FLNC,revere_20260616.png,ADD TO BE SNOW BUY WOLF FROG FLNC DDOG SELL GH,WOLF FROG FLNC DDOG,,,trusted,multi_ticker_fragment
+TURBO,2026-06-16,1,BUY,FROG,revere_20260616.png,ADD TO BE SNOW BUY WOLF FROG FLNC DDOG SELL GH,WOLF FROG FLNC DDOG,,,trusted,multi_ticker_fragment
+TURBO,2026-06-16,1,BUY,WOLF,revere_20260616.png,ADD TO BE SNOW BUY WOLF FROG FLNC DDOG SELL GH,WOLF FROG FLNC DDOG,,,trusted,multi_ticker_fragment
+TURBO,2026-06-16,1,SELL,GH,revere_20260616.png,ADD TO BE SNOW BUY WOLF FROG FLNC DDOG SELL GH,GH,,,trusted,single_ticker_fragment
+GRO,2026-06-17,1,SELL,ABD,revere_20260617.png,SELL CSCOVAY ABD TO ET IVTE SUV NEO JL,CSCOVAY ABD TO ET IVTE SUV NEO JL,,,trusted,multi_ticker_fragment
+GRO,2026-06-17,1,SELL,CSCO,revere_20260617.png,SELL CSCOVAY ABD TO ET IVTE SUV NEO JL,CSCOVAY ABD TO ET IVTE SUV NEO JL,,,trusted,multi_ticker_fragment
+GRO,2026-06-17,1,SELL,ET,revere_20260617.png,SELL CSCOVAY ABD TO ET IVTE SUV NEO JL,CSCOVAY ABD TO ET IVTE SUV NEO JL,,,trusted,multi_ticker_fragment
+GRO,2026-06-17,1,SELL,IVTE,revere_20260617.png,SELL CSCOVAY ABD TO ET IVTE SUV NEO JL,CSCOVAY ABD TO ET IVTE SUV NEO JL,,,trusted,multi_ticker_fragment
+GRO,2026-06-17,1,SELL,JL,revere_20260617.png,SELL CSCOVAY ABD TO ET IVTE SUV NEO JL,CSCOVAY ABD TO ET IVTE SUV NEO JL,,,trusted,multi_ticker_fragment
+GRO,2026-06-17,1,SELL,NEO,revere_20260617.png,SELL CSCOVAY ABD TO ET IVTE SUV NEO JL,CSCOVAY ABD TO ET IVTE SUV NEO JL,,,trusted,multi_ticker_fragment
+GRO,2026-06-17,1,SELL,SUV,revere_20260617.png,SELL CSCOVAY ABD TO ET IVTE SUV NEO JL,CSCOVAY ABD TO ET IVTE SUV NEO JL,,,trusted,multi_ticker_fragment
+GRO,2026-06-17,1,SELL,VAT,revere_20260617.png,SELL CSCOVAY ABD TO ET IVTE SUV NEO JL,CSCOVAY ABD TO ET IVTE SUV NEO JL,,,trusted,multi_ticker_fragment
+TURBO,2026-06-17,1,SELL,FLNC,revere_20260617.png,TRIM SNOW SELL VIAV FLNC,VIAV FLNC,,,trusted,multi_ticker_fragment
+TURBO,2026-06-17,1,SELL,VIAV,revere_20260617.png,TRIM SNOW SELL VIAV FLNC,VIAV FLNC,,,trusted,multi_ticker_fragment
+TURBO,2026-06-17,1,TRIM,SNOW,revere_20260617.png,TRIM SNOW SELL VIAV FLNC,SNOW,,,trusted,single_ticker_fragment
+GRO,2026-06-18,1,ADD,INTC,revere_20260618.png,SELL SNOW TRIM FINT CLOSE HEDGE SPS BUY S970. HUT NVT FORM ADD TO WOM INTC,TO WOM INTC,,,trusted,multi_ticker_fragment
+GRO,2026-06-18,1,ADD,WOM,revere_20260618.png,SELL SNOW TRIM FINT CLOSE HEDGE SPS BUY S970. HUT NVT FORM ADD TO WOM INTC,TO WOM INTC,,,trusted,multi_ticker_fragment
+GRO,2026-06-18,1,BUY,FORM,revere_20260618.png,SELL SNOW TRIM FINT CLOSE HEDGE SPS BUY S970. HUT NVT FORM ADD TO WOM INTC,S970. HUT NVT FORM,,,trusted,multi_ticker_fragment
+GRO,2026-06-18,1,BUY,HUT,revere_20260618.png,SELL SNOW TRIM FINT CLOSE HEDGE SPS BUY S970. HUT NVT FORM ADD TO WOM INTC,S970. HUT NVT FORM,,,trusted,multi_ticker_fragment
+GRO,2026-06-18,1,BUY,NVT,revere_20260618.png,SELL SNOW TRIM FINT CLOSE HEDGE SPS BUY S970. HUT NVT FORM ADD TO WOM INTC,S970. HUT NVT FORM,,,trusted,multi_ticker_fragment
+GRO,2026-06-18,1,BUY,SSO,revere_20260618.png,SELL SNOW TRIM FINT CLOSE HEDGE SPS BUY S970. HUT NVT FORM ADD TO WOM INTC,S970. HUT NVT FORM,,,trusted,multi_ticker_fragment
+GRO,2026-06-18,1,SELL,SNOW,revere_20260618.png,SELL SNOW TRIM FINT CLOSE HEDGE SPS BUY S970. HUT NVT FORM ADD TO WOM INTC,SNOW,,,trusted,single_ticker_fragment
+GRO,2026-06-18,1,TRIM,CLOSE,revere_20260618.png,SELL SNOW TRIM FINT CLOSE HEDGE SPS BUY S970. HUT NVT FORM ADD TO WOM INTC,FINT CLOSE HEDGE SPS,,,trusted,multi_ticker_fragment
+GRO,2026-06-18,1,TRIM,FINT,revere_20260618.png,SELL SNOW TRIM FINT CLOSE HEDGE SPS BUY S970. HUT NVT FORM ADD TO WOM INTC,FINT CLOSE HEDGE SPS,,,trusted,multi_ticker_fragment
+GRO,2026-06-18,1,TRIM,HEDGE,revere_20260618.png,SELL SNOW TRIM FINT CLOSE HEDGE SPS BUY S970. HUT NVT FORM ADD TO WOM INTC,FINT CLOSE HEDGE SPS,,,trusted,multi_ticker_fragment
+GRO,2026-06-18,1,TRIM,SPS,revere_20260618.png,SELL SNOW TRIM FINT CLOSE HEDGE SPS BUY S970. HUT NVT FORM ADD TO WOM INTC,FINT CLOSE HEDGE SPS,,,trusted,multi_ticker_fragment
+TURBO,2026-06-18,1,SELL,SNOW,revere_20260618.png,SELL SNOW,SNOW,,,trusted,single_ticker_fragment
+GRO,2026-06-22,1,BUY,ADDIO,revere_20260622.png,BUY HOOD ADD10 FTNT SELL DOCN O-TRIM BE CRDO,HOOD ADD10 FTNT,,,trusted,multi_ticker_fragment
+GRO,2026-06-22,1,BUY,FTNT,revere_20260622.png,BUY HOOD ADD10 FTNT SELL DOCN O-TRIM BE CRDO,HOOD ADD10 FTNT,,,trusted,multi_ticker_fragment
+GRO,2026-06-22,1,BUY,HOOD,revere_20260622.png,BUY HOOD ADD10 FTNT SELL DOCN O-TRIM BE CRDO,HOOD ADD10 FTNT,,,trusted,multi_ticker_fragment
+GRO,2026-06-22,1,SELL,DOCN,revere_20260622.png,BUY HOOD ADD10 FTNT SELL DOCN O-TRIM BE CRDO,DOCN O-,,,trusted,multi_ticker_fragment
+GRO,2026-06-22,1,SELL,O,revere_20260622.png,BUY HOOD ADD10 FTNT SELL DOCN O-TRIM BE CRDO,DOCN O-,,,trusted,multi_ticker_fragment
+GRO,2026-06-22,1,TRIM,BE,revere_20260622.png,BUY HOOD ADD10 FTNT SELL DOCN O-TRIM BE CRDO,BE CRDO,,,trusted,multi_ticker_fragment
+GRO,2026-06-22,1,TRIM,CRDO,revere_20260622.png,BUY HOOD ADD10 FTNT SELL DOCN O-TRIM BE CRDO,BE CRDO,,,trusted,multi_ticker_fragment
+TURBO,2026-06-22,1,ADD,FROG,revere_20260622.png,BUY NOK ADD 10 FROG SELL WOLF,10 FROG,,,trusted,multi_ticker_fragment
+TURBO,2026-06-22,1,ADD,IO,revere_20260622.png,BUY NOK ADD 10 FROG SELL WOLF,10 FROG,,,trusted,multi_ticker_fragment
+TURBO,2026-06-22,1,BUY,NOK,revere_20260622.png,BUY NOK ADD 10 FROG SELL WOLF,NOK,,,trusted,single_ticker_fragment
+TURBO,2026-06-22,1,SELL,WOLF,revere_20260622.png,BUY NOK ADD 10 FROG SELL WOLF,WOLF,,,trusted,single_ticker_fragment
+GRO,2026-06-23,1,SELL,MRVL,revere_20260623.png,SELL MRVL » SPXL,MRVL » SPXL,,,trusted,multi_ticker_fragment
+GRO,2026-06-23,1,SELL,SPXL,revere_20260623.png,SELL MRVL » SPXL,MRVL » SPXL,,,trusted,multi_ticker_fragment
+TURBO,2026-06-23,1,BUY,CRWD,revere_20260623.png,BUY CRWD + 'WIO {JENNI <.. RROC,CRWD + 'WIO {JENNI <.. RROC,,,trusted,multi_ticker_fragment
+TURBO,2026-06-23,1,BUY,JENNI,revere_20260623.png,BUY CRWD + 'WIO {JENNI <.. RROC,CRWD + 'WIO {JENNI <.. RROC,,,trusted,multi_ticker_fragment
+TURBO,2026-06-23,1,BUY,RROC,revere_20260623.png,BUY CRWD + 'WIO {JENNI <.. RROC,CRWD + 'WIO {JENNI <.. RROC,,,trusted,multi_ticker_fragment
+TURBO,2026-06-23,1,BUY,WIO,revere_20260623.png,BUY CRWD + 'WIO {JENNI <.. RROC,CRWD + 'WIO {JENNI <.. RROC,,,trusted,multi_ticker_fragment
+GRO,2026-06-24,1,BUY,HPE,revere_20260624.png,TRIM INTC BUY HPE SELL NBIS HUT WGMI HOOD NVT,HPE,,,trusted,single_ticker_fragment
+GRO,2026-06-24,1,SELL,HOOD,revere_20260624.png,TRIM INTC BUY HPE SELL NBIS HUT WGMI HOOD NVT,NBIS HUT WGMI HOOD NVT,,,trusted,multi_ticker_fragment
+GRO,2026-06-24,1,SELL,HUT,revere_20260624.png,TRIM INTC BUY HPE SELL NBIS HUT WGMI HOOD NVT,NBIS HUT WGMI HOOD NVT,,,trusted,multi_ticker_fragment
+GRO,2026-06-24,1,SELL,NBIS,revere_20260624.png,TRIM INTC BUY HPE SELL NBIS HUT WGMI HOOD NVT,NBIS HUT WGMI HOOD NVT,,,trusted,multi_ticker_fragment
+GRO,2026-06-24,1,SELL,NVT,revere_20260624.png,TRIM INTC BUY HPE SELL NBIS HUT WGMI HOOD NVT,NBIS HUT WGMI HOOD NVT,,,trusted,multi_ticker_fragment
+GRO,2026-06-24,1,SELL,WGMI,revere_20260624.png,TRIM INTC BUY HPE SELL NBIS HUT WGMI HOOD NVT,NBIS HUT WGMI HOOD NVT,,,trusted,multi_ticker_fragment
+GRO,2026-06-24,1,TRIM,INTC,revere_20260624.png,TRIM INTC BUY HPE SELL NBIS HUT WGMI HOOD NVT,INTC,,,trusted,single_ticker_fragment
+TURBO,2026-06-24,1,ADD,SOXS,revere_20260624.png,SELL MRVL ADD TO SOXS,TO SOXS,,,trusted,single_ticker_fragment
+TURBO,2026-06-24,1,SELL,MRVL,revere_20260624.png,SELL MRVL ADD TO SOXS,MRVL,,,trusted,single_ticker_fragment
+GRO,2026-06-25,1,SELL,BE,revere_20260625.png,SELL BE HPE TRIM INTC. O-TRIM GH,BE HPE,,,trusted,multi_ticker_fragment
+GRO,2026-06-25,1,SELL,HPE,revere_20260625.png,SELL BE HPE TRIM INTC. O-TRIM GH,BE HPE,,,trusted,multi_ticker_fragment
+GRO,2026-06-25,1,TRIM,GH,revere_20260625.png,SELL BE HPE TRIM INTC. O-TRIM GH,GH,,,trusted,single_ticker_fragment
+GRO,2026-06-25,1,TRIM,INTC,revere_20260625.png,SELL BE HPE TRIM INTC. O-TRIM GH,INTC. O-,,,trusted,multi_ticker_fragment
+GRO,2026-06-25,1,TRIM,O,revere_20260625.png,SELL BE HPE TRIM INTC. O-TRIM GH,INTC. O-,,,trusted,multi_ticker_fragment
+GRO,2026-06-26,1,SELL,CRDO,revere_20260626.png,SELL FORM CRDO,FORM CRDO,,,trusted,multi_ticker_fragment
+GRO,2026-06-26,1,SELL,FORM,revere_20260626.png,SELL FORM CRDO,FORM CRDO,,,trusted,multi_ticker_fragment
+TURBO,2026-06-26,1,SELL,BE,revere_20260626.png,SELL NOK BE,NOK BE,,,trusted,multi_ticker_fragment
+TURBO,2026-06-26,1,SELL,NOK,revere_20260626.png,SELL NOK BE,NOK BE,,,trusted,multi_ticker_fragment
+GRO,2026-06-29,1,ADD,UPAQ,revere_20260629.png,SELL INTC SPXU O-TRIM GH BUY DELL STM MRVL FLEX ADD TO UPAQ,TO UPAQ,,,trusted,single_ticker_fragment
+GRO,2026-06-29,1,BUY,DELL,revere_20260629.png,SELL INTC SPXU O-TRIM GH BUY DELL STM MRVL FLEX ADD TO UPAQ,DELL STM MRVL FLEX,,,trusted,multi_ticker_fragment
+GRO,2026-06-29,1,BUY,FLEX,revere_20260629.png,SELL INTC SPXU O-TRIM GH BUY DELL STM MRVL FLEX ADD TO UPAQ,DELL STM MRVL FLEX,,,trusted,multi_ticker_fragment
+GRO,2026-06-29,1,BUY,MRVL,revere_20260629.png,SELL INTC SPXU O-TRIM GH BUY DELL STM MRVL FLEX ADD TO UPAQ,DELL STM MRVL FLEX,,,trusted,multi_ticker_fragment
+GRO,2026-06-29,1,BUY,STM,revere_20260629.png,SELL INTC SPXU O-TRIM GH BUY DELL STM MRVL FLEX ADD TO UPAQ,DELL STM MRVL FLEX,,,trusted,multi_ticker_fragment
+GRO,2026-06-29,1,SELL,INTC,revere_20260629.png,SELL INTC SPXU O-TRIM GH BUY DELL STM MRVL FLEX ADD TO UPAQ,INTC SPXU O-,,,trusted,multi_ticker_fragment
+GRO,2026-06-29,1,SELL,O,revere_20260629.png,SELL INTC SPXU O-TRIM GH BUY DELL STM MRVL FLEX ADD TO UPAQ,INTC SPXU O-,,,trusted,multi_ticker_fragment
+GRO,2026-06-29,1,SELL,SPXU,revere_20260629.png,SELL INTC SPXU O-TRIM GH BUY DELL STM MRVL FLEX ADD TO UPAQ,INTC SPXU O-,,,trusted,multi_ticker_fragment
+GRO,2026-06-29,1,TRIM,GH,revere_20260629.png,SELL INTC SPXU O-TRIM GH BUY DELL STM MRVL FLEX ADD TO UPAQ,GH,,,trusted,single_ticker_fragment
+TURBO,2026-06-29,1,ADD,NBIS,revere_20260629.png,SELL SOXS BUY STM ADD TO NBIS,TO NBIS,,,trusted,single_ticker_fragment
+TURBO,2026-06-29,1,BUY,STM,revere_20260629.png,SELL SOXS BUY STM ADD TO NBIS,STM,,,trusted,single_ticker_fragment
+TURBO,2026-06-29,1,SELL,SOXS,revere_20260629.png,SELL SOXS BUY STM ADD TO NBIS,SOXS,,,trusted,single_ticker_fragment
+GRO,2026-06-30,1,ADD,FLEX,revere_20260630.png,ADD TO FTNT STM MRVL FLEX BUY TWLO,TO FTNT STM MRVL FLEX,,,trusted,multi_ticker_fragment
+GRO,2026-06-30,1,ADD,FTNT,revere_20260630.png,ADD TO FTNT STM MRVL FLEX BUY TWLO,TO FTNT STM MRVL FLEX,,,trusted,multi_ticker_fragment
+GRO,2026-06-30,1,ADD,MRVL,revere_20260630.png,ADD TO FTNT STM MRVL FLEX BUY TWLO,TO FTNT STM MRVL FLEX,,,trusted,multi_ticker_fragment
+GRO,2026-06-30,1,ADD,STM,revere_20260630.png,ADD TO FTNT STM MRVL FLEX BUY TWLO,TO FTNT STM MRVL FLEX,,,trusted,multi_ticker_fragment
+GRO,2026-06-30,1,BUY,TWLO,revere_20260630.png,ADD TO FTNT STM MRVL FLEX BUY TWLO,TWLO,,,trusted,single_ticker_fragment
+TURBO,2026-06-30,1,BUY,MKL,revere_20260630.png,BUY MKL,MKL,,,trusted,single_ticker_fragment
+GRO,2026-07-01,1,BUY,GLW,revere_20260701.png,BUY GLW SELL STM MRVL,GLW,,,trusted,single_ticker_fragment
+GRO,2026-07-01,1,SELL,MRVL,revere_20260701.png,BUY GLW SELL STM MRVL,STM MRVL,,,trusted,multi_ticker_fragment
+GRO,2026-07-01,1,SELL,STM,revere_20260701.png,BUY GLW SELL STM MRVL,STM MRVL,,,trusted,multi_ticker_fragment
+TURBO,2026-07-01,1,BUY,HOOD,revere_20260701.png,BUY HOOD SELL NBIS STM,HOOD,,,trusted,single_ticker_fragment
+TURBO,2026-07-01,1,SELL,NBIS,revere_20260701.png,BUY HOOD SELL NBIS STM,NBIS STM,,,trusted,multi_ticker_fragment
+TURBO,2026-07-01,1,SELL,STM,revere_20260701.png,BUY HOOD SELL NBIS STM,NBIS STM,,,trusted,multi_ticker_fragment
+GRO,2026-07-02,1,BUY,ADO,revere_20260702.png,SELL DELL LEX GLW TRAM UPRO BUY ROOT INTC ADO TO LLTK,ROOT INTC ADO TO LLTK,,,trusted,multi_ticker_fragment
+GRO,2026-07-02,1,BUY,INTC,revere_20260702.png,SELL DELL LEX GLW TRAM UPRO BUY ROOT INTC ADO TO LLTK,ROOT INTC ADO TO LLTK,,,trusted,multi_ticker_fragment
+GRO,2026-07-02,1,BUY,LLTK,revere_20260702.png,SELL DELL LEX GLW TRAM UPRO BUY ROOT INTC ADO TO LLTK,ROOT INTC ADO TO LLTK,,,trusted,multi_ticker_fragment
+GRO,2026-07-02,1,BUY,ROOT,revere_20260702.png,SELL DELL LEX GLW TRAM UPRO BUY ROOT INTC ADO TO LLTK,ROOT INTC ADO TO LLTK,,,trusted,multi_ticker_fragment
+GRO,2026-07-02,1,SELL,DELL,revere_20260702.png,SELL DELL LEX GLW TRAM UPRO BUY ROOT INTC ADO TO LLTK,DELL LEX GLW TRAM UPRO,,,trusted,multi_ticker_fragment
+GRO,2026-07-02,1,SELL,GLW,revere_20260702.png,SELL DELL LEX GLW TRAM UPRO BUY ROOT INTC ADO TO LLTK,DELL LEX GLW TRAM UPRO,,,trusted,multi_ticker_fragment
+GRO,2026-07-02,1,SELL,LEX,revere_20260702.png,SELL DELL LEX GLW TRAM UPRO BUY ROOT INTC ADO TO LLTK,DELL LEX GLW TRAM UPRO,,,trusted,multi_ticker_fragment
+GRO,2026-07-02,1,SELL,TRAM,revere_20260702.png,SELL DELL LEX GLW TRAM UPRO BUY ROOT INTC ADO TO LLTK,DELL LEX GLW TRAM UPRO,,,trusted,multi_ticker_fragment
+GRO,2026-07-02,1,SELL,UPRO,revere_20260702.png,SELL DELL LEX GLW TRAM UPRO BUY ROOT INTC ADO TO LLTK,DELL LEX GLW TRAM UPRO,,,trusted,multi_ticker_fragment
+TURBO,2026-07-02,1,BUY,BKYF,revere_20260702.png,BUY BKYF SELL MKL,BKYF,,,trusted,single_ticker_fragment
+TURBO,2026-07-02,1,SELL,MKL,revere_20260702.png,BUY BKYF SELL MKL,MKL,,,trusted,single_ticker_fragment
+GRO,2026-07-06,1,BUY,ODOG,revere_20260706.png,BUY 0DOG,0DOG,,,trusted,single_ticker_fragment
+TURBO,2026-07-06,1,BUY,AOD,revere_20260706.png,BUY RDDT ETHA MIT AOD TO HOOD,RDDT ETHA MIT AOD TO HOOD,,,trusted,multi_ticker_fragment
+TURBO,2026-07-06,1,BUY,ETHA,revere_20260706.png,BUY RDDT ETHA MIT AOD TO HOOD,RDDT ETHA MIT AOD TO HOOD,,,trusted,multi_ticker_fragment
+TURBO,2026-07-06,1,BUY,HOOD,revere_20260706.png,BUY RDDT ETHA MIT AOD TO HOOD,RDDT ETHA MIT AOD TO HOOD,,,trusted,multi_ticker_fragment
+TURBO,2026-07-06,1,BUY,MIT,revere_20260706.png,BUY RDDT ETHA MIT AOD TO HOOD,RDDT ETHA MIT AOD TO HOOD,,,trusted,multi_ticker_fragment
+TURBO,2026-07-06,1,BUY,RDDT,revere_20260706.png,BUY RDDT ETHA MIT AOD TO HOOD,RDDT ETHA MIT AOD TO HOOD,,,trusted,multi_ticker_fragment
+GRO,2026-07-07,1,ADD,DDOG,revere_20260707.png,ADD TO DDOG BUY DELL SELL INTC,TO DDOG,,,trusted,single_ticker_fragment
+GRO,2026-07-07,1,BUY,DELL,revere_20260707.png,ADD TO DDOG BUY DELL SELL INTC,DELL,,,trusted,single_ticker_fragment
+GRO,2026-07-07,1,SELL,INTC,revere_20260707.png,ADD TO DDOG BUY DELL SELL INTC,INTC,,,trusted,single_ticker_fragment
+TURBO,2026-07-07,1,ADD,ETHA,revere_20260707.png,ADD T CTHAIBI BUY FCEL ML DRAM SELL CRWO INTC THA HYP,T CTHAIBI,,,trusted,multi_ticker_fragment
+TURBO,2026-07-07,1,ADD,IBIT,revere_20260707.png,ADD T CTHAIBI BUY FCEL ML DRAM SELL CRWO INTC THA HYP,T CTHAIBI,,,trusted,multi_ticker_fragment
+TURBO,2026-07-07,1,ADD,T,revere_20260707.png,ADD T CTHAIBI BUY FCEL ML DRAM SELL CRWO INTC THA HYP,T CTHAIBI,,,trusted,multi_ticker_fragment
+TURBO,2026-07-07,1,BUY,DRAM,revere_20260707.png,ADD T CTHAIBI BUY FCEL ML DRAM SELL CRWO INTC THA HYP,FCEL ML DRAM,,,trusted,multi_ticker_fragment
+TURBO,2026-07-07,1,BUY,FCEL,revere_20260707.png,ADD T CTHAIBI BUY FCEL ML DRAM SELL CRWO INTC THA HYP,FCEL ML DRAM,,,trusted,multi_ticker_fragment
+TURBO,2026-07-07,1,BUY,ML,revere_20260707.png,ADD T CTHAIBI BUY FCEL ML DRAM SELL CRWO INTC THA HYP,FCEL ML DRAM,,,trusted,multi_ticker_fragment
+TURBO,2026-07-07,1,SELL,CRWO,revere_20260707.png,ADD T CTHAIBI BUY FCEL ML DRAM SELL CRWO INTC THA HYP,CRWO INTC THA HYP,,,trusted,multi_ticker_fragment
+TURBO,2026-07-07,1,SELL,HYP,revere_20260707.png,ADD T CTHAIBI BUY FCEL ML DRAM SELL CRWO INTC THA HYP,CRWO INTC THA HYP,,,trusted,multi_ticker_fragment
+TURBO,2026-07-07,1,SELL,INTC,revere_20260707.png,ADD T CTHAIBI BUY FCEL ML DRAM SELL CRWO INTC THA HYP,CRWO INTC THA HYP,,,trusted,multi_ticker_fragment
+TURBO,2026-07-07,1,SELL,THA,revere_20260707.png,ADD T CTHAIBI BUY FCEL ML DRAM SELL CRWO INTC THA HYP,CRWO INTC THA HYP,,,trusted,multi_ticker_fragment
+GRO,2026-07-08,1,BUY,ADO,revere_20260708.png,BUY DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS SELL GH.,DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS,,,trusted,multi_ticker_fragment
+GRO,2026-07-08,1,BUY,DELL,revere_20260708.png,BUY DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS SELL GH.,DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS,,,trusted,multi_ticker_fragment
+GRO,2026-07-08,1,BUY,DRAM,revere_20260708.png,BUY DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS SELL GH.,DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS,,,trusted,multi_ticker_fragment
+GRO,2026-07-08,1,BUY,HEDGE,revere_20260708.png,BUY DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS SELL GH.,DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS,,,trusted,multi_ticker_fragment
+GRO,2026-07-08,1,BUY,HOOD,revere_20260708.png,BUY DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS SELL GH.,DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS,,,trusted,multi_ticker_fragment
+GRO,2026-07-08,1,BUY,I,revere_20260708.png,BUY DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS SELL GH.,DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS,,,trusted,multi_ticker_fragment
+GRO,2026-07-08,1,BUY,SDS,revere_20260708.png,BUY DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS SELL GH.,DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS,,,trusted,multi_ticker_fragment
+GRO,2026-07-08,1,BUY,SOXL,revere_20260708.png,BUY DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS SELL GH.,DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS,,,trusted,multi_ticker_fragment
+GRO,2026-07-08,1,SELL,GH,revere_20260708.png,BUY DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS SELL GH.,GH.,,,trusted,single_ticker_fragment
+GRO,2026-07-09,1,ADD,DELL,revere_20260709.png,BUY SIMD AMD ADD TO HOOD DELL SELL HEDGE SDS,TO HOOD DELL,,,trusted,multi_ticker_fragment
+GRO,2026-07-09,1,ADD,HOOD,revere_20260709.png,BUY SIMD AMD ADD TO HOOD DELL SELL HEDGE SDS,TO HOOD DELL,,,trusted,multi_ticker_fragment
+GRO,2026-07-09,1,BUY,AMD,revere_20260709.png,BUY SIMD AMD ADD TO HOOD DELL SELL HEDGE SDS,SIMD AMD,,,trusted,multi_ticker_fragment
+GRO,2026-07-09,1,BUY,SIMD,revere_20260709.png,BUY SIMD AMD ADD TO HOOD DELL SELL HEDGE SDS,SIMD AMD,,,trusted,multi_ticker_fragment
+GRO,2026-07-09,1,SELL,HEDGE,revere_20260709.png,BUY SIMD AMD ADD TO HOOD DELL SELL HEDGE SDS,HEDGE SDS,,,trusted,multi_ticker_fragment
+GRO,2026-07-09,1,SELL,SDS,revere_20260709.png,BUY SIMD AMD ADD TO HOOD DELL SELL HEDGE SDS,HEDGE SDS,,,trusted,multi_ticker_fragment
+TURBO,2026-07-09,1,ADD,RDOT,revere_20260709.png,ADD TO RDOT UPRO,TO RDOT UPRO,,,trusted,multi_ticker_fragment
+TURBO,2026-07-09,1,ADD,UPRO,revere_20260709.png,ADD TO RDOT UPRO,TO RDOT UPRO,,,trusted,multi_ticker_fragment
+GRO,2026-07-10,1,ADD,RDDT,revere_20260710.png,ADD TO SOXL RDDT,TO SOXL RDDT,,,trusted,multi_ticker_fragment
+GRO,2026-07-10,1,ADD,SOXL,revere_20260710.png,ADD TO SOXL RDDT,TO SOXL RDDT,,,trusted,multi_ticker_fragment
+GRO,2026-07-13,1,ADD,RDDT,revere_20260713.png,ADD TO SOXL RDDT,TO SOXL RDDT,,,trusted,multi_ticker_fragment
+GRO,2026-07-13,1,ADD,SOXL,revere_20260713.png,ADD TO SOXL RDDT,TO SOXL RDDT,,,trusted,multi_ticker_fragment
+GRO,2026-07-14,1,ADD,HOOD,revere_20260714.png,ADD TO HOOD TRIM LLYX,TO HOOD,,,trusted,single_ticker_fragment
+GRO,2026-07-14,1,TRIM,LLYX,revere_20260714.png,ADD TO HOOD TRIM LLYX,LLYX,,,trusted,single_ticker_fragment
+TURBO,2026-07-14,1,BUY,TQQQ,revere_20260714.png,BUY TQQQ,TQQQ,,,trusted,single_ticker_fragment
+TURBO,2026-07-15,1,SELL,DRAM,revere_20260715.png,SELL DRAM,DRAM,,,trusted,single_ticker_fragment
+GRO,2026-07-16,1,BUY,LLY,revere_20260716.png,SELL HOOD RDDT BUY LLY,LLY,,,trusted,single_ticker_fragment
+GRO,2026-07-16,1,SELL,HOOD,revere_20260716.png,SELL HOOD RDDT BUY LLY,HOOD RDDT,,,trusted,multi_ticker_fragment
+GRO,2026-07-16,1,SELL,RDDT,revere_20260716.png,SELL HOOD RDDT BUY LLY,HOOD RDDT,,,trusted,multi_ticker_fragment
+TURBO,2026-07-16,1,SELL,LABU,revere_20260716.png,SELL RODT LABU TQQQ,RODT LABU TQQQ,,,trusted,multi_ticker_fragment
+TURBO,2026-07-16,1,SELL,RODT,revere_20260716.png,SELL RODT LABU TQQQ,RODT LABU TQQQ,,,trusted,multi_ticker_fragment
+TURBO,2026-07-16,1,SELL,TQQQ,revere_20260716.png,SELL RODT LABU TQQQ,RODT LABU TQQQ,,,trusted,multi_ticker_fragment
+GRO,2026-07-17,1,SELL,TWLO,revere_20260717.png,SELL TWLO,TWLO,,,trusted,single_ticker_fragment
+TURBO,2026-07-17,1,SELL,HOOD,revere_20260717.png,SELL HOOD,HOOD,,,trusted,single_ticker_fragment
+GRO,2026-07-21,1,ADD,DDOG,revere_20260721.png,ADD TO UPRO TRIS FTNT + DDOG,TO UPRO TRIS FTNT + DDOG,,,trusted,multi_ticker_fragment
+GRO,2026-07-21,1,ADD,FTNT,revere_20260721.png,ADD TO UPRO TRIS FTNT + DDOG,TO UPRO TRIS FTNT + DDOG,,,trusted,multi_ticker_fragment
+GRO,2026-07-21,1,ADD,TRIS,revere_20260721.png,ADD TO UPRO TRIS FTNT + DDOG,TO UPRO TRIS FTNT + DDOG,,,trusted,multi_ticker_fragment
+GRO,2026-07-21,1,ADD,UPRO,revere_20260721.png,ADD TO UPRO TRIS FTNT + DDOG,TO UPRO TRIS FTNT + DDOG,,,trusted,multi_ticker_fragment
+TURBO,2026-07-21,1,BUY,AMD,revere_20260721.png,BUY AMD,AMD,,,trusted,single_ticker_fragment
+GRO,2026-07-22,1,BUY,DELL,revere_20260722.png,BUY HPE DELL SELL FTNT D0OG,HPE DELL,,,trusted,multi_ticker_fragment
+GRO,2026-07-22,1,BUY,HPE,revere_20260722.png,BUY HPE DELL SELL FTNT D0OG,HPE DELL,,,trusted,multi_ticker_fragment
+GRO,2026-07-22,1,SELL,DOOG,revere_20260722.png,BUY HPE DELL SELL FTNT D0OG,FTNT D0OG,,,trusted,multi_ticker_fragment
+GRO,2026-07-22,1,SELL,FTNT,revere_20260722.png,BUY HPE DELL SELL FTNT D0OG,FTNT D0OG,,,trusted,multi_ticker_fragment
+TURBO,2026-07-22,1,SELL,FINT,revere_20260722.png,SELL FINT TWLO,FINT TWLO,,,trusted,multi_ticker_fragment
+TURBO,2026-07-22,1,SELL,TWLO,revere_20260722.png,SELL FINT TWLO,FINT TWLO,,,trusted,multi_ticker_fragment
+TURBO,2026-07-23,1,SELL,BHYP,revere_20260723.png,TRIM UPRO IBIT SELL BHYP,BHYP,,,trusted,single_ticker_fragment
+TURBO,2026-07-23,1,TRIM,IBIT,revere_20260723.png,TRIM UPRO IBIT SELL BHYP,UPRO IBIT,,,trusted,multi_ticker_fragment
+TURBO,2026-07-23,1,TRIM,UPRO,revere_20260723.png,TRIM UPRO IBIT SELL BHYP,UPRO IBIT,,,trusted,multi_ticker_fragment
+GRO,2026-07-27,1,SELL,AMD,revere_20260727.png,SELL AMD DELL,AMD DELL,,,trusted,multi_ticker_fragment
+GRO,2026-07-27,1,SELL,DELL,revere_20260727.png,SELL AMD DELL,AMD DELL,,,trusted,multi_ticker_fragment
+TURBO,2026-07-27,1,SELL,AMD,revere_20260727.png,SELL AMD,AMD,,,trusted,single_ticker_fragment
+GRO,2026-07-28,1,SELL,HPE,revere_20260728.png,SELL HPE,HPE,,,trusted,single_ticker_fragment
+TURBO,2026-07-28,1,TRIM,ETHA,revere_20260728.png,TRIM ETHA,ETHA,,,trusted,single_ticker_fragment
+GRO,2026-07-29,1,ADD,HEDGE,revere_20260729.png,TRIM UPRO ADD 10 HEDGE $PXS,10 HEDGE $PXS,,,trusted,multi_ticker_fragment
+GRO,2026-07-29,1,ADD,IO,revere_20260729.png,TRIM UPRO ADD 10 HEDGE $PXS,10 HEDGE $PXS,,,trusted,multi_ticker_fragment
+GRO,2026-07-29,1,ADD,PXS,revere_20260729.png,TRIM UPRO ADD 10 HEDGE $PXS,10 HEDGE $PXS,,,trusted,multi_ticker_fragment
+GRO,2026-07-29,1,TRIM,UPRO,revere_20260729.png,TRIM UPRO ADD 10 HEDGE $PXS,UPRO,,,trusted,single_ticker_fragment
+TURBO,2026-07-29,1,SELL,ETHA,revere_20260729.png,SELL ETHA,ETHA,,,trusted,single_ticker_fragment
+GRO,2026-07-30,1,SELL,LLYX,revere_20260730.png,SELL LLYX TRIM LLY,LLYX,,,trusted,single_ticker_fragment
+GRO,2026-07-30,1,TRIM,LLY,revere_20260730.png,SELL LLYX TRIM LLY,LLY,,,trusted,single_ticker_fragment
+GRO,2026-07-31,1,SELL,LLY,revere_20260731.png,SELL LLY TRIM SPXS,LLY,,,trusted,single_ticker_fragment
+GRO,2026-07-31,1,TRIM,SPXS,revere_20260731.png,SELL LLY TRIM SPXS,SPXS,,,trusted,single_ticker_fragment
+GRO,2026-08-03,1,SELL,SPYS,revere_20260803.png,SELL SPYS,SPYS,,,trusted,single_ticker_fragment
+GRO,2026-08-04,1,BUY,CBAS,revere_20260804.png,"BUY HPE,OKTA MLTR, VLO,CBAS",CBAS,,,trusted,single_ticker_fragment
+GRO,2026-08-04,1,BUY,HPE,revere_20260804.png,"BUY HPE,OKTA MLTR, VLO,CBAS",HPE,,,trusted,single_ticker_fragment
+GRO,2026-08-04,1,BUY,MLTR,revere_20260804.png,"BUY HPE,OKTA MLTR, VLO,CBAS",OKTA MLTR,,,trusted,multi_ticker_fragment
+GRO,2026-08-04,1,BUY,OKTA,revere_20260804.png,"BUY HPE,OKTA MLTR, VLO,CBAS",OKTA MLTR,,,trusted,multi_ticker_fragment
+GRO,2026-08-04,1,BUY,VLO,revere_20260804.png,"BUY HPE,OKTA MLTR, VLO,CBAS",VLO,,,trusted,single_ticker_fragment
+TURBO,2026-08-05,1,BUY,DRAM,revere_20260805.png,BUY DRAM SELL TSEM,DRAM,,,trusted,single_ticker_fragment
+TURBO,2026-08-05,1,SELL,TSEM,revere_20260805.png,BUY DRAM SELL TSEM,TSEM,,,trusted,single_ticker_fragment
+GRO,2026-08-07,1,ADD,HPE,revere_20260807.png,BUY SPXL ADD TO PLTR.HPE SELL VLO,TO PLTR.HPE,,,trusted,multi_ticker_fragment
+GRO,2026-08-07,1,ADD,PLTR,revere_20260807.png,BUY SPXL ADD TO PLTR.HPE SELL VLO,TO PLTR.HPE,,,trusted,multi_ticker_fragment
+GRO,2026-08-07,1,BUY,SPXL,revere_20260807.png,BUY SPXL ADD TO PLTR.HPE SELL VLO,SPXL,,,trusted,single_ticker_fragment
+GRO,2026-08-07,1,SELL,VLO,revere_20260807.png,BUY SPXL ADD TO PLTR.HPE SELL VLO,VLO,,,trusted,single_ticker_fragment
+TURBO,2026-08-07,1,SELL,DRAM,revere_20260807.png,SELL DRAM,DRAM,,,trusted,single_ticker_fragment
+GRO,2026-08-10,1,ADD,HPE,revere_20260810.png,ADD TO OKTA HPE PLTR BUY AMZU,TO OKTA HPE PLTR,,,trusted,multi_ticker_fragment
+GRO,2026-08-10,1,ADD,OKTA,revere_20260810.png,ADD TO OKTA HPE PLTR BUY AMZU,TO OKTA HPE PLTR,,,trusted,multi_ticker_fragment
+GRO,2026-08-10,1,ADD,PLTR,revere_20260810.png,ADD TO OKTA HPE PLTR BUY AMZU,TO OKTA HPE PLTR,,,trusted,multi_ticker_fragment
+GRO,2026-08-10,1,BUY,AMZU,revere_20260810.png,ADD TO OKTA HPE PLTR BUY AMZU,AMZU,,,trusted,single_ticker_fragment
+GRO,2026-08-11,1,BUY,TWLO,revere_20260811.png,BUY TWLO,TWLO,,,trusted,single_ticker_fragment
+TURBO,2026-08-11,1,ADD,TQQ,revere_20260811.png,BUY FCX ADD TO TQQ,TO TQQ,,,trusted,single_ticker_fragment
+TURBO,2026-08-11,1,BUY,FCX,revere_20260811.png,BUY FCX ADD TO TQQ,FCX,,,trusted,single_ticker_fragment
+GRO,2026-08-12,1,ADD,PLTR,revere_20260812.png,SELL AMZY ADD TO PLTR BUY TQGQ THA WEES APH ITE ST,TO PLTR,,,trusted,single_ticker_fragment
+GRO,2026-08-12,1,BUY,APH,revere_20260812.png,SELL AMZY ADD TO PLTR BUY TQGQ THA WEES APH ITE ST,TQGQ THA WEES APH ITE ST,,,trusted,multi_ticker_fragment
+GRO,2026-08-12,1,BUY,ITE,revere_20260812.png,SELL AMZY ADD TO PLTR BUY TQGQ THA WEES APH ITE ST,TQGQ THA WEES APH ITE ST,,,trusted,multi_ticker_fragment
+GRO,2026-08-12,1,BUY,ST,revere_20260812.png,SELL AMZY ADD TO PLTR BUY TQGQ THA WEES APH ITE ST,TQGQ THA WEES APH ITE ST,,,trusted,multi_ticker_fragment
+GRO,2026-08-12,1,BUY,THA,revere_20260812.png,SELL AMZY ADD TO PLTR BUY TQGQ THA WEES APH ITE ST,TQGQ THA WEES APH ITE ST,,,trusted,multi_ticker_fragment
+GRO,2026-08-12,1,BUY,TQGQ,revere_20260812.png,SELL AMZY ADD TO PLTR BUY TQGQ THA WEES APH ITE ST,TQGQ THA WEES APH ITE ST,,,trusted,multi_ticker_fragment
+GRO,2026-08-12,1,BUY,WEES,revere_20260812.png,SELL AMZY ADD TO PLTR BUY TQGQ THA WEES APH ITE ST,TQGQ THA WEES APH ITE ST,,,trusted,multi_ticker_fragment
+GRO,2026-08-12,1,SELL,AMZY,revere_20260812.png,SELL AMZY ADD TO PLTR BUY TQGQ THA WEES APH ITE ST,AMZY,,,trusted,single_ticker_fragment
+TURBO,2026-08-12,1,ADD,FCX,revere_20260812.png,ADD TO FCX O-TRIM CBAS,TO FCX O-,,,trusted,multi_ticker_fragment
+TURBO,2026-08-12,1,ADD,O,revere_20260812.png,ADD TO FCX O-TRIM CBAS,TO FCX O-,,,trusted,multi_ticker_fragment
+TURBO,2026-08-12,1,TRIM,CBAS,revere_20260812.png,ADD TO FCX O-TRIM CBAS,CBAS,,,trusted,single_ticker_fragment
+GRO,2026-08-13,1,BUY,RBRK,revere_20260813.png,BUY RBRK.,RBRK.,,,trusted,single_ticker_fragment
+TURBO,2026-08-13,1,BUY,RBRK,revere_20260813.png,BUY TWLO RBRK,TWLO RBRK,,,trusted,multi_ticker_fragment
+TURBO,2026-08-13,1,BUY,TWLO,revere_20260813.png,BUY TWLO RBRK,TWLO RBRK,,,trusted,multi_ticker_fragment
+GRO,2026-08-14,1,ADD,HPE,revere_20260814.png,ADD 10 HPE SELL CBRS TRIM OKTA,10 HPE,,,trusted,multi_ticker_fragment
+GRO,2026-08-14,1,ADD,IO,revere_20260814.png,ADD 10 HPE SELL CBRS TRIM OKTA,10 HPE,,,trusted,multi_ticker_fragment
+GRO,2026-08-14,1,SELL,CBRS,revere_20260814.png,ADD 10 HPE SELL CBRS TRIM OKTA,CBRS,,,trusted,single_ticker_fragment
+GRO,2026-08-14,1,TRIM,OKTA,revere_20260814.png,ADD 10 HPE SELL CBRS TRIM OKTA,OKTA,,,trusted,single_ticker_fragment
+TURBO,2026-08-14,1,BUY,GOXU,revere_20260814.png,BUY SACK GOXU S,SACK GOXU S,,,trusted,multi_ticker_fragment
+TURBO,2026-08-14,1,BUY,S,revere_20260814.png,BUY SACK GOXU S,SACK GOXU S,,,trusted,multi_ticker_fragment
+TURBO,2026-08-14,1,BUY,SACK,revere_20260814.png,BUY SACK GOXU S,SACK GOXU S,,,trusted,multi_ticker_fragment
+GRO,2026-08-17,1,ADD,LITE,revere_20260817.png,SELL TWLO OKTA BUY SOXL CBRS ADD TO LITE NBIS,TO LITE NBIS,,,trusted,multi_ticker_fragment
+GRO,2026-08-17,1,ADD,NBIS,revere_20260817.png,SELL TWLO OKTA BUY SOXL CBRS ADD TO LITE NBIS,TO LITE NBIS,,,trusted,multi_ticker_fragment
+GRO,2026-08-17,1,BUY,CBRS,revere_20260817.png,SELL TWLO OKTA BUY SOXL CBRS ADD TO LITE NBIS,SOXL CBRS,,,trusted,multi_ticker_fragment
+GRO,2026-08-17,1,BUY,SOXL,revere_20260817.png,SELL TWLO OKTA BUY SOXL CBRS ADD TO LITE NBIS,SOXL CBRS,,,trusted,multi_ticker_fragment
+GRO,2026-08-17,1,SELL,OKTA,revere_20260817.png,SELL TWLO OKTA BUY SOXL CBRS ADD TO LITE NBIS,TWLO OKTA,,,trusted,multi_ticker_fragment
+GRO,2026-08-17,1,SELL,TWLO,revere_20260817.png,SELL TWLO OKTA BUY SOXL CBRS ADD TO LITE NBIS,TWLO OKTA,,,trusted,multi_ticker_fragment
+TURBO,2026-08-17,1,BUY,GEV,revere_20260817.png,SELL TWLO BUY LITE ITM GEV,LITE ITM GEV,,,trusted,multi_ticker_fragment
+TURBO,2026-08-17,1,BUY,ITM,revere_20260817.png,SELL TWLO BUY LITE ITM GEV,LITE ITM GEV,,,trusted,multi_ticker_fragment
+TURBO,2026-08-17,1,BUY,LITE,revere_20260817.png,SELL TWLO BUY LITE ITM GEV,LITE ITM GEV,,,trusted,multi_ticker_fragment
+TURBO,2026-08-17,1,SELL,TWLO,revere_20260817.png,SELL TWLO BUY LITE ITM GEV,TWLO,,,trusted,single_ticker_fragment
+GRO,2026-08-18,1,SELL,APH,revere_20260818.png,SELL TQQQ TNA SOXL CBRS APH LITE SITM TRIM NBIS,TQQQ TNA SOXL CBRS APH LITE SITM,,,trusted,multi_ticker_fragment
+GRO,2026-08-18,1,SELL,CBRS,revere_20260818.png,SELL TQQQ TNA SOXL CBRS APH LITE SITM TRIM NBIS,TQQQ TNA SOXL CBRS APH LITE SITM,,,trusted,multi_ticker_fragment
+GRO,2026-08-18,1,SELL,LITE,revere_20260818.png,SELL TQQQ TNA SOXL CBRS APH LITE SITM TRIM NBIS,TQQQ TNA SOXL CBRS APH LITE SITM,,,trusted,multi_ticker_fragment
+GRO,2026-08-18,1,SELL,SITM,revere_20260818.png,SELL TQQQ TNA SOXL CBRS APH LITE SITM TRIM NBIS,TQQQ TNA SOXL CBRS APH LITE SITM,,,trusted,multi_ticker_fragment
+GRO,2026-08-18,1,SELL,SOXL,revere_20260818.png,SELL TQQQ TNA SOXL CBRS APH LITE SITM TRIM NBIS,TQQQ TNA SOXL CBRS APH LITE SITM,,,trusted,multi_ticker_fragment
+GRO,2026-08-18,1,SELL,TNA,revere_20260818.png,SELL TQQQ TNA SOXL CBRS APH LITE SITM TRIM NBIS,TQQQ TNA SOXL CBRS APH LITE SITM,,,trusted,multi_ticker_fragment
+GRO,2026-08-18,1,SELL,TQQQ,revere_20260818.png,SELL TQQQ TNA SOXL CBRS APH LITE SITM TRIM NBIS,TQQQ TNA SOXL CBRS APH LITE SITM,,,trusted,multi_ticker_fragment
+GRO,2026-08-18,1,TRIM,NBIS,revere_20260818.png,SELL TQQQ TNA SOXL CBRS APH LITE SITM TRIM NBIS,NBIS,,,trusted,single_ticker_fragment
+TURBO,2026-08-18,1,SELL,GEV,revere_20260818.png,SELL GEV LITE TRIM UPRO TQQQ CBRS,GEV LITE,,,trusted,multi_ticker_fragment
+TURBO,2026-08-18,1,SELL,LITE,revere_20260818.png,SELL GEV LITE TRIM UPRO TQQQ CBRS,GEV LITE,,,trusted,multi_ticker_fragment
+TURBO,2026-08-18,1,TRIM,CBRS,revere_20260818.png,SELL GEV LITE TRIM UPRO TQQQ CBRS,UPRO TQQQ CBRS,,,trusted,multi_ticker_fragment
+TURBO,2026-08-18,1,TRIM,TQQQ,revere_20260818.png,SELL GEV LITE TRIM UPRO TQQQ CBRS,UPRO TQQQ CBRS,,,trusted,multi_ticker_fragment
+TURBO,2026-08-18,1,TRIM,UPRO,revere_20260818.png,SELL GEV LITE TRIM UPRO TQQQ CBRS,UPRO TQQQ CBRS,,,trusted,multi_ticker_fragment
+GRO,2026-08-19,1,BUY,MRNA,revere_20260819.png,BUY MRNA TRIM RBRK SELL NBIS HPE,MRNA,,,trusted,single_ticker_fragment
+GRO,2026-08-19,1,SELL,HPE,revere_20260819.png,BUY MRNA TRIM RBRK SELL NBIS HPE,NBIS HPE,,,trusted,multi_ticker_fragment
+GRO,2026-08-19,1,SELL,NBIS,revere_20260819.png,BUY MRNA TRIM RBRK SELL NBIS HPE,NBIS HPE,,,trusted,multi_ticker_fragment
+GRO,2026-08-19,1,TRIM,RBRK,revere_20260819.png,BUY MRNA TRIM RBRK SELL NBIS HPE,RBRK,,,trusted,single_ticker_fragment
+TURBO,2026-08-19,1,BUY,CHYM,revere_20260819.png,BUY MRNA IBIT ETHA SPXL CHYM SELL SITM CBRS,MRNA IBIT ETHA SPXL CHYM,,,trusted,multi_ticker_fragment
+TURBO,2026-08-19,1,BUY,ETHA,revere_20260819.png,BUY MRNA IBIT ETHA SPXL CHYM SELL SITM CBRS,MRNA IBIT ETHA SPXL CHYM,,,trusted,multi_ticker_fragment
+TURBO,2026-08-19,1,BUY,IBIT,revere_20260819.png,BUY MRNA IBIT ETHA SPXL CHYM SELL SITM CBRS,MRNA IBIT ETHA SPXL CHYM,,,trusted,multi_ticker_fragment
+TURBO,2026-08-19,1,BUY,MRNA,revere_20260819.png,BUY MRNA IBIT ETHA SPXL CHYM SELL SITM CBRS,MRNA IBIT ETHA SPXL CHYM,,,trusted,multi_ticker_fragment
+TURBO,2026-08-19,1,BUY,SPXL,revere_20260819.png,BUY MRNA IBIT ETHA SPXL CHYM SELL SITM CBRS,MRNA IBIT ETHA SPXL CHYM,,,trusted,multi_ticker_fragment
+TURBO,2026-08-19,1,SELL,CBRS,revere_20260819.png,BUY MRNA IBIT ETHA SPXL CHYM SELL SITM CBRS,SITM CBRS,,,trusted,multi_ticker_fragment
+TURBO,2026-08-19,1,SELL,SITM,revere_20260819.png,BUY MRNA IBIT ETHA SPXL CHYM SELL SITM CBRS,SITM CBRS,,,trusted,multi_ticker_fragment
+GRO,2026-08-20,1,TRIM,MRNA,revere_20260820.png,TRIM MRNA,MRNA,,,trusted,single_ticker_fragment
+TURBO,2026-08-20,1,TRIM,CHYM,revere_20260820.png,TRIM ETHA GDXU TRIM CHYM MRNA SPCX,CHYM MRNA SPCX,,,trusted,multi_ticker_fragment
+TURBO,2026-08-20,1,TRIM,ETHA,revere_20260820.png,TRIM ETHA GDXU TRIM CHYM MRNA SPCX,ETHA GDXU,,,trusted,multi_ticker_fragment
+TURBO,2026-08-20,1,TRIM,GDXU,revere_20260820.png,TRIM ETHA GDXU TRIM CHYM MRNA SPCX,ETHA GDXU,,,trusted,multi_ticker_fragment
+TURBO,2026-08-20,1,TRIM,MRNA,revere_20260820.png,TRIM ETHA GDXU TRIM CHYM MRNA SPCX,CHYM MRNA SPCX,,,trusted,multi_ticker_fragment
+TURBO,2026-08-20,1,TRIM,SPCX,revere_20260820.png,TRIM ETHA GDXU TRIM CHYM MRNA SPCX,CHYM MRNA SPCX,,,trusted,multi_ticker_fragment
+GRO,2026-08-21,1,BUY,PICK,revere_20260821.png,BUY PICK,PICK,,,trusted,single_ticker_fragment
+TURBO,2026-08-21,1,ADD,MRNA,revere_20260821.png,BUY PLTR ADD TO MRNA SPCX TQQQ O-TRIM IB1T SELL RBRK,TO MRNA SPCX TQQQ O-,,,trusted,multi_ticker_fragment
+TURBO,2026-08-21,1,ADD,O,revere_20260821.png,BUY PLTR ADD TO MRNA SPCX TQQQ O-TRIM IB1T SELL RBRK,TO MRNA SPCX TQQQ O-,,,trusted,multi_ticker_fragment
+TURBO,2026-08-21,1,ADD,SPCX,revere_20260821.png,BUY PLTR ADD TO MRNA SPCX TQQQ O-TRIM IB1T SELL RBRK,TO MRNA SPCX TQQQ O-,,,trusted,multi_ticker_fragment
+TURBO,2026-08-21,1,ADD,TQQQ,revere_20260821.png,BUY PLTR ADD TO MRNA SPCX TQQQ O-TRIM IB1T SELL RBRK,TO MRNA SPCX TQQQ O-,,,trusted,multi_ticker_fragment
+TURBO,2026-08-21,1,BUY,PLTR,revere_20260821.png,BUY PLTR ADD TO MRNA SPCX TQQQ O-TRIM IB1T SELL RBRK,PLTR,,,trusted,single_ticker_fragment
+TURBO,2026-08-21,1,SELL,RBRK,revere_20260821.png,BUY PLTR ADD TO MRNA SPCX TQQQ O-TRIM IB1T SELL RBRK,RBRK,,,trusted,single_ticker_fragment
+TURBO,2026-08-21,1,TRIM,IBIT,revere_20260821.png,BUY PLTR ADD TO MRNA SPCX TQQQ O-TRIM IB1T SELL RBRK,IB1T,,,trusted,single_ticker_fragment
+GRO,2026-08-24,1,ADD,PLTR,revere_20260824.png,ADD TO PLTR,TO PLTR,,,trusted,single_ticker_fragment
+TURBO,2026-08-24,1,TRIM,TQQQ,revere_20260824.png,TRIM TQQQ,TQQQ,,,trusted,single_ticker_fragment
+GRO,2026-08-25,1,SELL,RBRK,revere_20260825.png,SELL RBRK TRIM PLTR,RBRK,,,trusted,single_ticker_fragment
+GRO,2026-08-25,1,TRIM,PLTR,revere_20260825.png,SELL RBRK TRIM PLTR,PLTR,,,trusted,single_ticker_fragment
+TURBO,2026-08-25,1,BUY,FIG,revere_20260825.png,BUY FIG BUY/SELL HNGE,FIG,,,trusted,single_ticker_fragment
+TURBO,2026-08-25,1,SELL,HNGE,revere_20260825.png,BUY FIG BUY/SELL HNGE,HNGE,,,trusted,single_ticker_fragment
+GRO,2026-08-26,1,SELL,MRNA,revere_20260826.png,TRIM PLTR SELL MRNA,MRNA,,,trusted,single_ticker_fragment
+GRO,2026-08-26,1,TRIM,PLTR,revere_20260826.png,TRIM PLTR SELL MRNA,PLTR,,,trusted,single_ticker_fragment
+TURBO,2026-08-26,1,BUY,GH,revere_20260826.png,BUY GH HNGE,GH HNGE,,,trusted,multi_ticker_fragment
+TURBO,2026-08-26,1,BUY,HNGE,revere_20260826.png,BUY GH HNGE,GH HNGE,,,trusted,multi_ticker_fragment
+GRO,2026-08-27,1,BUY,ADO,revere_20260827.png,BUY FROG NVDA ADO FO SPXL PLTR,FROG NVDA ADO FO SPXL PLTR,,,trusted,multi_ticker_fragment
+GRO,2026-08-27,1,BUY,FO,revere_20260827.png,BUY FROG NVDA ADO FO SPXL PLTR,FROG NVDA ADO FO SPXL PLTR,,,trusted,multi_ticker_fragment
+GRO,2026-08-27,1,BUY,FROG,revere_20260827.png,BUY FROG NVDA ADO FO SPXL PLTR,FROG NVDA ADO FO SPXL PLTR,,,trusted,multi_ticker_fragment
+GRO,2026-08-27,1,BUY,NVDA,revere_20260827.png,BUY FROG NVDA ADO FO SPXL PLTR,FROG NVDA ADO FO SPXL PLTR,,,trusted,multi_ticker_fragment
+GRO,2026-08-27,1,BUY,PLTR,revere_20260827.png,BUY FROG NVDA ADO FO SPXL PLTR,FROG NVDA ADO FO SPXL PLTR,,,trusted,multi_ticker_fragment
+GRO,2026-08-27,1,BUY,SPXL,revere_20260827.png,BUY FROG NVDA ADO FO SPXL PLTR,FROG NVDA ADO FO SPXL PLTR,,,trusted,multi_ticker_fragment
+TURBO,2026-08-27,1,ADD,CHYM,revere_20260827.png,BUY ZETA CRM ADD TO CHYM,TO CHYM,,,trusted,single_ticker_fragment
+TURBO,2026-08-27,1,BUY,CRM,revere_20260827.png,BUY ZETA CRM ADD TO CHYM,ZETA CRM,,,trusted,multi_ticker_fragment
+TURBO,2026-08-27,1,BUY,ZETA,revere_20260827.png,BUY ZETA CRM ADD TO CHYM,ZETA CRM,,,trusted,multi_ticker_fragment
+GRO,2026-08-28,1,ADD,PLTR,revere_20260828.png,ADD TO PLTR ADD/TRIM FROG SELL NVDA TRIM PICK,TO PLTR,,,trusted,single_ticker_fragment
+GRO,2026-08-28,1,SELL,NVDA,revere_20260828.png,ADD TO PLTR ADD/TRIM FROG SELL NVDA TRIM PICK,NVDA,,,trusted,single_ticker_fragment
+GRO,2026-08-28,1,TRIM,FROG,revere_20260828.png,ADD TO PLTR ADD/TRIM FROG SELL NVDA TRIM PICK,FROG,,,trusted,single_ticker_fragment
+GRO,2026-08-28,1,TRIM,PICK,revere_20260828.png,ADD TO PLTR ADD/TRIM FROG SELL NVDA TRIM PICK,PICK,,,trusted,single_ticker_fragment
+TURBO,2026-08-28,1,SELL,GH,revere_20260828.png,SELL GHHNGE TRIM CHYM,GHHNGE,,,trusted,multi_ticker_fragment
+TURBO,2026-08-28,1,SELL,HNGE,revere_20260828.png,SELL GHHNGE TRIM CHYM,GHHNGE,,,trusted,multi_ticker_fragment
+TURBO,2026-08-28,1,TRIM,CHYM,revere_20260828.png,SELL GHHNGE TRIM CHYM,CHYM,,,trusted,single_ticker_fragment
+GRO,2026-08-31,1,SELL,PICK,revere_20260831.png,SELL PICK,PICK,,,trusted,single_ticker_fragment
+TURBO,2026-08-31,1,SELL,CHYM,revere_20260831.png,SELL FIG CHYM,FIG CHYM,,,trusted,multi_ticker_fragment
+TURBO,2026-08-31,1,SELL,FIG,revere_20260831.png,SELL FIG CHYM,FIG CHYM,,,trusted,multi_ticker_fragment
+GRO,2026-09-01,1,SELL,FROG,revere_20260901.png,SELL FROG TRIM SPXL + PLTR,FROG,,,trusted,single_ticker_fragment
+GRO,2026-09-01,1,TRIM,PLTR,revere_20260901.png,SELL FROG TRIM SPXL + PLTR,SPXL + PLTR,,,trusted,multi_ticker_fragment
+GRO,2026-09-01,1,TRIM,SPXL,revere_20260901.png,SELL FROG TRIM SPXL + PLTR,SPXL + PLTR,,,trusted,multi_ticker_fragment
+TURBO,2026-09-01,1,BUY,HOOD,revere_20260901.png,BUY HOOD,HOOD,,,trusted,single_ticker_fragment
+GRO,2026-09-02,1,SELL,SPXL,revere_20260902.png,SELL SPXL TRIM BLTR,SPXL,,,trusted,single_ticker_fragment
+GRO,2026-09-02,1,TRIM,BLTR,revere_20260902.png,SELL SPXL TRIM BLTR,BLTR,,,trusted,single_ticker_fragment
+TURBO,2026-09-02,1,SELL,FOX,revere_20260902.png,SELL PLTAZETA OTAIMFOX,PLTAZETA OTAIMFOX,,,trusted,multi_ticker_fragment
+TURBO,2026-09-02,1,SELL,FTAI,revere_20260902.png,SELL PLTAZETA OTAIMFOX,PLTAZETA OTAIMFOX,,,trusted,multi_ticker_fragment
+TURBO,2026-09-02,1,SELL,PLTR,revere_20260902.png,SELL PLTAZETA OTAIMFOX,PLTAZETA OTAIMFOX,,,trusted,multi_ticker_fragment
+TURBO,2026-09-02,1,SELL,ZETA,revere_20260902.png,SELL PLTAZETA OTAIMFOX,PLTAZETA OTAIMFOX,,,trusted,multi_ticker_fragment
+GRO,2026-09-03,1,BUY,MU,revere_20260903.png,BUY QLD MU,QLD MU,,,trusted,multi_ticker_fragment
+GRO,2026-09-03,1,BUY,QLD,revere_20260903.png,BUY QLD MU,QLD MU,,,trusted,multi_ticker_fragment
+TURBO,2026-09-03,1,BUY,PURR,revere_20260903.png,BUY PURR,PURR,,,trusted,single_ticker_fragment
+GRO,2026-09-04,1,BUY,MPE,revere_20260904.png,BUY MPE OKTA,MPE OKTA,,,trusted,multi_ticker_fragment
+GRO,2026-09-04,1,BUY,OKTA,revere_20260904.png,BUY MPE OKTA,MPE OKTA,,,trusted,multi_ticker_fragment
+GRO,2026-09-08,1,BUY,CF,revere_20260908.png,BUY CF SPOX,CF SPOX,,,trusted,multi_ticker_fragment
+GRO,2026-09-08,1,BUY,SPOX,revere_20260908.png,BUY CF SPOX,CF SPOX,,,trusted,multi_ticker_fragment
+TURBO,2026-09-08,1,BUY,ABAK,revere_20260908.png,BUY ABAK TEM SELL MRNA,ABAK TEM,,,trusted,multi_ticker_fragment
+TURBO,2026-09-08,1,BUY,TEM,revere_20260908.png,BUY ABAK TEM SELL MRNA,ABAK TEM,,,trusted,multi_ticker_fragment
+TURBO,2026-09-08,1,SELL,MRNA,revere_20260908.png,BUY ABAK TEM SELL MRNA,MRNA,,,trusted,single_ticker_fragment
+GRO,2026-09-09,1,BUY,ARKG,revere_20260909.png,BUY ARKG SELL SPCX,ARKG,,,trusted,single_ticker_fragment
+GRO,2026-09-09,1,SELL,SPCX,revere_20260909.png,BUY ARKG SELL SPCX,SPCX,,,trusted,single_ticker_fragment
+GRO,2026-09-10,1,SELL,ARKG,revere_20260910.png,SELL MU ARKG TRIM PLTR,MU ARKG,,,trusted,multi_ticker_fragment
+GRO,2026-09-10,1,SELL,MU,revere_20260910.png,SELL MU ARKG TRIM PLTR,MU ARKG,,,trusted,multi_ticker_fragment
+GRO,2026-09-10,1,TRIM,PLTR,revere_20260910.png,SELL MU ARKG TRIM PLTR,PLTR,,,trusted,single_ticker_fragment
+TURBO,2026-09-10,1,SELL,PURR,revere_20260910.png,SELL TEM PURR,TEM PURR,,,trusted,multi_ticker_fragment
+TURBO,2026-09-10,1,SELL,TEM,revere_20260910.png,SELL TEM PURR,TEM PURR,,,trusted,multi_ticker_fragment

@@ -52,6 +52,15 @@ npm run extract
 npm run performance
 ```
 
+## Accessing Final Processed Data
+
+- The final processed datasets live under `data/` inside this workspace.
+- Use `data/portfolio_performance_summary.csv` for top-line portfolio summaries, `data/portfolio_performance_timeseries.csv` for time-series charts, and `data/position_performance.csv` for position-level drilldowns.
+- Use `data/portfolio_performance_review.csv` and `data/portfolio_actions_review.csv` to inspect rows that were excluded or flagged during action parsing, pricing, or lifecycle reconstruction.
+- Open these CSVs directly in Excel, LibreOffice Calc, Google Sheets, or import them into a notebook or BI tool for presentations and visualizations.
+- The repo does not currently generate a dedicated dashboard, slide deck, or HTML report. At the moment, the CSV files above are the canonical presentation and visualization inputs.
+- Historical price cache files used by the performance pass are stored under `data/price_cache/yahoo/`.
+
 ## Notes
 
 - `sample_screenshots.lnk` is intentionally kept local and ignored by git. Create your own local shortcut or use `--input-dir` / `--shortcut` when running the CLI.

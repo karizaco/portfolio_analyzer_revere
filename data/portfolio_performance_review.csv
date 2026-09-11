@@ -1,0 +1,1158 @@
+review_type,portfolio,ticker,review_date,sequence,source_file,related_file,review_basis,details
+unapplied_action,GRO,CMG,2022-09-22,1,revere_20220922.png,,unmatched_action_signal,SELL 4% CMG
+unapplied_action,GRO,SSO,2022-09-22,1,revere_20220922.png,,unmatched_action_signal,SELL 10% SSO
+unapplied_action,GRO,TSLA,2022-09-22,1,revere_20220922.png,,unmatched_action_signal,SELL 1.5% TSLA
+unapplied_action,GRO,QD,2022-11-29,1,revere_20221129.png,,unmatched_action_signal,BUY 4% QD
+unapplied_adjustment,GRO,SHLS,2022-11-29,1,revere_20221129.png,,unmatched_adjustment,TRIM % SHLS
+unapplied_adjustment,GRO,TSLL,2022-11-29,1,revere_20221129.png,,unmatched_adjustment,ADD 5% T-BILL
+action_parse_review,GRO,LLY,2022-12-27,1,revere_20221227.png,,ambiguous_percent_multi_ticker,ADD 10% T-BILLS
+action_parse_review,GRO,TBT,2022-12-27,1,revere_20221227.png,,ambiguous_percent_multi_ticker,ADD 10% T-BILLS
+unapplied_action,GRO,DIA,2022-12-27,1,revere_20221227.png,,unmatched_action_signal,BUY 5% DIA
+unapplied_action,GRO,AL,2023-02-01,1,revere_20230201.png,,unmatched_action_signal,SELL TNA+AL
+unapplied_action,GRO,DT,2023-02-01,1,revere_20230201.png,,unmatched_action_signal,BUY DT O-
+unapplied_action,GRO,O,2023-02-01,1,revere_20230201.png,,unmatched_action_signal,BUY DT O-
+unapplied_action,GRO,TNA,2023-02-01,1,revere_20230201.png,,unmatched_action_signal,SELL TNA+AL
+unapplied_adjustment,GRO,BA,2023-02-01,1,revere_20230201.png,,unmatched_adjustment,ADD BA+GDX+BROS
+unapplied_adjustment,GRO,GDX,2023-02-01,1,revere_20230201.png,,unmatched_adjustment,ADD BA+GDX+BROS
+unapplied_adjustment,GRO,SSO,2023-02-01,1,revere_20230201.png,,unmatched_adjustment,TRIM 550
+unapplied_adjustment,GRO,NVDA,2023-02-27,1,revere_20230227.png,,unmatched_adjustment,ADD NVDA
+unapplied_adjustment,GRO,SSO,2023-02-27,1,revere_20230227.png,,unmatched_adjustment,ADD TO SSO
+unapplied_adjustment,GRO,TBT,2023-02-27,1,revere_20230227.png,,unmatched_adjustment,TRIM TBT
+unapplied_action,GRO,O,2023-03-16,1,revere_20230316.png,,unmatched_action_signal,BUY UPRO O-
+unapplied_action,GRO,UPRO,2023-03-16,1,revere_20230316.png,,unmatched_action_signal,BUY UPRO O-
+unapplied_adjustment,GRO,ANET,2023-03-16,1,revere_20230316.png,,unmatched_adjustment,TRIM ANET
+unapplied_adjustment,GRO,QLD,2023-03-16,1,revere_20230316.png,,unmatched_adjustment,ADD TO QLD
+unapplied_action,GRO,UPRO,2023-03-22,1,revere_20230322.png,,unmatched_action_signal,SELL UPRO
+unapplied_adjustment,GRO,ONON,2023-03-22,1,revere_20230322.png,,unmatched_adjustment,ADD TO ONON
+unapplied_adjustment,GRO,QLD,2023-03-22,1,revere_20230322.png,,unmatched_adjustment,TRIM QLD
+unapplied_adjustment,GRO,LULU,2023-05-09,1,revere_20230509.png,,unmatched_adjustment,ADD TO LULU + UBER
+unapplied_action,GRO,DRV,2023-06-30,1,revere_20230630.png,,unmatched_action_signal,BUY DRV
+unapplied_adjustment,GRO,UBER,2023-08-23,1,revere_20230823.png,,adjustment_missing_percent,ADD TO UBER
+lifecycle_mismatch,GRO,TSLA,2023-11-28,1,revere_20231128.png,revere_20220922.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,DKNG,2023-11-28,1,revere_20231128.png,,unmatched_action_signal,SELL DKNG
+unapplied_action,GRO,PDD,2023-11-28,1,revere_20231128.png,,unmatched_action_signal,BUY PDD
+unapplied_adjustment,GRO,QLD,2023-11-28,1,revere_20231128.png,,unmatched_adjustment,ADD TO QLD + TSLA
+unapplied_adjustment,GRO,TSLA,2023-11-28,1,revere_20231128.png,,adjustment_missing_percent,ADD TO QLD + TSLA
+unapplied_adjustment,GRO,TA,2024-03-01,1,revere_20240301.png,,unmatched_adjustment,ADD TA WFRD
+unapplied_action,GRO,CLOSE,2024-04-16,1,revere_20240416.png,,unmatched_action_signal,SELL VDE CLOSE HEDGE/SPXS
+unapplied_action,GRO,HEDGE,2024-04-16,1,revere_20240416.png,,unmatched_action_signal,SELL VDE CLOSE HEDGE/SPXS
+unapplied_action,GRO,LLY,2024-04-16,1,revere_20240416.png,,unmatched_action_signal,SELL LLY
+unapplied_action,GRO,MU,2024-04-16,1,revere_20240416.png,,unmatched_action_signal,SELL MU
+unapplied_action,GRO,SPXS,2024-04-16,1,revere_20240416.png,,unmatched_action_signal,SELL VDE CLOSE HEDGE/SPXS
+unapplied_action,GRO,VDE,2024-04-16,1,revere_20240416.png,,unmatched_action_signal,SELL VDE CLOSE HEDGE/SPXS
+lifecycle_mismatch,GRO,TMDX,2024-07-10,1,revere_20240710.png,revere_20240613.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,CAVA,2024-07-10,1,revere_20240710.png,,unmatched_action_signal,SELL TMDX + CAVA
+unapplied_action,GRO,CCL,2024-07-10,1,revere_20240710.png,,unmatched_action_signal,BUY GLW + CCL
+unapplied_action,GRO,GLW,2024-07-10,1,revere_20240710.png,,unmatched_action_signal,BUY GLW + CCL
+unapplied_action,GRO,TMDX,2024-07-10,1,revere_20240710.png,,unmatched_action_signal,SELL TMDX + CAVA
+unapplied_adjustment,GRO,CRWD,2024-07-10,1,revere_20240710.png,,unmatched_adjustment,TRIM CRWD
+unapplied_action,GRO,CEG,2024-08-23,1,revere_20240823.png,,unmatched_action_signal,SELL CEG
+unapplied_adjustment,GRO,META,2024-08-23,1,revere_20240823.png,,unmatched_adjustment,TRIM META
+unapplied_adjustment,GRO,NAIL,2024-09-25,1,revere_20240925.png,,unmatched_adjustment,TRIM }% NOW NAIL
+unapplied_adjustment,GRO,NOW,2024-09-25,1,revere_20240925.png,,unmatched_adjustment,TRIM }% NOW NAIL
+lifecycle_mismatch,GRO,FLUT,2024-09-25,2,revere_20240925_2.png,revere_20240925.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_adjustment,GRO,FLUT,2024-09-25,2,revere_20240925_2.png,,adjustment_missing_percent,ADD FLUT
+unapplied_adjustment,GRO,NAIL,2024-09-25,2,revere_20240925_2.png,,unmatched_adjustment,TRIM % NOW NAIL
+unapplied_adjustment,GRO,NOW,2024-09-25,2,revere_20240925_2.png,,unmatched_adjustment,TRIM % NOW NAIL
+unapplied_action,GRO,COIN,2024-12-07,1,revere_20241207.png,,unmatched_action_signal,BUY COIN + $50
+unapplied_action,GRO,SO,2024-12-07,1,revere_20241207.png,,unmatched_action_signal,BUY COIN + $50
+unapplied_adjustment,GRO,GTLB,2024-12-07,1,revere_20241207.png,,unmatched_adjustment,TRIM GTLB
+unapplied_action,GRO,AR,2025-01-03,1,revere_20250103.png,,unmatched_action_signal,SELL AR
+lifecycle_mismatch,GRO,CEG,2025-01-30,1,revere_20250130.png,revere_20220922.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,CEG,2025-01-30,1,revere_20250130.png,,unmatched_action_signal,BUY CEG GEV
+unapplied_action,GRO,GEV,2025-01-30,1,revere_20250130.png,,unmatched_action_signal,BUY CEG GEV
+unapplied_adjustment,GRO,TSLA,2025-01-30,1,revere_20250130.png,,adjustment_missing_percent,TRIM TSLA
+lifecycle_mismatch,GRO,CAVA,2025-02-10,1,revere_20250210.png,revere_20240823.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_adjustment,GRO,CAVA,2025-02-10,1,revere_20250210.png,,adjustment_missing_percent,ADD TO CAVA
+unapplied_action,GRO,UPRO,2025-02-27,1,revere_20250227.png,,unmatched_action_signal,SELL UPRO
+unapplied_adjustment,GRO,T,2025-02-27,1,revere_20250227.png,,unmatched_adjustment,ADD TTORSP
+unapplied_adjustment,GRO,URSP,2025-02-27,1,revere_20250227.png,,unmatched_adjustment,ADD TTORSP
+unapplied_action,GRO,SQ,2025-03-12,1,revere_20250312.png,,unmatched_action_signal,BUY £SQ
+lifecycle_mismatch,GRO,GLO,2025-03-25,1,revere_20250325.png,revere_20250312.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,PLTR,2025-03-25,1,revere_20250325.png,revere_20250103.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,GRO,PSQ,2025-03-25,1,revere_20250325.png,revere_20250312.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,SMG,2025-03-25,1,revere_20250325.png,revere_20250312.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,BROS,2025-03-25,1,revere_20250325.png,,unmatched_action_signal,BUY BROSDOCS
+unapplied_action,GRO,DOCN,2025-03-25,1,revere_20250325.png,,unmatched_action_signal,BUY BROSDOCS
+lifecycle_mismatch,GRO,BROS,2025-06-06,1,revere_20250606.png,revere_20230201.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,GRO,GEV,2025-06-06,1,revere_20250606.png,revere_20250103.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,GRO,IBIT,2025-06-06,1,revere_20250606.png,revere_20240517.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,GRO,NFLX,2025-06-06,1,revere_20250606.png,revere_20250325.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,GRO,PLTR,2025-06-06,1,revere_20250606.png,revere_20250103.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,TURBO,RDDT,2025-07-16,1,revere_20250716.png,revere_20250714.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,RDDT,2025-07-16,1,revere_20250716.png,,unmatched_action_signal,SELL RDDT
+unapplied_action,TURBO,BMNR,2025-08-27,1,revere_20250827.png,,unmatched_action_signal,SELL BMNR
+lifecycle_mismatch,GRO,TSLA,2025-09-03,1,revere_20250903.png,revere_20220922.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,TSLA,2025-09-03,1,revere_20250903.png,,unmatched_action_signal,BUY TSLA + NAIL
+unapplied_adjustment,TURBO,HOOD,2025-09-03,1,revere_20250903.png,,adjustment_missing_percent,TRIM TQQQ + HOOD
+unapplied_adjustment,TURBO,TQQQ,2025-09-03,1,revere_20250903.png,,unmatched_adjustment,TRIM TQQQ + HOOD
+unapplied_action,GRO,NAIL,2025-09-05,1,revere_20250905.png,,unmatched_action_signal,BUY TSLA + NAIL
+unapplied_action,GRO,TSLA,2025-09-05,1,revere_20250905.png,,unmatched_action_signal,BUY TSLA + NAIL
+lifecycle_mismatch,TURBO,SOLT,2025-09-05,1,revere_20250905.png,revere_20250903.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,TURBO,GEV,2025-09-05,1,revere_20250905.png,,unmatched_action_signal,SELL GEV
+unapplied_action,TURBO,SOLT,2025-09-05,1,revere_20250905.png,,unmatched_action_signal,BUY SOLT
+unapplied_adjustment,TURBO,HOOD,2025-09-05,1,revere_20250905.png,,adjustment_missing_percent,TRIM TQQQ + HOOD
+unapplied_adjustment,TURBO,TQQQ,2025-09-05,1,revere_20250905.png,,unmatched_adjustment,TRIM TQQQ + HOOD
+unapplied_adjustment,GRO,HOOD,2025-09-12,1,revere_20250912.png,,adjustment_missing_percent,ADD TO TSLA + HOOD
+unapplied_adjustment,GRO,TSLA,2025-09-12,1,revere_20250912.png,,adjustment_missing_percent,ADD TO TSLA + HOOD
+unapplied_adjustment,GRO,SSO,2025-10-09,1,revere_20251009.png,,unmatched_adjustment,TRIM SSO
+unapplied_adjustment,TURBO,ETHA,2025-10-09,1,revere_20251009.png,,adjustment_missing_percent,TRIM ETHA
+unapplied_adjustment,GRO,BE,2025-10-13,1,revere_20251013.png,,unmatched_adjustment,TRIM BE + MP +NBIS
+unapplied_adjustment,GRO,MP,2025-10-13,1,revere_20251013.png,,adjustment_missing_percent,TRIM BE + MP +NBIS
+unapplied_adjustment,GRO,NBIS,2025-10-13,1,revere_20251013.png,,unmatched_adjustment,TRIM BE + MP +NBIS
+unapplied_adjustment,TURBO,MP,2025-10-13,1,revere_20251013.png,,unmatched_adjustment,TRIM MP
+unapplied_action,GRO,SSO,2025-10-15,1,revere_20251015.png,,unmatched_action_signal,BUY SSO
+lifecycle_mismatch,GRO,IONQ,2025-10-16,1,revere_20251016.png,revere_20251015.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,PPH,2025-10-16,1,revere_20251016.png,revere_20251015.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,IONQ,2025-10-16,1,revere_20251016.png,,unmatched_action_signal,SELL PPH IONQ DASH
+unapplied_action,GRO,PPH,2025-10-16,1,revere_20251016.png,,unmatched_action_signal,SELL PPH IONQ DASH
+unapplied_action,GRO,STK,2025-10-16,1,revere_20251016.png,,unmatched_action_signal,BUY STK
+unapplied_adjustment,GRO,HOOD,2025-10-16,1,revere_20251016.png,,adjustment_missing_percent,TRIM HOOD
+unapplied_adjustment,GRO,UPRO,2025-10-20,1,revere_20251020.png,,adjustment_missing_percent,TRIM UPRO
+unapplied_action,TURBO,GH,2025-10-20,1,revere_20251020.png,,unmatched_action_signal,SELL SNDK GH UPRO
+unapplied_action,TURBO,SNDK,2025-10-20,1,revere_20251020.png,,unmatched_action_signal,SELL SNDK GH UPRO
+unapplied_action,TURBO,UPRO,2025-10-20,1,revere_20251020.png,,unmatched_action_signal,SELL SNDK GH UPRO
+unapplied_action,GRO,NAIL,2025-10-29,1,revere_20251029.png,,unmatched_action_signal,SELL NAIL
+unapplied_action,GRO,O,2025-10-29,1,revere_20251029.png,,unmatched_action_signal,BUY TER O-
+unapplied_adjustment,GRO,SSO,2025-10-29,1,revere_20251029.png,,unmatched_adjustment,TRIM SSO
+unapplied_adjustment,TURBO,URTY,2025-10-30,1,revere_20251030.png,,unmatched_adjustment,ADD TO UULIL URTY
+unapplied_adjustment,TURBO,UULIL,2025-10-30,1,revere_20251030.png,,unmatched_adjustment,ADD TO UULIL URTY
+unapplied_adjustment,GRO,SSO,2025-11-04,1,revere_20251104.png,,adjustment_missing_percent,TRIM SSO
+unapplied_adjustment,GRO,TER,2025-11-04,1,revere_20251104.png,,adjustment_missing_percent,ADD TO TER
+lifecycle_mismatch,TURBO,URA,2025-11-04,1,revere_20251104.png,revere_20251031.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,URA,2025-11-04,1,revere_20251104.png,,unmatched_action_signal,SELL URA
+unapplied_adjustment,TURBO,BABA,2025-11-04,1,revere_20251104.png,,adjustment_missing_percent,TRIM BABA
+unapplied_adjustment,TURBO,IO,2025-11-04,1,revere_20251104.png,,unmatched_adjustment,ADD 10 SSO
+unapplied_adjustment,TURBO,SSO,2025-11-04,1,revere_20251104.png,,unmatched_adjustment,ADD 10 SSO
+lifecycle_mismatch,GRO,TER,2025-11-05,1,revere_20251105.png,revere_20251029.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_adjustment,GRO,HOOD,2025-11-05,1,revere_20251105.png,,adjustment_missing_percent,TRIM HOOD
+unapplied_adjustment,GRO,TER,2025-11-05,1,revere_20251105.png,,adjustment_missing_percent,ADD TO TER
+unapplied_adjustment,TURBO,AMZN,2025-11-05,1,revere_20251105.png,,adjustment_missing_percent,ADD TO AMZN
+unapplied_adjustment,TURBO,SSO,2025-11-05,1,revere_20251105.png,,unmatched_adjustment,ADD SSO
+lifecycle_mismatch,TURBO,MU,2025-11-19,1,revere_20251119.png,revere_20251105.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,IREN,2025-11-19,1,revere_20251119.png,,unmatched_action_signal,SELL MU IREN
+unapplied_action,TURBO,MU,2025-11-19,1,revere_20251119.png,,unmatched_action_signal,SELL MU IREN
+unapplied_action,GRO,PLTR,2025-12-30,1,revere_20251230.png,,unmatched_action_signal,SELL PLTR
+unapplied_adjustment,TURBO,TSLA,2025-12-30,1,revere_20251230.png,,unmatched_adjustment,TRIM TSLA 4
+lifecycle_mismatch,GRO,TAN,2025-12-31,1,revere_20251231.png,revere_20251230.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,MU,2025-12-31,1,revere_20251231.png,,unmatched_action_signal,BUY MU
+unapplied_action,GRO,STV,2025-12-31,1,revere_20251231.png,,unmatched_action_signal,SELL STV TAN
+unapplied_action,GRO,TAN,2025-12-31,1,revere_20251231.png,,unmatched_action_signal,SELL STV TAN
+lifecycle_mismatch,TURBO,URTY,2025-12-31,1,revere_20251231.png,revere_20251230.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,URTY,2025-12-31,1,revere_20251231.png,,unmatched_action_signal,SELL URTY
+unapplied_adjustment,TURBO,GLD,2025-12-31,1,revere_20251231.png,,adjustment_missing_percent,TRIM GLD NUGT
+unapplied_adjustment,TURBO,NUGT,2025-12-31,1,revere_20251231.png,,unmatched_adjustment,TRIM GLD NUGT
+unapplied_adjustment,GRO,SSO,2026-01-02,1,revere_20260102.png,,adjustment_missing_percent,TRIM S50
+lifecycle_mismatch,TURBO,NUGT,2026-01-02,1,revere_20260102.png,revere_20251231.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,LQDA,2026-01-02,1,revere_20260102.png,,unmatched_action_signal,SELL NUGT LQDA
+unapplied_action,TURBO,NUGT,2026-01-02,1,revere_20260102.png,,unmatched_action_signal,SELL NUGT LQDA
+unapplied_adjustment,TURBO,TSLA,2026-01-02,1,revere_20260102.png,,unmatched_adjustment,TRIM TSLA
+unapplied_action,GRO,RDOT,2026-01-05,1,revere_20260105.png,,unmatched_action_signal,BUY RDOT
+unapplied_adjustment,GRO,CCJ,2026-01-05,1,revere_20260105.png,,adjustment_missing_percent,ADD TO SSO GOOG CCJ
+unapplied_adjustment,GRO,GOOG,2026-01-05,1,revere_20260105.png,,unmatched_adjustment,ADD TO SSO GOOG CCJ
+unapplied_adjustment,GRO,SSO,2026-01-05,1,revere_20260105.png,,adjustment_missing_percent,ADD TO SSO GOOG CCJ
+unapplied_adjustment,TURBO,RKLB,2026-01-05,1,revere_20260105.png,,adjustment_missing_percent,ADD TO RKLB
+lifecycle_mismatch,TURBO,TSLA,2026-01-06,1,revere_20260106.png,revere_20260105.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,TSLA,2026-01-06,1,revere_20260106.png,,unmatched_action_signal,SELL TSLA ALAB
+unapplied_adjustment,TURBO,RKT,2026-01-06,1,revere_20260106.png,,adjustment_missing_percent,ADD TO RKT
+unapplied_action,GRO,LABU,2026-01-07,1,revere_20260107.png,,unmatched_action_signal,BUY LABU SLV
+unapplied_action,GRO,SLV,2026-01-07,1,revere_20260107.png,,unmatched_action_signal,BUY LABU SLV
+unapplied_adjustment,GRO,SNDK,2026-01-08,1,revere_20260108.png,,adjustment_missing_percent,ADD TO SNDK
+lifecycle_mismatch,TURBO,SLV,2026-01-08,1,revere_20260108.png,revere_20260107.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,SPYM,2026-01-08,1,revere_20260108.png,revere_20260107.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,SSO,2026-01-08,1,revere_20260108.png,revere_20260107.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_adjustment,TURBO,PL,2026-01-08,1,revere_20260108.png,,unmatched_adjustment,TRIM PL
+unapplied_adjustment,GRO,RDDT,2026-01-09,1,revere_20260109.png,,unmatched_adjustment,ADD TO RDDT
+unapplied_action,TURBO,INTC,2026-01-09,1,revere_20260109.png,,unmatched_action_signal,BUY INTC
+lifecycle_mismatch,GRO,AFRM,2026-01-12,1,revere_20260112.png,revere_20250210.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,AFRM,2026-01-12,1,revere_20260112.png,,unmatched_action_signal,BUY AFRM
+unapplied_action,GRO,AFRM,2026-01-12,2,revere_20260112_2.png,,unmatched_action_signal,BUY AFRM
+unapplied_action,GRO,APH,2026-01-12,2,revere_20260112_2.png,,unmatched_action_signal,BUY APH
+unapplied_action,GRO,TSLL,2026-01-12,2,revere_20260112_2.png,,unmatched_action_signal,BUY TSLL
+unapplied_action,GRO,EOSE,2026-01-14,1,revere_20260114.png,,unmatched_action_signal,BUY EOSE
+unapplied_action,GRO,NVDA,2026-01-14,1,revere_20260114.png,,unmatched_action_signal,SELL NVDA TSLL
+unapplied_action,GRO,TSLL,2026-01-14,1,revere_20260114.png,,unmatched_action_signal,SELL NVDA TSLL
+unapplied_adjustment,GRO,BE,2026-01-14,1,revere_20260114.png,,adjustment_missing_percent,ADD TO MU BE
+unapplied_adjustment,GRO,MU,2026-01-14,1,revere_20260114.png,,unmatched_adjustment,ADD TO MU BE
+unapplied_adjustment,GRO,SLV,2026-01-14,1,revere_20260114.png,,unmatched_adjustment,TRIM SLV
+unapplied_adjustment,GRO,SSO,2026-01-14,1,revere_20260114.png,,adjustment_missing_percent,TRIM SSO
+lifecycle_mismatch,GRO,RDDT,2026-01-15,1,revere_20260115.png,revere_20260114.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,RDDT,2026-01-15,1,revere_20260115.png,,unmatched_action_signal,SELL RDDT
+unapplied_adjustment,GRO,APH,2026-01-15,1,revere_20260115.png,,adjustment_missing_percent,ADD TO APH
+unapplied_adjustment,GRO,LLY,2026-01-15,1,revere_20260115.png,,unmatched_adjustment,TRIM LLY
+unapplied_adjustment,TURBO,PL,2026-01-15,1,revere_20260115.png,,unmatched_adjustment,TRIM SNDK PL
+unapplied_adjustment,TURBO,SNDK,2026-01-15,1,revere_20260115.png,,adjustment_missing_percent,TRIM SNDK PL
+lifecycle_mismatch,GRO,GLD,2026-01-16,1,revere_20260116.png,revere_20250325.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,GRO,SLY,2026-01-16,1,revere_20260116.png,revere_20260115.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_adjustment,GRO,AOD,2026-01-16,1,revere_20260116.png,,unmatched_adjustment,TRIM RKB AOD TO LABU [INN
+unapplied_adjustment,GRO,INN,2026-01-16,1,revere_20260116.png,,unmatched_adjustment,TRIM RKB AOD TO LABU [INN
+unapplied_adjustment,GRO,LABU,2026-01-16,1,revere_20260116.png,,unmatched_adjustment,TRIM RKB AOD TO LABU [INN
+unapplied_adjustment,GRO,RKB,2026-01-16,1,revere_20260116.png,,unmatched_adjustment,TRIM RKB AOD TO LABU [INN
+lifecycle_mismatch,TURBO,LEU,2026-01-16,1,revere_20260116.png,revere_20260114.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_adjustment,TURBO,LEU,2026-01-16,1,revere_20260116.png,,adjustment_missing_percent,ADD TO LEU
+unapplied_adjustment,TURBO,RKLB,2026-01-16,1,revere_20260116.png,,adjustment_missing_percent,TRIM RKLB
+lifecycle_mismatch,GRO,TSLL,2026-01-22,1,revere_20260122.png,revere_20260112.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,TSLL,2026-01-22,1,revere_20260122.png,,unmatched_action_signal,BUY TSLL
+unapplied_action,TURBO,ARKG,2026-01-22,1,revere_20260122.png,,unmatched_action_signal,BUY ARKG
+unapplied_adjustment,TURBO,LEU,2026-01-22,1,revere_20260122.png,,adjustment_missing_percent,ADD TO LEU
+unapplied_action,GRO,ONG,2026-01-23,1,revere_20260123.png,,unmatched_action_signal,SELL ONG
+lifecycle_mismatch,TURBO,SE,2026-01-23,1,revere_20260123.png,revere_20260122.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,SE,2026-01-23,1,revere_20260123.png,,unmatched_action_signal,SELL SE(
+unapplied_action,TURBO,LEU,2026-01-26,1,revere_20260126.png,,unmatched_action_signal,SELL LEU
+unapplied_adjustment,TURBO,BABA,2026-01-26,1,revere_20260126.png,,adjustment_missing_percent,ADD 10 BABA O-
+unapplied_adjustment,TURBO,IO,2026-01-26,1,revere_20260126.png,,unmatched_adjustment,ADD 10 BABA O-
+unapplied_adjustment,TURBO,O,2026-01-26,1,revere_20260126.png,,unmatched_adjustment,ADD 10 BABA O-
+unapplied_adjustment,TURBO,REMX,2026-01-26,1,revere_20260126.png,,unmatched_adjustment,TRIM SLV REMX
+unapplied_adjustment,TURBO,SLV,2026-01-26,1,revere_20260126.png,,unmatched_adjustment,TRIM SLV REMX
+unapplied_action,TURBO,VSCO,2026-01-27,1,revere_20260127.png,,unmatched_action_signal,SELL VSCO
+unapplied_action,GRO,DUST,2026-01-28,1,revere_20260128.png,,unmatched_action_signal,SELL DUST
+unapplied_adjustment,GRO,APH,2026-01-28,1,revere_20260128.png,,adjustment_missing_percent,TRIM APH
+unapplied_action,TURBO,GEV,2026-01-28,1,revere_20260128.png,,unmatched_action_signal,BUY GEV
+unapplied_action,TURBO,CRWD,2026-01-29,1,revere_20260129.png,,unmatched_action_signal,SELL FIGR CRWD O-TRMA GLD
+unapplied_action,TURBO,FIGR,2026-01-29,1,revere_20260129.png,,unmatched_action_signal,SELL FIGR CRWD O-TRMA GLD
+unapplied_action,TURBO,GLD,2026-01-29,1,revere_20260129.png,,unmatched_action_signal,SELL FIGR CRWD O-TRMA GLD
+unapplied_action,TURBO,GLD,2026-01-30,1,revere_20260130.png,,unmatched_action_signal,SELL ARKG LABU REMX GLD SLV PPLT
+unapplied_action,TURBO,PPLT,2026-01-30,1,revere_20260130.png,,unmatched_action_signal,SELL ARKG LABU REMX GLD SLV PPLT
+unapplied_action,TURBO,REMX,2026-01-30,1,revere_20260130.png,,unmatched_action_signal,SELL ARKG LABU REMX GLD SLV PPLT
+unapplied_action,TURBO,SLV,2026-01-30,1,revere_20260130.png,,unmatched_action_signal,SELL ARKG LABU REMX GLD SLV PPLT
+unapplied_adjustment,TURBO,SNOK,2026-01-30,1,revere_20260130.png,,unmatched_adjustment,TRIM SNOK
+lifecycle_mismatch,GRO,AAPL,2026-02-02,1,revere_20260202.png,revere_20220922.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,AAPL,2026-02-02,1,revere_20260202.png,,unmatched_action_signal,BUY AAPL
+unapplied_adjustment,GRO,URSP,2026-02-02,1,revere_20260202.png,,adjustment_missing_percent,ADD TO URSP
+lifecycle_mismatch,TURBO,PL,2026-02-02,1,revere_20260202.png,revere_20260130.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,PL,2026-02-02,1,revere_20260202.png,,unmatched_action_signal,SELL PL
+unapplied_action,GRO,ENE,2026-02-03,1,revere_20260203.png,,unmatched_action_signal,SELL APH [ENE
+unapplied_adjustment,GRO,AAPL,2026-02-03,1,revere_20260203.png,,adjustment_missing_percent,ADD TO AAPL
+unapplied_action,TURBO,BAA,2026-02-03,1,revere_20260203.png,,unmatched_action_signal,SELL BAA [EEN =UV RO
+unapplied_action,TURBO,EEN,2026-02-03,1,revere_20260203.png,,unmatched_action_signal,SELL BAA [EEN =UV RO
+unapplied_action,TURBO,RO,2026-02-03,1,revere_20260203.png,,unmatched_action_signal,SELL BAA [EEN =UV RO
+unapplied_action,TURBO,UV,2026-02-03,1,revere_20260203.png,,unmatched_action_signal,SELL BAA [EEN =UV RO
+unapplied_action,GRO,CC,2026-02-04,1,revere_20260204.png,,unmatched_action_signal,SELL SSO CC)
+unapplied_action,GRO,RSP,2026-02-04,1,revere_20260204.png,,unmatched_action_signal,BUY RSP
+unapplied_action,GRO,SSO,2026-02-04,1,revere_20260204.png,,unmatched_action_signal,SELL SSO CC)
+unapplied_adjustment,GRO,BE,2026-02-04,1,revere_20260204.png,,adjustment_missing_percent,TRIM BE
+lifecycle_mismatch,TURBO,TSEM,2026-02-04,1,revere_20260204.png,revere_20260203.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,TSEM,2026-02-04,1,revere_20260204.png,,unmatched_action_signal,SELL TSEM RKL8 BTU
+unapplied_adjustment,TURBO,GOOGL,2026-02-05,1,revere_20260205.png,,unmatched_adjustment,TRIM GOOGL O-
+unapplied_adjustment,TURBO,MLTZ,2026-02-05,1,revere_20260205.png,,unmatched_adjustment,TRIM MLTZ
+unapplied_adjustment,TURBO,O,2026-02-05,1,revere_20260205.png,,unmatched_adjustment,TRIM GOOGL O-
+lifecycle_mismatch,GRO,GEV,2026-02-06,1,revere_20260206.png,revere_20250103.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,GRO,TNA,2026-02-06,1,revere_20260206.png,revere_20240301.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,GEV,2026-02-06,1,revere_20260206.png,,unmatched_action_signal,BUY GEV
+unapplied_action,GRO,TNA,2026-02-06,1,revere_20260206.png,,unmatched_action_signal,BUY TNA
+unapplied_action,GRO,NVOA,2026-02-09,1,revere_20260209.png,,unmatched_action_signal,BUY NVOA « SOK
+unapplied_action,GRO,SOK,2026-02-09,1,revere_20260209.png,,unmatched_action_signal,BUY NVOA « SOK
+unapplied_adjustment,GRO,ENE,2026-02-10,1,revere_20260210.png,,unmatched_adjustment,ADD TO [HI ENE
+unapplied_adjustment,GRO,HI,2026-02-10,1,revere_20260210.png,,unmatched_adjustment,ADD TO [HI ENE
+unapplied_adjustment,TURBO,AA,2026-02-10,1,revere_20260210.png,,unmatched_adjustment,ADD 10 AA COPX
+unapplied_adjustment,TURBO,IO,2026-02-10,1,revere_20260210.png,,unmatched_adjustment,ADD 10 AA COPX
+lifecycle_mismatch,GRO,JI,2026-02-11,1,revere_20260211.png,revere_20260210.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,NVDA,2026-02-11,1,revere_20260211.png,revere_20260210.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,NVOA,2026-02-11,1,revere_20260211.png,revere_20250606.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,GRO,SPYM,2026-02-11,1,revere_20260211.png,revere_20260210.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,USRP,2026-02-11,1,revere_20260211.png,revere_20260210.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,TNA,2026-02-11,1,revere_20260211.png,,unmatched_action_signal,SELL TNA ENPH
+unapplied_action,TURBO,VRT,2026-02-11,1,revere_20260211.png,,unmatched_action_signal,BUY VRT
+unapplied_adjustment,TURBO,INTC,2026-02-11,1,revere_20260211.png,,unmatched_adjustment,ADD TO INTC
+lifecycle_mismatch,GRO,GOOG,2026-02-12,1,revere_20260212.png,revere_20260211.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,AA,2026-02-12,1,revere_20260212.png,,unmatched_action_signal,SELL TOL TER SNDX AA. DOCH.VRTESLY
+unapplied_action,GRO,COPX,2026-02-12,1,revere_20260212.png,,unmatched_action_signal,SELL 550.C0PX JIINTC GEV
+unapplied_action,GRO,DOCH,2026-02-12,1,revere_20260212.png,,unmatched_action_signal,SELL TOL TER SNDX AA. DOCH.VRTESLY
+unapplied_action,GRO,GEV,2026-02-12,1,revere_20260212.png,,unmatched_action_signal,SELL 550.C0PX JIINTC GEV
+unapplied_action,GRO,GOOG,2026-02-12,1,revere_20260212.png,,unmatched_action_signal,SELL GOOG XME TURBO HOLOWNGS: 5#YM
+unapplied_action,GRO,HALO,2026-02-12,1,revere_20260212.png,,unmatched_action_signal,SELL GOOG XME TURBO HOLOWNGS: 5#YM
+unapplied_action,GRO,J,2026-02-12,1,revere_20260212.png,,unmatched_action_signal,SELL 550.C0PX JIINTC GEV
+unapplied_action,GRO,JINTC,2026-02-12,1,revere_20260212.png,,unmatched_action_signal,SELL 550.C0PX JIINTC GEV
+unapplied_action,GRO,SNDX,2026-02-12,1,revere_20260212.png,,unmatched_action_signal,SELL TOL TER SNDX AA. DOCH.VRTESLY
+unapplied_action,GRO,SPYM,2026-02-12,1,revere_20260212.png,,unmatched_action_signal,SELL GOOG XME TURBO HOLOWNGS: 5#YM
+unapplied_action,GRO,SSO,2026-02-12,1,revere_20260212.png,,unmatched_action_signal,SELL 550.C0PX JIINTC GEV
+unapplied_action,GRO,TER,2026-02-12,1,revere_20260212.png,,unmatched_action_signal,SELL TOL TER SNDX AA. DOCH.VRTESLY
+unapplied_action,GRO,TOL,2026-02-12,1,revere_20260212.png,,unmatched_action_signal,SELL TOL TER SNDX AA. DOCH.VRTESLY
+unapplied_action,GRO,WNGS,2026-02-12,1,revere_20260212.png,,unmatched_action_signal,SELL GOOG XME TURBO HOLOWNGS: 5#YM
+unapplied_adjustment,GRO,AAPL,2026-02-12,1,revere_20260212.png,,adjustment_missing_percent,TRIM AAPL TNA BE
+unapplied_adjustment,GRO,BE,2026-02-12,1,revere_20260212.png,,adjustment_missing_percent,TRIM AAPL TNA BE
+unapplied_adjustment,GRO,TNA,2026-02-12,1,revere_20260212.png,,unmatched_adjustment,TRIM AAPL TNA BE
+unapplied_action,TURBO,FSL,2026-02-12,1,revere_20260212.png,,unmatched_action_signal,BUY FSL¥
+unapplied_action,TURBO,GOOGL,2026-02-12,1,revere_20260212.png,,unmatched_action_signal,SELL GOOGL
+unapplied_adjustment,TURBO,INTC,2026-02-12,1,revere_20260212.png,,unmatched_adjustment,TRIM INTC
+unapplied_action,GRO,NVDA,2026-02-13,1,revere_20260213.png,,unmatched_action_signal,SELL AAPL NVDA BE
+unapplied_adjustment,GRO,PLTD,2026-02-13,1,revere_20260213.png,,unmatched_adjustment,TRIM PLTD
+unapplied_action,TURBO,FCX,2026-02-13,1,revere_20260213.png,,unmatched_action_signal,BUY FTI FCX
+unapplied_action,TURBO,FTI,2026-02-13,1,revere_20260213.png,,unmatched_action_signal,BUY FTI FCX
+unapplied_action,TURBO,VRT,2026-02-13,1,revere_20260213.png,,unmatched_action_signal,SELL VRT
+unapplied_adjustment,GRO,CEV,2026-02-17,1,revere_20260217.png,,unmatched_adjustment,ADD TO CEV [INE
+unapplied_adjustment,GRO,INE,2026-02-17,1,revere_20260217.png,,unmatched_adjustment,ADD TO CEV [INE
+lifecycle_mismatch,TURBO,AA,2026-02-17,1,revere_20260217.png,revere_20260213.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,AA,2026-02-17,1,revere_20260217.png,,unmatched_action_signal,SELL AA
+unapplied_action,TURBO,NET,2026-02-17,1,revere_20260217.png,,unmatched_action_signal,BUY NET
+unapplied_action,GRO,COPX,2026-02-18,1,revere_20260218.png,,unmatched_action_signal,BUY COPX UFO
+unapplied_action,GRO,UFO,2026-02-18,1,revere_20260218.png,,unmatched_action_signal,BUY COPX UFO
+unapplied_adjustment,GRO,FSLY,2026-02-18,1,revere_20260218.png,,unmatched_adjustment,ADD TO FSLY
+unapplied_adjustment,GRO,PLTD,2026-02-18,1,revere_20260218.png,,unmatched_adjustment,TRIM SHORT VIA PLTD
+unapplied_adjustment,GRO,SHORT,2026-02-18,1,revere_20260218.png,,unmatched_adjustment,TRIM SHORT VIA PLTD
+unapplied_adjustment,GRO,VIA,2026-02-18,1,revere_20260218.png,,unmatched_adjustment,TRIM SHORT VIA PLTD
+unapplied_action,TURBO,MU,2026-02-18,1,revere_20260218.png,,unmatched_action_signal,BUY MU
+unapplied_adjustment,TURBO,FCX,2026-02-18,1,revere_20260218.png,,unmatched_adjustment,ADD TO FCX
+unapplied_action,GRO,ILE,2026-02-19,1,revere_20260219.png,,unmatched_action_signal,BUY ILE
+unapplied_adjustment,GRO,ANET,2026-02-19,1,revere_20260219.png,,unmatched_adjustment,ADD ECX FTALNET MU
+unapplied_adjustment,GRO,COR,2026-02-19,1,revere_20260219.png,,unmatched_adjustment,ADD COR
+unapplied_adjustment,GRO,DOCH,2026-02-19,1,revere_20260219.png,,unmatched_adjustment,ADD DOCH FSLY SNDK
+unapplied_adjustment,GRO,ECX,2026-02-19,1,revere_20260219.png,,unmatched_adjustment,ADD ECX FTALNET MU
+unapplied_adjustment,GRO,FSLY,2026-02-19,1,revere_20260219.png,,unmatched_adjustment,ADD DOCH FSLY SNDK
+unapplied_adjustment,GRO,FSLY,2026-02-19,1,revere_20260219.png,,unmatched_adjustment,ADD TO FSLY TURBO HOLOINGS: 5PM 550
+unapplied_adjustment,GRO,FTA,2026-02-19,1,revere_20260219.png,,unmatched_adjustment,ADD ECX FTALNET MU
+unapplied_adjustment,GRO,HALO,2026-02-19,1,revere_20260219.png,,unmatched_adjustment,ADD TO FSLY TURBO HOLOINGS: 5PM 550
+unapplied_adjustment,GRO,INGD,2026-02-19,1,revere_20260219.png,,unmatched_adjustment,ADD TO FSLY TURBO HOLOINGS: 5PM 550
+unapplied_adjustment,GRO,INTC,2026-02-19,1,revere_20260219.png,,unmatched_adjustment,ADD JIIIGEV. TOL INTC TER
+unapplied_adjustment,GRO,JGEV,2026-02-19,1,revere_20260219.png,,unmatched_adjustment,ADD JIIIGEV. TOL INTC TER
+unapplied_adjustment,GRO,JI,2026-02-19,1,revere_20260219.png,,unmatched_adjustment,ADD JIIIGEV. TOL INTC TER
+unapplied_adjustment,GRO,MU,2026-02-19,1,revere_20260219.png,,adjustment_missing_percent,ADD ECX FTALNET MU
+unapplied_adjustment,GRO,SNDK,2026-02-19,1,revere_20260219.png,,unmatched_adjustment,ADD DOCH FSLY SNDK
+unapplied_adjustment,GRO,SSO,2026-02-19,1,revere_20260219.png,,adjustment_missing_percent,ADD TO FSLY TURBO HOLOINGS: 5PM 550
+unapplied_adjustment,GRO,TER,2026-02-19,1,revere_20260219.png,,adjustment_missing_percent,ADD JIIIGEV. TOL INTC TER
+unapplied_adjustment,TURBO,SNDK,2026-02-19,1,revere_20260219.png,,adjustment_missing_percent,ADD TO SNDK
+unapplied_action,GRO,XLP,2026-02-23,1,revere_20260223.png,,unmatched_action_signal,BUY XLP
+unapplied_adjustment,GRO,ITB,2026-02-23,1,revere_20260223.png,,adjustment_missing_percent,TRIM ITB UFO
+unapplied_adjustment,GRO,UFO,2026-02-23,1,revere_20260223.png,,unmatched_adjustment,TRIM ITB UFO
+unapplied_adjustment,TURBO,TOMU,2026-02-23,1,revere_20260223.png,,unmatched_adjustment,ADD TOMU
+unapplied_action,GRO,PLTD,2026-02-24,1,revere_20260224.png,,unmatched_action_signal,SELL PLTD
+unapplied_adjustment,GRO,ILF,2026-02-24,1,revere_20260224.png,,unmatched_adjustment,ADD TO ILF
+unapplied_action,TURBO,AA,2026-02-24,1,revere_20260224.png,,unmatched_action_signal,BUY VR BE AA
+unapplied_action,TURBO,BE,2026-02-24,1,revere_20260224.png,,unmatched_action_signal,BUY VR BE AA
+unapplied_action,TURBO,QBTZ,2026-02-24,1,revere_20260224.png,,unmatched_action_signal,SELL RGTZ QBTZ
+unapplied_action,TURBO,RGTZ,2026-02-24,1,revere_20260224.png,,unmatched_action_signal,SELL RGTZ QBTZ
+unapplied_action,TURBO,VR,2026-02-24,1,revere_20260224.png,,unmatched_action_signal,BUY VR BE AA
+unapplied_action,GRO,CCJ,2026-02-25,1,revere_20260225.png,,unmatched_action_signal,BUY CCJ
+unapplied_action,GRO,T,2026-02-25,1,revere_20260225.png,,unmatched_action_signal,SELL ITB T
+unapplied_adjustment,GRO,UPRO,2026-02-25,1,revere_20260225.png,,unmatched_adjustment,ADD TO UPRO
+unapplied_action,TURBO,IONZ,2026-02-25,1,revere_20260225.png,,unmatched_action_signal,SELL IONZ OKLS
+unapplied_action,TURBO,OKLS,2026-02-25,1,revere_20260225.png,,unmatched_action_signal,SELL IONZ OKLS
+unapplied_action,TURBO,UPRD,2026-02-25,1,revere_20260225.png,,unmatched_action_signal,BUY UPRD
+lifecycle_mismatch,TURBO,FAI,2026-02-26,1,revere_20260226.png,revere_20260225.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,FLY,2026-02-26,1,revere_20260226.png,revere_20260225.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,ILF,2026-02-26,1,revere_20260226.png,revere_20260225.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,JLEV,2026-02-26,1,revere_20260226.png,revere_20260225.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,SPYM,2026-02-26,1,revere_20260226.png,revere_20260225.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,TOU,2026-02-26,1,revere_20260226.png,revere_20260225.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,TNA,2026-02-27,1,revere_20260227.png,revere_20260225.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,TNA,2026-02-27,1,revere_20260227.png,,unmatched_action_signal,SELL TNA
+unapplied_action,GRO,UFO,2026-02-27,1,revere_20260227.png,,unmatched_action_signal,SELL UFO
+unapplied_adjustment,GRO,UPRO,2026-02-27,1,revere_20260227.png,,unmatched_adjustment,TRIM UPRO
+unapplied_action,TURBO,BE,2026-02-27,1,revere_20260227.png,,unmatched_action_signal,SELL BE
+unapplied_action,GRO,SQQQ,2026-03-02,1,revere_20260302.png,,unmatched_action_signal,SELL SQQQ
+unapplied_adjustment,GRO,MU,2026-03-02,1,revere_20260302.png,,adjustment_missing_percent,TRIM MU
+lifecycle_mismatch,GRO,COPX,2026-03-03,1,revere_20260303.png,revere_20260302.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,COPX,2026-03-03,1,revere_20260303.png,,unmatched_action_signal,SELL COPX MU SNDK
+unapplied_action,GRO,SNDK,2026-03-03,1,revere_20260303.png,,unmatched_action_signal,SELL COPX MU SNDK
+unapplied_adjustment,GRO,FTAI,2026-03-03,1,revere_20260303.png,,unmatched_adjustment,TRIM ILF FTAI
+unapplied_adjustment,GRO,ILF,2026-03-03,1,revere_20260303.png,,unmatched_adjustment,TRIM ILF FTAI
+lifecycle_mismatch,TURBO,MU,2026-03-03,1,revere_20260303.png,revere_20260302.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,AA,2026-03-03,1,revere_20260303.png,,unmatched_action_signal,SELL AA FTA! ILF MU SNDK UPRO VAT
+unapplied_action,TURBO,FTA,2026-03-03,1,revere_20260303.png,,unmatched_action_signal,SELL AA FTA! ILF MU SNDK UPRO VAT
+unapplied_action,TURBO,ILF,2026-03-03,1,revere_20260303.png,,unmatched_action_signal,SELL AA FTA! ILF MU SNDK UPRO VAT
+unapplied_action,TURBO,MU,2026-03-03,1,revere_20260303.png,,unmatched_action_signal,SELL AA FTA! ILF MU SNDK UPRO VAT
+unapplied_action,TURBO,SNDK,2026-03-03,1,revere_20260303.png,,unmatched_action_signal,SELL AA FTA! ILF MU SNDK UPRO VAT
+unapplied_action,TURBO,UPRO,2026-03-03,1,revere_20260303.png,,unmatched_action_signal,SELL AA FTA! ILF MU SNDK UPRO VAT
+unapplied_action,TURBO,VAT,2026-03-03,1,revere_20260303.png,,unmatched_action_signal,SELL AA FTA! ILF MU SNDK UPRO VAT
+unapplied_adjustment,TURBO,COPX,2026-03-03,1,revere_20260303.png,,adjustment_missing_percent,TRIM COPX FCX
+unapplied_adjustment,TURBO,FCX,2026-03-03,1,revere_20260303.png,,unmatched_adjustment,TRIM COPX FCX
+unapplied_action,GRO,CRCL,2026-03-04,1,revere_20260304.png,,unmatched_action_signal,BUY CRCL
+unapplied_action,TURBO,CC,2026-03-04,1,revere_20260304.png,,unmatched_action_signal,BUY CC)
+unapplied_action,GRO,LF,2026-03-05,1,revere_20260305.png,,unmatched_action_signal,SELL LF XTP
+unapplied_action,GRO,XTP,2026-03-05,1,revere_20260305.png,,unmatched_action_signal,SELL LF XTP
+unapplied_adjustment,GRO,GEV,2026-03-05,1,revere_20260305.png,,adjustment_missing_percent,TRIM GEV KEVS [INN
+unapplied_adjustment,GRO,INN,2026-03-05,1,revere_20260305.png,,unmatched_adjustment,TRIM GEV KEVS [INN
+unapplied_adjustment,GRO,KEVS,2026-03-05,1,revere_20260305.png,,unmatched_adjustment,TRIM GEV KEVS [INN
+lifecycle_mismatch,TURBO,CCI,2026-03-05,1,revere_20260305.png,revere_20260304.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,FCX,2026-03-05,1,revere_20260305.png,revere_20260304.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,ILF,2026-03-05,1,revere_20260305.png,revere_20260304.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,GEV,2026-03-06,1,revere_20260306.png,revere_20260305.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,CC,2026-03-06,1,revere_20260306.png,,unmatched_action_signal,SELL AVS GEV CC)
+unapplied_action,TURBO,GEV,2026-03-06,1,revere_20260306.png,,unmatched_action_signal,SELL AVS GEV CC)
+unapplied_adjustment,TURBO,SSO,2026-03-06,1,revere_20260306.png,,unmatched_adjustment,TRIM TER SSO
+unapplied_adjustment,TURBO,TER,2026-03-06,1,revere_20260306.png,,unmatched_adjustment,TRIM TER SSO
+unapplied_adjustment,GRO,CRCL,2026-03-11,1,revere_20260311.png,,unmatched_adjustment,ADD TO CRCL TRIN SPXS
+unapplied_adjustment,GRO,SPXS,2026-03-11,1,revere_20260311.png,,unmatched_adjustment,ADD TO CRCL TRIN SPXS
+unapplied_adjustment,GRO,TRIN,2026-03-11,1,revere_20260311.png,,unmatched_adjustment,ADD TO CRCL TRIN SPXS
+unapplied_adjustment,TURBO,FSLY,2026-03-11,1,revere_20260311.png,,unmatched_adjustment,TRIM FSLY
+unapplied_action,GRO,NET,2026-03-12,1,revere_20260312.png,,unmatched_action_signal,BUY NET
+unapplied_action,GRO,RSP,2026-03-12,1,revere_20260312.png,,unmatched_action_signal,SELL SOXL RSP
+unapplied_adjustment,GRO,HEDGE,2026-03-16,1,revere_20260316.png,,unmatched_adjustment,TRIM HEDGE SPU
+unapplied_adjustment,GRO,SPU,2026-03-16,1,revere_20260316.png,,unmatched_adjustment,TRIM HEDGE SPU
+unapplied_adjustment,GRO,TOMET,2026-03-16,1,revere_20260316.png,,unmatched_adjustment,ADD TOMET
+unapplied_adjustment,GRO,AE,2026-03-18,1,revere_20260318.png,,unmatched_adjustment,TRIM AE TER SUV
+unapplied_adjustment,GRO,FSLY,2026-03-18,1,revere_20260318.png,,unmatched_adjustment,TRIM FSLY
+unapplied_adjustment,GRO,HEOGE,2026-03-18,1,revere_20260318.png,,unmatched_adjustment,TRIM HEOGE/SPXU TUNA WOWOWAS SEAS
+unapplied_adjustment,GRO,IO,2026-03-18,1,revere_20260318.png,,unmatched_adjustment,TRIM [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE
+unapplied_adjustment,GRO,IO,2026-03-18,1,revere_20260318.png,,unmatched_adjustment,TRIM HEOGE/SPXU TUNA WOWOWAS SEAS
+unapplied_adjustment,GRO,IR,2026-03-18,1,revere_20260318.png,,unmatched_adjustment,TRIM [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE
+unapplied_adjustment,GRO,IURSO,2026-03-18,1,revere_20260318.png,,unmatched_adjustment,TRIM [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE
+unapplied_adjustment,GRO,NEE,2026-03-18,1,revere_20260318.png,,unmatched_adjustment,TRIM [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE
+unapplied_adjustment,GRO,SEAS,2026-03-18,1,revere_20260318.png,,unmatched_adjustment,TRIM HEOGE/SPXU TUNA WOWOWAS SEAS
+unapplied_adjustment,GRO,SO,2026-03-18,1,revere_20260318.png,,adjustment_missing_percent,TRIM SO
+unapplied_adjustment,GRO,SPXU,2026-03-18,1,revere_20260318.png,,unmatched_adjustment,TRIM HEOGE/SPXU TUNA WOWOWAS SEAS
+unapplied_adjustment,GRO,SUV,2026-03-18,1,revere_20260318.png,,unmatched_adjustment,TRIM AE TER SUV
+unapplied_adjustment,GRO,TER,2026-03-18,1,revere_20260318.png,,adjustment_missing_percent,TRIM AE TER SUV
+unapplied_adjustment,GRO,TUNA,2026-03-18,1,revere_20260318.png,,unmatched_adjustment,TRIM HEOGE/SPXU TUNA WOWOWAS SEAS
+unapplied_adjustment,GRO,WOWAS,2026-03-18,1,revere_20260318.png,,unmatched_adjustment,TRIM HEOGE/SPXU TUNA WOWOWAS SEAS
+action_parse_review,GRO,IO,2026-03-19,1,revere_20260319.png,,ambiguous_percent_multi_ticker,TRIM [NE TREO RVAB/REBAR: (0 13/-2.34%)
+action_parse_review,GRO,NE,2026-03-19,1,revere_20260319.png,,ambiguous_percent_multi_ticker,TRIM [NE TREO RVAB/REBAR: (0 13/-2.34%)
+action_parse_review,GRO,O,2026-03-19,1,revere_20260319.png,,ambiguous_percent_multi_ticker,TRIM [NE TREO RVAB/REBAR: (0 13/-2.34%)
+action_parse_review,GRO,TREO,2026-03-19,1,revere_20260319.png,,ambiguous_percent_multi_ticker,TRIM [NE TREO RVAB/REBAR: (0 13/-2.34%)
+unapplied_adjustment,GRO,BE,2026-03-19,1,revere_20260319.png,,unmatched_adjustment,TRIM BE
+unapplied_adjustment,GRO,EEE,2026-03-19,1,revere_20260319.png,,unmatched_adjustment,TRIM 6L0 EEE UNO HOLOINGS: SPYM
+unapplied_adjustment,GRO,FSEV,2026-03-19,1,revere_20260319.png,,unmatched_adjustment,TRIM TER FSEV
+unapplied_adjustment,GRO,GLO,2026-03-19,1,revere_20260319.png,,unmatched_adjustment,TRIM 6L0 EEE UNO HOLOINGS: SPYM
+unapplied_adjustment,GRO,HALO,2026-03-19,1,revere_20260319.png,,unmatched_adjustment,TRIM 6L0 EEE UNO HOLOINGS: SPYM
+unapplied_adjustment,GRO,INGD,2026-03-19,1,revere_20260319.png,,unmatched_adjustment,TRIM 6L0 EEE UNO HOLOINGS: SPYM
+unapplied_adjustment,GRO,SE,2026-03-19,1,revere_20260319.png,,unmatched_adjustment,TRIM SE
+unapplied_adjustment,GRO,SPYM,2026-03-19,1,revere_20260319.png,,unmatched_adjustment,TRIM 6L0 EEE UNO HOLOINGS: SPYM
+unapplied_adjustment,GRO,TER,2026-03-19,1,revere_20260319.png,,adjustment_missing_percent,TRIM TER FSEV
+unapplied_adjustment,GRO,UNO,2026-03-19,1,revere_20260319.png,,unmatched_adjustment,TRIM 6L0 EEE UNO HOLOINGS: SPYM
+lifecycle_mismatch,GRO,GLO,2026-03-20,1,revere_20260320.png,revere_20260319.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,NBIS,2026-03-20,1,revere_20260320.png,revere_20260319.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,GLO,2026-03-20,1,revere_20260320.png,,unmatched_action_signal,SELL VRT NBIS GLO
+unapplied_action,GRO,NBIS,2026-03-20,1,revere_20260320.png,,unmatched_action_signal,SELL VRT NBIS GLO
+unapplied_action,GRO,VRT,2026-03-20,1,revere_20260320.png,,unmatched_action_signal,SELL VRT NBIS GLO
+unapplied_adjustment,GRO,BE,2026-03-20,1,revere_20260320.png,,unmatched_adjustment,ADD TO SOS [IEE RUSEO HOOINGS: BE
+unapplied_adjustment,GRO,HOOD,2026-03-20,1,revere_20260320.png,,adjustment_missing_percent,ADD TO SOS [IEE RUSEO HOOINGS: BE
+unapplied_adjustment,GRO,IEE,2026-03-20,1,revere_20260320.png,,unmatched_adjustment,ADD TO SOS [IEE RUSEO HOOINGS: BE
+unapplied_adjustment,GRO,NGL,2026-03-20,1,revere_20260320.png,,unmatched_adjustment,ADD TO SOS [IEE RUSEO HOOINGS: BE
+unapplied_adjustment,GRO,NNEC,2026-03-20,1,revere_20260320.png,,unmatched_adjustment,ADD [NNEC
+unapplied_adjustment,GRO,RUSEO,2026-03-20,1,revere_20260320.png,,unmatched_adjustment,ADD TO SOS [IEE RUSEO HOOINGS: BE
+unapplied_adjustment,GRO,SOS,2026-03-20,1,revere_20260320.png,,unmatched_adjustment,ADD TO SOS [IEE RUSEO HOOINGS: BE
+unapplied_adjustment,GRO,TER,2026-03-20,1,revere_20260320.png,,adjustment_missing_percent,ADD TER FSLY
+unapplied_adjustment,GRO,CRCL,2026-03-23,1,revere_20260323.png,,unmatched_adjustment,TRIM SDS CRCL UREO HOLOINGS: TER FSLY
+unapplied_adjustment,GRO,FSLY,2026-03-23,1,revere_20260323.png,,adjustment_missing_percent,TRIM SDS CRCL UREO HOLOINGS: TER FSLY
+unapplied_adjustment,GRO,HALO,2026-03-23,1,revere_20260323.png,,unmatched_adjustment,TRIM SDS CRCL UREO HOLOINGS: TER FSLY
+unapplied_adjustment,GRO,INGD,2026-03-23,1,revere_20260323.png,,unmatched_adjustment,TRIM SDS CRCL UREO HOLOINGS: TER FSLY
+unapplied_adjustment,GRO,NRG,2026-03-23,1,revere_20260323.png,,unmatched_adjustment,TRIM [NRG
+unapplied_adjustment,GRO,SDS,2026-03-23,1,revere_20260323.png,,unmatched_adjustment,TRIM SDS CRCL UREO HOLOINGS: TER FSLY
+unapplied_adjustment,GRO,TER,2026-03-23,1,revere_20260323.png,,adjustment_missing_percent,TRIM SDS CRCL UREO HOLOINGS: TER FSLY
+unapplied_adjustment,GRO,UREO,2026-03-23,1,revere_20260323.png,,unmatched_adjustment,TRIM SDS CRCL UREO HOLOINGS: TER FSLY
+unapplied_action,TURBO,BE,2026-03-23,1,revere_20260323.png,,unmatched_action_signal,SELL PLTZ BE
+unapplied_action,TURBO,PLTZ,2026-03-23,1,revere_20260323.png,,unmatched_action_signal,SELL PLTZ BE
+unapplied_action,GRO,CRCL,2026-03-24,1,revere_20260324.png,,unmatched_action_signal,SELL CRCL
+unapplied_adjustment,GRO,FS,2026-03-24,1,revere_20260324.png,,unmatched_adjustment,TRIM NET TUREO HOOS: [IN TER FS Y
+unapplied_adjustment,GRO,HOOS,2026-03-24,1,revere_20260324.png,,adjustment_missing_percent,TRIM NET TUREO HOOS: [IN TER FS Y
+unapplied_adjustment,GRO,NET,2026-03-24,1,revere_20260324.png,,unmatched_adjustment,TRIM NET TUREO HOOS: [IN TER FS Y
+unapplied_adjustment,GRO,TER,2026-03-24,1,revere_20260324.png,,adjustment_missing_percent,TRIM NET TUREO HOOS: [IN TER FS Y
+unapplied_adjustment,GRO,TUREO,2026-03-24,1,revere_20260324.png,,unmatched_adjustment,TRIM NET TUREO HOOS: [IN TER FS Y
+unapplied_adjustment,GRO,Y,2026-03-24,1,revere_20260324.png,,unmatched_adjustment,TRIM NET TUREO HOOS: [IN TER FS Y
+action_parse_review,GRO,B,2026-03-26,1,revere_20260326.png,,ambiguous_percent_multi_ticker,ADD TO HEDGE SDS TUREO WOLOINGS: [I VER. FS. B+ TURBO RVAB/REBAR: (+ : //-2.49%)
+action_parse_review,GRO,FS,2026-03-26,1,revere_20260326.png,,ambiguous_percent_multi_ticker,ADD TO HEDGE SDS TUREO WOLOINGS: [I VER. FS. B+ TURBO RVAB/REBAR: (+ : //-2.49%)
+action_parse_review,GRO,HEDGE,2026-03-26,1,revere_20260326.png,,ambiguous_percent_multi_ticker,ADD TO HEDGE SDS TUREO WOLOINGS: [I VER. FS. B+ TURBO RVAB/REBAR: (+ : //-2.49%)
+action_parse_review,GRO,I,2026-03-26,1,revere_20260326.png,,ambiguous_percent_multi_ticker,ADD TO HEDGE SDS TUREO WOLOINGS: [I VER. FS. B+ TURBO RVAB/REBAR: (+ : //-2.49%)
+action_parse_review,GRO,INGD,2026-03-26,1,revere_20260326.png,,ambiguous_percent_multi_ticker,ADD TO HEDGE SDS TUREO WOLOINGS: [I VER. FS. B+ TURBO RVAB/REBAR: (+ : //-2.49%)
+action_parse_review,GRO,SDS,2026-03-26,1,revere_20260326.png,,ambiguous_percent_multi_ticker,ADD TO HEDGE SDS TUREO WOLOINGS: [I VER. FS. B+ TURBO RVAB/REBAR: (+ : //-2.49%)
+action_parse_review,GRO,TUREO,2026-03-26,1,revere_20260326.png,,ambiguous_percent_multi_ticker,ADD TO HEDGE SDS TUREO WOLOINGS: [I VER. FS. B+ TURBO RVAB/REBAR: (+ : //-2.49%)
+action_parse_review,GRO,VER,2026-03-26,1,revere_20260326.png,,ambiguous_percent_multi_ticker,ADD TO HEDGE SDS TUREO WOLOINGS: [I VER. FS. B+ TURBO RVAB/REBAR: (+ : //-2.49%)
+action_parse_review,GRO,WOLF,2026-03-26,1,revere_20260326.png,,ambiguous_percent_multi_ticker,ADD TO HEDGE SDS TUREO WOLOINGS: [I VER. FS. B+ TURBO RVAB/REBAR: (+ : //-2.49%)
+unapplied_action,GRO,AVS,2026-03-26,1,revere_20260326.png,,unmatched_action_signal,BUY AVS
+unapplied_action,GRO,NET,2026-03-26,1,revere_20260326.png,,unmatched_action_signal,SELL NET
+unapplied_adjustment,GRO,FSLY,2026-03-26,1,revere_20260326.png,,adjustment_missing_percent,TRIM FSLY
+unapplied_action,GRO,AA,2026-03-27,1,revere_20260327.png,,unmatched_action_signal,SELL FLSY 1UREO WAROIES: [ING TER FS
+unapplied_action,GRO,FLSY,2026-03-27,1,revere_20260327.png,,unmatched_action_signal,SELL FLSY 1UREO WAROIES: [ING TER FS
+unapplied_action,GRO,FS,2026-03-27,1,revere_20260327.png,,unmatched_action_signal,SELL FLSY 1UREO WAROIES: [ING TER FS
+unapplied_action,GRO,ING,2026-03-27,1,revere_20260327.png,,unmatched_action_signal,SELL FLSY 1UREO WAROIES: [ING TER FS
+unapplied_action,GRO,IUREO,2026-03-27,1,revere_20260327.png,,unmatched_action_signal,SELL FLSY 1UREO WAROIES: [ING TER FS
+unapplied_action,GRO,ROIES,2026-03-27,1,revere_20260327.png,,unmatched_action_signal,SELL FLSY 1UREO WAROIES: [ING TER FS
+unapplied_action,GRO,TER,2026-03-27,1,revere_20260327.png,,unmatched_action_signal,SELL FLSY 1UREO WAROIES: [ING TER FS
+unapplied_adjustment,GRO,HEDGE,2026-03-27,1,revere_20260327.png,,unmatched_adjustment,ADD TO HEDGE SDS.
+unapplied_adjustment,GRO,SDS,2026-03-27,1,revere_20260327.png,,unmatched_adjustment,ADD TO HEDGE SDS.
+unapplied_adjustment,TURBO,FSLY,2026-03-30,1,revere_20260330.png,,unmatched_adjustment,TRIM FSLY
+unapplied_adjustment,TURBO,IONZ,2026-03-30,1,revere_20260330.png,,unmatched_adjustment,TRIM 1ONZ R6TZ 572 JEN
+unapplied_adjustment,TURBO,JEN,2026-03-30,1,revere_20260330.png,,unmatched_adjustment,TRIM 1ONZ R6TZ 572 JEN
+unapplied_adjustment,TURBO,RGTZ,2026-03-30,1,revere_20260330.png,,unmatched_adjustment,TRIM 1ONZ R6TZ 572 JEN
+unapplied_adjustment,TURBO,SE,2026-03-30,1,revere_20260330.png,,unmatched_adjustment,TRIM 1ONZ R6TZ 572 JEN
+unapplied_action,GRO,HEDGE,2026-04-01,1,revere_20260401.png,,unmatched_action_signal,SELL HEDGE SPXS
+unapplied_action,GRO,SPXS,2026-04-01,1,revere_20260401.png,,unmatched_action_signal,SELL HEDGE SPXS
+unapplied_action,GRO,SES,2026-04-06,1,revere_20260406.png,,unmatched_action_signal,SELL SOS YURSO WOLOWES: {VC SV
+unapplied_action,GRO,SOS,2026-04-06,1,revere_20260406.png,,unmatched_action_signal,SELL SOS YURSO WOLOWES: {VC SV
+unapplied_action,GRO,SV,2026-04-06,1,revere_20260406.png,,unmatched_action_signal,SELL SOS YURSO WOLOWES: {VC SV
+unapplied_action,GRO,VC,2026-04-06,1,revere_20260406.png,,unmatched_action_signal,SELL SOS YURSO WOLOWES: {VC SV
+unapplied_action,GRO,WOLF,2026-04-06,1,revere_20260406.png,,unmatched_action_signal,SELL SOS YURSO WOLOWES: {VC SV
+unapplied_action,GRO,YURSO,2026-04-06,1,revere_20260406.png,,unmatched_action_signal,SELL SOS YURSO WOLOWES: {VC SV
+unapplied_action,TURBO,SBIT,2026-04-06,1,revere_20260406.png,,unmatched_action_signal,SELL SBIT
+unapplied_action,TURBO,AVS,2026-04-07,1,revere_20260407.png,,unmatched_action_signal,SELL AVS
+unapplied_action,GRO,DOCN,2026-04-08,1,revere_20260408.png,,unmatched_action_signal,BUY DOCN LNG
+unapplied_action,GRO,LNG,2026-04-08,1,revere_20260408.png,,unmatched_action_signal,BUY DOCN LNG
+unapplied_adjustment,GRO,BWXT,2026-04-08,1,revere_20260408.png,,unmatched_adjustment,TRIM ER <M. GL. TER FSLY. BWXT.50LS
+unapplied_adjustment,GRO,ER,2026-04-08,1,revere_20260408.png,,unmatched_adjustment,TRIM ER <M. GL. TER FSLY. BWXT.50LS
+unapplied_adjustment,GRO,FSLY,2026-04-08,1,revere_20260408.png,,adjustment_missing_percent,TRIM ER <M. GL. TER FSLY. BWXT.50LS
+unapplied_adjustment,GRO,GL,2026-04-08,1,revere_20260408.png,,unmatched_adjustment,TRIM ER <M. GL. TER FSLY. BWXT.50LS
+unapplied_adjustment,GRO,HEDGE,2026-04-08,1,revere_20260408.png,,unmatched_adjustment,TRIM HEDGE SPXS TURE WOLOINES: SEV
+unapplied_adjustment,GRO,INE,2026-04-08,1,revere_20260408.png,,unmatched_adjustment,TRIM HEDGE SPXS TURE WOLOINES: SEV
+unapplied_adjustment,GRO,M,2026-04-08,1,revere_20260408.png,,unmatched_adjustment,TRIM ER <M. GL. TER FSLY. BWXT.50LS
+unapplied_adjustment,GRO,SEV,2026-04-08,1,revere_20260408.png,,unmatched_adjustment,TRIM HEDGE SPXS TURE WOLOINES: SEV
+unapplied_adjustment,GRO,SOLS,2026-04-08,1,revere_20260408.png,,unmatched_adjustment,TRIM ER <M. GL. TER FSLY. BWXT.50LS
+unapplied_adjustment,GRO,SPXS,2026-04-08,1,revere_20260408.png,,unmatched_adjustment,TRIM HEDGE SPXS TURE WOLOINES: SEV
+unapplied_adjustment,GRO,TER,2026-04-08,1,revere_20260408.png,,adjustment_missing_percent,TRIM ER <M. GL. TER FSLY. BWXT.50LS
+unapplied_adjustment,GRO,TURE,2026-04-08,1,revere_20260408.png,,unmatched_adjustment,TRIM HEDGE SPXS TURE WOLOINES: SEV
+unapplied_adjustment,GRO,WOLF,2026-04-08,1,revere_20260408.png,,adjustment_missing_percent,TRIM HEDGE SPXS TURE WOLOINES: SEV
+unapplied_action,TURBO,BWXT,2026-04-08,1,revere_20260408.png,,unmatched_action_signal,BUY SPYM BWXTSOLS
+unapplied_action,TURBO,SOLS,2026-04-08,1,revere_20260408.png,,unmatched_action_signal,BUY SPYM BWXTSOLS
+unapplied_action,TURBO,SPYM,2026-04-08,1,revere_20260408.png,,unmatched_action_signal,BUY SPYM BWXTSOLS
+unapplied_adjustment,TURBO,NVD,2026-04-08,1,revere_20260408.png,,unmatched_adjustment,TRIM NVD
+unapplied_action,GRO,FSLY,2026-04-09,1,revere_20260409.png,,unmatched_action_signal,BUY FSLY
+unapplied_adjustment,GRO,BWA,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,TRIM BWA SOLS
+unapplied_adjustment,GRO,CLOSE,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM
+unapplied_adjustment,GRO,DOCN,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM
+unapplied_adjustment,GRO,FL,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,TRIM TER FL
+unapplied_adjustment,GRO,GLW,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,TRIM GLW
+unapplied_adjustment,GRO,HEDGE,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM
+unapplied_adjustment,GRO,I,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM
+unapplied_adjustment,GRO,LNG,2026-04-09,1,revere_20260409.png,,adjustment_missing_percent,TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM
+unapplied_adjustment,GRO,OOL,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM
+unapplied_adjustment,GRO,RM,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM
+unapplied_adjustment,GRO,SEV,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM
+unapplied_adjustment,GRO,SNINI,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM
+unapplied_adjustment,GRO,SOLS,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,TRIM BWA SOLS
+unapplied_adjustment,GRO,SPXL,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM
+unapplied_adjustment,GRO,TER,2026-04-09,1,revere_20260409.png,,adjustment_missing_percent,TRIM TER FL
+unapplied_adjustment,GRO,TUNA,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM
+unapplied_adjustment,GRO,URA,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM
+unapplied_adjustment,GRO,WGN,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,TRIM DOCN LNG CLOSE HEDGE SPXL RUNAOWOLOIWGS: SEV SNINIIRA RM
+unapplied_action,TURBO,NVD,2026-04-09,1,revere_20260409.png,,unmatched_action_signal,SELL NVD
+unapplied_adjustment,TURBO,ARM,2026-04-09,1,revere_20260409.png,,adjustment_missing_percent,ADD TO SPYM ARM
+unapplied_adjustment,TURBO,SPYM,2026-04-09,1,revere_20260409.png,,unmatched_adjustment,ADD TO SPYM ARM
+unapplied_action,GRO,BWXT,2026-04-10,1,revere_20260410.png,,unmatched_action_signal,BUY BWXT SOLS
+unapplied_action,GRO,DOCN,2026-04-10,1,revere_20260410.png,,unmatched_action_signal,SELL DOCN FSLY LNG
+unapplied_action,GRO,ER,2026-04-10,1,revere_20260410.png,,unmatched_action_signal,BUY [ER ~M
+unapplied_action,GRO,FSLY,2026-04-10,1,revere_20260410.png,,unmatched_action_signal,SELL DOCN FSLY LNG
+unapplied_action,GRO,HALO,2026-04-10,1,revere_20260410.png,,unmatched_action_signal,BUY UFO LABU 1UREO HOLOINGS: SEYM
+unapplied_action,GRO,INGD,2026-04-10,1,revere_20260410.png,,unmatched_action_signal,BUY UFO LABU 1UREO HOLOINGS: SEYM
+unapplied_action,GRO,IUREO,2026-04-10,1,revere_20260410.png,,unmatched_action_signal,BUY UFO LABU 1UREO HOLOINGS: SEYM
+unapplied_action,GRO,LABU,2026-04-10,1,revere_20260410.png,,unmatched_action_signal,BUY UFO LABU 1UREO HOLOINGS: SEYM
+unapplied_action,GRO,LNG,2026-04-10,1,revere_20260410.png,,unmatched_action_signal,SELL DOCN FSLY LNG
+unapplied_action,GRO,LW,2026-04-10,1,revere_20260410.png,,unmatched_action_signal,BUY LW
+unapplied_action,GRO,M,2026-04-10,1,revere_20260410.png,,unmatched_action_signal,BUY [ER ~M
+unapplied_action,GRO,SEYM,2026-04-10,1,revere_20260410.png,,unmatched_action_signal,BUY UFO LABU 1UREO HOLOINGS: SEYM
+unapplied_action,GRO,SOLS,2026-04-10,1,revere_20260410.png,,unmatched_action_signal,BUY BWXT SOLS
+unapplied_action,GRO,TER,2026-04-10,1,revere_20260410.png,,unmatched_action_signal,BUY TER
+unapplied_action,GRO,UFO,2026-04-10,1,revere_20260410.png,,unmatched_action_signal,BUY UFO LABU 1UREO HOLOINGS: SEYM
+unapplied_action,TURBO,FSLY,2026-04-10,1,revere_20260410.png,,unmatched_action_signal,SELL FSLY
+lifecycle_mismatch,GRO,CAVA,2026-04-13,1,revere_20260413.png,revere_20240823.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,ASTS,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY GLW. TER BWXT SOLS ASTS LUNR
+unapplied_action,GRO,BWXT,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY GLW. TER BWXT SOLS ASTS LUNR
+unapplied_action,GRO,CAVA,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM
+unapplied_action,GRO,DELL,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY DELL
+unapplied_action,GRO,GLW,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY GLW. TER BWXT SOLS ASTS LUNR
+unapplied_action,GRO,IURBO,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM
+unapplied_action,GRO,JIE,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM
+unapplied_action,GRO,LABU,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY LABU
+unapplied_action,GRO,LUNR,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY GLW. TER BWXT SOLS ASTS LUNR
+unapplied_action,GRO,ONDS,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM
+unapplied_action,GRO,ORCS,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,SELL ORCS
+unapplied_action,GRO,RKLS,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY RKLS
+unapplied_action,GRO,RM,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM
+unapplied_action,GRO,SEV,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM
+unapplied_action,GRO,SOLS,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY GLW. TER BWXT SOLS ASTS LUNR
+unapplied_action,GRO,TER,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY GLW. TER BWXT SOLS ASTS LUNR
+unapplied_action,GRO,TOL,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM
+unapplied_action,GRO,UPRO,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM
+unapplied_action,GRO,URA,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM
+unapplied_adjustment,GRO,UPRO,2026-04-13,1,revere_20260413.png,,unmatched_adjustment,ADD TO UPRO
+unapplied_action,TURBO,ASTS,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY ASTS LUNR RKLB LABU DELL
+unapplied_action,TURBO,DELL,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY ASTS LUNR RKLB LABU DELL
+unapplied_action,TURBO,LABU,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY ASTS LUNR RKLB LABU DELL
+unapplied_action,TURBO,LUNR,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY ASTS LUNR RKLB LABU DELL
+unapplied_action,TURBO,RGTZ,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,SELL RGTZ
+unapplied_action,TURBO,RKLB,2026-04-13,1,revere_20260413.png,,unmatched_action_signal,BUY ASTS LUNR RKLB LABU DELL
+unapplied_action,GRO,CEN,2026-04-14,1,revere_20260414.png,,unmatched_action_signal,BUY PL LITE CEN
+unapplied_action,GRO,PL,2026-04-14,1,revere_20260414.png,,unmatched_action_signal,BUY PL LITE CEN
+unapplied_adjustment,GRO,CAVA,2026-04-14,1,revere_20260414.png,,adjustment_missing_percent,ADD TO CAVA
+unapplied_action,TURBO,ASTS,2026-04-14,1,revere_20260414.png,,unmatched_action_signal,SELL ASTS QBTZ IONZ
+unapplied_action,TURBO,IONZ,2026-04-14,1,revere_20260414.png,,unmatched_action_signal,SELL ASTS QBTZ IONZ
+unapplied_action,TURBO,QBTZ,2026-04-14,1,revere_20260414.png,,unmatched_action_signal,SELL ASTS QBTZ IONZ
+unapplied_adjustment,TURBO,AKLE,2026-04-14,1,revere_20260414.png,,unmatched_adjustment,ADD TO GLW AKLE
+unapplied_adjustment,TURBO,GLW,2026-04-14,1,revere_20260414.png,,adjustment_missing_percent,ADD TO GLW AKLE
+lifecycle_mismatch,GRO,TER,2026-04-15,1,revere_20260415.png,revere_20251029.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,TER,2026-04-15,1,revere_20260415.png,,unmatched_action_signal,BUY DRAM TER GLW
+unapplied_action,TURBO,CC,2026-04-15,1,revere_20260415.png,,unmatched_action_signal,BUY SATS CC) IL *
+unapplied_action,TURBO,IL,2026-04-15,1,revere_20260415.png,,unmatched_action_signal,BUY SATS CC) IL *
+unapplied_adjustment,TURBO,ARM,2026-04-16,1,revere_20260416.png,,adjustment_missing_percent,ADD TO ARM BOTFOM UNE: + .
+unapplied_adjustment,TURBO,BIT,2026-04-16,1,revere_20260416.png,,unmatched_adjustment,ADD TO ARM BOTFOM UNE: + .
+unapplied_adjustment,TURBO,FOX,2026-04-16,1,revere_20260416.png,,unmatched_adjustment,ADD TO ARM BOTFOM UNE: + .
+unapplied_adjustment,TURBO,UNE,2026-04-16,1,revere_20260416.png,,unmatched_adjustment,ADD TO ARM BOTFOM UNE: + .
+unapplied_action,GRO,CADO,2026-04-17,1,revere_20260417.png,,unmatched_action_signal,BUY WUGT CADO
+unapplied_action,GRO,WUGT,2026-04-17,1,revere_20260417.png,,unmatched_action_signal,BUY WUGT CADO
+lifecycle_mismatch,TURBO,ETHA,2026-04-17,1,revere_20260417.png,revere_20250606.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,TURBO,BITX,2026-04-17,1,revere_20260417.png,,unmatched_action_signal,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS
+unapplied_action,TURBO,CC,2026-04-17,1,revere_20260417.png,,unmatched_action_signal,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS
+unapplied_action,TURBO,ETHA,2026-04-17,1,revere_20260417.png,,unmatched_action_signal,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS
+unapplied_action,TURBO,FRO,2026-04-17,1,revere_20260417.png,,unmatched_action_signal,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS
+unapplied_action,TURBO,I,2026-04-17,1,revere_20260417.png,,unmatched_action_signal,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS
+unapplied_action,TURBO,MU,2026-04-17,1,revere_20260417.png,,unmatched_action_signal,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS
+unapplied_action,TURBO,NE,2026-04-17,1,revere_20260417.png,,unmatched_action_signal,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS
+unapplied_action,TURBO,O,2026-04-17,1,revere_20260417.png,,unmatched_action_signal,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS
+unapplied_action,TURBO,OT,2026-04-17,1,revere_20260417.png,,unmatched_action_signal,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS
+lifecycle_mismatch,GRO,GLW,2026-04-20,1,revere_20260420.png,revere_20260415.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_adjustment,GRO,GLW,2026-04-20,1,revere_20260420.png,,adjustment_missing_percent,ADD TA GLW.
+unapplied_adjustment,GRO,TA,2026-04-20,1,revere_20260420.png,,unmatched_adjustment,ADD TA GLW.
+unapplied_action,TURBO,DESTE,2026-04-20,1,revere_20260420.png,,unmatched_action_signal,BUY LEA DESTE 015I
+unapplied_action,TURBO,HS,2026-04-20,1,revere_20260420.png,,unmatched_action_signal,BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE
+unapplied_action,TURBO,I,2026-04-20,1,revere_20260420.png,,unmatched_action_signal,BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE
+unapplied_action,TURBO,IO,2026-04-20,1,revere_20260420.png,,unmatched_action_signal,BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE
+unapplied_action,TURBO,LEA,2026-04-20,1,revere_20260420.png,,unmatched_action_signal,BUY LEA DESTE 015I
+unapplied_action,TURBO,NBIS,2026-04-20,1,revere_20260420.png,,unmatched_action_signal,BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE
+unapplied_action,TURBO,OISI,2026-04-20,1,revere_20260420.png,,unmatched_action_signal,BUY LEA DESTE 015I
+unapplied_action,TURBO,OOL,2026-04-20,1,revere_20260420.png,,unmatched_action_signal,BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE
+unapplied_action,TURBO,SE,2026-04-20,1,revere_20260420.png,,unmatched_action_signal,BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE
+unapplied_action,TURBO,SPOT,2026-04-20,1,revere_20260420.png,,unmatched_action_signal,BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE
+unapplied_action,TURBO,THIE,2026-04-20,1,revere_20260420.png,,unmatched_action_signal,BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE
+unapplied_action,TURBO,TOL,2026-04-20,1,revere_20260420.png,,unmatched_action_signal,BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE
+unapplied_action,TURBO,UNE,2026-04-20,1,revere_20260420.png,,unmatched_action_signal,BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE
+lifecycle_mismatch,GRO,NUGT,2026-04-21,1,revere_20260421.png,revere_20260420.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,NUGT,2026-04-21,1,revere_20260421.png,,unmatched_action_signal,SELL NUGT
+lifecycle_mismatch,TURBO,BITX,2026-04-21,1,revere_20260421.png,revere_20260420.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,BWXT,2026-04-21,1,revere_20260421.png,revere_20260420.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+price_lookup_issue,TURBO,SATS,2026-04-21,1,revere_20260421.png,,network_error,Price lookup status: network_error
+unapplied_action,TURBO,BITX,2026-04-21,1,revere_20260421.png,,unmatched_action_signal,SELL BITX
+unapplied_action,TURBO,BWXT,2026-04-21,1,revere_20260421.png,,unmatched_action_signal,SELL ETHA BWXT
+unapplied_action,TURBO,CJ,2026-04-21,1,revere_20260421.png,,unmatched_action_signal,SELL £CJ
+unapplied_action,TURBO,ETHA,2026-04-21,1,revere_20260421.png,,unmatched_action_signal,SELL ETHA BWXT
+unapplied_action,TURBO,FRO,2026-04-21,1,revere_20260421.png,,unmatched_action_signal,SELL FRO
+unapplied_action,TURBO,UPRD,2026-04-21,1,revere_20260421.png,,unmatched_action_signal,BUY UPRD + MU
+unapplied_adjustment,TURBO,MU,2026-04-22,1,revere_20260422.png,,adjustment_missing_percent,ADD TO MU
+lifecycle_mismatch,GRO,LABU,2026-04-23,1,revere_20260423.png,revere_20260422.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,EWZ,2026-04-23,1,revere_20260423.png,,unmatched_action_signal,BUY NBISEWZ ~~
+unapplied_action,GRO,LABU,2026-04-23,1,revere_20260423.png,,unmatched_action_signal,SELL LABU
+unapplied_action,GRO,NBIS,2026-04-23,1,revere_20260423.png,,unmatched_action_signal,BUY NBISEWZ ~~
+unapplied_adjustment,GRO,TNA,2026-04-23,1,revere_20260423.png,,adjustment_missing_percent,ADD TOCRDOTNA
+unapplied_adjustment,GRO,TOCRD,2026-04-23,1,revere_20260423.png,,unmatched_adjustment,ADD TOCRDOTNA
+unapplied_action,TURBO,IREN,2026-04-23,1,revere_20260423.png,,unmatched_action_signal,BUY IREN APLD
+lifecycle_mismatch,GRO,UFO,2026-04-24,1,revere_20260424.png,revere_20260423.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,UFO,2026-04-24,1,revere_20260424.png,,unmatched_action_signal,SELL UFO
+unapplied_adjustment,GRO,PL,2026-04-24,1,revere_20260424.png,,unmatched_adjustment,TRIM PL
+unapplied_action,TURBO,NBIS,2026-04-24,1,revere_20260424.png,,unmatched_action_signal,SELL NBIS
+unapplied_adjustment,TURBO,ARM,2026-04-24,1,revere_20260424.png,,adjustment_missing_percent,TRIM ARM
+unapplied_adjustment,GRO,GLW,2026-04-27,1,revere_20260427.png,,adjustment_missing_percent,TRIM NBIS PL GLW
+unapplied_adjustment,GRO,NBIS,2026-04-27,1,revere_20260427.png,,unmatched_adjustment,TRIM NBIS PL GLW
+unapplied_adjustment,GRO,PL,2026-04-27,1,revere_20260427.png,,unmatched_adjustment,TRIM NBIS PL GLW
+unapplied_adjustment,GRO,WGMI,2026-04-27,1,revere_20260427.png,,unmatched_adjustment,ADD TO WGMI
+unapplied_adjustment,TURBO,GLW,2026-04-27,1,revere_20260427.png,,adjustment_missing_percent,TRIM GLW
+unapplied_action,GRO,NEIS,2026-04-28,1,revere_20260428.png,,unmatched_action_signal,SELL NEIS LITE
+lifecycle_mismatch,TURBO,IREN,2026-04-28,1,revere_20260428.png,revere_20260427.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,SOLS,2026-04-28,1,revere_20260428.png,revere_20260427.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,IREN,2026-04-28,1,revere_20260428.png,,unmatched_action_signal,SELL CIFR IREN LABY SOLS.
+unapplied_action,TURBO,LABY,2026-04-28,1,revere_20260428.png,,unmatched_action_signal,SELL CIFR IREN LABY SOLS.
+unapplied_action,TURBO,SOLS,2026-04-28,1,revere_20260428.png,,unmatched_action_signal,SELL CIFR IREN LABY SOLS.
+unapplied_action,GRO,AE,2026-04-29,1,revere_20260429.png,,unmatched_action_signal,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS
+unapplied_action,GRO,AL,2026-04-29,1,revere_20260429.png,,unmatched_action_signal,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS
+unapplied_action,GRO,APS,2026-04-29,1,revere_20260429.png,,unmatched_action_signal,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS
+unapplied_action,GRO,ATV,2026-04-29,1,revere_20260429.png,,unmatched_action_signal,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS
+unapplied_action,GRO,CW,2026-04-29,1,revere_20260429.png,,unmatched_action_signal,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS
+unapplied_action,GRO,HOOD,2026-04-29,1,revere_20260429.png,,unmatched_action_signal,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS
+unapplied_action,GRO,INGD,2026-04-29,1,revere_20260429.png,,unmatched_action_signal,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS
+unapplied_action,GRO,LL,2026-04-29,1,revere_20260429.png,,unmatched_action_signal,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS
+unapplied_action,GRO,MI,2026-04-29,1,revere_20260429.png,,unmatched_action_signal,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS
+unapplied_action,GRO,SE,2026-04-29,1,revere_20260429.png,,unmatched_action_signal,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS
+unapplied_action,GRO,SERV,2026-04-29,1,revere_20260429.png,,unmatched_action_signal,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS
+unapplied_action,GRO,TERPL,2026-04-29,1,revere_20260429.png,,unmatched_action_signal,SELL TERPL TURBO HODINGS: SEROSA AL ATV LL MI CW AE APS
+unapplied_action,TURBO,LUNR,2026-04-29,1,revere_20260429.png,,unmatched_action_signal,SELL LUNR ONDS TER
+unapplied_action,TURBO,ONDS,2026-04-29,1,revere_20260429.png,,unmatched_action_signal,SELL LUNR ONDS TER
+unapplied_action,TURBO,TER,2026-04-29,1,revere_20260429.png,,unmatched_action_signal,SELL LUNR ONDS TER
+lifecycle_mismatch,GRO,TNA,2026-04-30,1,revere_20260430.png,revere_20260422.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,BE,2026-04-30,1,revere_20260430.png,,unmatched_action_signal,BUY SBUX BE
+unapplied_action,GRO,SBUX,2026-04-30,1,revere_20260430.png,,unmatched_action_signal,BUY SBUX BE
+unapplied_adjustment,GRO,TNA,2026-04-30,1,revere_20260430.png,,adjustment_missing_percent,ADD TO TNA
+lifecycle_mismatch,TURBO,AMPX,2026-04-30,1,revere_20260430.png,revere_20260416.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,TURBO,AEHR,2026-04-30,1,revere_20260430.png,,unmatched_action_signal,BUY TNA AEHR
+unapplied_adjustment,TURBO,AMPX,2026-04-30,1,revere_20260430.png,,adjustment_missing_percent,ADD TO AMPX UPRO REMX
+unapplied_adjustment,TURBO,REMX,2026-04-30,1,revere_20260430.png,,adjustment_missing_percent,ADD TO AMPX UPRO REMX
+unapplied_adjustment,TURBO,GLW,2026-05-01,1,revere_20260501.png,,adjustment_missing_percent,ADD TO GLW TNA
+unapplied_adjustment,TURBO,TNA,2026-05-01,1,revere_20260501.png,,adjustment_missing_percent,ADD TO GLW TNA
+unapplied_adjustment,GRO,CLS,2026-05-04,1,revere_20260504.png,,unmatched_adjustment,ADD 10 CLS O-
+unapplied_adjustment,GRO,EWZ,2026-05-04,1,revere_20260504.png,,unmatched_adjustment,TRIM NVDA EWZ
+unapplied_adjustment,GRO,IO,2026-05-04,1,revere_20260504.png,,unmatched_adjustment,ADD 10 CLS O-
+unapplied_adjustment,GRO,MU,2026-05-04,1,revere_20260504.png,,adjustment_missing_percent,TRIM MU
+unapplied_adjustment,GRO,NVDA,2026-05-04,1,revere_20260504.png,,adjustment_missing_percent,TRIM NVDA EWZ
+unapplied_adjustment,GRO,O,2026-05-04,1,revere_20260504.png,,unmatched_adjustment,ADD 10 CLS O-
+unapplied_action,TURBO,BIT,2026-05-04,1,revere_20260504.png,,unmatched_action_signal,BUY UUUU URA BOTYOM LINE:
+unapplied_action,TURBO,URA,2026-05-04,1,revere_20260504.png,,unmatched_action_signal,BUY UUUU URA BOTYOM LINE:
+unapplied_action,TURBO,UUUU,2026-05-04,1,revere_20260504.png,,unmatched_action_signal,BUY UUUU URA BOTYOM LINE:
+unapplied_action,TURBO,WOM,2026-05-04,1,revere_20260504.png,,unmatched_action_signal,BUY UUUU URA BOTYOM LINE:
+unapplied_adjustment,GRO,CCJO,2026-05-05,1,revere_20260505.png,,unmatched_adjustment,ADD TO CCJO-
+unapplied_adjustment,GRO,DRAM,2026-05-05,1,revere_20260505.png,,adjustment_missing_percent,TRIM MU + DRAM
+unapplied_adjustment,GRO,MU,2026-05-05,1,revere_20260505.png,,adjustment_missing_percent,TRIM MU + DRAM
+unapplied_action,TURBO,CIFR,2026-05-05,1,revere_20260505.png,,unmatched_action_signal,BUY CRCL + CIFR
+unapplied_action,TURBO,CRCL,2026-05-05,1,revere_20260505.png,,unmatched_action_signal,BUY CRCL + CIFR
+unapplied_action,TURBO,O,2026-05-05,1,revere_20260505.png,,unmatched_action_signal,SELL UUUU O-
+unapplied_action,TURBO,UUUU,2026-05-05,1,revere_20260505.png,,unmatched_action_signal,SELL UUUU O-
+unapplied_adjustment,TURBO,MU,2026-05-05,1,revere_20260505.png,,adjustment_missing_percent,TRIM MU
+unapplied_action,GRO,AEHR,2026-05-06,1,revere_20260506.png,,unmatched_action_signal,BUY AEHR
+unapplied_adjustment,GRO,GLW,2026-05-06,1,revere_20260506.png,,adjustment_missing_percent,ADD TO GLW
+unapplied_action,TURBO,MP,2026-05-06,1,revere_20260506.png,,unmatched_action_signal,BUY SOXS MP
+unapplied_action,TURBO,MP,2026-05-07,1,revere_20260507.png,,unmatched_action_signal,SELL AMPX RKLB CRCL MP O-
+unapplied_action,TURBO,O,2026-05-07,1,revere_20260507.png,,unmatched_action_signal,SELL AMPX RKLB CRCL MP O-
+unapplied_action,TURBO,RKLB,2026-05-07,1,revere_20260507.png,,unmatched_action_signal,SELL AMPX RKLB CRCL MP O-
+unapplied_adjustment,TURBO,ARM,2026-05-07,1,revere_20260507.png,,adjustment_missing_percent,TRIM ARM
+unapplied_action,TURBO,AKAM,2026-05-08,1,revere_20260508.png,,unmatched_action_signal,BUY AKAM O-
+unapplied_action,TURBO,O,2026-05-08,1,revere_20260508.png,,unmatched_action_signal,BUY AKAM O-
+unapplied_adjustment,TURBO,AEHR,2026-05-08,1,revere_20260508.png,,unmatched_adjustment,ADD TO AEHR
+unapplied_adjustment,TURBO,DELL,2026-05-08,1,revere_20260508.png,,unmatched_adjustment,TRIM DELL
+unapplied_action,GRO,MU,2026-05-11,1,revere_20260511.png,,unmatched_action_signal,SELL MU
+unapplied_action,TURBO,CRCL,2026-05-11,1,revere_20260511.png,,unmatched_action_signal,BUY LABU CRCL SCCO
+unapplied_action,TURBO,LABU,2026-05-11,1,revere_20260511.png,,unmatched_action_signal,BUY LABU CRCL SCCO
+unapplied_action,TURBO,SCCO,2026-05-11,1,revere_20260511.png,,unmatched_action_signal,BUY LABU CRCL SCCO
+unapplied_action,TURBO,SOXS,2026-05-11,1,revere_20260511.png,,unmatched_action_signal,SELL SOXS
+unapplied_adjustment,TURBO,CIFR,2026-05-11,1,revere_20260511.png,,unmatched_adjustment,ADD TO CIFR
+lifecycle_mismatch,GRO,AVAB,2026-05-12,1,revere_20260512.png,revere_20260211.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,GRO,CCJ,2026-05-12,1,revere_20260512.png,revere_20260511.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,CROD,2026-05-12,1,revere_20260512.png,revere_20260511.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,JI,2026-05-12,1,revere_20260512.png,revere_20260511.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,SPYM,2026-05-12,1,revere_20260512.png,revere_20260511.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,TOL,2026-05-12,1,revere_20260512.png,revere_20260219.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,GRO,TWLO,2026-05-12,1,revere_20260512.png,revere_20250103.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,TURBO,URA,2026-05-12,1,revere_20260512.png,,unmatched_action_signal,SELL URA
+unapplied_adjustment,TURBO,CIFR,2026-05-12,1,revere_20260512.png,,unmatched_adjustment,TRIM CIFR
+lifecycle_mismatch,GRO,MRVL,2026-05-13,1,revere_20260513.png,revere_20250103.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,CCJ,2026-05-13,1,revere_20260513.png,,unmatched_action_signal,SELL CCJ
+unapplied_action,GRO,MRVL,2026-05-13,1,revere_20260513.png,,unmatched_action_signal,BUY MRVL
+unapplied_adjustment,GRO,CRDO,2026-05-13,1,revere_20260513.png,,unmatched_adjustment,ADD TO TWLO + CRDO
+unapplied_adjustment,GRO,TNA,2026-05-13,1,revere_20260513.png,,adjustment_missing_percent,TRIM TNA
+unapplied_adjustment,GRO,TWLO,2026-05-13,1,revere_20260513.png,,adjustment_missing_percent,ADD TO TWLO + CRDO
+unapplied_action,TURBO,AAO,2026-05-13,1,revere_20260513.png,,unmatched_action_signal,BUY AAO! + NXT
+unapplied_action,GRO,DDOG,2026-05-14,1,revere_20260514.png,,unmatched_action_signal,BUY DOCN DDOG
+unapplied_action,GRO,CROQ,2026-05-15,1,revere_20260515.png,,unmatched_action_signal,SELL TNA CROQ
+lifecycle_mismatch,TURBO,LABU,2026-05-15,1,revere_20260515.png,revere_20260514.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,LABU,2026-05-15,1,revere_20260515.png,,unmatched_action_signal,SELL LABU SCCO
+lifecycle_mismatch,GRO,AEHR,2026-05-18,1,revere_20260518.png,revere_20260515.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,CIEN,2026-05-18,1,revere_20260518.png,revere_20260515.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,AEHR,2026-05-18,1,revere_20260518.png,,unmatched_action_signal,SELL WGMI DRAM CIEN AEHR
+unapplied_action,GRO,CIEN,2026-05-18,1,revere_20260518.png,,unmatched_action_signal,SELL WGMI DRAM CIEN AEHR
+unapplied_action,GRO,WGMI,2026-05-18,1,revere_20260518.png,,unmatched_action_signal,SELL WGMI DRAM CIEN AEHR
+lifecycle_mismatch,TURBO,CIFR,2026-05-18,1,revere_20260518.png,revere_20260515.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,CRCL,2026-05-18,1,revere_20260518.png,revere_20260515.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,AAO,2026-05-18,1,revere_20260518.png,,unmatched_action_signal,SELL AAO! AEHR CRCL CIFR
+unapplied_action,TURBO,AEHR,2026-05-18,1,revere_20260518.png,,unmatched_action_signal,SELL AAO! AEHR CRCL CIFR
+unapplied_action,TURBO,CIFR,2026-05-18,1,revere_20260518.png,,unmatched_action_signal,SELL AAO! AEHR CRCL CIFR
+unapplied_action,TURBO,CRCL,2026-05-18,1,revere_20260518.png,,unmatched_action_signal,SELL AAO! AEHR CRCL CIFR
+unapplied_action,GRO,CAT,2026-05-19,1,revere_20260519.png,,unmatched_action_signal,SELL CAT GLW TSLA
+unapplied_action,GRO,GLW,2026-05-19,1,revere_20260519.png,,unmatched_action_signal,SELL CAT GLW TSLA
+unapplied_action,GRO,TSLA,2026-05-19,1,revere_20260519.png,,unmatched_action_signal,SELL CAT GLW TSLA
+unapplied_adjustment,GRO,BE,2026-05-19,1,revere_20260519.png,,unmatched_adjustment,TRIM BE DOCN
+unapplied_adjustment,GRO,DOCN,2026-05-19,1,revere_20260519.png,,adjustment_missing_percent,TRIM BE DOCN
+lifecycle_mismatch,TURBO,AKAM,2026-05-19,1,revere_20260519.png,revere_20260518.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,AKAM,2026-05-19,1,revere_20260519.png,,unmatched_action_signal,SELL TNA AKAM
+unapplied_adjustment,TURBO,SEDG,2026-05-20,1,revere_20260520.png,,adjustment_missing_percent,ADD TO SEDG
+unapplied_adjustment,GRO,TWLO,2026-05-21,1,revere_20260521.png,,adjustment_missing_percent,TRIM TWLO
+unapplied_adjustment,GRO,UPRO,2026-05-21,1,revere_20260521.png,,adjustment_missing_percent,ADD TO UPRO
+unapplied_action,TURBO,INGD,2026-05-21,1,revere_20260521.png,,unmatched_action_signal,BUY TSLA INGD NOK O-
+unapplied_action,TURBO,O,2026-05-21,1,revere_20260521.png,,unmatched_action_signal,BUY TSLA INGD NOK O-
+unapplied_adjustment,TURBO,ARM,2026-05-21,1,revere_20260521.png,,adjustment_missing_percent,TRIM ARM
+unapplied_adjustment,TURBO,SPYM,2026-05-21,1,revere_20260521.png,,unmatched_adjustment,ADD TO SPYM
+lifecycle_mismatch,GRO,SBUX,2026-05-22,1,revere_20260522.png,revere_20260521.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,AAO,2026-05-22,1,revere_20260522.png,,unmatched_action_signal,BUY AAO! CSCO GNC
+unapplied_action,GRO,GNC,2026-05-22,1,revere_20260522.png,,unmatched_action_signal,BUY AAO! CSCO GNC
+unapplied_action,GRO,SBUX,2026-05-22,1,revere_20260522.png,,unmatched_action_signal,SELL SBUX
+unapplied_adjustment,GRO,UPRO,2026-05-22,1,revere_20260522.png,,adjustment_missing_percent,ADD TO UPRO
+unapplied_action,TURBO,AAOI,2026-05-22,1,revere_20260522.png,,unmatched_action_signal,BUY AAOI FLY CRCL O-
+unapplied_action,TURBO,O,2026-05-22,1,revere_20260522.png,,unmatched_action_signal,BUY AAOI FLY CRCL O-
+unapplied_adjustment,TURBO,DELL,2026-05-22,1,revere_20260522.png,,unmatched_adjustment,TRIM DELL
+unapplied_adjustment,GRO,BE,2026-05-26,1,revere_20260526.png,,unmatched_adjustment,ADD TO BE
+lifecycle_mismatch,TURBO,INTC,2026-05-26,1,revere_20260526.png,revere_20260316.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,TURBO,INTC,2026-05-26,1,revere_20260526.png,,unmatched_action_signal,BUY INTC O-
+unapplied_action,TURBO,O,2026-05-26,1,revere_20260526.png,,unmatched_action_signal,BUY INTC O-
+unapplied_adjustment,TURBO,MU,2026-05-26,1,revere_20260526.png,,adjustment_missing_percent,TRIM MU
+unapplied_action,GRO,O,2026-05-28,1,revere_20260528.png,,unmatched_action_signal,BUY LABU O-
+unapplied_adjustment,GRO,MRVL,2026-05-28,1,revere_20260528.png,,adjustment_missing_percent,TRIM MRVL
+unapplied_action,TURBO,AAOI,2026-05-28,1,revere_20260528.png,,unmatched_action_signal,SELL AAOI
+unapplied_adjustment,TURBO,NBIS,2026-05-28,1,revere_20260528.png,,adjustment_missing_percent,ADD TO NBIS.
+unapplied_adjustment,TURBO,SEDG,2026-05-28,1,revere_20260528.png,,adjustment_missing_percent,TRIM SEDG
+lifecycle_mismatch,GRO,NVDA,2026-05-29,1,revere_20260529.png,revere_20260528.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,DPST,2026-05-29,1,revere_20260529.png,,unmatched_action_signal,BUY DPST
+unapplied_action,GRO,NVDA,2026-05-29,1,revere_20260529.png,,unmatched_action_signal,SELL NVDA
+lifecycle_mismatch,TURBO,INTC,2026-05-29,1,revere_20260529.png,revere_20260316.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_adjustment,TURBO,ARM,2026-05-29,1,revere_20260529.png,,adjustment_missing_percent,TRIM ARM DELL GLW
+unapplied_adjustment,TURBO,BE,2026-05-29,1,revere_20260529.png,,adjustment_missing_percent,ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH
+unapplied_adjustment,TURBO,BERAR,2026-05-29,1,revere_20260529.png,,unmatched_adjustment,ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH
+unapplied_adjustment,TURBO,CF,2026-05-29,1,revere_20260529.png,,unmatched_adjustment,ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH
+unapplied_adjustment,TURBO,CROD,2026-05-29,1,revere_20260529.png,,unmatched_adjustment,ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH
+unapplied_adjustment,TURBO,DELL,2026-05-29,1,revere_20260529.png,,unmatched_adjustment,TRIM ARM DELL GLW
+unapplied_adjustment,TURBO,GH,2026-05-29,1,revere_20260529.png,,adjustment_missing_percent,ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH
+unapplied_adjustment,TURBO,GLW,2026-05-29,1,revere_20260529.png,,adjustment_missing_percent,TRIM ARM DELL GLW
+unapplied_adjustment,TURBO,I,2026-05-29,1,revere_20260529.png,,unmatched_adjustment,ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH
+unapplied_adjustment,TURBO,INE,2026-05-29,1,revere_20260529.png,,unmatched_adjustment,ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH
+unapplied_adjustment,TURBO,INTC,2026-05-29,1,revere_20260529.png,,adjustment_missing_percent,ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH
+unapplied_adjustment,TURBO,IO,2026-05-29,1,revere_20260529.png,,unmatched_adjustment,ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH
+unapplied_adjustment,TURBO,IR,2026-05-29,1,revere_20260529.png,,unmatched_adjustment,ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH
+unapplied_adjustment,TURBO,LEU,2026-05-29,1,revere_20260529.png,,adjustment_missing_percent,ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH
+unapplied_adjustment,TURBO,MU,2026-05-29,1,revere_20260529.png,,adjustment_missing_percent,ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH
+unapplied_adjustment,TURBO,SSO,2026-05-29,1,revere_20260529.png,,unmatched_adjustment,ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH
+unapplied_adjustment,TURBO,T,2026-05-29,1,revere_20260529.png,,unmatched_adjustment,ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH
+unapplied_adjustment,TURBO,TATFI,2026-05-29,1,revere_20260529.png,,unmatched_adjustment,ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH
+unapplied_adjustment,TURBO,TH,2026-05-29,1,revere_20260529.png,,unmatched_adjustment,ADD TO INTC BOTTOMUINE: IR V2 7550 7H? 6407 2 L5UC5F. TATFICR08 174 37 2NE BERAR TH
+lifecycle_mismatch,GRO,DDOG,2026-05-30,1,revere_20260530.png,revere_20260529.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,AAO,2026-05-30,1,revere_20260530.png,,unmatched_action_signal,SELL AAO!
+unapplied_action,GRO,DDOG,2026-05-30,1,revere_20260530.png,,unmatched_action_signal,SELL DDOG
+unapplied_adjustment,GRO,BE,2026-05-30,1,revere_20260530.png,,unmatched_adjustment,TRIM BE
+lifecycle_mismatch,TURBO,DELL,2026-05-30,1,revere_20260530.png,revere_20260529.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,DELL,2026-05-30,1,revere_20260530.png,,unmatched_action_signal,SELL DELL
+unapplied_action,GRO,O,2026-06-01,1,revere_20260601.png,,unmatched_action_signal,BUY QBTS O-
+unapplied_action,GRO,QBTS,2026-06-01,1,revere_20260601.png,,unmatched_action_signal,BUY QBTS O-
+unapplied_adjustment,GRO,DDOG,2026-06-01,1,revere_20260601.png,,unmatched_adjustment,TRIM DDOG NBIS TWLO
+unapplied_adjustment,GRO,NBIS,2026-06-01,1,revere_20260601.png,,adjustment_missing_percent,TRIM DDOG NBIS TWLO
+unapplied_adjustment,GRO,TWLO,2026-06-01,1,revere_20260601.png,,adjustment_missing_percent,TRIM DDOG NBIS TWLO
+unapplied_adjustment,TURBO,BE,2026-06-01,1,revere_20260601.png,,adjustment_missing_percent,ADD TO BE
+unapplied_action,GRO,LLYX,2026-06-02,1,revere_20260602.png,,unmatched_action_signal,BUY LLYX
+unapplied_adjustment,GRO,D,2026-06-02,1,revere_20260602.png,,unmatched_adjustment,ADD TO GH D-
+unapplied_adjustment,GRO,GH,2026-06-02,1,revere_20260602.png,,adjustment_missing_percent,ADD TO GH D-
+unapplied_adjustment,GRO,MRVL,2026-06-02,1,revere_20260602.png,,adjustment_missing_percent,TRIM MRVL
+unapplied_adjustment,GRO,NTC,2026-06-02,1,revere_20260602.png,,unmatched_adjustment,TRIM (NTC
+unapplied_adjustment,TURBO,IREN,2026-06-02,1,revere_20260602.png,,adjustment_missing_percent,ADD TA TSLA + IREN
+unapplied_adjustment,TURBO,TA,2026-06-02,1,revere_20260602.png,,unmatched_adjustment,ADD TA TSLA + IREN
+unapplied_adjustment,TURBO,TSLA,2026-06-02,1,revere_20260602.png,,adjustment_missing_percent,ADD TA TSLA + IREN
+unapplied_action,GRO,DRST,2026-06-03,1,revere_20260603.png,,unmatched_action_signal,SELL DRST INTC
+unapplied_adjustment,GRO,CLOSE,2026-06-03,1,revere_20260603.png,,unmatched_adjustment,ADD TO LLYX O-CLOSEMAVL
+unapplied_adjustment,GRO,MRVL,2026-06-03,1,revere_20260603.png,,adjustment_missing_percent,ADD TO LLYX O-CLOSEMAVL
+unapplied_action,GRO,TWLO,2026-06-08,1,revere_20260608.png,,unmatched_action_signal,SELL TWLO
+lifecycle_mismatch,GRO,GNAC,2026-06-09,1,revere_20260609.png,revere_20260608.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,JI,2026-06-09,1,revere_20260609.png,revere_20260608.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,LLYX,2026-06-09,1,revere_20260609.png,revere_20260603.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,GRO,LYK,2026-06-09,1,revere_20260609.png,revere_20260608.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,UPNO,2026-06-09,1,revere_20260609.png,revere_20260608.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,UPRO,2026-06-09,1,revere_20260609.png,revere_20260421.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,TURBO,SNOW,2026-06-09,1,revere_20260609.png,revere_20260604.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,TURBO,DOCN,2026-06-09,1,revere_20260609.png,,unmatched_action_signal,SELL NBIS DOCN SEDG MU
+unapplied_action,TURBO,NBIS,2026-06-09,1,revere_20260609.png,,unmatched_action_signal,SELL NBIS DOCN SEDG MU
+unapplied_action,TURBO,SEDG,2026-06-09,1,revere_20260609.png,,unmatched_action_signal,SELL NBIS DOCN SEDG MU
+unapplied_action,TURBO,SNOW,2026-06-09,1,revere_20260609.png,,unmatched_action_signal,BUY SNOW
+unapplied_adjustment,GRO,UPRO,2026-06-10,1,revere_20260610.png,,adjustment_missing_percent,TRIM UPRO
+lifecycle_mismatch,GRO,MRVL,2026-06-12,1,revere_20260612.png,revere_20250103.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,GRO,NBIS,2026-06-12,1,revere_20260612.png,revere_20260526.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,GRO,SNOW,2026-06-12,1,revere_20260612.png,revere_20250130.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,MRVL,2026-06-12,1,revere_20260612.png,,unmatched_action_signal,BUY CRDO SNOW FTNT VIAV MRVL NBIS
+unapplied_action,GRO,NBIS,2026-06-12,1,revere_20260612.png,,unmatched_action_signal,BUY CRDO SNOW FTNT VIAV MRVL NBIS
+unapplied_action,GRO,SNOW,2026-06-12,1,revere_20260612.png,,unmatched_action_signal,BUY CRDO SNOW FTNT VIAV MRVL NBIS
+unapplied_adjustment,GRO,DOCN,2026-06-12,1,revere_20260612.png,,adjustment_missing_percent,ADD TO DOCN
+lifecycle_mismatch,TURBO,BE,2026-06-12,1,revere_20260612.png,revere_20260414.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,TURBO,GH,2026-06-12,1,revere_20260612.png,revere_20251119.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,TURBO,BE,2026-06-12,1,revere_20260612.png,,unmatched_action_signal,BUY GH BE VIAV MRVL NBIS
+unapplied_action,TURBO,GH,2026-06-12,1,revere_20260612.png,,unmatched_action_signal,BUY GH BE VIAV MRVL NBIS
+unapplied_action,TURBO,NBIS,2026-06-12,1,revere_20260612.png,,unmatched_action_signal,BUY GH BE VIAV MRVL NBIS
+unapplied_adjustment,TURBO,SPYM,2026-06-12,1,revere_20260612.png,,unmatched_adjustment,ADD TO SPYM
+lifecycle_mismatch,GRO,DOCN,2026-06-15,1,revere_20260615.png,revere_20260514.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_adjustment,GRO,DOCN,2026-06-15,1,revere_20260615.png,,adjustment_missing_percent,ADD TO NBIS SNOW VIAV DOCN
+unapplied_adjustment,GRO,NBIS,2026-06-15,1,revere_20260615.png,,adjustment_missing_percent,ADD TO NBIS SNOW VIAV DOCN
+unapplied_adjustment,GRO,SNOW,2026-06-15,1,revere_20260615.png,,adjustment_missing_percent,ADD TO NBIS SNOW VIAV DOCN
+unapplied_adjustment,GRO,VIAV,2026-06-15,1,revere_20260615.png,,adjustment_missing_percent,ADD TO NBIS SNOW VIAV DOCN
+unapplied_adjustment,TURBO,SNOW,2026-06-15,1,revere_20260615.png,,adjustment_missing_percent,ADD TO SNOW
+unapplied_adjustment,GRO,BE,2026-06-16,1,revere_20260616.png,,adjustment_missing_percent,ADD TO WGMI BE
+unapplied_adjustment,GRO,WGMI,2026-06-16,1,revere_20260616.png,,adjustment_missing_percent,ADD TO WGMI BE
+unapplied_action,TURBO,DDOG,2026-06-16,1,revere_20260616.png,,unmatched_action_signal,BUY WOLF FROG FLNC DDOG
+unapplied_action,TURBO,FLNC,2026-06-16,1,revere_20260616.png,,unmatched_action_signal,BUY WOLF FROG FLNC DDOG
+unapplied_action,TURBO,FROG,2026-06-16,1,revere_20260616.png,,unmatched_action_signal,BUY WOLF FROG FLNC DDOG
+unapplied_action,TURBO,GH,2026-06-16,1,revere_20260616.png,,unmatched_action_signal,SELL GH
+unapplied_action,TURBO,WOLF,2026-06-16,1,revere_20260616.png,,unmatched_action_signal,BUY WOLF FROG FLNC DDOG
+unapplied_adjustment,TURBO,BE,2026-06-16,1,revere_20260616.png,,adjustment_missing_percent,ADD TO BE SNOW
+unapplied_adjustment,TURBO,SNOW,2026-06-16,1,revere_20260616.png,,adjustment_missing_percent,ADD TO BE SNOW
+unapplied_action,GRO,ABD,2026-06-17,1,revere_20260617.png,,unmatched_action_signal,SELL CSCOVAY ABD TO ET IVTE SUV NEO JL
+unapplied_action,GRO,CSCO,2026-06-17,1,revere_20260617.png,,unmatched_action_signal,SELL CSCOVAY ABD TO ET IVTE SUV NEO JL
+unapplied_action,GRO,ET,2026-06-17,1,revere_20260617.png,,unmatched_action_signal,SELL CSCOVAY ABD TO ET IVTE SUV NEO JL
+unapplied_action,GRO,IVTE,2026-06-17,1,revere_20260617.png,,unmatched_action_signal,SELL CSCOVAY ABD TO ET IVTE SUV NEO JL
+unapplied_action,GRO,JL,2026-06-17,1,revere_20260617.png,,unmatched_action_signal,SELL CSCOVAY ABD TO ET IVTE SUV NEO JL
+unapplied_action,GRO,NEO,2026-06-17,1,revere_20260617.png,,unmatched_action_signal,SELL CSCOVAY ABD TO ET IVTE SUV NEO JL
+unapplied_action,GRO,SUV,2026-06-17,1,revere_20260617.png,,unmatched_action_signal,SELL CSCOVAY ABD TO ET IVTE SUV NEO JL
+unapplied_action,GRO,VAT,2026-06-17,1,revere_20260617.png,,unmatched_action_signal,SELL CSCOVAY ABD TO ET IVTE SUV NEO JL
+unapplied_action,TURBO,FLNC,2026-06-17,1,revere_20260617.png,,unmatched_action_signal,SELL VIAV FLNC
+unapplied_adjustment,TURBO,SNOW,2026-06-17,1,revere_20260617.png,,adjustment_missing_percent,TRIM SNOW
+lifecycle_mismatch,GRO,INTC,2026-06-18,1,revere_20260618.png,revere_20260616.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,FORM,2026-06-18,1,revere_20260618.png,,unmatched_action_signal,BUY S970. HUT NVT FORM
+unapplied_action,GRO,HUT,2026-06-18,1,revere_20260618.png,,unmatched_action_signal,BUY S970. HUT NVT FORM
+unapplied_action,GRO,NVT,2026-06-18,1,revere_20260618.png,,unmatched_action_signal,BUY S970. HUT NVT FORM
+unapplied_action,GRO,SSO,2026-06-18,1,revere_20260618.png,,unmatched_action_signal,BUY S970. HUT NVT FORM
+unapplied_adjustment,GRO,CLOSE,2026-06-18,1,revere_20260618.png,,unmatched_adjustment,TRIM FINT CLOSE HEDGE SPS
+unapplied_adjustment,GRO,FINT,2026-06-18,1,revere_20260618.png,,unmatched_adjustment,TRIM FINT CLOSE HEDGE SPS
+unapplied_adjustment,GRO,HEDGE,2026-06-18,1,revere_20260618.png,,unmatched_adjustment,TRIM FINT CLOSE HEDGE SPS
+unapplied_adjustment,GRO,INTC,2026-06-18,1,revere_20260618.png,,adjustment_missing_percent,ADD TO WOM INTC
+unapplied_adjustment,GRO,SPS,2026-06-18,1,revere_20260618.png,,unmatched_adjustment,TRIM FINT CLOSE HEDGE SPS
+unapplied_adjustment,GRO,WOM,2026-06-18,1,revere_20260618.png,,unmatched_adjustment,ADD TO WOM INTC
+lifecycle_mismatch,GRO,HOOD,2026-06-22,1,revere_20260622.png,revere_20250606.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,ADDIO,2026-06-22,1,revere_20260622.png,,unmatched_action_signal,BUY HOOD ADD10 FTNT
+unapplied_action,GRO,FTNT,2026-06-22,1,revere_20260622.png,,unmatched_action_signal,BUY HOOD ADD10 FTNT
+unapplied_action,GRO,HOOD,2026-06-22,1,revere_20260622.png,,unmatched_action_signal,BUY HOOD ADD10 FTNT
+unapplied_action,GRO,O,2026-06-22,1,revere_20260622.png,,unmatched_action_signal,SELL DOCN O-
+unapplied_adjustment,GRO,BE,2026-06-22,1,revere_20260622.png,,adjustment_missing_percent,TRIM BE CRDO
+unapplied_adjustment,GRO,CRDO,2026-06-22,1,revere_20260622.png,,adjustment_missing_percent,TRIM BE CRDO
+lifecycle_mismatch,TURBO,NOK,2026-06-22,1,revere_20260622.png,revere_20260521.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,TURBO,WOLF,2026-06-22,1,revere_20260622.png,revere_20260618.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,NOK,2026-06-22,1,revere_20260622.png,,unmatched_action_signal,BUY NOK
+unapplied_action,TURBO,WOLF,2026-06-22,1,revere_20260622.png,,unmatched_action_signal,SELL WOLF
+unapplied_adjustment,TURBO,FROG,2026-06-22,1,revere_20260622.png,,unmatched_adjustment,ADD 10 FROG
+unapplied_adjustment,TURBO,IO,2026-06-22,1,revere_20260622.png,,unmatched_adjustment,ADD 10 FROG
+lifecycle_mismatch,GRO,SPXL,2026-06-23,1,revere_20260623.png,revere_20260622.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,SPXL,2026-06-23,1,revere_20260623.png,,unmatched_action_signal,SELL MRVL » SPXL
+lifecycle_mismatch,TURBO,CRWD,2026-06-23,1,revere_20260623.png,revere_20260127.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,TURBO,CRWD,2026-06-23,1,revere_20260623.png,,unmatched_action_signal,BUY CRWD + 'WIO {JENNI <.. RROC
+unapplied_action,TURBO,JENNI,2026-06-23,1,revere_20260623.png,,unmatched_action_signal,BUY CRWD + 'WIO {JENNI <.. RROC
+unapplied_action,TURBO,RROC,2026-06-23,1,revere_20260623.png,,unmatched_action_signal,BUY CRWD + 'WIO {JENNI <.. RROC
+unapplied_action,TURBO,WIO,2026-06-23,1,revere_20260623.png,,unmatched_action_signal,BUY CRWD + 'WIO {JENNI <.. RROC
+unapplied_action,GRO,HPE,2026-06-24,1,revere_20260624.png,,unmatched_action_signal,BUY HPE
+unapplied_action,GRO,HUT,2026-06-24,1,revere_20260624.png,,unmatched_action_signal,SELL NBIS HUT WGMI HOOD NVT
+unapplied_action,GRO,NBIS,2026-06-24,1,revere_20260624.png,,unmatched_action_signal,SELL NBIS HUT WGMI HOOD NVT
+unapplied_action,GRO,NVT,2026-06-24,1,revere_20260624.png,,unmatched_action_signal,SELL NBIS HUT WGMI HOOD NVT
+unapplied_action,GRO,WGMI,2026-06-24,1,revere_20260624.png,,unmatched_action_signal,SELL NBIS HUT WGMI HOOD NVT
+unapplied_adjustment,GRO,INTC,2026-06-24,1,revere_20260624.png,,adjustment_missing_percent,TRIM INTC
+unapplied_adjustment,TURBO,SOXS,2026-06-24,1,revere_20260624.png,,adjustment_missing_percent,ADD TO SOXS
+unapplied_action,GRO,HPE,2026-06-25,1,revere_20260625.png,,unmatched_action_signal,SELL BE HPE
+unapplied_adjustment,GRO,GH,2026-06-25,1,revere_20260625.png,,adjustment_missing_percent,TRIM GH
+unapplied_adjustment,GRO,INTC,2026-06-25,1,revere_20260625.png,,adjustment_missing_percent,TRIM INTC. O-
+unapplied_adjustment,GRO,O,2026-06-25,1,revere_20260625.png,,unmatched_adjustment,TRIM INTC. O-
+lifecycle_mismatch,GRO,FORM,2026-06-26,1,revere_20260626.png,revere_20260625.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,CRDO,2026-06-26,1,revere_20260626.png,,unmatched_action_signal,SELL FORM CRDO
+unapplied_action,GRO,FORM,2026-06-26,1,revere_20260626.png,,unmatched_action_signal,SELL FORM CRDO
+unapplied_action,GRO,O,2026-06-29,1,revere_20260629.png,,unmatched_action_signal,SELL INTC SPXU O-
+unapplied_action,GRO,SPXU,2026-06-29,1,revere_20260629.png,,unmatched_action_signal,SELL INTC SPXU O-
+unapplied_adjustment,GRO,GH,2026-06-29,1,revere_20260629.png,,adjustment_missing_percent,TRIM GH
+unapplied_adjustment,GRO,UPAQ,2026-06-29,1,revere_20260629.png,,unmatched_adjustment,ADD TO UPAQ
+unapplied_adjustment,TURBO,NBIS,2026-06-29,1,revere_20260629.png,,adjustment_missing_percent,ADD TO NBIS
+lifecycle_mismatch,GRO,TWLO,2026-06-30,1,revere_20260630.png,revere_20250103.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,TWLO,2026-06-30,1,revere_20260630.png,,unmatched_action_signal,BUY TWLO
+unapplied_adjustment,GRO,FLEX,2026-06-30,1,revere_20260630.png,,adjustment_missing_percent,ADD TO FTNT STM MRVL FLEX
+unapplied_adjustment,GRO,FTNT,2026-06-30,1,revere_20260630.png,,adjustment_missing_percent,ADD TO FTNT STM MRVL FLEX
+unapplied_adjustment,GRO,MRVL,2026-06-30,1,revere_20260630.png,,adjustment_missing_percent,ADD TO FTNT STM MRVL FLEX
+unapplied_adjustment,GRO,STM,2026-06-30,1,revere_20260630.png,,adjustment_missing_percent,ADD TO FTNT STM MRVL FLEX
+unapplied_action,TURBO,MKL,2026-06-30,1,revere_20260630.png,,unmatched_action_signal,BUY MKL
+lifecycle_mismatch,TURBO,HOOD,2026-07-01,1,revere_20260701.png,revere_20250606.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,TURBO,HOOD,2026-07-01,1,revere_20260701.png,,unmatched_action_signal,BUY HOOD
+unapplied_action,TURBO,STM,2026-07-01,1,revere_20260701.png,,unmatched_action_signal,SELL NBIS STM
+unapplied_action,GRO,ADO,2026-07-02,1,revere_20260702.png,,unmatched_action_signal,BUY ROOT INTC ADO TO LLTK
+unapplied_action,GRO,LEX,2026-07-02,1,revere_20260702.png,,unmatched_action_signal,SELL DELL LEX GLW TRAM UPRO
+unapplied_action,GRO,LLTK,2026-07-02,1,revere_20260702.png,,unmatched_action_signal,BUY ROOT INTC ADO TO LLTK
+unapplied_action,GRO,ROOT,2026-07-02,1,revere_20260702.png,,unmatched_action_signal,BUY ROOT INTC ADO TO LLTK
+unapplied_action,GRO,TRAM,2026-07-02,1,revere_20260702.png,,unmatched_action_signal,SELL DELL LEX GLW TRAM UPRO
+unapplied_action,GRO,UPRO,2026-07-02,1,revere_20260702.png,,unmatched_action_signal,SELL DELL LEX GLW TRAM UPRO
+unapplied_action,TURBO,BKYF,2026-07-02,1,revere_20260702.png,,unmatched_action_signal,BUY BKYF
+unapplied_action,TURBO,MKL,2026-07-02,1,revere_20260702.png,,unmatched_action_signal,SELL MKL
+unapplied_action,GRO,ODOG,2026-07-06,1,revere_20260706.png,,unmatched_action_signal,BUY 0DOG
+lifecycle_mismatch,TURBO,ETHA,2026-07-06,1,revere_20260706.png,revere_20250606.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,TURBO,AOD,2026-07-06,1,revere_20260706.png,,unmatched_action_signal,BUY RDDT ETHA MIT AOD TO HOOD
+unapplied_action,TURBO,ETHA,2026-07-06,1,revere_20260706.png,,unmatched_action_signal,BUY RDDT ETHA MIT AOD TO HOOD
+unapplied_action,TURBO,HOOD,2026-07-06,1,revere_20260706.png,,unmatched_action_signal,BUY RDDT ETHA MIT AOD TO HOOD
+unapplied_action,TURBO,MIT,2026-07-06,1,revere_20260706.png,,unmatched_action_signal,BUY RDDT ETHA MIT AOD TO HOOD
+unapplied_action,TURBO,RDDT,2026-07-06,1,revere_20260706.png,,unmatched_action_signal,BUY RDDT ETHA MIT AOD TO HOOD
+unapplied_adjustment,GRO,DDOG,2026-07-07,1,revere_20260707.png,,unmatched_adjustment,ADD TO DDOG
+lifecycle_mismatch,TURBO,INTC,2026-07-07,1,revere_20260707.png,revere_20260706.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,CRWO,2026-07-07,1,revere_20260707.png,,unmatched_action_signal,SELL CRWO INTC THA HYP
+unapplied_action,TURBO,DRAM,2026-07-07,1,revere_20260707.png,,unmatched_action_signal,BUY FCEL ML DRAM
+unapplied_action,TURBO,HYP,2026-07-07,1,revere_20260707.png,,unmatched_action_signal,SELL CRWO INTC THA HYP
+unapplied_action,TURBO,INTC,2026-07-07,1,revere_20260707.png,,unmatched_action_signal,SELL CRWO INTC THA HYP
+unapplied_action,TURBO,ML,2026-07-07,1,revere_20260707.png,,unmatched_action_signal,BUY FCEL ML DRAM
+unapplied_action,TURBO,THA,2026-07-07,1,revere_20260707.png,,unmatched_action_signal,SELL CRWO INTC THA HYP
+unapplied_adjustment,TURBO,ETHA,2026-07-07,1,revere_20260707.png,,adjustment_missing_percent,ADD T CTHAIBI
+unapplied_adjustment,TURBO,IBIT,2026-07-07,1,revere_20260707.png,,adjustment_missing_percent,ADD T CTHAIBI
+unapplied_adjustment,TURBO,T,2026-07-07,1,revere_20260707.png,,unmatched_adjustment,ADD T CTHAIBI
+lifecycle_mismatch,GRO,SOXL,2026-07-08,1,revere_20260708.png,revere_20260604.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,ADO,2026-07-08,1,revere_20260708.png,,unmatched_action_signal,BUY DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS
+unapplied_action,GRO,DELL,2026-07-08,1,revere_20260708.png,,unmatched_action_signal,BUY DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS
+unapplied_action,GRO,DRAM,2026-07-08,1,revere_20260708.png,,unmatched_action_signal,BUY DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS
+unapplied_action,GRO,HEDGE,2026-07-08,1,revere_20260708.png,,unmatched_action_signal,BUY DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS
+unapplied_action,GRO,I,2026-07-08,1,revere_20260708.png,,unmatched_action_signal,BUY DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS
+unapplied_action,GRO,SDS,2026-07-08,1,revere_20260708.png,,unmatched_action_signal,BUY DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS
+unapplied_action,GRO,SOXL,2026-07-08,1,revere_20260708.png,,unmatched_action_signal,BUY DRAM HOOD SOXL ADO TO DELL HEDGE W/ SDS
+lifecycle_mismatch,TURBO,ORAM,2026-07-08,1,revere_20260708.png,revere_20260707.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,RDDT,2026-07-08,1,revere_20260708.png,revere_20260707.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,SPYM,2026-07-08,1,revere_20260708.png,revere_20260707.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,HEDGE,2026-07-09,1,revere_20260709.png,,unmatched_action_signal,SELL HEDGE SDS
+unapplied_action,GRO,SDS,2026-07-09,1,revere_20260709.png,,unmatched_action_signal,SELL HEDGE SDS
+unapplied_action,GRO,SIMD,2026-07-09,1,revere_20260709.png,,unmatched_action_signal,BUY SIMD AMD
+unapplied_adjustment,GRO,DELL,2026-07-09,1,revere_20260709.png,,adjustment_missing_percent,ADD TO HOOD DELL
+unapplied_adjustment,GRO,HOOD,2026-07-09,1,revere_20260709.png,,adjustment_missing_percent,ADD TO HOOD DELL
+unapplied_adjustment,TURBO,RDOT,2026-07-09,1,revere_20260709.png,,adjustment_missing_percent,ADD TO RDOT UPRO
+lifecycle_mismatch,GRO,SOXL,2026-07-10,1,revere_20260710.png,revere_20260604.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_adjustment,GRO,RDDT,2026-07-10,1,revere_20260710.png,,unmatched_adjustment,ADD TO SOXL RDDT
+unapplied_adjustment,GRO,SOXL,2026-07-10,1,revere_20260710.png,,adjustment_missing_percent,ADD TO SOXL RDDT
+unapplied_adjustment,GRO,RDDT,2026-07-13,1,revere_20260713.png,,unmatched_adjustment,ADD TO SOXL RDDT
+unapplied_adjustment,GRO,SOXL,2026-07-13,1,revere_20260713.png,,adjustment_missing_percent,ADD TO SOXL RDDT
+unapplied_adjustment,GRO,HOOD,2026-07-14,1,revere_20260714.png,,adjustment_missing_percent,ADD TO HOOD
+unapplied_adjustment,GRO,LLYX,2026-07-14,1,revere_20260714.png,,adjustment_missing_percent,TRIM LLYX
+unapplied_action,TURBO,TQQQ,2026-07-14,1,revere_20260714.png,,unmatched_action_signal,BUY TQQQ
+unapplied_action,GRO,LLY,2026-07-16,1,revere_20260716.png,,unmatched_action_signal,BUY LLY
+unapplied_action,GRO,RDDT,2026-07-16,1,revere_20260716.png,,unmatched_action_signal,SELL HOOD RDDT
+lifecycle_mismatch,TURBO,TQQQ,2026-07-16,1,revere_20260716.png,revere_20260715.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,LABU,2026-07-16,1,revere_20260716.png,,unmatched_action_signal,SELL RODT LABU TQQQ
+unapplied_action,TURBO,RODT,2026-07-16,1,revere_20260716.png,,unmatched_action_signal,SELL RODT LABU TQQQ
+unapplied_action,TURBO,TQQQ,2026-07-16,1,revere_20260716.png,,unmatched_action_signal,SELL RODT LABU TQQQ
+lifecycle_mismatch,GRO,FTNT,2026-07-21,1,revere_20260721.png,revere_20260612.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_adjustment,GRO,DDOG,2026-07-21,1,revere_20260721.png,,unmatched_adjustment,ADD TO UPRO TRIS FTNT + DDOG
+unapplied_adjustment,GRO,FTNT,2026-07-21,1,revere_20260721.png,,adjustment_missing_percent,ADD TO UPRO TRIS FTNT + DDOG
+unapplied_adjustment,GRO,TRIS,2026-07-21,1,revere_20260721.png,,unmatched_adjustment,ADD TO UPRO TRIS FTNT + DDOG
+unapplied_adjustment,GRO,UPRO,2026-07-21,1,revere_20260721.png,,adjustment_missing_percent,ADD TO UPRO TRIS FTNT + DDOG
+lifecycle_mismatch,GRO,DELL,2026-07-22,1,revere_20260722.png,revere_20260707.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,GRO,DOOG,2026-07-22,1,revere_20260722.png,revere_20260721.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,DELL,2026-07-22,1,revere_20260722.png,,unmatched_action_signal,BUY HPE DELL
+unapplied_action,GRO,DOOG,2026-07-22,1,revere_20260722.png,,unmatched_action_signal,SELL FTNT D0OG
+lifecycle_mismatch,TURBO,TWLO,2026-07-22,1,revere_20260722.png,revere_20260721.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,FINT,2026-07-22,1,revere_20260722.png,,unmatched_action_signal,SELL FINT TWLO
+unapplied_action,TURBO,TWLO,2026-07-22,1,revere_20260722.png,,unmatched_action_signal,SELL FINT TWLO
+unapplied_action,TURBO,BHYP,2026-07-23,1,revere_20260723.png,,unmatched_action_signal,SELL BHYP
+unapplied_adjustment,TURBO,IBIT,2026-07-23,1,revere_20260723.png,,adjustment_missing_percent,TRIM UPRO IBIT
+unapplied_adjustment,TURBO,UPRO,2026-07-23,1,revere_20260723.png,,adjustment_missing_percent,TRIM UPRO IBIT
+unapplied_action,GRO,DELL,2026-07-27,1,revere_20260727.png,,unmatched_action_signal,SELL AMD DELL
+unapplied_action,GRO,HPE,2026-07-28,1,revere_20260728.png,,unmatched_action_signal,SELL HPE
+unapplied_adjustment,TURBO,ETHA,2026-07-28,1,revere_20260728.png,,adjustment_missing_percent,TRIM ETHA
+unapplied_adjustment,GRO,HEDGE,2026-07-29,1,revere_20260729.png,,unmatched_adjustment,ADD 10 HEDGE $PXS
+unapplied_adjustment,GRO,IO,2026-07-29,1,revere_20260729.png,,unmatched_adjustment,ADD 10 HEDGE $PXS
+unapplied_adjustment,GRO,PXS,2026-07-29,1,revere_20260729.png,,unmatched_adjustment,ADD 10 HEDGE $PXS
+unapplied_adjustment,GRO,UPRO,2026-07-29,1,revere_20260729.png,,adjustment_missing_percent,TRIM UPRO
+unapplied_action,GRO,LLYX,2026-07-30,1,revere_20260730.png,,unmatched_action_signal,SELL LLYX
+unapplied_adjustment,GRO,LLY,2026-07-30,1,revere_20260730.png,,adjustment_missing_percent,TRIM LLY
+unapplied_action,GRO,LLY,2026-07-31,1,revere_20260731.png,,unmatched_action_signal,SELL LLY
+unapplied_adjustment,GRO,SPXS,2026-07-31,1,revere_20260731.png,,unmatched_adjustment,TRIM SPXS
+unapplied_action,GRO,SPYS,2026-08-03,1,revere_20260803.png,,unmatched_action_signal,SELL SPYS
+lifecycle_mismatch,TURBO,ODOG,2026-08-03,1,revere_20260803.png,revere_20260731.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,CBAS,2026-08-04,1,revere_20260804.png,,unmatched_action_signal,BUY CBAS
+unapplied_action,GRO,HPE,2026-08-04,1,revere_20260804.png,,unmatched_action_signal,BUY HPE
+unapplied_action,GRO,MLTR,2026-08-04,1,revere_20260804.png,,unmatched_action_signal,BUY OKTA MLTR
+unapplied_action,GRO,VLO,2026-08-04,1,revere_20260804.png,,unmatched_action_signal,BUY VLO
+lifecycle_mismatch,GRO,HPE,2026-08-05,1,revere_20260805.png,revere_20260722.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,GRO,IO,2026-08-05,1,revere_20260805.png,revere_20260804.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,MPE,2026-08-05,1,revere_20260805.png,revere_20260804.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,DRAM,2026-08-05,1,revere_20260805.png,,unmatched_action_signal,BUY DRAM
+unapplied_action,TURBO,TSEM,2026-08-05,1,revere_20260805.png,,unmatched_action_signal,SELL TSEM
+lifecycle_mismatch,GRO,HPE,2026-08-07,1,revere_20260807.png,revere_20260722.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,VLO,2026-08-07,1,revere_20260807.png,,unmatched_action_signal,SELL VLO
+unapplied_adjustment,GRO,HPE,2026-08-07,1,revere_20260807.png,,adjustment_missing_percent,ADD TO PLTR.HPE
+unapplied_adjustment,GRO,PLTR,2026-08-07,1,revere_20260807.png,,adjustment_missing_percent,ADD TO PLTR.HPE
+lifecycle_mismatch,TURBO,DRAM,2026-08-07,1,revere_20260807.png,revere_20260806.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,DRAM,2026-08-07,1,revere_20260807.png,,unmatched_action_signal,SELL DRAM
+unapplied_adjustment,GRO,HPE,2026-08-10,1,revere_20260810.png,,adjustment_missing_percent,ADD TO OKTA HPE PLTR
+unapplied_adjustment,GRO,OKTA,2026-08-10,1,revere_20260810.png,,adjustment_missing_percent,ADD TO OKTA HPE PLTR
+unapplied_adjustment,GRO,PLTR,2026-08-10,1,revere_20260810.png,,adjustment_missing_percent,ADD TO OKTA HPE PLTR
+unapplied_adjustment,TURBO,TQQ,2026-08-11,1,revere_20260811.png,,unmatched_adjustment,ADD TO TQQ
+unapplied_action,GRO,AMZY,2026-08-12,1,revere_20260812.png,,unmatched_action_signal,SELL AMZY
+unapplied_action,GRO,ST,2026-08-12,1,revere_20260812.png,,unmatched_action_signal,BUY TQGQ THA WEES APH ITE ST
+unapplied_action,GRO,THA,2026-08-12,1,revere_20260812.png,,unmatched_action_signal,BUY TQGQ THA WEES APH ITE ST
+unapplied_action,GRO,TQGQ,2026-08-12,1,revere_20260812.png,,unmatched_action_signal,BUY TQGQ THA WEES APH ITE ST
+unapplied_action,GRO,WEES,2026-08-12,1,revere_20260812.png,,unmatched_action_signal,BUY TQGQ THA WEES APH ITE ST
+unapplied_adjustment,GRO,PLTR,2026-08-12,1,revere_20260812.png,,adjustment_missing_percent,ADD TO PLTR
+unapplied_adjustment,TURBO,CBAS,2026-08-12,1,revere_20260812.png,,unmatched_adjustment,TRIM CBAS
+unapplied_adjustment,TURBO,FCX,2026-08-12,1,revere_20260812.png,,adjustment_missing_percent,ADD TO FCX O-
+unapplied_adjustment,TURBO,O,2026-08-12,1,revere_20260812.png,,unmatched_adjustment,ADD TO FCX O-
+lifecycle_mismatch,GRO,CBRS,2026-08-14,1,revere_20260814.png,revere_20260813.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,HPE,2026-08-14,1,revere_20260814.png,revere_20260722.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,CBRS,2026-08-14,1,revere_20260814.png,,unmatched_action_signal,SELL CBRS
+unapplied_adjustment,GRO,HPE,2026-08-14,1,revere_20260814.png,,adjustment_missing_percent,ADD 10 HPE
+unapplied_adjustment,GRO,OKTA,2026-08-14,1,revere_20260814.png,,adjustment_missing_percent,TRIM OKTA
+unapplied_action,TURBO,GOXU,2026-08-14,1,revere_20260814.png,,unmatched_action_signal,BUY SACK GOXU S
+unapplied_action,TURBO,S,2026-08-14,1,revere_20260814.png,,unmatched_action_signal,BUY SACK GOXU S
+lifecycle_mismatch,GRO,SOXL,2026-08-17,1,revere_20260817.png,revere_20260604.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,SOXL,2026-08-17,1,revere_20260817.png,,unmatched_action_signal,BUY SOXL CBRS
+unapplied_adjustment,GRO,LITE,2026-08-17,1,revere_20260817.png,,unmatched_adjustment,ADD TO LITE NBIS
+unapplied_adjustment,GRO,NBIS,2026-08-17,1,revere_20260817.png,,adjustment_missing_percent,ADD TO LITE NBIS
+unapplied_action,TURBO,ITM,2026-08-17,1,revere_20260817.png,,unmatched_action_signal,BUY LITE ITM GEV
+lifecycle_mismatch,GRO,LITE,2026-08-18,1,revere_20260818.png,revere_20260817.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,TNA,2026-08-18,1,revere_20260818.png,revere_20260817.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,GRO,TQQQ,2026-08-18,1,revere_20260818.png,revere_20260817.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,LITE,2026-08-18,1,revere_20260818.png,,unmatched_action_signal,SELL TQQQ TNA SOXL CBRS APH LITE SITM
+unapplied_action,GRO,SITM,2026-08-18,1,revere_20260818.png,,unmatched_action_signal,SELL TQQQ TNA SOXL CBRS APH LITE SITM
+unapplied_action,GRO,TNA,2026-08-18,1,revere_20260818.png,,unmatched_action_signal,SELL TQQQ TNA SOXL CBRS APH LITE SITM
+unapplied_action,GRO,TQQQ,2026-08-18,1,revere_20260818.png,,unmatched_action_signal,SELL TQQQ TNA SOXL CBRS APH LITE SITM
+unapplied_adjustment,GRO,NBIS,2026-08-18,1,revere_20260818.png,,adjustment_missing_percent,TRIM NBIS
+unapplied_adjustment,TURBO,CBRS,2026-08-18,1,revere_20260818.png,,unmatched_adjustment,TRIM UPRO TQQQ CBRS
+unapplied_adjustment,TURBO,TQQQ,2026-08-18,1,revere_20260818.png,,unmatched_adjustment,TRIM UPRO TQQQ CBRS
+unapplied_adjustment,TURBO,UPRO,2026-08-18,1,revere_20260818.png,,adjustment_missing_percent,TRIM UPRO TQQQ CBRS
+unapplied_action,GRO,NBIS,2026-08-19,1,revere_20260819.png,,unmatched_action_signal,SELL NBIS HPE
+unapplied_adjustment,GRO,RBRK,2026-08-19,1,revere_20260819.png,,adjustment_missing_percent,TRIM RBRK
+unapplied_action,TURBO,CBRS,2026-08-19,1,revere_20260819.png,,unmatched_action_signal,SELL SITM CBRS
+unapplied_action,TURBO,CHYM,2026-08-19,1,revere_20260819.png,,unmatched_action_signal,BUY MRNA IBIT ETHA SPXL CHYM
+unapplied_action,TURBO,ETHA,2026-08-19,1,revere_20260819.png,,unmatched_action_signal,BUY MRNA IBIT ETHA SPXL CHYM
+unapplied_action,TURBO,IBIT,2026-08-19,1,revere_20260819.png,,unmatched_action_signal,BUY MRNA IBIT ETHA SPXL CHYM
+unapplied_action,TURBO,MRNA,2026-08-19,1,revere_20260819.png,,unmatched_action_signal,BUY MRNA IBIT ETHA SPXL CHYM
+unapplied_action,TURBO,SITM,2026-08-19,1,revere_20260819.png,,unmatched_action_signal,SELL SITM CBRS
+unapplied_action,TURBO,SPXL,2026-08-19,1,revere_20260819.png,,unmatched_action_signal,BUY MRNA IBIT ETHA SPXL CHYM
+unapplied_adjustment,GRO,MRNA,2026-08-20,1,revere_20260820.png,,adjustment_missing_percent,TRIM MRNA
+lifecycle_mismatch,TURBO,CBRS,2026-08-20,1,revere_20260820.png,revere_20260819.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,IBIT,2026-08-20,1,revere_20260820.png,revere_20250606.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,TURBO,SITM,2026-08-20,1,revere_20260820.png,revere_20260819.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,SPXL,2026-08-20,1,revere_20260820.png,revere_20260520.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_adjustment,TURBO,CHYM,2026-08-20,1,revere_20260820.png,,adjustment_missing_percent,TRIM CHYM MRNA SPCX
+unapplied_adjustment,TURBO,ETHA,2026-08-20,1,revere_20260820.png,,adjustment_missing_percent,TRIM ETHA GDXU
+unapplied_adjustment,TURBO,GDXU,2026-08-20,1,revere_20260820.png,,unmatched_adjustment,TRIM ETHA GDXU
+unapplied_adjustment,TURBO,MRNA,2026-08-20,1,revere_20260820.png,,adjustment_missing_percent,TRIM CHYM MRNA SPCX
+unapplied_adjustment,TURBO,SPCX,2026-08-20,1,revere_20260820.png,,unmatched_adjustment,TRIM CHYM MRNA SPCX
+lifecycle_mismatch,GRO,PICK,2026-08-21,1,revere_20260821.png,revere_20260604.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,PICK,2026-08-21,1,revere_20260821.png,,unmatched_action_signal,BUY PICK
+unapplied_adjustment,TURBO,IBIT,2026-08-21,1,revere_20260821.png,,adjustment_missing_percent,TRIM IB1T
+unapplied_adjustment,TURBO,MRNA,2026-08-21,1,revere_20260821.png,,adjustment_missing_percent,ADD TO MRNA SPCX TQQQ O-
+unapplied_adjustment,TURBO,O,2026-08-21,1,revere_20260821.png,,unmatched_adjustment,ADD TO MRNA SPCX TQQQ O-
+unapplied_adjustment,TURBO,SPCX,2026-08-21,1,revere_20260821.png,,unmatched_adjustment,ADD TO MRNA SPCX TQQQ O-
+unapplied_adjustment,TURBO,TQQQ,2026-08-21,1,revere_20260821.png,,unmatched_adjustment,ADD TO MRNA SPCX TQQQ O-
+unapplied_adjustment,GRO,PLTR,2026-08-24,1,revere_20260824.png,,adjustment_missing_percent,ADD TO PLTR
+unapplied_adjustment,TURBO,TQQQ,2026-08-24,1,revere_20260824.png,,unmatched_adjustment,TRIM TQQQ
+unapplied_adjustment,GRO,PLTR,2026-08-25,1,revere_20260825.png,,adjustment_missing_percent,TRIM PLTR
+action_parse_review,TURBO,,2026-08-25,1,revere_20260825.png,,missing_ticker,BUY /
+unapplied_action,TURBO,HNGE,2026-08-25,1,revere_20260825.png,,unmatched_action_signal,SELL HNGE
+unapplied_adjustment,GRO,PLTR,2026-08-26,1,revere_20260826.png,,adjustment_missing_percent,TRIM PLTR
+lifecycle_mismatch,TURBO,GH,2026-08-26,1,revere_20260826.png,revere_20251119.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,TURBO,GH,2026-08-26,1,revere_20260826.png,,unmatched_action_signal,BUY GH HNGE
+unapplied_action,GRO,ADO,2026-08-27,1,revere_20260827.png,,unmatched_action_signal,BUY FROG NVDA ADO FO SPXL PLTR
+unapplied_action,GRO,FO,2026-08-27,1,revere_20260827.png,,unmatched_action_signal,BUY FROG NVDA ADO FO SPXL PLTR
+unapplied_action,GRO,PLTR,2026-08-27,1,revere_20260827.png,,unmatched_action_signal,BUY FROG NVDA ADO FO SPXL PLTR
+unapplied_action,GRO,SPXL,2026-08-27,1,revere_20260827.png,,unmatched_action_signal,BUY FROG NVDA ADO FO SPXL PLTR
+unapplied_adjustment,TURBO,CHYM,2026-08-27,1,revere_20260827.png,,adjustment_missing_percent,ADD TO CHYM
+action_parse_review,GRO,,2026-08-28,1,revere_20260828.png,,missing_ticker,ADD /
+unapplied_adjustment,GRO,FROG,2026-08-28,1,revere_20260828.png,,adjustment_missing_percent,TRIM FROG
+unapplied_adjustment,GRO,PICK,2026-08-28,1,revere_20260828.png,,adjustment_missing_percent,TRIM PICK
+unapplied_adjustment,GRO,PLTR,2026-08-28,1,revere_20260828.png,,adjustment_missing_percent,ADD TO PLTR
+unapplied_action,TURBO,GH,2026-08-28,1,revere_20260828.png,,unmatched_action_signal,SELL GHHNGE
+unapplied_action,TURBO,HNGE,2026-08-28,1,revere_20260828.png,,unmatched_action_signal,SELL GHHNGE
+unapplied_adjustment,TURBO,CHYM,2026-08-28,1,revere_20260828.png,,adjustment_missing_percent,TRIM CHYM
+unapplied_action,TURBO,CHYM,2026-08-31,1,revere_20260831.png,,unmatched_action_signal,SELL FIG CHYM
+unapplied_action,TURBO,FIG,2026-08-31,1,revere_20260831.png,,unmatched_action_signal,SELL FIG CHYM
+unapplied_adjustment,GRO,PLTR,2026-09-01,1,revere_20260901.png,,adjustment_missing_percent,TRIM SPXL + PLTR
+unapplied_adjustment,GRO,SPXL,2026-09-01,1,revere_20260901.png,,adjustment_missing_percent,TRIM SPXL + PLTR
+unapplied_adjustment,GRO,BLTR,2026-09-02,1,revere_20260902.png,,unmatched_adjustment,TRIM BLTR
+lifecycle_mismatch,TURBO,SPCX,2026-09-02,1,revere_20260902.png,revere_20260901.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+lifecycle_mismatch,TURBO,SPYM,2026-09-02,1,revere_20260902.png,revere_20260901.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,TURBO,FOX,2026-09-02,1,revere_20260902.png,,unmatched_action_signal,SELL PLTAZETA OTAIMFOX
+unapplied_action,TURBO,FTAI,2026-09-02,1,revere_20260902.png,,unmatched_action_signal,SELL PLTAZETA OTAIMFOX
+lifecycle_mismatch,GRO,MU,2026-09-03,1,revere_20260903.png,revere_20260413.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,GRO,MU,2026-09-03,1,revere_20260903.png,,unmatched_action_signal,BUY QLD MU
+unapplied_action,GRO,MPE,2026-09-04,1,revere_20260904.png,,unmatched_action_signal,BUY MPE OKTA
+unapplied_action,GRO,SPOX,2026-09-08,1,revere_20260908.png,,unmatched_action_signal,BUY CF SPOX
+lifecycle_mismatch,TURBO,TEM,2026-09-08,1,revere_20260908.png,revere_20250904.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+unapplied_action,TURBO,ABAK,2026-09-08,1,revere_20260908.png,,unmatched_action_signal,BUY ABAK TEM
+unapplied_action,TURBO,TEM,2026-09-08,1,revere_20260908.png,,unmatched_action_signal,BUY ABAK TEM
+lifecycle_mismatch,GRO,ARKG,2026-09-09,1,revere_20260909.png,revere_20250325.png,duplicate_enter_open_position,Existing open lifecycle prevented a new ENTER event from opening a second position.
+lifecycle_mismatch,GRO,SPCX,2026-09-09,1,revere_20260909.png,revere_20260908.png,unmatched_exit_event,EXIT event had no matching open lifecycle.
+unapplied_action,GRO,ARKG,2026-09-09,1,revere_20260909.png,,unmatched_action_signal,BUY ARKG
+unapplied_action,GRO,SPCX,2026-09-09,1,revere_20260909.png,,unmatched_action_signal,SELL SPCX
+price_lookup_issue,GRO,ADO,2026-09-10,1,revere_20260512.png,,no_market_data,Price lookup status: no_market_data
+price_lookup_issue,GRO,AVAB,2026-09-10,1,revere_20260211.png,,network_error,Price lookup status: network_error
+price_lookup_issue,GRO,AVDA,2026-09-10,1,revere_20260512.png,,no_market_data,Price lookup status: no_market_data
+price_lookup_issue,GRO,BACS,2026-09-10,1,revere_20250325.png,,network_error,Price lookup status: network_error
+price_lookup_issue,GRO,GLI,2026-09-10,1,revere_20260512.png,,no_market_data,Price lookup status: no_market_data
+price_lookup_issue,GRO,GOOC,2026-09-10,1,revere_20260211.png,,network_error,Price lookup status: network_error
+price_lookup_issue,GRO,GOYA,2026-09-10,1,revere_20260211.png,,network_error,Price lookup status: network_error
+price_lookup_issue,GRO,HOOS,2026-09-10,1,revere_20250325.png,,network_error,Price lookup status: network_error
+price_lookup_issue,GRO,IO,2026-09-10,1,revere_20260814.png,,network_error,Price lookup status: network_error
+price_lookup_issue,GRO,JIE,2026-09-10,1,revere_20260211.png,,no_market_data,Price lookup status: no_market_data
+price_lookup_issue,GRO,LCI,2026-09-10,1,revere_20260116.png,,network_error,Price lookup status: network_error
+price_lookup_issue,GRO,LTHM,2026-09-10,1,revere_20220922.png,,network_error,Price lookup status: network_error
+price_lookup_issue,GRO,NVOA,2026-09-10,1,revere_20250606.png,,network_error,Price lookup status: network_error
+price_lookup_issue,GRO,RBRX,2026-09-10,1,revere_20250325.png,,network_error,Price lookup status: network_error
+price_lookup_issue,GRO,SHDK,2026-09-10,1,revere_20260211.png,,network_error,Price lookup status: network_error
+price_lookup_issue,GRO,SPM,2026-09-10,1,revere_20260219.png,,no_market_data,Price lookup status: no_market_data
+price_lookup_issue,GRO,SWAV,2026-09-10,1,revere_20220922.png,,network_error,Price lookup status: network_error
+price_lookup_issue,GRO,TGTH,2026-09-10,1,revere_20250325.png,,network_error,Price lookup status: network_error
+price_lookup_issue,GRO,UPRD,2026-09-10,1,revere_20260116.png,,no_market_data,Price lookup status: no_market_data
+price_lookup_issue,GRO,XNAE,2026-09-10,1,revere_20260211.png,,network_error,Price lookup status: network_error
+unapplied_adjustment,GRO,PLTR,2026-09-10,1,revere_20260910.png,,adjustment_missing_percent,TRIM PLTR
+price_lookup_issue,TURBO,CU,2026-09-10,1,revere_20260305.png,,no_market_data,Price lookup status: no_market_data
+price_lookup_issue,TURBO,FOL,2026-09-10,1,revere_20260902.png,,no_market_data,Price lookup status: no_market_data
+price_lookup_issue,TURBO,IL,2026-09-10,1,revere_20260226.png,,no_market_data,Price lookup status: no_market_data
+price_lookup_issue,TURBO,JIGE,2026-09-10,1,revere_20260226.png,,network_error,Price lookup status: network_error
+price_lookup_issue,TURBO,OOOG,2026-09-10,1,revere_20260803.png,,network_error,Price lookup status: network_error
+price_lookup_issue,TURBO,PYM,2026-09-10,1,revere_20260108.png,,no_market_data,Price lookup status: no_market_data
+price_lookup_issue,TURBO,RDOT,2026-09-10,1,revere_20260708.png,,network_error,Price lookup status: network_error
+price_lookup_issue,TURBO,RFSLY,2026-09-10,1,revere_20260305.png,,network_error,Price lookup status: network_error
+price_lookup_issue,TURBO,SACK,2026-09-10,1,revere_20260814.png,,network_error,Price lookup status: network_error
+price_lookup_issue,TURBO,SPOX,2026-09-10,1,revere_20260902.png,,network_error,Price lookup status: network_error
+price_lookup_issue,TURBO,TALS,2026-09-10,1,revere_20260417.png,,network_error,Price lookup status: network_error
+price_lookup_issue,TURBO,THA,2026-09-10,1,revere_20260902.png,,no_market_data,Price lookup status: no_market_data
+price_lookup_issue,TURBO,TUREO,2026-09-10,1,revere_20260305.png,,network_error,Price lookup status: network_error
+price_lookup_issue,TURBO,UPAO,2026-09-10,1,revere_20260708.png,,network_error,Price lookup status: network_error
+price_lookup_issue,TURBO,VSCO,2026-09-10,1,revere_20260106.png,,network_error,Price lookup status: network_error

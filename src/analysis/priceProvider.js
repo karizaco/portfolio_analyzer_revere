@@ -5,6 +5,30 @@ const path = require('node:path');
 const LOOKUP_PADDING_DAYS = 10;
 const REQUEST_TIMEOUT_MS = 15000;
 
+function minDateKey(left, right) {
+  if (!left) {
+    return right;
+  }
+
+  if (!right) {
+    return left;
+  }
+
+  return left <= right ? left : right;
+}
+
+function maxDateKey(left, right) {
+  if (!left) {
+    return right;
+  }
+
+  if (!right) {
+    return left;
+  }
+
+  return left >= right ? left : right;
+}
+
 function parseDateKey(value) {
   const parsed = new Date(`${value}T00:00:00Z`);
   if (Number.isNaN(parsed.getTime())) {
@@ -77,15 +101,24 @@ function mergePricePoints(existingPoints, incomingPoints) {
 }
 
 function cacheCoversRange(cacheEntry, fromDate, toDate) {
+  const terminalEmptyStatus = cacheEntry
+    && ['missing_ticker', 'network_error', 'no_market_data'].includes(cacheEntry.status);
+  if (terminalEmptyStatus) {
+    return true;
+  }
+
   return Boolean(
     cacheEntry
     && cacheEntry.from_date
     && cacheEntry.to_date
     && Array.isArray(cacheEntry.prices)
-    && cacheEntry.prices.length > 0
     && cacheEntry.from_date <= fromDate
     && cacheEntry.to_date >= toDate
   );
+}
+
+function shouldPersistCache(cacheEntry) {
+  return cacheEntry && cacheEntry.status !== 'network_error';
 }
 
 function defaultRequestJson(url) {
@@ -251,8 +284,16 @@ function createUnconfiguredPriceProvider() {
 
 function createYahooPriceProvider(options = {}) {
   const cacheDirectory = options.cacheDirectory || path.join(process.cwd(), 'data', 'price_cache', 'yahoo');
+  const defaultFromDate = options.defaultFromDate || '';
+  const defaultToDate = options.defaultToDate || '';
+  const defaultRangeFloor = defaultFromDate ? shiftDateKey(defaultFromDate, -LOOKUP_PADDING_DAYS) : '';
+  const defaultRangeCeiling = defaultToDate ? shiftDateKey(defaultToDate, LOOKUP_PADDING_DAYS) : '';
+  const prefetchConcurrency = Number.isFinite(options.prefetchConcurrency) && options.prefetchConcurrency > 0
+    ? options.prefetchConcurrency
+    : 8;
   const requestJson = options.requestJson || defaultRequestJson;
   const inMemoryCache = new Map();
+  const pointLookupCache = new Map();
 
   async function loadTickerSeries(ticker, fromDate, toDate) {
     const symbol = normalizeTickerSymbol(ticker);
@@ -272,12 +313,14 @@ function createYahooPriceProvider(options = {}) {
     }
 
     if (!cacheCoversRange(cacheEntry, fromDate, toDate)) {
-      const requestedFrom = cacheEntry && cacheEntry.from_date && cacheEntry.from_date < fromDate
-        ? cacheEntry.from_date
-        : fromDate;
-      const requestedTo = cacheEntry && cacheEntry.to_date && cacheEntry.to_date > toDate
-        ? cacheEntry.to_date
-        : toDate;
+      const requestedFrom = minDateKey(
+        cacheEntry && cacheEntry.from_date,
+        minDateKey(fromDate, defaultRangeFloor || defaultFromDate)
+      );
+      const requestedTo = maxDateKey(
+        cacheEntry && cacheEntry.to_date,
+        maxDateKey(toDate, defaultRangeCeiling || defaultToDate)
+      );
       const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&period1=${toUnixSeconds(requestedFrom)}&period2=${toUnixSeconds(requestedTo, true)}&includeAdjustedClose=true`;
 
       try {
@@ -288,11 +331,14 @@ function createYahooPriceProvider(options = {}) {
           fetched_at: new Date().toISOString(),
           from_date: requestedFrom,
           prices: mergedPrices,
+          status: mergedPrices.length ? 'ok' : 'no_market_data',
           symbol,
           to_date: requestedTo
         };
         inMemoryCache.set(symbol, cacheEntry);
-        await writeCacheFile(cacheFilePath, cacheEntry);
+        if (shouldPersistCache(cacheEntry)) {
+          await writeCacheFile(cacheFilePath, cacheEntry);
+        }
       } catch (error) {
         if (cacheEntry && Array.isArray(cacheEntry.prices) && cacheEntry.prices.length) {
           return {
@@ -302,13 +348,18 @@ function createYahooPriceProvider(options = {}) {
           };
         }
 
-        return {
+        cacheEntry = {
           error: error.message,
+          fetched_at: new Date().toISOString(),
+          from_date: requestedFrom,
           prices: [],
-          source: 'yahoo_chart',
           status: 'network_error',
-          symbol
+          source: 'yahoo_chart',
+          symbol,
+          to_date: requestedTo
         };
+        inMemoryCache.set(symbol, cacheEntry);
+        return cacheEntry;
       }
     }
 
@@ -316,7 +367,7 @@ function createYahooPriceProvider(options = {}) {
       return {
         ...(cacheEntry || { prices: [], symbol }),
         source: 'yahoo_chart',
-        status: 'no_market_data'
+        status: cacheEntry && cacheEntry.status ? cacheEntry.status : 'no_market_data'
       };
     }
 
@@ -337,37 +388,47 @@ function createYahooPriceProvider(options = {}) {
       };
     }
 
-    const fromDate = shiftDateKey(targetDate, -LOOKUP_PADDING_DAYS);
-    const toDate = shiftDateKey(targetDate, LOOKUP_PADDING_DAYS);
-    const series = await loadTickerSeries(ticker, fromDate, toDate);
-    if (!Array.isArray(series.prices) || !series.prices.length) {
-      return {
-        price: '',
-        priceDate: '',
-        priceSource: 'yahoo_chart',
-        priceStatus: series.status || 'no_market_data'
-      };
+    const pointCacheKey = `${normalizeTickerSymbol(ticker)}|${targetDate}`;
+    if (pointLookupCache.has(pointCacheKey)) {
+      return pointLookupCache.get(pointCacheKey);
     }
 
-    const selectedPoint = selectPricePoint(series.prices, targetDate);
-    if (!selectedPoint) {
-      return {
-        price: '',
-        priceDate: '',
-        priceSource: 'yahoo_chart',
-        priceStatus: 'price_not_found'
-      };
-    }
+    const pointPromise = (async () => {
+      const fromDate = shiftDateKey(targetDate, -LOOKUP_PADDING_DAYS);
+      const toDate = shiftDateKey(targetDate, LOOKUP_PADDING_DAYS);
+      const series = await loadTickerSeries(ticker, fromDate, toDate);
+      if (!Array.isArray(series.prices) || !series.prices.length) {
+        return {
+          price: '',
+          priceDate: '',
+          priceSource: 'yahoo_chart',
+          priceStatus: series.status || 'no_market_data'
+        };
+      }
 
-    return {
-      lookupMode: selectedPoint.lookupMode,
-      price: selectedPoint.price,
-      priceDate: selectedPoint.date,
-      priceSource: `yahoo_chart_${selectedPoint.source}`,
-      priceStatus: selectedPoint.lookupMode === 'exact_or_same_day'
-        ? 'ok'
-        : `ok_${selectedPoint.lookupMode}`
-    };
+      const selectedPoint = selectPricePoint(series.prices, targetDate);
+      if (!selectedPoint) {
+        return {
+          price: '',
+          priceDate: '',
+          priceSource: 'yahoo_chart',
+          priceStatus: 'price_not_found'
+        };
+      }
+
+      return {
+        lookupMode: selectedPoint.lookupMode,
+        price: selectedPoint.price,
+        priceDate: selectedPoint.date,
+        priceSource: `yahoo_chart_${selectedPoint.source}`,
+        priceStatus: selectedPoint.lookupMode === 'exact_or_same_day'
+          ? 'ok'
+          : `ok_${selectedPoint.lookupMode}`
+      };
+    })();
+
+    pointLookupCache.set(pointCacheKey, pointPromise);
+    return pointPromise;
   }
 
   async function getPositionPrices(position) {
@@ -397,7 +458,33 @@ function createYahooPriceProvider(options = {}) {
     };
   }
 
+  async function prefetchTickers(tickers) {
+    const uniqueTickers = [...new Set((tickers || [])
+      .map((ticker) => normalizeTickerSymbol(ticker))
+      .filter(Boolean))];
+    if (!uniqueTickers.length) {
+      return;
+    }
+
+    const sharedFromDate = defaultRangeFloor || defaultFromDate;
+    const sharedToDate = defaultRangeCeiling || defaultToDate;
+    let nextIndex = 0;
+
+    async function worker() {
+      while (nextIndex < uniqueTickers.length) {
+        const currentIndex = nextIndex;
+        nextIndex += 1;
+        const ticker = uniqueTickers[currentIndex];
+        await loadTickerSeries(ticker, sharedFromDate || shiftDateKey(formatDateKey(new Date()), -LOOKUP_PADDING_DAYS), sharedToDate || formatDateKey(new Date()));
+      }
+    }
+
+    const workerCount = Math.min(prefetchConcurrency, uniqueTickers.length);
+    await Promise.all(Array.from({ length: workerCount }, () => worker()));
+  }
+
   return {
+    prefetchTickers,
     getPositionPrices,
     getPricePoint
   };
