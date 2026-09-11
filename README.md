@@ -42,7 +42,8 @@ npm run extract
 
 ## Notes
 
-- The extractor resolves `sample_screenshots.lnk` automatically and only reads from its target.
+- `sample_screenshots.lnk` is intentionally kept local and ignored by git. Create your own local shortcut or use `--input-dir` / `--shortcut` when running the CLI.
+- If `sample_screenshots.lnk` exists locally, the extractor resolves it automatically and only reads from its target.
 - The linked screenshot folder is treated as read-only. All generated files stay under this workspace.
 - Legacy `FOCUS` / `PORTFOLIO` screenshots are mapped into the `GRO` columns, with `TURBO` left empty.
 - The first snapshot establishes a baseline. Position enter/exit events are only derived when a previous snapshot exists.
