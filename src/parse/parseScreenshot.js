@@ -23,9 +23,73 @@ function findLine(lines, matcher) {
   return lines.find((line) => matcher.test(line)) || '';
 }
 
+function findLineIndex(lines, matcher) {
+  return lines.findIndex((line) => matcher.test(line));
+}
+
+function attachPortfolioPrefix(line, portfolioPrefix) {
+  if (!line || !portfolioPrefix || /^PORTFOLIO\b/.test(line) || /^FOCUS\b/.test(line)) {
+    return line;
+  }
+
+  if (/^RVAB\b/.test(line)) {
+    return `${portfolioPrefix} ${line}`;
+  }
+
+  return line;
+}
+
+function findFollowingMetricLine(lines, startIndex, portfolioPrefix) {
+  if (startIndex < 0) {
+    return '';
+  }
+
+  for (let index = startIndex + 1; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (/^(?:GRO|TURBO)\b.*HOLDINGS\b/.test(line) || /^FOCUS\b/.test(line) || /^BOTTOM\b/.test(line)) {
+      break;
+    }
+
+    if (/^PORTFOLIO\b/.test(line) || /^RVAB\b/.test(line) || /^(?:GRO|TURBO)\b.*RVAB\b/.test(line)) {
+      return attachPortfolioPrefix(line, portfolioPrefix);
+    }
+  }
+
+  return '';
+}
+
+function splitInlineMetricLine(holdingsLine, portfolioKey) {
+  if (!holdingsLine) {
+    return {
+      actionLine: '',
+      holdingsLine: ''
+    };
+  }
+
+  const markerMatch = holdingsLine.match(/\s(RVAB(?:\s*\/\s*REBAR)?\s*[:.].*)$/);
+  if (!markerMatch || markerMatch.index === undefined) {
+    return {
+      actionLine: '',
+      holdingsLine
+    };
+  }
+
+  const prefix = holdingsLine.slice(0, markerMatch.index).trim();
+  const metricSuffix = markerMatch[1].trim();
+  const portfolioPrefix = portfolioKey === 'turbo' ? 'TURBO' : 'GRO';
+
+  return {
+    actionLine: /^RVAB\b/.test(metricSuffix) ? `${portfolioPrefix} ${metricSuffix}` : metricSuffix,
+    holdingsLine: prefix
+  };
+}
+
 function buildPortfolioFields({ actionLine, holdingsLine, layoutType, portfolioKey }) {
-  const holdingsRaw = extractHoldingsContent(holdingsLine, portfolioKey, layoutType);
-  const metrics = parseMetricBundle(actionLine);
+  const inlineSplit = !actionLine
+    ? splitInlineMetricLine(holdingsLine, portfolioKey)
+    : { actionLine, holdingsLine };
+  const holdingsRaw = extractHoldingsContent(inlineSplit.holdingsLine, portfolioKey, layoutType);
+  const metrics = parseMetricBundle(actionLine || inlineSplit.actionLine);
 
   return {
     actions: metrics.actions,
@@ -51,17 +115,21 @@ function parseScreenshot({ metadata, ocr }) {
   const mergedLines = normalizeLines(ocr.text);
   const layoutType = detectLayoutType(mergedLines);
 
-  const groHoldingsLine = layoutType === 'legacy_focus'
-    ? findLine(mergedLines, /^FOCUS\b/)
-    : findLine(mergedLines, /^GRO\b.*HOLDINGS\b/);
+  const groHoldingsIndex = layoutType === 'legacy_focus'
+    ? findLineIndex(mergedLines, /^FOCUS\b/)
+    : findLineIndex(mergedLines, /^GRO\b.*HOLDINGS\b/);
+  const groHoldingsLine = groHoldingsIndex >= 0 ? mergedLines[groHoldingsIndex] : '';
   const groActionLine = layoutType === 'legacy_focus'
     ? findLine(mergedLines, /^PORTFOLIO\b/)
-    : findLine(mergedLines, /^GRO\b(?!.*HOLDINGS\b).*RVAB\b/);
-  const turboHoldingsLine = layoutType === 'gro_turbo'
-    ? findLine(mergedLines, /^TURBO\b.*HOLDINGS\b/)
-    : '';
+    : (findLine(mergedLines, /^GRO\b(?!.*HOLDINGS\b).*RVAB\b/)
+      || findFollowingMetricLine(mergedLines, groHoldingsIndex, 'GRO'));
+  const turboHoldingsIndex = layoutType === 'gro_turbo'
+    ? findLineIndex(mergedLines, /^TURBO\b.*HOLDINGS\b/)
+    : -1;
+  const turboHoldingsLine = turboHoldingsIndex >= 0 ? mergedLines[turboHoldingsIndex] : '';
   const turboActionLine = layoutType === 'gro_turbo'
-    ? findLine(mergedLines, /^TURBO\b(?!.*HOLDINGS\b).*RVAB\b/)
+    ? (findLine(mergedLines, /^TURBO\b(?!.*HOLDINGS\b).*RVAB\b/)
+      || findFollowingMetricLine(mergedLines, turboHoldingsIndex, 'TURBO'))
     : '';
   const bottomLineRaw = findLine(mergedLines, /^BOTTOM\b.*LINE\b/);
 
@@ -78,7 +146,9 @@ function parseScreenshot({ metadata, ocr }) {
     portfolioKey: 'turbo'
   });
 
-  const bottomLine = extractBottomLine(bottomLineRaw);
+  const fallbackBottomLine = extractBottomLine(ocr.bottomText || '');
+  const bottomLine = extractBottomLine(bottomLineRaw) || fallbackBottomLine;
+  const resolvedBottomLineRaw = bottomLineRaw || (fallbackBottomLine ? `BOTTOM LINE: ${fallbackBottomLine}` : '');
   const issues = [];
   appendIssue(issues, !gro.holdings.length, 'MISSING_GRO_HOLDINGS');
   appendIssue(issues, !gro.metricsRaw, 'MISSING_GRO_ACTION_LINE');
@@ -90,7 +160,7 @@ function parseScreenshot({ metadata, ocr }) {
   return {
     as_of_date: metadata.asOfDate,
     bottom_line: bottomLine,
-    bottom_line_raw: bottomLineRaw,
+    bottom_line_raw: resolvedBottomLineRaw,
     gro_action_text: gro.actionText,
     gro_action_text_raw: gro.actionTextRaw,
     gro_actions: gro.actions,

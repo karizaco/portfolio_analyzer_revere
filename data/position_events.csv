@@ -1,12 +1,10 @@
 portfolio,event_date,sequence,event_type,ticker,source_file,previous_source_file,action_context,event_status,repair_basis
 GRO,2022-11-29,1,EXIT,FSLR,revere_20221129.png,revere_20220922.png,BUY 4% QD SELL FSLR TRIM % SHLS ADD 5% T-BILL,trusted,action_match
 GRO,2022-12-27,1,ENTER,FCX,revere_20221227.png,revere_20221129.png,BUY 2% FCX & 5% DIA ADD 10% T-BILLS,trusted,action_match
-GRO,2022-12-27,1,ENTER,IO,revere_20221227.png,revere_20221129.png,BUY 2% FCX & 5% DIA ADD 10% T-BILLS,trusted,action_match
 GRO,2023-02-01,1,ENTER,BROS,revere_20230201.png,revere_20221227.png,ADD BA+GDX+BROS BUY DT O-SELL TNA+AL TRIM 550,trusted,action_match
 GRO,2023-02-27,1,ENTER,PANW,revere_20230227.png,revere_20230201.png,"ADD TO SSO,NVDA,PANW TRIM TBT",trusted,action_match
 GRO,2023-05-09,1,ENTER,UBER,revere_20230509.png,revere_20230322.png,ADD TO LULU + UBER,trusted,action_match
 GRO,2023-06-30,1,ENTER,CHAT,revere_20230630.png,revere_20230509.png,ADD TO CHAT BUY DRV,trusted,action_match
-GRO,2023-06-30,1,ENTER,DRV,revere_20230630.png,revere_20230509.png,ADD TO CHAT BUY DRV,trusted,action_match
 GRO,2023-10-30,1,ENTER,BITO,revere_20231030.png,revere_20230823.png,BUY BITO,trusted,action_match
 GRO,2023-11-28,1,ENTER,TSLA,revere_20231128.png,revere_20231030.png,SELL DKNG BUY PDD ADD TO QLD + TSLA,trusted,action_match
 GRO,2024-03-01,1,ENTER,TNA,revere_20240301.png,revere_20231128.png,BUY TNA ADD TA WFRD,trusted,action_match
@@ -15,21 +13,34 @@ GRO,2024-05-17,1,ENTER,ERX,revere_20240517.png,revere_20240416.png,ADD TO IBIT B
 GRO,2024-05-17,1,ENTER,IBIT,revere_20240517.png,revere_20240416.png,ADD TO IBIT BUY ERX,trusted,action_match
 GRO,2024-06-13,1,ENTER,SMCI,revere_20240613.png,revere_20240517.png,BUY SMCI,trusted,action_match
 GRO,2024-07-10,1,EXIT,TMDX,revere_20240710.png,revere_20240613.png,SELL TMDX + CAVA TRIM CRWD BUY GLW + CCL,trusted,action_match
-GRO,2025-04-17,1,ENTER,SPLG,revere_20250417.png,revere_20241207.png,,trusted,holdings_diff
-GRO,2025-04-17,1,EXIT,AKLE,revere_20250417.png,revere_20241207.png,,trusted,holdings_diff
-GRO,2025-04-17,1,EXIT,CRWD,revere_20250417.png,revere_20241207.png,,trusted,holdings_diff
-GRO,2025-04-17,1,EXIT,IO,revere_20250417.png,revere_20241207.png,,trusted,holdings_diff
-GRO,2025-04-17,1,EXIT,NAIL,revere_20250417.png,revere_20241207.png,,trusted,holdings_diff
-GRO,2025-04-17,1,EXIT,NRGU,revere_20250417.png,revere_20241207.png,,trusted,holdings_diff
-GRO,2025-04-17,1,EXIT,NUGT,revere_20250417.png,revere_20241207.png,,trusted,holdings_diff
-GRO,2025-04-17,1,EXIT,OFL,revere_20250417.png,revere_20241207.png,,trusted,holdings_diff
-GRO,2025-04-17,1,EXIT,ONDS,revere_20250417.png,revere_20241207.png,,trusted,holdings_diff
-GRO,2025-04-17,1,EXIT,RSP,revere_20250417.png,revere_20241207.png,,trusted,holdings_diff
-GRO,2025-04-17,1,EXIT,SAW,revere_20250417.png,revere_20241207.png,,trusted,holdings_diff
-GRO,2025-04-17,1,EXIT,SOR,revere_20250417.png,revere_20241207.png,,trusted,holdings_diff
-GRO,2025-04-17,1,EXIT,SPXL,revere_20250417.png,revere_20241207.png,,trusted,holdings_diff
-GRO,2025-04-17,1,EXIT,SVN,revere_20250417.png,revere_20241207.png,,trusted,holdings_diff
-GRO,2025-04-17,1,EXIT,TNA,revere_20250417.png,revere_20241207.png,,trusted,holdings_diff
+GRO,2024-07-25,1,ENTER,FAS,revere_20240725.png,revere_20240710.png,BUY FAS FRI KEYS: SPX VS SOSMA QQQ STABILIZATION? ~~ SMALL CAP RS,trusted,action_signal_correction
+GRO,2024-08-23,1,ENTER,CAVA,revere_20240823.png,revere_20240725.png,BUY CAVA SELL CEG TRIM META BUY MIDU MON KEYS: SPX VS R/5642-67 SML/MID OUTPERFORMANCE? AVOID DISTRIBUTION,trusted,action_match
+GRO,2024-08-23,1,ENTER,MIDU,revere_20240823.png,revere_20240725.png,BUY CAVA SELL CEG TRIM META BUY MIDU MON KEYS: SPX VS R/5642-67 SML/MID OUTPERFORMANCE? AVOID DISTRIBUTION,trusted,action_match
+GRO,2024-09-25,1,ENTER,FLUT,revere_20240925.png,revere_20240823.png,ADD FLUT TRIM }% NOW NAIL,trusted,action_match
+GRO,2024-09-25,2,ENTER,FLUT,revere_20240925_2.png,revere_20240925.png,ADD FLUT TRIM % NOW NAIL,trusted,action_signal_correction
+GRO,2024-12-02,1,ENTER,VRT,revere_20241202.png,revere_20240925_2.png,ADD TO VRT,trusted,action_match
+GRO,2025-01-03,1,ENTER,GEV,revere_20250103.png,revere_20241207.png,BUY MRVL TWLO ADD PLTR GEV ~~ SELL AR,trusted,action_match
+GRO,2025-01-03,1,ENTER,MRVL,revere_20250103.png,revere_20241207.png,BUY MRVL TWLO ADD PLTR GEV ~~ SELL AR,trusted,action_match
+GRO,2025-01-03,1,ENTER,PLTR,revere_20250103.png,revere_20241207.png,BUY MRVL TWLO ADD PLTR GEV ~~ SELL AR,trusted,action_match
+GRO,2025-01-03,1,ENTER,TWLO,revere_20250103.png,revere_20241207.png,BUY MRVL TWLO ADD PLTR GEV ~~ SELL AR,trusted,action_match
+GRO,2025-01-30,1,ENTER,CEG,revere_20250130.png,revere_20250103.png,BUY CEG GEV ADD TO SNOW TRIM TSLA,trusted,action_match
+GRO,2025-01-30,1,ENTER,SNOW,revere_20250130.png,revere_20250103.png,BUY CEG GEV ADD TO SNOW TRIM TSLA,trusted,action_match
+GRO,2025-02-10,1,ENTER,AFRM,revere_20250210.png,revere_20250130.png,ADD TO CAVA BUY AFRM,trusted,action_match
+GRO,2025-02-10,1,ENTER,CAVA,revere_20250210.png,revere_20250130.png,ADD TO CAVA BUY AFRM,trusted,action_match
+GRO,2025-03-25,1,ENTER,ARKG,revere_20250325.png,revere_20250312.png,BUY BROSDOCS,trusted,holdings_diff
+GRO,2025-03-25,1,ENTER,BACS,revere_20250325.png,revere_20250312.png,BUY BROSDOCS,trusted,holdings_diff
+GRO,2025-03-25,1,ENTER,DASH,revere_20250325.png,revere_20250312.png,BUY BROSDOCS,trusted,holdings_diff
+GRO,2025-03-25,1,ENTER,GLD,revere_20250325.png,revere_20250312.png,BUY BROSDOCS,trusted,holdings_diff
+GRO,2025-03-25,1,ENTER,HOOS,revere_20250325.png,revere_20250312.png,BUY BROSDOCS,trusted,holdings_diff
+GRO,2025-03-25,1,ENTER,NFLX,revere_20250325.png,revere_20250312.png,BUY BROSDOCS,trusted,holdings_diff
+GRO,2025-03-25,1,ENTER,PLTR,revere_20250325.png,revere_20250312.png,BUY BROSDOCS,trusted,holdings_diff
+GRO,2025-03-25,1,ENTER,RBRX,revere_20250325.png,revere_20250312.png,BUY BROSDOCS,trusted,holdings_diff
+GRO,2025-03-25,1,ENTER,SO,revere_20250325.png,revere_20250312.png,BUY BROSDOCS,trusted,holdings_diff
+GRO,2025-03-25,1,ENTER,SPLG,revere_20250325.png,revere_20250312.png,BUY BROSDOCS,trusted,holdings_diff
+GRO,2025-03-25,1,ENTER,TGTH,revere_20250325.png,revere_20250312.png,BUY BROSDOCS,trusted,holdings_diff
+GRO,2025-03-25,1,EXIT,GLO,revere_20250325.png,revere_20250312.png,BUY BROSDOCS,trusted,holdings_diff
+GRO,2025-03-25,1,EXIT,PSQ,revere_20250325.png,revere_20250312.png,BUY BROSDOCS,trusted,holdings_diff
+GRO,2025-03-25,1,EXIT,SMG,revere_20250325.png,revere_20250312.png,BUY BROSDOCS,trusted,holdings_diff
 GRO,2025-06-06,1,ENTER,BROS,revere_20250606.png,revere_20250417.png,,trusted,holdings_diff
 GRO,2025-06-06,1,ENTER,GEV,revere_20250606.png,revere_20250417.png,,trusted,holdings_diff
 GRO,2025-06-06,1,ENTER,HIMS,revere_20250606.png,revere_20250417.png,,trusted,holdings_diff
@@ -50,33 +61,13 @@ TURBO,2025-09-03,1,ENTER,SOLT,revere_20250903.png,revere_20250827.png,SELL GEV T
 TURBO,2025-09-03,1,EXIT,GEV,revere_20250903.png,revere_20250827.png,SELL GEV TRIM TQQQ + HOOD BUY SOLT,trusted,action_match
 TURBO,2025-09-04,1,ENTER,BABA,revere_20250904.png,revere_20250903.png,BUY TEM + BABA,trusted,action_match
 TURBO,2025-09-04,1,ENTER,TEM,revere_20250904.png,revere_20250903.png,BUY TEM + BABA,trusted,action_match
+TURBO,2025-09-05,1,ENTER,SOLT,revere_20250905.png,revere_20250904.png,SELL GEV TRIM TQQQ + HOOD BUY SOLT,trusted,action_match
 GRO,2025-09-26,1,ENTER,MP,revere_20250926.png,revere_20250912.png,ADD TO MP,trusted,action_match
-GRO,2025-10-09,1,ENTER,COE,revere_20251009.png,revere_20250926.png,TRIM SSO,trusted,holdings_diff
-GRO,2025-10-09,1,ENTER,CRWV,revere_20251009.png,revere_20250926.png,TRIM SSO,trusted,holdings_diff
-GRO,2025-10-09,1,ENTER,ETHA,revere_20251009.png,revere_20250926.png,TRIM SSO,trusted,holdings_diff
-GRO,2025-10-09,1,ENTER,IBIT,revere_20251009.png,revere_20250926.png,TRIM SSO,trusted,holdings_diff
-GRO,2025-10-09,1,ENTER,NEI,revere_20251009.png,revere_20250926.png,TRIM SSO,trusted,holdings_diff
-GRO,2025-10-09,1,ENTER,PPH,revere_20251009.png,revere_20250926.png,TRIM SSO,trusted,holdings_diff
-GRO,2025-10-09,1,ENTER,SSO,revere_20251009.png,revere_20250926.png,TRIM SSO,trusted,holdings_diff
-GRO,2025-10-09,1,ENTER,THA,revere_20251009.png,revere_20250926.png,TRIM SSO,trusted,holdings_diff
-GRO,2025-10-09,1,EXIT,CRWY,revere_20251009.png,revere_20250926.png,TRIM SSO,trusted,holdings_diff
-GRO,2025-10-09,1,EXIT,NBIS,revere_20251009.png,revere_20250926.png,TRIM SSO,trusted,holdings_diff
-GRO,2025-10-09,1,EXIT,TSLA,revere_20251009.png,revere_20250926.png,TRIM SSO,trusted,holdings_diff
-GRO,2025-10-13,1,ENTER,IONQ,revere_20251013.png,revere_20251009.png,TRIM BE + MP +NBIS,trusted,holdings_diff
-GRO,2025-10-13,1,ENTER,LEU,revere_20251013.png,revere_20251009.png,TRIM BE + MP +NBIS,trusted,holdings_diff
-GRO,2025-10-13,1,ENTER,NBIS,revere_20251013.png,revere_20251009.png,TRIM BE + MP +NBIS,trusted,holdings_diff
-GRO,2025-10-13,1,ENTER,TSLA,revere_20251013.png,revere_20251009.png,TRIM BE + MP +NBIS,trusted,holdings_diff
-GRO,2025-10-13,1,EXIT,COE,revere_20251013.png,revere_20251009.png,TRIM BE + MP +NBIS,trusted,holdings_diff
-GRO,2025-10-13,1,EXIT,ETHA,revere_20251013.png,revere_20251009.png,TRIM BE + MP +NBIS,trusted,holdings_diff
-GRO,2025-10-13,1,EXIT,NEI,revere_20251013.png,revere_20251009.png,TRIM BE + MP +NBIS,trusted,holdings_diff
-GRO,2025-10-13,1,EXIT,SSO,revere_20251013.png,revere_20251009.png,TRIM BE + MP +NBIS,trusted,holdings_diff
-GRO,2025-10-13,1,EXIT,THA,revere_20251013.png,revere_20251009.png,TRIM BE + MP +NBIS,trusted,holdings_diff
 TURBO,2025-10-15,1,ENTER,ARKG,revere_20251015.png,revere_20251013.png,BUY FIG SNDK ARKG SERV ADD TO GEV,trusted,action_match
 TURBO,2025-10-15,1,ENTER,FIG,revere_20251015.png,revere_20251013.png,BUY FIG SNDK ARKG SERV ADD TO GEV,trusted,action_match
 TURBO,2025-10-15,1,ENTER,GEV,revere_20251015.png,revere_20251013.png,BUY FIG SNDK ARKG SERV ADD TO GEV,trusted,action_match
 TURBO,2025-10-15,1,ENTER,SERV,revere_20251015.png,revere_20251013.png,BUY FIG SNDK ARKG SERV ADD TO GEV,trusted,action_match
 TURBO,2025-10-15,1,ENTER,SNDK,revere_20251015.png,revere_20251013.png,BUY FIG SNDK ARKG SERV ADD TO GEV,trusted,action_match
-GRO,2025-10-16,1,ENTER,STK,revere_20251016.png,revere_20251015.png,BUY STK SELL PPH IONQ DASH TRIM HOOD,trusted,action_match
 GRO,2025-10-16,1,EXIT,DASH,revere_20251016.png,revere_20251015.png,BUY STK SELL PPH IONQ DASH TRIM HOOD,trusted,action_match
 GRO,2025-10-16,1,EXIT,IONQ,revere_20251016.png,revere_20251015.png,BUY STK SELL PPH IONQ DASH TRIM HOOD,trusted,action_match
 GRO,2025-10-16,1,EXIT,PPH,revere_20251016.png,revere_20251015.png,BUY STK SELL PPH IONQ DASH TRIM HOOD,trusted,action_match
@@ -91,6 +82,7 @@ GRO,2025-10-31,1,ENTER,SSO,revere_20251031.png,revere_20251030.png,ADD TO SSO,tr
 TURBO,2025-10-31,1,ENTER,AMZN,revere_20251031.png,revere_20251030.png,BUY AMZN,trusted,action_match
 TURBO,2025-11-04,1,EXIT,URA,revere_20251104.png,revere_20251031.png,ADD 10 SSO SELL URA TRIM BABA,trusted,action_match
 GRO,2025-11-05,1,ENTER,CCJ,revere_20251105.png,revere_20251104.png,ADD TO TER BUY CCJ TRIM HOOD,trusted,action_match
+GRO,2025-11-05,1,ENTER,TER,revere_20251105.png,revere_20251104.png,ADD TO TER BUY CCJ TRIM HOOD,trusted,action_match
 TURBO,2025-11-05,1,ENTER,LMND,revere_20251105.png,revere_20251104.png,"ADD TO AMZN,SSO BUY, LMND, SOFI",trusted,action_match
 TURBO,2025-11-05,1,ENTER,SOFI,revere_20251105.png,revere_20251104.png,"ADD TO AMZN,SSO BUY, LMND, SOFI",trusted,action_match
 TURBO,2025-11-19,1,ENTER,GH,revere_20251119.png,revere_20251105.png,SELL MU IREN BUY GLD GH,trusted,action_match
@@ -101,7 +93,6 @@ GRO,2025-12-31,1,EXIT,TAN,revere_20251231.png,revere_20251230.png,BUY MU SELL ST
 TURBO,2025-12-31,1,EXIT,URTY,revere_20251231.png,revere_20251230.png,SELL URTY TRIM GLD NUGT,trusted,action_match
 GRO,2026-01-02,1,EXIT,TSLA,revere_20260102.png,revere_20251231.png,TRIM S50 SELL TSLA,trusted,action_match
 TURBO,2026-01-02,1,ENTER,RDDT,revere_20260102.png,revere_20251231.png,BUY RDDT TRIM TSLA SELL NUGT LQDA,trusted,action_match
-TURBO,2026-01-02,1,EXIT,LQDA,revere_20260102.png,revere_20251231.png,BUY RDDT TRIM TSLA SELL NUGT LQDA,trusted,action_match
 TURBO,2026-01-02,1,EXIT,NUGT,revere_20260102.png,revere_20251231.png,BUY RDDT TRIM TSLA SELL NUGT LQDA,trusted,action_match
 TURBO,2026-01-05,1,ENTER,RKT,revere_20260105.png,revere_20260102.png,ADD TO RKLB BUY RKT,trusted,action_match
 GRO,2026-01-06,1,ENTER,RKT,revere_20260106.png,revere_20260105.png,BUY RKT SNDK,trusted,action_match
@@ -113,15 +104,10 @@ TURBO,2026-01-06,1,EXIT,ALAB,revere_20260106.png,revere_20260105.png,ADD TO RKT 
 TURBO,2026-01-06,1,EXIT,TSLA,revere_20260106.png,revere_20260105.png,ADD TO RKT BUY ZETA VSCO BTU SELL TSLA ALAB,trusted,action_match
 GRO,2026-01-08,1,ENTER,BE,revere_20260108.png,revere_20260107.png,ADD TO SNDK BUY BE,trusted,action_match
 TURBO,2026-01-08,1,ENTER,PYM,revere_20260108.png,revere_20260107.png,TRIM PL,trusted,holdings_diff
-TURBO,2026-01-08,1,ENTER,RDDT,revere_20260108.png,revere_20260107.png,TRIM PL,trusted,holdings_diff
-TURBO,2026-01-08,1,ENTER,RKLB,revere_20260108.png,revere_20260107.png,TRIM PL,trusted,holdings_diff
-TURBO,2026-01-08,1,ENTER,RKT,revere_20260108.png,revere_20260107.png,TRIM PL,trusted,holdings_diff
-TURBO,2026-01-08,1,ENTER,SNDK,revere_20260108.png,revere_20260107.png,TRIM PL,trusted,holdings_diff
-TURBO,2026-01-08,1,EXIT,AKLE,revere_20260108.png,revere_20260107.png,TRIM PL,trusted,holdings_diff
-TURBO,2026-01-08,1,EXIT,AKT,revere_20260108.png,revere_20260107.png,TRIM PL,trusted,holdings_diff
-TURBO,2026-01-08,1,EXIT,MU,revere_20260108.png,revere_20260107.png,TRIM PL,trusted,holdings_diff
-TURBO,2026-01-08,1,EXIT,RODT,revere_20260108.png,revere_20260107.png,TRIM PL,trusted,holdings_diff
-TURBO,2026-01-08,1,EXIT,SNK,revere_20260108.png,revere_20260107.png,TRIM PL,trusted,holdings_diff
+TURBO,2026-01-08,1,ENTER,SLY,revere_20260108.png,revere_20260107.png,TRIM PL,trusted,holdings_diff
+TURBO,2026-01-08,1,EXIT,SLV,revere_20260108.png,revere_20260107.png,TRIM PL,trusted,holdings_diff
+TURBO,2026-01-08,1,EXIT,SPYM,revere_20260108.png,revere_20260107.png,TRIM PL,trusted,holdings_diff
+TURBO,2026-01-08,1,EXIT,SSO,revere_20260108.png,revere_20260107.png,TRIM PL,trusted,holdings_diff
 GRO,2026-01-12,1,ENTER,AFRM,revere_20260112.png,revere_20260109.png,"BUY AFRM,APH,& TSLL",trusted,action_match
 GRO,2026-01-12,1,ENTER,APH,revere_20260112.png,revere_20260109.png,"BUY AFRM,APH,& TSLL",trusted,action_match
 GRO,2026-01-12,1,ENTER,TSLL,revere_20260112.png,revere_20260109.png,"BUY AFRM,APH,& TSLL",trusted,action_match
@@ -130,67 +116,38 @@ TURBO,2026-01-14,1,ENTER,LEU,revere_20260114.png,revere_20260112_2.png,BUY LABU 
 TURBO,2026-01-14,1,EXIT,ZETA,revere_20260114.png,revere_20260112_2.png,BUY LABU LEU SELL ZETA,trusted,action_match
 GRO,2026-01-15,1,EXIT,RDDT,revere_20260115.png,revere_20260114.png,ADD TO APH TRIM LLY SELL RDDT,trusted,action_match
 TURBO,2026-01-15,1,EXIT,RDDT,revere_20260115.png,revere_20260114.png,TRIM SNDK PL SELL RDDT *,trusted,action_match
-GRO,2026-01-16,1,ENTER,CCI,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
+GRO,2026-01-16,1,ENTER,FNGD,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
 GRO,2026-01-16,1,ENTER,GLD,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
-GRO,2026-01-16,1,ENTER,INGD,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
-GRO,2026-01-16,1,ENTER,MU,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
-GRO,2026-01-16,1,ENTER,RKLB,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
-GRO,2026-01-16,1,ENTER,SNDK,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
+GRO,2026-01-16,1,ENTER,LCI,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
+GRO,2026-01-16,1,ENTER,LLY,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
 GRO,2026-01-16,1,ENTER,UPRD,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
-GRO,2026-01-16,1,EXIT,CC,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
-GRO,2026-01-16,1,EXIT,FAS,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
-GRO,2026-01-16,1,EXIT,RKLE,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
-GRO,2026-01-16,1,EXIT,SHOX,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
+GRO,2026-01-16,1,EXIT,CCJ,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
+GRO,2026-01-16,1,EXIT,SLY,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
 GRO,2026-01-16,1,EXIT,UPRO,revere_20260116.png,revere_20260115.png,TRIM RKB AOD TO LABU [INN,trusted,holdings_diff
 TURBO,2026-01-16,1,ENTER,LEU,revere_20260116.png,revere_20260115.png,TRIM RKLB ADD TO LEU,trusted,action_match
+GRO,2026-01-22,1,ENTER,RKLB,revere_20260122.png,revere_20260116.png,BUY TSLL ADD TO URSP RKLB,trusted,action_signal_correction
 GRO,2026-01-22,1,ENTER,TSLL,revere_20260122.png,revere_20260116.png,BUY TSLL ADD TO URSP RKLB,trusted,action_match
+GRO,2026-01-22,1,ENTER,URSP,revere_20260122.png,revere_20260116.png,BUY TSLL ADD TO URSP RKLB,trusted,action_signal_correction
 TURBO,2026-01-23,1,EXIT,SE,revere_20260123.png,revere_20260122.png,SELL SE(,trusted,action_match
-GRO,2026-01-26,1,ENTER,COOTE,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,ENTER,GOO,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,ENTER,GOOG,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,ENTER,KTOS,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,ENTER,MU,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,ENTER,NOK,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,ENTER,RKLB,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,ENTER,SPYM,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,ENTER,SSO,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,ENTER,TSLA,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,EXIT,APH,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,EXIT,DELL,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,EXIT,EOSE,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,EXIT,MRVL,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,EXIT,SHOE,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,EXIT,SLY,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,EXIT,TSM,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
-GRO,2026-01-26,1,EXIT,UPRO,revere_20260126.png,revere_20260123.png,,trusted,holdings_diff
 TURBO,2026-01-27,1,ENTER,CRWD,revere_20260127.png,revere_20260126.png,BUY CRWD FIGR SELL VSCO,trusted,action_match
 TURBO,2026-01-27,1,ENTER,FIGR,revere_20260127.png,revere_20260126.png,BUY CRWD FIGR SELL VSCO,trusted,action_match
 TURBO,2026-01-30,1,EXIT,ARKG,revere_20260130.png,revere_20260128.png,TRIM SNOK SELL ARKG LABU REMX GLD SLV PPLT,trusted,action_match
+TURBO,2026-01-30,1,EXIT,LABU,revere_20260130.png,revere_20260128.png,TRIM SNOK SELL ARKG LABU REMX GLD SLV PPLT,trusted,action_signal_correction
 GRO,2026-02-02,1,ENTER,AAPL,revere_20260202.png,revere_20260130.png,BUY AAPL ADD TO URSP,trusted,action_match
 TURBO,2026-02-02,1,EXIT,PL,revere_20260202.png,revere_20260130.png,SELL PL,trusted,action_match
 GRO,2026-02-03,1,EXIT,APH,revere_20260203.png,revere_20260202.png,ADD TO AAPL SELL APH [ENE,trusted,action_match
-GRO,2026-02-04,1,EXIT,CC,revere_20260204.png,revere_20260203.png,BUY RSP SELL SSO CC) TRIM BE,trusted,action_match
 TURBO,2026-02-04,1,ENTER,ENPH,revere_20260204.png,revere_20260203.png,BUY ENPH SELL TSEM RKL8 BTU,trusted,action_match
 TURBO,2026-02-04,1,EXIT,BTU,revere_20260204.png,revere_20260203.png,BUY ENPH SELL TSEM RKL8 BTU,trusted,action_match
 TURBO,2026-02-04,1,EXIT,RKLB,revere_20260204.png,revere_20260203.png,BUY ENPH SELL TSEM RKL8 BTU,trusted,action_match
 TURBO,2026-02-04,1,EXIT,TSEM,revere_20260204.png,revere_20260203.png,BUY ENPH SELL TSEM RKL8 BTU,trusted,action_match
-GRO,2026-02-05,1,ENTER,GLD,revere_20260205.png,revere_20260204.png,,trusted,holdings_diff
-GRO,2026-02-05,1,ENTER,GOOG,revere_20260205.png,revere_20260204.png,,trusted,holdings_diff
-GRO,2026-02-05,1,ENTER,JIII,revere_20260205.png,revere_20260204.png,,trusted,holdings_diff
-GRO,2026-02-05,1,ENTER,SPVM,revere_20260205.png,revere_20260204.png,,trusted,holdings_diff
-GRO,2026-02-05,1,ENTER,USRP,revere_20260205.png,revere_20260204.png,,trusted,holdings_diff
-GRO,2026-02-05,1,EXIT,COOS,revere_20260205.png,revere_20260204.png,,trusted,holdings_diff
-GRO,2026-02-05,1,EXIT,GLO,revere_20260205.png,revere_20260204.png,,trusted,holdings_diff
-GRO,2026-02-05,1,EXIT,JJLL,revere_20260205.png,revere_20260204.png,,trusted,holdings_diff
-GRO,2026-02-05,1,EXIT,SPYM,revere_20260205.png,revere_20260204.png,,trusted,holdings_diff
-GRO,2026-02-05,1,EXIT,USKP,revere_20260205.png,revere_20260204.png,,trusted,holdings_diff
+TURBO,2026-02-05,1,EXIT,ENPH,revere_20260205.png,revere_20260204.png,SELL ENPH UPRO TRIM GOOGL O-TRIM MLTZ,trusted,action_match
+TURBO,2026-02-05,1,EXIT,UPRO,revere_20260205.png,revere_20260204.png,SELL ENPH UPRO TRIM GOOGL O-TRIM MLTZ,trusted,action_match
 GRO,2026-02-06,1,ENTER,GEV,revere_20260206.png,revere_20260205.png,"BUY GEV, TNA",trusted,action_match
 GRO,2026-02-06,1,ENTER,TNA,revere_20260206.png,revere_20260205.png,"BUY GEV, TNA",trusted,action_match
-TURBO,2026-02-10,1,ENTER,AA,revere_20260210.png,revere_20260206.png,BUY ENPH ADD 10 AA COPX,trusted,action_match
-TURBO,2026-02-10,1,ENTER,COPX,revere_20260210.png,revere_20260206.png,BUY ENPH ADD 10 AA COPX,trusted,action_match
-TURBO,2026-02-10,1,ENTER,ENPH,revere_20260210.png,revere_20260206.png,BUY ENPH ADD 10 AA COPX,trusted,action_match
+TURBO,2026-02-10,1,ENTER,COPX,revere_20260210.png,revere_20260209.png,BUY ENPH ADD 10 AA COPX,trusted,action_match
+TURBO,2026-02-10,1,ENTER,ENPH,revere_20260210.png,revere_20260209.png,BUY ENPH ADD 10 AA COPX,trusted,action_match
 GRO,2026-02-11,1,ENTER,AVAB,revere_20260211.png,revere_20260210.png,,trusted,holdings_diff
-GRO,2026-02-11,1,ENTER,GOOG,revere_20260211.png,revere_20260210.png,,trusted,holdings_diff
+GRO,2026-02-11,1,ENTER,GOOC,revere_20260211.png,revere_20260210.png,,trusted,holdings_diff
 GRO,2026-02-11,1,ENTER,GOYA,revere_20260211.png,revere_20260210.png,,trusted,holdings_diff
 GRO,2026-02-11,1,ENTER,ITB,revere_20260211.png,revere_20260210.png,,trusted,holdings_diff
 GRO,2026-02-11,1,ENTER,JIE,revere_20260211.png,revere_20260210.png,,trusted,holdings_diff
@@ -198,8 +155,8 @@ GRO,2026-02-11,1,ENTER,MU,revere_20260211.png,revere_20260210.png,,trusted,holdi
 GRO,2026-02-11,1,ENTER,NVOA,revere_20260211.png,revere_20260210.png,,trusted,holdings_diff
 GRO,2026-02-11,1,ENTER,SHDK,revere_20260211.png,revere_20260210.png,,trusted,holdings_diff
 GRO,2026-02-11,1,ENTER,SPVM,revere_20260211.png,revere_20260210.png,,trusted,holdings_diff
-GRO,2026-02-11,1,ENTER,TA,revere_20260211.png,revere_20260210.png,,trusted,holdings_diff
-GRO,2026-02-11,1,ENTER,USA,revere_20260211.png,revere_20260210.png,,trusted,holdings_diff
+GRO,2026-02-11,1,ENTER,TAN,revere_20260211.png,revere_20260210.png,,trusted,holdings_diff
+GRO,2026-02-11,1,ENTER,USAE,revere_20260211.png,revere_20260210.png,,trusted,holdings_diff
 GRO,2026-02-11,1,ENTER,XME,revere_20260211.png,revere_20260210.png,,trusted,holdings_diff
 GRO,2026-02-11,1,ENTER,XNAE,revere_20260211.png,revere_20260210.png,,trusted,holdings_diff
 GRO,2026-02-11,1,EXIT,GLD,revere_20260211.png,revere_20260210.png,,trusted,holdings_diff
@@ -212,7 +169,7 @@ GRO,2026-02-11,1,EXIT,USRP,revere_20260211.png,revere_20260210.png,,trusted,hold
 TURBO,2026-02-11,1,EXIT,ENPH,revere_20260211.png,revere_20260210.png,SELL TNA ENPH ADD TO INTC BUY VRT,trusted,action_match
 GRO,2026-02-12,1,EXIT,GOOG,revere_20260212.png,revere_20260211.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",trusted,action_match
 GRO,2026-02-12,1,EXIT,XME,revere_20260212.png,revere_20260211.png,"TRIM AAPL TNA BE SELL GOOG XME TURBO HOLOWNGS: 5#YM,550.C0PX JIINTC GEV, TOL TER SNDX AA. DOCH.VRTESLY",trusted,action_match
-GRO,2026-02-13,1,EXIT,AAPL,revere_20260213.png,revere_20260212.png,TRIM PLTD SELL AAPL NVDA BE,trusted,action_match
+GRO,2026-02-13,1,EXIT,AAPL,revere_20260213.png,revere_20260212.png,TRIM PLTD SELL AAPL NVDA BE,trusted,action_signal_correction
 GRO,2026-02-13,1,EXIT,BE,revere_20260213.png,revere_20260212.png,TRIM PLTD SELL AAPL NVDA BE,trusted,action_match
 TURBO,2026-02-13,1,ENTER,DOCN,revere_20260213.png,revere_20260211.png,SELL VRT BUY FTI FCX ADD TO DOCN,trusted,action_match
 TURBO,2026-02-17,1,EXIT,AA,revere_20260217.png,revere_20260213.png,SELL AA BUY NET,trusted,action_match
@@ -223,10 +180,12 @@ GRO,2026-02-24,1,ENTER,SNDK,revere_20260224.png,revere_20260223.png,BUY SNDK ADD
 GRO,2026-02-25,1,EXIT,ITB,revere_20260225.png,revere_20260224.png,BUY CCJ ADD TO UPRO SELL ITB T,trusted,action_match
 TURBO,2026-02-26,1,ENTER,F,revere_20260226.png,revere_20260225.png,,trusted,holdings_diff
 TURBO,2026-02-26,1,ENTER,FSLY,revere_20260226.png,revere_20260225.png,,trusted,holdings_diff
+TURBO,2026-02-26,1,ENTER,FTAI,revere_20260226.png,revere_20260225.png,,trusted,holdings_diff
 TURBO,2026-02-26,1,ENTER,IL,revere_20260226.png,revere_20260225.png,,trusted,holdings_diff
-TURBO,2026-02-26,1,ENTER,LITE,revere_20260226.png,revere_20260225.png,,trusted,holdings_diff
+TURBO,2026-02-26,1,ENTER,JIGE,revere_20260226.png,revere_20260225.png,,trusted,holdings_diff
 TURBO,2026-02-26,1,ENTER,SPVM,revere_20260226.png,revere_20260225.png,,trusted,holdings_diff
 TURBO,2026-02-26,1,ENTER,TOL,revere_20260226.png,revere_20260225.png,,trusted,holdings_diff
+TURBO,2026-02-26,1,EXIT,FAI,revere_20260226.png,revere_20260225.png,,trusted,holdings_diff
 TURBO,2026-02-26,1,EXIT,FLY,revere_20260226.png,revere_20260225.png,,trusted,holdings_diff
 TURBO,2026-02-26,1,EXIT,ILF,revere_20260226.png,revere_20260225.png,,trusted,holdings_diff
 TURBO,2026-02-26,1,EXIT,JLEV,revere_20260226.png,revere_20260225.png,,trusted,holdings_diff
@@ -237,67 +196,25 @@ TURBO,2026-03-02,1,EXIT,TOL,revere_20260302.png,revere_20260227.png,SELL TOL,tru
 GRO,2026-03-03,1,EXIT,COPX,revere_20260303.png,revere_20260302.png,SELL COPX MU SNDK TRIM ILF FTAI,trusted,action_match
 GRO,2026-03-03,1,EXIT,MU,revere_20260303.png,revere_20260302.png,SELL COPX MU SNDK TRIM ILF FTAI,trusted,action_match
 TURBO,2026-03-03,1,EXIT,MU,revere_20260303.png,revere_20260302.png,SELL AA FTA! ILF MU SNDK UPRO VAT TRIM COPX FCX,trusted,action_match
-TURBO,2026-03-03,1,EXIT,UPRO,revere_20260303.png,revere_20260302.png,SELL AA FTA! ILF MU SNDK UPRO VAT TRIM COPX FCX,trusted,action_match
 TURBO,2026-03-05,1,ENTER,AVS,revere_20260305.png,revere_20260304.png,,trusted,holdings_diff
-TURBO,2026-03-05,1,ENTER,C,revere_20260305.png,revere_20260304.png,,trusted,holdings_diff
 TURBO,2026-03-05,1,ENTER,CU,revere_20260305.png,revere_20260304.png,,trusted,holdings_diff
-TURBO,2026-03-05,1,ENTER,NRG,revere_20260305.png,revere_20260304.png,,trusted,holdings_diff
-TURBO,2026-03-05,1,ENTER,REMX,revere_20260305.png,revere_20260304.png,,trusted,holdings_diff
 TURBO,2026-03-05,1,ENTER,RFSLY,revere_20260305.png,revere_20260304.png,,trusted,holdings_diff
-TURBO,2026-03-05,1,ENTER,SPCX,revere_20260305.png,revere_20260304.png,,trusted,holdings_diff
 TURBO,2026-03-05,1,ENTER,TE,revere_20260305.png,revere_20260304.png,,trusted,holdings_diff
 TURBO,2026-03-05,1,ENTER,TUREO,revere_20260305.png,revere_20260304.png,,trusted,holdings_diff
 TURBO,2026-03-05,1,EXIT,CCI,revere_20260305.png,revere_20260304.png,,trusted,holdings_diff
+TURBO,2026-03-05,1,EXIT,COPX,revere_20260305.png,revere_20260304.png,,trusted,holdings_diff
 TURBO,2026-03-05,1,EXIT,FCX,revere_20260305.png,revere_20260304.png,,trusted,holdings_diff
 TURBO,2026-03-05,1,EXIT,FSLY,revere_20260305.png,revere_20260304.png,,trusted,holdings_diff
 TURBO,2026-03-05,1,EXIT,ILF,revere_20260305.png,revere_20260304.png,,trusted,holdings_diff
 TURBO,2026-03-05,1,EXIT,TER,revere_20260305.png,revere_20260304.png,,trusted,holdings_diff
-GRO,2026-03-06,1,ENTER,JR,revere_20260306.png,revere_20260305.png,,trusted,holdings_diff
-GRO,2026-03-06,1,ENTER,LO,revere_20260306.png,revere_20260305.png,,trusted,holdings_diff
-GRO,2026-03-06,1,ENTER,RSP,revere_20260306.png,revere_20260305.png,,trusted,holdings_diff
-GRO,2026-03-06,1,ENTER,SPYM,revere_20260306.png,revere_20260305.png,,trusted,holdings_diff
-GRO,2026-03-06,1,ENTER,USAP,revere_20260306.png,revere_20260305.png,,trusted,holdings_diff
-GRO,2026-03-06,1,EXIT,CON,revere_20260306.png,revere_20260305.png,,trusted,holdings_diff
-GRO,2026-03-06,1,EXIT,GEV,revere_20260306.png,revere_20260305.png,,trusted,holdings_diff
-GRO,2026-03-06,1,EXIT,GLD,revere_20260306.png,revere_20260305.png,,trusted,holdings_diff
-GRO,2026-03-06,1,EXIT,J,revere_20260306.png,revere_20260305.png,,trusted,holdings_diff
-GRO,2026-03-06,1,EXIT,KEVS,revere_20260306.png,revere_20260305.png,,trusted,holdings_diff
-GRO,2026-03-06,1,EXIT,SE,revere_20260306.png,revere_20260305.png,,trusted,holdings_diff
-GRO,2026-03-06,1,EXIT,USAR,revere_20260306.png,revere_20260305.png,,trusted,holdings_diff
 TURBO,2026-03-06,1,EXIT,AVS,revere_20260306.png,revere_20260305.png,SELL AVS GEV CC) TRIM TER SSO,trusted,action_match
 TURBO,2026-03-06,1,EXIT,GEV,revere_20260306.png,revere_20260305.png,SELL AVS GEV CC) TRIM TER SSO,trusted,action_match
 GRO,2026-03-11,1,ENTER,SOXL,revere_20260311.png,revere_20260310.png,ADD TO CRCL TRIN SPXS BUY SOXL,trusted,action_match
 GRO,2026-03-12,1,EXIT,SOXL,revere_20260312.png,revere_20260311.png,SELL SOXL RSP BUY NET,trusted,action_match
 TURBO,2026-03-16,1,ENTER,INTC,revere_20260316.png,revere_20260312.png,BUY INTC,trusted,action_match
-GRO,2026-03-18,1,ENTER,FSEV,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,ENTER,FSLY,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,ENTER,GLI,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,ENTER,INTC,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,ENTER,NBIS,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,ENTER,TOMET,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,ENTER,UPNO,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,ENTER,VRT,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,EXIT,CRCL,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,EXIT,F,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,EXIT,GLD,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,EXIT,IBIT,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,EXIT,IT,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,EXIT,SI,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,EXIT,SPYM,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,EXIT,UPRO,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,EXIT,V,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-18,1,EXIT,VAT,revere_20260318.png,revere_20260316.png,"TRIM FSLY TRIM HEOGE/SPXU TUNA WOWOWAS SEAS, AE TER SUV, SO, [IR 1URSO RVAB/REBAR: ( 7-2 07+) (NEE",trusted,holdings_diff
-GRO,2026-03-19,1,ENTER,CREL,revere_20260319.png,revere_20260318.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",trusted,holdings_diff
-GRO,2026-03-19,1,ENTER,JI,revere_20260319.png,revere_20260318.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",trusted,holdings_diff
-GRO,2026-03-19,1,ENTER,NE,revere_20260319.png,revere_20260318.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",trusted,holdings_diff
-GRO,2026-03-19,1,ENTER,RFSLY,revere_20260319.png,revere_20260318.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",trusted,holdings_diff
-GRO,2026-03-19,1,ENTER,SPYM,revere_20260319.png,revere_20260318.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",trusted,holdings_diff
-GRO,2026-03-19,1,ENTER,UPRO,revere_20260319.png,revere_20260318.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",trusted,holdings_diff
-GRO,2026-03-19,1,EXIT,FSEV,revere_20260319.png,revere_20260318.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",trusted,holdings_diff
-GRO,2026-03-19,1,EXIT,GLI,revere_20260319.png,revere_20260318.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",trusted,holdings_diff
-GRO,2026-03-19,1,EXIT,INTC,revere_20260319.png,revere_20260318.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",trusted,holdings_diff
-GRO,2026-03-19,1,EXIT,TOMET,revere_20260319.png,revere_20260318.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",trusted,holdings_diff
-GRO,2026-03-19,1,EXIT,UPNO,revere_20260319.png,revere_20260318.png,"TRIM 6L0 EEE UNO HOLOINGS: SPYM,BE, TER FSEV, SE, [NE TREO RVAB/REBAR: (0 13/-2.34%)",trusted,holdings_diff
+GRO,2026-03-20,1,ENTER,FSLY,revere_20260320.png,revere_20260319.png,"SELL VRT NBIS GLO ADD TO SOS [IEE RUSEO HOOINGS: BE, TER FSLY, [NNEC",trusted,action_match
+GRO,2026-03-20,1,EXIT,GLO,revere_20260320.png,revere_20260319.png,"SELL VRT NBIS GLO ADD TO SOS [IEE RUSEO HOOINGS: BE, TER FSLY, [NNEC",trusted,action_signal_correction
+GRO,2026-03-20,1,EXIT,NBIS,revere_20260320.png,revere_20260319.png,"SELL VRT NBIS GLO ADD TO SOS [IEE RUSEO HOOINGS: BE, TER FSLY, [NNEC",trusted,action_signal_correction
 TURBO,2026-04-07,1,ENTER,ARM,revere_20260407.png,revere_20260402.png,SELL AVS BUY ARM + GLW,trusted,action_match
 TURBO,2026-04-07,1,ENTER,GLW,revere_20260407.png,revere_20260402.png,SELL AVS BUY ARM + GLW,trusted,action_match
 GRO,2026-04-13,1,ENTER,CAT,revere_20260413.png,revere_20260407.png,"SELL ORCS ADD TO UPRO BUY UPRO TPR MU CAVA CAT 1URBO HOLONGS: SEV JEEIRA RM, GLW. TER BWXT SOLS ASTS LUNR,RKLS, LABU, DELL",trusted,action_match
@@ -310,43 +227,24 @@ GRO,2026-04-15,1,ENTER,DRAM,revere_20260415.png,revere_20260414.png,BUY DRAM TER
 GRO,2026-04-15,1,ENTER,GLW,revere_20260415.png,revere_20260414.png,BUY DRAM TER GLW,trusted,action_match
 GRO,2026-04-15,1,ENTER,TER,revere_20260415.png,revere_20260414.png,BUY DRAM TER GLW,trusted,action_match
 TURBO,2026-04-15,1,ENTER,SATS,revere_20260415.png,revere_20260414.png,BUY SATS CC) IL * BOTTOM LINE: » UNPRECEDENTED V-SHAPE RECOVERY INTO ALL-TIME HIGHS,trusted,action_match
-GRO,2026-04-16,1,ENTER,ALAB,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,ENTER,AVAB,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,ENTER,BE,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,ENTER,GI,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,ENTER,LABL,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,ENTER,MRVL,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,ENTER,ORAM,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,ENTER,PLTR,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,ENTER,S,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,ENTER,SITM,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,ENTER,SNOW,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,ENTER,TE,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,ENTER,TEM,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,ENTER,THA,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,ENTER,UY,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,ENTER,WGMI,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,EXIT,CIEN,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,EXIT,DRAM,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,EXIT,GLW,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,EXIT,LABU,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,EXIT,LITE,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,EXIT,SPYM,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,EXIT,TPR,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,EXIT,UFO,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
-GRO,2026-04-16,1,EXIT,UPRO,revere_20260416.png,revere_20260415.png,,trusted,holdings_diff
 TURBO,2026-04-16,1,ENTER,AMPX,revere_20260416.png,revere_20260415.png,BUY AMPX PL ADD TO ARM BOTFOM UNE: + .,trusted,action_match
 TURBO,2026-04-16,1,ENTER,PL,revere_20260416.png,revere_20260415.png,BUY AMPX PL ADD TO ARM BOTFOM UNE: + .,trusted,action_match
+TURBO,2026-04-17,1,ENTER,ETHA,revere_20260417.png,revere_20260416.png,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,trusted,action_signal_correction
+TURBO,2026-04-17,1,ENTER,TALS,revere_20260417.png,revere_20260416.png,BUY ETHA BITX FRO CMOTTOMUNE: > ©... 0 1 0 TALS,trusted,action_signal_correction
 GRO,2026-04-20,1,ENTER,GLW,revere_20260420.png,revere_20260416.png,ADD TA GLW.,trusted,action_match
+TURBO,2026-04-20,1,ENTER,BEBE,revere_20260420.png,revere_20260417.png,"BUY NBIS SBOTTOM UNE: 53 I OOL THIE #20 I HS BEBE, LEA DESTE 015I",trusted,action_signal_correction
 GRO,2026-04-21,1,ENTER,UPRO,revere_20260421.png,revere_20260420.png,ADD TO UPRO SELL NUGT,trusted,action_match
-GRO,2026-04-21,1,EXIT,NUGT,revere_20260421.png,revere_20260420.png,ADD TO UPRO SELL NUGT,trusted,action_match
+GRO,2026-04-21,1,EXIT,NUGT,revere_20260421.png,revere_20260420.png,ADD TO UPRO SELL NUGT,trusted,action_signal_correction
 TURBO,2026-04-21,1,ENTER,MU,revere_20260421.png,revere_20260420.png,"BUY UPRD + MU SELL BITX, ETHA BWXT, SATS, FRO, £CJ",trusted,action_match
+TURBO,2026-04-21,1,EXIT,BITX,revere_20260421.png,revere_20260420.png,"BUY UPRD + MU SELL BITX, ETHA BWXT, SATS, FRO, £CJ",trusted,action_signal_correction
+TURBO,2026-04-21,1,EXIT,BWXT,revere_20260421.png,revere_20260420.png,"BUY UPRD + MU SELL BITX, ETHA BWXT, SATS, FRO, £CJ",trusted,action_signal_correction
 TURBO,2026-04-21,1,EXIT,SATS,revere_20260421.png,revere_20260420.png,"BUY UPRD + MU SELL BITX, ETHA BWXT, SATS, FRO, £CJ",trusted,action_match
 GRO,2026-04-22,1,ENTER,TNA,revere_20260422.png,revere_20260421.png,BUY TNA SELL TPR,trusted,action_match
 GRO,2026-04-22,1,EXIT,TPR,revere_20260422.png,revere_20260421.png,BUY TNA SELL TPR,trusted,action_match
 TURBO,2026-04-22,1,ENTER,CIFR,revere_20260422.png,revere_20260421.png,BUY CIFR ADD TO MU,trusted,action_match
 GRO,2026-04-23,1,EXIT,LABU,revere_20260423.png,revere_20260422.png,BUY NBISEWZ ~~ ADD TOCRDOTNA SELL LABU,trusted,action_match
-GRO,2026-04-24,1,EXIT,UFO,revere_20260424.png,revere_20260423.png,SELL UFO TRIM PL,trusted,action_match
+TURBO,2026-04-23,1,ENTER,APLD,revere_20260423.png,revere_20260422.png,BUY IREN APLD,trusted,action_signal_correction
+GRO,2026-04-24,1,EXIT,UFO,revere_20260424.png,revere_20260423.png,SELL UFO TRIM PL,trusted,action_signal_correction
 GRO,2026-04-27,1,ENTER,CC,revere_20260427.png,revere_20260424.png,TRIM NBIS PL GLW ADD TO WGMI BUY CC),trusted,action_match
 TURBO,2026-04-27,1,ENTER,ONDS,revere_20260427.png,revere_20260424.png,SELL APLD PL TRIM GLW BUY ONDS REMX,trusted,action_match
 TURBO,2026-04-27,1,ENTER,REMX,revere_20260427.png,revere_20260424.png,SELL APLD PL TRIM GLW BUY ONDS REMX,trusted,action_match
@@ -358,62 +256,13 @@ TURBO,2026-04-28,1,EXIT,CIFR,revere_20260428.png,revere_20260427.png,SELL CIFR I
 TURBO,2026-04-28,1,EXIT,IREN,revere_20260428.png,revere_20260427.png,SELL CIFR IREN LABY SOLS.,trusted,action_match
 TURBO,2026-04-28,1,EXIT,SOLS,revere_20260428.png,revere_20260427.png,SELL CIFR IREN LABY SOLS.,trusted,action_match
 GRO,2026-04-30,1,ENTER,TNA,revere_20260430.png,revere_20260429.png,BUY SBUX BE ADD TO TNA,trusted,action_match
-TURBO,2026-04-30,1,ENTER,AEHR,revere_20260430.png,revere_20260428.png,BUY TNA AEHR ADD TO AMPX UPRO REMX,trusted,action_match
-TURBO,2026-04-30,1,ENTER,REMX,revere_20260430.png,revere_20260428.png,BUY TNA AEHR ADD TO AMPX UPRO REMX,trusted,action_match
+TURBO,2026-04-30,1,ENTER,AMPX,revere_20260430.png,revere_20260428.png,BUY TNA AEHR ADD TO AMPX UPRO REMX,trusted,action_match
 TURBO,2026-04-30,1,ENTER,TNA,revere_20260430.png,revere_20260428.png,BUY TNA AEHR ADD TO AMPX UPRO REMX,trusted,action_match
 TURBO,2026-04-30,1,ENTER,UPRO,revere_20260430.png,revere_20260428.png,BUY TNA AEHR ADD TO AMPX UPRO REMX,trusted,action_match
-GRO,2026-05-01,1,ENTER,AKT,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,ENTER,CCL,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,ENTER,CIEN,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,ENTER,GUW,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,ENTER,MRVL,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,ENTER,NVDA,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,ENTER,ORAM,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,ENTER,PYM,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,ENTER,SBUX,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,ENTER,TEA,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,ENTER,THA,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,ENTER,UPAO,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,EXIT,CCI,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,EXIT,DRAM,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,EXIT,GLW,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,EXIT,I,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,EXIT,MU,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,EXIT,NVOA,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,EXIT,SSO,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,EXIT,TER,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,EXIT,TNA,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-GRO,2026-05-01,1,EXIT,UPRO,revere_20260501.png,revere_20260430.png,,trusted,holdings_diff
-TURBO,2026-05-05,1,ENTER,CRCL,revere_20260505.png,revere_20260504.png,BUY CRCL + CIFR SELL UUUU O-TRIM MU,trusted,action_match
-TURBO,2026-05-06,1,ENTER,SOXS,revere_20260506.png,revere_20260505.png,BUY SOXS MP ADD TO CRCL,trusted,action_match
-GRO,2026-05-07,1,ENTER,AVDA,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,ENTER,CCL,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,ENTER,COE,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,ENTER,JI,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,ENTER,MU,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,ENTER,NAIL,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,ENTER,ORAM,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,ENTER,SPCX,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,ENTER,SPVIA,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,ENTER,TSA,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,ENTER,TUA,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,ENTER,UPNO,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,ENTER,WIO,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,EXIT,CAVA,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,EXIT,CCJO,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,EXIT,CIN,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,EXIT,DRAM,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,EXIT,EWZ,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,EXIT,GLW,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,EXIT,ML,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,EXIT,NVDA,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,EXIT,SBUX,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,EXIT,SPYM,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,EXIT,TNA,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,EXIT,UPRD,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-GRO,2026-05-07,1,EXIT,WGMI,revere_20260507.png,revere_20260506.png,,trusted,holdings_diff
-TURBO,2026-05-07,1,EXIT,AMPX,revere_20260507.png,revere_20260506.png,SELL AMPX RKLB CRCL MP O-TRIM ARM,trusted,action_match
-TURBO,2026-05-07,1,EXIT,CRCL,revere_20260507.png,revere_20260506.png,SELL AMPX RKLB CRCL MP O-TRIM ARM,trusted,action_match
+TURBO,2026-05-06,1,ENTER,CRCL,revere_20260506.png,revere_20260505.png,BUY SOXS MP ADD TO CRCL,trusted,action_signal_correction
+TURBO,2026-05-06,1,ENTER,SOXS,revere_20260506.png,revere_20260505.png,BUY SOXS MP ADD TO CRCL,trusted,action_signal_correction
+TURBO,2026-05-07,1,EXIT,AMPX,revere_20260507.png,revere_20260506.png,SELL AMPX RKLB CRCL MP O-TRIM ARM,trusted,action_signal_correction
+TURBO,2026-05-07,1,EXIT,CRCL,revere_20260507.png,revere_20260506.png,SELL AMPX RKLB CRCL MP O-TRIM ARM,trusted,action_signal_correction
 GRO,2026-05-12,1,ENTER,ADO,revere_20260512.png,revere_20260511.png,,trusted,holdings_diff
 GRO,2026-05-12,1,ENTER,AVAB,revere_20260512.png,revere_20260511.png,,trusted,holdings_diff
 GRO,2026-05-12,1,ENTER,AVDA,revere_20260512.png,revere_20260511.png,,trusted,holdings_diff
@@ -423,6 +272,7 @@ GRO,2026-05-12,1,ENTER,GLI,revere_20260512.png,revere_20260511.png,,trusted,hold
 GRO,2026-05-12,1,ENTER,SIMO,revere_20260512.png,revere_20260511.png,,trusted,holdings_diff
 GRO,2026-05-12,1,ENTER,TOL,revere_20260512.png,revere_20260511.png,,trusted,holdings_diff
 GRO,2026-05-12,1,ENTER,TWLO,revere_20260512.png,revere_20260511.png,,trusted,holdings_diff
+GRO,2026-05-12,1,ENTER,TZA,revere_20260512.png,revere_20260511.png,,trusted,holdings_diff
 GRO,2026-05-12,1,EXIT,CCJ,revere_20260512.png,revere_20260511.png,,trusted,holdings_diff
 GRO,2026-05-12,1,EXIT,CROD,revere_20260512.png,revere_20260511.png,,trusted,holdings_diff
 GRO,2026-05-12,1,EXIT,GLW,revere_20260512.png,revere_20260511.png,,trusted,holdings_diff
@@ -430,7 +280,6 @@ GRO,2026-05-12,1,EXIT,JI,revere_20260512.png,revere_20260511.png,,trusted,holdin
 GRO,2026-05-12,1,EXIT,NVDA,revere_20260512.png,revere_20260511.png,,trusted,holdings_diff
 GRO,2026-05-12,1,EXIT,SPYM,revere_20260512.png,revere_20260511.png,,trusted,holdings_diff
 TURBO,2026-05-12,1,ENTER,SCCO,revere_20260512.png,revere_20260511.png,ADD TO SCCO TRIM CIFR SELL URA,trusted,action_match
-TURBO,2026-05-12,1,EXIT,URA,revere_20260512.png,revere_20260511.png,ADD TO SCCO TRIM CIFR SELL URA,trusted,action_match
 GRO,2026-05-13,1,ENTER,MRVL,revere_20260513.png,revere_20260512.png,SELL CCJ TRIM TNA ADD TO TWLO + CRDO BUY MRVL,trusted,action_match
 TURBO,2026-05-13,1,ENTER,NXT,revere_20260513.png,revere_20260512.png,BUY AAO! + NXT,trusted,action_match
 GRO,2026-05-14,1,ENTER,DOCN,revere_20260514.png,revere_20260513.png,BUY DOCN DDOG,trusted,action_match
@@ -468,76 +317,31 @@ TURBO,2026-05-30,1,ENTER,DOCN,revere_20260530.png,revere_20260529.png,SELL DELL 
 TURBO,2026-05-30,1,EXIT,DELL,revere_20260530.png,revere_20260529.png,SELL DELL BUY DOCN SELL GLW FLY,trusted,action_match
 TURBO,2026-05-30,1,EXIT,FLY,revere_20260530.png,revere_20260529.png,SELL DELL BUY DOCN SELL GLW FLY,trusted,action_match
 TURBO,2026-05-30,1,EXIT,GLW,revere_20260530.png,revere_20260529.png,SELL DELL BUY DOCN SELL GLW FLY,trusted,action_match
-GRO,2026-06-01,1,ENTER,QBTS,revere_20260601.png,revere_20260530.png,BUY QBTS O-TRIM DDOG NBIS TWLO,trusted,action_match
 TURBO,2026-06-01,1,ENTER,COPX,revere_20260601.png,revere_20260530.png,SELL ARM SELL INTC ADD TO BE BUY COPX IREN USAR,trusted,action_match
 TURBO,2026-06-01,1,ENTER,IREN,revere_20260601.png,revere_20260530.png,SELL ARM SELL INTC ADD TO BE BUY COPX IREN USAR,trusted,action_match
 TURBO,2026-06-01,1,ENTER,USAR,revere_20260601.png,revere_20260530.png,SELL ARM SELL INTC ADD TO BE BUY COPX IREN USAR,trusted,action_match
 TURBO,2026-06-01,1,EXIT,ARM,revere_20260601.png,revere_20260530.png,SELL ARM SELL INTC ADD TO BE BUY COPX IREN USAR,trusted,action_match
 TURBO,2026-06-01,1,EXIT,INTC,revere_20260601.png,revere_20260530.png,SELL ARM SELL INTC ADD TO BE BUY COPX IREN USAR,trusted,action_match
-GRO,2026-06-02,1,ENTER,LLYX,revere_20260602.png,revere_20260601.png,BUY LLYX ADD TO GH D-TRIM MRVL TRIM (NTC SELL LABU,trusted,action_match
 GRO,2026-06-02,1,EXIT,LABU,revere_20260602.png,revere_20260601.png,BUY LLYX ADD TO GH D-TRIM MRVL TRIM (NTC SELL LABU,trusted,action_match
 TURBO,2026-06-02,1,ENTER,AEHR,revere_20260602.png,revere_20260601.png,BUY AEHR ADD TA TSLA + IREN,trusted,action_match
+GRO,2026-06-03,1,ENTER,LLYX,revere_20260603.png,revere_20260602.png,ADD TO LLYX O-CLOSEMAVL SELL DRST INTC,trusted,action_match
 GRO,2026-06-03,1,EXIT,INTC,revere_20260603.png,revere_20260602.png,ADD TO LLYX O-CLOSEMAVL SELL DRST INTC,trusted,action_match
-TURBO,2026-06-03,1,ENTER,AVAB,revere_20260603.png,revere_20260602.png,,trusted,holdings_diff
-TURBO,2026-06-03,1,ENTER,B,revere_20260603.png,revere_20260602.png,,trusted,holdings_diff
-TURBO,2026-06-03,1,ENTER,DOCN,revere_20260603.png,revere_20260602.png,,trusted,holdings_diff
-TURBO,2026-06-03,1,ENTER,INDO,revere_20260603.png,revere_20260602.png,,trusted,holdings_diff
-TURBO,2026-06-03,1,ENTER,SEOG,revere_20260603.png,revere_20260602.png,,trusted,holdings_diff
-TURBO,2026-06-03,1,ENTER,SI,revere_20260603.png,revere_20260602.png,,trusted,holdings_diff
-TURBO,2026-06-03,1,EXIT,BE,revere_20260603.png,revere_20260602.png,,trusted,holdings_diff
-TURBO,2026-06-03,1,EXIT,INOD,revere_20260603.png,revere_20260602.png,,trusted,holdings_diff
-TURBO,2026-06-03,1,EXIT,MU,revere_20260603.png,revere_20260602.png,,trusted,holdings_diff
-TURBO,2026-06-03,1,EXIT,OOCN,revere_20260603.png,revere_20260602.png,,trusted,holdings_diff
-TURBO,2026-06-03,1,EXIT,SEDG,revere_20260603.png,revere_20260602.png,,trusted,holdings_diff
-TURBO,2026-06-03,1,EXIT,SPXL,revere_20260603.png,revere_20260602.png,,trusted,holdings_diff
 GRO,2026-06-04,1,ENTER,COPX,revere_20260604.png,revere_20260603.png,BUY SOXL PICK COPX,trusted,action_match
 GRO,2026-06-04,1,ENTER,PICK,revere_20260604.png,revere_20260603.png,BUY SOXL PICK COPX,trusted,action_match
 GRO,2026-06-04,1,ENTER,SOXL,revere_20260604.png,revere_20260603.png,BUY SOXL PICK COPX,trusted,action_match
 TURBO,2026-06-04,1,ENTER,SNOW,revere_20260604.png,revere_20260603.png,SELL USAR BUY SNOW,trusted,action_match
 TURBO,2026-06-04,1,EXIT,USAR,revere_20260604.png,revere_20260603.png,SELL USAR BUY SNOW,trusted,action_match
-GRO,2026-06-05,1,ENTER,CRDO,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,ENTER,ERX,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,ENTER,JL,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,ENTER,SPVIA,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,ENTER,UPNO,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,ENTER,WOM,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,EXIT,BE,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,EXIT,COPX,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,EXIT,DDOG,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,EXIT,GH,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,EXIT,GNRC,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,EXIT,LLYX,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,EXIT,NBIS,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,EXIT,PICK,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,EXIT,QBTS,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,EXIT,SOXL,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,EXIT,SPYM,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,EXIT,TWLO,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-GRO,2026-06-05,1,EXIT,UPRO,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-TURBO,2026-06-05,1,ENTER,AVAB,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-TURBO,2026-06-05,1,ENTER,BF,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-TURBO,2026-06-05,1,ENTER,HOOD,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-TURBO,2026-06-05,1,ENTER,INDO,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-TURBO,2026-06-05,1,ENTER,PICK,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-TURBO,2026-06-05,1,ENTER,PLTR,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-TURBO,2026-06-05,1,ENTER,TSUA,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-TURBO,2026-06-05,1,EXIT,AER,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-TURBO,2026-06-05,1,EXIT,BE,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-TURBO,2026-06-05,1,EXIT,INOD,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-TURBO,2026-06-05,1,EXIT,IREN,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-TURBO,2026-06-05,1,EXIT,SEDG,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-TURBO,2026-06-05,1,EXIT,SPXL,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
-TURBO,2026-06-05,1,EXIT,TSLA,revere_20260605.png,revere_20260604.png,,trusted,holdings_diff
+GRO,2026-06-09,1,ENTER,GNRC,revere_20260609.png,revere_20260608.png,,trusted,holdings_diff
 GRO,2026-06-09,1,ENTER,LLYX,revere_20260609.png,revere_20260608.png,,trusted,holdings_diff
 GRO,2026-06-09,1,ENTER,SPYM,revere_20260609.png,revere_20260608.png,,trusted,holdings_diff
 GRO,2026-06-09,1,ENTER,UPRO,revere_20260609.png,revere_20260608.png,,trusted,holdings_diff
+GRO,2026-06-09,1,EXIT,GNAC,revere_20260609.png,revere_20260608.png,,trusted,holdings_diff
 GRO,2026-06-09,1,EXIT,JI,revere_20260609.png,revere_20260608.png,,trusted,holdings_diff
-GRO,2026-06-09,1,EXIT,LY,revere_20260609.png,revere_20260608.png,,trusted,holdings_diff
+GRO,2026-06-09,1,EXIT,LYK,revere_20260609.png,revere_20260608.png,,trusted,holdings_diff
 GRO,2026-06-09,1,EXIT,SPVM,revere_20260609.png,revere_20260608.png,,trusted,holdings_diff
 GRO,2026-06-09,1,EXIT,UPNO,revere_20260609.png,revere_20260608.png,,trusted,holdings_diff
-TURBO,2026-06-09,1,EXIT,DOCN,revere_20260609.png,revere_20260608.png,BUY SNOW SELL NBIS DOCN SEDG MU,trusted,action_match
+TURBO,2026-06-09,1,ENTER,SNOW,revere_20260609.png,revere_20260608.png,BUY SNOW SELL NBIS DOCN SEDG MU,trusted,action_match
 TURBO,2026-06-09,1,EXIT,MU,revere_20260609.png,revere_20260608.png,BUY SNOW SELL NBIS DOCN SEDG MU,trusted,action_match
-TURBO,2026-06-09,1,EXIT,NBIS,revere_20260609.png,revere_20260608.png,BUY SNOW SELL NBIS DOCN SEDG MU,trusted,action_match
 GRO,2026-06-10,1,EXIT,GNRC,revere_20260610.png,revere_20260609.png,SELL GNRC TRIM UPRO,trusted,action_match
 GRO,2026-06-12,1,ENTER,CRDO,revere_20260612.png,revere_20260611.png,ADD TO DOCN BUY CRDO SNOW FTNT VIAV MRVL NBIS,trusted,action_match
 GRO,2026-06-12,1,ENTER,FTNT,revere_20260612.png,revere_20260611.png,ADD TO DOCN BUY CRDO SNOW FTNT VIAV MRVL NBIS,trusted,action_match
@@ -549,14 +353,13 @@ TURBO,2026-06-12,1,ENTER,BE,revere_20260612.png,revere_20260611.png,BUY GH BE VI
 TURBO,2026-06-12,1,ENTER,GH,revere_20260612.png,revere_20260611.png,BUY GH BE VIAV MRVL NBIS ADD TO SPYM,trusted,action_match
 TURBO,2026-06-12,1,ENTER,MRVL,revere_20260612.png,revere_20260611.png,BUY GH BE VIAV MRVL NBIS ADD TO SPYM,trusted,action_match
 TURBO,2026-06-12,1,ENTER,VIAV,revere_20260612.png,revere_20260611.png,BUY GH BE VIAV MRVL NBIS ADD TO SPYM,trusted,action_match
-GRO,2026-06-15,1,ENTER,BE,revere_20260615.png,revere_20260612.png,,trusted,holdings_diff
-GRO,2026-06-15,1,ENTER,DOCN,revere_20260615.png,revere_20260612.png,,trusted,holdings_diff
-GRO,2026-06-15,1,ENTER,TOL,revere_20260615.png,revere_20260612.png,,trusted,holdings_diff
-GRO,2026-06-15,1,ENTER,WGMI,revere_20260615.png,revere_20260612.png,,trusted,holdings_diff
-GRO,2026-06-15,1,EXIT,OOCN,revere_20260615.png,revere_20260612.png,,trusted,holdings_diff
+GRO,2026-06-15,1,ENTER,BE,revere_20260615.png,revere_20260612.png,ADD TO NBIS SNOW VIAV DOCN BUY WGMI BE,trusted,action_match
+GRO,2026-06-15,1,ENTER,DOCN,revere_20260615.png,revere_20260612.png,ADD TO NBIS SNOW VIAV DOCN BUY WGMI BE,trusted,action_match
+GRO,2026-06-15,1,ENTER,WGMI,revere_20260615.png,revere_20260612.png,ADD TO NBIS SNOW VIAV DOCN BUY WGMI BE,trusted,action_match
 GRO,2026-06-16,1,ENTER,INTC,revere_20260616.png,revere_20260615.png,ADD TO WGMI BE BUY INTC,trusted,action_match
 TURBO,2026-06-17,1,EXIT,VIAV,revere_20260617.png,revere_20260616.png,TRIM SNOW SELL VIAV FLNC,trusted,action_match
 GRO,2026-06-18,1,ENTER,INTC,revere_20260618.png,revere_20260617.png,SELL SNOW TRIM FINT CLOSE HEDGE SPS BUY S970. HUT NVT FORM ADD TO WOM INTC,trusted,action_match
+GRO,2026-06-18,1,EXIT,SNOW,revere_20260618.png,revere_20260617.png,SELL SNOW TRIM FINT CLOSE HEDGE SPS BUY S970. HUT NVT FORM ADD TO WOM INTC,trusted,action_signal_correction
 TURBO,2026-06-18,1,EXIT,SNOW,revere_20260618.png,revere_20260617.png,SELL SNOW,trusted,action_match
 GRO,2026-06-22,1,ENTER,HOOD,revere_20260622.png,revere_20260618.png,BUY HOOD ADD10 FTNT SELL DOCN O-TRIM BE CRDO,trusted,action_match
 GRO,2026-06-22,1,EXIT,DOCN,revere_20260622.png,revere_20260618.png,BUY HOOD ADD10 FTNT SELL DOCN O-TRIM BE CRDO,trusted,action_match
@@ -565,13 +368,9 @@ TURBO,2026-06-22,1,EXIT,WOLF,revere_20260622.png,revere_20260618.png,BUY NOK ADD
 GRO,2026-06-23,1,EXIT,MRVL,revere_20260623.png,revere_20260622.png,SELL MRVL » SPXL,trusted,action_match
 GRO,2026-06-23,1,EXIT,SPXL,revere_20260623.png,revere_20260622.png,SELL MRVL » SPXL,trusted,action_match
 TURBO,2026-06-23,1,ENTER,CRWD,revere_20260623.png,revere_20260622.png,BUY CRWD + 'WIO {JENNI <.. RROC,trusted,action_match
+GRO,2026-06-24,1,EXIT,HOOD,revere_20260624.png,revere_20260623.png,TRIM INTC BUY HPE SELL NBIS HUT WGMI HOOD NVT,trusted,action_match
 TURBO,2026-06-24,1,EXIT,MRVL,revere_20260624.png,revere_20260623.png,SELL MRVL ADD TO SOXS,trusted,action_match
 GRO,2026-06-25,1,EXIT,BE,revere_20260625.png,revere_20260624.png,SELL BE HPE TRIM INTC. O-TRIM GH,trusted,action_match
-TURBO,2026-06-25,1,ENTER,AVAB,revere_20260625.png,revere_20260624.png,,trusted,holdings_diff
-TURBO,2026-06-25,1,ENTER,DOOG,revere_20260625.png,revere_20260624.png,,trusted,holdings_diff
-TURBO,2026-06-25,1,ENTER,FINT,revere_20260625.png,revere_20260624.png,,trusted,holdings_diff
-TURBO,2026-06-25,1,ENTER,FTNT,revere_20260625.png,revere_20260624.png,,trusted,holdings_diff
-TURBO,2026-06-25,1,EXIT,ODOG,revere_20260625.png,revere_20260624.png,,trusted,holdings_diff
 GRO,2026-06-26,1,EXIT,FORM,revere_20260626.png,revere_20260625.png,SELL FORM CRDO,trusted,action_match
 TURBO,2026-06-26,1,EXIT,BE,revere_20260626.png,revere_20260625.png,SELL NOK BE,trusted,action_match
 TURBO,2026-06-26,1,EXIT,NOK,revere_20260626.png,revere_20260625.png,SELL NOK BE,trusted,action_match
@@ -609,75 +408,30 @@ TURBO,2026-07-08,1,EXIT,RDDT,revere_20260708.png,revere_20260707.png,,trusted,ho
 TURBO,2026-07-08,1,EXIT,SPYM,revere_20260708.png,revere_20260707.png,,trusted,holdings_diff
 TURBO,2026-07-08,1,EXIT,UPRO,revere_20260708.png,revere_20260707.png,,trusted,holdings_diff
 GRO,2026-07-09,1,ENTER,AMD,revere_20260709.png,revere_20260708.png,BUY SIMD AMD ADD TO HOOD DELL SELL HEDGE SDS,trusted,action_match
-TURBO,2026-07-09,1,ENTER,UPRO,revere_20260709.png,revere_20260708.png,ADD TO RDOT UPRO BOTTOMLINE: 3 WII 21° HL: ICHISO ABI 0 S80 S02 AN KL,trusted,action_match
-GRO,2026-07-15,1,ENTER,AVAB,revere_20260715.png,revere_20260714.png,,trusted,holdings_diff
-GRO,2026-07-15,1,ENTER,BE,revere_20260715.png,revere_20260714.png,,trusted,holdings_diff
-GRO,2026-07-15,1,ENTER,FTA,revere_20260715.png,revere_20260714.png,,trusted,holdings_diff
-GRO,2026-07-15,1,ENTER,FTNT,revere_20260715.png,revere_20260714.png,,trusted,holdings_diff
-GRO,2026-07-15,1,ENTER,I,revere_20260715.png,revere_20260714.png,,trusted,holdings_diff
-GRO,2026-07-15,1,ENTER,M,revere_20260715.png,revere_20260714.png,,trusted,holdings_diff
-GRO,2026-07-15,1,ENTER,OOOG,revere_20260715.png,revere_20260714.png,,trusted,holdings_diff
-GRO,2026-07-15,1,ENTER,ROOT,revere_20260715.png,revere_20260714.png,,trusted,holdings_diff
-GRO,2026-07-15,1,ENTER,SOLS,revere_20260715.png,revere_20260714.png,,trusted,holdings_diff
-GRO,2026-07-15,1,ENTER,TEM,revere_20260715.png,revere_20260714.png,,trusted,holdings_diff
-GRO,2026-07-15,1,EXIT,DDOG,revere_20260715.png,revere_20260714.png,,trusted,holdings_diff
-GRO,2026-07-15,1,EXIT,DELL,revere_20260715.png,revere_20260714.png,,trusted,holdings_diff
-GRO,2026-07-15,1,EXIT,FINT,revere_20260715.png,revere_20260714.png,,trusted,holdings_diff
-GRO,2026-07-15,1,EXIT,SPYM,revere_20260715.png,revere_20260714.png,,trusted,holdings_diff
-GRO,2026-07-15,1,EXIT,T,revere_20260715.png,revere_20260714.png,,trusted,holdings_diff
+TURBO,2026-07-09,1,ENTER,UPRO,revere_20260709.png,revere_20260708.png,ADD TO RDOT UPRO,trusted,action_match
+GRO,2026-07-10,1,ENTER,SOXL,revere_20260710.png,revere_20260709.png,ADD TO SOXL RDDT,trusted,action_match
 TURBO,2026-07-15,1,EXIT,DRAM,revere_20260715.png,revere_20260714.png,SELL DRAM,trusted,action_match
 GRO,2026-07-16,1,EXIT,HOOD,revere_20260716.png,revere_20260715.png,SELL HOOD RDDT BUY LLY,trusted,action_match
 TURBO,2026-07-16,1,EXIT,TQQQ,revere_20260716.png,revere_20260715.png,SELL RODT LABU TQQQ,trusted,action_match
 GRO,2026-07-17,1,EXIT,TWLO,revere_20260717.png,revere_20260716.png,SELL TWLO,trusted,action_match
 TURBO,2026-07-17,1,EXIT,HOOD,revere_20260717.png,revere_20260716.png,SELL HOOD,trusted,action_match
 GRO,2026-07-21,1,ENTER,FTNT,revere_20260721.png,revere_20260720.png,ADD TO UPRO TRIS FTNT + DDOG,trusted,action_match
-TURBO,2026-07-21,1,ENTER,AMD,revere_20260721.png,revere_20260720.png,BUY AMD,trusted,action_match
-GRO,2026-07-22,1,ENTER,DELL,revere_20260722.png,revere_20260721.png,BUY HPE DELL SELL FTNT D0OG,trusted,action_match
-GRO,2026-07-22,1,ENTER,HPE,revere_20260722.png,revere_20260721.png,BUY HPE DELL SELL FTNT D0OG,trusted,action_match
+TURBO,2026-07-21,1,ENTER,AMD,revere_20260721.png,revere_20260720.png,BUY AMD,trusted,action_signal_correction
+GRO,2026-07-22,1,ENTER,DELL,revere_20260722.png,revere_20260721.png,BUY HPE DELL SELL FTNT D0OG,trusted,action_signal_correction
+GRO,2026-07-22,1,ENTER,HPE,revere_20260722.png,revere_20260721.png,BUY HPE DELL SELL FTNT D0OG,trusted,action_signal_correction
+GRO,2026-07-22,1,EXIT,DOOG,revere_20260722.png,revere_20260721.png,BUY HPE DELL SELL FTNT D0OG,trusted,action_signal_correction
 GRO,2026-07-22,1,EXIT,FTNT,revere_20260722.png,revere_20260721.png,BUY HPE DELL SELL FTNT D0OG,trusted,action_match
 TURBO,2026-07-22,1,EXIT,TWLO,revere_20260722.png,revere_20260721.png,SELL FINT TWLO,trusted,action_match
-GRO,2026-07-23,1,ENTER,SPXS,revere_20260723.png,revere_20260722.png,,trusted,holdings_diff
-GRO,2026-07-23,1,EXIT,LLY,revere_20260723.png,revere_20260722.png,,trusted,holdings_diff
-GRO,2026-07-24,1,ENTER,AMD,revere_20260724.png,revere_20260723.png,,trusted,holdings_diff
-GRO,2026-07-24,1,ENTER,AVAB,revere_20260724.png,revere_20260723.png,,trusted,holdings_diff
-GRO,2026-07-24,1,ENTER,CAVA,revere_20260724.png,revere_20260723.png,,trusted,holdings_diff
-GRO,2026-07-24,1,ENTER,FLY,revere_20260724.png,revere_20260723.png,,trusted,holdings_diff
-GRO,2026-07-24,1,ENTER,OFL,revere_20260724.png,revere_20260723.png,,trusted,holdings_diff
-GRO,2026-07-24,1,ENTER,SEDG,revere_20260724.png,revere_20260723.png,,trusted,holdings_diff
-GRO,2026-07-24,1,EXIT,DELL,revere_20260724.png,revere_20260723.png,,trusted,holdings_diff
-GRO,2026-07-24,1,EXIT,HPE,revere_20260724.png,revere_20260723.png,,trusted,holdings_diff
-GRO,2026-07-24,1,EXIT,LLYX,revere_20260724.png,revere_20260723.png,,trusted,holdings_diff
-GRO,2026-07-24,1,EXIT,SPXS,revere_20260724.png,revere_20260723.png,,trusted,holdings_diff
-GRO,2026-07-24,1,EXIT,SPYM,revere_20260724.png,revere_20260723.png,,trusted,holdings_diff
 GRO,2026-07-27,1,EXIT,AMD,revere_20260727.png,revere_20260724.png,SELL AMD DELL,trusted,action_match
 TURBO,2026-07-27,1,EXIT,AMD,revere_20260727.png,revere_20260724.png,SELL AMD,trusted,action_match
-TURBO,2026-07-28,1,EXIT,IBIT,revere_20260728.png,revere_20260727.png,TRIM ETHA,trusted,holdings_diff
 TURBO,2026-07-29,1,EXIT,ETHA,revere_20260729.png,revere_20260728.png,SELL ETHA,trusted,action_match
 TURBO,2026-08-03,1,ENTER,OOOG,revere_20260803.png,revere_20260731.png,,trusted,holdings_diff
 TURBO,2026-08-03,1,EXIT,ODOG,revere_20260803.png,revere_20260731.png,,trusted,holdings_diff
 GRO,2026-08-04,1,ENTER,OKTA,revere_20260804.png,revere_20260803.png,"BUY HPE,OKTA MLTR, VLO,CBAS",trusted,action_match
-TURBO,2026-08-04,1,ENTER,AVAB,revere_20260804.png,revere_20260803.png,,trusted,holdings_diff
-TURBO,2026-08-04,1,ENTER,CBRS,revere_20260804.png,revere_20260803.png,,trusted,holdings_diff
-TURBO,2026-08-04,1,ENTER,COS,revere_20260804.png,revere_20260803.png,,trusted,holdings_diff
-TURBO,2026-08-04,1,ENTER,DDOG,revere_20260804.png,revere_20260803.png,,trusted,holdings_diff
-TURBO,2026-08-04,1,ENTER,TQQQ,revere_20260804.png,revere_20260803.png,,trusted,holdings_diff
-TURBO,2026-08-04,1,ENTER,TSEM,revere_20260804.png,revere_20260803.png,,trusted,holdings_diff
-TURBO,2026-08-04,1,EXIT,OOOG,revere_20260804.png,revere_20260803.png,,trusted,holdings_diff
 GRO,2026-08-05,1,ENTER,HPE,revere_20260805.png,revere_20260804.png,,trusted,holdings_diff
 GRO,2026-08-05,1,ENTER,VLO,revere_20260805.png,revere_20260804.png,,trusted,holdings_diff
 GRO,2026-08-05,1,EXIT,IO,revere_20260805.png,revere_20260804.png,,trusted,holdings_diff
 GRO,2026-08-05,1,EXIT,MPE,revere_20260805.png,revere_20260804.png,,trusted,holdings_diff
-GRO,2026-08-06,1,ENTER,GH,revere_20260806.png,revere_20260805.png,,trusted,holdings_diff
-GRO,2026-08-06,1,ENTER,IO,revere_20260806.png,revere_20260805.png,,trusted,holdings_diff
-GRO,2026-08-06,1,ENTER,PYM,revere_20260806.png,revere_20260805.png,,trusted,holdings_diff
-GRO,2026-08-06,1,EXIT,HPE,revere_20260806.png,revere_20260805.png,,trusted,holdings_diff
-GRO,2026-08-06,1,EXIT,SPYM,revere_20260806.png,revere_20260805.png,,trusted,holdings_diff
-GRO,2026-08-06,1,EXIT,VLO,revere_20260806.png,revere_20260805.png,,trusted,holdings_diff
-TURBO,2026-08-06,1,ENTER,DRAM,revere_20260806.png,revere_20260804.png,,trusted,holdings_diff
-TURBO,2026-08-06,1,EXIT,AVAB,revere_20260806.png,revere_20260804.png,,trusted,holdings_diff
-TURBO,2026-08-06,1,EXIT,CBRS,revere_20260806.png,revere_20260804.png,,trusted,holdings_diff
-TURBO,2026-08-06,1,EXIT,DDOG,revere_20260806.png,revere_20260804.png,,trusted,holdings_diff
-TURBO,2026-08-06,1,EXIT,TSEM,revere_20260806.png,revere_20260804.png,,trusted,holdings_diff
 GRO,2026-08-07,1,ENTER,HPE,revere_20260807.png,revere_20260806.png,BUY SPXL ADD TO PLTR.HPE SELL VLO,trusted,action_match
 GRO,2026-08-07,1,ENTER,SPXL,revere_20260807.png,revere_20260806.png,BUY SPXL ADD TO PLTR.HPE SELL VLO,trusted,action_match
 TURBO,2026-08-07,1,EXIT,DRAM,revere_20260807.png,revere_20260806.png,SELL DRAM,trusted,action_match
@@ -685,10 +439,14 @@ GRO,2026-08-10,1,ENTER,AMZU,revere_20260810.png,revere_20260807.png,ADD TO OKTA 
 GRO,2026-08-11,1,ENTER,TWLO,revere_20260811.png,revere_20260810.png,BUY TWLO,trusted,action_match
 TURBO,2026-08-11,1,ENTER,FCX,revere_20260811.png,revere_20260810.png,BUY FCX ADD TO TQQ,trusted,action_match
 GRO,2026-08-12,1,ENTER,APH,revere_20260812.png,revere_20260811.png,SELL AMZY ADD TO PLTR BUY TQGQ THA WEES APH ITE ST,trusted,action_match
+GRO,2026-08-12,1,ENTER,ITE,revere_20260812.png,revere_20260811.png,SELL AMZY ADD TO PLTR BUY TQGQ THA WEES APH ITE ST,trusted,action_signal_correction
 GRO,2026-08-13,1,ENTER,RBRK,revere_20260813.png,revere_20260812.png,BUY RBRK.,trusted,action_match
 TURBO,2026-08-13,1,ENTER,RBRK,revere_20260813.png,revere_20260812.png,BUY TWLO RBRK,trusted,action_match
 TURBO,2026-08-13,1,ENTER,TWLO,revere_20260813.png,revere_20260812.png,BUY TWLO RBRK,trusted,action_match
-GRO,2026-08-14,1,EXIT,CBRS,revere_20260814.png,revere_20260813.png,ADD 10 HPE SELL CBRS TRIM OKTA,trusted,action_match
+GRO,2026-08-14,1,ENTER,HPE,revere_20260814.png,revere_20260813.png,ADD 10 HPE SELL CBRS TRIM OKTA,trusted,action_match
+GRO,2026-08-14,1,ENTER,IO,revere_20260814.png,revere_20260813.png,ADD 10 HPE SELL CBRS TRIM OKTA,trusted,action_signal_correction
+GRO,2026-08-14,1,EXIT,CBRS,revere_20260814.png,revere_20260813.png,ADD 10 HPE SELL CBRS TRIM OKTA,trusted,action_signal_correction
+TURBO,2026-08-14,1,ENTER,SACK,revere_20260814.png,revere_20260813.png,BUY SACK GOXU S BOTTOM LINE: 1 515155 TAKE A HEE ATHER AL INDE SES BLTL BAL D8 TOW VLA,trusted,action_signal_correction
 GRO,2026-08-17,1,ENTER,CBRS,revere_20260817.png,revere_20260814.png,SELL TWLO OKTA BUY SOXL CBRS ADD TO LITE NBIS,trusted,action_match
 GRO,2026-08-17,1,ENTER,SOXL,revere_20260817.png,revere_20260814.png,SELL TWLO OKTA BUY SOXL CBRS ADD TO LITE NBIS,trusted,action_match
 GRO,2026-08-17,1,EXIT,OKTA,revere_20260817.png,revere_20260814.png,SELL TWLO OKTA BUY SOXL CBRS ADD TO LITE NBIS,trusted,action_match
@@ -723,27 +481,10 @@ TURBO,2026-08-26,1,ENTER,GH,revere_20260826.png,revere_20260825.png,BUY GH HNGE,
 TURBO,2026-08-26,1,ENTER,HNGE,revere_20260826.png,revere_20260825.png,BUY GH HNGE,trusted,action_match
 GRO,2026-08-27,1,ENTER,FROG,revere_20260827.png,revere_20260826.png,BUY FROG NVDA ADO FO SPXL PLTR,trusted,action_match
 GRO,2026-08-27,1,ENTER,NVDA,revere_20260827.png,revere_20260826.png,BUY FROG NVDA ADO FO SPXL PLTR,trusted,action_match
-TURBO,2026-08-27,1,ENTER,ZETA,revere_20260827.png,revere_20260826.png,"BUY ZETA CRM ADD TO CHYM BOTTOMUNE: VIL K, WIE 1A ANI SAS RALY DER RES",trusted,action_match
+TURBO,2026-08-27,1,ENTER,CRM,revere_20260827.png,revere_20260826.png,BUY ZETA CRM ADD TO CHYM,trusted,action_signal_correction
+TURBO,2026-08-27,1,ENTER,ZETA,revere_20260827.png,revere_20260826.png,BUY ZETA CRM ADD TO CHYM,trusted,action_match
 GRO,2026-08-28,1,EXIT,NVDA,revere_20260828.png,revere_20260827.png,ADD TO PLTR ADD/TRIM FROG SELL NVDA TRIM PICK,trusted,action_match
-TURBO,2026-08-28,1,ENTER,CAM,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
-TURBO,2026-08-28,1,ENTER,FX,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
-TURBO,2026-08-28,1,ENTER,GXG,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
-TURBO,2026-08-28,1,ENTER,INTC,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
-TURBO,2026-08-28,1,ENTER,MANA,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
-TURBO,2026-08-28,1,ENTER,SICH,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
-TURBO,2026-08-28,1,ENTER,SMC,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
-TURBO,2026-08-28,1,ENTER,TQOQ,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
-TURBO,2026-08-28,1,EXIT,FIG,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
-TURBO,2026-08-28,1,EXIT,FOL,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
-TURBO,2026-08-28,1,EXIT,GH,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
-TURBO,2026-08-28,1,EXIT,HNGE,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
-TURBO,2026-08-28,1,EXIT,HOOD,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
-TURBO,2026-08-28,1,EXIT,IBIT,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
-TURBO,2026-08-28,1,EXIT,MRNA,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
-TURBO,2026-08-28,1,EXIT,SPCX,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
-TURBO,2026-08-28,1,EXIT,TSLA,revere_20260828.png,revere_20260827.png,SELL GHHNGE TRIM CHYM,trusted,holdings_diff
 GRO,2026-08-31,1,EXIT,PICK,revere_20260831.png,revere_20260828.png,SELL PICK,trusted,action_match
-TURBO,2026-08-31,1,EXIT,CHYM,revere_20260831.png,revere_20260828.png,SELL FIG CHYM,trusted,action_match
 GRO,2026-09-01,1,EXIT,FROG,revere_20260901.png,revere_20260831.png,SELL FROG TRIM SPXL + PLTR,trusted,action_match
 TURBO,2026-09-01,1,ENTER,HOOD,revere_20260901.png,revere_20260831.png,BUY HOOD,trusted,action_match
 GRO,2026-09-02,1,EXIT,SPXL,revere_20260902.png,revere_20260901.png,SELL SPXL TRIM BLTR,trusted,action_match

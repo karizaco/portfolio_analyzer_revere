@@ -887,10 +887,14 @@ function repairHoldingTokens(rawTokens, options) {
       continue;
     }
 
+    if (isStrictTicker(normalized) && !normalized.includes('.') && alphaOnly(normalized).length <= MAX_TICKER_ALPHA_LENGTH) {
+      repaired.push(normalized);
+      continue;
+    }
+
     const strictAndSupported = isStrictTicker(normalized) && isSupportedTicker(normalized, referenceScores);
     const needsCorrection = !strictAndSupported
-      && (!isSupportedTicker(normalized, referenceScores)
-        || normalized.includes('.')
+      && (normalized.includes('.')
         || alphaOnly(normalized).length > MAX_TICKER_ALPHA_LENGTH
         || (!isStrictTicker(normalized) && (rowContext.lowConfidence || rowContext.noChanges)));
     if (needsCorrection) {

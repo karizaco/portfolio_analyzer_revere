@@ -7,3 +7,28 @@ true,revere_20260909.png,TURBO,UPRC,UPRO,missing trailing O
 true,revere_20260909.png,TURBO,FURR,PURR,misread leading P
 true,revere_20260909.png,TURBO,BIT,IBIT,missing leading I
 true,revere_20260910.png,TURBO,TQQQUBIT,TQQQ|IBIT,fused ticker pair
+true,,GRO,RKLS,RKLB,safe global OCR residue
+true,,TURBO,RKLS,RKLB,safe global OCR residue
+true,,GRO,RKLE,RKLB,safe global OCR residue
+true,,TURBO,RKLE,RKLB,safe global OCR residue
+true,,TURBO,FEMX,REMX,safe global OCR residue
+true,,TURBO,SNOK,SNDK,safe global OCR residue
+true,,TURBO,AKL,RKLB,safe global OCR residue
+true,revere_20260107.png,TURBO,SPYMSSO,SPYM|SSO,fused index pair
+true,revere_20260107.png,TURBO,GOOGLRKLB,GOOGL|RKLB,fused ticker pair
+true,revere_20260107.png,TURBO,PLSNOK,PL|SNDK,misread fused pair
+true,revere_20260107.png,TURBO,PLSNDK,PL|SNDK,fused ticker pair
+true,revere_20260107.png,TURBO,ZETAVSCOBTY,ZETA|VSCO|BTU,fused ticker trio
+true,revere_20260107.png,GRO,RKLS,RKLB,misread trailing S
+true,revere_20260107.png,TURBO,SLY,SLV,metals ETF misread as Y
+true,revere_20260115.png,GRO,AKLELAPH,RKLB|APH,fused ticker pair
+true,revere_20260115.png,GRO,SIV,SLV,metals ETF OCR swap
+true,revere_20260115.png,GRO,AS,MU,mu misread as letters
+true,revere_20260115.png,GRO,SHOX,SNDK,safe file-specific correction
+true,revere_20260115.png,TURBO,GOOGLAKLA,GOOG|RKLB,fused ticker pair
+true,revere_20260116.png,TURBO,GODGLRKLE,GOOG|RKLB,fused ticker pair
+true,revere_20260116.png,TURBO,SNDKNSCO,SNDK|VSCO,fused ticker pair
+true,revere_20260202.png,TURBO,GOOGLINTC,GOOGL|INTC,fused ticker pair
+true,revere_20260202.png,TURBO,STU,BTU,misread leading B
+true,revere_20260202.png,TURBO,SNOK,SNDK,file-specific correction
+true,revere_20260202.png,TURBO,AKL,RKLB,file-specific correction

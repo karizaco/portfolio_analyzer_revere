@@ -1,6 +1,6 @@
 const ACTION_PATTERN = /\b(BUY|SELL|ADD|TRIM)\b\s+([^]+?)(?=\b(?:BUY|SELL|ADD|TRIM|NO CHANGES)\b|$)/g;
 
-const LABEL_PATTERN = /(FOCUS\s*:|PORTFOLIO\s*\/\s*RVAB(?:2)?\s*:|GRO\s+HOLDINGS\s*:|GRO\s+RVAB(?:\s*\/\s*REBAR)?\s*:|TURBO\s+HOLDINGS\s*:|TURBO\s+RVAB(?:\s*\/\s*REBAR)?\s*:|BOTTOM\s+LINE\s*:)/g;
+const LABEL_PATTERN = /(FOCUS\s*[:.]|PORTFOLIO(?:\s*\/\s*RVAB(?:2)?(?:\s*\/\s*REBAR)?|\s+RVAB(?:\s*\/\s*REBAR)?)\s*[:.]|GRO\s+RVAB(?:\s*\/\s*REBAR)?\s*[:.]|TURBO\s+RVAB(?:\s*\/\s*REBAR)?\s*[:.]|GRO(?:\s+HOLDINGS)?\s*[:.]|TURBO(?:\s+HOLDINGS)?\s*[:.]|RVAB(?:\s*\/\s*REBAR)?\s*[:.]|BOTTOM\s+LINE\s*[:.]?)/g;
 
 const STRONG_LABEL_PATTERNS = [
   /^FOCUS\b/,
@@ -37,13 +37,21 @@ function normalizeOcrFragment(value) {
       .replace(/\b(BUY|SELL|ADD|TRIM)(?=[A-Z])/g, '$1 ')
       .replace(/([A-Z0-9])(?=(BUY|SELL|ADD|TRIM)\b)/g, '$1 ')
       .replace(/\bRBAV\b/g, 'RVAB')
+      .replace(/\bRYAB\b/g, 'RVAB')
+      .replace(/\bRVAD\b/g, 'RVAB')
       .replace(/\bRVAG\b/g, 'RVAB')
       .replace(/\bRVAS\b/g, 'RVAB')
       .replace(/\bRVAB2\b/g, 'RVAB')
+      .replace(/\bREDAR\b/g, 'REBAR')
+      .replace(/\bREDAR\b/g, 'REBAR')
       .replace(/\bB0TTOM\b/g, 'BOTTOM')
+      .replace(/\bBOTTOMLINE\b/g, 'BOTTOM LINE')
+      .replace(/\bBOTTOMUNE\b/g, 'BOTTOM LINE')
       .replace(/\bLINF\b/g, 'LINE')
       .replace(/\bBOTTOM\s+UNE\b/g, 'BOTTOM LINE')
       .replace(/\bH0LDINGS\b/g, 'HOLDINGS')
+      .replace(/\bOLDINGS\b/g, 'HOLDINGS')
+      .replace(/\bHO\s+DRNGS\b/g, 'HOLDINGS')
       .replace(/\bPORTFOUIO\b/g, 'PORTFOLIO')
       .replace(/\bPORTFOLIQ\b/g, 'PORTFOLIO')
       .replace(/\bTUR8O\b/g, 'TURBO')
@@ -55,22 +63,52 @@ function isStrongLabel(line) {
   return STRONG_LABEL_PATTERNS.some((pattern) => pattern.test(line));
 }
 
+function derivePortfolioHint(line) {
+  if (/^GRO\b/.test(line)) {
+    return 'GRO';
+  }
+
+  if (/^TURBO\b/.test(line)) {
+    return 'TURBO';
+  }
+
+  return '';
+}
+
+function normalizeLabelSegment(segment, portfolioHint) {
+  let normalized = sanitizeLeadingNoise(segment);
+
+  normalized = normalized
+    .replace(/^GRO\s*[:.]\s*/i, 'GRO HOLDINGS: ')
+    .replace(/^TURBO\s*[:.]\s*/i, 'TURBO HOLDINGS: ')
+    .replace(/^PORTFOLIO\s+RVAB/i, 'PORTFOLIO/RVAB')
+    .replace(/^BOTTOM\s+LINE\s*[:.]?\s*/i, 'BOTTOM LINE: ');
+
+  if (portfolioHint && /^RVAB\b/i.test(normalized)) {
+    normalized = `${portfolioHint} ${normalized}`;
+  }
+
+  return normalizeWhitespace(normalized);
+}
+
 function splitEmbeddedLabels(line) {
   const matches = [...line.matchAll(LABEL_PATTERN)];
   if (matches.length <= 1) {
-    return [line];
+    return [normalizeLabelSegment(line, '')];
   }
 
   const segments = [];
+  let portfolioHint = '';
   for (let index = 0; index < matches.length; index += 1) {
     const match = matches[index];
     const start = match.index || 0;
     const end = index + 1 < matches.length
       ? matches[index + 1].index || line.length
       : line.length;
-    const segment = sanitizeLeadingNoise(line.slice(start, end));
+    const segment = normalizeLabelSegment(line.slice(start, end), portfolioHint);
     if (segment) {
       segments.push(segment);
+      portfolioHint = derivePortfolioHint(segment) || portfolioHint;
     }
   }
 
@@ -122,7 +160,7 @@ function extractBottomLine(line) {
     return '';
   }
 
-  return normalizeWhitespace(line.replace(/^BOTTOM\s+LINE\s*:?\s*/i, ''));
+  return normalizeWhitespace(line.replace(/^BOTTOM\s+LINE\s*[:.]?\s*/i, ''));
 }
 
 function cleanTickerToken(token) {
