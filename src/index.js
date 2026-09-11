@@ -315,6 +315,19 @@ async function runPerformance() {
   console.log(`Price provider status: ${process.env.REVERE_PRICE_SOURCE === 'none' ? 'provider_unconfigured' : 'yahoo_chart'}`);
 }
 
+async function runReport() {
+  const { generatePerformanceReport } = require('./report/generatePerformanceReport');
+
+  const report = await generatePerformanceReport({
+    dataDirectory: OUTPUT_DIRECTORY,
+    outputDirectory: path.join(OUTPUT_DIRECTORY, 'report')
+  });
+
+  console.log(`Wrote performance report: ${report.outputPath}`);
+  console.log(`Summary rows: ${report.summaryCount}`);
+  console.log(`Timeseries rows: ${report.timeseriesCount}`);
+}
+
 async function main() {
   const options = parseArgs(process.argv.slice(2));
 
@@ -330,6 +343,11 @@ async function main() {
 
   if (options.command === 'performance') {
     await runPerformance(options);
+    return;
+  }
+
+  if (options.command === 'report') {
+    await runReport(options);
     return;
   }
 

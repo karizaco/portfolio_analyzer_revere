@@ -8,7 +8,8 @@
     "discover": "node src/index.js discover",
     "extract": "node src/index.js extract",
     "extract:sample": "node src/index.js extract --limit 5",
-    "performance": "node src/index.js performance"
+    "performance": "node src/index.js performance",
+    "report": "node src/index.js report"
   },
   "dependencies": {
     "sharp": "^0.34.3",
