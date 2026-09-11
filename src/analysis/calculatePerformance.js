@@ -438,15 +438,69 @@ function collectPortfolioSnapshots(sortedSnapshots, portfolioKey) {
   });
 }
 
+function buildWhiteboardKey(portfolio, asOfDate) {
+  return `${portfolio}|${asOfDate}`;
+}
+
+function choosePreferredWhiteboardRow(currentRow, candidateRow) {
+  if (!currentRow) {
+    return candidateRow;
+  }
+
+  if ((candidateRow.sequence || 0) !== (currentRow.sequence || 0)) {
+    return (candidateRow.sequence || 0) > (currentRow.sequence || 0) ? candidateRow : currentRow;
+  }
+
+  return Number(candidateRow.ocr_confidence || 0) >= Number(currentRow.ocr_confidence || 0)
+    ? candidateRow
+    : currentRow;
+}
+
+function buildWhiteboardLookup(whiteboardRows) {
+  const lookup = new Map();
+
+  for (const row of whiteboardRows) {
+    const key = buildWhiteboardKey(row.portfolio, row.as_of_date);
+    lookup.set(key, choosePreferredWhiteboardRow(lookup.get(key), row));
+  }
+
+  return lookup;
+}
+
+function buildWhiteboardReviewRows(whiteboardRows, usedKeys) {
+  const reviewRows = [];
+
+  for (const row of whiteboardRows) {
+    const key = buildWhiteboardKey(row.portfolio, row.as_of_date);
+    if (usedKeys.has(key)) {
+      continue;
+    }
+
+    reviewRows.push(buildReviewRow({
+      details: row.metrics_raw || row.action_text || row.bottom_line || 'Whiteboard observation had no matching portfolio snapshot date.',
+      portfolio: row.portfolio,
+      reviewBasis: 'unmatched_whiteboard_observation',
+      reviewDate: row.as_of_date,
+      reviewType: 'whiteboard_observation_review',
+      sequence: row.sequence,
+      sourceFile: row.source_file,
+      ticker: ''
+    }));
+  }
+
+  return reviewRows;
+}
+
 function buildCurveStatus(missingPriceCount) {
   return missingPriceCount ? 'partial_price_data' : 'ok';
 }
 
-async function buildCurveRows(sortedSnapshots, positionRows, appliedAdjustments, priceProvider) {
+async function buildCurveRows(sortedSnapshots, positionRows, appliedAdjustments, priceProvider, whiteboardLookup) {
   const curveRows = [];
   const latestStateByPortfolio = new Map();
   const transactions = buildTransactions(positionRows, appliedAdjustments);
   const positionsById = new Map(positionRows.map((row) => [buildPositionId(row), row]));
+  const usedWhiteboardKeys = new Set();
 
   for (const portfolioKey of ['gro', 'turbo']) {
     const portfolio = portfolioKey.toUpperCase();
@@ -602,6 +656,10 @@ async function buildCurveRows(sortedSnapshots, positionRows, appliedAdjustments,
       const curveStatus = previousSnapshot ? buildCurveStatus(missingPriceCount) : 'baseline';
       const pricedPositions = previousSnapshot ? Math.max(activePositions.size - missingPriceCount, 0) : activePositions.size;
       const unpricedPositions = previousSnapshot ? missingPriceCount : 0;
+      const whiteboardObservation = whiteboardLookup.get(buildWhiteboardKey(portfolio, snapshot.as_of_date));
+      if (whiteboardObservation) {
+        usedWhiteboardKeys.add(buildWhiteboardKey(portfolio, snapshot.as_of_date));
+      }
       curveRows.push({
         as_of_date: snapshot.as_of_date,
         cash_weight: formatDecimal(equityValue > 0 ? cashValue / equityValue : 0),
@@ -614,6 +672,13 @@ async function buildCurveRows(sortedSnapshots, positionRows, appliedAdjustments,
         portfolio,
         priced_positions: pricedPositions,
         unpriced_positions: unpricedPositions,
+        whiteboard_action_text: whiteboardObservation ? whiteboardObservation.action_text || '' : '',
+        whiteboard_bottom_line: whiteboardObservation ? whiteboardObservation.bottom_line || '' : '',
+        whiteboard_metric_1: whiteboardObservation ? whiteboardObservation.metric_1 || '' : '',
+        whiteboard_metric_2: whiteboardObservation ? whiteboardObservation.metric_2 || '' : '',
+        whiteboard_metric_scalar: whiteboardObservation ? whiteboardObservation.metric_scalar || '' : '',
+        whiteboard_ocr_confidence: whiteboardObservation ? String(whiteboardObservation.ocr_confidence || '') : '',
+        whiteboard_source_file: whiteboardObservation ? whiteboardObservation.source_file || '' : '',
         weighted_exposure: formatDecimal(equityValue > 0 ? investedValue / equityValue : 0)
       });
 
@@ -629,7 +694,8 @@ async function buildCurveRows(sortedSnapshots, positionRows, appliedAdjustments,
 
   return {
     curveRows,
-    latestStateByPortfolio
+    latestStateByPortfolio,
+    usedWhiteboardKeys
   };
 }
 
@@ -703,7 +769,7 @@ async function enrichPrices(positionRows, priceProvider) {
   return reviewRows;
 }
 
-async function calculatePerformance({ actionReviewRows, actionRows, events, priceProvider, snapshots }) {
+async function calculatePerformance({ actionReviewRows, actionRows, events, priceProvider, snapshots, whiteboardReviewRows = [], whiteboardRows = [] }) {
   const positionRows = [];
   const reviewRows = [];
   const openPositions = new Map();
@@ -712,6 +778,7 @@ async function calculatePerformance({ actionReviewRows, actionRows, events, pric
   const trustedActionRows = sortActions(actionRows).map((row) => ({ ...row }));
   const actionLookup = buildActionLookup(trustedActionRows);
   const entrySizingPlan = buildEntrySizingPlan(sortedEvents, actionLookup);
+  const whiteboardLookup = buildWhiteboardLookup(whiteboardRows);
 
   for (const actionReviewRow of actionReviewRows) {
     reviewRows.push(buildReviewRow({
@@ -723,6 +790,19 @@ async function calculatePerformance({ actionReviewRows, actionRows, events, pric
       sequence: actionReviewRow.sequence,
       sourceFile: actionReviewRow.source_file,
       ticker: actionReviewRow.ticker
+    }));
+  }
+
+  for (const whiteboardReviewRow of whiteboardReviewRows) {
+    reviewRows.push(buildReviewRow({
+      details: whiteboardReviewRow.metrics_raw || whiteboardReviewRow.action_text || whiteboardReviewRow.bottom_line || 'Whiteboard row requires review.',
+      portfolio: whiteboardReviewRow.portfolio,
+      reviewBasis: whiteboardReviewRow.issue_codes || 'whiteboard_parse_review',
+      reviewDate: whiteboardReviewRow.as_of_date,
+      reviewType: 'whiteboard_parse_review',
+      sequence: whiteboardReviewRow.sequence,
+      sourceFile: whiteboardReviewRow.source_file,
+      ticker: ''
     }));
   }
 
@@ -848,7 +928,8 @@ async function calculatePerformance({ actionReviewRows, actionRows, events, pric
   const priceReviewRows = await enrichPrices(positionRows, priceProvider);
   reviewRows.push(...priceReviewRows);
 
-  const curveState = await buildCurveRows(sortedSnapshots, positionRows, appliedAdjustments, priceProvider);
+  const curveState = await buildCurveRows(sortedSnapshots, positionRows, appliedAdjustments, priceProvider, whiteboardLookup);
+  reviewRows.push(...buildWhiteboardReviewRows(whiteboardRows, curveState.usedWhiteboardKeys));
   const summaryRows = buildSummaryRows(positionRows, reviewRows, sortedSnapshots, curveState.latestStateByPortfolio);
 
   positionRows.sort((left, right) => {

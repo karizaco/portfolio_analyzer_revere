@@ -234,3 +234,102 @@ test('calculatePerformance attaches trusted ADD/TRIM rows as lifecycle adjustmen
   assert.equal(rowsByTicker.get('UBER').current_weight_fraction, '0.562195');
   assert.equal(rowsByTicker.get('MSFT').current_weight_fraction, '0.437805');
 });
+
+test('calculatePerformance merges whiteboard observations into curve rows and reviews unmatched dates', async () => {
+  const snapshots = [
+    {
+      as_of_date: '2024-03-01',
+      gro_holdings: ['NVDA'],
+      gro_metric_1: '1.51',
+      gro_metric_2: '1.63',
+      gro_metric_scalar: '',
+      sequence: 1,
+      source_file: 'revere_20240301.png',
+      turbo_holdings: ['TQQQ'],
+      turbo_metric_1: '0.80',
+      turbo_metric_2: '0.82',
+      turbo_metric_scalar: ''
+    }
+  ];
+
+  const result = await calculatePerformance({
+    actionReviewRows: [],
+    actionRows: [],
+    events: [],
+    priceProvider: createMockPriceProvider({
+      NVDA: { '2024-03-01': 100 },
+      TQQQ: { '2024-03-01': 50 }
+    }),
+    snapshots,
+    whiteboardReviewRows: [
+      {
+        action_text: '',
+        as_of_date: '2024-03-02',
+        bottom_line: 'Needs review',
+        issue_codes: 'LOW_OCR_CONFIDENCE',
+        metrics_raw: 'GRO (1.70/1.80)',
+        portfolio: 'GRO',
+        sequence: 1,
+        source_file: '20240302_ps.jpg'
+      }
+    ],
+    whiteboardRows: [
+      {
+        action_text: 'ADD TO GRO LEADERS',
+        as_of_date: '2024-03-01',
+        bottom_line: 'Leaders still intact',
+        metric_1: '1.70',
+        metric_2: '1.80',
+        metric_scalar: '',
+        metrics_raw: 'GRO RVAB: (1.70/1.80)',
+        ocr_confidence: 88,
+        portfolio: 'GRO',
+        sequence: 1,
+        source_file: '20240301_ps.jpg'
+      },
+      {
+        action_text: 'TRIM TURBO RISK',
+        as_of_date: '2024-03-01',
+        bottom_line: 'Small caps lagging',
+        metric_1: '0.90',
+        metric_2: '0.95',
+        metric_scalar: '',
+        metrics_raw: 'TURBO RVAB: (0.90/0.95)',
+        ocr_confidence: 86,
+        portfolio: 'TURBO',
+        sequence: 1,
+        source_file: '20240301_ps.jpg'
+      },
+      {
+        action_text: '',
+        as_of_date: '2024-03-05',
+        bottom_line: 'No matching holdings day',
+        metric_1: '1.90',
+        metric_2: '2.00',
+        metric_scalar: '',
+        metrics_raw: 'GRO RVAB: (1.90/2.00)',
+        ocr_confidence: 90,
+        portfolio: 'GRO',
+        sequence: 1,
+        source_file: '20240305_ps.jpg'
+      }
+    ]
+  });
+
+  const groCurve = result.curveRows.find((row) => row.portfolio === 'GRO');
+  const turboCurve = result.curveRows.find((row) => row.portfolio === 'TURBO');
+
+  assert.equal(groCurve.whiteboard_metric_1, '1.70');
+  assert.equal(groCurve.whiteboard_metric_2, '1.80');
+  assert.equal(groCurve.whiteboard_action_text, 'ADD TO GRO LEADERS');
+  assert.equal(groCurve.whiteboard_bottom_line, 'Leaders still intact');
+  assert.equal(turboCurve.whiteboard_action_text, 'TRIM TURBO RISK');
+  assert.match(
+    result.reviewRows.map((row) => `${row.review_type}:${row.review_basis}`).join('|'),
+    /whiteboard_parse_review:LOW_OCR_CONFIDENCE/
+  );
+  assert.match(
+    result.reviewRows.map((row) => `${row.review_type}:${row.review_basis}`).join('|'),
+    /whiteboard_observation_review:unmatched_whiteboard_observation/
+  );
+});

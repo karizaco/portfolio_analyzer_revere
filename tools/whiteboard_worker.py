@@ -5,18 +5,23 @@ import json
 import sqlite3
 import subprocess
 import sys
-from contextlib import suppress
 from datetime import datetime, timezone
 from pathlib import Path
 
 WORKSPACE_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PIPELINE_ROOT = WORKSPACE_ROOT / 'data' / 'video_pipeline'
+REFERENCE_SUFFIXES = {'.jpg', '.jpeg', '.pgm', '.png', '.webp'}
+THUMBNAIL_WIDTH = 8
+THUMBNAIL_HEIGHT = 8
+SHARPNESS_WIDTH = 64
+SHARPNESS_HEIGHT = 36
 
 DIRECTORY_LAYOUT = {
     'catalog': 'catalog',
     'downloads': 'downloads',
     'frames': 'frames',
     'logs': 'logs',
+    'references': 'references',
     'review': 'review',
     'screenshots': 'screenshots',
 }
@@ -256,11 +261,7 @@ def build_catalog_command(args: argparse.Namespace) -> list[str]:
 
 
 def build_yt_dlp_prefix(yt_dlp_bin: str) -> list[str]:
-    yt_dlp_target = Path(yt_dlp_bin)
-    if yt_dlp_target.suffix.lower() == '.py':
-        return [sys.executable, str(yt_dlp_target)]
-
-    return [yt_dlp_bin]
+    return build_command_prefix(yt_dlp_bin)
 
 
 def parse_catalog_line(line: str) -> dict[str, str] | None:
@@ -301,6 +302,14 @@ def write_log_file(log_directory: Path, stem: str, stdout: str, stderr: str) -> 
         encoding='utf-8',
     )
     return log_path
+
+
+def build_command_prefix(command_bin: str) -> list[str]:
+    command_target = Path(command_bin)
+    if command_target.suffix.lower() == '.py':
+        return [sys.executable, str(command_target)]
+
+    return [command_bin]
 
 
 def record_catalog_run(
@@ -351,17 +360,37 @@ def update_video_row(
     status: str,
     download_path: str | None = None,
     error: str | None = None,
+    output_path: str | None = None,
+    review_reason: str | None = None,
+    selected_score: float | None = None,
+    selected_timestamp: float | None = None,
 ) -> None:
     assignments = ['status = ?', 'updated_at = ?']
     values: list[object] = [status, utc_now_iso()]
 
     if download_path is not None:
-      assignments.append('download_path = ?')
-      values.append(download_path)
+        assignments.append('download_path = ?')
+        values.append(download_path)
 
     if error is not None:
-      assignments.append('error = ?')
-      values.append(error)
+        assignments.append('error = ?')
+        values.append(error)
+
+    if output_path is not None:
+        assignments.append('output_path = ?')
+        values.append(output_path)
+
+    if review_reason is not None:
+        assignments.append('review_reason = ?')
+        values.append(review_reason)
+
+    if selected_score is not None:
+        assignments.append('selected_score = ?')
+        values.append(selected_score)
+
+    if selected_timestamp is not None:
+        assignments.append('selected_timestamp = ?')
+        values.append(selected_timestamp)
 
     values.append(video_id)
     connection.execute(
@@ -443,6 +472,324 @@ def locate_downloaded_file(download_directory: Path, video_id: str) -> Path | No
         return match
 
     return None
+
+
+def resolve_reference_dir(pipeline_root: Path, value: str) -> Path:
+    if value:
+        return Path(value).expanduser().resolve()
+
+    return pipeline_root / 'references'
+
+
+def list_reference_images(reference_directory: Path) -> list[Path]:
+    if not reference_directory.exists():
+        return []
+
+    return sorted(
+        file_path for file_path in reference_directory.iterdir()
+        if file_path.is_file() and file_path.suffix.lower() in REFERENCE_SUFFIXES
+    )
+
+
+def read_raw_gray_frame(command: list[str], frame_size: int) -> bytes:
+    result = subprocess.run(command, capture_output=True, check=False)
+    if result.returncode != 0:
+        message = result.stderr.decode('utf-8', errors='ignore').strip() or 'ffmpeg frame decode failed.'
+        raise RuntimeError(message)
+
+    if len(result.stdout) != frame_size:
+        raise RuntimeError(f'Expected {frame_size} grayscale bytes, received {len(result.stdout)}.')
+
+    return result.stdout
+
+
+def create_scale_filter(width: int, height: int) -> str:
+    return (
+        f'scale={width}:{height}:force_original_aspect_ratio=decrease,'
+        f'pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,format=gray'
+    )
+
+
+def decode_media_hash(ffmpeg_bin: str, media_path: Path, width: int, height: int) -> bytes:
+    frame_size = width * height
+    command = build_command_prefix(ffmpeg_bin)
+    command.extend([
+        '-hide_banner',
+        '-loglevel',
+        'error',
+        '-i',
+        str(media_path),
+        '-frames:v',
+        '1',
+        '-vf',
+        create_scale_filter(width, height),
+        '-f',
+        'rawvideo',
+        '-pix_fmt',
+        'gray',
+        '-',
+    ])
+    return read_raw_gray_frame(command, frame_size)
+
+
+def build_average_hash(pixels: bytes) -> int:
+    if not pixels:
+        return 0
+
+    average_value = sum(pixels) / len(pixels)
+    bit_value = 0
+    for pixel in pixels:
+        bit_value <<= 1
+        if pixel >= average_value:
+            bit_value |= 1
+
+    return bit_value
+
+
+def hash_similarity(left_hash: int, right_hash: int, bit_count: int) -> float:
+    difference = (left_hash ^ right_hash).bit_count()
+    return 1 - (difference / bit_count)
+
+
+def load_reference_hashes(reference_directory: Path, ffmpeg_bin: str) -> list[dict[str, object]]:
+    references = []
+    for reference_path in list_reference_images(reference_directory):
+        pixels = decode_media_hash(ffmpeg_bin, reference_path, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+        references.append({
+            'hash': build_average_hash(pixels),
+            'path': str(reference_path),
+        })
+
+    return references
+
+
+def stream_sample_frames(video_path: Path, ffmpeg_bin: str, sample_fps: float) -> list[dict[str, float | int]]:
+    frame_size = THUMBNAIL_WIDTH * THUMBNAIL_HEIGHT
+    command = build_command_prefix(ffmpeg_bin)
+    command.extend([
+        '-hide_banner',
+        '-loglevel',
+        'error',
+        '-i',
+        str(video_path),
+        '-vf',
+        f'fps={sample_fps},{create_scale_filter(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)}',
+        '-f',
+        'rawvideo',
+        '-pix_fmt',
+        'gray',
+        '-',
+    ])
+
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    frames = []
+    index = 0
+    sample_interval = 1 / sample_fps
+
+    assert process.stdout is not None
+    while True:
+        chunk = process.stdout.read(frame_size)
+        if not chunk:
+            break
+
+        if len(chunk) != frame_size:
+            process.kill()
+            raise RuntimeError('ffmpeg returned a partial grayscale frame during sampling.')
+
+        frames.append({
+            'hash': build_average_hash(chunk),
+            'index': index,
+            'timestamp': round(index * sample_interval, 3),
+        })
+        index += 1
+
+    assert process.stderr is not None
+    stderr_output = process.stderr.read().decode('utf-8', errors='ignore')
+    return_code = process.wait()
+    if return_code != 0:
+        raise RuntimeError(stderr_output.strip() or 'ffmpeg sampling command failed.')
+
+    return frames
+
+
+def score_sample_frames(frames: list[dict[str, float | int]], references: list[dict[str, object]]) -> list[dict[str, float | int]]:
+    if not references:
+        return []
+
+    scored_frames = []
+    for frame in frames:
+        similarities = [
+            hash_similarity(int(frame['hash']), int(reference['hash']), THUMBNAIL_WIDTH * THUMBNAIL_HEIGHT)
+            for reference in references
+        ]
+        scored_frames.append({
+            'hash': frame['hash'],
+            'index': frame['index'],
+            'score': round(max(similarities), 4),
+            'timestamp': frame['timestamp'],
+        })
+
+    return scored_frames
+
+
+def group_candidate_windows(scored_frames: list[dict[str, float | int]], threshold: float) -> list[list[dict[str, float | int]]]:
+    windows = []
+    current_window: list[dict[str, float | int]] = []
+
+    for frame in scored_frames:
+        if float(frame['score']) >= threshold:
+            current_window.append(frame)
+            continue
+
+        if current_window:
+            windows.append(current_window)
+            current_window = []
+
+    if current_window:
+        windows.append(current_window)
+
+    return windows
+
+
+def choose_best_window(windows: list[list[dict[str, float | int]]]) -> list[dict[str, float | int]]:
+    return max(
+        windows,
+        key=lambda window: (
+            len(window),
+            sum(float(frame['score']) for frame in window) / len(window),
+            float(window[-1]['timestamp']),
+        ),
+    )
+
+
+def decode_sharpness_pixels(ffmpeg_bin: str, media_path: Path, timestamp: float) -> bytes:
+    frame_size = SHARPNESS_WIDTH * SHARPNESS_HEIGHT
+    command = build_command_prefix(ffmpeg_bin)
+    command.extend([
+        '-hide_banner',
+        '-loglevel',
+        'error',
+        '-ss',
+        f'{timestamp:.3f}',
+        '-i',
+        str(media_path),
+        '-frames:v',
+        '1',
+        '-vf',
+        create_scale_filter(SHARPNESS_WIDTH, SHARPNESS_HEIGHT),
+        '-f',
+        'rawvideo',
+        '-pix_fmt',
+        'gray',
+        '-',
+    ])
+    return read_raw_gray_frame(command, frame_size)
+
+
+def compute_sharpness(pixels: bytes, width: int, height: int) -> float:
+    total = 0
+    for row_index in range(height - 1):
+        row_offset = row_index * width
+        next_row_offset = (row_index + 1) * width
+        for column_index in range(width - 1):
+            current = pixels[row_offset + column_index]
+            total += abs(current - pixels[row_offset + column_index + 1])
+            total += abs(current - pixels[next_row_offset + column_index])
+
+    return total / max(1, (width - 1) * (height - 1) * 2)
+
+
+def choose_final_frame(
+    ffmpeg_bin: str,
+    video_path: Path,
+    window: list[dict[str, float | int]],
+    score_margin: float,
+    candidate_limit: int,
+) -> dict[str, float | int]:
+    best_score = max(float(frame['score']) for frame in window)
+    eligible = [frame for frame in window if float(frame['score']) >= best_score - score_margin]
+    candidates = eligible[-candidate_limit:] if len(eligible) > candidate_limit else eligible
+    ranked = []
+    for frame in candidates:
+        sharpness_pixels = decode_sharpness_pixels(ffmpeg_bin, video_path, float(frame['timestamp']))
+        ranked.append({
+            **frame,
+            'sharpness': round(compute_sharpness(sharpness_pixels, SHARPNESS_WIDTH, SHARPNESS_HEIGHT), 4),
+        })
+
+    return max(
+        ranked,
+        key=lambda frame: (
+            float(frame['sharpness']),
+            float(frame['timestamp']),
+            float(frame['score']),
+        ),
+    )
+
+
+def allocate_screenshot_path(screenshot_directory: Path, upload_date: str, video_id: str) -> Path:
+    stem = upload_date if upload_date else f'undated_{video_id}'
+    candidate = screenshot_directory / f'{stem}_ps.jpg'
+    if not candidate.exists():
+        return candidate
+
+    suffix = 2
+    while True:
+        candidate = screenshot_directory / f'{stem}_ps_{suffix}.jpg'
+        if not candidate.exists():
+            return candidate
+        suffix += 1
+
+
+def extract_frame_to_file(ffmpeg_bin: str, media_path: Path, timestamp: float, output_path: Path) -> None:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    command = build_command_prefix(ffmpeg_bin)
+    command.extend([
+        '-hide_banner',
+        '-loglevel',
+        'error',
+        '-ss',
+        f'{timestamp:.3f}',
+        '-i',
+        str(media_path),
+        '-frames:v',
+        '1',
+        '-q:v',
+        '2',
+        str(output_path),
+    ])
+    result = subprocess.run(command, capture_output=True, text=True, check=False)
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr.strip() or result.stdout.strip() or 'ffmpeg frame extraction failed.')
+
+
+def select_videos_for_scan(
+    connection: sqlite3.Connection,
+    *,
+    limit: int,
+    video_id: str,
+) -> list[sqlite3.Row]:
+    if video_id:
+        row = connection.execute(
+            '''
+            SELECT video_id, upload_date, video_url, title, status, download_path
+            FROM videos
+            WHERE video_id = ?
+            ''',
+            (video_id,),
+        ).fetchone()
+        return [row] if row else []
+
+    return connection.execute(
+        '''
+        SELECT video_id, upload_date, video_url, title, status, download_path
+        FROM videos
+        WHERE status IN ('scanning', 'review') AND download_path <> ''
+        ORDER BY upload_date ASC, video_id ASC
+        LIMIT ?
+        ''',
+        (limit,),
+    ).fetchall()
 
 
 def command_download(args: argparse.Namespace) -> int:
@@ -551,6 +898,183 @@ def command_download(args: argparse.Namespace) -> int:
         'status': 'ok' if not errored else 'partial',
     }, indent=2))
     return 0 if not errored else 1
+
+
+def command_scan(args: argparse.Namespace) -> int:
+    pipeline_root = resolve_pipeline_root(args.pipeline_root)
+    db_path = resolve_db_path(pipeline_root, args.db_path)
+    paths = ensure_layout(pipeline_root)
+    reference_directory = resolve_reference_dir(pipeline_root, args.reference_dir)
+
+    if not db_path.exists():
+        print('Worker state is missing. Run `npm run video:init` first.', file=sys.stderr)
+        return 1
+
+    reference_hashes = load_reference_hashes(reference_directory, args.ffmpeg_bin)
+    if not reference_hashes:
+        print(f'No reference images were found in {reference_directory}.', file=sys.stderr)
+        return 1
+
+    with connect_database(db_path) as connection:
+        initialize_schema(connection)
+        selected_rows = select_videos_for_scan(
+            connection,
+            limit=max(1, args.limit),
+            video_id=args.video_id,
+        )
+
+    if not selected_rows:
+        print(json.dumps({
+            'attempted': 0,
+            'db_path': str(db_path),
+            'pipeline_root': str(pipeline_root),
+            'status': 'idle',
+        }, indent=2))
+        return 0
+
+    results = []
+    done_count = 0
+    review_count = 0
+    no_match_count = 0
+    error_count = 0
+
+    with connect_database(db_path) as connection:
+        for row in selected_rows:
+            download_path = Path(row['download_path'])
+            if not download_path.exists():
+                message = f'Download file is missing: {download_path}'
+                update_video_row(connection, video_id=row['video_id'], status='error', error=message)
+                results.append({'error': message, 'status': 'error', 'video_id': row['video_id']})
+                error_count += 1
+                continue
+
+            try:
+                sampled_frames = stream_sample_frames(download_path, args.ffmpeg_bin, args.sample_fps)
+                scored_frames = score_sample_frames(sampled_frames, reference_hashes)
+                if not scored_frames:
+                    raise RuntimeError('No sampled frames were produced for this video.')
+
+                candidate_windows = [
+                    window for window in group_candidate_windows(scored_frames, args.similarity_threshold)
+                    if len(window) >= args.min_window_length
+                ]
+
+                if candidate_windows:
+                    best_window = choose_best_window(candidate_windows)
+                    selected_frame = choose_final_frame(
+                        args.ffmpeg_bin,
+                        download_path,
+                        best_window,
+                        args.score_margin,
+                        args.candidate_limit,
+                    )
+                    output_path = allocate_screenshot_path(paths['screenshots'], row['upload_date'], row['video_id'])
+                    extract_frame_to_file(args.ffmpeg_bin, download_path, float(selected_frame['timestamp']), output_path)
+                    summary = {
+                        'best_window_end': best_window[-1]['timestamp'],
+                        'best_window_length': len(best_window),
+                        'best_window_start': best_window[0]['timestamp'],
+                        'output_path': str(output_path),
+                        'selected_frame': selected_frame,
+                        'video_id': row['video_id'],
+                    }
+                    log_path = write_log_file(paths['logs'], f"scan_{row['video_id']}", json.dumps(summary, indent=2), '')
+                    update_video_row(
+                        connection,
+                        video_id=row['video_id'],
+                        status='done',
+                        error='',
+                        output_path=str(output_path),
+                        review_reason='',
+                        selected_score=float(selected_frame['score']),
+                        selected_timestamp=float(selected_frame['timestamp']),
+                    )
+                    results.append({
+                        'log_path': str(log_path),
+                        'output_path': str(output_path),
+                        'score': selected_frame['score'],
+                        'status': 'done',
+                        'timestamp': selected_frame['timestamp'],
+                        'video_id': row['video_id'],
+                    })
+                    done_count += 1
+                    continue
+
+                best_frame = max(scored_frames, key=lambda frame: (float(frame['score']), float(frame['timestamp'])))
+                if float(best_frame['score']) >= args.review_threshold:
+                    review_path = paths['review'] / f"{row['upload_date'] or row['video_id']}_{row['video_id']}_review.jpg"
+                    extract_frame_to_file(args.ffmpeg_bin, download_path, float(best_frame['timestamp']), review_path)
+                    summary = {
+                        'best_frame': best_frame,
+                        'reason': 'review_threshold_only',
+                        'review_path': str(review_path),
+                        'video_id': row['video_id'],
+                    }
+                    log_path = write_log_file(paths['logs'], f"scan_{row['video_id']}", json.dumps(summary, indent=2), '')
+                    update_video_row(
+                        connection,
+                        video_id=row['video_id'],
+                        status='review',
+                        error='',
+                        output_path=str(review_path),
+                        review_reason='similarity_below_autosave_threshold',
+                        selected_score=float(best_frame['score']),
+                        selected_timestamp=float(best_frame['timestamp']),
+                    )
+                    results.append({
+                        'log_path': str(log_path),
+                        'output_path': str(review_path),
+                        'score': best_frame['score'],
+                        'status': 'review',
+                        'timestamp': best_frame['timestamp'],
+                        'video_id': row['video_id'],
+                    })
+                    review_count += 1
+                    continue
+
+                summary = {
+                    'best_frame': best_frame,
+                    'reason': 'no_candidate_window',
+                    'video_id': row['video_id'],
+                }
+                log_path = write_log_file(paths['logs'], f"scan_{row['video_id']}", json.dumps(summary, indent=2), '')
+                update_video_row(
+                    connection,
+                    video_id=row['video_id'],
+                    status='no_match',
+                    error='',
+                    output_path='',
+                    review_reason='no_candidate_window',
+                    selected_score=float(best_frame['score']),
+                    selected_timestamp=float(best_frame['timestamp']),
+                )
+                results.append({
+                    'log_path': str(log_path),
+                    'score': best_frame['score'],
+                    'status': 'no_match',
+                    'timestamp': best_frame['timestamp'],
+                    'video_id': row['video_id'],
+                })
+                no_match_count += 1
+            except RuntimeError as error:
+                update_video_row(connection, video_id=row['video_id'], status='error', error=str(error))
+                results.append({'error': str(error), 'status': 'error', 'video_id': row['video_id']})
+                error_count += 1
+
+    print(json.dumps({
+        'attempted': len(selected_rows),
+        'db_path': str(db_path),
+        'done': done_count,
+        'errored': error_count,
+        'no_match': no_match_count,
+        'pipeline_root': str(pipeline_root),
+        'reference_count': len(reference_hashes),
+        'reference_directory': str(reference_directory),
+        'results': results,
+        'review': review_count,
+        'status': 'ok' if not error_count else 'partial',
+    }, indent=2))
+    return 0 if not error_count else 1
 
 
 def upsert_catalog_rows(connection: sqlite3.Connection, source_url: str, rows: list[dict[str, str]]) -> tuple[int, int]:
@@ -746,6 +1270,19 @@ def build_parser() -> argparse.ArgumentParser:
         help='yt-dlp format selector for low-resolution resumable downloads.',
     )
     download_parser.set_defaults(handler=command_download)
+
+    scan_parser = subparsers.add_parser('scan', help='Scan downloaded videos for the target whiteboard frame.')
+    scan_parser.add_argument('--ffmpeg-bin', default='ffmpeg', help='Path to the ffmpeg executable.')
+    scan_parser.add_argument('--reference-dir', default='', help='Directory containing reference stills for the target whiteboard.')
+    scan_parser.add_argument('--limit', type=int, default=1, help='How many downloaded videos to scan in this run.')
+    scan_parser.add_argument('--video-id', default='', help='Optional specific video ID to scan or rescan.')
+    scan_parser.add_argument('--sample-fps', type=float, default=1.0, help='Sampling rate in frames per second for the coarse scan.')
+    scan_parser.add_argument('--similarity-threshold', type=float, default=0.9, help='Minimum hash similarity for auto-save candidate windows.')
+    scan_parser.add_argument('--review-threshold', type=float, default=0.82, help='Minimum score for keeping a review candidate when no autosave window is found.')
+    scan_parser.add_argument('--min-window-length', type=int, default=3, help='Minimum consecutive matching samples required for an auto-save window.')
+    scan_parser.add_argument('--score-margin', type=float, default=0.02, help='How close a sampled frame must be to the best score before sharpness ranking applies.')
+    scan_parser.add_argument('--candidate-limit', type=int, default=5, help='Maximum number of high-score timestamps to sharpness-rank within the winning window.')
+    scan_parser.set_defaults(handler=command_scan)
 
     return parser
 

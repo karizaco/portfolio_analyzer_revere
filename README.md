@@ -110,6 +110,12 @@ Download the next pending videos at low resolution and mark them ready for scann
 npm run video:download -- --limit 5
 ```
 
+Scan downloaded videos against a small reference set and save the best whiteboard screenshot:
+
+```bash
+npm run video:scan -- --reference-dir ".\\data\\video_pipeline\\references" --limit 5
+```
+
 Useful catalog options:
 
 - `--limit 10` to test on a small subset first
@@ -123,11 +129,21 @@ Useful download options:
 - `--cookies-from-browser firefox` or `--cookies-file path.txt` when YouTube requires a logged-in session
 - `--format "bv*[height<=480]+ba/b[height<=480]"` to override the default low-resolution selector
 
-The worker stores its state at `data/video_pipeline/state.sqlite` and creates local directories for `catalog`, `downloads`, `frames`, `logs`, `review`, and `screenshots`. Those artifacts stay inside this workspace and are ignored by git.
+Useful scan options:
+
+- `--reference-dir path` to point at 1-5 known-good whiteboard examples
+- `--similarity-threshold 0.9` to tighten or loosen auto-save behavior
+- `--review-threshold 0.82` to keep near-misses for human inspection
+- `--video-id VIDEO_ID` to rescan a single downloaded row
+- `--ffmpeg-bin C:\\path\\to\\ffmpeg.exe` if `ffmpeg` is not on `PATH`
+
+The worker stores its state at `data/video_pipeline/state.sqlite` and creates local directories for `catalog`, `downloads`, `frames`, `logs`, `references`, `review`, and `screenshots`. Those artifacts stay inside this workspace and are ignored by git.
 
 Each successful catalog import also saves the raw `yt-dlp` output to `data/video_pipeline/catalog/` so the playlist snapshot can be inspected or replayed later.
 
 The download step also keeps a local `download_archive.txt` under `data/video_pipeline/` so interrupted runs can resume without re-downloading completed video IDs.
+
+The scan step samples frames at low resolution, matches them against the reference stills, groups consecutive hits into candidate windows, prefers a later sharp frame inside the best window, and saves the extracted screenshot as `YYYYMMDD_ps.jpg` with collision-safe suffixes.
 
 ## Accessing Final Processed Data
 

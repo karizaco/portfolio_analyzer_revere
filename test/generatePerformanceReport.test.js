@@ -61,7 +61,14 @@ test('buildReportHtml renders summary cards and portfolio sections', () => {
       unpriced_positions: '1',
       observed_metric_scalar: '1.21',
       observed_metric_1: '',
-      observed_metric_2: ''
+      observed_metric_2: '',
+      whiteboard_source_file: '20260910_ps.jpg',
+      whiteboard_ocr_confidence: '89',
+      whiteboard_metric_scalar: '',
+      whiteboard_metric_1: '1.66',
+      whiteboard_metric_2: '1.70',
+      whiteboard_action_text: 'ADD TO LEADERS',
+      whiteboard_bottom_line: 'Breadth still healthy'
     }
   ]);
 
@@ -73,5 +80,7 @@ test('buildReportHtml renders summary cards and portfolio sections', () => {
 
   assert.match(html, /Static performance report from extracted CSVs/);
   assert.match(html, /GRO Estimated Equity Index/);
+  assert.match(html, /Latest Whiteboard/);
+  assert.match(html, /ADD TO LEADERS/);
   assert.match(html, /data\/report\/index\.html/);
 });

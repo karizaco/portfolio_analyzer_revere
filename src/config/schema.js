@@ -117,6 +117,27 @@ const POSITION_PERFORMANCE_SUMMARY_COLUMNS = [
   'price_status'
 ];
 
+const WHITEBOARD_OBSERVATION_COLUMNS = [
+  'source_file',
+  'as_of_date',
+  'sequence',
+  'portfolio',
+  'ocr_profile',
+  'ocr_confidence',
+  'parse_status',
+  'issue_codes',
+  'raw_lines',
+  'metrics_raw',
+  'metric_scalar',
+  'metric_1',
+  'metric_2',
+  'action_text_raw',
+  'action_text',
+  'actions',
+  'bottom_line_raw',
+  'bottom_line'
+];
+
 const PORTFOLIO_PERFORMANCE_TIMESERIES_COLUMNS = [
   'portfolio',
   'as_of_date',
@@ -129,7 +150,14 @@ const PORTFOLIO_PERFORMANCE_TIMESERIES_COLUMNS = [
   'unpriced_positions',
   'observed_metric_scalar',
   'observed_metric_1',
-  'observed_metric_2'
+  'observed_metric_2',
+  'whiteboard_source_file',
+  'whiteboard_ocr_confidence',
+  'whiteboard_metric_scalar',
+  'whiteboard_metric_1',
+  'whiteboard_metric_2',
+  'whiteboard_action_text',
+  'whiteboard_bottom_line'
 ];
 
 const PERFORMANCE_REVIEW_COLUMNS = [
@@ -154,5 +182,6 @@ module.exports = {
   POSITION_EVENT_COLUMNS,
   POSITION_PERFORMANCE_COLUMNS,
   POSITION_PERFORMANCE_SUMMARY_COLUMNS,
-  SNAPSHOT_COLUMNS
+  SNAPSHOT_COLUMNS,
+  WHITEBOARD_OBSERVATION_COLUMNS
 };

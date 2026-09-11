@@ -9,6 +9,7 @@ const WORKSPACE_ROOT = path.resolve(__dirname, '..');
 const CONFIG_DIRECTORY = path.join(WORKSPACE_ROOT, 'config');
 const DEFAULT_SHORTCUT = path.join(WORKSPACE_ROOT, 'sample_screenshots.lnk');
 const OUTPUT_DIRECTORY = path.join(WORKSPACE_ROOT, 'data');
+const DEFAULT_WHITEBOARD_INPUT_DIRECTORY = path.join(OUTPUT_DIRECTORY, 'video_pipeline', 'screenshots');
 
 function parseArgs(argv) {
   const options = {
@@ -139,6 +140,10 @@ async function resolveInputPath(options) {
   return resolveShortcutTarget(shortcutPath);
 }
 
+async function resolveWhiteboardInputPath(options) {
+  return options.input || DEFAULT_WHITEBOARD_INPUT_DIRECTORY;
+}
+
 async function runDiscover(options) {
   const inputPath = await resolveInputPath(options);
   await ensureDirectoryExists(inputPath);
@@ -233,6 +238,52 @@ async function runExtract(options) {
   console.log(`Wrote ${positionEvents.reviewEvents.length} review position events.`);
 }
 
+async function runExtractWhiteboard(options) {
+  const { WHITEBOARD_OBSERVATION_COLUMNS } = require('./config/schema');
+  const { discoverWhiteboardScreenshots } = require('./io/discoverWhiteboardScreenshots');
+  const { closeWorker, ocrImage } = require('./ocr/ocrImage');
+  const { parseWhiteboardScreenshot } = require('./parse/parseWhiteboardScreenshot');
+  const { writeCsv } = require('./write/writeCsv');
+
+  const inputPath = await resolveWhiteboardInputPath(options);
+  await ensureDirectoryExists(inputPath);
+
+  const screenshots = await discoverWhiteboardScreenshots(inputPath);
+  const selectedScreenshots = filterScreenshots(screenshots, options);
+  if (!selectedScreenshots.length) {
+    throw new Error('No whiteboard screenshots matched the current filters.');
+  }
+
+  console.log(`Resolved whiteboard screenshot directory: ${inputPath}`);
+  console.log(`Found ${screenshots.length} whiteboard screenshot files.`);
+  console.log(`Processing ${selectedScreenshots.length} whiteboard screenshot(s)...`);
+
+  const observationRows = [];
+  for (const screenshot of selectedScreenshots) {
+    console.log(`OCR ${screenshot.fileName}`);
+    const ocr = await ocrImage(screenshot.fullPath);
+    observationRows.push(...parseWhiteboardScreenshot({ metadata: screenshot, ocr }));
+  }
+
+  const trustedRows = observationRows.filter((row) => row.parse_status === 'ok' && !row.issue_codes);
+  const reviewRows = observationRows.filter((row) => row.parse_status !== 'ok' || row.issue_codes);
+
+  await writeCsv(
+    path.join(OUTPUT_DIRECTORY, 'portfolio_whiteboard_observations.csv'),
+    WHITEBOARD_OBSERVATION_COLUMNS,
+    trustedRows
+  );
+
+  await writeCsv(
+    path.join(OUTPUT_DIRECTORY, 'portfolio_whiteboard_review.csv'),
+    WHITEBOARD_OBSERVATION_COLUMNS,
+    reviewRows
+  );
+
+  console.log(`Wrote ${trustedRows.length} trusted whiteboard observation rows.`);
+  console.log(`Wrote ${reviewRows.length} whiteboard review rows.`);
+}
+
 async function runPerformance() {
   const {
     PERFORMANCE_REVIEW_COLUMNS,
@@ -245,7 +296,8 @@ async function runPerformance() {
   const {
     loadPortfolioActions,
     loadPortfolioSnapshots,
-    loadPositionEvents
+    loadPositionEvents,
+    loadWhiteboardObservations
   } = require('./io/loadExtractedData');
   const { writeCsv } = require('./write/writeCsv');
 
@@ -253,6 +305,8 @@ async function runPerformance() {
   const positionEvents = await loadPositionEvents(OUTPUT_DIRECTORY, 'position_events.csv');
   const portfolioActions = await loadPortfolioActions(OUTPUT_DIRECTORY, 'portfolio_actions.csv');
   const portfolioActionReviews = await loadPortfolioActions(OUTPUT_DIRECTORY, 'portfolio_actions_review.csv');
+  const whiteboardRows = await loadWhiteboardObservations(OUTPUT_DIRECTORY, 'portfolio_whiteboard_observations.csv');
+  const whiteboardReviewRows = await loadWhiteboardObservations(OUTPUT_DIRECTORY, 'portfolio_whiteboard_review.csv');
 
   if (!snapshots.length) {
     throw new Error('No extracted snapshot data found. Run `npm run extract` first.');
@@ -281,7 +335,9 @@ async function runPerformance() {
     actionRows: portfolioActions,
     events: positionEvents,
     priceProvider,
-    snapshots
+    snapshots,
+    whiteboardReviewRows,
+    whiteboardRows
   });
 
   await writeCsv(
@@ -338,6 +394,11 @@ async function main() {
 
   if (options.command === 'extract') {
     await runExtract(options);
+    return;
+  }
+
+  if (options.command === 'extract-whiteboard') {
+    await runExtractWhiteboard(options);
     return;
   }
 

@@ -167,6 +167,32 @@ function buildChart({ dates, formatter, series, title }) {
   `;
 }
 
+function buildWhiteboardSummary(timeseriesRows) {
+  const latestRow = [...timeseriesRows].reverse().find((row) => row.whiteboard_metric_scalar
+    || row.whiteboard_metric_1
+    || row.whiteboard_metric_2
+    || row.whiteboard_bottom_line
+    || row.whiteboard_action_text);
+
+  if (!latestRow) {
+    return '';
+  }
+
+  const metricParts = [
+    latestRow.whiteboard_metric_scalar,
+    latestRow.whiteboard_metric_1,
+    latestRow.whiteboard_metric_2
+  ].filter(Boolean);
+
+  return `
+    <article class="whiteboard-callout">
+      <p class="eyebrow">Latest Whiteboard</p>
+      <strong>${escapeHtml(metricParts.join(' / ') || 'Observed')}</strong>
+      <p>${escapeHtml(latestRow.whiteboard_action_text || latestRow.whiteboard_bottom_line || 'No annotation text captured.')}</p>
+    </article>
+  `;
+}
+
 function buildPortfolioSection(summaryRow, timeseriesRows) {
   const color = PORTFOLIO_COLORS[summaryRow.portfolio] || '#455a64';
   const dates = timeseriesRows.map((row) => row.as_of_date);
@@ -193,6 +219,7 @@ function buildPortfolioSection(summaryRow, timeseriesRows) {
         <article><span>Unpriced Positions</span><strong>${escapeHtml(formatCount(summaryRow.unpriced_positions))}</strong></article>
         <article><span>Fallback Entries</span><strong>${escapeHtml(formatCount(summaryRow.assumed_equal_weight_entries))}</strong></article>
       </div>
+      ${buildWhiteboardSummary(timeseriesRows)}
       <div class="chart-grid">
         ${buildChart({
           dates,
@@ -364,6 +391,22 @@ function buildReportHtml({ generatedAt, summaryRows, timeseriesRows }) {
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 12px;
       margin-top: 18px;
+    }
+    .whiteboard-callout {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(23,33,43,0.06);
+    }
+    .whiteboard-callout strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+    }
+    .whiteboard-callout p:last-child {
+      margin-bottom: 0;
+      color: var(--muted);
     }
     .chart-grid {
       display: grid;

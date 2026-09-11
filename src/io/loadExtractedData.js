@@ -53,6 +53,15 @@ function mapPortfolioActionRow(row) {
   };
 }
 
+function mapWhiteboardObservationRow(row) {
+  return {
+    ...row,
+    actions: splitPipeCell(row.actions),
+    ocr_confidence: parseNumberOrBlank(row.ocr_confidence),
+    sequence: parseInteger(row.sequence)
+  };
+}
+
 async function loadPortfolioSnapshots(dataDirectory) {
   const rows = await loadCsvRows(path.join(dataDirectory, 'portfolio_snapshots.csv'));
   return rows.map(mapSnapshotRow);
@@ -68,10 +77,16 @@ async function loadPortfolioActions(dataDirectory, fileName = 'portfolio_actions
   return rows.map(mapPortfolioActionRow);
 }
 
+async function loadWhiteboardObservations(dataDirectory, fileName = 'portfolio_whiteboard_observations.csv') {
+  const rows = await loadCsvRows(path.join(dataDirectory, fileName));
+  return rows.map(mapWhiteboardObservationRow);
+}
+
 module.exports = {
   loadPortfolioActions,
   loadPortfolioSnapshots,
   loadPositionEvents,
+  loadWhiteboardObservations,
   parseNumberOrBlank,
   splitPipeCell
 };
