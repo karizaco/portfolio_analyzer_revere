@@ -118,10 +118,11 @@ async function runDiscover(options) {
 }
 
 async function runExtract(options) {
-  const { POSITION_EVENT_COLUMNS, SNAPSHOT_COLUMNS } = require('./config/schema');
+  const { PORTFOLIO_ACTION_COLUMNS, POSITION_EVENT_COLUMNS, SNAPSHOT_COLUMNS } = require('./config/schema');
   const { repairSnapshotRows } = require('./normalize/repairHoldings');
   const { closeWorker, ocrImage } = require('./ocr/ocrImage');
   const { parseScreenshot } = require('./parse/parseScreenshot');
+  const { derivePortfolioActions } = require('./report/derivePortfolioActions');
   const { derivePositionEvents } = require('./report/derivePositionEvents');
   const { writeCsv } = require('./write/writeCsv');
   const inputPath = await resolveInputPath(options);
@@ -161,6 +162,19 @@ async function runExtract(options) {
     reviewRows
   );
 
+  const portfolioActions = derivePortfolioActions(repairedSnapshotRows);
+  await writeCsv(
+    path.join(OUTPUT_DIRECTORY, 'portfolio_actions.csv'),
+    PORTFOLIO_ACTION_COLUMNS,
+    portfolioActions.trustedRows
+  );
+
+  await writeCsv(
+    path.join(OUTPUT_DIRECTORY, 'portfolio_actions_review.csv'),
+    PORTFOLIO_ACTION_COLUMNS,
+    portfolioActions.reviewRows
+  );
+
   const positionEvents = derivePositionEvents(repairedSnapshotRows);
   await writeCsv(
     path.join(OUTPUT_DIRECTORY, 'position_events.csv'),
@@ -176,8 +190,83 @@ async function runExtract(options) {
 
   console.log(`Wrote ${repairedSnapshotRows.length} snapshot rows.`);
   console.log(`Wrote ${reviewRows.length} review rows.`);
+  console.log(`Wrote ${portfolioActions.trustedRows.length} trusted action rows.`);
+  console.log(`Wrote ${portfolioActions.reviewRows.length} review action rows.`);
   console.log(`Wrote ${positionEvents.trustedEvents.length} trusted position events.`);
   console.log(`Wrote ${positionEvents.reviewEvents.length} review position events.`);
+}
+
+async function runPerformance() {
+  const {
+    PERFORMANCE_REVIEW_COLUMNS,
+    PORTFOLIO_PERFORMANCE_TIMESERIES_COLUMNS,
+    POSITION_PERFORMANCE_COLUMNS,
+    POSITION_PERFORMANCE_SUMMARY_COLUMNS
+  } = require('./config/schema');
+  const { calculatePerformance } = require('./analysis/calculatePerformance');
+  const { createUnconfiguredPriceProvider, createYahooPriceProvider } = require('./analysis/priceProvider');
+  const {
+    loadPortfolioActions,
+    loadPortfolioSnapshots,
+    loadPositionEvents
+  } = require('./io/loadExtractedData');
+  const { writeCsv } = require('./write/writeCsv');
+
+  const snapshots = await loadPortfolioSnapshots(OUTPUT_DIRECTORY);
+  const positionEvents = await loadPositionEvents(OUTPUT_DIRECTORY, 'position_events.csv');
+  const portfolioActions = await loadPortfolioActions(OUTPUT_DIRECTORY, 'portfolio_actions.csv');
+  const portfolioActionReviews = await loadPortfolioActions(OUTPUT_DIRECTORY, 'portfolio_actions_review.csv');
+
+  if (!snapshots.length) {
+    throw new Error('No extracted snapshot data found. Run `npm run extract` first.');
+  }
+
+  if (!portfolioActions.length && !portfolioActionReviews.length) {
+    throw new Error('No extracted action-ledger data found. Re-run `npm run extract` with the current extractor first.');
+  }
+
+  const priceProvider = process.env.REVERE_PRICE_SOURCE === 'none'
+    ? createUnconfiguredPriceProvider()
+    : createYahooPriceProvider({
+      cacheDirectory: path.join(OUTPUT_DIRECTORY, 'price_cache', 'yahoo')
+    });
+  const performance = await calculatePerformance({
+    actionReviewRows: portfolioActionReviews,
+    actionRows: portfolioActions,
+    events: positionEvents,
+    priceProvider,
+    snapshots
+  });
+
+  await writeCsv(
+    path.join(OUTPUT_DIRECTORY, 'position_performance.csv'),
+    POSITION_PERFORMANCE_COLUMNS,
+    performance.positionRows
+  );
+
+  await writeCsv(
+    path.join(OUTPUT_DIRECTORY, 'portfolio_performance_summary.csv'),
+    POSITION_PERFORMANCE_SUMMARY_COLUMNS,
+    performance.summaryRows
+  );
+
+  await writeCsv(
+    path.join(OUTPUT_DIRECTORY, 'portfolio_performance_timeseries.csv'),
+    PORTFOLIO_PERFORMANCE_TIMESERIES_COLUMNS,
+    performance.curveRows
+  );
+
+  await writeCsv(
+    path.join(OUTPUT_DIRECTORY, 'portfolio_performance_review.csv'),
+    PERFORMANCE_REVIEW_COLUMNS,
+    performance.reviewRows
+  );
+
+  console.log(`Wrote ${performance.positionRows.length} position performance rows.`);
+  console.log(`Wrote ${performance.summaryRows.length} portfolio performance summary rows.`);
+  console.log(`Wrote ${performance.curveRows.length} portfolio performance timeseries rows.`);
+  console.log(`Wrote ${performance.reviewRows.length} portfolio performance review rows.`);
+  console.log(`Price provider status: ${process.env.REVERE_PRICE_SOURCE === 'none' ? 'provider_unconfigured' : 'yahoo_chart'}`);
 }
 
 async function main() {
@@ -190,6 +279,11 @@ async function main() {
 
   if (options.command === 'extract') {
     await runExtract(options);
+    return;
+  }
+
+  if (options.command === 'performance') {
+    await runPerformance(options);
     return;
   }
 

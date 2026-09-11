@@ -11,8 +11,14 @@ This workspace contains a small Node.js CLI that reads the linked screenshot dir
 
 - `data/portfolio_snapshots.csv`: canonical extracted snapshot rows, one per dated screenshot.
 - `data/review_queue.csv`: rows flagged for manual review because of missing fields or low OCR confidence.
+- `data/portfolio_actions.csv`: normalized `BUY` / `ADD` / `SELL` / `TRIM` action rows, one row per parsed ticker-level instruction.
+- `data/portfolio_actions_review.csv`: action fragments that could not be mapped cleanly to a single ticker-level instruction.
 - `data/position_events.csv`: holdings-derived entry and exit events by portfolio and day.
 - `data/position_events_review.csv`: candidate events that were withheld from the trusted output because they conflict with action text or come from noisy holdings.
+- `data/position_performance.csv`: reconstructed position lifecycles with baseline synthesis, sizing assumptions, historical price dates, price-source metadata, current weight, and realized or unrealized return fields.
+- `data/portfolio_performance_summary.csv`: per-portfolio counts for open and closed positions, baseline rows, sizing methods, adjustment counts, review totals, and the latest estimated equity, cash weight, and invested weight.
+- `data/portfolio_performance_timeseries.csv`: per-snapshot portfolio timeline with an estimated equity index, cash-conserving exposure model, price-coverage counts, and observed screenshot metrics for later calibration.
+- `data/portfolio_performance_review.csv`: lifecycle mismatches, unmapped adjustments, and action-parse review rows withheld from the main performance outputs.
 
 ## Usage
 
@@ -22,22 +28,28 @@ This workspace contains a small Node.js CLI that reads the linked screenshot dir
 npm install
 ```
 
-2. Verify the linked screenshot inventory:
+1. Verify the linked screenshot inventory:
 
 ```bash
 npm run discover
 ```
 
-3. Run a small sample first:
+1. Run a small sample first:
 
 ```bash
 npm run extract:sample
 ```
 
-4. Run the full extraction:
+1. Run the full extraction:
 
 ```bash
 npm run extract
+```
+
+1. Build the standalone performance scaffolding from the extracted CSVs:
+
+```bash
+npm run performance
 ```
 
 ## Notes
@@ -47,5 +59,11 @@ npm run extract
 - The linked screenshot folder is treated as read-only. All generated files stay under this workspace.
 - Legacy `FOCUS` / `PORTFOLIO` screenshots are mapped into the `GRO` columns, with `TURBO` left empty.
 - The first snapshot establishes a baseline. Position enter/exit events are only derived when a previous snapshot exists.
+- The action ledger is additive. `data/position_events.csv` remains focused on `ENTER` / `EXIT`, while `data/portfolio_actions.csv` preserves ticker-level `BUY` / `ADD` / `SELL` / `TRIM` instructions for later sizing logic.
 - Rows with low OCR confidence or missing core fields are written to `data/review_queue.csv` for manual cleanup rather than being dropped.
 - When a row has explicit `BUY` or `SELL` signals, the trusted event file prefers those signals over raw holdings diffs. Unmatched diff-only events are pushed to `data/position_events_review.csv` instead.
+- The current `performance` command reconstructs position lifecycles, attaches mapped `ADD` / `TRIM` adjustments, and fetches daily Yahoo Finance chart data into `data/price_cache/yahoo/`.
+- Price lookups use adjusted close when available, fall back to close when needed, and choose the same trading day or the nearest prior trading day for a screenshot date. Missing or unresolved quotes are pushed into `data/portfolio_performance_review.csv` instead of being treated as cleanly priced.
+- Equal-weight fallback entries are funded by a cash-conserving assumption: use explicit action percentages when present, otherwise assign the same-day unresolved new positions an equal target weight and fund them from cash first, then by proportional dilution of existing open positions.
+- `data/portfolio_performance_timeseries.csv` now emits a normalized equity index plus cash and invested weights. It is still an assumed model and should be calibrated later if screenshot-level portfolio performance figures or a better source of sizing truth become available.
+- Set `REVERE_PRICE_SOURCE=none` before `npm run performance` if you want to skip network price lookups and regenerate the unpriced scaffolding only.
