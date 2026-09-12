@@ -1,5 +1,6 @@
 const sharp = require('sharp');
 const Tesseract = require('tesseract.js');
+const { TEXT_DENSITY_KEYWORDS } = require('../video/ocrScanLogic');
 
 const createWorker = Tesseract.createWorker;
 const BOTTOM_CROP_RATIO = 0.7;
@@ -14,16 +15,39 @@ function splitRecognizedLines(text) {
     .filter(Boolean);
 }
 
+// Tokens whose presence in OCR text indicates a structured whiteboard layout
+// (legacy) or a text-heavy screen (new). Used to choose between OCR profiles.
+const STRUCTURED_KEYWORDS = Object.freeze([
+  'BOTTOM LINE',
+  'HOLDINGS',
+  'FOCUS',
+  'PORTFOLIO',
+  'GRO',
+  'TURBO',
+  'RVAB',
+  'REBAR'
+]);
+
 function scoreOcrResult(text) {
   const upper = text.toUpperCase();
   let score = 0;
-  for (const token of ['BOTTOM LINE', 'HOLDINGS', 'FOCUS', 'PORTFOLIO', 'GRO', 'TURBO', 'RVAB', 'REBAR']) {
+  for (const token of STRUCTURED_KEYWORDS) {
     if (upper.includes(token)) {
       score += 1;
     }
   }
-
   return score;
+}
+
+function findKeywords(text) {
+  const upper = String(text || '').toUpperCase();
+  const found = [];
+  for (const token of TEXT_DENSITY_KEYWORDS) {
+    if (upper.includes(token)) {
+      found.push(token);
+    }
+  }
+  return found;
 }
 
 async function preprocessImage(filePath, profileName) {
@@ -123,6 +147,7 @@ async function runProfile(worker, filePath, profileName) {
   const text = result.data.text || '';
   return {
     confidence: Number(result.data.confidence || 0),
+    keywords: findKeywords(text),
     lines: splitRecognizedLines(text),
     profileName,
     score: scoreOcrResult(text),

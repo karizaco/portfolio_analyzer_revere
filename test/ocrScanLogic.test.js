@@ -61,6 +61,50 @@ test('scoreWhiteboardCandidate ranks dual-portfolio whiteboards strongly', () =>
   assert.ok(score >= 20);
 });
 
+test('scoreWhiteboardCandidate penalizes frames with no whiteboard keywords (browser chrome + chart)', () => {
+  // Browser chrome + stock chart label OCR — high line/char density but zero
+  // whiteboard-specific keywords. Must score well below the strong threshold.
+  const browserChromeText = [
+    'Safari File Edit View History Bookmarks Window Help',
+    'Roundhill Magnificent Seven ETF',
+    '$69.15 +0.11%',
+    'Vol 3,260,889',
+    'MAGS (-$0.37) -0.53%',
+    '52-Wk High 3% to Pivot',
+    'Updated: 04:00 PM ET'
+  ].join('\n');
+
+  const withChrome = scoreWhiteboardCandidate(
+    [],
+    33,
+    {
+      text: browserChromeText,
+      lines: browserChromeText.split('\n')
+    }
+  );
+
+  const dmiText = [
+    'DAILY MARKET INSIGHT',
+    'MARKET STATE: UPTREND',
+    'WHAT HAPPENED TODAY?',
+    'GRO -0.46% TURBO -0.53%',
+    'BOTTOM LINE HEALTHY'
+  ].join('\n');
+
+  const withDmi = scoreWhiteboardCandidate(
+    [],
+    33,
+    {
+      text: dmiText,
+      lines: dmiText.split('\n')
+    }
+  );
+
+  assert.ok(withChrome < 6, `browser-chrome score ${withChrome} should be < strongThreshold (6)`);
+  assert.ok(withDmi > 20, `DMI score ${withDmi} should clear strongThreshold`);
+  assert.ok(withDmi > withChrome + 20, `DMI ${withDmi} must beat browser-chrome ${withChrome} by > 20 points`);
+});
+
 test('summarizeLumaBuffer and scoreFramePrefilter favor bright text-heavy frames', () => {
   const whiteboardPixels = Buffer.alloc(160 * 90, 235);
   for (let rowIndex = 20; rowIndex < 70; rowIndex += 8) {

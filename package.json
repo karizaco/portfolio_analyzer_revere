@@ -17,7 +17,11 @@
     "video:download": "node tools/runWhiteboardWorker.js download",
     "video:import-local": "node tools/runWhiteboardWorker.js import-local",
     "video:scan": "node tools/runWhiteboardWorker.js scan",
-    "video:scan-ocr": "node tools/scanVideoWithOcr.js"
+    "video:scan-ocr": "node tools/scanVideoWithOcr.js",
+    "fixture:build-synthetic": "node tools/buildSyntheticWhiteboardVideo.js",
+    "video:dryrun-yt": "bash tools/dryrun_yt_dlp_pipeline.sh",
+    "video:dryrun-local": "bash tools/dryrun_python_worker_pipeline.sh",
+    "video:dryrun": "bash tools/dryrun_full_pipeline.sh"
   },
   "dependencies": {
     "sharp": "^0.34.3",

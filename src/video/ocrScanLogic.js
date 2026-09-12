@@ -5,6 +5,24 @@ const sharp = require('sharp');
 const PREFILTER_WIDTH = 160;
 const PREFILTER_HEIGHT = 90;
 
+// Tokens whose presence in OCR text is a strong positive signal that a frame
+// is a "text-heavy screen" (Daily Market Insight, Tale of the Tape, etc.)
+// rather than a stock-chart frame.
+const TEXT_DENSITY_KEYWORDS = Object.freeze([
+  'DAILY MARKET INSIGHT',
+  'TALE OF THE TAPE',
+  'MARKET STATE',
+  'WHAT HAPPENED TODAY',
+  'GROTECTION',
+  'GROTECTION GAUGE',
+  'MAG7',
+  'RAI100',
+  '21/21',
+  'BOTTOM LINE',
+  'PORTFOLIO',
+  'HOLDINGS'
+]);
+
 function splitIssueCodes(issueCodes) {
   return String(issueCodes || '')
     .split('|')
@@ -45,7 +63,7 @@ function scoreSnapshotCandidate(parsedRow) {
   return Number(score.toFixed(2));
 }
 
-function scoreWhiteboardCandidate(observationRows, ocrConfidence) {
+function scoreWhiteboardCandidate(observationRows, ocrConfidence, ocrResult = null) {
   const rows = Array.isArray(observationRows) ? observationRows : [];
   const groRow = rows.find((row) => row.portfolio === 'GRO') || null;
   const turboRow = rows.find((row) => row.portfolio === 'TURBO') || null;
@@ -83,8 +101,108 @@ function scoreWhiteboardCandidate(observationRows, ocrConfidence) {
     score += 4;
   }
 
+  // New: reward text-heavy OCR output even when the parser couldn't extract
+  // a structured portfolio summary. This is the dominant signal that lets
+  // DAILY MARKET INSIGHT / TALE OF THE TAPE style slides clear the threshold
+  // even though they don't have a GRO HOLDINGS / TURBO RVAB layout.
+  score += scoreTextDensity(ocrResult);
+
+  // Defense-in-depth: also penalize chart-likeness at the OCR-scoring stage,
+  // even if the prefilter missed it. Uses the same stats as the prefilter.
+  if (ocrResult && ocrResult.stats) {
+    score += scoreChartLikeness(ocrResult.stats);
+  }
+
+  // Strong negative signal: a frame with text but ZERO whiteboard-specific
+  // keywords is almost certainly a stock-chart screenshot wrapped in browser
+  // chrome (Safari File Edit View History Bookmarks Window Help + chart
+  // labels). Without this guard, browser chrome alone produces enough
+  // line/char density to mis-classify chart pages as tale_of_the_tape.
+  if (ocrResult && ocrResult.text) {
+    const keywordHits = countKeywordHits(ocrResult.text);
+    if (keywordHits === 0) {
+      score -= 18;
+    }
+  }
+
   score += Number(ocrConfidence || 0) / 20;
   return Number(score.toFixed(2));
+}
+
+function countKeywordHits(text) {
+  const upper = String(text || '').toUpperCase();
+  let keywordHits = 0;
+  for (const token of TEXT_DENSITY_KEYWORDS) {
+    if (upper.includes(token)) {
+      keywordHits += 1;
+    }
+  }
+  return keywordHits;
+}
+
+// Pure helper: given an OCR result { text, lines }, score how "text-heavy"
+// the frame is. Daily Market Insight pages yield ~20 OCR lines / 400 chars
+// and 3+ keyword hits; stock-chart pages yield ~4 lines / 100 chars and 0
+// hits. The delta between the two is the discriminator the previous scoring
+// formula was missing.
+function scoreTextDensity(ocrResult) {
+  if (!ocrResult) {
+    return 0;
+  }
+
+  const text = String(ocrResult.text || '');
+  const lines = Array.isArray(ocrResult.lines) ? ocrResult.lines.length : 0;
+  const compactText = text.replace(/\s+/g, '');
+  const charCount = compactText.length;
+  const keywordHits = countKeywordHits(text);
+
+  const lineScore = lines * 1.5;
+  const charScore = charCount / 50;
+  const keywordScore = keywordHits * 4;
+  const base = lineScore + charScore + keywordScore;
+
+  // Without any TEXT_DENSITY_KEYWORDS hit, the line/char signal is just
+  // browser chrome + chart-label noise. A stock-chart screenshot wrapped in
+  // Google Chrome yields ~30 OCR lines / ~2300 chars → score 90, which
+  // would otherwise swamp the keyword and chart penalties downstream.
+  // Cap at 8 so non-whiteboard OCR cannot dominate.
+  if (keywordHits === 0) {
+    return Number(Math.min(base, 8).toFixed(2));
+  }
+  return Number(base.toFixed(2));
+}
+
+// Pure helper: given prefilter stats, return a positive bonus for text-like
+// frames and a negative penalty for chart-like frames. Charts have roughly
+// equal horizontal and vertical edge ratios (candles + oscillator + grid
+// lines); text on a white background has mostly horizontal edges (text rows)
+// and far fewer vertical edges.
+function scoreChartLikeness(stats) {
+  if (!stats) {
+    return 0;
+  }
+
+  const horizontal = Number(stats.horizontalEdgeRatio || 0);
+  const vertical = Number(stats.verticalEdgeRatio || 0);
+  const totalEdgeDensity = horizontal + vertical;
+
+  // Without enough edge activity to discriminate, return 0 (uniform scenes
+  // are neither text nor chart).
+  if (totalEdgeDensity < 0.05) {
+    return 0;
+  }
+
+  const ratio = vertical / (horizontal + 0.01);
+
+  if (ratio > 1.2) {
+    // Chart-like: penalize, capped at -6.
+    return -Math.min((ratio - 1.2) * 8, 6);
+  }
+  if (ratio < 0.7) {
+    // Text-like: small positive bonus, capped at +2.
+    return Math.min((0.7 - ratio) * 4, 2);
+  }
+  return 0;
 }
 
 function summarizeLumaBuffer(buffer, width, height) {
@@ -92,8 +210,10 @@ function summarizeLumaBuffer(buffer, width, height) {
   let totalSquares = 0;
   let brightPixels = 0;
   let darkPixels = 0;
-  let edgeHits = 0;
-  let edgeComparisons = 0;
+  let horizontalEdgeHits = 0;
+  let verticalEdgeHits = 0;
+  let horizontalComparisons = 0;
+  let verticalComparisons = 0;
 
   for (let index = 0; index < buffer.length; index += 1) {
     const value = buffer[index];
@@ -117,14 +237,15 @@ function summarizeLumaBuffer(buffer, width, height) {
       const below = buffer[index + width];
 
       if (Math.abs(current - right) >= 24) {
-        edgeHits += 1;
+        horizontalEdgeHits += 1;
       }
 
       if (Math.abs(current - below) >= 24) {
-        edgeHits += 1;
+        verticalEdgeHits += 1;
       }
 
-      edgeComparisons += 2;
+      horizontalComparisons += 1;
+      verticalComparisons += 1;
     }
   }
 
@@ -132,12 +253,21 @@ function summarizeLumaBuffer(buffer, width, height) {
   const meanLuma = total / pixelCount;
   const variance = Math.max((totalSquares / pixelCount) - (meanLuma * meanLuma), 0);
 
+  const totalEdgeHits = horizontalEdgeHits + verticalEdgeHits;
+  const totalComparisons = horizontalComparisons + verticalComparisons;
+
   return {
     brightRatio: brightPixels / pixelCount,
     darkRatio: darkPixels / pixelCount,
-    edgeRatio: edgeComparisons > 0 ? edgeHits / edgeComparisons : 0,
+    edgeRatio: totalComparisons > 0 ? totalEdgeHits / totalComparisons : 0,
+    horizontalComparisons,
+    horizontalEdgeHits,
+    horizontalEdgeRatio: horizontalComparisons > 0 ? horizontalEdgeHits / horizontalComparisons : 0,
     meanLuma,
-    stdDev: Math.sqrt(variance)
+    stdDev: Math.sqrt(variance),
+    verticalComparisons,
+    verticalEdgeHits,
+    verticalEdgeRatio: verticalComparisons > 0 ? verticalEdgeHits / verticalComparisons : 0
   };
 }
 
@@ -165,11 +295,11 @@ function scoreFramePrefilter(stats, outputKind) {
   score += Math.max(0, 8 - (Math.abs(stats.edgeRatio - 0.09) * 110));
   score += Math.max(0, 6 - (Math.abs(stats.stdDev - 60) / 10));
 
-  if (stats.meanLuma < 160) {
+  if (stats.meanLuma < 140) {
     score -= 8;
   }
 
-  if (stats.brightRatio < 0.45) {
+  if (stats.brightRatio < 0.30) {
     score -= 12;
   }
 
@@ -184,6 +314,16 @@ function scoreFramePrefilter(stats, outputKind) {
   if (outputKind === 'snapshot') {
     score += Math.min(stats.edgeRatio * 25, 2);
   }
+
+  // Defense-in-depth chart rejection: subtract a small chart-likeness
+  // penalty so obvious candlestick frames fall below prefilterThreshold and
+  // never reach OCR. Text-like frames receive a small boost. The penalty
+  // is intentionally gentle (multiplier 1, not 5) because dense text
+  // (Daily Market Insight pages) and tabular layouts (Tale of the Tape)
+  // produce vertical-edge patterns that look chart-like but are NOT charts —
+  // the keyword and chart penalties in scoreWhiteboardCandidate handle the
+  // rest at the OCR stage.
+  score += scoreChartLikeness(stats);
 
   return Number(score.toFixed(2));
 }
@@ -262,7 +402,8 @@ function selectFramesForOcr(prefilterRows, options = {}) {
     maxFrames = 60,
     minFrames = 12,
     minScore = 14,
-    neighborRadius = 1
+    neighborRadius = 1,
+    uniformSampleCount = 12
   } = options;
 
   if (!prefilterRows.length) {
@@ -311,6 +452,23 @@ function selectFramesForOcr(prefilterRows, options = {}) {
     }
   }
 
+  // Defense in depth for short-duration whiteboard screens: also pick
+  // uniformly-spaced frames across the whole timeline so a 4-second DMI
+  // window that fell between the top-scoring clusters still gets sampled.
+  // Without this, the top-scoring frames tend to cluster around the highest-
+  // luma chart transitions, missing dense-text slides that score lower on
+  // luma alone but high on text density once OCR runs.
+  if (uniformSampleCount > 0 && selected.size < maxFrames) {
+    const totalRows = prefilterRows.length;
+    const stride = Math.max(1, Math.floor(totalRows / uniformSampleCount));
+    for (let offset = 0; offset < totalRows && selected.size < maxFrames; offset += stride) {
+      const row = prefilterRows[offset];
+      if (!selected.has(row.frameIndex)) {
+        selected.set(row.frameIndex, row);
+      }
+    }
+  }
+
   return [...selected.values()].sort((left, right) => left.frameIndex - right.frameIndex);
 }
 
@@ -334,54 +492,58 @@ function inferDateKey(videoPath, explicitDateKey = '') {
   return `${year}${month}${day}`;
 }
 
-function allocateOutputPath(outputRoot, outputKind, dateKey) {
+function allocateOutputPath(outputRoot, outputKind, dateKey, suffix = null) {
   const targetDirectory = path.join(outputRoot, outputKind === 'snapshot' ? 'snapshots' : 'screenshots');
   fs.mkdirSync(targetDirectory, { recursive: true });
 
   if (outputKind === 'snapshot') {
     const baseStem = `revere_${dateKey}`;
     let candidatePath = path.join(targetDirectory, `${baseStem}.png`);
-    if (!fs.existsSync(candidatePath)) {
+    if (!suffix && !fs.existsSync(candidatePath)) {
       return candidatePath;
     }
 
-    let suffix = 2;
+    let numericSuffix = Number.isFinite(suffix) ? suffix : 2;
     while (true) {
-      candidatePath = path.join(targetDirectory, `${baseStem}_${suffix}.png`);
+      candidatePath = path.join(targetDirectory, `${baseStem}_${numericSuffix}.png`);
       if (!fs.existsSync(candidatePath)) {
         return candidatePath;
       }
-      suffix += 1;
+      numericSuffix += 1;
     }
   }
 
   const baseStem = `${dateKey}_ps`;
   let candidatePath = path.join(targetDirectory, `${baseStem}.png`);
-  if (!fs.existsSync(candidatePath)) {
+  if (!suffix && !fs.existsSync(candidatePath)) {
     return candidatePath;
   }
 
-  let suffix = 2;
+  let numericSuffix = Number.isFinite(suffix) ? suffix : 2;
   while (true) {
-    candidatePath = path.join(targetDirectory, `${baseStem}_${suffix}.png`);
+    candidatePath = path.join(targetDirectory, `${baseStem}_${numericSuffix}.png`);
     if (!fs.existsSync(candidatePath)) {
       return candidatePath;
     }
-    suffix += 1;
+    numericSuffix += 1;
   }
 }
 
 module.exports = {
-  analyzeFrameBeforeOcr,
+  TEXT_DENSITY_KEYWORDS,
   allocateOutputPath,
+  analyzeFrameBeforeOcr,
   chooseBestCandidate,
   chooseBestWindow,
+  countKeywordHits,
   groupContiguousCandidates,
   inferDateKey,
+  scoreChartLikeness,
   scoreFramePrefilter,
   scoreSnapshotCandidate,
+  scoreTextDensity,
   scoreWhiteboardCandidate,
   selectFramesForOcr,
-  summarizeLumaBuffer,
-  splitIssueCodes
+  splitIssueCodes,
+  summarizeLumaBuffer
 };

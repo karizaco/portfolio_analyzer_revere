@@ -1,213 +1,32 @@
+'use strict';
+
 const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
-const crypto = require('node:crypto');
 const { spawnSync } = require('node:child_process');
 
 const { closeWorker, ocrImage } = require('../src/ocr/ocrImage');
 const { parseScreenshot } = require('../src/parse/parseScreenshot');
-const { parseWhiteboardScreenshot } = require('../src/parse/parseWhiteboardScreenshot');
+const {
+  detectScreenLayout,
+  parseWhiteboardScreenshot
+} = require('../src/parse/parseWhiteboardScreenshot');
 const {
   analyzeFrameBeforeOcr,
   allocateOutputPath,
   chooseBestCandidate,
-  chooseBestWindow,
   groupContiguousCandidates,
   inferDateKey,
   scoreFramePrefilter,
   scoreSnapshotCandidate,
   scoreWhiteboardCandidate,
-  selectFramesForOcr
+  selectFramesForOcr,
+  splitIssueCodes
 } = require('../src/video/ocrScanLogic');
+const { createProbeKey, parseArgs, printHelp } = require('../src/video/ocrScanArgs');
 
-const WORKSPACE_ROOT = path.resolve(__dirname, '..');
-const DEFAULT_OUTPUT_ROOT = path.join(WORKSPACE_ROOT, 'data', 'video_ocr_probe');
-
-function printHelp() {
-  console.log([
-    'Usage: node tools/scanVideoWithOcr.js --video <path> [options]',
-    '',
-    'Options:',
-    '  --video <path>             Local video file to scan',
-    '  --date <YYYYMMDD>          Optional date key override for output naming',
-    '  --output-kind <kind>       whiteboard | snapshot',
-    '  --output-root <path>       Root directory for extracted outputs',
-    '  --ffmpeg-bin <path>        Optional ffmpeg executable path',
-    '  --fps <number>             Frame sampling rate, default 0.25',
-    '  --sample-width <pixels>    Width for cheap prefilter frame extraction, default 640',
-    '  --ocr-frame-width <pixels> Width for OCR candidate frame extraction, default 1280',
-    '  --prefilter-threshold <n>  Cheap image filter threshold, default 14',
-    '  --prefilter-min-frames <n> Minimum frames to keep for OCR, default 12',
-    '  --prefilter-max-frames <n> Maximum frames to OCR, default 60',
-    '  --prefilter-neighbors <n>  Neighbor frames kept around strong prefilter hits, default 1',
-    '  --strong-threshold <n>     Autosave score threshold, default 14',
-    '  --review-threshold <n>     Review score threshold, default 10',
-    '  --progress-interval <n>    Report OCR progress every N frames, default 10',
-    '  --top-candidates <n>       Include the top N candidate timestamps in the result, default 5',
-    '  --keep-frames              Keep sampled intermediate frames',
-    '  --help                     Show this help text',
-    ''
-  ].join('\n'));
-}
-
-function parseArgs(argv) {
-  if (argv.includes('--help') || argv.includes('-h')) {
-    printHelp();
-    return null;
-  }
-
-  const options = {
-    ffmpegBin: 'ffmpeg',
-    fps: 0.25,
-    ocrFrameWidth: 1280,
-    outputKind: 'whiteboard',
-    outputRoot: DEFAULT_OUTPUT_ROOT,
-    prefilterMaxFrames: 60,
-    prefilterMinFrames: 12,
-    prefilterNeighbors: 1,
-    prefilterThreshold: 14,
-    progressInterval: 10,
-    reviewThreshold: 10,
-    sampleWidth: 640,
-    strongThreshold: 14,
-    topCandidates: 5
-  };
-
-  for (let index = 0; index < argv.length; index += 1) {
-    const argument = argv[index];
-    const nextValue = argv[index + 1];
-
-    switch (argument) {
-      case '--video':
-        options.videoPath = path.resolve(nextValue);
-        index += 1;
-        break;
-      case '--video-dir':
-        options.videoDirectory = path.resolve(nextValue);
-        index += 1;
-        break;
-      case '--file':
-        options.fileName = nextValue;
-        index += 1;
-        break;
-      case '--date':
-        options.dateKey = nextValue;
-        index += 1;
-        break;
-      case '--output-root':
-        options.outputRoot = path.resolve(nextValue);
-        index += 1;
-        break;
-      case '--output-kind':
-        options.outputKind = nextValue;
-        index += 1;
-        break;
-      case '--ffmpeg-bin':
-        options.ffmpegBin = nextValue;
-        index += 1;
-        break;
-      case '--fps':
-        options.fps = Number(nextValue);
-        index += 1;
-        break;
-      case '--sample-width':
-        options.sampleWidth = Number(nextValue);
-        index += 1;
-        break;
-      case '--ocr-frame-width':
-        options.ocrFrameWidth = Number(nextValue);
-        index += 1;
-        break;
-      case '--prefilter-threshold':
-        options.prefilterThreshold = Number(nextValue);
-        index += 1;
-        break;
-      case '--prefilter-min-frames':
-        options.prefilterMinFrames = Number(nextValue);
-        index += 1;
-        break;
-      case '--prefilter-max-frames':
-        options.prefilterMaxFrames = Number(nextValue);
-        index += 1;
-        break;
-      case '--prefilter-neighbors':
-        options.prefilterNeighbors = Number(nextValue);
-        index += 1;
-        break;
-      case '--strong-threshold':
-        options.strongThreshold = Number(nextValue);
-        index += 1;
-        break;
-      case '--review-threshold':
-        options.reviewThreshold = Number(nextValue);
-        index += 1;
-        break;
-      case '--progress-interval':
-        options.progressInterval = Number(nextValue);
-        index += 1;
-        break;
-      case '--top-candidates':
-        options.topCandidates = Number(nextValue);
-        index += 1;
-        break;
-      case '--keep-frames':
-        options.keepFrames = true;
-        break;
-      default:
-        throw new Error(`Unknown argument: ${argument}`);
-    }
-  }
-
-  if (!options.videoPath && options.videoDirectory && options.fileName) {
-    options.videoPath = path.resolve(options.videoDirectory, options.fileName);
-  }
-
-  if (!options.videoPath) {
-    throw new Error('Missing required argument: --video');
-  }
-
-  if (!['whiteboard', 'snapshot'].includes(options.outputKind)) {
-    throw new Error(`Unsupported output kind: ${options.outputKind}`);
-  }
-
-  if (!Number.isFinite(options.fps) || options.fps <= 0) {
-    throw new Error('`--fps` must be a positive number.');
-  }
-
-  if (!Number.isFinite(options.sampleWidth) || options.sampleWidth <= 0) {
-    throw new Error('`--sample-width` must be a positive number.');
-  }
-
-  if (!Number.isFinite(options.ocrFrameWidth) || options.ocrFrameWidth <= 0) {
-    throw new Error('`--ocr-frame-width` must be a positive number.');
-  }
-
-  if (!Number.isFinite(options.progressInterval) || options.progressInterval <= 0) {
-    throw new Error('`--progress-interval` must be a positive number.');
-  }
-
-  if (!Number.isFinite(options.prefilterThreshold)) {
-    throw new Error('`--prefilter-threshold` must be numeric.');
-  }
-
-  if (!Number.isFinite(options.prefilterMinFrames) || options.prefilterMinFrames <= 0) {
-    throw new Error('`--prefilter-min-frames` must be a positive number.');
-  }
-
-  if (!Number.isFinite(options.prefilterMaxFrames) || options.prefilterMaxFrames <= 0) {
-    throw new Error('`--prefilter-max-frames` must be a positive number.');
-  }
-
-  if (!Number.isFinite(options.prefilterNeighbors) || options.prefilterNeighbors < 0) {
-    throw new Error('`--prefilter-neighbors` must be zero or a positive number.');
-  }
-
-  if (!Number.isFinite(options.topCandidates) || options.topCandidates <= 0) {
-    throw new Error('`--top-candidates` must be a positive number.');
-  }
-
-  return options;
-}
+const OCR_TEXT_SNIPPET_MAX_CHARS = 200;
+const CAPTURE_MIN_FRAME_GAP = 10;
 
 function formatDuration(totalSeconds) {
   const rounded = Math.max(0, Math.round(totalSeconds));
@@ -220,22 +39,6 @@ function formatDuration(totalSeconds) {
   }
 
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-}
-
-function isBetterCandidate(candidate, currentBest) {
-  if (!currentBest) {
-    return true;
-  }
-
-  if (candidate.score !== currentBest.score) {
-    return candidate.score > currentBest.score;
-  }
-
-  if (candidate.ocrConfidence !== currentBest.ocrConfidence) {
-    return candidate.ocrConfidence > currentBest.ocrConfidence;
-  }
-
-  return candidate.timestamp > currentBest.timestamp;
 }
 
 function sortCandidatesDescending(candidates) {
@@ -252,6 +55,47 @@ function sortCandidatesDescending(candidates) {
 
       return right.timestamp - left.timestamp;
     });
+}
+
+// Pick the top-scoring candidates above `threshold`, skipping any that fall
+// inside the same window as an already-picked candidate (within `minFrameGap`
+// frame indices). This ensures we capture multiple distinct screens rather
+// than 3 frames from the same 30-second whiteboard segment.
+function pickTopDistinctCandidates(candidates, threshold, maxCaptures, minFrameGap = CAPTURE_MIN_FRAME_GAP) {
+  const strong = sortCandidatesDescending(candidates.filter((candidate) => candidate.score >= threshold));
+  const picked = [];
+  for (const candidate of strong) {
+    if (picked.length >= maxCaptures) {
+      break;
+    }
+
+    const tooClose = picked.some((other) => Math.abs(other.frameIndex - candidate.frameIndex) < minFrameGap);
+    if (!tooClose) {
+      picked.push(candidate);
+    }
+  }
+  return picked;
+}
+
+function extractOcrTextSnippet(text, maxChars = OCR_TEXT_SNIPPET_MAX_CHARS) {
+  const compact = String(text || '').replace(/\s+/g, ' ').trim();
+  if (compact.length <= maxChars) {
+    return compact;
+  }
+  return `${compact.slice(0, maxChars - 3)}...`;
+}
+
+function collectIssueCodes(parsedRows) {
+  const codes = new Set();
+  if (!Array.isArray(parsedRows)) {
+    return [];
+  }
+  for (const row of parsedRows) {
+    for (const code of splitIssueCodes(row.issue_codes)) {
+      codes.add(code);
+    }
+  }
+  return [...codes];
 }
 
 function logProgress({ bestCandidate, outputKind, processedCount, startedAt, totalFrames }) {
@@ -327,15 +171,6 @@ function buildFrameMetadata(framePath, dateKey, frameIndex) {
 
 function buildFrameTimestamp(frameIndex, fps) {
   return Number((frameIndex / fps).toFixed(3));
-}
-
-function createProbeKey(videoPath, dateKey, outputKind) {
-  const baseName = path.basename(videoPath, path.extname(videoPath))
-    .replace(/[^a-z0-9._-]+/gi, '_')
-    .toLowerCase();
-  const shortenedName = baseName.slice(0, 36).replace(/_+$/g, '') || 'video';
-  const digest = crypto.createHash('sha1').update(videoPath).digest('hex').slice(0, 8);
-  return `${dateKey}_${shortenedName}_${digest}_${outputKind}`;
 }
 
 function buildScaleFilter(width) {
@@ -479,10 +314,6 @@ function extractFinalFrame(videoPath, timestamp, outputPath, ffmpegBin) {
   runFfmpegCommand(command, 'ffmpeg final frame extraction failed.');
 }
 
-function buildWindowCandidates(candidates, threshold) {
-  return groupContiguousCandidates(candidates.filter((candidate) => candidate.score >= threshold));
-}
-
 async function prefilterFrames({ fps, framePaths, outputKind, progressInterval }) {
   const prefilterRows = [];
   let bestRow = null;
@@ -522,7 +353,7 @@ async function prefilterFrames({ fps, framePaths, outputKind, progressInterval }
   };
 }
 
-async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps) {
+async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats, prefilterScore) {
   const ocr = await ocrImage(framePath);
   const parsed = parseScreenshot({
     metadata: buildFrameMetadata(framePath, dateKey, frameIndex),
@@ -533,13 +364,19 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps) {
     frameIndex,
     framePath,
     ocrConfidence: Number(parsed.ocr_confidence || ocr.confidence || 0),
+    ocrProfile: ocr.profileName,
+    ocrTextSnippet: extractOcrTextSnippet(ocr.text),
     parsed,
+    parsedRows: null,
+    prefilterScore,
     score: scoreSnapshotCandidate(parsed),
+    screenLayout: detectScreenLayout(ocr.text, ocr.lines),
+    stats,
     timestamp: buildFrameTimestamp(frameIndex, fps)
   };
 }
 
-async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps) {
+async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps, stats, prefilterScore) {
   const ocr = await ocrImage(framePath);
   const parsedRows = parseWhiteboardScreenshot({
     metadata: buildFrameMetadata(framePath, dateKey, frameIndex),
@@ -550,8 +387,13 @@ async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps) {
     frameIndex,
     framePath,
     ocrConfidence: Number(ocr.confidence || 0),
+    ocrProfile: ocr.profileName,
+    ocrTextSnippet: extractOcrTextSnippet(ocr.text),
     parsedRows,
-    score: scoreWhiteboardCandidate(parsedRows, ocr.confidence),
+    prefilterScore,
+    score: scoreWhiteboardCandidate(parsedRows, ocr.confidence, { ...ocr, stats }),
+    screenLayout: detectScreenLayout(ocr.text, ocr.lines),
+    stats,
     timestamp: buildFrameTimestamp(frameIndex, fps)
   };
 }
@@ -584,11 +426,26 @@ async function scanFrames({
     );
     try {
       extractOcrFrame(videoPath, frameRow.timestamp, ocrFramePath, ffmpegBin, ocrFrameWidth);
-      const candidate = await buildCandidate(ocrFramePath, frameRow.frameIndex, dateKey, fps);
+      const candidate = await buildCandidate(
+        ocrFramePath,
+        frameRow.frameIndex,
+        dateKey,
+        fps,
+        frameRow.stats,
+        frameRow.prefilterScore
+      );
       candidates.push(candidate);
-      if (candidate.score >= strongThreshold && isBetterCandidate(candidate, bestCandidate)) {
-        bestCandidate = candidate;
-      } else if (!bestCandidate && isBetterCandidate(candidate, bestCandidate)) {
+      if (candidate.score >= strongThreshold) {
+        if (!bestCandidate) {
+          bestCandidate = candidate;
+        } else {
+          const existingIsBetter = bestCandidate.score > candidate.score
+            || (bestCandidate.score === candidate.score && bestCandidate.ocrConfidence >= candidate.ocrConfidence);
+          if (!existingIsBetter) {
+            bestCandidate = candidate;
+          }
+        }
+      } else if (!bestCandidate) {
         bestCandidate = candidate;
       }
 
@@ -636,14 +493,37 @@ function summarizeCandidate(candidate, outputKind) {
     return null;
   }
 
-  return {
+  const summary = {
     frame_index: candidate.frameIndex,
     frame_path: candidate.framePath,
+    issue_codes: collectIssueCodes(candidate.parsedRows),
     ocr_confidence: candidate.ocrConfidence,
+    ocr_profile: candidate.ocrProfile || '',
+    ocr_text_snippet: candidate.ocrTextSnippet || '',
     output_kind: outputKind,
+    parsed_row_count: Array.isArray(candidate.parsedRows) ? candidate.parsedRows.length : 0,
+    prefilter_score: candidate.prefilterScore == null ? null : Number(candidate.prefilterScore.toFixed(2)),
     score: candidate.score,
+    screen_layout: candidate.screenLayout || 'unknown',
     timestamp: candidate.timestamp
   };
+
+  return summary;
+}
+
+function summarizeCapture(candidate, outputKind, outputPath) {
+  const summary = summarizeCandidate(candidate, outputKind);
+  if (!summary) {
+    return null;
+  }
+  return { ...summary, output_path: outputPath };
+}
+
+async function saveCapture({ candidate, outputRoot, outputKind, dateKey, videoPath, ffmpegBin, suffix }) {
+  const explicitSuffix = Number.isFinite(suffix) ? suffix : null;
+  const outputPath = allocateOutputPath(outputRoot, outputKind, dateKey, explicitSuffix);
+  extractFinalFrame(videoPath, candidate.timestamp, outputPath, ffmpegBin);
+  return outputPath;
 }
 
 async function main() {
@@ -667,12 +547,12 @@ async function main() {
   await ensureDirectoryExists(ocrFrameDirectory);
   await ensureDirectoryExists(logsDirectory);
 
-  let outputPath = '';
   const resultBase = {
     date_key: dateKey,
     output_kind: options.outputKind,
     video_path: videoPath
   };
+
   try {
     console.log(`[scan:${options.outputKind}] preflighting final ${options.outputKind} output extraction`);
     await preflightOutputExtraction(videoPath, options.outputKind, logsDirectory, probeKey, options.ffmpegBin);
@@ -726,35 +606,32 @@ async function main() {
     });
     const candidates = scanResult.candidates;
 
-    const strongWindows = buildWindowCandidates(candidates, options.strongThreshold);
-    const bestWindow = chooseBestWindow(strongWindows);
-    const reviewCandidate = chooseBestCandidate(candidates.filter((candidate) => candidate.score >= options.reviewThreshold));
-    const strongCandidate = chooseBestCandidate(bestWindow);
+    const strongCandidates = pickTopDistinctCandidates(
+      candidates,
+      options.strongThreshold,
+      options.maxCapturesPerVideo
+    );
+    const reviewCandidates = strongCandidates.length
+      ? []
+      : pickTopDistinctCandidates(candidates, options.reviewThreshold, options.maxCapturesPerVideo);
+    const captures = strongCandidates.length ? strongCandidates : reviewCandidates;
 
-    let selectedCandidate = strongCandidate;
-    let status = 'done';
-    if (!selectedCandidate && reviewCandidate) {
-      selectedCandidate = reviewCandidate;
-      status = 'review';
-    }
-
-    if (!selectedCandidate) {
+    if (!captures.length) {
       const bestCandidate = chooseBestCandidate(candidates);
       const result = {
         ...resultBase,
+        captured_count: 0,
+        captures: [],
         frame_count: framePaths.length,
         frame_error_count: scanResult.frameErrors.length,
         frame_errors: scanResult.frameErrors.slice(0, 5),
-        ocr_frame_width: options.ocrFrameWidth,
         ocr_frame_count: selectedFrameRows.length,
+        ocr_frame_width: options.ocrFrameWidth,
         prefilter_best_score: bestPrefilter ? bestPrefilter.prefilterScore : null,
         sample_frame_width: options.sampleWidth,
         status: 'no_match',
-        top_candidates: scanResult.topCandidates,
         top_candidate: summarizeCandidate(bestCandidate, options.outputKind),
-        window_end: bestWindow.length ? bestWindow[bestWindow.length - 1].timestamp : null,
-        window_length: bestWindow.length,
-        window_start: bestWindow.length ? bestWindow[0].timestamp : null
+        top_candidates: scanResult.topCandidates
       };
       const logPath = await writeScanLog(logsDirectory, probeKey, result);
       result.log_path = logPath;
@@ -762,25 +639,41 @@ async function main() {
       return;
     }
 
-    outputPath = allocateOutputPath(outputRoot, options.outputKind, dateKey);
-    extractFinalFrame(videoPath, selectedCandidate.timestamp, outputPath, options.ffmpegBin);
+    const captureOutputs = [];
+    for (let captureIndex = 0; captureIndex < captures.length; captureIndex += 1) {
+      const candidate = captures[captureIndex];
+      const explicitSuffix = captureIndex === 0 ? null : captureIndex + 1;
+      const outputPath = await saveCapture({
+        candidate,
+        dateKey,
+        ffmpegBin: options.ffmpegBin,
+        outputKind: options.outputKind,
+        outputRoot,
+        suffix: explicitSuffix,
+        videoPath
+      });
+      captureOutputs.push({ candidate, outputPath });
+    }
 
+    const status = strongCandidates.length ? 'done' : 'review';
     const result = {
       ...resultBase,
+      captured_count: captureOutputs.length,
+      captures: captureOutputs.map(({ candidate, outputPath }) => summarizeCapture(candidate, options.outputKind, outputPath)),
       frame_count: framePaths.length,
       frame_error_count: scanResult.frameErrors.length,
       frame_errors: scanResult.frameErrors.slice(0, 5),
+      max_captures_per_video: options.maxCapturesPerVideo,
       ocr_frame_count: selectedFrameRows.length,
       ocr_frame_width: options.ocrFrameWidth,
-      output_path: outputPath,
+      output_path: captureOutputs[0].outputPath,
       prefilter_best_score: bestPrefilter ? bestPrefilter.prefilterScore : null,
+      review_threshold: options.reviewThreshold,
       sample_frame_width: options.sampleWidth,
       status,
-      top_candidates: scanResult.topCandidates,
-      top_candidate: summarizeCandidate(selectedCandidate, options.outputKind),
-      window_end: bestWindow.length ? bestWindow[bestWindow.length - 1].timestamp : null,
-      window_length: bestWindow.length,
-      window_start: bestWindow.length ? bestWindow[0].timestamp : null
+      strong_threshold: options.strongThreshold,
+      top_candidate: summarizeCandidate(captureOutputs[0].candidate, options.outputKind),
+      top_candidates: scanResult.topCandidates
     };
     const logPath = await writeScanLog(logsDirectory, probeKey, result);
     result.log_path = logPath;

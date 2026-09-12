@@ -158,7 +158,8 @@ Useful direct OCR scan options:
 - `--prefilter-threshold 14` to control the cheap image-based filter before OCR starts
 - `--prefilter-min-frames 12` and `--prefilter-max-frames 60` to bound how many frames are sent to OCR
 - `--prefilter-neighbors 1` to retain adjacent timestamps around strong prefilter hits
-- `--strong-threshold 14` and `--review-threshold 10` to tune automatic timestamp selection
+- `--strong-threshold 6` and `--review-threshold 4` to tune automatic timestamp selection; the defaults are calibrated for the new text-density scorer (DMI / ToTT pages score 60-130, chart pages score negative)
+- `--max-captures 3` to save up to N screenshots per video; the strongest distinct candidates (with a minimum frame gap of 10) are kept, so both the Daily Market Insight page and the Tale of the Tape page in the same video are typically captured
 - `--progress-interval 10` to print OCR progress every N sampled frames
 - `--top-candidates 5` to include the best timestamp candidates in the output log
 - `--keep-frames` to preserve sampled frames for manual inspection during debugging
@@ -193,10 +194,29 @@ The direct OCR probe currently writes the whiteboard output as `YYYYMMDD_ps.png`
 Debugging a wrong timestamp or wrong screenshot:
 
 1. Re-run the command with `--keep-frames` so the sampled PNGs remain under `data/.../ocr_probe/frames/`.
-2. Check the JSON log under `data/.../ocr_probe/logs/`; it records `status`, `top_candidate`, `top_candidates`, window timing, prefilter reduction, and any frame-level OCR errors.
+2. Check the JSON log under `data/.../ocr_probe/logs/`; it records `status`, `top_candidate`, `top_candidates`, `captures` (array, one entry per saved screenshot), window timing, prefilter reduction, and any frame-level OCR errors. Each capture and top candidate also includes `screen_layout`, `ocr_text_snippet` (first ~200 chars of OCR text), `parsed_row_count`, `issue_codes` (array), `ocr_profile`, and `prefilter_score` for fast diagnosis.
 3. If the right screen exists but was missed, increase density with `--fps 0.5` or `--fps 1` so the scan samples more timestamps.
 4. If a near-miss was chosen, raise `--strong-threshold` or inspect the top candidate timestamps in the JSON log and compare them to the saved frames.
 5. If no useful candidates appear, run the same video once with `--output-kind whiteboard` and once with `--output-kind snapshot`; the two scoring heuristics are intentionally different.
+
+### Whiteboard detection (Daily Market Insight / Tale of the Tape)
+
+The whiteboard scorer uses a text-density signal as the primary discriminator between real whiteboard slides and stock-chart pages wrapped in browser chrome:
+
+- `scoreTextDensity(ocrResult)` — `lines * 1.5 + chars / 50 + keywordHits * 4` where keywordHits is the count of `TEXT_DENSITY_KEYWORDS` (`DAILY MARKET INSIGHT`, `TALE OF THE TAPE`, `MARKET STATE`, `WHAT HAPPENED TODAY`, `GROTECTION`, `GROTECTION GAUGE`, `MAG7`, `RAI100`, `21/21`, `BOTTOM LINE`, `PORTFOLIO`, `HOLDINGS`) found in the OCR text.
+- When `keywordHits === 0`, the text-density score is capped at 8 so that browser-chrome-only OCR (Safari File Edit View History Bookmarks Window Help + chart labels, ~30 lines / ~2300 chars) cannot dominate.
+- `scoreWhiteboardCandidate` adds a `-18` penalty when OCR text contains zero whiteboard keywords — this rejects stock-chart screenshots wrapped in browser chrome even when the chart penalty is borderline.
+- `scoreChartLikeness` returns a chart penalty when the vertical-edge to horizontal-edge ratio exceeds 1.2 (candlestick signature); text on a white background has mostly horizontal strokes and a much smaller ratio. Applied at both prefilter (×1, gentle so dense-text screens still pass) and OCR stages (raw, defense in depth).
+
+Recognized `screen_layout` values in the JSON log:
+
+- `dmi` — Daily Market Insight page (MARKET STATE, WHAT HAPPENED TODAY, BOTTOM LINE, etc.)
+- `tale_of_the_tape` — Tale of the Tape page (TALE OF THE TAPE header, index/sentiment/case lines)
+- `structured_whiteboard` — Full Revere whiteboard with both GRO and TURBO HOLDINGS / RVAB / REBAR / BOTTOM LINE fields
+- `chart` — Stock chart page (candlestick + oscillator)
+- `unknown_text` — Text-heavy but not matching any of the above
+
+Prefilter is intentionally permissive (`brightRatio < 0.30` rejection, `meanLuma < 140` rejection, gentle chart penalty ×1) so dense-text DMI slides and tabular ToTT layouts still reach OCR. After OCR, the keyword penalty and capped text-density scoring reliably separate whiteboard pages from chart pages. `selectFramesForOcr` adds 12 uniformly-spaced frames on top of the top-scoring prefilter seeds, so short-duration whiteboard windows (a few seconds in a 16-minute video) are still sampled even when their luma-only prefilter scores are modest.
 
 Useful scan options:
 
@@ -214,6 +234,76 @@ Each successful catalog import also saves the raw `yt-dlp` output to `data/video
 The download step also keeps a local `download_archive.txt` under `data/video_pipeline/` so interrupted runs can resume without re-downloading completed video IDs.
 
 The scan step samples frames at low resolution, matches them against the reference stills, groups consecutive hits into candidate windows, prefers a later sharp frame inside the best window, and saves the extracted screenshot as `YYYYMMDD_ps.jpg` with collision-safe suffixes.
+
+## Dry-Run and Smoke Tests
+
+The workspace ships with deterministic, offline smoke tests that exercise both the local-video flow and the YouTube-channel flow end-to-end. They are designed to fail fast (non-zero exit) if any of the integration points regress.
+
+Prerequisites:
+
+- `node` (already required by the rest of the project)
+- A working `ffmpeg` binary — the helper `tools/buildSyntheticWhiteboardVideo.js` and the e2e tests look for it on `PATH`, in `FFMPEG_BIN`, in `C:/ffmpeg/bin/ffmpeg.exe`, `C:/Program Files/ffmpeg/bin/ffmpeg.exe`, or under `~/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg*/.../bin/ffmpeg.exe` (the WinGet Gyan install). On non-Windows hosts, install ffmpeg via your package manager.
+- `bash` (Git Bash is fine on Windows)
+
+Build the synthetic fixtures (~18 KB MP4 + ~627 B white reference PNG). This is a one-off; the fixtures are committed but easy to regenerate:
+
+```bash
+npm run fixture:build-synthetic
+```
+
+Run the unit + e2e test suite. The e2e tests auto-skip when `ffmpeg` or the synthetic fixture is missing:
+
+```bash
+node --test test/
+```
+
+Run the YouTube dry run against the bundled mock yt-dlp fixture (`test/fixtures/mockYtDlp.py`). No network access required:
+
+```bash
+npm run video:dryrun-yt
+```
+
+Expected last line:
+
+```text
+[dryrun-yt] OK: catalog=2, downloaded=1, total_videos=2, scanning=1
+```
+
+Run the local-video dry run against the synthetic MP4 + the white reference. Uses the real `ffmpeg` + the Python whiteboard worker. Sandboxes all writes under `data/video_pipeline_dryrun_local_<pid>/` and removes them on exit:
+
+```bash
+npm run video:dryrun-local
+```
+
+Expected last line:
+
+```text
+[dryrun-local] OK: imported=1, scan_status=ok, done=1, errored=0, screenshot=20260104_ps.jpg
+```
+
+Run both dry runs in sequence:
+
+```bash
+npm run video:dryrun
+```
+
+Expected last line:
+
+```text
+[dryrun] OK: both dry runs passed
+```
+
+What the dry runs assert:
+
+- **YouTube dry run** — `init → catalog → download → status` against a sandboxed pipeline root. Verifies: 2 catalog rows persisted, 1 mock MP4 written under `downloads/`, the SQLite row flipped to `video_counts.scanning = 1`, the catalog TSV exists under `catalog/`, and `download_archive.txt` recorded the mock video id `youtube abc123`.
+- **Local-video dry run** — `init → import-local → scan → status` against the synthetic whiteboard MP4 and a near-uniform white reference image. Verifies: 1 row imported, scan returns `status='ok'`, `video_counts.done = 1`, `video_counts.error = 0`, and exactly one `20260104_ps*.jpg` screenshot was extracted under `screenshots/`.
+
+Sandboxing guarantees:
+
+- All pipeline-root writes happen under `data/video_pipeline_dryrun_<pid>/` and are removed on script exit. Nothing under `D:\courses_F\revere_asset` is ever touched (it remains read-only per the workspace constraints in `CLAUDE.md`).
+- The local dry run also copies the synthetic MP4 into a dedicated scratch directory so it does not collide with the existing 23-byte OCR-error stub at `test/fixtures/local_20260104_sample.mp4`.
+
+If the local dry run starts failing with `status='error'` and a message containing `preflight`, the cause is almost always an `ffmpeg` regression on the whiteboard preflight path — the same caveat flagged in commit `5f496ee`. The fast-fail behavior of `tools/scanVideoWithOcr.js` (no long OCR run on bad input) keeps the feedback loop short.
 
 ## Accessing Final Processed Data
 
