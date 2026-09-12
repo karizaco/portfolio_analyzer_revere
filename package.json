@@ -15,7 +15,9 @@
     "video:status": "node tools/runWhiteboardWorker.js status",
     "video:catalog": "node tools/runWhiteboardWorker.js catalog",
     "video:download": "node tools/runWhiteboardWorker.js download",
-    "video:scan": "node tools/runWhiteboardWorker.js scan"
+    "video:import-local": "node tools/runWhiteboardWorker.js import-local",
+    "video:scan": "node tools/runWhiteboardWorker.js scan",
+    "video:scan-ocr": "node tools/scanVideoWithOcr.js"
   },
   "dependencies": {
     "sharp": "^0.34.3",

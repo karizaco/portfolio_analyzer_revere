@@ -110,6 +110,18 @@ Download the next pending videos at low resolution and mark them ready for scann
 npm run video:download -- --limit 5
 ```
 
+Import local sample videos directly into the scan queue without using YouTube:
+
+```bash
+npm run video:import-local -- --video-dir "D:\\courses_F\\revere_asset" --limit 2
+```
+
+Scan a local sample video directly with OCR, without any reference stills:
+
+```bash
+npm run video:scan-ocr -- --video "D:\\courses_F\\revere_asset\\sample.mp4" --output-kind whiteboard
+```
+
 Scan downloaded videos against a small reference set and save the best whiteboard screenshot:
 
 ```bash
@@ -131,7 +143,60 @@ Useful download options:
 - `--cookies-from-browser firefox` or `--cookies-file path.txt` when YouTube requires a logged-in session
 - `--format "bv*[height<=480]+ba/b[height<=480]"` to override the default low-resolution selector
 
+Useful local import options:
+
+- `--video-dir path` to register sample `.mp4`, `.mov`, `.mkv`, `.m4v`, or `.webm` files for direct scanning
+- `--limit 2` to queue only a couple of sample videos at first
+- `--extensions .mp4,.mov` to narrow which local files get imported
+
+Useful direct OCR scan options:
+
+- `--video path` to scan a single local video directly
+- `--output-kind whiteboard|snapshot` to choose which parser/target screen to search for
+- `--output-root .\\data\\video_pipeline_samples` to control where the extracted frame is written
+- `--fps 0.25` to adjust frame sampling density; this is the default direct-scan rate
+- `--prefilter-threshold 14` to control the cheap image-based filter before OCR starts
+- `--prefilter-min-frames 12` and `--prefilter-max-frames 60` to bound how many frames are sent to OCR
+- `--prefilter-neighbors 1` to retain adjacent timestamps around strong prefilter hits
+- `--strong-threshold 14` and `--review-threshold 10` to tune automatic timestamp selection
+- `--progress-interval 10` to print OCR progress every N sampled frames
+- `--top-candidates 5` to include the best timestamp candidates in the output log
+- `--keep-frames` to preserve sampled frames for manual inspection during debugging
+
 For the Revere YouTube channel, a live smoke test succeeded for catalog import with Chrome cookies, while Edge cookie decryption failed with a DPAPI error and a cookie-less download retry hit a YouTube page reload check. If Chromium browser-cookie access fails locally, export cookies from a normal logged-in browser session to a Netscape-format text file and pass that file with `--cookies-file`.
+
+Sample-video workflow for ffmpeg and OCR testing:
+
+1. Put one or two sample videos in the linked asset folder or another readable local directory.
+2. Run `npm run video:init -- --pipeline-root .\\data\\video_pipeline_samples`.
+3. Run `npm run video:import-local -- --pipeline-root .\\data\\video_pipeline_samples --video-dir "D:\\courses_F\\revere_asset" --limit 2`.
+4. Run `npm run video:scan -- --pipeline-root .\\data\\video_pipeline_samples --reference-dir <portfolio-whiteboard-reference-dir> --video-id <imported-id>` to extract the `YYYYMMDD_ps.jpg` whiteboard frame.
+5. Run `npm run whiteboard:extract -- --input-dir .\\data\\video_pipeline_samples\\screenshots` to OCR and parse the saved portfolio-performance frame.
+6. Run `npm run video:scan -- --pipeline-root .\\data\\video_pipeline_samples --reference-dir <position-change-reference-dir> --video-id <imported-id> --output-kind snapshot` to extract the holdings/action frame as `revere_YYYYMMDD[_N].png`.
+7. Run `npm run extract -- --input-dir .\\data\\video_pipeline_samples\\snapshots` to test the existing holdings parser on the video-derived screenshot.
+
+If you do not want to manage reference stills at all, use the direct OCR command instead:
+
+1. Run `npm run video:scan-ocr -- --video "D:\\courses_F\\revere_asset\\sample.mp4" --output-kind whiteboard --output-root .\\data\\video_pipeline_samples`.
+2. Run `npm run whiteboard:extract -- --input-dir .\\data\\video_pipeline_samples\\screenshots`.
+3. Run `npm run video:scan-ocr -- --video "D:\\courses_F\\revere_asset\\sample.mp4" --output-kind snapshot --output-root .\\data\\video_pipeline_samples`.
+4. Run `npm run extract -- --input-dir .\\data\\video_pipeline_samples\\snapshots`.
+
+For a first coarse pass on a 15-25 minute video, prefer a lower sampling rate plus the prefilter cap, for example:
+
+```bash
+npm run video:scan-ocr -- --video "D:\\courses_F\\revere_asset\\sample.mp4" --output-kind whiteboard --output-root .\\data\\video_pipeline_samples --fps 0.1 --prefilter-max-frames 20 --prefilter-min-frames 8 --progress-interval 10
+```
+
+The direct OCR probe currently writes the whiteboard output as `YYYYMMDD_ps.png` instead of `.jpg` because that is more reliable on the current ffmpeg build. The stem naming stays the same, and `whiteboard:extract` accepts PNG inputs.
+
+Debugging a wrong timestamp or wrong screenshot:
+
+1. Re-run the command with `--keep-frames` so the sampled PNGs remain under `data/.../ocr_probe/frames/`.
+2. Check the JSON log under `data/.../ocr_probe/logs/`; it records `status`, `top_candidate`, `top_candidates`, window timing, prefilter reduction, and any frame-level OCR errors.
+3. If the right screen exists but was missed, increase density with `--fps 0.5` or `--fps 1` so the scan samples more timestamps.
+4. If a near-miss was chosen, raise `--strong-threshold` or inspect the top candidate timestamps in the JSON log and compare them to the saved frames.
+5. If no useful candidates appear, run the same video once with `--output-kind whiteboard` and once with `--output-kind snapshot`; the two scoring heuristics are intentionally different.
 
 Useful scan options:
 
@@ -139,9 +204,10 @@ Useful scan options:
 - `--similarity-threshold 0.9` to tighten or loosen auto-save behavior
 - `--review-threshold 0.82` to keep near-misses for human inspection
 - `--video-id VIDEO_ID` to rescan a single downloaded row
+- `--output-kind whiteboard|snapshot` to choose whether the extracted frame should feed `whiteboard:extract` or the existing `extract` command
 - `--ffmpeg-bin C:\\path\\to\\ffmpeg.exe` if `ffmpeg` is not on `PATH`
 
-The worker stores its state at `data/video_pipeline/state.sqlite` and creates local directories for `catalog`, `downloads`, `frames`, `logs`, `references`, `review`, and `screenshots`. Those artifacts stay inside this workspace and are ignored by git.
+The worker stores its state at `data/video_pipeline/state.sqlite` and creates local directories for `catalog`, `downloads`, `frames`, `logs`, `references`, `review`, `screenshots`, and `snapshots`. Those artifacts stay inside this workspace and are ignored by git.
 
 Each successful catalog import also saves the raw `yt-dlp` output to `data/video_pipeline/catalog/` so the playlist snapshot can be inspected or replayed later.
 

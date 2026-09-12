@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
-import os
+import re
 import sqlite3
 import subprocess
 import sys
@@ -14,6 +14,7 @@ import shutil
 WORKSPACE_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PIPELINE_ROOT = WORKSPACE_ROOT / 'data' / 'video_pipeline'
 REFERENCE_SUFFIXES = {'.jpg', '.jpeg', '.pgm', '.png', '.webp'}
+VIDEO_SUFFIXES = {'.mp4', '.mov', '.mkv', '.m4v', '.webm'}
 THUMBNAIL_WIDTH = 8
 THUMBNAIL_HEIGHT = 8
 SHARPNESS_WIDTH = 64
@@ -26,6 +27,7 @@ DIRECTORY_LAYOUT = {
     'logs': 'logs',
     'references': 'references',
     'review': 'review',
+    'snapshots': 'snapshots',
     'screenshots': 'screenshots',
 }
 
@@ -208,6 +210,58 @@ def describe_tool_resolution() -> dict[str, object]:
     }
 
 
+def sanitize_identifier(value: str) -> str:
+    sanitized = []
+    previous_was_separator = False
+    for character in value.lower():
+        if character.isalnum():
+            sanitized.append(character)
+            previous_was_separator = False
+            continue
+
+        if not previous_was_separator:
+            sanitized.append('_')
+            previous_was_separator = True
+
+    return ''.join(sanitized).strip('_') or 'video'
+
+
+def infer_upload_date(file_path: Path) -> str:
+    match = next(iter(re.findall(r'(20\d{6})', file_path.name)), '')
+    if match:
+        return match
+
+    return datetime.fromtimestamp(file_path.stat().st_mtime, tz=timezone.utc).strftime('%Y%m%d')
+
+
+def normalize_extensions(raw_value: str) -> set[str]:
+    if not raw_value.strip():
+        return set(VIDEO_SUFFIXES)
+
+    normalized = set()
+    for entry in raw_value.split(','):
+        extension = entry.strip().lower()
+        if not extension:
+            continue
+        normalized.add(extension if extension.startswith('.') else f'.{extension}')
+
+    return normalized or set(VIDEO_SUFFIXES)
+
+
+def discover_local_video_files(video_directory: Path, extensions: set[str]) -> list[Path]:
+    if not video_directory.exists():
+        return []
+
+    return sorted(
+        file_path for file_path in video_directory.iterdir()
+        if file_path.is_file() and file_path.suffix.lower() in extensions
+    )
+
+
+def build_local_video_id(file_path: Path, upload_date: str) -> str:
+    return f"local_{upload_date}_{sanitize_identifier(file_path.stem)}"
+
+
 def fetch_recent_videos(connection: sqlite3.Connection, limit: int) -> list[dict[str, str]]:
     rows = connection.execute(
         '''
@@ -240,6 +294,53 @@ def fetch_latest_catalog_run(connection: sqlite3.Connection) -> dict[str, object
         '''
     ).fetchone()
     return dict(row) if row else None
+
+
+def command_import_local(args: argparse.Namespace) -> int:
+    pipeline_root = resolve_pipeline_root(args.pipeline_root)
+    db_path = resolve_db_path(pipeline_root, args.db_path)
+    ensure_layout(pipeline_root)
+    video_directory = Path(args.video_dir).expanduser().resolve()
+    extensions = normalize_extensions(args.extensions)
+
+    if not video_directory.exists() or not video_directory.is_dir():
+        print(f'Local video directory not found: {video_directory}', file=sys.stderr)
+        return 1
+
+    video_paths = discover_local_video_files(video_directory, extensions)
+    if args.limit > 0:
+        video_paths = video_paths[:args.limit]
+
+    if not video_paths:
+        print(json.dumps({
+            'db_path': str(db_path),
+            'imported': 0,
+            'pipeline_root': str(pipeline_root),
+            'status': 'idle',
+            'video_directory': str(video_directory),
+        }, indent=2))
+        return 0
+
+    with connect_database(db_path) as connection:
+        initialize_schema(connection)
+        set_setting(connection, 'last_local_video_dir', str(video_directory))
+        inserted, updated, imported_rows = upsert_local_video_rows(
+            connection,
+            source_directory=video_directory,
+            video_paths=video_paths,
+        )
+
+    print(json.dumps({
+        'db_path': str(db_path),
+        'imported': len(imported_rows),
+        'inserted': inserted,
+        'pipeline_root': str(pipeline_root),
+        'results': imported_rows,
+        'status': 'ok',
+        'updated': updated,
+        'video_directory': str(video_directory),
+    }, indent=2))
+    return 0
 
 
 def command_init(args: argparse.Namespace) -> int:
@@ -794,7 +895,7 @@ def choose_final_frame(
     )
 
 
-def allocate_screenshot_path(screenshot_directory: Path, upload_date: str, video_id: str) -> Path:
+def allocate_whiteboard_output_path(screenshot_directory: Path, upload_date: str, video_id: str) -> Path:
     stem = upload_date if upload_date else f'undated_{video_id}'
     candidate = screenshot_directory / f'{stem}_ps.jpg'
     if not candidate.exists():
@@ -806,6 +907,30 @@ def allocate_screenshot_path(screenshot_directory: Path, upload_date: str, video
         if not candidate.exists():
             return candidate
         suffix += 1
+
+
+def allocate_snapshot_output_path(snapshot_directory: Path, upload_date: str, video_id: str) -> Path:
+    if not upload_date:
+        raise RuntimeError(f'Snapshot output requires an inferred upload date for {video_id}.')
+
+    stem = f'revere_{upload_date}'
+    candidate = snapshot_directory / f'{stem}.png'
+    if not candidate.exists():
+        return candidate
+
+    suffix = 2
+    while True:
+        candidate = snapshot_directory / f'{stem}_{suffix}.png'
+        if not candidate.exists():
+            return candidate
+        suffix += 1
+
+
+def allocate_scan_output_path(paths: dict[str, Path], upload_date: str, video_id: str, output_kind: str) -> Path:
+    if output_kind == 'snapshot':
+        return allocate_snapshot_output_path(paths['snapshots'], upload_date, video_id)
+
+    return allocate_whiteboard_output_path(paths['screenshots'], upload_date, video_id)
 
 
 def extract_frame_to_file(ffmpeg_bin: str, media_path: Path, timestamp: float, output_path: Path) -> None:
@@ -857,6 +982,81 @@ def select_videos_for_scan(
         ''',
         (limit,),
     ).fetchall()
+
+
+def upsert_local_video_rows(
+    connection: sqlite3.Connection,
+    *,
+    source_directory: Path,
+    video_paths: list[Path],
+) -> tuple[int, int, list[dict[str, str]]]:
+    inserted = 0
+    updated = 0
+    imported_rows = []
+
+    for video_path in video_paths:
+        upload_date = infer_upload_date(video_path)
+        video_id = build_local_video_id(video_path, upload_date)
+        existing = connection.execute(
+            'SELECT video_id FROM videos WHERE video_id = ?',
+            (video_id,),
+        ).fetchone()
+        timestamp = utc_now_iso()
+        connection.execute(
+            '''
+            INSERT INTO videos (
+                video_id,
+                source_url,
+                video_url,
+                title,
+                upload_date,
+                status,
+                download_path,
+                output_path,
+                selected_timestamp,
+                selected_score,
+                review_reason,
+                error,
+                created_at,
+                updated_at
+            ) VALUES (?, ?, '', ?, ?, 'scanning', ?, '', NULL, NULL, '', '', ?, ?)
+            ON CONFLICT(video_id) DO UPDATE SET
+                source_url = excluded.source_url,
+                title = excluded.title,
+                upload_date = excluded.upload_date,
+                download_path = excluded.download_path,
+                status = CASE
+                    WHEN videos.status = 'done' THEN 'done'
+                    WHEN videos.status = 'review' THEN 'review'
+                    ELSE 'scanning'
+                END,
+                error = '',
+                updated_at = excluded.updated_at
+            ''',
+            (
+                video_id,
+                str(source_directory),
+                video_path.name,
+                upload_date,
+                str(video_path),
+                timestamp,
+                timestamp,
+            ),
+        )
+
+        imported_rows.append({
+            'download_path': str(video_path),
+            'source_file': video_path.name,
+            'upload_date': upload_date,
+            'video_id': video_id,
+        })
+        if existing is None:
+            inserted += 1
+        else:
+            updated += 1
+
+    connection.commit()
+    return inserted, updated, imported_rows
 
 
 def command_download(args: argparse.Namespace) -> int:
@@ -1035,11 +1235,12 @@ def command_scan(args: argparse.Namespace) -> int:
                         args.score_margin,
                         args.candidate_limit,
                     )
-                    output_path = allocate_screenshot_path(paths['screenshots'], row['upload_date'], row['video_id'])
+                    output_path = allocate_scan_output_path(paths, row['upload_date'], row['video_id'], args.output_kind)
                     extract_frame_to_file(args.ffmpeg_bin, download_path, float(selected_frame['timestamp']), output_path)
                     summary = {
                         'best_window_end': best_window[-1]['timestamp'],
                         'best_window_length': len(best_window),
+                        'output_kind': args.output_kind,
                         'best_window_start': best_window[0]['timestamp'],
                         'output_path': str(output_path),
                         'selected_frame': selected_frame,
@@ -1312,6 +1513,16 @@ def build_parser() -> argparse.ArgumentParser:
     )
     catalog_parser.set_defaults(handler=command_catalog)
 
+    import_local_parser = subparsers.add_parser('import-local', help='Register local sample videos for direct scanning.')
+    import_local_parser.add_argument('--video-dir', required=True, help='Directory containing readable local video files.')
+    import_local_parser.add_argument('--limit', type=int, default=0, help='Optional maximum number of local videos to register.')
+    import_local_parser.add_argument(
+        '--extensions',
+        default='.mp4,.mov,.mkv,.m4v,.webm',
+        help='Comma-separated local video extensions to include.',
+    )
+    import_local_parser.set_defaults(handler=command_import_local)
+
     download_parser = subparsers.add_parser('download', help='Download pending videos and mark them ready for scanning.')
     download_parser.add_argument('--yt-dlp-bin', default='yt-dlp', help='Path to the yt-dlp executable.')
     download_parser.add_argument('--limit', type=int, default=1, help='How many pending videos to download in this run.')
@@ -1349,6 +1560,12 @@ def build_parser() -> argparse.ArgumentParser:
     scan_parser.add_argument('--min-window-length', type=int, default=3, help='Minimum consecutive matching samples required for an auto-save window.')
     scan_parser.add_argument('--score-margin', type=float, default=0.02, help='How close a sampled frame must be to the best score before sharpness ranking applies.')
     scan_parser.add_argument('--candidate-limit', type=int, default=5, help='Maximum number of high-score timestamps to sharpness-rank within the winning window.')
+    scan_parser.add_argument(
+        '--output-kind',
+        choices=['whiteboard', 'snapshot'],
+        default='whiteboard',
+        help='Whether the extracted frame should feed whiteboard parsing or the existing screenshot extractor.',
+    )
     scan_parser.set_defaults(handler=command_scan)
 
     return parser
@@ -1360,7 +1577,7 @@ def main(argv: list[str] | None = None) -> int:
     reordered_args = []
     deferred_globals = []
     global_flags = {'--pipeline-root', '--db-path'}
-    command_names = {'init', 'status', 'catalog', 'download', 'scan'}
+    command_names = {'init', 'status', 'catalog', 'import-local', 'download', 'scan'}
     command_seen = False
     index = 0
 

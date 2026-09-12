@@ -3,6 +3,7 @@ const Tesseract = require('tesseract.js');
 
 const createWorker = Tesseract.createWorker;
 const BOTTOM_CROP_RATIO = 0.7;
+const OCR_DPI = 300;
 
 let workerPromise;
 
@@ -51,7 +52,10 @@ async function preprocessImage(filePath, profileName) {
     pipeline = pipeline.threshold(176);
   }
 
-  return pipeline.png().toBuffer();
+  return pipeline
+    .withMetadata({ density: OCR_DPI })
+    .png()
+    .toBuffer();
 }
 
 function extractBottomCandidate(text) {
@@ -101,7 +105,8 @@ async function getWorker() {
       const worker = await createWorker('eng');
       if (typeof worker.setParameters === 'function') {
         await worker.setParameters({
-          preserve_interword_spaces: '1'
+          preserve_interword_spaces: '1',
+          user_defined_dpi: String(OCR_DPI)
         });
       }
 
