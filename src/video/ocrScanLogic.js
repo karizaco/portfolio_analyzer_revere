@@ -7,20 +7,17 @@ const PREFILTER_HEIGHT = 90;
 
 // Tokens whose presence in OCR text is a strong positive signal that a frame
 // is a "text-heavy screen" (Daily Market Insight, Tale of the Tape, etc.)
-// rather than a stock-chart frame.
+// rather than a stock-chart frame. Intentionally restricted to content-
+// specific phrases: sidebar-shared terms like GROTECTION, MAG7, RAI100,
+// 21/21, and HOLDINGS also appear on individual stock chart pages (the
+// Revere website sidebar), so counting them as positive signals would let
+// stock-chart pages through the keyword guard.
 const TEXT_DENSITY_KEYWORDS = Object.freeze([
   'DAILY MARKET INSIGHT',
   'TALE OF THE TAPE',
   'MARKET STATE',
   'WHAT HAPPENED TODAY',
-  'GROTECTION',
-  'GROTECTION GAUGE',
-  'MAG7',
-  'RAI100',
-  '21/21',
-  'BOTTOM LINE',
-  'PORTFOLIO',
-  'HOLDINGS'
+  'BOTTOM LINE'
 ]);
 
 function splitIssueCodes(issueCodes) {
