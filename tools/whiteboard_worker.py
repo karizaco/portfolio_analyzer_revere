@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
+import os
 import sqlite3
 import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+import shutil
 
 WORKSPACE_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PIPELINE_ROOT = WORKSPACE_ROOT / 'data' / 'video_pipeline'
@@ -142,6 +145,69 @@ def summarize_status(connection: sqlite3.Connection) -> dict[str, int]:
     return counts
 
 
+def resolve_yt_dlp_prefix(yt_dlp_bin: str) -> list[str]:
+    if yt_dlp_bin == 'py-yt-dlp':
+        return [sys.executable, '-m', 'yt_dlp']
+
+    if yt_dlp_bin and yt_dlp_bin != 'yt-dlp':
+        return build_command_prefix(yt_dlp_bin)
+
+    discovered = shutil.which('yt-dlp')
+    if discovered:
+        return [discovered]
+
+    if importlib.util.find_spec('yt_dlp'):
+        return [sys.executable, '-m', 'yt_dlp']
+
+    candidate_patterns = [
+        Path.home() / 'AppData' / 'Local' / 'Python' / 'pythoncore-*' / 'Scripts' / 'yt-dlp.exe',
+        Path.home() / 'AppData' / 'Roaming' / 'Python' / 'Python*' / 'Scripts' / 'yt-dlp.exe',
+    ]
+    for pattern in candidate_patterns:
+        matches = sorted(Path().glob(str(pattern))) if '*' in str(pattern) else ([pattern] if pattern.exists() else [])
+        if matches:
+            return [str(matches[-1])]
+
+    return [yt_dlp_bin]
+
+
+def resolve_ffmpeg_bin(ffmpeg_bin: str) -> str:
+    if ffmpeg_bin and ffmpeg_bin != 'ffmpeg':
+        return ffmpeg_bin
+
+    discovered = shutil.which('ffmpeg')
+    if discovered:
+        return discovered
+
+    candidate_paths = [
+        Path('C:/ffmpeg/bin/ffmpeg.exe'),
+        Path('C:/Program Files/ffmpeg/bin/ffmpeg.exe'),
+        Path.home() / 'AppData' / 'Local' / 'Microsoft' / 'WinGet' / 'Packages',
+    ]
+
+    direct_candidates = candidate_paths[:2]
+    for candidate in direct_candidates:
+        if candidate.exists():
+            return str(candidate)
+
+    winget_root = candidate_paths[2]
+    if winget_root.exists():
+        matches = sorted(winget_root.glob('Gyan.FFmpeg*/*/bin/ffmpeg.exe'))
+        if matches:
+            return str(matches[-1])
+
+    return ffmpeg_bin
+
+
+def describe_tool_resolution() -> dict[str, object]:
+    return {
+        'ffmpeg': resolve_ffmpeg_bin('ffmpeg'),
+        'python': sys.executable,
+        'yt_dlp_module_available': bool(importlib.util.find_spec('yt_dlp')),
+        'yt_dlp': resolve_yt_dlp_prefix('yt-dlp'),
+    }
+
+
 def fetch_recent_videos(connection: sqlite3.Connection, limit: int) -> list[dict[str, str]]:
     rows = connection.execute(
         '''
@@ -232,6 +298,7 @@ def command_status(args: argparse.Namespace) -> int:
         'pipeline_root': str(pipeline_root),
         'recent_videos': recent_videos,
         'status': 'ok',
+        'tool_resolution': describe_tool_resolution(),
         'total_videos': total_videos,
         'video_counts': status_counts,
     }, indent=2))
@@ -261,7 +328,7 @@ def build_catalog_command(args: argparse.Namespace) -> list[str]:
 
 
 def build_yt_dlp_prefix(yt_dlp_bin: str) -> list[str]:
-    return build_command_prefix(yt_dlp_bin)
+    return resolve_yt_dlp_prefix(yt_dlp_bin)
 
 
 def parse_catalog_line(line: str) -> dict[str, str] | None:
@@ -512,7 +579,7 @@ def create_scale_filter(width: int, height: int) -> str:
 
 def decode_media_hash(ffmpeg_bin: str, media_path: Path, width: int, height: int) -> bytes:
     frame_size = width * height
-    command = build_command_prefix(ffmpeg_bin)
+    command = build_command_prefix(resolve_ffmpeg_bin(ffmpeg_bin))
     command.extend([
         '-hide_banner',
         '-loglevel',
@@ -565,7 +632,7 @@ def load_reference_hashes(reference_directory: Path, ffmpeg_bin: str) -> list[di
 
 def stream_sample_frames(video_path: Path, ffmpeg_bin: str, sample_fps: float) -> list[dict[str, float | int]]:
     frame_size = THUMBNAIL_WIDTH * THUMBNAIL_HEIGHT
-    command = build_command_prefix(ffmpeg_bin)
+    command = build_command_prefix(resolve_ffmpeg_bin(ffmpeg_bin))
     command.extend([
         '-hide_banner',
         '-loglevel',
@@ -664,7 +731,7 @@ def choose_best_window(windows: list[list[dict[str, float | int]]]) -> list[dict
 
 def decode_sharpness_pixels(ffmpeg_bin: str, media_path: Path, timestamp: float) -> bytes:
     frame_size = SHARPNESS_WIDTH * SHARPNESS_HEIGHT
-    command = build_command_prefix(ffmpeg_bin)
+    command = build_command_prefix(resolve_ffmpeg_bin(ffmpeg_bin))
     command.extend([
         '-hide_banner',
         '-loglevel',
@@ -743,7 +810,7 @@ def allocate_screenshot_path(screenshot_directory: Path, upload_date: str, video
 
 def extract_frame_to_file(ffmpeg_bin: str, media_path: Path, timestamp: float, output_path: Path) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    command = build_command_prefix(ffmpeg_bin)
+    command = build_command_prefix(resolve_ffmpeg_bin(ffmpeg_bin))
     command.extend([
         '-hide_banner',
         '-loglevel',
@@ -1289,7 +1356,35 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
-    args = parser.parse_args(argv)
+    raw_args = list(argv) if argv is not None else sys.argv[1:]
+    reordered_args = []
+    deferred_globals = []
+    global_flags = {'--pipeline-root', '--db-path'}
+    command_names = {'init', 'status', 'catalog', 'download', 'scan'}
+    command_seen = False
+    index = 0
+
+    while index < len(raw_args):
+        argument = raw_args[index]
+        next_value = raw_args[index + 1] if index + 1 < len(raw_args) else None
+
+        if argument in command_names:
+            command_seen = True
+            reordered_args.append(argument)
+            index += 1
+            continue
+
+        if command_seen and argument in global_flags:
+            deferred_globals.append(argument)
+            if next_value is not None and not next_value.startswith('--'):
+                deferred_globals.append(next_value)
+                index += 2
+                continue
+
+        reordered_args.append(argument)
+        index += 1
+
+    args = parser.parse_args([*deferred_globals, *reordered_args])
     return args.handler(args)
 
 

@@ -119,8 +119,10 @@ npm run video:scan -- --reference-dir ".\\data\\video_pipeline\\references" --li
 Useful catalog options:
 
 - `--limit 10` to test on a small subset first
-- `--cookies-from-browser firefox` if playlist metadata requires a logged-in browser session
+- `--cookies-from-browser chrome` or `firefox` if playlist metadata requires a logged-in browser session
+- `--cookies-file exported-cookies.txt` when Chromium DPAPI decryption fails on your machine
 - `--yt-dlp-bin C:\\path\\to\\yt-dlp.exe` if `yt-dlp` is not on `PATH`
+- `--yt-dlp-bin py-yt-dlp` to force module-based invocation through the local Python install
 
 Useful download options:
 
@@ -128,6 +130,8 @@ Useful download options:
 - `--video-id VIDEO_ID` to retry one specific row
 - `--cookies-from-browser firefox` or `--cookies-file path.txt` when YouTube requires a logged-in session
 - `--format "bv*[height<=480]+ba/b[height<=480]"` to override the default low-resolution selector
+
+For the Revere YouTube channel, a live smoke test succeeded for catalog import with Chrome cookies, while Edge cookie decryption failed with a DPAPI error and a cookie-less download retry hit a YouTube page reload check. If Chromium browser-cookie access fails locally, export cookies from a normal logged-in browser session to a Netscape-format text file and pass that file with `--cookies-file`.
 
 Useful scan options:
 
