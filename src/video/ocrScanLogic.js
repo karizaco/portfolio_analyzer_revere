@@ -417,27 +417,72 @@ function selectFramesForOcr(prefilterRows, options = {}) {
 
       return right.timestamp - left.timestamp;
     });
-  const dynamicThreshold = Math.max(minScore, sortedByScore[0].prefilterScore - 2);
+  // When the highest-scoring frame is below the configured minScore (common
+  // for videos whose brightest scene is a low-contrast DAILY MARKET INSIGHT
+  // slide), the dynamic threshold must drop with the best score rather than
+  // staying clamped at minScore. Otherwise every frame falls below the cutoff
+  // and dense-text trade-line slides get filtered out before OCR ever runs.
+  // Floor the relaxed threshold at 60 % of minScore so we never go below a
+  // sane minimum (e.g. completely black frames still get rejected).
+  const bestScore = sortedByScore[0].prefilterScore;
+  const relaxedFloor = minScore * 0.6;
+  const dynamicThreshold = bestScore >= minScore
+    ? Math.max(minScore, bestScore - 2)
+    : Math.max(relaxedFloor, bestScore - 3);
+  const thresholdRelaxed = bestScore < minScore;
   const thresholdSeeds = sortedByScore.filter((row) => row.prefilterScore >= dynamicThreshold);
+  // Reserve a portion of the OCR budget for timeline-wide uniform sampling so
+  // a long dense-text window that scores below the dynamic threshold still
+  // gets OCR coverage. The remaining budget goes to the top-scoring seeds.
+  // Without this carve-out, high-luma chart frames at the start of the video
+  // can eat the entire OCR budget before the uniform-sampling backstop runs.
+  // Densify the uniform sample when the threshold had to be relaxed (the luma
+  // signal is weak overall — dense-text trade-line slides are short and need
+  // tighter stride to be caught at all) OR when the video is short enough that
+  // a 12-frame stride would be wider than ~20 s (a typical slide duration).
+  let uniformReserve = 0;
+  if (uniformSampleCount > 0) {
+    const baseline = Math.max(uniformSampleCount, Math.floor(maxFrames * 0.25));
+    // Compute how many uniform slots are needed to keep each stride under
+    // ~10 s of video. Trade-line slides are typically visible for 30-90 s
+    // so a stride wider than ~20 s risks missing them entirely.
+    let strideBasedReserve = baseline;
+    if (prefilterRows.length > 0) {
+      const sample = prefilterRows[Math.min(1, prefilterRows.length - 1)];
+      const secondsPerStep = sample.frameIndex > 0
+        ? sample.timestamp / sample.frameIndex
+        : 4;
+      const secondsPerStrideAtBaseline = (prefilterRows.length / baseline) * secondsPerStep;
+      if (secondsPerStrideAtBaseline > 10) {
+        strideBasedReserve = Math.ceil(prefilterRows.length / Math.max(1, Math.floor(10 / secondsPerStep)));
+      }
+    }
+    if (thresholdRelaxed) {
+      // When the luma signal is weak across the whole video (best prefilter
+      // score < minScore), dense-text slides are likely missed by the seed
+      // branch. Combine the doubled-baseline heuristic with the stride-based
+      // heuristic and take the larger of the two.
+      uniformReserve = Math.min(maxFrames, Math.max(baseline * 2, strideBasedReserve));
+    } else {
+      uniformReserve = Math.min(maxFrames, strideBasedReserve);
+    }
+  }
+  const seedBudget = Math.max(0, maxFrames - uniformReserve);
   const seedTargetCount = Math.min(
     sortedByScore.length,
-    Math.max(thresholdSeeds.length, minFrames)
+    Math.max(Math.min(thresholdSeeds.length, seedBudget), Math.max(0, minFrames - uniformReserve))
   );
   const selected = new Map();
-  const seedRows = sortedByScore.slice(0, Math.min(seedTargetCount, maxFrames));
+  const seedRows = sortedByScore.slice(0, Math.min(seedTargetCount, seedBudget));
 
   for (const row of seedRows) {
-    if (selected.size >= maxFrames) {
-      break;
-    }
-
     selected.set(row.frameIndex, row);
   }
 
-  for (let distance = 1; distance <= neighborRadius && selected.size < maxFrames; distance += 1) {
+  for (let distance = 1; distance <= neighborRadius && selected.size < seedBudget; distance += 1) {
     for (const row of seedRows) {
       for (const offset of [-distance, distance]) {
-        if (selected.size >= maxFrames) {
+        if (selected.size >= seedBudget) {
           break;
         }
 
@@ -455,9 +500,11 @@ function selectFramesForOcr(prefilterRows, options = {}) {
   // Without this, the top-scoring frames tend to cluster around the highest-
   // luma chart transitions, missing dense-text slides that score lower on
   // luma alone but high on text density once OCR runs.
-  if (uniformSampleCount > 0 && selected.size < maxFrames) {
+  // The uniform sample is budgeted BEFORE the seed loop so it cannot be
+  // starved by an early burst of high-scoring chart frames.
+  if (uniformReserve > 0) {
     const totalRows = prefilterRows.length;
-    const stride = Math.max(1, Math.floor(totalRows / uniformSampleCount));
+    const stride = Math.max(1, Math.floor(totalRows / uniformReserve));
     for (let offset = 0; offset < totalRows && selected.size < maxFrames; offset += stride) {
       const row = prefilterRows[offset];
       if (!selected.has(row.frameIndex)) {

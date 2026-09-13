@@ -9,3 +9,6 @@ data/my_videos_*/
 data/my_videos_v*/
 data/price_cache/
 sample_screenshots.lnk
+# Heavy per-frame PNGs from OCR scans — reproducible from probe logs
+data/video_scan_*/fix-final/screenshots/
+data/video_scan_*/**/ocr_probe/frames/

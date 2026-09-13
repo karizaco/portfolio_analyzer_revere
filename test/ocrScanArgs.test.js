@@ -81,6 +81,17 @@ test('parseArgs honours every numeric and string option', () => {
   assert.equal(options.keepFrames, true);
 });
 
+test('parseArgs captures --run-tag as a free-form string (defaults to null)', () => {
+  const defaultOptions = parseArgs(['--video', 'a.mp4'], { defaultOutputRoot: TEST_OUTPUT_ROOT });
+  assert.equal(defaultOptions.runTag, undefined);
+
+  const taggedOptions = parseArgs(
+    ['--video', 'a.mp4', '--run-tag', 'run-2'],
+    { defaultOutputRoot: TEST_OUTPUT_ROOT }
+  );
+  assert.equal(taggedOptions.runTag, 'run-2');
+});
+
 test('parseArgs prints help and returns null for --help', () => {
   const restore = silentConsoleLog();
   try {

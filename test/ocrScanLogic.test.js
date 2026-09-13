@@ -136,7 +136,58 @@ test('selectFramesForOcr keeps strong candidates and nearby neighbors while capp
     neighborRadius: 1
   });
 
-  assert.deepEqual(selected.map((row) => row.frameIndex), [1, 2, 3, 4, 5]);
+  // maxFrames=5 with uniformSampleCount=12 reserves floor(5*0.25)=1 slot
+  // for the timeline-wide uniform sample. With 7 frames the uniform sample
+  // picks frame 0. The remaining 4 budget goes to top-scoring seeds and
+  // their neighbors (frames 1, 2, 3, 4 — the neighbor radius pulls in
+  // frame 3 next to seed 2). Frame 5 loses out because the budget is full.
+  assert.deepEqual(selected.map((row) => row.frameIndex), [0, 1, 2, 3, 4]);
+});
+
+test('selectFramesForOcr relaxes dynamic threshold when best score is below minScore', () => {
+  // Simulates a video whose brightest frame is a low-contrast dense-text slide
+  // (best prefilter = 10.6). The default minScore=14 would filter out the
+  // trade-line window entirely; with relaxation, mid-range frames survive.
+  const selected = selectFramesForOcr([
+    { frameIndex: 0, prefilterScore: 10.6, timestamp: 0 },
+    { frameIndex: 1, prefilterScore: 12.4, timestamp: 4 },
+    { frameIndex: 2, prefilterScore: 11.8, timestamp: 8 },
+    { frameIndex: 3, prefilterScore: 11.2, timestamp: 12 },
+    { frameIndex: 4, prefilterScore: 9.8, timestamp: 16 },
+    { frameIndex: 5, prefilterScore: 10.1, timestamp: 20 },
+    { frameIndex: 6, prefilterScore: 11.9, timestamp: 24 }
+  ], {
+    maxFrames: 6,
+    minFrames: 4,
+    minScore: 14,
+    neighborRadius: 0,
+    uniformSampleCount: 0
+  });
+
+  // Every mid-range frame must survive — the relaxation floor (14 * 0.6 = 8.4)
+  // lets dynamicThreshold = max(8.4, 10.6 - 3) = 8.4 capture them all.
+  assert.deepEqual(selected.map((row) => row.frameIndex), [0, 1, 2, 3, 5, 6]);
+});
+
+test('selectFramesForOcr still rejects very low scores even after relaxation', () => {
+  // Floor guard: a fully-black frame (score 0.5) must NOT pass even when the
+  // best score is low, otherwise OCR would run on garbage.
+  const selected = selectFramesForOcr([
+    { frameIndex: 0, prefilterScore: 10.6, timestamp: 0 },
+    { frameIndex: 1, prefilterScore: 12.4, timestamp: 4 },
+    { frameIndex: 2, prefilterScore: 0.5, timestamp: 8 },
+    { frameIndex: 3, prefilterScore: -2.1, timestamp: 12 }
+  ], {
+    maxFrames: 10,
+    minFrames: 1,
+    minScore: 14,
+    neighborRadius: 0,
+    uniformSampleCount: 0
+  });
+
+  // Only the two bright frames survive; the 0.5 and -2.1 frames are filtered
+  // by the relaxed floor (max(8.4, 10.6-3) = 8.4).
+  assert.deepEqual(selected.map((row) => row.frameIndex).sort((a, b) => a - b), [0, 1]);
 });
 
 test('analyzeFrameBeforeOcr can score a generated bright frame', async () => {

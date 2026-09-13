@@ -18,6 +18,7 @@ function printHelp() {
     '  --date <YYYYMMDD>          Optional date key override for output naming',
     '  --output-kind <kind>       whiteboard | snapshot',
     '  --output-root <path>       Root directory for extracted outputs',
+    '  --run-tag <name>           Optional subdirectory appended to output-root so same-day reruns do not overwrite previous results',
     '  --ffmpeg-bin <path>        Optional ffmpeg executable path',
     '  --fps <number>             Frame sampling rate, default 0.25',
     '  --sample-width <pixels>    Width for cheap prefilter frame extraction, default 640',
@@ -89,6 +90,10 @@ function parseArgs(argv, overrides = {}) {
         break;
       case '--output-root':
         options.outputRoot = path.resolve(nextValue);
+        index += 1;
+        break;
+      case '--run-tag':
+        options.runTag = nextValue;
         index += 1;
         break;
       case '--output-kind':

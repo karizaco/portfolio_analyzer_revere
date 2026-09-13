@@ -534,7 +534,10 @@ async function main() {
 
   const videoPath = options.videoPath;
   const dateKey = inferDateKey(videoPath, options.dateKey);
-  const outputRoot = path.resolve(options.outputRoot);
+  const baseOutputRoot = path.resolve(options.outputRoot);
+  const outputRoot = options.runTag
+    ? path.join(baseOutputRoot, options.runTag)
+    : baseOutputRoot;
   const probeRoot = path.join(outputRoot, 'ocr_probe');
   const probeKey = createProbeKey(videoPath, dateKey, options.outputKind);
   const frameRoot = path.join(probeRoot, 'frames', probeKey);
