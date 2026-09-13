@@ -67,7 +67,10 @@ def main(argv: list[str]) -> int:
         print('2026.09.01')
         return 0
 
-    if '--flat-playlist' in argv:
+    # Catalog is identified by --skip-download without --download-archive
+    # (the download path always carries --download-archive). Mirrors the
+    # real yt-dlp invocation shape that tools/whiteboard_worker.py emits.
+    if '--skip-download' in argv and '--download-archive' not in argv:
         return run_catalog()
 
     return run_download(argv)

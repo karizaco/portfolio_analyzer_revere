@@ -5,6 +5,117 @@ const sharp = require('sharp');
 const PREFILTER_WIDTH = 160;
 const PREFILTER_HEIGHT = 90;
 
+// Pure helper: extract a date the OCR engine read off the whiteboard so the
+// scan log can record the *content* date separately from the filename/mtime
+// date. Two patterns cover the corpus seen so far:
+//   1. Long form  "THURSDAY, SEPTEMBER 8, 2026"  (DMI intro / agenda line)
+//   2. Short form "TUE, 11/15/22"                (TALE OF THE TAPE header)
+// Returns YYYYMMDD matching inferDateKey()'s shape, or null if nothing
+// matched. Two-digit years are interpreted as 2000+YY when < 70 else 1900+YY
+// (defensive — historical videos in this corpus are 2022-2026).
+function extractObservedDate(ocrText) {
+  if (!ocrText) {
+    return null;
+  }
+
+  const longFormPattern = new RegExp(
+    '\\b(?:MON(?:DAY)?|TUE(?:S)?(?:DAY)?|WED(?:NES)?(?:DAY)?|THU(?:R(?:S)?)?(?:DAY)?|FRI(?:DAY)?|SAT(?:UR)?(?:DAY)?|SUN(?:DAY)?)\\s*,?\\s+'
+    + '(JAN(?:UARY)?|FEB(?:RUARY)?|MAR(?:CH)?|APR(?:IL)?|MAY|JUN(?:E)?|JUL(?:Y)?|'
+    + 'AUG(?:UST)?|SEP(?:TEMBER)?|OCT(?:OBER)?|NOV(?:EMBER)?|DEC(?:EMBER)?)\\s+'
+    + '(\\d{1,2}),?\\s+(\\d{4})\\b',
+    'i'
+  );
+
+  const longMatch = ocrText.match(longFormPattern);
+  if (longMatch) {
+    const day = Number(longMatch[2]);
+    const year = Number(longMatch[3]);
+    const monthName = longMatch[1].slice(0, 3).toUpperCase();
+    const monthIndex = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+      .indexOf(monthName);
+    if (monthIndex >= 0) {
+      return formatDateKey(year, monthIndex + 1, day);
+    }
+  }
+
+  const shortFormPattern = new RegExp(
+    '\\b(?:MON|TUE|WED(?:NES)?|THUR(?:S)?|FRI|SAT(?:UR)?|SUN),?\\s+'
+    + '(\\d{1,2})\\/(\\d{1,2})\\/(\\d{2,4})\\b',
+    'i'
+  );
+
+  const shortMatch = ocrText.match(shortFormPattern);
+  if (shortMatch) {
+    const month = Number(shortMatch[1]);
+    const day = Number(shortMatch[2]);
+    const rawYear = Number(shortMatch[3]);
+    const year = rawYear < 100 ? (rawYear < 70 ? 2000 + rawYear : 1900 + rawYear) : rawYear;
+    return formatDateKey(year, month, day);
+  }
+
+  return null;
+}
+
+function formatDateKey(year, month, day) {
+  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) {
+    return null;
+  }
+  if (month < 1 || month > 12 || day < 1 || day > 31) {
+    return null;
+  }
+  return `${String(year).padStart(4, '0')}${String(month).padStart(2, '0')}${String(day).padStart(2, '0')}`;
+}
+
+// Shared helper: turn a numeric timestamp (seconds) into HH:MM:SS so the probe
+// log and the aggregator stay aligned. Lives next to formatDateKey because it
+// is the time-axis sibling of the date-key helper.
+function formatDuration(totalSeconds) {
+  if (!Number.isFinite(totalSeconds) || totalSeconds < 0) {
+    return '00:00:00';
+  }
+  const seconds = Math.round(totalSeconds);
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainder = seconds % 60;
+  const pad = (value) => String(value).padStart(2, '0');
+  return `${pad(hours)}:${pad(minutes)}:${pad(remainder)}`;
+}
+
+// Pure helper: detect the "WHAT'S THE MARKET TREND?" intro card so it can be
+// tagged on the capture without changing detectScreenLayout's classification
+// rules. The intro card always contains the title + GROTECTION gauge legend
+// and never contains the BULL CASE / HEADWINDS / BOTTOM LINE: blocks that
+// appear on real Daily Market Insight / Tale of the Tape slides. We accept
+// the OCR-dropped apostrophe ("WHATS THE MARKET TREND") as well.
+function detectIntroCard(ocrText) {
+  if (!ocrText) {
+    return false;
+  }
+
+  const upper = String(ocrText).toUpperCase();
+
+  const hasTitle = upper.includes("WHAT'S THE MARKET TREND") || upper.includes('WHATS THE MARKET TREND');
+  if (!hasTitle) {
+    return false;
+  }
+
+  const realSlideNegatives = ['BULL CASE', 'BOTTOM LINE:', 'HEADWINDS', 'PORTFOLIO/RVAB:'];
+  for (const negative of realSlideNegatives) {
+    if (upper.includes(negative)) {
+      return false;
+    }
+  }
+
+  const introMarkers = ['THE GROTECTION GAUGE', 'CHARTS: OF INTEREST'];
+  for (const marker of introMarkers) {
+    if (upper.includes(marker)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 // Tokens whose presence in OCR text is a strong positive signal that a frame
 // is a "text-heavy screen" (Daily Market Insight, Tale of the Tape, etc.)
 // rather than a stock-chart frame. Intentionally restricted to content-
@@ -60,70 +171,88 @@ function scoreSnapshotCandidate(parsedRow) {
   return Number(score.toFixed(2));
 }
 
-function scoreWhiteboardCandidate(observationRows, ocrConfidence, ocrResult = null) {
+// Canonical whiteboard scorer. Returns { total, components } so callers can
+// see exactly which bucket pushed a frame over (or below) the threshold.
+// Existing callers that only need the total should use scoreWhiteboardCandidate.
+function scoreWhiteboardCandidateBreakdown(observationRows, ocrConfidence, ocrResult = null) {
   const rows = Array.isArray(observationRows) ? observationRows : [];
   const groRow = rows.find((row) => row.portfolio === 'GRO') || null;
   const turboRow = rows.find((row) => row.portfolio === 'TURBO') || null;
-  let score = 0;
+  const components = {
+    chart_likeness: 0,
+    keyword_guard: 0,
+    ocr_confidence_bonus: 0,
+    pair_bonus: 0,
+    per_row_issues: 0,
+    per_row_metrics: 0,
+    text_density: 0
+  };
 
   for (const row of rows) {
+    let perRow = 0;
     if (row.metrics_raw) {
-      score += 6;
+      perRow += 6;
     }
 
     if (row.metric_scalar) {
-      score += 1;
+      perRow += 1;
     }
 
     if (row.metric_1) {
-      score += 2;
+      perRow += 2;
     }
 
     if (row.metric_2) {
-      score += 2;
+      perRow += 2;
     }
 
     if (row.action_text) {
-      score += 1;
+      perRow += 1;
     }
 
     if (row.bottom_line) {
-      score += 2;
+      perRow += 2;
     }
 
-    score -= splitIssueCodes(row.issue_codes).length * 2;
+    components.per_row_metrics += perRow;
+    components.per_row_issues -= splitIssueCodes(row.issue_codes).length * 2;
   }
 
   if (groRow && groRow.metrics_raw && turboRow && turboRow.metrics_raw) {
-    score += 4;
+    components.pair_bonus = 4;
   }
 
-  // New: reward text-heavy OCR output even when the parser couldn't extract
-  // a structured portfolio summary. This is the dominant signal that lets
-  // DAILY MARKET INSIGHT / TALE OF THE TAPE style slides clear the threshold
-  // even though they don't have a GRO HOLDINGS / TURBO RVAB layout.
-  score += scoreTextDensity(ocrResult);
+  // Reward text-heavy OCR output even when the parser couldn't extract a
+  // structured portfolio summary. Dominant signal for DAILY MARKET INSIGHT /
+  // TALE OF THE TAPE style slides that don't have GRO HOLDINGS / TURBO RVAB.
+  components.text_density = scoreTextDensity(ocrResult);
 
-  // Defense-in-depth: also penalize chart-likeness at the OCR-scoring stage,
-  // even if the prefilter missed it. Uses the same stats as the prefilter.
+  // Defense-in-depth: chart-likeness penalty at the OCR-scoring stage too.
   if (ocrResult && ocrResult.stats) {
-    score += scoreChartLikeness(ocrResult.stats);
+    components.chart_likeness = scoreChartLikeness(ocrResult.stats);
   }
 
-  // Strong negative signal: a frame with text but ZERO whiteboard-specific
-  // keywords is almost certainly a stock-chart screenshot wrapped in browser
-  // chrome (Safari File Edit View History Bookmarks Window Help + chart
-  // labels). Without this guard, browser chrome alone produces enough
+  // Strong negative: text but ZERO whiteboard keywords = browser chrome +
+  // chart labels. Without this guard, browser chrome alone produces enough
   // line/char density to mis-classify chart pages as tale_of_the_tape.
   if (ocrResult && ocrResult.text) {
     const keywordHits = countKeywordHits(ocrResult.text);
     if (keywordHits === 0) {
-      score -= 18;
+      components.keyword_guard = -18;
     }
   }
 
-  score += Number(ocrConfidence || 0) / 20;
-  return Number(score.toFixed(2));
+  components.ocr_confidence_bonus = Number(ocrConfidence || 0) / 20;
+
+  const total = Object.values(components).reduce((sum, value) => sum + value, 0);
+  return { components, total: Number(total.toFixed(2)) };
+}
+
+// Backwards-compatible thin wrapper: returns just the numeric total so the
+// existing call sites and tests (e.g. assert.ok(scoreWhiteboardCandidate(...) >= 20))
+// keep working without modification.
+function scoreWhiteboardCandidate(observationRows, ocrConfidence, ocrResult = null) {
+  return scoreWhiteboardCandidateBreakdown(observationRows, ocrConfidence, ocrResult).total;
 }
 
 function countKeywordHits(text) {
@@ -580,6 +709,9 @@ module.exports = {
   chooseBestCandidate,
   chooseBestWindow,
   countKeywordHits,
+  detectIntroCard,
+  extractObservedDate,
+  formatDuration,
   groupContiguousCandidates,
   inferDateKey,
   scoreChartLikeness,
@@ -587,6 +719,7 @@ module.exports = {
   scoreSnapshotCandidate,
   scoreTextDensity,
   scoreWhiteboardCandidate,
+  scoreWhiteboardCandidateBreakdown,
   selectFramesForOcr,
   splitIssueCodes,
   summarizeLumaBuffer

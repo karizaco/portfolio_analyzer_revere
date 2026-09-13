@@ -15,31 +15,23 @@ const {
   analyzeFrameBeforeOcr,
   allocateOutputPath,
   chooseBestCandidate,
+  detectIntroCard,
+  extractObservedDate,
+  formatDuration,
   groupContiguousCandidates,
   inferDateKey,
   scoreFramePrefilter,
   scoreSnapshotCandidate,
-  scoreWhiteboardCandidate,
+  scoreWhiteboardCandidateBreakdown,
   selectFramesForOcr,
   splitIssueCodes
 } = require('../src/video/ocrScanLogic');
+const { computePerceptualHash, hammingDistance } = require('../src/video/imageHash');
+const { extractTickersFromOcrText } = require('../src/normalize/tickerScan');
 const { createProbeKey, parseArgs, printHelp } = require('../src/video/ocrScanArgs');
 
 const OCR_TEXT_SNIPPET_MAX_CHARS = 200;
 const CAPTURE_MIN_FRAME_GAP = 10;
-
-function formatDuration(totalSeconds) {
-  const rounded = Math.max(0, Math.round(totalSeconds));
-  const hours = Math.floor(rounded / 3600);
-  const minutes = Math.floor((rounded % 3600) / 60);
-  const seconds = rounded % 60;
-
-  if (hours > 0) {
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-  }
-
-  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-}
 
 function sortCandidatesDescending(candidates) {
   return candidates
@@ -60,7 +52,9 @@ function sortCandidatesDescending(candidates) {
 // Pick the top-scoring candidates above `threshold`, skipping any that fall
 // inside the same window as an already-picked candidate (within `minFrameGap`
 // frame indices). This ensures we capture multiple distinct screens rather
-// than 3 frames from the same 30-second whiteboard segment.
+// than 3 frames from the same 30-second whiteboard segment. Returns both the
+// kept candidates and the top few that fell below `threshold` so reviewers can
+// audit why a frame was rejected.
 function pickTopDistinctCandidates(candidates, threshold, maxCaptures, minFrameGap = CAPTURE_MIN_FRAME_GAP) {
   const strong = sortCandidatesDescending(candidates.filter((candidate) => candidate.score >= threshold));
   const picked = [];
@@ -74,7 +68,10 @@ function pickTopDistinctCandidates(candidates, threshold, maxCaptures, minFrameG
       picked.push(candidate);
     }
   }
-  return picked;
+  return {
+    picked,
+    rejected: sortCandidatesDescending(candidates.filter((candidate) => candidate.score < threshold)).slice(0, 8)
+  };
 }
 
 function extractOcrTextSnippet(text, maxChars = OCR_TEXT_SNIPPET_MAX_CHARS) {
@@ -153,6 +150,124 @@ function resolveFfmpegBin(explicitValue) {
   return explicitValue || 'ffmpeg';
 }
 
+// Sibling helper: locate ffprobe.exe in the same install as ffmpeg. Returns
+// `null` (instead of throwing) when no candidate exists so callers can fall
+// back to "keyframe lookup skipped" without aborting the scan.
+function resolveFfprobeBin(explicitValue) {
+  if (explicitValue && explicitValue !== 'ffprobe') {
+    return explicitValue;
+  }
+
+  const localPath = process.env.PATH || '';
+  if (localPath.toLowerCase().includes('ffmpeg') || localPath.toLowerCase().includes('ffprobe')) {
+    return 'ffprobe';
+  }
+
+  const ffmpegBin = resolveFfmpegBin(null);
+  if (ffmpegBin && ffmpegBin !== 'ffmpeg') {
+    const sibling = path.join(path.dirname(ffmpegBin), 'ffprobe.exe');
+    try {
+      require('node:fs').accessSync(sibling);
+      return sibling;
+    } catch {
+    }
+  }
+
+  const directCandidates = [
+    'C:/ffmpeg/bin/ffprobe.exe',
+    'C:/Program Files/ffmpeg/bin/ffprobe.exe'
+  ];
+  for (const candidate of directCandidates) {
+    try {
+      require('node:fs').accessSync(candidate);
+      return candidate;
+    } catch {
+    }
+  }
+
+  return null;
+}
+
+// Run ffprobe once per video to harvest the list of keyframe PTS values,
+// then find the nearest keyframe to each capture's timestamp. Returns
+// `{ptsList, skipped}` so callers can flag the run as "no ffprobe available"
+// rather than silently filling the field with `null` everywhere.
+function collectKeyframeTimestamps(videoPath, ffprobeBin) {
+  if (!ffprobeBin) {
+    return { ptsList: [], skipped: true };
+  }
+
+  const command = [
+    ffprobeBin,
+    '-v', 'error',
+    '-select_streams', 'v',
+    '-skip_frame', 'nokey',
+    '-show_entries', 'frame=pts_time',
+    '-of', 'csv=p=0',
+    videoPath
+  ];
+
+  const result = spawnSync(command[0], command.slice(1), {
+    encoding: 'utf8',
+    stdio: 'pipe',
+    maxBuffer: 32 * 1024 * 1024
+  });
+
+  if (result.error || result.status !== 0) {
+    console.log(`[scan] ffprobe failed (${result.error ? result.error.message : result.stderr || 'no stderr'}); skipping keyframe lookup`);
+    return { ptsList: [], skipped: true };
+  }
+
+  const ptsList = String(result.stdout || '')
+    .split(/\r?\n/)
+    .map((line) => Number(line.trim()))
+    .filter((value) => Number.isFinite(value) && value >= 0)
+    .sort((left, right) => left - right);
+
+  return { ptsList, skipped: false };
+}
+
+function nearestKeyframe(ptsList, target) {
+  if (!Array.isArray(ptsList) || !ptsList.length) {
+    return null;
+  }
+  if (!Number.isFinite(target)) {
+    return null;
+  }
+
+  let lo = 0;
+  let hi = ptsList.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if (ptsList[mid] < target) {
+      lo = mid + 1;
+    } else {
+      hi = mid;
+    }
+  }
+
+  const candidate = ptsList[lo];
+  const previous = lo > 0 ? ptsList[lo - 1] : candidate;
+  return Math.abs(candidate - target) <= Math.abs(previous - target) ? candidate : previous;
+}
+
+function computeOcrEngineMetadata() {
+  let tesseractVersion = 'unknown';
+  try {
+    tesseractVersion = require('tesseract.js/package.json').version;
+  } catch {
+  }
+
+  return {
+    tesseract_version: tesseractVersion,
+    language: 'eng',
+    dpi: 300,
+    psm: null,
+    preserve_interword_spaces: '1',
+    deskew: false
+  };
+}
+
 async function ensureDirectoryExists(targetPath) {
   await fs.mkdir(targetPath, { recursive: true });
 }
@@ -216,6 +331,30 @@ function summarizeTopCandidates(candidates, outputKind, limit) {
   return sortCandidatesDescending(candidates)
     .slice(0, limit)
     .map((candidate) => summarizeCandidate(candidate, outputKind));
+}
+
+// Find the candidates whose frame index is within `±radius` of `targetIndex`
+// in the same scan run. Used by summarizeCapture to surface "near-miss"
+// candidates alongside each saved capture so reviewers can tell whether a
+// strong-but-too-close candidate was suppressed by the dedup window or by the
+// score thresholds.
+function findAdjacentCandidates(allCandidates, targetIndex, radius) {
+  const safeRadius = Math.max(0, Number(radius) || 0);
+  if (!Array.isArray(allCandidates) || !allCandidates.length || safeRadius === 0) {
+    return [];
+  }
+
+  return sortCandidatesDescending(allCandidates.filter(
+    (candidate) => Math.abs(candidate.frameIndex - targetIndex) <= safeRadius
+    && candidate.frameIndex !== targetIndex
+  )).map((candidate) => ({
+    frame_index: candidate.frameIndex,
+    timestamp: candidate.timestamp,
+    prefilter_score: candidate.prefilterScore == null ? null : Number(Number(candidate.prefilterScore).toFixed(2)),
+    score: candidate.score,
+    score_breakdown: candidate.scoreBreakdown || null,
+    screen_layout: candidate.screenLayout || 'unknown'
+  }));
 }
 
 async function writeScanLog(logsDirectory, probeKey, payload) {
@@ -359,19 +498,27 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     metadata: buildFrameMetadata(framePath, dateKey, frameIndex),
     ocr
   });
+  const [phash, tickers] = await Promise.all([
+    computePerceptualHash(framePath).catch(() => null),
+    Promise.resolve(extractTickersFromOcrText(ocr.text))
+  ]);
 
   return {
     frameIndex,
     framePath,
+    lowResFramePath: null,
     ocrConfidence: Number(parsed.ocr_confidence || ocr.confidence || 0),
     ocrProfile: ocr.profileName,
+    ocrText: ocr.text || '',
     ocrTextSnippet: extractOcrTextSnippet(ocr.text),
     parsed,
     parsedRows: null,
+    phash,
     prefilterScore,
     score: scoreSnapshotCandidate(parsed),
     screenLayout: detectScreenLayout(ocr.text, ocr.lines),
     stats,
+    tickers,
     timestamp: buildFrameTimestamp(frameIndex, fps)
   };
 }
@@ -382,18 +529,30 @@ async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps, sta
     metadata: buildFrameMetadata(framePath, dateKey, frameIndex),
     ocr
   });
+  const scoring = scoreWhiteboardCandidateBreakdown(parsedRows, ocr.confidence, { ...ocr, stats });
+  const [phash, tickers] = await Promise.all([
+    computePerceptualHash(framePath).catch(() => null),
+    Promise.resolve(extractTickersFromOcrText(ocr.text))
+  ]);
 
   return {
     frameIndex,
     framePath,
+    isIntroCard: detectIntroCard(ocr.text),
+    lowResFramePath: null,
+    observedDate: extractObservedDate(ocr.text),
     ocrConfidence: Number(ocr.confidence || 0),
     ocrProfile: ocr.profileName,
+    ocrText: ocr.text || '',
     ocrTextSnippet: extractOcrTextSnippet(ocr.text),
     parsedRows,
+    phash,
     prefilterScore,
-    score: scoreWhiteboardCandidate(parsedRows, ocr.confidence, { ...ocr, stats }),
+    score: scoring.total,
+    scoreBreakdown: scoring.components,
     screenLayout: detectScreenLayout(ocr.text, ocr.lines),
     stats,
+    tickers,
     timestamp: buildFrameTimestamp(frameIndex, fps)
   };
 }
@@ -488,35 +647,149 @@ async function scanFrames({
   };
 }
 
-function summarizeCandidate(candidate, outputKind) {
+function parsedObservationSummary(row) {
+  if (!row) {
+    return null;
+  }
+  return {
+    portfolio: row.portfolio || null,
+    metrics_raw: row.metrics_raw || null,
+    metric_1: row.metric_1 || null,
+    metric_2: row.metric_2 || null,
+    metric_scalar: Number.isFinite(row.metric_scalar) ? row.metric_scalar : null,
+    action_text: row.action_text || null,
+    bottom_line: row.bottom_line || null,
+    parse_status: row.parse_status || 'unknown',
+    issue_codes: splitIssueCodes(row.issue_codes),
+    ocr_confidence: Number(row.ocr_confidence || 0),
+    ocr_profile: row.ocr_profile || null
+  };
+}
+
+function summarizeCandidate(candidate, outputKind, allCandidates = null, confusionRadius = 0) {
   if (!candidate) {
     return null;
   }
 
+  const parsedRows = Array.isArray(candidate.parsedRows) ? candidate.parsedRows : [];
+  const parsedObservations = parsedRows.length
+    ? parsedRows.map(parsedObservationSummary)
+    : candidate.parsed
+      ? [parsedObservationSummary(candidate.parsed)]
+      : [];
+
   const summary = {
+    confusion_with_nearby: allCandidates
+      ? findAdjacentCandidates(allCandidates, candidate.frameIndex, confusionRadius)
+      : [],
     frame_index: candidate.frameIndex,
     frame_path: candidate.framePath,
-    issue_codes: collectIssueCodes(candidate.parsedRows),
+    is_intro_card: Boolean(candidate.isIntroCard),
+    issue_codes: collectIssueCodes(parsedRows),
+    low_res_frame_path: candidate.lowResFramePath || null,
+    nearest_ffmpeg_keyframe_ts: Number.isFinite(candidate.nearestFfmpegKeyframeTs) ? candidate.nearestFfmpegKeyframeTs : null,
+    observed_date: candidate.observedDate || null,
     ocr_confidence: candidate.ocrConfidence,
     ocr_profile: candidate.ocrProfile || '',
+    ocr_text: candidate.ocrText || '',
     ocr_text_snippet: candidate.ocrTextSnippet || '',
     output_kind: outputKind,
-    parsed_row_count: Array.isArray(candidate.parsedRows) ? candidate.parsedRows.length : 0,
+    parsed_observations: parsedObservations,
+    parsed_row_count: parsedRows.length || (candidate.parsed ? 1 : 0),
+    phash: candidate.phash || null,
     prefilter_score: candidate.prefilterScore == null ? null : Number(candidate.prefilterScore.toFixed(2)),
+    prefilter_stats: candidate.stats || null,
     score: candidate.score,
+    score_breakdown: candidate.scoreBreakdown || null,
     screen_layout: candidate.screenLayout || 'unknown',
-    timestamp: candidate.timestamp
+    tickers: Array.isArray(candidate.tickers) ? candidate.tickers : [],
+    timestamp: candidate.timestamp,
+    timestamp_hms: formatDuration(candidate.timestamp)
   };
 
   return summary;
 }
 
-function summarizeCapture(candidate, outputKind, outputPath) {
-  const summary = summarizeCandidate(candidate, outputKind);
+function summarizeCapture(candidate, outputKind, outputPath, allCandidates = null, confusionRadius = 0) {
+  const summary = summarizeCandidate(candidate, outputKind, allCandidates, confusionRadius);
   if (!summary) {
     return null;
   }
   return { ...summary, output_path: outputPath };
+}
+
+// Group contiguous same-screen-layout captures into sessions so reviewers
+// can answer "did video #3 have 1 DMI slide + 1 ToTT slide + 1 intro card?"
+// without re-scanning the timeline. Two captures belong to the same segment
+// when their frame indices are within 2× the deduplication window and they
+// share a screen_layout. Segments that consist entirely of intro cards are
+// flagged so downstream consumers can filter them out.
+function buildWhiteboardSegments(captures) {
+  if (!Array.isArray(captures) || !captures.length) {
+    return [];
+  }
+
+  const sorted = captures
+    .slice()
+    .sort((left, right) => left.frame_index - right.frame_index);
+
+  const contiguousWindow = CAPTURE_MIN_FRAME_GAP * 2;
+  const segments = [];
+  let current = null;
+
+  for (const capture of sorted) {
+    const layout = capture.screen_layout || 'unknown';
+    if (!current || current.layout !== layout || (capture.frame_index - current.endFrameIndex) > contiguousWindow) {
+      if (current) {
+        segments.push(finalizeSegment(current));
+      }
+      current = {
+        captureCount: 1,
+        endFrameIndex: capture.frame_index,
+        endTs: capture.timestamp,
+        frameIndices: [capture.frame_index],
+        introFlags: [Boolean(capture.is_intro_card)],
+        layout,
+        peakCapture: capture,
+        peakScore: capture.score,
+        scores: [capture.score],
+        startFrameIndex: capture.frame_index,
+        startTs: capture.timestamp
+      };
+      continue;
+    }
+
+    current.captureCount += 1;
+    current.endFrameIndex = capture.frame_index;
+    current.endTs = capture.timestamp;
+    current.frameIndices.push(capture.frame_index);
+    current.introFlags.push(Boolean(capture.is_intro_card));
+    current.scores.push(capture.score);
+    if (capture.score > current.peakScore) {
+      current.peakScore = capture.score;
+      current.peakCapture = capture;
+    }
+  }
+
+  if (current) {
+    segments.push(finalizeSegment(current));
+  }
+
+  return segments;
+}
+
+function finalizeSegment(segment) {
+  return {
+    capture_count: segment.captureCount,
+    end_ts: segment.endTs,
+    end_hms: formatDuration(segment.endTs),
+    is_intro_card: segment.introFlags.every(Boolean),
+    layout: segment.layout,
+    peak_frame_index: segment.peakCapture.frame_index,
+    peak_score: Number(segment.peakScore.toFixed(2)),
+    start_hms: formatDuration(segment.startTs),
+    start_ts: segment.startTs
+  };
 }
 
 async function saveCapture({ candidate, outputRoot, outputKind, dateKey, videoPath, ffmpegBin, suffix }) {
@@ -555,6 +828,26 @@ async function main() {
     output_kind: options.outputKind,
     video_path: videoPath
   };
+
+  const ocrEngineMetadata = computeOcrEngineMetadata();
+  let keyframePtsList = [];
+  let keyframeLookupSkipped = Boolean(options.skipKeyframes);
+  if (!keyframeLookupSkipped) {
+    const ffprobeBin = resolveFfprobeBin(null);
+    if (ffprobeBin) {
+      const { ptsList, skipped } = collectKeyframeTimestamps(videoPath, ffprobeBin);
+      keyframePtsList = ptsList;
+      keyframeLookupSkipped = skipped;
+      if (!skipped) {
+        console.log(`[scan:${options.outputKind}] ffprobe found ${ptsList.length} keyframe(s) for nearest-keyframe lookup`);
+      }
+    } else {
+      keyframeLookupSkipped = true;
+      console.log(`[scan:${options.outputKind}] skipping keyframe lookup (no ffprobe)`);
+    }
+  } else {
+    console.log(`[scan:${options.outputKind}] skipping keyframe lookup (--skip-keyframes)`);
+  }
 
   try {
     console.log(`[scan:${options.outputKind}] preflighting final ${options.outputKind} output extraction`);
@@ -608,16 +901,22 @@ async function main() {
       videoPath
     });
     const candidates = scanResult.candidates;
+    for (const candidate of candidates) {
+      candidate.nearestFfmpegKeyframeTs = nearestKeyframe(keyframePtsList, candidate.timestamp);
+    }
 
-    const strongCandidates = pickTopDistinctCandidates(
+    const strongResult = pickTopDistinctCandidates(
       candidates,
       options.strongThreshold,
       options.maxCapturesPerVideo
     );
-    const reviewCandidates = strongCandidates.length
-      ? []
+    const strongCandidates = strongResult.picked;
+    const reviewResult = strongCandidates.length
+      ? { picked: [], rejected: [] }
       : pickTopDistinctCandidates(candidates, options.reviewThreshold, options.maxCapturesPerVideo);
+    const reviewCandidates = reviewResult.picked;
     const captures = strongCandidates.length ? strongCandidates : reviewCandidates;
+    const rejectedForReport = (strongCandidates.length ? strongResult.rejected : reviewResult.rejected).slice(0, 5);
 
     if (!captures.length) {
       const bestCandidate = chooseBestCandidate(candidates);
@@ -628,13 +927,18 @@ async function main() {
         frame_count: framePaths.length,
         frame_error_count: scanResult.frameErrors.length,
         frame_errors: scanResult.frameErrors.slice(0, 5),
+        nearest_ffmpeg_keyframe_lookups_skipped: keyframeLookupSkipped,
+        nearest_ffmpeg_keyframe_pts_total: keyframePtsList.length,
+        ocr_engine_metadata: ocrEngineMetadata,
         ocr_frame_count: selectedFrameRows.length,
         ocr_frame_width: options.ocrFrameWidth,
         prefilter_best_score: bestPrefilter ? bestPrefilter.prefilterScore : null,
         sample_frame_width: options.sampleWidth,
         status: 'no_match',
-        top_candidate: summarizeCandidate(bestCandidate, options.outputKind),
-        top_candidates: scanResult.topCandidates
+        top_candidate: summarizeCandidate(bestCandidate, options.outputKind, candidates, options.confusionRadius),
+        top_candidates: scanResult.topCandidates,
+        top_rejected_candidates: rejectedForReport.map((candidate) => summarizeCandidate(candidate, options.outputKind)),
+        whiteboard_segments: []
       };
       const logPath = await writeScanLog(logsDirectory, probeKey, result);
       result.log_path = logPath;
@@ -659,14 +963,24 @@ async function main() {
     }
 
     const status = strongCandidates.length ? 'done' : 'review';
+    const captureSummaries = captureOutputs.map(({ candidate, outputPath }) => summarizeCapture(
+      candidate,
+      options.outputKind,
+      outputPath,
+      candidates,
+      options.confusionRadius
+    ));
     const result = {
       ...resultBase,
       captured_count: captureOutputs.length,
-      captures: captureOutputs.map(({ candidate, outputPath }) => summarizeCapture(candidate, options.outputKind, outputPath)),
+      captures: captureSummaries,
       frame_count: framePaths.length,
       frame_error_count: scanResult.frameErrors.length,
       frame_errors: scanResult.frameErrors.slice(0, 5),
       max_captures_per_video: options.maxCapturesPerVideo,
+      nearest_ffmpeg_keyframe_lookups_skipped: keyframeLookupSkipped,
+      nearest_ffmpeg_keyframe_pts_total: keyframePtsList.length,
+      ocr_engine_metadata: ocrEngineMetadata,
       ocr_frame_count: selectedFrameRows.length,
       ocr_frame_width: options.ocrFrameWidth,
       output_path: captureOutputs[0].outputPath,
@@ -675,8 +989,10 @@ async function main() {
       sample_frame_width: options.sampleWidth,
       status,
       strong_threshold: options.strongThreshold,
-      top_candidate: summarizeCandidate(captureOutputs[0].candidate, options.outputKind),
-      top_candidates: scanResult.topCandidates
+      top_candidate: summarizeCandidate(captureOutputs[0].candidate, options.outputKind, candidates, options.confusionRadius),
+      top_candidates: scanResult.topCandidates,
+      top_rejected_candidates: rejectedForReport.map((candidate) => summarizeCandidate(candidate, options.outputKind)),
+      whiteboard_segments: buildWhiteboardSegments(captureSummaries)
     };
     const logPath = await writeScanLog(logsDirectory, probeKey, result);
     result.log_path = logPath;
@@ -685,6 +1001,9 @@ async function main() {
     const errorResult = {
       ...resultBase,
       message: error.message,
+      nearest_ffmpeg_keyframe_lookups_skipped: keyframeLookupSkipped,
+      nearest_ffmpeg_keyframe_pts_total: keyframePtsList.length,
+      ocr_engine_metadata: ocrEngineMetadata,
       status: 'error'
     };
     const logPath = await writeScanLog(logsDirectory, probeKey, errorResult);

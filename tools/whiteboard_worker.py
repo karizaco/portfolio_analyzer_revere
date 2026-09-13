@@ -409,7 +409,10 @@ def command_status(args: argparse.Namespace) -> int:
 def build_catalog_command(args: argparse.Namespace) -> list[str]:
     command = build_yt_dlp_prefix(args.yt_dlp_bin)
 
-    command.extend(['--flat-playlist', '--skip-download', '--ignore-errors'])
+    # Drop --flat-playlist so yt-dlp resolves per-video metadata (otherwise
+    # upload_date is reported as "NA"). Keep --skip-download so we never pull
+    # bytes during the catalog pass.
+    command.extend(['--skip-download', '--ignore-errors', '--js-runtimes', 'node'])
 
     if args.limit:
         command.extend(['--playlist-end', str(args.limit)])
@@ -609,6 +612,7 @@ def build_download_command(
         '--ignore-errors',
         '--continue',
         '--no-overwrites',
+        '--js-runtimes', 'node',
         '--download-archive',
         str(archive_path),
     ])
@@ -640,6 +644,26 @@ def locate_downloaded_file(download_directory: Path, video_id: str) -> Path | No
         return match
 
     return None
+
+
+def locate_existing_download(download_directory: Path, video_id: str, upload_date: str) -> Path | None:
+    """Find a previously-downloaded file on disk for this video id, preferring
+    a path whose filename starts with the expected upload_date prefix. Returns
+    None when no candidate file is present.
+
+    The date-prefix preference guards against a stale local file from a
+    different upload (e.g. someone re-uploaded the same video id at a later
+    date) silently being treated as the new copy.
+    """
+    if upload_date:
+        date_prefix_matches = sorted(
+            download_directory.glob(f'{upload_date}_{video_id}.*')
+        ) if download_directory.exists() else []
+        non_part = [match for match in date_prefix_matches if match.suffix != '.part']
+        if non_part:
+            return non_part[0]
+
+    return locate_downloaded_file(download_directory, video_id)
 
 
 def resolve_reference_dir(pipeline_root: Path, value: str) -> Path:
@@ -1090,6 +1114,7 @@ def command_download(args: argparse.Namespace) -> int:
 
     results = []
     downloaded = 0
+    reused = 0
     errored = 0
 
     with connect_database(db_path) as connection:
@@ -1102,6 +1127,31 @@ def command_download(args: argparse.Namespace) -> int:
                     'video_id': row['video_id'],
                 })
                 errored += 1
+                continue
+
+            # Disk dedup: if a file matching <upload_date>_<id>.<ext> already
+            # exists on disk from a prior session, treat the row as already
+            # downloaded and skip the yt-dlp call entirely.
+            existing_file = locate_existing_download(
+                paths['downloads'],
+                row['video_id'],
+                row['upload_date'],
+            )
+            if existing_file is not None:
+                update_video_row(
+                    connection,
+                    video_id=row['video_id'],
+                    status='scanning',
+                    download_path=str(existing_file),
+                    error='',
+                )
+                results.append({
+                    'download_path': str(existing_file),
+                    'reused_from_disk': True,
+                    'status': 'scanning',
+                    'video_id': row['video_id'],
+                })
+                reused += 1
                 continue
 
             update_video_row(connection, video_id=row['video_id'], status='downloading', error='')
@@ -1159,6 +1209,7 @@ def command_download(args: argparse.Namespace) -> int:
         'attempted': len(selected_rows),
         'db_path': str(db_path),
         'downloaded': downloaded,
+        'reused_from_disk': reused,
         'errored': errored,
         'pipeline_root': str(pipeline_root),
         'results': results,
@@ -1539,8 +1590,10 @@ def build_parser() -> argparse.ArgumentParser:
     )
     download_parser.add_argument(
         '--extractor-args',
-        default='youtube:player_client=tv',
-        help='Optional yt-dlp extractor args passed through to the downloader.',
+        default='youtube:player_client=android,web_safari,web',
+        help='Optional yt-dlp extractor args passed through to the downloader. '
+             'The default client set bypasses the "page needs to be reloaded" '
+             'anti-bot check that the tv client hits on Revere videos.',
     )
     download_parser.add_argument(
         '--format',

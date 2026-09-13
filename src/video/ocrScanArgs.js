@@ -33,6 +33,8 @@ function printHelp() {
     '  --progress-interval <n>    Report OCR progress every N frames, default 10',
     '  --top-candidates <n>       Include the top N candidate timestamps in the result, default 5',
     '  --keep-frames              Keep sampled intermediate frames',
+    '  --skip-keyframes           Do not invoke ffprobe to locate the nearest keyframe per capture',
+    '  --confusion-radius <n>     Adjacent-frame lookup window for confusion_with_nearby, default 1',
     '  --help                     Show this help text',
     ''
   ].join('\n'));
@@ -40,6 +42,7 @@ function printHelp() {
 
 function buildDefaultOptions(defaultOutputRoot) {
   return {
+    confusionRadius: 1,
     ffmpegBin: 'ffmpeg',
     fps: 0.25,
     maxCapturesPerVideo: 3,
@@ -53,6 +56,7 @@ function buildDefaultOptions(defaultOutputRoot) {
     progressInterval: 10,
     reviewThreshold: 4,
     sampleWidth: 640,
+    skipKeyframes: false,
     strongThreshold: 6,
     topCandidates: 5
   };
@@ -155,6 +159,13 @@ function parseArgs(argv, overrides = {}) {
       case '--keep-frames':
         options.keepFrames = true;
         break;
+      case '--skip-keyframes':
+        options.skipKeyframes = true;
+        break;
+      case '--confusion-radius':
+        options.confusionRadius = Number(nextValue);
+        index += 1;
+        break;
       default:
         throw new Error(`Unknown argument: ${argument}`);
     }
@@ -210,6 +221,10 @@ function parseArgs(argv, overrides = {}) {
 
   if (!Number.isFinite(options.maxCapturesPerVideo) || options.maxCapturesPerVideo <= 0) {
     throw new Error('`--max-captures` must be a positive number.');
+  }
+
+  if (!Number.isFinite(options.confusionRadius) || options.confusionRadius < 0) {
+    throw new Error('`--confusion-radius` must be zero or a positive number.');
   }
 
   return options;

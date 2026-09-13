@@ -84,6 +84,8 @@ function runScanCli({ outputRoot, outputKind, ffmpegBin, videoPath, extraArgs = 
     '--progress-interval', '1',
     '--top-candidates', '3',
     '--keep-frames',
+    '--skip-keyframes',
+    '--confusion-radius', '1',
     ...extraArgs
   ];
   if (ffmpegBin) {
@@ -183,7 +185,9 @@ test('parseArgs produces the same options that the CLI parses from argv', () => 
     '--prefilter-max-frames', '4',
     '--progress-interval', '1',
     '--top-candidates', '3',
-    '--keep-frames'
+    '--keep-frames',
+    '--skip-keyframes',
+    '--confusion-radius', '2'
   ];
   const options = parseArgs(argv, { defaultOutputRoot: path.join(WORKSPACE_ROOT, 'data', 'ocr_probe_test_default') });
 
@@ -196,6 +200,8 @@ test('parseArgs produces the same options that the CLI parses from argv', () => 
   assert.equal(options.progressInterval, 1);
   assert.equal(options.topCandidates, 3);
   assert.equal(options.keepFrames, true);
+  assert.equal(options.skipKeyframes, true);
+  assert.equal(options.confusionRadius, 2);
 });
 
 test('CLI writes status:error log when the input file is not a real video', { skip: !ffmpegBin }, () => {
@@ -256,11 +262,27 @@ test('text-heavy scan captures multi-screen output with enriched JSON log', { sk
       assert.ok(fs.existsSync(capture.output_path), `capture file missing: ${capture.output_path}`);
       assert.ok(capture.score > 0, `capture score should be > 0, got ${capture.score}`);
       assert.ok(typeof capture.ocr_text_snippet === 'string', 'capture must include ocr_text_snippet');
+      assert.ok(typeof capture.ocr_text === 'string', 'capture must include full ocr_text');
+      assert.ok(Array.isArray(capture.tickers), 'capture must include tickers array');
+      assert.ok(typeof capture.phash === 'string' && capture.phash.length === 16, `phash must be 16-char hex, got ${capture.phash}`);
+      assert.ok(capture.prefilter_stats && typeof capture.prefilter_stats.brightRatio === 'number',
+        'capture must include prefilter_stats.brightRatio');
+      assert.ok(typeof capture.timestamp_hms === 'string', 'capture must include timestamp_hms');
+      assert.ok(Array.isArray(capture.confusion_with_nearby), 'capture must include confusion_with_nearby array');
+      assert.ok(Array.isArray(capture.parsed_observations), 'capture must include parsed_observations array');
       assert.ok(['structured_whiteboard', 'dmi', 'tale_of_the_tape', 'unknown_text', 'chart', 'unknown'].includes(capture.screen_layout),
         `unexpected screen_layout: ${capture.screen_layout}`);
       assert.ok(Array.isArray(capture.issue_codes), 'capture must include issue_codes array');
       assert.equal(capture.output_kind, 'whiteboard');
+      // --skip-keyframes was passed; the keyframe lookup must be null for every capture.
+      assert.equal(capture.nearest_ffmpeg_keyframe_ts, null);
     }
+
+    // OCR engine metadata is captured once per scan at the probe-log top level.
+    assert.ok(probeLog.ocr_engine_metadata, 'probe log must include ocr_engine_metadata');
+    assert.equal(probeLog.ocr_engine_metadata.language, 'eng');
+    assert.ok(typeof probeLog.ocr_engine_metadata.tesseract_version === 'string');
+    assert.equal(probeLog.nearest_ffmpeg_keyframe_lookups_skipped, true);
 
     // The number of saved PNG files under screenshots/ must match captures.length
     const screenshotsDirectory = path.join(outputRoot, 'screenshots');

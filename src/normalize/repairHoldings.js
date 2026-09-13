@@ -1018,8 +1018,10 @@ function repairSnapshotRows(rows) {
 }
 
 module.exports = {
+  buildReferenceScores,
   buildTickerKnowledge,
   extractActionSignals,
+  extractTickersFromFragment,
   findBestCorrection,
   repairSnapshotRows
 };
