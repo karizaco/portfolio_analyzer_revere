@@ -66,19 +66,21 @@ Current scope of the worker:
 
 - initialize a resumable workspace under `data/video_pipeline/`
 - persist playlist catalog state in SQLite
-- import a YouTube playlist or channel catalog through `yt-dlp`
+- import a YouTube playlist or channel catalog through `yt-dlp` (with real `YYYYMMDD` upload dates)
+- resumable, low-resolution downloads with status-based + disk-based dedup
+- frame extraction via either reference-hash similarity (`video:scan`) or the direct OCR probe (`video:scan-ocr`)
+- screenshot output feeds `whiteboard:extract` (whiteboard frames) or `extract` (snapshot frames) for the existing parser pipeline
 
 Current non-goals of this first pass:
 
-- downloading videos
-- scanning frames
-- selecting final whiteboard screenshots
-- parsing harvested whiteboard screenshots into CSVs
+- high-resolution / archival-quality downloads (the default format caps at 480p for speed and OCR is fine with it)
+- scanning whiteboard screenshots into the portfolio CSVs (still requires the downstream `whiteboard:extract` / `extract` pass)
 
 Prerequisites:
 
 - Python 3 available through `py -3`, `python`, or `python3`
-- `yt-dlp` installed and available on `PATH` for the catalog import step
+- `yt-dlp` installed and available on `PATH` (or via `py -3 -m yt_dlp`) for the catalog + download steps
+- `ffmpeg` for the scan step (the bundled OCR probe also needs it for frame extraction)
 
 Initialize the worker state:
 
@@ -130,11 +132,12 @@ npm run video:scan -- --reference-dir ".\\data\\video_pipeline\\references" --li
 
 Useful catalog options:
 
-- `--limit 10` to test on a small subset first
+- `--limit N` to test on a small subset first (defaults to 0 = no limit, but YouTube's `--playlist-end` accepts very large numbers so a small batch is recommended when smoke-testing)
 - `--cookies-from-browser chrome` or `firefox` if playlist metadata requires a logged-in browser session
 - `--cookies-file exported-cookies.txt` when Chromium DPAPI decryption fails on your machine
 - `--yt-dlp-bin C:\\path\\to\\yt-dlp.exe` if `yt-dlp` is not on `PATH`
 - `--yt-dlp-bin py-yt-dlp` to force module-based invocation through the local Python install
+- The catalog command uses `--skip-download` (not `--flat-playlist`) so `upload_date` is resolved to a real `YYYYMMDD` instead of `NA`. Re-running the same catalog is safe: existing rows are updated, never duplicated. To pull the next batch beyond the initial `--limit`, just raise it — the SQLite upsert keeps everything idempotent.
 
 Useful download options:
 
@@ -142,6 +145,8 @@ Useful download options:
 - `--video-id VIDEO_ID` to retry one specific row
 - `--cookies-from-browser firefox` or `--cookies-file path.txt` when YouTube requires a logged-in session
 - `--format "bv*[height<=480]+ba/b[height<=480]"` to override the default low-resolution selector
+- The default `--extractor-args "youtube:player_client=android,web_safari,web"` and `--js-runtimes node` are the combination that bypasses the YouTube "page needs to be reloaded" anti-bot check on Revere-style channels. Override only if those clients fail on a specific video.
+- The download summary now includes `reused_from_disk`: rows in `pending` / `error` whose `<upload_date>_<id>.<ext>` file already exists locally are flipped to `scanning` without invoking yt-dlp. Together with `download_archive.txt` and the status-based skip (`done` / `scanning` / `review` / `no_match` rows are not selected), the download step is fully idempotent — re-running `npm run video:download` against the same catalog does zero work.
 
 Useful local import options:
 
@@ -164,7 +169,13 @@ Useful direct OCR scan options:
 - `--top-candidates 5` to include the best timestamp candidates in the output log
 - `--keep-frames` to preserve sampled frames for manual inspection during debugging
 
-For the Revere YouTube channel, a live smoke test succeeded for catalog import with Chrome cookies, while Edge cookie decryption failed with a DPAPI error and a cookie-less download retry hit a YouTube page reload check. If Chromium browser-cookie access fails locally, export cookies from a normal logged-in browser session to a Netscape-format text file and pass that file with `--cookies-file`.
+For the Revere YouTube channel (`https://www.youtube.com/@revereasset/videos`, channel id `UCV27KlSTS2zAidGEbu0HcZA`), the live catalog + download flow has been validated end-to-end without cookies:
+
+- `npm run video:catalog -- --source-url "https://www.youtube.com/@revereasset/videos" --limit 70 --yt-dlp-bin py-yt-dlp` pulled the top 70 videos with real `YYYYMMDD` upload dates spanning 2026-07-04 → 2026-09-12. No malformed rows, no `NA` dates, no cookies required.
+- `npm run video:download -- --limit 30 --yt-dlp-bin py-yt-dlp` downloaded 30 videos at 360p (`bv*[height<=480]+ba/b[height<=480]` lands on 360p because no 480p progressive stream is exposed by the android / web_safari / web client set). Typical sizes: 22-50 MB for 13-35 minute videos. Downloads are resumable via `download_archive.txt` and skip already-on-disk files (see `reused_from_disk` in the summary).
+- `npm run video:scan-ocr -- --video <path> --output-kind whiteboard --fps 0.25` then extracts the `TALE OF THE TAPE` / `DAILY MARKET INSIGHT` slides in ~12 minutes per video with full OCR text + tickers + pHash + nearest-keyframe PTS recorded.
+
+If you hit a "page needs to be reloaded" or 403 error on a specific video (rare with the default extractor-args), export cookies from a normal logged-in browser session to a Netscape-format text file and pass it with `--cookies-file`. The default client set (`android,web_safari,web`) is a deliberate trade-off: it bypasses the reload check without needing browser cookies, but some region-locked or premium videos may still need cookies.
 
 Sample-video workflow for ffmpeg and OCR testing:
 
@@ -191,10 +202,30 @@ npm run video:scan-ocr -- --video "D:\\courses_F\\revere_asset\\sample.mp4" --ou
 
 The direct OCR probe currently writes the whiteboard output as `YYYYMMDD_ps.png` instead of `.jpg` because that is more reliable on the current ffmpeg build. The stem naming stays the same, and `whiteboard:extract` accepts PNG inputs.
 
+### Aggregating OCR probe output
+
+After running `video:scan-ocr` across multiple videos, use `tools/aggregateScanResults.js` to roll up the per-video probe logs into a single `analysis.json` + `analysis.md`:
+
+```bash
+node tools/aggregateScanResults.js data/video_pipeline_samples/yt_first
+```
+
+Per-capture fields in `analysis.json` include the full Phase 2 surface: `ocr_text` (full inline OCR text), `parsed_observations` (GRO + TURBO at-a-glance), `prefilter_stats`, `tickers`, `phash`, `low_res_frame_path`, `timestamp_hms`, `nearest_ffmpeg_keyframe_ts`, and `confusion_with_nearby`. Per-video metadata carries `ocr_engine_metadata` (tesseract.js version + flags) and `top_rejected_candidates`. Totals include `captures_with_tickers`, `unique_tickers`, `unique_phashes`, `phash_collisions` (captures sharing a pHash — same-slide dedup signal), `captures_with_keyframe_ts`, and `videos_with_keyframe_lookup_skipped`. A second tool, `tools/compareScanAnalyses.js <baseline.json> <current.json>`, prints a side-by-side totals + per-video breakdown so before/after probe-log changes are easy to verify.
+
+To compare two analysis runs against each other:
+
+```bash
+node tools/compareScanAnalyses.js data/video_scan_20260913/fields-v1/analysis.json data/video_scan_20260914/fields-v2/analysis.json
+```
+
+### OCR quality vs. download resolution
+
+YouTube's default progressive streams for Revere videos top out at 360p on the android / web_safari / web client combo, so the default download format (`bv*[height<=480]+ba/b[height<=480]`) lands at 360p with typical file sizes of 22-50 MB per 13-35 minute video (versus 500 MB+ at 1080p). For OCR this is fine: tesseract.js downsamples internally to ~300 DPI regardless of input resolution, and the large Revere whiteboard text (`MARKET STATE`, `TALE OF THE TAPE`, `BOTTOM LINE`) is still 30-50 px tall at 360p. A live validation on `0_YeDfX1atU` (Sept 11, 2026, 70 MB / 360p / 1217s) recovered the full `TALE OF THE TAPE — THURSDAY, SEPTEMBER 11, 2026` header and 6 tickers (`CF`, `OKTA`, `PLTR`, `SPYM`, `HOOD`, `TAN`) cleanly. Bump to 720p only if you need a high-res archival copy — pass `--format "bv*[height<=720]+ba/b[height<=720]"` to `npm run video:download`.
+
 Debugging a wrong timestamp or wrong screenshot:
 
 1. Re-run the command with `--keep-frames` so the sampled PNGs remain under `data/.../ocr_probe/frames/`.
-2. Check the JSON log under `data/.../ocr_probe/logs/`; it records `status`, `top_candidate`, `top_candidates`, `captures` (array, one entry per saved screenshot), window timing, prefilter reduction, and any frame-level OCR errors. Each capture and top candidate also includes `screen_layout`, `ocr_text_snippet` (first ~200 chars of OCR text), `parsed_row_count`, `issue_codes` (array), `ocr_profile`, and `prefilter_score` for fast diagnosis.
+2. Check the JSON log under `data/.../ocr_probe/logs/`; it records `status`, `top_candidate`, `top_candidates`, `captures` (array, one entry per saved screenshot), window timing, prefilter reduction, and any frame-level OCR errors. Each capture and top candidate also includes `screen_layout`, `ocr_text_snippet` (first ~200 chars of OCR text), `parsed_row_count`, `issue_codes` (array), `ocr_profile`, `prefilter_score`, plus the full Phase 2 fields: `ocr_text`, `parsed_observations`, `prefilter_stats`, `tickers`, `phash`, `low_res_frame_path`, `timestamp_hms`, `nearest_ffmpeg_keyframe_ts`, and `confusion_with_nearby`. The probe-log level carries `ocr_engine_metadata` (tesseract.js version + per-scan flags) and `top_rejected_candidates` so you can see what was filtered out and why.
 3. If the right screen exists but was missed, increase density with `--fps 0.5` or `--fps 1` so the scan samples more timestamps.
 4. If a near-miss was chosen, raise `--strong-threshold` or inspect the top candidate timestamps in the JSON log and compare them to the saved frames.
 5. If no useful candidates appear, run the same video once with `--output-kind whiteboard` and once with `--output-kind snapshot`; the two scoring heuristics are intentionally different.
@@ -229,9 +260,9 @@ Useful scan options:
 
 The worker stores its state at `data/video_pipeline/state.sqlite` and creates local directories for `catalog`, `downloads`, `frames`, `logs`, `references`, `review`, `screenshots`, and `snapshots`. Those artifacts stay inside this workspace and are ignored by git.
 
-Each successful catalog import also saves the raw `yt-dlp` output to `data/video_pipeline/catalog/` so the playlist snapshot can be inspected or replayed later.
+Each successful catalog import also saves the raw `yt-dlp` output to `data/video_pipeline/catalog/` so the playlist snapshot can be inspected or replayed later. The catalog row in SQLite carries a real `upload_date` (`YYYYMMDD`), `source_url`, `video_url`, and the latest `title`; re-running `npm run video:catalog` against the same source updates those fields without duplicating rows.
 
-The download step also keeps a local `download_archive.txt` under `data/video_pipeline/` so interrupted runs can resume without re-downloading completed video IDs.
+The download step keeps a local `download_archive.txt` under `data/video_pipeline/` so interrupted runs can resume without re-downloading completed video IDs. The JSON summary emitted at the end of `npm run video:download` includes `attempted`, `downloaded`, `reused_from_disk`, `errored`, plus a per-row `results` array — `reused_from_disk: N` reports how many rows were skipped because the matching file was already present, which is how idempotent re-runs surface their no-op behavior.
 
 The scan step samples frames at low resolution, matches them against the reference stills, groups consecutive hits into candidate windows, prefers a later sharp frame inside the best window, and saves the extracted screenshot as `YYYYMMDD_ps.jpg` with collision-safe suffixes.
 
