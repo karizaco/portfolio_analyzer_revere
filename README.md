@@ -176,6 +176,32 @@ Files are written to `data/video_pipeline/downloads_hires/<upload_date>_<video_i
 
 The checkpoint also stores `error[]` so a video that fails repeatedly across multiple runs is not retried endlessly — clear it manually (`rm _download_checkpoint.json`) to retry after a network blip is over.
 
+### Video type classifier (`daily` / `weekend_review` / `feature` / `live_update`)
+
+Revere's YouTube channel publishes several kinds of video that need to be treated differently downstream:
+
+| Kind | Detection signal | Treatment |
+|---|---|---|
+| `daily` | Tue-Fri upload, title starts with a date prefix or carries DMI/ToTT keywords | Primary signal source: per-day timeline rollup, full portfolio-delta parsing |
+| `weekend_review` | Title matches the weekend-wrapping regex, or Sat/Sun upload with non-LIVE title | Weekly context only — no daily position changes; should not pollute the per-day timeline |
+| `feature` | Title is all-caps / sector-themed (`AI STOCKS ARE BACK!`, `BULLS SHOW UP AS INDEXES...`, `30-YEAR YIELDS MAKING NEW HIGHS`) | Chart-heavy with ticker mentions in passing — ticker union yes, per-day rollup no |
+| `live_update` | Title carries `LIVE`, `MIDDAY`, `PRE-MARKET`, `MARKET OPEN` | Short market chatter — variable structure, often no captures |
+
+The classifier lives at [`src/normalize/videoTypeClassifier.js`](src/normalize/videoTypeClassifier.js) and is a pure function over `title + upload_date`. It is invoked:
+
+- Automatically: [`tools/runAllOcr.js`](tools/runAllOcr.js) stamps `video_type` onto every probe log it produces (idempotent, skipped on retry). The stamp records `video_type`, `video_type_label`, `video_type_description`, `video_type_classified_at`, and a `classification_inputs` excerpt so reviewers can audit the call.
+- Retroactively: [`tools/stampExistingProbeLogs.js`](tools/stampExistingProbeLogs.js) walks an existing `RUN_TAG` directory, joins each probe-log filename to the SQLite `videos` row (case-insensitive on `video_id`), and re-stamps. Useful for backfilling logs created before the classifier was wired in:
+
+  ```bash
+  npm run video:stamp-types                         # any run-tag found
+  npm run video:stamp-types -- --run-tag ocr-20260915   # one specific tag
+  npm run video:stamp-types:reclassify              # overwrite existing stamps
+  ```
+
+The aggregator ([`tools/aggregateOcrTimeline.js`](tools/aggregateOcrTimeline.js)) carries the kind through into `per_video[]`, `per_day[]`, and `totals.video_type_counts`. The viewer ([`tools/viewTimeline.html`](tools/viewTimeline.html)) shows a typed-pill column in the per-video table, a kind-filter chip row above the KPIs, and a catalog-wide `video_type_counts` summary in the meta line. Filter state survives page refresh via the URL hash (`#type=weekend_review`).
+
+**Reviewed rules (8 unit tests in [`test/videoTypeClassifier.test.js`](test/videoTypeClassifier.test.js))**: weekend-by-title, weekend-by-day-of-week fallback, daily-by-date-prefix, daily-by-DMI-keyword, feature-by-sector-keyword, live-by-title-hint, default-to-daily-on-empty-title, `isWeekendUpload()` math.
+
 Useful local import options:
 
 - `--video-dir path` to register sample `.mp4`, `.mov`, `.mkv`, `.m4v`, or `.webm` files for direct scanning

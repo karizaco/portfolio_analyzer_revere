@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Revere OCR timeline</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --line: #1f2937;
+      --ink: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-2: #f97316;
+      --good: #22c55e;
+      --bad: #ef4444;
+      --warn: #fbbf24;
+    }
+    html, body { background: var(--bg); color: var(--ink); margin: 0; font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    main { max-width: 1180px; margin: 0 auto; padding: 24px; }
+    h1 { font-size: 22px; margin: 0 0 4px; }
+    h2 { font-size: 16px; margin: 24px 0 8px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+    .meta { color: var(--muted); margin-bottom: 24px; }
+    .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+    .panel h3 { margin: 0 0 12px; font-size: 13px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+    .panel.full { grid-column: 1 / -1; }
+    .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+    .kpi .label { color: var(--muted); text-transform: uppercase; font-size: 11px; letter-spacing: 0.05em; }
+    .kpi .value { font-size: 28px; font-weight: 600; margin-top: 4px; }
+    .kpi .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .tickers { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .ticker { padding: 4px 10px; border-radius: 999px; background: var(--line); color: var(--ink); font-size: 12px; }
+    .ticker .count { color: var(--accent); margin-left: 6px; font-weight: 600; }
+    table { border-collapse: collapse; width: 100%; font-size: 12px; }
+    th, td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: left; }
+    th { color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; font-size: 11px; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .pill { padding: 2px 8px; border-radius: 999px; font-size: 11px; display: inline-block; }
+    .pill.dmi { background: rgba(56, 189, 248, 0.15); color: var(--accent); }
+    .pill.sw { background: rgba(249, 115, 22, 0.15); color: var(--accent-2); }
+    .pill.other { background: rgba(148, 163, 184, 0.15); color: var(--muted); }
+    .pill.intro { background: rgba(34, 197, 94, 0.15); color: var(--good); }
+    .pill.type-daily { background: rgba(56, 189, 248, 0.18); color: var(--accent); }
+    .pill.type-weekend_review { background: rgba(249, 115, 22, 0.18); color: var(--accent-2); }
+    .pill.type-feature { background: rgba(148, 163, 184, 0.18); color: var(--muted); }
+    .pill.type-live_update { background: rgba(251, 191, 36, 0.18); color: var(--warn); }
+    .pill.type-untagged { background: rgba(239, 68, 68, 0.18); color: var(--bad); }
+    .filterbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+    .filterbar .label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px; }
+    .filterbar .chip { padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); font-size: 12px; cursor: pointer; transition: all .12s ease; }
+    .filterbar .chip:hover { color: var(--ink); border-color: var(--accent); }
+    .filterbar .chip.active { background: var(--accent); color: #0b1220; border-color: var(--accent); font-weight: 600; }
+    .filterbar .chip.active.weekend { background: var(--accent-2); border-color: var(--accent-2); }
+    .filterbar .chip.active.feature { background: var(--muted); border-color: var(--muted); }
+    .filterbar .chip.active.live_update { background: var(--warn); border-color: var(--warn); color: #1f1707; }
+    .badge { display: inline-flex; align-items: center; gap: 4px; }
+    .type-summary { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; font-size: 12px; color: var(--muted); }
+    .type-summary span strong { color: var(--ink); }
+    .legend { font-size: 12px; color: var(--muted); }
+    canvas { width: 100%; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <main>
+    <h1>Revere OCR Timeline</h1>
+    <div class="meta" id="meta"></div>
+
+    <div class="filterbar" id="filterbar">
+      <span class="label">Video type:</span>
+      <button type="button" class="chip active" data-type="all">All</button>
+      <button type="button" class="chip daily" data-type="daily">Daily DMI</button>
+      <button type="button" class="chip weekend" data-type="weekend_review">Weekend Wrap</button>
+      <button type="button" class="chip feature" data-type="feature">Feature</button>
+      <button type="button" class="chip live_update" data-type="live_update">Live</button>
+      <button type="button" class="chip" data-type="untagged">Untagged</button>
+    </div>
+
+    <section class="kpis" id="kpis"></section>
+
+    <h2>Signals over time</h2>
+    <section class="panels">
+      <div class="panel">
+        <h3>Captures per day, by layout</h3>
+        <canvas id="capturesChart" height="160"></canvas>
+        <div class="legend">
+          <span class="pill dmi">dmi</span>
+          <span class="pill sw">structured_whiteboard</span>
+          <span class="pill other">other</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Score envelope (max + mean per day)</h3>
+        <canvas id="scoreChart" height="160"></canvas>
+      </div>
+
+      <div class="panel full">
+        <h3>Cumulative unique tickers across the catalog</h3>
+        <canvas id="tickerChart" height="100"></canvas>
+        <div class="tickers" id="topTickers"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Per-day DMI intro cards (signals of a daily show)</h3>
+        <canvas id="introChart" height="160"></canvas>
+      </div>
+
+      <div class="panel">
+        <h3>Whiteboard segments per day</h3>
+        <canvas id="segmentChart" height="160"></canvas>
+      </div>
+    </section>
+
+    <h2>Per-video detail</h2>
+    <section class="panel full">
+      <table id="perVideoTable">
+        <thead><tr>
+          <th>upload_date</th>
+          <th>video_id</th>
+          <th>kind</th>
+          <th class="num">captures</th>
+          <th class="num">max score</th>
+          <th class="num">mean score</th>
+          <th class="num">segments</th>
+          <th>layouts</th>
+          <th>flags</th>
+          <th>tickers</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+  const fmtDate = (s) => s && s.length === 8 ? `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}` : s;
+  const palette = {
+    dmi: 'rgba(56, 189, 248, 0.85)',
+    structured_whiteboard: 'rgba(249, 115, 22, 0.85)',
+    other: 'rgba(148, 163, 184, 0.85)'
+  };
+  const TYPE_BADGE_LABEL = {
+    daily: 'Daily',
+    weekend_review: 'Weekend',
+    feature: 'Feature',
+    live_update: 'Live',
+    untagged: 'Untagged'
+  };
+
+  const state = {
+    timeline: null,
+    activeType: 'all',
+    charts: {}
+  };
+
+  function layoutColor(layout) {
+    if (layout === 'dmi') return palette.dmi;
+    if (layout === 'structured_whiteboard') return palette.structured_whiteboard;
+    return palette.other;
+  }
+
+  function destroyCharts() {
+    for (const key of Object.keys(state.charts)) {
+      const ch = state.charts[key];
+      if (ch && typeof ch.destroy === 'function') ch.destroy();
+      delete state.charts[key];
+    }
+  }
+
+  function videoMatchesType(v, type) {
+    if (type === 'all') return true;
+    return (v.video_type || 'untagged') === type;
+  }
+
+  function filterTimeline(timeline, type) {
+    const per_video = timeline.per_video.filter((v) => videoMatchesType(v, type));
+    // Recompute per_day from filtered videos for accurate per-day rollups.
+    const dayMap = new Map();
+    for (const v of per_video) {
+      if (!v.upload_date) continue;
+      const row = dayMap.get(v.upload_date) || {
+        date: v.upload_date,
+        captures: 0,
+        videos: 0,
+        max_score: 0,
+        mean_score_sum: 0,
+        mean_score_count: 0,
+        has_dmi_intro_count: 0,
+        layouts: Object.create(null),
+        ticker_union: new Set(),
+        segments: 0,
+        video_type_counts: Object.create(null)
+      };
+      row.captures += v.captures || 0;
+      row.videos += 1;
+      if ((v.max_score || 0) > row.max_score) row.max_score = Number((v.max_score || 0).toFixed(2));
+      if (typeof v.mean_score === 'number') {
+        row.mean_score_sum += v.mean_score;
+        row.mean_score_count += 1;
+      }
+      if (v.has_dmi_intro) row.has_dmi_intro_count += 1;
+      for (const { layout, count } of v.layouts || []) row.layouts[layout] = (row.layouts[layout] || 0) + count;
+      for (const t of v.ticker_union || []) row.ticker_union.add(t);
+      row.segments += v.segments || 0;
+      const t = v.video_type || 'untagged';
+      row.video_type_counts[t] = (row.video_type_counts[t] || 0) + 1;
+      dayMap.set(v.upload_date, row);
+    }
+    const per_day = [...dayMap.values()].sort((a, b) => a.date.localeCompare(b.date)).map((row) => {
+      row.mean_score = row.mean_score_count ? Number((row.mean_score_sum / row.mean_score_count).toFixed(2)) : 0;
+      row.ticker_union_size = row.ticker_union.size;
+      row.ticker_union = [...row.ticker_union].sort();
+      delete row.mean_score_sum;
+      delete row.mean_score_count;
+      return row;
+    });
+    // Recompute totals over the filtered set.
+    const tickersSet = new Set();
+    const tickerFreq = new Map();
+    let totalCaptures = 0;
+    let videosWithCaptures = 0;
+    for (const v of per_video) {
+      totalCaptures += v.captures || 0;
+      if (v.captures > 0) videosWithCaptures += 1;
+      for (const t of v.ticker_union || []) {
+        tickersSet.add(t);
+        tickerFreq.set(t, (tickerFreq.get(t) || 0) + 1);
+      }
+    }
+    const filtered_totals = {
+      videos: per_video.length,
+      videos_with_captures: videosWithCaptures,
+      captures: totalCaptures,
+      unique_tickers: tickersSet.size,
+      top_tickers: [...tickerFreq.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 25)
+        .map(([ticker, count]) => ({ ticker, count }))
+    };
+    return { per_video, per_day, filtered_totals };
+  }
+
+  function render() {
+    if (!state.timeline) return;
+    const { per_video, per_day, filtered_totals } = filterTimeline(state.timeline, state.activeType);
+
+    // KPIs reflect the filtered slice.
+    const totals = state.timeline.totals;
+    const kpisHtml = `
+      <div class="kpi"><div class="label">Videos scanned</div><div class="value">${filtered_totals.videos}</div><div class="sub">${filtered_totals.videos_with_captures} with at least one capture</div></div>
+      <div class="kpi"><div class="label">Total captures</div><div class="value">${filtered_totals.captures}</div><div class="sub">avg ${(filtered_totals.captures / Math.max(1, filtered_totals.videos)).toFixed(2)} per video</div></div>
+      <div class="kpi"><div class="label">Unique tickers</div><div class="value">${filtered_totals.unique_tickers}</div><div class="sub">${state.activeType === 'all' ? 'across the whole catalog' : `within ${TYPE_BADGE_LABEL[state.activeType] || state.activeType}`}</div></div>
+      <div class="kpi"><div class="label">Active days</div><div class="value">${per_day.length}</div><div class="sub">distinct upload dates observed</div></div>
+    `;
+    document.getElementById('kpis').innerHTML = kpisHtml;
+
+    // Type summary sub-line on meta (always shows the catalog-wide breakdown
+    // so reviewers can see what's filtered out at a glance).
+    const typeCounts = totals.video_type_counts || {};
+    const typeSummaryHtml = Object.entries(typeCounts)
+      .map(([k, v]) => `<span class="badge"><span class="pill type-${k}">${TYPE_BADGE_LABEL[k] || k}</span><strong>${v}</strong></span>`)
+      .join('');
+    document.querySelector('#meta .type-summary')?.remove();
+    if (typeSummaryHtml) {
+      const summaryEl = document.createElement('div');
+      summaryEl.className = 'type-summary';
+      summaryEl.innerHTML = `<span>Catalog-wide breakdown:</span> ${typeSummaryHtml}`;
+      const metaEl = document.getElementById('meta');
+      metaEl.appendChild(summaryEl);
+    }
+
+    // Reuse existing chart elements by destroying & recreating.
+    destroyCharts();
+    if (per_day.length === 0) {
+      ['capturesChart', 'scoreChart', 'tickerChart', 'introChart', 'segmentChart'].forEach((id) => {
+        const ctx = document.getElementById(id).getContext('2d');
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      });
+      document.getElementById('topTickers').innerHTML = '<span class="ticker">No videos match the current filter.</span>';
+      renderPerVideoTable([]);
+      return;
+    }
+
+    const labels = per_day.map((d) => fmtDate(d.date));
+    const layoutKeys = new Set();
+    per_day.forEach((d) => Object.keys(d.layouts).forEach((k) => layoutKeys.add(k)));
+    const orderedLayouts = [...layoutKeys].sort((a, b) => (a === 'dmi' ? -1 : b === 'dmi' ? 1 : a.localeCompare(b)));
+
+    state.charts.captures = new Chart(document.getElementById('capturesChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: orderedLayouts.map((layout) => ({
+          label: layout,
+          backgroundColor: layoutColor(layout),
+          borderColor: layoutColor(layout),
+          data: per_day.map((d) => d.layouts[layout] || 0),
+          stack: 'captures'
+        }))
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#cbd5e1' } } },
+        scales: {
+          x: { stacked: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } },
+          y: { stacked: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' }, title: { display: true, text: 'captures/day', color: '#94a3b8' } }
+        }
+      }
+    });
+
+    state.charts.score = new Chart(document.getElementById('scoreChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label: 'max score', data: per_day.map((d) => d.max_score), borderColor: '#38bdf8', backgroundColor: 'rgba(56, 189, 248, 0.2)', fill: false, tension: 0.2 },
+          { label: 'mean score', data: per_day.map((d) => d.mean_score), borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.15)', fill: true, tension: 0.2 }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#cbd5e1' } } },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } },
+          y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } }
+        }
+      }
+    });
+
+    let running = new Set();
+    const cumulativeUnique = [];
+    per_day.forEach((d) => {
+      (d.ticker_union || []).forEach((t) => running.add(t));
+      cumulativeUnique.push(running.size);
+    });
+    state.charts.tickers = new Chart(document.getElementById('tickerChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'cumulative unique tickers',
+          data: cumulativeUnique,
+          borderColor: '#22c55e',
+          backgroundColor: 'rgba(34, 197, 94, 0.2)',
+          fill: true,
+          tension: 0.15,
+          pointRadius: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#cbd5e1' } } },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } },
+          y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } }
+        }
+      }
+    });
+
+    state.charts.intro = new Chart(document.getElementById('introChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'videos with DMI intro card',
+          data: per_day.map((d) => d.has_dmi_intro_count),
+          backgroundColor: 'rgba(34, 197, 94, 0.6)',
+          borderColor: '#22c55e'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#cbd5e1' } } },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } },
+          y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } }
+        }
+      }
+    });
+
+    state.charts.segments = new Chart(document.getElementById('segmentChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'whiteboard segments',
+          data: per_day.map((d) => d.segments),
+          backgroundColor: 'rgba(249, 115, 22, 0.6)',
+          borderColor: '#f97316'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#cbd5e1' } } },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } },
+          y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } }
+        }
+      }
+    });
+
+    document.getElementById('topTickers').innerHTML = (filtered_totals.top_tickers || [])
+      .slice(0, 30)
+      .map((t) => `<span class="ticker">${t.ticker}<span class="count">${t.count}</span></span>`)
+      .join('');
+
+    renderPerVideoTable(per_video);
+  }
+
+  function renderPerVideoTable(perVideo) {
+    const tbody = document.querySelector('#perVideoTable tbody');
+    if (!perVideo.length) {
+      tbody.innerHTML = '<tr><td colspan="10" style="padding:24px;text-align:center;color:var(--muted);">No videos match the current filter.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = perVideo.map((v) => {
+      const layouts = (v.layouts || []).map((l) =>
+        `<span class="pill ${l.layout === 'dmi' ? 'dmi' : (l.layout === 'structured_whiteboard' ? 'sw' : 'other')}">${l.layout}·${l.count}</span>`).join(' ');
+      const dmiIntro = v.has_dmi_intro ? '<span class="pill intro">DMI intro</span>' : '';
+      const typeBadge = `<span class="pill type-${v.video_type || 'untagged'}">${TYPE_BADGE_LABEL[v.video_type || 'untagged'] || (v.video_type || '?')}</span>`;
+      const tickers = (v.ticker_union || []).slice(0, 8).join(', ') + ((v.ticker_union || []).length > 8 ? ` +${v.ticker_union.length - 8}` : '');
+      return `<tr>
+        <td>${fmtDate(v.upload_date)}</td>
+        <td><code>${v.video_id}</code></td>
+        <td>${typeBadge}</td>
+        <td class="num">${v.captures}</td>
+        <td class="num">${v.max_score.toFixed(1)}</td>
+        <td class="num">${v.mean_score.toFixed(1)}</td>
+        <td class="num">${v.segments}</td>
+        <td>${layouts}</td>
+        <td>${dmiIntro}</td>
+        <td>${tickers}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function wireFilterbar() {
+    document.querySelectorAll('#filterbar .chip').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#filterbar .chip').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.activeType = btn.dataset.type;
+        if (history.replaceState) {
+          const u = new URL(window.location.href);
+          u.hash = state.activeType === 'all' ? '' : `type=${state.activeType}`;
+          history.replaceState(null, '', u.toString());
+        }
+        render();
+      });
+    });
+  }
+
+  function readHashFilter() {
+    const m = (window.location.hash || '').match(/type=([a-z_]+)/);
+    if (m && ['daily', 'weekend_review', 'feature', 'live_update', 'untagged', 'all'].includes(m[1])) {
+      state.activeType = m[1];
+      const btn = document.querySelector(`#filterbar .chip[data-type="${state.activeType}"]`);
+      if (btn) {
+        document.querySelectorAll('#filterbar .chip').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+    }
+  }
+
+  async function main() {
+    const url = new URL('timeline.json', document.location.href).toString();
+    let timeline;
+    try {
+      timeline = await (await fetch(url)).json();
+    } catch (e) {
+      document.getElementById('meta').textContent = `Failed to load timeline.json: ${e}`;
+      return;
+    }
+    document.title = `Revere OCR timeline – ${timeline.run_tag}`;
+    state.timeline = timeline;
+    document.getElementById('meta').innerHTML = `
+      run_tag=<code>${timeline.run_tag}</code> ·
+      generated_at=${timeline.generated_at} ·
+      <code>timeline.json</code>
+    `;
+    wireFilterbar();
+    readHashFilter();
+    render();
+  }
+
+  main();
+  </script>
+</body>
+</html>
