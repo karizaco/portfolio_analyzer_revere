@@ -148,6 +148,19 @@ conn.commit()
   if (updateRes.status !== 0) {
     console.error(`[run-all-ocr] WARN: failed to update status for ${videoId}: ${(updateRes.stderr || '').trim()}`);
   }
+
+  // Refresh .STATUS.json so a future session can resume or report progress
+  // without re-scanning the probe-logs directory.
+  writeRunStatus({
+    driver: 'runAllOcr.js',
+    outputRoot,
+    runTag,
+    startedAt: new Date(started).toISOString(),
+    expectedTotal: rows.length,
+    scanLog,
+    finishedAt: null,
+    nextStep: `continue serial scan; ${rows.length - done - skipped} video(s) remaining after this one`
+  });
 }
 
 const totalElapsed = ((Date.now() - started) / 1000).toFixed(1);
@@ -171,6 +184,18 @@ fs.writeFileSync(summaryPath, JSON.stringify({
   log: scanLog
 }, null, 2));
 
+// Final .STATUS.json write now that we know the wall-clock end + counts.
+writeRunStatus({
+  driver: 'runAllOcr.js',
+  outputRoot,
+  runTag,
+  startedAt: new Date(started).toISOString(),
+  expectedTotal: rows.length,
+  scanLog,
+  finishedAt: new Date().toISOString(),
+  nextStep: 'run npm run video:stamp-types -- --run-tag ' + runTag + ' then node tools/aggregateOcrTimeline.js ' + runTag
+});
+
 console.log('');
 console.log(`[run-all-ocr] elapsed ${totalElapsed}s · done=${done} skipped=${skipped} errored=${errored}`);
 const typeSummary = Object.entries(typeCounts).map(([k, v]) => `${k}=${v}`).join(' ');
@@ -181,6 +206,53 @@ function readFlag(arr, flag) {
   const i = arr.indexOf(flag);
   if (i === -1) return null;
   return arr[i + 1] || '';
+}
+
+// Maintain data/video_scan_<YYYYMMDD>/<run-tag>/.STATUS.json so a future session
+// can pick up where this one left off (or report progress to a reviewer) without
+// re-scanning the probe-logs directory. Writes are best-effort and never throw.
+function writeRunStatus({ driver, outputRoot, runTag, startedAt, expectedTotal, scanLog, finishedAt, nextStep }) {
+  try {
+    const probeLogsDir = path.join(outputRoot, 'ocr_probe', 'logs');
+    let probeLogCount = 0;
+    let lastProbeLog = null;
+    try {
+      const files = fs.readdirSync(probeLogsDir).filter((f) => f.endsWith('.json'));
+      probeLogCount = files.length;
+      lastProbeLog = files.sort().slice(-1)[0] || null;
+    } catch { /* dir may not exist yet on first call */ }
+
+    const seenKeys = new Set();
+    let uniqueVideosDone = 0;
+    let erroredCount = 0;
+    for (const row of scanLog) {
+      const key = `${row.upload_date || 'unknown'}_${row.video_id}`;
+      if (seenKeys.has(key)) continue;
+      seenKeys.add(key);
+      if (row.status === 'error') {
+        erroredCount += 1;
+      } else if (row.status === 'done') {
+        uniqueVideosDone += 1;
+      }
+    }
+
+    const statusPath = path.join(outputRoot, '.STATUS.json');
+    fs.writeFileSync(statusPath, JSON.stringify({
+      run_tag: runTag,
+      driver,
+      started_at: startedAt,
+      finished_at: finishedAt,
+      last_update_at: new Date().toISOString(),
+      probe_log_count: probeLogCount,
+      unique_videos_done: uniqueVideosDone,
+      unique_videos_errored: erroredCount,
+      expected_total: expectedTotal,
+      last_probe_log: lastProbeLog,
+      next_step: nextStep
+    }, null, 2));
+  } catch (e) {
+    console.warn(`[run-all-ocr] WARN: failed to write .STATUS.json: ${e.message}`);
+  }
 }
 
 // Stamp `video_type` (and a couple of display fields) onto the probe log so
