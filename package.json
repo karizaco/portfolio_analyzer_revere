@@ -19,6 +19,7 @@
     "video:download-hires:30": "node tools/downloadHiresBatch.js --limit 30 --height 720",
     "video:stamp-types": "node tools/stampExistingProbeLogs.js",
     "video:stamp-types:reclassify": "node tools/stampExistingProbeLogs.js --reclassify",
+    "video:ocr-parallel": "bash tools/parallelOcrScan.sh",
     "video:import-local": "node tools/runWhiteboardWorker.js import-local",
     "video:scan": "node tools/runWhiteboardWorker.js scan",
     "video:scan-ocr": "node tools/scanVideoWithOcr.js",

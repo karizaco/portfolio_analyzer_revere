@@ -176,6 +176,35 @@ Files are written to `data/video_pipeline/downloads_hires/<upload_date>_<video_i
 
 The checkpoint also stores `error[]` so a video that fails repeatedly across multiple runs is not retried endlessly — clear it manually (`rm _download_checkpoint.json`) to retry after a network blip is over.
 
+### Parallel OCR scan (`parallelOcrScan.sh`)
+
+[`tools/parallelOcrScan.sh`](tools/parallelOcrScan.sh) is the OCR analog of [`parallelDownload.sh`](tools/parallelDownload.sh): it reads scanning rows from SQLite and forks N `scanVideoWithOcr.js` subprocesses concurrently via `xargs -P`. Useful when you have many downloaded videos and want to spread the tesseract.js workload across CPU cores.
+
+Safety model (designed to coexist with an in-flight [`tools/runAllOcr.js`](tools/runAllOcr.js) batch):
+
+- **Read-only on SQLite**. The serial run keeps ownership of `status`; we never `UPDATE` rows.
+- **Distinct run-tag** = distinct output directory. The parallel run writes to `data/video_scan_<YYYYMMDD>/<run-tag>/ocr_probe/logs/<...>.json` and never touches the in-flight run's directory. No probe-log collisions, no ffmpeg-temp collisions.
+- **`SKIP_FROM_TAG=<in-flight-tag>`** = skip any row whose probe log already exists under the in-flight run-tag's directory. The remaining overlap window is at most the single row the serial run is currently mid-flight on. Worst case: one duplicate scan, never destructive.
+
+```bash
+npm run video:ocr-parallel                                           # 4 workers, fresh run-tag
+bash tools/parallelOcrScan.sh 6                                      # 6 workers, fresh run-tag
+bash tools/parallelOcrScan.sh 4 30                                   # 4 workers, max 30 videos
+RUN_TAG=ocr-20260915-p4 bash tools/parallelOcrScan.sh 4              # explicit run-tag
+SKIP_FROM_TAG=ocr-20260915 bash tools/parallelOcrScan.sh 4            # cooperate with serial run
+```
+
+Per-worker stderr/stdout is captured to `data/video_scan_<YYYYMMDD>/<run-tag>/<run-tag>_<upload_date>_<video_id>.log` for post-mortem. After completion aggregate with:
+
+```bash
+node tools/aggregateOcrTimeline.js <run-tag>
+```
+
+**Tuning notes**:
+- Memory scales with worker count. Tesseract.js is ~300-500 MB per worker; 4 workers ≈ 1.5 GB resident on Windows.
+- `--fps`, `--prefilter-*`, `--ocr-frame-width` are inherited from `scanVideoWithOcr.js` defaults; if you want to override, set env vars and pass them through (the bash wrapper takes `<workers> [limit]` only — extra flags would need to be added to the wrapper).
+- The serial in-flight run still uses one core; 4 parallel + 1 serial = 5 cores. Add workers conservatively until the GPU/CPU temp stays sane.
+
 ### Video type classifier (`daily` / `weekend_review` / `feature` / `live_update`)
 
 Revere's YouTube channel publishes several kinds of video that need to be treated differently downstream:
