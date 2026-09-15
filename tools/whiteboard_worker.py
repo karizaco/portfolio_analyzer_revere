@@ -423,6 +423,9 @@ def build_catalog_command(args: argparse.Namespace) -> list[str]:
     if args.cookies_file:
         command.extend(['--cookies', args.cookies_file])
 
+    if args.extractor_args:
+        command.extend(['--extractor-args', args.extractor_args])
+
     command.extend([
         '--print',
         '%(id)s\t%(upload_date)s\t%(title)s',
@@ -1561,6 +1564,14 @@ def build_parser() -> argparse.ArgumentParser:
         '--cookies-file',
         default='',
         help='Optional cookie file path for yt-dlp --cookies.',
+    )
+    catalog_parser.add_argument(
+        '--extractor-args',
+        default='youtube:player_client=ios,android,web_safari,web',
+        help='yt-dlp extractor args passed to the catalog command. The default '
+             'ios+android+web_safari+web client set is the most permissive '
+             'metadata-fetcher for Revere-style channels; the catalog defaults '
+             'match the download defaults.',
     )
     catalog_parser.set_defaults(handler=command_catalog)
 

@@ -2,6 +2,12 @@
 
 This workspace contains a small Node.js CLI that reads the linked screenshot directory in read-only mode, OCRs each PNG, extracts the portfolio snapshot fields, and writes CSV outputs inside this workspace.
 
+## Workspace Constraints
+
+- The screenshot directory referenced by `sample_screenshots.lnk` resolves to `D:\courses_F\revere_asset`.
+- Treat `D:\courses_F\revere_asset` as read-only. Do not create, modify, rename, or delete files there.
+- Edits are allowed only inside this workspace folder: `c:\Users\admin\Projects\portfolio_analyzer_revere`.
+
 ## Editable Inputs
 
 - `config/ticker_lexicon_seed.csv`: recurring tickers that should be treated as known symbols during cleanup.
@@ -148,6 +154,28 @@ Useful download options:
 - The default `--extractor-args "youtube:player_client=android,web_safari,web"` and `--js-runtimes node` are the combination that bypasses the YouTube "page needs to be reloaded" anti-bot check on Revere-style channels. Override only if those clients fail on a specific video.
 - The download summary now includes `reused_from_disk`: rows in `pending` / `error` whose `<upload_date>_<id>.<ext>` file already exists locally are flipped to `scanning` without invoking yt-dlp. Together with `download_archive.txt` and the status-based skip (`done` / `scanning` / `review` / `no_match` rows are not selected), the download step is fully idempotent — re-running `npm run video:download` against the same catalog does zero work.
 
+### High-resolution (720p) downloads
+
+The default low-res downloader (`npm run video:download`) is capped at 360p by YouTube's `android,web_safari,web` client combo, which is too coarse for OCR on dense Revere slides. A second script downloads Revere videos at 720p via YouTube's `mediaconnect` client, which exposes the full DASH format ladder (`137 = 1080p`, `136 = 720p`, `135 = 480p`, `134 = 360p`). It writes to a separate folder so the 360p and 720p streams never collide on disk:
+
+```bash
+node tools/downloadHiresBatch.js             # download the latest 30 pending at 720p
+node tools/downloadHiresBatch.js --limit 30  # same as above
+node tools/downloadHiresBatch.js --limit 10  # smoke-test on 10
+node tools/downloadHiresBatch.js --height 1080          # 1080p instead of 720p (slower, marginal OCR gain)
+node tools/downloadHiresBatch.js --limit 30 --height 480  # 480p only
+```
+
+Files are written to `data/video_pipeline/downloads_hires/<upload_date>_<video_id>.mp4`. SQLite is updated so the row's `download_path` now points at the high-res file, which makes `tools/runAllOcr.js` automatically OCR the new files on its next pass.
+
+**Resumability**: the script writes `data/video_pipeline/downloads_hires/_download_checkpoint.json` after every successful row (and after every error). On the next run it picks up exactly where it left off — kill `Ctrl+C` mid-batch, restart, the same idempotent checkpoint reloads. Three layers of dedup keep the run safe to interrupt:
+
+1. SQLite row is already in `done` status → skipped.
+2. The high-res mp4 exists on disk → skipped (also flipped to `done`).
+3. The checkpoint's `done[]` list has the video id → skipped even if both above are missed (race safety).
+
+The checkpoint also stores `error[]` so a video that fails repeatedly across multiple runs is not retried endlessly — clear it manually (`rm _download_checkpoint.json`) to retry after a network blip is over.
+
 Useful local import options:
 
 - `--video-dir path` to register sample `.mp4`, `.mov`, `.mkv`, `.m4v`, or `.webm` files for direct scanning
@@ -220,7 +248,26 @@ node tools/compareScanAnalyses.js data/video_scan_20260913/fields-v1/analysis.js
 
 ### OCR quality vs. download resolution
 
-YouTube's default progressive streams for Revere videos top out at 360p on the android / web_safari / web client combo, so the default download format (`bv*[height<=480]+ba/b[height<=480]`) lands at 360p with typical file sizes of 22-50 MB per 13-35 minute video (versus 500 MB+ at 1080p). For OCR this is fine: tesseract.js downsamples internally to ~300 DPI regardless of input resolution, and the large Revere whiteboard text (`MARKET STATE`, `TALE OF THE TAPE`, `BOTTOM LINE`) is still 30-50 px tall at 360p. A live validation on `0_YeDfX1atU` (Sept 11, 2026, 70 MB / 360p / 1217s) recovered the full `TALE OF THE TAPE — THURSDAY, SEPTEMBER 11, 2026` header and 6 tickers (`CF`, `OKTA`, `PLTR`, `SPYM`, `HOOD`, `TAN`) cleanly. Bump to 720p only if you need a high-res archival copy — pass `--format "bv*[height<=720]+ba/b[height<=720]"` to `npm run video:download`.
+YouTube exposes a very different format ladder depending on which `player_client` is used to negotiate the manifest:
+
+- **`android,web_safari,web`** (default for download) — currently on YouTube's "SABR-only streaming experiment", which only exposes the lowest-quality progressive MP4 for most videos. The default 480p height cap lands at **360p (`format_id=18`)**, typically 22-50 MB per 13-35 minute video.
+- **`mediaconnect`** (used by the high-resolution downloader) — negotiates the DASH manifest and exposes the full progressive ladder: `134` (360p), `135` (480p), **`136` (720p)** and **`137` (1080p)**.
+
+Pilot findings on `bEidyFtV-lY` (May 12, 2026 — a dense "TALE OF THE TAPE" slide captured via `0_YeDfX1atU`-style content):
+
+| Resolution | File size | OCR confidence | TALE OF THE TAPE year | RVAB number | BOTTOM LINE line |
+|---|---|---|---|---|---|
+| 360p (default) | ~50 MB | 38 | `M26` (lost) | `RVAS/REBAR [.2/ 7 31%)` (mostly garbled) | missing |
+| **720p (recommended)** | 55 MB | **64** | `2026` | `RVAB/REBAR: (1.51/-6.65%)` | `MOMENTUM UNWIND HITS LEADERS AND SPEC NAMES... STRONG CLOSE` |
+| 1080p | 114 MB | 66 | `2026` | same | same |
+
+**The 360p baseline fails on dense Revere slides.** Tesseract letter-level accuracy is below the threshold needed for ticker grid lines, action verbs (`ADD to`, `TRIM`, `SELL`), and the BOTTOM LINE paragraph. **1080p gives only +2 confidence over 720p** (essentially within noise) at 2× file size and 3× OCR wall-clock.
+
+**Default recommendation: 720p**, downloaded via the dedicated `tools/downloadHiresBatch.js` script (see below).
+
+The same slide content is what made the 360p letters-per-word accuracy drop: at 360p Revere's 8-10 px sector-ticker text becomes 2-3 px glyphs after tesseract's binarization — pure noise. At 720p those same glyphs are 18-24 px and recover cleanly.
+
+If you ever need to override the resolution for one specific video, pass `--format 137` (or any of `134`/`135`/`136`/`137`) into the per-video download. Be aware that `mediaconnect` is the only client that exposes those format IDs today; default `android,web_safari,web` will fall back to 360p.
 
 Debugging a wrong timestamp or wrong screenshot:
 
