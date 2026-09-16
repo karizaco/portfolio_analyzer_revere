@@ -32,6 +32,21 @@ const argv = process.argv.slice(2);
 const limit = Number(readFlag(argv, '--limit')) || 30;
 const height = Number(readFlag(argv, '--height')) || 720;
 const retryErrored = argv.includes('--retry-errored');
+// Optional explicit allow-list of video_ids (used by the parallel download
+// wrapper to fan out N workers across disjoint slices of the catalog).
+// When set, the candidate query filters to this list (case-insensitive).
+const onlyIds = new Set(
+  argv.filter((a, i) => argv[i - 1] === '--only-id' || a.startsWith('--only-id='))
+    .flatMap((a) => {
+      if (a.startsWith('--only-id=')) return [a.slice('--only-id='.length)];
+      return [];
+    })
+    .concat(
+      // Also support `--only-ids id1,id2,id3` (comma-separated) for one-shot use.
+      (readFlag(argv, '--only-ids') || '').split(',').filter(Boolean)
+    )
+    .map((s) => s.trim().toLowerCase())
+);
 
 if (![360, 480, 720, 1080].includes(height)) {
   console.error(`Unsupported --height ${height}; expected one of 360, 480, 720, 1080.`);
@@ -77,7 +92,16 @@ json.dump(out, sys.stdout)
 const qRes = spawnSync(py, ['-3', '-c', script], { encoding: 'utf8' });
 if (qRes.status !== 0) { console.error(qRes.stderr); process.exit(1); }
 const allRows = JSON.parse(qRes.stdout);
-console.log(`[hires] ${allRows.length} candidate rows in SQLite`);
+console.log(`[hires] ${allRows.length} candidate rows in SQLite${onlyIds.size ? ` (after --only-ids filter: ${onlyIds.size} requested)` : ''}`);
+
+if (onlyIds.size) {
+  const filtered = allRows.filter((r) => onlyIds.has(String(r.video_id || '').toLowerCase()));
+  const missing = [...onlyIds].filter((id) => !allRows.some((r) => String(r.video_id || '').toLowerCase() === id));
+  if (missing.length) console.warn(`[hires] WARN: ${missing.length} requested id(s) not in catalog: ${missing.slice(0, 5).join(',')}${missing.length > 5 ? ', ...' : ''}`);
+  allRows.length = 0;
+  allRows.push(...filtered);
+  console.log(`[hires] after explicit allow-list: ${allRows.length} rows`);
+}
 
 const todo = [];
 let skippedDone = 0;

@@ -36,7 +36,7 @@ import sys
 
 
 VIDEO_ID_FILENAME_RE = re.compile(
-    r"^(\d{8})_[A-Za-z0-9_\-]{6,15}_[a-f0-9]{8}_whiteboard\.json$"
+    r"^(\d{8})_(\d{8})_([A-Za-z0-9_\-]{6,15})_([a-f0-9]{8})_whiteboard\.json$"
 )
 
 
@@ -83,7 +83,7 @@ def _collect_jobs(args, workspace_root: pathlib.Path) -> list[tuple[str, str, pa
         if not p.exists():
             missing += 1
             continue
-        prefix = f"{upload_date}_{video_id}_"
+        prefix = f"{upload_date}_{video_id}_".lower()
         if any(s.startswith(prefix) for s in own_set):
             skipped_own += 1
             continue
@@ -113,10 +113,11 @@ def _probe_log_stems(directory: pathlib.Path | None) -> set[str]:
     for f in directory.iterdir():
         m = VIDEO_ID_FILENAME_RE.match(f.name)
         if m:
-            parts = f.name.split("_")
-            # parts: [date, date, video_id, hash, "_whiteboard.json"]
-            if len(parts) >= 4:
-                stems.add(f"{parts[0]}_{parts[2]}_")
+            # groups: (date1, date2, video_id, hash) — both dates are equal in
+            # current scanner output. Using regex groups keeps video_ids that
+            # contain underscores intact (e.g. "eai-qmrf_t0").
+            date1, _date2, vid, _hash = m.groups()
+            stems.add(f"{date1}_{vid}_".lower())
     return stems
 
 
@@ -202,6 +203,13 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--ffmpeg-bin", default=os.environ.get("FFMPEG_BIN", str(workspace / "tools" / "ffmpeg.exe")), help="ffmpeg binary path")
     parser.add_argument("--node-bin", default=os.environ.get("NODE_BIN", "node"), help="node binary path")
     parser.add_argument("--db-path", default=str(workspace / "data" / "video_pipeline" / "state.sqlite"))
+    parser.add_argument(
+        "--date-tag",
+        default=os.environ.get("DATE_TAG") or None,
+        help="calendar date tag (YYYYMMDD) for the data/video_scan_<date>/ directory. "
+             "Defaults to today (UTC). Honors $DATE_TAG. "
+             "Use this to write into yesterday's data/video_scan_<date>/ directory when resuming.",
+    )
     return parser.parse_args(argv)
 
 
@@ -214,7 +222,7 @@ def main(argv: list[str] | None = None) -> int:
 
     workers = max(1, args.workers)
     args.run_tag = args.run_tag or f"ocr-parallel-{_dt.datetime.utcnow().strftime('%Y%m%d-%H%M%S')}"
-    args.date_tag = _dt.datetime.utcnow().strftime("%Y%m%d")
+    args.date_tag = args.date_tag or _dt.datetime.utcnow().strftime("%Y%m%d")
 
     output_root = workspace / "data" / f"video_scan_{args.date_tag}" / args.run_tag
     output_root.mkdir(parents=True, exist_ok=True)
