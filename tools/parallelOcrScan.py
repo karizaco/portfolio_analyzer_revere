@@ -213,6 +213,67 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def _write_status_json(
+    *,
+    output_root: pathlib.Path,
+    run_tag: str,
+    started_at: _dt.datetime,
+    finished_at: _dt.datetime,
+    expected_total: int,
+    results: list[dict],
+    next_step: str,
+) -> None:
+    """Write data/video_scan_<date>/<run-tag>/.STATUS.json so a future
+    session can pick up progress without re-scanning probe-logs. Mirrors the
+    shape of runAllOcr.js' writeRunStatus helper.
+
+    Errors are swallowed — the status file is best-effort bookkeeping."""
+    try:
+        probe_logs_dir = output_root / run_tag / "ocr_probe" / "logs"
+        probe_log_count = 0
+        last_probe_log = None
+        if probe_logs_dir.exists():
+            files = sorted(p.name for p in probe_logs_dir.iterdir() if p.name.endswith(".json"))
+            probe_log_count = len(files)
+            last_probe_log = files[-1] if files else None
+
+        seen: set[tuple[str, str]] = set()
+        unique_done = 0
+        unique_errored = 0
+        for r in results:
+            key = (r.get("upload_date") or "unknown", r.get("video_id") or "")
+            if key in seen:
+                continue
+            seen.add(key)
+            if r.get("ok"):
+                unique_done += 1
+            else:
+                unique_errored += 1
+
+        status_path = output_root / ".STATUS.json"
+        status_path.write_text(
+            json.dumps(
+                {
+                    "run_tag": run_tag,
+                    "driver": "parallelOcrScan.py",
+                    "started_at": started_at.isoformat() + "Z",
+                    "finished_at": finished_at.isoformat() + "Z",
+                    "last_update_at": _dt.datetime.utcnow().isoformat() + "Z",
+                    "probe_log_count": probe_log_count,
+                    "unique_videos_done": unique_done,
+                    "unique_videos_errored": unique_errored,
+                    "expected_total": expected_total,
+                    "last_probe_log": last_probe_log,
+                    "next_step": next_step,
+                },
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+    except Exception as exc:  # noqa: BLE001 - best-effort bookkeeping
+        print(f"[parallel-ocr] WARN: failed to write .STATUS.json: {exc!r}", file=sys.stderr)
+
+
 def main(argv: list[str] | None = None) -> int:
     if argv is None:
         argv = sys.argv[1:]
@@ -316,64 +377,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-
-
-def _write_status_json(
-    *,
-    output_root: pathlib.Path,
-    run_tag: str,
-    started_at: _dt.datetime,
-    finished_at: _dt.datetime,
-    expected_total: int,
-    results: list[dict],
-    next_step: str,
-) -> None:
-    """Write data/video_scan_<date>/<run-tag>/.STATUS.json so a future
-    session can pick up progress without re-scanning probe-logs. Mirrors the
-    shape of runAllOcr.js' writeRunStatus helper.
-
-    Errors are swallowed — the status file is best-effort bookkeeping."""
-    try:
-        probe_logs_dir = output_root / run_tag / "ocr_probe" / "logs"
-        probe_log_count = 0
-        last_probe_log = None
-        if probe_logs_dir.exists():
-            files = sorted(p.name for p in probe_logs_dir.iterdir() if p.name.endswith(".json"))
-            probe_log_count = len(files)
-            last_probe_log = files[-1] if files else None
-
-        seen: set[tuple[str, str]] = set()
-        unique_done = 0
-        unique_errored = 0
-        for r in results:
-            key = (r.get("upload_date") or "unknown", r.get("video_id") or "")
-            if key in seen:
-                continue
-            seen.add(key)
-            if r.get("ok"):
-                unique_done += 1
-            else:
-                unique_errored += 1
-
-        status_path = output_root / ".STATUS.json"
-        status_path.write_text(
-            json.dumps(
-                {
-                    "run_tag": run_tag,
-                    "driver": "parallelOcrScan.py",
-                    "started_at": started_at.isoformat() + "Z",
-                    "finished_at": finished_at.isoformat() + "Z",
-                    "last_update_at": _dt.datetime.utcnow().isoformat() + "Z",
-                    "probe_log_count": probe_log_count,
-                    "unique_videos_done": unique_done,
-                    "unique_videos_errored": unique_errored,
-                    "expected_total": expected_total,
-                    "last_probe_log": last_probe_log,
-                    "next_step": next_step,
-                },
-                indent=2,
-            ),
-            encoding="utf-8",
-        )
-    except Exception as exc:  # noqa: BLE001 - best-effort bookkeeping
-        print(f"[parallel-ocr] WARN: failed to write .STATUS.json: {exc!r}", file=sys.stderr)
