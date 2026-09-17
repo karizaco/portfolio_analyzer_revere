@@ -472,6 +472,9 @@ def build_catalog_command(args: argparse.Namespace) -> list[str]:
     if args.limit:
         command.extend(['--playlist-end', str(args.limit)])
 
+    if args.playlist_items:
+        command.extend(['--playlist-items', args.playlist_items])
+
     if args.cookies_from_browser:
         command.extend(['--cookies-from-browser', args.cookies_from_browser])
 
@@ -1646,6 +1649,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     catalog_parser.add_argument('--yt-dlp-bin', default='yt-dlp', help='Path to the yt-dlp executable.')
     catalog_parser.add_argument('--limit', type=int, default=0, help='Optional playlist limit for smoke tests.')
+    catalog_parser.add_argument(
+        '--playlist-items',
+        default='',
+        help='Optional yt-dlp --playlist-items selector to skip known-bad '
+             'positions in a channel listing (e.g. "1-44,46-50" to skip row 45).',
+    )
     catalog_parser.add_argument(
         '--cookies-from-browser',
         default='',
