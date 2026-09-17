@@ -174,10 +174,11 @@ function scoreSnapshotCandidate(parsedRow) {
 // Canonical whiteboard scorer. Returns { total, components } so callers can
 // see exactly which bucket pushed a frame over (or below) the threshold.
 // Existing callers that only need the total should use scoreWhiteboardCandidate.
-function scoreWhiteboardCandidateBreakdown(observationRows, ocrConfidence, ocrResult = null) {
+function scoreWhiteboardCandidateBreakdown(observationRows, ocrConfidence, ocrResult = null, options = {}) {
   const rows = Array.isArray(observationRows) ? observationRows : [];
   const groRow = rows.find((row) => row.portfolio === 'GRO') || null;
   const turboRow = rows.find((row) => row.portfolio === 'TURBO') || null;
+  const prefilterProfile = String(options.prefilterProfile || 'whiteboard');
   const components = {
     chart_likeness: 0,
     keyword_guard: 0,
@@ -235,7 +236,11 @@ function scoreWhiteboardCandidateBreakdown(observationRows, ocrConfidence, ocrRe
   // Strong negative: text but ZERO whiteboard keywords = browser chrome +
   // chart labels. Without this guard, browser chrome alone produces enough
   // line/char density to mis-classify chart pages as tale_of_the_tape.
-  if (ocrResult && ocrResult.text) {
+  // Chart-stream profile deliberately disables this guard: chart streams have
+  // no DMI/ToTT keyword content (their value is in the position-list overlay
+  // + pHash region-crop). Rely on chart-likeness + parseChartStream for the
+  // signal instead.
+  if (ocrResult && ocrResult.text && prefilterProfile === 'whiteboard') {
     const keywordHits = countKeywordHits(ocrResult.text);
     if (keywordHits === 0) {
       components.keyword_guard = -18;
@@ -250,9 +255,10 @@ function scoreWhiteboardCandidateBreakdown(observationRows, ocrConfidence, ocrRe
 
 // Backwards-compatible thin wrapper: returns just the numeric total so the
 // existing call sites and tests (e.g. assert.ok(scoreWhiteboardCandidate(...) >= 20))
-// keep working without modification.
-function scoreWhiteboardCandidate(observationRows, ocrConfidence, ocrResult = null) {
-  return scoreWhiteboardCandidateBreakdown(observationRows, ocrConfidence, ocrResult).total;
+// keep working without modification. Accepts the same options bag as the
+// breakdown form so chart-stream callers can pass { prefilterProfile }.
+function scoreWhiteboardCandidate(observationRows, ocrConfidence, ocrResult = null, options = {}) {
+  return scoreWhiteboardCandidateBreakdown(observationRows, ocrConfidence, ocrResult, options).total;
 }
 
 function countKeywordHits(text) {
@@ -413,32 +419,33 @@ async function analyzeFrameBeforeOcr(framePath) {
   return summarizeLumaBuffer(data, info.width, info.height);
 }
 
-function scoreFramePrefilter(stats, outputKind) {
+function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard') {
+  const table = PREFILTER_PROFILES[profile] || PREFILTER_PROFILES.whiteboard;
   let score = 0;
 
-  score += Math.max(0, 12 - (Math.abs(stats.brightRatio - 0.72) * 24));
-  score += Math.max(0, 8 - (Math.abs(stats.darkRatio - 0.08) * 90));
-  score += Math.max(0, 8 - (Math.abs(stats.edgeRatio - 0.09) * 110));
-  score += Math.max(0, 6 - (Math.abs(stats.stdDev - 60) / 10));
+  score += Math.max(0, table.brightWeight - (Math.abs(stats.brightRatio - table.brightTarget) * table.brightSlope));
+  score += Math.max(0, table.darkWeight - (Math.abs(stats.darkRatio - table.darkTarget) * table.darkSlope));
+  score += Math.max(0, table.edgeWeight - (Math.abs(stats.edgeRatio - table.edgeTarget) * table.edgeSlope));
+  score += Math.max(0, table.stdDevWeight - (Math.abs(stats.stdDev - table.stdDevTarget) / table.stdDevSlope));
 
-  if (stats.meanLuma < 140) {
-    score -= 8;
+  if (stats.meanLuma < table.meanLumaFloor) {
+    score -= table.meanLumaPenalty;
   }
 
-  if (stats.brightRatio < 0.30) {
-    score -= 12;
+  if (stats.brightRatio < table.brightRatioFloor) {
+    score -= table.brightRatioPenalty;
   }
 
-  if (stats.darkRatio < 0.01) {
-    score -= 4;
+  if (stats.darkRatio < table.darkRatioFloor) {
+    score -= table.darkRatioFloorPenalty;
   }
 
-  if (stats.darkRatio > 0.35) {
-    score -= 8;
+  if (stats.darkRatio > table.darkRatioCeil) {
+    score -= table.darkRatioCeilPenalty;
   }
 
   if (outputKind === 'snapshot') {
-    score += Math.min(stats.edgeRatio * 25, 2);
+    score += Math.min(stats.edgeRatio * table.snapshotEdgeBoost, table.snapshotEdgeBoostCap);
   }
 
   // Defense-in-depth chart rejection: subtract a small chart-likeness
@@ -449,10 +456,91 @@ function scoreFramePrefilter(stats, outputKind) {
   // produce vertical-edge patterns that look chart-like but are NOT charts —
   // the keyword and chart penalties in scoreWhiteboardCandidate handle the
   // rest at the OCR stage.
-  score += scoreChartLikeness(stats);
+  // Chart-stream profile inverts this: chart-likeness is a POSITIVE signal
+  // because the content we want to OCR IS a candlestick frame. Boost instead
+  // of penalize, but keep it bounded so wildly off-profile frames still drop.
+  if (table.chartLikenessBoost > 0) {
+    score += scoreChartLikeness(stats) * (table.chartLikenessBoost / 6);
+  } else {
+    score += scoreChartLikeness(stats);
+  }
 
   return Number(score.toFixed(2));
 }
+
+// Prefilter score profiles. Each profile is a flat table of weights
+// (positive contribution when the stat lands near its target), slopes
+// (how fast the contribution falls off with distance), and floor/ceiling
+// penalties. The whiteboard profile matches the original constants — every
+// row mirrors the literal numbers that used to be hard-coded inside
+// scoreFramePrefilter. The chart_stream profile inverts the bright/dark
+// distribution (chart frames are dark on average), drops the meanLuma floor
+// so a candlestick chart with mean luma ~70 still scores, and turns
+// chart-likeness into a positive boost so the prefilter stops rejecting the
+// very frames we want to OCR. prefilterThresholdDefault is the floor below
+// which selectFramesForOcr considers the OCR budget "weak signal" — callers
+// that drive scanVideoWithOcr use it to set minScore dynamically.
+const PREFILTER_PROFILES = Object.freeze({
+  whiteboard: Object.freeze({
+    brightWeight: 12,
+    brightTarget: 0.72,
+    brightSlope: 24,
+    darkWeight: 8,
+    darkTarget: 0.08,
+    darkSlope: 90,
+    edgeWeight: 8,
+    edgeTarget: 0.09,
+    edgeSlope: 110,
+    stdDevWeight: 6,
+    stdDevTarget: 60,
+    stdDevSlope: 10,
+    meanLumaFloor: 140,
+    meanLumaPenalty: 8,
+    brightRatioFloor: 0.30,
+    brightRatioPenalty: 12,
+    darkRatioFloor: 0.01,
+    darkRatioFloorPenalty: 4,
+    darkRatioCeil: 0.35,
+    darkRatioCeilPenalty: 8,
+    snapshotEdgeBoost: 25,
+    snapshotEdgeBoostCap: 2,
+    chartLikenessBoost: -6,
+    prefilterThresholdDefault: 14
+  }),
+  chart_stream: Object.freeze({
+    // Chart frames: ~4% bright (axis labels, tickers in overlay), ~55% dark
+    // (chart body + dark UI chrome), ~0.10 edge ratio, stdDev ~55.
+    brightWeight: 12,
+    brightTarget: 0.04,
+    brightSlope: 30,
+    darkWeight: 8,
+    darkTarget: 0.55,
+    darkSlope: 20,
+    edgeWeight: 8,
+    edgeTarget: 0.10,
+    edgeSlope: 100,
+    stdDevWeight: 6,
+    stdDevTarget: 55,
+    stdDevSlope: 12,
+    // Loosen the meanLuma gate: chart frames have mean luma 50–90 (dark UI
+    // chrome dominates). Whiteboard threshold was 140.
+    meanLumaFloor: 60,
+    meanLumaPenalty: 6,
+    // Don't reject for low brightRatio (we WANT dark frames) or for moderate
+    // darkRatio (chart bodies are mostly dark).
+    brightRatioFloor: 0.005,
+    brightRatioPenalty: 6,
+    darkRatioFloor: 0.20,
+    darkRatioFloorPenalty: 4,
+    darkRatioCeil: 0.92,
+    darkRatioCeilPenalty: 6,
+    snapshotEdgeBoost: 25,
+    snapshotEdgeBoostCap: 2,
+    // Positive boost: chart-likeness is GOOD. Score 0–6 instead of -6 to 0.
+    chartLikenessBoost: 8,
+    prefilterThresholdDefault: 8
+  })
+});
 
 function groupContiguousCandidates(candidates) {
   const windows = [];
@@ -665,12 +753,13 @@ function inferDateKey(videoPath, explicitDateKey = '') {
   return `${year}${month}${day}`;
 }
 
-function allocateOutputPath(outputRoot, outputKind, dateKey, suffix = null) {
+function allocateOutputPath(outputRoot, outputKind, dateKey, suffix = null, basename = 'revere') {
+  const safeBasename = String(basename || 'revere').replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase() || 'revere';
   const targetDirectory = path.join(outputRoot, outputKind === 'snapshot' ? 'snapshots' : 'screenshots');
   fs.mkdirSync(targetDirectory, { recursive: true });
 
   if (outputKind === 'snapshot') {
-    const baseStem = `revere_${dateKey}`;
+    const baseStem = `${safeBasename}_${dateKey}`;
     let candidatePath = path.join(targetDirectory, `${baseStem}.png`);
     if (!suffix && !fs.existsSync(candidatePath)) {
       return candidatePath;
@@ -703,6 +792,7 @@ function allocateOutputPath(outputRoot, outputKind, dateKey, suffix = null) {
 }
 
 module.exports = {
+  PREFILTER_PROFILES,
   TEXT_DENSITY_KEYWORDS,
   allocateOutputPath,
   analyzeFrameBeforeOcr,

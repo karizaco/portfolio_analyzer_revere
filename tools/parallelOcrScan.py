@@ -19,6 +19,10 @@ Usage:
     python tools/parallelOcrScan.py [workers] [--limit N] [--run-tag TAG]
                                     [--skip-from-tag TAG]
                                     [--ffmpeg-bin PATH]
+                                    [--prefilter-profile whiteboard|chart_stream]
+                                    [--basename NAME]
+                                    [--chart-stream-parser]
+                                    [--channel revere|qullamaggie]
 """
 
 from __future__ import annotations
@@ -66,12 +70,17 @@ def _collect_jobs(args, workspace_root: pathlib.Path) -> list[tuple[str, str, pa
     skip_set = _probe_log_stems(skip_dir) if skip_dir else set()
 
     conn = sqlite3.connect(str(db_path))
-    rows = conn.execute(
+    sql = (
         "SELECT video_id, upload_date, download_path FROM videos "
         "WHERE status IN ('pending','scanning','error') "
         "AND download_path IS NOT NULL AND download_path != '' "
-        "ORDER BY upload_date ASC, video_id ASC"
-    ).fetchall()
+    )
+    sql_params: list = []
+    if args.channel:
+        sql += "AND (channel = ? OR (channel = '' AND ? = 'revere')) "
+        sql_params.extend([args.channel, args.channel])
+    sql += "ORDER BY upload_date ASC, video_id ASC"
+    rows = conn.execute(sql, sql_params).fetchall()
     conn.close()
 
     jobs: list[tuple[str, str, pathlib.Path]] = []
@@ -133,6 +142,9 @@ def _worker_main(payload: tuple) -> dict:
         ffmpeg_bin,
         node_bin,
         date_tag,
+        prefilter_profile,
+        basename,
+        chart_stream_parser,
     ) = payload
 
     log_path = pathlib.Path(output_root_str) / f"{run_tag}_{upload_date}_{video_id}.log"
@@ -150,7 +162,13 @@ def _worker_main(payload: tuple) -> dict:
         run_tag,
         "--ffmpeg-bin",
         ffmpeg_bin,
+        "--prefilter-profile",
+        prefilter_profile or "whiteboard",
+        "--basename",
+        basename or "revere",
     ]
+    if chart_stream_parser:
+        cmd.append("--chart-stream-parser")
     try:
         with log_path.open("w", encoding="utf-8") as f:
             f.write(f"# cmd: {' '.join(cmd)}\n")
@@ -203,6 +221,28 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--ffmpeg-bin", default=os.environ.get("FFMPEG_BIN", str(workspace / "tools" / "ffmpeg.exe")), help="ffmpeg binary path")
     parser.add_argument("--node-bin", default=os.environ.get("NODE_BIN", "node"), help="node binary path")
     parser.add_argument("--db-path", default=str(workspace / "data" / "video_pipeline" / "state.sqlite"))
+    parser.add_argument(
+        "--channel",
+        default=os.environ.get("CHANNEL") or "",
+        help="filter videos to this channel value in the catalog (e.g. 'revere', 'qullamaggie'). Honors $CHANNEL.",
+    )
+    parser.add_argument(
+        "--prefilter-profile",
+        default=os.environ.get("PREFILTER_PROFILE", "whiteboard"),
+        choices=["whiteboard", "chart_stream"],
+        help="prefilter score profile forwarded to scanVideoWithOcr.js (default: whiteboard). Honors $PREFILTER_PROFILE.",
+    )
+    parser.add_argument(
+        "--basename",
+        default=os.environ.get("BASENAME") or "",
+        help="snapshot PNG prefix + screenshot discovery stem forwarded to scanVideoWithOcr.js (default: 'revere' or the channel). Honors $BASENAME.",
+    )
+    parser.add_argument(
+        "--chart-stream-parser",
+        action="store_true",
+        default=os.environ.get("CHART_STREAM_PARSER") == "1",
+        help="forward --chart-stream-parser to scanVideoWithOcr.js (Qullamaggie). Honors $CHART_STREAM_PARSER=1.",
+    )
     parser.add_argument(
         "--date-tag",
         default=os.environ.get("DATE_TAG") or None,
@@ -284,6 +324,12 @@ def main(argv: list[str] | None = None) -> int:
     workers = max(1, args.workers)
     args.run_tag = args.run_tag or f"ocr-parallel-{_dt.datetime.utcnow().strftime('%Y%m%d-%H%M%S')}"
     args.date_tag = args.date_tag or _dt.datetime.utcnow().strftime("%Y%m%d")
+    # Resolve basename default: explicit --basename wins, otherwise derive from
+    # the channel so Qullamaggie runs land in `qmg_<DATE>.png` instead of
+    # `revere_<DATE>.png`. Empty string means "let scanVideoWithOcr default".
+    if not args.basename and args.channel and args.channel != "revere":
+        args.basename = args.channel
+    effective_basename = args.basename or "revere"
 
     output_root = workspace / "data" / f"video_scan_{args.date_tag}" / args.run_tag
     output_root.mkdir(parents=True, exist_ok=True)
@@ -301,6 +347,12 @@ def main(argv: list[str] | None = None) -> int:
     print(f"[parallel-ocr] output_root : {output_root}")
     print(f"[parallel-ocr] parallelism : {workers} workers")
     print(f"[parallel-ocr] pending     : {len(jobs)} videos")
+    if args.channel:
+        print(f"[parallel-ocr] channel     : {args.channel}")
+    print(f"[parallel-ocr] prefilter   : {args.prefilter_profile}")
+    print(f"[parallel-ocr] basename    : {effective_basename}")
+    if args.chart_stream_parser:
+        print(f"[parallel-ocr] parser      : chart-stream")
     if args.skip_from_tag:
         print(f"[parallel-ocr] skip_from   : {args.skip_from_tag} (cooperating with serial run)")
 
@@ -314,6 +366,9 @@ def main(argv: list[str] | None = None) -> int:
             args.ffmpeg_bin,
             args.node_bin,
             args.date_tag,
+            args.prefilter_profile,
+            effective_basename,
+            bool(args.chart_stream_parser),
         )
         for upload_date, video_id, download_path in jobs
     )

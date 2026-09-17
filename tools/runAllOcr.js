@@ -37,6 +37,10 @@ const argv = process.argv.slice(2);
 const limit = Number(readFlag(argv, '--limit')) || 0;
 const since = readFlag(argv, '--since') || null;
 const reclassify = argv.includes('--reclassify');
+const channelArg = readFlag(argv, '--channel') || process.env.CHANNEL || '';
+const prefilterProfileArg = process.env.PREFILTER_PROFILE || 'whiteboard';
+const basenameArg = process.env.BASENAME || (channelArg && channelArg !== 'revere' ? channelArg : 'revere');
+const effectiveChannel = channelArg || (basenameArg !== 'revere' ? basenameArg : 'revere');
 
 const today = new Date();
 const dateStr = `${today.getUTCFullYear()}${pad2(today.getUTCMonth() + 1)}${pad2(today.getUTCDate())}`;
@@ -62,6 +66,7 @@ conn.row_factory = sqlite3.Row
 filters = ["status = 'scanning'", "download_path IS NOT NULL", "download_path != ''"]
 params = []
 ${since ? `filters.append('upload_date >= ?'); params.append(${JSON.stringify(since)})` : ''}
+${effectiveChannel ? `filters.append('channel = ?'); params.append(${JSON.stringify(effectiveChannel)})` : ''}
 limit_clause = 'LIMIT ' + str(${limit}) if ${limit} else ''
 rows = conn.execute(
     f"SELECT video_id, upload_date, title, download_path FROM videos WHERE {' AND '.join(filters)} "
@@ -108,14 +113,23 @@ for (const row of rows) {
 
   const start = Date.now();
   console.log(`[run-all-ocr] ${++done}/${rows.length} ${uploadDate} ${videoId} "${(title || '').slice(0, 50)}"`);
-  const r = spawnSync(process.execPath, [
+  const childArgs = [
     path.resolve('tools/scanVideoWithOcr.js'),
     '--video', downloadPath,
     '--date', uploadDate || 'unknown',
     '--output-root', outputRoot,
     '--run-tag', runTag,
-    '--ffmpeg-bin', ffmpegBin
-  ], { encoding: 'utf8', stdio: 'inherit' });
+    '--ffmpeg-bin', ffmpegBin,
+    '--prefilter-profile', prefilterProfileArg,
+    '--basename', basenameArg
+  ];
+  // Auto-enable chart-stream parser when the prefilter profile asks for it
+  // (typical Qullamaggie run). The CHART_STREAM_PARSER=1 env override stays
+  // useful when a user wants the parser on a whiteboard-profile run.
+  if (prefilterProfileArg === 'chart_stream' || process.env.CHART_STREAM_PARSER === '1') {
+    childArgs.push('--chart-stream-parser');
+  }
+  const r = spawnSync(process.execPath, childArgs, { encoding: 'utf8', stdio: 'inherit' });
 
   const elapsed = ((Date.now() - start) / 1000).toFixed(1);
   let videoType = null;

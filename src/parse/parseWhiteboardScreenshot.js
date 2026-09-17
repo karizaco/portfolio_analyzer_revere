@@ -123,12 +123,19 @@ function parseWhiteboardScreenshot({ metadata, ocr }) {
 //   'structured_whiteboard' - the canonical GRO HOLDINGS / TURBO RVAB / BOTTOM LINE layout
 //   'dmi'                   - Daily Market Insight page (index %s + one-line GRO/TURBO P&L)
 //   'tale_of_the_tape'      - market recap with leader / laggard tables
+//   'chart_stream'          - chart-streaming frame with a position-list overlay (Qullamaggie)
 //   'unknown_text'          - text-heavy but not one of the named layouts
 //   'chart'                 - low text density (likely stock chart)
 const SCREEN_LAYOUT_KEYWORDS = {
   dmi: ['DAILY MARKET INSIGHT', 'MARKET STATE', 'WHAT HAPPENED TODAY'],
   tale_of_the_tape: ['TALE OF THE TAPE', 'LEADERS', 'LAGGARDS', 'WINNERS', 'LOSERS']
 };
+
+// Tokens that look like a stock ticker next to its price — the shape of a
+// position-list row in a chart-stream overlay. Loose on purpose: OCR on a
+// 13-pt overlay regularly produces a "$" without the digits or vice versa.
+const PRICE_TOKEN_RE = /\$\s*\d|\d+\.\d/i;
+const TICKER_TOKEN_RE = /\b[A-Z]{1,5}(?:\.[A-Z]{1,2})?\b/g;
 
 function detectScreenLayout(ocrText, ocrLines) {
   const upper = String(ocrText || '').toUpperCase();
@@ -149,6 +156,18 @@ function detectScreenLayout(ocrText, ocrLines) {
   const taleHits = SCREEN_LAYOUT_KEYWORDS.tale_of_the_tape.filter((token) => upper.includes(token)).length;
   if (taleHits >= 2 || (lines.length >= 8 && compactCharCount > 300)) {
     return 'tale_of_the_tape';
+  }
+
+  // chart_stream: 2+ ticker-shaped tokens in close proximity AND at least one
+  // price token. Matches the bottom-right position-list overlay that Qullamaggie
+  // streams show during his chart sessions. Placed BEFORE the unknown_text
+  // fallback so dense ticker rows don't masquerade as unknown_text.
+  if (lines.length >= 2) {
+    const tickerHits = (upper.match(TICKER_TOKEN_RE) || []).length;
+    const hasPrice = PRICE_TOKEN_RE.test(ocrText || '');
+    if (tickerHits >= 2 && hasPrice) {
+      return 'chart_stream';
+    }
   }
 
   if (lines.length >= 6 && compactCharCount > 200) {

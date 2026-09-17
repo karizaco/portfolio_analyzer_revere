@@ -27,8 +27,10 @@ const {
   splitIssueCodes
 } = require('../src/video/ocrScanLogic');
 const { computePerceptualHash, hammingDistance } = require('../src/video/imageHash');
+const { computePerceptualHashOfRegion, computePerceptualHashOfFractionalRegion } = require('../src/video/imageHashRegion');
 const { extractTickersFromOcrText } = require('../src/normalize/tickerScan');
 const { createProbeKey, parseArgs, printHelp } = require('../src/video/ocrScanArgs');
+const { parseChartStreamPositionList } = require('../src/parse/parseChartStream');
 
 const OCR_TEXT_SNIPPET_MAX_CHARS = 200;
 const CAPTURE_MIN_FRAME_GAP = 10;
@@ -453,7 +455,7 @@ function extractFinalFrame(videoPath, timestamp, outputPath, ffmpegBin) {
   runFfmpegCommand(command, 'ffmpeg final frame extraction failed.');
 }
 
-async function prefilterFrames({ fps, framePaths, outputKind, progressInterval }) {
+async function prefilterFrames({ fps, framePaths, outputKind, prefilterProfile, progressInterval }) {
   const prefilterRows = [];
   let bestRow = null;
   const startedAt = Date.now();
@@ -464,7 +466,7 @@ async function prefilterFrames({ fps, framePaths, outputKind, progressInterval }
     const row = {
       frameIndex: index,
       framePath,
-      prefilterScore: scoreFramePrefilter(stats, outputKind),
+      prefilterScore: scoreFramePrefilter(stats, outputKind, prefilterProfile),
       stats,
       timestamp: buildFrameTimestamp(index, fps)
     };
@@ -492,30 +494,38 @@ async function prefilterFrames({ fps, framePaths, outputKind, progressInterval }
   };
 }
 
-async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats, prefilterScore) {
+async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats, prefilterScore, options = {}) {
+  const { chartStreamParser = false, phashRegion = null, phashRegionFraction = null } = options;
   const ocr = await ocrImage(framePath);
-  const parsed = parseScreenshot({
-    metadata: buildFrameMetadata(framePath, dateKey, frameIndex),
-    ocr
-  });
-  const [phash, tickers] = await Promise.all([
+  const parsed = chartStreamParser
+    ? null
+    : parseScreenshot({
+      metadata: buildFrameMetadata(framePath, dateKey, frameIndex),
+      ocr
+    });
+  const chartStream = chartStreamParser ? parseChartStreamPositionList({ ocr }) : null;
+  const [phash, phashOverlay, tickers] = await Promise.all([
     computePerceptualHash(framePath).catch(() => null),
+    computeRegionHash(framePath, phashRegion, phashRegionFraction),
     Promise.resolve(extractTickersFromOcrText(ocr.text))
   ]);
 
   return {
+    chartStream,
     frameIndex,
     framePath,
     lowResFramePath: null,
-    ocrConfidence: Number(parsed.ocr_confidence || ocr.confidence || 0),
+    ocrConfidence: Number(parsed ? parsed.ocr_confidence : ocr.confidence || 0),
     ocrProfile: ocr.profileName,
     ocrText: ocr.text || '',
     ocrTextSnippet: extractOcrTextSnippet(ocr.text),
     parsed,
     parsedRows: null,
     phash,
+    phashOverlay,
+    phashRegion: phashOverlay ? phashRegion || phashRegionFraction || null : null,
     prefilterScore,
-    score: scoreSnapshotCandidate(parsed),
+    score: parsed ? scoreSnapshotCandidate(parsed) : scoreChartStreamCandidate(chartStream, ocr.confidence),
     screenLayout: detectScreenLayout(ocr.text, ocr.lines),
     stats,
     tickers,
@@ -523,15 +533,69 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
   };
 }
 
-async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps, stats, prefilterScore) {
+// Resolve the region hash input into one hex string. Accepts either a
+// pixel-region ({x,y,width,height}) or a fractional-region
+// ({xFraction,yFraction,wFraction,hFraction}). Pixel regions go straight to
+// computePerceptualHashOfRegion; fractional regions call the
+// resolution-aware variant. Returns `null` when no region is configured or
+// when sharp fails (mirrors computePerceptualHash's `.catch(() => null)`).
+async function computeRegionHash(framePath, phashRegion, phashRegionFraction) {
+  if (phashRegion && typeof phashRegion.x === 'number') {
+    try {
+      return await computePerceptualHashOfRegion(framePath, phashRegion);
+    } catch (error) {
+      console.log(`[scan] region pHash failed (${error.message}); skipping overlay hash`);
+      return null;
+    }
+  }
+  if (phashRegionFraction) {
+    try {
+      return await computePerceptualHashOfFractionalRegion(framePath, phashRegionFraction);
+    } catch (error) {
+      console.log(`[scan] region pHash failed (${error.message}); skipping overlay hash`);
+      return null;
+    }
+  }
+  return null;
+}
+
+// Score for the chart-stream parser. Mirrors scoreSnapshotCandidate's shape
+// (parse_status + ticker list + price action + ocr_confidence bonus) but
+// without the GRO/TURBO holdings fields. The signal is the size of the
+// position list + the parse confidence + the OCR confidence bonus.
+function scoreChartStreamCandidate(chartStream, ocrConfidence) {
+  if (!chartStream) {
+    return 0;
+  }
+  let score = Number(chartStream.confidence || 0) * 12;
+  score += Array.isArray(chartStream.position_list) ? chartStream.position_list.length * 1.5 : 0;
+  if (chartStream.price_action) {
+    score += 2;
+  }
+  if (chartStream.parse_status === 'ok') {
+    score += 4;
+  }
+  score -= Number(chartStream.tickers_rejected || 0) * 0.25;
+  score += Number(ocrConfidence || 0) / 20;
+  return Number(score.toFixed(2));
+}
+
+async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps, stats, prefilterScore, options = {}) {
+  const { prefilterProfile = 'whiteboard', phashRegion = null, phashRegionFraction = null } = options;
   const ocr = await ocrImage(framePath);
   const parsedRows = parseWhiteboardScreenshot({
     metadata: buildFrameMetadata(framePath, dateKey, frameIndex),
     ocr
   });
-  const scoring = scoreWhiteboardCandidateBreakdown(parsedRows, ocr.confidence, { ...ocr, stats });
-  const [phash, tickers] = await Promise.all([
+  const scoring = scoreWhiteboardCandidateBreakdown(
+    parsedRows,
+    ocr.confidence,
+    { ...ocr, stats },
+    { prefilterProfile }
+  );
+  const [phash, phashOverlay, tickers] = await Promise.all([
     computePerceptualHash(framePath).catch(() => null),
+    computeRegionHash(framePath, phashRegion, phashRegionFraction),
     Promise.resolve(extractTickersFromOcrText(ocr.text))
   ]);
 
@@ -547,7 +611,10 @@ async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps, sta
     ocrTextSnippet: extractOcrTextSnippet(ocr.text),
     parsedRows,
     phash,
+    phashOverlay,
+    phashRegion: phashOverlay ? phashRegion || phashRegionFraction || null : null,
     prefilterScore,
+    prefilterProfile,
     score: scoring.total,
     scoreBreakdown: scoring.components,
     screenLayout: detectScreenLayout(ocr.text, ocr.lines),
@@ -558,6 +625,7 @@ async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps, sta
 }
 
 async function scanFrames({
+  chartStreamParser = false,
   dateKey,
   ffmpegBin,
   fps,
@@ -566,6 +634,9 @@ async function scanFrames({
   ocrFrameDirectory,
   ocrFrameWidth,
   outputKind,
+  phashRegion,
+  phashRegionFraction,
+  prefilterProfile,
   progressInterval,
   strongThreshold,
   topCandidates,
@@ -576,6 +647,12 @@ async function scanFrames({
   let bestCandidate = null;
   const startedAt = Date.now();
   const buildCandidate = outputKind === 'snapshot' ? buildSnapshotCandidate : buildWhiteboardCandidate;
+  const candidateOptions = {
+    chartStreamParser,
+    phashRegion,
+    phashRegionFraction,
+    prefilterProfile
+  };
 
   for (let index = 0; index < frameRows.length; index += 1) {
     const frameRow = frameRows[index];
@@ -591,7 +668,8 @@ async function scanFrames({
         dateKey,
         fps,
         frameRow.stats,
-        frameRow.prefilterScore
+        frameRow.prefilterScore,
+        candidateOptions
       );
       candidates.push(candidate);
       if (candidate.score >= strongThreshold) {
@@ -677,8 +755,18 @@ function summarizeCandidate(candidate, outputKind, allCandidates = null, confusi
     : candidate.parsed
       ? [parsedObservationSummary(candidate.parsed)]
       : [];
+  const chartStreamSummary = candidate.chartStream
+    ? {
+        confidence: Number(candidate.chartStream.confidence || 0),
+        parse_status: candidate.chartStream.parse_status || 'unknown',
+        position_list: Array.isArray(candidate.chartStream.position_list) ? candidate.chartStream.position_list : [],
+        price_action: candidate.chartStream.price_action || '',
+        tickers_rejected: Number(candidate.chartStream.tickers_rejected || 0)
+      }
+    : null;
 
   const summary = {
+    chart_stream: chartStreamSummary,
     confusion_with_nearby: allCandidates
       ? findAdjacentCandidates(allCandidates, candidate.frameIndex, confusionRadius)
       : [],
@@ -697,6 +785,9 @@ function summarizeCandidate(candidate, outputKind, allCandidates = null, confusi
     parsed_observations: parsedObservations,
     parsed_row_count: parsedRows.length || (candidate.parsed ? 1 : 0),
     phash: candidate.phash || null,
+    phash_overlay: candidate.phashOverlay || null,
+    phash_region: candidate.phashRegion || null,
+    prefilter_profile: candidate.prefilterProfile || null,
     prefilter_score: candidate.prefilterScore == null ? null : Number(candidate.prefilterScore.toFixed(2)),
     prefilter_stats: candidate.stats || null,
     score: candidate.score,
@@ -792,9 +883,9 @@ function finalizeSegment(segment) {
   };
 }
 
-async function saveCapture({ candidate, outputRoot, outputKind, dateKey, videoPath, ffmpegBin, suffix }) {
+async function saveCapture({ basename = 'revere', candidate, outputRoot, outputKind, dateKey, videoPath, ffmpegBin, suffix }) {
   const explicitSuffix = Number.isFinite(suffix) ? suffix : null;
-  const outputPath = allocateOutputPath(outputRoot, outputKind, dateKey, explicitSuffix);
+  const outputPath = allocateOutputPath(outputRoot, outputKind, dateKey, explicitSuffix, basename);
   extractFinalFrame(videoPath, candidate.timestamp, outputPath, ffmpegBin);
   return outputPath;
 }
@@ -824,8 +915,14 @@ async function main() {
   await ensureDirectoryExists(logsDirectory);
 
   const resultBase = {
+    basename: options.basename,
+    channel: options.basename === 'revere' ? 'revere' : options.basename,
+    chart_stream_parser: Boolean(options.chartStreamParser),
     date_key: dateKey,
     output_kind: options.outputKind,
+    phash_region: options.phashRegion || null,
+    phash_region_fraction: options.phashRegionFraction || null,
+    prefilter_profile: options.prefilterProfile,
     video_path: videoPath
   };
 
@@ -867,6 +964,7 @@ async function main() {
       fps: options.fps,
       framePaths,
       outputKind: options.outputKind,
+      prefilterProfile: options.prefilterProfile,
       progressInterval: options.progressInterval
     });
     const selectedFrameRows = selectFramesForOcr(prefilterResult.prefilterRows, {
@@ -887,6 +985,7 @@ async function main() {
     );
 
     const scanResult = await scanFrames({
+      chartStreamParser: Boolean(options.chartStreamParser),
       dateKey,
       ffmpegBin: options.ffmpegBin,
       fps: options.fps,
@@ -895,6 +994,9 @@ async function main() {
       ocrFrameDirectory,
       ocrFrameWidth: options.ocrFrameWidth,
       outputKind: options.outputKind,
+      phashRegion: options.phashRegion || null,
+      phashRegionFraction: options.phashRegionFraction || null,
+      prefilterProfile: options.prefilterProfile,
       progressInterval: options.progressInterval,
       strongThreshold: options.strongThreshold,
       topCandidates: options.topCandidates,
@@ -951,6 +1053,7 @@ async function main() {
       const candidate = captures[captureIndex];
       const explicitSuffix = captureIndex === 0 ? null : captureIndex + 1;
       const outputPath = await saveCapture({
+        basename: options.basename,
         candidate,
         dateKey,
         ffmpegBin: options.ffmpegBin,

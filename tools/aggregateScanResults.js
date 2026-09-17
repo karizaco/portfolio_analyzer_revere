@@ -45,6 +45,10 @@ for (const fileName of logFiles) {
     video_path: parsed.video_path,
     date_key: parsed.date_key,
     output_kind: parsed.output_kind,
+    channel: parsed.channel || '',
+    basename: parsed.basename || '',
+    prefilter_profile: parsed.prefilter_profile || 'whiteboard',
+    chart_stream_parser: Boolean(parsed.chart_stream_parser),
     status: parsed.status,
     frame_counts: frameCounts,
     prefilter_best: parsed.prefilter_best_score,
@@ -70,6 +74,9 @@ for (const fileName of logFiles) {
       parsed_observations: capture.parsed_observations || [],
       tickers: capture.tickers || [],
       phash: capture.phash || null,
+      phash_overlay: capture.phash_overlay || null,
+      phash_region: capture.phash_region || null,
+      chart_stream: capture.chart_stream || null,
       low_res_frame_path: capture.low_res_frame_path || null,
       nearest_ffmpeg_keyframe_ts: Number.isFinite(capture.nearest_ffmpeg_keyframe_ts) ? capture.nearest_ffmpeg_keyframe_ts : null,
       confusion_with_nearby: Array.isArray(capture.confusion_with_nearby) ? capture.confusion_with_nearby : [],
@@ -97,6 +104,9 @@ for (const fileName of logFiles) {
 const capturePhashes = videos.flatMap((video) => video.captures.map((capture) => capture.phash).filter(Boolean));
 const uniquePhashes = [...new Set(capturePhashes)];
 const phashCollisions = countPhashCollisions(capturePhashes);
+const captureOverlayPhashes = videos.flatMap((video) => video.captures.map((capture) => capture.phash_overlay).filter(Boolean));
+const uniqueOverlayPhashes = [...new Set(captureOverlayPhashes)];
+const overlayPhashCollisions = countPhashCollisions(captureOverlayPhashes);
 
 const aggregateJson = {
   generated_at: new Date().toISOString(),
@@ -110,6 +120,7 @@ const aggregateJson = {
     captures_status_done: videos.filter((video) => video.status === 'done').length,
     unique_screen_layouts: [...new Set(videos.flatMap((video) => video.unique_layouts))].sort(),
     captures_per_layout: countCapturesPerLayout(videos),
+    captures_per_channel: countCapturesPerChannel(videos),
     captures_with_observed_date: videos.reduce((sum, video) => sum + video.captures.filter((c) => Boolean(c.observed_date)).length, 0),
     intro_card_captures: videos.reduce((sum, video) => sum + video.captures.filter((c) => c.is_intro_card).length, 0),
     whiteboard_segments_total: videos.reduce((sum, video) => sum + (Array.isArray(video.whiteboard_segments) ? video.whiteboard_segments.length : 0), 0),
@@ -119,6 +130,8 @@ const aggregateJson = {
     captures_with_keyframe_ts: videos.reduce((sum, video) => sum + video.captures.filter((c) => Number.isFinite(c.nearest_ffmpeg_keyframe_ts)).length, 0),
     unique_phashes: uniquePhashes,
     phash_collisions: phashCollisions,
+    unique_overlay_phashes: uniqueOverlayPhashes,
+    overlay_phash_collisions: overlayPhashCollisions,
     videos_with_keyframe_lookup_skipped: videos.filter((video) => video.nearest_ffmpeg_keyframe_lookups_skipped).length
   },
   videos: videos
@@ -152,6 +165,15 @@ function countCapturesPerLayout(videos) {
       const layout = capture.screen_layout || 'unknown';
       counts[layout] = (counts[layout] || 0) + 1;
     }
+  }
+  return Object.fromEntries(Object.entries(counts).sort((left, right) => right[1] - left[1]));
+}
+
+function countCapturesPerChannel(videos) {
+  const counts = {};
+  for (const video of videos) {
+    const channel = video.channel || (video.basename && video.basename !== 'revere' ? video.basename : 'revere');
+    counts[channel] = (counts[channel] || 0) + video.captured_count;
   }
   return Object.fromEntries(Object.entries(counts).sort((left, right) => right[1] - left[1]));
 }
@@ -213,6 +235,8 @@ function renderMarkdown(aggregate) {
   lines.push(`- **Captures with tickers:** ${totals.captures_with_tickers} (unique tickers: ${totals.unique_tickers.length})`);
   lines.push(`- **Captures with keyframe timestamp:** ${totals.captures_with_keyframe_ts} (videos with lookup skipped: ${totals.videos_with_keyframe_lookup_skipped})`);
   lines.push(`- **Unique pHashes:** ${totals.unique_phashes.length} (captures sharing a pHash: ${totals.phash_collisions})`);
+  lines.push(`- **Unique overlay pHashes (chart-stream):** ${totals.unique_overlay_phashes.length} (collisions: ${totals.overlay_phash_collisions})`);
+  lines.push(`- **Captures per channel:** ${Object.entries(totals.captures_per_channel || {}).map(([k, v]) => `${k}=${v}`).join(', ') || '—'}`);
   lines.push(`- **Unique screen layouts:** ${totals.unique_screen_layouts.join(', ') || '(none)'}`);
   lines.push('- **Captures per layout:**');
   for (const [layout, count] of Object.entries(totals.captures_per_layout)) {

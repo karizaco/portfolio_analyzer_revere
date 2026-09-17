@@ -124,6 +124,61 @@ def initialize_schema(connection: sqlite3.Connection) -> None:
         '''
     )
     connection.commit()
+    _apply_migrations(connection)
+
+
+def _apply_migrations(connection: sqlite3.Connection) -> None:
+    """Idempotent ALTER TABLE migrations applied after `initialize_schema`.
+
+    Each entry checks whether the column exists before adding it; the backfill
+    UPDATE statements are safe to run on every startup because the WHERE clause
+    targets only rows that still have the empty-string sentinel value.
+    """
+    existing = {
+        row['name']
+        for row in connection.execute('PRAGMA table_info(videos)')
+    }
+    if 'channel' not in existing:
+        connection.execute("ALTER TABLE videos ADD COLUMN channel TEXT NOT NULL DEFAULT ''")
+    if 'transcript_path' not in existing:
+        connection.execute("ALTER TABLE videos ADD COLUMN transcript_path TEXT NOT NULL DEFAULT ''")
+    if 'transcript_segment_count' not in existing:
+        connection.execute("ALTER TABLE videos ADD COLUMN transcript_segment_count INTEGER NOT NULL DEFAULT 0")
+    if 'transcript_fetched_at' not in existing:
+        connection.execute("ALTER TABLE videos ADD COLUMN transcript_fetched_at TEXT NOT NULL DEFAULT ''")
+
+    # Backfill `channel` from `source_url` so legacy Revere rows survive.
+    connection.execute(
+        "UPDATE videos SET channel = 'revere' WHERE channel = '' AND source_url LIKE '%@revereasset%'"
+    )
+    connection.execute(
+        "UPDATE videos SET channel = 'qullamaggie' WHERE channel = '' AND source_url LIKE '%@Qullamaggie%'"
+    )
+    connection.execute(
+        "UPDATE videos SET channel = 'revere' WHERE channel = ''"
+    )
+    connection.commit()
+
+    catalog_run_columns = {
+        row['name']
+        for row in connection.execute('PRAGMA table_info(catalog_runs)')
+    }
+    if 'channel' not in catalog_run_columns:
+        connection.execute("ALTER TABLE catalog_runs ADD COLUMN channel TEXT NOT NULL DEFAULT ''")
+        connection.execute(
+            "UPDATE catalog_runs SET channel = 'revere' WHERE channel = '' AND source_url LIKE '%@revereasset%'"
+        )
+        connection.execute(
+            "UPDATE catalog_runs SET channel = 'qullamaggie' WHERE channel = '' AND source_url LIKE '%@Qullamaggie%'"
+        )
+        connection.execute(
+            "UPDATE catalog_runs SET channel = 'revere' WHERE channel = ''"
+        )
+        connection.commit()
+
+    connection.execute(
+        "CREATE INDEX IF NOT EXISTS idx_videos_channel ON videos(channel)"
+    )
 
 
 def set_setting(connection: sqlite3.Connection, key: str, value: str) -> None:
@@ -489,6 +544,7 @@ def build_command_prefix(command_bin: str) -> list[str]:
 def record_catalog_run(
     connection: sqlite3.Connection,
     *,
+    channel: str = '',
     command: list[str],
     inserted: int,
     malformed_rows: int,
@@ -502,6 +558,7 @@ def record_catalog_run(
         '''
         INSERT INTO catalog_runs (
             source_url,
+            channel,
             command_json,
             raw_output_path,
             row_count,
@@ -510,10 +567,11 @@ def record_catalog_run(
             missing_upload_dates,
             malformed_rows,
             created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''',
         (
             source_url,
+            channel,
             json.dumps(command),
             str(raw_output_path),
             row_count,
@@ -1399,7 +1457,7 @@ def command_scan(args: argparse.Namespace) -> int:
     return 0 if not error_count else 1
 
 
-def upsert_catalog_rows(connection: sqlite3.Connection, source_url: str, rows: list[dict[str, str]]) -> tuple[int, int]:
+def upsert_catalog_rows(connection: sqlite3.Connection, source_url: str, rows: list[dict[str, str]], channel: str = '') -> tuple[int, int]:
     inserted = 0
     updated = 0
 
@@ -1418,10 +1476,11 @@ def upsert_catalog_rows(connection: sqlite3.Connection, source_url: str, rows: l
                 video_url,
                 title,
                 upload_date,
+                channel,
                 status,
                 created_at,
                 updated_at
-            ) VALUES (?, ?, ?, ?, ?, 'pending', ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, ?)
             ON CONFLICT(video_id) DO UPDATE SET
                 source_url = excluded.source_url,
                 video_url = excluded.video_url,
@@ -1429,6 +1488,10 @@ def upsert_catalog_rows(connection: sqlite3.Connection, source_url: str, rows: l
                 upload_date = CASE
                     WHEN excluded.upload_date <> '' THEN excluded.upload_date
                     ELSE videos.upload_date
+                END,
+                channel = CASE
+                    WHEN excluded.channel <> '' THEN excluded.channel
+                    ELSE videos.channel
                 END,
                 updated_at = excluded.updated_at
             ''',
@@ -1438,6 +1501,7 @@ def upsert_catalog_rows(connection: sqlite3.Connection, source_url: str, rows: l
                 row['video_url'],
                 row['title'],
                 row['upload_date'],
+                channel,
                 timestamp,
                 timestamp,
             ),
@@ -1460,6 +1524,11 @@ def command_catalog(args: argparse.Namespace) -> int:
     if not db_path.exists():
         print('Worker state is missing. Run `npm run video:init` first.', file=sys.stderr)
         return 1
+
+    # Resolve the effective channel. If `--channel` was omitted, infer from
+    # the source URL (handle-based channels only — playlist URLs default to
+    # 'revere' for backward compat with existing scripts).
+    effective_channel = args.channel or infer_channel_from_url(args.source_url) or 'revere'
 
     command = build_catalog_command(args)
     result = subprocess.run(command, capture_output=True, text=True, check=False)
@@ -1487,9 +1556,10 @@ def command_catalog(args: argparse.Namespace) -> int:
     with connect_database(db_path) as connection:
         initialize_schema(connection)
         set_setting(connection, 'source_url', args.source_url)
+        set_setting(connection, 'channel', effective_channel)
         set_setting(connection, 'last_catalog_output_path', str(snapshot_path))
         set_setting(connection, 'last_catalog_import_at', utc_now_iso())
-        inserted, updated = upsert_catalog_rows(connection, args.source_url, rows)
+        inserted, updated = upsert_catalog_rows(connection, args.source_url, rows, channel=effective_channel)
         record_catalog_run(
             connection,
             command=command,
@@ -1500,10 +1570,12 @@ def command_catalog(args: argparse.Namespace) -> int:
             row_count=len(rows),
             source_url=args.source_url,
             updated=updated,
+            channel=effective_channel,
         )
 
     print(json.dumps({
         'cataloged_rows': len(rows),
+        'channel': effective_channel,
         'db_path': str(db_path),
         'inserted': inserted,
         'malformed_rows': len(malformed_lines),
@@ -1520,6 +1592,19 @@ def command_catalog(args: argparse.Namespace) -> int:
         print(json.dumps({'malformed_examples': malformed_lines[:5]}, indent=2), file=sys.stderr)
 
     return 0
+
+
+def infer_channel_from_url(source_url: str) -> str:
+    """Best-effort channel inference from a YouTube source URL. Returns '' if
+    no rule matches so the caller can apply its own default."""
+    if not source_url:
+        return ''
+    lowered = source_url.lower()
+    if '@revereasset' in lowered or '/revereasset' in lowered:
+        return 'revere'
+    if '@qullamaggie' in lowered or '/qullamaggie' in lowered:
+        return 'qullamaggie'
+    return ''
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -1553,6 +1638,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     catalog_parser = subparsers.add_parser('catalog', help='Import playlist or channel metadata through yt-dlp.')
     catalog_parser.add_argument('--source-url', required=True, help='YouTube playlist or channel URL to catalog.')
+    catalog_parser.add_argument(
+        '--channel',
+        default='',
+        help='Logical channel name written to the videos.channel + catalog_runs.channel columns '
+             '(e.g. "revere", "qullamaggie"). Inferred from the source URL when omitted.',
+    )
     catalog_parser.add_argument('--yt-dlp-bin', default='yt-dlp', help='Path to the yt-dlp executable.')
     catalog_parser.add_argument('--limit', type=int, default=0, help='Optional playlist limit for smoke tests.')
     catalog_parser.add_argument(

@@ -172,9 +172,11 @@ function hammingDistance(hexA, hexB) {
 module.exports = {
   SOURCE_SIZE,
   SAMPLE_SIZE,
+  bitsToHex,
   computePerceptualHash,
   computePerceptualHashFromPixels,
   dct1d,
   dct2d,
-  hammingDistance
+  hammingDistance,
+  median
 };

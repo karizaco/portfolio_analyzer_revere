@@ -27,7 +27,11 @@ const {
 
 const argv = process.argv.slice(2);
 const runTagArg = readFlag(argv, '--run-tag');
+const channelArg = readFlag(argv, '--channel');
 const reclassify = argv.includes('--reclassify');
+const runTags = runTagArg
+  ? String(runTagArg).split(',').map((value) => value.trim()).filter(Boolean)
+  : null;
 
 const dbPath = path.resolve('data/video_pipeline/state.sqlite');
 if (!fs.existsSync(dbPath)) {
@@ -83,8 +87,8 @@ let totalSkipped = 0;
 let totalLogs = 0;
 
 for (const scanDateDir of scanDateDirs) {
-  const runTags = runTagArg ? [runTagArg] : listRunTags(scanDateDir);
-  for (const runTag of runTags) {
+  const runTagSet = runTags || listRunTags(scanDateDir);
+  for (const runTag of runTagSet) {
     const probeLogsDir = path.join(scanDateDir, runTag, runTag, 'ocr_probe', 'logs');
     if (!fs.existsSync(probeLogsDir)) continue;
     const logFiles = fs.readdirSync(probeLogsDir).filter((f) => f.endsWith('.json'));
@@ -122,6 +126,15 @@ for (const scanDateDir of scanDateDirs) {
       catch (e) {
         console.warn(`[stamp] WARN: failed to parse ${logPath}: ${e.message}`);
         continue;
+      }
+      if (channelArg) {
+        // Filter on log content (not filename). Older probe logs don't carry
+        // `basename`; default them to 'revere' so a single-channel filter
+        // doesn't accidentally drop them.
+        const logChannel = log.basename && log.basename !== 'revere' ? log.basename : 'revere';
+        if (logChannel !== channelArg) {
+          continue;
+        }
       }
       if (log.video_type && log.video_type_classified_at && !reclassify) {
         skippedInRun += 1;

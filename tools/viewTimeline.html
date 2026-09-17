@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Revere OCR timeline</title>
+  <title>OCR timeline</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root {
@@ -47,6 +47,7 @@
     .pill.type-weekend_review { background: rgba(249, 115, 22, 0.18); color: var(--accent-2); }
     .pill.type-feature { background: rgba(148, 163, 184, 0.18); color: var(--muted); }
     .pill.type-live_update { background: rgba(251, 191, 36, 0.18); color: var(--warn); }
+    .pill.type-chart_stream { background: rgba(168, 85, 247, 0.18); color: #c084fc; }
     .pill.type-untagged { background: rgba(239, 68, 68, 0.18); color: var(--bad); }
     .filterbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
     .filterbar .label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px; }
@@ -56,6 +57,7 @@
     .filterbar .chip.active.weekend { background: var(--accent-2); border-color: var(--accent-2); }
     .filterbar .chip.active.feature { background: var(--muted); border-color: var(--muted); }
     .filterbar .chip.active.live_update { background: var(--warn); border-color: var(--warn); color: #1f1707; }
+    .filterbar .chip.active.chart_stream { background: #c084fc; border-color: #c084fc; color: #1f1707; }
     .badge { display: inline-flex; align-items: center; gap: 4px; }
     .type-summary { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; font-size: 12px; color: var(--muted); }
     .type-summary span strong { color: var(--ink); }
@@ -66,7 +68,7 @@
 </head>
 <body>
   <main>
-    <h1>Revere OCR Timeline</h1>
+    <h1>OCR Timeline</h1>
     <div class="meta" id="meta"></div>
 
     <div class="filterbar" id="filterbar">
@@ -76,6 +78,7 @@
       <button type="button" class="chip weekend" data-type="weekend_review">Weekend Wrap</button>
       <button type="button" class="chip feature" data-type="feature">Feature</button>
       <button type="button" class="chip live_update" data-type="live_update">Live</button>
+      <button type="button" class="chip chart_stream" data-type="chart_stream">Chart Stream</button>
       <button type="button" class="chip" data-type="untagged">Untagged</button>
     </div>
 
@@ -147,6 +150,7 @@
     weekend_review: 'Weekend',
     feature: 'Feature',
     live_update: 'Live',
+    chart_stream: 'Stream',
     untagged: 'Untagged'
   };
 
@@ -455,7 +459,7 @@
 
   function readHashFilter() {
     const m = (window.location.hash || '').match(/type=([a-z_]+)/);
-    if (m && ['daily', 'weekend_review', 'feature', 'live_update', 'untagged', 'all'].includes(m[1])) {
+    if (m && ['daily', 'weekend_review', 'feature', 'live_update', 'chart_stream', 'untagged', 'all'].includes(m[1])) {
       state.activeType = m[1];
       const btn = document.querySelector(`#filterbar .chip[data-type="${state.activeType}"]`);
       if (btn) {

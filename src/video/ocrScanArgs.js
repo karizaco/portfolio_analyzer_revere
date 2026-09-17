@@ -35,13 +35,51 @@ function printHelp() {
     '  --keep-frames              Keep sampled intermediate frames',
     '  --skip-keyframes           Do not invoke ffprobe to locate the nearest keyframe per capture',
     '  --confusion-radius <n>     Adjacent-frame lookup window for confusion_with_nearby, default 1',
+    '  --prefilter-profile <p>    whiteboard | chart_stream (drives prefilter score table + keyword guard)',
+    '  --basename <name>          Snapshot PNG prefix + screenshot discovery stem, default "revere"',
+    '  --phash-region <x,y,w,h>   Region in pixels for the overlay pHash (optional)',
+    '  --phash-region-fraction <xf,yf,wf,hf> Fractional overlay region (0..1); chart_stream default "0.70,0.84,0.28,0.14"',
+    '  --chart-stream-parser      Replace the GRO/TURBO whiteboard parser with parseChartStream',
     '  --help                     Show this help text',
     ''
   ].join('\n'));
 }
 
+// Default fractional overlay region for chart-stream runs. Qullamaggie's
+// position-list overlay sits in the bottom-right corner of a streamed chart
+// frame; the values here cover ~28% width × 14% height starting at 70% / 84%
+// of the frame. These numbers were eyeballed from the YouTube layout and are
+// good enough for the prefilter — the OCR engine tolerates a couple of pixels
+// of slack on every edge.
+const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.70,0.84,0.28,0.14';
+
+function parseFractionalRegion(raw) {
+  if (!raw) return null;
+  const tokens = String(raw).split(',').map((value) => Number(value.trim()));
+  if (tokens.length !== 4 || tokens.some((value) => !Number.isFinite(value) || value < 0 || value > 1)) {
+    throw new Error(`Expected fractional region as four 0..1 numbers, got "${raw}"`);
+  }
+  const [xFraction, yFraction, wFraction, hFraction] = tokens;
+  if (xFraction + wFraction > 1.001 || yFraction + hFraction > 1.001) {
+    throw new Error(`Fractional region overflows frame bounds: ${raw}`);
+  }
+  return { xFraction, yFraction, wFraction, hFraction };
+}
+
+function parsePixelRegion(raw) {
+  if (!raw) return null;
+  const tokens = String(raw).split(',').map((value) => Number(value.trim()));
+  if (tokens.length !== 4 || tokens.some((value) => !Number.isFinite(value) || value < 0)) {
+    throw new Error(`Expected pixel region as four non-negative numbers, got "${raw}"`);
+  }
+  const [x, y, width, height] = tokens;
+  return { x, y, width, height };
+}
+
 function buildDefaultOptions(defaultOutputRoot) {
   return {
+    basename: 'revere',
+    chartStreamParser: false,
     confusionRadius: 1,
     ffmpegBin: 'ffmpeg',
     fps: 0.25,
@@ -49,9 +87,12 @@ function buildDefaultOptions(defaultOutputRoot) {
     ocrFrameWidth: 1280,
     outputKind: 'whiteboard',
     outputRoot: defaultOutputRoot,
+    phashRegion: null,
+    phashRegionFraction: null,
     prefilterMaxFrames: 60,
     prefilterMinFrames: 12,
     prefilterNeighbors: 1,
+    prefilterProfile: 'whiteboard',
     prefilterThreshold: 14,
     progressInterval: 10,
     reviewThreshold: 4,
@@ -166,6 +207,25 @@ function parseArgs(argv, overrides = {}) {
         options.confusionRadius = Number(nextValue);
         index += 1;
         break;
+      case '--prefilter-profile':
+        options.prefilterProfile = String(nextValue);
+        index += 1;
+        break;
+      case '--basename':
+        options.basename = String(nextValue);
+        index += 1;
+        break;
+      case '--phash-region':
+        options.phashRegion = parsePixelRegion(nextValue);
+        index += 1;
+        break;
+      case '--phash-region-fraction':
+        options.phashRegionFraction = parseFractionalRegion(nextValue);
+        index += 1;
+        break;
+      case '--chart-stream-parser':
+        options.chartStreamParser = true;
+        break;
       default:
         throw new Error(`Unknown argument: ${argument}`);
     }
@@ -227,6 +287,32 @@ function parseArgs(argv, overrides = {}) {
     throw new Error('`--confusion-radius` must be zero or a positive number.');
   }
 
+  if (!['whiteboard', 'chart_stream'].includes(options.prefilterProfile)) {
+    throw new Error(`Unsupported prefilter profile: ${options.prefilterProfile}`);
+  }
+
+  const sanitizedBasename = String(options.basename || 'revere').replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
+  if (!sanitizedBasename) {
+    throw new Error('`--basename` must contain at least one alphanumeric character.');
+  }
+  options.basename = sanitizedBasename;
+
+  if (options.phashRegion && options.phashRegionFraction) {
+    throw new Error('Pass either `--phash-region` or `--phash-region-fraction`, not both.');
+  }
+
+  if (options.prefilterProfile === 'chart_stream' && !options.phashRegion && !options.phashRegionFraction) {
+    options.phashRegionFraction = parseFractionalRegion(CHART_STREAM_REGION_FRACTION_DEFAULT);
+  }
+
+  if (options.chartStreamParser && options.outputKind !== 'snapshot') {
+    // The chart-stream parser produces a single observation row per capture;
+    // it's only meaningful in snapshot mode where one slide = one capture.
+    // For whiteboard runs the parser is a no-op anyway because no structured
+    // GRO/TURBO rows exist.
+    throw new Error('`--chart-stream-parser` is only supported with `--output-kind snapshot`.');
+  }
+
   return options;
 }
 
@@ -240,8 +326,11 @@ function createProbeKey(videoPath, dateKey, outputKind) {
 }
 
 module.exports = {
+  CHART_STREAM_REGION_FRACTION_DEFAULT,
   DEFAULT_OUTPUT_ROOT,
   createProbeKey,
   parseArgs,
+  parseFractionalRegion,
+  parsePixelRegion,
   printHelp
 };

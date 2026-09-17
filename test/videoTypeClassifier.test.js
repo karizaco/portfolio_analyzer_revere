@@ -61,9 +61,27 @@ test('isWeekendUpload helper', () => {
   assert.equal(isWeekendUpload(null), false);
 });
 
+test('classifyVideoType flags chart_stream by LIVE STREAM / STREAM markers', () => {
+  assert.equal(classifyVideoType({ title: 'LIVE STREAM — TSLA setup', uploadDate: '20260818' }), 'chart_stream');
+  assert.equal(classifyVideoType({ title: 'Stream recap', uploadDate: '20260818' }), 'chart_stream');
+  // chart-stream markers (SESSION / SCALP / CHART ONLY) also classify
+  assert.equal(classifyVideoType({ title: 'Afternoon session watchlist', uploadDate: '20260818' }), 'chart_stream');
+  assert.equal(classifyVideoType({ title: 'Scalp watch — TSLA / NVDA', uploadDate: '20260818' }), 'chart_stream');
+  assert.equal(classifyVideoType({ title: 'CHART ONLY review', uploadDate: '20260818' }), 'chart_stream');
+});
+
+test('classifyVideoType chart_stream beats LIVE_HINTS when both match', () => {
+  // "LIVE STREAM" must classify as chart_stream (more specific), not live_update.
+  // Without the explicit ordering check, the bare LIVE_HINTS branch would win.
+  assert.equal(classifyVideoType({ title: 'LIVE STREAM — midday thoughts', uploadDate: '20260818' }), 'chart_stream');
+  // bare "LIVE" without "STREAM" stays live_update
+  assert.equal(classifyVideoType({ title: 'LIVE — Midday take', uploadDate: '20260818' }), 'live_update');
+});
+
 test('TYPE_BADGE_LABEL exposes a label for every kind', () => {
   assert.equal(TYPE_BADGE_LABEL.daily, 'Daily');
   assert.equal(TYPE_BADGE_LABEL.weekend_review, 'Weekend');
   assert.equal(TYPE_BADGE_LABEL.feature, 'Feature');
   assert.equal(TYPE_BADGE_LABEL.live_update, 'Live');
+  assert.equal(TYPE_BADGE_LABEL.chart_stream, 'Stream');
 });
