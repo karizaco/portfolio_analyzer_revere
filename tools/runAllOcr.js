@@ -126,8 +126,17 @@ for (const row of rows) {
   // Auto-enable chart-stream parser when the prefilter profile asks for it
   // (typical Qullamaggie run). The CHART_STREAM_PARSER=1 env override stays
   // useful when a user wants the parser on a whiteboard-profile run.
-  if (prefilterProfileArg === 'chart_stream' || process.env.CHART_STREAM_PARSER === '1') {
+  const useChartStreamParser = prefilterProfileArg === 'chart_stream' || process.env.CHART_STREAM_PARSER === '1';
+  if (useChartStreamParser) {
+    // The parser is only valid with --output-kind snapshot (it replaces the
+    // GRO/TURBO whiteboard parser with parseChartStreamPositionList).
+    childArgs.push('--output-kind', 'snapshot');
     childArgs.push('--chart-stream-parser');
+  } else {
+    // Default output kind when no chart-stream parser is set; explicit
+    // OUTPUT_KIND env var wins for ad-hoc overrides.
+    const envKind = process.env.OUTPUT_KIND;
+    childArgs.push('--output-kind', envKind || 'whiteboard');
   }
   const r = spawnSync(process.execPath, childArgs, { encoding: 'utf8', stdio: 'inherit' });
 

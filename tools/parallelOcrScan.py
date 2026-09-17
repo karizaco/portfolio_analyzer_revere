@@ -145,6 +145,7 @@ def _worker_main(payload: tuple) -> dict:
         prefilter_profile,
         basename,
         chart_stream_parser,
+        output_kind,
     ) = payload
 
     log_path = pathlib.Path(output_root_str) / f"{run_tag}_{upload_date}_{video_id}.log"
@@ -162,6 +163,8 @@ def _worker_main(payload: tuple) -> dict:
         run_tag,
         "--ffmpeg-bin",
         ffmpeg_bin,
+        "--output-kind",
+        output_kind or "whiteboard",
         "--prefilter-profile",
         prefilter_profile or "whiteboard",
         "--basename",
@@ -250,6 +253,13 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
              "Defaults to today (UTC). Honors $DATE_TAG. "
              "Use this to write into yesterday's data/video_scan_<date>/ directory when resuming.",
     )
+    parser.add_argument(
+        "--output-kind",
+        default=os.environ.get("OUTPUT_KIND") or "",
+        help="output kind forwarded to scanVideoWithOcr.js (whiteboard | snapshot). "
+             "Default: 'snapshot' when --chart-stream-parser is set, else 'whiteboard'. "
+             "Honors $OUTPUT_KIND.",
+    )
     return parser.parse_args(argv)
 
 
@@ -331,6 +341,13 @@ def main(argv: list[str] | None = None) -> int:
         args.basename = args.channel
     effective_basename = args.basename or "revere"
 
+    # Resolve output kind default: explicit --output-kind wins, otherwise
+    # default to 'snapshot' when the chart-stream parser is on (the parser
+    # is only valid with --output-kind snapshot), else 'whiteboard'.
+    if not args.output_kind:
+        args.output_kind = "snapshot" if args.chart_stream_parser else "whiteboard"
+    effective_output_kind = args.output_kind
+
     output_root = workspace / "data" / f"video_scan_{args.date_tag}" / args.run_tag
     output_root.mkdir(parents=True, exist_ok=True)
     (output_root / args.run_tag / "ocr_probe" / "logs").mkdir(parents=True, exist_ok=True)
@@ -353,6 +370,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"[parallel-ocr] basename    : {effective_basename}")
     if args.chart_stream_parser:
         print(f"[parallel-ocr] parser      : chart-stream")
+    print(f"[parallel-ocr] output_kind : {effective_output_kind}")
     if args.skip_from_tag:
         print(f"[parallel-ocr] skip_from   : {args.skip_from_tag} (cooperating with serial run)")
 
@@ -369,6 +387,7 @@ def main(argv: list[str] | None = None) -> int:
             args.prefilter_profile,
             effective_basename,
             bool(args.chart_stream_parser),
+            effective_output_kind,
         )
         for upload_date, video_id, download_path in jobs
     )
