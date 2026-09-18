@@ -9,6 +9,10 @@
 //                       discord_pipeline_runs exist in state.sqlite.
 //   add-source        → register a new source. Idempotent on duplicate name.
 //   ingest            → spawn py -m tools.discord_pipeline.ingest_channel.
+//   ingest-jsonl      → spawn py -m tools.discord_pipeline.import_jsonl.
+//   ingest-agentic    → print the agentic prompt path + JSONL schema +
+//                       the exact npm command to run after the agent finishes.
+//                       Does NOT spawn an agent itself.
 //   extract-tickers   → spawn extract_tickers.py to write discord_signals.csv.
 //   status            → SELECT rows + last run per source.
 //   list              → pretty-print every source with message counts.
@@ -126,6 +130,77 @@ function commandExtractTickers() {
   process.exit(r.status || 0);
 }
 
+const AGENTIC_PROMPT_PATH = path.join(__dirname, 'discord_pipeline', 'agentic_prompt.md');
+const JSONL_SCHEMA_SUMMARY = [
+  '{',
+  '  "discord_message_id": "1234567890123456789",   // required, snowflake',
+  '  "author_id":          "987654321098765432",    // required',
+  '  "author_name":        "trader_jane",          // required',
+  '  "content":            "$TQQQ breaking out",   // required',
+  '  "posted_at":          "2026-09-17T14:32:08+00:00", // required, ISO-8601',
+  '  "edited_at":          null,                    // optional',
+  '  "is_pinned":          false,                   // optional',
+  '  "has_attachments":    false                    // optional',
+  '}',
+].join('\n');
+
+function commandIngestJsonl(argv) {
+  const source = readFlag(argv, '--source') || '';
+  const file = readFlag(argv, '--file') || './discord_dump.jsonl';
+  const limit = readFlag(argv, '--limit') || '';
+  const skipExtract = argv.includes('--skip-extract');
+  if (!source) {
+    console.error(
+      'Usage: node tools/runDiscordIngest.js ingest-jsonl --source <name> ' +
+      '[--file <path>|-] [--limit N] [--skip-extract]');
+    process.exit(1);
+  }
+  const args = ['--source', source, '--file', file];
+  if (limit) args.push('--limit', limit);
+  if (skipExtract) args.push('--skip-extract');
+  const r = runPythonModule('tools.discord_pipeline.import_jsonl', args);
+  process.exit(r.status || 0);
+}
+
+function commandIngestAgentic(argv) {
+  const source = readFlag(argv, '--source') || '';
+  const messages = readFlag(argv, '--messages') || '100';
+  if (!source) {
+    console.error(
+      'Usage: node tools/runDiscordIngest.js ingest-agentic --source <name> ' +
+      '[--messages N]');
+    process.exit(1);
+  }
+  console.log('Agentic JSONL ingest — Discord channel scrape via browser agent');
+  console.log('------------------------------------------------------------');
+  console.log(`Source:                ${source}`);
+  console.log(`Requested message cap: ${messages}`);
+  console.log('');
+  console.log('Agent prompt file:');
+  console.log(`  ${AGENTIC_PROMPT_PATH}`);
+  console.log('');
+  console.log('Required JSONL schema (one JSON object per line):');
+  console.log(JSONL_SCHEMA_SUMMARY);
+  console.log('');
+  console.log('Workflow:');
+  console.log('  1. Hand the agent prompt to a computer-use agent');
+  console.log('     (Claude with computer use, Grok bot, OpenClaw, ...).');
+  console.log('  2. The agent browses Discord in a real browser and writes a');
+  console.log('     JSONL file at a path it chooses.');
+  console.log('  3. The agent prints the absolute path of that JSONL file.');
+  console.log('  4. You then run the command below to ingest it.');
+  console.log('');
+  console.log('Ingest command (run AFTER the agent finishes):');
+  console.log(`  npm run discord:ingest:jsonl -- --source ${source} --file <absolute_path_to_jsonl>`);
+  console.log('');
+  console.log('Optional flags you can append to the ingest command:');
+  console.log('  --limit N          import at most N new rows');
+  console.log('  --skip-extract     do not auto-run extract_tickers afterwards');
+  console.log('');
+  console.log('Note: this subcommand does NOT spawn an agent itself.');
+  console.log('      It only prints what the agent needs + how to import the JSONL.');
+}
+
 function commandStatus() {
   ensureDbExists();
   const script = `
@@ -197,6 +272,8 @@ function printUsage() {
     '  node tools/runDiscordIngest.js init\n' +
     '  node tools/runDiscordIngest.js add-source <name> <channel_id> --guild-id <id> [--kind text]\n' +
     '  node tools/runDiscordIngest.js ingest --source <name> [--limit N]\n' +
+    '  node tools/runDiscordIngest.js ingest-jsonl --source <name> [--file <path>|-] [--limit N] [--skip-extract]\n' +
+    '  node tools/runDiscordIngest.js ingest-agentic --source <name> [--messages N]\n' +
     '  node tools/runDiscordIngest.js extract-tickers\n' +
     '  node tools/runDiscordIngest.js status\n' +
     '  node tools/runDiscordIngest.js list');
@@ -210,6 +287,8 @@ function main() {
     case 'init': return commandInit();
     case 'add-source': return commandAddSource(rest);
     case 'ingest': return commandIngest(rest);
+    case 'ingest-jsonl': return commandIngestJsonl(rest);
+    case 'ingest-agentic': return commandIngestAgentic(rest);
     case 'extract-tickers': return commandExtractTickers();
     case 'status': return commandStatus();
     case 'list': return commandList();

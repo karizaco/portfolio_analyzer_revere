@@ -41,7 +41,9 @@
     "discord:extract-tickers": "node tools/runDiscordIngest.js extract-tickers",
     "discord:list": "node tools/runDiscordIngest.js list",
     "discord:status": "node tools/runDiscordIngest.js status",
-    "discord:catalog": "node tools/listDiscordCatalog.js"
+    "discord:catalog": "node tools/listDiscordCatalog.js",
+    "discord:ingest:agentic": "node tools/runDiscordIngest.js ingest-agentic",
+    "discord:ingest:jsonl": "node tools/runDiscordIngest.js ingest-jsonl"
   },
   "dependencies": {
     "sharp": "^0.34.3",
