@@ -12,7 +12,21 @@ from pathlib import Path
 
 from data.discord_pipeline import bootstrap_schema, register_source, utc_now_iso
 
-__all__ = ["bootstrap_schema", "register_source", "utc_now_iso", "self_test"]
+# Canonical schema for Discord message JSONL records.
+# All ingest paths (REST, browser, agentic) must emit records matching this schema.
+DISCORD_MESSAGE_SCHEMA = {
+    'snowflake': str,       # Discord message ID (int64 as string)
+    'author': str,          # author's display name
+    'content': str,         # message text content
+    'timestamp': str,       # ISO 8601 datetime string
+    'edited': str | None,   # ISO 8601 if edited, else None
+    'reply_to': str | None, # snowflake of replied-to message, else None
+    'thread_id': str | None,# thread ID if message is in a thread, else None
+}
+REQUIRED_MESSAGE_KEYS = tuple(DISCORD_MESSAGE_SCHEMA.keys())
+
+__all__ = ["bootstrap_schema", "register_source", "utc_now_iso", "self_test",
+           "DISCORD_MESSAGE_SCHEMA", "REQUIRED_MESSAGE_KEYS"]
 
 
 def self_test() -> int:

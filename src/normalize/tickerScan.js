@@ -18,8 +18,7 @@ const path = require('node:path');
 
 const { buildTickerKnowledge, buildReferenceScores } = require('./repairHoldings');
 
-const STRICT_TICKER_PATTERN = /^[A-Z]{1,5}(?:\.[A-Z]{1,2})?$/;
-const TOKEN_SPLIT_PATTERN = /[\s,;:()\[\]{}<>/\\|]+/;
+const { STRICT_TICKER_PATTERN, tokenizeText, extractTickers } = require('./tickerExtraction');
 
 let cachedLexicon = null;
 
@@ -70,37 +69,15 @@ function buildSeedReferenceScores(configDirectory) {
   };
 }
 
-// Strip non-alphanumeric noise from an OCR fragment so "TQQQ." or "TQQQ,"
-// collapses to the same seed match as "TQQQ".
-function normalizeTickerToken(rawToken) {
-  return String(rawToken || '')
-    .toUpperCase()
-    .replace(/[^A-Z0-9.]/g, '');
-}
-
 function extractTickersFromOcrText(ocrText, options = {}) {
   const text = String(ocrText || '');
   if (!text.trim()) {
     return [];
   }
 
-  const seedTickerSet = new Set(loadSeedLexiconSync(options.configDirectory).tickers);
-
-  const seen = new Set();
-  const matched = [];
-  for (const rawToken of text.split(TOKEN_SPLIT_PATTERN)) {
-    const token = normalizeTickerToken(rawToken);
-    if (!token || !STRICT_TICKER_PATTERN.test(token) || !seedTickerSet.has(token)) {
-      continue;
-    }
-    if (seen.has(token)) {
-      continue;
-    }
-    seen.add(token);
-    matched.push(token);
-  }
-
-  return matched.sort();
+  const { tickers } = loadSeedLexiconSync(options.configDirectory);
+  const lexicon = new Set(tickers);
+  return extractTickers(text, lexicon);
 }
 
 function clearTickerScanCache() {

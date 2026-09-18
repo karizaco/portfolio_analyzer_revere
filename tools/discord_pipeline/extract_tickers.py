@@ -16,15 +16,15 @@ import sys
 from pathlib import Path
 
 from data.discord_pipeline import bootstrap_schema
+from tools.discord_pipeline.ticker_extraction import (
+    extract_tickers,
+    STRICT_TICKER_PATTERN,
+)
 
 WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB_PATH = WORKSPACE_ROOT / "data" / "video_pipeline" / "state.sqlite"
 DEFAULT_OUTPUT_CSV = WORKSPACE_ROOT / "data" / "video_pipeline" / "discord_signals.csv"
 DEFAULT_LEXICON = WORKSPACE_ROOT / "config" / "ticker_lexicon_seed.csv"
-
-STRICT_TICKER_PATTERN = re.compile(r"^[A-Z]{1,5}(?:\.[A-Z]{1,2})?$")
-TOKEN_SPLIT_PATTERN = re.compile(r"[\s,;:()\[\]{}<>/\\|`'\"]+")
-NORMALIZE_PATTERN = re.compile(r"[^A-Z0-9.]")
 
 
 def load_seed_lexicon(lexicon_path: Path) -> set[str]:
@@ -46,23 +46,6 @@ def load_seed_lexicon(lexicon_path: Path) -> set[str]:
             if ticker:
                 tickers.add(ticker)
     return tickers
-
-
-def normalize_token(raw_token: str) -> str:
-    return NORMALIZE_PATTERN.sub("", str(raw_token or "").upper())
-
-
-def extract_tickers(message_body: str, seed_tickers: set[str]) -> list[str]:
-    if not message_body:
-        return []
-    matched: set[str] = set()
-    for raw in TOKEN_SPLIT_PATTERN.split(message_body):
-        token = normalize_token(raw)
-        if not token or not STRICT_TICKER_PATTERN.match(token):
-            continue
-        if token in seed_tickers:
-            matched.add(token)
-    return sorted(matched)
 
 
 def fetch_messages(connection: sqlite3.Connection) -> list[sqlite3.Row]:

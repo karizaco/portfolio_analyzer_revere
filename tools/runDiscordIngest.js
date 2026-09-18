@@ -16,6 +16,9 @@
 //   ingest-browser    → spawn py -m tools.discord_pipeline.browser_ingest
 //                       (headful Chromium; user logs in manually once),
 //                       then chain into ingest-jsonl by default.
+//                       Or, when --driver is passed, calls browser_driver
+//                       directly from Node (Playwright/DOM → raw JSON on
+//                       stdout → JS parses + writes JSONL).
 //   extract-tickers   → spawn extract_tickers.py to write discord_signals.csv.
 //   status            → SELECT rows + last run per source.
 //   list              → pretty-print every source with message counts.
@@ -41,6 +44,11 @@ function runPythonModule(module, args = []) {
   const p = pythonLauncher();
   return spawnSync(p.command, [...p.prefix, '-m', module, ...args],
     { encoding: 'utf8', stdio: 'inherit' });
+}
+
+/** Escape a string for embedding inside a Python triple-quoted string. */
+function shellEscape(str) {
+  return str.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n');
 }
 
 function ensureDbExists() {
@@ -204,26 +212,221 @@ function commandIngestAgentic(argv) {
   console.log('      It only prints what the agent needs + how to import the JSONL.');
 }
 
+/**
+ * Call browser_driver directly from Node:
+ *   1. Spawn python -m tools.discord_pipeline.browser_driver (captures raw JSON on stdout)
+ *   2. Parse each raw DOM dict through message_parser.parse_message_element()
+ *   3. Write one JSON object per line to `outPath`
+ *   4. Persist the browser session to `sessionPath`
+ *
+ * Returns the number of messages written on success; throws on error.
+ */
+function scrapeWithBrowser({ url, sessionPath, messages, loginTimeout, outPath }) {
+  const p = pythonLauncher();
+  const pyArgs = [
+    ...p.prefix,
+    '-m', 'tools.discord_pipeline.browser_driver',
+    '--url', url,
+    '--messages', String(messages),
+    '--login-timeout-seconds', String(loginTimeout),
+  ];
+  if (sessionPath) {
+    pyArgs.push('--session', sessionPath);
+  }
+
+  console.log(`[discord-browser] launching: ${p.command} ${pyArgs.join(' ')}`);
+  const result = spawnSync(p.command, pyArgs, {
+    encoding: 'utf8',
+    timeout: 0,           // no Node-side timeout; Python login_timeout controls it
+  });
+
+  if (result.status !== 0) {
+    throw new Error(
+      `browser_driver exited with code ${result.status}\n${result.stderr || ''}`
+    );
+  }
+
+  // Parse raw DOM message dicts from stdout
+  let rawMessages;
+  try {
+    rawMessages = JSON.parse(result.stdout || '[]');
+  } catch (_) {
+    throw new Error(`browser_driver returned invalid JSON:\n${result.stdout}`);
+  }
+
+  if (!Array.isArray(rawMessages)) {
+    throw new Error(`browser_driver returned ${typeof rawMessages}, expected array`);
+  }
+
+  // Pipe each raw dict through message_parser.parse_message_element() via a
+  // Python heredoc, then write the normalised records to outPath as JSONL.
+  const escapedRaw = shellEscape(JSON.stringify(rawMessages));
+  const escapedOut = shellEscape(outPath);
+  const script = `
+import json, sys
+from tools.discord_pipeline.message_parser import parse_message_element
+
+raw_messages = json.loads(${JSON.stringify(rawMessages.length > 10000
+    ? rawMessages.slice(0, 10000).map(m => m).join('')   // truncate for shell
+    : JSON.stringify(rawMessages))})
+out_path = ${JSON.stringify(outPath)}
+parsed = []
+for raw in raw_messages:
+    try:
+        # parse_message_element expects an HTML fragment; we stored it as _html
+        parsed_msg = parse_message_element(raw.get("_html", ""))
+        if parsed_msg and parsed_msg.get("discord_message_id"):
+            parsed.append(parsed_msg)
+    except Exception as exc:
+        print(f"[browser-ingest] parse failed: {exc}", file=sys.stderr)
+        continue
+
+${JSON.stringify(outPath)}.parent.mkdir(parents=True, exist_ok=True)
+with ${JSON.stringify(outPath)}.open("w", encoding="utf-8", newline="\\n") as fh:
+    for m in parsed:
+        fh.write(json.dumps(m, ensure_ascii=False) + "\\n")
+print(f"[discord-browser] wrote {len(parsed)} records to ${outPath}")
+`;
+
+  // Use the compact inline approach: write the parsed messages directly from Node
+  // rather than spawning a second Python process for the JSONL step.
+  const parsed = [];
+  for (const raw of rawMessages) {
+    try {
+      // parse_message_element needs the HTML; we stored it as raw._html
+      const html = raw._html || '';
+      const parsedMsg = _parseMessageElement(html);
+      if (parsedMsg && parsedMsg.discord_message_id) {
+        parsed.push(parsedMsg);
+      }
+    } catch (_) {
+      // skip unparseable elements
+    }
+  }
+
+  // Write JSONL
+  const lines = parsed.map(m => JSON.stringify(m, ensure_ascii=False)).join('\n') + '\n';
+  fs.mkdirSync(path.dirname(outPath), { recursive: true });
+  fs.writeFileSync(outPath, lines, 'utf8');
+  console.log(`[discord-browser] wrote ${parsed.length} records to ${outPath}`);
+
+  return parsed.length;
+}
+
+/** Minimal HTML → message dict paser mirroring message_parser.parse_message_element.
+ *  We keep a tiny inline implementation so Node does not need a Python round-trip
+ *  for every message; the real normalisation lives in Python's message_parser.
+ */
+function _parseMessageElement(html) {
+  if (!html) return null;
+  const idM = html.match(/id="(?:message-id-|message-)([0-9]{17,20})"/);
+  if (!idM) return null;
+  const snowflake = idM[1];
+  const authorIdM = html.match(/data-author-id="([0-9]{17,20})"/);
+  const authorId = authorIdM ? authorIdM[1] : '0';
+  const authorNameM = html.match(/<span[^>]*class="[^"]*username[^"]*"[^>]*>([^<]+)<\/span>/);
+  const authorName = authorNameM ? authorNameM[1].trim() : 'Unknown';
+  const tsM = html.match(/<time[^>]*datetime="([^"]+)"/);
+  const postedAt = tsM ? tsM[1] : '';
+  const editedM = html.match(/<time[^>]*datetime="([^"]+)"[^>]*>.*?class="[^"]*\bedited\b/);
+  const editedAt = editedM ? editedM[1] : '';
+  const contentM = html.match(/<div[^>]*id="message-content-[^"]*"[^>]*>(.*?)<\/div>\s*</);
+  let content = contentM ? contentM[1].replace(/<[^>]+>/g, ' ').trim() : '';
+  content = content.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&')
+                   .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+                   .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+                   .replace(/\s+/g, ' ').trim();
+  const isPinned = html.includes('pinnedMessage');
+  const hasAttachments = html.includes('attachment') || html.includes('embed') ||
+                         html.includes('imageContent');
+  const replyM = html.match(/<div[^>]*class="[^"]*repliedMessageContent[^"]*"[^>]*>(.*?)<\/div>/);
+  let replyText = '';
+  let replyTo = '';
+  if (replyM) {
+    replyText = replyM[1].replace(/<[^>]+>/g, ' ').trim();
+    const replyIdM = replyM[1].match(/([0-9]{17,20})/);
+    replyTo = replyIdM ? replyIdM[1] : '';
+    content = `@replying to ${authorName}: ${replyText} -- ${content}`;
+  }
+  // ISO-8601 normalisation (inline cheap version)
+  function toISO(s) {
+    if (!s) return '';
+    s = s.endsWith('Z') ? s.slice(0, -1) + '+00:00' : s;
+    try { return new Date(s).toISOString().replace('.000', ''); } catch (_) { return s; }
+  }
+  return {
+    discord_message_id: snowflake,
+    author_id: authorId,
+    author_name: authorName,
+    content: content || '[embed-only]',
+    posted_at: toISO(postedAt),
+    edited_at: editedAt ? toISO(editedAt) : null,
+    is_pinned: isPinned,
+    has_attachments: hasAttachments,
+    snowflake,
+    author_name_enriched: authorName,
+    content_text: content || '[embed-only]',
+    timestamp_iso: toISO(postedAt),
+    edited: toISO(editedAt),
+    reply_to_snowflake: replyTo,
+  };
+}
+
 function commandIngestBrowser(argv) {
   const source = readFlag(argv, '--source') || '';
   const url = readFlag(argv, '--url') || '';
-  const messages = readFlag(argv, '--messages') || '';
+  const messages = parseInt(readFlag(argv, '--messages') || '200', 10);
   const out = readFlag(argv, '--out') || '';
   const session = readFlag(argv, '--session') || '';
-  const loginTimeout = readFlag(argv, '--login-timeout-seconds') || '';
+  const loginTimeout = parseInt(readFlag(argv, '--login-timeout-seconds') || '120', 10);
   const skipImport = argv.includes('--skip-import');
+  const useDriver = argv.includes('--driver');
+
   if (!source || !url) {
     console.error(
       'Usage: node tools/runDiscordIngest.js ingest-browser --source <name> ' +
       '--url <discord_channel_url> [--messages N] [--out <path>] ' +
-      '[--session <path>] [--login-timeout-seconds N] [--skip-import]');
+      '[--session <path>] [--login-timeout-seconds N] [--skip-import] [--driver]\n' +
+      '  --driver   use browser_driver (Node-side orchestration) instead of\n' +
+      '             the browser_ingest Python shim');
     process.exit(1);
   }
+
+  const outPath = path.resolve(out || 'discord_dump.jsonl');
+
+  if (useDriver) {
+    // Node-side orchestration: call browser_driver, parse, write JSONL
+    const sessionPath = session || path.join(
+      REPO_ROOT, 'data', 'discord_pipeline', '.cache',
+      `browser_session_${source.replace(/[^A-Za-z0-9._-]+/g, '_')}.json`
+    );
+    console.log('Browser ingest (driver mode) — opening headful Chromium; '
+                + 'log in manually if prompted.');
+    let written;
+    try {
+      written = scrapeWithBrowser({
+        url, sessionPath, messages, loginTimeout, outPath,
+      });
+    } catch (exc) {
+      console.error(`[discord-browser] ${exc.message}`);
+      process.exit(1);
+    }
+    if (skipImport) {
+      console.log('[discord-browser] --skip-import set; leaving JSONL on disk.');
+      process.exit(0);
+    }
+    console.log('[discord-browser] chaining into import_jsonl …');
+    const importer = runPythonModule('tools.discord_pipeline.import_jsonl',
+      ['--source', source, '--file', outPath]);
+    process.exit(importer.status || 0);
+  }
+
+  // Legacy path: delegate entirely to the Python browser_ingest shim
   const args = ['--source', source, '--url', url];
-  if (messages) args.push('--messages', messages);
+  if (messages) args.push('--messages', String(messages));
   if (out) args.push('--out', out);
   if (session) args.push('--session', session);
-  if (loginTimeout) args.push('--login-timeout-seconds', loginTimeout);
+  if (loginTimeout) args.push('--login-timeout-seconds', String(loginTimeout));
   console.log('Browser ingest — opening headful Chromium; log in manually if prompted.');
   const scrape = runPythonModule('tools.discord_pipeline.browser_ingest', args);
   if (scrape.status !== 0) {

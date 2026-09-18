@@ -1,32 +1,32 @@
-"""Discord channel browser-scraper (Playwright).
+"""Discord channel browser-scraper — thin shim for direct CLI invocation.
+
+For programmatic use import ``browser_driver.scrape_channel`` directly.
+For Node.js orchestration use ``tools/runDiscordIngest.js``.
 
 When run as a script (python tools/discord_pipeline/browser_ingest.py), the
 project root is prepended to sys.path so sub-package imports resolve.
 
-Third ingest path alongside ``ingest_channel.py`` (REST + bot token) and
-``import_jsonl.py`` (agentic prompt). Opens a real headed Chromium, lets the
-user log in manually if needed, scrolls N messages into view, and writes a
-JSONL file in the exact schema ``import_jsonl.py`` accepts.
+This module handles:
+  1. CLI argument parsing
+  2. Session persistence (read/write storage_state JSON)
+  3. JSONL output writing
+  4. Result summary printing
 
-One-time setup: ``pip install -r requirements.txt && playwright install chromium``.
-Selectors below are best-effort: Discord rotates DOM classes often, so each
-extraction step warns on failure rather than crashing the scrape.
+The Playwright/DOM work is delegated to ``browser_driver.scrape_channel``.
 """
 
 import sys
-from pathlib import Path as _Path
-
-# Resolve project root once (two levels up from this file: discord_pipeline → tools → <root>)
-_PROJECT_ROOT = _Path(__file__).resolve().parents[2]
-if str(_PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(_PROJECT_ROOT))
-
-import argparse
 import json
 import re
 import time
 from pathlib import Path
-from typing import Any
+
+# Resolve project root once (two levels up from this file: discord_pipeline → tools → <root>)
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
+
+import argparse
 
 try:
     from .message_parser import (
@@ -36,7 +36,6 @@ try:
         parse_message_dict,
     )
 except ImportError:
-    # Support running as a standalone script (no known parent package)
     from tools.discord_pipeline.message_parser import (
         parse_message_element,
         EMPTY_MESSAGE,
@@ -44,21 +43,13 @@ except ImportError:
         parse_message_dict,
     )
 
-try:
-    from playwright.sync_api import sync_playwright
-    PLAYWRIGHT_AVAILABLE = True
-except Exception:
-    PLAYWRIGHT_AVAILABLE = False
+from .browser_driver import scrape_channel, DEFAULT_SESSION_DIR
 
 # ---------------------------------------------------------------------------
 # Module-level constants
 # ---------------------------------------------------------------------------
 
-WORKSPACE_ROOT = _Path(__file__).resolve().parents[2]
-DEFAULT_SESSION_DIR = WORKSPACE_ROOT / "data" / "discord_pipeline" / ".cache"
-LOGIN_PATH_FRAGMENT = "/login"
-NO_NEW_SCROLL_LIMIT = 2
-LOGIN_POLL_SECONDS = 2
+WORKSPACE_ROOT = _PROJECT_ROOT
 SELECTOR_LOG = "[browser-ingest]"
 
 
@@ -98,94 +89,10 @@ def _default_session_path(source: str) -> Path:
 
 
 # ---------------------------------------------------------------------------
-# Page helpers (Playwright)
+# Orchestration helpers (session + JSONL — not DOM)
 # ---------------------------------------------------------------------------
 
-def _wait_for_login(page, timeout_seconds: int) -> bool:
-    """Block until the URL leaves /login (or timeout)."""
-    deadline = time.time() + max(0, timeout_seconds)
-    print(f"{SELECTOR_LOG} Waiting up to {timeout_seconds}s for the user to log in "
-          "to Discord in the open browser window.")
-    while time.time() < deadline:
-        try:
-            url = page.url or ""
-        except Exception:
-            time.sleep(LOGIN_POLL_SECONDS)
-            continue
-        if LOGIN_PATH_FRAGMENT not in url:
-            print(f"{SELECTOR_LOG} Login detected at {url}")
-            return True
-        time.sleep(LOGIN_POLL_SECONDS)
-    return False
-
-
-def _retry(op, *, attempts: int = 2, backoff: float = 1.0):
-    """Run ``op()`` up to ``attempts`` times; re-raise the last error."""
-    for i in range(1, max(1, attempts) + 1):
-        try:
-            return op()
-        except Exception as exc:
-            if i >= attempts:
-                raise
-            print(f"{SELECTOR_LOG} transient error {type(exc).__name__}: {exc}; "
-                  f"backing off {backoff:.1f}s (attempt {i}/{attempts})")
-            time.sleep(backoff)
-            backoff *= 2
-
-
-def _scrape_channel(page, target_count: int,
-                    scroll_pause_ms: int) -> list[dict[str, Any]]:
-    print(f"{SELECTOR_LOG} Waiting for message list to render …")
-    deadline = time.time() + 30
-    while time.time() < deadline:
-        try:
-            count = page.locator("li[id^='message-']").count()
-        except Exception:
-            count = 0
-        if count > 0:
-            break
-        time.sleep(0.5)
-    else:
-        print(f"{SELECTOR_LOG} WARNING: no li[id^='message-'] elements after 30s. "
-              "Selectors may have changed; dumping whatever is on page.")
-
-    seen_ids: set[str] = set()
-    messages: list[dict[str, Any]] = []
-    no_new_runs = 0
-    while len(messages) < target_count and no_new_runs < NO_NEW_SCROLL_LIMIT:
-        htmls = page.eval_on_selector_all(
-            "li[id^='message-']",
-            "els => els.map(e => e.outerHTML)")
-        new_here = 0
-        for h in htmls:
-            try:
-                msg = parse_message_element(h)
-            except Exception as exc:
-                print(f"{SELECTOR_LOG} parse failed on one element: {exc}",
-                      file=sys.stderr)
-                continue
-            if not msg["discord_message_id"] or msg["discord_message_id"] in seen_ids:
-                continue
-            seen_ids.add(msg["discord_message_id"])
-            messages.append(msg)
-            new_here += 1
-            if len(messages) >= target_count:
-                break
-        print(f"{SELECTOR_LOG} accumulated {len(messages)} messages "
-              f"(+{new_here} new this batch)")
-        no_new_runs = no_new_runs + 1 if new_here == 0 else 0
-        if len(messages) >= target_count:
-            break
-        try:
-            page.keyboard.press("PageUp")
-            time.sleep(scroll_pause_ms / 1000.0)
-        except Exception as exc:
-            print(f"{SELECTOR_LOG} scroll error: {exc}", file=sys.stderr)
-            break
-    return messages
-
-
-def _write_jsonl(messages: list[dict[str, Any]], out_path: Path) -> int:
+def _write_jsonl(messages: list[dict], out_path: Path) -> int:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with out_path.open("w", encoding="utf-8", newline="\n") as fh:
         for m in messages:
@@ -194,86 +101,101 @@ def _write_jsonl(messages: list[dict[str, Any]], out_path: Path) -> int:
 
 
 # ---------------------------------------------------------------------------
-# Main
+# Main (thin shim)
 # ---------------------------------------------------------------------------
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
-    if not PLAYWRIGHT_AVAILABLE:
-        print(f"{SELECTOR_LOG} Playwright is not installed. Run:\n"
-              "    pip install -r requirements.txt\n    playwright install chromium",
-              file=sys.stderr)
-        return 2
 
     session_path = (Path(args.session) if args.session
                     else _default_session_path(args.source))
-    storage_state: dict[str, Any] | None = None
-    if session_path.exists():
-        try:
-            storage_state = json.loads(session_path.read_text(encoding="utf-8"))
-            print(f"{SELECTOR_LOG} loaded existing session from {session_path}")
-        except Exception as exc:
-            print(f"{SELECTOR_LOG} could not parse {session_path}: {exc}; ignoring.",
-                  file=sys.stderr)
-
-    headless = bool(args.headless)
-    if headless:
-        print(f"{SELECTOR_LOG} WARNING: --headless set; Discord typically blocks "
-              "headless browsers. Use only for testing.", file=sys.stderr)
-
     out_path = Path(args.out).resolve()
     started = time.time()
-    messages: list[dict[str, Any]] = []
 
-    with sync_playwright() as pw:
-        browser = pw.chromium.launch(headless=headless)
+    # Delegate all Playwright/DOM work to browser_driver
+    raw_messages = scrape_channel(
+        url=args.url,
+        session_state_path=str(session_path) if session_path.exists() else None,
+        messages=args.messages,
+        login_timeout=args.login_timeout_seconds,
+        scroll_pause_ms=args.scroll_pause_ms,
+        headless=bool(args.headless),
+    )
+
+    # Parse raw DOM dicts through message_parser for schema normalisation
+    parsed_messages: list[dict] = []
+    for raw in raw_messages:
         try:
-            context = browser.new_context(storage_state=storage_state)
-            page = context.new_page()
-            try:
-                _retry(lambda: page.goto(args.url, wait_until="domcontentloaded",
-                                         timeout=45000))
-            except Exception as exc:
-                print(f"{SELECTOR_LOG} initial navigation failed: {exc}",
-                      file=sys.stderr)
+            # Re-serialise the stored _html through parse_message_element so the
+            # output matches what the old browser_ingest produced
+            parsed = parse_message_element(raw.get("_html", ""))
+            if not parsed.get("discord_message_id"):
+                continue
+            parsed_messages.append(parsed)
+        except Exception as exc:
+            print(f"{SELECTOR_LOG} parse failed on one element: {exc}",
+                  file=sys.stderr)
+            continue
 
-            if LOGIN_PATH_FRAGMENT in (page.url or ""):
-                print(f"{SELECTOR_LOG} Not logged in (currently at {page.url}).")
-                if not _wait_for_login(page, args.login_timeout_seconds):
-                    print(f"{SELECTOR_LOG} login timeout after "
-                          f"{args.login_timeout_seconds}s", file=sys.stderr)
-                    return 1
-                try:
-                    page.goto(args.url, wait_until="domcontentloaded", timeout=45000)
-                except Exception as exc:
-                    print(f"{SELECTOR_LOG} post-login navigation failed: {exc}",
-                          file=sys.stderr)
+    written = _write_jsonl(parsed_messages, out_path)
 
-            messages = _scrape_channel(page, args.messages, args.scroll_pause_ms)
-            written = _write_jsonl(messages, out_path)
-
-            try:
-                session_path.parent.mkdir(parents=True, exist_ok=True)
-                session_path.write_text(
-                    json.dumps(context.storage_state()), encoding="utf-8")
-                print(f"{SELECTOR_LOG} saved session to {session_path}")
-            except Exception as exc:
-                print(f"{SELECTOR_LOG} could not save session: {exc}",
-                      file=sys.stderr)
-        finally:
-            try:
-                browser.close()
-            except Exception:
-                pass
+    # Save session for next run
+    try:
+        session_path.parent.mkdir(parents=True, exist_ok=True)
+        # browser_driver already launched the browser; we don't have direct
+        # access to its context.storage_state() here.  Re-launch briefly to
+        # persist the session cookie if the user is still logged in.
+        _persist_session(session_path, args.url, args.login_timeout_seconds)
+    except Exception as exc:
+        print(f"{SELECTOR_LOG} could not save session: {exc}", file=sys.stderr)
 
     elapsed = time.time() - started
     print(json.dumps({
         "source": args.source, "url": args.url,
-        "messages_loaded": len(messages), "messages_written": len(messages),
+        "messages_loaded": len(raw_messages),
+        "messages_written": written,
         "jsonl_path": str(out_path), "elapsed_seconds": round(elapsed, 2),
-        "headless": headless, "session_path": str(session_path),
+        "headless": bool(args.headless), "session_path": str(session_path),
     }, indent=2))
-    return 0 if messages else 1
+    return 0 if parsed_messages else 1
+
+
+def _persist_session(session_path: Path, url: str, login_timeout: int):
+    """Re-launch browser with an existing session and save it back."""
+    from .browser_driver import scrape_channel, PLAYWRIGHT_AVAILABLE
+    if not PLAYWRIGHT_AVAILABLE:
+        return
+    # Use a tiny scrape (0 messages) to get the browser context and save state
+    scrape_channel(url=url, session_state_path=str(session_path),
+                   messages=0, login_timeout=login_timeout,
+                   scroll_pause_ms=100, headless=True)
+    # NOTE: scrape_channel doesn't expose storage_state directly.
+    # Instead, browser_driver saves nothing — it is the caller's job.
+    # For this shim we do a minimal playwright launch just to persist.
+    import json as _json
+    from playwright.sync_api import sync_playwright
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(headless=True)
+        try:
+            # Try to load the existing session (it should already be there)
+            existing = None
+            if session_path.exists():
+                try:
+                    existing = _json.loads(session_path.read_text(encoding="utf-8"))
+                except Exception:
+                    pass
+            context = browser.new_context(storage_state=existing)
+            # Navigate to refresh cookies
+            try:
+                context.new_page().goto(url, wait_until="domcontentloaded",
+                                       timeout=30000)
+            except Exception:
+                pass
+            session_path.write_text(
+                _json.dumps(context.storage_state()), encoding="utf-8")
+            print(f"{SELECTOR_LOG} saved session to {session_path}")
+        finally:
+            browser.close()
 
 
 if __name__ == "__main__":
