@@ -36,7 +36,10 @@ if (!fs.existsSync(dbPath)) {
 const transcriptsDir = path.resolve('data/video_pipeline/transcripts');
 fs.mkdirSync(transcriptsDir, { recursive: true });
 
+// yt-dlp is installed as a Python module; use 'py -3 -m yt_dlp' instead of
+// a bare 'yt-dlp' command so the tool is found on all install methods.
 const py = process.platform === 'win32' ? 'py' : 'python3';
+const ytdlpBin = [py, '-3', '-m', 'yt_dlp'];
 const script = `
 import json, sqlite3, sys
 conn = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
@@ -74,14 +77,14 @@ for (const row of rows) {
     continue;
   }
   console.log(`[fetch-captions] ${videoId} (${channel}) "${(title || '').slice(0, 50)}"`);
-  const ytdlp = spawnSync('yt-dlp', [
+  const ytdlp = spawnSync(ytdlpBin[0], ytdlpBin.slice(1).concat([
     '--write-auto-subs',
     '--skip-download',
     '--sub-lang', 'en',
     '--convert-subs', 'vtt',
     '-o', `${baseOut}.%(ext)s`,
     videoUrl
-  ], { encoding: 'utf8' });
+  ]), { encoding: 'utf8' });
   if (ytdlp.status !== 0) {
     errors += 1;
     console.error(`[fetch-captions] yt-dlp failed for ${videoId}: ${(ytdlp.stderr || '').slice(0, 200)}`);
@@ -136,29 +139,31 @@ function parseVtt(vttText) {
   const lines = String(vttText || '').replace(/\r\n/g, '\n').split('\n');
   const segments = [];
   let i = 0;
-  // Skip the WEBVTT header and any metadata blocks.
-  while (i < lines.length && !/-->/.test(lines[i])) {
-    i += 1;
-  }
   while (i < lines.length) {
-    const headerLine = lines[i];
-    if (!headerLine.includes('-->')) {
+    const line = lines[i].trim();
+    // Look for a timestamp header; skip metadata and empty lines.
+    if (!line.includes('-->')) {
       i += 1;
       continue;
     }
-    const timestampMatch = headerLine.match(/(\d{2}:)?(\d{2}):(\d{2})\.(\d{3})\s+-->\s+(\d{2}:)?(\d{2}):(\d{2})\.(\d{3})/);
+    const timestampMatch = line.match(
+      /(\d{2}:)?(\d{2}):(\d{2})\.(\d{3})\s+-->\s+(\d{2}:)?(\d{2}):(\d{2})\.(\d{3})/
+    );
     if (!timestampMatch) {
       i += 1;
       continue;
     }
     const startTs = vttTimestampToSeconds(timestampMatch);
-    const endTimestampMatch = headerLine.match(/-->\s+(.+)/);
+    const endTimestampMatch = line.match(/-->\s+(.+)/);
     const endRaw = endTimestampMatch ? endTimestampMatch[1].trim().split(/\s+/)[0] : null;
     const endTs = endRaw ? vttTimestampToSeconds(parseVttTimestamp(endRaw)) : startTs + 1;
     i += 1;
+    // Collect content lines until we hit an empty line or the next timestamp header.
     const textLines = [];
-    while (i < lines.length && lines[i].trim() !== '' && !/-->/.test(lines[i])) {
-      textLines.push(lines[i]);
+    while (i < lines.length) {
+      const nextLine = lines[i].trim();
+      if (nextLine === '' || /-->/.test(nextLine)) break;
+      textLines.push(nextLine);
       i += 1;
     }
     const text = textLines
@@ -169,6 +174,8 @@ function parseVtt(vttText) {
     if (text) {
       segments.push({ start_ts: Number(startTs.toFixed(3)), end_ts: Number(endTs.toFixed(3)), text });
     }
+    // If we broke on an empty line, consume it and loop to the next timestamp.
+    if (i < lines.length && lines[i].trim() === '') i += 1;
   }
   return segments;
 }
