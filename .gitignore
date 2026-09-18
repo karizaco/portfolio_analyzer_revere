@@ -12,3 +12,5 @@ sample_screenshots.lnk
 # Heavy per-frame PNGs from OCR scans — reproducible from probe logs
 data/video_scan_*/fix-final/screenshots/
 data/video_scan_*/**/ocr_probe/frames/
+data/discord_pipeline/__pycache__/
+data/discord_pipeline/.cache/

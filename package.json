@@ -34,7 +34,14 @@
     "fixture:build-synthetic:qmg": "node tools/buildSyntheticChartStreamVideo.js",
     "video:dryrun-yt": "bash tools/dryrun_yt_dlp_pipeline.sh",
     "video:dryrun-local": "bash tools/dryrun_python_worker_pipeline.sh",
-    "video:dryrun": "bash tools/dryrun_full_pipeline.sh"
+    "video:dryrun": "bash tools/dryrun_full_pipeline.sh",
+    "discord:init": "node tools/runDiscordIngest.js init",
+    "discord:add-source": "node tools/runDiscordIngest.js add-source",
+    "discord:ingest": "node tools/runDiscordIngest.js ingest",
+    "discord:extract-tickers": "node tools/runDiscordIngest.js extract-tickers",
+    "discord:list": "node tools/runDiscordIngest.js list",
+    "discord:status": "node tools/runDiscordIngest.js status",
+    "discord:catalog": "node tools/listDiscordCatalog.js"
   },
   "dependencies": {
     "sharp": "^0.34.3",
