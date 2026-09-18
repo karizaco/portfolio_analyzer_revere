@@ -54,7 +54,7 @@ if (!/^\d{8}$/.test(dateKey)) {
 }
 
 function resolveProbeLogsBase(tag) {
-  return path.resolve('data', `video_scan_${dateKey}`, tag, tag, 'ocr_probe', 'logs');
+  return path.resolve('data', `video_scan_${dateKey}`, tag, 'ocr_probe', 'logs');
 }
 
 const missingTags = tags.filter((tag) => !fs.existsSync(resolveProbeLogsBase(tag)));

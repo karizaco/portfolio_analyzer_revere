@@ -30,6 +30,7 @@ const { computePerceptualHash, hammingDistance } = require('../src/video/imageHa
 const { computePerceptualHashOfRegion, computePerceptualHashOfFractionalRegion } = require('../src/video/imageHashRegion');
 const { extractTickersFromOcrText } = require('../src/normalize/tickerScan');
 const { createProbeKey, parseArgs, printHelp } = require('../src/video/ocrScanArgs');
+const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
 const { parseChartStreamPositionList } = require('../src/parse/parseChartStream');
 
 const OCR_TEXT_SNIPPET_MAX_CHARS = 200;
@@ -581,7 +582,7 @@ function scoreChartStreamCandidate(chartStream, ocrConfidence) {
 }
 
 async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps, stats, prefilterScore, options = {}) {
-  const { prefilterProfile = 'whiteboard', phashRegion = null, phashRegionFraction = null } = options;
+  const { prefilterProfile = PREFILTER_PROFILE_DEFAULT, phashRegion = null, phashRegionFraction = null } = options;
   const ocr = await ocrImage(framePath);
   const parsedRows = parseWhiteboardScreenshot({
     metadata: buildFrameMetadata(framePath, dateKey, frameIndex),

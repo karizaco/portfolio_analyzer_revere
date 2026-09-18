@@ -1,70 +1,32 @@
 """Idempotent schema bootstrap for the Discord channel-ingestion POC.
 
 Sibling tables for the video pipeline. Lives in the same SQLite at
-``data/video_pipeline/state.sqlite``. Mirrors ``whiteboard_worker.py``'s
-additive-migration style: ``CREATE TABLE IF NOT EXISTS`` + guarded
-``PRAGMA table_info`` checks, so repeated calls are no-ops.
+``data/video_pipeline/state.sqlite``.
+
+Schema definitions live in ``data/db/schema.sql`` (the single source of truth).
+This module re-exports helpers that call ``bootstrap_schema()`` on startup.
 """
 
 from __future__ import annotations
 
 import datetime as _dt
 import sqlite3
+from pathlib import Path
 
 
 def utc_now_iso() -> str:
     return _dt.datetime.now(_dt.timezone.utc).replace(microsecond=0).isoformat()
 
 
-SCHEMA_SQL = """
-CREATE TABLE IF NOT EXISTS discord_sources (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL UNIQUE,
-    channel_id TEXT NOT NULL,
-    guild_id TEXT NOT NULL,
-    channel_kind TEXT NOT NULL DEFAULT 'text',
-    added_at TEXT NOT NULL,
-    last_run_at TEXT,
-    last_message_id TEXT,
-    enabled INTEGER NOT NULL DEFAULT 1
-);
-
-CREATE TABLE IF NOT EXISTS discord_messages (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    source_id INTEGER NOT NULL REFERENCES discord_sources(id),
-    discord_message_id TEXT NOT NULL UNIQUE,
-    author_id TEXT NOT NULL,
-    author_name TEXT NOT NULL,
-    content TEXT NOT NULL,
-    posted_at TEXT NOT NULL,
-    ingested_at TEXT NOT NULL,
-    has_tickers INTEGER NOT NULL DEFAULT 0,
-    ticker_list TEXT NOT NULL DEFAULT '',
-    raw_json TEXT NOT NULL
-);
-
-CREATE INDEX IF NOT EXISTS idx_discord_messages_source_posted
-    ON discord_messages(source_id, posted_at);
-CREATE INDEX IF NOT EXISTS idx_discord_messages_tickers
-    ON discord_messages(has_tickers, posted_at);
-
-CREATE TABLE IF NOT EXISTS discord_pipeline_runs (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    source_id INTEGER NOT NULL REFERENCES discord_sources(id),
-    run_tag TEXT NOT NULL,
-    started_at TEXT NOT NULL,
-    finished_at TEXT,
-    fetched_count INTEGER NOT NULL DEFAULT 0,
-    new_count INTEGER NOT NULL DEFAULT 0,
-    error TEXT
-);
-"""
+# Path to the shared schema file, resolved relative to this file's location.
+_SCHEMA_SQL_PATH = Path(__file__).resolve().parents[1] / 'db' / 'schema.sql'
 
 
 def bootstrap_schema(connection: sqlite3.Connection) -> None:
-    """Create the Discord sibling tables if missing. Idempotent."""
+    """Execute data/db/schema.sql to create all shared tables. Idempotent."""
     connection.execute("PRAGMA foreign_keys = ON")
-    connection.executescript(SCHEMA_SQL)
+    connection.execute("PRAGMA journal_mode = WAL")
+    connection.executescript(_SCHEMA_SQL_PATH.read_text(encoding='utf-8'))
     connection.commit()
 
 
@@ -106,7 +68,6 @@ def self_test() -> int:
     """Round-trip the schema in a temp SQLite. 0 = OK, 1 = failure."""
     import sys
     import tempfile
-    from pathlib import Path
 
     tmp = Path(tempfile.mkdtemp(prefix="discord-schema-"))
     try:
@@ -127,7 +88,8 @@ def self_test() -> int:
             "SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'discord%'")}
         want = {"discord_sources", "discord_messages", "discord_pipeline_runs"}
         if tables != want:
-            print(f"tables: have {sorted(tables)} want {sorted(want)}", file=sys.stderr)
+            print(f"tables: have {sorted(tables)} want {sorted(want)}",
+                  file=sys.stderr)
             return 1
         idx = {r["name"] for r in conn.execute(
             "SELECT name FROM sqlite_master WHERE type='index' AND name LIKE 'idx_discord%'")}

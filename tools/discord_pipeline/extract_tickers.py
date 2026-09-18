@@ -40,7 +40,7 @@ def load_seed_lexicon(lexicon_path: Path) -> set[str]:
                 continue
             if first:
                 first = False
-                if line.lower().startswith("ticker"):
+                if line.lower().startswith("ticker") and "," in line:
                     continue
             ticker = line.split(",", 1)[0].strip().upper()
             if ticker:

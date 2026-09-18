@@ -3,6 +3,8 @@
 const path = require('node:path');
 const crypto = require('node:crypto');
 
+const { PREFILTER_PROFILE_DEFAULT } = require('../config/schema');
+
 const DEFAULT_OUTPUT_ROOT = path.join(
   path.resolve(__dirname, '..', '..'),
   'data',
@@ -92,7 +94,7 @@ function buildDefaultOptions(defaultOutputRoot) {
     prefilterMaxFrames: 60,
     prefilterMinFrames: 12,
     prefilterNeighbors: 1,
-    prefilterProfile: 'whiteboard',
+    prefilterProfile: PREFILTER_PROFILE_DEFAULT,
     prefilterThreshold: 14,
     progressInterval: 10,
     reviewThreshold: 4,

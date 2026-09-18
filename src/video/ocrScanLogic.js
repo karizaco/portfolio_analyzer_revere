@@ -2,6 +2,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const sharp = require('sharp');
 
+const { PREFILTER_PROFILE_DEFAULT } = require('../config/schema');
+
 const PREFILTER_WIDTH = 160;
 const PREFILTER_HEIGHT = 90;
 
@@ -178,7 +180,7 @@ function scoreWhiteboardCandidateBreakdown(observationRows, ocrConfidence, ocrRe
   const rows = Array.isArray(observationRows) ? observationRows : [];
   const groRow = rows.find((row) => row.portfolio === 'GRO') || null;
   const turboRow = rows.find((row) => row.portfolio === 'TURBO') || null;
-  const prefilterProfile = String(options.prefilterProfile || 'whiteboard');
+  const prefilterProfile = String(options.prefilterProfile || PREFILTER_PROFILE_DEFAULT);
   const components = {
     chart_likeness: 0,
     keyword_guard: 0,

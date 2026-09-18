@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const { hammingDistance } = require('../src/video/imageHash');
+const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
 
 const argv = process.argv.slice(2);
 const scanRoot = argv.length ? path.resolve(argv[0]) : path.resolve('data/video_scan_20260912');
@@ -14,6 +15,45 @@ const outputBase = scanRoot;
 const PHASH_COLLISION_THRESHOLD = 5;
 const OCR_TEXT_TABLE_MAX_CHARS = 80;
 const TICKERS_TABLE_LIMIT = 4;
+
+/**
+ * Validates that a probe log JSON object has all required fields.
+ * Throws a descriptive error if any field is missing or wrong type.
+ * @param {object} log - parsed probe log JSON
+ * @param {string} logPath - file path (for error messages)
+ */
+/**
+ * Validates that a probe log JSON object has all required fields.
+ * Only enforces fields that existed in pre-Qullamaggie logs; newer fields
+ * (video_type, basename, prefilter_profile, channel) are optional and
+ * tolerate being absent in older logs.
+ * @param {object} log - parsed probe log JSON
+ * @param {string} logPath - file path (for error messages)
+ */
+function validateProbeLog(log, logPath) {
+    // Core fields that must exist in ALL probe logs
+    const required = ['status', 'captures'];
+    for (const field of required) {
+        if (!(field in log)) {
+            throw new Error(`validateProbeLog(${logPath}): missing required field "${field}"`);
+        }
+    }
+    // captures must be non-empty
+    if (!log.captures || (Array.isArray(log.captures) && log.captures.length === 0)) {
+        throw new Error(`validateProbeLog(${logPath}): captures is empty`);
+    }
+    // Type checks for fields that exist (gracefully skip missing ones from old logs)
+    const typeChecks = {
+        status: 'string',
+        frame_count: 'number',
+        ocr_frame_count: 'number',
+    };
+    for (const [field, expectedType] of Object.entries(typeChecks)) {
+        if (field in log && typeof log[field] !== expectedType) {
+            throw new Error(`validateProbeLog(${logPath}): field "${field}" should be ${expectedType}, got ${typeof log[field]}`);
+        }
+    }
+}
 
 const logFiles = fs.readdirSync(logsDirectory)
   .filter((name) => name.endsWith('.json'))
@@ -26,8 +66,10 @@ const screenshotFiles = fs.existsSync(screenshotsDirectory)
 const videos = [];
 
 for (const fileName of logFiles) {
-  const raw = fs.readFileSync(path.join(logsDirectory, fileName), 'utf8');
+  const logPath = path.join(logsDirectory, fileName);
+  const raw = fs.readFileSync(logPath, 'utf8');
   const parsed = JSON.parse(raw);
+  validateProbeLog(parsed, logPath);
   const captures = Array.isArray(parsed.captures) ? parsed.captures : [];
 
   const frameCounts = {
@@ -47,7 +89,7 @@ for (const fileName of logFiles) {
     output_kind: parsed.output_kind,
     channel: parsed.channel || '',
     basename: parsed.basename || '',
-    prefilter_profile: parsed.prefilter_profile || 'whiteboard',
+    prefilter_profile: parsed.prefilter_profile || PREFILTER_PROFILE_DEFAULT,
     chart_stream_parser: Boolean(parsed.chart_stream_parser),
     status: parsed.status,
     frame_counts: frameCounts,

@@ -13,6 +13,8 @@ import shutil
 
 WORKSPACE_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PIPELINE_ROOT = WORKSPACE_ROOT / 'data' / 'video_pipeline'
+SCHEMA_VERSION = 1
+SCHEMA_SQL_PATH = WORKSPACE_ROOT / 'data' / 'db' / 'schema.sql'
 REFERENCE_SUFFIXES = {'.jpg', '.jpeg', '.pgm', '.png', '.webp'}
 VIDEO_SUFFIXES = {'.mp4', '.mov', '.mkv', '.m4v', '.webm'}
 THUMBNAIL_WIDTH = 8
@@ -79,106 +81,63 @@ def connect_database(db_path: Path) -> sqlite3.Connection:
     return connection
 
 
-def initialize_schema(connection: sqlite3.Connection) -> None:
-    status_sql = ', '.join(f"'{status}'" for status in VIDEO_STATUSES)
-    connection.executescript(
-        f'''
-        CREATE TABLE IF NOT EXISTS videos (
-            video_id TEXT PRIMARY KEY,
-            source_url TEXT NOT NULL DEFAULT '',
-            video_url TEXT NOT NULL DEFAULT '',
-            title TEXT NOT NULL DEFAULT '',
-            upload_date TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ({status_sql})),
-            download_path TEXT NOT NULL DEFAULT '',
-            output_path TEXT NOT NULL DEFAULT '',
-            selected_timestamp REAL,
-            selected_score REAL,
-            review_reason TEXT NOT NULL DEFAULT '',
-            error TEXT NOT NULL DEFAULT '',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
-
-        CREATE INDEX IF NOT EXISTS idx_videos_status ON videos(status);
-        CREATE INDEX IF NOT EXISTS idx_videos_upload_date ON videos(upload_date);
-
-        CREATE TABLE IF NOT EXISTS worker_settings (
-            setting_key TEXT PRIMARY KEY,
-            setting_value TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
-
-        CREATE TABLE IF NOT EXISTS catalog_runs (
-            run_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            source_url TEXT NOT NULL,
-            command_json TEXT NOT NULL,
-            raw_output_path TEXT NOT NULL,
-            row_count INTEGER NOT NULL,
-            inserted_count INTEGER NOT NULL,
-            updated_count INTEGER NOT NULL,
-            missing_upload_dates INTEGER NOT NULL,
-            malformed_rows INTEGER NOT NULL,
-            created_at TEXT NOT NULL
-        );
-        '''
-    )
-    connection.commit()
-    _apply_migrations(connection)
+def _get_schema_version(connection: sqlite3.Connection) -> int:
+    """Return the highest applied schema version, or 0 if none."""
+    row = connection.execute(
+        "SELECT MAX(version) AS v FROM schema_version"
+    ).fetchone()
+    return int(row['v']) if row and row['v'] is not None else 0
 
 
 def _apply_migrations(connection: sqlite3.Connection) -> None:
-    """Idempotent ALTER TABLE migrations applied after `initialize_schema`.
+    """Apply version-tracked data backfills after schema.sql has been executed.
 
-    Each entry checks whether the column exists before adding it; the backfill
-    UPDATE statements are safe to run on every startup because the WHERE clause
-    targets only rows that still have the empty-string sentinel value.
+    This only runs backfill UPDATEs for versions newer than what is recorded
+    in ``schema_version``, so it is safe to call on every startup.
     """
-    existing = {
-        row['name']
-        for row in connection.execute('PRAGMA table_info(videos)')
-    }
-    if 'channel' not in existing:
-        connection.execute("ALTER TABLE videos ADD COLUMN channel TEXT NOT NULL DEFAULT ''")
-    if 'transcript_path' not in existing:
-        connection.execute("ALTER TABLE videos ADD COLUMN transcript_path TEXT NOT NULL DEFAULT ''")
-    if 'transcript_segment_count' not in existing:
-        connection.execute("ALTER TABLE videos ADD COLUMN transcript_segment_count INTEGER NOT NULL DEFAULT 0")
-    if 'transcript_fetched_at' not in existing:
-        connection.execute("ALTER TABLE videos ADD COLUMN transcript_fetched_at TEXT NOT NULL DEFAULT ''")
+    current = _get_schema_version(connection)
 
-    # Backfill `channel` from `source_url` so legacy Revere rows survive.
-    connection.execute(
-        "UPDATE videos SET channel = 'revere' WHERE channel = '' AND source_url LIKE '%@revereasset%'"
-    )
-    connection.execute(
-        "UPDATE videos SET channel = 'qullamaggie' WHERE channel = '' AND source_url LIKE '%@Qullamaggie%'"
-    )
-    connection.execute(
-        "UPDATE videos SET channel = 'revere' WHERE channel = ''"
-    )
-    connection.commit()
-
-    catalog_run_columns = {
-        row['name']
-        for row in connection.execute('PRAGMA table_info(catalog_runs)')
-    }
-    if 'channel' not in catalog_run_columns:
-        connection.execute("ALTER TABLE catalog_runs ADD COLUMN channel TEXT NOT NULL DEFAULT ''")
+    # Version 1: backfill `channel` on `videos` and `catalog_runs` from
+    # `source_url` so legacy rows get a channel label.
+    if current < 1:
         connection.execute(
-            "UPDATE catalog_runs SET channel = 'revere' WHERE channel = '' AND source_url LIKE '%@revereasset%'"
+            "UPDATE videos SET channel = 'revere' "
+            "WHERE channel = '' AND source_url LIKE '%@revereasset%'"
         )
         connection.execute(
-            "UPDATE catalog_runs SET channel = 'qullamaggie' WHERE channel = '' AND source_url LIKE '%@Qullamaggie%'"
+            "UPDATE videos SET channel = 'qullamaggie' "
+            "WHERE channel = '' AND source_url LIKE '%@Qullamaggie%'"
+        )
+        connection.execute(
+            "UPDATE videos SET channel = 'revere' WHERE channel = ''"
+        )
+        connection.execute(
+            "UPDATE catalog_runs SET channel = 'revere' "
+            "WHERE channel = '' AND source_url LIKE '%@revereasset%'"
+        )
+        connection.execute(
+            "UPDATE catalog_runs SET channel = 'qullamaggie' "
+            "WHERE channel = '' AND source_url LIKE '%@Qullamaggie%'"
         )
         connection.execute(
             "UPDATE catalog_runs SET channel = 'revere' WHERE channel = ''"
         )
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_version (version) VALUES (1)"
+        )
         connection.commit()
 
-    connection.execute(
-        "CREATE INDEX IF NOT EXISTS idx_videos_channel ON videos(channel)"
-    )
+
+def initialize_schema(connection: sqlite3.Connection) -> None:
+    """Load and execute data/db/schema.sql, then run any pending data migrations."""
+    connection.execute("PRAGMA foreign_keys = ON")
+    connection.execute("PRAGMA journal_mode = WAL")
+
+    sql_text = SCHEMA_SQL_PATH.read_text(encoding='utf-8')
+    connection.executescript(sql_text)
+    connection.commit()
+
+    _apply_migrations(connection)
 
 
 def set_setting(connection: sqlite3.Connection, key: str, value: str) -> None:

@@ -32,13 +32,14 @@ const {
   TYPE_BADGE_LABEL,
   TYPE_DESCRIPTION
 } = require('../src/normalize/videoTypeClassifier');
+const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
 
 const argv = process.argv.slice(2);
 const limit = Number(readFlag(argv, '--limit')) || 0;
 const since = readFlag(argv, '--since') || null;
 const reclassify = argv.includes('--reclassify');
 const channelArg = readFlag(argv, '--channel') || process.env.CHANNEL || '';
-const prefilterProfileArg = process.env.PREFILTER_PROFILE || 'whiteboard';
+const prefilterProfileArg = process.env.PREFILTER_PROFILE || PREFILTER_PROFILE_DEFAULT;
 const basenameArg = process.env.BASENAME || (channelArg && channelArg !== 'revere' ? channelArg : 'revere');
 const effectiveChannel = channelArg || (basenameArg !== 'revere' ? basenameArg : 'revere');
 

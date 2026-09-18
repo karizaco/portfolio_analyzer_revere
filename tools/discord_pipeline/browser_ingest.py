@@ -1,5 +1,8 @@
 """Discord channel browser-scraper (Playwright).
 
+When run as a script (python tools/discord_pipeline/browser_ingest.py), the
+project root is prepended to sys.path so sub-package imports resolve.
+
 Third ingest path alongside ``ingest_channel.py`` (REST + bot token) and
 ``import_jsonl.py`` (agentic prompt). Opens a real headed Chromium, lets the
 user log in manually if needed, scrolls N messages into view, and writes a
@@ -10,14 +13,36 @@ Selectors below are best-effort: Discord rotates DOM classes often, so each
 extraction step warns on failure rather than crashing the scrape.
 """
 
+import sys
+from pathlib import Path as _Path
+
+# Resolve project root once (two levels up from this file: discord_pipeline → tools → <root>)
+_PROJECT_ROOT = _Path(__file__).resolve().parents[2]
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
+
 import argparse
 import json
 import re
-import sys
 import time
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+try:
+    from .message_parser import (
+        parse_message_element,
+        EMPTY_MESSAGE,
+        REQUIRED_MESSAGE_KEYS,
+        parse_message_dict,
+    )
+except ImportError:
+    # Support running as a standalone script (no known parent package)
+    from tools.discord_pipeline.message_parser import (
+        parse_message_element,
+        EMPTY_MESSAGE,
+        REQUIRED_MESSAGE_KEYS,
+        parse_message_dict,
+    )
 
 try:
     from playwright.sync_api import sync_playwright
@@ -25,123 +50,21 @@ try:
 except Exception:
     PLAYWRIGHT_AVAILABLE = False
 
-WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
+# ---------------------------------------------------------------------------
+# Module-level constants
+# ---------------------------------------------------------------------------
+
+WORKSPACE_ROOT = _Path(__file__).resolve().parents[2]
 DEFAULT_SESSION_DIR = WORKSPACE_ROOT / "data" / "discord_pipeline" / ".cache"
 LOGIN_PATH_FRAGMENT = "/login"
 NO_NEW_SCROLL_LIMIT = 2
 LOGIN_POLL_SECONDS = 2
 SELECTOR_LOG = "[browser-ingest]"
 
-# Pure parsing helpers (no Playwright deps) — exported for unit tests.
-ID_RE = re.compile(r"id=\"(?:message-id-|message-)(?P<id>[0-9]{17,20})\"")
-SNOWFLAKE_RE = re.compile(r"[0-9]{17,20}")
-EMPTY_MESSAGE = {"discord_message_id": "", "author_id": "", "author_name": "",
-                "content": "", "posted_at": "", "edited_at": None,
-                "is_pinned": False, "has_attachments": False}
 
-
-def parse_message_id(text: str) -> str:
-    """Extract a Discord message snowflake from an ``id`` attr or HTML fragment."""
-    if not text:
-        return ""
-    m = ID_RE.search(text)
-    if m:
-        return m.group("id")
-    m = re.search(r'data-message-id="(?P<id>[0-9]{17,20})"', text)
-    if m:
-        return m.group("id")
-    m = SNOWFLAKE_RE.search(text)
-    return m.group(0) if m else ""
-
-
-def parse_iso8601(value: str) -> str:
-    """ISO-8601 UTC string; accepts Discord's relative + absolute forms."""
-    if not value:
-        return ""
-    s = value.strip()
-    if s.endswith("Z"):
-        s = s[:-1] + "+00:00"
-    try:
-        dt = datetime.fromisoformat(s)
-    except ValueError:
-        return value
-    if dt.tzinfo is None:
-        dt = dt.replace(tzinfo=timezone.utc)
-    return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S+00:00")
-
-
-def parse_message_element(html: str) -> dict[str, Any]:
-    """Best-effort parse of a Discord message <li>. Pure regex, no DOM."""
-    if not html:
-        return dict(EMPTY_MESSAGE)
-    msg_id = parse_message_id(html)
-    if not msg_id:
-        return dict(EMPTY_MESSAGE)
-
-    author_id_m = re.search(r'data-author-id="(?P<aid>[0-9]{17,20})"', html)
-    author_id = author_id_m.group("aid") if author_id_m else "0"
-
-    author_name = _first_match(html, [
-        r'<span[^>]*class="[^"]*username[^"]*"[^>]*>(?P<v>[^<]+)</span>',
-        r'<h2[^>]*>\s*<span[^>]*class="[^"]*username[^"]*"[^>]*>(?P<v>[^<]+)</span>',
-    ]) or "Unknown"
-
-    content_raw = _first_match(html, [
-        r'<div[^>]*id="message-content-[^"]*"[^>]*>(?P<v>.*?)</div>\s*<',
-        r'<div[^>]*class="[^"]*markdown[^"]*"[^>]*>(?P<v>.*?)</div>\s*<',
-    ])
-    content = _strip_tags(content_raw) if content_raw else ""
-
-    posted_at = _first_match(html, [
-        r'<time[^>]*datetime="(?P<v>[^"]+)"',
-        r'<time[^>]*title="(?P<v>[^"]+)"',
-    ])
-    edited_marker = re.search(r'class="[^"]*\bedited\b', html)
-    edited_ts_m = re.search(
-        r'<time[^>]*datetime="(?P<v>[^"]+)"[^>]*>.{0,120}?class="[^"]*\bedited\b',
-        html, flags=re.DOTALL)
-    edited_ts = edited_ts_m.group("v") if (edited_marker and edited_ts_m) else ""
-
-    pinned = "pinnedMessage" in html
-    has_attachments = ('attachment' in html or 'embed' in html
-                       or 'imageContent' in html)
-
-    reply_ctx = _first_match(html, [
-        r'<div[^>]*class="[^"]*repliedMessageContent[^"]*"[^>]*>(?P<v>.*?)</div>',
-    ])
-    if reply_ctx:
-        content = f"@replying to {author_name}: {_strip_tags(reply_ctx)} -- {content}"
-
-    if not content and not has_attachments:
-        return dict(EMPTY_MESSAGE)
-
-    return {
-        "discord_message_id": msg_id, "author_id": author_id,
-        "author_name": author_name, "content": content or "[embed-only]",
-        "posted_at": parse_iso8601(posted_at),
-        "edited_at": parse_iso8601(edited_ts) if edited_ts else None,
-        "is_pinned": pinned, "has_attachments": has_attachments,
-    }
-
-
-def _first_match(text: str, patterns: list[str]) -> str:
-    for pat in patterns:
-        m = re.search(pat, text, flags=re.DOTALL)
-        if m:
-            return (m.group("v") or "").strip()
-    return ""
-
-
-def _strip_tags(fragment: str) -> str:
-    """Cheap HTML→text — lxml pulls in too much for Discord-sized payloads."""
-    if not fragment:
-        return ""
-    s = re.sub(r"<[^>]+>", " ", fragment)
-    for ent, ch in (("&nbsp;", " "), ("&amp;", "&"), ("&lt;", "<"),
-                    ("&gt;", ">"), ("&quot;", '"'), ("&#39;", "'")):
-        s = s.replace(ent, ch)
-    return re.sub(r"\s+", " ", s).strip()
-
+# ---------------------------------------------------------------------------
+# Argument parsing
+# ---------------------------------------------------------------------------
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(
@@ -174,7 +97,11 @@ def _default_session_path(source: str) -> Path:
     return DEFAULT_SESSION_DIR / f"browser_session_{safe}.json"
 
 
-def _wait_for_login(page: Page, timeout_seconds: int) -> bool:
+# ---------------------------------------------------------------------------
+# Page helpers (Playwright)
+# ---------------------------------------------------------------------------
+
+def _wait_for_login(page, timeout_seconds: int) -> bool:
     """Block until the URL leaves /login (or timeout)."""
     deadline = time.time() + max(0, timeout_seconds)
     print(f"{SELECTOR_LOG} Waiting up to {timeout_seconds}s for the user to log in "
@@ -206,8 +133,8 @@ def _retry(op, *, attempts: int = 2, backoff: float = 1.0):
             backoff *= 2
 
 
-def _scrape_channel(page: Page, target_count: int,
-                     scroll_pause_ms: int) -> list[dict[str, Any]]:
+def _scrape_channel(page, target_count: int,
+                    scroll_pause_ms: int) -> list[dict[str, Any]]:
     print(f"{SELECTOR_LOG} Waiting for message list to render …")
     deadline = time.time() + 30
     while time.time() < deadline:
@@ -265,6 +192,10 @@ def _write_jsonl(messages: list[dict[str, Any]], out_path: Path) -> int:
             fh.write(json.dumps(m, ensure_ascii=False) + "\n")
     return len(messages)
 
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)

@@ -31,14 +31,14 @@ import sys
 from pathlib import Path
 
 from data.discord_pipeline import bootstrap_schema, utc_now_iso
+from tools.discord_pipeline import REQUIRED_MESSAGE_KEYS
 
 WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB_PATH = str(WORKSPACE_ROOT / "data" / "video_pipeline" / "state.sqlite")
 MAX_FILE_BYTES_WARN = 10 * 1024 * 1024  # 10 MB sanity threshold
 
-REQUIRED_KEYS = (
-    "discord_message_id", "author_id", "author_name", "content", "posted_at",
-)
+# Required keys for the canonical Discord message JSONL schema
+REQUIRED_KEYS = REQUIRED_MESSAGE_KEYS
 
 
 def parse_args(argv):

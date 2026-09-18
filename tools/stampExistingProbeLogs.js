@@ -89,7 +89,7 @@ let totalLogs = 0;
 for (const scanDateDir of scanDateDirs) {
   const runTagSet = runTags || listRunTags(scanDateDir);
   for (const runTag of runTagSet) {
-    const probeLogsDir = path.join(scanDateDir, runTag, runTag, 'ocr_probe', 'logs');
+    const probeLogsDir = path.join(scanDateDir, runTag, 'ocr_probe', 'logs');
     if (!fs.existsSync(probeLogsDir)) continue;
     const logFiles = fs.readdirSync(probeLogsDir).filter((f) => f.endsWith('.json'));
     if (logFiles.length === 0) continue;
