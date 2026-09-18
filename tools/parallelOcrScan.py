@@ -40,7 +40,7 @@ import sys
 
 
 VIDEO_ID_FILENAME_RE = re.compile(
-    r"^(\d{8})_(\d{8})_([A-Za-z0-9_\-]{6,15})_([a-f0-9]{8})_whiteboard\.json$"
+    r"^(\d{8})_(\d{8})_([A-Za-z0-9_\-]{6,15})_([a-f0-9]{8})_(?:whiteboard|snapshot)\.json$"
 )
 
 
@@ -114,8 +114,8 @@ def _collect_jobs(args, workspace_root: pathlib.Path) -> list[tuple[str, str, pa
 
 def _probe_log_stems(directory: pathlib.Path | None) -> set[str]:
     """Return the set of `<upload_date>_<video_id>_<hash>` stems for any
-    `_whiteboard.json` files in `directory`. Caller can then check
-    `prefix.startswith()` for membership tests."""
+    `_whiteboard.json` or `_snapshot.json` files in `directory`. Caller can
+    then check `prefix.startswith()` for membership tests."""
     if not directory or not directory.exists():
         return set()
     stems: set[str] = set()

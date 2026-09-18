@@ -72,7 +72,7 @@ function listRunTags(scanDateDir) {
 }
 
 const parseLogFilename = (filename) => {
-  const match = filename.match(/^(\d{8})_(\d{8})_([A-Za-z0-9_-]{6,15})_([a-f0-9]{8})_whiteboard\.json$/);
+  const match = filename.match(/^(\d{8})_(\d{8})_([A-Za-z0-9_-]{6,15})_([a-f0-9]{8})_(whiteboard|snapshot)\.json$/);
   if (!match) return null;
   const [, , uploadDate, videoId] = match;
   return { uploadDate, videoId };

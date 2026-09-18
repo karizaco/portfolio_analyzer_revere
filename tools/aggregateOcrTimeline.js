@@ -19,20 +19,39 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const tagArg = process.argv[2];
+// Optional --date-tag YYYYMMDD flag (defaults to today's UTC). Lets the script
+// aggregate scans from prior dates — e.g. a `qmg-ocr-20260917-missing19` run
+// that lives under `data/video_scan_20260917/` even when the script is invoked
+// on a later day.
+function readFlag(arr, flag) {
+  const i = arr.indexOf(flag);
+  if (i === -1) return null;
+  return arr[i + 1] || '';
+}
+
+const argv = process.argv.slice(2);
+const dateTagArg = readFlag(argv, '--date-tag');
+const positional = argv.filter((a) => !a.startsWith('--') && a !== dateTagArg);
+
+const tagArg = positional[0];
 if (!tagArg) {
-  console.error('Usage: node tools/aggregateOcrTimeline.js <run-tag>[,<run-tag>...]');
+  console.error('Usage: node tools/aggregateOcrTimeline.js [--date-tag YYYYMMDD] <run-tag>[,<run-tag>...]');
   process.exit(1);
 }
 const tags = String(tagArg).split(',').map((value) => value.trim()).filter(Boolean);
 if (!tags.length) {
-  console.error('No run-tag provided. Usage: node tools/aggregateOcrTimeline.js <run-tag>[,<run-tag>...]');
+  console.error('No run-tag provided. Usage: node tools/aggregateOcrTimeline.js [--date-tag YYYYMMDD] <run-tag>[,<run-tag>...]');
   process.exit(1);
 }
 
 const today = new Date();
 const pad2 = (n) => String(n).padStart(2, '0');
-const dateKey = `${today.getUTCFullYear()}${pad2(today.getUTCMonth() + 1)}${pad2(today.getUTCDate())}`;
+const dateKey = dateTagArg
+  || `${today.getUTCFullYear()}${pad2(today.getUTCMonth() + 1)}${pad2(today.getUTCDate())}`;
+if (!/^\d{8}$/.test(dateKey)) {
+  console.error(`Invalid --date-tag '${dateTagArg}' (expected YYYYMMDD)`);
+  process.exit(1);
+}
 
 function resolveProbeLogsBase(tag) {
   return path.resolve('data', `video_scan_${dateKey}`, tag, tag, 'ocr_probe', 'logs');
@@ -40,7 +59,7 @@ function resolveProbeLogsBase(tag) {
 
 const missingTags = tags.filter((tag) => !fs.existsSync(resolveProbeLogsBase(tag)));
 if (missingTags.length === tags.length) {
-  console.error(`No probe logs found for any of: ${tags.join(', ')}. Run 'npm run video:scan-ocr' or 'tools/runAllOcr.js' first.`);
+  console.error(`No probe logs found for any of: ${tags.join(', ')} under data/video_scan_${dateKey}/. Run 'npm run video:scan-ocr' or 'tools/runAllOcr.js' first, or pass --date-tag to point at a prior scan date.`);
   process.exit(1);
 }
 if (missingTags.length) {
