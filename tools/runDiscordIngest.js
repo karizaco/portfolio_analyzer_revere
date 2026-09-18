@@ -13,6 +13,9 @@
 //   ingest-agentic    → print the agentic prompt path + JSONL schema +
 //                       the exact npm command to run after the agent finishes.
 //                       Does NOT spawn an agent itself.
+//   ingest-browser    → spawn py -m tools.discord_pipeline.browser_ingest
+//                       (headful Chromium; user logs in manually once),
+//                       then chain into ingest-jsonl by default.
 //   extract-tickers   → spawn extract_tickers.py to write discord_signals.csv.
 //   status            → SELECT rows + last run per source.
 //   list              → pretty-print every source with message counts.
@@ -201,6 +204,43 @@ function commandIngestAgentic(argv) {
   console.log('      It only prints what the agent needs + how to import the JSONL.');
 }
 
+function commandIngestBrowser(argv) {
+  const source = readFlag(argv, '--source') || '';
+  const url = readFlag(argv, '--url') || '';
+  const messages = readFlag(argv, '--messages') || '';
+  const out = readFlag(argv, '--out') || '';
+  const session = readFlag(argv, '--session') || '';
+  const loginTimeout = readFlag(argv, '--login-timeout-seconds') || '';
+  const skipImport = argv.includes('--skip-import');
+  if (!source || !url) {
+    console.error(
+      'Usage: node tools/runDiscordIngest.js ingest-browser --source <name> ' +
+      '--url <discord_channel_url> [--messages N] [--out <path>] ' +
+      '[--session <path>] [--login-timeout-seconds N] [--skip-import]');
+    process.exit(1);
+  }
+  const args = ['--source', source, '--url', url];
+  if (messages) args.push('--messages', messages);
+  if (out) args.push('--out', out);
+  if (session) args.push('--session', session);
+  if (loginTimeout) args.push('--login-timeout-seconds', loginTimeout);
+  console.log('Browser ingest — opening headful Chromium; log in manually if prompted.');
+  const scrape = runPythonModule('tools.discord_pipeline.browser_ingest', args);
+  if (scrape.status !== 0) {
+    process.exit(scrape.status || 1);
+  }
+  if (skipImport) {
+    console.log('[discord-browser] --skip-import set; leaving JSONL on disk.');
+    process.exit(0);
+  }
+  // Chain into import_jsonl with the JSONL the scraper just wrote.
+  const jsonlPath = out || './discord_dump.jsonl';
+  console.log('[discord-browser] chaining into import_jsonl …');
+  const importer = runPythonModule('tools.discord_pipeline.import_jsonl',
+    ['--source', source, '--file', jsonlPath]);
+  process.exit(importer.status || 0);
+}
+
 function commandStatus() {
   ensureDbExists();
   const script = `
@@ -274,6 +314,7 @@ function printUsage() {
     '  node tools/runDiscordIngest.js ingest --source <name> [--limit N]\n' +
     '  node tools/runDiscordIngest.js ingest-jsonl --source <name> [--file <path>|-] [--limit N] [--skip-extract]\n' +
     '  node tools/runDiscordIngest.js ingest-agentic --source <name> [--messages N]\n' +
+    '  node tools/runDiscordIngest.js ingest-browser --source <name> --url <url> [--messages N] [--skip-import]\n' +
     '  node tools/runDiscordIngest.js extract-tickers\n' +
     '  node tools/runDiscordIngest.js status\n' +
     '  node tools/runDiscordIngest.js list');
@@ -289,6 +330,7 @@ function main() {
     case 'ingest': return commandIngest(rest);
     case 'ingest-jsonl': return commandIngestJsonl(rest);
     case 'ingest-agentic': return commandIngestAgentic(rest);
+    case 'ingest-browser': return commandIngestBrowser(rest);
     case 'extract-tickers': return commandExtractTickers();
     case 'status': return commandStatus();
     case 'list': return commandList();

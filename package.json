@@ -43,7 +43,8 @@
     "discord:status": "node tools/runDiscordIngest.js status",
     "discord:catalog": "node tools/listDiscordCatalog.js",
     "discord:ingest:agentic": "node tools/runDiscordIngest.js ingest-agentic",
-    "discord:ingest:jsonl": "node tools/runDiscordIngest.js ingest-jsonl"
+    "discord:ingest:jsonl": "node tools/runDiscordIngest.js ingest-jsonl",
+    "discord:ingest:browser": "node tools/runDiscordIngest.js ingest-browser"
   },
   "dependencies": {
     "sharp": "^0.34.3",

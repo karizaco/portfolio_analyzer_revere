@@ -1,0 +1,5 @@
+# Python deps for tools/discord_pipeline/browser_ingest.py
+# One-time setup:
+#     pip install -r requirements.txt
+#     playwright install chromium
+playwright>=1.40

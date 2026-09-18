@@ -9,8 +9,11 @@ data/my_videos_*/
 data/my_videos_v*/
 data/price_cache/
 sample_screenshots.lnk
+# Default output of discord browser ingest debug runs
+discord_dump.jsonl
+browser_session_*.json
 # Heavy per-frame PNGs from OCR scans — reproducible from probe logs
 data/video_scan_*/fix-final/screenshots/
 data/video_scan_*/**/ocr_probe/frames/
-data/discord_pipeline/__pycache__/
+**/__pycache__/
 data/discord_pipeline/.cache/
