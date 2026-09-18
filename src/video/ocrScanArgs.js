@@ -307,12 +307,11 @@ function parseArgs(argv, overrides = {}) {
     options.phashRegionFraction = parseFractionalRegion(CHART_STREAM_REGION_FRACTION_DEFAULT);
   }
 
-  if (options.chartStreamParser && options.outputKind !== 'snapshot') {
-    // The chart-stream parser produces a single observation row per capture;
-    // it's only meaningful in snapshot mode where one slide = one capture.
-    // For whiteboard runs the parser is a no-op anyway because no structured
-    // GRO/TURBO rows exist.
-    throw new Error('`--chart-stream-parser` is only supported with `--output-kind snapshot`.');
+  // chart_stream prefilter + chart-stream parser must be used together: the prefilter
+  // finds dark candlestick-chart frames and the parser extracts position lists from them.
+  // Auto-enable so the user only needs --prefilter-profile chart_stream.
+  if (options.prefilterProfile === 'chart_stream') {
+    options.chartStreamParser = true;
   }
 
   return options;

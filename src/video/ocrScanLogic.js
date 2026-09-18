@@ -89,12 +89,22 @@ function formatDuration(totalSeconds) {
 // and never contains the BULL CASE / HEADWINDS / BOTTOM LINE: blocks that
 // appear on real Daily Market Insight / Tale of the Tape slides. We accept
 // the OCR-dropped apostrophe ("WHATS THE MARKET TREND") as well.
+//
+// Also detects the Qullamaggie intro card: "PLEASE read this first -> qullamaggie.com"
+// (OCR may misread as "gullamaggie.com" due to the stylized 'u'/'a' in the logo).
 function detectIntroCard(ocrText) {
   if (!ocrText) {
     return false;
   }
 
   const upper = String(ocrText).toUpperCase();
+
+  // Qullamaggie-style intro: "PLEASE READ THIS FIRST -> QULLAMAGGIE.COM"
+  // (OCR variants: gullamaggie, qullamagle, qullamage)
+  const qmgIntro = upper.includes('PLEASE READ THIS FIRST') || upper.includes('PLEASE READ THIS FIRS');
+  if (qmgIntro && (upper.includes('QULLAMAGGIE') || upper.includes('GULLAMAGGIE') || upper.includes('GULLAMAGLE'))) {
+    return true;
+  }
 
   const hasTitle = upper.includes("WHAT'S THE MARKET TREND") || upper.includes('WHATS THE MARKET TREND');
   if (!hasTitle) {

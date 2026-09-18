@@ -505,16 +505,24 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
       ocr
     });
   const chartStream = chartStreamParser ? parseChartStreamPositionList({ ocr }) : null;
+  // When chartStreamParser is active, use its position_list as the ticker source;
+  // otherwise fall back to the full-text extractor (GRO/TURBO path).
+  const tickerSource = chartStream && chartStream.position_list ? chartStream.position_list : [];
   const [phash, phashOverlay, tickers] = await Promise.all([
     computePerceptualHash(framePath).catch(() => null),
     computeRegionHash(framePath, phashRegion, phashRegionFraction),
-    Promise.resolve(extractTickersFromOcrText(ocr.text))
+    Promise.resolve(
+      chartStreamParser && tickerSource.length
+        ? tickerSource
+        : extractTickersFromOcrText(ocr.text)
+    )
   ]);
 
   return {
     chartStream,
     frameIndex,
     framePath,
+    isIntroCard: detectIntroCard(ocr.text),
     lowResFramePath: null,
     ocrConfidence: Number(parsed ? parsed.ocr_confidence : ocr.confidence || 0),
     ocrProfile: ocr.profileName,
@@ -525,6 +533,7 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     phash,
     phashOverlay,
     phashRegion: phashOverlay ? phashRegion || phashRegionFraction || null : null,
+    prefilterProfile: options.prefilterProfile,
     prefilterScore,
     score: parsed ? scoreSnapshotCandidate(parsed) : scoreChartStreamCandidate(chartStream, ocr.confidence),
     screenLayout: detectScreenLayout(ocr.text, ocr.lines),
