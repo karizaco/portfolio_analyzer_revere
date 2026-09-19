@@ -6,9 +6,10 @@
 // list of tickers that:
 //   1. match the strict uppercase ticker shape, AND
 //   2. survive the seed-lexicon membership check (no fuzzy correction), AND
-//   3. appear more than once in the OCR text for the frame, OR are followed by
-//      a price/numeric token — defends against one-off OCR noise on a chart
-//      axis label (e.g. "MSFT $412.30" only counts because of the $ price).
+//   3. appear at least once in the OCR text for the frame, OR are followed by
+//      a price/numeric token — the position-list overlay IS the authoritative
+//      source so a single occurrence suffices; the price-nearby clause defends
+//      against one-off OCR noise on a chart axis label (e.g. "MSFT $412.30").
 //
 // This deliberately does NOT reimplement the GRO/TURBO parser — chart-stream
 // videos don't have a portfolio summary, just ticker positions.
@@ -74,7 +75,10 @@ function parseChartStreamPositionList({ ocr } = {}) {
   for (const ticker of candidates) {
     const occurrences = occurrenceCounts.get(ticker) || 0;
     const priceNearby = hasPriceNear(text, ticker);
-    if (occurrences >= 2 || priceNearby) {
+    // Accept if: appears ≥1 time OR has a price token nearby.
+    // Position-list tickers typically appear once in the overlay; the
+    // overlay IS the authoritative source so a single occurrence suffices.
+    if (occurrences >= 1 || priceNearby) {
       accepted.push(ticker);
     } else {
       rejected.push(ticker);

@@ -664,6 +664,24 @@ async function scanFrames({
     prefilterProfile
   };
 
+  // Skip OCR entirely for low-resolution source videos (360p/480p) — the
+  // position-list overlay text is unreadable at those resolutions.
+  const ffprobeBin = resolveFfprobeBin(null);
+  if (ffprobeBin) {
+    const ffprobeResult = spawnSync(ffprobeBin, [
+      '-v', 'error',
+      '-select_streams', 'v:0',
+      '-show_entries', 'stream=height',
+      '-of', 'csv=p=0',
+      videoPath
+    ], { encoding: 'utf8' });
+    const sourceHeight = parseInt((ffprobeResult.stdout || '').trim(), 10);
+    if (!Number.isNaN(sourceHeight) && sourceHeight < 720) {
+      console.warn(`[scan:${outputKind}] Skipping ${videoPath}: source resolution ${sourceHeight}p < 720p minimum`);
+      return { bestCandidate: null, candidates: [], frameErrors: [], topCandidates: [] };
+    }
+  }
+
   for (let index = 0; index < frameRows.length; index += 1) {
     const frameRow = frameRows[index];
     const ocrFramePath = path.join(

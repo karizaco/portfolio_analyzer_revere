@@ -89,7 +89,7 @@ function buildWhiteboardVideo(ffmpegBin, outputPath) {
     : null;
   const drawTextFilter = (text, fontsize, y) => {
     const head = fontOption ? `${fontOption}:` : '';
-    return `drawtext=${head}text='${text}':fontcolor=black:fontsize=${fontsize}:x=24:y=${y}`;
+    return `drawtext=${head}text='${text}':fontcolor=black:fontsize=${fontsize}:x=64:y=${y}`;
   };
 
   const args = [
@@ -97,11 +97,11 @@ function buildWhiteboardVideo(ffmpegBin, outputPath) {
     '-hide_banner',
     '-loglevel', 'error',
     '-f', 'lavfi',
-    '-i', 'color=c=white:s=320x180:d=4:r=4',
+    '-i', 'color=c=white:s=1280x720:d=4:r=4',
     '-vf', [
-      drawTextFilter('GRO RVAB (1.45/1.51) ADD', 22, 44),
-      drawTextFilter('TURBO RVAB (0.90/0.95) HOLD', 22, 84),
-      drawTextFilter('BOTTOM LINE HEALTHY', 18, 140)
+      drawTextFilter('GRO RVAB (1.45/1.51) ADD', 59, 118),
+      drawTextFilter('TURBO RVAB (0.90/0.95) HOLD', 59, 224),
+      drawTextFilter('BOTTOM LINE HEALTHY', 48, 374)
     ].join(','),
     '-frames:v', '16',
     '-an',
@@ -123,7 +123,7 @@ function buildWhiteReferencePng(ffmpegBin, outputPath) {
     '-hide_banner',
     '-loglevel', 'error',
     '-f', 'lavfi',
-    '-i', 'color=c=white:s=320x180:d=0.04',
+    '-i', 'color=c=white:s=1280x720:d=0.04',
     '-frames:v', '1',
     '-update', '1',
     outputPath
@@ -151,20 +151,20 @@ function buildTextHeavyVideo(ffmpegBin, outputPath) {
     '-hide_banner',
     '-loglevel', 'error',
     '-f', 'lavfi',
-    '-i', 'color=c=white:s=480x270:d=4:r=4',
+    '-i', 'color=c=white:s=1280x720:d=4:r=4',
     '-vf', [
-      drawTextFilter('DAILY MARKET INSIGHT', 20, 16, 14),
-      drawTextFilter('MARKET STATE UPTREND', 16, 16, 44),
-      drawTextFilter('WHAT HAPPENED TODAY', 16, 16, 64),
-      drawTextFilter('INDEXES FALL ON TENSIONS', 14, 16, 86),
-      drawTextFilter('SPX -0.48 RSP -0.96', 12, 16, 108),
-      drawTextFilter('QQQ -0.29 DJIA -0.75', 12, 16, 124),
-      drawTextFilter('MAG7 +0.36 RAI100 -0.24', 12, 16, 140),
-      drawTextFilter('GRO -0.46 TURBO -0.53', 14, 16, 160),
-      drawTextFilter('21/21 T-12 RG8', 12, 16, 180),
-      drawTextFilter('BOTTOM LINE HEALTHY', 14, 16, 204),
-      drawTextFilter('LEADERS INTACT ADD', 12, 16, 224),
-      drawTextFilter('TRIM SMALL CAPS', 12, 16, 240)
+      drawTextFilter('DAILY MARKET INSIGHT', 53, 43, 37),
+      drawTextFilter('MARKET STATE UPTREND', 43, 43, 117),
+      drawTextFilter('WHAT HAPPENED TODAY', 43, 43, 171),
+      drawTextFilter('INDEXES FALL ON TENSIONS', 37, 43, 230),
+      drawTextFilter('SPX -0.48 RSP -0.96', 32, 43, 288),
+      drawTextFilter('QQQ -0.29 DJIA -0.75', 32, 43, 331),
+      drawTextFilter('MAG7 +0.36 RAI100 -0.24', 32, 43, 374),
+      drawTextFilter('GRO -0.46 TURBO -0.53', 37, 43, 427),
+      drawTextFilter('21/21 T-12 RG8', 32, 43, 480),
+      drawTextFilter('BOTTOM LINE HEALTHY', 37, 43, 544),
+      drawTextFilter('LEADERS INTACT ADD', 32, 43, 597),
+      drawTextFilter('TRIM SMALL CAPS', 32, 43, 640)
     ].join(','),
     '-frames:v', '16',
     '-an',

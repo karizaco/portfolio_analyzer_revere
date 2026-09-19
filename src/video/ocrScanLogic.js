@@ -535,8 +535,9 @@ const PREFILTER_PROFILES = Object.freeze({
     stdDevTarget: 55,
     stdDevSlope: 12,
     // Loosen the meanLuma gate: chart frames have mean luma 50–90 (dark UI
-    // chrome dominates). Whiteboard threshold was 140.
-    meanLumaFloor: 60,
+    // chrome dominates). Early-2022 QMG chart-stream videos can be very dark
+    // (meanLuma ~13-17), so the floor is dropped to 30 (was 60, was 140).
+    meanLumaFloor: 30,
     meanLumaPenalty: 6,
     // Don't reject for low brightRatio (we WANT dark frames) or for moderate
     // darkRatio (chart bodies are mostly dark).

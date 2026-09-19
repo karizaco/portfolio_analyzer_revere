@@ -115,21 +115,22 @@ function buildChartStreamVideo(ffmpegBin, outputPath, rows) {
   // grid is part of -vf (not the -i spec) so ffmpeg's lavfi parser accepts it.
   const drawTextFilters = [];
   // Static POSITION LIST chrome (box + border + label) applies to all frames.
+  // Scale coordinates from 480x270 → 1280x720 (2.67x).
   drawTextFilters.push(
-    `drawgrid=w=60:h=60:t=1:c=0x1f2933@0.6`,
-    `drawbox=x=336:y=216:w=128:h=48:color=0x111827@0.95:t=fill`,
-    `drawbox=x=336:y=216:w=128:h=48:color=0xe5e7eb@0.8:t=2`,
-    `drawtext=${fontOption ? fontOption + ':' : ''}text='POSITION LIST':fontcolor=white:fontsize=10:x=344:y=222`
+    `drawgrid=w=160:h=160:t=1:c=0x1f2933@0.6`,
+    `drawbox=x=896:y=576:w=342:h=128:color=0x111827@0.95:t=fill`,
+    `drawbox=x=896:y=576:w=342:h=128:color=0xe5e7eb@0.8:t=2`,
+    `drawtext=${fontOption ? fontOption + ':' : ''}text='POSITION LIST':fontcolor=white:fontsize=27:x=918:y=592`
   );
   // Per-frame ticker rows. Use enable='eq(n\,N)' so each filter only paints
   // one frame — this is how we get the position list to change across the
   // 16 frames so the pHash_overlay test sees different overlay hashes.
   rows.forEach((row, frameIndex) => {
     row.forEach((cell, rowIdx) => {
-      const yOffset = 232 + rowIdx * 10;
+      const yOffset = 619 + rowIdx * 27;
       drawTextFilters.push(
-        `drawtext=${fontOption ? fontOption + ':' : ''}text='${cell}':fontcolor=white:fontsize=9:` +
-          `x=344:y=${yOffset}:enable='eq(n\\,${frameIndex})'`
+        `drawtext=${fontOption ? fontOption + ':' : ''}text='${cell}':fontcolor=white:fontsize=24:` +
+          `x=918:y=${yOffset}:enable='eq(n\\,${frameIndex})'`
       );
     });
   });
@@ -139,7 +140,7 @@ function buildChartStreamVideo(ffmpegBin, outputPath, rows) {
     '-hide_banner',
     '-loglevel', 'error',
     '-f', 'lavfi',
-    '-i', 'color=c=0x0d1117:s=480x270:d=4:r=4',
+    '-i', 'color=c=0x0d1117:s=1280x720:d=4:r=4',
     '-frames:v', '16',
     '-vf', drawTextFilters.join(','),
     '-an',
