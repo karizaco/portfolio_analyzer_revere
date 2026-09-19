@@ -21,7 +21,6 @@ import re
 import time
 from pathlib import Path
 
-# Resolve project root once (two levels up from this file: discord_pipeline → tools → <root>)
 _PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
@@ -43,19 +42,18 @@ except ImportError:
         parse_message_dict,
     )
 
-from .browser_driver import scrape_channel, DEFAULT_SESSION_DIR
-
-# ---------------------------------------------------------------------------
-# Module-level constants
-# ---------------------------------------------------------------------------
+try:
+    from .browser_driver import scrape_channel, DEFAULT_SESSION_DIR, PLAYWRIGHT_AVAILABLE
+except ImportError:
+    from tools.discord_pipeline.browser_driver import (
+        scrape_channel,
+        DEFAULT_SESSION_DIR,
+        PLAYWRIGHT_AVAILABLE,
+    )
 
 WORKSPACE_ROOT = _PROJECT_ROOT
 SELECTOR_LOG = "[browser-ingest]"
 
-
-# ---------------------------------------------------------------------------
-# Argument parsing
-# ---------------------------------------------------------------------------
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(
@@ -88,10 +86,6 @@ def _default_session_path(source: str) -> Path:
     return DEFAULT_SESSION_DIR / f"browser_session_{safe}.json"
 
 
-# ---------------------------------------------------------------------------
-# Orchestration helpers (session + JSONL — not DOM)
-# ---------------------------------------------------------------------------
-
 def _write_jsonl(messages: list[dict], out_path: Path) -> int:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with out_path.open("w", encoding="utf-8", newline="\n") as fh:
@@ -100,9 +94,47 @@ def _write_jsonl(messages: list[dict], out_path: Path) -> int:
     return len(messages)
 
 
-# ---------------------------------------------------------------------------
-# Main (thin shim)
-# ---------------------------------------------------------------------------
+def _persist_session(session_path: Path, url: str) -> bool:
+    """Open the existing storage_state in a fresh context, navigate once so
+    cookies/localStorage are materialised, then write storage_state back to disk.
+
+    Returns True if the save succeeded. If Playwright is unavailable the call
+    is a silent no-op (returns False).
+    """
+    if not PLAYWRIGHT_AVAILABLE:
+        return False
+    try:
+        from playwright.sync_api import sync_playwright
+    except Exception as exc:
+        print(f"{SELECTOR_LOG} playwright import failed during persist: {exc}",
+              file=sys.stderr)
+        return False
+
+    existing = None
+    if session_path.exists():
+        try:
+            existing = json.loads(session_path.read_text(encoding="utf-8"))
+        except Exception:
+            existing = None
+
+    session_path.parent.mkdir(parents=True, exist_ok=True)
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(headless=True)
+        try:
+            context = browser.new_context(storage_state=existing)
+            try:
+                page = context.new_page()
+                page.goto(url, wait_until="domcontentloaded", timeout=30000)
+            except Exception as exc:
+                print(f"{SELECTOR_LOG} navigate during persist failed: {exc}",
+                      file=sys.stderr)
+            state = context.storage_state()
+            session_path.write_text(json.dumps(state), encoding="utf-8")
+            print(f"{SELECTOR_LOG} saved session to {session_path}")
+            return True
+        finally:
+            browser.close()
+
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
@@ -112,7 +144,6 @@ def main(argv: list[str] | None = None) -> int:
     out_path = Path(args.out).resolve()
     started = time.time()
 
-    # Delegate all Playwright/DOM work to browser_driver
     raw_messages = scrape_channel(
         url=args.url,
         session_state_path=str(session_path) if session_path.exists() else None,
@@ -122,12 +153,9 @@ def main(argv: list[str] | None = None) -> int:
         headless=bool(args.headless),
     )
 
-    # Parse raw DOM dicts through message_parser for schema normalisation
     parsed_messages: list[dict] = []
     for raw in raw_messages:
         try:
-            # Re-serialise the stored _html through parse_message_element so the
-            # output matches what the old browser_ingest produced
             parsed = parse_message_element(raw.get("_html", ""))
             if not parsed.get("discord_message_id"):
                 continue
@@ -139,13 +167,8 @@ def main(argv: list[str] | None = None) -> int:
 
     written = _write_jsonl(parsed_messages, out_path)
 
-    # Save session for next run
     try:
-        session_path.parent.mkdir(parents=True, exist_ok=True)
-        # browser_driver already launched the browser; we don't have direct
-        # access to its context.storage_state() here.  Re-launch briefly to
-        # persist the session cookie if the user is still logged in.
-        _persist_session(session_path, args.url, args.login_timeout_seconds)
+        _persist_session(session_path, args.url)
     except Exception as exc:
         print(f"{SELECTOR_LOG} could not save session: {exc}", file=sys.stderr)
 
@@ -158,44 +181,6 @@ def main(argv: list[str] | None = None) -> int:
         "headless": bool(args.headless), "session_path": str(session_path),
     }, indent=2))
     return 0 if parsed_messages else 1
-
-
-def _persist_session(session_path: Path, url: str, login_timeout: int):
-    """Re-launch browser with an existing session and save it back."""
-    from .browser_driver import scrape_channel, PLAYWRIGHT_AVAILABLE
-    if not PLAYWRIGHT_AVAILABLE:
-        return
-    # Use a tiny scrape (0 messages) to get the browser context and save state
-    scrape_channel(url=url, session_state_path=str(session_path),
-                   messages=0, login_timeout=login_timeout,
-                   scroll_pause_ms=100, headless=True)
-    # NOTE: scrape_channel doesn't expose storage_state directly.
-    # Instead, browser_driver saves nothing — it is the caller's job.
-    # For this shim we do a minimal playwright launch just to persist.
-    import json as _json
-    from playwright.sync_api import sync_playwright
-    with sync_playwright() as pw:
-        browser = pw.chromium.launch(headless=True)
-        try:
-            # Try to load the existing session (it should already be there)
-            existing = None
-            if session_path.exists():
-                try:
-                    existing = _json.loads(session_path.read_text(encoding="utf-8"))
-                except Exception:
-                    pass
-            context = browser.new_context(storage_state=existing)
-            # Navigate to refresh cookies
-            try:
-                context.new_page().goto(url, wait_until="domcontentloaded",
-                                       timeout=30000)
-            except Exception:
-                pass
-            session_path.write_text(
-                _json.dumps(context.storage_state()), encoding="utf-8")
-            print(f"{SELECTOR_LOG} saved session to {session_path}")
-        finally:
-            browser.close()
 
 
 if __name__ == "__main__":

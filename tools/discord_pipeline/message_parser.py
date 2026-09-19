@@ -10,20 +10,8 @@ import re
 from datetime import datetime, timezone
 from typing import Any
 
-# ---------------------------------------------------------------------------
-# Compiled regexes (module-level for performance)
-# ---------------------------------------------------------------------------
-
 ID_RE = re.compile(r'id="(?:message-id-|message-)(?P<id>[0-9]{17,20})"')
 SNOWFLAKE_RE = re.compile(r"[0-9]{17,20}")
-
-# NOTE: STRICT_TICKER_PATTERN, MESSAGE_URL_RE, DISCORD_EPOCH_MS and
-# SNOWFLAKE_EPOCH are not defined in this module — add them here if needed
-# by downstream consumers.
-
-# ---------------------------------------------------------------------------
-# Schema constants
-# ---------------------------------------------------------------------------
 
 REQUIRED_MESSAGE_KEYS = (
     "discord_message_id",
@@ -47,9 +35,6 @@ EMPTY_MESSAGE: dict[str, Any] = {
     "has_attachments": False,
 }
 
-# ---------------------------------------------------------------------------
-# Pure parsing helpers
-# ---------------------------------------------------------------------------
 
 def parse_message_id(text: str) -> str:
     """Extract a Discord message snowflake from an ``id`` attr or HTML fragment."""
@@ -100,21 +85,26 @@ def _strip_tags(fragment: str) -> str:
     return re.sub(r"\s+", " ", s).strip()
 
 
+def _extract_reply_author(reply_html: str) -> str:
+    """Best-effort extract of the replied-to message's author username."""
+    if not reply_html:
+        return ""
+    author = _first_match(reply_html, [
+        r'<span[^>]*class="[^"]*username[^"]*"[^>]*>(?P<v>[^<]+)</span>',
+    ])
+    if author:
+        return author
+    # Sometimes the reply author is rendered via an aria-label or alt.
+    alt = _first_match(reply_html, [
+        r'<img[^>]*alt="(?P<v>[^"]+)"[^>]*>',
+    ])
+    if alt and alt != "Unknown":
+        return alt
+    return ""
+
+
 def parse_message_element(html: str) -> dict[str, Any]:
-    """Best-effort parse of a Discord message ``<li>`` element.
-
-    Returns a dict with keys:
-      snowflake        (str) — the Discord message ID
-      author_name      (str)
-      content_text     (str) — raw text content, includes "@replying to ..." prefix
-      timestamp_iso    (str) — ISO-8601 UTC
-      edited           (str) — ISO-8601 UTC of last edit, or ""
-      reply_to_snowflake (str) — parent message ID if this is a reply, or ""
-
-    Plus the full import-compatible schema fields for compatibility with
-    ``import_jsonl.py`` (discord_message_id, author_id, author_name, content,
-    posted_at, edited_at, is_pinned, has_attachments).
-    """
+    """Best-effort parse of a Discord message ``<li>`` element."""
     if not html:
         return dict(EMPTY_MESSAGE)
     msg_id = parse_message_id(html)
@@ -154,8 +144,13 @@ def parse_message_element(html: str) -> dict[str, Any]:
     ])
     reply_to_snowflake = ""
     if reply_ctx:
-        content = f"@replying to {author_name}: {_strip_tags(reply_ctx)} -- {content}"
+        reply_text = _strip_tags(reply_ctx)
         reply_to_snowflake = parse_message_id(reply_ctx)
+        reply_author = _extract_reply_author(reply_ctx)
+        if reply_author:
+            content = f"@replying to {reply_author}: {reply_text} -- {content}"
+        else:
+            content = f"@replying to (unknown): {reply_text} -- {content}"
 
     if not content and not has_attachments:
         return dict(EMPTY_MESSAGE)
@@ -163,9 +158,7 @@ def parse_message_element(html: str) -> dict[str, Any]:
     posted_iso = parse_iso8601(posted_at)
     edited_iso = parse_iso8601(edited_ts) if edited_ts else ""
 
-    # Legacy import-compatible keys + enriched keys
     return {
-        # Import-compatible schema
         "discord_message_id": msg_id,
         "author_id": author_id,
         "author_name": author_name,
@@ -174,7 +167,6 @@ def parse_message_element(html: str) -> dict[str, Any]:
         "edited_at": edited_iso or None,
         "is_pinned": pinned,
         "has_attachments": has_attachments,
-        # Enriched keys referenced by name in the spec
         "snowflake": msg_id,
         "author_name_enriched": author_name,
         "content_text": content or "[embed-only]",
@@ -185,15 +177,9 @@ def parse_message_element(html: str) -> dict[str, Any]:
 
 
 def parse_message_dict(raw_dict: dict[str, Any]) -> dict[str, Any]:
-    """Validate and normalise a raw message dict against REQUIRED_MESSAGE_KEYS.
-
-    Missing keys that are absent or None are filled from EMPTY_MESSAGE.
-    Unexpected keys are preserved.  A ValueError is raised if
-    ``discord_message_id`` is empty after normalisation.
-    """
+    """Validate and normalise a raw message dict against REQUIRED_MESSAGE_KEYS."""
     result = dict(EMPTY_MESSAGE)
     result.update({k: v for k, v in raw_dict.items() if v is not None})
-    # Ensure required keys present (EMPTY_MESSAGE covers all REQUIRED_MESSAGE_KEYS)
     missing = [k for k in REQUIRED_MESSAGE_KEYS if k not in result]
     for k in missing:
         result[k] = EMPTY_MESSAGE[k]
