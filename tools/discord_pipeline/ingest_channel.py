@@ -127,7 +127,6 @@ def fetch_channel_page(*, api_base: str, channel_id: str, token: str,
             f"Verify the channel_id + READ_MESSAGE_HISTORY.")
     if status >= 400:
         raise RuntimeError(f"Discord API error {status}: {body[:200]!r}")
-    # Yield briefly when the bucket is almost empty to avoid hammering it.
     remaining = response_headers.get("X-RateLimit-Remaining")
     if remaining is not None:
         try:
@@ -165,6 +164,26 @@ def record_run(connection: sqlite3.Connection, *, source_id: int, run_tag: str,
     )
     connection.commit()
     return int(cur.lastrowid or 0)
+
+
+def _insert_message(connection: sqlite3.Connection, *, source_id: int,
+                    raw: dict[str, object]) -> bool:
+    """Insert a single Discord message. Return True if newly inserted."""
+    parsed = parse_message(raw)
+    msg_id = parsed["discord_message_id"]
+    if not msg_id:
+        return False
+    cur = connection.execute(
+        """INSERT INTO discord_messages
+              (source_id, discord_message_id, author_id, author_name,
+               content, posted_at, ingested_at, has_tickers, ticker_list,
+               raw_json)
+           VALUES (?, ?, ?, ?, ?, ?, ?, 0, '', ?)
+           ON CONFLICT(discord_message_id) DO NOTHING""",
+        (source_id, msg_id, parsed["author_id"], parsed["author_name"],
+         parsed["content"], parsed["posted_at"], utc_now_iso(),
+         json.dumps(raw, ensure_ascii=False)))
+    return cur.rowcount > 0
 
 
 def ingest_source(connection: sqlite3.Connection, *, name: str, limit: int,
@@ -207,28 +226,13 @@ def ingest_source(connection: sqlite3.Connection, *, name: str, limit: int,
             page_new = 0
             oldest_id: str | None = None
             for raw in page:
-                parsed = parse_message(raw)
-                msg_id = parsed["discord_message_id"]
-                if not msg_id:
-                    continue
-                if oldest_id is None or msg_id < oldest_id:
-                    oldest_id = msg_id
-                fetched_total += 1
+                msg_id = str((raw.get("id") if isinstance(raw, dict) else "") or "")
+                if msg_id:
+                    if oldest_id is None or msg_id < oldest_id:
+                        oldest_id = msg_id
+                    fetched_total += 1
                 try:
-                    connection.execute(
-                        """INSERT INTO discord_messages
-                              (source_id, discord_message_id, author_id, author_name,
-                               content, posted_at, ingested_at, has_tickers, ticker_list,
-                               raw_json)
-                           VALUES (?, ?, ?, ?, ?, ?, ?, 0, '', ?)
-                           ON CONFLICT(discord_message_id) DO NOTHING""",
-                        (source_id, msg_id, parsed["author_id"], parsed["author_name"],
-                         parsed["content"], parsed["posted_at"], utc_now_iso(),
-                         json.dumps(raw, ensure_ascii=False)))
-                    exists = connection.execute(
-                        "SELECT 1 FROM discord_messages WHERE discord_message_id = ?",
-                        (msg_id,)).fetchone()
-                    if exists is not None:
+                    if _insert_message(connection, source_id=source_id, raw=raw):
                         page_new += 1
                 except sqlite3.IntegrityError:
                     pass
