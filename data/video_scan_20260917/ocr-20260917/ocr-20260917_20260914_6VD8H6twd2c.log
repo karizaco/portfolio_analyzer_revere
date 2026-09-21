@@ -1,0 +1,1364 @@
+# cmd: node tools/scanVideoWithOcr.js --video C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260914_6VD8H6twd2c.mp4 --date 20260914 --output-root C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260917\ocr-20260917 --run-tag ocr-20260917 --ffmpeg-bin C:\Users\admin\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.1-full_build\bin\ffmpeg.exe --output-kind whiteboard --prefilter-profile whiteboard --basename revere
+[scan:whiteboard] ffprobe found 196 keyframe(s) for nearest-keyframe lookup
+[scan:whiteboard] preflighting final whiteboard output extraction
+[scan:whiteboard] extracting sample frames from C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260914_6VD8H6twd2c.mp4
+[scan:whiteboard] extracted 250 frame(s) at 0.25 fps with width 640; starting prefilter
+[scan:whiteboard] prefilter 1/250 frames after 00:00:00; best prefilter 4.32 at 00:00:00
+[scan:whiteboard] prefilter 10/250 frames after 00:00:00; best prefilter 4.35 at 00:00:20
+[scan:whiteboard] prefilter 20/250 frames after 00:00:00; best prefilter 4.35 at 00:00:20
+[scan:whiteboard] prefilter 30/250 frames after 00:00:00; best prefilter 4.35 at 00:00:20
+[scan:whiteboard] prefilter 40/250 frames after 00:00:00; best prefilter 15.52 at 00:02:04
+[scan:whiteboard] prefilter 50/250 frames after 00:00:01; best prefilter 15.52 at 00:02:04
+[scan:whiteboard] prefilter 60/250 frames after 00:00:01; best prefilter 15.52 at 00:02:04
+[scan:whiteboard] prefilter 70/250 frames after 00:00:01; best prefilter 15.97 at 00:04:08
+[scan:whiteboard] prefilter 80/250 frames after 00:00:01; best prefilter 15.97 at 00:04:08
+[scan:whiteboard] prefilter 90/250 frames after 00:00:01; best prefilter 15.97 at 00:04:08
+[scan:whiteboard] prefilter 100/250 frames after 00:00:01; best prefilter 15.97 at 00:04:08
+[scan:whiteboard] prefilter 110/250 frames after 00:00:01; best prefilter 15.97 at 00:04:08
+[scan:whiteboard] prefilter 120/250 frames after 00:00:01; best prefilter 16.74 at 00:07:32
+[scan:whiteboard] prefilter 130/250 frames after 00:00:01; best prefilter 16.74 at 00:07:32
+[scan:whiteboard] prefilter 140/250 frames after 00:00:01; best prefilter 16.74 at 00:07:32
+[scan:whiteboard] prefilter 150/250 frames after 00:00:01; best prefilter 17.46 at 00:09:40
+[scan:whiteboard] prefilter 160/250 frames after 00:00:01; best prefilter 17.46 at 00:09:40
+[scan:whiteboard] prefilter 170/250 frames after 00:00:01; best prefilter 17.46 at 00:09:40
+[scan:whiteboard] prefilter 180/250 frames after 00:00:02; best prefilter 17.46 at 00:09:40
+[scan:whiteboard] prefilter 190/250 frames after 00:00:02; best prefilter 17.46 at 00:09:40
+[scan:whiteboard] prefilter 200/250 frames after 00:00:02; best prefilter 17.46 at 00:09:40
+[scan:whiteboard] prefilter 210/250 frames after 00:00:02; best prefilter 17.46 at 00:09:40
+[scan:whiteboard] prefilter 220/250 frames after 00:00:02; best prefilter 17.46 at 00:09:40
+[scan:whiteboard] prefilter 230/250 frames after 00:00:02; best prefilter 17.46 at 00:09:40
+[scan:whiteboard] prefilter 240/250 frames after 00:00:02; best prefilter 17.46 at 00:09:40
+[scan:whiteboard] prefilter 250/250 frames after 00:00:02; best prefilter 17.46 at 00:09:40
+[scan:whiteboard] prefilter kept 60/250 frame(s) for OCR; best prefilter 17.46 at 00:09:40
+[scan:whiteboard] extracting OCR candidates from source video at width 1280
+[scan:whiteboard] OCR 1/60 frames (1.7%) after 00:00:01; best score -15.39 at 00:00:00 (ocr 0.0)
+Image too small to scale!! (1x36 vs min width of 3)
+Line cannot be recognized!!
+[scan:whiteboard] OCR 10/60 frames (16.7%) after 00:00:29; best score 58.74 at 00:01:04 (ocr 62.0)
+[scan:whiteboard] OCR 20/60 frames (33.3%) after 00:01:23; best score 58.74 at 00:01:04 (ocr 62.0)
+[scan:whiteboard] OCR 30/60 frames (50.0%) after 00:01:57; best score 112.77 at 00:06:40 (ocr 61.0)
+[scan:whiteboard] OCR 40/60 frames (66.7%) after 00:02:45; best score 112.77 at 00:06:40 (ocr 61.0)
+[scan:whiteboard] OCR 50/60 frames (83.3%) after 00:03:24; best score 112.77 at 00:06:40 (ocr 61.0)
+[scan:whiteboard] OCR 60/60 frames (100.0%) after 00:04:05; best score 112.77 at 00:06:40 (ocr 61.0)
+{
+  "basename": "revere",
+  "channel": "revere",
+  "chart_stream_parser": false,
+  "date_key": "20260914",
+  "output_kind": "whiteboard",
+  "phash_region": null,
+  "phash_region_fraction": null,
+  "prefilter_profile": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260914_6VD8H6twd2c.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 100,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260914_20260914_6vd8h6twd2c_992d3c4c_whiteboard\\ocr\\ocr_000101.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 400.96,
+      "observed_date": "20260914",
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": "& presion     EE EE                                         B      I        J EI Ta    ERR\n>> TALE OF THE TAPE ~ MONDAY, SEPTEMBER 14, 2026 <<\n* MARKET STATE:                                                                                                                       WHAT'S THE MARKET TREND?\n*STOINDEXES if SY RGBSA Od NASIY USD TNX/TYXD  vsSd                                                                   “THE GROTECTION GAUGE\"\n* SENTIMENT: VIX 17.13+7.55.; F8G          AMN380-1.7227 00.0 DEITY NAAM 89.5743.96\nDBULL CASE: NITIATF RALLY & TREND 21FMA  €8/3.4 REGAIN 20F K FTD                                                             [TT eRoteer] lorow |\n“DBEAR CASE: SUSTAINED BREAK BELOW 21EMA 4 9/1 BROKE BELOW 21€                                                                                                                       2\n* TODAY'S KEYS: SPX vs S0D1/21E4  QQQvsSODD/21EY  R2K vs 28800/100D%\n*DAYCT:U-1 => D1 86:54 216:-54 8E>21E? NO\nACTION: 00.58% 17625 47600 17645 47630                                                                                     HORT TERM 210s nas   E IE\n*SPXO/N 7591-76331 07611 030 7596-76151 L/H 7592-7648                                                                 sozs Downes NEUTRAL |\n* SPXATR: 0.72% SPX-0.48% 60/40-0.52% GRO -0.70% TURBO -0.90%                                                                                                             =\n* SECTORS: 1 BPS IGV HACK BUG 18il ETHA ITB KL MAGS 4 BY% USD SOXX CHAT URNM                                                                                       HEE\n* GRO HOLDINGS; SPYM,UPRO,GLD,HPE CF AMD                                                                                                  a                                     [sad\n* GRO RVAB/REBAR: 0 87 {-0.05%/.3.15%) TAM QLO AMD.\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ,1BIT,ETHA,SPCX,HOOD,CAM                                                                                                      [LONG TERM (200ama) ==>    IEEE 3\n* TURBO AVAB/REBAR: 1.23 (-1.56%/-4.01%) SELL SOXL GDXU                                                                                           21626 NEUTRAL up [|\n* BOTTOM LINE: SOF TWARE/CYBER RS, A-1 STOCKS PULL-BACK.                                                                                  _—\n* TUES KEYS: SPX vs SOD/21E  QQQvs SOD/21E R2K vs 2900/1000\n35> S&P50 KEY LEVELS <<<\n* 7816 {8/13 INTRADAY A-T-H}                                                                                                          [+]\n*7663{  Z1EMA) €9/1L 8/211 8/204 7/314\nP7657 FRIDAY: 56.311 FATE 25 8°00\" A5 93 REEL INIEES SKA SACK DESPITE HOT CPI PRINT\n$7620 TODAY: SOF WARE /CYBER RS, A-1 STOCKS PULL-BACK,\n* 7610/7629 (16 SOD/10WK) € 7/311 7/233 7/211 T/174 6/291\n7591 THURSDAY: HOT PPI AND YIELDS FURTHER WEAKNESS\n* 7167/7200 (15 2000/40WK) € 4/31 3/194\n-\nGRO ~-0.70%  TURBO~-0.80%\n\n* EMAIL: connor @revereasset.com                                    R e \\Y e I e   A § S e t                           Conner Bates\n\n* TWITTER (X): @ConnorJBates_                                                                                                   Analystfassociate PM\n\n* PHONE: (855) REAL-WEALTH / (855) 732-5932                   \\ 1  q n q      e m e nt                        Erna Connor@RovoroAssot com\n\n* WEB SITE: revereasset.com|                                                                                                              Tritton @Connoratos\n",
+      "ocr_text_snippet": "& presion EE EE B I J EI Ta ERR >> TALE OF THE TAPE ~ MONDAY, SEPTEMBER 14, 2026 << * MARKET STATE: WHAT'S THE MARKET TREND? *STOINDEXES if SY RGBSA Od NASIY USD TNX/TYXD vsSd “THE GROTECTION GAUGE...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0 87 {-0.05%/.3.15%) TAM QLO AMD.",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "SOF TWARE/CYBER RS, A-1 STOCKS PULL-BACK. _- TUES KEYS: SPX VS SOD/21E QQQVS SOD/21E R2K VS 2900/1000 35> S&P50 KEY LEVELS <<< 7816 {8/13 INTRADAY A-T-H} [+] 7663{ Z1EMA) €9/1L 8/211 8/204 7/314 P7657 FRIDAY: 56.311 FATE 25 8°00\" A5 93 REEL INIEES SKA SACK DESPITE HOT CPI PRINT 7620 TODAY: SOF WARE /CYBER RS, A-1 STOCKS PULL-BACK, 7610/7629 (16 SOD/10WK) € 7/311 7/233 7/211 T/174 6/291 7591 THURSDAY: HOT PPI AND YIELDS FURTHER WEAKNESS 7167/7200 (15 2000/40WK) € 4/31 3/194 GRO ~-0.70% TURBO~-0.80% EMAIL: CONNOR @REVEREASSET.COM R E \\Y E I E A § S E T CONNER BATES TWITTER (X): @CONNORJBATES_ ANALYSTFASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 \\ 1 Q N Q E M E NT ERNA CONNOR@ROVOROASSOT COM WEB SITE: REVEREASSET.COM TRITTON @CONNORATOS",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ,1BIT,ETHA,SPCX,HOOD,CAM [LONG TERM (200AMA) ==> IEEE 3 TURBO AVAB/REBAR: 1.23 (-1.56%/-4.01%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL SOXL GDXU 21626 NEUTRAL UP [",
+          "bottom_line": "SOF TWARE/CYBER RS, A-1 STOCKS PULL-BACK. _- TUES KEYS: SPX VS SOD/21E QQQVS SOD/21E R2K VS 2900/1000 35> S&P50 KEY LEVELS <<< 7816 {8/13 INTRADAY A-T-H} [+] 7663{ Z1EMA) €9/1L 8/211 8/204 7/314 P7657 FRIDAY: 56.311 FATE 25 8°00\" A5 93 REEL INIEES SKA SACK DESPITE HOT CPI PRINT 7620 TODAY: SOF WARE /CYBER RS, A-1 STOCKS PULL-BACK, 7610/7629 (16 SOD/10WK) € 7/311 7/233 7/211 T/174 6/291 7591 THURSDAY: HOT PPI AND YIELDS FURTHER WEAKNESS 7167/7200 (15 2000/40WK) € 4/31 3/194 GRO ~-0.70% TURBO~-0.80% EMAIL: CONNOR @REVEREASSET.COM R E \\Y E I E A § S E T CONNER BATES TWITTER (X): @CONNORJBATES_ ANALYSTFASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 \\ 1 Q N Q E M E NT ERNA CONNOR@ROVOROASSOT COM WEB SITE: REVEREASSET.COM TRITTON @CONNORATOS",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c0b1a52f5ad27c87",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": 2.72,
+      "prefilter_stats": {
+        "brightRatio": 0.4504166666666667,
+        "darkRatio": 0.28833333333333333,
+        "edgeRatio": 0.2448943537559183,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2289,
+        "horizontalEdgeRatio": 0.1617553529785881,
+        "meanLuma": 166.23916666666668,
+        "stdDev": 91.2702741213942,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4642,
+        "verticalEdgeRatio": 0.32803335453324856
+      },
+      "score": 112.77,
+      "score_breakdown": {
+        "chart_likeness": -5.679097802518813,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 19,
+        "text_density": 92.4
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "CF",
+        "ETHA",
+        "GDXU",
+        "GLD",
+        "HOOD",
+        "HPE",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 400,
+      "timestamp_hms": "00:06:40",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\screenshots\\20260914_ps.png"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 88,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260914_20260914_6vd8h6twd2c_992d3c4c_whiteboard\\ocr\\ocr_000089.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 353.76,
+      "observed_date": "20260914",
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Preview Fito COR View Go Tools Window Help                                                                          [=]       &      Pe B® 4 © mF Q E- © MonSenld 5226\n\noun\n> TALE OF THE TAPE ~ MONDAY, SEPTEMBER 14, 2026 <<\n* MARKET STATE:                                                                                                                       WHAT'S THE MARKET TREND?\n*STOINDEXES 11 S$ RGEST Ob NASIY USD TNX/TYXD  wsSd                                                                   “THE GROTECTION GAUGE\"\n* SENTIMENT: VIX :7.13727.55 | FRG          AM380-1.7227 00.0 DEITY NAAM 89.57+43.96\nDRULL CASE: INITIATE RALLY & TREND 21604A  €8/3 4 REGAIN 21F & FTD                                                            TT EE TT\n“2 BEAR CASE: SUSTAINED BREAK BELOW 21EMA 4 9/1 BROKE BELOW 21€                                                                                                                    2\n* TODAY'S KEYS: SPX vs 50D /21E4,  QQQvsSODD/21EY,  R2K vs 28801/100D4                                                                                                             |\n*DAYCT:U1=> D1 86:54 216-54 8E>21E? NO\n* ACTION: 00.58% 17625 47600 $7645 47630                                                                                     HORT TERM torn nar   E JE\n*SPXO/N 7591-76331 07611 030 7596-76157 L/H 7592-7648                                                                   suas Downes NEUTRAL |\n* SPXATR: 0.72% SPX-0.48% 60/40-0.52% GRO-0.70% TURBO -0.90%\n* SECTORS: P BPS 164 HACK BUG IBIT ETHA 1T8 KE MAGS J BY% USD SOXX CHAT URNM                                                                                      [<2]\n* GRO HOLDINGS; SPYM,UPRO,GLD,HPE,CF AMD                                                                                                  a                                     TT\n* GRO RVAB/REBAR: 0 57 (.0.05%/-3.15%) TAIM QLD AMD\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ,1BIT,ETHA,SPCX,HOOD,CAM                                                                                                      [LONG TERM (200ama} ==>    EEE 3\n* TURBO RVAB/REBAR: ©.23(-1.56%/-4.01%) SELL S0XL GDXU                                                                                           1026 NEUTRAL» up [|\n* BOTTOM LINE: > SOFTWARE/CYBER RS, A-1 STOCKS PULL-BACK.                                                                                  _—\n* TUES KEYS: SPX vs SOD/21E  QQQvs SOD/21E R2K vs 2300/1000\n>>> S&PS00 KEY LEVELS <<<\n+7816 {8/13 INTRADAY A-T-H}                                                                                                          [+]\n“7663  Z21EMA) €9/14 8/211 8/204 7/314\n$7657 FRIDAY: 52,5011 FAT 2 57A% 3007 A% 42 RECLT FIXES S147 BALK DESPITE HOT CPI PRINT\n$7620 TODAY: SOF 1 WARL/CYBER RS, A-1 STOCKS PULL-BACK,\n* 7610/7629 (16 SOD/10WK) € 7/311 7/234 7/211 174 6/291\n37591 THURSDAY: HOT PP{ AND YIELDS FURTHER WEAKNESS\n* 7167/7200 (15 2000/40WK) € 4/31 3/190\n\nRO ~0.70% | TURBO~.0.90%\n\n* EMAIL: connor @revereasset.com                                    R e \\Y e Tr e   A § S e t                           Connor Bates\n\n* TWITTER {X): @ConnorJBates_                                                                                                   Analystfassoclate PM\n\n* PHONE: (855) REAL-WEALTH / (855) 732-5932                   \\ 1  a n q      e m e nt                        Email: Connor@RovoreAssat corm\n\n* WEB SITE: revereasset.com|                                                                                                              Titer @CennorBatos..\n",
+      "ocr_text_snippet": "® Preview Fito COR View Go Tools Window Help [=] & Pe B® 4 © mF Q E- © MonSenld 5226 oun > TALE OF THE TAPE ~ MONDAY, SEPTEMBER 14, 2026 << * MARKET STATE: WHAT'S THE MARKET TREND? *STOINDEXES 11 S...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0 57 (.0.05%/-3.15%) TAIM QLD AMD",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "> SOFTWARE/CYBER RS, A-1 STOCKS PULL-BACK. _- TUES KEYS: SPX VS SOD/21E QQQVS SOD/21E R2K VS 2300/1000 S&PS00 KEY LEVELS <<< 7816 {8/13 INTRADAY A-T-H} [+] 7663 Z21EMA) €9/14 8/211 8/204 7/314 7657 FRIDAY: 52,5011 FAT 2 57A% 3007 A% 42 RECLT FIXES S147 BALK DESPITE HOT CPI PRINT 7620 TODAY: SOF 1 WARL/CYBER RS, A-1 STOCKS PULL-BACK, 7610/7629 (16 SOD/10WK) € 7/311 7/234 7/211 174 6/291 37591 THURSDAY: HOT PP{ AND YIELDS FURTHER WEAKNESS 7167/7200 (15 2000/40WK) € 4/31 3/190 RO ~0.70% TURBO~.0.90% EMAIL: CONNOR @REVEREASSET.COM R E \\Y E TR E A § S E T CONNOR BATES TWITTER {X): @CONNORJBATES_ ANALYSTFASSOCLATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 \\ 1 A N Q E M E NT EMAIL: CONNOR@ROVOREASSAT CORM WEB SITE: REVEREASSET.COM TITER @CENNORBATOS..",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ,1BIT,ETHA,SPCX,HOOD,CAM [LONG TERM (200AMA} ==> EEE 3",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "> SOFTWARE/CYBER RS, A-1 STOCKS PULL-BACK. _- TUES KEYS: SPX VS SOD/21E QQQVS SOD/21E R2K VS 2300/1000 S&PS00 KEY LEVELS <<< 7816 {8/13 INTRADAY A-T-H} [+] 7663 Z21EMA) €9/14 8/211 8/204 7/314 7657 FRIDAY: 52,5011 FAT 2 57A% 3007 A% 42 RECLT FIXES S147 BALK DESPITE HOT CPI PRINT 7620 TODAY: SOF 1 WARL/CYBER RS, A-1 STOCKS PULL-BACK, 7610/7629 (16 SOD/10WK) € 7/311 7/234 7/211 174 6/291 37591 THURSDAY: HOT PP{ AND YIELDS FURTHER WEAKNESS 7167/7200 (15 2000/40WK) € 4/31 3/190 RO ~0.70% TURBO~.0.90% EMAIL: CONNOR @REVEREASSET.COM R E \\Y E TR E A § S E T CONNOR BATES TWITTER {X): @CONNORJBATES_ ANALYSTFASSOCLATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 \\ 1 A N Q E M E NT EMAIL: CONNOR@ROVOREASSAT CORM WEB SITE: REVEREASSET.COM TITER @CENNORBATOS..",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c091a52f5ed27c87",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": 2.47,
+      "prefilter_stats": {
+        "brightRatio": 0.4436111111111111,
+        "darkRatio": 0.28944444444444445,
+        "edgeRatio": 0.25026499894000426,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2330,
+        "horizontalEdgeRatio": 0.16465267472263445,
+        "meanLuma": 165.4777777777778,
+        "stdDev": 91.0961308823179,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4753,
+        "verticalEdgeRatio": 0.33587732315737406
+      },
+      "score": 112.54,
+      "score_breakdown": {
+        "chart_likeness": -5.78492662380488,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.1,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 18,
+        "text_density": 93.22
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "CF",
+        "ETHA",
+        "GDXU",
+        "GLD",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "QLD",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 352,
+      "timestamp_hms": "00:05:52",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\screenshots\\20260914_ps_2.png"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 16,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260914_20260914_6vd8h6twd2c_992d3c4c_whiteboard\\ocr\\ocr_000017.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 65.76,
+      "observed_date": "20260914",
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text": " vreaen              TEEN    B    “        i                                                                 ES          0             ®& «oer T      ERE            E\nWHAT'S THE MARKET TREND?\n>>> THE REVERE ROUNDUP <<<                                                                                  “THE GROTECTION        £\n>>> DAILY MARKET INSIGHT <<<                                                                       I ET\n* YT, X, 6, TikTok: @REVEREASSET - PLS LIKE SHARE +SUB\n+X,                                          8                                                   LED]\n>>> MONDAY, SEPTEMBER 14, 2026 <<<                                                                       rere | [<0] |)\n* MARKET STATE:                                                                                                                             [SHORT TERM (210rma) na»            LO]\n* WHAT HAPPENED TODAY?                                              ,)                                                                 $1025 DOWN <= NEUTRAL LANNE\n9 SOFTWARE/CYBER RS, AJ STOCKS HIT,\n\nAVIV\nwasn an 9                  > ac\nT12 +218% 101        24 (sorts wear)                                                                                            EEEEE\nMAG7 +0.30%                                                                                             i             [omer |__| [#1] |\nRG8 -1.12%                                                                                                           EE ——\nRAI100 -4.96%\n\nSPX 0.48%  RSP+0.07%                                                                                                [+]\n\nQQQ 0.79%  QQQE-0.19%\n\nDIA -0.25%\n\nMID -0.89%                                                     =                ,\n\nR2K  -0.35%\n\n60/40 -0.52%\n\nGRO ~-0.70%  TURBO~-0.90%\n* EMAIL: connor @revereasset.com                                    R e \\Y e Tr e   A S S e t                           Connor Bates\n* TWITTER {X): @ConnorJBates_                                                                                                                                          Analyst/assoclate PM\n* PHONE: (855) REAL-WEALTH / (855) 732-5932                M a      a     e        e      t                      Email: Connor@RovoraAssot.com\n* WEB SITE: revereasset.com|                                                  n              m     n                          Triton @ConnorBatos..\n",
+      "ocr_text_snippet": "vreaen TEEN B “ i ES 0 ®& «oer T ERE E WHAT'S THE MARKET TREND? >>> THE REVERE ROUNDUP <<< “THE GROTECTION £ >>> DAILY MARKET INSIGHT <<< I ET * YT, X, 6, TikTok: @REVEREASSET - PLS LIKE SHARE +SUB...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c495e46c5b336cc5",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": 4.34,
+      "prefilter_stats": {
+        "brightRatio": 0.4353472222222222,
+        "darkRatio": 0.3234722222222222,
+        "edgeRatio": 0.22380043813158082,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2330,
+        "horizontalEdgeRatio": 0.16465267472263445,
+        "meanLuma": 159.37479166666665,
+        "stdDev": 94.6414477299921,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4004,
+        "verticalEdgeRatio": 0.2829482015405272
+      },
+      "score": 58.74,
+      "score_breakdown": {
+        "chart_likeness": -3.360497833308383,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.1,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 67
+      },
+      "screen_layout": "dmi",
+      "tickers": [],
+      "timestamp": 64,
+      "timestamp_hms": "00:01:04",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\screenshots\\20260914_ps_3.png"
+    }
+  ],
+  "frame_count": 250,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 196,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\screenshots\\20260914_ps.png",
+  "prefilter_best_score": 17.46,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "chart_stream": null,
+    "confusion_with_nearby": [],
+    "frame_index": 100,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260914_20260914_6vd8h6twd2c_992d3c4c_whiteboard\\ocr\\ocr_000101.png",
+    "is_intro_card": false,
+    "issue_codes": [],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 400.96,
+    "observed_date": "20260914",
+    "ocr_confidence": 61,
+    "ocr_profile": "threshold",
+    "ocr_text": "& presion     EE EE                                         B      I        J EI Ta    ERR\n>> TALE OF THE TAPE ~ MONDAY, SEPTEMBER 14, 2026 <<\n* MARKET STATE:                                                                                                                       WHAT'S THE MARKET TREND?\n*STOINDEXES if SY RGBSA Od NASIY USD TNX/TYXD  vsSd                                                                   “THE GROTECTION GAUGE\"\n* SENTIMENT: VIX 17.13+7.55.; F8G          AMN380-1.7227 00.0 DEITY NAAM 89.5743.96\nDBULL CASE: NITIATF RALLY & TREND 21FMA  €8/3.4 REGAIN 20F K FTD                                                             [TT eRoteer] lorow |\n“DBEAR CASE: SUSTAINED BREAK BELOW 21EMA 4 9/1 BROKE BELOW 21€                                                                                                                       2\n* TODAY'S KEYS: SPX vs S0D1/21E4  QQQvsSODD/21EY  R2K vs 28800/100D%\n*DAYCT:U-1 => D1 86:54 216:-54 8E>21E? NO\nACTION: 00.58% 17625 47600 17645 47630                                                                                     HORT TERM 210s nas   E IE\n*SPXO/N 7591-76331 07611 030 7596-76151 L/H 7592-7648                                                                 sozs Downes NEUTRAL |\n* SPXATR: 0.72% SPX-0.48% 60/40-0.52% GRO -0.70% TURBO -0.90%                                                                                                             =\n* SECTORS: 1 BPS IGV HACK BUG 18il ETHA ITB KL MAGS 4 BY% USD SOXX CHAT URNM                                                                                       HEE\n* GRO HOLDINGS; SPYM,UPRO,GLD,HPE CF AMD                                                                                                  a                                     [sad\n* GRO RVAB/REBAR: 0 87 {-0.05%/.3.15%) TAM QLO AMD.\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ,1BIT,ETHA,SPCX,HOOD,CAM                                                                                                      [LONG TERM (200ama) ==>    IEEE 3\n* TURBO AVAB/REBAR: 1.23 (-1.56%/-4.01%) SELL SOXL GDXU                                                                                           21626 NEUTRAL up [|\n* BOTTOM LINE: SOF TWARE/CYBER RS, A-1 STOCKS PULL-BACK.                                                                                  _—\n* TUES KEYS: SPX vs SOD/21E  QQQvs SOD/21E R2K vs 2900/1000\n35> S&P50 KEY LEVELS <<<\n* 7816 {8/13 INTRADAY A-T-H}                                                                                                          [+]\n*7663{  Z1EMA) €9/1L 8/211 8/204 7/314\nP7657 FRIDAY: 56.311 FATE 25 8°00\" A5 93 REEL INIEES SKA SACK DESPITE HOT CPI PRINT\n$7620 TODAY: SOF WARE /CYBER RS, A-1 STOCKS PULL-BACK,\n* 7610/7629 (16 SOD/10WK) € 7/311 7/233 7/211 T/174 6/291\n7591 THURSDAY: HOT PPI AND YIELDS FURTHER WEAKNESS\n* 7167/7200 (15 2000/40WK) € 4/31 3/194\n-\nGRO ~-0.70%  TURBO~-0.80%\n\n* EMAIL: connor @revereasset.com                                    R e \\Y e I e   A § S e t                           Conner Bates\n\n* TWITTER (X): @ConnorJBates_                                                                                                   Analystfassociate PM\n\n* PHONE: (855) REAL-WEALTH / (855) 732-5932                   \\ 1  q n q      e m e nt                        Erna Connor@RovoroAssot com\n\n* WEB SITE: revereasset.com|                                                                                                              Tritton @Connoratos\n",
+    "ocr_text_snippet": "& presion EE EE B I J EI Ta ERR >> TALE OF THE TAPE ~ MONDAY, SEPTEMBER 14, 2026 << * MARKET STATE: WHAT'S THE MARKET TREND? *STOINDEXES if SY RGBSA Od NASIY USD TNX/TYXD vsSd “THE GROTECTION GAUGE...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": "RVAB/REBAR: 0 87 {-0.05%/.3.15%) TAM QLO AMD.",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": "SOF TWARE/CYBER RS, A-1 STOCKS PULL-BACK. _- TUES KEYS: SPX VS SOD/21E QQQVS SOD/21E R2K VS 2900/1000 35> S&P50 KEY LEVELS <<< 7816 {8/13 INTRADAY A-T-H} [+] 7663{ Z1EMA) €9/1L 8/211 8/204 7/314 P7657 FRIDAY: 56.311 FATE 25 8°00\" A5 93 REEL INIEES SKA SACK DESPITE HOT CPI PRINT 7620 TODAY: SOF WARE /CYBER RS, A-1 STOCKS PULL-BACK, 7610/7629 (16 SOD/10WK) € 7/311 7/233 7/211 T/174 6/291 7591 THURSDAY: HOT PPI AND YIELDS FURTHER WEAKNESS 7167/7200 (15 2000/40WK) € 4/31 3/194 GRO ~-0.70% TURBO~-0.80% EMAIL: CONNOR @REVEREASSET.COM R E \\Y E I E A § S E T CONNER BATES TWITTER (X): @CONNORJBATES_ ANALYSTFASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 \\ 1 Q N Q E M E NT ERNA CONNOR@ROVOROASSOT COM WEB SITE: REVEREASSET.COM TRITTON @CONNORATOS",
+        "parse_status": "ok",
+        "issue_codes": [],
+        "ocr_confidence": 61,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ,1BIT,ETHA,SPCX,HOOD,CAM [LONG TERM (200AMA) ==> IEEE 3 TURBO AVAB/REBAR: 1.23 (-1.56%/-4.01%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "SELL SOXL GDXU 21626 NEUTRAL UP [",
+        "bottom_line": "SOF TWARE/CYBER RS, A-1 STOCKS PULL-BACK. _- TUES KEYS: SPX VS SOD/21E QQQVS SOD/21E R2K VS 2900/1000 35> S&P50 KEY LEVELS <<< 7816 {8/13 INTRADAY A-T-H} [+] 7663{ Z1EMA) €9/1L 8/211 8/204 7/314 P7657 FRIDAY: 56.311 FATE 25 8°00\" A5 93 REEL INIEES SKA SACK DESPITE HOT CPI PRINT 7620 TODAY: SOF WARE /CYBER RS, A-1 STOCKS PULL-BACK, 7610/7629 (16 SOD/10WK) € 7/311 7/233 7/211 T/174 6/291 7591 THURSDAY: HOT PPI AND YIELDS FURTHER WEAKNESS 7167/7200 (15 2000/40WK) € 4/31 3/194 GRO ~-0.70% TURBO~-0.80% EMAIL: CONNOR @REVEREASSET.COM R E \\Y E I E A § S E T CONNER BATES TWITTER (X): @CONNORJBATES_ ANALYSTFASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 \\ 1 Q N Q E M E NT ERNA CONNOR@ROVOROASSOT COM WEB SITE: REVEREASSET.COM TRITTON @CONNORATOS",
+        "parse_status": "ok",
+        "issue_codes": [],
+        "ocr_confidence": 61,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "c0b1a52f5ad27c87",
+    "phash_overlay": null,
+    "phash_region": null,
+    "prefilter_profile": "whiteboard",
+    "prefilter_score": 2.72,
+    "prefilter_stats": {
+      "brightRatio": 0.4504166666666667,
+      "darkRatio": 0.28833333333333333,
+      "edgeRatio": 0.2448943537559183,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 2289,
+      "horizontalEdgeRatio": 0.1617553529785881,
+      "meanLuma": 166.23916666666668,
+      "stdDev": 91.2702741213942,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 4642,
+      "verticalEdgeRatio": 0.32803335453324856
+    },
+    "score": 112.77,
+    "score_breakdown": {
+      "chart_likeness": -5.679097802518813,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 3.05,
+      "pair_bonus": 4,
+      "per_row_issues": 0,
+      "per_row_metrics": 19,
+      "text_density": 92.4
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "CF",
+      "ETHA",
+      "GDXU",
+      "GLD",
+      "HOOD",
+      "HPE",
+      "SPCX",
+      "SPYM",
+      "TQQQ",
+      "UPRO"
+    ],
+    "timestamp": 400,
+    "timestamp_hms": "00:06:40"
+  },
+  "top_candidates": [
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 100,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260914_20260914_6vd8h6twd2c_992d3c4c_whiteboard\\ocr\\ocr_000101.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260914",
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": "& presion     EE EE                                         B      I        J EI Ta    ERR\n>> TALE OF THE TAPE ~ MONDAY, SEPTEMBER 14, 2026 <<\n* MARKET STATE:                                                                                                                       WHAT'S THE MARKET TREND?\n*STOINDEXES if SY RGBSA Od NASIY USD TNX/TYXD  vsSd                                                                   “THE GROTECTION GAUGE\"\n* SENTIMENT: VIX 17.13+7.55.; F8G          AMN380-1.7227 00.0 DEITY NAAM 89.5743.96\nDBULL CASE: NITIATF RALLY & TREND 21FMA  €8/3.4 REGAIN 20F K FTD                                                             [TT eRoteer] lorow |\n“DBEAR CASE: SUSTAINED BREAK BELOW 21EMA 4 9/1 BROKE BELOW 21€                                                                                                                       2\n* TODAY'S KEYS: SPX vs S0D1/21E4  QQQvsSODD/21EY  R2K vs 28800/100D%\n*DAYCT:U-1 => D1 86:54 216:-54 8E>21E? NO\nACTION: 00.58% 17625 47600 17645 47630                                                                                     HORT TERM 210s nas   E IE\n*SPXO/N 7591-76331 07611 030 7596-76151 L/H 7592-7648                                                                 sozs Downes NEUTRAL |\n* SPXATR: 0.72% SPX-0.48% 60/40-0.52% GRO -0.70% TURBO -0.90%                                                                                                             =\n* SECTORS: 1 BPS IGV HACK BUG 18il ETHA ITB KL MAGS 4 BY% USD SOXX CHAT URNM                                                                                       HEE\n* GRO HOLDINGS; SPYM,UPRO,GLD,HPE CF AMD                                                                                                  a                                     [sad\n* GRO RVAB/REBAR: 0 87 {-0.05%/.3.15%) TAM QLO AMD.\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ,1BIT,ETHA,SPCX,HOOD,CAM                                                                                                      [LONG TERM (200ama) ==>    IEEE 3\n* TURBO AVAB/REBAR: 1.23 (-1.56%/-4.01%) SELL SOXL GDXU                                                                                           21626 NEUTRAL up [|\n* BOTTOM LINE: SOF TWARE/CYBER RS, A-1 STOCKS PULL-BACK.                                                                                  _—\n* TUES KEYS: SPX vs SOD/21E  QQQvs SOD/21E R2K vs 2900/1000\n35> S&P50 KEY LEVELS <<<\n* 7816 {8/13 INTRADAY A-T-H}                                                                                                          [+]\n*7663{  Z1EMA) €9/1L 8/211 8/204 7/314\nP7657 FRIDAY: 56.311 FATE 25 8°00\" A5 93 REEL INIEES SKA SACK DESPITE HOT CPI PRINT\n$7620 TODAY: SOF WARE /CYBER RS, A-1 STOCKS PULL-BACK,\n* 7610/7629 (16 SOD/10WK) € 7/311 7/233 7/211 T/174 6/291\n7591 THURSDAY: HOT PPI AND YIELDS FURTHER WEAKNESS\n* 7167/7200 (15 2000/40WK) € 4/31 3/194\n-\nGRO ~-0.70%  TURBO~-0.80%\n\n* EMAIL: connor @revereasset.com                                    R e \\Y e I e   A § S e t                           Conner Bates\n\n* TWITTER (X): @ConnorJBates_                                                                                                   Analystfassociate PM\n\n* PHONE: (855) REAL-WEALTH / (855) 732-5932                   \\ 1  q n q      e m e nt                        Erna Connor@RovoroAssot com\n\n* WEB SITE: revereasset.com|                                                                                                              Tritton @Connoratos\n",
+      "ocr_text_snippet": "& presion EE EE B I J EI Ta ERR >> TALE OF THE TAPE ~ MONDAY, SEPTEMBER 14, 2026 << * MARKET STATE: WHAT'S THE MARKET TREND? *STOINDEXES if SY RGBSA Od NASIY USD TNX/TYXD vsSd “THE GROTECTION GAUGE...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0 87 {-0.05%/.3.15%) TAM QLO AMD.",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "SOF TWARE/CYBER RS, A-1 STOCKS PULL-BACK. _- TUES KEYS: SPX VS SOD/21E QQQVS SOD/21E R2K VS 2900/1000 35> S&P50 KEY LEVELS <<< 7816 {8/13 INTRADAY A-T-H} [+] 7663{ Z1EMA) €9/1L 8/211 8/204 7/314 P7657 FRIDAY: 56.311 FATE 25 8°00\" A5 93 REEL INIEES SKA SACK DESPITE HOT CPI PRINT 7620 TODAY: SOF WARE /CYBER RS, A-1 STOCKS PULL-BACK, 7610/7629 (16 SOD/10WK) € 7/311 7/233 7/211 T/174 6/291 7591 THURSDAY: HOT PPI AND YIELDS FURTHER WEAKNESS 7167/7200 (15 2000/40WK) € 4/31 3/194 GRO ~-0.70% TURBO~-0.80% EMAIL: CONNOR @REVEREASSET.COM R E \\Y E I E A § S E T CONNER BATES TWITTER (X): @CONNORJBATES_ ANALYSTFASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 \\ 1 Q N Q E M E NT ERNA CONNOR@ROVOROASSOT COM WEB SITE: REVEREASSET.COM TRITTON @CONNORATOS",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ,1BIT,ETHA,SPCX,HOOD,CAM [LONG TERM (200AMA) ==> IEEE 3 TURBO AVAB/REBAR: 1.23 (-1.56%/-4.01%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL SOXL GDXU 21626 NEUTRAL UP [",
+          "bottom_line": "SOF TWARE/CYBER RS, A-1 STOCKS PULL-BACK. _- TUES KEYS: SPX VS SOD/21E QQQVS SOD/21E R2K VS 2900/1000 35> S&P50 KEY LEVELS <<< 7816 {8/13 INTRADAY A-T-H} [+] 7663{ Z1EMA) €9/1L 8/211 8/204 7/314 P7657 FRIDAY: 56.311 FATE 25 8°00\" A5 93 REEL INIEES SKA SACK DESPITE HOT CPI PRINT 7620 TODAY: SOF WARE /CYBER RS, A-1 STOCKS PULL-BACK, 7610/7629 (16 SOD/10WK) € 7/311 7/233 7/211 T/174 6/291 7591 THURSDAY: HOT PPI AND YIELDS FURTHER WEAKNESS 7167/7200 (15 2000/40WK) € 4/31 3/194 GRO ~-0.70% TURBO~-0.80% EMAIL: CONNOR @REVEREASSET.COM R E \\Y E I E A § S E T CONNER BATES TWITTER (X): @CONNORJBATES_ ANALYSTFASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 \\ 1 Q N Q E M E NT ERNA CONNOR@ROVOROASSOT COM WEB SITE: REVEREASSET.COM TRITTON @CONNORATOS",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c0b1a52f5ad27c87",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": 2.72,
+      "prefilter_stats": {
+        "brightRatio": 0.4504166666666667,
+        "darkRatio": 0.28833333333333333,
+        "edgeRatio": 0.2448943537559183,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2289,
+        "horizontalEdgeRatio": 0.1617553529785881,
+        "meanLuma": 166.23916666666668,
+        "stdDev": 91.2702741213942,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4642,
+        "verticalEdgeRatio": 0.32803335453324856
+      },
+      "score": 112.77,
+      "score_breakdown": {
+        "chart_likeness": -5.679097802518813,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 19,
+        "text_density": 92.4
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "CF",
+        "ETHA",
+        "GDXU",
+        "GLD",
+        "HOOD",
+        "HPE",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 400,
+      "timestamp_hms": "00:06:40"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 88,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260914_20260914_6vd8h6twd2c_992d3c4c_whiteboard\\ocr\\ocr_000089.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260914",
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Preview Fito COR View Go Tools Window Help                                                                          [=]       &      Pe B® 4 © mF Q E- © MonSenld 5226\n\noun\n> TALE OF THE TAPE ~ MONDAY, SEPTEMBER 14, 2026 <<\n* MARKET STATE:                                                                                                                       WHAT'S THE MARKET TREND?\n*STOINDEXES 11 S$ RGEST Ob NASIY USD TNX/TYXD  wsSd                                                                   “THE GROTECTION GAUGE\"\n* SENTIMENT: VIX :7.13727.55 | FRG          AM380-1.7227 00.0 DEITY NAAM 89.57+43.96\nDRULL CASE: INITIATE RALLY & TREND 21604A  €8/3 4 REGAIN 21F & FTD                                                            TT EE TT\n“2 BEAR CASE: SUSTAINED BREAK BELOW 21EMA 4 9/1 BROKE BELOW 21€                                                                                                                    2\n* TODAY'S KEYS: SPX vs 50D /21E4,  QQQvsSODD/21EY,  R2K vs 28801/100D4                                                                                                             |\n*DAYCT:U1=> D1 86:54 216-54 8E>21E? NO\n* ACTION: 00.58% 17625 47600 $7645 47630                                                                                     HORT TERM torn nar   E JE\n*SPXO/N 7591-76331 07611 030 7596-76157 L/H 7592-7648                                                                   suas Downes NEUTRAL |\n* SPXATR: 0.72% SPX-0.48% 60/40-0.52% GRO-0.70% TURBO -0.90%\n* SECTORS: P BPS 164 HACK BUG IBIT ETHA 1T8 KE MAGS J BY% USD SOXX CHAT URNM                                                                                      [<2]\n* GRO HOLDINGS; SPYM,UPRO,GLD,HPE,CF AMD                                                                                                  a                                     TT\n* GRO RVAB/REBAR: 0 57 (.0.05%/-3.15%) TAIM QLD AMD\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ,1BIT,ETHA,SPCX,HOOD,CAM                                                                                                      [LONG TERM (200ama} ==>    EEE 3\n* TURBO RVAB/REBAR: ©.23(-1.56%/-4.01%) SELL S0XL GDXU                                                                                           1026 NEUTRAL» up [|\n* BOTTOM LINE: > SOFTWARE/CYBER RS, A-1 STOCKS PULL-BACK.                                                                                  _—\n* TUES KEYS: SPX vs SOD/21E  QQQvs SOD/21E R2K vs 2300/1000\n>>> S&PS00 KEY LEVELS <<<\n+7816 {8/13 INTRADAY A-T-H}                                                                                                          [+]\n“7663  Z21EMA) €9/14 8/211 8/204 7/314\n$7657 FRIDAY: 52,5011 FAT 2 57A% 3007 A% 42 RECLT FIXES S147 BALK DESPITE HOT CPI PRINT\n$7620 TODAY: SOF 1 WARL/CYBER RS, A-1 STOCKS PULL-BACK,\n* 7610/7629 (16 SOD/10WK) € 7/311 7/234 7/211 174 6/291\n37591 THURSDAY: HOT PP{ AND YIELDS FURTHER WEAKNESS\n* 7167/7200 (15 2000/40WK) € 4/31 3/190\n\nRO ~0.70% | TURBO~.0.90%\n\n* EMAIL: connor @revereasset.com                                    R e \\Y e Tr e   A § S e t                           Connor Bates\n\n* TWITTER {X): @ConnorJBates_                                                                                                   Analystfassoclate PM\n\n* PHONE: (855) REAL-WEALTH / (855) 732-5932                   \\ 1  a n q      e m e nt                        Email: Connor@RovoreAssat corm\n\n* WEB SITE: revereasset.com|                                                                                                              Titer @CennorBatos..\n",
+      "ocr_text_snippet": "® Preview Fito COR View Go Tools Window Help [=] & Pe B® 4 © mF Q E- © MonSenld 5226 oun > TALE OF THE TAPE ~ MONDAY, SEPTEMBER 14, 2026 << * MARKET STATE: WHAT'S THE MARKET TREND? *STOINDEXES 11 S...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0 57 (.0.05%/-3.15%) TAIM QLD AMD",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "> SOFTWARE/CYBER RS, A-1 STOCKS PULL-BACK. _- TUES KEYS: SPX VS SOD/21E QQQVS SOD/21E R2K VS 2300/1000 S&PS00 KEY LEVELS <<< 7816 {8/13 INTRADAY A-T-H} [+] 7663 Z21EMA) €9/14 8/211 8/204 7/314 7657 FRIDAY: 52,5011 FAT 2 57A% 3007 A% 42 RECLT FIXES S147 BALK DESPITE HOT CPI PRINT 7620 TODAY: SOF 1 WARL/CYBER RS, A-1 STOCKS PULL-BACK, 7610/7629 (16 SOD/10WK) € 7/311 7/234 7/211 174 6/291 37591 THURSDAY: HOT PP{ AND YIELDS FURTHER WEAKNESS 7167/7200 (15 2000/40WK) € 4/31 3/190 RO ~0.70% TURBO~.0.90% EMAIL: CONNOR @REVEREASSET.COM R E \\Y E TR E A § S E T CONNOR BATES TWITTER {X): @CONNORJBATES_ ANALYSTFASSOCLATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 \\ 1 A N Q E M E NT EMAIL: CONNOR@ROVOREASSAT CORM WEB SITE: REVEREASSET.COM TITER @CENNORBATOS..",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ,1BIT,ETHA,SPCX,HOOD,CAM [LONG TERM (200AMA} ==> EEE 3",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "> SOFTWARE/CYBER RS, A-1 STOCKS PULL-BACK. _- TUES KEYS: SPX VS SOD/21E QQQVS SOD/21E R2K VS 2300/1000 S&PS00 KEY LEVELS <<< 7816 {8/13 INTRADAY A-T-H} [+] 7663 Z21EMA) €9/14 8/211 8/204 7/314 7657 FRIDAY: 52,5011 FAT 2 57A% 3007 A% 42 RECLT FIXES S147 BALK DESPITE HOT CPI PRINT 7620 TODAY: SOF 1 WARL/CYBER RS, A-1 STOCKS PULL-BACK, 7610/7629 (16 SOD/10WK) € 7/311 7/234 7/211 174 6/291 37591 THURSDAY: HOT PP{ AND YIELDS FURTHER WEAKNESS 7167/7200 (15 2000/40WK) € 4/31 3/190 RO ~0.70% TURBO~.0.90% EMAIL: CONNOR @REVEREASSET.COM R E \\Y E TR E A § S E T CONNOR BATES TWITTER {X): @CONNORJBATES_ ANALYSTFASSOCLATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 \\ 1 A N Q E M E NT EMAIL: CONNOR@ROVOREASSAT CORM WEB SITE: REVEREASSET.COM TITER @CENNORBATOS..",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c091a52f5ed27c87",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": 2.47,
+      "prefilter_stats": {
+        "brightRatio": 0.4436111111111111,
+        "darkRatio": 0.28944444444444445,
+        "edgeRatio": 0.25026499894000426,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2330,
+        "horizontalEdgeRatio": 0.16465267472263445,
+        "meanLuma": 165.4777777777778,
+        "stdDev": 91.0961308823179,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4753,
+        "verticalEdgeRatio": 0.33587732315737406
+      },
+      "score": 112.54,
+      "score_breakdown": {
+        "chart_likeness": -5.78492662380488,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.1,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 18,
+        "text_density": 93.22
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "CF",
+        "ETHA",
+        "GDXU",
+        "GLD",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "QLD",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 352,
+      "timestamp_hms": "00:05:52"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 84,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260914_20260914_6vd8h6twd2c_992d3c4c_whiteboard\\ocr\\ocr_000085.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260914",
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Preview Fito COR View Go Tools Window Help                                                                          [=]       &      Pe B® 4 © mF Q E- © MonSenld 5226\n\noun\n> TALE OF THE TAPE ~ MONDAY, SEPTEMBER 14, 2026 <<\n* MARKET STATE:                                                                                                                       WHAT'S THE MARKET TREND?\n*STOINDEXES 11 S$ RGEST Ob NASIY USD TNX/TYXD  wsSd                                                                   “THE GROTECTION GAUGE\"\n* SENTIMENT: VIX :7.13727.55 | FRG          AM380-1.7227 00.0 DEITY NAAM 89.57+43.96\nDRULL CASE: INITIATE RALLY & TREND 21604A  €8/3 4 REGAIN 21F & FTD                                                            TT EE TT\n“2 BEAR CASE: SUSTAINED BREAK BELOW 21EMA 4 9/1 BROKE BELOW 21€                                                                                                                    2\n* TODAY'S KEYS: SPX vs 50D /21E4,  QQQvsSODD/21EY,  R2K vs 28801/100D4                                                                                                             |\n*DAYCT:U1=> D1 86:54 216-54 8E>21E? NO\n* ACTION: 00.58% 17625 47600 $7645 47630                                                                                     HORT TERM torn nar   E JE\n*SPXO/N 7591-76331 07611 030 7596-76157 L/H 7592-7648                                                                   suas Downes NEUTRAL |\n* SPXATR: 0.72% SPX-0.48% 60/40-0.52% GRO-0.70% TURBO -0.90%\n* SECTORS: P BPS 164 HACK BUG IBIT ETHA 1T8 KE MAGS J BY% USD SOXX CHAT URNM                                                                                      [<2]\n* GRO HOLDINGS; SPYM,UPRO,GLD,HPE,CF AMD                                                                                                  a                                     TT\n* GRO RVAB/REBAR: 0 57 (.0.05%/-3.15%) TAIM QLD AMD\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ,1BIT,ETHA,SPCX,HOOD,CAM                                                                                                      [LONG TERM (200ama} ==>    EEE 3\n* TURBO RVAB/REBAR: ©.23(-1.56%/-4.01%) SELL S0XL GDXU                                                                                           1026 NEUTRAL» up [|\n* BOTTOM LINE: > SOFTWARE/CYBER RS, A-1 STOCKS PULL-BACK.                                                                                  _—\n* TUES KEYS: SPX vs SOD/21E  QQQvs SOD/21E R2K vs 2300/1000\n>>> S&PS00 KEY LEVELS <<<\n+7816 {8/13 INTRADAY A-T-H}                                                                                                          [+]\n“7663  Z21EMA) €9/14 8/211 8/204 7/314\n$7657 FRIDAY: 52,5011 FAT 2 57A% 3007 A% 42 RECLT FIXES S147 BALK DESPITE HOT CPI PRINT\n$7620 TODAY: SOF 1 WARL/CYBER RS, A-1 STOCKS PULL-BACK,\n* 7610/7629 (16 SOD/10WK) € 7/311 7/234 7/211 174 6/291\n37591 THURSDAY: HOT PP{ AND YIELDS FURTHER WEAKNESS\n* 7167/7200 (15 2000/40WK) € 4/31 3/190\n\nRO ~0.70% | TURBO~.0.90%\n\n* EMAIL: connor @revereasset.com                                    R e \\Y e Tr e   A § S e t                           Connor Bates\n\n* TWITTER {X): @ConnorJBates_                                                                                                   Analystfassoclate PM\n\n* PHONE: (855) REAL-WEALTH / (855) 732-5932                   \\ 1  a n q      e m e nt                        Email: Connor@RovoreAssat corm\n\n* WEB SITE: revereasset.com|                                                                                                              Titer @CennorBatos..\n",
+      "ocr_text_snippet": "® Preview Fito COR View Go Tools Window Help [=] & Pe B® 4 © mF Q E- © MonSenld 5226 oun > TALE OF THE TAPE ~ MONDAY, SEPTEMBER 14, 2026 << * MARKET STATE: WHAT'S THE MARKET TREND? *STOINDEXES 11 S...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0 57 (.0.05%/-3.15%) TAIM QLD AMD",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "> SOFTWARE/CYBER RS, A-1 STOCKS PULL-BACK. _- TUES KEYS: SPX VS SOD/21E QQQVS SOD/21E R2K VS 2300/1000 S&PS00 KEY LEVELS <<< 7816 {8/13 INTRADAY A-T-H} [+] 7663 Z21EMA) €9/14 8/211 8/204 7/314 7657 FRIDAY: 52,5011 FAT 2 57A% 3007 A% 42 RECLT FIXES S147 BALK DESPITE HOT CPI PRINT 7620 TODAY: SOF 1 WARL/CYBER RS, A-1 STOCKS PULL-BACK, 7610/7629 (16 SOD/10WK) € 7/311 7/234 7/211 174 6/291 37591 THURSDAY: HOT PP{ AND YIELDS FURTHER WEAKNESS 7167/7200 (15 2000/40WK) € 4/31 3/190 RO ~0.70% TURBO~.0.90% EMAIL: CONNOR @REVEREASSET.COM R E \\Y E TR E A § S E T CONNOR BATES TWITTER {X): @CONNORJBATES_ ANALYSTFASSOCLATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 \\ 1 A N Q E M E NT EMAIL: CONNOR@ROVOREASSAT CORM WEB SITE: REVEREASSET.COM TITER @CENNORBATOS..",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ,1BIT,ETHA,SPCX,HOOD,CAM [LONG TERM (200AMA} ==> EEE 3",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "> SOFTWARE/CYBER RS, A-1 STOCKS PULL-BACK. _- TUES KEYS: SPX VS SOD/21E QQQVS SOD/21E R2K VS 2300/1000 S&PS00 KEY LEVELS <<< 7816 {8/13 INTRADAY A-T-H} [+] 7663 Z21EMA) €9/14 8/211 8/204 7/314 7657 FRIDAY: 52,5011 FAT 2 57A% 3007 A% 42 RECLT FIXES S147 BALK DESPITE HOT CPI PRINT 7620 TODAY: SOF 1 WARL/CYBER RS, A-1 STOCKS PULL-BACK, 7610/7629 (16 SOD/10WK) € 7/311 7/234 7/211 174 6/291 37591 THURSDAY: HOT PP{ AND YIELDS FURTHER WEAKNESS 7167/7200 (15 2000/40WK) € 4/31 3/190 RO ~0.70% TURBO~.0.90% EMAIL: CONNOR @REVEREASSET.COM R E \\Y E TR E A § S E T CONNOR BATES TWITTER {X): @CONNORJBATES_ ANALYSTFASSOCLATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 \\ 1 A N Q E M E NT EMAIL: CONNOR@ROVOREASSAT CORM WEB SITE: REVEREASSET.COM TITER @CENNORBATOS..",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c091a52f5ed27c87",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": 2.47,
+      "prefilter_stats": {
+        "brightRatio": 0.4436111111111111,
+        "darkRatio": 0.28944444444444445,
+        "edgeRatio": 0.25026499894000426,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2330,
+        "horizontalEdgeRatio": 0.16465267472263445,
+        "meanLuma": 165.47722222222222,
+        "stdDev": 91.09567182702635,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4753,
+        "verticalEdgeRatio": 0.33587732315737406
+      },
+      "score": 112.54,
+      "score_breakdown": {
+        "chart_likeness": -5.78492662380488,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.1,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 18,
+        "text_density": 93.22
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "CF",
+        "ETHA",
+        "GDXU",
+        "GLD",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "QLD",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 336,
+      "timestamp_hms": "00:05:36"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 80,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260914_20260914_6vd8h6twd2c_992d3c4c_whiteboard\\ocr\\ocr_000081.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260914",
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Preview Fro Et view Go Too Window Mel                                                               GQ @® & #8 ® CO sm FT aE @ MoSplasae\n\nCXR)\n>> TALE OF THE TAPE ~ MONDAY, SEPTEMBER 14, 2026 <<\n* MARKET STATE:                                                                                                                       WHAT'S THE MARKET TREND?\n*STOINDEXES it S$ RGEST OL NASIY USD TNX/TYXD  ws5d                                                                   \"THE GROTECTION GAUGE\"\n* SENTIMENT: VIX :7.107:7.35... F&G       A300-07227 100 TERN nani 20.5743.96\nDBULL CAS: INITIATE RALLY & TREND 21FMA  €8/3.4 REGAIN 21F & FTD                                                            [TT eromeer] lorows |\nD BEAR CASE: SUSTAINED BREAK BELOW 21EMA 9/1 BROKE BELOW 21€\n* TODAY'S KEYS: SPX vs 50D /21EL  QQQvs SODT/21Ed  R2K vs 28801/100D¢                                                                                                             |\n¢DAYCT:U-1 => D1 8E:-5Y 21E:-54 8E>21E? NO\nACTION: 00.58% 17625 47600 7645 47630                                                                                     HORT TERM terns nas   E JE\n*SPXO/N 759176331 O7611 030 7596-76151 L/H 7592-7648                                                                 svtazs pown ca NEuTRALl |\n*SPXATR: 0.72% SPX -0.48% 60/40-0.52% GRO-0.70% TURBO -0.90%\n* SECTORS: 1 BPS IGY HACK BUG 1BIT LTHA ITB KRE MAGS  BY% USD SOXX CHAT URNM                                                                                   HEE\n* GRO HOLDINGS; SPYM,UPRO,GLD,HPE CF AMD                                                                             a                                [  swaad\n* GRO RVAB/REBAR: 0 57 (.0.05%/.3.15%) TRIM QLD AMD.\n* TURBO HOLDINGS: SPYM,UPRO,TQ0Q, BIT, ETHA SPCX,HOOD,CRM                                                                                                      LoNG TERM (200uma) ==>    LL [#]\n* TURBO RVAB/REBAR: 1 23 (-1.56%/-4.01%) SELL SOXL GDXU                                                                                           41026 KEVTRAL wp [|\n* BOTTOM LINE: > SOF T\\/ARE/CYBER RS, A-1 STOCKS PULL-BACK,                                                                              EE\n* TUES KEYS: PX vs SOD/21E  0QQvs SOD/21€ R2K vs 2900/1000\n>>> S&P500 KEY LEVELS <<<\n* 7816 {8/13 INTRADAY A-T-H)                                                                                                          [+]\n*7663{  Z21EMA) €9/10 8/211 8/204 2/314\nP7657 FRIDAY: 56.551 LEADERS STANA0U\" AS DURSLEY PIES SAP BACK DESPITE HOT CPI PRINT\n7620 TODAY: SOF IWARE/CYBELR RS, A-l STOCKS PULL-BACK,\n* 7610/7629 (16 SOD/10WK) € 7/311 7/234 7/211 TA7d 6/291\n7591 THURSDAY: HOT PPI AND YIELDS FURTHER WEAKNESS\n* 7167/7200 (45 2000/40WK) € 4/81 3/190\n\nRO “0.70% TURBO0.90%\n\n* EMAIL: connor @revereasset.com                                    R e \\Y e r e   A § S e t                           Connor Bates\n\n* TWITTER (X): @ConnorJBates_                                                                                                   Analyst/associate PM\n\n* PHONE: (855) REAL-WEALTH / {855) 732-5932               M an a     e m e nt                     Email: Connor@RovoreAssotcom\n\n* WEB SITE: revereasset.com{                                                                                                              Tritton @ConnorBatos..\n",
+      "ocr_text_snippet": "® Preview Fro Et view Go Too Window Mel GQ @® & #8 ® CO sm FT aE @ MoSplasae CXR) >> TALE OF THE TAPE ~ MONDAY, SEPTEMBER 14, 2026 << * MARKET STATE: WHAT'S THE MARKET TREND? *STOINDEXES it S$ RGES...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0 57 (.0.05%/.3.15%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "TRIM QLD AMD.",
+          "bottom_line": "> SOF T\\/ARE/CYBER RS, A-1 STOCKS PULL-BACK, EE TUES KEYS: PX VS SOD/21E 0QQVS SOD/21€ R2K VS 2900/1000 S&P500 KEY LEVELS <<< 7816 {8/13 INTRADAY A-T-H) [+] 7663{ Z21EMA) €9/10 8/211 8/204 2/314 P7657 FRIDAY: 56.551 LEADERS STANA0U\" AS DURSLEY PIES SAP BACK DESPITE HOT CPI PRINT 7620 TODAY: SOF IWARE/CYBELR RS, A-L STOCKS PULL-BACK, 7610/7629 (16 SOD/10WK) € 7/311 7/234 7/211 TA7D 6/291 7591 THURSDAY: HOT PPI AND YIELDS FURTHER WEAKNESS 7167/7200 (45 2000/40WK) € 4/81 3/190 RO \"0.70% TURBO0.90% EMAIL: CONNOR @REVEREASSET.COM R E \\Y E R E A § S E T CONNOR BATES TWITTER (X): @CONNORJBATES_ ANALYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / {855) 732-5932 M AN A E M E NT EMAIL: CONNOR@ROVOREASSOTCOM WEB SITE: REVEREASSET.COM{ TRITTON @CONNORBATOS..",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQ0Q, BIT, ETHA SPCX,HOOD,CRM LONG TERM (200UMA) ==> LL [#]",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "> SOF T\\/ARE/CYBER RS, A-1 STOCKS PULL-BACK, EE TUES KEYS: PX VS SOD/21E 0QQVS SOD/21€ R2K VS 2900/1000 S&P500 KEY LEVELS <<< 7816 {8/13 INTRADAY A-T-H) [+] 7663{ Z21EMA) €9/10 8/211 8/204 2/314 P7657 FRIDAY: 56.551 LEADERS STANA0U\" AS DURSLEY PIES SAP BACK DESPITE HOT CPI PRINT 7620 TODAY: SOF IWARE/CYBELR RS, A-L STOCKS PULL-BACK, 7610/7629 (16 SOD/10WK) € 7/311 7/234 7/211 TA7D 6/291 7591 THURSDAY: HOT PPI AND YIELDS FURTHER WEAKNESS 7167/7200 (45 2000/40WK) € 4/81 3/190 RO \"0.70% TURBO0.90% EMAIL: CONNOR @REVEREASSET.COM R E \\Y E R E A § S E T CONNOR BATES TWITTER (X): @CONNORJBATES_ ANALYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / {855) 732-5932 M AN A E M E NT EMAIL: CONNOR@ROVOREASSOTCOM WEB SITE: REVEREASSET.COM{ TRITTON @CONNORBATOS..",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c091a52f5ed27c87",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": 2.51,
+      "prefilter_stats": {
+        "brightRatio": 0.44381944444444443,
+        "darkRatio": 0.28965277777777776,
+        "edgeRatio": 0.24984100063599746,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2329,
+        "horizontalEdgeRatio": 0.16458200833863332,
+        "meanLuma": 165.4882638888889,
+        "stdDev": 91.10475503529696,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4742,
+        "verticalEdgeRatio": 0.3350999929333616
+      },
+      "score": 112.44,
+      "score_breakdown": {
+        "chart_likeness": -5.75553387762041,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 18,
+        "text_density": 93.2
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "CF",
+        "CRM",
+        "ETHA",
+        "GDXU",
+        "GLD",
+        "HOOD",
+        "HPE",
+        "QLD",
+        "SPCX",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 320,
+      "timestamp_hms": "00:05:20"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 108,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260914_20260914_6vd8h6twd2c_992d3c4c_whiteboard\\ocr\\ocr_000109.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260914",
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": "& Prive       wa     “     .                                      B      8       ® & ow    FA        -\n>> TALE OF THE TAPE ~ MONDAY, SEPTEMBER 14, 2026 <<\n* MARKET STATE:                                                                                                                       WHAT'S THE MARKET TREND?\n*STOINDEXES i 54 RGBST Od NASIY USD TNX/TYXD  vsSd                                                                   “THE GROTECTION GAUGE\"\n* SENTIMENT: ViX 17 1327.55; FRG          AMN3801.7227 00.0 DEITY NAAM 89.57+43.96\nDBULL CASE: INITIATE RALLY & TREND 21FMGA  €5/3.4 REGAIN 20F & FTD                                                             [TT eeomeer] lorow |\nFBEAR CASE: SUSTAINED BREAK BELOW 21EMA 9/1 BROKE BELOW 21€                                                                                                                        va\n* TODAY'S KEYS: SPX vs 50DT/21E4, QQQvs SODT/21Ed  R2K vs 2880/1004                                                                                                             ——\n*DAYCT:U-1 => D1 8E:-5Y 216:-5¢ 8E>21E? NO\n* ACTION: 00.58% 17625 47600 £7645 47630                                                                                              [SHORT TERM (210000) =a   E JE\n*SPXO/N 759176331 07611 O30 7596-76151 L/H 7592-7648                                                                 svtazs pow <a NEwTRALL |\n SPXATR: 0.72% SPX-0.48% 60/40-0.52% GRO -0.70% TURBO -0.90%                                                                                                            —\n* SECTORS: 1 BPS IGY HACK BUG IBIT £THA ITB KRE MAGS J BY% USD SOXX CHAT URNM                                                                                    HEE\n* GRO HOLDINGS; SPYM,UPRO,GLD,HPE CF AMD                                                                                                            a                                         TT\n* GRO RVAB/REBAR: 0 47 {.0.05%/-3.15%) TAM QLO AMD.\n* TURBO HOLDINGS: SPYM,UPRO,TQ0Q, BIT, ETHA SPX, HOOD,CRM                                                                                                      LNG TERM (200uma) =>    IEEE 3\n* TURBO RVAB/REBAR: 1 23 (-1.56%/-4.01%) SELL SOXL GDXU                                                                                           i026 NEUTRAL wp [|\n* BOTTOM LINE: > SOF TWARE/CYBER RS, A-1 STOCKS PULL-BACK,                                                                                  EE ———\n* TUES KEYS: SPX vs SOD/21E  QQQvs SOD/21E R2K vs 2900/1000\n35> S&P500 KEY LEVELS <<<\n* 7816 {8/13 INTRADAY A-T-H)                                     *                                                                    [+]\n*7663{  Z21EMA) € 9/14 8/211 8/204 7/314\nPTET FRIDAY: 56.37 FATE 35 877 SDL\" A5 OF RIEL INIEKFS SKA BACK DESPITE HOT CPI PRINT\n7620 TODAY: SOF [WARE /CYBER RS, A-l STOCKS PULL-BACK,\n* 7610/7629 (16 SOD/10WK) € 7/311 7/234 7/211 T/174 6/291\n7591 THURSDAY: HOT PPI AND YIELDS FURTHER WEAKNESS\n* 7167/7200 (15 2000/40WK) € 4/31 3/194\n-\nGRO ~-0.70%  TURBO~-0.90%\n\n* EMAIL: connor @revereasset.com                                    R e \\Y e I e   A § S e t                           Conner Bates\n\n* TWITTER (X): @ConnorJBates_                                                                                                   Analystfassociate PM\n\n* PHONE: (855) REAL-WEALTH / (855) 732-5032                   \\ 1  q n q      e m e nt                        Erna Connor@RovoroAssat com\n\n* WEB SITE: revereasset.com|                                                                                                              Tritton @Connoratos\n",
+      "ocr_text_snippet": "& Prive wa “ . B 8 ® & ow FA - >> TALE OF THE TAPE ~ MONDAY, SEPTEMBER 14, 2026 << * MARKET STATE: WHAT'S THE MARKET TREND? *STOINDEXES i 54 RGBST Od NASIY USD TNX/TYXD vsSd “THE GROTECTION GAUGE\" ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0 47 {.0.05%/-3.15%) TAM QLO AMD.",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "> SOF TWARE/CYBER RS, A-1 STOCKS PULL-BACK, EE --- TUES KEYS: SPX VS SOD/21E QQQVS SOD/21E R2K VS 2900/1000 35> S&P500 KEY LEVELS <<< 7816 {8/13 INTRADAY A-T-H) * [+] 7663{ Z21EMA) € 9/14 8/211 8/204 7/314 PTET FRIDAY: 56.37 FATE 35 877 SDL\" A5 OF RIEL INIEKFS SKA BACK DESPITE HOT CPI PRINT 7620 TODAY: SOF [WARE /CYBER RS, A-L STOCKS PULL-BACK, 7610/7629 (16 SOD/10WK) € 7/311 7/234 7/211 T/174 6/291 7591 THURSDAY: HOT PPI AND YIELDS FURTHER WEAKNESS 7167/7200 (15 2000/40WK) € 4/31 3/194 GRO ~-0.70% TURBO~-0.90% EMAIL: CONNOR @REVEREASSET.COM R E \\Y E I E A § S E T CONNER BATES TWITTER (X): @CONNORJBATES_ ANALYSTFASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5032 \\ 1 Q N Q E M E NT ERNA CONNOR@ROVOROASSAT COM WEB SITE: REVEREASSET.COM TRITTON @CONNORATOS",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQ0Q, BIT, ETHA SPX, HOOD,CRM LNG TERM (200UMA) => IEEE 3",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "> SOF TWARE/CYBER RS, A-1 STOCKS PULL-BACK, EE --- TUES KEYS: SPX VS SOD/21E QQQVS SOD/21E R2K VS 2900/1000 35> S&P500 KEY LEVELS <<< 7816 {8/13 INTRADAY A-T-H) * [+] 7663{ Z21EMA) € 9/14 8/211 8/204 7/314 PTET FRIDAY: 56.37 FATE 35 877 SDL\" A5 OF RIEL INIEKFS SKA BACK DESPITE HOT CPI PRINT 7620 TODAY: SOF [WARE /CYBER RS, A-L STOCKS PULL-BACK, 7610/7629 (16 SOD/10WK) € 7/311 7/234 7/211 T/174 6/291 7591 THURSDAY: HOT PPI AND YIELDS FURTHER WEAKNESS 7167/7200 (15 2000/40WK) € 4/31 3/194 GRO ~-0.70% TURBO~-0.90% EMAIL: CONNOR @REVEREASSET.COM R E \\Y E I E A § S E T CONNER BATES TWITTER (X): @CONNORJBATES_ ANALYSTFASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5032 \\ 1 Q N Q E M E NT ERNA CONNOR@ROVOROASSAT COM WEB SITE: REVEREASSET.COM TRITTON @CONNORATOS",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c0b1a52f5ad27c87",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": 2.73,
+      "prefilter_stats": {
+        "brightRatio": 0.4507638888888889,
+        "darkRatio": 0.28868055555555555,
+        "edgeRatio": 0.24454102183591267,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2285,
+        "horizontalEdgeRatio": 0.16147268744258356,
+        "meanLuma": 166.25881944444444,
+        "stdDev": 91.25633706303273,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4636,
+        "verticalEdgeRatio": 0.32760935622924175
+      },
+      "score": 111.76,
+      "score_breakdown": {
+        "chart_likeness": -5.684503257765268,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 18,
+        "text_density": 92.44
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "CF",
+        "CRM",
+        "ETHA",
+        "GDXU",
+        "GLD",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 432,
+      "timestamp_hms": "00:07:12"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260914_20260914_6vd8h6twd2c_992d3c4c_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": 4.32,
+      "prefilter_stats": {
+        "brightRatio": 0.435625,
+        "darkRatio": 0.3234722222222222,
+        "edgeRatio": 0.224189103243587,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2331,
+        "horizontalEdgeRatio": 0.16472334110663558,
+        "meanLuma": 159.3711111111111,
+        "stdDev": 94.6563186767376,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4014,
+        "verticalEdgeRatio": 0.28365486538053847
+      },
+      "score": -15.39,
+      "score_breakdown": {
+        "chart_likeness": -3.3876117791232367,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 164,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260914_20260914_6vd8h6twd2c_992d3c4c_whiteboard\\ocr\\ocr_000165.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 657.92,
+      "observed_date": null,
+      "ocr_confidence": 31,
+      "ocr_profile": "threshold",
+      "ocr_text": "# Seer Fin E61 view History Bookmarks Window Herp                         [= 3]   dC 8B CO er QA B® MonSenld 527PM\nMarceTsURor of [E)      x oMy wey Mery Meo sum Qme- DELO\n» Twillo Inc. C1 A                                                                                          3231.01          $231.88\n2 Twilo Inc. ©                           votes es omnes wwe wen el mo no\nOIE + ove mt enncrrtan      Tm, mm sewiew em wesc sum    wm eae\novo                   I Co Co SL NR\nRr IRVAT RAR VAN IAS    )\n= mE dm me    ~      way     ANC TN    \"\nBEES hed  AV                A %             -\nmoTmeme gp ~~ = +z yr\nmosh me\n= oem om She S\nmow oon Sm ©\npier oll cooling                                                 xs\nTe BT) t1a%- 12% py  az(ax 8m)                                      EET               i    bovad            =\nny     BE      1)  a\n=,    1     Ly       ia\nhei    LE       _       a\nPU WR TSUN       Ca\nI Bee Ba yg                                 i                              he\nners    Aw       . a on oss      =                             pes\na Aa    TX Be enna                                                -\nres\nwo.                                                    N              Be\n|   Cw    -         i     we    i     i   .   )\ngo gg, wg ond io\nrE RE RAR tA TG\not     ox    ow    an    oo    ue    - ER wy    on    -     ao    sop    oa\nScreen.    Unis.  [a   Inter Asset Correlation 19 Hems Cuneo 04 46 PM ET 03142026                               Orn.  Q& 5 4\nLe LE   Cm THORS TEN ee VIS URL eee SR JS SW\na Te TRB Se WEIR Som BSE\nF   0\nFavorites                  PES             2                                                                                                    7\n",
+      "ocr_text_snippet": "# Seer Fin E61 view History Bookmarks Window Herp [= 3] dC 8B CO er QA B® MonSenld 527PM MarceTsURor of [E) x oMy wey Mery Meo sum Qme- DELO » Twillo Inc. C1 A 3231.01 $231.88 2 Twilo Inc. © votes ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 31,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 31,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "806c1d3b4fc1674f",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": 15.47,
+      "prefilter_stats": {
+        "brightRatio": 0.7804861111111111,
+        "darkRatio": 0.030208333333333334,
+        "edgeRatio": 0.16288601512260617,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1714,
+        "horizontalEdgeRatio": 0.12112218217793795,
+        "meanLuma": 229.96520833333332,
+        "stdDev": 42.85873725373139,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2896,
+        "verticalEdgeRatio": 0.2046498480672744
+      },
+      "score": -23.34,
+      "score_breakdown": {
+        "chart_likeness": -2.8860550468604327,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.55,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE",
+        "ON"
+      ],
+      "timestamp": 656,
+      "timestamp_hms": "00:10:56"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 168,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260914_20260914_6vd8h6twd2c_992d3c4c_whiteboard\\ocr\\ocr_000169.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 672.8,
+      "observed_date": null,
+      "ocr_confidence": 32,
+      "ocr_profile": "threshold",
+      "ocr_text": "# Sear File Edit viow Mistory Bookmarks Window  Moip                          Go   &  AC BBC © sx FQ B- © MonSepld527Pu\nMareTsURos o GED      x [Loy Wey Moos Mav «sum 0 Qme- OES O\n# Palantir Technologies Inc.                                                                         $473.06         173.3%\n& Salantlr Tect                         soos en sone mins cn bom ose    on co\nvases «Ominous sr      I SoD bins ie See    pan\noti                 ras chet. uri Sst\nCusine              4s wm Wome                                   \\ Socnetien 140331    ©\nYour   EPS EPS Baw CompcatsRmeg 85                          «        ay           AN         f   ”                \\\nBe [9 %Cw 5S cosrmg | ®                           7       4         4     \\\nWH OM Th 2% samy         4    vo     /  \\    fi     4     =\nEoRsaami     y   YVAN AY AWAY         :\nImon El pee th  and                      .\nmom semen\nImma on cme w\nmomen ame\nmom I ae w\nTm mene                                                         w\ner  Y   - AT Nd                                          My         w\nBEE TE a VE                w             RY\npO -   ’           835              1814s  A KL — =   N         1                   -\n-       -                      :      _    |             A  fo\na ww                  ye hd,    -   A    al i          w\n=                NAT eh TL              \\\n_ A        “ty                                -\nNe VAR\nesi]\n16D Volume.                                                                         wom\n.         Cw            EE    wo      _         pe\nipo pi gr mig gig          =\na ER Ab Rm ad,\now    owe     a     a    I~     aor  [=     wn      ™     sp     oa\nSees Use Reem   Inter Asset Correlation 19Hems © uosies 04 3 PU ETC\" 42026                              or + DE EAR\noe     Ome ome wm   CSREES TE WE ees WIE TUR SY ene Son Om\nEE\nfo        Yn    Ne om ame ane em\nFavorites                  Is             Ed                                                                                                    f\n",
+      "ocr_text_snippet": "# Sear File Edit viow Mistory Bookmarks Window Moip Go & AC BBC © sx FQ B- © MonSepld527Pu MareTsURos o GED x [Loy Wey Moos Mav «sum 0 Qme- OES O # Palantir Technologies Inc. $473.06 173.3% & Salan...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 32,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 32,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "8079192ddf434cd7",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": 15.12,
+      "prefilter_stats": {
+        "brightRatio": 0.8039583333333333,
+        "darkRatio": 0.030208333333333334,
+        "edgeRatio": 0.15525404565048406,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1579,
+        "horizontalEdgeRatio": 0.11158222033778531,
+        "meanLuma": 230.82375,
+        "stdDev": 42.78573447805227,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2815,
+        "verticalEdgeRatio": 0.19892587096318282
+      },
+      "score": -23.89,
+      "score_breakdown": {
+        "chart_likeness": -3.489142172960344,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.6,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE",
+        "EDIT",
+        "ON"
+      ],
+      "timestamp": 672,
+      "timestamp_hms": "00:11:12"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 152,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260914_20260914_6vd8h6twd2c_992d3c4c_whiteboard\\ocr\\ocr_000153.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 605.76,
+      "observed_date": null,
+      "ocr_confidence": 35,
+      "ocr_profile": "threshold",
+      "ocr_text": "# Swi Fie Et View Mistry Bookmarks Window Help                         Go   # AC 8 ® CO mm F QA EO MonSenld 526PM\n[SR———      x Lor we ry ou mm Summ. DBE oO\n# Global X Cybersecurity ETF                                                                        144.33          344.31\nTEA                      roe wm mos emi secede\nDeo STL i mans RE em\nCutensn              “sv b os Wome           a”    WA             ~   Soars tias    w\nYour  Price Price Seles Compose Reng -               7S      fi         \\,    fi   \\   7  Ny   0\nDec)  © %Chp XCM eps Rag   -    ~            a   i   “Xf           NS    A   ff   \\  Ns\nwa 00. Emam ow   ™ A     /    AY        %  jr    Lf\nww ma on   sompsrmon of NT   %    V4             4      4    4        »\nwn own aw gensseen JN\nmoan onan”\nmom om Re\nmo me en  Sues Grow Rate +                              ws\nmE                                                                 .\nmomo Ee                                    N    Wom\nul   A   ol)\nan     of  yd a TE    ©\nETOYS.                            Ny ALY;   x    .        -\npc.    ——               eh re      ip\nI   Yr pn    EE             Wl   an    _-\noe        RL ey            -       A     y/      MER                       y\nSY     ara     Tima   foe 7\nNr     CRE\n“   ,         0                                  »\ned\n160 Vouma                   re   Tv        ~    i”   =         ow     o-          sou\n—                                 —           =\nintima lim  Jn i li       &\nsping ng on ES       =\nDL RE BL A\nou     ha    ow     an    o    oe     wo ER ww    an     -     og     0p     oa\nSerene.  N  Use    Ropar   Inter Asset Correlation 19 Hems Curses 0446 PMET 08 \"42026                              LL 2  CE-I N\nEL       Lom sh ome we    I I I I R\nEE ST Ten EE ORE Sen BRE See 50\nof         _.    et\nFavortes         [3S      hd                                                  '\n",
+      "ocr_text_snippet": "# Swi Fie Et View Mistry Bookmarks Window Help Go # AC 8 ® CO mm F QA EO MonSenld 526PM [SR——— x Lor we ry ou mm Summ. DBE oO # Global X Cybersecurity ETF 144.33 344.31 TEA roe wm mos emi secede De...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "805c1733cf4977c6",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": 14.96,
+      "prefilter_stats": {
+        "brightRatio": 0.8027083333333334,
+        "darkRatio": 0.030208333333333334,
+        "edgeRatio": 0.14984806727439756,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1459,
+        "horizontalEdgeRatio": 0.10310225425764964,
+        "meanLuma": 230.47159722222221,
+        "stdDev": 43.1940746187612,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2782,
+        "verticalEdgeRatio": 0.1965938802911455
+      },
+      "score": -24.56,
+      "score_breakdown": {
+        "chart_likeness": -4.305567600327395,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.75,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "LI",
+        "ON"
+      ],
+      "timestamp": 608,
+      "timestamp_hms": "00:10:08"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 200,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260914_20260914_6vd8h6twd2c_992d3c4c_whiteboard\\ocr\\ocr_000201.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 801.92,
+      "observed_date": null,
+      "ocr_confidence": 31,
+      "ocr_profile": "threshold",
+      "ocr_text": "# Sear File Edt view History Bookmarks Window Help                           [= 3]   &  AC BH CO sr FQ 8 8 MonSepld 520PM\noe                               S—\nMarETSURGE of (EE      x [oy Wey Moos Mev ¢ sum @ dma. OES 0\n© Circle Internet Group Inc.                                                                          496.22          197.42\n2, Circle Internet,          no i  sran incon. enon woven poves | wmss oma ssn Weowcy mom sri     exc crema\neater +                    juts coterie Mr     a\nen                    a pst os oMEr oman Ltn soot o\nAww Home             p                                     ,      acura     ©\nA                p       \\       ©                      /       3\n;\nir\nFE TY                                                         w\nfy                                       \" UTRIYN                                                              @\ng                             Nd      Vs                                      f-        ,\ni                                         i       id,      ~\n\\                                       i       i                                       !            «\n\"|     a    we        |     wh) Pg J ha       “ie fl MN       ”\nPS  Nak™ unt,       AER       5     Fiske         Va =         ©\nlt    PO    na,                                              | lb                  \\\nJ                     et                                        i  ven Hh                      ©\nhed                  “a  ©\n[ey                        —           ~           ~                           [A\n-        _      Me        po\nwis ggg gg nln         =\nLa EH Lo FE\nwo      on       -      -      nr       P.     =      an       -       -      wo      out\nserv    uw | hwem Inter Asset Comelation 19Hems Cts or scr EToa sans                              ome - Duma\npe em ecm we Sm tH omm TH ee [ERS ew JW am\nEE Ti at a a\noo           ..      bw mk ame. an oro ew\nFavoriten                  .-             =                                                                                                    '\n",
+      "ocr_text_snippet": "# Sear File Edt view History Bookmarks Window Help [= 3] & AC BH CO sr FQ 8 8 MonSepld 520PM oe S— MarETSURGE of (EE x [oy Wey Moos Mev ¢ sum @ dma. OES 0 © Circle Internet Group Inc. 496.22 197.42...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 31,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 31,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "8078072f3b617cdb",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": 14.03,
+      "prefilter_stats": {
+        "brightRatio": 0.8169444444444445,
+        "darkRatio": 0.029444444444444443,
+        "edgeRatio": 0.15433538265846936,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1509,
+        "horizontalEdgeRatio": 0.10663557345770618,
+        "meanLuma": 231.7242361111111,
+        "stdDev": 42.40352771422345,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2859,
+        "verticalEdgeRatio": 0.20203519185923258
+      },
+      "score": -24.71,
+      "score_breakdown": {
+        "chart_likeness": -4.257534943744663,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.55,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "ON"
+      ],
+      "timestamp": 800,
+      "timestamp_hms": "00:13:20"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 1,
+      "end_ts": 64,
+      "end_hms": "00:01:04",
+      "is_intro_card": false,
+      "layout": "dmi",
+      "peak_frame_index": 16,
+      "peak_score": 58.74,
+      "start_hms": "00:01:04",
+      "start_ts": 64
+    },
+    {
+      "capture_count": 2,
+      "end_ts": 400,
+      "end_hms": "00:06:40",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 100,
+      "peak_score": 112.77,
+      "start_hms": "00:05:52",
+      "start_ts": 352
+    }
+  ],
+  "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\logs\\20260914_20260914_6vd8h6twd2c_992d3c4c_whiteboard.json"
+}

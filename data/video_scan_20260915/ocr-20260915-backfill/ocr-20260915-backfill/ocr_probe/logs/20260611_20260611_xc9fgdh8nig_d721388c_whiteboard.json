@@ -1,0 +1,1199 @@
+{
+  "date_key": "20260611",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260611_XC9fgdH8nIg.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 120,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260611_20260611_xc9fgdh8nig_d721388c_whiteboard\\ocr\\ocr_000121.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 481.28,
+      "observed_date": "20260611",
+      "ocr_confidence": 69,
+      "ocr_profile": "threshold",
+      "ocr_text": ">> TALE OF THE TAPE — THURSDAY, JUNE 11, 2026 <<\n* MARKET STATE:\n* STO INDEXES 01    64 RGBOT    84 NASIL USDA TNX/TYXA vs 5d\n* SENTIMENT: VIX 19.48(-12.4%) F&G               Ani 30.4 3.3 22.047 IE NAAN 79.3-7.6\n= BULL CASL: INITIATE RALLY & TREND 21EMA                    NY\nDBEAR CASE: SUSTAINED BREAK BELOW 21EMA €56/5\n* NEWS: WED: CPI THURS: PPI FRI: SPCX IPO NEXT WED 6/17: 157 FOMC W/ WARSH\n* TODAY'S KEYS: SPX vs 21EJ,/50DT  0QQ vs 21ED/50DT  R2K vs 21E4/50D\n* DAY CT:D-3/4=>U-1 8e:-5¢ 2le:-5¢\n* ACTION: © +0.29% 47320 47260 17380 $7350\n*SPXO/N 7224-73311 07287 030 7280-73281 L/H7257-7413\n*SPXATR:1.15%% SPX 11.75% 60/40+0% GRO +1.30% TURBO (0.81%\n* SECTORS: 4 Bi’S USD DRAM, REMX, UFO MEME SOXX JETS ITH J BY% USD XLE IGV\ncou\n* GRO HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN\n* GRO RVAB/REBAR: 0.18/05 (-0.38%/-4.87%) NO CHANGES\n* TURBO HOLDINGS: SPYM,UPRO,SNOW\n* TURBO RVAB/REBAR: 0.07/0.56 (-11%/-2.57%) NO CHANGES\n* BOTTOM LINE: = LODLING GEOPOLITICAL 1ENSIONS RESULT IN STRUNG REBOUND\n* FRIKEYS: SPX vs 21€/500  QQQ vs 21E/50D R2K vs 21E\n23> S&P500 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\n*7423 (45 21EMA) € 6/54 4/54      2274 2/21 20124 2/01\n734 TODAY: COO! ING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND\n37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUL & SMIL/MIDT\n7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS\n*7213/7287(120 50D/10WK) € 4/81 2/274 1/211 1/204\n* 6872/6892 {15 200D/40WK) € 5/124 5/8 SLOPED\n\no\n",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — THURSDAY, JUNE 11, 2026 << * MARKET STATE: * STO INDEXES 01 64 RGBOT 84 NASIL USDA TNX/TYXA vs 5d * SENTIMENT: VIX 19.48(-12.4%) F&G Ani 30.4 3.3 22.047 IE NAAN 79.3-7.6 = BUL...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.18/05 (-0.38%/-4.87%)",
+          "metric_1": "0.18",
+          "metric_2": "05",
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "= LODLING GEOPOLITICAL 1ENSIONS RESULT IN STRUNG REBOUND FRIKEYS: SPX VS 21€/500 QQQ VS 21E/50D R2K VS 21E 23> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7423 (45 21EMA) € 6/54 4/54 2274 2/21 20124 2/01 734 TODAY: COO! ING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND 37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUL & SMIL/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(120 50D/10WK) € 4/81 2/274 1/211 1/204 6872/6892 {15 200D/40WK) € 5/124 5/8 SLOPED O",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 0.07/0.56 (-11%/-2.57%)",
+          "metric_1": "0.07",
+          "metric_2": "0.56",
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "= LODLING GEOPOLITICAL 1ENSIONS RESULT IN STRUNG REBOUND FRIKEYS: SPX VS 21€/500 QQQ VS 21E/50D R2K VS 21E 23> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7423 (45 21EMA) € 6/54 4/54 2274 2/21 20124 2/01 734 TODAY: COO! ING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND 37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUL & SMIL/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(120 50D/10WK) € 4/81 2/274 1/211 1/204 6872/6892 {15 200D/40WK) € 5/124 5/8 SLOPED O",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "be6dc19036642b2f",
+      "prefilter_score": 6.73,
+      "prefilter_stats": {
+        "brightRatio": 0.89,
+        "darkRatio": 0.00020833333333333335,
+        "edgeRatio": 0.10797823475372766,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 600,
+        "horizontalEdgeRatio": 0.0423998304006784,
+        "meanLuma": 244.6940972222222,
+        "stdDev": 19.684020412549366,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2456,
+        "verticalEdgeRatio": 0.1735566391067769
+      },
+      "score": 106.27,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.45,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 26,
+        "text_density": 78.82
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "REMX",
+        "SNOW",
+        "SPCX",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 480,
+      "timestamp_hms": "00:08:00",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260611_ps_4.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 104,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260611_20260611_xc9fgdh8nig_d721388c_whiteboard\\ocr\\ocr_000105.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 414.72,
+      "observed_date": "20260611",
+      "ocr_confidence": 70,
+      "ocr_profile": "threshold",
+      "ocr_text": "2> TALE OF THE TAPE = THURSDAY, JUNE 11, 2026 <<\n* MARKET STATE:\n* STO INDEXES 01    64 RGBOT    84 NASIY USDD TNX/TYXA vs Sd\n* SENTIMENT:VIX 19.48(-12.4%) F8G              Ani120429 22047 IE NAAIM 79.3-7.6\nBULL CAST: INITIATE RALLY & TREND 21EMA\n“DBEAR CASE: SUSTAINED BREAK BELOW 21EMA €6/5\n* NEWS: WED: CPI THURS: PPI FRI: SPCX IPO NEXT WED 6/17: 157 FOMC W/ WARSH\n* TODAY'S KEYS: SPX vs 21E,/50DT | 0QQ vs 21ET/S0DT  R2K vs 21E1/50D\n* DAY CT: D-3/4 => U-1 Ber 54 20-54\n* ACTION: 0 40.29% 17370 $7260 17380 $7350\n*SPXO/N 7224-73311 07287 030 7280-73281 L/H 7257-7413\n*SPXATR: 115% SPX +1.75% 60/40 +0.% GRO +1.30% TURBO (0.81%\n* SECTORS: 1 BPS USD DRAM, KEMX,UFO MEME SOXX JEFS 118 BY% USD XLE IGV\ncou\n* GRO HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN\n* GRO RVAB/REBAR: 0.18/0.88 (-0.38%/-4.87%) NO CHANGES\n* TURBO HOLDINGS: SPYM,UPRO, SNOW\n* TURBO RVAB/REBAR: 0.07/0.56 {-.119%/-2.57%) NO CHANGES\n* BOTTOM LINE: = COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND\n* FRIKEYS: SPX vs 21€/500  QQQuvs 21E/50D R2K vs 20€\n25> S&P500 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H}\n*7423 (V5 21EMA) € 6/54 A/81           27218 22st 2/124 on\n3734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RFROUND\n$7386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUE & SML/MIDT\n7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS\n*7213/7287(120 S00/10WK) € 4/81 2/274 1/211 1/204\n* 6872/6892 {D5 200D/40WK) € 5/124 5/8 SLOPED\no\n",
+      "ocr_text_snippet": "2> TALE OF THE TAPE = THURSDAY, JUNE 11, 2026 << * MARKET STATE: * STO INDEXES 01 64 RGBOT 84 NASIY USDD TNX/TYXA vs Sd * SENTIMENT:VIX 19.48(-12.4%) F8G Ani120429 22047 IE NAAIM 79.3-7.6 BULL CAST...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.18/0.88 (-0.38%/-4.87%)",
+          "metric_1": "0.18",
+          "metric_2": "0.88",
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "= COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND FRIKEYS: SPX VS 21€/500 QQQUVS 21E/50D R2K VS 20€ 25> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7423 (V5 21EMA) € 6/54 A/81 27218 22ST 2/124 ON 3734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RFROUND 7386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUE & SML/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(120 S00/10WK) € 4/81 2/274 1/211 1/204 6872/6892 {D5 200D/40WK) € 5/124 5/8 SLOPED O",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 70,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 0.07/0.56 {-.119%/-2.57%)",
+          "metric_1": "0.07",
+          "metric_2": "0.56",
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "= COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND FRIKEYS: SPX VS 21€/500 QQQUVS 21E/50D R2K VS 20€ 25> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7423 (V5 21EMA) € 6/54 A/81 27218 22ST 2/124 ON 3734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RFROUND 7386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUE & SML/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(120 S00/10WK) € 4/81 2/274 1/211 1/204 6872/6892 {D5 200D/40WK) € 5/124 5/8 SLOPED O",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 70,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "be6dc19036646b2e",
+      "prefilter_score": 6.67,
+      "prefilter_stats": {
+        "brightRatio": 0.8902083333333334,
+        "darkRatio": 0.0001388888888888889,
+        "edgeRatio": 0.10833156667373331,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 608,
+        "horizontalEdgeRatio": 0.04296516147268744,
+        "meanLuma": 244.6772222222222,
+        "stdDev": 19.639185829909945,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2458,
+        "verticalEdgeRatio": 0.17369797187477917
+      },
+      "score": 106.2,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.5,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 26,
+        "text_density": 78.7
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "SNOW",
+        "SPCX",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 416,
+      "timestamp_hms": "00:06:56",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260611_ps_5.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 144,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260611_20260611_xc9fgdh8nig_d721388c_whiteboard\\ocr\\ocr_000145.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 578.56,
+      "observed_date": "20260611",
+      "ocr_confidence": 68,
+      "ocr_profile": "threshold",
+      "ocr_text": ">> TALE OF THE TAPE — THURSDAY, JUNE 11, 2026 <<\n* MARKET STATE:\n* STO INDEXES 01    64 RGBOT    84 NASIL USDA TNX/TYXA vs 5d\n* SENTIMENT:VIX 19.48(-12.4%) F&G              anit 30.4 5.9 22.047 IE NAAM 7937.6\nBULL CASL: INITIATE RALLY & TREND 21EMA\nDBEAR CASE: SUSTAINED BREAK BELOW 21EMA €56/5\n* NEWS: WED: CPI THURS: PPI FRI: SPCX IPO NEXT WED 6/17: 157 FOMC W/ WARSH\n* TODAY'S KEYS: SPX vs 21EJ,/50DF  0QQ vs 21ET/50DT  R2K vs 21E4/50D\n*DAYCT:D-3/4=>U-1 8e:-5¢ 2le:-5¢\n* ACTION: 0 +0.29% 17320 $7260 17380 $7350\n*SPXO/N 7224-73311 07287 030 7280-73281 L/H 7257-7413\n*SPXATR:1.15%T SPX 11.75% 60/40+0% GRO +1.30% TURBO (0.81%\n* SECTORS: 1 BI'S USD DRAM, KEMX,UFO MEME SOXXJELS [18 BY% USD XLE IGV\ncou\n* GRO HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN\n* GRO RVAB/REBAR: 0.18/0.58 (-0.38%/-4.87%) NO CHANGES\n* TURBO HOLDINGS: SPYM,UPRO,SNOW\n* TURBO RVAB/REBAR: 0.07/0.5 (-11%/-2.57%) NO CHANGES\n* BOTTOM LINE: = LOOUING GEOPOLITICAL 1ENSIONS RESULT IN STRUNG REBOUND\n* FRIKEYS: SPX vs 21E/500  QQQ vs 21E/50D R2K vs 2}€\n23> S&P500 KEY LEVELS <<<                                  &\n* 7621 (6/2 INTRADAY A-T-H}\n*7423 (V5 21EMA) € 6/54 4/54           2274 2/1 2/124 2/01\n734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RF BOUND\n37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUL & SML/MIDT\n7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS\n*7213/7287(1720 50D/10WK) € 4781 2/274 1/211 1/204\n* 6872/6892 {M5 200D/40WK) € 5/124 5/8 SLOPEA\n\no\n",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — THURSDAY, JUNE 11, 2026 << * MARKET STATE: * STO INDEXES 01 64 RGBOT 84 NASIL USDA TNX/TYXA vs 5d * SENTIMENT:VIX 19.48(-12.4%) F&G anit 30.4 5.9 22.047 IE NAAM 7937.6 BULL CA...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.18/0.58 (-0.38%/-4.87%)",
+          "metric_1": "0.18",
+          "metric_2": "0.58",
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "= LOOUING GEOPOLITICAL 1ENSIONS RESULT IN STRUNG REBOUND FRIKEYS: SPX VS 21E/500 QQQ VS 21E/50D R2K VS 2}€ 23> S&P500 KEY LEVELS <<< & 7621 (6/2 INTRADAY A-T-H} 7423 (V5 21EMA) € 6/54 4/54 2274 2/1 2/124 2/01 734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RF BOUND 37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUL & SML/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(1720 50D/10WK) € 4781 2/274 1/211 1/204 6872/6892 {M5 200D/40WK) € 5/124 5/8 SLOPEA O",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 0.07/0.5 (-11%/-2.57%)",
+          "metric_1": "0.07",
+          "metric_2": "0.5",
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "= LOOUING GEOPOLITICAL 1ENSIONS RESULT IN STRUNG REBOUND FRIKEYS: SPX VS 21E/500 QQQ VS 21E/50D R2K VS 2}€ 23> S&P500 KEY LEVELS <<< & 7621 (6/2 INTRADAY A-T-H} 7423 (V5 21EMA) € 6/54 4/54 2274 2/1 2/124 2/01 734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RF BOUND 37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUL & SML/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(1720 50D/10WK) € 4781 2/274 1/211 1/204 6872/6892 {M5 200D/40WK) € 5/124 5/8 SLOPEA O",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "be6dc19036242b6f",
+      "prefilter_score": 6.75,
+      "prefilter_stats": {
+        "brightRatio": 0.8902777777777777,
+        "darkRatio": 0.0001388888888888889,
+        "edgeRatio": 0.107624902833722,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 594,
+        "horizontalEdgeRatio": 0.04197583209667161,
+        "meanLuma": 244.74784722222222,
+        "stdDev": 19.614116644764735,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2452,
+        "verticalEdgeRatio": 0.17327397357077237
+      },
+      "score": 106.14,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.4,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 26,
+        "text_density": 78.74
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "SNOW",
+        "SPCX",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 576,
+      "timestamp_hms": "00:09:36",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260611_ps_6.png"
+    }
+  ],
+  "frame_count": 267,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 210,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260611_ps_4.png",
+  "prefilter_best_score": 21.95,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 120,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260611_20260611_xc9fgdh8nig_d721388c_whiteboard\\ocr\\ocr_000121.png",
+    "is_intro_card": false,
+    "issue_codes": [],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 481.28,
+    "observed_date": "20260611",
+    "ocr_confidence": 69,
+    "ocr_profile": "threshold",
+    "ocr_text": ">> TALE OF THE TAPE — THURSDAY, JUNE 11, 2026 <<\n* MARKET STATE:\n* STO INDEXES 01    64 RGBOT    84 NASIL USDA TNX/TYXA vs 5d\n* SENTIMENT: VIX 19.48(-12.4%) F&G               Ani 30.4 3.3 22.047 IE NAAN 79.3-7.6\n= BULL CASL: INITIATE RALLY & TREND 21EMA                    NY\nDBEAR CASE: SUSTAINED BREAK BELOW 21EMA €56/5\n* NEWS: WED: CPI THURS: PPI FRI: SPCX IPO NEXT WED 6/17: 157 FOMC W/ WARSH\n* TODAY'S KEYS: SPX vs 21EJ,/50DT  0QQ vs 21ED/50DT  R2K vs 21E4/50D\n* DAY CT:D-3/4=>U-1 8e:-5¢ 2le:-5¢\n* ACTION: © +0.29% 47320 47260 17380 $7350\n*SPXO/N 7224-73311 07287 030 7280-73281 L/H7257-7413\n*SPXATR:1.15%% SPX 11.75% 60/40+0% GRO +1.30% TURBO (0.81%\n* SECTORS: 4 Bi’S USD DRAM, REMX, UFO MEME SOXX JETS ITH J BY% USD XLE IGV\ncou\n* GRO HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN\n* GRO RVAB/REBAR: 0.18/05 (-0.38%/-4.87%) NO CHANGES\n* TURBO HOLDINGS: SPYM,UPRO,SNOW\n* TURBO RVAB/REBAR: 0.07/0.56 (-11%/-2.57%) NO CHANGES\n* BOTTOM LINE: = LODLING GEOPOLITICAL 1ENSIONS RESULT IN STRUNG REBOUND\n* FRIKEYS: SPX vs 21€/500  QQQ vs 21E/50D R2K vs 21E\n23> S&P500 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\n*7423 (45 21EMA) € 6/54 4/54      2274 2/21 20124 2/01\n734 TODAY: COO! ING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND\n37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUL & SMIL/MIDT\n7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS\n*7213/7287(120 50D/10WK) € 4/81 2/274 1/211 1/204\n* 6872/6892 {15 200D/40WK) € 5/124 5/8 SLOPED\n\no\n",
+    "ocr_text_snippet": ">> TALE OF THE TAPE — THURSDAY, JUNE 11, 2026 << * MARKET STATE: * STO INDEXES 01 64 RGBOT 84 NASIL USDA TNX/TYXA vs 5d * SENTIMENT: VIX 19.48(-12.4%) F&G Ani 30.4 3.3 22.047 IE NAAN 79.3-7.6 = BUL...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": "RVAB/REBAR: 0.18/05 (-0.38%/-4.87%)",
+        "metric_1": "0.18",
+        "metric_2": "05",
+        "metric_scalar": null,
+        "action_text": "NO CHANGES",
+        "bottom_line": "= LODLING GEOPOLITICAL 1ENSIONS RESULT IN STRUNG REBOUND FRIKEYS: SPX VS 21€/500 QQQ VS 21E/50D R2K VS 21E 23> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7423 (45 21EMA) € 6/54 4/54 2274 2/21 20124 2/01 734 TODAY: COO! ING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND 37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUL & SMIL/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(120 50D/10WK) € 4/81 2/274 1/211 1/204 6872/6892 {15 200D/40WK) € 5/124 5/8 SLOPED O",
+        "parse_status": "ok",
+        "issue_codes": [],
+        "ocr_confidence": 69,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": "RVAB/REBAR: 0.07/0.56 (-11%/-2.57%)",
+        "metric_1": "0.07",
+        "metric_2": "0.56",
+        "metric_scalar": null,
+        "action_text": "NO CHANGES",
+        "bottom_line": "= LODLING GEOPOLITICAL 1ENSIONS RESULT IN STRUNG REBOUND FRIKEYS: SPX VS 21€/500 QQQ VS 21E/50D R2K VS 21E 23> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7423 (45 21EMA) € 6/54 4/54 2274 2/21 20124 2/01 734 TODAY: COO! ING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND 37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUL & SMIL/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(120 50D/10WK) € 4/81 2/274 1/211 1/204 6872/6892 {15 200D/40WK) € 5/124 5/8 SLOPED O",
+        "parse_status": "ok",
+        "issue_codes": [],
+        "ocr_confidence": 69,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "be6dc19036642b2f",
+    "prefilter_score": 6.73,
+    "prefilter_stats": {
+      "brightRatio": 0.89,
+      "darkRatio": 0.00020833333333333335,
+      "edgeRatio": 0.10797823475372766,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 600,
+      "horizontalEdgeRatio": 0.0423998304006784,
+      "meanLuma": 244.6940972222222,
+      "stdDev": 19.684020412549366,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 2456,
+      "verticalEdgeRatio": 0.1735566391067769
+    },
+    "score": 106.27,
+    "score_breakdown": {
+      "chart_likeness": -6,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 3.45,
+      "pair_bonus": 4,
+      "per_row_issues": 0,
+      "per_row_metrics": 26,
+      "text_density": 78.82
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "REMX",
+      "SNOW",
+      "SPCX",
+      "SPYM",
+      "UPRO"
+    ],
+    "timestamp": 480,
+    "timestamp_hms": "00:08:00"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 120,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260611_20260611_xc9fgdh8nig_d721388c_whiteboard\\ocr\\ocr_000121.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260611",
+      "ocr_confidence": 69,
+      "ocr_profile": "threshold",
+      "ocr_text": ">> TALE OF THE TAPE — THURSDAY, JUNE 11, 2026 <<\n* MARKET STATE:\n* STO INDEXES 01    64 RGBOT    84 NASIL USDA TNX/TYXA vs 5d\n* SENTIMENT: VIX 19.48(-12.4%) F&G               Ani 30.4 3.3 22.047 IE NAAN 79.3-7.6\n= BULL CASL: INITIATE RALLY & TREND 21EMA                    NY\nDBEAR CASE: SUSTAINED BREAK BELOW 21EMA €56/5\n* NEWS: WED: CPI THURS: PPI FRI: SPCX IPO NEXT WED 6/17: 157 FOMC W/ WARSH\n* TODAY'S KEYS: SPX vs 21EJ,/50DT  0QQ vs 21ED/50DT  R2K vs 21E4/50D\n* DAY CT:D-3/4=>U-1 8e:-5¢ 2le:-5¢\n* ACTION: © +0.29% 47320 47260 17380 $7350\n*SPXO/N 7224-73311 07287 030 7280-73281 L/H7257-7413\n*SPXATR:1.15%% SPX 11.75% 60/40+0% GRO +1.30% TURBO (0.81%\n* SECTORS: 4 Bi’S USD DRAM, REMX, UFO MEME SOXX JETS ITH J BY% USD XLE IGV\ncou\n* GRO HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN\n* GRO RVAB/REBAR: 0.18/05 (-0.38%/-4.87%) NO CHANGES\n* TURBO HOLDINGS: SPYM,UPRO,SNOW\n* TURBO RVAB/REBAR: 0.07/0.56 (-11%/-2.57%) NO CHANGES\n* BOTTOM LINE: = LODLING GEOPOLITICAL 1ENSIONS RESULT IN STRUNG REBOUND\n* FRIKEYS: SPX vs 21€/500  QQQ vs 21E/50D R2K vs 21E\n23> S&P500 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\n*7423 (45 21EMA) € 6/54 4/54      2274 2/21 20124 2/01\n734 TODAY: COO! ING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND\n37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUL & SMIL/MIDT\n7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS\n*7213/7287(120 50D/10WK) € 4/81 2/274 1/211 1/204\n* 6872/6892 {15 200D/40WK) € 5/124 5/8 SLOPED\n\no\n",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — THURSDAY, JUNE 11, 2026 << * MARKET STATE: * STO INDEXES 01 64 RGBOT 84 NASIL USDA TNX/TYXA vs 5d * SENTIMENT: VIX 19.48(-12.4%) F&G Ani 30.4 3.3 22.047 IE NAAN 79.3-7.6 = BUL...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.18/05 (-0.38%/-4.87%)",
+          "metric_1": "0.18",
+          "metric_2": "05",
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "= LODLING GEOPOLITICAL 1ENSIONS RESULT IN STRUNG REBOUND FRIKEYS: SPX VS 21€/500 QQQ VS 21E/50D R2K VS 21E 23> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7423 (45 21EMA) € 6/54 4/54 2274 2/21 20124 2/01 734 TODAY: COO! ING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND 37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUL & SMIL/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(120 50D/10WK) € 4/81 2/274 1/211 1/204 6872/6892 {15 200D/40WK) € 5/124 5/8 SLOPED O",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 0.07/0.56 (-11%/-2.57%)",
+          "metric_1": "0.07",
+          "metric_2": "0.56",
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "= LODLING GEOPOLITICAL 1ENSIONS RESULT IN STRUNG REBOUND FRIKEYS: SPX VS 21€/500 QQQ VS 21E/50D R2K VS 21E 23> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7423 (45 21EMA) € 6/54 4/54 2274 2/21 20124 2/01 734 TODAY: COO! ING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND 37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUL & SMIL/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(120 50D/10WK) € 4/81 2/274 1/211 1/204 6872/6892 {15 200D/40WK) € 5/124 5/8 SLOPED O",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "be6dc19036642b2f",
+      "prefilter_score": 6.73,
+      "prefilter_stats": {
+        "brightRatio": 0.89,
+        "darkRatio": 0.00020833333333333335,
+        "edgeRatio": 0.10797823475372766,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 600,
+        "horizontalEdgeRatio": 0.0423998304006784,
+        "meanLuma": 244.6940972222222,
+        "stdDev": 19.684020412549366,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2456,
+        "verticalEdgeRatio": 0.1735566391067769
+      },
+      "score": 106.27,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.45,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 26,
+        "text_density": 78.82
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "REMX",
+        "SNOW",
+        "SPCX",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 480,
+      "timestamp_hms": "00:08:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 104,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260611_20260611_xc9fgdh8nig_d721388c_whiteboard\\ocr\\ocr_000105.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260611",
+      "ocr_confidence": 70,
+      "ocr_profile": "threshold",
+      "ocr_text": "2> TALE OF THE TAPE = THURSDAY, JUNE 11, 2026 <<\n* MARKET STATE:\n* STO INDEXES 01    64 RGBOT    84 NASIY USDD TNX/TYXA vs Sd\n* SENTIMENT:VIX 19.48(-12.4%) F8G              Ani120429 22047 IE NAAIM 79.3-7.6\nBULL CAST: INITIATE RALLY & TREND 21EMA\n“DBEAR CASE: SUSTAINED BREAK BELOW 21EMA €6/5\n* NEWS: WED: CPI THURS: PPI FRI: SPCX IPO NEXT WED 6/17: 157 FOMC W/ WARSH\n* TODAY'S KEYS: SPX vs 21E,/50DT | 0QQ vs 21ET/S0DT  R2K vs 21E1/50D\n* DAY CT: D-3/4 => U-1 Ber 54 20-54\n* ACTION: 0 40.29% 17370 $7260 17380 $7350\n*SPXO/N 7224-73311 07287 030 7280-73281 L/H 7257-7413\n*SPXATR: 115% SPX +1.75% 60/40 +0.% GRO +1.30% TURBO (0.81%\n* SECTORS: 1 BPS USD DRAM, KEMX,UFO MEME SOXX JEFS 118 BY% USD XLE IGV\ncou\n* GRO HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN\n* GRO RVAB/REBAR: 0.18/0.88 (-0.38%/-4.87%) NO CHANGES\n* TURBO HOLDINGS: SPYM,UPRO, SNOW\n* TURBO RVAB/REBAR: 0.07/0.56 {-.119%/-2.57%) NO CHANGES\n* BOTTOM LINE: = COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND\n* FRIKEYS: SPX vs 21€/500  QQQuvs 21E/50D R2K vs 20€\n25> S&P500 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H}\n*7423 (V5 21EMA) € 6/54 A/81           27218 22st 2/124 on\n3734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RFROUND\n$7386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUE & SML/MIDT\n7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS\n*7213/7287(120 S00/10WK) € 4/81 2/274 1/211 1/204\n* 6872/6892 {D5 200D/40WK) € 5/124 5/8 SLOPED\no\n",
+      "ocr_text_snippet": "2> TALE OF THE TAPE = THURSDAY, JUNE 11, 2026 << * MARKET STATE: * STO INDEXES 01 64 RGBOT 84 NASIY USDD TNX/TYXA vs Sd * SENTIMENT:VIX 19.48(-12.4%) F8G Ani120429 22047 IE NAAIM 79.3-7.6 BULL CAST...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.18/0.88 (-0.38%/-4.87%)",
+          "metric_1": "0.18",
+          "metric_2": "0.88",
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "= COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND FRIKEYS: SPX VS 21€/500 QQQUVS 21E/50D R2K VS 20€ 25> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7423 (V5 21EMA) € 6/54 A/81 27218 22ST 2/124 ON 3734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RFROUND 7386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUE & SML/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(120 S00/10WK) € 4/81 2/274 1/211 1/204 6872/6892 {D5 200D/40WK) € 5/124 5/8 SLOPED O",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 70,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 0.07/0.56 {-.119%/-2.57%)",
+          "metric_1": "0.07",
+          "metric_2": "0.56",
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "= COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND FRIKEYS: SPX VS 21€/500 QQQUVS 21E/50D R2K VS 20€ 25> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7423 (V5 21EMA) € 6/54 A/81 27218 22ST 2/124 ON 3734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RFROUND 7386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUE & SML/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(120 S00/10WK) € 4/81 2/274 1/211 1/204 6872/6892 {D5 200D/40WK) € 5/124 5/8 SLOPED O",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 70,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "be6dc19036646b2e",
+      "prefilter_score": 6.67,
+      "prefilter_stats": {
+        "brightRatio": 0.8902083333333334,
+        "darkRatio": 0.0001388888888888889,
+        "edgeRatio": 0.10833156667373331,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 608,
+        "horizontalEdgeRatio": 0.04296516147268744,
+        "meanLuma": 244.6772222222222,
+        "stdDev": 19.639185829909945,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2458,
+        "verticalEdgeRatio": 0.17369797187477917
+      },
+      "score": 106.2,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.5,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 26,
+        "text_density": 78.7
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "SNOW",
+        "SPCX",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 416,
+      "timestamp_hms": "00:06:56"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 144,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260611_20260611_xc9fgdh8nig_d721388c_whiteboard\\ocr\\ocr_000145.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260611",
+      "ocr_confidence": 68,
+      "ocr_profile": "threshold",
+      "ocr_text": ">> TALE OF THE TAPE — THURSDAY, JUNE 11, 2026 <<\n* MARKET STATE:\n* STO INDEXES 01    64 RGBOT    84 NASIL USDA TNX/TYXA vs 5d\n* SENTIMENT:VIX 19.48(-12.4%) F&G              anit 30.4 5.9 22.047 IE NAAM 7937.6\nBULL CASL: INITIATE RALLY & TREND 21EMA\nDBEAR CASE: SUSTAINED BREAK BELOW 21EMA €56/5\n* NEWS: WED: CPI THURS: PPI FRI: SPCX IPO NEXT WED 6/17: 157 FOMC W/ WARSH\n* TODAY'S KEYS: SPX vs 21EJ,/50DF  0QQ vs 21ET/50DT  R2K vs 21E4/50D\n*DAYCT:D-3/4=>U-1 8e:-5¢ 2le:-5¢\n* ACTION: 0 +0.29% 17320 $7260 17380 $7350\n*SPXO/N 7224-73311 07287 030 7280-73281 L/H 7257-7413\n*SPXATR:1.15%T SPX 11.75% 60/40+0% GRO +1.30% TURBO (0.81%\n* SECTORS: 1 BI'S USD DRAM, KEMX,UFO MEME SOXXJELS [18 BY% USD XLE IGV\ncou\n* GRO HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN\n* GRO RVAB/REBAR: 0.18/0.58 (-0.38%/-4.87%) NO CHANGES\n* TURBO HOLDINGS: SPYM,UPRO,SNOW\n* TURBO RVAB/REBAR: 0.07/0.5 (-11%/-2.57%) NO CHANGES\n* BOTTOM LINE: = LOOUING GEOPOLITICAL 1ENSIONS RESULT IN STRUNG REBOUND\n* FRIKEYS: SPX vs 21E/500  QQQ vs 21E/50D R2K vs 2}€\n23> S&P500 KEY LEVELS <<<                                  &\n* 7621 (6/2 INTRADAY A-T-H}\n*7423 (V5 21EMA) € 6/54 4/54           2274 2/1 2/124 2/01\n734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RF BOUND\n37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUL & SML/MIDT\n7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS\n*7213/7287(1720 50D/10WK) € 4781 2/274 1/211 1/204\n* 6872/6892 {M5 200D/40WK) € 5/124 5/8 SLOPEA\n\no\n",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — THURSDAY, JUNE 11, 2026 << * MARKET STATE: * STO INDEXES 01 64 RGBOT 84 NASIL USDA TNX/TYXA vs 5d * SENTIMENT:VIX 19.48(-12.4%) F&G anit 30.4 5.9 22.047 IE NAAM 7937.6 BULL CA...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.18/0.58 (-0.38%/-4.87%)",
+          "metric_1": "0.18",
+          "metric_2": "0.58",
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "= LOOUING GEOPOLITICAL 1ENSIONS RESULT IN STRUNG REBOUND FRIKEYS: SPX VS 21E/500 QQQ VS 21E/50D R2K VS 2}€ 23> S&P500 KEY LEVELS <<< & 7621 (6/2 INTRADAY A-T-H} 7423 (V5 21EMA) € 6/54 4/54 2274 2/1 2/124 2/01 734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RF BOUND 37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUL & SML/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(1720 50D/10WK) € 4781 2/274 1/211 1/204 6872/6892 {M5 200D/40WK) € 5/124 5/8 SLOPEA O",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 0.07/0.5 (-11%/-2.57%)",
+          "metric_1": "0.07",
+          "metric_2": "0.5",
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "= LOOUING GEOPOLITICAL 1ENSIONS RESULT IN STRUNG REBOUND FRIKEYS: SPX VS 21E/500 QQQ VS 21E/50D R2K VS 2}€ 23> S&P500 KEY LEVELS <<< & 7621 (6/2 INTRADAY A-T-H} 7423 (V5 21EMA) € 6/54 4/54 2274 2/1 2/124 2/01 734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RF BOUND 37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUL & SML/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(1720 50D/10WK) € 4781 2/274 1/211 1/204 6872/6892 {M5 200D/40WK) € 5/124 5/8 SLOPEA O",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "be6dc19036242b6f",
+      "prefilter_score": 6.75,
+      "prefilter_stats": {
+        "brightRatio": 0.8902777777777777,
+        "darkRatio": 0.0001388888888888889,
+        "edgeRatio": 0.107624902833722,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 594,
+        "horizontalEdgeRatio": 0.04197583209667161,
+        "meanLuma": 244.74784722222222,
+        "stdDev": 19.614116644764735,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2452,
+        "verticalEdgeRatio": 0.17327397357077237
+      },
+      "score": 106.14,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.4,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 26,
+        "text_density": 78.74
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "SNOW",
+        "SPCX",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 576,
+      "timestamp_hms": "00:09:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 136,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260611_20260611_xc9fgdh8nig_d721388c_whiteboard\\ocr\\ocr_000137.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260611",
+      "ocr_confidence": 67,
+      "ocr_profile": "threshold",
+      "ocr_text": ">> TALE OF THE TAPE — THURSDAY, JUNE 11, 2026 <<\n* MARKET STATE:\n+ STO INDEXES 01    64 RGBOT    84 NASIL USD TNX/TYXD vs 5d\n* SENTIMENT:VIX 19.48(-12.4%) F&G               ani 30.45.3 22.04.7 IE NAAM 79.376.\nBULL CASL: INITIATE RALLY & TREND 21EMA\n“DBEAR CASE: SUSTAINED BREAK BELOW 21EMA €6/5\n* NEWS: WED: CPI THURS: PPI FRI: SPCX IPO NEXT WED 6/17: 157 FOMC W/ WARSH\n* TODAY'S KEYS: SPX vs 21EJ,/50DF  0QQ vs 21ET/50DT  R2K vs 21E4/50D 1\n* DAY CT:D-3/4 => U-1 8e:-5¢ 2le:-5¢\n* ACTION: 0 +0.29% 17320 $-7260 17380 $7350\n*SPXO/N 7224-73311 07287 030 7280-73281 L/H 7257-7413\n* SPX ATR: 115%1 SPX 11.75% 60/40 10.% GRO +1.30% TURBO +0.81%\n* SECTORS: 1 BPS USD DRAM, REMX,UFO MEME SOXX JETS 118 BY% USD XLE IGV\ncou\n* GRO HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN\n* GRO RVAB/REBAR: 0.18/0.85 (-0. Ne 87%) NO CHANGES\n* TURBO HOLDINGS: SPYM,UPRO,SNO!\n* TURBO RVAB/REBAR: 0.07/0.56 {-.11%/-2.57%) NO CHANGES\n* BOTTOM LINE: =» LOOLING GEOPOLITICAL IENSIONS RESULT IN STRONG REBOUND\n* FRIKEYS: SPX vs 21E/500  QQQ vs 21E/50D R2K vs 21E\n23> S&P500 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H}\n*7423 (V5 21EMA) € 6/54 4/34           2/274 2/21 2/124 2/01\n734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RFROUND\n37386 TUES: AML PMI\" LEADERS J, WIDE & LOOSE; VALUE & SMI/MIDT\n7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS\n*7213/7287(720 50D/10WK) € 4/31 2/274 1/211 1/204\n* 6872/6892 {15 200D/40WK) € 5/124 H/8SLOPED\no\n",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — THURSDAY, JUNE 11, 2026 << * MARKET STATE: + STO INDEXES 01 64 RGBOT 84 NASIL USD TNX/TYXD vs 5d * SENTIMENT:VIX 19.48(-12.4%) F&G ani 30.45.3 22.04.7 IE NAAM 79.376. BULL CAS...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.18/0.85 (-0. NE 87%)",
+          "metric_1": "0.18",
+          "metric_2": "0.85",
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "=» LOOLING GEOPOLITICAL IENSIONS RESULT IN STRONG REBOUND FRIKEYS: SPX VS 21E/500 QQQ VS 21E/50D R2K VS 21E 23> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7423 (V5 21EMA) € 6/54 4/34 2/274 2/21 2/124 2/01 734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RFROUND 37386 TUES: AML PMI\" LEADERS J, WIDE & LOOSE; VALUE & SMI/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(720 50D/10WK) € 4/31 2/274 1/211 1/204 6872/6892 {15 200D/40WK) € 5/124 H/8SLOPED O",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 67,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 0.07/0.56 {-.11%/-2.57%)",
+          "metric_1": "0.07",
+          "metric_2": "0.56",
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "=» LOOLING GEOPOLITICAL IENSIONS RESULT IN STRONG REBOUND FRIKEYS: SPX VS 21E/500 QQQ VS 21E/50D R2K VS 21E 23> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7423 (V5 21EMA) € 6/54 4/34 2/274 2/21 2/124 2/01 734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RFROUND 37386 TUES: AML PMI\" LEADERS J, WIDE & LOOSE; VALUE & SMI/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(720 50D/10WK) € 4/31 2/274 1/211 1/204 6872/6892 {15 200D/40WK) € 5/124 H/8SLOPED O",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 67,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "be6dc19036642b2f",
+      "prefilter_score": 6.73,
+      "prefilter_stats": {
+        "brightRatio": 0.8901388888888889,
+        "darkRatio": 0.0001388888888888889,
+        "edgeRatio": 0.10790756836972652,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 608,
+        "horizontalEdgeRatio": 0.04296516147268744,
+        "meanLuma": 244.70083333333332,
+        "stdDev": 19.685575637873676,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2446,
+        "verticalEdgeRatio": 0.1728499752667656
+      },
+      "score": 106.13,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.35,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 26,
+        "text_density": 78.78
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "REMX",
+        "SPCX",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 544,
+      "timestamp_hms": "00:09:04"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 124,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260611_20260611_xc9fgdh8nig_d721388c_whiteboard\\ocr\\ocr_000125.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260611",
+      "ocr_confidence": 67,
+      "ocr_profile": "threshold",
+      "ocr_text": "25 TALE OF THE TAPE = THURSDAY, JUNE 11, 2026 <<\n* MARKET STATE:\n+ STO INDEXES 0    64 RGBOT    84 NASIL USD TNX/TYXD vs 5d\n* SENTIMENT:VIX 19.48(-12.4%) F&G              ani 30.4 3.9 22.047 IE NAAM 79.3-7.6\nBULL CASL: INITIATE RALLY & TREND 216 MA\n“DBEAR CASE: SUSTAINED BREAK BELOW 21EMA €6/5\n* NEWS: WED: CPI THURS: PPI FRI: SPCX IPO NEXT WED 6/17: 157 FOMC W/ WARSH\n* TODAY'S KEYS: SPX vs 21EJ,/50DF  QQQ vs 21ET/50DT  R2K vs 21E4/50D\n* DAY CT:D-3/4=>U-1 e:-5¢ 2le:-5¢\n* ACTION: 0 10.29% 17320 $7260 17380 $7350\n*SPXO/N 7224-73311 07287 030 7280-73281 L/H 7257-7413\n* SPX ATR: 115%4 SPX 11.75% 60/40 10.% GRO 1.30% TURBO 10.81%\n* SECTORS: 1 BPS USD DRAM, REMX,UFO MEME SOXXJELS 118 4 BY% USD XLE IGV\ncou              IN\n* GRO HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN\n* GRO RVAB/REBAR: 0.18/0.58 [-0.38%/-4.87%) NO CHANGES\n* TURBO HOLDINGS: SPYM,UPRO, SNOW\n* TURBO RVAB/REBAR: 0.07/0.56 {-11%/-2.57%) NO CHANGES\n* BOTTOM LINE: =» LOULING GEOPOLITICAL 1ENSIONS RESULT IN $TRONG REBOUND\n* FRIKEYS: SPX vs 21E/500  QQQ vs 21E/50D R2K vs 21E\n23> S&P500 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H}\n*7423 (V5 21EMA) € 6/54 4/54           2/274 2/21 2/124 2/01\n2734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RI BOUND\n37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUT & SML/MIDT\n7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS\n*7213/7287(120 50D/10WK) € 4/31 2/274 1/211 1/208\n* 6872/6892 {M5 200D/40WK) € 5/124 L/8 SLOPED\no\n",
+      "ocr_text_snippet": "25 TALE OF THE TAPE = THURSDAY, JUNE 11, 2026 << * MARKET STATE: + STO INDEXES 0 64 RGBOT 84 NASIL USD TNX/TYXD vs 5d * SENTIMENT:VIX 19.48(-12.4%) F&G ani 30.4 3.9 22.047 IE NAAM 79.3-7.6 BULL CAS...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.18/0.58 [-0.38%/-4.87%)",
+          "metric_1": "0.18",
+          "metric_2": "0.58",
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "=» LOULING GEOPOLITICAL 1ENSIONS RESULT IN $TRONG REBOUND FRIKEYS: SPX VS 21E/500 QQQ VS 21E/50D R2K VS 21E 23> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7423 (V5 21EMA) € 6/54 4/54 2/274 2/21 2/124 2/01 2734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RI BOUND 37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUT & SML/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(120 50D/10WK) € 4/31 2/274 1/211 1/208 6872/6892 {M5 200D/40WK) € 5/124 L/8 SLOPED O",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 67,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 0.07/0.56 {-11%/-2.57%)",
+          "metric_1": "0.07",
+          "metric_2": "0.56",
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "=» LOULING GEOPOLITICAL 1ENSIONS RESULT IN $TRONG REBOUND FRIKEYS: SPX VS 21E/500 QQQ VS 21E/50D R2K VS 21E 23> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7423 (V5 21EMA) € 6/54 4/54 2/274 2/21 2/124 2/01 2734 TODAY: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG RI BOUND 37386 TUES: AM, PM LEADERS, WIDE & LOOSE; VALUT & SML/MIDT 7267 WED: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS 7213/7287(120 50D/10WK) € 4/31 2/274 1/211 1/208 6872/6892 {M5 200D/40WK) € 5/124 L/8 SLOPED O",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 67,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "be6dc19036646b2e",
+      "prefilter_score": 6.68,
+      "prefilter_stats": {
+        "brightRatio": 0.8899305555555556,
+        "darkRatio": 0.0001388888888888889,
+        "edgeRatio": 0.10836689986573388,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 608,
+        "horizontalEdgeRatio": 0.04296516147268744,
+        "meanLuma": 244.69069444444443,
+        "stdDev": 19.67737765009393,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2459,
+        "verticalEdgeRatio": 0.1737686382587803
+      },
+      "score": 106.13,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.35,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 26,
+        "text_density": 78.78
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "REMX",
+        "SNOW",
+        "SPCX",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 496,
+      "timestamp_hms": "00:08:16"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260611_20260611_xc9fgdh8nig_d721388c_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 4.37,
+      "prefilter_stats": {
+        "brightRatio": 0.3907638888888889,
+        "darkRatio": 0.3325,
+        "edgeRatio": 0.25627164158010035,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2833,
+        "horizontalEdgeRatio": 0.20019786587520316,
+        "meanLuma": 152.78722222222223,
+        "stdDev": 94.4004399298574,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4420,
+        "verticalEdgeRatio": 0.31234541728499754
+      },
+      "score": -14.29,
+      "score_breakdown": {
+        "chart_likeness": -2.287672255262212,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 72,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260611_20260611_xc9fgdh8nig_d721388c_whiteboard\\ocr\\ocr_000073.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 286.72,
+      "observed_date": null,
+      "ocr_confidence": 37,
+      "ocr_profile": "threshold",
+      "ocr_text": "SELTULITIER natn   ERR Tie. wpe moe vanoveT ToEW)\nSmmcrmiin (Ex ee sn nr eo                              Emo : =\n # Choe Volatility Index                                                                                            wo\nSE\n* wi                                                     Be\nSete                                                           Pr                        r\n21,            i\"                                              i\n1                      In                               |     /                         [\n:     |     hid\n     hy of     SS   Jf  A Loy  ty   .  I\nype gle   tl,\" lh    EE a\npl]                                 he\nR2\n60                                os\nTe       SN         7  §   NL      AN             -\nET\n* PHONE: [855 KEAL-WEALIT / (go5) 732.5952 or      TT ]       ZR        -                     Ce ss rev  e)\n* WEBSITE: revereasset.com                                                                    CO)\n",
+      "ocr_text_snippet": "SELTULITIER natn ERR Tie. wpe moe vanoveT ToEW) Smmcrmiin (Ex ee sn nr eo Emo : = # Choe Volatility Index wo SE * wi Be Sete Pr r 21, i\" i 1 In | / [ : | hid hy of SS Jf A Loy ty . I ype gle tl,\" l...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5aa6e91429553b9",
+      "prefilter_score": 21.56,
+      "prefilter_stats": {
+        "brightRatio": 0.8736805555555556,
+        "darkRatio": 0.02666666666666667,
+        "edgeRatio": 0.1086495654017384,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1378,
+        "horizontalEdgeRatio": 0.09737827715355805,
+        "meanLuma": 235.8384027777778,
+        "stdDev": 41.01412270593836,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1697,
+        "verticalEdgeRatio": 0.11992085364991874
+      },
+      "score": -20.15,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.85,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "unknown_text",
+      "tickers": [
+        "BE",
+        "PL"
+      ],
+      "timestamp": 288,
+      "timestamp_hms": "00:04:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 236,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260611_20260611_xc9fgdh8nig_d721388c_whiteboard\\ocr\\ocr_000237.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 942.08,
+      "observed_date": null,
+      "ocr_confidence": 35,
+      "ocr_profile": "threshold",
+      "ocr_text": "I #SToct - MarketSurge - Google Chwome                                                                                                                                  - oo Xx\n%3 marketsurge investors com/mstool chant = sympa JAOSCRY2C pera dicity% Muweek                                                                                                   &\nMasersdses o (EE)     xo [ay ee ow a                              EXERC: co: 0\nm Oscar Health Inc.                                                                                             428.88          428.91\nQ sw     CoPrSaB WE Rovio 4                                                        wa     Hew York, NY Off 52-veak High    FIC 9% Hom pivot If weeks 0527 PMET 06112026 Last Updale DADO PM ET D6TI2026\nsng ee              ase Bone\nYear(Dech EPS (5)  NCNg Saes(3BF  NChg                                                                         »\nal      ame     Te me       tants Wl — en        x\nLae BY    285   11:    EH)  He         un           - ©                                                        ®\nam            Fl       er        57      ws 4 TT             —         —                                    1\nLow    Tor an   ne                                                                    .      H     2%\nLamm omg                                      ;                      ~\nor                                                                             Bp               .\niran mann                                                        Tn\nDl me sme 2                                        i         IN\nRS Rating.    95 Earnings Stabmy   A                              il                       ~*               on\n0 Be                      .         /\nLb] mn r— a                        —                i       Is\n-    Goprsreny or mmercwe an |                                             fo                         /     pe\naes tig   Av canon     sor                                                                             o%    [\nEA     By           Hr      I         1               n           .\nfy       GR wen                                3!\n“| ew      156 Forward 0     El                            i!\noo | De ene                           |\nShow, nme om\noa Bi       .        /                 .             .\nv of wesnon ws msc mores =        2       [AN ee,     ey           A    PS       i\nVopaFinanca uC 21 TI 85 Dees 412                                                                         SW\naX  Roakeinc.  KUZL 82 2 36 Mab 454\nHs meee   Ee Nh IE    M\n[as]    ww       ww        ww        Tw        a        wE        =        ww       Ea\na      v       peers                  RE                    tie                     a                    Rr                    er                    ri                    103%                    ise:                    RAE              “ng\nnw       jo       on       ss       fe       fo       sa       war       a       mn on\n)  Py     Cr     Js     py     a  -     ow     Joy     jo     jy    wor\nScreg.      =      Reports.    Turbo 12 12items © upairea 0) MET RE                                                               omy   22 89\n",
+      "ocr_text_snippet": "I #SToct - MarketSurge - Google Chwome - oo Xx %3 marketsurge investors com/mstool chant = sympa JAOSCRY2C pera dicity% Muweek & Masersdses o (EE) xo [ay ee ow a EXERC: co: 0 m Oscar Health Inc. 42...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "e3949c2dc6a6b923",
+      "prefilter_score": 10.56,
+      "prefilter_stats": {
+        "brightRatio": 0.8335416666666666,
+        "darkRatio": 0.0002777777777777778,
+        "edgeRatio": 0.14497208677831955,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1824,
+        "horizontalEdgeRatio": 0.12889548441806234,
+        "meanLuma": 236.32368055555557,
+        "stdDev": 25.048489537697993,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2279,
+        "verticalEdgeRatio": 0.16104868913857678
+      },
+      "score": -20.25,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.75,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 944,
+      "timestamp_hms": "00:15:44"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 68,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260611_20260611_xc9fgdh8nig_d721388c_whiteboard\\ocr\\ocr_000069.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 271.36,
+      "observed_date": null,
+      "ocr_confidence": 33,
+      "ocr_profile": "threshold",
+      "ocr_text": "I SToo! - MarketSurge - Google Chvome                                                                   - oo Xx\n= marketsucge investars.com/mstool chan = symbol % 3ARUTE 2 periodicity 3Aday                                                                                                    &\nMarkeTSURGE «QTR      x [Tow | weonty ony me oo sn 6                              ER ©ime- Does 0\n® Russell 2000 Index                                                                                             ar 2321.03\n© mea                                                            cnn eS\nEAE EC IU\nsats    wi      I.\nTut +  Hh\nili pi  fy t ’          -\n   a             o ut    0 ~~\nwily, oH                     ’    js        ”\na ’ “lf i T— poo            -\n;        R             a\nIv Mi ,        I, pt —        Foy if! il                         =\na\nRT BRC wi   1 h {                          o                 wo\ni” x     a          Ie\na —    a                               ™                        _—                                                                          ”\nTT Th ET\nses [Tw] meen IAGRZBamS © ans varssrons                                             or - = EES\n* WEBSITE: revereasset.com         [| ATPL AAIIU ULI\n",
+      "ocr_text_snippet": "I SToo! - MarketSurge - Google Chvome - oo Xx = marketsucge investars.com/mstool chan = symbol % 3ARUTE 2 periodicity 3Aday & MarkeTSURGE «QTR x [Tow | weonty ony me oo sn 6 ER ©ime- Does 0 ® Russe...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 33,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 33,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5aa8a335d5547a8",
+      "prefilter_score": 20.73,
+      "prefilter_stats": {
+        "brightRatio": 0.8892361111111111,
+        "darkRatio": 0.026597222222222223,
+        "edgeRatio": 0.1039502508656632,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1195,
+        "horizontalEdgeRatio": 0.08444632888135115,
+        "meanLuma": 236.63958333333332,
+        "stdDev": 39.87500734717812,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1747,
+        "verticalEdgeRatio": 0.12345417284997527
+      },
+      "score": -21.21,
+      "score_breakdown": {
+        "chart_likeness": -0.8570859926225776,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.65,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 272,
+      "timestamp_hms": "00:04:32"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 92,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260611_20260611_xc9fgdh8nig_d721388c_whiteboard\\ocr\\ocr_000093.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 368.64,
+      "observed_date": null,
+      "ocr_confidence": 40,
+      "ocr_profile": "threshold",
+      "ocr_text": "Hl MSToot - MarketSurge - Google Cheome\n® CBOE 10 Year Treasury Note Yield Index                                                            Sl hye Der ©\n© Com SIE Review slat. +                                      44.63\ny\nthy\ni!      we hell,\n                             an                La     Fe eT    “\nTT,            TL NP Cy\n)  he   ww iw WT ly ut os      i ! Wile’\nil    ~—   + Jol       1   ill’ BE  a [ee                    “\nhp   ,   lial          I, ow                           g\non          [s |         [1]                              lf\njh       ”                      |                           “\nEE Np      aa VA        TN                       N\nos   \"   o   PO   \"   a                \\            Te\n",
+      "ocr_text_snippet": "Hl MSToot - MarketSurge - Google Cheome ® CBOE 10 Year Treasury Note Yield Index Sl hye Der © © Com SIE Review slat. + 44.63 y thy i! we hell, an La Fe eT “ TT, TL NP Cy ) he ww iw WT ly ut os i ! ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 40,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 40,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5aaaa33555175a8",
+      "prefilter_score": 20.58,
+      "prefilter_stats": {
+        "brightRatio": 0.8958333333333334,
+        "darkRatio": 0.02652777777777778,
+        "edgeRatio": 0.09571761712953149,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1037,
+        "horizontalEdgeRatio": 0.07328104020917249,
+        "meanLuma": 237.61944444444444,
+        "stdDev": 39.931401730164744,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1672,
+        "verticalEdgeRatio": 0.11815419404989047
+      },
+      "score": -21.75,
+      "score_breakdown": {
+        "chart_likeness": -1.7499249051768775,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "unknown_text",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 368,
+      "timestamp_hms": "00:06:08"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 2,
+      "end_ts": 480,
+      "end_hms": "00:08:00",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 120,
+      "peak_score": 106.27,
+      "start_hms": "00:06:56",
+      "start_ts": 416
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 576,
+      "end_hms": "00:09:36",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 144,
+      "peak_score": 106.14,
+      "start_hms": "00:09:36",
+      "start_ts": 576
+    }
+  ]
+}

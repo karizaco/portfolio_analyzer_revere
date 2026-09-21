@@ -1,0 +1,17 @@
+{
+  "date_key": "20260103",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads\\20260103_def456.mp4",
+  "message": "Final output preflight failed before OCR started: [in#0 @ 00000179556867c0] moov atom not found\r\n[in#0 @ 0000017955686100] Error opening input: Invalid data found when processing input\r\nError opening input file C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads\\20260103_def456.mp4.\r\nError opening input files: Invalid data found when processing input\r\n",
+  "nearest_ffmpeg_keyframe_lookups_skipped": true,
+  "nearest_ffmpeg_keyframe_pts_total": 0,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "status": "error"
+}

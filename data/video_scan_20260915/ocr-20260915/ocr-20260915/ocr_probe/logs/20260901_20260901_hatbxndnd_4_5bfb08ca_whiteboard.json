@@ -1,0 +1,1332 @@
+{
+  "date_key": "20260901",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260901_hATbxNdNd_4.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 234,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260901_20260901_hatbxndnd_4_5bfb08ca_whiteboard\\ocr\\ocr_000235.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 936,
+      "observed_date": "20260901",
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n>> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << >)          .               »\n2>> DAN papier state:                                                                 ®                          Brees OZ 8 0\n*YLX IG, Tik| *STOINDEXESOF 64 RGEOD Bd NASI USDA TNX/TYXD vs 5d 2422                                                             $52.68 1\n>>> TUESD] SENTIMENT: VIX 16.36; 21 £86                 annnze-2s2262 SEEN naam 102548                                                                                      TK esa 19d\nBULL CASE: INITIATE RALLY & TREND 21EMA ~~ €8/3-4 REGAIN 21E & FTD                                                        Last Update 0258 PV ET 09012026.\n* MARKETS BEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 9/1 BROKE BELOW 21€                                                                               wf\n* WHAT HAI       * NEWS: US RESUMES IRAN BOMBING WED: ADP FRI: BLS EMPLOYMENT REPORT                                                                                       »\n> WEAK STA       * TODAY'S KEYS: SPX vs 21€4,/8Ed,  QQQ vs 21E/8Ed  R2K vs 29001 /50D J\n21/21 2.      * DAYCT:      =>DN-1 8€:-24 21E:-1¢ BE >» 21E? YES                                                                              528\n acnom op 1o%         17664 3HRA TELL 7632                                        am    il\nT2121) «spxo/N $T6317699 07632 030 7628-76411 L/H 7611-7664                                                                           {     i\nMAG7 0]  *SPXATR:O.77%{ SPX-0.71% 60/40-0.58% GRO -0.96% TURBO -1.18%                                                       )!  if  I [I         “\nRGS    1)     * SECTORS: 9 BY% USD OILS XLP.U.V BIO J BP$ *A/I* S/W BANKS G/S/X COPX                                  1    A          in]              !\n* GRO HOLDINGS: SPYM,UPRO/SPXL,PLTR                                                                                                     Id hy\nRAIL00-2; + GRO RVAB/REBAR: 0.90 (-0.11%/-3.62%) SELL FROG TRIM SPXL + PLTR                                                          Hh\nSPX -0.]  * TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBIT.ETHA,GDXU,FCX MRNA ZETA, SPCX, HOOD, PLTR,                                     I y              -\nQQa 1]      * TURBO RVAB/REBAR: 1.81 (-2.22%/-4.69%) BUY HOOD                                         of              1  eT                           P)\nDIA -O.       * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D              J\n\"| * WED KEYS: SPX vs 50D/21€  QQQ vs 100D/50D RZK vs 1000/50D                                      fn\nMID -14 >>> SEPSOD KEY LEVELS <<<                                                                                                   fq\nRZK  -1.]      * 7816 (8/13 INTRADAY A-T-H)\n60/40 -0.      “»7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER                    had                                                »\n27686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG\nGRO ™04  +7667(¢321EMA} € 9/14 8/211 8/204 7/314\n========5|      7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D\n* EMAIL do| | 7571/7603 (13 500/10WK) € 7/314 7/23 1/210 7/174 6/290\ni          * 7127/7159 (14 200D/40WK) € 4/81 3/193\n* TWITTER (\n* PHONE: {8|\n@ SITE:                                                                                                    FEE I EE TL\n@ Dupiay sett                                                                                                    fro 2026                                 @ Puy -     [=0 38 IAN\n|                                                                                                           “|\n",
+      "ocr_text_snippet": ">>> THE >> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << >) . » 2>> DAN papier state: ® Brees OZ 8 0 *YLX IG, Tik| *STOINDEXESOF 64 RGEOD Bd NASI USDA TNX/TYXD vs 5d 2422 $52.68 1 >>> TUESD] SEN...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO/SPXL,PLTR ID HY RAIL00-2; + GRO RVAB/REBAR: 0.90 (-0.11%/-3.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL FROG TRIM SPXL + PLTR HH SPX -0.] * TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBIT.ETHA,GDXU,FCX MRNA ZETA, SPCX, HOOD, PLTR, I Y - QQA 1] * TURBO RVAB/REBAR: 1.81 (-2.22%/-4.69%) BUY HOOD OF 1 ET P) DIA -O. * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D J WED KEYS: SPX VS 50D/21€ QQQ VS 100D/50D RZK VS 1000/50D FN MID -14 >>> SEPSOD KEY LEVELS <<< FQ RZK -1.] * 7816 (8/13 INTRADAY A-T-H) 60/40 -0. \"»7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER HAD » 27686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG GRO ™04 +7667(¢321EMA} € 9/14 8/211 8/204 7/314 5 7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D EMAIL DO 7571/7603 (13 500/10WK) € 7/314 7/23 1/210 7/174 6/290 I * 7127/7159 (14 200D/40WK) € 4/81 3/193 TWITTER ( PHONE: {8 SITE: FEE I EE TL DUPIAY SETT FRO 2026 @ PUY - [=0 38 IAN",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "85ff5144df1144d9",
+      "prefilter_score": 13.59,
+      "prefilter_stats": {
+        "brightRatio": 0.7786805555555556,
+        "darkRatio": 0.03909722222222222,
+        "edgeRatio": 0.1835559324429369,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1351,
+        "horizontalEdgeRatio": 0.09547028478552752,
+        "meanLuma": 228.7525,
+        "stdDev": 46.78792721032733,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3844,
+        "verticalEdgeRatio": 0.2716415801003463
+      },
+      "score": 87.72,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.1,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 88.62
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "PLTR",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO",
+        "ZETA"
+      ],
+      "timestamp": 936,
+      "timestamp_hms": "00:15:36",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\screenshots\\20260901_ps.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 252,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260901_20260901_hatbxndnd_4_5bfb08ca_whiteboard\\ocr\\ocr_000253.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1008,
+      "observed_date": "20260901",
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n>> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << >)          .               »\n2>> DAN papier state:                                                                 ®                          Brees OZ 8 0\n*YLX IG, Tik| *STOINDEXESOF 64 RGEOD Bd NASI USDA TNX/TYXD vs 5d 2422                                                             $52.68 1\n>>> TUESD] SENTIMENT: VIX 16.36; 21 £86                 annnze-2s2262 SEEN naam 102548                                                                                      TK esa 19d\nBULL CASE: INITIATE RALLY & TREND 21EMA ~~ €8/3-4 REGAIN 21E & FTD                                                        Last Update 0258 PV ET 09012026.\n* MARKETS BEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 9/1 BROKE BELOW 21€                                                                               wf\n* WHAT HAI       * NEWS: US RESUMES IRAN BOMBING WED: ADP FRI: BLS EMPLOYMENT REPORT                                                                                       »\n> WEAK STA       * TODAY'S KEYS: SPX vs 21€4,/8Ed,  QQQ vs 21E/8Ed  R2K vs 29001 /50D J\n21/21 2.      * DAYCT:      =>DN-1 8€:-24 21E:-1¢ BE >» 21E? YES                                                                              528\n* ACTION: 0 -0.70%                P7664 3HRL T7611 P7632                                                                       an        il\nT2121) «spxO/N 76317699 07632 030 7628-76411 L/H 7611-7664                                                                           t     i\nMAG7 0]  *\"SPXATR:D.77%{ SPX-0.71% 60/40-0.58% GRO -0.96% TURBO -1.18%                                                       )!  if  I [3         “\nRGS    1)     * SECTORS: 9 BY% USD OILS XLP.U.V BIO J BP$ *A/I* S/W BANKS G/S/X COPX                                  1    A          in]              !\n* GRO HOLDINGS: SPYM,UPRO/SPXL,PLTR                                                                                                     Id hy\nRAIL00-2; + GRO RVAB/REBAR: 0.90 (-0.11%/-3.62%) SELL FROG TRIM SPXL + PLTR                                                          Hh\nSPX -0.]  * TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBITETHA,GDXU,FCX, MRNA, ZETA, SPCX, HOOD, PLTR,                                     I y              -\nQQa 1]      * TURBO RVAB/REBAR: 1.81 (-2.22%/-4.69%) BUY HOOD                                         op              1  eT                           P)\nDIA -O.       * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D              Jt\n\"| * WED KEYS: SPX vs 50D/21€  QQQ vs 100D/50D RZK vs 1000/50D                                      fhe\nMID -14 >>> SEPSOD KEY LEVELS <<<                                                                                                   fq\nRZK  -1.]      * 7816 (8/13 INTRADAY A-T-H)\n60/40 -0.      “»7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER                    had                                                »\n27686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG\nGRO ™04  +7667(¢321EMA} € 9/14 8/211 8/204 7/314\n========5|      > 7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D\n* EMAIL do| | 7571/7603 (13 500/10WK) € 7/314 7/23 1/210 7/174 6/290\ni          * 7127/7159 (14 200D/40WK) € 4/81 3/193\n* TWITTER (\n* PHONE: {g|\n@\" SITE:                                                                                                    FEE I EE TL\n@ Dupiay seit                                                                                                    fro 2026                                 @ Puy -     [=0 38 IAN\n",
+      "ocr_text_snippet": ">>> THE >> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << >) . » 2>> DAN papier state: ® Brees OZ 8 0 *YLX IG, Tik| *STOINDEXESOF 64 RGEOD Bd NASI USDA TNX/TYXD vs 5d 2422 $52.68 1 >>> TUESD] SEN...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO/SPXL,PLTR ID HY RAIL00-2; + GRO RVAB/REBAR: 0.90 (-0.11%/-3.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL FROG TRIM SPXL + PLTR HH SPX -0.] * TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBITETHA,GDXU,FCX, MRNA, ZETA, SPCX, HOOD, PLTR, I Y - QQA 1] * TURBO RVAB/REBAR: 1.81 (-2.22%/-4.69%) BUY HOOD OP 1 ET P) DIA -O. * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D JT WED KEYS: SPX VS 50D/21€ QQQ VS 100D/50D RZK VS 1000/50D FHE MID -14 >>> SEPSOD KEY LEVELS <<< FQ RZK -1.] * 7816 (8/13 INTRADAY A-T-H) 60/40 -0. \"»7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER HAD » 27686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG GRO ™04 +7667(¢321EMA} € 9/14 8/211 8/204 7/314 5 > 7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D EMAIL DO 7571/7603 (13 500/10WK) € 7/314 7/23 1/210 7/174 6/290 I * 7127/7159 (14 200D/40WK) € 4/81 3/193 TWITTER ( PHONE: {G SITE: FEE I EE TL DUPIAY SEIT FRO 2026 @ PUY - [=0 38 IAN",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "85ff5144df1144d9",
+      "prefilter_score": 13.61,
+      "prefilter_stats": {
+        "brightRatio": 0.7780555555555555,
+        "darkRatio": 0.03909722222222222,
+        "edgeRatio": 0.18327326690693238,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1335,
+        "horizontalEdgeRatio": 0.09433962264150944,
+        "meanLuma": 228.71875,
+        "stdDev": 46.80540161839998,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3852,
+        "verticalEdgeRatio": 0.2722069111723553
+      },
+      "score": 86.4,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.1,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 87.3
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "PLTR",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO",
+        "ZETA"
+      ],
+      "timestamp": 1008,
+      "timestamp_hms": "00:16:48",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\screenshots\\20260901_ps_2.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 276,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260901_20260901_hatbxndnd_4_5bfb08ca_whiteboard\\ocr\\ocr_000277.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1104.8,
+      "observed_date": "20260901",
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n>> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << o          .               »     5\n2>> DAN“ yaper state:                                                                 ®                          0 pe     ae     ©\n*YLXIG,TK{  \"STOINDEXESOT 64 RGEOT 8 NASIL USD/N TNX/TYXD vs 5d 2422                                                             952,68 1\n55> TUESD] © SENTIMENT: VIX 1 301-9 5) P&G               annszs-22262 JENS naam 02518                                                                              THR Gsa18) 0b\nBULL CASE: INITIATE RALLY & TREND 21EMA    €5/3-4 REGAIN 21E & FTD                                                Last Updater 02 56 PM ET 090172026\n* MARKETS] 3 BEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 9/1 BROKE BELOW 21E                                                                               0 0\n* WHAT HA       * NEWS: US RESUMES IRAN BOMBING WED: ADP FRI: BLS EMPLOYMENT REPORT                                                                                       »\n> WEAK STA       * TODAY'S KEYS: SPX vs 21E4,/8Ed,  QQQ vs 21EJ/8E  R2K vs 29001 /50D J\n21/21 -24  TOAYCT:  =>DN-1 86:2 216-14 8E>21E7 VES                                                                       i.                   f\n* ACTION: 0 -0.70%              M7664 3HRE 7611 P7632                                                             an      il\nT-12 -1) «spxO/N 76317699 07632 030 7628-76411 L/H 7611-7664                                                                           {     i\nMAG7 0)  *\"SPXATR:D.F7%{ SPX-0.71% 60/40-0.58% GRO-0.96% TURBO -1.18%                                                       )!  if  I [I         .\nRGS    1)     * SECTORS:  BY% USD OILS XLP.U.V BIO J BP$ *A/I* S/W BANKS G/S/X COPX                                   1    A          in]               !\n* GRO HOLDINGS: SPYM,UPRO/SPXL,PLTR,                                                                                                     Jt hy\nRAIL00-2{ + Gro RVAB/REBAR: 0.90 (-0.11%/-3.52%) SELL FROG TRIM SPXL + PLTR                                                          val\nSPX -0.       * TURBO HOLDINGS: SPYM,UPRO,TQQQLIBIT,ETHA, GDXU,FCX, MRNA, ZETA, SPCX, HOOD, PLTR,                                     Its\nQQQ 1] * TURBO RVAB/REBAR: 1.81 (-2.22%/-4.69%) BUY HOOD                                         of               1  eT                       %\nDIA -O.       * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D              J\n\"| * WED KEYS: SPX vs 50D/21€  QQQ vs 100D/50D R2K vs 1000/50D                                      fh\nMID -14 >>> SBPSOD KEY LEVELS <<<                                                                                                    1\nRZK  -1.]      * 7816 (8/13 INTRADAY A-T-H)\n60/40 0.      “$7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER                    wn                                                Ed\n“$7686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG\nGRO ™04  +7667(4321EMA}) € 9/14 8/211 8/204 7/311\n========5|      =» 7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, GQQ BREAKS 50D\n*EMAIL do| 7571/7603 (1350D/10WK) € 7/310 7/23 1/211 7/174 6/291\n:         * 7127/7159 (14 200D/40WK) € 4/81 3/19¢\n* TWITTER (\n* PHONE: {g|\n@ SITE:                                                                                                    FE EE EL\n@ Dpiay sett                                                                                        foe 2026                             Q Puy -    28 5a\n",
+      "ocr_text_snippet": ">>> THE >> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << o . » 5 2>> DAN“ yaper state: ® 0 pe ae © *YLXIG,TK{ \"STOINDEXESOT 64 RGEOT 8 NASIL USD/N TNX/TYXD vs 5d 2422 952,68 1 55> TUESD] © SENTI...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO/SPXL,PLTR, JT HY RAIL00-2{ + GRO RVAB/REBAR: 0.90 (-0.11%/-3.52%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL FROG TRIM SPXL + PLTR VAL SPX -0. * TURBO HOLDINGS: SPYM,UPRO,TQQQLIBIT,ETHA, GDXU,FCX, MRNA, ZETA, SPCX, HOOD, PLTR, ITS QQQ 1] * TURBO RVAB/REBAR: 1.81 (-2.22%/-4.69%) BUY HOOD OF 1 ET % DIA -O. * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D J WED KEYS: SPX VS 50D/21€ QQQ VS 100D/50D R2K VS 1000/50D FH MID -14 >>> SBPSOD KEY LEVELS <<< 1 RZK -1.] * 7816 (8/13 INTRADAY A-T-H) 60/40 0. \"$7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER WN ED 7686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG GRO ™04 +7667(4321EMA}) € 9/14 8/211 8/204 7/311 5 =» 7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, GQQ BREAKS 50D EMAIL DO 7571/7603 (1350D/10WK) € 7/310 7/23 1/211 7/174 6/291 7127/7159 (14 200D/40WK) € 4/81 3/19¢ TWITTER ( PHONE: {G SITE: FE EE EL DPIAY SETT FOE 2026 Q PUY - 28 5A",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "85ff5144df1144d9",
+      "prefilter_score": 13.57,
+      "prefilter_stats": {
+        "brightRatio": 0.7790972222222222,
+        "darkRatio": 0.03909722222222222,
+        "edgeRatio": 0.18238993710691823,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1326,
+        "horizontalEdgeRatio": 0.09370362518549925,
+        "meanLuma": 228.82444444444445,
+        "stdDev": 46.73779266910494,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3836,
+        "verticalEdgeRatio": 0.2710762490283372
+      },
+      "score": 86.07,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 87.02
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "PLTR",
+        "SPCX",
+        "SPYM",
+        "UPRO",
+        "ZETA"
+      ],
+      "timestamp": 1104,
+      "timestamp_hms": "00:18:24",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\screenshots\\20260901_ps_3.png"
+    }
+  ],
+  "frame_count": 383,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 299,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\screenshots\\20260901_ps.png",
+  "prefilter_best_score": 19.48,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 234,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260901_20260901_hatbxndnd_4_5bfb08ca_whiteboard\\ocr\\ocr_000235.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_BOTTOM_LINE",
+      "MISSING_METRIC_LINE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 936,
+    "observed_date": "20260901",
+    "ocr_confidence": 62,
+    "ocr_profile": "threshold",
+    "ocr_text": ">>> THE\n>> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << >)          .               »\n2>> DAN papier state:                                                                 ®                          Brees OZ 8 0\n*YLX IG, Tik| *STOINDEXESOF 64 RGEOD Bd NASI USDA TNX/TYXD vs 5d 2422                                                             $52.68 1\n>>> TUESD] SENTIMENT: VIX 16.36; 21 £86                 annnze-2s2262 SEEN naam 102548                                                                                      TK esa 19d\nBULL CASE: INITIATE RALLY & TREND 21EMA ~~ €8/3-4 REGAIN 21E & FTD                                                        Last Update 0258 PV ET 09012026.\n* MARKETS BEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 9/1 BROKE BELOW 21€                                                                               wf\n* WHAT HAI       * NEWS: US RESUMES IRAN BOMBING WED: ADP FRI: BLS EMPLOYMENT REPORT                                                                                       »\n> WEAK STA       * TODAY'S KEYS: SPX vs 21€4,/8Ed,  QQQ vs 21E/8Ed  R2K vs 29001 /50D J\n21/21 2.      * DAYCT:      =>DN-1 8€:-24 21E:-1¢ BE >» 21E? YES                                                                              528\n acnom op 1o%         17664 3HRA TELL 7632                                        am    il\nT2121) «spxo/N $T6317699 07632 030 7628-76411 L/H 7611-7664                                                                           {     i\nMAG7 0]  *SPXATR:O.77%{ SPX-0.71% 60/40-0.58% GRO -0.96% TURBO -1.18%                                                       )!  if  I [I         “\nRGS    1)     * SECTORS: 9 BY% USD OILS XLP.U.V BIO J BP$ *A/I* S/W BANKS G/S/X COPX                                  1    A          in]              !\n* GRO HOLDINGS: SPYM,UPRO/SPXL,PLTR                                                                                                     Id hy\nRAIL00-2; + GRO RVAB/REBAR: 0.90 (-0.11%/-3.62%) SELL FROG TRIM SPXL + PLTR                                                          Hh\nSPX -0.]  * TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBIT.ETHA,GDXU,FCX MRNA ZETA, SPCX, HOOD, PLTR,                                     I y              -\nQQa 1]      * TURBO RVAB/REBAR: 1.81 (-2.22%/-4.69%) BUY HOOD                                         of              1  eT                           P)\nDIA -O.       * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D              J\n\"| * WED KEYS: SPX vs 50D/21€  QQQ vs 100D/50D RZK vs 1000/50D                                      fn\nMID -14 >>> SEPSOD KEY LEVELS <<<                                                                                                   fq\nRZK  -1.]      * 7816 (8/13 INTRADAY A-T-H)\n60/40 -0.      “»7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER                    had                                                »\n27686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG\nGRO ™04  +7667(¢321EMA} € 9/14 8/211 8/204 7/314\n========5|      7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D\n* EMAIL do| | 7571/7603 (13 500/10WK) € 7/314 7/23 1/210 7/174 6/290\ni          * 7127/7159 (14 200D/40WK) € 4/81 3/193\n* TWITTER (\n* PHONE: {8|\n@ SITE:                                                                                                    FEE I EE TL\n@ Dupiay sett                                                                                                    fro 2026                                 @ Puy -     [=0 38 IAN\n|                                                                                                           “|\n",
+    "ocr_text_snippet": ">>> THE >> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << >) . » 2>> DAN papier state: ® Brees OZ 8 0 *YLX IG, Tik| *STOINDEXESOF 64 RGEOD Bd NASI USDA TNX/TYXD vs 5d 2422 $52.68 1 >>> TUESD] SEN...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": "HOLDINGS: SPYM,UPRO/SPXL,PLTR ID HY RAIL00-2; + GRO RVAB/REBAR: 0.90 (-0.11%/-3.62%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "SELL FROG TRIM SPXL + PLTR HH SPX -0.] * TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBIT.ETHA,GDXU,FCX MRNA ZETA, SPCX, HOOD, PLTR, I Y - QQA 1] * TURBO RVAB/REBAR: 1.81 (-2.22%/-4.69%) BUY HOOD OF 1 ET P) DIA -O. * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D J WED KEYS: SPX VS 50D/21€ QQQ VS 100D/50D RZK VS 1000/50D FN MID -14 >>> SEPSOD KEY LEVELS <<< FQ RZK -1.] * 7816 (8/13 INTRADAY A-T-H) 60/40 -0. \"»7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER HAD » 27686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG GRO ™04 +7667(¢321EMA} € 9/14 8/211 8/204 7/314 5 7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D EMAIL DO 7571/7603 (13 500/10WK) € 7/314 7/23 1/210 7/174 6/290 I * 7127/7159 (14 200D/40WK) € 4/81 3/193 TWITTER ( PHONE: {8 SITE: FEE I EE TL DUPIAY SETT FRO 2026 @ PUY - [=0 38 IAN",
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_BOTTOM_LINE"
+        ],
+        "ocr_confidence": 62,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE"
+        ],
+        "ocr_confidence": 62,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "85ff5144df1144d9",
+    "prefilter_score": 13.59,
+    "prefilter_stats": {
+      "brightRatio": 0.7786805555555556,
+      "darkRatio": 0.03909722222222222,
+      "edgeRatio": 0.1835559324429369,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1351,
+      "horizontalEdgeRatio": 0.09547028478552752,
+      "meanLuma": 228.7525,
+      "stdDev": 46.78792721032733,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 3844,
+      "verticalEdgeRatio": 0.2716415801003463
+    },
+    "score": 87.72,
+    "score_breakdown": {
+      "chart_likeness": -6,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 3.1,
+      "pair_bonus": 0,
+      "per_row_issues": -6,
+      "per_row_metrics": 8,
+      "text_density": 88.62
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "BE",
+      "FCX",
+      "GDXU",
+      "HOOD",
+      "PLTR",
+      "SPCX",
+      "SPYM",
+      "TQQQ",
+      "UPRO",
+      "ZETA"
+    ],
+    "timestamp": 936,
+    "timestamp_hms": "00:15:36"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 234,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260901_20260901_hatbxndnd_4_5bfb08ca_whiteboard\\ocr\\ocr_000235.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260901",
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n>> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << >)          .               »\n2>> DAN papier state:                                                                 ®                          Brees OZ 8 0\n*YLX IG, Tik| *STOINDEXESOF 64 RGEOD Bd NASI USDA TNX/TYXD vs 5d 2422                                                             $52.68 1\n>>> TUESD] SENTIMENT: VIX 16.36; 21 £86                 annnze-2s2262 SEEN naam 102548                                                                                      TK esa 19d\nBULL CASE: INITIATE RALLY & TREND 21EMA ~~ €8/3-4 REGAIN 21E & FTD                                                        Last Update 0258 PV ET 09012026.\n* MARKETS BEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 9/1 BROKE BELOW 21€                                                                               wf\n* WHAT HAI       * NEWS: US RESUMES IRAN BOMBING WED: ADP FRI: BLS EMPLOYMENT REPORT                                                                                       »\n> WEAK STA       * TODAY'S KEYS: SPX vs 21€4,/8Ed,  QQQ vs 21E/8Ed  R2K vs 29001 /50D J\n21/21 2.      * DAYCT:      =>DN-1 8€:-24 21E:-1¢ BE >» 21E? YES                                                                              528\n acnom op 1o%         17664 3HRA TELL 7632                                        am    il\nT2121) «spxo/N $T6317699 07632 030 7628-76411 L/H 7611-7664                                                                           {     i\nMAG7 0]  *SPXATR:O.77%{ SPX-0.71% 60/40-0.58% GRO -0.96% TURBO -1.18%                                                       )!  if  I [I         “\nRGS    1)     * SECTORS: 9 BY% USD OILS XLP.U.V BIO J BP$ *A/I* S/W BANKS G/S/X COPX                                  1    A          in]              !\n* GRO HOLDINGS: SPYM,UPRO/SPXL,PLTR                                                                                                     Id hy\nRAIL00-2; + GRO RVAB/REBAR: 0.90 (-0.11%/-3.62%) SELL FROG TRIM SPXL + PLTR                                                          Hh\nSPX -0.]  * TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBIT.ETHA,GDXU,FCX MRNA ZETA, SPCX, HOOD, PLTR,                                     I y              -\nQQa 1]      * TURBO RVAB/REBAR: 1.81 (-2.22%/-4.69%) BUY HOOD                                         of              1  eT                           P)\nDIA -O.       * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D              J\n\"| * WED KEYS: SPX vs 50D/21€  QQQ vs 100D/50D RZK vs 1000/50D                                      fn\nMID -14 >>> SEPSOD KEY LEVELS <<<                                                                                                   fq\nRZK  -1.]      * 7816 (8/13 INTRADAY A-T-H)\n60/40 -0.      “»7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER                    had                                                »\n27686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG\nGRO ™04  +7667(¢321EMA} € 9/14 8/211 8/204 7/314\n========5|      7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D\n* EMAIL do| | 7571/7603 (13 500/10WK) € 7/314 7/23 1/210 7/174 6/290\ni          * 7127/7159 (14 200D/40WK) € 4/81 3/193\n* TWITTER (\n* PHONE: {8|\n@ SITE:                                                                                                    FEE I EE TL\n@ Dupiay sett                                                                                                    fro 2026                                 @ Puy -     [=0 38 IAN\n|                                                                                                           “|\n",
+      "ocr_text_snippet": ">>> THE >> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << >) . » 2>> DAN papier state: ® Brees OZ 8 0 *YLX IG, Tik| *STOINDEXESOF 64 RGEOD Bd NASI USDA TNX/TYXD vs 5d 2422 $52.68 1 >>> TUESD] SEN...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO/SPXL,PLTR ID HY RAIL00-2; + GRO RVAB/REBAR: 0.90 (-0.11%/-3.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL FROG TRIM SPXL + PLTR HH SPX -0.] * TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBIT.ETHA,GDXU,FCX MRNA ZETA, SPCX, HOOD, PLTR, I Y - QQA 1] * TURBO RVAB/REBAR: 1.81 (-2.22%/-4.69%) BUY HOOD OF 1 ET P) DIA -O. * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D J WED KEYS: SPX VS 50D/21€ QQQ VS 100D/50D RZK VS 1000/50D FN MID -14 >>> SEPSOD KEY LEVELS <<< FQ RZK -1.] * 7816 (8/13 INTRADAY A-T-H) 60/40 -0. \"»7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER HAD » 27686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG GRO ™04 +7667(¢321EMA} € 9/14 8/211 8/204 7/314 5 7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D EMAIL DO 7571/7603 (13 500/10WK) € 7/314 7/23 1/210 7/174 6/290 I * 7127/7159 (14 200D/40WK) € 4/81 3/193 TWITTER ( PHONE: {8 SITE: FEE I EE TL DUPIAY SETT FRO 2026 @ PUY - [=0 38 IAN",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "85ff5144df1144d9",
+      "prefilter_score": 13.59,
+      "prefilter_stats": {
+        "brightRatio": 0.7786805555555556,
+        "darkRatio": 0.03909722222222222,
+        "edgeRatio": 0.1835559324429369,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1351,
+        "horizontalEdgeRatio": 0.09547028478552752,
+        "meanLuma": 228.7525,
+        "stdDev": 46.78792721032733,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3844,
+        "verticalEdgeRatio": 0.2716415801003463
+      },
+      "score": 87.72,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.1,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 88.62
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "PLTR",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO",
+        "ZETA"
+      ],
+      "timestamp": 936,
+      "timestamp_hms": "00:15:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 252,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260901_20260901_hatbxndnd_4_5bfb08ca_whiteboard\\ocr\\ocr_000253.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260901",
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n>> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << >)          .               »\n2>> DAN papier state:                                                                 ®                          Brees OZ 8 0\n*YLX IG, Tik| *STOINDEXESOF 64 RGEOD Bd NASI USDA TNX/TYXD vs 5d 2422                                                             $52.68 1\n>>> TUESD] SENTIMENT: VIX 16.36; 21 £86                 annnze-2s2262 SEEN naam 102548                                                                                      TK esa 19d\nBULL CASE: INITIATE RALLY & TREND 21EMA ~~ €8/3-4 REGAIN 21E & FTD                                                        Last Update 0258 PV ET 09012026.\n* MARKETS BEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 9/1 BROKE BELOW 21€                                                                               wf\n* WHAT HAI       * NEWS: US RESUMES IRAN BOMBING WED: ADP FRI: BLS EMPLOYMENT REPORT                                                                                       »\n> WEAK STA       * TODAY'S KEYS: SPX vs 21€4,/8Ed,  QQQ vs 21E/8Ed  R2K vs 29001 /50D J\n21/21 2.      * DAYCT:      =>DN-1 8€:-24 21E:-1¢ BE >» 21E? YES                                                                              528\n* ACTION: 0 -0.70%                P7664 3HRL T7611 P7632                                                                       an        il\nT2121) «spxO/N 76317699 07632 030 7628-76411 L/H 7611-7664                                                                           t     i\nMAG7 0]  *\"SPXATR:D.77%{ SPX-0.71% 60/40-0.58% GRO -0.96% TURBO -1.18%                                                       )!  if  I [3         “\nRGS    1)     * SECTORS: 9 BY% USD OILS XLP.U.V BIO J BP$ *A/I* S/W BANKS G/S/X COPX                                  1    A          in]              !\n* GRO HOLDINGS: SPYM,UPRO/SPXL,PLTR                                                                                                     Id hy\nRAIL00-2; + GRO RVAB/REBAR: 0.90 (-0.11%/-3.62%) SELL FROG TRIM SPXL + PLTR                                                          Hh\nSPX -0.]  * TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBITETHA,GDXU,FCX, MRNA, ZETA, SPCX, HOOD, PLTR,                                     I y              -\nQQa 1]      * TURBO RVAB/REBAR: 1.81 (-2.22%/-4.69%) BUY HOOD                                         op              1  eT                           P)\nDIA -O.       * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D              Jt\n\"| * WED KEYS: SPX vs 50D/21€  QQQ vs 100D/50D RZK vs 1000/50D                                      fhe\nMID -14 >>> SEPSOD KEY LEVELS <<<                                                                                                   fq\nRZK  -1.]      * 7816 (8/13 INTRADAY A-T-H)\n60/40 -0.      “»7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER                    had                                                »\n27686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG\nGRO ™04  +7667(¢321EMA} € 9/14 8/211 8/204 7/314\n========5|      > 7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D\n* EMAIL do| | 7571/7603 (13 500/10WK) € 7/314 7/23 1/210 7/174 6/290\ni          * 7127/7159 (14 200D/40WK) € 4/81 3/193\n* TWITTER (\n* PHONE: {g|\n@\" SITE:                                                                                                    FEE I EE TL\n@ Dupiay seit                                                                                                    fro 2026                                 @ Puy -     [=0 38 IAN\n",
+      "ocr_text_snippet": ">>> THE >> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << >) . » 2>> DAN papier state: ® Brees OZ 8 0 *YLX IG, Tik| *STOINDEXESOF 64 RGEOD Bd NASI USDA TNX/TYXD vs 5d 2422 $52.68 1 >>> TUESD] SEN...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO/SPXL,PLTR ID HY RAIL00-2; + GRO RVAB/REBAR: 0.90 (-0.11%/-3.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL FROG TRIM SPXL + PLTR HH SPX -0.] * TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBITETHA,GDXU,FCX, MRNA, ZETA, SPCX, HOOD, PLTR, I Y - QQA 1] * TURBO RVAB/REBAR: 1.81 (-2.22%/-4.69%) BUY HOOD OP 1 ET P) DIA -O. * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D JT WED KEYS: SPX VS 50D/21€ QQQ VS 100D/50D RZK VS 1000/50D FHE MID -14 >>> SEPSOD KEY LEVELS <<< FQ RZK -1.] * 7816 (8/13 INTRADAY A-T-H) 60/40 -0. \"»7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER HAD » 27686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG GRO ™04 +7667(¢321EMA} € 9/14 8/211 8/204 7/314 5 > 7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D EMAIL DO 7571/7603 (13 500/10WK) € 7/314 7/23 1/210 7/174 6/290 I * 7127/7159 (14 200D/40WK) € 4/81 3/193 TWITTER ( PHONE: {G SITE: FEE I EE TL DUPIAY SEIT FRO 2026 @ PUY - [=0 38 IAN",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "85ff5144df1144d9",
+      "prefilter_score": 13.61,
+      "prefilter_stats": {
+        "brightRatio": 0.7780555555555555,
+        "darkRatio": 0.03909722222222222,
+        "edgeRatio": 0.18327326690693238,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1335,
+        "horizontalEdgeRatio": 0.09433962264150944,
+        "meanLuma": 228.71875,
+        "stdDev": 46.80540161839998,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3852,
+        "verticalEdgeRatio": 0.2722069111723553
+      },
+      "score": 86.4,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.1,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 87.3
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "PLTR",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO",
+        "ZETA"
+      ],
+      "timestamp": 1008,
+      "timestamp_hms": "00:16:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 228,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260901_20260901_hatbxndnd_4_5bfb08ca_whiteboard\\ocr\\ocr_000229.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260901",
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n>> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << >)          .              »\n2>> DAN yapker state:                                                                 ®                          Brees O32 Oy\n*YL,X16,Ti|  *STOINDEXESOD 64 RGEOD 81 NASI USDA TEX/TYX vs5d 2422                                                             $52.68\n>>> TUESD] SENTIMENT: VIX 16.3815 121 8G               annnze-2s2262 PHY naam 102.548                                                                              essa\nBULL CASE: INITIATE RALLY & TREND 21EMA ~~ €-8/3-4 REGAIN 21E & FTD                                                      Last Update: 0255 PV E1 090172026.\n* MARKETS] BEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 9/1 BROKE BELOW 21€                                                                               wf\n* WHAT HAI      * NEWS: US pn sla BOMBING WED: ADP FRI: BLS EMPLOYMENT REPORT                                                                                       »\n=> WEAK STAF       * TODAY'S KEYS: SRRwvs 21E4,/8Ed,  QQQ vs 21EJ/8EL  R2K vs 29001 /50D J\n21/21 2.      * DAY CT:      =>DN-1 8E:-24 21E:-1¢ BE > 21E? YES                                                                              528\n* ACTION: 0 -0.70%                M7664 3HRE 7611 P7632                                                                       an        il\nT-12 -1)  «spxO/N 76317699 ©7632 030 $7628-76411 L/H 7611-7664                                                                           {     i\nMAG7 -0|  *\"SPXATR: 0.77% SPX-0.71% 60/40-0.58% GRO -0.96% TURBO -1.18%                                                       h if  I [3         .\nRGS    -1)     * SECTORS: P BY%: USD OILS XLP.U.V BIO J BP$ *A/I* S/W BANKS G/S/X COPX                                   1    ¥          in]               !\n* GRO HOLDINGS: SPYM,UPRO/SPXL,PLTR                                                                                                     Id hy                  _\nRAI100-2{ + Gro RVAB/REBAR: 0.90 (-0.11%/-3 82%) SELL FROG TRIM SPXL + PLTR                                                          Hh\nSPX -0.]  * TURBO HOLDINGS: SPYM,UPRO,TQQQ, BIT, ETHA,GDXU,FCX, MRNA, ZETA, SPCX, HOOD, PLTR,                                     It's             P\nQQQ -1.] * TURBO RVAB/REBAR: 1.K1(-2.22%/-4.69%) BUY HOOD                                           i,         =                        w\nDIA -O.       * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D                 3      RRL\n\"| * WED KEYS: SPX vs S0D/21E  QQQvs 100D/50D RZK vs 1000/50D                                      fh\nMID -14 >>> SEPSOD KEY LEVELS <<<                                                                                                    J\nRZK  -1.]      * 7816 (8/13 INTRADAY A-T-H)\n60/40 -0.      »7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER                    wn                                                ®\n$7686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG\nGRO ™03  «7667(4321EMA}) € 9/14 8/211 8/204 7/311\n========5|      7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS S00\n* EMAIL do|  * 7571/7603 (13 500/10WK) € 7/314 7/23 1/210 7/174 6/290\n:          * 7127/7159 (14 200D/40WK) € 4/81 3/19¢\n* TWITTER (\n* PHONE: {8|\n@ SITE:                                                                                                    FL I EE\n@ Duspiay Sets                                                                                                    fo 202                                 OQ Puy     [038 IAN\n",
+      "ocr_text_snippet": ">>> THE >> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << >) . » 2>> DAN yapker state: ® Brees O32 Oy *YL,X16,Ti| *STOINDEXESOD 64 RGEOD 81 NASI USDA TEX/TYX vs5d 2422 $52.68 >>> TUESD] SENTIMENT...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO/SPXL,PLTR ID HY _ RAI100-2{ + GRO RVAB/REBAR: 0.90 (-0.11%/-3 82%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL FROG TRIM SPXL + PLTR HH SPX -0.] * TURBO HOLDINGS: SPYM,UPRO,TQQQ, BIT, ETHA,GDXU,FCX, MRNA, ZETA, SPCX, HOOD, PLTR, IT'S P QQQ -1.] * TURBO RVAB/REBAR: 1.K1(-2.22%/-4.69%) BUY HOOD I, = W DIA -O. * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D 3 RRL WED KEYS: SPX VS S0D/21E QQQVS 100D/50D RZK VS 1000/50D FH MID -14 >>> SEPSOD KEY LEVELS <<< J RZK -1.] * 7816 (8/13 INTRADAY A-T-H) 60/40 -0. »7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER WN ® 7686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG GRO ™03 «7667(4321EMA}) € 9/14 8/211 8/204 7/311 5 7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS S00 EMAIL DO * 7571/7603 (13 500/10WK) € 7/314 7/23 1/210 7/174 6/290 7127/7159 (14 200D/40WK) € 4/81 3/19¢ TWITTER ( PHONE: {8 SITE: FL I EE DUSPIAY SETS FO 202 OQ PUY [038 IAN",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "85ff5144df1144d9",
+      "prefilter_score": 13.6,
+      "prefilter_stats": {
+        "brightRatio": 0.77875,
+        "darkRatio": 0.03923611111111111,
+        "edgeRatio": 0.18327326690693238,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1341,
+        "horizontalEdgeRatio": 0.09476362094551621,
+        "meanLuma": 228.7707638888889,
+        "stdDev": 46.78783843912176,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3846,
+        "verticalEdgeRatio": 0.27178291286834855
+      },
+      "score": 86.14,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 87.14
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "PLTR",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO",
+        "ZETA"
+      ],
+      "timestamp": 912,
+      "timestamp_hms": "00:15:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 276,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260901_20260901_hatbxndnd_4_5bfb08ca_whiteboard\\ocr\\ocr_000277.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260901",
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n>> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << o          .               »     5\n2>> DAN“ yaper state:                                                                 ®                          0 pe     ae     ©\n*YLXIG,TK{  \"STOINDEXESOT 64 RGEOT 8 NASIL USD/N TNX/TYXD vs 5d 2422                                                             952,68 1\n55> TUESD] © SENTIMENT: VIX 1 301-9 5) P&G               annszs-22262 JENS naam 02518                                                                              THR Gsa18) 0b\nBULL CASE: INITIATE RALLY & TREND 21EMA    €5/3-4 REGAIN 21E & FTD                                                Last Updater 02 56 PM ET 090172026\n* MARKETS] 3 BEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 9/1 BROKE BELOW 21E                                                                               0 0\n* WHAT HA       * NEWS: US RESUMES IRAN BOMBING WED: ADP FRI: BLS EMPLOYMENT REPORT                                                                                       »\n> WEAK STA       * TODAY'S KEYS: SPX vs 21E4,/8Ed,  QQQ vs 21EJ/8E  R2K vs 29001 /50D J\n21/21 -24  TOAYCT:  =>DN-1 86:2 216-14 8E>21E7 VES                                                                       i.                   f\n* ACTION: 0 -0.70%              M7664 3HRE 7611 P7632                                                             an      il\nT-12 -1) «spxO/N 76317699 07632 030 7628-76411 L/H 7611-7664                                                                           {     i\nMAG7 0)  *\"SPXATR:D.F7%{ SPX-0.71% 60/40-0.58% GRO-0.96% TURBO -1.18%                                                       )!  if  I [I         .\nRGS    1)     * SECTORS:  BY% USD OILS XLP.U.V BIO J BP$ *A/I* S/W BANKS G/S/X COPX                                   1    A          in]               !\n* GRO HOLDINGS: SPYM,UPRO/SPXL,PLTR,                                                                                                     Jt hy\nRAIL00-2{ + Gro RVAB/REBAR: 0.90 (-0.11%/-3.52%) SELL FROG TRIM SPXL + PLTR                                                          val\nSPX -0.       * TURBO HOLDINGS: SPYM,UPRO,TQQQLIBIT,ETHA, GDXU,FCX, MRNA, ZETA, SPCX, HOOD, PLTR,                                     Its\nQQQ 1] * TURBO RVAB/REBAR: 1.81 (-2.22%/-4.69%) BUY HOOD                                         of               1  eT                       %\nDIA -O.       * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D              J\n\"| * WED KEYS: SPX vs 50D/21€  QQQ vs 100D/50D R2K vs 1000/50D                                      fh\nMID -14 >>> SBPSOD KEY LEVELS <<<                                                                                                    1\nRZK  -1.]      * 7816 (8/13 INTRADAY A-T-H)\n60/40 0.      “$7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER                    wn                                                Ed\n“$7686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG\nGRO ™04  +7667(4321EMA}) € 9/14 8/211 8/204 7/311\n========5|      =» 7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, GQQ BREAKS 50D\n*EMAIL do| 7571/7603 (1350D/10WK) € 7/310 7/23 1/211 7/174 6/291\n:         * 7127/7159 (14 200D/40WK) € 4/81 3/19¢\n* TWITTER (\n* PHONE: {g|\n@ SITE:                                                                                                    FE EE EL\n@ Dpiay sett                                                                                        foe 2026                             Q Puy -    28 5a\n",
+      "ocr_text_snippet": ">>> THE >> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << o . » 5 2>> DAN“ yaper state: ® 0 pe ae © *YLXIG,TK{ \"STOINDEXESOT 64 RGEOT 8 NASIL USD/N TNX/TYXD vs 5d 2422 952,68 1 55> TUESD] © SENTI...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO/SPXL,PLTR, JT HY RAIL00-2{ + GRO RVAB/REBAR: 0.90 (-0.11%/-3.52%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL FROG TRIM SPXL + PLTR VAL SPX -0. * TURBO HOLDINGS: SPYM,UPRO,TQQQLIBIT,ETHA, GDXU,FCX, MRNA, ZETA, SPCX, HOOD, PLTR, ITS QQQ 1] * TURBO RVAB/REBAR: 1.81 (-2.22%/-4.69%) BUY HOOD OF 1 ET % DIA -O. * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D J WED KEYS: SPX VS 50D/21€ QQQ VS 100D/50D R2K VS 1000/50D FH MID -14 >>> SBPSOD KEY LEVELS <<< 1 RZK -1.] * 7816 (8/13 INTRADAY A-T-H) 60/40 0. \"$7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER WN ED 7686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG GRO ™04 +7667(4321EMA}) € 9/14 8/211 8/204 7/311 5 =» 7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, GQQ BREAKS 50D EMAIL DO 7571/7603 (1350D/10WK) € 7/310 7/23 1/211 7/174 6/291 7127/7159 (14 200D/40WK) € 4/81 3/19¢ TWITTER ( PHONE: {G SITE: FE EE EL DPIAY SETT FOE 2026 Q PUY - 28 5A",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "85ff5144df1144d9",
+      "prefilter_score": 13.57,
+      "prefilter_stats": {
+        "brightRatio": 0.7790972222222222,
+        "darkRatio": 0.03909722222222222,
+        "edgeRatio": 0.18238993710691823,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1326,
+        "horizontalEdgeRatio": 0.09370362518549925,
+        "meanLuma": 228.82444444444445,
+        "stdDev": 46.73779266910494,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3836,
+        "verticalEdgeRatio": 0.2710762490283372
+      },
+      "score": 86.07,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 87.02
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "PLTR",
+        "SPCX",
+        "SPYM",
+        "UPRO",
+        "ZETA"
+      ],
+      "timestamp": 1104,
+      "timestamp_hms": "00:18:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 246,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260901_20260901_hatbxndnd_4_5bfb08ca_whiteboard\\ocr\\ocr_000247.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260901",
+      "ocr_confidence": 59,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n>> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << o          .              »     ®\n2>> DAN gapker state:                                                                 h                          Qe s OB 20,\n*YLXIG,TK{  \"STOINDEXESOD GL RGEOT 84 NASIY USD/N TRX/TYXN vs 5d 2422                                                             952,68 1\n>>> TUESD] SENTIMENT: VIX 16.3815 121 8G               annazs-2e2262 SEEN naam 102.50                                                                              essa\n>BULL CASE: INITIATE RALLY & TREND 21EMA    €58/3-4 REGAIN 21E & FTD                                                Last Update: 02 59 PM ET 0810172026.\n* MARKETS] BEAR CASE: SUSTAINED BREAK BELOW 21EMA 4 9/1 BROKE BELOW 21€                                                                               PE\n* WHAT HAI      * NEWS: US RESUMES IRAN 8OMBING WED: ADP FRI: BLS EMPLOYMENT REPORT                                                                                       »\n9 weaksTa]  * TODAY'SKEYS: SPX vs 2164/8Ed  QQQvs 21EQ/8EL R2K vs 2900T/50Dd\n21/21 2.      * DAY CT:      =>DN-1 8E:-24 21E:-1¢ 8E >» 21E? YES                                                                              528                     f\n* ACTION: 0 -0.70%              M7664 3HRE 7611 17632                                                            py      il\nT-22 -Li «spxO/N 76317699 07632 030 bch § L/H 7611-7664                                                     {   I\nMAG7 -0|  *\"SPXATR:O.77%{ SPX-0.71% 60/40-0.58% GRO A96% TURBO -1.18%                                                       h iif  I |         “\nRGS  -1]   * SECTORS: P BY%: USD OILS XLP.U.V BIO J BP$ *A/I* S/W BANKS G/S/X COPX                       [:       [|          !\n* GRO HOLDINGS: SPYM,UPRO/SPXLPLTR                                                                                                 J iy\nRAI100-2{ + Gro RVAB/REBAR: 0.90 (-0.11%/-3 52%) SELL FROG TRIM SPXL + PLTR                                                          Hh\nSPX    -0.      * TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBIT,ETHA, GDXU,FCX, MRNA, ZETA, SPCX, HOOD, PLTR,                              Ii   t\nQQQ 1] * TURBO RVAB/REBAR: 1.1 (-2.22%/-4.69%) BUY HOOD                                          oH               1  ———                       0\nDIA 0       * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D        2 4     Th\n\"| * WED KEYS: SPX vs 50D/21€  QQQ vs 100D/50D RZK vs 100/500                                      fh\nMID -14 >>> SEPSOD KEY LEVELS <<<                                                                                                    fq\nR2K  -1.]  *7816 (8/13 INTRADAY A-T-H)\n60/40 -0.      »7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER                    “wn                                                @\n$7686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG\nGRO ~-0.9 «7667 ($3 21EMA) € 9/14 8/211 8/204 7/311\n========5|      7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS S00\n* EMAIL do|  * 7571/7603 (3 500/10WK) € 7/314 7/234 1/211 7/174 6/290\n* 7127/7159 (14 200D/40WK) € 4/81 3/19¢\n* TWITTER (\n* PHONE: {8\n®\" SITE:                                                                                                    FEI I EE TL\n(@ Drspiay Sete                                                                                        fox 232                             OQ Puy    [038 IAN\n",
+      "ocr_text_snippet": ">>> THE >> TALE OF THE TAPE — TUESDAY, SEPTEMBER 1, 2026 << o . » ® 2>> DAN gapker state: h Qe s OB 20, *YLXIG,TK{ \"STOINDEXESOD GL RGEOT 84 NASIY USD/N TRX/TYXN vs 5d 2422 952,68 1 >>> TUESD] SENT...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO/SPXLPLTR J IY RAI100-2{ + GRO RVAB/REBAR: 0.90 (-0.11%/-3 52%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL FROG TRIM SPXL + PLTR HH SPX -0. * TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBIT,ETHA, GDXU,FCX, MRNA, ZETA, SPCX, HOOD, PLTR, II T QQQ 1] * TURBO RVAB/REBAR: 1.1 (-2.22%/-4.69%) BUY HOOD OH 1 --- 0 DIA 0 * BOTTOM LINE: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS 50D 2 4 TH WED KEYS: SPX VS 50D/21€ QQQ VS 100D/50D RZK VS 100/500 FH MID -14 >>> SEPSOD KEY LEVELS <<< FQ R2K -1.] *7816 (8/13 INTRADAY A-T-H) 60/40 -0. »7712 FRI: DOLLAR AND YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER \"WN @ 7686 MON: YIELDS NEAR 5-YEAR HIGHS, STOCKS WEAK, CRYPTO STRONG GRO ~-0.9 «7667 ($3 21EMA) € 9/14 8/211 8/204 7/311 5 7631 TODAY: WEAK START TO WORST MONTH; SPX BREAKS 21E, QQQ BREAKS S00 EMAIL DO * 7571/7603 (3 500/10WK) € 7/314 7/234 1/211 7/174 6/290 7127/7159 (14 200D/40WK) € 4/81 3/19¢ TWITTER ( PHONE: {8 SITE: FEI I EE TL (@ DRSPIAY SETE FOX 232 OQ PUY [038 IAN",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 59,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 59,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "85ff5144df1144d9",
+      "prefilter_score": 13.59,
+      "prefilter_stats": {
+        "brightRatio": 0.7790277777777778,
+        "darkRatio": 0.03916666666666667,
+        "edgeRatio": 0.18316726733093067,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1335,
+        "horizontalEdgeRatio": 0.09433962264150944,
+        "meanLuma": 228.76395833333333,
+        "stdDev": 46.794968490194094,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3849,
+        "verticalEdgeRatio": 0.2719949120203519
+      },
+      "score": 81.99,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.95,
+        "pair_bonus": 0,
+        "per_row_issues": -10,
+        "per_row_metrics": 8,
+        "text_density": 87.04
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "IBIT",
+        "PLTR",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO",
+        "ZETA"
+      ],
+      "timestamp": 984,
+      "timestamp_hms": "00:16:24"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260901_20260901_hatbxndnd_4_5bfb08ca_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 3.36,
+      "prefilter_stats": {
+        "brightRatio": 0.46118055555555554,
+        "darkRatio": 0.3138888888888889,
+        "edgeRatio": 0.2408310366758533,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2308,
+        "horizontalEdgeRatio": 0.16309801427460957,
+        "meanLuma": 164.83798611111112,
+        "stdDev": 93.09434320951469,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4508,
+        "verticalEdgeRatio": 0.318564059077097
+      },
+      "score": -17.12,
+      "score_breakdown": {
+        "chart_likeness": -5.1229445889177825,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 198,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260901_20260901_hatbxndnd_4_5bfb08ca_whiteboard\\ocr\\ocr_000199.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 792,
+      "observed_date": null,
+      "ocr_confidence": 43,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE RE\n>»> DAILY | Me=<=msures a @B         X Only Wey Mowhy Mav  < S126 [3 Press OBB\nb—                                                                                         f\nYL 6, Tok  CBOE 30 Year Treasury Bond Yield Index                                                                           ve so 52.68 :\n>>> TUESDAY, §                 © Top ATH sec      -                                                                                                ova\nARKE ST                                                                                                                     LeU 025 Pw £1 cooVCZS\nLN   E-RNCI                                              w\n* WHAT HAPPEN                ELEN ai SES a “ah NUD A cui NI\nSD WEAKSTARTTQV mm ——\n21/21 2.54%                                                                                       ww             :\nT12 1.03%                                                                           wo\nband fe 8\nMAG7 0.74%                                   ser                fu hy  [S.\na     p |     zo\nRGE  -1.68%                                                   [                     Yo        A\nRAI100 -2.72%                                                                      il                       i nN Ly\nSPX 0.71%                                                 /   i             Rl  ro\nom                                 o                   i\nwr                i        TL NS                 ”\nDIA -0.79%            i                    I   I         [=        [TR\nMID -1.05% »    a   |  1%         il 1 wll                      1;\nRZK 1.23% yall” th  Su Sef         -\n60/40 0.58% “on ob      NE                                            ha                               hd\nGRO ~-0.96%                           ;\n——              la\n1               Cea\n*EMAlL:don@re oe» = 000000000 0 000000\n* TWITTER (X): @ “0m\n* PHONE: {855} R                                                            Dt Not Asal\nPa STereve ® =m ome mw om oe ae woe ww won\n@osaysers Ti Somes | Us    Reports   21.21 8/31 <<< 2Nitems © paver PULTE               Ory - CE EA\n",
+      "ocr_text_snippet": ">>> THE RE >»> DAILY | Me=<=msures a @B X Only Wey Mowhy Mav < S126 [3 Press OBB b— f YL 6, Tok CBOE 30 Year Treasury Bond Yield Index ve so 52.68 : >>> TUESDAY, § © Top ATH sec - ova ARKE ST LeU 0...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 43,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 43,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80aa55577e555599",
+      "prefilter_score": 17.38,
+      "prefilter_stats": {
+        "brightRatio": 0.7986805555555555,
+        "darkRatio": 0.06465277777777778,
+        "edgeRatio": 0.1544060490424705,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1321,
+        "horizontalEdgeRatio": 0.0933502932654936,
+        "meanLuma": 225.688125,
+        "stdDev": 57.30115519570387,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3049,
+        "verticalEdgeRatio": 0.21546180481944738
+      },
+      "score": -25.85,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.15,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "LEU"
+      ],
+      "timestamp": 792,
+      "timestamp_hms": "00:13:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 108,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260901_20260901_hatbxndnd_4_5bfb08ca_whiteboard\\ocr\\ocr_000109.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 432,
+      "observed_date": null,
+      "ocr_confidence": 43,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE RE\n>>> DAILY fy Ma=siecs «6B      x om wey my a mm     EEE\nYT, 16, TiTok: S&P 500 Index                                                               1.631.471\n>>> TUESDAY, §             © Tor WATGH sesciv20       -                                                                                       Vol 4258188677 4470,\nwars                                        ves\n* WHAT HAPPENE — =                        Son _ 7 TNT ON FEN        .\n=» WEAK START TO —\n21/21 2.54%                                                                                     wens              \\\nT12 1.03%                                      ro       oe   flee Math,\nMAG7 -0.74%                                           \\  ar!  thy  ptm  I — eg,\nRGB 1.68%                                         ot Ht   I       fod        Snes\nRAI100 -2.72%                                     m        Wt =        rs:\nSPX 0.71%                                    wy                 =     me\naaa -1.27%      ry EY hed  ,         La    i            can   A    000\nDIA 0.79% uff), Tu TE   irre.                     wan      pr\nte   a  —                         Smo wm\nR2K 123%                      Fu                   wl    Tao    —\n60/40 -0.58%                                           il                                       avn       fra\nGRO ~-0.96%                                          wha                                      swtio       fone\neemeemes                                                           poi     jor\n* EMAIL: don@re                                          creud\n* TWITTER (X): @_ 90 vie        I         ny         we    .   i       wo     5\nswore es, gdm, 5\n@   A SA\nCensions_T]  somes [Un    Reports   21.21 8/31 <<< ZVitems Cres PN ITE EK              OFy - OR E A\n",
+      "ocr_text_snippet": ">>> THE RE >>> DAILY fy Ma=siecs «6B x om wey my a mm EEE YT, 16, TiTok: S&P 500 Index 1.631.471 >>> TUESDAY, § © Tor WATGH sesciv20 - Vol 4258188677 4470, wars ves * WHAT HAPPENE — = Son _ 7 TNT O...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 43,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 43,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80ae55557f555552",
+      "prefilter_score": 17.59,
+      "prefilter_stats": {
+        "brightRatio": 0.7613888888888889,
+        "darkRatio": 0.06479166666666666,
+        "edgeRatio": 0.16104868913857678,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1284,
+        "horizontalEdgeRatio": 0.09073563705745177,
+        "meanLuma": 222.65548611111112,
+        "stdDev": 57.684746603724584,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3274,
+        "verticalEdgeRatio": 0.2313617412197018
+      },
+      "score": -25.85,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.15,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 432,
+      "timestamp_hms": "00:07:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 156,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260901_20260901_hatbxndnd_4_5bfb08ca_whiteboard\\ocr\\ocr_000157.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 621.92,
+      "observed_date": null,
+      "ocr_confidence": 40,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE RE!\n55> DAILY § Mame=sisce o QI      Tom we wy we «wm oo     EEX Co co: oo,\n222 DALI                                                                    $2,920.13 1\nYLXIGTKIOk Russell 2000 Index                                                                                                                  aur diana\n>>> TUESDAY, §             © erway                                                                                 ne 0430 ET Groves\n.         )\n\nMARKETSTATE: , 0                                   SEIN    ©\n* WHAT HAPPEN ~~ «or               —               ~                                                                                                                »\n=» WEAK START TO —\n\n21/21 2.56%                                                                                      po              !\n\nTz 103%                                                    He       Lap)\n\ncally\n\nMAGT 0.74%                                                                   i al ys hl     w-\n\nRGE  -168%                                     mea oh r     sos LL,\n\nRAI100 -2.72%                                      ¥  o\n\nyt ThE       :                      -\nSPX 0.71%           sn                    Flyer    !    ws\nQQ 1.27%         y   Fre           Ld      onasg\nPlay  A            od                     pm    .\n\nDIA 0.79% pee    Eh    fii I —     [Se                              i.\n\nwo 10s fg,    a aw.         20\n\nRak 123% ANE Hr             META          v\n\n60/40 -0.58% Tor NE                                                               2\n\nEs\n\nGRO ~-0.96%\n*EMANdon@ee™— vert\nS TWITTER (X): @ \"®ve    -     sa         -          sm                        a\n* PHONE: (855) R                   |             |                       |                        [                             |\n\n:        (5      Ww  ! [      1\"     Ed      13     Ed      13      Ed     0      u      3      a     os     \"     [2]      wv      El      1\"      a\n\n@® SITE: revel                 po                po               Mar                 apr              =n               dun,                  Avg                sop\n\n0a setngs Py   Severs | tan    Reports   21.21 8/31 <<< 20 items © rvs BPM 0T 30               OFy - OR ERA\n",
+      "ocr_text_snippet": ">>> THE RE! 55> DAILY § Mame=sisce o QI Tom we wy we «wm oo EEX Co co: oo, 222 DALI $2,920.13 1 YLXIGTKIOk Russell 2000 Index aur diana >>> TUESDAY, § © erway ne 0430 ET Groves . ) MARKETSTATE: , 0...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 40,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 40,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80ae55557f555592",
+      "prefilter_score": 16.94,
+      "prefilter_stats": {
+        "brightRatio": 0.7903472222222222,
+        "darkRatio": 0.06465277777777778,
+        "edgeRatio": 0.1600240265705604,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1356,
+        "horizontalEdgeRatio": 0.09582361670553317,
+        "meanLuma": 225.134375,
+        "stdDev": 57.11701012953281,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3173,
+        "verticalEdgeRatio": 0.2242244364355876
+      },
+      "score": -26,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "TAN"
+      ],
+      "timestamp": 624,
+      "timestamp_hms": "00:10:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 78,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260901_20260901_hatbxndnd_4_5bfb08ca_whiteboard\\ocr\\ocr_000079.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 312.8,
+      "observed_date": null,
+      "ocr_confidence": 40,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE RE\n>>> DAILY h MarkeTsUrRGE  o [BF         Xx Toul Wey Mowmy Me «  < 16 (3        ===: wos OBO,\n*VLXIG TIO | cob £00 Index                                                                            7831471\n>>> TUESDAY,             © Top WATCH cecs +26)       -                                                                                 pais dar\nCMARKETSTATE:                                               pi\n“WHAT HAPPENI  &                      I Et NV a NC DR        =\n=» WEAK START TO —\n\n21/21 2.50%                                                                                     em              ,\n\nT12 -1.03%                                                   i.          i.    fut\n\nMAG7 -0.74%                                                     ,  7   TL. 1     |\n\nRG8  -1.68%                                            ob iF    ii     Be\n\nRAI100 -2.72%                                                                                              ¥                             a               rob\n\nSPX 0.71%                                       ged        .\n\nQQa 1.27%       wos Tm ama             or                                  N\n\nDia 0.79% oy eye                     !      =\n\nMID 1.05% Ap\n\nRK -1.23%\n\n60/40 -0.58%                                          bi                                                                Ld\n\nGRO ~-0.96%                                          oh\nBE\n* TWITTER (X): @__e0 vos        in         T     a   on    mo   ow       -     Fr\n\n          i                                                                           iH\n\nvows aA avi, =\n@   a i a Sa\n\nGowns Dif Swe [lm    Reports   21.21 8/31 <<< 2Nitems © vnaret FP ITE              OF - CE Em A\n",
+      "ocr_text_snippet": ">>> THE RE >>> DAILY h MarkeTsUrRGE o [BF Xx Toul Wey Mowmy Me « < 16 (3 ===: wos OBO, *VLXIG TIO | cob £00 Index 7831471 >>> TUESDAY, © Top WATCH cecs +26) - pais dar CMARKETSTATE: pi “WHAT HAPPEN...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 40,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 40,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80ae55557f555592",
+      "prefilter_score": 17.46,
+      "prefilter_stats": {
+        "brightRatio": 0.7769444444444444,
+        "darkRatio": 0.06472222222222222,
+        "edgeRatio": 0.15871669846653946,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1263,
+        "horizontalEdgeRatio": 0.08925164299342803,
+        "meanLuma": 223.0896527777778,
+        "stdDev": 57.6326171503746,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3229,
+        "verticalEdgeRatio": 0.2281817539396509
+      },
+      "score": -26,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 312,
+      "timestamp_hms": "00:05:12"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 2,
+      "end_ts": 1008,
+      "end_hms": "00:16:48",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 234,
+      "peak_score": 87.72,
+      "start_hms": "00:15:36",
+      "start_ts": 936
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 1104,
+      "end_hms": "00:18:24",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 276,
+      "peak_score": 86.07,
+      "start_hms": "00:18:24",
+      "start_ts": 1104
+    }
+  ],
+  "video_type": "daily",
+  "video_type_label": "Daily",
+  "video_type_description": "Tue-Fri DMI episode — full portfolio deltas, daily metrics",
+  "video_type_classified_at": "2026-09-15T10:15:31.685Z",
+  "classification_inputs": {
+    "title_excerpt": "WEAK START TO THE SEASONALLY WORST MONTH...HERE'S WHAT TO LOOK FOR NEXT  PLTR FROG FCX GDX IBIT",
+    "upload_date": "20260901",
+    "retroactive": true
+  }
+}

@@ -1,0 +1,1343 @@
+# cmd: node tools/scanVideoWithOcr.js --video C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260909_iCGc5ObTkrs.mp4 --date 20260909 --output-root C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260915\ocr-20260915-backfill --run-tag ocr-20260915-backfill --ffmpeg-bin c:/Users/admin/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-9.0.1-full_build/bin/ffmpeg.exe
+[scan:whiteboard] ffprobe found 179 keyframe(s) for nearest-keyframe lookup
+[scan:whiteboard] preflighting final whiteboard output extraction
+[scan:whiteboard] extracting sample frames from C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260909_iCGc5ObTkrs.mp4
+[scan:whiteboard] extracted 221 frame(s) at 0.25 fps with width 640; starting prefilter
+[scan:whiteboard] prefilter 1/221 frames after 00:00:00; best prefilter 3.47 at 00:00:00
+[scan:whiteboard] prefilter 10/221 frames after 00:00:01; best prefilter 3.59 at 00:00:20
+[scan:whiteboard] prefilter 20/221 frames after 00:00:01; best prefilter 3.59 at 00:00:20
+[scan:whiteboard] prefilter 30/221 frames after 00:00:01; best prefilter 14.07 at 00:01:56
+[scan:whiteboard] prefilter 40/221 frames after 00:00:02; best prefilter 16.03 at 00:02:32
+[scan:whiteboard] prefilter 50/221 frames after 00:00:02; best prefilter 16.03 at 00:02:32
+[scan:whiteboard] prefilter 60/221 frames after 00:00:03; best prefilter 16.14 at 00:03:48
+[scan:whiteboard] prefilter 70/221 frames after 00:00:03; best prefilter 17.06 at 00:04:12
+[scan:whiteboard] prefilter 80/221 frames after 00:00:04; best prefilter 17.06 at 00:04:12
+[scan:whiteboard] prefilter 90/221 frames after 00:00:04; best prefilter 17.06 at 00:04:12
+[scan:whiteboard] prefilter 100/221 frames after 00:00:05; best prefilter 17.06 at 00:04:12
+[scan:whiteboard] prefilter 110/221 frames after 00:00:05; best prefilter 17.06 at 00:04:12
+[scan:whiteboard] prefilter 120/221 frames after 00:00:06; best prefilter 17.06 at 00:04:12
+[scan:whiteboard] prefilter 130/221 frames after 00:00:06; best prefilter 18.66 at 00:08:16
+[scan:whiteboard] prefilter 140/221 frames after 00:00:07; best prefilter 18.66 at 00:08:16
+[scan:whiteboard] prefilter 150/221 frames after 00:00:07; best prefilter 18.66 at 00:08:16
+[scan:whiteboard] prefilter 160/221 frames after 00:00:08; best prefilter 18.66 at 00:08:16
+[scan:whiteboard] prefilter 170/221 frames after 00:00:08; best prefilter 18.66 at 00:08:16
+[scan:whiteboard] prefilter 180/221 frames after 00:00:09; best prefilter 18.66 at 00:08:16
+[scan:whiteboard] prefilter 190/221 frames after 00:00:09; best prefilter 18.66 at 00:08:16
+[scan:whiteboard] prefilter 200/221 frames after 00:00:09; best prefilter 18.66 at 00:08:16
+[scan:whiteboard] prefilter 210/221 frames after 00:00:10; best prefilter 18.66 at 00:08:16
+[scan:whiteboard] prefilter 220/221 frames after 00:00:10; best prefilter 18.66 at 00:08:16
+[scan:whiteboard] prefilter 221/221 frames after 00:00:10; best prefilter 18.66 at 00:08:16
+[scan:whiteboard] prefilter kept 60/221 frame(s) for OCR; best prefilter 18.66 at 00:08:16
+[scan:whiteboard] extracting OCR candidates from source video at width 1280
+[scan:whiteboard] OCR 1/60 frames (1.7%) after 00:00:03; best score -16.07 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 10/60 frames (16.7%) after 00:01:46; best score 58.25 at 00:01:36 (ocr 66.0)
+[scan:whiteboard] OCR 20/60 frames (33.3%) after 00:05:26; best score 58.25 at 00:01:36 (ocr 66.0)
+[scan:whiteboard] OCR 30/60 frames (50.0%) after 00:08:07; best score 116.20 at 00:05:24 (ocr 65.0)
+Image too small to scale!! (1x36 vs min width of 3)
+Line cannot be recognized!!
+[scan:whiteboard] OCR 40/60 frames (66.7%) after 00:10:43; best score 118.42 at 00:06:48 (ocr 64.0)
+[scan:whiteboard] OCR 50/60 frames (83.3%) after 00:13:51; best score 118.42 at 00:06:48 (ocr 64.0)
+Image too small to scale!! (1x36 vs min width of 3)
+Line cannot be recognized!!
+[scan:whiteboard] OCR 60/60 frames (100.0%) after 00:16:43; best score 118.42 at 00:06:48 (ocr 64.0)
+{
+  "date_key": "20260909",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260909_iCGc5ObTkrs.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 102,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260909_20260909_icgc5obtkrs_697336be_whiteboard\\ocr\\ocr_000103.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 409.76,
+      "observed_date": "20260909",
+      "ocr_confidence": 64,
+      "ocr_profile": "threshold",
+      "ocr_text": "# Preview fio Gor view Go Todt Window Hep                                                                [=%      ® OC AC FE 4 LC ma FT Q BO wedSeps 506M\nosm\n>> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 <<                                                                                                             WHAT'S THE MARKET TREND?\n* MARKET STATE: UPTREND                                                                                                                      \"THE GROTECTION GAUGE”\n*STOINDEXESAT 14 RG86T 04 NASI USD TNX/TYXA vs5d2130\n* SENTIMENT: VIX 36 55 +2 vi. | FRG             ann 007 68227 001 TETT warn 5.611609\nPBULL CASE: INITIATE RALLY & TRIND 21EMA  €8/3-4 RIGAIN 214L & FTD                                                                                                -\nDBEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 5/1 BROKE BELOW 21E             +                                                                                     |<]\n“NEWS: TREASURY DEPT BUY BACK $68 DEBT THU: PPI FRI; CPI                                                                                                         —\n* TODAY'S KEYS: SPX vs 21E4,/78000 QQQ vs S0DM/21ET  R2Kvs 100D4./5003                                                                                                                          :\n*DAYCT:D-2=>D-3 8:20 21E:-20 B8E>21€7 ves                                                                                                                  | [=]\n* ACTION: 0 -0.17% OPEN = HIGH $7661 7625 7650\n“SPXO/N 7639-76871 O7661 030 7645-76517 L/H 7624-7661\n* SPXATR: 0.68% SPX-0.48% 60/40-0.49% GRO-0.28% TURBO -0.70%                                                         [MED M TERM (some) ==>  EEE 3\n* SECTORS: 4 BPS USD GLE XLE USO HACK SOXX IBIT PICK 3 BYS USD KRE XLU ITB UFO                                        a          5625 NEUTRAL => UP\n* GRO HOLDINGS: SPYM,UPRO,QLD,ARKG,PLTR MU, HPE OKTA, CF,\n* GRO RVAB/REBAR: 1.13 {0.08%/ 3.98%) BUYARKG SELL SPCX                                                                      LONG TERM (200mma} ==>   [|e]\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ, BIT, ETHA,GOXU,FCX SPCK HOOD, PURR, RBRK, TEM                                                   wiozs wevTRAL=s vp [|\n* TURBO RVAB/REGAR: | 56 (-1.91%/4.58%) NO CHANGES\n* BOTTOM LINE: 9 OIL. WELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND\n* THURS KEYS: SPXvs 21/7620 QQQ vs 500/21E 2K vs 100D/50D\n2 SBPS00 KEY LEVELS <<<                                                                                                                                                      (+\n* 7816 (8/13 INTRADAY A-T-H)\n$7719 FRI: STRONG JOBS KUMBER PAUSES INDEXES BLT A | STOCKS RALLY\n“7678{  21EMA) € 9/14 8/2:1 8/204 1/311\n7674 TUES: Al FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN\n27636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND\n* 7598/7606 (76 SOD/10WK) € 7/311 7/234 7/211 7/174 6/291\n* 7147/7160 (15 2000/40WK)_€ 4/87 3/193\n* EMAIL: connor@revereasset.com                                   R e \\% e T e   A S S et\nConnor Bates\n* TWITTER (X): @ConnorlBates_                                                                                                  Analyst/Associate PM\n* PHONE: (855) REAL-WEALTH / (855) 732-5932            M                                    t                    Email: Connor@ReveroAssot.corm\n* WEB SITE: revereasset.com                                              an a ge m e n                          Twitter: @ConnorBatas._\n",
+      "ocr_text_snippet": "# Preview fio Gor view Go Todt Window Hep [=% ® OC AC FE 4 LC ma FT Q BO wedSeps 506M osm >> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 << WHAT'S THE MARKET TREND? * MARKET STATE: UPTREND \"THE...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.13 {0.08%/ 3.98%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY ARKG SELL SPCX LONG TERM (200MMA} ==> [ E]",
+          "bottom_line": "9 OIL. WELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPXVS 21/7620 QQQ VS 500/21E 2K VS 100D/50D 2 SBPS00 KEY LEVELS <<< (+ 7816 (8/13 INTRADAY A-T-H) 7719 FRI: STRONG JOBS KUMBER PAUSES INDEXES BLT A STOCKS RALLY 7678{ 21EMA) € 9/14 8/2:1 8/204 1/311 7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 27636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND 7598/7606 (76 SOD/10WK) € 7/311 7/234 7/211 7/174 6/291 7147/7160 (15 2000/40WK)_€ 4/87 3/193 EMAIL: CONNOR@REVEREASSET.COM R E \\% E T E A S S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANALYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@REVEROASSOT.CORM WEB SITE: REVEREASSET.COM AN A GE M E N TWITTER: @CONNORBATAS._",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 64,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REGAR: 56 (-1.91%/4.58%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "9 OIL. WELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPXVS 21/7620 QQQ VS 500/21E 2K VS 100D/50D 2 SBPS00 KEY LEVELS <<< (+ 7816 (8/13 INTRADAY A-T-H) 7719 FRI: STRONG JOBS KUMBER PAUSES INDEXES BLT A STOCKS RALLY 7678{ 21EMA) € 9/14 8/2:1 8/204 1/311 7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 27636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND 7598/7606 (76 SOD/10WK) € 7/311 7/234 7/211 7/174 6/291 7147/7160 (15 2000/40WK)_€ 4/87 3/193 EMAIL: CONNOR@REVEREASSET.COM R E \\% E T E A S S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANALYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@REVEROASSOT.CORM WEB SITE: REVEREASSET.COM AN A GE M E N TWITTER: @CONNORBATAS._",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 64,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c091a52dded27c87",
+      "prefilter_score": 2.75,
+      "prefilter_stats": {
+        "brightRatio": 0.4463888888888889,
+        "darkRatio": 0.30368055555555556,
+        "edgeRatio": 0.24659034697194546,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2337,
+        "horizontalEdgeRatio": 0.16514733941064236,
+        "meanLuma": 163.64090277777777,
+        "stdDev": 93.01060278129881,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4642,
+        "verticalEdgeRatio": 0.32803335453324856
+      },
+      "score": 118.42,
+      "score_breakdown": {
+        "chart_likeness": -5.383195548938678,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.2,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 20,
+        "text_density": 96.6
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "QLD",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 408,
+      "timestamp_hms": "00:06:48",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260909_ps.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 90,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260909_20260909_icgc5obtkrs_697336be_whiteboard\\ocr\\ocr_000091.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 359.92,
+      "observed_date": "20260909",
+      "ocr_confidence": 65,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Proview fie Eat View Go Tools Window ep                                                                CG B06 0 £40 L & F a 8 © wdseps soseu\n\nes\n\n>> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 <<                                                                                                             WHAT'S THE MARKET TREND?\n\n* MARKET STATE: UPTREND                                                           *                                                          “THE GROTECTION GAUGE\"\n\n*STOINDEXES AT 1H RGBET 04 NASIY USD TNX/TYX vs 5d 2130\n\n* SENTIMENT: VIX 15 2-3 £86          wn 33.7 16822701 ETT aro 5561.16.59\n\nDBL CASE INITIATE RALLY & TREND 22EMA  €8/3-0 REGAIN 20( & FTD                                                                                              —\n\nJBEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 5/1 BROKE BELOW 21E\n\n* NEWS: TREASURY DEPT BUY BACK $68 DEBT THU: PPI FRI: CPI\n\n* TODAY'S KEYS: SPX vs 216 4,/78000 QQQ vs SODM/21ET  R2Kvs 10004,/500%\n\n*DAYCT:D-2=>0-3 8:24 216-20 B8E>21€7 vis                                                                                                                  [=]\n\n* ACTION: 00.17% OPEN = HIGH $7661 17625 37650\n\n“SPXO/N 7639-76871 07661 O30 7645-76617 L/H 7624-7661\n\n* SPXATR: 0.68% SPX-0.48% 60/40-0.49% GRO-0.28% TURBO -0.70%                                                         uEDuM TERM (some) =e  HEE 3\n\n* SECTORS: 1+ BPS USD GLD Xe USO HACK SOXX (BIT PICK J BYS USD KRE XLU ITB UFO                                          P=             8425 REUTRAL => UP\n\n* GRO HOLDINGS: SPYM,UPRO,QUD,ARKG,PLTR MU, HPE.OKTA, CF,\n\n* GRO RVAB/REBAR: 1.13 (0.16%/3.98%) BUYARKG SELL SPCX                                                                      LONG TERM (200mm) =>   INE 3\n\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ, BIT. ETHA,GDXU,FCX SPC HOOD, PURR, RBRK, TEM                                                   1076 weUTRAL = 0p [|\n\n* TURBO RVAB/REBAR: 1 8G (-1.91%/-4.58%} NO CHANGES\n\n* BOTTOM LINE: Oil, YIELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND\n\n* THURS KEYS: SPX vs 21/7620 QQQ vs S0D/21E RK vs 100D/50D\n\n2 SBPS00 KEY LEVELS <<<                                                                                                                                                      (+\n\n* 7816 (8/13 INTRADAY A-T-H}\n\n$7713 FRI: STRONG IDBS KUMBER PAUSES INDEXES BUT A-1 STRCKS RALLY\n\n“7678{  21EMA) €9/14 82:1 8/204 yt\n\n37674 TUES: AI FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN\n\n$7636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE T0 ACT AS A HEADWIND\n\n* 7598/7606 (16 SOD/10WK) € 7/317 7/234 214 174 6/281\n\n* 7147/7160 (15 2000/40WK) € 4/87 3/194\n\n*        .\nEMAIL: connor@revereasset.com                                     R e \\% e T e    A S S et                            Connor Bates\n\n* TWITTER (X): @ConnorlBates_                                                                                                  Anatyst/Associate PM\n\n* PHONE: (855) REAL-WEALTH / (855) 732-5932            M                                   t                   Email: Connor@RovereAsset corm\n\n* WEB SITE: revereasset.com                                               a n a ge m e n                           Twitter: @ConnorBates_\n",
+      "ocr_text_snippet": "® Proview fie Eat View Go Tools Window ep CG B06 0 £40 L & F a 8 © wdseps soseu es >> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 << WHAT'S THE MARKET TREND? * MARKET STATE: UPTREND * “THE GROT...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.13 (0.16%/3.98%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY ARKG SELL SPCX LONG TERM (200MM) => INE 3",
+          "bottom_line": "OIL, YIELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPX VS 21/7620 QQQ VS S0D/21E RK VS 100D/50D 2 SBPS00 KEY LEVELS <<< (+ 7816 (8/13 INTRADAY A-T-H} 7713 FRI: STRONG IDBS KUMBER PAUSES INDEXES BUT A-1 STRCKS RALLY 7678{ 21EMA) €9/14 82:1 8/204 YT 37674 TUES: AI FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 7636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE T0 ACT AS A HEADWIND 7598/7606 (16 SOD/10WK) € 7/317 7/234 214 174 6/281 7147/7160 (15 2000/40WK) € 4/87 3/194 EMAIL: CONNOR@REVEREASSET.COM R E \\% E T E A S S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANATYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@ROVEREASSET CORM WEB SITE: REVEREASSET.COM A N A GE M E N TWITTER: @CONNORBATES_",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 65,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ, BIT. ETHA,GDXU,FCX SPC HOOD, PURR, RBRK, TEM 1076 WEUTRAL = 0P [",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "OIL, YIELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPX VS 21/7620 QQQ VS S0D/21E RK VS 100D/50D 2 SBPS00 KEY LEVELS <<< (+ 7816 (8/13 INTRADAY A-T-H} 7713 FRI: STRONG IDBS KUMBER PAUSES INDEXES BUT A-1 STRCKS RALLY 7678{ 21EMA) €9/14 82:1 8/204 YT 37674 TUES: AI FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 7636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE T0 ACT AS A HEADWIND 7598/7606 (16 SOD/10WK) € 7/317 7/234 214 174 6/281 7147/7160 (15 2000/40WK) € 4/87 3/194 EMAIL: CONNOR@REVEREASSET.COM R E \\% E T E A S S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANATYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@ROVEREASSET CORM WEB SITE: REVEREASSET.COM A N A GE M E N TWITTER: @CONNORBATES_",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 65,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c091a52dded27c87",
+      "prefilter_score": 2.8,
+      "prefilter_stats": {
+        "brightRatio": 0.44680555555555557,
+        "darkRatio": 0.30409722222222224,
+        "edgeRatio": 0.24567168397993075,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2332,
+        "horizontalEdgeRatio": 0.1647940074906367,
+        "meanLuma": 163.69375,
+        "stdDev": 93.0142960328844,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4621,
+        "verticalEdgeRatio": 0.3265493604692248
+      },
+      "score": 116.86,
+      "score_breakdown": {
+        "chart_likeness": -5.345563187535122,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.25,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 19,
+        "text_density": 95.96
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "GLD",
+        "HOOD",
+        "MU",
+        "PLTR",
+        "PURR",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 360,
+      "timestamp_hms": "00:06:00",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260909_ps_2.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 78,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260909_20260909_icgc5obtkrs_697336be_whiteboard\\ocr\\ocr_000079.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 310.8,
+      "observed_date": "20260909",
+      "ocr_confidence": 65,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Preview fio Est view Go Toss Window Hep                                                                GB ®&® Ac & 40 L $1 7 Q EB © wdseps 55pm\nrR)\n>> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 <<                                                                                                             WHAT'S THE MARKET TREND?\n* MARKET STATE: UPTREND                                                                                                                   “THE GROTECTION GAUGE”\n*STOINDEXESAT 14 RG86T 04 NASI USD TNX/TYX4 vs5d2130\n* SENTIMENT: VIX 16 53 +3 vi.'| FBG             Ann 29.7 68227 000 TXTT nan 25.61.1609\nPBULL CASE: INITIATE RALLY & TREND 21EMA  €8/3-4 REGAIN 21€ & FID                                                                                                -—\nDBEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 5/1 BROKE BELOW 21E\n* NEWS: TREASURY DEPT BUY BACK $68 DEBT THU: PPL FRI: CPI\n* TODAY'S KEYS: SPX vs 21E4,/78000 QQQ vs SOD1M/21EF  R2Kvs 10004,/5003                                                                                                                          :\n*DAYCT: D-2=>D-3 8:20 216-20 B8E>21E7 ves\n* ACTION: 00.17% OPEN = HIGH $7661 17625 37650\n“SPXO/N 7639-76871 07661 030 7645-76517 L/H 7624-7661\n* SPXATR: 0.68% SPX-0.48% 60/40-0.49% GRO-0.28% TURBO -0.70%                                                         [MED M TERM (some) ==>  NEE 3\n* SECTORS: 4 BPS USD GLO Xe USO HACK SOXX IBIT PICK 3 BY% USD KRE XLU ITB UFO                                          =              8425 HEUTRAL => UP\n* GRO HOLDINGS: SPYM,UPRO,QLD,ARKG, PTR MU, HPE OKTA, CF,\n* GRO RVAB/REBAR: 1.13 {0.98%/ 3.98%) BUYARKG SELLSPCX                                                                      LONG TERM (200wma) ==>   [] [#]\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ, BIT, ETHA,GDXU,FCX SPCK HOOD, PURR, RBRK, TEM                                                   wiozs wevTRAL= 0p [|\n* TURBO RVAB/REBAR: | 56 (-1.51%/-4.58%) NO CHANGES\n* BOTTOM LINE: OIL, WELDS, AND GEGPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND\n* THURS KEYS: SPXvs 21/7620 QQQ vs 500/21E R2K vs 100D/50D\n22 SBPS00 KEY LEVELS <<<                                                                                                                                                      (+\n* 7816 {8/13 INTRADAY A-T-H}\n$7719 FRI: STRONG IDBS KUMBFR PAUSES INDFXES BLIT A-1 STACKS RALLY\n“7678  21EMA) €5/1 8/2: 8/204 1/317\n97674 TUES: AI FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN\n>7636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND\n+ 7598/7606 (46 SOD/10WK) € 7/217 7/234 7/217 174 6/291\n* 7147/7160 (15 2000/40WK)_& 4/8% 3/193\n* EMAIL: connor@revereasset.com                                   R e \\% e T e   A S S et\nConnor Bates\n* TWITTER (X): @ConnorlBates_                                                                                                  Analyst/Associate PM\n* PHONE: (855) REAL-WEALTH / (855) 732-5932            M                                   t                   Email: Connor@RoveroAssetcorm\n* WEB SITE: revereasset.com                                              an a ge m e n                          Twitter: @ConnorBates_\n",
+      "ocr_text_snippet": "® Preview fio Est view Go Toss Window Hep GB ®&® Ac & 40 L $1 7 Q EB © wdseps 55pm rR) >> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 << WHAT'S THE MARKET TREND? * MARKET STATE: UPTREND “THE GR...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.13 {0.98%/ 3.98%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY ARKG SELL SPCX LONG TERM (200WMA) ==> [] [#]",
+          "bottom_line": "OIL, WELDS, AND GEGPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPXVS 21/7620 QQQ VS 500/21E R2K VS 100D/50D 22 SBPS00 KEY LEVELS <<< (+ 7816 {8/13 INTRADAY A-T-H} 7719 FRI: STRONG IDBS KUMBFR PAUSES INDFXES BLIT A-1 STACKS RALLY 7678 21EMA) €5/1 8/2: 8/204 1/317 97674 TUES: AI FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 7636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND 7598/7606 (46 SOD/10WK) € 7/217 7/234 7/217 174 6/291 7147/7160 (15 2000/40WK)_& 4/8% 3/193 EMAIL: CONNOR@REVEREASSET.COM R E \\% E T E A S S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANALYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@ROVEROASSETCORM WEB SITE: REVEREASSET.COM AN A GE M E N TWITTER: @CONNORBATES_",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 65,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ, BIT, ETHA,GDXU,FCX SPCK HOOD, PURR, RBRK, TEM WIOZS WEVTRAL= 0P [",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "OIL, WELDS, AND GEGPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPXVS 21/7620 QQQ VS 500/21E R2K VS 100D/50D 22 SBPS00 KEY LEVELS <<< (+ 7816 {8/13 INTRADAY A-T-H} 7719 FRI: STRONG IDBS KUMBFR PAUSES INDFXES BLIT A-1 STACKS RALLY 7678 21EMA) €5/1 8/2: 8/204 1/317 97674 TUES: AI FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 7636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND 7598/7606 (46 SOD/10WK) € 7/217 7/234 7/217 174 6/291 7147/7160 (15 2000/40WK)_& 4/8% 3/193 EMAIL: CONNOR@REVEREASSET.COM R E \\% E T E A S S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANALYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@ROVEROASSETCORM WEB SITE: REVEREASSET.COM AN A GE M E N TWITTER: @CONNORBATES_",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 65,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c091a52dded27c87",
+      "prefilter_score": 2.68,
+      "prefilter_stats": {
+        "brightRatio": 0.44645833333333335,
+        "darkRatio": 0.3038194444444444,
+        "edgeRatio": 0.24708501165995336,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2334,
+        "horizontalEdgeRatio": 0.16493534025863896,
+        "meanLuma": 163.6238888888889,
+        "stdDev": 93.02958944687607,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4659,
+        "verticalEdgeRatio": 0.32923468306126774
+      },
+      "score": 116.15,
+      "score_breakdown": {
+        "chart_likeness": -5.4562914308566715,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.25,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 18,
+        "text_density": 96.36
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PURR",
+        "QLD",
+        "RBRK",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 312,
+      "timestamp_hms": "00:05:12",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260909_ps_3.png"
+    }
+  ],
+  "frame_count": 221,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 179,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260909_ps.png",
+  "prefilter_best_score": 18.66,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 102,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260909_20260909_icgc5obtkrs_697336be_whiteboard\\ocr\\ocr_000103.png",
+    "is_intro_card": false,
+    "issue_codes": [],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 409.76,
+    "observed_date": "20260909",
+    "ocr_confidence": 64,
+    "ocr_profile": "threshold",
+    "ocr_text": "# Preview fio Gor view Go Todt Window Hep                                                                [=%      ® OC AC FE 4 LC ma FT Q BO wedSeps 506M\nosm\n>> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 <<                                                                                                             WHAT'S THE MARKET TREND?\n* MARKET STATE: UPTREND                                                                                                                      \"THE GROTECTION GAUGE”\n*STOINDEXESAT 14 RG86T 04 NASI USD TNX/TYXA vs5d2130\n* SENTIMENT: VIX 36 55 +2 vi. | FRG             ann 007 68227 001 TETT warn 5.611609\nPBULL CASE: INITIATE RALLY & TRIND 21EMA  €8/3-4 RIGAIN 214L & FTD                                                                                                -\nDBEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 5/1 BROKE BELOW 21E             +                                                                                     |<]\n“NEWS: TREASURY DEPT BUY BACK $68 DEBT THU: PPI FRI; CPI                                                                                                         —\n* TODAY'S KEYS: SPX vs 21E4,/78000 QQQ vs S0DM/21ET  R2Kvs 100D4./5003                                                                                                                          :\n*DAYCT:D-2=>D-3 8:20 21E:-20 B8E>21€7 ves                                                                                                                  | [=]\n* ACTION: 0 -0.17% OPEN = HIGH $7661 7625 7650\n“SPXO/N 7639-76871 O7661 030 7645-76517 L/H 7624-7661\n* SPXATR: 0.68% SPX-0.48% 60/40-0.49% GRO-0.28% TURBO -0.70%                                                         [MED M TERM (some) ==>  EEE 3\n* SECTORS: 4 BPS USD GLE XLE USO HACK SOXX IBIT PICK 3 BYS USD KRE XLU ITB UFO                                        a          5625 NEUTRAL => UP\n* GRO HOLDINGS: SPYM,UPRO,QLD,ARKG,PLTR MU, HPE OKTA, CF,\n* GRO RVAB/REBAR: 1.13 {0.08%/ 3.98%) BUYARKG SELL SPCX                                                                      LONG TERM (200mma} ==>   [|e]\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ, BIT, ETHA,GOXU,FCX SPCK HOOD, PURR, RBRK, TEM                                                   wiozs wevTRAL=s vp [|\n* TURBO RVAB/REGAR: | 56 (-1.91%/4.58%) NO CHANGES\n* BOTTOM LINE: 9 OIL. WELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND\n* THURS KEYS: SPXvs 21/7620 QQQ vs 500/21E 2K vs 100D/50D\n2 SBPS00 KEY LEVELS <<<                                                                                                                                                      (+\n* 7816 (8/13 INTRADAY A-T-H)\n$7719 FRI: STRONG JOBS KUMBER PAUSES INDEXES BLT A | STOCKS RALLY\n“7678{  21EMA) € 9/14 8/2:1 8/204 1/311\n7674 TUES: Al FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN\n27636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND\n* 7598/7606 (76 SOD/10WK) € 7/311 7/234 7/211 7/174 6/291\n* 7147/7160 (15 2000/40WK)_€ 4/87 3/193\n* EMAIL: connor@revereasset.com                                   R e \\% e T e   A S S et\nConnor Bates\n* TWITTER (X): @ConnorlBates_                                                                                                  Analyst/Associate PM\n* PHONE: (855) REAL-WEALTH / (855) 732-5932            M                                    t                    Email: Connor@ReveroAssot.corm\n* WEB SITE: revereasset.com                                              an a ge m e n                          Twitter: @ConnorBatas._\n",
+    "ocr_text_snippet": "# Preview fio Gor view Go Todt Window Hep [=% ® OC AC FE 4 LC ma FT Q BO wedSeps 506M osm >> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 << WHAT'S THE MARKET TREND? * MARKET STATE: UPTREND \"THE...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": "RVAB/REBAR: 1.13 {0.08%/ 3.98%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "BUY ARKG SELL SPCX LONG TERM (200MMA} ==> [ E]",
+        "bottom_line": "9 OIL. WELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPXVS 21/7620 QQQ VS 500/21E 2K VS 100D/50D 2 SBPS00 KEY LEVELS <<< (+ 7816 (8/13 INTRADAY A-T-H) 7719 FRI: STRONG JOBS KUMBER PAUSES INDEXES BLT A STOCKS RALLY 7678{ 21EMA) € 9/14 8/2:1 8/204 1/311 7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 27636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND 7598/7606 (76 SOD/10WK) € 7/311 7/234 7/211 7/174 6/291 7147/7160 (15 2000/40WK)_€ 4/87 3/193 EMAIL: CONNOR@REVEREASSET.COM R E \\% E T E A S S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANALYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@REVEROASSOT.CORM WEB SITE: REVEREASSET.COM AN A GE M E N TWITTER: @CONNORBATAS._",
+        "parse_status": "ok",
+        "issue_codes": [],
+        "ocr_confidence": 64,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": "RVAB/REGAR: 56 (-1.91%/4.58%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "NO CHANGES",
+        "bottom_line": "9 OIL. WELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPXVS 21/7620 QQQ VS 500/21E 2K VS 100D/50D 2 SBPS00 KEY LEVELS <<< (+ 7816 (8/13 INTRADAY A-T-H) 7719 FRI: STRONG JOBS KUMBER PAUSES INDEXES BLT A STOCKS RALLY 7678{ 21EMA) € 9/14 8/2:1 8/204 1/311 7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 27636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND 7598/7606 (76 SOD/10WK) € 7/311 7/234 7/211 7/174 6/291 7147/7160 (15 2000/40WK)_€ 4/87 3/193 EMAIL: CONNOR@REVEREASSET.COM R E \\% E T E A S S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANALYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@REVEROASSOT.CORM WEB SITE: REVEREASSET.COM AN A GE M E N TWITTER: @CONNORBATAS._",
+        "parse_status": "ok",
+        "issue_codes": [],
+        "ocr_confidence": 64,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "c091a52dded27c87",
+    "prefilter_score": 2.75,
+    "prefilter_stats": {
+      "brightRatio": 0.4463888888888889,
+      "darkRatio": 0.30368055555555556,
+      "edgeRatio": 0.24659034697194546,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 2337,
+      "horizontalEdgeRatio": 0.16514733941064236,
+      "meanLuma": 163.64090277777777,
+      "stdDev": 93.01060278129881,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 4642,
+      "verticalEdgeRatio": 0.32803335453324856
+    },
+    "score": 118.42,
+    "score_breakdown": {
+      "chart_likeness": -5.383195548938678,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 3.2,
+      "pair_bonus": 4,
+      "per_row_issues": 0,
+      "per_row_metrics": 20,
+      "text_density": 96.6
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "ARKG",
+      "CF",
+      "ETHA",
+      "FCX",
+      "HOOD",
+      "HPE",
+      "IBIT",
+      "MU",
+      "OKTA",
+      "PLTR",
+      "PURR",
+      "QLD",
+      "RBRK",
+      "SPCX",
+      "SPYM",
+      "TEM",
+      "TQQQ",
+      "UPRO"
+    ],
+    "timestamp": 408,
+    "timestamp_hms": "00:06:48"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 102,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260909_20260909_icgc5obtkrs_697336be_whiteboard\\ocr\\ocr_000103.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260909",
+      "ocr_confidence": 64,
+      "ocr_profile": "threshold",
+      "ocr_text": "# Preview fio Gor view Go Todt Window Hep                                                                [=%      ® OC AC FE 4 LC ma FT Q BO wedSeps 506M\nosm\n>> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 <<                                                                                                             WHAT'S THE MARKET TREND?\n* MARKET STATE: UPTREND                                                                                                                      \"THE GROTECTION GAUGE”\n*STOINDEXESAT 14 RG86T 04 NASI USD TNX/TYXA vs5d2130\n* SENTIMENT: VIX 36 55 +2 vi. | FRG             ann 007 68227 001 TETT warn 5.611609\nPBULL CASE: INITIATE RALLY & TRIND 21EMA  €8/3-4 RIGAIN 214L & FTD                                                                                                -\nDBEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 5/1 BROKE BELOW 21E             +                                                                                     |<]\n“NEWS: TREASURY DEPT BUY BACK $68 DEBT THU: PPI FRI; CPI                                                                                                         —\n* TODAY'S KEYS: SPX vs 21E4,/78000 QQQ vs S0DM/21ET  R2Kvs 100D4./5003                                                                                                                          :\n*DAYCT:D-2=>D-3 8:20 21E:-20 B8E>21€7 ves                                                                                                                  | [=]\n* ACTION: 0 -0.17% OPEN = HIGH $7661 7625 7650\n“SPXO/N 7639-76871 O7661 030 7645-76517 L/H 7624-7661\n* SPXATR: 0.68% SPX-0.48% 60/40-0.49% GRO-0.28% TURBO -0.70%                                                         [MED M TERM (some) ==>  EEE 3\n* SECTORS: 4 BPS USD GLE XLE USO HACK SOXX IBIT PICK 3 BYS USD KRE XLU ITB UFO                                        a          5625 NEUTRAL => UP\n* GRO HOLDINGS: SPYM,UPRO,QLD,ARKG,PLTR MU, HPE OKTA, CF,\n* GRO RVAB/REBAR: 1.13 {0.08%/ 3.98%) BUYARKG SELL SPCX                                                                      LONG TERM (200mma} ==>   [|e]\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ, BIT, ETHA,GOXU,FCX SPCK HOOD, PURR, RBRK, TEM                                                   wiozs wevTRAL=s vp [|\n* TURBO RVAB/REGAR: | 56 (-1.91%/4.58%) NO CHANGES\n* BOTTOM LINE: 9 OIL. WELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND\n* THURS KEYS: SPXvs 21/7620 QQQ vs 500/21E 2K vs 100D/50D\n2 SBPS00 KEY LEVELS <<<                                                                                                                                                      (+\n* 7816 (8/13 INTRADAY A-T-H)\n$7719 FRI: STRONG JOBS KUMBER PAUSES INDEXES BLT A | STOCKS RALLY\n“7678{  21EMA) € 9/14 8/2:1 8/204 1/311\n7674 TUES: Al FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN\n27636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND\n* 7598/7606 (76 SOD/10WK) € 7/311 7/234 7/211 7/174 6/291\n* 7147/7160 (15 2000/40WK)_€ 4/87 3/193\n* EMAIL: connor@revereasset.com                                   R e \\% e T e   A S S et\nConnor Bates\n* TWITTER (X): @ConnorlBates_                                                                                                  Analyst/Associate PM\n* PHONE: (855) REAL-WEALTH / (855) 732-5932            M                                    t                    Email: Connor@ReveroAssot.corm\n* WEB SITE: revereasset.com                                              an a ge m e n                          Twitter: @ConnorBatas._\n",
+      "ocr_text_snippet": "# Preview fio Gor view Go Todt Window Hep [=% ® OC AC FE 4 LC ma FT Q BO wedSeps 506M osm >> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 << WHAT'S THE MARKET TREND? * MARKET STATE: UPTREND \"THE...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.13 {0.08%/ 3.98%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY ARKG SELL SPCX LONG TERM (200MMA} ==> [ E]",
+          "bottom_line": "9 OIL. WELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPXVS 21/7620 QQQ VS 500/21E 2K VS 100D/50D 2 SBPS00 KEY LEVELS <<< (+ 7816 (8/13 INTRADAY A-T-H) 7719 FRI: STRONG JOBS KUMBER PAUSES INDEXES BLT A STOCKS RALLY 7678{ 21EMA) € 9/14 8/2:1 8/204 1/311 7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 27636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND 7598/7606 (76 SOD/10WK) € 7/311 7/234 7/211 7/174 6/291 7147/7160 (15 2000/40WK)_€ 4/87 3/193 EMAIL: CONNOR@REVEREASSET.COM R E \\% E T E A S S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANALYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@REVEROASSOT.CORM WEB SITE: REVEREASSET.COM AN A GE M E N TWITTER: @CONNORBATAS._",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 64,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REGAR: 56 (-1.91%/4.58%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "9 OIL. WELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPXVS 21/7620 QQQ VS 500/21E 2K VS 100D/50D 2 SBPS00 KEY LEVELS <<< (+ 7816 (8/13 INTRADAY A-T-H) 7719 FRI: STRONG JOBS KUMBER PAUSES INDEXES BLT A STOCKS RALLY 7678{ 21EMA) € 9/14 8/2:1 8/204 1/311 7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 27636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND 7598/7606 (76 SOD/10WK) € 7/311 7/234 7/211 7/174 6/291 7147/7160 (15 2000/40WK)_€ 4/87 3/193 EMAIL: CONNOR@REVEREASSET.COM R E \\% E T E A S S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANALYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@REVEROASSOT.CORM WEB SITE: REVEREASSET.COM AN A GE M E N TWITTER: @CONNORBATAS._",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 64,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c091a52dded27c87",
+      "prefilter_score": 2.75,
+      "prefilter_stats": {
+        "brightRatio": 0.4463888888888889,
+        "darkRatio": 0.30368055555555556,
+        "edgeRatio": 0.24659034697194546,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2337,
+        "horizontalEdgeRatio": 0.16514733941064236,
+        "meanLuma": 163.64090277777777,
+        "stdDev": 93.01060278129881,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4642,
+        "verticalEdgeRatio": 0.32803335453324856
+      },
+      "score": 118.42,
+      "score_breakdown": {
+        "chart_likeness": -5.383195548938678,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.2,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 20,
+        "text_density": 96.6
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "QLD",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 408,
+      "timestamp_hms": "00:06:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 96,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260909_20260909_icgc5obtkrs_697336be_whiteboard\\ocr\\ocr_000097.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260909",
+      "ocr_confidence": 64,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Preview Fie COR View Go Touts Widow Hep                                                                [=3      ®8 ACE HO Lo FQ OB © WdSepd SMM\nXR)\n>> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 <<                                                                                                             WHAT'S THE MARKET TREND?\n* MARKET STATE: UPTREND                                                                                                                      \"THE GROTECTION GAUGE”\n*STOINDEXES AT 14 RGB6DT 04 NASIY USD TNX/TYXD vs5d 2130\n* SENTIMENT: VIX 1 54 £3 5c. | FAG          Ann297 63227 00 STE nam 5.61 16.19\nPRULL CASE: INITIATE RALLY & TRIND 21EMA  €8/3.4 RIGAIN 21€ & FID                                                                                                 -—\nDBEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 5/1 BROKE BELOW 21E             +\n* NEWS: TREASURY DEPT BUY BACK $68 DEBT THU: PPL FRI: CPI\n* TODAY'S KEYS: SPX vs 216478000 QQQ vs 50D1M/21ET  R2Kvs 10004./500%                                                                                                                          3\n*DAYCT:D-2=>0-3 8:20 216-20 B8E>21E7 ves\n* ACTION: 00.17% OPEN = HIGH $7661 17625 7650\n“SPXO/N 7633-76877 O7661 030 7645-76517 L/H 7624-7661\n* SPX ATR: 0.68% SPX-0.48% 60/40-0.49% GRO -0.28% TURBO -0.70%                                                         Meow M TERM (some) ==>  HEE 3\n* SECTORS: 1 BPS USD GLO X(E USO HACK SOXK 1BIT PICK 3 BYS USD KRE XLU ITB UFO                       =        8425 KEUTRAL => UP\n* GRO HOLDINGS: SPYM,UPRO,QLD,ARKG,PLTR MU, HPE OKTA, CF,\n* GRO RVAB/REBAR: 1.13 {0.98%/ 3.98%) BUYARKG SELLSPCX                                                                      LONG TERM (200uma) ==>   [|]\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ, BIT, ETHA,GDXU,FCX SPCK HOOD, PURR, RBRK, TEM                                                   wiozs wevTRAL =p [|\n* TURBO RVAB/REBAR: | 56 (-1.51%/-4.58%) NO CHANGES\n* BOTTOM LINE: 9 OIL, YIELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND\n* THURS KEYS: SPXvs 21/7620 QQQvs500/21E  R2K vs 100D/50D\n22 SBPS00 KEY LEVELS <<<                                                                                                                                                      (+\n* 7816 {8/13 INTRADAY A-T-H}\n$7719 FRI: STRONG JOBS KUMBER PAUSES INDFXES BIT A-1 STOCKS RALLY\n“7678{  21EMA) €9/14 8/2i1 8/204 ist\n97674 TUES: Al FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN\n>7636 TODAY: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND\n* 7598/7606 (16 SOD/IOWK) € 7/311 7/234 7/217 174 6/291\n* 7147/7160 (5 2000/40WK)_€ 4/87 3/194\n* EMAIL: connor@revereasset.com                                   R e \\% e T e   A N S et\nConnor Bates\n* TWITTER (X): @ConnorlBates_                                                                                                  Anatyst/Associate PM\n* PHONE: (855) REAL-WEALTH / (855) 732-5932            M                                    t                    Email: Connor@ReveroAssot.com\n* WEB SITE: revereasset.com                                              a n a ge m e n                          Twitter: @ConnorBates_\n",
+      "ocr_text_snippet": "® Preview Fie COR View Go Touts Widow Hep [=3 ®8 ACE HO Lo FQ OB © WdSepd SMM XR) >> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 << WHAT'S THE MARKET TREND? * MARKET STATE: UPTREND \"THE GROTECT...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.13 {0.98%/ 3.98%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY ARKG SELL SPCX LONG TERM (200UMA) ==> [ ]",
+          "bottom_line": "9 OIL, YIELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPXVS 21/7620 QQQVS500/21E R2K VS 100D/50D 22 SBPS00 KEY LEVELS <<< (+ 7816 {8/13 INTRADAY A-T-H} 7719 FRI: STRONG JOBS KUMBER PAUSES INDFXES BIT A-1 STOCKS RALLY 7678{ 21EMA) €9/14 8/2I1 8/204 IST 97674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 7636 TODAY: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND 7598/7606 (16 SOD/IOWK) € 7/311 7/234 7/217 174 6/291 7147/7160 (5 2000/40WK)_€ 4/87 3/194 EMAIL: CONNOR@REVEREASSET.COM R E \\% E T E A N S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANATYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@REVEROASSOT.COM WEB SITE: REVEREASSET.COM A N A GE M E N TWITTER: @CONNORBATES_",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 64,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 56 (-1.51%/-4.58%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "9 OIL, YIELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPXVS 21/7620 QQQVS500/21E R2K VS 100D/50D 22 SBPS00 KEY LEVELS <<< (+ 7816 {8/13 INTRADAY A-T-H} 7719 FRI: STRONG JOBS KUMBER PAUSES INDFXES BIT A-1 STOCKS RALLY 7678{ 21EMA) €9/14 8/2I1 8/204 IST 97674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 7636 TODAY: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND 7598/7606 (16 SOD/IOWK) € 7/311 7/234 7/217 174 6/291 7147/7160 (5 2000/40WK)_€ 4/87 3/194 EMAIL: CONNOR@REVEREASSET.COM R E \\% E T E A N S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANATYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@REVEROASSOT.COM WEB SITE: REVEREASSET.COM A N A GE M E N TWITTER: @CONNORBATES_",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 64,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c091a52dded27c87",
+      "prefilter_score": 2.71,
+      "prefilter_stats": {
+        "brightRatio": 0.4461111111111111,
+        "darkRatio": 0.30368055555555556,
+        "edgeRatio": 0.24729701081195676,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2341,
+        "horizontalEdgeRatio": 0.1654300049466469,
+        "meanLuma": 163.625625,
+        "stdDev": 93.01308926121594,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4658,
+        "verticalEdgeRatio": 0.32916401667726664
+      },
+      "score": 117.99,
+      "score_breakdown": {
+        "chart_likeness": -5.410614257344381,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.2,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 20,
+        "text_density": 96.2
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "HPE",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "QLD",
+        "RBRK",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 384,
+      "timestamp_hms": "00:06:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 93,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260909_20260909_icgc5obtkrs_697336be_whiteboard\\ocr\\ocr_000094.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260909",
+      "ocr_confidence": 64,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Preview Fie COR View Go Touts Widow Hep                                                                [=3      ®8 ACE HO Lo FQ OB © WdSepd SMM\nXR)\n>> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 <<                                                                                                             WHAT'S THE MARKET TREND?\n* MARKET STATE: UPTREND                                                                                                                      \"THE GROTECTION GAUGE”\n*STOINDEXES AT 14 RGB6DT 04 NASIY USD TNX/TYXD vs5d 2130\n* SENTIMENT: VIX 1 54 £3 5c. | FAG          Ann297 63227 00 STE nam 5.61 16.19\nPRULL CASE: INITIATE RALLY & TRIND 21EMA  €8/3.4 RIGAIN 21€ & FID                                                                                                 -—\nDBEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 5/1 BROKE BELOW 21E             +\n* NEWS: TREASURY DEPT BUY BACK $68 DEBT THU: PPL FRI: CPI\n* TODAY'S KEYS: SPX vs 216478000 QQQ vs 50D1M/21ET  R2Kvs 10004./500%                                                                                                                          3\n*DAYCT:D-2=>0-3 8:20 216-20 B8E>21E7 ves\n* ACTION: 00.17% OPEN = HIGH $7661 17625 7650\n“SPXO/N 7633-76877 O7661 030 7645-76517 L/H 7624-7661\n* SPX ATR: 0.68% SPX-0.48% 60/40-0.49% GRO -0.28% TURBO -0.70%                                                         Meow M TERM (some) ==>  HEE 3\n* SECTORS: 1 BPS USD GLO X(E USO HACK SOXK 1BIT PICK 3 BYS USD KRE XLU ITB UFO                       =        8425 KEUTRAL => UP\n* GRO HOLDINGS: SPYM,UPRO,QLD,ARKG,PLTR MU, HPE OKTA, CF,\n* GRO RVAB/REBAR: 1.13 {0.98%/ 3.98%) BUYARKG SELLSPCX                                                                      LONG TERM (200uma) ==>   [|]\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ, BIT, ETHA,GDXU,FCX SPCK HOOD, PURR, RBRK, TEM                                                   wiozs wevTRAL =p [|\n* TURBO RVAB/REBAR: | 56 (-1.51%/-4.58%) NO CHANGES\n* BOTTOM LINE: 9 OIL, YIELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND\n* THURS KEYS: SPXvs 21/7620 QQQvs500/21E  R2K vs 100D/50D\n22 SBPS00 KEY LEVELS <<<                                                                                                                                                      (+\n* 7816 {8/13 INTRADAY A-T-H}\n$7719 FRI: STRONG JOBS KUMBER PAUSES INDFXES BIT A-1 STOCKS RALLY\n“7678{  21EMA) €9/14 8/2i1 8/204 ist\n97674 TUES: Al FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN\n>7636 TODAY: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND\n* 7598/7606 (16 SOD/IOWK) € 7/311 7/234 7/217 174 6/291\n* 7147/7160 (5 2000/40WK)_€ 4/87 3/194\n* EMAIL: connor@revereasset.com                                   R e \\% e T e   A N S et\nConnor Bates\n* TWITTER (X): @ConnorlBates_                                                                                                  Anatyst/Associate PM\n* PHONE: (855) REAL-WEALTH / (855) 732-5932            M                                    t                    Email: Connor@ReveroAssot.com\n* WEB SITE: revereasset.com                                              a n a ge m e n                          Twitter: @ConnorBates_\n",
+      "ocr_text_snippet": "® Preview Fie COR View Go Touts Widow Hep [=3 ®8 ACE HO Lo FQ OB © WdSepd SMM XR) >> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 << WHAT'S THE MARKET TREND? * MARKET STATE: UPTREND \"THE GROTECT...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.13 {0.98%/ 3.98%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY ARKG SELL SPCX LONG TERM (200UMA) ==> [ ]",
+          "bottom_line": "9 OIL, YIELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPXVS 21/7620 QQQVS500/21E R2K VS 100D/50D 22 SBPS00 KEY LEVELS <<< (+ 7816 {8/13 INTRADAY A-T-H} 7719 FRI: STRONG JOBS KUMBER PAUSES INDFXES BIT A-1 STOCKS RALLY 7678{ 21EMA) €9/14 8/2I1 8/204 IST 97674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 7636 TODAY: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND 7598/7606 (16 SOD/IOWK) € 7/311 7/234 7/217 174 6/291 7147/7160 (5 2000/40WK)_€ 4/87 3/194 EMAIL: CONNOR@REVEREASSET.COM R E \\% E T E A N S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANATYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@REVEROASSOT.COM WEB SITE: REVEREASSET.COM A N A GE M E N TWITTER: @CONNORBATES_",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 64,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 56 (-1.51%/-4.58%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "9 OIL, YIELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPXVS 21/7620 QQQVS500/21E R2K VS 100D/50D 22 SBPS00 KEY LEVELS <<< (+ 7816 {8/13 INTRADAY A-T-H} 7719 FRI: STRONG JOBS KUMBER PAUSES INDFXES BIT A-1 STOCKS RALLY 7678{ 21EMA) €9/14 8/2I1 8/204 IST 97674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 7636 TODAY: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND 7598/7606 (16 SOD/IOWK) € 7/311 7/234 7/217 174 6/291 7147/7160 (5 2000/40WK)_€ 4/87 3/194 EMAIL: CONNOR@REVEREASSET.COM R E \\% E T E A N S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANATYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@REVEROASSOT.COM WEB SITE: REVEREASSET.COM A N A GE M E N TWITTER: @CONNORBATES_",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 64,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c091a52dded27c87",
+      "prefilter_score": 2.66,
+      "prefilter_stats": {
+        "brightRatio": 0.44631944444444444,
+        "darkRatio": 0.30395833333333333,
+        "edgeRatio": 0.24687301250794996,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2330,
+        "horizontalEdgeRatio": 0.16465267472263445,
+        "meanLuma": 163.6417361111111,
+        "stdDev": 93.01575759447864,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4657,
+        "verticalEdgeRatio": 0.3290933502932655
+      },
+      "score": 117.93,
+      "score_breakdown": {
+        "chart_likeness": -5.47418541701227,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.2,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 20,
+        "text_density": 96.2
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "HPE",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "QLD",
+        "RBRK",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 372,
+      "timestamp_hms": "00:06:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 105,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260909_20260909_icgc5obtkrs_697336be_whiteboard\\ocr\\ocr_000106.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260909",
+      "ocr_confidence": 66,
+      "ocr_profile": "threshold",
+      "ocr_text": "# reves fle Est view Go Toots Window Hep                                                                [=3      GEO AC FE BHO Low FQ BO wedSepd 506M\nenn\n>> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 <<                                                                                                             WHAT'S THE MARKET TREND?\n* MARKET STATE: UPTREND                                                                                                                         “THE GROTECTION GAUGE”\n*STOINDEXESAT 14 RG86T 04 NASI USD TNX/TYXD vs5d2130\n* SENTIMENT: VIX 25 2-4 vt FRG        Ann 997 46.8227 0.00 TETT mann 5.61 16.09\nDBULL CASE: NITIATE RALLY & TRIND 21EMA  €8/3-0 REGAIN 23E & FTD                                                                                                -\nPBEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 9/1 BROKE BELOW 21E                                                                                                    | [<D]\n“NEWS: TREASURY DEPT BUY BACK $68 DEBT THU: PPI FRI; CPI                                                                                                         —\n* TODAY'S KEYS: SPX vs 216478000 QQQvs S0DM/21ET  R2Kvs 10004,/500%                                                                                                                          a\n*DAYCT:D-2=>0-3 8:20 216-20 B8E>21€7 vis\n* ACTION: 0 -0.17% OPEN = HIGH $7661 17625 7650\n“SPXO/N 7639-76871 O7661 030 7645-76517 L/H 7624-7661\n* SPATR: 0.68% SPX-0.48% 60/40-0.49% GRO-0.28% TURBO -0.70%                                                         [MECH M TERM (s0urme) ==>  HEE 3\n* SECTORS: 4 BPS USD GLE XcE USO HACK SOXK BIT PICK 3 BYS USD KRE XLU ITB UFO                                        a             5425 NEUTRAL => UF\n* GRO HOLDINGS: SPYM,UPRO,QLD,ARKS,PLTR MU, HPE OKTA, CF,\n* GRO RVAB/REBAR: 1.13 {-0.38%/-3.98%) BUYARKG  SELLSPCX                                                                      LONG TERM (200sma) ==>   IEE 3\n* TURBO HOLDINGS: SPYM,UPRO,TQOQ, BIT,ETHA,GOXU,FCX SPCK HOOD, PURR, RBRK, TEM                                                   21075 HEUTRAL => be [|\n* TURBO RVAB/REBAR: 1 85(-1.91%/-4.58%} NO CHANGES\n* BOTTOM LINE: 3 OIL, YIELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND\n* THURS KEYS: SPX vs 21€/7620 QQQ vs 50D/21E R2K vs 1000/50D\n> SBPS00 KEY LEVELS <<<                                                                                                                                              oO\n“7816 (8/13 INTRADAY A-T-H}\n$7719 FRI: STRONG IDBS RUMBER PAUSES INJEXES BIT A | STOCKS RALLY\n“7678{  21EMA) €5/14 8/211 8/204 1/511\n37674 TUES: Al FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN\n>7636 TODAY: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND\n+ 7598/7606 (16 SOD/10WK) € 7/310 7/234 7/211 174 6/291\n* 7147/7160 (15 2000/40WK)_& 4/8% 3/194\n* EMAIL: connor@revereasset.com                                   R e \\% e I e   A S S et\nConnor Bates\n* TWITTER (X): @ConnorlBates_                                                                                                  Analyst/Associate PM\n* PHONE: (855) REAL-WEALTH / (855) 732-5932            M                                    t                    Email: Connor@RoveroAssot.corm\n* WEB SITE: revereasset.com                                              a n a ge m e n                          Twitter: @ConnorBatas._\n",
+      "ocr_text_snippet": "# reves fle Est view Go Toots Window Hep [=3 GEO AC FE BHO Low FQ BO wedSepd 506M enn >> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 << WHAT'S THE MARKET TREND? * MARKET STATE: UPTREND “THE GRO...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.13 {-0.38%/-3.98%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY ARKG SELL SPCX LONG TERM (200SMA) ==> IEE 3",
+          "bottom_line": "3 OIL, YIELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPX VS 21€/7620 QQQ VS 50D/21E R2K VS 1000/50D SBPS00 KEY LEVELS <<< OO 7816 (8/13 INTRADAY A-T-H} 7719 FRI: STRONG IDBS RUMBER PAUSES INJEXES BIT A STOCKS RALLY 7678{ 21EMA) €5/14 8/211 8/204 1/511 37674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 7636 TODAY: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND 7598/7606 (16 SOD/10WK) € 7/310 7/234 7/211 174 6/291 7147/7160 (15 2000/40WK)_& 4/8% 3/194 EMAIL: CONNOR@REVEREASSET.COM R E \\% E I E A S S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANALYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@ROVEROASSOT.CORM WEB SITE: REVEREASSET.COM A N A GE M E N TWITTER: @CONNORBATAS._",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQOQ, BIT,ETHA,GOXU,FCX SPCK HOOD, PURR, RBRK, TEM 21075 HEUTRAL => BE [",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "3 OIL, YIELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPX VS 21€/7620 QQQ VS 50D/21E R2K VS 1000/50D SBPS00 KEY LEVELS <<< OO 7816 (8/13 INTRADAY A-T-H} 7719 FRI: STRONG IDBS RUMBER PAUSES INJEXES BIT A STOCKS RALLY 7678{ 21EMA) €5/14 8/211 8/204 1/511 37674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 7636 TODAY: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND 7598/7606 (16 SOD/10WK) € 7/310 7/234 7/211 174 6/291 7147/7160 (15 2000/40WK)_& 4/8% 3/194 EMAIL: CONNOR@REVEREASSET.COM R E \\% E I E A S S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANALYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@ROVEROASSOT.CORM WEB SITE: REVEREASSET.COM A N A GE M E N TWITTER: @CONNORBATAS._",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c091a52dded27c87",
+      "prefilter_score": 2.74,
+      "prefilter_stats": {
+        "brightRatio": 0.44666666666666666,
+        "darkRatio": 0.30416666666666664,
+        "edgeRatio": 0.2464490142039432,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2334,
+        "horizontalEdgeRatio": 0.16493534025863896,
+        "meanLuma": 163.65854166666668,
+        "stdDev": 93.01119782099077,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4641,
+        "verticalEdgeRatio": 0.3279626881492474
+      },
+      "score": 117.48,
+      "score_breakdown": {
+        "chart_likeness": -5.398121599185622,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.3,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 19,
+        "text_density": 96.58
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "CF",
+        "ETHA",
+        "FCX",
+        "HOOD",
+        "HPE",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "QLD",
+        "RBRK",
+        "SPYM",
+        "TEM",
+        "UPRO"
+      ],
+      "timestamp": 420,
+      "timestamp_hms": "00:07:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 90,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260909_20260909_icgc5obtkrs_697336be_whiteboard\\ocr\\ocr_000091.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260909",
+      "ocr_confidence": 65,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Proview fie Eat View Go Tools Window ep                                                                CG B06 0 £40 L & F a 8 © wdseps soseu\n\nes\n\n>> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 <<                                                                                                             WHAT'S THE MARKET TREND?\n\n* MARKET STATE: UPTREND                                                           *                                                          “THE GROTECTION GAUGE\"\n\n*STOINDEXES AT 1H RGBET 04 NASIY USD TNX/TYX vs 5d 2130\n\n* SENTIMENT: VIX 15 2-3 £86          wn 33.7 16822701 ETT aro 5561.16.59\n\nDBL CASE INITIATE RALLY & TREND 22EMA  €8/3-0 REGAIN 20( & FTD                                                                                              —\n\nJBEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 5/1 BROKE BELOW 21E\n\n* NEWS: TREASURY DEPT BUY BACK $68 DEBT THU: PPI FRI: CPI\n\n* TODAY'S KEYS: SPX vs 216 4,/78000 QQQ vs SODM/21ET  R2Kvs 10004,/500%\n\n*DAYCT:D-2=>0-3 8:24 216-20 B8E>21€7 vis                                                                                                                  [=]\n\n* ACTION: 00.17% OPEN = HIGH $7661 17625 37650\n\n“SPXO/N 7639-76871 07661 O30 7645-76617 L/H 7624-7661\n\n* SPXATR: 0.68% SPX-0.48% 60/40-0.49% GRO-0.28% TURBO -0.70%                                                         uEDuM TERM (some) =e  HEE 3\n\n* SECTORS: 1+ BPS USD GLD Xe USO HACK SOXX (BIT PICK J BYS USD KRE XLU ITB UFO                                          P=             8425 REUTRAL => UP\n\n* GRO HOLDINGS: SPYM,UPRO,QUD,ARKG,PLTR MU, HPE.OKTA, CF,\n\n* GRO RVAB/REBAR: 1.13 (0.16%/3.98%) BUYARKG SELL SPCX                                                                      LONG TERM (200mm) =>   INE 3\n\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ, BIT. ETHA,GDXU,FCX SPC HOOD, PURR, RBRK, TEM                                                   1076 weUTRAL = 0p [|\n\n* TURBO RVAB/REBAR: 1 8G (-1.91%/-4.58%} NO CHANGES\n\n* BOTTOM LINE: Oil, YIELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND\n\n* THURS KEYS: SPX vs 21/7620 QQQ vs S0D/21E RK vs 100D/50D\n\n2 SBPS00 KEY LEVELS <<<                                                                                                                                                      (+\n\n* 7816 (8/13 INTRADAY A-T-H}\n\n$7713 FRI: STRONG IDBS KUMBER PAUSES INDEXES BUT A-1 STRCKS RALLY\n\n“7678{  21EMA) €9/14 82:1 8/204 yt\n\n37674 TUES: AI FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN\n\n$7636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE T0 ACT AS A HEADWIND\n\n* 7598/7606 (16 SOD/10WK) € 7/317 7/234 214 174 6/281\n\n* 7147/7160 (15 2000/40WK) € 4/87 3/194\n\n*        .\nEMAIL: connor@revereasset.com                                     R e \\% e T e    A S S et                            Connor Bates\n\n* TWITTER (X): @ConnorlBates_                                                                                                  Anatyst/Associate PM\n\n* PHONE: (855) REAL-WEALTH / (855) 732-5932            M                                   t                   Email: Connor@RovereAsset corm\n\n* WEB SITE: revereasset.com                                               a n a ge m e n                           Twitter: @ConnorBates_\n",
+      "ocr_text_snippet": "® Proview fie Eat View Go Tools Window ep CG B06 0 £40 L & F a 8 © wdseps soseu es >> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 << WHAT'S THE MARKET TREND? * MARKET STATE: UPTREND * “THE GROT...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.13 (0.16%/3.98%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY ARKG SELL SPCX LONG TERM (200MM) => INE 3",
+          "bottom_line": "OIL, YIELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPX VS 21/7620 QQQ VS S0D/21E RK VS 100D/50D 2 SBPS00 KEY LEVELS <<< (+ 7816 (8/13 INTRADAY A-T-H} 7713 FRI: STRONG IDBS KUMBER PAUSES INDEXES BUT A-1 STRCKS RALLY 7678{ 21EMA) €9/14 82:1 8/204 YT 37674 TUES: AI FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 7636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE T0 ACT AS A HEADWIND 7598/7606 (16 SOD/10WK) € 7/317 7/234 214 174 6/281 7147/7160 (15 2000/40WK) € 4/87 3/194 EMAIL: CONNOR@REVEREASSET.COM R E \\% E T E A S S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANATYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@ROVEREASSET CORM WEB SITE: REVEREASSET.COM A N A GE M E N TWITTER: @CONNORBATES_",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 65,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ, BIT. ETHA,GDXU,FCX SPC HOOD, PURR, RBRK, TEM 1076 WEUTRAL = 0P [",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "OIL, YIELDS, AND GEQPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND THURS KEYS: SPX VS 21/7620 QQQ VS S0D/21E RK VS 100D/50D 2 SBPS00 KEY LEVELS <<< (+ 7816 (8/13 INTRADAY A-T-H} 7713 FRI: STRONG IDBS KUMBER PAUSES INDEXES BUT A-1 STRCKS RALLY 7678{ 21EMA) €9/14 82:1 8/204 YT 37674 TUES: AI FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN 7636 TODAY: OIL. YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE T0 ACT AS A HEADWIND 7598/7606 (16 SOD/10WK) € 7/317 7/234 214 174 6/281 7147/7160 (15 2000/40WK) € 4/87 3/194 EMAIL: CONNOR@REVEREASSET.COM R E \\% E T E A S S ET CONNOR BATES TWITTER (X): @CONNORLBATES_ ANATYST/ASSOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M T EMAIL: CONNOR@ROVEREASSET CORM WEB SITE: REVEREASSET.COM A N A GE M E N TWITTER: @CONNORBATES_",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 65,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c091a52dded27c87",
+      "prefilter_score": 2.8,
+      "prefilter_stats": {
+        "brightRatio": 0.44680555555555557,
+        "darkRatio": 0.30409722222222224,
+        "edgeRatio": 0.24567168397993075,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2332,
+        "horizontalEdgeRatio": 0.1647940074906367,
+        "meanLuma": 163.69375,
+        "stdDev": 93.0142960328844,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4621,
+        "verticalEdgeRatio": 0.3265493604692248
+      },
+      "score": 116.86,
+      "score_breakdown": {
+        "chart_likeness": -5.345563187535122,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.25,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 19,
+        "text_density": 95.96
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "GLD",
+        "HOOD",
+        "MU",
+        "PLTR",
+        "PURR",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 360,
+      "timestamp_hms": "00:06:00"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260909_20260909_icgc5obtkrs_697336be_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 3.47,
+      "prefilter_stats": {
+        "brightRatio": 0.43548611111111113,
+        "darkRatio": 0.33305555555555555,
+        "edgeRatio": 0.2367677195957883,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2384,
+        "horizontalEdgeRatio": 0.1684686594586955,
+        "meanLuma": 158.19118055555555,
+        "stdDev": 96.26617060407543,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4317,
+        "verticalEdgeRatio": 0.30506677973288104
+      },
+      "score": -16.07,
+      "score_breakdown": {
+        "chart_likeness": -4.074861711099935,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 111,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260909_20260909_icgc5obtkrs_697336be_whiteboard\\ocr\\ocr_000112.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 444.76,
+      "observed_date": null,
+      "ocr_confidence": 30,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Setar Fie 0% View Mimtory Bookmarks Window Help                         [=3   [CR]  MCF BE Loe FQ 8 ® WedSepd S0TPM\nMamkarsUrce a QED     x | oy why Mey GM. swe (3                      ER cee: 0st 0\n= Meta Platforms Inc.                                                                       $651.35        $653.69\nalta eo                               rots wen oomwgve omnes wewco wm meow we usm\noe eatery + Ove srr re ri        Eiioma Tonnes Sotavitoe Smet Soman Sank     a\nBitioi            ET eo Nes ort ovo toa ses ur vito\nEe mame CT Ee      :           —~           nN pen     .\nTa ey  — Pe Aff\nWO NH YW AmenRsRan Bw Lf    1           Vi   o     f      /    vA /    Wi   y           @\n021  1277 3% MN Gem RS Rag 70         i                                  i\nmez  FET  1% GrpRSRawg 34 BS\nTae Im ae Soames\nFr\nhe UD oem»\nTae Ben I semoemsmn\nhe wn en\nse    WIE oy LE    jt           ao\nAuk       LR    Up            |                                              .\nhub oy    mA     Ee    I                                  _—\ned     ain    an              .  WF  =     ¢    NL              El      ™\nnar           -            |          a   iL I.          TY\nJ         p )   Ly i Fo EY  Pn,     .    t      es\n—            =       epee  “Sid   i ely      wun\nha     00      I .   PR  ay {— [i tf      -\ni            WW    |\nsage                7\n8D Volume.    -            nd      po.    -       -    ne   »             fo\ninti i, ono etivhnhi  LL\na ~  Ay  Sep ® h or bee  don  [EO Th  - - - “nr  Ed \" “\nSons Len | fwpom   Inter Asset Comelation 19 tems CG  Usaioc or. nat1 sboazine                            Ory - EE BA\n“a pe       | © em   fe oma me   Comm Tes me Mel OF ome WEDD MOM SR wpe ET em Cow\n© Soares        Tf wm oom ew ws oo     .     Co   -\nrn                -\nCavern        FS |\n",
+      "ocr_text_snippet": "® Setar Fie 0% View Mimtory Bookmarks Window Help [=3 [CR] MCF BE Loe FQ 8 ® WedSepd S0TPM MamkarsUrce a QED x | oy why Mey GM. swe (3 ER cee: 0st 0 = Meta Platforms Inc. $651.35 $653.69 alta eo ro...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 30,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 30,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80381d2f574667cf",
+      "prefilter_score": 16.86,
+      "prefilter_stats": {
+        "brightRatio": 0.7834027777777778,
+        "darkRatio": 0.029305555555555557,
+        "edgeRatio": 0.1735566391067769,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1993,
+        "horizontalEdgeRatio": 0.14083810331425342,
+        "meanLuma": 230.01340277777777,
+        "stdDev": 42.829097077532,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2919,
+        "verticalEdgeRatio": 0.2062751748993004
+      },
+      "score": -21.84,
+      "score_breakdown": {
+        "chart_likeness": -1.3402157872298535,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.5,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 444,
+      "timestamp_hms": "00:07:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 159,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260909_20260909_icgc5obtkrs_697336be_whiteboard\\ocr\\ocr_000160.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 635.16,
+      "observed_date": null,
+      "ocr_confidence": 31,
+      "ocr_profile": "threshold",
+      "ocr_text": "# Safari Fie Edi View Mislory Bookmarks Wudow  Melp                         f=3   [CH]  MCF 8 EC L Ma FT GQ 8 © WidSepd S10PM\nMamcaTsires a (@      x omy wey New Godan wom 6                      ER cee: 0st o0\n= Bloom Energy Corp.                                                                       $268.66        $269.28\nQsam TURONZ Lest) Te et sy pms         TT am sontn aw sme i Lum om ontin dupe 0510 PET oomree Lapin out 1 4A\nVo 3 BE des CorosisRung ©    .   FN    .   d    VAN   2%       Vay   /\nBu xO XC Epsamg  mo NAN   of       ANAL   ff Nef — —\nEE   a a A aa     »\nDos moses VF er 7\nEEE fol\nEin ohms                              -\n3 seem                                   i                          =\nWare AR BN. OTH pg iAASXER)                      =   .     i\nip 0      I                    hd\nA, 'h,          “\nJAD Tt     Ta        = {\ni» ;       ove    IW a ( rg    N\nN                      ®     wa            Aq                       led\n&                 %   oT   .                 =   TEA\nTun pele,                   4         ,\nBO Votre.  aw       a    -             heed     ry               uw\nmie    «ii       ot    ;      ht                      -\nol atin       i\nwo.    Oe     dan    Feo    War     Ao   | = 3    un     du     E™     E23     ot\nSonam Len | wom   Inter Asset Correlation 19ltems CG  upssior 54 4s TT pidzize                            Ory - EE BS\n= Bre       | @ ner   Be sma me    COmm Mi Thm Ter aie were WER MOTE BN woe IE Mem 70\n\"0 sacs        TH 6 ww tee sw om   0 om      i      .   R      .   .\nFavortss           FS |\n",
+      "ocr_text_snippet": "# Safari Fie Edi View Mislory Bookmarks Wudow Melp f=3 [CH] MCF 8 EC L Ma FT GQ 8 © WidSepd S10PM MamcaTsires a (@ x omy wey New Godan wom 6 ER cee: 0st o0 = Bloom Energy Corp. $268.66 $269.28 Qsam...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 31,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 31,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "806c1d3b15c667d7",
+      "prefilter_score": 15.81,
+      "prefilter_stats": {
+        "brightRatio": 0.7877777777777778,
+        "darkRatio": 0.029166666666666667,
+        "edgeRatio": 0.1626740159706028,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1771,
+        "horizontalEdgeRatio": 0.1251501660660024,
+        "meanLuma": 230.44319444444446,
+        "stdDev": 42.52136842963613,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2833,
+        "verticalEdgeRatio": 0.20019786587520316
+      },
+      "score": -22.7,
+      "score_breakdown": {
+        "chart_likeness": -2.2503955534873015,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.55,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE",
+        "TER"
+      ],
+      "timestamp": 636,
+      "timestamp_hms": "00:10:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 177,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260909_20260909_icgc5obtkrs_697336be_whiteboard\\ocr\\ocr_000178.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 710.08,
+      "observed_date": null,
+      "ocr_confidence": 31,
+      "ocr_profile": "threshold",
+      "ocr_text": "# Sear Filo Edi view istory Bookmarks Window  Holp                         G   [CH]  BC OF 8 ® Loe TQ 8B © WedSepd S11PM\nMasaTsURce o (ED     x [oy wey Mey Men wm § Qe. DBs.0O\n= Fastly inc. C1 A                                                                           322.75         221\n# Fastly nc.                        FE... JR -\n eemrmemmasm——     mmm sven wees gm semen podem\nrer          Som Jy SO aml Te MRE Sen\nCusiorase               ERE EE I NL EN NNN                  —   ava)   Saenanic (14033)     »\nEe we ann        :     NA    y    ~~\nBuc}  ® %Ch Chg Eps Ruteg   wo    rc A VEY J  fim 4    a    o_o\nERE re    JN           wy           y\nosm Rom g\nonward\nmom\nBoome               4\nRe                                            .\nWare om ve 2% pe dalexse                   '    id     N\na    |                 -            ®\nWo   ;             To\nTc IL                       a\nJf    hg                '   VE       = §\n=A WAL    Ti a\nMT             .\ns                   4 fF A      - } 2 Bo    un\nk            4      eT  am    -    had          ®\ni  =  BOW\n=     iE                           Tor             Cas\nPr                     J         i.    ne                             Py\nsigna dg        S\non       ~~     nec      an      -     -       o ER      rn      w       ~o      oy      oa\nSarvans.    Lists.    Rapors.   Inter Asset Correlation 191tems ©  Upisios Ga ar AMET th AG0N                             © Puy  \"IE IN\n= ve       fom pn «oma wm   COCRm TEM TE AT eee WAS SOROS wee IoD SIR\nTe TT we mmm a we eT TT\n—         .-\nFavorden                FN            hd                                                                                          ll\n",
+      "ocr_text_snippet": "# Sear Filo Edi view istory Bookmarks Window Holp G [CH] BC OF 8 ® Loe TQ 8B © WedSepd S11PM MasaTsURce o (ED x [oy wey Mey Men wm § Qe. DBs.0O = Fastly inc. C1 A 322.75 221 # Fastly nc. FE... JR -...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 31,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 31,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "806c9c3f7b4346c7",
+      "prefilter_score": 15.98,
+      "prefilter_stats": {
+        "brightRatio": 0.7811805555555555,
+        "darkRatio": 0.029305555555555557,
+        "edgeRatio": 0.1627446823546039,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1769,
+        "horizontalEdgeRatio": 0.12500883329800014,
+        "meanLuma": 230.15409722222222,
+        "stdDev": 42.89070173957024,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2837,
+        "verticalEdgeRatio": 0.2004805314112077
+      },
+      "score": -22.73,
+      "score_breakdown": {
+        "chart_likeness": -2.279550486519307,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.55,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "TEM"
+      ],
+      "timestamp": 708,
+      "timestamp_hms": "00:11:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 60,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260909_20260909_icgc5obtkrs_697336be_whiteboard\\ocr\\ocr_000061.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 240.28,
+      "observed_date": null,
+      "ocr_confidence": 35,
+      "ocr_profile": "threshold",
+      "ocr_text": "# Seen Fie Eat view istory Bookmarks Wadow hep                         0G ®©8 »t & #0 C @éa 7 Q § © WwedSepd 50304\nMascarsiRes a QE)      x [Toy Weeky Meodly dou. ¢ av [                      EE om: ass 0\n$2,921.23\n® Russell 2000 Index                                                                                  RUT (amen aTk\n© TURBO-1Z Leaders Liti+4)     .                                                                                                                                               Vel 2.982.638 NA\nLat pte: 430 PET 01032028\nARE   wom os                 a             2                    NG   ‘Stochastcs (14.0 3.3)\n.           .              7       NS   « /   NTN         o    \\              ©\nCa ff    NAV a     WV        ¥)   /    Ny    A   3\nv4    A           f/        Rus   Vay                 b                 \\      4       S\n4                               _—                                                       3                 Va               »\nfd           ech\n}          ae\nUTD              1      Pes     R               ao\noH Mi       LR\neats oN            ei rypel          gO]\nme    Ga!  |      mn             -\n(RH             a\n(TI     i                ee\nwot 1”    1                  a                     0\nmee                                          IN}         i        ar:             Sac                                                   «\nbiped                 5         Tn       TT\n1h      ThA                                -\nfile      Sn            g         XT\nce              ARC TN        WT                                              -\nf                  mos      mA Te TT\naf      om     i provsioa\naN              jit WL)\n-                             J                                                *       200\nREE\n90 vor                                                  |                                 sa\na.       ”                            -                             -\n2  ,   £3  EE    EL]  EY    oe    El   l.    1”    [J    15 |  El    1?   ER    2    Cc)    EB   |   \"    Ed\n-       -       -        Ps        w ER   wn        w        no        -        oa\nscram    Lan    porn   Inter Asaet Comelation 19ltems G ursses 0147 Pet omoszon.                             om - GEE BA\n= tne                    .            Cum eh we ewes ees     Vakom ompR      Con Maw Camo\n-            J Orr mc sme wm    fmm Th Bm TE em ches WEED MUR a wee ID anim owe\n© Sots            i                                                                        f\npos wo   ree.    ass am mame cw        -            .    .    .\nthy Lis                wo\n[EE ER Sy.   wn am 2m om    .    .    .    .    .    .    .    .\nFavontsn                a\n",
+      "ocr_text_snippet": "# Seen Fie Eat view istory Bookmarks Wadow hep 0G ®©8 »t & #0 C @éa 7 Q § © WwedSepd 50304 MascarsiRes a QE) x [Toy Weeky Meodly dou. ¢ av [ EE om: ass 0 $2,921.23 ® Russell 2000 Index RUT (amen aT...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80e60fb95f847cd4",
+      "prefilter_score": 15.8,
+      "prefilter_stats": {
+        "brightRatio": 0.7926388888888889,
+        "darkRatio": 0.029375,
+        "edgeRatio": 0.15935269592254964,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1708,
+        "horizontalEdgeRatio": 0.12069818387393116,
+        "meanLuma": 230.6001388888889,
+        "stdDev": 42.519178352344525,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2802,
+        "verticalEdgeRatio": 0.1980072079711681
+      },
+      "score": -22.77,
+      "score_breakdown": {
+        "chart_likeness": -2.519966910154581,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.75,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 240,
+      "timestamp_hms": "00:04:00"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 3,
+      "end_ts": 408,
+      "end_hms": "00:06:48",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 102,
+      "peak_score": 118.42,
+      "start_hms": "00:05:12",
+      "start_ts": 312
+    }
+  ],
+  "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\logs\\20260909_20260909_icgc5obtkrs_697336be_whiteboard.json"
+}

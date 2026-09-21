@@ -1,0 +1,13 @@
+{
+  "run_tag": "ocr-20260917",
+  "driver": "parallelOcrScan.py",
+  "started_at": "2026-09-17T08:21:11.359299Z",
+  "finished_at": "2026-09-17T08:34:31.395755Z",
+  "last_update_at": "2026-09-17T08:34:31.396099Z",
+  "probe_log_count": 6,
+  "unique_videos_done": 3,
+  "unique_videos_errored": 0,
+  "expected_total": 3,
+  "last_probe_log": "20260916_20260916_gojwra0ewbc_eb7842b5_whiteboard.json",
+  "next_step": "run npm run video:stamp-types -- --run-tag ocr-20260917 then node tools/aggregateOcrTimeline.js ocr-20260917"
+}

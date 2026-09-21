@@ -1,0 +1,969 @@
+{
+  "date_key": "20260717",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260717_FMeOqqhbJgE.mp4",
+  "captured_count": 0,
+  "captures": [],
+  "frame_count": 730,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 504,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "prefilter_best_score": 20.59,
+  "sample_frame_width": 640,
+  "status": "no_match",
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 0,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260717_20260717_fmeoqqhbjge_2847795a_whiteboard\\ocr\\ocr_000001.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE",
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 0,
+    "observed_date": null,
+    "ocr_confidence": 0,
+    "ocr_profile": "threshold",
+    "ocr_text": "",
+    "ocr_text_snippet": "",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "d00837fe5d8a233e",
+    "prefilter_score": -23.07,
+    "prefilter_stats": {
+      "brightRatio": 0.26652777777777775,
+      "darkRatio": 0.45958333333333334,
+      "edgeRatio": 0.006395307752102325,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 101,
+      "horizontalEdgeRatio": 0.007137304784114197,
+      "meanLuma": 134.58277777777778,
+      "stdDev": 81.8327127135703,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 80,
+      "verticalEdgeRatio": 0.005653310720090453
+    },
+    "score": -12,
+    "score_breakdown": {
+      "chart_likeness": 0,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 0,
+      "pair_bonus": 0,
+      "per_row_issues": -12,
+      "per_row_metrics": 0,
+      "text_density": 0
+    },
+    "screen_layout": "chart",
+    "tickers": [],
+    "timestamp": 0,
+    "timestamp_hms": "00:00:00"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260717_20260717_fmeoqqhbjge_2847795a_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d00837fe5d8a233e",
+      "prefilter_score": -23.07,
+      "prefilter_stats": {
+        "brightRatio": 0.26652777777777775,
+        "darkRatio": 0.45958333333333334,
+        "edgeRatio": 0.006395307752102325,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 101,
+        "horizontalEdgeRatio": 0.007137304784114197,
+        "meanLuma": 134.58277777777778,
+        "stdDev": 81.8327127135703,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 80,
+        "verticalEdgeRatio": 0.005653310720090453
+      },
+      "score": -12,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 708,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260717_20260717_fmeoqqhbjge_2847795a_whiteboard\\ocr\\ocr_000709.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 37,
+      "ocr_profile": "threshold",
+      "ocr_text": "be. |                     *\nes  1           -   2\n|        oT\n \\      Co    WN            ,\nball\n",
+      "ocr_text_snippet": "be. | * es 1 - 2 | oT \\ Co WN , ball",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "e969c45a3e1c61d5",
+      "prefilter_score": -11.69,
+      "prefilter_stats": {
+        "brightRatio": 0.00020833333333333335,
+        "darkRatio": 0.2704861111111111,
+        "edgeRatio": 0.13324146703413187,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2044,
+        "horizontalEdgeRatio": 0.14444208889831106,
+        "meanLuma": 130.28083333333333,
+        "stdDev": 50.62970438361478,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1727,
+        "verticalEdgeRatio": 0.12204084516995266
+      },
+      "score": -20.19,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.85,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 7.96
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 2832,
+      "timestamp_hms": "00:47:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 648,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260717_20260717_fmeoqqhbjge_2847795a_whiteboard\\ocr\\ocr_000649.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 42,
+      "ocr_profile": "threshold",
+      "ocr_text": "@\nMarkeTSUrRcE a (EEE)     x Ouy | Weekly Monty SMn «raz 3 Oren + OG ©\ns\n® Cerebras Systems IE. w..                                                                                     171.35\nSeman 075.35 1550                                                                                          PY          PP.                               Cars 159 11-4 gi\n0 semen © BOMAERSOAIMG (1) +                                 00m Ag SYd SITTIN Wark Cap $5000      ou 2900520 22 43:0\nOtwestgh  SS6T. 20DATRS HOSE LawUndsie 1720 PM ET 072020\nSus zo               As hx Ene                           Sms a   4\nYom EPS EPS Sues CompoumRamg 1\n©ec)  5) %Chg  %Cha Eps Ramp   n\n205 00 NA NA psmumg\n020  000  NA  NA 3 Month RS Rating 58\n021 000 NA  NA 6 Month RS Rating 20\n22 07 NA NA GuomRsRamg 82\n2D 0% We  acbuRang +                                          1\n0 0% 41 Eames Suuy WA\n2025  Reidel “TE Sais Growth Rate 0%\n0%e Lod  69%: EPS Grown Rate 0%\nWore 0% wen a pp vemexsh\n[                 ”\n             ns hag 250\nI | i i      Fd\ni                                    Bo        Rats    2 «\nf     |      |                                   wn        .\n¥                                              iW  h\n=    T    =    =    =    =    3   CR a\nNov                              ur         or         wey       so      M\nur Ends June 2028 est                 EPs Ouest -\n.                                 017      -      144      I        EPS 8), % Chg.\n1905       -       was       na       : swe % ong\nwa        Aner Tox Margin\nScreens    sts    Reports   21.21 7113 <<< 22items © ae: IEANETIT                          omy - OR EQ\n",
+      "ocr_text_snippet": "@ MarkeTSUrRcE a (EEE) x Ouy | Weekly Monty SMn «raz 3 Oren + OG © s ® Cerebras Systems IE. w.. 171.35 Seman 075.35 1550 PY PP. Cars 159 11-4 gi 0 semen © BOMAERSOAIMG (1) + 00m Ag SYd SITTIN Wark ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 42,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 42,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c85a4ab2b6a4d64f",
+      "prefilter_score": 19.07,
+      "prefilter_stats": {
+        "brightRatio": 0.791875,
+        "darkRatio": 0.021944444444444444,
+        "edgeRatio": 0.1288248180340612,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1441,
+        "horizontalEdgeRatio": 0.10183025934562928,
+        "meanLuma": 232.3684722222222,
+        "stdDev": 38.37821547005414,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2205,
+        "verticalEdgeRatio": 0.1558193767224931
+      },
+      "score": -21.45,
+      "score_breakdown": {
+        "chart_likeness": -1.5468489930553364,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.1,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 2592,
+      "timestamp_hms": "00:43:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 660,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260717_20260717_fmeoqqhbjge_2847795a_whiteboard\\ocr\\ocr_000661.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 42,
+      "ocr_profile": "threshold",
+      "ocr_text": "[2]\nMarkeTsURss  o (EEE)     x uy | weekty Money sum ov < Tz @ Gren s DG ©\ns.\n® Cerebras Systems Inc. «..                                                                        171.20\nCox Semone Fats 951550                                                                                       50 Days avg vr          a                              cars 19921) 5 135\n0 samen © siGHNERS TOMMY (1 +                              DDmAQSV SWITTONZD MammCan $5008     ot 7994 308 22 84%\nOSteskMgh  SSer. DAR TOBE LuUndste 1229 PM ET O7AIZ0Z\nCuma an             PEE                        STN   t]\nYom EPS EPS Sues ComposseRues 1\n(Dec)  1%) %Cha  %ChY EPS Rang   70\nWe 0x NA WA mma ow                                    \\                <a\nWO 00 NANA Som AsRuns                    [\n2020 000 NA  NA 6 boon RS Rating 20\nHm 07 NA NA GowRsremg. m2\nTn 0% oe A seaman                                        10\n2024 ps er SHE Eammgs Stably WA\n2025  77 a  “TE Sales Growth Ratc 0%\n20%e DW  65 EPS Grown Ratu 0%\nWore 0% wn ar pp vamexsh\n|                ”\n            Rana 250\ni                                    Py          J    “\n|      |                             Be          14     0 «\nf                                            wn     y\n|         3                                |           i  h\n=    7    =    =    0    =    3   mmm\nNov.                  ’          ar         Apr        May      Jun.      Jul\nGr Ends Jus 228 1                ers ones\na                               £17      -      144      ve        EPS 8). % Cho.\n106       -       a3       na       : Suess wong\nna       ater Tox Margin\nServers    sts    Reports   2121713 <<< Z2items © wares Lien                        orm - Om EA\n",
+      "ocr_text_snippet": "[2] MarkeTsURss o (EEE) x uy | weekty Money sum ov < Tz @ Gren s DG © s. ® Cerebras Systems Inc. «.. 171.20 Cox Semone Fats 951550 50 Days avg vr a cars 19921) 5 135 0 samen © siGHNERS TOMMY (1 + D...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 42,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 42,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c85a4ab2b6a4d64f",
+      "prefilter_score": 18.94,
+      "prefilter_stats": {
+        "brightRatio": 0.7895833333333333,
+        "darkRatio": 0.02263888888888889,
+        "edgeRatio": 0.13006147975408097,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1445,
+        "horizontalEdgeRatio": 0.1021129248816338,
+        "meanLuma": 232.15270833333332,
+        "stdDev": 38.57502717862437,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2236,
+        "verticalEdgeRatio": 0.15801003462652816
+      },
+      "score": -21.58,
+      "score_breakdown": {
+        "chart_likeness": -1.6750628738551931,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.1,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 2640,
+      "timestamp_hms": "00:44:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 684,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260717_20260717_fmeoqqhbjge_2847795a_whiteboard\\ocr\\ocr_000685.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 34,
+      "ocr_profile": "threshold",
+      "ocr_text": "@\nMarceTsURse a (i)       x  ¥  Weekly Moomy SMe v «Tum  Drems OG ©\n3                                                                                    s:\n® Figma Inc. Cl A w..                                                                                             24.08\nGomer Sm Desa 7 1460                                                                                                    00a Agwl EIN                                 Fa (5208) 14st\n0 smn © SOMMERS TONmY (1)                                             0DayAg Sol HSOSIE Mare Cap  $12978       vol 105.762.073 1347%\nOvszaeechh 4316. 7IDRAIRS 855% LoxUsde 1231 PWETOTIZOZD\n\nSustar u                                     LE TI                                                                              .                   k4\n\nrey Em uch Swe ew ooo 4% ooo ements\n\n2     wa   WA NA\n\n20     ow Na   PAYA\n\n2021     000   NA   NA   NA                                                                   160\n\n2022     oo NA   AA                                                                   0\n\n2m     08 wa    0s ma                        2\n\n2004    as ws   PE—                                       Vly\n\n205     ois iz    can                                                                    00\n\n20           or we. 14 ae                                                                                                                                                                            °\n\nre    0 ae. 18 ee                                        h\n\nCompostaRang M4 EPSGownRam 2%                                            la I                       ©\n\nFram    prio                                  tly                  pM\n\n\"ong     Joico                                          1\n\nnnn RS    © SmGmmRae                                           1 h      .           ©\n\n“Mens    a etciagn ew                                           2s        o       smn\n\nGoupRSRamg TW Rewmentmy dm                                                          7     Erin!\n\nea Raing    © Confion     Py                                                   il\n\niia       2                                              i      iy ®\n\nSomme 13 a       wi                                                       IX           2\n\nAna      Prog     weoxse                                                         Ul          =\n\npos                           i                                                  t         js\n\nox             ,      !       |                                                           :\na=                B+       =    &    J    jd      Sok     y    .    woo\n\n-                                                                         ke             po            5            js                 sa ls                                             po\n\n|         !           os                 N                            Teen 0\n\nTop,                                       cess\n\nsoe                   E\n\n<                                                                                              Ex           =            ww           TT           Sep 5           Dec 75           Na          FTE\n\nur                        004    020    LT)    oo   ot   coe    0.10   on    Lo OEPS IS\n\n5        \\\n\noo                                                                     -           REE          pens         +128:         ~a7Ees          E           ~256            3               % Chg\nwas     2169     m2     208    mz    ams     Pr     as     3¢ Suien (80\nwe    co SEER    ww    os   [EN   san   are   wom\n\nSows | bss    Reports   21.21 7/13 <<< 22items © war: irae                           OF - OR ER\n",
+      "ocr_text_snippet": "@ MarceTsURse a (i) x ¥ Weekly Moomy SMe v «Tum Drems OG © 3 s: ® Figma Inc. Cl A w.. 24.08 Gomer Sm Desa 7 1460 00a Agwl EIN Fa (5208) 14st 0 smn © SOMMERS TONmY (1) 0DayAg Sol HSOSIE Mare Cap $12...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 34,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 34,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ca5a4ab2b494d74e",
+      "prefilter_score": 18.29,
+      "prefilter_stats": {
+        "brightRatio": 0.7783333333333333,
+        "darkRatio": 0.021736111111111112,
+        "edgeRatio": 0.13762278284220197,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1531,
+        "horizontalEdgeRatio": 0.10819023390573104,
+        "meanLuma": 231.47215277777778,
+        "stdDev": 38.78195531256188,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2364,
+        "verticalEdgeRatio": 0.16705533177867288
+      },
+      "score": -22.01,
+      "score_breakdown": {
+        "chart_likeness": -1.7075557096818557,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.7,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 2736,
+      "timestamp_hms": "00:45:36"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260717_20260717_fmeoqqhbjge_2847795a_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d00837fe5d8a233e",
+      "prefilter_score": -23.07,
+      "prefilter_stats": {
+        "brightRatio": 0.26652777777777775,
+        "darkRatio": 0.45958333333333334,
+        "edgeRatio": 0.006395307752102325,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 101,
+        "horizontalEdgeRatio": 0.007137304784114197,
+        "meanLuma": 134.58277777777778,
+        "stdDev": 81.8327127135703,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 80,
+        "verticalEdgeRatio": 0.005653310720090453
+      },
+      "score": -12,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 708,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260717_20260717_fmeoqqhbjge_2847795a_whiteboard\\ocr\\ocr_000709.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 2834.285488,
+      "observed_date": null,
+      "ocr_confidence": 37,
+      "ocr_profile": "threshold",
+      "ocr_text": "be. |                     *\nes  1           -   2\n|        oT\n \\      Co    WN            ,\nball\n",
+      "ocr_text_snippet": "be. | * es 1 - 2 | oT \\ Co WN , ball",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "e969c45a3e1c61d5",
+      "prefilter_score": -11.69,
+      "prefilter_stats": {
+        "brightRatio": 0.00020833333333333335,
+        "darkRatio": 0.2704861111111111,
+        "edgeRatio": 0.13324146703413187,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2044,
+        "horizontalEdgeRatio": 0.14444208889831106,
+        "meanLuma": 130.28083333333333,
+        "stdDev": 50.62970438361478,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1727,
+        "verticalEdgeRatio": 0.12204084516995266
+      },
+      "score": -20.19,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.85,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 7.96
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 2832,
+      "timestamp_hms": "00:47:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 648,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260717_20260717_fmeoqqhbjge_2847795a_whiteboard\\ocr\\ocr_000649.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 2590.431112,
+      "observed_date": null,
+      "ocr_confidence": 42,
+      "ocr_profile": "threshold",
+      "ocr_text": "@\nMarkeTSUrRcE a (EEE)     x Ouy | Weekly Monty SMn «raz 3 Oren + OG ©\ns\n® Cerebras Systems IE. w..                                                                                     171.35\nSeman 075.35 1550                                                                                          PY          PP.                               Cars 159 11-4 gi\n0 semen © BOMAERSOAIMG (1) +                                 00m Ag SYd SITTIN Wark Cap $5000      ou 2900520 22 43:0\nOtwestgh  SS6T. 20DATRS HOSE LawUndsie 1720 PM ET 072020\nSus zo               As hx Ene                           Sms a   4\nYom EPS EPS Sues CompoumRamg 1\n©ec)  5) %Chg  %Cha Eps Ramp   n\n205 00 NA NA psmumg\n020  000  NA  NA 3 Month RS Rating 58\n021 000 NA  NA 6 Month RS Rating 20\n22 07 NA NA GuomRsRamg 82\n2D 0% We  acbuRang +                                          1\n0 0% 41 Eames Suuy WA\n2025  Reidel “TE Sais Growth Rate 0%\n0%e Lod  69%: EPS Grown Rate 0%\nWore 0% wen a pp vemexsh\n[                 ”\n             ns hag 250\nI | i i      Fd\ni                                    Bo        Rats    2 «\nf     |      |                                   wn        .\n¥                                              iW  h\n=    T    =    =    =    =    3   CR a\nNov                              ur         or         wey       so      M\nur Ends June 2028 est                 EPs Ouest -\n.                                 017      -      144      I        EPS 8), % Chg.\n1905       -       was       na       : swe % ong\nwa        Aner Tox Margin\nScreens    sts    Reports   21.21 7113 <<< 22items © ae: IEANETIT                          omy - OR EQ\n",
+      "ocr_text_snippet": "@ MarkeTSUrRcE a (EEE) x Ouy | Weekly Monty SMn «raz 3 Oren + OG © s ® Cerebras Systems IE. w.. 171.35 Seman 075.35 1550 PY PP. Cars 159 11-4 gi 0 semen © BOMAERSOAIMG (1) + 00m Ag SYd SITTIN Wark ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 42,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 42,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c85a4ab2b6a4d64f",
+      "prefilter_score": 19.07,
+      "prefilter_stats": {
+        "brightRatio": 0.791875,
+        "darkRatio": 0.021944444444444444,
+        "edgeRatio": 0.1288248180340612,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1441,
+        "horizontalEdgeRatio": 0.10183025934562928,
+        "meanLuma": 232.3684722222222,
+        "stdDev": 38.37821547005414,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2205,
+        "verticalEdgeRatio": 0.1558193767224931
+      },
+      "score": -21.45,
+      "score_breakdown": {
+        "chart_likeness": -1.5468489930553364,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.1,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 2592,
+      "timestamp_hms": "00:43:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 660,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260717_20260717_fmeoqqhbjge_2847795a_whiteboard\\ocr\\ocr_000661.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 2642.668921,
+      "observed_date": null,
+      "ocr_confidence": 42,
+      "ocr_profile": "threshold",
+      "ocr_text": "[2]\nMarkeTsURss  o (EEE)     x uy | weekty Money sum ov < Tz @ Gren s DG ©\ns.\n® Cerebras Systems Inc. «..                                                                        171.20\nCox Semone Fats 951550                                                                                       50 Days avg vr          a                              cars 19921) 5 135\n0 samen © siGHNERS TOMMY (1 +                              DDmAQSV SWITTONZD MammCan $5008     ot 7994 308 22 84%\nOSteskMgh  SSer. DAR TOBE LuUndste 1229 PM ET O7AIZ0Z\nCuma an             PEE                        STN   t]\nYom EPS EPS Sues ComposseRues 1\n(Dec)  1%) %Cha  %ChY EPS Rang   70\nWe 0x NA WA mma ow                                    \\                <a\nWO 00 NANA Som AsRuns                    [\n2020 000 NA  NA 6 boon RS Rating 20\nHm 07 NA NA GowRsremg. m2\nTn 0% oe A seaman                                        10\n2024 ps er SHE Eammgs Stably WA\n2025  77 a  “TE Sales Growth Ratc 0%\n20%e DW  65 EPS Grown Ratu 0%\nWore 0% wn ar pp vamexsh\n|                ”\n            Rana 250\ni                                    Py          J    “\n|      |                             Be          14     0 «\nf                                            wn     y\n|         3                                |           i  h\n=    7    =    =    0    =    3   mmm\nNov.                  ’          ar         Apr        May      Jun.      Jul\nGr Ends Jus 228 1                ers ones\na                               £17      -      144      ve        EPS 8). % Cho.\n106       -       a3       na       : Suess wong\nna       ater Tox Margin\nServers    sts    Reports   2121713 <<< Z2items © wares Lien                        orm - Om EA\n",
+      "ocr_text_snippet": "[2] MarkeTsURss o (EEE) x uy | weekty Money sum ov < Tz @ Gren s DG © s. ® Cerebras Systems Inc. «.. 171.20 Cox Semone Fats 951550 50 Days avg vr a cars 19921) 5 135 0 samen © siGHNERS TOMMY (1 + D...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 42,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 42,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c85a4ab2b6a4d64f",
+      "prefilter_score": 18.94,
+      "prefilter_stats": {
+        "brightRatio": 0.7895833333333333,
+        "darkRatio": 0.02263888888888889,
+        "edgeRatio": 0.13006147975408097,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1445,
+        "horizontalEdgeRatio": 0.1021129248816338,
+        "meanLuma": 232.15270833333332,
+        "stdDev": 38.57502717862437,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2236,
+        "verticalEdgeRatio": 0.15801003462652816
+      },
+      "score": -21.58,
+      "score_breakdown": {
+        "chart_likeness": -1.6750628738551931,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.1,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 2640,
+      "timestamp_hms": "00:44:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 684,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260717_20260717_fmeoqqhbjge_2847795a_whiteboard\\ocr\\ocr_000685.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 2735.588093,
+      "observed_date": null,
+      "ocr_confidence": 34,
+      "ocr_profile": "threshold",
+      "ocr_text": "@\nMarceTsURse a (i)       x  ¥  Weekly Moomy SMe v «Tum  Drems OG ©\n3                                                                                    s:\n® Figma Inc. Cl A w..                                                                                             24.08\nGomer Sm Desa 7 1460                                                                                                    00a Agwl EIN                                 Fa (5208) 14st\n0 smn © SOMMERS TONmY (1)                                             0DayAg Sol HSOSIE Mare Cap  $12978       vol 105.762.073 1347%\nOvszaeechh 4316. 7IDRAIRS 855% LoxUsde 1231 PWETOTIZOZD\n\nSustar u                                     LE TI                                                                              .                   k4\n\nrey Em uch Swe ew ooo 4% ooo ements\n\n2     wa   WA NA\n\n20     ow Na   PAYA\n\n2021     000   NA   NA   NA                                                                   160\n\n2022     oo NA   AA                                                                   0\n\n2m     08 wa    0s ma                        2\n\n2004    as ws   PE—                                       Vly\n\n205     ois iz    can                                                                    00\n\n20           or we. 14 ae                                                                                                                                                                            °\n\nre    0 ae. 18 ee                                        h\n\nCompostaRang M4 EPSGownRam 2%                                            la I                       ©\n\nFram    prio                                  tly                  pM\n\n\"ong     Joico                                          1\n\nnnn RS    © SmGmmRae                                           1 h      .           ©\n\n“Mens    a etciagn ew                                           2s        o       smn\n\nGoupRSRamg TW Rewmentmy dm                                                          7     Erin!\n\nea Raing    © Confion     Py                                                   il\n\niia       2                                              i      iy ®\n\nSomme 13 a       wi                                                       IX           2\n\nAna      Prog     weoxse                                                         Ul          =\n\npos                           i                                                  t         js\n\nox             ,      !       |                                                           :\na=                B+       =    &    J    jd      Sok     y    .    woo\n\n-                                                                         ke             po            5            js                 sa ls                                             po\n\n|         !           os                 N                            Teen 0\n\nTop,                                       cess\n\nsoe                   E\n\n<                                                                                              Ex           =            ww           TT           Sep 5           Dec 75           Na          FTE\n\nur                        004    020    LT)    oo   ot   coe    0.10   on    Lo OEPS IS\n\n5        \\\n\noo                                                                     -           REE          pens         +128:         ~a7Ees          E           ~256            3               % Chg\nwas     2169     m2     208    mz    ams     Pr     as     3¢ Suien (80\nwe    co SEER    ww    os   [EN   san   are   wom\n\nSows | bss    Reports   21.21 7/13 <<< 22items © war: irae                           OF - OR ER\n",
+      "ocr_text_snippet": "@ MarceTsURse a (i) x ¥ Weekly Moomy SMe v «Tum Drems OG © 3 s: ® Figma Inc. Cl A w.. 24.08 Gomer Sm Desa 7 1460 00a Agwl EIN Fa (5208) 14st 0 smn © SOMMERS TONmY (1) 0DayAg Sol HSOSIE Mare Cap $12...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 34,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 34,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ca5a4ab2b494d74e",
+      "prefilter_score": 18.29,
+      "prefilter_stats": {
+        "brightRatio": 0.7783333333333333,
+        "darkRatio": 0.021736111111111112,
+        "edgeRatio": 0.13762278284220197,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1531,
+        "horizontalEdgeRatio": 0.10819023390573104,
+        "meanLuma": 231.47215277777778,
+        "stdDev": 38.78195531256188,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2364,
+        "verticalEdgeRatio": 0.16705533177867288
+      },
+      "score": -22.01,
+      "score_breakdown": {
+        "chart_likeness": -1.7075557096818557,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.7,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 2736,
+      "timestamp_hms": "00:45:36"
+    }
+  ],
+  "whiteboard_segments": []
+}

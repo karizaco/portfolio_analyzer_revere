@@ -1,0 +1,5 @@
+[     803ms] TypeError: (d.ticker_union || []).forEach is not a function
+    at http://localhost:8123/viewTimeline.html:215:30
+    at Array.forEach (<anonymous>)
+    at main (http://localhost:8123/viewTimeline.html:214:22)
+[     808ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8123/favicon.ico:0

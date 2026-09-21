@@ -1,0 +1,303 @@
+{
+  "run_tag": "ocr-20260917",
+  "run_tags": [
+    "ocr-20260917"
+  ],
+  "generated_at": "2026-09-17T09:02:44.014Z",
+  "totals": {
+    "videos": 3,
+    "videos_with_captures": 3,
+    "captures": 9,
+    "layouts": {
+      "structured_whiteboard": 7,
+      "dmi": 2
+    },
+    "segment_layouts": {
+      "dmi": 2,
+      "structured_whiteboard": 4
+    },
+    "video_type_counts": {
+      "daily": 3
+    },
+    "channel_counts": {
+      "revere": 3
+    },
+    "unique_tickers": 17,
+    "unique_chart_stream_tickers": 0,
+    "top_tickers": [
+      {
+        "ticker": "CF",
+        "count": 7
+      },
+      {
+        "ticker": "ETHA",
+        "count": 7
+      },
+      {
+        "ticker": "HPE",
+        "count": 7
+      },
+      {
+        "ticker": "SPYM",
+        "count": 7
+      },
+      {
+        "ticker": "UPRO",
+        "count": 7
+      },
+      {
+        "ticker": "SPCX",
+        "count": 6
+      },
+      {
+        "ticker": "QLD",
+        "count": 6
+      },
+      {
+        "ticker": "HOOD",
+        "count": 5
+      },
+      {
+        "ticker": "TQQQ",
+        "count": 5
+      },
+      {
+        "ticker": "GLD",
+        "count": 4
+      },
+      {
+        "ticker": "CRM",
+        "count": 3
+      },
+      {
+        "ticker": "SNAP",
+        "count": 3
+      },
+      {
+        "ticker": "GDXU",
+        "count": 2
+      },
+      {
+        "ticker": "IBIT",
+        "count": 2
+      },
+      {
+        "ticker": "ON",
+        "count": 2
+      },
+      {
+        "ticker": "REMX",
+        "count": 2
+      },
+      {
+        "ticker": "LLY",
+        "count": 1
+      }
+    ],
+    "untyped_videos": []
+  },
+  "per_video": [
+    {
+      "upload_date": "20260914",
+      "video_id": "6vd8h6twd2c",
+      "video_type": "daily",
+      "video_type_label": "Daily",
+      "channel": "revere",
+      "output_kind": "992d3c4c",
+      "captures": 3,
+      "max_score": 112.77,
+      "mean_score": 94.68,
+      "layouts": [
+        {
+          "layout": "structured_whiteboard",
+          "count": 2
+        },
+        {
+          "layout": "dmi",
+          "count": 1
+        }
+      ],
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "CF",
+        "ETHA",
+        "GDXU",
+        "GLD",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "QLD",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "chart_stream_tickers": [],
+      "segments": 2
+    },
+    {
+      "upload_date": "20260915",
+      "video_id": "ncp8mchfskc",
+      "video_type": "daily",
+      "video_type_label": "Daily",
+      "channel": "revere",
+      "output_kind": "fa53858e",
+      "captures": 3,
+      "max_score": 92.92,
+      "mean_score": 89.86,
+      "layouts": [
+        {
+          "layout": "structured_whiteboard",
+          "count": 3
+        }
+      ],
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "CF",
+        "CRM",
+        "ETHA",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "LLY",
+        "ON",
+        "QLD",
+        "SNAP",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "chart_stream_tickers": [],
+      "segments": 2
+    },
+    {
+      "upload_date": "20260916",
+      "video_id": "gojwra0ewbc",
+      "video_type": "daily",
+      "video_type_label": "Daily",
+      "channel": "revere",
+      "output_kind": "eb7842b5",
+      "captures": 3,
+      "max_score": 115.51,
+      "mean_score": 95.71,
+      "layouts": [
+        {
+          "layout": "structured_whiteboard",
+          "count": 2
+        },
+        {
+          "layout": "dmi",
+          "count": 1
+        }
+      ],
+      "has_dmi_intro": true,
+      "ticker_union": [
+        "CF",
+        "ETHA",
+        "GLD",
+        "HPE",
+        "QLD",
+        "REMX",
+        "SPCX",
+        "SPYM",
+        "UPRO"
+      ],
+      "chart_stream_tickers": [],
+      "segments": 2
+    }
+  ],
+  "per_day": [
+    {
+      "date": "20260914",
+      "captures": 3,
+      "videos": 1,
+      "max_score": 112.77,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "structured_whiteboard": 2,
+        "dmi": 1
+      },
+      "ticker_union": [
+        "CF",
+        "ETHA",
+        "GDXU",
+        "GLD",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "QLD",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "segments": 2,
+      "video_type_counts": {
+        "daily": 1
+      },
+      "mean_score": 94.68,
+      "ticker_union_size": 12
+    },
+    {
+      "date": "20260915",
+      "captures": 3,
+      "videos": 1,
+      "max_score": 92.92,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "structured_whiteboard": 3
+      },
+      "ticker_union": [
+        "CF",
+        "CRM",
+        "ETHA",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "LLY",
+        "ON",
+        "QLD",
+        "SNAP",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "segments": 2,
+      "video_type_counts": {
+        "daily": 1
+      },
+      "mean_score": 89.86,
+      "ticker_union_size": 14
+    },
+    {
+      "date": "20260916",
+      "captures": 3,
+      "videos": 1,
+      "max_score": 115.51,
+      "has_dmi_intro_count": 1,
+      "layouts": {
+        "structured_whiteboard": 2,
+        "dmi": 1
+      },
+      "ticker_union": [
+        "CF",
+        "ETHA",
+        "GLD",
+        "HPE",
+        "QLD",
+        "REMX",
+        "SPCX",
+        "SPYM",
+        "UPRO"
+      ],
+      "segments": 2,
+      "video_type_counts": {
+        "daily": 1
+      },
+      "mean_score": 95.71,
+      "ticker_union_size": 9
+    }
+  ]
+}

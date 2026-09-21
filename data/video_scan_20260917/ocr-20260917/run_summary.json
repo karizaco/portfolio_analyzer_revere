@@ -1,0 +1,38 @@
+{
+  "run_tag": "ocr-20260917",
+  "started_at": "2026-09-17T08:21:11.359299Z",
+  "ended_at": "2026-09-17T08:34:31.394922Z",
+  "elapsed_seconds": 800.035548,
+  "workers": 1,
+  "skip_from_tag": null,
+  "ffmpeg_bin": "C:\\Users\\admin\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-9.0.1-full_build\\bin\\ffmpeg.exe",
+  "results": [
+    {
+      "upload_date": "20260914",
+      "video_id": "6VD8H6twd2c",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917_20260914_6VD8H6twd2c.log",
+      "started_at": "2026-09-17T08:21:11.552399Z",
+      "ended_at": "2026-09-17T08:25:28.262584Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260915",
+      "video_id": "NCp8mcHfsKc",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917_20260915_NCp8mcHfsKc.log",
+      "started_at": "2026-09-17T08:25:28.263026Z",
+      "ended_at": "2026-09-17T08:29:44.184244Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260916",
+      "video_id": "GOjwRa0EWBc",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917_20260916_GOjwRa0EWBc.log",
+      "started_at": "2026-09-17T08:29:44.184473Z",
+      "ended_at": "2026-09-17T08:34:31.389939Z",
+      "ok": true
+    }
+  ]
+}

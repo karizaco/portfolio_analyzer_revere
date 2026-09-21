@@ -1,0 +1,1389 @@
+# cmd: node tools/scanVideoWithOcr.js --video C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260910_ZbcQw4xdVxo.mp4 --date 20260910 --output-root C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260915\ocr-20260915-p4 --run-tag ocr-20260915-p4 --ffmpeg-bin c:/Users/admin/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-9.0.1-full_build/bin/ffmpeg.exe
+[scan:whiteboard] ffprobe found 170 keyframe(s) for nearest-keyframe lookup
+[scan:whiteboard] preflighting final whiteboard output extraction
+[scan:whiteboard] extracting sample frames from C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260910_ZbcQw4xdVxo.mp4
+[scan:whiteboard] extracted 213 frame(s) at 0.25 fps with width 640; starting prefilter
+[scan:whiteboard] prefilter 1/213 frames after 00:00:00; best prefilter 6.34 at 00:00:00
+[scan:whiteboard] prefilter 10/213 frames after 00:00:00; best prefilter 6.35 at 00:00:36
+[scan:whiteboard] prefilter 20/213 frames after 00:00:00; best prefilter 6.36 at 00:01:12
+[scan:whiteboard] prefilter 30/213 frames after 00:00:00; best prefilter 17.17 at 00:01:48
+[scan:whiteboard] prefilter 40/213 frames after 00:00:01; best prefilter 17.72 at 00:02:36
+[scan:whiteboard] prefilter 50/213 frames after 00:00:01; best prefilter 17.72 at 00:02:36
+[scan:whiteboard] prefilter 60/213 frames after 00:00:01; best prefilter 18.02 at 00:03:48
+[scan:whiteboard] prefilter 70/213 frames after 00:00:01; best prefilter 18.23 at 00:04:28
+[scan:whiteboard] prefilter 80/213 frames after 00:00:01; best prefilter 18.23 at 00:04:28
+[scan:whiteboard] prefilter 90/213 frames after 00:00:01; best prefilter 19.02 at 00:05:36
+[scan:whiteboard] prefilter 100/213 frames after 00:00:02; best prefilter 19.02 at 00:05:36
+[scan:whiteboard] prefilter 110/213 frames after 00:00:02; best prefilter 19.02 at 00:05:36
+[scan:whiteboard] prefilter 120/213 frames after 00:00:02; best prefilter 19.02 at 00:05:36
+[scan:whiteboard] prefilter 130/213 frames after 00:00:02; best prefilter 19.02 at 00:05:36
+[scan:whiteboard] prefilter 140/213 frames after 00:00:02; best prefilter 19.02 at 00:05:36
+[scan:whiteboard] prefilter 150/213 frames after 00:00:03; best prefilter 19.02 at 00:05:36
+[scan:whiteboard] prefilter 160/213 frames after 00:00:03; best prefilter 19.02 at 00:05:36
+[scan:whiteboard] prefilter 170/213 frames after 00:00:03; best prefilter 19.02 at 00:05:36
+[scan:whiteboard] prefilter 180/213 frames after 00:00:03; best prefilter 19.02 at 00:05:36
+[scan:whiteboard] prefilter 190/213 frames after 00:00:04; best prefilter 19.02 at 00:05:36
+[scan:whiteboard] prefilter 200/213 frames after 00:00:04; best prefilter 19.02 at 00:05:36
+[scan:whiteboard] prefilter 210/213 frames after 00:00:04; best prefilter 19.02 at 00:05:36
+[scan:whiteboard] prefilter 213/213 frames after 00:00:04; best prefilter 19.02 at 00:05:36
+[scan:whiteboard] prefilter kept 60/213 frame(s) for OCR; best prefilter 19.02 at 00:05:36
+[scan:whiteboard] extracting OCR candidates from source video at width 1280
+[scan:whiteboard] OCR 1/60 frames (1.7%) after 00:00:02; best score -16.73 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 10/60 frames (16.7%) after 00:00:56; best score 51.64 at 00:01:24 (ocr 60.0)
+[scan:whiteboard] OCR 20/60 frames (33.3%) after 00:01:57; best score 51.64 at 00:01:24 (ocr 60.0)
+[scan:whiteboard] OCR 30/60 frames (50.0%) after 00:06:49; best score 51.64 at 00:01:24 (ocr 60.0)
+[scan:whiteboard] OCR 40/60 frames (66.7%) after 00:08:24; best score 108.18 at 00:06:24 (ocr 62.0)
+[scan:whiteboard] OCR 50/60 frames (83.3%) after 00:09:38; best score 108.18 at 00:06:24 (ocr 62.0)
+[scan:whiteboard] OCR 60/60 frames (100.0%) after 00:11:46; best score 108.18 at 00:06:24 (ocr 62.0)
+{
+  "date_key": "20260910",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260910_ZbcQw4xdVxo.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 96,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260910_20260910_zbcqw4xdvxo_4628e382_whiteboard\\ocr\\ocr_000097.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 384.8,
+      "observed_date": "20260910",
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Preview Flo ER View Go Too Widow Help                     CEE. 00\n® © (- Screenshot 2026-09-10 at 4.4...    a a                a       ® id\n>> TALE OF THE TAPE — THURSDAY, SEPTEMBER 10, 2026 <<\nMamKeTSURCS 2 |e MARKET STATE:  Quem: DEL ©\n» CBOE 30 Year’ *STOINDEXES OF 64 RG811 64 NASIL USD TNX/TYXP vs 5d 1321                              3261\n© * SENTIMENT: VIX 18.04 (+9.605) F&G             AA 38.0-1722.7 40.0 TEIERYNAAIM 89.57+3.96                       eins cr sa mers\na sow a     ™  <> BULL CASE: INITIATE RALLY & TREND 21EMA    €8/3-4 REGAIN 21E & FTD             a a     ©\n~~~  <»BEAR CASE: SUSTAINED BREAK BELOW 21EMA € 9/1 BROKE BELOW 21E              A A\n* NEWS: HOT PPI        MIDDLE EAST CONFLICT         FRI: CP)      ORCL EARNINGS                                  sant    ©        I\n* TODAY'S KEYS: SPX vs 2164,/76204  QQQ vs 5004/2148 R2K vs 100D4,/50Dd                       [er at      .\n* DAY CT: D-3 => D-4 8E:-3¢ 21E:-3 8E>21E? NO                                            Ag     Wo\n“              * ACTION: 0 0.55% 7610 FAIL 3 TIMES AND WEAKNESS ALL DAY                              [NC SR\n, ta           *SPXO/N 7593-76621 07595 030 7580-76031 L/H 7580-7613                    We   p=                   ®\nNE July * SPX ATR: 0.69% SPX -0.58% 60/40 -0.74% GRO -0.81% TURBO -1.49%                 z                                 [\nXi        i       * SECTORS: 1 BY% USD BWET O&G DBC { BPS COPX G/S/M URA SOXX LYTE             5                           “\noo\" * GRO HOLDINGS: SPYM,UPRO,QLD,PLTR HPE,OKTA, CF\n* GRO RVAB/REBAR: 1.01{-0.10%/-3.18%) SELL MU ARKG TRIM PLTR\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBIT,ETHA,GDXU,FCX ,SPCX, HOOD, RBRK                                                                    *\n* TURBO RVAB/REBAR: 1.46 (-1.42%/-3.83%) SELL TEM PURR\n—— * BOTTOM LINE: > HOT PPI AND YIELDS FURTHER WEAKNESS                                 —_—\n* FRI KEYS: SPX vs 50D/10W/7580 QQQ vs 50D/10W/100D/707 R2K vs 100D/288\n>>> S&P500 KEY LEVELS <<<\n* 7816 (8/13 INTRADAY A-T-H)                                                                             B\nTut TT I e7ee6(  21EMA) € 9/14 8/211 8/208 7/311                                     Ft ta Tw\nsw ow P7674 TUES: Al FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN                                        or - maa\nEL _  P7636 WED: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND          Fi   ch fame GER womngn RsRs\nTe * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291                 a\n© Veo Process       37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS                                          em\nwe \"7157/7178 (5 200D/80WK) € 4/81 3/19y                                   pro     .     .     Coe\nCT                                                         —                                       Cg\n",
+      "ocr_text_snippet": "@ Preview Flo ER View Go Too Widow Help CEE. 00 ® © (- Screenshot 2026-09-10 at 4.4... a a a ® id >> TALE OF THE TAPE — THURSDAY, SEPTEMBER 10, 2026 << MamKeTSURCS 2 |e MARKET STATE: Quem: DEL © » ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.01{-0.10%/-3.18%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL MU ARKG TRIM PLTR",
+          "bottom_line": "> HOT PPI AND YIELDS FURTHER WEAKNESS -_- FRI KEYS: SPX VS 50D/10W/7580 QQQ VS 50D/10W/100D/707 R2K VS 100D/288 S&P500 KEY LEVELS <<< 7816 (8/13 INTRADAY A-T-H) B TUT TT I E7EE6( 21EMA) € 9/14 8/211 8/208 7/311 FT TA TW SW OW P7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN OR - MAA EL _ P7636 WED: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND FI CH FAME GER WOMNGN RSRS TE * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291 A VEO PROCESS 37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS EM WE \"7157/7178 (5 200D/80WK) € 4/81 3/19Y PRO . . COE CT - CG",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.46 (-1.42%/-3.83%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL TEM PURR",
+          "bottom_line": "> HOT PPI AND YIELDS FURTHER WEAKNESS -_- FRI KEYS: SPX VS 50D/10W/7580 QQQ VS 50D/10W/100D/707 R2K VS 100D/288 S&P500 KEY LEVELS <<< 7816 (8/13 INTRADAY A-T-H) B TUT TT I E7EE6( 21EMA) € 9/14 8/211 8/208 7/311 FT TA TW SW OW P7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN OR - MAA EL _ P7636 WED: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND FI CH FAME GER WOMNGN RSRS TE * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291 A VEO PROCESS 37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS EM WE \"7157/7178 (5 200D/80WK) € 4/81 3/19Y PRO . . COE CT - CG",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f019f8783ff03",
+      "prefilter_score": 11.89,
+      "prefilter_stats": {
+        "brightRatio": 0.7483333333333333,
+        "darkRatio": 0.020694444444444446,
+        "edgeRatio": 0.22005511977952089,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1580,
+        "horizontalEdgeRatio": 0.11165288672178644,
+        "meanLuma": 229.91368055555554,
+        "stdDev": 39.115574570157,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4648,
+        "verticalEdgeRatio": 0.3284573528372553
+      },
+      "score": 108.18,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.1,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 20,
+        "text_density": 87.08
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "QLD",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO",
+        "URA"
+      ],
+      "timestamp": 384,
+      "timestamp_hms": "00:06:24",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\screenshots\\20260910_ps.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 138,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260910_20260910_zbcqw4xdvxo_4628e382_whiteboard\\ocr\\ocr_000139.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 553.88,
+      "observed_date": "20260910",
+      "ocr_confidence": 56,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Predew Flo EM View Go Tous Window Hep                                  [x [-]\nCO] ® 6 ([- Screenshot2026-09-10814.4... N aaa        [=3   ® io          a\n>> TALE OF THE TAPE —~ THURSDAY, SEPTEMBER 10, 2026 <<\nMagxeTSURGE   * MARKET STATE: Quam DELO\n» Oracle Corp. »STO INDEXES 01 64 RGE1P 64 NASI USD TNX/TYXA vs5d 1321       wn oleat0       we 152.94\n3 soe            * SENTIMENT: VIX 18.04 (+9.60:%) F&G               AM380-17227+00 TERTINAM 89574396 45% meron seni oe\nCantata         ~ =PBULL CASE: INITIATE RALLY & TREND 21EMA    €8/3-4 REGAIN 21E & FTD              -             Pre      ~      3\n&5 5 53 4 -DBEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 9/1 BROKE BELOW 21E              ==\nTa sm om * NEWS:HOTPPI   MIDDLE EAST CONFLICT    FRI:CPI ORCL EARNINGS\nRa amo. * TODAY'S KEYS: SPXvs 21E4,/76204 QQQvs SODJ/21E  R2K vs 10004,/50Dd\nWin Wl *DAYCT:D-3=>D4 8€:-3 21E:-3) 8E>21E? NO                                                 -\nwe aw wil * ACTION: 0-0.55% 7610 FAIL 3 TIMES AND WEAKNESS ALL DAY\non ~ TSPXO/N 7593-76621 07595 030 7580-76031 L/H7580-7613               _\npaid * SPX ATR: 0.69% SPX -0.58% 60/40-0.74% GRO -0.81% TURBO -1.49%                                    w\n7. *SECTORS: 1 BY% USD BWET O&G DBC J BP COPX G/S/M URA SOXX LYTE             EN  =o      ogc cr\n=        * GRO HOLDINGS: SPYM,UPRO,QLD,PLTR, HPE,OKTA, CF                                                   RE       EDEN -\n\n* GRO RVAB/REBAR: 1.01{-0.10%/-3.18%) SELL MU ARKG TRIM PLTR                                         iad oe\nowen * TURBO HOLDINGS: SPYM,UPRO,TQQQ,IBIT,ETHA,GDXU,FCX ,SPCX,HOOD,RBRK                         a ow\n[                     * TURBO RVAB/REBAR: 1.46 (-1.42%/-3.83%) SELL TEM PURR                                                                 Ta          ne\nTm  * BOTTOM LINE: 5 HOT PPI AND YIELDS FURTHER WEAKNESS                                 TTT\nwm WUE % ERI KEYS: SPX vs SOD/10W/7580  QQQ vs SOD/10W/1000/707 R2K vs 1000/288         Frm wa we\n\nwi >>> S&PS00 KEY LEVELS <<<                                                                                _           Or Ends September 2028 cs EPS Oue NG\"\n\nWi *7816(8/13 INTRADAY A-T-H)                                                 -  |  mm meee\nen      _ *7666(  21EMA) € 9/1) 8/211 8/204 7/311                   PN              Ae Tx a\n\nsew C7674 TUES: Al FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN                         or © 2 uaa\nTween 7636 WED: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND     ombal Mem cow Gm one en\nEee 7603/7617 (16 50D/10WK) € 7/311 7/231 7/211 7/174 6/291         Te. we\n\nSeer | 37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS                       \\              wy\n\nomen © 7157/7178 (15 2000/40WK) € 4/81 3/198                      ass    R—    Loe\n\nCT                                                                        Cy\n",
+      "ocr_text_snippet": "@ Predew Flo EM View Go Tous Window Hep [x [-] CO] ® 6 ([- Screenshot2026-09-10814.4... N aaa [=3 ® io a >> TALE OF THE TAPE —~ THURSDAY, SEPTEMBER 10, 2026 << MagxeTSURGE * MARKET STATE: Quam DELO...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.01{-0.10%/-3.18%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL MU ARKG TRIM PLTR IAD OE OWEN * TURBO HOLDINGS: SPYM,UPRO,TQQQ,IBIT,ETHA,GDXU,FCX ,SPCX,HOOD,RBRK A OW",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.46 (-1.42%/-3.83%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL TEM PURR TA NE TM * BOTTOM LINE: 5 HOT PPI AND YIELDS FURTHER WEAKNESS TTT WM WUE % ERI KEYS: SPX VS SOD/10W/7580 QQQ VS SOD/10W/1000/707 R2K VS 1000/288 FRM WA WE WI >>> S&PS00 KEY LEVELS <<< _ OR ENDS SEPTEMBER 2028 CS EPS OUE NG\" WI *7816(8/13 INTRADAY A-T-H) - MM MEEE EN _ *7666( 21EMA) € 9/1) 8/211 8/204 7/311 PN AE TX A SEW C7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN OR © 2 UAA TWEEN 7636 WED: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND OMBAL MEM COW GM ONE EN EEE 7603/7617 (16 50D/10WK) € 7/311 7/231 7/211 7/174 6/291 TE. WE SEER 37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS \\ WY OMEN © 7157/7178 (15 2000/40WK) € 4/81 3/198 ASS R- LOE CT CY",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f019d9f05fb0d",
+      "prefilter_score": 5.96,
+      "prefilter_stats": {
+        "brightRatio": 0.5481944444444444,
+        "darkRatio": 0.22444444444444445,
+        "edgeRatio": 0.21793512825948697,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2098,
+        "horizontalEdgeRatio": 0.14825807363437213,
+        "meanLuma": 183.0820138888889,
+        "stdDev": 89.74655523472649,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4070,
+        "verticalEdgeRatio": 0.2876121828846018
+      },
+      "score": 98.86,
+      "score_breakdown": {
+        "chart_likeness": -4.938894668923112,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.8,
+        "pair_bonus": 4,
+        "per_row_issues": -8,
+        "per_row_metrics": 16,
+        "text_density": 89
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "QLD",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO",
+        "URA"
+      ],
+      "timestamp": 552,
+      "timestamp_hms": "00:09:12",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\screenshots\\20260910_ps_2.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 126,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260910_20260910_zbcqw4xdvxo_4628e382_whiteboard\\ocr\\ocr_000127.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 504,
+      "observed_date": "20260910",
+      "ocr_confidence": 57,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Preview Fle ER View Go Tos Window Help            E000\n® © ([D- Seeenshot2026-0900t84. QR QQ              [=3      ® io\n>> TALE OF THE TAPE —~ THURSDAY, SEPTEMBER 10, 2026 <<\nMamETS os * MARKET STATE:                                                         . Quam. DELO\n» Oracle Corp. STO INDEXES 01 64 RGE1P 64 NASI USD TNX/TYXA vs5d 1321       wn teas       we 152.94\n3 seis            * SENTIMENT: VIR 18.04 (49.60%) F&G               AAN3S0 1722.7 40.0 HAAIMBESTSRO8 SSN Mere smem e\nCammarte         ~ =DBULL CASE: INITIATE RALLY & TREND 21EMA    €38/3-4 REGAIN 21E & FTD              _             ay      ~      3\nEw “a «82 4 PBEAR CASE: SUSTAINED BREAK BELOW 21EMA  € 9/1 BROKE BELOW 21E              -_——\noo    peed  fey     * NEWS: HOT PPI        MIDDLE EAST CONFLICT        FRI: CPI      ORCL EARNINGS\nThon + TODAY'S KEYS: SPXvs 21E4/76204 QQQvs SODV/21EL  R2K vs 10004,/5004\n& in Ll *DAYCT:D-3=>D4 8€:-3 21E:-3) 8E>21E? NO                                                   -\nwe sw wi. * ACTION: 0-0.55% 47610 FAIL 3 TIMES AND WEAKNESS ALL DAY\nos — TSPXO/N 7593-76621 07595 030 7580-76031 L/H 7580-7613\npaid * SPX ATR: 0.69% SPX -0.58% 60/40-0.74% GRO -0.81% TURBO -1.49%             2                              w\n=. “SECTORS: 1 BYS% USD BWET O8G DBC J BPS COPX G/S/M URA SOXX LYTE             EN  —      og Gr\n=             * GRO HOLDINGS: SPYM,UPRO,QLD,PLTR HPE,OKTA, CF                                                       iia       td\n* GRO RVAB/REBAR: 1.01{-0.10%/-3.18%) SELL MU ARKG TRIM PLTR                                           ad come\nwow TURBO HOLDINGS: SPYM,UPRO,TQQQ,IBIT,ETHA,GDXU,FCX ,SPCX,HOOD,RBRK                         a ow\n* TURBO RVAB/REBAR: 1.46 (-1.429%/-3.83%) SELL TEM PURR                                                              pr          a\nmy  * BOTTOM LINE: 3 HOT PPI AND YIELDS FURTHER WEAKNESS                                 TT.\nwo ThE % FRI KEYS: SPX vs S0D/10W/7580 QQQ vs 50D/10W/100D/707 R2K vs 100/288           HV\nwi >>> S&PS00 KEY LEVELS <<<                                                                                  _           Or Ends Soptumber 2028411 EPS Oue NG\"\nWi *7816(8/13 INTRADAY A-T-H)                                                            -  |  mm meee\nen           _*7666(  21EMA) € 9/14 8/211 8/20 7/311                                 PN                        Ae x ar\nsemw T_T DT674 TUES: Al FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN                         or © 2 uaa\n“meee $7636 WED: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND          Wher Mew Come Gm worn mam\nTew *7603/7617 (16 50D/10WK) € 7/31 7/238 7/21 71174 6/291               Te. we\nSiem | P7591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS                       .              om\nws\" 7157/7178 (15 200D/40WK) € 4/81 3/194                                           ww a\nLC                                                     —                                Cy\n",
+      "ocr_text_snippet": "@ Preview Fle ER View Go Tos Window Help E000 ® © ([D- Seeenshot2026-0900t84. QR QQ [=3 ® io >> TALE OF THE TAPE —~ THURSDAY, SEPTEMBER 10, 2026 << MamETS os * MARKET STATE: . Quam. DELO » Oracle C...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.01{-0.10%/-3.18%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL MU ARKG TRIM PLTR AD COME WOW TURBO HOLDINGS: SPYM,UPRO,TQQQ,IBIT,ETHA,GDXU,FCX ,SPCX,HOOD,RBRK A OW",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 57,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.46 (-1.429%/-3.83%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL TEM PURR PR A MY * BOTTOM LINE: 3 HOT PPI AND YIELDS FURTHER WEAKNESS TT. WO THE % FRI KEYS: SPX VS S0D/10W/7580 QQQ VS 50D/10W/100D/707 R2K VS 100/288 HV WI >>> S&PS00 KEY LEVELS <<< _ OR ENDS SOPTUMBER 2028411 EPS OUE NG\" WI *7816(8/13 INTRADAY A-T-H) - MM MEEE EN _*7666( 21EMA) € 9/14 8/211 8/20 7/311 PN AE X AR SEMW T_T DT674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN OR © 2 UAA MEEE $7636 WED: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND WHER MEW COME GM WORN MAM TEW *7603/7617 (16 50D/10WK) € 7/31 7/238 7/21 71174 6/291 TE. WE SIEM P7591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS . OM WS\" 7157/7178 (15 200D/40WK) € 4/81 3/194 WW A LC - CY",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 57,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f019d9f05fb0d",
+      "prefilter_score": 12.37,
+      "prefilter_stats": {
+        "brightRatio": 0.7310416666666667,
+        "darkRatio": 0.020625,
+        "edgeRatio": 0.2340823970037453,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1812,
+        "horizontalEdgeRatio": 0.12804748781004877,
+        "meanLuma": 228.15041666666667,
+        "stdDev": 39.79899862424997,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4813,
+        "verticalEdgeRatio": 0.3401173061974419
+      },
+      "score": 97.43,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.85,
+        "pair_bonus": 4,
+        "per_row_issues": -8,
+        "per_row_metrics": 16,
+        "text_density": 88.58
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "QLD",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO",
+        "URA"
+      ],
+      "timestamp": 504,
+      "timestamp_hms": "00:08:24",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\screenshots\\20260910_ps_3.png"
+    }
+  ],
+  "frame_count": 213,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 170,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\screenshots\\20260910_ps.png",
+  "prefilter_best_score": 19.02,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 96,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260910_20260910_zbcqw4xdvxo_4628e382_whiteboard\\ocr\\ocr_000097.png",
+    "is_intro_card": false,
+    "issue_codes": [],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 384.8,
+    "observed_date": "20260910",
+    "ocr_confidence": 62,
+    "ocr_profile": "threshold",
+    "ocr_text": "@ Preview Flo ER View Go Too Widow Help                     CEE. 00\n® © (- Screenshot 2026-09-10 at 4.4...    a a                a       ® id\n>> TALE OF THE TAPE — THURSDAY, SEPTEMBER 10, 2026 <<\nMamKeTSURCS 2 |e MARKET STATE:  Quem: DEL ©\n» CBOE 30 Year’ *STOINDEXES OF 64 RG811 64 NASIL USD TNX/TYXP vs 5d 1321                              3261\n© * SENTIMENT: VIX 18.04 (+9.605) F&G             AA 38.0-1722.7 40.0 TEIERYNAAIM 89.57+3.96                       eins cr sa mers\na sow a     ™  <> BULL CASE: INITIATE RALLY & TREND 21EMA    €8/3-4 REGAIN 21E & FTD             a a     ©\n~~~  <»BEAR CASE: SUSTAINED BREAK BELOW 21EMA € 9/1 BROKE BELOW 21E              A A\n* NEWS: HOT PPI        MIDDLE EAST CONFLICT         FRI: CP)      ORCL EARNINGS                                  sant    ©        I\n* TODAY'S KEYS: SPX vs 2164,/76204  QQQ vs 5004/2148 R2K vs 100D4,/50Dd                       [er at      .\n* DAY CT: D-3 => D-4 8E:-3¢ 21E:-3 8E>21E? NO                                            Ag     Wo\n“              * ACTION: 0 0.55% 7610 FAIL 3 TIMES AND WEAKNESS ALL DAY                              [NC SR\n, ta           *SPXO/N 7593-76621 07595 030 7580-76031 L/H 7580-7613                    We   p=                   ®\nNE July * SPX ATR: 0.69% SPX -0.58% 60/40 -0.74% GRO -0.81% TURBO -1.49%                 z                                 [\nXi        i       * SECTORS: 1 BY% USD BWET O&G DBC { BPS COPX G/S/M URA SOXX LYTE             5                           “\noo\" * GRO HOLDINGS: SPYM,UPRO,QLD,PLTR HPE,OKTA, CF\n* GRO RVAB/REBAR: 1.01{-0.10%/-3.18%) SELL MU ARKG TRIM PLTR\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBIT,ETHA,GDXU,FCX ,SPCX, HOOD, RBRK                                                                    *\n* TURBO RVAB/REBAR: 1.46 (-1.42%/-3.83%) SELL TEM PURR\n—— * BOTTOM LINE: > HOT PPI AND YIELDS FURTHER WEAKNESS                                 —_—\n* FRI KEYS: SPX vs 50D/10W/7580 QQQ vs 50D/10W/100D/707 R2K vs 100D/288\n>>> S&P500 KEY LEVELS <<<\n* 7816 (8/13 INTRADAY A-T-H)                                                                             B\nTut TT I e7ee6(  21EMA) € 9/14 8/211 8/208 7/311                                     Ft ta Tw\nsw ow P7674 TUES: Al FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN                                        or - maa\nEL _  P7636 WED: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND          Fi   ch fame GER womngn RsRs\nTe * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291                 a\n© Veo Process       37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS                                          em\nwe \"7157/7178 (5 200D/80WK) € 4/81 3/19y                                   pro     .     .     Coe\nCT                                                         —                                       Cg\n",
+    "ocr_text_snippet": "@ Preview Flo ER View Go Too Widow Help CEE. 00 ® © (- Screenshot 2026-09-10 at 4.4... a a a ® id >> TALE OF THE TAPE — THURSDAY, SEPTEMBER 10, 2026 << MamKeTSURCS 2 |e MARKET STATE: Quem: DEL © » ...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": "RVAB/REBAR: 1.01{-0.10%/-3.18%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "SELL MU ARKG TRIM PLTR",
+        "bottom_line": "> HOT PPI AND YIELDS FURTHER WEAKNESS -_- FRI KEYS: SPX VS 50D/10W/7580 QQQ VS 50D/10W/100D/707 R2K VS 100D/288 S&P500 KEY LEVELS <<< 7816 (8/13 INTRADAY A-T-H) B TUT TT I E7EE6( 21EMA) € 9/14 8/211 8/208 7/311 FT TA TW SW OW P7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN OR - MAA EL _ P7636 WED: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND FI CH FAME GER WOMNGN RSRS TE * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291 A VEO PROCESS 37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS EM WE \"7157/7178 (5 200D/80WK) € 4/81 3/19Y PRO . . COE CT - CG",
+        "parse_status": "ok",
+        "issue_codes": [],
+        "ocr_confidence": 62,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": "RVAB/REBAR: 1.46 (-1.42%/-3.83%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "SELL TEM PURR",
+        "bottom_line": "> HOT PPI AND YIELDS FURTHER WEAKNESS -_- FRI KEYS: SPX VS 50D/10W/7580 QQQ VS 50D/10W/100D/707 R2K VS 100D/288 S&P500 KEY LEVELS <<< 7816 (8/13 INTRADAY A-T-H) B TUT TT I E7EE6( 21EMA) € 9/14 8/211 8/208 7/311 FT TA TW SW OW P7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN OR - MAA EL _ P7636 WED: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND FI CH FAME GER WOMNGN RSRS TE * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291 A VEO PROCESS 37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS EM WE \"7157/7178 (5 200D/80WK) € 4/81 3/19Y PRO . . COE CT - CG",
+        "parse_status": "ok",
+        "issue_codes": [],
+        "ocr_confidence": 62,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "807f019f8783ff03",
+    "prefilter_score": 11.89,
+    "prefilter_stats": {
+      "brightRatio": 0.7483333333333333,
+      "darkRatio": 0.020694444444444446,
+      "edgeRatio": 0.22005511977952089,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1580,
+      "horizontalEdgeRatio": 0.11165288672178644,
+      "meanLuma": 229.91368055555554,
+      "stdDev": 39.115574570157,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 4648,
+      "verticalEdgeRatio": 0.3284573528372553
+    },
+    "score": 108.18,
+    "score_breakdown": {
+      "chart_likeness": -6,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 3.1,
+      "pair_bonus": 4,
+      "per_row_issues": 0,
+      "per_row_metrics": 20,
+      "text_density": 87.08
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "ARKG",
+      "CF",
+      "ETHA",
+      "FCX",
+      "GDXU",
+      "HOOD",
+      "HPE",
+      "IBIT",
+      "MU",
+      "OKTA",
+      "PLTR",
+      "PURR",
+      "QLD",
+      "RBRK",
+      "SPCX",
+      "SPYM",
+      "TEM",
+      "TQQQ",
+      "UPRO",
+      "URA"
+    ],
+    "timestamp": 384,
+    "timestamp_hms": "00:06:24"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 96,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260910_20260910_zbcqw4xdvxo_4628e382_whiteboard\\ocr\\ocr_000097.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260910",
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Preview Flo ER View Go Too Widow Help                     CEE. 00\n® © (- Screenshot 2026-09-10 at 4.4...    a a                a       ® id\n>> TALE OF THE TAPE — THURSDAY, SEPTEMBER 10, 2026 <<\nMamKeTSURCS 2 |e MARKET STATE:  Quem: DEL ©\n» CBOE 30 Year’ *STOINDEXES OF 64 RG811 64 NASIL USD TNX/TYXP vs 5d 1321                              3261\n© * SENTIMENT: VIX 18.04 (+9.605) F&G             AA 38.0-1722.7 40.0 TEIERYNAAIM 89.57+3.96                       eins cr sa mers\na sow a     ™  <> BULL CASE: INITIATE RALLY & TREND 21EMA    €8/3-4 REGAIN 21E & FTD             a a     ©\n~~~  <»BEAR CASE: SUSTAINED BREAK BELOW 21EMA € 9/1 BROKE BELOW 21E              A A\n* NEWS: HOT PPI        MIDDLE EAST CONFLICT         FRI: CP)      ORCL EARNINGS                                  sant    ©        I\n* TODAY'S KEYS: SPX vs 2164,/76204  QQQ vs 5004/2148 R2K vs 100D4,/50Dd                       [er at      .\n* DAY CT: D-3 => D-4 8E:-3¢ 21E:-3 8E>21E? NO                                            Ag     Wo\n“              * ACTION: 0 0.55% 7610 FAIL 3 TIMES AND WEAKNESS ALL DAY                              [NC SR\n, ta           *SPXO/N 7593-76621 07595 030 7580-76031 L/H 7580-7613                    We   p=                   ®\nNE July * SPX ATR: 0.69% SPX -0.58% 60/40 -0.74% GRO -0.81% TURBO -1.49%                 z                                 [\nXi        i       * SECTORS: 1 BY% USD BWET O&G DBC { BPS COPX G/S/M URA SOXX LYTE             5                           “\noo\" * GRO HOLDINGS: SPYM,UPRO,QLD,PLTR HPE,OKTA, CF\n* GRO RVAB/REBAR: 1.01{-0.10%/-3.18%) SELL MU ARKG TRIM PLTR\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBIT,ETHA,GDXU,FCX ,SPCX, HOOD, RBRK                                                                    *\n* TURBO RVAB/REBAR: 1.46 (-1.42%/-3.83%) SELL TEM PURR\n—— * BOTTOM LINE: > HOT PPI AND YIELDS FURTHER WEAKNESS                                 —_—\n* FRI KEYS: SPX vs 50D/10W/7580 QQQ vs 50D/10W/100D/707 R2K vs 100D/288\n>>> S&P500 KEY LEVELS <<<\n* 7816 (8/13 INTRADAY A-T-H)                                                                             B\nTut TT I e7ee6(  21EMA) € 9/14 8/211 8/208 7/311                                     Ft ta Tw\nsw ow P7674 TUES: Al FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN                                        or - maa\nEL _  P7636 WED: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND          Fi   ch fame GER womngn RsRs\nTe * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291                 a\n© Veo Process       37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS                                          em\nwe \"7157/7178 (5 200D/80WK) € 4/81 3/19y                                   pro     .     .     Coe\nCT                                                         —                                       Cg\n",
+      "ocr_text_snippet": "@ Preview Flo ER View Go Too Widow Help CEE. 00 ® © (- Screenshot 2026-09-10 at 4.4... a a a ® id >> TALE OF THE TAPE — THURSDAY, SEPTEMBER 10, 2026 << MamKeTSURCS 2 |e MARKET STATE: Quem: DEL © » ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.01{-0.10%/-3.18%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL MU ARKG TRIM PLTR",
+          "bottom_line": "> HOT PPI AND YIELDS FURTHER WEAKNESS -_- FRI KEYS: SPX VS 50D/10W/7580 QQQ VS 50D/10W/100D/707 R2K VS 100D/288 S&P500 KEY LEVELS <<< 7816 (8/13 INTRADAY A-T-H) B TUT TT I E7EE6( 21EMA) € 9/14 8/211 8/208 7/311 FT TA TW SW OW P7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN OR - MAA EL _ P7636 WED: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND FI CH FAME GER WOMNGN RSRS TE * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291 A VEO PROCESS 37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS EM WE \"7157/7178 (5 200D/80WK) € 4/81 3/19Y PRO . . COE CT - CG",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.46 (-1.42%/-3.83%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL TEM PURR",
+          "bottom_line": "> HOT PPI AND YIELDS FURTHER WEAKNESS -_- FRI KEYS: SPX VS 50D/10W/7580 QQQ VS 50D/10W/100D/707 R2K VS 100D/288 S&P500 KEY LEVELS <<< 7816 (8/13 INTRADAY A-T-H) B TUT TT I E7EE6( 21EMA) € 9/14 8/211 8/208 7/311 FT TA TW SW OW P7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN OR - MAA EL _ P7636 WED: OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND FI CH FAME GER WOMNGN RSRS TE * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291 A VEO PROCESS 37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS EM WE \"7157/7178 (5 200D/80WK) € 4/81 3/19Y PRO . . COE CT - CG",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f019f8783ff03",
+      "prefilter_score": 11.89,
+      "prefilter_stats": {
+        "brightRatio": 0.7483333333333333,
+        "darkRatio": 0.020694444444444446,
+        "edgeRatio": 0.22005511977952089,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1580,
+        "horizontalEdgeRatio": 0.11165288672178644,
+        "meanLuma": 229.91368055555554,
+        "stdDev": 39.115574570157,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4648,
+        "verticalEdgeRatio": 0.3284573528372553
+      },
+      "score": 108.18,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.1,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 20,
+        "text_density": 87.08
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "QLD",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO",
+        "URA"
+      ],
+      "timestamp": 384,
+      "timestamp_hms": "00:06:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 93,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260910_20260910_zbcqw4xdvxo_4628e382_whiteboard\\ocr\\ocr_000094.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260910",
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Preview Flo ER View Go Too Widow Help                     CEE. 00\n® © (- Screenshot 2026-09-10 at 4.4...    a a                a       ® id\n>> TALE OF THE TAPE — THURSDAY, SEPTEMBER 10, 2026 <<\nMamKeTSURCS 2 |e MARKET STATE:  Qum- DEL ©\n» CBOE 30 Year’ *STOINDEXES OP 64 RG811 64 NASIL USD TNX/TYXP vs 5d 1321                              3261\n© * SENTIMENT: VIX 18.04 [+9.605) F&G             AA 38.0-1722.7 40.0 TEIEMYNAAIA 89.57+3.96                       eins cr sa mers\na sow a     ™  <> BULL CASE: INITIATE RALLY & TREND 21EMA    €8/3-4 REGAIN 21E & FTD             a a     ©\n~~~  <»BEAR CASE: SUSTAINED BREAK BELOW 21EMA € 9/1 BROKE BELOW 21E              A A\n* NEWS: HOT PPI        MIDDLE EAST CONFLICT         FRI: CP)      ORCL EARNINGS                                  sant    ©        I\n* TODAY'S KEYS: SPX vs 2164,/76204  QQQ vs 5004/2164 R2K vs 100D4,/50Dd                       [er at      .\n* DAY CT: D-3=>D-4 8E:-3 21E:-3 8E>21E? NO                                            Ag     Wo\n“              * ACTION: 0 0.55% 7610 FAIL 3 TIMES AND WEAKNESS ALL DAY                              wir\n, ta           *SPXO/N 7593-76621 07595 030 7580-76031 L/H 7580-7613                    We   p=                   ®\nNE July * SPX ATR: 0.69% SPX -0.58% 60/40 -0.74% GRO -0.81% TURBO -1.49%                 z                                 [\nXi        i       * SECTORS: 1 BY% USD BWET O&G DBC J BPS COPX G/S/M URA SOXX LYTE             5                           “\noo\" * GRO HOLDINGS: SPYM,UPRO,GLD,PLTR HPE,OKTA, CF\n* GRO RVAB/REBAR: 1.01{-0.10%/-3.18%) SELL MU ARKG TRIM PLTR\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBIT,ETHA,GDXU,FCX ,SPCX, HOOD, RBRK                                                                    *\n* TURBO RVAB/REBAR: 1.46 (-1.42%/-3.83%) SELL TEM PURR\n———— * BOTTOM LINE: -» HOT PPI AND YIELDS FURTHER WEAKNESS                                 —_—\n* FRI KEYS: SPX vs 50D/10W/7580 QQQ vs 50D/10W/100D/707 R2K vs 100D/288\n>>> S&P500 KEY LEVELS <<<\n* 7816 (8/13 INTRADAY A-T-H)                                                                             B\nTu \"MT I eess( 21EMA) € 9/10 8/211 8/208 7/311                                     Fat rw\nsw ow P7674 TUES: Al FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN                                        or - maa\nEL _  P7636 WED: OIL, YIELDS, AND GEOPOUTICAL TENSIONS CONTINUE TO ACT AS A HEADWIND          Fi   ch fame GER womngn RsRs\nTm * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291                 a\n© Veo Process       37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS                                          em\nwe \"7157/7178 (5 200D/80WK) € 4/81 3/19y                                   pro     .     .     Coe\nCT                                                         —                                       Cg\n",
+      "ocr_text_snippet": "@ Preview Flo ER View Go Too Widow Help CEE. 00 ® © (- Screenshot 2026-09-10 at 4.4... a a a ® id >> TALE OF THE TAPE — THURSDAY, SEPTEMBER 10, 2026 << MamKeTSURCS 2 |e MARKET STATE: Qum- DEL © » C...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.01{-0.10%/-3.18%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL MU ARKG TRIM PLTR",
+          "bottom_line": "-» HOT PPI AND YIELDS FURTHER WEAKNESS -_- FRI KEYS: SPX VS 50D/10W/7580 QQQ VS 50D/10W/100D/707 R2K VS 100D/288 S&P500 KEY LEVELS <<< 7816 (8/13 INTRADAY A-T-H) B TU \"MT I EESS( 21EMA) € 9/10 8/211 8/208 7/311 FAT RW SW OW P7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN OR - MAA EL _ P7636 WED: OIL, YIELDS, AND GEOPOUTICAL TENSIONS CONTINUE TO ACT AS A HEADWIND FI CH FAME GER WOMNGN RSRS TM * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291 A VEO PROCESS 37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS EM WE \"7157/7178 (5 200D/80WK) € 4/81 3/19Y PRO . . COE CT - CG",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.46 (-1.42%/-3.83%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL TEM PURR",
+          "bottom_line": "-» HOT PPI AND YIELDS FURTHER WEAKNESS -_- FRI KEYS: SPX VS 50D/10W/7580 QQQ VS 50D/10W/100D/707 R2K VS 100D/288 S&P500 KEY LEVELS <<< 7816 (8/13 INTRADAY A-T-H) B TU \"MT I EESS( 21EMA) € 9/10 8/211 8/208 7/311 FAT RW SW OW P7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN OR - MAA EL _ P7636 WED: OIL, YIELDS, AND GEOPOUTICAL TENSIONS CONTINUE TO ACT AS A HEADWIND FI CH FAME GER WOMNGN RSRS TM * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291 A VEO PROCESS 37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS EM WE \"7157/7178 (5 200D/80WK) € 4/81 3/19Y PRO . . COE CT - CG",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f019f8783ff03",
+      "prefilter_score": 11.89,
+      "prefilter_stats": {
+        "brightRatio": 0.7485416666666667,
+        "darkRatio": 0.020694444444444446,
+        "edgeRatio": 0.22030245212352484,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1582,
+        "horizontalEdgeRatio": 0.11179421948978871,
+        "meanLuma": 229.89680555555555,
+        "stdDev": 39.11542628080212,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4653,
+        "verticalEdgeRatio": 0.328810684757261
+      },
+      "score": 108.1,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.1,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 20,
+        "text_density": 87
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "GLD",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO",
+        "URA"
+      ],
+      "timestamp": 372,
+      "timestamp_hms": "00:06:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 90,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260910_20260910_zbcqw4xdvxo_4628e382_whiteboard\\ocr\\ocr_000091.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260910",
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Preview Flo ER View Go Too Widow Help                     CEE. 00\n® © (- Screenshot 2026-09-10 at 4.4...    a a                a       ® id\n—r—e TALE OF THE TAPE — THURSDAY, SEPTEMBER 10, 2026 << Py E——\n1 * MARKET STATE:                                                                    +             ~~                        *\n» CBOE 30 Year’ *STOINDEXES OP 64 RG811 64 NASIL USDY TNX/TYXP vs 5d 1321                              3261\n© * SENTIMENT: VIX 18.04 [+9.605) F&G             AA 38.0-1722.7 40.0 TEIEYNAAIM 89.57+3.96                       ets cr sa mers\na sow a     ™  BULL CASE: INITIATE RALLY & TREND 21EMA    €8/3-4 REGAIN 21E & FTD             a aT     =\n~~~  <»BEAR CASE: SUSTAINED BREAK BELOW 21EMA € 9/1 BROKE BELOW 21E              A A\n* NEWS: HOT PPI        MIDDLE EAST CONFLICT         FRI: CPI      ORCL EARNINGS                                  sant    ©        I\n* TODAY'S KEYS: SPX vs 2164,/76204  QQQ vs 5004/2164 R2K vs 100D4,/50Dd                       Joh at      .\n* DAY CT: D-3 =>D-4 8E:-3¢ 21E:-3¢ 8E>21E? NO                                            Ag     [Ls\n“              * ACTION: 0 -0.55% 7610 FAIL 3 TIMES AND WEAKNESS ALL DAY                              [NC SA\n, ta           *SPXO/N 7593-76621 07595 030 7580-76031 L/H 7580-7613                    We   p=                   ®\nNE July * SPX ATR: 0.69% SPX -0.58% 60/40 -0.74% GRO -0.81% TURBO -1.49%                 -                                 [\nXi        i       * SECTORS: 1 BY% USD BWET O&G DBC { BPS COPX G/S/M URA SOXX LYTE             5                           “\noo\" * GRO HOLDINGS: SPYM,UPRO,CLD,PLTR HPE,OKTA, CF\n* GRO RVAB/REBAR: 1.01{-0.10%/-3.18%) SELL MU ARKG TRIM PLTR\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBIT,ETHA,GDXU,FCX ,SPCX, HOOD, RBRK                                                                    *\n* TURBO RVAB/REBAR: 1.46 (1.42%/-3.83%) SELL TEM PURR\n——— * BOTTOM LINE: > HOT PPI AND YIELDS FURTHER WEAKNESS                                 —_—\n* FRI KEYS: SPX vs 50D/10W/7580 QQQ vs 50D/10W/100D/707 R2K vs 100/288\n>>> S&P500 KEY LEVELS <<<\n* 7816 (8/13 INTRADAY A-T-H)                                                                             B\nTw\" Ma\" 1 e7ess( 21EMA) € 9/10 8/211 8/204 7/311                                     Fat rw\nsw ow P7674 TUES: Al FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN                                        om - 2a as\nEL _  P7636 WED: OIL, YIELDS, AND GEOPOUTICAL TENSIONS CONTINUE TO ACT AS A HEADWIND          Fi   ch fame GER womngn RsRs\nTm * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291                 a\n© Veo Process       37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS                                          em\nwe \"7157/7178 (5 200D/80WK) € 4/81 3/19y                                   pro     .     .     Coe\nLo                                                         —                                       Cd\n",
+      "ocr_text_snippet": "@ Preview Flo ER View Go Too Widow Help CEE. 00 ® © (- Screenshot 2026-09-10 at 4.4... a a a ® id —r—e TALE OF THE TAPE — THURSDAY, SEPTEMBER 10, 2026 << Py E—— 1 * MARKET STATE: + ~~ * » CBOE 30 Y...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.01{-0.10%/-3.18%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL MU ARKG TRIM PLTR",
+          "bottom_line": "> HOT PPI AND YIELDS FURTHER WEAKNESS -_- FRI KEYS: SPX VS 50D/10W/7580 QQQ VS 50D/10W/100D/707 R2K VS 100/288 S&P500 KEY LEVELS <<< 7816 (8/13 INTRADAY A-T-H) B TW\" MA\" 1 E7ESS( 21EMA) € 9/10 8/211 8/204 7/311 FAT RW SW OW P7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN OM - 2A AS EL _ P7636 WED: OIL, YIELDS, AND GEOPOUTICAL TENSIONS CONTINUE TO ACT AS A HEADWIND FI CH FAME GER WOMNGN RSRS TM * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291 A VEO PROCESS 37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS EM WE \"7157/7178 (5 200D/80WK) € 4/81 3/19Y PRO . . COE LO - CD",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.46 (1.42%/-3.83%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL TEM PURR",
+          "bottom_line": "> HOT PPI AND YIELDS FURTHER WEAKNESS -_- FRI KEYS: SPX VS 50D/10W/7580 QQQ VS 50D/10W/100D/707 R2K VS 100/288 S&P500 KEY LEVELS <<< 7816 (8/13 INTRADAY A-T-H) B TW\" MA\" 1 E7ESS( 21EMA) € 9/10 8/211 8/204 7/311 FAT RW SW OW P7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN OM - 2A AS EL _ P7636 WED: OIL, YIELDS, AND GEOPOUTICAL TENSIONS CONTINUE TO ACT AS A HEADWIND FI CH FAME GER WOMNGN RSRS TM * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291 A VEO PROCESS 37591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS EM WE \"7157/7178 (5 200D/80WK) € 4/81 3/19Y PRO . . COE LO - CD",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f019f8783ff03",
+      "prefilter_score": 11.9,
+      "prefilter_stats": {
+        "brightRatio": 0.7482638888888888,
+        "darkRatio": 0.020694444444444446,
+        "edgeRatio": 0.22047911808352766,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1582,
+        "horizontalEdgeRatio": 0.11179421948978871,
+        "meanLuma": 229.89236111111111,
+        "stdDev": 39.115827962641006,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4658,
+        "verticalEdgeRatio": 0.32916401667726664
+      },
+      "score": 107.98,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.1,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 20,
+        "text_density": 86.88
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO",
+        "URA"
+      ],
+      "timestamp": 360,
+      "timestamp_hms": "00:06:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 105,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260910_20260910_zbcqw4xdvxo_4628e382_whiteboard\\ocr\\ocr_000106.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260910",
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Preview Flo ER View Go Tos Window Help                     CIEE. 00\n® ® (D- Screenshot 2026-09-10 at 4.4...    a a                a       ® id\n>> TALE OF THE TAPE — THURSDAY, SEPTEMBER 10, 2026 <<\nMamKeTSURCS 2 |e MARKET STATE:  Qum- DEL ©\n» CBOE 30 Year’ *STOINDEXES OP 64 RG811 64 NASIL USD TNX/TYXP vs 5d 1321                              3261\n© * SENTIMENT: VIX 18.04 (+9.60%) F&G             AA 38.0-1722.7 40.0 TEIEYNAAIM 89.57+3.96                       ets cr sa mers\na sow a     ™  =» BULL CASE: INITIATE RALLY & TREND 21EMA    €8/3-4 REGAIN 21E & FTD             a aT     =\n~~~  <»BEAR CASE: SUSTAINED BREAK BELOW 21EMA € 9/1 BROKE BELOW 21E              A A\n* NEWS: HOT PPI        MIDDLE EAST CONFLICT         FRI: CPI      ORCL EARNINGS                                  sant    ©        I\n* TODAY'S KEYS: SPX vs 2164,/76204  QQQ vs 5004/2164 R2K vs 100D4,/50Dd                       [er at      .\n* DAY CT: D-3=>D-4 8E:-3 21E:-3 8E>21E? NO                                            Ag     Wl _\n“              * ACTION: 0 0.55% 7610 FAIL 3 TIMES AND WEAKNESS ALL DAY                              [1 SE\n, ta           *SPXO/N 7593-76621 07595 030 7580-76031 L/H 7580-7613                    We   p=                   ®\nNE July * SPX ATR: 0.69% SPX -0.58% 60/40 -0.74% GRO -0.81% TURBO -1.49%                 -                                 [\nXi        i       * SECTORS: 1 BY% USD BWET O&G DBC J BPS COPX G/S/M URA SOXX LYTE             [5                           “\noo\" * GRO HOLDINGS: SPYM,UPRO,GLD,PLTR HPE,OKTA, CF\n* GRO RVAB/REBAR: 1.01{-0.10%/-3.18%) SELL MU ARKG TRIM PLTR\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBIT,ETHA,GDXU,FCX ,SPCX, HOOD, RBRK                                                                    *\n* TURBO RVAB/REBAR: 1.46 (1.42%/-3.83%) SELL TEM PURR\n———— * BOTTOM LINE: > HOT PPI AND YIELDS FURTHER WEAKNESS                                  —_—\n* FRI KEYS: SPX vs 50D/10W/7580 QQQ vs 50D/10W/100D/707 R2K vs 100/288\n>>> S&P500 KEY LEVELS <<<\n* 7816 (8/13 INTRADAY A-T-H)                                                                             B\nTu \"MT I eess( 21EMA) € 9/10 8/211 8/208 7/311                                     Fat rw\nsw ow P7674 TUES: Al FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN                                        orm - = aaa\nBn   _  P7636 WED: OIL, YIELDS, AND GEOPOUTICAL TENSIONS CONTINUE TO ACT AS A HEADWIND          Fi   ch fame GER womwgn RsRs\nTem * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291                 a\nSeer $7591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS                                        sw,\nee\" 7157/7178 (15 200D/40WK) € 4/81 3/193                                   wa. oe\nCT                                                                                                   Cg\n",
+      "ocr_text_snippet": "@ Preview Flo ER View Go Tos Window Help CIEE. 00 ® ® (D- Screenshot 2026-09-10 at 4.4... a a a ® id >> TALE OF THE TAPE — THURSDAY, SEPTEMBER 10, 2026 << MamKeTSURCS 2 |e MARKET STATE: Qum- DEL © ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.01{-0.10%/-3.18%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL MU ARKG TRIM PLTR",
+          "bottom_line": "> HOT PPI AND YIELDS FURTHER WEAKNESS -_- FRI KEYS: SPX VS 50D/10W/7580 QQQ VS 50D/10W/100D/707 R2K VS 100/288 S&P500 KEY LEVELS <<< 7816 (8/13 INTRADAY A-T-H) B TU \"MT I EESS( 21EMA) € 9/10 8/211 8/208 7/311 FAT RW SW OW P7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN ORM - = AAA BN _ P7636 WED: OIL, YIELDS, AND GEOPOUTICAL TENSIONS CONTINUE TO ACT AS A HEADWIND FI CH FAME GER WOMWGN RSRS TEM * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291 A SEER $7591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS SW, EE\" 7157/7178 (15 200D/40WK) € 4/81 3/193 WA. OE CT CG",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.46 (1.42%/-3.83%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL TEM PURR",
+          "bottom_line": "> HOT PPI AND YIELDS FURTHER WEAKNESS -_- FRI KEYS: SPX VS 50D/10W/7580 QQQ VS 50D/10W/100D/707 R2K VS 100/288 S&P500 KEY LEVELS <<< 7816 (8/13 INTRADAY A-T-H) B TU \"MT I EESS( 21EMA) € 9/10 8/211 8/208 7/311 FAT RW SW OW P7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN ORM - = AAA BN _ P7636 WED: OIL, YIELDS, AND GEOPOUTICAL TENSIONS CONTINUE TO ACT AS A HEADWIND FI CH FAME GER WOMWGN RSRS TEM * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291 A SEER $7591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS SW, EE\" 7157/7178 (15 200D/40WK) € 4/81 3/193 WA. OE CT CG",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f019f8783ff03",
+      "prefilter_score": 11.89,
+      "prefilter_stats": {
+        "brightRatio": 0.7484027777777778,
+        "darkRatio": 0.020694444444444446,
+        "edgeRatio": 0.21998445339551975,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1585,
+        "horizontalEdgeRatio": 0.1120062186417921,
+        "meanLuma": 229.91770833333334,
+        "stdDev": 39.111915174753996,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4641,
+        "verticalEdgeRatio": 0.3279626881492474
+      },
+      "score": 107.97,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 20,
+        "text_density": 86.92
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "GLD",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO",
+        "URA"
+      ],
+      "timestamp": 420,
+      "timestamp_hms": "00:07:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 102,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260910_20260910_zbcqw4xdvxo_4628e382_whiteboard\\ocr\\ocr_000103.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260910",
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Preview Flo ER View Go Tos Window Help                     CIEE. 00\n® ® (D- Screenshot 2026-09-10 at 4.4...    a a                a       ® id\n>> TALE OF THE TAPE — THURSDAY, SEPTEMBER 10, 2026 <<\nMamKeTSURCS 2 |e MARKET STATE:  Qum- DEL ©\n» CBOE 30 Year’ *STOINDEXES OP 64 RG811 64 NASIL USD TNX/TYXP vs 5d 1321                              3261\n© * SENTIMENT: VIX 18.04 (+9.60%) F&G             AA 38.0-1722.7 40.0 TEIEYNAAIM 89.57+3.96                       ets cr sa mers\na sow a     ™  =» BULL CASE: INITIATE RALLY & TREND 21EMA    €8/3-4 REGAIN 21E & FTD             a aT     =\n~~~  <»BEAR CASE: SUSTAINED BREAK BELOW 21EMA € 9/1 BROKE BELOW 21E              A A\n* NEWS: HOT PPI        MIDDLE EAST CONFLICT         FRI: CPI      ORCL EARNINGS                                  sant    ©        I\n* TODAY'S KEYS: SPX vs 2164,/76204  QQQ vs 5004/2164 R2K vs 100D4,/50Dd                       [er at      .\n* DAY CT: D-3=>D-4 8E:-3 21E:-3 8E>21E? NO                                            Ag     Wl _\n“              * ACTION: 0 0.55% 7610 FAIL 3 TIMES AND WEAKNESS ALL DAY                              [1 SE\n, ta           *SPXO/N 7593-76621 07595 030 7580-76031 L/H 7580-7613                    We   p=                   ®\nNE July * SPX ATR: 0.69% SPX -0.58% 60/40 -0.74% GRO -0.81% TURBO -1.49%                 -                                 [\nXi        i       * SECTORS: 1 BY% USD BWET O&G DBC J BPS COPX G/S/M URA SOXX LYTE             [5                           “\noo\" * GRO HOLDINGS: SPYM,UPRO,GLD,PLTR HPE,OKTA, CF\n* GRO RVAB/REBAR: 1.01{-0.10%/-3.18%) SELL MU ARKG TRIM PLTR\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ, IBIT,ETHA,GDXU,FCX ,SPCX, HOOD, RBRK                                                                    *\n* TURBO RVAB/REBAR: 1.46 (1.42%/-3.83%) SELL TEM PURR\n———— * BOTTOM LINE: > HOT PPI AND YIELDS FURTHER WEAKNESS                                  —_—\n* FRI KEYS: SPX vs 50D/10W/7580 QQQ vs 50D/10W/100D/707 R2K vs 100/288\n>>> S&P500 KEY LEVELS <<<\n* 7816 (8/13 INTRADAY A-T-H)                                                                             B\nTu \"MT I eess( 21EMA) € 9/10 8/211 8/208 7/311                                     Fat rw\nsw ow P7674 TUES: Al FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN                                        orm - = aaa\nBn   _  P7636 WED: OIL, YIELDS, AND GEOPOUTICAL TENSIONS CONTINUE TO ACT AS A HEADWIND          Fi   ch fame GER womwgn RsRs\nTem * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291                 a\nSeer $7591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS                                        sw,\nee\" 7157/7178 (15 200D/40WK) € 4/81 3/193                                   wa. oe\nCT                                                                                                   Cg\n",
+      "ocr_text_snippet": "@ Preview Flo ER View Go Tos Window Help CIEE. 00 ® ® (D- Screenshot 2026-09-10 at 4.4... a a a ® id >> TALE OF THE TAPE — THURSDAY, SEPTEMBER 10, 2026 << MamKeTSURCS 2 |e MARKET STATE: Qum- DEL © ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.01{-0.10%/-3.18%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL MU ARKG TRIM PLTR",
+          "bottom_line": "> HOT PPI AND YIELDS FURTHER WEAKNESS -_- FRI KEYS: SPX VS 50D/10W/7580 QQQ VS 50D/10W/100D/707 R2K VS 100/288 S&P500 KEY LEVELS <<< 7816 (8/13 INTRADAY A-T-H) B TU \"MT I EESS( 21EMA) € 9/10 8/211 8/208 7/311 FAT RW SW OW P7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN ORM - = AAA BN _ P7636 WED: OIL, YIELDS, AND GEOPOUTICAL TENSIONS CONTINUE TO ACT AS A HEADWIND FI CH FAME GER WOMWGN RSRS TEM * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291 A SEER $7591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS SW, EE\" 7157/7178 (15 200D/40WK) € 4/81 3/193 WA. OE CT CG",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.46 (1.42%/-3.83%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL TEM PURR",
+          "bottom_line": "> HOT PPI AND YIELDS FURTHER WEAKNESS -_- FRI KEYS: SPX VS 50D/10W/7580 QQQ VS 50D/10W/100D/707 R2K VS 100/288 S&P500 KEY LEVELS <<< 7816 (8/13 INTRADAY A-T-H) B TU \"MT I EESS( 21EMA) € 9/10 8/211 8/208 7/311 FAT RW SW OW P7674 TUES: AL FOLLOWS THROUGH WHILE INDEXES CLOSE DOWN ORM - = AAA BN _ P7636 WED: OIL, YIELDS, AND GEOPOUTICAL TENSIONS CONTINUE TO ACT AS A HEADWIND FI CH FAME GER WOMWGN RSRS TEM * 7603/7617 (16 50D/10WK) € 7/311 7/234 7/211 7/173 6/291 A SEER $7591 TODAY: HOT PPI AND YIELDS FURTHER WEAKNESS SW, EE\" 7157/7178 (15 200D/40WK) € 4/81 3/193 WA. OE CT CG",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f019f8783ff03",
+      "prefilter_score": 11.89,
+      "prefilter_stats": {
+        "brightRatio": 0.7484027777777778,
+        "darkRatio": 0.020694444444444446,
+        "edgeRatio": 0.21998445339551975,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1585,
+        "horizontalEdgeRatio": 0.1120062186417921,
+        "meanLuma": 229.91770833333334,
+        "stdDev": 39.111915174753996,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4641,
+        "verticalEdgeRatio": 0.3279626881492474
+      },
+      "score": 107.97,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 20,
+        "text_density": 86.92
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "GLD",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO",
+        "URA"
+      ],
+      "timestamp": 408,
+      "timestamp_hms": "00:06:48"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260910_20260910_zbcqw4xdvxo_4628e382_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 6.34,
+      "prefilter_stats": {
+        "brightRatio": 0.5553472222222222,
+        "darkRatio": 0.2242361111111111,
+        "edgeRatio": 0.20924316302734788,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2031,
+        "horizontalEdgeRatio": 0.14352342590629638,
+        "meanLuma": 183.7992361111111,
+        "stdDev": 89.7761980456267,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3891,
+        "verticalEdgeRatio": 0.2749629001483994
+      },
+      "score": -16.73,
+      "score_breakdown": {
+        "chart_likeness": -4.728127373406796,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 108,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260910_20260910_zbcqw4xdvxo_4628e382_whiteboard\\ocr\\ocr_000109.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 432,
+      "observed_date": null,
+      "ocr_confidence": 38,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Proview Fle Edi Vew Co Too Window icp               LE i\nMarxeTsuree a (5     Xx Tour Westy Meow, wk ~ wom @                   ES ose - DE: @\n353.61\nR CBOE 30 Year Treasury Bond Yield Index                                                                          TX (os075) ot 41%\n© noms    .                                                         ao wa\nvss cra vr mons\nDAR   Ea PAN TONS TN TTT TT Net TNT an gig   =\n=    —    «     :        /                                                ©\nwd\nwn |\nan\nwo          . Jif,   .\ni,         ip    pi\nwn                                                         Br     -\n.                                   wn      1th  i Ph    ie   jot\nh       “                                         Le pa lee         PS\nMh     [I                   war        i    rg  LR\nha                 IPE       [i       se    Cie\nTA a            os Fatt ply\n]     if      -          any apt gdp              as              “\nvo             To he ng Pn     IR os\nthy   ly Plaats’ fh         Li\npod   9         pe                       “\n“hy\nan\nCisne\noe\nbata ho nia\nEEE EN EEE EEE EEE rE EEE EE EEE\n      r™     sn      oat      wor     on      a      fo ER ue      ap      wy     oo      ~      r™     sap\nServana    Lists.    Reports   Main List 28ltems C  voores 9830 AMET 73097035.                                    LL  2 = as\nmee ow   Br sem em   Combo es dow omar we Sm Im gun Ln SO some me\nN               2  nT  CBOE 10 Year Treasur.   221  En   .  RE)  as      B    °   B   .   B  Fy\n© Video Process      “\nBow ove ocewwemes. ow se. im 2      .    om\na nt         |                                                           1\n= Chats of Intsress         pw wo  (Snares Ruse 2000.   ro meer   .  in  31 ETRE. Foon   e387   .   .   Lam\nEY sss —————————————————————— A\n",
+      "ocr_text_snippet": "@ Proview Fle Edi Vew Co Too Window icp LE i MarxeTsuree a (5 Xx Tour Westy Meow, wk ~ wom @ ES ose - DE: @ 353.61 R CBOE 30 Year Treasury Bond Yield Index TX (os075) ot 41% © noms . ao wa vss cra ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 38,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 38,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80671b31ff11f568",
+      "prefilter_score": 16.57,
+      "prefilter_stats": {
+        "brightRatio": 0.7564583333333333,
+        "darkRatio": 0.058263888888888886,
+        "edgeRatio": 0.1636633453466186,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1367,
+        "horizontalEdgeRatio": 0.09660094692954561,
+        "meanLuma": 223.19006944444445,
+        "stdDev": 53.9893114292661,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3265,
+        "verticalEdgeRatio": 0.23072574376369162
+      },
+      "score": -26.1,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.9,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 432,
+      "timestamp_hms": "00:07:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 87,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260910_20260910_zbcqw4xdvxo_4628e382_whiteboard\\ocr\\ocr_000088.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 348.8,
+      "observed_date": null,
+      "ocr_confidence": 37,
+      "ocr_profile": "threshold",
+      "ocr_text": "€ Clvms Fla Edt View Hnoy Bodkowrs Profies Tab Window Wein                  a Es\nMarxeTsukee a (5    X | Duy Weakly Mey ik ~ woz                Em ose - DE: ©\n53.61\nR CBOE 30 Year Treasury Bond Yield Index                                                                          TIX 1os075) or 41%\n© nwa    -                                                         oro wa\nLose 0100 ET ouiners\na sv o   [EE Nn NY A ies a A Ne ND a Ea a A ee dd   Id\ni»    —    .             /               /             ,                   M\nwo\nan |  ad\nwor       J\n|             | hpi J i    °\non                                                                                                                             1 b,                  yf fi           a1”\nA            ty     -\n5      os                             hd     he a  =         ©\njy      }                   wa        i    Ara \"oie\n1 dll                                                    §           \"       a 7\ni Mp                vl                [\naar         I hte i TE    a   ICs\nnf  i ly,  ed! =          y +)\nbis    =             wr                                 “\nas    hi\non\nRY\nese\nDaa Kot Asatabe\nmn ow om wom ow ow om ow ow ou om ou om oe nD ow me BD om ow ow om om ow om ow ou ew om wu ow\n      ™     sp      ou      ov     [      a      fo EER Me      ror      ay     on      ~      ™     sp\nPY    fon Main List 28 tems © vives seas av tr manozs                                   om - 2% mA\n= one    om   Ba ome we   CTI hm ee 20 ORE ww RE RIUM ME ZR TUR come mw\nN               Rp  nT  CBOE 10 Your Treas.   an  rn   .  18  as   .   B    0   B   .   B  Fy\n© Video Process           fs\nroan         |   I   ww se   Cae a2      -    o   .   -     ow\nCher often           Bm wo meme   wo sew   Lam a Emenee   ss   .   .   La\nLE ———————————————\n",
+      "ocr_text_snippet": "€ Clvms Fla Edt View Hnoy Bodkowrs Profies Tab Window Wein a Es MarxeTsukee a (5 X | Duy Weakly Mey ik ~ woz Em ose - DE: © 53.61 R CBOE 30 Year Treasury Bond Yield Index TIX 1os075) or 41% © nwa -...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80773f01ff73d408",
+      "prefilter_score": 17.71,
+      "prefilter_stats": {
+        "brightRatio": 0.7953472222222222,
+        "darkRatio": 0.059930555555555556,
+        "edgeRatio": 0.14525475231432408,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1206,
+        "horizontalEdgeRatio": 0.08522365910536357,
+        "meanLuma": 226.5882638888889,
+        "stdDev": 54.066793706563956,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2905,
+        "verticalEdgeRatio": 0.20528584552328458
+      },
+      "score": -26.15,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.85,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 348,
+      "timestamp_hms": "00:05:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 57,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260910_20260910_zbcqw4xdvxo_4628e382_whiteboard\\ocr\\ocr_000058.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 225.92,
+      "observed_date": null,
+      "ocr_confidence": 36,
+      "ocr_profile": "threshold",
+      "ocr_text": "§ Chrome Fla Et View Hinoy Bodnaria Profle Tab Window Hew          Co   Es\nMarxeTsurce o QF      xX Touy weekly Moy tw ~ sox © Qa - DEL G\ns;\n» S&P MidCap 400                                                                                            wo 3583.84\n© sot    -                                                         a wre se\nLoosen Gh 20 7 oars\nNOTE EE RTT TTT nF eT TT TT en Sigua   M\n———— a\nsass        We\nit h,\noun       ph Ee Cy    ue\nan)       pt I        Jer\ni Je      _   aw        1\npry AN     a    ily, ot   a   -                     22507\n—            -        k        —                0\n”     bh    he AN              —\n\"9  3  wi A   > Sn      7    PA\nCh   f   - Hip    El hes                 =>                 [\noN    CE           i                                    -\na            py     y\nLTA i Li             TH\nHy   Fim py     A\nith fy   tl fete                      ane\nI        [                                                                   fad\nTor       i]\ni                                   Sed uf\n1D volume.                          Tr                     i\"\n-—r         -               a          ~                          or wt\nwn\n, |                                                         poi\n®  id  El  i  »  it  »  ”  2  CI)  wo  2  I)  Ea  0  LEE  EE  w  Mu  ”-  2  0\nost      Now.     owe      J     [\"     ™     =     ay     an      su      Pr      sp\nScreens.    [ey    Reports   Main List 2B items © votves 0835 Aw £1 73097075.                                    © Fey  2 = aa\n3 oe     hd   Rv sma wm    COTE Ta we GRY TRE sme ETOCUNR cm ee am OTe Rem\n© Video Process           fs        .\nSam Om semast   our somn   Cem as   .   .    o   .   .   Law\n2 tania A    ou seme wm a    ee aw\n= Chas otcon\nLC —rS—————a tie A Ct\n",
+      "ocr_text_snippet": "§ Chrome Fla Et View Hinoy Bodnaria Profle Tab Window Hew Co Es MarxeTsurce o QF xX Touy weekly Moy tw ~ sox © Qa - DEL G s; » S&P MidCap 400 wo 3583.84 © sot - a wre se Loosen Gh 20 7 oars NOTE EE...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80e68e00ff7f7191",
+      "prefilter_score": 18.02,
+      "prefilter_stats": {
+        "brightRatio": 0.8138888888888889,
+        "darkRatio": 0.058472222222222224,
+        "edgeRatio": 0.13638612112218218,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 983,
+        "horizontalEdgeRatio": 0.06946505547311144,
+        "meanLuma": 227.7932638888889,
+        "stdDev": 53.11801819912504,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2877,
+        "verticalEdgeRatio": 0.20330718677125292
+      },
+      "score": -26.2,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.8,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "MU"
+      ],
+      "timestamp": 228,
+      "timestamp_hms": "00:03:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 141,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260910_20260910_zbcqw4xdvxo_4628e382_whiteboard\\ocr\\ocr_000142.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 564.8,
+      "observed_date": null,
+      "ocr_confidence": 30,
+      "ocr_profile": "threshold",
+      "ocr_text": "§ Chvme Fla Et ew Hunoy Bockman Profle Tab Window Hel        a\nMarxeTSUnc: (EE)      X oy vey] wom tw ~ som © Qaen + DEL G\n» Oracle Corp.                                                                                   $164.60         $152.94\nComp res aan 1 1451           Prowdes oid bed ase HRC 1 POREACR ORO 8 PODS BINIME WDaAS. IRI Maaco esse    amore      Rel (33a asx.\n@ saner      © astra      + re. rvs aan                   95D One AWTS 00m ADSL HEIDI DOwARY AS       ator     wo neRzE 7s S197\n———                     wo    Rn TK CRSA ME BLL 41% fm pct n $3 meehs 0310 PM ET GRYGA020 Lah Updte G405 PET REGO\na               EI NWN er LS   5\noi EPS Xow Sawen®) Now\npot     es ae wm\n0     Pre                                                      =\non     iow. aw an                                                                           wo\npe     on le we ow                                                        i,         .        fod\n0     sw ow. ses en                                                         rN      or         os\none       en wn see                                                                               JM\nFA     wowoue                                                    HY              =\n2026.     807 dt.  som an                                            SES—   vz Te  -          20\nfd    wn el ms                                          uf        I'L    LNT      -\n=    i SS         NL IN     wo\nCommierg 7 tPicoera mn                                       pr           _-          RE TE\n5;                    i                                  o\nEPS Rang    WB Enngn Survive   ™                   Br CT Wah VS   4                 W\nos rung     Eas Sunt    5                  TE      an      Ve                  l     wo\nSams     Pegi srs A                    RE                     R                      -\nronnas     43 orvlaciorgn    nan |B            Pin tt) Sai                           —                 Pa]\nGophshuns ow Amba        oS   “Tk TTTh a oa a aaa Ee oa a ANSE,\nAo Ramo    Bune    soar | FT     sont     RA Vv\nSarg    x ow     PT Tv cmt Sc Sct AS Gi shes\nuD hao    0 rip       prety                                                                        N         w\nre      a pe     Bax                           Sisae\noe       Th faeaert      w OO o-eewe oF\nDueatvaa 13th PresioSumt    P™                                                                                  Fry\ninom THORN MAMF%,    un                                                                                  fiom\nSn rout     + Srodat 140m 05%                                                                                     po\nSm Ovary ATH Stir Fo 030%                  JR     .         .            —\nsopRs       Rs Dbcomg  wo.otrunae\nes Toon ers err hes Snzs Sap Dees Mode nan edt Lowes rE adh apis Deas Made ede beds GRR\nDomeiec DOC mw TM Ses sm 1s we am am te om am oa se aw tw wr mor zm aw an | um em\nBoum On    Hox 8% Mo Dw2s m0                              2     165,     rn    en     +     wr    oe     an     pre     PS    sn    wir    2m     Ee\nSamoa MOR NB AM a mx mw ew         :     w.      y     seaman |   xen\nSmal THO MB 7 ae AGE Ws we wy m4 pS ms ue m3 3 m3 Wy wr se Ms er w2 wa | wi swede\nJ TE ET Ee    xem\nsme Gn Gwem Charts of interest 2items C Usawes ssa” amazon                                 Ory © 28 BA\nPy   -    EY       .            Lo Prax Gm      200   hay oDayhg3 Make Comp maGrue      \"    rs\naN      @     Rr   Smal  tame      og  rica  on  ATR%,     Name  Vol (10008) Cap tm)  Rang  Rak HR Ofer RS   ao\nBL eT eT eT\nBP ow oacecom      Sw mmm om wee. Gem. ameow semis ww wn   w\nhoo Lat\nBoze Gum ewnew    on wm    © se ere. fee    re    .    .    Cows ow\n» Chars of vars         [\nf\n= 2mm\n",
+      "ocr_text_snippet": "§ Chvme Fla Et ew Hunoy Bockman Profle Tab Window Hel a MarxeTSUnc: (EE) X oy vey] wom tw ~ som © Qaen + DEL G » Oracle Corp. $164.60 $152.94 Comp res aan 1 1451 Prowdes oid bed ase HRC 1 POREACR O...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 30,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 30,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80f63e11f76dd20c",
+      "prefilter_score": 16.8,
+      "prefilter_stats": {
+        "brightRatio": 0.7540972222222222,
+        "darkRatio": 0.057916666666666665,
+        "edgeRatio": 0.16288601512260617,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1489,
+        "horizontalEdgeRatio": 0.10522224577768356,
+        "meanLuma": 223.80104166666666,
+        "stdDev": 53.20069769303819,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3121,
+        "verticalEdgeRatio": 0.2205497844675288
+      },
+      "score": -26.21,
+      "score_breakdown": {
+        "chart_likeness": -5.713000226922864,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.5,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 564,
+      "timestamp_hms": "00:09:24"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 1,
+      "end_ts": 384,
+      "end_hms": "00:06:24",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 96,
+      "peak_score": 108.18,
+      "start_hms": "00:06:24",
+      "start_ts": 384
+    },
+    {
+      "capture_count": 2,
+      "end_ts": 552,
+      "end_hms": "00:09:12",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 138,
+      "peak_score": 98.86,
+      "start_hms": "00:08:24",
+      "start_ts": 504
+    }
+  ],
+  "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\logs\\20260910_20260910_zbcqw4xdvxo_4628e382_whiteboard.json"
+}

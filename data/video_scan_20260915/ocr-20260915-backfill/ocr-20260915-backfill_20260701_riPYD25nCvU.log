@@ -1,0 +1,984 @@
+# cmd: node tools/scanVideoWithOcr.js --video C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260701_riPYD25nCvU.mp4 --date 20260701 --output-root C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260915\ocr-20260915-backfill --run-tag ocr-20260915-backfill --ffmpeg-bin c:/Users/admin/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-9.0.1-full_build/bin/ffmpeg.exe
+[scan:whiteboard] ffprobe found 121 keyframe(s) for nearest-keyframe lookup
+[scan:whiteboard] preflighting final whiteboard output extraction
+[scan:whiteboard] extracting sample frames from C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260701_riPYD25nCvU.mp4
+[scan:whiteboard] extracted 180 frame(s) at 0.25 fps with width 640; starting prefilter
+[scan:whiteboard] prefilter 1/180 frames after 00:00:00; best prefilter 6.08 at 00:00:00
+[scan:whiteboard] prefilter 10/180 frames after 00:00:00; best prefilter 7.00 at 00:00:12
+[scan:whiteboard] prefilter 20/180 frames after 00:00:01; best prefilter 7.00 at 00:00:12
+[scan:whiteboard] prefilter 30/180 frames after 00:00:01; best prefilter 10.77 at 00:01:36
+[scan:whiteboard] prefilter 40/180 frames after 00:00:01; best prefilter 10.78 at 00:02:24
+[scan:whiteboard] prefilter 50/180 frames after 00:00:02; best prefilter 14.36 at 00:03:16
+[scan:whiteboard] prefilter 60/180 frames after 00:00:02; best prefilter 14.46 at 00:03:48
+[scan:whiteboard] prefilter 70/180 frames after 00:00:03; best prefilter 14.46 at 00:03:48
+[scan:whiteboard] prefilter 80/180 frames after 00:00:03; best prefilter 14.46 at 00:03:48
+[scan:whiteboard] prefilter 90/180 frames after 00:00:04; best prefilter 14.46 at 00:03:48
+[scan:whiteboard] prefilter 100/180 frames after 00:00:04; best prefilter 21.73 at 00:06:32
+[scan:whiteboard] prefilter 110/180 frames after 00:00:04; best prefilter 21.78 at 00:06:48
+[scan:whiteboard] prefilter 120/180 frames after 00:00:05; best prefilter 21.78 at 00:06:48
+[scan:whiteboard] prefilter 130/180 frames after 00:00:05; best prefilter 21.78 at 00:06:48
+[scan:whiteboard] prefilter 140/180 frames after 00:00:05; best prefilter 21.78 at 00:06:48
+[scan:whiteboard] prefilter 150/180 frames after 00:00:06; best prefilter 21.78 at 00:06:48
+[scan:whiteboard] prefilter 160/180 frames after 00:00:06; best prefilter 21.78 at 00:06:48
+[scan:whiteboard] prefilter 170/180 frames after 00:00:07; best prefilter 21.78 at 00:06:48
+[scan:whiteboard] prefilter 180/180 frames after 00:00:07; best prefilter 21.78 at 00:06:48
+[scan:whiteboard] prefilter kept 60/180 frame(s) for OCR; best prefilter 21.78 at 00:06:48
+[scan:whiteboard] extracting OCR candidates from source video at width 1280
+[scan:whiteboard] OCR 1/60 frames (1.7%) after 00:00:02; best score -15.67 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 10/60 frames (16.7%) after 00:00:38; best score -15.67 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 20/60 frames (33.3%) after 00:01:10; best score -15.67 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 30/60 frames (50.0%) after 00:01:48; best score -15.67 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 40/60 frames (66.7%) after 00:02:37; best score -15.67 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 50/60 frames (83.3%) after 00:03:30; best score -15.67 at 00:00:00 (ocr 0.0)
+Image too small to scale!! (2x36 vs min width of 3)
+Line cannot be recognized!!
+[scan:whiteboard] OCR 60/60 frames (100.0%) after 00:04:21; best score -15.67 at 00:00:00 (ocr 0.0)
+{
+  "date_key": "20260701",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260701_riPYD25nCvU.mp4",
+  "captured_count": 0,
+  "captures": [],
+  "frame_count": 180,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 121,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "prefilter_best_score": 21.78,
+  "sample_frame_width": 640,
+  "status": "no_match",
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 171,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260701_20260701_ripyd25ncvu_211870f1_whiteboard\\ocr\\ocr_000172.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 684,
+    "observed_date": null,
+    "ocr_confidence": 68,
+    "ocr_profile": "threshold",
+    "ocr_text": "Py          * S&,P500 UNDER 200D R-A-I-R RULES (REVERE AGGRESSIVE INDEX RE-ENTRY)\n\n* USE NON-LEVGD FOR FIRST 30% DUE TO VOLATILITY UNDER 200D\n\n* REDUCE EXPOSURE ON FAILURE INTO DECLINING 8/21/50                                          oo          :\n8                                                  CEILING TARGET FLOOR                                            .    LA\"\n:                                          <8E 20%         10% 20%                                             g\nH                                          >8E 20%         20%          0%                                              :\ni                                         521 30%         25%         20%                                              2    Be\n¢                                       8E>21E 40%          35%          30%                                                 g\n}                            >50D (NEG SLOPE) ~~ 50%          40%           35%                                                            Rc\n\n|                 >50D (POS SLOPE) ~~ 60%       50%       40%                               :\n:\n TraderLion\n",
+    "ocr_text_snippet": "Py * S&,P500 UNDER 200D R-A-I-R RULES (REVERE AGGRESSIVE INDEX RE-ENTRY) * USE NON-LEVGD FOR FIRST 30% DUE TO VOLATILITY UNDER 200D * REDUCE EXPOSURE ON FAILURE INTO DECLINING 8/21/50 oo : 8 CEILIN...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE"
+        ],
+        "ocr_confidence": 68,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE"
+        ],
+        "ocr_confidence": 68,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "da5a255b352fa02d",
+    "prefilter_score": 16.81,
+    "prefilter_stats": {
+      "brightRatio": 0.5466666666666666,
+      "darkRatio": 0.12347222222222222,
+      "edgeRatio": 0.19744187689915907,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 2470,
+      "horizontalEdgeRatio": 0.17454596848279275,
+      "meanLuma": 196.5376388888889,
+      "stdDev": 71.15090848161034,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 3118,
+      "verticalEdgeRatio": 0.2203377853155254
+    },
+    "score": -14.6,
+    "score_breakdown": {
+      "chart_likeness": 0,
+      "keyword_guard": -18,
+      "ocr_confidence_bonus": 3.4,
+      "pair_bonus": 0,
+      "per_row_issues": -8,
+      "per_row_metrics": 0,
+      "text_density": 8
+    },
+    "screen_layout": "tale_of_the_tape",
+    "tickers": [
+      "BE"
+    ],
+    "timestamp": 684,
+    "timestamp_hms": "00:11:24"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 171,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260701_20260701_ripyd25ncvu_211870f1_whiteboard\\ocr\\ocr_000172.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 68,
+      "ocr_profile": "threshold",
+      "ocr_text": "Py          * S&,P500 UNDER 200D R-A-I-R RULES (REVERE AGGRESSIVE INDEX RE-ENTRY)\n\n* USE NON-LEVGD FOR FIRST 30% DUE TO VOLATILITY UNDER 200D\n\n* REDUCE EXPOSURE ON FAILURE INTO DECLINING 8/21/50                                          oo          :\n8                                                  CEILING TARGET FLOOR                                            .    LA\"\n:                                          <8E 20%         10% 20%                                             g\nH                                          >8E 20%         20%          0%                                              :\ni                                         521 30%         25%         20%                                              2    Be\n¢                                       8E>21E 40%          35%          30%                                                 g\n}                            >50D (NEG SLOPE) ~~ 50%          40%           35%                                                            Rc\n\n|                 >50D (POS SLOPE) ~~ 60%       50%       40%                               :\n:\n TraderLion\n",
+      "ocr_text_snippet": "Py * S&,P500 UNDER 200D R-A-I-R RULES (REVERE AGGRESSIVE INDEX RE-ENTRY) * USE NON-LEVGD FOR FIRST 30% DUE TO VOLATILITY UNDER 200D * REDUCE EXPOSURE ON FAILURE INTO DECLINING 8/21/50 oo : 8 CEILIN...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "da5a255b352fa02d",
+      "prefilter_score": 16.81,
+      "prefilter_stats": {
+        "brightRatio": 0.5466666666666666,
+        "darkRatio": 0.12347222222222222,
+        "edgeRatio": 0.19744187689915907,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2470,
+        "horizontalEdgeRatio": 0.17454596848279275,
+        "meanLuma": 196.5376388888889,
+        "stdDev": 71.15090848161034,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3118,
+        "verticalEdgeRatio": 0.2203377853155254
+      },
+      "score": -14.6,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.4,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 684,
+      "timestamp_hms": "00:11:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260701_20260701_ripyd25ncvu_211870f1_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 6.08,
+      "prefilter_stats": {
+        "brightRatio": 0.4639583333333333,
+        "darkRatio": 0.25930555555555557,
+        "edgeRatio": 0.25973429439615575,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2676,
+        "horizontalEdgeRatio": 0.18910324358702565,
+        "meanLuma": 174.44840277777777,
+        "stdDev": 81.05737665350934,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4675,
+        "verticalEdgeRatio": 0.3303653452052858
+      },
+      "score": -15.67,
+      "score_breakdown": {
+        "chart_likeness": -3.674132123754662,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 27,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260701_20260701_ripyd25ncvu_211870f1_whiteboard\\ocr\\ocr_000028.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 72,
+      "ocr_profile": "threshold",
+      "ocr_text": ".                       TEN STEPS FROM \"BOTTOM\" TO \"BULL\"                                 ”\n“                        4/23 1 REGAIN 8EMA\n4/24 2 REGAIN 21EMA                                                  Co         .\n:                          4/22-23 3 O'NEILFTD 4+ DAYS OFF LO                               .   L&\"\nB      4 NO DIST 4 DAYS AFTER FTD EK\n:                          4/29 5 SEMA CROSS UP THRU 21EMA                        2\n:                             5/1 6 REGAIN S0SMA                                             g   BER\nH                            5/12 7 21EMA CROSS UP THRU 50SMA                         #\n5/12 8 REGAIN 200SMA                                                 Retard oglen\n5/13 9 50SMA SLOPE TURN POSITIVE                        -\n7/1 10 50SMA CROSS UP THRU 200SMA\n TraderLion\n",
+      "ocr_text_snippet": ". TEN STEPS FROM \"BOTTOM\" TO \"BULL\" ” “ 4/23 1 REGAIN 8EMA 4/24 2 REGAIN 21EMA Co . : 4/22-23 3 O'NEILFTD 4+ DAYS OFF LO . L&\" B 4 NO DIST 4 DAYS AFTER FTD EK : 4/29 5 SEMA CROSS UP THRU 21EMA 2 : ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 72,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 72,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ca5a254b253fa43d",
+      "prefilter_score": 10.71,
+      "prefilter_stats": {
+        "brightRatio": 0.5689583333333333,
+        "darkRatio": 0.24256944444444445,
+        "edgeRatio": 0.1931312274750901,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2195,
+        "horizontalEdgeRatio": 0.1551127128824818,
+        "meanLuma": 187.65840277777778,
+        "stdDev": 80.61542392884041,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3271,
+        "verticalEdgeRatio": 0.2311497420676984
+      },
+      "score": -16,
+      "score_breakdown": {
+        "chart_likeness": -1.59960967425776,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.6,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "unknown_text",
+      "tickers": [],
+      "timestamp": 108,
+      "timestamp_hms": "00:01:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 36,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260701_20260701_ripyd25ncvu_211870f1_whiteboard\\ocr\\ocr_000037.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 68,
+      "ocr_profile": "threshold",
+      "ocr_text": "=<                                                                                                  :\n.                       TEN STEPS FROM \"BOTTOM\" TO \"BULL\"                                 ”\n-                        4/23 1 REGAIN 8EMA\n4/24 2 REGAIN 21EMA                                                  a         )\n'                          4/22-23 3 O'NEIL FTD 4+ DAYS OFF LO                               .   Le\"\n8      4 NO DIST 4 DAYS AFTER FTD                              5\n&                                                                                                         x     Don Vandenbord\n5                           4/29 5 SEMA CROSS UP THRU 21EMA                          H\nH                             5/1 6 REGAIN 505MA                                             g   ]\nH                            5/12 7 21EMA CROSS UP THRU 50SMA                         #\n5/12 8 REGAIN 200SMA                                                 Femara odin\n5/13 9 50SMA SLOPE TURN POSITIVE                        N\n7/1 10 50SMA CROSS UP THRU 200SMA\n[23\n TraderLion\n",
+      "ocr_text_snippet": "=< : . TEN STEPS FROM \"BOTTOM\" TO \"BULL\" ” - 4/23 1 REGAIN 8EMA 4/24 2 REGAIN 21EMA a ) ' 4/22-23 3 O'NEIL FTD 4+ DAYS OFF LO . Le\" 8 4 NO DIST 4 DAYS AFTER FTD 5 & x Don Vandenbord 5 4/29 5 SEMA C...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ca5a255b253fa42d",
+      "prefilter_score": 10.78,
+      "prefilter_stats": {
+        "brightRatio": 0.5686805555555555,
+        "darkRatio": 0.24354166666666666,
+        "edgeRatio": 0.19397922408310367,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2214,
+        "horizontalEdgeRatio": 0.15645537417850328,
+        "meanLuma": 187.71298611111112,
+        "stdDev": 80.60365599114405,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3276,
+        "verticalEdgeRatio": 0.23150307398770406
+      },
+      "score": -16.13,
+      "score_breakdown": {
+        "chart_likeness": -1.526252913381816,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.4,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 144,
+      "timestamp_hms": "00:02:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 42,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260701_20260701_ripyd25ncvu_211870f1_whiteboard\\ocr\\ocr_000043.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 69,
+      "ocr_profile": "threshold",
+      "ocr_text": ".                       TEN STEPS FROM \"BOTTOM\" TO \"BULL\"                                 ;\n“                        4/23 1 REGAIN 8EMA\n4/24 2 REGAIN 21EMA                                                  Co         .\nf                          4/2223 3 O'NEILFTD 4+ DAYS OFF LO                               .   L&\"\nH      4 NO DIST 4 DAYS AFTER FTD                              :\n§                          4/29 5 SEMA CROSS UP THRU 21EMA                        2\n:                             5/1 6 REGAIN S0SMA                                             2   Be\nH                            5/12 7 21EMA CROSS UP THRU 50SMA                         #\n|                           5/12 8 REGAIN 200SMA                                                 Femara Wogken\n5/13 9 S0SMA SLOPE TURN POSITIVE                        -\n7/1 10 50SMA CROSS UP THRU 200SMA                     :\n TraderLion\n",
+      "ocr_text_snippet": ". TEN STEPS FROM \"BOTTOM\" TO \"BULL\" ; “ 4/23 1 REGAIN 8EMA 4/24 2 REGAIN 21EMA Co . f 4/2223 3 O'NEILFTD 4+ DAYS OFF LO . L&\" H 4 NO DIST 4 DAYS AFTER FTD : § 4/29 5 SEMA CROSS UP THRU 21EMA 2 : 5/...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ca5a255b253fa42d",
+      "prefilter_score": 10.7,
+      "prefilter_stats": {
+        "brightRatio": 0.5684722222222223,
+        "darkRatio": 0.2427777777777778,
+        "edgeRatio": 0.19369655854709913,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2201,
+        "horizontalEdgeRatio": 0.1555367111864886,
+        "meanLuma": 187.72430555555556,
+        "stdDev": 80.53726168892926,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3281,
+        "verticalEdgeRatio": 0.2318564059077097
+      },
+      "score": -16.16,
+      "score_breakdown": {
+        "chart_likeness": -1.6050748982928553,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.45,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "unknown_text",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 168,
+      "timestamp_hms": "00:02:48"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 171,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260701_20260701_ripyd25ncvu_211870f1_whiteboard\\ocr\\ocr_000172.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 684,
+      "observed_date": null,
+      "ocr_confidence": 68,
+      "ocr_profile": "threshold",
+      "ocr_text": "Py          * S&,P500 UNDER 200D R-A-I-R RULES (REVERE AGGRESSIVE INDEX RE-ENTRY)\n\n* USE NON-LEVGD FOR FIRST 30% DUE TO VOLATILITY UNDER 200D\n\n* REDUCE EXPOSURE ON FAILURE INTO DECLINING 8/21/50                                          oo          :\n8                                                  CEILING TARGET FLOOR                                            .    LA\"\n:                                          <8E 20%         10% 20%                                             g\nH                                          >8E 20%         20%          0%                                              :\ni                                         521 30%         25%         20%                                              2    Be\n¢                                       8E>21E 40%          35%          30%                                                 g\n}                            >50D (NEG SLOPE) ~~ 50%          40%           35%                                                            Rc\n\n|                 >50D (POS SLOPE) ~~ 60%       50%       40%                               :\n:\n TraderLion\n",
+      "ocr_text_snippet": "Py * S&,P500 UNDER 200D R-A-I-R RULES (REVERE AGGRESSIVE INDEX RE-ENTRY) * USE NON-LEVGD FOR FIRST 30% DUE TO VOLATILITY UNDER 200D * REDUCE EXPOSURE ON FAILURE INTO DECLINING 8/21/50 oo : 8 CEILIN...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "da5a255b352fa02d",
+      "prefilter_score": 16.81,
+      "prefilter_stats": {
+        "brightRatio": 0.5466666666666666,
+        "darkRatio": 0.12347222222222222,
+        "edgeRatio": 0.19744187689915907,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2470,
+        "horizontalEdgeRatio": 0.17454596848279275,
+        "meanLuma": 196.5376388888889,
+        "stdDev": 71.15090848161034,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3118,
+        "verticalEdgeRatio": 0.2203377853155254
+      },
+      "score": -14.6,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.4,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 684,
+      "timestamp_hms": "00:11:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260701_20260701_ripyd25ncvu_211870f1_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 6.08,
+      "prefilter_stats": {
+        "brightRatio": 0.4639583333333333,
+        "darkRatio": 0.25930555555555557,
+        "edgeRatio": 0.25973429439615575,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2676,
+        "horizontalEdgeRatio": 0.18910324358702565,
+        "meanLuma": 174.44840277777777,
+        "stdDev": 81.05737665350934,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4675,
+        "verticalEdgeRatio": 0.3303653452052858
+      },
+      "score": -15.67,
+      "score_breakdown": {
+        "chart_likeness": -3.674132123754662,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 27,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260701_20260701_ripyd25ncvu_211870f1_whiteboard\\ocr\\ocr_000028.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 108,
+      "observed_date": null,
+      "ocr_confidence": 72,
+      "ocr_profile": "threshold",
+      "ocr_text": ".                       TEN STEPS FROM \"BOTTOM\" TO \"BULL\"                                 ”\n“                        4/23 1 REGAIN 8EMA\n4/24 2 REGAIN 21EMA                                                  Co         .\n:                          4/22-23 3 O'NEILFTD 4+ DAYS OFF LO                               .   L&\"\nB      4 NO DIST 4 DAYS AFTER FTD EK\n:                          4/29 5 SEMA CROSS UP THRU 21EMA                        2\n:                             5/1 6 REGAIN S0SMA                                             g   BER\nH                            5/12 7 21EMA CROSS UP THRU 50SMA                         #\n5/12 8 REGAIN 200SMA                                                 Retard oglen\n5/13 9 50SMA SLOPE TURN POSITIVE                        -\n7/1 10 50SMA CROSS UP THRU 200SMA\n TraderLion\n",
+      "ocr_text_snippet": ". TEN STEPS FROM \"BOTTOM\" TO \"BULL\" ” “ 4/23 1 REGAIN 8EMA 4/24 2 REGAIN 21EMA Co . : 4/22-23 3 O'NEILFTD 4+ DAYS OFF LO . L&\" B 4 NO DIST 4 DAYS AFTER FTD EK : 4/29 5 SEMA CROSS UP THRU 21EMA 2 : ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 72,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 72,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ca5a254b253fa43d",
+      "prefilter_score": 10.71,
+      "prefilter_stats": {
+        "brightRatio": 0.5689583333333333,
+        "darkRatio": 0.24256944444444445,
+        "edgeRatio": 0.1931312274750901,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2195,
+        "horizontalEdgeRatio": 0.1551127128824818,
+        "meanLuma": 187.65840277777778,
+        "stdDev": 80.61542392884041,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3271,
+        "verticalEdgeRatio": 0.2311497420676984
+      },
+      "score": -16,
+      "score_breakdown": {
+        "chart_likeness": -1.59960967425776,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.6,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "unknown_text",
+      "tickers": [],
+      "timestamp": 108,
+      "timestamp_hms": "00:01:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 36,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260701_20260701_ripyd25ncvu_211870f1_whiteboard\\ocr\\ocr_000037.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 144,
+      "observed_date": null,
+      "ocr_confidence": 68,
+      "ocr_profile": "threshold",
+      "ocr_text": "=<                                                                                                  :\n.                       TEN STEPS FROM \"BOTTOM\" TO \"BULL\"                                 ”\n-                        4/23 1 REGAIN 8EMA\n4/24 2 REGAIN 21EMA                                                  a         )\n'                          4/22-23 3 O'NEIL FTD 4+ DAYS OFF LO                               .   Le\"\n8      4 NO DIST 4 DAYS AFTER FTD                              5\n&                                                                                                         x     Don Vandenbord\n5                           4/29 5 SEMA CROSS UP THRU 21EMA                          H\nH                             5/1 6 REGAIN 505MA                                             g   ]\nH                            5/12 7 21EMA CROSS UP THRU 50SMA                         #\n5/12 8 REGAIN 200SMA                                                 Femara odin\n5/13 9 50SMA SLOPE TURN POSITIVE                        N\n7/1 10 50SMA CROSS UP THRU 200SMA\n[23\n TraderLion\n",
+      "ocr_text_snippet": "=< : . TEN STEPS FROM \"BOTTOM\" TO \"BULL\" ” - 4/23 1 REGAIN 8EMA 4/24 2 REGAIN 21EMA a ) ' 4/22-23 3 O'NEIL FTD 4+ DAYS OFF LO . Le\" 8 4 NO DIST 4 DAYS AFTER FTD 5 & x Don Vandenbord 5 4/29 5 SEMA C...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ca5a255b253fa42d",
+      "prefilter_score": 10.78,
+      "prefilter_stats": {
+        "brightRatio": 0.5686805555555555,
+        "darkRatio": 0.24354166666666666,
+        "edgeRatio": 0.19397922408310367,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2214,
+        "horizontalEdgeRatio": 0.15645537417850328,
+        "meanLuma": 187.71298611111112,
+        "stdDev": 80.60365599114405,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3276,
+        "verticalEdgeRatio": 0.23150307398770406
+      },
+      "score": -16.13,
+      "score_breakdown": {
+        "chart_likeness": -1.526252913381816,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.4,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 144,
+      "timestamp_hms": "00:02:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 42,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260701_20260701_ripyd25ncvu_211870f1_whiteboard\\ocr\\ocr_000043.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 168,
+      "observed_date": null,
+      "ocr_confidence": 69,
+      "ocr_profile": "threshold",
+      "ocr_text": ".                       TEN STEPS FROM \"BOTTOM\" TO \"BULL\"                                 ;\n“                        4/23 1 REGAIN 8EMA\n4/24 2 REGAIN 21EMA                                                  Co         .\nf                          4/2223 3 O'NEILFTD 4+ DAYS OFF LO                               .   L&\"\nH      4 NO DIST 4 DAYS AFTER FTD                              :\n§                          4/29 5 SEMA CROSS UP THRU 21EMA                        2\n:                             5/1 6 REGAIN S0SMA                                             2   Be\nH                            5/12 7 21EMA CROSS UP THRU 50SMA                         #\n|                           5/12 8 REGAIN 200SMA                                                 Femara Wogken\n5/13 9 S0SMA SLOPE TURN POSITIVE                        -\n7/1 10 50SMA CROSS UP THRU 200SMA                     :\n TraderLion\n",
+      "ocr_text_snippet": ". TEN STEPS FROM \"BOTTOM\" TO \"BULL\" ; “ 4/23 1 REGAIN 8EMA 4/24 2 REGAIN 21EMA Co . f 4/2223 3 O'NEILFTD 4+ DAYS OFF LO . L&\" H 4 NO DIST 4 DAYS AFTER FTD : § 4/29 5 SEMA CROSS UP THRU 21EMA 2 : 5/...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ca5a255b253fa42d",
+      "prefilter_score": 10.7,
+      "prefilter_stats": {
+        "brightRatio": 0.5684722222222223,
+        "darkRatio": 0.2427777777777778,
+        "edgeRatio": 0.19369655854709913,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2201,
+        "horizontalEdgeRatio": 0.1555367111864886,
+        "meanLuma": 187.72430555555556,
+        "stdDev": 80.53726168892926,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3281,
+        "verticalEdgeRatio": 0.2318564059077097
+      },
+      "score": -16.16,
+      "score_breakdown": {
+        "chart_likeness": -1.6050748982928553,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.45,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "unknown_text",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 168,
+      "timestamp_hms": "00:02:48"
+    }
+  ],
+  "whiteboard_segments": [],
+  "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\logs\\20260701_20260701_ripyd25ncvu_211870f1_whiteboard.json"
+}

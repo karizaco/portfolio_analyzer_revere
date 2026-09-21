@@ -1,0 +1,585 @@
+# cmd: node tools/scanVideoWithOcr.js --video C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads\20220427_Q-oK6u6tZ3M.mp4 --date 20220427 --output-root C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260917\qmg-ocr-20260917-missing19 --run-tag qmg-ocr-20260917-missing19 --ffmpeg-bin C:\Users\admin\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.1-full_build\bin\ffmpeg.exe --output-kind snapshot --prefilter-profile chart_stream --basename qmg --chart-stream-parser
+[scan:snapshot] ffprobe found 152 keyframe(s) for nearest-keyframe lookup
+[scan:snapshot] preflighting final snapshot output extraction
+[scan:snapshot] extracting sample frames from C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads\20220427_Q-oK6u6tZ3M.mp4
+[scan:snapshot] extracted 201 frame(s) at 0.25 fps with width 640; starting prefilter
+[scan:snapshot] prefilter 1/201 frames after 00:00:00; best prefilter 13.03 at 00:00:00
+[scan:snapshot] prefilter 10/201 frames after 00:00:00; best prefilter 13.03 at 00:00:00
+[scan:snapshot] prefilter 20/201 frames after 00:00:00; best prefilter 13.03 at 00:00:00
+[scan:snapshot] prefilter 30/201 frames after 00:00:00; best prefilter 13.03 at 00:00:00
+[scan:snapshot] prefilter 40/201 frames after 00:00:00; best prefilter 13.03 at 00:00:00
+[scan:snapshot] prefilter 50/201 frames after 00:00:00; best prefilter 13.03 at 00:00:00
+[scan:snapshot] prefilter 60/201 frames after 00:00:01; best prefilter 13.03 at 00:00:00
+[scan:snapshot] prefilter 70/201 frames after 00:00:01; best prefilter 13.03 at 00:00:00
+[scan:snapshot] prefilter 80/201 frames after 00:00:01; best prefilter 13.03 at 00:00:00
+[scan:snapshot] prefilter 90/201 frames after 00:00:01; best prefilter 13.03 at 00:00:00
+[scan:snapshot] prefilter 100/201 frames after 00:00:01; best prefilter 13.03 at 00:00:00
+[scan:snapshot] prefilter 110/201 frames after 00:00:01; best prefilter 13.03 at 00:00:00
+[scan:snapshot] prefilter 120/201 frames after 00:00:01; best prefilter 13.03 at 00:00:00
+[scan:snapshot] prefilter 130/201 frames after 00:00:01; best prefilter 14.97 at 00:08:04
+[scan:snapshot] prefilter 140/201 frames after 00:00:01; best prefilter 14.97 at 00:08:04
+[scan:snapshot] prefilter 150/201 frames after 00:00:01; best prefilter 14.97 at 00:08:04
+[scan:snapshot] prefilter 160/201 frames after 00:00:01; best prefilter 14.97 at 00:08:04
+[scan:snapshot] prefilter 170/201 frames after 00:00:02; best prefilter 14.97 at 00:08:04
+[scan:snapshot] prefilter 180/201 frames after 00:00:02; best prefilter 14.97 at 00:08:04
+[scan:snapshot] prefilter 190/201 frames after 00:00:02; best prefilter 14.97 at 00:08:04
+[scan:snapshot] prefilter 200/201 frames after 00:00:02; best prefilter 14.97 at 00:08:04
+[scan:snapshot] prefilter 201/201 frames after 00:00:02; best prefilter 14.97 at 00:08:04
+[scan:snapshot] prefilter kept 60/201 frame(s) for OCR; best prefilter 14.97 at 00:08:04
+[scan:snapshot] extracting OCR candidates from source video at width 1280
+[scan:snapshot] OCR 1/60 frames (1.7%) after 00:00:01; best score 4.60 at 00:00:00 (ocr 92.0)
+[scan:snapshot] OCR 10/60 frames (16.7%) after 00:00:13; best score 4.60 at 00:00:00 (ocr 92.0)
+[scan:snapshot] OCR 20/60 frames (33.3%) after 00:00:29; best score 4.60 at 00:00:00 (ocr 92.0)
+[scan:snapshot] OCR 30/60 frames (50.0%) after 00:00:44; best score 4.60 at 00:00:00 (ocr 92.0)
+[scan:snapshot] OCR 40/60 frames (66.7%) after 00:01:00; best score 4.60 at 00:00:00 (ocr 92.0)
+[scan:snapshot] OCR 50/60 frames (83.3%) after 00:01:13; best score 4.60 at 00:00:00 (ocr 92.0)
+[scan:snapshot] OCR 60/60 frames (100.0%) after 00:01:30; best score 4.60 at 00:00:00 (ocr 92.0)
+{
+  "basename": "qmg",
+  "channel": "qmg",
+  "chart_stream_parser": true,
+  "date_key": "20220427",
+  "output_kind": "snapshot",
+  "phash_region": null,
+  "phash_region_fraction": {
+    "xFraction": 0.7,
+    "yFraction": 0.84,
+    "wFraction": 0.28,
+    "hFraction": 0.14
+  },
+  "prefilter_profile": "chart_stream",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads\\20220427_Q-oK6u6tZ3M.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "chart_stream": {
+        "confidence": 0,
+        "parse_status": "no_seed_tickers",
+        "position_list": [],
+        "price_action": "",
+        "tickers_rejected": 0
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 69,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\frames\\20220427_20220427_q-ok6u6tz3m_7a3f2018_snapshot\\ocr\\ocr_000070.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 277.333333,
+      "observed_date": null,
+      "ocr_confidence": 93,
+      "ocr_profile": "threshold",
+      "ocr_text": "PLEASE read this first -> qullamaggie.com\n",
+      "ocr_text_snippet": "PLEASE read this first -> qullamaggie.com",
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "ff2c5aa4d2307ad0",
+      "phash_overlay": "c3c33d19c19c3cc7",
+      "phash_region": {
+        "xFraction": 0.7,
+        "yFraction": 0.84,
+        "wFraction": 0.28,
+        "hFraction": 0.14
+      },
+      "prefilter_profile": null,
+      "prefilter_score": 10.7,
+      "prefilter_stats": {
+        "brightRatio": 0.011111111111111112,
+        "darkRatio": 0.9577083333333334,
+        "edgeRatio": 0.09656561373754505,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1037,
+        "horizontalEdgeRatio": 0.07328104020917249,
+        "meanLuma": 15.63875,
+        "stdDev": 36.586304717502486,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1696,
+        "verticalEdgeRatio": 0.1198501872659176
+      },
+      "score": 4.65,
+      "score_breakdown": null,
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 276,
+      "timestamp_hms": "00:04:36",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\snapshots\\qmg_20220427.png"
+    },
+    {
+      "chart_stream": {
+        "confidence": 0,
+        "parse_status": "no_seed_tickers",
+        "position_list": [],
+        "price_action": "",
+        "tickers_rejected": 0
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 177,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\frames\\20220427_20220427_q-ok6u6tz3m_7a3f2018_snapshot\\ocr\\ocr_000178.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 709.333333,
+      "observed_date": null,
+      "ocr_confidence": 92,
+      "ocr_profile": "threshold",
+      "ocr_text": "PLEASE read this first -> qullamaggie.com\n",
+      "ocr_text_snippet": "PLEASE read this first -> qullamaggie.com",
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "af2cda60d239e8e4",
+      "phash_overlay": "c3c23dd9c1dc3827",
+      "phash_region": {
+        "xFraction": 0.7,
+        "yFraction": 0.84,
+        "wFraction": 0.28,
+        "hFraction": 0.14
+      },
+      "prefilter_profile": null,
+      "prefilter_score": 5.58,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.9666666666666667,
+        "edgeRatio": 0.1091442300897463,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1322,
+        "horizontalEdgeRatio": 0.09342095964949473,
+        "meanLuma": 15.351041666666667,
+        "stdDev": 28.253985073366934,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1767,
+        "verticalEdgeRatio": 0.12486750052999789
+      },
+      "score": 4.6,
+      "score_breakdown": null,
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 708,
+      "timestamp_hms": "00:11:48",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\snapshots\\qmg_20220427_2.png"
+    },
+    {
+      "chart_stream": {
+        "confidence": 0,
+        "parse_status": "no_seed_tickers",
+        "position_list": [],
+        "price_action": "",
+        "tickers_rejected": 0
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 159,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\frames\\20220427_20220427_q-ok6u6tz3m_7a3f2018_snapshot\\ocr\\ocr_000160.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 634.666667,
+      "observed_date": null,
+      "ocr_confidence": 92,
+      "ocr_profile": "threshold",
+      "ocr_text": "PLEASE read this first -> qullamaggie.com\n",
+      "ocr_text_snippet": "PLEASE read this first -> qullamaggie.com",
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "af28daa8d238eac6",
+      "phash_overlay": "c3c239d9c1dc3c27",
+      "phash_region": {
+        "xFraction": 0.7,
+        "yFraction": 0.84,
+        "wFraction": 0.28,
+        "hFraction": 0.14
+      },
+      "prefilter_profile": null,
+      "prefilter_score": 5.72,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.965625,
+        "edgeRatio": 0.10889689774574235,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1339,
+        "horizontalEdgeRatio": 0.09462228817751396,
+        "meanLuma": 15.344236111111112,
+        "stdDev": 28.76696434472915,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1743,
+        "verticalEdgeRatio": 0.12317150731397074
+      },
+      "score": 4.6,
+      "score_breakdown": null,
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 636,
+      "timestamp_hms": "00:10:36",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\snapshots\\qmg_20220427_3.png"
+    }
+  ],
+  "frame_count": 201,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 152,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\snapshots\\qmg_20220427.png",
+  "prefilter_best_score": 14.97,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "review",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "chart_stream": {
+      "confidence": 0,
+      "parse_status": "no_seed_tickers",
+      "position_list": [],
+      "price_action": "",
+      "tickers_rejected": 0
+    },
+    "confusion_with_nearby": [],
+    "frame_index": 69,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\frames\\20220427_20220427_q-ok6u6tz3m_7a3f2018_snapshot\\ocr\\ocr_000070.png",
+    "is_intro_card": false,
+    "issue_codes": [],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 277.333333,
+    "observed_date": null,
+    "ocr_confidence": 93,
+    "ocr_profile": "threshold",
+    "ocr_text": "PLEASE read this first -> qullamaggie.com\n",
+    "ocr_text_snippet": "PLEASE read this first -> qullamaggie.com",
+    "output_kind": "snapshot",
+    "parsed_observations": [],
+    "parsed_row_count": 0,
+    "phash": "ff2c5aa4d2307ad0",
+    "phash_overlay": "c3c33d19c19c3cc7",
+    "phash_region": {
+      "xFraction": 0.7,
+      "yFraction": 0.84,
+      "wFraction": 0.28,
+      "hFraction": 0.14
+    },
+    "prefilter_profile": null,
+    "prefilter_score": 10.7,
+    "prefilter_stats": {
+      "brightRatio": 0.011111111111111112,
+      "darkRatio": 0.9577083333333334,
+      "edgeRatio": 0.09656561373754505,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1037,
+      "horizontalEdgeRatio": 0.07328104020917249,
+      "meanLuma": 15.63875,
+      "stdDev": 36.586304717502486,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 1696,
+      "verticalEdgeRatio": 0.1198501872659176
+    },
+    "score": 4.65,
+    "score_breakdown": null,
+    "screen_layout": "chart",
+    "tickers": [],
+    "timestamp": 276,
+    "timestamp_hms": "00:04:36"
+  },
+  "top_candidates": [
+    {
+      "chart_stream": {
+        "confidence": 0,
+        "parse_status": "no_seed_tickers",
+        "position_list": [],
+        "price_action": "",
+        "tickers_rejected": 0
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 69,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\frames\\20220427_20220427_q-ok6u6tz3m_7a3f2018_snapshot\\ocr\\ocr_000070.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 93,
+      "ocr_profile": "threshold",
+      "ocr_text": "PLEASE read this first -> qullamaggie.com\n",
+      "ocr_text_snippet": "PLEASE read this first -> qullamaggie.com",
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "ff2c5aa4d2307ad0",
+      "phash_overlay": "c3c33d19c19c3cc7",
+      "phash_region": {
+        "xFraction": 0.7,
+        "yFraction": 0.84,
+        "wFraction": 0.28,
+        "hFraction": 0.14
+      },
+      "prefilter_profile": null,
+      "prefilter_score": 10.7,
+      "prefilter_stats": {
+        "brightRatio": 0.011111111111111112,
+        "darkRatio": 0.9577083333333334,
+        "edgeRatio": 0.09656561373754505,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1037,
+        "horizontalEdgeRatio": 0.07328104020917249,
+        "meanLuma": 15.63875,
+        "stdDev": 36.586304717502486,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1696,
+        "verticalEdgeRatio": 0.1198501872659176
+      },
+      "score": 4.65,
+      "score_breakdown": null,
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 276,
+      "timestamp_hms": "00:04:36"
+    },
+    {
+      "chart_stream": {
+        "confidence": 0,
+        "parse_status": "no_seed_tickers",
+        "position_list": [],
+        "price_action": "",
+        "tickers_rejected": 0
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 177,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\frames\\20220427_20220427_q-ok6u6tz3m_7a3f2018_snapshot\\ocr\\ocr_000178.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 92,
+      "ocr_profile": "threshold",
+      "ocr_text": "PLEASE read this first -> qullamaggie.com\n",
+      "ocr_text_snippet": "PLEASE read this first -> qullamaggie.com",
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "af2cda60d239e8e4",
+      "phash_overlay": "c3c23dd9c1dc3827",
+      "phash_region": {
+        "xFraction": 0.7,
+        "yFraction": 0.84,
+        "wFraction": 0.28,
+        "hFraction": 0.14
+      },
+      "prefilter_profile": null,
+      "prefilter_score": 5.58,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.9666666666666667,
+        "edgeRatio": 0.1091442300897463,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1322,
+        "horizontalEdgeRatio": 0.09342095964949473,
+        "meanLuma": 15.351041666666667,
+        "stdDev": 28.253985073366934,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1767,
+        "verticalEdgeRatio": 0.12486750052999789
+      },
+      "score": 4.6,
+      "score_breakdown": null,
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 708,
+      "timestamp_hms": "00:11:48"
+    },
+    {
+      "chart_stream": {
+        "confidence": 0,
+        "parse_status": "no_seed_tickers",
+        "position_list": [],
+        "price_action": "",
+        "tickers_rejected": 0
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 174,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\frames\\20220427_20220427_q-ok6u6tz3m_7a3f2018_snapshot\\ocr\\ocr_000175.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 92,
+      "ocr_profile": "threshold",
+      "ocr_text": "PLEASE read this first -> qullamaggie.com\n",
+      "ocr_text_snippet": "PLEASE read this first -> qullamaggie.com",
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "af2cda60d239e8e4",
+      "phash_overlay": "c3c23dd9c1dc3827",
+      "phash_region": {
+        "xFraction": 0.7,
+        "yFraction": 0.84,
+        "wFraction": 0.28,
+        "hFraction": 0.14
+      },
+      "prefilter_profile": null,
+      "prefilter_score": 5.58,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.9667361111111111,
+        "edgeRatio": 0.10872023178573953,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1314,
+        "horizontalEdgeRatio": 0.0928556285774857,
+        "meanLuma": 15.331041666666666,
+        "stdDev": 28.253882383634714,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1763,
+        "verticalEdgeRatio": 0.12458483499399335
+      },
+      "score": 4.6,
+      "score_breakdown": null,
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 696,
+      "timestamp_hms": "00:11:36"
+    },
+    {
+      "chart_stream": {
+        "confidence": 0,
+        "parse_status": "no_seed_tickers",
+        "position_list": [],
+        "price_action": "",
+        "tickers_rejected": 0
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 171,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\frames\\20220427_20220427_q-ok6u6tz3m_7a3f2018_snapshot\\ocr\\ocr_000172.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 92,
+      "ocr_profile": "threshold",
+      "ocr_text": "PLEASE read this first -> qullamaggie.com\n",
+      "ocr_text_snippet": "PLEASE read this first -> qullamaggie.com",
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "af2cda64d230eae4",
+      "phash_overlay": "c7c23dc9c19c3c27",
+      "phash_region": {
+        "xFraction": 0.7,
+        "yFraction": 0.84,
+        "wFraction": 0.28,
+        "hFraction": 0.14
+      },
+      "prefilter_profile": null,
+      "prefilter_score": 5.73,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.9667361111111111,
+        "edgeRatio": 0.10840223305773443,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1318,
+        "horizontalEdgeRatio": 0.09313829411349021,
+        "meanLuma": 15.328611111111112,
+        "stdDev": 28.236772975518782,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1750,
+        "verticalEdgeRatio": 0.12366617200197866
+      },
+      "score": 4.6,
+      "score_breakdown": null,
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 684,
+      "timestamp_hms": "00:11:24"
+    },
+    {
+      "chart_stream": {
+        "confidence": 0,
+        "parse_status": "no_seed_tickers",
+        "position_list": [],
+        "price_action": "",
+        "tickers_rejected": 0
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 168,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\frames\\20220427_20220427_q-ok6u6tz3m_7a3f2018_snapshot\\ocr\\ocr_000169.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 92,
+      "ocr_profile": "threshold",
+      "ocr_text": "PLEASE read this first -> qullamaggie.com\n",
+      "ocr_text_snippet": "PLEASE read this first -> qullamaggie.com",
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "af2cda64d230f8f0",
+      "phash_overlay": "c7c23dc9c1983c67",
+      "phash_region": {
+        "xFraction": 0.7,
+        "yFraction": 0.84,
+        "wFraction": 0.28,
+        "hFraction": 0.14
+      },
+      "prefilter_profile": null,
+      "prefilter_score": 5.44,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.9688888888888889,
+        "edgeRatio": 0.11084022330577345,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1355,
+        "horizontalEdgeRatio": 0.09575295032153204,
+        "meanLuma": 14.915694444444444,
+        "stdDev": 27.650692744305147,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1782,
+        "verticalEdgeRatio": 0.12592749629001485
+      },
+      "score": 4.6,
+      "score_breakdown": null,
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 672,
+      "timestamp_hms": "00:11:12"
+    }
+  ],
+  "top_rejected_candidates": [],
+  "whiteboard_segments": [
+    {
+      "capture_count": 1,
+      "end_ts": 276,
+      "end_hms": "00:04:36",
+      "is_intro_card": false,
+      "layout": "chart",
+      "peak_frame_index": 69,
+      "peak_score": 4.65,
+      "start_hms": "00:04:36",
+      "start_ts": 276
+    },
+    {
+      "capture_count": 2,
+      "end_ts": 708,
+      "end_hms": "00:11:48",
+      "is_intro_card": false,
+      "layout": "chart",
+      "peak_frame_index": 159,
+      "peak_score": 4.6,
+      "start_hms": "00:10:36",
+      "start_ts": 636
+    }
+  ],
+  "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\logs\\20220427_20220427_q-ok6u6tz3m_7a3f2018_snapshot.json"
+}

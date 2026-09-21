@@ -1,0 +1,1219 @@
+{
+  "date_key": "20260704",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260704_MhoMAtRai-4.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 28,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260704_20260704_mhomatrai-4_926b4996_whiteboard\\ocr\\ocr_000029.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 112.96,
+      "observed_date": "20260704",
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVERE ROUNDUP <<<                                                                                 rope\n222 ERT VERT VUNUVT OS                                                        THE GROTECTION GAUGE\"\n2>WEEKEND WALKTHRU<<< WALKTHRU<<<                                                                                     PROTECT] lGrow J\n|                                                   prep—\n>>>SATURDAY, JULY 4, 2026<<<                                                          romrsom—] [<1 |]\n\n* MARKET STATE: UPTREND                                                                  I\n\n* WHAT HAPPENED TODAY?                                                                 620 NEUTRAL => UP. EEC\n> HOLIDAY WEEK ENDS POSITIVE FOR BROAD MKT, Al TUMBLES\n\n[MEDIUM TERM {508ma) ==>\nAl                 gn erat\nT2 +137% M6 De\nLONG TERM (200wma) ==\n\nWATCH -1.19% Mal © ds                                      EE\n\nRAIL00 -4.94%\n\nMAG7  +5.70%                                                                         (+\n\nRGS 0.30%\n\nSPX +1.80% RSP 42.20%\n\nQQ +0.90% QQOE 41.20%\n\nDIA +200%\n\nMID 0.35%\n\nRK 0.50%\n\n60/40 +0.44%\n\nGRO™  +1.20% TURBO™ 41.28%                 R                 A         t\n\n* EMAIL: todd @revereasset.com                                       (AY € r e           S S e                      Todd Thomas\n\n* TWITTER [X): @Toddmichael70                                                                                                                                     Advisor/Portfolio Manager\n\n* PHONE: (855) REAL-WEALTH / {855) 732-5932               anage 1 ] ] ent          Email: Todd¢RevereAssetcom\n\n* WEBSITE: revereasset.com\n",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< rope 222 ERT VERT VUNUVT OS THE GROTECTION GAUGE\" 2>WEEKEND WALKTHRU<<< WALKTHRU<<< PROTECT] lGrow J | prep— >>>SATURDAY, JULY 4, 2026<<< romrsom—] [<1 |] * MARKET STATE:...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c699f74dc0103fe1",
+      "prefilter_score": 4.33,
+      "prefilter_stats": {
+        "brightRatio": 0.3877083333333333,
+        "darkRatio": 0.34465277777777775,
+        "edgeRatio": 0.25047699809200763,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2779,
+        "horizontalEdgeRatio": 0.19638188113914212,
+        "meanLuma": 151.76819444444445,
+        "stdDev": 94.93525653228667,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4310,
+        "verticalEdgeRatio": 0.30457211504487314
+      },
+      "score": 54.4,
+      "score_breakdown": {
+        "chart_likeness": -2.2061571437865286,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 61.56
+      },
+      "screen_layout": "dmi",
+      "tickers": [],
+      "timestamp": 112,
+      "timestamp_hms": "00:01:52",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260704_ps_4.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 42,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260704_20260704_mhomatrai-4_926b4996_whiteboard\\ocr\\ocr_000043.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 168.8,
+      "observed_date": "20260704",
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVERE ROUNDUP <<<                                                                              rope\n222 ME REVERE RVVNAY 2                                                   THE GROTECTION GAUGE\"\n2>WEEKEND WALKTHRU<<< WALKTHRU<<<                                                                                                   PROTECT] lGrow J\n|                                              prep—\n>>>SATURDAY, JULY 4, 2026<<<                                                          romrsom—] [<1 |]\n* MARKET STATE: UPTREND                                         I\n* WHAT HAPPENED TODAY?                                                                 630 NEUTRAL => UP | []\n-» HOLIDAY WEEK ENDS POSITIVE FOR BROAD MKT, Al TUMBLES]\n[MEDIUM TERM {508ma) ==>\na                                              gn era\nTI H3% AED WE                                                                  1 a\n[LONG TERM (200wma) ==\nWATCH 119% Aa 2 $45                                                     rn aE Sl\nRAI00 4.94%\nMAG +5.70%                                             (+ ]\nRG 030%\nSPX +LE0% RSP 42.20%\nQQQ 40.90% QOOE 41.20%\nDIA +200%\nMD 035%\nRk 05g)\n60/40 +0.44%\nGRO +120% TURBO +128%               R                A        t\n* EMAIL: todd @revereasset.com                                     AY e r e           S S e                     Todd Thomas\n* TWITTER [X): @Toddmichael70                                                                                                                                     Advisor/Portfolio Manager\n* PHONE: (855) REAL-WEALTH / {855) 732-5932              anage 1 ] ] ent         Email: Todd¢RevereAssetcom\n* WEBSITE: revereasset.com\n",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< rope 222 ME REVERE RVVNAY 2 THE GROTECTION GAUGE\" 2>WEEKEND WALKTHRU<<< WALKTHRU<<< PROTECT] lGrow J | prep— >>>SATURDAY, JULY 4, 2026<<< romrsom—] [<1 |] * MARKET STATE:...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c699f74dc0103fe1",
+      "prefilter_score": 4.37,
+      "prefilter_stats": {
+        "brightRatio": 0.388125,
+        "darkRatio": 0.345,
+        "edgeRatio": 0.25058299766800934,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2786,
+        "horizontalEdgeRatio": 0.19687654582715003,
+        "meanLuma": 151.76520833333333,
+        "stdDev": 94.93829690960064,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4306,
+        "verticalEdgeRatio": 0.3042894495088686
+      },
+      "score": 54.21,
+      "score_breakdown": {
+        "chart_likeness": -2.1669965260579804,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 61.38
+      },
+      "screen_layout": "dmi",
+      "tickers": [],
+      "timestamp": 168,
+      "timestamp_hms": "00:02:48",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260704_ps_5.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 77,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260704_20260704_mhomatrai-4_926b4996_whiteboard\\ocr\\ocr_000078.png",
+      "is_intro_card": true,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 307.84,
+      "observed_date": "20260704",
+      "ocr_confidence": 63,
+      "ocr_profile": "threshold",
+      "ocr_text": "»»> THE REVERE ROUNDUP <<<                                                                   WHAT'S THE MARKET TREND?\nTHE GROTECTION GAUGE\"\n>>WEEKEND WALKTHRU<<<                                                      e—ROTECT [GROW |\n\n|                                                   prep— —\n      >>>SATURDAY, JULY 4, 2026<<<                                                          rere] [S|]\n* MARKET STATE: UPTREND                                                                  I————\n\n* WHAT HAPPENED TODAY?                                                                 6730 NEUTRAL => UP IEEE\n-> HOLIDAY WEEK ENDS POSITIVE FOR BROAD MKT, Al TUMBLES|\n\n[MEDIUM TERM {508ma) ==>\na                                                  oe | ®\nT12 H3% M6 SD be\nLONG TERM (200wma) ==\n\nwo Aa 5 a                                                          Fe SR\n\nRAI100 -4.94%\n\nMAG7  +5.70%                                                                         (+ ]\n\nRGS 0.30%\n\nSPX +1.80% RSP   42.20%\n\nQQ +0.90% QQOE +1.20%\n\nDIA +2.00%                          \"     mo\n\nMID 0.35%\n\nRK 0.50%\n\n60/40 +0.44%\n\nGRO™  +1.20% TURBO\" +1.28%                         R                         A             t\n\n* EMAIL: todd @revereasset.com                                       ev e Tr e           S S e                      Todd Thomas\n\n* TWITTER [X): @Toddmichael70                                                                                                                                     Advisor/Portfolio Manager\n\n* PHONE: (855) REAL-WEALTH / {855) 732-5932               anage l ] ] ent          Email: ToddeaRevereassetcom\n\n* WEBSITE: revereasset.com\n",
+      "ocr_text_snippet": "»»> THE REVERE ROUNDUP <<< WHAT'S THE MARKET TREND? THE GROTECTION GAUGE\" >>WEEKEND WALKTHRU<<< e—ROTECT [GROW | | prep— — >>>SATURDAY, JULY 4, 2026<<< rere] [S|] * MARKET STATE: UPTREND I———— * WH...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c699f74dc0103fe1",
+      "prefilter_score": 4.27,
+      "prefilter_stats": {
+        "brightRatio": 0.38819444444444445,
+        "darkRatio": 0.34569444444444447,
+        "edgeRatio": 0.2503003321320048,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2768,
+        "horizontalEdgeRatio": 0.19560455091512968,
+        "meanLuma": 151.8201388888889,
+        "stdDev": 94.96203706383957,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4316,
+        "verticalEdgeRatio": 0.30499611334887994
+      },
+      "score": 54.16,
+      "score_breakdown": {
+        "chart_likeness": -2.267290368481291,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.15,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 61.28
+      },
+      "screen_layout": "dmi",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 308,
+      "timestamp_hms": "00:05:08",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260704_ps_6.png"
+    }
+  ],
+  "frame_count": 450,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 357,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260704_ps_4.png",
+  "prefilter_best_score": 22.51,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 28,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260704_20260704_mhomatrai-4_926b4996_whiteboard\\ocr\\ocr_000029.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 112.96,
+    "observed_date": "20260704",
+    "ocr_confidence": 61,
+    "ocr_profile": "threshold",
+    "ocr_text": ">>> THE REVERE ROUNDUP <<<                                                                                 rope\n222 ERT VERT VUNUVT OS                                                        THE GROTECTION GAUGE\"\n2>WEEKEND WALKTHRU<<< WALKTHRU<<<                                                                                     PROTECT] lGrow J\n|                                                   prep—\n>>>SATURDAY, JULY 4, 2026<<<                                                          romrsom—] [<1 |]\n\n* MARKET STATE: UPTREND                                                                  I\n\n* WHAT HAPPENED TODAY?                                                                 620 NEUTRAL => UP. EEC\n> HOLIDAY WEEK ENDS POSITIVE FOR BROAD MKT, Al TUMBLES\n\n[MEDIUM TERM {508ma) ==>\nAl                 gn erat\nT2 +137% M6 De\nLONG TERM (200wma) ==\n\nWATCH -1.19% Mal © ds                                      EE\n\nRAIL00 -4.94%\n\nMAG7  +5.70%                                                                         (+\n\nRGS 0.30%\n\nSPX +1.80% RSP 42.20%\n\nQQ +0.90% QQOE 41.20%\n\nDIA +200%\n\nMID 0.35%\n\nRK 0.50%\n\n60/40 +0.44%\n\nGRO™  +1.20% TURBO™ 41.28%                 R                 A         t\n\n* EMAIL: todd @revereasset.com                                       (AY € r e           S S e                      Todd Thomas\n\n* TWITTER [X): @Toddmichael70                                                                                                                                     Advisor/Portfolio Manager\n\n* PHONE: (855) REAL-WEALTH / {855) 732-5932               anage 1 ] ] ent          Email: Todd¢RevereAssetcom\n\n* WEBSITE: revereasset.com\n",
+    "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< rope 222 ERT VERT VUNUVT OS THE GROTECTION GAUGE\" 2>WEEKEND WALKTHRU<<< WALKTHRU<<< PROTECT] lGrow J | prep— >>>SATURDAY, JULY 4, 2026<<< romrsom—] [<1 |] * MARKET STATE:...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE"
+        ],
+        "ocr_confidence": 61,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE"
+        ],
+        "ocr_confidence": 61,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "c699f74dc0103fe1",
+    "prefilter_score": 4.33,
+    "prefilter_stats": {
+      "brightRatio": 0.3877083333333333,
+      "darkRatio": 0.34465277777777775,
+      "edgeRatio": 0.25047699809200763,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 2779,
+      "horizontalEdgeRatio": 0.19638188113914212,
+      "meanLuma": 151.76819444444445,
+      "stdDev": 94.93525653228667,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 4310,
+      "verticalEdgeRatio": 0.30457211504487314
+    },
+    "score": 54.4,
+    "score_breakdown": {
+      "chart_likeness": -2.2061571437865286,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 3.05,
+      "pair_bonus": 0,
+      "per_row_issues": -8,
+      "per_row_metrics": 0,
+      "text_density": 61.56
+    },
+    "screen_layout": "dmi",
+    "tickers": [],
+    "timestamp": 112,
+    "timestamp_hms": "00:01:52"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 28,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260704_20260704_mhomatrai-4_926b4996_whiteboard\\ocr\\ocr_000029.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260704",
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVERE ROUNDUP <<<                                                                                 rope\n222 ERT VERT VUNUVT OS                                                        THE GROTECTION GAUGE\"\n2>WEEKEND WALKTHRU<<< WALKTHRU<<<                                                                                     PROTECT] lGrow J\n|                                                   prep—\n>>>SATURDAY, JULY 4, 2026<<<                                                          romrsom—] [<1 |]\n\n* MARKET STATE: UPTREND                                                                  I\n\n* WHAT HAPPENED TODAY?                                                                 620 NEUTRAL => UP. EEC\n> HOLIDAY WEEK ENDS POSITIVE FOR BROAD MKT, Al TUMBLES\n\n[MEDIUM TERM {508ma) ==>\nAl                 gn erat\nT2 +137% M6 De\nLONG TERM (200wma) ==\n\nWATCH -1.19% Mal © ds                                      EE\n\nRAIL00 -4.94%\n\nMAG7  +5.70%                                                                         (+\n\nRGS 0.30%\n\nSPX +1.80% RSP 42.20%\n\nQQ +0.90% QQOE 41.20%\n\nDIA +200%\n\nMID 0.35%\n\nRK 0.50%\n\n60/40 +0.44%\n\nGRO™  +1.20% TURBO™ 41.28%                 R                 A         t\n\n* EMAIL: todd @revereasset.com                                       (AY € r e           S S e                      Todd Thomas\n\n* TWITTER [X): @Toddmichael70                                                                                                                                     Advisor/Portfolio Manager\n\n* PHONE: (855) REAL-WEALTH / {855) 732-5932               anage 1 ] ] ent          Email: Todd¢RevereAssetcom\n\n* WEBSITE: revereasset.com\n",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< rope 222 ERT VERT VUNUVT OS THE GROTECTION GAUGE\" 2>WEEKEND WALKTHRU<<< WALKTHRU<<< PROTECT] lGrow J | prep— >>>SATURDAY, JULY 4, 2026<<< romrsom—] [<1 |] * MARKET STATE:...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c699f74dc0103fe1",
+      "prefilter_score": 4.33,
+      "prefilter_stats": {
+        "brightRatio": 0.3877083333333333,
+        "darkRatio": 0.34465277777777775,
+        "edgeRatio": 0.25047699809200763,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2779,
+        "horizontalEdgeRatio": 0.19638188113914212,
+        "meanLuma": 151.76819444444445,
+        "stdDev": 94.93525653228667,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4310,
+        "verticalEdgeRatio": 0.30457211504487314
+      },
+      "score": 54.4,
+      "score_breakdown": {
+        "chart_likeness": -2.2061571437865286,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 61.56
+      },
+      "screen_layout": "dmi",
+      "tickers": [],
+      "timestamp": 112,
+      "timestamp_hms": "00:01:52"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 21,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260704_20260704_mhomatrai-4_926b4996_whiteboard\\ocr\\ocr_000022.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260704",
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVERE ROUNDUP <<<                                                                              rope\n222 ME REVERE RVVNAY 2                                                   THE GROTECTION GAUGE\"\n2>WEEKEND WALKTHRU<<< WALKTHRU<<<                                                                                                   PROTECT] lGrow J\n|                                                                                reper a pS\n2>>SATURDAY, JULY 4, 2026<<<                                                  ome J\n* MARKET STATE: UPTREND                                         [ores eon creme\n* WHAT HAPPENED TODAY?                                                                 630 NEUTRAL => UP MEE\n-» HOLIDAY WEEK ENDS POSITIVE FOR BROAD MKT, Al TUMBLES]\n[MEDIUM TERM {508ma) ==>\na                                              gn erat\nTI H3% AED WE                                                                  1 a\n[LONG TERM (200wma) ==\nWATCH 119% fal 2 $45                                                     aE Sl\nRAI00 4.94%\nMAG +5.70%                                             (+\nRG 030%\nSPX +L80% RSP 42.20%\nQQQ  +0:90% QO0E 41.20%\nDIA +200%\nMD 035%\nRK 050%\n60/40 +0.44%\nGRO +120% TURBO +128%               R                A        t\n* EMAIL: todd @revereasset.com                                     ev e r e           S S e                     Todd Thomas\n* TWITTER [X): @Toddmichael70                                                                                                                                     Advisor/Portfolio Manager\n* PHONE: (855) REAL-WEALTH / {855) 732-5932              anage 1 ] ] ent         Email: Todd¢RevereAssetcom\n* WEBSITE: revereasset.com\n",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< rope 222 ME REVERE RVVNAY 2 THE GROTECTION GAUGE\" 2>WEEKEND WALKTHRU<<< WALKTHRU<<< PROTECT] lGrow J | reper a pS 2>>SATURDAY, JULY 4, 2026<<< ome J * MARKET STATE: UPTRE...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c699f74dc0103fe1",
+      "prefilter_score": 4.35,
+      "prefilter_stats": {
+        "brightRatio": 0.388125,
+        "darkRatio": 0.3448611111111111,
+        "edgeRatio": 0.25065366405201045,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2784,
+        "horizontalEdgeRatio": 0.19673521305914776,
+        "meanLuma": 151.78590277777778,
+        "stdDev": 94.94521992906981,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4310,
+        "verticalEdgeRatio": 0.30457211504487314
+      },
+      "score": 54.32,
+      "score_breakdown": {
+        "chart_likeness": -2.185979196789619,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 61.46
+      },
+      "screen_layout": "dmi",
+      "tickers": [],
+      "timestamp": 84,
+      "timestamp_hms": "00:01:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 42,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260704_20260704_mhomatrai-4_926b4996_whiteboard\\ocr\\ocr_000043.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260704",
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVERE ROUNDUP <<<                                                                              rope\n222 ME REVERE RVVNAY 2                                                   THE GROTECTION GAUGE\"\n2>WEEKEND WALKTHRU<<< WALKTHRU<<<                                                                                                   PROTECT] lGrow J\n|                                              prep—\n>>>SATURDAY, JULY 4, 2026<<<                                                          romrsom—] [<1 |]\n* MARKET STATE: UPTREND                                         I\n* WHAT HAPPENED TODAY?                                                                 630 NEUTRAL => UP | []\n-» HOLIDAY WEEK ENDS POSITIVE FOR BROAD MKT, Al TUMBLES]\n[MEDIUM TERM {508ma) ==>\na                                              gn era\nTI H3% AED WE                                                                  1 a\n[LONG TERM (200wma) ==\nWATCH 119% Aa 2 $45                                                     rn aE Sl\nRAI00 4.94%\nMAG +5.70%                                             (+ ]\nRG 030%\nSPX +LE0% RSP 42.20%\nQQQ 40.90% QOOE 41.20%\nDIA +200%\nMD 035%\nRk 05g)\n60/40 +0.44%\nGRO +120% TURBO +128%               R                A        t\n* EMAIL: todd @revereasset.com                                     AY e r e           S S e                     Todd Thomas\n* TWITTER [X): @Toddmichael70                                                                                                                                     Advisor/Portfolio Manager\n* PHONE: (855) REAL-WEALTH / {855) 732-5932              anage 1 ] ] ent         Email: Todd¢RevereAssetcom\n* WEBSITE: revereasset.com\n",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< rope 222 ME REVERE RVVNAY 2 THE GROTECTION GAUGE\" 2>WEEKEND WALKTHRU<<< WALKTHRU<<< PROTECT] lGrow J | prep— >>>SATURDAY, JULY 4, 2026<<< romrsom—] [<1 |] * MARKET STATE:...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c699f74dc0103fe1",
+      "prefilter_score": 4.37,
+      "prefilter_stats": {
+        "brightRatio": 0.388125,
+        "darkRatio": 0.345,
+        "edgeRatio": 0.25058299766800934,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2786,
+        "horizontalEdgeRatio": 0.19687654582715003,
+        "meanLuma": 151.76520833333333,
+        "stdDev": 94.93829690960064,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4306,
+        "verticalEdgeRatio": 0.3042894495088686
+      },
+      "score": 54.21,
+      "score_breakdown": {
+        "chart_likeness": -2.1669965260579804,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 61.38
+      },
+      "screen_layout": "dmi",
+      "tickers": [],
+      "timestamp": 168,
+      "timestamp_hms": "00:02:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 77,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260704_20260704_mhomatrai-4_926b4996_whiteboard\\ocr\\ocr_000078.png",
+      "is_intro_card": true,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260704",
+      "ocr_confidence": 63,
+      "ocr_profile": "threshold",
+      "ocr_text": "»»> THE REVERE ROUNDUP <<<                                                                   WHAT'S THE MARKET TREND?\nTHE GROTECTION GAUGE\"\n>>WEEKEND WALKTHRU<<<                                                      e—ROTECT [GROW |\n\n|                                                   prep— —\n      >>>SATURDAY, JULY 4, 2026<<<                                                          rere] [S|]\n* MARKET STATE: UPTREND                                                                  I————\n\n* WHAT HAPPENED TODAY?                                                                 6730 NEUTRAL => UP IEEE\n-> HOLIDAY WEEK ENDS POSITIVE FOR BROAD MKT, Al TUMBLES|\n\n[MEDIUM TERM {508ma) ==>\na                                                  oe | ®\nT12 H3% M6 SD be\nLONG TERM (200wma) ==\n\nwo Aa 5 a                                                          Fe SR\n\nRAI100 -4.94%\n\nMAG7  +5.70%                                                                         (+ ]\n\nRGS 0.30%\n\nSPX +1.80% RSP   42.20%\n\nQQ +0.90% QQOE +1.20%\n\nDIA +2.00%                          \"     mo\n\nMID 0.35%\n\nRK 0.50%\n\n60/40 +0.44%\n\nGRO™  +1.20% TURBO\" +1.28%                         R                         A             t\n\n* EMAIL: todd @revereasset.com                                       ev e Tr e           S S e                      Todd Thomas\n\n* TWITTER [X): @Toddmichael70                                                                                                                                     Advisor/Portfolio Manager\n\n* PHONE: (855) REAL-WEALTH / {855) 732-5932               anage l ] ] ent          Email: ToddeaRevereassetcom\n\n* WEBSITE: revereasset.com\n",
+      "ocr_text_snippet": "»»> THE REVERE ROUNDUP <<< WHAT'S THE MARKET TREND? THE GROTECTION GAUGE\" >>WEEKEND WALKTHRU<<< e—ROTECT [GROW | | prep— — >>>SATURDAY, JULY 4, 2026<<< rere] [S|] * MARKET STATE: UPTREND I———— * WH...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c699f74dc0103fe1",
+      "prefilter_score": 4.27,
+      "prefilter_stats": {
+        "brightRatio": 0.38819444444444445,
+        "darkRatio": 0.34569444444444447,
+        "edgeRatio": 0.2503003321320048,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2768,
+        "horizontalEdgeRatio": 0.19560455091512968,
+        "meanLuma": 151.8201388888889,
+        "stdDev": 94.96203706383957,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4316,
+        "verticalEdgeRatio": 0.30499611334887994
+      },
+      "score": 54.16,
+      "score_breakdown": {
+        "chart_likeness": -2.267290368481291,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.15,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 61.28
+      },
+      "screen_layout": "dmi",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 308,
+      "timestamp_hms": "00:05:08"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 7,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260704_20260704_mhomatrai-4_926b4996_whiteboard\\ocr\\ocr_000008.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260704",
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVERE ROUNDUP <<<                                                                                 TE Te\n272 IME RTVIMT LAT °°                                                                             THE GROTECTION GAUGE\"\n>>WEEKEND WALKTHRU<<<                                                                                     ee PROTECT [GROW]\n|                                                                      SR\n>>>SATURDAY, JULY 4, 2026<<<                                                          roeremee=] [S|\n* MARKET STATE: UPTREND                                                                                           ———\n* WHAT HAPPENED TODAY?                                                                                        630 NEUTRAL => UP  EEC\n> HOLIDAY WEEK ENDS POSITIVE FOR BROAD MKT, Al TUMBLES|\n[MEDIUM TERM (308ma) ==>\nA ET                 gy Eimer\nTO H3% M6 SD We\nLONG TERM (2008ma) ==>\nERT SE                    rome LA\nRAI100 -4.94%\nMAGT 45.70%                                                                                                     (+ ]\nRGS 0.30%\nSPX +1.80% RSP     42.20%\nQQ +0.90% QQQE 41.20%\nDIA +2.00%\nMID 035%                                                                        i\nRK 0.50%\n60/40  +0.44%\nGRO~  +1.20% TURBO\" +1.28%                         R                         A             t\n* EMAIL: todd @revereasset.com                                       ev e r e           S S e                      Todd Thomas\n*TWITTER (x): @Toddrmichael70                                                                                                                               Advisor/Portfolio Manager\n* PHONE: (855) REAL-WEALTH / (855) 732-5032                            a Nn a g e m e nt                   Email Tedd@Revereassetcom\n* WEBSITE: revereasset.com\n",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< TE Te 272 IME RTVIMT LAT °° THE GROTECTION GAUGE\" >>WEEKEND WALKTHRU<<< ee PROTECT [GROW] | SR >>>SATURDAY, JULY 4, 2026<<< roeremee=] [S| * MARKET STATE: UPTREND ——— * W...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c699f74dc0103fe1",
+      "prefilter_score": 4.32,
+      "prefilter_stats": {
+        "brightRatio": 0.38840277777777776,
+        "darkRatio": 0.34506944444444443,
+        "edgeRatio": 0.2499116670199986,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2770,
+        "horizontalEdgeRatio": 0.19574588368313192,
+        "meanLuma": 151.81409722222222,
+        "stdDev": 94.9718376891071,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4303,
+        "verticalEdgeRatio": 0.30407745035686523
+      },
+      "score": 54.08,
+      "score_breakdown": {
+        "chart_likeness": -2.2234180888954533,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.1,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 61.2
+      },
+      "screen_layout": "dmi",
+      "tickers": [],
+      "timestamp": 28,
+      "timestamp_hms": "00:00:28"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260704_20260704_mhomatrai-4_926b4996_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 16.06,
+      "prefilter_stats": {
+        "brightRatio": 0.6696527777777778,
+        "darkRatio": 0.1411111111111111,
+        "edgeRatio": 0.12345417284997527,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 791,
+        "horizontalEdgeRatio": 0.055897109744894355,
+        "meanLuma": 203.00284722222221,
+        "stdDev": 75.47920007969817,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2703,
+        "verticalEdgeRatio": 0.19101123595505617
+      },
+      "score": -18,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 70,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260704_20260704_mhomatrai-4_926b4996_whiteboard\\ocr\\ocr_000071.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 281.76,
+      "observed_date": "20260706",
+      "ocr_confidence": 86,
+      "ocr_profile": "threshold",
+      "ocr_text": "MONDAY, JULY 06 2026\n\nTime +                              Release                                                                            For                      Trading Impact ~\n09:45 ET                       S&P Global U.S. Services PMI - Final                               Jun                         Low\n10:00 ET                      15M Non:Manufacturiog Index                                        Jun                        High\nTUESDAY, JULY 07 2026\n\nTime +                              Release                                                                            For                      Trading Impact ~\n08:30 ET                            Trade Balance                                                                    May                              High\n‘WEDNESDAY, JULY 08 2026\n\nTime +                              Release                                                                            For                      Trading Impact ~\n07:00 ET                               HBA Mortgage Applications Index                                              07/04                                Low\n\n10:00 ET                            Wholesale Inventories                                                          May                              Low\n\n10:30 €T                           EIA Crude Oil Inventories                                                 07/04                           High\n14:00 ET                            FOMC Minutes                                                                    Jun                              High\n15:00 ET                            Consumer Credit                                                                 May                              Low\nTHURSDAY, JULY 09 2026\n\nTime +                              Release                                                                            For                      Trading Impact ~\n08:30 ET                   Initial Claims                                              07/04                    High\n08:30 ET                   Continuing Claims                                          06/27                    High\n10:00 ET                         Existing Home Sates         PN                                           Jun                            High\n10:30 ET                                   EIA Natural Gas Inventories’                                                             07/04                                    High\n",
+      "ocr_text_snippet": "MONDAY, JULY 06 2026 Time + Release For Trading Impact ~ 09:45 ET S&P Global U.S. Services PMI - Final Jun Low 10:00 ET 15M Non:Manufacturiog Index Jun High TUESDAY, JULY 07 2026 Time + Release For...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 86,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 86,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "af7ef081d076e281",
+      "prefilter_score": 15.67,
+      "prefilter_stats": {
+        "brightRatio": 0.8227777777777778,
+        "darkRatio": 0.02277777777777778,
+        "edgeRatio": 0.1086495654017384,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 522,
+        "horizontalEdgeRatio": 0.036887852448590205,
+        "meanLuma": 236.51569444444445,
+        "stdDev": 33.34761824438595,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2553,
+        "verticalEdgeRatio": 0.18041127835488657
+      },
+      "score": -19.7,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 4.3,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 280,
+      "timestamp_hms": "00:04:40"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 63,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260704_20260704_mhomatrai-4_926b4996_whiteboard\\ocr\\ocr_000064.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 252,
+      "observed_date": "20260706",
+      "ocr_confidence": 86,
+      "ocr_profile": "threshold",
+      "ocr_text": "MONDAY, JULY 06 2026\n\nTime +                              Release                                                                            For                      Trading Impact ~\n09:45 ET                       S&P Global U.S. Services PMI - Final                               Jun                         Low\n10:00 ET                      15M Non:Manufacturiog Index                                        Jun                        High\nTUESDAY, JULY 07 2026\n\nTime +                              Release                                                                            For                      Trading Impact ~\n08:30 ET                            Trade Balance                                                                    May                              High\n‘WEDNESDAY, JULY 08 2026\n\nTime +                              Release                                                                            For                      Trading Impact ~\n07:00 ET                               HBA Mortgage Applications Index                                              07/04                                Low\n\n10:00 ET                            Wholesale Inventories                                                          May                              Low\n\n10:30 €T                           E14 Crude Oil Inventories                                                 07/04                           High\n14:00 ET                            FOMC Minutes                                                                    Jun                              High\n15:00 ET                            Consumer Credit                                                                 May                              Low\nTHURSDAY, JULY 09 2026\n\nTime +                              Release                                                                            For                      Trading Impact ~\n08:30 ET                   Initial Claims                                              07/04                    High\n08:30 ET                   Continuing Claims                                          06/27                    High\n10:00 ET                            Existing Home Sates                                                             Jun                              High\n10:30 ET                                   EIA Natural Gas Inventories                                                             07/04                                    High\n",
+      "ocr_text_snippet": "MONDAY, JULY 06 2026 Time + Release For Trading Impact ~ 09:45 ET S&P Global U.S. Services PMI - Final Jun Low 10:00 ET 15M Non:Manufacturiog Index Jun High TUESDAY, JULY 07 2026 Time + Release For...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 86,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 86,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "af7ef081d436e281",
+      "prefilter_score": 15.59,
+      "prefilter_stats": {
+        "brightRatio": 0.8227083333333334,
+        "darkRatio": 0.02277777777777778,
+        "edgeRatio": 0.1093562292417497,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 522,
+        "horizontalEdgeRatio": 0.036887852448590205,
+        "meanLuma": 236.5115277777778,
+        "stdDev": 33.34641835505484,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2573,
+        "verticalEdgeRatio": 0.1818246060349092
+      },
+      "score": -19.7,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 4.3,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 252,
+      "timestamp_hms": "00:04:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 56,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260704_20260704_mhomatrai-4_926b4996_whiteboard\\ocr\\ocr_000057.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 225.92,
+      "observed_date": "20260706",
+      "ocr_confidence": 83,
+      "ocr_profile": "threshold",
+      "ocr_text": "MONDAY, JULY 06 2026\n\nTime +                              Release                                                                            For                      Trading Impact ~\n09:45 ET                        S&P Globat U.S. Services PMI - Final                                  Jun                           Low\n\n10:00 ET                            158 Non-manufacturiog Index                                                 Jun                              High\nTUESDAY, JULY 07 2026    NY\n\nTime +                              Release                                                                            For                      Trading impact ~\n08:30 ET                            Trade Balance                                                                    May                              High\nWEDNESDAY, JULY 06 2026\n\nTime +                              Release                                                                            For                      Trading Impact +\n07:00 ET                            MBA Mortgage Applications Index                                         07/04                             Low\n\n10:00 ET                            ‘Wholesale Inventories                                                          May                              Low\n\n10:30 ET                           EIA Crisde Oil Inventories                                                 07/04                           High\n4:00 ET                            FOMC Minutes                                                                    Jun                              High\n15:00 ET                            Consumer Cregit                                                                 May                              Low\nTHURSDAY, JULY 09 2026\n\nTime +                              Release                                                                            For                      Trading Impact +\n08:30 ET                            Initial Claims                                                                    07/04                             High\n08:30 ET                            Continuing Claims                                                              06/27                             High\n10:00 ET                            Existing Home Sales                                                             Jun                              High\n10:30 ET                               ElA Natural Gas Inventories                                                      07/04                                High\n",
+      "ocr_text_snippet": "MONDAY, JULY 06 2026 Time + Release For Trading Impact ~ 09:45 ET S&P Globat U.S. Services PMI - Final Jun Low 10:00 ET 158 Non-manufacturiog Index Jun High TUESDAY, JULY 07 2026 NY Time + Release ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 83,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 83,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "af7ef081d036f281",
+      "prefilter_score": 15.43,
+      "prefilter_stats": {
+        "brightRatio": 0.8222916666666666,
+        "darkRatio": 0.02263888888888889,
+        "edgeRatio": 0.11076955692177232,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 520,
+        "horizontalEdgeRatio": 0.036746519680587945,
+        "meanLuma": 236.49645833333332,
+        "stdDev": 33.33962421822045,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2615,
+        "verticalEdgeRatio": 0.18479259416295668
+      },
+      "score": -19.85,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 4.15,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 224,
+      "timestamp_hms": "00:03:44"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 385,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260704_20260704_mhomatrai-4_926b4996_whiteboard\\ocr\\ocr_000386.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1541.76,
+      "observed_date": null,
+      "ocr_confidence": 31,
+      "ocr_profile": "threshold",
+      "ocr_text": "[I MSToot- MaketSurge - Google Chvome.                                                                   - ee Xx\n7 matings masons omntod Khan ya ARERKKL period iy use\nMamkeTSURSE a EES      x ou [ey | mony te ems @                                   EX Civ - Does 0\n~ Rubik, Inc,                                                                                        83.42         $83.64\nCarrasco v1                                                  Poo oust SOwshove  SEMAD MeknGn SUIS     cana oan    Rn ams rise\na sasin     —    JPR ——                  CIONOte | GSAT SOWAS SNRIN DmARE ore     oC     wo 5358s sav\npA    PuoAlo,CA ON SEReLF 15 Smolin hme 07599 ET URBAORS La Uptt: 0400 £1 22028\nEon ese              an BET)\nTum E50 acm Sse aon\nBh                                                   =                   w\nmo    a wa 4 we\naL mmm em lm ee Bx                        fl ' he J\nmm    aw sn os am                                                      i\n;                                                                [Et Hh\n[TR   2am os ew                                   J    Pi        ©\nfx    wm or am                                         |           -     f   BZ ANE;\nsom    ut en   Yow                                                il     [      Hl\nA | wm   at amen. te mem                                               !             i       |\nMES   PH 14                                                   J\nDE                                                      Lge                .\no | cranm    frie dante\nAnam     7 Eamon Wa                                                                       i\nLo | oeens    ® Swot                                              /                          *\nChants     [Rr |                                                    1A\nChaps Fa    foun ma    4                                                                                  frre.\n=    era car                                         i                       A    [\nprvirie     © om                                            RR                               ©\n1 | meme 1s ome      Pry                                            y\npe      on PE    0100 39)                                             fl I\n[BR Jy     7% Fat 02    w                                       i    ho                             \"\nGiweves Wa PreowSeer    ou                                        I dll\n«| oom    WA reat                                                                        »\nSvinte 15M anime 300m 17         FS NE SE | LE                         2\nSemasifon 05%                    www WS ese STOW lpm                           a.\n~ oO                                                         A\nToksmom RS SCs wots                                                                                                                                      Ee\nvo | ame wm BER wan                                              Jp      _    am\nPapen. Pw 0% Spl on                                       J I.   .   |              a\nWO em Tans o% om oma Tw                                 N   .                       on\nCoSmon CAD M @ Wz                                      ot                           &\nx mem WB 0% mm\nA                                                                     J a NY    0\nA ar TI TNT EIN eT ere aT\n“=,                           aw ew am am em ew oom am am oe on am as om oo ss om | 0 ws\nNaN mw eae am am am am a we ae am em mx ws | no sew\nnow\nAY                           m2 wz wr wr wr ws ws ms wa mo me mi ms aes m2 amr wn | Bosses\n:                               wn wae we oc EER am me me as oh am ew nae se ome | 2 wow\nsas [Ton | mes 627 WERE B2iems © ues ous Tooun                                            om - 22 mA\nFLY. (O03) ALAC WLALTIL (000) 1227230¢                            ™          ”\n* WEBSITE: revereasset.com                                                                                     »,\n",
+      "ocr_text_snippet": "[I MSToot- MaketSurge - Google Chvome. - ee Xx 7 matings masons omntod Khan ya ARERKKL period iy use MamkeTSURSE a EES x ou [ey | mony te ems @ EX Civ - Does 0 ~ Rubik, Inc, 83.42 $83.64 Carrasco v...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 31,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 31,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5aa2a21d659d78a",
+      "prefilter_score": 20.45,
+      "prefilter_stats": {
+        "brightRatio": 0.8402777777777778,
+        "darkRatio": 0.026875,
+        "edgeRatio": 0.12560949756200976,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1554,
+        "horizontalEdgeRatio": 0.10981556073775704,
+        "meanLuma": 233.5336111111111,
+        "stdDev": 40.35431421606327,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2001,
+        "verticalEdgeRatio": 0.14140343438626246
+      },
+      "score": -20.45,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.55,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 1540,
+      "timestamp_hms": "00:25:40"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 2,
+      "end_ts": 168,
+      "end_hms": "00:02:48",
+      "is_intro_card": false,
+      "layout": "dmi",
+      "peak_frame_index": 28,
+      "peak_score": 54.4,
+      "start_hms": "00:01:52",
+      "start_ts": 112
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 308,
+      "end_hms": "00:05:08",
+      "is_intro_card": true,
+      "layout": "dmi",
+      "peak_frame_index": 77,
+      "peak_score": 54.16,
+      "start_hms": "00:05:08",
+      "start_ts": 308
+    }
+  ]
+}

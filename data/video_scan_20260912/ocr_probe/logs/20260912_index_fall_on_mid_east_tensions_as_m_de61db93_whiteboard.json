@@ -1,0 +1,164 @@
+{
+  "date_key": "20260912",
+  "output_kind": "whiteboard",
+  "video_path": "D:\\courses_F\\revere_asset\\videos\\INDEX FALL ON MID EAST TENSIONS AS MKT AWAITS CPI PPI SPCX AMD I.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "frame_index": 100,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_index_fall_on_mid_east_tensions_as_m_de61db93_whiteboard\\ocr\\ocr_000101.png",
+      "issue_codes": [],
+      "ocr_confidence": 71,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": ">> TALE OF THE TAPE ~ TUESDAY, SEPTEMBER 8, 2026 << * MARKET STATE: UPTREND *STOINDEXES 41 14 RG8G6T 0d NASI USDY TNX/TYXD vs 5d 3339 * SENTIMENT: VIX 14.53 (+ 147%) F8G AA 29.7 96.822. (ic) TIT NA...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 6.06,
+      "score": 100.11,
+      "screen_layout": "structured_whiteboard",
+      "timestamp": 400,
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\screenshots\\20260912_ps.png"
+    },
+    {
+      "frame_index": 120,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_index_fall_on_mid_east_tensions_as_m_de61db93_whiteboard\\ocr\\ocr_000121.png",
+      "issue_codes": [],
+      "ocr_confidence": 72,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": ">> TALE OF THE TAPE = TUESDAY, SEPTEMBER 8, 2026 << * MARKET STATE; UPTREND *STOINDEXES 41 14 RG8G6D 0d NASI USDY TNX/TYXD vs 5d 3339 * SENTIMENT: VIX 14.53 (11.473) F&G AAN29.7 96.822. [icv TY NAA...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 6.08,
+      "score": 100.02,
+      "screen_layout": "structured_whiteboard",
+      "timestamp": 480,
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\screenshots\\20260912_ps_2.png"
+    },
+    {
+      "frame_index": 20,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_index_fall_on_mid_east_tensions_as_m_de61db93_whiteboard\\ocr\\ocr_000021.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "ocr_confidence": 65,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< WHATS THE MARKET TREND? —_— “THE GROTECTION GAUGE\" >>>DAILY MARKET INSIGHT <<< TN *¥1,3, 1G, TiTok @REVEREASSET -PISUKESHARESSUB. | = 2>>TUESDAY, SEPTEMBER 8, 2026<<< — *...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 3.77,
+      "score": 53,
+      "screen_layout": "dmi",
+      "timestamp": 80,
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\screenshots\\20260912_ps_3.png"
+    }
+  ],
+  "frame_count": 245,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "ocr_frame_count": 32,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\screenshots\\20260912_ps.png",
+  "prefilter_best_score": 22.06,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "frame_index": 100,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_index_fall_on_mid_east_tensions_as_m_de61db93_whiteboard\\ocr\\ocr_000101.png",
+    "issue_codes": [],
+    "ocr_confidence": 71,
+    "ocr_profile": "threshold",
+    "ocr_text_snippet": ">> TALE OF THE TAPE ~ TUESDAY, SEPTEMBER 8, 2026 << * MARKET STATE: UPTREND *STOINDEXES 41 14 RG8G6T 0d NASI USDY TNX/TYXD vs 5d 3339 * SENTIMENT: VIX 14.53 (+ 147%) F8G AA 29.7 96.822. (ic) TIT NA...",
+    "output_kind": "whiteboard",
+    "parsed_row_count": 2,
+    "prefilter_score": 6.06,
+    "score": 100.11,
+    "screen_layout": "structured_whiteboard",
+    "timestamp": 400
+  },
+  "top_candidates": [
+    {
+      "frame_index": 100,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_index_fall_on_mid_east_tensions_as_m_de61db93_whiteboard\\ocr\\ocr_000101.png",
+      "issue_codes": [],
+      "ocr_confidence": 71,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": ">> TALE OF THE TAPE ~ TUESDAY, SEPTEMBER 8, 2026 << * MARKET STATE: UPTREND *STOINDEXES 41 14 RG8G6T 0d NASI USDY TNX/TYXD vs 5d 3339 * SENTIMENT: VIX 14.53 (+ 147%) F8G AA 29.7 96.822. (ic) TIT NA...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 6.06,
+      "score": 100.11,
+      "screen_layout": "structured_whiteboard",
+      "timestamp": 400
+    },
+    {
+      "frame_index": 120,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_index_fall_on_mid_east_tensions_as_m_de61db93_whiteboard\\ocr\\ocr_000121.png",
+      "issue_codes": [],
+      "ocr_confidence": 72,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": ">> TALE OF THE TAPE = TUESDAY, SEPTEMBER 8, 2026 << * MARKET STATE; UPTREND *STOINDEXES 41 14 RG8G6D 0d NASI USDY TNX/TYXD vs 5d 3339 * SENTIMENT: VIX 14.53 (11.473) F&G AAN29.7 96.822. [icv TY NAA...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 6.08,
+      "score": 100.02,
+      "screen_layout": "structured_whiteboard",
+      "timestamp": 480
+    },
+    {
+      "frame_index": 20,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_index_fall_on_mid_east_tensions_as_m_de61db93_whiteboard\\ocr\\ocr_000021.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "ocr_confidence": 65,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< WHATS THE MARKET TREND? —_— “THE GROTECTION GAUGE\" >>>DAILY MARKET INSIGHT <<< TN *¥1,3, 1G, TiTok @REVEREASSET -PISUKESHARESSUB. | = 2>>TUESDAY, SEPTEMBER 8, 2026<<< — *...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 3.77,
+      "score": 53,
+      "screen_layout": "dmi",
+      "timestamp": 80
+    },
+    {
+      "frame_index": 240,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_index_fall_on_mid_east_tensions_as_m_de61db93_whiteboard\\ocr\\ocr_000241.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "ocr_confidence": 64,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< WHATS THE MARKET TREND? —_— “THE GROTECTION GAUGE\" >>>DAILY MARKET INSIGHT <<< [r—Cr or] T,X, I, TkTok: @REVEREASSET -PIS KE SHARESSUB. | — * MARKET STATE: UPTREND ror] C...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 3.75,
+      "score": 51.17,
+      "screen_layout": "dmi",
+      "timestamp": 960
+    },
+    {
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_index_fall_on_mid_east_tensions_as_m_de61db93_whiteboard\\ocr\\ocr_000001.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 3.74,
+      "score": -14.66,
+      "screen_layout": "chart",
+      "timestamp": 0
+    }
+  ]
+}

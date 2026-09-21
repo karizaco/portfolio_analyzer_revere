@@ -1,0 +1,182 @@
+{
+  "run_tag": "ocr-20260915-backfill",
+  "started_at": "2026-09-16T09:49:57.930358Z",
+  "ended_at": "2026-09-16T11:55:50.526362Z",
+  "elapsed_seconds": 7552.594692,
+  "workers": 4,
+  "skip_from_tag": "ocr-20260915",
+  "ffmpeg_bin": "c:/Users/admin/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-9.0.1-full_build/bin/ffmpeg.exe",
+  "results": [
+    {
+      "upload_date": "20260618",
+      "video_id": "QOvsT86cVg0",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260618_QOvsT86cVg0.log",
+      "started_at": "2026-09-16T09:49:58.083035Z",
+      "ended_at": "2026-09-16T09:53:55.512188Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260616",
+      "video_id": "xbVIkwq_gg0",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260616_xbVIkwq_gg0.log",
+      "started_at": "2026-09-16T09:49:58.074359Z",
+      "ended_at": "2026-09-16T09:57:36.426544Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260623",
+      "video_id": "dZCVZAL0SOg",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260623_dZCVZAL0SOg.log",
+      "started_at": "2026-09-16T09:57:36.427919Z",
+      "ended_at": "2026-09-16T10:02:23.755874Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260621",
+      "video_id": "bV7cCj9Mpwg",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260621_bV7cCj9Mpwg.log",
+      "started_at": "2026-09-16T09:53:55.512529Z",
+      "ended_at": "2026-09-16T10:04:28.489285Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260605",
+      "video_id": "a7zObEZlEEM",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260605_a7zObEZlEEM.log",
+      "started_at": "2026-09-16T09:49:58.058574Z",
+      "ended_at": "2026-09-16T10:05:01.241697Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260625",
+      "video_id": "NSJxNGbcMl0",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260625_NSJxNGbcMl0.log",
+      "started_at": "2026-09-16T10:02:23.756609Z",
+      "ended_at": "2026-09-16T10:08:43.259017Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260627",
+      "video_id": "gNtCkmnlFbw",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260627_gNtCkmnlFbw.log",
+      "started_at": "2026-09-16T10:05:01.242379Z",
+      "ended_at": "2026-09-16T10:11:48.165561Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260612",
+      "video_id": "of7ldllufyg",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260612_of7ldllufyg.log",
+      "started_at": "2026-09-16T09:49:58.064293Z",
+      "ended_at": "2026-09-16T10:12:35.636070Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260629",
+      "video_id": "vMRwBaCuqFs",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260629_vMRwBaCuqFs.log",
+      "started_at": "2026-09-16T10:08:43.259536Z",
+      "ended_at": "2026-09-16T10:13:14.725268Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260701",
+      "video_id": "riPYD25nCvU",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260701_riPYD25nCvU.log",
+      "started_at": "2026-09-16T10:11:48.165981Z",
+      "ended_at": "2026-09-16T10:16:19.806439Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260626",
+      "video_id": "tldNhps605c",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260626_tldNhps605c.log",
+      "started_at": "2026-09-16T10:04:28.489854Z",
+      "ended_at": "2026-09-16T10:16:42.120211Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260710",
+      "video_id": "eg4f-Uin0hQ",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260710_eg4f-Uin0hQ.log",
+      "started_at": "2026-09-16T10:13:14.725620Z",
+      "ended_at": "2026-09-16T10:18:08.579259Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260702",
+      "video_id": "C7xYmeMf1ew",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260702_C7xYmeMf1ew.log",
+      "started_at": "2026-09-16T10:12:35.636377Z",
+      "ended_at": "2026-09-16T10:19:41.619522Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260724",
+      "video_id": "pbX2XvDq1RQ",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260724_pbX2XvDq1RQ.log",
+      "started_at": "2026-09-16T10:16:42.121110Z",
+      "ended_at": "2026-09-16T11:27:29.640848Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260717",
+      "video_id": "FMeOqqhbJgE",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260717_FMeOqqhbJgE.log",
+      "started_at": "2026-09-16T10:16:19.806647Z",
+      "ended_at": "2026-09-16T11:27:52.626135Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260731",
+      "video_id": "5ov2coLmqfk",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260731_5ov2coLmqfk.log",
+      "started_at": "2026-09-16T10:18:08.579574Z",
+      "ended_at": "2026-09-16T11:28:19.778663Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260807",
+      "video_id": "g40Q36Dpzf4",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260807_g40Q36Dpzf4.log",
+      "started_at": "2026-09-16T10:19:41.620275Z",
+      "ended_at": "2026-09-16T11:36:19.166971Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260909",
+      "video_id": "iCGc5ObTkrs",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260909_iCGc5ObTkrs.log",
+      "started_at": "2026-09-16T11:27:52.627065Z",
+      "ended_at": "2026-09-16T11:45:01.740558Z",
+      "ok": true
+    },
+    {
+      "upload_date": "20260813",
+      "video_id": "eWeJSMLlZLs",
+      "exit_code": 0,
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill_20260813_eWeJSMLlZLs.log",
+      "started_at": "2026-09-16T11:27:29.641424Z",
+      "ended_at": "2026-09-16T11:55:50.508593Z",
+      "ok": true
+    }
+  ]
+}

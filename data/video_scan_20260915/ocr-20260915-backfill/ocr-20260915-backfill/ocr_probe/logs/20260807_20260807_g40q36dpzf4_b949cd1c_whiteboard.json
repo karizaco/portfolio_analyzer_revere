@@ -1,0 +1,967 @@
+{
+  "date_key": "20260807",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260807_g40Q36Dpzf4.mp4",
+  "captured_count": 0,
+  "captures": [],
+  "frame_count": 530,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 366,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "prefilter_best_score": 19.77,
+  "sample_frame_width": 640,
+  "status": "no_match",
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 0,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260807_20260807_g40q36dpzf4_b949cd1c_whiteboard\\ocr\\ocr_000001.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE",
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 0,
+    "observed_date": null,
+    "ocr_confidence": 0,
+    "ocr_profile": "threshold",
+    "ocr_text": "",
+    "ocr_text_snippet": "",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "d00837fe5d8a233e",
+    "prefilter_score": -21.81,
+    "prefilter_stats": {
+      "brightRatio": 0.057291666666666664,
+      "darkRatio": 0.4920833333333333,
+      "edgeRatio": 0.021093915624337503,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 377,
+      "horizontalEdgeRatio": 0.02664122676842626,
+      "meanLuma": 113.31673611111111,
+      "stdDev": 62.29650670527492,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 220,
+      "verticalEdgeRatio": 0.015546604480248746
+    },
+    "score": -12,
+    "score_breakdown": {
+      "chart_likeness": 0,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 0,
+      "pair_bonus": 0,
+      "per_row_issues": -12,
+      "per_row_metrics": 0,
+      "text_density": 0
+    },
+    "screen_layout": "chart",
+    "tickers": [],
+    "timestamp": 0,
+    "timestamp_hms": "00:00:00"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260807_20260807_g40q36dpzf4_b949cd1c_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d00837fe5d8a233e",
+      "prefilter_score": -21.81,
+      "prefilter_stats": {
+        "brightRatio": 0.057291666666666664,
+        "darkRatio": 0.4920833333333333,
+        "edgeRatio": 0.021093915624337503,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 377,
+        "horizontalEdgeRatio": 0.02664122676842626,
+        "meanLuma": 113.31673611111111,
+        "stdDev": 62.29650670527492,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 220,
+        "verticalEdgeRatio": 0.015546604480248746
+      },
+      "score": -12,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 8,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260807_20260807_g40q36dpzf4_b949cd1c_whiteboard\\ocr\\ocr_000009.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 81,
+      "ocr_profile": "threshold",
+      "ocr_text": "|    |\nRevere Asset\nManagement\n",
+      "ocr_text_snippet": "| | Revere Asset Management",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 81,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 81,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "cc3b33c4cc3933c6",
+      "prefilter_score": -20.36,
+      "prefilter_stats": {
+        "brightRatio": 0.041944444444444444,
+        "darkRatio": 0.9384722222222223,
+        "edgeRatio": 0.04303582785668857,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 624,
+        "horizontalEdgeRatio": 0.04409582361670553,
+        "meanLuma": 38.636180555555555,
+        "stdDev": 48.03845605774444,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 594,
+        "verticalEdgeRatio": 0.04197583209667161
+      },
+      "score": -16.99,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 4.05,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 4.96
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 32,
+      "timestamp_hms": "00:00:32"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 384,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260807_20260807_g40q36dpzf4_b949cd1c_whiteboard\\ocr\\ocr_000385.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 39,
+      "ocr_profile": "threshold",
+      "ocr_text": "tarkeTSURGE a       X os Week Mou Mev ons @ Com. DE 0\n ARK Genomic Revolution ETF «..:                                                                                       42.26\nM0 ETF ETNA 1451                                                    ooanAgYe 3803100                   ARKG (+5370) 49.60%\nA user © 212183 weston          .                                             50a Avg Soi $133,447.87                       ot 83401221 28830\nOnSowWookHon  ASEn 2)DayATR® 377% LastUpdale 1206 PM ET 08072026\nf—                       Q sow    Bowe                               Stocnastes,            ©\near(Dect  Price()  %Chg Sales (SM) % Chg           -                                   -\n019      357   al      -   -                                                                       wo\n020      ws eee      Co\n021      sa ae      Co\n022      823    SEL      -   -                                                                       120\n023      ar      ol\nA                         Hl                                            w-\n025      Perc          :\n©\nRE —                   [als]\nPS Rating                         + Eamings Surpnse             .                                                                                                       }                                                                                                                            Ps\nee fete                  RK\nMonin 45      5 Sues Gown Rae ON                                                      aR gy\nMonin      98 ProTae Margin    on 0               f\nfoun RS Rati     © Reumonean 0%\narbi Rang     A Camron     0                              |                      ii    0\nreno      oe       o      *       1                hy                          N\n1D Vi ane     PER        .      [l      LF                  ll N                        20\nora                            §                                      I  l                     .\n”                 _—                                                   l\n“,                            :                                       I\" Bradt              .\nwo                                                                                             »\nno                                                                                              :\noct                                      Cases\nop Ri                                                   —        N                               om\nstaS)                                      -                                                      iy\n-             ;                  IN                                              |\nrani                                  010     220     Ps     wa     os     2020     202s     2s     wz\npe                                              [=]\nscreens    ws | Repors   TEMPLATE 8items C  Upus oata as £7 08 17.7020                 ory - CE EA\n",
+      "ocr_text_snippet": "tarkeTSURGE a X os Week Mou Mev ons @ Com. DE 0 ARK Genomic Revolution ETF «..: 42.26 M0 ETF ETNA 1451 ooanAgYe 3803100 ARKG (+5370) 49.60% A user © 212183 weston . 50a Avg Soi $133,447.87 ot 83401...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 39,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 39,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ca5a4ba2b7a84e5a",
+      "prefilter_score": 16.56,
+      "prefilter_stats": {
+        "brightRatio": 0.7423611111111111,
+        "darkRatio": 0.03361111111111111,
+        "edgeRatio": 0.17889195109886227,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1869,
+        "horizontalEdgeRatio": 0.1320754716981132,
+        "meanLuma": 226.36902777777777,
+        "stdDev": 43.82579227463242,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3194,
+        "verticalEdgeRatio": 0.22570843049961134
+      },
+      "score": -23.16,
+      "score_breakdown": {
+        "chart_likeness": -3.1092130852370783,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.95,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "ARKG"
+      ],
+      "timestamp": 1536,
+      "timestamp_hms": "00:25:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 400,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260807_20260807_g40q36dpzf4_b949cd1c_whiteboard\\ocr\\ocr_000401.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 36,
+      "ocr_profile": "threshold",
+      "ocr_text": "rariETSURSE of (EE)       Xow Wen Moww SH. «wm 0 Corn. OE 0\n ARK Genomic Revolution ETF ...:                                                                                       $42.29\nETE ETA 5                                                    Casha @LI                   ARKG (+5375) 67%\nen essen       i                          »        Popa visa                  an ro\nOnszweokHan | ASN 23DayATR ATI LastUpdolo 1208 PU ET 08072026\nvo              jo sv   Wow oe                     Stoonastes        =\nrec) Prce(®) Gh Sales(SM) % Chg         -\now     pra     \"ne                                                         »\n020     wm     Co\n21     ou aw     Co\n022     Pr     Co                                                         2\nozs     ar     Co\n= mow                    Hl                                    w\n025     Pre        :                     {0\naN                             80\nRE —-                   [als]\nPs ated      | EamegsSupnse +                          4                               ©\ns Rang      wn Company                  fl\nMoris      53 Ses Gown tne Ow                                                      La\nMonn s      \"oman ox 0               f\nfour BS Rang     © ReumonCwny on\ncr Raing     A Cath Fou     n                              IN                    i    0 4\nEEE La              hit\n10 Vol Ha     11 oan      fi                          I    H                   .\non                |   ¥                   f  IP  i i\n                                                           I         >\n-         '      i                     II\" Mith          :\now                   ,                                            I           w\nhat                                                                            18\nor                                      UN.\noor                                          —      —                         fr\nFil\noa                                                                           Ba\ni                           pum mm,\nrant                            2010    20    2021    022    anes    2024    ues    ze    zr\npe                                     ER\nscreens    Lats | Repors   TEMPLATE 8items Cups oman ast 67 ne acs                 ory - CO EBA\n",
+      "ocr_text_snippet": "rariETSURSE of (EE) Xow Wen Moww SH. «wm 0 Corn. OE 0 ARK Genomic Revolution ETF ...: $42.29 ETE ETA 5 Casha @LI ARKG (+5375) 67% en essen i » Popa visa an ro OnszweokHan | ASN 23DayATR ATI LastUpd...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ca5a43a2b7ac4e5a",
+      "prefilter_score": 16.94,
+      "prefilter_stats": {
+        "brightRatio": 0.7418055555555556,
+        "darkRatio": 0.035486111111111114,
+        "edgeRatio": 0.17867995194685887,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1880,
+        "horizontalEdgeRatio": 0.13285280192212565,
+        "meanLuma": 226.07333333333332,
+        "stdDev": 44.376660031547694,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3177,
+        "verticalEdgeRatio": 0.22450710197159213
+      },
+      "score": -23.17,
+      "score_breakdown": {
+        "chart_likeness": -2.9727797537484353,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.8,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "ARKG"
+      ],
+      "timestamp": 1600,
+      "timestamp_hms": "00:26:40"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 312,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260807_20260807_g40q36dpzf4_b949cd1c_whiteboard\\ocr\\ocr_000313.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 39,
+      "ocr_profile": "threshold",
+      "ocr_text": "[3\n1arkeTSURGE  o [SINE        X Dally Weekly Monthly SMin v «8726   [c]  Howes = COB @\n    n    -                                                                     s-\n* Chime Financial Inc. Cl A «..                                                                                                   30.24\n1 St - Sty Erp: 114225,                                     00a vl 60RZ0 Markel Cop    sie      CHYM (7.26) 31.54%\nA seman        ® 212180 cee       .                                       S0DayAgS Vol MZEIIB 21 Day ARS 63m        Vol 56,346 767 +216.19%\nOfSzWodkHigh 956% +330 from potm2weeks Losi Update 1207 PMET 080772026\n\npr                & sod ow Bm ®-                     s   inti     ®\nariDec) EPSB)  WChg Seks(sO} % Chg                                                  »\noto     000            ES esse\n020     000             -\n021     000\n022     wz     .    To    .\nozs     Pr    13                                                              ©\n02a          oor ee,        Tee\n025     421 sien    22 ov                                                        =)    w\n200         0% wee 21 ow                                                               il\n“N        os ewe 33 ow                                                     It                                                             50\noocaterang 48 EPSGowpRae On                             h       ll                  »\nPS Rateg     36 EanogsSupnse 8.124%                              !\n$ Ratng     6 Earnings Stabiky     ;                              iJ     {      hy    /          »\nMori RS    9 SumGrownRae 30%                              i             Li   Hi\nMonin RS    $8 PraTax Margin   sex [S1     os     ol     x     J            \\ |  0 RS Rovng 20\nroup RS Rang   1 Rotem on Equity   hol E23    re    aan    S    ae   {HH     bey | i.    os\nceo          Co Cash Fi          i                                                     CA                                                    1%\nve                                      sna                       V\nha\ncto                                                                                  \"\n,                :       dW\nove |                                                             niall     mill        |         Lid\nnoes |||                                                                               CH)             Wrz            nz            Sep 26             Dec25             or 26             Jun2           Sepze et\nrotef  f                           005     000     720     215     012     on     007     00s EPS(H\ni                                                       Ee            o      veh are           \"         “255          a          50. wong\normpa                 “7                                            #752          arg          5281          5435           596 4          6474          6698           6828 Sales (SM)\nOFS               -\nval |    |    N     Cy     IE    os. EEE    “as    25    3s    ar,    25 eng\n\nScreens    Gas | Repons   TEMPLATE-1 Bitems © Upbut oiaa aw £1 om nr ion                 oFy - © EH BA\n",
+      "ocr_text_snippet": "[3 1arkeTSURGE o [SINE X Dally Weekly Monthly SMin v «8726 [c] Howes = COB @ n - s- * Chime Financial Inc. Cl A «.. 30.24 1 St - Sty Erp: 114225, 00a vl 60RZ0 Markel Cop sie CHYM (7.26) 31.54% A se...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 39,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 39,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ca484aa6b5b4957d",
+      "prefilter_score": 13.18,
+      "prefilter_stats": {
+        "brightRatio": 0.7465972222222222,
+        "darkRatio": 0.014722222222222222,
+        "edgeRatio": 0.17440463571479048,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1742,
+        "horizontalEdgeRatio": 0.12310084092996962,
+        "meanLuma": 229.21430555555557,
+        "stdDev": 36.63400121951021,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3194,
+        "verticalEdgeRatio": 0.22570843049961134
+      },
+      "score": -24.02,
+      "score_breakdown": {
+        "chart_likeness": -3.9661610503793447,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.95,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 1248,
+      "timestamp_hms": "00:20:48"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260807_20260807_g40q36dpzf4_b949cd1c_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d00837fe5d8a233e",
+      "prefilter_score": -21.81,
+      "prefilter_stats": {
+        "brightRatio": 0.057291666666666664,
+        "darkRatio": 0.4920833333333333,
+        "edgeRatio": 0.021093915624337503,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 377,
+        "horizontalEdgeRatio": 0.02664122676842626,
+        "meanLuma": 113.31673611111111,
+        "stdDev": 62.29650670527492,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 220,
+        "verticalEdgeRatio": 0.015546604480248746
+      },
+      "score": -12,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 8,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260807_20260807_g40q36dpzf4_b949cd1c_whiteboard\\ocr\\ocr_000009.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 34.8348,
+      "observed_date": null,
+      "ocr_confidence": 81,
+      "ocr_profile": "threshold",
+      "ocr_text": "|    |\nRevere Asset\nManagement\n",
+      "ocr_text_snippet": "| | Revere Asset Management",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 81,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 81,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "cc3b33c4cc3933c6",
+      "prefilter_score": -20.36,
+      "prefilter_stats": {
+        "brightRatio": 0.041944444444444444,
+        "darkRatio": 0.9384722222222223,
+        "edgeRatio": 0.04303582785668857,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 624,
+        "horizontalEdgeRatio": 0.04409582361670553,
+        "meanLuma": 38.636180555555555,
+        "stdDev": 48.03845605774444,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 594,
+        "verticalEdgeRatio": 0.04197583209667161
+      },
+      "score": -16.99,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 4.05,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 4.96
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 32,
+      "timestamp_hms": "00:00:32"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 384,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260807_20260807_g40q36dpzf4_b949cd1c_whiteboard\\ocr\\ocr_000385.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1538.169967,
+      "observed_date": null,
+      "ocr_confidence": 39,
+      "ocr_profile": "threshold",
+      "ocr_text": "tarkeTSURGE a       X os Week Mou Mev ons @ Com. DE 0\n ARK Genomic Revolution ETF «..:                                                                                       42.26\nM0 ETF ETNA 1451                                                    ooanAgYe 3803100                   ARKG (+5370) 49.60%\nA user © 212183 weston          .                                             50a Avg Soi $133,447.87                       ot 83401221 28830\nOnSowWookHon  ASEn 2)DayATR® 377% LastUpdale 1206 PM ET 08072026\nf—                       Q sow    Bowe                               Stocnastes,            ©\near(Dect  Price()  %Chg Sales (SM) % Chg           -                                   -\n019      357   al      -   -                                                                       wo\n020      ws eee      Co\n021      sa ae      Co\n022      823    SEL      -   -                                                                       120\n023      ar      ol\nA                         Hl                                            w-\n025      Perc          :\n©\nRE —                   [als]\nPS Rating                         + Eamings Surpnse             .                                                                                                       }                                                                                                                            Ps\nee fete                  RK\nMonin 45      5 Sues Gown Rae ON                                                      aR gy\nMonin      98 ProTae Margin    on 0               f\nfoun RS Rati     © Reumonean 0%\narbi Rang     A Camron     0                              |                      ii    0\nreno      oe       o      *       1                hy                          N\n1D Vi ane     PER        .      [l      LF                  ll N                        20\nora                            §                                      I  l                     .\n”                 _—                                                   l\n“,                            :                                       I\" Bradt              .\nwo                                                                                             »\nno                                                                                              :\noct                                      Cases\nop Ri                                                   —        N                               om\nstaS)                                      -                                                      iy\n-             ;                  IN                                              |\nrani                                  010     220     Ps     wa     os     2020     202s     2s     wz\npe                                              [=]\nscreens    ws | Repors   TEMPLATE 8items C  Upus oata as £7 08 17.7020                 ory - CE EA\n",
+      "ocr_text_snippet": "tarkeTSURGE a X os Week Mou Mev ons @ Com. DE 0 ARK Genomic Revolution ETF «..: 42.26 M0 ETF ETNA 1451 ooanAgYe 3803100 ARKG (+5370) 49.60% A user © 212183 weston . 50a Avg Soi $133,447.87 ot 83401...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 39,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 39,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ca5a4ba2b7a84e5a",
+      "prefilter_score": 16.56,
+      "prefilter_stats": {
+        "brightRatio": 0.7423611111111111,
+        "darkRatio": 0.03361111111111111,
+        "edgeRatio": 0.17889195109886227,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1869,
+        "horizontalEdgeRatio": 0.1320754716981132,
+        "meanLuma": 226.36902777777777,
+        "stdDev": 43.82579227463242,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3194,
+        "verticalEdgeRatio": 0.22570843049961134
+      },
+      "score": -23.16,
+      "score_breakdown": {
+        "chart_likeness": -3.1092130852370783,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.95,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "ARKG"
+      ],
+      "timestamp": 1536,
+      "timestamp_hms": "00:25:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 400,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260807_20260807_g40q36dpzf4_b949cd1c_whiteboard\\ocr\\ocr_000401.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1602.033767,
+      "observed_date": null,
+      "ocr_confidence": 36,
+      "ocr_profile": "threshold",
+      "ocr_text": "rariETSURSE of (EE)       Xow Wen Moww SH. «wm 0 Corn. OE 0\n ARK Genomic Revolution ETF ...:                                                                                       $42.29\nETE ETA 5                                                    Casha @LI                   ARKG (+5375) 67%\nen essen       i                          »        Popa visa                  an ro\nOnszweokHan | ASN 23DayATR ATI LastUpdolo 1208 PU ET 08072026\nvo              jo sv   Wow oe                     Stoonastes        =\nrec) Prce(®) Gh Sales(SM) % Chg         -\now     pra     \"ne                                                         »\n020     wm     Co\n21     ou aw     Co\n022     Pr     Co                                                         2\nozs     ar     Co\n= mow                    Hl                                    w\n025     Pre        :                     {0\naN                             80\nRE —-                   [als]\nPs ated      | EamegsSupnse +                          4                               ©\ns Rang      wn Company                  fl\nMoris      53 Ses Gown tne Ow                                                      La\nMonn s      \"oman ox 0               f\nfour BS Rang     © ReumonCwny on\ncr Raing     A Cath Fou     n                              IN                    i    0 4\nEEE La              hit\n10 Vol Ha     11 oan      fi                          I    H                   .\non                |   ¥                   f  IP  i i\n                                                           I         >\n-         '      i                     II\" Mith          :\now                   ,                                            I           w\nhat                                                                            18\nor                                      UN.\noor                                          —      —                         fr\nFil\noa                                                                           Ba\ni                           pum mm,\nrant                            2010    20    2021    022    anes    2024    ues    ze    zr\npe                                     ER\nscreens    Lats | Repors   TEMPLATE 8items Cups oman ast 67 ne acs                 ory - CO EBA\n",
+      "ocr_text_snippet": "rariETSURSE of (EE) Xow Wen Moww SH. «wm 0 Corn. OE 0 ARK Genomic Revolution ETF ...: $42.29 ETE ETA 5 Casha @LI ARKG (+5375) 67% en essen i » Popa visa an ro OnszweokHan | ASN 23DayATR ATI LastUpd...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ca5a43a2b7ac4e5a",
+      "prefilter_score": 16.94,
+      "prefilter_stats": {
+        "brightRatio": 0.7418055555555556,
+        "darkRatio": 0.035486111111111114,
+        "edgeRatio": 0.17867995194685887,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1880,
+        "horizontalEdgeRatio": 0.13285280192212565,
+        "meanLuma": 226.07333333333332,
+        "stdDev": 44.376660031547694,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3177,
+        "verticalEdgeRatio": 0.22450710197159213
+      },
+      "score": -23.17,
+      "score_breakdown": {
+        "chart_likeness": -2.9727797537484353,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.8,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "ARKG"
+      ],
+      "timestamp": 1600,
+      "timestamp_hms": "00:26:40"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 312,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260807_20260807_g40q36dpzf4_b949cd1c_whiteboard\\ocr\\ocr_000313.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1247.879967,
+      "observed_date": null,
+      "ocr_confidence": 39,
+      "ocr_profile": "threshold",
+      "ocr_text": "[3\n1arkeTSURGE  o [SINE        X Dally Weekly Monthly SMin v «8726   [c]  Howes = COB @\n    n    -                                                                     s-\n* Chime Financial Inc. Cl A «..                                                                                                   30.24\n1 St - Sty Erp: 114225,                                     00a vl 60RZ0 Markel Cop    sie      CHYM (7.26) 31.54%\nA seman        ® 212180 cee       .                                       S0DayAgS Vol MZEIIB 21 Day ARS 63m        Vol 56,346 767 +216.19%\nOfSzWodkHigh 956% +330 from potm2weeks Losi Update 1207 PMET 080772026\n\npr                & sod ow Bm ®-                     s   inti     ®\nariDec) EPSB)  WChg Seks(sO} % Chg                                                  »\noto     000            ES esse\n020     000             -\n021     000\n022     wz     .    To    .\nozs     Pr    13                                                              ©\n02a          oor ee,        Tee\n025     421 sien    22 ov                                                        =)    w\n200         0% wee 21 ow                                                               il\n“N        os ewe 33 ow                                                     It                                                             50\noocaterang 48 EPSGowpRae On                             h       ll                  »\nPS Rateg     36 EanogsSupnse 8.124%                              !\n$ Ratng     6 Earnings Stabiky     ;                              iJ     {      hy    /          »\nMori RS    9 SumGrownRae 30%                              i             Li   Hi\nMonin RS    $8 PraTax Margin   sex [S1     os     ol     x     J            \\ |  0 RS Rovng 20\nroup RS Rang   1 Rotem on Equity   hol E23    re    aan    S    ae   {HH     bey | i.    os\nceo          Co Cash Fi          i                                                     CA                                                    1%\nve                                      sna                       V\nha\ncto                                                                                  \"\n,                :       dW\nove |                                                             niall     mill        |         Lid\nnoes |||                                                                               CH)             Wrz            nz            Sep 26             Dec25             or 26             Jun2           Sepze et\nrotef  f                           005     000     720     215     012     on     007     00s EPS(H\ni                                                       Ee            o      veh are           \"         “255          a          50. wong\normpa                 “7                                            #752          arg          5281          5435           596 4          6474          6698           6828 Sales (SM)\nOFS               -\nval |    |    N     Cy     IE    os. EEE    “as    25    3s    ar,    25 eng\n\nScreens    Gas | Repons   TEMPLATE-1 Bitems © Upbut oiaa aw £1 om nr ion                 oFy - © EH BA\n",
+      "ocr_text_snippet": "[3 1arkeTSURGE o [SINE X Dally Weekly Monthly SMin v «8726 [c] Howes = COB @ n - s- * Chime Financial Inc. Cl A «.. 30.24 1 St - Sty Erp: 114225, 00a vl 60RZ0 Markel Cop sie CHYM (7.26) 31.54% A se...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 39,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 39,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ca484aa6b5b4957d",
+      "prefilter_score": 13.18,
+      "prefilter_stats": {
+        "brightRatio": 0.7465972222222222,
+        "darkRatio": 0.014722222222222222,
+        "edgeRatio": 0.17440463571479048,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1742,
+        "horizontalEdgeRatio": 0.12310084092996962,
+        "meanLuma": 229.21430555555557,
+        "stdDev": 36.63400121951021,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3194,
+        "verticalEdgeRatio": 0.22570843049961134
+      },
+      "score": -24.02,
+      "score_breakdown": {
+        "chart_likeness": -3.9661610503793447,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.95,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 1248,
+      "timestamp_hms": "00:20:48"
+    }
+  ],
+  "whiteboard_segments": []
+}

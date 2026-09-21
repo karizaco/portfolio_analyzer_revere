@@ -1,0 +1,1298 @@
+{
+  "date_key": "20260615",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260615_Am3cmv2Y0aw.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 76,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260615_20260615_am3cmv2y0aw_f3960d06_whiteboard\\ocr\\ocr_000077.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 306.4,
+      "observed_date": "20260615",
+      "ocr_confidence": 52,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Preview Fla Ed View Go Tools Window Help            [CEA RX LEK]      z\n® © [D- Screenshor2026-06-15at51., 0Q Q Q@             [=     ® io\nI                                D                                                 nS\namersys 22 TALE OF THE TAPE ~ MONDAY, JUNE 15, 2026 << PY E—\nX * MARKET STATE: UPTREND (6/15)                                                                  -\n> Roundh +570 INDEXES 61 OJ RGE&T OJ NASI USD TNX/TYX vs 5d               vo»       ge.52       as oe, 88.62\n0 samen t * SENTIMENT:VIX 16.03{-9.33%) F&G           AAI 30.4-5.9 2047 EEETE nasim 793.76       re METI is Ot\nnein       <P BULL CASE: INITIATE RALLY & TREND 21EMA €6/15                                         -              =                     ~\nux \"a, <PBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                           =  SNL      o\nms o@  % NEWS: PEACE AGREEMENT; WED 6/17: 15 FOMC W/ WARSH\nzo om * TODAY'S KEYS:SPXvs 21E1 /5004 QQQuvs21E1  R2Kvs 21E                                      Ah\nDT 0% ®DAYCT:U-2 => U-3 8e:+24 21e:+21                                                    fi  EY)         v\nwe wa * ACTION: O +1.36%       17577                                                  >   EE  find  \"   pr\n®S 9% +SPXO/N 7476-75331 07516 030 7526-75521 L/H 7516-7577                       fa           ly y\n* SPX ATR: 1.21% SPX +1.66% 60/40 +1.02% GRO +1.64% TURBO +1.68%                 L        =       -  [\n\"SECTORS: 1 BPS CRYPTO DRAM EWY URNM GDX URA MAGS  BY% USD OG XLE       tb\nLivy GRO HOLDINGS: SPYM,UPRO,GH,LLYX WGMI,CSCO,DOCN,CRDO, SNOW, FTNT.VIAV, MRVLNBIS BE        fn                               “\n) JF * GRO RVAB/REBAR: 1.40 (-1.54%/-7.02%) ADD to NBIS SNOW VIAV DOCN BUY WGMI BE               kn\nJL _™ * TURBO HOLDINGS: SPYM,UPRO,SNOW,GH, BE, VIAV,MRVL                                !\n=         * TURBO RVAB/REBAR: : 07 {-1.79%/-5.67%) ADD to SNOW                                              srr                            »\n== * BOTTOM LINE: -» PEACE AGREEMENT LEADS TO BROAD STRENGTH\n *MONKEYS: SPX vs ATH/21E QQQvs ATH/21E  R2Kvs 8E/21€                         -\nvan, >>> SRP500 KEY LEVELS <<<                                                                              oh              [rp             ur\nlio wre            Ml,\nwo © - 7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH                      Sa TERT Te\nre] ¥7432(L521EMA) € 6/58 4/31        2/273 2/250 2/124 2/64                               om - osama\n37431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING                     B\n=                                                                                    Gn Wome: Mew Gem GE orn Roma\nZo 37394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND          Bw wot cwih me ee\novkeors * 7267/7375(1 20 50D/10WK} € 4/81 2/274 1/211 1/20                      :       :    v     )     :    -\nmea * 6887/6920 {15 200D/40WK) € 5/121 5/8 SLOPE                         .    JP    :    Co    !\n= crams\ndl                                                   —_                              ni rn nea\n",
+      "ocr_text_snippet": "6 Preview Fla Ed View Go Tools Window Help [CEA RX LEK] z ® © [D- Screenshor2026-06-15at51., 0Q Q Q@ [= ® io I D nS amersys 22 TALE OF THE TAPE ~ MONDAY, JUNE 15, 2026 << PY E— X * MARKET STATE: UP...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "-» PEACE AGREEMENT LEADS TO BROAD STRENGTH MONKEYS: SPX VS ATH/21E QQQVS ATH/21E R2KVS 8E/21€ - VAN, >>> SRP500 KEY LEVELS <<< OH [RP UR LIO WRE ML, WO © - 7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH SA TERT TE RE] ¥7432(L521EMA) € 6/58 4/31 2/273 2/250 2/124 2/64 OM - OSAMA 37431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING B GN WOME: MEW GEM GE ORN ROMA ZO 37394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND BW WOT CWIH ME EE OVKEORS * 7267/7375(1 20 50D/10WK} € 4/81 2/274 1/211 1/20 : : V ) : - MEA * 6887/6920 {15 200D/40WK) € 5/121 5/8 SLOPE . JP : CO ! CRAMS DL -_ NI RN NEA",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 52,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: : 07 {-1.79%/-5.67%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO SNOW SRR »",
+          "bottom_line": "-» PEACE AGREEMENT LEADS TO BROAD STRENGTH MONKEYS: SPX VS ATH/21E QQQVS ATH/21E R2KVS 8E/21€ - VAN, >>> SRP500 KEY LEVELS <<< OH [RP UR LIO WRE ML, WO © - 7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH SA TERT TE RE] ¥7432(L521EMA) € 6/58 4/31 2/273 2/250 2/124 2/64 OM - OSAMA 37431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING B GN WOME: MEW GEM GE ORN ROMA ZO 37394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND BW WOT CWIH ME EE OVKEORS * 7267/7375(1 20 50D/10WK} € 4/81 2/274 1/211 1/20 : : V ) : - MEA * 6887/6920 {15 200D/40WK) € 5/121 5/8 SLOPE . JP : CO ! CRAMS DL -_ NI RN NEA",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 52,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807e01c3fe09f69b",
+      "prefilter_score": 11.95,
+      "prefilter_stats": {
+        "brightRatio": 0.7492361111111111,
+        "darkRatio": 0.021111111111111112,
+        "edgeRatio": 0.21274114903540386,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1587,
+        "horizontalEdgeRatio": 0.11214755140979436,
+        "meanLuma": 229.35993055555556,
+        "stdDev": 39.558356576015285,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4434,
+        "verticalEdgeRatio": 0.31333474666101335
+      },
+      "score": 94.08,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.6,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 91.48
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "MRVL",
+        "NBIS",
+        "SNOW",
+        "SPYM",
+        "UPRO",
+        "URA"
+      ],
+      "timestamp": 304,
+      "timestamp_hms": "00:05:04",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260615_ps_4.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 66,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260615_20260615_am3cmv2y0aw_f3960d06_whiteboard\\ocr\\ocr_000067.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 266.2,
+      "observed_date": "20260615",
+      "ocr_confidence": 55,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Preview Flo EM View Go Tools Widow Hep             [A KX YER]      eo\nIN ® 8 [D- Sceenshor202-065at54. QQ Q              a      ® io\namcersys 22 TALE OF THE TAPE — MONDAY, JUNE 15, 2026 <<  PY E—\n\n * MARKET STATE: UPTREND {6/15)                                                                  -\n\n» Roundh +570 INDEXES 60 OW RGE8T OJ NASI USD TNX/TYX vs 5d              vw       oe.52       os on, 58.62\n0 sane * SENTIMENT:VIX 16.03(-9.33%) F&G            anin304 59 2204.7 EERE naam 79.3.6        TRL Utena co\ncoor       BULL CASE: INITIATE RALLY & TREND 21EMA €6/15                                         :                    hy                  .\n% ™ » BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                           = ~~ e\nms om % NEWS: PEACE AGREEMENT; WED 6/17: 1 FOMC W/ WARSH\nwom * TODAY'S KEYS:SPXvs21E1 /500T QQQvs21E1  R2Kvs21E1                                          Mas\nme® DAYCT:U-2 =>U-3 8e:421 21e:421 *                                    atv    A\nmwa *ACTION: 0 +1.36%     17577                                  §  RR kl \"  5\n™ “e sSPXO/N 7476-75331 07516 030 7526-75521 L/H7516-7577                          np             ly 4\n\n* SPX ATR: 1.21% SPX +1.66% 60/40 +1.02% GRO +1.64% TURBO +1.68%               JL MSU:      -\nvn SECTORS: 1 BPS CRYPTO DRAM EWY URNM GDX URA MAGS J BY% USD OBGXLE  ——F—\"77                    i\npity  * GRO HOLDINGS: SPYM,UPRO,GH,LLYX,WGMI,CSCO,DOCN,CRDO,SNOW,FTNT,VIAV,MRVL,NBIS, BE     N   i oT                                 ©\nRn hy      $ * GRO RVAB/REBAR: 1.40 (-1.54%/-7.02%) ADD to NBIS SNOW VIAV DOCN BUY WGMI BE              ) Hy\nJd _* * TURBO HOLDINGS: SPYM,UPRO,SNOW,GH,BE,VIAV,MRVL                                        !\n—          * TURBO RVAB/REBAR: 1.07 {-1.79%/-5.67%) ADD to SNOW                                              FA                            »\n=== * BOTTOM LINE: =» PEACE AGREEMENT LEADS TO BROAD STRENGTH\n *MONKEYS:SPXvsATH/21E QQQusATH/21E R2Kvs 8E/21E                                     EE\nwin, >>> S&PS00 KEY LEVELS <<<                                                                                 i              [r—              ww\n\nili 5 monn            Min, =\n\ntt\" #7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH                         a.     id    *    a,\"\nee | 27832 (45 21EMA) € 6/53 4/81         2214 2/250 2/124 2/61             ’                     orm - mama\n\n————— =>»7431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING                    -\non                     ’           y              \\          i                                     PR Tr\n——er—= 27394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND           Err wow Gwen Res Res TTF TT\n\novis * 7267/7375(120 50D/10WK) € 4/81 2/274 1/211 1/200                i     ee    i       ue\nwen * 6887/6920 (15 200D/40WK) € 5/129 5/8 SLOPE                         Vem em\nJ\n",
+      "ocr_text_snippet": "6 Preview Flo EM View Go Tools Widow Hep [A KX YER] eo IN ® 8 [D- Sceenshor202-065at54. QQ Q a ® io amcersys 22 TALE OF THE TAPE — MONDAY, JUNE 15, 2026 << PY E— * MARKET STATE: UPTREND {6/15) - » ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "=» PEACE AGREEMENT LEADS TO BROAD STRENGTH MONKEYS:SPXVSATH/21E QQQUSATH/21E R2KVS 8E/21E EE WIN, >>> S&PS00 KEY LEVELS <<< I [R- WW ILI 5 MONN MIN, = TT\" #7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH A. ID * A,\" EE 27832 (45 21EMA) € 6/53 4/81 2214 2/250 2/124 2/61 ' ORM - MAMA 7431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING - ON ' Y \\ I PR TR ER-= 27394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND ERR WOW GWEN RES RES TTF TT OVIS * 7267/7375(120 50D/10WK) € 4/81 2/274 1/211 1/200 I EE I UE WEN * 6887/6920 (15 200D/40WK) € 5/129 5/8 SLOPE VEM EM J",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.07 {-1.79%/-5.67%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO SNOW FA »",
+          "bottom_line": "=» PEACE AGREEMENT LEADS TO BROAD STRENGTH MONKEYS:SPXVSATH/21E QQQUSATH/21E R2KVS 8E/21E EE WIN, >>> S&PS00 KEY LEVELS <<< I [R- WW ILI 5 MONN MIN, = TT\" #7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH A. ID * A,\" EE 27832 (45 21EMA) € 6/53 4/81 2214 2/250 2/124 2/61 ' ORM - MAMA 7431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING - ON ' Y \\ I PR TR ER-= 27394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND ERR WOW GWEN RES RES TTF TT OVIS * 7267/7375(120 50D/10WK) € 4/81 2/274 1/211 1/200 I EE I UE WEN * 6887/6920 (15 200D/40WK) € 5/129 5/8 SLOPE VEM EM J",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807e01c3f609fe9b",
+      "prefilter_score": 11.96,
+      "prefilter_stats": {
+        "brightRatio": 0.7490277777777777,
+        "darkRatio": 0.021111111111111112,
+        "edgeRatio": 0.2122818175393965,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1572,
+        "horizontalEdgeRatio": 0.1110875556497774,
+        "meanLuma": 229.34930555555556,
+        "stdDev": 39.575944041045474,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4436,
+        "verticalEdgeRatio": 0.3134760794290156
+      },
+      "score": 90.81,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.75,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 88.06
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "MRVL",
+        "NBIS",
+        "SNOW",
+        "SPYM",
+        "UPRO",
+        "URA"
+      ],
+      "timestamp": 264,
+      "timestamp_hms": "00:04:24",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260615_ps_5.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 100,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260615_20260615_am3cmv2y0aw_f3960d06_whiteboard\\ocr\\ocr_000101.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 401.56,
+      "observed_date": "20260615",
+      "ocr_confidence": 55,
+      "ocr_profile": "threshold",
+      "ocr_text": "# Proves Fle EX View Go Tools Window Hep            “UY\n® @ (D- Screenshor2026-08-15at51. QQ              [=      ® ia\nMARKETEG      >> TALE OF THE TAPE ~ MONDAY, JUNE 15, 2026 <<                                         Bom po: oo\n* MARKET STATE: UPTREND (6/15)                                                                       b\n5 Fortinet Inc \"wom «STO INDEXES 61 04 RGBBT 04 NASI, USD TNX/TYX vs 5d              \"48.35       140.49\n0 nar ® aaa TE       * SENTIMENT: VIX 16.03(-9.33%) F&G             AAI 30.459 2047288] NAAM 79.3-7.6         POs SI ccodbition\n—           Gods Tomiosr BBULL CASE: INITIATE RALLY & TREND 21EMA €6/15                                       PR\nHELE sense PBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                —             an\nTn tr 3 quwass  * NEWS: PEACE AGREEMENT; WED 6/17: 157 FOMC W/ WARSH                                      =\nBID enn | TODAYS KEYS:SPXvs 2164 /50D4  QQQvs21E1  R2Kvs 21E4                                    1\nmow an      ™ DAY CT: U-2 => U-3 8: +2 21e: 42                                           ml\nms woe URSTSTL ACTION: O +1.36%        17577                                                              nl    fy   i.\nOot SPKO/N 747675331 07516 030 7526-75521 L/H 7516-7577                       i          H\ni             * SPX ATR: 1.21% SPX +1.66% 60/40+1.02% GRO +1.64% TURBO +1.68%            ~  Ry     f           kd [\nmE SECTORS: 4 BPS CRYPTO DRAM EWY URNM GDX URA MAGS J BY% USD O&G XLE        Tr\nca        spsee        * GRO HOLDINGS: SPYM,UPRO,GH,LLYX,WGMI,CSCO,DOCN,CRDO,SNOW,FTNT,VIAV,MRVL,NBIS,BE                  pe           w\nTo sac         * GRO RVAB/REBAR: 1.40 (-1.54%/-7.029%) ADD to NBIS SNOW VIAV DOCN BUY WGMI BE                       Pe\ni              stato         * TURBO HOLDINGS: SPYM,UPRO,SNOW, GH, BE, VIAV,MRVL                                                    —\n\\    El bowsonesins. ~~ * TURBO RVAB/REBAR: 1.07 {-1.79%/-5.67%) ADD to SNOW                                                                   hd\ni           west compose * BOTTOM LINE: =» PEACE AGREEMENT LEADS TO BROAD STRENGTH\nCL xcomowe “MONKEYS: SPX vs ATH/21E QQQvs ATH/21E R2K vs 86/21E                             -_\nli m       veurmang 22> S8PS00 KEY LEVELS <<<                                                                              -                         2\n*7621 (6/2 INTRADAY A-T-H}                                                                        il      i                 ]\ninl “   J 7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH                         Ly  \"\newe © 7432(4521EMA) € 6/54 4/81         2/273 2/2510 2/124 2/61              Term - o=aa\n— 7 37431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING                     =\n@ Feowsn                  €                                           .                             .                  dm Cow POCO yogi RS Rae\nSo  ——————\" 37394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND          FI kind\n© Vea process        4 *7267/7375(120 50D/10WK) € 4/84 2/274 1/211 1/204                oe    .       ue\n=n               * 6887/6920 (15 200D/40WK) € 5/121 5/8 SLOPED                                  eo mt\n[ES\n=o                                                            —_                                           me\n",
+      "ocr_text_snippet": "# Proves Fle EX View Go Tools Window Hep “UY ® @ (D- Screenshor2026-08-15at51. QQ [= ® ia MARKETEG >> TALE OF THE TAPE ~ MONDAY, JUNE 15, 2026 << Bom po: oo * MARKET STATE: UPTREND (6/15) b 5 Forti...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807d01f600cdff6b",
+      "prefilter_score": 11.77,
+      "prefilter_stats": {
+        "brightRatio": 0.75375,
+        "darkRatio": 0.021319444444444443,
+        "edgeRatio": 0.21878312486750054,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1606,
+        "horizontalEdgeRatio": 0.11349021270581584,
+        "meanLuma": 229.93048611111112,
+        "stdDev": 38.65986956834531,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4586,
+        "verticalEdgeRatio": 0.3240760370291852
+      },
+      "score": 76.25,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.75,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 91.5
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "MRVL",
+        "NBIS",
+        "SNOW",
+        "SPYM",
+        "UPRO",
+        "URA"
+      ],
+      "timestamp": 400,
+      "timestamp_hms": "00:06:40",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260615_ps_6.png"
+    }
+  ],
+  "frame_count": 172,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 140,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260615_ps_4.png",
+  "prefilter_best_score": 18.54,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 76,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260615_20260615_am3cmv2y0aw_f3960d06_whiteboard\\ocr\\ocr_000077.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 306.4,
+    "observed_date": "20260615",
+    "ocr_confidence": 52,
+    "ocr_profile": "threshold",
+    "ocr_text": "6 Preview Fla Ed View Go Tools Window Help            [CEA RX LEK]      z\n® © [D- Screenshor2026-06-15at51., 0Q Q Q@             [=     ® io\nI                                D                                                 nS\namersys 22 TALE OF THE TAPE ~ MONDAY, JUNE 15, 2026 << PY E—\nX * MARKET STATE: UPTREND (6/15)                                                                  -\n> Roundh +570 INDEXES 61 OJ RGE&T OJ NASI USD TNX/TYX vs 5d               vo»       ge.52       as oe, 88.62\n0 samen t * SENTIMENT:VIX 16.03{-9.33%) F&G           AAI 30.4-5.9 2047 EEETE nasim 793.76       re METI is Ot\nnein       <P BULL CASE: INITIATE RALLY & TREND 21EMA €6/15                                         -              =                     ~\nux \"a, <PBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                           =  SNL      o\nms o@  % NEWS: PEACE AGREEMENT; WED 6/17: 15 FOMC W/ WARSH\nzo om * TODAY'S KEYS:SPXvs 21E1 /5004 QQQuvs21E1  R2Kvs 21E                                      Ah\nDT 0% ®DAYCT:U-2 => U-3 8e:+24 21e:+21                                                    fi  EY)         v\nwe wa * ACTION: O +1.36%       17577                                                  >   EE  find  \"   pr\n®S 9% +SPXO/N 7476-75331 07516 030 7526-75521 L/H 7516-7577                       fa           ly y\n* SPX ATR: 1.21% SPX +1.66% 60/40 +1.02% GRO +1.64% TURBO +1.68%                 L        =       -  [\n\"SECTORS: 1 BPS CRYPTO DRAM EWY URNM GDX URA MAGS  BY% USD OG XLE       tb\nLivy GRO HOLDINGS: SPYM,UPRO,GH,LLYX WGMI,CSCO,DOCN,CRDO, SNOW, FTNT.VIAV, MRVLNBIS BE        fn                               “\n) JF * GRO RVAB/REBAR: 1.40 (-1.54%/-7.02%) ADD to NBIS SNOW VIAV DOCN BUY WGMI BE               kn\nJL _™ * TURBO HOLDINGS: SPYM,UPRO,SNOW,GH, BE, VIAV,MRVL                                !\n=         * TURBO RVAB/REBAR: : 07 {-1.79%/-5.67%) ADD to SNOW                                              srr                            »\n== * BOTTOM LINE: -» PEACE AGREEMENT LEADS TO BROAD STRENGTH\n *MONKEYS: SPX vs ATH/21E QQQvs ATH/21E  R2Kvs 8E/21€                         -\nvan, >>> SRP500 KEY LEVELS <<<                                                                              oh              [rp             ur\nlio wre            Ml,\nwo © - 7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH                      Sa TERT Te\nre] ¥7432(L521EMA) € 6/58 4/31        2/273 2/250 2/124 2/64                               om - osama\n37431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING                     B\n=                                                                                    Gn Wome: Mew Gem GE orn Roma\nZo 37394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND          Bw wot cwih me ee\novkeors * 7267/7375(1 20 50D/10WK} € 4/81 2/274 1/211 1/20                      :       :    v     )     :    -\nmea * 6887/6920 {15 200D/40WK) € 5/121 5/8 SLOPE                         .    JP    :    Co    !\n= crams\ndl                                                   —_                              ni rn nea\n",
+    "ocr_text_snippet": "6 Preview Fla Ed View Go Tools Window Help [CEA RX LEK] z ® © [D- Screenshor2026-06-15at51., 0Q Q Q@ [= ® io I D nS amersys 22 TALE OF THE TAPE ~ MONDAY, JUNE 15, 2026 << PY E— X * MARKET STATE: UP...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": "-» PEACE AGREEMENT LEADS TO BROAD STRENGTH MONKEYS: SPX VS ATH/21E QQQVS ATH/21E R2KVS 8E/21€ - VAN, >>> SRP500 KEY LEVELS <<< OH [RP UR LIO WRE ML, WO © - 7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH SA TERT TE RE] ¥7432(L521EMA) € 6/58 4/31 2/273 2/250 2/124 2/64 OM - OSAMA 37431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING B GN WOME: MEW GEM GE ORN ROMA ZO 37394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND BW WOT CWIH ME EE OVKEORS * 7267/7375(1 20 50D/10WK} € 4/81 2/274 1/211 1/20 : : V ) : - MEA * 6887/6920 {15 200D/40WK) € 5/121 5/8 SLOPE . JP : CO ! CRAMS DL -_ NI RN NEA",
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 52,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": "RVAB/REBAR: : 07 {-1.79%/-5.67%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "ADD TO SNOW SRR »",
+        "bottom_line": "-» PEACE AGREEMENT LEADS TO BROAD STRENGTH MONKEYS: SPX VS ATH/21E QQQVS ATH/21E R2KVS 8E/21€ - VAN, >>> SRP500 KEY LEVELS <<< OH [RP UR LIO WRE ML, WO © - 7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH SA TERT TE RE] ¥7432(L521EMA) € 6/58 4/31 2/273 2/250 2/124 2/64 OM - OSAMA 37431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING B GN WOME: MEW GEM GE ORN ROMA ZO 37394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND BW WOT CWIH ME EE OVKEORS * 7267/7375(1 20 50D/10WK} € 4/81 2/274 1/211 1/20 : : V ) : - MEA * 6887/6920 {15 200D/40WK) € 5/121 5/8 SLOPE . JP : CO ! CRAMS DL -_ NI RN NEA",
+        "parse_status": "review",
+        "issue_codes": [
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 52,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "807e01c3fe09f69b",
+    "prefilter_score": 11.95,
+    "prefilter_stats": {
+      "brightRatio": 0.7492361111111111,
+      "darkRatio": 0.021111111111111112,
+      "edgeRatio": 0.21274114903540386,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1587,
+      "horizontalEdgeRatio": 0.11214755140979436,
+      "meanLuma": 229.35993055555556,
+      "stdDev": 39.558356576015285,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 4434,
+      "verticalEdgeRatio": 0.31333474666101335
+    },
+    "score": 94.08,
+    "score_breakdown": {
+      "chart_likeness": -6,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 2.6,
+      "pair_bonus": 0,
+      "per_row_issues": -6,
+      "per_row_metrics": 12,
+      "text_density": 91.48
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "BE",
+      "MRVL",
+      "NBIS",
+      "SNOW",
+      "SPYM",
+      "UPRO",
+      "URA"
+    ],
+    "timestamp": 304,
+    "timestamp_hms": "00:05:04"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 76,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260615_20260615_am3cmv2y0aw_f3960d06_whiteboard\\ocr\\ocr_000077.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260615",
+      "ocr_confidence": 52,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Preview Fla Ed View Go Tools Window Help            [CEA RX LEK]      z\n® © [D- Screenshor2026-06-15at51., 0Q Q Q@             [=     ® io\nI                                D                                                 nS\namersys 22 TALE OF THE TAPE ~ MONDAY, JUNE 15, 2026 << PY E—\nX * MARKET STATE: UPTREND (6/15)                                                                  -\n> Roundh +570 INDEXES 61 OJ RGE&T OJ NASI USD TNX/TYX vs 5d               vo»       ge.52       as oe, 88.62\n0 samen t * SENTIMENT:VIX 16.03{-9.33%) F&G           AAI 30.4-5.9 2047 EEETE nasim 793.76       re METI is Ot\nnein       <P BULL CASE: INITIATE RALLY & TREND 21EMA €6/15                                         -              =                     ~\nux \"a, <PBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                           =  SNL      o\nms o@  % NEWS: PEACE AGREEMENT; WED 6/17: 15 FOMC W/ WARSH\nzo om * TODAY'S KEYS:SPXvs 21E1 /5004 QQQuvs21E1  R2Kvs 21E                                      Ah\nDT 0% ®DAYCT:U-2 => U-3 8e:+24 21e:+21                                                    fi  EY)         v\nwe wa * ACTION: O +1.36%       17577                                                  >   EE  find  \"   pr\n®S 9% +SPXO/N 7476-75331 07516 030 7526-75521 L/H 7516-7577                       fa           ly y\n* SPX ATR: 1.21% SPX +1.66% 60/40 +1.02% GRO +1.64% TURBO +1.68%                 L        =       -  [\n\"SECTORS: 1 BPS CRYPTO DRAM EWY URNM GDX URA MAGS  BY% USD OG XLE       tb\nLivy GRO HOLDINGS: SPYM,UPRO,GH,LLYX WGMI,CSCO,DOCN,CRDO, SNOW, FTNT.VIAV, MRVLNBIS BE        fn                               “\n) JF * GRO RVAB/REBAR: 1.40 (-1.54%/-7.02%) ADD to NBIS SNOW VIAV DOCN BUY WGMI BE               kn\nJL _™ * TURBO HOLDINGS: SPYM,UPRO,SNOW,GH, BE, VIAV,MRVL                                !\n=         * TURBO RVAB/REBAR: : 07 {-1.79%/-5.67%) ADD to SNOW                                              srr                            »\n== * BOTTOM LINE: -» PEACE AGREEMENT LEADS TO BROAD STRENGTH\n *MONKEYS: SPX vs ATH/21E QQQvs ATH/21E  R2Kvs 8E/21€                         -\nvan, >>> SRP500 KEY LEVELS <<<                                                                              oh              [rp             ur\nlio wre            Ml,\nwo © - 7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH                      Sa TERT Te\nre] ¥7432(L521EMA) € 6/58 4/31        2/273 2/250 2/124 2/64                               om - osama\n37431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING                     B\n=                                                                                    Gn Wome: Mew Gem GE orn Roma\nZo 37394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND          Bw wot cwih me ee\novkeors * 7267/7375(1 20 50D/10WK} € 4/81 2/274 1/211 1/20                      :       :    v     )     :    -\nmea * 6887/6920 {15 200D/40WK) € 5/121 5/8 SLOPE                         .    JP    :    Co    !\n= crams\ndl                                                   —_                              ni rn nea\n",
+      "ocr_text_snippet": "6 Preview Fla Ed View Go Tools Window Help [CEA RX LEK] z ® © [D- Screenshor2026-06-15at51., 0Q Q Q@ [= ® io I D nS amersys 22 TALE OF THE TAPE ~ MONDAY, JUNE 15, 2026 << PY E— X * MARKET STATE: UP...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "-» PEACE AGREEMENT LEADS TO BROAD STRENGTH MONKEYS: SPX VS ATH/21E QQQVS ATH/21E R2KVS 8E/21€ - VAN, >>> SRP500 KEY LEVELS <<< OH [RP UR LIO WRE ML, WO © - 7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH SA TERT TE RE] ¥7432(L521EMA) € 6/58 4/31 2/273 2/250 2/124 2/64 OM - OSAMA 37431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING B GN WOME: MEW GEM GE ORN ROMA ZO 37394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND BW WOT CWIH ME EE OVKEORS * 7267/7375(1 20 50D/10WK} € 4/81 2/274 1/211 1/20 : : V ) : - MEA * 6887/6920 {15 200D/40WK) € 5/121 5/8 SLOPE . JP : CO ! CRAMS DL -_ NI RN NEA",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 52,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: : 07 {-1.79%/-5.67%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO SNOW SRR »",
+          "bottom_line": "-» PEACE AGREEMENT LEADS TO BROAD STRENGTH MONKEYS: SPX VS ATH/21E QQQVS ATH/21E R2KVS 8E/21€ - VAN, >>> SRP500 KEY LEVELS <<< OH [RP UR LIO WRE ML, WO © - 7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH SA TERT TE RE] ¥7432(L521EMA) € 6/58 4/31 2/273 2/250 2/124 2/64 OM - OSAMA 37431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING B GN WOME: MEW GEM GE ORN ROMA ZO 37394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND BW WOT CWIH ME EE OVKEORS * 7267/7375(1 20 50D/10WK} € 4/81 2/274 1/211 1/20 : : V ) : - MEA * 6887/6920 {15 200D/40WK) € 5/121 5/8 SLOPE . JP : CO ! CRAMS DL -_ NI RN NEA",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 52,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807e01c3fe09f69b",
+      "prefilter_score": 11.95,
+      "prefilter_stats": {
+        "brightRatio": 0.7492361111111111,
+        "darkRatio": 0.021111111111111112,
+        "edgeRatio": 0.21274114903540386,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1587,
+        "horizontalEdgeRatio": 0.11214755140979436,
+        "meanLuma": 229.35993055555556,
+        "stdDev": 39.558356576015285,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4434,
+        "verticalEdgeRatio": 0.31333474666101335
+      },
+      "score": 94.08,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.6,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 91.48
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "MRVL",
+        "NBIS",
+        "SNOW",
+        "SPYM",
+        "UPRO",
+        "URA"
+      ],
+      "timestamp": 304,
+      "timestamp_hms": "00:05:04"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 68,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260615_20260615_am3cmv2y0aw_f3960d06_whiteboard\\ocr\\ocr_000069.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260615",
+      "ocr_confidence": 55,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Preview Fla Em View Go Tools Widow Help            “a\n® @ ([D- Screenshot 2026-06-15 at 5.1...    Q aq              ag      @®   io\nasecerses 22 TALE OF THE TAPE ~ MONDAY, JUNE 15, 2026 <<  PY E—\n> * MARKET STATE: UPTREND (6/15)                                                                  -\n= Roundh +STO INDEXES 61 OL RG8ST 04 NASI USD TNK/TVX_ vs 5d              ammo ese\n0 same « * SENTIMENT:VIX 16.03(-9.33%) F&G            ani 30.45.93 2204.7 EERE naam 79.3.7.        CR. SE.\ncoon       PBULL CASE: INITIATE RALLY & TREND 21EMA €6/15                                        -                    gy                 .\nw= re, <PBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                         7 SAN\nms o@  * NEWS: PEACE AGREEMENT; WED 6/17: 15 FOMC W/ WARSH\nwei ow * TODAY'S KEYS: SPX vs 21E4 /50D4 QQQuvs21E4  R2Kvs 21E4                                          hava\nm0% XDAYCT:U-2 => U-3 Be:+271 2lers2t ©                                            at vy     N\nme wa * ACTION: O +1.36%     7577                                   §  EE he! \",  Be\nTw *SPXO/N 7476-75337 07516 030 7526-75521 L/H 7516-7577                          on fe             ly 4\n* SPX ATR: 1.21% SPX +1.66% 60/40 +1.02% GRO +1.64% TURBO +1.68%              JL MSS:      \"\non SECTORS: BPS CRYPTO DRAM EWY URNM GDX URA MAGS J BY% USD O&G XLE       —                    g\npitty * GRO HOLDINGS: SPYM,UPRO,GH,LLYX,WGMI,CSCO,DOCN,CRDO,SNOW,FTNT,VIAV,MRVL,NBIS,BE     N   i oT                               ©\n) at      $ * GRO RVAB/REBAR: 1.40 (-1.54%/-7.02%) ADD to NBIS SNOW VIAV DOCN BUY WGMI BE                Hy\nJL  * TURBO HOLDINGS: SPYM,UPRO,SNOW,GH, BE, VIAV,MRVL                                        !\n=        * TURBO RVAB/REBAR: - 07 {-1.79%/-5.67%) ADD to SNOW                                           gm                          B\n=== * BOTTOM LINE: =»PEACE AGREEMENT LEADS TO BROAD STRENGTH\n_ * MONKEYS: SPXvs ATH/21E QQQvs ATH/21E R2K vs 8E/21E                                   FE\nwm >>> SGPS00 KEY LEVELS <<<                                                                                 kT              ——              fg\nJi 5555 won            Min,\n” ®_ »7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH                         - -     w    EJ    EN    CART\nee | *7432(4521EMA) € 6/53 4/81         9218 2/251 2/124 2/60                                   ors - oz ma\n———— »7431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING                     -\n= on                                                                                              Cy mowhet Mem Com Gow cpu nna\nZC 37394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND           Er Cwlioh cw mam Cm *Ore Mere\novis * 7267/7375(P20 SOD/10WK} € 4/81 2/274 1/211 1/20                i     eo    i       ue\n«wnt * 6887/6920 (15 200D/40WK) € 5/121 5/8 SLOPE                      Vem em)\na coum\nows                                                         —                            J\n",
+      "ocr_text_snippet": "6 Preview Fla Em View Go Tools Widow Help “a ® @ ([D- Screenshot 2026-06-15 at 5.1... Q aq ag @® io asecerses 22 TALE OF THE TAPE ~ MONDAY, JUNE 15, 2026 << PY E— > * MARKET STATE: UPTREND (6/15) -...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "=»PEACE AGREEMENT LEADS TO BROAD STRENGTH MONKEYS: SPXVS ATH/21E QQQVS ATH/21E R2K VS 8E/21E FE WM >>> SGPS00 KEY LEVELS <<< KT -- FG JI 5555 WON MIN, 7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH - - W EJ EN CART EE *7432(4521EMA) € 6/53 4/81 9218 2/251 2/124 2/60 ORS - OZ MA 7431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING - ON CY MOWHET MEM COM GOW CPU NNA ZC 37394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND ER CWLIOH CW MAM CM *ORE MERE OVIS * 7267/7375(P20 SOD/10WK} € 4/81 2/274 1/211 1/20 I EO I UE WNT * 6887/6920 (15 200D/40WK) € 5/121 5/8 SLOPE VEM EM) A COUM OWS - J",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: - 07 {-1.79%/-5.67%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO SNOW GM B",
+          "bottom_line": "=»PEACE AGREEMENT LEADS TO BROAD STRENGTH MONKEYS: SPXVS ATH/21E QQQVS ATH/21E R2K VS 8E/21E FE WM >>> SGPS00 KEY LEVELS <<< KT -- FG JI 5555 WON MIN, 7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH - - W EJ EN CART EE *7432(4521EMA) € 6/53 4/81 9218 2/251 2/124 2/60 ORS - OZ MA 7431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING - ON CY MOWHET MEM COM GOW CPU NNA ZC 37394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND ER CWLIOH CW MAM CM *ORE MERE OVIS * 7267/7375(P20 SOD/10WK} € 4/81 2/274 1/211 1/20 I EO I UE WNT * 6887/6920 (15 200D/40WK) € 5/121 5/8 SLOPE VEM EM) A COUM OWS - J",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807e01c3f609fe9b",
+      "prefilter_score": 11.94,
+      "prefilter_stats": {
+        "brightRatio": 0.7497916666666666,
+        "darkRatio": 0.021111111111111112,
+        "edgeRatio": 0.2118931524273903,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1585,
+        "horizontalEdgeRatio": 0.1120062186417921,
+        "meanLuma": 229.43180555555554,
+        "stdDev": 39.532852928025086,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4412,
+        "verticalEdgeRatio": 0.31178008621298847
+      },
+      "score": 92.75,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.75,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 90
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "MRVL",
+        "NBIS",
+        "SNOW",
+        "SPYM",
+        "UPRO",
+        "URA"
+      ],
+      "timestamp": 272,
+      "timestamp_hms": "00:04:32"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 72,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260615_20260615_am3cmv2y0aw_f3960d06_whiteboard\\ocr\\ocr_000073.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260615",
+      "ocr_confidence": 56,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Preview Fis Ed View Go Tools Window Help            “a\n® © (D- Screenshot 2026-06-15 at 5.1...    a aa              ag      ® io\n\nasecerso 22 TALE OF THE TAPE ~ MONDAY, JUNE 15, 2026 <<  PY E—\n\n> * MARKET STATE: UPTREND (6/15)\n\n» Roundh +570 INDEXES 60 OJ RGE8T OJ NASI USD TNX/TYX vs 5d              ow       ge.52       as on, 88.62\n0 same * SENTIMENT:VIX 16.03(-0.33%) F&G            ani304 59 2204.7 [EERE naam 79.3.7.6        AR Arm a\nnin      “BULL CASE: INITIATE RALLY & TREND 21EMA €6/15                                     Te\nGx, \"3 , DBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                           =            SAN\nms om % NEWS: PEACE AGREEMENT; WED 6/17: 17 FOMC W/ WARSH\nwn om * TODAY'S KEYS:SPXvs 211 /50D1 QQQvs21E4  R2Kvs 21ED                                          Mas\nmo 0% #PAYCT:U-2 => U-3 Be:42 21e:+24 ©                                    at    wv\nwe wa * ACTION: O +1.36%     +7577                                   i  RR ne \",  gr\n™ %% *SPXO/N 7476-75331 07516 030 7526-75521 L/H 7516-7577                          in fp             ly 4\n\n*SPX ATR: 1.21%1 SPX +1.66% 60/40 +1.02% GRO +1.64% TURBO +1.68%              JL NO:      ®\nvw SECTORS: 1 BPS CRYPTO DRAM EWY URNM GDX URA MAGS J BY% USD O&G XLE       EE EE                    i\npity  * GRO HOLDINGS: SPYM,UPRO,GH,LLYX,WGMI,CSCO,DOCN,CRDO,SNOW,FTNT,VIAV,MRVL,NBIS,BE     N   i oT                                ©\nn at      $ * GRO RVAB/REBAR: 1.40 (-1.54%/-7.02%) ADD to NBIS SNOW VIAV DOCN BUY WGMI BE                oy\nJL _ * TURBO HOLDINGS: SPYM,UPRO,SNOW,GH,BE,VIAV,MRVL                                        !\n=        * TURBO RVAB/REBAR: 1.07 {-1.79%/-5.67%) ADD to SNOW                                            Sir                           »\n= * BOTTOM LINE: =» PEACE AGREEMENT LEADS TO BROAD STRENGTH\n *MONKEYS:SPXvsATH/21E QQQuvs ATH/21E R2K vs 8/21E                                     000\nwe >>> SRPS00 KEY LEVELS <<<                                                                                 i              FT             ur\n\nJ 55 wes            nin,\n\n” ® _ »7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH                         - -     ”    EJ    a,\"\nee | 7432 (45 21EMA) € 6/53 4/31         2274 2/251 2/124 2/61             ’                     on . oma\n\n———— »7431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING                    -\n= vo                                                                                              oy womgt Mew Cre Gsm og esa\nZC 7394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND           El Wh wm nan ee nore mm\n\nvier * 7267/7375(20 SOD/10WK) € 4/81 2/274 1/211 1/200                i     ee    i       ue\n“went * 6887/6920 (15 200D/40WK) € 5/121 5/8 SLOPE                      Vem amd\n= count\n",
+      "ocr_text_snippet": "6 Preview Fis Ed View Go Tools Window Help “a ® © (D- Screenshot 2026-06-15 at 5.1... a aa ag ® io asecerso 22 TALE OF THE TAPE ~ MONDAY, JUNE 15, 2026 << PY E— > * MARKET STATE: UPTREND (6/15) » R...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "=» PEACE AGREEMENT LEADS TO BROAD STRENGTH MONKEYS:SPXVSATH/21E QQQUVS ATH/21E R2K VS 8/21E 000 WE >>> SRPS00 KEY LEVELS <<< I FT UR J 55 WES NIN, 7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH - - \" EJ A,\" EE 7432 (45 21EMA) € 6/53 4/31 2274 2/251 2/124 2/61 ' ON . OMA 7431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING - VO OY WOMGT MEW CRE GSM OG ESA ZC 7394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND EL WH WM NAN EE NORE MM VIER * 7267/7375(20 SOD/10WK) € 4/81 2/274 1/211 1/200 I EE I UE WENT * 6887/6920 (15 200D/40WK) € 5/121 5/8 SLOPE VEM AMD COUNT",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.07 {-1.79%/-5.67%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO SNOW SIR »",
+          "bottom_line": "=» PEACE AGREEMENT LEADS TO BROAD STRENGTH MONKEYS:SPXVSATH/21E QQQUVS ATH/21E R2K VS 8/21E 000 WE >>> SRPS00 KEY LEVELS <<< I FT UR J 55 WES NIN, 7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH - - \" EJ A,\" EE 7432 (45 21EMA) € 6/53 4/31 2274 2/251 2/124 2/61 ' ON . OMA 7431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING - VO OY WOMGT MEW CRE GSM OG ESA ZC 7394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND EL WH WM NAN EE NORE MM VIER * 7267/7375(20 SOD/10WK) € 4/81 2/274 1/211 1/200 I EE I UE WENT * 6887/6920 (15 200D/40WK) € 5/121 5/8 SLOPE VEM AMD COUNT",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807e01c3f609fe9b",
+      "prefilter_score": 11.95,
+      "prefilter_stats": {
+        "brightRatio": 0.7496527777777777,
+        "darkRatio": 0.021111111111111112,
+        "edgeRatio": 0.21252914988340046,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1583,
+        "horizontalEdgeRatio": 0.11186488587378984,
+        "meanLuma": 229.3545138888889,
+        "stdDev": 39.57335945097298,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4432,
+        "verticalEdgeRatio": 0.3131934138930111
+      },
+      "score": 90.88,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.8,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 88.08
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARM",
+        "BE",
+        "MRVL",
+        "NBIS",
+        "SNOW",
+        "SPYM",
+        "UPRO",
+        "URA"
+      ],
+      "timestamp": 288,
+      "timestamp_hms": "00:04:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 66,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260615_20260615_am3cmv2y0aw_f3960d06_whiteboard\\ocr\\ocr_000067.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260615",
+      "ocr_confidence": 55,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Preview Flo EM View Go Tools Widow Hep             [A KX YER]      eo\nIN ® 8 [D- Sceenshor202-065at54. QQ Q              a      ® io\namcersys 22 TALE OF THE TAPE — MONDAY, JUNE 15, 2026 <<  PY E—\n\n * MARKET STATE: UPTREND {6/15)                                                                  -\n\n» Roundh +570 INDEXES 60 OW RGE8T OJ NASI USD TNX/TYX vs 5d              vw       oe.52       os on, 58.62\n0 sane * SENTIMENT:VIX 16.03(-9.33%) F&G            anin304 59 2204.7 EERE naam 79.3.6        TRL Utena co\ncoor       BULL CASE: INITIATE RALLY & TREND 21EMA €6/15                                         :                    hy                  .\n% ™ » BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                           = ~~ e\nms om % NEWS: PEACE AGREEMENT; WED 6/17: 1 FOMC W/ WARSH\nwom * TODAY'S KEYS:SPXvs21E1 /500T QQQvs21E1  R2Kvs21E1                                          Mas\nme® DAYCT:U-2 =>U-3 8e:421 21e:421 *                                    atv    A\nmwa *ACTION: 0 +1.36%     17577                                  §  RR kl \"  5\n™ “e sSPXO/N 7476-75331 07516 030 7526-75521 L/H7516-7577                          np             ly 4\n\n* SPX ATR: 1.21% SPX +1.66% 60/40 +1.02% GRO +1.64% TURBO +1.68%               JL MSU:      -\nvn SECTORS: 1 BPS CRYPTO DRAM EWY URNM GDX URA MAGS J BY% USD OBGXLE  ——F—\"77                    i\npity  * GRO HOLDINGS: SPYM,UPRO,GH,LLYX,WGMI,CSCO,DOCN,CRDO,SNOW,FTNT,VIAV,MRVL,NBIS, BE     N   i oT                                 ©\nRn hy      $ * GRO RVAB/REBAR: 1.40 (-1.54%/-7.02%) ADD to NBIS SNOW VIAV DOCN BUY WGMI BE              ) Hy\nJd _* * TURBO HOLDINGS: SPYM,UPRO,SNOW,GH,BE,VIAV,MRVL                                        !\n—          * TURBO RVAB/REBAR: 1.07 {-1.79%/-5.67%) ADD to SNOW                                              FA                            »\n=== * BOTTOM LINE: =» PEACE AGREEMENT LEADS TO BROAD STRENGTH\n *MONKEYS:SPXvsATH/21E QQQusATH/21E R2Kvs 8E/21E                                     EE\nwin, >>> S&PS00 KEY LEVELS <<<                                                                                 i              [r—              ww\n\nili 5 monn            Min, =\n\ntt\" #7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH                         a.     id    *    a,\"\nee | 27832 (45 21EMA) € 6/53 4/81         2214 2/250 2/124 2/61             ’                     orm - mama\n\n————— =>»7431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING                    -\non                     ’           y              \\          i                                     PR Tr\n——er—= 27394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND           Err wow Gwen Res Res TTF TT\n\novis * 7267/7375(120 50D/10WK) € 4/81 2/274 1/211 1/200                i     ee    i       ue\nwen * 6887/6920 (15 200D/40WK) € 5/129 5/8 SLOPE                         Vem em\nJ\n",
+      "ocr_text_snippet": "6 Preview Flo EM View Go Tools Widow Hep [A KX YER] eo IN ® 8 [D- Sceenshor202-065at54. QQ Q a ® io amcersys 22 TALE OF THE TAPE — MONDAY, JUNE 15, 2026 << PY E— * MARKET STATE: UPTREND {6/15) - » ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "=» PEACE AGREEMENT LEADS TO BROAD STRENGTH MONKEYS:SPXVSATH/21E QQQUSATH/21E R2KVS 8E/21E EE WIN, >>> S&PS00 KEY LEVELS <<< I [R- WW ILI 5 MONN MIN, = TT\" #7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH A. ID * A,\" EE 27832 (45 21EMA) € 6/53 4/81 2214 2/250 2/124 2/61 ' ORM - MAMA 7431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING - ON ' Y \\ I PR TR ER-= 27394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND ERR WOW GWEN RES RES TTF TT OVIS * 7267/7375(120 50D/10WK) € 4/81 2/274 1/211 1/200 I EE I UE WEN * 6887/6920 (15 200D/40WK) € 5/129 5/8 SLOPE VEM EM J",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.07 {-1.79%/-5.67%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO SNOW FA »",
+          "bottom_line": "=» PEACE AGREEMENT LEADS TO BROAD STRENGTH MONKEYS:SPXVSATH/21E QQQUSATH/21E R2KVS 8E/21E EE WIN, >>> S&PS00 KEY LEVELS <<< I [R- WW ILI 5 MONN MIN, = TT\" #7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH A. ID * A,\" EE 27832 (45 21EMA) € 6/53 4/81 2214 2/250 2/124 2/61 ' ORM - MAMA 7431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING - ON ' Y \\ I PR TR ER-= 27394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND ERR WOW GWEN RES RES TTF TT OVIS * 7267/7375(120 50D/10WK) € 4/81 2/274 1/211 1/200 I EE I UE WEN * 6887/6920 (15 200D/40WK) € 5/129 5/8 SLOPE VEM EM J",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807e01c3f609fe9b",
+      "prefilter_score": 11.96,
+      "prefilter_stats": {
+        "brightRatio": 0.7490277777777777,
+        "darkRatio": 0.021111111111111112,
+        "edgeRatio": 0.2122818175393965,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1572,
+        "horizontalEdgeRatio": 0.1110875556497774,
+        "meanLuma": 229.34930555555556,
+        "stdDev": 39.575944041045474,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4436,
+        "verticalEdgeRatio": 0.3134760794290156
+      },
+      "score": 90.81,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.75,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 88.06
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "MRVL",
+        "NBIS",
+        "SNOW",
+        "SPYM",
+        "UPRO",
+        "URA"
+      ],
+      "timestamp": 264,
+      "timestamp_hms": "00:04:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 70,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260615_20260615_am3cmv2y0aw_f3960d06_whiteboard\\ocr\\ocr_000071.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260615",
+      "ocr_confidence": 54,
+      "ocr_profile": "threshold",
+      "ocr_text": "€ Preew Flo EX View Go Tools Window Hep            “a\n® © ([D- Screenshot 2026-06-15 at 5...    a Qa              [=      ® io\narwersy 22 TALE OF THE TAPE - MONDAY, JUNE 15, 2026 <<  PY E—\n* * MARKET STATE: UPTREND (6/15)                                                                  -\n» Roundh +570 INDEXES 60 OJ RGE8T OJ NASI USD TNX/TYX vs 5d              ow       ge.52       as on, 88.62\n0 same ¢ * SENTIMENT:VIX 16.03{-9.33%) F&G             AAI 30.4 -5.9 2204.7 EERIE naam 79.3.7.6         WARS ATR          Awe oun         Vo 2.403% 4.0%\nTorna 05 PMET AAS nr Oooh eer BS\nconn      “BULL CASE: INITIATE RALLY & TREND 21EMA €6/15                                     TT —      hy                .\n5% \"a » PBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                           =            Ean NE\nms ox ¥ NEWS: PEACE AGREEMENT; WED 6/17: 157 FOMC W/ WARSH\nwom *TODAY'S KEYS:SPXvs21E4 /50DT QQQvs21E1T  R2Kvs21E4\nm0% #PAYCT:U-2 => U-3 Be:42 21er+24 ©                                    atv N    wv\nmwa * ACTION: O +1.36%     17577                                  i  RR i tL \",  5\n™ “* *SPXO/N 7476-75331 07516 030 7526-75521 L/H 7516-7577                          i fp               +\n* SPX ATR: 1.21% SPX +1.66% 60/40 +1.02% GRO +1.64% TURBO +1.68%              JL NOR:      -\nvw SECTORS: 4 BPS CRYPTO DRAM EWY URNM GDX URA MAGS J BY% USD OGXLE  ——F—\"T77-\"                    ¢\npity  * GRO HOLDINGS: SPYM,UPRO,GH,LLYX,WGMI,CSCO,DOCN,CRDO, SNOW, FTNT,VIAV,MRVL,NBIS,BE     N   i oT                                ©\nn hy      $ * GRO RVAB/REBAR: 1.40 (-1.54%/-7.02%) ADD to NBIS SNOW VIAV DOCN BUY WGMI BE                Hy\nJL _ * TURBO HOLDINGS: SPYM,UPRO,SNOW,GH,BE,VIAV,MRVL                                        I\nem         * TURBO RVAB/REBAR: 1.07 {-1.79%/-5.67%) ADD to SNOW                                              |                            hd\n= * BOTTOM LINE: =» PEACE AGREEMENT LEADS TO BROAD STRENGTH\n *MONKEYS:SPXvsATH/21E QQQusATH/21E R2Kvs 8E/21E                                     EE\nwon >>> S&P500 KEY LEVELS <<<                                                                   i            Fr           fg\nIii 5 em woes            Min,\nPU »7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH                         ed     ”    *    a,\"\nee | 7432 (45 21EMA) € 6/53 4/31         2214 2/250 2/124 2/61             ’                     or - mama\n————— 7431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING                    -\neo                                                                                              Rr\n\"= 7394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND           EY wed coi wi TER vor mi\nvier * 7267/7375(120 SOD/10WK) € 4/81 2/274 1/211 1/200                i     ee    i       ue\n“went * 6887/6920 (15 2000/40WK) € 5/121 5/8 SLOPE                      Vem md\na coats\now                                                         —                            em ern ae\n",
+      "ocr_text_snippet": "€ Preew Flo EX View Go Tools Window Hep “a ® © ([D- Screenshot 2026-06-15 at 5... a Qa [= ® io arwersy 22 TALE OF THE TAPE - MONDAY, JUNE 15, 2026 << PY E— * * MARKET STATE: UPTREND (6/15) - » Roun...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "=» PEACE AGREEMENT LEADS TO BROAD STRENGTH MONKEYS:SPXVSATH/21E QQQUSATH/21E R2KVS 8E/21E EE WON >>> S&P500 KEY LEVELS <<< I FR FG III 5 EM WOES MIN, PU »7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH ED \" * A,\" EE 7432 (45 21EMA) € 6/53 4/31 2214 2/250 2/124 2/61 ' OR - MAMA 7431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING - EO RR 7394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND EY WED COI WI TER VOR MI VIER * 7267/7375(120 SOD/10WK) € 4/81 2/274 1/211 1/200 I EE I UE WENT * 6887/6920 (15 2000/40WK) € 5/121 5/8 SLOPE VEM MD A COATS OW - EM ERN AE",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "=» PEACE AGREEMENT LEADS TO BROAD STRENGTH MONKEYS:SPXVSATH/21E QQQUSATH/21E R2KVS 8E/21E EE WON >>> S&P500 KEY LEVELS <<< I FR FG III 5 EM WOES MIN, PU »7554 TODAY: PEACE AGREEMENT LEADS TO BROAD STRENGTH ED \" * A,\" EE 7432 (45 21EMA) € 6/53 4/31 2214 2/250 2/124 2/61 ' OR - MAMA 7431 FRIDAY: HISTORICAL SPACEX IPO; IRAN WAR TENSIONS EASING - EO RR 7394 THURS: COOLING GEOPOLITICAL TENSIONS RESULT IN STRONG REBOUND EY WED COI WI TER VOR MI VIER * 7267/7375(120 SOD/10WK) € 4/81 2/274 1/211 1/200 I EE I UE WENT * 6887/6920 (15 2000/40WK) € 5/121 5/8 SLOPE VEM MD A COATS OW - EM ERN AE",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807e01c3f609fe9b",
+      "prefilter_score": 11.97,
+      "prefilter_stats": {
+        "brightRatio": 0.7488194444444445,
+        "darkRatio": 0.021111111111111112,
+        "edgeRatio": 0.21245848349939933,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1583,
+        "horizontalEdgeRatio": 0.11186488587378984,
+        "meanLuma": 229.34180555555557,
+        "stdDev": 39.58393125255033,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4430,
+        "verticalEdgeRatio": 0.3130520811250088
+      },
+      "score": 84.68,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.7,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 4,
+        "text_density": 91.98
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "MRVL",
+        "NBIS",
+        "SNOW",
+        "SPYM",
+        "TER",
+        "UPRO",
+        "URA"
+      ],
+      "timestamp": 280,
+      "timestamp_hms": "00:04:40"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260615_20260615_am3cmv2y0aw_f3960d06_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 7.07,
+      "prefilter_stats": {
+        "brightRatio": 0.5573611111111111,
+        "darkRatio": 0.2271527777777778,
+        "edgeRatio": 0.202812522083245,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2039,
+        "horizontalEdgeRatio": 0.14408875697830542,
+        "meanLuma": 183.21895833333335,
+        "stdDev": 90.5296117240924,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3701,
+        "verticalEdgeRatio": 0.26153628718818456
+      },
+      "score": -15.98,
+      "score_breakdown": {
+        "chart_likeness": -3.9784747604918103,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 46,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260615_20260615_am3cmv2y0aw_f3960d06_whiteboard\\ocr\\ocr_000047.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 186.28,
+      "observed_date": null,
+      "ocr_confidence": 32,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Chrome Flo Edt View Hoy Buda Pofes Td Wndow Help\nMaries o GR     x Tow Welty Moor twa - ¢ anm §                   ERS om- Ds: 0\n© U.S. Dollar Index (DXY)                                                                                - pid\nram ee ~~              .      me         PE\nSeen AN  TAINAN nT NTT nS        =\nTR                         wn        Rl\n)                         i                          li 4!                     -\n                     wn      y                      we                 i 4 fh    ne           J\nfl             Wi  fy Ht        If WY ne”\nHy ph, a     CUR     Te reel ™        ol\n|  i   ily if                  he       ih  Fi )          es  ri\n|                           [ |\"                           \"\nL                              i                                   .\n2 won         © tex   Ba sme wm    CM Rm ee GRYCVTRE we TUR NOUR rm nem am vom mse\nen     |  Rs ov USommmsmom ow war  Sew        oe  E    wor\nLL  —————————  ———————\n",
+      "ocr_text_snippet": "6 Chrome Flo Edt View Hoy Buda Pofes Td Wndow Help Maries o GR x Tow Welty Moor twa - ¢ anm § ERS om- Ds: 0 © U.S. Dollar Index (DXY) - pid ram ee ~~ . me PE Seen AN TAINAN nT NTT nS = TR wn Rl ) i...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 32,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 32,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80ff1f26ee13d940",
+      "prefilter_score": 17.9,
+      "prefilter_stats": {
+        "brightRatio": 0.8095833333333333,
+        "darkRatio": 0.05659722222222222,
+        "edgeRatio": 0.1411561020422585,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1289,
+        "horizontalEdgeRatio": 0.09108896897745743,
+        "meanLuma": 227.94611111111112,
+        "stdDev": 53.12481122987519,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2706,
+        "verticalEdgeRatio": 0.19122323510705957
+      },
+      "score": -25.93,
+      "score_breakdown": {
+        "chart_likeness": -5.533064431566364,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.6,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 184,
+      "timestamp_hms": "00:03:04"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 42,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260615_20260615_am3cmv2y0aw_f3960d06_whiteboard\\ocr\\ocr_000043.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 166.16,
+      "observed_date": null,
+      "ocr_confidence": 37,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Cuvee Fla Edt View Hiy Bodo Profs Tab Window tein        =\nMarceTsUkes  o GE     x Tom wey Mew tM ¢ wem §                   ES cw- Ds: 0\n~ Cboa Volatility Index                                                                                          —s.20\n© soos       .                                                                 SE\nen ot15 ET wr\nIE RNY             §                            a                    ©\nwo\nw\nor\nwn       -                               i                      =\ni im                      [\ni                  -     I d  i                   .\n[                            |              CRN La SE TTI |\nill ht         pa     .\na        ah, it   RA 5   hg hr            Sana         ps un\n     ly        A  =                 a                      1\ni 1         WT ne                          Re      .\nra\nCe\npr\n[A\nww mw om ww ww ww maw a om a wae ow wm wm mom\n4      Wo       o       wr      -       i mm we      we       nN\nScreens    nts  | Repo   Main List 3Sitems © uptrea 2231 av ET E8707                                     © Puy  2 = a.\n=           Omar am ww EOE ew BORE ee RE UES LS ST CER ow me\n=                  a  6 RUT   Ruscen 2000 Index    bz 286408    -   208   07            °   00    -      105   |\nSvioosoms           ..\na en mmm ow am      ww       .     ow          ps\nwon\nEE Re p——    wm ws a     ow am\n= cra crs                                                         co”          “\na ——— ee. eee\n",
+      "ocr_text_snippet": "6 Cuvee Fla Edt View Hiy Bodo Profs Tab Window tein = MarceTsUkes o GE x Tom wey Mew tM ¢ wem § ES cw- Ds: 0 ~ Cboa Volatility Index —s.20 © soos . SE en ot15 ET wr IE RNY § a © wo w or wn - i = i ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807d9f23dd0d7344",
+      "prefilter_score": 18.19,
+      "prefilter_stats": {
+        "brightRatio": 0.8106944444444445,
+        "darkRatio": 0.05673611111111111,
+        "edgeRatio": 0.13398346406614373,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1096,
+        "horizontalEdgeRatio": 0.07745035686523921,
+        "meanLuma": 228.54527777777778,
+        "stdDev": 53.03558977946949,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2696,
+        "verticalEdgeRatio": 0.19051657126704827
+      },
+      "score": -26.15,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.85,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 168,
+      "timestamp_hms": "00:02:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 116,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260615_20260615_am3cmv2y0aw_f3960d06_whiteboard\\ocr\\ocr_000117.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 466.04,
+      "observed_date": null,
+      "ocr_confidence": 35,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Chrome Fa Edt ew Hnoy Bookman Profs Tab Window Hep         Es\nMarwETSURCe o (EER     X Tom ety Weomy tev owen Q Quem. DBL OG\n» CoinShares Bitcoin Mining ETF                                                                      70.50          69.01\nPre        i                               DM Sm mm mec, pone eens\niene 8 SE AE TRS TY mre wane\nCR A\nEve I\nmom wow pense |\nww em ow eB                                                       hoo.\nws wm wn wa Ces WA      we                                                i  |\nmomo onEsmEr of)                                               pp   Hy\n.     PE WAsXS)      1                                            If     N     Ped\n NAY              we                  ih ® aol\ny  A             AT vA    i\n(      re     tpheli     [TL nN TI          Li;      L\n2 i    7    hl /  |g —   v    AKA EL 3           “\nby      pd       =     AY   r     er\nMya)    -                                                  a                          »\n     \" Wig  C-         nt\nconcurs               To    i     .        Ki       .         oe     PM             2\ni gpm i 55\npo      -      o       -     -      J     w      <      EN\nBereona.  Tee  Reports   21/21 21 items Cras ret AW EY 18075                                       LEC  2s aa\nEr          @ Now    er sma  a    ROE hs id  Gua PEI RCWET sean “RIm VINEE crm hae Mm wow es\n=212            B 6 00CN  Ogesouksn Hadngs   ov wim  2 ne  84 SOFTWA. Cores.   sms ars  2  i  an |\n= Turbo 12                        ®   7 wos    CoinShares Boon an.       “61    wa      .    87     46 ETREIN.. Finance,      Ee     00      .      B    710\nFavorites,                °         a snow   ‘Srowhara Inc.           ac   24078    mn   1345    24 SOFTWA.. Comp Sh.    1885577 BENS     [3    m    1551\nivy sts              3 + || —————————                              y\n",
+      "ocr_text_snippet": "6 Chrome Fa Edt ew Hnoy Bookman Profs Tab Window Hep Es MarwETSURCe o (EER X Tom ety Weomy tev owen Q Quem. DBL OG » CoinShares Bitcoin Mining ETF 70.50 69.01 Pre i DM Sm mm mec, pone eens iene 8 S...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "8079bb0cde47d453",
+      "prefilter_score": 16.39,
+      "prefilter_stats": {
+        "brightRatio": 0.7578472222222222,
+        "darkRatio": 0.05701388888888889,
+        "edgeRatio": 0.16974065437071584,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1428,
+        "horizontalEdgeRatio": 0.10091159635361459,
+        "meanLuma": 223.84604166666668,
+        "stdDev": 53.641944146643276,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3376,
+        "verticalEdgeRatio": 0.23856971238781713
+      },
+      "score": -26.25,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.75,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "SNOW"
+      ],
+      "timestamp": 464,
+      "timestamp_hms": "00:07:44"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 56,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260615_20260615_am3cmv2y0aw_f3960d06_whiteboard\\ocr\\ocr_000057.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 226.2,
+      "observed_date": null,
+      "ocr_confidence": 34,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Clwme Fla Edt View Hnay Bockmads Profles Tab Window Hein        a\nMarieTskes a (0      X Tou Westy Mow tan - ¢ emm § Qaen - DEL ©\n$49.71\n® CBOE 30 Year Treasury Bond Yield Index                                                                          A\n© rim       .                                                                 py\nLn crs cr nice\nESPERO\" EY        ;     «7     .    )       «            N      a a\nw         .\n,\n+\nPe                                                    Py           hg,    w\n1                                        wer                  of         mit      0\ntll                           ps                !      fd\n                      wa ey       ll               i\naft —           WL                —\nzo         Ey     ETT\nHy, f  ios \",    +    hy                    ths\n1)    ¥       rs                      dn\nLo bg                                                             .\nJ:\ner\nPo\n[v—\nsm om om mn x won wm maw wm wm mw a a mm mw\nYo       on       wor      o       o Em Te      i”       -       .      .\nBervena    Lists    Reports   Main List 35items C totre 3051 AME) %157076                                    © Fay  2% as\nwo         © te   fs ome mame    CMA Ge gy Bw MONE gu my WOwARE Mew Gm OS® Lon hse\n=                    A 13 BND   ‘Vanguard Tost Bona MW.    Dog   330    -   03   01 EVEN. Fusnos.    EX)   00    -       287   B\n© io roses           LCF nee ewes                                                     ww\nFw seme 0s mn om sromw mw mm wom\nonan\n| Fos wm cms ew an me     oe a\n« Chaos                                                         co          ”\nLs —rS———— bidet atti A bbl, CC\n",
+      "ocr_text_snippet": "6 Clwme Fla Edt View Hnay Bockmads Profles Tab Window Hein a MarieTskes a (0 X Tou Westy Mow tan - ¢ emm § Qaen - DEL © $49.71 ® CBOE 30 Year Treasury Bond Yield Index A © rim . py Ln crs cr nice E...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 34,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 34,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "806e3b23ff53f401",
+      "prefilter_score": 18.39,
+      "prefilter_stats": {
+        "brightRatio": 0.8197916666666667,
+        "darkRatio": 0.05673611111111111,
+        "edgeRatio": 0.13002614656208042,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 986,
+        "horizontalEdgeRatio": 0.06967705462511484,
+        "meanLuma": 228.9092361111111,
+        "stdDev": 52.81729013227082,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2694,
+        "verticalEdgeRatio": 0.190375238499046
+      },
+      "score": -26.3,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.7,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "TAN"
+      ],
+      "timestamp": 224,
+      "timestamp_hms": "00:03:44"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 2,
+      "end_ts": 304,
+      "end_hms": "00:05:04",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 76,
+      "peak_score": 94.08,
+      "start_hms": "00:04:24",
+      "start_ts": 264
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 400,
+      "end_hms": "00:06:40",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 100,
+      "peak_score": 76.25,
+      "start_hms": "00:06:40",
+      "start_ts": 400
+    }
+  ]
+}

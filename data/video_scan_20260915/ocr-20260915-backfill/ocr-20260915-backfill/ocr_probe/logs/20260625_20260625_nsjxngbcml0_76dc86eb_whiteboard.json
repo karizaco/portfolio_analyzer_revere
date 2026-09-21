@@ -1,0 +1,945 @@
+{
+  "date_key": "20260625",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260625_NSJxNGbcMl0.mp4",
+  "captured_count": 0,
+  "captures": [],
+  "frame_count": 136,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 121,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "prefilter_best_score": 19.06,
+  "sample_frame_width": 640,
+  "status": "no_match",
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 0,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260625_20260625_nsjxngbcml0_76dc86eb_whiteboard\\ocr\\ocr_000001.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE",
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 0,
+    "observed_date": null,
+    "ocr_confidence": 0,
+    "ocr_profile": "threshold",
+    "ocr_text": "",
+    "ocr_text_snippet": "",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "0000000000000000",
+    "prefilter_score": 17.97,
+    "prefilter_stats": {
+      "brightRatio": 0.7127083333333334,
+      "darkRatio": 0.12194444444444444,
+      "edgeRatio": 0.1526747226344428,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1520,
+      "horizontalEdgeRatio": 0.1074129036817186,
+      "meanLuma": 209.84173611111112,
+      "stdDev": 72.99452715243892,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 2801,
+      "verticalEdgeRatio": 0.19793654158716698
+    },
+    "score": -15.89,
+    "score_breakdown": {
+      "chart_likeness": -3.8865273155142024,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 0,
+      "pair_bonus": 0,
+      "per_row_issues": -12,
+      "per_row_metrics": 0,
+      "text_density": 0
+    },
+    "screen_layout": "chart",
+    "tickers": [],
+    "timestamp": 0,
+    "timestamp_hms": "00:00:00"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260625_20260625_nsjxngbcml0_76dc86eb_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 17.97,
+      "prefilter_stats": {
+        "brightRatio": 0.7127083333333334,
+        "darkRatio": 0.12194444444444444,
+        "edgeRatio": 0.1526747226344428,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1520,
+        "horizontalEdgeRatio": 0.1074129036817186,
+        "meanLuma": 209.84173611111112,
+        "stdDev": 72.99452715243892,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2801,
+        "verticalEdgeRatio": 0.19793654158716698
+      },
+      "score": -15.89,
+      "score_breakdown": {
+        "chart_likeness": -3.8865273155142024,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 108,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260625_20260625_nsjxngbcml0_76dc86eb_whiteboard\\ocr\\ocr_000109.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 69,
+      "ocr_profile": "threshold",
+      "ocr_text": "i\n3                                2025 TRADERLION CONFERENCE\nPROPERLY VARYING BETAIS AFORM OF ALPHA                              - STOCK SELECTICN\n- EZBE: STRONGEST STOCKS TREND ALONG 8EMA                       .        N\n22> RULES TOOLS - GROTECTION <<<                                              - BUY RULES\nH                                                                                                                                                         - STRENGTH                                                                                          2                                      F]\ng             - TREND GAUGE                                        VOLUME GAPS                            2\nH                                  - TEN STEPS FROM \"BOTTOM\" TO \"BULL\"                                                                      - VOLUME BREAKOUTS                                                               H\n3                                  - POSITION SIZING                                                                                           - POST-WEAKNESS                                                                                H            Don Vandanbord\nE                                          - RVAB: REVERE VOLATILITY-ADIUSTED BETA                                                       - BEMA PULLBACK W/STO-60 CROSS                                           z\n2                                          - RPRP: REVERE POSITIONAL RISK PARITY                                                            - PULLBACKS TO 21EMA, 10WMA/50SMA                                    £\n8             ~ RISK MANAGEMENT                            - SELLRULES                                       H\na                     - REBAR: REVERE ESTIMATED BALANCE -AT-RISK                   - OFFENSIVE\n- INDEX POSITIONING                                     -3-4 ATREXTENSION FROM 21EMA                      Richard Moglen\n- RAIR: REVERE AGGRESSIVE INDEX RE-ENTRY                - DEFENSIVE\n-{NITIAL *R\" STOP (0.20% OF TOTAL PORTFOLIO)                .\n- TRAILING BREAK OF BEMA, 21EMA, 10WMA/SOSMA     .\n TraderLion\n",
+      "ocr_text_snippet": "i 3 2025 TRADERLION CONFERENCE PROPERLY VARYING BETAIS AFORM OF ALPHA - STOCK SELECTICN - EZBE: STRONGEST STOCKS TREND ALONG 8EMA . N 22> RULES TOOLS - GROTECTION <<< - BUY RULES H - STRENGTH 2 F] ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d2da2f4b250ba12f",
+      "prefilter_score": 18.83,
+      "prefilter_stats": {
+        "brightRatio": 0.7131944444444445,
+        "darkRatio": 0.1232638888888889,
+        "edgeRatio": 0.15044873153840718,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1555,
+        "horizontalEdgeRatio": 0.10988622712175818,
+        "meanLuma": 209.80479166666666,
+        "stdDev": 73.2028945377613,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2703,
+        "verticalEdgeRatio": 0.19101123595505617
+      },
+      "score": -17.7,
+      "score_breakdown": {
+        "chart_likeness": -3.146167131346118,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.45,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 432,
+      "timestamp_hms": "00:07:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 100,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260625_20260625_nsjxngbcml0_76dc86eb_whiteboard\\ocr\\ocr_000101.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 66,
+      "ocr_profile": "threshold",
+      "ocr_text": "i\n.                                2025 TRADERLION CONFERENCE\nPROPERLY VARYING BETA IS A FORM OF ALPHA                              - STOCK SELECTICN\n- EZBE: STRONGEST STOCKS TREND ALONG 8EMA                       .         A\n22> RULES & TOOLS - GROTECTION <<<                                              - BUY RULES\n&                                                                                                                                                         - STRENGTH                                                                                           2                                      I]\ng             - TREND GAUGE                                        VOLUME GAPS                            [2\n2                                  - TEN STEPS FROM \"BOTTOM\" TO \"BULL\"                                                                      - VOLUME BREAKOUTS                                                               H\nH                                  - POSITION SIZING                                                                                           - POST-WEAKNESS                                                                                H            Don Vandanbord\nFH                                          ~ RVAB: REVERE VOLATILITY-ADIUSTED BETA                                                       -8EMA PULLBACK W/STO-60 CROSS                                           H\ng                                          - RPRP: REVERE POSITIONAL RISK PARITY                                                            - PULLBACKS TO 21EMA, 10WMA/50SMA                                    £\n&             ~ RISK MANAGEMENT                            -SELLRULES                                       H\nH]                     - REBAR: REVERE ESTIMATED BALANCE -AT-RISK                   - OFFENSIVE\n- INDEX POSITIONING                                     -3-4 ATREXTENSION FROM 21EMA                      Richard Moglen\n- RAIR: REVERE AGGRESSIVE INDEX RE-ENTRY                - DEFENSIVE\nINTIAL *R\" STOP (0.20% OF TOTAL PORTFOLIO)       .\n- TRAILING BREAK OF BEMA, 21EMA, 10WMA/SISMA     .\n TraderLion\n",
+      "ocr_text_snippet": "i . 2025 TRADERLION CONFERENCE PROPERLY VARYING BETA IS A FORM OF ALPHA - STOCK SELECTICN - EZBE: STRONGEST STOCKS TREND ALONG 8EMA . A 22> RULES & TOOLS - GROTECTION <<< - BUY RULES & - STRENGTH 2...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d2da2f4b250ba12f",
+      "prefilter_score": 19.02,
+      "prefilter_stats": {
+        "brightRatio": 0.7136805555555555,
+        "darkRatio": 0.12215277777777778,
+        "edgeRatio": 0.15069606388241114,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1566,
+        "horizontalEdgeRatio": 0.11066355734577062,
+        "meanLuma": 209.85243055555554,
+        "stdDev": 73.13875863675659,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2699,
+        "verticalEdgeRatio": 0.19072857041905167
+      },
+      "score": -17.75,
+      "score_breakdown": {
+        "chart_likeness": -3.045313936668016,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.3,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 400,
+      "timestamp_hms": "00:06:40"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 2,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260625_20260625_nsjxngbcml0_76dc86eb_whiteboard\\ocr\\ocr_000003.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 69,
+      "ocr_profile": "threshold",
+      "ocr_text": "|=                                                                                                                                                                         x\nN                                                                                                    k=\n-               * WHY DO INVESTORS GET FRUSTRATED & UNDERPERFORM?\na.                      1) CASH DRAG\n- SOLUTION 1>>> R-A--R RULES TO ESTABLISH INDEX POSITION OFF LOWS, ALLOW LEADERS TIME TO SETUP\n- SOLUTION 2 >>> R-V-A-B EXPOSURE RULES                                                                                                        Co\n2) IMPROPER ENTRIES                                                                                                                            F]\na                                           - SOLUTION 1>>>USE PROPER *R\" SIZING “¥ITH- RVAB DATA                                                                              -\n2                                             -SOLUTION 2 >>> 60-MIN STO FOR ENTRY                                                                                                           2\nHs                                         3) SHAKEOUTS                                                                                                                                                             i]          Don Vandenbard\nH                                         ~ SOLUTION 1>>>RPRP FOR PROPER POSITION SIZING                                                                                2\n=                                           - SOLUTION 2 >>>ALLOW FOR \"OVERSHOGTING* OBVIOUS STOPS                                                                      2\nJ                                       4)NOTTAKING PROFITS ON THE WAY UP                                                                                                                   5\n£                                           - SOLUTION 1>>> OFFENSIVE SELLING: +4A-T-R FROM 21E (FEED THE DUCKS)                                                     #\n.                 ~ SOLUTION 2 >>> EZ8E (USING BEMATO TRIM & LOCK GAINS)                                    PL Tre\n- SOLUTION 3 >>> ALWAYS LEAVE A RUNNER; MAKE LAST SELL \"DEFENSIVE\"\nNEE            NLP)           .            N           -1vd-           .          A         .              .                        N\n0                        »               [J        »                        .        N              »        DW        D FI       THEM]\n. Don vandenbord  | TraderLion, June 8th 2026                                                              .  |\n TraderLion\n",
+      "ocr_text_snippet": "|= x N k= - * WHY DO INVESTORS GET FRUSTRATED & UNDERPERFORM? a. 1) CASH DRAG - SOLUTION 1>>> R-A--R RULES TO ESTABLISH INDEX POSITION OFF LOWS, ALLOW LEADERS TIME TO SETUP - SOLUTION 2 >>> R-V-A-B...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d2d82f5b252ba02f",
+      "prefilter_score": 17.72,
+      "prefilter_stats": {
+        "brightRatio": 0.699375,
+        "darkRatio": 0.118125,
+        "edgeRatio": 0.18231927072291712,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1893,
+        "horizontalEdgeRatio": 0.13377146491414035,
+        "meanLuma": 209.63805555555555,
+        "stdDev": 71.10031720977231,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3267,
+        "verticalEdgeRatio": 0.23086707653169386
+      },
+      "score": -17.8,
+      "score_breakdown": {
+        "chart_likeness": -3.2463364643083565,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.45,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "PL"
+      ],
+      "timestamp": 8,
+      "timestamp_hms": "00:00:08"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 48,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260625_20260625_nsjxngbcml0_76dc86eb_whiteboard\\ocr\\ocr_000049.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 66,
+      "ocr_profile": "threshold",
+      "ocr_text": ":                                                                                                                                                                                                                                                      i\n£,                                                                                                        Ls\n\"                                 2025 TRADERLION CONFERENCE\nPROPERLY VARYING BETA IS A FORM QF ALPHA                              - STOCK SELECTICN\n- EZBE: STRONGEST STOCKS TREND ALONG 8EMA                       oo.\n22> RULES & TOOLS - GROTECTION <<<                                              -BUYRULES\nH                                                                                                                                                         - STRENGTH                                                                                           -                                        []\ng             - TREND GAUGE                                        VOLUME GAPS                            8     p\nH                                  - TENSTEPS FROM \"BOTTOM\" TO \"BULL\"                                                                      - VOLUME BREAKOUTS                                                               FH]\nH                                - POSITION SIZING                                                                                      - POST-WEAKNESS                                                                            H           Pon Vandel\nES                                          - RVAB: REVERE VOLATILITY-ADIUSTED BETA                                                       - BEMA PULLBACK W/STO-60 CROSS                                           z\nF                                          - RPRP: REVERE POSITIONAL RISK PARITY                                                            - PULLBACKS TO 21EMA, 10WMA/S0SMA                                    E\njo             ~ RISK MANAGEMENT                            - SELLRULES                                       H\nHS                     - REBAR: REVERE ESTIMATED BALANCE -AT-RISK                   - OFFENSIVE\n- INDEX POSITIONING                                     - 3-4 ATREXTENSION FROM 21EMA                      Richard Mogan\n- RAIR: REVERE AGGRESSIVE INDEX RE-ENTRY                - DEFENSIVE\n- INITIAL *R\" STOP {0.20% OF TOTAL PORTFOLIO)                .\n- TRAILING BREAK OF BEMA, 21EMA, 10WMA/SOSMA     .\n TraderLion\n",
+      "ocr_text_snippet": ": i £, Ls \" 2025 TRADERLION CONFERENCE PROPERLY VARYING BETA IS A FORM QF ALPHA - STOCK SELECTICN - EZBE: STRONGEST STOCKS TREND ALONG 8EMA oo. 22> RULES & TOOLS - GROTECTION <<< -BUYRULES H - STRE...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d2da2f4b250ba12f",
+      "prefilter_score": 18.95,
+      "prefilter_stats": {
+        "brightRatio": 0.7134027777777778,
+        "darkRatio": 0.12166666666666667,
+        "edgeRatio": 0.15073139707441172,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1558,
+        "horizontalEdgeRatio": 0.11009822627376158,
+        "meanLuma": 209.79416666666665,
+        "stdDev": 73.12623783852601,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2708,
+        "verticalEdgeRatio": 0.19136456787506184
+      },
+      "score": -17.85,
+      "score_breakdown": {
+        "chart_likeness": -3.1472036057451866,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.3,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 192,
+      "timestamp_hms": "00:03:12"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260625_20260625_nsjxngbcml0_76dc86eb_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 17.97,
+      "prefilter_stats": {
+        "brightRatio": 0.7127083333333334,
+        "darkRatio": 0.12194444444444444,
+        "edgeRatio": 0.1526747226344428,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1520,
+        "horizontalEdgeRatio": 0.1074129036817186,
+        "meanLuma": 209.84173611111112,
+        "stdDev": 72.99452715243892,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2801,
+        "verticalEdgeRatio": 0.19793654158716698
+      },
+      "score": -15.89,
+      "score_breakdown": {
+        "chart_likeness": -3.8865273155142024,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 108,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260625_20260625_nsjxngbcml0_76dc86eb_whiteboard\\ocr\\ocr_000109.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 432,
+      "observed_date": null,
+      "ocr_confidence": 69,
+      "ocr_profile": "threshold",
+      "ocr_text": "i\n3                                2025 TRADERLION CONFERENCE\nPROPERLY VARYING BETAIS AFORM OF ALPHA                              - STOCK SELECTICN\n- EZBE: STRONGEST STOCKS TREND ALONG 8EMA                       .        N\n22> RULES TOOLS - GROTECTION <<<                                              - BUY RULES\nH                                                                                                                                                         - STRENGTH                                                                                          2                                      F]\ng             - TREND GAUGE                                        VOLUME GAPS                            2\nH                                  - TEN STEPS FROM \"BOTTOM\" TO \"BULL\"                                                                      - VOLUME BREAKOUTS                                                               H\n3                                  - POSITION SIZING                                                                                           - POST-WEAKNESS                                                                                H            Don Vandanbord\nE                                          - RVAB: REVERE VOLATILITY-ADIUSTED BETA                                                       - BEMA PULLBACK W/STO-60 CROSS                                           z\n2                                          - RPRP: REVERE POSITIONAL RISK PARITY                                                            - PULLBACKS TO 21EMA, 10WMA/50SMA                                    £\n8             ~ RISK MANAGEMENT                            - SELLRULES                                       H\na                     - REBAR: REVERE ESTIMATED BALANCE -AT-RISK                   - OFFENSIVE\n- INDEX POSITIONING                                     -3-4 ATREXTENSION FROM 21EMA                      Richard Moglen\n- RAIR: REVERE AGGRESSIVE INDEX RE-ENTRY                - DEFENSIVE\n-{NITIAL *R\" STOP (0.20% OF TOTAL PORTFOLIO)                .\n- TRAILING BREAK OF BEMA, 21EMA, 10WMA/SOSMA     .\n TraderLion\n",
+      "ocr_text_snippet": "i 3 2025 TRADERLION CONFERENCE PROPERLY VARYING BETAIS AFORM OF ALPHA - STOCK SELECTICN - EZBE: STRONGEST STOCKS TREND ALONG 8EMA . N 22> RULES TOOLS - GROTECTION <<< - BUY RULES H - STRENGTH 2 F] ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d2da2f4b250ba12f",
+      "prefilter_score": 18.83,
+      "prefilter_stats": {
+        "brightRatio": 0.7131944444444445,
+        "darkRatio": 0.1232638888888889,
+        "edgeRatio": 0.15044873153840718,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1555,
+        "horizontalEdgeRatio": 0.10988622712175818,
+        "meanLuma": 209.80479166666666,
+        "stdDev": 73.2028945377613,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2703,
+        "verticalEdgeRatio": 0.19101123595505617
+      },
+      "score": -17.7,
+      "score_breakdown": {
+        "chart_likeness": -3.146167131346118,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.45,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 432,
+      "timestamp_hms": "00:07:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 100,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260625_20260625_nsjxngbcml0_76dc86eb_whiteboard\\ocr\\ocr_000101.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 402,
+      "observed_date": null,
+      "ocr_confidence": 66,
+      "ocr_profile": "threshold",
+      "ocr_text": "i\n.                                2025 TRADERLION CONFERENCE\nPROPERLY VARYING BETA IS A FORM OF ALPHA                              - STOCK SELECTICN\n- EZBE: STRONGEST STOCKS TREND ALONG 8EMA                       .         A\n22> RULES & TOOLS - GROTECTION <<<                                              - BUY RULES\n&                                                                                                                                                         - STRENGTH                                                                                           2                                      I]\ng             - TREND GAUGE                                        VOLUME GAPS                            [2\n2                                  - TEN STEPS FROM \"BOTTOM\" TO \"BULL\"                                                                      - VOLUME BREAKOUTS                                                               H\nH                                  - POSITION SIZING                                                                                           - POST-WEAKNESS                                                                                H            Don Vandanbord\nFH                                          ~ RVAB: REVERE VOLATILITY-ADIUSTED BETA                                                       -8EMA PULLBACK W/STO-60 CROSS                                           H\ng                                          - RPRP: REVERE POSITIONAL RISK PARITY                                                            - PULLBACKS TO 21EMA, 10WMA/50SMA                                    £\n&             ~ RISK MANAGEMENT                            -SELLRULES                                       H\nH]                     - REBAR: REVERE ESTIMATED BALANCE -AT-RISK                   - OFFENSIVE\n- INDEX POSITIONING                                     -3-4 ATREXTENSION FROM 21EMA                      Richard Moglen\n- RAIR: REVERE AGGRESSIVE INDEX RE-ENTRY                - DEFENSIVE\nINTIAL *R\" STOP (0.20% OF TOTAL PORTFOLIO)       .\n- TRAILING BREAK OF BEMA, 21EMA, 10WMA/SISMA     .\n TraderLion\n",
+      "ocr_text_snippet": "i . 2025 TRADERLION CONFERENCE PROPERLY VARYING BETA IS A FORM OF ALPHA - STOCK SELECTICN - EZBE: STRONGEST STOCKS TREND ALONG 8EMA . A 22> RULES & TOOLS - GROTECTION <<< - BUY RULES & - STRENGTH 2...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d2da2f4b250ba12f",
+      "prefilter_score": 19.02,
+      "prefilter_stats": {
+        "brightRatio": 0.7136805555555555,
+        "darkRatio": 0.12215277777777778,
+        "edgeRatio": 0.15069606388241114,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1566,
+        "horizontalEdgeRatio": 0.11066355734577062,
+        "meanLuma": 209.85243055555554,
+        "stdDev": 73.13875863675659,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2699,
+        "verticalEdgeRatio": 0.19072857041905167
+      },
+      "score": -17.75,
+      "score_breakdown": {
+        "chart_likeness": -3.045313936668016,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.3,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 400,
+      "timestamp_hms": "00:06:40"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 2,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260625_20260625_nsjxngbcml0_76dc86eb_whiteboard\\ocr\\ocr_000003.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 6,
+      "observed_date": null,
+      "ocr_confidence": 69,
+      "ocr_profile": "threshold",
+      "ocr_text": "|=                                                                                                                                                                         x\nN                                                                                                    k=\n-               * WHY DO INVESTORS GET FRUSTRATED & UNDERPERFORM?\na.                      1) CASH DRAG\n- SOLUTION 1>>> R-A--R RULES TO ESTABLISH INDEX POSITION OFF LOWS, ALLOW LEADERS TIME TO SETUP\n- SOLUTION 2 >>> R-V-A-B EXPOSURE RULES                                                                                                        Co\n2) IMPROPER ENTRIES                                                                                                                            F]\na                                           - SOLUTION 1>>>USE PROPER *R\" SIZING “¥ITH- RVAB DATA                                                                              -\n2                                             -SOLUTION 2 >>> 60-MIN STO FOR ENTRY                                                                                                           2\nHs                                         3) SHAKEOUTS                                                                                                                                                             i]          Don Vandenbard\nH                                         ~ SOLUTION 1>>>RPRP FOR PROPER POSITION SIZING                                                                                2\n=                                           - SOLUTION 2 >>>ALLOW FOR \"OVERSHOGTING* OBVIOUS STOPS                                                                      2\nJ                                       4)NOTTAKING PROFITS ON THE WAY UP                                                                                                                   5\n£                                           - SOLUTION 1>>> OFFENSIVE SELLING: +4A-T-R FROM 21E (FEED THE DUCKS)                                                     #\n.                 ~ SOLUTION 2 >>> EZ8E (USING BEMATO TRIM & LOCK GAINS)                                    PL Tre\n- SOLUTION 3 >>> ALWAYS LEAVE A RUNNER; MAKE LAST SELL \"DEFENSIVE\"\nNEE            NLP)           .            N           -1vd-           .          A         .              .                        N\n0                        »               [J        »                        .        N              »        DW        D FI       THEM]\n. Don vandenbord  | TraderLion, June 8th 2026                                                              .  |\n TraderLion\n",
+      "ocr_text_snippet": "|= x N k= - * WHY DO INVESTORS GET FRUSTRATED & UNDERPERFORM? a. 1) CASH DRAG - SOLUTION 1>>> R-A--R RULES TO ESTABLISH INDEX POSITION OFF LOWS, ALLOW LEADERS TIME TO SETUP - SOLUTION 2 >>> R-V-A-B...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d2d82f5b252ba02f",
+      "prefilter_score": 17.72,
+      "prefilter_stats": {
+        "brightRatio": 0.699375,
+        "darkRatio": 0.118125,
+        "edgeRatio": 0.18231927072291712,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1893,
+        "horizontalEdgeRatio": 0.13377146491414035,
+        "meanLuma": 209.63805555555555,
+        "stdDev": 71.10031720977231,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3267,
+        "verticalEdgeRatio": 0.23086707653169386
+      },
+      "score": -17.8,
+      "score_breakdown": {
+        "chart_likeness": -3.2463364643083565,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.45,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "PL"
+      ],
+      "timestamp": 8,
+      "timestamp_hms": "00:00:08"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 48,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260625_20260625_nsjxngbcml0_76dc86eb_whiteboard\\ocr\\ocr_000049.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 192,
+      "observed_date": null,
+      "ocr_confidence": 66,
+      "ocr_profile": "threshold",
+      "ocr_text": ":                                                                                                                                                                                                                                                      i\n£,                                                                                                        Ls\n\"                                 2025 TRADERLION CONFERENCE\nPROPERLY VARYING BETA IS A FORM QF ALPHA                              - STOCK SELECTICN\n- EZBE: STRONGEST STOCKS TREND ALONG 8EMA                       oo.\n22> RULES & TOOLS - GROTECTION <<<                                              -BUYRULES\nH                                                                                                                                                         - STRENGTH                                                                                           -                                        []\ng             - TREND GAUGE                                        VOLUME GAPS                            8     p\nH                                  - TENSTEPS FROM \"BOTTOM\" TO \"BULL\"                                                                      - VOLUME BREAKOUTS                                                               FH]\nH                                - POSITION SIZING                                                                                      - POST-WEAKNESS                                                                            H           Pon Vandel\nES                                          - RVAB: REVERE VOLATILITY-ADIUSTED BETA                                                       - BEMA PULLBACK W/STO-60 CROSS                                           z\nF                                          - RPRP: REVERE POSITIONAL RISK PARITY                                                            - PULLBACKS TO 21EMA, 10WMA/S0SMA                                    E\njo             ~ RISK MANAGEMENT                            - SELLRULES                                       H\nHS                     - REBAR: REVERE ESTIMATED BALANCE -AT-RISK                   - OFFENSIVE\n- INDEX POSITIONING                                     - 3-4 ATREXTENSION FROM 21EMA                      Richard Mogan\n- RAIR: REVERE AGGRESSIVE INDEX RE-ENTRY                - DEFENSIVE\n- INITIAL *R\" STOP {0.20% OF TOTAL PORTFOLIO)                .\n- TRAILING BREAK OF BEMA, 21EMA, 10WMA/SOSMA     .\n TraderLion\n",
+      "ocr_text_snippet": ": i £, Ls \" 2025 TRADERLION CONFERENCE PROPERLY VARYING BETA IS A FORM QF ALPHA - STOCK SELECTICN - EZBE: STRONGEST STOCKS TREND ALONG 8EMA oo. 22> RULES & TOOLS - GROTECTION <<< -BUYRULES H - STRE...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d2da2f4b250ba12f",
+      "prefilter_score": 18.95,
+      "prefilter_stats": {
+        "brightRatio": 0.7134027777777778,
+        "darkRatio": 0.12166666666666667,
+        "edgeRatio": 0.15073139707441172,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1558,
+        "horizontalEdgeRatio": 0.11009822627376158,
+        "meanLuma": 209.79416666666665,
+        "stdDev": 73.12623783852601,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2708,
+        "verticalEdgeRatio": 0.19136456787506184
+      },
+      "score": -17.85,
+      "score_breakdown": {
+        "chart_likeness": -3.1472036057451866,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.3,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 192,
+      "timestamp_hms": "00:03:12"
+    }
+  ],
+  "whiteboard_segments": []
+}

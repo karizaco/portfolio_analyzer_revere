@@ -1,0 +1,45 @@
+# cmd: node tools/scanVideoWithOcr.js --video C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260804_A22cuhvxR90.mp4 --date 20260804 --output-root C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260915\ocr-20260915-backfill --run-tag ocr-20260915-backfill --ffmpeg-bin c:/Users/admin/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-9.0.1-full_build/bin/ffmpeg.exe
+[scan:whiteboard] ffprobe found 243 keyframe(s) for nearest-keyframe lookup
+[scan:whiteboard] preflighting final whiteboard output extraction
+[scan:whiteboard] extracting sample frames from C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260804_A22cuhvxR90.mp4
+[scan:whiteboard] extracted 304 frame(s) at 0.25 fps with width 640; starting prefilter
+[scan:whiteboard] prefilter 1/304 frames after 00:00:00; best prefilter 3.56 at 00:00:00
+[scan:whiteboard] prefilter 10/304 frames after 00:00:00; best prefilter 3.63 at 00:00:04
+[scan:whiteboard] prefilter 20/304 frames after 00:00:00; best prefilter 3.63 at 00:00:04
+[scan:whiteboard] prefilter 30/304 frames after 00:00:00; best prefilter 3.63 at 00:00:04
+[scan:whiteboard] prefilter 40/304 frames after 00:00:00; best prefilter 4.05 at 00:02:36
+[scan:whiteboard] prefilter 50/304 frames after 00:00:01; best prefilter 4.06 at 00:03:00
+[scan:whiteboard] prefilter 60/304 frames after 00:00:01; best prefilter 4.06 at 00:03:00
+[scan:whiteboard] prefilter 70/304 frames after 00:00:01; best prefilter 21.17 at 00:04:04
+[scan:whiteboard] prefilter 80/304 frames after 00:00:01; best prefilter 21.61 at 00:05:04
+[scan:whiteboard] prefilter 90/304 frames after 00:00:01; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 100/304 frames after 00:00:01; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 110/304 frames after 00:00:01; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 120/304 frames after 00:00:01; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 130/304 frames after 00:00:02; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 140/304 frames after 00:00:02; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 150/304 frames after 00:00:02; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 160/304 frames after 00:00:02; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 170/304 frames after 00:00:02; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 180/304 frames after 00:00:02; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 190/304 frames after 00:00:02; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 200/304 frames after 00:00:03; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 210/304 frames after 00:00:03; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 220/304 frames after 00:00:03; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 230/304 frames after 00:00:03; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 240/304 frames after 00:00:03; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 250/304 frames after 00:00:03; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 260/304 frames after 00:00:03; best prefilter 22.62 at 00:05:32
+[scan:whiteboard] prefilter 270/304 frames after 00:00:03; best prefilter 23.42 at 00:17:32
+[scan:whiteboard] prefilter 280/304 frames after 00:00:04; best prefilter 23.42 at 00:17:32
+[scan:whiteboard] prefilter 290/304 frames after 00:00:04; best prefilter 23.42 at 00:17:32
+[scan:whiteboard] prefilter 300/304 frames after 00:00:04; best prefilter 23.42 at 00:17:32
+[scan:whiteboard] prefilter 304/304 frames after 00:00:04; best prefilter 23.42 at 00:17:32
+[scan:whiteboard] prefilter kept 60/304 frame(s) for OCR; best prefilter 23.42 at 00:17:32
+[scan:whiteboard] extracting OCR candidates from source video at width 1280
+[scan:whiteboard] OCR 1/60 frames (1.7%) after 00:00:01; best score -16.96 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 10/60 frames (16.7%) after 00:00:41; best score 65.23 at 00:02:20 (ocr 64.0)
+[scan:whiteboard] OCR 20/60 frames (33.3%) after 00:01:41; best score 65.23 at 00:02:20 (ocr 64.0)
+[scan:whiteboard] OCR 30/60 frames (50.0%) after 00:02:47; best score 92.42 at 00:09:40 (ocr 60.0)
+[scan:whiteboard] OCR 40/60 frames (66.7%) after 00:03:52; best score 92.42 at 00:09:40 (ocr 60.0)
+[scan:whiteboard] OCR 50/60 frames (83.3%) after 00:05:02; best score 92.42 at 00:09:40 (ocr 60.0)

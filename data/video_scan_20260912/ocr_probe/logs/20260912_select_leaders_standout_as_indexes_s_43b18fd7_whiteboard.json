@@ -1,0 +1,154 @@
+{
+  "date_key": "20260912",
+  "output_kind": "whiteboard",
+  "video_path": "D:\\courses_F\\revere_asset\\videos\\SELECT LEADERS STANDOUT AS INDEXES SNAP BACK DESPITE HOT CPI PRI.mp4",
+  "captured_count": 2,
+  "captures": [
+    {
+      "frame_index": 300,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_select_leaders_standout_as_indexes_s_43b18fd7_whiteboard\\ocr\\ocr_000301.png",
+      "issue_codes": [],
+      "ocr_confidence": 74,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "> TALE OF THE TAPE — THURSDAY, SEPTEMBER 11, 2026 << * MARKET STATE: *STOINDEXES 11 5 RGBET 0 NASI USD TNX/TYXT vssd * SENTIMENT: VIX 13.54{-11.21%; F&G ARNSL0-17227 40.0 NAAIM 89.5743.96 BULL CASE...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": -27.48,
+      "score": 104.42,
+      "screen_layout": "structured_whiteboard",
+      "timestamp": 1200,
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\screenshots\\20260912_ps_27.png"
+    },
+    {
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_select_leaders_standout_as_indexes_s_43b18fd7_whiteboard\\ocr\\ocr_000001.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "ocr_confidence": 63,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< WHAT'S THE MARKET TREND? “THE GROTECTION GAUGE\" >>>DAILY MARKET INSIGHT <<< * YT, X, IG, TikTok: @REVEREASSET - PLS LIKE SHARE+SUB x Te EDINAY CEDTEMRED 11 A9eeee | ~ = >...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 4.05,
+      "score": 51.97,
+      "screen_layout": "dmi",
+      "timestamp": 0,
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\screenshots\\20260912_ps_28.png"
+    }
+  ],
+  "frame_count": 729,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "ocr_frame_count": 50,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\screenshots\\20260912_ps_27.png",
+  "prefilter_best_score": 18.4,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "frame_index": 300,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_select_leaders_standout_as_indexes_s_43b18fd7_whiteboard\\ocr\\ocr_000301.png",
+    "issue_codes": [],
+    "ocr_confidence": 74,
+    "ocr_profile": "threshold",
+    "ocr_text_snippet": "> TALE OF THE TAPE — THURSDAY, SEPTEMBER 11, 2026 << * MARKET STATE: *STOINDEXES 11 5 RGBET 0 NASI USD TNX/TYXT vssd * SENTIMENT: VIX 13.54{-11.21%; F&G ARNSL0-17227 40.0 NAAIM 89.5743.96 BULL CASE...",
+    "output_kind": "whiteboard",
+    "parsed_row_count": 2,
+    "prefilter_score": -27.48,
+    "score": 104.42,
+    "screen_layout": "structured_whiteboard",
+    "timestamp": 1200
+  },
+  "top_candidates": [
+    {
+      "frame_index": 300,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_select_leaders_standout_as_indexes_s_43b18fd7_whiteboard\\ocr\\ocr_000301.png",
+      "issue_codes": [],
+      "ocr_confidence": 74,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "> TALE OF THE TAPE — THURSDAY, SEPTEMBER 11, 2026 << * MARKET STATE: *STOINDEXES 11 5 RGBET 0 NASI USD TNX/TYXT vssd * SENTIMENT: VIX 13.54{-11.21%; F&G ARNSL0-17227 40.0 NAAIM 89.5743.96 BULL CASE...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": -27.48,
+      "score": 104.42,
+      "screen_layout": "structured_whiteboard",
+      "timestamp": 1200
+    },
+    {
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_select_leaders_standout_as_indexes_s_43b18fd7_whiteboard\\ocr\\ocr_000001.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "ocr_confidence": 63,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< WHAT'S THE MARKET TREND? “THE GROTECTION GAUGE\" >>>DAILY MARKET INSIGHT <<< * YT, X, IG, TikTok: @REVEREASSET - PLS LIKE SHARE+SUB x Te EDINAY CEDTEMRED 11 A9eeee | ~ = >...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 4.05,
+      "score": 51.97,
+      "screen_layout": "dmi",
+      "timestamp": 0
+    },
+    {
+      "frame_index": 709,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_select_leaders_standout_as_indexes_s_43b18fd7_whiteboard\\ocr\\ocr_000710.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "ocr_confidence": 34,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "MarkeTSURSE a [I X daly [Weekly | Morty Min ~ < st2e B - Lares + O06 © ~ Unity Software Inc. 43.96 $43.96 Conmin St Deg (1121551 woo wim soCosARVS, STII Nawica $stE (se00 200s 0 ps2 ess 0 Same © WA...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 16.99,
+      "score": -23.96,
+      "screen_layout": "tale_of_the_tape",
+      "timestamp": 2836
+    },
+    {
+      "frame_index": 708,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_select_leaders_standout_as_indexes_s_43b18fd7_whiteboard\\ocr\\ocr_000709.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "ocr_confidence": 35,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "MarkeTSURGE a [J x oy [ee | wow Me sim 0 EEE cw:- oto ~ Unity Software Inc. *43.96 $43.96 Gopi St Desi 12145) woos Goa SOwsAnVe, SII MaretGm $0518 pov u ps2amess D sem © WASTERECOWDREKES( «Ome wo a...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 16.81,
+      "score": -24.08,
+      "screen_layout": "tale_of_the_tape",
+      "timestamp": 2832
+    },
+    {
+      "frame_index": 710,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_select_leaders_standout_as_indexes_s_43b18fd7_whiteboard\\ocr\\ocr_000711.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "ocr_confidence": 35,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "MaRrkETSURGE a [I xX Daly [Weekly | Montnly Min v ¢ 9tu2 ( - Hae v OG L-0 ~ Unity Software Inc. 43.96 $43.96 Curia Stn Des 12165) oom wim soOsAgve, ETI Mec ssi (seo 200% U pau ase B Samer © MASTERE...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 16.92,
+      "score": -24.11,
+      "screen_layout": "tale_of_the_tape",
+      "timestamp": 2840
+    }
+  ]
+}

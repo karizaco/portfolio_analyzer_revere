@@ -1,0 +1,957 @@
+{
+  "date_key": "20260623",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260623_dZCVZAL0SOg.mp4",
+  "captured_count": 0,
+  "captures": [],
+  "frame_count": 188,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 121,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "prefilter_best_score": -7.87,
+  "sample_frame_width": 640,
+  "status": "no_match",
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 0,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260623_20260623_dzcvzal0sog_c95b8d04_whiteboard\\ocr\\ocr_000001.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE",
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 0,
+    "observed_date": null,
+    "ocr_confidence": 0,
+    "ocr_profile": "threshold",
+    "ocr_text": "",
+    "ocr_text_snippet": "",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "0000000000000000",
+    "prefilter_score": -18.01,
+    "prefilter_stats": {
+      "brightRatio": 0,
+      "darkRatio": 0.36569444444444443,
+      "edgeRatio": 0.06624973500105999,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1014,
+      "horizontalEdgeRatio": 0.07165571337714649,
+      "meanLuma": 92.96465277777777,
+      "stdDev": 46.010586801258086,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 861,
+      "verticalEdgeRatio": 0.0608437566249735
+    },
+    "score": -12,
+    "score_breakdown": {
+      "chart_likeness": 0,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 0,
+      "pair_bonus": 0,
+      "per_row_issues": -12,
+      "per_row_metrics": 0,
+      "text_density": 0
+    },
+    "screen_layout": "chart",
+    "tickers": [],
+    "timestamp": 0,
+    "timestamp_hms": "00:00:00"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260623_20260623_dzcvzal0sog_c95b8d04_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": -18.01,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.36569444444444443,
+        "edgeRatio": 0.06624973500105999,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1014,
+        "horizontalEdgeRatio": 0.07165571337714649,
+        "meanLuma": 92.96465277777777,
+        "stdDev": 46.010586801258086,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 861,
+        "verticalEdgeRatio": 0.0608437566249735
+      },
+      "score": -12,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 54,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260623_20260623_dzcvzal0sog_c95b8d04_whiteboard\\ocr\\ocr_000055.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": "La\nPes\n-———\n~g  FRADER\nFUNDING\nUPT0 90% OFF USE CODE “CF”\n",
+      "ocr_text_snippet": "La Pes -——— ~g FRADER FUNDING UPT0 90% OFF USE CODE “CF”",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9724fccbc3323827",
+      "prefilter_score": -19.01,
+      "prefilter_stats": {
+        "brightRatio": 0.0004861111111111111,
+        "darkRatio": 0.4074305555555556,
+        "edgeRatio": 0.054165783336866655,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 872,
+        "horizontalEdgeRatio": 0.061621086848985936,
+        "meanLuma": 89.33743055555556,
+        "stdDev": 47.38001910156454,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 661,
+        "verticalEdgeRatio": 0.04671047982474737
+      },
+      "score": -14.81,
+      "score_breakdown": {
+        "chart_likeness": 0.19124428964687068,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "chart",
+      "tickers": [
+        "CF"
+      ],
+      "timestamp": 216,
+      "timestamp_hms": "00:03:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 51,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260623_20260623_dzcvzal0sog_c95b8d04_whiteboard\\ocr\\ocr_000052.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": "o\n}\n.\nFr.)\nnT Him                     -\nFUNDING\nUP T0 90% OFF USE CODE “CF”\n",
+      "ocr_text_snippet": "o } . Fr.) nT Him - FUNDING UP T0 90% OFF USE CODE “CF”",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9722fcedc3033a34",
+      "prefilter_score": -18.71,
+      "prefilter_stats": {
+        "brightRatio": 0.000625,
+        "darkRatio": 0.38319444444444445,
+        "edgeRatio": 0.05918309660094693,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 922,
+        "horizontalEdgeRatio": 0.06515440604904248,
+        "meanLuma": 91.41680555555556,
+        "stdDev": 46.750589964381696,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 753,
+        "verticalEdgeRatio": 0.05321178715285139
+      },
+      "score": -14.95,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "chart",
+      "tickers": [
+        "CF"
+      ],
+      "timestamp": 204,
+      "timestamp_hms": "00:03:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 90,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260623_20260623_dzcvzal0sog_c95b8d04_whiteboard\\ocr\\ocr_000091.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 66,
+      "ocr_profile": "threshold",
+      "ocr_text": "/\nng  FRADER\nFUNDING\nUPT0 50% OFF USE CODE “CF”\n",
+      "ocr_text_snippet": "/ ng FRADER FUNDING UPT0 50% OFF USE CODE “CF”",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9722fccb03323e27",
+      "prefilter_score": -18.81,
+      "prefilter_stats": {
+        "brightRatio": 0.0004861111111111111,
+        "darkRatio": 0.436875,
+        "edgeRatio": 0.05593244293689492,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 921,
+        "horizontalEdgeRatio": 0.06508373966504134,
+        "meanLuma": 86.43055555555556,
+        "stdDev": 46.33507981986843,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 662,
+        "verticalEdgeRatio": 0.0467811462087485
+      },
+      "score": -15.65,
+      "score_breakdown": {
+        "chart_likeness": 0.307788161993769,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.3,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 6.74
+      },
+      "screen_layout": "chart",
+      "tickers": [
+        "CF"
+      ],
+      "timestamp": 360,
+      "timestamp_hms": "00:06:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 6,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260623_20260623_dzcvzal0sog_c95b8d04_whiteboard\\ocr\\ocr_000007.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 69,
+      "ocr_profile": "threshold",
+      "ocr_text": "/\nlo v4  FRADER\nFUNDING\nUPT0 90% OFF USE CODE “CF”\n",
+      "ocr_text_snippet": "/ lo v4 FRADER FUNDING UPT0 90% OFF USE CODE “CF”",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9725e4cec3713836",
+      "prefilter_score": -18.57,
+      "prefilter_stats": {
+        "brightRatio": 0.0005555555555555556,
+        "darkRatio": 0.3997222222222222,
+        "edgeRatio": 0.05978376086495654,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 914,
+        "horizontalEdgeRatio": 0.06458907497703342,
+        "meanLuma": 89.98729166666666,
+        "stdDev": 47.57538365756949,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 778,
+        "verticalEdgeRatio": 0.054978446752879655
+      },
+      "score": -15.77,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.45,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 6.78
+      },
+      "screen_layout": "chart",
+      "tickers": [
+        "CF"
+      ],
+      "timestamp": 24,
+      "timestamp_hms": "00:00:24"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260623_20260623_dzcvzal0sog_c95b8d04_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": -18.01,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.36569444444444443,
+        "edgeRatio": 0.06624973500105999,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1014,
+        "horizontalEdgeRatio": 0.07165571337714649,
+        "meanLuma": 92.96465277777777,
+        "stdDev": 46.010586801258086,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 861,
+        "verticalEdgeRatio": 0.0608437566249735
+      },
+      "score": -12,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 54,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260623_20260623_dzcvzal0sog_c95b8d04_whiteboard\\ocr\\ocr_000055.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 218.96875,
+      "observed_date": null,
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": "La\nPes\n-———\n~g  FRADER\nFUNDING\nUPT0 90% OFF USE CODE “CF”\n",
+      "ocr_text_snippet": "La Pes -——— ~g FRADER FUNDING UPT0 90% OFF USE CODE “CF”",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9724fccbc3323827",
+      "prefilter_score": -19.01,
+      "prefilter_stats": {
+        "brightRatio": 0.0004861111111111111,
+        "darkRatio": 0.4074305555555556,
+        "edgeRatio": 0.054165783336866655,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 872,
+        "horizontalEdgeRatio": 0.061621086848985936,
+        "meanLuma": 89.33743055555556,
+        "stdDev": 47.38001910156454,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 661,
+        "verticalEdgeRatio": 0.04671047982474737
+      },
+      "score": -14.81,
+      "score_breakdown": {
+        "chart_likeness": 0.19124428964687068,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "chart",
+      "tickers": [
+        "CF"
+      ],
+      "timestamp": 216,
+      "timestamp_hms": "00:03:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 51,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260623_20260623_dzcvzal0sog_c95b8d04_whiteboard\\ocr\\ocr_000052.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 206.45625,
+      "observed_date": null,
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": "o\n}\n.\nFr.)\nnT Him                     -\nFUNDING\nUP T0 90% OFF USE CODE “CF”\n",
+      "ocr_text_snippet": "o } . Fr.) nT Him - FUNDING UP T0 90% OFF USE CODE “CF”",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9722fcedc3033a34",
+      "prefilter_score": -18.71,
+      "prefilter_stats": {
+        "brightRatio": 0.000625,
+        "darkRatio": 0.38319444444444445,
+        "edgeRatio": 0.05918309660094693,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 922,
+        "horizontalEdgeRatio": 0.06515440604904248,
+        "meanLuma": 91.41680555555556,
+        "stdDev": 46.750589964381696,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 753,
+        "verticalEdgeRatio": 0.05321178715285139
+      },
+      "score": -14.95,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "chart",
+      "tickers": [
+        "CF"
+      ],
+      "timestamp": 204,
+      "timestamp_hms": "00:03:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 90,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260623_20260623_dzcvzal0sog_c95b8d04_whiteboard\\ocr\\ocr_000091.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 362.8625,
+      "observed_date": null,
+      "ocr_confidence": 66,
+      "ocr_profile": "threshold",
+      "ocr_text": "/\nng  FRADER\nFUNDING\nUPT0 50% OFF USE CODE “CF”\n",
+      "ocr_text_snippet": "/ ng FRADER FUNDING UPT0 50% OFF USE CODE “CF”",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9722fccb03323e27",
+      "prefilter_score": -18.81,
+      "prefilter_stats": {
+        "brightRatio": 0.0004861111111111111,
+        "darkRatio": 0.436875,
+        "edgeRatio": 0.05593244293689492,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 921,
+        "horizontalEdgeRatio": 0.06508373966504134,
+        "meanLuma": 86.43055555555556,
+        "stdDev": 46.33507981986843,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 662,
+        "verticalEdgeRatio": 0.0467811462087485
+      },
+      "score": -15.65,
+      "score_breakdown": {
+        "chart_likeness": 0.307788161993769,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.3,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 6.74
+      },
+      "screen_layout": "chart",
+      "tickers": [
+        "CF"
+      ],
+      "timestamp": 360,
+      "timestamp_hms": "00:06:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 6,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260623_20260623_dzcvzal0sog_c95b8d04_whiteboard\\ocr\\ocr_000007.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 25.025,
+      "observed_date": null,
+      "ocr_confidence": 69,
+      "ocr_profile": "threshold",
+      "ocr_text": "/\nlo v4  FRADER\nFUNDING\nUPT0 90% OFF USE CODE “CF”\n",
+      "ocr_text_snippet": "/ lo v4 FRADER FUNDING UPT0 90% OFF USE CODE “CF”",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9725e4cec3713836",
+      "prefilter_score": -18.57,
+      "prefilter_stats": {
+        "brightRatio": 0.0005555555555555556,
+        "darkRatio": 0.3997222222222222,
+        "edgeRatio": 0.05978376086495654,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 914,
+        "horizontalEdgeRatio": 0.06458907497703342,
+        "meanLuma": 89.98729166666666,
+        "stdDev": 47.57538365756949,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 778,
+        "verticalEdgeRatio": 0.054978446752879655
+      },
+      "score": -15.77,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.45,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 6.78
+      },
+      "screen_layout": "chart",
+      "tickers": [
+        "CF"
+      ],
+      "timestamp": 24,
+      "timestamp_hms": "00:00:24"
+    }
+  ],
+  "whiteboard_segments": []
+}

@@ -1,0 +1,1356 @@
+{
+  "date_key": "20260819",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260819_NXmuO8bCCs4.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 196,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260819_20260819_nxmuo8bccs4_8118831c_whiteboard\\ocr\\ocr_000197.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 785.76,
+      "observed_date": "20260819",
+      "ocr_confidence": 56,
+      "ocr_profile": "threshold",
+      "ocr_text": "$§ Pwiew Fb Em       Qo Touts        Help                                                       *0 0 -\nCo  ® © [D- Screenshot 2026-08-19 a 5.41.485M           aaa                o       ® io      a\nMARKETSURGE 0  >> TALE OF THE TAPE — WEDNESDAY, AUGUST 19, 2026 <<  PY ————\n= * MARKET STATE: UPTREND                                                                :                    .\n©» Gersbras Systems + 510 INDEXES OT 64 RGBOT 74 NASI USD TNX/TYX vs 5d               216.05         neti 8\n0 sown         © son % SENTIMENT: VIX 14.85 {-6.00%) F&G                  AAR 34.7 -2.327.4028 NAAIM 95         ET tpn ET   o\nCamonze                    => BULL CASE: INITIATE RALLY & TREND 21EMA  €-8/3-4 REGAIN 21E & FTD              Sm ep       Cl     Owners 8\n5 «Se 85 in -PBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                  zz =\nfe   +4    :     :  w  * NEWS: TREASURY INTERVENTION; MODERNA CANCER VACCINE/GENOMICS; TRUMP CRYPTO                                    -\nSa am 0 ly +TODAY'SKEYS:SPXvs21ET/BEd QQQvs21ET/BEY R2Kvs 21EM/BEY                                                  oo\nTo ow em em. ¥ *DAYCT:DN-1 =>DN-1/  8e:-2J 21e: +144                                                                    -     i)\nme 0% ne re om ® ACTION: O +0.32%                                                                            -                   rad         _\nWe 1% wh EL e8 sgpY O/N 7678-77401 07716 030 7700-77264 L/H 7700-7743                      ©          f  j              craonnc\n*SPXATR:1.02%  SPX+0.21% 60/40 +0.39% GRO +0.21% TURBO +2.08%           Hh,  ar wo\n* SECTORS: 1M BPS ARKG XB! CRYPTO G/S/M XLV J BY% USD LYUTE NCLD BUG SOXX      iW -   ut      x             0.=.\n* GRO HOLDINGS: SPYM,UPRQ/SPXL,PLTR,RERK, MRNA                                                         fd             ”                   a\n* GRO RVAB/REBAR: 1.08 (-0.57%/-5.43%) BUY MRNA TRIM RBRK SELL NBIS HPE                                                            Har\n[                     * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS,FCX,RBRK, SPCX,GDXU,SITM,                                                          ve ge\n* TURBO RVAB/REBAR: 1.86 (-3.37%/-7.60%) BUY MRNA IBIT ETHA SPXL CHYM SELL SITM CBRS        Pr                             aw Techn\n* BOTTOM LINE: 9 MONSTER Moved IN GENOMICS, CRYPTO AND COMMODITIES            I     ale  ll       hos     =\n= * THURS KEYS: SPXvs 21E/8E QQQvs 21E/8E R2K vs 21E/8E                                           I        1         MN                  Jo\n=               = 5>>SRPSO0 KEY LEVELS <<<                                                                                 Pa-F 1\n~ *7816 (8/13 INTRADAY A-T-H)                                               =      -       re\n7745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS                      -        sun. 529\n= =»7707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES            -                 pm\n==\" J 37692 TUES: A- STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE             orc a= ax\nBee *7653(M521EMA) € 7/311 7/230 7/211 7/174 6/291 6/23                 Bo ct nay am wotMsh SR\nResi           * 7527/7552 (16 S0D/10WK) € 7/314 7/234 7/210 7/174 6/291                 we       BE)\nwantin             * 7087/7111 (14 200D/40WK) € 4/81 3/194                                              he                           SL\nen                                                                                                            so       Cam\nLL                                                     —                                       Cg\n",
+      "ocr_text_snippet": "$§ Pwiew Fb Em Qo Touts Help *0 0 - Co ® © [D- Screenshot 2026-08-19 a 5.41.485M aaa o ® io a MARKETSURGE 0 >> TALE OF THE TAPE — WEDNESDAY, AUGUST 19, 2026 << PY ———— = * MARKET STATE: UPTREND : ....",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.08 (-0.57%/-5.43%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY MRNA TRIM RBRK SELL NBIS HPE HAR",
+          "bottom_line": "9 MONSTER MOVED IN GENOMICS, CRYPTO AND COMMODITIES I ALE LL HOS = THURS KEYS: SPXVS 21E/8E QQQVS 21E/8E R2K VS 21E/8E I 1 MN JO 5>>SRPSO0 KEY LEVELS <<< PA-F 1 7816 (8/13 INTRADAY A-T-H) = - RE 7745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS - SUN. 529 7707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES - PM J 37692 TUES: A- STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE ORC A= AX BEE *7653(M521EMA) € 7/311 7/230 7/211 7/174 6/291 6/23 BO CT NAY AM WOTMSH SR RESI * 7527/7552 (16 S0D/10WK) € 7/314 7/234 7/210 7/174 6/291 WE BE) WANTIN * 7087/7111 (14 200D/40WK) € 4/81 3/194 HE SL EN SO CAM LL - CG",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.86 (-3.37%/-7.60%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY MRNA IBIT ETHA SPXL CHYM SELL SITM CBRS PR AW TECHN",
+          "bottom_line": "9 MONSTER MOVED IN GENOMICS, CRYPTO AND COMMODITIES I ALE LL HOS = THURS KEYS: SPXVS 21E/8E QQQVS 21E/8E R2K VS 21E/8E I 1 MN JO 5>>SRPSO0 KEY LEVELS <<< PA-F 1 7816 (8/13 INTRADAY A-T-H) = - RE 7745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS - SUN. 529 7707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES - PM J 37692 TUES: A- STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE ORC A= AX BEE *7653(M521EMA) € 7/311 7/230 7/211 7/174 6/291 6/23 BO CT NAY AM WOTMSH SR RESI * 7527/7552 (16 S0D/10WK) € 7/314 7/234 7/210 7/174 6/291 WE BE) WANTIN * 7087/7111 (14 200D/40WK) € 4/81 3/194 HE SL EN SO CAM LL - CG",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01978285fe6f",
+      "prefilter_score": 12.04,
+      "prefilter_stats": {
+        "brightRatio": 0.7489583333333333,
+        "darkRatio": 0.021805555555555557,
+        "edgeRatio": 0.2216804466115469,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1703,
+        "horizontalEdgeRatio": 0.12034485195392551,
+        "meanLuma": 229.56034722222222,
+        "stdDev": 39.73826657561941,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4571,
+        "verticalEdgeRatio": 0.3230160412691683
+      },
+      "score": 107.5,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.8,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 20,
+        "text_density": 90.7
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "BE",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HPE",
+        "IBIT",
+        "NBIS",
+        "PLTR",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 784,
+      "timestamp_hms": "00:13:04",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\screenshots\\20260819_ps.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 172,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260819_20260819_nxmuo8bccs4_8118831c_whiteboard\\ocr\\ocr_000173.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 688.96,
+      "observed_date": "20260819",
+      "ocr_confidence": 56,
+      "ocr_profile": "threshold",
+      "ocr_text": "€ Preew Flo E® Vier Go Tools Window Hep            @r00p0ec         ”\nEE ® © (D- Screenshot 2026-08-19 a1 5.41.48PM  N  aaa        g   @ id   a\nMarxeTsice «GE >> TALE OF THE TAPE - WEDNESDAY, AUGUST 19, 2026 << Chm DEE ©\n      _— * MARKET STATE: UPTREND                               =\n» JShares Semicond! + 570 INDEXES 01 64 RGEC 74 NAST USDY TNX/TYX vs 5d       S223    BN\nB solar       © mou * SENTIMENT: VIX 14.83 (-6.00% F&G               ANN 34.7 2.3 27.002.0 EEIT) NAAM 95        PET Dron Ls. ones Er oo   o\na                >BULL CASE: INITIATE RALLY & TREND 21EMA  €8/3-4 REGAIN 21E & FTD             Ar opmaggor      © owas\nBm \"W <3 435 on BEAR CASE: SUSTAINED BREAK BELOW 21EMA                            eh    o\npi   Tv * NEWS: TREASURY INTERVENTION; MODERNA CANCER VACCINE/GENOMICS; TRUMP CRYPTO                  Pe\nwer en    - * TODAY'S KEYS: SPX vs 2161 /8Ed,  QQQvs 21E1/8EY  R2K vs 2161 /8EL              Fa    w @\nTm me ae TDAYCT:DN-1 =>DN-1/  8e:-24 21e:+144                        HA        —-\nmo wma eS ACTION: © 40.32%                                     PE    -\n\" *SPXO/N 7678-7740\" 07716 030 7700-77261 L/H 7700-7743                          BO\namar *SPXATR: 1.02% SPX +0.21% 60/40+0.39% GRO +0.21% TURBO +2.08%                   f=\nTUTE * SECTORS: 1 BPS ARKG XBI CRYPTO G/S/M XLV J BY% USD LYUTE NCLD BUG SOXX                              © Wine\n          * GRO HOLDINGS: SPYM,UPRO/SPXL,PLTR RBRK, MRNA                                                                                                             a\n————— * GRO RVAB/REBAR: 1.08 (0.57%/-5.43%) BUY MRNA TRIM RBRK SELL NBIS HPE             ——\nhd            * TURBO HOLDINGS: SPYM,UPRO,TQQIQ,CBRS,FCX,RBRK, SPCX, GDXU,SITM,                     NN       Lo\n-           _ *TURBO RVAB/REBAR: 1.86 (-3.37%/-7.60%) BUY MRNA BIT ETHA SPXL CHYM SELL SITM CBRS    TIME   Tachnca\nTil    \\ |    i  * BOTTOM LINE: » MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES                               =\nTela wl LG * THURS KEYS: SPX vs 216/8E QQQvs 21E/8E  R2K vs 21€/8E                      A      teks\nCoctowiwars ov 222 S&PSO0 KEY LEVELS <<<                                             TY ewe ®@\nwir w mom mem w * 7816 (8/13 INTRADAY A-T-H)                                         Tan          or\n“oom wow 37745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS          -          eros\n= 37707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES             -\n|                                                      orm - sma\n37692 TUES: A-| STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE                  _\nA *7653(1521EMA) € 7/311 7/234 7/211 7/174 6291 623%        Bom amp MER some we\nvetoes       * 7527/7552 (16 50D/10WK) € 7/311 7/234 7/211 7/174 6/291          wise    -    -    ED\na     | *7087/7111 (14 200D/40WK) € 4/81 3/190                        -              =\n[—\nLo                                    —                           Cd\n",
+      "ocr_text_snippet": "€ Preew Flo E® Vier Go Tools Window Hep @r00p0ec ” EE ® © (D- Screenshot 2026-08-19 a1 5.41.48PM N aaa g @ id a MarxeTsice «GE >> TALE OF THE TAPE - WEDNESDAY, AUGUST 19, 2026 << Chm DEE © _— * MAR...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.08 (0.57%/-5.43%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY MRNA TRIM RBRK SELL NBIS HPE -- HD * TURBO HOLDINGS: SPYM,UPRO,TQQIQ,CBRS,FCX,RBRK, SPCX, GDXU,SITM, NN LO",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.86 (-3.37%/-7.60%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY MRNA BIT ETHA SPXL CHYM SELL SITM CBRS TIME TACHNCA TIL \\ I * BOTTOM LINE: » MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES = TELA WL LG * THURS KEYS: SPX VS 216/8E QQQVS 21E/8E R2K VS 21€/8E A TEKS COCTOWIWARS OV 222 S&PSO0 KEY LEVELS <<< TY EWE ®@ WIR W MOM MEM W * 7816 (8/13 INTRADAY A-T-H) TAN OR OOM WOW 37745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS - EROS 37707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES - ORM - SMA 37692 TUES: A- STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE _ A *7653(1521EMA) € 7/311 7/234 7/211 7/174 6291 623% BOM AMP MER SOME WE VETOES * 7527/7552 (16 50D/10WK) € 7/311 7/234 7/211 7/174 6/291 WISE - - ED A *7087/7111 (14 200D/40WK) € 4/81 3/190 - = LO - CD",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f018d8305ff6f",
+      "prefilter_score": 16.97,
+      "prefilter_stats": {
+        "brightRatio": 0.7374305555555556,
+        "darkRatio": 0.057430555555555554,
+        "edgeRatio": 0.17055331778672886,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1374,
+        "horizontalEdgeRatio": 0.09709561161755353,
+        "meanLuma": 222.76145833333334,
+        "stdDev": 54.15581276471249,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3453,
+        "verticalEdgeRatio": 0.24401102395590418
+      },
+      "score": 101.3,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.8,
+        "pair_bonus": 4,
+        "per_row_issues": -8,
+        "per_row_metrics": 16,
+        "text_density": 92.5
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HPE",
+        "NBIS",
+        "PLTR",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TAN",
+        "UPRO"
+      ],
+      "timestamp": 688,
+      "timestamp_hms": "00:11:28",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\screenshots\\20260819_ps_2.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 212,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260819_20260819_nxmuo8bccs4_8118831c_whiteboard\\ocr\\ocr_000213.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 847.84,
+      "observed_date": "20260819",
+      "ocr_confidence": 55,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Chrome Fie Edt View                Protics Tab Windom Help       [3                            -      =        -                              2\nEN  ® 0 (I~ Screenshot 2026-08-19 a1 5.4148PM           Qa a                [=       ® id\nMamwersUkce o @@ 22 TALE OF THE TAPE — WEDNESDAY, AUGUST 19, 2026 <<  bam: DEL ©\n» VanEck Gold Min /ARKET STATE: UPTREND                                                                      a              ‘97.33\na Er * STO INDEXES 04 64 RGBOM 74 NASIT USDY TNX/TYX vs 5d            Cant      ox esa\n© see         © wax * SENTIMENT: VIX 14.85 { 6.00:3) F&G                 AAI #7 2327.002.4 30ER NAAIM 95         PET ob nes onUnoi DGoPi £1 US   o\n—                  PBULL CASE: INITIATE RALLY & TREND 21EMA  €8/3-4 REGAIN 21E & FID              enon       a oma\n©\" Wom sow : “PBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                             Be\nTw em T% * NEWS: TREASURY INTERVENTION; MODERNA CANCER VACCINE/GENOMICS; TRUMP CRYPTO        crm              mt\nmn mmo oon 0 TODAY'S KEYS: SPX vs 21E1/8EN.  QQQvs 21E1/8EY  R2K vs 21E1/8EL\nmw { *DAYCT:DN-1 =>DN-1/      8e:-20 21le: +141                                                                a. B\nme we wp * ACTION: O 40.32%                                                                                                              _\nTTT MMC F SPX O/N 7678-77401 07716 030 7700-77261 L/H 7700-7743                                  25/             creo\n~~ *SPXATR:1.02% SPX +0.21% 60/40+0.39% GRO +0.21% TURBO +2.08%          A I\ney  * SECTORS: P BPS ARKG X81 CRYPTO G/S/M XLV J BY% USD LYUTE NCLD BUG SOXX       Stange   or           I\n* GRO HOLDINGS: SPYM,UPRO/SPXL,PLTR,RBRK, MRNA                                                         LE a                  a\n———\"\"\" *GRO RVAB/REBAR: 1.08 (-0 57%/-5.43%) BUY MRNA TRIM RBRK SELL NBIS HPE                                                                  fe\n—                   * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS,FOX,RBRK,5PCX,GDXU,SITM,                                                            mg\nrl                   * TURBO RVAB/REBAR: 1.86 (-3.37%/-7.60%) BUY MRNA IBIT ETHA SPXL CHYM SELLSITM CBRS  _                                wa enn\nliu  * BOTTOM LINE: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES          ill il ul li |      -\na       SW * THURS KEYS: SPX vs 21E/8E  QQQvs 21€/8E  R2K vs 21E/8E                                 w       A       1               os\n-           © 32> S&PS00 KEY LEVELS <<<                                                                                           bd            rn. ©\n.       wn %7816 (8/13 INTRADAY A-T-H)                                           -              —\nu            -       -»7745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS                                 do 04.5 Cp\n“        = 37707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES             -                     hain\nMm\" — 37692 TUES: A-] STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE            _          orc a= aR\nme *7653 (1S 21EMA) € 7/311 7/238 7/211 7/178 6/291 6/233                 re itd\nvamos          * 7527/7552 (16 50D/10WK} € 7/311 7/234 7/211 7/174 6/294                 anon       -       -       Ces\n= Mot         | *7087/7111(74 2000/40WK) € 4/87 3/194                                              sen                           wy\n.       .       .       Lam\n= Chams oto\nLL                                                      —                                      Co\n",
+      "ocr_text_snippet": "@ Chrome Fie Edt View Protics Tab Windom Help [3 - = - 2 EN ® 0 (I~ Screenshot 2026-08-19 a1 5.4148PM Qa a [= ® id MamwersUkce o @@ 22 TALE OF THE TAPE — WEDNESDAY, AUGUST 19, 2026 << bam: DEL © » ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.08 (-0 57%/-5.43%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY MRNA TRIM RBRK SELL NBIS HPE FE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ,CBRS,FOX,RBRK,5PCX,GDXU,SITM, MG RL * TURBO RVAB/REBAR: 1.86 (-3.37%/-7.60%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY MRNA IBIT ETHA SPXL CHYM SELL SITM CBRS _ WA ENN LIU * BOTTOM LINE: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES ILL IL UL LI - A SW * THURS KEYS: SPX VS 21E/8E QQQVS 21€/8E R2K VS 21E/8E W A 1 OS 32> S&PS00 KEY LEVELS <<< BD RN. © WN %7816 (8/13 INTRADAY A-T-H) - - U - -»7745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS DO 04.5 CP 37707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES - HAIN MM\" - 37692 TUES: A-] STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE _ ORC A= AR ME *7653 (1S 21EMA) € 7/311 7/238 7/211 7/178 6/291 6/233 RE ITD VAMOS * 7527/7552 (16 50D/10WK} € 7/311 7/234 7/211 7/174 6/294 ANON - - CES MOT *7087/7111(74 2000/40WK) € 4/87 3/194 SEN WY LAM CHAMS OTO LL - CO",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01df8405ff0f",
+      "prefilter_score": 12.22,
+      "prefilter_stats": {
+        "brightRatio": 0.7428472222222222,
+        "darkRatio": 0.021805555555555557,
+        "edgeRatio": 0.22019645254752315,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1632,
+        "horizontalEdgeRatio": 0.11532753868984524,
+        "meanLuma": 228.97569444444446,
+        "stdDev": 40.10673562599304,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4600,
+        "verticalEdgeRatio": 0.32506536640520106
+      },
+      "score": 97.37,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.75,
+        "pair_bonus": 4,
+        "per_row_issues": -8,
+        "per_row_metrics": 16,
+        "text_density": 88.62
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "BE",
+        "ETHA",
+        "GDXU",
+        "HPE",
+        "IBIT",
+        "NBIS",
+        "PLTR",
+        "RBRK",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 848,
+      "timestamp_hms": "00:14:08",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\screenshots\\20260819_ps_3.png"
+    }
+  ],
+  "frame_count": 294,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 230,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\screenshots\\20260819_ps.png",
+  "prefilter_best_score": 19.87,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 196,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260819_20260819_nxmuo8bccs4_8118831c_whiteboard\\ocr\\ocr_000197.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 785.76,
+    "observed_date": "20260819",
+    "ocr_confidence": 56,
+    "ocr_profile": "threshold",
+    "ocr_text": "$§ Pwiew Fb Em       Qo Touts        Help                                                       *0 0 -\nCo  ® © [D- Screenshot 2026-08-19 a 5.41.485M           aaa                o       ® io      a\nMARKETSURGE 0  >> TALE OF THE TAPE — WEDNESDAY, AUGUST 19, 2026 <<  PY ————\n= * MARKET STATE: UPTREND                                                                :                    .\n©» Gersbras Systems + 510 INDEXES OT 64 RGBOT 74 NASI USD TNX/TYX vs 5d               216.05         neti 8\n0 sown         © son % SENTIMENT: VIX 14.85 {-6.00%) F&G                  AAR 34.7 -2.327.4028 NAAIM 95         ET tpn ET   o\nCamonze                    => BULL CASE: INITIATE RALLY & TREND 21EMA  €-8/3-4 REGAIN 21E & FTD              Sm ep       Cl     Owners 8\n5 «Se 85 in -PBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                  zz =\nfe   +4    :     :  w  * NEWS: TREASURY INTERVENTION; MODERNA CANCER VACCINE/GENOMICS; TRUMP CRYPTO                                    -\nSa am 0 ly +TODAY'SKEYS:SPXvs21ET/BEd QQQvs21ET/BEY R2Kvs 21EM/BEY                                                  oo\nTo ow em em. ¥ *DAYCT:DN-1 =>DN-1/  8e:-2J 21e: +144                                                                    -     i)\nme 0% ne re om ® ACTION: O +0.32%                                                                            -                   rad         _\nWe 1% wh EL e8 sgpY O/N 7678-77401 07716 030 7700-77264 L/H 7700-7743                      ©          f  j              craonnc\n*SPXATR:1.02%  SPX+0.21% 60/40 +0.39% GRO +0.21% TURBO +2.08%           Hh,  ar wo\n* SECTORS: 1M BPS ARKG XB! CRYPTO G/S/M XLV J BY% USD LYUTE NCLD BUG SOXX      iW -   ut      x             0.=.\n* GRO HOLDINGS: SPYM,UPRQ/SPXL,PLTR,RERK, MRNA                                                         fd             ”                   a\n* GRO RVAB/REBAR: 1.08 (-0.57%/-5.43%) BUY MRNA TRIM RBRK SELL NBIS HPE                                                            Har\n[                     * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS,FCX,RBRK, SPCX,GDXU,SITM,                                                          ve ge\n* TURBO RVAB/REBAR: 1.86 (-3.37%/-7.60%) BUY MRNA IBIT ETHA SPXL CHYM SELL SITM CBRS        Pr                             aw Techn\n* BOTTOM LINE: 9 MONSTER Moved IN GENOMICS, CRYPTO AND COMMODITIES            I     ale  ll       hos     =\n= * THURS KEYS: SPXvs 21E/8E QQQvs 21E/8E R2K vs 21E/8E                                           I        1         MN                  Jo\n=               = 5>>SRPSO0 KEY LEVELS <<<                                                                                 Pa-F 1\n~ *7816 (8/13 INTRADAY A-T-H)                                               =      -       re\n7745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS                      -        sun. 529\n= =»7707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES            -                 pm\n==\" J 37692 TUES: A- STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE             orc a= ax\nBee *7653(M521EMA) € 7/311 7/230 7/211 7/174 6/291 6/23                 Bo ct nay am wotMsh SR\nResi           * 7527/7552 (16 S0D/10WK) € 7/314 7/234 7/210 7/174 6/291                 we       BE)\nwantin             * 7087/7111 (14 200D/40WK) € 4/81 3/194                                              he                           SL\nen                                                                                                            so       Cam\nLL                                                     —                                       Cg\n",
+    "ocr_text_snippet": "$§ Pwiew Fb Em Qo Touts Help *0 0 - Co ® © [D- Screenshot 2026-08-19 a 5.41.485M aaa o ® io a MARKETSURGE 0 >> TALE OF THE TAPE — WEDNESDAY, AUGUST 19, 2026 << PY ———— = * MARKET STATE: UPTREND : ....",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": "RVAB/REBAR: 1.08 (-0.57%/-5.43%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "BUY MRNA TRIM RBRK SELL NBIS HPE HAR",
+        "bottom_line": "9 MONSTER MOVED IN GENOMICS, CRYPTO AND COMMODITIES I ALE LL HOS = THURS KEYS: SPXVS 21E/8E QQQVS 21E/8E R2K VS 21E/8E I 1 MN JO 5>>SRPSO0 KEY LEVELS <<< PA-F 1 7816 (8/13 INTRADAY A-T-H) = - RE 7745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS - SUN. 529 7707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES - PM J 37692 TUES: A- STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE ORC A= AX BEE *7653(M521EMA) € 7/311 7/230 7/211 7/174 6/291 6/23 BO CT NAY AM WOTMSH SR RESI * 7527/7552 (16 S0D/10WK) € 7/314 7/234 7/210 7/174 6/291 WE BE) WANTIN * 7087/7111 (14 200D/40WK) € 4/81 3/194 HE SL EN SO CAM LL - CG",
+        "parse_status": "review",
+        "issue_codes": [
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 56,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": "RVAB/REBAR: 1.86 (-3.37%/-7.60%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "BUY MRNA IBIT ETHA SPXL CHYM SELL SITM CBRS PR AW TECHN",
+        "bottom_line": "9 MONSTER MOVED IN GENOMICS, CRYPTO AND COMMODITIES I ALE LL HOS = THURS KEYS: SPXVS 21E/8E QQQVS 21E/8E R2K VS 21E/8E I 1 MN JO 5>>SRPSO0 KEY LEVELS <<< PA-F 1 7816 (8/13 INTRADAY A-T-H) = - RE 7745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS - SUN. 529 7707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES - PM J 37692 TUES: A- STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE ORC A= AX BEE *7653(M521EMA) € 7/311 7/230 7/211 7/174 6/291 6/23 BO CT NAY AM WOTMSH SR RESI * 7527/7552 (16 S0D/10WK) € 7/314 7/234 7/210 7/174 6/291 WE BE) WANTIN * 7087/7111 (14 200D/40WK) € 4/81 3/194 HE SL EN SO CAM LL - CG",
+        "parse_status": "review",
+        "issue_codes": [
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 56,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "807f01978285fe6f",
+    "prefilter_score": 12.04,
+    "prefilter_stats": {
+      "brightRatio": 0.7489583333333333,
+      "darkRatio": 0.021805555555555557,
+      "edgeRatio": 0.2216804466115469,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1703,
+      "horizontalEdgeRatio": 0.12034485195392551,
+      "meanLuma": 229.56034722222222,
+      "stdDev": 39.73826657561941,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 4571,
+      "verticalEdgeRatio": 0.3230160412691683
+    },
+    "score": 107.5,
+    "score_breakdown": {
+      "chart_likeness": -6,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 2.8,
+      "pair_bonus": 4,
+      "per_row_issues": -4,
+      "per_row_metrics": 20,
+      "text_density": 90.7
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "ARKG",
+      "BE",
+      "ETHA",
+      "FCX",
+      "GDXU",
+      "HPE",
+      "IBIT",
+      "NBIS",
+      "PLTR",
+      "RBRK",
+      "SPCX",
+      "SPYM",
+      "TQQQ",
+      "UPRO"
+    ],
+    "timestamp": 784,
+    "timestamp_hms": "00:13:04"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 196,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260819_20260819_nxmuo8bccs4_8118831c_whiteboard\\ocr\\ocr_000197.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260819",
+      "ocr_confidence": 56,
+      "ocr_profile": "threshold",
+      "ocr_text": "$§ Pwiew Fb Em       Qo Touts        Help                                                       *0 0 -\nCo  ® © [D- Screenshot 2026-08-19 a 5.41.485M           aaa                o       ® io      a\nMARKETSURGE 0  >> TALE OF THE TAPE — WEDNESDAY, AUGUST 19, 2026 <<  PY ————\n= * MARKET STATE: UPTREND                                                                :                    .\n©» Gersbras Systems + 510 INDEXES OT 64 RGBOT 74 NASI USD TNX/TYX vs 5d               216.05         neti 8\n0 sown         © son % SENTIMENT: VIX 14.85 {-6.00%) F&G                  AAR 34.7 -2.327.4028 NAAIM 95         ET tpn ET   o\nCamonze                    => BULL CASE: INITIATE RALLY & TREND 21EMA  €-8/3-4 REGAIN 21E & FTD              Sm ep       Cl     Owners 8\n5 «Se 85 in -PBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                  zz =\nfe   +4    :     :  w  * NEWS: TREASURY INTERVENTION; MODERNA CANCER VACCINE/GENOMICS; TRUMP CRYPTO                                    -\nSa am 0 ly +TODAY'SKEYS:SPXvs21ET/BEd QQQvs21ET/BEY R2Kvs 21EM/BEY                                                  oo\nTo ow em em. ¥ *DAYCT:DN-1 =>DN-1/  8e:-2J 21e: +144                                                                    -     i)\nme 0% ne re om ® ACTION: O +0.32%                                                                            -                   rad         _\nWe 1% wh EL e8 sgpY O/N 7678-77401 07716 030 7700-77264 L/H 7700-7743                      ©          f  j              craonnc\n*SPXATR:1.02%  SPX+0.21% 60/40 +0.39% GRO +0.21% TURBO +2.08%           Hh,  ar wo\n* SECTORS: 1M BPS ARKG XB! CRYPTO G/S/M XLV J BY% USD LYUTE NCLD BUG SOXX      iW -   ut      x             0.=.\n* GRO HOLDINGS: SPYM,UPRQ/SPXL,PLTR,RERK, MRNA                                                         fd             ”                   a\n* GRO RVAB/REBAR: 1.08 (-0.57%/-5.43%) BUY MRNA TRIM RBRK SELL NBIS HPE                                                            Har\n[                     * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS,FCX,RBRK, SPCX,GDXU,SITM,                                                          ve ge\n* TURBO RVAB/REBAR: 1.86 (-3.37%/-7.60%) BUY MRNA IBIT ETHA SPXL CHYM SELL SITM CBRS        Pr                             aw Techn\n* BOTTOM LINE: 9 MONSTER Moved IN GENOMICS, CRYPTO AND COMMODITIES            I     ale  ll       hos     =\n= * THURS KEYS: SPXvs 21E/8E QQQvs 21E/8E R2K vs 21E/8E                                           I        1         MN                  Jo\n=               = 5>>SRPSO0 KEY LEVELS <<<                                                                                 Pa-F 1\n~ *7816 (8/13 INTRADAY A-T-H)                                               =      -       re\n7745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS                      -        sun. 529\n= =»7707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES            -                 pm\n==\" J 37692 TUES: A- STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE             orc a= ax\nBee *7653(M521EMA) € 7/311 7/230 7/211 7/174 6/291 6/23                 Bo ct nay am wotMsh SR\nResi           * 7527/7552 (16 S0D/10WK) € 7/314 7/234 7/210 7/174 6/291                 we       BE)\nwantin             * 7087/7111 (14 200D/40WK) € 4/81 3/194                                              he                           SL\nen                                                                                                            so       Cam\nLL                                                     —                                       Cg\n",
+      "ocr_text_snippet": "$§ Pwiew Fb Em Qo Touts Help *0 0 - Co ® © [D- Screenshot 2026-08-19 a 5.41.485M aaa o ® io a MARKETSURGE 0 >> TALE OF THE TAPE — WEDNESDAY, AUGUST 19, 2026 << PY ———— = * MARKET STATE: UPTREND : ....",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.08 (-0.57%/-5.43%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY MRNA TRIM RBRK SELL NBIS HPE HAR",
+          "bottom_line": "9 MONSTER MOVED IN GENOMICS, CRYPTO AND COMMODITIES I ALE LL HOS = THURS KEYS: SPXVS 21E/8E QQQVS 21E/8E R2K VS 21E/8E I 1 MN JO 5>>SRPSO0 KEY LEVELS <<< PA-F 1 7816 (8/13 INTRADAY A-T-H) = - RE 7745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS - SUN. 529 7707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES - PM J 37692 TUES: A- STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE ORC A= AX BEE *7653(M521EMA) € 7/311 7/230 7/211 7/174 6/291 6/23 BO CT NAY AM WOTMSH SR RESI * 7527/7552 (16 S0D/10WK) € 7/314 7/234 7/210 7/174 6/291 WE BE) WANTIN * 7087/7111 (14 200D/40WK) € 4/81 3/194 HE SL EN SO CAM LL - CG",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.86 (-3.37%/-7.60%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY MRNA IBIT ETHA SPXL CHYM SELL SITM CBRS PR AW TECHN",
+          "bottom_line": "9 MONSTER MOVED IN GENOMICS, CRYPTO AND COMMODITIES I ALE LL HOS = THURS KEYS: SPXVS 21E/8E QQQVS 21E/8E R2K VS 21E/8E I 1 MN JO 5>>SRPSO0 KEY LEVELS <<< PA-F 1 7816 (8/13 INTRADAY A-T-H) = - RE 7745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS - SUN. 529 7707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES - PM J 37692 TUES: A- STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE ORC A= AX BEE *7653(M521EMA) € 7/311 7/230 7/211 7/174 6/291 6/23 BO CT NAY AM WOTMSH SR RESI * 7527/7552 (16 S0D/10WK) € 7/314 7/234 7/210 7/174 6/291 WE BE) WANTIN * 7087/7111 (14 200D/40WK) € 4/81 3/194 HE SL EN SO CAM LL - CG",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01978285fe6f",
+      "prefilter_score": 12.04,
+      "prefilter_stats": {
+        "brightRatio": 0.7489583333333333,
+        "darkRatio": 0.021805555555555557,
+        "edgeRatio": 0.2216804466115469,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1703,
+        "horizontalEdgeRatio": 0.12034485195392551,
+        "meanLuma": 229.56034722222222,
+        "stdDev": 39.73826657561941,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4571,
+        "verticalEdgeRatio": 0.3230160412691683
+      },
+      "score": 107.5,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.8,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 20,
+        "text_density": 90.7
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "BE",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HPE",
+        "IBIT",
+        "NBIS",
+        "PLTR",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 784,
+      "timestamp_hms": "00:13:04"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 172,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260819_20260819_nxmuo8bccs4_8118831c_whiteboard\\ocr\\ocr_000173.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260819",
+      "ocr_confidence": 56,
+      "ocr_profile": "threshold",
+      "ocr_text": "€ Preew Flo E® Vier Go Tools Window Hep            @r00p0ec         ”\nEE ® © (D- Screenshot 2026-08-19 a1 5.41.48PM  N  aaa        g   @ id   a\nMarxeTsice «GE >> TALE OF THE TAPE - WEDNESDAY, AUGUST 19, 2026 << Chm DEE ©\n      _— * MARKET STATE: UPTREND                               =\n» JShares Semicond! + 570 INDEXES 01 64 RGEC 74 NAST USDY TNX/TYX vs 5d       S223    BN\nB solar       © mou * SENTIMENT: VIX 14.83 (-6.00% F&G               ANN 34.7 2.3 27.002.0 EEIT) NAAM 95        PET Dron Ls. ones Er oo   o\na                >BULL CASE: INITIATE RALLY & TREND 21EMA  €8/3-4 REGAIN 21E & FTD             Ar opmaggor      © owas\nBm \"W <3 435 on BEAR CASE: SUSTAINED BREAK BELOW 21EMA                            eh    o\npi   Tv * NEWS: TREASURY INTERVENTION; MODERNA CANCER VACCINE/GENOMICS; TRUMP CRYPTO                  Pe\nwer en    - * TODAY'S KEYS: SPX vs 2161 /8Ed,  QQQvs 21E1/8EY  R2K vs 2161 /8EL              Fa    w @\nTm me ae TDAYCT:DN-1 =>DN-1/  8e:-24 21e:+144                        HA        —-\nmo wma eS ACTION: © 40.32%                                     PE    -\n\" *SPXO/N 7678-7740\" 07716 030 7700-77261 L/H 7700-7743                          BO\namar *SPXATR: 1.02% SPX +0.21% 60/40+0.39% GRO +0.21% TURBO +2.08%                   f=\nTUTE * SECTORS: 1 BPS ARKG XBI CRYPTO G/S/M XLV J BY% USD LYUTE NCLD BUG SOXX                              © Wine\n          * GRO HOLDINGS: SPYM,UPRO/SPXL,PLTR RBRK, MRNA                                                                                                             a\n————— * GRO RVAB/REBAR: 1.08 (0.57%/-5.43%) BUY MRNA TRIM RBRK SELL NBIS HPE             ——\nhd            * TURBO HOLDINGS: SPYM,UPRO,TQQIQ,CBRS,FCX,RBRK, SPCX, GDXU,SITM,                     NN       Lo\n-           _ *TURBO RVAB/REBAR: 1.86 (-3.37%/-7.60%) BUY MRNA BIT ETHA SPXL CHYM SELL SITM CBRS    TIME   Tachnca\nTil    \\ |    i  * BOTTOM LINE: » MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES                               =\nTela wl LG * THURS KEYS: SPX vs 216/8E QQQvs 21E/8E  R2K vs 21€/8E                      A      teks\nCoctowiwars ov 222 S&PSO0 KEY LEVELS <<<                                             TY ewe ®@\nwir w mom mem w * 7816 (8/13 INTRADAY A-T-H)                                         Tan          or\n“oom wow 37745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS          -          eros\n= 37707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES             -\n|                                                      orm - sma\n37692 TUES: A-| STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE                  _\nA *7653(1521EMA) € 7/311 7/234 7/211 7/174 6291 623%        Bom amp MER some we\nvetoes       * 7527/7552 (16 50D/10WK) € 7/311 7/234 7/211 7/174 6/291          wise    -    -    ED\na     | *7087/7111 (14 200D/40WK) € 4/81 3/190                        -              =\n[—\nLo                                    —                           Cd\n",
+      "ocr_text_snippet": "€ Preew Flo E® Vier Go Tools Window Hep @r00p0ec ” EE ® © (D- Screenshot 2026-08-19 a1 5.41.48PM N aaa g @ id a MarxeTsice «GE >> TALE OF THE TAPE - WEDNESDAY, AUGUST 19, 2026 << Chm DEE © _— * MAR...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.08 (0.57%/-5.43%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY MRNA TRIM RBRK SELL NBIS HPE -- HD * TURBO HOLDINGS: SPYM,UPRO,TQQIQ,CBRS,FCX,RBRK, SPCX, GDXU,SITM, NN LO",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.86 (-3.37%/-7.60%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY MRNA BIT ETHA SPXL CHYM SELL SITM CBRS TIME TACHNCA TIL \\ I * BOTTOM LINE: » MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES = TELA WL LG * THURS KEYS: SPX VS 216/8E QQQVS 21E/8E R2K VS 21€/8E A TEKS COCTOWIWARS OV 222 S&PSO0 KEY LEVELS <<< TY EWE ®@ WIR W MOM MEM W * 7816 (8/13 INTRADAY A-T-H) TAN OR OOM WOW 37745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS - EROS 37707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES - ORM - SMA 37692 TUES: A- STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE _ A *7653(1521EMA) € 7/311 7/234 7/211 7/174 6291 623% BOM AMP MER SOME WE VETOES * 7527/7552 (16 50D/10WK) € 7/311 7/234 7/211 7/174 6/291 WISE - - ED A *7087/7111 (14 200D/40WK) € 4/81 3/190 - = LO - CD",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f018d8305ff6f",
+      "prefilter_score": 16.97,
+      "prefilter_stats": {
+        "brightRatio": 0.7374305555555556,
+        "darkRatio": 0.057430555555555554,
+        "edgeRatio": 0.17055331778672886,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1374,
+        "horizontalEdgeRatio": 0.09709561161755353,
+        "meanLuma": 222.76145833333334,
+        "stdDev": 54.15581276471249,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3453,
+        "verticalEdgeRatio": 0.24401102395590418
+      },
+      "score": 101.3,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.8,
+        "pair_bonus": 4,
+        "per_row_issues": -8,
+        "per_row_metrics": 16,
+        "text_density": 92.5
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HPE",
+        "NBIS",
+        "PLTR",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TAN",
+        "UPRO"
+      ],
+      "timestamp": 688,
+      "timestamp_hms": "00:11:28"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 212,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260819_20260819_nxmuo8bccs4_8118831c_whiteboard\\ocr\\ocr_000213.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260819",
+      "ocr_confidence": 55,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Chrome Fie Edt View                Protics Tab Windom Help       [3                            -      =        -                              2\nEN  ® 0 (I~ Screenshot 2026-08-19 a1 5.4148PM           Qa a                [=       ® id\nMamwersUkce o @@ 22 TALE OF THE TAPE — WEDNESDAY, AUGUST 19, 2026 <<  bam: DEL ©\n» VanEck Gold Min /ARKET STATE: UPTREND                                                                      a              ‘97.33\na Er * STO INDEXES 04 64 RGBOM 74 NASIT USDY TNX/TYX vs 5d            Cant      ox esa\n© see         © wax * SENTIMENT: VIX 14.85 { 6.00:3) F&G                 AAI #7 2327.002.4 30ER NAAIM 95         PET ob nes onUnoi DGoPi £1 US   o\n—                  PBULL CASE: INITIATE RALLY & TREND 21EMA  €8/3-4 REGAIN 21E & FID              enon       a oma\n©\" Wom sow : “PBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                             Be\nTw em T% * NEWS: TREASURY INTERVENTION; MODERNA CANCER VACCINE/GENOMICS; TRUMP CRYPTO        crm              mt\nmn mmo oon 0 TODAY'S KEYS: SPX vs 21E1/8EN.  QQQvs 21E1/8EY  R2K vs 21E1/8EL\nmw { *DAYCT:DN-1 =>DN-1/      8e:-20 21le: +141                                                                a. B\nme we wp * ACTION: O 40.32%                                                                                                              _\nTTT MMC F SPX O/N 7678-77401 07716 030 7700-77261 L/H 7700-7743                                  25/             creo\n~~ *SPXATR:1.02% SPX +0.21% 60/40+0.39% GRO +0.21% TURBO +2.08%          A I\ney  * SECTORS: P BPS ARKG X81 CRYPTO G/S/M XLV J BY% USD LYUTE NCLD BUG SOXX       Stange   or           I\n* GRO HOLDINGS: SPYM,UPRO/SPXL,PLTR,RBRK, MRNA                                                         LE a                  a\n———\"\"\" *GRO RVAB/REBAR: 1.08 (-0 57%/-5.43%) BUY MRNA TRIM RBRK SELL NBIS HPE                                                                  fe\n—                   * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS,FOX,RBRK,5PCX,GDXU,SITM,                                                            mg\nrl                   * TURBO RVAB/REBAR: 1.86 (-3.37%/-7.60%) BUY MRNA IBIT ETHA SPXL CHYM SELLSITM CBRS  _                                wa enn\nliu  * BOTTOM LINE: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES          ill il ul li |      -\na       SW * THURS KEYS: SPX vs 21E/8E  QQQvs 21€/8E  R2K vs 21E/8E                                 w       A       1               os\n-           © 32> S&PS00 KEY LEVELS <<<                                                                                           bd            rn. ©\n.       wn %7816 (8/13 INTRADAY A-T-H)                                           -              —\nu            -       -»7745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS                                 do 04.5 Cp\n“        = 37707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES             -                     hain\nMm\" — 37692 TUES: A-] STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE            _          orc a= aR\nme *7653 (1S 21EMA) € 7/311 7/238 7/211 7/178 6/291 6/233                 re itd\nvamos          * 7527/7552 (16 50D/10WK} € 7/311 7/234 7/211 7/174 6/294                 anon       -       -       Ces\n= Mot         | *7087/7111(74 2000/40WK) € 4/87 3/194                                              sen                           wy\n.       .       .       Lam\n= Chams oto\nLL                                                      —                                      Co\n",
+      "ocr_text_snippet": "@ Chrome Fie Edt View Protics Tab Windom Help [3 - = - 2 EN ® 0 (I~ Screenshot 2026-08-19 a1 5.4148PM Qa a [= ® id MamwersUkce o @@ 22 TALE OF THE TAPE — WEDNESDAY, AUGUST 19, 2026 << bam: DEL © » ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.08 (-0 57%/-5.43%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY MRNA TRIM RBRK SELL NBIS HPE FE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ,CBRS,FOX,RBRK,5PCX,GDXU,SITM, MG RL * TURBO RVAB/REBAR: 1.86 (-3.37%/-7.60%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY MRNA IBIT ETHA SPXL CHYM SELL SITM CBRS _ WA ENN LIU * BOTTOM LINE: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES ILL IL UL LI - A SW * THURS KEYS: SPX VS 21E/8E QQQVS 21€/8E R2K VS 21E/8E W A 1 OS 32> S&PS00 KEY LEVELS <<< BD RN. © WN %7816 (8/13 INTRADAY A-T-H) - - U - -»7745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS DO 04.5 CP 37707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES - HAIN MM\" - 37692 TUES: A-] STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE _ ORC A= AR ME *7653 (1S 21EMA) € 7/311 7/238 7/211 7/178 6/291 6/233 RE ITD VAMOS * 7527/7552 (16 50D/10WK} € 7/311 7/234 7/211 7/174 6/294 ANON - - CES MOT *7087/7111(74 2000/40WK) € 4/87 3/194 SEN WY LAM CHAMS OTO LL - CO",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01df8405ff0f",
+      "prefilter_score": 12.22,
+      "prefilter_stats": {
+        "brightRatio": 0.7428472222222222,
+        "darkRatio": 0.021805555555555557,
+        "edgeRatio": 0.22019645254752315,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1632,
+        "horizontalEdgeRatio": 0.11532753868984524,
+        "meanLuma": 228.97569444444446,
+        "stdDev": 40.10673562599304,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4600,
+        "verticalEdgeRatio": 0.32506536640520106
+      },
+      "score": 97.37,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.75,
+        "pair_bonus": 4,
+        "per_row_issues": -8,
+        "per_row_metrics": 16,
+        "text_density": 88.62
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "BE",
+        "ETHA",
+        "GDXU",
+        "HPE",
+        "IBIT",
+        "NBIS",
+        "PLTR",
+        "RBRK",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 848,
+      "timestamp_hms": "00:14:08"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 128,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260819_20260819_nxmuo8bccs4_8118831c_whiteboard\\ocr\\ocr_000129.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260819",
+      "ocr_confidence": 56,
+      "ocr_profile": "threshold",
+      "ocr_text": "§ Precew Fa ol vies Oc Togs Vewos Hep            an 0\n* o   (D- Screenshot 2026-08-19 at 5.41.48PM          a @ @              ag      @®   iM\nMarkeTsvoe 2 TALE OF THE TAPE — WEDNESDAY, AUGUST 19, 2026 <<  Gam. DBL 0\n» ish         - * MARKET STATE: UPTREND                                                                             -           “6295                “302\nShares 201 «<1 INDEXES OT 64 RGBOT 7d NASIT USDY TNX/TYX vs Sd                     oo        wn 8\n© seer          * SENTIMENT: VIX 14.85 (-6.C0%) F&G                  AAI34.7 2.327.042.4 TERT) NAAM 95         To OSA ET Myra Las ct 0405 0 £1 Ono   o\nCaves           DBULL CASE: INITIATE RALLY & TREND 21EMA  €8/3-4 REGAIN 21E & FTD                BN               a.         © owns\nBn\" JIS DBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                              ~TTRERA a      o\nTime vw * NEWS: TREASURY INTERVENTION; MODERNA CANCER VACCINE/GENOMICS; TRUMP CRYPTO                               Pe\nwi aes ox + TODAY'S KEYS: SPX vs 21E1/8Ed  QQQvs 21E1M/8EY  R2K vs 216/864\non we we *DAYCT:DN-1 =>DN-1/  8e:-2J 2le:+1at                            ATA     . 2\nme ww am & ACTION: © +0.32%                                                                              on                       _\nTROTT TU «spXO/N 7678-77401 07716 030 7700-77261 L/H 7700-7743                 —                      coon\n*SPXATR:1.02%  SPX+0.21% 60/40 +0.39% GRO +0.21% TURBO +2.08%         Bm RE  0\n* SECTORS: 1 BPS ARKG XBI CRYPTO G/S/M XLV 4 BY% USD LYUTE NCLD BUG SOXX         af =       EN  I\"         reac\n* GRO HOLDINGS: SPYM,UPRO/SPXL,PLTR,RBRK, MRNA                                                             Lid                    RC)                 a\n—  * GRO RVAB/REBAR: 1.08 (-0.57%/-5.43%) BUY MRNA TRIM RBRK SELL NBIS HPE                       a\nMidd            * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS,FOX,RBRK,SPCX, GDXU,SITM,                                                                      he     2\nih) * TURBO RVAB/REBAR: 1.86 (-3.37%/-7.60%) BUY MRNA IBIT ETHA SPXL CHYM SELLSITM CBRS J]         o                      a\nil il  * BOTTOM LINE: > MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES           i                              oe\nWE * THURS KEYS: SPX vs 21€/8€  QQQvs 21E/8E  R2K vs 21E/8E                              Ll,        in\nMoves ss 222 S&PS00 KEY LEVELS <<<                                        in a @\nwi w wa | * 7816 (8/13 INTRADAY A-T-H)                                                          Toes on              exc\nwow ows 37745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS            Poe om               sw. % 29\n“L 37707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES             -          he                hel\n*™\" — 97692 TUES: A-l STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE              _                orc a= as\nBoe *7653(1521EMA) € 7/311 7/238 7/214 7/174 6/291 6/234               NUN cw ey Tm moter Rem\nCvanomes 7527/7552 (16 50D/10WK) € 7/314 7/234 7/211 7/174 6/291               E      ses      :      :      BE)\navon | 7087/7111 (M4 200D/40WK) € 4/81 3/193                                    wo ame     :     .     EE\ni        .      .      .      Cam\nial                                                      -—                              —_                                     )\n",
+      "ocr_text_snippet": "§ Precew Fa ol vies Oc Togs Vewos Hep an 0 * o (D- Screenshot 2026-08-19 at 5.41.48PM a @ @ ag @® iM MarkeTsvoe 2 TALE OF THE TAPE — WEDNESDAY, AUGUST 19, 2026 << Gam. DBL 0 » ish - * MARKET STATE:...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.08 (-0.57%/-5.43%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY MRNA TRIM RBRK SELL NBIS HPE A MIDD * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS,FOX,RBRK,SPCX, GDXU,SITM, HE 2 IH) * TURBO RVAB/REBAR: 1.86 (-3.37%/-7.60%) BUY MRNA IBIT ETHA SPXL CHYM SELL SITM CBRS J] O A IL IL * BOTTOM LINE: > MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES I OE WE * THURS KEYS: SPX VS 21€/8€ QQQVS 21E/8E R2K VS 21E/8E LL, IN MOVES SS 222 S&PS00 KEY LEVELS <<< IN A @ WI W WA * 7816 (8/13 INTRADAY A-T-H) TOES ON EXC WOW OWS 37745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS POE OM SW. % 29 L 37707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES - HE HEL 97692 TUES: A-L STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE _ ORC A= AS BOE *7653(1521EMA) € 7/311 7/238 7/214 7/174 6/291 6/234 NUN CW EY TM MOTER REM CVANOMES 7527/7552 (16 50D/10WK) € 7/314 7/234 7/211 7/174 6/291 E SES : : BE) AVON 7087/7111 (M4 200D/40WK) € 4/81 3/193 WO AME : . EE I . . . CAM IAL -- -_ )",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f018dde01fd8f",
+      "prefilter_score": 12.37,
+      "prefilter_stats": {
+        "brightRatio": 0.7360416666666667,
+        "darkRatio": 0.021805555555555557,
+        "edgeRatio": 0.22637976114762207,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1726,
+        "horizontalEdgeRatio": 0.12197017878595152,
+        "meanLuma": 228.71645833333332,
+        "stdDev": 39.92456715427992,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4681,
+        "verticalEdgeRatio": 0.3307893435092926
+      },
+      "score": 86.3,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.8,
+        "pair_bonus": 0,
+        "per_row_issues": -10,
+        "per_row_metrics": 8,
+        "text_density": 91.5
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "BE",
+        "ETHA",
+        "GDXU",
+        "HPE",
+        "IBIT",
+        "NBIS",
+        "PLTR",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 512,
+      "timestamp_hms": "00:08:32"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 216,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260819_20260819_nxmuo8bccs4_8118831c_whiteboard\\ocr\\ocr_000217.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260819",
+      "ocr_confidence": 58,
+      "ocr_profile": "threshold",
+      "ocr_text": "i                 “Ya\n.- °   M+ Sereenshot 2026-08-19 at 5.41.48PM           aaa                [=       ®@ in\n\nMares nce o gg 22 TALE OF THE TAPE — WEDNESDAY, AUGUST 19, 2026 <<  PU.\n\n~~ * MARKET STATE: UPTREND                                                                0                  ”\n\n5 YanBck Gold Mint + 70 INDEXES OF 64 RGBOM 74 NASI USD TNX/TYX vs 5d              ari       ox con 2\n© sos         © wax * SENTIMENT: VIX 14.69 | £.00%) F&G                  AND 347 23274524 TEER) NAAM 95         PURI odorer tI boro   o\n—                  BULL CASE: INITIATE RALLY & TREND 21EMA  €-8/3-4 REGAIN 21€ & FTD              GT       © want\n\"5 JI M5 BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                             = ==\nSu mmo Tf * NEWS: TREASURY INTERVENTION; MODERNA CANCER VACCINE/GENOMICS; TRUMP CRYPTO        Tre              mt\nmime. («TODAY'S KEYS: SPX vs 2161 /8Ed  QQQvs 21ETM/8EY  R2K vs 21E1/8Ed\neT 4 *DAYCT:DN-1 =>DN-1/  8e:-2d 2le: +141                                                                . B\nme wm 0 FACTION: O +0.32%                                                                                                              _\nTOUT NT wsPXO/N 7678-77401 07716 030 7700-77261 L/H 7700-7743                                  daly             cron\n\n7 TSPXATR:1.02%  SPX+0.21% 60/40+0.33% GRO +0.21% TURBO +2.08%           Lr\n\nPE  * SECTORS: 1 BPS ARKG XBI CRYPTO G/S/M XLV J, BY% USD LYUTE NCLD BUG SOXX      “rang”  -          [ J\n\n-                        * GRO HOLDINGS: SPYM,UPRO/SPXL,PLTR, RBRK, MRNA                                                     Bera                 a\n_———\"\"\" * GRO RVAB/REBAR: 1.08 (-0.57%/-5.43%) BUY MRNA TRIM RBRK SELL NBIS HPE                                                                     fe\n[E.                   * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS,FCX,RBRK,SPCX,GDXU,SITM,                                                            mg\noT                     * TURBO RVAB/REBAR: 1.86 (-3.37%/-7.60%) BUY MRNA BIT ETHA SPXL CHYM SELLSITM CBRS ~~ _                                 J\nlilt  * BOTTOM LINE: > MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES                                  =\n—       Wt * THURS KEYS: SPX vs 21E/8E QQQvs 21E/8E  R2K vs 21E/8E                                  ba       A       1               os\n-           © >>> SRP500 KEY LEVELS <<<                                                                             :           ~            [EN\nwe        wm T7816 (8/13 INTRADAY A-T-H)                                               -               or\n            -       7745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS                                 eamnxo\n“        = 7707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES             -                    hans\n_—       ™\" — 7692 TUES: A-| STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE                  _               or as as\nJee *7653(1521EMA} € 7/314 7/238 7/211 7/174 6/2941 6/23¢                 TH cy wang\" worven mse\nResin          * 7527/7552 (16 SOD/10WK) € 7/314 7/234 7/211 7/17 6/291                 Ee)       -       -       Caw\nbon       | * 7087/7111 (74 2000/40WK) € 4/81 3/194                                  san                    wy\n.       .       .       Lam\n[—                                                            _\n",
+      "ocr_text_snippet": "i “Ya .- ° M+ Sereenshot 2026-08-19 at 5.41.48PM aaa [= ®@ in Mares nce o gg 22 TALE OF THE TAPE — WEDNESDAY, AUGUST 19, 2026 << PU. ~~ * MARKET STATE: UPTREND 0 ” 5 YanBck Gold Mint + 70 INDEXES O...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 1.08 (-0.57%/-5.43%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY MRNA TRIM RBRK SELL NBIS HPE FE E. * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS,FCX,RBRK,SPCX,GDXU,SITM, MG OT * TURBO RVAB/REBAR: 1.86 (-3.37%/-7.60%) BUY MRNA BIT ETHA SPXL CHYM SELL SITM CBRS ~~ _ J LILT * BOTTOM LINE: > MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES = WT * THURS KEYS: SPX VS 21E/8E QQQVS 21E/8E R2K VS 21E/8E BA A 1 OS SRP500 KEY LEVELS <<< : ~ [EN WE WM T7816 (8/13 INTRADAY A-T-H) - OR 7745 MON: CEASEFIRE ENDS AND HIGHER YIELDS PUTS PRESSURE ON STOCKS EAMNXO 7707 TODAY: MONSTER MOVES IN GENOMICS, CRYPTO AND COMMODITIES - HANS 7692 TUES: A- STOCKS BLASTED, RECENT GROWTH PROGRESS UNDONE _ OR AS AS JEE *7653(1521EMA} € 7/314 7/238 7/211 7/174 6/2941 6/23¢ TH CY WANG\" WORVEN MSE RESIN * 7527/7552 (16 SOD/10WK) € 7/314 7/234 7/211 7/17 6/291 EE) - - CAW BON * 7087/7111 (74 2000/40WK) € 4/81 3/194 SAN WY LAM",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 58,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 58,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f019d8685ff0f",
+      "prefilter_score": 7.03,
+      "prefilter_stats": {
+        "brightRatio": 0.559375,
+        "darkRatio": 0.2209722222222222,
+        "edgeRatio": 0.21214048477139424,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2114,
+        "horizontalEdgeRatio": 0.1493887357783902,
+        "meanLuma": 184.39305555555555,
+        "stdDev": 89.20215076877177,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3890,
+        "verticalEdgeRatio": 0.27489223376439825
+      },
+      "score": 86.22,
+      "score_breakdown": {
+        "chart_likeness": -4.197323000119706,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.9,
+        "pair_bonus": 0,
+        "per_row_issues": -10,
+        "per_row_metrics": 8,
+        "text_density": 89.52
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HPE",
+        "NBIS",
+        "PLTR",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 864,
+      "timestamp_hms": "00:14:24"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260819_20260819_nxmuo8bccs4_8118831c_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 7.1,
+      "prefilter_stats": {
+        "brightRatio": 0.5656944444444445,
+        "darkRatio": 0.22090277777777778,
+        "edgeRatio": 0.2037311850752597,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2019,
+        "horizontalEdgeRatio": 0.1426754292982828,
+        "meanLuma": 184.92388888888888,
+        "stdDev": 89.24456822181826,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3747,
+        "verticalEdgeRatio": 0.2647869408522366
+      },
+      "score": -16.27,
+      "score_breakdown": {
+        "chart_likeness": -4.27450185372898,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 112,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260819_20260819_nxmuo8bccs4_8118831c_whiteboard\\ocr\\ocr_000113.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 446.88,
+      "observed_date": null,
+      "ocr_confidence": 33,
+      "ocr_profile": "threshold",
+      "ocr_text": "[3 Pla Edie  Bookmarks Profies Tab Window Hein        © *»000e Cc wg    v Circo ay\nPEI           oe                                          Ace siorn\nPREETYCI         -                                                 °          aD\n°              on\nww     -     —     [RR        Pp   r     -\nCETTE        ugg     py.                  -      -\nI                                                           [=]\nM             .                                               .\n50,740.02\n55.0254 JPY\n  [)\n--   -                                 [eee]   .\n/                                        -  5\nN               .\n[200 2 JH\npd                                 ‘\noon Boe cra solos tari}                                             '\no               ;\n.     1                             [:)\nBE                     |\n7                     FE                                   -\n-              (::]\n[]                                                    Ps\n",
+      "ocr_text_snippet": "[3 Pla Edie Bookmarks Profies Tab Window Hein © *»000e Cc wg v Circo ay PEI oe Ace siorn PREETYCI - ° aD ° on ww - — [RR Pp r - CETTE ugg py. - - I [=] M . . 50,740.02 55.0254 JPY [) -- - [eee] . /...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 33,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 33,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ff29c0487386fa13",
+      "prefilter_score": -26.6,
+      "prefilter_stats": {
+        "brightRatio": 0.13555555555555557,
+        "darkRatio": 0.8165277777777777,
+        "edgeRatio": 0.14041410501024662,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1346,
+        "horizontalEdgeRatio": 0.09511695286552187,
+        "meanLuma": 56.837986111111114,
+        "stdDev": 85.16209667353864,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2628,
+        "verticalEdgeRatio": 0.1857112571549714
+      },
+      "score": -24.88,
+      "score_breakdown": {
+        "chart_likeness": -4.533686496225238,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.65,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "unknown_text",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 448,
+      "timestamp_hms": "00:07:28"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 108,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260819_20260819_nxmuo8bccs4_8118831c_whiteboard\\ocr\\ocr_000109.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 432,
+      "observed_date": null,
+      "ocr_confidence": 37,
+      "ocr_profile": "threshold",
+      "ocr_text": "€ Crome Bn Ede View    Polis Tab Window Help.         @*»000e Cc wg  ”  BEE)  g  a\n:                              °               .\nRe  Er  Be       E      i  \"oe    be  mew            -\n[:]\nBE EE— 105.5035\nd  o\nyi           rizr\n7              -             SR\n  >                :\n                       :\nVe                                              *\n:\nEcol oom cra ir sibs sei van]                                                °                R\n[2]\n7                                                               -               a\n:]                                                 Boon\n",
+      "ocr_text_snippet": "€ Crome Bn Ede View Polis Tab Window Help. @*»000e Cc wg ” BEE) g a : ° . Re Er Be E i \"oe be mew - [:] BE EE— 105.5035 d o yi rizr 7 - SR > : : Ve * : Ecol oom cra ir sibs sei van] ° R [2] 7 - a :...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ff33b088629a7aa2",
+      "prefilter_score": -26.3,
+      "prefilter_stats": {
+        "brightRatio": 0.13583333333333333,
+        "darkRatio": 0.8170833333333334,
+        "edgeRatio": 0.13232280404211716,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1228,
+        "horizontalEdgeRatio": 0.08677831955338845,
+        "meanLuma": 56.29888888888889,
+        "stdDev": 85.40268323841464,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2517,
+        "verticalEdgeRatio": 0.17786728853084588
+      },
+      "score": -25.25,
+      "score_breakdown": {
+        "chart_likeness": -5.1030689808763725,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.85,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "chart",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 432,
+      "timestamp_hms": "00:07:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 104,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260819_20260819_nxmuo8bccs4_8118831c_whiteboard\\ocr\\ocr_000105.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 415.84,
+      "observed_date": null,
+      "ocr_confidence": 32,
+      "ocr_profile": "threshold",
+      "ocr_text": "§_ Clowns Fa Edi   Bockmads Profle Tb Window Help.         @*»000e Cc wma    Y Te  i\n°                on\nCRE  \"   -             .  ww  Pp    []   Low     —-  .             -\n[=]\n°               .                                                     .\n—_— Emm\nEooeten\nEY  °\nPp         A      A Fi)\nHe        proves\nssasz01\n.                                                          26.969.03  ‘\n7                    B                            reorer]\n7                                                   ’\n-                                      [ o.s00.24]\nyA                                         .                 E\n®\n.    .                                         .\nON CET ERTS) CITY                                                                     ,\no                 B\n[2]\n7                                                                   a\na                                                          ’             po                ®\nBoos\n",
+      "ocr_text_snippet": "§_ Clowns Fa Edi Bockmads Profle Tb Window Help. @*»000e Cc wma Y Te i ° on CRE \" - . ww Pp [] Low —- . - [=] ° . . —_— Emm Eooeten EY ° Pp A A Fi) He proves ssasz01 . 26.969.03 ‘ 7 B reorer] 7 ’ -...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 32,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 32,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ff33b08c629a7a22",
+      "prefilter_score": -26.39,
+      "prefilter_stats": {
+        "brightRatio": 0.13583333333333333,
+        "darkRatio": 0.8218055555555556,
+        "edgeRatio": 0.1322874708501166,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1222,
+        "horizontalEdgeRatio": 0.08635432124938167,
+        "meanLuma": 55.838680555555555,
+        "stdDev": 85.39499410213405,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2522,
+        "verticalEdgeRatio": 0.17822062045085152
+      },
+      "score": -25.6,
+      "score_breakdown": {
+        "chart_likeness": -5.197104531686604,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.6,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 416,
+      "timestamp_hms": "00:06:56"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 84,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260819_20260819_nxmuo8bccs4_8118831c_whiteboard\\ocr\\ocr_000085.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 333.92,
+      "observed_date": null,
+      "ocr_confidence": 40,
+      "ocr_profile": "threshold",
+      "ocr_text": "&_cs  Bo Edt View Helo Dogamacts Profs Tab Window Help         O*»000w CC may   ee   ad\nMarxeTsdkee a      X Day weekly oom [ san     - Qa - DEE G\nF iShares Bitcoin Trust ETF        .                               BIT (32701 +3.94% Vo 39,543.26 +260.48% Aor Hows 05 55 PM ET OR/1S2026 510.30 S0.72(-186% $38.78  =\nAswr mowe A UR AN aN VAY Jl ia ia VAL I\nMr” VY                     )       /      ’     ~ NT eA\nhd   &@\npe   z  ]\nJ             »   =\n/             J\norm en                                | a\nre       _                  far                              vo\npie                                           a\nSeow                                                  fod\nBD Vola.                                                                      am  edt\na\nisos incl. =\ntC DG AC ft lL              ll\nSew Li epems   Main List 28 Items © Usnrea 0720 P01 08a 020                                    OF - 2 = @ A\nTm ow   or ome   Coren em we IY STIR am gm Row mn Ge WEED come me\n=               »  13 sw  iShares Sitenr Tum   447  001   -  325  26 ETFETN. Franc.   908.987   .   .   .  4536\n© Video Process        ‘“n     A  “oar   Shares Bicoin Trum ETF   59%  378    -   208   89 ETFETN.. France.   1475047    -    -    -  “000   I\n= Hoous          |    bw wo vepmemsows 00 ms. om os owen. rem mew. as\nL         nN a ————————————tieeeede ee i A te, \"TTT Tr                                         no\n",
+      "ocr_text_snippet": "&_cs Bo Edt View Helo Dogamacts Profs Tab Window Help O*»000w CC may ee ad MarxeTsdkee a X Day weekly oom [ san - Qa - DEE G F iShares Bitcoin Trust ETF . BIT (32701 +3.94% Vo 39,543.26 +260.48% Ao...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 40,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 40,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80fe3609f649f68a",
+      "prefilter_score": 18.05,
+      "prefilter_stats": {
+        "brightRatio": 0.8029166666666666,
+        "darkRatio": 0.05736111111111111,
+        "edgeRatio": 0.13840011306621441,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 939,
+        "horizontalEdgeRatio": 0.06635573457706169,
+        "meanLuma": 227.1551388888889,
+        "stdDev": 53.973484629364684,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2978,
+        "verticalEdgeRatio": 0.21044449155536712
+      },
+      "score": -26,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 336,
+      "timestamp_hms": "00:05:36"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 1,
+      "end_ts": 688,
+      "end_hms": "00:11:28",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 172,
+      "peak_score": 101.3,
+      "start_hms": "00:11:28",
+      "start_ts": 688
+    },
+    {
+      "capture_count": 2,
+      "end_ts": 848,
+      "end_hms": "00:14:08",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 196,
+      "peak_score": 107.5,
+      "start_hms": "00:13:04",
+      "start_ts": 784
+    }
+  ],
+  "video_type": "daily",
+  "video_type_label": "Daily",
+  "video_type_description": "Tue-Fri DMI episode — full portfolio deltas, daily metrics",
+  "video_type_classified_at": "2026-09-15T08:07:46.441Z",
+  "classification_inputs": {
+    "title_excerpt": "TREASURY YIELD CURVE CONTROL INTERVENTION; MODERNA BIG CANCER VACCINE BREAKTRHOUGH!",
+    "upload_date": "20260819",
+    "retroactive": true
+  }
+}

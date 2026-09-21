@@ -1,0 +1,330 @@
+{
+  "run_tag": "ocr-20260914",
+  "generated_at": "2026-09-14T11:26:41.568Z",
+  "totals": {
+    "videos": 7,
+    "videos_with_captures": 7,
+    "captures": 19,
+    "layouts": {
+      "dmi": 9,
+      "structured_whiteboard": 10
+    },
+    "segment_layouts": {
+      "dmi": 6,
+      "structured_whiteboard": 6
+    },
+    "unique_tickers": 10,
+    "top_tickers": [
+      {
+        "ticker": "BE",
+        "count": 13
+      },
+      {
+        "ticker": "MU",
+        "count": 5
+      },
+      {
+        "ticker": "LABU",
+        "count": 3
+      },
+      {
+        "ticker": "URA",
+        "count": 3
+      },
+      {
+        "ticker": "TAN",
+        "count": 3
+      },
+      {
+        "ticker": "REMX",
+        "count": 3
+      },
+      {
+        "ticker": "NBIS",
+        "count": 2
+      },
+      {
+        "ticker": "TEM",
+        "count": 1
+      },
+      {
+        "ticker": "UPRO",
+        "count": 1
+      },
+      {
+        "ticker": "CF",
+        "count": 1
+      }
+    ]
+  },
+  "per_video": [
+    {
+      "upload_date": "20260509",
+      "video_id": "m0pv73rv2qo",
+      "captures": 2,
+      "max_score": 27.84,
+      "mean_score": 26.91,
+      "layouts": [
+        {
+          "layout": "dmi",
+          "count": 2
+        }
+      ],
+      "has_dmi_intro": true,
+      "ticker_union": [],
+      "segments": 1
+    },
+    {
+      "upload_date": "20260511",
+      "video_id": "klxyb7imwpi",
+      "captures": 3,
+      "max_score": 100.22,
+      "mean_score": 91.61,
+      "layouts": [
+        {
+          "layout": "structured_whiteboard",
+          "count": 3
+        }
+      ],
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "BE",
+        "LABU",
+        "MU",
+        "TEM"
+      ],
+      "segments": 3
+    },
+    {
+      "upload_date": "20260512",
+      "video_id": "beidyftv-ly",
+      "captures": 3,
+      "max_score": 100.2,
+      "mean_score": 78.7,
+      "layouts": [
+        {
+          "layout": "structured_whiteboard",
+          "count": 2
+        },
+        {
+          "layout": "dmi",
+          "count": 1
+        }
+      ],
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "BE",
+        "URA"
+      ],
+      "segments": 2
+    },
+    {
+      "upload_date": "20260513",
+      "video_id": "ekcshohf-bu",
+      "captures": 3,
+      "max_score": 88.93,
+      "mean_score": 74.65,
+      "layouts": [
+        {
+          "layout": "structured_whiteboard",
+          "count": 2
+        },
+        {
+          "layout": "dmi",
+          "count": 1
+        }
+      ],
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "BE",
+        "MU",
+        "NBIS",
+        "TAN"
+      ],
+      "segments": 2
+    },
+    {
+      "upload_date": "20260514",
+      "video_id": "-e2av8iaafw",
+      "captures": 3,
+      "max_score": 99.61,
+      "mean_score": 94.21,
+      "layouts": [
+        {
+          "layout": "structured_whiteboard",
+          "count": 3
+        }
+      ],
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "BE",
+        "MU",
+        "REMX",
+        "TAN",
+        "UPRO"
+      ],
+      "segments": 1
+    },
+    {
+      "upload_date": "20260515",
+      "video_id": "n89ebeo-wdo",
+      "captures": 3,
+      "max_score": 90.12,
+      "mean_score": 72.18,
+      "layouts": [
+        {
+          "layout": "dmi",
+          "count": 3
+        }
+      ],
+      "has_dmi_intro": true,
+      "ticker_union": [
+        "BE",
+        "CF",
+        "URA"
+      ],
+      "segments": 2
+    },
+    {
+      "upload_date": "20260516",
+      "video_id": "xyk7t3tzrp0",
+      "captures": 2,
+      "max_score": 42.4,
+      "mean_score": 39.78,
+      "layouts": [
+        {
+          "layout": "dmi",
+          "count": 2
+        }
+      ],
+      "has_dmi_intro": true,
+      "ticker_union": [],
+      "segments": 1
+    }
+  ],
+  "per_day": [
+    {
+      "date": "20260509",
+      "captures": 2,
+      "videos": 1,
+      "max_score": 27.84,
+      "has_dmi_intro_count": 1,
+      "layouts": {
+        "dmi": 2
+      },
+      "ticker_union": [],
+      "segments": 1,
+      "mean_score": 26.91,
+      "ticker_union_size": 0
+    },
+    {
+      "date": "20260511",
+      "captures": 3,
+      "videos": 1,
+      "max_score": 100.22,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "structured_whiteboard": 3
+      },
+      "ticker_union": [
+        "BE",
+        "LABU",
+        "MU",
+        "TEM"
+      ],
+      "segments": 3,
+      "mean_score": 91.61,
+      "ticker_union_size": 4
+    },
+    {
+      "date": "20260512",
+      "captures": 3,
+      "videos": 1,
+      "max_score": 100.2,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "structured_whiteboard": 2,
+        "dmi": 1
+      },
+      "ticker_union": [
+        "BE",
+        "URA"
+      ],
+      "segments": 2,
+      "mean_score": 78.7,
+      "ticker_union_size": 2
+    },
+    {
+      "date": "20260513",
+      "captures": 3,
+      "videos": 1,
+      "max_score": 88.93,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "structured_whiteboard": 2,
+        "dmi": 1
+      },
+      "ticker_union": [
+        "BE",
+        "MU",
+        "NBIS",
+        "TAN"
+      ],
+      "segments": 2,
+      "mean_score": 74.65,
+      "ticker_union_size": 4
+    },
+    {
+      "date": "20260514",
+      "captures": 3,
+      "videos": 1,
+      "max_score": 99.61,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "structured_whiteboard": 3
+      },
+      "ticker_union": [
+        "BE",
+        "MU",
+        "REMX",
+        "TAN",
+        "UPRO"
+      ],
+      "segments": 1,
+      "mean_score": 94.21,
+      "ticker_union_size": 5
+    },
+    {
+      "date": "20260515",
+      "captures": 3,
+      "videos": 1,
+      "max_score": 90.12,
+      "has_dmi_intro_count": 1,
+      "layouts": {
+        "dmi": 3
+      },
+      "ticker_union": [
+        "BE",
+        "CF",
+        "URA"
+      ],
+      "segments": 2,
+      "mean_score": 72.18,
+      "ticker_union_size": 3
+    },
+    {
+      "date": "20260516",
+      "captures": 2,
+      "videos": 1,
+      "max_score": 42.4,
+      "has_dmi_intro_count": 1,
+      "layouts": {
+        "dmi": 2
+      },
+      "ticker_union": [],
+      "segments": 1,
+      "mean_score": 39.78,
+      "ticker_union_size": 0
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "run_tag": "ocr-parallel-20260917-043325",
+  "driver": "parallelOcrScan.py",
+  "started_at": "2026-09-17T04:33:25.053625Z",
+  "finished_at": "2026-09-17T04:33:28.625836Z",
+  "last_update_at": "2026-09-17T04:33:28.626019Z",
+  "probe_log_count": 0,
+  "unique_videos_done": 0,
+  "unique_videos_errored": 29,
+  "expected_total": 29,
+  "last_probe_log": null,
+  "next_step": "inspect 29 failed job log(s); then aggregate with node tools/aggregateOcrTimeline.js ocr-parallel-20260917-043325"
+}

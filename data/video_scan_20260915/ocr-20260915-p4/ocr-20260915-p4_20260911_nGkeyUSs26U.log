@@ -1,0 +1,1067 @@
+# cmd: node tools/scanVideoWithOcr.js --video C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260911_nGkeyUSs26U.mp4 --date 20260911 --output-root C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260915\ocr-20260915-p4 --run-tag ocr-20260915-p4 --ffmpeg-bin c:/Users/admin/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-9.0.1-full_build/bin/ffmpeg.exe
+[scan:whiteboard] ffprobe found 494 keyframe(s) for nearest-keyframe lookup
+[scan:whiteboard] preflighting final whiteboard output extraction
+[scan:whiteboard] extracting sample frames from C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260911_nGkeyUSs26U.mp4
+[scan:whiteboard] extracted 715 frame(s) at 0.25 fps with width 640; starting prefilter
+[scan:whiteboard] prefilter 1/715 frames after 00:00:00; best prefilter -23.06 at 00:00:00
+[scan:whiteboard] prefilter 10/715 frames after 00:00:00; best prefilter 17.21 at 00:00:36
+[scan:whiteboard] prefilter 20/715 frames after 00:00:00; best prefilter 17.26 at 00:00:56
+[scan:whiteboard] prefilter 30/715 frames after 00:00:00; best prefilter 17.26 at 00:00:56
+[scan:whiteboard] prefilter 40/715 frames after 00:00:00; best prefilter 17.26 at 00:00:56
+[scan:whiteboard] prefilter 50/715 frames after 00:00:01; best prefilter 17.86 at 00:02:40
+[scan:whiteboard] prefilter 60/715 frames after 00:00:01; best prefilter 17.86 at 00:02:40
+[scan:whiteboard] prefilter 70/715 frames after 00:00:01; best prefilter 17.86 at 00:02:40
+[scan:whiteboard] prefilter 80/715 frames after 00:00:01; best prefilter 17.86 at 00:02:40
+[scan:whiteboard] prefilter 90/715 frames after 00:00:01; best prefilter 17.86 at 00:02:40
+[scan:whiteboard] prefilter 100/715 frames after 00:00:01; best prefilter 17.86 at 00:02:40
+[scan:whiteboard] prefilter 110/715 frames after 00:00:01; best prefilter 17.86 at 00:02:40
+[scan:whiteboard] prefilter 120/715 frames after 00:00:01; best prefilter 17.86 at 00:02:40
+[scan:whiteboard] prefilter 130/715 frames after 00:00:01; best prefilter 17.86 at 00:02:40
+[scan:whiteboard] prefilter 140/715 frames after 00:00:01; best prefilter 17.86 at 00:02:40
+[scan:whiteboard] prefilter 150/715 frames after 00:00:02; best prefilter 18.46 at 00:09:40
+[scan:whiteboard] prefilter 160/715 frames after 00:00:02; best prefilter 18.46 at 00:09:40
+[scan:whiteboard] prefilter 170/715 frames after 00:00:02; best prefilter 18.46 at 00:09:40
+[scan:whiteboard] prefilter 180/715 frames after 00:00:02; best prefilter 18.46 at 00:09:40
+[scan:whiteboard] prefilter 190/715 frames after 00:00:02; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 200/715 frames after 00:00:02; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 210/715 frames after 00:00:02; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 220/715 frames after 00:00:02; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 230/715 frames after 00:00:02; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 240/715 frames after 00:00:02; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 250/715 frames after 00:00:03; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 260/715 frames after 00:00:03; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 270/715 frames after 00:00:03; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 280/715 frames after 00:00:03; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 290/715 frames after 00:00:03; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 300/715 frames after 00:00:03; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 310/715 frames after 00:00:03; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 320/715 frames after 00:00:03; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 330/715 frames after 00:00:03; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 340/715 frames after 00:00:03; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 350/715 frames after 00:00:04; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 360/715 frames after 00:00:04; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 370/715 frames after 00:00:04; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 380/715 frames after 00:00:04; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 390/715 frames after 00:00:04; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 400/715 frames after 00:00:04; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 410/715 frames after 00:00:04; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 420/715 frames after 00:00:04; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 430/715 frames after 00:00:04; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 440/715 frames after 00:00:05; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 450/715 frames after 00:00:05; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 460/715 frames after 00:00:05; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 470/715 frames after 00:00:05; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 480/715 frames after 00:00:05; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 490/715 frames after 00:00:05; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 500/715 frames after 00:00:05; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 510/715 frames after 00:00:05; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 520/715 frames after 00:00:05; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 530/715 frames after 00:00:05; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 540/715 frames after 00:00:05; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 550/715 frames after 00:00:06; best prefilter 19.24 at 00:12:32
+[scan:whiteboard] prefilter 560/715 frames after 00:00:06; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter 570/715 frames after 00:00:06; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter 580/715 frames after 00:00:06; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter 590/715 frames after 00:00:06; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter 600/715 frames after 00:00:06; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter 610/715 frames after 00:00:06; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter 620/715 frames after 00:00:06; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter 630/715 frames after 00:00:06; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter 640/715 frames after 00:00:07; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter 650/715 frames after 00:00:07; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter 660/715 frames after 00:00:07; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter 670/715 frames after 00:00:07; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter 680/715 frames after 00:00:07; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter 690/715 frames after 00:00:07; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter 700/715 frames after 00:00:07; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter 710/715 frames after 00:00:07; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter 715/715 frames after 00:00:07; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] prefilter kept 60/715 frame(s) for OCR; best prefilter 19.69 at 00:37:12
+[scan:whiteboard] extracting OCR candidates from source video at width 1280
+[scan:whiteboard] OCR 1/60 frames (1.7%) after 00:00:02; best score -12.00 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 10/60 frames (16.7%) after 00:00:43; best score -12.00 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 20/60 frames (33.3%) after 00:01:44; best score -12.00 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 30/60 frames (50.0%) after 00:03:01; best score -12.00 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 40/60 frames (66.7%) after 00:04:02; best score -12.00 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 50/60 frames (83.3%) after 00:05:01; best score -12.00 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 60/60 frames (100.0%) after 00:06:09; best score -12.00 at 00:00:00 (ocr 0.0)
+{
+  "date_key": "20260911",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260911_nGkeyUSs26U.mp4",
+  "captured_count": 0,
+  "captures": [],
+  "frame_count": 715,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 494,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "prefilter_best_score": 19.69,
+  "sample_frame_width": 640,
+  "status": "no_match",
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 0,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260911_20260911_ngkeyuss26u_93db4021_whiteboard\\ocr\\ocr_000001.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE",
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 0,
+    "observed_date": null,
+    "ocr_confidence": 0,
+    "ocr_profile": "threshold",
+    "ocr_text": "",
+    "ocr_text_snippet": "",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "d12937fe4d8a302e",
+    "prefilter_score": -23.06,
+    "prefilter_stats": {
+      "brightRatio": 0.26645833333333335,
+      "darkRatio": 0.45868055555555554,
+      "edgeRatio": 0.006324641368101194,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 100,
+      "horizontalEdgeRatio": 0.007066638400113066,
+      "meanLuma": 134.74104166666666,
+      "stdDev": 81.72392182779123,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 79,
+      "verticalEdgeRatio": 0.0055826443360893225
+    },
+    "score": -12,
+    "score_breakdown": {
+      "chart_likeness": 0,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 0,
+      "pair_bonus": 0,
+      "per_row_issues": -12,
+      "per_row_metrics": 0,
+      "text_density": 0
+    },
+    "screen_layout": "chart",
+    "tickers": [],
+    "timestamp": 0,
+    "timestamp_hms": "00:00:00"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260911_20260911_ngkeyuss26u_93db4021_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d12937fe4d8a302e",
+      "prefilter_score": -23.06,
+      "prefilter_stats": {
+        "brightRatio": 0.26645833333333335,
+        "darkRatio": 0.45868055555555554,
+        "edgeRatio": 0.006324641368101194,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 100,
+        "horizontalEdgeRatio": 0.007066638400113066,
+        "meanLuma": 134.74104166666666,
+        "stdDev": 81.72392182779123,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 79,
+        "verticalEdgeRatio": 0.0055826443360893225
+      },
+      "score": -12,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 539,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260911_20260911_ngkeyuss26u_93db4021_whiteboard\\ocr\\ocr_000540.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 34,
+      "ocr_profile": "threshold",
+      "ocr_text": "EE\noo\nMarxeTSURGE a ff         xX Csly weedy Monthly SM ~  < oms (9  Dam + AGE ©\nf      .                                                                            B\n» iShares Bitcoin Trust ETF «...                                                                                   43.92\ntie dtu                                                             rT —                    it 5130 am\nSnr © room -                                                       Soma Sve HALT 2 Dara Same        wo tasaoAa are\nrsa ana         ior Lo pi 1278 PETG 203\nsome              RE Ne IE DZ\nTown prea) Kong Sawai Hr                   .                                                  ®\nTow      So                             —     —    -\nJad      0%                    P——              oF\non      [FO     :\nfon      jd        :                                             —\njd      ow        :                                        [ih\n2a      vo        .  BE RE |    liad    =                   »\noo     Pea                                     il      =\n[if      ~             7       WY       nse\nComposite Rang.            + EPS Growin Rate.               B                                                                                            &                     N                                                                                                               55        Ld\npr      © a son    :                           :       (ih                  AN        ohn\nRS kung     68 Ears Sabiey                TU Aas               .  $i     p       Ed\nSom     foreign               -     -        :                            3      -    “\nContes     To Pretest    on         Eh 8  1    ji                          Hh)      N         |\nComnShaws  fewmetan          ARE 4 Pn                               fied\nect Roms   A Gone    4        FAT                             La.    “\nSMR Rating     + daw        ox            EF /\nWD Voi Rate     15 Rep                      “4                                                            comsonann        »\nnora      om wx     “exe          HE RAEI IIL                               J Somsantanon\n-        \"ane      !         J                                               a\nba    jaeio          !                                  ee\nxl                             |                                               ece   ES    2\n-              |                             Cus\n[31   _—\nme\n                                                                                       jo]\nR          J       i      -     oo         Li]\n-                                                                                       pt\nu                              a a EEN EEE ERNE Raa aaa a pa WE\n5                                  wu wn ms am wa ee es we | ws         Port\nLa |\n-    wn    wn    wow    wn    wom        sao 510\nwn   EE   -   a   wn   an   wn   a       warm\n=~     8           ]      tioms © in torts                        ony + 2 = mA\n",
+      "ocr_text_snippet": "EE oo MarxeTSURGE a ff xX Csly weedy Monthly SM ~ < oms (9 Dam + AGE © f . B » iShares Bitcoin Trust ETF «... 43.92 tie dtu rT — it 5130 am Snr © room - Soma Sve HALT 2 Dara Same wo tasaoAa are rsa...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 34,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 34,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d15a42b9b7a25a5a",
+      "prefilter_score": 18.92,
+      "prefilter_stats": {
+        "brightRatio": 0.7284027777777777,
+        "darkRatio": 0.06583333333333333,
+        "edgeRatio": 0.1864179209949827,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1784,
+        "horizontalEdgeRatio": 0.1260688290580171,
+        "meanLuma": 221.5715972222222,
+        "stdDev": 53.01975272851931,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3492,
+        "verticalEdgeRatio": 0.24676701293194828
+      },
+      "score": -25.21,
+      "score_breakdown": {
+        "chart_likeness": -4.908364017844621,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.7,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 2156,
+      "timestamp_hms": "00:35:56"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 528,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260911_20260911_ngkeyuss26u_93db4021_whiteboard\\ocr\\ocr_000529.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 32,
+      "ocr_profile": "threshold",
+      "ocr_text": "EE\n)\nMarkaTsurcE a [Ef         xX Cay weedy Monthly SM ~  < ons  Dam - OE ©\n~ iShares Bitcoin Trust ETF «..                                                                                                                    43.96\need eden                                                                   ovmave assist                      ® (s1an 2am\n8 Saker © To WAIN      .                                                       520 Argun MDD 11 DayATRS 327%        ve 135725348 10 190\nonsen 387        ExioPmot Lot Updan 12 18 PHT GB1120\n—               a      rd   Io\nYear (Dec)         Price) %Chy Seles (SM) % Chg                                                                 B                                                                                                           Open                                  “                       0\nbe      pi                               ——               ro         wl\n——                   z                 pl\non       om                 =       oun\nwn       jo         -                                                i.       “cng       2e%\n-                               3               1          Cia Range       [\nozs       boo         :                      :         ;            [it\n  ee       ay       ramon\npo     ow    Co                                {Lid         on      oraz      »\nES         wo              -                                           fy           IA             EC we stcnan 1       wo\n1              0 Scien    E—\nComposite Ratng           + EPS Growth Rat             .                                                                                  s                                                                                              MBI%          55       Ld\nprin       © boon Sow     :                                3        ih                            ww Lo\na8 Katng     8 Eainiogs Siabiey                               q      my                      Heer         1\nrove    Sus Gonmig   :       eid i       i                        arotvon 7   o\nMonin RS     6 Pelton    on            |       1     Is                        Fo     antes,\nGopRStamg - heumoscamy 0%              ;            .                               je        Doon       Ps\npldpiten    A Comin      0              | Rl Al                           J     ERNE\nSUR Rang     * err        on                  J                               sno)     pri\nUID Vol Rao.      15 R&D                           o Li                                                                                         *\npa      ow pe     Lxser            eee\nGoa        © boa pe      .         I                                                         x\nCosi      asia              :\no                                                                                              =\nhe              Ca             caus\n+]                          [X] J LL ————\npa\nof                                                                                             jot)\n——        _    -    I.        itd\nJ                                      .                                                       PH]\nu                                me a nts sds Oecd Mm dnd Sen Den\non)     os                               wi ww mes we ea so ws we ©»          Preah\nor                               )\n[]       1                                        “        we am       ,       rs       .        .                           xem\na              I              wr              Na              wa              wa              I\"              ™              in                             sao ti\nSE                              rn    va SERA    Na    Na    Na    Na    “a    [Pr ———\n=     -           ]      items © rie esas                         om - OE EA\n",
+      "ocr_text_snippet": "EE ) MarkaTsurcE a [Ef xX Cay weedy Monthly SM ~ < ons Dam - OE © ~ iShares Bitcoin Trust ETF «.. 43.96 eed eden ovmave assist ® (s1an 2am 8 Saker © To WAIN . 520 Argun MDD 11 DayATRS 327% ve 13572...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 32,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 32,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d15a42b9b7a24e5a",
+      "prefilter_score": 19.13,
+      "prefilter_stats": {
+        "brightRatio": 0.7219444444444445,
+        "darkRatio": 0.0654861111111111,
+        "edgeRatio": 0.18479259416295668,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1775,
+        "horizontalEdgeRatio": 0.12543283160200694,
+        "meanLuma": 220.98763888888888,
+        "stdDev": 53.06228769079512,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3455,
+        "verticalEdgeRatio": 0.24415235672390645
+      },
+      "score": -25.22,
+      "score_breakdown": {
+        "chart_likeness": -4.822048410913586,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.6,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE",
+        "PL"
+      ],
+      "timestamp": 2112,
+      "timestamp_hms": "00:35:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 187,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260911_20260911_ngkeyuss26u_93db4021_whiteboard\\ocr\\ocr_000188.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 41,
+      "ocr_profile": "threshold",
+      "ocr_text": "NN.\nMarkaTsureE a (EE) N   X Daly Wesy wowhy SMn v «ons ©             [coer scene - ass ©\n® Roundhill Photonics & Optics ETF ....                                                                325.31\nBrat 5 BINA 10                                                                     DOA VS     wa                    TE (0.781 63.10%\n£ setae     © TOP uATGH ee     -                                                 50DayAvgS val STASI                   Var 817.962 +30 87\nOMS2ieecrigh 231% 210ayATR% 4% Lamtlpeats 14 AMET 0911202\nCommas              LE EE CE                            asain (152    [\nYour    Price Price Swe CompaeRang -                                                            2A      »\nUnvalid Date) ($1 % Chg % Chg EPS Ratng   es\nas    am    - mshams  B\n220    on.   2 hon &5 Rang £3\n8 ont RS Rating 48\n-     pial |\n2022    000     AecOntamg -                                                           »\nam   on    Cami Subesy ©\npoo    to       Suen Gowns ©\n[ry\nws ow                                             |  |\ni by   f RS Ry\n=\n\" |] Hy   2\ni\nsoa\n-                                                                  I]\ntoe                                                                            i\no                                                          it\nj\n.                                                              Zu\nrr       Fell\nNov           \"                   Apr       way      Jun       Ju       gy      Sep\nA                                                  p—\n-—                                                    Price (5), % Chg\n’     I=                                               Sales (M51,% Chg\naw  pz                               =n                                  Aer Tox Margin\n—      items © het 110 Tan 0 pu                        omy - OB EA\n",
+      "ocr_text_snippet": "NN. MarkaTsureE a (EE) N X Daly Wesy wowhy SMn v «ons © [coer scene - ass © ® Roundhill Photonics & Optics ETF .... 325.31 Brat 5 BINA 10 DOA VS wa TE (0.781 63.10% £ setae © TOP uATGH ee - 50DayAv...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 41,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 41,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d15a4aa9ada18f6a",
+      "prefilter_score": 19.04,
+      "prefilter_stats": {
+        "brightRatio": 0.7634027777777778,
+        "darkRatio": 0.05597222222222222,
+        "edgeRatio": 0.1359621228181754,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1155,
+        "horizontalEdgeRatio": 0.08161967352130592,
+        "meanLuma": 224.93159722222222,
+        "stdDev": 53.031777438458676,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2693,
+        "verticalEdgeRatio": 0.19030457211504487
+      },
+      "score": -25.95,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.05,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "TAN"
+      ],
+      "timestamp": 748,
+      "timestamp_hms": "00:12:28"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 209,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260911_20260911_ngkeyuss26u_93db4021_whiteboard\\ocr\\ocr_000210.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 34,
+      "ocr_profile": "threshold",
+      "ocr_text": "NN.\nMarkeTSURGE of (EF9       X Duy Wey Monthly Mn ~  < onms                 [coer sexe - ass ©\n# Nebius Group N.V. CI A +...                                                                       %228.45\nren i on                                          omni HII Mesaie wore      Weis 5050 4 15\nComat sastoress nomaRn sen         pire\n\nFT                [3       rere a Teena ovens Lan Ups Mss AMET 031120\n\nCusine               LEE 2 SCR BY a a SI a Wa     ©\n\n5 Es sue Camouerama 73                                           ®\n\n(Dr) ©) %Chg  %ChG EPS Ratng   “TS\n\nFor\n\n2020  LL  oe 3 Month RS Rating #1\n\nTo bm ai el omer %                      a                -\n\nFI                           wl            we\n\n023 0M WES acgDa amg  [3\n\n= own nt                           TN\"           i\n\n005 DIT + Sales Grown Rae 49%                            Y  f.   N               In      »\n\nba EN SH EpSGowhRde                      mrs     [y    .   20%    ,     hy\n\nTe Am ll ERT                      J) il  f     fi   bcd       i\n\n[=     by       Ek )  yi iw      hd\n®.   ples                  {          go    [\non)             Avil]\nfe,                                    0\nry    il                 RF <7\nwow               d   -\n-        __      .    alent    dot?     ATE                   jd           0\n[/         Cana\n~           v\nod                                    zp         oo     we         py                Br\nyr               III      MIT           ll     TUTTE    I            4\n4    \\Y          a\n[4         Aor      May     Jun      ul      Aug      Sep.\n\n.                     4               A             SN\n      }                      Es    or    -    038    6    ore    -    er     EPS (3). % Chg\n:                                                                      +           ss            w            st          a            wre            -            was             Sue 01,500\n\n-                                                          so                     =                             oe                                                            ater Toxin\n\n=             A\na      tioms © 1h tet 17ers                        ors - oom EA\n5 —\n",
+      "ocr_text_snippet": "NN. MarkeTSURGE of (EF9 X Duy Wey Monthly Mn ~ < onms [coer sexe - ass © # Nebius Group N.V. CI A +... %228.45 ren i on omni HII Mesaie wore Weis 5050 4 15 Comat sastoress nomaRn sen pire FT [3 rer...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 34,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 34,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d1585823ada5ad7a",
+      "prefilter_score": 16.86,
+      "prefilter_stats": {
+        "brightRatio": 0.695,
+        "darkRatio": 0.05631944444444444,
+        "edgeRatio": 0.18878524485902057,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1739,
+        "horizontalEdgeRatio": 0.12288884177796622,
+        "meanLuma": 219.016875,
+        "stdDev": 53.2698208412287,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3604,
+        "verticalEdgeRatio": 0.2546816479400749
+      },
+      "score": -26.03,
+      "score_breakdown": {
+        "chart_likeness": -5.732010997016767,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.7,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 836,
+      "timestamp_hms": "00:13:56"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260911_20260911_ngkeyuss26u_93db4021_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d12937fe4d8a302e",
+      "prefilter_score": -23.06,
+      "prefilter_stats": {
+        "brightRatio": 0.26645833333333335,
+        "darkRatio": 0.45868055555555554,
+        "edgeRatio": 0.006324641368101194,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 100,
+        "horizontalEdgeRatio": 0.007066638400113066,
+        "meanLuma": 134.74104166666666,
+        "stdDev": 81.72392182779123,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 79,
+        "verticalEdgeRatio": 0.0055826443360893225
+      },
+      "score": -12,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 539,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260911_20260911_ngkeyuss26u_93db4021_whiteboard\\ocr\\ocr_000540.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 2156.56874,
+      "observed_date": null,
+      "ocr_confidence": 34,
+      "ocr_profile": "threshold",
+      "ocr_text": "EE\noo\nMarxeTSURGE a ff         xX Csly weedy Monthly SM ~  < oms (9  Dam + AGE ©\nf      .                                                                            B\n» iShares Bitcoin Trust ETF «...                                                                                   43.92\ntie dtu                                                             rT —                    it 5130 am\nSnr © room -                                                       Soma Sve HALT 2 Dara Same        wo tasaoAa are\nrsa ana         ior Lo pi 1278 PETG 203\nsome              RE Ne IE DZ\nTown prea) Kong Sawai Hr                   .                                                  ®\nTow      So                             —     —    -\nJad      0%                    P——              oF\non      [FO     :\nfon      jd        :                                             —\njd      ow        :                                        [ih\n2a      vo        .  BE RE |    liad    =                   »\noo     Pea                                     il      =\n[if      ~             7       WY       nse\nComposite Rang.            + EPS Growin Rate.               B                                                                                            &                     N                                                                                                               55        Ld\npr      © a son    :                           :       (ih                  AN        ohn\nRS kung     68 Ears Sabiey                TU Aas               .  $i     p       Ed\nSom     foreign               -     -        :                            3      -    “\nContes     To Pretest    on         Eh 8  1    ji                          Hh)      N         |\nComnShaws  fewmetan          ARE 4 Pn                               fied\nect Roms   A Gone    4        FAT                             La.    “\nSMR Rating     + daw        ox            EF /\nWD Voi Rate     15 Rep                      “4                                                            comsonann        »\nnora      om wx     “exe          HE RAEI IIL                               J Somsantanon\n-        \"ane      !         J                                               a\nba    jaeio          !                                  ee\nxl                             |                                               ece   ES    2\n-              |                             Cus\n[31   _—\nme\n                                                                                       jo]\nR          J       i      -     oo         Li]\n-                                                                                       pt\nu                              a a EEN EEE ERNE Raa aaa a pa WE\n5                                  wu wn ms am wa ee es we | ws         Port\nLa |\n-    wn    wn    wow    wn    wom        sao 510\nwn   EE   -   a   wn   an   wn   a       warm\n=~     8           ]      tioms © in torts                        ony + 2 = mA\n",
+      "ocr_text_snippet": "EE oo MarxeTSURGE a ff xX Csly weedy Monthly SM ~ < oms (9 Dam + AGE © f . B » iShares Bitcoin Trust ETF «... 43.92 tie dtu rT — it 5130 am Snr © room - Soma Sve HALT 2 Dara Same wo tasaoAa are rsa...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 34,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 34,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d15a42b9b7a25a5a",
+      "prefilter_score": 18.92,
+      "prefilter_stats": {
+        "brightRatio": 0.7284027777777777,
+        "darkRatio": 0.06583333333333333,
+        "edgeRatio": 0.1864179209949827,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1784,
+        "horizontalEdgeRatio": 0.1260688290580171,
+        "meanLuma": 221.5715972222222,
+        "stdDev": 53.01975272851931,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3492,
+        "verticalEdgeRatio": 0.24676701293194828
+      },
+      "score": -25.21,
+      "score_breakdown": {
+        "chart_likeness": -4.908364017844621,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.7,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 2156,
+      "timestamp_hms": "00:35:56"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 528,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260911_20260911_ngkeyuss26u_93db4021_whiteboard\\ocr\\ocr_000529.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 2110.107953,
+      "observed_date": null,
+      "ocr_confidence": 32,
+      "ocr_profile": "threshold",
+      "ocr_text": "EE\n)\nMarkaTsurcE a [Ef         xX Cay weedy Monthly SM ~  < ons  Dam - OE ©\n~ iShares Bitcoin Trust ETF «..                                                                                                                    43.96\need eden                                                                   ovmave assist                      ® (s1an 2am\n8 Saker © To WAIN      .                                                       520 Argun MDD 11 DayATRS 327%        ve 135725348 10 190\nonsen 387        ExioPmot Lot Updan 12 18 PHT GB1120\n—               a      rd   Io\nYear (Dec)         Price) %Chy Seles (SM) % Chg                                                                 B                                                                                                           Open                                  “                       0\nbe      pi                               ——               ro         wl\n——                   z                 pl\non       om                 =       oun\nwn       jo         -                                                i.       “cng       2e%\n-                               3               1          Cia Range       [\nozs       boo         :                      :         ;            [it\n  ee       ay       ramon\npo     ow    Co                                {Lid         on      oraz      »\nES         wo              -                                           fy           IA             EC we stcnan 1       wo\n1              0 Scien    E—\nComposite Ratng           + EPS Growth Rat             .                                                                                  s                                                                                              MBI%          55       Ld\nprin       © boon Sow     :                                3        ih                            ww Lo\na8 Katng     8 Eainiogs Siabiey                               q      my                      Heer         1\nrove    Sus Gonmig   :       eid i       i                        arotvon 7   o\nMonin RS     6 Pelton    on            |       1     Is                        Fo     antes,\nGopRStamg - heumoscamy 0%              ;            .                               je        Doon       Ps\npldpiten    A Comin      0              | Rl Al                           J     ERNE\nSUR Rang     * err        on                  J                               sno)     pri\nUID Vol Rao.      15 R&D                           o Li                                                                                         *\npa      ow pe     Lxser            eee\nGoa        © boa pe      .         I                                                         x\nCosi      asia              :\no                                                                                              =\nhe              Ca             caus\n+]                          [X] J LL ————\npa\nof                                                                                             jot)\n——        _    -    I.        itd\nJ                                      .                                                       PH]\nu                                me a nts sds Oecd Mm dnd Sen Den\non)     os                               wi ww mes we ea so ws we ©»          Preah\nor                               )\n[]       1                                        “        we am       ,       rs       .        .                           xem\na              I              wr              Na              wa              wa              I\"              ™              in                             sao ti\nSE                              rn    va SERA    Na    Na    Na    Na    “a    [Pr ———\n=     -           ]      items © rie esas                         om - OE EA\n",
+      "ocr_text_snippet": "EE ) MarkaTsurcE a [Ef xX Cay weedy Monthly SM ~ < ons Dam - OE © ~ iShares Bitcoin Trust ETF «.. 43.96 eed eden ovmave assist ® (s1an 2am 8 Saker © To WAIN . 520 Argun MDD 11 DayATRS 327% ve 13572...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 32,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 32,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d15a42b9b7a24e5a",
+      "prefilter_score": 19.13,
+      "prefilter_stats": {
+        "brightRatio": 0.7219444444444445,
+        "darkRatio": 0.0654861111111111,
+        "edgeRatio": 0.18479259416295668,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1775,
+        "horizontalEdgeRatio": 0.12543283160200694,
+        "meanLuma": 220.98763888888888,
+        "stdDev": 53.06228769079512,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3455,
+        "verticalEdgeRatio": 0.24415235672390645
+      },
+      "score": -25.22,
+      "score_breakdown": {
+        "chart_likeness": -4.822048410913586,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.6,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE",
+        "PL"
+      ],
+      "timestamp": 2112,
+      "timestamp_hms": "00:35:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 187,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260911_20260911_ngkeyuss26u_93db4021_whiteboard\\ocr\\ocr_000188.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 746.412069,
+      "observed_date": null,
+      "ocr_confidence": 41,
+      "ocr_profile": "threshold",
+      "ocr_text": "NN.\nMarkaTsureE a (EE) N   X Daly Wesy wowhy SMn v «ons ©             [coer scene - ass ©\n® Roundhill Photonics & Optics ETF ....                                                                325.31\nBrat 5 BINA 10                                                                     DOA VS     wa                    TE (0.781 63.10%\n£ setae     © TOP uATGH ee     -                                                 50DayAvgS val STASI                   Var 817.962 +30 87\nOMS2ieecrigh 231% 210ayATR% 4% Lamtlpeats 14 AMET 0911202\nCommas              LE EE CE                            asain (152    [\nYour    Price Price Swe CompaeRang -                                                            2A      »\nUnvalid Date) ($1 % Chg % Chg EPS Ratng   es\nas    am    - mshams  B\n220    on.   2 hon &5 Rang £3\n8 ont RS Rating 48\n-     pial |\n2022    000     AecOntamg -                                                           »\nam   on    Cami Subesy ©\npoo    to       Suen Gowns ©\n[ry\nws ow                                             |  |\ni by   f RS Ry\n=\n\" |] Hy   2\ni\nsoa\n-                                                                  I]\ntoe                                                                            i\no                                                          it\nj\n.                                                              Zu\nrr       Fell\nNov           \"                   Apr       way      Jun       Ju       gy      Sep\nA                                                  p—\n-—                                                    Price (5), % Chg\n’     I=                                               Sales (M51,% Chg\naw  pz                               =n                                  Aer Tox Margin\n—      items © het 110 Tan 0 pu                        omy - OB EA\n",
+      "ocr_text_snippet": "NN. MarkaTsureE a (EE) N X Daly Wesy wowhy SMn v «ons © [coer scene - ass © ® Roundhill Photonics & Optics ETF .... 325.31 Brat 5 BINA 10 DOA VS wa TE (0.781 63.10% £ setae © TOP uATGH ee - 50DayAv...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 41,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 41,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d15a4aa9ada18f6a",
+      "prefilter_score": 19.04,
+      "prefilter_stats": {
+        "brightRatio": 0.7634027777777778,
+        "darkRatio": 0.05597222222222222,
+        "edgeRatio": 0.1359621228181754,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1155,
+        "horizontalEdgeRatio": 0.08161967352130592,
+        "meanLuma": 224.93159722222222,
+        "stdDev": 53.031777438458676,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2693,
+        "verticalEdgeRatio": 0.19030457211504487
+      },
+      "score": -25.95,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.05,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "TAN"
+      ],
+      "timestamp": 748,
+      "timestamp_hms": "00:12:28"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 209,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\frames\\20260911_20260911_ngkeyuss26u_93db4021_whiteboard\\ocr\\ocr_000210.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 833.555268,
+      "observed_date": null,
+      "ocr_confidence": 34,
+      "ocr_profile": "threshold",
+      "ocr_text": "NN.\nMarkeTSURGE of (EF9       X Duy Wey Monthly Mn ~  < onms                 [coer sexe - ass ©\n# Nebius Group N.V. CI A +...                                                                       %228.45\nren i on                                          omni HII Mesaie wore      Weis 5050 4 15\nComat sastoress nomaRn sen         pire\n\nFT                [3       rere a Teena ovens Lan Ups Mss AMET 031120\n\nCusine               LEE 2 SCR BY a a SI a Wa     ©\n\n5 Es sue Camouerama 73                                           ®\n\n(Dr) ©) %Chg  %ChG EPS Ratng   “TS\n\nFor\n\n2020  LL  oe 3 Month RS Rating #1\n\nTo bm ai el omer %                      a                -\n\nFI                           wl            we\n\n023 0M WES acgDa amg  [3\n\n= own nt                           TN\"           i\n\n005 DIT + Sales Grown Rae 49%                            Y  f.   N               In      »\n\nba EN SH EpSGowhRde                      mrs     [y    .   20%    ,     hy\n\nTe Am ll ERT                      J) il  f     fi   bcd       i\n\n[=     by       Ek )  yi iw      hd\n®.   ples                  {          go    [\non)             Avil]\nfe,                                    0\nry    il                 RF <7\nwow               d   -\n-        __      .    alent    dot?     ATE                   jd           0\n[/         Cana\n~           v\nod                                    zp         oo     we         py                Br\nyr               III      MIT           ll     TUTTE    I            4\n4    \\Y          a\n[4         Aor      May     Jun      ul      Aug      Sep.\n\n.                     4               A             SN\n      }                      Es    or    -    038    6    ore    -    er     EPS (3). % Chg\n:                                                                      +           ss            w            st          a            wre            -            was             Sue 01,500\n\n-                                                          so                     =                             oe                                                            ater Toxin\n\n=             A\na      tioms © 1h tet 17ers                        ors - oom EA\n5 —\n",
+      "ocr_text_snippet": "NN. MarkeTSURGE of (EF9 X Duy Wey Monthly Mn ~ < onms [coer sexe - ass © # Nebius Group N.V. CI A +... %228.45 ren i on omni HII Mesaie wore Weis 5050 4 15 Comat sastoress nomaRn sen pire FT [3 rer...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 34,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 34,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d1585823ada5ad7a",
+      "prefilter_score": 16.86,
+      "prefilter_stats": {
+        "brightRatio": 0.695,
+        "darkRatio": 0.05631944444444444,
+        "edgeRatio": 0.18878524485902057,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1739,
+        "horizontalEdgeRatio": 0.12288884177796622,
+        "meanLuma": 219.016875,
+        "stdDev": 53.2698208412287,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3604,
+        "verticalEdgeRatio": 0.2546816479400749
+      },
+      "score": -26.03,
+      "score_breakdown": {
+        "chart_likeness": -5.732010997016767,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.7,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 836,
+      "timestamp_hms": "00:13:56"
+    }
+  ],
+  "whiteboard_segments": [],
+  "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-p4\\ocr-20260915-p4\\ocr_probe\\logs\\20260911_20260911_ngkeyuss26u_93db4021_whiteboard.json"
+}

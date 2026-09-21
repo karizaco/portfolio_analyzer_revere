@@ -1,0 +1,976 @@
+{
+  "date_key": "20260814",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260814_K307gBsCRGg.mp4",
+  "captured_count": 0,
+  "captures": [],
+  "frame_count": 538,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 372,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "prefilter_best_score": 19.47,
+  "sample_frame_width": 640,
+  "status": "no_match",
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 0,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260814_20260814_k307gbscrgg_041dc6c0_whiteboard\\ocr\\ocr_000001.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE",
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 0,
+    "observed_date": null,
+    "ocr_confidence": 0,
+    "ocr_profile": "threshold",
+    "ocr_text": "",
+    "ocr_text_snippet": "",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "d00837fe5d8a233e",
+    "prefilter_score": -19.9,
+    "prefilter_stats": {
+      "brightRatio": 0.0011805555555555556,
+      "darkRatio": 0.7495138888888889,
+      "edgeRatio": 0.036216521800579465,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 729,
+      "horizontalEdgeRatio": 0.051515793936824254,
+      "meanLuma": 73.27131944444444,
+      "stdDev": 45.73558892254914,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 296,
+      "verticalEdgeRatio": 0.020917249664334676
+    },
+    "score": -10.56,
+    "score_breakdown": {
+      "chart_likeness": 1.4398777727998529,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 0,
+      "pair_bonus": 0,
+      "per_row_issues": -12,
+      "per_row_metrics": 0,
+      "text_density": 0
+    },
+    "screen_layout": "chart",
+    "tickers": [],
+    "timestamp": 0,
+    "timestamp_hms": "00:00:00"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260814_20260814_k307gbscrgg_041dc6c0_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d00837fe5d8a233e",
+      "prefilter_score": -19.9,
+      "prefilter_stats": {
+        "brightRatio": 0.0011805555555555556,
+        "darkRatio": 0.7495138888888889,
+        "edgeRatio": 0.036216521800579465,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 729,
+        "horizontalEdgeRatio": 0.051515793936824254,
+        "meanLuma": 73.27131944444444,
+        "stdDev": 45.73558892254914,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 296,
+        "verticalEdgeRatio": 0.020917249664334676
+      },
+      "score": -10.56,
+      "score_breakdown": {
+        "chart_likeness": 1.4398777727998529,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 8,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260814_20260814_k307gbscrgg_041dc6c0_whiteboard\\ocr\\ocr_000009.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 81,
+      "ocr_profile": "threshold",
+      "ocr_text": "|    |\nRevere Asset\nManagement\n",
+      "ocr_text_snippet": "| | Revere Asset Management",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 81,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 81,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "cc3b33c4cc3933c6",
+      "prefilter_score": 13.58,
+      "prefilter_stats": {
+        "brightRatio": 0.7429861111111111,
+        "darkRatio": 0.016666666666666666,
+        "edgeRatio": 0.16666666666666666,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1655,
+        "horizontalEdgeRatio": 0.11695286552187124,
+        "meanLuma": 227.52694444444444,
+        "stdDev": 38.716687782993525,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3062,
+        "verticalEdgeRatio": 0.21638046781146208
+      },
+      "score": -21.03,
+      "score_breakdown": {
+        "chart_likeness": -4.035326271493062,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 4.05,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 4.96
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 32,
+      "timestamp_hms": "00:00:32"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 448,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260814_20260814_k307gbscrgg_041dc6c0_whiteboard\\ocr\\ocr_000449.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 36,
+      "ocr_profile": "threshold",
+      "ocr_text": "MarkeTsUReE o ERIE  a    x | oy | Westy Monty Mo mum                 Er ®om- oss 0\n= CoreWeave Inc. Cl A x.                                                                                       £105.10\neaters 2173 14                                                       DOisAGIl AMIN NaseCe  S6rseE        Chm a1 112\n8 toner © 212 KOs       .                                                  0D A Sle SLI0IUTE ZDWATRSY 103%        a 13354502 “36524\nOnsen tn 31a sv wom pot 31 das La Usd 211 PHET 08142025\ncama               Qs WR Ber TN area _ opm fT   ®\new ES Eps Saws CompoumRarg 28\nBo Nw XCM marae 4 me       pa\nwo 00     - seme\nwow   3 bn RS Rang 48\n2021    oc              & Month RS Rating 76                                                             13625                                                      “0\nFea EN indi                          |\nMm oes a ra. meee                              Lod          ae\nFE iA                             Pil                                 ©\nZOE Emma       i”                  wil oy. Bp              |\nWale 14 nie ls. py   .                                               3          Ho                    <\nN    eee SS   EV BF hy      |     <\nSL        :             iar        SEY SN\nwa    N           Bhi]                             1          -\n-.    Hi       al         Ji         a                      1\nfi    LN]                 gi     A   ~.                                        aa)         iy   ly    u        i]\n1,        ILL      >       c            Ly,   Ls ab                                                  IN woman 80\nif  pt       i     ay                       WL\n1     [1                 bos                                    +    I\ni\ni                    orc     rr rad\nwe    -                            pr          a      ™    on    vn              )    pe\niti        4                               I       Ju        [MRI                             [I             far\nCa                  a     EE EE EE EE AC I A\n.      ¥                an Keb      Mar.       Apr       May      Jun.       Jul       Aug\n.            B      fa IN crea ar 2026                  Qt Ended dune 2028                 Qu Esse EPS Due inte\nCRF ar:   .           By -   os   a am   -   az   an   an   “  EPS (5). % hg\nPE                                                                                                      pp                                                                 NE                                                  Aer Tax aro\nsoem |   Lats      Reports    21.21 8/10 <<< 26items © pam TT iIAIETOAM AL                                  om - OEE A\n",
+      "ocr_text_snippet": "MarkeTsUReE o ERIE a x | oy | Westy Monty Mo mum Er ®om- oss 0 = CoreWeave Inc. Cl A x. £105.10 eaters 2173 14 DOisAGIl AMIN NaseCe S6rseE Chm a1 112 8 toner © 212 KOs . 0D A Sle SLI0IUTE ZDWATRSY ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c9484ca9b5a5b36b",
+      "prefilter_score": 17.24,
+      "prefilter_stats": {
+        "brightRatio": 0.693125,
+        "darkRatio": 0.033819444444444444,
+        "edgeRatio": 0.1997385343791958,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2172,
+        "horizontalEdgeRatio": 0.1534873860504558,
+        "meanLuma": 220.695,
+        "stdDev": 44.746410811992035,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3481,
+        "verticalEdgeRatio": 0.24598968270793584
+      },
+      "score": -22.64,
+      "score_breakdown": {
+        "chart_likeness": -2.43712108441286,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.8,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 1792,
+      "timestamp_hms": "00:29:52"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 232,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260814_20260814_k307gbscrgg_041dc6c0_whiteboard\\ocr\\ocr_000233.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 36,
+      "ocr_profile": "threshold",
+      "ocr_text": "MarkeTSUReE o EY      FE               EEX ©om- oss 0\n= Applied Optoelectronics Inc. «..                                                                       $149.17\ncm pres 123-53                                                     oDmAgYe TRIG Manali    soon      ARO1 1451903 +14.55%\nQ Seam © 2121810503)       .                                              50Day Avg S Vor $1UISTIN 21 Day ATR    un        Voi 1570.58 «88.1%\nOff 52.Weoi High      3619s 37 from prvot in 216 days Last Update 11°57 AMET 08/14:2026.\nComo               A rE BWR Te TT Tera ee means   ®\nVe EPS EPS Swes ComoomuRung 7\nOnt Cw NON osrmma 82                              po\n8 0m aT it eRe  -\n0m ps2  77 IMonnRS Rang 2\nWoT 0 A. mens han &                                  woe\nm2 a0 GopRsRam W                                     §                     ES\non owe    acDrrang                              dd\nWw om ow oY tenes                              ly     !\n5 D2 gan Crone dg                        :    |  i h   3   —\nMeo DM 4 <r osc fee 0%                          .                       —\nTre a Dl pmemens                   it \\      MW he   ~     BE\noe       hE    WA Me         .\nJ              ¢             Ht)             .\nIr    M4       J                         7\nbal  LY] byt                              Wl      sams 100\nFx (a!                         pr    68\nWARY:                            r\n4    VY\nd\nwn 5          cp      ret      ——      7                       J      Py\nI  |     ’      ”    | 1 etal   iif I |\n:           |                -\nmy  /                     Ji aril]       | | i   |    1        i ] il |  il\nmw i                     a      aw   rm   i 1       i       nw\ni                                    i                                     ow\nf                                                                          i\nIi                              A REA        Timi            Im __ 3\na                             EE JER EE a   =\nE             Feb.      War       Apr      May      dun.      Jul       Avg\nE—          Ended Ane 2078         GuEdsse  EPSDue tvs:\nor                           -    002    sar    008     -    ae    Re     ou     -   EPs 1. % 0g\nrf           b,            -    wo    an    wre    “    a0    pe     80     “  semmnnon\n04                     a              Aer Tax Margin\n-—   7        Y   oo.                 =\nsame |  Lats    Reports   21.21 8/10 <<< 26items © pea IAAT AGE                       Of - DB EB A\n",
+      "ocr_text_snippet": "MarkeTSUReE o EY FE EEX ©om- oss 0 = Applied Optoelectronics Inc. «.. $149.17 cm pres 123-53 oDmAgYe TRIG Manali soon ARO1 1451903 +14.55% Q Seam © 2121810503) . 50Day Avg S Vor $1UISTIN 21 Day ATR...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c95a12b1b6a495ed",
+      "prefilter_score": 14.63,
+      "prefilter_stats": {
+        "brightRatio": 0.6838194444444444,
+        "darkRatio": 0.013541666666666667,
+        "edgeRatio": 0.18613525545897816,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2007,
+        "horizontalEdgeRatio": 0.14182743269026923,
+        "meanLuma": 223.17902777777778,
+        "stdDev": 40.17811080605556,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3261,
+        "verticalEdgeRatio": 0.2304430782276871
+      },
+      "score": -22.74,
+      "score_breakdown": {
+        "chart_likeness": -2.5423684320761826,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.8,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 928,
+      "timestamp_hms": "00:15:28"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 56,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260814_20260814_k307gbscrgg_041dc6c0_whiteboard\\ocr\\ocr_000057.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 37,
+      "ocr_profile": "threshold",
+      "ocr_text": "MarkersUres a (EI        x Day weedy soomy wn <       BE                  EE ©ome- oss oo\nM S&P 500 Index                                                                                             SPX ($1480).0 19% voi 1200817 142 301%. $7,784.19\n\neS Nn i\not,\n\nHo fob\n\nI                      i\n\nbm                        \"a                   ~\n\nuift        off, Jo rl Ty,                                                             ha\n\nph  inf            CE   k         i                        -\n\n|                                        bg yl d my                         pe\n|          N  - x     i  i  I LLL lh ili . [hin VT i re]  dhe]\nIl       i Ce n\nsams | Law    Reports er 8/10 <<< 26items Clon —            Ory - DEBE A\n",
+      "ocr_text_snippet": "MarkersUres a (EI x Day weedy soomy wn < BE EE ©ome- oss oo M S&P 500 Index SPX ($1480).0 19% voi 1200817 142 301%. $7,784.19 eS Nn i ot, Ho fob I i bm \"a ~ uift off, Jo rl Ty, ha ph inf CE k i - |...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c25a51a9ada1adcb",
+      "prefilter_score": 17.12,
+      "prefilter_stats": {
+        "brightRatio": 0.7544444444444445,
+        "darkRatio": 0.023819444444444445,
+        "edgeRatio": 0.15193272560243093,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1616,
+        "horizontalEdgeRatio": 0.11419687654582715,
+        "meanLuma": 228.2125,
+        "stdDev": 44.36336838948448,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2684,
+        "verticalEdgeRatio": 0.1896685746590347
+      },
+      "score": -22.77,
+      "score_breakdown": {
+        "chart_likeness": -2.617284681168245,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.85,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "unknown_text",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 224,
+      "timestamp_hms": "00:03:44"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260814_20260814_k307gbscrgg_041dc6c0_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d00837fe5d8a233e",
+      "prefilter_score": -19.9,
+      "prefilter_stats": {
+        "brightRatio": 0.0011805555555555556,
+        "darkRatio": 0.7495138888888889,
+        "edgeRatio": 0.036216521800579465,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 729,
+        "horizontalEdgeRatio": 0.051515793936824254,
+        "meanLuma": 73.27131944444444,
+        "stdDev": 45.73558892254914,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 296,
+        "verticalEdgeRatio": 0.020917249664334676
+      },
+      "score": -10.56,
+      "score_breakdown": {
+        "chart_likeness": 1.4398777727998529,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 8,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260814_20260814_k307gbscrgg_041dc6c0_whiteboard\\ocr\\ocr_000009.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 34.820057,
+      "observed_date": null,
+      "ocr_confidence": 81,
+      "ocr_profile": "threshold",
+      "ocr_text": "|    |\nRevere Asset\nManagement\n",
+      "ocr_text_snippet": "| | Revere Asset Management",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 81,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 81,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "cc3b33c4cc3933c6",
+      "prefilter_score": 13.58,
+      "prefilter_stats": {
+        "brightRatio": 0.7429861111111111,
+        "darkRatio": 0.016666666666666666,
+        "edgeRatio": 0.16666666666666666,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1655,
+        "horizontalEdgeRatio": 0.11695286552187124,
+        "meanLuma": 227.52694444444444,
+        "stdDev": 38.716687782993525,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3062,
+        "verticalEdgeRatio": 0.21638046781146208
+      },
+      "score": -21.03,
+      "score_breakdown": {
+        "chart_likeness": -4.035326271493062,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 4.05,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 4.96
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 32,
+      "timestamp_hms": "00:00:32"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 448,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260814_20260814_k307gbscrgg_041dc6c0_whiteboard\\ocr\\ocr_000449.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1793.149496,
+      "observed_date": null,
+      "ocr_confidence": 36,
+      "ocr_profile": "threshold",
+      "ocr_text": "MarkeTsUReE o ERIE  a    x | oy | Westy Monty Mo mum                 Er ®om- oss 0\n= CoreWeave Inc. Cl A x.                                                                                       £105.10\neaters 2173 14                                                       DOisAGIl AMIN NaseCe  S6rseE        Chm a1 112\n8 toner © 212 KOs       .                                                  0D A Sle SLI0IUTE ZDWATRSY 103%        a 13354502 “36524\nOnsen tn 31a sv wom pot 31 das La Usd 211 PHET 08142025\ncama               Qs WR Ber TN area _ opm fT   ®\new ES Eps Saws CompoumRarg 28\nBo Nw XCM marae 4 me       pa\nwo 00     - seme\nwow   3 bn RS Rang 48\n2021    oc              & Month RS Rating 76                                                             13625                                                      “0\nFea EN indi                          |\nMm oes a ra. meee                              Lod          ae\nFE iA                             Pil                                 ©\nZOE Emma       i”                  wil oy. Bp              |\nWale 14 nie ls. py   .                                               3          Ho                    <\nN    eee SS   EV BF hy      |     <\nSL        :             iar        SEY SN\nwa    N           Bhi]                             1          -\n-.    Hi       al         Ji         a                      1\nfi    LN]                 gi     A   ~.                                        aa)         iy   ly    u        i]\n1,        ILL      >       c            Ly,   Ls ab                                                  IN woman 80\nif  pt       i     ay                       WL\n1     [1                 bos                                    +    I\ni\ni                    orc     rr rad\nwe    -                            pr          a      ™    on    vn              )    pe\niti        4                               I       Ju        [MRI                             [I             far\nCa                  a     EE EE EE EE AC I A\n.      ¥                an Keb      Mar.       Apr       May      Jun.       Jul       Aug\n.            B      fa IN crea ar 2026                  Qt Ended dune 2028                 Qu Esse EPS Due inte\nCRF ar:   .           By -   os   a am   -   az   an   an   “  EPS (5). % hg\nPE                                                                                                      pp                                                                 NE                                                  Aer Tax aro\nsoem |   Lats      Reports    21.21 8/10 <<< 26items © pam TT iIAIETOAM AL                                  om - OEE A\n",
+      "ocr_text_snippet": "MarkeTsUReE o ERIE a x | oy | Westy Monty Mo mum Er ®om- oss 0 = CoreWeave Inc. Cl A x. £105.10 eaters 2173 14 DOisAGIl AMIN NaseCe S6rseE Chm a1 112 8 toner © 212 KOs . 0D A Sle SLI0IUTE ZDWATRSY ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c9484ca9b5a5b36b",
+      "prefilter_score": 17.24,
+      "prefilter_stats": {
+        "brightRatio": 0.693125,
+        "darkRatio": 0.033819444444444444,
+        "edgeRatio": 0.1997385343791958,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2172,
+        "horizontalEdgeRatio": 0.1534873860504558,
+        "meanLuma": 220.695,
+        "stdDev": 44.746410811992035,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3481,
+        "verticalEdgeRatio": 0.24598968270793584
+      },
+      "score": -22.64,
+      "score_breakdown": {
+        "chart_likeness": -2.43712108441286,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.8,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 1792,
+      "timestamp_hms": "00:29:52"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 232,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260814_20260814_k307gbscrgg_041dc6c0_whiteboard\\ocr\\ocr_000233.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 928.290045,
+      "observed_date": null,
+      "ocr_confidence": 36,
+      "ocr_profile": "threshold",
+      "ocr_text": "MarkeTSUReE o EY      FE               EEX ©om- oss 0\n= Applied Optoelectronics Inc. «..                                                                       $149.17\ncm pres 123-53                                                     oDmAgYe TRIG Manali    soon      ARO1 1451903 +14.55%\nQ Seam © 2121810503)       .                                              50Day Avg S Vor $1UISTIN 21 Day ATR    un        Voi 1570.58 «88.1%\nOff 52.Weoi High      3619s 37 from prvot in 216 days Last Update 11°57 AMET 08/14:2026.\nComo               A rE BWR Te TT Tera ee means   ®\nVe EPS EPS Swes ComoomuRung 7\nOnt Cw NON osrmma 82                              po\n8 0m aT it eRe  -\n0m ps2  77 IMonnRS Rang 2\nWoT 0 A. mens han &                                  woe\nm2 a0 GopRsRam W                                     §                     ES\non owe    acDrrang                              dd\nWw om ow oY tenes                              ly     !\n5 D2 gan Crone dg                        :    |  i h   3   —\nMeo DM 4 <r osc fee 0%                          .                       —\nTre a Dl pmemens                   it \\      MW he   ~     BE\noe       hE    WA Me         .\nJ              ¢             Ht)             .\nIr    M4       J                         7\nbal  LY] byt                              Wl      sams 100\nFx (a!                         pr    68\nWARY:                            r\n4    VY\nd\nwn 5          cp      ret      ——      7                       J      Py\nI  |     ’      ”    | 1 etal   iif I |\n:           |                -\nmy  /                     Ji aril]       | | i   |    1        i ] il |  il\nmw i                     a      aw   rm   i 1       i       nw\ni                                    i                                     ow\nf                                                                          i\nIi                              A REA        Timi            Im __ 3\na                             EE JER EE a   =\nE             Feb.      War       Apr      May      dun.      Jul       Avg\nE—          Ended Ane 2078         GuEdsse  EPSDue tvs:\nor                           -    002    sar    008     -    ae    Re     ou     -   EPs 1. % 0g\nrf           b,            -    wo    an    wre    “    a0    pe     80     “  semmnnon\n04                     a              Aer Tax Margin\n-—   7        Y   oo.                 =\nsame |  Lats    Reports   21.21 8/10 <<< 26items © pea IAAT AGE                       Of - DB EB A\n",
+      "ocr_text_snippet": "MarkeTSUReE o EY FE EEX ©om- oss 0 = Applied Optoelectronics Inc. «.. $149.17 cm pres 123-53 oDmAgYe TRIG Manali soon ARO1 1451903 +14.55% Q Seam © 2121810503) . 50Day Avg S Vor $1UISTIN 21 Day ATR...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c95a12b1b6a495ed",
+      "prefilter_score": 14.63,
+      "prefilter_stats": {
+        "brightRatio": 0.6838194444444444,
+        "darkRatio": 0.013541666666666667,
+        "edgeRatio": 0.18613525545897816,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2007,
+        "horizontalEdgeRatio": 0.14182743269026923,
+        "meanLuma": 223.17902777777778,
+        "stdDev": 40.17811080605556,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3261,
+        "verticalEdgeRatio": 0.2304430782276871
+      },
+      "score": -22.74,
+      "score_breakdown": {
+        "chart_likeness": -2.5423684320761826,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.8,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 928,
+      "timestamp_hms": "00:15:28"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 56,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260814_20260814_k307gbscrgg_041dc6c0_whiteboard\\ocr\\ocr_000057.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 226.413835,
+      "observed_date": null,
+      "ocr_confidence": 37,
+      "ocr_profile": "threshold",
+      "ocr_text": "MarkersUres a (EI        x Day weedy soomy wn <       BE                  EE ©ome- oss oo\nM S&P 500 Index                                                                                             SPX ($1480).0 19% voi 1200817 142 301%. $7,784.19\n\neS Nn i\not,\n\nHo fob\n\nI                      i\n\nbm                        \"a                   ~\n\nuift        off, Jo rl Ty,                                                             ha\n\nph  inf            CE   k         i                        -\n\n|                                        bg yl d my                         pe\n|          N  - x     i  i  I LLL lh ili . [hin VT i re]  dhe]\nIl       i Ce n\nsams | Law    Reports er 8/10 <<< 26items Clon —            Ory - DEBE A\n",
+      "ocr_text_snippet": "MarkersUres a (EI x Day weedy soomy wn < BE EE ©ome- oss oo M S&P 500 Index SPX ($1480).0 19% voi 1200817 142 301%. $7,784.19 eS Nn i ot, Ho fob I i bm \"a ~ uift off, Jo rl Ty, ha ph inf CE k i - |...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c25a51a9ada1adcb",
+      "prefilter_score": 17.12,
+      "prefilter_stats": {
+        "brightRatio": 0.7544444444444445,
+        "darkRatio": 0.023819444444444445,
+        "edgeRatio": 0.15193272560243093,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1616,
+        "horizontalEdgeRatio": 0.11419687654582715,
+        "meanLuma": 228.2125,
+        "stdDev": 44.36336838948448,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2684,
+        "verticalEdgeRatio": 0.1896685746590347
+      },
+      "score": -22.77,
+      "score_breakdown": {
+        "chart_likeness": -2.617284681168245,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.85,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "unknown_text",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 224,
+      "timestamp_hms": "00:03:44"
+    }
+  ],
+  "whiteboard_segments": [],
+  "video_type": "feature",
+  "video_type_label": "Feature",
+  "video_type_description": "Sector/explainer — chart-heavy, includes ticker mentions",
+  "video_type_classified_at": "2026-09-15T08:07:46.427Z",
+  "classification_inputs": {
+    "title_excerpt": "AI STOCKS ARE BACK! Fiber, Memory & NeoCloud Leaders Revealed | Your Money Podcast Ep. 603",
+    "upload_date": "20260814",
+    "retroactive": true
+  }
+}

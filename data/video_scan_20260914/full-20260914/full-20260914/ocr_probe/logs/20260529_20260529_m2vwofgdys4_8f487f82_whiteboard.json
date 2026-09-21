@@ -1,0 +1,979 @@
+{
+  "date_key": "20260529",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads\\20260529_M2VWOFgdYs4.mp4",
+  "captured_count": 0,
+  "captures": [],
+  "frame_count": 994,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 687,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "prefilter_best_score": 26.1,
+  "sample_frame_width": 640,
+  "status": "no_match",
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 928,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260529_20260529_m2vwofgdys4_8f487f82_whiteboard\\ocr\\ocr_000929.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE",
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 3713.820981,
+    "observed_date": null,
+    "ocr_confidence": 0,
+    "ocr_profile": "threshold",
+    "ocr_text": "",
+    "ocr_text_snippet": "",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "ad69c8927ba4f449",
+    "prefilter_score": -11.51,
+    "prefilter_stats": {
+      "brightRatio": 0.019097222222222224,
+      "darkRatio": 0.22972222222222222,
+      "edgeRatio": 0.1325701363861211,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 2108,
+      "horizontalEdgeRatio": 0.14896473747438344,
+      "meanLuma": 126.80902777777777,
+      "stdDev": 51.73072160127017,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 1644,
+      "verticalEdgeRatio": 0.1161755352978588
+    },
+    "score": -12,
+    "score_breakdown": {
+      "chart_likeness": 0,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 0,
+      "pair_bonus": 0,
+      "per_row_issues": -12,
+      "per_row_metrics": 0,
+      "text_density": 0
+    },
+    "screen_layout": "chart",
+    "tickers": [],
+    "timestamp": 3712,
+    "timestamp_hms": "01:01:52"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 928,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260529_20260529_m2vwofgdys4_8f487f82_whiteboard\\ocr\\ocr_000929.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ad69c8927ba4f449",
+      "prefilter_score": -11.51,
+      "prefilter_stats": {
+        "brightRatio": 0.019097222222222224,
+        "darkRatio": 0.22972222222222222,
+        "edgeRatio": 0.1325701363861211,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2108,
+        "horizontalEdgeRatio": 0.14896473747438344,
+        "meanLuma": 126.80902777777777,
+        "stdDev": 51.73072160127017,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1644,
+        "verticalEdgeRatio": 0.1161755352978588
+      },
+      "score": -12,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 3712,
+      "timestamp_hms": "01:01:52"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260529_20260529_m2vwofgdys4_8f487f82_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d1307f8b105c17bd",
+      "prefilter_score": 6.6,
+      "prefilter_stats": {
+        "brightRatio": 0.33493055555555556,
+        "darkRatio": 0.3211805555555556,
+        "edgeRatio": 0.0021906579040350503,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 40,
+        "horizontalEdgeRatio": 0.0028266553600452267,
+        "meanLuma": 153.86416666666668,
+        "stdDev": 81.54867339594732,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 22,
+        "verticalEdgeRatio": 0.0015546604480248746
+      },
+      "score": -12,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 800,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260529_20260529_m2vwofgdys4_8f487f82_whiteboard\\ocr\\ocr_000801.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 49,
+      "ocr_profile": "threshold",
+      "ocr_text": "re ver Cee Deer Yemen Aveeten Mm Pee Seed fees Ves             el J\nSn Lg                          wT\n== Ll                               Te        -_— =\n\nWB MDING 1\ns\n\n“,                       »e\n[|         Overheated = sell” is refuted\n\nAltes 2 95 reading the SAP does not fall M 6 months A sctudly    Epi bres tn brent tes by Sagan — ve ati\nLl Ra           eats bascbne (+6 9% v3 +5.0%, t++2.0, 83% positwve). The only      Lio nmin\n\nA      truth in “be Careful” (3 NAITOWET (RIDErvion — NDE lover retma.   .                     .  Pe\n\nAcross 51 separate >35 eprodes, exactly one {Oct-Nov 2021]    ‘\n\npreceded 2 serous decine                 He                    -\n|                                        i\n\n:              .\n——         —_———\n83%          —    —    —    _—\n\n.                    ,    .     mri\n‘ems                                                                  »\n",
+      "ocr_text_snippet": "re ver Cee Deer Yemen Aveeten Mm Pee Seed fees Ves el J Sn Lg wT == Ll Te -_— = WB MDING 1 s “, »e [| Overheated = sell” is refuted Altes 2 95 reading the SAP does not fall M 6 months A sctudly Epi...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 49,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 49,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "dc5b1e1e3da41962",
+      "prefilter_score": 25.63,
+      "prefilter_stats": {
+        "brightRatio": 0.7375694444444445,
+        "darkRatio": 0.059166666666666666,
+        "edgeRatio": 0.13999010670623985,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1878,
+        "horizontalEdgeRatio": 0.13271146915412338,
+        "meanLuma": 218.52534722222222,
+        "stdDev": 54.297789209818475,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2084,
+        "verticalEdgeRatio": 0.1472687442583563
+      },
+      "score": -19.55,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.45,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 3200,
+      "timestamp_hms": "00:53:20"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 848,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260529_20260529_m2vwofgdys4_8f487f82_whiteboard\\ocr\\ocr_000849.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 40,
+      "ocr_profile": "threshold",
+      "ocr_text": "pret Be Deg teemen  Aemesen bm ue Geced fees Ves             a LN\nERS wi Fd                    wT\nST tem 3D SEE Dee                               So—        Balad\n,\nHow few independent bets these are\nTa\n               mer ns crema ea $49 40 pcs pm               Tre cere sch io 4 Ramet of mac events The\nps      33 ub: 30 ep300es are essentially the GFC, 2011. 2013\n.              voor                          ol    16, COVI0 and 2012 — that 1 De rel sample sare\nmms                              a     betund any “ugral”\nfree                  if\nT\n' | oT                 H                       pre\n   anh     Nd                -\n«        Tr\nvs                            51        33\nSo           al     i                    jpeg money   orpenters 475 voriogey   drpenders + $0 epacon\nI~        ae aw Xs XG ma EW me me Kp me me     (Rom 3 meets)     am 97 wren\nSill\n|  kon\n=]\n”\n",
+      "ocr_text_snippet": "pret Be Deg teemen Aemesen bm ue Geced fees Ves a LN ERS wi Fd wT ST tem 3D SEE Dee So— Balad , How few independent bets these are Ta mer ns crema ea $49 40 pcs pm Tre cere sch io 4 Ramet of mac ev...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 40,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 40,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9d1e0f1f1e9f0c81",
+      "prefilter_score": 22.9,
+      "prefilter_stats": {
+        "brightRatio": 0.8482638888888889,
+        "darkRatio": 0.031875,
+        "edgeRatio": 0.10833156667373331,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1371,
+        "horizontalEdgeRatio": 0.09688361246555013,
+        "meanLuma": 230.78076388888888,
+        "stdDev": 43.26557913983547,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1695,
+        "verticalEdgeRatio": 0.11977952088191647
+      },
+      "score": -20,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE",
+        "TEM"
+      ],
+      "timestamp": 3392,
+      "timestamp_hms": "00:56:32"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 912,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260529_20260529_m2vwofgdys4_8f487f82_whiteboard\\ocr\\ocr_000913.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 43,
+      "ocr_profile": "threshold",
+      "ocr_text": "em run rem ler Crsem Mees fembee Jen Seam ew                                            Uma Beer EP\ntome                                                 1]\nB50 waar\noY |                           .        \\                        .\nImplications for using NAAIM\nStop selling on high readings\n        © LUE EI recess\nCa hedets — ni net eapObure\nBom\nEn                                 Move the bullish bar to -30. and be patient\nThe grawmanm edge a real Bul PIys Oves & Quiter [0 2 peal 3nd (Ores wih rlent Gnpereon Eroress 0 meh DOUTICS sting 3nd singed mre\nmeget\n!                              ¢\n\\IM as a volatility-regime gauge\n.                                                                        \\ ALAR (he Wall OF Iie GuTcOe Gling 30 — Seed That (10 $10nE. Redgrg wd leverage. 37d Lgely anore d tor\n”\n",
+      "ocr_text_snippet": "em run rem ler Crsem Mees fembee Jen Seam ew Uma Beer EP tome 1] B50 waar oY | . \\ . Implications for using NAAIM Stop selling on high readings © LUE EI recess Ca hedets — ni net eapObure Bom En Mo...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 43,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 43,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d05a5795b5b5154a",
+      "prefilter_score": 24.51,
+      "prefilter_stats": {
+        "brightRatio": 0.7977083333333334,
+        "darkRatio": 0.04486111111111111,
+        "edgeRatio": 0.11826019362589216,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1425,
+        "horizontalEdgeRatio": 0.10069959720161119,
+        "meanLuma": 225.16229166666668,
+        "stdDev": 48.59047383516694,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1922,
+        "verticalEdgeRatio": 0.13582079005017314
+      },
+      "score": -20.07,
+      "score_breakdown": {
+        "chart_likeness": -0.21544963006939177,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.15,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 3648,
+      "timestamp_hms": "01:00:48"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 928,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260529_20260529_m2vwofgdys4_8f487f82_whiteboard\\ocr\\ocr_000929.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 3713.820981,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ad69c8927ba4f449",
+      "prefilter_score": -11.51,
+      "prefilter_stats": {
+        "brightRatio": 0.019097222222222224,
+        "darkRatio": 0.22972222222222222,
+        "edgeRatio": 0.1325701363861211,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2108,
+        "horizontalEdgeRatio": 0.14896473747438344,
+        "meanLuma": 126.80902777777777,
+        "stdDev": 51.73072160127017,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1644,
+        "verticalEdgeRatio": 0.1161755352978588
+      },
+      "score": -12,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 3712,
+      "timestamp_hms": "01:01:52"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260529_20260529_m2vwofgdys4_8f487f82_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d1307f8b105c17bd",
+      "prefilter_score": 6.6,
+      "prefilter_stats": {
+        "brightRatio": 0.33493055555555556,
+        "darkRatio": 0.3211805555555556,
+        "edgeRatio": 0.0021906579040350503,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 40,
+        "horizontalEdgeRatio": 0.0028266553600452267,
+        "meanLuma": 153.86416666666668,
+        "stdDev": 81.54867339594732,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 22,
+        "verticalEdgeRatio": 0.0015546604480248746
+      },
+      "score": -12,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 800,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260529_20260529_m2vwofgdys4_8f487f82_whiteboard\\ocr\\ocr_000801.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 3202.832571,
+      "observed_date": null,
+      "ocr_confidence": 49,
+      "ocr_profile": "threshold",
+      "ocr_text": "re ver Cee Deer Yemen Aveeten Mm Pee Seed fees Ves             el J\nSn Lg                          wT\n== Ll                               Te        -_— =\n\nWB MDING 1\ns\n\n“,                       »e\n[|         Overheated = sell” is refuted\n\nAltes 2 95 reading the SAP does not fall M 6 months A sctudly    Epi bres tn brent tes by Sagan — ve ati\nLl Ra           eats bascbne (+6 9% v3 +5.0%, t++2.0, 83% positwve). The only      Lio nmin\n\nA      truth in “be Careful” (3 NAITOWET (RIDErvion — NDE lover retma.   .                     .  Pe\n\nAcross 51 separate >35 eprodes, exactly one {Oct-Nov 2021]    ‘\n\npreceded 2 serous decine                 He                    -\n|                                        i\n\n:              .\n——         —_———\n83%          —    —    —    _—\n\n.                    ,    .     mri\n‘ems                                                                  »\n",
+      "ocr_text_snippet": "re ver Cee Deer Yemen Aveeten Mm Pee Seed fees Ves el J Sn Lg wT == Ll Te -_— = WB MDING 1 s “, »e [| Overheated = sell” is refuted Altes 2 95 reading the SAP does not fall M 6 months A sctudly Epi...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 49,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 49,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "dc5b1e1e3da41962",
+      "prefilter_score": 25.63,
+      "prefilter_stats": {
+        "brightRatio": 0.7375694444444445,
+        "darkRatio": 0.059166666666666666,
+        "edgeRatio": 0.13999010670623985,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1878,
+        "horizontalEdgeRatio": 0.13271146915412338,
+        "meanLuma": 218.52534722222222,
+        "stdDev": 54.297789209818475,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2084,
+        "verticalEdgeRatio": 0.1472687442583563
+      },
+      "score": -19.55,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.45,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 3200,
+      "timestamp_hms": "00:53:20"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 848,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260529_20260529_m2vwofgdys4_8f487f82_whiteboard\\ocr\\ocr_000849.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 3394.442737,
+      "observed_date": null,
+      "ocr_confidence": 40,
+      "ocr_profile": "threshold",
+      "ocr_text": "pret Be Deg teemen  Aemesen bm ue Geced fees Ves             a LN\nERS wi Fd                    wT\nST tem 3D SEE Dee                               So—        Balad\n,\nHow few independent bets these are\nTa\n               mer ns crema ea $49 40 pcs pm               Tre cere sch io 4 Ramet of mac events The\nps      33 ub: 30 ep300es are essentially the GFC, 2011. 2013\n.              voor                          ol    16, COVI0 and 2012 — that 1 De rel sample sare\nmms                              a     betund any “ugral”\nfree                  if\nT\n' | oT                 H                       pre\n   anh     Nd                -\n«        Tr\nvs                            51        33\nSo           al     i                    jpeg money   orpenters 475 voriogey   drpenders + $0 epacon\nI~        ae aw Xs XG ma EW me me Kp me me     (Rom 3 meets)     am 97 wren\nSill\n|  kon\n=]\n”\n",
+      "ocr_text_snippet": "pret Be Deg teemen Aemesen bm ue Geced fees Ves a LN ERS wi Fd wT ST tem 3D SEE Dee So— Balad , How few independent bets these are Ta mer ns crema ea $49 40 pcs pm Tre cere sch io 4 Ramet of mac ev...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 40,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 40,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9d1e0f1f1e9f0c81",
+      "prefilter_score": 22.9,
+      "prefilter_stats": {
+        "brightRatio": 0.8482638888888889,
+        "darkRatio": 0.031875,
+        "edgeRatio": 0.10833156667373331,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1371,
+        "horizontalEdgeRatio": 0.09688361246555013,
+        "meanLuma": 230.78076388888888,
+        "stdDev": 43.26557913983547,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1695,
+        "verticalEdgeRatio": 0.11977952088191647
+      },
+      "score": -20,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE",
+        "TEM"
+      ],
+      "timestamp": 3392,
+      "timestamp_hms": "00:56:32"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 912,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260529_20260529_m2vwofgdys4_8f487f82_whiteboard\\ocr\\ocr_000913.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 3649.945226,
+      "observed_date": null,
+      "ocr_confidence": 43,
+      "ocr_profile": "threshold",
+      "ocr_text": "em run rem ler Crsem Mees fembee Jen Seam ew                                            Uma Beer EP\ntome                                                 1]\nB50 waar\noY |                           .        \\                        .\nImplications for using NAAIM\nStop selling on high readings\n        © LUE EI recess\nCa hedets — ni net eapObure\nBom\nEn                                 Move the bullish bar to -30. and be patient\nThe grawmanm edge a real Bul PIys Oves & Quiter [0 2 peal 3nd (Ores wih rlent Gnpereon Eroress 0 meh DOUTICS sting 3nd singed mre\nmeget\n!                              ¢\n\\IM as a volatility-regime gauge\n.                                                                        \\ ALAR (he Wall OF Iie GuTcOe Gling 30 — Seed That (10 $10nE. Redgrg wd leverage. 37d Lgely anore d tor\n”\n",
+      "ocr_text_snippet": "em run rem ler Crsem Mees fembee Jen Seam ew Uma Beer EP tome 1] B50 waar oY | . \\ . Implications for using NAAIM Stop selling on high readings © LUE EI recess Ca hedets — ni net eapObure Bom En Mo...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 43,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 43,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d05a5795b5b5154a",
+      "prefilter_score": 24.51,
+      "prefilter_stats": {
+        "brightRatio": 0.7977083333333334,
+        "darkRatio": 0.04486111111111111,
+        "edgeRatio": 0.11826019362589216,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1425,
+        "horizontalEdgeRatio": 0.10069959720161119,
+        "meanLuma": 225.16229166666668,
+        "stdDev": 48.59047383516694,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1922,
+        "verticalEdgeRatio": 0.13582079005017314
+      },
+      "score": -20.07,
+      "score_breakdown": {
+        "chart_likeness": -0.21544963006939177,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.15,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 3648,
+      "timestamp_hms": "01:00:48"
+    }
+  ],
+  "whiteboard_segments": []
+}

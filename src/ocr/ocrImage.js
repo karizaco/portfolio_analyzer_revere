@@ -50,9 +50,11 @@ function findKeywords(text) {
   return found;
 }
 
-async function preprocessImage(filePath, profileName) {
+async function preprocessImage(filePath, profileName, preprocessOptions = {}) {
+  const { overlayRegion = null, overlayScale = 3 } = preprocessOptions;
   let pipeline = sharp(filePath);
 
+  // --- bottom-half profiles (legacy whiteboard) ---
   if (profileName === 'bottom-threshold' || profileName === 'bottom-normalized') {
     const metadata = await pipeline.metadata();
     const width = metadata.width || 0;
@@ -64,6 +66,31 @@ async function preprocessImage(filePath, profileName) {
       top,
       width
     });
+  }
+
+  // --- chart-stream profile: crop overlay region, upscale, enhance ---
+  if (profileName === 'chart-stream' && overlayRegion) {
+    const metadata = await pipeline.metadata();
+    const width = metadata.width || 0;
+    const height = metadata.height || 0;
+    const { x, y, w, h } = overlayRegion;
+    // Convert fractional coords to absolute pixels
+    const left = Math.round(x * width);
+    const top = Math.round(y * height);
+    const cropW = Math.round(w * width);
+    const cropH = Math.round(h * height);
+    pipeline = sharp(filePath)
+      .extract({ left, top, width: cropW, height: cropH })
+      .resize(Math.round(cropW * overlayScale), Math.round(cropH * overlayScale), { kernel: 'lanczos3' })
+      .grayscale()
+      .negate()   // invert: white-on-dark → black-on-white (sharp ≥ 0.34 uses negate(), older used invert())
+      .normalize()
+      .sharpen({ sigma: 1.5 })
+      .linear(1.8, -64);  // contrast boost via linear transform
+    return pipeline
+      .withMetadata({ density: OCR_DPI })
+      .png()
+      .toBuffer();
   }
 
   pipeline = pipeline
@@ -141,8 +168,8 @@ async function getWorker() {
   return workerPromise;
 }
 
-async function runProfile(worker, filePath, profileName) {
-  const imageBuffer = await preprocessImage(filePath, profileName);
+async function runProfile(worker, filePath, profileName, preprocessOptions) {
+  const imageBuffer = await preprocessImage(filePath, profileName, preprocessOptions);
   const result = await worker.recognize(imageBuffer);
   const text = result.data.text || '';
   return {
@@ -155,21 +182,33 @@ async function runProfile(worker, filePath, profileName) {
   };
 }
 
-async function ocrImage(filePath) {
+async function ocrImage(filePath, preprocessOptions = {}) {
   const worker = await getWorker();
-  const thresholdResult = await runProfile(worker, filePath, 'threshold');
+
+  // When chartStream mode is active, use the dedicated overlay-crop profile
+  if (preprocessOptions.chartStream) {
+    const chartStreamResult = await runProfile(worker, filePath, 'chart-stream', preprocessOptions);
+    return {
+      ...chartStreamResult,
+      bottomConfidence: 0,
+      bottomProfile: '',
+      bottomText: ''
+    };
+  }
+
+  const thresholdResult = await runProfile(worker, filePath, 'threshold', preprocessOptions);
 
   let selectedResult = thresholdResult;
   if (thresholdResult.score < 3 && thresholdResult.lines.length < 3) {
-    const normalizedResult = await runProfile(worker, filePath, 'normalized');
+    const normalizedResult = await runProfile(worker, filePath, 'normalized', preprocessOptions);
     selectedResult = normalizedResult.score > thresholdResult.score
     ? normalizedResult
     : thresholdResult;
   }
 
   if (!hasBottomLineContent(selectedResult.text)) {
-    const bottomThresholdResult = await runProfile(worker, filePath, 'bottom-threshold');
-    const bottomNormalizedResult = await runProfile(worker, filePath, 'bottom-normalized');
+    const bottomThresholdResult = await runProfile(worker, filePath, 'bottom-threshold', preprocessOptions);
+    const bottomNormalizedResult = await runProfile(worker, filePath, 'bottom-normalized', preprocessOptions);
     const bottomCandidates = [bottomThresholdResult, bottomNormalizedResult]
       .map((result) => ({
         confidence: result.confidence,

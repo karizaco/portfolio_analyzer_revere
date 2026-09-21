@@ -1,0 +1,1305 @@
+{
+  "date_key": "20260707",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260707_YxadnXtRlDQ.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 240,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260707_20260707_yxadnxtrldq_75b1cf62_whiteboard\\ocr\\ocr_000241.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 959,
+      "observed_date": "20260707",
+      "ocr_confidence": 54,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n2» TALE OF THE TAPE ~ TUESDAY, JULY 7, 2026 <<                                ®  Games OG ©\n>>> DAIL| 5 er state: uptrend                                                                                                                                    .\nSVT,X IG, TT] *STOINDEXES2®  3LRGBOT 8 NASIT USDL TNX/TYXA vs 5d                                                              i” ad5.29\n555 TUESDA SENTIMENT: VIX 16.13112.6:4) F&G            An 314-235 26.447.5 DETER] Naam 54.69 13.90                                                              a\nBULL CASE: INITIATE RALLY & TREND 21EMA  €6/30 2°° CLOSE ABOVE                                                           Lost pate 02.58 PMET 070772028\n* MARKETST|  _3geAR CASE: SUSTAINED BREAK BELOW 21EMA                                            N           J        ®\n* WHAT HAP{  * NEWS: OIL SPIKES ON HORMUZ DRAMA WED: FED MINUTES FRI: SK HYNIX U.S. ADR LISTING           )        —            SETA      El\n3 ArsTocksH  * TODAY'S KEYS:SPXvs 8ED/21ED  QQQvs 2164/5004  R2K vs BEL/21ET\n*DAY CT: U-1=>    8e:61 21e:61\n21/21 20) 4 pCTION: © -0.15% O=HI 1HRG 7478 10D          90M 7520          HRY TAB? PTO CLS                           hd\nT-12 5.1 *SPXO/N 7512-7550 07525 030 47508-7536  L/H 7478-7536                                       |\n* SPX ATR: 1.49% SPX 0.45% 60/40-0.74% GRO -0.43% TURBO -0.95%                              i]      eo              ®\nRGE 2      * SECTORS: + BY% USD OILS CLOU XLC.P.UV.RE J BPS SOXX DRAM EEM INTL G/5/X                               i Com\n“]  * GRO HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX,TWLO,DELL GH RDDT                                     1  Ph bowl\nRAI100 -4.    * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%) ADD to DDOG BUY DELL SELL INTC                              h ie Hi    { Br\nSPX -0.4)   * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA LABU,DDOG, HOOD, TWLO, MRVL FTNT ROBT, FCEL                Wh  as gy      “\nQQQ 1.8 TURBO RVAB/REBAR: 1.65 (-3.275/-6.38%) ADDio Tun I Br CEL WAY. DRAM SE CAWD WTC THM Br      . i      | | is\n* BOTTOM LINE: <> Al STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505        Wl         & PT\nDIA 0.21 «WED KEYS: SPXvs 7551/21E QQQs 21E/50D R2K vs 8E/21E                       =       -\nMID 1.1)  >>>S&PS00 KEY LEVELS <<<                                                                                        :\nR2K 0.9  ’7621(6/2 INTRADAY A-T-H}                                         —                              2\n7537 MON: THE GREAT ROTATION CONTINUES...\n60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 216/505\nGRO ~-0.4] 57483 THURS: CARNAGE IN Al STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEGCLOUDS\nsmmms=ced  T74S1(1521EMA] €6/29 1 6/234 6/121 6/54 4/84                                                                     “©\nEMAIL don] | 7LL/74SS(18 SOD/1OWK) € ash 2/274 1/211 1/204\ni          * 6942/6978 (14 2000/40WK) € 5/121 5/8 SLOPED\n* TWITTER (X |\n* PHONE: (8                                                                                   2      7 wv ou ow on 6 om @\n® SITE:                                                                                                       Joa             Hay            un             ao\n ——————————————————————————————————— |, 517..\" 3             ory - ZT EBA\nrae 10257 rsistieets [3 tognuniesave Rowan wry Doc BBB ——b—— we\n<  » oa   nme @C® oa \"gn, FR  Pa  wa\n",
+      "ocr_text_snippet": ">>> THE 2» TALE OF THE TAPE ~ TUESDAY, JULY 7, 2026 << ® Games OG © >>> DAIL| 5 er state: uptrend . SVT,X IG, TT] *STOINDEXES2® 3LRGBOT 8 NASIT USDL TNX/TYXA vs 5d i” ad5.29 555 TUESDA SENTIMENT: V...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX,TWLO,DELL GH RDDT 1 PH BOWL RAI100 -4. * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO DDOG BUY DELL SELL INTC H IE HI { BR SPX -0.4) * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA LABU,DDOG, HOOD, TWLO, MRVL FTNT ROBT, FCEL WH AS GY \" QQQ 1.8 TURBO RVAB/REBAR: 1.65 (-3.275/-6.38%) ADD IO TUN I BR CEL WAY. DRAM SE CAWD WTC THM BR . I IS",
+          "bottom_line": "<> AL STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505 WL & PT DIA 0.21 «WED KEYS: SPXVS 7551/21E QQQS 21E/50D R2K VS 8E/21E = - MID 1.1) >>>S&PS00 KEY LEVELS <<< : R2K 0.9 '7621(6/2 INTRADAY A-T-H} - 2 7537 MON: THE GREAT ROTATION CONTINUES... 60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 216/505 GRO ~-0.4] 57483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEGCLOUDS SMMMS=CED T74S1(1521EMA] €6/29 1 6/234 6/121 6/54 4/84 \"© EMAIL DON] 7LL/74SS(18 SOD/1OWK) € ASH 2/274 1/211 1/204 I * 6942/6978 (14 2000/40WK) € 5/121 5/8 SLOPED TWITTER (X PHONE: (8 2 7 WV OU OW ON 6 OM @ SITE: JOA HAY UN AO 517..\" 3 ORY - ZT EBA RAE 10257 RSISTIEETS [3 TOGNUNIESAVE ROWAN WRY DOC BBB --B-- WE OA NME @C® OA \"GN, FR PA WA",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "<> AL STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505 WL & PT DIA 0.21 «WED KEYS: SPXVS 7551/21E QQQS 21E/50D R2K VS 8E/21E = - MID 1.1) >>>S&PS00 KEY LEVELS <<< : R2K 0.9 '7621(6/2 INTRADAY A-T-H} - 2 7537 MON: THE GREAT ROTATION CONTINUES... 60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 216/505 GRO ~-0.4] 57483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEGCLOUDS SMMMS=CED T74S1(1521EMA] €6/29 1 6/234 6/121 6/54 4/84 \"© EMAIL DON] 7LL/74SS(18 SOD/1OWK) € ASH 2/274 1/211 1/204 I * 6942/6978 (14 2000/40WK) € 5/121 5/8 SLOPED TWITTER (X PHONE: (8 2 7 WV OU OW ON 6 OM @ SITE: JOA HAY UN AO 517..\" 3 ORY - ZT EBA RAE 10257 RSISTIEETS [3 TOGNUNIESAVE ROWAN WRY DOC BBB --B-- WE OA NME @C® OA \"GN, FR PA WA",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d57f0080ff00c6df",
+      "prefilter_score": 16.69,
+      "prefilter_stats": {
+        "brightRatio": 0.7444444444444445,
+        "darkRatio": 0.0575,
+        "edgeRatio": 0.20316585400325066,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1517,
+        "horizontalEdgeRatio": 0.10720090452971522,
+        "meanLuma": 223.3279861111111,
+        "stdDev": 53.05323317302088,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4233,
+        "verticalEdgeRatio": 0.2991308034767861
+      },
+      "score": 96.64,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.7,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 93.94
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "DELL",
+        "ETHA",
+        "HOOD",
+        "IBIT",
+        "INTC",
+        "LABU",
+        "MRVL",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 960,
+      "timestamp_hms": "00:16:00",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260707_ps_4.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 252,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260707_20260707_yxadnxtrldq_75b1cf62_whiteboard\\ocr\\ocr_000253.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1009.12,
+      "observed_date": "20260707",
+      "ocr_confidence": 52,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n>> TALE OF THE TAPE ~ TUESDAY, JULY 7, 2026 <<                                  ®  Games DBE 0\n>>> DAIL| 1% ier state: upTaend\nCVL,X IG, TkT|  *STOINDEXES24  3L RGEOT 84 NASIT USD TNX/TYXD vs Sd                                                                 46.29\n55» TUESDA \"SENTIMENT: VIX 16.13 13.6) FRG            Ann 314-135 26.407. EIOR] raam 84.69 13.90                                                        TH ses ea\nFBULL CASE: INITIATE RALLY & TREND 21EMA  €6/30 2 CLOSE ABOVE                                                           Lost Upate 02 58 PMET 07072028\n“MARKET ST) 3geAR CASE: SUSTAINED BREAK BELOW Z1EMA                                               N            eStats fT        »\n* WHAT HAP|  * NEWS: OIL SPIKES ON KORMUZ DRAMA WED: FED MINUTES FRI: SK HYNIX U.S. ADR LISTING             —        CSE TT\n3 ArsTocksH  * TODAY'S KEYS: SPX vs 8EM/21ET  QQQs 2164/5004  R2K vs BEL/21ET\n*DAY CT: U-1=>    8e:61 21e:61\n20/21 21) + pCTION: © -0.15% O=HI 1HRG 7478 LOD          A0MP7520          HRY 7487 PTO CLS                           “wr\nT-12 5.1 *SPXO/N 7512-7550 07525 030 7508-7536  L/H 7478-7536                                       |\n* SPX ATR: 1.49% SPX-D.45% 60/4D-0.74% GRO-043% TURBO -0.95%                              i]      i.              “\nRGE 2      * SECTORS: 4 BY% USD OILS CLOU XLC.P.UV.RE J BPS SOXX DRAM EEM INTL G/5/X                               i Com\n“]  * GRO HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX, TWLO,DELL GH RDDT                          .                     |   Ph  howl\nRAI100 -4.    * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%) ADD to DDOG BUY DELL SELL INTC                            h J Hi   he. wb\nSPX -0.4)    * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA LABU,DDOG, HOOD, TWLO, MRVLFTNT,RDOT, FCEL                    Wl   cL A a  a        “\nQQQ 1.8 * TURBO RVAB/REBAR: 1.65 (-3.275/-6.38%) ADDuo uA 8 Bu CEL MAY. DRAM SELL CAWD WTC THM Bre        . N        \\ } is\n* BOTTOM LINE: <> Al STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505        ul         Fa\nDIA 0.21 «ED KEYS: SPXvs 7551/21E QQQus 21E/50D R2K vs 86/21                               -\nMID 1.1]  >>>S&PS00 KEY LEVELS <<<\nR2K  -0.9  *7621(6/2 INTRADAY A-T-H)                                                    —                                      *\n7537 MON: THE GREAT ROTATION CONTINUES.\n60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AK 100 HITS LO; QQ BREAKS 216/505\nGRO ~-0.41 $7483 THURS: CARNAGE IN Al STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS\nszmmas=zed  T4SL{TS21EMA) € 6/291 6/234 6/121 6/54 4/84                                                                     “©\nCEMAIL don | 7411/74SS(18 SOD/10WK) € a/b 227% 1/214 1/104\n:          * 6942/6978 (14 200D/40WK) € 5/124 5/8 SLOPED\n* TWITTER (X |\n* PHONE: (8                                                                          @     7 wv ou ow 2 ow om @\n® SITE:                                                                                                       Joa             May            un             mM\n ———————————————————————————————————————— \"175-35            Or + TEE A\nra 02 isan © [3 omnis sas orgasms Dien BB 8 ———— oe\n4  ™ oa   n. me\" @r Roa\" gg», 7  ~ ha  ww\n",
+      "ocr_text_snippet": ">>> THE >> TALE OF THE TAPE ~ TUESDAY, JULY 7, 2026 << ® Games DBE 0 >>> DAIL| 1% ier state: upTaend CVL,X IG, TkT| *STOINDEXES24 3L RGEOT 84 NASIT USD TNX/TYXD vs Sd 46.29 55» TUESDA \"SENTIMENT: V...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX, TWLO,DELL GH RDDT . PH HOWL RAI100 -4. * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO DDOG BUY DELL SELL INTC H J HI HE. WB SPX -0.4) * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA LABU,DDOG, HOOD, TWLO, MRVLFTNT,RDOT, FCEL WL CL A A A \" QQQ 1.8 * TURBO RVAB/REBAR: 1.65 (-3.275/-6.38%) ADD UO UA 8 BU CEL MAY. DRAM SELL CAWD WTC THM BRE . N \\ } IS",
+          "bottom_line": "<> AL STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505 UL FA DIA 0.21 «ED KEYS: SPXVS 7551/21E QQQUS 21E/50D R2K VS 86/21 - MID 1.1] >>>S&PS00 KEY LEVELS <<< R2K -0.9 *7621(6/2 INTRADAY A-T-H) - * 7537 MON: THE GREAT ROTATION CONTINUES. 60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AK 100 HITS LO; QQ BREAKS 216/505 GRO ~-0.41 $7483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS SZMMAS=ZED T4SL{TS21EMA) € 6/291 6/234 6/121 6/54 4/84 \"© CEMAIL DON 7411/74SS(18 SOD/10WK) € A/B 227% 1/214 1/104 6942/6978 (14 200D/40WK) € 5/124 5/8 SLOPED TWITTER (X PHONE: (8 @ 7 WV OU OW 2 OW OM @ SITE: JOA MAY UN MM 175-35 OR + TEE A RA 02 ISAN © [3 OMNIS SAS ORGASMS DIEN BB 8 ---- OE 4 ™ OA N. ME\" @R ROA\" GG», 7 ~ HA WW",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 52,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "<> AL STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505 UL FA DIA 0.21 «ED KEYS: SPXVS 7551/21E QQQUS 21E/50D R2K VS 86/21 - MID 1.1] >>>S&PS00 KEY LEVELS <<< R2K -0.9 *7621(6/2 INTRADAY A-T-H) - * 7537 MON: THE GREAT ROTATION CONTINUES. 60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AK 100 HITS LO; QQ BREAKS 216/505 GRO ~-0.41 $7483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS SZMMAS=ZED T4SL{TS21EMA) € 6/291 6/234 6/121 6/54 4/84 \"© CEMAIL DON 7411/74SS(18 SOD/10WK) € A/B 227% 1/214 1/104 6942/6978 (14 200D/40WK) € 5/124 5/8 SLOPED TWITTER (X PHONE: (8 @ 7 WV OU OW 2 OW OM @ SITE: JOA MAY UN MM 175-35 OR + TEE A RA 02 ISAN © [3 OMNIS SAS ORGASMS DIEN BB 8 ---- OE 4 ™ OA N. ME\" @R ROA\" GG», 7 ~ HA WW",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 52,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d57f0080ff00c6df",
+      "prefilter_score": 16.74,
+      "prefilter_stats": {
+        "brightRatio": 0.7449305555555555,
+        "darkRatio": 0.058125,
+        "edgeRatio": 0.20334251996325348,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1512,
+        "horizontalEdgeRatio": 0.10684757260970956,
+        "meanLuma": 223.32743055555557,
+        "stdDev": 53.062704760062026,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4243,
+        "verticalEdgeRatio": 0.2998374673167974
+      },
+      "score": 96.44,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.6,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 93.84
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "DELL",
+        "ETHA",
+        "HOOD",
+        "IBIT",
+        "INTC",
+        "LABU",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 1008,
+      "timestamp_hms": "00:16:48",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260707_ps_5.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 198,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260707_20260707_yxadnxtrldq_75b1cf62_whiteboard\\ocr\\ocr_000199.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 793.92,
+      "observed_date": "20260707",
+      "ocr_confidence": 55,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n2> TALE OF THE TAPE ~ TUESDAY, JULY 7, 2026 <<                                ®  Games OGs O\n>>> DAIL 5 er stare: upTmend\n*YT,X, IG, TT|  *STOINDEXES21  3L RGEOT 8 NASIT USDL TNX/TYXA vs 5d                                                                    46.29\n555 TUESDA SENTIMENT: VIX 16.13 112.654) F&G             An 314-285 2647.5 TITER] Naam £4.69 13.90                                                          TH sas es\n->BULL CASE: INITIATE RALLY & TREND 21EMA ~~ €6/30 2° CLOSE ABOVE                                                           Lost pate 02 58 PM ET 07072028\n* MARKETS) _3geAR CASE: SUSTAINED BREAK BELOW 21EMA                                               N            PP  .        ®\n* WHAT HAP|  * NEWS: OIL SPIKES ON HORMUZ DRAMA WED: FED MINUTES FRI: SK HYNIX U.S. ADR LISTING             naa        A\n3 ArsTocksH  * TODAY'S KEYS: SPX vs 8EM/21ED  QQQs 2164/5004 R2K vs BEL/21ED\n*DAY CT: U-1=>    8e:67 21e:61\n20/21 20) 4 pCTION: © -0.15% O=HI 1HRG 7473 0D          90M 7520          HRY 7487 PTO CLS                           hd\nT12 5.      *SPXO/N 47512-7550 07525 030 $7508-7536  L/H 7478-7536                                       |\n* SPX ATR: 1.49% SPX-0.45% 60/40-0.74% GRO -0.43% TURBO -0.95%                              i]      -              ©\nRGE 2      * SECTORS:  BY% USD OILS CLOU XLC.P.U V.RE J BPS SOXX DRAM EEM INTL G/5/X                               i Com\n“]  * GRO HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX, TWLO,DELL GH RDDT                                     1  Ph Low\nRAI100 -4.    * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%) ADD to DDOG BUY DELL SELL INTC                              h J Hs    hE: Wy\nSPX -0.4)     * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA LABU,DD0G, HOOD, TWLO, MRVL FTNT,RDDT,FCEL                       Wl   Fy am       =   Ww         “\nQQQ 1.8 TURBO RVAB/REBAR: 1.65 (-3.275/-6 38%) ADDio €TuA I Buy CE WAY. DRAM SELL CAWD WTC TRA Bre        | |        | Ta\n* BOTTOM LINE: < Al STOCKS HIT HARD AGAIN; R-Al-100 HITS LO; QQQ BREAKS 21E/505        il         Fi YT\nDIA 0.21 «wep KEYS: SPXvs 7551/21E QQQs 21E/50D R2K vs 8E/21E                       !       -\nMIO -1.1|  >>>S5&PS00 KEY LEVELS <<<\nR2K 0.9  *7621(6/2 INTRADAY A-T-H}                                                           | —                                           *\n7537 MON: THE GREAT ROTATION CONTINUES.\n60/40 0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; RA 100 HITS LO; QQ BREAKS 216/505\nGRO ~-0.41 $7483 THURS: CARNAGE IN Al STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS\nmmmmmmmeme     *7451(15 21EMA) € 6/29 1 6/238 6/121 6/54 4/31                                                                         ©\nCEMAIL don | 7H11/74SS(18 SOD/10WK) € 2/81 227% 1/211 1/204\n:          * 6342/6978 (14 200D/A0WK) € 5/121 5/8 SLOPED\n* TWITTER {X |\n* PHONE: (8                                                                                   >      7 ow om ow 2 os wm om\n® SITE:                                                                                                       Joa             May            un             au\nE——————————————————————IL TTT             ory - om EA\nroe 1042s 8 [3 tomas Rosgmsonon Brien BBB ——b—— on\n4  \"oa   mn. mE mgr Roa” gg», 7  in  wg\n",
+      "ocr_text_snippet": ">>> THE 2> TALE OF THE TAPE ~ TUESDAY, JULY 7, 2026 << ® Games OGs O >>> DAIL 5 er stare: upTmend *YT,X, IG, TT| *STOINDEXES21 3L RGEOT 8 NASIT USDL TNX/TYXA vs 5d 46.29 555 TUESDA SENTIMENT: VIX 1...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX, TWLO,DELL GH RDDT 1 PH LOW RAI100 -4. * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO DDOG BUY DELL SELL INTC H J HS HE: WY SPX -0.4) * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA LABU,DD0G, HOOD, TWLO, MRVL FTNT,RDDT,FCEL WL FY AM = WW \" QQQ 1.8 TURBO RVAB/REBAR: 1.65 (-3.275/-6 38%) ADD IO €TUA I BUY CE WAY. DRAM SELL CAWD WTC TRA BRE TA",
+          "bottom_line": "< AL STOCKS HIT HARD AGAIN; R-AL-100 HITS LO; QQQ BREAKS 21E/505 IL FI YT DIA 0.21 «WEP KEYS: SPXVS 7551/21E QQQS 21E/50D R2K VS 8E/21E ! - MIO -1.1 >>>S5&PS00 KEY LEVELS <<< R2K 0.9 *7621(6/2 INTRADAY A-T-H} - * 7537 MON: THE GREAT ROTATION CONTINUES. 60/40 0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; RA 100 HITS LO; QQ BREAKS 216/505 GRO ~-0.41 $7483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS MMMMMMMEME *7451(15 21EMA) € 6/29 1 6/238 6/121 6/54 4/31 © CEMAIL DON 7H11/74SS(18 SOD/10WK) € 2/81 227% 1/211 1/204 6342/6978 (14 200D/A0WK) € 5/121 5/8 SLOPED TWITTER {X PHONE: (8 > 7 OW OM OW 2 OS WM OM SITE: JOA MAY UN AU E----------------------IL TTT ORY - OM EA ROE 1042S 8 [3 TOMAS ROSGMSONON BRIEN BBB --B-- ON 4 \"OA MN. ME MGR ROA\" GG», 7 IN WG",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "< AL STOCKS HIT HARD AGAIN; R-AL-100 HITS LO; QQQ BREAKS 21E/505 IL FI YT DIA 0.21 «WEP KEYS: SPXVS 7551/21E QQQS 21E/50D R2K VS 8E/21E ! - MIO -1.1 >>>S5&PS00 KEY LEVELS <<< R2K 0.9 *7621(6/2 INTRADAY A-T-H} - * 7537 MON: THE GREAT ROTATION CONTINUES. 60/40 0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; RA 100 HITS LO; QQ BREAKS 216/505 GRO ~-0.41 $7483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS MMMMMMMEME *7451(15 21EMA) € 6/29 1 6/238 6/121 6/54 4/31 © CEMAIL DON 7H11/74SS(18 SOD/10WK) € 2/81 227% 1/211 1/204 6342/6978 (14 200D/A0WK) € 5/121 5/8 SLOPED TWITTER {X PHONE: (8 > 7 OW OM OW 2 OS WM OM SITE: JOA MAY UN AU E----------------------IL TTT ORY - OM EA ROE 1042S 8 [3 TOMAS ROSGMSONON BRIEN BBB --B-- ON 4 \"OA MN. ME MGR ROA\" GG», 7 IN WG",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d57f0080ff00c6df",
+      "prefilter_score": 16.7,
+      "prefilter_stats": {
+        "brightRatio": 0.7444444444444445,
+        "darkRatio": 0.057569444444444444,
+        "edgeRatio": 0.20390785103526252,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1528,
+        "horizontalEdgeRatio": 0.10797823475372766,
+        "meanLuma": 223.34006944444445,
+        "stdDev": 53.07374696271067,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4243,
+        "verticalEdgeRatio": 0.2998374673167974
+      },
+      "score": 96.13,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.75,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 93.38
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "DELL",
+        "ETHA",
+        "HOOD",
+        "IBIT",
+        "INTC",
+        "LABU",
+        "MRVL",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 792,
+      "timestamp_hms": "00:13:12",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260707_ps_6.png"
+    }
+  ],
+  "frame_count": 369,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 294,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260707_ps_4.png",
+  "prefilter_best_score": 21.88,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 240,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260707_20260707_yxadnxtrldq_75b1cf62_whiteboard\\ocr\\ocr_000241.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "LOW_OCR_CONFIDENCE",
+      "MISSING_METRIC_LINE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 959,
+    "observed_date": "20260707",
+    "ocr_confidence": 54,
+    "ocr_profile": "threshold",
+    "ocr_text": ">>> THE\n2» TALE OF THE TAPE ~ TUESDAY, JULY 7, 2026 <<                                ®  Games OG ©\n>>> DAIL| 5 er state: uptrend                                                                                                                                    .\nSVT,X IG, TT] *STOINDEXES2®  3LRGBOT 8 NASIT USDL TNX/TYXA vs 5d                                                              i” ad5.29\n555 TUESDA SENTIMENT: VIX 16.13112.6:4) F&G            An 314-235 26.447.5 DETER] Naam 54.69 13.90                                                              a\nBULL CASE: INITIATE RALLY & TREND 21EMA  €6/30 2°° CLOSE ABOVE                                                           Lost pate 02.58 PMET 070772028\n* MARKETST|  _3geAR CASE: SUSTAINED BREAK BELOW 21EMA                                            N           J        ®\n* WHAT HAP{  * NEWS: OIL SPIKES ON HORMUZ DRAMA WED: FED MINUTES FRI: SK HYNIX U.S. ADR LISTING           )        —            SETA      El\n3 ArsTocksH  * TODAY'S KEYS:SPXvs 8ED/21ED  QQQvs 2164/5004  R2K vs BEL/21ET\n*DAY CT: U-1=>    8e:61 21e:61\n21/21 20) 4 pCTION: © -0.15% O=HI 1HRG 7478 10D          90M 7520          HRY TAB? PTO CLS                           hd\nT-12 5.1 *SPXO/N 7512-7550 07525 030 47508-7536  L/H 7478-7536                                       |\n* SPX ATR: 1.49% SPX 0.45% 60/40-0.74% GRO -0.43% TURBO -0.95%                              i]      eo              ®\nRGE 2      * SECTORS: + BY% USD OILS CLOU XLC.P.UV.RE J BPS SOXX DRAM EEM INTL G/5/X                               i Com\n“]  * GRO HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX,TWLO,DELL GH RDDT                                     1  Ph bowl\nRAI100 -4.    * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%) ADD to DDOG BUY DELL SELL INTC                              h ie Hi    { Br\nSPX -0.4)   * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA LABU,DDOG, HOOD, TWLO, MRVL FTNT ROBT, FCEL                Wh  as gy      “\nQQQ 1.8 TURBO RVAB/REBAR: 1.65 (-3.275/-6.38%) ADDio Tun I Br CEL WAY. DRAM SE CAWD WTC THM Br      . i      | | is\n* BOTTOM LINE: <> Al STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505        Wl         & PT\nDIA 0.21 «WED KEYS: SPXvs 7551/21E QQQs 21E/50D R2K vs 8E/21E                       =       -\nMID 1.1)  >>>S&PS00 KEY LEVELS <<<                                                                                        :\nR2K 0.9  ’7621(6/2 INTRADAY A-T-H}                                         —                              2\n7537 MON: THE GREAT ROTATION CONTINUES...\n60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 216/505\nGRO ~-0.4] 57483 THURS: CARNAGE IN Al STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEGCLOUDS\nsmmms=ced  T74S1(1521EMA] €6/29 1 6/234 6/121 6/54 4/84                                                                     “©\nEMAIL don] | 7LL/74SS(18 SOD/1OWK) € ash 2/274 1/211 1/204\ni          * 6942/6978 (14 2000/40WK) € 5/121 5/8 SLOPED\n* TWITTER (X |\n* PHONE: (8                                                                                   2      7 wv ou ow on 6 om @\n® SITE:                                                                                                       Joa             Hay            un             ao\n ——————————————————————————————————— |, 517..\" 3             ory - ZT EBA\nrae 10257 rsistieets [3 tognuniesave Rowan wry Doc BBB ——b—— we\n<  » oa   nme @C® oa \"gn, FR  Pa  wa\n",
+    "ocr_text_snippet": ">>> THE 2» TALE OF THE TAPE ~ TUESDAY, JULY 7, 2026 << ® Games OG © >>> DAIL| 5 er state: uptrend . SVT,X IG, TT] *STOINDEXES2® 3LRGBOT 8 NASIT USDL TNX/TYXA vs 5d i” ad5.29 555 TUESDA SENTIMENT: V...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": "HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX,TWLO,DELL GH RDDT 1 PH BOWL RAI100 -4. * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "ADD TO DDOG BUY DELL SELL INTC H IE HI { BR SPX -0.4) * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA LABU,DDOG, HOOD, TWLO, MRVL FTNT ROBT, FCEL WH AS GY \" QQQ 1.8 TURBO RVAB/REBAR: 1.65 (-3.275/-6.38%) ADD IO TUN I BR CEL WAY. DRAM SE CAWD WTC THM BR . I IS",
+        "bottom_line": "<> AL STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505 WL & PT DIA 0.21 «WED KEYS: SPXVS 7551/21E QQQS 21E/50D R2K VS 8E/21E = - MID 1.1) >>>S&PS00 KEY LEVELS <<< : R2K 0.9 '7621(6/2 INTRADAY A-T-H} - 2 7537 MON: THE GREAT ROTATION CONTINUES... 60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 216/505 GRO ~-0.4] 57483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEGCLOUDS SMMMS=CED T74S1(1521EMA] €6/29 1 6/234 6/121 6/54 4/84 \"© EMAIL DON] 7LL/74SS(18 SOD/1OWK) € ASH 2/274 1/211 1/204 I * 6942/6978 (14 2000/40WK) € 5/121 5/8 SLOPED TWITTER (X PHONE: (8 2 7 WV OU OW ON 6 OM @ SITE: JOA HAY UN AO 517..\" 3 ORY - ZT EBA RAE 10257 RSISTIEETS [3 TOGNUNIESAVE ROWAN WRY DOC BBB --B-- WE OA NME @C® OA \"GN, FR PA WA",
+        "parse_status": "review",
+        "issue_codes": [
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 54,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": "<> AL STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505 WL & PT DIA 0.21 «WED KEYS: SPXVS 7551/21E QQQS 21E/50D R2K VS 8E/21E = - MID 1.1) >>>S&PS00 KEY LEVELS <<< : R2K 0.9 '7621(6/2 INTRADAY A-T-H} - 2 7537 MON: THE GREAT ROTATION CONTINUES... 60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 216/505 GRO ~-0.4] 57483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEGCLOUDS SMMMS=CED T74S1(1521EMA] €6/29 1 6/234 6/121 6/54 4/84 \"© EMAIL DON] 7LL/74SS(18 SOD/1OWK) € ASH 2/274 1/211 1/204 I * 6942/6978 (14 2000/40WK) € 5/121 5/8 SLOPED TWITTER (X PHONE: (8 2 7 WV OU OW ON 6 OM @ SITE: JOA HAY UN AO 517..\" 3 ORY - ZT EBA RAE 10257 RSISTIEETS [3 TOGNUNIESAVE ROWAN WRY DOC BBB --B-- WE OA NME @C® OA \"GN, FR PA WA",
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 54,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "d57f0080ff00c6df",
+    "prefilter_score": 16.69,
+    "prefilter_stats": {
+      "brightRatio": 0.7444444444444445,
+      "darkRatio": 0.0575,
+      "edgeRatio": 0.20316585400325066,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1517,
+      "horizontalEdgeRatio": 0.10720090452971522,
+      "meanLuma": 223.3279861111111,
+      "stdDev": 53.05323317302088,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 4233,
+      "verticalEdgeRatio": 0.2991308034767861
+    },
+    "score": 96.64,
+    "score_breakdown": {
+      "chart_likeness": -6,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 2.7,
+      "pair_bonus": 0,
+      "per_row_issues": -6,
+      "per_row_metrics": 12,
+      "text_density": 93.94
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "DELL",
+      "ETHA",
+      "HOOD",
+      "IBIT",
+      "INTC",
+      "LABU",
+      "MRVL",
+      "SPYM",
+      "UPRO"
+    ],
+    "timestamp": 960,
+    "timestamp_hms": "00:16:00"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 240,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260707_20260707_yxadnxtrldq_75b1cf62_whiteboard\\ocr\\ocr_000241.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260707",
+      "ocr_confidence": 54,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n2» TALE OF THE TAPE ~ TUESDAY, JULY 7, 2026 <<                                ®  Games OG ©\n>>> DAIL| 5 er state: uptrend                                                                                                                                    .\nSVT,X IG, TT] *STOINDEXES2®  3LRGBOT 8 NASIT USDL TNX/TYXA vs 5d                                                              i” ad5.29\n555 TUESDA SENTIMENT: VIX 16.13112.6:4) F&G            An 314-235 26.447.5 DETER] Naam 54.69 13.90                                                              a\nBULL CASE: INITIATE RALLY & TREND 21EMA  €6/30 2°° CLOSE ABOVE                                                           Lost pate 02.58 PMET 070772028\n* MARKETST|  _3geAR CASE: SUSTAINED BREAK BELOW 21EMA                                            N           J        ®\n* WHAT HAP{  * NEWS: OIL SPIKES ON HORMUZ DRAMA WED: FED MINUTES FRI: SK HYNIX U.S. ADR LISTING           )        —            SETA      El\n3 ArsTocksH  * TODAY'S KEYS:SPXvs 8ED/21ED  QQQvs 2164/5004  R2K vs BEL/21ET\n*DAY CT: U-1=>    8e:61 21e:61\n21/21 20) 4 pCTION: © -0.15% O=HI 1HRG 7478 10D          90M 7520          HRY TAB? PTO CLS                           hd\nT-12 5.1 *SPXO/N 7512-7550 07525 030 47508-7536  L/H 7478-7536                                       |\n* SPX ATR: 1.49% SPX 0.45% 60/40-0.74% GRO -0.43% TURBO -0.95%                              i]      eo              ®\nRGE 2      * SECTORS: + BY% USD OILS CLOU XLC.P.UV.RE J BPS SOXX DRAM EEM INTL G/5/X                               i Com\n“]  * GRO HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX,TWLO,DELL GH RDDT                                     1  Ph bowl\nRAI100 -4.    * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%) ADD to DDOG BUY DELL SELL INTC                              h ie Hi    { Br\nSPX -0.4)   * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA LABU,DDOG, HOOD, TWLO, MRVL FTNT ROBT, FCEL                Wh  as gy      “\nQQQ 1.8 TURBO RVAB/REBAR: 1.65 (-3.275/-6.38%) ADDio Tun I Br CEL WAY. DRAM SE CAWD WTC THM Br      . i      | | is\n* BOTTOM LINE: <> Al STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505        Wl         & PT\nDIA 0.21 «WED KEYS: SPXvs 7551/21E QQQs 21E/50D R2K vs 8E/21E                       =       -\nMID 1.1)  >>>S&PS00 KEY LEVELS <<<                                                                                        :\nR2K 0.9  ’7621(6/2 INTRADAY A-T-H}                                         —                              2\n7537 MON: THE GREAT ROTATION CONTINUES...\n60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 216/505\nGRO ~-0.4] 57483 THURS: CARNAGE IN Al STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEGCLOUDS\nsmmms=ced  T74S1(1521EMA] €6/29 1 6/234 6/121 6/54 4/84                                                                     “©\nEMAIL don] | 7LL/74SS(18 SOD/1OWK) € ash 2/274 1/211 1/204\ni          * 6942/6978 (14 2000/40WK) € 5/121 5/8 SLOPED\n* TWITTER (X |\n* PHONE: (8                                                                                   2      7 wv ou ow on 6 om @\n® SITE:                                                                                                       Joa             Hay            un             ao\n ——————————————————————————————————— |, 517..\" 3             ory - ZT EBA\nrae 10257 rsistieets [3 tognuniesave Rowan wry Doc BBB ——b—— we\n<  » oa   nme @C® oa \"gn, FR  Pa  wa\n",
+      "ocr_text_snippet": ">>> THE 2» TALE OF THE TAPE ~ TUESDAY, JULY 7, 2026 << ® Games OG © >>> DAIL| 5 er state: uptrend . SVT,X IG, TT] *STOINDEXES2® 3LRGBOT 8 NASIT USDL TNX/TYXA vs 5d i” ad5.29 555 TUESDA SENTIMENT: V...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX,TWLO,DELL GH RDDT 1 PH BOWL RAI100 -4. * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO DDOG BUY DELL SELL INTC H IE HI { BR SPX -0.4) * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA LABU,DDOG, HOOD, TWLO, MRVL FTNT ROBT, FCEL WH AS GY \" QQQ 1.8 TURBO RVAB/REBAR: 1.65 (-3.275/-6.38%) ADD IO TUN I BR CEL WAY. DRAM SE CAWD WTC THM BR . I IS",
+          "bottom_line": "<> AL STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505 WL & PT DIA 0.21 «WED KEYS: SPXVS 7551/21E QQQS 21E/50D R2K VS 8E/21E = - MID 1.1) >>>S&PS00 KEY LEVELS <<< : R2K 0.9 '7621(6/2 INTRADAY A-T-H} - 2 7537 MON: THE GREAT ROTATION CONTINUES... 60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 216/505 GRO ~-0.4] 57483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEGCLOUDS SMMMS=CED T74S1(1521EMA] €6/29 1 6/234 6/121 6/54 4/84 \"© EMAIL DON] 7LL/74SS(18 SOD/1OWK) € ASH 2/274 1/211 1/204 I * 6942/6978 (14 2000/40WK) € 5/121 5/8 SLOPED TWITTER (X PHONE: (8 2 7 WV OU OW ON 6 OM @ SITE: JOA HAY UN AO 517..\" 3 ORY - ZT EBA RAE 10257 RSISTIEETS [3 TOGNUNIESAVE ROWAN WRY DOC BBB --B-- WE OA NME @C® OA \"GN, FR PA WA",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "<> AL STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505 WL & PT DIA 0.21 «WED KEYS: SPXVS 7551/21E QQQS 21E/50D R2K VS 8E/21E = - MID 1.1) >>>S&PS00 KEY LEVELS <<< : R2K 0.9 '7621(6/2 INTRADAY A-T-H} - 2 7537 MON: THE GREAT ROTATION CONTINUES... 60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 216/505 GRO ~-0.4] 57483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEGCLOUDS SMMMS=CED T74S1(1521EMA] €6/29 1 6/234 6/121 6/54 4/84 \"© EMAIL DON] 7LL/74SS(18 SOD/1OWK) € ASH 2/274 1/211 1/204 I * 6942/6978 (14 2000/40WK) € 5/121 5/8 SLOPED TWITTER (X PHONE: (8 2 7 WV OU OW ON 6 OM @ SITE: JOA HAY UN AO 517..\" 3 ORY - ZT EBA RAE 10257 RSISTIEETS [3 TOGNUNIESAVE ROWAN WRY DOC BBB --B-- WE OA NME @C® OA \"GN, FR PA WA",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d57f0080ff00c6df",
+      "prefilter_score": 16.69,
+      "prefilter_stats": {
+        "brightRatio": 0.7444444444444445,
+        "darkRatio": 0.0575,
+        "edgeRatio": 0.20316585400325066,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1517,
+        "horizontalEdgeRatio": 0.10720090452971522,
+        "meanLuma": 223.3279861111111,
+        "stdDev": 53.05323317302088,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4233,
+        "verticalEdgeRatio": 0.2991308034767861
+      },
+      "score": 96.64,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.7,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 93.94
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "DELL",
+        "ETHA",
+        "HOOD",
+        "IBIT",
+        "INTC",
+        "LABU",
+        "MRVL",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 960,
+      "timestamp_hms": "00:16:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 246,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260707_20260707_yxadnxtrldq_75b1cf62_whiteboard\\ocr\\ocr_000247.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260707",
+      "ocr_confidence": 53,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n>> TALE OF THE TAPE - TUESDAY, JULY 7, 2026 <<                                ®  Gms. OGs ©\n>>> DAIL| 5 ier stare: upTRend\nSYLXIG,TRT|  *STOINDEXES24  3L RGEOT 84 NASIT USD TNX/TYXD vs 5d                                                                 46.29\n55» TUESDA \"SENTIMENT: VIX16.13103.61 F8G            Ann 314-285 26.007. FIRE] naam 84.69 13.90                                                        TH (sas er\n“3BULL CASE: INITIATE RALLY & TREND 21EMA ~~ €6/30 2°\" CLOSE ABOVE                                                           Lost Upcte 0259 PM ET 07072026\n“MARKET STI _3gEAR CASE: SUSTAINED BREAK BELOW 21EMA                                            N           a St LATE        ®\n* WHAT HAP{  * NEWS: OIL SPIKES ON HORMUZ DRAMA WED: FED MINUTES FRI: SK HYNIX U.S. ADR LISTING                —       TONERS\n3 arsTocksH  * TODAY'S KEYS: SPX vs 8ET/21E1  QQQs 2164/5004  R2K vs BEL/21ET\n*DAY CT: U-1=>    8e:61 21e:61\n21/21 20) wu pCTION: 0 -0.15% O=HI 1HRG 7478 10D          A0MP7520          IHR TAB? PTO CLS                           hd\nT12 5.      *SPXO/N L 7512-7550 07525 030 $7508-7536  L/H 7478-7536                                       |\n* SPX ATR: 1.49%1 SPX-0.45% 60/40-0.74% GRO-0.43% TURBO -0.95%                              i]      eo              w\nRGE 2      * SECTORS: 4 BY% USD OILS CLOU XLC.P.UV.RE J BPS SOXX DRAM EEM INTL G/5/X                               i Col\n\"]  * GRO HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX,TWLO,DELL GH RDDT                             a                        |   Ph  bowl\nRAI100 -4.     * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%) ADD to DDOG BUY DELL SELL INTC                                 th J Hi    hl wl\nSPX -0.4)     * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA,LABU,DDOG, HOOD, TWLO, MRVL FTNT ROOT, FCEL                       Wh  vi    “x          ww         “\nQQQ 1.8 * TURBO RVAB/REBAR: 1.5 (-3.275/-6.38%) ADDio Tun 0 Bur CEL MAY. ORAM SE WD WTC THA Bre      . i      | ty ‘\n* BOTTOM LINE: <> Al STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505        ul         pe        d\nDIA 0.21 «wep KEYS: SPXvs 7551/21E QQQus 21E/50D R2K vs 86/21                       =       -\nMIO 11]  >>>S&PS00 KEY LEVELS <<<                                                                                        .\nR2K  -0.9  *7621(6/2 INTRADAY A-T-H}                                                           —                                          »\n7537 MON: THE GREAT ROTATION CONTINUES,\n60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQ BREAKS 216/505\nGRO ~-0.4] 57483 THURS: CARNAGE IN Al STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS\nsomms=ced TP 74S1{1521EMA) €6/29 1 6/234 6/121 6/54 4/84                                                                     “\nCEMAIL don | 7411/74SS(18 SOD/10WK) € 2/81 227% 1/211 1/204\ni          * 6942/6978 (14 200D/40WK) € 5/124 5/8 SLOPED\n* TWITTER {X |\n* PHONE: (8                                                                                   a      7 ow om ow 2 os wm om\n® SITE:                                                                                                       Joa             ay            aun             mM\n ——————————————————————————————————— i173 0            ory - DE EA\nrae az sats 8 [3 comnts Rowson Booen BBB ——b—— on\n4  ea   HN. mE \"TEER oa\" gs -F  xa   - Tw\n",
+      "ocr_text_snippet": ">>> THE >> TALE OF THE TAPE - TUESDAY, JULY 7, 2026 << ® Gms. OGs © >>> DAIL| 5 ier stare: upTRend SYLXIG,TRT| *STOINDEXES24 3L RGEOT 84 NASIT USD TNX/TYXD vs 5d 46.29 55» TUESDA \"SENTIMENT: VIX16....",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX,TWLO,DELL GH RDDT A PH BOWL RAI100 -4. * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO DDOG BUY DELL SELL INTC TH J HI HL WL SPX -0.4) * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA,LABU,DDOG, HOOD, TWLO, MRVL FTNT ROOT, FCEL WH VI \"X WW \" QQQ 1.8 * TURBO RVAB/REBAR: 1.5 (-3.275/-6.38%) ADD IO TUN 0 BUR CEL MAY. ORAM SE WD WTC THA BRE . I TY '",
+          "bottom_line": "<> AL STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505 UL PE D DIA 0.21 «WEP KEYS: SPXVS 7551/21E QQQUS 21E/50D R2K VS 86/21 = - MIO 11] >>>S&PS00 KEY LEVELS <<< . R2K -0.9 *7621(6/2 INTRADAY A-T-H} - » 7537 MON: THE GREAT ROTATION CONTINUES, 60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQ BREAKS 216/505 GRO ~-0.4] 57483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS SOMMS=CED TP 74S1{1521EMA) €6/29 1 6/234 6/121 6/54 4/84 \" CEMAIL DON 7411/74SS(18 SOD/10WK) € 2/81 227% 1/211 1/204 I * 6942/6978 (14 200D/40WK) € 5/124 5/8 SLOPED TWITTER {X PHONE: (8 A 7 OW OM OW 2 OS WM OM SITE: JOA AY AUN MM I173 0 ORY - DE EA RAE AZ SATS 8 [3 COMNTS ROWSON BOOEN BBB --B-- ON 4 EA HN. ME \"TEER OA\" GS -F XA - TW",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 53,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "<> AL STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505 UL PE D DIA 0.21 «WEP KEYS: SPXVS 7551/21E QQQUS 21E/50D R2K VS 86/21 = - MIO 11] >>>S&PS00 KEY LEVELS <<< . R2K -0.9 *7621(6/2 INTRADAY A-T-H} - » 7537 MON: THE GREAT ROTATION CONTINUES, 60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQ BREAKS 216/505 GRO ~-0.4] 57483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS SOMMS=CED TP 74S1{1521EMA) €6/29 1 6/234 6/121 6/54 4/84 \" CEMAIL DON 7411/74SS(18 SOD/10WK) € 2/81 227% 1/211 1/204 I * 6942/6978 (14 200D/40WK) € 5/124 5/8 SLOPED TWITTER {X PHONE: (8 A 7 OW OM OW 2 OS WM OM SITE: JOA AY AUN MM I173 0 ORY - DE EA RAE AZ SATS 8 [3 COMNTS ROWSON BOOEN BBB --B-- ON 4 EA HN. ME \"TEER OA\" GS -F XA - TW",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 53,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d57f0080ff00c6df",
+      "prefilter_score": 16.7,
+      "prefilter_stats": {
+        "brightRatio": 0.7447222222222222,
+        "darkRatio": 0.05763888888888889,
+        "edgeRatio": 0.204437848915271,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1515,
+        "horizontalEdgeRatio": 0.10705957176171295,
+        "meanLuma": 223.3423611111111,
+        "stdDev": 53.05604620464667,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4271,
+        "verticalEdgeRatio": 0.30181612606882907
+      },
+      "score": 96.59,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.65,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 93.94
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "DELL",
+        "ETHA",
+        "HOOD",
+        "IBIT",
+        "INTC",
+        "LABU",
+        "MRVL",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 984,
+      "timestamp_hms": "00:16:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 252,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260707_20260707_yxadnxtrldq_75b1cf62_whiteboard\\ocr\\ocr_000253.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260707",
+      "ocr_confidence": 52,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n>> TALE OF THE TAPE ~ TUESDAY, JULY 7, 2026 <<                                  ®  Games DBE 0\n>>> DAIL| 1% ier state: upTaend\nCVL,X IG, TkT|  *STOINDEXES24  3L RGEOT 84 NASIT USD TNX/TYXD vs Sd                                                                 46.29\n55» TUESDA \"SENTIMENT: VIX 16.13 13.6) FRG            Ann 314-135 26.407. EIOR] raam 84.69 13.90                                                        TH ses ea\nFBULL CASE: INITIATE RALLY & TREND 21EMA  €6/30 2 CLOSE ABOVE                                                           Lost Upate 02 58 PMET 07072028\n“MARKET ST) 3geAR CASE: SUSTAINED BREAK BELOW Z1EMA                                               N            eStats fT        »\n* WHAT HAP|  * NEWS: OIL SPIKES ON KORMUZ DRAMA WED: FED MINUTES FRI: SK HYNIX U.S. ADR LISTING             —        CSE TT\n3 ArsTocksH  * TODAY'S KEYS: SPX vs 8EM/21ET  QQQs 2164/5004  R2K vs BEL/21ET\n*DAY CT: U-1=>    8e:61 21e:61\n20/21 21) + pCTION: © -0.15% O=HI 1HRG 7478 LOD          A0MP7520          HRY 7487 PTO CLS                           “wr\nT-12 5.1 *SPXO/N 7512-7550 07525 030 7508-7536  L/H 7478-7536                                       |\n* SPX ATR: 1.49% SPX-D.45% 60/4D-0.74% GRO-043% TURBO -0.95%                              i]      i.              “\nRGE 2      * SECTORS: 4 BY% USD OILS CLOU XLC.P.UV.RE J BPS SOXX DRAM EEM INTL G/5/X                               i Com\n“]  * GRO HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX, TWLO,DELL GH RDDT                          .                     |   Ph  howl\nRAI100 -4.    * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%) ADD to DDOG BUY DELL SELL INTC                            h J Hi   he. wb\nSPX -0.4)    * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA LABU,DDOG, HOOD, TWLO, MRVLFTNT,RDOT, FCEL                    Wl   cL A a  a        “\nQQQ 1.8 * TURBO RVAB/REBAR: 1.65 (-3.275/-6.38%) ADDuo uA 8 Bu CEL MAY. DRAM SELL CAWD WTC THM Bre        . N        \\ } is\n* BOTTOM LINE: <> Al STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505        ul         Fa\nDIA 0.21 «ED KEYS: SPXvs 7551/21E QQQus 21E/50D R2K vs 86/21                               -\nMID 1.1]  >>>S&PS00 KEY LEVELS <<<\nR2K  -0.9  *7621(6/2 INTRADAY A-T-H)                                                    —                                      *\n7537 MON: THE GREAT ROTATION CONTINUES.\n60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AK 100 HITS LO; QQ BREAKS 216/505\nGRO ~-0.41 $7483 THURS: CARNAGE IN Al STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS\nszmmas=zed  T4SL{TS21EMA) € 6/291 6/234 6/121 6/54 4/84                                                                     “©\nCEMAIL don | 7411/74SS(18 SOD/10WK) € a/b 227% 1/214 1/104\n:          * 6942/6978 (14 200D/40WK) € 5/124 5/8 SLOPED\n* TWITTER (X |\n* PHONE: (8                                                                          @     7 wv ou ow 2 ow om @\n® SITE:                                                                                                       Joa             May            un             mM\n ———————————————————————————————————————— \"175-35            Or + TEE A\nra 02 isan © [3 omnis sas orgasms Dien BB 8 ———— oe\n4  ™ oa   n. me\" @r Roa\" gg», 7  ~ ha  ww\n",
+      "ocr_text_snippet": ">>> THE >> TALE OF THE TAPE ~ TUESDAY, JULY 7, 2026 << ® Games DBE 0 >>> DAIL| 1% ier state: upTaend CVL,X IG, TkT| *STOINDEXES24 3L RGEOT 84 NASIT USD TNX/TYXD vs Sd 46.29 55» TUESDA \"SENTIMENT: V...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX, TWLO,DELL GH RDDT . PH HOWL RAI100 -4. * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO DDOG BUY DELL SELL INTC H J HI HE. WB SPX -0.4) * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA LABU,DDOG, HOOD, TWLO, MRVLFTNT,RDOT, FCEL WL CL A A A \" QQQ 1.8 * TURBO RVAB/REBAR: 1.65 (-3.275/-6.38%) ADD UO UA 8 BU CEL MAY. DRAM SELL CAWD WTC THM BRE . N \\ } IS",
+          "bottom_line": "<> AL STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505 UL FA DIA 0.21 «ED KEYS: SPXVS 7551/21E QQQUS 21E/50D R2K VS 86/21 - MID 1.1] >>>S&PS00 KEY LEVELS <<< R2K -0.9 *7621(6/2 INTRADAY A-T-H) - * 7537 MON: THE GREAT ROTATION CONTINUES. 60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AK 100 HITS LO; QQ BREAKS 216/505 GRO ~-0.41 $7483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS SZMMAS=ZED T4SL{TS21EMA) € 6/291 6/234 6/121 6/54 4/84 \"© CEMAIL DON 7411/74SS(18 SOD/10WK) € A/B 227% 1/214 1/104 6942/6978 (14 200D/40WK) € 5/124 5/8 SLOPED TWITTER (X PHONE: (8 @ 7 WV OU OW 2 OW OM @ SITE: JOA MAY UN MM 175-35 OR + TEE A RA 02 ISAN © [3 OMNIS SAS ORGASMS DIEN BB 8 ---- OE 4 ™ OA N. ME\" @R ROA\" GG», 7 ~ HA WW",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 52,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "<> AL STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505 UL FA DIA 0.21 «ED KEYS: SPXVS 7551/21E QQQUS 21E/50D R2K VS 86/21 - MID 1.1] >>>S&PS00 KEY LEVELS <<< R2K -0.9 *7621(6/2 INTRADAY A-T-H) - * 7537 MON: THE GREAT ROTATION CONTINUES. 60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AK 100 HITS LO; QQ BREAKS 216/505 GRO ~-0.41 $7483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS SZMMAS=ZED T4SL{TS21EMA) € 6/291 6/234 6/121 6/54 4/84 \"© CEMAIL DON 7411/74SS(18 SOD/10WK) € A/B 227% 1/214 1/104 6942/6978 (14 200D/40WK) € 5/124 5/8 SLOPED TWITTER (X PHONE: (8 @ 7 WV OU OW 2 OW OM @ SITE: JOA MAY UN MM 175-35 OR + TEE A RA 02 ISAN © [3 OMNIS SAS ORGASMS DIEN BB 8 ---- OE 4 ™ OA N. ME\" @R ROA\" GG», 7 ~ HA WW",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 52,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d57f0080ff00c6df",
+      "prefilter_score": 16.74,
+      "prefilter_stats": {
+        "brightRatio": 0.7449305555555555,
+        "darkRatio": 0.058125,
+        "edgeRatio": 0.20334251996325348,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1512,
+        "horizontalEdgeRatio": 0.10684757260970956,
+        "meanLuma": 223.32743055555557,
+        "stdDev": 53.062704760062026,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4243,
+        "verticalEdgeRatio": 0.2998374673167974
+      },
+      "score": 96.44,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.6,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 93.84
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "DELL",
+        "ETHA",
+        "HOOD",
+        "IBIT",
+        "INTC",
+        "LABU",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 1008,
+      "timestamp_hms": "00:16:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 258,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260707_20260707_yxadnxtrldq_75b1cf62_whiteboard\\ocr\\ocr_000259.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260707",
+      "ocr_confidence": 53,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n>> TALE OF THE TAPE ~ TUESDAY, JULY 7, 2026 <<                                ®  Gms DE: ®\n>>> DAIL| 5 ier stare: uptrend\nSYLX IG, TT|  *STOINDEXES2F  3L RGEOT 84 NASI USD TNX/TYXD vs 5d                                                            ” wis.29\n555 TUESDA SENTIMENT: VIX 16.13 113.614) F&G            AN 314-185 2607.5 TERR] NAIM 84,69-13.90                                                              a\nBULL CASE: INITIATE RALLY & TREND 21EMA  €56/30 2° CLOSE ABOVE                                                           Lost Update 02 58 PMET 07072026\n* MARKET ST) _3gEAR CASE: SUSTAINED BREAK BELOW 21EMA                                          N          Pa        psn       ®\n* WHAT HAP|  * NEWS: OIL SPIKES ON HORMUZ DRAMA WED: FED MINUTES FRI: SK HYNIX U.S. ADR LISTING             TTR TT\n3 arsTockse  * TODAY'S KEYS:SPX vs 8ED/21ED  QQQvs 2164/5004  R2K vs 8EL/21ED\n*DAY CT: U-1=>    8e: 61 21e:67\n21/21 20) wpCTION: © -0.15% O=HI 1HRG 7473 10D          90MP7520          HRY 7487 PTO CLS                           hd\nT12 5.      *SPXO/N $ 7512-7550 07525 030 $7508-7536  L/H 7478-7536                                       |\n* SPX ATR: 1.49% SPX-0.45% 60/40-0.74% GRO -0.43% TURBO -0.95%                              i]      we              “\nRGE 2      * SECTORS: 4 BY% USD OILS CLOU XLC.P.UV.RE J BPS SOXX DRAM EEM INTL G/S/X                              i Com\n“]  * GRO HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX,TWLO,DELL GH RDDT                    3                1  Ph Low\nRAIL00-4.3  * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%) ADD 10 DDOG BUY DELL SELL INTC                               th Hi  Hig\nSPX -0.4)    * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA,LABU,DDOG, HOOD, TWLO, MRVL FTNT ROOT, FCEL                    iW  P yas      =  Ww        “\nQQQ 1.8 TURBO RVAB/REBAR: 1.65 (-3.275/-6.38%) ADDo Tun a Bu CEL AY. DRAM SELL CRWD WTC TM Br      . 0      \\ | i\n* BOTTOM LINE: <> Al STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505        ul         Fa Yr\nDIA 0.21 «WED KEYS: SPXvs 7551/21E QQQus 21E/50D R2K vs 86/21                       =       i\nMIO 1.1] >>> S&PS00 KEY LEVELS <<<\nR2K  -0.9  *7621(6/2 INTRADAY A-T-H)                                                    |                                      *\n37537 MON: THE GREAT ROTATION CONTINUES...\n60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 216/505\nGRO ~-0.4] 57483 THURS: CARNAGE IN Al STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS\nsmmmssmooed  T74S1{1S21EMA) €6/29 1 6/234 6/121 6/54 4/84                                                                     “\nCEMAIL don | 7411/74SS(18 SOD/10WK) € 2/81 227% 1/214 1/204\n:          * 6942/6978 (14 200D/40WK) € 5/129 5/8 SLOPED\n* TWITTER {X |\n* PHONE: (8                                                                          >     7 wom ow 2 os wm om\n® SITE:                                                                                                       Joa             May            un             mM\n —————————————————————————————————— {i170            ory - Dm EQ\nrae 02 isis [3 tomncnia sas omar Dien BBB ——— on\n3  oa   un. met BTR a” gD 7  Ad   - a\n",
+      "ocr_text_snippet": ">>> THE >> TALE OF THE TAPE ~ TUESDAY, JULY 7, 2026 << ® Gms DE: ® >>> DAIL| 5 ier stare: uptrend SYLX IG, TT| *STOINDEXES2F 3L RGEOT 84 NASI USD TNX/TYXD vs 5d ” wis.29 555 TUESDA SENTIMENT: VIX 1...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX,TWLO,DELL GH RDDT 3 1 PH LOW RAIL00-4.3 * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD 10 DDOG BUY DELL SELL INTC TH HI HIG SPX -0.4) * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA,LABU,DDOG, HOOD, TWLO, MRVL FTNT ROOT, FCEL IW P YAS = WW \" QQQ 1.8 TURBO RVAB/REBAR: 1.65 (-3.275/-6.38%) ADD O TUN A BU CEL AY. DRAM SELL CRWD WTC TM BR . 0 \\ I",
+          "bottom_line": "<> AL STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505 UL FA YR DIA 0.21 «WED KEYS: SPXVS 7551/21E QQQUS 21E/50D R2K VS 86/21 = I MIO 1.1] >>> S&PS00 KEY LEVELS <<< R2K -0.9 *7621(6/2 INTRADAY A-T-H) * 37537 MON: THE GREAT ROTATION CONTINUES... 60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 216/505 GRO ~-0.4] 57483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS SMMMSSMOOED T74S1{1S21EMA) €6/29 1 6/234 6/121 6/54 4/84 \" CEMAIL DON 7411/74SS(18 SOD/10WK) € 2/81 227% 1/214 1/204 6942/6978 (14 200D/40WK) € 5/129 5/8 SLOPED TWITTER {X PHONE: (8 > 7 WOM OW 2 OS WM OM SITE: JOA MAY UN MM I170 ORY - DM EQ RAE 02 ISIS [3 TOMNCNIA SAS OMAR DIEN BBB --- ON 3 OA UN. MET BTR A\" GD 7 AD - A",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 53,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "<> AL STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 21E/505 UL FA YR DIA 0.21 «WED KEYS: SPXVS 7551/21E QQQUS 21E/50D R2K VS 86/21 = I MIO 1.1] >>> S&PS00 KEY LEVELS <<< R2K -0.9 *7621(6/2 INTRADAY A-T-H) * 37537 MON: THE GREAT ROTATION CONTINUES... 60/40 -0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; R-AI-100 HITS LO; QQQ BREAKS 216/505 GRO ~-0.4] 57483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS SMMMSSMOOED T74S1{1S21EMA) €6/29 1 6/234 6/121 6/54 4/84 \" CEMAIL DON 7411/74SS(18 SOD/10WK) € 2/81 227% 1/214 1/204 6942/6978 (14 200D/40WK) € 5/129 5/8 SLOPED TWITTER {X PHONE: (8 > 7 WOM OW 2 OS WM OM SITE: JOA MAY UN MM I170 ORY - DM EQ RAE 02 ISIS [3 TOMNCNIA SAS OMAR DIEN BBB --- ON 3 OA UN. MET BTR A\" GD 7 AD - A",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 53,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d57f0080ff00c6df",
+      "prefilter_score": 16.7,
+      "prefilter_stats": {
+        "brightRatio": 0.7445833333333334,
+        "darkRatio": 0.057569444444444444,
+        "edgeRatio": 0.20369585188325914,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1517,
+        "horizontalEdgeRatio": 0.10720090452971522,
+        "meanLuma": 223.3177777777778,
+        "stdDev": 53.06000654977081,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4248,
+        "verticalEdgeRatio": 0.30019079923680303
+      },
+      "score": 96.19,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.65,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 93.54
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "DELL",
+        "ETHA",
+        "HOOD",
+        "IBIT",
+        "INTC",
+        "LABU",
+        "MRVL",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 1032,
+      "timestamp_hms": "00:17:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 198,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260707_20260707_yxadnxtrldq_75b1cf62_whiteboard\\ocr\\ocr_000199.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260707",
+      "ocr_confidence": 55,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n2> TALE OF THE TAPE ~ TUESDAY, JULY 7, 2026 <<                                ®  Games OGs O\n>>> DAIL 5 er stare: upTmend\n*YT,X, IG, TT|  *STOINDEXES21  3L RGEOT 8 NASIT USDL TNX/TYXA vs 5d                                                                    46.29\n555 TUESDA SENTIMENT: VIX 16.13 112.654) F&G             An 314-285 2647.5 TITER] Naam £4.69 13.90                                                          TH sas es\n->BULL CASE: INITIATE RALLY & TREND 21EMA ~~ €6/30 2° CLOSE ABOVE                                                           Lost pate 02 58 PM ET 07072028\n* MARKETS) _3geAR CASE: SUSTAINED BREAK BELOW 21EMA                                               N            PP  .        ®\n* WHAT HAP|  * NEWS: OIL SPIKES ON HORMUZ DRAMA WED: FED MINUTES FRI: SK HYNIX U.S. ADR LISTING             naa        A\n3 ArsTocksH  * TODAY'S KEYS: SPX vs 8EM/21ED  QQQs 2164/5004 R2K vs BEL/21ED\n*DAY CT: U-1=>    8e:67 21e:61\n20/21 20) 4 pCTION: © -0.15% O=HI 1HRG 7473 0D          90M 7520          HRY 7487 PTO CLS                           hd\nT12 5.      *SPXO/N 47512-7550 07525 030 $7508-7536  L/H 7478-7536                                       |\n* SPX ATR: 1.49% SPX-0.45% 60/40-0.74% GRO -0.43% TURBO -0.95%                              i]      -              ©\nRGE 2      * SECTORS:  BY% USD OILS CLOU XLC.P.U V.RE J BPS SOXX DRAM EEM INTL G/5/X                               i Com\n“]  * GRO HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX, TWLO,DELL GH RDDT                                     1  Ph Low\nRAI100 -4.    * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%) ADD to DDOG BUY DELL SELL INTC                              h J Hs    hE: Wy\nSPX -0.4)     * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA LABU,DD0G, HOOD, TWLO, MRVL FTNT,RDDT,FCEL                       Wl   Fy am       =   Ww         “\nQQQ 1.8 TURBO RVAB/REBAR: 1.65 (-3.275/-6 38%) ADDio €TuA I Buy CE WAY. DRAM SELL CAWD WTC TRA Bre        | |        | Ta\n* BOTTOM LINE: < Al STOCKS HIT HARD AGAIN; R-Al-100 HITS LO; QQQ BREAKS 21E/505        il         Fi YT\nDIA 0.21 «wep KEYS: SPXvs 7551/21E QQQs 21E/50D R2K vs 8E/21E                       !       -\nMIO -1.1|  >>>S5&PS00 KEY LEVELS <<<\nR2K 0.9  *7621(6/2 INTRADAY A-T-H}                                                           | —                                           *\n7537 MON: THE GREAT ROTATION CONTINUES.\n60/40 0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; RA 100 HITS LO; QQ BREAKS 216/505\nGRO ~-0.41 $7483 THURS: CARNAGE IN Al STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS\nmmmmmmmeme     *7451(15 21EMA) € 6/29 1 6/238 6/121 6/54 4/31                                                                         ©\nCEMAIL don | 7H11/74SS(18 SOD/10WK) € 2/81 227% 1/211 1/204\n:          * 6342/6978 (14 200D/A0WK) € 5/121 5/8 SLOPED\n* TWITTER {X |\n* PHONE: (8                                                                                   >      7 ow om ow 2 os wm om\n® SITE:                                                                                                       Joa             May            un             au\nE——————————————————————IL TTT             ory - om EA\nroe 1042s 8 [3 tomas Rosgmsonon Brien BBB ——b—— on\n4  \"oa   mn. mE mgr Roa” gg», 7  in  wg\n",
+      "ocr_text_snippet": ">>> THE 2> TALE OF THE TAPE ~ TUESDAY, JULY 7, 2026 << ® Games OGs O >>> DAIL 5 er stare: upTmend *YT,X, IG, TT| *STOINDEXES21 3L RGEOT 8 NASIT USDL TNX/TYXA vs 5d 46.29 555 TUESDA SENTIMENT: VIX 1...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,DDOG, FTNT,LLYX, TWLO,DELL GH RDDT 1 PH LOW RAI100 -4. * GRO RVAB/REBAR: 1.05 (-0.80%/-4.99%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO DDOG BUY DELL SELL INTC H J HS HE: WY SPX -0.4) * TURBO HOLDINGS: SPYM,UPRO,BHYP, IBIT, DRAM, ETHA LABU,DD0G, HOOD, TWLO, MRVL FTNT,RDDT,FCEL WL FY AM = WW \" QQQ 1.8 TURBO RVAB/REBAR: 1.65 (-3.275/-6 38%) ADD IO €TUA I BUY CE WAY. DRAM SELL CAWD WTC TRA BRE TA",
+          "bottom_line": "< AL STOCKS HIT HARD AGAIN; R-AL-100 HITS LO; QQQ BREAKS 21E/505 IL FI YT DIA 0.21 «WEP KEYS: SPXVS 7551/21E QQQS 21E/50D R2K VS 8E/21E ! - MIO -1.1 >>>S5&PS00 KEY LEVELS <<< R2K 0.9 *7621(6/2 INTRADAY A-T-H} - * 7537 MON: THE GREAT ROTATION CONTINUES. 60/40 0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; RA 100 HITS LO; QQ BREAKS 216/505 GRO ~-0.41 $7483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS MMMMMMMEME *7451(15 21EMA) € 6/29 1 6/238 6/121 6/54 4/31 © CEMAIL DON 7H11/74SS(18 SOD/10WK) € 2/81 227% 1/211 1/204 6342/6978 (14 200D/A0WK) € 5/121 5/8 SLOPED TWITTER {X PHONE: (8 > 7 OW OM OW 2 OS WM OM SITE: JOA MAY UN AU E----------------------IL TTT ORY - OM EA ROE 1042S 8 [3 TOMAS ROSGMSONON BRIEN BBB --B-- ON 4 \"OA MN. ME MGR ROA\" GG», 7 IN WG",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "< AL STOCKS HIT HARD AGAIN; R-AL-100 HITS LO; QQQ BREAKS 21E/505 IL FI YT DIA 0.21 «WEP KEYS: SPXVS 7551/21E QQQS 21E/50D R2K VS 8E/21E ! - MIO -1.1 >>>S5&PS00 KEY LEVELS <<< R2K 0.9 *7621(6/2 INTRADAY A-T-H} - * 7537 MON: THE GREAT ROTATION CONTINUES. 60/40 0.7) 37503 TODAY: A1 STOCKS HIT HARD AGAIN; RA 100 HITS LO; QQ BREAKS 216/505 GRO ~-0.41 $7483 THURS: CARNAGE IN AL STOCKS: SEMICONDUCTORS, MEMORY, OPTICS, & NEOCLOUDS MMMMMMMEME *7451(15 21EMA) € 6/29 1 6/238 6/121 6/54 4/31 © CEMAIL DON 7H11/74SS(18 SOD/10WK) € 2/81 227% 1/211 1/204 6342/6978 (14 200D/A0WK) € 5/121 5/8 SLOPED TWITTER {X PHONE: (8 > 7 OW OM OW 2 OS WM OM SITE: JOA MAY UN AU E----------------------IL TTT ORY - OM EA ROE 1042S 8 [3 TOMAS ROSGMSONON BRIEN BBB --B-- ON 4 \"OA MN. ME MGR ROA\" GG», 7 IN WG",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d57f0080ff00c6df",
+      "prefilter_score": 16.7,
+      "prefilter_stats": {
+        "brightRatio": 0.7444444444444445,
+        "darkRatio": 0.057569444444444444,
+        "edgeRatio": 0.20390785103526252,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1528,
+        "horizontalEdgeRatio": 0.10797823475372766,
+        "meanLuma": 223.34006944444445,
+        "stdDev": 53.07374696271067,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4243,
+        "verticalEdgeRatio": 0.2998374673167974
+      },
+      "score": 96.13,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.75,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 93.38
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "DELL",
+        "ETHA",
+        "HOOD",
+        "IBIT",
+        "INTC",
+        "LABU",
+        "MRVL",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 792,
+      "timestamp_hms": "00:13:12"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260707_20260707_yxadnxtrldq_75b1cf62_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 4.09,
+      "prefilter_stats": {
+        "brightRatio": 0.4633333333333333,
+        "darkRatio": 0.30277777777777776,
+        "edgeRatio": 0.24323369373189174,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2398,
+        "horizontalEdgeRatio": 0.16945798883471133,
+        "meanLuma": 166.28805555555556,
+        "stdDev": 92.19687914456169,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4486,
+        "verticalEdgeRatio": 0.3170093986290721
+      },
+      "score": -16.53,
+      "score_breakdown": {
+        "chart_likeness": -4.531860083244403,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 156,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260707_20260707_yxadnxtrldq_75b1cf62_whiteboard\\ocr\\ocr_000157.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 621.84,
+      "observed_date": null,
+      "ocr_confidence": 41,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVER]\n>>> DAILY MARI MarkeTSURGE a (EE)        x oi | wey Nowy www «mm Qa - DBE 0\n3\n* VI, X, 16, TikTok: @REVER » 1).S. Dollar Index (DXY)                                                      oxy Jor1z\n>>> TUESDAY, JULY i                 p—            .                                                                                                      cm cone SOT\n“MARKETSTATEIUPTE, , o & mw a TN TT JE mT\n* WHAT HAPPENED TO                                                                                                                                                    =\n3 AI STOCKS HIT AGAIN,                                                                     VY TT                                          i\n21/21 2.14% 81                                                                        hy\nT12 5.10% 01                                                                         fli     Bl\non 0M   jis\non we\nRGS 2.18%                    ul   | Il                   iv       PY\nRAIL00 -4.30%      wm    fi   Vk        wo          |     ]             Wo\nSPX -045% RS     [      Bes   To        fit            |     ANAT     Hitlih  i .           .\nJ      High          i                                 N           LEH                   M\naca 18% ar |      (7 as oY  NNT Lay         |   ;       ho pad      Li  |\n!             .      Hie                .        |     i        Rj\nDIA 0.25%    hE    -     iNT    Ne i A    7\nMIO -1.15%      il                 I      ,     Jl     h                   w\n:            iN                          *            “       nines                     I\nRK 0.90%    RA                     kad        VHRR    j           an we\n60/40 0.74%                                            J Nd                                                .\nGRO ~0.43% TUF                                  |    H\n* EMAIL: don@reverea                                                                                                                                                    *\n«TWITTER (X: @dvanc                                          ome ona\nTPHONEESSIREALM ww we wm 6 om wom ow om ow\n® SITE: revereasse ou                Now             Dec               an               Feb        ==               Am               ay              an               ”\nserers    [o    nos _DV EOD RGB BIGS SSiems © tyes 01701 ort on         orm - DE EA\nPowe sermon BBB ——t—— on SEER Ta ICS SI SEAR        -             a   Be\n",
+      "ocr_text_snippet": ">>> THE REVER] >>> DAILY MARI MarkeTSURGE a (EE) x oi | wey Nowy www «mm Qa - DBE 0 3 * VI, X, 16, TikTok: @REVER » 1).S. Dollar Index (DXY) oxy Jor1z >>> TUESDAY, JULY i p— . cm cone SOT “MARKETST...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 41,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 41,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80aa3f7f5d545330",
+      "prefilter_score": 21.19,
+      "prefilter_stats": {
+        "brightRatio": 0.7622222222222222,
+        "darkRatio": 0.07805555555555556,
+        "edgeRatio": 0.17136598120274185,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1749,
+        "horizontalEdgeRatio": 0.12359550561797752,
+        "meanLuma": 220.82111111111112,
+        "stdDev": 61.023141775057425,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3101,
+        "verticalEdgeRatio": 0.21913645678750618
+      },
+      "score": -23.47,
+      "score_breakdown": {
+        "chart_likeness": -3.522384964903649,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.05,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 624,
+      "timestamp_hms": "00:10:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 108,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260707_20260707_yxadnxtrldq_75b1cf62_whiteboard\\ocr\\ocr_000109.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 430.96,
+      "observed_date": null,
+      "ocr_confidence": 40,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVER|\n>>> DAILY MARI MarkeTSUReE a (QE        x ou | wey Mowwy town. «mm Las» DGS ©\n$\n* T,X, 16, TkTok: GREVER n S&P 500 Index                                                              wr TBS\n2>> TUESDAY, JULY i                 © tora To0uan           .                                                                                                      mtn oes UET Si\n“MARKETSTATEUPTE , , Wy om a                              ]     ©\n* WHAT HAPPENED TO               FNS ITN A ee TT Re]\n=» AI STOCKS HIT AGAIN, £                                                                                                                                                             <=\n21/21 214% 81               )               ou       pr           os\nov                      i\nT12 5.10% 01                               oy       wm          Rk  Wo\nin    —r      TY\nRGS  -2.18%                                                Sr range         py          i yt /               oo\n-      Tamas       |\nRAIL00 -4.30%                                                                                  -—                 preyain             wo             g\nSPX 0.45% RS                                beeen    fied    of! J    2         ™\nQoQ 185% QC       rover\nDIA -0.25%                    SL Sunn   —         00\nwo       vo WH ioe)   wom 1\nMIO 1.19%           Hy     ally AT ET   |\nRK 0.90%       FO Lu  1! LE) Sl te             wr\n60/40 -0.74%      a Pe    5     hs                I I\nGRO ~0.43% TUF of i LI                   th i                 ao\nmmmmmmmmmmmememe=t Ll       30078    7\nsesesssscssssesss! |          pi\n* EMAIL: don@ cevereany 0  ill [Ie |    [       | rik I | I    I   I |  I      0\n«rome o0- cond (HNL UML TO EE RATA ARINC ETAT NT\n.   .     |                        Er\nPHONE: (855) REAL   mH al a a\n[A revereasse      oct       Nov      Dec       ain    ute ER 4       or      ay      un      wt\nscm    wo    Room _DVEOD RGB BIGS sitems © toes on om“ ornt on         or - DE Ea\nGon Dre BB 5 ——— oJ     -       Ld\n",
+      "ocr_text_snippet": ">>> THE REVER| >>> DAILY MARI MarkeTSUReE a (QE x ou | wey Mowwy town. «mm Las» DGS © $ * T,X, 16, TkTok: GREVER n S&P 500 Index wr TBS 2>> TUESDAY, JULY i © tora To0uan . mtn oes UET Si “MARKETSTA...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 40,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 40,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80afbf7777542408",
+      "prefilter_score": 21.48,
+      "prefilter_stats": {
+        "brightRatio": 0.7280555555555556,
+        "darkRatio": 0.08215277777777778,
+        "edgeRatio": 0.17935128259486963,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1796,
+        "horizontalEdgeRatio": 0.12691682566603066,
+        "meanLuma": 217.6292361111111,
+        "stdDev": 61.91496267933252,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3280,
+        "verticalEdgeRatio": 0.23178573952370857
+      },
+      "score": -23.94,
+      "score_breakdown": {
+        "chart_likeness": -3.9431559062920964,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 432,
+      "timestamp_hms": "00:07:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 288,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260707_20260707_yxadnxtrldq_75b1cf62_whiteboard\\ocr\\ocr_000289.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1150,
+      "observed_date": null,
+      "ocr_confidence": 38,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVER|\n>>> DAILY MAR] \"=\" BED     EE EE Gms: DE: ©\n*¥T,X, IG, TikTok: @Rever ® CoinShares Bitcoin Mining ETF sc.                                                      $53.14              $52.63\nFrance ETE ETNA 15S;                           S0DaAmVL E806 Nakai Cap      [3     $0511 %097      WM 1.43851 3825\n35> TUESDAY, JULY § fy sor & ror 2170000     .            Comite sate mowaa% are      rs      hig\nTARKET STATS: UBT                                     Ono B16 A om pict mAT5 days 0545 PET OTOTAS La Upte O400 MET 7072528\n:      Canine                         Rw BR Bn TT mY      »\n* WHAT HAPPENED TO Yaw Price Proe Sues ConeostaRong                                     2\ner TR Ale So Gre\n> AISTOCKS HIT AGAIN, | 2019 000 HA NA msRang   7                      — po                 kel\n\"                                        nz\n21/21 2.14% 84 DX OX ma NA ee\nam ow we wn Penne ff                                        |\nT-12 5.10% 01 mz ow wn wa omen of                              y Il      ©\nJos wor ws. NA Cams Sanity WA                                      f    :\nSees Groin ite                                      “i\nwes 218%    xe mw wa Se Comme                                   fi    Hh\n)      ms wm wa Sete                             | i .     i      .\n-                veep)                                                         hd\nRAI100 -4.30%              |    0                                                 [i   a\nSPX 0.45% RS       I     Mi                                         ly\n2                                                 /\nQoQ 185% QC     i      N—        iy                  I  |  AN]\nDIA 0.25%          SA         wll                  i! tl                  ”\nMID -1.19%      3 gl       B ish   BAHAR. ur          H\nJ P                     PLN        H   AT       ~~        sie                     sem\nR2K 0.90%    FR       ll IV \\ 2 Ti Hy i PE sams            “\n60/40 0.74%      BSN yg         x                         N     >\na           hci\nso eo nl calf eaktt® ad       ual\nB——— | |] |      A herbi TUM)\nBB E.R A SL\nLEAL: don@everen X): @dvanc                Qn Ended Decemon 2625                  awensed sen 028                   [oy S——             prcevara-\nFE            -            21           \"            Pe           -           wn           ew           -           ne           Pre cng\n* PHONE: (855) REAL-W    na    “    I\"    wa    na    -    na    na    na    “    na    NA   Saien (M9), % Chg\npoe revere  NA                   NA            =x    NA                   NA    After Tax Margin\nP—    J    Roos _DV EOD RGB BIGB $Sitems © unions 1 vast vt on         or + DE EA\na      ’ oa.        [EP Za - Bal TE al FB R 3     - on      ES   ar\n",
+      "ocr_text_snippet": ">>> THE REVER| >>> DAILY MAR] \"=\" BED EE EE Gms: DE: © *¥T,X, IG, TikTok: @Rever ® CoinShares Bitcoin Mining ETF sc. $53.14 $52.63 France ETE ETNA 15S; S0DaAmVL E806 Nakai Cap [3 $0511 %097 WM 1.43...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 38,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 38,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "81ff3fdede114001",
+      "prefilter_score": 20.52,
+      "prefilter_stats": {
+        "brightRatio": 0.7002777777777778,
+        "darkRatio": 0.08791666666666667,
+        "edgeRatio": 0.21242315030739878,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2143,
+        "horizontalEdgeRatio": 0.15143806091442302,
+        "meanLuma": 214.55708333333334,
+        "stdDev": 63.43892025093244,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3869,
+        "verticalEdgeRatio": 0.27340823970037453
+      },
+      "score": -24.05,
+      "score_breakdown": {
+        "chart_likeness": -3.9486384388774827,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.9,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 1152,
+      "timestamp_hms": "00:19:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 102,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260707_20260707_yxadnxtrldq_75b1cf62_whiteboard\\ocr\\ocr_000103.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 405.88,
+      "observed_date": null,
+      "ocr_confidence": 38,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVERI\n555 DAILY MAR \"===\" « 00      A ames DBs ©\n$\n* VT, X, 6, TikTok: GREVER » S&P 500 Index                                                              we BS\n2>> TUESDAY, JULY §                 © tora To0can           .                                                                                                      Ltn oo ET i\n“MARKETSTATE:UPTE, , © mo a                                    w\n+ WHAT HAPPENED TO                     TONITE TNS ep ST Ratt -\n=» AI STOCKS HIT AGAIN, |\n21/21 2.14% 81                                                         sos\nT12 5.10% 01                                                         it   [1        -\npo TT\nRG8 -2.18%                                           id J  |   -   0\nRAI100 -4.30%                                                                                                                                         If      7\nSPX -045% RS                                                  Fol ee        zs\nQa 185% QC                                                WY om        a _-\non wi                  -         frien\nDIA 0.25%                              ev                 fe        use      fd\n.            we         ol M fy        |     oz 317\nMID -1.19%                       I he hag 5 es         7 Ne       Ie\nRK -0.90%        ou b \"1  pel 7 IIT      i    snare     a0\nply SE     FA | RR wee      pid\n60/40 0.74%            +   ly) ;      :       eres                       Ii           wk Stochanics (1.      ws\net                              [fy        pest     po\nGRO ~0.43% TUF of YT         =m                              i   T               Tenors       hd\nJO |          sou      :                                                         f           i           g\nSUSTSE—\"    g     wn ]              I      hao mE\n* EMAIL: | iil lil! I! fll Mi il  I I   1 (i! il       | I | ] i il  sion    Toma Il    on\n.       .                                                                  A\norem 1 il TOE AP LH VR ee\n.      )        |                                         rr\nPHONE: (355) REAL    oe at a at tl a Uy at te i i Tt te ta\noe revere      Oct       Nov     Dec      din      Feo EIR War      Ae      May     dun    ———\nSeren    we    Roos _DV EOD RGB BIGB $Sitems © viens mn ssinst rt on         or + DE EA\nRowse Brow BB KF ———— on JRC IE CE I SUL        -           a\n",
+      "ocr_text_snippet": ">>> THE REVERI 555 DAILY MAR \"===\" « 00 A ames DBs © $ * VT, X, 6, TikTok: GREVER » S&P 500 Index we BS 2>> TUESDAY, JULY § © tora To0can . Ltn oo ET i “MARKETSTATE:UPTE, , © mo a w + WHAT HAPPENED...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 38,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 38,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80aa3f7f77154d08",
+      "prefilter_score": 21.47,
+      "prefilter_stats": {
+        "brightRatio": 0.7193055555555555,
+        "darkRatio": 0.08256944444444445,
+        "edgeRatio": 0.18207193837891314,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1809,
+        "horizontalEdgeRatio": 0.12783548865804537,
+        "meanLuma": 217.20159722222223,
+        "stdDev": 61.676162423887575,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3344,
+        "verticalEdgeRatio": 0.23630838809978094
+      },
+      "score": -24.22,
+      "score_breakdown": {
+        "chart_likeness": -4.115387257691578,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.9,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 408,
+      "timestamp_hms": "00:06:48"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 1,
+      "end_ts": 792,
+      "end_hms": "00:13:12",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 198,
+      "peak_score": 96.13,
+      "start_hms": "00:13:12",
+      "start_ts": 792
+    },
+    {
+      "capture_count": 2,
+      "end_ts": 1008,
+      "end_hms": "00:16:48",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 240,
+      "peak_score": 96.64,
+      "start_hms": "00:16:00",
+      "start_ts": 960
+    }
+  ]
+}

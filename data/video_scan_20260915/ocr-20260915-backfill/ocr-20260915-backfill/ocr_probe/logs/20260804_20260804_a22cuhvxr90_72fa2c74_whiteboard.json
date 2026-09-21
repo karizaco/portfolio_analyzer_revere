@@ -1,0 +1,1311 @@
+{
+  "date_key": "20260804",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260804_A22cuhvxR90.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 145,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260804_20260804_a22cuhvxr90_72fa2c74_whiteboard\\ocr\\ocr_000146.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 581.44,
+      "observed_date": "20260804",
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> TI\n>» D,      »> TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 <<                                  I) res OBB\n* MARKET STATE: UPTREND                                                                                                                              .\n*YLXIG|  *STOINDEXES6H OL RGBEM  O NASIT USDL TNX/TYXP vs Sd                                                                 i. ds.\n>>> TUE      # SENTIMENT: VIX 16 50 {3 0%] F&G 58(+13 GREED) An 3141.4, 26.9-1.2 FETE naam 79.70 4.32                                                             \"ve 0 A\n* MARKE       BULL CASE: INITIATE RALLY & TREND 21EMA ~~ €8/3-4 REGAIN 21E & FTD                                                               Last Update. G2 50 PM ET 08.04:2026\n»BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                          CED              ®\n* WHAT        * NEWS: TUES ER AMC: AMD SPCXd ALABL ANETT WED ER AMC: SNDK WDC APP                                                                                  PF)\n> AILEAD!        * TODAY'S KEYS: SPX vs 8EM/ATHT QQQ vs 6864 /21E1  R2K vs 8ET/21ED\n21/21     *DAYCT:U-3=>U-4 8e:+31 2le: +31                                                                  |\nT.12      * ACTION: O 40.45% TREND UP TO A-T-H 7758                                   hd                      4 i!\n*SPXO/N 7603-76371 07633 030   rads  L/H 7629-7758                               |                                   Ro\nMAG?     *SPXATR: 1.10% SPX +179% 60/40 115%     +1.39% TURBO +1.36%                il .      oo         f [i Ri  hp\nRG8       * SECTORS: BPS SOXX DRAM OPTICS S/W 118      + BY% CRUDE XLU.V.RE              f         hy            we\nRAI100        * GRO HOLDINGS: SPYM,UPRO,HPE,OKTA, PLTR,VLO,CBRS.                                                                      1)    Jf  Ir.   IN         1   pa —\nPx            * GRO RVAB/REBAR: 0.90 (-0.46%/-6.06%) BUY HPE.OKTA,PLTR VLO,CBRS                                     fh  Va  hhh       1\n* TURBO HOLDINGS; SPYM,UPRO, TQQQ,DDOG, CRS, TSEM                                      I h  Lo am       Lp                        w B\njelele}         * TURBO RVAB/REBAR: 1.21{-1.48%/-6.22%} BUY TQQQ,CBRS,TSEM                               J\\  {  ¥ -                          in\nDIA         * BOTTOM LINE: -» POWERFUL FTD RALLY LED BY A-| CARRIES MOST INDEXTS TO ATH Jif +        :                 Be\nMID           * WED KEYS: SPX vs 8E/ATH  QQQvs S00/ATH  R2K vs 8E/ATH                                     i\n23> SRPS0D KEY LEVELS <<<\nR2K          +7758 (8/4 INTRADAY A-T-H)                                                                                                                               2\n60/40       7737 TODAY: POWERFUL FTO RALLY LED BY A | CARRIES MOSI INDEXES TOA TH\nGRO ~       27600 MON: SEP LOOKS FOR NFW ALL-TIME HIGHS, AI/TECH NAMES SEOW BROAD STRENGTH\n27490 FRI: MAGS PROPS INDEXES, Al DAY TWO FOLLOW THROUGH\n[iii      * 7493 (124 21EMA) € 7/311 7/234 7/211 7/174 6/291 6/233                                                                               Ea\n* EMAIL:       * 7481/7468 (16 50D/10WK) € 7/314 7/234 7/211 7/174 6/291\n«TWITTER * 7034/7056 (15 200D/40WK) € 4/81 3/19¢\n* PHONE:\naarp or                                                                                                     u wm om ow wm wm ww\n®       Puget tecsiees 8 [3              Gopwwing Dios @ 0 0B — 4 won        er              ha               wo                jad\nSeem         [ETE R=       TCC 2 Moms © ms vw Tw i                                      or - COR EA\nWow seings [rons BBM BB ———— we   [IE al BL EC TE al JP Bg\n",
+      "ocr_text_snippet": ">>> TI >» D, »> TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 << I) res OBB * MARKET STATE: UPTREND . *YLXIG| *STOINDEXES6H OL RGBEM O NASIT USDL TNX/TYXP vs Sd i. ds. >>> TUE # SENTIMENT: VIX 16 50 {...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS; SPYM,UPRO, TQQQ,DDOG, CRS, TSEM I H LO AM LP W B JELELE} * TURBO RVAB/REBAR: 1.21{-1.48%/-6.22%}",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY TQQQ,CBRS,TSEM J\\ { ¥ - IN DIA * BOTTOM LINE: -» POWERFUL FTD RALLY LED BY A- CARRIES MOST INDEXTS TO ATH JIF + : BE MID * WED KEYS: SPX VS 8E/ATH QQQVS S00/ATH R2K VS 8E/ATH I 23> SRPS0D KEY LEVELS <<< R2K +7758 (8/4 INTRADAY A-T-H) 2 60/40 7737 TODAY: POWERFUL FTO RALLY LED BY A CARRIES MOSI INDEXES TOA TH GRO ~ 27600 MON: SEP LOOKS FOR NFW ALL-TIME HIGHS, AI/TECH NAMES SEOW BROAD STRENGTH 27490 FRI: MAGS PROPS INDEXES, AL DAY TWO FOLLOW THROUGH III * 7493 (124 21EMA) € 7/311 7/234 7/211 7/174 6/291 6/233 EA EMAIL: * 7481/7468 (16 50D/10WK) € 7/314 7/234 7/211 7/174 6/291 TWITTER * 7034/7056 (15 200D/40WK) € 4/81 3/19¢ PHONE: AARP OR U WM OM OW WM WM WW PUGET TECSIEES 8 [3 GOPWWING DIOS @ 0 0B - 4 WON ER HA WO JAD SEEM [ETE R= TCC 2 MOMS © MS VW TW I OR - COR EA WOW SEINGS [RONS BBM BB ---- WE [IE AL BL EC TE AL JP BG",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5ff0080df1302fe",
+      "prefilter_score": 15.22,
+      "prefilter_stats": {
+        "brightRatio": 0.7686805555555556,
+        "darkRatio": 0.04986111111111111,
+        "edgeRatio": 0.1923185640590771,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1461,
+        "horizontalEdgeRatio": 0.1032435870256519,
+        "meanLuma": 225.68597222222223,
+        "stdDev": 51.030172152248426,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3982,
+        "verticalEdgeRatio": 0.2813935410925023
+      },
+      "score": 92.42,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 93.42
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "HPE",
+        "OKTA",
+        "PLTR",
+        "SNDK",
+        "SPYM",
+        "TQQQ",
+        "TSEM",
+        "UPRO"
+      ],
+      "timestamp": 580,
+      "timestamp_hms": "00:09:40",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260804_ps.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 170,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260804_20260804_a22cuhvxr90_72fa2c74_whiteboard\\ocr\\ocr_000171.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 682.08,
+      "observed_date": "20260804",
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> Tl\n>>» DA 2>.TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 <<                                   ® Comes OBO\n* MARKET STATE: UPTREND                                                                                                                              s\n*YLX6,]  vSTOINDEXES6™ OU RGBET 04 NASI USD TNX/TYXA vs5d                                                                8.27\n>>> TUE      * SENTIMENT: VIX 16 50 i+2.0%! F&G 58(+13 GREED) Aa131 «1.4, 26.9-1.2 THIER Naam 79.70 4.32                                                             \"va 0 NA\n* MARKE'       PBULL CASE: INITIATE RALLY & TREND 21EMA ~~ €8/3-4 REGAIN 21E & FTD                                                              Last update. G2.53 PW ET 08:042026\n> BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                            CED              ®\n* WHAT       * NEWS: TUESER AMC: AMD SPCXd ALABY, ANETT WED ER AMC: SNDX WDC APP                                                                          PF)\n> AILEADY  * TODAY'S KEYS: SPX vs 8E N/ATHA QQQvs 6861/2161 R2K vs 8E 1/211\n21/21     PDAYCT: U-3=>U-4  8e: +31 2le:-31                                                                   ]\nT.12      * ACTION: O +0.45% TREND UP TO A-T-H 7758                                    or                      4 I)\n*SPXO/N 7603-76371 07633 030 7629-76591 L/H 7629-7758                               |                                   |\nMAG7     *SPXATR: 100%  SPX+179% 60/40+1.15% GRO +1.39% TURBO ~136%                  il .      wo          WM Ri  te      “\nRG8       * SECTORS: 4 BPS SOXX DRAM OPTICS S/W iB      J BY% CRUDE XLE.U.V.RE             |         i            we\nRAIL00       * GRO HOLDINGS: SPYM,UPRO,HPE,OKTA,PLTR,VLO,CBRS                                                                1)   hl   iN   t    wh\"\nPx           * GRO RVAB/REBAR: 0.99 {-0.46%/-6.06%} BUY HPE,OKTA PLTRVLO,CBRS                                     fh  7  hh       )f|\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ,0D0G,CBRS, TSEM                                         1 h  vw        iT                          u fi\nQaQ        * TURBO RVAB/REBAR: 1.21 (-1.48%/-6.22%) BUY TQQQ,CBRS,TSEM                             9  {  ¥ -                        hy\nDIA      * BOTTOM LINE: > POWERFUL FTD RALLY LED BY A-l CARRIES MOST INDEXES TOAT-H {ff 1 _-              £8\nMID             * WED KEYS: SPX vs 8E/ATH  QQQvs SOD/ATH  R2K vs 8E/ATH                                           .\n>> S&P500 KEY LEVELS <<<\nR2K          7758 (8/4 INTRADAY A-T-H)                                                                                                                                “@\n60/40       7737 TODAY: POWERFUL FID RALLY LED BY A | CARRIES MOST INDEXES TO A T H\nGRO ~       27600 MON: S&P LODKS FOR NFW ALL-TIME HIGHS; Al/TFCH NAMES SHOW BROAD STRENGTH\n37490 FRI: MAGS PROPS INDEXES, Al DAY TWO FOLLOW THROUGH\nS=E===s      *7493 (124 21EMA) € 7/211 7/234 7/211 717d 6/291 6/234                                                                               “0\n* EMAIL:     * 7481/7468 (16 500/10WK) € 7/311 7/234 7/211 7/174 6/291\n“TWITTER ° 7034/7056 (15 200D/40WK) € 4/51 3/193\n* PHONE:\n& SIT                                                                                                    . ME’)   wr oa       2   -      \"     oa       ”       \"hoo\nPage tot58 eMiwods 8 DR          FT I —————\nTew         Tee] Repos       TCC 2 Toms © vm sw                                      ory - CR EA\noso sets [Plion BM BB ———— on   mE rR oa \"gn,\n",
+      "ocr_text_snippet": ">>> Tl >>» DA 2>.TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 << ® Comes OBO * MARKET STATE: UPTREND s *YLX6,] vSTOINDEXES6™ OU RGBET 04 NASI USD TNX/TYXA vs5d 8.27 >>> TUE * SENTIMENT: VIX 16 50 i+2...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ,0D0G,CBRS, TSEM 1 H VW IT U FI QAQ * TURBO RVAB/REBAR: 1.21 (-1.48%/-6.22%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY TQQQ,CBRS,TSEM 9 { ¥ - HY DIA * BOTTOM LINE: > POWERFUL FTD RALLY LED BY A-L CARRIES MOST INDEXES TOAT-H {FF 1 _- £8 MID * WED KEYS: SPX VS 8E/ATH QQQVS SOD/ATH R2K VS 8E/ATH . S&P500 KEY LEVELS <<< R2K 7758 (8/4 INTRADAY A-T-H) \"@ 60/40 7737 TODAY: POWERFUL FID RALLY LED BY A CARRIES MOST INDEXES TO A T H GRO ~ 27600 MON: S&P LODKS FOR NFW ALL-TIME HIGHS; AL/TFCH NAMES SHOW BROAD STRENGTH 37490 FRI: MAGS PROPS INDEXES, AL DAY TWO FOLLOW THROUGH S=E===S *7493 (124 21EMA) € 7/211 7/234 7/211 717D 6/291 6/234 \"0 EMAIL: * 7481/7468 (16 500/10WK) € 7/311 7/234 7/211 7/174 6/291 TWITTER ° 7034/7056 (15 200D/40WK) € 4/51 3/193 PHONE: SIT . ME') WR OA 2 - \" OA \" \"HOO PAGE TOT58 EMIWODS 8 DR FT I ----- TEW TEE] REPOS TCC 2 TOMS © VM SW ORY - CR EA OSO SETS [PLION BM BB ---- ON ME RR OA \"GN,",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5ff0080df1302fb",
+      "prefilter_score": 15.24,
+      "prefilter_stats": {
+        "brightRatio": 0.7686805555555556,
+        "darkRatio": 0.05,
+        "edgeRatio": 0.1925305632110805,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1470,
+        "horizontalEdgeRatio": 0.10387958448166207,
+        "meanLuma": 225.69868055555557,
+        "stdDev": 51.04321125209237,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3979,
+        "verticalEdgeRatio": 0.2811815419404989
+      },
+      "score": 92.08,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 93.08
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "HPE",
+        "OKTA",
+        "PLTR",
+        "SPYM",
+        "TQQQ",
+        "TSEM",
+        "UPRO"
+      ],
+      "timestamp": 680,
+      "timestamp_hms": "00:11:20",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260804_ps_2.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 115,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260804_20260804_a22cuhvxr90_72fa2c74_whiteboard\\ocr\\ocr_000116.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 459.68,
+      "observed_date": "20260804",
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> Tl\n>>> D,      2» TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 <<                                  ® Pores OB: 0\n* MARKET STATE: UPTREND                                                                                                                              .\nSYLXIG]  +STOINDEXES6T OL RGEST OV NASILLUSDY TNX/TYXA vs 5d                                                               36.27\n>>> TUE] * SENTIMENT: VIX 1650-4 0%) F&G 58(+13 GREED} Anes +1. 265-12 BEER Naam 79,704.52                                                          os Wa\n* MARKE'       BULL CASE: INITIATE RALLY & TREND 21EMA       8/3-4 REGAIN 21E & FTD                                                                Last Updato. 02 53 PM ET 08:04:2026.\n> BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                            CED              ®\n* WHAT        * NEWS: TUES ER AMC: AMD SPCXd ALABL ANETD WED ER AMC: SNDK WDC APP                                                                                  PF)\n> AILEADY + TODAY'S KEYS: SPX vs BEM/ATHA QQQvs 6861 /21E1 R2K vs BET/21ED\n21/21     *DAYCT:U-3=>U-4  8e:+31 2le: +31                                                                  |\nT12         * ACTION: 0 +0.45% TREND UP TO A-T-H 7758                                                        hil                                   4  I)\n*SPXO/N 7603-76371 07633 030 7629-76591 L/H 7629-7758                               |                                   1]\nMAG? | 5px ATR: 1.10% SPX +1.79% 60/40-1.15% GRO +1.39% TURBO +1.36%                       il .        wo             1!  Ri   te        “\nRG8       * SECTORS: I BPS SOXX DRAM OPTICS fw 118      4 BY% CRUDE XLU.V.RE              L        hi           fe\nRAI100       * GRO HOLDINGS: SPYM,UPRO,HPE,OKTA, PLTR,VLO,CBRS.                                                                  1)    yf   In.  1        1   Pg.  —\nSpx            * GRO RVAB/REBAR: 0.90 (-0.46%/-6.06%) BUY HPE OKTA,PLTR VLO,CBRS                                     th  Va  ih       iy\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ,DDOG,CBRS, TSEM                                          I h  yo mses apr                           w B\nQaQ         * TURBO RVAB/REBAR: 1.21 {-1.48%/-6.22%} BUY TQQQ,CBRS,TSEM                             fl  {  ¥ -                         Hy\nDIA      * BOTTOM LINE: -> POWERFUL FTD RALLY LED BY Al CARRIES MOST INDTXES TO AT-1 {ff ~~    -           ae\nMID           * WED KEYS: SPX vs 8E/ATH  QQQ vs SOD/ATH  R2K vs 8E/ATH                                     i\n23> SRPS0D KEY LEVELS <<<\nR2K          7758 (8/4 INTRADAY A-T-H)                                                                                                                               “\n60/40        7737 TODAY: POWERFUL FID RALLY LED BY A | CARRIES MOST INDEXES TOA T H\nGRO ~     7600 MON: S&P LOOKS FOR NFW ALL-TIME HIGHS; Al/TECH NAMES SKOW BROAD STRENGTH\n$7490 FRI: MAGS PROPS INDEXES, Al DAY TWO FOLLOW THROUGH\ns======      +7493 (124 21EMA) € 7/311 7/238 7/211 7/174 6/291 6/23)                                                                               w®\n* EMAIL:       * 7481/7468 (16 S0D/10WK) € 7/314 7/234 7/211 7474 6/291\n«TWITTER * 7034/7056 (15 200D/40WK) € 4/81 3/19%\n* PHONE:\n& ST                                                                                             SE mmm mw\nbapa tities & D3        Gowns Dow @ MB 6B —4— on\nSee         To Rewer          p       TCC 2 floms © vm vw                                      or - OR EA\nFos sens [lis BM FB ———— wn   me \"BCR oa\" 9»,                            i\n",
+      "ocr_text_snippet": ">>> Tl >>> D, 2» TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 << ® Pores OB: 0 * MARKET STATE: UPTREND . SYLXIG] +STOINDEXES6T OL RGEST OV NASILLUSDY TNX/TYXA vs 5d 36.27 >>> TUE] * SENTIMENT: VIX 16...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ,DDOG,CBRS, TSEM I H YO MSES APR W B QAQ * TURBO RVAB/REBAR: 1.21 {-1.48%/-6.22%}",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY TQQQ,CBRS,TSEM FL { ¥ - HY DIA * BOTTOM LINE: -> POWERFUL FTD RALLY LED BY AL CARRIES MOST INDTXES TO AT-1 {FF ~~ - AE MID * WED KEYS: SPX VS 8E/ATH QQQ VS SOD/ATH R2K VS 8E/ATH I 23> SRPS0D KEY LEVELS <<< R2K 7758 (8/4 INTRADAY A-T-H) \" 60/40 7737 TODAY: POWERFUL FID RALLY LED BY A CARRIES MOST INDEXES TOA T H GRO ~ 7600 MON: S&P LOOKS FOR NFW ALL-TIME HIGHS; AL/TECH NAMES SKOW BROAD STRENGTH 7490 FRI: MAGS PROPS INDEXES, AL DAY TWO FOLLOW THROUGH S====== +7493 (124 21EMA) € 7/311 7/238 7/211 7/174 6/291 6/23) W® EMAIL: * 7481/7468 (16 S0D/10WK) € 7/314 7/234 7/211 7474 6/291 TWITTER * 7034/7056 (15 200D/40WK) € 4/81 3/19% PHONE: ST SE MMM MW BAPA TITIES & D3 GOWNS DOW @ MB 6B -4- ON SEE TO REWER P TCC 2 FLOMS © VM VW OR - OR EA FOS SENS [LIS BM FB ---- WN ME \"BCR OA\" 9», I",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5ff0080df1702fa",
+      "prefilter_score": 15.31,
+      "prefilter_stats": {
+        "brightRatio": 0.7679861111111111,
+        "darkRatio": 0.050486111111111114,
+        "edgeRatio": 0.19270722917108332,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1474,
+        "horizontalEdgeRatio": 0.1041622500176666,
+        "meanLuma": 225.56826388888888,
+        "stdDev": 51.21435813256247,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3980,
+        "verticalEdgeRatio": 0.28125220832450004
+      },
+      "score": 91.98,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 92.98
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "HPE",
+        "OKTA",
+        "PLTR",
+        "SNDK",
+        "SPYM",
+        "TQQQ",
+        "TSEM",
+        "UPRO"
+      ],
+      "timestamp": 460,
+      "timestamp_hms": "00:07:40",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260804_ps_3.png"
+    }
+  ],
+  "frame_count": 304,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 243,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260804_ps.png",
+  "prefilter_best_score": 23.42,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 145,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260804_20260804_a22cuhvxr90_72fa2c74_whiteboard\\ocr\\ocr_000146.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 581.44,
+    "observed_date": "20260804",
+    "ocr_confidence": 60,
+    "ocr_profile": "threshold",
+    "ocr_text": ">>> TI\n>» D,      »> TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 <<                                  I) res OBB\n* MARKET STATE: UPTREND                                                                                                                              .\n*YLXIG|  *STOINDEXES6H OL RGBEM  O NASIT USDL TNX/TYXP vs Sd                                                                 i. ds.\n>>> TUE      # SENTIMENT: VIX 16 50 {3 0%] F&G 58(+13 GREED) An 3141.4, 26.9-1.2 FETE naam 79.70 4.32                                                             \"ve 0 A\n* MARKE       BULL CASE: INITIATE RALLY & TREND 21EMA ~~ €8/3-4 REGAIN 21E & FTD                                                               Last Update. G2 50 PM ET 08.04:2026\n»BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                          CED              ®\n* WHAT        * NEWS: TUES ER AMC: AMD SPCXd ALABL ANETT WED ER AMC: SNDK WDC APP                                                                                  PF)\n> AILEAD!        * TODAY'S KEYS: SPX vs 8EM/ATHT QQQ vs 6864 /21E1  R2K vs 8ET/21ED\n21/21     *DAYCT:U-3=>U-4 8e:+31 2le: +31                                                                  |\nT.12      * ACTION: O 40.45% TREND UP TO A-T-H 7758                                   hd                      4 i!\n*SPXO/N 7603-76371 07633 030   rads  L/H 7629-7758                               |                                   Ro\nMAG?     *SPXATR: 1.10% SPX +179% 60/40 115%     +1.39% TURBO +1.36%                il .      oo         f [i Ri  hp\nRG8       * SECTORS: BPS SOXX DRAM OPTICS S/W 118      + BY% CRUDE XLU.V.RE              f         hy            we\nRAI100        * GRO HOLDINGS: SPYM,UPRO,HPE,OKTA, PLTR,VLO,CBRS.                                                                      1)    Jf  Ir.   IN         1   pa —\nPx            * GRO RVAB/REBAR: 0.90 (-0.46%/-6.06%) BUY HPE.OKTA,PLTR VLO,CBRS                                     fh  Va  hhh       1\n* TURBO HOLDINGS; SPYM,UPRO, TQQQ,DDOG, CRS, TSEM                                      I h  Lo am       Lp                        w B\njelele}         * TURBO RVAB/REBAR: 1.21{-1.48%/-6.22%} BUY TQQQ,CBRS,TSEM                               J\\  {  ¥ -                          in\nDIA         * BOTTOM LINE: -» POWERFUL FTD RALLY LED BY A-| CARRIES MOST INDEXTS TO ATH Jif +        :                 Be\nMID           * WED KEYS: SPX vs 8E/ATH  QQQvs S00/ATH  R2K vs 8E/ATH                                     i\n23> SRPS0D KEY LEVELS <<<\nR2K          +7758 (8/4 INTRADAY A-T-H)                                                                                                                               2\n60/40       7737 TODAY: POWERFUL FTO RALLY LED BY A | CARRIES MOSI INDEXES TOA TH\nGRO ~       27600 MON: SEP LOOKS FOR NFW ALL-TIME HIGHS, AI/TECH NAMES SEOW BROAD STRENGTH\n27490 FRI: MAGS PROPS INDEXES, Al DAY TWO FOLLOW THROUGH\n[iii      * 7493 (124 21EMA) € 7/311 7/234 7/211 7/174 6/291 6/233                                                                               Ea\n* EMAIL:       * 7481/7468 (16 50D/10WK) € 7/314 7/234 7/211 7/174 6/291\n«TWITTER * 7034/7056 (15 200D/40WK) € 4/81 3/19¢\n* PHONE:\naarp or                                                                                                     u wm om ow wm wm ww\n®       Puget tecsiees 8 [3              Gopwwing Dios @ 0 0B — 4 won        er              ha               wo                jad\nSeem         [ETE R=       TCC 2 Moms © ms vw Tw i                                      or - COR EA\nWow seings [rons BBM BB ———— we   [IE al BL EC TE al JP Bg\n",
+    "ocr_text_snippet": ">>> TI >» D, »> TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 << I) res OBB * MARKET STATE: UPTREND . *YLXIG| *STOINDEXES6H OL RGBEM O NASIT USDL TNX/TYXP vs Sd i. ds. >>> TUE # SENTIMENT: VIX 16 50 {...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE"
+        ],
+        "ocr_confidence": 60,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": "HOLDINGS; SPYM,UPRO, TQQQ,DDOG, CRS, TSEM I H LO AM LP W B JELELE} * TURBO RVAB/REBAR: 1.21{-1.48%/-6.22%}",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "BUY TQQQ,CBRS,TSEM J\\ { ¥ - IN DIA * BOTTOM LINE: -» POWERFUL FTD RALLY LED BY A- CARRIES MOST INDEXTS TO ATH JIF + : BE MID * WED KEYS: SPX VS 8E/ATH QQQVS S00/ATH R2K VS 8E/ATH I 23> SRPS0D KEY LEVELS <<< R2K +7758 (8/4 INTRADAY A-T-H) 2 60/40 7737 TODAY: POWERFUL FTO RALLY LED BY A CARRIES MOSI INDEXES TOA TH GRO ~ 27600 MON: SEP LOOKS FOR NFW ALL-TIME HIGHS, AI/TECH NAMES SEOW BROAD STRENGTH 27490 FRI: MAGS PROPS INDEXES, AL DAY TWO FOLLOW THROUGH III * 7493 (124 21EMA) € 7/311 7/234 7/211 7/174 6/291 6/233 EA EMAIL: * 7481/7468 (16 50D/10WK) € 7/314 7/234 7/211 7/174 6/291 TWITTER * 7034/7056 (15 200D/40WK) € 4/81 3/19¢ PHONE: AARP OR U WM OM OW WM WM WW PUGET TECSIEES 8 [3 GOPWWING DIOS @ 0 0B - 4 WON ER HA WO JAD SEEM [ETE R= TCC 2 MOMS © MS VW TW I OR - COR EA WOW SEINGS [RONS BBM BB ---- WE [IE AL BL EC TE AL JP BG",
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_BOTTOM_LINE"
+        ],
+        "ocr_confidence": 60,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "d5ff0080df1302fe",
+    "prefilter_score": 15.22,
+    "prefilter_stats": {
+      "brightRatio": 0.7686805555555556,
+      "darkRatio": 0.04986111111111111,
+      "edgeRatio": 0.1923185640590771,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1461,
+      "horizontalEdgeRatio": 0.1032435870256519,
+      "meanLuma": 225.68597222222223,
+      "stdDev": 51.030172152248426,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 3982,
+      "verticalEdgeRatio": 0.2813935410925023
+    },
+    "score": 92.42,
+    "score_breakdown": {
+      "chart_likeness": -6,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 3,
+      "pair_bonus": 0,
+      "per_row_issues": -6,
+      "per_row_metrics": 8,
+      "text_density": 93.42
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "BE",
+      "HPE",
+      "OKTA",
+      "PLTR",
+      "SNDK",
+      "SPYM",
+      "TQQQ",
+      "TSEM",
+      "UPRO"
+    ],
+    "timestamp": 580,
+    "timestamp_hms": "00:09:40"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 145,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260804_20260804_a22cuhvxr90_72fa2c74_whiteboard\\ocr\\ocr_000146.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260804",
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> TI\n>» D,      »> TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 <<                                  I) res OBB\n* MARKET STATE: UPTREND                                                                                                                              .\n*YLXIG|  *STOINDEXES6H OL RGBEM  O NASIT USDL TNX/TYXP vs Sd                                                                 i. ds.\n>>> TUE      # SENTIMENT: VIX 16 50 {3 0%] F&G 58(+13 GREED) An 3141.4, 26.9-1.2 FETE naam 79.70 4.32                                                             \"ve 0 A\n* MARKE       BULL CASE: INITIATE RALLY & TREND 21EMA ~~ €8/3-4 REGAIN 21E & FTD                                                               Last Update. G2 50 PM ET 08.04:2026\n»BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                          CED              ®\n* WHAT        * NEWS: TUES ER AMC: AMD SPCXd ALABL ANETT WED ER AMC: SNDK WDC APP                                                                                  PF)\n> AILEAD!        * TODAY'S KEYS: SPX vs 8EM/ATHT QQQ vs 6864 /21E1  R2K vs 8ET/21ED\n21/21     *DAYCT:U-3=>U-4 8e:+31 2le: +31                                                                  |\nT.12      * ACTION: O 40.45% TREND UP TO A-T-H 7758                                   hd                      4 i!\n*SPXO/N 7603-76371 07633 030   rads  L/H 7629-7758                               |                                   Ro\nMAG?     *SPXATR: 1.10% SPX +179% 60/40 115%     +1.39% TURBO +1.36%                il .      oo         f [i Ri  hp\nRG8       * SECTORS: BPS SOXX DRAM OPTICS S/W 118      + BY% CRUDE XLU.V.RE              f         hy            we\nRAI100        * GRO HOLDINGS: SPYM,UPRO,HPE,OKTA, PLTR,VLO,CBRS.                                                                      1)    Jf  Ir.   IN         1   pa —\nPx            * GRO RVAB/REBAR: 0.90 (-0.46%/-6.06%) BUY HPE.OKTA,PLTR VLO,CBRS                                     fh  Va  hhh       1\n* TURBO HOLDINGS; SPYM,UPRO, TQQQ,DDOG, CRS, TSEM                                      I h  Lo am       Lp                        w B\njelele}         * TURBO RVAB/REBAR: 1.21{-1.48%/-6.22%} BUY TQQQ,CBRS,TSEM                               J\\  {  ¥ -                          in\nDIA         * BOTTOM LINE: -» POWERFUL FTD RALLY LED BY A-| CARRIES MOST INDEXTS TO ATH Jif +        :                 Be\nMID           * WED KEYS: SPX vs 8E/ATH  QQQvs S00/ATH  R2K vs 8E/ATH                                     i\n23> SRPS0D KEY LEVELS <<<\nR2K          +7758 (8/4 INTRADAY A-T-H)                                                                                                                               2\n60/40       7737 TODAY: POWERFUL FTO RALLY LED BY A | CARRIES MOSI INDEXES TOA TH\nGRO ~       27600 MON: SEP LOOKS FOR NFW ALL-TIME HIGHS, AI/TECH NAMES SEOW BROAD STRENGTH\n27490 FRI: MAGS PROPS INDEXES, Al DAY TWO FOLLOW THROUGH\n[iii      * 7493 (124 21EMA) € 7/311 7/234 7/211 7/174 6/291 6/233                                                                               Ea\n* EMAIL:       * 7481/7468 (16 50D/10WK) € 7/314 7/234 7/211 7/174 6/291\n«TWITTER * 7034/7056 (15 200D/40WK) € 4/81 3/19¢\n* PHONE:\naarp or                                                                                                     u wm om ow wm wm ww\n®       Puget tecsiees 8 [3              Gopwwing Dios @ 0 0B — 4 won        er              ha               wo                jad\nSeem         [ETE R=       TCC 2 Moms © ms vw Tw i                                      or - COR EA\nWow seings [rons BBM BB ———— we   [IE al BL EC TE al JP Bg\n",
+      "ocr_text_snippet": ">>> TI >» D, »> TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 << I) res OBB * MARKET STATE: UPTREND . *YLXIG| *STOINDEXES6H OL RGBEM O NASIT USDL TNX/TYXP vs Sd i. ds. >>> TUE # SENTIMENT: VIX 16 50 {...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS; SPYM,UPRO, TQQQ,DDOG, CRS, TSEM I H LO AM LP W B JELELE} * TURBO RVAB/REBAR: 1.21{-1.48%/-6.22%}",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY TQQQ,CBRS,TSEM J\\ { ¥ - IN DIA * BOTTOM LINE: -» POWERFUL FTD RALLY LED BY A- CARRIES MOST INDEXTS TO ATH JIF + : BE MID * WED KEYS: SPX VS 8E/ATH QQQVS S00/ATH R2K VS 8E/ATH I 23> SRPS0D KEY LEVELS <<< R2K +7758 (8/4 INTRADAY A-T-H) 2 60/40 7737 TODAY: POWERFUL FTO RALLY LED BY A CARRIES MOSI INDEXES TOA TH GRO ~ 27600 MON: SEP LOOKS FOR NFW ALL-TIME HIGHS, AI/TECH NAMES SEOW BROAD STRENGTH 27490 FRI: MAGS PROPS INDEXES, AL DAY TWO FOLLOW THROUGH III * 7493 (124 21EMA) € 7/311 7/234 7/211 7/174 6/291 6/233 EA EMAIL: * 7481/7468 (16 50D/10WK) € 7/314 7/234 7/211 7/174 6/291 TWITTER * 7034/7056 (15 200D/40WK) € 4/81 3/19¢ PHONE: AARP OR U WM OM OW WM WM WW PUGET TECSIEES 8 [3 GOPWWING DIOS @ 0 0B - 4 WON ER HA WO JAD SEEM [ETE R= TCC 2 MOMS © MS VW TW I OR - COR EA WOW SEINGS [RONS BBM BB ---- WE [IE AL BL EC TE AL JP BG",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5ff0080df1302fe",
+      "prefilter_score": 15.22,
+      "prefilter_stats": {
+        "brightRatio": 0.7686805555555556,
+        "darkRatio": 0.04986111111111111,
+        "edgeRatio": 0.1923185640590771,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1461,
+        "horizontalEdgeRatio": 0.1032435870256519,
+        "meanLuma": 225.68597222222223,
+        "stdDev": 51.030172152248426,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3982,
+        "verticalEdgeRatio": 0.2813935410925023
+      },
+      "score": 92.42,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 93.42
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "HPE",
+        "OKTA",
+        "PLTR",
+        "SNDK",
+        "SPYM",
+        "TQQQ",
+        "TSEM",
+        "UPRO"
+      ],
+      "timestamp": 580,
+      "timestamp_hms": "00:09:40"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 170,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260804_20260804_a22cuhvxr90_72fa2c74_whiteboard\\ocr\\ocr_000171.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260804",
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> Tl\n>>» DA 2>.TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 <<                                   ® Comes OBO\n* MARKET STATE: UPTREND                                                                                                                              s\n*YLX6,]  vSTOINDEXES6™ OU RGBET 04 NASI USD TNX/TYXA vs5d                                                                8.27\n>>> TUE      * SENTIMENT: VIX 16 50 i+2.0%! F&G 58(+13 GREED) Aa131 «1.4, 26.9-1.2 THIER Naam 79.70 4.32                                                             \"va 0 NA\n* MARKE'       PBULL CASE: INITIATE RALLY & TREND 21EMA ~~ €8/3-4 REGAIN 21E & FTD                                                              Last update. G2.53 PW ET 08:042026\n> BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                            CED              ®\n* WHAT       * NEWS: TUESER AMC: AMD SPCXd ALABY, ANETT WED ER AMC: SNDX WDC APP                                                                          PF)\n> AILEADY  * TODAY'S KEYS: SPX vs 8E N/ATHA QQQvs 6861/2161 R2K vs 8E 1/211\n21/21     PDAYCT: U-3=>U-4  8e: +31 2le:-31                                                                   ]\nT.12      * ACTION: O +0.45% TREND UP TO A-T-H 7758                                    or                      4 I)\n*SPXO/N 7603-76371 07633 030 7629-76591 L/H 7629-7758                               |                                   |\nMAG7     *SPXATR: 100%  SPX+179% 60/40+1.15% GRO +1.39% TURBO ~136%                  il .      wo          WM Ri  te      “\nRG8       * SECTORS: 4 BPS SOXX DRAM OPTICS S/W iB      J BY% CRUDE XLE.U.V.RE             |         i            we\nRAIL00       * GRO HOLDINGS: SPYM,UPRO,HPE,OKTA,PLTR,VLO,CBRS                                                                1)   hl   iN   t    wh\"\nPx           * GRO RVAB/REBAR: 0.99 {-0.46%/-6.06%} BUY HPE,OKTA PLTRVLO,CBRS                                     fh  7  hh       )f|\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ,0D0G,CBRS, TSEM                                         1 h  vw        iT                          u fi\nQaQ        * TURBO RVAB/REBAR: 1.21 (-1.48%/-6.22%) BUY TQQQ,CBRS,TSEM                             9  {  ¥ -                        hy\nDIA      * BOTTOM LINE: > POWERFUL FTD RALLY LED BY A-l CARRIES MOST INDEXES TOAT-H {ff 1 _-              £8\nMID             * WED KEYS: SPX vs 8E/ATH  QQQvs SOD/ATH  R2K vs 8E/ATH                                           .\n>> S&P500 KEY LEVELS <<<\nR2K          7758 (8/4 INTRADAY A-T-H)                                                                                                                                “@\n60/40       7737 TODAY: POWERFUL FID RALLY LED BY A | CARRIES MOST INDEXES TO A T H\nGRO ~       27600 MON: S&P LODKS FOR NFW ALL-TIME HIGHS; Al/TFCH NAMES SHOW BROAD STRENGTH\n37490 FRI: MAGS PROPS INDEXES, Al DAY TWO FOLLOW THROUGH\nS=E===s      *7493 (124 21EMA) € 7/211 7/234 7/211 717d 6/291 6/234                                                                               “0\n* EMAIL:     * 7481/7468 (16 500/10WK) € 7/311 7/234 7/211 7/174 6/291\n“TWITTER ° 7034/7056 (15 200D/40WK) € 4/51 3/193\n* PHONE:\n& SIT                                                                                                    . ME’)   wr oa       2   -      \"     oa       ”       \"hoo\nPage tot58 eMiwods 8 DR          FT I —————\nTew         Tee] Repos       TCC 2 Toms © vm sw                                      ory - CR EA\noso sets [Plion BM BB ———— on   mE rR oa \"gn,\n",
+      "ocr_text_snippet": ">>> Tl >>» DA 2>.TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 << ® Comes OBO * MARKET STATE: UPTREND s *YLX6,] vSTOINDEXES6™ OU RGBET 04 NASI USD TNX/TYXA vs5d 8.27 >>> TUE * SENTIMENT: VIX 16 50 i+2...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ,0D0G,CBRS, TSEM 1 H VW IT U FI QAQ * TURBO RVAB/REBAR: 1.21 (-1.48%/-6.22%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY TQQQ,CBRS,TSEM 9 { ¥ - HY DIA * BOTTOM LINE: > POWERFUL FTD RALLY LED BY A-L CARRIES MOST INDEXES TOAT-H {FF 1 _- £8 MID * WED KEYS: SPX VS 8E/ATH QQQVS SOD/ATH R2K VS 8E/ATH . S&P500 KEY LEVELS <<< R2K 7758 (8/4 INTRADAY A-T-H) \"@ 60/40 7737 TODAY: POWERFUL FID RALLY LED BY A CARRIES MOST INDEXES TO A T H GRO ~ 27600 MON: S&P LODKS FOR NFW ALL-TIME HIGHS; AL/TFCH NAMES SHOW BROAD STRENGTH 37490 FRI: MAGS PROPS INDEXES, AL DAY TWO FOLLOW THROUGH S=E===S *7493 (124 21EMA) € 7/211 7/234 7/211 717D 6/291 6/234 \"0 EMAIL: * 7481/7468 (16 500/10WK) € 7/311 7/234 7/211 7/174 6/291 TWITTER ° 7034/7056 (15 200D/40WK) € 4/51 3/193 PHONE: SIT . ME') WR OA 2 - \" OA \" \"HOO PAGE TOT58 EMIWODS 8 DR FT I ----- TEW TEE] REPOS TCC 2 TOMS © VM SW ORY - CR EA OSO SETS [PLION BM BB ---- ON ME RR OA \"GN,",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5ff0080df1302fb",
+      "prefilter_score": 15.24,
+      "prefilter_stats": {
+        "brightRatio": 0.7686805555555556,
+        "darkRatio": 0.05,
+        "edgeRatio": 0.1925305632110805,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1470,
+        "horizontalEdgeRatio": 0.10387958448166207,
+        "meanLuma": 225.69868055555557,
+        "stdDev": 51.04321125209237,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3979,
+        "verticalEdgeRatio": 0.2811815419404989
+      },
+      "score": 92.08,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 93.08
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "HPE",
+        "OKTA",
+        "PLTR",
+        "SPYM",
+        "TQQQ",
+        "TSEM",
+        "UPRO"
+      ],
+      "timestamp": 680,
+      "timestamp_hms": "00:11:20"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 115,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260804_20260804_a22cuhvxr90_72fa2c74_whiteboard\\ocr\\ocr_000116.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260804",
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> Tl\n>>> D,      2» TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 <<                                  ® Pores OB: 0\n* MARKET STATE: UPTREND                                                                                                                              .\nSYLXIG]  +STOINDEXES6T OL RGEST OV NASILLUSDY TNX/TYXA vs 5d                                                               36.27\n>>> TUE] * SENTIMENT: VIX 1650-4 0%) F&G 58(+13 GREED} Anes +1. 265-12 BEER Naam 79,704.52                                                          os Wa\n* MARKE'       BULL CASE: INITIATE RALLY & TREND 21EMA       8/3-4 REGAIN 21E & FTD                                                                Last Updato. 02 53 PM ET 08:04:2026.\n> BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                            CED              ®\n* WHAT        * NEWS: TUES ER AMC: AMD SPCXd ALABL ANETD WED ER AMC: SNDK WDC APP                                                                                  PF)\n> AILEADY + TODAY'S KEYS: SPX vs BEM/ATHA QQQvs 6861 /21E1 R2K vs BET/21ED\n21/21     *DAYCT:U-3=>U-4  8e:+31 2le: +31                                                                  |\nT12         * ACTION: 0 +0.45% TREND UP TO A-T-H 7758                                                        hil                                   4  I)\n*SPXO/N 7603-76371 07633 030 7629-76591 L/H 7629-7758                               |                                   1]\nMAG? | 5px ATR: 1.10% SPX +1.79% 60/40-1.15% GRO +1.39% TURBO +1.36%                       il .        wo             1!  Ri   te        “\nRG8       * SECTORS: I BPS SOXX DRAM OPTICS fw 118      4 BY% CRUDE XLU.V.RE              L        hi           fe\nRAI100       * GRO HOLDINGS: SPYM,UPRO,HPE,OKTA, PLTR,VLO,CBRS.                                                                  1)    yf   In.  1        1   Pg.  —\nSpx            * GRO RVAB/REBAR: 0.90 (-0.46%/-6.06%) BUY HPE OKTA,PLTR VLO,CBRS                                     th  Va  ih       iy\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ,DDOG,CBRS, TSEM                                          I h  yo mses apr                           w B\nQaQ         * TURBO RVAB/REBAR: 1.21 {-1.48%/-6.22%} BUY TQQQ,CBRS,TSEM                             fl  {  ¥ -                         Hy\nDIA      * BOTTOM LINE: -> POWERFUL FTD RALLY LED BY Al CARRIES MOST INDTXES TO AT-1 {ff ~~    -           ae\nMID           * WED KEYS: SPX vs 8E/ATH  QQQ vs SOD/ATH  R2K vs 8E/ATH                                     i\n23> SRPS0D KEY LEVELS <<<\nR2K          7758 (8/4 INTRADAY A-T-H)                                                                                                                               “\n60/40        7737 TODAY: POWERFUL FID RALLY LED BY A | CARRIES MOST INDEXES TOA T H\nGRO ~     7600 MON: S&P LOOKS FOR NFW ALL-TIME HIGHS; Al/TECH NAMES SKOW BROAD STRENGTH\n$7490 FRI: MAGS PROPS INDEXES, Al DAY TWO FOLLOW THROUGH\ns======      +7493 (124 21EMA) € 7/311 7/238 7/211 7/174 6/291 6/23)                                                                               w®\n* EMAIL:       * 7481/7468 (16 S0D/10WK) € 7/314 7/234 7/211 7474 6/291\n«TWITTER * 7034/7056 (15 200D/40WK) € 4/81 3/19%\n* PHONE:\n& ST                                                                                             SE mmm mw\nbapa tities & D3        Gowns Dow @ MB 6B —4— on\nSee         To Rewer          p       TCC 2 floms © vm vw                                      or - OR EA\nFos sens [lis BM FB ———— wn   me \"BCR oa\" 9»,                            i\n",
+      "ocr_text_snippet": ">>> Tl >>> D, 2» TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 << ® Pores OB: 0 * MARKET STATE: UPTREND . SYLXIG] +STOINDEXES6T OL RGEST OV NASILLUSDY TNX/TYXA vs 5d 36.27 >>> TUE] * SENTIMENT: VIX 16...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ,DDOG,CBRS, TSEM I H YO MSES APR W B QAQ * TURBO RVAB/REBAR: 1.21 {-1.48%/-6.22%}",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY TQQQ,CBRS,TSEM FL { ¥ - HY DIA * BOTTOM LINE: -> POWERFUL FTD RALLY LED BY AL CARRIES MOST INDTXES TO AT-1 {FF ~~ - AE MID * WED KEYS: SPX VS 8E/ATH QQQ VS SOD/ATH R2K VS 8E/ATH I 23> SRPS0D KEY LEVELS <<< R2K 7758 (8/4 INTRADAY A-T-H) \" 60/40 7737 TODAY: POWERFUL FID RALLY LED BY A CARRIES MOST INDEXES TOA T H GRO ~ 7600 MON: S&P LOOKS FOR NFW ALL-TIME HIGHS; AL/TECH NAMES SKOW BROAD STRENGTH 7490 FRI: MAGS PROPS INDEXES, AL DAY TWO FOLLOW THROUGH S====== +7493 (124 21EMA) € 7/311 7/238 7/211 7/174 6/291 6/23) W® EMAIL: * 7481/7468 (16 S0D/10WK) € 7/314 7/234 7/211 7474 6/291 TWITTER * 7034/7056 (15 200D/40WK) € 4/81 3/19% PHONE: ST SE MMM MW BAPA TITIES & D3 GOWNS DOW @ MB 6B -4- ON SEE TO REWER P TCC 2 FLOMS © VM VW OR - OR EA FOS SENS [LIS BM FB ---- WN ME \"BCR OA\" 9», I",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5ff0080df1702fa",
+      "prefilter_score": 15.31,
+      "prefilter_stats": {
+        "brightRatio": 0.7679861111111111,
+        "darkRatio": 0.050486111111111114,
+        "edgeRatio": 0.19270722917108332,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1474,
+        "horizontalEdgeRatio": 0.1041622500176666,
+        "meanLuma": 225.56826388888888,
+        "stdDev": 51.21435813256247,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3980,
+        "verticalEdgeRatio": 0.28125220832450004
+      },
+      "score": 91.98,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 92.98
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "HPE",
+        "OKTA",
+        "PLTR",
+        "SNDK",
+        "SPYM",
+        "TQQQ",
+        "TSEM",
+        "UPRO"
+      ],
+      "timestamp": 460,
+      "timestamp_hms": "00:07:40"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 180,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260804_20260804_a22cuhvxr90_72fa2c74_whiteboard\\ocr\\ocr_000181.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260804",
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> Tl\n>>» DA 2>.TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 <<                                   ® Comes OBO\n* MARKET STATE: UPTREND                                                                                                                              s\n*YLX6,]  vSTOINDEXES6™ OU RGBET 04 NASI USDY TNX/TYXA vs5d                                                                5.27\n>>> TUE      * SENTIMENT: VIX 16 50 i+2.0%! F&G 58(+13 GREED) Aa131 «1.4, 26.9-1.2 THIER Naam 79.70 4.32                                                             \"va 0 NA\n* MARKE'       PBULL CASE: INITIATE RALLY & TREND 21EMA ~~ €8/3-4 REGAIN 21E & FTD                                                              Last update. G2.53 PW ET 08:042026\n> BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                            CED              ®\n* WHAT       * NEWS! TUESERAMC: AMD SPCXd ALABY, ANETT WED ER AMC: SNDX WDC APP                                                                          PF)\n> AILEADY  * TODAY'S KEYS: SPX vs 8E N/ATHA QQQvs 6861/2161 R2K vs 8E1/21E1\n21/21     PDAYCT: U-3=>U-4  8e: +31 2le:-31                                                                   ]\nT.12      * ACTION: © +0.45% TREND UP TO A-T-H 7758                                    or                      4 I)\n*SPXO/N 7603-76371 07633 030 7629-76591 L/H 7629-7758                               |                                   Ro\nMAG?     *SPXATR: 1.10% SPX +179% 60/40+1.15% GRO +139% TURBO +1 36%                  il .      wo          fi [ Ri\nRG8       * SECTORS: 4 BPS SOXX DRAM OPTICS S/W iB      J BY% CRUDE XLE.U.V.RE             1        hy           we  _\nRAI100      : GRO HOLDINGS: SPYM,UPRO,HPE,OKTA,PLTR,VLO,CBRS Hg : Ih.  1   we\nPx              GRO RVAB/REBAR! 0.09 {-0.46%/-6.06%) BUY HPE,OKTA,PLTR.VLO,CBRS                                        fh  s                hes\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ,0DOG,CBRS, TSEM                                         i\" h  Vw        Sr                          ow B\nQaQ        * TURBO RVAB/REBAR: 1.21 (-1.48%/-6.22%) BUY TQQQ,CBRS,TSEM                             ql  {  ¥ -                        hy\nDIA      * BOTTOM LINE: > POWERFUL FD RALLY LED BY Al CARRIES MOST INDEXES TOAT- {ff ~ 1            £8\nMID             * WED KEYS: SPX vs 8E/ATH  QQQvs SOD/ATH  R2K vs 8E/ATH\n>> S&P500 KEY LEVELS <<<\nR2K          7758 (8/4 INTRADAY A-T-H)                                                                                                                                “@\n60/40       7737 TODAY: POWERFUL FTD RALLY LED BY A | CARRIES MOST INDEXES TO A T H\nGRO ~       7600 MON: S&P LODKS FOR NFW ALL-TIME HIGHS; Al/TFCH NAMES SHOW BROAD STRENGTH\n37490 FRI: MAGS PROPS INDEXES, Al DAY TWO FOLLOW THROUGH\nS=E===s      *7493 (124 21EMA) € 7/211 7/234 7/211 717d 6/291 6/23)                                                                               “0\n* EMAIL:     * 7481/7468 (16 500/10WK) € 7/311 7/234 7/211 7/179 6/291\n“TWITTER ° 7034/7056 (15 200D/40WK) € 4/51 3/193\n* PHONE:\n& ST                                                                                             RE EC IL J. SLI\nPage tots eotinods 8 DR          FT NI ————\nTew         Te] Semone       TEC 2 Moms © vm vw                                      ory - CR EA\noso sets [Plion BM BB ———— on  mE\" rR oa \"og,\n",
+      "ocr_text_snippet": ">>> Tl >>» DA 2>.TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 << ® Comes OBO * MARKET STATE: UPTREND s *YLX6,] vSTOINDEXES6™ OU RGBET 04 NASI USDY TNX/TYXA vs5d 5.27 >>> TUE * SENTIMENT: VIX 16 50 i+...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ,0DOG,CBRS, TSEM I\" H VW SR OW B QAQ * TURBO RVAB/REBAR: 1.21 (-1.48%/-6.22%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY TQQQ,CBRS,TSEM QL { ¥ - HY DIA * BOTTOM LINE: > POWERFUL FD RALLY LED BY AL CARRIES MOST INDEXES TOAT- {FF ~ 1 £8 MID * WED KEYS: SPX VS 8E/ATH QQQVS SOD/ATH R2K VS 8E/ATH S&P500 KEY LEVELS <<< R2K 7758 (8/4 INTRADAY A-T-H) \"@ 60/40 7737 TODAY: POWERFUL FTD RALLY LED BY A CARRIES MOST INDEXES TO A T H GRO ~ 7600 MON: S&P LODKS FOR NFW ALL-TIME HIGHS; AL/TFCH NAMES SHOW BROAD STRENGTH 37490 FRI: MAGS PROPS INDEXES, AL DAY TWO FOLLOW THROUGH S=E===S *7493 (124 21EMA) € 7/211 7/234 7/211 717D 6/291 6/23) \"0 EMAIL: * 7481/7468 (16 500/10WK) € 7/311 7/234 7/211 7/179 6/291 TWITTER ° 7034/7056 (15 200D/40WK) € 4/51 3/193 PHONE: ST RE EC IL J. SLI PAGE TOTS EOTINODS 8 DR FT NI ---- TEW TE] SEMONE TEC 2 MOMS © VM VW ORY - CR EA OSO SETS [PLION BM BB ---- ON ME\" RR OA \"OG,",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5ff0080df1302fb",
+      "prefilter_score": 15.1,
+      "prefilter_stats": {
+        "brightRatio": 0.7738194444444444,
+        "darkRatio": 0.050069444444444444,
+        "edgeRatio": 0.18627658822698043,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1503,
+        "horizontalEdgeRatio": 0.10621157515369939,
+        "meanLuma": 226.06694444444443,
+        "stdDev": 50.819402097550075,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3769,
+        "verticalEdgeRatio": 0.26634160130026147
+      },
+      "score": 91.91,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 92.86
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "HPE",
+        "OKTA",
+        "PLTR",
+        "SPYM",
+        "TQQQ",
+        "TSEM",
+        "UPRO"
+      ],
+      "timestamp": 720,
+      "timestamp_hms": "00:12:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 120,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260804_20260804_a22cuhvxr90_72fa2c74_whiteboard\\ocr\\ocr_000121.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260804",
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> Tl        |\n>>> D,      2» TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 <<                                  ® Cores OBO\n* MARKET STATE: UPTREND                                                                                                                              .\n*YLXIG]  +STOINDEXES6T OL RGEST OV NASI® USDY TNX/TYXA vs 5d                                                               36.27\n>>> TUE] * SENTIMENT: VIX 16 50-4 0%) F&G 58{+13 GREED} Aan 51 +1. 26:5:1.2 BEER NAAM 79,704.52                                                           os Wa\n* MARKE'       BULL CASE: INITIATE RALLY & TREND 21EMA ~~ €8/3-4 REGAIN 21E & FTD                                                                Last Updato. 02 53 PM ET 08:04:2026.\n> BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                            CED              ®\n* WHAT        * NEWS: TUES ER AMC: AMD, SPCXd ALABY, ANETD WED ER AMC: SNDK WDC APP                                                                                  PF)\n> AILEADY + TODAY'S KEYS: SPX vs BEM/ATHA QQQvs 6861/2161 R2K vs BET/21E1\n21/21     *DAYCT:U-3=>U-4  8e:+31 2le: +31                                                                  |\nT12         * ACTION: 0 +0.45% TREND UP TO A-T-H 7758                                                        “                                   4  i)\n*SPXO/N 7603-76371 07633 030 7629-76591 L/H 7629-7758                               |                                   1]\nMAG? | 5px ATR: 1.10% SPX +1.79% 60/40-1.15% GRO +1.39% TURBO +1.36%                       il .        wo             1!  Ri        “\nRG8       * SECTORS: I BPS SOXX DRAM OPTICS fw 118      4 BY% CRUDE XLU.V.RE              L        hi           fe\nRAI100        * GRO HOLDINGS: SPYM,UPRO,HPE,OKTA, PLTR,VLO,CBRS                                                                        1)    yf   In.   1         1   -      —\nPx            * GRO RVAB/REBAR: 0.90 (-0.46%/-6.06%) BUY HPE OKTA,PLTR VLO,CBRS                                     th  Va  hh       ie\n* TURBO HOLDINGS; SPYM,UPRO,TQOQ,DDOG,CBRS, TSEM                                         I h  a       hp                          w B\nQaQ         * TURBO RVAB/REBAR: 1.21 {-1.48%/-6.22%} BUY TQQQ,CBRS,TSEM                             fl  {  ¥ -                         Hy\nDIA      * BOTTOM LINE: -> POWERFUL FTD RALLY LED BY Al CARRIES MOST INDTXES TO AT {lf ~~    -          ae\nMID           * WED KEYS: SPX vs 8E/ATH  QQQ vs SOD/ATH  R2K vs 8E/ATH                                     i\n>> SRPSO0 KEY LEVELS <<<\nR2K          7758 (8/4 INTRADAY A-T-H)                                                                                                                               “\n60/40        7737 TODAY: POWERFUL FID RALLY LED BY A | CARRIES MOST INDEXES TO A 1 H\nGRO ~       P7600 MON: SEP LOOKS FOR NFW ALL-TIME HIGHS: AI/TECH NAMES SHOW BROAD STRENGTH\n37490 FRI: MAGS PROPS INDEXES, Al DAY TWO FOLLOW THROUGH\ns======      +7493 (124 21EMA) € 7/311 7/238 7/211 7/174 6/291 6/23)                                                                               w®\n* EMAIL:       * 7481/7468 (16 S0D/10WK) € 7/314 7/234 7/214 7/474 6/291\n«TWITTER * 7034/7056 (15 200D/40WK) € 4/81 3/19¢\n* PHONE:\n& sl                                                                                             EC IL J. JL\nbapa ties & D2        Gown Pow @ MB 6B —4— on\nET      ED      Reports    TCC 2 Moms © vm vw                       ory + CB EQ\nFos sens Dlios BW FB ———— wo   [IZ La NC TE le JPN J                            i\n",
+      "ocr_text_snippet": ">>> Tl | >>> D, 2» TALE OF THE TAPE — TUESDAY, AUGUST 4, 2026 << ® Cores OBO * MARKET STATE: UPTREND . *YLXIG] +STOINDEXES6T OL RGEST OV NASI® USDY TNX/TYXA vs 5d 36.27 >>> TUE] * SENTIMENT: VIX 16...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS; SPYM,UPRO,TQOQ,DDOG,CBRS, TSEM I H A HP W B QAQ * TURBO RVAB/REBAR: 1.21 {-1.48%/-6.22%}",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY TQQQ,CBRS,TSEM FL { ¥ - HY DIA * BOTTOM LINE: -> POWERFUL FTD RALLY LED BY AL CARRIES MOST INDTXES TO AT {LF ~~ - AE MID * WED KEYS: SPX VS 8E/ATH QQQ VS SOD/ATH R2K VS 8E/ATH I SRPSO0 KEY LEVELS <<< R2K 7758 (8/4 INTRADAY A-T-H) \" 60/40 7737 TODAY: POWERFUL FID RALLY LED BY A CARRIES MOST INDEXES TO A 1 H GRO ~ P7600 MON: SEP LOOKS FOR NFW ALL-TIME HIGHS: AI/TECH NAMES SHOW BROAD STRENGTH 37490 FRI: MAGS PROPS INDEXES, AL DAY TWO FOLLOW THROUGH S====== +7493 (124 21EMA) € 7/311 7/238 7/211 7/174 6/291 6/23) W® EMAIL: * 7481/7468 (16 S0D/10WK) € 7/314 7/234 7/214 7/474 6/291 TWITTER * 7034/7056 (15 200D/40WK) € 4/81 3/19¢ PHONE: SL EC IL J. JL BAPA TIES & D2 GOWN POW @ MB 6B -4- ON ET ED REPORTS TCC 2 MOMS © VM VW ORY + CB EQ FOS SENS DLIOS BW FB ---- WO [IZ LA NC TE LE JPN J I",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5ff0080df1302fe",
+      "prefilter_score": 15.23,
+      "prefilter_stats": {
+        "brightRatio": 0.7685416666666667,
+        "darkRatio": 0.049930555555555554,
+        "edgeRatio": 0.19249523001907992,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1462,
+        "horizontalEdgeRatio": 0.10331425340965303,
+        "meanLuma": 225.68798611111112,
+        "stdDev": 51.036077327708156,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3986,
+        "verticalEdgeRatio": 0.28167620662850684
+      },
+      "score": 91.86,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 92.86
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "HPE",
+        "OKTA",
+        "PLTR",
+        "SNDK",
+        "SPYM",
+        "TQQQ",
+        "TSEM",
+        "UPRO"
+      ],
+      "timestamp": 480,
+      "timestamp_hms": "00:08:00"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260804_20260804_a22cuhvxr90_72fa2c74_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 3.56,
+      "prefilter_stats": {
+        "brightRatio": 0.464375,
+        "darkRatio": 0.3179166666666667,
+        "edgeRatio": 0.2377923821638047,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2295,
+        "horizontalEdgeRatio": 0.16217935128259486,
+        "meanLuma": 164.31145833333332,
+        "stdDev": 93.38747763923017,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4435,
+        "verticalEdgeRatio": 0.3134054130450145
+      },
+      "score": -16.96,
+      "score_breakdown": {
+        "chart_likeness": -4.961811771755505,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 295,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260804_20260804_a22cuhvxr90_72fa2c74_whiteboard\\ocr\\ocr_000296.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1177.24,
+      "observed_date": null,
+      "ocr_confidence": 43,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> DAILY            E    [RR     Pa\n* YT, X, 16, TikTok:\nx                                  [NER\n>>> TUESDAY,                                 i)\n* MARKET STATH                                                      *841.29                   849.47\n.                                       E——— — —                      [rs “vam        veo         Pt Siadehuon\nWHAT HAPPE        [ec 1968 - wav, 1570] 7% | veo |        ox oe 020M ET ont Lat: oun Er Shon\n> AI LEADS POWE                            aN, 1973 -ocT, 1974] 99% | voa.rw |                                                                               M\n21/21 +1.98%             [rep -mar 1080] 210% | varen |                    niin      4\nTaz +3949       Nov, 1980 Aus, 1982] 285% | vaso |\n| Avc-oct, 1087 ssw | sean |\nMAG7 +0.85%                 | sui-ocr,ao%] 204% | sex |                         TTT\nRGS  +2.94%           | Jui-oct, 1008] 225% | +290% |                               1000\n-             [ MAR, 2000 - Oc, 2002 s05% | 102.0% |                 }\nRAI100 +4834           oct, 2007 - man, 2000] 57.7% | _sa3ean |                aT.    4        Pp\nSpx +1.79%           | mav-ocr zou] _arew | varow |                  pi en\n340%        [ sep-pec, 208] 20a% [| wasaw |            |    Hh\naaa +          [Feo wan 200] asa | veo |        -       KRY\nDIA 41.71%        [— san-oct, 2022] a7sw | essox |]             Kon    i\nMID +1.79%         | en -apm 2005] ain | varam |                 PE ena LL\n        | es | [on               wiv .]®\nR2K  +1.85%           [— oromanvis| 232% | von |\n60/40 +1.15%                  | Auge sax | serax |                                                     w\n| SEVERE (>30% loss) (6)]__ 445% | +s0a% |\nGRO ~+1.39%)\nJES                                                                                                         2m\n* EMAIL: don@r                                                                                                                                                      ae\n* TWITTER (X): Cit      -                             Ea       J Tins)\n* PHONE: (855) REAL-WEALTH / (3    -       -                    .      - EERE\n* WEB SITE: revereasset.com                                     ‘Q Ended March 2028                                   Qtr Enc dune 2028 ext                                           €P8 Duet ©\nM    os    ain    2    »    om    aan    son     eran\n“    ps    aoe    pe    M    pe   can    ses   Soe 14000\non ml               wr         toe a Marin\nDwolsysetngs Dron @ WB MB ———— wn\n-          eens     in  T  Teports   21.21 8/3 <<< 24 items © uate ha MET CH un                 O Pay  [=28 38 BAN\n&£  [LA    LEE oC: Tal ICT ale J 1  a x   - le\n",
+      "ocr_text_snippet": ">>> DAILY E [RR Pa * YT, X, 16, TikTok: x [NER >>> TUESDAY, i) * MARKET STATH *841.29 849.47 . E——— — — [rs “vam veo Pt Siadehuon WHAT HAPPE [ec 1968 - wav, 1570] 7% | veo | ox oe 020M ET ont Lat: ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 43,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 43,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "852dd63ed2c0ce93",
+      "prefilter_score": 6.02,
+      "prefilter_stats": {
+        "brightRatio": 0.4557638888888889,
+        "darkRatio": 0.3290972222222222,
+        "edgeRatio": 0.1976185428591619,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2166,
+        "horizontalEdgeRatio": 0.153063387746449,
+        "meanLuma": 162.760625,
+        "stdDev": 93.6207582759557,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3427,
+        "verticalEdgeRatio": 0.24217369797187477
+      },
+      "score": -22.13,
+      "score_breakdown": {
+        "chart_likeness": -2.281205281883935,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.15,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 1180,
+      "timestamp_hms": "00:19:40"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 85,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260804_20260804_a22cuhvxr90_72fa2c74_whiteboard\\ocr\\ocr_000086.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 342.44,
+      "observed_date": null,
+      "ocr_confidence": 35,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n>>> DAILY MAReTsURes o @8       x or Wey doom wn mam @         Er Coss 0s:\nFo—                                                                                     *16.50\nYLXIGTITE Choe Volatility Index | N                                                            ix sah aoe\n>>> TUESDA             © Toenzitoenn         .                                                                                     an, 0415 PVT SNES\n.\nIMARKETSTE mow oe                                         sna       »\nWHATHAPP = © (Nom TNA Tee ON Ne TN STP     x\n»arpspoy———\n21/21 +1.9¢\nT12 +38                                 wn                                             “\nMAG7 0.8\nRGE +29                                      wes\nRAI100 +4.8                                       i                                       ©\nSPX +17 mg                                                         p\nQqq +34                            |\nDIA +17                           i  i  .                               =\nMID 41.7!   !                     Pr          Ir    “               Bx\nRK +18!                    ne    |        pd       ii TTT         wn\naL                                                SA                   -      0           |\n60/0 +11 J                   i ;    on      pr | AE | ——    i\nGRO ~+1.3¢ 4”   ee TH    hv      Sm         fel\nI    I  \"        ih                 oN\nJE—— l   RN    fir At                        wn      Ha      1H       LI\n* EMAIL: dong                         Li                                                                                            -                   hd\n* TWITTER (X)                             x)                                                 ane Hot &ialaole\n* PHONE: (85!                                       Trend\nERSTE 7% vm wom woom ow moe ow wom a om ow wy\n:        bee        -       re       we                wr       »        -\n[]       —    | es 2121813 <<< 26Hems © sam hd 1 1G icas                 ory + 2mm A\nWows setngs Dros BH BB ———— on    mE \"eR oa \"gy                              ]\n»                              ;         »\n",
+      "ocr_text_snippet": ">>> THE >>> DAILY MAReTsURes o @8 x or Wey doom wn mam @ Er Coss 0s: Fo— *16.50 YLXIGTITE Choe Volatility Index | N ix sah aoe >>> TUESDA © Toenzitoenn . an, 0415 PVT SNES . IMARKETSTE mow oe sna »...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80aa1b7e76455b9a",
+      "prefilter_score": 22.38,
+      "prefilter_stats": {
+        "brightRatio": 0.7898611111111111,
+        "darkRatio": 0.07840277777777778,
+        "edgeRatio": 0.14935340258638966,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1546,
+        "horizontalEdgeRatio": 0.109250229665748,
+        "meanLuma": 222.31416666666667,
+        "stdDev": 61.56724683335198,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2681,
+        "verticalEdgeRatio": 0.1894565755070313
+      },
+      "score": -23.36,
+      "score_breakdown": {
+        "chart_likeness": -3.1098506082926924,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.75,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 340,
+      "timestamp_hms": "00:05:40"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 260,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260804_20260804_a22cuhvxr90_72fa2c74_whiteboard\\ocr\\ocr_000261.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1040.68,
+      "observed_date": null,
+      "ocr_confidence": 35,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n2>> DAILY MARRETSURoE «zen      | our wey wy wn vs G       [oor ITI\n*YT,X,1G, TkTd P Arista Netw Lows  h                                                   3208.00         $190.51\n! Conran to                           PE CTTW S—    [Ripaiend     awe aston sarc\n222 TUESDA 4 supa © rovmzirori     -                 sme ame nomen dors GS00PN ET corto Lue 5430 ou £1 HOVERS\n* MARKET ST/\nGunn               AAR EE TL ee ND aa NO Te\n“WHAT HAPP wa ers 55 sues Composers                                              H\nCR Ema\n=> AI LEADS POV 2019  081 zn  “1 Rg Rang    »\noh                                                 mar\nWor eae BU LL eRe 8                                     i     |\nT12 #39 0 Gn GD II gepmenes w                  ine      a      4    i   w\nMAG? +0.8 moo Ean                      hi fl      ft    1    C1        «\nRee 29 IIHT EME ef     fy tL\nRAILOO +4.8                                                                                Ea         |      t2                     feng 160\n'¥                                                   |    WAN    fi    hy”                79\nsex +174              im            I     “1    -\naaa +347            UT          J   (] : 7 Ad  A fan     :\nAA’     wa       4     “      fi     ipllll Lee Torah    wo\nMID 41.70   p=  th gat   7a      li ve        Ah\n|          Hy    TAN                          /\nRK +18     it    i   ly  nr   .\n50/0 1110 a WA ps pf  TEV     3                       ET\nGRO 41.307   jo       I         7       -                  wo\ner                            .\nEe 01 1 [wer IOS 1 7 ri ||| UD TL LE al\nCS Em a EE EE\n* EMAIL: dont,     onc      an      Fob     ar      or      ™      on      IM       ™\n* TWITTER (X) ov Entesorcemser 2s                [rS—                [Op—                   ersouema-\n+ PHONE: (85t     aes    wo    osr    -    oes    so    os    -    on    wr,     on     trance\nP       -    1504    on.    ammo    -    20068    2e03    \"    ams    wn    sont   Suen 8) 8.000\n& SITE: re                            Er                                            318                                             NA                        Aftee Tax Margin\nScreen    Las | Repos   21.21 8/3 <<< 24 items © bi 15a 1051 Gus fe                 Ory - OS BQ\n0p sets [ros BBB oe   me \"pr Rog\" 9,\n»                           ;        n            I\n",
+      "ocr_text_snippet": ">>> THE 2>> DAILY MARRETSURoE «zen | our wey wy wn vs G [oor ITI *YT,X,1G, TkTd P Arista Netw Lows h 3208.00 $190.51 ! Conran to PE CTTW S— [Ripaiend awe aston sarc 222 TUESDA 4 supa © rovmzirori -...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80aa1b1fd6535eb8",
+      "prefilter_score": 22.45,
+      "prefilter_stats": {
+        "brightRatio": 0.7238888888888889,
+        "darkRatio": 0.07777777777777778,
+        "edgeRatio": 0.19846653946717546,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2079,
+        "horizontalEdgeRatio": 0.14691541233835065,
+        "meanLuma": 217.21055555555554,
+        "stdDev": 61.08777473368617,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3538,
+        "verticalEdgeRatio": 0.2500176665960003
+      },
+      "score": -23.4,
+      "score_breakdown": {
+        "chart_likeness": -3.1466212716898365,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.75,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "TAN"
+      ],
+      "timestamp": 1040,
+      "timestamp_hms": "00:17:20"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 255,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260804_20260804_a22cuhvxr90_72fa2c74_whiteboard\\ocr\\ocr_000256.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1020.6,
+      "observed_date": null,
+      "ocr_confidence": 35,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE\n>>> DAILY MweTsces «Bl     A       EEC oc:\n*YT,X,iG,TkTq » Arista Networks Inc.                                                   3208.00         $190.51\n! corn tamara                           Coahvs SH Neaaiw SEE esters     awe ssn 500\n55 TUESDA “5 si” roma tors    .              ren waseamen moms Tew     a    Pepriivision\nOf 52-¥eek High         198%  +7% liom pevotin 20 days 06.00 PM ET 0804/2026 Last Update. 04.00 PM ET 08042026\n* MARKET §T¢\nCom               REE A SP a NI aa We    *\n“WHAT HAPP wa ers 05 sues Gompossramy                                            4\nCR EE Eee IS\n=> AILEADS POV 2019  081 2  “1: Re Rabng   »\nWn ne DU Lo mee 8                                    i     |\nERE BE               wo     yo        —\npro eehi  on                      Oe\nMAG7 +0.8 00 2% re Sn                     {         f             )     “\nfre     \"                                   !\nRs 29 TI EID EMRE Jy      fi,\nRAIL00 +4.8                                               fap         IP i LI    JT—\nSPX a              oo                  Nf     IM    »\n000 +348             tho          J   an A a ma      :\n=      ~~           a                    wt        Hi                    AL        .\nDIA +17 A NN TT ae       { i a,   i    Li    Higllll  ETAL vy    wo\n.        i]         Tf Le TN  Es\nMID +17 BT    LN   Zi   a    s    -\nYr ag Te ES 1        AM               -\nRK +18    1)       ly  J ly i\n\\          —.    Po            ei OY 0        oo                                            ~     1”\nsoo ring A pms Ae EI RET WE 4                Ey\nGRO ~+1.3¢ mig     2              E            o         p\npil       ingnd       Dosa        i\n==========(ulll tT rrr Cor MAW TR Ar Tn 2 5 TT    (ol nA iT\nCe EC ES I TE\n* EMAIL: dong,    oe    no    Fe    ar    aor    ay    on    ™    ™\n* TWITTER (X) av Exes ecemter 03                                      Jr                                     r——                                              ers oun\n.    ace ©    ass    a    ost    “    os    wr    om    on    wn    on     [HT\nPHONE: (85!   15a   p   27090   -   J   -   20s   cas   21   Sot, ch\n& SITE: re                               we                                                    ren                                                     wa                             Aft Tax Margin\nScreen    Ls Reports   21.21 8/3 <<< 24 items © bana 15a 1051 Gus Le                 oF - OS EA\nGow sin Dios BB Bh on   meme Roa \"gn\n»                         ;       »           I\n",
+      "ocr_text_snippet": ">>> THE >>> DAILY MweTsces «Bl A EEC oc: *YT,X,iG,TkTq » Arista Networks Inc. 3208.00 $190.51 ! corn tamara Coahvs SH Neaaiw SEE esters awe ssn 500 55 TUESDA “5 si” roma tors . ren waseamen moms Te...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80aa1b1fde515eb8",
+      "prefilter_score": 22.19,
+      "prefilter_stats": {
+        "brightRatio": 0.7245138888888889,
+        "darkRatio": 0.07763888888888888,
+        "edgeRatio": 0.19754787647516076,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2044,
+        "horizontalEdgeRatio": 0.14444208889831106,
+        "meanLuma": 217.37229166666665,
+        "stdDev": 61.07540713943927,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3547,
+        "verticalEdgeRatio": 0.25065366405201045
+      },
+      "score": -23.63,
+      "score_breakdown": {
+        "chart_likeness": -3.3836971690818167,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.75,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 1020,
+      "timestamp_hms": "00:17:00"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 1,
+      "end_ts": 460,
+      "end_hms": "00:07:40",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 115,
+      "peak_score": 91.98,
+      "start_hms": "00:07:40",
+      "start_ts": 460
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 580,
+      "end_hms": "00:09:40",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 145,
+      "peak_score": 92.42,
+      "start_hms": "00:09:40",
+      "start_ts": 580
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 680,
+      "end_hms": "00:11:20",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 170,
+      "peak_score": 92.08,
+      "start_hms": "00:11:20",
+      "start_ts": 680
+    }
+  ]
+}

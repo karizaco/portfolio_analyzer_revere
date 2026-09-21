@@ -1,0 +1,235 @@
+{
+  "summary": {
+    "run_tag": "qmg-ocr-20260917-missing19",
+    "date_tag": "20260917",
+    "total_files": 47,
+    "processed_files": 7,
+    "total_videos": 7,
+    "total_videos_with_captures": 7,
+    "total_captures": 8,
+    "video_type_counts": {},
+    "channel_counts": {
+      "qmg": 7
+    },
+    "whiteboard_segment_distribution": {
+      "1": 6,
+      "2": 1
+    },
+    "daily": [
+      {
+        "date": "20220218",
+        "videos": 1,
+        "captures": 1,
+        "with_captures": 1
+      },
+      {
+        "date": "20220228",
+        "videos": 1,
+        "captures": 2,
+        "with_captures": 1
+      },
+      {
+        "date": "20220301",
+        "videos": 1,
+        "captures": 1,
+        "with_captures": 1
+      },
+      {
+        "date": "20220323",
+        "videos": 1,
+        "captures": 1,
+        "with_captures": 1
+      },
+      {
+        "date": "20220412",
+        "videos": 1,
+        "captures": 1,
+        "with_captures": 1
+      },
+      {
+        "date": "20220421",
+        "videos": 1,
+        "captures": 1,
+        "with_captures": 1
+      },
+      {
+        "date": "20220425",
+        "videos": 1,
+        "captures": 1,
+        "with_captures": 1
+      }
+    ]
+  },
+  "per_video": [
+    {
+      "video_id": "cd_ixyhwo3o",
+      "upload_date": "20220218",
+      "title": "",
+      "channel": "qmg",
+      "video_type": null,
+      "output_kind": "snapshot",
+      "capture_count": 1,
+      "chart_stream_capture_count": 0,
+      "whiteboard_segment_count": 1,
+      "captures": [
+        {
+          "timestamp": 2156,
+          "score": 14.45,
+          "layout": null,
+          "tickers": [
+            "BE",
+            "LI",
+            "ON"
+          ]
+        }
+      ],
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\logs\\20220218_20220218_cd_ixyhwo3o_dee3273e_snapshot.json"
+    },
+    {
+      "video_id": "ux2b8famule",
+      "upload_date": "20220228",
+      "title": "",
+      "channel": "qmg",
+      "video_type": null,
+      "output_kind": "snapshot",
+      "capture_count": 2,
+      "chart_stream_capture_count": 0,
+      "whiteboard_segment_count": 2,
+      "captures": [
+        {
+          "timestamp": 1400,
+          "score": 13.05,
+          "layout": null,
+          "tickers": [
+            "BE"
+          ]
+        },
+        {
+          "timestamp": 2800,
+          "score": 12.95,
+          "layout": null,
+          "tickers": [
+            "ON",
+            "U"
+          ]
+        }
+      ],
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\logs\\20220228_20220228_ux2b8famule_f3c32eed_snapshot.json"
+    },
+    {
+      "video_id": "bypiofqbhvq",
+      "upload_date": "20220301",
+      "title": "",
+      "channel": "qmg",
+      "video_type": null,
+      "output_kind": "snapshot",
+      "capture_count": 1,
+      "chart_stream_capture_count": 0,
+      "whiteboard_segment_count": 1,
+      "captures": [
+        {
+          "timestamp": 792,
+          "score": 12.75,
+          "layout": null,
+          "tickers": [
+            "LI",
+            "ON"
+          ]
+        }
+      ],
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\logs\\20220301_20220301_bypiofqbhvq_a0a040ff_snapshot.json"
+    },
+    {
+      "video_id": "xsk8dd6eoea",
+      "upload_date": "20220323",
+      "title": "",
+      "channel": "qmg",
+      "video_type": null,
+      "output_kind": "snapshot",
+      "capture_count": 1,
+      "chart_stream_capture_count": 0,
+      "whiteboard_segment_count": 1,
+      "captures": [
+        {
+          "timestamp": 960,
+          "score": 13.1,
+          "layout": null,
+          "tickers": [
+            "BE"
+          ]
+        }
+      ],
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\logs\\20220323_20220323_xsk8dd6eoea_12946d43_snapshot.json"
+    },
+    {
+      "video_id": "bnpcapjdaz4",
+      "upload_date": "20220412",
+      "title": "",
+      "channel": "qmg",
+      "video_type": null,
+      "output_kind": "snapshot",
+      "capture_count": 1,
+      "chart_stream_capture_count": 0,
+      "whiteboard_segment_count": 1,
+      "captures": [
+        {
+          "timestamp": 1560,
+          "score": 12.5,
+          "layout": null,
+          "tickers": [
+            "BE",
+            "LI",
+            "ON"
+          ]
+        }
+      ],
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\logs\\20220412_20220412_bnpcapjdaz4_61e32b8a_snapshot.json"
+    },
+    {
+      "video_id": "bml5ml24crg",
+      "upload_date": "20220421",
+      "title": "",
+      "channel": "qmg",
+      "video_type": null,
+      "output_kind": "snapshot",
+      "capture_count": 1,
+      "chart_stream_capture_count": 0,
+      "whiteboard_segment_count": 1,
+      "captures": [
+        {
+          "timestamp": 1672,
+          "score": 12.9,
+          "layout": null,
+          "tickers": [
+            "BE",
+            "ON"
+          ]
+        }
+      ],
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\logs\\20220421_20220421_bml5ml24crg_07b710e6_snapshot.json"
+    },
+    {
+      "video_id": "s6jdprmrgck",
+      "upload_date": "20220425",
+      "title": "",
+      "channel": "qmg",
+      "video_type": null,
+      "output_kind": "snapshot",
+      "capture_count": 1,
+      "chart_stream_capture_count": 0,
+      "whiteboard_segment_count": 1,
+      "captures": [
+        {
+          "timestamp": 1148,
+          "score": 16.5,
+          "layout": null,
+          "tickers": [
+            "FANG",
+            "ON"
+          ]
+        }
+      ],
+      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\logs\\20220425_20220425_s6jdprmrgck_f709e343_snapshot.json"
+    }
+  ]
+}

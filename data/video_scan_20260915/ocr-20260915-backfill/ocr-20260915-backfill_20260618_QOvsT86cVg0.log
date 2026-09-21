@@ -1,0 +1,979 @@
+# cmd: node tools/scanVideoWithOcr.js --video C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260618_QOvsT86cVg0.mp4 --date 20260618 --output-root C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260915\ocr-20260915-backfill --run-tag ocr-20260915-backfill --ffmpeg-bin c:/Users/admin/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-9.0.1-full_build/bin/ffmpeg.exe
+[scan:whiteboard] ffprobe found 132 keyframe(s) for nearest-keyframe lookup
+[scan:whiteboard] preflighting final whiteboard output extraction
+[scan:whiteboard] extracting sample frames from C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260618_QOvsT86cVg0.mp4
+[scan:whiteboard] extracted 179 frame(s) at 0.25 fps with width 640; starting prefilter
+[scan:whiteboard] prefilter 1/179 frames after 00:00:00; best prefilter -1.46 at 00:00:00
+[scan:whiteboard] prefilter 10/179 frames after 00:00:00; best prefilter -1.41 at 00:00:24
+[scan:whiteboard] prefilter 20/179 frames after 00:00:00; best prefilter -1.41 at 00:00:24
+[scan:whiteboard] prefilter 30/179 frames after 00:00:00; best prefilter -1.41 at 00:00:24
+[scan:whiteboard] prefilter 40/179 frames after 00:00:00; best prefilter -1.28 at 00:02:16
+[scan:whiteboard] prefilter 50/179 frames after 00:00:01; best prefilter -1.28 at 00:02:16
+[scan:whiteboard] prefilter 60/179 frames after 00:00:01; best prefilter -1.28 at 00:02:16
+[scan:whiteboard] prefilter 70/179 frames after 00:00:01; best prefilter -1.28 at 00:02:16
+[scan:whiteboard] prefilter 80/179 frames after 00:00:01; best prefilter -1.28 at 00:02:16
+[scan:whiteboard] prefilter 90/179 frames after 00:00:01; best prefilter -1.28 at 00:02:16
+[scan:whiteboard] prefilter 100/179 frames after 00:00:01; best prefilter -1.28 at 00:02:16
+[scan:whiteboard] prefilter 110/179 frames after 00:00:01; best prefilter -1.28 at 00:02:16
+[scan:whiteboard] prefilter 120/179 frames after 00:00:01; best prefilter -1.28 at 00:02:16
+[scan:whiteboard] prefilter 130/179 frames after 00:00:01; best prefilter -1.28 at 00:02:16
+[scan:whiteboard] prefilter 140/179 frames after 00:00:02; best prefilter -1.28 at 00:02:16
+[scan:whiteboard] prefilter 150/179 frames after 00:00:02; best prefilter -1.28 at 00:02:16
+[scan:whiteboard] prefilter 160/179 frames after 00:00:02; best prefilter -1.28 at 00:02:16
+[scan:whiteboard] prefilter 170/179 frames after 00:00:02; best prefilter -1.28 at 00:02:16
+[scan:whiteboard] prefilter 179/179 frames after 00:00:02; best prefilter -1.28 at 00:02:16
+[scan:whiteboard] prefilter kept 60/179 frame(s) for OCR; best prefilter -1.28 at 00:02:16
+[scan:whiteboard] extracting OCR candidates from source video at width 1280
+[scan:whiteboard] OCR 1/60 frames (1.7%) after 00:00:01; best score -14.94 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 10/60 frames (16.7%) after 00:00:33; best score -14.94 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 20/60 frames (33.3%) after 00:01:08; best score -14.94 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 30/60 frames (50.0%) after 00:01:49; best score -14.94 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 40/60 frames (66.7%) after 00:02:29; best score -14.94 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 50/60 frames (83.3%) after 00:03:09; best score -14.94 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 60/60 frames (100.0%) after 00:03:49; best score -14.94 at 00:00:00 (ocr 0.0)
+{
+  "date_key": "20260618",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260618_QOvsT86cVg0.mp4",
+  "captured_count": 0,
+  "captures": [],
+  "frame_count": 179,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 132,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "prefilter_best_score": -1.28,
+  "sample_frame_width": 640,
+  "status": "no_match",
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 0,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260618_20260618_qovst86cvg0_f967a876_whiteboard\\ocr\\ocr_000001.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE",
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 0,
+    "observed_date": null,
+    "ocr_confidence": 0,
+    "ocr_profile": "threshold",
+    "ocr_text": "",
+    "ocr_text_snippet": "",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "0000000000000000",
+    "prefilter_score": -1.46,
+    "prefilter_stats": {
+      "brightRatio": 0.359375,
+      "darkRatio": 0.4496527777777778,
+      "edgeRatio": 0.13327680022613242,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1383,
+      "horizontalEdgeRatio": 0.09773160907356371,
+      "meanLuma": 140.9009027777778,
+      "stdDev": 91.11824566808468,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 2389,
+      "verticalEdgeRatio": 0.16882199137870116
+    },
+    "score": -14.94,
+    "score_breakdown": {
+      "chart_likeness": -2.936487133570788,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 0,
+      "pair_bonus": 0,
+      "per_row_issues": -12,
+      "per_row_metrics": 0,
+      "text_density": 0
+    },
+    "screen_layout": "chart",
+    "tickers": [],
+    "timestamp": 0,
+    "timestamp_hms": "00:00:00"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260618_20260618_qovst86cvg0_f967a876_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": -1.46,
+      "prefilter_stats": {
+        "brightRatio": 0.359375,
+        "darkRatio": 0.4496527777777778,
+        "edgeRatio": 0.13327680022613242,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1383,
+        "horizontalEdgeRatio": 0.09773160907356371,
+        "meanLuma": 140.9009027777778,
+        "stdDev": 91.11824566808468,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2389,
+        "verticalEdgeRatio": 0.16882199137870116
+      },
+      "score": -14.94,
+      "score_breakdown": {
+        "chart_likeness": -2.936487133570788,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 2,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260618_20260618_qovst86cvg0_f967a876_whiteboard\\ocr\\ocr_000003.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 77,
+      "ocr_profile": "threshold",
+      "ocr_text": "* RULES & TOOLS - GROTECTION                                             CT\nRIDING THEFTD                      - TREND GAUGE                                                     hs\nWAVE:                               - TEN STEPS FROM “BOTTOM” TO \"BULL\"                            La        >\n- POSITION SIZING                                                   Ses ise     hh\nPORTFOLIO                                        .                                                                a\nCONSTRUCTION &                            - RVAB: REVERE VOLATILITY-ADJUSTED BETA\nMANAGEMENT                             - RPRP: REVERE POSITIONAL RISK PARITY                         A    O\n- RISK MANAGEMENT                                                                           .\n- REBAR: REVERE ESTIMATED BALANCE-AT-RISK [IRERAttEs\n- INDEX POSITIONING\n- RAIR: REVERE AGGRESSIVE INDEX RE-ENTRY\nHOW TO RIDE THERWAVE DEF UILUIW LI HROUGHSANDEUILD A\nHIGH-PERFORMINGYPORITOLIC\nDon Vandenbord | investing with IBD Podcast, July 16th 2025\n",
+      "ocr_text_snippet": "* RULES & TOOLS - GROTECTION CT RIDING THEFTD - TREND GAUGE hs WAVE: - TEN STEPS FROM “BOTTOM” TO \"BULL\" La > - POSITION SIZING Ses ise hh PORTFOLIO . a CONSTRUCTION & - RVAB: REVERE VOLATILITY-ADJ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 77,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 77,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "812f3fe66ad0d05a",
+      "prefilter_score": -4.19,
+      "prefilter_stats": {
+        "brightRatio": 0.34506944444444443,
+        "darkRatio": 0.44729166666666664,
+        "edgeRatio": 0.17867995194685887,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1958,
+        "horizontalEdgeRatio": 0.13836477987421383,
+        "meanLuma": 141.09847222222223,
+        "stdDev": 89.79526109061968,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3099,
+        "verticalEdgeRatio": 0.2189951240195039
+      },
+      "score": -16.36,
+      "score_breakdown": {
+        "chart_likeness": -2.208469595286518,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.85,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 8,
+      "timestamp_hms": "00:00:08"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 82,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260618_20260618_qovst86cvg0_f967a876_whiteboard\\ocr\\ocr_000083.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 77,
+      "ocr_profile": "threshold",
+      "ocr_text": "* RULES & TOOLS - GROTECTION                                                  LT\nRIDING THE FTD                      - TREND GAUGE                                                     tr.\nWAVE:                               - TEN STEPS FROM \"BOTTOM\" TO \"BULL\"                            LA\n- POSITION SIZING                                                          PE\nComa &                       - RVAB: REVERE VOLATILITY-ADJUSTED BETA                      :\nMANAGEMENT                              - RPRP: REVERE POSITIONAL RISK PARITY                 | 4      )     0\n- RISK MANAGEMENT                                                                              L\n- REBAR: REVERE ESTIMATED BALANCE-AT-RISK [EERECEetats\n- INDEX POSITIONING\n- RAIR: REVERE AGGRESSIVE INDEX RE-ENTRY\n",
+      "ocr_text_snippet": "* RULES & TOOLS - GROTECTION LT RIDING THE FTD - TREND GAUGE tr. WAVE: - TEN STEPS FROM \"BOTTOM\" TO \"BULL\" LA - POSITION SIZING PE Coma & - RVAB: REVERE VOLATILITY-ADJUSTED BETA : MANAGEMENT - RPRP...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 77,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 77,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "813a7fe66b91849a",
+      "prefilter_score": -1.35,
+      "prefilter_stats": {
+        "brightRatio": 0.3605555555555556,
+        "darkRatio": 0.44604166666666667,
+        "edgeRatio": 0.13666878665818671,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1458,
+        "horizontalEdgeRatio": 0.10303158787364851,
+        "meanLuma": 140.78826388888888,
+        "stdDev": 91.36114441865273,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2410,
+        "verticalEdgeRatio": 0.1703059854427249
+      },
+      "score": -16.6,
+      "score_breakdown": {
+        "chart_likeness": -2.4536914430044217,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.85,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 328,
+      "timestamp_hms": "00:05:28"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 92,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260618_20260618_qovst86cvg0_f967a876_whiteboard\\ocr\\ocr_000093.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 78,
+      "ocr_profile": "threshold",
+      "ocr_text": "* RULES & TOOLS - GROTECTION                                                  CL\nRIDING THEFTD                      - TREND GAUGE                                                     lt»   a\nWAVE:                               - TEN STEPS FROM \"BOTTOM\" TO \"BULL\"                            T\n- POSITION SIZING                                                          Sean alk\nppd &                         - RVAB: REVERE VOLATILITY-ADJUSTED BETA\nMANAGEMENT                              - RPRP: REVERE POSITIONAL RISK PARITY                          A     0\n\n- RISK MANAGEMENT\n- REBAR: REVERE ESTIMATED BALANCE-AT-RiSK [Eades\n\n- INDEX POSITIONING\n- RAIR: REVERE AGGRESSIVE INDEX RE-ENTRY\n",
+      "ocr_text_snippet": "* RULES & TOOLS - GROTECTION CL RIDING THEFTD - TREND GAUGE lt» a WAVE: - TEN STEPS FROM \"BOTTOM\" TO \"BULL\" T - POSITION SIZING Sean alk ppd & - RVAB: REVERE VOLATILITY-ADJUSTED BETA MANAGEMENT - R...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 78,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 78,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "813a7fe66b91849a",
+      "prefilter_score": -1.38,
+      "prefilter_stats": {
+        "brightRatio": 0.3601388888888889,
+        "darkRatio": 0.44722222222222224,
+        "edgeRatio": 0.13610345558617765,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1445,
+        "horizontalEdgeRatio": 0.1021129248816338,
+        "meanLuma": 140.64083333333335,
+        "stdDev": 91.36364931400354,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2407,
+        "verticalEdgeRatio": 0.1700939862907215
+      },
+      "score": -16.64,
+      "score_breakdown": {
+        "chart_likeness": -2.5373328879112034,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.9,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 368,
+      "timestamp_hms": "00:06:08"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 94,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260618_20260618_qovst86cvg0_f967a876_whiteboard\\ocr\\ocr_000095.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 79,
+      "ocr_profile": "threshold",
+      "ocr_text": "* RULES & TOOLS - GROTECTION                                                  PL\nRIDING THE FTD                      - TREND GAUGE                                                     ox\nWAVE:                                  - TEN STEPS FROM \"BOTTOM\" TO \"BULL\"                              CA\n- POSITION SIZING                                                          stn aia\nComa &                         - RVAB: REVERE VOLATILITY-ADJUSTED BETA\nMANAGEMENT                              - RPRP: REVERE POSITIONAL RISK PARITY                 | 4 [mi\n- RISK MANAGEMENT                                                                               .\n- REBAR: REVERE ESTIMATED BALANCE-AT-Risk [IERAISCES\n- INDEX POSITIONING\n- RAIR: REVERE AGGRESSIVE INDEX RE-ENTRY\n",
+      "ocr_text_snippet": "* RULES & TOOLS - GROTECTION PL RIDING THE FTD - TREND GAUGE ox WAVE: - TEN STEPS FROM \"BOTTOM\" TO \"BULL\" CA - POSITION SIZING stn aia Coma & - RVAB: REVERE VOLATILITY-ADJUSTED BETA MANAGEMENT - RP...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 79,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 79,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "813a7fe66b91849a",
+      "prefilter_score": -1.47,
+      "prefilter_stats": {
+        "brightRatio": 0.36041666666666666,
+        "darkRatio": 0.4477777777777778,
+        "edgeRatio": 0.13610345558617765,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1439,
+        "horizontalEdgeRatio": 0.10168892657762703,
+        "meanLuma": 140.75625,
+        "stdDev": 91.51025080614833,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2413,
+        "verticalEdgeRatio": 0.17051798459472828
+      },
+      "score": -16.66,
+      "score_breakdown": {
+        "chart_likeness": -2.6137790966207106,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.95,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "PL"
+      ],
+      "timestamp": 376,
+      "timestamp_hms": "00:06:16"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260618_20260618_qovst86cvg0_f967a876_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": -1.46,
+      "prefilter_stats": {
+        "brightRatio": 0.359375,
+        "darkRatio": 0.4496527777777778,
+        "edgeRatio": 0.13327680022613242,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1383,
+        "horizontalEdgeRatio": 0.09773160907356371,
+        "meanLuma": 140.9009027777778,
+        "stdDev": 91.11824566808468,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2389,
+        "verticalEdgeRatio": 0.16882199137870116
+      },
+      "score": -14.94,
+      "score_breakdown": {
+        "chart_likeness": -2.936487133570788,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 2,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260618_20260618_qovst86cvg0_f967a876_whiteboard\\ocr\\ocr_000003.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 6,
+      "observed_date": null,
+      "ocr_confidence": 77,
+      "ocr_profile": "threshold",
+      "ocr_text": "* RULES & TOOLS - GROTECTION                                             CT\nRIDING THEFTD                      - TREND GAUGE                                                     hs\nWAVE:                               - TEN STEPS FROM “BOTTOM” TO \"BULL\"                            La        >\n- POSITION SIZING                                                   Ses ise     hh\nPORTFOLIO                                        .                                                                a\nCONSTRUCTION &                            - RVAB: REVERE VOLATILITY-ADJUSTED BETA\nMANAGEMENT                             - RPRP: REVERE POSITIONAL RISK PARITY                         A    O\n- RISK MANAGEMENT                                                                           .\n- REBAR: REVERE ESTIMATED BALANCE-AT-RISK [IRERAttEs\n- INDEX POSITIONING\n- RAIR: REVERE AGGRESSIVE INDEX RE-ENTRY\nHOW TO RIDE THERWAVE DEF UILUIW LI HROUGHSANDEUILD A\nHIGH-PERFORMINGYPORITOLIC\nDon Vandenbord | investing with IBD Podcast, July 16th 2025\n",
+      "ocr_text_snippet": "* RULES & TOOLS - GROTECTION CT RIDING THEFTD - TREND GAUGE hs WAVE: - TEN STEPS FROM “BOTTOM” TO \"BULL\" La > - POSITION SIZING Ses ise hh PORTFOLIO . a CONSTRUCTION & - RVAB: REVERE VOLATILITY-ADJ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 77,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 77,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "812f3fe66ad0d05a",
+      "prefilter_score": -4.19,
+      "prefilter_stats": {
+        "brightRatio": 0.34506944444444443,
+        "darkRatio": 0.44729166666666664,
+        "edgeRatio": 0.17867995194685887,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1958,
+        "horizontalEdgeRatio": 0.13836477987421383,
+        "meanLuma": 141.09847222222223,
+        "stdDev": 89.79526109061968,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3099,
+        "verticalEdgeRatio": 0.2189951240195039
+      },
+      "score": -16.36,
+      "score_breakdown": {
+        "chart_likeness": -2.208469595286518,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.85,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 8,
+      "timestamp_hms": "00:00:08"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 82,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260618_20260618_qovst86cvg0_f967a876_whiteboard\\ocr\\ocr_000083.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 330,
+      "observed_date": null,
+      "ocr_confidence": 77,
+      "ocr_profile": "threshold",
+      "ocr_text": "* RULES & TOOLS - GROTECTION                                                  LT\nRIDING THE FTD                      - TREND GAUGE                                                     tr.\nWAVE:                               - TEN STEPS FROM \"BOTTOM\" TO \"BULL\"                            LA\n- POSITION SIZING                                                          PE\nComa &                       - RVAB: REVERE VOLATILITY-ADJUSTED BETA                      :\nMANAGEMENT                              - RPRP: REVERE POSITIONAL RISK PARITY                 | 4      )     0\n- RISK MANAGEMENT                                                                              L\n- REBAR: REVERE ESTIMATED BALANCE-AT-RISK [EERECEetats\n- INDEX POSITIONING\n- RAIR: REVERE AGGRESSIVE INDEX RE-ENTRY\n",
+      "ocr_text_snippet": "* RULES & TOOLS - GROTECTION LT RIDING THE FTD - TREND GAUGE tr. WAVE: - TEN STEPS FROM \"BOTTOM\" TO \"BULL\" LA - POSITION SIZING PE Coma & - RVAB: REVERE VOLATILITY-ADJUSTED BETA : MANAGEMENT - RPRP...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 77,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 77,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "813a7fe66b91849a",
+      "prefilter_score": -1.35,
+      "prefilter_stats": {
+        "brightRatio": 0.3605555555555556,
+        "darkRatio": 0.44604166666666667,
+        "edgeRatio": 0.13666878665818671,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1458,
+        "horizontalEdgeRatio": 0.10303158787364851,
+        "meanLuma": 140.78826388888888,
+        "stdDev": 91.36114441865273,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2410,
+        "verticalEdgeRatio": 0.1703059854427249
+      },
+      "score": -16.6,
+      "score_breakdown": {
+        "chart_likeness": -2.4536914430044217,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.85,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 328,
+      "timestamp_hms": "00:05:28"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 92,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260618_20260618_qovst86cvg0_f967a876_whiteboard\\ocr\\ocr_000093.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 366,
+      "observed_date": null,
+      "ocr_confidence": 78,
+      "ocr_profile": "threshold",
+      "ocr_text": "* RULES & TOOLS - GROTECTION                                                  CL\nRIDING THEFTD                      - TREND GAUGE                                                     lt»   a\nWAVE:                               - TEN STEPS FROM \"BOTTOM\" TO \"BULL\"                            T\n- POSITION SIZING                                                          Sean alk\nppd &                         - RVAB: REVERE VOLATILITY-ADJUSTED BETA\nMANAGEMENT                              - RPRP: REVERE POSITIONAL RISK PARITY                          A     0\n\n- RISK MANAGEMENT\n- REBAR: REVERE ESTIMATED BALANCE-AT-RiSK [Eades\n\n- INDEX POSITIONING\n- RAIR: REVERE AGGRESSIVE INDEX RE-ENTRY\n",
+      "ocr_text_snippet": "* RULES & TOOLS - GROTECTION CL RIDING THEFTD - TREND GAUGE lt» a WAVE: - TEN STEPS FROM \"BOTTOM\" TO \"BULL\" T - POSITION SIZING Sean alk ppd & - RVAB: REVERE VOLATILITY-ADJUSTED BETA MANAGEMENT - R...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 78,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 78,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "813a7fe66b91849a",
+      "prefilter_score": -1.38,
+      "prefilter_stats": {
+        "brightRatio": 0.3601388888888889,
+        "darkRatio": 0.44722222222222224,
+        "edgeRatio": 0.13610345558617765,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1445,
+        "horizontalEdgeRatio": 0.1021129248816338,
+        "meanLuma": 140.64083333333335,
+        "stdDev": 91.36364931400354,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2407,
+        "verticalEdgeRatio": 0.1700939862907215
+      },
+      "score": -16.64,
+      "score_breakdown": {
+        "chart_likeness": -2.5373328879112034,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.9,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 368,
+      "timestamp_hms": "00:06:08"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 94,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260618_20260618_qovst86cvg0_f967a876_whiteboard\\ocr\\ocr_000095.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 378,
+      "observed_date": null,
+      "ocr_confidence": 79,
+      "ocr_profile": "threshold",
+      "ocr_text": "* RULES & TOOLS - GROTECTION                                                  PL\nRIDING THE FTD                      - TREND GAUGE                                                     ox\nWAVE:                                  - TEN STEPS FROM \"BOTTOM\" TO \"BULL\"                              CA\n- POSITION SIZING                                                          stn aia\nComa &                         - RVAB: REVERE VOLATILITY-ADJUSTED BETA\nMANAGEMENT                              - RPRP: REVERE POSITIONAL RISK PARITY                 | 4 [mi\n- RISK MANAGEMENT                                                                               .\n- REBAR: REVERE ESTIMATED BALANCE-AT-Risk [IERAISCES\n- INDEX POSITIONING\n- RAIR: REVERE AGGRESSIVE INDEX RE-ENTRY\n",
+      "ocr_text_snippet": "* RULES & TOOLS - GROTECTION PL RIDING THE FTD - TREND GAUGE ox WAVE: - TEN STEPS FROM \"BOTTOM\" TO \"BULL\" CA - POSITION SIZING stn aia Coma & - RVAB: REVERE VOLATILITY-ADJUSTED BETA MANAGEMENT - RP...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 79,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 79,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "813a7fe66b91849a",
+      "prefilter_score": -1.47,
+      "prefilter_stats": {
+        "brightRatio": 0.36041666666666666,
+        "darkRatio": 0.4477777777777778,
+        "edgeRatio": 0.13610345558617765,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1439,
+        "horizontalEdgeRatio": 0.10168892657762703,
+        "meanLuma": 140.75625,
+        "stdDev": 91.51025080614833,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2413,
+        "verticalEdgeRatio": 0.17051798459472828
+      },
+      "score": -16.66,
+      "score_breakdown": {
+        "chart_likeness": -2.6137790966207106,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.95,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "PL"
+      ],
+      "timestamp": 376,
+      "timestamp_hms": "00:06:16"
+    }
+  ],
+  "whiteboard_segments": [],
+  "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\logs\\20260618_20260618_qovst86cvg0_f967a876_whiteboard.json"
+}

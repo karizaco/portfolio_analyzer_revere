@@ -1667,8 +1667,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     download_parser.add_argument(
         '--format',
-        default='bv*[height<=480]+ba/b[height<=480]',
-        help='yt-dlp format selector for low-resolution resumable downloads.',
+        default='bv*[height<=720]+ba/b[height<=720]',
+        help='yt-dlp format selector for video downloads. Default 720p; use --format "136" for QMG 720p or "bv*[height<=480]" for fast 360p test downloads.',
     )
     download_parser.set_defaults(handler=command_download)
 

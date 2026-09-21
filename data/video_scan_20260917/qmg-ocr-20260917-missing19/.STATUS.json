@@ -1,0 +1,13 @@
+{
+  "run_tag": "qmg-ocr-20260917-missing19",
+  "driver": "parallelOcrScan.py",
+  "started_at": "2026-09-17T14:22:30.094074Z",
+  "finished_at": "2026-09-18T02:56:02.185286Z",
+  "last_update_at": "2026-09-18T02:56:02.204425Z",
+  "probe_log_count": 47,
+  "unique_videos_done": 47,
+  "unique_videos_errored": 0,
+  "expected_total": 47,
+  "last_probe_log": "20231215_20231215_jnva5cd_m7m_76c41ebc_snapshot.json",
+  "next_step": "run npm run video:stamp-types -- --run-tag qmg-ocr-20260917-missing19 then node tools/aggregateOcrTimeline.js qmg-ocr-20260917-missing19"
+}
