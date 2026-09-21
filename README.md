@@ -453,6 +453,133 @@ If the local dry run starts failing with `status='error'` and a message containi
 - Open `data/report/index.html` directly in a browser for the built-in charting and presentation layer. The underlying CSV files remain the canonical inputs for deeper analysis or custom visualizations.
 - Historical price cache files used by the performance pass are stored under `data/price_cache/yahoo/`.
 
+## Qullamaggie Chart-Stream OCR
+
+Qullamaggie's live trading sessions show a **position-list overlay** in the bottom-right corner of the chart frame — a small table listing open positions with ticker symbols and price/percent data. This is fundamentally different from Revere's whiteboard slides: no structured text fields, just a ticker column that changes throughout the stream.
+
+### Architecture
+
+- **Parser**: [`src/parse/parseChartStream.js`](src/parse/parseChartStream.js) — pure function that extracts ticker symbols from raw OCR text using two signals:
+  1. **Lexicon membership** — the ticker appears in [`config/ticker_lexicon_seed.csv`](config/ticker_lexicon_seed.csv)
+  2. **Price-nearby** — the ticker appears within 12 characters of a price token (`$`, decimal number, `HIGH/LOW/CLOSE/TARGET/STOP/BID/ASK`, or a `+/-value%` pattern)
+
+- **OCR pipeline**: [`src/ocr/ocrImage.js`](src/ocr/ocrImage.js) (`chart-stream` profile) — crops the overlay region, upscales 3× with lanczos3, grayscale, `negate()` (white-on-dark → black-on-white), normalize, sharpen(σ=1.5), linear(1.8, −64), then Tesseract.
+
+- **Scanner**: [`tools/scanVideoWithOcr.js`](tools/scanVideoWithOcr.js) uses `--prefilter-profile chart_stream` (dark-frame preference) and `--chart-stream-parser` (activates the chart-stream parser). The `CHART_STREAM_REGION_FRACTION_DEFAULT` crop is `{x:0.70, y:0.60, w:0.30, h:0.40}`.
+
+### Validated Crop Region
+
+```
+{x: 0.70, y: 0.60, w: 0.30, h: 0.40}   ← 30% width × 40% height, anchored bottom-right
+```
+
+This was validated against 9 human-verified snapshots across 3 videos:
+- Mean ticker recall: **56%** with this crop vs **44–47%** for wider crops
+- Wider crops that include more chart area **hurt** OCR quality
+- Do not widen this crop without re-validating against ground truth
+
+### Resolution Requirements
+
+| Resolution | Result |
+|---|---|
+| 1080p (1920×1080) | ✅ Works — mean recall ~57–70% |
+| 720p | ⚠️ Marginal — detectable but significantly worse |
+| 360p (640×360) | ❌ Completely unusable — overlay text is too small |
+
+**Must use 1080p source** for QMG chart-stream OCR. The 360p default download (YouTube `android` client) will not work.
+
+Download QMG videos at 1080p:
+```bash
+node tools/downloadHiresBatch.js --only-ids <ids> --height 1080
+```
+
+### Negate Preprocessing
+
+`negate()` (white-on-dark → black-on-white) was validated at **+13pp** OCR confidence improvement on dark-overlay frames. However, on 1080p snapshots that are already well-lit, negate makes **zero difference** — both negated and original produce identical output on those frames. Keep it enabled; it helps on darker frames.
+
+### Ground Truth Test Set
+
+Human-verified tickers for 9 QMG snapshots (1920×1080):
+
+| Video | Snapshots | Ground Truth |
+|-------|-----------|--------------|
+| 20220606 | qmg_20220606.png … _12.png | GOVX, LABU, UCO, ALB, CBIO, VLO, TNA, NFLX |
+| 20220607 | qmg_20220607.png, _2, _3 | UCO, VLO, ALB, BOIL, NFLX, TNA, LTHM |
+| 20220608 | qmg_20220608.png, _2, _3 | SIGA, TNA, VLO, UCO, NFLX, ALB, BOIL, LTHM, AERC |
+| 20220614 | qmg_20220614.png, _2, _3 | UVXY, VLO, UCO |
+| 20221117 | qmg_20221117.png, _2, _3 | FREY, OIH, ASML, U, SI, SOXL |
+| 20230126 | qmg_20230126.png, _2, _3 | CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS |
+
+Ground truth is embedded in [`tools/buildQmgReviewPage.js`](tools/buildQmgReviewPage.js) → `GROUND_TRUTH` constant.
+
+### Running the Ground Truth Test
+
+```bash
+# Quick check: OCR + parse + recall for 7 snapshots
+node -e "
+const { ocrImage } = require('./src/ocr/ocrImage');
+const { parseChartStreamPositionList } = require('./src/parse/parseChartStream');
+const gt = {
+  '20220606':   ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
+  '20220607':   ['UCO','VLO','ALB','BOIL','NFLX','TNA','LTHM'],
+  '20220608':   ['SIGA','TNA','VLO','UCO','NFLX','ALB','BOIL','LTHM','AERC'],
+  '20220614':   ['UVXY','VLO','UCO'],
+  '20221117':   ['FREY','OIH','ASML','U','SI','SOXL'],
+  '20230126':   ['CVNA','FCX','TNA','CWEB','YINN','PDD','MDGL','GNS'],
+};
+const snaps = {
+  '20220606':   'data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606.png',
+  '20220607':   'data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220607.png',
+  '20220608':   'data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220608.png',
+  '20220614':   'data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220614.png',
+  '20221117':   'data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20221117.png',
+  '20230126':   'data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20230126.png',
+};
+(async () => {
+  let total=0, hit=0;
+  for (const [k,snap] of Object.entries(snaps)) {
+    const r = await ocrImage(snap, { chartStream:true, overlayRegion:{x:0.70,y:0.60,w:0.30,h:0.40}, overlayScale:3 });
+    const p = parseChartStreamPositionList({ ocr:r });
+    const h = gt[k].filter(t=>p.position_list.includes(t));
+    const miss = gt[k].filter(t=>!p.position_list.includes(t));
+    console.log(k+': '+h.length+'/'+gt[k].length+'  miss=['+miss.join(',')+']');
+    total += gt[k].length; hit += h.length;
+  }
+  console.log('Overall: '+(hit/total*100).toFixed(0)+'% recall ('+hit+'/'+total+')');
+})().then(()=>process.exit(0)).catch(e=>{console.error(e);process.exit(1);});
+"
+```
+
+### Known OCR Failure Modes
+
+These are **character-level confusions**, not crop or preprocessing issues:
+
+| Ticker | OCR Reads As |
+|--------|-------------|
+| UCO | BUCO, LUCO |
+| VLO | VIO |
+| ALB | AB |
+| YINN | *(missed entirely)* |
+| PDD | *(missed entirely)* |
+| OIH | *(missed entirely)* |
+| CBIO | *(missed entirely)* |
+
+The overlay font makes `I`, `O`, `L`, `U`, `B`, `V` easy to confuse. Fix approaches:
+1. **Post-OCR edit-distance correction** — Levenshtein ≤2 against seed lexicon (`tools/experiment_a5_edit_distance.js`)
+2. **Tesseract training** — train on the actual chart overlay font
+3. **Larger fallback lexicon** — [`config/ticker_sp500.csv`](config/ticker_sp500.csv) (505 symbols) is a start; full US ticker list (~10k+) would catch more
+
+### Review Page
+
+Visual snapshot inspector with ground truth labels and per-capture recall:
+
+```bash
+node tools/buildQmgReviewPage.js   # rebuild
+# then open tools/qmg_snapshot_review.html in a browser
+```
+
+The review page shows the Recall column (x/y) comparing detected tickers against ground truth, with an expand toggle as the **first column**.
+
 ## Notes
 
 - `sample_screenshots.lnk` is intentionally kept local and ignored by git. Create your own local shortcut or use `--input-dir` / `--shortcut` when running the CLI.
