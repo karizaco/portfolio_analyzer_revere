@@ -1,0 +1,1049 @@
+{
+  "date_key": "20260825",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260825_Ja2WJcG7ZdA.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 200,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260825_20260825_ja2wjcg7zda_9f3649cc_whiteboard\\ocr\\ocr_000201.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 802,
+      "observed_date": "20260825",
+      "ocr_confidence": 63,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>>              |                                                                                                                                o\nTH        > TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 <<                                             ®   Ques > OB 2-0\n>>> DA       * MARKET STATE: UPTREND                                                                                                            $45.39\n—         *STOINDEXES 11 4L RGBIT SY NASI USD TNX/TYX  vs5d                                                           x (10861-1385\nHadid         * SENTIMENT: VIX 15.451-1.5:.1 FRG            AAS 38.5 90.8 24.6.2.0 SETET NAAM 34.5.5                                                           Vol 0 WA\n>>> TUES         BULL CASE: INITIATE RALLY & TREND 21EMA  €8/3-1 REGAIN 21€ & FTD                                                             Lost do: 02.50 PH ET 06282028\n« MARKET         BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                    =                            -\n« WHATH          * NEWS: WED AM: PCE WED A/H: NVDAE/R FRI: JACKSON HOLE WARSH @ 10AM ET\n* TODAY'S KEYS: SPX vs 21E1/BEY,  QQQvs 65E1/50DY RZKvs21E  /8EY                                                             Ad\n> ATER         *DAYCT:ON-1/  =>DN-1/  8e:-6% 2le:+3f                                                                  .      I           il  \\y\n21/21 +       * ACTION: 0 +0.35% 05=Hl {,765110D 17677                     INTO CLS                            1   1}    1  By\nT12 4        *SPXO/N 7645-7700 ©7680 030 7673-7686  L/H 7651-7686                                           ff  Lo)   1            1\nMAG7          * SPX ATR: D.96% SPX +0.32% 60/40 +0.51% GRO +0.21% TURBO +0.81%                         1  f t tr           wos       a        *\n* SECTORS: 1M BPS SOXX NCL LYTE DRAM URNM J 8Y%     S/W OILS XRT XLP             Tt   t         TT\nRG8                 * GRO HOLDINGS: SPYM,UPRO/SPXLPICK PLTR, MRNA                                                                         | EE\nRA1100            * GRO RVAB/REBAR: 1.04 {-0.24%/-4.66%) SELLRBRK TRIM PLTR                                                   fh -—\nSPX +         * TURBO HOLDINGS: SPYM,UPRO,TQQQ,SPXLIBIT,ETHA,GOXU,FCX, LTR SPCX MRNA.CHYM.FIG                  .                                                      w\n* TURBO RVAB/REBAR: 1.70 (-3.12%/-5.91%) BUY FIG BUY/SELL HNGE\nQaQ +        * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A-| BOUNCE; PCE IN AM\nDilA 4          * WED KEYS: SPXvs 21€/8E QQQvs 65E/50D  R2K vs 21E/8E\n>>> S&PS00 KEY LEVELS <<<\nRK         * 7816 (8/13 INTRADAY A-T-H)                                                                                                                                     »\n7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A-1 BOUNCE; PCE IN AM\n60/40 +        37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS\nGRO ~+\neo       * 7656 (12 21EMA) € 8/219 8/20 7/311\n          * 7551/7564 (15 500/20WK) € 7/311 7/234 7/211 1/174 6/281                                                                             —\n* EMAIL: d        * 7105/7137 (1S 200D/40WK) € 4/81 3/193\n* TWITTE\n-      NE:                                                                                                                         I          oo          n\n                        aug\n@\nan            ory - OR EA\nBoiwia se                                                                                                             .\npag ors1s twits 8 C3 tran ste se           Foweyseioy Dion 8 BB ——t—— on\n",
+      "ocr_text_snippet": ">>> | o TH > TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 << ® Ques > OB 2-0 >>> DA * MARKET STATE: UPTREND $45.39 — *STOINDEXES 11 4L RGBIT SY NASI USD TNX/TYX vs5d x (10861-1385 Hadid * SENTIMENT:...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.70 (-3.12%/-5.91%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY FIG BUY/SELL HNGE QAQ + * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A- BOUNCE; PCE IN AM DILA 4 * WED KEYS: SPXVS 21€/8E QQQVS 65E/50D R2K VS 21E/8E S&PS00 KEY LEVELS <<< RK * 7816 (8/13 INTRADAY A-T-H) » 7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A-1 BOUNCE; PCE IN AM 60/40 + 37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS GRO ~+ EO * 7656 (12 21EMA) € 8/219 8/20 7/311 7551/7564 (15 500/20WK) € 7/311 7/234 7/211 1/174 6/281 - EMAIL: D * 7105/7137 (1S 200D/40WK) € 4/81 3/193 TWITTE NE: I OO N AUG AN ORY - OR EA BOIWIA SE . PAG ORS1S TWITS 8 C3 TRAN STE SE FOWEYSEIOY DION 8 BB --T-- ON",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "95ff00c1df1046de",
+      "prefilter_score": 13.46,
+      "prefilter_stats": {
+        "brightRatio": 0.7985416666666667,
+        "darkRatio": 0.042152777777777775,
+        "edgeRatio": 0.17260264292276165,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1328,
+        "horizontalEdgeRatio": 0.09384495795350152,
+        "meanLuma": 228.20458333333335,
+        "stdDev": 47.47310005669578,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3557,
+        "verticalEdgeRatio": 0.2513603278920218
+      },
+      "score": 93.01,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.15,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 93.86
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ETHA",
+        "FCX",
+        "PLTR",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 800,
+      "timestamp_hms": "00:13:20",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\screenshots\\20260825_ps.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 160,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260825_20260825_ja2wjcg7zda_9f3649cc_whiteboard\\ocr\\ocr_000161.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 641.88,
+      "observed_date": "20260825",
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>>                                                                                                                                               o\nTH        >> TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 <<                                            @   Qa OB 20\n>>> DA       * MARKET STATE: UPTREND                                                                                                            146.39\na         *STOINDEXES 11 44 RGBIT SU NASI USD TNX/TYX  vs5d                                                       (10681136\nHadid         * SENTIMENT: VIX 15.45/-1.5\".1 FRG            Aan 35.5 008 20.6.2. TETETL NAAM 4.5.5                                                           Vol 0 WA\n>>> TUES         BULL CASE: INITIATE RALLY & TREND 21EMA  €-8/3-4 REGAIN 21£ & FTD                                                              Lost doo 02.58 PH BI 08252028\n« MARKET         BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                       -                                         -\n« WHATH          * NEWS: WED AM: PCE WED A/H: NVDAE/R FRI: JACKSON HOLE WARSH @ 10AM ET\n* TODAY'S KEYS: SPX vs 21E1/BEY,  QQQvs 65E1/50DY RZKvs21E [BEY                                                             a\n> AuTerna         *DAYCT:ON-1/  =>DN-1/  Be:-6% 2le:+3t                                                                  .      I           il  \\y\n21/21 +     * ACTION: 0 +0.35% O5=HI {7651100 17677               INTO CLS                    1 13   Hy  By\nT12 4        *SPXO/N 7645-7700 ©7680 030 7673-7686  L/H 7651-7686                                           yf  Hy   1            1\nMAG           * SPX ATR: 0.96%:       X +0.32% 60/40 +0.51% GRO +0.21% TURBO +0.81%                           1  {l t            wos      oo        “©\n* SECTORS: 1 8PS SEXX NCLD LYTE DRAM URNM & BY%     S/W OILS XRT XLP             It              eT\nRGE                * GRO HOLDINGS: ShglelJPRO/SPXL PICK, PLTR, MRNA                                                                      1      gl SE —\nRAI100            * GRO RVAB/REBAR: 1.04 {-0.24%/-4.66%) SELL RBRK TRIM PLTR                                                  Hh\nSpx +         * TURBO HOLDINGS: SPYM,UPRO,TQQQ, SPXLIBIT,ETHA,GOXU, FCX, LTR SPCX MRNA.CHYM.FIG                  3                                                      w\n* TURBO RVAB/REBAR: 1.70 (-3.12%/-5.91%) BUY FIG BUY/SELL HNGE\naa +        * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A-| BOUNCE; PCE IN AM\nDJIA +         * WED KEYS: SPX vs 21€/8F QQQuvs 65E/50D R2K vs 21€/8E\n>>> S&PS00 KEY LEVELS <<<\nRK         * 7816 (8/13 INTRADAY A-T-H)                                                                                                                                     »\n7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A-| BOUNCE; PCE IN AM\n60/40 +        37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS\nGRO ~+\nI       +7656 (12 21EMA) € 8/214 8/208 7/211\nTT          * 7551/7564 {15 500/10WK) € 7/311 7/234 7/217 173 6/291                                                                             —\n* EMAIL: d        * 7105/7137 (1S 200D/40WK) € 4/81 3/19\n* TWITTE\n*      NE:                                                                                                                         I          oo          2\nwo                        a\n@-\nRe         ory - CB ER\nRosia sv                                                                                                             .\nbuoe 101513 ronson 8 [Rr untes sure           Foweseang Bion 8 0 B ——- on\n",
+      "ocr_text_snippet": ">>> o TH >> TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 << @ Qa OB 20 >>> DA * MARKET STATE: UPTREND 146.39 a *STOINDEXES 11 44 RGBIT SU NASI USD TNX/TYX vs5d (10681136 Hadid * SENTIMENT: VIX 15.45...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.70 (-3.12%/-5.91%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY FIG BUY/SELL HNGE AA + * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A- BOUNCE; PCE IN AM DJIA + * WED KEYS: SPX VS 21€/8F QQQUVS 65E/50D R2K VS 21€/8E S&PS00 KEY LEVELS <<< RK * 7816 (8/13 INTRADAY A-T-H) » 7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A- BOUNCE; PCE IN AM 60/40 + 37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS GRO ~+ I +7656 (12 21EMA) € 8/214 8/208 7/211 TT * 7551/7564 {15 500/10WK) € 7/311 7/234 7/217 173 6/291 - EMAIL: D * 7105/7137 (1S 200D/40WK) € 4/81 3/19 TWITTE NE: I OO 2 WO A RE ORY - CB ER ROSIA SV . BUOE 101513 RONSON 8 [RR UNTES SURE FOWESEANG BION 8 0 B --- ON",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "95ff00c1df1046de",
+      "prefilter_score": 13.57,
+      "prefilter_stats": {
+        "brightRatio": 0.7970833333333334,
+        "darkRatio": 0.042847222222222224,
+        "edgeRatio": 0.17302664122676842,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1344,
+        "horizontalEdgeRatio": 0.09497562009751961,
+        "meanLuma": 228.05270833333333,
+        "stdDev": 47.6694819931816,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3553,
+        "verticalEdgeRatio": 0.25107766235601725
+      },
+      "score": 92.84,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.1,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 93.74
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "ETHA",
+        "FCX",
+        "PLTR",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 640,
+      "timestamp_hms": "00:10:40",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\screenshots\\20260825_ps_2.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 140,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260825_20260825_ja2wjcg7zda_9f3649cc_whiteboard\\ocr\\ocr_000141.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 561.04,
+      "observed_date": "20260825",
+      "ocr_confidence": 63,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>>                                                                                                                                               o\nTH          > TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 <<                                                        ®    Qa + OB 20\n>>> DA       * MARKET STATE: UPTREND                                                                                                            146.39\na         *STOINDEXES 11 4L RGBIM SU NASI USD TNX/TVX  vs5d                                                       x 50681-1361\nHated         * SENTIMENT: VIX 15.45/-1.5%'1 F&G            Aan 38.5 908 24.6.2. TETET NAAM 94.5.5                                                           Vol 0 WA\n>>> TUES         BULL CASE: INITIATE RALLY & TREND 21EMA  €-8/3-4 REGAIN 21€ & FID                                                             Lost del. 02.5 PH EI 06:25:2028\n« MARKET         BEAR CASE: SUSTAINED BREAK BELOW 21EMA                  =                 -           -\n“ WHAT H.           * NEWS: WED AM: PCE WED A/H: NVDA E/R     FRI: JACKSON on @ 10AM ET\n* TODAY'S KEYS: SPX vs 21E4/8Ed,  QQQ vs 65E1/50DY,            21E /8Ed                                                             ar\n> ALTERNA         *DAYCT:ON-1/  =>DN-1/  Be:-64 2le; +31                                                                  A      I           il  \\y\n21/21 4     * ACTION: 0 +0.35% O5=HI {7651100 17677               INTO CLS                    1 1}   Hy  By\nT12 4        *SPXO/N 7645-7700 ©7680 030 7673-7686  L/H 7651-7686                                           ff  Ly)   1            1\nMAG?           * SPX ATR: D.96%) SPX +0.32% 60/40 +0.51% GRO +0.21% TURBO +0.81%                           1  ih t            wn        “©\n* SECTORS: 4 BPS SOXX NCLD LYTE DRAM URNM  BY%     S/W OILS XRT XLP             It\nRG8               * GRO HOLDINGS: SPYM,UPRO/SPXL,PICK PLTR, MANA                                                                1    i =\nRAI100            * GRO RVAB/REBAR: 1.04 {-0.24%/-4.66%) SELLRBRK TRIM PLTR                                                   Hy\nSpx +         * TURBO HOLDINGS: SPYM,UPRO,TQQQ,SPXLIBITETHA.GDXU,FCX, PLTR,SPCX MRNA.CHYM.FIG                 .                                                      «\n* TURBO RVAB/REBAR: 1.70 (-3.12%/-5.91%) BUY FIG BUY/SELL HNGE\nQaQ +        * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A-| BOUNCE; PCE IN AM\nDIA +         * WED KEYS: SPX vs 21€/8E QQQvs 6SE/50D R2K vs 21€/8E\n>>> S&PS00 KEY LEVELS <<<\nRK         * 7816 (8/13 INTRADAY A-T-H)                                                                                                                                     »\n7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A-| BOUNCE; PCE IN AM\n60/40 +        37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS\nGRO ~+\nel __       * 7656 (12 21EMA) € 8/219 8/204 7/319\n          * 7551/7564 {15 500/10WK) € 7/311 7/234 7/211 7/173 6/291                                                                             —\n* EMAIL: d        * 7105/7137 {1S 200D/40WK) € 4/81 3/19\n* TWITTE\n*      NE:                                                                                                                         I          oo          n\nwo                        au\n@:\naa          ory - OR EA\nBorgia so                                                                                                             .\npage sors1s tonsa 8 [3 Eran eosin           Foyseoy: Dion © BB ———— on\n",
+      "ocr_text_snippet": ">>> o TH > TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 << ® Qa + OB 20 >>> DA * MARKET STATE: UPTREND 146.39 a *STOINDEXES 11 4L RGBIM SU NASI USD TNX/TVX vs5d x 50681-1361 Hated * SENTIMENT: VIX 1...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.70 (-3.12%/-5.91%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY FIG BUY/SELL HNGE QAQ + * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A- BOUNCE; PCE IN AM DIA + * WED KEYS: SPX VS 21€/8E QQQVS 6SE/50D R2K VS 21€/8E S&PS00 KEY LEVELS <<< RK * 7816 (8/13 INTRADAY A-T-H) » 7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A- BOUNCE; PCE IN AM 60/40 + 37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS GRO ~+ EL __ * 7656 (12 21EMA) € 8/219 8/204 7/319 7551/7564 {15 500/10WK) € 7/311 7/234 7/211 7/173 6/291 - EMAIL: D * 7105/7137 {1S 200D/40WK) € 4/81 3/19 TWITTE NE: I OO N WO AU AA ORY - OR EA BORGIA SO . PAGE SORS1S TONSA 8 [3 ERAN EOSIN FOYSEOY: DION © BB ---- ON",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "95ff00c1ff1043da",
+      "prefilter_score": 13.58,
+      "prefilter_stats": {
+        "brightRatio": 0.7973611111111111,
+        "darkRatio": 0.042986111111111114,
+        "edgeRatio": 0.1737686382587803,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1338,
+        "horizontalEdgeRatio": 0.09455162179351283,
+        "meanLuma": 228.050625,
+        "stdDev": 47.65056844593238,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3580,
+        "verticalEdgeRatio": 0.25298565472404777
+      },
+      "score": 92.75,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.15,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 93.6
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "FCX",
+        "NVDA",
+        "PLTR",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 560,
+      "timestamp_hms": "00:09:20",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\screenshots\\20260825_ps_3.png"
+    }
+  ],
+  "frame_count": 338,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 268,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\screenshots\\20260825_ps.png",
+  "prefilter_best_score": 20.75,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 200,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260825_20260825_ja2wjcg7zda_9f3649cc_whiteboard\\ocr\\ocr_000201.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 802,
+    "observed_date": "20260825",
+    "ocr_confidence": 63,
+    "ocr_profile": "threshold",
+    "ocr_text": ">>>              |                                                                                                                                o\nTH        > TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 <<                                             ®   Ques > OB 2-0\n>>> DA       * MARKET STATE: UPTREND                                                                                                            $45.39\n—         *STOINDEXES 11 4L RGBIT SY NASI USD TNX/TYX  vs5d                                                           x (10861-1385\nHadid         * SENTIMENT: VIX 15.451-1.5:.1 FRG            AAS 38.5 90.8 24.6.2.0 SETET NAAM 34.5.5                                                           Vol 0 WA\n>>> TUES         BULL CASE: INITIATE RALLY & TREND 21EMA  €8/3-1 REGAIN 21€ & FTD                                                             Lost do: 02.50 PH ET 06282028\n« MARKET         BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                    =                            -\n« WHATH          * NEWS: WED AM: PCE WED A/H: NVDAE/R FRI: JACKSON HOLE WARSH @ 10AM ET\n* TODAY'S KEYS: SPX vs 21E1/BEY,  QQQvs 65E1/50DY RZKvs21E  /8EY                                                             Ad\n> ATER         *DAYCT:ON-1/  =>DN-1/  8e:-6% 2le:+3f                                                                  .      I           il  \\y\n21/21 +       * ACTION: 0 +0.35% 05=Hl {,765110D 17677                     INTO CLS                            1   1}    1  By\nT12 4        *SPXO/N 7645-7700 ©7680 030 7673-7686  L/H 7651-7686                                           ff  Lo)   1            1\nMAG7          * SPX ATR: D.96% SPX +0.32% 60/40 +0.51% GRO +0.21% TURBO +0.81%                         1  f t tr           wos       a        *\n* SECTORS: 1M BPS SOXX NCL LYTE DRAM URNM J 8Y%     S/W OILS XRT XLP             Tt   t         TT\nRG8                 * GRO HOLDINGS: SPYM,UPRO/SPXLPICK PLTR, MRNA                                                                         | EE\nRA1100            * GRO RVAB/REBAR: 1.04 {-0.24%/-4.66%) SELLRBRK TRIM PLTR                                                   fh -—\nSPX +         * TURBO HOLDINGS: SPYM,UPRO,TQQQ,SPXLIBIT,ETHA,GOXU,FCX, LTR SPCX MRNA.CHYM.FIG                  .                                                      w\n* TURBO RVAB/REBAR: 1.70 (-3.12%/-5.91%) BUY FIG BUY/SELL HNGE\nQaQ +        * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A-| BOUNCE; PCE IN AM\nDilA 4          * WED KEYS: SPXvs 21€/8E QQQvs 65E/50D  R2K vs 21E/8E\n>>> S&PS00 KEY LEVELS <<<\nRK         * 7816 (8/13 INTRADAY A-T-H)                                                                                                                                     »\n7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A-1 BOUNCE; PCE IN AM\n60/40 +        37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS\nGRO ~+\neo       * 7656 (12 21EMA) € 8/219 8/20 7/311\n          * 7551/7564 (15 500/20WK) € 7/311 7/234 7/211 1/174 6/281                                                                             —\n* EMAIL: d        * 7105/7137 (1S 200D/40WK) € 4/81 3/193\n* TWITTE\n-      NE:                                                                                                                         I          oo          n\n                        aug\n@\nan            ory - OR EA\nBoiwia se                                                                                                             .\npag ors1s twits 8 C3 tran ste se           Foweyseioy Dion 8 BB ——t—— on\n",
+    "ocr_text_snippet": ">>> | o TH > TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 << ® Ques > OB 2-0 >>> DA * MARKET STATE: UPTREND $45.39 — *STOINDEXES 11 4L RGBIT SY NASI USD TNX/TYX vs5d x (10861-1385 Hadid * SENTIMENT:...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE"
+        ],
+        "ocr_confidence": 63,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": "RVAB/REBAR: 1.70 (-3.12%/-5.91%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "BUY FIG BUY/SELL HNGE QAQ + * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A- BOUNCE; PCE IN AM DILA 4 * WED KEYS: SPXVS 21€/8E QQQVS 65E/50D R2K VS 21E/8E S&PS00 KEY LEVELS <<< RK * 7816 (8/13 INTRADAY A-T-H) » 7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A-1 BOUNCE; PCE IN AM 60/40 + 37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS GRO ~+ EO * 7656 (12 21EMA) € 8/219 8/20 7/311 7551/7564 (15 500/20WK) € 7/311 7/234 7/211 1/174 6/281 - EMAIL: D * 7105/7137 (1S 200D/40WK) € 4/81 3/193 TWITTE NE: I OO N AUG AN ORY - OR EA BOIWIA SE . PAG ORS1S TWITS 8 C3 TRAN STE SE FOWEYSEIOY DION 8 BB --T-- ON",
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_BOTTOM_LINE"
+        ],
+        "ocr_confidence": 63,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "95ff00c1df1046de",
+    "prefilter_score": 13.46,
+    "prefilter_stats": {
+      "brightRatio": 0.7985416666666667,
+      "darkRatio": 0.042152777777777775,
+      "edgeRatio": 0.17260264292276165,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1328,
+      "horizontalEdgeRatio": 0.09384495795350152,
+      "meanLuma": 228.20458333333335,
+      "stdDev": 47.47310005669578,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 3557,
+      "verticalEdgeRatio": 0.2513603278920218
+    },
+    "score": 93.01,
+    "score_breakdown": {
+      "chart_likeness": -6,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 3.15,
+      "pair_bonus": 0,
+      "per_row_issues": -6,
+      "per_row_metrics": 8,
+      "text_density": 93.86
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "ETHA",
+      "FCX",
+      "PLTR",
+      "SPCX",
+      "SPYM",
+      "TQQQ",
+      "UPRO"
+    ],
+    "timestamp": 800,
+    "timestamp_hms": "00:13:20"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 200,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260825_20260825_ja2wjcg7zda_9f3649cc_whiteboard\\ocr\\ocr_000201.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260825",
+      "ocr_confidence": 63,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>>              |                                                                                                                                o\nTH        > TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 <<                                             ®   Ques > OB 2-0\n>>> DA       * MARKET STATE: UPTREND                                                                                                            $45.39\n—         *STOINDEXES 11 4L RGBIT SY NASI USD TNX/TYX  vs5d                                                           x (10861-1385\nHadid         * SENTIMENT: VIX 15.451-1.5:.1 FRG            AAS 38.5 90.8 24.6.2.0 SETET NAAM 34.5.5                                                           Vol 0 WA\n>>> TUES         BULL CASE: INITIATE RALLY & TREND 21EMA  €8/3-1 REGAIN 21€ & FTD                                                             Lost do: 02.50 PH ET 06282028\n« MARKET         BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                    =                            -\n« WHATH          * NEWS: WED AM: PCE WED A/H: NVDAE/R FRI: JACKSON HOLE WARSH @ 10AM ET\n* TODAY'S KEYS: SPX vs 21E1/BEY,  QQQvs 65E1/50DY RZKvs21E  /8EY                                                             Ad\n> ATER         *DAYCT:ON-1/  =>DN-1/  8e:-6% 2le:+3f                                                                  .      I           il  \\y\n21/21 +       * ACTION: 0 +0.35% 05=Hl {,765110D 17677                     INTO CLS                            1   1}    1  By\nT12 4        *SPXO/N 7645-7700 ©7680 030 7673-7686  L/H 7651-7686                                           ff  Lo)   1            1\nMAG7          * SPX ATR: D.96% SPX +0.32% 60/40 +0.51% GRO +0.21% TURBO +0.81%                         1  f t tr           wos       a        *\n* SECTORS: 1M BPS SOXX NCL LYTE DRAM URNM J 8Y%     S/W OILS XRT XLP             Tt   t         TT\nRG8                 * GRO HOLDINGS: SPYM,UPRO/SPXLPICK PLTR, MRNA                                                                         | EE\nRA1100            * GRO RVAB/REBAR: 1.04 {-0.24%/-4.66%) SELLRBRK TRIM PLTR                                                   fh -—\nSPX +         * TURBO HOLDINGS: SPYM,UPRO,TQQQ,SPXLIBIT,ETHA,GOXU,FCX, LTR SPCX MRNA.CHYM.FIG                  .                                                      w\n* TURBO RVAB/REBAR: 1.70 (-3.12%/-5.91%) BUY FIG BUY/SELL HNGE\nQaQ +        * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A-| BOUNCE; PCE IN AM\nDilA 4          * WED KEYS: SPXvs 21€/8E QQQvs 65E/50D  R2K vs 21E/8E\n>>> S&PS00 KEY LEVELS <<<\nRK         * 7816 (8/13 INTRADAY A-T-H)                                                                                                                                     »\n7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A-1 BOUNCE; PCE IN AM\n60/40 +        37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS\nGRO ~+\neo       * 7656 (12 21EMA) € 8/219 8/20 7/311\n          * 7551/7564 (15 500/20WK) € 7/311 7/234 7/211 1/174 6/281                                                                             —\n* EMAIL: d        * 7105/7137 (1S 200D/40WK) € 4/81 3/193\n* TWITTE\n-      NE:                                                                                                                         I          oo          n\n                        aug\n@\nan            ory - OR EA\nBoiwia se                                                                                                             .\npag ors1s twits 8 C3 tran ste se           Foweyseioy Dion 8 BB ——t—— on\n",
+      "ocr_text_snippet": ">>> | o TH > TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 << ® Ques > OB 2-0 >>> DA * MARKET STATE: UPTREND $45.39 — *STOINDEXES 11 4L RGBIT SY NASI USD TNX/TYX vs5d x (10861-1385 Hadid * SENTIMENT:...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.70 (-3.12%/-5.91%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY FIG BUY/SELL HNGE QAQ + * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A- BOUNCE; PCE IN AM DILA 4 * WED KEYS: SPXVS 21€/8E QQQVS 65E/50D R2K VS 21E/8E S&PS00 KEY LEVELS <<< RK * 7816 (8/13 INTRADAY A-T-H) » 7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A-1 BOUNCE; PCE IN AM 60/40 + 37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS GRO ~+ EO * 7656 (12 21EMA) € 8/219 8/20 7/311 7551/7564 (15 500/20WK) € 7/311 7/234 7/211 1/174 6/281 - EMAIL: D * 7105/7137 (1S 200D/40WK) € 4/81 3/193 TWITTE NE: I OO N AUG AN ORY - OR EA BOIWIA SE . PAG ORS1S TWITS 8 C3 TRAN STE SE FOWEYSEIOY DION 8 BB --T-- ON",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "95ff00c1df1046de",
+      "prefilter_score": 13.46,
+      "prefilter_stats": {
+        "brightRatio": 0.7985416666666667,
+        "darkRatio": 0.042152777777777775,
+        "edgeRatio": 0.17260264292276165,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1328,
+        "horizontalEdgeRatio": 0.09384495795350152,
+        "meanLuma": 228.20458333333335,
+        "stdDev": 47.47310005669578,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3557,
+        "verticalEdgeRatio": 0.2513603278920218
+      },
+      "score": 93.01,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.15,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 93.86
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ETHA",
+        "FCX",
+        "PLTR",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 800,
+      "timestamp_hms": "00:13:20"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 195,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260825_20260825_ja2wjcg7zda_9f3649cc_whiteboard\\ocr\\ocr_000196.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260825",
+      "ocr_confidence": 63,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>>                                                                                                                                               ©\nTH        > TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 <<                                            ®   Ques + OB 20\n>>> DA       * MARKET STATE: UPTREND                                                                                                            546.39\nx         *STOINDEXES 1 44 RGBIT SU NASI USD TNX/TYX  vs5d                                                           (30861-1365\nHadid         * SENTIMENT: VIX 15.451-1.5:.1 FRG            Aan 38.5 90.8 24.6.2.0 SETETE NAAM 94.5.5                                                           vol 0 WA\n>>> TUES         BULL CASE: INITIATE RALLY & TREND 21EMA  €8/3-4 REGAIN 21€ & FTD                                                             Lost do: 02.50 PH ET 06282028\n« MARKET         BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                               er                            -\n« WHATH          * NEWS: WED AM: PCE WED A/H: NVDAE/R FRI: JACKSON HOLE WARSH @ 10AM ET\n* TODAY'S KEYS: SPX vs 21E1/BEY,  QQQvs 65E1/50DY RZKvs21E [BEY                                                             Ad\n> ATER         *DAYCT:ON-1/  =>DN-1/  8e:-6% 2le: +34                                                                  .      I           il  \\y\n21/21 +      * ACTION: 0 +0.35% 05=Hl {,765110D 17677                  INTO CLS                         1  Pe   1  ay\nT12 4        *SPXO/N 7645-7700 ©7680 030 7673-7686  L/H 7651-7686                                     ’     yf  +H   1            1\n* SPX ATR: 0.96%, SPX +0.32% 60/40 +0.51% GRO +0.21% TURBO +081%                                      vy            wos                    hd\nMAG7        * SECTORS: I 8PS SOXX NCLD LYTE DRAM URNM 4 8Y%     S/W OILS XRT XLP             he Te 14         oe\nRG8                * GRO HOLDINGS: SPYM,UPRO/SPXLPICK PLTR, MRNA                                                                      1        tr 7\nRA1100            * GRO RVAB/REBAR: 1.04 {-0.24%/-4.66%) SELLRBRK TRIM PLTR                                                   fh\nSpx +         * TURBO HOLDINGS: SPYM,UPRO,TQQQ,SPXLIBIT.ETHA.GDXU,FCX,PLTR,SPCX MRNA.CHYM.FIG                 .                                                      w\n* TURBO RVAB/REBAR: 1.70 (-3.12%/-5.91%) BUY FIG BUY/SELL HNGE\nQaQ +        * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A-| BOUNCE; PCE IN AM\nDIA +         * WED KEYS: SPXvs 21€/8E QQQys 65€/50D R2K vs 21E/8E\n>>> S&PS00 KEY LEVELS <<<\nRK         * 7816 (8/13 INTRADAY A-T-H)                                                                                                                                     »\n7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A-f BOUNCE; PCE IN AM\n60/40 +        37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS\nGRO ~+\n__       * 7656 (12 21EMA) € 8/711 8/204 7/311\n          * 7551/7564 (15 500/10WK) € 7/311 7/234 7/211 7/174 6/291                                                                             —\n* EMAIL: d        * 7105/7137 (1S 200D/40WK) € 4/21 3/193\n* TWITTE\n-      NE:                                                                                                                         I          oo          n\n                        a\n@-\nsn              ory - OR EA\nBorgia se                                                                                                             .\npag ors1s twits 8 C3 tran ste sie           Foes Dion 8 BB ——t—— on\n",
+      "ocr_text_snippet": ">>> © TH > TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 << ® Ques + OB 20 >>> DA * MARKET STATE: UPTREND 546.39 x *STOINDEXES 1 44 RGBIT SU NASI USD TNX/TYX vs5d (30861-1365 Hadid * SENTIMENT: VIX 1...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.70 (-3.12%/-5.91%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY FIG BUY/SELL HNGE QAQ + * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A- BOUNCE; PCE IN AM DIA + * WED KEYS: SPXVS 21€/8E QQQYS 65€/50D R2K VS 21E/8E S&PS00 KEY LEVELS <<< RK * 7816 (8/13 INTRADAY A-T-H) » 7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A-F BOUNCE; PCE IN AM 60/40 + 37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS GRO ~+ 7656 (12 21EMA) € 8/711 8/204 7/311 7551/7564 (15 500/10WK) € 7/311 7/234 7/211 7/174 6/291 - EMAIL: D * 7105/7137 (1S 200D/40WK) € 4/21 3/193 TWITTE NE: I OO N A SN ORY - OR EA BORGIA SE . PAG ORS1S TWITS 8 C3 TRAN STE SIE FOES DION 8 BB --T-- ON",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "95ff00c1df1046de",
+      "prefilter_score": 13.47,
+      "prefilter_stats": {
+        "brightRatio": 0.7984722222222222,
+        "darkRatio": 0.042291666666666665,
+        "edgeRatio": 0.17249664334675996,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1324,
+        "horizontalEdgeRatio": 0.093562292417497,
+        "meanLuma": 228.20118055555557,
+        "stdDev": 47.46720811074213,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3558,
+        "verticalEdgeRatio": 0.2514309942760229
+      },
+      "score": 92.87,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.15,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 93.72
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "FCX",
+        "PLTR",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 780,
+      "timestamp_hms": "00:13:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 160,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260825_20260825_ja2wjcg7zda_9f3649cc_whiteboard\\ocr\\ocr_000161.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260825",
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>>                                                                                                                                               o\nTH        >> TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 <<                                            @   Qa OB 20\n>>> DA       * MARKET STATE: UPTREND                                                                                                            146.39\na         *STOINDEXES 11 44 RGBIT SU NASI USD TNX/TYX  vs5d                                                       (10681136\nHadid         * SENTIMENT: VIX 15.45/-1.5\".1 FRG            Aan 35.5 008 20.6.2. TETETL NAAM 4.5.5                                                           Vol 0 WA\n>>> TUES         BULL CASE: INITIATE RALLY & TREND 21EMA  €-8/3-4 REGAIN 21£ & FTD                                                              Lost doo 02.58 PH BI 08252028\n« MARKET         BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                       -                                         -\n« WHATH          * NEWS: WED AM: PCE WED A/H: NVDAE/R FRI: JACKSON HOLE WARSH @ 10AM ET\n* TODAY'S KEYS: SPX vs 21E1/BEY,  QQQvs 65E1/50DY RZKvs21E [BEY                                                             a\n> AuTerna         *DAYCT:ON-1/  =>DN-1/  Be:-6% 2le:+3t                                                                  .      I           il  \\y\n21/21 +     * ACTION: 0 +0.35% O5=HI {7651100 17677               INTO CLS                    1 13   Hy  By\nT12 4        *SPXO/N 7645-7700 ©7680 030 7673-7686  L/H 7651-7686                                           yf  Hy   1            1\nMAG           * SPX ATR: 0.96%:       X +0.32% 60/40 +0.51% GRO +0.21% TURBO +0.81%                           1  {l t            wos      oo        “©\n* SECTORS: 1 8PS SEXX NCLD LYTE DRAM URNM & BY%     S/W OILS XRT XLP             It              eT\nRGE                * GRO HOLDINGS: ShglelJPRO/SPXL PICK, PLTR, MRNA                                                                      1      gl SE —\nRAI100            * GRO RVAB/REBAR: 1.04 {-0.24%/-4.66%) SELL RBRK TRIM PLTR                                                  Hh\nSpx +         * TURBO HOLDINGS: SPYM,UPRO,TQQQ, SPXLIBIT,ETHA,GOXU, FCX, LTR SPCX MRNA.CHYM.FIG                  3                                                      w\n* TURBO RVAB/REBAR: 1.70 (-3.12%/-5.91%) BUY FIG BUY/SELL HNGE\naa +        * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A-| BOUNCE; PCE IN AM\nDJIA +         * WED KEYS: SPX vs 21€/8F QQQuvs 65E/50D R2K vs 21€/8E\n>>> S&PS00 KEY LEVELS <<<\nRK         * 7816 (8/13 INTRADAY A-T-H)                                                                                                                                     »\n7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A-| BOUNCE; PCE IN AM\n60/40 +        37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS\nGRO ~+\nI       +7656 (12 21EMA) € 8/214 8/208 7/211\nTT          * 7551/7564 {15 500/10WK) € 7/311 7/234 7/217 173 6/291                                                                             —\n* EMAIL: d        * 7105/7137 (1S 200D/40WK) € 4/81 3/19\n* TWITTE\n*      NE:                                                                                                                         I          oo          2\nwo                        a\n@-\nRe         ory - CB ER\nRosia sv                                                                                                             .\nbuoe 101513 ronson 8 [Rr untes sure           Foweseang Bion 8 0 B ——- on\n",
+      "ocr_text_snippet": ">>> o TH >> TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 << @ Qa OB 20 >>> DA * MARKET STATE: UPTREND 146.39 a *STOINDEXES 11 44 RGBIT SU NASI USD TNX/TYX vs5d (10681136 Hadid * SENTIMENT: VIX 15.45...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.70 (-3.12%/-5.91%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY FIG BUY/SELL HNGE AA + * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A- BOUNCE; PCE IN AM DJIA + * WED KEYS: SPX VS 21€/8F QQQUVS 65E/50D R2K VS 21€/8E S&PS00 KEY LEVELS <<< RK * 7816 (8/13 INTRADAY A-T-H) » 7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A- BOUNCE; PCE IN AM 60/40 + 37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS GRO ~+ I +7656 (12 21EMA) € 8/214 8/208 7/211 TT * 7551/7564 {15 500/10WK) € 7/311 7/234 7/217 173 6/291 - EMAIL: D * 7105/7137 (1S 200D/40WK) € 4/81 3/19 TWITTE NE: I OO 2 WO A RE ORY - CB ER ROSIA SV . BUOE 101513 RONSON 8 [RR UNTES SURE FOWESEANG BION 8 0 B --- ON",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "95ff00c1df1046de",
+      "prefilter_score": 13.57,
+      "prefilter_stats": {
+        "brightRatio": 0.7970833333333334,
+        "darkRatio": 0.042847222222222224,
+        "edgeRatio": 0.17302664122676842,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1344,
+        "horizontalEdgeRatio": 0.09497562009751961,
+        "meanLuma": 228.05270833333333,
+        "stdDev": 47.6694819931816,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3553,
+        "verticalEdgeRatio": 0.25107766235601725
+      },
+      "score": 92.84,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.1,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 93.74
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "ETHA",
+        "FCX",
+        "PLTR",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 640,
+      "timestamp_hms": "00:10:40"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 165,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260825_20260825_ja2wjcg7zda_9f3649cc_whiteboard\\ocr\\ocr_000166.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260825",
+      "ocr_confidence": 63,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>>                                                                                                                                               o\nTH        > TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 <<                                            ®   Ques + OB 20\n>>> DA       * MARKET STATE: UPTREND                                                                                                            146.39\n—         *STOINDEXES 11 AL RGB1D SY NASI USD TNX/TYX  vs5d                                                       (10681-1385\nHadid         * SENTIMENT: VIX 15.35/-1.5%.] F&G            Aan 38.5 90.8 20.6.2. TETETE NAAM 94.5.5                                                            Vol 0 WA\n>>> TUES         BULL CASE: INITIATE RALLY & TREND 21EMA  €-8/3-1 REGAIN 21€ & FTD                                                            Lost do. 02.55 PH ET 06252026\n« MARKET         BEAR CASE: SUSTAINED BREAK BELOW 21EMA            Tres                            -\n“ WHAT H.           * NEWS: WED AM: PCE WED A/H: NVDA F/R     FRI: JACKSON HOLE WARSH @ 10AM €T\n* TODAY'S KEYS: SPX vs 21EM/BEY,  QQQvs 65E1/50DY R2Kvs21E [BEY                                                             ar\n> ALTERNA         *DAYCT:ON-1/  =>DN-1/  Be:-64 2le; +31                                                                  .      I           il  \\y\n21/21 +     * ACTION: 0 +0.35% O5=HI 47651100 17677               INTO CLS                    1 1}   3  ay\nT12 4        *SPXO/N 7645-7700 ©7680 030 7673-7686  L/H 7651-7686                                           ff  Hy   1            1\nMAGT           * SPX ATR: 0.96% SPX +0.32% 6|      +0.51% GRO +0.21% TURBO +0.81%                          [1  ie 1            “0       —        5\n* SECTORS: 1 8PS SOXX NCLD LYTE PRAM URNM BY%     S/W OILS XRT XLP             It              TT\nRG8                 * GRO HOLDINGS: SPYM,UPRO/SPXL, PH        R,MRNA                                                                         1    ot 7\nRAI100            * GRO RVAB/REBAR: 1.04 {-0.24%/-4.66%) SELLRBRK TRIM PLTR                                                   Hy\nsex +         * TURBO HOLDINGS: SPYM,UPRO,TQQQ,SPXLIBIT,ETHA.GDXU,FCX,PLTR,SPCX MRNA.CHYM FIG                 p                                                      w\n* TURBO RVAB/REBAR: 1.70 (-3.12%/-5.91%) BUY FIG BUY/SELL HNGE\nQaQ +        * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A-| BOUNCE; PCE IN AM\nDIA +         * WED KEYS: SPX vs 21€/8E QQQUvs 65E/50D R2K vs 21E/8E\n>>> S&PS00 KEY LEVELS <<<\nRK         * 7816 (8/13 INTRADAY A-T-H)                                                                                                                                     »\n7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A BOUNCE; PCE IN AM\n60/40 +        37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS\nGRO ~+\nel __       * 7656 (12 21EMA) € 8/719 8/204 7/31\n          * 7551/7564 {15 500/10WK) € 7/311 7/234 7/211 7/173 6/291                                                                             —\n* EMAIL: d        * 7105/7137 (1S 200D/40WK) € 4/21 3/193\n* TWITTE!\n*      NE:                                                                                                                         I          oo          n\nwo                        au\n@\nin          ory - OR EA\nBorgia se                                                                                                             .\npag tors tonsa 8 [2 bryan wets sae           Foose Dion BBB ———— on\n",
+      "ocr_text_snippet": ">>> o TH > TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 << ® Ques + OB 20 >>> DA * MARKET STATE: UPTREND 146.39 — *STOINDEXES 11 AL RGB1D SY NASI USD TNX/TYX vs5d (10681-1385 Hadid * SENTIMENT: VIX ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.70 (-3.12%/-5.91%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY FIG BUY/SELL HNGE QAQ + * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A- BOUNCE; PCE IN AM DIA + * WED KEYS: SPX VS 21€/8E QQQUVS 65E/50D R2K VS 21E/8E S&PS00 KEY LEVELS <<< RK * 7816 (8/13 INTRADAY A-T-H) » 7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A BOUNCE; PCE IN AM 60/40 + 37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS GRO ~+ EL __ * 7656 (12 21EMA) € 8/719 8/204 7/31 7551/7564 {15 500/10WK) € 7/311 7/234 7/211 7/173 6/291 - EMAIL: D * 7105/7137 (1S 200D/40WK) € 4/21 3/193 TWITTE! NE: I OO N WO AU IN ORY - OR EA BORGIA SE . PAG TORS TONSA 8 [2 BRYAN WETS SAE FOOSE DION BBB ---- ON",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "95ff00c0df1053de",
+      "prefilter_score": 13.47,
+      "prefilter_stats": {
+        "brightRatio": 0.798125,
+        "darkRatio": 0.042222222222222223,
+        "edgeRatio": 0.173061974418769,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1336,
+        "horizontalEdgeRatio": 0.09441028902551056,
+        "meanLuma": 228.20305555555555,
+        "stdDev": 47.451365647099095,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3562,
+        "verticalEdgeRatio": 0.2517136598120274
+      },
+      "score": 92.83,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.15,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 93.68
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "FCX",
+        "NVDA",
+        "PLTR",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 660,
+      "timestamp_hms": "00:11:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 140,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260825_20260825_ja2wjcg7zda_9f3649cc_whiteboard\\ocr\\ocr_000141.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260825",
+      "ocr_confidence": 63,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>>                                                                                                                                               o\nTH          > TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 <<                                                        ®    Qa + OB 20\n>>> DA       * MARKET STATE: UPTREND                                                                                                            146.39\na         *STOINDEXES 11 4L RGBIM SU NASI USD TNX/TVX  vs5d                                                       x 50681-1361\nHated         * SENTIMENT: VIX 15.45/-1.5%'1 F&G            Aan 38.5 908 24.6.2. TETET NAAM 94.5.5                                                           Vol 0 WA\n>>> TUES         BULL CASE: INITIATE RALLY & TREND 21EMA  €-8/3-4 REGAIN 21€ & FID                                                             Lost del. 02.5 PH EI 06:25:2028\n« MARKET         BEAR CASE: SUSTAINED BREAK BELOW 21EMA                  =                 -           -\n“ WHAT H.           * NEWS: WED AM: PCE WED A/H: NVDA E/R     FRI: JACKSON on @ 10AM ET\n* TODAY'S KEYS: SPX vs 21E4/8Ed,  QQQ vs 65E1/50DY,            21E /8Ed                                                             ar\n> ALTERNA         *DAYCT:ON-1/  =>DN-1/  Be:-64 2le; +31                                                                  A      I           il  \\y\n21/21 4     * ACTION: 0 +0.35% O5=HI {7651100 17677               INTO CLS                    1 1}   Hy  By\nT12 4        *SPXO/N 7645-7700 ©7680 030 7673-7686  L/H 7651-7686                                           ff  Ly)   1            1\nMAG?           * SPX ATR: D.96%) SPX +0.32% 60/40 +0.51% GRO +0.21% TURBO +0.81%                           1  ih t            wn        “©\n* SECTORS: 4 BPS SOXX NCLD LYTE DRAM URNM  BY%     S/W OILS XRT XLP             It\nRG8               * GRO HOLDINGS: SPYM,UPRO/SPXL,PICK PLTR, MANA                                                                1    i =\nRAI100            * GRO RVAB/REBAR: 1.04 {-0.24%/-4.66%) SELLRBRK TRIM PLTR                                                   Hy\nSpx +         * TURBO HOLDINGS: SPYM,UPRO,TQQQ,SPXLIBITETHA.GDXU,FCX, PLTR,SPCX MRNA.CHYM.FIG                 .                                                      «\n* TURBO RVAB/REBAR: 1.70 (-3.12%/-5.91%) BUY FIG BUY/SELL HNGE\nQaQ +        * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A-| BOUNCE; PCE IN AM\nDIA +         * WED KEYS: SPX vs 21€/8E QQQvs 6SE/50D R2K vs 21€/8E\n>>> S&PS00 KEY LEVELS <<<\nRK         * 7816 (8/13 INTRADAY A-T-H)                                                                                                                                     »\n7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A-| BOUNCE; PCE IN AM\n60/40 +        37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS\nGRO ~+\nel __       * 7656 (12 21EMA) € 8/219 8/204 7/319\n          * 7551/7564 {15 500/10WK) € 7/311 7/234 7/211 7/173 6/291                                                                             —\n* EMAIL: d        * 7105/7137 {1S 200D/40WK) € 4/81 3/19\n* TWITTE\n*      NE:                                                                                                                         I          oo          n\nwo                        au\n@:\naa          ory - OR EA\nBorgia so                                                                                                             .\npage sors1s tonsa 8 [3 Eran eosin           Foyseoy: Dion © BB ———— on\n",
+      "ocr_text_snippet": ">>> o TH > TALE OF THE TAPE — TUESDAY, AUGUST 25, 2026 << ® Qa + OB 20 >>> DA * MARKET STATE: UPTREND 146.39 a *STOINDEXES 11 4L RGBIM SU NASI USD TNX/TVX vs5d x 50681-1361 Hated * SENTIMENT: VIX 1...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.70 (-3.12%/-5.91%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY FIG BUY/SELL HNGE QAQ + * BOTTOM LINE: > ALTERNATING RED/GREEN DAYS CONTINUES; A- BOUNCE; PCE IN AM DIA + * WED KEYS: SPX VS 21€/8E QQQVS 6SE/50D R2K VS 21€/8E S&PS00 KEY LEVELS <<< RK * 7816 (8/13 INTRADAY A-T-H) » 7677 TODAY: ALTERNATING RED/GREEN DAYS CONTINUES; A- BOUNCE; PCE IN AM 60/40 + 37674 FRI: BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS GRO ~+ EL __ * 7656 (12 21EMA) € 8/219 8/204 7/319 7551/7564 {15 500/10WK) € 7/311 7/234 7/211 7/173 6/291 - EMAIL: D * 7105/7137 {1S 200D/40WK) € 4/81 3/19 TWITTE NE: I OO N WO AU AA ORY - OR EA BORGIA SO . PAGE SORS1S TONSA 8 [3 ERAN EOSIN FOYSEOY: DION © BB ---- ON",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "95ff00c1ff1043da",
+      "prefilter_score": 13.58,
+      "prefilter_stats": {
+        "brightRatio": 0.7973611111111111,
+        "darkRatio": 0.042986111111111114,
+        "edgeRatio": 0.1737686382587803,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1338,
+        "horizontalEdgeRatio": 0.09455162179351283,
+        "meanLuma": 228.050625,
+        "stdDev": 47.65056844593238,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3580,
+        "verticalEdgeRatio": 0.25298565472404777
+      },
+      "score": 92.75,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.15,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 93.6
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "FCX",
+        "NVDA",
+        "PLTR",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 560,
+      "timestamp_hms": "00:09:20"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260825_20260825_ja2wjcg7zda_9f3649cc_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 4.07,
+      "prefilter_stats": {
+        "brightRatio": 0.44583333333333336,
+        "darkRatio": 0.33305555555555555,
+        "edgeRatio": 0.23902904388382445,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2423,
+        "horizontalEdgeRatio": 0.17122464843473958,
+        "meanLuma": 160.8382638888889,
+        "stdDev": 94.0293889919962,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4342,
+        "verticalEdgeRatio": 0.30683343933290935
+      },
+      "score": -15.94,
+      "score_breakdown": {
+        "chart_likeness": -3.9448877173417163,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 95,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915\\ocr-20260915\\ocr_probe\\frames\\20260825_20260825_ja2wjcg7zda_9f3649cc_whiteboard\\ocr\\ocr_000096.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 380.04,
+      "observed_date": null,
+      "ocr_confidence": 38,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVERE I yyprveroniece «gm       I TEED\nDAILY MARKI\n222 DAILY MARK! bow Jones industria Average                                          ied\n¥1,X, IG, TikTok: @REVEREA             © Top WATCH seectsst       .                                                                                Vol 4260.246.903 18.28%\n2>> TUESDAY, AUGUS]                                                                                 Ut o4 PU ET 520\n“MARKETSTATE: UPTRE! ® 7 77 BL #0 8 Too oS Alm 8\n“ WHAT HAPPENED TODAS = 7S\n=> ALTERNATING RED/GREEN D/  vay >      REN                                .          Tabs\n21/21 +0.94% 127                         .                 or            floiis       sare\nT12 +112% SA                      RR      ’   mn   “het\nMAG? +0.61%                                         ny rip \". ror\nRG8  +0.80%                                Hugtle      FR J      52000\nRAIL100 +1.75%                                                                                                         wel                    - —-\nSPX +0.32%                      .       eT\naan 062%   Rr —           Flt etre nf     pmo                           -\nDIA 40.30%     Tig p=  —                                    ~\nR2K  +0.50%       f yl   I\n60/40 +0.51%                }                                                                                  wo\nGRO ~+0.21% TUR        1  rh                                                       ‘\nJE                                       Cans\n* EMAIL: don@revereasst mows T        _       iN        .     ]    -        j     -   3\nmc esse [Tg Ag i           8\njeu ima,\n|   SITE: revereasset.c   —    be | eo   21.21 8/24 <<< 21 items © sins pres dinnin            Ory - OS EQ\nFowoysrn Goon B BB wn          )\nPage 101513 twilaods 8p [REngish wnted state     Fowoyseeng: Dron 0 B —F——- on\n",
+      "ocr_text_snippet": ">>> THE REVERE I yyprveroniece «gm I TEED DAILY MARKI 222 DAILY MARK! bow Jones industria Average ied ¥1,X, IG, TikTok: @REVEREA © Top WATCH seectsst . Vol 4260.246.903 18.28% 2>> TUESDAY, AUGUS] U...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 38,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 38,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80af5f7b7f550500",
+      "prefilter_score": 18.46,
+      "prefilter_stats": {
+        "brightRatio": 0.7610416666666666,
+        "darkRatio": 0.07444444444444444,
+        "edgeRatio": 0.17758462299484135,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1357,
+        "horizontalEdgeRatio": 0.09589428308953431,
+        "meanLuma": 220.7607638888889,
+        "stdDev": 59.469616910886344,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3669,
+        "verticalEdgeRatio": 0.2592749629001484
+      },
+      "score": -26.1,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.9,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 380,
+      "timestamp_hms": "00:06:20"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 2,
+      "end_ts": 640,
+      "end_hms": "00:10:40",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 160,
+      "peak_score": 92.84,
+      "start_hms": "00:09:20",
+      "start_ts": 560
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 800,
+      "end_hms": "00:13:20",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 200,
+      "peak_score": 93.01,
+      "start_hms": "00:13:20",
+      "start_ts": 800
+    }
+  ],
+  "video_type": "daily",
+  "video_type_label": "Daily",
+  "video_type_description": "Tue-Fri DMI episode — full portfolio deltas, daily metrics",
+  "video_type_classified_at": "2026-09-15T10:15:31.675Z",
+  "classification_inputs": {
+    "title_excerpt": "ALTERNATING RED/GREEN DAYS CONTINUES AS BEATEN-DOWN A/I STOCKS BOUNCE; PCE INFLATION DATA ON DECK",
+    "upload_date": "20260825",
+    "retroactive": true
+  }
+}

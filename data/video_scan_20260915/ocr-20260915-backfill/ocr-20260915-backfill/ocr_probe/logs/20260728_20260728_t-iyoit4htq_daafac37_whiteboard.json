@@ -1,0 +1,1265 @@
+{
+  "date_key": "20260728",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260728_T-IyOIt4hTQ.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 170,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260728_20260728_t-iyoit4htq_daafac37_whiteboard\\ocr\\ocr_000171.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 678.56,
+      "observed_date": "20260728",
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> TH\n>> TALE OF THE TAPE - TUESDAY, JULY 28, 2026 <<  Gms. DEO\n>>> DAI         * MARKET STATE:\nSVX 6, TH | ¢STOINDEXES4T 14 RGE2T 24 NASI USD  TNX/TVX  vsSd                                          . 46.04\n>>> TUESD          * SENTIMENT: VIX :£.21( 2.5%: F&G              anize.8-283 222-59 TERT Naam 34.02 11.52                                                                        on\n===     3 BULL CASE: INITIATE RALLY & TREND 21EMA                                                   Lost Upate. 02 50 PM ET 07782026\n\"MARKETS | BEAR CASE: SUSTAINED BREAK BELOW 21EMA 4-7/23 CLOSE BELOW 8/21/50                                                             x            ©\n* WHAT HA          * NEWS: FOMC WED...32% CHANCE OF RATE HIKE THURS: PCE                                                                                                 »\nASTOCKS            * TODAY'S KEYS: SPX vs 74201 /65E1 QQ         04/1000 R2K vs 21E4/SOD VIX vs 204\n*DAYCT:D-2/ =>       Be: ad 21e:\n*SPXO/N 7385-74301 07412 030 _J383-74131 L/H 7383-7452                                                                 .\nT12 +0      * SPX ATR: 1.02% SPX +0.21% 60/40       GRO +0.20% TURBO                                                1,\nMAG? +C      * SECTORS: 1 BPS S/W XRT ITB XLF.C.Y.P.V     J BY% SOXX DRAM OILS G/S/X                                  if  Y     w\nRGE 0         * Gro HOLDINGS: spym,upro JE Lv/LLYX                                                                wo                     Iti t.\nRAIL00-5          * GRO RVAB/REBAR: 0.78(-0.28%/-3.55%) SELL HPE                                                             tif                       1        +\n* TURBO HOLDINGS: SPYM,UPRO,EFHA,DDOG                                                       }     BTL Ea\nSPX +0         * TURBO RVAB/REBAR: 0.87 {-0.74%/-2.69%) SELLIBIT TRIM ETHA                                    t     Nib bh\naaa -0.          * BOTTOM LINE: A-I STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK        aac                Lr                                   “\nDJIA +194 * WED KEYS: SPX vs SOD/6SE QQQvs 700/100D R2K vs 21E/50D VIX vs 20                                          £8\n4|| >>> SBPSO0 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\nRk +0f        \"7467 (43 21LEMA) € 7/234 7/211 174 6/291 6/23% 6/121 6/54                                                                  2\nB        * 7470/7459(41 SOD/1OWK) € 7/234 7/211 7/174 6/291\nGRO ~+0           37429 TODAY: A-| STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK\nsEs===s=s           “$7412 FRI : SUMMER CHOP: A-I STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-0                                                                                    40\n* EMAIL: do       * 7013/7035 (14 200D/40WK) € 4/37 3/194\n* TWITTER (                                                                                               PS\n* PHONE: {£                                                                                          .\nTE BE —————————————————          ”          »          10          Ed\n[§ ELL Pore                Gowen, Bion BM 1 ——d—— won |                      wo\n(OP —         Lat         Repos 21.21 7127 <<< 2Vitems © wire #117 mio                                       ory + Dm EA\nere Ep\n<Q  [LEI   LEE ICR BEE ol Ps BA   ”    RE\n",
+      "ocr_text_snippet": ">>> TH >> TALE OF THE TAPE - TUESDAY, JULY 28, 2026 << Gms. DEO >>> DAI * MARKET STATE: SVX 6, TH | ¢STOINDEXES4T 14 RGE2T 24 NASI USD TNX/TVX vsSd . 46.04 >>> TUESD * SENTIMENT: VIX :£.21( 2.5%: F...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,EFHA,DDOG } BTL EA SPX +0 * TURBO RVAB/REBAR: 0.87 {-0.74%/-2.69%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL IBIT TRIM ETHA T NIB BH AAA -0. * BOTTOM LINE: A-I STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK AAC LR \" DJIA +194 * WED KEYS: SPX VS SOD/6SE QQQVS 700/100D R2K VS 21E/50D VIX VS 20 £8 4 >>> SBPSO0 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) RK +0F \"7467 (43 21LEMA) € 7/234 7/211 174 6/291 6/23% 6/121 6/54 2 B * 7470/7459(41 SOD/1OWK) € 7/234 7/211 7/174 6/291 GRO ~+0 37429 TODAY: A- STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK SES===S=S \"$7412 FRI : SUMMER CHOP: A-I STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-0 40 EMAIL: DO * 7013/7035 (14 200D/40WK) € 4/37 3/194 TWITTER ( PS PHONE: {£ . TE BE ----------------- \" » 10 ED ELL PORE GOWEN, BION BM 1 --D-- WON WO (OP - LAT REPOS 21.21 7127 <<< 2VITEMS © WIRE #117 MIO ORY + DM EA ERE EP Q [LEI LEE ICR BEE OL PS BA \" RE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d57f0082df0052ff",
+      "prefilter_score": 16.66,
+      "prefilter_stats": {
+        "brightRatio": 0.7595138888888889,
+        "darkRatio": 0.06013888888888889,
+        "edgeRatio": 0.18708925164299342,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1443,
+        "horizontalEdgeRatio": 0.10197159211363155,
+        "meanLuma": 223.8501388888889,
+        "stdDev": 53.95170976059815,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3852,
+        "verticalEdgeRatio": 0.2722069111723553
+      },
+      "score": 89.78,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 90.78
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "ETHA",
+        "HPE",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 680,
+      "timestamp_hms": "00:11:20",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260728_ps_4.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 185,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260728_20260728_t-iyoit4htq_daafac37_whiteboard\\ocr\\ocr_000186.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 738.6,
+      "observed_date": "20260728",
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> TH\n2> TALE OF THE TAPE - TUESDAY, JULY 28, 2026 <<  Gms. DG 0\n>>> DAIl        * MARKET STATE:\n*VILX6,TH | *STOINDEXES4T 14 RGB2T 20 NASD USD  TNX/TVX  vsSd                                                                    *46.04\n>>> TUESD     * SENTIMENT: VIX 55 21( 2.5%: FBG       anizes183 22.255 EET NAAM 84.02 1162                                en\n===     3 BULL CASE: INITIATE RALLY & TREND 21EMA                                                   Lanta 0258 PMET 07072028\n* MARKETS , | -)BEAR CASE: SUSTAINED BREAK BELOW 21EMA 4-7/23 CLOSE BELOW 8/21/50                                                           pe.         ©\n* WHAT HA          * NEWS: FOMC WED...32% CHANCE OF RATE HIKE THURS: PCE                                                                                                 »\nASTOCKS            * TODAY'S KEYS: SPX vs 7420/6564 QQQ vs 7004/1000 R2K vs 21E4./50D MIX vs 204\n*DAYCT:D-2/ =>       Be: ad 216-44\n*SPXO/N 7385-74307 07412 030 7383-74131 L/H 7383-7452                                                                 N\nT12 +0      *SPKATR: 102% SPX +0.21% 60/40       GRO +0.20% TURBO                                                1\nMAG? +C      * SECTORS: 1 BPS S/W XRT IT8 XLF.C.Y.P.V     J BY% SOXX DRAM OILS G/S/X                                  if  4     w\nRGE 0         * 680 HOLDINGS: spym,upRO JE LLv/LLYx                                                                   Ee)                      Its 1.\nRAIL00 -5          * GRO RVAB/REBAR: 0.75(-0.28%/-3.55%) SELL HPE                                                               tif                        1         jh\n* TURBO HOLDINGS: SPYM,UPRO,ETHA,DDOG                                                         }      BLN    Hr\nSPX +0         * TURBO RVAB/REBAR: 0.8: {-0.74%/-2.69%) SELLIBIT TRIM ETHA                                    t     Il ws     .\naa 0.        *BOTTOM LINE: AI STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMCON DECK [=             Lr                            “\nDJIA +1%n|  * WEDKEYS:SPXvsSOD/6SE QQQvs 700/100D R2K vs 21E/50D VIX vs 20                                          o8\n4        >>> S&P500 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\nR2K ~~ +OF        * 7467 (V3 21EMA) € 7/234 7/211 7/174 6/2941 6/233 6/121 6/5¢                                                                  2\n        * 7470/7459( 1 SOD/10WK) € 7/234 7/211 7/174 6/291\nGRO ~+0           -»7429 TODAY: A-| STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK\ns=======s           “$7412 FRI : SUMMER CHOP: A- STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-0                                                                                    “0\n* EMAIL: do       * 7013/7035 (14 200D/40WK) € 4/81 3/194\n* TWITTER {                                                                                               9\n* PHONE: {£                                                                                          .\nLL —————————————————— > |B          ”          Ed          .          ES\n[§ SITE: | verse vw 8 3                Wout setirgsDifoun   [ER — Ne                      wt\nOF Drpiay Serungs.      Screens.         Lists,     | Repons       21.21 7/27 <<< 2Vitems © Lutes aT buLE 2200                                       Oo Pay     CE ® A\nPp   ;= a     nN. mE TBR og \"9s    -      EE\n",
+      "ocr_text_snippet": ">>> TH 2> TALE OF THE TAPE - TUESDAY, JULY 28, 2026 << Gms. DG 0 >>> DAIl * MARKET STATE: *VILX6,TH | *STOINDEXES4T 14 RGB2T 20 NASD USD TNX/TVX vsSd *46.04 >>> TUESD * SENTIMENT: VIX 55 21( 2.5%: ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,ETHA,DDOG } BLN HR SPX +0 * TURBO RVAB/REBAR: 0.8: {-0.74%/-2.69%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL IBIT TRIM ETHA T IL WS . AA 0. *BOTTOM LINE: AI STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMCON DECK [= LR \" DJIA +1%N * WEDKEYS:SPXVSSOD/6SE QQQVS 700/100D R2K VS 21E/50D VIX VS 20 O8 4 >>> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) R2K ~~ +OF * 7467 (V3 21EMA) € 7/234 7/211 7/174 6/2941 6/233 6/121 6/5¢ 2 7470/7459( 1 SOD/10WK) € 7/234 7/211 7/174 6/291 GRO ~+0 -»7429 TODAY: A- STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK S=======S \"$7412 FRI : SUMMER CHOP: A- STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-0 \"0 EMAIL: DO * 7013/7035 (14 200D/40WK) € 4/81 3/194 TWITTER { 9 PHONE: {£ . LL ------------------ > B \" ED . ES SITE: VERSE VW 8 3 WOUT SETIRGSDIFOUN [ER - NE WT OF DRPIAY SERUNGS. SCREENS. LISTS, REPONS 21.21 7/27 <<< 2VITEMS © LUTES AT BULE 2200 OO PAY CE ® A PP ;= A NN. ME TBR OG \"9S - EE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d57f0080df0053ff",
+      "prefilter_score": 16.64,
+      "prefilter_stats": {
+        "brightRatio": 0.7602777777777778,
+        "darkRatio": 0.06027777777777778,
+        "edgeRatio": 0.18659458695498551,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1426,
+        "horizontalEdgeRatio": 0.10077026358561232,
+        "meanLuma": 223.96569444444444,
+        "stdDev": 53.78610612433059,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3855,
+        "verticalEdgeRatio": 0.2724189103243587
+      },
+      "score": 89.03,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 89.98
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "ETHA",
+        "HPE",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 740,
+      "timestamp_hms": "00:12:20",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260728_ps_5.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 205,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260728_20260728_t-iyoit4htq_daafac37_whiteboard\\ocr\\ocr_000206.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 818.76,
+      "observed_date": "20260728",
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> TH\n>> TALE OF THE TAPE — TUESDAY, JULY 28, 2026 <<  frm» DOGS 6G\n>>> DAI         * MARKET STATE:\nSALXIGTH | *STOINDEXESAT 1 RGE2M  2U NASW USD TNX/TYX  vsSd                                             *46.04\n>>> TUESD     * SENTIMENT: VIX £8 21( 2.5: FRG       annze8-183 22.2-5.5 PERT NAAM 84.02 1162                                en\n===     3 BULL CASE: INITIATE RALLY & TREND 21EMA                                                   Lanta 02.58 PMET 022028\n* MARKETS , | -)BEAR CASE: SUSTAINED BREAK BELOW 21EMA 4-7/23 CLOSE BELOW 8/21/50                                                           a         ©\n* WHAT HA          * NEWS: FOMC WED...32% CHANCE OF RATE HIKE THURS: PCE                                                                                                 »\nASTOCKS             * TODAY'S KEYS: SPX vs 74201 /65E1 QQQ vs 7004/1000 R2K vs 21E4./50D MVIX vs 204\n*DAYCT:D-2/ =>       Be: ad 21e: 4d\n*SPXO/N 7385-74307 07412 030 7383-74131 L/H 7383-7452                                                                 .\nT12 +0        *SPXATR: 102% - SPX+0.21% 60/40         GRO +0.20% TURBO                                                             1\nMAG? +C      * SECTORS: 1 BPS S/W XRT ITB XLF.C.Y.P.V     J BY% SOXX DRAM OILS G/S/X                                  if  4     w\nRGE 0        * Gro HOLDINGS: spym,upRo JE Lv/LLYX                                                          wo                   its |\nRAIL00 5         * GRO RVAB/REBAR: 0.73(-0.34%/-3.55%) SELL HPE                                                         tif                     1        fa\n* TURBO HOLDINGS: SPYM,UPRO,ETHA,DDOG                                                         }       th, Bo    HW\nSPX #0         * TURBO RVAB/REBAR: 0.83 {-0.74%/-2.69%) SELLIBIT TRIM ETHA                                    t      beg Bi\naaa 0.        * BOTTOM LINE: A-I STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK [=             Lt                            “\nDJIA +1%m|  * WED KEYS: SPXvsSOD/6SE QQQus 700/100D R2K vs 21€/50D VIX vs 20                                          £5\n4)l >>> SBPSO0 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\nR2K +0) .       * 7467 (U3 21EMA) € 7/234 7/211 7/174 6/2941 6/233 6/121 6/5¢                                                                  2\n* 7470/7459(3 1 SOD/10WK) € 7/234 7/211 7174 6/291\nGRO ~+0           -»7429 TODAY: A-| STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK\ns=======s           “$7412 FRI : SUMMER CHOP: A- STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-0                                                                                    40\n* EMAIL: do       * 7013/7035 (14 200D/40WK) € 4/81 3/194\n* TWITTER (                                                                                               PS\n* PHONE: {£                                                                                          .\n.     A —    >     a          ”          Ed          A          El\n[§ ELL Poreray=                Gowns row @ MB —4—— wn |                      ul\nOO Origiay Sarge      Screens.         Lists         Reports       21.21 7127 <<< 2Vitems © wives BERL ons                                       OF - COB BQ\nPp   ’oa     nN. merge ® oa\" gn,     a       RE\n",
+      "ocr_text_snippet": ">>> TH >> TALE OF THE TAPE — TUESDAY, JULY 28, 2026 << frm» DOGS 6G >>> DAI * MARKET STATE: SALXIGTH | *STOINDEXESAT 1 RGE2M 2U NASW USD TNX/TYX vsSd *46.04 >>> TUESD * SENTIMENT: VIX £8 21( 2.5: F...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,ETHA,DDOG } TH, BO HW SPX #0 * TURBO RVAB/REBAR: 0.83 {-0.74%/-2.69%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL IBIT TRIM ETHA T BEG BI AAA 0. * BOTTOM LINE: A-I STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK [= LT \" DJIA +1%M * WED KEYS: SPXVSSOD/6SE QQQUS 700/100D R2K VS 21€/50D VIX VS 20 £5 4)L >>> SBPSO0 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) R2K +0) . * 7467 (U3 21EMA) € 7/234 7/211 7/174 6/2941 6/233 6/121 6/5¢ 2 7470/7459(3 1 SOD/10WK) € 7/234 7/211 7174 6/291 GRO ~+0 -»7429 TODAY: A- STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK S=======S \"$7412 FRI : SUMMER CHOP: A- STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-0 40 EMAIL: DO * 7013/7035 (14 200D/40WK) € 4/81 3/194 TWITTER ( PS PHONE: {£ . A - > A \" ED A EL ELL PORERAY= GOWNS ROW @ MB -4-- WN UL OO ORIGIAY SARGE SCREENS. LISTS REPORTS 21.21 7127 <<< 2VITEMS © WIVES BERL ONS OF - COB BQ PP 'OA NN. MERGE ® OA\" GN, A RE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d57f0082df0043ff",
+      "prefilter_score": 16.57,
+      "prefilter_stats": {
+        "brightRatio": 0.7605555555555555,
+        "darkRatio": 0.05965277777777778,
+        "edgeRatio": 0.18694791887499115,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1428,
+        "horizontalEdgeRatio": 0.10091159635361459,
+        "meanLuma": 223.9634027777778,
+        "stdDev": 53.778166853173424,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3863,
+        "verticalEdgeRatio": 0.27298424139636773
+      },
+      "score": 88.49,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 89.44
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "ETHA",
+        "HPE",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 820,
+      "timestamp_hms": "00:13:40",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260728_ps_6.png"
+    }
+  ],
+  "frame_count": 308,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 247,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260728_ps_4.png",
+  "prefilter_best_score": 23.56,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 170,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260728_20260728_t-iyoit4htq_daafac37_whiteboard\\ocr\\ocr_000171.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 678.56,
+    "observed_date": "20260728",
+    "ocr_confidence": 60,
+    "ocr_profile": "threshold",
+    "ocr_text": ">>> TH\n>> TALE OF THE TAPE - TUESDAY, JULY 28, 2026 <<  Gms. DEO\n>>> DAI         * MARKET STATE:\nSVX 6, TH | ¢STOINDEXES4T 14 RGE2T 24 NASI USD  TNX/TVX  vsSd                                          . 46.04\n>>> TUESD          * SENTIMENT: VIX :£.21( 2.5%: F&G              anize.8-283 222-59 TERT Naam 34.02 11.52                                                                        on\n===     3 BULL CASE: INITIATE RALLY & TREND 21EMA                                                   Lost Upate. 02 50 PM ET 07782026\n\"MARKETS | BEAR CASE: SUSTAINED BREAK BELOW 21EMA 4-7/23 CLOSE BELOW 8/21/50                                                             x            ©\n* WHAT HA          * NEWS: FOMC WED...32% CHANCE OF RATE HIKE THURS: PCE                                                                                                 »\nASTOCKS            * TODAY'S KEYS: SPX vs 74201 /65E1 QQ         04/1000 R2K vs 21E4/SOD VIX vs 204\n*DAYCT:D-2/ =>       Be: ad 21e:\n*SPXO/N 7385-74301 07412 030 _J383-74131 L/H 7383-7452                                                                 .\nT12 +0      * SPX ATR: 1.02% SPX +0.21% 60/40       GRO +0.20% TURBO                                                1,\nMAG? +C      * SECTORS: 1 BPS S/W XRT ITB XLF.C.Y.P.V     J BY% SOXX DRAM OILS G/S/X                                  if  Y     w\nRGE 0         * Gro HOLDINGS: spym,upro JE Lv/LLYX                                                                wo                     Iti t.\nRAIL00-5          * GRO RVAB/REBAR: 0.78(-0.28%/-3.55%) SELL HPE                                                             tif                       1        +\n* TURBO HOLDINGS: SPYM,UPRO,EFHA,DDOG                                                       }     BTL Ea\nSPX +0         * TURBO RVAB/REBAR: 0.87 {-0.74%/-2.69%) SELLIBIT TRIM ETHA                                    t     Nib bh\naaa -0.          * BOTTOM LINE: A-I STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK        aac                Lr                                   “\nDJIA +194 * WED KEYS: SPX vs SOD/6SE QQQvs 700/100D R2K vs 21E/50D VIX vs 20                                          £8\n4|| >>> SBPSO0 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\nRk +0f        \"7467 (43 21LEMA) € 7/234 7/211 174 6/291 6/23% 6/121 6/54                                                                  2\nB        * 7470/7459(41 SOD/1OWK) € 7/234 7/211 7/174 6/291\nGRO ~+0           37429 TODAY: A-| STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK\nsEs===s=s           “$7412 FRI : SUMMER CHOP: A-I STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-0                                                                                    40\n* EMAIL: do       * 7013/7035 (14 200D/40WK) € 4/37 3/194\n* TWITTER (                                                                                               PS\n* PHONE: {£                                                                                          .\nTE BE —————————————————          ”          »          10          Ed\n[§ ELL Pore                Gowen, Bion BM 1 ——d—— won |                      wo\n(OP —         Lat         Repos 21.21 7127 <<< 2Vitems © wire #117 mio                                       ory + Dm EA\nere Ep\n<Q  [LEI   LEE ICR BEE ol Ps BA   ”    RE\n",
+    "ocr_text_snippet": ">>> TH >> TALE OF THE TAPE - TUESDAY, JULY 28, 2026 << Gms. DEO >>> DAI * MARKET STATE: SVX 6, TH | ¢STOINDEXES4T 14 RGE2T 24 NASI USD TNX/TVX vsSd . 46.04 >>> TUESD * SENTIMENT: VIX :£.21( 2.5%: F...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE"
+        ],
+        "ocr_confidence": 60,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": "HOLDINGS: SPYM,UPRO,EFHA,DDOG } BTL EA SPX +0 * TURBO RVAB/REBAR: 0.87 {-0.74%/-2.69%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "SELL IBIT TRIM ETHA T NIB BH AAA -0. * BOTTOM LINE: A-I STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK AAC LR \" DJIA +194 * WED KEYS: SPX VS SOD/6SE QQQVS 700/100D R2K VS 21E/50D VIX VS 20 £8 4 >>> SBPSO0 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) RK +0F \"7467 (43 21LEMA) € 7/234 7/211 174 6/291 6/23% 6/121 6/54 2 B * 7470/7459(41 SOD/1OWK) € 7/234 7/211 7/174 6/291 GRO ~+0 37429 TODAY: A- STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK SES===S=S \"$7412 FRI : SUMMER CHOP: A-I STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-0 40 EMAIL: DO * 7013/7035 (14 200D/40WK) € 4/37 3/194 TWITTER ( PS PHONE: {£ . TE BE ----------------- \" » 10 ED ELL PORE GOWEN, BION BM 1 --D-- WON WO (OP - LAT REPOS 21.21 7127 <<< 2VITEMS © WIRE #117 MIO ORY + DM EA ERE EP Q [LEI LEE ICR BEE OL PS BA \" RE",
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_BOTTOM_LINE"
+        ],
+        "ocr_confidence": 60,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "d57f0082df0052ff",
+    "prefilter_score": 16.66,
+    "prefilter_stats": {
+      "brightRatio": 0.7595138888888889,
+      "darkRatio": 0.06013888888888889,
+      "edgeRatio": 0.18708925164299342,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1443,
+      "horizontalEdgeRatio": 0.10197159211363155,
+      "meanLuma": 223.8501388888889,
+      "stdDev": 53.95170976059815,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 3852,
+      "verticalEdgeRatio": 0.2722069111723553
+    },
+    "score": 89.78,
+    "score_breakdown": {
+      "chart_likeness": -6,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 3,
+      "pair_bonus": 0,
+      "per_row_issues": -6,
+      "per_row_metrics": 8,
+      "text_density": 90.78
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "BE",
+      "ETHA",
+      "HPE",
+      "SPYM",
+      "UPRO"
+    ],
+    "timestamp": 680,
+    "timestamp_hms": "00:11:20"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 170,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260728_20260728_t-iyoit4htq_daafac37_whiteboard\\ocr\\ocr_000171.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260728",
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> TH\n>> TALE OF THE TAPE - TUESDAY, JULY 28, 2026 <<  Gms. DEO\n>>> DAI         * MARKET STATE:\nSVX 6, TH | ¢STOINDEXES4T 14 RGE2T 24 NASI USD  TNX/TVX  vsSd                                          . 46.04\n>>> TUESD          * SENTIMENT: VIX :£.21( 2.5%: F&G              anize.8-283 222-59 TERT Naam 34.02 11.52                                                                        on\n===     3 BULL CASE: INITIATE RALLY & TREND 21EMA                                                   Lost Upate. 02 50 PM ET 07782026\n\"MARKETS | BEAR CASE: SUSTAINED BREAK BELOW 21EMA 4-7/23 CLOSE BELOW 8/21/50                                                             x            ©\n* WHAT HA          * NEWS: FOMC WED...32% CHANCE OF RATE HIKE THURS: PCE                                                                                                 »\nASTOCKS            * TODAY'S KEYS: SPX vs 74201 /65E1 QQ         04/1000 R2K vs 21E4/SOD VIX vs 204\n*DAYCT:D-2/ =>       Be: ad 21e:\n*SPXO/N 7385-74301 07412 030 _J383-74131 L/H 7383-7452                                                                 .\nT12 +0      * SPX ATR: 1.02% SPX +0.21% 60/40       GRO +0.20% TURBO                                                1,\nMAG? +C      * SECTORS: 1 BPS S/W XRT ITB XLF.C.Y.P.V     J BY% SOXX DRAM OILS G/S/X                                  if  Y     w\nRGE 0         * Gro HOLDINGS: spym,upro JE Lv/LLYX                                                                wo                     Iti t.\nRAIL00-5          * GRO RVAB/REBAR: 0.78(-0.28%/-3.55%) SELL HPE                                                             tif                       1        +\n* TURBO HOLDINGS: SPYM,UPRO,EFHA,DDOG                                                       }     BTL Ea\nSPX +0         * TURBO RVAB/REBAR: 0.87 {-0.74%/-2.69%) SELLIBIT TRIM ETHA                                    t     Nib bh\naaa -0.          * BOTTOM LINE: A-I STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK        aac                Lr                                   “\nDJIA +194 * WED KEYS: SPX vs SOD/6SE QQQvs 700/100D R2K vs 21E/50D VIX vs 20                                          £8\n4|| >>> SBPSO0 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\nRk +0f        \"7467 (43 21LEMA) € 7/234 7/211 174 6/291 6/23% 6/121 6/54                                                                  2\nB        * 7470/7459(41 SOD/1OWK) € 7/234 7/211 7/174 6/291\nGRO ~+0           37429 TODAY: A-| STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK\nsEs===s=s           “$7412 FRI : SUMMER CHOP: A-I STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-0                                                                                    40\n* EMAIL: do       * 7013/7035 (14 200D/40WK) € 4/37 3/194\n* TWITTER (                                                                                               PS\n* PHONE: {£                                                                                          .\nTE BE —————————————————          ”          »          10          Ed\n[§ ELL Pore                Gowen, Bion BM 1 ——d—— won |                      wo\n(OP —         Lat         Repos 21.21 7127 <<< 2Vitems © wire #117 mio                                       ory + Dm EA\nere Ep\n<Q  [LEI   LEE ICR BEE ol Ps BA   ”    RE\n",
+      "ocr_text_snippet": ">>> TH >> TALE OF THE TAPE - TUESDAY, JULY 28, 2026 << Gms. DEO >>> DAI * MARKET STATE: SVX 6, TH | ¢STOINDEXES4T 14 RGE2T 24 NASI USD TNX/TVX vsSd . 46.04 >>> TUESD * SENTIMENT: VIX :£.21( 2.5%: F...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,EFHA,DDOG } BTL EA SPX +0 * TURBO RVAB/REBAR: 0.87 {-0.74%/-2.69%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL IBIT TRIM ETHA T NIB BH AAA -0. * BOTTOM LINE: A-I STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK AAC LR \" DJIA +194 * WED KEYS: SPX VS SOD/6SE QQQVS 700/100D R2K VS 21E/50D VIX VS 20 £8 4 >>> SBPSO0 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) RK +0F \"7467 (43 21LEMA) € 7/234 7/211 174 6/291 6/23% 6/121 6/54 2 B * 7470/7459(41 SOD/1OWK) € 7/234 7/211 7/174 6/291 GRO ~+0 37429 TODAY: A- STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK SES===S=S \"$7412 FRI : SUMMER CHOP: A-I STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-0 40 EMAIL: DO * 7013/7035 (14 200D/40WK) € 4/37 3/194 TWITTER ( PS PHONE: {£ . TE BE ----------------- \" » 10 ED ELL PORE GOWEN, BION BM 1 --D-- WON WO (OP - LAT REPOS 21.21 7127 <<< 2VITEMS © WIRE #117 MIO ORY + DM EA ERE EP Q [LEI LEE ICR BEE OL PS BA \" RE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d57f0082df0052ff",
+      "prefilter_score": 16.66,
+      "prefilter_stats": {
+        "brightRatio": 0.7595138888888889,
+        "darkRatio": 0.06013888888888889,
+        "edgeRatio": 0.18708925164299342,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1443,
+        "horizontalEdgeRatio": 0.10197159211363155,
+        "meanLuma": 223.8501388888889,
+        "stdDev": 53.95170976059815,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3852,
+        "verticalEdgeRatio": 0.2722069111723553
+      },
+      "score": 89.78,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 90.78
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "ETHA",
+        "HPE",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 680,
+      "timestamp_hms": "00:11:20"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 185,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260728_20260728_t-iyoit4htq_daafac37_whiteboard\\ocr\\ocr_000186.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260728",
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> TH\n2> TALE OF THE TAPE - TUESDAY, JULY 28, 2026 <<  Gms. DG 0\n>>> DAIl        * MARKET STATE:\n*VILX6,TH | *STOINDEXES4T 14 RGB2T 20 NASD USD  TNX/TVX  vsSd                                                                    *46.04\n>>> TUESD     * SENTIMENT: VIX 55 21( 2.5%: FBG       anizes183 22.255 EET NAAM 84.02 1162                                en\n===     3 BULL CASE: INITIATE RALLY & TREND 21EMA                                                   Lanta 0258 PMET 07072028\n* MARKETS , | -)BEAR CASE: SUSTAINED BREAK BELOW 21EMA 4-7/23 CLOSE BELOW 8/21/50                                                           pe.         ©\n* WHAT HA          * NEWS: FOMC WED...32% CHANCE OF RATE HIKE THURS: PCE                                                                                                 »\nASTOCKS            * TODAY'S KEYS: SPX vs 7420/6564 QQQ vs 7004/1000 R2K vs 21E4./50D MIX vs 204\n*DAYCT:D-2/ =>       Be: ad 216-44\n*SPXO/N 7385-74307 07412 030 7383-74131 L/H 7383-7452                                                                 N\nT12 +0      *SPKATR: 102% SPX +0.21% 60/40       GRO +0.20% TURBO                                                1\nMAG? +C      * SECTORS: 1 BPS S/W XRT IT8 XLF.C.Y.P.V     J BY% SOXX DRAM OILS G/S/X                                  if  4     w\nRGE 0         * 680 HOLDINGS: spym,upRO JE LLv/LLYx                                                                   Ee)                      Its 1.\nRAIL00 -5          * GRO RVAB/REBAR: 0.75(-0.28%/-3.55%) SELL HPE                                                               tif                        1         jh\n* TURBO HOLDINGS: SPYM,UPRO,ETHA,DDOG                                                         }      BLN    Hr\nSPX +0         * TURBO RVAB/REBAR: 0.8: {-0.74%/-2.69%) SELLIBIT TRIM ETHA                                    t     Il ws     .\naa 0.        *BOTTOM LINE: AI STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMCON DECK [=             Lr                            “\nDJIA +1%n|  * WEDKEYS:SPXvsSOD/6SE QQQvs 700/100D R2K vs 21E/50D VIX vs 20                                          o8\n4        >>> S&P500 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\nR2K ~~ +OF        * 7467 (V3 21EMA) € 7/234 7/211 7/174 6/2941 6/233 6/121 6/5¢                                                                  2\n        * 7470/7459( 1 SOD/10WK) € 7/234 7/211 7/174 6/291\nGRO ~+0           -»7429 TODAY: A-| STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK\ns=======s           “$7412 FRI : SUMMER CHOP: A- STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-0                                                                                    “0\n* EMAIL: do       * 7013/7035 (14 200D/40WK) € 4/81 3/194\n* TWITTER {                                                                                               9\n* PHONE: {£                                                                                          .\nLL —————————————————— > |B          ”          Ed          .          ES\n[§ SITE: | verse vw 8 3                Wout setirgsDifoun   [ER — Ne                      wt\nOF Drpiay Serungs.      Screens.         Lists,     | Repons       21.21 7/27 <<< 2Vitems © Lutes aT buLE 2200                                       Oo Pay     CE ® A\nPp   ;= a     nN. mE TBR og \"9s    -      EE\n",
+      "ocr_text_snippet": ">>> TH 2> TALE OF THE TAPE - TUESDAY, JULY 28, 2026 << Gms. DG 0 >>> DAIl * MARKET STATE: *VILX6,TH | *STOINDEXES4T 14 RGB2T 20 NASD USD TNX/TVX vsSd *46.04 >>> TUESD * SENTIMENT: VIX 55 21( 2.5%: ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,ETHA,DDOG } BLN HR SPX +0 * TURBO RVAB/REBAR: 0.8: {-0.74%/-2.69%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL IBIT TRIM ETHA T IL WS . AA 0. *BOTTOM LINE: AI STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMCON DECK [= LR \" DJIA +1%N * WEDKEYS:SPXVSSOD/6SE QQQVS 700/100D R2K VS 21E/50D VIX VS 20 O8 4 >>> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) R2K ~~ +OF * 7467 (V3 21EMA) € 7/234 7/211 7/174 6/2941 6/233 6/121 6/5¢ 2 7470/7459( 1 SOD/10WK) € 7/234 7/211 7/174 6/291 GRO ~+0 -»7429 TODAY: A- STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK S=======S \"$7412 FRI : SUMMER CHOP: A- STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-0 \"0 EMAIL: DO * 7013/7035 (14 200D/40WK) € 4/81 3/194 TWITTER { 9 PHONE: {£ . LL ------------------ > B \" ED . ES SITE: VERSE VW 8 3 WOUT SETIRGSDIFOUN [ER - NE WT OF DRPIAY SERUNGS. SCREENS. LISTS, REPONS 21.21 7/27 <<< 2VITEMS © LUTES AT BULE 2200 OO PAY CE ® A PP ;= A NN. ME TBR OG \"9S - EE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d57f0080df0053ff",
+      "prefilter_score": 16.64,
+      "prefilter_stats": {
+        "brightRatio": 0.7602777777777778,
+        "darkRatio": 0.06027777777777778,
+        "edgeRatio": 0.18659458695498551,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1426,
+        "horizontalEdgeRatio": 0.10077026358561232,
+        "meanLuma": 223.96569444444444,
+        "stdDev": 53.78610612433059,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3855,
+        "verticalEdgeRatio": 0.2724189103243587
+      },
+      "score": 89.03,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 89.98
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "ETHA",
+        "HPE",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 740,
+      "timestamp_hms": "00:12:20"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 205,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260728_20260728_t-iyoit4htq_daafac37_whiteboard\\ocr\\ocr_000206.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260728",
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> TH\n>> TALE OF THE TAPE — TUESDAY, JULY 28, 2026 <<  frm» DOGS 6G\n>>> DAI         * MARKET STATE:\nSALXIGTH | *STOINDEXESAT 1 RGE2M  2U NASW USD TNX/TYX  vsSd                                             *46.04\n>>> TUESD     * SENTIMENT: VIX £8 21( 2.5: FRG       annze8-183 22.2-5.5 PERT NAAM 84.02 1162                                en\n===     3 BULL CASE: INITIATE RALLY & TREND 21EMA                                                   Lanta 02.58 PMET 022028\n* MARKETS , | -)BEAR CASE: SUSTAINED BREAK BELOW 21EMA 4-7/23 CLOSE BELOW 8/21/50                                                           a         ©\n* WHAT HA          * NEWS: FOMC WED...32% CHANCE OF RATE HIKE THURS: PCE                                                                                                 »\nASTOCKS             * TODAY'S KEYS: SPX vs 74201 /65E1 QQQ vs 7004/1000 R2K vs 21E4./50D MVIX vs 204\n*DAYCT:D-2/ =>       Be: ad 21e: 4d\n*SPXO/N 7385-74307 07412 030 7383-74131 L/H 7383-7452                                                                 .\nT12 +0        *SPXATR: 102% - SPX+0.21% 60/40         GRO +0.20% TURBO                                                             1\nMAG? +C      * SECTORS: 1 BPS S/W XRT ITB XLF.C.Y.P.V     J BY% SOXX DRAM OILS G/S/X                                  if  4     w\nRGE 0        * Gro HOLDINGS: spym,upRo JE Lv/LLYX                                                          wo                   its |\nRAIL00 5         * GRO RVAB/REBAR: 0.73(-0.34%/-3.55%) SELL HPE                                                         tif                     1        fa\n* TURBO HOLDINGS: SPYM,UPRO,ETHA,DDOG                                                         }       th, Bo    HW\nSPX #0         * TURBO RVAB/REBAR: 0.83 {-0.74%/-2.69%) SELLIBIT TRIM ETHA                                    t      beg Bi\naaa 0.        * BOTTOM LINE: A-I STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK [=             Lt                            “\nDJIA +1%m|  * WED KEYS: SPXvsSOD/6SE QQQus 700/100D R2K vs 21€/50D VIX vs 20                                          £5\n4)l >>> SBPSO0 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\nR2K +0) .       * 7467 (U3 21EMA) € 7/234 7/211 7/174 6/2941 6/233 6/121 6/5¢                                                                  2\n* 7470/7459(3 1 SOD/10WK) € 7/234 7/211 7174 6/291\nGRO ~+0           -»7429 TODAY: A-| STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK\ns=======s           “$7412 FRI : SUMMER CHOP: A- STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-0                                                                                    40\n* EMAIL: do       * 7013/7035 (14 200D/40WK) € 4/81 3/194\n* TWITTER (                                                                                               PS\n* PHONE: {£                                                                                          .\n.     A —    >     a          ”          Ed          A          El\n[§ ELL Poreray=                Gowns row @ MB —4—— wn |                      ul\nOO Origiay Sarge      Screens.         Lists         Reports       21.21 7127 <<< 2Vitems © wives BERL ons                                       OF - COB BQ\nPp   ’oa     nN. merge ® oa\" gn,     a       RE\n",
+      "ocr_text_snippet": ">>> TH >> TALE OF THE TAPE — TUESDAY, JULY 28, 2026 << frm» DOGS 6G >>> DAI * MARKET STATE: SALXIGTH | *STOINDEXESAT 1 RGE2M 2U NASW USD TNX/TYX vsSd *46.04 >>> TUESD * SENTIMENT: VIX £8 21( 2.5: F...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,ETHA,DDOG } TH, BO HW SPX #0 * TURBO RVAB/REBAR: 0.83 {-0.74%/-2.69%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL IBIT TRIM ETHA T BEG BI AAA 0. * BOTTOM LINE: A-I STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK [= LT \" DJIA +1%M * WED KEYS: SPXVSSOD/6SE QQQUS 700/100D R2K VS 21€/50D VIX VS 20 £5 4)L >>> SBPSO0 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) R2K +0) . * 7467 (U3 21EMA) € 7/234 7/211 7/174 6/2941 6/233 6/121 6/5¢ 2 7470/7459(3 1 SOD/10WK) € 7/234 7/211 7174 6/291 GRO ~+0 -»7429 TODAY: A- STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK S=======S \"$7412 FRI : SUMMER CHOP: A- STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-0 40 EMAIL: DO * 7013/7035 (14 200D/40WK) € 4/81 3/194 TWITTER ( PS PHONE: {£ . A - > A \" ED A EL ELL PORERAY= GOWNS ROW @ MB -4-- WN UL OO ORIGIAY SARGE SCREENS. LISTS REPORTS 21.21 7127 <<< 2VITEMS © WIVES BERL ONS OF - COB BQ PP 'OA NN. MERGE ® OA\" GN, A RE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d57f0082df0043ff",
+      "prefilter_score": 16.57,
+      "prefilter_stats": {
+        "brightRatio": 0.7605555555555555,
+        "darkRatio": 0.05965277777777778,
+        "edgeRatio": 0.18694791887499115,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1428,
+        "horizontalEdgeRatio": 0.10091159635361459,
+        "meanLuma": 223.9634027777778,
+        "stdDev": 53.778166853173424,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3863,
+        "verticalEdgeRatio": 0.27298424139636773
+      },
+      "score": 88.49,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 89.44
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "ETHA",
+        "HPE",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 820,
+      "timestamp_hms": "00:13:40"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 200,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260728_20260728_t-iyoit4htq_daafac37_whiteboard\\ocr\\ocr_000201.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260728",
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> TH\n2> TALE OF THE TAPE - TUESDAY, JULY 28, 2026 <<  Gms» DBs 0\n>>> DAI         * MARKET STATE:\n*ALXIGTH | *STOINDEXESAT 1 RGB2T 2 NASW USD TNX/TYX  vsSd                                                                   246.04\n>>> TUESD           * SENTIMENT: VIX 15.21( 2.5%.) FBG               ani 28-183 22.2 5.9 FEET Manim 34.02 11.62                                                                      Rae\n===     3 BULL CASE: INITIATE RALLY & TREND 21EMA                                                   Lanta 02.58 PMET 702078\n* MARKETS , | -)BEAR CASE: SUSTAINED BREAK BELOW 21EMA 47/23 CLOSE BELOW 8/21/50                                                             x            w\n* WHAT HA          * NEWS: FOMC WED...32% CHANCE OF RATE HIKE THURS: $CE                                                                                                 »\nASTOCKS            * TODAY'S KEYS: SPX vs 74201 /65E4 QQQ vs 7004/1000 R2K vs 21E4./50D MIX vs 204\n*DAYCT:D-2/ =>       Be: ad 21e:-4d\n*SPXO/N 7385-74301 07412 030 7383-74131 L/H 7383-7452                                                                 .\nT-12 +0      *SPXATR: 1.02% SPX +D.21% 60/40       GRO +0.20% TURBO                                                [1\nMAG? +C      * SECTORS: 1 BPS S/W XRT ITB XUF.C.Y.P.V     J BY% SOXX DRAM OILS G/S/X                                  if  4     “\nRGE 0          * GRO HOLDINGS: spymupro JE LLv/LLYX                                                                   Pe)                      Its 1.\nRAIL00-5         * GRO RVAB/REBAR: 0.73(-0.34%/-3.55%) SELL HPE                                                          tif                      1        1\n* TURBO HOLDINGS: SPYM,UPRO,ETHA,DDOG                                                         }4     He, be    Hr\nSPX +0         * TURBO RVAB/REBAR: 0.51 {-0.74%/-2.69%) SELLIBIT TRIM ETHA                                   t     Jl a Sg\naa 0.        * BOTTOM LINE: AI STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMCON DECK [=             Lr                            “\nDJIA +1%n|  * WED KEYS: SPXvsS0D/6SE QQQus 700/100D R2K vs 21E/50D VIX vs 20                                          CI\n4        >>> S&P500 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\nR2K  +0F        * 7467 (U3 21EMA) € 7/234 7/211 7/174 6/291 6/23% 6/121 6/5¢                                                                  a2\nE        * 7470/7459(3 1 SOD/10WK) € 7/234 7/211 7/174 6/291\nGRO ~+0           -»7429 TODAY: A-| STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK\ns=======s           “$7412 FRI : SUMMER CHOP: A- STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-D                                                                                    40\n* EMAIL: do       * 7013/7035 (14 200D/40WK) € 4/81 3/194\n* TWITTER (                                                                                               PS\n* PHONE: {£                                                                                          .\n.     A —    >     a          ”          Ed          A          El\n[§ ELL Pore                Gowns Drow @ MB —H—— an |                      ul\nCO Dri Serge      Screens.         Lists         Reports       21.21 7127 <<< items © Lunia BTID 50                                       OF - COB BA\nP  oa   N.C me r@ Ce ® oa\" gD,   -    EE\n",
+      "ocr_text_snippet": ">>> TH 2> TALE OF THE TAPE - TUESDAY, JULY 28, 2026 << Gms» DBs 0 >>> DAI * MARKET STATE: *ALXIGTH | *STOINDEXESAT 1 RGB2T 2 NASW USD TNX/TYX vsSd 246.04 >>> TUESD * SENTIMENT: VIX 15.21( 2.5%.) FB...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,ETHA,DDOG }4 HE, BE HR SPX +0 * TURBO RVAB/REBAR: 0.51 {-0.74%/-2.69%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL IBIT TRIM ETHA T JL A SG AA 0. * BOTTOM LINE: AI STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMCON DECK [= LR \" DJIA +1%N * WED KEYS: SPXVSS0D/6SE QQQUS 700/100D R2K VS 21E/50D VIX VS 20 CI 4 >>> S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) R2K +0F * 7467 (U3 21EMA) € 7/234 7/211 7/174 6/291 6/23% 6/121 6/5¢ A2 E * 7470/7459(3 1 SOD/10WK) € 7/234 7/211 7/174 6/291 GRO ~+0 -»7429 TODAY: A- STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK S=======S \"$7412 FRI : SUMMER CHOP: A- STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-D 40 EMAIL: DO * 7013/7035 (14 200D/40WK) € 4/81 3/194 TWITTER ( PS PHONE: {£ . A - > A \" ED A EL ELL PORE GOWNS DROW @ MB -H-- AN UL CO DRI SERGE SCREENS. LISTS REPORTS 21.21 7127 <<< ITEMS © LUNIA BTID 50 OF - COB BA P OA N.C ME R@ CE ® OA\" GD, - EE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d57f0082df0043ff",
+      "prefilter_score": 16.57,
+      "prefilter_stats": {
+        "brightRatio": 0.7600694444444445,
+        "darkRatio": 0.059444444444444446,
+        "edgeRatio": 0.18790191505900644,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1416,
+        "horizontalEdgeRatio": 0.10006359974560101,
+        "meanLuma": 223.99388888888888,
+        "stdDev": 53.79811119556037,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3902,
+        "verticalEdgeRatio": 0.27574023037241185
+      },
+      "score": 88.26,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 89.26
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "ETHA",
+        "HPE",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 800,
+      "timestamp_hms": "00:13:20"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 195,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260728_20260728_t-iyoit4htq_daafac37_whiteboard\\ocr\\ocr_000196.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260728",
+      "ocr_confidence": 59,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> TH\n>> TALE OF THE TAPE - TUESDAY, JULY 28, 2026 <<  Gms. DEE O\n>>> DAI         * MARKET STATE:\nSVLXIGTH | *STOINDEXES4T 1 RG82TM  2U NASH USD TNX/TYX  vsSd                                             *46.04\n»5> TUESD     * SENTIMENT: VIX 18.21 2.551 F&G       anil 208-283 22.2 5.5 TET NAAM 84.02 11.62                                RNA\n===     3 BULL CASE: INITIATE RALLY & TREND 21EMA                                                  Lanta 02.58 PMET 002028\n\"MARKETS | BEAR CASE: SUSTAINED BREAK BELOW 21EMA 47/23 CLOSE BELOW 8/21/50                                                           pe         ©\n* WHAT HA          * NEWS: FOMC WED...32% CHANCE OF RATE HIKE THURS: PCE                                                                                                 »\nAdsToCKS            * TODAY'S KEYS: SPX vs 7420M/65E QQQ vs 7004/1000 R2K vs 21E4 /S0D VIX vs 204\n*DAYCT:D-2/ =>       Be: 4d 21e: 4d\n*SPXO/N 7385-74301 07412 030 7383-74131 L/H7383.7452                                                                 .\nT12 +0      *SPXATR: 1.02% - SPX +0.21% 60/40       GRO +0.20% TURBO                                                1,\nMAG? +C      * SECTORS: 1 BPS S/W XRT ITB XUF.C.Y.PV     J BY% SOXX DRAM OILS G/S/X                                  {  4     w\nRGE 0         * Gro HOLDINGS: spym,upro JE LALLY                                                                   wo                      Its 1.\nRAIL00 -5         * GRO RVAB/REBAR: 0.73(-0.34p4/-3.55%) SELL HPE                                                          tif                      1   oll bb\n* TURBO HOLDINGS: SPYM,UPRO,ETHA,DDOG                                                       }+       be, th    Hr\nSPX +0         * TURBO RVAB/REBAR: 0.53 {-0.74%/-2.69%) SELLIBIT TRIM ETHA                                    t      Pll we Bi\naaa 0.        * BOTTOM LINE: A-I STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMCON DECK [=~           Lr                           “\nDJA +149]  * WED KEYS: SPXvsSOD/6SE QQQvs 700/100D R2Kvs 21€/50D VIX vs 20                                          on\nI        >>> S&PS00 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\nRk +0f        \"7467 (43 21EMA) € 7/234 7/211 17% 6/291 6/23% 6/121 6/54                                                                  °\n* 7470/7459(3 1 SOD/10WK) € 7/238 7/211 7/174 6/297\nGRO ~+0           -»7429 TODAY: A-| STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK\ns=ss=ss=s           “$7412 FRI : SUMMER CHOP: A-I STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-0                                                                                    40\n+ EMAIL: do       * 7013/7035 (14 200D/40WK) € 4/81 3/194\n* TWITTER {                                                                                               2\n* PHONE: {¢                                                                                          .\n| ——————————————————————————————————— |B          ”          »          10          Ed\n[§ SITE:     Page ots sarees 3p [1                TW Ouiay Setings [Foun   AB 4 wo»      don                      wl\nA.      screens         Lists         Reports       21.29 27 <<< 20items © Lares BATON pn                                       OF - DB EA\nwr    .\nPp   oo     5. mere ® a6\" go,    -      EE\n",
+      "ocr_text_snippet": ">>> TH >> TALE OF THE TAPE - TUESDAY, JULY 28, 2026 << Gms. DEE O >>> DAI * MARKET STATE: SVLXIGTH | *STOINDEXES4T 1 RG82TM 2U NASH USD TNX/TYX vsSd *46.04 »5> TUESD * SENTIMENT: VIX 18.21 2.551 F&...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 59,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,ETHA,DDOG }+ BE, TH HR SPX +0 * TURBO RVAB/REBAR: 0.53 {-0.74%/-2.69%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL IBIT TRIM ETHA T PLL WE BI AAA 0. * BOTTOM LINE: A-I STOCKS HIT AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMCON DECK [=~ LR \" DJA +149] * WED KEYS: SPXVSSOD/6SE QQQVS 700/100D R2KVS 21€/50D VIX VS 20 ON I >>> S&PS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) RK +0F \"7467 (43 21EMA) € 7/234 7/211 17% 6/291 6/23% 6/121 6/54 ° 7470/7459(3 1 SOD/10WK) € 7/238 7/211 7/174 6/297 GRO ~+0 -»7429 TODAY: A- STOCKS HIT HARD AGAIN, NON-TECH INDEXES CLOSE GREEN; FOMC ON DECK S=SS=SS=S \"$7412 FRI : SUMMER CHOP: A-I STOCKS WEAK, YIELDS + USD + OIL UP, & SPX/QQQ < 50-0 40 EMAIL: DO * 7013/7035 (14 200D/40WK) € 4/81 3/194 TWITTER { 2 PHONE: {¢ . B \" » 10 ED SITE: PAGE OTS SAREES 3P [1 TW OUIAY SETINGS [FOUN AB 4 WO» DON WL A. SCREENS LISTS REPORTS 21.29 27 <<< 20ITEMS © LARES BATON PN OF - DB EA WR . PP OO 5. MERE ® A6\" GO, - EE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 59,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d57f0080df0053ff",
+      "prefilter_score": 16.59,
+      "prefilter_stats": {
+        "brightRatio": 0.76,
+        "darkRatio": 0.05965277777777778,
+        "edgeRatio": 0.18818458059501095,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1431,
+        "horizontalEdgeRatio": 0.10112359550561797,
+        "meanLuma": 223.979375,
+        "stdDev": 53.788269886538956,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3895,
+        "verticalEdgeRatio": 0.27524556568440395
+      },
+      "score": 86.59,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.95,
+        "pair_bonus": 0,
+        "per_row_issues": -10,
+        "per_row_metrics": 8,
+        "text_density": 91.64
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "ETHA",
+        "HPE",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 780,
+      "timestamp_hms": "00:13:00"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260728_20260728_t-iyoit4htq_daafac37_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 3.15,
+      "prefilter_stats": {
+        "brightRatio": 0.4309722222222222,
+        "darkRatio": 0.3470138888888889,
+        "edgeRatio": 0.23874637834781995,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2358,
+        "horizontalEdgeRatio": 0.1666313334746661,
+        "meanLuma": 157.88986111111112,
+        "stdDev": 94.32170618852292,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4399,
+        "verticalEdgeRatio": 0.31086142322097376
+      },
+      "score": -16.48,
+      "score_breakdown": {
+        "chart_likeness": -4.47955959368036,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 75,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260728_20260728_t-iyoit4htq_daafac37_whiteboard\\ocr\\ocr_000076.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 300.72,
+      "observed_date": null,
+      "ocr_confidence": 47,
+      "ocr_profile": "threshold",
+      "ocr_text": "22> DA reese       mmm          — a ssmase0at s2zen $7,428.78\n\n* T,X, 16, Ti * S&P 500 Index\n\n>>>TUESD A 7» » +   EAC J                                          Stochasocs 14     0\n\n* MARKET Soni   Ngee   =\n\nTwHATHAT————————————————————\nA-1 STOCKS                                   »    | ™\njis 0                          i     A I J\ndo                Wh Pl |                  ps            :\nSPX +0  [                {   J [     I              I I\n\nfe MN WT\nDIA +1            tt    I                        ]   ly,  ao\nR2K +0      |  !      J     wes00m                       Ly [n   hn\nao       A ME                           |           :\n\nur              imma  beled filiddy\nmms      -          —\n",
+      "ocr_text_snippet": "22> DA reese mmm — a ssmase0at s2zen $7,428.78 * T,X, 16, Ti * S&P 500 Index >>>TUESD A 7» » + EAC J Stochasocs 14 0 * MARKET Soni Ngee = TwHATHAT———————————————————— A-1 STOCKS » | ™ jis 0 i A I J...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 47,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 47,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c07b5713b507754c",
+      "prefilter_score": 23.33,
+      "prefilter_stats": {
+        "brightRatio": 0.7271527777777778,
+        "darkRatio": 0.09541666666666666,
+        "edgeRatio": 0.18132994134690128,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2175,
+        "horizontalEdgeRatio": 0.15369938520245918,
+        "meanLuma": 216.61493055555556,
+        "stdDev": 64.94123079857712,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2957,
+        "verticalEdgeRatio": 0.20896049749134338
+      },
+      "score": -20.26,
+      "score_breakdown": {
+        "chart_likeness": -0.6119136114240824,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.35,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "unknown_text",
+      "tickers": [
+        "PL"
+      ],
+      "timestamp": 300,
+      "timestamp_hms": "00:05:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 70,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260728_20260728_t-iyoit4htq_daafac37_whiteboard\\ocr\\ocr_000071.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 280.64,
+      "observed_date": null,
+      "ocr_confidence": 41,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> DAIl MarkeTsURee  o (EH)      X  Osy  Weey Monthly GoM      - Qa s DGS ©\n\n* AT, X, 1G, hl * S&P 500 Index                                                                              SPX (#31560) 4D21% Vol 5574580841 626% $7,428.78\n\n>>>TUESD A ~ » --   Eo #                                          Stochasoes (14     0\n\n* MARKET Stn?   Nr NT   »\n\nwat\n-                                      ’      iy                        in\nwc :                          ny      of he! [                      -\nRAI100 gy   ui                         1, |    le    f                  1        py                   0\nPx +0  i                 d                          1 f\n\naa <.     fp            [    Wl      i              fh, 1\nDIA +1       :     fi    I    | h   ly,  ao\ncob hd =\n\nEL                                        RE\n\nel           ih he    es  |  i    \\ |  |  A      -\n\n«twitter i i                                       Stone\n\n* PHONE: {                                   |    a em rom Bl bm 202 u       I          al                      I\n\nPp   screws    Lots    Reports   21 FU2T <<< items © wre BATE To                 ory - ORBEA\n\n®                  | IF             =\n\noo        -              —\n",
+      "ocr_text_snippet": ">>> DAIl MarkeTsURee o (EH) X Osy Weey Monthly GoM - Qa s DGS © * AT, X, 1G, hl * S&P 500 Index SPX (#31560) 4D21% Vol 5574580841 626% $7,428.78 >>>TUESD A ~ » -- Eo # Stochasoes (14 0 * MARKET Stn...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 41,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 41,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c07b4f1ab5177548",
+      "prefilter_score": 23.15,
+      "prefilter_stats": {
+        "brightRatio": 0.7341666666666666,
+        "darkRatio": 0.0954861111111111,
+        "edgeRatio": 0.1791746166348668,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2146,
+        "horizontalEdgeRatio": 0.1516500600664264,
+        "meanLuma": 217.15520833333332,
+        "stdDev": 64.84660859662884,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2925,
+        "verticalEdgeRatio": 0.2066991732033072
+      },
+      "score": -20.58,
+      "score_breakdown": {
+        "chart_likeness": -0.629463477755289,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.05,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 280,
+      "timestamp_hms": "00:04:40"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 105,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260728_20260728_t-iyoit4htq_daafac37_whiteboard\\ocr\\ocr_000106.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 421.68,
+      "observed_date": null,
+      "ocr_confidence": 38,
+      "ocr_profile": "threshold",
+      "ocr_text": ">> DAIl MarceTsUres  o [)        X Daly Wey Mommy SMe < mes (3 Gms: DOGS 6\n$:\n\nxe, gap MidCap 400                                                                         wo Soest\n>>> TUESD             @ Toe2121T0PLY         -                                                                                             Vol 1066 899478 +3 63%\nPavypemn                                                                                                                                              Cot Ut. 08 10 PM ET 178020\nMARKETS. , Wo mom                                               F—    w\n+ WHAT En Naty\n\nA4{STOCKS                           —         -                             .\n\nEE       =\n\n112 +g   RE                                 Td  J lh\n\nnt             Sag Mh\nRG8 0                                                       It    - _L-    I     —\n\nRAI100 -5                                    [ls    lil Wi     Ton       amo\nSPX +0            sn                       fy il  th,  t  Tf\n\naaa 0.                                   |     A   il     >                     sn\nDIA +1 we    Rak N           M   1    |\n\n.      ~.                 pd        Ee\nFil, if        MN       p=                             -\nR2K +0 4 1     I           ~~\n[Ld i            | —       7\n\nGRO ~+0 7     wen             i        i dl                                                        awa\n«EMAIL: pa                                                                                                                                30\n* TWITTER {                                                          srk\n* PHONE: (¢               1                          ses\nv Site: ©    2 Tw    a ow     =»     \"ml    w    =    “    ww     Pi\n\nCl Dip sorungs.   Screens.    Lists,    Reports   21.21 7427 <<< 2Vitems © Lute TENE 2s                  Oo Par  [=3-IN BN\n=z     [Or       m. mer@C® argon,      we         a\n",
+      "ocr_text_snippet": ">> DAIl MarceTsUres o [) X Daly Wey Mommy SMe < mes (3 Gms: DOGS 6 $: xe, gap MidCap 400 wo Soest >>> TUESD @ Toe2121T0PLY - Vol 1066 899478 +3 63% Pavypemn Cot Ut. 08 10 PM ET 178020 MARKETS. , Wo...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 38,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 38,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "806e5f135f595b12",
+      "prefilter_score": 21.43,
+      "prefilter_stats": {
+        "brightRatio": 0.7797222222222222,
+        "darkRatio": 0.09055555555555556,
+        "edgeRatio": 0.15610204225849764,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1671,
+        "horizontalEdgeRatio": 0.11808352766588934,
+        "meanLuma": 219.67458333333335,
+        "stdDev": 63.898508447152565,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2747,
+        "verticalEdgeRatio": 0.19412055685110594
+      },
+      "score": -22.62,
+      "score_breakdown": {
+        "chart_likeness": -2.5246227607020106,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.9,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 420,
+      "timestamp_hms": "00:07:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 270,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260728_20260728_t-iyoit4htq_daafac37_whiteboard\\ocr\\ocr_000271.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1081.48,
+      "observed_date": null,
+      "ocr_confidence": 32,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE]     Ee\n>>> DAI METER GB      «on my wo mv «wm YS ——\n*yT,x,16,T§ P Celestica Inc. sa                                                           351.34         $350.20\ncoca 1 0 150                               Comb 207094 ance 330828    stan sam     615 t319001000%\n355 TUESD sumer 1002121100030    .                 vasa Samm Boyan Tim     Nooo    froptniighiioy\n22> TUESD                                             a mtn Ta dope 0501 PM ET orden Lanna 005 ET OTS\n.\nMARKETS...                Asn Bom o® ha Ne NR,    ©\nTWHATHA Gx 98 xB Sow tere wT     —-                                                o\nA{STOCKS 2006 088 or    RS Rating   ©   —~——\n2020  osa ear  7\" 3 Mont RS Rating 39                         a0\nET etd |\nfim ma mmm\nT1240 dm 6 a or ee                ww       It                  *\nTn me en fe\nMAG? +0 Zs won wn a. seeieetesst                     {|\nSome vo ree ar\nRG8 0 nv Wh lal Eseeenme mw              wi it        I   |                 -\nRAIL00-5                                #     AY        (PLA S——\nSPX +0                             CAH  J    EC STN\n|    j       4    1    Fi (TTR 1:    0\naa <.     {                     t     WEN        TRE\nom sad, 1                Tm      Ee  Ei aAR 7\nTT gf rt | SN     _          ny             ns    v      al     {\nd     So       EN»                                         N=      Rs\nRIK +0  i  [E    ih til]       -      /                 el BO\na i AT 1    va:    E-                           a   =\nGRO +0      | Ea         1.\nRE 5 i          Bl AP Tr oil               4\n========<{J]T1[]     To CoB Cows Tr TVR Tl      2 Hl Tl Tell wd ne ai ll\n.    ;      =    *    5    co    =    Gl    +    5    -    &    =    5    .    &\nEMAIL: do       Feb        wr          PY         May         om         J          ™\nLTWITTER(       A      «      a       EE      -       a mos\n-               wn               -               as                 \\\nPHONE: (E ,            -            Louse            wo            ps             -             seme            wr               ss sas xo\nCe                       oo           =                ro             tor Tx Margi\nCf Dp Sarno   Screens    Lats    Reports   21.21 127 <<< 20items © bse Sb ATPU LE 2300                 ory - DR EQ\nee A i\n<z     \"oo       m. mC EPRCR Gogo,       »         wo -\n",
+      "ocr_text_snippet": ">>> THE] Ee >>> DAI METER GB «on my wo mv «wm YS —— *yT,x,16,T§ P Celestica Inc. sa 351.34 $350.20 coca 1 0 150 Comb 207094 ance 330828 stan sam 615 t319001000% 355 TUESD sumer 1002121100030 . vasa...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 32,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 32,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "806d5f33d6965a1a",
+      "prefilter_score": 22.15,
+      "prefilter_stats": {
+        "brightRatio": 0.7305555555555555,
+        "darkRatio": 0.08965277777777778,
+        "edgeRatio": 0.18231927072291712,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1972,
+        "horizontalEdgeRatio": 0.13935410925022967,
+        "meanLuma": 216.0845138888889,
+        "stdDev": 62.58968240463991,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3188,
+        "verticalEdgeRatio": 0.22528443219560454
+      },
+      "score": -22.87,
+      "score_breakdown": {
+        "chart_likeness": -2.4671300348709,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.6,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "CF"
+      ],
+      "timestamp": 1080,
+      "timestamp_hms": "00:18:00"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 3,
+      "end_ts": 820,
+      "end_hms": "00:13:40",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 170,
+      "peak_score": 89.78,
+      "start_hms": "00:11:20",
+      "start_ts": 680
+    }
+  ]
+}

@@ -1,0 +1,956 @@
+# cmd: node tools/scanVideoWithOcr.js --video C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260621_bV7cCj9Mpwg.mp4 --date 20260621 --output-root C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260915\ocr-20260915-backfill --run-tag ocr-20260915-backfill --ffmpeg-bin c:/Users/admin/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-9.0.1-full_build/bin/ffmpeg.exe
+[scan:whiteboard] ffprobe found 131 keyframe(s) for nearest-keyframe lookup
+[scan:whiteboard] preflighting final whiteboard output extraction
+[scan:whiteboard] extracting sample frames from C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260621_bV7cCj9Mpwg.mp4
+[scan:whiteboard] extracted 189 frame(s) at 0.25 fps with width 640; starting prefilter
+[scan:whiteboard] prefilter 1/189 frames after 00:00:00; best prefilter -28.02 at 00:00:00
+[scan:whiteboard] prefilter 10/189 frames after 00:00:00; best prefilter -27.03 at 00:00:04
+[scan:whiteboard] prefilter 20/189 frames after 00:00:01; best prefilter 7.89 at 00:01:16
+[scan:whiteboard] prefilter 30/189 frames after 00:00:01; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter 40/189 frames after 00:00:02; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter 50/189 frames after 00:00:02; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter 60/189 frames after 00:00:02; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter 70/189 frames after 00:00:03; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter 80/189 frames after 00:00:03; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter 90/189 frames after 00:00:03; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter 100/189 frames after 00:00:04; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter 110/189 frames after 00:00:04; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter 120/189 frames after 00:00:05; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter 130/189 frames after 00:00:05; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter 140/189 frames after 00:00:05; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter 150/189 frames after 00:00:06; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter 160/189 frames after 00:00:06; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter 170/189 frames after 00:00:07; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter 180/189 frames after 00:00:07; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter 189/189 frames after 00:00:07; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] prefilter kept 60/189 frame(s) for OCR; best prefilter 8.11 at 00:01:32
+[scan:whiteboard] extracting OCR candidates from source video at width 1280
+[scan:whiteboard] OCR 1/60 frames (1.7%) after 00:00:02; best score -16.68 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 10/60 frames (16.7%) after 00:01:15; best score -16.68 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 20/60 frames (33.3%) after 00:02:02; best score -16.68 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 30/60 frames (50.0%) after 00:03:54; best score -16.68 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 40/60 frames (66.7%) after 00:06:55; best score -16.68 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 50/60 frames (83.3%) after 00:09:34; best score -16.68 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 60/60 frames (100.0%) after 00:10:18; best score -16.68 at 00:00:00 (ocr 0.0)
+{
+  "date_key": "20260621",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260621_bV7cCj9Mpwg.mp4",
+  "captured_count": 0,
+  "captures": [],
+  "frame_count": 189,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 131,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "prefilter_best_score": 8.11,
+  "sample_frame_width": 640,
+  "status": "no_match",
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 171,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260621_20260621_bv7ccj9mpwg_6a93bf47_whiteboard\\ocr\\ocr_000172.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_BOTTOM_LINE",
+      "MISSING_METRIC_LINE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 684,
+    "observed_date": null,
+    "ocr_confidence": 76,
+    "ocr_profile": "threshold",
+    "ocr_text": "GRO RULES\nLg\n* S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS       i  ~  a\nFLOOR - EFF 9/15/24                                                                          —  fq\n>21E  70%*  *60% IF O-TRIMMING DUE TO BEING EXTENDED                          —\n>50D     60%     <= USE LEVGD FOR EVERYTHING OVER 30% CORE                |    Fx\n>100D     50%     <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?)                          ‘      i     0\n>150D     40%     <= SPLG/RSP CORE ONLY, NO LEVGD\n52000 30%                                                                                                              oon vanoensoR\n<200D (<2ATR}) ~~ 20%\n<200D (>2ATR) -20%\n",
+    "ocr_text_snippet": "GRO RULES Lg * S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS i ~ a FLOOR - EFF 9/15/24 — fq >21E 70%* *60% IF O-TRIMMING DUE TO BEING EXTENDED — >50D 60% <= USE L...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": "RULES LG S&P500 INDEX ETFS - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS I ~ A FLOOR - EFF 9/15/24 - FQ 21E 70%* *60% IF O-",
+        "metric_1": "9",
+        "metric_2": "15",
+        "metric_scalar": null,
+        "action_text": "TRIM MING DUE TO BEING EXTENDED - 50D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE FX 100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?) ' I 0 150D 40% <= SPLG/RSP CORE ONLY, NO LEVGD 52000 30% OON VANOENSOR 200D (<2ATR}) ~~ 20% 200D (>2ATR) -20%",
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_BOTTOM_LINE"
+        ],
+        "ocr_confidence": 76,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE"
+        ],
+        "ocr_confidence": 76,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "9797789768d09668",
+    "prefilter_score": -1.69,
+    "prefilter_stats": {
+      "brightRatio": 0.404375,
+      "darkRatio": 0.3993055555555556,
+      "edgeRatio": 0.13405413045014486,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1309,
+      "horizontalEdgeRatio": 0.09250229665748004,
+      "meanLuma": 150.93965277777778,
+      "stdDev": 91.60904118948748,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 2485,
+      "verticalEdgeRatio": 0.1756059642428097
+    },
+    "score": -5.31,
+    "score_breakdown": {
+      "chart_likeness": -4.105524263879602,
+      "keyword_guard": -18,
+      "ocr_confidence_bonus": 3.8,
+      "pair_bonus": 0,
+      "per_row_issues": -6,
+      "per_row_metrics": 11,
+      "text_density": 8
+    },
+    "screen_layout": "tale_of_the_tape",
+    "tickers": [],
+    "timestamp": 684,
+    "timestamp_hms": "00:11:24"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 171,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260621_20260621_bv7ccj9mpwg_6a93bf47_whiteboard\\ocr\\ocr_000172.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 76,
+      "ocr_profile": "threshold",
+      "ocr_text": "GRO RULES\nLg\n* S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS       i  ~  a\nFLOOR - EFF 9/15/24                                                                          —  fq\n>21E  70%*  *60% IF O-TRIMMING DUE TO BEING EXTENDED                          —\n>50D     60%     <= USE LEVGD FOR EVERYTHING OVER 30% CORE                |    Fx\n>100D     50%     <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?)                          ‘      i     0\n>150D     40%     <= SPLG/RSP CORE ONLY, NO LEVGD\n52000 30%                                                                                                              oon vanoensoR\n<200D (<2ATR}) ~~ 20%\n<200D (>2ATR) -20%\n",
+      "ocr_text_snippet": "GRO RULES Lg * S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS i ~ a FLOOR - EFF 9/15/24 — fq >21E 70%* *60% IF O-TRIMMING DUE TO BEING EXTENDED — >50D 60% <= USE L...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RULES LG S&P500 INDEX ETFS - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS I ~ A FLOOR - EFF 9/15/24 - FQ 21E 70%* *60% IF O-",
+          "metric_1": "9",
+          "metric_2": "15",
+          "metric_scalar": null,
+          "action_text": "TRIM MING DUE TO BEING EXTENDED - 50D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE FX 100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?) ' I 0 150D 40% <= SPLG/RSP CORE ONLY, NO LEVGD 52000 30% OON VANOENSOR 200D (<2ATR}) ~~ 20% 200D (>2ATR) -20%",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 76,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 76,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9797789768d09668",
+      "prefilter_score": -1.69,
+      "prefilter_stats": {
+        "brightRatio": 0.404375,
+        "darkRatio": 0.3993055555555556,
+        "edgeRatio": 0.13405413045014486,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1309,
+        "horizontalEdgeRatio": 0.09250229665748004,
+        "meanLuma": 150.93965277777778,
+        "stdDev": 91.60904118948748,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2485,
+        "verticalEdgeRatio": 0.1756059642428097
+      },
+      "score": -5.31,
+      "score_breakdown": {
+        "chart_likeness": -4.105524263879602,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.8,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 11,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 684,
+      "timestamp_hms": "00:11:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 177,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260621_20260621_bv7ccj9mpwg_6a93bf47_whiteboard\\ocr\\ocr_000178.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 71,
+      "ocr_profile": "threshold",
+      "ocr_text": "GRO RULES\ni =\n* S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS      W  “    je)\nFLOOR - EFF 9/15/24                                                                                                   soot ad\n>21E  70%*  *60% IF O-TRIMMING DUE TO BEING EXTENDED                       —\n>50D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE               '\n>100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?)                         Co    C\n>1500 40% <= SPLG/RSP CORE ONLY, NO LEVGD\n000 30%                                                                                                      oot tanneoro\n<200D (<2ATR) 20%\n<200D (>2ATR}  -20%\n",
+      "ocr_text_snippet": "GRO RULES i = * S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS W “ je) FLOOR - EFF 9/15/24 soot ad >21E 70%* *60% IF O-TRIMMING DUE TO BEING EXTENDED — >50D 60% <=...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RULES I = S&P500 INDEX ETFS - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS W \" JE) FLOOR - EFF 9/15/24 SOOT AD 21E 70%* *60% IF O-",
+          "metric_1": "9",
+          "metric_2": "15",
+          "metric_scalar": null,
+          "action_text": "TRIM MING DUE TO BEING EXTENDED - 50D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE ' 100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?) CO C 1500 40% <= SPLG/RSP CORE ONLY, NO LEVGD 000 30% OOT TANNEORO 200D (<2ATR) 20% 200D (>2ATR} -20%",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 71,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 71,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9797789768d09668",
+      "prefilter_score": -1.64,
+      "prefilter_stats": {
+        "brightRatio": 0.4040972222222222,
+        "darkRatio": 0.4004861111111111,
+        "edgeRatio": 0.13507879301816125,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1331,
+        "horizontalEdgeRatio": 0.09405695710550491,
+        "meanLuma": 150.8504861111111,
+        "stdDev": 91.6368652680382,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2492,
+        "verticalEdgeRatio": 0.1761006289308176
+      },
+      "score": -5.39,
+      "score_breakdown": {
+        "chart_likeness": -3.9387875124786937,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.55,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 11,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 708,
+      "timestamp_hms": "00:11:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 162,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260621_20260621_bv7ccj9mpwg_6a93bf47_whiteboard\\ocr\\ocr_000163.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 70,
+      "ocr_profile": "threshold",
+      "ocr_text": "GRO RULES\nij =\n* S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS      W  “     le)\nFLOOR - EFF 9/15/24                                                                               on x 8\n>21E 70%\"  *60% IF O-TRIMMING DUE TO BEING EXTENDED                       ale\n>50D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE\n>100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?)                         Co    OC\n>150D 40% <= SPLG/RSP CORE ONLY, NO LEVGD\n>2000 30%                                                                                                              Je eere\n<200D {(<2ATR) 20%\n<200D (>2ATR)  -20%\nEIRENE] VERE ASSET MANAGEMENT\n",
+      "ocr_text_snippet": "GRO RULES ij = * S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS W “ le) FLOOR - EFF 9/15/24 on x 8 >21E 70%\" *60% IF O-TRIMMING DUE TO BEING EXTENDED ale >50D 60% ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RULES IJ = S&P500 INDEX ETFS - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS W \" LE) FLOOR - EFF 9/15/24 ON X 8 21E 70%\" *60% IF O-",
+          "metric_1": "9",
+          "metric_2": "15",
+          "metric_scalar": null,
+          "action_text": "TRIM MING DUE TO BEING EXTENDED ALE 50D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE 100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?) CO OC 150D 40% <= SPLG/RSP CORE ONLY, NO LEVGD 2000 30% JE EERE 200D {(<2ATR) 20% 200D (>2ATR) -20% EIRENE] VERE ASSET MANAGEMENT",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 70,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 70,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9797789768709668",
+      "prefilter_score": -1.59,
+      "prefilter_stats": {
+        "brightRatio": 0.40402777777777776,
+        "darkRatio": 0.40055555555555555,
+        "edgeRatio": 0.1348314606741573,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1330,
+        "horizontalEdgeRatio": 0.09398629072150379,
+        "meanLuma": 150.9284027777778,
+        "stdDev": 91.5908941310579,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2486,
+        "verticalEdgeRatio": 0.17567663062681083
+      },
+      "score": -5.42,
+      "score_breakdown": {
+        "chart_likeness": -3.915368566982215,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.5,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 11,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 648,
+      "timestamp_hms": "00:10:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 174,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260621_20260621_bv7ccj9mpwg_6a93bf47_whiteboard\\ocr\\ocr_000175.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 71,
+      "ocr_profile": "threshold",
+      "ocr_text": "GRO RULES\nno\n* S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS  -   a\nFLOOR - EFF 9/15/24                                                                                                   Pe. PE\n>21E  70%*  *60% IF O-TRIMMING DUE TO BEING EXTENDED\n>50D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE               |    Fx\n>100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?)                          Co    OC\n>150D 40% <= SPLG/RSP CORE ONLY, NO LEVGD\n2000 30%                                                                                                              oon tanoenaoro\n<200D (<2ATR) 20%\n<200D (>2ATR)  -20%\n",
+      "ocr_text_snippet": "GRO RULES no * S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS - a FLOOR - EFF 9/15/24 Pe. PE >21E 70%* *60% IF O-TRIMMING DUE TO BEING EXTENDED >50D 60% <= USE LEV...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RULES NO S&P500 INDEX ETFS - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS - A FLOOR - EFF 9/15/24 PE. PE 21E 70%* *60% IF O-",
+          "metric_1": "9",
+          "metric_2": "15",
+          "metric_scalar": null,
+          "action_text": "TRIM MING DUE TO BEING EXTENDED 50D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE FX 100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?) CO OC 150D 40% <= SPLG/RSP CORE ONLY, NO LEVGD 2000 30% OON TANOENAORO 200D (<2ATR) 20% 200D (>2ATR) -20%",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 71,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 71,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9797789768d09668",
+      "prefilter_score": -1.77,
+      "prefilter_stats": {
+        "brightRatio": 0.40423611111111113,
+        "darkRatio": 0.4009027777777778,
+        "edgeRatio": 0.13416013002614657,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1306,
+        "horizontalEdgeRatio": 0.09229029750547664,
+        "meanLuma": 150.8076388888889,
+        "stdDev": 91.64783865720052,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2491,
+        "verticalEdgeRatio": 0.1760299625468165
+      },
+      "score": -5.62,
+      "score_breakdown": {
+        "chart_likeness": -4.167089691953771,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.55,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 11,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 696,
+      "timestamp_hms": "00:11:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 168,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260621_20260621_bv7ccj9mpwg_6a93bf47_whiteboard\\ocr\\ocr_000169.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 78,
+      "ocr_profile": "threshold",
+      "ocr_text": "GRO RULES\nI.\n* SRPS00 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS       h   -      a\n>21E     70%*     *60% IF O-TRIMMING DUE TO BEING EXTENDED\n>S0D     60%     <= USE LEVGD FOR EVERYTHING OVER 30% CORE\n>100D     50%     <= UNDER 50D, ELIMINATE LEVG ASAP {10% RSP?)                                »    O\n>150D     40%     <= SPLG/RSP CORE ONLY, NO LEVGD\n00 as                                                                                   5. A\n<200D (<2ATR) 20%\n<200D (>2ATR)  -20%\n",
+      "ocr_text_snippet": "GRO RULES I. * SRPS00 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS h - a >21E 70%* *60% IF O-TRIMMING DUE TO BEING EXTENDED >S0D 60% <= USE LEVGD FOR EVERYTHING OVER 30...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RULES I. SRPS00 INDEX ETFS - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS H - A 21E 70%* *60% IF O-",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "TRIM MING DUE TO BEING EXTENDED S0D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE 100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP {10% RSP?) » O 150D 40% <= SPLG/RSP CORE ONLY, NO LEVGD 00 AS 5. A 200D (<2ATR) 20% 200D (>2ATR) -20%",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 78,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 78,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9797789768509669",
+      "prefilter_score": -1.61,
+      "prefilter_stats": {
+        "brightRatio": 0.40430555555555553,
+        "darkRatio": 0.4000694444444444,
+        "edgeRatio": 0.1348314606741573,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1328,
+        "horizontalEdgeRatio": 0.09384495795350152,
+        "meanLuma": 150.9596527777778,
+        "stdDev": 91.59120968491517,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2488,
+        "verticalEdgeRatio": 0.1758179633948131
+      },
+      "score": -8.04,
+      "score_breakdown": {
+        "chart_likeness": -3.9446509380677934,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.9,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 8
+      },
+      "screen_layout": "unknown_text",
+      "tickers": [],
+      "timestamp": 672,
+      "timestamp_hms": "00:11:12"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 171,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260621_20260621_bv7ccj9mpwg_6a93bf47_whiteboard\\ocr\\ocr_000172.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 684,
+      "observed_date": null,
+      "ocr_confidence": 76,
+      "ocr_profile": "threshold",
+      "ocr_text": "GRO RULES\nLg\n* S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS       i  ~  a\nFLOOR - EFF 9/15/24                                                                          —  fq\n>21E  70%*  *60% IF O-TRIMMING DUE TO BEING EXTENDED                          —\n>50D     60%     <= USE LEVGD FOR EVERYTHING OVER 30% CORE                |    Fx\n>100D     50%     <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?)                          ‘      i     0\n>150D     40%     <= SPLG/RSP CORE ONLY, NO LEVGD\n52000 30%                                                                                                              oon vanoensoR\n<200D (<2ATR}) ~~ 20%\n<200D (>2ATR) -20%\n",
+      "ocr_text_snippet": "GRO RULES Lg * S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS i ~ a FLOOR - EFF 9/15/24 — fq >21E 70%* *60% IF O-TRIMMING DUE TO BEING EXTENDED — >50D 60% <= USE L...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RULES LG S&P500 INDEX ETFS - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS I ~ A FLOOR - EFF 9/15/24 - FQ 21E 70%* *60% IF O-",
+          "metric_1": "9",
+          "metric_2": "15",
+          "metric_scalar": null,
+          "action_text": "TRIM MING DUE TO BEING EXTENDED - 50D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE FX 100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?) ' I 0 150D 40% <= SPLG/RSP CORE ONLY, NO LEVGD 52000 30% OON VANOENSOR 200D (<2ATR}) ~~ 20% 200D (>2ATR) -20%",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 76,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 76,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9797789768d09668",
+      "prefilter_score": -1.69,
+      "prefilter_stats": {
+        "brightRatio": 0.404375,
+        "darkRatio": 0.3993055555555556,
+        "edgeRatio": 0.13405413045014486,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1309,
+        "horizontalEdgeRatio": 0.09250229665748004,
+        "meanLuma": 150.93965277777778,
+        "stdDev": 91.60904118948748,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2485,
+        "verticalEdgeRatio": 0.1756059642428097
+      },
+      "score": -5.31,
+      "score_breakdown": {
+        "chart_likeness": -4.105524263879602,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.8,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 11,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 684,
+      "timestamp_hms": "00:11:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 177,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260621_20260621_bv7ccj9mpwg_6a93bf47_whiteboard\\ocr\\ocr_000178.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 708,
+      "observed_date": null,
+      "ocr_confidence": 71,
+      "ocr_profile": "threshold",
+      "ocr_text": "GRO RULES\ni =\n* S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS      W  “    je)\nFLOOR - EFF 9/15/24                                                                                                   soot ad\n>21E  70%*  *60% IF O-TRIMMING DUE TO BEING EXTENDED                       —\n>50D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE               '\n>100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?)                         Co    C\n>1500 40% <= SPLG/RSP CORE ONLY, NO LEVGD\n000 30%                                                                                                      oot tanneoro\n<200D (<2ATR) 20%\n<200D (>2ATR}  -20%\n",
+      "ocr_text_snippet": "GRO RULES i = * S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS W “ je) FLOOR - EFF 9/15/24 soot ad >21E 70%* *60% IF O-TRIMMING DUE TO BEING EXTENDED — >50D 60% <=...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RULES I = S&P500 INDEX ETFS - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS W \" JE) FLOOR - EFF 9/15/24 SOOT AD 21E 70%* *60% IF O-",
+          "metric_1": "9",
+          "metric_2": "15",
+          "metric_scalar": null,
+          "action_text": "TRIM MING DUE TO BEING EXTENDED - 50D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE ' 100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?) CO C 1500 40% <= SPLG/RSP CORE ONLY, NO LEVGD 000 30% OOT TANNEORO 200D (<2ATR) 20% 200D (>2ATR} -20%",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 71,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 71,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9797789768d09668",
+      "prefilter_score": -1.64,
+      "prefilter_stats": {
+        "brightRatio": 0.4040972222222222,
+        "darkRatio": 0.4004861111111111,
+        "edgeRatio": 0.13507879301816125,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1331,
+        "horizontalEdgeRatio": 0.09405695710550491,
+        "meanLuma": 150.8504861111111,
+        "stdDev": 91.6368652680382,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2492,
+        "verticalEdgeRatio": 0.1761006289308176
+      },
+      "score": -5.39,
+      "score_breakdown": {
+        "chart_likeness": -3.9387875124786937,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.55,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 11,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 708,
+      "timestamp_hms": "00:11:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 162,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260621_20260621_bv7ccj9mpwg_6a93bf47_whiteboard\\ocr\\ocr_000163.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 648,
+      "observed_date": null,
+      "ocr_confidence": 70,
+      "ocr_profile": "threshold",
+      "ocr_text": "GRO RULES\nij =\n* S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS      W  “     le)\nFLOOR - EFF 9/15/24                                                                               on x 8\n>21E 70%\"  *60% IF O-TRIMMING DUE TO BEING EXTENDED                       ale\n>50D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE\n>100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?)                         Co    OC\n>150D 40% <= SPLG/RSP CORE ONLY, NO LEVGD\n>2000 30%                                                                                                              Je eere\n<200D {(<2ATR) 20%\n<200D (>2ATR)  -20%\nEIRENE] VERE ASSET MANAGEMENT\n",
+      "ocr_text_snippet": "GRO RULES ij = * S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS W “ le) FLOOR - EFF 9/15/24 on x 8 >21E 70%\" *60% IF O-TRIMMING DUE TO BEING EXTENDED ale >50D 60% ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RULES IJ = S&P500 INDEX ETFS - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS W \" LE) FLOOR - EFF 9/15/24 ON X 8 21E 70%\" *60% IF O-",
+          "metric_1": "9",
+          "metric_2": "15",
+          "metric_scalar": null,
+          "action_text": "TRIM MING DUE TO BEING EXTENDED ALE 50D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE 100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?) CO OC 150D 40% <= SPLG/RSP CORE ONLY, NO LEVGD 2000 30% JE EERE 200D {(<2ATR) 20% 200D (>2ATR) -20% EIRENE] VERE ASSET MANAGEMENT",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 70,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 70,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9797789768709668",
+      "prefilter_score": -1.59,
+      "prefilter_stats": {
+        "brightRatio": 0.40402777777777776,
+        "darkRatio": 0.40055555555555555,
+        "edgeRatio": 0.1348314606741573,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1330,
+        "horizontalEdgeRatio": 0.09398629072150379,
+        "meanLuma": 150.9284027777778,
+        "stdDev": 91.5908941310579,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2486,
+        "verticalEdgeRatio": 0.17567663062681083
+      },
+      "score": -5.42,
+      "score_breakdown": {
+        "chart_likeness": -3.915368566982215,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.5,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 11,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 648,
+      "timestamp_hms": "00:10:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 174,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260621_20260621_bv7ccj9mpwg_6a93bf47_whiteboard\\ocr\\ocr_000175.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 696,
+      "observed_date": null,
+      "ocr_confidence": 71,
+      "ocr_profile": "threshold",
+      "ocr_text": "GRO RULES\nno\n* S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS  -   a\nFLOOR - EFF 9/15/24                                                                                                   Pe. PE\n>21E  70%*  *60% IF O-TRIMMING DUE TO BEING EXTENDED\n>50D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE               |    Fx\n>100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?)                          Co    OC\n>150D 40% <= SPLG/RSP CORE ONLY, NO LEVGD\n2000 30%                                                                                                              oon tanoenaoro\n<200D (<2ATR) 20%\n<200D (>2ATR)  -20%\n",
+      "ocr_text_snippet": "GRO RULES no * S&P500 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS - a FLOOR - EFF 9/15/24 Pe. PE >21E 70%* *60% IF O-TRIMMING DUE TO BEING EXTENDED >50D 60% <= USE LEV...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RULES NO S&P500 INDEX ETFS - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS - A FLOOR - EFF 9/15/24 PE. PE 21E 70%* *60% IF O-",
+          "metric_1": "9",
+          "metric_2": "15",
+          "metric_scalar": null,
+          "action_text": "TRIM MING DUE TO BEING EXTENDED 50D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE FX 100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP (10% RSP?) CO OC 150D 40% <= SPLG/RSP CORE ONLY, NO LEVGD 2000 30% OON TANOENAORO 200D (<2ATR) 20% 200D (>2ATR) -20%",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 71,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 71,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9797789768d09668",
+      "prefilter_score": -1.77,
+      "prefilter_stats": {
+        "brightRatio": 0.40423611111111113,
+        "darkRatio": 0.4009027777777778,
+        "edgeRatio": 0.13416013002614657,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1306,
+        "horizontalEdgeRatio": 0.09229029750547664,
+        "meanLuma": 150.8076388888889,
+        "stdDev": 91.64783865720052,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2491,
+        "verticalEdgeRatio": 0.1760299625468165
+      },
+      "score": -5.62,
+      "score_breakdown": {
+        "chart_likeness": -4.167089691953771,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.55,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 11,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 696,
+      "timestamp_hms": "00:11:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 168,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260621_20260621_bv7ccj9mpwg_6a93bf47_whiteboard\\ocr\\ocr_000169.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 672,
+      "observed_date": null,
+      "ocr_confidence": 78,
+      "ocr_profile": "threshold",
+      "ocr_text": "GRO RULES\nI.\n* SRPS00 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS       h   -      a\n>21E     70%*     *60% IF O-TRIMMING DUE TO BEING EXTENDED\n>S0D     60%     <= USE LEVGD FOR EVERYTHING OVER 30% CORE\n>100D     50%     <= UNDER 50D, ELIMINATE LEVG ASAP {10% RSP?)                                »    O\n>150D     40%     <= SPLG/RSP CORE ONLY, NO LEVGD\n00 as                                                                                   5. A\n<200D (<2ATR) 20%\n<200D (>2ATR)  -20%\n",
+      "ocr_text_snippet": "GRO RULES I. * SRPS00 INDEX ETFs - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS h - a >21E 70%* *60% IF O-TRIMMING DUE TO BEING EXTENDED >S0D 60% <= USE LEVGD FOR EVERYTHING OVER 30...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RULES I. SRPS00 INDEX ETFS - GRO EXPOSURE RULES FOR BULLISH KMA CONFIGURATION & PULLBACKS H - A 21E 70%* *60% IF O-",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "TRIM MING DUE TO BEING EXTENDED S0D 60% <= USE LEVGD FOR EVERYTHING OVER 30% CORE 100D 50% <= UNDER 50D, ELIMINATE LEVG ASAP {10% RSP?) » O 150D 40% <= SPLG/RSP CORE ONLY, NO LEVGD 00 AS 5. A 200D (<2ATR) 20% 200D (>2ATR) -20%",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 78,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 78,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9797789768509669",
+      "prefilter_score": -1.61,
+      "prefilter_stats": {
+        "brightRatio": 0.40430555555555553,
+        "darkRatio": 0.4000694444444444,
+        "edgeRatio": 0.1348314606741573,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1328,
+        "horizontalEdgeRatio": 0.09384495795350152,
+        "meanLuma": 150.9596527777778,
+        "stdDev": 91.59120968491517,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2488,
+        "verticalEdgeRatio": 0.1758179633948131
+      },
+      "score": -8.04,
+      "score_breakdown": {
+        "chart_likeness": -3.9446509380677934,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.9,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 8,
+        "text_density": 8
+      },
+      "screen_layout": "unknown_text",
+      "tickers": [],
+      "timestamp": 672,
+      "timestamp_hms": "00:11:12"
+    }
+  ],
+  "whiteboard_segments": [],
+  "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\logs\\20260621_20260621_bv7ccj9mpwg_6a93bf47_whiteboard.json"
+}

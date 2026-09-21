@@ -1,0 +1,495 @@
+{
+  "run_tag": "ocr-20260915-p4",
+  "generated_at": "2026-09-15T09:52:10.208Z",
+  "totals": {
+    "videos": 6,
+    "videos_with_captures": 6,
+    "captures": 18,
+    "layouts": {
+      "structured_whiteboard": 12,
+      "dmi": 6
+    },
+    "segment_layouts": {
+      "structured_whiteboard": 7,
+      "dmi": 3
+    },
+    "video_type_counts": {
+      "daily": 4,
+      "weekend_review": 2
+    },
+    "unique_tickers": 24,
+    "top_tickers": [
+      {
+        "ticker": "FCX",
+        "count": 12
+      },
+      {
+        "ticker": "HOOD",
+        "count": 12
+      },
+      {
+        "ticker": "HPE",
+        "count": 12
+      },
+      {
+        "ticker": "SPYM",
+        "count": 12
+      },
+      {
+        "ticker": "UPRO",
+        "count": 12
+      },
+      {
+        "ticker": "ETHA",
+        "count": 11
+      },
+      {
+        "ticker": "GDXU",
+        "count": 11
+      },
+      {
+        "ticker": "OKTA",
+        "count": 11
+      },
+      {
+        "ticker": "QLD",
+        "count": 11
+      },
+      {
+        "ticker": "TQQQ",
+        "count": 11
+      },
+      {
+        "ticker": "IBIT",
+        "count": 10
+      },
+      {
+        "ticker": "PLTR",
+        "count": 10
+      },
+      {
+        "ticker": "SPCX",
+        "count": 10
+      },
+      {
+        "ticker": "PURR",
+        "count": 9
+      },
+      {
+        "ticker": "CF",
+        "count": 9
+      },
+      {
+        "ticker": "MU",
+        "count": 8
+      },
+      {
+        "ticker": "RBRK",
+        "count": 8
+      },
+      {
+        "ticker": "BE",
+        "count": 6
+      },
+      {
+        "ticker": "TEM",
+        "count": 6
+      },
+      {
+        "ticker": "URA",
+        "count": 6
+      },
+      {
+        "ticker": "DELL",
+        "count": 3
+      },
+      {
+        "ticker": "GLD",
+        "count": 3
+      },
+      {
+        "ticker": "TAN",
+        "count": 3
+      },
+      {
+        "ticker": "ARKG",
+        "count": 3
+      }
+    ],
+    "untyped_videos": []
+  },
+  "per_video": [
+    {
+      "upload_date": "20260904",
+      "video_id": "bpeges-erl0",
+      "video_type": "daily",
+      "video_type_label": "Daily",
+      "captures": 3,
+      "max_score": 97.69,
+      "mean_score": 97.6,
+      "layouts": [
+        {
+          "layout": "structured_whiteboard",
+          "count": 3
+        }
+      ],
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "BE",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "QLD",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "segments": 3
+    },
+    {
+      "upload_date": "20260905",
+      "video_id": "trp_szvuqhu",
+      "video_type": "weekend_review",
+      "video_type_label": "Weekend",
+      "captures": 3,
+      "max_score": 45.58,
+      "mean_score": 44.74,
+      "layouts": [
+        {
+          "layout": "dmi",
+          "count": 3
+        }
+      ],
+      "has_dmi_intro": true,
+      "ticker_union": [
+        "DELL"
+      ],
+      "segments": 1
+    },
+    {
+      "upload_date": "20260908",
+      "video_id": "wuc1mdt6wx8",
+      "video_type": "daily",
+      "video_type_label": "Daily",
+      "captures": 3,
+      "max_score": 100.5,
+      "mean_score": 100.34,
+      "layouts": [
+        {
+          "layout": "structured_whiteboard",
+          "count": 3
+        }
+      ],
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "GLD",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "QLD",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TAN",
+        "TEM",
+        "TQQQ",
+        "UPRO",
+        "URA"
+      ],
+      "segments": 1
+    },
+    {
+      "upload_date": "20260910",
+      "video_id": "zbcqw4xdvxo",
+      "video_type": "daily",
+      "video_type_label": "Daily",
+      "captures": 3,
+      "max_score": 108.18,
+      "mean_score": 101.49,
+      "layouts": [
+        {
+          "layout": "structured_whiteboard",
+          "count": 3
+        }
+      ],
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "QLD",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO",
+        "URA"
+      ],
+      "segments": 2
+    },
+    {
+      "upload_date": "20260911",
+      "video_id": "0_yedfx1atu",
+      "video_type": "daily",
+      "video_type_label": "Daily",
+      "captures": 3,
+      "max_score": 104.42,
+      "mean_score": 104.42,
+      "layouts": [
+        {
+          "layout": "structured_whiteboard",
+          "count": 3
+        }
+      ],
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "OKTA",
+        "PLTR",
+        "QLD",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "segments": 1
+    },
+    {
+      "upload_date": "20260912",
+      "video_id": "7t50zib7-bk",
+      "video_type": "weekend_review",
+      "video_type_label": "Weekend",
+      "captures": 3,
+      "max_score": 49.58,
+      "mean_score": 49.26,
+      "layouts": [
+        {
+          "layout": "dmi",
+          "count": 3
+        }
+      ],
+      "has_dmi_intro": true,
+      "ticker_union": [
+        "BE"
+      ],
+      "segments": 2
+    }
+  ],
+  "per_day": [
+    {
+      "date": "20260904",
+      "captures": 3,
+      "videos": 1,
+      "max_score": 97.69,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "structured_whiteboard": 3
+      },
+      "ticker_union": [
+        "BE",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "QLD",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "segments": 3,
+      "video_type_counts": {
+        "daily": 1
+      },
+      "mean_score": 97.6,
+      "ticker_union_size": 16
+    },
+    {
+      "date": "20260905",
+      "captures": 3,
+      "videos": 1,
+      "max_score": 45.58,
+      "has_dmi_intro_count": 1,
+      "layouts": {
+        "dmi": 3
+      },
+      "ticker_union": [
+        "DELL"
+      ],
+      "segments": 1,
+      "video_type_counts": {
+        "weekend_review": 1
+      },
+      "mean_score": 44.74,
+      "ticker_union_size": 1
+    },
+    {
+      "date": "20260908",
+      "captures": 3,
+      "videos": 1,
+      "max_score": 100.5,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "structured_whiteboard": 3
+      },
+      "ticker_union": [
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "GLD",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "QLD",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TAN",
+        "TEM",
+        "TQQQ",
+        "UPRO",
+        "URA"
+      ],
+      "segments": 1,
+      "video_type_counts": {
+        "daily": 1
+      },
+      "mean_score": 100.34,
+      "ticker_union_size": 21
+    },
+    {
+      "date": "20260910",
+      "captures": 3,
+      "videos": 1,
+      "max_score": 108.18,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "structured_whiteboard": 3
+      },
+      "ticker_union": [
+        "ARKG",
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "MU",
+        "OKTA",
+        "PLTR",
+        "PURR",
+        "QLD",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TEM",
+        "TQQQ",
+        "UPRO",
+        "URA"
+      ],
+      "segments": 2,
+      "video_type_counts": {
+        "daily": 1
+      },
+      "mean_score": 101.49,
+      "ticker_union_size": 20
+    },
+    {
+      "date": "20260911",
+      "captures": 3,
+      "videos": 1,
+      "max_score": 104.42,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "structured_whiteboard": 3
+      },
+      "ticker_union": [
+        "CF",
+        "ETHA",
+        "FCX",
+        "GDXU",
+        "HOOD",
+        "HPE",
+        "IBIT",
+        "OKTA",
+        "PLTR",
+        "QLD",
+        "RBRK",
+        "SPCX",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "segments": 1,
+      "video_type_counts": {
+        "daily": 1
+      },
+      "mean_score": 104.42,
+      "ticker_union_size": 15
+    },
+    {
+      "date": "20260912",
+      "captures": 3,
+      "videos": 1,
+      "max_score": 49.58,
+      "has_dmi_intro_count": 1,
+      "layouts": {
+        "dmi": 3
+      },
+      "ticker_union": [
+        "BE"
+      ],
+      "segments": 2,
+      "video_type_counts": {
+        "weekend_review": 1
+      },
+      "mean_score": 49.26,
+      "ticker_union_size": 1
+    }
+  ]
+}

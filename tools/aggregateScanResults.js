@@ -7,10 +7,66 @@ const { hammingDistance } = require('../src/video/imageHash');
 const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
 
 const argv = process.argv.slice(2);
-const scanRoot = argv.length ? path.resolve(argv[0]) : path.resolve('data/video_scan_20260912');
-const logsDirectory = path.join(scanRoot, 'ocr_probe', 'logs');
-const screenshotsDirectory = path.join(scanRoot, 'screenshots');
-const outputBase = scanRoot;
+const userArg = argv.length ? path.resolve(argv[0]) : null;
+
+/**
+ * Resolve scan-date dir and optional run-tag filter from user input.
+ * - data/video_scan_20260917          → scanDateDir + all run-tags
+ * - data/video_scan_20260917/qmg-ocr  → scanDateDir + [qmg-ocr]
+ * - (no arg)                          → all scan-date dirs + all run-tags
+ */
+function resolveScanRoots(userPath) {
+  if (!userPath) {
+    // Scan everything: all scan-date dirs, then all subdirs that contain probe logs
+    const scanDates = fs.readdirSync('data')
+      .filter(n => /^video_scan_\d{8}$/.test(n))
+      .map(n => path.join('data', n));
+    return scanDates.flatMap(sd => {
+      if (!fs.existsSync(sd)) return [];
+      return fs.readdirSync(sd)
+        .filter(n => !n.startsWith('.') && fs.statSync(path.join(sd, n)).isDirectory())
+        .map(rt => ({ scanDateDir: sd, runTag: rt }));
+    });
+  }
+
+  const parent = path.dirname(userPath);
+  const base = path.basename(userPath);
+
+  if (/^video_scan_\d{8}$/.test(base)) {
+    // User passed a scan-date dir → scan all run-tag subdirs inside
+    if (!fs.existsSync(userPath)) return [];
+    return fs.readdirSync(userPath)
+      .filter(n => !n.startsWith('.') && fs.statSync(path.join(userPath, n)).isDirectory())
+      .map(rt => ({ scanDateDir: userPath, runTag: rt }));
+  } else {
+    // User passed a run-tag dir → use its parent as scan-date
+    const scanDateDir = parent;
+    return [{ scanDateDir, runTag: base }];
+  }
+}
+
+const scanEntries = resolveScanRoots(userArg);
+const outputBase = userArg
+  ? ( /^video_scan_\d{8}$/.test(path.basename(userArg)) ? userArg : path.dirname(userArg) )
+  : path.resolve('data');
+const screenshotsDirectory = userArg
+  ? path.join(userArg, 'screenshots')
+  : path.join(outputBase, 'screenshots');
+
+/**
+ * Build probe-log directories for one scan entry, checking all known patterns:
+ * - flat:        data/video_scan_<DATE>/<runTag>/ocr_probe/logs
+ * - single:      data/video_scan_<DATE>/<runTag>/ocr_probe/logs   (same as flat, for clarity)
+ * - doubled:     data/video_scan_<DATE>/<runTag>/<runTag>/ocr_probe/logs
+ * - legacy-root: data/video_scan_<DATE>/ocr_probe/logs
+ */
+function buildLogsDirectories(scanDateDir, runTag) {
+  return [
+    path.join(scanDateDir, runTag, 'ocr_probe', 'logs'),                 // flat / single
+    path.join(scanDateDir, runTag, runTag, 'ocr_probe', 'logs'),          // doubled (legacy from parallelOcrScan.py)
+    path.join(scanDateDir, 'ocr_probe', 'logs'),                          // legacy root-level (pre-Qullamaggie structure)
+  ];
+}
 
 const PHASH_COLLISION_THRESHOLD = 5;
 const OCR_TEXT_TABLE_MAX_CHARS = 80;
@@ -55,21 +111,41 @@ function validateProbeLog(log, logPath) {
     }
 }
 
-const logFiles = fs.readdirSync(logsDirectory)
-  .filter((name) => name.endsWith('.json'))
-  .sort();
+// Collect log files from all scan entries, checking both single and doubled patterns
+const logFiles = (() => {
+  const seen = new Set();
+  const files = [];
+  for (const { scanDateDir, runTag } of scanEntries) {
+    const dirs = buildLogsDirectories(scanDateDir, runTag);
+    for (const dir of dirs) {
+      if (!fs.existsSync(dir)) continue;
+      try {
+        for (const name of fs.readdirSync(dir)) {
+          if (!name.endsWith('.json')) continue;
+          if (!seen.has(name)) { seen.add(name); files.push(path.join(dir, name)); }
+        }
+      } catch (_) { /* skip dirs we can't read */ }
+    }
+  }
+  return files.sort();
+})();
 
-const screenshotFiles = fs.existsSync(screenshotsDirectory)
+const screenshotFiles = userArg && fs.existsSync(screenshotsDirectory)
   ? fs.readdirSync(screenshotsDirectory).filter((name) => name.endsWith('.png')).sort()
   : [];
 
 const videos = [];
 
-for (const fileName of logFiles) {
-  const logPath = path.join(logsDirectory, fileName);
-  const raw = fs.readFileSync(logPath, 'utf8');
-  const parsed = JSON.parse(raw);
-  validateProbeLog(parsed, logPath);
+for (const logPath of logFiles) {
+  let parsed;
+  try {
+    const raw = fs.readFileSync(logPath, 'utf8');
+    parsed = JSON.parse(raw);
+    validateProbeLog(parsed, logPath);
+  } catch (err) {
+    console.warn(`[aggregate-scan] skipping ${logPath}: ${err.message}`);
+    continue;
+  }
   const captures = Array.isArray(parsed.captures) ? parsed.captures : [];
 
   const frameCounts = {
@@ -82,7 +158,7 @@ for (const fileName of logFiles) {
   const uniqueLayouts = [...new Set(layouts)];
 
   videos.push({
-    probe_file: fileName,
+    probe_file: path.basename(logPath),
     log_path: parsed.log_path,
     video_path: parsed.video_path,
     date_key: parsed.date_key,
@@ -90,6 +166,7 @@ for (const fileName of logFiles) {
     channel: parsed.channel || '',
     basename: parsed.basename || '',
     prefilter_profile: parsed.prefilter_profile || PREFILTER_PROFILE_DEFAULT,
+    temporal_decay: Number(parsed.temporal_decay) || null,
     chart_stream_parser: Boolean(parsed.chart_stream_parser),
     status: parsed.status,
     frame_counts: frameCounts,
@@ -153,7 +230,7 @@ const overlayPhashCollisions = countPhashCollisions(captureOverlayPhashes);
 const aggregateJson = {
   generated_at: new Date().toISOString(),
   output_root: outputBase,
-  probe_directory: logsDirectory,
+  probe_directory: userArg || outputBase,
   screenshots_directory: screenshotsDirectory,
   totals: {
     videos_scanned: videos.length,

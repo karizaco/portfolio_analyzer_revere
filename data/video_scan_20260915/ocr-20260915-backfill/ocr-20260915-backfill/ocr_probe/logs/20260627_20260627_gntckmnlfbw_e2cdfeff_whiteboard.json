@@ -1,0 +1,941 @@
+{
+  "date_key": "20260627",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260627_gNtCkmnlFbw.mp4",
+  "captured_count": 0,
+  "captures": [],
+  "frame_count": 195,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 131,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "prefilter_best_score": -8.03,
+  "sample_frame_width": 640,
+  "status": "no_match",
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 0,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260627_20260627_gntckmnlfbw_e2cdfeff_whiteboard\\ocr\\ocr_000001.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE",
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 0,
+    "observed_date": null,
+    "ocr_confidence": 0,
+    "ocr_profile": "threshold",
+    "ocr_text": "",
+    "ocr_text_snippet": "",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "0000000000000000",
+    "prefilter_score": -16.73,
+    "prefilter_stats": {
+      "brightRatio": 0,
+      "darkRatio": 0.525625,
+      "edgeRatio": 0.07875768496926012,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 929,
+      "horizontalEdgeRatio": 0.06564907073705038,
+      "meanLuma": 84.77534722222222,
+      "stdDev": 46.20139206075569,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 1300,
+      "verticalEdgeRatio": 0.09186629920146987
+    },
+    "score": -12.11,
+    "score_breakdown": {
+      "chart_likeness": -0.1149956562759833,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 0,
+      "pair_bonus": 0,
+      "per_row_issues": -12,
+      "per_row_metrics": 0,
+      "text_density": 0
+    },
+    "screen_layout": "chart",
+    "tickers": [],
+    "timestamp": 0,
+    "timestamp_hms": "00:00:00"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260627_20260627_gntckmnlfbw_e2cdfeff_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": -16.73,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.525625,
+        "edgeRatio": 0.07875768496926012,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 929,
+        "horizontalEdgeRatio": 0.06564907073705038,
+        "meanLuma": 84.77534722222222,
+        "stdDev": 46.20139206075569,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1300,
+        "verticalEdgeRatio": 0.09186629920146987
+      },
+      "score": -12.11,
+      "score_breakdown": {
+        "chart_likeness": -0.1149956562759833,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 69,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260627_20260627_gntckmnlfbw_e2cdfeff_whiteboard\\ocr\\ocr_000070.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 75,
+      "ocr_profile": "threshold",
+      "ocr_text": "Pe\n« TRADE                                                                                     N ;     “CAPITAL\nTRADING JOURNAL - CODE \"WOR\"                                                                                                                                            USE GODE “RIZ” FOR 20% OFF\n",
+      "ocr_text_snippet": "Pe « TRADE N ; “CAPITAL TRADING JOURNAL - CODE \"WOR\" USE GODE “RIZ” FOR 20% OFF",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 75,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 75,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d1daca292a363cd9",
+      "prefilter_score": -19.26,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.8118055555555556,
+        "edgeRatio": 0.06985372058511766,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 894,
+        "horizontalEdgeRatio": 0.06317574729701081,
+        "meanLuma": 72.14909722222222,
+        "stdDev": 29.52604651483337,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1083,
+        "verticalEdgeRatio": 0.0765316938732245
+      },
+      "score": -16.49,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.75,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 5.76
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 276,
+      "timestamp_hms": "00:04:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 162,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260627_20260627_gntckmnlfbw_e2cdfeff_whiteboard\\ocr\\ocr_000163.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 72,
+      "ocr_profile": "threshold",
+      "ocr_text": "“~\n~ TRADE                                                                                     N B     CAPITAL\nTRADING JOURNAL - CODE “WOR®                                                                                                                                            USE GODE “RIZ\" FOR 20% OFF\n",
+      "ocr_text_snippet": "“~ ~ TRADE N B CAPITAL TRADING JOURNAL - CODE “WOR® USE GODE “RIZ\" FOR 20% OFF",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 72,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 72,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d1daca219bb23ec8",
+      "prefilter_score": -19.7,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.8271527777777777,
+        "edgeRatio": 0.06571973712105152,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 816,
+        "horizontalEdgeRatio": 0.05766376934492262,
+        "meanLuma": 70.46743055555555,
+        "stdDev": 29.705941611217558,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1044,
+        "verticalEdgeRatio": 0.07377570489718041
+      },
+      "score": -16.66,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.6,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 5.74
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 648,
+      "timestamp_hms": "00:10:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 72,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260627_20260627_gntckmnlfbw_e2cdfeff_whiteboard\\ocr\\ocr_000073.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 69,
+      "ocr_profile": "threshold",
+      "ocr_text": "Tw .\n~~ TRADE                                       |                               i                                                     N  >      \"CAPITAL\nTRADING JOURNAL - CODE \"WOR\"                                                                                                                                            USE CODE \"RIZ\" FOR 20% OFF\n",
+      "ocr_text_snippet": "Tw . ~~ TRADE | i N > \"CAPITAL TRADING JOURNAL - CODE \"WOR\" USE CODE \"RIZ\" FOR 20% OFF",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d19aca291e3676c9",
+      "prefilter_score": -17.41,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.4397916666666667,
+        "edgeRatio": 0.11797752808988764,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1643,
+        "horizontalEdgeRatio": 0.11610486891385768,
+        "meanLuma": 102.27659722222222,
+        "stdDev": 56.70431917782899,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1696,
+        "verticalEdgeRatio": 0.1198501872659176
+      },
+      "score": -16.71,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.45,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 5.84
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 288,
+      "timestamp_hms": "00:04:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 96,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260627_20260627_gntckmnlfbw_e2cdfeff_whiteboard\\ocr\\ocr_000097.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 70,
+      "ocr_profile": "threshold",
+      "ocr_text": "aN\n& TRADE                                                                                                                     N  ;     © CAPITAL\nTRADING JOURNAL - CODE \"WOR\"                                                                                                                                            USE GODE “RIZ” FOR 20% OFF\n",
+      "ocr_text_snippet": "aN & TRADE N ; © CAPITAL TRADING JOURNAL - CODE \"WOR\" USE GODE “RIZ” FOR 20% OFF",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 70,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 70,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "999aca681f3276cc",
+      "prefilter_score": -19.09,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.8104861111111111,
+        "edgeRatio": 0.07197371210515158,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 934,
+        "horizontalEdgeRatio": 0.06600240265705604,
+        "meanLuma": 73.01666666666667,
+        "stdDev": 28.90910323756171,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1103,
+        "verticalEdgeRatio": 0.07794502155324712
+      },
+      "score": -16.74,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.5,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 5.76
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 384,
+      "timestamp_hms": "00:06:24"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260627_20260627_gntckmnlfbw_e2cdfeff_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": -16.73,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.525625,
+        "edgeRatio": 0.07875768496926012,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 929,
+        "horizontalEdgeRatio": 0.06564907073705038,
+        "meanLuma": 84.77534722222222,
+        "stdDev": 46.20139206075569,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1300,
+        "verticalEdgeRatio": 0.09186629920146987
+      },
+      "score": -12.11,
+      "score_breakdown": {
+        "chart_likeness": -0.1149956562759833,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 69,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260627_20260627_gntckmnlfbw_e2cdfeff_whiteboard\\ocr\\ocr_000070.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 276,
+      "observed_date": null,
+      "ocr_confidence": 75,
+      "ocr_profile": "threshold",
+      "ocr_text": "Pe\n« TRADE                                                                                     N ;     “CAPITAL\nTRADING JOURNAL - CODE \"WOR\"                                                                                                                                            USE GODE “RIZ” FOR 20% OFF\n",
+      "ocr_text_snippet": "Pe « TRADE N ; “CAPITAL TRADING JOURNAL - CODE \"WOR\" USE GODE “RIZ” FOR 20% OFF",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 75,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 75,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d1daca292a363cd9",
+      "prefilter_score": -19.26,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.8118055555555556,
+        "edgeRatio": 0.06985372058511766,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 894,
+        "horizontalEdgeRatio": 0.06317574729701081,
+        "meanLuma": 72.14909722222222,
+        "stdDev": 29.52604651483337,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1083,
+        "verticalEdgeRatio": 0.0765316938732245
+      },
+      "score": -16.49,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.75,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 5.76
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 276,
+      "timestamp_hms": "00:04:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 162,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260627_20260627_gntckmnlfbw_e2cdfeff_whiteboard\\ocr\\ocr_000163.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 648,
+      "observed_date": null,
+      "ocr_confidence": 72,
+      "ocr_profile": "threshold",
+      "ocr_text": "“~\n~ TRADE                                                                                     N B     CAPITAL\nTRADING JOURNAL - CODE “WOR®                                                                                                                                            USE GODE “RIZ\" FOR 20% OFF\n",
+      "ocr_text_snippet": "“~ ~ TRADE N B CAPITAL TRADING JOURNAL - CODE “WOR® USE GODE “RIZ\" FOR 20% OFF",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 72,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 72,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d1daca219bb23ec8",
+      "prefilter_score": -19.7,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.8271527777777777,
+        "edgeRatio": 0.06571973712105152,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 816,
+        "horizontalEdgeRatio": 0.05766376934492262,
+        "meanLuma": 70.46743055555555,
+        "stdDev": 29.705941611217558,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1044,
+        "verticalEdgeRatio": 0.07377570489718041
+      },
+      "score": -16.66,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.6,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 5.74
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 648,
+      "timestamp_hms": "00:10:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 72,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260627_20260627_gntckmnlfbw_e2cdfeff_whiteboard\\ocr\\ocr_000073.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 288,
+      "observed_date": null,
+      "ocr_confidence": 69,
+      "ocr_profile": "threshold",
+      "ocr_text": "Tw .\n~~ TRADE                                       |                               i                                                     N  >      \"CAPITAL\nTRADING JOURNAL - CODE \"WOR\"                                                                                                                                            USE CODE \"RIZ\" FOR 20% OFF\n",
+      "ocr_text_snippet": "Tw . ~~ TRADE | i N > \"CAPITAL TRADING JOURNAL - CODE \"WOR\" USE CODE \"RIZ\" FOR 20% OFF",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d19aca291e3676c9",
+      "prefilter_score": -17.41,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.4397916666666667,
+        "edgeRatio": 0.11797752808988764,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1643,
+        "horizontalEdgeRatio": 0.11610486891385768,
+        "meanLuma": 102.27659722222222,
+        "stdDev": 56.70431917782899,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1696,
+        "verticalEdgeRatio": 0.1198501872659176
+      },
+      "score": -16.71,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.45,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 5.84
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 288,
+      "timestamp_hms": "00:04:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 96,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260627_20260627_gntckmnlfbw_e2cdfeff_whiteboard\\ocr\\ocr_000097.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 384,
+      "observed_date": null,
+      "ocr_confidence": 70,
+      "ocr_profile": "threshold",
+      "ocr_text": "aN\n& TRADE                                                                                                                     N  ;     © CAPITAL\nTRADING JOURNAL - CODE \"WOR\"                                                                                                                                            USE GODE “RIZ” FOR 20% OFF\n",
+      "ocr_text_snippet": "aN & TRADE N ; © CAPITAL TRADING JOURNAL - CODE \"WOR\" USE GODE “RIZ” FOR 20% OFF",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 70,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 70,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "999aca681f3276cc",
+      "prefilter_score": -19.09,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.8104861111111111,
+        "edgeRatio": 0.07197371210515158,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 934,
+        "horizontalEdgeRatio": 0.06600240265705604,
+        "meanLuma": 73.01666666666667,
+        "stdDev": 28.90910323756171,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1103,
+        "verticalEdgeRatio": 0.07794502155324712
+      },
+      "score": -16.74,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.5,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 5.76
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 384,
+      "timestamp_hms": "00:06:24"
+    }
+  ],
+  "whiteboard_segments": []
+}

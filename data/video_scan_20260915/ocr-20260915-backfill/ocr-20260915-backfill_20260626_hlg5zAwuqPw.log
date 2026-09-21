@@ -1,0 +1,1254 @@
+# cmd: node tools/scanVideoWithOcr.js --video C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260626_hlg5zAwuqPw.mp4 --date 20260626 --output-root C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260915\ocr-20260915-backfill --run-tag ocr-20260915-backfill --ffmpeg-bin c:/Users/admin/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-9.0.1-full_build/bin/ffmpeg.exe
+[scan:whiteboard] ffprobe found 232 keyframe(s) for nearest-keyframe lookup
+[scan:whiteboard] preflighting final whiteboard output extraction
+[scan:whiteboard] extracting sample frames from C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260626_hlg5zAwuqPw.mp4
+[scan:whiteboard] extracted 298 frame(s) at 0.25 fps with width 640; starting prefilter
+[scan:whiteboard] prefilter 1/298 frames after 00:00:00; best prefilter 4.38 at 00:00:00
+[scan:whiteboard] prefilter 10/298 frames after 00:00:00; best prefilter 4.38 at 00:00:00
+[scan:whiteboard] prefilter 20/298 frames after 00:00:00; best prefilter 4.38 at 00:00:00
+[scan:whiteboard] prefilter 30/298 frames after 00:00:00; best prefilter 4.38 at 00:00:00
+[scan:whiteboard] prefilter 40/298 frames after 00:00:01; best prefilter 4.38 at 00:00:00
+[scan:whiteboard] prefilter 50/298 frames after 00:00:01; best prefilter 14.44 at 00:03:16
+[scan:whiteboard] prefilter 60/298 frames after 00:00:01; best prefilter 14.44 at 00:03:16
+[scan:whiteboard] prefilter 70/298 frames after 00:00:01; best prefilter 14.44 at 00:03:16
+[scan:whiteboard] prefilter 80/298 frames after 00:00:01; best prefilter 14.44 at 00:03:16
+[scan:whiteboard] prefilter 90/298 frames after 00:00:01; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 100/298 frames after 00:00:01; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 110/298 frames after 00:00:02; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 120/298 frames after 00:00:02; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 130/298 frames after 00:00:02; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 140/298 frames after 00:00:02; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 150/298 frames after 00:00:02; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 160/298 frames after 00:00:02; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 170/298 frames after 00:00:02; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 180/298 frames after 00:00:03; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 190/298 frames after 00:00:03; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 200/298 frames after 00:00:03; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 210/298 frames after 00:00:03; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 220/298 frames after 00:00:03; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 230/298 frames after 00:00:03; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 240/298 frames after 00:00:03; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 250/298 frames after 00:00:03; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 260/298 frames after 00:00:04; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 270/298 frames after 00:00:04; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 280/298 frames after 00:00:04; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 290/298 frames after 00:00:04; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter 298/298 frames after 00:00:04; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] prefilter kept 60/298 frame(s) for OCR; best prefilter 19.88 at 00:05:56
+[scan:whiteboard] extracting OCR candidates from source video at width 1280
+[scan:whiteboard] OCR 1/60 frames (1.7%) after 00:00:01; best score -14.28 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 10/60 frames (16.7%) after 01:00:49; best score 54.41 at 00:00:48 (ocr 66.0)
+[scan:whiteboard] OCR 20/60 frames (33.3%) after 01:03:29; best score 54.41 at 00:00:48 (ocr 66.0)
+[scan:whiteboard] OCR 30/60 frames (50.0%) after 01:06:13; best score 94.77 at 00:06:56 (ocr 75.0)
+[scan:whiteboard] OCR 40/60 frames (66.7%) after 01:08:48; best score 94.77 at 00:06:56 (ocr 75.0)
+[scan:whiteboard] OCR 50/60 frames (83.3%) after 01:12:38; best score 94.77 at 00:06:56 (ocr 75.0)
+[scan:whiteboard] OCR 60/60 frames (100.0%) after 01:16:31; best score 94.77 at 00:06:56 (ocr 75.0)
+{
+  "date_key": "20260626",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260626_hlg5zAwuqPw.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 104,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_hlg5zawuqpw_8ab8c7af_whiteboard\\ocr\\ocr_000105.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 415.84,
+      "observed_date": "20260626",
+      "ocr_confidence": 75,
+      "ocr_profile": "threshold",
+      "ocr_text": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 <<\n\n* MARKET STATE:\n\n* STO INDEXES 21      1l RG82T   re NASI     USD TNX/TYX     vs 5d\n\n* SENTIMENT: VIX 18.45(-2.54%) F&G                  AAI 44.9 +8.3 18.9.5.2 [TREE] NAAIM 98.59+45.76\n=» BULL CASE: INITIATE RALLY & TREND 21EMA\n\n=> BEAR CASE: SUSTAINED BREAK BELOW 21EMA 46/23 2N° CLOSE BELOW\n\n* NEWS: SEMIS DOWN ON OPEN-A IPO DELAY TO ‘27, AAPL CONSIDERING CHINESE MEMORY\n* TODAY'S KEYS: SPX vs 21E,/50D       QQQvs 21E4/50DD  R2Kv s ATH  /SE1\n*DAYCT: /D-3 =>D4 8e:-44 2le:-4l\n\n* ACTION:            $7343 17393         [eo]\n\n*SPXO/N 7292-73881 07358 030 7294-73521 L/H 7294-7392\n\n* SPX ATR: 1.33% 1 SPX           60/40          GRO —0.41% TURBO\n\n* SECTORS: I            CLOU IGV PPH GDX XLV            SMH DRAM TAN XLK OIL\n* GRO HOLDINGS: SPYM,UPRO,INTC,GH,LLYX,FTNT\n\n* GRO RVAB/REBAR: 0.89(-0.45%/-4.28%) SELL FORM CRDO\n\n* TURBO HOLDINGS: SPYM,UPRQ,SOXS,LABW,DDOG,CRWD, TWLO,NBIS,INTC,FTNT\n\n* TURBO RVAB/REBAR:0.82(-2.39%/-4.86%) SELL NOK BE\n\n* BOTTOM LINE: =» SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n\n* MON KEYS: SPX vs 21E/50D  QQQ vs 21E/50D R2K vs ATH/8E\n\n>>> S&P500 KEY LEVELS <<<\n\n* 7621 (6/2 INTRADAY A-T-H)\n\n* 7424 (I 8 21EMA) € 6/234 6/12 6/58 4/81\n\n7354 TODAY: < SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n\n* 7363/7392(-M11_50D/10WK) € 4/81 2/274 _ 1/211 1/201\n\n7354 TODAY: > SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n\n* 69.00/6936 (14 200D/40WK) € 5/121 5/8 SLOPE\n",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 << * MARKET STATE: * STO INDEXES 21 1l RG82T re NASI USD TNX/TYX vs 5d * SENTIMENT: VIX 18.45(-2.54%) F&G AAI 44.9 +8.3 18.9.5.2 [TREE] NAAIM 98.59+45.76...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.89(-0.45%/-4.28%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL FORM CRDO",
+          "bottom_line": "=» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (I 8 21EMA) € 6/234 6/12 6/58 4/81 7354 TODAY: < SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 7363/7392(-M11_50D/10WK) € 4/81 2/274 _ 1/211 1/201 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 69.00/6936 (14 200D/40WK) € 5/121 5/8 SLOPE",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 75,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR:0.82(-2.39%/-4.86%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL NOK BE",
+          "bottom_line": "=» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (I 8 21EMA) € 6/234 6/12 6/58 4/81 7354 TODAY: < SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 7363/7392(-M11_50D/10WK) € 4/81 2/274 _ 1/211 1/201 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 69.00/6936 (14 200D/40WK) € 5/121 5/8 SLOPE",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 75,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9f65c19ad490996d",
+      "prefilter_score": 2.23,
+      "prefilter_stats": {
+        "brightRatio": 0.8405555555555555,
+        "darkRatio": 0,
+        "edgeRatio": 0.18062327750688997,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1240,
+        "horizontalEdgeRatio": 0.08762631616140203,
+        "meanLuma": 232.48430555555555,
+        "stdDev": 23.194582181477173,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3872,
+        "verticalEdgeRatio": 0.2736202388523779
+      },
+      "score": 94.77,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.75,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 20,
+        "text_density": 73.02
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "INTC",
+        "NBIS",
+        "SPYM",
+        "TAN",
+        "UPRO"
+      ],
+      "timestamp": 416,
+      "timestamp_hms": "00:06:56",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260626_ps_4.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 124,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_hlg5zawuqpw_8ab8c7af_whiteboard\\ocr\\ocr_000125.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 497.76,
+      "observed_date": "20260626",
+      "ocr_confidence": 75,
+      "ocr_profile": "threshold",
+      "ocr_text": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 <<\n\n* MARKET STATE:\n\n* STO INDEXES 2     11 RG8 21     1d NASI USD TNX/TYX vs 5d\n\n* SENTIMENT: VIX 18.45(-2.54%) F&G             AAI 45.9 8.3 12.9.5. [TRIER] NAAIM 98.59+45.76\n=» BULL CASE: INITIATE RALLY & TREND 21EMA\n\n=» BEAR CASE: SUSTAINED BREAK BELOW 21EMA 46/23 2NP CLOSE BELOW\n\n* NEWS: SEMIS DOWN ON OPEN-AI IPO DELAY TO ‘27, AAPL CONSIDERING CHINESE MEMORY\n* TODAY'S KEYS: SPX vs 21E./50D       QQQvs 21E4./50DM  R2Kv sATH  /8E\n*DAY CT: /D-3 =>D4 8e:-44 2le:-4l\n\n* ACTION:            $7343 17393         [eo]\n\n*SPXO/N 7292-73881 07358 030 7294-73521 L/H 7294-7392\n\n* SPX ATR: 1.33% SPX          60/40          GRO -0.41% TURBO\n\n* SECTORS: 1           CLOU IGV PPH GDX XLV J            SMH DRAM TAN XLK OIL\n* GRO HOLDINGS: SPYM,UPRO,INTC,GH,LLYX,FTNT\n\n* GRO RVAB/REBAR: 0.89(-0.45%/-4.28%) SELL FORM CRDO\n\n* TURBO HOLDINGS: SPYM,UPRQ,SOXS,LABU,DDOG,CRWD, TWLO,NBIS,INTC,FTNT\n\n* TURBO RVAB/REBAR:0.82(-2.39%/-4.86%) SELL NOK BE\n\n* BOTTOM LINE: -» SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW S0DAY\n\n* MON KEYS: SPX vs 21E/50D  QQQ vs 21E/50D  R2K vs ATH/8E\n\n>>> S&P500 KEY LEVELS <<<\n\n* 7621 (6/2 INTRADAY A-T-H)\n\n* 7424 (18 21EMA) € 6/231 6/12 1D 6/54 4/8\n\n7354 TODAY: = SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n*7363/7392(M11_50D/10WK) € 4/31 2/27 _ 1/211 1/204\n\n7354 TODAY: > SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n\n* 6925/6936 (4 200D/40WK) € 5/121 5/8 SLOPED\n",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 << * MARKET STATE: * STO INDEXES 2 11 RG8 21 1d NASI USD TNX/TYX vs 5d * SENTIMENT: VIX 18.45(-2.54%) F&G AAI 45.9 8.3 12.9.5. [TRIER] NAAIM 98.59+45.76 ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.89(-0.45%/-4.28%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL FORM CRDO",
+          "bottom_line": "-» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW S0DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (18 21EMA) € 6/231 6/12 1D 6/54 4/8 7354 TODAY: = SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 7363/7392(M11_50D/10WK) € 4/31 2/27 _ 1/211 1/204 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 6925/6936 (4 200D/40WK) € 5/121 5/8 SLOPED",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 75,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR:0.82(-2.39%/-4.86%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL NOK BE",
+          "bottom_line": "-» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW S0DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (18 21EMA) € 6/231 6/12 1D 6/54 4/8 7354 TODAY: = SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 7363/7392(M11_50D/10WK) € 4/31 2/27 _ 1/211 1/204 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 6925/6936 (4 200D/40WK) € 5/121 5/8 SLOPED",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 75,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "bf65c39ac0909b4d",
+      "prefilter_score": 2.21,
+      "prefilter_stats": {
+        "brightRatio": 0.8409027777777778,
+        "darkRatio": 0,
+        "edgeRatio": 0.17973994770687585,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1220,
+        "horizontalEdgeRatio": 0.08621298848137941,
+        "meanLuma": 232.581875,
+        "stdDev": 23.083919170326162,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3867,
+        "verticalEdgeRatio": 0.27326690693237227
+      },
+      "score": 94.71,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.75,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 20,
+        "text_density": 72.96
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "INTC",
+        "LABU",
+        "NBIS",
+        "SPYM",
+        "TAN",
+        "UPRO"
+      ],
+      "timestamp": 496,
+      "timestamp_hms": "00:08:16",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260626_ps_5.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 140,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_hlg5zawuqpw_8ab8c7af_whiteboard\\ocr\\ocr_000141.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 559.84,
+      "observed_date": "20260626",
+      "ocr_confidence": 76,
+      "ocr_profile": "threshold",
+      "ocr_text": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 <<\n\n* MARKET STATE:\n\n* STO INDEXES 21     1l RG8 21     1d NASI USDP TNX/TYX vs 5d\n\n* SENTIMENT: VIX 18.45(-2.54%) F&G             AAI144.9 48.3 18.9.5.2 [TRIER] NAAIM 98.59+45.76\n=> BULL CASE: INITIATE RALLY & TREND 21EMA\n\n=» BEAR CASE: SUSTAINED BREAK BELOW 21EMA 46/23 2NP CLOSE BELOW\n\n* NEWS: SEMIS DOWN ON OPEN-AI IPO DELAY TO ‘27, AAPL CONSIDERING CHINESE MEMORY\n* TODAY'S KEYS: SPX vs 21E,/50D       QQQvs 21E4./50D™  R2Kv s ATH /SET\n*DAYCT: /D-3 =>D4 8e:-44 2le:-4l\n\n* ACTION:            $7343 17393         [eo]\n\n*SPXO/N 7292-73881 07358 030 7294-73524 L/H 7294-7392\n\n* SPX ATR: 1.33% SPX          60/40          GRO -0.41% TURBO\n\n* SECTORS: T           CLOU IGV PPH GDX XLV J           SMH DRAM TAN XLK OIL\n* GRO HOLDINGS: SPYM,UPRO,INTC,GH,LLYX,FTNT\n\n* GRO RVAB/REBAR: 0.89(-0.45%/-4.28%) SELL FORM CRDO\n\n* TURBO HOLDINGS: SPYM,UPRO,50XS,LABU,DDOG,CRWD, TWLO,NBIS,INTC,FTNT\n\n* TURBO RVAB/REBAR:0 82(-2,39%/-4.86%) SELL NOK BE\n\n* BOTTOM LINE: -» SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW S0DAY\n\n* MON KEYS: SPX vs 21E/50D  QQQ vs 21E/50D R2K vs ATH/8E\n\n>>> S&P500 KEY LEVELS <<<\n\n* 7621 (6/2 INTRADAY A-T-H)\n\n* 7424 (48 21EMA) € 6/234 6/121 6/54 4/81\n\n7354 TODAY: = SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n*7363/7392(M11 _50D/10WK) € 4/81 2/27 1/211 1/204\n\n7354 TODAY: > SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n\n* 6925/6936 (4 200D/40WK) € 5/121 5/8 SLOPED\n",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 << * MARKET STATE: * STO INDEXES 21 1l RG8 21 1d NASI USDP TNX/TYX vs 5d * SENTIMENT: VIX 18.45(-2.54%) F&G AAI144.9 48.3 18.9.5.2 [TRIER] NAAIM 98.59+45...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.89(-0.45%/-4.28%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL FORM CRDO",
+          "bottom_line": "-» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW S0DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (48 21EMA) € 6/234 6/121 6/54 4/81 7354 TODAY: = SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 7363/7392(M11 _50D/10WK) € 4/81 2/27 1/211 1/204 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 6925/6936 (4 200D/40WK) € 5/121 5/8 SLOPED",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 76,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,50XS,LABU,DDOG,CRWD, TWLO,NBIS,INTC,FTNT",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "-» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW S0DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (48 21EMA) € 6/234 6/121 6/54 4/81 7354 TODAY: = SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 7363/7392(M11 _50D/10WK) € 4/81 2/27 1/211 1/204 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 6925/6936 (4 200D/40WK) € 5/121 5/8 SLOPED",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 76,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "bf65c39ac0909b4d",
+      "prefilter_score": 2.21,
+      "prefilter_stats": {
+        "brightRatio": 0.8409722222222222,
+        "darkRatio": 0,
+        "edgeRatio": 0.179563281746873,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1213,
+        "horizontalEdgeRatio": 0.08571832379337149,
+        "meanLuma": 232.58319444444444,
+        "stdDev": 23.091527325838918,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3869,
+        "verticalEdgeRatio": 0.27340823970037453
+      },
+      "score": 92.84,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.8,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 18,
+        "text_density": 73.04
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "INTC",
+        "LABU",
+        "NBIS",
+        "SPYM",
+        "TAN",
+        "UPRO"
+      ],
+      "timestamp": 560,
+      "timestamp_hms": "00:09:20",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260626_ps_6.png"
+    }
+  ],
+  "frame_count": 298,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 232,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260626_ps_4.png",
+  "prefilter_best_score": 19.88,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 104,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_hlg5zawuqpw_8ab8c7af_whiteboard\\ocr\\ocr_000105.png",
+    "is_intro_card": false,
+    "issue_codes": [],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 415.84,
+    "observed_date": "20260626",
+    "ocr_confidence": 75,
+    "ocr_profile": "threshold",
+    "ocr_text": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 <<\n\n* MARKET STATE:\n\n* STO INDEXES 21      1l RG82T   re NASI     USD TNX/TYX     vs 5d\n\n* SENTIMENT: VIX 18.45(-2.54%) F&G                  AAI 44.9 +8.3 18.9.5.2 [TREE] NAAIM 98.59+45.76\n=» BULL CASE: INITIATE RALLY & TREND 21EMA\n\n=> BEAR CASE: SUSTAINED BREAK BELOW 21EMA 46/23 2N° CLOSE BELOW\n\n* NEWS: SEMIS DOWN ON OPEN-A IPO DELAY TO ‘27, AAPL CONSIDERING CHINESE MEMORY\n* TODAY'S KEYS: SPX vs 21E,/50D       QQQvs 21E4/50DD  R2Kv s ATH  /SE1\n*DAYCT: /D-3 =>D4 8e:-44 2le:-4l\n\n* ACTION:            $7343 17393         [eo]\n\n*SPXO/N 7292-73881 07358 030 7294-73521 L/H 7294-7392\n\n* SPX ATR: 1.33% 1 SPX           60/40          GRO —0.41% TURBO\n\n* SECTORS: I            CLOU IGV PPH GDX XLV            SMH DRAM TAN XLK OIL\n* GRO HOLDINGS: SPYM,UPRO,INTC,GH,LLYX,FTNT\n\n* GRO RVAB/REBAR: 0.89(-0.45%/-4.28%) SELL FORM CRDO\n\n* TURBO HOLDINGS: SPYM,UPRQ,SOXS,LABW,DDOG,CRWD, TWLO,NBIS,INTC,FTNT\n\n* TURBO RVAB/REBAR:0.82(-2.39%/-4.86%) SELL NOK BE\n\n* BOTTOM LINE: =» SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n\n* MON KEYS: SPX vs 21E/50D  QQQ vs 21E/50D R2K vs ATH/8E\n\n>>> S&P500 KEY LEVELS <<<\n\n* 7621 (6/2 INTRADAY A-T-H)\n\n* 7424 (I 8 21EMA) € 6/234 6/12 6/58 4/81\n\n7354 TODAY: < SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n\n* 7363/7392(-M11_50D/10WK) € 4/81 2/274 _ 1/211 1/201\n\n7354 TODAY: > SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n\n* 69.00/6936 (14 200D/40WK) € 5/121 5/8 SLOPE\n",
+    "ocr_text_snippet": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 << * MARKET STATE: * STO INDEXES 21 1l RG82T re NASI USD TNX/TYX vs 5d * SENTIMENT: VIX 18.45(-2.54%) F&G AAI 44.9 +8.3 18.9.5.2 [TREE] NAAIM 98.59+45.76...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": "RVAB/REBAR: 0.89(-0.45%/-4.28%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "SELL FORM CRDO",
+        "bottom_line": "=» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (I 8 21EMA) € 6/234 6/12 6/58 4/81 7354 TODAY: < SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 7363/7392(-M11_50D/10WK) € 4/81 2/274 _ 1/211 1/201 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 69.00/6936 (14 200D/40WK) € 5/121 5/8 SLOPE",
+        "parse_status": "ok",
+        "issue_codes": [],
+        "ocr_confidence": 75,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": "RVAB/REBAR:0.82(-2.39%/-4.86%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "SELL NOK BE",
+        "bottom_line": "=» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (I 8 21EMA) € 6/234 6/12 6/58 4/81 7354 TODAY: < SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 7363/7392(-M11_50D/10WK) € 4/81 2/274 _ 1/211 1/201 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 69.00/6936 (14 200D/40WK) € 5/121 5/8 SLOPE",
+        "parse_status": "ok",
+        "issue_codes": [],
+        "ocr_confidence": 75,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "9f65c19ad490996d",
+    "prefilter_score": 2.23,
+    "prefilter_stats": {
+      "brightRatio": 0.8405555555555555,
+      "darkRatio": 0,
+      "edgeRatio": 0.18062327750688997,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1240,
+      "horizontalEdgeRatio": 0.08762631616140203,
+      "meanLuma": 232.48430555555555,
+      "stdDev": 23.194582181477173,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 3872,
+      "verticalEdgeRatio": 0.2736202388523779
+    },
+    "score": 94.77,
+    "score_breakdown": {
+      "chart_likeness": -6,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 3.75,
+      "pair_bonus": 4,
+      "per_row_issues": 0,
+      "per_row_metrics": 20,
+      "text_density": 73.02
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "BE",
+      "INTC",
+      "NBIS",
+      "SPYM",
+      "TAN",
+      "UPRO"
+    ],
+    "timestamp": 416,
+    "timestamp_hms": "00:06:56"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 104,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_hlg5zawuqpw_8ab8c7af_whiteboard\\ocr\\ocr_000105.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260626",
+      "ocr_confidence": 75,
+      "ocr_profile": "threshold",
+      "ocr_text": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 <<\n\n* MARKET STATE:\n\n* STO INDEXES 21      1l RG82T   re NASI     USD TNX/TYX     vs 5d\n\n* SENTIMENT: VIX 18.45(-2.54%) F&G                  AAI 44.9 +8.3 18.9.5.2 [TREE] NAAIM 98.59+45.76\n=» BULL CASE: INITIATE RALLY & TREND 21EMA\n\n=> BEAR CASE: SUSTAINED BREAK BELOW 21EMA 46/23 2N° CLOSE BELOW\n\n* NEWS: SEMIS DOWN ON OPEN-A IPO DELAY TO ‘27, AAPL CONSIDERING CHINESE MEMORY\n* TODAY'S KEYS: SPX vs 21E,/50D       QQQvs 21E4/50DD  R2Kv s ATH  /SE1\n*DAYCT: /D-3 =>D4 8e:-44 2le:-4l\n\n* ACTION:            $7343 17393         [eo]\n\n*SPXO/N 7292-73881 07358 030 7294-73521 L/H 7294-7392\n\n* SPX ATR: 1.33% 1 SPX           60/40          GRO —0.41% TURBO\n\n* SECTORS: I            CLOU IGV PPH GDX XLV            SMH DRAM TAN XLK OIL\n* GRO HOLDINGS: SPYM,UPRO,INTC,GH,LLYX,FTNT\n\n* GRO RVAB/REBAR: 0.89(-0.45%/-4.28%) SELL FORM CRDO\n\n* TURBO HOLDINGS: SPYM,UPRQ,SOXS,LABW,DDOG,CRWD, TWLO,NBIS,INTC,FTNT\n\n* TURBO RVAB/REBAR:0.82(-2.39%/-4.86%) SELL NOK BE\n\n* BOTTOM LINE: =» SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n\n* MON KEYS: SPX vs 21E/50D  QQQ vs 21E/50D R2K vs ATH/8E\n\n>>> S&P500 KEY LEVELS <<<\n\n* 7621 (6/2 INTRADAY A-T-H)\n\n* 7424 (I 8 21EMA) € 6/234 6/12 6/58 4/81\n\n7354 TODAY: < SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n\n* 7363/7392(-M11_50D/10WK) € 4/81 2/274 _ 1/211 1/201\n\n7354 TODAY: > SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n\n* 69.00/6936 (14 200D/40WK) € 5/121 5/8 SLOPE\n",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 << * MARKET STATE: * STO INDEXES 21 1l RG82T re NASI USD TNX/TYX vs 5d * SENTIMENT: VIX 18.45(-2.54%) F&G AAI 44.9 +8.3 18.9.5.2 [TREE] NAAIM 98.59+45.76...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.89(-0.45%/-4.28%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL FORM CRDO",
+          "bottom_line": "=» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (I 8 21EMA) € 6/234 6/12 6/58 4/81 7354 TODAY: < SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 7363/7392(-M11_50D/10WK) € 4/81 2/274 _ 1/211 1/201 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 69.00/6936 (14 200D/40WK) € 5/121 5/8 SLOPE",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 75,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR:0.82(-2.39%/-4.86%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL NOK BE",
+          "bottom_line": "=» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (I 8 21EMA) € 6/234 6/12 6/58 4/81 7354 TODAY: < SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 7363/7392(-M11_50D/10WK) € 4/81 2/274 _ 1/211 1/201 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 69.00/6936 (14 200D/40WK) € 5/121 5/8 SLOPE",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 75,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9f65c19ad490996d",
+      "prefilter_score": 2.23,
+      "prefilter_stats": {
+        "brightRatio": 0.8405555555555555,
+        "darkRatio": 0,
+        "edgeRatio": 0.18062327750688997,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1240,
+        "horizontalEdgeRatio": 0.08762631616140203,
+        "meanLuma": 232.48430555555555,
+        "stdDev": 23.194582181477173,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3872,
+        "verticalEdgeRatio": 0.2736202388523779
+      },
+      "score": 94.77,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.75,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 20,
+        "text_density": 73.02
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "INTC",
+        "NBIS",
+        "SPYM",
+        "TAN",
+        "UPRO"
+      ],
+      "timestamp": 416,
+      "timestamp_hms": "00:06:56"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 124,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_hlg5zawuqpw_8ab8c7af_whiteboard\\ocr\\ocr_000125.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260626",
+      "ocr_confidence": 75,
+      "ocr_profile": "threshold",
+      "ocr_text": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 <<\n\n* MARKET STATE:\n\n* STO INDEXES 2     11 RG8 21     1d NASI USD TNX/TYX vs 5d\n\n* SENTIMENT: VIX 18.45(-2.54%) F&G             AAI 45.9 8.3 12.9.5. [TRIER] NAAIM 98.59+45.76\n=» BULL CASE: INITIATE RALLY & TREND 21EMA\n\n=» BEAR CASE: SUSTAINED BREAK BELOW 21EMA 46/23 2NP CLOSE BELOW\n\n* NEWS: SEMIS DOWN ON OPEN-AI IPO DELAY TO ‘27, AAPL CONSIDERING CHINESE MEMORY\n* TODAY'S KEYS: SPX vs 21E./50D       QQQvs 21E4./50DM  R2Kv sATH  /8E\n*DAY CT: /D-3 =>D4 8e:-44 2le:-4l\n\n* ACTION:            $7343 17393         [eo]\n\n*SPXO/N 7292-73881 07358 030 7294-73521 L/H 7294-7392\n\n* SPX ATR: 1.33% SPX          60/40          GRO -0.41% TURBO\n\n* SECTORS: 1           CLOU IGV PPH GDX XLV J            SMH DRAM TAN XLK OIL\n* GRO HOLDINGS: SPYM,UPRO,INTC,GH,LLYX,FTNT\n\n* GRO RVAB/REBAR: 0.89(-0.45%/-4.28%) SELL FORM CRDO\n\n* TURBO HOLDINGS: SPYM,UPRQ,SOXS,LABU,DDOG,CRWD, TWLO,NBIS,INTC,FTNT\n\n* TURBO RVAB/REBAR:0.82(-2.39%/-4.86%) SELL NOK BE\n\n* BOTTOM LINE: -» SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW S0DAY\n\n* MON KEYS: SPX vs 21E/50D  QQQ vs 21E/50D  R2K vs ATH/8E\n\n>>> S&P500 KEY LEVELS <<<\n\n* 7621 (6/2 INTRADAY A-T-H)\n\n* 7424 (18 21EMA) € 6/231 6/12 1D 6/54 4/8\n\n7354 TODAY: = SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n*7363/7392(M11_50D/10WK) € 4/31 2/27 _ 1/211 1/204\n\n7354 TODAY: > SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n\n* 6925/6936 (4 200D/40WK) € 5/121 5/8 SLOPED\n",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 << * MARKET STATE: * STO INDEXES 2 11 RG8 21 1d NASI USD TNX/TYX vs 5d * SENTIMENT: VIX 18.45(-2.54%) F&G AAI 45.9 8.3 12.9.5. [TRIER] NAAIM 98.59+45.76 ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.89(-0.45%/-4.28%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL FORM CRDO",
+          "bottom_line": "-» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW S0DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (18 21EMA) € 6/231 6/12 1D 6/54 4/8 7354 TODAY: = SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 7363/7392(M11_50D/10WK) € 4/31 2/27 _ 1/211 1/204 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 6925/6936 (4 200D/40WK) € 5/121 5/8 SLOPED",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 75,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR:0.82(-2.39%/-4.86%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL NOK BE",
+          "bottom_line": "-» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW S0DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (18 21EMA) € 6/231 6/12 1D 6/54 4/8 7354 TODAY: = SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 7363/7392(M11_50D/10WK) € 4/31 2/27 _ 1/211 1/204 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 6925/6936 (4 200D/40WK) € 5/121 5/8 SLOPED",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 75,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "bf65c39ac0909b4d",
+      "prefilter_score": 2.21,
+      "prefilter_stats": {
+        "brightRatio": 0.8409027777777778,
+        "darkRatio": 0,
+        "edgeRatio": 0.17973994770687585,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1220,
+        "horizontalEdgeRatio": 0.08621298848137941,
+        "meanLuma": 232.581875,
+        "stdDev": 23.083919170326162,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3867,
+        "verticalEdgeRatio": 0.27326690693237227
+      },
+      "score": 94.71,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.75,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 20,
+        "text_density": 72.96
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "INTC",
+        "LABU",
+        "NBIS",
+        "SPYM",
+        "TAN",
+        "UPRO"
+      ],
+      "timestamp": 496,
+      "timestamp_hms": "00:08:16"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 100,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_hlg5zawuqpw_8ab8c7af_whiteboard\\ocr\\ocr_000101.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260626",
+      "ocr_confidence": 75,
+      "ocr_profile": "threshold",
+      "ocr_text": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 <<\n\n* MARKET STATE:\n\n* STO INDEXES 2-1      1l RG821T      14 NASI     USD TNX/TYX     vs 5d\n\n* SENTIMENT: VIX 18.45(-2.54%) F&G                  AAN44.9 +83 12.9.5. [TRIER] NAAIM 98.59+45.76\n=» BULL CASE: INITIATE RALLY & TREND 21EMA\n\n=» BEAR CASE: SUSTAINED BREAK BELOW 21EMA 46/23 2M CLOSE BELOW\n\n* NEWS: SEMIS DOWN ON OPEN-AI IPO DELAY TO ‘27, AAPL CONSIDERING CHINESE MEMORY\n* TODAY'S KEYS: SPX vs 21E,/50D       QQQvs 21E4./50D™  R2Kv s ATH: /S8ET\n*DAYCT: /D-3 =>D4 8e:-44 2le:-4l\n\n* ACTION:            $7343 17393         [eo]\n\n*SPX O/N 7292-73881 07358 030 7294-73524 L/H 7294-7392\n\n* SPX ATR: 1.33% 1 SPX           60/40          GRO —0.41% TURBO\n\n* SECTORS:            CLOU IGV PPH GDX XLV 4            SMH DRAM TAN XLK OIL\n* GRO HOLDINGS: SPYM,UPRO,INTC,GH,LLYX,FTNT\n\n* GRO RVAB/REBAR: 0.89(-0.45%/-4.28%) SELL FORM CRDO\n\n* TURBO HOLDINGS: SPYM,UPRQ,S0XS,LABU,DDOG,CRWD, TWLO,NBIS,INTC,FTNT\n\n* TURBO RVAB/REBAR:0.82(-2.39%/-4.86%) SELL NOK BE\n\n* BOTTOM LINE: =» SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n\n* MON KEYS: SPX vs 21E/50D  QQQ vs 21E/50D R2K vs ATH/8E\n\n>>> S&P500 KEY LEVELS <<<\n\n* 7621 (6/2 INTRADAY A-T-H)\n\n* 7424 (U8 21EMA) € 6/234 6/121 6/58 4/81\n\n7354 TODAY: < SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW SODAY\n\n* 7363/7392(1 11 _50D/10WK) € 4/81 2/274 _ 1/211 1/204\n\n7354 TODAY: > SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW S0DAY\n\n* 69.00/6936 (14 200D/40WK) € 5/121 5/8 SLOPE\n",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 << * MARKET STATE: * STO INDEXES 2-1 1l RG821T 14 NASI USD TNX/TYX vs 5d * SENTIMENT: VIX 18.45(-2.54%) F&G AAN44.9 +83 12.9.5. [TRIER] NAAIM 98.59+45.76...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.89(-0.45%/-4.28%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL FORM CRDO",
+          "bottom_line": "=» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (U8 21EMA) € 6/234 6/121 6/58 4/81 7354 TODAY: < SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW SODAY 7363/7392(1 11 _50D/10WK) € 4/81 2/274 _ 1/211 1/204 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW S0DAY 69.00/6936 (14 200D/40WK) € 5/121 5/8 SLOPE",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 75,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRQ,S0XS,LABU,DDOG,CRWD, TWLO,NBIS,INTC,FTNT",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "=» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (U8 21EMA) € 6/234 6/121 6/58 4/81 7354 TODAY: < SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW SODAY 7363/7392(1 11 _50D/10WK) € 4/81 2/274 _ 1/211 1/204 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW S0DAY 69.00/6936 (14 200D/40WK) € 5/121 5/8 SLOPE",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 75,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "9f65c39ad0909b4d",
+      "prefilter_score": 2.22,
+      "prefilter_stats": {
+        "brightRatio": 0.8408333333333333,
+        "darkRatio": 0,
+        "edgeRatio": 0.1802699455868843,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1227,
+        "horizontalEdgeRatio": 0.08670765316938732,
+        "meanLuma": 232.49965277777778,
+        "stdDev": 23.221469948005044,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3875,
+        "verticalEdgeRatio": 0.27383223800438133
+      },
+      "score": 92.85,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.75,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 18,
+        "text_density": 73.1
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "INTC",
+        "LABU",
+        "NBIS",
+        "SPYM",
+        "TAN",
+        "UPRO"
+      ],
+      "timestamp": 400,
+      "timestamp_hms": "00:06:40"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 140,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_hlg5zawuqpw_8ab8c7af_whiteboard\\ocr\\ocr_000141.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260626",
+      "ocr_confidence": 76,
+      "ocr_profile": "threshold",
+      "ocr_text": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 <<\n\n* MARKET STATE:\n\n* STO INDEXES 21     1l RG8 21     1d NASI USDP TNX/TYX vs 5d\n\n* SENTIMENT: VIX 18.45(-2.54%) F&G             AAI144.9 48.3 18.9.5.2 [TRIER] NAAIM 98.59+45.76\n=> BULL CASE: INITIATE RALLY & TREND 21EMA\n\n=» BEAR CASE: SUSTAINED BREAK BELOW 21EMA 46/23 2NP CLOSE BELOW\n\n* NEWS: SEMIS DOWN ON OPEN-AI IPO DELAY TO ‘27, AAPL CONSIDERING CHINESE MEMORY\n* TODAY'S KEYS: SPX vs 21E,/50D       QQQvs 21E4./50D™  R2Kv s ATH /SET\n*DAYCT: /D-3 =>D4 8e:-44 2le:-4l\n\n* ACTION:            $7343 17393         [eo]\n\n*SPXO/N 7292-73881 07358 030 7294-73524 L/H 7294-7392\n\n* SPX ATR: 1.33% SPX          60/40          GRO -0.41% TURBO\n\n* SECTORS: T           CLOU IGV PPH GDX XLV J           SMH DRAM TAN XLK OIL\n* GRO HOLDINGS: SPYM,UPRO,INTC,GH,LLYX,FTNT\n\n* GRO RVAB/REBAR: 0.89(-0.45%/-4.28%) SELL FORM CRDO\n\n* TURBO HOLDINGS: SPYM,UPRO,50XS,LABU,DDOG,CRWD, TWLO,NBIS,INTC,FTNT\n\n* TURBO RVAB/REBAR:0 82(-2,39%/-4.86%) SELL NOK BE\n\n* BOTTOM LINE: -» SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW S0DAY\n\n* MON KEYS: SPX vs 21E/50D  QQQ vs 21E/50D R2K vs ATH/8E\n\n>>> S&P500 KEY LEVELS <<<\n\n* 7621 (6/2 INTRADAY A-T-H)\n\n* 7424 (48 21EMA) € 6/234 6/121 6/54 4/81\n\n7354 TODAY: = SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n*7363/7392(M11 _50D/10WK) € 4/81 2/27 1/211 1/204\n\n7354 TODAY: > SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n\n* 6925/6936 (4 200D/40WK) € 5/121 5/8 SLOPED\n",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 << * MARKET STATE: * STO INDEXES 21 1l RG8 21 1d NASI USDP TNX/TYX vs 5d * SENTIMENT: VIX 18.45(-2.54%) F&G AAI144.9 48.3 18.9.5.2 [TRIER] NAAIM 98.59+45...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.89(-0.45%/-4.28%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL FORM CRDO",
+          "bottom_line": "-» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW S0DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (48 21EMA) € 6/234 6/121 6/54 4/81 7354 TODAY: = SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 7363/7392(M11 _50D/10WK) € 4/81 2/27 1/211 1/204 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 6925/6936 (4 200D/40WK) € 5/121 5/8 SLOPED",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 76,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,50XS,LABU,DDOG,CRWD, TWLO,NBIS,INTC,FTNT",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "-» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW S0DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (48 21EMA) € 6/234 6/121 6/54 4/81 7354 TODAY: = SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 7363/7392(M11 _50D/10WK) € 4/81 2/27 1/211 1/204 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 6925/6936 (4 200D/40WK) € 5/121 5/8 SLOPED",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 76,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "bf65c39ac0909b4d",
+      "prefilter_score": 2.21,
+      "prefilter_stats": {
+        "brightRatio": 0.8409722222222222,
+        "darkRatio": 0,
+        "edgeRatio": 0.179563281746873,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1213,
+        "horizontalEdgeRatio": 0.08571832379337149,
+        "meanLuma": 232.58319444444444,
+        "stdDev": 23.091527325838918,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3869,
+        "verticalEdgeRatio": 0.27340823970037453
+      },
+      "score": 92.84,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.8,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 18,
+        "text_density": 73.04
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "INTC",
+        "LABU",
+        "NBIS",
+        "SPYM",
+        "TAN",
+        "UPRO"
+      ],
+      "timestamp": 560,
+      "timestamp_hms": "00:09:20"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 116,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_hlg5zawuqpw_8ab8c7af_whiteboard\\ocr\\ocr_000117.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260626",
+      "ocr_confidence": 77,
+      "ocr_profile": "threshold",
+      "ocr_text": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 <<\n\n* MARKET STATE:\n\n* STO INDEXES 21     1l RG8 21     1d NASI USDP TNX/TYX vs 5d\n\n* SENTIMENT: VIX 18.45(-2.54%) F&G             AAI44.9 48.3 12.9.5.2 [TREE] NAAIM 98.59+45.76\nBULL CASE: INITIATE RALLY & TREND 21EMA\n\n=» BEAR CASE: SUSTAINED BREAK BELOW 21EMA 46/23 2ND CLOSE BELOW\n\n* NEWS: SEMIS DOWN ON OPEN-AIl IPO DELAY TO ‘27, AAPL CONSIDERING CHINESE MEMORY\n* TODAY'S KEYS: SPX vs 21E,/50D       QQQvs 21E4./500™  R2Kv s ATH /SET\n*DAYCT: /D-3 =>D4 8e:-44 2le:-4\n\n* ACTION:            $7343 17393         [eo]\n\n*SPXO/N 7292-73881 07358 030 7294-73524 L/H 7294-7392\n\n* SPX ATR: 1.33% SPX          60/40          GRO -0.41% TURBO\n\n* SECTORS: T           CLOU IGV PPH GDX XLV J           SMH DRAM TAN XLK OIL\n* GRO HOLDINGS: SPYM,UPRO,INTC,GH,LLYX,FTNT\n\n* GRO RVAB/REBAR: 0.89(-0.45%/-4.28%) SELL FORM CRDO\n\n* TURBO HOLDINGS: SPYM,UPRO,50XS,LABU,DDOG,CRWD, TWLO,NBIS,INTC,FTNT\n\n* TURBO RVAB/REBAR:0.82(-2,39%/-4.86%) SELL NOK 8E\n\n* BOTTOM LINE: -» SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW S0DAY\n\n* MON KEYS: SPX vs 21E/50D  QQQ vs 21E/50D  R2K vs ATH/8E\n\n>>> S&P500 KEY LEVELS <<<\n\n* 7621 (6/2 INTRADAY A-T-H)\n\n* 7424 (48 21EMA) € 6/234 6/121 6/54 4/81\n\n7354 TODAY: = SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n*7363/7392(M11 _50D/10WK) € 4/81 2/27 1/211 1/204\n\n7354 TODAY: > SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n\n* 6925/6936 (4 200D/40WK) € 5/121 5/8 SLOPED\n",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — FRIDAY, JUNE 26, 2026 << * MARKET STATE: * STO INDEXES 21 1l RG8 21 1d NASI USDP TNX/TYX vs 5d * SENTIMENT: VIX 18.45(-2.54%) F&G AAI44.9 48.3 12.9.5.2 [TREE] NAAIM 98.59+45.7...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.89(-0.45%/-4.28%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL FORM CRDO",
+          "bottom_line": "-» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW S0DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (48 21EMA) € 6/234 6/121 6/54 4/81 7354 TODAY: = SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 7363/7392(M11 _50D/10WK) € 4/81 2/27 1/211 1/204 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 6925/6936 (4 200D/40WK) € 5/121 5/8 SLOPED",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 77,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,50XS,LABU,DDOG,CRWD, TWLO,NBIS,INTC,FTNT",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "-» SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW S0DAY MON KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS ATH/8E S&P500 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7424 (48 21EMA) € 6/234 6/121 6/54 4/81 7354 TODAY: = SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 7363/7392(M11 _50D/10WK) € 4/81 2/27 1/211 1/204 7354 TODAY: > SEMIS, STORAGE, AND AL STOCKS HIT, S&P BELOW 50DAY 6925/6936 (4 200D/40WK) € 5/121 5/8 SLOPED",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 77,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "bf65c39ac0909b4d",
+      "prefilter_score": 2.25,
+      "prefilter_stats": {
+        "brightRatio": 0.8401388888888889,
+        "darkRatio": 0.00006944444444444444,
+        "edgeRatio": 0.1805172779308883,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1242,
+        "horizontalEdgeRatio": 0.08776764892940428,
+        "meanLuma": 232.46506944444445,
+        "stdDev": 23.2548328757381,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3867,
+        "verticalEdgeRatio": 0.27326690693237227
+      },
+      "score": 92.83,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.85,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 18,
+        "text_density": 72.98
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "INTC",
+        "LABU",
+        "NBIS",
+        "SPYM",
+        "TAN",
+        "UPRO"
+      ],
+      "timestamp": 464,
+      "timestamp_hms": "00:07:44"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_hlg5zawuqpw_8ab8c7af_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 4.38,
+      "prefilter_stats": {
+        "brightRatio": 0.38930555555555557,
+        "darkRatio": 0.330625,
+        "edgeRatio": 0.26531693873224504,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2937,
+        "horizontalEdgeRatio": 0.20754716981132076,
+        "meanLuma": 153.16916666666665,
+        "stdDev": 94.06473462092772,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4572,
+        "verticalEdgeRatio": 0.3230867076531694
+      },
+      "score": -14.28,
+      "score_breakdown": {
+        "chart_likeness": -2.2810723369422217,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 156,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_hlg5zawuqpw_8ab8c7af_whiteboard\\ocr\\ocr_000157.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 621.92,
+      "observed_date": null,
+      "ocr_confidence": 75,
+      "ocr_profile": "threshold",
+      "ocr_text": "a aos @ot) ll DO ~1) Document? - Word           £ seach                                                                              ® - oo x\nfile Home inset Draw Design layout References Mailings Review View Help Acrobat                                 N       © Comments | Editing |\nE S500               T3630 73790 729150       40 05% 0\nON - Acquired SYNA\nEfi Lilly hits new highs as Jaypirca moves closer to broader EU approval (1,201.72 +74.03)\n«Eli Lilly (LLY) is surging to new record highs after the EMA's Committee for Medicinal\nProducts for Human Use issued a positive opinion recommending Jaypicea, or pirtobrutinib,\nfor approval in the EU for adults with chronic lymphocytic leukemia across all tines of\ntherapy.\nThe New York Times reported that OpenAl may delay its planned IPO until 2027\nfollowing SpaceX's (SPCX 157.76, +4.76, +3.11%) disappointing post-IPO performance, weighing on\nAl-related chipmakers after yesterday's past-Micron (MU 1180.70, -32.86, -2.71%) rally.\nSNOW, DDOG, FROG|\nPagezofz wos & [2 TewrredcionsOn [BT Accessibilty investigate                                             C@oisley Serings [Focus    B -—+—- ox\n7354 TODAY: > SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n* 6925/6936 (4 200D/40WK) € 5/121 5/8 SLOPE\n",
+      "ocr_text_snippet": "a aos @ot) ll DO ~1) Document? - Word £ seach ® - oo x file Home inset Draw Design layout References Mailings Review View Help Acrobat N © Comments | Editing | E S500 T3630 73790 729150 40 05% 0 ON...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 75,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 75,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "815548eb3f7a3174",
+      "prefilter_score": 3.59,
+      "prefilter_stats": {
+        "brightRatio": 0.80125,
+        "darkRatio": 0.00125,
+        "edgeRatio": 0.16783266200268532,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1292,
+        "horizontalEdgeRatio": 0.09130096812946081,
+        "meanLuma": 234.5234027777778,
+        "stdDev": 26.29303894102831,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3458,
+        "verticalEdgeRatio": 0.24436435587590982
+      },
+      "score": -20.25,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.75,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "MU",
+        "SNOW",
+        "SPCX"
+      ],
+      "timestamp": 624,
+      "timestamp_hms": "00:10:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 228,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_hlg5zawuqpw_8ab8c7af_whiteboard\\ocr\\ocr_000229.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 909.92,
+      "observed_date": null,
+      "ocr_confidence": 58,
+      "ocr_profile": "threshold",
+      "ocr_text": "IB MSTool - MarketSurge - Google Chrome                                                                                                                                                                                                                                   -         o         x\n5 marketsurge. investors com/mstool chart =symbol%3AFROG¥%2Cperiodicity%3Aday                                                                             &\nMARKETSURGE o [RY x         o          w         mM aMn ev @  @Prws- OE -0-\n* JFrog Ltd. sou                                                                                                                        $87.50                       $87.58\nComp Sitwr - Enterprise {133/145}                                                                        SODaysAvgVol 2534708 Market Cap.             $9.548                 (50.08) 0.09%                 FROG (+6878) +11.14%\nB semen SHIWEREVES)                  .                                50 Day Avg § Vol. $173,190.063 21 Day ATR %         601%                   Aner Hours             ol. 26,872,608 +6721\nOF 52-Week High         “77%  +73% trom pivot In 158 days 05:05 PM ET 06/26/2026 Last Update: 04:00 PM ET 06/26/2078\nCustomize                                    T   2 A see Hl ome @                             89 16,\nYour EPS EPS Sales ComposteRatng 92                                                                                               eS r—\nBec (9 %Ghe_ Cha sme Daan         as 7                                         ER                                        Tharal                  PE §\nseroans [Lists             Reports          Turbo 12 12items CG Updarea 12:55 PM ET 06126:2026                                          ory - BB & A\na Brow                                          )        New                                                                                    %Chg1 %ChgGur Curent  21Day          Price             Prices \\\n[12 mone            ©      Por ome we     Cem URE Chm dM Je TE\nh                  -         1 FROG          JFrog Lt                               200             59          a7.58            601                 11.14            878\ni= 6/19 WE REV\n.                                                            L]         2 0scr          Oscar Health Inc.                     36.1             49         2979           676                as            112\n= 5/23 WE Review\n= SHE WE REVIEW                                                   Rr        3 cRwD         Crowds         Ings |.               44            24        701.00          545                a1         2244\n= 1acz                                                                       Rr         4 KEEL           Keel Infrastructure Corp.             175            41           603          1188                273           016\n= Turbo 12                                                           Rr        5     MXL           Maxi near Inc.                       05           88        96.60         11.54               225          213\n= 2121                                                                        Rr 6 oust          Ouster ino                              “18            98          202          13.00                 0.48           020\n= 4143 with weekly adds                                          P71 AN         Fiuenoe Energy Inc                er 23 wx usm             os om\n= Corstmigrated)                                                            LE            Arm Holdings PLC ADR                Ix           208 m2 is                ET RT\ni= 1721 Focus(migrated)                                                     L]         9 PENG           Penguin Solutions Inc.                 183            73          6228          182                572           449\ni= Legacy 2(migrated)                                                      m0 AEMR          Ach Test Systems                  “165          204          9181          1261                707           5.98\n“7354 TODAY: > SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n* 6925/6936 (14 200D/40WK) € 5/121 5/8 SLOPED\n",
+      "ocr_text_snippet": "IB MSTool - MarketSurge - Google Chrome - o x 5 marketsurge. investors com/mstool chart =symbol%3AFROG¥%2Cperiodicity%3Aday & MARKETSURGE o [RY x o w mM aMn ev @ @Prws- OE -0- * JFrog Ltd. sou $87....",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 58,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 58,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "91411f0e7e33abf0",
+      "prefilter_score": 4.03,
+      "prefilter_stats": {
+        "brightRatio": 0.7920833333333334,
+        "darkRatio": 0.0015972222222222223,
+        "edgeRatio": 0.1747933008267967,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1410,
+        "horizontalEdgeRatio": 0.09963960144159423,
+        "meanLuma": 233.48465277777777,
+        "stdDev": 28.184657233176797,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3537,
+        "verticalEdgeRatio": 0.24994700021199914
+      },
+      "score": -25.1,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.9,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARM"
+      ],
+      "timestamp": 912,
+      "timestamp_hms": "00:15:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 88,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_hlg5zawuqpw_8ab8c7af_whiteboard\\ocr\\ocr_000089.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 353.76,
+      "observed_date": null,
+      "ocr_confidence": 54,
+      "ocr_profile": "threshold",
+      "ocr_text": "[ll MSTool - MarketSurge - Google Chrome                                                                             -   [-]   x\n25 marketsurge.nvestors.com/mstool?chart=symbol%3ASLY92Cperiodicity%3Aday                                                                                                                                                        &\nMARKETSURGE a          x   Dally | Weakly Monthly 1Min ~  < 62626 (3 eo, Nets - [0B &-0-\niShares Silver Trust au                                                                              63.49                 $53.28\nFinance-ETF / ETN (N/A/145)                             50 Days Avg Vol.   23,42,604 Market Cap.       50      (+50.21) 40.39%        SLV (+30.92) +1.76%\nLQ sete @ 619 WE REV (52)          .                   50 Day Avg $ Vol. $1,861,314208 21 Day ATR %     420%          After Hours        Vol. 15,294,088 33.29%\n-                             Off 52. eek High   51.49%  +48% from pivot in 207 days 04:56 PM ET 082612026 Last Update: 0400 PM ET 0826/2026\nCustomize                 Xs Ae Hoh\nYear Price Price Sales ComposieRalng  -\n(Bec)    9) %Chg %Chg Eps Ratng     .\n2019 1668 +15% NA Rs Rang     “a                                  oh\n2020 2457 «47% Na 3MonthRSRating §                                                                         80\n6 Monin RS Rating 5\n=      1 az NA             <\n0x21           Group RS Rating\nam mm a wa omestiw         Pe Crm       N\n    Sy       Fe                    =\n2028 278% NA Eamings Stablity NA ga rT          a      a      En            0\nSales Growth Rate 0%                                                         itz\n2004 2635 2% NA                                                                                  ng 60\nEPS Growth Rate 0% 37                                                        Lp]     aa    ed\n208 G44Z MEE NA pe NA(zoXSP)                                                               Ja\nSeong\nstom\n18D Volume                                                                                                                                                                                                                                     om\nor                         om\n20M\niY\n5 (14.1,3.3)                                              -             -                                       i                      #\n‘20      w®      2      ©      a7      vs     »      2      a6   B\n“ar                     Aor              Em wy            I                    ut\nScreens       Lists    |   Reports.     IAC2 28items C updated: 12:58 PMET 061262026                         © Pay ~   o=2 = a\nINL YO) LAL LAL U0) fama     17          og=     -            Te ere Fe EY TT)\n* WEBSITE: revereasset.com                                       C         CA   ™\n",
+      "ocr_text_snippet": "[ll MSTool - MarketSurge - Google Chrome - [-] x 25 marketsurge.nvestors.com/mstool?chart=symbol%3ASLY92Cperiodicity%3Aday & MARKETSURGE a x Dally | Weakly Monthly 1Min ~ < 62626 (3 eo, Nets - [0B ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5aaaa0f545551ea",
+      "prefilter_score": 13.81,
+      "prefilter_stats": {
+        "brightRatio": 0.7610416666666666,
+        "darkRatio": 0.035902777777777777,
+        "edgeRatio": 0.19479188749911666,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1472,
+        "horizontalEdgeRatio": 0.10402091724966434,
+        "meanLuma": 226.53916666666666,
+        "stdDev": 47.65157825735331,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4041,
+        "verticalEdgeRatio": 0.285562857748569
+      },
+      "score": -25.3,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.7,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "SLV"
+      ],
+      "timestamp": 352,
+      "timestamp_hms": "00:05:52"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 204,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_hlg5zawuqpw_8ab8c7af_whiteboard\\ocr\\ocr_000205.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 816.8,
+      "observed_date": null,
+      "ocr_confidence": 52,
+      "ocr_profile": "threshold",
+      "ocr_text": "IB WSTool - MarketSurge - Google Chrome                                                                                                                                                                                     -       o       x\n2% marketsurge. investors com/mstool?chart =symbol%3AMU%2Cperiodicity%3Aday                                                                                                                                 5\nMarKETSURGE a     x To lw wm ome ow Cowen - nmtoo-\n* Micron Technology, Inc. au                                               $1,121.91          $1,132.33\nComputer-Hordware/Perip (31145)                        50 Days Avg Vol.   51,597,656 Market Cap.     $1.37T     (510.42) 0.92%       MU (581.23) -6.69%\nA Samet v SMIWEREV(12)         .               50Day Avg § Vol. $41.496,692190 21 Day ATR %     2.46%          After Hours       Vol, 85674.390 +50.26%\nOf 52:Week High     77% +14%% from pivot In 71 days 05:05 PM ET 06/26/2026 Last Update: 04:00 PM ET 06/26/2026\nCustomize                          § sw ose BE dhe Be     Oate          101312025\nYear    EPS EPS Sales ComposileRating 99                                  Open            18521\n(Rug)    6) %Chg  %Chg Eps Rating     a                                  Hn             191.85                   |\n2019 635 4% 2% pe Rain      py                                  Low             184.92                  /\n2020 285 65% 8% 3MonhRSRatng 97                                ou.         Tore ne                A  Rs Fat 1000\n21 606 “1% 29% qvennSRang 9                         9        222%          ff  %\n2022   835 38%  1%           <                      Cis Range        2%        81867\nid     “ GroupRSRatng 98                                  Vol           20.399.260             Ww\n20 ads AEH AR mepsrang 8                                .                300.261             yp          728.50\n26 100 ozs az           wn                                [No           rams            In\nEamings Stability                                                                                                  3\" 2K Stochastics (1                   93.55                                )                                                 <\n2023   820 sod | +45% Sales Growl Rate 67%                           © %D Stochastics (1      use 1H   A            500\n202e 7273 477% +257% Eps Growth Rate 600%                               :             1Tageeron, Salt\n22e TIO 0H E% PE 25(L0XSP)  .                        EN   Ema)       100.01+17.4% SN            N\nba:                   7       SMA(50)           134.73439.4%\nDos     12880                                                       «\nIG VAG rats ATR EGS 1OOT 10783 tag)   A a Be     westeTe2y | ES          ees\nri CY TN TTT Cl      Sos        BIZ                 sez        ae\nar           a                                                                                  5)\n180 volume]             a)              Gu ow           am             am        J     oo     Er       naw TT         lsmom\nfl, xo   2m       Lol)     EL]     Hl      Nn  13)   |    id   —                378M\nx                    fa     \"      hy      ad           4 dL                                           2M\ni lt il     lth ocr\nNl ol 5 OR ES ATT A     I].              El\nTr ee ee ee ee eee eae 3}\n092306 20 04 {8 01 1520 132710°24 07 20°07 21 04 18°02 1630 227 41 25 08 2205 19703 17 31 14 28 1226 09°23 06°20 06 20 03°17 01 15°20 12°26 10\nSep Det’ Nov Dec Jan Fen Mar Apr May Jun sil AQECERSommrmétta Nov Dec Jan Feb Mar Apr May dm dul\nScreens   Reports     21/21 21items © Updated: 1258 PM ET 061262026                          ory - CE B A\n=»7354 TODAY: > SEMIS, STORAGE, AND Al STOCKS HIT, S&P BELOW 50DAY\n* 6925/6936 (14 200D/40WK) € 5/121 5/8 SLOPED\n",
+      "ocr_text_snippet": "IB WSTool - MarketSurge - Google Chrome - o x 2% marketsurge. investors com/mstool?chart =symbol%3AMU%2Cperiodicity%3Aday 5 MarKETSURGE a x To lw wm ome ow Cowen - nmtoo- * Micron Technology, Inc. ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 52,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 52,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "cb50372ad4c9b5f0",
+      "prefilter_score": 4.85,
+      "prefilter_stats": {
+        "brightRatio": 0.7636805555555556,
+        "darkRatio": 0.0018055555555555555,
+        "edgeRatio": 0.18450992862695215,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1503,
+        "horizontalEdgeRatio": 0.10621157515369939,
+        "meanLuma": 231.08194444444445,
+        "stdDev": 29.35620475010777,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3719,
+        "verticalEdgeRatio": 0.26280828210020496
+      },
+      "score": -25.4,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.6,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE",
+        "MU"
+      ],
+      "timestamp": 816,
+      "timestamp_hms": "00:13:36"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 3,
+      "end_ts": 560,
+      "end_hms": "00:09:20",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 104,
+      "peak_score": 94.77,
+      "start_hms": "00:06:56",
+      "start_ts": 416
+    }
+  ],
+  "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\logs\\20260626_20260626_hlg5zawuqpw_8ab8c7af_whiteboard.json"
+}

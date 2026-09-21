@@ -1,0 +1,1284 @@
+{
+  "date_key": "20260810",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260810_u5F6yIo61oA.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 105,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260810_20260810_u5f6yio61oa_d7cf95b7_whiteboard\\ocr\\ocr_000106.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 417.6,
+      "observed_date": "20260810",
+      "ocr_confidence": 55,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Preview Fn EM View Oo Tools Wow Help              “UN\n© 30 [M-  Sereenhorz02-09-10st420200M    Q a q        [=   ® ia\nMarkersdice « @§ 22 TALE OF THE TAPE ~ MONDAY, AUGUST 10, 2026 << fam. DBL ©\n~ * MARKET STATE: UPTREND                                                              -\n5 Sershras SYST 4 STO INDEXES 64 OJ RGB 74 14 NASD USDY TNX/TYX vs 5d            1230.00     we 2001 0\nQ su         © # SENTIMENT: VIX 15.40 (+3.365%) F&G 64{+0 GREED) AN 37 +6 25-1.5 NEINE] NAAIM 79.70 4.32       wart mas wo i Goo a1 or   o\nCoes                BULL CASE: INITIATE RALLY & TREND 21EMA  €8/3-4 REGAIN 21E & FTD                       seepage           © ows\nes tre am                                                                       A VAYa wo a          Foros\n8% %«& JE BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                     LI\nTm se 1D * NEWS: WED: CPI THURS PP AND MORE EARNINGS; HPE UPGRADE; ChatGPT Cyber                                      at\nmoan Lo  Ra res x vs SEAT  an SAT  R2K vs BE /ATHY                           a\n0 0% sr as          1 U-4,     U-1 => U-4,       e: +      e +7                                                   RS Ran 300    News\nBm Wr acTion:       27773 $7749                              (VAVANAY A *      -\n. *SPXO/N 7740-77731 07751 030 7748-77611 L/H7743-7773             .          ht         choo\n* SPX ATR: 1.13% SPX       60/40 0.26% GRO +0.18% TURBO              Lm MH, Hh, i  wd wo\n* SECTORS: 1 8Y% USD ORG BUG G/S IGY COPX 4 BPS WGMI JETS ITB CRYPTO           nor   oe        0.x.\n* GRO HOLDINGS: SPYM,UPRO,SPXL,HPE,OKTA PLTR CBRS,AMZU                                                                                    a\nmw. *GRORVAB/REBAR: 1.25 (-1.02%/-6.62%) ADD to OKTA HPE PLTR BUY AMZU                  EE—— TR\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS                                                           In                                 ge\n* TURBO RVAB/REBAR: 1.04 (0.55%/-5.22%) NO CHANGES           en\n* BOTTOM LINE:                         '         :                                                                ne        - =\n= * TUESKEYS: SPXvs 8E/ATH QQQ vs S0D/730 R2Kvs 8E/ATH                Still       os\nCl               © >>> S&P500 KEY LEVELS <<<                                                                           ~               \"teen ©\n= 7793 (8/4 INTRADAY A-T-H}                                               -      on          Dimace ©\n7757 FRI: LEADERS LEAD AS INDEXES CLOSE STRONG                           woz       sux 0\n                                                                       ~                  ex\nto                                                                or - Sua\n= ren           *7570 (P24 21EMA) € 7/311 7/234 7/211 7/179 6/291 6/23%           tos cw fay am nO RSE\nen     *7497/7521 (16 SOD/10WK) € 7/314 7/234 7/21 7/17 6/291           amo               ww\n—        * 7055/7086 (15 2000/40WK) € 4/841 3/193                                         oem\n= Chants of eros                                                                              :     ’          oo\nLo                                        —                         Ce Tet\n",
+      "ocr_text_snippet": "6 Preview Fn EM View Oo Tools Wow Help “UN © 30 [M- Sereenhorz02-09-10st420200M Q a q [= ® ia Markersdice « @§ 22 TALE OF THE TAPE ~ MONDAY, AUGUST 10, 2026 << fam. DBL © ~ * MARKET STATE: UPTREND ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,SPXL,HPE,OKTA PLTR CBRS,AMZU A MW. *GRORVAB/REBAR: 1.25 (-1.02%/-6.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO OKTA HPE PLTR BUY AMZU EE-- TR",
+          "bottom_line": "' : NE - = TUESKEYS: SPXVS 8E/ATH QQQ VS S0D/730 R2KVS 8E/ATH STILL OS CL © >>> S&P500 KEY LEVELS <<< ~ \"TEEN © 7793 (8/4 INTRADAY A-T-H} - ON DIMACE © 7757 FRI: LEADERS LEAD AS INDEXES CLOSE STRONG WOZ SUX 0 EX TO OR - SUA REN *7570 (P24 21EMA) € 7/311 7/234 7/211 7/179 6/291 6/23% TOS CW FAY AM NO RSE EN *7497/7521 (16 SOD/10WK) € 7/314 7/234 7/21 7/17 6/291 AMO WW 7055/7086 (15 2000/40WK) € 4/841 3/193 OEM CHANTS OF EROS : ' OO LO - CE TET",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.04 (0.55%/-5.22%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES EN",
+          "bottom_line": "' : NE - = TUESKEYS: SPXVS 8E/ATH QQQ VS S0D/730 R2KVS 8E/ATH STILL OS CL © >>> S&P500 KEY LEVELS <<< ~ \"TEEN © 7793 (8/4 INTRADAY A-T-H} - ON DIMACE © 7757 FRI: LEADERS LEAD AS INDEXES CLOSE STRONG WOZ SUX 0 EX TO OR - SUA REN *7570 (P24 21EMA) € 7/311 7/234 7/211 7/179 6/291 6/23% TOS CW FAY AM NO RSE EN *7497/7521 (16 SOD/10WK) € 7/314 7/234 7/21 7/17 6/291 AMO WW 7055/7086 (15 2000/40WK) € 4/841 3/193 OEM CHANTS OF EROS : ' OO LO - CE TET",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01979601fe9f",
+      "prefilter_score": 11.6,
+      "prefilter_stats": {
+        "brightRatio": 0.7675,
+        "darkRatio": 0.02236111111111111,
+        "edgeRatio": 0.2076178361953219,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1612,
+        "horizontalEdgeRatio": 0.11391421100982263,
+        "meanLuma": 230.77520833333332,
+        "stdDev": 39.26364354995227,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4264,
+        "verticalEdgeRatio": 0.30132146138082117
+      },
+      "score": 104.05,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.75,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 20,
+        "text_density": 87.3
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "HPE",
+        "OKTA",
+        "PLTR",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 420,
+      "timestamp_hms": "00:07:00",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260810_ps.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 84,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260810_20260810_u5f6yio61oa_d7cf95b7_whiteboard\\ocr\\ocr_000085.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 337.72,
+      "observed_date": "20260810",
+      "ocr_confidence": 50,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Preview Fle ER View Go Tools Widow Help            0g HOw        5\n® © (Dv Screenshot 2026-08-1004.20.28PM     Qa a          [=    ® iad\nCL          x                                                      a\nMameTsnee o EE        >> TALE OF THE TAPE - MONDAY, AUGUST 10, 2026 << Gam. DBL oo\n= Howlett Packard Enterprise { , 11 RKET STATE: UPTREND                                                    0           154.68\nCome Ton te HE           *STOINDEXES 67 OJ RG871 1d NASIT USDJ TNX/TYX vs 5d         «      we amine\n© sam        © msioral       *_ * SENTIMENT: VIX 15.40 (3.36%) F&G 64{+0 GREED) AAI 37 46 25-1.8 TTILR] NAAIM 79.70 4.32      5 Latin peu 1 70   o\nue cwswnony “BULL CASE: INITIATE RALLY & TREND 21EMA ~~ €8/3-4 REGAIN 21E & FTD           wage       © oma\n8 UE J SLL BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                   LI\nZwow wl Rhee * NEWS: WED: CPI THURS PPI AND MORE EARNINGS; HPE UPGRADE; ChatGPT Cyber                          Pe\nnom wo eonadly * TODAYS KEYS: SPXvs BET/ATHY  QQQus SODT/ATHY RIK vs SET/ATHY         neers     « 9%\nmow ol Doi ') *DAYCTU/ Ul =>U-4) Sef ater                             yt         —\nWe se cn on eames * ACTION:       17773 17749                               Bld mre\nTUM WT Te Mes wsPXO/N 7740-77731 07751 030 7748-77611 L/H7743-7773            oe         ca\nce eo ES on *SPX ATR: 113% 4 SPX     60/40-0.26% GRO +0.18% TURBO          =    Ny\neS SECTORS: 1 BY% USD O8G BUG G/S IGY COPX J BPS WGMI JETS ITB CRYPTO                              rains\n* GRO HOLDINGS: SPYM,UPRO,SPXL,HPE,OKTA PLTR,CBRS,AMZU                                                                     a\nmm * GRO RVAB/REBAR: 1.25 (-L.02%/-6.52%) ADD to OKTA HPE PLTR BUY AMZU                  —\nne              ~—             * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS                                                                                        wm      [+3\n~~ * TURBO RVAB/REBAR: 1.04 (-0.55%/-5.22%) NO CHANGES                                     —              ee\nMg 55          TE\nMHTITNAILIEL + Tes Keys: spx vs 8E/ATH  QQQ vs 500/730 R2K vs BE/ATH                       LH         on\nomen         © >>> S&PS00 KEY LEVELS <<<                                                Me ©\n-       a      x — *7793(8/4 INTRADAY A-T-H}                                           -        Dsmrcw ©\n-          B         we. 37757 ERI: LEADERS LEAD AS INDEXES CLOSE STRONG                                               sux\nPa                                                                 .        ex ag\nScreww Lua Reem                                                           ory - QF BA\nlial           ©\" ®7570 {124 21EMA) € 7/311 7/234 7/211 7/174 6/291 6/23¢        AE A\nen       _ *7497/7521(1650D/10WK) € 7/314 7/234 7/214 7/174 6/291         -         ww\n—          I * 7055/7086 {15 200D/40WK) € 4/81 3/194                        Sem\n= Charts of Interest                                                                             :    )     :   i.\nLo                            —                               Ce\n",
+      "ocr_text_snippet": "@ Preview Fle ER View Go Tools Widow Help 0g HOw 5 ® © (Dv Screenshot 2026-08-1004.20.28PM Qa a [= ® iad CL x a MameTsnee o EE >> TALE OF THE TAPE - MONDAY, AUGUST 10, 2026 << Gam. DBL oo = Howlett...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,SPXL,HPE,OKTA PLTR,CBRS,AMZU A MM * GRO RVAB/REBAR: 1.25 (-L.02%/-6.52%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO OKTA HPE PLTR BUY AMZU - NE ~- * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS WM [+3",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 50,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.04 (-0.55%/-5.22%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES - EE MG 55 TE MHTITNAILIEL + TES KEYS: SPX VS 8E/ATH QQQ VS 500/730 R2K VS BE/ATH LH ON OMEN © >>> S&PS00 KEY LEVELS <<< ME © A X - *7793(8/4 INTRADAY A-T-H} - DSMRCW © B WE. 37757 ERI: LEADERS LEAD AS INDEXES CLOSE STRONG SUX PA . EX AG SCREWW LUA REEM ORY - QF BA LIAL ©\" ®7570 {124 21EMA) € 7/311 7/234 7/211 7/174 6/291 6/23¢ AE A EN _ *7497/7521(1650D/10WK) € 7/314 7/234 7/214 7/174 6/291 - WW I * 7055/7086 {15 200D/40WK) € 4/81 3/194 SEM CHARTS OF INTEREST : ) : I. LO - CE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 50,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "806d01b500fdfe6f",
+      "prefilter_score": 11.86,
+      "prefilter_stats": {
+        "brightRatio": 0.7560416666666666,
+        "darkRatio": 0.022152777777777778,
+        "edgeRatio": 0.20779450215532472,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1605,
+        "horizontalEdgeRatio": 0.11341954632181471,
+        "meanLuma": 229.79354166666667,
+        "stdDev": 39.277769015633844,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4276,
+        "verticalEdgeRatio": 0.3021694579888347
+      },
+      "score": 89.44,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.5,
+        "pair_bonus": 4,
+        "per_row_issues": -8,
+        "per_row_metrics": 16,
+        "text_density": 80.94
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "HPE",
+        "OKTA",
+        "PLTR",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 336,
+      "timestamp_hms": "00:05:36",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260810_ps_2.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 72,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260810_20260810_u5f6yio61oa_d7cf95b7_whiteboard\\ocr\\ocr_000073.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 287.6,
+      "observed_date": "20260810",
+      "ocr_confidence": 50,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Preview Fle ER View Go Tools Widow Help            [XI XEN TX      B\nx\nMarkets ceo EE        2> TALE OF THE TAPE ~ MONDAY, AUGUST 10, 2026 << me. DELO\n Howlett Packard Enterprise { 11 KC! STATE: UPTREND                                                    0           454.68\nComer 108 es           *STOINDEXES 61 OL RGB7T 1d NASIT USDY TNX/TYX vs 5d         4      oe sane\n@ sam        © msira        *_ * SENTIMENT: VIX 15.40 (+3.36%) F&G 64{+0 GREED) AAI 37 46 25-1.8 TTIER] NAAIM 79.70 4.32      at ou 1 crs   o\nue cwmmneey un “YBULL CASE: INITIATE RALLY & TREND 21EMA  €8/3-4 REGAIN 21E & FTD           a       0 ome\n$i aE J SUL BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                   LI\nTow wl Sled * NEWS: WED: CPI THURS PPI AND MORE EARNINGS; HPE UPGRADE; ChatGPT Cyber                mt\nnom meals TODAYSKEVS:SPXvs SET/ATHY,  QQQus SODT/ATHY  R2K vs SET/ATHY        eas     « 9%\nZoom ONES % tDAYCT:Ua/ [Ul =U    8e: +7 21e: +74                           ot         frost\nwee saz ne ne iescmeneems* ACTION:      27773 $7749                            Bl 2 me     _\nTe AM TWN ee menn eopy ON 7740-77731 07751 030 7748-77611 L/H 7743-7773       TT ake\neB YSPXATR: 113% SPX     60/40 -0.26% GRO +0.18% TURBO          =     i=\nSEES GrevoRS: A BY USD ORG BUG G/S IY COPX 4 BPS WGMIJETS IT8 CRYPTO                         ? Woe\n* GRO HOLDINGS: SPYM,UPRO,SPXL,HPE,OKTA,PLTR,CBRS,AMZU                                                                     a\n“wwe \"GRO RVAB/REBAR: 1.25 (-102%/-6.62%) ADD to OKTA HPE PLTR BUY AMZU                  —r\np                 p.                * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS                                                                                                              a\n“= *TURBO RVAB/REBAR: 1.04 (-0.55%/-5.22%) NO CHANGES                            —           re\npg 55          ily 2\nRUTIEIITRITNEMILEL TUES KEYS: SPX vs 8E/ATH QQQ vs 500/730 R2K vs 8E/ATH                     HAE        om\nomens         © >>> S&P500 KEY LEVELS <<<                                                :     “en ©\n      os      on *7793(8/4 INTRADAY A-T-H}                                       -       [Ee\n-          \"         sw. 37757 FRE: LEADERS LEAD AS INDEXES CLOSE STRONG                                              sn 5.50\neo       [ri\nSew Ln Reem                                                           Ory © 25 @4%\n= poe         © *7570 (124 21EMA) € 7/311 7/238 7/211 7/174 6/291 6/234      a MR vom ma\nem .. 7497/7521(1650D/10WK) € 7/311 7/234 7/211 7/174 6/291        EEE\n—          I * 7055/7086 (15 200D/40WK) € 4/81 3/194                        Cem\nene                                                                       Cam\nLo                          —                             re\n",
+      "ocr_text_snippet": "@ Preview Fle ER View Go Tools Widow Help [XI XEN TX B x Markets ceo EE 2> TALE OF THE TAPE ~ MONDAY, AUGUST 10, 2026 << me. DELO Howlett Packard Enterprise { 11 KC! STATE: UPTREND 0 454.68 Comer 1...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,SPXL,HPE,OKTA,PLTR,CBRS,AMZU A WWE \"GRO RVAB/REBAR: 1.25 (-102%/-6.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO OKTA HPE PLTR BUY AMZU -R P P. * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS A",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 50,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.04 (-0.55%/-5.22%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES - RE PG 55 ILY 2 RUTIEIITRITNEMILEL TUES KEYS: SPX VS 8E/ATH QQQ VS 500/730 R2K VS 8E/ATH HAE OM OMENS © >>> S&P500 KEY LEVELS <<< : \"EN © OS ON *7793(8/4 INTRADAY A-T-H} - [EE SW. 37757 FRE: LEADERS LEAD AS INDEXES CLOSE STRONG SN 5.50 EO [RI SEW LN REEM ORY © 25 @4% POE © *7570 (124 21EMA) € 7/311 7/238 7/211 7/174 6/291 6/234 A MR VOM MA EM .. 7497/7521(1650D/10WK) € 7/311 7/234 7/211 7/174 6/291 EEE I * 7055/7086 (15 200D/40WK) € 4/81 3/194 CEM ENE CAM LO - RE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 50,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "806d01b500fdfe6f",
+      "prefilter_score": 11.86,
+      "prefilter_stats": {
+        "brightRatio": 0.7556944444444444,
+        "darkRatio": 0.022152777777777778,
+        "edgeRatio": 0.20878383153134053,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1620,
+        "horizontalEdgeRatio": 0.11447954208183167,
+        "meanLuma": 229.72625,
+        "stdDev": 39.27278963076028,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4289,
+        "verticalEdgeRatio": 0.3030881209808494
+      },
+      "score": 86.7,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.5,
+        "pair_bonus": 4,
+        "per_row_issues": -8,
+        "per_row_metrics": 16,
+        "text_density": 78.2
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "HPE",
+        "OKTA",
+        "PLTR",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 288,
+      "timestamp_hms": "00:04:48",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260810_ps_3.png"
+    }
+  ],
+  "frame_count": 214,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 173,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260810_ps.png",
+  "prefilter_best_score": 19.48,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 105,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260810_20260810_u5f6yio61oa_d7cf95b7_whiteboard\\ocr\\ocr_000106.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 417.6,
+    "observed_date": "20260810",
+    "ocr_confidence": 55,
+    "ocr_profile": "threshold",
+    "ocr_text": "6 Preview Fn EM View Oo Tools Wow Help              “UN\n© 30 [M-  Sereenhorz02-09-10st420200M    Q a q        [=   ® ia\nMarkersdice « @§ 22 TALE OF THE TAPE ~ MONDAY, AUGUST 10, 2026 << fam. DBL ©\n~ * MARKET STATE: UPTREND                                                              -\n5 Sershras SYST 4 STO INDEXES 64 OJ RGB 74 14 NASD USDY TNX/TYX vs 5d            1230.00     we 2001 0\nQ su         © # SENTIMENT: VIX 15.40 (+3.365%) F&G 64{+0 GREED) AN 37 +6 25-1.5 NEINE] NAAIM 79.70 4.32       wart mas wo i Goo a1 or   o\nCoes                BULL CASE: INITIATE RALLY & TREND 21EMA  €8/3-4 REGAIN 21E & FTD                       seepage           © ows\nes tre am                                                                       A VAYa wo a          Foros\n8% %«& JE BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                     LI\nTm se 1D * NEWS: WED: CPI THURS PP AND MORE EARNINGS; HPE UPGRADE; ChatGPT Cyber                                      at\nmoan Lo  Ra res x vs SEAT  an SAT  R2K vs BE /ATHY                           a\n0 0% sr as          1 U-4,     U-1 => U-4,       e: +      e +7                                                   RS Ran 300    News\nBm Wr acTion:       27773 $7749                              (VAVANAY A *      -\n. *SPXO/N 7740-77731 07751 030 7748-77611 L/H7743-7773             .          ht         choo\n* SPX ATR: 1.13% SPX       60/40 0.26% GRO +0.18% TURBO              Lm MH, Hh, i  wd wo\n* SECTORS: 1 8Y% USD ORG BUG G/S IGY COPX 4 BPS WGMI JETS ITB CRYPTO           nor   oe        0.x.\n* GRO HOLDINGS: SPYM,UPRO,SPXL,HPE,OKTA PLTR CBRS,AMZU                                                                                    a\nmw. *GRORVAB/REBAR: 1.25 (-1.02%/-6.62%) ADD to OKTA HPE PLTR BUY AMZU                  EE—— TR\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS                                                           In                                 ge\n* TURBO RVAB/REBAR: 1.04 (0.55%/-5.22%) NO CHANGES           en\n* BOTTOM LINE:                         '         :                                                                ne        - =\n= * TUESKEYS: SPXvs 8E/ATH QQQ vs S0D/730 R2Kvs 8E/ATH                Still       os\nCl               © >>> S&P500 KEY LEVELS <<<                                                                           ~               \"teen ©\n= 7793 (8/4 INTRADAY A-T-H}                                               -      on          Dimace ©\n7757 FRI: LEADERS LEAD AS INDEXES CLOSE STRONG                           woz       sux 0\n                                                                       ~                  ex\nto                                                                or - Sua\n= ren           *7570 (P24 21EMA) € 7/311 7/234 7/211 7/179 6/291 6/23%           tos cw fay am nO RSE\nen     *7497/7521 (16 SOD/10WK) € 7/314 7/234 7/21 7/17 6/291           amo               ww\n—        * 7055/7086 (15 2000/40WK) € 4/841 3/193                                         oem\n= Chants of eros                                                                              :     ’          oo\nLo                                        —                         Ce Tet\n",
+    "ocr_text_snippet": "6 Preview Fn EM View Oo Tools Wow Help “UN © 30 [M- Sereenhorz02-09-10st420200M Q a q [= ® ia Markersdice « @§ 22 TALE OF THE TAPE ~ MONDAY, AUGUST 10, 2026 << fam. DBL © ~ * MARKET STATE: UPTREND ...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": "HOLDINGS: SPYM,UPRO,SPXL,HPE,OKTA PLTR CBRS,AMZU A MW. *GRORVAB/REBAR: 1.25 (-1.02%/-6.62%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "ADD TO OKTA HPE PLTR BUY AMZU EE-- TR",
+        "bottom_line": "' : NE - = TUESKEYS: SPXVS 8E/ATH QQQ VS S0D/730 R2KVS 8E/ATH STILL OS CL © >>> S&P500 KEY LEVELS <<< ~ \"TEEN © 7793 (8/4 INTRADAY A-T-H} - ON DIMACE © 7757 FRI: LEADERS LEAD AS INDEXES CLOSE STRONG WOZ SUX 0 EX TO OR - SUA REN *7570 (P24 21EMA) € 7/311 7/234 7/211 7/179 6/291 6/23% TOS CW FAY AM NO RSE EN *7497/7521 (16 SOD/10WK) € 7/314 7/234 7/21 7/17 6/291 AMO WW 7055/7086 (15 2000/40WK) € 4/841 3/193 OEM CHANTS OF EROS : ' OO LO - CE TET",
+        "parse_status": "review",
+        "issue_codes": [
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 55,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": "RVAB/REBAR: 1.04 (0.55%/-5.22%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "NO CHANGES EN",
+        "bottom_line": "' : NE - = TUESKEYS: SPXVS 8E/ATH QQQ VS S0D/730 R2KVS 8E/ATH STILL OS CL © >>> S&P500 KEY LEVELS <<< ~ \"TEEN © 7793 (8/4 INTRADAY A-T-H} - ON DIMACE © 7757 FRI: LEADERS LEAD AS INDEXES CLOSE STRONG WOZ SUX 0 EX TO OR - SUA REN *7570 (P24 21EMA) € 7/311 7/234 7/211 7/179 6/291 6/23% TOS CW FAY AM NO RSE EN *7497/7521 (16 SOD/10WK) € 7/314 7/234 7/21 7/17 6/291 AMO WW 7055/7086 (15 2000/40WK) € 4/841 3/193 OEM CHANTS OF EROS : ' OO LO - CE TET",
+        "parse_status": "review",
+        "issue_codes": [
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 55,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "807f01979601fe9f",
+    "prefilter_score": 11.6,
+    "prefilter_stats": {
+      "brightRatio": 0.7675,
+      "darkRatio": 0.02236111111111111,
+      "edgeRatio": 0.2076178361953219,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1612,
+      "horizontalEdgeRatio": 0.11391421100982263,
+      "meanLuma": 230.77520833333332,
+      "stdDev": 39.26364354995227,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 4264,
+      "verticalEdgeRatio": 0.30132146138082117
+    },
+    "score": 104.05,
+    "score_breakdown": {
+      "chart_likeness": -6,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 2.75,
+      "pair_bonus": 4,
+      "per_row_issues": -4,
+      "per_row_metrics": 20,
+      "text_density": 87.3
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "BE",
+      "HPE",
+      "OKTA",
+      "PLTR",
+      "SPYM",
+      "TQQQ",
+      "UPRO"
+    ],
+    "timestamp": 420,
+    "timestamp_hms": "00:07:00"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 105,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260810_20260810_u5f6yio61oa_d7cf95b7_whiteboard\\ocr\\ocr_000106.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260810",
+      "ocr_confidence": 55,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Preview Fn EM View Oo Tools Wow Help              “UN\n© 30 [M-  Sereenhorz02-09-10st420200M    Q a q        [=   ® ia\nMarkersdice « @§ 22 TALE OF THE TAPE ~ MONDAY, AUGUST 10, 2026 << fam. DBL ©\n~ * MARKET STATE: UPTREND                                                              -\n5 Sershras SYST 4 STO INDEXES 64 OJ RGB 74 14 NASD USDY TNX/TYX vs 5d            1230.00     we 2001 0\nQ su         © # SENTIMENT: VIX 15.40 (+3.365%) F&G 64{+0 GREED) AN 37 +6 25-1.5 NEINE] NAAIM 79.70 4.32       wart mas wo i Goo a1 or   o\nCoes                BULL CASE: INITIATE RALLY & TREND 21EMA  €8/3-4 REGAIN 21E & FTD                       seepage           © ows\nes tre am                                                                       A VAYa wo a          Foros\n8% %«& JE BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                     LI\nTm se 1D * NEWS: WED: CPI THURS PP AND MORE EARNINGS; HPE UPGRADE; ChatGPT Cyber                                      at\nmoan Lo  Ra res x vs SEAT  an SAT  R2K vs BE /ATHY                           a\n0 0% sr as          1 U-4,     U-1 => U-4,       e: +      e +7                                                   RS Ran 300    News\nBm Wr acTion:       27773 $7749                              (VAVANAY A *      -\n. *SPXO/N 7740-77731 07751 030 7748-77611 L/H7743-7773             .          ht         choo\n* SPX ATR: 1.13% SPX       60/40 0.26% GRO +0.18% TURBO              Lm MH, Hh, i  wd wo\n* SECTORS: 1 8Y% USD ORG BUG G/S IGY COPX 4 BPS WGMI JETS ITB CRYPTO           nor   oe        0.x.\n* GRO HOLDINGS: SPYM,UPRO,SPXL,HPE,OKTA PLTR CBRS,AMZU                                                                                    a\nmw. *GRORVAB/REBAR: 1.25 (-1.02%/-6.62%) ADD to OKTA HPE PLTR BUY AMZU                  EE—— TR\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS                                                           In                                 ge\n* TURBO RVAB/REBAR: 1.04 (0.55%/-5.22%) NO CHANGES           en\n* BOTTOM LINE:                         '         :                                                                ne        - =\n= * TUESKEYS: SPXvs 8E/ATH QQQ vs S0D/730 R2Kvs 8E/ATH                Still       os\nCl               © >>> S&P500 KEY LEVELS <<<                                                                           ~               \"teen ©\n= 7793 (8/4 INTRADAY A-T-H}                                               -      on          Dimace ©\n7757 FRI: LEADERS LEAD AS INDEXES CLOSE STRONG                           woz       sux 0\n                                                                       ~                  ex\nto                                                                or - Sua\n= ren           *7570 (P24 21EMA) € 7/311 7/234 7/211 7/179 6/291 6/23%           tos cw fay am nO RSE\nen     *7497/7521 (16 SOD/10WK) € 7/314 7/234 7/21 7/17 6/291           amo               ww\n—        * 7055/7086 (15 2000/40WK) € 4/841 3/193                                         oem\n= Chants of eros                                                                              :     ’          oo\nLo                                        —                         Ce Tet\n",
+      "ocr_text_snippet": "6 Preview Fn EM View Oo Tools Wow Help “UN © 30 [M- Sereenhorz02-09-10st420200M Q a q [= ® ia Markersdice « @§ 22 TALE OF THE TAPE ~ MONDAY, AUGUST 10, 2026 << fam. DBL © ~ * MARKET STATE: UPTREND ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,SPXL,HPE,OKTA PLTR CBRS,AMZU A MW. *GRORVAB/REBAR: 1.25 (-1.02%/-6.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO OKTA HPE PLTR BUY AMZU EE-- TR",
+          "bottom_line": "' : NE - = TUESKEYS: SPXVS 8E/ATH QQQ VS S0D/730 R2KVS 8E/ATH STILL OS CL © >>> S&P500 KEY LEVELS <<< ~ \"TEEN © 7793 (8/4 INTRADAY A-T-H} - ON DIMACE © 7757 FRI: LEADERS LEAD AS INDEXES CLOSE STRONG WOZ SUX 0 EX TO OR - SUA REN *7570 (P24 21EMA) € 7/311 7/234 7/211 7/179 6/291 6/23% TOS CW FAY AM NO RSE EN *7497/7521 (16 SOD/10WK) € 7/314 7/234 7/21 7/17 6/291 AMO WW 7055/7086 (15 2000/40WK) € 4/841 3/193 OEM CHANTS OF EROS : ' OO LO - CE TET",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.04 (0.55%/-5.22%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES EN",
+          "bottom_line": "' : NE - = TUESKEYS: SPXVS 8E/ATH QQQ VS S0D/730 R2KVS 8E/ATH STILL OS CL © >>> S&P500 KEY LEVELS <<< ~ \"TEEN © 7793 (8/4 INTRADAY A-T-H} - ON DIMACE © 7757 FRI: LEADERS LEAD AS INDEXES CLOSE STRONG WOZ SUX 0 EX TO OR - SUA REN *7570 (P24 21EMA) € 7/311 7/234 7/211 7/179 6/291 6/23% TOS CW FAY AM NO RSE EN *7497/7521 (16 SOD/10WK) € 7/314 7/234 7/21 7/17 6/291 AMO WW 7055/7086 (15 2000/40WK) € 4/841 3/193 OEM CHANTS OF EROS : ' OO LO - CE TET",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01979601fe9f",
+      "prefilter_score": 11.6,
+      "prefilter_stats": {
+        "brightRatio": 0.7675,
+        "darkRatio": 0.02236111111111111,
+        "edgeRatio": 0.2076178361953219,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1612,
+        "horizontalEdgeRatio": 0.11391421100982263,
+        "meanLuma": 230.77520833333332,
+        "stdDev": 39.26364354995227,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4264,
+        "verticalEdgeRatio": 0.30132146138082117
+      },
+      "score": 104.05,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.75,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 20,
+        "text_density": 87.3
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "HPE",
+        "OKTA",
+        "PLTR",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 420,
+      "timestamp_hms": "00:07:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 96,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260810_20260810_u5f6yio61oa_d7cf95b7_whiteboard\\ocr\\ocr_000097.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260810",
+      "ocr_confidence": 55,
+      "ocr_profile": "threshold",
+      "ocr_text": "€ Preview Fle Ed View Go Tools Window Help           Deo» sw      B\n® © (D- Screenshot 2026-08-10 at 4.20.28PM   Qa a a      d   @ id\nI                           x                                a\nMamcerscuee o QA) 55 TALE OF THE TAPE ~ MONDAY, AUGUST 10, 2026 << Samm DE oe\n» Amazon.com Inc.    * MARKET STATE: UPTREND                                         277.53        278.09\nBe eee *STOINDEXESST OL RGB7T 1d NASM USDY TNX/TYX vs Sd         GIA mIEOE e\n_                ~ * SENTIMENT: VIX 15.40 (+3.36%] F&G 64(+0 GREED) AAI 27 +6 251.8 STINE] NAAIM 79.70 4.32     Lerowoma enone RA\n%5, © a comer PBULL CASE: INITIATE RALLY & TREND 21EMA  €38/3-4 REGAIN 21E & FTD          Ee N=\n7% \"eel AS BEAR CASE: SUSTAINED BREAK BELOW 21EMA                      _— |B,\npal a fee 2 guenmss * NEWS: WED: CPI THURS PPI AND MORE EARNINGS; HPE UPGRADE; ChatGPT Cyber        |}      Sector\nma aww out coowne ® TODAY'S KEYS: SPX vs 8ETN/ATHY  QQQvs SODM/ATHY  R2K vs 8ET/ATHY       te   1        “@\nGas tm ae ae ees *DAYCT:U-4/  fU-1 =>U-4/   Be: +7 1 21e: +74                   A     mo Ne\nTe tam al lue SS e ACTION:       27773 17749                                     i    ea     =\n=e © mew SC *SPXO/N 7740-77731 07751 030 7748-77611 L/H 7743-7773                  Fa\nBee wspy ATRI1.43%4 SPX     60/40-0.26% GRO +0.18% TURBO               in       J\n* SECTORS: 1 BY% USD O&G BUG G/S IGV COPX J BPS WGMI JETS ITB CRYPTO                                        Frnt\n* GRO HOLDINGS: SPYM,UPRO,SPXL, HPE, OKTA, PLTR,CBRS, AMZU                                                                             a\naus                        * GRO RVAB/REBAR: 1.25 (-1.02%/-6.62%) ADD to OKTA HPE PLTR BUY AMZU                                                  me.\n                 * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS                                                                                                    POV +\nTil         iii     * TURBO RVAB/REBAR: 1.04 (-0.55%/-5.22%) NO CHANGES                   Tdi     I    wT\n* BOTTOM LINE:                                                                                                      oF\nA. “MOU * TUES KEYS: SPXvs 8E/ATH  QQQ vs SOD/730 R2K vs 8E/ATH                   Swe\nErte nce 013       _ >>>S&PS00 KEY LEVELS <<<                                                                    a                   aC]\nM             -              * 7793 (8/4 INTRADAY A-T-H)                                                                                           hd               Tuees     “\n_ P7757 FRI: LEADERS LEAD AS INDEXES CLOSE STRONG                   .          re\n—-— ww                                                            or - ow aA\nEr —                                                            Bam mee we\nee *7570(12421EMA) € 7/311 7/231 7/211 7/170 6/291 6/23%       fe\n© Veoa Process        *7497/7521 (16 50D/10WK) € 7/311 7/234 7/2110 7/173 6/291       Ce\n= nt             * 7055/7086 (15 2000/40WK) € 4/81 3/193                                    a\nJrAp—\n",
+      "ocr_text_snippet": "€ Preview Fle Ed View Go Tools Window Help Deo» sw B ® © (D- Screenshot 2026-08-10 at 4.20.28PM Qa a a d @ id I x a Mamcerscuee o QA) 55 TALE OF THE TAPE ~ MONDAY, AUGUST 10, 2026 << Samm DE oe » A...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,SPXL, HPE, OKTA, PLTR,CBRS, AMZU A AUS * GRO RVAB/REBAR: 1.25 (-1.02%/-6.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO OKTA HPE PLTR BUY AMZU ME.",
+          "bottom_line": "OF A. \"MOU * TUES KEYS: SPXVS 8E/ATH QQQ VS SOD/730 R2K VS 8E/ATH SWE ERTE NCE 013 _ >>>S&PS00 KEY LEVELS <<< A AC] M - * 7793 (8/4 INTRADAY A-T-H) HD TUEES \" P7757 FRI: LEADERS LEAD AS INDEXES CLOSE STRONG . RE WW OR - OW AA ER - BAM MEE WE EE *7570(12421EMA) € 7/311 7/231 7/211 7/170 6/291 6/23% FE VEOA PROCESS *7497/7521 (16 50D/10WK) € 7/311 7/234 7/2110 7/173 6/291 CE NT * 7055/7086 (15 2000/40WK) € 4/81 3/193 A JRAP-",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,TQQQ,CBRS POV + TIL III * TURBO RVAB/REBAR: 1.04 (-0.55%/-5.22%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES TDI I WT",
+          "bottom_line": "OF A. \"MOU * TUES KEYS: SPXVS 8E/ATH QQQ VS SOD/730 R2K VS 8E/ATH SWE ERTE NCE 013 _ >>>S&PS00 KEY LEVELS <<< A AC] M - * 7793 (8/4 INTRADAY A-T-H) HD TUEES \" P7757 FRI: LEADERS LEAD AS INDEXES CLOSE STRONG . RE WW OR - OW AA ER - BAM MEE WE EE *7570(12421EMA) € 7/311 7/231 7/211 7/170 6/291 6/23% FE VEOA PROCESS *7497/7521 (16 50D/10WK) € 7/311 7/234 7/2110 7/173 6/291 CE NT * 7055/7086 (15 2000/40WK) € 4/81 3/193 A JRAP-",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f0195860dfe6f",
+      "prefilter_score": 12.79,
+      "prefilter_stats": {
+        "brightRatio": 0.7515972222222222,
+        "darkRatio": 0.028194444444444446,
+        "edgeRatio": 0.20927849621934846,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1611,
+        "horizontalEdgeRatio": 0.1138435446258215,
+        "meanLuma": 228.31506944444445,
+        "stdDev": 42.134475137754634,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4312,
+        "verticalEdgeRatio": 0.3047134478128754
+      },
+      "score": 103.77,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.75,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 20,
+        "text_density": 87.02
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "HPE",
+        "OKTA",
+        "PLTR",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 384,
+      "timestamp_hms": "00:06:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 102,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260810_20260810_u5f6yio61oa_d7cf95b7_whiteboard\\ocr\\ocr_000103.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260810",
+      "ocr_confidence": 54,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Preview Fis Ed View Go Tools Widow Help                                                      & 0% wv ¥ -\nCo ]  ® © ([D- Screenshot 2026-08-10 at 4.29.28PM        Q a f                [=3       ® id      ns\nMarxersice o @ 22 TALE OF THE TAPE - MONDAY, AUGUST 10, 2026 <<  Guam. DB ©\n~ * MARKET STATE: UPTREND                                                              -\n& Dersbras SYS 4 STO INDEXES 61 OU RGB74 14 NASI USD TNX/TYX vs 5d               22000      ane 000 8\nQ sme         © # SENTIMENT: VIX 15.40 {+3.36%) F&G 64{+0 GREED) AAN 37 +6 25-1.8 ILE] NAAIM 79.70 4.32       aru ama wo i Gece E1 ob   o\nGi .. \"PBULLCASE: INITIATE RALLY & TREND 21EMA  €8/3-4 REGAIN Z1E & FTD            NE      © owe\nBB 5m <& PBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                           /                          ® wm\nam ow oC NEWS: WED: CPI THURS PPI AND MORE EARNINGS; HPE UPGRADE; ChatGPT Cyber                                                    ome\nwoo   J Tooars vs =~ vs Fra   Pe SnTTeY   R2K vs BET /ATHY                                                            @\nHee ow av. aw        1 U-4,    U-1 =>U-4      e: +f    e:47                          v                ren WN\nEEL RE eee aun              AY\n. *SPXO/N 7740-77731 07751 030 7748-77611 L/H 7743-7773                                ht             crane\n* SPX ATR: 1.13% 4 SPX         60/40 -0.26% GRO +0.18% TURBO                  Lm A, Hh, if.   =a\n* SECTORS:  BY% USD OG BUG G/S IGV COPX J BPS WGMI JETS ITB CRYPTO           nor   Ca        0.x.\n* GRO HOLDINGS: SPYM,UPRO,SPXL,HPE,OKTA,PLTR,CBRS, AMZU                                                                                    a\n\"mw *GRORVAB/REBAR: 1.25 (-1.02%/-6.62%) ADD to OKTA HPE PLTR BUY AMZU                      TT aw ee\n* TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS                                                           In                                 mE ge\n* TURBO RVAB/REBAR: 1.04 (0.55%/-5.22%} NO CHANGES                                                     T                te\n*BOTTOMLINE: |                                                                                           no        - =\nms * TUESKEYS: SPXvs 8E/ATH  QQQvs 500/730 R2K vs 8E/ATH                                  EE             os\nbali                - >>> S&PS500 KEY LEVELS <<<                                                                                “                en: @\n- *7793 (8/4 INTRADAY A-T-H)                                                                     =         on              rr\n37757 FRI: LEADERS LEAD AS INDEXES CLOSE STRONG                            oz       sum bx 20\n                         Tea\nvn ow                                                                                                                     or - mw EA\n® fon               *7570 (124 21EMA) € 7/311 7/233 7/211 7/178 6/291 6/23¢                tan cum nang m %OtMm RR\nRo        * 7497/7521 (16 SOD/10WK) € 7/314 7/234 7/214 7/174 6/291                  2mm                         os\n—          * 7055/7086 (15 2000/40WK) € 4/81 3/19                                                     o       :       :       Coen)\n[E—                                                                                                            .       .       .       Cam\nCT           -                                                        —                                  Cae\n",
+      "ocr_text_snippet": "@ Preview Fis Ed View Go Tools Widow Help & 0% wv ¥ - Co ] ® © ([D- Screenshot 2026-08-10 at 4.29.28PM Q a f [=3 ® id ns Marxersice o @ 22 TALE OF THE TAPE - MONDAY, AUGUST 10, 2026 << Guam. DB © ~...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,SPXL,HPE,OKTA,PLTR,CBRS, AMZU A MW *GRORVAB/REBAR: 1.25 (-1.02%/-6.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO OKTA HPE PLTR BUY AMZU TT AW EE",
+          "bottom_line": "NO - = MS * TUESKEYS: SPXVS 8E/ATH QQQVS 500/730 R2K VS 8E/ATH EE OS BALI - >>> S&PS500 KEY LEVELS <<< \" EN: @ 7793 (8/4 INTRADAY A-T-H) = ON RR 37757 FRI: LEADERS LEAD AS INDEXES CLOSE STRONG OZ SUM BX 20 TEA VN OW OR - MW EA FON *7570 (124 21EMA) € 7/311 7/233 7/211 7/178 6/291 6/23¢ TAN CUM NANG M %OTMM RR RO * 7497/7521 (16 SOD/10WK) € 7/314 7/234 7/214 7/174 6/291 2MM OS 7055/7086 (15 2000/40WK) € 4/81 3/19 O : : COEN) E- . . . CAM CT - - CAE",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.04 (0.55%/-5.22%}",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES T TE",
+          "bottom_line": "NO - = MS * TUESKEYS: SPXVS 8E/ATH QQQVS 500/730 R2K VS 8E/ATH EE OS BALI - >>> S&PS500 KEY LEVELS <<< \" EN: @ 7793 (8/4 INTRADAY A-T-H) = ON RR 37757 FRI: LEADERS LEAD AS INDEXES CLOSE STRONG OZ SUM BX 20 TEA VN OW OR - MW EA FON *7570 (124 21EMA) € 7/311 7/233 7/211 7/178 6/291 6/23¢ TAN CUM NANG M %OTMM RR RO * 7497/7521 (16 SOD/10WK) € 7/314 7/234 7/214 7/174 6/291 2MM OS 7055/7086 (15 2000/40WK) € 4/81 3/19 O : : COEN) E- . . . CAM CT - - CAE",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01979201ff9f",
+      "prefilter_score": 11.57,
+      "prefilter_stats": {
+        "brightRatio": 0.7686111111111111,
+        "darkRatio": 0.02236111111111111,
+        "edgeRatio": 0.20631050809130097,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1605,
+        "horizontalEdgeRatio": 0.11341954632181471,
+        "meanLuma": 230.839375,
+        "stdDev": 39.21117991293984,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4234,
+        "verticalEdgeRatio": 0.2992014698607872
+      },
+      "score": 98.04,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.7,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 20,
+        "text_density": 81.34
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "HPE",
+        "OKTA",
+        "PLTR",
+        "SPYM",
+        "TAN",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 408,
+      "timestamp_hms": "00:06:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 84,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260810_20260810_u5f6yio61oa_d7cf95b7_whiteboard\\ocr\\ocr_000085.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260810",
+      "ocr_confidence": 50,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Preview Fle ER View Go Tools Widow Help            0g HOw        5\n® © (Dv Screenshot 2026-08-1004.20.28PM     Qa a          [=    ® iad\nCL          x                                                      a\nMameTsnee o EE        >> TALE OF THE TAPE - MONDAY, AUGUST 10, 2026 << Gam. DBL oo\n= Howlett Packard Enterprise { , 11 RKET STATE: UPTREND                                                    0           154.68\nCome Ton te HE           *STOINDEXES 67 OJ RG871 1d NASIT USDJ TNX/TYX vs 5d         «      we amine\n© sam        © msioral       *_ * SENTIMENT: VIX 15.40 (3.36%) F&G 64{+0 GREED) AAI 37 46 25-1.8 TTILR] NAAIM 79.70 4.32      5 Latin peu 1 70   o\nue cwswnony “BULL CASE: INITIATE RALLY & TREND 21EMA ~~ €8/3-4 REGAIN 21E & FTD           wage       © oma\n8 UE J SLL BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                   LI\nZwow wl Rhee * NEWS: WED: CPI THURS PPI AND MORE EARNINGS; HPE UPGRADE; ChatGPT Cyber                          Pe\nnom wo eonadly * TODAYS KEYS: SPXvs BET/ATHY  QQQus SODT/ATHY RIK vs SET/ATHY         neers     « 9%\nmow ol Doi ') *DAYCTU/ Ul =>U-4) Sef ater                             yt         —\nWe se cn on eames * ACTION:       17773 17749                               Bld mre\nTUM WT Te Mes wsPXO/N 7740-77731 07751 030 7748-77611 L/H7743-7773            oe         ca\nce eo ES on *SPX ATR: 113% 4 SPX     60/40-0.26% GRO +0.18% TURBO          =    Ny\neS SECTORS: 1 BY% USD O8G BUG G/S IGY COPX J BPS WGMI JETS ITB CRYPTO                              rains\n* GRO HOLDINGS: SPYM,UPRO,SPXL,HPE,OKTA PLTR,CBRS,AMZU                                                                     a\nmm * GRO RVAB/REBAR: 1.25 (-L.02%/-6.52%) ADD to OKTA HPE PLTR BUY AMZU                  —\nne              ~—             * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS                                                                                        wm      [+3\n~~ * TURBO RVAB/REBAR: 1.04 (-0.55%/-5.22%) NO CHANGES                                     —              ee\nMg 55          TE\nMHTITNAILIEL + Tes Keys: spx vs 8E/ATH  QQQ vs 500/730 R2K vs BE/ATH                       LH         on\nomen         © >>> S&PS00 KEY LEVELS <<<                                                Me ©\n-       a      x — *7793(8/4 INTRADAY A-T-H}                                           -        Dsmrcw ©\n-          B         we. 37757 ERI: LEADERS LEAD AS INDEXES CLOSE STRONG                                               sux\nPa                                                                 .        ex ag\nScreww Lua Reem                                                           ory - QF BA\nlial           ©\" ®7570 {124 21EMA) € 7/311 7/234 7/211 7/174 6/291 6/23¢        AE A\nen       _ *7497/7521(1650D/10WK) € 7/314 7/234 7/214 7/174 6/291         -         ww\n—          I * 7055/7086 {15 200D/40WK) € 4/81 3/194                        Sem\n= Charts of Interest                                                                             :    )     :   i.\nLo                            —                               Ce\n",
+      "ocr_text_snippet": "@ Preview Fle ER View Go Tools Widow Help 0g HOw 5 ® © (Dv Screenshot 2026-08-1004.20.28PM Qa a [= ® iad CL x a MameTsnee o EE >> TALE OF THE TAPE - MONDAY, AUGUST 10, 2026 << Gam. DBL oo = Howlett...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,SPXL,HPE,OKTA PLTR,CBRS,AMZU A MM * GRO RVAB/REBAR: 1.25 (-L.02%/-6.52%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO OKTA HPE PLTR BUY AMZU - NE ~- * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS WM [+3",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 50,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.04 (-0.55%/-5.22%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES - EE MG 55 TE MHTITNAILIEL + TES KEYS: SPX VS 8E/ATH QQQ VS 500/730 R2K VS BE/ATH LH ON OMEN © >>> S&PS00 KEY LEVELS <<< ME © A X - *7793(8/4 INTRADAY A-T-H} - DSMRCW © B WE. 37757 ERI: LEADERS LEAD AS INDEXES CLOSE STRONG SUX PA . EX AG SCREWW LUA REEM ORY - QF BA LIAL ©\" ®7570 {124 21EMA) € 7/311 7/234 7/211 7/174 6/291 6/23¢ AE A EN _ *7497/7521(1650D/10WK) € 7/314 7/234 7/214 7/174 6/291 - WW I * 7055/7086 {15 200D/40WK) € 4/81 3/194 SEM CHARTS OF INTEREST : ) : I. LO - CE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 50,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "806d01b500fdfe6f",
+      "prefilter_score": 11.86,
+      "prefilter_stats": {
+        "brightRatio": 0.7560416666666666,
+        "darkRatio": 0.022152777777777778,
+        "edgeRatio": 0.20779450215532472,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1605,
+        "horizontalEdgeRatio": 0.11341954632181471,
+        "meanLuma": 229.79354166666667,
+        "stdDev": 39.277769015633844,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4276,
+        "verticalEdgeRatio": 0.3021694579888347
+      },
+      "score": 89.44,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.5,
+        "pair_bonus": 4,
+        "per_row_issues": -8,
+        "per_row_metrics": 16,
+        "text_density": 80.94
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "HPE",
+        "OKTA",
+        "PLTR",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 336,
+      "timestamp_hms": "00:05:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 81,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260810_20260810_u5f6yio61oa_d7cf95b7_whiteboard\\ocr\\ocr_000082.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260810",
+      "ocr_confidence": 49,
+      "ocr_profile": "threshold",
+      "ocr_text": "€ Predew Flo EX View Go Tools Window Hep            EET\n® © (Dv Screenshot 2026-08-10204.20.28PM   Qa a       g   ® id\nMareTsCen o (G3        >> TALE OF THE TAPE - MONDAY, AUGUST 10, 2026 << Gam. DELO\n» Howlott Packard Enterprise | 1A KT STATE: UPTREND                                                    0           454.68\nCome Sees 16             *STOINDEXES 64 OL RG874 1 NASIT USDJ TNX/TYX vs 5d          Jos       we amine 0,\nQ samen        © saorn       *_ * SENTIMENT: VIX 15.40 (-3.36%) F&G 64{+0 GREED) Aan? 4625-1.8 TIRE] NAAIM 79.70 4.32      = Lat oh ua rr   o\ner sem covomrurg BULL CASE: INITIATE RALLY & TREND 21EMA  €8/3-4 REGAIN 21E & FTD           ag       © owes\n$58 xf J wm™ 4 BEAR CASE: SUSTAINED BREAK BELOW 21EMA                                   LA\nmm or dees NEWS: WED: CPITHURS PPIAND MORE EARNINGS; HPE UPGRADE; ChatGPT Cyber                pt\n22am mT emer w *TODAYSKEVSISPXsSET/ATHY  QQQus SODT/ATHY RK vs BET/ATHY        memes     « 9%\nmeow wl UGE *DAYCT:U-4/ JU =>U-4/ Benefit 21er7t                           yt         =\nBin DIT Smee acTION:       27773 47749                               gle,\nRA me mA e+ SPX O/N 7740-77731 07751 030 7748-77611 L/H 7743-7773       ni.      Crd\nEa oo * SPX ATR: 113% SPX     60/40 -0.26% GRO +0.18% TURBO          =    - 0\nRESETS GHCTORS:  8Y% USD O&G BUG G/S 1GY COPX J BPS WGMI JETS ITB CRYPTO                             Sasumic\n* GRO HOLDINGS: SPYM,UPRO,SPXL,HPE, OKTA,PLTR,CBRS,AMZU                                                                     a\n\"mw *GRORVAB/REBAR: 1.25 (-1.02%/-6.62%) ADD to OKTA HPE PLTR BUY AMZU                  TTT wa ee\n.                P               * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS                                                                                                    hs)\n~~ * TURBO RVAB/REBAR: 1.04 (-0.55%/-5.22%} NO CHANGES                            —           re\n          lly #\na  * TUES KEYS: SPX vs BE/ATH  QQQ vs 500/730 R2K vs BE/ATH             a      =\navers       + 22> SEPS00 KEY LEVELS <<<                                       een @\n-    os    sw *7793(8/4 INTRADAY A-T-H)                          -     a\n-      os     swe. DTTST FRI: LEADERS LEAD AS INDEXES CLOSE STRONG                            a]\n-                                                            ~       Tea\ntevem Las Reson                                                           Ory - 2 F&A\nfafa        _ OM 27570 (124 21EMA) € 7/311 7/234 7/211 7/17d 6/291 6/234       mw few SER ong Rs\nCo       _. *7497/7521 (16 50D/10WK) € 7/311 7/234 1/211 7/174 6/291         -         ow\n—           I * 7055/7086 (15 200D/40WK) € 4/81 3/194                           :    :    Coen\n= Charts of desost                                                                       :    A    Co\nLo                          —                             Ce\n",
+      "ocr_text_snippet": "€ Predew Flo EX View Go Tools Window Hep EET ® © (Dv Screenshot 2026-08-10204.20.28PM Qa a g ® id MareTsCen o (G3 >> TALE OF THE TAPE - MONDAY, AUGUST 10, 2026 << Gam. DELO » Howlott Packard Enterp...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,SPXL,HPE, OKTA,PLTR,CBRS,AMZU A MW *GRORVAB/REBAR: 1.25 (-1.02%/-6.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "ADD TO OKTA HPE PLTR BUY AMZU TTT WA EE P * TURBO HOLDINGS: SPYM,UPRO,TQQQ,CBRS HS)",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 49,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1.04 (-0.55%/-5.22%}",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES - RE LLY # A * TUES KEYS: SPX VS BE/ATH QQQ VS 500/730 R2K VS BE/ATH A = AVERS + 22> SEPS00 KEY LEVELS <<< EEN @ OS SW *7793(8/4 INTRADAY A-T-H) - A OS SWE. DTTST FRI: LEADERS LEAD AS INDEXES CLOSE STRONG A] TEA TEVEM LAS RESON ORY - 2 F&A FAFA _ OM 27570 (124 21EMA) € 7/311 7/234 7/211 7/17D 6/291 6/234 MW FEW SER ONG RS CO _. *7497/7521 (16 50D/10WK) € 7/311 7/234 1/211 7/174 6/291 - OW I * 7055/7086 (15 200D/40WK) € 4/81 3/194 : : COEN CHARTS OF DESOST : A CO LO - CE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 49,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "806d01b500fdfe6f",
+      "prefilter_score": 11.84,
+      "prefilter_stats": {
+        "brightRatio": 0.7565972222222223,
+        "darkRatio": 0.022152777777777778,
+        "edgeRatio": 0.20797116811532754,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1620,
+        "horizontalEdgeRatio": 0.11447954208183167,
+        "meanLuma": 229.8059027777778,
+        "stdDev": 39.27030481365287,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4266,
+        "verticalEdgeRatio": 0.30146279414882343
+      },
+      "score": 87.55,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.45,
+        "pair_bonus": 4,
+        "per_row_issues": -8,
+        "per_row_metrics": 16,
+        "text_density": 79.1
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "HPE",
+        "OKTA",
+        "PLTR",
+        "SPYM",
+        "TQQQ",
+        "UPRO"
+      ],
+      "timestamp": 324,
+      "timestamp_hms": "00:05:24"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260810_20260810_u5f6yio61oa_d7cf95b7_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 7.34,
+      "prefilter_stats": {
+        "brightRatio": 0.5724305555555556,
+        "darkRatio": 0.21506944444444445,
+        "edgeRatio": 0.19394389089110312,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1924,
+        "horizontalEdgeRatio": 0.1359621228181754,
+        "meanLuma": 186.22569444444446,
+        "stdDev": 89.10720154719985,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3565,
+        "verticalEdgeRatio": 0.2519256589640308
+      },
+      "score": -16.21,
+      "score_breakdown": {
+        "chart_likeness": -4.207727873503394,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 27,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260810_20260810_u5f6yio61oa_d7cf95b7_whiteboard\\ocr\\ocr_000028.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 105.92,
+      "observed_date": null,
+      "ocr_confidence": 35,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Clwme Fla Ed View Hooy Booms Profies Tab Window baip        RE\nMarwETSURce o GE     X \"Tuy weedy Moy tum -  ¢ woz [3                   ERS om: Ds: 0\n» S&P 500 Index                                             IAL KR\nQuema                                                nt RE i\nwe     PP      B\nta gE gd\nos ms ssa         aa   ) ECE     —\nae Ln py | oul, wy Pht hn ~  MEE    [|\nraat ny                                                       w\noct      Nov.     [3      Jn     fo     ur  [ =]  pr     ay     wn     EY      av\nScreens.  Tae  Reports   Turbo 12 12ftems © Jpaaiet C317 PM ET 00 57000                                   LL  2 = a.\nEL A   CES. Re BE ee ROUEN SW IG NUR ew mee\n-—        oT mm, Ln nm mm nn\nee           Ps mo wero      mx wwe owe wm wee wo ax ow\n",
+      "ocr_text_snippet": "@ Clwme Fla Ed View Hooy Booms Profies Tab Window baip RE MarwETSURce o GE X \"Tuy weedy Moy tum - ¢ woz [3 ERS om: Ds: 0 » S&P 500 Index IAL KR Quema nt RE i we PP B ta gE gd os ms ssa aa ) ECE — a...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "816f9e49b649d44b",
+      "prefilter_score": 18.31,
+      "prefilter_stats": {
+        "brightRatio": 0.7504861111111111,
+        "darkRatio": 0.056805555555555554,
+        "edgeRatio": 0.15504204649848066,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1453,
+        "horizontalEdgeRatio": 0.10267825595364286,
+        "meanLuma": 223.51444444444445,
+        "stdDev": 54.121801288310415,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2935,
+        "verticalEdgeRatio": 0.2074058370433185
+      },
+      "score": -25.38,
+      "score_breakdown": {
+        "chart_likeness": -5.125526964396586,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.75,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 108,
+      "timestamp_hms": "00:01:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 135,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260810_20260810_u5f6yio61oa_d7cf95b7_whiteboard\\ocr\\ocr_000136.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 538.32,
+      "observed_date": null,
+      "ocr_confidence": 33,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Cwvme Fla Edt Vew Hiory Bockaris Profs Teh Window tei        RE\nMarxeTsUrce «EEE     X Duy Weekly Mwy SOMmo  ¢ wozs © Qa - DEL &\n~ Datadog Inc. CI A                                                                                       $260.01           $260.78\nCamp har Eres 141            pve 48 rion 300 sey ado ce     POOM MINTS SoOmaAGWS  BMIST MaaCn  Stema     cin aso    ono (stem re\n0 sma       © nsw       Jeena                        EPS tueDu NSIS 00h SLZSTAAN 21 CarATRA 803%        tac es       Vor 41098 3330,\non sao                wo    Nam Yo ONSEN 691% 4% mpm Ter SIPMETOUTOT Lape DOOPUETOMIOMIS\nComrs               EEA ETE EI       -         fr     a     eng,   Bowens\nYow EPS EPS ume ComosteRosey 8         ws       oo      N    /            :           /          ad\nod  ®)  %Chg %Ch EPS Rung   “ — Ne                                                                 ”\n219 001 Te HN Rs Reig   ET —     &\nWn om Xen 6 mass 8                                                          a         aur\nPR EAR bit ividhed                                           I      Jubal  i        see\nPRR ENA dnitindronilied                                             ~\nJ an aw 0 eee or                                   ured   ry)   s      share.    ®\n4 AM WEN Cues Sway                                 poret”       Ft a        8 x   Newt\nJs 205 LR Sees eroem nmi                                  IL,        >          Vv\nWome 2% vie 9% eset mm =      ome wom                                                                       _\nTe am ie wm penn Pkg   a                              ps                          =\n—_—                          i     a     abides       FT                               Chachlas\n2                                       pet        by        i at        or,                                                                  2          -\na                         a                        a                         Pa\n-                               faa             ied                              pel        []  Pr\nPram:\nSse                                                      a\n18D Volume                                                                                      doa\nno                                               a                             woe,\n.                                                pr.    \"             I      w\n1\"   3   Ed   El   1“   El   El   El   \"   El   -   El   %   EE)   0   Ed   of   15   EE   ”   ES   1   El   or        hid\noat        wor      ec       a.       S      ™       pe       wy       on       a        ™\nEnded December 2025                 tr Ende March 2026                 rnd ure 2028                     sows:\n+3     ose     ES     04     az     08     a     ode     “20%     oss     -     ose     warn,     os        EPS ($1 % Chg.  hl\n          wz           -           rr          aa         1064          -           me         ES         ans          -           se          Es           aan             Ss\n.                        Jes                      ==                       o              Ate Tex Mort\ndew aw few MainList3Skems © nes sssvmiiovaz                                     om - LR EA\n\"in een              Ther          A                 .    oon Conan        2100 argon        moan, @Oumg3 Maw Coo dG\nBee ©        ld     Symes tame        Sw    ror   Boe Gmy wee Se TR TGTme own Remy Ram Ofte R\n=                     mow    Choo Voioty ind      am sas    FT   0    .    B     o    3    BEET\n© Video Process           ‘-\nBoos Gms      FER    Caw 3 cern sees   roa289    .        R—\npyre\nER Jpte——          wma us se     13 REM mam. sss 1s0err     ”     saw\n= Chars of meres\n|                          et t—————————————       TT                      ny\n",
+      "ocr_text_snippet": "@ Cwvme Fla Edt Vew Hiory Bockaris Profs Teh Window tei RE MarxeTsUrce «EEE X Duy Weekly Mwy SOMmo ¢ wozs © Qa - DEL & ~ Datadog Inc. CI A $260.01 $260.78 Camp har Eres 141 pve 48 rion 300 sey ado ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 33,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 33,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80fd1a0df60df60e",
+      "prefilter_score": 17.37,
+      "prefilter_stats": {
+        "brightRatio": 0.7380555555555556,
+        "darkRatio": 0.056666666666666664,
+        "edgeRatio": 0.17814995406685039,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1659,
+        "horizontalEdgeRatio": 0.11723553105787576,
+        "meanLuma": 222.60541666666666,
+        "stdDev": 53.394069568671846,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3383,
+        "verticalEdgeRatio": 0.23906437707582504
+      },
+      "score": -25.78,
+      "score_breakdown": {
+        "chart_likeness": -5.431296688160577,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.65,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "TER"
+      ],
+      "timestamp": 540,
+      "timestamp_hms": "00:09:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 126,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260810_20260810_u5f6yio61oa_d7cf95b7_whiteboard\\ocr\\ocr_000127.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 503.56,
+      "observed_date": null,
+      "ocr_confidence": 36,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Chvms Flo Edt ew Huo Bockman Profle Tab Window Hen         a\nMarxeTsUrce  o (EE     xX Touy | Weekly Mew, Meo < ozs © Qa - DEL G\n» ARK Genomic Revolution ETF                                                                  $44.67          4431\nFoe £75 ETNA 151                                             Poow WA Demag stim                 [Eger      ARG 81n A in\n6 sans      ® rorer      .                              PSDuOu NA OOmAGS HATA NOWARA 3%       te es      21008\nwa    WA OTSIWmMGh 911% tm hein ody 0e30PMET RATES Lit HCOPMETONUE gp\nCamorde                 PER EE                  7            «          ten,      »  Owes\nvr wee pen sive Comoros + a ym RI a NY a Ny a wi   es\nBa Th dem wow snes   NAS     Din                                       7     =\nws ww we oh    a\n2020 926 en    3 Month RS Ras) #9.                                                                     (rou &\non    Soon AS Rr |                                                   wor                set\n“    GoorsRin ©                                                    oy        fy\n= oa nme                                                   4,      ol        =\n22 je ew   Eairgs Stabity                                   4   a.  tg   ©  Newt\nTe mw aw Se Como                                               Es    t      FLT\ni    7% Grou Rot. 0            wo                                 boat        EAE      -\nms ww ow ee ere              et]        )                =\non           o        PR              FE     i)    bf                   cra\n                  pA         n          JU\nPai    yr - pit, SUTIN      —     L        i:             » g«\nNL)     - TR                               SN          r                                 ai\n                           XE TT Bel JW re we)                            Pato nc\nSse                                                      a\n[a   pr                         rl                      ~      a     =              Tee wane\na T         T              ii\"                         ™            RT   oy\n|       | -     .      I                                -\n2   3   Ed   El   1“   n   12   ED   o   El   “   20   El   El   3   Ed   of   15   EE   12   EJ   \"   ED   or       hid\noa       or      oc       i.      »      ar       Ps       wy      nm       -       an\nEndod Dncambar 2025               Gr Ended March 2026                Ou ned une 028                   mesvuena- 4\na    7087     w     2356     an    242     w    2076    =    “x08,     -     23    ou             Price i). % Chg.  eo\non     a     “     w     I\"     “     “     a     ox     -     a     on            [RET\nn                      I\"                     ==                     wo             Ae Tex org\ntr aw    few Charts of Interest items GC Usawes 5351s 110070                                 Ory + 28 BA\n\"ia oun          Bh                         Freak  Curuer      2       nosry  0DABS Wak Comp wGowg          Rs\nJame ON    Rv ma me     COMI TRE ee RY see RR NOUR chm me ew XOMee SR 2\no—— ea Thm mew mm mm RW\nEEE    IT)    Tam aren rr,    re    B    B    A   w\n= Moo Lis\n= Charts of kkorost                ?\nJo            I\nEEE\n",
+      "ocr_text_snippet": "@ Chvms Flo Edt ew Huo Bockman Profle Tab Window Hen a MarxeTsUrce o (EE xX Touy | Weekly Mew, Meo < ozs © Qa - DEL G » ARK Genomic Revolution ETF $44.67 4431 Foe £75 ETNA 151 Poow WA Demag stim [E...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "806d1a25de6dd29b",
+      "prefilter_score": 16.78,
+      "prefilter_stats": {
+        "brightRatio": 0.7394444444444445,
+        "darkRatio": 0.056805555555555554,
+        "edgeRatio": 0.17062398417073,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1505,
+        "horizontalEdgeRatio": 0.10635290792170164,
+        "meanLuma": 222.64534722222223,
+        "stdDev": 53.31388042908908,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3324,
+        "verticalEdgeRatio": 0.23489506041975833
+      },
+      "score": -26.2,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.8,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 504,
+      "timestamp_hms": "00:08:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 108,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260810_20260810_u5f6yio61oa_d7cf95b7_whiteboard\\ocr\\ocr_000109.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 432.76,
+      "observed_date": null,
+      "ocr_confidence": 36,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Cuvee Fl Ed View Hiioy Bocknaris Profs Tab Window Help        B=\nMarceTsUnee a (ERY      X our | Wed Mow Ma. M02 Q Qa DBL ©\n» ARK Genomic Revolution ETF                                                                  144.67          4431\nFrance E47 ETNA AEE                                             PoDM WA Damage stim                 C030 20s      Pr,\nPS      © asta      .                              PSDaDum WA WOmADSW HEMT NOWKRE 2m       te es      210088 1\na    NA OrSiWemngy 91 stm end 0630PUET MIDE Lali HCOPMETONUTE gp\nComa              PIETER SN IY oa   ER\nPier Por Se Comes     .     /         4           §\noe)  # %Ch %Ch EpsRmng   a      Nea mat”                                             yp      »\nwr ow we esha WT —————————————————————————————————    &\nom 93 un    3 Monin RS Rung #9.                                                                 Induary &\nprot    Soon AS Rag 1                                                   po                 Sec\nGovoRsRIn +                                                   ry         1\npei «tral                                                  aa!      ki        2\nTm cm                                  A hy, NE   PR\nwn mw wn SeeGomRmm                                 x   F)     TRUE. ne\nE85 Grown Rae. 0%                                                                        ma          Ra      %          =\nms mw ow eee      ESOS URURURUUNRRRRP |      /   pe                =\n.           y         py              wT     lg                  oe\ngy         RIL NPS NN |      Asha                   -,         =\nhE  =           =     rt          —                                          Ed\nyi        hr   asia To          ey                     0.\naT                                                    a\n—          —               =            y             p      =                ea\n|                         Il  | Mill    |    |      I |                   |      |                 Ea.\nEl    1“   n    12   EJ   C3   n   3   E]   %   El   ©   1”   o   1   EE   7   ED   1°   2%   or       hid\nor       ou        .       fo»       or        Pe        wr       on       -        an\nOr Ended Oscomper 1025                  On Ended March 2028                   a Edad time 2020                      [Er\n-     EES     vets     242     -     E20     »     4208     -     ux     aon               Pics i$, % Chg.  en\n“      A     PA     I     “     wa     -     wo      “      “     a              [I\n~                        w Em                   wa               [Rasis—\nsrw Gwe Geew Charts of Inforest 1items © urbme: shsnemrtseann                                orm - 2 @ mA\noe                                      Prax cum      at           wowhgs Maw Coro vaGow           rs\na          oom    I id     COTE Rm ee RY se WRN oven a   wT xomuen Asam\n—owmemT— rr ——————\nBP 1 NG xeon nas,    ICT)    © am ere. rer,    sem    B    B    an   w\n= Mon Lin\n= Charts of Inkeroat                ?\n<a            |\nLL ———————— ———————\n",
+      "ocr_text_snippet": "@ Cuvee Fl Ed View Hiioy Bocknaris Profs Tab Window Help B= MarceTsUnee a (ERY X our | Wed Mow Ma. M02 Q Qa DBL © » ARK Genomic Revolution ETF 144.67 4431 France E47 ETNA AEE PoDM WA Damage stim C0...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "806d1a25de6de68b",
+      "prefilter_score": 17.03,
+      "prefilter_stats": {
+        "brightRatio": 0.7421527777777778,
+        "darkRatio": 0.056805555555555554,
+        "edgeRatio": 0.1604126916825666,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1339,
+        "horizontalEdgeRatio": 0.09462228817751396,
+        "meanLuma": 222.255625,
+        "stdDev": 53.964356835203276,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3201,
+        "verticalEdgeRatio": 0.22620309518761925
+      },
+      "score": -26.2,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.8,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 432,
+      "timestamp_hms": "00:07:12"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 2,
+      "end_ts": 336,
+      "end_hms": "00:05:36",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 84,
+      "peak_score": 89.44,
+      "start_hms": "00:04:48",
+      "start_ts": 288
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 420,
+      "end_hms": "00:07:00",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 105,
+      "peak_score": 104.05,
+      "start_hms": "00:07:00",
+      "start_ts": 420
+    }
+  ]
+}

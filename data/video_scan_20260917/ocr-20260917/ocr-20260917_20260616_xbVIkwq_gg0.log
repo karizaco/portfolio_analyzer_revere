@@ -1,0 +1,1030 @@
+# cmd: node tools/scanVideoWithOcr.js --video C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260616_xbVIkwq_gg0.mp4 --date 20260616 --output-root C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260917\ocr-20260917 --run-tag ocr-20260917 --ffmpeg-bin C:\Users\admin\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.1-full_build\bin\ffmpeg.exe --output-kind whiteboard --prefilter-profile whiteboard --basename revere
+[scan:whiteboard] ffprobe found 148 keyframe(s) for nearest-keyframe lookup
+[scan:whiteboard] preflighting final whiteboard output extraction
+[scan:whiteboard] extracting sample frames from C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260616_xbVIkwq_gg0.mp4
+[scan:whiteboard] extracted 230 frame(s) at 0.25 fps with width 640; starting prefilter
+[scan:whiteboard] prefilter 1/230 frames after 00:00:00; best prefilter -11.29 at 00:00:00
+[scan:whiteboard] prefilter 10/230 frames after 00:00:00; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 20/230 frames after 00:00:00; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 30/230 frames after 00:00:00; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 40/230 frames after 00:00:00; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 50/230 frames after 00:00:00; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 60/230 frames after 00:00:01; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 70/230 frames after 00:00:01; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 80/230 frames after 00:00:01; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 90/230 frames after 00:00:01; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 100/230 frames after 00:00:01; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 110/230 frames after 00:00:01; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 120/230 frames after 00:00:01; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 130/230 frames after 00:00:01; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 140/230 frames after 00:00:01; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 150/230 frames after 00:00:01; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 160/230 frames after 00:00:01; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 170/230 frames after 00:00:01; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 180/230 frames after 00:00:01; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 190/230 frames after 00:00:02; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 200/230 frames after 00:00:02; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 210/230 frames after 00:00:02; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 220/230 frames after 00:00:02; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter 230/230 frames after 00:00:02; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] prefilter kept 60/230 frame(s) for OCR; best prefilter -8.68 at 00:00:04
+[scan:whiteboard] extracting OCR candidates from source video at width 1280
+[scan:whiteboard] OCR 1/60 frames (1.7%) after 00:00:01; best score -12.00 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 10/60 frames (16.7%) after 00:00:15; best score -12.00 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 20/60 frames (33.3%) after 00:00:31; best score -12.00 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 30/60 frames (50.0%) after 00:00:50; best score -12.00 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 40/60 frames (66.7%) after 00:01:06; best score -12.00 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 50/60 frames (83.3%) after 00:01:23; best score -12.00 at 00:00:00 (ocr 0.0)
+[scan:whiteboard] OCR 60/60 frames (100.0%) after 00:01:39; best score -12.00 at 00:00:00 (ocr 0.0)
+{
+  "basename": "revere",
+  "channel": "revere",
+  "chart_stream_parser": false,
+  "date_key": "20260616",
+  "output_kind": "whiteboard",
+  "phash_region": null,
+  "phash_region_fraction": null,
+  "prefilter_profile": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260616_xbVIkwq_gg0.mp4",
+  "captured_count": 0,
+  "captures": [],
+  "frame_count": 230,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 148,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "prefilter_best_score": -8.68,
+  "sample_frame_width": 640,
+  "status": "no_match",
+  "top_candidate": {
+    "chart_stream": null,
+    "confusion_with_nearby": [],
+    "frame_index": 0,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260616_20260616_xbvikwq_gg0_5f98c7b6_whiteboard\\ocr\\ocr_000001.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE",
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 0,
+    "observed_date": null,
+    "ocr_confidence": 0,
+    "ocr_profile": "threshold",
+    "ocr_text": "",
+    "ocr_text_snippet": "",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "0000000000000000",
+    "phash_overlay": null,
+    "phash_region": null,
+    "prefilter_profile": "whiteboard",
+    "prefilter_score": -11.29,
+    "prefilter_stats": {
+      "brightRatio": 0,
+      "darkRatio": 0.305,
+      "edgeRatio": 0.054837113984877395,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 828,
+      "horizontalEdgeRatio": 0.05851176595293619,
+      "meanLuma": 96.32951388888888,
+      "stdDev": 45.788597452948274,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 724,
+      "verticalEdgeRatio": 0.0511624620168186
+    },
+    "score": -12,
+    "score_breakdown": {
+      "chart_likeness": 0,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 0,
+      "pair_bonus": 0,
+      "per_row_issues": -12,
+      "per_row_metrics": 0,
+      "text_density": 0
+    },
+    "screen_layout": "chart",
+    "tickers": [],
+    "timestamp": 0,
+    "timestamp_hms": "00:00:00"
+  },
+  "top_candidates": [
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260616_20260616_xbvikwq_gg0_5f98c7b6_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": -11.29,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.305,
+        "edgeRatio": 0.054837113984877395,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 828,
+        "horizontalEdgeRatio": 0.05851176595293619,
+        "meanLuma": 96.32951388888888,
+        "stdDev": 45.788597452948274,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 724,
+        "verticalEdgeRatio": 0.0511624620168186
+      },
+      "score": -12,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 60,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260616_20260616_xbvikwq_gg0_5f98c7b6_whiteboard\\ocr\\ocr_000061.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 68,
+      "ocr_profile": "threshold",
+      "ocr_text": "i.\n-\ni\n2\n* TRADE\nTRADING JOURNAL - CODE :CF20\"\n",
+      "ocr_text_snippet": "i. - i 2 * TRADE TRADING JOURNAL - CODE :CF20\"",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "8424f9f9cfc2c2b2",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": -12.36,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.31680555555555556,
+        "edgeRatio": 0.04042117164864674,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 668,
+        "horizontalEdgeRatio": 0.04720514451275528,
+        "meanLuma": 93.53986111111111,
+        "stdDev": 46.45055100716889,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 476,
+        "verticalEdgeRatio": 0.0336371987845382
+      },
+      "score": -14.15,
+      "score_breakdown": {
+        "chart_likeness": 0.44795987696260653,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.4,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 240,
+      "timestamp_hms": "00:04:00"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 3,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260616_20260616_xbvikwq_gg0_5f98c7b6_whiteboard\\ocr\\ocr_000004.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 71,
+      "ocr_profile": "threshold",
+      "ocr_text": "“»\nTRADING $50M AT 25 USING ONE SIMPLE MARKET CYCLE STRATEGY\nTed Zhang | Chart Fanatics, June 7th 2026                                              .\n* Ty wd   ~                                                     —-— am Ww\n",
+      "ocr_text_snippet": "“» TRADING $50M AT 25 USING ONE SIMPLE MARKET CYCLE STRATEGY Ted Zhang | Chart Fanatics, June 7th 2026 . * Ty wd ~ —-— am Ww",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 71,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 71,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "bc20cbdf90c4ccf8",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": -23.85,
+      "prefilter_stats": {
+        "brightRatio": 0.0006944444444444445,
+        "darkRatio": 0.8942361111111111,
+        "edgeRatio": 0.15938802911455022,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1929,
+        "horizontalEdgeRatio": 0.13631545473818105,
+        "meanLuma": 30.616805555555555,
+        "stdDev": 41.6257712082841,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2582,
+        "verticalEdgeRatio": 0.18246060349091936
+      },
+      "score": -14.87,
+      "score_breakdown": {
+        "chart_likeness": -0.37628603580760256,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.55,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 7.96
+      },
+      "screen_layout": "chart_stream",
+      "tickers": [],
+      "timestamp": 12,
+      "timestamp_hms": "00:00:12"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 51,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260616_20260616_xbvikwq_gg0_5f98c7b6_whiteboard\\ocr\\ocr_000052.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 65,
+      "ocr_profile": "threshold",
+      "ocr_text": "EE\n.     \\\n* TRADE\nTRADING JOURNAL - CODE “CF20\"\n",
+      "ocr_text_snippet": "EE . \\ * TRADE TRADING JOURNAL - CODE “CF20\"",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 65,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 65,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "8620f8cfd7b0b4a5",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": -11.68,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.165,
+        "edgeRatio": 0.051374461168821994,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 779,
+        "horizontalEdgeRatio": 0.05504911313688079,
+        "meanLuma": 129.98166666666665,
+        "stdDev": 42.19220336744695,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 675,
+        "verticalEdgeRatio": 0.047699809200763194
+      },
+      "score": -16.05,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.25,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 6.7
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 204,
+      "timestamp_hms": "00:03:24"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 18,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260616_20260616_xbvikwq_gg0_5f98c7b6_whiteboard\\ocr\\ocr_000019.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 69,
+      "ocr_profile": "threshold",
+      "ocr_text": ".                <¢             -\n* TRADE\nTRADING JOURNAL - CODE “CF20\"\n",
+      "ocr_text_snippet": ". <¢ - * TRADE TRADING JOURNAL - CODE “CF20\"",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "8425f979d8cec3c2",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": -19.82,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.37,
+        "edgeRatio": 0.03957317504063317,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 646,
+        "horizontalEdgeRatio": 0.04565048406473041,
+        "meanLuma": 86.24944444444445,
+        "stdDev": 53.382362877246486,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 474,
+        "verticalEdgeRatio": 0.03349586601653593
+      },
+      "score": -16.96,
+      "score_breakdown": {
+        "chart_likeness": 0.3924115249330167,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.45,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 5.2
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 72,
+      "timestamp_hms": "00:01:12"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260616_20260616_xbvikwq_gg0_5f98c7b6_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": -11.29,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.305,
+        "edgeRatio": 0.054837113984877395,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 828,
+        "horizontalEdgeRatio": 0.05851176595293619,
+        "meanLuma": 96.32951388888888,
+        "stdDev": 45.788597452948274,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 724,
+        "verticalEdgeRatio": 0.0511624620168186
+      },
+      "score": -12,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 60,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260616_20260616_xbvikwq_gg0_5f98c7b6_whiteboard\\ocr\\ocr_000061.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 237.7375,
+      "observed_date": null,
+      "ocr_confidence": 68,
+      "ocr_profile": "threshold",
+      "ocr_text": "i.\n-\ni\n2\n* TRADE\nTRADING JOURNAL - CODE :CF20\"\n",
+      "ocr_text_snippet": "i. - i 2 * TRADE TRADING JOURNAL - CODE :CF20\"",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "8424f9f9cfc2c2b2",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": -12.36,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.31680555555555556,
+        "edgeRatio": 0.04042117164864674,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 668,
+        "horizontalEdgeRatio": 0.04720514451275528,
+        "meanLuma": 93.53986111111111,
+        "stdDev": 46.45055100716889,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 476,
+        "verticalEdgeRatio": 0.0336371987845382
+      },
+      "score": -14.15,
+      "score_breakdown": {
+        "chart_likeness": 0.44795987696260653,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.4,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 240,
+      "timestamp_hms": "00:04:00"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 3,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260616_20260616_xbvikwq_gg0_5f98c7b6_whiteboard\\ocr\\ocr_000004.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 12.5125,
+      "observed_date": null,
+      "ocr_confidence": 71,
+      "ocr_profile": "threshold",
+      "ocr_text": "“»\nTRADING $50M AT 25 USING ONE SIMPLE MARKET CYCLE STRATEGY\nTed Zhang | Chart Fanatics, June 7th 2026                                              .\n* Ty wd   ~                                                     —-— am Ww\n",
+      "ocr_text_snippet": "“» TRADING $50M AT 25 USING ONE SIMPLE MARKET CYCLE STRATEGY Ted Zhang | Chart Fanatics, June 7th 2026 . * Ty wd ~ —-— am Ww",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 71,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 71,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "bc20cbdf90c4ccf8",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": -23.85,
+      "prefilter_stats": {
+        "brightRatio": 0.0006944444444444445,
+        "darkRatio": 0.8942361111111111,
+        "edgeRatio": 0.15938802911455022,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1929,
+        "horizontalEdgeRatio": 0.13631545473818105,
+        "meanLuma": 30.616805555555555,
+        "stdDev": 41.6257712082841,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2582,
+        "verticalEdgeRatio": 0.18246060349091936
+      },
+      "score": -14.87,
+      "score_breakdown": {
+        "chart_likeness": -0.37628603580760256,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.55,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 7.96
+      },
+      "screen_layout": "chart_stream",
+      "tickers": [],
+      "timestamp": 12,
+      "timestamp_hms": "00:00:12"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 51,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260616_20260616_xbvikwq_gg0_5f98c7b6_whiteboard\\ocr\\ocr_000052.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 206.45625,
+      "observed_date": null,
+      "ocr_confidence": 65,
+      "ocr_profile": "threshold",
+      "ocr_text": "EE\n.     \\\n* TRADE\nTRADING JOURNAL - CODE “CF20\"\n",
+      "ocr_text_snippet": "EE . \\ * TRADE TRADING JOURNAL - CODE “CF20\"",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 65,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 65,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "8620f8cfd7b0b4a5",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": -11.68,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.165,
+        "edgeRatio": 0.051374461168821994,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 779,
+        "horizontalEdgeRatio": 0.05504911313688079,
+        "meanLuma": 129.98166666666665,
+        "stdDev": 42.19220336744695,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 675,
+        "verticalEdgeRatio": 0.047699809200763194
+      },
+      "score": -16.05,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.25,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 6.7
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 204,
+      "timestamp_hms": "00:03:24"
+    },
+    {
+      "chart_stream": null,
+      "confusion_with_nearby": [],
+      "frame_index": 18,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\frames\\20260616_20260616_xbvikwq_gg0_5f98c7b6_whiteboard\\ocr\\ocr_000019.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 75.075,
+      "observed_date": null,
+      "ocr_confidence": 69,
+      "ocr_profile": "threshold",
+      "ocr_text": ".                <¢             -\n* TRADE\nTRADING JOURNAL - CODE “CF20\"\n",
+      "ocr_text_snippet": ". <¢ - * TRADE TRADING JOURNAL - CODE “CF20\"",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 69,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "8425f979d8cec3c2",
+      "phash_overlay": null,
+      "phash_region": null,
+      "prefilter_profile": "whiteboard",
+      "prefilter_score": -19.82,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.37,
+        "edgeRatio": 0.03957317504063317,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 646,
+        "horizontalEdgeRatio": 0.04565048406473041,
+        "meanLuma": 86.24944444444445,
+        "stdDev": 53.382362877246486,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 474,
+        "verticalEdgeRatio": 0.03349586601653593
+      },
+      "score": -16.96,
+      "score_breakdown": {
+        "chart_likeness": 0.3924115249330167,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 3.45,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 5.2
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 72,
+      "timestamp_hms": "00:01:12"
+    }
+  ],
+  "whiteboard_segments": [],
+  "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\ocr-20260917\\ocr-20260917\\ocr_probe\\logs\\20260616_20260616_xbvikwq_gg0_5f98c7b6_whiteboard.json"
+}

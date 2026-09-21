@@ -1,0 +1,1256 @@
+{
+  "date_key": "20260617",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260617_kMkJuiYj8cA.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 114,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260617_20260617_kmkjuiyj8ca_8bfd52a7_whiteboard\\ocr\\ocr_000115.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 453.64,
+      "observed_date": "20260617",
+      "ocr_confidence": 59,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Preview fio Et View Go Toots Window Heb                                      G 3 ac ®® % + OL Wm FQ BR 8 Wamm7snm\neo a                                                                                                                                     WHAT'S THE MARKET TREND?\n“THE GROTECTION GAUGE\"\n>> TALE OF THE TAPE ~ WEDNESDAY, JUNE 17, 2026 <<\n* MARKET STATE: UPTREND (6/15)                                                                                                             (TT I TT\n*STOINDEXES 31 OL RG82T OJ NAST USD TNX/TYX vs Sd\nSENTIMENT vit 117 FR auton 20 EE aamers7                  wr cass —\nDBULL CASE: INITIATE RALLY & TREND 21EMA €6/15                                                                                2\nDBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                                                       EE    1\n* NEWS: PEACE AGREEMENT; WED 6/17: 17 FOMC W/ WARSH, FRI: MKT CLOSED                                                                              hs           tema\n+ TODAY'S KEYS: SPX vs ATHY./21E  QQQvs ATHL/21ET  R2Kvs ATHY /21ET                                                                                    ee —\n*DAYCT:D-1=>D-2 8e:-14 2: +i                                                                     N\n* ACTION: 0 +0.17% $7532      17500 FOMC PIVOTS 1/518 17445                                          _       porn |_| [|]\n*SPXO/N 7509-75391 07524 030 7509-7530 L/H 7402-7532                                                              1          RA\n*SPXATR: 1.23% SPX-121% 60/40-0.67% GRO -0.70% TURBO 051%                                                                                     i.   TT\n* SECTORS: 1 IPS LSD X3: MEE SOXX C-AT J BY USD IT8 1GY PICK BIT GD HACK COPX SLY                                                               LMG TERM (200amal                            El\n* GRO HOLDINGS: spvmuero Jl oH crx was, oc cro show. FINT MAVLNGIS BEINTC                                                                         310/25 KEUTRAL => UP\n* GRO RVAB/REBAR: ©.3¢(-1.49%/.5.90%) TRIM Lyx. séLL sco vy 400 wo weve imc au veoae [Ill\n* TURBO HOLDINGS: SPYM.UPRD,LABU SNOW, SE MEVLWOLF FROG, DDOG INTE\n* TURBO RVAB/REBAR: 1 12 (2.195/-5 12%) BUY INTC LABU TRIM SNOW SELL VIA FINC\n* BOTTOM LINE: HAWKISH TILT FROM WARSH SPARKS SELL-OFF\n* THURS KEYS: SPXvs 8E/21E QQQus BE/21E RIK vs 8E/21E\n22> SBPS00 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\n7550 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH\n7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH                                              ;\n+7437 (17 20EMA) € 6/12 6/53 4/81        2218 2/34 2124 25t\n7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF\n*7301/7361(118 SOD/10WK) € 6/81 2/274 1/214 1/204\n* 6897/6917 (15 2000/40WK)_& 5/12F 5/8 SLOPED\noo ore Asset            Connoraates\n* TWITTER (X): @ConnorJBates_                                                                                                                                                      Anatyst/assockate PM\n* PHONE: (255) REAL-WEALTH / (855) 732-5932               \\ 1  a n a     e m e nt                       Email: Connor@RovoroAsset.com\nTwittor: @C        Bot\n* WEB SITE: revereasset.com                                                                                                                              @ConnorBates\n",
+      "ocr_text_snippet": "® Preview fio Et View Go Toots Window Heb G 3 ac ®® % + OL Wm FQ BR 8 Wamm7snm eo a WHAT'S THE MARKET TREND? “THE GROTECTION GAUGE\" >> TALE OF THE TAPE ~ WEDNESDAY, JUNE 17, 2026 << * MARKET STATE:...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPVMUERO JL OH CRX WAS, OC CRO SHOW. FINT MAVLNGIS BEINTC 310/25 KEUTRAL => UP",
+          "metric_1": "310",
+          "metric_2": "25",
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "HAWKISH TILT FROM WARSH SPARKS SELL-OFF THURS KEYS: SPXVS 8E/21E QQQUS BE/21E RIK VS 8E/21E 22> SBPS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7550 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH 7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH ; 7437 (17 20EMA) € 6/12 6/53 4/81 2218 2/34 2124 25T 7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF 7301/7361(118 SOD/10WK) € 6/81 2/274 1/214 1/204 6897/6917 (15 2000/40WK)_& 5/12F 5/8 SLOPED OO ORE ASSET CONNORAATES TWITTER (X): @CONNORJBATES_ ANATYST/ASSOCKATE PM PHONE: (255) REAL-WEALTH / (855) 732-5932 \\ 1 A N A E M E NT EMAIL: CONNOR@ROVOROASSET.COM TWITTOR: @C BOT WEB SITE: REVEREASSET.COM @CONNORBATES",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 59,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1 12 (2.195/-5 12%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY INTC LABU TRIM SNOW SELL VIA FINC",
+          "bottom_line": "HAWKISH TILT FROM WARSH SPARKS SELL-OFF THURS KEYS: SPXVS 8E/21E QQQUS BE/21E RIK VS 8E/21E 22> SBPS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7550 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH 7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH ; 7437 (17 20EMA) € 6/12 6/53 4/81 2218 2/34 2124 25T 7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF 7301/7361(118 SOD/10WK) € 6/81 2/274 1/214 1/204 6897/6917 (15 2000/40WK)_& 5/12F 5/8 SLOPED OO ORE ASSET CONNORAATES TWITTER (X): @CONNORJBATES_ ANATYST/ASSOCKATE PM PHONE: (255) REAL-WEALTH / (855) 732-5932 \\ 1 A N A E M E NT EMAIL: CONNOR@ROVOROASSET.COM TWITTOR: @C BOT WEB SITE: REVEREASSET.COM @CONNORBATES",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 59,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c291e06c5ed33cad",
+      "prefilter_score": 3.78,
+      "prefilter_stats": {
+        "brightRatio": 0.4404166666666667,
+        "darkRatio": 0.30069444444444443,
+        "edgeRatio": 0.24111370221185782,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2413,
+        "horizontalEdgeRatio": 0.17051798459472828,
+        "meanLuma": 163.0507638888889,
+        "stdDev": 92.9130312785075,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4411,
+        "verticalEdgeRatio": 0.31170941982898737
+      },
+      "score": 116.66,
+      "score_breakdown": {
+        "chart_likeness": -4.213999553730462,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.95,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 22,
+        "text_density": 95.92
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "INTC",
+        "LABU",
+        "SLY",
+        "SNOW"
+      ],
+      "timestamp": 456,
+      "timestamp_hms": "00:07:36",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260617_ps_4.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 93,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260617_20260617_kmkjuiyj8ca_8bfd52a7_whiteboard\\ocr\\ocr_000094.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 373.52,
+      "observed_date": "20260617",
+      "ocr_confidence": 57,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Preview Fro Et view Go Toor Window Heb                                      G 8 Ac ®® % +O Lm FQ BO Wani7saiow\nesa                                                                                                                                     WHAT'S THE MARKET TREND?\n\"THE GROTECTION GAUGE\"\n>> TALE OF THE TAPE ~ WEDNESDAY, JUNE 17, 2026 <<\n* MARKET STATE: UPTREND (6/15)                                                                                                             (TT I TT\n*STOINDEXES 3% OL RGE21 OJ NASIT USD TNX/TYX vs Sd\n© SENTIMENT v5.06 17 p17        aia 58 2047 TEE waama re 26                                        Aner cendens =>          =\nBULL CASE: INITIATE RALLY & TREND 21EMA €6/15                                                                                2\nBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                                            ,         —,   1\n* NEWS: PEACE AGREEMENT; WED 6/17: 15 FOMC W/ WARSH, FRI: MKT CLOSED                                                                             HORT TERM termed\n+ TODAY'S KEYS: SPX vs ATHY /21E  QRQvs ATHL/21ET  R2Kvs ATH /21ET                                                                                   ee —\n*DAYCT:D1=>D-2 8e:-14 2e: +47                                                                    N\n*SPXO/N 7509-7539 07524 030 7500-75301 L/H 7402-7532                                                              3          ETA | ——\n* SPX ATR: 1.23% SPX-121% 60/40-0.67% GRO-0.70% TURBO 0.51%                                                                                     —   BREE\n# SECTORS: 1 UPS LSD ¥3: 1/23: SCX CAAT <r B¥% USD ITRIGY PICK BIT G10 HACK COPX SLY                                                          Lo TERM (200mal                                  HB\n* GRO HOLDINGS: spvmuero Jl oH. wam, Doc cro show. FINT MAVLNGIS BEINTC                                                                         310/26 NEUTRAL => UP\n* GRO RVAB/REBAR: © 55{1.49%/.5.90%) TRIM LUX. SELL sco vay on eo evi inc au veoae [Ill\n* TURBO HOLDINGS: SPYM.UPRO.LASU SNOW, SEMAVLWOLE FROG. DDOGINTE\n* TURBO RVAB/REBAR: ’ 2 (2 19%/-5.12%) BUY INTC LABU TRI SNOW SELL VIAY FLNC\n* BOTTOM LINE: -»HAWKISH TILT FROM WARSH SPARKS SELL-OFF\n+ THURS KEYS: SPX vs 8E/21E QQQs BE/21E RIK vs 8E/21E\n22> SEP500 KEY LEVELS <ec\n#7621 (6/2 INTRADAY A-T-H)\n7554 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH\n$7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH\n+7437 {17 21EMA) € 6/12 1 6/53 4/31        >27d 2/250 24 26h\n$7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF\n*7301/7361( M18 SOD/1OWK) € ¢/8 2/274 L211 1/204\n* 6897/6917 (15 2000/40WK)_& 5/12 5/8 SLOPED\n2\n2                                              ave ¥v OU                                               Connor Bates\n* TWITTER (X): @ConnorJBates_                                                                                                                                                      Anatyst/aseociate PM\n* PHONE: (855) REAL-WEALTH / (855) 732-5932             M a n a     e m e nt                      Email: Connor@RoveroAssot.com\nTwitter: @Connareaty\n* WEB SITE: revereasset.com                                                                                                                              @Connarbates-\n",
+      "ocr_text_snippet": "® Preview Fro Et view Go Toor Window Heb G 8 Ac ®® % +O Lm FQ BO Wani7saiow esa WHAT'S THE MARKET TREND? \"THE GROTECTION GAUGE\" >> TALE OF THE TAPE ~ WEDNESDAY, JUNE 17, 2026 << * MARKET STATE: UPT...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPVMUERO JL OH. WAM, DOC CRO SHOW. FINT MAVLNGIS BEINTC 310/26 NEUTRAL => UP",
+          "metric_1": "310",
+          "metric_2": "26",
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "-»HAWKISH TILT FROM WARSH SPARKS SELL-OFF THURS KEYS: SPX VS 8E/21E QQQS BE/21E RIK VS 8E/21E 22> SEP500 KEY LEVELS <EC 7621 (6/2 INTRADAY A-T-H) 7554 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH 7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH 7437 {17 21EMA) € 6/12 1 6/53 4/31 >27D 2/250 24 26H 7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF 7301/7361( M18 SOD/1OWK) € ¢/8 2/274 L211 1/204 6897/6917 (15 2000/40WK)_& 5/12 5/8 SLOPED 2 2 AVE ¥V OU CONNOR BATES TWITTER (X): @CONNORJBATES_ ANATYST/ASEOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M A N A E M E NT EMAIL: CONNOR@ROVEROASSOT.COM TWITTER: @CONNAREATY WEB SITE: REVEREASSET.COM @CONNARBATES-",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 57,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: ' 2 (2 19%/-5.12%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY INTC LABU TRI SNOW SELL VIAY FLNC",
+          "bottom_line": "-»HAWKISH TILT FROM WARSH SPARKS SELL-OFF THURS KEYS: SPX VS 8E/21E QQQS BE/21E RIK VS 8E/21E 22> SEP500 KEY LEVELS <EC 7621 (6/2 INTRADAY A-T-H) 7554 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH 7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH 7437 {17 21EMA) € 6/12 1 6/53 4/31 >27D 2/250 24 26H 7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF 7301/7361( M18 SOD/1OWK) € ¢/8 2/274 L211 1/204 6897/6917 (15 2000/40WK)_& 5/12 5/8 SLOPED 2 2 AVE ¥V OU CONNOR BATES TWITTER (X): @CONNORJBATES_ ANATYST/ASEOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M A N A E M E NT EMAIL: CONNOR@ROVEROASSOT.COM TWITTER: @CONNAREATY WEB SITE: REVEREASSET.COM @CONNARBATES-",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 57,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c291e06c5ed33cad",
+      "prefilter_score": 2.01,
+      "prefilter_stats": {
+        "brightRatio": 0.40826388888888887,
+        "darkRatio": 0.3097916666666667,
+        "edgeRatio": 0.25355098579605684,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2410,
+        "horizontalEdgeRatio": 0.1703059854427249,
+        "meanLuma": 160.91868055555557,
+        "stdDev": 91.61850089688434,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4766,
+        "verticalEdgeRatio": 0.3367959861493887
+      },
+      "score": 114.87,
+      "score_breakdown": {
+        "chart_likeness": -5.343308080313225,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.85,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 22,
+        "text_density": 95.36
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "INTC",
+        "LABU",
+        "SLY",
+        "SNOW"
+      ],
+      "timestamp": 372,
+      "timestamp_hms": "00:06:12",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260617_ps_5.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 15,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260617_20260617_kmkjuiyj8ca_8bfd52a7_whiteboard\\ocr\\ocr_000016.png",
+      "is_intro_card": true,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 60.16,
+      "observed_date": "20260617",
+      "ocr_confidence": 66,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Preview fo Est View Go Toor Window Heb                                                    CG 8 ac ®® ¥ +O Lm FQ B® Wau? sion\nwon\n>>> THE REVERE ROUNDUP <<<                                                               WHAT'S THE MARKET TREND?\n-                                                                              “THE GROTECTION GAUGE\"\n>>> DAILY MARKET INSIGHT <<<                                                               ET CT\n* YT, X, 1G, TikTok: @REVEREASSET - PLS LIKE, SHARE+SUB              A                                                       ———\n>>> WEDNESDAY, JUNE 17, 2026 <<<\n* MARKET STATE: UPTREND (FTD 4/8)                                                                                  430m TERM 21amey er\n* WHAT HAPPENED TODAY?                                      A                                                           6115 NEUTRAL +» UP    |]\n> HAWKISH TILT FROM WARSH SPARKS SELL-OFF                                                N\n[MEDIUM TERM {S0sma) we\noa                   es LE\nT-12 +036% 671       6\nEe=———lEEEE 3\nMAG? -2.83%                                                                                Lg     [omer || |B] ]\nRG8  -0.46%\nRAI100 +0.35%\nSPX -1.21%     RSP -1.50%                                                                                             (+\naQQ -1.01%   QQQE -0.90%\nDJIA -0.99%\nMID -1.22%                                            ilk\nR2ZK  -0.75%\n60/40 -0.67%\nGRO ~0.70%  TURBO™~-0.51%\n* EMAIL: connor@revereasset.com                               R eve I e   As S e t                         Connor Bates\n* TWITTER (X}: @ConnorJBates_                                                                                                Analyst/assockate PM\n* PHONE: (855) REAL-WEALTH / (855) 732-5932              \\ 1  a      a     e        e      t                     Email: Connor@ReveroAsset.com\n* WEB SITE: revereasset.com                                             n             m     n                        Twitior: @Gonnorbates.\n",
+      "ocr_text_snippet": "® Preview fo Est View Go Toor Window Heb CG 8 ac ®® ¥ +O Lm FQ B® Wau? sion won >>> THE REVERE ROUNDUP <<< WHAT'S THE MARKET TREND? - “THE GROTECTION GAUGE\" >>> DAILY MARKET INSIGHT <<< ET CT * YT,...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c495e06c5b337cc5",
+      "prefilter_score": 4.5,
+      "prefilter_stats": {
+        "brightRatio": 0.4301388888888889,
+        "darkRatio": 0.32506944444444447,
+        "edgeRatio": 0.22906508373966505,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2421,
+        "horizontalEdgeRatio": 0.17108331566673735,
+        "meanLuma": 158.37784722222221,
+        "stdDev": 94.64376965365676,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4062,
+        "verticalEdgeRatio": 0.28704685181259276
+      },
+      "score": 61.42,
+      "score_breakdown": {
+        "chart_likeness": -3.0813163655946703,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.3,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 0,
+        "text_density": 69.2
+      },
+      "screen_layout": "dmi",
+      "tickers": [],
+      "timestamp": 60,
+      "timestamp_hms": "00:01:00",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260617_ps_6.png"
+    }
+  ],
+  "frame_count": 223,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 180,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260617_ps_4.png",
+  "prefilter_best_score": 19.89,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 114,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260617_20260617_kmkjuiyj8ca_8bfd52a7_whiteboard\\ocr\\ocr_000115.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 453.64,
+    "observed_date": "20260617",
+    "ocr_confidence": 59,
+    "ocr_profile": "threshold",
+    "ocr_text": "® Preview fio Et View Go Toots Window Heb                                      G 3 ac ®® % + OL Wm FQ BR 8 Wamm7snm\neo a                                                                                                                                     WHAT'S THE MARKET TREND?\n“THE GROTECTION GAUGE\"\n>> TALE OF THE TAPE ~ WEDNESDAY, JUNE 17, 2026 <<\n* MARKET STATE: UPTREND (6/15)                                                                                                             (TT I TT\n*STOINDEXES 31 OL RG82T OJ NAST USD TNX/TYX vs Sd\nSENTIMENT vit 117 FR auton 20 EE aamers7                  wr cass —\nDBULL CASE: INITIATE RALLY & TREND 21EMA €6/15                                                                                2\nDBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                                                       EE    1\n* NEWS: PEACE AGREEMENT; WED 6/17: 17 FOMC W/ WARSH, FRI: MKT CLOSED                                                                              hs           tema\n+ TODAY'S KEYS: SPX vs ATHY./21E  QQQvs ATHL/21ET  R2Kvs ATHY /21ET                                                                                    ee —\n*DAYCT:D-1=>D-2 8e:-14 2: +i                                                                     N\n* ACTION: 0 +0.17% $7532      17500 FOMC PIVOTS 1/518 17445                                          _       porn |_| [|]\n*SPXO/N 7509-75391 07524 030 7509-7530 L/H 7402-7532                                                              1          RA\n*SPXATR: 1.23% SPX-121% 60/40-0.67% GRO -0.70% TURBO 051%                                                                                     i.   TT\n* SECTORS: 1 IPS LSD X3: MEE SOXX C-AT J BY USD IT8 1GY PICK BIT GD HACK COPX SLY                                                               LMG TERM (200amal                            El\n* GRO HOLDINGS: spvmuero Jl oH crx was, oc cro show. FINT MAVLNGIS BEINTC                                                                         310/25 KEUTRAL => UP\n* GRO RVAB/REBAR: ©.3¢(-1.49%/.5.90%) TRIM Lyx. séLL sco vy 400 wo weve imc au veoae [Ill\n* TURBO HOLDINGS: SPYM.UPRD,LABU SNOW, SE MEVLWOLF FROG, DDOG INTE\n* TURBO RVAB/REBAR: 1 12 (2.195/-5 12%) BUY INTC LABU TRIM SNOW SELL VIA FINC\n* BOTTOM LINE: HAWKISH TILT FROM WARSH SPARKS SELL-OFF\n* THURS KEYS: SPXvs 8E/21E QQQus BE/21E RIK vs 8E/21E\n22> SBPS00 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\n7550 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH\n7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH                                              ;\n+7437 (17 20EMA) € 6/12 6/53 4/81        2218 2/34 2124 25t\n7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF\n*7301/7361(118 SOD/10WK) € 6/81 2/274 1/214 1/204\n* 6897/6917 (15 2000/40WK)_& 5/12F 5/8 SLOPED\noo ore Asset            Connoraates\n* TWITTER (X): @ConnorJBates_                                                                                                                                                      Anatyst/assockate PM\n* PHONE: (255) REAL-WEALTH / (855) 732-5932               \\ 1  a n a     e m e nt                       Email: Connor@RovoroAsset.com\nTwittor: @C        Bot\n* WEB SITE: revereasset.com                                                                                                                              @ConnorBates\n",
+    "ocr_text_snippet": "® Preview fio Et View Go Toots Window Heb G 3 ac ®® % + OL Wm FQ BR 8 Wamm7snm eo a WHAT'S THE MARKET TREND? “THE GROTECTION GAUGE\" >> TALE OF THE TAPE ~ WEDNESDAY, JUNE 17, 2026 << * MARKET STATE:...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": "HOLDINGS: SPVMUERO JL OH CRX WAS, OC CRO SHOW. FINT MAVLNGIS BEINTC 310/25 KEUTRAL => UP",
+        "metric_1": "310",
+        "metric_2": "25",
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": "HAWKISH TILT FROM WARSH SPARKS SELL-OFF THURS KEYS: SPXVS 8E/21E QQQUS BE/21E RIK VS 8E/21E 22> SBPS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7550 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH 7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH ; 7437 (17 20EMA) € 6/12 6/53 4/81 2218 2/34 2124 25T 7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF 7301/7361(118 SOD/10WK) € 6/81 2/274 1/214 1/204 6897/6917 (15 2000/40WK)_& 5/12F 5/8 SLOPED OO ORE ASSET CONNORAATES TWITTER (X): @CONNORJBATES_ ANATYST/ASSOCKATE PM PHONE: (255) REAL-WEALTH / (855) 732-5932 \\ 1 A N A E M E NT EMAIL: CONNOR@ROVOROASSET.COM TWITTOR: @C BOT WEB SITE: REVEREASSET.COM @CONNORBATES",
+        "parse_status": "review",
+        "issue_codes": [
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 59,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": "RVAB/REBAR: 1 12 (2.195/-5 12%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "BUY INTC LABU TRIM SNOW SELL VIA FINC",
+        "bottom_line": "HAWKISH TILT FROM WARSH SPARKS SELL-OFF THURS KEYS: SPXVS 8E/21E QQQUS BE/21E RIK VS 8E/21E 22> SBPS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7550 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH 7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH ; 7437 (17 20EMA) € 6/12 6/53 4/81 2218 2/34 2124 25T 7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF 7301/7361(118 SOD/10WK) € 6/81 2/274 1/214 1/204 6897/6917 (15 2000/40WK)_& 5/12F 5/8 SLOPED OO ORE ASSET CONNORAATES TWITTER (X): @CONNORJBATES_ ANATYST/ASSOCKATE PM PHONE: (255) REAL-WEALTH / (855) 732-5932 \\ 1 A N A E M E NT EMAIL: CONNOR@ROVOROASSET.COM TWITTOR: @C BOT WEB SITE: REVEREASSET.COM @CONNORBATES",
+        "parse_status": "review",
+        "issue_codes": [
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 59,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "c291e06c5ed33cad",
+    "prefilter_score": 3.78,
+    "prefilter_stats": {
+      "brightRatio": 0.4404166666666667,
+      "darkRatio": 0.30069444444444443,
+      "edgeRatio": 0.24111370221185782,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 2413,
+      "horizontalEdgeRatio": 0.17051798459472828,
+      "meanLuma": 163.0507638888889,
+      "stdDev": 92.9130312785075,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 4411,
+      "verticalEdgeRatio": 0.31170941982898737
+    },
+    "score": 116.66,
+    "score_breakdown": {
+      "chart_likeness": -4.213999553730462,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 2.95,
+      "pair_bonus": 4,
+      "per_row_issues": -4,
+      "per_row_metrics": 22,
+      "text_density": 95.92
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "BE",
+      "INTC",
+      "LABU",
+      "SLY",
+      "SNOW"
+    ],
+    "timestamp": 456,
+    "timestamp_hms": "00:07:36"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 114,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260617_20260617_kmkjuiyj8ca_8bfd52a7_whiteboard\\ocr\\ocr_000115.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260617",
+      "ocr_confidence": 59,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Preview fio Et View Go Toots Window Heb                                      G 3 ac ®® % + OL Wm FQ BR 8 Wamm7snm\neo a                                                                                                                                     WHAT'S THE MARKET TREND?\n“THE GROTECTION GAUGE\"\n>> TALE OF THE TAPE ~ WEDNESDAY, JUNE 17, 2026 <<\n* MARKET STATE: UPTREND (6/15)                                                                                                             (TT I TT\n*STOINDEXES 31 OL RG82T OJ NAST USD TNX/TYX vs Sd\nSENTIMENT vit 117 FR auton 20 EE aamers7                  wr cass —\nDBULL CASE: INITIATE RALLY & TREND 21EMA €6/15                                                                                2\nDBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                                                       EE    1\n* NEWS: PEACE AGREEMENT; WED 6/17: 17 FOMC W/ WARSH, FRI: MKT CLOSED                                                                              hs           tema\n+ TODAY'S KEYS: SPX vs ATHY./21E  QQQvs ATHL/21ET  R2Kvs ATHY /21ET                                                                                    ee —\n*DAYCT:D-1=>D-2 8e:-14 2: +i                                                                     N\n* ACTION: 0 +0.17% $7532      17500 FOMC PIVOTS 1/518 17445                                          _       porn |_| [|]\n*SPXO/N 7509-75391 07524 030 7509-7530 L/H 7402-7532                                                              1          RA\n*SPXATR: 1.23% SPX-121% 60/40-0.67% GRO -0.70% TURBO 051%                                                                                     i.   TT\n* SECTORS: 1 IPS LSD X3: MEE SOXX C-AT J BY USD IT8 1GY PICK BIT GD HACK COPX SLY                                                               LMG TERM (200amal                            El\n* GRO HOLDINGS: spvmuero Jl oH crx was, oc cro show. FINT MAVLNGIS BEINTC                                                                         310/25 KEUTRAL => UP\n* GRO RVAB/REBAR: ©.3¢(-1.49%/.5.90%) TRIM Lyx. séLL sco vy 400 wo weve imc au veoae [Ill\n* TURBO HOLDINGS: SPYM.UPRD,LABU SNOW, SE MEVLWOLF FROG, DDOG INTE\n* TURBO RVAB/REBAR: 1 12 (2.195/-5 12%) BUY INTC LABU TRIM SNOW SELL VIA FINC\n* BOTTOM LINE: HAWKISH TILT FROM WARSH SPARKS SELL-OFF\n* THURS KEYS: SPXvs 8E/21E QQQus BE/21E RIK vs 8E/21E\n22> SBPS00 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\n7550 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH\n7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH                                              ;\n+7437 (17 20EMA) € 6/12 6/53 4/81        2218 2/34 2124 25t\n7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF\n*7301/7361(118 SOD/10WK) € 6/81 2/274 1/214 1/204\n* 6897/6917 (15 2000/40WK)_& 5/12F 5/8 SLOPED\noo ore Asset            Connoraates\n* TWITTER (X): @ConnorJBates_                                                                                                                                                      Anatyst/assockate PM\n* PHONE: (255) REAL-WEALTH / (855) 732-5932               \\ 1  a n a     e m e nt                       Email: Connor@RovoroAsset.com\nTwittor: @C        Bot\n* WEB SITE: revereasset.com                                                                                                                              @ConnorBates\n",
+      "ocr_text_snippet": "® Preview fio Et View Go Toots Window Heb G 3 ac ®® % + OL Wm FQ BR 8 Wamm7snm eo a WHAT'S THE MARKET TREND? “THE GROTECTION GAUGE\" >> TALE OF THE TAPE ~ WEDNESDAY, JUNE 17, 2026 << * MARKET STATE:...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPVMUERO JL OH CRX WAS, OC CRO SHOW. FINT MAVLNGIS BEINTC 310/25 KEUTRAL => UP",
+          "metric_1": "310",
+          "metric_2": "25",
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "HAWKISH TILT FROM WARSH SPARKS SELL-OFF THURS KEYS: SPXVS 8E/21E QQQUS BE/21E RIK VS 8E/21E 22> SBPS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7550 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH 7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH ; 7437 (17 20EMA) € 6/12 6/53 4/81 2218 2/34 2124 25T 7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF 7301/7361(118 SOD/10WK) € 6/81 2/274 1/214 1/204 6897/6917 (15 2000/40WK)_& 5/12F 5/8 SLOPED OO ORE ASSET CONNORAATES TWITTER (X): @CONNORJBATES_ ANATYST/ASSOCKATE PM PHONE: (255) REAL-WEALTH / (855) 732-5932 \\ 1 A N A E M E NT EMAIL: CONNOR@ROVOROASSET.COM TWITTOR: @C BOT WEB SITE: REVEREASSET.COM @CONNORBATES",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 59,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1 12 (2.195/-5 12%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY INTC LABU TRIM SNOW SELL VIA FINC",
+          "bottom_line": "HAWKISH TILT FROM WARSH SPARKS SELL-OFF THURS KEYS: SPXVS 8E/21E QQQUS BE/21E RIK VS 8E/21E 22> SBPS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7550 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH 7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH ; 7437 (17 20EMA) € 6/12 6/53 4/81 2218 2/34 2124 25T 7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF 7301/7361(118 SOD/10WK) € 6/81 2/274 1/214 1/204 6897/6917 (15 2000/40WK)_& 5/12F 5/8 SLOPED OO ORE ASSET CONNORAATES TWITTER (X): @CONNORJBATES_ ANATYST/ASSOCKATE PM PHONE: (255) REAL-WEALTH / (855) 732-5932 \\ 1 A N A E M E NT EMAIL: CONNOR@ROVOROASSET.COM TWITTOR: @C BOT WEB SITE: REVEREASSET.COM @CONNORBATES",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 59,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c291e06c5ed33cad",
+      "prefilter_score": 3.78,
+      "prefilter_stats": {
+        "brightRatio": 0.4404166666666667,
+        "darkRatio": 0.30069444444444443,
+        "edgeRatio": 0.24111370221185782,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2413,
+        "horizontalEdgeRatio": 0.17051798459472828,
+        "meanLuma": 163.0507638888889,
+        "stdDev": 92.9130312785075,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4411,
+        "verticalEdgeRatio": 0.31170941982898737
+      },
+      "score": 116.66,
+      "score_breakdown": {
+        "chart_likeness": -4.213999553730462,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.95,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 22,
+        "text_density": 95.92
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "INTC",
+        "LABU",
+        "SLY",
+        "SNOW"
+      ],
+      "timestamp": 456,
+      "timestamp_hms": "00:07:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 93,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260617_20260617_kmkjuiyj8ca_8bfd52a7_whiteboard\\ocr\\ocr_000094.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260617",
+      "ocr_confidence": 57,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Preview Fro Et view Go Toor Window Heb                                      G 8 Ac ®® % +O Lm FQ BO Wani7saiow\nesa                                                                                                                                     WHAT'S THE MARKET TREND?\n\"THE GROTECTION GAUGE\"\n>> TALE OF THE TAPE ~ WEDNESDAY, JUNE 17, 2026 <<\n* MARKET STATE: UPTREND (6/15)                                                                                                             (TT I TT\n*STOINDEXES 3% OL RGE21 OJ NASIT USD TNX/TYX vs Sd\n© SENTIMENT v5.06 17 p17        aia 58 2047 TEE waama re 26                                        Aner cendens =>          =\nBULL CASE: INITIATE RALLY & TREND 21EMA €6/15                                                                                2\nBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                                            ,         —,   1\n* NEWS: PEACE AGREEMENT; WED 6/17: 15 FOMC W/ WARSH, FRI: MKT CLOSED                                                                             HORT TERM termed\n+ TODAY'S KEYS: SPX vs ATHY /21E  QRQvs ATHL/21ET  R2Kvs ATH /21ET                                                                                   ee —\n*DAYCT:D1=>D-2 8e:-14 2e: +47                                                                    N\n*SPXO/N 7509-7539 07524 030 7500-75301 L/H 7402-7532                                                              3          ETA | ——\n* SPX ATR: 1.23% SPX-121% 60/40-0.67% GRO-0.70% TURBO 0.51%                                                                                     —   BREE\n# SECTORS: 1 UPS LSD ¥3: 1/23: SCX CAAT <r B¥% USD ITRIGY PICK BIT G10 HACK COPX SLY                                                          Lo TERM (200mal                                  HB\n* GRO HOLDINGS: spvmuero Jl oH. wam, Doc cro show. FINT MAVLNGIS BEINTC                                                                         310/26 NEUTRAL => UP\n* GRO RVAB/REBAR: © 55{1.49%/.5.90%) TRIM LUX. SELL sco vay on eo evi inc au veoae [Ill\n* TURBO HOLDINGS: SPYM.UPRO.LASU SNOW, SEMAVLWOLE FROG. DDOGINTE\n* TURBO RVAB/REBAR: ’ 2 (2 19%/-5.12%) BUY INTC LABU TRI SNOW SELL VIAY FLNC\n* BOTTOM LINE: -»HAWKISH TILT FROM WARSH SPARKS SELL-OFF\n+ THURS KEYS: SPX vs 8E/21E QQQs BE/21E RIK vs 8E/21E\n22> SEP500 KEY LEVELS <ec\n#7621 (6/2 INTRADAY A-T-H)\n7554 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH\n$7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH\n+7437 {17 21EMA) € 6/12 1 6/53 4/31        >27d 2/250 24 26h\n$7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF\n*7301/7361( M18 SOD/1OWK) € ¢/8 2/274 L211 1/204\n* 6897/6917 (15 2000/40WK)_& 5/12 5/8 SLOPED\n2\n2                                              ave ¥v OU                                               Connor Bates\n* TWITTER (X): @ConnorJBates_                                                                                                                                                      Anatyst/aseociate PM\n* PHONE: (855) REAL-WEALTH / (855) 732-5932             M a n a     e m e nt                      Email: Connor@RoveroAssot.com\nTwitter: @Connareaty\n* WEB SITE: revereasset.com                                                                                                                              @Connarbates-\n",
+      "ocr_text_snippet": "® Preview Fro Et view Go Toor Window Heb G 8 Ac ®® % +O Lm FQ BO Wani7saiow esa WHAT'S THE MARKET TREND? \"THE GROTECTION GAUGE\" >> TALE OF THE TAPE ~ WEDNESDAY, JUNE 17, 2026 << * MARKET STATE: UPT...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPVMUERO JL OH. WAM, DOC CRO SHOW. FINT MAVLNGIS BEINTC 310/26 NEUTRAL => UP",
+          "metric_1": "310",
+          "metric_2": "26",
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "-»HAWKISH TILT FROM WARSH SPARKS SELL-OFF THURS KEYS: SPX VS 8E/21E QQQS BE/21E RIK VS 8E/21E 22> SEP500 KEY LEVELS <EC 7621 (6/2 INTRADAY A-T-H) 7554 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH 7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH 7437 {17 21EMA) € 6/12 1 6/53 4/31 >27D 2/250 24 26H 7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF 7301/7361( M18 SOD/1OWK) € ¢/8 2/274 L211 1/204 6897/6917 (15 2000/40WK)_& 5/12 5/8 SLOPED 2 2 AVE ¥V OU CONNOR BATES TWITTER (X): @CONNORJBATES_ ANATYST/ASEOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M A N A E M E NT EMAIL: CONNOR@ROVEROASSOT.COM TWITTER: @CONNAREATY WEB SITE: REVEREASSET.COM @CONNARBATES-",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 57,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: ' 2 (2 19%/-5.12%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY INTC LABU TRI SNOW SELL VIAY FLNC",
+          "bottom_line": "-»HAWKISH TILT FROM WARSH SPARKS SELL-OFF THURS KEYS: SPX VS 8E/21E QQQS BE/21E RIK VS 8E/21E 22> SEP500 KEY LEVELS <EC 7621 (6/2 INTRADAY A-T-H) 7554 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH 7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH 7437 {17 21EMA) € 6/12 1 6/53 4/31 >27D 2/250 24 26H 7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF 7301/7361( M18 SOD/1OWK) € ¢/8 2/274 L211 1/204 6897/6917 (15 2000/40WK)_& 5/12 5/8 SLOPED 2 2 AVE ¥V OU CONNOR BATES TWITTER (X): @CONNORJBATES_ ANATYST/ASEOCIATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 M A N A E M E NT EMAIL: CONNOR@ROVEROASSOT.COM TWITTER: @CONNAREATY WEB SITE: REVEREASSET.COM @CONNARBATES-",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 57,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c291e06c5ed33cad",
+      "prefilter_score": 2.01,
+      "prefilter_stats": {
+        "brightRatio": 0.40826388888888887,
+        "darkRatio": 0.3097916666666667,
+        "edgeRatio": 0.25355098579605684,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2410,
+        "horizontalEdgeRatio": 0.1703059854427249,
+        "meanLuma": 160.91868055555557,
+        "stdDev": 91.61850089688434,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4766,
+        "verticalEdgeRatio": 0.3367959861493887
+      },
+      "score": 114.87,
+      "score_breakdown": {
+        "chart_likeness": -5.343308080313225,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.85,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 22,
+        "text_density": 95.36
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "INTC",
+        "LABU",
+        "SLY",
+        "SNOW"
+      ],
+      "timestamp": 372,
+      "timestamp_hms": "00:06:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 99,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260617_20260617_kmkjuiyj8ca_8bfd52a7_whiteboard\\ocr\\ocr_000100.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260617",
+      "ocr_confidence": 61,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Preview Fo Et View Go Toots Window Heb                                     G 8 ac ®O® % + OL Wm FQ BO Wan? sum\nPY                                                                                                                                     WHAT'S THE MARKET TREND?\n“THE GROTECTION GAUGE\"\n>> TALE OF THE TAPE ~ WEDNESDAY, JUNE 17, 2026 <<\n* MARKET STATE: UPTREND (6/15)                                                                                              (TN TT\n\"STOINDEXES 31 04 RGB21 OJ NASI USD TNX/TYX _ vsSd\n© SENTIMENT. VI 15 5117.47 $86            ini 53 2047 EEE ama 70226                                                         WARKET LEADERS =>             <>]\nDBULL CASE: INITIATE RALLY & TREND 21EMA €6/15                                                                                                                                          -\nPBEAR CASE: SUSTAINED BREAK BELOW Z1EMA.                                                                                                            oT TERM (21     —   LC]\n* NEWS: PEACE AGREEMENT; WED 6/17: 1°\" FOMC W/ WARSH, FRI: MKT CLOSED                                                                                 (tema)\n+ TODAY'S KEYS: SPX vs ATHY /21E  QQQvs ATHL/21ET  R2Kvs ATH /21ET                                   a a—            =]\n*DAYCT:D-1=>D-2 8e:-1{ 2le: +44                                                                                                            >\n*SPXO/N 7509-75391 07524 03¢ 7509-75307 L/H 7402-7532                                                              1          RS\n* SPX ATR: 1.23% 5PX-1.21% 60/40-0.67% GRO -0.70% TURBO -0.51%                                                                                     -   EEE 3\n# SECTORS: DIPS L'SD XB: MEME SCX LI-AT Jb BYK USD ITE 1GY PICK IBIT GD HACK COPK SLY                                                        LMG TERM (Zu0sma)                                 B\n* GRO HOLDINGS: spvmuero Jl oh.cLrx wan, Doc cro show. FINTMAVLNGIS BEINTC                                                                         31020 NEUTRAL => UP\n* GRO RVAB/REBAR: -.55{(-1.9%/.5.90%) TRIM vx. sett csco vay apo wo mevi.mrc su veoae [lll\n* TURBO HOLDINGS: SPYM,UPRO,LABU, SNOW, BE.MRVL WOLF FROG, DDOG,INTC\n* TURBO RVAB/REBAR: 142 (-2.19%/-5.12%) BUY INTC LABU TRIM SNOW SELL VIAV FLNC\n* BOTTOM UNE: 9 HAWKISH TILT FROM WARSH SPARKS SELL-OFF\n* THURS KEYS: SPX vs 8E/21E QQQ vs 8E/21E RIK vs 8E/21E\n22> SBPS00 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\n7554 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH\n$7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH\n+7437 {17 21EMA) € 6/12 1 6/53 4/81          2274 2/254 128 25h\n$7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF\n© 7301/7361( 118 SOD/10WK) € 4/31 2/274 1/211 1/204\n* 6897/6917 (15 2000/40WK)_€ 5/12 5/8 SLOPED\n:                oor ore Asset           Connor ates\n* TWITTER (X): @ConnorlBates_                                                                                                Anatyst/assockate PM\n* PHONE: (255) REAL-WEALTH / (855) 732-5932              \\ 1  a n a     e m e nt                      Email: Connor@RovoroAssetcom\nTwittor: @C:      Bat\n* WEB SITE: revereasset.com                                                                                                                              @Connarbates\n",
+      "ocr_text_snippet": "® Preview Fo Et View Go Toots Window Heb G 8 ac ®O® % + OL Wm FQ BO Wan? sum PY WHAT'S THE MARKET TREND? “THE GROTECTION GAUGE\" >> TALE OF THE TAPE ~ WEDNESDAY, JUNE 17, 2026 << * MARKET STATE: UPT...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPVMUERO JL OH.CLRX WAN, DOC CRO SHOW. FINTMAVLNGIS BEINTC 31020 NEUTRAL => UP",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "9 HAWKISH TILT FROM WARSH SPARKS SELL-OFF THURS KEYS: SPX VS 8E/21E QQQ VS 8E/21E RIK VS 8E/21E 22> SBPS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7554 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH 7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH 7437 {17 21EMA) € 6/12 1 6/53 4/81 2274 2/254 128 25H 7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF 7301/7361( 118 SOD/10WK) € 4/31 2/274 1/211 1/204 6897/6917 (15 2000/40WK)_€ 5/12 5/8 SLOPED OOR ORE ASSET CONNOR ATES TWITTER (X): @CONNORLBATES_ ANATYST/ASSOCKATE PM PHONE: (255) REAL-WEALTH / (855) 732-5932 \\ 1 A N A E M E NT EMAIL: CONNOR@ROVOROASSETCOM TWITTOR: @C: BAT WEB SITE: REVEREASSET.COM @CONNARBATES",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 142 (-2.19%/-5.12%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY INTC LABU TRIM SNOW SELL VIAV FLNC",
+          "bottom_line": "9 HAWKISH TILT FROM WARSH SPARKS SELL-OFF THURS KEYS: SPX VS 8E/21E QQQ VS 8E/21E RIK VS 8E/21E 22> SBPS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7554 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH 7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH 7437 {17 21EMA) € 6/12 1 6/53 4/81 2274 2/254 128 25H 7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF 7301/7361( 118 SOD/10WK) € 4/31 2/274 1/211 1/204 6897/6917 (15 2000/40WK)_€ 5/12 5/8 SLOPED OOR ORE ASSET CONNOR ATES TWITTER (X): @CONNORLBATES_ ANATYST/ASSOCKATE PM PHONE: (255) REAL-WEALTH / (855) 732-5932 \\ 1 A N A E M E NT EMAIL: CONNOR@ROVOROASSETCOM TWITTOR: @C: BAT WEB SITE: REVEREASSET.COM @CONNARBATES",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c291e06c5ed33cad",
+      "prefilter_score": 1.98,
+      "prefilter_stats": {
+        "brightRatio": 0.40902777777777777,
+        "darkRatio": 0.31104166666666666,
+        "edgeRatio": 0.25372765175605966,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2407,
+        "horizontalEdgeRatio": 0.1700939862907215,
+        "meanLuma": 160.93875,
+        "stdDev": 91.66903405181628,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4774,
+        "verticalEdgeRatio": 0.3373613172213978
+      },
+      "score": 111.08,
+      "score_breakdown": {
+        "chart_likeness": -5.386011434132101,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3.05,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 19,
+        "text_density": 90.42
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "IBIT",
+        "INTC",
+        "LABU",
+        "SLY",
+        "SNOW",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 396,
+      "timestamp_hms": "00:06:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 105,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260617_20260617_kmkjuiyj8ca_8bfd52a7_whiteboard\\ocr\\ocr_000106.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260617",
+      "ocr_confidence": 60,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Preview fo Cot View Go Toor Window Heb                                     CG 3 ac ®® % +O Lm FQ Ee Waun?snm\nPE                                                                                                                                     WHAT'S THE MARKET TREND?\n“THE GROTECTION GAUGE\"\n>> TALE OF THE TAPE ~ WEDNESDAY, JUNE 17, 2026 <<\n* MARKET STATE: UPTREND (6/15)                                                                                                                                   (TT I TT\n*STOINDEXES 3% OL RG82T OJ NASIT USD TNX/TYX _ vsSd                                                                                         >\n© SENTIMENT: Vix 1 4312.57.78             304.59 204) EERE asm 937                                                                                               _\nDBULL CASE: INITIATE RALLY & TREND 21EMA €6/15                                                                                 3\nPBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                                                             x          1      —    Lo]\n* NEWS: PEACE AGREEMENT; WED 6/17: 1°\" FOMC W/ WARSH, FRI: MKT CLOSED                                                                                    [2teme)\n+ TODAY'S KEYS: SPX vs ATHY./21E  QQQvs ATHL/ZIET  R2Kvs ATH /21ET                                   a            =\n*DAYCT:D-1=>D-2 8e:-1l 2le: +47                                                                                                            -\n*SPXO/N 7509-7539\" 07524 030 7500-75307 L/H 7402-7532                                                                          3           TA | ———\n* SPX ATR: 1.23% SPX-1.21% 60/40-0.67% GRO -0.70% TURBO -0.51%                                                                                       -   EEE 3\n# SECTORS: P 07S LISD 2: MEME SOX0x C-AT <b BY USD ITE 1GY PICK BIT GL HACK COPX SLY                                OMG TERM (200smal                   B\n* GRO HOLDINGS: spvmuero Jil aH. wan, oc Roo sNow.FINTMAVLNGIS BEINTC                                                                         31020 NEUTRAL UP\n* GRO RVAB/REBAR: -.55{1.49%/.5.90%) TRIM Lyx. sett cscoviav 00 eo av irc su veoae [Ill\n* TURBO HOLDINGS: SPYM,UPRO, LAGU, SNOW, BE.MRVL WOLF FROG, DDOG,INTC.\n* TURBO RVAB/REBAR: 1 12 (-2.19%/-5.12%) BUY INTC LABU TRIM SNOW SELL VIAV FLNC\n* BOTTOM UNE: 9 HAWKISH TILT FROM WARSH SPARKS SELL-OFF\n* THURS KEYS: SPX vs 8E/21E QQQ vs 8E/21E  R2K vs 8E/21E\n22> S&PS00 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\n=»7554 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH\n$7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH\n+7437 (17 21EMA) € 6/12 1 6/54 4/31            2218 2/750 2128 en\n$7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF\n*7301/7361( 118 SOD/10WK) € ¢/37 2/274 1/211 1/204\n* 6897/6917 (15 2000/40WK) € 5/121 5/8 SLOPED\n                    oo ore Asset            Connorgates\n* TWITTER (X): @ConnorJBates_                                                                                                                                                     Anatystfassocicate PM\n* PHONE: (855) REAL-WEALTH / (855) 732-5932              \\ 1  a n a     e m e nt                      Email: Connor@RoveroAsset.com\nTwittor @C:         gat\n* WEB SITE: revereasset.com                                                                                                                                                       @Connarbates\n",
+      "ocr_text_snippet": "® Preview fo Cot View Go Toor Window Heb CG 3 ac ®® % +O Lm FQ Ee Waun?snm PE WHAT'S THE MARKET TREND? “THE GROTECTION GAUGE\" >> TALE OF THE TAPE ~ WEDNESDAY, JUNE 17, 2026 << * MARKET STATE: UPTRE...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPVMUERO JIL AH. WAN, OC ROO SNOW.FINTMAVLNGIS BEINTC 31020 NEUTRAL UP",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "9 HAWKISH TILT FROM WARSH SPARKS SELL-OFF THURS KEYS: SPX VS 8E/21E QQQ VS 8E/21E R2K VS 8E/21E 22> S&PS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7554 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH 7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH 7437 (17 21EMA) € 6/12 1 6/54 4/31 2218 2/750 2128 EN 7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF 7301/7361( 118 SOD/10WK) € ¢/37 2/274 1/211 1/204 6897/6917 (15 2000/40WK) € 5/121 5/8 SLOPED OO ORE ASSET CONNORGATES TWITTER (X): @CONNORJBATES_ ANATYSTFASSOCICATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 \\ 1 A N A E M E NT EMAIL: CONNOR@ROVEROASSET.COM TWITTOR @C: GAT WEB SITE: REVEREASSET.COM @CONNARBATES",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1 12 (-2.19%/-5.12%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY INTC LABU TRIM SNOW SELL VIAV FLNC",
+          "bottom_line": "9 HAWKISH TILT FROM WARSH SPARKS SELL-OFF THURS KEYS: SPX VS 8E/21E QQQ VS 8E/21E R2K VS 8E/21E 22> S&PS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 7554 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH 7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH 7437 (17 21EMA) € 6/12 1 6/54 4/31 2218 2/750 2128 EN 7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF 7301/7361( 118 SOD/10WK) € ¢/37 2/274 1/211 1/204 6897/6917 (15 2000/40WK) € 5/121 5/8 SLOPED OO ORE ASSET CONNORGATES TWITTER (X): @CONNORJBATES_ ANATYSTFASSOCICATE PM PHONE: (855) REAL-WEALTH / (855) 732-5932 \\ 1 A N A E M E NT EMAIL: CONNOR@ROVEROASSET.COM TWITTOR @C: GAT WEB SITE: REVEREASSET.COM @CONNARBATES",
+          "parse_status": "ok",
+          "issue_codes": [],
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c291e06c5ed33cad",
+      "prefilter_score": 2.02,
+      "prefilter_stats": {
+        "brightRatio": 0.40875,
+        "darkRatio": 0.30916666666666665,
+        "edgeRatio": 0.25393965090806303,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2414,
+        "horizontalEdgeRatio": 0.1705886509787294,
+        "meanLuma": 160.9113888888889,
+        "stdDev": 91.64999504918386,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4773,
+        "verticalEdgeRatio": 0.3372906508373967
+      },
+      "score": 110.54,
+      "score_breakdown": {
+        "chart_likeness": -5.341831571780194,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 3,
+        "pair_bonus": 4,
+        "per_row_issues": 0,
+        "per_row_metrics": 19,
+        "text_density": 89.88
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "INTC",
+        "LABU",
+        "SLY",
+        "SNOW",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 420,
+      "timestamp_hms": "00:07:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 87,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260617_20260617_kmkjuiyj8ca_8bfd52a7_whiteboard\\ocr\\ocr_000088.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260617",
+      "ocr_confidence": 57,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Proview Fie Et View Go Toots Window Hep                                      CG 8 Ac BGO ¥ + OL Mm FQ Ee Wan\neo a                                                                                                                                     WHAT'S THE MARKET TREND?\n“THE GROTECTION GAUGE\"\n>> TALE OF THE TAPE ~ WEDNESDAY, JUNE 17, 2026 <<\n* MARKET STATE: UPTREND (6/15)                                                                                                             [ ___ erorecr]  lowow |\n\"STOINDEXES 31 OL RGB2T OJ NASIT USD TNX/TYX _ vsSd\n SENTMIENT 1550 ors ausss 20a EE rea                   war casts Ll]\nBULL CASE: INITIATE RALLY & TREND 21EMA €6/15\nBEAR CASE: SUSTAINED BREAK BELOW 21EMA                                                                                                            ,         WE   To         |\n“NEWS: PEACE AGREEMENT; WED 6/17: 15 FOMC W/ WARSH, FRI: MKT CLOSED                                                                             HORT TERM termed\n+ TODAY'S KEYS: SPX vs ATHY /21E  QRQws ATHL/21ET  R2Kvs ATHY J21ET                                                                                   em ——\n*DAYCT:01=>D-2 Ber-1d 21: ah                                                                    N\n*SPXO/N 7509-7539 07524 030 7509-75301 L/H 7402-7532                                                              i          TA | ——\n*SPXATR: 1.23% SPX 121% 60/40-0.67% GRO -0.70% TURBO -051%                                                                                     —   BREE 3\n# SECTORS: 1 09S USD X31 M231 SOK LI-AT <b BY USD ITB IGY PICK BIT GLO HACK COP SLY                                oH TERM (z00ama)                   HB\n* GRO HOLDINGS: spvmuero Jl aH. curx wm, oc cro show. FINT MAVLNGIS BEINTC                                                                         311020 KEUTRAL => UP\n* GRO RVAB/REBAR: -.35(.1.49%/5.50%) TRIM Lyx. sev cscoviay 400 eo mvt tc Buy veoae [Ill\n* TURBO HOLDINGS: SPYM.UPRO,LABU SNOW, SE MAVLIOLE FROG.ODOGINTC\n* TURBO RVAB/REBAR: 1 12 (2.19%/5 12%) BUY INTC LABU TRIM SNOW SELL VIA FINC\n* BOTTOM LINE: HAWKISH TILT FROM WARSH SPARKS SELL-OFF\n* THURS KEYS: SPXvs 8E/21E QQQs BE/21E RIK vs 8E/21E\n22> SBPS00 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H)\n37556 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH\n$7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH                                              i\n+7437 {17 21EMA) € 6/12 1 6/53 4/31       2218 2/250 124 ot\n7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF\n*+7301/7361(118 SOD/10WK) € 4/87 2/274 1/211 1/204\n* 6897/6917 (15 2000/40WK)_& 5/12 5/8 5L0PED\n                               oor ore Asset            connoraates\n* TWITTER (X): @ConnorJBates_                                                                                                                                                      Anatyst/associate PM\n* PHONE: {255) REAL-WEALTH / (855) 732-5932              \\ 1  a n pl     e m e nt                      Email Connor@RovoreAssot.com\nTwittor: @Connorsaty\n* WEB SITE: revereasset.com                                                                                                                    @Connorates\n",
+      "ocr_text_snippet": "® Proview Fie Et View Go Toots Window Hep CG 8 Ac BGO ¥ + OL Mm FQ Ee Wan eo a WHAT'S THE MARKET TREND? “THE GROTECTION GAUGE\" >> TALE OF THE TAPE ~ WEDNESDAY, JUNE 17, 2026 << * MARKET STATE: UPTR...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPVMUERO JL AH. CURX WM, OC CRO SHOW. FINT MAVLNGIS BEINTC 311020 KEUTRAL => UP",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "HAWKISH TILT FROM WARSH SPARKS SELL-OFF THURS KEYS: SPXVS 8E/21E QQQS BE/21E RIK VS 8E/21E 22> SBPS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 37556 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH 7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH I 7437 {17 21EMA) € 6/12 1 6/53 4/31 2218 2/250 124 OT 7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF 7301/7361(118 SOD/10WK) € 4/87 2/274 1/211 1/204 6897/6917 (15 2000/40WK)_& 5/12 5/8 5L0PED OOR ORE ASSET CONNORAATES TWITTER (X): @CONNORJBATES_ ANATYST/ASSOCIATE PM PHONE: {255) REAL-WEALTH / (855) 732-5932 \\ 1 A N PL E M E NT EMAIL CONNOR@ROVOREASSOT.COM TWITTOR: @CONNORSATY WEB SITE: REVEREASSET.COM @CONNORATES",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 57,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 1 12 (2.19%/5 12%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY INTC LABU TRIM SNOW SELL VIA FINC",
+          "bottom_line": "HAWKISH TILT FROM WARSH SPARKS SELL-OFF THURS KEYS: SPXVS 8E/21E QQQS BE/21E RIK VS 8E/21E 22> SBPS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H) 37556 MONDAY PEACE AGREEMENT LEADS TO BROAD STRENGTH 7511 TUES: SEMIS AND TECH GIVE BACK MONDAY'S GAINS, DOW ATH I 7437 {17 21EMA) € 6/12 1 6/53 4/31 2218 2/250 124 OT 7420 TODAY: HAWKISH TILT FROM WARSH SPARKS SELL-OFF 7301/7361(118 SOD/10WK) € 4/87 2/274 1/211 1/204 6897/6917 (15 2000/40WK)_& 5/12 5/8 5L0PED OOR ORE ASSET CONNORAATES TWITTER (X): @CONNORJBATES_ ANATYST/ASSOCIATE PM PHONE: {255) REAL-WEALTH / (855) 732-5932 \\ 1 A N PL E M E NT EMAIL CONNOR@ROVOREASSOT.COM TWITTOR: @CONNORSATY WEB SITE: REVEREASSET.COM @CONNORATES",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 57,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c291e06c5ed33cad",
+      "prefilter_score": 2.02,
+      "prefilter_stats": {
+        "brightRatio": 0.4085416666666667,
+        "darkRatio": 0.30833333333333335,
+        "edgeRatio": 0.25379831814006076,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2413,
+        "horizontalEdgeRatio": 0.17051798459472828,
+        "meanLuma": 160.91430555555556,
+        "stdDev": 91.65813833549565,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4770,
+        "verticalEdgeRatio": 0.33707865168539325
+      },
+      "score": 110.43,
+      "score_breakdown": {
+        "chart_likeness": -5.338285620334233,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.85,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 19,
+        "text_density": 93.92
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "INTC",
+        "LABU",
+        "PL",
+        "SLY",
+        "SNOW"
+      ],
+      "timestamp": 348,
+      "timestamp_hms": "00:05:48"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260617_20260617_kmkjuiyj8ca_8bfd52a7_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 4.52,
+      "prefilter_stats": {
+        "brightRatio": 0.43020833333333336,
+        "darkRatio": 0.3252083333333333,
+        "edgeRatio": 0.22867641862765883,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2419,
+        "horizontalEdgeRatio": 0.17094198289873508,
+        "meanLuma": 158.38472222222222,
+        "stdDev": 94.65983200052324,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4053,
+        "verticalEdgeRatio": 0.2864108543565826
+      },
+      "score": -15.06,
+      "score_breakdown": {
+        "chart_likeness": -3.063102272594131,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 138,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260617_20260617_kmkjuiyj8ca_8bfd52a7_whiteboard\\ocr\\ocr_000139.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 553.6,
+      "observed_date": null,
+      "ocr_confidence": 32,
+      "ocr_profile": "threshold",
+      "ocr_text": "® Seas Kio Eon view story Seokmiks Window Help                       G 8 Ac OB % +O Lm FQ B® Wann? sum\nMaseTS RoE [od        x Tour | weekly Monn Wa was © Gam. OGe 0\nP State Street Lowe           1ETF                                                                       $139.99          $139.39\naca ETH NE                                          PODM WA ODmAW  RHSHA NanoCw #8    sain oar      Xn esa 03995\nPAS      .                               EPS Dunas WA 500i Ap $v 19RMALIT 21 DeyATRY. 200%      coon    “wT Treen\nwo    RA Oem ATH Omampeti gw 05ZAPMETORNIZON. Lauro. 0400 PH ET UITZOZS\nComoe               AE A  L_P ———tn NEESh  _ E d\nYew Pes Pre Seles Composse Rating             -                   g      ev   S               2»\nBo wow XO Eesrme\nwe wn am wa Aska Ww\nTo wen we wh IewRSmes Ww\n)    orm 5 ute #1\nme wee avs wa peermiShue A |                         -   —            »\nmmm wn WA evean 0                                       ea\nmsm oe WA Eames wie WA                                      Pr Mew ay\nx2  0s etx wa Ses Gown Rue 8%               =e,      ERT)            *  :-    i   Pp\npony                      al |    [XY i    4\nms wm a WA a ee            maf              9     !    tf hl          -\nPE ABIX        [PO       Phi    us   .       it            A    J\n+*              2         ou       JET 2. SS 1 T_—\nPy wr N \"a  he dy   kL if i  Hf Why, Ib I             we\nCL Ye    ku                     Wl,                                   3\ni i           es    ez                                      a.                                              fo\ni  Ii                                                     %           ’\noth                                                    wo\nWey\nSU I) Lid\nhy      ws\n5\nry                                                                          -\n=\n| toate, I\nR)   —                                                                            »\nEr\n18D ohms                                                                              wm\nEl       OE\nCE   a ae Tg Egg Tag gg gg gg Tg Tg Pg EE   Bw TNE eww\n2      oa       or      oe       an      ER we       PY       fo      on\nSms | wae | meow Inter Asset Correlation 19 Hwms © se csoneuE seine                     omy + DEAR\nvon            I                     Comes     ona   5         “   .     Pe\nLee ©     cid    CORE TU om Taw mes mete WERE OR AT wee BT oe\nTm——————————   Bm hx cotmverems. #m aw   © om   B      Bn      5\nMy Lists                % ~                                                                                                      '\n",
+      "ocr_text_snippet": "® Seas Kio Eon view story Seokmiks Window Help G 8 Ac OB % +O Lm FQ B® Wann? sum MaseTS RoE [od x Tour | weekly Monn Wa was © Gam. OGe 0 P State Street Lowe 1ETF $139.99 $139.39 aca ETH NE PODM WA ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 32,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 32,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "806a0c3b7f8177c7",
+      "prefilter_score": 19.13,
+      "prefilter_stats": {
+        "brightRatio": 0.7644444444444445,
+        "darkRatio": 0.03875,
+        "edgeRatio": 0.159812027418557,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1853,
+        "horizontalEdgeRatio": 0.13094480955409513,
+        "meanLuma": 227.2411111111111,
+        "stdDev": 47.01874246733822,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2670,
+        "verticalEdgeRatio": 0.18867924528301888
+      },
+      "score": -21.51,
+      "score_breakdown": {
+        "chart_likeness": -1.1093972955763576,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.6,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 552,
+      "timestamp_hms": "00:09:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 147,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260617_20260617_kmkjuiyj8ca_8bfd52a7_whiteboard\\ocr\\ocr_000148.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 588.6,
+      "observed_date": null,
+      "ocr_confidence": 30,
+      "ocr_profile": "threshold",
+      "ocr_text": "# Safari File Ed view History Bookmarks Widow  Melp                       [=3   -  at B® ¥% # © LC wm FQ RB @ Wedlnil 5250\npremm—— « EB      ou | Wey ty tn + vs  PEE ome. OE 0\nP fluence Energy, Inc.                                                                              $23.74          323.42\nrn venmonin    J,        ln LE Bo, lie Menem Mm RL    padi\noe a oT ATS TOT cr cn Co\n[—               EE a BLE] al Se ane NE\naD fm ome       CEE ems              :         :                         )\nmo Dem Eh ©                   i\nEEE                        i                         7             :\nERE        I     i                    |    i |         .\nwe     it]   1    i.                 hp   [] i\nfy fed      i                 . fy i             »\ni. \" If  hi Fights       ly,       10 op gm\nI    V                                        ’               -\net Sa? lide    p        R         .     .    JER   —     ~.   .         — —am\nA    _        se                                EN                                                    B\nddan =\n\"     -     o-      a     Emm     -     fa     -.     I\nBerens.    Lian    Repos.   Inter Asset Correlation 19 items Cupane ca05 Pu Es 06172026                               LE  oR a?’\nDw em a ee we RDOCTOMD TEL WE eee WER OUR ST ew oan SX\neT erm mee eee       ;\n",
+      "ocr_text_snippet": "# Safari File Ed view History Bookmarks Widow Melp [=3 - at B® ¥% # © LC wm FQ RB @ Wedlnil 5250 premm—— « EB ou | Wey ty tn + vs PEE ome. OE 0 P fluence Energy, Inc. $23.74 323.42 rn venmonin J, l...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 30,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 30,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80781d0fbd4366d7",
+      "prefilter_score": 19.15,
+      "prefilter_stats": {
+        "brightRatio": 0.7625,
+        "darkRatio": 0.03881944444444444,
+        "edgeRatio": 0.1584693661225355,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1826,
+        "horizontalEdgeRatio": 0.12903681718606458,
+        "meanLuma": 227.4338888888889,
+        "stdDev": 46.23439456110675,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2659,
+        "verticalEdgeRatio": 0.18790191505900644
+      },
+      "score": -21.71,
+      "score_breakdown": {
+        "chart_likeness": -1.211635010749628,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.5,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 588,
+      "timestamp_hms": "00:09:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 144,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260617_20260617_kmkjuiyj8ca_8bfd52a7_whiteboard\\ocr\\ocr_000145.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 573.44,
+      "observed_date": null,
+      "ocr_confidence": 31,
+      "ocr_profile": "threshold",
+      "ocr_text": "# Saari Fie Ea view History Bookmarks Widow  Melp                       [=3   -  MC BQ ¥ + © L ma FQ RB. @ Wedlni? 5256M\nMARGETSURCE [Gel x own | wel dey ec wna §                    EZ ome oct oo\nP Snowflake, ‘lesdino.                                                                1234.62       3234.52\n2 Snowflake, +                      VOU UU. cry So\noem   J   nm men ss wees se   jae meen\nmm             tie Sr Sng sein TERS TR en spn nS\nCusiomua            ANA EEE - EUR) ENT em AEN Sm TT pain _|*\nrr at como       JUAN         J    rr                N\nAD fm Some n\nEE      _                                  —\nTorn ee\nECR Ey |    =\n0s I Nh momeamg Be     dia                                  Ib\nTR omen ka. SN\nZW OR Mgmiesm     VE ot                             [J         -\nmmm seme lg)          a                     gl!\n.      be wewaxen [I          N                          f  ft\nLL Tn            SAN                 I.    -y\nmo                                       8 iy:    he\nhy Welhyy           oo\nW   [Ry      bi.     we Wl\nhe i   A     “Hh,  -   1).             *\n M Singh, wl                          ul\nIl  ma   ~\n.\ni i |  I        j   Thin] dl     il  | li I l  i i i  | li           z\ntt os AA AG Al      -\na    -    o     LN    LI SC    -    8    .    K\nLE ET are.   Inter Asset Corvelation 19 items © ussmes c25ebu ts canon                            Orn - Dom aR\noo        Om m+ em wm    ie NE Bly SB J +\n———— ea    :    3\nMyLists        wv                                                   ’\n",
+      "ocr_text_snippet": "# Saari Fie Ea view History Bookmarks Widow Melp [=3 - MC BQ ¥ + © L ma FQ RB. @ Wedlni? 5256M MARGETSURCE [Gel x own | wel dey ec wna § EZ ome oct oo P Snowflake, ‘lesdino. 1234.62 3234.52 2 Snowf...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 31,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 31,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80383d6e37815f97",
+      "prefilter_score": 18.98,
+      "prefilter_stats": {
+        "brightRatio": 0.7879166666666667,
+        "darkRatio": 0.03888888888888889,
+        "edgeRatio": 0.1479754080983676,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1638,
+        "horizontalEdgeRatio": 0.11575153699385203,
+        "meanLuma": 229.81430555555556,
+        "stdDev": 45.520983754942556,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2550,
+        "verticalEdgeRatio": 0.1801992792028832
+      },
+      "score": -22.31,
+      "score_breakdown": {
+        "chart_likeness": -1.8638299307112636,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.55,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 576,
+      "timestamp_hms": "00:09:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 123,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260617_20260617_kmkjuiyj8ca_8bfd52a7_whiteboard\\ocr\\ocr_000124.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 493.6,
+      "observed_date": null,
+      "ocr_confidence": 29,
+      "ocr_profile": "threshold",
+      "ocr_text": "# Sater Fie EG1 view Mistry Bookmarks Window Help                       [=   4 nw BE HF +O Lo TT OE @ Wann] 521\non                                        na eas\nMarirsiros a [E)      x Tan] weeky sory ta woes © Amu. OG sO\n» Applied Optoelectronics, Inc.                                                                      $170.10         167.34\nasia Egor 23-451                                    woou    mousts wOmagw. AMT Newcs Harm    szss eos      anor 83.40 209%\nPUSS    er      J ——       PSDuOus ANG OMAP FLNAITZON 2DwARK (143%      cron     epehymghrd\ntanton          econ                  wa    Bo Lak TR ONSIMAI 0% oA Ramgmatin gus 0573 PMETOTI0N Lak Us 6400 PH ET SRATZORS\nCota              AAR NUL SNAP a SY aa ap     lo\new 5 rs um Corum 8                           %                         n\nOo) CB wow ew conan om\nms om me wh pense ow\nTe om Mn  gueeesree                              mer\nPEPSI pa doicled\nPARE AO ire                                   er\nTa aw ma Cem                               |   »       \\\nEa 0m am 5 emo WA                                    :    ips          =\nWE Om WN us owen                                             1    \"Il\nNite 1m me 0 eager                                                   I]    i   hd\nTare 471 sees EL pe NAwaXSR                                                    |   i I    i ly\nEEN        :\n(\nal 1) :                      \"0\nFLY        E\na       Hi\n)       [i                  nna\n[    a                  H           .\n' I  [1 A\ntat hop d        7                                       wo\n|   hy 1  L-\nny\nFa,           as        PRIS AL                   ES                      hd\nLn         RY CYNE Rt hg                       =\nRE TL i    ed     pol            -\n-      £3             ro\nhd                      Sessd\n180 voume                                         iT         a      ma    .             rw\nCE EE   a ag Ug Tg gg Tag HE gg Eg HE gg Tg Eg TH TE   a ST SS\nI      ot       or      [       an      fo ER       or       Yr      -       wu\npe.    fr    moow Inter Asset Correlation 19 items © usomec cance es srt                             orm + mE aEa\nwon            I                     Comes     ona   PO     “     am\npee ©     id    COE Th vem Taw me ftw WEGE NOW OR wee ETH oa\nTTT) TR wwe oemwerwms. wm aw © eo  -  -  -  -\nwyLiss                wo                                                                                                      [\n",
+      "ocr_text_snippet": "# Sater Fie EG1 view Mistry Bookmarks Window Help [= 4 nw BE HF +O Lo TT OE @ Wann] 521 on na eas Marirsiros a [E) x Tan] weeky sory ta woes © Amu. OG sO » Applied Optoelectronics, Inc. $170.10 167...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 29,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 29,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80c8156be69977c7",
+      "prefilter_score": 19.01,
+      "prefilter_stats": {
+        "brightRatio": 0.7635416666666667,
+        "darkRatio": 0.03881944444444444,
+        "edgeRatio": 0.15161472687442584,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1649,
+        "horizontalEdgeRatio": 0.11652886721786446,
+        "meanLuma": 227.15458333333333,
+        "stdDev": 47.3983736663535,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2642,
+        "verticalEdgeRatio": 0.1867005865309872
+      },
+      "score": -22.75,
+      "score_breakdown": {
+        "chart_likeness": -2.204457947735561,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.45,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE",
+        "TAN"
+      ],
+      "timestamp": 492,
+      "timestamp_hms": "00:08:12"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 1,
+      "end_ts": 60,
+      "end_hms": "00:01:00",
+      "is_intro_card": true,
+      "layout": "dmi",
+      "peak_frame_index": 15,
+      "peak_score": 61.42,
+      "start_hms": "00:01:00",
+      "start_ts": 60
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 372,
+      "end_hms": "00:06:12",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 93,
+      "peak_score": 114.87,
+      "start_hms": "00:06:12",
+      "start_ts": 372
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 456,
+      "end_hms": "00:07:36",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 114,
+      "peak_score": 116.66,
+      "start_hms": "00:07:36",
+      "start_ts": 456
+    }
+  ]
+}

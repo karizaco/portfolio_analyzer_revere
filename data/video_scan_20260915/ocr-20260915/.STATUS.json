@@ -1,0 +1,13 @@
+{
+  "run_tag": "ocr-20260915",
+  "driver": "runAllOcr.js",
+  "started_at": "2026-09-15T04:00:32.615Z",
+  "finished_at": "2026-09-15T10:06:06.148Z",
+  "last_update_at": "2026-09-15T10:17:24.814689Z",
+  "probe_log_count": 29,
+  "unique_videos_done": 29,
+  "unique_videos_errored": 0,
+  "expected_total": 107,
+  "last_probe_log": "20260912_20260912_7t50zib7-bk_dcccf42e_whiteboard.json",
+  "next_step": "stamper applied (19 daily + 5 feature + 5 weekend_review). Next: aggregate with node tools/aggregateOcrTimeline.js ocr-20260915."
+}

@@ -1,0 +1,1268 @@
+{
+  "date_key": "20260527",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads\\20260527_BqyY-stYKfU.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 84,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260527_20260527_bqyy-stykfu_89aadec5_whiteboard\\ocr\\ocr_000085.png",
+      "is_intro_card": true,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 333.92,
+      "observed_date": "20260527",
+      "ocr_confidence": 36,
+      "ocr_profile": "threshold",
+      "ocr_text": "B mem ce rx ee a an mda om                1&9 - @®e LMT Fe meen\n[HE REVERE ROLINDAIP                    WHAT'S THE MARKET TREND?\neen                                         )                     “THE GROTECTION GAUGE\"\n>» TALE OF THE TAPE - WEDNESDAY, MAY 27, 2026 <<\n© MARKET STATE: 1915050 £70 78]                                     AE) LEADERS mee         *\nSSTOINDOES \"1 OL AGEET OL MAST USD THNTVX tT wSd                      [a\nCUNTIMINT VX: S 12 0 FRG       PETS ETIREY., , .. [PPro T rep\nBIUCAM IN TATE RALLY B TAUND 21 WA € ACR                                    pom? ress tomatoes\nDUAR CASE SUSTAINED BRERC BE.C'W 2IEMA                                             Grane\n* NEWS. AN CEASE-FIRE EXTENDED, MU & SC HYNG CROSS $1 TRILLION MC. F#3 PCE\nTODAYS KIYS SAn EET /ATH  OOOWECATS RIK gES ATH                      ree——\nCDAYCE LT end   Be nm eins    |             [3\n* ACTION:     ~      $14      :\nTIXO/N TSIATSSSS O56 030 IOTTSITC LM IAM-15N0\n“SPXATR SEN PX    60/40    Gho    TURBO 4 79%                         Cio tee an\n* SECTORS ©     tn    [   + BON HACK ECU SOI ELD GY CHAT                                          ’\n* GAO HOLCENGS: 377M ura LAB CHC MIA C350 MBF. \"8h 0, OCR: G4 WWDMLAROL OOO\n* GRO RVAB/RIBAR | / © 47%) BUY LAB O-TRIM MOCVL\n* TURBO HOLDINGS: $7700 (m0 WE G4 0 ACH, THA WIC. B.1 LT lh TC AR AUCED AR OC\n* TURBO RVABMREBAR: (: {6 53%) O-TAM SEDG SELL AAO! ADD 10 NSIS.\n*BOTTOMUNE » \"oor --   EERE\n* THURS KEYS: SPX vs BATH QQ vi S/ATH RIX v3 $E/ATH\n>>> SAPS00 KEY LEVELS <<<\n* 7539 (3/26 INTRAGAY A-1-M)\nEI CTE  EE\n$1510   Ate a ae\nEZEN   .       .\nCTII(TIT MMAL EC 0   FILE NOTE BY Ne\n*0I7/7108( 7 10 SODSIOWK) € 1 4 NTN Nd          ) A\n© GA4/6847 (7 J00D/OWY) € ct -    t                  B     Sse             Connor Bates\nAnalyst/Assaciote Fu\nLy   rT   Pa         ,    ,                     ee rm eA\n—                        Mdliagement         Sea\nWEB SITE: revereasset.com                                                                                                                                                                        |\n",
+      "ocr_text_snippet": "B mem ce rx ee a an mda om 1&9 - @®e LMT Fe meen [HE REVERE ROLINDAIP WHAT'S THE MARKET TREND? een ) “THE GROTECTION GAUGE\" >» TALE OF THE TAPE - WEDNESDAY, MAY 27, 2026 << © MARKET STATE: 1915050 ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/RIBAR / © 47%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY LAB O-TRIM MOCVL",
+          "bottom_line": "» \"OOR -- EERE THURS KEYS: SPX VS BATH QQ VI S/ATH RIX V3 $E/ATH SAPS00 KEY LEVELS <<< 7539 (3/26 INTRAGAY A-1-M) EI CTE EE 1510 ATE A AE EZEN . . CTII(TIT MMAL EC 0 FILE NOTE BY NE 0I7/7108( 7 10 SODSIOWK) € 1 4 NTN ND ) A GA4/6847 (7 J00D/OWY) € CT - T B SSE CONNOR BATES ANALYST/ASSACIOTE FU LY RT PA , , EE RM EA MDLIAGEMENT SEA WEB SITE: REVEREASSET.COM",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: $7700 (M0 WE G4 0 ACH, THA WIC. B.1 LT LH TC AR AUCED AR OC TURBO RVABMREBAR: (: {6 53%) O-TAM SEDG",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL AAO! ADD 10 NSIS.",
+          "bottom_line": "» \"OOR -- EERE THURS KEYS: SPX VS BATH QQ VI S/ATH RIX V3 $E/ATH SAPS00 KEY LEVELS <<< 7539 (3/26 INTRAGAY A-1-M) EI CTE EE 1510 ATE A AE EZEN . . CTII(TIT MMAL EC 0 FILE NOTE BY NE 0I7/7108( 7 10 SODSIOWK) € 1 4 NTN ND ) A GA4/6847 (7 J00D/OWY) € CT - T B SSE CONNOR BATES ANALYST/ASSACIOTE FU LY RT PA , , EE RM EA MDLIAGEMENT SEA WEB SITE: REVEREASSET.COM",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c695e26897936cca",
+      "prefilter_score": 1.67,
+      "prefilter_stats": {
+        "brightRatio": 0.4222916666666667,
+        "darkRatio": 0.31340277777777775,
+        "edgeRatio": 0.2518549925800297,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2237,
+        "horizontalEdgeRatio": 0.1580807010105293,
+        "meanLuma": 163.27055555555555,
+        "stdDev": 91.8175765049749,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4891,
+        "verticalEdgeRatio": 0.3456292841495301
+      },
+      "score": 96.88,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 1.8,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 20,
+        "text_density": 81.08
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "MU",
+        "URA"
+      ],
+      "timestamp": 336,
+      "timestamp_hms": "00:05:36",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\screenshots\\20260527_ps.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 69,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260527_20260527_bqyy-stykfu_89aadec5_whiteboard\\ocr\\ocr_000070.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 276.8,
+      "observed_date": null,
+      "ocr_confidence": 40,
+      "ocr_profile": "threshold",
+      "ocr_text": "B meee tn fe es a es mae im             hy 9 Be Lm w $e eee\n\neen\n\nBe eon\nTMARKET STATE LATRISD 1104-0\n\n.                                                                “THE GROTECTION GAUGE\"\n\nTSTOWOEXIS SS OL AGEIT CL NAMIC USO TNIV Pwd\n\nCSENTMINTRC 3: 4G 146         we n2 26307 40 TET mss cron os                              —\nDHLLLCASE INIT ATE BALLY & THING JIEWA € 48\n\nBEAR CASE SUSTA NED BUIAC BELOW 21EMA\n\n* MEWS IRAN CEASE-FIRE EXTENDED, MU & SK HYNIX CROSS $1 TRILLION MC, FRI PCE\n\n* TOOAYS KEYS SPX va 8£ = FATH    QQ vs 3€ = JATH    RE v3 BET /ATH\n\nanon     +       en                                                    PERE\n\nSSPXO/N TSIA-7555T OTS26 O30 ISOT-FSITT L/H 2498.75X0\n\nEBL ER\n* SECTORS =     Tr     vo    3 BYN RACK CLO SCX GLO KGW CHA”                       ——\n\n* GRO MOLDINGS $7703 (PAG LAB OVAC MV C(O WARS TWA 82,000 104 MVD AACS DOXN                                   Lows reve costumes =n\n\n© GRO RVABMIBAR (* * 7 4 &%) BUY LADY O-THIM MRVU                                       ARR             .\n\n© TURBO MOLDINGS 1/vt LPO WELGLW AOL TIA 8 DG BHT ABEL IVC Wh) NOD A008 DE i.\n\n© TURBO RVAB/REBAR | / 6 93%) O-TRIM SEDG SELL AAD! ADD to NS\n\nTHOTTOM LINE » +    .        DEN\n\nTHURS KEYS SPX vi SE/ATH  QQQ vs BI/ATH  R2K va BE/ATH                                   Oo\n\n>>> $8PSQ0 KEY LEVELS <<<\n\n* YS {5/26 INTRADAY AT-M)\n\nretain     Co\n\nJS\n\nFOTN          .      .                            .\n\nSII IEMA) € ©    ily. ot nue on\n\nCF03TI0NT 1 WQONOWKY € 1 nergy    4 od\n\n* 6824/6847 (= v 2000/40WK} €   Pd    -     kd\n\nM    2]\n\n* EMAIL: connor rover easset.com               nev el e  Asset            Connor Bates              |\n* TWITTER (X). @ConnoriBates_                                                                                                                  Analyst/Associote Fat\n\n* PHONE: (855) REAL-WEALTH / (855) 732-5932    Mana  ement        re re A ett\n\n* WEB SITE: revereasset.com                                             Had\n",
+      "ocr_text_snippet": "B meee tn fe es a es mae im hy 9 Be Lm w $e eee een Be eon TMARKET STATE LATRISD 1104-0 . “THE GROTECTION GAUGE\" TSTOWOEXIS SS OL AGEIT CL NAMIC USO TNIV Pwd CSENTMINTRC 3: 4G 146 we n2 26307 40 TE...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 40,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR / 6 93%) O-",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "TRIM SEDG SELL AAD! ADD TO NS THOTTOM LINE » + . DEN THURS KEYS SPX VI SE/ATH QQQ VS BI/ATH R2K VA BE/ATH OO 8PSQ0 KEY LEVELS <<< YS {5/26 INTRADAY AT-M) RETAIN CO JS FOTN . . . SII IEMA) € © ILY. OT NUE ON CF03TI0NT 1 WQONOWKY € 1 NERGY 4 OD 6824/6847 (= V 2000/40WK} € PD - KD M 2] EMAIL: CONNOR ROVER EASSET.COM NEV EL E ASSET CONNOR BATES TWITTER (X). @CONNORIBATES_ ANALYST/ASSOCIOTE FAT PHONE: (855) REAL-WEALTH / (855) 732-5932 MANA EMENT RE RE A ETT WEB SITE: REVEREASSET.COM HAD",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 40,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c091a52dd6d23caf",
+      "prefilter_score": 1.92,
+      "prefilter_stats": {
+        "brightRatio": 0.4326388888888889,
+        "darkRatio": 0.31083333333333335,
+        "edgeRatio": 0.25256165642004097,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2209,
+        "horizontalEdgeRatio": 0.15610204225849764,
+        "meanLuma": 164.09986111111112,
+        "stdDev": 91.82486213186634,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4939,
+        "verticalEdgeRatio": 0.34902127058158433
+      },
+      "score": 69.92,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2,
+        "pair_bonus": 0,
+        "per_row_issues": -10,
+        "per_row_metrics": 8,
+        "text_density": 75.92
+      },
+      "screen_layout": "dmi",
+      "tickers": [
+        "BE",
+        "MU"
+      ],
+      "timestamp": 276,
+      "timestamp_hms": "00:04:36",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\screenshots\\20260527_ps_2.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 24,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260527_20260527_bqyy-stykfu_89aadec5_whiteboard\\ocr\\ocr_000025.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 96.8,
+      "observed_date": null,
+      "ocr_confidence": 52,
+      "ocr_profile": "threshold",
+      "ocr_text": ".                   FO I ER SE EI A\n“THE GROTECTION GAUGE\"\n2>> DAILY MARKET INSIGHT <<<\n© YT, X, 0G, TiTok: @REVEREASSET - PLS LIKE SHARE SUS       a\noo EES, ke 2, 202                Ee\n® MARKET STATE: +t “vith oe                                            BIOORT TERME Samal ove.\n* WHAT HAPPENED TODAY?                                                        Caan\nmons roms (um oe\nNits     104                                           Cae ee\nT12 -3.03%    Pa      100                                                        [pe—     —\nRAJI00 0.77%                                                            (+)                     |\nQaQ -0.11%  QQQE-0.89%                     dq\nRAE\nMID 037%                              h\nTURBO ~ 0 79%\nsessssssssrssssssssssassrzsassassse\n* EMAIL: connor @revereatsot.com            Revere Asset          Connor Bates\n* TWITTER (X): @ConnoriBates_                                                                                                                  Anatyst/Aseacicte Fu\n* PHONE: (855) REAL-WEALTH / (855) 732-5932     \\         m    t        en en A eR\n* WEB SITE: revereasset.com                ana  e   en          wT eee\n",
+      "ocr_text_snippet": ". FO I ER SE EI A “THE GROTECTION GAUGE\" 2>> DAILY MARKET INSIGHT <<< © YT, X, 0G, TiTok: @REVEREASSET - PLS LIKE SHARE SUS a oo EES, ke 2, 202 Ee ® MARKET STATE: +t “vith oe BIOORT TERME Samal ove...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 52,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 52,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c495e44c5b337cc5",
+      "prefilter_score": 3.56,
+      "prefilter_stats": {
+        "brightRatio": 0.4297916666666667,
+        "darkRatio": 0.3422222222222222,
+        "edgeRatio": 0.22804042117164863,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2308,
+        "horizontalEdgeRatio": 0.16309801427460957,
+        "meanLuma": 158.16027777777776,
+        "stdDev": 95.34566211032455,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4146,
+        "verticalEdgeRatio": 0.29298282806868775
+      },
+      "score": 38.52,
+      "score_breakdown": {
+        "chart_likeness": -3.9406673171368976,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.6,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 51.86
+      },
+      "screen_layout": "dmi",
+      "tickers": [],
+      "timestamp": 96,
+      "timestamp_hms": "00:01:36",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\screenshots\\20260527_ps_3.png"
+    }
+  ],
+  "frame_count": 215,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 169,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\screenshots\\20260527_ps.png",
+  "prefilter_best_score": 19.37,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 84,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260527_20260527_bqyy-stykfu_89aadec5_whiteboard\\ocr\\ocr_000085.png",
+    "is_intro_card": true,
+    "issue_codes": [
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 333.92,
+    "observed_date": "20260527",
+    "ocr_confidence": 36,
+    "ocr_profile": "threshold",
+    "ocr_text": "B mem ce rx ee a an mda om                1&9 - @®e LMT Fe meen\n[HE REVERE ROLINDAIP                    WHAT'S THE MARKET TREND?\neen                                         )                     “THE GROTECTION GAUGE\"\n>» TALE OF THE TAPE - WEDNESDAY, MAY 27, 2026 <<\n© MARKET STATE: 1915050 £70 78]                                     AE) LEADERS mee         *\nSSTOINDOES \"1 OL AGEET OL MAST USD THNTVX tT wSd                      [a\nCUNTIMINT VX: S 12 0 FRG       PETS ETIREY., , .. [PPro T rep\nBIUCAM IN TATE RALLY B TAUND 21 WA € ACR                                    pom? ress tomatoes\nDUAR CASE SUSTAINED BRERC BE.C'W 2IEMA                                             Grane\n* NEWS. AN CEASE-FIRE EXTENDED, MU & SC HYNG CROSS $1 TRILLION MC. F#3 PCE\nTODAYS KIYS SAn EET /ATH  OOOWECATS RIK gES ATH                      ree——\nCDAYCE LT end   Be nm eins    |             [3\n* ACTION:     ~      $14      :\nTIXO/N TSIATSSSS O56 030 IOTTSITC LM IAM-15N0\n“SPXATR SEN PX    60/40    Gho    TURBO 4 79%                         Cio tee an\n* SECTORS ©     tn    [   + BON HACK ECU SOI ELD GY CHAT                                          ’\n* GAO HOLCENGS: 377M ura LAB CHC MIA C350 MBF. \"8h 0, OCR: G4 WWDMLAROL OOO\n* GRO RVAB/RIBAR | / © 47%) BUY LAB O-TRIM MOCVL\n* TURBO HOLDINGS: $7700 (m0 WE G4 0 ACH, THA WIC. B.1 LT lh TC AR AUCED AR OC\n* TURBO RVABMREBAR: (: {6 53%) O-TAM SEDG SELL AAO! ADD 10 NSIS.\n*BOTTOMUNE » \"oor --   EERE\n* THURS KEYS: SPX vs BATH QQ vi S/ATH RIX v3 $E/ATH\n>>> SAPS00 KEY LEVELS <<<\n* 7539 (3/26 INTRAGAY A-1-M)\nEI CTE  EE\n$1510   Ate a ae\nEZEN   .       .\nCTII(TIT MMAL EC 0   FILE NOTE BY Ne\n*0I7/7108( 7 10 SODSIOWK) € 1 4 NTN Nd          ) A\n© GA4/6847 (7 J00D/OWY) € ct -    t                  B     Sse             Connor Bates\nAnalyst/Assaciote Fu\nLy   rT   Pa         ,    ,                     ee rm eA\n—                        Mdliagement         Sea\nWEB SITE: revereasset.com                                                                                                                                                                        |\n",
+    "ocr_text_snippet": "B mem ce rx ee a an mda om 1&9 - @®e LMT Fe meen [HE REVERE ROLINDAIP WHAT'S THE MARKET TREND? een ) “THE GROTECTION GAUGE\" >» TALE OF THE TAPE - WEDNESDAY, MAY 27, 2026 << © MARKET STATE: 1915050 ...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": "RVAB/RIBAR / © 47%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "BUY LAB O-TRIM MOCVL",
+        "bottom_line": "» \"OOR -- EERE THURS KEYS: SPX VS BATH QQ VI S/ATH RIX V3 $E/ATH SAPS00 KEY LEVELS <<< 7539 (3/26 INTRAGAY A-1-M) EI CTE EE 1510 ATE A AE EZEN . . CTII(TIT MMAL EC 0 FILE NOTE BY NE 0I7/7108( 7 10 SODSIOWK) € 1 4 NTN ND ) A GA4/6847 (7 J00D/OWY) € CT - T B SSE CONNOR BATES ANALYST/ASSACIOTE FU LY RT PA , , EE RM EA MDLIAGEMENT SEA WEB SITE: REVEREASSET.COM",
+        "parse_status": "review",
+        "issue_codes": [
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 36,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": "HOLDINGS: $7700 (M0 WE G4 0 ACH, THA WIC. B.1 LT LH TC AR AUCED AR OC TURBO RVABMREBAR: (: {6 53%) O-TAM SEDG",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "SELL AAO! ADD 10 NSIS.",
+        "bottom_line": "» \"OOR -- EERE THURS KEYS: SPX VS BATH QQ VI S/ATH RIX V3 $E/ATH SAPS00 KEY LEVELS <<< 7539 (3/26 INTRAGAY A-1-M) EI CTE EE 1510 ATE A AE EZEN . . CTII(TIT MMAL EC 0 FILE NOTE BY NE 0I7/7108( 7 10 SODSIOWK) € 1 4 NTN ND ) A GA4/6847 (7 J00D/OWY) € CT - T B SSE CONNOR BATES ANALYST/ASSACIOTE FU LY RT PA , , EE RM EA MDLIAGEMENT SEA WEB SITE: REVEREASSET.COM",
+        "parse_status": "review",
+        "issue_codes": [
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 36,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "c695e26897936cca",
+    "prefilter_score": 1.67,
+    "prefilter_stats": {
+      "brightRatio": 0.4222916666666667,
+      "darkRatio": 0.31340277777777775,
+      "edgeRatio": 0.2518549925800297,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 2237,
+      "horizontalEdgeRatio": 0.1580807010105293,
+      "meanLuma": 163.27055555555555,
+      "stdDev": 91.8175765049749,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 4891,
+      "verticalEdgeRatio": 0.3456292841495301
+    },
+    "score": 96.88,
+    "score_breakdown": {
+      "chart_likeness": -6,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 1.8,
+      "pair_bonus": 4,
+      "per_row_issues": -4,
+      "per_row_metrics": 20,
+      "text_density": 81.08
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "BE",
+      "MU",
+      "URA"
+    ],
+    "timestamp": 336,
+    "timestamp_hms": "00:05:36"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 84,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260527_20260527_bqyy-stykfu_89aadec5_whiteboard\\ocr\\ocr_000085.png",
+      "is_intro_card": true,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260527",
+      "ocr_confidence": 36,
+      "ocr_profile": "threshold",
+      "ocr_text": "B mem ce rx ee a an mda om                1&9 - @®e LMT Fe meen\n[HE REVERE ROLINDAIP                    WHAT'S THE MARKET TREND?\neen                                         )                     “THE GROTECTION GAUGE\"\n>» TALE OF THE TAPE - WEDNESDAY, MAY 27, 2026 <<\n© MARKET STATE: 1915050 £70 78]                                     AE) LEADERS mee         *\nSSTOINDOES \"1 OL AGEET OL MAST USD THNTVX tT wSd                      [a\nCUNTIMINT VX: S 12 0 FRG       PETS ETIREY., , .. [PPro T rep\nBIUCAM IN TATE RALLY B TAUND 21 WA € ACR                                    pom? ress tomatoes\nDUAR CASE SUSTAINED BRERC BE.C'W 2IEMA                                             Grane\n* NEWS. AN CEASE-FIRE EXTENDED, MU & SC HYNG CROSS $1 TRILLION MC. F#3 PCE\nTODAYS KIYS SAn EET /ATH  OOOWECATS RIK gES ATH                      ree——\nCDAYCE LT end   Be nm eins    |             [3\n* ACTION:     ~      $14      :\nTIXO/N TSIATSSSS O56 030 IOTTSITC LM IAM-15N0\n“SPXATR SEN PX    60/40    Gho    TURBO 4 79%                         Cio tee an\n* SECTORS ©     tn    [   + BON HACK ECU SOI ELD GY CHAT                                          ’\n* GAO HOLCENGS: 377M ura LAB CHC MIA C350 MBF. \"8h 0, OCR: G4 WWDMLAROL OOO\n* GRO RVAB/RIBAR | / © 47%) BUY LAB O-TRIM MOCVL\n* TURBO HOLDINGS: $7700 (m0 WE G4 0 ACH, THA WIC. B.1 LT lh TC AR AUCED AR OC\n* TURBO RVABMREBAR: (: {6 53%) O-TAM SEDG SELL AAO! ADD 10 NSIS.\n*BOTTOMUNE » \"oor --   EERE\n* THURS KEYS: SPX vs BATH QQ vi S/ATH RIX v3 $E/ATH\n>>> SAPS00 KEY LEVELS <<<\n* 7539 (3/26 INTRAGAY A-1-M)\nEI CTE  EE\n$1510   Ate a ae\nEZEN   .       .\nCTII(TIT MMAL EC 0   FILE NOTE BY Ne\n*0I7/7108( 7 10 SODSIOWK) € 1 4 NTN Nd          ) A\n© GA4/6847 (7 J00D/OWY) € ct -    t                  B     Sse             Connor Bates\nAnalyst/Assaciote Fu\nLy   rT   Pa         ,    ,                     ee rm eA\n—                        Mdliagement         Sea\nWEB SITE: revereasset.com                                                                                                                                                                        |\n",
+      "ocr_text_snippet": "B mem ce rx ee a an mda om 1&9 - @®e LMT Fe meen [HE REVERE ROLINDAIP WHAT'S THE MARKET TREND? een ) “THE GROTECTION GAUGE\" >» TALE OF THE TAPE - WEDNESDAY, MAY 27, 2026 << © MARKET STATE: 1915050 ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/RIBAR / © 47%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY LAB O-TRIM MOCVL",
+          "bottom_line": "» \"OOR -- EERE THURS KEYS: SPX VS BATH QQ VI S/ATH RIX V3 $E/ATH SAPS00 KEY LEVELS <<< 7539 (3/26 INTRAGAY A-1-M) EI CTE EE 1510 ATE A AE EZEN . . CTII(TIT MMAL EC 0 FILE NOTE BY NE 0I7/7108( 7 10 SODSIOWK) € 1 4 NTN ND ) A GA4/6847 (7 J00D/OWY) € CT - T B SSE CONNOR BATES ANALYST/ASSACIOTE FU LY RT PA , , EE RM EA MDLIAGEMENT SEA WEB SITE: REVEREASSET.COM",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: $7700 (M0 WE G4 0 ACH, THA WIC. B.1 LT LH TC AR AUCED AR OC TURBO RVABMREBAR: (: {6 53%) O-TAM SEDG",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL AAO! ADD 10 NSIS.",
+          "bottom_line": "» \"OOR -- EERE THURS KEYS: SPX VS BATH QQ VI S/ATH RIX V3 $E/ATH SAPS00 KEY LEVELS <<< 7539 (3/26 INTRAGAY A-1-M) EI CTE EE 1510 ATE A AE EZEN . . CTII(TIT MMAL EC 0 FILE NOTE BY NE 0I7/7108( 7 10 SODSIOWK) € 1 4 NTN ND ) A GA4/6847 (7 J00D/OWY) € CT - T B SSE CONNOR BATES ANALYST/ASSACIOTE FU LY RT PA , , EE RM EA MDLIAGEMENT SEA WEB SITE: REVEREASSET.COM",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c695e26897936cca",
+      "prefilter_score": 1.67,
+      "prefilter_stats": {
+        "brightRatio": 0.4222916666666667,
+        "darkRatio": 0.31340277777777775,
+        "edgeRatio": 0.2518549925800297,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2237,
+        "horizontalEdgeRatio": 0.1580807010105293,
+        "meanLuma": 163.27055555555555,
+        "stdDev": 91.8175765049749,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4891,
+        "verticalEdgeRatio": 0.3456292841495301
+      },
+      "score": 96.88,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 1.8,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 20,
+        "text_density": 81.08
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "MU",
+        "URA"
+      ],
+      "timestamp": 336,
+      "timestamp_hms": "00:05:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 81,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260527_20260527_bqyy-stykfu_89aadec5_whiteboard\\ocr\\ocr_000082.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 36,
+      "ocr_profile": "threshold",
+      "ocr_text": "B Pe mfr ee a Ces mee my             1 89 c @ ee Lm Ys eee\n[HE REVERE ROLINDUP                   WHAT'S THE MARKEY TREND?\ncen                                                          “THE GROTECTION GAUGE\"\n> TALE OF THE TAPE - WEDNESOAY, MAY 27, 2026 <<\nMARKET STATE LPT (ND [570 4F|\nSSTOINDEMES ST OLAGEES OL MAST USD THNTYX tT wid\nCUNTIMINT VX: L 1821 RG       PPT E TIRE. , .. . [FPP prpy\nFL LCANE IN DIATE RALLY A TRIND 2IIWA € A'%                                       WORT TRAN tema) eve\nDUARCALL CUSTANED BRERC BE.CW 21EIVA                                            Grr AN a\n* NEWS IRAN CEASE-FIRE EXTENDED, MU & SK HYNIX CROSS $1 TRILLION ME, FR3 PCE\nTODAYS KEYS. SPKv $67 ATH GOO BEZ/ATH  RIKve 6 /ATH                     ee\nCDAYCT LF bey .T nf   Be: \"le -3nT                i\n+ ACTON     ~     Yr\nSKO/N FIATSISS 07526 0X IRITSITN MIAMI\n*SORATR. 690% 1 $9    sare0    a0    TUR0 2 15%                         Lo\n«secroms. +    on   Cat BTN RACK LLC SON C.D GY (HAT\n* GAD HOLOAGS S7vad ac, ABU, CHAK COMI 0.006, WORAR00N\n* GRO RVAB/RIBAR | / 7] ORY LABY O-TRIM MIVL\n* TURBO MOCOINGS 1770 U0, WE, La 1 MOR THAW DG M71 heh, 07 AR ICED ARM, C14.\n© TURBO RVAB/REBAR. (76 33%) O-TAM SE0G SELL ANGI ADO 10 NBG                              |\n$BOTTOMUNE » vt -« +    So\n* THURS KEYS: SPX vi BE/ATH  QOQ vi SE/ATH RIX vi SE/ATH\n25> S4P500 KEY LEVRLS <<<\n+ T319.03/26 WIRAGAY ATH)\nE 28%51   Aeon    B   Coon\nP1510     a   A   a\nSun.   RT\nTTHI(A 17 ZUMA <2    Vargo id co\n© 017771080\" 1% SODIOWK] € © oA 220 CT avd           1 A                                      |\n© SAEBAT (1: J000/AOWT € ta              p    Sse          Connor Bates\nAnaryst/associate mt\nONENESS REAL VIERLTT TORS FTN)      ,  d ement      ee ener\n* WEB SITE: revereasset.com              dll  g                      ree\n",
+      "ocr_text_snippet": "B Pe mfr ee a Ces mee my 1 89 c @ ee Lm Ys eee [HE REVERE ROLINDUP WHAT'S THE MARKEY TREND? cen “THE GROTECTION GAUGE\" > TALE OF THE TAPE - WEDNESOAY, MAY 27, 2026 << MARKET STATE LPT (ND [570 4F| ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/RIBAR / 7] ORY LABY O-",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "TRIM MIVL TURBO MOCOINGS 1770 U0, WE, LA 1 MOR THAW DG M71 HEH, 07 AR ICED ARM, C14.",
+          "bottom_line": "» VT -« + SO THURS KEYS: SPX VI BE/ATH QOQ VI SE/ATH RIX VI SE/ATH 25> S4P500 KEY LEVRLS <<< T319.03/26 WIRAGAY ATH) E 28%51 AEON B COON P1510 A A A SUN. RT TTHI(A 17 ZUMA <2 VARGO ID CO 017771080\" 1% SODIOWK] € © OA 220 CT AVD 1 A SAEBAT (1: J000/AOWT € TA P SSE CONNOR BATES ANARYST/ASSOCIATE MT ONENESS REAL VIERLTT TORS FTN) , D EMENT EE ENER WEB SITE: REVEREASSET.COM DLL G REE",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR. (76 33%) O-TAM SE0G",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL ANGI ADO 10 NBG",
+          "bottom_line": "» VT -« + SO THURS KEYS: SPX VI BE/ATH QOQ VI SE/ATH RIX VI SE/ATH 25> S4P500 KEY LEVRLS <<< T319.03/26 WIRAGAY ATH) E 28%51 AEON B COON P1510 A A A SUN. RT TTHI(A 17 ZUMA <2 VARGO ID CO 017771080\" 1% SODIOWK] € © OA 220 CT AVD 1 A SAEBAT (1: J000/AOWT € TA P SSE CONNOR BATES ANARYST/ASSOCIATE MT ONENESS REAL VIERLTT TORS FTN) , D EMENT EE ENER WEB SITE: REVEREASSET.COM DLL G REE",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c695e26897936cca",
+      "prefilter_score": 1.68,
+      "prefilter_stats": {
+        "brightRatio": 0.4225,
+        "darkRatio": 0.31340277777777775,
+        "edgeRatio": 0.25196099215603135,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2231,
+        "horizontalEdgeRatio": 0.15765670270652252,
+        "meanLuma": 163.273125,
+        "stdDev": 91.81872040397461,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4900,
+        "verticalEdgeRatio": 0.34626528160554026
+      },
+      "score": 94.72,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 1.8,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 20,
+        "text_density": 78.92
+      },
+      "screen_layout": "dmi",
+      "tickers": [
+        "ARM",
+        "BE",
+        "MU"
+      ],
+      "timestamp": 324,
+      "timestamp_hms": "00:05:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 75,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260527_20260527_bqyy-stykfu_89aadec5_whiteboard\\ocr\\ocr_000076.png",
+      "is_intro_card": true,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260527",
+      "ocr_confidence": 39,
+      "ocr_profile": "threshold",
+      "ocr_text": "B mem ce rx ee a an mda om                1&9 - ®e LMT Fe meen\n[HE REVERE ROLINDAIP                   WHAT'S THE MARKET TREND?\ncon                                         )                     “THE GROTECTION GAUGE\"\n> TALE OF THE TAPE - WEDNESDAY, MAY 27, 2026 <<\n© MARKET STATE: “115080 £70) 4/8]                                     WARE LEADERS see         *\n“STOINDEXES “1 OLRGEST OL MAST USD  THX/TYX ws                 i eens\nCUNTIMINT VX: L 1.8 IN FAG          PETS ETIREY.. o .. o [PPRrT PoP\nBIOLCAN IN DATE RALLY KB IAEND ZUMA € 408                                    [SMORT TERMS tema owe\nPAARLCALE SUSTAINED BRERC BE. CW 2LEVA                                             CE AN\n* NEWS. RAK CEASE-FIRE EXTENDED, MU & SC HNO CROSS $1 TRILLION MC. F839 PCE\n“TODAYS KIS. An EC ATH OOOWELT/ATH: ATE 86S ATH                      ee\nCDAYCE 17 fa>.5 7) Be -in lent                3\n* ACTION     ~      $a\nCKO TSITSSSS 07526 0X0 FRITSITY MIAMI\nSPXATR G96% . 9X    40    Gro    TURBO 2 79%                         Cas ea\n© SECTORS. ©     ar    a   3 BON ACK £00 SOE ELD Gy (HAT                                          i\n GAO HOUCHNGS: 37vWL LPR, LAB CHA MIA, C50 MBP 0. EC GH WOR ARG DOCK\nGRO RVAB/REBAR | / 6 42%] BUY LABU O-TRIM MATL\n© TURBO MOUOIIGS: 1700.00.17, 1a MOR THA M 0%. 1 th TC ARS ED ARM. R10\n© TURBO RVAB/REBAR: (7 6 93%) O-TIM SEOG SELL AMOI ADD 10 BIS\n*OOTTOMUNE + twine   BEEN\n* THURS KEYS: SX vs BE/ATH OG vi SE/ATH RIX v3 BE/ATH\n>>> SAPY00 KEY LEVELS <e<                               ’\n* 7599 (3/26 INTRAOAY AT-M)\ndzone   EH\n+1580    FE\nEIT        .   SE\nCITI ZUMA EC cD   PZLTTNE NE EE FE\n*TONI/TION C10 SODSIOWE) € 1 4 Ne CN Nd            ) A\nSER/E847 (12 2000/OWY) € Tc                  B                        Connor Bates\nAnatyst/Assacicte Fu\nog ALA Rerieser         Jlagement         TT\n* WEB SITE: revereasset.com               tldll  g                        ree\n",
+      "ocr_text_snippet": "B mem ce rx ee a an mda om 1&9 - ®e LMT Fe meen [HE REVERE ROLINDAIP WHAT'S THE MARKET TREND? con ) “THE GROTECTION GAUGE\" > TALE OF THE TAPE - WEDNESDAY, MAY 27, 2026 << © MARKET STATE: “115080 £7...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR / 6 42%]",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "BUY LABU O-TRIM MATL TURBO MOUOIIGS: 1700.00.17, 1A MOR THA M 0%. 1 TH TC ARS ED ARM. R10",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 39,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: (7 6 93%) O-TIM SEOG",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL AMOI ADD 10 BIS OOTTOMUNE + TWINE BEEN THURS KEYS: SX VS BE/ATH OG VI SE/ATH RIX V3 BE/ATH SAPY00 KEY LEVELS <E< ' 7599 (3/26 INTRAOAY AT-M) DZONE EH 1580 FE EIT . SE CITI ZUMA EC CD PZLTTNE NE EE FE TONI/TION C10 SODSIOWE) € 1 4 NE CN ND ) A SER/E847 (12 2000/OWY) € TC B CONNOR BATES ANATYST/ASSACICTE FU OG ALA RERIESER JLAGEMENT TT WEB SITE: REVEREASSET.COM TLDLL G REE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 39,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c695e26897936cca",
+      "prefilter_score": 1.68,
+      "prefilter_stats": {
+        "brightRatio": 0.4226388888888889,
+        "darkRatio": 0.31340277777777775,
+        "edgeRatio": 0.25206699173203306,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2233,
+        "horizontalEdgeRatio": 0.15779803547452476,
+        "meanLuma": 163.27930555555557,
+        "stdDev": 91.82163288781362,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4901,
+        "verticalEdgeRatio": 0.34633594798954137
+      },
+      "score": 87.05,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 1.95,
+        "pair_bonus": 4,
+        "per_row_issues": -8,
+        "per_row_metrics": 16,
+        "text_density": 79.1
+      },
+      "screen_layout": "dmi",
+      "tickers": [
+        "BE",
+        "LABU",
+        "MU"
+      ],
+      "timestamp": 300,
+      "timestamp_hms": "00:05:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 78,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260527_20260527_bqyy-stykfu_89aadec5_whiteboard\\ocr\\ocr_000079.png",
+      "is_intro_card": true,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260527",
+      "ocr_confidence": 39,
+      "ocr_profile": "threshold",
+      "ocr_text": "B mem ce rx ee a an mda om              1&9 - @®e LMT Fe eee\n[HE REVERE ROUNDUP                    WHAT'S THE MARKET TREND?\ncen                                            )                       “THE GROTECTION GAUGE\"\n> TALE OF THE TAPE - WEDNESDAY, MAY 27, 2026 <<\nOS MAAKET STATE: L212 {N0 [70 4/R|\nSSTOINDEES'T  OLRGSAS OL WAST USD THNTVX tT wid\nCUNTIMINT VX: L 1.8 IN FAG       PETS ETIREY.. o .. o [PPRrT PoP\nBOL CAN IN TATE RALLY BIAIND JIA € 40K                                                    [SORT FERS ema oor\nPAARLCALE SUSTAINED BRERC BE. CW 2LEVA                                              Cro AN\n* NEWS. IRAN CEASE-FIRE EXTENDED, MU & SC HYNIX CROSS $1 TRILLION MC, F& PCE\nCDAYCT LF kes.io%) Be <n” le -3et                ¢                          Dee ue\n* ACTION      -      res\nCIXOMN ISIETSISC OT526 030 TOTTI UMIAMISI0\nSPXATR B90. SPR    ra    oho    TURBO < 79%                       Col\n“SECTORS. T      St    cast    & Bem RACK {OU SDE CLD Oy (HAT\n© GAO HOLONGS: 1rd Ura, LABY. CHAK MAPA C3K0 MIL, 8 CO, G1 WAAR S008\n© GRO RVAB/RIBAR | / © 47%] OAIY LABY O-TRIM MIVL\n* TURBO MOLDINGS 1/70 LIMO WE, La 8 MOR THAW OG MES LY hh, rT CA SCID AR, C44\n* TURBO RVAB/REBAR.(  / 6 51%) O-TANM SED SELL AAGH ADD 10 NSIS\nSBOTTOMUNE + oc +   BE\n* THURS KEYS: SPX vs BE/ATH  QOQ vi SE/ATH RIX vi SE/ATH\n>> S69500 KEY LEVIS <<<                                 .\n+7599 (3/26 WTRADAY ATH)\nP30   ent    EEE\nEAL    EK   CE.   EE\nSun        .   Co\nT7M2(717 Z1UIMAL € © 7    UTE  PRE PTA 2 TER\nCF0IT/7ICN C1 SOO/IOWK] CC 2g TN Lg               by  A\nERY (TL 2000MOWY & ct 1            h   Sse        Connor Batos\nAratyst/ Associate Ft\ny     RSTREAC WOR INS    JT         vidlld   ement             ee re hte\n* WEB SITE: revereasset.com              i                               ee\n",
+      "ocr_text_snippet": "B mem ce rx ee a an mda om 1&9 - @®e LMT Fe eee [HE REVERE ROUNDUP WHAT'S THE MARKET TREND? cen ) “THE GROTECTION GAUGE\" > TALE OF THE TAPE - WEDNESDAY, MAY 27, 2026 << OS MAAKET STATE: L212 {N0 [7...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/RIBAR / © 47%] OAIY LABY O-",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "TRIM MIVL TURBO MOLDINGS 1/70 LIMO WE, LA 8 MOR THAW OG MES LY HH, RT CA SCID AR, C44",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 39,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR.( / 6 51%) O-TANM SED",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL AAGH ADD 10 NSIS SBOTTOMUNE + OC + BE THURS KEYS: SPX VS BE/ATH QOQ VI SE/ATH RIX VI SE/ATH S69500 KEY LEVIS <<< . 7599 (3/26 WTRADAY ATH) P30 ENT EEE EAL EK CE. EE SUN . CO T7M2(717 Z1UIMAL € © 7 UTE PRE PTA 2 TER CF0IT/7ICN C1 SOO/IOWK] CC 2G TN LG BY A ERY (TL 2000MOWY & CT 1 H SSE CONNOR BATOS ARATYST/ ASSOCIATE FT Y RSTREAC WOR INS JT VIDLLD EMENT EE RE HTE WEB SITE: REVEREASSET.COM I EE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 39,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c695e26897936cca",
+      "prefilter_score": 1.68,
+      "prefilter_stats": {
+        "brightRatio": 0.42243055555555553,
+        "darkRatio": 0.3132638888888889,
+        "edgeRatio": 0.2521376581160342,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2234,
+        "horizontalEdgeRatio": 0.1578687018585259,
+        "meanLuma": 163.28243055555555,
+        "stdDev": 91.81791928826169,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4902,
+        "verticalEdgeRatio": 0.34640661437354253
+      },
+      "score": 80.81,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 1.95,
+        "pair_bonus": 4,
+        "per_row_issues": -8,
+        "per_row_metrics": 16,
+        "text_density": 72.86
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE",
+        "MU",
+        "TER",
+        "URA"
+      ],
+      "timestamp": 312,
+      "timestamp_hms": "00:05:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 90,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260527_20260527_bqyy-stykfu_89aadec5_whiteboard\\ocr\\ocr_000091.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 37,
+      "ocr_profile": "threshold",
+      "ocr_text": "B Pew cm tx ee a ea mea my                bY  59 - ®e Lm vw FO RTE\nX   Ba   RE\n“en                                                                         “THE GROTECTION GAUGE\"\n> TALE OF THE TAPE - WEDNESOAY, MAY 27, 2026 <<\nMARKET STATE LPT (ND [570 4F|\nSSTOINDEXES “1 OL AGSFS OJ KANT USD  THRTYX + wild                         [wim |\nCUNTIMINT VX: L 1821 RG         PPT E TIRE. , .. . [FPP prpy\nFIL LUCANE IN DATE RALLY H TREND 211A € 4/8                                                      {ORT TERS oma) eve\n\"NEWS RAN CEASE FRE EXTENDED, MU & SK HYNON CROSS $1 TRILLION MC, FRI PCE\nTODAYS KITS. PAN SET ATH OROWSES/ATY  AIKvi gE\" /ATN                            eee\nCDAYCE 17 tax? 5) Be iA le +t                +\n© ACTION.       ~       Frees\nTIPXO/MN TSIATISSS 07336 0X0 IOLISITN UM IM-1530\n“SPXATR 096%. SPX     ©/40     GRO     TURBO © 79%                             es\n* SECTORS. *         ah      EEA      + rm eA {CU SO CLD Gy (HAT                                                                        '\n= GAO HOLOAGS: Svat rac, LAB VRC MA_ C30 MPL.\" 0.81000 GH WIRAKCE DOCK\n* GAO RVAB/RIBAR © / € 47%] BUY LAB O-TRIM MIVL                                       [+]\n® TURBO MOLDINGS: $770 LIMO, WE La it SOR THAW DX #18 WO NTC ARS SOCIO ARM, CR 4\n* TURBO RVAS/REBAR: (: / 6 93%) O-TAM SEG SELL AAO ADD 10 NBIS                                            |\n*BOTTOMUNE  ~oinv    REE\n* THURS KEYS: SPX vs BE/ATH  QOQ vi SE/ATH RIX v3 SE/ATH\n>>> SAPSO0 KEY LEVILS <<<\n* 7539 (3/76 INTRAGAY A-1-H)                                          |                                                        |\ndruza aes    B      co\nE 2430     a   A   Sey   LE\nsun oo     .   Ce\nTTI(2 17 ZUMA € © 2    PIE XANE A PNA\n*T0)T/7I08 \"14 SODMIOWK] FT -~ 1nd CN Ng               )  Asset                                         |\n682/847 (TL 2000/MOWE) € it     *                      p                            Connor Batos\nAratyst/Azsociote Fd\n5    SS TRERLVOIL TH 7 (RIS) 782598           .    d   ement           ree ott:\n* WEB SITE: revereasset.com              dll  g                       a\n",
+      "ocr_text_snippet": "B Pew cm tx ee a ea mea my bY 59 - ®e Lm vw FO RTE X Ba RE “en “THE GROTECTION GAUGE\" > TALE OF THE TAPE - WEDNESOAY, MAY 27, 2026 << MARKET STATE LPT (ND [570 4F| SSTOINDEXES “1 OL AGSFS OJ KANT U...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "~OINV REE THURS KEYS: SPX VS BE/ATH QOQ VI SE/ATH RIX V3 SE/ATH SAPSO0 KEY LEVILS <<< 7539 (3/76 INTRAGAY A-1-H) DRUZA AES B CO E 2430 A A SEY LE SUN OO . CE TTI(2 17 ZUMA € © 2 PIE XANE A PNA T0)T/7I08 \"14 SODMIOWK] FT -~ 1ND CN NG ) ASSET 682/847 (TL 2000/MOWE) € IT * P CONNOR BATOS ARATYST/AZSOCIOTE FD 5 SS TRERLVOIL TH 7 (RIS) 782598 . D EMENT REE OTT: WEB SITE: REVEREASSET.COM DLL G A",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: (: / 6 93%) O-TAM SEG",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL AAO ADD 10 NBIS",
+          "bottom_line": "~OINV REE THURS KEYS: SPX VS BE/ATH QOQ VI SE/ATH RIX V3 SE/ATH SAPSO0 KEY LEVILS <<< 7539 (3/76 INTRAGAY A-1-H) DRUZA AES B CO E 2430 A A SEY LE SUN OO . CE TTI(2 17 ZUMA € © 2 PIE XANE A PNA T0)T/7I08 \"14 SODMIOWK] FT -~ 1ND CN NG ) ASSET 682/847 (TL 2000/MOWE) € IT * P CONNOR BATOS ARATYST/AZSOCIOTE FD 5 SS TRERLVOIL TH 7 (RIS) 782598 . D EMENT REE OTT: WEB SITE: REVEREASSET.COM DLL G A",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c695e26897936cca",
+      "prefilter_score": 1.67,
+      "prefilter_stats": {
+        "brightRatio": 0.4222222222222222,
+        "darkRatio": 0.31319444444444444,
+        "edgeRatio": 0.25181965938802914,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2231,
+        "horizontalEdgeRatio": 0.15765670270652252,
+        "meanLuma": 163.2745138888889,
+        "stdDev": 91.8205420033637,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4896,
+        "verticalEdgeRatio": 0.34598261606953573
+      },
+      "score": 78.79,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 1.85,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 76.94
+      },
+      "screen_layout": "dmi",
+      "tickers": [
+        "ARM",
+        "BE",
+        "MU",
+        "NBIS"
+      ],
+      "timestamp": 360,
+      "timestamp_hms": "00:06:00"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260527_20260527_bqyy-stykfu_89aadec5_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 3.6,
+      "prefilter_stats": {
+        "brightRatio": 0.4303472222222222,
+        "darkRatio": 0.3423611111111111,
+        "edgeRatio": 0.227687089251643,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2308,
+        "horizontalEdgeRatio": 0.16309801427460957,
+        "meanLuma": 158.1926388888889,
+        "stdDev": 95.37327966255442,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4136,
+        "verticalEdgeRatio": 0.2922761642286764
+      },
+      "score": -15.91,
+      "score_breakdown": {
+        "chart_likeness": -3.9080077239937783,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 174,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260527_20260527_bqyy-stykfu_89aadec5_whiteboard\\ocr\\ocr_000175.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 693.92,
+      "observed_date": null,
+      "ocr_confidence": 23,
+      "ocr_profile": "threshold",
+      "ocr_text": "i ES - ev - N    a ;   Ne AN     \\           .\nn, Ey  - is He Tok a : H-   -\nphd AT\nRT Tr\nPer EE EE =\nel BE I\n",
+      "ocr_text_snippet": "i ES - ev - N a ; Ne AN \\ . n, Ey - is He Tok a : H- - phd AT RT Tr Per EE EE = el BE I",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 23,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 23,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "806d163d5c497cd7",
+      "prefilter_score": 17.28,
+      "prefilter_stats": {
+        "brightRatio": 0.7552083333333334,
+        "darkRatio": 0.03895833333333333,
+        "edgeRatio": 0.17348597272277577,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1842,
+        "horizontalEdgeRatio": 0.13016747933008269,
+        "meanLuma": 227.52159722222223,
+        "stdDev": 45.921621997631206,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3068,
+        "verticalEdgeRatio": 0.21680446611546886
+      },
+      "score": -23.62,
+      "score_breakdown": {
+        "chart_likeness": -2.7740238264490706,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.15,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "chart",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 696,
+      "timestamp_hms": "00:11:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 66,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260527_20260527_bqyy-stykfu_89aadec5_whiteboard\\ocr\\ocr_000067.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 261.92,
+      "observed_date": null,
+      "ocr_confidence": 29,
+      "ocr_profile": "threshold",
+      "ocr_text": "Be ce tp des el Reeses saa =                      FO I EE I EE a RT\n..\names   =    J —              — EEE\n~ CBOE 30 Year Treasury Bond Yield Index                                                              Ju\n[Raa     -                                                     Neh\nNTL EA NT Nem TNT AL TTT NAL ST YY         H\n7     ~                                  A\nna         -    fl           =                      as      .        -\nj             TRI\nTL, ==       \\   '      i)!     vay           A,    py;\nnd VT    ly} /  Lr  15) Chee  adn \\ — —-        -\n!     ion       TT RTs       Af\nW     I]         -             ,   4\nmantle        MERE       -              .\nBL HAE            =                :\ncc        -    7                                                                        -\nTE IE a SrA BIE IE TN SIT SIP\nSon   -   band  Inter Asset Comolalion Masms © cn onc ccs                      er - CBE\non         |oliTomTn ono         1         Co\n~     ham emmm we en                             “a\n",
+      "ocr_text_snippet": "Be ce tp des el Reeses saa = FO I EE I EE a RT .. ames = J — — EEE ~ CBOE 30 Year Treasury Bond Yield Index Ju [Raa - Neh NTL EA NT Nem TNT AL TTT NAL ST YY H 7 ~ A na - fl = as . - j TRI TL, == \\ ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 29,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 29,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80270fb76e5179d8",
+      "prefilter_score": 18.26,
+      "prefilter_stats": {
+        "brightRatio": 0.8344444444444444,
+        "darkRatio": 0.03875,
+        "edgeRatio": 0.13119214189809908,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1338,
+        "horizontalEdgeRatio": 0.09455162179351283,
+        "meanLuma": 233.3257638888889,
+        "stdDev": 44.91547991752982,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2375,
+        "verticalEdgeRatio": 0.16783266200268532
+      },
+      "score": -23.79,
+      "score_breakdown": {
+        "chart_likeness": -3.242089610749506,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.45,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 264,
+      "timestamp_hms": "00:04:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 96,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260527_20260527_bqyy-stykfu_89aadec5_whiteboard\\ocr\\ocr_000097.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 384.8,
+      "observed_date": null,
+      "ocr_confidence": 33,
+      "ocr_profile": "threshold",
+      "ocr_text": "I LI IE                       Gh Bec Be LM Yh eee\n.-\name   =   sr ee a  —            —— EEE\n+ CBOE 10 Year Treasury Note Yiekd Index                                                                 Sas\n& tr          :                                                                                      warm mm mn\nNOT RRS Tes TTT Ts ree TTT ee TTT             -\nhoo\nI 4                                                        In         wo\"\nOg                                                                   |        tb A                -\nof      -        EE                                          ¥ se       +\noo                  Pe              .      8)\n7 WO             EEE            “                   \"\n--           eta      Toga Pe      \\     a           So\n}   4       o           he 1“    ' Jed                         y a   ,\nK a        , a)        wo                          )   )                                            -\n“    EL)    -    »    -    -    -    ”\"    »    “    -    ”    - ) Ve   i Bn    -    -    -    -    -    El    -    =u    -    -    -\n-     Ld      o      —     Om      -~ ER   ~~     Ld      Ed      3     -      ~\n——    -    Led   over Lied Mmema - oo ~~  -                              ®r=  “3 I BLN\nRRS         rm ee     TAR. TW OTN LD ee TE UTS eee SST\n——          a\na       ol vm mmm eww      .-          .      8\n—           J TT Sr Tr Tr py.\n",
+      "ocr_text_snippet": "I LI IE Gh Bec Be LM Yh eee .- ame = sr ee a — —— EEE + CBOE 10 Year Treasury Note Yiekd Index Sas & tr : warm mm mn NOT RRS Tes TTT Ts ree TTT ee TTT - hoo I 4 In wo\" Og | tb A - of - EE ¥ se + oo...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 33,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 33,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80271bb17f1177cc",
+      "prefilter_score": 17.53,
+      "prefilter_stats": {
+        "brightRatio": 0.8376388888888889,
+        "darkRatio": 0.03895833333333333,
+        "edgeRatio": 0.1321108048901138,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1309,
+        "horizontalEdgeRatio": 0.09250229665748004,
+        "meanLuma": 233.30034722222223,
+        "stdDev": 44.78240601808176,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2430,
+        "verticalEdgeRatio": 0.17171931312274752
+      },
+      "score": -24.15,
+      "score_breakdown": {
+        "chart_likeness": -3.80218268057442,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.65,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 384,
+      "timestamp_hms": "00:06:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 63,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260527_20260527_bqyy-stykfu_89aadec5_whiteboard\\ocr\\ocr_000064.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 252,
+      "observed_date": null,
+      "ocr_confidence": 26,
+      "ocr_profile": "threshold",
+      "ocr_text": "B Me tm tae as aes Besa meas ws                      “a  #9 - Oe Lm oT se ar\n.e\namer   Cm me ew  JE           IEEE\nr iShares 20+ Year Treasury Bond ETF                                                       85.32         85.30\nRibthsb ade                                          FS    eran      [Risa\nPRR           .                               Naim te mimi Same, mss on      -     J fiiclagrio\nFf iu    Fy    fre Oso wi ie\n~  EE LE              -                                          l-\n’                 WS VV AI SNA NNN LAW          in\n—                    ARS A i !        |\n:                           34       he\nhi                  hs By            -\na   4   mS,       Ra           ~    :\n.e      J a               Arb    .\nSap TY      i\"        x                      \\                     R\nLIE SE TE                     -\nERR RE I    —    -\n[a         1     RAPT FFA      - J le oa      ¢     ;               -\noe         Tat bh 7 Rr AEE atk\n~~                  (         awn  Be RT\n==    =     -                  I\n-\nL)\na er dm we ae mm em ee mm mr Te eee mm Thm et 2m 1 em m3 1h at 17 ee\nTe BM Wm Om sm Ve dr Wm sem hy by ow tm bm oa BH Ym se am Mg Bw Or bm Bm ae we Be Ae By Ae a hey Sy\nLoad    -    baad   Inter Asset Correlation Mame ° ov 4 imo    .                               r=  “3 IR BEN\nees        B=   ar em a    Bol ANI I a El TE - e id\n5 ne semen an   Cha       w Th          .      5\n2 stan          |\n——       -.    be ee eemme a    -       -          .     “\nN         oo   Bt A emma me aw     “a       v     o  '\n",
+      "ocr_text_snippet": "B Me tm tae as aes Besa meas ws “a #9 - Oe Lm oT se ar .e amer Cm me ew JE IEEE r iShares 20+ Year Treasury Bond ETF 85.32 85.30 Ribthsb ade FS eran [Risa PRR . Naim te mimi Same, mss on - J fiicla...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 26,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 26,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "8091962eb659796f",
+      "prefilter_score": 17.73,
+      "prefilter_stats": {
+        "brightRatio": 0.7404861111111111,
+        "darkRatio": 0.04645833333333333,
+        "edgeRatio": 0.18083527665889337,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1829,
+        "horizontalEdgeRatio": 0.12924881633806798,
+        "meanLuma": 224.27388888888888,
+        "stdDev": 49.959140097893915,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3289,
+        "verticalEdgeRatio": 0.23242173697971874
+      },
+      "score": -24.45,
+      "score_breakdown": {
+        "chart_likeness": -3.752888338551948,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.3,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 252,
+      "timestamp_hms": "00:04:12"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 1,
+      "end_ts": 96,
+      "end_hms": "00:01:36",
+      "is_intro_card": false,
+      "layout": "dmi",
+      "peak_frame_index": 24,
+      "peak_score": 38.52,
+      "start_hms": "00:01:36",
+      "start_ts": 96
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 276,
+      "end_hms": "00:04:36",
+      "is_intro_card": false,
+      "layout": "dmi",
+      "peak_frame_index": 69,
+      "peak_score": 69.92,
+      "start_hms": "00:04:36",
+      "start_ts": 276
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 336,
+      "end_hms": "00:05:36",
+      "is_intro_card": true,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 84,
+      "peak_score": 96.88,
+      "start_hms": "00:05:36",
+      "start_ts": 336
+    }
+  ]
+}

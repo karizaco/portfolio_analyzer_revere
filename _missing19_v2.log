@@ -1,0 +1,75 @@
+C:\Users\admin\Projects\portfolio_analyzer_revere\tools\parallelOcrScan.py:336: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  args.date_tag = args.date_tag or _dt.datetime.utcnow().strftime("%Y%m%d")
+[parallel-ocr] jobs=47 skipped_own=0 skipped_other=0 missing_files=0
+C:\Users\admin\Projects\portfolio_analyzer_revere\tools\parallelOcrScan.py:395: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  started = _dt.datetime.utcnow()
+C:\Users\admin\Projects\portfolio_analyzer_revere\tools\parallelOcrScan.py:400: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  ts = _dt.datetime.utcnow().strftime("%H:%M:%S")
+[parallel-ocr] workspace   : C:\Users\admin\Projects\portfolio_analyzer_revere
+[parallel-ocr] run_tag     : qmg-ocr-20260917-missing19
+[parallel-ocr] output_root : C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260917\qmg-ocr-20260917-missing19
+[parallel-ocr] parallelism : 4 workers
+[parallel-ocr] pending     : 47 videos
+[parallel-ocr] channel     : qullamaggie
+[parallel-ocr] prefilter   : chart_stream
+[parallel-ocr] basename    : qmg
+[parallel-ocr] parser      : chart-stream
+[parallel-ocr] output_kind : snapshot
+[parallel-ocr 14:32:19] 20220301 BYPiofqBhvQ -> OK
+[parallel-ocr 14:38:10] 20220218 Cd_IXyHwO3o -> OK
+[parallel-ocr 14:38:12] 20220228 uX2B8fAMuLE -> OK
+[parallel-ocr 14:38:39] 20220222 X1Rp33_-R9E -> OK
+[parallel-ocr 14:39:17] 20220302 BAlC_cRvESM -> OK
+[parallel-ocr 14:47:52] 20220318 CRvSLzJs6i8 -> OK
+[parallel-ocr 14:48:10] 20220323 Xsk8dD6eoEA -> OK
+[parallel-ocr 14:48:21] 20220321 Fsh39kp9XPM -> OK
+[parallel-ocr 14:49:01] 20220330 B2PcGc--FnM -> OK
+[parallel-ocr 14:52:29] 20220331 CkJEeFvlDzc -> OK
+[parallel-ocr 14:52:35] 20220406 TeWiXhJTeyI -> OK
+[parallel-ocr 14:53:18] 20220405 fXN3uTL01f4 -> OK
+[parallel-ocr 14:54:00] 20220412 bnPcAPjdAz4 -> OK
+[parallel-ocr 14:56:26] 20220414 mKkOtiFjc_E -> OK
+[parallel-ocr 14:56:50] 20220413 n6Gm1mLN7T0 -> OK
+[parallel-ocr 14:57:00] 20220419 yn2pIMXdFg8 -> OK
+[parallel-ocr 14:57:28] 20220421 BMl5Ml24crg -> OK
+[parallel-ocr 14:58:27] 20220426 uDfm0ClZ8yE -> OK
+[parallel-ocr 14:58:36] 20220427 Q-oK6u6tZ3M -> OK
+[parallel-ocr 14:59:06] 20220427 dtFCCcfgf3Y -> OK
+[parallel-ocr 15:00:05] 20220427 wPMNdbuaoJc -> OK
+[parallel-ocr 15:00:16] 20220428 PquLytys1k4 -> OK
+[parallel-ocr 15:00:23] 20220425 s6jdpRmrGck -> OK
+[parallel-ocr 15:01:13] 20220429 K4PzGs13b-4 -> OK
+[parallel-ocr 15:01:51] 20220506 NtIRVae1Igo -> OK
+[parallel-ocr 15:02:21] 20220510 3ZRiHbMRr0w -> OK
+[parallel-ocr 15:02:47] 20220517 eX7XDCdoa0c -> OK
+[parallel-ocr 15:03:42] 20220606 Axs8VyUKFRk -> OK
+[parallel-ocr 15:05:38] 20220606 ST8lvpOVjeM -> OK
+[parallel-ocr 15:06:46] 20220606 aaIlqb7HUJQ -> OK
+[parallel-ocr 15:08:13] 20220607 i0Iq83_54Xs -> OK
+[parallel-ocr 15:11:11] 20220608 MWiFMdc6fBo -> OK
+[parallel-ocr 15:11:53] 20220614 faG8Mb_tV9g -> OK
+[parallel-ocr 02:33:49] 20221104 9lzYgB-b9yE -> OK
+[parallel-ocr 02:34:37] 20221104 xtDinDnf3-o -> OK
+[parallel-ocr 02:36:33] 20221117 sN_vorSS83c -> OK
+[parallel-ocr 02:38:15] 20230126 GdMs1y_RTnM -> OK
+[parallel-ocr 02:39:28] 20230518 1AJIzXSkfyM -> OK
+[parallel-ocr 02:40:35] 20230522 8Pa6cllRZNw -> OK
+[parallel-ocr 02:43:05] 20230523 2UgJ5CvVVK4 -> OK
+[parallel-ocr 02:45:41] 20230601 1HFPeLD2zwc -> OK
+[parallel-ocr 02:46:44] 20230602 30ksgwzWboo -> OK
+[parallel-ocr 02:47:38] 20230605 C7ZZhSxYYLk -> OK
+[parallel-ocr 02:52:44] 20230608 SLhbpNuHegw -> OK
+[parallel-ocr 02:55:32] 20231215 JNVA5cd_m7M -> OK
+[parallel-ocr 02:55:39] 20231201 TZnX1qEiOkM -> OK
+[parallel-ocr 02:56:02] 20230609 VdQSDGZBLQE -> OK
+C:\Users\admin\Projects\portfolio_analyzer_revere\tools\parallelOcrScan.py:407: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  elapsed = (_dt.datetime.utcnow() - started).total_seconds()
+C:\Users\admin\Projects\portfolio_analyzer_revere\tools\parallelOcrScan.py:417: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "ended_at": _dt.datetime.utcnow().isoformat() + "Z",
+C:\Users\admin\Projects\portfolio_analyzer_revere\tools\parallelOcrScan.py:435: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  finished_at=_dt.datetime.utcnow(),
+C:\Users\admin\Projects\portfolio_analyzer_revere\tools\parallelOcrScan.py:311: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "last_update_at": _dt.datetime.utcnow().isoformat() + "Z",
+[parallel-ocr] done in 45212.1s · ok=47 err=0
+[parallel-ocr] summary at C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260917\qmg-ocr-20260917-missing19\run_summary.json
+[parallel-ocr] aggregate with: node tools/aggregateOcrTimeline.js qmg-ocr-20260917-missing19

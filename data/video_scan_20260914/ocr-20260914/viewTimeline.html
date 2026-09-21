@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Revere OCR timeline</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --line: #1f2937;
+      --ink: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-2: #f97316;
+      --good: #22c55e;
+      --bad: #ef4444;
+      --warn: #fbbf24;
+    }
+    html, body { background: var(--bg); color: var(--ink); margin: 0; font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    main { max-width: 1180px; margin: 0 auto; padding: 24px; }
+    h1 { font-size: 22px; margin: 0 0 4px; }
+    h2 { font-size: 16px; margin: 24px 0 8px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+    .meta { color: var(--muted); margin-bottom: 24px; }
+    .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+    .panel h3 { margin: 0 0 12px; font-size: 13px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+    .panel.full { grid-column: 1 / -1; }
+    .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+    .kpi .label { color: var(--muted); text-transform: uppercase; font-size: 11px; letter-spacing: 0.05em; }
+    .kpi .value { font-size: 28px; font-weight: 600; margin-top: 4px; }
+    .kpi .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .tickers { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .ticker { padding: 4px 10px; border-radius: 999px; background: var(--line); color: var(--ink); font-size: 12px; }
+    .ticker .count { color: var(--accent); margin-left: 6px; font-weight: 600; }
+    table { border-collapse: collapse; width: 100%; font-size: 12px; }
+    th, td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: left; }
+    th { color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; font-size: 11px; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .pill { padding: 2px 8px; border-radius: 999px; font-size: 11px; display: inline-block; }
+    .pill.dmi { background: rgba(56, 189, 248, 0.15); color: var(--accent); }
+    .pill.sw { background: rgba(249, 115, 22, 0.15); color: var(--accent-2); }
+    .pill.other { background: rgba(148, 163, 184, 0.15); color: var(--muted); }
+    .pill.intro { background: rgba(34, 197, 94, 0.15); color: var(--good); }
+    .legend { font-size: 12px; color: var(--muted); }
+    canvas { width: 100%; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <main>
+    <h1>Revere OCR Timeline</h1>
+    <div class="meta" id="meta"></div>
+
+    <section class="kpis" id="kpis"></section>
+
+    <h2>Signals over time</h2>
+    <section class="panels">
+      <div class="panel">
+        <h3>Captures per day, by layout</h3>
+        <canvas id="capturesChart" height="160"></canvas>
+        <div class="legend">
+          <span class="pill dmi">dmi</span>
+          <span class="pill sw">structured_whiteboard</span>
+          <span class="pill other">other</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Score envelope (max + mean per day)</h3>
+        <canvas id="scoreChart" height="160"></canvas>
+      </div>
+
+      <div class="panel full">
+        <h3>Cumulative unique tickers across the catalog</h3>
+        <canvas id="tickerChart" height="100"></canvas>
+        <div class="tickers" id="topTickers"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Per-day DMI intro cards (signals of a daily show)</h3>
+        <canvas id="introChart" height="160"></canvas>
+      </div>
+
+      <div class="panel">
+        <h3>Whiteboard segments per day</h3>
+        <canvas id="segmentChart" height="160"></canvas>
+      </div>
+    </section>
+
+    <h2>Per-video detail</h2>
+    <section class="panel full">
+      <table id="perVideoTable">
+        <thead><tr>
+          <th>upload_date</th>
+          <th>video_id</th>
+          <th class="num">captures</th>
+          <th class="num">max score</th>
+          <th class="num">mean score</th>
+          <th class="num">segments</th>
+          <th>layouts</th>
+          <th>flags</th>
+          <th>tickers</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+  const fmtDate = (s) => s && s.length === 8 ? `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}` : s;
+  const palette = {
+    dmi: 'rgba(56, 189, 248, 0.85)',
+    structured_whiteboard: 'rgba(249, 115, 22, 0.85)',
+    other: 'rgba(148, 163, 184, 0.85)'
+  };
+
+  function layoutColor(layout) {
+    if (layout === 'dmi') return palette.dmi;
+    if (layout === 'structured_whiteboard') return palette.structured_whiteboard;
+    return palette.other;
+  }
+
+  async function main() {
+    const url = new URL('timeline.json', document.location.href).toString();
+    let timeline;
+    try {
+      timeline = await (await fetch(url)).json();
+    } catch (e) {
+      document.getElementById('meta').textContent = `Failed to load timeline.json: ${e}`;
+      return;
+    }
+    document.title = `Revere OCR timeline – ${timeline.run_tag}`;
+
+    const totals = timeline.totals;
+    document.getElementById('meta').innerHTML = `
+      run_tag=<code>${timeline.run_tag}</code> ·
+      generated_at=${timeline.generated_at} ·
+      <code>timeline.json</code>
+    `;
+
+    const kpisHtml = `
+      <div class="kpi"><div class="label">Videos scanned</div><div class="value">${totals.videos}</div><div class="sub">${totals.videos_with_captures} with at least one capture</div></div>
+      <div class="kpi"><div class="label">Total captures</div><div class="value">${totals.captures}</div><div class="sub">avg ${(totals.captures / Math.max(1, totals.videos)).toFixed(2)} per video</div></div>
+      <div class="kpi"><div class="label">Unique tickers</div><div class="value">${totals.unique_tickers}</div><div class="sub">across the whole catalog</div></div>
+      <div class="kpi"><div class="label">Active days</div><div class="value">${timeline.per_day.length}</div><div class="sub">distinct upload dates observed</div></div>
+    `;
+    document.getElementById('kpis').innerHTML = kpisHtml;
+
+    const labels = timeline.per_day.map((d) => fmtDate(d.date));
+
+    const layoutKeys = new Set();
+    timeline.per_day.forEach((d) => Object.keys(d.layouts).forEach((k) => layoutKeys.add(k)));
+    const orderedLayouts = [...layoutKeys].sort((a, b) => (a === 'dmi' ? -1 : b === 'dmi' ? 1 : a.localeCompare(b)));
+
+    new Chart(document.getElementById('capturesChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: orderedLayouts.map((layout) => ({
+          label: layout,
+          backgroundColor: layoutColor(layout),
+          borderColor: layoutColor(layout),
+          data: timeline.per_day.map((d) => d.layouts[layout] || 0),
+          stack: 'captures'
+        }))
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#cbd5e1' } } },
+        scales: {
+          x: { stacked: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } },
+          y: { stacked: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' }, title: { display: true, text: 'captures/day', color: '#94a3b8' } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('scoreChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'max score',
+            data: timeline.per_day.map((d) => d.max_score),
+            borderColor: '#38bdf8',
+            backgroundColor: 'rgba(56, 189, 248, 0.2)',
+            fill: false,
+            tension: 0.2
+          },
+          {
+            label: 'mean score',
+            data: timeline.per_day.map((d) => d.mean_score),
+            borderColor: '#f97316',
+            backgroundColor: 'rgba(249, 115, 22, 0.15)',
+            fill: true,
+            tension: 0.2
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#cbd5e1' } } },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } },
+          y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } }
+        }
+      }
+    });
+
+    let running = new Set();
+    const cumulativeUnique = [];
+    timeline.per_day.forEach((d) => {
+      (d.ticker_union || []).forEach((t) => running.add(t));
+      cumulativeUnique.push(running.size);
+    });
+    new Chart(document.getElementById('tickerChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'cumulative unique tickers',
+          data: cumulativeUnique,
+          borderColor: '#22c55e',
+          backgroundColor: 'rgba(34, 197, 94, 0.2)',
+          fill: true,
+          tension: 0.15,
+          pointRadius: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#cbd5e1' } } },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } },
+          y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('introChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'videos with DMI intro card',
+          data: timeline.per_day.map((d) => d.has_dmi_intro_count),
+          backgroundColor: 'rgba(34, 197, 94, 0.6)',
+          borderColor: '#22c55e'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#cbd5e1' } } },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } },
+          y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('segmentChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'whiteboard segments',
+          data: timeline.per_day.map((d) => d.segments),
+          backgroundColor: 'rgba(249, 115, 22, 0.6)',
+          borderColor: '#f97316'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#cbd5e1' } } },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } },
+          y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(31,41,55,0.6)' } }
+        }
+      }
+    });
+
+    const topTickers = (timeline.totals.top_tickers || []).slice(0, 30);
+    document.getElementById('topTickers').innerHTML = topTickers
+      .map((t) => `<span class="ticker">${t.ticker}<span class="count">${t.count}</span></span>`)
+      .join('');
+
+    const tbody = document.querySelector('#perVideoTable tbody');
+    tbody.innerHTML = timeline.per_video.map((v) => {
+      const layouts = (v.layouts || []).map((l) =>
+        `<span class="pill ${l.layout === 'dmi' ? 'dmi' : (l.layout === 'structured_whiteboard' ? 'sw' : 'other')}">${l.layout}·${l.count}</span>`).join(' ');
+      const flags = v.has_dmi_intro ? '<span class="pill intro">DMI intro</span>' : '';
+      const tickers = (v.ticker_union || []).slice(0, 8).join(', ') + ((v.ticker_union || []).length > 8 ? ` +${v.ticker_union.length - 8}` : '');
+      return `<tr>
+        <td>${fmtDate(v.upload_date)}</td>
+        <td><code>${v.video_id}</code></td>
+        <td class="num">${v.captures}</td>
+        <td class="num">${v.max_score.toFixed(1)}</td>
+        <td class="num">${v.mean_score.toFixed(1)}</td>
+        <td class="num">${v.segments}</td>
+        <td>${layouts}</td>
+        <td>${flags}</td>
+        <td>${tickers}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  main();
+  </script>
+</body>
+</html>

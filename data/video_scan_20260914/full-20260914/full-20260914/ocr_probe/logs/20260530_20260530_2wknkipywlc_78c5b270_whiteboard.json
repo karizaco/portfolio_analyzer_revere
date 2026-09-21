@@ -1,0 +1,1161 @@
+{
+  "date_key": "20260530",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads\\20260530_2wKnKIPywLc.mp4",
+  "captured_count": 2,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 27,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260530_20260530_2wknkipywlc_78c5b270_whiteboard\\ocr\\ocr_000028.png",
+      "is_intro_card": true,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 107.52,
+      "observed_date": "20260530",
+      "ocr_confidence": 48,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVERE ROUNDUP <<<                                                                 WHAT'S THE MARKET TREND?\nTe IECYEAI AIA M TLD                                                 “THE GROTECTION GAUGE”\n>>WEEKEND WALKTHRU<<<\nEE\n>>>SATURDAY, MAY 30, 2026<<<         >                                     wre] | |B] |\nCATR LLL\n\n* MARKET STATE: _P7REND 422%                                                          —\n\na ENED TOON?                                                            omen |\n\n-» MASDAD 100 LEADS BAY \\WITH DOUBLE DIG!T RETLRAS\n\n[OEE BEN IR  vo\n\nILL RT  penaamL\n\nAGT ep                                                                    (+)\n\n-   a   ago    “ll                        hl\n\nGAL dw   [Stet IE\n\naa aren                           Hal\n\n£9)     “17\n\nGROm LTE   TURITT WE\n\na     Revere Asset rome\n\n* TWITTER (X): @Toddmichael 70                                                            Advisor/Porttolio Manager\n\n* PHONE: (855) REAL-WEALTH / (855) 732-5932             \\Y  a n a g e m e nt              rn en Ete A\n\n* WEBSITE: revereasset.com\n",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< WHAT'S THE MARKET TREND? Te IECYEAI AIA M TLD “THE GROTECTION GAUGE” >>WEEKEND WALKTHRU<<< EE >>>SATURDAY, MAY 30, 2026<<< > wre] | |B] | CATR LLL * MARKET STATE: _P7REND...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 48,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 48,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c699f74d40103fe5",
+      "prefilter_score": 4.47,
+      "prefilter_stats": {
+        "brightRatio": 0.39263888888888887,
+        "darkRatio": 0.3309722222222222,
+        "edgeRatio": 0.25379831814006076,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2814,
+        "horizontalEdgeRatio": 0.19885520457918168,
+        "meanLuma": 154.249375,
+        "stdDev": 94.50527597499189,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4369,
+        "verticalEdgeRatio": 0.3087414317009399
+      },
+      "score": 32.75,
+      "score_breakdown": {
+        "chart_likeness": -2.226046942828818,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.4,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 44.58
+      },
+      "screen_layout": "dmi",
+      "tickers": [],
+      "timestamp": 108,
+      "timestamp_hms": "00:01:48",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\screenshots\\20260530_ps.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 9,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260530_20260530_2wknkipywlc_78c5b270_whiteboard\\ocr\\ocr_000010.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 35.84,
+      "observed_date": null,
+      "ocr_confidence": 53,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVERE ROUNDUP <<<                                                                   WHAT'S THE MARKET TRENO?\nTe AEEYEMT MAL ATO.                                                          “THE GROTECTION GAUGE”\n>>WEEKEND WALKTHRU<<<\n—_—                                                        [ oreer Te]\n\\J                                              MARNE LEADERS —\n>>>SATURDAY, MAY 30,2026¢<<                                                               vmmiom—] | (A |\n* MARKET STATE: UFTREND 22 28                                                         A——\nmo oo     8         Fe TL\n> NASDAQ 106 LEADS MAY \\YITH DOUBLE BiG! T RETURNS\nIS DERE. JE  v5                        —\na IR TE  renaamL Jl\nRSE EN                                                                                  (+)\n[SRR    [Fobot BENE PE\n[= ER I ER\n© EMAIL: todd@revereasset.com                            R e A\" e Tr e   A RN) S e t                 Todd Thomas\n* TWITTER (x): @Toddmichael 70                                                                        Advisor/Porttotio Manager\n* PHONE: (855) REALWEALTH / (855] 732-5932              V |  a n a g e m e nt               pee\n* WEBSITE: revereass>.com\n",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< WHAT'S THE MARKET TRENO? Te AEEYEMT MAL ATO. “THE GROTECTION GAUGE” >>WEEKEND WALKTHRU<<< —_— [ oreer Te] \\J MARNE LEADERS — >>>SATURDAY, MAY 30,2026¢<< vmmiom—] | (A | *...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 53,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 53,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c699f74d40103fe5",
+      "prefilter_score": 4.49,
+      "prefilter_stats": {
+        "brightRatio": 0.3933333333333333,
+        "darkRatio": 0.3313888888888889,
+        "edgeRatio": 0.2537629849480602,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2815,
+        "horizontalEdgeRatio": 0.19892587096318282,
+        "meanLuma": 154.2788888888889,
+        "stdDev": 94.54668305415694,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4367,
+        "verticalEdgeRatio": 0.3086000989329376
+      },
+      "score": 28.87,
+      "score_breakdown": {
+        "chart_likeness": -2.2166351542866423,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.65,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 40.44
+      },
+      "screen_layout": "dmi",
+      "tickers": [],
+      "timestamp": 36,
+      "timestamp_hms": "00:00:36",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\screenshots\\20260530_ps_2.png"
+    }
+  ],
+  "frame_count": 592,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 464,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\screenshots\\20260530_ps.png",
+  "prefilter_best_score": 22.51,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 27,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260530_20260530_2wknkipywlc_78c5b270_whiteboard\\ocr\\ocr_000028.png",
+    "is_intro_card": true,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE",
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 107.52,
+    "observed_date": "20260530",
+    "ocr_confidence": 48,
+    "ocr_profile": "threshold",
+    "ocr_text": ">>> THE REVERE ROUNDUP <<<                                                                 WHAT'S THE MARKET TREND?\nTe IECYEAI AIA M TLD                                                 “THE GROTECTION GAUGE”\n>>WEEKEND WALKTHRU<<<\nEE\n>>>SATURDAY, MAY 30, 2026<<<         >                                     wre] | |B] |\nCATR LLL\n\n* MARKET STATE: _P7REND 422%                                                          —\n\na ENED TOON?                                                            omen |\n\n-» MASDAD 100 LEADS BAY \\WITH DOUBLE DIG!T RETLRAS\n\n[OEE BEN IR  vo\n\nILL RT  penaamL\n\nAGT ep                                                                    (+)\n\n-   a   ago    “ll                        hl\n\nGAL dw   [Stet IE\n\naa aren                           Hal\n\n£9)     “17\n\nGROm LTE   TURITT WE\n\na     Revere Asset rome\n\n* TWITTER (X): @Toddmichael 70                                                            Advisor/Porttolio Manager\n\n* PHONE: (855) REAL-WEALTH / (855) 732-5932             \\Y  a n a g e m e nt              rn en Ete A\n\n* WEBSITE: revereasset.com\n",
+    "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< WHAT'S THE MARKET TREND? Te IECYEAI AIA M TLD “THE GROTECTION GAUGE” >>WEEKEND WALKTHRU<<< EE >>>SATURDAY, MAY 30, 2026<<< > wre] | |B] | CATR LLL * MARKET STATE: _P7REND...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 48,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 48,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "c699f74d40103fe5",
+    "prefilter_score": 4.47,
+    "prefilter_stats": {
+      "brightRatio": 0.39263888888888887,
+      "darkRatio": 0.3309722222222222,
+      "edgeRatio": 0.25379831814006076,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 2814,
+      "horizontalEdgeRatio": 0.19885520457918168,
+      "meanLuma": 154.249375,
+      "stdDev": 94.50527597499189,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 4369,
+      "verticalEdgeRatio": 0.3087414317009399
+    },
+    "score": 32.75,
+    "score_breakdown": {
+      "chart_likeness": -2.226046942828818,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 2.4,
+      "pair_bonus": 0,
+      "per_row_issues": -12,
+      "per_row_metrics": 0,
+      "text_density": 44.58
+    },
+    "screen_layout": "dmi",
+    "tickers": [],
+    "timestamp": 108,
+    "timestamp_hms": "00:01:48"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 27,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260530_20260530_2wknkipywlc_78c5b270_whiteboard\\ocr\\ocr_000028.png",
+      "is_intro_card": true,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260530",
+      "ocr_confidence": 48,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVERE ROUNDUP <<<                                                                 WHAT'S THE MARKET TREND?\nTe IECYEAI AIA M TLD                                                 “THE GROTECTION GAUGE”\n>>WEEKEND WALKTHRU<<<\nEE\n>>>SATURDAY, MAY 30, 2026<<<         >                                     wre] | |B] |\nCATR LLL\n\n* MARKET STATE: _P7REND 422%                                                          —\n\na ENED TOON?                                                            omen |\n\n-» MASDAD 100 LEADS BAY \\WITH DOUBLE DIG!T RETLRAS\n\n[OEE BEN IR  vo\n\nILL RT  penaamL\n\nAGT ep                                                                    (+)\n\n-   a   ago    “ll                        hl\n\nGAL dw   [Stet IE\n\naa aren                           Hal\n\n£9)     “17\n\nGROm LTE   TURITT WE\n\na     Revere Asset rome\n\n* TWITTER (X): @Toddmichael 70                                                            Advisor/Porttolio Manager\n\n* PHONE: (855) REAL-WEALTH / (855) 732-5932             \\Y  a n a g e m e nt              rn en Ete A\n\n* WEBSITE: revereasset.com\n",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< WHAT'S THE MARKET TREND? Te IECYEAI AIA M TLD “THE GROTECTION GAUGE” >>WEEKEND WALKTHRU<<< EE >>>SATURDAY, MAY 30, 2026<<< > wre] | |B] | CATR LLL * MARKET STATE: _P7REND...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 48,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 48,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c699f74d40103fe5",
+      "prefilter_score": 4.47,
+      "prefilter_stats": {
+        "brightRatio": 0.39263888888888887,
+        "darkRatio": 0.3309722222222222,
+        "edgeRatio": 0.25379831814006076,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2814,
+        "horizontalEdgeRatio": 0.19885520457918168,
+        "meanLuma": 154.249375,
+        "stdDev": 94.50527597499189,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4369,
+        "verticalEdgeRatio": 0.3087414317009399
+      },
+      "score": 32.75,
+      "score_breakdown": {
+        "chart_likeness": -2.226046942828818,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.4,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 44.58
+      },
+      "screen_layout": "dmi",
+      "tickers": [],
+      "timestamp": 108,
+      "timestamp_hms": "00:01:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 18,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260530_20260530_2wknkipywlc_78c5b270_whiteboard\\ocr\\ocr_000019.png",
+      "is_intro_card": true,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 52,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVERE ROUNDUP <<<                                                                   WHAT'S THE MARKET TREND?\nTe AMEEVEAIC IAI PTUD Ls                                                                 “THE GROTECTION GAUGE™\n>>WEEKEND WALKTHRU<<<                                                             —\neee                                                               TT I CTS\nSATURDAY, MY 30, 2006ccc [°            Eres aaa\n* MARKET STATE: _F7REND LZ 25                                                               OT TERN tome)\n* WHAT HAPPENED TODAY?                                                                                                         st mim +\n> NASDAQ 106 LEADS MAY \\WITH DOUBLE DIGIT RETLRRS\nIEEE ET  V6\nEE EERE  —____* |\nJE RE CS                               |\nOran                         =     .\nB31)     S17\nGRO™ 1FE 0 TuEITh LIED\n* EMAIL: todd@revereasset.com                             R e \\Y e r e   A S S ec t                  Todd Thomas\n* TWITTER {(}: @Toddmichael70                                                                                                      Advisor/Portfotio Manager\n* PHONE: (855) REALWEALTH / (855] 732-5932              V |  a n a g e m e nt              fe\n* WEBSITE: revereass>.com\n",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< WHAT'S THE MARKET TREND? Te AMEEVEAIC IAI PTUD Ls “THE GROTECTION GAUGE™ >>WEEKEND WALKTHRU<<< — eee TT I CTS SATURDAY, MY 30, 2006ccc [° Eres aaa * MARKET STATE: _F7REND...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 52,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 52,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c699f74dc0103fe1",
+      "prefilter_score": 4.3,
+      "prefilter_stats": {
+        "brightRatio": 0.39229166666666665,
+        "darkRatio": 0.3313888888888889,
+        "edgeRatio": 0.2527383223800438,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2778,
+        "horizontalEdgeRatio": 0.196311214755141,
+        "meanLuma": 154.24229166666666,
+        "stdDev": 94.49732419946808,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4375,
+        "verticalEdgeRatio": 0.3091654300049467
+      },
+      "score": 32.71,
+      "score_breakdown": {
+        "chart_likeness": -2.388313107336506,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.6,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 44.5
+      },
+      "screen_layout": "dmi",
+      "tickers": [],
+      "timestamp": 72,
+      "timestamp_hms": "00:01:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 36,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260530_20260530_2wknkipywlc_78c5b270_whiteboard\\ocr\\ocr_000037.png",
+      "is_intro_card": true,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 49,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVERE ROUNDUP <<<                                                                   WHAT'S THE MARKET TREND?\nECVE AIA PTLD                                                     “THE GROTECTION GAUGE\"\n>>WEEKEND WALKTHRU<<<\neee\nSATURDAY, MY 30 2006ccc [°            Eres aaa J\n* MARKET STATE: _P7REND 422%                                                       OT TER tome)\n© AT HAPPENED TODAY?                                   em) |_|\n-» MASDAD 100 LEADS BAY \\WITH DOUBLE DIG!T RETLRAS                                                                                  P—        Jy       BE 3\nTien Ay  V6                        —\nER LEE ERT  penaamL\nAGT ep                                                                          (+)\n-    a   ago    “ll                          hl\nGAL dw   [Stet IE\nCRETE                           a        '\n£9)     “17D\nGROUT TEL TRISTE\n* EMAIL: todd@revereassat.com                             R e \\Y e Tr e   A S S et                 Todd Thomas\n* TWITTER (X): @Toddmichael 70                                                                 Advisor/porttotio Manager\n* PHONE: (855) REAL-WEALTH / (855) 732-5932         VI ana g e | ] | ent         ee\n* WEBSITE: revereasset.com\n",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< WHAT'S THE MARKET TREND? ECVE AIA PTLD “THE GROTECTION GAUGE\" >>WEEKEND WALKTHRU<<< eee SATURDAY, MY 30 2006ccc [° Eres aaa J * MARKET STATE: _P7REND 422% OT TER tome) © ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 49,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 49,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c699f74d40103fe5",
+      "prefilter_score": 4.41,
+      "prefilter_stats": {
+        "brightRatio": 0.39305555555555555,
+        "darkRatio": 0.33125,
+        "edgeRatio": 0.25340965302805457,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2800,
+        "horizontalEdgeRatio": 0.19786587520316584,
+        "meanLuma": 154.276875,
+        "stdDev": 94.53639110423114,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4372,
+        "verticalEdgeRatio": 0.30895343085294324
+      },
+      "score": 31.98,
+      "score_breakdown": {
+        "chart_likeness": -2.29049161825049,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.45,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 43.82
+      },
+      "screen_layout": "dmi",
+      "tickers": [
+        "BE",
+        "TER"
+      ],
+      "timestamp": 144,
+      "timestamp_hms": "00:02:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 9,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260530_20260530_2wknkipywlc_78c5b270_whiteboard\\ocr\\ocr_000010.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 53,
+      "ocr_profile": "threshold",
+      "ocr_text": ">>> THE REVERE ROUNDUP <<<                                                                   WHAT'S THE MARKET TRENO?\nTe AEEYEMT MAL ATO.                                                          “THE GROTECTION GAUGE”\n>>WEEKEND WALKTHRU<<<\n—_—                                                        [ oreer Te]\n\\J                                              MARNE LEADERS —\n>>>SATURDAY, MAY 30,2026¢<<                                                               vmmiom—] | (A |\n* MARKET STATE: UFTREND 22 28                                                         A——\nmo oo     8         Fe TL\n> NASDAQ 106 LEADS MAY \\YITH DOUBLE BiG! T RETURNS\nIS DERE. JE  v5                        —\na IR TE  renaamL Jl\nRSE EN                                                                                  (+)\n[SRR    [Fobot BENE PE\n[= ER I ER\n© EMAIL: todd@revereasset.com                            R e A\" e Tr e   A RN) S e t                 Todd Thomas\n* TWITTER (x): @Toddmichael 70                                                                        Advisor/Porttotio Manager\n* PHONE: (855) REALWEALTH / (855] 732-5932              V |  a n a g e m e nt               pee\n* WEBSITE: revereass>.com\n",
+      "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< WHAT'S THE MARKET TRENO? Te AEEYEMT MAL ATO. “THE GROTECTION GAUGE” >>WEEKEND WALKTHRU<<< —_— [ oreer Te] \\J MARNE LEADERS — >>>SATURDAY, MAY 30,2026¢<< vmmiom—] | (A | *...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 53,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 53,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "c699f74d40103fe5",
+      "prefilter_score": 4.49,
+      "prefilter_stats": {
+        "brightRatio": 0.3933333333333333,
+        "darkRatio": 0.3313888888888889,
+        "edgeRatio": 0.2537629849480602,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2815,
+        "horizontalEdgeRatio": 0.19892587096318282,
+        "meanLuma": 154.2788888888889,
+        "stdDev": 94.54668305415694,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4367,
+        "verticalEdgeRatio": 0.3086000989329376
+      },
+      "score": 28.87,
+      "score_breakdown": {
+        "chart_likeness": -2.2166351542866423,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.65,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 40.44
+      },
+      "screen_layout": "dmi",
+      "tickers": [],
+      "timestamp": 36,
+      "timestamp_hms": "00:00:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260530_20260530_2wknkipywlc_78c5b270_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 4.41,
+      "prefilter_stats": {
+        "brightRatio": 0.39381944444444444,
+        "darkRatio": 0.33125,
+        "edgeRatio": 0.2522436576920359,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2785,
+        "horizontalEdgeRatio": 0.1968058794431489,
+        "meanLuma": 154.29368055555557,
+        "stdDev": 94.5487657188263,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4354,
+        "verticalEdgeRatio": 0.3076814359409229
+      },
+      "score": -14.3,
+      "score_breakdown": {
+        "chart_likeness": -2.302231668437832,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260530_20260530_2wknkipywlc_78c5b270_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 4.41,
+      "prefilter_stats": {
+        "brightRatio": 0.39381944444444444,
+        "darkRatio": 0.33125,
+        "edgeRatio": 0.2522436576920359,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2785,
+        "horizontalEdgeRatio": 0.1968058794431489,
+        "meanLuma": 154.29368055555557,
+        "stdDev": 94.5487657188263,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4354,
+        "verticalEdgeRatio": 0.3076814359409229
+      },
+      "score": -14.3,
+      "score_breakdown": {
+        "chart_likeness": -2.302231668437832,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 396,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260530_20260530_2wknkipywlc_78c5b270_whiteboard\\ocr\\ocr_000397.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1582.08,
+      "observed_date": null,
+      "ocr_confidence": 28,
+      "ocr_profile": "threshold",
+      "ocr_text": "Hnre Veimtoge Cogn Oomay                                                                 - 0 x\nBe mone an 11m IR AN dr 05                                                                  .\nMameare, !    =     .  Ey) — me te aa                              == -  «ue\n* Hinge Health inc. CI A                                                                                 58.90         158.21\n[Rishi                                            im    J    ated     mai\nSw eben TE LECSSRINTTOIIT       De Smm IRETWRE TIA WERE LLL Rui\nreps oc            Newsome\n\nTi wen ve mm on\n=   ~   woononu                                                  i         -\nA                                                    Co       ‘\nRTE SEEN                                    | §     .\nBE [Fv i-Rbd BE                                         3    \"\n\nrng      pg apny    w       y\nBR EET A |                                                     ,         -\njerked Goo   on                                             qb     —\n\na Ero N    2                                           Sh [lee 8\nCET EEL                                                bowl\nLER [rennin   ~                                                   J]   J NO\n\nWN. XN EeluR                                         TE       ty\nI Baddndb                        Ba     EE Ee Fo) Blt bin Ji\nI\nve ow | les 3 DEIR                                              |           i\nax TIL III                       dal\n- IZ                                                             ~—— I\n-     BR CT ET TT J ST RL ar RE RT EP SP\nS                                   ee an TUTE ATE NINE NN Tea\nn                                         LT BE TLL I TE SC PI REEF RY IETR™Y )\nas                               -       Coe ee  [NE  “te\n\nSoman     “    —   Copy-5/23 WE Review adjustments 13 awn =     ce                                    om - Lmma\n* WEBSITE: revereasset.com                                                                     '®,\n",
+      "ocr_text_snippet": "Hnre Veimtoge Cogn Oomay - 0 x Be mone an 11m IR AN dr 05 . Mameare, ! = . Ey) — me te aa == - «ue * Hinge Health inc. CI A 58.90 158.21 [Rishi im J ated mai Sw eben TE LECSSRINTTOIIT De Smm IRETWR...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 28,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 28,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5aa2a8c5555d72a",
+      "prefilter_score": 21.64,
+      "prefilter_stats": {
+        "brightRatio": 0.8529166666666667,
+        "darkRatio": 0.026041666666666668,
+        "edgeRatio": 0.11069889053777118,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1354,
+        "horizontalEdgeRatio": 0.09568228393753092,
+        "meanLuma": 235.56895833333334,
+        "stdDev": 39.638364837244254,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1779,
+        "verticalEdgeRatio": 0.12571549713801144
+      },
+      "score": -20.6,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.4,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 1584,
+      "timestamp_hms": "00:26:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 252,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260530_20260530_2wknkipywlc_78c5b270_whiteboard\\ocr\\ocr_000253.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1008.64,
+      "observed_date": null,
+      "ocr_confidence": 26,
+      "ocr_profile": "threshold",
+      "ocr_text": "Have Getatone Govgn Duns                                                             - eo x\nTaryn na om Se Saeco A aac dra ©                                                                   a\namu    o|      © om mam mem ve san a                                  = Cova\n*» Guardant Health Inc.                                                                                          \"28.11         129.89\n= Suara                                            rw mm ii amon ein im    a      RGA\nGow mimics STmETeemobes ee ne        Bg Br SANE eB. Frit rie\nA            De.                                     I\nns ne Ace min a         :                                         .\n«amon                                               2\nEE  won nh Ne                    A   -\nem    EN ENE VA             JA                                :      ~ au   -\nRa  EE 5             '        } \"pT\nColm mpm on                aM                     a\n-    iene)     u ree   jog                               ¥                             ”    ry  ’     [ad    -\nBI ECC EES |                  '     a!         N Jf a       .\nmT oamne Wn                             Ny          ALN         yr\nem is   2                   :     Lr    iN TAA       :\nPb      RS     lh                                                      4    ;                    .\nDe mms                       WF yA         H\n| BE EEEeed a zaizazoatii dzad BEIM RAZA Aa\nvo] ee wo                                       -\nor    moon wes ts                                            J         rf  Shes     hi\nAEE mE   v     (WaT    Tn     yr,     hii   1    [ y  ill  Il      |   =\nax mm  HEE [1 ft |   dn Ec Th hia 1  fll   1]   |  |    =\noT.          pu                                    .          ~    a\nINN STN em NAL TN ALT\n-     BE TS a a YR Ce IL IL MRT Sra EP PY AEST\nN                 LT Tm Ie TT Ta\n-                   NEN    .    -_ oe    Cee aa  Ce\n—    seem CopySTIWE Review sdustmects keen © oo                              on cams\nFAT (9 NAL IT 711 (O09) 496-0995                       .         9\nBee eA LAL            [ ATLL U III\n",
+      "ocr_text_snippet": "Have Getatone Govgn Duns - eo x Taryn na om Se Saeco A aac dra © a amu o| © om mam mem ve san a = Cova *» Guardant Health Inc. \"28.11 129.89 = Suara rw mm ii amon ein im a RGA Gow mimics STmETeemob...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 26,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 26,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5aaa26715555c2b",
+      "prefilter_score": 21.56,
+      "prefilter_stats": {
+        "brightRatio": 0.8508333333333333,
+        "darkRatio": 0.02625,
+        "edgeRatio": 0.11306621440180906,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1459,
+        "horizontalEdgeRatio": 0.10310225425764964,
+        "meanLuma": 235.54645833333333,
+        "stdDev": 40.73851313848326,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1741,
+        "verticalEdgeRatio": 0.12303017454596848
+      },
+      "score": -20.7,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.3,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 1008,
+      "timestamp_hms": "00:16:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 369,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260530_20260530_2wknkipywlc_78c5b270_whiteboard\\ocr\\ocr_000370.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1474.56,
+      "observed_date": null,
+      "ocr_confidence": 25,
+      "ocr_profile": "threshold",
+      "ocr_text": "Hae terete Coope Cums                                           - 0 x\nEA Let               _ why # a\nHare | Wy           gE\n;r =  DEE 2       N       f    |  3  She  is JASN Fa =\nIEE      i | ul if y Aa toy    J\nI ch            i\nSY tee TES\nn EY DE           EI a NE aR TT ASAT TT ee  ps\nTT TL co smmtnemmtm an m ean\nJR wl rs [REE S Bs UP 88 © 3 ———\n",
+      "ocr_text_snippet": "Hae terete Coope Cums - 0 x EA Let _ why # a Hare | Wy gE ;r = DEE 2 N f | 3 She is JASN Fa = IEE i | ul if y Aa toy J I ch i SY tee TES n EY DE EI a NE aR TT ASAT TT ee ps TT TL co smmtnemmtm an m...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 25,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 25,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5aaaca745519d1a",
+      "prefilter_score": 19.62,
+      "prefilter_stats": {
+        "brightRatio": 0.8252083333333333,
+        "darkRatio": 0.026319444444444444,
+        "edgeRatio": 0.13684545261818953,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1743,
+        "horizontalEdgeRatio": 0.12317150731397074,
+        "meanLuma": 233.61673611111112,
+        "stdDev": 41.253445787558434,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2130,
+        "verticalEdgeRatio": 0.15051939792240832
+      },
+      "score": -20.75,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.25,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 1476,
+      "timestamp_hms": "00:24:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 216,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260914\\full-20260914\\full-20260914\\ocr_probe\\frames\\20260530_20260530_2wknkipywlc_78c5b270_whiteboard\\ocr\\ocr_000217.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 865.28,
+      "observed_date": null,
+      "ocr_confidence": 30,
+      "ocr_profile": "threshold",
+      "ocr_text": "TT   en                                    TT\n[OF EAE]     © er mm en ce   a                         [~~ — Ye Tae  h\n> Maxtinasr inc.                                                   in em wear amen              Juz m9\nor om N ETT               De IRR ATET ET we me TRI snmen\nREE                                              I      z\njo  won                           i\nENE                                       fh             :\nsme pmoms oo                    or     of oh       :\nnmLoonInoR          “                   I      {—.             ;\ntT SE A |        :              i    fH    pa   y      a3\nvrogET X       i        ht a   A  a\nwm EER           Li  i a         Y      pn    bo\nI          wath autt orm rot TD =\n[RST                                mT TT ENN a Si   o\nmm mm mm mm em mw mw gam mw mm mm me mm mw\noan     -    —— Copy:S23 WE Review adjustments Bidens © ov                                       or Lem\nrome (01 PAL STH (oor tse ot                         rr\n© WEBSITE. reverensset. corn           [ ATLLLII UA IIL\n",
+      "ocr_text_snippet": "TT en TT [OF EAE] © er mm en ce a [~~ — Ye Tae h > Maxtinasr inc. in em wear amen Juz m9 or om N ETT De IRR ATET ET we me TRI snmen REE I z jo won i ENE fh : sme pmoms oo or of oh : nmLoonInoR “ I ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 30,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 30,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d5aa2a3b4555d70a",
+      "prefilter_score": 19.72,
+      "prefilter_stats": {
+        "brightRatio": 0.8331944444444445,
+        "darkRatio": 0.026111111111111113,
+        "edgeRatio": 0.12917814995406685,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1533,
+        "horizontalEdgeRatio": 0.10833156667373331,
+        "meanLuma": 234.33027777777778,
+        "stdDev": 41.401631408148305,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2123,
+        "verticalEdgeRatio": 0.1500247332344004
+      },
+      "score": -21.04,
+      "score_breakdown": {
+        "chart_likeness": -0.5426686015610542,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.5,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 864,
+      "timestamp_hms": "00:14:24"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 2,
+      "end_ts": 108,
+      "end_hms": "00:01:48",
+      "is_intro_card": false,
+      "layout": "dmi",
+      "peak_frame_index": 27,
+      "peak_score": 32.75,
+      "start_hms": "00:00:36",
+      "start_ts": 36
+    }
+  ]
+}

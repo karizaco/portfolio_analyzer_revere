@@ -1,0 +1,35 @@
+# cmd: node tools/scanVideoWithOcr.js --video C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260605_w88fjo4VKuk.mp4 --date 20260605 --output-root C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260915\ocr-20260915-backfill --run-tag ocr-20260915-backfill --ffmpeg-bin c:/Users/admin/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-9.0.1-full_build/bin/ffmpeg.exe
+[scan:whiteboard] ffprobe found 197 keyframe(s) for nearest-keyframe lookup
+[scan:whiteboard] preflighting final whiteboard output extraction
+[scan:whiteboard] extracting sample frames from C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads_hires\20260605_w88fjo4VKuk.mp4
+[scan:whiteboard] extracted 251 frame(s) at 0.25 fps with width 640; starting prefilter
+[scan:whiteboard] prefilter 1/251 frames after 00:00:00; best prefilter 3.11 at 00:00:00
+[scan:whiteboard] prefilter 10/251 frames after 00:00:00; best prefilter 3.13 at 00:00:04
+[scan:whiteboard] prefilter 20/251 frames after 00:00:00; best prefilter 3.15 at 00:01:16
+[scan:whiteboard] prefilter 30/251 frames after 00:00:00; best prefilter 3.15 at 00:01:16
+[scan:whiteboard] prefilter 40/251 frames after 00:00:00; best prefilter 17.27 at 00:02:32
+[scan:whiteboard] prefilter 50/251 frames after 00:00:01; best prefilter 17.49 at 00:02:40
+[scan:whiteboard] prefilter 60/251 frames after 00:00:01; best prefilter 18.04 at 00:03:56
+[scan:whiteboard] prefilter 70/251 frames after 00:00:01; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 80/251 frames after 00:00:01; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 90/251 frames after 00:00:01; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 100/251 frames after 00:00:01; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 110/251 frames after 00:00:01; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 120/251 frames after 00:00:02; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 130/251 frames after 00:00:02; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 140/251 frames after 00:00:02; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 150/251 frames after 00:00:02; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 160/251 frames after 00:00:02; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 170/251 frames after 00:00:03; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 180/251 frames after 00:00:03; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 190/251 frames after 00:00:03; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 200/251 frames after 00:00:03; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 210/251 frames after 00:00:03; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 220/251 frames after 00:00:04; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 230/251 frames after 00:00:04; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 240/251 frames after 00:00:04; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 250/251 frames after 00:00:04; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter 251/251 frames after 00:00:04; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] prefilter kept 60/251 frame(s) for OCR; best prefilter 18.55 at 00:04:00
+[scan:whiteboard] extracting OCR candidates from source video at width 1280
+[scan:whiteboard] OCR 1/60 frames (1.7%) after 00:00:01; best score -16.19 at 00:00:00 (ocr 0.0)

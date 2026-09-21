@@ -1,0 +1,1910 @@
+{
+  "generated_at": "2026-09-13T13:16:50.340Z",
+  "output_root": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1",
+  "probe_directory": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\ocr_probe\\logs",
+  "screenshots_directory": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots",
+  "totals": {
+    "videos_scanned": 10,
+    "total_captures": 50,
+    "screenshots_on_disk": 50,
+    "captures_status_done": 10,
+    "unique_screen_layouts": [
+      "dmi",
+      "structured_whiteboard",
+      "tale_of_the_tape"
+    ],
+    "captures_per_layout": {
+      "dmi": 37,
+      "structured_whiteboard": 10,
+      "tale_of_the_tape": 3
+    },
+    "captures_with_observed_date": 44,
+    "intro_card_captures": 7,
+    "whiteboard_segments_total": 25,
+    "intro_card_segments": 3
+  },
+  "videos": [
+    {
+      "probe_file": "20260912_gap_up...chop_around...break_down..._f024ddc9_whiteboard.json",
+      "video_path": "D:\\courses_F\\revere_asset\\videos\\Gap Up...Chop Around...Break Down...Bounce Whats The Bottom Line.mp4",
+      "date_key": "20260912",
+      "output_kind": "whiteboard",
+      "status": "done",
+      "frame_counts": {
+        "sample": 423,
+        "ocr": 60,
+        "captures": 5
+      },
+      "prefilter_best": 12.26,
+      "thresholds": {
+        "strong": 6,
+        "review": 4
+      },
+      "captured_count": 5,
+      "captures": [
+        {
+          "timestamp": 868,
+          "timestamp_hms": "00:14:28",
+          "frame_index": 217,
+          "score": 98.56,
+          "prefilter_score": 5.73,
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE — TUE, 11/15/22 << * MARKET STATE: BEAR MARKET RALLY > R * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE Woe, SMawsuT * TECHNICAL: INDEXES & G-6:...",
+          "observed_date": "20221115",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.1,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 101.46
+          }
+        },
+        {
+          "timestamp": 1288,
+          "timestamp_hms": "00:21:28",
+          "frame_index": 322,
+          "score": 97.32,
+          "prefilter_score": 8.87,
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_2.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE — TUE, 11/15/22 << * MARKET STATE: BEAR MARKET RALLY > R * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE W oxy, oC MarseSmT * TECHNICAL: INDEXES ...",
+          "observed_date": "20221115",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -2.9885502166614906,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.15,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 97.16
+          }
+        },
+        {
+          "timestamp": 1120,
+          "timestamp_hms": "00:18:40",
+          "frame_index": 280,
+          "score": 97.04,
+          "prefilter_score": 5.68,
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_3.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE — TUE, 11/15/22 << * MARKET STATE: BEAR MARKET RALLY > R * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE Wow, Mesa * TECHNICAL: INDEXES & G-6: DL...",
+          "observed_date": "20221115",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.1,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 99.94
+          }
+        },
+        {
+          "timestamp": 784,
+          "timestamp_hms": "00:13:04",
+          "frame_index": 196,
+          "score": 96.55,
+          "prefilter_score": 5.74,
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_4.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE — TUE, 11/15/22 << * MARKET STATE: BEAR MARKET RALLY > R * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE Wo ose, Maem * TECHNICAL: INDEXES & G-6:...",
+          "observed_date": "20221115",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.05,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 99.5
+          }
+        },
+        {
+          "timestamp": 924,
+          "timestamp_hms": "00:15:24",
+          "frame_index": 231,
+          "score": 96.18,
+          "prefilter_score": 5.74,
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_5.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE — TUE, 11/15/22 << * MARKET STATE: BEAR MARKET RALLY > R * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE Woe, Mesa * TECHNICAL: INDEXES & G-6: DL...",
+          "observed_date": "20221115",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.1,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 99.08
+          }
+        }
+      ],
+      "whiteboard_segments": [
+        {
+          "capture_count": 1,
+          "end_ts": 784,
+          "end_hms": "13:04",
+          "is_intro_card": false,
+          "layout": "dmi",
+          "peak_frame_index": 196,
+          "peak_score": 96.55,
+          "start_hms": "13:04",
+          "start_ts": 784
+        },
+        {
+          "capture_count": 2,
+          "end_ts": 924,
+          "end_hms": "15:24",
+          "is_intro_card": false,
+          "layout": "dmi",
+          "peak_frame_index": 217,
+          "peak_score": 98.56,
+          "start_hms": "14:28",
+          "start_ts": 868
+        },
+        {
+          "capture_count": 1,
+          "end_ts": 1120,
+          "end_hms": "18:40",
+          "is_intro_card": false,
+          "layout": "dmi",
+          "peak_frame_index": 280,
+          "peak_score": 97.04,
+          "start_hms": "18:40",
+          "start_ts": 1120
+        },
+        {
+          "capture_count": 1,
+          "end_ts": 1288,
+          "end_hms": "21:28",
+          "is_intro_card": false,
+          "layout": "dmi",
+          "peak_frame_index": 322,
+          "peak_score": 97.32,
+          "start_hms": "21:28",
+          "start_ts": 1288
+        }
+      ],
+      "unique_layouts": [
+        "dmi"
+      ],
+      "top_candidate": {
+        "timestamp": 868,
+        "score": 98.56,
+        "screen_layout": "dmi"
+      }
+    },
+    {
+      "probe_file": "20260912_going_nowhere_day_12_can_these_recen_a2a698ff_whiteboard.json",
+      "video_path": "D:\\courses_F\\revere_asset\\videos\\Going Nowhere Day 12 Can These Recent Breakouts Offer Hope to Bu.mp4",
+      "date_key": "20260912",
+      "output_kind": "whiteboard",
+      "status": "done",
+      "frame_counts": {
+        "sample": 497,
+        "ocr": 60,
+        "captures": 5
+      },
+      "prefilter_best": 10.6,
+      "thresholds": {
+        "strong": 6,
+        "review": 4
+      },
+      "captured_count": 5,
+      "captures": [
+        {
+          "timestamp": 1408,
+          "timestamp_hms": "00:23:28",
+          "frame_index": 352,
+          "score": 90.3,
+          "prefilter_score": 6.34,
+          "ocr_confidence": 52,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_6.png",
+          "ocr_text_snippet": "2» TALE OF THE TAPE - WED, 1/4/23 << [ >| MARKET STATE: * HEADWINDS: USD, INFLATION, RECESSION, RISING INT RATES, RUSSIA/UKRAINE | Open sucks JENSEN RHI 21 «TECHNICAL: STO INDEXES 6-6 NASI/RSI USD ...",
+          "observed_date": "20230104",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 2.6,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 4,
+            "text_density": 97.7
+          }
+        },
+        {
+          "timestamp": 1248,
+          "timestamp_hms": "00:20:48",
+          "frame_index": 312,
+          "score": 89.14,
+          "prefilter_score": 6.13,
+          "ocr_confidence": 52,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_7.png",
+          "ocr_text_snippet": "»> TALE OF THE TAPE - WED, 1/4/23 << [ 5 | * MARKET STATE: * HEADWINDS: USD, INFLATION, RECESSION, RISING INT RATES, RUSSIA/UKRAINE ETE vow Te 21 «TECHNICAL: STO INDEXES G61 NASI/RSIT USD <22€,p TN...",
+          "observed_date": "20230104",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 2.6,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 4,
+            "text_density": 96.54
+          }
+        },
+        {
+          "timestamp": 1536,
+          "timestamp_hms": "00:25:36",
+          "frame_index": 384,
+          "score": 82.29,
+          "prefilter_score": 6.14,
+          "ocr_confidence": 51,
+          "ocr_profile": "threshold",
+          "screen_layout": "tale_of_the_tape",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_8.png",
+          "ocr_text_snippet": "> TALE OF THE TAPE — WED, 1/4/23 << ' >| * MARKEY STATE: * HEADWINDS: USD, INFLATION, RECESSION, RISING INT RATES, RUSSIA/UKRAINE we REE 21 «TECHNICAL: STO INDEXES 6-6 NASI/RSIT USD <21E, 1 TNX/TYX...",
+          "observed_date": "20230104",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 2.55,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 4,
+            "text_density": 89.74
+          }
+        },
+        {
+          "timestamp": 224,
+          "timestamp_hms": "00:03:44",
+          "frame_index": 56,
+          "score": 66.63,
+          "prefilter_score": 7.24,
+          "ocr_confidence": 48,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_9.png",
+          "ocr_text_snippet": "> REVERE ASSET MANAGEMENT < e, — NT RATES, RUSSIA/UKRAINE [LEY ar. Ee > DAILY MARKET INSIGHT VIDEO < 5.216, tnx/Tvx >21E, Ad Io List: HNQUBRKO... +, £2) BB ae UL 0 (+4 FEAR) >>> AGENDA — WED, 1/4/2...",
+          "observed_date": "20230104",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -3.6104042120666264,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 2.4,
+            "pair_bonus": 0,
+            "per_row_issues": -12,
+            "per_row_metrics": 0,
+            "text_density": 79.84
+          }
+        },
+        {
+          "timestamp": 320,
+          "timestamp_hms": "00:05:20",
+          "frame_index": 80,
+          "score": 60.68,
+          "prefilter_score": 3.56,
+          "ocr_confidence": 59,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_10.png",
+          "ocr_text_snippet": "> REVERE ASSET MANAGEMENT < 0 = ErYyes ony |,_woomy | 3000 [ «| Gn yo [EE > DAILY MARKET INSIGHT VIDEO < amen. Sw 5 ov | »>> AGENDA — WED, 1/4/23 <<< a * MARKET STATE: SETTRIEN S&P500 - LAST 13 BEA...",
+          "observed_date": "20230104",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -4.649898231317362,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 2.95,
+            "pair_bonus": 0,
+            "per_row_issues": -12,
+            "per_row_metrics": 0,
+            "text_density": 74.38
+          }
+        }
+      ],
+      "whiteboard_segments": [
+        {
+          "capture_count": 1,
+          "end_ts": 224,
+          "end_hms": "03:44",
+          "is_intro_card": false,
+          "layout": "dmi",
+          "peak_frame_index": 56,
+          "peak_score": 66.63,
+          "start_hms": "03:44",
+          "start_ts": 224
+        },
+        {
+          "capture_count": 1,
+          "end_ts": 320,
+          "end_hms": "05:20",
+          "is_intro_card": false,
+          "layout": "dmi",
+          "peak_frame_index": 80,
+          "peak_score": 60.68,
+          "start_hms": "05:20",
+          "start_ts": 320
+        },
+        {
+          "capture_count": 1,
+          "end_ts": 1248,
+          "end_hms": "20:48",
+          "is_intro_card": false,
+          "layout": "dmi",
+          "peak_frame_index": 312,
+          "peak_score": 89.14,
+          "start_hms": "20:48",
+          "start_ts": 1248
+        },
+        {
+          "capture_count": 1,
+          "end_ts": 1408,
+          "end_hms": "23:28",
+          "is_intro_card": false,
+          "layout": "dmi",
+          "peak_frame_index": 352,
+          "peak_score": 90.3,
+          "start_hms": "23:28",
+          "start_ts": 1408
+        },
+        {
+          "capture_count": 1,
+          "end_ts": 1536,
+          "end_hms": "25:36",
+          "is_intro_card": false,
+          "layout": "tale_of_the_tape",
+          "peak_frame_index": 384,
+          "peak_score": 82.29,
+          "start_hms": "25:36",
+          "start_ts": 1536
+        }
+      ],
+      "unique_layouts": [
+        "dmi",
+        "tale_of_the_tape"
+      ],
+      "top_candidate": {
+        "timestamp": 1408,
+        "score": 90.3,
+        "screen_layout": "dmi"
+      }
+    },
+    {
+      "probe_file": "20260912_index_fall_on_mid_east_tensions_as_m_de61db93_whiteboard.json",
+      "video_path": "D:\\courses_F\\revere_asset\\videos\\INDEX FALL ON MID EAST TENSIONS AS MKT AWAITS CPI PPI SPCX AMD I.mp4",
+      "date_key": "20260912",
+      "output_kind": "whiteboard",
+      "status": "done",
+      "frame_counts": {
+        "sample": 245,
+        "ocr": 60,
+        "captures": 5
+      },
+      "prefilter_best": 22.06,
+      "thresholds": {
+        "strong": 6,
+        "review": 4
+      },
+      "captured_count": 5,
+      "captures": [
+        {
+          "timestamp": 496,
+          "timestamp_hms": "00:08:16",
+          "frame_index": 124,
+          "score": 100.39,
+          "prefilter_score": 6.06,
+          "ocr_confidence": 73,
+          "ocr_profile": "threshold",
+          "screen_layout": "structured_whiteboard",
+          "issue_codes": [],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_11.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE ~ TUESDAY, SEPTEMBER 8, 2026 << * MARKET STATE: UPTREND *STOINDEXES 41 14 RG8G6T 0d NASI USDY TNX/TYXD vs 5d 3339 * SENTIMENT: VIX 14.53 (+ 147%) FBG AA 20.2 96.822. Tic) TERRI ...",
+          "observed_date": "20260908",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.65,
+            "pair_bonus": 4,
+            "per_row_issues": 0,
+            "per_row_metrics": 20,
+            "text_density": 78.74
+          }
+        },
+        {
+          "timestamp": 432,
+          "timestamp_hms": "00:07:12",
+          "frame_index": 108,
+          "score": 100.33,
+          "prefilter_score": 6.05,
+          "ocr_confidence": 73,
+          "ocr_profile": "threshold",
+          "screen_layout": "structured_whiteboard",
+          "issue_codes": [],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_12.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE ~ TUESDAY, SEPTEMBER 8, 2026 << * MARKET STATE: UPTREND *STOINDEXES 41 14 RG8G6T 0d NASI USDY TNX/TYXD vs 5d 3339 * SENTIMENT: VIX 14.53 (+ 147%) F8G AA 29.7 96.822. (ic) TIT NA...",
+          "observed_date": "20260908",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.65,
+            "pair_bonus": 4,
+            "per_row_issues": 0,
+            "per_row_metrics": 20,
+            "text_density": 78.68
+          }
+        },
+        {
+          "timestamp": 368,
+          "timestamp_hms": "00:06:08",
+          "frame_index": 92,
+          "score": 100.33,
+          "prefilter_score": 6.05,
+          "ocr_confidence": 73,
+          "ocr_profile": "threshold",
+          "screen_layout": "structured_whiteboard",
+          "issue_codes": [],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_13.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE = TUESDAY, SEPTEMBER 8, 2026 << * MARKET STATE; UPTREND *STOINDEXES AT 14 RGBGD OJ NASIL USDY TNX/TYXA vs 5d 1 * SENTIMENT: VIX 14.53 (11.4730) F&G AAN28.7 26.822. Maicr) RTINAM...",
+          "observed_date": "20260908",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.65,
+            "pair_bonus": 4,
+            "per_row_issues": 0,
+            "per_row_metrics": 20,
+            "text_density": 78.68
+          }
+        },
+        {
+          "timestamp": 32,
+          "timestamp_hms": "00:00:32",
+          "frame_index": 8,
+          "score": 55,
+          "prefilter_score": 3.76,
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_14.png",
+          "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< WHATS THE MARKET TREND? —_— “THE GROTECTION GAUGE\" 222DAILY MARKET INSIGHT <<< — — YT, 16, TikTok: @REVEREASSET -PIS LKESHARESSUB. | [mre T_T] | >>>TUESDAY, SEPTEMBER 8, ...",
+          "observed_date": "20260908",
+          "is_intro_card": true,
+          "score_breakdown": {
+            "chart_likeness": -2.6473453919979697,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.15,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 0,
+            "text_density": 62.5
+          }
+        },
+        {
+          "timestamp": 96,
+          "timestamp_hms": "00:01:36",
+          "frame_index": 24,
+          "score": 53.59,
+          "prefilter_score": 3.77,
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_15.png",
+          "ocr_text_snippet": ">>> THE REVERE ROUNDUP <<< WHATS THE MARKET TREND? —_— “THE GROTECTION GAUGE\" >>>DAILY MARKET INSIGHT <<< rer Tor] 1,3, 1G, TiTok: @REVEREASSET -PIS UKE SHAREYSUB. | gr 2>>TUESDAY, SEPTEMBER 8, 202...",
+          "observed_date": "20260908",
+          "is_intro_card": true,
+          "score_breakdown": {
+            "chart_likeness": -2.6218367788535843,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.15,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 0,
+            "text_density": 61.06
+          }
+        }
+      ],
+      "whiteboard_segments": [
+        {
+          "capture_count": 2,
+          "end_ts": 96,
+          "end_hms": "01:36",
+          "is_intro_card": true,
+          "layout": "dmi",
+          "peak_frame_index": 8,
+          "peak_score": 55,
+          "start_hms": "00:32",
+          "start_ts": 32
+        },
+        {
+          "capture_count": 3,
+          "end_ts": 496,
+          "end_hms": "08:16",
+          "is_intro_card": false,
+          "layout": "structured_whiteboard",
+          "peak_frame_index": 124,
+          "peak_score": 100.39,
+          "start_hms": "06:08",
+          "start_ts": 368
+        }
+      ],
+      "unique_layouts": [
+        "structured_whiteboard",
+        "dmi"
+      ],
+      "top_candidate": {
+        "timestamp": 496,
+        "score": 100.39,
+        "screen_layout": "structured_whiteboard"
+      }
+    },
+    {
+      "probe_file": "20260912_indexes_log_a_negative_reversal...is_c6a67599_whiteboard.json",
+      "video_path": "D:\\courses_F\\revere_asset\\videos\\Indexes Log a Negative Reversal...Is it Normal Action.mp4",
+      "date_key": "20260912",
+      "output_kind": "whiteboard",
+      "status": "done",
+      "frame_counts": {
+        "sample": 349,
+        "ocr": 60,
+        "captures": 5
+      },
+      "prefilter_best": 11.28,
+      "thresholds": {
+        "strong": 6,
+        "review": 4
+      },
+      "captured_count": 5,
+      "captures": [
+        {
+          "timestamp": 800,
+          "timestamp_hms": "00:13:20",
+          "frame_index": 200,
+          "score": 92.44,
+          "prefilter_score": 5.84,
+          "ocr_confidence": 64,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_16.png",
+          "ocr_text_snippet": "2> TALE OF THE TAPE - MON, 11/14/22 << * MARKET STATE: BEAR MARKET RALLY > B * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE Wo. MaRS 5 [© TECHNICAL INDEXES § 6-6: D...",
+          "observed_date": "20221114",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.2,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 95.24
+          }
+        },
+        {
+          "timestamp": 840,
+          "timestamp_hms": "00:14:00",
+          "frame_index": 210,
+          "score": 92.38,
+          "prefilter_score": 5.85,
+          "ocr_confidence": 64,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_17.png",
+          "ocr_text_snippet": "2> TALE OF THE TAPE - MON, 11/14/22 << * MARKET STATE: BEAR MARKET RALLY > B * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE Wow. MERKEISWITH 5 [© TECHNICAL INDEXES ...",
+          "observed_date": "20221114",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.2,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 95.18
+          }
+        },
+        {
+          "timestamp": 740,
+          "timestamp_hms": "00:12:20",
+          "frame_index": 185,
+          "score": 92.38,
+          "prefilter_score": 5.86,
+          "ocr_confidence": 64,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_18.png",
+          "ocr_text_snippet": "2> TALE OF THE TAPE — MON, 11/14/22 << * MARKET STATE: BEAR MARKET RALLY > B * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE Wwe MsRkaiSaT 5 [| * TECHNICAL: INDEXES ...",
+          "observed_date": "20221114",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.2,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 95.18
+          }
+        },
+        {
+          "timestamp": 0,
+          "timestamp_hms": "00:00:00",
+          "frame_index": 0,
+          "score": 60.95,
+          "prefilter_score": -15.3,
+          "ocr_confidence": 67,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_19.png",
+          "ocr_text_snippet": "2 WHAT'S THE MARKET TREND? © men - Qa wm THE GROTECTION GAUGE\" > REVERE ASSET MANAGEMENT < > DAILY MARKET INSIGHT VIDEO < SSE —— jas >>> AGENDA — MON, 11/14/22 <<< i023 NEUTRAL => uP - - * MARKET S...",
+          "observed_date": "20221114",
+          "is_intro_card": true,
+          "score_breakdown": {
+            "chart_likeness": -3.496279787012803,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.35,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 0,
+            "text_density": 69.1
+          }
+        },
+        {
+          "timestamp": 80,
+          "timestamp_hms": "00:01:20",
+          "frame_index": 20,
+          "score": 60.69,
+          "prefilter_score": -15.32,
+          "ocr_confidence": 65,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_20.png",
+          "ocr_text_snippet": "2 WHAT'S THE MARKET TREND? © smn us - Qa wm THE GROTECTION GAUGE\" > REVERE ASSET MANAGEMENT < > DAILY MARKET INSIGHT VIDEO < CELALE ——— 22> AGENDA MON, 11/14 >>> AGENDA — MON, 11/14/22 <<< ee — - —...",
+          "observed_date": "20221114",
+          "is_intro_card": true,
+          "score_breakdown": {
+            "chart_likeness": -3.5200113184856825,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.25,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 0,
+            "text_density": 68.96
+          }
+        }
+      ],
+      "whiteboard_segments": [
+        {
+          "capture_count": 2,
+          "end_ts": 80,
+          "end_hms": "01:20",
+          "is_intro_card": true,
+          "layout": "dmi",
+          "peak_frame_index": 0,
+          "peak_score": 60.95,
+          "start_hms": "00:00",
+          "start_ts": 0
+        },
+        {
+          "capture_count": 3,
+          "end_ts": 840,
+          "end_hms": "14:00",
+          "is_intro_card": false,
+          "layout": "dmi",
+          "peak_frame_index": 200,
+          "peak_score": 92.44,
+          "start_hms": "12:20",
+          "start_ts": 740
+        }
+      ],
+      "unique_layouts": [
+        "dmi"
+      ],
+      "top_candidate": {
+        "timestamp": 800,
+        "score": 92.44,
+        "screen_layout": "dmi"
+      }
+    },
+    {
+      "probe_file": "20260912_oil_yields_and_geopolitical_tensions_da0256bb_whiteboard.json",
+      "video_path": "D:\\courses_F\\revere_asset\\videos\\OIL YIELDS AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWI.mp4",
+      "date_key": "20260912",
+      "output_kind": "whiteboard",
+      "status": "done",
+      "frame_counts": {
+        "sample": 221,
+        "ocr": 60,
+        "captures": 5
+      },
+      "prefilter_best": 18.86,
+      "thresholds": {
+        "strong": 6,
+        "review": 4
+      },
+      "captured_count": 5,
+      "captures": [
+        {
+          "timestamp": 396,
+          "timestamp_hms": "00:06:36",
+          "frame_index": 99,
+          "score": 119.59,
+          "prefilter_score": 2.81,
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold",
+          "screen_layout": "structured_whiteboard",
+          "issue_codes": [],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_21.png",
+          "ocr_text_snippet": "® Preview Flo ER View Go Tools Window Hep CG ®O ac dl #0 Lm TQ 8 8 Wedteps S0ePM ean >> TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 << WHAT'S THE MARKET TREND? * MARKET STATE: UPTREND \"THE GROT...",
+          "observed_date": "20260909",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -5.325769142636611,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.3,
+            "pair_bonus": 4,
+            "per_row_issues": 0,
+            "per_row_metrics": 20,
+            "text_density": 97.62
+          }
+        },
+        {
+          "timestamp": 312,
+          "timestamp_hms": "00:05:12",
+          "frame_index": 78,
+          "score": 119.33,
+          "prefilter_score": 2.76,
+          "ocr_confidence": 66,
+          "ocr_profile": "threshold",
+          "screen_layout": "structured_whiteboard",
+          "issue_codes": [],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_22.png",
+          "ocr_text_snippet": "® Preview Fle ER View Go Tools Window Hep GC ®0 nc i WO LW FQ 8 @ WedSepd SOM ean 2» TALE OF THE TAPE — WEDNESDAY, SEPTEMBER 9, 2026 << WHAT'S THE MARKET TREND? * MARKET STATE: UPTREND \"THE GROTECT...",
+          "observed_date": "20260909",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -5.365081744582936,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.3,
+            "pair_bonus": 4,
+            "per_row_issues": 0,
+            "per_row_metrics": 20,
+            "text_density": 97.4
+          }
+        },
+        {
+          "timestamp": 108,
+          "timestamp_hms": "00:01:48",
+          "frame_index": 27,
+          "score": 57.41,
+          "prefilter_score": 3.38,
+          "ocr_confidence": 68,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_23.png",
+          "ocr_text_snippet": "WHAT'S THE MARKET TREND? >>> THE REVERE ROUNDUP <<< THE GROTECTION GAUGE\" >>> DAILY MARKET INSIGHT <<< TT EE TT * YT, X, 1G, TikTok: @REVEREASSET - PLS LIKE, SHARE+SUB = J MARKET LEADERS ==> < »>> ...",
+          "observed_date": "20260909",
+          "is_intro_card": true,
+          "score_breakdown": {
+            "chart_likeness": -4.165667005557543,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.4,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 0,
+            "text_density": 66.18
+          }
+        },
+        {
+          "timestamp": 12,
+          "timestamp_hms": "00:00:12",
+          "frame_index": 3,
+          "score": 54.06,
+          "prefilter_score": 3.54,
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_24.png",
+          "ocr_text_snippet": "# Preview File Edi View Go Tools Window Help [=3 [CH] BC d 8 ® L WF Q 8 © WedSepd 5:00PM LN 3 WHAT'S THE MARKET TREND? >>> THE REVERE ROUNDUP <<< THE GROTECTION GAUGE\" >>> DAILY MARKET INSIGHT <<< ...",
+          "observed_date": "20260909",
+          "is_intro_card": true,
+          "score_breakdown": {
+            "chart_likeness": -4.019125741526684,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.1,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 0,
+            "text_density": 62.98
+          }
+        },
+        {
+          "timestamp": 60,
+          "timestamp_hms": "00:01:00",
+          "frame_index": 15,
+          "score": 52.72,
+          "prefilter_score": 3.53,
+          "ocr_confidence": 70,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_25.png",
+          "ocr_text_snippet": "# Proview File Edi View Go Tools Window Help [3 [CH] Me 8 ® bm FQ Be © WedSepd 5:00PM LE WHAT'S THE MARKET TREND? >>> THE REVERE ROUNDUP <<< THE GROTECTION GAUGE\" >>> DAILY MARKET INSIGHT <<< TT EE...",
+          "observed_date": "20260909",
+          "is_intro_card": true,
+          "score_breakdown": {
+            "chart_likeness": -4.023928433875586,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.5,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 0,
+            "text_density": 61.24
+          }
+        }
+      ],
+      "whiteboard_segments": [
+        {
+          "capture_count": 3,
+          "end_ts": 108,
+          "end_hms": "01:48",
+          "is_intro_card": true,
+          "layout": "dmi",
+          "peak_frame_index": 27,
+          "peak_score": 57.41,
+          "start_hms": "00:12",
+          "start_ts": 12
+        },
+        {
+          "capture_count": 1,
+          "end_ts": 312,
+          "end_hms": "05:12",
+          "is_intro_card": false,
+          "layout": "structured_whiteboard",
+          "peak_frame_index": 78,
+          "peak_score": 119.33,
+          "start_hms": "05:12",
+          "start_ts": 312
+        },
+        {
+          "capture_count": 1,
+          "end_ts": 396,
+          "end_hms": "06:36",
+          "is_intro_card": false,
+          "layout": "structured_whiteboard",
+          "peak_frame_index": 99,
+          "peak_score": 119.59,
+          "start_hms": "06:36",
+          "start_ts": 396
+        }
+      ],
+      "unique_layouts": [
+        "structured_whiteboard",
+        "dmi"
+      ],
+      "top_candidate": {
+        "timestamp": 396,
+        "score": 119.59,
+        "screen_layout": "structured_whiteboard"
+      }
+    },
+    {
+      "probe_file": "20260912_second_straight_down_day...here_are_b817f6b8_whiteboard.json",
+      "video_path": "D:\\courses_F\\revere_asset\\videos\\Second Straight Down Day...Here are the Key Levels That Bulls Ne.mp4",
+      "date_key": "20260912",
+      "output_kind": "whiteboard",
+      "status": "done",
+      "frame_counts": {
+        "sample": 307,
+        "ocr": 60,
+        "captures": 5
+      },
+      "prefilter_best": 11.53,
+      "thresholds": {
+        "strong": 6,
+        "review": 4
+      },
+      "captured_count": 5,
+      "captures": [
+        {
+          "timestamp": 820,
+          "timestamp_hms": "00:13:40",
+          "frame_index": 205,
+          "score": 92.72,
+          "prefilter_score": 11.2,
+          "ocr_confidence": 59,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_31.png",
+          "ocr_text_snippet": "2 TALE OF THE TAPE — MON, 2/6/23 << ! * MARKET STATE: UPTREND > * HEADWINDS: INFLATION, RECESSION, FED QT & RISING RATES, RUSSIA/UKRAINE Wo oa TAARKE TSR * TECHNICAL: STO INDEX 4/5 0/8 G-6 NASI/RSI...",
+          "observed_date": "20230206",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -1.3323866818048735,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 2.95,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 4,
+            "text_density": 95.1
+          }
+        },
+        {
+          "timestamp": 740,
+          "timestamp_hms": "00:12:20",
+          "frame_index": 185,
+          "score": 91.18,
+          "prefilter_score": 6.47,
+          "ocr_confidence": 60,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_32.png",
+          "ocr_text_snippet": "> TALE OF THE TAPE — MON, 2/6/23 << * MARKET STATE: UPTRENDI »| *HEADWINDS: INFLATION, RECESSION, FED QT & RISING RATES, RUSSIA/UKRAINE \"a PAE Tr * TECHNICAL: STO INDEX 4/50/B G-6 NASI/RSID USD >21...",
+          "observed_date": "20230206",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 94.18
+          }
+        },
+        {
+          "timestamp": 940,
+          "timestamp_hms": "00:15:40",
+          "frame_index": 235,
+          "score": 87.57,
+          "prefilter_score": 6.77,
+          "ocr_confidence": 57,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_33.png",
+          "ocr_text_snippet": "> TALE OF THE TAPE — MON, 2/6/23 << ’ * MARKET STATE: UPTREND 5 * HEADWINDS: INFLATION, RECESSION, FED QT & RISING RATES, RUSSIA/UKRAINE Woe FALE * TECHNICAL: STO INDEX 4/5 0/8 G-6 NASI/RSI USD >21...",
+          "observed_date": "20230206",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 2.85,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 4,
+            "text_density": 94.72
+          }
+        },
+        {
+          "timestamp": 880,
+          "timestamp_hms": "00:14:40",
+          "frame_index": 220,
+          "score": 87.34,
+          "prefilter_score": 6.77,
+          "ocr_confidence": 58,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_34.png",
+          "ocr_text_snippet": "> TALE OF THE TAPE — MON, 2/6/23 << hi * MARKET STATE: UPTREND! 5 *HEADWINDS: INFLATION, RECESSION, FED QT & RISING RATES, RUSSIA/UKRAINE W xe AE Sa * TECHNICAL: STO INDEX 4/50/8 G-6 NASI/RSIM USD ...",
+          "observed_date": "20230206",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 2.9,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 4,
+            "text_density": 94.44
+          }
+        },
+        {
+          "timestamp": 780,
+          "timestamp_hms": "00:13:00",
+          "frame_index": 195,
+          "score": 85.93,
+          "prefilter_score": 6.49,
+          "ocr_confidence": 57,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_35.png",
+          "ocr_text_snippet": "»> TALE OF THE TAPE — MON, 2/6/23 << ¢ * MARKET STATE: UPTRENDI | *HEADWINDS: INFLATION, RECESSION, FED QT & RISING RATES, RUSSIA/UKRAINE Wo. SA * TECHNICAL: STO INDEX 4/5 0/8 G-6 NASI/RSI™ USD >21...",
+          "observed_date": "20230206",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 2.85,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 4,
+            "text_density": 93.08
+          }
+        }
+      ],
+      "whiteboard_segments": [
+        {
+          "capture_count": 5,
+          "end_ts": 940,
+          "end_hms": "15:40",
+          "is_intro_card": false,
+          "layout": "dmi",
+          "peak_frame_index": 205,
+          "peak_score": 92.72,
+          "start_hms": "12:20",
+          "start_ts": 740
+        }
+      ],
+      "unique_layouts": [
+        "dmi"
+      ],
+      "top_candidate": {
+        "timestamp": 820,
+        "score": 92.72,
+        "screen_layout": "dmi"
+      }
+    },
+    {
+      "probe_file": "20260912_select_leaders_standout_as_indexes_s_43b18fd7_whiteboard.json",
+      "video_path": "D:\\courses_F\\revere_asset\\videos\\SELECT LEADERS STANDOUT AS INDEXES SNAP BACK DESPITE HOT CPI PRI.mp4",
+      "date_key": "20260912",
+      "output_kind": "whiteboard",
+      "status": "done",
+      "frame_counts": {
+        "sample": 729,
+        "ocr": 60,
+        "captures": 5
+      },
+      "prefilter_best": 18.4,
+      "thresholds": {
+        "strong": 6,
+        "review": 4
+      },
+      "captured_count": 5,
+      "captures": [
+        {
+          "timestamp": 1248,
+          "timestamp_hms": "00:20:48",
+          "frame_index": 312,
+          "score": 104.42,
+          "prefilter_score": -27.5,
+          "ocr_confidence": 74,
+          "ocr_profile": "threshold",
+          "screen_layout": "structured_whiteboard",
+          "issue_codes": [],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_26.png",
+          "ocr_text_snippet": "> TALE OF THE TAPE — THURSDAY, SEPTEMBER 11, 2026 << * MARKET STATE: *STOINDEXES 11 5 RGBET 0 NASI USD TNX/TYXT vssd * SENTIMENT: VIX 13.54{-11.21%; F&G ARNSL0-17227 40.0 NAAIM 89.5743.96 BULL CASE...",
+          "observed_date": "20260911",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.7,
+            "pair_bonus": 4,
+            "per_row_issues": 0,
+            "per_row_metrics": 20,
+            "text_density": 82.72
+          }
+        },
+        {
+          "timestamp": 1200,
+          "timestamp_hms": "00:20:00",
+          "frame_index": 300,
+          "score": 104.42,
+          "prefilter_score": -27.48,
+          "ocr_confidence": 74,
+          "ocr_profile": "threshold",
+          "screen_layout": "structured_whiteboard",
+          "issue_codes": [],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_27.png",
+          "ocr_text_snippet": "> TALE OF THE TAPE — THURSDAY, SEPTEMBER 11, 2026 << * MARKET STATE: *STOINDEXES 11 5 RGBET 0 NASI USD TNX/TYXT vssd * SENTIMENT: VIX 13.54{-11.21%; F&G ARNSL0-17227 40.0 NAAIM 89.5743.96 BULL CASE...",
+          "observed_date": "20260911",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.7,
+            "pair_bonus": 4,
+            "per_row_issues": 0,
+            "per_row_metrics": 20,
+            "text_density": 82.72
+          }
+        },
+        {
+          "timestamp": 1152,
+          "timestamp_hms": "00:19:12",
+          "frame_index": 288,
+          "score": 104.42,
+          "prefilter_score": -27.51,
+          "ocr_confidence": 74,
+          "ocr_profile": "threshold",
+          "screen_layout": "structured_whiteboard",
+          "issue_codes": [],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_28.png",
+          "ocr_text_snippet": "> TALE OF THE TAPE — THURSDAY, SEPTEMBER 11, 2026 << * MARKET STATE: *STOINDEXES 11 5 RGBET 0 NASI USD TNX/TYXT vssd * SENTIMENT: VIX 13.54{-11.21%; F&G ARNSL0-17227 40.0 NAAIM 89.5743.96 BULL CASE...",
+          "observed_date": "20260911",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.7,
+            "pair_bonus": 4,
+            "per_row_issues": 0,
+            "per_row_metrics": 20,
+            "text_density": 82.72
+          }
+        },
+        {
+          "timestamp": 1104,
+          "timestamp_hms": "00:18:24",
+          "frame_index": 276,
+          "score": 104.42,
+          "prefilter_score": -27.52,
+          "ocr_confidence": 74,
+          "ocr_profile": "threshold",
+          "screen_layout": "structured_whiteboard",
+          "issue_codes": [],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_29.png",
+          "ocr_text_snippet": "> TALE OF THE TAPE — THURSDAY, SEPTEMBER 11, 2026 << * MARKET STATE: *STOINDEXES 11 5 RGBET 0 NASI USD TNX/TYXT vssd * SENTIMENT: VIX 13.54{-11.21%; F&G ARNSL0-17227 40.0 NAAIM 89.5743.96 BULL CASE...",
+          "observed_date": "20260911",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.7,
+            "pair_bonus": 4,
+            "per_row_issues": 0,
+            "per_row_metrics": 20,
+            "text_density": 82.72
+          }
+        },
+        {
+          "timestamp": 1008,
+          "timestamp_hms": "00:16:48",
+          "frame_index": 252,
+          "score": 104.24,
+          "prefilter_score": -27.5,
+          "ocr_confidence": 72,
+          "ocr_profile": "threshold",
+          "screen_layout": "structured_whiteboard",
+          "issue_codes": [],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_30.png",
+          "ocr_text_snippet": "> TALE OF THE TAPE — THURSDAY, SEPTEMBER 11, 2026 << * MARKET STATE: \"STOINDEXES 11 SY RG8ET OV NASI USDP TNX/TYXT vsSd * SENTIMENT: VIX 15 8411.21) F&G ARNS80-17227 40.0 NAAIM 89.5743.96 BULL CASE...",
+          "observed_date": "20260911",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.6,
+            "pair_bonus": 4,
+            "per_row_issues": 0,
+            "per_row_metrics": 20,
+            "text_density": 82.64
+          }
+        }
+      ],
+      "whiteboard_segments": [
+        {
+          "capture_count": 1,
+          "end_ts": 1008,
+          "end_hms": "16:48",
+          "is_intro_card": false,
+          "layout": "structured_whiteboard",
+          "peak_frame_index": 252,
+          "peak_score": 104.24,
+          "start_hms": "16:48",
+          "start_ts": 1008
+        },
+        {
+          "capture_count": 4,
+          "end_ts": 1248,
+          "end_hms": "20:48",
+          "is_intro_card": false,
+          "layout": "structured_whiteboard",
+          "peak_frame_index": 276,
+          "peak_score": 104.42,
+          "start_hms": "18:24",
+          "start_ts": 1104
+        }
+      ],
+      "unique_layouts": [
+        "structured_whiteboard"
+      ],
+      "top_candidate": {
+        "timestamp": 1248,
+        "score": 104.42,
+        "screen_layout": "structured_whiteboard"
+      }
+    },
+    {
+      "probe_file": "20260912_split_decision_day_as_both_bulls_and_61a1e16a_whiteboard.json",
+      "video_path": "D:\\courses_F\\revere_asset\\videos\\Split Decision Day As Both Bulls AND Bears Have Mixed Emotions.mp4",
+      "date_key": "20260912",
+      "output_kind": "whiteboard",
+      "status": "done",
+      "frame_counts": {
+        "sample": 357,
+        "ocr": 60,
+        "captures": 5
+      },
+      "prefilter_best": 12.51,
+      "thresholds": {
+        "strong": 6,
+        "review": 4
+      },
+      "captured_count": 5,
+      "captures": [
+        {
+          "timestamp": 1080,
+          "timestamp_hms": "00:18:00",
+          "frame_index": 270,
+          "score": 95.09,
+          "prefilter_score": 5.97,
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_36.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE - THUR, 11/17/22 << * MARKET STATE: BEAR MARKET RALLY 5 | * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE [RFS Fra) * TECHNICAL: STC INDEXES, G64...",
+          "observed_date": "20221117",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.15,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 97.94
+          }
+        },
+        {
+          "timestamp": 900,
+          "timestamp_hms": "00:15:00",
+          "frame_index": 225,
+          "score": 94.17,
+          "prefilter_score": 6.01,
+          "ocr_confidence": 65,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_37.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE - THUR, 13/17/22 << * MARKET STATE: BEAR MARKET RALLY 5 | * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE Wo. MaReSum * TECHNICAL: STO INDEXES\\, ...",
+          "observed_date": null,
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.25,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 96.92
+          }
+        },
+        {
+          "timestamp": 800,
+          "timestamp_hms": "00:13:20",
+          "frame_index": 200,
+          "score": 93.61,
+          "prefilter_score": 6.01,
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_38.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE - THUR, 13/17/22 << * MARKET STATE: BEAR MARKET RALLY 5. | * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE Wag. Markisuim * TECHNICAL: STO INDEXE...",
+          "observed_date": null,
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.15,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 96.46
+          }
+        },
+        {
+          "timestamp": 760,
+          "timestamp_hms": "00:12:40",
+          "frame_index": 190,
+          "score": 93.13,
+          "prefilter_score": 6.03,
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_39.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE - THUR, 13/17/22 << * MARKET STATE: BEAR MARKET RALLY 5 | * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE Wag. Maeusuim * TECHNICAL: STC INDEXES....",
+          "observed_date": null,
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.15,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 95.98
+          }
+        },
+        {
+          "timestamp": 860,
+          "timestamp_hms": "00:14:20",
+          "frame_index": 215,
+          "score": 92.93,
+          "prefilter_score": 6.01,
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_40.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE - THUR, 13/17/22 << * MARKET STATE: BEAR MARKET RALLY 5 | * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE Wag. Markisuim * TECHNICAL: STO INDEXES...",
+          "observed_date": null,
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.15,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 95.78
+          }
+        }
+      ],
+      "whiteboard_segments": [
+        {
+          "capture_count": 4,
+          "end_ts": 900,
+          "end_hms": "15:00",
+          "is_intro_card": false,
+          "layout": "dmi",
+          "peak_frame_index": 225,
+          "peak_score": 94.17,
+          "start_hms": "12:40",
+          "start_ts": 760
+        },
+        {
+          "capture_count": 1,
+          "end_ts": 1080,
+          "end_hms": "18:00",
+          "is_intro_card": false,
+          "layout": "dmi",
+          "peak_frame_index": 270,
+          "peak_score": 95.09,
+          "start_hms": "18:00",
+          "start_ts": 1080
+        }
+      ],
+      "unique_layouts": [
+        "dmi"
+      ],
+      "top_candidate": {
+        "timestamp": 1080,
+        "score": 95.09,
+        "screen_layout": "dmi"
+      }
+    },
+    {
+      "probe_file": "20260912_thanksgiving_week_kicks_off_with_a_y_abb24475_whiteboard.json",
+      "video_path": "D:\\courses_F\\revere_asset\\videos\\Thanksgiving Week Kicks Off With a Yawn But We Did Add to a Posi.mp4",
+      "date_key": "20260912",
+      "output_kind": "whiteboard",
+      "status": "done",
+      "frame_counts": {
+        "sample": 314,
+        "ocr": 60,
+        "captures": 5
+      },
+      "prefilter_best": 11.99,
+      "thresholds": {
+        "strong": 6,
+        "review": 4
+      },
+      "captured_count": 5,
+      "captures": [
+        {
+          "timestamp": 760,
+          "timestamp_hms": "00:12:40",
+          "frame_index": 190,
+          "score": 94.68,
+          "prefilter_score": 6.49,
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_46.png",
+          "ocr_text_snippet": "> TALE OF THE TAPE — MON, 11/21/22 << * MARKET STATE: BEAR MARKET RALLY 2f HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE do 3 PARCEL TSM »| * TECHNICAL: STOINDEXES ~...",
+          "observed_date": "20221121",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.1,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 97.58
+          }
+        },
+        {
+          "timestamp": 840,
+          "timestamp_hms": "00:14:00",
+          "frame_index": 210,
+          "score": 93.84,
+          "prefilter_score": 6.51,
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_47.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE — MON, 11/21/22 << * MARKET STATE: BEAR MARKET RALLY 2f HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE 9 we / PaR<ey STH »| * TECHNICAL: STOINDEXE...",
+          "observed_date": "20221121",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.1,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 96.74
+          }
+        },
+        {
+          "timestamp": 720,
+          "timestamp_hms": "00:12:00",
+          "frame_index": 180,
+          "score": 93.5,
+          "prefilter_score": 6.5,
+          "ocr_confidence": 64,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_48.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE — MON, 11/21/22 << * MARKET STATE: BEAR MARKET RALLY 2. HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE © we MARK ETSMITH »| * TECHNICAL: STOINDEXE...",
+          "observed_date": "20221121",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.2,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 96.3
+          }
+        },
+        {
+          "timestamp": 900,
+          "timestamp_hms": "00:15:00",
+          "frame_index": 225,
+          "score": 93.43,
+          "prefilter_score": 6.5,
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_49.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE — MON, 11/21/22 << * MARKET STATE: BEAR MARKET RALLY 2f HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE 9 we / PARE TAMITH »| * TECHNICAL: STOINDEX...",
+          "observed_date": "20221121",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.05,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 96.38
+          }
+        },
+        {
+          "timestamp": 800,
+          "timestamp_hms": "00:13:20",
+          "frame_index": 200,
+          "score": 93.16,
+          "prefilter_score": 6.5,
+          "ocr_confidence": 62,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_50.png",
+          "ocr_text_snippet": ">> TALE OF THE TAPE — MON, 11/21/22 << * MARKET STATE: BEAR MARKET RALLY 2f HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE @ G ! Hani TEMITH | *TECHNICAL:STO INDEXES ...",
+          "observed_date": "20221121",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.1,
+            "pair_bonus": 0,
+            "per_row_issues": -4,
+            "per_row_metrics": 4,
+            "text_density": 96.06
+          }
+        }
+      ],
+      "whiteboard_segments": [
+        {
+          "capture_count": 5,
+          "end_ts": 900,
+          "end_hms": "15:00",
+          "is_intro_card": false,
+          "layout": "dmi",
+          "peak_frame_index": 190,
+          "peak_score": 94.68,
+          "start_hms": "12:00",
+          "start_ts": 720
+        }
+      ],
+      "unique_layouts": [
+        "dmi"
+      ],
+      "top_candidate": {
+        "timestamp": 760,
+        "score": 94.68,
+        "screen_layout": "dmi"
+      }
+    },
+    {
+      "probe_file": "20260912_the_big_show...the_sector_rotation_r_eb62f507_whiteboard.json",
+      "video_path": "D:\\courses_F\\revere_asset\\videos\\THE BIG SHOW...The Sector Rotation Rally Edition.mp4",
+      "date_key": "20260912",
+      "output_kind": "whiteboard",
+      "status": "done",
+      "frame_counts": {
+        "sample": 483,
+        "ocr": 60,
+        "captures": 5
+      },
+      "prefilter_best": 12.69,
+      "thresholds": {
+        "strong": 6,
+        "review": 4
+      },
+      "captured_count": 5,
+      "captures": [
+        {
+          "timestamp": 1056,
+          "timestamp_hms": "00:17:36",
+          "frame_index": 264,
+          "score": 81.72,
+          "prefilter_score": 5.93,
+          "ocr_confidence": 64,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_41.png",
+          "ocr_text_snippet": "ja Bros @E Dc vorov PL bewdend @ © & - © x I I] | Ee >> TALE OF THE TAPE = FRI, 11/11/22 << ’ EE TOLER [| * MARKET STATE: BEAR MARKET RALLY * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT...",
+          "observed_date": "20221111",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.2,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 0,
+            "text_density": 92.52
+          }
+        },
+        {
+          "timestamp": 992,
+          "timestamp_hms": "00:16:32",
+          "frame_index": 248,
+          "score": 81.37,
+          "prefilter_score": 6,
+          "ocr_confidence": 63,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_42.png",
+          "ocr_text_snippet": "ja Brose @E Dc vorov PL beware @ © & - 0 x RE RE | Er >> TALE OF THE TAPE = FRI, 11/11/22 << ’ Aso: ove ov, 0 8 BG [| * MARKET STATE: BEAR MARKET RALLY * HEADWINDS: USD, INFLATION, FED TAPER/BAL SH...",
+          "observed_date": "20221111",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.15,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 0,
+            "text_density": 92.22
+          }
+        },
+        {
+          "timestamp": 1216,
+          "timestamp_hms": "00:20:16",
+          "frame_index": 304,
+          "score": 76.63,
+          "prefilter_score": 6.5,
+          "ocr_confidence": 57,
+          "ocr_profile": "threshold",
+          "screen_layout": "tale_of_the_tape",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_43.png",
+          "ocr_text_snippet": "ja Brose @ ER Dc voroy PL bewdend @ © 2 - © x Fle Home et Daw Owign Lyout Adee Maligs fever view eb west 0 [ERY — ~ALHON: © 0.25% 4 3 7159 A Woe. MARSESHEN d *SPX O/N 39-391 03966 0-30/60 3944-3983...",
+          "observed_date": null,
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 2.85,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 4,
+            "text_density": 83.78
+          }
+        },
+        {
+          "timestamp": 1152,
+          "timestamp_hms": "00:19:12",
+          "frame_index": 288,
+          "score": 73.5,
+          "prefilter_score": 6.73,
+          "ocr_confidence": 58,
+          "ocr_profile": "threshold",
+          "screen_layout": "tale_of_the_tape",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_44.png",
+          "ocr_text_snippet": "ja Brose @ ER Dc vorov PL bowen @ © 2 - 0 x J de mn ee i ET *SPX O/N 39-390 03966 0-30/60 3944-39831 L/H 3944-4002 Andro lm: POVIZ Lv I BEB CC [ * SPXATR: 230%(-) 0 +025 CL+% G-6+7.13% 60/40 20.80%...",
+          "observed_date": null,
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -6,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 2.9,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 4,
+            "text_density": 80.6
+          }
+        },
+        {
+          "timestamp": 128,
+          "timestamp_hms": "00:02:08",
+          "frame_index": 32,
+          "score": 55.74,
+          "prefilter_score": -15.55,
+          "ocr_confidence": 61,
+          "ocr_profile": "threshold",
+          "screen_layout": "dmi",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE"
+          ],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_45.png",
+          "ocr_text_snippet": "a | & File Home Insert Draw Desig Layon Refer: Mailis Revie View Hetp Acrot © HEA be a [oR we File Hom Inser Draw Page Form Data Revie View Help Aol © [IE > REVERE ASSET MANAGEMENT < ox vt 5 A s co...",
+          "observed_date": "20221111",
+          "is_intro_card": false,
+          "score_breakdown": {
+            "chart_likeness": -4.393876667839562,
+            "keyword_guard": 0,
+            "ocr_confidence_bonus": 3.05,
+            "pair_bonus": 0,
+            "per_row_issues": -8,
+            "per_row_metrics": 0,
+            "text_density": 65.08
+          }
+        }
+      ],
+      "whiteboard_segments": [
+        {
+          "capture_count": 1,
+          "end_ts": 128,
+          "end_hms": "02:08",
+          "is_intro_card": false,
+          "layout": "dmi",
+          "peak_frame_index": 32,
+          "peak_score": 55.74,
+          "start_hms": "02:08",
+          "start_ts": 128
+        },
+        {
+          "capture_count": 2,
+          "end_ts": 1056,
+          "end_hms": "17:36",
+          "is_intro_card": false,
+          "layout": "dmi",
+          "peak_frame_index": 264,
+          "peak_score": 81.72,
+          "start_hms": "16:32",
+          "start_ts": 992
+        },
+        {
+          "capture_count": 2,
+          "end_ts": 1216,
+          "end_hms": "20:16",
+          "is_intro_card": false,
+          "layout": "tale_of_the_tape",
+          "peak_frame_index": 304,
+          "peak_score": 76.63,
+          "start_hms": "19:12",
+          "start_ts": 1152
+        }
+      ],
+      "unique_layouts": [
+        "dmi",
+        "tale_of_the_tape"
+      ],
+      "top_candidate": {
+        "timestamp": 1056,
+        "score": 81.72,
+        "screen_layout": "dmi"
+      }
+    }
+  ]
+}

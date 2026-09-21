@@ -1,0 +1,975 @@
+{
+  "date_key": "20260626",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260626_tldNhps605c.mp4",
+  "captured_count": 0,
+  "captures": [],
+  "frame_count": 881,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 608,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "prefilter_best_score": 25.39,
+  "sample_frame_width": 640,
+  "status": "no_match",
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 0,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_tldnhps605c_9a9456b0_whiteboard\\ocr\\ocr_000001.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "MISSING_BOTTOM_LINE",
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 0,
+    "observed_date": null,
+    "ocr_confidence": 0,
+    "ocr_profile": "threshold",
+    "ocr_text": "",
+    "ocr_text_snippet": "",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": null,
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": null,
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_METRIC_LINE",
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 0,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "d00837fe5d8a233e",
+    "prefilter_score": -24.93,
+    "prefilter_stats": {
+      "brightRatio": 0.13583333333333333,
+      "darkRatio": 0.3921527777777778,
+      "edgeRatio": 0.011447954208183167,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 186,
+      "horizontalEdgeRatio": 0.013143947424210304,
+      "meanLuma": 121.50611111111111,
+      "stdDev": 89.27712840979355,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 138,
+      "verticalEdgeRatio": 0.009751960992156031
+    },
+    "score": -12,
+    "score_breakdown": {
+      "chart_likeness": 0,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 0,
+      "pair_bonus": 0,
+      "per_row_issues": -12,
+      "per_row_metrics": 0,
+      "text_density": 0
+    },
+    "screen_layout": "chart",
+    "tickers": [],
+    "timestamp": 0,
+    "timestamp_hms": "00:00:00"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_tldnhps605c_9a9456b0_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d00837fe5d8a233e",
+      "prefilter_score": -24.93,
+      "prefilter_stats": {
+        "brightRatio": 0.13583333333333333,
+        "darkRatio": 0.3921527777777778,
+        "edgeRatio": 0.011447954208183167,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 186,
+        "horizontalEdgeRatio": 0.013143947424210304,
+        "meanLuma": 121.50611111111111,
+        "stdDev": 89.27712840979355,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 138,
+        "verticalEdgeRatio": 0.009751960992156031
+      },
+      "score": -12,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 154,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_tldnhps605c_9a9456b0_whiteboard\\ocr\\ocr_000155.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 51,
+      "ocr_profile": "threshold",
+      "ocr_text": "mmm SS Sm een       | REDE             hal\nDATE   VALUE  DAY%  WEEK%   INCP     SPX   SPX %                   [ msi a | Qaes - OGL ©\n6/26/26                                                                                                                             sex 383.53\n6/25/26 $104058 1.10%  -3.68% 4.06%    7357.49 1.55%                                        Voi 1718603219 74 627\n6/24/26 $102,925 -1.65%  -4.73%       2.93%         7358.22 -1.54%                                                                         Last Update: 11/59 AM ET 0626:202¢\n6/23/26 $104,652  x    313% 4.65%     736546 1.45%                                            frac         bd\n” 6/22/26 109927 1!         1.75%      9.93%       747279 0.01%\n| 6/18/26 5108036 3.01% 451%    8.04%    7500.58 0.36%           NE\n6/17/26 $104873 0.35%    1.46%    4.88%     742010 0.71%             F<                       eros\n6/16/26 3104513 -258% 110%    4.51%     7511.35 0.51%                                     ul   P         Te00\n6/15/26 $107,279 3.78%   EX]    7.28%    7554.29 1.08%                             t  Ml      n\n6/12/26 $103372 187% 3.57%    337%    743146 0.56%                           fy lh t        ao\n0/11/26 s101,47 [I 167%     1.47%      7394.30 -1.06%                                   i   IL         I   [\n6/10/26 $95957 -3.16%  -3.86%                           7266.99 2.76%                                                           \"wo                     ye\n6/9/26 $99,088 277% 072% 0.91%    7386.65 1.16%                           YR        ry          10\nI” 6/8/26 3101914 2.11%    2.11%    1.91%     7405.73 -0.91%                      } rl   sl        J               |\n| ors/26 sesso: HE <u% 019%    7383.74 -1.20%                  |    4     ya\n6/4/26  $108926 -0.50%   4.66%   8.93%    7584.31 1.48%                 rt    -      ya Pca    oo\n| 6/3/26 s10907¢ 0.02% 5.18%   9.47%   7553.68 1.07%              1   ;   =\n6/2/26 $110493 40% 6.16% 10.49%      7609.78 1.82%                 Sy    a i      —\n-                    -    6.22%    7599.96 1.69%              Sr pO                      6500\n.                                           4.08%       7580.06 1.43%                    B            :\nL                       3.11%     7563.63 1.21%               ee\n277%          7520.36 0.63%                           0     fl                                                                         he\n4          f      XE         3.56%     7519.42 0.61%              |\n;                 7473.47                                                           i.\n         i                             |                oo      —-\nso                                    Ji         rm\n2                    #    EE    =e    we Tee Ta\nI     Reports    21.21 6/22 <<< 24 items Curae 1 sab ET ms                          Ory - CRB A\n",
+      "ocr_text_snippet": "mmm SS Sm een | REDE hal DATE VALUE DAY% WEEK% INCP SPX SPX % [ msi a | Qaes - OGL © 6/26/26 sex 383.53 6/25/26 $104058 1.10% -3.68% 4.06% 7357.49 1.55% Voi 1718603219 74 627 6/24/26 $102,925 -1.65...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 51,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 51,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "da76952a2bb22d2a",
+      "prefilter_score": 10.7,
+      "prefilter_stats": {
+        "brightRatio": 0.5129166666666667,
+        "darkRatio": 0.1757638888888889,
+        "edgeRatio": 0.21146915412338352,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2590,
+        "horizontalEdgeRatio": 0.18302593456292843,
+        "meanLuma": 187.89284722222223,
+        "stdDev": 79.88057216838699,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3395,
+        "verticalEdgeRatio": 0.2399123736838386
+      },
+      "score": -19.79,
+      "score_breakdown": {
+        "chart_likeness": -0.3432182199589242,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.55,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 616,
+      "timestamp_hms": "00:10:16"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 266,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_tldnhps605c_9a9456b0_whiteboard\\ocr\\ocr_000267.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 49,
+      "ocr_profile": "threshold",
+      "ocr_text": "mmm SS em een       | REE——             hal\nDATE   VALUE ~~ DAY%  WEEK%   INCP     SPX   SPX %                   Exes Qaes - OGL Oo\n6/26/26                                                                                                *73.60\n6/25/26 $104058 1.10%  -3.68%    4.06%    7357.49 -1.55%           [over arson szrisammess woscon 10       wo 3236581 +1 20\n6/24/26 $102,925 1.65%  -4.73% 2.93%     735822 -1.56%              or 52:0 Hn     Smet 2105/ATRY 826% Last Upasio 1207 PA ET 05262026\n6/23/26 $104652 AON 3.13% 4.65%     7365.46 1.45%                         TT      %\n\" 6/22/26 $109.927 175% 1.75%      9.93%       747279 0.01%\n6/18/26 $108,036 3.01% 451%    8.04%     7500.58 0.36%\n| 17126 104879 035%    1.46%    4.88%    742010 0.71%                                        t       »\n6/16/26 $104,513  -2.58%    110%    4.51%     7511.35 0.51%                                            }  }\n| 6/15/26 $107,273 3.78%   3.78%    7.28%    7554.29 1.08%                                          t\n6/12/26 $103,372 1.87% 3.57%    237%     743146 0.56%                                          il         n\no/11/26  s101,474 [I 167%    1.47%     7384.30 1.06%                                     i]    |     ——\n6/10/26 $95,957 -3.16%  -3.86%            726699 2.76%                                    #    i  foe\n6/9/26 $99,088 277% 0.72% 0.91%            7386.65 1.16%                                                                               i.          ff       Li                              =\nI” 6/8/26 $101,914 2.11%    211%    1.91%     7405.73 -0.91%                              tn   a       Pp         |\n| e526 sovz0s I <ux 090%    7383.74 1.20%                           If [! Le     Pa      w\n6/4/26 $108926 0.50% 466%    8.93%     758431 1.48%                            1]    f        .\n| 6/3/26 5109474 0.92% 518%    9.47%     7553.68 1.07%                           J\n6/2/26 $110,493  #.02%       6.16%       10.49%        7609.78 1.82%                                             EAS                                         ©\nLC                    -    6.22%    7599.96 1.69%                  oat?\n4.08%     7580.06 1.43%                  [=\nk                       311%     7563.63 1.21%                ~                           |      x\n2.77%     7520.36 0.63%\n'         g     A]        3.56%    7519.12 0.61%              Is | | | li | il  il\n’                    7473.47                             -     ”     FE CTE\n:         fi                             |                 .         wo                                      focaoue a”\nPrice (8), % Shy.\nER                               4                                                                                Salen (M5), % Cho\n~                      #\njal     -                 [                                          Aer Tax Margin\nSereens | ums     Reports    21.21 6/22 <<< 24items GC trcved iA En                           OFy - TU BE A\n",
+      "ocr_text_snippet": "mmm SS em een | REE—— hal DATE VALUE ~~ DAY% WEEK% INCP SPX SPX % Exes Qaes - OGL Oo 6/26/26 *73.60 6/25/26 $104058 1.10% -3.68% 4.06% 7357.49 -1.55% [over arson szrisammess woscon 10 wo 3236581 +1...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 49,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 49,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ea56d52d2aa12d2b",
+      "prefilter_score": 10.93,
+      "prefilter_stats": {
+        "brightRatio": 0.5301388888888889,
+        "darkRatio": 0.17451388888888889,
+        "edgeRatio": 0.2071938378913151,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2512,
+        "horizontalEdgeRatio": 0.1775139566108402,
+        "meanLuma": 189.46506944444445,
+        "stdDev": 80.06108710694085,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3352,
+        "verticalEdgeRatio": 0.23687371917178998
+      },
+      "score": -20.06,
+      "score_breakdown": {
+        "chart_likeness": -0.5058597857177851,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.45,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 1064,
+      "timestamp_hms": "00:17:44"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 140,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_tldnhps605c_9a9456b0_whiteboard\\ocr\\ocr_000141.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 48,
+      "ocr_profile": "threshold",
+      "ocr_text": "REVERE A)-100 INDEX        ot SINCE               NCP                                  Erm  Ques - OGL\nAT                        X      NCP        2      2\novr mo owmw nog                                                             7,383.80\n6/26/26                                                                                                                        wo rine 47\n6/25/26 $104058 1.10% 3.68% 4.06%          7357.49 -155%                                                                                           Last Updo: 11 59AM ET 0628202\n6/24/26 $102,925 -1.65%      -4.73%       2.93%        7358.22     -1.54%                                                                             \"                      80\n6/23/26 $104652 ABO 313% 465%     7365.46 -1.45%                                                 rm         »\n\" 6/22/26 $109927 1.75%      1.75%      9.93%       747279 -0.01%\n6/18/26 5108036 3.01% ASIN        8.04%          7500.58 0.36%                               -\n6/17/26 5104879 0.35% 148% 488%    742010 0.71%                 ~ >            I.\n6/16/26 $100513 258%  La0% asi Jl 751135 asin                                                               I  1     i\n6/15/26 $107279 378% 378% 7.28%     7554.29 1.08%                                         po         J\n6/12/26 $103,372 187% 357% 3.37%      743146 -0.56%                                                 yt UR |  t              oo\no/ny/ze storaze NE 1.07%      1.47%      7394.30 1.06%                                          ny   [La      I    Uy\n6/10/26 595957 -3.16% 3.86%              7266.99 276%                                                       /\n6/9/26  So9088 277% 072% 091% [Ml 738665 116%                                                     At              yd                 i.\n” 6/8/26 $101,914 2.11%     2.11%     191%      7405.73 -0.91%                                  1)    p           yd\nos/z6 somos HE ax oxox [ll mma 120%                        hf     ;        /                |\n6/4/26 5108926 0.50%      4.66%        8.93%         7584.31     1.48%                                              i          P                 J          0\n8/3/26 $109.47 0.92% 5.18%      9.47%       7553.68 1.07%                                      1       7          LT\n6/2/26 5110493 4.02%      6.16%       10.49%       7609.78 1.82%                                               7         _\n” 8/26 s106223 2.06%     208%      6.22%      7599.96 1.69%                     From      Pee                                 0\n4.08%      7580.06 1.43%                       =  Poh\n3.11%       7563.63    1.21%                                      Sl\n|)                   :                                          277%        752036 0.63%                          Li                                                                   wo\n3.56%         7519.12     0.61%                               (s     i\n        |                                          i    rim      )\niL -          i wimp I  ILL HL\nhel                   ij                                        *                .           mics X                        =n                    ar                           aor                          May                       on                         M™\nsewers |        Repors       oft                      ca cea                                           orm - SEB 8 A\n",
+      "ocr_text_snippet": "REVERE A)-100 INDEX ot SINCE NCP Erm Ques - OGL AT X NCP 2 2 ovr mo owmw nog 7,383.80 6/26/26 wo rine 47 6/25/26 $104058 1.10% 3.68% 4.06% 7357.49 -155% Last Updo: 11 59AM ET 0628202 6/24/26 $102,9...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 48,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 48,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "da54b52a2bd2352b",
+      "prefilter_score": 9.34,
+      "prefilter_stats": {
+        "brightRatio": 0.4876388888888889,
+        "darkRatio": 0.22604166666666667,
+        "edgeRatio": 0.19295456151508728,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2330,
+        "horizontalEdgeRatio": 0.16465267472263445,
+        "meanLuma": 178.85854166666667,
+        "stdDev": 85.47279572463025,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3131,
+        "verticalEdgeRatio": 0.2212564483075401
+      },
+      "score": -20.13,
+      "score_breakdown": {
+        "chart_likeness": -0.5346949840380972,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.4,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 560,
+      "timestamp_hms": "00:09:20"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 294,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_tldnhps605c_9a9456b0_whiteboard\\ocr\\ocr_000295.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 37,
+      "ocr_profile": "threshold",
+      "ocr_text": "MarksTSURGE «(EEO      Lm          .       .    ps           DER Qe: OBC ©\n» Roundhill Memory                                                                                             373.47\nneed 1H LINGNA 15                               [RPRP: REVERE POSITIONAL RISK PARITY                                       s15.                         ORAM [53 43-4 a5\n008 rodaicon. 0         Vol 32.457.416 +60 17%\nSora     21721820 ccc)\na         ®         A                       10 MDE + BOB] ce ET OF PORTRGIG ALLOCATED T0 Wak ETH £ eDGIG                     bos. 2100/ ATR B76% Last Undsio 1208 PMET 0262026\nFt                     proc lee                                   EE TE)     2\nYour     Price Price Swes Cor                                                                 u\n(nvatigOutel (81K Chg % THY cp\nTE               ER AE a EAA EA EA\nom    ooo wa wa 304             EEE Tr CN Be Er\not     00 wn na OM               [Tam | wuss [1am] room, mem | romin] moon [ nash                                t       Ld\nGo                  — EET rr RE POS HT FE PEN                                      t\nwz     000 NA NA py,                Tie Toon [am Tioom iin wen Hon] men\nnon     oo NA NA Ear                — EE Ey RECN FE EEN FEN                                     t\nsad                  — rn EY rey REE RRS FR PEF                                      q]           n\nwow a               Fai afer                          i        aE\n208    000 NA NA pe            ——— EY Ey PPO FRAO pv                     [EY   ed\n[elma tonne mn fn                          4       .\nase]       Som! noon [000%] 13 oom | 10                            N           w\nTET ETT MT ETAT               »     i.\nTam som [aton sien! ion [oom Jon fueaon                               .\noar [a | ve [sam] soon | sor [nim [oom [10a                  fy  IY\niin vn EY ET RN PRR SINGERS HP                   Harr\npm nna                  ie     /      PM\n—    PERS EI pred pH               11          i\nEET ETE PN re PEER EVN FERRER FIRTN                 1\n— EEE RN EIN RNG FN                  a\n— TN EY    vom [6 Tres [inn               SAL                  »\n—    van fam | vo | ren foam            of [>\nny               ha                 [am | 20m [Took] sar | amon Son fiom nom\n4                       [aint some [aoa sums] som [soon som | som\n[ado T vim [2am] vom | fv [nam oom [nnn\n§                am] soot [oon] sum lsum sim one [ou                                        »\nhe]           3           [Tam ron [2a] ram [som | soon soos | soon\n*          oso | vom [aan] onan’ swe [worn [soon | room                    1\n                 Fm oom [Tm [oom oa Tron             Il    mdi\nTem {ox [am] oo {von | asin? sam | ow            hl\nJ             f                      EET REE FIST ETM TY                  a]    a    wow\nes          :    —          FT {1 von [ion som \"san | aa [5am | won |              ay      duo       m\nN                         [won Thom oon am Liason [ours                                             nce Due Nik +\nPrice (5), % Chg\ncee                                           -   PE                Salen (45), % Cho\n=                                                                             Aner Tax Margin\nsereens | ua    Reports   21.21 6/22 <<< 24 items © toswed sab 2 ue                        ory - CREB A\n",
+      "ocr_text_snippet": "MarksTSURGE «(EEO Lm . . ps DER Qe: OBC © » Roundhill Memory 373.47 need 1H LINGNA 15 [RPRP: REVERE POSITIONAL RISK PARITY s15. ORAM [53 43-4 a5 008 rodaicon. 0 Vol 32.457.416 +60 17% Sora 21721820...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "8250ff6ad0c12fb5",
+      "prefilter_score": 7.93,
+      "prefilter_stats": {
+        "brightRatio": 0.39229166666666665,
+        "darkRatio": 0.2989583333333333,
+        "edgeRatio": 0.15585470991449368,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2076,
+        "horizontalEdgeRatio": 0.14670341318634725,
+        "meanLuma": 163.9676388888889,
+        "stdDev": 89.62032915138691,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2335,
+        "verticalEdgeRatio": 0.1650060066426401
+      },
+      "score": -20.15,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.85,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE",
+        "TEM"
+      ],
+      "timestamp": 1176,
+      "timestamp_hms": "00:19:36"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_tldnhps605c_9a9456b0_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "d00837fe5d8a233e",
+      "prefilter_score": -24.93,
+      "prefilter_stats": {
+        "brightRatio": 0.13583333333333333,
+        "darkRatio": 0.3921527777777778,
+        "edgeRatio": 0.011447954208183167,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 186,
+        "horizontalEdgeRatio": 0.013143947424210304,
+        "meanLuma": 121.50611111111111,
+        "stdDev": 89.27712840979355,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 138,
+        "verticalEdgeRatio": 0.009751960992156031
+      },
+      "score": -12,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 154,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_tldnhps605c_9a9456b0_whiteboard\\ocr\\ocr_000155.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 614.683494,
+      "observed_date": null,
+      "ocr_confidence": 51,
+      "ocr_profile": "threshold",
+      "ocr_text": "mmm SS Sm een       | REDE             hal\nDATE   VALUE  DAY%  WEEK%   INCP     SPX   SPX %                   [ msi a | Qaes - OGL ©\n6/26/26                                                                                                                             sex 383.53\n6/25/26 $104058 1.10%  -3.68% 4.06%    7357.49 1.55%                                        Voi 1718603219 74 627\n6/24/26 $102,925 -1.65%  -4.73%       2.93%         7358.22 -1.54%                                                                         Last Update: 11/59 AM ET 0626:202¢\n6/23/26 $104,652  x    313% 4.65%     736546 1.45%                                            frac         bd\n” 6/22/26 109927 1!         1.75%      9.93%       747279 0.01%\n| 6/18/26 5108036 3.01% 451%    8.04%    7500.58 0.36%           NE\n6/17/26 $104873 0.35%    1.46%    4.88%     742010 0.71%             F<                       eros\n6/16/26 3104513 -258% 110%    4.51%     7511.35 0.51%                                     ul   P         Te00\n6/15/26 $107,279 3.78%   EX]    7.28%    7554.29 1.08%                             t  Ml      n\n6/12/26 $103372 187% 3.57%    337%    743146 0.56%                           fy lh t        ao\n0/11/26 s101,47 [I 167%     1.47%      7394.30 -1.06%                                   i   IL         I   [\n6/10/26 $95957 -3.16%  -3.86%                           7266.99 2.76%                                                           \"wo                     ye\n6/9/26 $99,088 277% 072% 0.91%    7386.65 1.16%                           YR        ry          10\nI” 6/8/26 3101914 2.11%    2.11%    1.91%     7405.73 -0.91%                      } rl   sl        J               |\n| ors/26 sesso: HE <u% 019%    7383.74 -1.20%                  |    4     ya\n6/4/26  $108926 -0.50%   4.66%   8.93%    7584.31 1.48%                 rt    -      ya Pca    oo\n| 6/3/26 s10907¢ 0.02% 5.18%   9.47%   7553.68 1.07%              1   ;   =\n6/2/26 $110493 40% 6.16% 10.49%      7609.78 1.82%                 Sy    a i      —\n-                    -    6.22%    7599.96 1.69%              Sr pO                      6500\n.                                           4.08%       7580.06 1.43%                    B            :\nL                       3.11%     7563.63 1.21%               ee\n277%          7520.36 0.63%                           0     fl                                                                         he\n4          f      XE         3.56%     7519.42 0.61%              |\n;                 7473.47                                                           i.\n         i                             |                oo      —-\nso                                    Ji         rm\n2                    #    EE    =e    we Tee Ta\nI     Reports    21.21 6/22 <<< 24 items Curae 1 sab ET ms                          Ory - CRB A\n",
+      "ocr_text_snippet": "mmm SS Sm een | REDE hal DATE VALUE DAY% WEEK% INCP SPX SPX % [ msi a | Qaes - OGL © 6/26/26 sex 383.53 6/25/26 $104058 1.10% -3.68% 4.06% 7357.49 1.55% Voi 1718603219 74 627 6/24/26 $102,925 -1.65...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 51,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 51,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "da76952a2bb22d2a",
+      "prefilter_score": 10.7,
+      "prefilter_stats": {
+        "brightRatio": 0.5129166666666667,
+        "darkRatio": 0.1757638888888889,
+        "edgeRatio": 0.21146915412338352,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2590,
+        "horizontalEdgeRatio": 0.18302593456292843,
+        "meanLuma": 187.89284722222223,
+        "stdDev": 79.88057216838699,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3395,
+        "verticalEdgeRatio": 0.2399123736838386
+      },
+      "score": -19.79,
+      "score_breakdown": {
+        "chart_likeness": -0.3432182199589242,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.55,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 616,
+      "timestamp_hms": "00:10:16"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 266,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_tldnhps605c_9a9456b0_whiteboard\\ocr\\ocr_000267.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1061.732105,
+      "observed_date": null,
+      "ocr_confidence": 49,
+      "ocr_profile": "threshold",
+      "ocr_text": "mmm SS em een       | REE——             hal\nDATE   VALUE ~~ DAY%  WEEK%   INCP     SPX   SPX %                   Exes Qaes - OGL Oo\n6/26/26                                                                                                *73.60\n6/25/26 $104058 1.10%  -3.68%    4.06%    7357.49 -1.55%           [over arson szrisammess woscon 10       wo 3236581 +1 20\n6/24/26 $102,925 1.65%  -4.73% 2.93%     735822 -1.56%              or 52:0 Hn     Smet 2105/ATRY 826% Last Upasio 1207 PA ET 05262026\n6/23/26 $104652 AON 3.13% 4.65%     7365.46 1.45%                         TT      %\n\" 6/22/26 $109.927 175% 1.75%      9.93%       747279 0.01%\n6/18/26 $108,036 3.01% 451%    8.04%     7500.58 0.36%\n| 17126 104879 035%    1.46%    4.88%    742010 0.71%                                        t       »\n6/16/26 $104,513  -2.58%    110%    4.51%     7511.35 0.51%                                            }  }\n| 6/15/26 $107,273 3.78%   3.78%    7.28%    7554.29 1.08%                                          t\n6/12/26 $103,372 1.87% 3.57%    237%     743146 0.56%                                          il         n\no/11/26  s101,474 [I 167%    1.47%     7384.30 1.06%                                     i]    |     ——\n6/10/26 $95,957 -3.16%  -3.86%            726699 2.76%                                    #    i  foe\n6/9/26 $99,088 277% 0.72% 0.91%            7386.65 1.16%                                                                               i.          ff       Li                              =\nI” 6/8/26 $101,914 2.11%    211%    1.91%     7405.73 -0.91%                              tn   a       Pp         |\n| e526 sovz0s I <ux 090%    7383.74 1.20%                           If [! Le     Pa      w\n6/4/26 $108926 0.50% 466%    8.93%     758431 1.48%                            1]    f        .\n| 6/3/26 5109474 0.92% 518%    9.47%     7553.68 1.07%                           J\n6/2/26 $110,493  #.02%       6.16%       10.49%        7609.78 1.82%                                             EAS                                         ©\nLC                    -    6.22%    7599.96 1.69%                  oat?\n4.08%     7580.06 1.43%                  [=\nk                       311%     7563.63 1.21%                ~                           |      x\n2.77%     7520.36 0.63%\n'         g     A]        3.56%    7519.12 0.61%              Is | | | li | il  il\n’                    7473.47                             -     ”     FE CTE\n:         fi                             |                 .         wo                                      focaoue a”\nPrice (8), % Shy.\nER                               4                                                                                Salen (M5), % Cho\n~                      #\njal     -                 [                                          Aer Tax Margin\nSereens | ums     Reports    21.21 6/22 <<< 24items GC trcved iA En                           OFy - TU BE A\n",
+      "ocr_text_snippet": "mmm SS em een | REE—— hal DATE VALUE ~~ DAY% WEEK% INCP SPX SPX % Exes Qaes - OGL Oo 6/26/26 *73.60 6/25/26 $104058 1.10% -3.68% 4.06% 7357.49 -1.55% [over arson szrisammess woscon 10 wo 3236581 +1...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 49,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 49,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "ea56d52d2aa12d2b",
+      "prefilter_score": 10.93,
+      "prefilter_stats": {
+        "brightRatio": 0.5301388888888889,
+        "darkRatio": 0.17451388888888889,
+        "edgeRatio": 0.2071938378913151,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2512,
+        "horizontalEdgeRatio": 0.1775139566108402,
+        "meanLuma": 189.46506944444445,
+        "stdDev": 80.06108710694085,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3352,
+        "verticalEdgeRatio": 0.23687371917178998
+      },
+      "score": -20.06,
+      "score_breakdown": {
+        "chart_likeness": -0.5058597857177851,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.45,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 1064,
+      "timestamp_hms": "00:17:44"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 140,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_tldnhps605c_9a9456b0_whiteboard\\ocr\\ocr_000141.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 562.433226,
+      "observed_date": null,
+      "ocr_confidence": 48,
+      "ocr_profile": "threshold",
+      "ocr_text": "REVERE A)-100 INDEX        ot SINCE               NCP                                  Erm  Ques - OGL\nAT                        X      NCP        2      2\novr mo owmw nog                                                             7,383.80\n6/26/26                                                                                                                        wo rine 47\n6/25/26 $104058 1.10% 3.68% 4.06%          7357.49 -155%                                                                                           Last Updo: 11 59AM ET 0628202\n6/24/26 $102,925 -1.65%      -4.73%       2.93%        7358.22     -1.54%                                                                             \"                      80\n6/23/26 $104652 ABO 313% 465%     7365.46 -1.45%                                                 rm         »\n\" 6/22/26 $109927 1.75%      1.75%      9.93%       747279 -0.01%\n6/18/26 5108036 3.01% ASIN        8.04%          7500.58 0.36%                               -\n6/17/26 5104879 0.35% 148% 488%    742010 0.71%                 ~ >            I.\n6/16/26 $100513 258%  La0% asi Jl 751135 asin                                                               I  1     i\n6/15/26 $107279 378% 378% 7.28%     7554.29 1.08%                                         po         J\n6/12/26 $103,372 187% 357% 3.37%      743146 -0.56%                                                 yt UR |  t              oo\no/ny/ze storaze NE 1.07%      1.47%      7394.30 1.06%                                          ny   [La      I    Uy\n6/10/26 595957 -3.16% 3.86%              7266.99 276%                                                       /\n6/9/26  So9088 277% 072% 091% [Ml 738665 116%                                                     At              yd                 i.\n” 6/8/26 $101,914 2.11%     2.11%     191%      7405.73 -0.91%                                  1)    p           yd\nos/z6 somos HE ax oxox [ll mma 120%                        hf     ;        /                |\n6/4/26 5108926 0.50%      4.66%        8.93%         7584.31     1.48%                                              i          P                 J          0\n8/3/26 $109.47 0.92% 5.18%      9.47%       7553.68 1.07%                                      1       7          LT\n6/2/26 5110493 4.02%      6.16%       10.49%       7609.78 1.82%                                               7         _\n” 8/26 s106223 2.06%     208%      6.22%      7599.96 1.69%                     From      Pee                                 0\n4.08%      7580.06 1.43%                       =  Poh\n3.11%       7563.63    1.21%                                      Sl\n|)                   :                                          277%        752036 0.63%                          Li                                                                   wo\n3.56%         7519.12     0.61%                               (s     i\n        |                                          i    rim      )\niL -          i wimp I  ILL HL\nhel                   ij                                        *                .           mics X                        =n                    ar                           aor                          May                       on                         M™\nsewers |        Repors       oft                      ca cea                                           orm - SEB 8 A\n",
+      "ocr_text_snippet": "REVERE A)-100 INDEX ot SINCE NCP Erm Ques - OGL AT X NCP 2 2 ovr mo owmw nog 7,383.80 6/26/26 wo rine 47 6/25/26 $104058 1.10% 3.68% 4.06% 7357.49 -155% Last Updo: 11 59AM ET 0628202 6/24/26 $102,9...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 48,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 48,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "da54b52a2bd2352b",
+      "prefilter_score": 9.34,
+      "prefilter_stats": {
+        "brightRatio": 0.4876388888888889,
+        "darkRatio": 0.22604166666666667,
+        "edgeRatio": 0.19295456151508728,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2330,
+        "horizontalEdgeRatio": 0.16465267472263445,
+        "meanLuma": 178.85854166666667,
+        "stdDev": 85.47279572463025,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3131,
+        "verticalEdgeRatio": 0.2212564483075401
+      },
+      "score": -20.13,
+      "score_breakdown": {
+        "chart_likeness": -0.5346949840380972,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 2.4,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 560,
+      "timestamp_hms": "00:09:20"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 294,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260626_20260626_tldnhps605c_9a9456b0_whiteboard\\ocr\\ocr_000295.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1177.884882,
+      "observed_date": null,
+      "ocr_confidence": 37,
+      "ocr_profile": "threshold",
+      "ocr_text": "MarksTSURGE «(EEO      Lm          .       .    ps           DER Qe: OBC ©\n» Roundhill Memory                                                                                             373.47\nneed 1H LINGNA 15                               [RPRP: REVERE POSITIONAL RISK PARITY                                       s15.                         ORAM [53 43-4 a5\n008 rodaicon. 0         Vol 32.457.416 +60 17%\nSora     21721820 ccc)\na         ®         A                       10 MDE + BOB] ce ET OF PORTRGIG ALLOCATED T0 Wak ETH £ eDGIG                     bos. 2100/ ATR B76% Last Undsio 1208 PMET 0262026\nFt                     proc lee                                   EE TE)     2\nYour     Price Price Swes Cor                                                                 u\n(nvatigOutel (81K Chg % THY cp\nTE               ER AE a EAA EA EA\nom    ooo wa wa 304             EEE Tr CN Be Er\not     00 wn na OM               [Tam | wuss [1am] room, mem | romin] moon [ nash                                t       Ld\nGo                  — EET rr RE POS HT FE PEN                                      t\nwz     000 NA NA py,                Tie Toon [am Tioom iin wen Hon] men\nnon     oo NA NA Ear                — EE Ey RECN FE EEN FEN                                     t\nsad                  — rn EY rey REE RRS FR PEF                                      q]           n\nwow a               Fai afer                          i        aE\n208    000 NA NA pe            ——— EY Ey PPO FRAO pv                     [EY   ed\n[elma tonne mn fn                          4       .\nase]       Som! noon [000%] 13 oom | 10                            N           w\nTET ETT MT ETAT               »     i.\nTam som [aton sien! ion [oom Jon fueaon                               .\noar [a | ve [sam] soon | sor [nim [oom [10a                  fy  IY\niin vn EY ET RN PRR SINGERS HP                   Harr\npm nna                  ie     /      PM\n—    PERS EI pred pH               11          i\nEET ETE PN re PEER EVN FERRER FIRTN                 1\n— EEE RN EIN RNG FN                  a\n— TN EY    vom [6 Tres [inn               SAL                  »\n—    van fam | vo | ren foam            of [>\nny               ha                 [am | 20m [Took] sar | amon Son fiom nom\n4                       [aint some [aoa sums] som [soon som | som\n[ado T vim [2am] vom | fv [nam oom [nnn\n§                am] soot [oon] sum lsum sim one [ou                                        »\nhe]           3           [Tam ron [2a] ram [som | soon soos | soon\n*          oso | vom [aan] onan’ swe [worn [soon | room                    1\n                 Fm oom [Tm [oom oa Tron             Il    mdi\nTem {ox [am] oo {von | asin? sam | ow            hl\nJ             f                      EET REE FIST ETM TY                  a]    a    wow\nes          :    —          FT {1 von [ion som \"san | aa [5am | won |              ay      duo       m\nN                         [won Thom oon am Liason [ours                                             nce Due Nik +\nPrice (5), % Chg\ncee                                           -   PE                Salen (45), % Cho\n=                                                                             Aner Tax Margin\nsereens | ua    Reports   21.21 6/22 <<< 24 items © toswed sab 2 ue                        ory - CREB A\n",
+      "ocr_text_snippet": "MarksTSURGE «(EEO Lm . . ps DER Qe: OBC © » Roundhill Memory 373.47 need 1H LINGNA 15 [RPRP: REVERE POSITIONAL RISK PARITY s15. ORAM [53 43-4 a5 008 rodaicon. 0 Vol 32.457.416 +60 17% Sora 21721820...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "8250ff6ad0c12fb5",
+      "prefilter_score": 7.93,
+      "prefilter_stats": {
+        "brightRatio": 0.39229166666666665,
+        "darkRatio": 0.2989583333333333,
+        "edgeRatio": 0.15585470991449368,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2076,
+        "horizontalEdgeRatio": 0.14670341318634725,
+        "meanLuma": 163.9676388888889,
+        "stdDev": 89.62032915138691,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2335,
+        "verticalEdgeRatio": 0.1650060066426401
+      },
+      "score": -20.15,
+      "score_breakdown": {
+        "chart_likeness": 0,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.85,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE",
+        "TEM"
+      ],
+      "timestamp": 1176,
+      "timestamp_hms": "00:19:36"
+    }
+  ],
+  "whiteboard_segments": []
+}

@@ -54,11 +54,13 @@ function sortCandidatesDescending(candidates) {
 
 // Pick the top-scoring candidates above `threshold`, skipping any that fall
 // inside the same window as an already-picked candidate (within `minFrameGap`
-// frame indices). This ensures we capture multiple distinct screens rather
-// than 3 frames from the same 30-second whiteboard segment. Returns both the
-// kept candidates and the top few that fell below `threshold` so reviewers can
-// audit why a frame was rejected.
-function pickTopDistinctCandidates(candidates, threshold, maxCaptures, minFrameGap = CAPTURE_MIN_FRAME_GAP) {
+// frame indices) OR whose overlay pHash is within `phashHammingMax` bits of
+// an already-picked candidate. The latter deduplicates near-identical position
+// lists across the stream (e.g. the same chart frame with the same overlay
+// appearing 10 minutes apart with no meaningful change in tickers).
+// Returns both the kept candidates and the top few that fell below `threshold`
+// so reviewers can audit why a frame was rejected.
+function pickTopDistinctCandidates(candidates, threshold, maxCaptures, minFrameGap = CAPTURE_MIN_FRAME_GAP, phashHammingMax = 6) {
   const strong = sortCandidatesDescending(candidates.filter((candidate) => candidate.score >= threshold));
   const picked = [];
   for (const candidate of strong) {
@@ -67,9 +69,25 @@ function pickTopDistinctCandidates(candidates, threshold, maxCaptures, minFrameG
     }
 
     const tooClose = picked.some((other) => Math.abs(other.frameIndex - candidate.frameIndex) < minFrameGap);
-    if (!tooClose) {
-      picked.push(candidate);
+    if (tooClose) {
+      continue;
     }
+
+    // pHash-overlay Hamming dedup: if this candidate's overlay hash is very
+    // similar to an already-picked candidate, skip it — the position list
+    // hasn't meaningfully changed.
+    if (phashHammingMax > 0 && candidate.phashOverlay) {
+      const tooSimilar = picked.some((other) => {
+        if (!other.phashOverlay) return false;
+        const dist = hammingDistance(candidate.phashOverlay, other.phashOverlay);
+        return dist <= phashHammingMax;
+      });
+      if (tooSimilar) {
+        continue;
+      }
+    }
+
+    picked.push(candidate);
   }
   return {
     picked,
@@ -456,7 +474,7 @@ function extractFinalFrame(videoPath, timestamp, outputPath, ffmpegBin) {
   runFfmpegCommand(command, 'ffmpeg final frame extraction failed.');
 }
 
-async function prefilterFrames({ fps, framePaths, outputKind, prefilterProfile, progressInterval }) {
+async function prefilterFrames({ fps, framePaths, outputKind, prefilterProfile, progressInterval, temporalDecay }) {
   const prefilterRows = [];
   let bestRow = null;
   const startedAt = Date.now();
@@ -464,12 +482,13 @@ async function prefilterFrames({ fps, framePaths, outputKind, prefilterProfile, 
   for (let index = 0; index < framePaths.length; index += 1) {
     const framePath = framePaths[index];
     const stats = await analyzeFrameBeforeOcr(framePath);
+    const timestamp = buildFrameTimestamp(index, fps);
     const row = {
       frameIndex: index,
       framePath,
-      prefilterScore: scoreFramePrefilter(stats, outputKind, prefilterProfile),
+      prefilterScore: scoreFramePrefilter(stats, outputKind, prefilterProfile, temporalDecay),
       stats,
-      timestamp: buildFrameTimestamp(index, fps)
+      timestamp
     };
     prefilterRows.push(row);
 
@@ -497,7 +516,11 @@ async function prefilterFrames({ fps, framePaths, outputKind, prefilterProfile, 
 
 async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats, prefilterScore, options = {}) {
   const { chartStreamParser = false, phashRegion = null, phashRegionFraction = null } = options;
-  const ocr = await ocrImage(framePath);
+  // When chart-stream parser is active, pass overlay region so ocrImage can crop it before OCR
+  const ocrOptions = chartStreamParser
+    ? { chartStream: true, overlayRegion: phashRegionFraction, overlayScale: 3 }
+    : {};
+  const ocr = await ocrImage(framePath, ocrOptions);
   const parsed = chartStreamParser
     ? null
     : parseScreenshot({
@@ -676,8 +699,14 @@ async function scanFrames({
       videoPath
     ], { encoding: 'utf8' });
     const sourceHeight = parseInt((ffprobeResult.stdout || '').trim(), 10);
+    // Skip when ffprobe fails (NaN) or when height is below minimum.
+    // When ffprobe succeeds and height < 720: warn and skip.
+    // When ffprobe returns NaN: warn and skip (could not verify resolution).
     if (!Number.isNaN(sourceHeight) && sourceHeight < 720) {
       console.warn(`[scan:${outputKind}] Skipping ${videoPath}: source resolution ${sourceHeight}p < 720p minimum`);
+      return { bestCandidate: null, candidates: [], frameErrors: [], topCandidates: [] };
+    } else if (Number.isNaN(sourceHeight)) {
+      console.warn(`[scan:${outputKind}] Skipping ${videoPath}: could not determine source resolution (ffprobe returned NaN)`);
       return { bestCandidate: null, candidates: [], frameErrors: [], topCandidates: [] };
     }
   }
@@ -951,6 +980,7 @@ async function main() {
     phash_region: options.phashRegion || null,
     phash_region_fraction: options.phashRegionFraction || null,
     prefilter_profile: options.prefilterProfile,
+    temporal_decay: options.temporalDecay,
     video_path: videoPath
   };
 
@@ -993,7 +1023,8 @@ async function main() {
       framePaths,
       outputKind: options.outputKind,
       prefilterProfile: options.prefilterProfile,
-      progressInterval: options.progressInterval
+      progressInterval: options.progressInterval,
+      temporalDecay: options.temporalDecay
     });
     const selectedFrameRows = selectFramesForOcr(prefilterResult.prefilterRows, {
       maxFrames: options.prefilterMaxFrames,
@@ -1038,12 +1069,14 @@ async function main() {
     const strongResult = pickTopDistinctCandidates(
       candidates,
       options.strongThreshold,
-      options.maxCapturesPerVideo
+      options.maxCapturesPerVideo,
+      CAPTURE_MIN_FRAME_GAP,
+      options.phashHammingMax
     );
     const strongCandidates = strongResult.picked;
     const reviewResult = strongCandidates.length
       ? { picked: [], rejected: [] }
-      : pickTopDistinctCandidates(candidates, options.reviewThreshold, options.maxCapturesPerVideo);
+      : pickTopDistinctCandidates(candidates, options.reviewThreshold, options.maxCapturesPerVideo, CAPTURE_MIN_FRAME_GAP, options.phashHammingMax);
     const reviewCandidates = reviewResult.picked;
     const captures = strongCandidates.length ? strongCandidates : reviewCandidates;
     const rejectedForReport = (strongCandidates.length ? strongResult.rejected : reviewResult.rejected).slice(0, 5);

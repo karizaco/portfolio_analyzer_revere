@@ -1,0 +1,13 @@
+{
+  "run_tag": "qmg-ocr-20260917",
+  "driver": "parallelOcrScan.py",
+  "started_at": "2026-09-17T05:22:43.376381Z",
+  "finished_at": "2026-09-17T05:23:28.094416Z",
+  "last_update_at": "2026-09-17T05:23:28.098491Z",
+  "probe_log_count": 29,
+  "unique_videos_done": 0,
+  "unique_videos_errored": 29,
+  "expected_total": 29,
+  "last_probe_log": "20231215_20231215_jnva5cd_m7m_76c41ebc_snapshot.json",
+  "next_step": "inspect 29 failed job log(s); then aggregate with node tools/aggregateOcrTimeline.js qmg-ocr-20260917"
+}

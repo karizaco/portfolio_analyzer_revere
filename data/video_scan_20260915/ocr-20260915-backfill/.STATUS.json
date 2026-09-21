@@ -1,0 +1,13 @@
+{
+  "run_tag": "ocr-20260915-backfill",
+  "driver": "parallelOcrScan.py",
+  "started_at": "2026-09-16T09:49:57.930358Z",
+  "finished_at": "2026-09-16T11:55:50.526362Z",
+  "last_update_at": "2026-09-16T11:55:50.526362Z",
+  "probe_log_count": 78,
+  "unique_videos_done": 19,
+  "unique_videos_errored": 0,
+  "expected_total": 19,
+  "last_probe_log": "data\\video_scan_20260915\\ocr-20260915-backfill/ocr-20260915-backfill_eWeJSMLlZLs_20260813.log",
+  "next_step": "Partition 78 probe logs into good (61) and empty (17), then flip SQLite: 61->done, 17->error with note \"whiteboard-free\". Run aggregateScanResults.js + update STATUS.md."
+}

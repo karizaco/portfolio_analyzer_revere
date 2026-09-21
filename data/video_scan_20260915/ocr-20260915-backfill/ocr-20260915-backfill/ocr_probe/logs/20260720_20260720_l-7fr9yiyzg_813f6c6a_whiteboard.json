@@ -1,0 +1,1263 @@
+{
+  "date_key": "20260720",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260720_L-7fr9yIyzg.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 147,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260720_20260720_l-7fr9yiyzg_813f6c6a_whiteboard\\ocr\\ocr_000148.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 589.68,
+      "observed_date": "20260720",
+      "ocr_confidence": 55,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Preview Fle EM View Go Too Window Help           @ecaon + »d\n| © ® [D- screenshor2020.07-2031 9261200        Qa a              [=      ® io\npoT——  >> TALE OF THE TAPE — MONDAY, JULY 20, 2026 <<  Py E—\n¥ * MARKET STATE:                               *\n© Bitwise Hyperliquic * STO INDEXESO1 ~~ 64. RGBOT 64 NASI USD TNX/TYX1 vs Sd                       3832        ae oi 485\nPO          © sou * SENTIMENT: VIX 18.65(-0.64%) F&G               AA 4439 48.5 22.243 YTDR] NAAIM 95.64 412.69     2 mn ome\noe         ~ BULL CASE: INITIATE RALLY & TREND 21EMA                            \"\nYom te min ties cor <PBEAR CASE: SUSTAINED BREAK BELOW 21EMA €7/20 2° CLOSE BELOW              _           ome         °\nFo \"05155 i PEER          >                   ’                                                        VAN\nws ow wa wa msi * NEWS: IREN/HUT; KIMI3 AND MEMORY; ACHR AND ANDURIL                                                        ©\npio       om A Mo * TODAY'S KEYS: SPX vs 8EJ/21E4,/5000 QQQ vs 700/500 J R2K vs BEL /21Ed          ER —\nmz ow we wa a *DAYCT:D-1=>D-2 8e:-1 2le:-1\npio      Sa ACTION: 0 40.43% 7462 17494 JPM SELLIN INTO CLOSE                              AT)\nms ow wa woof *SPXO/N 7443-75067 07489 030 7481-75131 L/H 7440-7513                    i WARY Ra ge\n*SPXATR:1.11%  5PX-0.19% 60/40-0.28% GRO -0.26% TURBO +0.24%        i  In fl  of   “1,\n* SECTORS: 1 BY% USD WGMI CRYPTO KWEB O&G J BPS ARKG ITB X8I NASA                     rr       -\n* GRO HOLDINGS: SPYM,UPRO,DDOG, FNT,LLYX,LLY                                                                 =\n* GRO RVAB/REBAR: 0.90(-0.22%/-3.62%) NO CHANGES\n———— * TURBO HOLDINGS: 5FYM,UPRO,BHYP,iBIT,ETHA,0DOG, TWLO,FTNT                                             —_— a\nhd                * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%) NO CHANGES                                              .     --          x\n* BOTTOM LINE: => INDEXES FADED THE GAP UP;                                                                                         pd\n* TUES KEYS: SPX vs 8E/21E/50D  QQQ vs 700/500 R2K vs 21E/50D                                                               hel\nor boc         *- >>> S&PS00 KEY LEVELS <<<                                                                     EE     .op      v\n* 7621 (6/2 INTRADAY A-T-H)                                                                                                    Poeun a-\n7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS                                                             —\n+7487 (16 21EMA) € 6/29 6/230 6/121 6/5¢ 4/81                     )                    tort\nume om] *7466/7468(16 S0D/10WK) € 4/81 2/27% 1/211 1/204                                   om - 2% aA\n“em. <>7457 FRI: BROAD SELLING CONTINUES; SPX QQQ BELOW 50DSMAs                           ast bmn me wOmp omen ran\nC= cw —————= -»7443 TODAY: INDEXES FADED THE GAP UP;                                                     Oo om me oe\n© Vio Process          * 6991/7021 (15 200D/40WK) € 5/121 5/8 SLOPED                                    \\      .      .      Cae\n= Mom\nen                                                                                                .      .      .      Lam\nL       meme                                                            —                                            oo                              on     py\n",
+      "ocr_text_snippet": "@ Preview Fle EM View Go Too Window Help @ecaon + »d | © ® [D- screenshor2020.07-2031 9261200 Qa a [= ® io poT—— >> TALE OF THE TAPE — MONDAY, JULY 20, 2026 << Py E— ¥ * MARKET STATE: * © Bitwise H...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.90(-0.22%/-3.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "=> INDEXES FADED THE GAP UP; PD TUES KEYS: SPX VS 8E/21E/50D QQQ VS 700/500 R2K VS 21E/50D HEL OR BOC *- >>> S&PS00 KEY LEVELS <<< EE .OP V 7621 (6/2 INTRADAY A-T-H) POEUN A- 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS - 7487 (16 21EMA) € 6/29 6/230 6/121 6/5¢ 4/81 ) TORT UME OM] *7466/7468(16 S0D/10WK) € 4/81 2/27% 1/211 1/204 OM - 2% AA EM. <>7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS AST BMN ME WOMP OMEN RAN C= CW -----= -»7443 TODAY: INDEXES FADED THE GAP UP; OO OM ME OE VIO PROCESS * 6991/7021 (15 200D/40WK) € 5/121 5/8 SLOPED \\ . . CAE MOM EN . . . LAM L MEME - OO ON PY",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: 5FYM,UPRO,BHYP,IBIT,ETHA,0DOG, TWLO,FTNT -_- A HD * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES . -- X",
+          "bottom_line": "=> INDEXES FADED THE GAP UP; PD TUES KEYS: SPX VS 8E/21E/50D QQQ VS 700/500 R2K VS 21E/50D HEL OR BOC *- >>> S&PS00 KEY LEVELS <<< EE .OP V 7621 (6/2 INTRADAY A-T-H) POEUN A- 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS - 7487 (16 21EMA) € 6/29 6/230 6/121 6/5¢ 4/81 ) TORT UME OM] *7466/7468(16 S0D/10WK) € 4/81 2/27% 1/211 1/204 OM - 2% AA EM. <>7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS AST BMN ME WOMP OMEN RAN C= CW -----= -»7443 TODAY: INDEXES FADED THE GAP UP; OO OM ME OE VIO PROCESS * 6991/7021 (15 200D/40WK) € 5/121 5/8 SLOPED \\ . . CAE MOM EN . . . LAM L MEME - OO ON PY",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01959305ff6d",
+      "prefilter_score": 7.15,
+      "prefilter_stats": {
+        "brightRatio": 0.5593055555555555,
+        "darkRatio": 0.22194444444444444,
+        "edgeRatio": 0.2090311638753445,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2096,
+        "horizontalEdgeRatio": 0.14811674086636986,
+        "meanLuma": 184.46909722222222,
+        "stdDev": 89.37694296577402,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3820,
+        "verticalEdgeRatio": 0.26994558688431913
+      },
+      "score": 110.55,
+      "score_breakdown": {
+        "chart_likeness": -4.0580395171418235,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.75,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 20,
+        "text_density": 91.86
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "ETHA",
+        "IBIT",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 588,
+      "timestamp_hms": "00:09:48",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260720_ps_4.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 102,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260720_20260720_l-7fr9yiyzg_813f6c6a_whiteboard\\ocr\\ocr_000103.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 405.92,
+      "observed_date": "20260720",
+      "ocr_confidence": 58,
+      "ocr_profile": "threshold",
+      "ocr_text": "€ Predew Flo EX View Go Tos Window Hep             ®»OR + DS\namcrouoy 22 TALE OF THE TAPE ~ MONDAY, JULY 20, 2026 << PySE—\n© * MARKET STATE:                                                                          _                                   *\n» CBOE{0Y 'STOINDEXESOT 64 RG8OT 64 NASIL USD TNX/TYXD vs 5d                                      145.98\noc osm aen\n* SENTIMENT: VIX 18.65(-0.64%) FRG              AAN44.9 405 22.2.4.3 [ITIRE] NAAIM 95.64 +1269                                    FT 11\n« sw oo FBULLCASE: INITIATE RALLY & TREND 21EMA                         Ca         —\nN             /- \"PBEAR CASE: SUSTAINED BREAK BELOW 21EMA €7/20 2° CLOSE BELOW                 Noaod       *\nNS * NEWS: IREN/HUT; KIMI3 AND MEMORY; ACHR AND ANDURIL                 ENYA V3\nVr\" + TODAY'S KEYS: SPX vs 8E/21E4,/50D4  QQQ vs 7004,/50D & R2K vs BEL /21Ed                  >         \"\n*DAYCT:D-1=>D-2 8e:-1y 2le:-1l                                                    wn\n* ACTION: © +0.43% {7462 97494 LPM SELLIN INTO CLOSE                  Al     vo         ay\n*SPXO/N 7443-75061 07489 030 7481-75131 L/H 7440-7513               wo JH     Jil\n*SPXATR:1.11%  SPX-0.19% 60/40-0.28% GRO -0.26% TURBO 40.24%       WA By oa     “\n~—____ *SECTORS: 1 BY% USD WGMI CRYPTO KWEB O&G J BPS ARKG ITB XBI NASA             Ce                on                    [\n           + * GRO HOLDINGS: SPYM,UPRO,DDOG,FINT,LLYXLY                                                    I      “\n   Te  * GRO RVAB/REBAR: 0.90(-0.22%/-3.62%) NO CHANGES\nls, pis ~* * TURBO HOLDINGS: SPYM,UPRO,BHYP,IBIT,ETHA,DDOG,TWLO,FTNT                                                       wo\nEA        * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%) NO CHANGES\n_ * BOTTOM LINE: PINDEXES FADED THE GAP UP;                                              -\nhdd       * TUES KEYS: SPX vs 8E/21E/50D  QQQ.vs 700/500  R2K vs 21E/50D\n>>> S&PS00 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H}\n_ 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS                          .\nYM 7487 (16 21EMA) € 6/29 1 6/234 6/121 6/54 4/81                     EE ve\nes *7466/7468(16 SOD/10WK) € 4/81 2/274 1/214 1/204                          or - mu aa\n“aio. P7457 FRI: BROAD SELLING CONTINUES; SPX QQQ BELOW 50DSMAs              By omaet dem Come meGmr poe rams\nom 7443 TODAY: INDEXES FADED THE GAP UP;                                                     me oem ee\nSvar  * 6991/7021 (15 200D/40WK) € 5/129 5/8 SLOPED                       .     aw\nFo,\nTm                                                                        |.      se am\n",
+      "ocr_text_snippet": "€ Predew Flo EX View Go Tos Window Hep ®»OR + DS amcrouoy 22 TALE OF THE TAPE ~ MONDAY, JULY 20, 2026 << PySE— © * MARKET STATE: _ * » CBOE{0Y 'STOINDEXESOT 64 RG8OT 64 NASIL USD TNX/TYXD vs 5d 145...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,DDOG,FINT,LLYXLY I \" TE * GRO RVAB/REBAR: 0.90(-0.22%/-3.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES LS, PIS ~* * TURBO HOLDINGS: SPYM,UPRO,BHYP,IBIT,ETHA,DDOG,TWLO,FTNT WO EA * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%) NO CHANGES",
+          "bottom_line": "PINDEXES FADED THE GAP UP; - HDD * TUES KEYS: SPX VS 8E/21E/50D QQQ.VS 700/500 R2K VS 21E/50D S&PS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS . YM 7487 (16 21EMA) € 6/29 1 6/234 6/121 6/54 4/81 EE VE ES *7466/7468(16 SOD/10WK) € 4/81 2/274 1/214 1/204 OR - MU AA AIO. P7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS BY OMAET DEM COME MEGMR POE RAMS OM 7443 TODAY: INDEXES FADED THE GAP UP; ME OEM EE SVAR * 6991/7021 (15 200D/40WK) € 5/129 5/8 SLOPED . AW FO, TM . SE AM",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 58,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "PINDEXES FADED THE GAP UP; - HDD * TUES KEYS: SPX VS 8E/21E/50D QQQ.VS 700/500 R2K VS 21E/50D S&PS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS . YM 7487 (16 21EMA) € 6/29 1 6/234 6/121 6/54 4/81 EE VE ES *7466/7468(16 SOD/10WK) € 4/81 2/274 1/214 1/204 OR - MU AA AIO. P7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS BY OMAET DEM COME MEGMR POE RAMS OM 7443 TODAY: INDEXES FADED THE GAP UP; ME OEM EE SVAR * 6991/7021 (15 200D/40WK) € 5/129 5/8 SLOPED . AW FO, TM . SE AM",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 58,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01859f01ff9b",
+      "prefilter_score": 11.39,
+      "prefilter_stats": {
+        "brightRatio": 0.77625,
+        "darkRatio": 0.022152777777777778,
+        "edgeRatio": 0.19606388241113704,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1445,
+        "horizontalEdgeRatio": 0.1021129248816338,
+        "meanLuma": 231.10520833333334,
+        "stdDev": 39.437141977046345,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4104,
+        "verticalEdgeRatio": 0.29001483994064026
+      },
+      "score": 88.76,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.9,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 85.86
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "ETHA",
+        "IBIT",
+        "MU",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 408,
+      "timestamp_hms": "00:06:48",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260720_ps_5.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 117,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260720_20260720_l-7fr9yiyzg_813f6c6a_whiteboard\\ocr\\ocr_000118.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 468,
+      "observed_date": "20260720",
+      "ocr_confidence": 54,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Proview Fie Edi View Go Tools Window Help                                                        -          . 2  i i\nargrodice 22 TALE OF THE TAPE — MONDAY, JULY 20, 2026 <<  PY EE—\n* MARKET STATE:                                                                                                                                     :\n» CBOE10Y. ®STOINDEXESOT 64 RG8OD 64 NASI USD TNX/TYXP vs Sd                                                 *45.98\nDox pans ran\n* SENTIMENT: VIX 18 65(-0.64%) F&G               AAN49 405 22.2.4.3 TIF MAAIM 95.64 412.69                                                     Wo\nLoon G2 sour ozone\nw ow a . PBULLCASE: INITIATE RALLY & TREND 21EMA\nNy          \"|; -DBEAR CASE: SUSTAINED BREAK BELOW 21EMA €7/20 2° CLOSE BELOW                7   AN              IIIS       *\nN_/ © * NEWS: IREN/HUT; KIMI3 AND MEMORY; ACHR AND ANDURIL                            :       AYA            .\n—       * TODAY'S KEYS: SPX vs 8EJ,/21EJ,/50Dd  QQQ vs 7004,/50D 4 R2K vs BEL /21EY                                     >\n* DAY CT: D-1=>D-2 8e:-1¢ 2le:-1l                                                        pe\n* ACTION: © +0.43% *4,7462 47494 LPM SELLIN INTO CLOSE                                1         wo               \\          w\n*SPXO/N 7443-7506 07489 030 7481-75131 L/H 7440-7513                    La)    J       or tit\n*SPXATR:1.11%  SPX-0.19% 60/40-0.28% GRO-0.26% TURBO +0.24%             b     hdd  Peiber ra          “\nT——__ *SECTORS: 1 BY% USD WGMI CRYPTO KWEB O&G BPS ARKG ITB XBI NASA             rT                se                    [\n           + * GRO HOLDINGS: SPYMUPRO,DDOG,FTNT,LLYKALY                                                    ce      “\nry   ~~ 4a\" GRO RVAB/REBAR: 0.90(-0.22%/-3.62%) NO CHANGES\nl,, al ” * TURBO HOLDINGS: SPYM,UPRO,BHYP,IBIT,ETHA,DDOG, TWLO,FTNT                                                                  w\nRa        * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%) NO CHANGES\n_  *BOTTOMLINE: “PINDEXES FADED THE GAP UP;                                              - 0\nwon             * TUES KEYS: SPX vs 8E/21E/50D QQQvs 700/50D  R2K vs 21E/50D\n>>> S&PS00 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H}\n7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS\nOM | +7487 (16 21EMA) € 6/29 1 6/23% 6/121 B/S 4/81                                   Lm\numa * 7866/7468(16 SOD/10WK) € 4/8 2/278 1/211 1/204                                                ory - 95 a@S\n“=e 7457 FRI: BROAD SELLING CONTINUES; SPX QQQ BELOW 50DSMAs                   ny Gait dem Gro mGew or mame\n“—oew—— =>7443 TODAY: INDEXES FADED THE GAP UP;                                                     Lm whew tee mw ow\nSvdeosroms  * 6991/7021 (15 200D/40WK} € 5/121 5/8 SLOPES                                       .         \\       .       .       Cae\n= Mom                                                                                                        .         N       .       .       Law\n= chars otk\nmcm                                                             —                                _—                          a\n",
+      "ocr_text_snippet": "@ Proview Fie Edi View Go Tools Window Help - . 2 i i argrodice 22 TALE OF THE TAPE — MONDAY, JULY 20, 2026 << PY EE— * MARKET STATE: : » CBOE10Y. ®STOINDEXESOT 64 RG8OD 64 NASI USD TNX/TYXP vs Sd ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYMUPRO,DDOG,FTNT,LLYKALY CE \" RY ~~ 4A\" GRO RVAB/REBAR: 0.90(-0.22%/-3.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES L,, AL \" * TURBO HOLDINGS: SPYM,UPRO,BHYP,IBIT,ETHA,DDOG, TWLO,FTNT W RA * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%) NO CHANGES",
+          "bottom_line": "\"PINDEXES FADED THE GAP UP; - 0 WON * TUES KEYS: SPX VS 8E/21E/50D QQQVS 700/50D R2K VS 21E/50D S&PS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS OM +7487 (16 21EMA) € 6/29 1 6/23% 6/121 B/S 4/81 LM UMA * 7866/7468(16 SOD/10WK) € 4/8 2/278 1/211 1/204 ORY - 95 A@S E 7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS NY GAIT DEM GRO MGEW OR MAME OEW-- =>7443 TODAY: INDEXES FADED THE GAP UP; LM WHEW TEE MW OW SVDEOSROMS * 6991/7021 (15 200D/40WK} € 5/121 5/8 SLOPES . \\ . . CAE MOM . N . . LAW CHARS OTK MCM - _- A",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "\"PINDEXES FADED THE GAP UP; - 0 WON * TUES KEYS: SPX VS 8E/21E/50D QQQVS 700/50D R2K VS 21E/50D S&PS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS OM +7487 (16 21EMA) € 6/29 1 6/23% 6/121 B/S 4/81 LM UMA * 7866/7468(16 SOD/10WK) € 4/8 2/278 1/211 1/204 ORY - 95 A@S E 7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS NY GAIT DEM GRO MGEW OR MAME OEW-- =>7443 TODAY: INDEXES FADED THE GAP UP; LM WHEW TEE MW OW SVDEOSROMS * 6991/7021 (15 200D/40WK} € 5/121 5/8 SLOPES . \\ . . CAE MOM . N . . LAW CHARS OTK MCM - _- A",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01859f01ff9b",
+      "prefilter_score": 11.06,
+      "prefilter_stats": {
+        "brightRatio": 0.7879861111111112,
+        "darkRatio": 0.02201388888888889,
+        "edgeRatio": 0.18507525969896121,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1238,
+        "horizontalEdgeRatio": 0.08748498339339976,
+        "meanLuma": 231.85875,
+        "stdDev": 39.071873495361174,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4000,
+        "verticalEdgeRatio": 0.28266553600452266
+      },
+      "score": 88.6,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.7,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 85.9
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "ETHA",
+        "IBIT",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 468,
+      "timestamp_hms": "00:07:48",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260720_ps_6.png"
+    }
+  ],
+  "frame_count": 230,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 183,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260720_ps_4.png",
+  "prefilter_best_score": 19.42,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 147,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260720_20260720_l-7fr9yiyzg_813f6c6a_whiteboard\\ocr\\ocr_000148.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 589.68,
+    "observed_date": "20260720",
+    "ocr_confidence": 55,
+    "ocr_profile": "threshold",
+    "ocr_text": "@ Preview Fle EM View Go Too Window Help           @ecaon + »d\n| © ® [D- screenshor2020.07-2031 9261200        Qa a              [=      ® io\npoT——  >> TALE OF THE TAPE — MONDAY, JULY 20, 2026 <<  Py E—\n¥ * MARKET STATE:                               *\n© Bitwise Hyperliquic * STO INDEXESO1 ~~ 64. RGBOT 64 NASI USD TNX/TYX1 vs Sd                       3832        ae oi 485\nPO          © sou * SENTIMENT: VIX 18.65(-0.64%) F&G               AA 4439 48.5 22.243 YTDR] NAAIM 95.64 412.69     2 mn ome\noe         ~ BULL CASE: INITIATE RALLY & TREND 21EMA                            \"\nYom te min ties cor <PBEAR CASE: SUSTAINED BREAK BELOW 21EMA €7/20 2° CLOSE BELOW              _           ome         °\nFo \"05155 i PEER          >                   ’                                                        VAN\nws ow wa wa msi * NEWS: IREN/HUT; KIMI3 AND MEMORY; ACHR AND ANDURIL                                                        ©\npio       om A Mo * TODAY'S KEYS: SPX vs 8EJ/21E4,/5000 QQQ vs 700/500 J R2K vs BEL /21Ed          ER —\nmz ow we wa a *DAYCT:D-1=>D-2 8e:-1 2le:-1\npio      Sa ACTION: 0 40.43% 7462 17494 JPM SELLIN INTO CLOSE                              AT)\nms ow wa woof *SPXO/N 7443-75067 07489 030 7481-75131 L/H 7440-7513                    i WARY Ra ge\n*SPXATR:1.11%  5PX-0.19% 60/40-0.28% GRO -0.26% TURBO +0.24%        i  In fl  of   “1,\n* SECTORS: 1 BY% USD WGMI CRYPTO KWEB O&G J BPS ARKG ITB X8I NASA                     rr       -\n* GRO HOLDINGS: SPYM,UPRO,DDOG, FNT,LLYX,LLY                                                                 =\n* GRO RVAB/REBAR: 0.90(-0.22%/-3.62%) NO CHANGES\n———— * TURBO HOLDINGS: 5FYM,UPRO,BHYP,iBIT,ETHA,0DOG, TWLO,FTNT                                             —_— a\nhd                * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%) NO CHANGES                                              .     --          x\n* BOTTOM LINE: => INDEXES FADED THE GAP UP;                                                                                         pd\n* TUES KEYS: SPX vs 8E/21E/50D  QQQ vs 700/500 R2K vs 21E/50D                                                               hel\nor boc         *- >>> S&PS00 KEY LEVELS <<<                                                                     EE     .op      v\n* 7621 (6/2 INTRADAY A-T-H)                                                                                                    Poeun a-\n7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS                                                             —\n+7487 (16 21EMA) € 6/29 6/230 6/121 6/5¢ 4/81                     )                    tort\nume om] *7466/7468(16 S0D/10WK) € 4/81 2/27% 1/211 1/204                                   om - 2% aA\n“em. <>7457 FRI: BROAD SELLING CONTINUES; SPX QQQ BELOW 50DSMAs                           ast bmn me wOmp omen ran\nC= cw —————= -»7443 TODAY: INDEXES FADED THE GAP UP;                                                     Oo om me oe\n© Vio Process          * 6991/7021 (15 200D/40WK) € 5/121 5/8 SLOPED                                    \\      .      .      Cae\n= Mom\nen                                                                                                .      .      .      Lam\nL       meme                                                            —                                            oo                              on     py\n",
+    "ocr_text_snippet": "@ Preview Fle EM View Go Too Window Help @ecaon + »d | © ® [D- screenshor2020.07-2031 9261200 Qa a [= ® io poT—— >> TALE OF THE TAPE — MONDAY, JULY 20, 2026 << Py E— ¥ * MARKET STATE: * © Bitwise H...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": "RVAB/REBAR: 0.90(-0.22%/-3.62%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "NO CHANGES",
+        "bottom_line": "=> INDEXES FADED THE GAP UP; PD TUES KEYS: SPX VS 8E/21E/50D QQQ VS 700/500 R2K VS 21E/50D HEL OR BOC *- >>> S&PS00 KEY LEVELS <<< EE .OP V 7621 (6/2 INTRADAY A-T-H) POEUN A- 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS - 7487 (16 21EMA) € 6/29 6/230 6/121 6/5¢ 4/81 ) TORT UME OM] *7466/7468(16 S0D/10WK) € 4/81 2/27% 1/211 1/204 OM - 2% AA EM. <>7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS AST BMN ME WOMP OMEN RAN C= CW -----= -»7443 TODAY: INDEXES FADED THE GAP UP; OO OM ME OE VIO PROCESS * 6991/7021 (15 200D/40WK) € 5/121 5/8 SLOPED \\ . . CAE MOM EN . . . LAM L MEME - OO ON PY",
+        "parse_status": "review",
+        "issue_codes": [
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 55,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": "HOLDINGS: 5FYM,UPRO,BHYP,IBIT,ETHA,0DOG, TWLO,FTNT -_- A HD * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "NO CHANGES . -- X",
+        "bottom_line": "=> INDEXES FADED THE GAP UP; PD TUES KEYS: SPX VS 8E/21E/50D QQQ VS 700/500 R2K VS 21E/50D HEL OR BOC *- >>> S&PS00 KEY LEVELS <<< EE .OP V 7621 (6/2 INTRADAY A-T-H) POEUN A- 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS - 7487 (16 21EMA) € 6/29 6/230 6/121 6/5¢ 4/81 ) TORT UME OM] *7466/7468(16 S0D/10WK) € 4/81 2/27% 1/211 1/204 OM - 2% AA EM. <>7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS AST BMN ME WOMP OMEN RAN C= CW -----= -»7443 TODAY: INDEXES FADED THE GAP UP; OO OM ME OE VIO PROCESS * 6991/7021 (15 200D/40WK) € 5/121 5/8 SLOPED \\ . . CAE MOM EN . . . LAM L MEME - OO ON PY",
+        "parse_status": "review",
+        "issue_codes": [
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 55,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "807f01959305ff6d",
+    "prefilter_score": 7.15,
+    "prefilter_stats": {
+      "brightRatio": 0.5593055555555555,
+      "darkRatio": 0.22194444444444444,
+      "edgeRatio": 0.2090311638753445,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 2096,
+      "horizontalEdgeRatio": 0.14811674086636986,
+      "meanLuma": 184.46909722222222,
+      "stdDev": 89.37694296577402,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 3820,
+      "verticalEdgeRatio": 0.26994558688431913
+    },
+    "score": 110.55,
+    "score_breakdown": {
+      "chart_likeness": -4.0580395171418235,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 2.75,
+      "pair_bonus": 4,
+      "per_row_issues": -4,
+      "per_row_metrics": 20,
+      "text_density": 91.86
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "ARKG",
+      "ETHA",
+      "IBIT",
+      "SPYM",
+      "UPRO"
+    ],
+    "timestamp": 588,
+    "timestamp_hms": "00:09:48"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 147,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260720_20260720_l-7fr9yiyzg_813f6c6a_whiteboard\\ocr\\ocr_000148.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260720",
+      "ocr_confidence": 55,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Preview Fle EM View Go Too Window Help           @ecaon + »d\n| © ® [D- screenshor2020.07-2031 9261200        Qa a              [=      ® io\npoT——  >> TALE OF THE TAPE — MONDAY, JULY 20, 2026 <<  Py E—\n¥ * MARKET STATE:                               *\n© Bitwise Hyperliquic * STO INDEXESO1 ~~ 64. RGBOT 64 NASI USD TNX/TYX1 vs Sd                       3832        ae oi 485\nPO          © sou * SENTIMENT: VIX 18.65(-0.64%) F&G               AA 4439 48.5 22.243 YTDR] NAAIM 95.64 412.69     2 mn ome\noe         ~ BULL CASE: INITIATE RALLY & TREND 21EMA                            \"\nYom te min ties cor <PBEAR CASE: SUSTAINED BREAK BELOW 21EMA €7/20 2° CLOSE BELOW              _           ome         °\nFo \"05155 i PEER          >                   ’                                                        VAN\nws ow wa wa msi * NEWS: IREN/HUT; KIMI3 AND MEMORY; ACHR AND ANDURIL                                                        ©\npio       om A Mo * TODAY'S KEYS: SPX vs 8EJ/21E4,/5000 QQQ vs 700/500 J R2K vs BEL /21Ed          ER —\nmz ow we wa a *DAYCT:D-1=>D-2 8e:-1 2le:-1\npio      Sa ACTION: 0 40.43% 7462 17494 JPM SELLIN INTO CLOSE                              AT)\nms ow wa woof *SPXO/N 7443-75067 07489 030 7481-75131 L/H 7440-7513                    i WARY Ra ge\n*SPXATR:1.11%  5PX-0.19% 60/40-0.28% GRO -0.26% TURBO +0.24%        i  In fl  of   “1,\n* SECTORS: 1 BY% USD WGMI CRYPTO KWEB O&G J BPS ARKG ITB X8I NASA                     rr       -\n* GRO HOLDINGS: SPYM,UPRO,DDOG, FNT,LLYX,LLY                                                                 =\n* GRO RVAB/REBAR: 0.90(-0.22%/-3.62%) NO CHANGES\n———— * TURBO HOLDINGS: 5FYM,UPRO,BHYP,iBIT,ETHA,0DOG, TWLO,FTNT                                             —_— a\nhd                * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%) NO CHANGES                                              .     --          x\n* BOTTOM LINE: => INDEXES FADED THE GAP UP;                                                                                         pd\n* TUES KEYS: SPX vs 8E/21E/50D  QQQ vs 700/500 R2K vs 21E/50D                                                               hel\nor boc         *- >>> S&PS00 KEY LEVELS <<<                                                                     EE     .op      v\n* 7621 (6/2 INTRADAY A-T-H)                                                                                                    Poeun a-\n7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS                                                             —\n+7487 (16 21EMA) € 6/29 6/230 6/121 6/5¢ 4/81                     )                    tort\nume om] *7466/7468(16 S0D/10WK) € 4/81 2/27% 1/211 1/204                                   om - 2% aA\n“em. <>7457 FRI: BROAD SELLING CONTINUES; SPX QQQ BELOW 50DSMAs                           ast bmn me wOmp omen ran\nC= cw —————= -»7443 TODAY: INDEXES FADED THE GAP UP;                                                     Oo om me oe\n© Vio Process          * 6991/7021 (15 200D/40WK) € 5/121 5/8 SLOPED                                    \\      .      .      Cae\n= Mom\nen                                                                                                .      .      .      Lam\nL       meme                                                            —                                            oo                              on     py\n",
+      "ocr_text_snippet": "@ Preview Fle EM View Go Too Window Help @ecaon + »d | © ® [D- screenshor2020.07-2031 9261200 Qa a [= ® io poT—— >> TALE OF THE TAPE — MONDAY, JULY 20, 2026 << Py E— ¥ * MARKET STATE: * © Bitwise H...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.90(-0.22%/-3.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "=> INDEXES FADED THE GAP UP; PD TUES KEYS: SPX VS 8E/21E/50D QQQ VS 700/500 R2K VS 21E/50D HEL OR BOC *- >>> S&PS00 KEY LEVELS <<< EE .OP V 7621 (6/2 INTRADAY A-T-H) POEUN A- 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS - 7487 (16 21EMA) € 6/29 6/230 6/121 6/5¢ 4/81 ) TORT UME OM] *7466/7468(16 S0D/10WK) € 4/81 2/27% 1/211 1/204 OM - 2% AA EM. <>7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS AST BMN ME WOMP OMEN RAN C= CW -----= -»7443 TODAY: INDEXES FADED THE GAP UP; OO OM ME OE VIO PROCESS * 6991/7021 (15 200D/40WK) € 5/121 5/8 SLOPED \\ . . CAE MOM EN . . . LAM L MEME - OO ON PY",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: 5FYM,UPRO,BHYP,IBIT,ETHA,0DOG, TWLO,FTNT -_- A HD * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES . -- X",
+          "bottom_line": "=> INDEXES FADED THE GAP UP; PD TUES KEYS: SPX VS 8E/21E/50D QQQ VS 700/500 R2K VS 21E/50D HEL OR BOC *- >>> S&PS00 KEY LEVELS <<< EE .OP V 7621 (6/2 INTRADAY A-T-H) POEUN A- 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS - 7487 (16 21EMA) € 6/29 6/230 6/121 6/5¢ 4/81 ) TORT UME OM] *7466/7468(16 S0D/10WK) € 4/81 2/27% 1/211 1/204 OM - 2% AA EM. <>7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS AST BMN ME WOMP OMEN RAN C= CW -----= -»7443 TODAY: INDEXES FADED THE GAP UP; OO OM ME OE VIO PROCESS * 6991/7021 (15 200D/40WK) € 5/121 5/8 SLOPED \\ . . CAE MOM EN . . . LAM L MEME - OO ON PY",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 55,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01959305ff6d",
+      "prefilter_score": 7.15,
+      "prefilter_stats": {
+        "brightRatio": 0.5593055555555555,
+        "darkRatio": 0.22194444444444444,
+        "edgeRatio": 0.2090311638753445,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2096,
+        "horizontalEdgeRatio": 0.14811674086636986,
+        "meanLuma": 184.46909722222222,
+        "stdDev": 89.37694296577402,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3820,
+        "verticalEdgeRatio": 0.26994558688431913
+      },
+      "score": 110.55,
+      "score_breakdown": {
+        "chart_likeness": -4.0580395171418235,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.75,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 20,
+        "text_density": 91.86
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "ETHA",
+        "IBIT",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 588,
+      "timestamp_hms": "00:09:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 144,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260720_20260720_l-7fr9yiyzg_813f6c6a_whiteboard\\ocr\\ocr_000145.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260720",
+      "ocr_confidence": 56,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Predew Flo EM Vier Go Tools Window Hep           [CER NIN)\nEE ® © (D- Screenshor2026-07-20 a1. 26.13PM        a qa              [=      ® io     a\npoT——  >> TALE OF THE TAPE — MONDAY, JULY 20, 2026 <<  Pye E—\n¥ * MARKET STATE:                                                                                   i                               °\n» Bitwise Hyperliquit * STO INDEXESDT 64 RGBOD  6J NASI USD TNX/TYXA vs Sd                        $35.32             ¥34.85\nFre © CMA                                                                                                                                     cron rim         one eprom esis\nPOS          © mew * SENTIMENT: VIX 18.65(-0.64%) F&G               An ae9 sa 22243 FEDEI NAAM 95.64 41263           arvoon           \"22065 31 1\noe                ~ BULL CASE: INITIATE RALLY & TREND 21EMA                                                EY compaEToTIoR tants opmET ten\nwa ie pies sine cr <PBEAR CASE: SUSTAINED BREAK BELOW 21EMA €7/20 2° CLOSE BELOW                          Roma?         ©\natm ecm ncrs ers       g                   3                                                —      VAS N\nwy ow wa wa msi * NEWS: IREN/HUT; KIMI3 AND MEMORY; ACHR AND ANDURIL                                                        »\npio       oa im * TODAY'S KEYS: SPX vs BEG /21E4,/5000 QQQ vs 7004./500 § R2K vs BEL /21Ed          I\nwz      om ma wa omg *DAYCT:D-1=>D-2 8e:-1y 2le:-1\npio      Sa ACTION: 0 +0.43% J,7462 17494 JPM SELLIN INTO CLOSE                              AT)\nws ow wa woof *SPXO/N 7443-75061 07489 030 7481-75131 L/H 7440-7513                    W WARY RN ge\n© *SPXATR:1.11%  SPX-0.19% 60/40-0.28% GRO -0.26% TURBO 10.24%           i  I 3   fi    “1,\n* SECTORS: 1 BY% USD WGMI CRYPTO KWEB O&G J BPS ARKG ITB X8I NASA                     rr       -\n* GRO HOLDINGS: SPYM,UPRO,DDOG, FINT, LLYX,LLY                                                                 =\n* GRO RVAB/REBAR: 0.90{-0.22%/-3.62%) NO CHANGES\n———————————— * TURBO HOLDINGS: SPYM,UPRO,BHYP,IBIT,ETHA,DDOG, TWLO,FTNT                                             —_— ur\nhia                    * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%) NO CHANGES                                                           .       -             nex\n* BOTTOM LINE: <P INDEXES FADED THE GAP UP;                                                                                       om\n* TUES KEYS: SPX vs 8E/21E/50D  QQQus 700/50D  R2K vs 21€/50D                                    hel\nor me         *- >>> S&PS00 KEY LEVELS <<<                                                                        EE      *oy      ”\n* 7621 (6/2 INTRADAY A-T-H)                                                                                                    PreaSuma”\n27534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS                                                             ——\n*7487 (16 21EMA) € 5/29 1 6/234 6/121 6/54 4/8                         JR\nume om] *7466/7468(16 S0D/10WK) € 4/81 2/270 1/211 1/204                                   ory - 2 Ew aA\n“eo. <>7457 FRI: BROAD SELLING CONTINUES; SPX QQQ BELOW 50DSMAs                           ast bmm Ge wGmp omen ran\n—comw——————— <>7443 TODAY: INDEXES FADED THE GAP UP;                                                     Oo om mw oe\n© Vio proses          * 6991/7021 (15 200D/40WK) € 5/121 5/8 SLOPED                                     \\      .      .      Cae\n= Manu                                                                                                                                 .        .        .        Cam\n= Chas ote                                                      _                                    —                       -\n",
+      "ocr_text_snippet": "@ Predew Flo EM Vier Go Tools Window Hep [CER NIN) EE ® © (D- Screenshor2026-07-20 a1. 26.13PM a qa [= ® io a poT—— >> TALE OF THE TAPE — MONDAY, JULY 20, 2026 << Pye E— ¥ * MARKET STATE: i ° » Bit...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "RVAB/REBAR: 0.90{-0.22%/-3.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES",
+          "bottom_line": "<P INDEXES FADED THE GAP UP; OM TUES KEYS: SPX VS 8E/21E/50D QQQUS 700/50D R2K VS 21€/50D HEL OR ME *- >>> S&PS00 KEY LEVELS <<< EE *OY \" 7621 (6/2 INTRADAY A-T-H) PREASUMA\" 27534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS -- 7487 (16 21EMA) € 5/29 1 6/234 6/121 6/54 4/8 JR UME OM] *7466/7468(16 S0D/10WK) € 4/81 2/270 1/211 1/204 ORY - 2 EW AA EO. <>7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS AST BMM GE WGMP OMEN RAN COMW------- <>7443 TODAY: INDEXES FADED THE GAP UP; OO OM MW OE VIO PROSES * 6991/7021 (15 200D/40WK) € 5/121 5/8 SLOPED \\ . . CAE MANU . . . CAM CHAS OTE _ - -",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,BHYP,IBIT,ETHA,DDOG, TWLO,FTNT -_- UR HIA * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES . - NEX",
+          "bottom_line": "<P INDEXES FADED THE GAP UP; OM TUES KEYS: SPX VS 8E/21E/50D QQQUS 700/50D R2K VS 21€/50D HEL OR ME *- >>> S&PS00 KEY LEVELS <<< EE *OY \" 7621 (6/2 INTRADAY A-T-H) PREASUMA\" 27534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS -- 7487 (16 21EMA) € 5/29 1 6/234 6/121 6/54 4/8 JR UME OM] *7466/7468(16 S0D/10WK) € 4/81 2/270 1/211 1/204 ORY - 2 EW AA EO. <>7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS AST BMM GE WGMP OMEN RAN COMW------- <>7443 TODAY: INDEXES FADED THE GAP UP; OO OM MW OE VIO PROSES * 6991/7021 (15 200D/40WK) € 5/121 5/8 SLOPED \\ . . CAE MANU . . . CAM CHAS OTE _ - -",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01959305ff6d",
+      "prefilter_score": 11.84,
+      "prefilter_stats": {
+        "brightRatio": 0.7593055555555556,
+        "darkRatio": 0.022222222222222223,
+        "edgeRatio": 0.21139848773938238,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1657,
+        "horizontalEdgeRatio": 0.11709419828987351,
+        "meanLuma": 229.92347222222222,
+        "stdDev": 39.870014201002235,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4326,
+        "verticalEdgeRatio": 0.3057027771888912
+      },
+      "score": 110.18,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.8,
+        "pair_bonus": 4,
+        "per_row_issues": -4,
+        "per_row_metrics": 20,
+        "text_density": 93.38
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "ETHA",
+        "IBIT",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 576,
+      "timestamp_hms": "00:09:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 102,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260720_20260720_l-7fr9yiyzg_813f6c6a_whiteboard\\ocr\\ocr_000103.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260720",
+      "ocr_confidence": 58,
+      "ocr_profile": "threshold",
+      "ocr_text": "€ Predew Flo EX View Go Tos Window Hep             ®»OR + DS\namcrouoy 22 TALE OF THE TAPE ~ MONDAY, JULY 20, 2026 << PySE—\n© * MARKET STATE:                                                                          _                                   *\n» CBOE{0Y 'STOINDEXESOT 64 RG8OT 64 NASIL USD TNX/TYXD vs 5d                                      145.98\noc osm aen\n* SENTIMENT: VIX 18.65(-0.64%) FRG              AAN44.9 405 22.2.4.3 [ITIRE] NAAIM 95.64 +1269                                    FT 11\n« sw oo FBULLCASE: INITIATE RALLY & TREND 21EMA                         Ca         —\nN             /- \"PBEAR CASE: SUSTAINED BREAK BELOW 21EMA €7/20 2° CLOSE BELOW                 Noaod       *\nNS * NEWS: IREN/HUT; KIMI3 AND MEMORY; ACHR AND ANDURIL                 ENYA V3\nVr\" + TODAY'S KEYS: SPX vs 8E/21E4,/50D4  QQQ vs 7004,/50D & R2K vs BEL /21Ed                  >         \"\n*DAYCT:D-1=>D-2 8e:-1y 2le:-1l                                                    wn\n* ACTION: © +0.43% {7462 97494 LPM SELLIN INTO CLOSE                  Al     vo         ay\n*SPXO/N 7443-75061 07489 030 7481-75131 L/H 7440-7513               wo JH     Jil\n*SPXATR:1.11%  SPX-0.19% 60/40-0.28% GRO -0.26% TURBO 40.24%       WA By oa     “\n~—____ *SECTORS: 1 BY% USD WGMI CRYPTO KWEB O&G J BPS ARKG ITB XBI NASA             Ce                on                    [\n           + * GRO HOLDINGS: SPYM,UPRO,DDOG,FINT,LLYXLY                                                    I      “\n   Te  * GRO RVAB/REBAR: 0.90(-0.22%/-3.62%) NO CHANGES\nls, pis ~* * TURBO HOLDINGS: SPYM,UPRO,BHYP,IBIT,ETHA,DDOG,TWLO,FTNT                                                       wo\nEA        * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%) NO CHANGES\n_ * BOTTOM LINE: PINDEXES FADED THE GAP UP;                                              -\nhdd       * TUES KEYS: SPX vs 8E/21E/50D  QQQ.vs 700/500  R2K vs 21E/50D\n>>> S&PS00 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H}\n_ 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS                          .\nYM 7487 (16 21EMA) € 6/29 1 6/234 6/121 6/54 4/81                     EE ve\nes *7466/7468(16 SOD/10WK) € 4/81 2/274 1/214 1/204                          or - mu aa\n“aio. P7457 FRI: BROAD SELLING CONTINUES; SPX QQQ BELOW 50DSMAs              By omaet dem Come meGmr poe rams\nom 7443 TODAY: INDEXES FADED THE GAP UP;                                                     me oem ee\nSvar  * 6991/7021 (15 200D/40WK) € 5/129 5/8 SLOPED                       .     aw\nFo,\nTm                                                                        |.      se am\n",
+      "ocr_text_snippet": "€ Predew Flo EX View Go Tos Window Hep ®»OR + DS amcrouoy 22 TALE OF THE TAPE ~ MONDAY, JULY 20, 2026 << PySE— © * MARKET STATE: _ * » CBOE{0Y 'STOINDEXESOT 64 RG8OT 64 NASIL USD TNX/TYXD vs 5d 145...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,DDOG,FINT,LLYXLY I \" TE * GRO RVAB/REBAR: 0.90(-0.22%/-3.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES LS, PIS ~* * TURBO HOLDINGS: SPYM,UPRO,BHYP,IBIT,ETHA,DDOG,TWLO,FTNT WO EA * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%) NO CHANGES",
+          "bottom_line": "PINDEXES FADED THE GAP UP; - HDD * TUES KEYS: SPX VS 8E/21E/50D QQQ.VS 700/500 R2K VS 21E/50D S&PS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS . YM 7487 (16 21EMA) € 6/29 1 6/234 6/121 6/54 4/81 EE VE ES *7466/7468(16 SOD/10WK) € 4/81 2/274 1/214 1/204 OR - MU AA AIO. P7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS BY OMAET DEM COME MEGMR POE RAMS OM 7443 TODAY: INDEXES FADED THE GAP UP; ME OEM EE SVAR * 6991/7021 (15 200D/40WK) € 5/129 5/8 SLOPED . AW FO, TM . SE AM",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 58,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "PINDEXES FADED THE GAP UP; - HDD * TUES KEYS: SPX VS 8E/21E/50D QQQ.VS 700/500 R2K VS 21E/50D S&PS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS . YM 7487 (16 21EMA) € 6/29 1 6/234 6/121 6/54 4/81 EE VE ES *7466/7468(16 SOD/10WK) € 4/81 2/274 1/214 1/204 OR - MU AA AIO. P7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS BY OMAET DEM COME MEGMR POE RAMS OM 7443 TODAY: INDEXES FADED THE GAP UP; ME OEM EE SVAR * 6991/7021 (15 200D/40WK) € 5/129 5/8 SLOPED . AW FO, TM . SE AM",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 58,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01859f01ff9b",
+      "prefilter_score": 11.39,
+      "prefilter_stats": {
+        "brightRatio": 0.77625,
+        "darkRatio": 0.022152777777777778,
+        "edgeRatio": 0.19606388241113704,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1445,
+        "horizontalEdgeRatio": 0.1021129248816338,
+        "meanLuma": 231.10520833333334,
+        "stdDev": 39.437141977046345,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4104,
+        "verticalEdgeRatio": 0.29001483994064026
+      },
+      "score": 88.76,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.9,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 85.86
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "ETHA",
+        "IBIT",
+        "MU",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 408,
+      "timestamp_hms": "00:06:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 117,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260720_20260720_l-7fr9yiyzg_813f6c6a_whiteboard\\ocr\\ocr_000118.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260720",
+      "ocr_confidence": 54,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Proview Fie Edi View Go Tools Window Help                                                        -          . 2  i i\nargrodice 22 TALE OF THE TAPE — MONDAY, JULY 20, 2026 <<  PY EE—\n* MARKET STATE:                                                                                                                                     :\n» CBOE10Y. ®STOINDEXESOT 64 RG8OD 64 NASI USD TNX/TYXP vs Sd                                                 *45.98\nDox pans ran\n* SENTIMENT: VIX 18 65(-0.64%) F&G               AAN49 405 22.2.4.3 TIF MAAIM 95.64 412.69                                                     Wo\nLoon G2 sour ozone\nw ow a . PBULLCASE: INITIATE RALLY & TREND 21EMA\nNy          \"|; -DBEAR CASE: SUSTAINED BREAK BELOW 21EMA €7/20 2° CLOSE BELOW                7   AN              IIIS       *\nN_/ © * NEWS: IREN/HUT; KIMI3 AND MEMORY; ACHR AND ANDURIL                            :       AYA            .\n—       * TODAY'S KEYS: SPX vs 8EJ,/21EJ,/50Dd  QQQ vs 7004,/50D 4 R2K vs BEL /21EY                                     >\n* DAY CT: D-1=>D-2 8e:-1¢ 2le:-1l                                                        pe\n* ACTION: © +0.43% *4,7462 47494 LPM SELLIN INTO CLOSE                                1         wo               \\          w\n*SPXO/N 7443-7506 07489 030 7481-75131 L/H 7440-7513                    La)    J       or tit\n*SPXATR:1.11%  SPX-0.19% 60/40-0.28% GRO-0.26% TURBO +0.24%             b     hdd  Peiber ra          “\nT——__ *SECTORS: 1 BY% USD WGMI CRYPTO KWEB O&G BPS ARKG ITB XBI NASA             rT                se                    [\n           + * GRO HOLDINGS: SPYMUPRO,DDOG,FTNT,LLYKALY                                                    ce      “\nry   ~~ 4a\" GRO RVAB/REBAR: 0.90(-0.22%/-3.62%) NO CHANGES\nl,, al ” * TURBO HOLDINGS: SPYM,UPRO,BHYP,IBIT,ETHA,DDOG, TWLO,FTNT                                                                  w\nRa        * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%) NO CHANGES\n_  *BOTTOMLINE: “PINDEXES FADED THE GAP UP;                                              - 0\nwon             * TUES KEYS: SPX vs 8E/21E/50D QQQvs 700/50D  R2K vs 21E/50D\n>>> S&PS00 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H}\n7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS\nOM | +7487 (16 21EMA) € 6/29 1 6/23% 6/121 B/S 4/81                                   Lm\numa * 7866/7468(16 SOD/10WK) € 4/8 2/278 1/211 1/204                                                ory - 95 a@S\n“=e 7457 FRI: BROAD SELLING CONTINUES; SPX QQQ BELOW 50DSMAs                   ny Gait dem Gro mGew or mame\n“—oew—— =>7443 TODAY: INDEXES FADED THE GAP UP;                                                     Lm whew tee mw ow\nSvdeosroms  * 6991/7021 (15 200D/40WK} € 5/121 5/8 SLOPES                                       .         \\       .       .       Cae\n= Mom                                                                                                        .         N       .       .       Law\n= chars otk\nmcm                                                             —                                _—                          a\n",
+      "ocr_text_snippet": "@ Proview Fie Edi View Go Tools Window Help - . 2 i i argrodice 22 TALE OF THE TAPE — MONDAY, JULY 20, 2026 << PY EE— * MARKET STATE: : » CBOE10Y. ®STOINDEXESOT 64 RG8OD 64 NASI USD TNX/TYXP vs Sd ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYMUPRO,DDOG,FTNT,LLYKALY CE \" RY ~~ 4A\" GRO RVAB/REBAR: 0.90(-0.22%/-3.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES L,, AL \" * TURBO HOLDINGS: SPYM,UPRO,BHYP,IBIT,ETHA,DDOG, TWLO,FTNT W RA * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%) NO CHANGES",
+          "bottom_line": "\"PINDEXES FADED THE GAP UP; - 0 WON * TUES KEYS: SPX VS 8E/21E/50D QQQVS 700/50D R2K VS 21E/50D S&PS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS OM +7487 (16 21EMA) € 6/29 1 6/23% 6/121 B/S 4/81 LM UMA * 7866/7468(16 SOD/10WK) € 4/8 2/278 1/211 1/204 ORY - 95 A@S E 7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS NY GAIT DEM GRO MGEW OR MAME OEW-- =>7443 TODAY: INDEXES FADED THE GAP UP; LM WHEW TEE MW OW SVDEOSROMS * 6991/7021 (15 200D/40WK} € 5/121 5/8 SLOPES . \\ . . CAE MOM . N . . LAW CHARS OTK MCM - _- A",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "\"PINDEXES FADED THE GAP UP; - 0 WON * TUES KEYS: SPX VS 8E/21E/50D QQQVS 700/50D R2K VS 21E/50D S&PS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS OM +7487 (16 21EMA) € 6/29 1 6/23% 6/121 B/S 4/81 LM UMA * 7866/7468(16 SOD/10WK) € 4/8 2/278 1/211 1/204 ORY - 95 A@S E 7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS NY GAIT DEM GRO MGEW OR MAME OEW-- =>7443 TODAY: INDEXES FADED THE GAP UP; LM WHEW TEE MW OW SVDEOSROMS * 6991/7021 (15 200D/40WK} € 5/121 5/8 SLOPES . \\ . . CAE MOM . N . . LAW CHARS OTK MCM - _- A",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01859f01ff9b",
+      "prefilter_score": 11.06,
+      "prefilter_stats": {
+        "brightRatio": 0.7879861111111112,
+        "darkRatio": 0.02201388888888889,
+        "edgeRatio": 0.18507525969896121,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1238,
+        "horizontalEdgeRatio": 0.08748498339339976,
+        "meanLuma": 231.85875,
+        "stdDev": 39.071873495361174,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4000,
+        "verticalEdgeRatio": 0.28266553600452266
+      },
+      "score": 88.6,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.7,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 85.9
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "ETHA",
+        "IBIT",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 468,
+      "timestamp_hms": "00:07:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 123,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260720_20260720_l-7fr9yiyzg_813f6c6a_whiteboard\\ocr\\ocr_000124.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260720",
+      "ocr_confidence": 56,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Proview Fie Edi View Go Tools Window Help                                             -        . 2 i i\nmerous 22 TALE OF THE TAPE — MONDAY, JULY 20, 2026 << PySE—\n* MARKET STATE:                                                                                                                                     *\n= CBOE10Y *STOINDEXESOT 64 RGBOD 61 NASIL USD TNX/TYX vs 5d                                            $45.98\nDox pans ran\n* SENTIMENT: VIX 18 65(-0.64%) F&G              AAN49 405 22.2.4.3 TIF MAAIM 95.64 412.69                                    FT 1\nw sw 4 , PBULLCASE: INITIATE RALLY & TREND 21EMA\nNy         \"|; -DBEAR CASE: SUSTAINED BREAK BELOW 21EMA €7/20 2° CLOSE BELOW               7   AN              IIIS       *\nN_/ * * NEWS: IREN/HUT; KIMI3 AND MEMORY; ACHR AND ANDURIL                           :       AYA           .\nVr\" * TODAY'S KEYS: SPX vs 8EJ,/21E4/50D¢, QQQvs 7004,/50D & R2K vs BEY /21E4                         >\n*DAYCT:D-1=>D-2 8e:-1y 2le:-1l                                                    wn\n* ACTION: 0 +0.43% {7462 17494 {PM SELLIN INTO CLOSE                        1       wo           .       w\n*SPXO/N 7443-7506\" 07489 030 7481-75134 L/H 7440-7513                wo J     or lt\n“SPXATR: 111%  SPX-0.19% 60/40-0.28% GRO -0.26% TURBO +0.24%          Wo Bg ra       .\n~———____ *SECTORS: 1 BY% USD WGMI CRYPTO KWEB O&G J BPS ARKG ITB XBI NASA             Lr                oo                    [\n           + * GRO HOLDINGS: SPYMUPRO,DDOG,FTNT,LLYKALY                                                    ce      “\nry   ~~ 4a\" GRO RVAB/REBAR: 0.90(-0.22%/-3.62%) NO CHANGES\nl,, al ” * TURBO HOLDINGS: SPYM,UPRO,BHYP,IBIT,ETHA,DDOG, TWLO,FTNT                                                         w\nRa        * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%) NO CHANGES\n__ *BOTTOMLINE: “PINDEXES FADED THE GAP UP;                                              0000\nhed        * TUES KEYS: SPX vs 8E/21€/S0D QQQvs 700/500  R2K vs 21E/50D\n>>> S&PS00 KEY LEVELS <<<\n* 7621 (6/2 INTRADAY A-T-H}\n7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS\nOM | +7487 (16 21EMA) € 6/29 1 6/23% 6/121 B/S 4/81                            Lm\nume * 7466/7468(16 SOD/10WK) € 4/81 2/273 1/211 1/208                          Or - QE EA\n“ooo 7457 FRI: BROAD SELLING CONTINUES; SPX QQQ BELOW 50DSMAs              wy fmhet em Coe Gm wore ram\n“—oew—— =>7443 TODAY: INDEXES FADED THE GAP UP;                                                     Lm whew tee mw ow\nSvesommeen * 6991/7021 (15 200D/40WK} € 5/121 5/8 SLOPED                       .     \\    .    .    Cae\n= Mom                                                                                   .       .     .     .     Law\n= chars otk\n= crm                                                 —                         —_—                     po\n",
+      "ocr_text_snippet": "@ Proview Fie Edi View Go Tools Window Help - . 2 i i merous 22 TALE OF THE TAPE — MONDAY, JULY 20, 2026 << PySE— * MARKET STATE: * = CBOE10Y *STOINDEXESOT 64 RGBOD 61 NASIL USD TNX/TYX vs 5d $45.9...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYMUPRO,DDOG,FTNT,LLYKALY CE \" RY ~~ 4A\" GRO RVAB/REBAR: 0.90(-0.22%/-3.62%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES L,, AL \" * TURBO HOLDINGS: SPYM,UPRO,BHYP,IBIT,ETHA,DDOG, TWLO,FTNT W RA * TURBO RVAB/REBAR: 1.26 (-2.17%/-4.28%) NO CHANGES",
+          "bottom_line": "\"PINDEXES FADED THE GAP UP; 0000 HED * TUES KEYS: SPX VS 8E/21€/S0D QQQVS 700/500 R2K VS 21E/50D S&PS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS OM +7487 (16 21EMA) € 6/29 1 6/23% 6/121 B/S 4/81 LM UME * 7466/7468(16 SOD/10WK) € 4/81 2/273 1/211 1/208 OR - QE EA OOO 7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS WY FMHET EM COE GM WORE RAM OEW-- =>7443 TODAY: INDEXES FADED THE GAP UP; LM WHEW TEE MW OW SVESOMMEEN * 6991/7021 (15 200D/40WK} € 5/121 5/8 SLOPED . \\ . . CAE MOM . . . . LAW CHARS OTK CRM - -_- PO",
+          "parse_status": "review",
+          "issue_codes": [
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": "\"PINDEXES FADED THE GAP UP; 0000 HED * TUES KEYS: SPX VS 8E/21€/S0D QQQVS 700/500 R2K VS 21E/50D S&PS00 KEY LEVELS <<< 7621 (6/2 INTRADAY A-T-H} 7534 THURS: ROTATION, CHOP, & MORE CARNAGE IN TECH/AI STOCKS OM +7487 (16 21EMA) € 6/29 1 6/23% 6/121 B/S 4/81 LM UME * 7466/7468(16 SOD/10WK) € 4/81 2/273 1/211 1/208 OR - QE EA OOO 7457 FRI: BROAD SELL ING CONTINUES; SPX QQQ BELOW 50DSMAS WY FMHET EM COE GM WORE RAM OEW-- =>7443 TODAY: INDEXES FADED THE GAP UP; LM WHEW TEE MW OW SVESOMMEEN * 6991/7021 (15 200D/40WK} € 5/121 5/8 SLOPED . \\ . . CAE MOM . . . . LAW CHARS OTK CRM - -_- PO",
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 56,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01859f01ff9b",
+      "prefilter_score": 11.06,
+      "prefilter_stats": {
+        "brightRatio": 0.7878472222222223,
+        "darkRatio": 0.02201388888888889,
+        "edgeRatio": 0.1849692601229595,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1238,
+        "horizontalEdgeRatio": 0.08748498339339976,
+        "meanLuma": 231.86,
+        "stdDev": 39.07499356650255,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3997,
+        "verticalEdgeRatio": 0.2824535368525193
+      },
+      "score": 86.86,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.8,
+        "pair_bonus": 0,
+        "per_row_issues": -6,
+        "per_row_metrics": 12,
+        "text_density": 84.06
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARKG",
+        "ETHA",
+        "IBIT",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 492,
+      "timestamp_hms": "00:08:12"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260720_20260720_l-7fr9yiyzg_813f6c6a_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 7.43,
+      "prefilter_stats": {
+        "brightRatio": 0.5659722222222222,
+        "darkRatio": 0.221875,
+        "edgeRatio": 0.20083386333121334,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2023,
+        "horizontalEdgeRatio": 0.14295809483428734,
+        "meanLuma": 184.99020833333333,
+        "stdDev": 89.42922466155967,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3661,
+        "verticalEdgeRatio": 0.25870963182813933
+      },
+      "score": -15.93,
+      "score_breakdown": {
+        "chart_likeness": -3.9310070177545935,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 162,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260720_20260720_l-7fr9yiyzg_813f6c6a_whiteboard\\ocr\\ocr_000163.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 648,
+      "observed_date": null,
+      "ocr_confidence": 30,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Cwvme Fa Edt ew Hunoy Bosowis Profi Tb Window We         a\nMarceTsen o      Xr wen oy mam 0 Gam DBL ©\n» Block Inc.                                                                               79.14         $79.29\neae CAC rat i 145           J ——      odme AMIN Homme Ata Meee Wise     [Pht      x02 ctoen oat\noa     © sssiore     + ows cars ars                EoiDwOs GURU 500mADSL IOS 1 OwARE 300      arin     [atte\njoven                        o    OMma Ch Cusine AM bmp ders O81APMETGIZIN Len Und God ET ROU\nGomis               EY           ~~       ~~              p    -     w\nYow EPS EPS Sums ComposeRawy #1     2       .             7          a                PN         SZ\nOw) %Ch ACh Epsmm | M4   Aa      N         /   Nu   7             INC ff\nD0 om ity ie homey   “              NS        aaa              ZS              »\nTM Seam\nTo ve mente\nTm vm an eeenseed b\nTr am wn an oomTmee 7\nTo aw mr age Ame\nMe 30 cS Ts EPS Grown Rel AER                                                       ha}  af   »\nToe dw SEDER A         Cn                      uw    IAA dt\nna                 Can    5                  ro            CW We Bigg    -\nhy     Lr    ETT       te,                  a     Z\nK                                         -\nF Ly fe Dona   A    LL     SE TL                   ©\nas                   eg         oa\nHe\n18D Vole:                                                                                    how\np.                                         pen\nSE Se Se SS SS RS EE RR A ECE.\noa        -      on        -       tN      i        aor       ™       un       FH\nGu ErosgOscamse 218                 0 End suc 208                 Per                [ros\n.     ou     -     on     o-     ass     \"     os     wn     on     “     on     wn      © ammo\na     ems     “     aus     ps    som     “     ams    a    asm     “     wows     on      os summnnom\nSs                        Ton                =     NN        Jr.\ndew ten Ren 2021 21ems Cups oman orzo                                      om - 2 waa\n= on             ow       .            Cg Fm, me      gine wong      base; Owhgs dew Camo vaGomp\nfen ©       id     Symes tame.       nim ¢   oe   al I I EE EE I Tad\n=                   FB 1 NON mxmeswmenc     vw we om we   34 Busnes. Sears    ame   EB)   ® ww |}\np—\nBr wom omen     sw amu am we 0 sma. cms umes wer ww an\n221m\nRa eer ceva     J vm am sma 20 DRG GwmA. ude maste se nam\n= tumon2           |\n",
+      "ocr_text_snippet": "@ Cwvme Fa Edt ew Hunoy Bosowis Profi Tb Window We a MarceTsen o Xr wen oy mam 0 Gam DBL © » Block Inc. 79.14 $79.29 eae CAC rat i 145 J —— odme AMIN Homme Ata Meee Wise [Pht x02 ctoen oat oa © sss...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 30,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 30,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80fd9a15ee07d607",
+      "prefilter_score": 18.31,
+      "prefilter_stats": {
+        "brightRatio": 0.7510416666666667,
+        "darkRatio": 0.056875,
+        "edgeRatio": 0.16433467599462936,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1616,
+        "horizontalEdgeRatio": 0.11419687654582715,
+        "meanLuma": 223.0834027777778,
+        "stdDev": 53.48291577773008,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3035,
+        "verticalEdgeRatio": 0.21447247544343157
+      },
+      "score": -24.71,
+      "score_breakdown": {
+        "chart_likeness": -4.214999630158578,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.5,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 648,
+      "timestamp_hms": "00:10:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 63,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260720_20260720_l-7fr9yiyzg_813f6c6a_whiteboard\\ocr\\ocr_000064.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 252,
+      "observed_date": null,
+      "ocr_confidence": 38,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Cuvee Fla Edt View Hiory Bockmaris Profi Tab Window Help        a\nMarkeTs ceo QB)      ETE Gam DEE ©\n3,744.58\nP S&P MidCap 400                                                                                            WO (53059) 251%\n© amore        -                                                                                                                 wo 10200 774%\nLosin 04200 ET crZ0TGRS\n           VAY           /         N                    -     N\nYa,        >     }         NA           nV                 V4                er       w\nrr\nAyo brie,\nsow           FUept RY pay\nnam             |        Ie at\nPN                   +]    Tho, FP hill JR\nEL         11 Helly                 I     4       pol J                          [\ni Te\n.       tit! TP\nIT a      Pravis           tre it HT                                      wo\nwma ene eT\nTh EE   =                            pA                                  -\nTare                                           Cease\n#Dvaume                            IN                                         T             ™\n|               |        |               |                |        |    |     |   &\nor   El   os 7 Wl I.    \"*   *    ”   Ed    ”   ES   10   ES   EL]   £3   3   Kd   os   kd\noe          wn         Fon        a     [J         oy         r=         ™\new oe    fern Malin List 3Sitems C ussreo 50077 rsonns                                    om - 2B mA\nEE    To     @ tow    Boa oma remy    oo Per ame og, Now wogex og, my Wowest Mew Gow MGB yong se\n© vena ress        .-     Pa om eseoooTamss   vo ee      2 or ee. we. ames              |\n2 Mont                Pa om comememaman    0 sem    Com ee    .    .     o    .    .    . am\n= Chats of mores        |    [ER Sa ——\"     on amas    Sam ae    .    .     °    .    .    Law\nLL  ——————————  ———————\n",
+      "ocr_text_snippet": "@ Cuvee Fla Edt View Hiory Bockmaris Profi Tab Window Help a MarkeTs ceo QB) ETE Gam DEE © 3,744.58 P S&P MidCap 400 WO (53059) 251% © amore - wo 10200 774% Losin 04200 ET crZ0TGRS VAY / N - N Ya, ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 38,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 38,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80ee0f04fe15ff48",
+      "prefilter_score": 17.68,
+      "prefilter_stats": {
+        "brightRatio": 0.8188888888888889,
+        "darkRatio": 0.056805555555555554,
+        "edgeRatio": 0.13663345346618613,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1076,
+        "horizontalEdgeRatio": 0.0760370291852166,
+        "meanLuma": 227.83895833333332,
+        "stdDev": 52.72253731168107,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2791,
+        "verticalEdgeRatio": 0.19722987774715567
+      },
+      "score": -26.1,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.9,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 252,
+      "timestamp_hms": "00:04:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 141,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260720_20260720_l-7fr9yiyzg_813f6c6a_whiteboard\\ocr\\ocr_000142.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 564.8,
+      "observed_date": null,
+      "ocr_confidence": 36,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Clvme Fla Et View Hinouy Bocas Profies Tab Window Help         a\nMarxeTsURcs «(RED     X Duy Weekly Mow, sa ~<a @ Qaen - DEL G\n~ Bitwise Hyperliquid ETF                                                                     $35.32         $34.85\nFree ££ TA ARS)                                                     PT ——               ctnaroran      ower eprom esa\nQ sate     © store     .                                  EPSDDu NA BOmARSI UNM Murals 8      avon      vo 200s 1 18.\no    Wa OnSmemmgn 130% 21OAATR% SE 0512PMENOIEVINN Lun Upes 02990 ET T000ES\nCorie              As hw Bowe                                    Seen 14m)    w\naw pce pros Ske CoronseRag                                                                          Ng\nanes \"HARROD cranes                                                  ZA     \\\n3   000 NA HA RS Rag                                                 :           ES\non   G0 NA NA Shown RS Rag 3\non 5 Ra 42\nPY   wm wa wa fis en a |\nPp   G0 NA WA mam\non   G0 NA NA Cor Sumy WA\ny      x ron Saas rot Rt 9\na       0%         EPS Grown Re 0%                                                                                           Uy       [!      1        a3 ng ©\nwr   TNA MA pe wagaxse                                              FAW: DRT at\n[Ie     By\nU    +o       *\nIth  hyp AL     0\n1     Eo        »    »\nRi\nsna\n160 Volume                                                                       —       .\nne\nPr\n=     w     =     w     w     =     i     =     7     w     w     w    EE\noe         no           fo           or           ™        ~o       M\n[am\nPret. cng\n50\n==                                    Are Tax pci\nsown aw few MainList3Skems © temas ov sverarmos                                    om - 2 E mA\nsen          wo      .          [Pen ame     210m women    basty  00wAgl Mem Coo b3GT® yom\nmE. ©      »    Smee tne        To Chm se RT CTE wee TURD CAN cw nee am xomee SR\n=              A wont  hacen 20¢ You Teoaa.  27s  EX)   -  [x]  7 ETFETN. Feunce  2143884   -        $00\n© Veo Process           ‘-\nPow oT   CBOE 30 Your Twas   ne mm    .   0   \"    .    .     °    .    .    Lam   ll\n» Manus\n|    Bw mx coor ove   ER    Cams    .    .     o    .    .    Law\n= Chars of rest\nAe ann          —      »   cz      —              .\n",
+      "ocr_text_snippet": "@ Clvme Fla Et View Hinouy Bocas Profies Tab Window Help a MarxeTsURcs «(RED X Duy Weekly Mow, sa ~<a @ Qaen - DEL G ~ Bitwise Hyperliquid ETF $35.32 $34.85 Free ££ TA ARS) PT —— ctnaroran ower epr...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80da3f15de65de04",
+      "prefilter_score": 19.36,
+      "prefilter_stats": {
+        "brightRatio": 0.8247916666666667,
+        "darkRatio": 0.056875,
+        "edgeRatio": 0.12038018514592608,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 944,
+        "horizontalEdgeRatio": 0.06670906649706734,
+        "meanLuma": 229.10763888888889,
+        "stdDev": 53.02694490626274,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2463,
+        "verticalEdgeRatio": 0.1740513037947848
+      },
+      "score": -26.2,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.8,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 564,
+      "timestamp_hms": "00:09:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 81,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260720_20260720_l-7fr9yiyzg_813f6c6a_whiteboard\\ocr\\ocr_000082.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 324,
+      "observed_date": null,
+      "ocr_confidence": 36,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Come Fla Edt Vew Hoy Bosknaris  Profkes Teo Window Hein        a\nMarkeTsUrcs  o ()       X oy vey | wey swe ~ mom @ Oras - DEL G\n» SPDR Gold Shares                                                                               $367.72         $367.60\n2, SPOR Gold                          coon wn ome rs memes wool    wr E780\nST                  IO I SE le ee 8   hn Jae\npoeou Na Sorhrii STAR DONG Ir rT AT\nCorte               EEE EE ER PN                ;     ©  -   FTN  -     Siochmzca (14.3.3)     ©\nYewOw)  Pce(d)  %Chg Seke(ME XThg ny       ,     Ny    Ra   7    Ny   4          /   Ns    \\\n020     Mee 7   wa A   AYA 4                                                       Te       »\n2028    we ue,   NA Na                                                    J\nJ Pn S—\net      EE\ncovmris+ prmon                                              to        =\nEFS Rang.      - Eameg Supose    WA                                                             ~~                     Ho\nToe mei wm                                           J                      -\nIon Rs     V Sues Geom Rae    ™                                              PO pee\nMon RS    § Proachargn     py                                J PPT pone                                0 [\nGroup RS Rating   - Remon Equey    oo                         cram slams TET                                                0\nKarun E Comfow       A |                  I aio” pi                                                 ho\nSmet        oh         eZ\nsamo      =         =\npha.     am PE    WACO X 3P)                Cow       ze                                                10\n-     RL]              =       -                                       »\nIC CA              Fo       ws\nmw re wm                ba        we                                                =\nEEC              =     ~                                          oe\nToni                       ,      Ey              oo       I\n—  ~  CnRange      2%                                         —-\nones wa ram sar              “      a                                          -\nTDI BS eres      we                                         a\ner IRC              er. an\nemer ts 00 tems (CHRUNUHREINNN soon ov SUMMER RIERA AANA ARAMA\nVatShewsA ASW -   Maz 7 3   ak   ar   sw    AEN   2213   Een   30483   assar   en   02   EE      Price\nferret ER I   peat\nNA    NA    NA    WA    NA    A   had    ARIK    NA    NA    NA    A    NA    NA    wa     Seles (100)\nSerena    Lint    Reports   Main List 35items © Coons 285748 137700075                                    oFy - RR EA\nTe om       ,            Rr      a     way ois me smn yom\n—              ©       ®    Syme tame         Go wer SM hma wes SY Tame wile cme Res mew OMe RR\n© Video Process           an        As oxy    US oter nex @1)     02 ose     -    oer    oz           -       o                    am    t\nA Mah Unt                        Rr   0 Go     SPDR Goad Shares.       on   W780      -    20     02 ETFETN.. France.     2708407      -      -          788\n",
+      "ocr_text_snippet": "@ Come Fla Edt Vew Hoy Bosknaris Profkes Teo Window Hein a MarkeTsUrcs o () X oy vey | wey swe ~ mom @ Oras - DEL G » SPDR Gold Shares $367.72 $367.60 2, SPOR Gold coon wn ome rs memes wool wr E780...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 36,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "81f63225b60dd74d",
+      "prefilter_score": 18.02,
+      "prefilter_stats": {
+        "brightRatio": 0.7686805555555556,
+        "darkRatio": 0.056805555555555554,
+        "edgeRatio": 0.14525475231432408,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1242,
+        "horizontalEdgeRatio": 0.08776764892940428,
+        "meanLuma": 223.91895833333334,
+        "stdDev": 53.53519767948557,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2869,
+        "verticalEdgeRatio": 0.20274185569924386
+      },
+      "score": -26.2,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.8,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 324,
+      "timestamp_hms": "00:05:24"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 2,
+      "end_ts": 468,
+      "end_hms": "00:07:48",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 102,
+      "peak_score": 88.76,
+      "start_hms": "00:06:48",
+      "start_ts": 408
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 588,
+      "end_hms": "00:09:48",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 147,
+      "peak_score": 110.55,
+      "start_hms": "00:09:48",
+      "start_ts": 588
+    }
+  ]
+}

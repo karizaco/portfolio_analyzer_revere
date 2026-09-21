@@ -1,0 +1,5 @@
+C:\Users\admin\Projects\portfolio_analyzer_revere\tools\parallelOcrScan.py:336: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  args.date_tag = args.date_tag or _dt.datetime.utcnow().strftime("%Y%m%d")
+[parallel-ocr] jobs=19 skipped_own=0 skipped_other=0 missing_files=0
+C:\Users\admin\Projects\portfolio_analyzer_revere\tools\parallelOcrScan.py:395: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  started = _dt.datetime.utcnow()

@@ -39,10 +39,10 @@ function resolveFractionalRegion(sourceWidth, sourceHeight, fractionRegion) {
   if (!fractionRegion) {
     return null;
   }
-  const xFraction = Number(fractionRegion.xFraction);
-  const yFraction = Number(fractionRegion.yFraction);
-  const wFraction = Number(fractionRegion.wFraction);
-  const hFraction = Number(fractionRegion.hFraction);
+  const xFraction = Number(fractionRegion.x);
+  const yFraction = Number(fractionRegion.y);
+  const wFraction = Number(fractionRegion.w);
+  const hFraction = Number(fractionRegion.h);
   if (![xFraction, yFraction, wFraction, hFraction].every(Number.isFinite)) {
     return null;
   }

@@ -1,0 +1,6 @@
+# cmd: node tools/scanVideoWithOcr.js --video C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads\20230602_30ksgwzWboo.mp4 --date 20230602 --output-root C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260917\qmg-ocr-20260917 --run-tag qmg-ocr-20260917 --ffmpeg-bin C:\Users\admin\Projects\portfolio_analyzer_revere\tools\ffmpeg.exe --output-kind snapshot --prefilter-profile chart_stream --basename qmg --chart-stream-parser
+[scan:snapshot] ffprobe found 1 keyframe(s) for nearest-keyframe lookup
+[scan:snapshot] preflighting final snapshot output extraction
+[scan:snapshot] failed: Final output preflight failed before OCR started: spawnSync C:\Users\admin\Projects\portfolio_analyzer_revere\tools\ffmpeg.exe ENOENT
+[scan:snapshot] details saved to C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260917\qmg-ocr-20260917\qmg-ocr-20260917\ocr_probe\logs\20230602_20230602_30ksgwzwboo_65dac2af_snapshot.json
+Final output preflight failed before OCR started: spawnSync C:\Users\admin\Projects\portfolio_analyzer_revere\tools\ffmpeg.exe ENOENT

@@ -1,0 +1,50 @@
+- main [ref=e2]:
+  - heading "Revere OCR Timeline" [level=1] [ref=e3]
+  - generic [ref=e4]:
+    - text: run_tag=
+    - code [ref=e5]: ocr-20260914
+    - text: · generated_at=2026-09-14T11:03:43.517Z ·
+    - code [ref=e6]: timeline.json
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - generic [ref=e9]: Videos scanned
+      - generic [ref=e10]: "7"
+      - generic [ref=e11]: 7 with at least one capture
+    - generic [ref=e12]:
+      - generic [ref=e13]: Total captures
+      - generic [ref=e14]: "19"
+      - generic [ref=e15]: avg 2.71 per video
+    - generic [ref=e16]:
+      - generic [ref=e17]: Unique tickers
+      - generic [ref=e18]: "10"
+      - generic [ref=e19]: across the whole catalog
+    - generic [ref=e20]:
+      - generic [ref=e21]: Active days
+      - generic [ref=e22]: "7"
+      - generic [ref=e23]: distinct upload dates observed
+  - heading "Signals over time" [level=2] [ref=e24]
+  - generic [ref=e25]:
+    - generic [ref=e26]:
+      - heading "Captures per day, by layout" [level=3] [ref=e27]
+      - generic [ref=e29]:
+        - generic [ref=e30]: dmi
+        - generic [ref=e31]: structured_whiteboard
+        - generic [ref=e32]: other
+    - heading "Score envelope (max + mean per day)" [level=3] [ref=e34]
+    - heading "Cumulative unique tickers across the catalog" [level=3] [ref=e37]
+    - heading "Per-day DMI intro cards (signals of a daily show)" [level=3] [ref=e40]
+    - heading "Whiteboard segments per day" [level=3] [ref=e43]
+  - heading "Per-video detail" [level=2] [ref=e45]
+  - table [ref=e47]:
+    - rowgroup [ref=e48]:
+      - row [ref=e49]:
+        - columnheader "upload_date" [ref=e50]
+        - columnheader "video_id" [ref=e51]
+        - columnheader "captures" [ref=e52]
+        - columnheader "max score" [ref=e53]
+        - columnheader "mean score" [ref=e54]
+        - columnheader "segments" [ref=e55]
+        - columnheader "layouts" [ref=e56]
+        - columnheader "flags" [ref=e57]
+        - columnheader "tickers" [ref=e58]
+    - rowgroup

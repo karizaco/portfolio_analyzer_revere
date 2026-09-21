@@ -1,0 +1,174 @@
+{
+  "date_key": "20260912",
+  "output_kind": "whiteboard",
+  "video_path": "D:\\courses_F\\revere_asset\\videos\\Gap Up...Chop Around...Break Down...Bounce Whats The Bottom Line.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "frame_index": 280,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_gap_up...chop_around...break_down..._f024ddc9_whiteboard\\ocr\\ocr_000281.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE"
+      ],
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — TUE, 11/15/22 << * MARKET STATE: BEAR MARKET RALLY > R * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE Wow, Mesa * TECHNICAL: INDEXES & G-6: DL...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 5.68,
+      "score": 97.04,
+      "screen_layout": "dmi",
+      "timestamp": 1120,
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\screenshots\\20260912_ps_4.png"
+    },
+    {
+      "frame_index": 210,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_gap_up...chop_around...break_down..._f024ddc9_whiteboard\\ocr\\ocr_000211.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE"
+      ],
+      "ocr_confidence": 63,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — TUE, 11/15/22 << * MARKET STATE: BEAR MARKET RALLY > R * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE Wow, Mesa * TECHNICAL: INDEXES & G-6: DL...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 5.72,
+      "score": 96.39,
+      "screen_layout": "dmi",
+      "timestamp": 840,
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\screenshots\\20260912_ps_5.png"
+    },
+    {
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_gap_up...chop_around...break_down..._f024ddc9_whiteboard\\ocr\\ocr_000001.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "ocr_confidence": 66,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "2 WHAT'S THE MARKET TREND? “@ DEG Verte in LT . 2m \"THE GROTECTION GAUGE\" > REVERE ASSET MANAGEMENT < ——— > DAILY MARKET INSIGHT VIDEO < ic LesveRs — >>> AGENDA — TUE, 11/15/22 <<< * MARKET STATE: ...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": -15.42,
+      "score": 52.36,
+      "screen_layout": "dmi",
+      "timestamp": 0,
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\screenshots\\20260912_ps_6.png"
+    }
+  ],
+  "frame_count": 423,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "ocr_frame_count": 29,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\screenshots\\20260912_ps_4.png",
+  "prefilter_best_score": 12.26,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "frame_index": 280,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_gap_up...chop_around...break_down..._f024ddc9_whiteboard\\ocr\\ocr_000281.png",
+    "issue_codes": [
+      "MISSING_METRIC_LINE"
+    ],
+    "ocr_confidence": 62,
+    "ocr_profile": "threshold",
+    "ocr_text_snippet": ">> TALE OF THE TAPE — TUE, 11/15/22 << * MARKET STATE: BEAR MARKET RALLY > R * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE Wow, Mesa * TECHNICAL: INDEXES & G-6: DL...",
+    "output_kind": "whiteboard",
+    "parsed_row_count": 2,
+    "prefilter_score": 5.68,
+    "score": 97.04,
+    "screen_layout": "dmi",
+    "timestamp": 1120
+  },
+  "top_candidates": [
+    {
+      "frame_index": 280,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_gap_up...chop_around...break_down..._f024ddc9_whiteboard\\ocr\\ocr_000281.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE"
+      ],
+      "ocr_confidence": 62,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — TUE, 11/15/22 << * MARKET STATE: BEAR MARKET RALLY > R * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE Wow, Mesa * TECHNICAL: INDEXES & G-6: DL...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 5.68,
+      "score": 97.04,
+      "screen_layout": "dmi",
+      "timestamp": 1120
+    },
+    {
+      "frame_index": 210,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_gap_up...chop_around...break_down..._f024ddc9_whiteboard\\ocr\\ocr_000211.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE"
+      ],
+      "ocr_confidence": 63,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": ">> TALE OF THE TAPE — TUE, 11/15/22 << * MARKET STATE: BEAR MARKET RALLY > R * HEADWINDS: USD, INFLATION, FED TAPER/BAL SHT REDUX, INT RATES, RUSSIA/UKRAINE Wow, Mesa * TECHNICAL: INDEXES & G-6: DL...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 5.72,
+      "score": 96.39,
+      "screen_layout": "dmi",
+      "timestamp": 840
+    },
+    {
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_gap_up...chop_around...break_down..._f024ddc9_whiteboard\\ocr\\ocr_000001.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "ocr_confidence": 66,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "2 WHAT'S THE MARKET TREND? “@ DEG Verte in LT . 2m \"THE GROTECTION GAUGE\" > REVERE ASSET MANAGEMENT < ——— > DAILY MARKET INSIGHT VIDEO < ic LesveRs — >>> AGENDA — TUE, 11/15/22 <<< * MARKET STATE: ...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": -15.42,
+      "score": 52.36,
+      "screen_layout": "dmi",
+      "timestamp": 0
+    },
+    {
+      "frame_index": 35,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_gap_up...chop_around...break_down..._f024ddc9_whiteboard\\ocr\\ocr_000036.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE"
+      ],
+      "ocr_confidence": 70,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "2 WHAT'S THE MARKET TREND? “@ EG Mates - Rom “THE GROTECTION GAUGE\" > REVERE ASSET MANAGEMENT < ———— > DAILY MARKET INSIGHT VIDEO < ic Leavers — >>> AGENDA — TUE, 11/15/22 <<< * MARKET STATE: BEAR ...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": -15.39,
+      "score": 52.04,
+      "screen_layout": "dmi",
+      "timestamp": 140
+    },
+    {
+      "frame_index": 420,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260912\\ocr_probe\\frames\\20260912_gap_up...chop_around...break_down..._f024ddc9_whiteboard\\ocr\\ocr_000421.png",
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "ocr_confidence": 48,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "> REVERE ASSET MANAGEMENT < owe] «aa EEE x Guide i hava! Downiond news AddloLis: BIVHe «pd Bd mow i > DAILY MARKET INSIGHT VIDEO < ~ Vs bY A 2 A Fhe | >>> AGENDA — TUE, 11/15/22 <<< : . A / } ava w...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 7.16,
+      "score": 50.3,
+      "screen_layout": "dmi",
+      "timestamp": 1680
+    }
+  ]
+}

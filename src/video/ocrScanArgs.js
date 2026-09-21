@@ -39,21 +39,23 @@ function printHelp() {
     '  --confusion-radius <n>     Adjacent-frame lookup window for confusion_with_nearby, default 1',
     '  --prefilter-profile <p>    whiteboard | chart_stream (drives prefilter score table + keyword guard)',
     '  --basename <name>          Snapshot PNG prefix + screenshot discovery stem, default "revere"',
-    '  --phash-region <x,y,w,h>   Region in pixels for the overlay pHash (optional)',
+    '  --phash-region <x,y,w,h>  Region in pixels for the overlay pHash (optional)',
+    '  --phash-hamming-max <n>    Max Hamming distance for overlay pHash dedup, default 6',
     '  --phash-region-fraction <xf,yf,wf,hf> Fractional overlay region (0..1); chart_stream default "0.70,0.84,0.28,0.14"',
+    '  --temporal-decay <secs>    Seconds over which early-frame boost decays to zero, default 1800',
     '  --chart-stream-parser      Replace the GRO/TURBO whiteboard parser with parseChartStream',
     '  --help                     Show this help text',
     ''
   ].join('\n'));
 }
 
-// Default fractional overlay region for chart-stream runs. Qullamaggie's
+// Default fractional overlay region for chart-stream OCR. Qullamaggie's
 // position-list overlay sits in the bottom-right corner of a streamed chart
-// frame; the values here cover ~28% width × 14% height starting at 70% / 84%
-// of the frame. These numbers were eyeballed from the YouTube layout and are
-// good enough for the prefilter — the OCR engine tolerates a couple of pixels
-// of slack on every edge.
-const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.70,0.84,0.28,0.14';
+// frame. The region {x:0.70, y:0.60, w:0.30, h:0.40} was validated against
+// ground truth (56% mean ticker recall vs 44-47% for wider crops). Going wider
+// hurts OCR quality by including too much chart area. The pHash region
+// (--phash-region-fraction default) is a separate, narrower carve-out.
+const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.70,0.60,0.30,0.40';
 
 function parseFractionalRegion(raw) {
   if (!raw) return null;
@@ -65,7 +67,7 @@ function parseFractionalRegion(raw) {
   if (xFraction + wFraction > 1.001 || yFraction + hFraction > 1.001) {
     throw new Error(`Fractional region overflows frame bounds: ${raw}`);
   }
-  return { xFraction, yFraction, wFraction, hFraction };
+  return { x: xFraction, y: yFraction, w: wFraction, h: hFraction };
 }
 
 function parsePixelRegion(raw) {
@@ -89,6 +91,7 @@ function buildDefaultOptions(defaultOutputRoot) {
     ocrFrameWidth: 1280,
     outputKind: 'whiteboard',
     outputRoot: defaultOutputRoot,
+    phashHammingMax: 6,
     phashRegion: null,
     phashRegionFraction: null,
     prefilterMaxFrames: 60,
@@ -101,6 +104,7 @@ function buildDefaultOptions(defaultOutputRoot) {
     sampleWidth: 640,
     skipKeyframes: false,
     strongThreshold: 6,
+    temporalDecay: 1800,
     topCandidates: 5
   };
 }
@@ -228,6 +232,14 @@ function parseArgs(argv, overrides = {}) {
       case '--chart-stream-parser':
         options.chartStreamParser = true;
         break;
+      case '--temporal-decay':
+        options.temporalDecay = Number(nextValue);
+        index += 1;
+        break;
+      case '--phash-hamming-max':
+        options.phashHammingMax = Number(nextValue);
+        index += 1;
+        break;
       default:
         throw new Error(`Unknown argument: ${argument}`);
     }
@@ -287,6 +299,14 @@ function parseArgs(argv, overrides = {}) {
 
   if (!Number.isFinite(options.confusionRadius) || options.confusionRadius < 0) {
     throw new Error('`--confusion-radius` must be zero or a positive number.');
+  }
+
+  if (!Number.isFinite(options.temporalDecay) || options.temporalDecay <= 0) {
+    throw new Error('`--temporal-decay` must be a positive number of seconds.');
+  }
+
+  if (!Number.isFinite(options.phashHammingMax) || options.phashHammingMax < 0 || options.phashHammingMax > 64) {
+    throw new Error('`--phash-hamming-max` must be an integer between 0 and 64.');
   }
 
   if (!['whiteboard', 'chart_stream'].includes(options.prefilterProfile)) {

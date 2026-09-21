@@ -1,0 +1,30 @@
+C:\Users\admin\Projects\portfolio_analyzer_revere\tools\parallelOcrScan.py:336: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  args.date_tag = args.date_tag or _dt.datetime.utcnow().strftime("%Y%m%d")
+[parallel-ocr] jobs=3 skipped_own=0 skipped_other=0 missing_files=0
+C:\Users\admin\Projects\portfolio_analyzer_revere\tools\parallelOcrScan.py:395: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  started = _dt.datetime.utcnow()
+C:\Users\admin\Projects\portfolio_analyzer_revere\tools\parallelOcrScan.py:400: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  ts = _dt.datetime.utcnow().strftime("%H:%M:%S")
+[parallel-ocr] workspace   : C:\Users\admin\Projects\portfolio_analyzer_revere
+[parallel-ocr] run_tag     : ocr-20260917
+[parallel-ocr] output_root : C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260917\ocr-20260917
+[parallel-ocr] parallelism : 1 workers
+[parallel-ocr] pending     : 3 videos
+[parallel-ocr] channel     : revere
+[parallel-ocr] prefilter   : whiteboard
+[parallel-ocr] basename    : revere
+[parallel-ocr] output_kind : whiteboard
+[parallel-ocr 08:00:53] 20260605 a7zObEZlEEM -> OK
+[parallel-ocr 08:05:45] 20260612 of7ldllufyg -> OK
+[parallel-ocr 08:07:34] 20260616 xbVIkwq_gg0 -> OK
+C:\Users\admin\Projects\portfolio_analyzer_revere\tools\parallelOcrScan.py:407: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  elapsed = (_dt.datetime.utcnow() - started).total_seconds()
+C:\Users\admin\Projects\portfolio_analyzer_revere\tools\parallelOcrScan.py:417: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "ended_at": _dt.datetime.utcnow().isoformat() + "Z",
+C:\Users\admin\Projects\portfolio_analyzer_revere\tools\parallelOcrScan.py:435: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  finished_at=_dt.datetime.utcnow(),
+C:\Users\admin\Projects\portfolio_analyzer_revere\tools\parallelOcrScan.py:311: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "last_update_at": _dt.datetime.utcnow().isoformat() + "Z",
+[parallel-ocr] done in 625.3s · ok=3 err=0
+[parallel-ocr] summary at C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260917\ocr-20260917\run_summary.json
+[parallel-ocr] aggregate with: node tools/aggregateOcrTimeline.js ocr-20260917

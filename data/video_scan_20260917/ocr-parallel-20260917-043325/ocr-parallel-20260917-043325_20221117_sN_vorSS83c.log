@@ -1,0 +1,2 @@
+# cmd: node tools/scanVideoWithOcr.js --video C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_pipeline\downloads\20221117_sN_vorSS83c.mp4 --date 20221117 --output-root C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20260917\ocr-parallel-20260917-043325 --run-tag ocr-parallel-20260917-043325 --ffmpeg-bin C:\Users\admin\Projects\portfolio_analyzer_revere\tools\ffmpeg.exe --prefilter-profile chart_stream --basename qmg --chart-stream-parser
+`--chart-stream-parser` is only supported with `--output-kind snapshot`.

@@ -1,0 +1,1290 @@
+{
+  "date_key": "20260610",
+  "output_kind": "whiteboard",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_hires\\20260610_boZRoKyPMB0.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 78,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260610_20260610_bozrokypmb0_3f833e3f_whiteboard\\ocr\\ocr_000079.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 312.8,
+      "observed_date": "20260610",
+      "ocr_confidence": 57,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Preview Fe EM View Go Tools Winow Help           [CARE XN EN]      2\nIE ® 0 (D- Screenshot 2026-06-10 at 5.23.00PM    aaa        ag   ® ia   ne\nMarwersuucs: « [22 TALE OF THE TAPE ~ WEDNESDAY, JUNE 10, 2026 << PY ————\n)              = % MARKET STATE:                                                                            -\n\nFr iShares 20+ Yel s 570 INDEXES 017 64 RGBOT 8d NASI USD TNX/TYXT vs 5d                  Pin        A880\n0 sam © sem * SENTIMENT:VIX 21.99 (+10.67%) F&G          ransssvorzer a SERB ARM BEST Se meee\ngpp cow PBULLCASE: INITIATE RALLY & TREND 21EMA                                             ee       wom\n\nne me PBEAR CASE: SUSTAINED BREAK BELOW 21EMA €6/5                                                   ~                  =\n® 4 ow mae NEWS:WED: CPI THURS: PPI FRI:SPCXIPO NEXT WED 6/17: 157 FOMC WITH WARSH                            roams\n\"7 Gm daw *TODAY'S KEYS:SPX vs 21EL/50D1 QQQus 21E4/50DP R2K vs 8EL/21Ed\n© cm wa #DAYCT:D2/3 =>D-3/4 8e:4d 21e: hd                         oN        B\nZ ~| wm wow *ACTION:O-0.44% 17396 {7297 17328 J MORE WEAKNESS LATE DAY                             ©\nLv |®™ o° *sPXO/N 7299-73851 07350 030 7328-73821 L/H 7265-7396              [re          wm      =\nB    Jl * SPX ATR: 110% SPX-162% 60/40-0.97% GRO-L24% TURBO-0.77%       Sab, eo\nPa  lf * SECTORS: 1 BY% O&G XLE XLP KWEB DBC J BPS SMH PBW REMX ITB BOTZ DRNZ NLF         wT Ww  0.\n-          * GRO HOLDINGS: SPYM,UPRO, GH,LLYX,CSCO,DOCN                                       of             o\nZw                * GRO RVAB/REBAR: 0.86 (-0.32%/-4.14%) SELL GNRC TRIM UPRO                                   -_               a\nGe         * TURBO HOLDINGS: SPYM,UPRO,SNOW                                                           =\n— * TURBO RVAB/REBAR: 0.55 (-0.11%/-1.87%) NO CHANGES                                          _—_—\ni’      \"ovum 5 8 BOTTOM LINE: =» INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS __ ==            88 _\n-e Wg vives KEYS: SPX vs 21E/50D QQQ vs 21E/50D R2K vs 21E/50D                 Eologuulighuy —%   ar\nYO          4 >>> S&P500 KEY LEVELS <<<                                                                               [          wr          -              _\neo     — * 7621 (6/2 INTRADAY A-T-H)                                      -              a\nnw,     wo *7423 {35 21EMA) € 6/58 4/81       2/274 2/254 2/124 2/61                            [I\non      mo                   2ND CLOSE BELOW THE 21-EMA FOR THE S&P 500... SOME RELIEF IN LEADERS           -                            Alter Tix Marg\n| Mme MS 37386 TUES: AM{,PMT* LEADERS, WIDE & LOOSE; VALUE & SML/MID                i                  ory - RE a8\n= foe          7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS      Bomhel Mew Cw ROGER opm RSRa\nTo        *7213/7287(120 SOD/1OWK) € 4/84 2/273 1/211 1/204                   mee wo -        EQ\n\"6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPED                            wow sa\nwes 0s. am\nJrA—\n",
+      "ocr_text_snippet": "6 Preview Fe EM View Go Tools Winow Help [CARE XN EN] 2 IE ® 0 (D- Screenshot 2026-06-10 at 5.23.00PM aaa ag ® ia ne Marwersuucs: « [22 TALE OF THE TAPE ~ WEDNESDAY, JUNE 10, 2026 << PY ———— ) = % ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO, GH,LLYX,CSCO,DOCN OF O ZW * GRO RVAB/REBAR: 0.86 (-0.32%/-4.14%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL GNRC TRIM UPRO -_ A GE * TURBO HOLDINGS: SPYM,UPRO,SNOW =",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 57,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 0.55 (-0.11%/-1.87%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES _-_- I' \"OVUM 5 8 BOTTOM LINE: =» INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS __ == 88 _ E WG VIVES KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS 21E/50D EOLOGUULIGHUY -% AR YO 4 >>> S&P500 KEY LEVELS <<< [ WR - _ EO - * 7621 (6/2 INTRADAY A-T-H) - A NW, WO *7423 {35 21EMA) € 6/58 4/81 2/274 2/254 2/124 2/61 [I ON MO 2ND CLOSE BELOW THE 21-EMA FOR THE S&P 500... SOME RELIEF IN LEADERS - ALTER TIX MARG MME MS 37386 TUES: AM{,PMT* LEADERS, WIDE & LOOSE; VALUE & SML/MID I ORY - RE A8 FOE 7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS BOMHEL MEW CW ROGER OPM RSRA TO *7213/7287(120 SOD/1OWK) € 4/84 2/273 1/211 1/204 MEE WO - EQ 6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPED WOW SA WES 0S. AM JRA-",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 57,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01979307fe8b",
+      "prefilter_score": 12.31,
+      "prefilter_stats": {
+        "brightRatio": 0.7392361111111111,
+        "darkRatio": 0.022152777777777778,
+        "edgeRatio": 0.2261677619956187,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1688,
+        "horizontalEdgeRatio": 0.11928485619390856,
+        "meanLuma": 228.95534722222223,
+        "stdDev": 39.79150548681476,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4713,
+        "verticalEdgeRatio": 0.33305066779732884
+      },
+      "score": 98.89,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.85,
+        "pair_bonus": 4,
+        "per_row_issues": -8,
+        "per_row_metrics": 16,
+        "text_density": 90.04
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARM",
+        "REMX",
+        "SNOW",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 312,
+      "timestamp_hms": "00:05:12",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260610_ps_4.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 96,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260610_20260610_bozrokypmb0_3f833e3f_whiteboard\\ocr\\ocr_000097.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 384.8,
+      "observed_date": "20260610",
+      "ocr_confidence": 54,
+      "ocr_profile": "threshold",
+      "ocr_text": "€ Predew Flo EM View Go Tools Window Hep           @Ceoaoed ¥ & + o IEEE 8 TERETE\nMd   -    ® @ (D- Screenshot 2026-06-10 8 5.23.00PM.      aaa           a     ®@ io               Focus\nMarcersusce a [22 TALE OF THE TAPE — WEDNESDAY, JUNE 10, 2026 <<                                     —                  -\n)              = * MARKET STATE:                                                                            -            Ce         ~ =\n© iShares 20+ Yel» gro INDEXES OF 64 RGBOA 84 NASIY USD TNX/TYXD vs 5d                ear         ’\nOommen © smo * SENTIMENT:VIX 21.99 (+10.67%) F&G            RAN 36.3.40.7 26.7 43.50 TY NAAIM 86.82 11.57      came)  —               Y -\npsp wen PBULLCASE: INITIATE RALLY & TREND 21EMA                                                :               Romeo\n\"7 n= me BEAR CASE: SUSTAINED BREAK BELOW 21EMA €6/5                                  Ts     hn 1\n® me ows « NEWS:WED: CPL THURS: PPI FRE SPCXIPO NEXT WED 6/17: 157 FOMC WITH WARSH               EE        —\n7 im ws * TODAY'S KEYS: SPX vs 214/500 QQQ vs 21E4/S0DD  R2K vs 8E/21E4                        wy\nMc mwa eDAYCT:D-2/3 =>D-3/4 Seidl 21e:-pd                        EA We\nF ~| mu wn *ACTION:0-0.44% 17396 {7297 17328 J MORE WEAKNESS LATE DAY                 Ce    ®\nLv | ®™ *v *SPXO/N 7299-73851 07350 030 7328-73821 L/H 7265-7396              —          PE      =\nBE    - Tol SPX ATR: 1.10% SPX-1.62% 60/40-0.97% GRO-1.24% TURBO -0.77%       Iusyn,  h   Nii       ~\nPa  pl * SECTORS: 4 BY% O&G XLE XLP KWEB DBC J BP$ SMH PBW REMX ITB BOTZ DRNZ NLF        Kh ptr          0.x\n|.          * GRO HOLDINGS: SPYM,UPRO,GH,LLYX,C5CO,DOCN                                      “ur   w    *\nZw                * GRO RVAB/REBAR: 0.86 (-0.32%/-4.14%) SELL GNRC TRIM UPRO                                   EE               2\nGe         * TURBO HOLDINGS: SPYM,UPRO,SNOW                                                           -\nT ———— \"TURBO RVAB/REBAR: 0.55 (-0.11%/-1.87%) NO CHANGES                             _—\na   om Ji * BOTTOM LINE: = INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS =»           a _\nUgg   LLY * THURS KEYS: SPX vs 21E/S0D  QQQ vs 21E/50D  R2K vs 21€/50D                     Elegy #   on\nVO a          4 >>> S&P500 KEY LEVELS <<<                                                                               H          wn          an\neo    . — *7621{6/2 INTRADAY A-T-H}                                      -              re\nnw,     na *7423{521EMA) € 6/54 4/81       2/274 2/251 2/12 2/61                            [Er\non        Mo                 2ND CLOSE BELOW THE 21-EMA FOR THE $&P 500... SOME RELIEF IN LEADERS          -                         Alber i Marg\nteem“. P7386 TUES: AM PMT LEADERS, WIDE & LOOSE; VALUE & SML/MIDT                 B                   Orw - SS aS\nmee $7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS        BImand Nw Com MCR wot Rha\nTo em\" 7213/7287(120 SOD/10WK) € 4/81 2/273 1/214 1/20            Tm www\nen    * 6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPE                       won oe    -    cose\nwwe     .     Lem\n[—\nL    vie                                                 —                          -    -    ~n              on\n",
+      "ocr_text_snippet": "€ Predew Flo EM View Go Tools Window Hep @Ceoaoed ¥ & + o IEEE 8 TERETE Md - ® @ (D- Screenshot 2026-06-10 8 5.23.00PM. aaa a ®@ io Focus Marcersusce a [22 TALE OF THE TAPE — WEDNESDAY, JUNE 10, 20...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,GH,LLYX,C5CO,DOCN \"UR W * ZW * GRO RVAB/REBAR: 0.86 (-0.32%/-4.14%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL GNRC TRIM UPRO EE 2 GE * TURBO HOLDINGS: SPYM,UPRO,SNOW - T ---- \"TURBO RVAB/REBAR: 0.55 (-0.11%/-1.87%) NO CHANGES _- A OM JI * BOTTOM LINE: = INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS =» A _ UGG LLY * THURS KEYS: SPX VS 21E/S0D QQQ VS 21E/50D R2K VS 21€/50D ELEGY # ON VO A 4 >>> S&P500 KEY LEVELS <<< H WN AN EO . - *7621{6/2 INTRADAY A-T-H} - RE NW, NA *7423{521EMA) € 6/54 4/81 2/274 2/251 2/12 2/61 [ER ON MO 2ND CLOSE BELOW THE 21-EMA FOR THE $&P 500... SOME RELIEF IN LEADERS - ALBER I MARG TEEM\". P7386 TUES: AM PMT LEADERS, WIDE & LOOSE; VALUE & SML/MIDT B ORW - SS AS MEE $7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS BIMAND NW COM MCR WOT RHA TO EM\" 7213/7287(120 SOD/10WK) € 4/81 2/273 1/214 1/20 TM WWW EN * 6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPE WON OE - COSE WWE . LEM L VIE - - - ~N ON",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80ff01c19b05fe9b",
+      "prefilter_score": 12.38,
+      "prefilter_stats": {
+        "brightRatio": 0.7367361111111111,
+        "darkRatio": 0.022222222222222223,
+        "edgeRatio": 0.22627376157162038,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1696,
+        "horizontalEdgeRatio": 0.1198501872659176,
+        "meanLuma": 228.82319444444445,
+        "stdDev": 39.823781850881915,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4708,
+        "verticalEdgeRatio": 0.33269733587732314
+      },
+      "score": 87.06,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.7,
+        "pair_bonus": 0,
+        "per_row_issues": -10,
+        "per_row_metrics": 8,
+        "text_density": 92.36
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "MU",
+        "PL",
+        "REMX",
+        "SNOW",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 384,
+      "timestamp_hms": "00:06:24",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260610_ps_5.png"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 108,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260610_20260610_bozrokypmb0_3f833e3f_whiteboard\\ocr\\ocr_000109.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 432,
+      "observed_date": "20260610",
+      "ocr_confidence": 53,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Preview Fe SM View Go Tots Wow Help           [CARE XN EN]      3\nMarersukce o gg >> TALE OF THE TAPE ~ WEDNESDAY, JUNE 10, 2026 << om. DELO\n~ * MARKET STATE:                                                                                          BR\n[7 Generac Holding » co INDEXES 01 64 RGBOT Bd, NASI USDN TNX/TYXA vs 5d                  ‘238.50       3 0\n8 samme @ aaoww* SENTIMENT:VIX 21.99 (+10.67%) F&G            AAI 36.3 40.7 26.7 PE¥s7.0 4.9] NAAIM B6.82-1157 0 SS ae vena   a\ngmp en        =»BULL CASE: INITIATE RALLY & TREND 21EMA                                               NN       noms\nji        B% \"+2 PBEAR CASE: SUSTAINED BREAK BELOW 21EMA €6/5                                                        d             =       -\n® J me .% x * NEWS: WED: CPI THURS:PPI FRI: SPCX IPO NEXT WED 6/17: 15\" FOMC WITH WARSH                Wh            am\not mn ee Xe TODAY'S KEYS: SPX vs 21€4/50DT QQQ vs 21E4,/SODN  R2K vs 8E/21E4                   Ail  iu ¥ Wy\nMocomm sk ®sDAYCT:D-2/3 =>D-3/4 8e:4y 2le: fd                                           IN    Ly     J     w 8B\nSoo | ms, i E* ACTION: 0-0.44% 17396 $7297 17328 {MORE WEAKNESS LATE DAY                 ww         i\nLo | me e% =sSPXO/N 7209-73851 07350 030 7328-73821 L/H 7265-7396               at!      9                 ne\n= |e T SPX ATR: 110% SPX-162%  60/40-0.97% GRO -1.24% TURBO -0.77%            pv             mo\npa               * SECTORS: 4 BY% O&G XLE XLP KWEB DBC J BP$ SMH PBW REMX ITB BOTZ DRNZ NLF\n|        _, * GRO HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN                                N             -   a\n2 - wy;     * GRO RVAB/REBAR: 0.865 (-0.32%/-4.14%) SELL GNRC TRIM UPRO                               ES                      a\nTow —       * TURBO HOLDINGS: SPYM,UPRO, SNOW                                                  «\np                       * TURBO RVAB/REBAR: 0.55 (-0.11%/-1.87%) NO CHANGES                                             _ ul\n.o    sows iw % BOTTOM LINE: = INFLATION SCARES AND [RAN WAR TENSIONS LEAD TO FURTHER WEAKNESS ____ \"i                    JA\ngil   [IND + THURS KEYS: SPX vs 21E/50D QQQ vs 21E/50D R2K vs 21E/50D                       unify   CITRINE = 7 es\nVO a         55> SRPS00 KEY LEVELS <<<                                                                                 wr\nPO ~*7621(6/2 INTRADAY A-T-H)                                                     pp Am a\nOR: +7423((521EMA) €6/5¢ 4/81        20274 2/251 2/12 2/61           mem mr senses\non      te                 2ND CLOSE BELOW THE 21-EMA FOR THE S&P 500... SOME RELIEF IN LEADERS          -                        Alber i Marg\n_—-      **— 7386 TUES: AM,PM I\" LEADERS, WIDE & LOOSE; VALUE & SML/MID               _               ory - 95 a@S\nmews <D7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS    hoo cwen na am women wha\nCo roms      *7213/7287(120 SOD/10WK) € 4/81 2/274 1/211 1/204                   ET EE Ta\nJ        * 6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPES                                   ma 00      .      REE\nchars otra                                                                                  am a     .     Lam\nLL                                            —                             Cee ee\n",
+      "ocr_text_snippet": "6 Preview Fe SM View Go Tots Wow Help [CARE XN EN] 3 Marersukce o gg >> TALE OF THE TAPE ~ WEDNESDAY, JUNE 10, 2026 << om. DELO ~ * MARKET STATE: BR [7 Generac Holding » co INDEXES 01 64 RGBOT Bd, ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN N - A 2 - WY; * GRO RVAB/REBAR: 0.865 (-0.32%/-4.14%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL GNRC TRIM UPRO ES A TOW - * TURBO HOLDINGS: SPYM,UPRO, SNOW « P * TURBO RVAB/REBAR: 0.55 (-0.11%/-1.87%) NO CHANGES _ UL O SOWS IW % BOTTOM LINE: = INFLATION SCARES AND [RAN WAR TENSIONS LEAD TO FURTHER WEAKNESS ____ \"I JA GIL [IND + THURS KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS 21E/50D UNIFY CITRINE = 7 ES VO A 55> SRPS00 KEY LEVELS <<< WR PO ~*7621(6/2 INTRADAY A-T-H) PP AM A OR: +7423((521EMA) €6/5¢ 4/81 20274 2/251 2/12 2/61 MEM MR SENSES ON TE 2ND CLOSE BELOW THE 21-EMA FOR THE S&P 500... SOME RELIEF IN LEADERS - ALBER I MARG 7386 TUES: AM,PM I\" LEADERS, WIDE & LOOSE; VALUE & SML/MID _ ORY - 95 A@S MEWS <D7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS HOO CWEN NA AM WOMEN WHA CO ROMS *7213/7287(120 SOD/10WK) € 4/81 2/274 1/211 1/204 ET EE TA J * 6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPES MA 00 . REE CHARS OTRA AM A . LAM LL - CEE EE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 53,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 53,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01979305fe9b",
+      "prefilter_score": 12.4,
+      "prefilter_stats": {
+        "brightRatio": 0.7359722222222222,
+        "darkRatio": 0.022152777777777778,
+        "edgeRatio": 0.2328810684757261,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1791,
+        "horizontalEdgeRatio": 0.12656349374602502,
+        "meanLuma": 228.58708333333334,
+        "stdDev": 39.914289071065824,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4800,
+        "verticalEdgeRatio": 0.3391986432054272
+      },
+      "score": 83.67,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.65,
+        "pair_bonus": 0,
+        "per_row_issues": -10,
+        "per_row_metrics": 8,
+        "text_density": 89.02
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "REMX",
+        "SNOW",
+        "SPCX",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 432,
+      "timestamp_hms": "00:07:12",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260610_ps_6.png"
+    }
+  ],
+  "frame_count": 187,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 150,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\screenshots\\20260610_ps_4.png",
+  "prefilter_best_score": 19.55,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "confusion_with_nearby": [],
+    "frame_index": 78,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260610_20260610_bozrokypmb0_3f833e3f_whiteboard\\ocr\\ocr_000079.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_BOTTOM_LINE",
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 312.8,
+    "observed_date": "20260610",
+    "ocr_confidence": 57,
+    "ocr_profile": "threshold",
+    "ocr_text": "6 Preview Fe EM View Go Tools Winow Help           [CARE XN EN]      2\nIE ® 0 (D- Screenshot 2026-06-10 at 5.23.00PM    aaa        ag   ® ia   ne\nMarwersuucs: « [22 TALE OF THE TAPE ~ WEDNESDAY, JUNE 10, 2026 << PY ————\n)              = % MARKET STATE:                                                                            -\n\nFr iShares 20+ Yel s 570 INDEXES 017 64 RGBOT 8d NASI USD TNX/TYXT vs 5d                  Pin        A880\n0 sam © sem * SENTIMENT:VIX 21.99 (+10.67%) F&G          ransssvorzer a SERB ARM BEST Se meee\ngpp cow PBULLCASE: INITIATE RALLY & TREND 21EMA                                             ee       wom\n\nne me PBEAR CASE: SUSTAINED BREAK BELOW 21EMA €6/5                                                   ~                  =\n® 4 ow mae NEWS:WED: CPI THURS: PPI FRI:SPCXIPO NEXT WED 6/17: 157 FOMC WITH WARSH                            roams\n\"7 Gm daw *TODAY'S KEYS:SPX vs 21EL/50D1 QQQus 21E4/50DP R2K vs 8EL/21Ed\n© cm wa #DAYCT:D2/3 =>D-3/4 8e:4d 21e: hd                         oN        B\nZ ~| wm wow *ACTION:O-0.44% 17396 {7297 17328 J MORE WEAKNESS LATE DAY                             ©\nLv |®™ o° *sPXO/N 7299-73851 07350 030 7328-73821 L/H 7265-7396              [re          wm      =\nB    Jl * SPX ATR: 110% SPX-162% 60/40-0.97% GRO-L24% TURBO-0.77%       Sab, eo\nPa  lf * SECTORS: 1 BY% O&G XLE XLP KWEB DBC J BPS SMH PBW REMX ITB BOTZ DRNZ NLF         wT Ww  0.\n-          * GRO HOLDINGS: SPYM,UPRO, GH,LLYX,CSCO,DOCN                                       of             o\nZw                * GRO RVAB/REBAR: 0.86 (-0.32%/-4.14%) SELL GNRC TRIM UPRO                                   -_               a\nGe         * TURBO HOLDINGS: SPYM,UPRO,SNOW                                                           =\n— * TURBO RVAB/REBAR: 0.55 (-0.11%/-1.87%) NO CHANGES                                          _—_—\ni’      \"ovum 5 8 BOTTOM LINE: =» INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS __ ==            88 _\n-e Wg vives KEYS: SPX vs 21E/50D QQQ vs 21E/50D R2K vs 21E/50D                 Eologuulighuy —%   ar\nYO          4 >>> S&P500 KEY LEVELS <<<                                                                               [          wr          -              _\neo     — * 7621 (6/2 INTRADAY A-T-H)                                      -              a\nnw,     wo *7423 {35 21EMA) € 6/58 4/81       2/274 2/254 2/124 2/61                            [I\non      mo                   2ND CLOSE BELOW THE 21-EMA FOR THE S&P 500... SOME RELIEF IN LEADERS           -                            Alter Tix Marg\n| Mme MS 37386 TUES: AM{,PMT* LEADERS, WIDE & LOOSE; VALUE & SML/MID                i                  ory - RE a8\n= foe          7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS      Bomhel Mew Cw ROGER opm RSRa\nTo        *7213/7287(120 SOD/1OWK) € 4/84 2/273 1/211 1/204                   mee wo -        EQ\n\"6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPED                            wow sa\nwes 0s. am\nJrA—\n",
+    "ocr_text_snippet": "6 Preview Fe EM View Go Tools Winow Help [CARE XN EN] 2 IE ® 0 (D- Screenshot 2026-06-10 at 5.23.00PM aaa ag ® ia ne Marwersuucs: « [22 TALE OF THE TAPE ~ WEDNESDAY, JUNE 10, 2026 << PY ———— ) = % ...",
+    "output_kind": "whiteboard",
+    "parsed_observations": [
+      {
+        "portfolio": "GRO",
+        "metrics_raw": "HOLDINGS: SPYM,UPRO, GH,LLYX,CSCO,DOCN OF O ZW * GRO RVAB/REBAR: 0.86 (-0.32%/-4.14%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "SELL GNRC TRIM UPRO -_ A GE * TURBO HOLDINGS: SPYM,UPRO,SNOW =",
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 57,
+        "ocr_profile": "threshold"
+      },
+      {
+        "portfolio": "TURBO",
+        "metrics_raw": "RVAB/REBAR: 0.55 (-0.11%/-1.87%)",
+        "metric_1": null,
+        "metric_2": null,
+        "metric_scalar": null,
+        "action_text": "NO CHANGES _-_- I' \"OVUM 5 8 BOTTOM LINE: =» INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS __ == 88 _ E WG VIVES KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS 21E/50D EOLOGUULIGHUY -% AR YO 4 >>> S&P500 KEY LEVELS <<< [ WR - _ EO - * 7621 (6/2 INTRADAY A-T-H) - A NW, WO *7423 {35 21EMA) € 6/58 4/81 2/274 2/254 2/124 2/61 [I ON MO 2ND CLOSE BELOW THE 21-EMA FOR THE S&P 500... SOME RELIEF IN LEADERS - ALTER TIX MARG MME MS 37386 TUES: AM{,PMT* LEADERS, WIDE & LOOSE; VALUE & SML/MID I ORY - RE A8 FOE 7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS BOMHEL MEW CW ROGER OPM RSRA TO *7213/7287(120 SOD/1OWK) € 4/84 2/273 1/211 1/204 MEE WO - EQ 6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPED WOW SA WES 0S. AM JRA-",
+        "bottom_line": null,
+        "parse_status": "review",
+        "issue_codes": [
+          "MISSING_BOTTOM_LINE",
+          "LOW_OCR_CONFIDENCE"
+        ],
+        "ocr_confidence": 57,
+        "ocr_profile": "threshold"
+      }
+    ],
+    "parsed_row_count": 2,
+    "phash": "807f01979307fe8b",
+    "prefilter_score": 12.31,
+    "prefilter_stats": {
+      "brightRatio": 0.7392361111111111,
+      "darkRatio": 0.022152777777777778,
+      "edgeRatio": 0.2261677619956187,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1688,
+      "horizontalEdgeRatio": 0.11928485619390856,
+      "meanLuma": 228.95534722222223,
+      "stdDev": 39.79150548681476,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 4713,
+      "verticalEdgeRatio": 0.33305066779732884
+    },
+    "score": 98.89,
+    "score_breakdown": {
+      "chart_likeness": -6,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 2.85,
+      "pair_bonus": 4,
+      "per_row_issues": -8,
+      "per_row_metrics": 16,
+      "text_density": 90.04
+    },
+    "screen_layout": "structured_whiteboard",
+    "tickers": [
+      "ARM",
+      "REMX",
+      "SNOW",
+      "SPYM",
+      "UPRO"
+    ],
+    "timestamp": 312,
+    "timestamp_hms": "00:05:12"
+  },
+  "top_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 78,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260610_20260610_bozrokypmb0_3f833e3f_whiteboard\\ocr\\ocr_000079.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260610",
+      "ocr_confidence": 57,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Preview Fe EM View Go Tools Winow Help           [CARE XN EN]      2\nIE ® 0 (D- Screenshot 2026-06-10 at 5.23.00PM    aaa        ag   ® ia   ne\nMarwersuucs: « [22 TALE OF THE TAPE ~ WEDNESDAY, JUNE 10, 2026 << PY ————\n)              = % MARKET STATE:                                                                            -\n\nFr iShares 20+ Yel s 570 INDEXES 017 64 RGBOT 8d NASI USD TNX/TYXT vs 5d                  Pin        A880\n0 sam © sem * SENTIMENT:VIX 21.99 (+10.67%) F&G          ransssvorzer a SERB ARM BEST Se meee\ngpp cow PBULLCASE: INITIATE RALLY & TREND 21EMA                                             ee       wom\n\nne me PBEAR CASE: SUSTAINED BREAK BELOW 21EMA €6/5                                                   ~                  =\n® 4 ow mae NEWS:WED: CPI THURS: PPI FRI:SPCXIPO NEXT WED 6/17: 157 FOMC WITH WARSH                            roams\n\"7 Gm daw *TODAY'S KEYS:SPX vs 21EL/50D1 QQQus 21E4/50DP R2K vs 8EL/21Ed\n© cm wa #DAYCT:D2/3 =>D-3/4 8e:4d 21e: hd                         oN        B\nZ ~| wm wow *ACTION:O-0.44% 17396 {7297 17328 J MORE WEAKNESS LATE DAY                             ©\nLv |®™ o° *sPXO/N 7299-73851 07350 030 7328-73821 L/H 7265-7396              [re          wm      =\nB    Jl * SPX ATR: 110% SPX-162% 60/40-0.97% GRO-L24% TURBO-0.77%       Sab, eo\nPa  lf * SECTORS: 1 BY% O&G XLE XLP KWEB DBC J BPS SMH PBW REMX ITB BOTZ DRNZ NLF         wT Ww  0.\n-          * GRO HOLDINGS: SPYM,UPRO, GH,LLYX,CSCO,DOCN                                       of             o\nZw                * GRO RVAB/REBAR: 0.86 (-0.32%/-4.14%) SELL GNRC TRIM UPRO                                   -_               a\nGe         * TURBO HOLDINGS: SPYM,UPRO,SNOW                                                           =\n— * TURBO RVAB/REBAR: 0.55 (-0.11%/-1.87%) NO CHANGES                                          _—_—\ni’      \"ovum 5 8 BOTTOM LINE: =» INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS __ ==            88 _\n-e Wg vives KEYS: SPX vs 21E/50D QQQ vs 21E/50D R2K vs 21E/50D                 Eologuulighuy —%   ar\nYO          4 >>> S&P500 KEY LEVELS <<<                                                                               [          wr          -              _\neo     — * 7621 (6/2 INTRADAY A-T-H)                                      -              a\nnw,     wo *7423 {35 21EMA) € 6/58 4/81       2/274 2/254 2/124 2/61                            [I\non      mo                   2ND CLOSE BELOW THE 21-EMA FOR THE S&P 500... SOME RELIEF IN LEADERS           -                            Alter Tix Marg\n| Mme MS 37386 TUES: AM{,PMT* LEADERS, WIDE & LOOSE; VALUE & SML/MID                i                  ory - RE a8\n= foe          7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS      Bomhel Mew Cw ROGER opm RSRa\nTo        *7213/7287(120 SOD/1OWK) € 4/84 2/273 1/211 1/204                   mee wo -        EQ\n\"6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPED                            wow sa\nwes 0s. am\nJrA—\n",
+      "ocr_text_snippet": "6 Preview Fe EM View Go Tools Winow Help [CARE XN EN] 2 IE ® 0 (D- Screenshot 2026-06-10 at 5.23.00PM aaa ag ® ia ne Marwersuucs: « [22 TALE OF THE TAPE ~ WEDNESDAY, JUNE 10, 2026 << PY ———— ) = % ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO, GH,LLYX,CSCO,DOCN OF O ZW * GRO RVAB/REBAR: 0.86 (-0.32%/-4.14%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL GNRC TRIM UPRO -_ A GE * TURBO HOLDINGS: SPYM,UPRO,SNOW =",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 57,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 0.55 (-0.11%/-1.87%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES _-_- I' \"OVUM 5 8 BOTTOM LINE: =» INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS __ == 88 _ E WG VIVES KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS 21E/50D EOLOGUULIGHUY -% AR YO 4 >>> S&P500 KEY LEVELS <<< [ WR - _ EO - * 7621 (6/2 INTRADAY A-T-H) - A NW, WO *7423 {35 21EMA) € 6/58 4/81 2/274 2/254 2/124 2/61 [I ON MO 2ND CLOSE BELOW THE 21-EMA FOR THE S&P 500... SOME RELIEF IN LEADERS - ALTER TIX MARG MME MS 37386 TUES: AM{,PMT* LEADERS, WIDE & LOOSE; VALUE & SML/MID I ORY - RE A8 FOE 7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS BOMHEL MEW CW ROGER OPM RSRA TO *7213/7287(120 SOD/1OWK) € 4/84 2/273 1/211 1/204 MEE WO - EQ 6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPED WOW SA WES 0S. AM JRA-",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 57,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01979307fe8b",
+      "prefilter_score": 12.31,
+      "prefilter_stats": {
+        "brightRatio": 0.7392361111111111,
+        "darkRatio": 0.022152777777777778,
+        "edgeRatio": 0.2261677619956187,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1688,
+        "horizontalEdgeRatio": 0.11928485619390856,
+        "meanLuma": 228.95534722222223,
+        "stdDev": 39.79150548681476,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4713,
+        "verticalEdgeRatio": 0.33305066779732884
+      },
+      "score": 98.89,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.85,
+        "pair_bonus": 4,
+        "per_row_issues": -8,
+        "per_row_metrics": 16,
+        "text_density": 90.04
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARM",
+        "REMX",
+        "SNOW",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 312,
+      "timestamp_hms": "00:05:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 75,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260610_20260610_bozrokypmb0_3f833e3f_whiteboard\\ocr\\ocr_000076.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260610",
+      "ocr_confidence": 54,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Preview Flo ER View Go Tool Widow Help           @Coaed 5 ® +      \"\nMarcersusce o (22 TALE OF THE TAPE ~ WEDNESDAY, JUNE 10, 2026 <<  bam. DE ©\n)              ~ * MARKET STATE:                                                                            -\nFP iShares 204 Yel» oro INDEXES 04 64 RGBOD 84 NASI USD TNX/TYXD vs 5d                   Pin        A880\n6 soe * SENTIMENT:VIX 21.99 (+10.67%) FRG            An363407267 +3 OEE NAMM 8682-1057 Kim ites: se\npng cw FBULLCASE: INITIATE RALLY & TREND 21EMA                                               :           os\n\"TT me me BEAR CASE: SUSTAINED BREAK BELOW 21EMA €6/5                                Ten      LE\n® 4 me oe NEWS: WED: CPL THURS: PPI FRE: SPCX IPO NEXT WED 6/17: 157 FOMC WITH WARSH                                      iH\nD7 an ues * TODAY'S KEYS: SPX vs 21EL/50D1 QQQvs 21E4/50D  R2K vs 8EL/21E4\nMc ma wa eDAYCT:D-2/3 =>D-3/4 8e:-4d 21e:-pd                            JSR VER         8\nF ~| mu wm *ACTION:0-0.44% 17396 $7297 17328 J MORE WEAKNESS LATE DAY                                             ©\nLv | ®™ ®* *SPXO/N 7299-73851 07350 030 7328-73821 L/H 7265-7396                                            i        cova\nB         rk * SPX ATR: 1.10% SPX-1.62% 60/40-0.97% GRO -1.24% TURBO -0.77%               Ios,                              p\nPa  lf * SECTORS: 4 BY% O&G XLE XLP KWEB DBC J BPS SMH PBW REMX ITB BOTZ DRNZ NLF        wh aE       .  0.\n|.                * GRO HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN                                                                “ ut    \"               -\n2                 * GRO RVAB/REBAR: 0.86 (-0.32%/-4.14%) SELL GNRC TRIM UPRO                                     _                at\nGe             * TURBO HOLDINGS: SPYM,UPRO, SNOW                                                                                     -\n© ———— \"TURBO RVAB/REBAR: 0.55 (-0.11%/-1.87%) NO CHANGES                                         _ ul\nove gs, % BOTTOM LINE: =» INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS           -                    as _\noe  hill * THURS KEYS: SPX vs 21E/50D QQQ vs 21E/50D  R2K vs 21€/50D                               Eloy #5     os\nVO          4 >>> S&P500 KEY LEVELS <<<                                                                                 -           u-          xn                   @\nMo        — * 7621 (6/2 INTRADAY A-T-H)                                                                  -                        ——\nnw,      wa *7423 (45 21EMA} € 6/5 4/81          2/274 2/254 2/12) 2/61                                      Sums n cn\non       oo\" -                    2ND CLOSE BELOW THE 21-EMA FOR THE S&P 500... SOME RELIEF IN LEADERS            —                              Alter Tix Marg\ntema       \"37386 TUES: AM PMD LEADERS, WIDE & LOOSE; VALUE & SML/MIDT                 i                   Gm - 2 EA\nfale               =»7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS         tio co rmg \"am %Ofron  RSRa\nCo ee \"7213/7287(120 S0D/10WK) € 4/84 2/273 1/211 1/201                          ET       -           ED\nron       * 6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPE                                    was 00      :      cose\naw ao       .       Lam\n[A —\nCT       BN                                        —                        Ce tm ee\n",
+      "ocr_text_snippet": "6 Preview Flo ER View Go Tool Widow Help @Coaed 5 ® + \" Marcersusce o (22 TALE OF THE TAPE ~ WEDNESDAY, JUNE 10, 2026 << bam. DE © ) ~ * MARKET STATE: - FP iShares 204 Yel» oro INDEXES 04 64 RGBOD ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN \" UT \" - 2 * GRO RVAB/REBAR: 0.86 (-0.32%/-4.14%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL GNRC TRIM UPRO _ AT GE * TURBO HOLDINGS: SPYM,UPRO, SNOW -",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": "RVAB/REBAR: 0.55 (-0.11%/-1.87%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "NO CHANGES _ UL OVE GS, % BOTTOM LINE: =» INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS - AS _ OE HILL * THURS KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS 21€/50D ELOY #5 OS VO 4 >>> S&P500 KEY LEVELS <<< - U- XN @ MO - * 7621 (6/2 INTRADAY A-T-H) - -- NW, WA *7423 (45 21EMA} € 6/5 4/81 2/274 2/254 2/12) 2/61 SUMS N CN ON OO\" - 2ND CLOSE BELOW THE 21-EMA FOR THE S&P 500... SOME RELIEF IN LEADERS - ALTER TIX MARG TEMA \"37386 TUES: AM PMD LEADERS, WIDE & LOOSE; VALUE & SML/MIDT I GM - 2 EA FALE =»7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS TIO CO RMG \"AM %OFRON RSRA CO EE \"7213/7287(120 S0D/10WK) € 4/84 2/273 1/211 1/201 ET - ED RON * 6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPE WAS 00 : COSE AW AO . LAM A - CT BN - CE TM EE",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01979307fe8b",
+      "prefilter_score": 12.3,
+      "prefilter_stats": {
+        "brightRatio": 0.7395138888888889,
+        "darkRatio": 0.022083333333333333,
+        "edgeRatio": 0.22549643134760794,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1686,
+        "horizontalEdgeRatio": 0.1191435234259063,
+        "meanLuma": 228.98354166666667,
+        "stdDev": 39.78241786002875,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4696,
+        "verticalEdgeRatio": 0.3318493392693096
+      },
+      "score": 98.22,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.7,
+        "pair_bonus": 4,
+        "per_row_issues": -8,
+        "per_row_metrics": 16,
+        "text_density": 89.52
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "MU",
+        "REMX",
+        "SNOW",
+        "SPCX",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 300,
+      "timestamp_hms": "00:05:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 96,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260610_20260610_bozrokypmb0_3f833e3f_whiteboard\\ocr\\ocr_000097.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260610",
+      "ocr_confidence": 54,
+      "ocr_profile": "threshold",
+      "ocr_text": "€ Predew Flo EM View Go Tools Window Hep           @Ceoaoed ¥ & + o IEEE 8 TERETE\nMd   -    ® @ (D- Screenshot 2026-06-10 8 5.23.00PM.      aaa           a     ®@ io               Focus\nMarcersusce a [22 TALE OF THE TAPE — WEDNESDAY, JUNE 10, 2026 <<                                     —                  -\n)              = * MARKET STATE:                                                                            -            Ce         ~ =\n© iShares 20+ Yel» gro INDEXES OF 64 RGBOA 84 NASIY USD TNX/TYXD vs 5d                ear         ’\nOommen © smo * SENTIMENT:VIX 21.99 (+10.67%) F&G            RAN 36.3.40.7 26.7 43.50 TY NAAIM 86.82 11.57      came)  —               Y -\npsp wen PBULLCASE: INITIATE RALLY & TREND 21EMA                                                :               Romeo\n\"7 n= me BEAR CASE: SUSTAINED BREAK BELOW 21EMA €6/5                                  Ts     hn 1\n® me ows « NEWS:WED: CPL THURS: PPI FRE SPCXIPO NEXT WED 6/17: 157 FOMC WITH WARSH               EE        —\n7 im ws * TODAY'S KEYS: SPX vs 214/500 QQQ vs 21E4/S0DD  R2K vs 8E/21E4                        wy\nMc mwa eDAYCT:D-2/3 =>D-3/4 Seidl 21e:-pd                        EA We\nF ~| mu wn *ACTION:0-0.44% 17396 {7297 17328 J MORE WEAKNESS LATE DAY                 Ce    ®\nLv | ®™ *v *SPXO/N 7299-73851 07350 030 7328-73821 L/H 7265-7396              —          PE      =\nBE    - Tol SPX ATR: 1.10% SPX-1.62% 60/40-0.97% GRO-1.24% TURBO -0.77%       Iusyn,  h   Nii       ~\nPa  pl * SECTORS: 4 BY% O&G XLE XLP KWEB DBC J BP$ SMH PBW REMX ITB BOTZ DRNZ NLF        Kh ptr          0.x\n|.          * GRO HOLDINGS: SPYM,UPRO,GH,LLYX,C5CO,DOCN                                      “ur   w    *\nZw                * GRO RVAB/REBAR: 0.86 (-0.32%/-4.14%) SELL GNRC TRIM UPRO                                   EE               2\nGe         * TURBO HOLDINGS: SPYM,UPRO,SNOW                                                           -\nT ———— \"TURBO RVAB/REBAR: 0.55 (-0.11%/-1.87%) NO CHANGES                             _—\na   om Ji * BOTTOM LINE: = INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS =»           a _\nUgg   LLY * THURS KEYS: SPX vs 21E/S0D  QQQ vs 21E/50D  R2K vs 21€/50D                     Elegy #   on\nVO a          4 >>> S&P500 KEY LEVELS <<<                                                                               H          wn          an\neo    . — *7621{6/2 INTRADAY A-T-H}                                      -              re\nnw,     na *7423{521EMA) € 6/54 4/81       2/274 2/251 2/12 2/61                            [Er\non        Mo                 2ND CLOSE BELOW THE 21-EMA FOR THE $&P 500... SOME RELIEF IN LEADERS          -                         Alber i Marg\nteem“. P7386 TUES: AM PMT LEADERS, WIDE & LOOSE; VALUE & SML/MIDT                 B                   Orw - SS aS\nmee $7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS        BImand Nw Com MCR wot Rha\nTo em\" 7213/7287(120 SOD/10WK) € 4/81 2/273 1/214 1/20            Tm www\nen    * 6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPE                       won oe    -    cose\nwwe     .     Lem\n[—\nL    vie                                                 —                          -    -    ~n              on\n",
+      "ocr_text_snippet": "€ Predew Flo EM View Go Tools Window Hep @Ceoaoed ¥ & + o IEEE 8 TERETE Md - ® @ (D- Screenshot 2026-06-10 8 5.23.00PM. aaa a ®@ io Focus Marcersusce a [22 TALE OF THE TAPE — WEDNESDAY, JUNE 10, 20...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,GH,LLYX,C5CO,DOCN \"UR W * ZW * GRO RVAB/REBAR: 0.86 (-0.32%/-4.14%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL GNRC TRIM UPRO EE 2 GE * TURBO HOLDINGS: SPYM,UPRO,SNOW - T ---- \"TURBO RVAB/REBAR: 0.55 (-0.11%/-1.87%) NO CHANGES _- A OM JI * BOTTOM LINE: = INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS =» A _ UGG LLY * THURS KEYS: SPX VS 21E/S0D QQQ VS 21E/50D R2K VS 21€/50D ELEGY # ON VO A 4 >>> S&P500 KEY LEVELS <<< H WN AN EO . - *7621{6/2 INTRADAY A-T-H} - RE NW, NA *7423{521EMA) € 6/54 4/81 2/274 2/251 2/12 2/61 [ER ON MO 2ND CLOSE BELOW THE 21-EMA FOR THE $&P 500... SOME RELIEF IN LEADERS - ALBER I MARG TEEM\". P7386 TUES: AM PMT LEADERS, WIDE & LOOSE; VALUE & SML/MIDT B ORW - SS AS MEE $7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS BIMAND NW COM MCR WOT RHA TO EM\" 7213/7287(120 SOD/10WK) € 4/81 2/273 1/214 1/20 TM WWW EN * 6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPE WON OE - COSE WWE . LEM L VIE - - - ~N ON",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80ff01c19b05fe9b",
+      "prefilter_score": 12.38,
+      "prefilter_stats": {
+        "brightRatio": 0.7367361111111111,
+        "darkRatio": 0.022222222222222223,
+        "edgeRatio": 0.22627376157162038,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1696,
+        "horizontalEdgeRatio": 0.1198501872659176,
+        "meanLuma": 228.82319444444445,
+        "stdDev": 39.823781850881915,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4708,
+        "verticalEdgeRatio": 0.33269733587732314
+      },
+      "score": 87.06,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.7,
+        "pair_bonus": 0,
+        "per_row_issues": -10,
+        "per_row_metrics": 8,
+        "text_density": 92.36
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "MU",
+        "PL",
+        "REMX",
+        "SNOW",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 384,
+      "timestamp_hms": "00:06:24"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 90,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260610_20260610_bozrokypmb0_3f833e3f_whiteboard\\ocr\\ocr_000091.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260610",
+      "ocr_confidence": 53,
+      "ocr_profile": "threshold",
+      "ocr_text": "§ Preview Fn 6 View Go Tots Widow Help            [CL RE XN ENR\nIE ® & (D-  Screenshor 2026-06-10 aL 5.23.00PM.        a aq              ag      ® i0     a\nMarsico [22 TALE OF THE TAPE ~ WEDNESDAY, JUNE 10, 2026 <<  PY —\n)              = % MARKET STATE:                                                                            -\n\nP iShares 20+ Yel» grouNDEXES OF 64 RGBOA 84 NASIY USD TNX/TYXD vs 5d                    Pin         A880\n0 sam © som * SENTIMENT:VIX 21.99 (+10.67%) F&6            ransssvorzer a SRBR NAR BESET Se meee\npsp wen PBULLCASE: INITIATE RALLY & TREND 21EMA                                                :                   ”           ome\n\n\"7 n= me BEAR CASE: SUSTAINED BREAK BELOW 21EMA €6/5                                          Ts        o       o\n® me ow « NEWS:WED: CPL THURS: PPI FRE SPCXIPO NEXT WED 6/17: 157 FOMC WITH WARSH                                  noamt\n\"7 am wen * TODAY'S KEYS: SPX vs 214/500 QQQvs 21E4/50D  R2K vs 8Ed/21Ed\n¥ cm wa eDAYCT:D-2/3 =>D-3/4 Seidl 21e:-pd                           A VE        B\nZ ~| wm ww *ACTION:O-0.44% 17396 {7297 17328 {MORE WEAKNESS LATE DAY                            0\nLv |®™ ®v *SPXO/N 7299-73851 07350 030 7328-73821 L/H 7265-7396                 rea——            wr       —\nBE      - Lk * SPX ATR: 1.10%1 SPX-1.62% 60/40-0.97% GRO-1.24% TURBO -0.77%             Ios ~\\                     ~\nPa  pl * SECTORS: 1 BY?% O&G XLE XLP KWEB DBC J BPS SMH PBW REMX ITB BOTZ DRNZ NLF        uh -       .  0.\n|.          * GRO HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN                                      “   \"         a\n2 -                 * GRO RVAB/REBAR: 0.86 (-0.32%/-4.14%) SELL GNRC TRIM UPRO                                      _                nat\nGe             * TURBO HOLDINGS: SPYM,UPRO,SNOW                                                                                     I\"\n7 ———— \"TURBO RVAB/REBAR: 0.55 (-0.11%/-1.87%) NO CHANGES                          EL\n\"ove i, & BOTTOM LINE: =» INFLATION SCARES AND [RAN WAR TENSIONS LEAD TO FURTHER WEAKNESS =»                   sm _\n-e  Ugg * THURS KEYS: SPX vs 21E/50D QQQ vs 21E/50D R2K vs 21E/50D                                 Eloguulilgiy —#     aes\nVO am          % >>> S&P500 KEY LEVELS <<<                                                                               H          un          EB                  ©\neo    . — * 7621 (6/2 INTRADAY A-T-H)                                        -               fopioha\nnw,      wo *7423{J521EMA) € 6/50 4/81         2/274 2/250 2/124 2/61                                  [i\non          NL                    2ND CLOSE BELOW THE 21-EMA FOR THE S&P 500... SOME RELIEF IN LEADERS           -                             Alber Tux Marg\nwm “37386 TUES: AM PM] LEADERS, WIDE & LOOSE; VALUE & SML/MID                 i                   ory - STAR\n= Bown               7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS         Wowhgl Mes Com hSE® orm RSRa\nTo em\" 7213/7287(120 SOD/10WK) € 4/81 2/273 1/214 1/20                       wes -          we\nron      * 6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPED                              www 00     Cosme\nwee 0. am\n= Couns neon                                                      _                                mer                 i.\n",
+      "ocr_text_snippet": "§ Preview Fn 6 View Go Tots Widow Help [CL RE XN ENR IE ® & (D- Screenshor 2026-06-10 aL 5.23.00PM. a aq ag ® i0 a Marsico [22 TALE OF THE TAPE ~ WEDNESDAY, JUNE 10, 2026 << PY — ) = % MARKET STATE...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN \" \" A 2 - * GRO RVAB/REBAR: 0.86 (-0.32%/-4.14%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL GNRC TRIM UPRO _ NAT GE * TURBO HOLDINGS: SPYM,UPRO,SNOW I\" 7 ---- \"TURBO RVAB/REBAR: 0.55 (-0.11%/-1.87%) NO CHANGES EL OVE I, & BOTTOM LINE: =» INFLATION SCARES AND [RAN WAR TENSIONS LEAD TO FURTHER WEAKNESS =» SM _ E UGG * THURS KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS 21E/50D ELOGUULILGIY -# AES VO AM % >>> S&P500 KEY LEVELS <<< H UN EB © EO . - * 7621 (6/2 INTRADAY A-T-H) - FOPIOHA NW, WO *7423{J521EMA) € 6/50 4/81 2/274 2/250 2/124 2/61 [I ON NL 2ND CLOSE BELOW THE 21-EMA FOR THE S&P 500... SOME RELIEF IN LEADERS - ALBER TUX MARG WM \"37386 TUES: AM PM] LEADERS, WIDE & LOOSE; VALUE & SML/MID I ORY - STAR BOWN 7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS WOWHGL MES COM HSE® ORM RSRA TO EM\" 7213/7287(120 SOD/10WK) € 4/81 2/273 1/214 1/20 WES - WE RON * 6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPED WWW 00 COSME WEE 0. AM COUNS NEON _ MER I.",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 53,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 53,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01979307fe8b",
+      "prefilter_score": 12.32,
+      "prefilter_stats": {
+        "brightRatio": 0.7390277777777777,
+        "darkRatio": 0.022222222222222223,
+        "edgeRatio": 0.22630909476362093,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1690,
+        "horizontalEdgeRatio": 0.11942618896191082,
+        "meanLuma": 228.9345138888889,
+        "stdDev": 39.78521086076988,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4715,
+        "verticalEdgeRatio": 0.33319200056533105
+      },
+      "score": 85.15,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.65,
+        "pair_bonus": 0,
+        "per_row_issues": -10,
+        "per_row_metrics": 8,
+        "text_density": 90.5
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "BE",
+        "PL",
+        "REMX",
+        "SNOW",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 360,
+      "timestamp_hms": "00:06:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 87,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260610_20260610_bozrokypmb0_3f833e3f_whiteboard\\ocr\\ocr_000088.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE",
+        "MISSING_METRIC_LINE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": "20260610",
+      "ocr_confidence": 54,
+      "ocr_profile": "threshold",
+      "ocr_text": "§ Preview Fn 6 View Go Tots Wow Help            [CERNE XN ENR?\nIE ® & (D-  Screenshor 2026-06-10 8 5.23.00PM.    a aq        ag   ® i0   a\nMarsico (22 TALE OF THE TAPE ~ WEDNESDAY, JUNE 10, 2026 << PY ———\n)              = % MARKET STATE:                                                                            -\n© iShares 20+ Yel» grouNDEXES OF 64 RGBOA 84 NASIY USD TNX/TYXD vs 5d                   sass        A880\n0 om © smi * SENTIMENT:VIX 21.99 (+10.67%) F&6          ransssorzer a SRB ARM BESET Se meee\ngap con PBULLCASE: INITIATE RALLY & TREND 21EMA                                                 :                   ”            ome\n\"7 n= me BEAR CASE: SUSTAINED BREAK BELOW 21EMA €6/5                                          Ts        o       o\n® 7 me ows « NEWS:WED: CPL THURS: PPI FRE SPCXIPO NEXT WED 6/17: 157 FOMC WITH WARSH                            roamt\n\"7 am wen * TODAY'S KEYS: SPX vs 214/500 QQQvs 21E4/50D  R2K vs 8Ed/21Ed\nMc mwa eDAYCT:D-2/3 =>D-3/4 8e:-dd 21e:-pd                         A YE        a8\nZF ~| wm ww *ACTION:O-0.44% 17396 {7297 17328 {MORE WEAKNESS LATE DAY                            0\nLv |®™ o *sPXO/N 7299-73851 07350 030 7328-73821 L/H 7265-7396              rea——          ba      —\nBE    - Tol + SPX ATR: 1.10% SPX-1.62% 60/40-0.97% GRO-1.24% TURBO -0.77%       Ios ~\\            ~\nPa  pl * SECTORS: 1 BY?% O&G XLE XLP KWEB DBC J BPS SMH PBW REMX ITB BOTZ DRNZ NLF        uh -       .  0.\n|.          * GRO HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN                                      “   \"         a\n2 -                * GRO RVAB/REBAR: 0.86 (-0.32%/-4.14%) SELL GNRC TRIM UPRO                                   _               at\nGe         * TURBO HOLDINGS: SPYM,UPRO,SNOW                                                           I\"\nT ———— \"TURBO RVAB/REBAR: 0.55 (-0.11%/-1.87%) NO CHANGES                             _—\n\"owes 5, & BOTTOM LINE: =» INFLATION SCARES AND [RAN WAR TENSIONS LEAD TO FURTHER WEAKNESS ==               sa _\n-e  Ugg * THURS KEYS: SPX vs 21E/50D QQQ vs 21E/50D R2K vs 21E/50D                       Flog, #    aes\nVO am          4 >>> S&P500 KEY LEVELS <<<                                                                               H          un          EB                  ©\neo    = * 7621 (6/2 INTRADAY A-T-H)                                       -              fopioha\nnw,     wo *7423{J521EMA) € 6/50 4/81       2/274 2/250 2/124 2/61                            [i\non         NL                   2ND CLOSE BELOW THE 21-EMA FOR THE S&P 500... SOME RELIEF IN LEADERS           -                            Alber Tux Marg\nwm \"37386 TUES: AM, PM] LEADERS, WIDE & LOOSE; VALUE & SML/MID                 i                   ory - STAR\n= Bown            7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS       Wowhgl Mes Com hSE® orm RSRa\nTo em\" 7213/7287(120 SOD/10WK) € 4/81 2/273 1/214 1/20                   wes -        we\nron    * 6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPED                       www 00    Cosme\n= Couns neon                                                                          we ee. am\nLC                                         —                         Ce ttt\n",
+      "ocr_text_snippet": "§ Preview Fn 6 View Go Tots Wow Help [CERNE XN ENR? IE ® & (D- Screenshor 2026-06-10 8 5.23.00PM. a aq ag ® i0 a Marsico (22 TALE OF THE TAPE ~ WEDNESDAY, JUNE 10, 2026 << PY ——— ) = % MARKET STATE...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": "HOLDINGS: SPYM,UPRO,GH,LLYX,CSCO,DOCN \" \" A 2 - * GRO RVAB/REBAR: 0.86 (-0.32%/-4.14%)",
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": "SELL GNRC TRIM UPRO _ AT GE * TURBO HOLDINGS: SPYM,UPRO,SNOW I\" T ---- \"TURBO RVAB/REBAR: 0.55 (-0.11%/-1.87%) NO CHANGES _- OWES 5, & BOTTOM LINE: =» INFLATION SCARES AND [RAN WAR TENSIONS LEAD TO FURTHER WEAKNESS == SA _ E UGG * THURS KEYS: SPX VS 21E/50D QQQ VS 21E/50D R2K VS 21E/50D FLOG, # AES VO AM 4 >>> S&P500 KEY LEVELS <<< H UN EB © EO = * 7621 (6/2 INTRADAY A-T-H) - FOPIOHA NW, WO *7423{J521EMA) € 6/50 4/81 2/274 2/250 2/124 2/61 [I ON NL 2ND CLOSE BELOW THE 21-EMA FOR THE S&P 500... SOME RELIEF IN LEADERS - ALBER TUX MARG WM \"37386 TUES: AM, PM] LEADERS, WIDE & LOOSE; VALUE & SML/MID I ORY - STAR BOWN 7267 TODAY: INFLATION SCARES AND IRAN WAR TENSIONS LEAD TO FURTHER WEAKNESS WOWHGL MES COM HSE® ORM RSRA TO EM\" 7213/7287(120 SOD/10WK) € 4/81 2/273 1/214 1/20 WES - WE RON * 6872/6892 (15 200D/40WK) € 5/121 5/8 SLOPED WWW 00 COSME COUNS NEON WE EE. AM LC - CE TTT",
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 54,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807f01979307fe8b",
+      "prefilter_score": 12.33,
+      "prefilter_stats": {
+        "brightRatio": 0.7385416666666667,
+        "darkRatio": 0.022222222222222223,
+        "edgeRatio": 0.22623842837961983,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1687,
+        "horizontalEdgeRatio": 0.11921418980990743,
+        "meanLuma": 228.92798611111112,
+        "stdDev": 39.79015644742947,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 4716,
+        "verticalEdgeRatio": 0.3332626669493322
+      },
+      "score": 85.14,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.7,
+        "pair_bonus": 0,
+        "per_row_issues": -10,
+        "per_row_metrics": 8,
+        "text_density": 90.44
+      },
+      "screen_layout": "structured_whiteboard",
+      "tickers": [
+        "ARM",
+        "BE",
+        "PL",
+        "REMX",
+        "SNOW",
+        "SPYM",
+        "UPRO"
+      ],
+      "timestamp": 348,
+      "timestamp_hms": "00:05:48"
+    }
+  ],
+  "top_rejected_candidates": [
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260610_20260610_bozrokypmb0_3f833e3f_whiteboard\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0,
+      "ocr_profile": "threshold",
+      "ocr_text": "",
+      "ocr_text_snippet": "",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 0,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "0000000000000000",
+      "prefilter_score": 7.75,
+      "prefilter_stats": {
+        "brightRatio": 0.5546527777777778,
+        "darkRatio": 0.22118055555555555,
+        "edgeRatio": 0.21426047629142816,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 2230,
+        "horizontalEdgeRatio": 0.15758603632252138,
+        "meanLuma": 183.8803472222222,
+        "stdDev": 89.50926350192597,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3834,
+        "verticalEdgeRatio": 0.27093491626033495
+      },
+      "score": -15.33,
+      "score_breakdown": {
+        "chart_likeness": -3.3335318004140806,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 0,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 0
+      },
+      "screen_layout": "chart",
+      "tickers": [],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 57,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260610_20260610_bozrokypmb0_3f833e3f_whiteboard\\ocr\\ocr_000058.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 225.92,
+      "observed_date": null,
+      "ocr_confidence": 35,
+      "ocr_profile": "threshold",
+      "ocr_text": "6 Cweme Fla Edt Vew History Bookmarks Profs Tab Window tein        a    3\nMarieTsUke: a GY      X Toy | Westy Moy Mm -  ¢ soz Qa DBL ©\n~ Choe Volatility Index                                             wn l22 4\n© mio       .                                                      on i 4 ET\n“es mw                                                                       ®\nshe oR w          N   y    ~                                 R   Ps   ot\nNL Nf See TTT AINA ATTN INNS a   i\no-\nI.                     .\nwes\noo                        i                 .\n-                          |      |                     whl ly                0\n               wo              N\ni                                                            |                 _—            J\nBg rly  il               [i umn   sm   ]  |     foal  I   »\niy I       ez    . I  — I    _     i\ntay      i     IPI LIRREY Coelil Sh        Fk\npy   L  nl i fli ot   po     HP et               LA\n\"      wz   us\ncA\nCee\nPe\n[EE\nnow om wn om ow om om ow om ww ow momo mm om ow mow om me x ow om ow\na     *      -     -      on      or -      -      Ps      -     -\nServana    [ee    Reports   Main List 35items C  Uotweo 0236 tha FT 08 a 2070                                    © Puy  IN\n= aoe        ow    [RP    Comey mg Noy ORS gu nn ROwAt Me Gre MOOR yoru hom\n© Video Process     “    Br awn omer so om     ow   oe ew\n—        |   Ae wm comme   we mmo aww     .   ow    ovr\nJR—         Bs ov usomswmoe oun wm. es oo         [SE     om\nLC TTT c—————————————————————————————————————————\n",
+      "ocr_text_snippet": "6 Cweme Fla Edt Vew History Bookmarks Profs Tab Window tein a 3 MarieTsUke: a GY X Toy | Westy Moy Mm - ¢ soz Qa DBL © ~ Choe Volatility Index wn l22 4 © mio . on i 4 ET “es mw ® she oR w N y ~ R P...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 35,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807d9f22dd07734c",
+      "prefilter_score": 19.55,
+      "prefilter_stats": {
+        "brightRatio": 0.8116666666666666,
+        "darkRatio": 0.056805555555555554,
+        "edgeRatio": 0.13991944032223871,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1380,
+        "horizontalEdgeRatio": 0.09751960992156031,
+        "meanLuma": 227.68659722222222,
+        "stdDev": 52.942289474577805,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2580,
+        "verticalEdgeRatio": 0.18231927072291712
+      },
+      "score": -24.22,
+      "score_breakdown": {
+        "chart_likeness": -3.9654711437979397,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.75,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 228,
+      "timestamp_hms": "00:03:48"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 114,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260610_20260610_bozrokypmb0_3f833e3f_whiteboard\\ocr\\ocr_000115.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 456.8,
+      "observed_date": null,
+      "ocr_confidence": 33,
+      "ocr_profile": "threshold",
+      "ocr_text": "$ Chums Fa Et View Hnoy Bockmaks Profs Tab Window Help         a ES\nMarieTSURcs o GY       X ony Weakly Moh Mm ~ woz Q Qaen- DEL O\nFP State Street Energy Select Sector SPDR ETF                                                       $58.49          5825 0\nbean A                                        POOw WA SOmAgw | Se) mew    woz air      XE Et an\nPR         .                                ES Dune NA S00ay hog £ bt S21LSI0ATE 21 Oop ATR. 21050       er a     pity\nwo     [rapa gt     hornet 05VPHET DVIORS Low Updo OPH ET OVIORS\nmpg Cen               [IE EP SN                  p          ~~   N       womens\nEHD ver we sive comomming +          TTT TT TTT TTT NL TNT   Ie)\n.     Ba TIS Wow wom amen                                                                    &\nWS me wm sn wa msews #5                               3                   an\nAn mm on ems                                          i            wn             =e\nRe mn ana SA B                                [Li    Pr           H   ®\n[i CAAA madi                                       WH \"     a dy\n_     AZ A NA Beno wide WA                                           wt           Ri     \"AN hed          News\nFo me am nw Smo                                 flag     M4, we Tr   P\nws wn ce Nae men                               3 Shy!         4  id    3            .    =\nLr               xan                         Re                 5              crane\n3                                                    Ix                  war\npl     ,                   - 0 #\npa.                                           LM      -                -                [i\nLC           .e        i.   ~    \\ Jha   ~            TA        ra\nPe      0             ey       r—                                              EY\nwn          ou            B\nFP a ah es WO Ri LL TWN oy                                        San\nSa BR   RF\n+     6                   =                      Sse                                                    Ts\n_—\n4     [r—                                    ™      a              P            -         me\no       =     iii      P     a                           1  I I  Ii il I  mm  Hil           wm\n~am   Tn                                                                     B=\nvo   a   5   »   12   E3   10   Eg   o   El   os   El  E   1\"   E]   El  El   El   Eg   3   3   Cl   E   El        hid\non       on       oa       ™      ou       =      ES      -       aor       wy      an\n[APS           [Po B——           JD,                   [ET ]\n-     4300     an    un    -     an     “oh    EES    EB     ar    ar                     Price i$), % Chg.  hl\nnw      a     wn     I\"    -      wa     I\"     w    “      A     wa                    As 81.5000\n= 9               a                       ww mm                w                     Acre an\nsem Gwe Gwem Charts of Interest Shtwms © uses orm                                 or - QB BA\na fen            @ tow    Br ome nme     COT Tm we MER VURAL se TU UNS cw mm ren ROT sma\nBE\n= Man Lt                   !\n1x Chats of korest          |                                                               @ Tho selected tems have bean delsted | Undo\npl\nLL ——— od\n",
+      "ocr_text_snippet": "$ Chums Fa Et View Hnoy Bockmaks Profs Tab Window Help a ES MarieTSURcs o GY X ony Weakly Moh Mm ~ woz Q Qaen- DEL O FP State Street Energy Select Sector SPDR ETF $58.49 5825 0 bean A POOw WA SOmAg...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 33,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 33,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80aa5529d6d7aa57",
+      "prefilter_score": 16.48,
+      "prefilter_stats": {
+        "brightRatio": 0.7692361111111111,
+        "darkRatio": 0.058611111111111114,
+        "edgeRatio": 0.16532400537064518,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1507,
+        "horizontalEdgeRatio": 0.10649424068970391,
+        "meanLuma": 224.4465277777778,
+        "stdDev": 53.8356880460175,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3172,
+        "verticalEdgeRatio": 0.22415377005158646
+      },
+      "score": -26.14,
+      "score_breakdown": {
+        "chart_likeness": -5.793294550836817,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.65,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE",
+        "PL"
+      ],
+      "timestamp": 456,
+      "timestamp_hms": "00:07:36"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 63,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260610_20260610_bozrokypmb0_3f833e3f_whiteboard\\ocr\\ocr_000064.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 252,
+      "observed_date": null,
+      "ocr_confidence": 37,
+      "ocr_profile": "threshold",
+      "ocr_text": "€ Chvme Fla Ede ew Hnoy Boris Profs Tab Window Wen        a  ES\nMarceTsdiee o GR      Xow wey Moy ten - sem Quan - DBE ©\n® U.S. Dollar Index {DXY)                                           wo iB0.02 4\n© Aol     -                                                oon Om\nLo so 5 17 ET cron\nSe NSA Li TNT NN TN ee TN TN   N   =\nIN ‘                          rors [ —   vmx                                            =\nne                                 I                        wo\nER man                                        -\nrv                    th          \"   I        | i   I,             x\nP| N ji    i\"  Sak pil    TN  i                        0\ns =  Taft Bid ou     ALES       [ANF       :\nCW            WL\nzw                          1               I                ;\nie                                                 Hh           !\n4  i      1 i     “        =\n~                                            Hy In lf  th iF   I\nla                                                     Ca       f\nVv Oo                                       -  do\nPCD inven\nn=                             Data Not Available\n=    wn mn wen oxn en wen wen EE wen en en men wm ms wen\nsew i Reem   Main List 35 toms C voted 073 rma 1 osm                                    ory © 2 EBA\npew om   6 sme me    CMe Opn wa UB NORE a pm Sst Mem Om Om sore mn\n.       ..     Pr wn eomesnmme om om oon       .    .            .    .       \\\nPr          | row mw      a            Cw          a\n« Coarse            Bos ov usowwmem on ws. es oo    .     ow. om\nLTT e————— en.\n",
+      "ocr_text_snippet": "€ Chvme Fla Ede ew Hnoy Boris Profs Tab Window Wen a ES MarceTsdiee o GR Xow wey Moy ten - sem Quan - DBE © ® U.S. Dollar Index {DXY) wo iB0.02 4 © Aol - oon Om Lo so 5 17 ET cron Se NSA Li TNT NN ...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 37,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "80f30e2cfb4dfc11",
+      "prefilter_score": 17.91,
+      "prefilter_stats": {
+        "brightRatio": 0.8198611111111112,
+        "darkRatio": 0.05694444444444444,
+        "edgeRatio": 0.13493746025015899,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1199,
+        "horizontalEdgeRatio": 0.08472899441735567,
+        "meanLuma": 228.60333333333332,
+        "stdDev": 53.25528810466731,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 2620,
+        "verticalEdgeRatio": 0.18514592608296235
+      },
+      "score": -26.15,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.85,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [],
+      "timestamp": 252,
+      "timestamp_hms": "00:04:12"
+    },
+    {
+      "confusion_with_nearby": [],
+      "frame_index": 150,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260915\\ocr-20260915-backfill\\ocr-20260915-backfill\\ocr_probe\\frames\\20260610_20260610_bozrokypmb0_3f833e3f_whiteboard\\ocr\\ocr_000151.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 600.8,
+      "observed_date": null,
+      "ocr_confidence": 31,
+      "ocr_profile": "threshold",
+      "ocr_text": "@ Chwame Fla Et View Hoy Bockman Profs Tab Window Help         Es\nMarxeTsUres o GE     X Touy Weekly Mow, lM ~  < so: Q Qa DEL G\n7 D-Wave Quantum Inc.                                                                  $23.03         2325 0\nComin brpm 1th                                 Poom     WA DOs MMS Naeem $8     caozn ame      0819 s021119% nas\nAPSA       + Orn cen compu aos on tans on EPSDuDua  OUDAISN  500up Avg $V. MIATIATIA 21OWATRA 120%     tr en    0 20700545 43.42%\nvo    Prone CA OTST Hn 502% +1 om per nays DSTIPHE 0OTOTS Lovie DAGPMETOUOTIRS\nsnp en              SprEE Ee a ee      wo omens\nTe 68 D5 sie Comonms 6                                  vf         »\n.    Br Boat i cer                                                             ©\nCE BE RE\nWe 0m WA NA suemesmme 5                                                                   anv\nNA mn on ah NA gumASRa                                                             hd\nBZ 063 si WA Cemgmshan #1\nNo mm am Cosma w                                         .  @\nHo 0B Crna Suok WA [9                                                                  Not\nGoo Em seemnea in\nTose G3 ne ry emaemina dy If                                                                 =\nLop | me 9 al cel of eemesin ill 4             1                              ”             .\n:                 CE uh a                               ih)        yr\n-             ol}    bo ii     [i a                       (LA.     0\ni.            i      ~~     pod 2 —        aT      Fra oF pel           ha\n[I ee |   —    hs           a &        Fo, oh     » a\nol       ST             JURRETE Lo RR IL DY $8            nat\nz           hams”                                                                                                                    re st           on\n+    -                                        Sn               EA                               IS\nToc\n-      180 oma      hd        FT )     -     RT           an               =           i              fai\n~ a                                                                                        f=\n[=\nvo mm am he Rr EE Tee le ae ar PE EE Ty  Ca\n3      oa       or     oe       FY      ES      -       sor      ny      an\n[UPS —              [rR s—              pre—              [ry oo——       rows ©\noor    BItY    00    -     208    1%    0%    -     £1    Az    200    -     008      EPS ($1, % Chg.  eo\nn x     w   rs    2   -     2s   wa    2   “    wo    “0   -    a    mn xc\n=       sas              a.    =       Py               uct\nsoe Daw Reem 24{21 2Mitems Cowes mReverCercTn                                      om - 2% mA\n® Browse   -      -                            Pree   Comet       Troe % Chg Car      dusty 50-Day Amp §  Marat.  Comp id Grow.\nBeen Oh    Ed    LEST   TS TRI The Sew Um DI con rae Gm xOTen RS\ncours tren             Fs wr ave        ai my ow mas oF VEDCA Wea    Tore sonems we aw\ni.             PB 5 013 RDWeOwmminc    vis mas  158  25  25 SOFTWA  Compsn   ems sme   «  we wa |\nTabor:         |   Bw cso camSwnen     ews os am 2d Cowy. comm whan ean   M   [R—\na    .             —            i.      JINN   -   a\nFavorites.            °                                                                           J\n",
+      "ocr_text_snippet": "@ Chwame Fla Et View Hoy Bockman Profs Tab Window Help Es MarxeTsUres o GE X Touy Weekly Mow, lM ~ < so: Q Qa DEL G 7 D-Wave Quantum Inc. $23.03 2325 0 Comin brpm 1th Poom WA DOs MMS Naeem $8 caozn...",
+      "output_kind": "whiteboard",
+      "parsed_observations": [
+        {
+          "portfolio": "GRO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 31,
+          "ocr_profile": "threshold"
+        },
+        {
+          "portfolio": "TURBO",
+          "metrics_raw": null,
+          "metric_1": null,
+          "metric_2": null,
+          "metric_scalar": null,
+          "action_text": null,
+          "bottom_line": null,
+          "parse_status": "review",
+          "issue_codes": [
+            "MISSING_METRIC_LINE",
+            "MISSING_BOTTOM_LINE",
+            "LOW_OCR_CONFIDENCE"
+          ],
+          "ocr_confidence": 31,
+          "ocr_profile": "threshold"
+        }
+      ],
+      "parsed_row_count": 2,
+      "phash": "807d9a0ede07d49b",
+      "prefilter_score": 16.33,
+      "prefilter_stats": {
+        "brightRatio": 0.7680555555555556,
+        "darkRatio": 0.056875,
+        "edgeRatio": 0.16585400325065366,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1517,
+        "horizontalEdgeRatio": 0.10720090452971522,
+        "meanLuma": 224.4092361111111,
+        "stdDev": 52.857658288030976,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 3177,
+        "verticalEdgeRatio": 0.22450710197159213
+      },
+      "score": -26.17,
+      "score_breakdown": {
+        "chart_likeness": -5.724598585477327,
+        "keyword_guard": -18,
+        "ocr_confidence_bonus": 1.55,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 8
+      },
+      "screen_layout": "tale_of_the_tape",
+      "tickers": [
+        "BE"
+      ],
+      "timestamp": 600,
+      "timestamp_hms": "00:10:00"
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 3,
+      "end_ts": 432,
+      "end_hms": "00:07:12",
+      "is_intro_card": false,
+      "layout": "structured_whiteboard",
+      "peak_frame_index": 78,
+      "peak_score": 98.89,
+      "start_hms": "00:05:12",
+      "start_ts": 312
+    }
+  ]
+}

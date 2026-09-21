@@ -1,0 +1,395 @@
+{
+  "date_key": "20260912",
+  "output_kind": "whiteboard",
+  "video_path": "D:\\courses_F\\revere_asset\\videos\\Going Nowhere Day 12 Can These Recent Breakouts Offer Hope to Bu.mp4",
+  "captured_count": 5,
+  "captures": [
+    {
+      "frame_index": 352,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\ocr_probe\\frames\\20260912_going_nowhere_day_12_can_these_recen_a2a698ff_whiteboard\\ocr\\ocr_000353.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "observed_date": "20230104",
+      "ocr_confidence": 52,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "2» TALE OF THE TAPE - WED, 1/4/23 << [ >| MARKET STATE: * HEADWINDS: USD, INFLATION, RECESSION, RISING INT RATES, RUSSIA/UKRAINE | Open sucks JENSEN RHI 21 «TECHNICAL: STO INDEXES 6-6 NASI/RSI USD ...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 6.34,
+      "score": 90.3,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.6,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 4,
+        "text_density": 97.7
+      },
+      "screen_layout": "dmi",
+      "timestamp": 1408,
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_6.png"
+    },
+    {
+      "frame_index": 312,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\ocr_probe\\frames\\20260912_going_nowhere_day_12_can_these_recen_a2a698ff_whiteboard\\ocr\\ocr_000313.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "observed_date": "20230104",
+      "ocr_confidence": 52,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "»> TALE OF THE TAPE - WED, 1/4/23 << [ 5 | * MARKET STATE: * HEADWINDS: USD, INFLATION, RECESSION, RISING INT RATES, RUSSIA/UKRAINE ETE vow Te 21 «TECHNICAL: STO INDEXES G61 NASI/RSIT USD <22€,p TN...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 6.13,
+      "score": 89.14,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.6,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 4,
+        "text_density": 96.54
+      },
+      "screen_layout": "dmi",
+      "timestamp": 1248,
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_7.png"
+    },
+    {
+      "frame_index": 384,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\ocr_probe\\frames\\20260912_going_nowhere_day_12_can_these_recen_a2a698ff_whiteboard\\ocr\\ocr_000385.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "observed_date": "20230104",
+      "ocr_confidence": 51,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "> TALE OF THE TAPE — WED, 1/4/23 << ' >| * MARKEY STATE: * HEADWINDS: USD, INFLATION, RECESSION, RISING INT RATES, RUSSIA/UKRAINE we REE 21 «TECHNICAL: STO INDEXES 6-6 NASI/RSIT USD <21E, 1 TNX/TYX...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 6.14,
+      "score": 82.29,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.55,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 4,
+        "text_density": 89.74
+      },
+      "screen_layout": "tale_of_the_tape",
+      "timestamp": 1536,
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_8.png"
+    },
+    {
+      "frame_index": 56,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\ocr_probe\\frames\\20260912_going_nowhere_day_12_can_these_recen_a2a698ff_whiteboard\\ocr\\ocr_000057.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "observed_date": "20230104",
+      "ocr_confidence": 48,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "> REVERE ASSET MANAGEMENT < e, — NT RATES, RUSSIA/UKRAINE [LEY ar. Ee > DAILY MARKET INSIGHT VIDEO < 5.216, tnx/Tvx >21E, Ad Io List: HNQUBRKO... +, £2) BB ae UL 0 (+4 FEAR) >>> AGENDA — WED, 1/4/2...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 7.24,
+      "score": 66.63,
+      "score_breakdown": {
+        "chart_likeness": -3.6104042120666264,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.4,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 79.84
+      },
+      "screen_layout": "dmi",
+      "timestamp": 224,
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_9.png"
+    },
+    {
+      "frame_index": 80,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\ocr_probe\\frames\\20260912_going_nowhere_day_12_can_these_recen_a2a698ff_whiteboard\\ocr\\ocr_000081.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "observed_date": "20230104",
+      "ocr_confidence": 59,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "> REVERE ASSET MANAGEMENT < 0 = ErYyes ony |,_woomy | 3000 [ «| Gn yo [EE > DAILY MARKET INSIGHT VIDEO < amen. Sw 5 ov | »>> AGENDA — WED, 1/4/23 <<< a * MARKET STATE: SETTRIEN S&P500 - LAST 13 BEA...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 3.56,
+      "score": 60.68,
+      "score_breakdown": {
+        "chart_likeness": -4.649898231317362,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.95,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 74.38
+      },
+      "screen_layout": "dmi",
+      "timestamp": 320,
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_10.png"
+    }
+  ],
+  "frame_count": 497,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 5,
+  "ocr_frame_count": 60,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\screenshots\\20260912_ps_6.png",
+  "prefilter_best_score": 10.6,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "frame_index": 352,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\ocr_probe\\frames\\20260912_going_nowhere_day_12_can_these_recen_a2a698ff_whiteboard\\ocr\\ocr_000353.png",
+    "is_intro_card": false,
+    "issue_codes": [
+      "MISSING_METRIC_LINE",
+      "LOW_OCR_CONFIDENCE"
+    ],
+    "observed_date": "20230104",
+    "ocr_confidence": 52,
+    "ocr_profile": "threshold",
+    "ocr_text_snippet": "2» TALE OF THE TAPE - WED, 1/4/23 << [ >| MARKET STATE: * HEADWINDS: USD, INFLATION, RECESSION, RISING INT RATES, RUSSIA/UKRAINE | Open sucks JENSEN RHI 21 «TECHNICAL: STO INDEXES 6-6 NASI/RSI USD ...",
+    "output_kind": "whiteboard",
+    "parsed_row_count": 2,
+    "prefilter_score": 6.34,
+    "score": 90.3,
+    "score_breakdown": {
+      "chart_likeness": -6,
+      "keyword_guard": 0,
+      "ocr_confidence_bonus": 2.6,
+      "pair_bonus": 0,
+      "per_row_issues": -8,
+      "per_row_metrics": 4,
+      "text_density": 97.7
+    },
+    "screen_layout": "dmi",
+    "timestamp": 1408
+  },
+  "top_candidates": [
+    {
+      "frame_index": 352,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\ocr_probe\\frames\\20260912_going_nowhere_day_12_can_these_recen_a2a698ff_whiteboard\\ocr\\ocr_000353.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "observed_date": "20230104",
+      "ocr_confidence": 52,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "2» TALE OF THE TAPE - WED, 1/4/23 << [ >| MARKET STATE: * HEADWINDS: USD, INFLATION, RECESSION, RISING INT RATES, RUSSIA/UKRAINE | Open sucks JENSEN RHI 21 «TECHNICAL: STO INDEXES 6-6 NASI/RSI USD ...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 6.34,
+      "score": 90.3,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.6,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 4,
+        "text_density": 97.7
+      },
+      "screen_layout": "dmi",
+      "timestamp": 1408
+    },
+    {
+      "frame_index": 312,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\ocr_probe\\frames\\20260912_going_nowhere_day_12_can_these_recen_a2a698ff_whiteboard\\ocr\\ocr_000313.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "observed_date": "20230104",
+      "ocr_confidence": 52,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "»> TALE OF THE TAPE - WED, 1/4/23 << [ 5 | * MARKET STATE: * HEADWINDS: USD, INFLATION, RECESSION, RISING INT RATES, RUSSIA/UKRAINE ETE vow Te 21 «TECHNICAL: STO INDEXES G61 NASI/RSIT USD <22€,p TN...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 6.13,
+      "score": 89.14,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.6,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 4,
+        "text_density": 96.54
+      },
+      "screen_layout": "dmi",
+      "timestamp": 1248
+    },
+    {
+      "frame_index": 344,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\ocr_probe\\frames\\20260912_going_nowhere_day_12_can_these_recen_a2a698ff_whiteboard\\ocr\\ocr_000345.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "observed_date": "20230104",
+      "ocr_confidence": 54,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "»> TALE OF THE TAPE - WED, 1/4/23 << [ 5 | * MARKEY STATE: * HEADWINDS: USD, INFLATION. RECESSION, RISING INT RATES, RUSSIA/UKRAINE ESTE vw Phnen ie 21 TECHNICAL STO INDEXES G67 NASI/RSIT USD <22€,...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 6.33,
+      "score": 87.62,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.7,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 4,
+        "text_density": 94.92
+      },
+      "screen_layout": "tale_of_the_tape",
+      "timestamp": 1376
+    },
+    {
+      "frame_index": 384,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\ocr_probe\\frames\\20260912_going_nowhere_day_12_can_these_recen_a2a698ff_whiteboard\\ocr\\ocr_000385.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "observed_date": "20230104",
+      "ocr_confidence": 51,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "> TALE OF THE TAPE — WED, 1/4/23 << ' >| * MARKEY STATE: * HEADWINDS: USD, INFLATION, RECESSION, RISING INT RATES, RUSSIA/UKRAINE we REE 21 «TECHNICAL: STO INDEXES 6-6 NASI/RSIT USD <21E, 1 TNX/TYX...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 6.14,
+      "score": 82.29,
+      "score_breakdown": {
+        "chart_likeness": -6,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.55,
+        "pair_bonus": 0,
+        "per_row_issues": -8,
+        "per_row_metrics": 4,
+        "text_density": 89.74
+      },
+      "screen_layout": "tale_of_the_tape",
+      "timestamp": 1536
+    },
+    {
+      "frame_index": 56,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260913\\fields-v1\\ocr_probe\\frames\\20260912_going_nowhere_day_12_can_these_recen_a2a698ff_whiteboard\\ocr\\ocr_000057.png",
+      "is_intro_card": false,
+      "issue_codes": [
+        "MISSING_METRIC_LINE",
+        "MISSING_BOTTOM_LINE",
+        "LOW_OCR_CONFIDENCE"
+      ],
+      "observed_date": "20230104",
+      "ocr_confidence": 48,
+      "ocr_profile": "threshold",
+      "ocr_text_snippet": "> REVERE ASSET MANAGEMENT < e, — NT RATES, RUSSIA/UKRAINE [LEY ar. Ee > DAILY MARKET INSIGHT VIDEO < 5.216, tnx/Tvx >21E, Ad Io List: HNQUBRKO... +, £2) BB ae UL 0 (+4 FEAR) >>> AGENDA — WED, 1/4/2...",
+      "output_kind": "whiteboard",
+      "parsed_row_count": 2,
+      "prefilter_score": 7.24,
+      "score": 66.63,
+      "score_breakdown": {
+        "chart_likeness": -3.6104042120666264,
+        "keyword_guard": 0,
+        "ocr_confidence_bonus": 2.4,
+        "pair_bonus": 0,
+        "per_row_issues": -12,
+        "per_row_metrics": 0,
+        "text_density": 79.84
+      },
+      "screen_layout": "dmi",
+      "timestamp": 224
+    }
+  ],
+  "whiteboard_segments": [
+    {
+      "capture_count": 1,
+      "end_ts": 224,
+      "end_hms": "03:44",
+      "is_intro_card": false,
+      "layout": "dmi",
+      "peak_frame_index": 56,
+      "peak_score": 66.63,
+      "start_hms": "03:44",
+      "start_ts": 224
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 320,
+      "end_hms": "05:20",
+      "is_intro_card": false,
+      "layout": "dmi",
+      "peak_frame_index": 80,
+      "peak_score": 60.68,
+      "start_hms": "05:20",
+      "start_ts": 320
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 1248,
+      "end_hms": "20:48",
+      "is_intro_card": false,
+      "layout": "dmi",
+      "peak_frame_index": 312,
+      "peak_score": 89.14,
+      "start_hms": "20:48",
+      "start_ts": 1248
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 1408,
+      "end_hms": "23:28",
+      "is_intro_card": false,
+      "layout": "dmi",
+      "peak_frame_index": 352,
+      "peak_score": 90.3,
+      "start_hms": "23:28",
+      "start_ts": 1408
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 1536,
+      "end_hms": "25:36",
+      "is_intro_card": false,
+      "layout": "tale_of_the_tape",
+      "peak_frame_index": 384,
+      "peak_score": 82.29,
+      "start_hms": "25:36",
+      "start_ts": 1536
+    }
+  ]
+}
