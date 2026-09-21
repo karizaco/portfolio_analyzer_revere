@@ -17,6 +17,56 @@ const ANALYSIS_JSON = 'data/video_ocr_probe/analysis.json';
 const SNAPSHOT_DIR = 'data/video_ocr_probe/qmg-1080p-batch1/snapshots';
 const OUTPUT_HTML = path.join(__dirname, 'qmg_snapshot_review.html');
 
+// Human-verified ground truth tickers per snapshot (dateKey → capture-index → gt list)
+// For captures beyond the first: ci=0 → no suffix, ci=1 → "_2", ci=2 → "_3", etc.
+const GROUND_TRUTH = {
+  '20220606': {
+    0: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
+    // ci=1..11 are the same 3 videos re-captured at different timestamps
+    1: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
+    2: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
+    3: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
+    4: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
+    5: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
+    6: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
+    7: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
+    8: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
+    9: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
+    10: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
+    11: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
+  },
+  '20220607': {
+    0: ['UCO','VLO','ALB','BOIL','NFLX','TNA','LTHM'],
+    1: ['UCO','VLO','ALB','BOIL','NFLX','TNA','LTHM'],
+    2: ['UCO','VLO','ALB','BOIL','NFLX','TNA','LTHM'],
+  },
+  '20220608': {
+    0: ['SIGA','TNA','VLO','UCO','NFLX','ALB','BOIL','LTHM','AERC'],
+    1: ['SIGA','TNA','VLO','UCO','NFLX','ALB','BOIL','LTHM','AERC'],
+    2: ['SIGA','TNA','VLO','UCO','NFLX','ALB','BOIL','LTHM','AERC'],
+  },
+  '20220614': {
+    0: ['UVXY','VLO','UCO'],
+    1: ['UVXY','VLO','UCO'],
+    2: ['UVXY','VLO','UCO'],
+  },
+  '20221104': {
+    0: [],   // not in ground truth set
+    1: [],
+    2: [],
+  },
+  '20221117': {
+    0: ['FREY','OIH','ASML','U','SI','SOXL'],
+    1: ['FREY','OIH','ASML','U','SI','SOXL'],
+    2: ['FREY','OIH','ASML','U','SI','SOXL'],
+  },
+  '20230126': {
+    0: ['CVNA','FCX','TNA','CWEB','YINN','PDD','MDGL','GNS'],
+    1: ['CVNA','FCX','TNA','CWEB','YINN','PDD','MDGL','GNS'],
+    2: ['CVNA','FCX','TNA','CWEB','YINN','PDD','MDGL','GNS'],
+  },
+};
+
 // Resolve snapshot paths relative to OUTPUT_HTML's directory
 // OUTPUT_HTML is in tools/, so relative from tools/ to snapshots is ../data/...
 const SNAPSHOT_RELATIVE_PATH = path.relative(path.dirname(OUTPUT_HTML), SNAPSHOT_DIR).replace(/\\/g, '/');
@@ -102,6 +152,7 @@ for (const v of videos) {
       priceAction: escapeHtml(priceAction),
       positionList,
       isTot: layout === 'tale_of_the_tape',
+      gt: GROUND_TRUTH[dateKey]?.[ci] || null,
     });
   }
 }
@@ -164,6 +215,7 @@ const html = `<!DOCTYPE html>
   tr:hover td { background: var(--bg2); }
   tr.expanded td { background: rgba(88,166,255,0.05); }
   .conf-cell { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; }
+  .recall-cell { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--accent); }
   .ticker-list { display: flex; flex-wrap: wrap; gap: 4px; }
   .ticker { background: rgba(88,166,255,0.12); color: var(--accent); padding: 1px 6px; border-radius: 3px; font-size: 11px; font-family: 'JetBrains Mono', monospace; font-weight: 500; }
   .ts { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text2); }
@@ -252,15 +304,16 @@ const html = `<!DOCTYPE html>
 <table id="mainTable">
 <thead>
 <tr>
+  <th></th>
   <th>#</th>
   <th>Video</th>
   <th>t (HMS)</th>
   <th>Conf</th>
-  <th>Tickers</th>
+  <th>Recall</th>
+  <th>Tickers (detected)</th>
   <th>Layout</th>
   <th>ph_overlay</th>
   <th>OCR snippet</th>
-  <th></th>
 </tr>
 </thead>
 <tbody id="tableBody">
@@ -316,15 +369,16 @@ function render() {
     const tr = document.createElement('tr');
     tr.className = rowClass;
     tr.innerHTML = \`
+      <td class="row-actions"><button class="expand-btn" onclick="toggleDetail(this)">+</button></td>
       <td>\${i + 1}</td>
       <td><span class="count-badge">\${r.dateKey}</span></td>
       <td><span class="ts">\${r.tsHms}</span></td>
       <td><span class="conf-cell" style="\${confColorStyle}">\${r.confStr}</span></td>
+      <td>\${r.gt ? '<span class="recall-cell">' + (r.tickers.filter(t => r.gt.includes(t)).length) + '/' + r.gt.length + '</span>' : '<span style="color:var(--text2)">—</span>'}</td>
       <td><div class="ticker-list">\${tickerBadges || '<span style="color:var(--text2)">—</span>'}</div></td>
       <td>\${layoutBadge}</td>
       <td><span class="ph">\${r.phOv}</span></td>
       <td><span class="ocr-snippet" title="\${r.ocrText.replace(/"/g,'&quot;')}">\${r.ocrSnippet}</span></td>
-      <td class="row-actions"><button class="expand-btn" onclick="toggleDetail(this)">+</button></td>
     \`;
     tbody.appendChild(tr);
 
@@ -332,7 +386,7 @@ function render() {
     const detailTr = document.createElement('tr');
     detailTr.className = 'detail-row';
     const detailTd = document.createElement('td');
-    detailTd.colSpan = 9;
+    detailTd.colSpan = 11;
     detailTd.style.padding = '0';
     const parseStatusBadge = r.parseStatus === 'ok'
       ? '<span class="badge badge-ok">ok</span>'

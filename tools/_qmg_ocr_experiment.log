@@ -1,0 +1,52 @@
+
+=== 20220606 (t=00:24:00) ===
+Ground truth: GOVX, LABU, UCO, ALB, CBIO, VLO, TNA, NFLX
+
+  20220606-1080p-orig  conf= 33%  recall=  0% (0/8)  found=[]  miss=[GOVX, LABU, UCO, ALB, CBIO, VLO, TNA, NFLX]
+  20220606-1080p-neg   conf= 33%  recall=  0% (0/8)  found=[]  miss=[GOVX, LABU, UCO, ALB, CBIO, VLO, TNA, NFLX]
+  20220606-720p-orig   conf=  2%  recall=  0% (0/8)  found=[]  miss=[GOVX, LABU, UCO, ALB, CBIO, VLO, TNA, NFLX]
+  20220606-720p-neg    conf=  2%  recall=  0% (0/8)  found=[]  miss=[GOVX, LABU, UCO, ALB, CBIO, VLO, TNA, NFLX]
+
+=== 20220607 (t=00:11:12) ===
+Ground truth: UCO, VLO, ALB, BOIL, NFLX, TNA, LTHM
+
+  20220607-1080p-orig  conf= 37%  recall=  0% (0/7)  found=[]  miss=[UCO, VLO, ALB, BOIL, NFLX, TNA, LTHM]
+  20220607-1080p-neg   conf= 37%  recall=  0% (0/7)  found=[]  miss=[UCO, VLO, ALB, BOIL, NFLX, TNA, LTHM]
+  20220607-720p-orig   conf= 89%  recall=  0% (0/7)  found=[]  miss=[UCO, VLO, ALB, BOIL, NFLX, TNA, LTHM]
+  20220607-720p-neg    conf= 89%  recall=  0% (0/7)  found=[]  miss=[UCO, VLO, ALB, BOIL, NFLX, TNA, LTHM]
+
+=== 20230126 (t=00:18:40) ===
+Ground truth: CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS
+
+  20230126-1080p-orig  conf= 33%  recall=  0% (0/8)  found=[]  miss=[CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS]
+  20230126-1080p-neg   conf= 33%  recall=  0% (0/8)  found=[]  miss=[CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS]
+  20230126-720p-orig   conf= 55%  recall=  0% (0/8)  found=[]  miss=[CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS]
+  20230126-720p-neg    conf= 55%  recall=  0% (0/8)  found=[]  miss=[CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS]
+
+=== MEAN RECALL PER VARIANT ===
+  20220606-1080p-orig  mean-recall=0%  mean-conf=33%
+  20220606-1080p-neg   mean-recall=0%  mean-conf=33%
+  20220606-720p-orig   mean-recall=0%  mean-conf=2%
+  20220606-720p-neg    mean-recall=0%  mean-conf=2%
+  20220607-1080p-orig  mean-recall=0%  mean-conf=37%
+  20220607-1080p-neg   mean-recall=0%  mean-conf=37%
+  20220607-720p-orig   mean-recall=0%  mean-conf=89%
+  20220607-720p-neg    mean-recall=0%  mean-conf=89%
+  20230126-1080p-orig  mean-recall=0%  mean-conf=33%
+  20230126-1080p-neg   mean-recall=0%  mean-conf=33%
+  20230126-720p-orig   mean-recall=0%  mean-conf=55%
+  20230126-720p-neg    mean-recall=0%  mean-conf=55%
+
+=== RANKED ===
+  1. 20220606-1080p-orig → 0% mean recall
+  2. 20220606-1080p-neg → 0% mean recall
+  3. 20220606-720p-orig → 0% mean recall
+  4. 20220606-720p-neg → 0% mean recall
+  5. 20220607-1080p-orig → 0% mean recall
+  6. 20220607-1080p-neg → 0% mean recall
+  7. 20220607-720p-orig → 0% mean recall
+  8. 20220607-720p-neg → 0% mean recall
+  9. 20230126-1080p-orig → 0% mean recall
+  10. 20230126-1080p-neg → 0% mean recall
+  11. 20230126-720p-orig → 0% mean recall
+  12. 20230126-720p-neg → 0% mean recall
