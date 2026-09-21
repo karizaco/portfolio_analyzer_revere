@@ -14,8 +14,15 @@ const fs = require('fs');
 const path = require('path');
 
 const ANALYSIS_JSON = 'data/video_ocr_probe/analysis.json';
-const SNAPSHOT_DIR = 'data/video_ocr_probe/qmg-1080p-batch1/snapshots';
+const SNAPSHOT_DIR_BATCH1 = 'data/video_ocr_probe/qmg-1080p-batch1/snapshots';
+const SNAPSHOT_DIR_BATCH2 = 'data/video_ocr_probe/qmg-1080p-batch2/snapshots';
 const OUTPUT_HTML = path.join(__dirname, 'qmg_snapshot_review.html');
+
+// Snapshot dirs map: probe-tag → snapshot dir
+const SNAPSHOT_DIRS = {
+  'qmg-1080p-batch1': SNAPSHOT_DIR_BATCH1,
+  'qmg-1080p-batch2': SNAPSHOT_DIR_BATCH2,
+};
 
 // Human-verified ground truth tickers per snapshot (dateKey → capture-index → gt list)
 // For captures beyond the first: ci=0 → no suffix, ci=1 → "_2", ci=2 → "_3", etc.
@@ -69,16 +76,72 @@ const GROUND_TRUTH = {
 
 // Resolve snapshot paths relative to OUTPUT_HTML's directory
 // OUTPUT_HTML is in tools/, so relative from tools/ to snapshots is ../data/...
-const SNAPSHOT_RELATIVE_PATH = path.relative(path.dirname(OUTPUT_HTML), SNAPSHOT_DIR).replace(/\\/g, '/');
+const SNAPSHOT_RELATIVE_PATH = path.relative(path.dirname(OUTPUT_HTML), SNAPSHOT_DIR_BATCH1).replace(/\\/g, '/');
 
 const d = JSON.parse(fs.readFileSync(ANALYSIS_JSON, 'utf8'));
-const videos = d.videos || [];
+const batch1Videos = d.videos || [];
 
-function snapPath(absPath) {
+// Also read batch2 probe logs directly
+const BATCH2_LOG_DIR = 'data/video_ocr_probe/qmg-1080p-batch2/ocr_probe/logs';
+const batch2Videos = [];
+
+function snapPath(absPath, snapshotDirs) {
   if (!absPath) return null;
   const rel = path.relative(path.dirname(OUTPUT_HTML), absPath).replace(/\\/g, '/');
   return rel;
 }
+
+// Build a map of batch2 captures from their probe log files
+const batch2Captures = [];
+if (fs.existsSync(BATCH2_LOG_DIR)) {
+  const logFiles = fs.readdirSync(BATCH2_LOG_DIR).filter(f => f.endsWith('.json'));
+  for (const lf of logFiles) {
+    try {
+      const log = JSON.parse(fs.readFileSync(path.join(BATCH2_LOG_DIR, lf), 'utf8'));
+      const caps = log.captures || [];
+      for (const c of caps) {
+        const dateKey = log.date_key || '';
+        const videoId = log.video_id || '';
+        batch2Captures.push({
+          dateKey,
+          videoId,
+          logPath: path.join(BATCH2_LOG_DIR, lf),
+          c,
+          log,
+        });
+      }
+    } catch(e) {}
+  }
+}
+
+// Group batch2 captures by video
+const batch2ByVideo = {};
+for (const cap of batch2Captures) {
+  if (!batch2ByVideo[cap.dateKey]) batch2ByVideo[cap.dateKey] = [];
+  batch2ByVideo[cap.dateKey].push(cap);
+}
+
+// Build unified video list
+const allVideos = [];
+
+// Add batch1 videos
+for (const v of batch1Videos) {
+  allVideos.push({ ...v, _batch: 'batch1' });
+}
+
+// Add batch2 videos (by dateKey)
+for (const dateKey of Object.keys(batch2ByVideo).sort()) {
+  const caps = batch2ByVideo[dateKey];
+  allVideos.push({
+    date_key: dateKey,
+    video_path: '',
+    captures: caps.map(c => c.c),
+    _batch: 'batch2',
+    _logPath: caps[0]?.logPath || '',
+  });
+}
+
+const videos = allVideos;
 
 function hms(seconds) {
   if (seconds == null) return '—';
@@ -112,7 +175,9 @@ for (const v of videos) {
     const c = v.captures[ci];
     const snapIdx = ci === 0 ? '' : String(ci + 1);
     const snapFile = `qmg_${dateKey}${snapIdx ? '_' + snapIdx : ''}.png`;
-    const snapAbs = path.join(SNAPSHOT_DIR, snapFile);
+    // Use batch-specific snapshot dir
+    const snapDir = v._batch === 'batch2' ? SNAPSHOT_DIR_BATCH2 : SNAPSHOT_DIR_BATCH1;
+    const snapAbs = path.join(snapDir, snapFile);
     const snapRel = snapPath(snapAbs);
     const conf = c.ocr_confidence != null ? Number(c.ocr_confidence) : null;
     const confStr = conf != null ? conf.toFixed(0) : '—';
