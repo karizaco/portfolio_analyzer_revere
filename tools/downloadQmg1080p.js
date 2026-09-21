@@ -32,6 +32,7 @@ const argv = process.argv.slice(2);
 const limit = Number(readFlag(argv, '--limit')) || 30;
 const height = 1080;
 const retryErrored = argv.includes('--retry-errored');
+const cookiesFile = readFlag(argv, '--cookies') || null;
 // Optional explicit allow-list of video_ids (used by the parallel download
 // wrapper to fan out N workers across disjoint slices of the catalog).
 // When set, the candidate query filters to this list (case-insensitive).
@@ -66,11 +67,12 @@ fs.mkdirSync(dlDir, { recursive: true });
 
 const checkpoint = (() => {
   try { return JSON.parse(fs.readFileSync(checkpointPath, 'utf8')); }
-  catch { return { height, done: [], errored: {} }; }
+  catch { return { height, done: [], errored: {}, blocked: [] }; }
 })();
 if (Number(checkpoint.height) !== height) checkpoint.height = height;
 checkpoint.done = Array.isArray(checkpoint.done) ? checkpoint.done : [];
 checkpoint.errored = (typeof checkpoint.errored === 'object' && checkpoint.errored) || {};
+checkpoint.blocked = Array.isArray(checkpoint.blocked) ? checkpoint.blocked : [];
 
 console.log(`[qmg1080] height=${height}p format=${formatCode} limit=${limit} retry-errored=${retryErrored}`);
 console.log(`[qmg1080] checkpoint: ${checkpoint.done.length} done, ${Object.keys(checkpoint.errored).length} errored`);
@@ -112,6 +114,7 @@ for (const row of allRows) {
   const { video_id: videoId, upload_date: uploadDate } = row;
   if (checkpoint.done.includes(videoId)) { skippedCheckpoint += 1; continue; }
   if (!retryErrored && checkpoint.errored[videoId]) { skippedErrored += 1; continue; }
+  if (checkpoint.blocked.includes(videoId)) { skippedErrored += 1; continue; }
   const expected = path.join(dlDir, `${uploadDate}_${videoId}.mp4`);
   if (fs.existsSync(expected) && fs.statSync(expected).size > 1024 * 1024) {
     skippedDisk += 1;
@@ -145,7 +148,8 @@ for (const row of todo) {
     '--no-playlist',
     '-f', formatCode,
     '--js-runtimes', 'node',
-    '--extractor-args', 'youtube:player_client=mediaconnect',
+    '--extractor-args', 'youtube:player_client=tv',
+    ...(cookiesFile ? ['--cookies', cookiesFile] : []),
     '-o', outTemplate,
     `https://www.youtube.com/watch?v=${videoId}`
   ], { encoding: 'utf8', stdio: 'inherit' });
@@ -207,7 +211,8 @@ function saveCheckpoint() {
     fs.writeFileSync(checkpointPath, JSON.stringify({
       height: checkpoint.height,
       done: [...new Set(checkpoint.done)],
-      errored: checkpoint.errored
+      errored: checkpoint.errored,
+      blocked: checkpoint.blocked || []
     }, null, 2));
   } catch (e) {
     console.error(`[qmg1080] WARN: failed to save checkpoint: ${e.message}`);
