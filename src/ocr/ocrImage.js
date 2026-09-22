@@ -79,14 +79,18 @@ async function preprocessImage(filePath, profileName, preprocessOptions = {}) {
     const top = Math.round(y * height);
     const cropW = Math.round(w * width);
     const cropH = Math.round(h * height);
+    // Pipeline order: negate FIRST (white-on-dark → dark-on-white), then
+    // linear contrast boost, then normalize. The old order (normalize before
+    // linear) washed out contrast by stretching values before the boost could
+    // differentiate text from background.
     pipeline = sharp(filePath)
       .extract({ left, top, width: cropW, height: cropH })
       .resize(Math.round(cropW * overlayScale), Math.round(cropH * overlayScale), { kernel: 'lanczos3' })
       .grayscale()
-      .negate()   // invert: white-on-dark → black-on-white (sharp ≥ 0.34 uses negate(), older used invert())
-      .normalize()
-      .sharpen({ sigma: 1.5 })
-      .linear(1.8, -64);  // contrast boost via linear transform
+      .negate()   // invert: white-on-dark → black-on-white
+      .linear(1.8, -64)  // contrast boost first
+      .normalize()         // then stretch to full range
+      .sharpen({ sigma: 1.5 });
     return pipeline
       .withMetadata({ density: OCR_DPI })
       .png()

@@ -214,7 +214,18 @@ def scrape_channel(
     result: list[dict[str, Any]] = []
 
     with sync_playwright() as pw:
-        browser = pw.chromium.launch(headless=headless)
+        # Try real browsers first (your existing Discord session is already logged in)
+        for channel in ['msedge', 'chrome', 'chromium']:
+            try:
+                browser = pw.chromium.launch(channel=channel, headless=False)
+                print(f"{SELECTOR_LOG} Launched via --browser-channel={channel}")
+                break
+            except Exception:
+                continue
+        else:
+            # Fall back to bundled Chromium (may get detected by Discord)
+            browser = pw.chromium.launch(headless=headless)
+            print(f"{SELECTOR_LOG} Launched bundled Chromium (may be detected)")
         try:
             context = browser.new_context(storage_state=storage_state)
             page = context.new_page()

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>QMG Video Pipeline — Status</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1117; color: #e6edf3; padding: 24px; }
+  h1 { color: #58a6ff; margin-bottom: 4px; }
+  .subtitle { color: #8b949e; font-size: 13px; margin-bottom: 24px; }
+  h2 { color: #58a6ff; margin: 28px 0 12px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .stat-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 16px; }
+  .stat-val { font-size: 28px; font-weight: 700; color: #e6edf3; }
+  .stat-label { font-size: 13px; color: #8b949e; margin-top: 4px; }
+  .stat-card.highlight { border-color: #f0883e; }
+  .stat-card.highlight .stat-val { color: #ffa657; }
+  .warn { color: #ffa657; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; color: #8b949e; padding: 8px 12px; border-bottom: 1px solid #21262d; font-weight: 500; }
+  td { padding: 8px 12px; border-bottom: 1px solid #161b22; }
+  tr:hover td { background: #161b22; }
+  .num { text-align: right; }
+  .scanned { color: #3fb950; } .unscanned { color: #8b949e; }
+  .badge { display: inline-block; padding: 1px 6px; border-radius: 10px; font-size: 11px; }
+  .badge-ok { background: #23863633; color: #3fb950; } .badge-old { background: #21262d; color: #8b949e; }
+  .section-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 0 8px; }
+  .section-header h3 { color: #e6edf3; font-size: 15px; }
+  .size-bar { background: #21262d; border-radius: 4px; height: 8px; width: 100%; margin-top: 8px; overflow: hidden; }
+  .size-bar-fill { height: 100%; border-radius: 4px; }
+  .space-summary { display: flex; gap: 32px; margin-bottom: 24px; flex-wrap: wrap; }
+  .space-item { min-width: 140px; }
+  .space-item .val { font-size: 22px; font-weight: 600; }
+  .space-item .label { font-size: 12px; color: #8b949e; }
+  .note { font-size: 12px; color: #8b949e; margin-top: 4px; }
+</style>
+</head>
+<body>
+<h1>QMG Video Pipeline — Status</h1>
+<p class="subtitle">Generated: 2026-09-22T08:20:56Z &nbsp;|&nbsp; Refresh by opening this file</p>
+
+<div class="space-summary">
+  <div class="space-item">
+    <div class="val">169.8 GB</div>
+    <div class="label">Total video storage</div>
+  </div>
+  <div class="space-item">
+    <div class="val">374 <span class="note">files</span></div>
+    <div class="label">downloads_1080p</div>
+    <div class="note">133.2 GB</div>
+  </div>
+  <div class="space-item">
+    <div class="val">129 <span class="note">files</span></div>
+    <div class="label">downloads_hires</div>
+    <div class="note">9.3 GB</div>
+  </div>
+  <div class="space-item">
+    <div class="val">214 <span class="note">files</span></div>
+    <div class="label">downloads (old)</div>
+    <div class="note">27.4 GB</div>
+  </div>
+</div>
+
+<h2>Downloads 1080p — 374 files (133.2 GB)</h2>
+
+<div class="section-header">
+  <h3>✅ OCR Scanned (0 files)</h3>
+</div>
+<table>
+  <thead><tr><th>File</th><th class="num">Size (MB)</th><th>Status</th></tr></thead>
+  <tbody>
+    
+    
+  </tbody>
+</table>
+
+<div class="section-header">
+  <h3>❌ Pending OCR (374 files) — can be deleted after scanning</h3>
+</div>
+<table>
+  <thead><tr><th>File</th><th class="num">Size (MB)</th><th>Action</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>_zodqKgRJaRQ.mp4</td>
+      <td class="num">859</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_zjJObr1Gn8A.mp4</td>
+      <td class="num">268</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_zizbhpz0S3c.mp4</td>
+      <td class="num">389</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_zhbdUtJDqz0.mp4</td>
+      <td class="num">653</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_zgX7rMRvvwI.mp4</td>
+      <td class="num">142</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_zaU0lpja-FU.mp4</td>
+      <td class="num">307</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_zQfEKa4eQeE.mp4</td>
+      <td class="num">415</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_zD-V-DyktqA.mp4</td>
+      <td class="num">203</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_z6PqNxocofw.mp4</td>
+      <td class="num">685</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_z6BwSblrVE8.mp4</td>
+      <td class="num">293</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_z5NvNXmHmfE.mp4</td>
+      <td class="num">574</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_ytWg3aGNc10.mp4</td>
+      <td class="num">317</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_yosACutKxAk.mp4</td>
+      <td class="num">737</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_ynnCwnIQ5Pg.mp4</td>
+      <td class="num">272</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_yhF78G6YFmU.mp4</td>
+      <td class="num">623</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_yLTaPfwqWis.mp4</td>
+      <td class="num">462</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_yCUSAp0mWlE.mp4</td>
+      <td class="num">198</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_yBGVaGSsFjM.mp4</td>
+      <td class="num">212</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_xv4off5Vyfk.mp4</td>
+      <td class="num">495</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_xtr4BbYRfaY.mp4</td>
+      <td class="num">404</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_xoxsJrn7UPM.mp4</td>
+      <td class="num">349</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_xnrajRDbw_0.mp4</td>
+      <td class="num">269</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_xLoQjzyOsnk.mp4</td>
+      <td class="num">261</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_x7jBeIGqwIs.mp4</td>
+      <td class="num">309</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_x2N8LwQr9fw.mp4</td>
+      <td class="num">603</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_wjqH-payJz0.mp4</td>
+      <td class="num">132</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_wejub-sXQ2c.mp4</td>
+      <td class="num">560</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_wUBuli89kCo.mp4</td>
+      <td class="num">75</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_wQlWvt1KPR0.mp4</td>
+      <td class="num">83</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_wMbFuyfL7Xw.mp4</td>
+      <td class="num">463</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_wLYBzP4qRjY.mp4</td>
+      <td class="num">729</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_wGJfJ-WIR7M.mp4</td>
+      <td class="num">759</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_w57mW2ysyhs.mp4</td>
+      <td class="num">105</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_vxDV5UcoE6k.mp4</td>
+      <td class="num">368</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_vgAoK49ZfNA.mp4</td>
+      <td class="num">830</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_v5KMw4lT85g.mp4</td>
+      <td class="num">537</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_v-7Af6D6xug.mp4</td>
+      <td class="num">240</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_uYkzHI4_2H0.mp4</td>
+      <td class="num">865</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_uFJDGcCzR3A.mp4</td>
+      <td class="num">313</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_u844Rmpyx_c.mp4</td>
+      <td class="num">164</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_u3k9-2pjcvs.mp4</td>
+      <td class="num">227</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_u0bYjATHWOM.mp4</td>
+      <td class="num">56</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_t5_1pbriFYo.mp4</td>
+      <td class="num">242</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_t3lWY0G5y5g.mp4</td>
+      <td class="num">243</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_skSlWuPz3PQ.mp4</td>
+      <td class="num">264</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_sjYxh1miPrM.mp4</td>
+      <td class="num">276</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_siYpCaiuPKg.mp4</td>
+      <td class="num">900</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_s_VglNdJuvc.mp4</td>
+      <td class="num">305</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_sXMzeLjlaJ8.mp4</td>
+      <td class="num">641</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr><tr>
+      <td>_s9dqGYWRmtc.mp4</td>
+      <td class="num">494</td>
+      <td><span class="badge badge-old">⏳ Pending</span></td>
+    </tr>
+    <tr><td colspan="3" style="color:#8b949e">...and 324 more pending files</td></tr>
+  </tbody>
+</table>
+
+<p style="color:#8b949e; font-size:13px; margin-top:24px">
+  <strong>⚠️ Disk space warning:</strong> downloads_1080p alone is 133 GB.
+  After OCR scanning completes, files marked "Pending" above can be safely deleted —
+  the OCR results (tickers, timestamps, screenshots) are stored in SQLite and are independent of the video files.
+</p>
+<p style="color:#8b949e; font-size:12px; margin-top:8px">
+  Re-run OCR on any file: <code>node tools/scanVideoWithOcr.js --video data/video_pipeline/downloads_1080p/FILE.mp4 ...</code>
+</p>
+</body>
+</html>
