@@ -9,7 +9,38 @@ Pick the one that matches how you can authenticate.
 |------|------|-------|-----------|
 | `ingest_channel.py`  (REST, bot token) | `DISCORD_BOT_TOKEN` + MESSAGE_CONTENT intent | Discord dev-portal one-time; `node tools/runDiscordIngest.js add-source ...` | You can run unattended backfills on a schedule. |
 | `agentic_prompt.md` (computer-use agent) | user is already logged into Discord in their browser | Hand `agentic_prompt.md` to a Claude/Grok/OpenClaw browser agent; it emits JSONL | You want the AI to "look at Discord for me" right now, and you're fine with a 1-shot JSONL dump. |
-| `browser_ingest.py`  (Playwright browser scrape) | user logs in manually inside the headful Chromium one time | `pip install -r requirements.txt` + `playwright install chromium` | The bot path is blocked (e.g. MESSAGE_CONTENT not yet verified for your server) and you still want a CLI one-liner. |
+| `browser_ingest.py`  (Playwright browser scrape) | user logs in manually inside the headful Chromium one time | `pip install -r requirements.txt` + `playwright install chromium` | **The bot path is blocked (e.g. not allowed to add bots to the server)** and you still want a CLI one-liner. |
+
+### Browser path — no bot invite needed
+
+This is the approach to use when you **cannot add a bot to the server** (common in private trading servers).
+Your Discord account is already a member — Playwright logs in as you and scrapes the channel.
+
+One-time setup:
+
+```bash
+pip install -r requirements.txt
+playwright install chromium
+```
+
+Register the source (channel_id + guild_id required):
+
+```bash
+node tools/runDiscordIngest.js add-source <name> <channel_id> --guild-id <guild_id>
+```
+
+Find channel/guild IDs: Discord desktop app → User Settings → Advanced → Developer Mode ON → right-click channel → Copy ID.
+
+First run (opens Chromium, you log in once):
+
+```bash
+npm run discord:ingest:browser -- --source <name> \
+    --url "https://discord.com/channels/<guild_id>/<channel_id>" \
+    --messages 200
+```
+
+Subsequent runs reuse the cached session (saved to `data/discord_pipeline/.cache/browser_session_<name>.json`).
+Delete that file to force a fresh login.
 
 ## Browser flow (new)
 
