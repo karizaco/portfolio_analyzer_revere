@@ -44,10 +44,15 @@
     "discord:catalog": "node tools/listDiscordCatalog.js",
     "discord:ingest:agentic": "node tools/runDiscordIngest.js ingest-agentic",
     "discord:ingest:jsonl": "node tools/runDiscordIngest.js ingest-jsonl",
-    "discord:ingest:browser": "node tools/runDiscordIngest.js ingest-browser"
+    "discord:ingest:browser": "node tools/runDiscordIngest.js ingest-browser",
+    "discord:signals": "python tools/build_discord_status.py",
+    "video:signals": "python tools/build_video_status.py"
   },
   "dependencies": {
     "sharp": "^0.34.3",
     "tesseract.js": "^6.0.1"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0"
   }
 }
