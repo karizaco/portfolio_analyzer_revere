@@ -197,10 +197,17 @@ for (const v of videos) {
       ? chartStream.price_action.replace(/\n/g, ' ').trim().substring(0, 60) : '—';
     const ocrSnippet = c.ocr_text_snippet || ocrText.substring(0, 120).replace(/\n/g, ' ');
 
+    // Video file size in MB (from downloads_1080p dir)
+    const vidFromName = dateKey; // dateKey is used to find the file
+    const vidBase = `data/video_pipeline/downloads_1080p/${dateKey}_${videoId}.mp4`;
+    let sizeMB = null;
+    try { const s = fs.statSync(vidBase); sizeMB = (s.size / 1024 / 1024).toFixed(0); } catch(e) {}
+
     videoRows.push({
       dateKey,
       videoId,
       snapRel,
+      sizeMB,
       snapFile,
       conf,
       confStr,
@@ -308,6 +315,13 @@ const html = `<!DOCTYPE html>
   .no-tot .tot-tag { display: none; }
   tr.tot-row td { border-left: 3px solid var(--yellow); }
   tr.tot-row td:first-child { padding-left: 9px; }
+  .sortable { cursor: pointer; user-select: none; }
+  .sortable::after { content: ' ↕'; font-size: 9px; opacity: 0.4; }
+  th.sort-asc::after { content: ' ↑'; opacity: 1; }
+  th.sort-desc::after { content: ' ↓'; opacity: 1; }
+  .yellow-border td { border-left: 3px solid var(--yellow); border-right: 3px solid var(--yellow); }
+  .yellow-border td:first-child { border-left-width: 1px; }
+  .yellow-border td:last-child { border-right-width: 1px; }
 </style>
 </head>
 <body>
@@ -350,7 +364,6 @@ const html = `<!DOCTYPE html>
     <select id="filterLayout">
       <option value="">All</option>
       <option value="chart_stream">chart_stream</option>
-      <option value="tale_of_the_tape">tale_of_the_tape</option>
     </select>
   </div>
   <div class="filter-group">
@@ -358,11 +371,15 @@ const html = `<!DOCTYPE html>
     <select id="filterShow">
       <option value="all">All captures</option>
       <option value="lowconf">Low conf (&lt;40)</option>
-      <option value="tot">tale_of_the_tape only</option>
     </select>
   </div>
   <button onclick="clearFilters()" style="background:none;border:1px solid var(--border);color:var(--text2);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:11px;">Clear</button>
   <span class="filter-label" id="rowCount" style="margin-left:auto;">${totalCaptures} rows</span>
+  <span style="font-size:11px;color:var(--text2);">
+    &nbsp;·&nbsp;
+    <span style="display:inline-block;width:24px;height:3px;background:var(--yellow);vertical-align:middle;border-radius:1px;"></span>
+    = ground-truth match row
+  </span>
 </div>
 
 <div class="table-wrap">
@@ -371,13 +388,14 @@ const html = `<!DOCTYPE html>
 <tr>
   <th></th>
   <th>#</th>
-  <th>Video</th>
-  <th>t (HMS)</th>
-  <th>Conf</th>
+  <th class="sortable" data-sort="dateKey">Video</th>
+  <th class="sortable" data-sort="sizeMB">Size</th>
+  <th class="sortable" data-sort="ts">t (HMS)</th>
+  <th class="sortable" data-sort="conf">Conf</th>
   <th>Recall</th>
   <th>Tickers (detected)</th>
-  <th>Layout</th>
-  <th>ph_overlay</th>
+  <th class="sortable" data-sort="layout">Layout</th>
+  <th class="sortable" data-sort="phOv">overlay ph</th>
   <th>OCR snippet</th>
 </tr>
 </thead>
@@ -389,6 +407,23 @@ const html = `<!DOCTYPE html>
 <script>
 const rows = ${rowsJson};
 const uniqueTickers = ${uniqueTickersJson};
+let sortKey = 'dateKey';
+let sortDir = 'asc';
+
+document.querySelectorAll('th.sortable').forEach(th => {
+  th.addEventListener('click', () => {
+    const key = th.dataset.sort;
+    if (sortKey === key) {
+      sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+    } else {
+      sortKey = key;
+      sortDir = 'asc';
+    }
+    document.querySelectorAll('th.sortable').forEach(t => t.classList.remove('sort-asc','sort-desc'));
+    th.classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+    render();
+  });
+});
 
 function clearFilters() {
   document.getElementById('filterConf').value = '';
@@ -396,6 +431,9 @@ function clearFilters() {
   document.getElementById('filterVideo').value = '';
   document.getElementById('filterLayout').value = '';
   document.getElementById('filterShow').value = 'all';
+  sortKey = 'dateKey';
+  sortDir = 'asc';
+  document.querySelectorAll('th.sortable').forEach(t => t.classList.remove('sort-asc','sort-desc'));
   render();
 }
 
@@ -406,7 +444,6 @@ function filterRow(r) {
   const layoutFilter = document.getElementById('filterLayout').value;
   const showFilter = document.getElementById('filterShow').value;
 
-  if (showFilter === 'tot' && r.layout !== 'tale_of_the_tape') return false;
   if (showFilter === 'lowconf' && (r.conf == null || r.conf >= 40)) return false;
   if (confThresh && (r.conf == null || r.conf >= confThresh)) return false;
   if (tickerFilter && !r.tickers.some(t => t === tickerFilter)) return false;
@@ -417,6 +454,17 @@ function filterRow(r) {
 
 function render() {
   const filtered = rows.filter(filterRow);
+  // Sort
+  filtered.sort((a, b) => {
+    let av = a[sortKey], bv = b[sortKey];
+    if (av == null) av = sortDir === 'asc' ? Infinity : -Infinity;
+    if (bv == null) bv = sortDir === 'asc' ? Infinity : -Infinity;
+    if (typeof av === 'string') av = av.toLowerCase();
+    if (typeof bv === 'string') bv = bv.toLowerCase();
+    if (av < bv) return sortDir === 'asc' ? -1 : 1;
+    if (av > bv) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
   document.getElementById('rowCount').textContent = filtered.length + ' rows';
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = '';
@@ -429,7 +477,7 @@ function render() {
       ? '<span class="badge badge-tot">tot</span>'
       : '<span class="badge badge-chart">chart</span>';
     const tickerBadges = r.tickers.map(t => '<span class="ticker">' + t + '</span>').join('');
-    const rowClass = isTot ? 'tot-row' : '';
+    const rowClass = r.gt ? 'yellow-border' : (isTot ? 'tot-row' : '');
 
     const tr = document.createElement('tr');
     tr.className = rowClass;
@@ -437,6 +485,7 @@ function render() {
       <td class="row-actions"><button class="expand-btn" onclick="toggleDetail(this)">+</button></td>
       <td>\${i + 1}</td>
       <td><span class="count-badge">\${r.dateKey}</span></td>
+      <td>\${r.sizeMB ? '<span class="size-mb">' + r.sizeMB + ' MB</span>' : '<span style="color:var(--text2)">—</span>'}</td>
       <td><span class="ts">\${r.tsHms}</span></td>
       <td><span class="conf-cell" style="\${confColorStyle}">\${r.confStr}</span></td>
       <td>\${r.gt ? '<span class="recall-cell">' + (r.tickers.filter(t => r.gt.includes(t)).length) + '/' + r.gt.length + '</span>' : '<span style="color:var(--text2)">—</span>'}</td>

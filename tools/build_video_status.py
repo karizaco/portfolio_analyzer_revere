@@ -29,39 +29,68 @@ def get_video_stats():
         }
     return stats
 
+def _extract_vid_from_logname(name):
+    """Extract video ID from probe log filename: {date}_{date}_{vid}_{8hexhash}_snapshot.json"""
+    import re
+    name = name.replace('.json', '').replace('_snapshot', '')
+    parts = name.split('_')
+    if len(parts) >= 4 and re.match(r'^[0-9a-f]{8}$', parts[3], re.I):
+        return parts[2]
+    vid = parts[2] if len(parts) >= 3 else ''
+    for i in range(3, len(parts)):
+        if re.match(r'^[0-9a-f]{8}$', parts[i], re.I):
+            break
+        vid += '_' + parts[i]
+    return vid
+
+def _extract_vid_from_stem(stem):
+    """Extract video ID from a download filename stem: {date}_{vid} or {vid}"""
+    import re
+    parts = stem.split('_')
+    if len(parts) == 1:
+        return parts[0]
+    vid = parts[1]
+    for i in range(2, len(parts)):
+        if re.match(r'^[0-9a-f]{8}$', parts[i], re.I):
+            break
+        vid += '_' + parts[i]
+    return vid
+
 def get_ocr_status():
-    """Check which video IDs have OCR probe logs."""
-    conn = sqlite3.connect(str(DB))
-    cur = conn.cursor()
-    # Videos that have been scanned (have probe logs or output_path)
-    cur.execute("""
-        SELECT video_id, upload_date, title, channel, download_path, output_path
-        FROM videos
-        WHERE channel = 'qullamaggie'
-        ORDER BY upload_date DESC
-    """)
-    rows = cur.fetchall()
-    conn.close()
-
+    """Check which video IDs have OCR probe logs by reading each log file."""
+    import re, json as _json
     scanned_ids = set()
-    for row in rows:
-        vid = row[0]
-        # Check if there's a probe log for this video
-        for probe_dir in (BASE / "video_ocr_probe").glob("*"):
-            if not probe_dir.is_dir():
-                continue
-            for log_file in probe_dir.glob("ocr_probe/logs/*.json"):
-                if vid in log_file.name:
-                    scanned_ids.add(vid)
 
-    # Also check video_scan directories
-    for scan_dir in (BASE / "..").glob("data/video_scan_*"):
+    for scan_dir in BASE.parent.glob("video_scan_*"):
         if not scan_dir.is_dir():
             continue
         for log_file in scan_dir.glob("**/ocr_probe/logs/*.json"):
-            vid_from_name = log_file.name.split('_')[0]
-            # Extract video ID from probe log filename pattern
-            pass
+            try:
+                log = _json.loads(log_file.read_text(encoding='utf-8'))
+                vid = log.get('video_id', '')
+                if not vid:
+                    vp = log.get('video_path', '')
+                    vid = _extract_vid_from_stem(Path(vp).stem)
+                if vid:
+                    scanned_ids.add(vid)
+            except Exception:
+                pass
+
+    # Also check video_ocr_probe directories
+    for probe_dir in BASE.glob("video_ocr_probe/*"):
+        if not probe_dir.is_dir():
+            continue
+        for log_file in probe_dir.glob("ocr_probe/logs/*.json"):
+            try:
+                log = _json.loads(log_file.read_text(encoding='utf-8'))
+                vid = log.get('video_id', '')
+                if not vid:
+                    vp = log.get('video_path', '')
+                    vid = _extract_vid_from_stem(Path(vp).stem)
+                if vid:
+                    scanned_ids.add(vid)
+            except Exception:
+                pass
 
     return scanned_ids
 
@@ -85,26 +114,31 @@ def build_video_html(stats, catalog_counts):
     for f in stats['downloads_1080p']['files']:
         size_gb = (BASE / 'downloads_1080p' / f).stat().st_size / (1024**3)
         date = f[:8]
-        vid = f.split('_')[1].replace('.mp4', '')
+        vid = _extract_vid_from_stem(f.replace('.mp4', ''))
         rows_1080.append({'file': f, 'date': date, 'vid': vid, 'size_gb': size_gb})
 
     rows_1080.sort(key=lambda x: x['date'], reverse=True)
 
     # Partition: OCR-scanned vs not
+    # Match by checking if any probe log filename contains the video's ID
     scanned = []
     unscanned = []
-    # We'd need actual scan status — use probe log presence as proxy
-    probe_vids = set()
-    for probe_dir in (BASE / "video_ocr_probe").glob("*"):
+    probe_log_names = set()
+    for scan_dir in BASE.parent.glob("video_scan_*"):
+        if not scan_dir.is_dir():
+            continue
+        for log_file in scan_dir.glob("**/ocr_probe/logs/*.json"):
+            probe_log_names.add(log_file.name)
+    for probe_dir in BASE.glob("video_ocr_probe/*"):
         if not probe_dir.is_dir():
             continue
         for log_file in probe_dir.glob("ocr_probe/logs/*.json"):
-            parts = log_file.name.replace('.json','').split('_')
-            if len(parts) >= 2:
-                probe_vids.add(parts[1])
+            probe_log_names.add(log_file.name)
 
     for row in rows_1080:
-        if row['vid'] in probe_vids:
+        vid_lower = row['vid'].lower()
+        found = any(vid_lower in name.lower() for name in probe_log_names)
+        if found:
             scanned.append(row)
         else:
             unscanned.append(row)
@@ -184,8 +218,7 @@ def build_video_html(stats, catalog_counts):
       <td>{r['file']}</td>
       <td class="num">{r['size_gb']*1024:.0f}</td>
       <td><span class="badge badge-ok">✓ Scanned</span></td>
-    </tr>""" for r in scanned[:50])}
-    {f'<tr><td colspan="3" style="color:#8b949e">...and {len(scanned)-50} more scanned files</td></tr>' if len(scanned) > 50 else ''}
+    </tr>""" for r in scanned)}
   </tbody>
 </table>
 
@@ -199,8 +232,7 @@ def build_video_html(stats, catalog_counts):
       <td>{r['file']}</td>
       <td class="num">{r['size_gb']*1024:.0f}</td>
       <td><span class="badge badge-old">⏳ Pending</span></td>
-    </tr>""" for r in unscanned[:50])}
-    {f'<tr><td colspan="3" style="color:#8b949e">...and {len(unscanned)-50} more pending files</td></tr>' if len(unscanned) > 50 else ''}
+    </tr>""" for r in unscanned)}
   </tbody>
 </table>
 
