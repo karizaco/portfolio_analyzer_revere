@@ -55,7 +55,9 @@ function printHelp() {
 // ground truth (56% mean ticker recall vs 44-47% for wider crops). Going wider
 // hurts OCR quality by including too much chart area. The pHash region
 // (--phash-region-fraction default) is a separate, narrower carve-out.
-const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.70,0.60,0.30,0.40';
+// Ground truth on 20220606: y=0.55 captures the full table (GOVX, LABU at top)
+// while y=0.60 misses them. Height 0.45 gives 6/8 tickers vs 4/8 at 0.40.
+const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.70,0.55,0.30,0.45';
 
 function parseFractionalRegion(raw) {
   if (!raw) return null;

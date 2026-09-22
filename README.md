@@ -488,7 +488,29 @@ This was validated against 9 human-verified snapshots across 3 videos:
 
 **Must use 1080p source** for QMG chart-stream OCR. The 360p default download (YouTube `android` client) will not work.
 
-Download QMG videos at 1080p:
+### YouTube Download Issues
+
+**SABR blocking**: YouTube has been rolling out SABR-only (Secure Adaptive Bitrate) streaming on many videos. This is NOT age-restriction — yt-dlp simply cannot extract stream URLs without authentication. Error looks like:
+
+```
+WARNING: [youtube] VIDEO_ID: Some android client https formats have been skipped as they are missing a URL.
+YouTube may have enabled the SABR-only
+```
+
+**Bypass via cookies**: Export cookies from a Firefox session (where you're logged into YouTube) using the Cookie-Editor browser extension:
+
+1. Open youtube.com in Firefox (normal or private window with Cookie-Editor extension)
+2. Click Cookie-Editor → Export → copy JSON
+3. Convert to Netscape format (or use yt-dlp's `--add-header` with individual cookies)
+4. `yt-dlp --cookies cookies.txt -f 137 URL`
+
+**Minimum cookies needed**: `SID`, `__Secure-3PSID`, `SIDCC`, `__Secure-1PSIDTS`, `VISITOR_PRIVACY_METADATA`, `GPS`, `YSC`, `CONSISTENCY`.
+
+**Firefox private mode**: Cookie-Editor works in private windows — it reads cookies from memory even when private browsing is active.
+
+**Truly age-restricted videos**: Only bypassable via browser session cookies. `"Fuck Putin"` title = age-gated, cannot be downloaded automatically.
+
+**Download QMG videos at 1080p:**
 ```bash
 node tools/downloadHiresBatch.js --only-ids <ids> --height 1080
 ```

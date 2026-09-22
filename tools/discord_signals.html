@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Discord Signals — Status</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1117; color: #e6edf3; padding: 24px; }
+  h1 { color: #58a6ff; margin-bottom: 4px; }
+  .subtitle { color: #8b949e; font-size: 13px; margin-bottom: 24px; }
+  h2 { color: #58a6ff; margin: 28px 0 12px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; color: #8b949e; padding: 8px 12px; border-bottom: 1px solid #21262d; font-weight: 500; }
+  td { padding: 10px 12px; border-bottom: 1px solid #161b22; }
+  tr:hover td { background: #161b22; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .channel-name { font-weight: 600; color: #79c0ff; }
+  .tag { display: inline-block; background: #1f6feb22; color: #58a6ff; padding: 2px 8px; border-radius: 12px; font-size: 12px; margin-right: 4px; }
+  .ticker-cell { font-family: 'SF Mono', Monaco, monospace; }
+  .ticker { display: inline-block; background: #23863622; color: #3fb950; padding: 2px 8px; border-radius: 4px; margin: 2px; font-size: 13px; }
+  .ticker-high { background: #f0883e22; color: #ffa657; }
+  .month-grid { display: grid; grid-template-columns: 100px repeat(3, 1fr); gap: 1px; background: #21262d; border: 1px solid #21262d; border-radius: 6px; overflow: hidden; }
+  .mg-header { background: #161b22; padding: 8px 12px; font-weight: 600; color: #8b949e; font-size: 13px; }
+  .mg-cell { background: #0d1117; padding: 8px 12px; font-size: 13px; text-align: right; }
+  .mg-cell.marker { color: #8b949e; }
+  .total { color: #e6edf3; font-weight: 600; }
+  .refresh { color: #8b949e; font-size: 12px; margin-top: 32px; }
+</style>
+</head>
+<body>
+<h1>Discord Trading Signals</h1>
+<p class="subtitle">Generated: 2026-09-22T08:20:56Z &nbsp;|&nbsp; data/video_pipeline/state.sqlite</p>
+
+<h2>Channels</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Channel</th>
+      <th class="num">Messages</th>
+      <th class="num">With Tickers</th>
+      <th>Oldest</th>
+      <th>Newest</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td class="channel-name">drendel</td>
+      <td class="num">1,945</td>
+      <td class="num">2</td>
+      <td>2025-07-24</td>
+      <td>2026-09-21</td>
+    </tr>
+    <tr>
+      <td class="channel-name">ariel-long</td>
+      <td class="num">1,645</td>
+      <td class="num">28</td>
+      <td>2025-04-08</td>
+      <td>2026-09-21</td>
+    </tr>
+    <tr>
+      <td class="channel-name">ariel-short</td>
+      <td class="num">1,368</td>
+      <td class="num">14</td>
+      <td>2025-04-07</td>
+      <td>2026-09-11</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Top Tickers</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 6px;">
+  <span class="ticker">$NVDA <span style="opacity:0.7">5</span></span><span class="ticker">$MSTR <span style="opacity:0.7">3</span></span><span class="ticker">$IGV <span style="opacity:0.7">2</span></span><span class="ticker">$MU <span style="opacity:0.7">2</span></span><span class="ticker">$ARM <span style="opacity:0.7">2</span></span><span class="ticker">$ARKK <span style="opacity:0.7">2</span></span><span class="ticker">$FCX <span style="opacity:0.7">2</span></span><span class="ticker">$HSAI <span style="opacity:0.7">2</span></span><span class="ticker">$PLTR <span style="opacity:0.7">2</span></span><span class="ticker">$UBER <span style="opacity:0.7">2</span></span><span class="ticker">$SLV <span style="opacity:0.7">2</span></span><span class="ticker">$DELL <span style="opacity:0.7">1</span></span><span class="ticker">$AMKR <span style="opacity:0.7">1</span></span><span class="ticker">$STX <span style="opacity:0.7">1</span></span><span class="ticker">$WDC <span style="opacity:0.7">1</span></span><span class="ticker">$MRVL <span style="opacity:0.7">1</span></span><span class="ticker">$BE <span style="opacity:0.7">1</span></span><span class="ticker">$CARS <span style="opacity:0.7">1</span></span><span class="ticker">$GDX <span style="opacity:0.7">1</span></span><span class="ticker">$HYMC <span style="opacity:0.7">1</span></span><span class="ticker">$SMH <span style="opacity:0.7">1</span></span><span class="ticker">$CRML <span style="opacity:0.7">1</span></span><span class="ticker">$ASML <span style="opacity:0.7">1</span></span><span class="ticker">$SLB <span style="opacity:0.7">1</span></span><span class="ticker">$VRT <span style="opacity:0.7">1</span></span><span class="ticker">$PL <span style="opacity:0.7">1</span></span><span class="ticker">$TSM <span style="opacity:0.7">1</span></span><span class="ticker">$COPX <span style="opacity:0.7">1</span></span><span class="ticker">$SCCO <span style="opacity:0.7">1</span></span><span class="ticker">$EAT <span style="opacity:0.7">1</span></span>
+</div>
+
+<h2>Messages per Month</h2>
+<div class="month-grid">
+  <div class="mg-header">Month</div>
+  <div class="mg-header">drendel</div><div class="mg-header">ariel-long</div><div class="mg-header">ariel-short</div>
+  <div class="mg-cell marker">2026-09</div>
+  <div class="mg-cell total">128</div><div class="mg-cell total">81</div><div class="mg-cell total">17</div><div class="mg-cell marker">2026-08</div>
+  <div class="mg-cell total">250</div><div class="mg-cell total">134</div><div class="mg-cell total">41</div><div class="mg-cell marker">2026-07</div>
+  <div class="mg-cell total">184</div><div class="mg-cell total">26</div><div class="mg-cell total">34</div><div class="mg-cell marker">2026-06</div>
+  <div class="mg-cell total">226</div><div class="mg-cell total">83</div><div class="mg-cell total">29</div><div class="mg-cell marker">2026-05</div>
+  <div class="mg-cell total">241</div><div class="mg-cell total">192</div><div class="mg-cell total">65</div><div class="mg-cell marker">2026-04</div>
+  <div class="mg-cell total">189</div><div class="mg-cell total">300</div><div class="mg-cell total">306</div><div class="mg-cell marker">2026-03</div>
+  <div class="mg-cell total">170</div><div class="mg-cell total">70</div><div class="mg-cell total">163</div><div class="mg-cell marker">2026-02</div>
+  <div class="mg-cell total">98</div><div class="mg-cell total">94</div><div class="mg-cell total">91</div><div class="mg-cell marker">2026-01</div>
+  <div class="mg-cell total">106</div><div class="mg-cell total">147</div><div class="mg-cell total">172</div><div class="mg-cell marker">2025-12</div>
+  <div class="mg-cell total">83</div><div class="mg-cell total">106</div><div class="mg-cell total">60</div><div class="mg-cell marker">2025-11</div>
+  <div class="mg-cell total">59</div><div class="mg-cell total">94</div><div class="mg-cell total">148</div><div class="mg-cell marker">2025-10</div>
+  <div class="mg-cell total">102</div><div class="mg-cell total">120</div><div class="mg-cell total">118</div><div class="mg-cell marker">2025-09</div>
+  <div class="mg-cell total">72</div><div class="mg-cell total">61</div><div class="mg-cell total">37</div><div class="mg-cell marker">2025-08</div>
+  <div class="mg-cell total">30</div><div class="mg-cell total">14</div><div class="mg-cell total">9</div><div class="mg-cell marker">2025-07</div>
+  <div class="mg-cell total">7</div><div class="mg-cell total">29</div><div class="mg-cell total">9</div><div class="mg-cell marker">2025-06</div>
+  <div class="mg-cell total">0</div><div class="mg-cell total">49</div><div class="mg-cell total">37</div><div class="mg-cell marker">2025-05</div>
+  <div class="mg-cell total">0</div><div class="mg-cell total">25</div><div class="mg-cell total">24</div><div class="mg-cell marker">2025-04</div>
+  <div class="mg-cell total">0</div><div class="mg-cell total">20</div><div class="mg-cell total">8</div>
+</div>
+
+<p class="refresh">Refresh by opening this file in a browser. Re-run <code>python tools/build_discord_status.py</code> to regenerate.</p>
+</body>
+</html>
