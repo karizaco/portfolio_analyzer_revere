@@ -10,18 +10,41 @@ Stack: Node.js + Python (yt-dlp/ffmpeg) + SQLite + Tesseract OCR + sharp + WebGL
 
 ---
 
+## Critical rules
+
+### Never infer resolution from filesize
+
+**Filesize tells you nothing about actual video resolution.** A 10-minute FullHD video can easily be under 1 GB. A 2-hour 720p video can be 2 GB. **Always use ffprobe to check actual resolution:**
+
+```bash
+ffprobe -v quiet -print_format json -show_streams "path/to/video.mp4"
+# Look for: width × height in the video stream
+```
+
+Never delete a video because it seems "too small to be FullHD" — this reasoning has caused data loss.
+
+### The download directories are NOT channel-exclusive
+
+The `downloads/`, `downloads_hires/`, `downloads_1080p/` directories have historically held mixed content. Before deleting from any of these directories, **always verify the actual video channel via SQLite** (`videos` table, `channel` column). The directory names describe the preferred resolution, not the channel.
+
+### YouTube cookie sessions expire
+
+YouTube session cookies in `youtube_cookies.txt` expire and become 0-byte files. When downloads fail with `"does not look like a Netscape format cookies file"`, re-export fresh cookies from Firefox Cookie-Editor and convert to Netscape format.
+
+---
+
 ## Data folder policy
 
 ### Download subdirectories (`data/video_pipeline/`)
 
-| Directory | Channel | Resolution | Format |
-|---|---|---|---|
-| `downloads/` | revere | 720p | 136 |
-| `downloads_hires/` | qullamaggie | 720p | 136 |
-| `downloads_1080p/` | qullamaggie | 1080p | 137 |
+| Directory | Preferred Resolution | Notes |
+|---|---|---|
+| `downloads/` | 720p | Historically held mixed qullamaggie+revere; currently empty after cleanup |
+| `downloads_hires/` | 720p | Mixed: ~98 revere + ~12 qullamaggie + ~19 unknown (verify via SQLite before deleting) |
+| `downloads_1080p/` | 1080p | qullamaggie 1080p (format 137); verify via ffprobe before assuming resolution |
 
-Each `(channel, resolution)` pair gets exactly one directory.
-Never mix channels or resolutions within a single download directory.
+Verify channel via SQLite: `SELECT video_id, channel FROM videos WHERE video_id IN (...)`
+Use ffprobe to verify actual resolution — never assume from directory name or filesize.
 
 ### Scan output directories (`data/video_scan_YYYYMMDD/`)
 
