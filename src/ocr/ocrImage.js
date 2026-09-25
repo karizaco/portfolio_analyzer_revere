@@ -172,9 +172,41 @@ async function getWorker() {
   return workerPromise;
 }
 
+// Parse Tesseract TSV output into per-word position records.
+// TSV columns: level page block par line word left top width height conf text
+// Returns array of { text, left, top, width, height, conf } for level=5 (word) only.
+function parseTsvWords(tsvString) {
+  if (!tsvString || typeof tsvString !== 'string') {
+    return [];
+  }
+  const out = [];
+  const lines = tsvString.split('\n');
+  for (let i = 1; i < lines.length; i += 1) {
+    const line = lines[i];
+    if (!line || !line.trim()) continue;
+    const cols = line.split('\t');
+    if (cols.length < 12) continue;
+    if (Number(cols[0]) !== 5) continue;
+    const text = (cols[11] || '').trim();
+    if (!text) continue;
+    out.push({
+      conf: Number(cols[10]),
+      height: Number(cols[9]),
+      left: Number(cols[6]),
+      text,
+      top: Number(cols[7]),
+      width: Number(cols[8])
+    });
+  }
+  return out;
+}
+
 async function runProfile(worker, filePath, profileName, preprocessOptions) {
   const imageBuffer = await preprocessImage(filePath, profileName, preprocessOptions);
-  const result = await worker.recognize(imageBuffer);
+  // Request tsv output so callers can use word positions for column-aware
+  // parsing. Backwards-compatible: callers that only read text/lines/confidence
+  // see no change.
+  const result = await worker.recognize(imageBuffer, {}, { tsv: true });
   const text = result.data.text || '';
   return {
     confidence: Number(result.data.confidence || 0),
@@ -182,7 +214,8 @@ async function runProfile(worker, filePath, profileName, preprocessOptions) {
     lines: splitRecognizedLines(text),
     profileName,
     score: scoreOcrResult(text),
-    text
+    text,
+    words: parseTsvWords(result.data.tsv)
   };
 }
 
