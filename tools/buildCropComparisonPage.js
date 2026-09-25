@@ -20,35 +20,45 @@ const GT = {
   '20220427': ['FAULL','LABU','NUGT','SOXL','UVXY','WEAT'],
 };
 
-// Each run = a parser variant + a list of captures. We re-OCR every capture
-// live so the comparison is on equal footing (Tesseract is non-deterministic
-// across runs). This avoids stale OCR text from old probe logs.
-const RUNS = [
+// All videos to show in the comparison. Each video lists the captures to OCR.
+// Uses the qmg-1080p-ocr-v2 batch run from 2026-09-23 which has snapshots for
+// every GT video.
+const VIDEOS = [
   {
-    tag: 'qmg-pipeline-20220323',
-    label: 'BEFORE: crop + edit-distance, NO column filter',
-    parser: 'legacy',
-    video: '20220323',
-    captures: [
-      { file: 'qmg_20220323.png',   label: 'Capture 1 (ts=00:34:10)' },
-      { file: 'qmg_20220323_2.png', label: 'Capture 2 (ts=00:02:44)' },
-      { file: 'qmg_20220323_3.png', label: 'Capture 3 (ts=00:32:48)' },
-    ],
+    dateKey: '20220323',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220323.png', 'qmg_20220323_2.png', 'qmg_20220323_3.png'],
+    description: '11 GT tickers (largest position list)',
   },
   {
-    tag: 'qmg-pos-aware-20220323',
-    label: 'AFTER: position-list-aware column filter',
-    parser: 'column-aware',
-    video: '20220323',
-    captures: [
-      { file: 'qmg_20220323.png', label: 'Capture 1 (ts=00:17:00)' },
-    ],
+    dateKey: '20220428',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220428.png', 'qmg_20220428_2.png', 'qmg_20220428_3.png'],
+    description: '4 GT tickers',
+  },
+  {
+    dateKey: '20220510',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220510.png', 'qmg_20220510_2.png', 'qmg_20220510_3.png'],
+    description: '2 GT tickers',
+  },
+  {
+    dateKey: '20220614',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220614.png', 'qmg_20220614_2.png', 'qmg_20220614_3.png'],
+    description: '3 GT tickers',
+  },
+  {
+    dateKey: '20220427',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220427.png'],
+    description: '6 GT tickers (FAULL, LABU, NUGT, SOXL, UVXY, WEAT)',
   },
 ];
 
 const CROPS_OUT_DIR = path.join(ROOT, 'data', 'video_scan_test', '_review_crops');
 
-// Replicate the OCR pipeline's preprocessing (chart-stream profile).
+// Preprocess a snapshot like the OCR pipeline does.
 async function preprocessForOcr(snapshotPath) {
   const meta = await sharp(snapshotPath).metadata();
   const left = Math.round(meta.width * CROP.x);
@@ -66,10 +76,10 @@ async function preprocessForOcr(snapshotPath) {
     .withMetadata({ density: 300 })
     .png()
     .toBuffer();
-  return { meta, left, top, cropW, cropH, ocrBuf };
+  return { left, top, cropW, cropH, ocrBuf };
 }
 
-// Legacy parser: accept any ticker-shaped token in lexicon or with price-nearby.
+// Legacy parser (no column filter). Accept any ticker-shaped token in lexicon.
 function legacyParse(text, lexicon) {
   const tokens = text.split(/[\s,;:()\[\]{}<>\/\\|]+/);
   const seen = new Set();
@@ -80,8 +90,7 @@ function legacyParse(text, lexicon) {
     if (!cleaned || seen.has(cleaned)) continue;
     seen.add(cleaned);
     if (!/^[A-Z][A-Z0-9]{0,4}$/.test(cleaned)) continue;
-    const inLex = lexicon.tickerSet.has(cleaned);
-    if (inLex) accepted.push(cleaned);
+    if (lexicon.tickerSet.has(cleaned)) accepted.push(cleaned);
   }
   return accepted;
 }
@@ -91,32 +100,25 @@ async function main() {
   const { loadSeedLexiconSync } = require(path.join(ROOT, 'src/normalize/tickerScan'));
   const lexicon = loadSeedLexiconSync();
 
-  // Set up Tesseract once for the whole page build.
   const worker = await Tesseract.createWorker('eng');
   await worker.setParameters({ preserve_interword_spaces: '1', user_defined_dpi: '300' });
 
   fs.mkdirSync(CROPS_OUT_DIR, { recursive: true });
 
-  const runData = [];
-  for (const run of RUNS) {
+  const videoResults = [];
+  for (const video of VIDEOS) {
     const captures = [];
-    for (let i = 0; i < run.captures.length; i += 1) {
-      const cap = run.captures[i];
-      const snapshotPath = path.join(ROOT, 'data', 'video_scan_test', run.tag, 'snapshots', cap.file);
-      if (!fs.existsSync(snapshotPath)) {
-        captures.push({ ...cap, error: 'Snapshot missing' });
-        continue;
-      }
-      const { left, top, cropW, cropH, ocrBuf } = await preprocessForOcr(snapshotPath);
+    for (const file of video.files) {
+      const snapshotPath = path.join(ROOT, video.snapshotsDir, file);
+      if (!fs.existsSync(snapshotPath)) continue;
 
-      // Save raw + OCR crops for the HTML to display.
-      const stem = `${run.tag}__${cap.file.replace('.png', '')}`;
+      const { left, top, cropW, cropH, ocrBuf } = await preprocessForOcr(snapshotPath);
+      const stem = `${video.dateKey}__${file.replace('.png', '')}`;
       const rawPath = path.join(CROPS_OUT_DIR, `${stem}__raw_crop.png`);
       const ocrPath = path.join(CROPS_OUT_DIR, `${stem}__ocr_crop.png`);
       await sharp(snapshotPath).extract({ left, top, width: cropW, height: cropH }).png().toFile(rawPath);
       fs.writeFileSync(ocrPath, ocrBuf);
 
-      // Re-OCR (Tesseract is non-deterministic so stored log OCR is unreliable).
       const ocrResult = await worker.recognize(ocrBuf, {}, { tsv: true });
       const text = ocrResult.data.text || '';
       const conf = Math.round(ocrResult.data.confidence || 0);
@@ -126,58 +128,69 @@ async function main() {
         return { text: (c[11] || '').trim(), left: +c[6], top: +c[7], width: +c[8], height: +c[9], conf: +c[10], line: +c[4] };
       }).filter(w => w.text);
 
-      // Apply the right parser.
-      let detected;
-      if (run.parser === 'column-aware') {
-        const ocr = { text, lines: text.split('\n'), words };
-        const parsed = parseChartStreamPositionList({ ocr });
-        detected = parsed.position_list;
-      } else {
-        detected = legacyParse(text, lexicon);
-      }
+      const ocr = { text, lines: text.split('\n'), words };
+      const columnResult = parseChartStreamPositionList({ ocr });
+      const detectedColumn = columnResult.position_list;
+      const detectedLegacy = legacyParse(text, lexicon);
 
-      const gt = GT[run.video] || [];
-      const correct = gt.filter(t => detected.includes(t));
-      const extra = detected.filter(t => !gt.includes(t));
-      const missing = gt.filter(t => !detected.includes(t));
+      const gt = GT[video.dateKey] || [];
 
+      const correctColumn = gt.filter(t => detectedColumn.includes(t));
+      const extraColumn = detectedColumn.filter(t => !gt.includes(t));
+      const missingColumn = gt.filter(t => !detectedColumn.includes(t));
+
+      const correctLegacy = gt.filter(t => detectedLegacy.includes(t));
+      const extraLegacy = detectedLegacy.filter(t => !gt.includes(t));
+
+      // Captures without GT still get evaluated, just don't track recall.
       captures.push({
-        ...cap,
+        file,
         crops: {
-          raw: path.relative(path.join(ROOT, 'tools'), rawPath).replace(/\\/g, '/'),
-          ocr: path.relative(path.join(ROOT, 'tools'), ocrPath).replace(/\\/g, '/'),
+          // Single level of "../" since the HTML is at tools/qmg_crop_comparison.html
+          // and the crops are at data/video_scan_test/_review_crops/.
+          raw: '../' + path.relative(ROOT, rawPath).replace(/\\/g, '/'),
+          ocr: '../' + path.relative(ROOT, ocrPath).replace(/\\/g, '/'),
         },
-        detected,
-        correct,
-        extra,
-        missing,
-        recall: gt.length ? `${correct.length}/${gt.length}` : '—',
+        correctColumn,
+        correctLegacy,
+        extraColumn,
+        extraLegacy,
+        missingColumn,
         ocrText: text.replace(/</g, '&lt;').slice(0, 600),
         conf,
+        detectedColumn,
+        detectedLegacy,
       });
     }
-    runData.push({ ...run, captures });
+    videoResults.push({ ...video, captures });
   }
 
   await worker.terminate();
 
-  // Aggregate metrics
-  const aggregateStats = runData.map(run => {
-    let totalCorrect = 0, totalFP = 0, totalDetected = 0, totalGT = 0;
-    for (const c of run.captures) {
-      totalCorrect += (c.correct || []).length;
-      totalFP += (c.extra || []).length;
-      totalDetected += (c.detected || []).length;
-      totalGT += (GT[run.video] || []).length;
+  // Per-video aggregates
+  const aggregateStats = videoResults.map(v => {
+    let totCorrectC = 0, totFPC = 0, totDetectedC = 0;
+    let totCorrectL = 0, totFPL = 0, totDetectedL = 0;
+    let totGT = 0;
+    for (const c of v.captures) {
+      totCorrectC += c.correctColumn.length;
+      totFPC += c.extraColumn.length;
+      totDetectedC += c.detectedColumn.length;
+      totCorrectL += c.correctLegacy.length;
+      totFPL += c.extraLegacy.length;
+      totDetectedL += c.detectedLegacy.length;
+      totGT += (GT[v.dateKey] || []).length;
     }
     return {
-      label: run.label,
-      totalCorrect,
-      totalDetected,
-      totalFP,
-      totalGT,
-      recallPct: totalGT ? Math.round((totalCorrect / totalGT) * 100) : 0,
-      precisionPct: totalDetected ? Math.round((totalCorrect / totalDetected) * 100) : 0,
+      dateKey: v.dateKey,
+      description: v.description,
+      gtCount: totGT,
+      column: { correct: totCorrectC, fp: totFPC, detected: totDetectedC,
+                recall: totGT ? Math.round(100 * totCorrectC / totGT) : 0,
+                precision: totDetectedC ? Math.round(100 * totCorrectC / totDetectedC) : 0 },
+      legacy: { correct: totCorrectL, fp: totFPL, detected: totDetectedL,
+                recall: totGT ? Math.round(100 * totCorrectL / totGT) : 0,
+                precision: totDetectedL ? Math.round(100 * totCorrectL / totDetectedL) : 0 },
     };
   });
 
@@ -190,12 +203,12 @@ async function main() {
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', monospace; background: #0d0d0d; color: #e0e0e0; padding: 20px; }
   h1 { color: #fff; margin-bottom: 5px; }
   h2 { color: #fff; margin-top: 30px; border-bottom: 1px solid #333; padding-bottom: 8px; }
-  .summary { display: flex; gap: 15px; margin: 20px 0; }
-  .summary-card { background: #1a1a1a; border: 1px solid #333; border-radius: 6px; padding: 15px; flex: 1; }
-  .summary-card h3 { margin: 0 0 8px; color: #fff; font-size: 13px; }
-  .summary-card .big { font-size: 28px; font-weight: bold; }
-  .big.good { color: #4f4; }
-  .big.bad { color: #f66; }
+  table.summary { border-collapse: collapse; width: 100%; margin: 15px 0 25px; background: #1a1a1a; border-radius: 6px; overflow: hidden; }
+  table.summary th { background: #2a2a2a; padding: 10px 12px; text-align: left; font-size: 12px; color: #fff; border-bottom: 1px solid #333; }
+  table.summary td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid #2a2a2a; }
+  table.summary td.good { color: #6d6; font-weight: 600; }
+  table.summary td.bad { color: #f66; font-weight: 600; }
+  table.summary td.warn { color: #fc6; font-weight: 600; }
   .legend { background: #1a1a1a; border: 1px solid #333; padding: 15px; border-radius: 6px; margin-bottom: 20px; font-size: 12px; line-height: 1.6; }
   .legend code { background: #2a2a2a; padding: 2px 5px; border-radius: 3px; }
   .capture-row { display: grid; grid-template-columns: 220px 280px 1fr; gap: 15px; margin: 15px 0; padding: 15px; background: #1a1a1a; border-radius: 6px; border: 1px solid #333; }
@@ -203,7 +216,6 @@ async function main() {
   .crop-box img { width: 100%; height: auto; display: block; border-radius: 3px; }
   .crop-box .crop-label { font-size: 11px; color: #888; margin-bottom: 6px; }
   .detection-box { padding: 0 5px; }
-  .detection-box .timestamp { color: #aaa; font-size: 12px; margin-bottom: 8px; }
   .ticker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 5px; margin-bottom: 10px; }
   .ticker { padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: 600; text-align: center; }
   .ticker.gt-correct { background: #1a3a1a; color: #6d6; border: 1px solid #4a4; }
@@ -211,85 +223,110 @@ async function main() {
   .ticker.fp         { background: #3a2a1a; color: #fa6; border: 1px solid #f84; }
   .gt-list-label { font-size: 11px; color: #888; margin-top: 8px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
   .ocr-text { font-family: monospace; font-size: 11px; color: #999; background: #0a0a0a; padding: 8px; border-radius: 3px; max-height: 140px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; margin-top: 10px; }
-  .recall-summary { font-size: 18px; font-weight: bold; margin: 10px 0; }
-  .recall-summary.good { color: #6d6; }
-  .recall-summary.warn { color: #fc6; }
-  .recall-summary.bad  { color: #f66; }
+  .recall-row { display: flex; gap: 20px; margin: 10px 0; font-size: 14px; }
+  .recall-row .label { color: #888; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
   .capture-title { font-size: 14px; color: #fff; font-weight: 600; margin-bottom: 4px; }
   .missing-banner { background: #3a1a1a; border-left: 4px solid #f44; padding: 8px 12px; border-radius: 4px; margin: 8px 0; font-size: 12px; color: #faa; }
 </style>
 </head>
 <body>
 <h1>Quullamaggie Position-List OCR — Crop & Detection Review</h1>
-<p style="color:#888">For each capture: <b>Raw crop</b> = the 250×434px region extracted from the snapshot (parser input). <b>OCR crop</b> = the 3× upscaled, inverted, contrast-boosted image fed to Tesseract. <b>Detection box</b> = detected tickers (color-coded) + GT tickers + OCR text.</p>
-<p style="color:#888"><b>Note:</b> OCR is re-run for every capture so BEFORE/AFTER comparisons are on equal footing (Tesseract is non-deterministic — stored probe logs may have lower-quality text from earlier runs).</p>
+<p style="color:#888">For each capture: <b>Raw crop</b> = 250×434px region from snapshot (parser input). <b>OCR crop</b> = 3× upscaled, inverted, contrast-boosted image fed to Tesseract. <b>Detection box</b> = both parsers' results side-by-side, color-coded.</p>
+<p style="color:#888"><b>OCR is re-run for every capture</b> so legacy and column-aware parsers are compared on identical Tesseract output (Tesseract is non-deterministic across runs).</p>
 
 <div class="legend">
   <p><b>Color coding:</b> <span class="ticker gt-correct">Green</span> = GT ticker correctly detected. <span class="ticker gt-missed">Red dashed</span> = GT ticker MISSED. <span class="ticker fp">Orange</span> = false positive (detected but not in GT).</p>
-  <p><b>How to use this page:</b> For each row, look at the OCR crop on the LEFT (what Tesseract saw) and check whether the detected tickers match the visible text in the position list. Missed GT tickers are Tesseract failures (garbled OCR), not parser failures.</p>
+  <p><b>Two parsers compared:</b> <b>Legacy</b> = accept any ticker-shape token in the seed lexicon. <b>Column-aware</b> = only accept ticker-shape words that land in the dominant ticker column (x=348-358 in scaled 750px crop) AND have a price token to their RIGHT on the same line. The column-aware filter rejects chart-area text (axis labels, chart annotations, Personal WatchList rows) that the legacy parser accepts as false positives.</p>
 </div>
 
-<div class="summary">
+<h2>Per-video aggregate (across all captures)</h2>
+<table class="summary">
+  <tr>
+    <th>Date</th>
+    <th>GT tickers</th>
+    <th colspan="2">Legacy parser</th>
+    <th colspan="2">Column-aware parser</th>
+  </tr>
+  <tr>
+    <th></th>
+    <th></th>
+    <th>Recall</th><th>Precision (FPs)</th>
+    <th>Recall</th><th>Precision (FPs)</th>
+  </tr>
 ${aggregateStats.map(s => `
-  <div class="summary-card">
-    <h3>${s.label}</h3>
-    <div class="big ${s.recallPct >= 50 ? 'good' : 'bad'}">${s.recallPct}% recall</div>
-    <div style="color:#888; font-size:12px; margin-top:6px;">
-      ${s.totalCorrect}/${s.totalGT} GT correct • ${s.totalFP} FPs • ${s.precisionPct}% precision
-    </div>
-  </div>`).join('')}
-</div>
+  <tr>
+    <td><b>${s.dateKey}</b><br><span style="color:#888; font-size:11px">${s.description}</span></td>
+    <td>${s.gtCount}</td>
+    <td class="${s.legacy.recall >= 50 ? 'good' : s.legacy.recall >= 25 ? 'warn' : 'bad'}">${s.legacy.recall}% (${s.legacy.correct}/${s.gtCount})</td>
+    <td class="${s.legacy.fp <= 1 ? 'good' : 'bad'}">${s.legacy.precision}% (${s.legacy.fp} FPs)</td>
+    <td class="${s.column.recall >= 50 ? 'good' : s.column.recall >= 25 ? 'warn' : 'bad'}">${s.column.recall}% (${s.column.correct}/${s.gtCount})</td>
+    <td class="${s.column.fp <= 1 ? 'good' : 'bad'}">${s.column.precision}% (${s.column.fp} FPs)</td>
+  </tr>`).join('')}
+</table>
 
-${runData.map(run => `
-<h2>${run.label}</h2>
-<p style="color:#888; font-size:12px;">GT for this video: ${(GT[run.video] || []).join(', ') || '(none)'}</p>
+${videoResults.map(v => `
+<h2>${v.dateKey} — ${v.description}</h2>
+<p style="color:#888; font-size:12px;">GT: ${(GT[v.dateKey] || []).join(', ') || '(none)'}</p>
 
-${run.captures.map(cap => {
-  if (cap.error) {
-    return `<div class="capture-row"><div style="grid-column: 1/-1; padding:20px; color:#f88">${cap.label}: ${cap.error}</div></div>`;
-  }
-  return `
+${v.captures.map((cap, idx) => `
   <div class="capture-row">
     <div class="crop-box">
-      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input)</span></div>
-      <img src="../${cap.crops.raw}" alt="raw crop">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="${cap.crops.raw}" alt="raw crop ${idx}">
     </div>
     <div class="crop-box">
-      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen — what Tesseract saw)</span></div>
-      <img src="../${cap.crops.ocr}" alt="ocr crop">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="${cap.crops.ocr}" alt="ocr crop ${idx}">
       <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: ${cap.conf}</div>
     </div>
     <div class="detection-box">
-      <div class="capture-title">${cap.label}</div>
+      <div class="capture-title">${cap.file}</div>
 
-      <div class="recall-summary ${cap.correct.length >= ((GT[run.video] || []).length * 0.6) ? 'good' : cap.correct.length >= 2 ? 'warn' : 'bad'}">
-        ${cap.recall} recall — ${cap.correct.length} correct, ${cap.missing.length} missed, ${cap.extra.length} false positives
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="${cap.correctLegacy.length >= (GT[v.dateKey] || []).length * 0.6 ? 'good' : cap.correctLegacy.length >= 2 ? 'warn' : 'bad'}" style="font-size:16px; font-weight:600;">
+            ${cap.correctLegacy.length}/${(GT[v.dateKey] || []).length} correct, ${cap.extraLegacy.length} FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="${cap.correctColumn.length >= (GT[v.dateKey] || []).length * 0.6 ? 'good' : cap.correctColumn.length >= 2 ? 'warn' : 'bad'}" style="font-size:16px; font-weight:600;">
+            ${cap.correctColumn.length}/${(GT[v.dateKey] || []).length} correct, ${cap.extraColumn.length} FP
+          </div>
+        </div>
       </div>
 
-      ${cap.missing.length > 0 ? `
-        <div class="missing-banner">⚠ Missed GT tickers: <b>${cap.missing.join(', ')}</b> — check OCR crop on the left to see if Tesseract garbled these</div>
+      ${cap.missingColumn.length > 0 ? `
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>${cap.missingColumn.join(', ')}</b> — check OCR crop to see if Tesseract garbled these</div>
       ` : ''}
 
-      <div class="gt-list-label">Ground truth tickers (${(GT[run.video] || []).length})</div>
+      <div class="gt-list-label">Ground truth tickers (${(GT[v.dateKey] || []).length})</div>
       <div class="ticker-grid">
-        ${(GT[run.video] || []).map(t => {
-          const isHit = cap.correct.includes(t);
-          return `<div class="ticker ${isHit ? 'gt-correct' : 'gt-missed'}" title="${isHit ? 'Detected' : 'MISSED by parser'}">${t}</div>`;
+        ${(GT[v.dateKey] || []).map(t => {
+          const colHit = cap.correctColumn.includes(t);
+          const legHit = cap.correctLegacy.includes(t);
+          let cls = 'gt-missed';
+          if (colHit && legHit) cls = 'gt-correct';
+          else if (colHit) cls = 'gt-correct';
+          else if (legHit) cls = 'gt-correct';
+          return `<div class="ticker ${cls}" title="Detected: ${legHit ? 'legacy✓' : 'legacy✗'} ${colHit ? 'column✓' : 'column✗'}">${t}</div>`;
         }).join('')}
       </div>
 
-      ${cap.extra.length > 0 ? `
-        <div class="gt-list-label">False positives (${cap.extra.length})</div>
+      ${cap.extraLegacy.length > 0 || cap.extraColumn.length > 0 ? `
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
         <div class="ticker-grid">
-          ${cap.extra.map(t => `<div class="ticker fp" title="Detected but not in GT">${t}</div>`).join('')}
+          ${cap.extraColumn.map(t => `<div class="ticker fp" title="Column-aware FP">${t}</div>`).join('')}
+          ${cap.extraLegacy.filter(t => !cap.extraColumn.includes(t)).map(t => `<div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">${t}*</div>`).join('')}
         </div>
-      ` : '<div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives</div>'}
+      ` : '<div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives on both parsers</div>'}
 
       <div class="gt-list-label">OCR text (Tesseract output)</div>
       <div class="ocr-text">${cap.ocrText || '(empty)'}</div>
     </div>
-  </div>`;
-}).join('')}
+  </div>
+`).join('')}
 `).join('')}
 </body>
 </html>`;
@@ -297,6 +334,7 @@ ${run.captures.map(cap => {
   const outPath = path.join(ROOT, 'tools', 'qmg_crop_comparison.html');
   fs.writeFileSync(outPath, html, 'utf8');
   console.log('Written:', outPath);
+  console.log('Total captures shown:', videoResults.reduce((sum, v) => sum + v.captures.length, 0));
   console.log('Crops in:', CROPS_OUT_DIR);
 }
 
