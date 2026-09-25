@@ -24,6 +24,11 @@ const GT = {
   '20220606': ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
   '20220607': ['UCO','VLO','ALB','BOIL','NFLX','TNA','LTHM'],
   '20220608': ['SIGA','TNA','VLO','UCO','NFLX','ALB','BOIL','LTHM','AERC'],
+  '20220330': ['NFLX','KWEB','REGN','LABU','COPX','X','NUGT','FCX'],
+  '20220405': ['CWEB','REGN','KWEB','JNUG','GGPI','TAN','NEM','COPX','FCX','NUGT','X'],
+  '20221117': ['FREY','OIH','ASML','U','SI','SOXL'],
+  '20230126': ['CVNA','FCX','TNA','CWEB','YINN','PDD','MDGL','GNS'],
+  '20230522': ['LI','IMGN','SOUN','AI','CVNA','APLD','PLTR'],
 };
 
 // All videos to show in the comparison. Each video lists the captures to OCR.
@@ -77,6 +82,36 @@ const VIDEOS = [
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20220608.png', 'qmg_20220608_2.png', 'qmg_20220608_3.png'],
     description: '9 GT tickers (largest after 20220323, OCR-difficult)',
+  },
+  {
+    dateKey: '20220330',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220330.png', 'qmg_20220330_2.png', 'qmg_20220330_3.png'],
+    description: '8 GT tickers (NFLX, KWEB, REGN, LABU, COPX, X, NUGT, FCX)',
+  },
+  {
+    dateKey: '20220405',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220405.png', 'qmg_20220405_2.png', 'qmg_20220405_3.png'],
+    description: '11 GT tickers (CWEB, REGN, KWEB, JNUG, GGPI, TAN, NEM, COPX, FCX, NUGT, X)',
+  },
+  {
+    dateKey: '20221117',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20221117.png', 'qmg_20221117_2.png', 'qmg_20221117_3.png'],
+    description: '6 GT tickers (FREY, OIH, ASML, U, SI, SOXL)',
+  },
+  {
+    dateKey: '20230126',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20230126.png', 'qmg_20230126_2.png', 'qmg_20230126_3.png'],
+    description: '8 GT tickers (CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS)',
+  },
+  {
+    dateKey: '20230522',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20230522.png', 'qmg_20230522_2.png', 'qmg_20230522_3.png'],
+    description: '7 GT tickers (LI, IMGN, SOUN, AI, CVNA, APLD, PLTR)',
   },
 ];
 
