@@ -7,8 +7,10 @@ const Tesseract = require('tesseract.js');
 
 const ROOT = path.join(__dirname, '..');
 
-// Crop region (matches CHART_STREAM_REGION_FRACTION_DEFAULT).
-const CROP = { x: 0.87, y: 0.58, w: 0.13, h: 0.40 };
+// Crop region — matches CHART_STREAM_REGION_FRACTION_DEFAULT (0.91,0.58,0.09,0.40).
+// 173x432 px at 1080p, narrower than the old 250x434 default to skip chart
+// y-axis labels and footer noise that confused Tesseract.
+const CROP = { x: 0.91, y: 0.58, w: 0.09, h: 0.40 };
 
 // Ground-truth tickers per video.
 const GT = {
@@ -17,7 +19,7 @@ const GT = {
   '20220428': ['CWEB','KWEB','TSLA','WEAT'],
   '20220614': ['UVXY','VLO','UCO'],
   '20220228': [],
-  '20220427': ['FAULL','LABU','NUGT','SOXL','UVXY','WEAT'],
+  '20220427': ['TSLA','BOIL','WEAT','KOLD'],
 };
 
 // All videos to show in the comparison. Each video lists the captures to OCR.
@@ -52,7 +54,7 @@ const VIDEOS = [
     dateKey: '20220427',
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20220427.png'],
-    description: '6 GT tickers (FAULL, LABU, NUGT, SOXL, UVXY, WEAT)',
+    description: '4 GT tickers (TSLA, BOIL, WEAT, KOLD)',
   },
 ];
 

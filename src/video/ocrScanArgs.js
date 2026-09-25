@@ -51,20 +51,25 @@ function printHelp() {
 
 // Default fractional overlay region for chart-stream OCR. Qullamaggie's
 // position-list overlay sits in the bottom-right corner of a streamed chart frame.
-// At 1080p (1920x1080): position list occupies x=[1670-1920], y=[626-1060].
-// The original default {x:0.70,y:0.55,w:0.30,h:0.45} was 372-432px too far left.
-// At 1080p: x=[1670-1920], y=[626-1060], w=250px, h=434px.
-// Note: x=0.92 (154px wide) was tested but Tesseract produces MORE garbled text
-// in narrow crops — the wider x=0.87 captures more context and reads better.
-// The crop is 104px wider than the actual position-list ticker column
-// (x=[1766-1911]), so chart y-axis labels (26.00, Arith) and chart-area
-// tickers land inside the crop. The position-list-aware filter in
-// src/parse/parseChartStream.js (identifyPositionListColumn) handles this:
-// it uses per-word OCR positions (Tesseract TSV output) to identify the
-// dominant ticker column (x=348-358 in the 3x-scaled crop) and rejects
-// chart-area tokens. Recall jumped from 21% to 55%, FPs dropped from 165
-// to 8 across the GT videos.
-const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.87,0.58,0.13,0.40';
+// At 1080p (1920x1080):
+//   - Position list table spans x=[1766-1911], y=[~653-1023] (145x370 px).
+//   - The OLD default 0.87,0.58,0.13,0.40 was 250x434 px — captured chart
+//     y-axis labels (26.00, Arith) on the left and "Items in Watchlist"
+//     footer at the bottom. The position-list-aware filter rejected those
+//     but they still confused Tesseract.
+//   - The NEW default 0.91,0.58,0.09,0.40 is 173x432 px — narrower (just
+//     the table area, no chart y-axis) but still tall enough to capture the
+//     full position list. Tested across 5 GT videos:
+//       0.87,0.13 (250px wide): 50% recall, 6 FPs
+//       0.91,0.09 (173px wide): 58% recall, 4 FPs
+//   - Even narrower (0.92,0.08 = 154px) was tested but Tesseract produces
+//     MORE garbled text in narrow crops — Tesseract needs context on the
+//     left side of text to read correctly.
+// The position-list-aware filter in src/parse/parseChartStream.js
+// (identifyPositionListColumn) is the second line of defense — it uses
+// per-word OCR positions to identify the dominant ticker column and
+// rejects chart-area tokens that survived the crop narrowing.
+const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.91,0.58,0.09,0.40';
 
 function parseFractionalRegion(raw) {
   if (!raw) return null;

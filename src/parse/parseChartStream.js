@@ -123,49 +123,10 @@ function hasPriceNear(ocrText, ticker) {
 // many edit-distance corrections (A→U, I→LI, etc.).
 //
 // Returns { inListTickers: Set<string>, dominantColumnX, columnWidth }
-function identifyPositionListColumn(words, scaledWidth) {
+function identifyPositionListColumn(words) {
   if (!Array.isArray(words) || !words.length) {
     return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
   }
-
-  // Collect ticker-shaped tokens (length >= 2) with their x positions
-  const tickerWords = [];
-  for (const w of words) {
-    const upper = (w.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
-    if (!upper) continue;
-    // Strict ticker shape: 2-5 uppercase chars, at least one letter.
-    // Skip single letters — too ambiguous (A, I, P, M appear all over).
-    if (!/^[A-Z][A-Z0-9]{1,4}$/.test(upper)) continue;
-    tickerWords.push({
-      center: w.left + w.width / 2,
-      line: w.line,
-      right: w.left + w.width,
-      text: upper
-    });
-  }
-  if (tickerWords.length < 3) {
-    return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
-  }
-
-  // Find the dominant x-column: bin centers into 20px buckets and pick the bucket
-  // with the most ticker words. Position list tickers cluster within ~30px in
-  // the 3x-scaled image.
-  const bucketWidth = 20;
-  const buckets = new Map();
-  for (const tw of tickerWords) {
-    const bucket = Math.floor(tw.center / bucketWidth) * bucketWidth;
-    buckets.set(bucket, (buckets.get(bucket) || 0) + 1);
-  }
-  const sortedBuckets = [...buckets.entries()].sort((a, b) => b[1] - a[1]);
-  const topBucket = sortedBuckets[0];
-  if (!topBucket || topBucket[1] < 3) {
-    return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
-  }
-
-  // Tight column: position list tickers span ~10px in the scaled image
-  // (BOIL/FCX at x=350, URA/REGN at x=358).
-  const dominantX = topBucket[0] + bucketWidth / 2;
-  const columnWidth = 25;
 
   // For each line: collect right-side price/percent tokens (x > ticker.right).
   // Real position list rows have the price token to the RIGHT of the ticker;
@@ -179,12 +140,9 @@ function identifyPositionListColumn(words, scaledWidth) {
     // Look for percent tokens ("+1.45%", "-0.08%") or dollar prices anywhere.
     const priceMatches = lineText.match(/[+\-]?\d+(?:\.\d+)?\s*%|[+\-]?\d+\.\d+|\$\s*\d/g);
     if (priceMatches && priceMatches.length) {
-      // For each ticker word on this line, check if a price token is to its RIGHT.
-      // Find the rightmost x of any price-like word vs leftmost ticker x.
       const tickerXs = sameLineWords
         .filter(x => /^[A-Z][A-Z0-9]{1,4}$/.test((x.text||'').toUpperCase().replace(/[^A-Z0-9.]/g,'')))
         .map(x => ({ left: x.left, right: x.left + x.width }));
-      // Find price words: those containing %, $, or decimal numbers
       const priceWords = sameLineWords.filter(x => /[%\$]|^\d+\.\d+$|^\d{2,4}$/.test(x.text));
       let maxTickerLeft = Math.max(0, ...tickerXs.map(t => t.left));
       let minPriceRight = Infinity;
@@ -193,19 +151,80 @@ function identifyPositionListColumn(words, scaledWidth) {
           minPriceRight = Math.min(minPriceRight, p.left);
         }
       }
-      // "price to the RIGHT of ticker" = at least one price word is to the right of the leftmost ticker
       lineRightHasPrice.set(w.line, minPriceRight !== Infinity);
     } else {
       lineRightHasPrice.set(w.line, false);
     }
   }
 
+  // Collect ticker-shaped tokens (length >= 2) with their x positions,
+  // but ONLY those whose line has a price-on-right pattern. These are
+  // strong "position list row" candidates — chart header words (SYM,
+  // Cran, Pre, Buzz, Last, Sorted) don't have prices to their right, so
+  // they're excluded from the column-finding step. This avoids the
+  // ambiguity where chart-header words land at the same x as the ticker
+  // column (e.g. SYM at x=177 ties with TSLA at x=179 in the same bucket).
+  const priceAlignedTickers = [];
+  const tickerWords = [];
+  for (const w of words) {
+    const upper = (w.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
+    if (!upper) continue;
+    if (!/^[A-Z][A-Z0-9]{1,4}$/.test(upper)) continue;
+    const center = w.left + w.width / 2;
+    const entry = {
+      center,
+      line: w.line,
+      right: w.left + w.width,
+      text: upper
+    };
+    tickerWords.push(entry);
+    if (lineRightHasPrice.get(w.line)) {
+      priceAlignedTickers.push(entry);
+    }
+  }
+  if (tickerWords.length < 3) {
+    return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
+  }
+
+  // Determine the column center. Prefer the median x of price-aligned
+  // tickers (these are real position list rows); fall back to the densest
+  // bucket of all ticker-shape words if not enough price-aligned candidates.
+  let dominantX;
+  let dominantCount;
+  if (priceAlignedTickers.length >= 2) {
+    const xs = priceAlignedTickers.map(t => t.center).sort((a, b) => a - b);
+    dominantX = xs[Math.floor(xs.length / 2)];
+    dominantCount = priceAlignedTickers.length;
+  } else {
+    // Fallback to densest-bucket heuristic (preserves previous behavior for
+    // frames where no line has a clear price-on-right pattern).
+    const bucketWidth = 20;
+    const buckets = new Map();
+    for (const tw of tickerWords) {
+      const bucket = Math.floor(tw.center / bucketWidth) * bucketWidth;
+      buckets.set(bucket, (buckets.get(bucket) || 0) + 1);
+    }
+    const sortedBuckets = [...buckets.entries()].sort((a, b) => b[1] - a[1]);
+    const topBucket = sortedBuckets[0];
+    if (!topBucket || topBucket[1] < 3) {
+      return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
+    }
+    dominantX = topBucket[0] + bucketWidth / 2;
+    dominantCount = topBucket[1];
+  }
+
+  // Tight column: position list tickers span ~10px in the scaled image
+  // (BOIL/FCX at x=350, URA/REGN at x=358). Allow some slack (20px) for
+  // OCR jitter that shifts the rightmost ticker by a few px.
+  const columnWidth = 20;
+
+  // Require both: ticker in the column AND price-on-right on the same line.
+  // This filters chart y-axis labels where prices are on the LEFT of the
+  // ticker-shape word ("25.00 | Bs | 8+"), and chart header words
+  // (SYM/Cran/Pre/Buzz) that happen to land at column x.
   const inListTickers = new Set();
   for (const tw of tickerWords) {
     if (Math.abs(tw.center - dominantX) <= columnWidth / 2) {
-      // Only include if there's a price token to the RIGHT of the ticker on
-      // the same line. This filters chart y-axis labels where prices are on
-      // the left of ticker-shape words ("25.00 | Bs | 8+").
       if (lineRightHasPrice.get(tw.line)) {
         inListTickers.add(tw.text);
       }
@@ -263,9 +282,8 @@ function parseChartStreamPositionList({ ocr } = {}) {
   // price-nearby + lexicon + edit-distance behavior so existing callers
   // keep working.
   const hasWordPositions = words && words.length > 0;
-  const scaledWidth = 750;
   const { inListTickers, dominantColumnX, columnWidth } = hasWordPositions
-    ? identifyPositionListColumn(words, scaledWidth)
+    ? identifyPositionListColumn(words)
     : { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
 
   // Primary extraction: ALL ticker-shaped tokens (no lexicon filter)
