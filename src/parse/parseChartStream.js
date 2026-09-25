@@ -378,10 +378,47 @@ function parseChartStreamPositionList({ ocr } = {}) {
   };
 }
 
+// Multi-frame merge: combine position lists from multiple captures of the
+// same video. A ticker is accepted if it appears in at least `minOccurrences`
+// of the captures. This dramatically reduces false positives from single-
+// frame OCR garbling while preserving recall (real position-list tickers
+// are usually detected across multiple frames).
+//
+// Each input is the result of parseChartStreamPositionList() — a sorted
+// array of accepted tickers. Returns a sorted array of merged tickers.
+function mergeMultiplePositionLists(positionLists, options = {}) {
+  const minOccurrences = Number.isFinite(options.minOccurrences)
+    ? options.minOccurrences
+    : 2;
+  if (!Array.isArray(positionLists) || !positionLists.length) {
+    return [];
+  }
+  // Filter out empty lists (frames where OCR failed entirely)
+  const nonEmpty = positionLists.filter((l) => Array.isArray(l) && l.length);
+  if (!nonEmpty.length) return [];
+
+  const counts = new Map();
+  for (const list of nonEmpty) {
+    // Track which tickers were seen in this frame (don't double-count repeats within one frame)
+    const seenInFrame = new Set();
+    for (const ticker of list) {
+      if (seenInFrame.has(ticker)) continue;
+      seenInFrame.add(ticker);
+      counts.set(ticker, (counts.get(ticker) || 0) + 1);
+    }
+  }
+  const required = Math.max(1, Math.min(minOccurrences, nonEmpty.length));
+  return [...counts.entries()]
+    .filter(([, count]) => count >= required)
+    .map(([ticker]) => ticker)
+    .sort();
+}
+
 module.exports = {
   hasPriceNear,
   identifyPositionListColumn,
   findCloseTickerMatch,
+  mergeMultiplePositionLists,
   parseChartStreamPositionList,
   extractAllTickerCandidates
 };

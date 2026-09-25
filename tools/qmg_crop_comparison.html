@@ -40,55 +40,68 @@
 
 <div class="legend">
   <p><b>Color coding:</b> <span class="ticker gt-correct">Green</span> = GT ticker correctly detected. <span class="ticker gt-missed">Red dashed</span> = GT ticker MISSED. <span class="ticker fp">Orange</span> = false positive (detected but not in GT).</p>
-  <p><b>Two parsers compared:</b> <b>Legacy</b> = accept any ticker-shape token in the seed lexicon. <b>Column-aware</b> = only accept ticker-shape words that land in the dominant ticker column (x=348-358 in scaled 750px crop) AND have a price token to their RIGHT on the same line. The column-aware filter rejects chart-area text (axis labels, chart annotations, Personal WatchList rows) that the legacy parser accepts as false positives.</p>
+  <p><b>Three parser configurations compared:</b></p>
+  <ul style="margin:4px 0 4px 24px">
+    <li><b>Single-capture legacy</b> — accept any ticker-shape token in the seed lexicon.</li>
+    <li><b>Single-capture column-aware</b> — only accept ticker-shape words that land in the dominant ticker column AND have a price token to their RIGHT on the same line.</li>
+    <li><b>Multi-frame merge (≥2/3 captures)</b> — accept tickers that survive across multiple captures of the same video. Dramatically reduces FPs from single-frame OCR garbling.</li>
+  </ul>
 </div>
 
 <h2>Per-video aggregate (across all captures)</h2>
 <table class="summary">
   <tr>
-    <th>Date</th>
-    <th>GT tickers</th>
-    <th colspan="2">Legacy parser</th>
-    <th colspan="2">Column-aware parser</th>
+    <th rowspan="2">Date</th>
+    <th rowspan="2">GT tickers</th>
+    <th colspan="2">Legacy (single capture)</th>
+    <th colspan="2">Column-aware (single)</th>
+    <th colspan="2">Multi-frame merge (≥2/3)</th>
   </tr>
   <tr>
-    <th></th>
-    <th></th>
+    <th>Recall</th><th>Precision (FPs)</th>
     <th>Recall</th><th>Precision (FPs)</th>
     <th>Recall</th><th>Precision (FPs)</th>
   </tr>
 
   <tr>
     <td><b>20220323</b><br><span style="color:#888; font-size:11px">11 GT tickers (largest position list)</span></td>
-    <td>33</td>
-    <td class="good">76% (25/33)</td>
+    <td>11</td>
+    <td class="good">91% (10/11)</td>
     <td class="good">100% (0 FPs)</td>
-    <td class="good">82% (27/33)</td>
-    <td class="good">96% (1 FPs)</td>
+    <td class="good">100% (11/11)</td>
+    <td class="good">92% (1 FPs)</td>
+    <td class="good">73% (8/11)</td>
+    <td class="good">100% (0 FPs)</td>
   </tr>
   <tr>
     <td><b>20220428</b><br><span style="color:#888; font-size:11px">4 GT tickers</span></td>
-    <td>12</td>
-    <td class="good">75% (9/12)</td>
-    <td class="bad">82% (2 FPs)</td>
-    <td class="good">92% (11/12)</td>
-    <td class="good">92% (1 FPs)</td>
+    <td>4</td>
+    <td class="good">75% (3/4)</td>
+    <td class="good">75% (1 FPs)</td>
+    <td class="good">100% (4/4)</td>
+    <td class="good">80% (1 FPs)</td>
+    <td class="good">75% (3/4)</td>
+    <td class="good">75% (1 FPs)</td>
   </tr>
   <tr>
     <td><b>20220510</b><br><span style="color:#888; font-size:11px">2 GT tickers</span></td>
-    <td>6</td>
-    <td class="good">67% (4/6)</td>
-    <td class="bad">67% (2 FPs)</td>
-    <td class="good">67% (4/6)</td>
+    <td>2</td>
+    <td class="good">100% (2/2)</td>
+    <td class="good">67% (1 FPs)</td>
+    <td class="good">100% (2/2)</td>
     <td class="good">100% (0 FPs)</td>
+    <td class="good">50% (1/2)</td>
+    <td class="good">50% (1 FPs)</td>
   </tr>
   <tr>
     <td><b>20220614</b><br><span style="color:#888; font-size:11px">3 GT tickers</span></td>
-    <td>9</td>
-    <td class="bad">22% (2/9)</td>
-    <td class="bad">40% (3 FPs)</td>
-    <td class="bad">22% (2/9)</td>
+    <td>3</td>
+    <td class="good">67% (2/3)</td>
     <td class="good">67% (1 FPs)</td>
+    <td class="warn">33% (1/3)</td>
+    <td class="good">50% (1 FPs)</td>
+    <td class="bad">0% (0/3)</td>
+    <td class="good">0% (1 FPs)</td>
   </tr>
   <tr>
     <td><b>20220427</b><br><span style="color:#888; font-size:11px">4 GT tickers (TSLA, BOIL, WEAT, KOLD)</span></td>
@@ -97,76 +110,110 @@
     <td class="good">50% (1 FPs)</td>
     <td class="warn">25% (1/4)</td>
     <td class="bad">25% (3 FPs)</td>
+    <td class="warn">25% (1/4)</td>
+    <td class="good">50% (1 FPs)</td>
   </tr>
   <tr>
     <td><b>20220606</b><br><span style="color:#888; font-size:11px">8 GT tickers (dense position list, OCR-difficult)</span></td>
-    <td>24</td>
-    <td class="warn">29% (7/24)</td>
-    <td class="bad">78% (2 FPs)</td>
-    <td class="warn">38% (9/24)</td>
-    <td class="bad">50% (9 FPs)</td>
+    <td>8</td>
+    <td class="good">75% (6/8)</td>
+    <td class="bad">75% (2 FPs)</td>
+    <td class="good">88% (7/8)</td>
+    <td class="bad">44% (9 FPs)</td>
+    <td class="bad">13% (1/8)</td>
+    <td class="good">100% (0 FPs)</td>
   </tr>
   <tr>
     <td><b>20220607</b><br><span style="color:#888; font-size:11px">7 GT tickers</span></td>
-    <td>21</td>
-    <td class="warn">38% (8/21)</td>
-    <td class="good">89% (1 FPs)</td>
-    <td class="warn">38% (8/21)</td>
-    <td class="bad">73% (3 FPs)</td>
+    <td>7</td>
+    <td class="good">57% (4/7)</td>
+    <td class="good">80% (1 FPs)</td>
+    <td class="good">57% (4/7)</td>
+    <td class="bad">57% (3 FPs)</td>
+    <td class="warn">43% (3/7)</td>
+    <td class="good">100% (0 FPs)</td>
   </tr>
   <tr>
     <td><b>20220608</b><br><span style="color:#888; font-size:11px">9 GT tickers (largest after 20220323, OCR-difficult)</span></td>
-    <td>27</td>
-    <td class="warn">33% (9/27)</td>
-    <td class="bad">69% (4 FPs)</td>
-    <td class="warn">26% (7/27)</td>
-    <td class="bad">58% (5 FPs)</td>
+    <td>9</td>
+    <td class="good">56% (5/9)</td>
+    <td class="bad">63% (3 FPs)</td>
+    <td class="warn">44% (4/9)</td>
+    <td class="bad">44% (5 FPs)</td>
+    <td class="warn">44% (4/9)</td>
+    <td class="good">80% (1 FPs)</td>
   </tr>
   <tr>
     <td><b>20220330</b><br><span style="color:#888; font-size:11px">8 GT tickers (NFLX, KWEB, REGN, LABU, COPX, X, NUGT, FCX)</span></td>
-    <td>24</td>
-    <td class="good">79% (19/24)</td>
+    <td>8</td>
+    <td class="good">100% (8/8)</td>
     <td class="good">100% (0 FPs)</td>
-    <td class="good">75% (18/24)</td>
-    <td class="bad">82% (4 FPs)</td>
+    <td class="good">100% (8/8)</td>
+    <td class="bad">67% (4 FPs)</td>
+    <td class="good">88% (7/8)</td>
+    <td class="good">100% (0 FPs)</td>
   </tr>
   <tr>
     <td><b>20220405</b><br><span style="color:#888; font-size:11px">11 GT tickers (CWEB, REGN, KWEB, JNUG, GGPI, TAN, NEM, COPX, FCX, NUGT, X)</span></td>
-    <td>33</td>
-    <td class="good">58% (19/33)</td>
-    <td class="bad">79% (5 FPs)</td>
-    <td class="warn">45% (15/33)</td>
-    <td class="bad">58% (11 FPs)</td>
+    <td>11</td>
+    <td class="good">73% (8/11)</td>
+    <td class="bad">67% (4 FPs)</td>
+    <td class="good">82% (9/11)</td>
+    <td class="bad">47% (10 FPs)</td>
+    <td class="good">64% (7/11)</td>
+    <td class="good">88% (1 FPs)</td>
   </tr>
   <tr>
     <td><b>20221117</b><br><span style="color:#888; font-size:11px">6 GT tickers (FREY, OIH, ASML, U, SI, SOXL)</span></td>
-    <td>18</td>
-    <td class="good">50% (9/18)</td>
-    <td class="bad">69% (4 FPs)</td>
-    <td class="warn">33% (6/18)</td>
-    <td class="good">86% (1 FPs)</td>
+    <td>6</td>
+    <td class="good">67% (4/6)</td>
+    <td class="bad">67% (2 FPs)</td>
+    <td class="good">67% (4/6)</td>
+    <td class="good">80% (1 FPs)</td>
+    <td class="good">67% (4/6)</td>
+    <td class="good">80% (1 FPs)</td>
   </tr>
   <tr>
     <td><b>20230126</b><br><span style="color:#888; font-size:11px">8 GT tickers (CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS)</span></td>
-    <td>24</td>
-    <td class="good">75% (18/24)</td>
-    <td class="bad">78% (5 FPs)</td>
-    <td class="good">58% (14/24)</td>
-    <td class="bad">88% (2 FPs)</td>
+    <td>8</td>
+    <td class="good">88% (7/8)</td>
+    <td class="bad">70% (3 FPs)</td>
+    <td class="good">88% (7/8)</td>
+    <td class="bad">78% (2 FPs)</td>
+    <td class="good">75% (6/8)</td>
+    <td class="good">86% (1 FPs)</td>
   </tr>
   <tr>
     <td><b>20230522</b><br><span style="color:#888; font-size:11px">7 GT tickers (LI, IMGN, SOUN, AI, CVNA, APLD, PLTR)</span></td>
-    <td>21</td>
-    <td class="warn">29% (6/21)</td>
-    <td class="bad">55% (5 FPs)</td>
-    <td class="warn">43% (9/21)</td>
-    <td class="bad">56% (7 FPs)</td>
+    <td>7</td>
+    <td class="warn">43% (3/7)</td>
+    <td class="bad">50% (3 FPs)</td>
+    <td class="good">71% (5/7)</td>
+    <td class="bad">50% (5 FPs)</td>
+    <td class="warn">29% (2/7)</td>
+    <td class="good">67% (1 FPs)</td>
   </tr>
 </table>
+<p style="color:#888; font-size:11px; margin-top:6px">
+  <b>Reading the table:</b> "Legacy (single)" = recall across all captures (de-duped) without multi-frame merge.
+  "Multi-frame merge (≥2/3)" = unique tickers that survive in ≥2 of 3 captures of the same video — fewer FPs but lower recall since real position lists change during a stream.
+  The right column is often the best tradeoff for downstream consumers.
+</p>
 
 
 <h2>20220323 — 11 GT tickers (largest position list)</h2>
 <p style="color:#888; font-size:12px;">GT: BOIL, JNUG, NUGT, X, URA, FCX, WEAT, COPX, URNM, REGN, KWEB</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">COPX, FCX, NUGT, REGN, URA, URNM, WEAT, X</span>
+  
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">COPX, FCX, KWEB, NUGT, REGN, URA, URNM, WEAT, X</span>
+  
+  &nbsp;<span style="color:#888">(GT missed: BOIL, JNUG, KWEB)</span>
+</div>
 
 
   <div class="capture-row">
@@ -370,6 +417,17 @@ TT je       10 Items in Personal Watchlisz Last Sorted C
 <p style="color:#888; font-size:12px;">GT: CWEB, KWEB, TSLA, WEAT</p>
 
 
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">KWEB, TSLA, WEAT, X</span>
+  <span style="color:#fa6"> (+1 FP: X)</span>
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">CWEB, KWEB, TSLA, WEAT</span>
+  
+  &nbsp;<span style="color:#888">(GT missed: CWEB)</span>
+</div>
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -567,6 +625,17 @@ ABE es BY  |
 
 <h2>20220510 — 2 GT tickers</h2>
 <p style="color:#888; font-size:12px;">GT: VRM, TSLA</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">TSLA, X</span>
+  <span style="color:#fa6"> (+1 FP: X)</span>
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">TSLA</span>
+  
+  &nbsp;<span style="color:#888">(GT missed: VRM)</span>
+</div>
 
 
   <div class="capture-row">
@@ -767,6 +836,17 @@ B50 B   |
 
 <h2>20220614 — 3 GT tickers</h2>
 <p style="color:#888; font-size:12px;">GT: UVXY, VLO, UCO</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">X</span>
+  <span style="color:#fa6"> (+1 FP: X)</span>
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">UVXY</span>
+  
+  &nbsp;<span style="color:#888">(GT missed: UVXY, VLO, UCO)</span>
+</div>
 
 
   <div class="capture-row">
@@ -973,6 +1053,17 @@ ANB pes BY) |
 <p style="color:#888; font-size:12px;">GT: TSLA, BOIL, WEAT, KOLD</p>
 
 
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/1 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">WEAT, X</span>
+  <span style="color:#fa6"> (+1 FP: X)</span>
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">APLD, OTSLA, SOI, WEAT</span>
+  <span style="color:#fa6"> (+3 FP: APLD, OTSLA, SOI)</span>
+  &nbsp;<span style="color:#888">(GT missed: TSLA, BOIL, KOLD)</span>
+</div>
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -1042,6 +1133,17 @@ AB 0   SO)  |
 
 <h2>20220606 — 8 GT tickers (dense position list, OCR-difficult)</h2>
 <p style="color:#888; font-size:12px;">GT: GOVX, LABU, UCO, ALB, CBIO, VLO, TNA, NFLX</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">LABU</span>
+  
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">ALB, TNA</span>
+  
+  &nbsp;<span style="color:#888">(GT missed: GOVX, UCO, ALB, CBIO, VLO, TNA, NFLX)</span>
+</div>
 
 
   <div class="capture-row">
@@ -1247,6 +1349,17 @@ __10%0    408 ltams In Personal Watchbiss Last Sorted 0335 _Re-S
 <p style="color:#888; font-size:12px;">GT: UCO, VLO, ALB, BOIL, NFLX, TNA, LTHM</p>
 
 
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">LTHM, TNA, UCO</span>
+  
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">LTHM, TNA, UCO</span>
+  
+  &nbsp;<span style="color:#888">(GT missed: VLO, ALB, BOIL, NFLX)</span>
+</div>
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -1443,6 +1556,17 @@ A     )
 
 <h2>20220608 — 9 GT tickers (largest after 20220323, OCR-difficult)</h2>
 <p style="color:#888; font-size:12px;">GT: SIGA, TNA, VLO, UCO, NFLX, ALB, BOIL, LTHM, AERC</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">BOIL, SIGA, TNA, UCO, X</span>
+  <span style="color:#fa6"> (+1 FP: X)</span>
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">SIGA, TNA</span>
+  
+  &nbsp;<span style="color:#888">(GT missed: VLO, NFLX, ALB, LTHM, AERC)</span>
+</div>
 
 
   <div class="capture-row">
@@ -1662,6 +1786,17 @@ ew    11 tems in Personal WatenLar Lam Somed 0339 Re-Som
 <p style="color:#888; font-size:12px;">GT: NFLX, KWEB, REGN, LABU, COPX, X, NUGT, FCX</p>
 
 
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">COPX, KWEB, LABU, NFLX, NUGT, REGN, X</span>
+  
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">COPX, FCX, KWEB, LABU, NUGT, REGN</span>
+  
+  &nbsp;<span style="color:#888">(GT missed: FCX)</span>
+</div>
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -1877,6 +2012,17 @@ ER, Ls    $ toms nn Personal Watcha Las Somed
 
 <h2>20220405 — 11 GT tickers (CWEB, REGN, KWEB, JNUG, GGPI, TAN, NEM, COPX, FCX, NUGT, X)</h2>
 <p style="color:#888; font-size:12px;">GT: CWEB, REGN, KWEB, JNUG, GGPI, TAN, NEM, COPX, FCX, NUGT, X</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">COPX, FCX, NEM, NUGT, REGN, TAN, URNM, X</span>
+  <span style="color:#fa6"> (+1 FP: URNM)</span>
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">COPX, FCX, INUG, NUGT, REGN, TAN</span>
+  <span style="color:#fa6"> (+1 FP: INUG)</span>
+  &nbsp;<span style="color:#888">(GT missed: CWEB, KWEB, JNUG, GGPI)</span>
+</div>
 
 
   <div class="capture-row">
@@ -2096,6 +2242,17 @@ I= INUG   +217% | +1016%
 <p style="color:#888; font-size:12px;">GT: FREY, OIH, ASML, U, SI, SOXL</p>
 
 
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">ASML, FREY, SOXL, U, X</span>
+  <span style="color:#fa6"> (+1 FP: X)</span>
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">ASML</span>
+  
+  &nbsp;<span style="color:#888">(GT missed: OIH, SI)</span>
+</div>
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -2307,6 +2464,17 @@ ANB par BY |
 
 <h2>20230126 — 8 GT tickers (CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS)</h2>
 <p style="color:#888; font-size:12px;">GT: CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">CVNA, CWEB, FCX, MDGL, TNA, X, YINN</span>
+  <span style="color:#fa6"> (+1 FP: X)</span>
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">CVNA, CWEB, FCX, YINN</span>
+  
+  &nbsp;<span style="color:#888">(GT missed: PDD, GNS)</span>
+</div>
 
 
   <div class="capture-row">
@@ -2529,6 +2697,17 @@ ANB pos BR) |
 
 <h2>20230522 — 7 GT tickers (LI, IMGN, SOUN, AI, CVNA, APLD, PLTR)</h2>
 <p style="color:#888; font-size:12px;">GT: LI, IMGN, SOUN, AI, CVNA, APLD, PLTR</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">APLD, CVNA, X</span>
+  <span style="color:#fa6"> (+1 FP: X)</span>
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">AMZN, APLD, CVNA, PURR, SOUN</span>
+  <span style="color:#fa6"> (+2 FP: AMZN, PURR)</span>
+  &nbsp;<span style="color:#888">(GT missed: LI, IMGN, SOUN, AI, PLTR)</span>
+</div>
 
 
   <div class="capture-row">

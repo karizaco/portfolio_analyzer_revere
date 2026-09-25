@@ -28,7 +28,7 @@ const {
   computePerceptualHashOfFractionalRegion,
   resolveFractionalRegion
 } = require('../src/video/imageHashRegion');
-const { parseChartStreamPositionList, hasPriceNear } = require('../src/parse/parseChartStream');
+const { parseChartStreamPositionList, hasPriceNear, mergeMultiplePositionLists } = require('../src/parse/parseChartStream');
 const { extractTickersFromOcrText } = require('../src/normalize/tickerScan');
 
 async function makeFixtureFrame({ width, height, draw }) {
@@ -279,4 +279,44 @@ test('extractTickersFromOcrText accepts the new Qullamaggie-recurring tickers', 
     assert.ok(tickers.includes(expected),
       `expected ${expected} in ${JSON.stringify(tickers)}`);
   }
+});
+
+test('mergeMultiplePositionLists accepts tickers in ≥minOccurrences captures', () => {
+  // 3 captures — AAPL appears in all 3, GOOG/MSFT/NVDA in 1 each.
+  const merged = mergeMultiplePositionLists(
+    [['AAPL','GOOG'], ['AAPL','MSFT'], ['AAPL','NVDA']],
+    { minOccurrences: 2 }
+  );
+  assert.deepEqual(merged, ['AAPL']);
+
+  // minOccurrences=1 keeps everything that appeared in any capture.
+  const union = mergeMultiplePositionLists(
+    [['AAPL','GOOG'], ['AAPL','MSFT'], ['AAPL','NVDA']],
+    { minOccurrences: 1 }
+  );
+  assert.deepEqual(union.sort(), ['AAPL','GOOG','MSFT','NVDA']);
+
+  // Empty input returns empty.
+  assert.deepEqual(mergeMultiplePositionLists([]), []);
+
+  // Duplicates within a single frame count once (frame dedup).
+  const dedup = mergeMultiplePositionLists(
+    [['AAPL','AAPL','GOOG'], ['AAPL','NVDA']],
+    { minOccurrences: 2 }
+  );
+  assert.deepEqual(dedup, ['AAPL']);
+
+  // 3/3 threshold — only tickers in every capture.
+  const strict = mergeMultiplePositionLists(
+    [['AAPL','GOOG'], ['AAPL','MSFT'], ['TSLA','NVDA']],
+    { minOccurrences: 3 }
+  );
+  assert.deepEqual(strict, []);
+
+  // Empty frames (where OCR failed) are filtered out before thresholding.
+  const withEmpty = mergeMultiplePositionLists(
+    [['AAPL','GOOG'], [], ['AAPL']],
+    { minOccurrences: 2 }
+  );
+  assert.deepEqual(withEmpty, ['AAPL']);
 });
