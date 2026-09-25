@@ -431,7 +431,7 @@ async function analyzeFrameBeforeOcr(framePath) {
   return summarizeLumaBuffer(data, info.width, info.height);
 }
 
-function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporalDecay = Infinity) {
+function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporalDecay = Infinity, timestamp = undefined) {
   const table = PREFILTER_PROFILES[profile] || PREFILTER_PROFILES.whiteboard;
   let score = 0;
 
@@ -481,8 +481,12 @@ function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporal
   // decays to zero after `temporalDecay` seconds. QMG position lists are
   // most likely to change in the first 20–30 minutes of a stream.
   if (isFinite(temporalDecay) && temporalDecay > 0 && profile === 'chart_stream') {
-    const temporalBoost = Math.max(0, 1 - stats.timestamp / temporalDecay) * 6;
-    score += temporalBoost;
+    const tsCandidate = timestamp !== undefined ? timestamp : (stats && stats.timestamp);
+    const ts = Number(tsCandidate);
+    if (Number.isFinite(ts)) {
+      const temporalBoost = Math.max(0, 1 - ts / temporalDecay) * 6;
+      score += temporalBoost;
+    }
   }
 
   return Number(score.toFixed(2));
