@@ -41,7 +41,7 @@ function printHelp() {
     '  --basename <name>          Snapshot PNG prefix + screenshot discovery stem, default "revere"',
     '  --phash-region <x,y,w,h>  Region in pixels for the overlay pHash (optional)',
     '  --phash-hamming-max <n>    Max Hamming distance for overlay pHash dedup, default 6',
-    '  --phash-region-fraction <xf,yf,wf,hf> Fractional overlay region (0..1); chart_stream default "0.70,0.84,0.28,0.14"',
+    '  --phash-region-fraction <xf,yf,wf,hf> Fractional overlay region (0..1); chart_stream default "0.87,0.58,0.13,0.40"',
     '  --temporal-decay <secs>    Seconds over which early-frame boost decays to zero, default 1800',
     '  --chart-stream-parser      Replace the GRO/TURBO whiteboard parser with parseChartStream',
     '  --help                     Show this help text',
@@ -50,14 +50,21 @@ function printHelp() {
 }
 
 // Default fractional overlay region for chart-stream OCR. Qullamaggie's
-// position-list overlay sits in the bottom-right corner of a streamed chart
-// frame. The region {x:0.70, y:0.60, w:0.30, h:0.40} was validated against
-// ground truth (56% mean ticker recall vs 44-47% for wider crops). Going wider
-// hurts OCR quality by including too much chart area. The pHash region
-// (--phash-region-fraction default) is a separate, narrower carve-out.
-// Ground truth on 20220606: y=0.55 captures the full table (GOVX, LABU at top)
-// while y=0.60 misses them. Height 0.45 gives 6/8 tickers vs 4/8 at 0.40.
-const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.70,0.55,0.30,0.45';
+// position-list overlay sits in the bottom-right corner of a streamed chart frame.
+// At 1080p (1920x1080): position list occupies x=[1670-1920], y=[626-1060].
+// The original default {x:0.70,y:0.55,w:0.30,h:0.45} was 372-432px too far left.
+// At 1080p: x=[1670-1920], y=[626-1060], w=250px, h=434px.
+// Note: x=0.92 (154px wide) was tested but Tesseract produces MORE garbled text
+// in narrow crops — the wider x=0.87 captures more context and reads better.
+// The crop is 104px wider than the actual position-list ticker column
+// (x=[1766-1911]), so chart y-axis labels (26.00, Arith) and chart-area
+// tickers land inside the crop. The position-list-aware filter in
+// src/parse/parseChartStream.js (identifyPositionListColumn) handles this:
+// it uses per-word OCR positions (Tesseract TSV output) to identify the
+// dominant ticker column (x=348-358 in the 3x-scaled crop) and rejects
+// chart-area tokens. Recall jumped from 21% to 55%, FPs dropped from 165
+// to 8 across the GT videos.
+const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.87,0.58,0.13,0.40';
 
 function parseFractionalRegion(raw) {
   if (!raw) return null;

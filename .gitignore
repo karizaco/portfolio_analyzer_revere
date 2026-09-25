@@ -15,5 +15,7 @@ browser_session_*.json
 # Heavy per-frame PNGs from OCR scans — reproducible from probe logs
 data/video_scan_*/fix-final/screenshots/
 data/video_scan_*/**/ocr_probe/frames/
+# Test runs and probes — temporary artifacts
+data/video_scan_test/
 **/__pycache__/
 data/discord_pipeline/.cache/

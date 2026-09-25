@@ -55,7 +55,8 @@ function loadSeedLexiconSync(configDirectory) {
 
   cachedLexicon = {
     csvPath,
-    tickers: [...new Set(tickers)].sort()
+    tickers: [...new Set(tickers)].sort(),
+    tickerSet: new Set(tickers)
   };
   return cachedLexicon;
 }
