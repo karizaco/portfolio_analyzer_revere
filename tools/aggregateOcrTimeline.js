@@ -140,6 +140,7 @@ for (const tag of tags) {
         chart_stream_tickers: [],
         segments: segments.length
       });
+      totalVideos += 1; // count scanned videos with zero captures
       upsertDay(uploadDate, 0, 0, 0, [], false, [], 0, segments.length, videoType);
       continue;
     }
@@ -292,4 +293,3 @@ function upsertDay(date, capturedDelta, capturedCount, maxScore, layouts, hasDmi
   row.video_type_counts[t] = (row.video_type_counts[t] || 0) + 1;
   dailyRollup.set(date, row);
 }
-

@@ -55,7 +55,7 @@ function ytdlp(args, timeout = 60) {
 function sqliteQuery(sql, params = []) {
   const script = `
 import json, sqlite3
-conn = sqlite3.connect(r"${dbPath.replace(/\\\\/g, '/')}")
+conn = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
 conn.row_factory = sqlite3.Row
 rows = conn.execute(${JSON.stringify(sql)}, ${JSON.stringify(params)}).fetchall()
 print(json.dumps([dict(r) for r in rows], default=str))
@@ -68,7 +68,7 @@ print(json.dumps([dict(r) for r in rows], default=str))
 function sqliteRun(sql, params = []) {
   const script = `
 import sqlite3
-conn = sqlite3.connect(r"${dbPath.replace(/\\\\/g, '/')}")
+conn = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
 conn.execute(${JSON.stringify(sql)}, ${JSON.stringify(params)})
 conn.commit()
 print('ok')
@@ -131,24 +131,30 @@ async function fetchDatesInBatches(rows) {
   let dateResolved = 0;
   for (let i = 0; i < rows.length; i += BATCH_SIZE) {
     const batch = rows.slice(i, i + BATCH_SIZE);
-    let metaText = '';
-    try {
-      metaText = ytdlp([
-        '--skip-download', '--no-warnings',
-        '--extractor-args', 'youtube:player_client=web_safari',
-        '--print', '%(id)s\t%(upload_date)s',
-        `https://www.youtube.com/watch?v=${batch[0].video_id}`,
-      ], 30);
-    } catch (e) {
-      console.warn(`[import] batch ${i}-${i+batch.length-1}: failed: ${e.message.slice(0,100)}`);
-    }
-    for (const line of metaText.split('\n')) {
-      const parts = line.trim().split('\t');
-      if (!parts[0]) continue;
-      const row = rows.find(r => r.video_id === parts[0]);
-      if (row && parts[1] && parts[1] !== 'NA') {
-        row.upload_date = parts[1].trim();
-        dateResolved++;
+    // Resolve upload_date for EACH row in the batch — a single yt-dlp call with
+    // one URL only returns metadata for that URL, so the previous
+    // `watch?v=${batch[0].video_id}` call silently dropped dates for batch[1..N].
+    for (const row of batch) {
+      let metaText = '';
+      try {
+        metaText = ytdlp([
+          '--skip-download', '--no-warnings',
+          '--extractor-args', 'youtube:player_client=web_safari',
+          '--print', '%(id)s\t%(upload_date)s',
+          `https://www.youtube.com/watch?v=${row.video_id}`,
+        ], 30);
+      } catch (e) {
+        console.warn(`[import] ${row.video_id}: failed: ${e.message.slice(0, 100)}`);
+        continue;
+      }
+      for (const line of metaText.split('\n')) {
+        const parts = line.trim().split('\t');
+        if (!parts[0]) continue;
+        if (parts[0] === row.video_id && parts[1] && parts[1] !== 'NA') {
+          row.upload_date = parts[1].trim();
+          dateResolved += 1;
+          break;
+        }
       }
     }
     const done = Math.min(i + BATCH_SIZE, rows.length);
