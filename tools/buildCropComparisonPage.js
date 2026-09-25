@@ -7,10 +7,11 @@ const Tesseract = require('tesseract.js');
 
 const ROOT = path.join(__dirname, '..');
 
-// Crop region — matches CHART_STREAM_REGION_FRACTION_DEFAULT (0.91,0.58,0.09,0.40).
-// 173x432 px at 1080p, narrower than the old 250x434 default to skip chart
-// y-axis labels and footer noise that confused Tesseract.
-const CROP = { x: 0.91, y: 0.58, w: 0.09, h: 0.40 };
+// Crop region — matches CHART_STREAM_REGION_FRACTION_DEFAULT (0.86,0.55,0.14,0.45).
+// 269x486 px at 1080p. Narrower than the original 250x434 default would
+// have been (0.87,0.13), but tall enough to capture the full position list
+// including header rows.
+const CROP = { x: 0.86, y: 0.55, w: 0.14, h: 0.45 };
 
 // Ground-truth tickers per video.
 const GT = {
@@ -20,6 +21,9 @@ const GT = {
   '20220614': ['UVXY','VLO','UCO'],
   '20220228': [],
   '20220427': ['TSLA','BOIL','WEAT','KOLD'],
+  '20220606': ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
+  '20220607': ['UCO','VLO','ALB','BOIL','NFLX','TNA','LTHM'],
+  '20220608': ['SIGA','TNA','VLO','UCO','NFLX','ALB','BOIL','LTHM','AERC'],
 };
 
 // All videos to show in the comparison. Each video lists the captures to OCR.
@@ -55,6 +59,24 @@ const VIDEOS = [
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20220427.png'],
     description: '4 GT tickers (TSLA, BOIL, WEAT, KOLD)',
+  },
+  {
+    dateKey: '20220606',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220606.png', 'qmg_20220606_2.png', 'qmg_20220606_3.png'],
+    description: '8 GT tickers (dense position list, OCR-difficult)',
+  },
+  {
+    dateKey: '20220607',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220607.png', 'qmg_20220607_2.png', 'qmg_20220607_3.png'],
+    description: '7 GT tickers',
+  },
+  {
+    dateKey: '20220608',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220608.png', 'qmg_20220608_2.png', 'qmg_20220608_3.png'],
+    description: '9 GT tickers (largest after 20220323, OCR-difficult)',
   },
 ];
 

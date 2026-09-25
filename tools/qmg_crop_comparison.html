@@ -61,42 +61,66 @@
   <tr>
     <td><b>20220323</b><br><span style="color:#888; font-size:11px">11 GT tickers (largest position list)</span></td>
     <td>33</td>
-    <td class="good">64% (21/33)</td>
+    <td class="good">76% (25/33)</td>
     <td class="good">100% (0 FPs)</td>
-    <td class="good">64% (21/33)</td>
-    <td class="bad">91% (2 FPs)</td>
+    <td class="good">82% (27/33)</td>
+    <td class="good">96% (1 FPs)</td>
   </tr>
   <tr>
     <td><b>20220428</b><br><span style="color:#888; font-size:11px">4 GT tickers</span></td>
     <td>12</td>
+    <td class="good">75% (9/12)</td>
+    <td class="bad">82% (2 FPs)</td>
     <td class="good">92% (11/12)</td>
-    <td class="good">100% (0 FPs)</td>
-    <td class="good">92% (11/12)</td>
-    <td class="good">100% (0 FPs)</td>
+    <td class="good">92% (1 FPs)</td>
   </tr>
   <tr>
     <td><b>20220510</b><br><span style="color:#888; font-size:11px">2 GT tickers</span></td>
     <td>6</td>
-    <td class="good">50% (3/6)</td>
-    <td class="bad">50% (3 FPs)</td>
-    <td class="good">50% (3/6)</td>
-    <td class="bad">60% (2 FPs)</td>
+    <td class="good">67% (4/6)</td>
+    <td class="bad">67% (2 FPs)</td>
+    <td class="good">67% (4/6)</td>
+    <td class="good">100% (0 FPs)</td>
   </tr>
   <tr>
     <td><b>20220614</b><br><span style="color:#888; font-size:11px">3 GT tickers</span></td>
     <td>9</td>
-    <td class="bad">11% (1/9)</td>
-    <td class="bad">33% (2 FPs)</td>
-    <td class="bad">0% (0/9)</td>
-    <td class="good">0% (1 FPs)</td>
+    <td class="bad">22% (2/9)</td>
+    <td class="bad">40% (3 FPs)</td>
+    <td class="bad">22% (2/9)</td>
+    <td class="good">67% (1 FPs)</td>
   </tr>
   <tr>
     <td><b>20220427</b><br><span style="color:#888; font-size:11px">4 GT tickers (TSLA, BOIL, WEAT, KOLD)</span></td>
     <td>4</td>
-    <td class="good">75% (3/4)</td>
-    <td class="good">100% (0 FPs)</td>
-    <td class="good">75% (3/4)</td>
-    <td class="good">75% (1 FPs)</td>
+    <td class="warn">25% (1/4)</td>
+    <td class="good">50% (1 FPs)</td>
+    <td class="warn">25% (1/4)</td>
+    <td class="bad">25% (3 FPs)</td>
+  </tr>
+  <tr>
+    <td><b>20220606</b><br><span style="color:#888; font-size:11px">8 GT tickers (dense position list, OCR-difficult)</span></td>
+    <td>24</td>
+    <td class="warn">29% (7/24)</td>
+    <td class="bad">78% (2 FPs)</td>
+    <td class="warn">38% (9/24)</td>
+    <td class="bad">50% (9 FPs)</td>
+  </tr>
+  <tr>
+    <td><b>20220607</b><br><span style="color:#888; font-size:11px">7 GT tickers</span></td>
+    <td>21</td>
+    <td class="warn">38% (8/21)</td>
+    <td class="good">89% (1 FPs)</td>
+    <td class="warn">38% (8/21)</td>
+    <td class="bad">73% (3 FPs)</td>
+  </tr>
+  <tr>
+    <td><b>20220608</b><br><span style="color:#888; font-size:11px">9 GT tickers (largest after 20220323, OCR-difficult)</span></td>
+    <td>27</td>
+    <td class="warn">33% (9/27)</td>
+    <td class="bad">69% (4 FPs)</td>
+    <td class="warn">26% (7/27)</td>
+    <td class="bad">58% (5 FPs)</td>
   </tr>
 </table>
 
@@ -113,7 +137,7 @@
     <div class="crop-box">
       <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
       <img src="../data/video_scan_test/_review_crops/20220323__qmg_20220323__ocr_crop.png" alt="ocr crop 0">
-      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 49</div>
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 47</div>
     </div>
     <div class="detection-box">
       <div class="capture-title">qmg_20220323.png</div>
@@ -121,56 +145,57 @@
       <div class="recall-row">
         <div>
           <div class="label">Legacy parser</div>
-          <div class="warn" style="font-size:16px; font-weight:600;">
-            4/11 correct, 0 FP
+          <div class="good" style="font-size:16px; font-weight:600;">
+            8/11 correct, 0 FP
           </div>
         </div>
         <div>
           <div class="label">Column-aware parser</div>
-          <div class="warn" style="font-size:16px; font-weight:600;">
-            6/11 correct, 1 FP
+          <div class="good" style="font-size:16px; font-weight:600;">
+            9/11 correct, 1 FP
           </div>
         </div>
       </div>
 
       
-        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>BOIL, X, FCX, REGN, KWEB</b> — check OCR crop to see if Tesseract garbled these</div>
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>BOIL, KWEB</b> — check OCR crop to see if Tesseract garbled these</div>
       
 
       <div class="gt-list-label">Ground truth tickers (11)</div>
       <div class="ticker-grid">
-        <div class="ticker gt-missed" title="Detected: legacy✗ column✗">BOIL</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">JNUG</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">NUGT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">X</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">FCX</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">WEAT</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">COPX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URNM</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">REGN</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">KWEB</div>
+        <div class="ticker gt-missed" title="Detected: legacy✗ column✗">BOIL</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">JNUG</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">NUGT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">X</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">FCX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">COPX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URNM</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">REGN</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">KWEB</div>
       </div>
 
       
         <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
         <div class="ticker-grid">
-          <div class="ticker fp" title="Column-aware FP">SI</div>
+          <div class="ticker fp" title="Column-aware FP">BE</div>
           
         </div>
       
 
       <div class="gt-list-label">OCR text (Tesseract output)</div>
-      <div class="ocr-text">)
-S lzems in Watchlist
-A - Positio @ sym: 41 = EF} X
-Fag |Sym   *% Crang ¥ Vol Buzz  =
-"| so     230% 1%
-|= INUG     218%]  +2815%)
-I= |NuGT   -2.80% 787%
-)    = x        +1,05% | +112,0%
-= [URA    054% +249,6%
-= Fx        0.08%)     ™
-I WAT    122%  609.5%
-17 | = cox    011% 168.9%
-I (URNM     047 %|  +35.2%]
-PoREGN | own asi
-I= kwes      301%]  L2112%
-A
-A
-A]
-11 Items in Personal Watchlisz Last Sorted C
-cach          |
+      <div class="ocr-text">44,00
+S Items in Watchlist
+A - Positio @® sym: #1 = E+ X
+Fug [Sym  Cran MY Buzz ls
+R00 Tw lgon | 230% cin
+- INUG   «218% +2815%)
+= |NUGT | +2,80% 787%
+40,00   = x     +105% | +112,0%
+«       = URA     Den] +240,6%
+= FCX     0,04%    33%|
+a             = \WeAT   122% +609,5%
+@5259      Arith ~ | = |copx    011% 168.9%
+TT       = [URNM    097% |  o35.2%]
+&lt;       [= REGN     0.20% |    85%|
+I Kw   301% | “211.2%
+40,08
+]        200M
+N
+MR,    11 Items In Personal Watchiiss Last Soned
+14
+AR nz20523  =  |
 </div>
     </div>
   </div>
@@ -183,7 +208,7 @@ cach          |
     <div class="crop-box">
       <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
       <img src="../data/video_scan_test/_review_crops/20220323__qmg_20220323_2__ocr_crop.png" alt="ocr crop 1">
-      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 50</div>
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 55</div>
     </div>
     <div class="detection-box">
       <div class="capture-title">qmg_20220323_2.png</div>
@@ -198,51 +223,42 @@ cach          |
         <div>
           <div class="label">Column-aware parser</div>
           <div class="good" style="font-size:16px; font-weight:600;">
-            9/11 correct, 1 FP
+            9/11 correct, 0 FP
           </div>
         </div>
       </div>
 
       
-        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>COPX, KWEB</b> — check OCR crop to see if Tesseract garbled these</div>
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>JNUG, REGN</b> — check OCR crop to see if Tesseract garbled these</div>
       
 
       <div class="gt-list-label">Ground truth tickers (11)</div>
       <div class="ticker-grid">
-        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">BOIL</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">JNUG</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">NUGT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">X</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">FCX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">COPX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URNM</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">REGN</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">KWEB</div>
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">BOIL</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">JNUG</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">NUGT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">X</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">FCX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">COPX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URNM</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">REGN</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div>
       </div>
 
-      
-        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
-        <div class="ticker-grid">
-          <div class="ticker fp" title="Column-aware FP">ON</div>
-          
-        </div>
-      
+      <div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives on both parsers</div>
 
       <div class="gt-list-label">OCR text (Tesseract output)</div>
-      <div class="ocr-text">)
+      <div class="ocr-text">10,00
 S Items in Watchlist
-A -Positio ® sym: § = Eb X
-Fug. [Sym |x crane ¥ vel Buzz  a
-= BOIL     +2,30%    136%
-I= INUG   «226% $2760%
-= NUGT    +2,74% |  +1773% |
-= X     1.00% “108.4%
-I= URA    045%) ~2028%|
-= FCX     0.06%   25%)
-I= \WEAT   131% +591,0%
-
-7 | = cox     020% +1574%
-= [URNM    0.56%  33%]
-=  REGN   0.20%     11 |
-I KWEB  260%] 207.7%
-
-A
-
-| 1 Hemi in Pacconal Winchbiz bast Sorted ¢
-
-PU         1
+A -Positio@® sym: § = EP X
+8.00   Fag [Sym   ncrange ¥ Vol Buz a
+I= BOIL    +2.30%   136%
+nu | 26m] s2760%
+—         £00    |= |NUGT   *274% | +1713%|
+—   =X    +1,00% | +1084%
+«     P= [uRA    045%) +2428%]
+= FCX    40.06%   2.5%]
+a       400    I= \WEAT   “131% +591,0%
+5339      Arith ~ | = |copx    020%] +1574%
+       [ [URNM   0.56%  33%]
+= KWEB   260%] +207.7%|
+100M
+]        5,00
+— 4000]    11 Items in Personal Watchlist Last Sorted C
+14
+~ Ee Maye  &  |
 </div>
     </div>
   </div>
@@ -255,7 +271,7 @@ PU         1
     <div class="crop-box">
       <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
       <img src="../data/video_scan_test/_review_crops/20220323__qmg_20220323_3__ocr_crop.png" alt="ocr crop 2">
-      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 45</div>
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 49</div>
     </div>
     <div class="detection-box">
       <div class="capture-title">qmg_20220323_3.png</div>
@@ -269,41 +285,42 @@ PU         1
         </div>
         <div>
           <div class="label">Column-aware parser</div>
-          <div class="warn" style="font-size:16px; font-weight:600;">
-            6/11 correct, 0 FP
+          <div class="good" style="font-size:16px; font-weight:600;">
+            9/11 correct, 0 FP
           </div>
         </div>
       </div>
 
       
-        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>BOIL, JNUG, X, FCX, WEAT</b> — check OCR crop to see if Tesseract garbled these</div>
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>BOIL, JNUG</b> — check OCR crop to see if Tesseract garbled these</div>
       
 
       <div class="gt-list-label">Ground truth tickers (11)</div>
       <div class="ticker-grid">
-        <div class="ticker gt-correct" title="Detected: legacy✓ column✗">BOIL</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">JNUG</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">NUGT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">X</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">FCX</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">WEAT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">COPX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URNM</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">REGN</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div>
+        <div class="ticker gt-missed" title="Detected: legacy✗ column✗">BOIL</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">JNUG</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">NUGT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">X</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">FCX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">COPX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URNM</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">REGN</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">KWEB</div>
       </div>
 
       <div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives on both parsers</div>
 
       <div class="gt-list-label">OCR text (Tesseract output)</div>
-      <div class="ocr-text">)
-7 lverns in Watchlist Last Somec 0203 Re-S
-A - Positio ® sym: 1 = BB+ X
-)     Fug (Sym     % Cran ¥ Pre Buzz   E
- BOIL    43%  +123%
-I OWEAT | ison cian
-)     = URNM   etssn]   “09%
-= NUGT   “097% 05% i
-I= |copx   0.02%    03%]
-)     (l FX     “040%   woz]
-= x          0 3%]  ~03%|
-&lt;   P= URA     +0,67% |    “07%
-= |REGN      0.08 x|    “00%
-I= KwEB      140%    28%)
-LS
-       10 Items in Personal Watchlist Last Sorted C
-ama            |
+      <div class="ocr-text">42,00
+_7 lems in Wanchlist  Last Somec 0203 Re-S
+A - Positio ® sym: #1 = EF} X
+40.00  |rag [Sym |%cranm Yipre Buzz   la
+= |80IL      433%   123%]
+I= WEAT    “1.59%  +142%
+38.00     = URNM    “155%    “09%
+= NUGT     097%    +05%
+I= copx     002%    03%)
+36,00     = FCX       0.40%    +0.2%
+a      &lt;           I= x          a a7]    “03%
+V50        Arith =| I URA | +067%  +07%
+= |REGN      008 %|    +0.0%)
+«          = [kwes       16%    “28%
+1.008
+TT je       10 Items in Personal Watchlisz Last Sorted C
+14:
+~ Re nz20323  =  |
 </div>
     </div>
   </div>
@@ -321,7 +338,7 @@ ama            |
     <div class="crop-box">
       <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
       <img src="../data/video_scan_test/_review_crops/20220428__qmg_20220428__ocr_crop.png" alt="ocr crop 0">
-      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 41</div>
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 55</div>
     </div>
     <div class="detection-box">
       <div class="capture-title">qmg_20220428.png</div>
@@ -330,7 +347,7 @@ ama            |
         <div>
           <div class="label">Legacy parser</div>
           <div class="good" style="font-size:16px; font-weight:600;">
-            4/4 correct, 0 FP
+            3/4 correct, 0 FP
           </div>
         </div>
         <div>
@@ -345,20 +362,29 @@ ama            |
 
       <div class="gt-list-label">Ground truth tickers (4)</div>
       <div class="ticker-grid">
-        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">CWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">TSLA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div>
+        <div class="ticker gt-correct" title="Detected: legacy✗ column✓">CWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">TSLA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div>
       </div>
 
       <div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives on both parsers</div>
 
       <div class="gt-list-label">OCR text (Tesseract output)</div>
-      <div class="ocr-text">“rool ¥   Ws 8 = &F A
-o [Sym |%crane AVolBuzz [adn ¥™
-= TSLA     6.70% +269.7%     5.
-= CWEB   061% +3163%   9
-- KWEB     054%] +50.8%     44
-» |WEAT     04%] +179% 27
-
-ar.AC         |
+      <div class="ocr-text">190,00               1 Item in Watchlist
+’             A-Positionsy @syms It = BX
+Fag [Sym [%Crane AVolBuzz [ASR *®
+185,00          P= TSLA      6.70% | +269,7%      5.3
+P= cwes      061% +3163%      9(
+= KWEB      054%  +508%      44
+180,00          [= |WEAT      DAG%|  +179%)     2]
+175.00
+170.00
+&lt;4
+Arith ~
+h 20 Ont
+) ort
+400          4 Items in Personal Watchlist Last Somed 03:39 Ra.
+16:06
+A
+BO pps B   |
 </div>
     </div>
   </div>
@@ -371,7 +397,7 @@ ar.AC         |
     <div class="crop-box">
       <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
       <img src="../data/video_scan_test/_review_crops/20220428__qmg_20220428_2__ocr_crop.png" alt="ocr crop 1">
-      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 43</div>
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 46</div>
     </div>
     <div class="detection-box">
       <div class="capture-title">qmg_20220428_2.png</div>
@@ -380,7 +406,7 @@ ar.AC         |
         <div>
           <div class="label">Legacy parser</div>
           <div class="good" style="font-size:16px; font-weight:600;">
-            4/4 correct, 0 FP
+            3/4 correct, 1 FP
           </div>
         </div>
         <div>
@@ -395,21 +421,35 @@ ar.AC         |
 
       <div class="gt-list-label">Ground truth tickers (4)</div>
       <div class="ticker-grid">
-        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">CWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">TSLA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div>
+        <div class="ticker gt-correct" title="Detected: legacy✗ column✓">CWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">TSLA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div>
       </div>
 
-      <div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives on both parsers</div>
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
 
       <div class="gt-list-label">OCR text (Tesseract output)</div>
-      <div class="ocr-text">“= rooiuie v    Ns 8 = FTA
-g [Sym  [nCrame A\VolBuzz [SRT
-» | TSLA       ATE +2714% 53
-= |CWEB      167%) +3445%      9
-= |KWEB      029%) +543%      4
-= WEAT      046% +26,7%)|     2,7
-Izems In Personal Watchlist Last Sorted 03:39 Re.
-
-ar.          |
+      <div class="ocr-text">285,00                      1 Item in Watchlist
+A -Positionsy  @syms I = EP X
+2)               —_—        — Tr
+         Fog ym rae Alfa 152
+= TSLA     SATE $2714% 53
+280,00          = cwes      167% | +3445%      9
+= |KWEB      0.29% +543%     44
+[= |WEAT      046%  +26,7%      217
+275,00
+270,00
+Arith ~
+4
+10,008
+).
+PECED        4 Izems In Personal Watchlist Last Sorted 03:39 Re-S
+i    16:03
+ANB pez BB   |
 </div>
     </div>
   </div>
@@ -422,7 +462,7 @@ ar.          |
     <div class="crop-box">
       <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
       <img src="../data/video_scan_test/_review_crops/20220428__qmg_20220428_3__ocr_crop.png" alt="ocr crop 2">
-      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 44</div>
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 49</div>
     </div>
     <div class="detection-box">
       <div class="capture-title">qmg_20220428_3.png</div>
@@ -431,13 +471,13 @@ ar.          |
         <div>
           <div class="label">Legacy parser</div>
           <div class="good" style="font-size:16px; font-weight:600;">
-            3/4 correct, 0 FP
+            3/4 correct, 1 FP
           </div>
         </div>
         <div>
           <div class="label">Column-aware parser</div>
           <div class="good" style="font-size:16px; font-weight:600;">
-            3/4 correct, 0 FP
+            3/4 correct, 1 FP
           </div>
         </div>
       </div>
@@ -448,21 +488,38 @@ ar.          |
 
       <div class="gt-list-label">Ground truth tickers (4)</div>
       <div class="ticker-grid">
-        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">CWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">TSLA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div>
+        <div class="ticker gt-correct" title="Detected: legacy✗ column✓">CWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">TSLA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div>
       </div>
 
-      <div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives on both parsers</div>
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">X</div>
+          
+        </div>
+      
 
       <div class="gt-list-label">OCR text (Tesseract output)</div>
-      <div class="ocr-text">“FOI Y To) = FI" A
-lym [crane Aol Buzz [a>
-- [151A  618% 5;
-= CWEB     127% +5163%     9
-~ KWEB     108%] +1003% 4;
-= WEAT     0.18% +103,5%     2,7
-Items in Personal Watchlist Last Sorted 03:39 Re.
-
-AaC.AA         |
+      <div class="ocr-text">46,00
+A - Positions @syms It = Ed X
+44.00                 Fag [Sym [%Crane AVolBuzz [ASR *E%
+P= |TSLA         a2E%| o2678% 5;
+P= Ccwes         137% #5163%        9
+42.00          [a 'KWEB      108% +100,3%     4,3
+P= WEAT        0.18% +103,5%        2,7
+40.00
+as
+«(39,02
+@
+38.00
+&lt;
+Arith ~
+440 0M
+1 Ot
+5,0M
+40m                      3 Items in Personal Watchlist Last Somed 0339 Re.
+15:44
+ABE es BY  |
 </div>
     </div>
   </div>
@@ -480,7 +537,7 @@ AaC.AA         |
     <div class="crop-box">
       <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
       <img src="../data/video_scan_test/_review_crops/20220510__qmg_20220510__ocr_crop.png" alt="ocr crop 0">
-      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 51</div>
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 53</div>
     </div>
     <div class="detection-box">
       <div class="capture-title">qmg_20220510.png</div>
@@ -495,7 +552,7 @@ AaC.AA         |
         <div>
           <div class="label">Column-aware parser</div>
           <div class="bad" style="font-size:16px; font-weight:600;">
-            1/2 correct, 1 FP
+            1/2 correct, 0 FP
           </div>
         </div>
       </div>
@@ -512,18 +569,28 @@ AaC.AA         |
       
         <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
         <div class="ticker-grid">
-          <div class="ticker fp" title="Column-aware FP">SPYM</div>
+          
           <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
         </div>
       
 
       <div class="gt-list-label">OCR text (Tesseract output)</div>
-      <div class="ocr-text">2 eens in Waschlist Laat Somed 0329 Ra-Son
-A - Positions 8 sym: §7 = B58 4 X
-lug Sym |%Crnge Y|PreBuzz 22%
-  Po TSLA | +4,53% «414.0%
-1 1 em in Personal Wachler Las Somed 0329
-arC.mn                |
+      <div class="ocr-text">|
+2 eng in Wazshlist Laat Sormed 0329 Ra-Som
+         150 | A- Positions @ Sym: § = 8 + X
+rug Sym |%Crange ¥ Pre Buzz   oon
+P= TSLA | +4,53% +414,0%
+|
+1.25
+a         &lt;
+5239           Arith ~
+6 0M
+4,004
+OA
+I. El      1 rem In Personal WarchLat Laz Somed 03:29
+15:32
+Pa       )
+BO ps0 B   |
 </div>
     </div>
   </div>
@@ -536,7 +603,7 @@ arC.mn                |
     <div class="crop-box">
       <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
       <img src="../data/video_scan_test/_review_crops/20220510__qmg_20220510_2__ocr_crop.png" alt="ocr crop 1">
-      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 55</div>
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 49</div>
     </div>
     <div class="detection-box">
       <div class="capture-title">qmg_20220510_2.png</div>
@@ -545,13 +612,13 @@ arC.mn                |
         <div>
           <div class="label">Legacy parser</div>
           <div class="bad" style="font-size:16px; font-weight:600;">
-            0/2 correct, 1 FP
+            1/2 correct, 0 FP
           </div>
         </div>
         <div>
           <div class="label">Column-aware parser</div>
           <div class="bad" style="font-size:16px; font-weight:600;">
-            1/2 correct, 1 FP
+            1/2 correct, 0 FP
           </div>
         </div>
       </div>
@@ -562,24 +629,32 @@ arC.mn                |
 
       <div class="gt-list-label">Ground truth tickers (2)</div>
       <div class="ticker-grid">
-        <div class="ticker gt-missed" title="Detected: legacy✗ column✗">VRM</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">TSLA</div>
+        <div class="ticker gt-missed" title="Detected: legacy✗ column✗">VRM</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">TSLA</div>
       </div>
 
-      
-        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
-        <div class="ticker-grid">
-          <div class="ticker fp" title="Column-aware FP">SPYM</div>
-          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
-        </div>
-      
+      <div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives on both parsers</div>
 
       <div class="gt-list-label">OCR text (Tesseract output)</div>
-      <div class="ocr-text">2 eens in Watchlist Last Somed 0324 Re-Son
-A - Positions @® Sym: §7 = 88 +} X
-fg [Sym |%Crange ¥|VolBuzz 23%
-Wo TStA | aor] «151%
-1 item in Personal Watchlist Laat Somed 0324
-aAC.NC                |
+      <div class="ocr-text">08-04
+2-08-04       32.00
+08-04
+08-03              2 Inaeng in Waschlse Last Somed 0324 Re-Son
+05-10       30.00    A- Positions @ Syms $8 = BX
+08-04                fag [Sym cranes Viol Buz ZZ
+RP              p= TSLA      907%) +151%|
+321 Re-Sont ¥         le
+=i 28,00
+AN          26,00
+Pat
+PO e230
+a      4
+w27m        Arith =
+4
+in          109.4K
+SE               1 em in Personal Watchlist Las Somed 0324
+15:26
+PaN       )
+BP meso BY)  |
 </div>
     </div>
   </div>
@@ -592,7 +667,7 @@ aAC.NC                |
     <div class="crop-box">
       <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
       <img src="../data/video_scan_test/_review_crops/20220510__qmg_20220510_3__ocr_crop.png" alt="ocr crop 2">
-      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 56</div>
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 61</div>
     </div>
     <div class="detection-box">
       <div class="capture-title">qmg_20220510_3.png</div>
@@ -606,19 +681,17 @@ aAC.NC                |
         </div>
         <div>
           <div class="label">Column-aware parser</div>
-          <div class="bad" style="font-size:16px; font-weight:600;">
-            1/2 correct, 0 FP
+          <div class="good" style="font-size:16px; font-weight:600;">
+            2/2 correct, 0 FP
           </div>
         </div>
       </div>
 
       
-        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>TSLA</b> — check OCR crop to see if Tesseract garbled these</div>
-      
 
       <div class="gt-list-label">Ground truth tickers (2)</div>
       <div class="ticker-grid">
-        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">VRM</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">TSLA</div>
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">VRM</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">TSLA</div>
       </div>
 
       
@@ -630,17 +703,23 @@ aAC.NC                |
       
 
       <div class="gt-list-label">OCR text (Tesseract output)</div>
-      <div class="ocr-text">1 mam in Watchlist Last Sormed 0334 Re-Ser
-A - Positions @ sym: 47 = B85 +b X
-fag Sym |%Craoge ¥|PreBuzz aon
-
-= VRM       +7037% +9723,0
-
-P= TSLA        +2,46%| +2953%
-
-2 izems in Personal Watchlist Las Somed 03:33
-
-aC.                 |
+      <div class="ocr-text">50,00
+1 mam in Watchlist Last Sormed 0334 Re-Sem
+A - Positions @ sym: 81 = 8 ++ X
+45,00       Fg Sym wcrange VPreBuzz
+= VRM     +7037%| +9723,0
+Bo TSLA | +2.46%| +2953%
+40.00
+wer
+35.00
+4
+Arith ~
+]    10M
+500,08
+I                  2 lems in Personal Wazchlst Last Somed 0333
+     1536
+A
+B50 B   |
 </div>
     </div>
   </div>
@@ -658,7 +737,7 @@ aC.                 |
     <div class="crop-box">
       <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
       <img src="../data/video_scan_test/_review_crops/20220614__qmg_20220614__ocr_crop.png" alt="ocr crop 0">
-      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 52</div>
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 53</div>
     </div>
     <div class="detection-box">
       <div class="capture-title">qmg_20220614.png</div>
@@ -667,49 +746,52 @@ aC.                 |
         <div>
           <div class="label">Legacy parser</div>
           <div class="bad" style="font-size:16px; font-weight:600;">
-            0/3 correct, 1 FP
+            1/3 correct, 1 FP
           </div>
         </div>
         <div>
           <div class="label">Column-aware parser</div>
           <div class="bad" style="font-size:16px; font-weight:600;">
-            0/3 correct, 1 FP
+            1/3 correct, 0 FP
           </div>
         </div>
       </div>
 
       
-        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>UVXY, VLO, UCO</b> — check OCR crop to see if Tesseract garbled these</div>
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>VLO, UCO</b> — check OCR crop to see if Tesseract garbled these</div>
       
 
       <div class="gt-list-label">Ground truth tickers (3)</div>
       <div class="ticker-grid">
-        <div class="ticker gt-missed" title="Detected: legacy✗ column✗">UVXY</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">VLO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">UCO</div>
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">UVXY</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">VLO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">UCO</div>
       </div>
 
       
         <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
         <div class="ticker-grid">
-          <div class="ticker fp" title="Column-aware FP">ON</div>
+          
           <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
         </div>
       
 
       <div class="gt-list-label">OCR text (Tesseract output)</div>
-      <div class="ocr-text">ems in Personal Watchlist
-
-sitions v [Sc @syms ¥ = BF +X
-
-,  ¢
-
-XY            006% +559%|           8,53
-
-(o]       +2,10% | +922%       384
-
-oo)      149% +522%       4,53
-
-in Personal Watchlist Last Sceted 03:14 Re.Sont
-alC.an            |
+      <div class="ocr-text">55.00
+JotdiwnusinPesondWachtin =~
+A - Positions v [1Sc @ syns 41 = BF + X
+.     Pag [Sym [Crane APreBuzz BRT" | €
+577]    = |UvXY     006% +559%     8,53
+=  +210%  +922%     384
+Pluco | saom] sax] 4s
+$1,00
+&lt;4
+Arith ~
+«10M
+3 OM
+)  1 OM
+441,0K
+&lt;0     3 Items in Personal Watchlist Last Sorted 03:14 Re-Som ¥
+.   15:40
+ANB pee BY) |
 </div>
     </div>
   </div>
@@ -722,7 +804,7 @@ alC.an            |
     <div class="crop-box">
       <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
       <img src="../data/video_scan_test/_review_crops/20220614__qmg_20220614_2__ocr_crop.png" alt="ocr crop 1">
-      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 57</div>
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 54</div>
     </div>
     <div class="detection-box">
       <div class="capture-title">qmg_20220614_2.png</div>
@@ -737,18 +819,18 @@ alC.an            |
         <div>
           <div class="label">Column-aware parser</div>
           <div class="bad" style="font-size:16px; font-weight:600;">
-            0/3 correct, 0 FP
+            1/3 correct, 0 FP
           </div>
         </div>
       </div>
 
       
-        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>UVXY, VLO, UCO</b> — check OCR crop to see if Tesseract garbled these</div>
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>VLO, UCO</b> — check OCR crop to see if Tesseract garbled these</div>
       
 
       <div class="gt-list-label">Ground truth tickers (3)</div>
       <div class="ticker-grid">
-        <div class="ticker gt-missed" title="Detected: legacy✗ column✗">UVXY</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">VLO</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">UCO</div>
+        <div class="ticker gt-correct" title="Detected: legacy✗ column✓">UVXY</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">VLO</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">UCO</div>
       </div>
 
       
@@ -760,20 +842,22 @@ alC.an            |
       
 
       <div class="gt-list-label">OCR text (Tesseract output)</div>
-      <div class="ocr-text">in Watchlist
-
-sitions @ Syms UCO X 1 = EE dX
-
-nro Shoo |
-
-IXY       0,3 |   +54,0%|       8,53
-
-0 | 222% 737% 384
-
-0 | 20% 267% 455)
-
-ems in Personal Watchlist Last Sorted 03:14 Re-S0
-aC.AC              |
+      <div class="ocr-text">42,00
+SltemsinWmehlie 00 00
+A - Positions @ syms UCO X 1 = BR X
+Pag [Sym [%Crange AVolBuzz AT" | €
+4000 | PUVXY | osu 540% 853)
+- ino
+Rue | 2% 267% 455)
+38.00
+4
+Arith ~
+4
+]  500,0&lt;
+a    30f 3 Items in Personal WatchLi Lam Sorted 03:14 Re-Sc
+   15:46
+A      )
+BY mes BY) |
 </div>
     </div>
   </div>
@@ -786,7 +870,7 @@ aC.AC              |
     <div class="crop-box">
       <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
       <img src="../data/video_scan_test/_review_crops/20220614__qmg_20220614_3__ocr_crop.png" alt="ocr crop 2">
-      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 47</div>
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 51</div>
     </div>
     <div class="detection-box">
       <div class="capture-title">qmg_20220614_3.png</div>
@@ -795,13 +879,13 @@ aC.AC              |
         <div>
           <div class="label">Legacy parser</div>
           <div class="bad" style="font-size:16px; font-weight:600;">
-            0/3 correct, 0 FP
+            0/3 correct, 1 FP
           </div>
         </div>
         <div>
           <div class="label">Column-aware parser</div>
           <div class="bad" style="font-size:16px; font-weight:600;">
-            0/3 correct, 0 FP
+            0/3 correct, 1 FP
           </div>
         </div>
       </div>
@@ -815,23 +899,31 @@ aC.AC              |
         <div class="ticker gt-missed" title="Detected: legacy✗ column✗">UVXY</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">VLO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">UCO</div>
       </div>
 
-      <div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives on both parsers</div>
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">LUVXY</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
 
       <div class="gt-list-label">OCR text (Tesseract output)</div>
-      <div class="ocr-text">in Watchlint
-
-sitions [1Sc @syms I = EEX
-
-m [Cane APreBuzz  AR*¥er | §
-
-/XY       091%] «1205%       853
-
-0       268% +2142% 383
-
-0       +1,04%  +1510%       4,52
-
-in Personal Watchlist Last Sorted 03:14 Re.Somt vw
-arC.54             |
+      <div class="ocr-text">50,00
+QlemsinWaehter
+A - Positions v [1Sc @ syms #' = & + X
+Fag (Sym  [% Crane A PreBuzz  AoR*®er | §
+P= luvxy     0.911% +1205%     853
+4500 | pm  266% +2142% 383
+-
+4
+Arith ©
+4
+G0 0x
+]  400.0&lt;
+200,0¢
+ha    3 Items in Personal Watchlist Last Sorted 03:14 _Re-Son_¥
+1534
+ANB pes BY) |
 </div>
     </div>
   </div>
@@ -857,44 +949,670 @@ arC.54             |
       <div class="recall-row">
         <div>
           <div class="label">Legacy parser</div>
-          <div class="good" style="font-size:16px; font-weight:600;">
-            3/4 correct, 0 FP
+          <div class="bad" style="font-size:16px; font-weight:600;">
+            1/4 correct, 1 FP
           </div>
         </div>
         <div>
           <div class="label">Column-aware parser</div>
-          <div class="good" style="font-size:16px; font-weight:600;">
-            3/4 correct, 1 FP
+          <div class="bad" style="font-size:16px; font-weight:600;">
+            1/4 correct, 3 FP
           </div>
         </div>
       </div>
 
       
-        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>KOLD</b> — check OCR crop to see if Tesseract garbled these</div>
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>TSLA, BOIL, KOLD</b> — check OCR crop to see if Tesseract garbled these</div>
       
 
       <div class="gt-list-label">Ground truth tickers (4)</div>
       <div class="ticker-grid">
-        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">TSLA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">BOIL</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">KOLD</div>
+        <div class="ticker gt-missed" title="Detected: legacy✗ column✗">TSLA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">BOIL</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">KOLD</div>
       </div>
 
       
         <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
         <div class="ticker-grid">
-          <div class="ticker fp" title="Column-aware FP">APLD</div>
+          <div class="ticker fp" title="Column-aware FP">APLD</div><div class="ticker fp" title="Column-aware FP">OTSLA</div><div class="ticker fp" title="Column-aware FP">SOI</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">YA 120 nn            ER  —
+or 169.25              A-Posit@®sym: 8 = BF X
+Fug Sym  |% Crane 4 [Pre Buzz
+165.00           PB OTSLA | 43.79% «466.4%
+= soi      24.90% +117,0%
+160.00           |=  WEAT       156% +4341%
+= KOLD       474%] +6042%
+155,00
+150,00
+J         4
+Arith ~
+4
+1.0M
+]        53001
+;     15:33
+AB 0   SO)  |
+</div>
+    </div>
+  </div>
+
+
+<h2>20220606 — 8 GT tickers (dense position list, OCR-difficult)</h2>
+<p style="color:#888; font-size:12px;">GT: GOVX, LABU, UCO, ALB, CBIO, VLO, TNA, NFLX</p>
+
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220606__qmg_20220606__raw_crop.png" alt="raw crop 0">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220606__qmg_20220606__ocr_crop.png" alt="ocr crop 0">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 47</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220606.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="bad" style="font-size:16px; font-weight:600;">
+            1/8 correct, 0 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="bad" style="font-size:16px; font-weight:600;">
+            1/8 correct, 0 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>LABU, UCO, ALB, CBIO, VLO, TNA, NFLX</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (8)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✗ column✓">GOVX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">LABU</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">UCO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">ALB</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">CBIO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">VLO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">TNA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">NFLX</div>
+      </div>
+
+      <div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives on both parsers</div>
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">22.00
+4 Items in Watchlist
+200 | mm
+A - Positions [IS @ sms §¥ = BEX
+Flag Sym [5 crams ¥ Vol Buz  hope |
+I lGovx |e1269% «13899 3191
+2000 | = LABU   219% +340,6%  1594
+ wo
+ma
+1900 |      :     *
+leo
+ith ~ | 1 a
+TT
+]  20M
+I    8 Items in Personal Watchlist Last Sorted 03:40 Re-Son
+.   15:55
+NB p60 BB  |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220606__qmg_20220606_2__raw_crop.png" alt="raw crop 1">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220606__qmg_20220606_2__ocr_crop.png" alt="ocr crop 1">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 48</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220606_2.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="bad" style="font-size:16px; font-weight:600;">
+            1/8 correct, 1 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            2/8 correct, 5 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>GOVX, LABU, UCO, CBIO, VLO, NFLX</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (8)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-missed" title="Detected: legacy✗ column✗">GOVX</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">LABU</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">UCO</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">ALB</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">CBIO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">VLO</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">TNA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">NFLX</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">BOIL</div><div class="ticker fp" title="Column-aware FP">CSO</div><div class="ticker fp" title="Column-aware FP">FCX</div><div class="ticker fp" title="Column-aware FP">NIO</div><div class="ticker fp" title="Column-aware FP">SIGA</div>
           
         </div>
       
 
       <div class="gt-list-label">OCR text (Tesseract output)</div>
-      <div class="ocr-text">A=TOSILTE =) 8 = &F "T° A
-Fag [Sym |% Cran Alpre Buzz
-J= TSLA    +3,79% +466,4%
-j= BOIL      +490% | +117.0%
-P= |WEAT       196%] +4441%
-|= KOLD       474% +6042%
-4 Items in Personal Watchlist Last Sorted
-aC. 5"            |
+      <div class="ocr-text">55,00
+Q Items in Personal Watchlist
+A - Positionsv [IS @ sms It = BX
+ron ym vm Vr |
+33.00   = BOIL   +1525% +6725%   1092
+va
+xo
+= ALB   +242% | +259.2%   5.81
+51.00 | I= [cso   +880% | +5810%   1863
+«     = vio CLOTH + 116,1%   394
+Arith =| I= Na | vr40m| 750% 830
+—      I= FX |  71% 308%    541
+OMe sica    OJ +10536% 1628
+|  1.0M
+40%    9 Items in Personal Watchin Last Sorted 03:35 Re-Som °
+\   15:36
+ANB ps0 BB  |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220606__qmg_20220606_3__raw_crop.png" alt="raw crop 2">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220606__qmg_20220606_3__ocr_crop.png" alt="ocr crop 2">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 46</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220606_3.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            5/8 correct, 1 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            6/8 correct, 4 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>GOVX, VLO</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (8)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-missed" title="Detected: legacy✗ column✗">GOVX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">LABU</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">UCO</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">ALB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">CBIO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">VLO</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">TNA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">NFLX</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">DBRG</div><div class="ticker fp" title="Column-aware FP">POP</div><div class="ticker fp" title="Column-aware FP">SQM</div><div class="ticker fp" title="Column-aware FP">VIO</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">P PBRA     +0,71% |
+210.00 P Bi0U    +4,99%
+= |sQM     +2.23% |
+= pop     “12.12%
+20 hems = Waschla:
+A - Positions @ Syms 418 X It = EX
+20000 cay [sym [coos Ypre Buzz [=o |
+Tm lBOIL | +1503% sess% 1092]
+= LaBU | ent0% +5257% 1575
+= |uco    03 og |  429.1%    484
+19000 | [AB S2.77% +231.0%   581
+= |CBIO   +9.60% | +522.2%)  18,63
+«      = vio    +1.06% | “106.8%    304
+Arith~ | I TNA | 0.82% «757% 833
+TO       I= |NFLX   “1.52%  “25.2%    541
+4
+500.0%
+__10%0    408 ltams In Personal Watchbiss Last Sorted 0335 _Re-S
+15
+~ Re 222.065  =  |
+</div>
+    </div>
+  </div>
+
+
+<h2>20220607 — 7 GT tickers</h2>
+<p style="color:#888; font-size:12px;">GT: UCO, VLO, ALB, BOIL, NFLX, TNA, LTHM</p>
+
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220607__qmg_20220607__raw_crop.png" alt="raw crop 0">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220607__qmg_20220607__ocr_crop.png" alt="ocr crop 0">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 50</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220607.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            3/7 correct, 0 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            3/7 correct, 0 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>VLO, ALB, BOIL, TNA</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (7)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">UCO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">VLO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">ALB</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">BOIL</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">NFLX</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">TNA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">LTHM</div>
+      </div>
+
+      <div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives on both parsers</div>
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">65.00
+A - Positions v [JS @syms 4 = BEX
+60,00 |Peg (Sym  [% Crane YVolBuzz [AR™Ter |
+= (uco     +2,90% |   24.2%     4,62
+[3  J184% +B5.7% 383
+ERR
+I= Boi    Tul max] 1022
+55.00    P= | NFLX       117%     22.7%      534
+&lt;        =   08°% «219%     7.92
+Arith ~ | I= [LTHM    175% «112.3%    848
+‘40m
+]  20M
+128K]   7 Items in Personal Watchlist Last Sorted 03:34 Re-Som
+.   16:00
+ANB peer BY) |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220607__qmg_20220607_2__raw_crop.png" alt="raw crop 1">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220607__qmg_20220607_2__ocr_crop.png" alt="ocr crop 1">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 55</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220607_2.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            2/7 correct, 0 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            2/7 correct, 3 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>VLO, ALB, BOIL, NFLX, LTHM</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (7)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">UCO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">VLO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">ALB</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">BOIL</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">NFLX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">TNA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">LTHM</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">NFIX</div><div class="ticker fp" title="Column-aware FP">NIO</div><div class="ticker fp" title="Column-aware FP">ON</div>
+          
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">30.00
+2 Items in Watchlist
+A - Positions [IS @ sms §¥ = BEX
+2800  Fag Sym [5 cranes Pre Buzz veal
+= uco | «1.21%   5,5%|   452
+= VIO   +0,90% +205,0%   377
+as
+2600 | j= [gon      136% +663% 104
+|            P= |NFIX     1.27% +21,8%     5.31
+AP        TNA | nein +1103%     7.86
+Arith ~ | =   218% +275.0%     8,40
+4
+50 OME
+I    7 tems in Personal Watchlinn Last Somted 03:34 Re-Som
+   15:35
+ARC ee BB) |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220607__qmg_20220607_3__raw_crop.png" alt="raw crop 2">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220607__qmg_20220607_3__ocr_crop.png" alt="ocr crop 2">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 59</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220607_3.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            3/7 correct, 1 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            3/7 correct, 0 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>VLO, ALB, BOIL, NFLX</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (7)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">UCO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">VLO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">ALB</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">BOIL</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">NFLX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">TNA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">LTHM</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">75.00
+ShensioWaehlie
+A - Positions v [1S @ syms ¥' = EF ++ X
+Fag [Sym   % Crange ¥ Pre Buzz  Erevan  {
+= uco    +1,16%    53,1%     4,52
+7000 | pm
+ns
+-
+x
+«        = [TNA      129% «92.8%     787
+Arith ~ | I= |[LTHM   187% +266,T%   840
+4
+)  50M
+613 4K
+40    7 Items In Persona! Watchlist Last Soed 0334 Re-Som °
+\   15:36
+A     )
+2 peor BB) |
+</div>
+    </div>
+  </div>
+
+
+<h2>20220608 — 9 GT tickers (largest after 20220323, OCR-difficult)</h2>
+<p style="color:#888; font-size:12px;">GT: SIGA, TNA, VLO, UCO, NFLX, ALB, BOIL, LTHM, AERC</p>
+
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220608__qmg_20220608__raw_crop.png" alt="raw crop 0">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220608__qmg_20220608__ocr_crop.png" alt="ocr crop 0">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 49</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220608.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            3/9 correct, 1 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            3/9 correct, 3 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>VLO, UCO, NFLX, ALB, LTHM, AERC</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (9)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✗ column✓">SIGA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">TNA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">VLO</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">UCO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">NFLX</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">ALB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">BOIL</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">LTHM</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">AERC</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">BABA</div><div class="ticker fp" title="Column-aware FP">CRM</div><div class="ticker fp" title="Column-aware FP">LEU</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">[= Tcom      +3,99% |
+Fleou | 00%
+60.00 | [F|ntes | e241%
+[= |sABA      +4,00%
+= In         «27%
+58.00   12 tems =n Watchlae  [3
+A - Positions v [Sc @ sms ¥' = BF +X
+Flag {Sym   5 Crane [Pre Buzz  m= | €
+5600 | ISIGA     084%) +3953% 1659
+B= [TNA    255%] +110,6%    7.58
+= vio     or] 2041x377
+10 | = uco
+Ev ama
+Arith ~ | = BOIL   +398% | +2455%   9,28
+— |
+«Plc na mes ae
+4 OM
+]  JOM
+Jo  9 Items in Personal Watchlist Last Sorted 03:31 Re-Sont
+15:
+AE 2008  8) |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220608__qmg_20220608_2__raw_crop.png" alt="raw crop 1">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220608__qmg_20220608_2__ocr_crop.png" alt="ocr crop 1">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 52</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220608_2.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            5/9 correct, 0 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            3/9 correct, 1 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>VLO, UCO, ALB, BOIL, LTHM, AERC</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (9)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">SIGA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">TNA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">VLO</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">UCO</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">NFLX</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">ALB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">BOIL</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">LTHM</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">AERC</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">BE</div>
+          
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">T4200
+6 Items in Persons! Watchlist
+A - Positions @ Syms UCO XX I = EE PX
+Flag Sym % Crane ¥|Pre Buzz [Aon €
+40.00
+= [siGA     075% +3407% 16,59
+[EE
+= TNA    209% +62,7%    7.58
+Se   057% +130,7%     3.77)
+100 | I |Uco
+“win po
+Arith ~  = NFLX      «100% «12.9%      5,20
+        "
+“        P= [BOIL
+F re
+-
+__ebee    5 of 11 hems in Personal WatchLir Last Sored 0339 Re-S
+15:41
+AR pu  8) |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220608__qmg_20220608_3__raw_crop.png" alt="raw crop 2">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220608__qmg_20220608_3__ocr_crop.png" alt="ocr crop 2">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 47</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220608_3.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="bad" style="font-size:16px; font-weight:600;">
+            1/9 correct, 3 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="bad" style="font-size:16px; font-weight:600;">
+            1/9 correct, 1 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>TNA, VLO, UCO, NFLX, ALB, BOIL, LTHM, AERC</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (9)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">SIGA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">TNA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">VLO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">UCO</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">NFLX</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">ALB</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">BOIL</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">LTHM</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">AERC</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">COIN</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div><div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">BE*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">= [xy    0,16%    326
+29500 | ~ ne | om     -
+P    380
+= [eon
+Sot 15 hems in Wanchlor Last Somed 040 RerSont ¥
+290.00 | A - Positions [Sc @ Syms ¥* = ER X
+nfo re Vcr men €
+= |SIGA    047% 357.5%   16,59
+Ee oon
+285,00
+=   197% +67.8%    7.58
+=  036% +1366% 377
+CRETE
+«       = [COIN   +2,89% +1343%    13,51
+Er
+pe
+[Fn
+0 ows | zm] mam] al
+F Jin sis] owes] 05
+ew    11 tems in Personal WatenLar Lam Somed 0339 Re-Som
+15:
+~ Be 222068  8) |
 </div>
     </div>
   </div>
