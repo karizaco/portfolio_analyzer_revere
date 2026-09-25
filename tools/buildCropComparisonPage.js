@@ -155,7 +155,7 @@ function legacyParse(text, lexicon) {
 }
 
 async function main() {
-  const { parseChartStreamPositionList } = require(path.join(ROOT, 'src/parse/parseChartStream'));
+  const { parseChartStreamPositionList, mergeMultiplePositionLists } = require(path.join(ROOT, 'src/parse/parseChartStream'));
   const { loadSeedLexiconSync } = require(path.join(ROOT, 'src/normalize/tickerScan'));
   const lexicon = loadSeedLexiconSync();
 
@@ -167,6 +167,8 @@ async function main() {
   const videoResults = [];
   for (const video of VIDEOS) {
     const captures = [];
+    const allColumnLists = []; // for multi-frame merge
+    const allLegacyLists = [];
     for (const file of video.files) {
       const snapshotPath = path.join(ROOT, video.snapshotsDir, file);
       if (!fs.existsSync(snapshotPath)) continue;
@@ -191,6 +193,8 @@ async function main() {
       const columnResult = parseChartStreamPositionList({ ocr });
       const detectedColumn = columnResult.position_list;
       const detectedLegacy = legacyParse(text, lexicon);
+      allColumnLists.push(detectedColumn);
+      allLegacyLists.push(detectedLegacy);
 
       const gt = GT[video.dateKey] || [];
 
@@ -221,35 +225,73 @@ async function main() {
         detectedLegacy,
       });
     }
-    videoResults.push({ ...video, captures });
+
+    // Multi-frame merge: ticker must appear in ≥2 captures to be accepted.
+    // Dramatically reduces FPs from single-frame OCR garbling.
+    const mergedColumn = mergeMultiplePositionLists(allColumnLists, { minOccurrences: 2 });
+    const mergedLegacy = mergeMultiplePositionLists(allLegacyLists, { minOccurrences: 2 });
+    const gt = GT[video.dateKey] || [];
+    videoResults.push({
+      ...video,
+      captures,
+      mergedColumn: {
+        correct: gt.filter(t => mergedColumn.includes(t)),
+        extra: mergedColumn.filter(t => !gt.includes(t)),
+        list: mergedColumn
+      },
+      mergedLegacy: {
+        correct: gt.filter(t => mergedLegacy.includes(t)),
+        extra: mergedLegacy.filter(t => !gt.includes(t)),
+        list: mergedLegacy
+      }
+    });
   }
 
   await worker.terminate();
 
   // Per-video aggregates
   const aggregateStats = videoResults.map(v => {
-    let totCorrectC = 0, totFPC = 0, totDetectedC = 0;
-    let totCorrectL = 0, totFPL = 0, totDetectedL = 0;
-    let totGT = 0;
+    const gt = GT[v.dateKey] || [];
+    const totGT = gt.length;
+    // Count UNIQUE tickers found across ALL captures (not summed duplicates)
+    const allColumnDetected = new Set();
+    const allLegacyDetected = new Set();
+    const allColumnCorrect = new Set();
+    const allLegacyCorrect = new Set();
+    const allColumnFP = new Set();
+    const allLegacyFP = new Set();
     for (const c of v.captures) {
-      totCorrectC += c.correctColumn.length;
-      totFPC += c.extraColumn.length;
-      totDetectedC += c.detectedColumn.length;
-      totCorrectL += c.correctLegacy.length;
-      totFPL += c.extraLegacy.length;
-      totDetectedL += c.detectedLegacy.length;
-      totGT += (GT[v.dateKey] || []).length;
+      for (const t of c.detectedColumn) allColumnDetected.add(t);
+      for (const t of c.detectedLegacy) allLegacyDetected.add(t);
+      for (const t of c.correctColumn) allColumnCorrect.add(t);
+      for (const t of c.correctLegacy) allLegacyCorrect.add(t);
+      for (const t of c.extraColumn) allColumnFP.add(t);
+      for (const t of c.extraLegacy) allLegacyFP.add(t);
     }
+    // Multi-frame merge aggregates — already counted as unique tickers per video.
+    const mergedCorrectC = v.mergedColumn ? v.mergedColumn.correct.length : 0;
+    const mergedFPC = v.mergedColumn ? v.mergedColumn.extra.length : 0;
+    const mergedDetectedC = v.mergedColumn ? v.mergedColumn.list.length : 0;
+    const mergedCorrectL = v.mergedLegacy ? v.mergedLegacy.correct.length : 0;
+    const mergedFPL = v.mergedLegacy ? v.mergedLegacy.extra.length : 0;
+    const mergedDetectedL = v.mergedLegacy ? v.mergedLegacy.list.length : 0;
     return {
       dateKey: v.dateKey,
       description: v.description,
       gtCount: totGT,
-      column: { correct: totCorrectC, fp: totFPC, detected: totDetectedC,
-                recall: totGT ? Math.round(100 * totCorrectC / totGT) : 0,
-                precision: totDetectedC ? Math.round(100 * totCorrectC / totDetectedC) : 0 },
-      legacy: { correct: totCorrectL, fp: totFPL, detected: totDetectedL,
-                recall: totGT ? Math.round(100 * totCorrectL / totGT) : 0,
-                precision: totDetectedL ? Math.round(100 * totCorrectL / totDetectedL) : 0 },
+      // Single-capture aggregates use unique tickers across all captures
+      column: { correct: allColumnCorrect.size, fp: allColumnFP.size, detected: allColumnDetected.size,
+                recall: totGT ? Math.round(100 * allColumnCorrect.size / totGT) : 0,
+                precision: allColumnDetected.size ? Math.round(100 * allColumnCorrect.size / allColumnDetected.size) : 0 },
+      legacy: { correct: allLegacyCorrect.size, fp: allLegacyFP.size, detected: allLegacyDetected.size,
+                recall: totGT ? Math.round(100 * allLegacyCorrect.size / totGT) : 0,
+                precision: allLegacyDetected.size ? Math.round(100 * allLegacyCorrect.size / allLegacyDetected.size) : 0 },
+      mergedColumn: { correct: mergedCorrectC, fp: mergedFPC, detected: mergedDetectedC,
+                recall: totGT ? Math.round(100 * mergedCorrectC / totGT) : 0,
+                precision: mergedDetectedC ? Math.round(100 * mergedCorrectC / mergedDetectedC) : 0 },
+      mergedLegacy: { correct: mergedCorrectL, fp: mergedFPL, detected: mergedDetectedL,
+                recall: totGT ? Math.round(100 * mergedCorrectL / totGT) : 0,
+                precision: mergedDetectedL ? Math.round(100 * mergedCorrectL / mergedDetectedL) : 0 },
     };
   });
 
@@ -295,20 +337,25 @@ async function main() {
 
 <div class="legend">
   <p><b>Color coding:</b> <span class="ticker gt-correct">Green</span> = GT ticker correctly detected. <span class="ticker gt-missed">Red dashed</span> = GT ticker MISSED. <span class="ticker fp">Orange</span> = false positive (detected but not in GT).</p>
-  <p><b>Two parsers compared:</b> <b>Legacy</b> = accept any ticker-shape token in the seed lexicon. <b>Column-aware</b> = only accept ticker-shape words that land in the dominant ticker column (x=348-358 in scaled 750px crop) AND have a price token to their RIGHT on the same line. The column-aware filter rejects chart-area text (axis labels, chart annotations, Personal WatchList rows) that the legacy parser accepts as false positives.</p>
+  <p><b>Three parser configurations compared:</b></p>
+  <ul style="margin:4px 0 4px 24px">
+    <li><b>Single-capture legacy</b> — accept any ticker-shape token in the seed lexicon.</li>
+    <li><b>Single-capture column-aware</b> — only accept ticker-shape words that land in the dominant ticker column AND have a price token to their RIGHT on the same line.</li>
+    <li><b>Multi-frame merge (≥2/3 captures)</b> — accept tickers that survive across multiple captures of the same video. Dramatically reduces FPs from single-frame OCR garbling.</li>
+  </ul>
 </div>
 
 <h2>Per-video aggregate (across all captures)</h2>
 <table class="summary">
   <tr>
-    <th>Date</th>
-    <th>GT tickers</th>
-    <th colspan="2">Legacy parser</th>
-    <th colspan="2">Column-aware parser</th>
+    <th rowspan="2">Date</th>
+    <th rowspan="2">GT tickers</th>
+    <th colspan="2">Legacy (single capture)</th>
+    <th colspan="2">Column-aware (single)</th>
+    <th colspan="2">Multi-frame merge (≥2/3)</th>
   </tr>
   <tr>
-    <th></th>
-    <th></th>
+    <th>Recall</th><th>Precision (FPs)</th>
     <th>Recall</th><th>Precision (FPs)</th>
     <th>Recall</th><th>Precision (FPs)</th>
   </tr>
@@ -320,12 +367,30 @@ ${aggregateStats.map(s => `
     <td class="${s.legacy.fp <= 1 ? 'good' : 'bad'}">${s.legacy.precision}% (${s.legacy.fp} FPs)</td>
     <td class="${s.column.recall >= 50 ? 'good' : s.column.recall >= 25 ? 'warn' : 'bad'}">${s.column.recall}% (${s.column.correct}/${s.gtCount})</td>
     <td class="${s.column.fp <= 1 ? 'good' : 'bad'}">${s.column.precision}% (${s.column.fp} FPs)</td>
+    <td class="${s.mergedLegacy.recall >= 50 ? 'good' : s.mergedLegacy.recall >= 25 ? 'warn' : 'bad'}">${s.mergedLegacy.recall}% (${s.mergedLegacy.correct}/${s.gtCount})</td>
+    <td class="${s.mergedLegacy.fp <= 1 ? 'good' : 'bad'}">${s.mergedLegacy.precision}% (${s.mergedLegacy.fp} FPs)</td>
   </tr>`).join('')}
 </table>
+<p style="color:#888; font-size:11px; margin-top:6px">
+  <b>Reading the table:</b> "Legacy (single)" = recall across all captures (de-duped) without multi-frame merge.
+  "Multi-frame merge (≥2/3)" = unique tickers that survive in ≥2 of 3 captures of the same video — fewer FPs but lower recall since real position lists change during a stream.
+  The right column is often the best tradeoff for downstream consumers.
+</p>
 
 ${videoResults.map(v => `
 <h2>${v.dateKey} — ${v.description}</h2>
 <p style="color:#888; font-size:12px;">GT: ${(GT[v.dateKey] || []).join(', ') || '(none)'}</p>
+
+${v.mergedLegacy && v.mergedLegacy.list.length > 0 || (v.mergedColumn && v.mergedColumn.list.length > 0) ? `
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/${v.captures.length} captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">${v.mergedLegacy.list.join(', ') || '∅'}</span>
+  ${v.mergedLegacy.extra.length > 0 ? `<span style="color:#fa6"> (+${v.mergedLegacy.extra.length} FP: ${v.mergedLegacy.extra.join(', ')})</span>` : ''}
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">${v.mergedColumn.list.join(', ') || '∅'}</span>
+  ${v.mergedColumn.extra.length > 0 ? `<span style="color:#fa6"> (+${v.mergedColumn.extra.length} FP: ${v.mergedColumn.extra.join(', ')})</span>` : ''}
+  &nbsp;<span style="color:#888">(GT missed: ${v.mergedLegacy ? (GT[v.dateKey] || []).filter(t => !v.mergedLegacy.list.includes(t)).join(', ') || '(none)' : ''})</span>
+</div>` : ''}
 
 ${v.captures.map((cap, idx) => `
   <div class="capture-row">

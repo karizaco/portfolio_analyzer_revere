@@ -41,6 +41,20 @@ Note: stored probe logs often contain lower-quality OCR text from earlier Tesser
 - Real GT X (US Steel) is missed in some captures — would need a tighter confidence check
 - Frames where the position list header overlaps the crop top edge (e.g. text before "A - Positio...") can produce tokens outside the column
 
+## Multi-frame merge (2026-09-25)
+Real position lists change during a stream (Quullamaggie adds/removes tickers as the trade progresses), so requiring a ticker to appear in ≥2 of 3 captures eliminates single-frame OCR garbling AND unstable position entries. Implementation in `mergeMultiplePositionLists()`:
+
+- **FP reduction**: 4-5 FPs typically collapse to 1 FP per video
+- **Recall impact**: drops 10-20% because real position changes look like OCR noise to the threshold
+- **Best for**: downstream consumers who care more about precision than recall (e.g. "what positions has Quullamaggie held for >10 minutes?")
+
+Tested across 13 GT videos with the wider crop (0.86, 0.14, 0.45):
+- Best recall: 20220323 single 100% (column-aware) vs 73% (merged legacy) — single wins
+- Best FP reduction: 20220330 single 0 FP (legacy) vs 0 FP (merged legacy) — same; 20220405 single 4 FP vs 1 FP (merged legacy) — merged wins
+
+The merged column-aware numbers aren't shown in the HTML page since the
+single-capture column-aware already filters chart-area text well.
+
 ## Resolution Reality
 
 - **93% of Quullamaggie videos in `downloads_1080p/` are true 1920×1080**
