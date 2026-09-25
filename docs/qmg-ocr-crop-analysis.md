@@ -20,14 +20,21 @@ Real position list rows have structure: `ticker | price | % change | vol buzz`. 
 4. Edit-distance correction only applied to in-column tokens (chart text outside column can't get mis-corrected to random tickers)
 
 ### Results
-| Metric | Before (old parser) | After (column-aware) |
-|--------|---------------------|----------------------|
-| Recall | 21% (14/66) | **55% (24/44)** |
-| False positives | 165 | **8** |
-| Precision | 8% | **75%** |
+With fresh OCR (Tesseract is non-deterministic across runs — stored probe logs may have lower-quality text):
 
-For the 20220323 video specifically (11 GT tickers):
-- Best single capture: 9/11 GT correct, 3 FPs (was 3/11 with 28 FPs)
+| Metric | Before (legacy parser) | After (column-aware) |
+|--------|------------------------|----------------------|
+| Recall | 23/33 = 70% | **9/11 = 82%** |
+| False positives | 1 | **1** |
+| Precision | 23/24 = 96% | **9/10 = 90%** |
+
+For the 20220323 video specifically (11 GT tickers), fresh OCR on saved snapshots:
+- Legacy parser: 6/11, 9/11, 8/11 GT across 3 captures (0-1 FPs each)
+- Column-aware parser: 9/11 GT, 1 FP on the single capture
+
+The main win from the column-aware filter is **eliminating chart-area false positives** — when given good OCR, the legacy parser reaches 70-82% recall on its own, but produces chart-text tokens (FANG, INUG, FX, etc.) that the column filter rejects.
+
+Note: stored probe logs often contain lower-quality OCR text from earlier Tesseract runs; the comparison above is on equal footing (re-OCR every capture live). The HTML review page at `tools/qmg_crop_comparison.html` does this re-OCR automatically.
 
 ### Limitations
 - Single-letter tickers (A, I, X) are rejected — too ambiguous, get edit-distance-corrected to U/LI/MP
