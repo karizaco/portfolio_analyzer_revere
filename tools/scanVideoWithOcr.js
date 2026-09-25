@@ -483,10 +483,13 @@ async function prefilterFrames({ fps, framePaths, outputKind, prefilterProfile, 
     const framePath = framePaths[index];
     const stats = await analyzeFrameBeforeOcr(framePath);
     const timestamp = buildFrameTimestamp(index, fps);
+    // Attach timestamp onto stats so scoreFramePrefilter temporal boost
+    // (which historically read stats.timestamp) cannot produce NaN.
+    stats.timestamp = timestamp;
     const row = {
       frameIndex: index,
       framePath,
-      prefilterScore: scoreFramePrefilter(stats, outputKind, prefilterProfile, temporalDecay),
+      prefilterScore: scoreFramePrefilter(stats, outputKind, prefilterProfile, temporalDecay, timestamp),
       stats,
       timestamp
     };
