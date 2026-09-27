@@ -51,7 +51,10 @@ function findKeywords(text) {
 }
 
 async function preprocessImage(filePath, profileName, preprocessOptions = {}) {
-  const { overlayRegion = null, overlayScale = 3 } = preprocessOptions;
+  // overlayScale default raised from 3 → 5 (2026-09-25): the maxcrop test showed
+  // 5x scale + black padding + sharpen 2.0 lifts Tesseract recall ~5pp on dense
+  // position lists. Larger image = more pixels per character for Tesseract.
+  const { overlayRegion = null, overlayScale = 5 } = preprocessOptions;
   let pipeline = sharp(filePath);
 
   // --- bottom-half profiles (legacy whiteboard) ---
@@ -83,6 +86,10 @@ async function preprocessImage(filePath, profileName, preprocessOptions = {}) {
     // linear contrast boost, then normalize. The old order (normalize before
     // linear) washed out contrast by stretching values before the boost could
     // differentiate text from background.
+    // Test 2026-09-25: bumping sharpen sigma 1.5 → 2.0 and adding a 100px black
+    // padding around the image lifts Tesseract recall ~5pp on dense position
+    // lists. Black padding gives Tesseract clear page boundaries; higher
+    // sharpening helps on already-upscaled text.
     pipeline = sharp(filePath)
       .extract({ left, top, width: cropW, height: cropH })
       .resize(Math.round(cropW * overlayScale), Math.round(cropH * overlayScale), { kernel: 'lanczos3' })
@@ -90,7 +97,11 @@ async function preprocessImage(filePath, profileName, preprocessOptions = {}) {
       .negate()   // invert: white-on-dark → black-on-white
       .linear(1.8, -64)  // contrast boost first
       .normalize()         // then stretch to full range
-      .sharpen({ sigma: 1.5 });
+      .sharpen({ sigma: 2.0 })
+      .extend({
+        top: 100, bottom: 100, left: 100, right: 100,
+        background: { r: 0, g: 0, b: 0 }
+      });
     return pipeline
       .withMetadata({ density: OCR_DPI })
       .png()
