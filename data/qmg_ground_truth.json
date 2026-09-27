@@ -332,7 +332,52 @@
   "20230605": {
     "0": ["IMGN","ARQQ","CVNA","IOT","PLTR","GSIT","MNDY","APLD","AI","QBTS","DNA"]
   },
-  "_meta": "Per-capture GT. Keys are dateKey (YYYYMMDD) → capture-index (0=qmg_*.png, 1=qmg_*_2.png, 2=qmg_*_3.png). crop: [x1,y1,x2,y2] in source-frame pixels.",
+  "20220222": {
+    "0": ["NUGT","MOS","TQQQ","FCX","TSLA"]
+  },
+  "20220301": {
+    "0": ["IBKR","CRH","XLV","KRE","MP","NUGT","EDV","RSX","FCX","VLO","COPX"]
+  },
+  "20220302": {
+    "0": ["NUGT","FCX","X","ERX","EDV","COPX","AGQ"]
+  },
+  "20220321": {
+    "0": ["DIDI","NUGT","COPX","URNM","REGN","FCX","NUZE","X"]
+  },
+  "20220331": {
+    "0": ["COPX","KWEB","SPXL","TQQQ","X","REGN","FCX","NUGT"]
+  },
+  "20220406": {
+    "0": ["X","FCX","REGN","COPX","NUGT","NEM","LHX"]
+  },
+  "20220414": {
+    "0": ["NUGT","JNUG","WEAT","GUSH","COPX","URA","URNM","X","REGN","FCX","LMT"]
+  },
+  "20220418": {
+    "0": ["VERU","WEAT","URA","URNM","FCX","LMT","COPX","REGN","GUSH","X","NUGT","JNUG"]
+  },
+  "20220419": {
+    "0": ["VERU","URNM","URA","REGN","JNUG","LMT","NUGT","X","COPX","WEAT","FCX","GUSH","BOIL","KOLD"]
+  },
+  "20220421": {
+    "0": ["FCX","JNUG","NUGT","COPX","WEAT","VERU","URNM","URA","REGN","X","GUSH","LAC","UCO","FTNT","BOIL","TSLA"]
+  },
+  "20220425": {
+    "0": ["KOLD","WEAT","VERU","BOIL"]
+  },
+  "20220429": {
+    "0": ["WEAT","GUSH","TSLA","X","SWN"]
+  },
+  "20220506": {
+    "0": ["UCO","WEAT","TSLA","LTHM"]
+  },
+  "20221104": {
+    "0": ["OIH"]
+  },
+  "20230518": {
+    "0": ["PLTR","LI","AI","SHOP","MNDY","IMGN","APLD"]
+  },
+  "_meta": "Per-capture GT. Keys are dateKey (YYYYMMDD) → capture-index (0=qmg_*.png, 1=qmg_*_2.png, 2=qmg_*_3.png). crop: [x1,y1,x2,y2] in source-frame pixels. Note: 20230518+ videos use wider table layout — default crop (0.86,0.14) may cut off left edge; consider 0.83,0.17 for newer videos.",
   "_source": "Verified by visual inspection of crop_comparison.html snapshots.",
   "_notes": {
     "20220323": "11 GT tickers consistent across captures",
