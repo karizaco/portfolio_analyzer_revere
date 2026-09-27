@@ -377,7 +377,28 @@
   "20230518": {
     "0": ["PLTR","LI","AI","SHOP","MNDY","IMGN","APLD"]
   },
-  "_meta": "Per-capture GT. Keys are dateKey (YYYYMMDD) → capture-index (0=qmg_*.png, 1=qmg_*_2.png, 2=qmg_*_3.png). crop: [x1,y1,x2,y2] in source-frame pixels. Note: 20230518+ videos use wider table layout — default crop (0.86,0.14) may cut off left edge; consider 0.83,0.17 for newer videos.",
+  "20220412": {
+    "0": ["LHX","LMT","URA","URNM","WEAT","X","COPX","FCX","REGN","NUGT","JNUG"]
+  },
+  "20220426": {
+    "0": ["BOIL","WEAT"]
+  },
+  "20230523": {
+    "0": ["QBTS","LI","SOUN","IMGN","FTCH","MNDY","APLD","PLTR","DNA","AI","CVNA"]
+  },
+  "20230601": {
+    "0": ["QBTS","APLD","AI","DNA","CVNA","IONQ","PLTR","IMGN","MNDY"]
+  },
+  "20230602": {
+    "0": ["IOT","TEAM","MTCH","QBTS","ARQQ","RGTI","IMGN","PLTR","CVNA","MNDY","APLD","DNA","IONQ","AI","GSIT"]
+  },
+  "20230608": {
+    "0": ["CVNA","QBTS","APLD","ARQQ","IMGN","IOT","GTLB","RGTI","DNA","MNDY","AI","PLTR","GSIT"]
+  },
+  "20230609": {
+    "0": ["RGTI","QBTS","IMGN","CVNA","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","APLD","MNDY"]
+  },
+  "_meta": "Per-capture GT. Keys are dateKey (YYYYMMDD) → capture-index (0=qmg_*.png, 1=qmg_*_2.png, 2=qmg_*_3.png). crop: [x1,y1,x2,y2] in source-frame pixels. Note: 20230518+ videos use wider table layout — default crop (0.86,0.14) may cut off left edge; use 0.83,0.17 for newer videos. 20230519/20231201/20231215 are Revere earnings frames, not Quullamaggie position lists.",
   "_source": "Verified by visual inspection of crop_comparison.html snapshots.",
   "_notes": {
     "20220323": "11 GT tickers consistent across captures",
