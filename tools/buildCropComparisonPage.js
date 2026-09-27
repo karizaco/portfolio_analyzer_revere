@@ -133,30 +133,13 @@ const VIDEOS = [
     description: '7 GT tickers (LI, IMGN, SOUN, AI, CVNA, APLD, PLTR)',
   },
   // --- "no GT" videos for visual review (OCR output only, ground truth TBD) ---
-  {
-    dateKey: '20220218 (no GT)',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220218.png', 'qmg_20220218_2.png', 'qmg_20220218_3.png'],
-    description: 'No GT — visual review only (early 2022)',
-  },
-  {
-    dateKey: '20220412 (no GT)',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220412.png', 'qmg_20220412_2.png', 'qmg_20220412_3.png'],
-    description: 'No GT — visual review only',
-  },
-  {
-    dateKey: '20230602 (no GT)',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20230602.png', 'qmg_20230602_2.png', 'qmg_20230602_3.png'],
-    description: 'No GT — visual review only (mid 2023)',
-  },
-  {
-    dateKey: '20231215 (no GT)',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20231215.png', 'qmg_20231215_2.png', 'qmg_20231215_3.png'],
-    description: 'No GT — visual review only (late 2023)',
-  },
+  // Removed in favor of new GT videos; uncomment to re-enable visual-only mode.
+  // {
+  //   dateKey: '20220218 (no GT)',
+  //   snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+  //   files: ['qmg_20220218.png', 'qmg_20220218_2.png', 'qmg_20220218_3.png'],
+  //   description: 'No GT — visual review only (early 2022)',
+  // },
   {
     dateKey: '20220218',
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
@@ -186,18 +169,112 @@ const VIDEOS = [
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20230605.png', 'qmg_20230605_2.png', 'qmg_20230605_3.png'],
     description: '11 GT tickers (IMGN, ARQQ, CVNA, IOT, PLTR, GSIT, MNDY, APLD, AI, QBTS, DNA) — wider table layout',
+    cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
+  },
+  {
+    dateKey: '20220222',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220222.png', 'qmg_20220222_2.png', 'qmg_20220222_3.png'],
+    description: '5 GT (NUGT, MOS, TQQQ, FCX, TSLA)',
+  },
+  {
+    dateKey: '20220301',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220301.png', 'qmg_20220301_2.png', 'qmg_20220301_3.png'],
+    description: '11 GT (IBKR, CRH, XLV, KRE, MP, NUGT, EDV, RSX, FCX, VLO, COPX)',
+  },
+  {
+    dateKey: '20220302',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220302.png', 'qmg_20220302_2.png', 'qmg_20220302_3.png'],
+    description: '7 GT (NUGT, FCX, X, ERX, EDV, COPX, AGQ)',
+  },
+  {
+    dateKey: '20220321',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220321.png', 'qmg_20220321_2.png', 'qmg_20220321_3.png'],
+    description: '8 GT (DIDI, NUGT, COPX, URNM, REGN, FCX, NUZE, X)',
+  },
+  {
+    dateKey: '20220331',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220331.png', 'qmg_20220331_2.png', 'qmg_20220331_3.png'],
+    description: '8 GT (COPX, KWEB, SPXL, TQQQ, X, REGN, FCX, NUGT)',
+  },
+  {
+    dateKey: '20220406',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220406.png', 'qmg_20220406_2.png', 'qmg_20220406_3.png'],
+    description: '7 GT (X, FCX, REGN, COPX, NUGT, NEM, LHX)',
+  },
+  {
+    dateKey: '20220414',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220414.png', 'qmg_20220414_2.png', 'qmg_20220414_3.png'],
+    description: '11 GT (NUGT, JNUG, WEAT, GUSH, COPX, URA, URNM, X, REGN, FCX, LMT)',
+  },
+  {
+    dateKey: '20220418',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220418.png', 'qmg_20220418_2.png', 'qmg_20220418_3.png'],
+    description: '12 GT (VERU, WEAT, URA, URNM, FCX, LMT, COPX, REGN, GUSH, X, NUGT, JNUG)',
+  },
+  {
+    dateKey: '20220419',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220419.png', 'qmg_20220419_2.png', 'qmg_20220419_3.png'],
+    description: '14 GT (VERU, URNM, URA, REGN, JNUG, LMT, NUGT, X, COPX, WEAT, FCX, GUSH, BOIL, KOLD)',
+  },
+  {
+    dateKey: '20220421',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220421.png', 'qmg_20220421_2.png', 'qmg_20220421_3.png'],
+    description: '16 GT (FCX, JNUG, NUGT, COPX, WEAT, VERU, URNM, URA, REGN, X, GUSH, LAC, UCO, FTNT, BOIL, TSLA) — largest',
+  },
+  {
+    dateKey: '20220425',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220425.png', 'qmg_20220425_2.png', 'qmg_20220425_3.png'],
+    description: '4 GT (KOLD, WEAT, VERU, BOIL)',
+  },
+  {
+    dateKey: '20220429',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220429.png', 'qmg_20220429_2.png', 'qmg_20220429_3.png'],
+    description: '5 GT (WEAT, GUSH, TSLA, X, SWN)',
+  },
+  {
+    dateKey: '20220506',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220506.png', 'qmg_20220506_2.png', 'qmg_20220506_3.png'],
+    description: '4 GT (UCO, WEAT, TSLA, LTHM)',
+  },
+  {
+    dateKey: '20221104',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20221104.png', 'qmg_20221104_2.png', 'qmg_20221104_3.png'],
+    description: '1 GT (OIH) — minimal position list',
+  },
+  {
+    dateKey: '20230518',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20230518.png', 'qmg_20230518_2.png', 'qmg_20230518_3.png'],
+    description: '7 GT (PLTR, LI, AI, SHOP, MNDY, IMGN, APLD) — wider table layout',
+    cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
   },
 ];
 
 const CROPS_OUT_DIR = path.join(ROOT, 'data', 'video_scan_test', '_review_crops');
 
-// Preprocess a snapshot like the OCR pipeline does.
-async function preprocessForOcr(snapshotPath) {
+// Preprocess a snapshot like the OCR pipeline does. cropOverride lets callers
+// use a different region (e.g. wider for newer videos with shifted table).
+async function preprocessForOcr(snapshotPath, cropOverride = null) {
   const meta = await sharp(snapshotPath).metadata();
-  const left = Math.round(meta.width * CROP.x);
-  const top = Math.round(meta.height * CROP.y);
-  const cropW = Math.round(meta.width * CROP.w);
-  const cropH = Math.round(meta.height * CROP.h);
+  const region = cropOverride || CROP;
+  const left = Math.round(meta.width * region.x);
+  const top = Math.round(meta.height * region.y);
+  const cropW = Math.round(meta.width * region.w);
+  const cropH = Math.round(meta.height * region.h);
   const ocrBuf = await sharp(snapshotPath)
     .extract({ left, top, width: cropW, height: cropH })
     .resize(cropW * 3, cropH * 3, { kernel: 'lanczos3' })
@@ -247,7 +324,7 @@ async function main() {
       const snapshotPath = path.join(ROOT, video.snapshotsDir, file);
       if (!fs.existsSync(snapshotPath)) continue;
 
-      const { left, top, cropW, cropH, ocrBuf } = await preprocessForOcr(snapshotPath);
+      const { left, top, cropW, cropH, ocrBuf } = await preprocessForOcr(snapshotPath, video.cropOverride);
       const stem = `${video.dateKey}__${file.replace('.png', '')}`;
       const rawPath = path.join(CROPS_OUT_DIR, `${stem}__raw_crop.png`);
       const ocrPath = path.join(CROPS_OUT_DIR, `${stem}__ocr_crop.png`);
