@@ -262,6 +262,53 @@ const VIDEOS = [
     description: '7 GT (PLTR, LI, AI, SHOP, MNDY, IMGN, APLD) — wider table layout',
     cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
   },
+  {
+    dateKey: '20220412',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220412.png', 'qmg_20220412_2.png', 'qmg_20220412_3.png'],
+    description: '11 GT (LHX, LMT, URA, URNM, WEAT, X, COPX, FCX, REGN, NUGT, JNUG)',
+  },
+  {
+    dateKey: '20220426',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220426.png', 'qmg_20220426_2.png', 'qmg_20220426_3.png'],
+    description: '2 GT (BOIL, WEAT) — minimal position list',
+  },
+  {
+    dateKey: '20230523',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20230523.png', 'qmg_20230523_2.png', 'qmg_20230523_3.png'],
+    description: '11 GT (QBTS, LI, SOUN, IMGN, FTCH, MNDY, APLD, PLTR, DNA, AI, CVNA)',
+    cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
+  },
+  {
+    dateKey: '20230601',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20230601.png', 'qmg_20230601_2.png', 'qmg_20230601_3.png'],
+    description: '9 GT (QBTS, APLD, AI, DNA, CVNA, IONQ, PLTR, IMGN, MNDY)',
+    cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
+  },
+  {
+    dateKey: '20230602',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20230602.png', 'qmg_20230602_2.png', 'qmg_20230602_3.png'],
+    description: '15 GT (IOT, TEAM, MTCH, QBTS, ARQQ, RGTI, IMGN, PLTR, CVNA, MNDY, APLD, DNA, IONQ, AI, GSIT) — largest yet',
+    cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
+  },
+  {
+    dateKey: '20230608',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20230608.png', 'qmg_20230608_2.png', 'qmg_20230608_3.png'],
+    description: '13 GT (CVNA, QBTS, APLD, ARQQ, IMGN, IOT, GTLB, RGTI, DNA, MNDY, AI, PLTR, GSIT)',
+    cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
+  },
+  {
+    dateKey: '20230609',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20230609.png', 'qmg_20230609_2.png', 'qmg_20230609_3.png'],
+    description: '13 GT (RGTI, QBTS, IMGN, CVNA, IOT, ARQQ, AI, PLTR, DNA, GTLB, GSIT, APLD, MNDY)',
+    cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
+  },
 ];
 
 const CROPS_OUT_DIR = path.join(ROOT, 'data', 'video_scan_test', '_review_crops');

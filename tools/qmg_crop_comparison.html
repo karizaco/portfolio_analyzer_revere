@@ -393,6 +393,76 @@
     <td class="bad">14% (1/7)</td>
     <td class="bad">33% (2 FPs)</td>
   </tr>
+  <tr>
+    <td><b>20220412</b><br><span style="color:#888; font-size:11px">11 GT (LHX, LMT, URA, URNM, WEAT, X, COPX, FCX, REGN, NUGT, JNUG)</span></td>
+    <td>11</td>
+    <td class="good">55% (6/11)</td>
+    <td class="bad">75% (8 FPs)</td>
+    <td class="good">55% (6/11)</td>
+    <td class="bad">55% (11 FPs)</td>
+    <td class="good">64% (7/11)</td>
+    <td class="good">100% (0 FPs)</td>
+  </tr>
+  <tr>
+    <td><b>20220426</b><br><span style="color:#888; font-size:11px">2 GT (BOIL, WEAT) — minimal position list</span></td>
+    <td>2</td>
+    <td class="good">100% (2/2)</td>
+    <td class="bad">67% (3 FPs)</td>
+    <td class="good">100% (2/2)</td>
+    <td class="bad">100% (2 FPs)</td>
+    <td class="good">100% (2/2)</td>
+    <td class="good">67% (1 FPs)</td>
+  </tr>
+  <tr>
+    <td><b>20230523</b><br><span style="color:#888; font-size:11px">11 GT (QBTS, LI, SOUN, IMGN, FTCH, MNDY, APLD, PLTR, DNA, AI, CVNA)</span></td>
+    <td>11</td>
+    <td class="bad">9% (1/11)</td>
+    <td class="bad">17% (6 FPs)</td>
+    <td class="bad">0% (0/11)</td>
+    <td class="bad">0% (7 FPs)</td>
+    <td class="bad">9% (1/11)</td>
+    <td class="good">50% (1 FPs)</td>
+  </tr>
+  <tr>
+    <td><b>20230601</b><br><span style="color:#888; font-size:11px">9 GT (QBTS, APLD, AI, DNA, CVNA, IONQ, PLTR, IMGN, MNDY)</span></td>
+    <td>9</td>
+    <td class="bad">22% (2/9)</td>
+    <td class="bad">50% (2 FPs)</td>
+    <td class="good">67% (6/9)</td>
+    <td class="bad">46% (9 FPs)</td>
+    <td class="bad">11% (1/9)</td>
+    <td class="good">50% (1 FPs)</td>
+  </tr>
+  <tr>
+    <td><b>20230602</b><br><span style="color:#888; font-size:11px">15 GT (IOT, TEAM, MTCH, QBTS, ARQQ, RGTI, IMGN, PLTR, CVNA, MNDY, APLD, DNA, IONQ, AI, GSIT) — largest yet</span></td>
+    <td>15</td>
+    <td class="bad">20% (3/15)</td>
+    <td class="bad">75% (3 FPs)</td>
+    <td class="warn">27% (4/15)</td>
+    <td class="bad">25% (14 FPs)</td>
+    <td class="bad">13% (2/15)</td>
+    <td class="good">67% (1 FPs)</td>
+  </tr>
+  <tr>
+    <td><b>20230608</b><br><span style="color:#888; font-size:11px">13 GT (CVNA, QBTS, APLD, ARQQ, IMGN, IOT, GTLB, RGTI, DNA, MNDY, AI, PLTR, GSIT)</span></td>
+    <td>13</td>
+    <td class="bad">15% (2/13)</td>
+    <td class="bad">33% (6 FPs)</td>
+    <td class="bad">15% (2/13)</td>
+    <td class="bad">17% (11 FPs)</td>
+    <td class="bad">15% (2/13)</td>
+    <td class="bad">50% (2 FPs)</td>
+  </tr>
+  <tr>
+    <td><b>20230609</b><br><span style="color:#888; font-size:11px">13 GT (RGTI, QBTS, IMGN, CVNA, IOT, ARQQ, AI, PLTR, DNA, GTLB, GSIT, APLD, MNDY)</span></td>
+    <td>13</td>
+    <td class="bad">15% (2/13)</td>
+    <td class="bad">40% (4 FPs)</td>
+    <td class="warn">46% (6/13)</td>
+    <td class="bad">33% (16 FPs)</td>
+    <td class="bad">8% (1/13)</td>
+    <td class="good">50% (1 FPs)</td>
+  </tr>
 </table>
 <p style="color:#888; font-size:11px; margin-top:6px">
   <b>Reading the table:</b> "Legacy (single)" = recall across all captures (de-duped) without multi-frame merge.
@@ -7527,6 +7597,1528 @@ I | MNDY |  = 404  oom] 55.3% |
 15
 ~ Rae ing  8) |
 </div>
+    </div>
+  </div>
+
+
+<h2>20220412 — 11 GT (LHX, LMT, URA, URNM, WEAT, X, COPX, FCX, REGN, NUGT, JNUG)</h2>
+<p style="color:#888; font-size:12px;">GT: LHX, LMT, URA, URNM, WEAT, X, COPX, FCX, REGN, NUGT, JNUG</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">COPX, NUGT, REGN, URA, URNM, WEAT, X</span>
+  
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">COPX, FCX, NUGT, ON, REGN, URA, URNM, WEAT</span>
+  <span style="color:#fa6"> (+1 FP: ON)</span>
+  &nbsp;<span style="color:#888">(GT missed: LHX, LMT, FCX, JNUG)</span>
+</div>
+
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220412__qmg_20220412__raw_crop.png" alt="raw crop 0">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220412__qmg_20220412__ocr_crop.png" alt="ocr crop 0">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 49</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220412.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            6/11 correct, 0 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            6/11 correct, 2 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>LHX, LMT, X, FCX, JNUG</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (11)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-missed" title="Detected: legacy✗ column✗">LHX</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">LMT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URNM</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">X</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">COPX</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">FCX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">REGN</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">NUGT</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">JNUG</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">BE</div><div class="ticker fp" title="Column-aware FP">STX</div>
+          
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">800
+0 Izeens in Watchlist
+A-Positi@ Syms It EEX
+7.00       Fag Sym     Coane Alpre Buzz
+TX | 019% +00%
+mor | e013%] 01%
+600 |p URA | «160%  +05%
+= URNM | e213% &lt;02%
+PB WEAT | +138% 40%
+500 | Mm oX | 152% «01%
+= coPX | 134% «00%
+PE           m RX | 153% 02%
+092300        Arith -  = REGN   “0.72% |    401%
+:          PB NUGT | 226%  +09%
+«           = nue |  245% 09%
+]                S0.0M
+veh
+11 Items in Personal Watchli Last Sorted
+15
+~ Ew  aoer2   C0)  |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220412__qmg_20220412_2__raw_crop.png" alt="raw crop 1">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220412__qmg_20220412_2__ocr_crop.png" alt="ocr crop 1">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 42</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220412_2.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 7 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 6 FP
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="gt-list-label">Ground truth tickers (0)</div>
+      <div class="ticker-grid">
+        
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">FCX</div><div class="ticker fp" title="Column-aware FP">MAGS</div><div class="ticker fp" title="Column-aware FP">NUGT</div><div class="ticker fp" title="Column-aware FP">ON</div><div class="ticker fp" title="Column-aware FP">URA</div><div class="ticker fp" title="Column-aware FP">URNM</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">REGN*</div><div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">SI*</div><div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div><div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">COPX*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">27.00                T
+m PTON | 227% 318
+PR FICH | 745% 170M
+14 Itaens in Watchisy
+2600 | A-Positi®@ sms i = 88 bX
+Fug Sym [%Crange 4 Vol Buzz
+= REGN | en aw
+25.00       moor     ~014%       ‘ si)
+P= x      “200% 09%
+Box | 030% aon
+Tm COPX | e135% rien
+24.00   = ura    114%] +1165%
+Tm URNM | +154%  +1355%
+a      «       = Rex | teen] ow
+100255      Arith~ | = NUGT | +078% «723%
+EE      Bo OWEAT | 046% +5951%
+«      = ONUG | 167% «807%
+om | mous | 769%] ~2088%
+]          SOM
+I om  12 Items in Personal Watchlinn Last Sorted
+16
+~ Ee azosrz  B  |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220412__qmg_20220412_3__raw_crop.png" alt="raw crop 2">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220412__qmg_20220412_3__ocr_crop.png" alt="ocr crop 2">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 47</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220412_3.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 7 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 8 FP
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="gt-list-label">Ground truth tickers (0)</div>
+      <div class="ticker-grid">
+        
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">COPX</div><div class="ticker fp" title="Column-aware FP">FCX</div><div class="ticker fp" title="Column-aware FP">NUGT</div><div class="ticker fp" title="Column-aware FP">ON</div><div class="ticker fp" title="Column-aware FP">REGN</div><div class="ticker fp" title="Column-aware FP">URA</div><div class="ticker fp" title="Column-aware FP">URNM</div><div class="ticker fp" title="Column-aware FP">WEAT</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">97,00
+0 Iverns in Watchlist
+
+A - Positi @ Syms §* = Eb X
+
+96,00   - HX    aT    0.0%
+
+|= wr     027%]    “01%
+
+= URA    160%  05%
+
+|= 'URNM    «213%    “02%
+
+9500 |[—              i
+
+|= WEAT   “111%   +5,0%
+
+|= x        “138%    01%
+
+Pm COPX | &lt;134% 00%
+
+a     &lt;          J fox   “151%    02%)
+
+092400    Arith = | = REGN |  +055%  01%)
+
+S NUGT    234%)    “10%,
+
+«             mONUG | 257% 09%
+|           10M
+:
+
+FE —            11 Items in Personal Watchlisz Last Sorted
+
+15:
+AE Ngo  8] |
+</div>
+    </div>
+  </div>
+
+
+<h2>20220426 — 2 GT (BOIL, WEAT) — minimal position list</h2>
+<p style="color:#888; font-size:12px;">GT: BOIL, WEAT</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">BOIL, WEAT, X</span>
+  <span style="color:#fa6"> (+1 FP: X)</span>
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">BOIL, WEAT</span>
+  
+  &nbsp;<span style="color:#888">(GT missed: (none))</span>
+</div>
+
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220426__qmg_20220426__raw_crop.png" alt="raw crop 0">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220426__qmg_20220426__ocr_crop.png" alt="ocr crop 0">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 57</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220426.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            2/2 correct, 0 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            2/2 correct, 0 FP
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="gt-list-label">Ground truth tickers (2)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">BOIL</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div>
+      </div>
+
+      <div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives on both parsers</div>
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">445,00
+0 Items in Watchlist
+A-Posit@sym: b = BEX
+Fag (Sym [% Crane Alpre Buzz
+62% +373%
+440.00           I= BOIL      +062% +373
+= WEAT     +160%  +2928%
+435,00
+430,00
+.         «
+Arith ~
+&lt;
+400.0
+]        200,0€
+4 0.00                  2 Items in Personal Watchlist Last Soned
+:     15:38
+ANB pn B   |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220426__qmg_20220426_2__raw_crop.png" alt="raw crop 1">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220426__qmg_20220426_2__ocr_crop.png" alt="ocr crop 1">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 58</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220426_2.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 2 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 1 FP
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="gt-list-label">Ground truth tickers (0)</div>
+      <div class="ticker-grid">
+        
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">WEAT</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">65.00                 0 Items in Watchlist
+A-@syms 30. X #1 = |X
+Fag [Sym [% Crane 4|Pre Buzz
+60.00            BOL | 074% e509
+I= WEAT     +197%| +2887%
+55.00
+50,00
+45,00
+         &lt;
+Arith ~
+«
+]        500,0€
+I               1 of 2 Items in Personal Watchlist Last &
+.     15:34
+ANB pn B   |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220426__qmg_20220426_3__raw_crop.png" alt="raw crop 2">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220426__qmg_20220426_3__ocr_crop.png" alt="ocr crop 2">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 60</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220426_3.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 3 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 2 FP
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="gt-list-label">Ground truth tickers (0)</div>
+      <div class="ticker-grid">
+        
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">BOIL</div><div class="ticker fp" title="Column-aware FP">WEAT</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">1 Item in Watchlist
+A-Posit@sym: 1 = Bd X
+= 140,00 [Fug [Sym     % Crange Alpre Buzz
+BOIL       0,00%     40%
+~13800    "                     :
+1am          [= (WEAT | +2,15%  +24%
+.   |            135.00
+|
+|
+130,00
+A      4
+02900         Arith
+« 300.0
+|               200,00
+)          100,08
+!  As
+SE          2 Items in Personal Watchlist Last Sorted
+\    15:28
+ABE ees B  |
+</div>
+    </div>
+  </div>
+
+
+<h2>20230523 — 11 GT (QBTS, LI, SOUN, IMGN, FTCH, MNDY, APLD, PLTR, DNA, AI, CVNA)</h2>
+<p style="color:#888; font-size:12px;">GT: QBTS, LI, SOUN, IMGN, FTCH, MNDY, APLD, PLTR, DNA, AI, CVNA</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">CVNA, EDIT</span>
+  <span style="color:#fa6"> (+1 FP: EDIT)</span>
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">COIN, ON</span>
+  <span style="color:#fa6"> (+2 FP: COIN, ON)</span>
+  &nbsp;<span style="color:#888">(GT missed: QBTS, LI, SOUN, IMGN, FTCH, MNDY, APLD, PLTR, DNA, AI)</span>
+</div>
+
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230523__qmg_20230523__raw_crop.png" alt="raw crop 0">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230523__qmg_20230523__ocr_crop.png" alt="ocr crop 0">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 43</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20230523.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="bad" style="font-size:16px; font-weight:600;">
+            1/11 correct, 2 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="bad" style="font-size:16px; font-weight:600;">
+            0/11 correct, 2 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>QBTS, LI, SOUN, IMGN, FTCH, MNDY, APLD, PLTR, DNA, AI, CVNA</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (11)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-missed" title="Detected: legacy✗ column✗">QBTS</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">LI</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">SOUN</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">IMGN</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">FTCH</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">MNDY</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">APLD</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">PLTR</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">DNA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">AI</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">CVNA</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">COIN</div><div class="ticker fp" title="Column-aware FP">ON</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">EDIT*</div><div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">U*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">_— me 0
+#7 ot 9 lems in WacchList                      Last Somed 0403 Re-Sont *
+A - Positions ¥ | [|Filter | Edit v             sym: EE FX
+mom Go, Tp eine [©
+PB |QBTS | 1 Hic  17M) +964,0%
+[8 u    Cn 366 227M  207%]
+" SouN |   wi 107  8 +239,0% |
+[a MG     150] 830) 7.6M  ws
+BACH | cn 657 an +3541%|
+[ oy  re 468 132M 294%
+mlaPD | 0n1370 46M wma
+= IpLTR  -693%| 588  363M +635,5%
++ ona | +861% | 857  200m) c617,8%|
+mA  | 004% 810 2130M| +3330%
+m|cvna | 620% )1387 06M] 1s69%)
+11 items nn Personal WaschlLaz                      Lam Sorted 03:33 Ro-Sort Ww
+16:04
+AEE 3050  LO) |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230523__qmg_20230523_2__raw_crop.png" alt="raw crop 1">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230523__qmg_20230523_2__ocr_crop.png" alt="ocr crop 1">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 45</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20230523_2.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 4 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 4 FP
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="gt-list-label">Ground truth tickers (0)</div>
+      <div class="ticker-grid">
+        
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">APLD</div><div class="ticker fp" title="Column-aware FP">FTCH</div><div class="ticker fp" title="Column-aware FP">MU</div><div class="ticker fp" title="Column-aware FP">ON</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">EDIT*</div><div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">amp | srssx   158, 289.8%
+PTSLA | 141% 36B| «1147%
+= MU  “121%  1368M| +1285%
+12 hems n Personal Waschle                     Last Soned 03:50 Re-Sont *
+A - Positions ¥ | [Fitter | Edit v       sym: FIcH XX SE +X
+WL Er TN
+Mm Q8TS 067i 1750 10M is
+mu  Lies 366  = +400%
+I» [SOUN  ©a0%|1074]  86M| +3265%|
+Pb MoN - 830  63M| +454%
+= FTCH  +142% 655 = +3931%
+M | MNDY  = 464 12M  =
+J» APLD | -083% [1362  3.IM| +2060%
+NP +6,25%| 588 md] +8219%|
+Ce | +993% 843 112M) +5250%
+ma  = 810 1585M | an]
+CNA | +497% [1381 404M +1683%)
+#5 of 11 Items In Personal Watchlist                 Last Sorted 03:33 Re-Sort</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230523__qmg_20230523_3__raw_crop.png" alt="raw crop 2">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230523__qmg_20230523_3__ocr_crop.png" alt="ocr crop 2">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 39</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20230523_3.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 2 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 3 FP
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="gt-list-label">Ground truth tickers (0)</div>
+      <div class="ticker-grid">
+        
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">COIN</div><div class="ticker fp" title="Column-aware FP">PURR</div><div class="ticker fp" title="Column-aware FP">TNA</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">EDIT*</div><div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">CVNA*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">4 Items in WachLis                                                          Last Sorted 03:44 Re-Som v
+A - Positions v | [|Fitter | Edit v               Sms bb EE HX
+molym 41 pot vel  Vol Buzz | €)
+M(@BTS | 176m [1750]  825.6K +1127,1%|
+I~ B  = 366 121M  jpyony
+IB SOUN «76% 1067 64M +3541%
+mmo  roa 830  sam) ar
+BFICH | 0%] 649 155M) 428.0%
+"or 018% 264 60M) coe
+BAD cee 1362   24M) v2403%|
+m [pur — 585 2023M| +8287%
+I [DNA 61%) 830  75M) 510.7%)
+= .   | osu 809 135M] vs326%|
+I |CVNA | 183% 1370  244M o141,7%|
+11 hems n Personal WarchlLaz                     Lam Somec 03:33 Re-Sort w
+15:
+AE 0023</div>
+    </div>
+  </div>
+
+
+<h2>20230601 — 9 GT (QBTS, APLD, AI, DNA, CVNA, IONQ, PLTR, IMGN, MNDY)</h2>
+<p style="color:#888; font-size:12px;">GT: QBTS, APLD, AI, DNA, CVNA, IONQ, PLTR, IMGN, MNDY</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">APLD, X</span>
+  <span style="color:#fa6"> (+1 FP: X)</span>
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">AMZN, APLD, DNA, MDB, QBTS</span>
+  <span style="color:#fa6"> (+2 FP: AMZN, MDB)</span>
+  &nbsp;<span style="color:#888">(GT missed: QBTS, AI, DNA, CVNA, IONQ, PLTR, IMGN, MNDY)</span>
+</div>
+
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230601__qmg_20230601__raw_crop.png" alt="raw crop 0">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230601__qmg_20230601__ocr_crop.png" alt="ocr crop 0">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 54</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20230601.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            2/9 correct, 1 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            6/9 correct, 1 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>APLD, AI, MNDY</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (9)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✗ column✓">QBTS</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">APLD</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">AI</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">DNA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">CVNA</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">IONQ</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">PLTR</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">IMGN</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">MNDY</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">MDB</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">170,00         0 ams = Waschlae            Last Somec 03:56 Re-Sont v
+A - Positions ¥ | [Filter | E42 @ Sym: §° = &8 +} X
+|        ]         Alxoruz
+Fog Sym Crane © Dol Vol Vol Buzz   [+]
+I |QBTS | +1587%/2638] 39M +11852%
+160.00     APD | 024% 1758 37M 152.2%
+mA     20.12% 1060 4006M +639.3% |
+= DNA   +380% 10200 69M +188.1%
+I [CVNA | +967% 1533] B89.7M +279.5%
+150,00
+:        I IONQ | +0.28% 1040 148M +246,7%
+I PLTR     0.59% 691 167.0M +213.2%
+.        = IMGN | +015% 605   5.1M   $9%
+Arith *          —_—
+= | MNDY     50% 492) 22AM| +106,5%
+4
+40M
+626.9K
+40,00
+46.00           9 itams n Person</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230601__qmg_20230601_2__raw_crop.png" alt="raw crop 1">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230601__qmg_20230601_2__ocr_crop.png" alt="ocr crop 1">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 53</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20230601_2.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 2 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 6 FP
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="gt-list-label">Ground truth tickers (0)</div>
+      <div class="ticker-grid">
+        
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">AMZN</div><div class="ticker fp" title="Column-aware FP">APLD</div><div class="ticker fp" title="Column-aware FP">CYNA</div><div class="ticker fp" title="Column-aware FP">DNA</div><div class="ticker fp" title="Column-aware FP">MDB</div><div class="ticker fp" title="Column-aware FP">QBTS</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">70,00
+6 ems = Watehlaz            Last Somec A402 Re-Sont vw
+60.00          A - Positions v | [Filter | Edt @ Syms 41 = & ++ X
+I       T         Aas          |
+Fog Sym [%Crange | DolVol oVolBuz | ©
+I |QBTS | +1587% 2638 44M  +1140.9)
+2000        = | APLD    000% 1758) 42M +141,0% |
+mA    19.27% 10,60 453.5M +604,6%
+= DNA   «3.60% 10,20  7AM +163,0%
+40,00     PB CYNA = +7.20% 1533 101.5M +273.4%
+«        LT |SVOA | 2 LcBA) 1223 TOI) +&lt;i34%
+I IONQ = +0.93% 1043 180M BI
+= [PUR   021% 694] 200.7TM ee
+.      = IMGN   022% 605  5.7M   96%
+Arith =         —                 i      i         i
+= MND</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230601__qmg_20230601_3__raw_crop.png" alt="raw crop 2">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230601__qmg_20230601_3__ocr_crop.png" alt="ocr crop 2">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 48</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20230601_3.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 1 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 8 FP
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="gt-list-label">Ground truth tickers (0)</div>
+      <div class="ticker-grid">
+        
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">AMZN</div><div class="ticker fp" title="Column-aware FP">APLD</div><div class="ticker fp" title="Column-aware FP">COIN</div><div class="ticker fp" title="Column-aware FP">CUNA</div><div class="ticker fp" title="Column-aware FP">DNA</div><div class="ticker fp" title="Column-aware FP">MDB</div><div class="ticker fp" title="Column-aware FP">PURR</div><div class="ticker fp" title="Column-aware FP">QBTS</div>
+          
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">7,00
+6.00          3 ltams = Wasehlaz           Last Somec 0341 Re-Sont wv
+A-Positionsv | [ @ sym: IMGN > § = EX
+Fly Sym  | Cran A Dol Vol  Vol Buzz   [+]
+5.00         o   |p     D
+A    224471060 2303M| +9884%|
+= SOUN   420% 11,34  25M “127.5%
+4.00       = 1ONQ   0.83% 1035 79M +366.6%|
+= PUR   150% 688] 96.6M +3525%|
+> APLD | +430% 1758 24M  + 298.5%
+4                 -_— tr
+3.00       P= MNDY   133% 492) 154M] +2516%|
+I~ IMGN   007%) 602  25M +13.7%
+)         I» QBTS | +873% 2586 551.3K| +3856%
+Avith -      eS rhe
+= DNA  +443% 10,0  26M +167,5%
+= CUNA | +348% 1518 180M +1012%
+&lt;4100.0M
+{18</div>
+    </div>
+  </div>
+
+
+<h2>20230602 — 15 GT (IOT, TEAM, MTCH, QBTS, ARQQ, RGTI, IMGN, PLTR, CVNA, MNDY, APLD, DNA, IONQ, AI, GSIT) — largest yet</h2>
+<p style="color:#888; font-size:12px;">GT: IOT, TEAM, MTCH, QBTS, ARQQ, RGTI, IMGN, PLTR, CVNA, MNDY, APLD, DNA, IONQ, AI, GSIT</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">APLD, CVNA, X</span>
+  <span style="color:#fa6"> (+1 FP: X)</span>
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">APLD, ARKG, CVNA</span>
+  <span style="color:#fa6"> (+1 FP: ARKG)</span>
+  &nbsp;<span style="color:#888">(GT missed: IOT, TEAM, MTCH, QBTS, ARQQ, RGTI, IMGN, PLTR, MNDY, DNA, IONQ, AI, GSIT)</span>
+</div>
+
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230602__qmg_20230602__raw_crop.png" alt="raw crop 0">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230602__qmg_20230602__ocr_crop.png" alt="ocr crop 0">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 42</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20230602.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            3/15 correct, 0 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            4/15 correct, 5 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>MTCH, QBTS, ARQQ, RGTI, IMGN, PLTR, MNDY, DNA, IONQ, AI, GSIT</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (15)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✗ column✓">IOT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">TEAM</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">MTCH</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">QBTS</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">ARQQ</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">RGTI</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">IMGN</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">PLTR</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">CVNA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">MNDY</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">APLD</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">DNA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">IONQ</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">AI</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">GSIT</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">AMZN</div><div class="ticker fp" title="Column-aware FP">ARKG</div><div class="ticker fp" title="Column-aware FP">ON</div><div class="ticker fp" title="Column-aware FP">ONON</div><div class="ticker fp" title="Column-aware FP">PUR</div>
+          
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">>00     moc | soon  343m wao1.6%|
+I TEAM | 256% 408M| +1258%
+MICH | 200%  232M i
+4,50       24emsin Personal Watchlist
+A - Positions v | [Filter | E62 @ sym: §' = §F FX
+Fog Sym sChange © oDelVol Vol Buz | ©
+4.00       PF IOT | 22.83% 456 781M] +2614.0
+I~ QBTs 1% 2696   1.5M| +682.5%
+= ARQQ | «365% 1725  6328K +4119%
+3.50       = ron |   2 11% [1946  3024K  +3795%
+= IMGN   035% 558 99M +1928%
+‘        = PUR | +1.99% [736 1397M +321.3%
+3.00       = CVNA | 264% 1635 676M +330.5%
+Asith ~      I OMNOY oo 493 153M +130.3%|
+= APLD   +3.04% 17.51   42M +311.9%
+«          = ona  217% 1031  5M +303.2%
+1</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230602__qmg_20230602_2__raw_crop.png" alt="raw crop 1">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230602__qmg_20230602_2__ocr_crop.png" alt="ocr crop 1">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 50</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20230602_2.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 3 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 7 FP
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="gt-list-label">Ground truth tickers (0)</div>
+      <div class="ticker-grid">
+        
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">APLD</div><div class="ticker fp" title="Column-aware FP">ARQQ</div><div class="ticker fp" title="Column-aware FP">CVNA</div><div class="ticker fp" title="Column-aware FP">EDIT</div><div class="ticker fp" title="Column-aware FP">IMGN</div><div class="ticker fp" title="Column-aware FP">IMNDY</div><div class="ticker fp" title="Column-aware FP">RGTI</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">90,00
+#1 of 3 Items in Watchlist
+80.00           A - Positions v | [Filter | Edt @ Sym: §' = 88 «f+ X
+Fag Sym  Grange | Dol Vol oPre Buzz | ©
+= QBTS | +596% 2645 77K oon
+70.00       = |ARQQ | +584% 1705 265.2K +17318%
+       PB APLD | +033% 1737 TI89K +5473%|
+= IMGN | +007%| 550  7629K  +87.6%
+= RGTI   +316% 19,13   69.7K  +9911%
+“460,00      = lomme | ensaxel 901] 279m cat 2c
+:          PUR | +089% 701 272M +5813%
+P= IMNDY | +007% 492    56M +601.0%
+.        = 1ONQ    19% 1053) 33M «976.3%
+Arith ~         ee SPR TR
+RA se 110 30M 596.9%
+«150M     FUONA | 050% 1024 13M +6244%
+PB GSIT     1033% </div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230602__qmg_20230602_3__raw_crop.png" alt="raw crop 2">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230602__qmg_20230602_3__ocr_crop.png" alt="ocr crop 2">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 45</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20230602_3.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 2 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 4 FP
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="gt-list-label">Ground truth tickers (0)</div>
+      <div class="ticker-grid">
+        
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">ARKG</div><div class="ticker fp" title="Column-aware FP">CVNA</div><div class="ticker fp" title="Column-aware FP">MDB</div><div class="ticker fp" title="Column-aware FP">X</div>
+          
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">310,00
+1 em = WaschLae             Last Somed (400) Re-Sont vw
+A - Positions v | [Filter | E62 @ Sym; §' = BF +f X
+300.00       Fog Sym 5 Crome | oDolVol [VolBuzz | ©
+ROT 23.15% 460) 123M 19715
+= ass    "65% 2700 23M ed
+290,00     = ARQQ | 1nn 1749] 416K +2889%
+= RGTI    40151959 457.4K Ee
+™IMGN | 035% 560 126M +985%
+260,00     LaLaLT   wi 121] 270M +275.8%
+= CVNA   5.76% 1635 1009M  +253.4%
+‘            = MNDY    Gr 500 246M 98.8%
+Arith ~     APD | ch 765 TOM 287.0%
+= ona     052% 1059 112M +345,9%
+‘©       EE 0 1106 2348M  +2496%
+       I GSIT    153022 6OM +2634%
+|
+Nn  |
+&lt;              1</div>
+    </div>
+  </div>
+
+
+<h2>20230608 — 13 GT (CVNA, QBTS, APLD, ARQQ, IMGN, IOT, GTLB, RGTI, DNA, MNDY, AI, PLTR, GSIT)</h2>
+<p style="color:#888; font-size:12px;">GT: CVNA, QBTS, APLD, ARQQ, IMGN, IOT, GTLB, RGTI, DNA, MNDY, AI, PLTR, GSIT</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">APLD, CVNA, EDIT, ON</span>
+  <span style="color:#fa6"> (+2 FP: EDIT, ON)</span>
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">CVNA, GNS</span>
+  <span style="color:#fa6"> (+1 FP: GNS)</span>
+  &nbsp;<span style="color:#888">(GT missed: QBTS, ARQQ, IMGN, IOT, GTLB, RGTI, DNA, MNDY, AI, PLTR, GSIT)</span>
+</div>
+
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230608__qmg_20230608__raw_crop.png" alt="raw crop 0">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230608__qmg_20230608__ocr_crop.png" alt="ocr crop 0">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 41</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20230608.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            2/13 correct, 3 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            2/13 correct, 4 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>QBTS, ARQQ, IMGN, IOT, GTLB, RGTI, DNA, MNDY, AI, PLTR, GSIT</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (13)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">CVNA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">QBTS</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">APLD</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">ARQQ</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">IMGN</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">IOT</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">GTLB</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">RGTI</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">DNA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">MNDY</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">AI</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">PLTR</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">GSIT</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">BKR</div><div class="ticker fp" title="Column-aware FP">EDIT</div><div class="ticker fp" title="Column-aware FP">GNS</div><div class="ticker fp" title="Column-aware FP">RTI</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div><div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">ON*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">r] of 2 tems in WaschlLar                         Last Somed 03:23 Re-Son Vv
+\ - Positions » | ([JFirter | Edit v       @oyms CNA XB SE Eb X
+ism [xc 7 ool vol Pre Buzz +
+~ |cvna | 18.35% 12.94]  50.5M 15594%)
+~|QBTS | 966% 3078 266K 10
+= |APLD | 045% 1833] S41TK| «232.7%
+i= 205% 1773] 627K +182,0%
+on | “107% 493] T48K 201%
+~ lor    «015% 558 24M .2787%
+~ ns  Cv 589) 114M +10758%
+~ RTI | +006% 2150] 181K 514%
+~ ona |   1084, 2253K on
+“(MNDY| aw 521 asm asin
+- a  | 080% 1252] 180M +162.0%
+~ [PLR 1.57%] 2d 60.6M ~o157%
+~ | GsIT  286% 3154] 456K +1267%
+ot 13 ems in Personal Wanchter ~~~ ssrSowd G1</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230608__qmg_20230608_2__raw_crop.png" alt="raw crop 1">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230608__qmg_20230608_2__ocr_crop.png" alt="ocr crop 1">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 44</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20230608_2.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 3 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 8 FP
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="gt-list-label">Ground truth tickers (0)</div>
+      <div class="ticker-grid">
+        
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">AMZN</div><div class="ticker fp" title="Column-aware FP">ARKG</div><div class="ticker fp" title="Column-aware FP">GNS</div><div class="ticker fp" title="Column-aware FP">GSIT</div><div class="ticker fp" title="Column-aware FP">ON</div><div class="ticker fp" title="Column-aware FP">ON</div><div class="ticker fp" title="Column-aware FP">PLTR</div><div class="ticker fp" title="Column-aware FP">RGTI</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">EDIT*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">0 hams in Watchin                         Last Somed 04:11 ReSot ¥
+\ - Positions v | (IFirter | Edit v                Sym: 8 = BF bX
+3 sym  fern 7 loot vo Joluz | ©
+~ joa 182% 1321] 3800M 735.7%
+~ Q8TS + 15.46% 31.26  75M +6940%|
+~ GsiT +6.00% 31.90,  67M ~1724%
+~ |RGTI   +967% 2201)  12M -4626%
+~ | IMGN | “150% 497) 8M 175
+~ | MNDY | 211%) 537 153M co
+- lor   207% =  1STM +582%
+~ | PLTR S107% 783) 450AM  +4058%
+He  |  0.67% 1268] 201M | ~95.0%
+~ | ARQQ | +2,05% 17,83] 5000K  +47.0%
+~ ons |  Lon 601 418M «1840%
+~ oN a4 “1090  6M “586%
+~ APD | 1864] 4M esosn
+3 Items in Personal Watchlin        </div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230608__qmg_20230608_3__raw_crop.png" alt="raw crop 2">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230608__qmg_20230608_3__ocr_crop.png" alt="ocr crop 2">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 48</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20230608_3.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 3 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 1 FP
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="gt-list-label">Ground truth tickers (0)</div>
+      <div class="ticker-grid">
+        
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">CVNA</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">EDIT*</div><div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">APLD*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">Otemeinvimehim        Lam Sones 0108 Re-Sont ¥
+
+\ - Positions » | [Fitter | Edit v                Bomb SEB SX
+
+sym  fern V7 loot vo Vel Buzz K+
+
+~ CVNA | 17.30% 1321 3482M 782.7%
+
+~ | srs | ~1691% 3126]  71m] + 166.1%|
+
+~ |GSIT | +886% 3190] SOM «1730%
+
+~ [Rem | &lt;1058% 2193 262K +3915%
+
+~ IMGN | 120% s07  72M  54
+
+~ |MNDY | +208% 537] 141M «10%
+
+~ or 361% 568 142M ~66.6%
+
+~ [PLIR | +0.20% 783 4252M 452.6%
+
+-  |  104% 1268 185.1M +1100%|
+
+~ | ARQQ | +2.74% 17.83] 4098K  +393%
+
+“lene | se 601) 387M] ~2058%
+
+~ DNA  44 1084)  ABM) 477%
+
+ APLD | cnn 1864] 44M +1184%
+
+3 Itami in Personal Watchin </div>
+    </div>
+  </div>
+
+
+<h2>20230609 — 13 GT (RGTI, QBTS, IMGN, CVNA, IOT, ARQQ, AI, PLTR, DNA, GTLB, GSIT, APLD, MNDY)</h2>
+<p style="color:#888; font-size:12px;">GT: RGTI, QBTS, IMGN, CVNA, IOT, ARQQ, AI, PLTR, DNA, GTLB, GSIT, APLD, MNDY</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/3 captures):</b>
+  &nbsp;<b>Legacy:</b> <span style="color:#fff">CVNA, X</span>
+  <span style="color:#fa6"> (+1 FP: X)</span>
+  &nbsp;|&nbsp;
+  <b>Column-aware:</b> <span style="color:#fff">ARQQ, CVNA, MNDY, RGTI</span>
+  
+  &nbsp;<span style="color:#888">(GT missed: RGTI, QBTS, IMGN, IOT, ARQQ, AI, PLTR, DNA, GTLB, GSIT, APLD, MNDY)</span>
+</div>
+
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230609__qmg_20230609__raw_crop.png" alt="raw crop 0">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230609__qmg_20230609__ocr_crop.png" alt="ocr crop 0">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 46</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20230609.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            2/13 correct, 1 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            6/13 correct, 1 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>QBTS, IOT, AI, DNA, GTLB, GSIT, APLD</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (13)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✗ column✓">RGTI</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">QBTS</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">IMGN</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">CVNA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">IOT</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">ARQQ</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">AI</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">PLTR</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">DNA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">GTLB</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">GSIT</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">APLD</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">MNDY</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">ON</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">30,00                  A — 0
+11 ams in Watchlist           Last Sorte 0374 Re-Sont wv
+A - Positions v | [Filter | Ed# @ Syms I = 8 + X
+T     T      Viaas
+Fag Sym |% Change    Dol Vol o Pre Buzz  [+]
+I RGTI | +1449% 2427 17M +584%
+5500        = Q8Ts    «793% 3143    11M   122%)
+’           P= IMGN | +546% 552    21M 22%
+Flmen swn sam em
+I [CVNA | +475% 1491 683M «113%
+M107    +436%| 585 15M «16%
+«             TM | Os] 28) TV LEA)
+I ARQQ | +3.14% 1792 249.4K   74%)
+=A     +199% 1253 128M 413%
+.           I PLTR    +191% 7.85 296M «34%
+Arith =         —_—t
+= ONA | 227% 1052 271K 07%
+«40M         </div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230609__qmg_20230609_2__raw_crop.png" alt="raw crop 1">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230609__qmg_20230609_2__ocr_crop.png" alt="ocr crop 1">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 43</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20230609_2.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 3 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 6 FP
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="gt-list-label">Ground truth tickers (0)</div>
+      <div class="ticker-grid">
+        
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">ARQQ</div><div class="ticker fp" title="Column-aware FP">CVNA</div><div class="ticker fp" title="Column-aware FP">MDB</div><div class="ticker fp" title="Column-aware FP">RGTI</div><div class="ticker fp" title="Column-aware FP">TNA</div><div class="ticker fp" title="Column-aware FP">X</div>
+          
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">oo        I~      «223%   37.6M| +373%    4
+=z     +2,26%  613M ar a
+I MDB     206% 827M 277% 4
+12,00           ie ee] EO
+26 ems in wer —
+A - Positions v | [Filter | Edt @ Syms § = B8 +} X
+10.00        Fg Sym |% Crane © DolVol VolBuz | €
+= RGTI | 47.25% 2363 56M +2026,0%)
+= QBTS | 176% 3144 37M +3765%)
+8.00        IMGN | o7A7% 530 3TIM +3175%
+I CVNA | 42.19% 1517) 539.8M | +8683%
+or    749% 597 6LTM  +5648%
+16.00       Im ARQQ  +169% 1792  8406K + 167.0%)
+a     47.62% 1271 325.6M +2412%|
+Atith *       = PUR 382% 789  397M oe
+DNA 284% 1061 63M 824%
+«        BGTB | «443% 611 279M +1107%
+RGSIT | </div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230609__qmg_20230609_3__raw_crop.png" alt="raw crop 2">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20230609__qmg_20230609_3__ocr_crop.png" alt="ocr crop 2">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 45</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20230609_3.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 2 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            0/0 correct, 9 FP
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="gt-list-label">Ground truth tickers (0)</div>
+      <div class="ticker-grid">
+        
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">ALB</div><div class="ticker fp" title="Column-aware FP">APH</div><div class="ticker fp" title="Column-aware FP">ARKG</div><div class="ticker fp" title="Column-aware FP">GSIT</div><div class="ticker fp" title="Column-aware FP">MNDY</div><div class="ticker fp" title="Column-aware FP">OONA</div><div class="ticker fp" title="Column-aware FP">OT</div><div class="ticker fp" title="Column-aware FP">OVA</div><div class="ticker fp" title="Column-aware FP">QBTS</div>
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">DDOG*</div><div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">™ |OIR     +150%| 136M] «197% 3
+B DDOG | 179%  583M +168,7% |  3
+200       Tor oem] el rm
+A - Positions v | [Filter | Ed @ Sym: 7 = &8 +} X
+T    Vion |
+is)       Fog Sym (nChange || oDolVol | VolBuz | ©
+1.50      I RGTI  +13,77% 2337 37M] «3000.1
+P |QBTS | +617% (3142 22M =
+Im IMGN | 692% 527 218M +4654%
+ova “4.62% 1482 3114M «1154.7
+= oT   +1044%| 597 396M 855.2%
+41.00     = ARQQ 126% 1792 4122K 2017%
+a    7.10% 1265 1790M +333,7%
+Arith =    mR +2,37% 780 1588M “348.7%
+= |OoNA   +455% 10,55 3M] +1053%|
+«       = GTB 563% 609 157M 169.2%)
+P| GSIT   +040% 32,10   12M +242%
+200M      = apo    19</div>
     </div>
   </div>
 
