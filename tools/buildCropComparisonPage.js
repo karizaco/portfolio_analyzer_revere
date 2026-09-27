@@ -157,6 +157,36 @@ const VIDEOS = [
     files: ['qmg_20231215.png', 'qmg_20231215_2.png', 'qmg_20231215_3.png'],
     description: 'No GT — visual review only (late 2023)',
   },
+  {
+    dateKey: '20220218',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220218.png', 'qmg_20220218_2.png', 'qmg_20220218_3.png'],
+    description: '5 GT tickers (TQQQ, MOS, FCX, EWMC, COPX) — first ever Quullamaggie video',
+  },
+  {
+    dateKey: '20220318',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220318.png', 'qmg_20220318_2.png', 'qmg_20220318_3.png'],
+    description: '7 GT tickers (NUGT, FCX, REGN, URA, COPX, URNM, KWEB)',
+  },
+  {
+    dateKey: '20220413',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220413.png', 'qmg_20220413_2.png', 'qmg_20220413_3.png'],
+    description: '11 GT tickers (WEAT, LHX, REGN, LMT, X, FCX, COPX, NUGT, JNUG, URA, URNM) — largest after 20220323',
+  },
+  {
+    dateKey: '20220517',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220517.png', 'qmg_20220517_2.png', 'qmg_20220517_3.png'],
+    description: '7 GT tickers (FNGU, TQQQ, OXY, COIN, ERX, AR, WEAT)',
+  },
+  {
+    dateKey: '20230605',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20230605.png', 'qmg_20230605_2.png', 'qmg_20230605_3.png'],
+    description: '11 GT tickers (IMGN, ARQQ, CVNA, IOT, PLTR, GSIT, MNDY, APLD, AI, QBTS, DNA) — wider table layout',
+  },
 ];
 
 const CROPS_OUT_DIR = path.join(ROOT, 'data', 'video_scan_test', '_review_crops');
