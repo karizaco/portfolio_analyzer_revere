@@ -55,121 +55,10 @@ function gtDisplay(dateKey) {
 // every GT video.
 const VIDEOS = [
   {
-    dateKey: '20220323',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220323.png', 'qmg_20220323_2.png', 'qmg_20220323_3.png'],
-    description: '11 GT tickers (largest position list)',
-  },
-  {
-    dateKey: '20220428',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220428.png', 'qmg_20220428_2.png', 'qmg_20220428_3.png'],
-    description: '4 GT tickers',
-  },
-  {
-    dateKey: '20220510',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220510.png', 'qmg_20220510_2.png', 'qmg_20220510_3.png'],
-    description: '2 GT tickers',
-  },
-  {
-    dateKey: '20220614',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220614.png', 'qmg_20220614_2.png', 'qmg_20220614_3.png'],
-    description: '3 GT tickers',
-  },
-  {
-    dateKey: '20220427',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220427.png'],
-    description: '4 GT tickers (TSLA, BOIL, WEAT, KOLD)',
-  },
-  {
-    dateKey: '20220606',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220606.png', 'qmg_20220606_2.png', 'qmg_20220606_3.png'],
-    description: '8 GT tickers (dense position list, OCR-difficult)',
-  },
-  {
-    dateKey: '20220607',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220607.png', 'qmg_20220607_2.png', 'qmg_20220607_3.png'],
-    description: '7 GT tickers',
-  },
-  {
-    dateKey: '20220608',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220608.png', 'qmg_20220608_2.png', 'qmg_20220608_3.png'],
-    description: '9 GT tickers (largest after 20220323, OCR-difficult)',
-  },
-  {
-    dateKey: '20220330',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220330.png', 'qmg_20220330_2.png', 'qmg_20220330_3.png'],
-    description: '8 GT tickers (NFLX, KWEB, REGN, LABU, COPX, X, NUGT, FCX)',
-  },
-  {
-    dateKey: '20220405',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220405.png', 'qmg_20220405_2.png', 'qmg_20220405_3.png'],
-    description: '11 GT tickers (CWEB, REGN, KWEB, JNUG, GGPI, TAN, NEM, COPX, FCX, NUGT, X)',
-  },
-  {
-    dateKey: '20221117',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20221117.png', 'qmg_20221117_2.png', 'qmg_20221117_3.png'],
-    description: '6 GT tickers (FREY, OIH, ASML, U, SI, SOXL)',
-  },
-  {
-    dateKey: '20230126',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20230126.png', 'qmg_20230126_2.png', 'qmg_20230126_3.png'],
-    description: '8 GT tickers (CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS)',
-  },
-  {
-    dateKey: '20230522',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20230522.png', 'qmg_20230522_2.png', 'qmg_20230522_3.png'],
-    description: '7 GT tickers (LI, IMGN, SOUN, AI, CVNA, APLD, PLTR)',
-  },
-  // --- "no GT" videos for visual review (OCR output only, ground truth TBD) ---
-  // Removed in favor of new GT videos; uncomment to re-enable visual-only mode.
-  // {
-  //   dateKey: '20220218 (no GT)',
-  //   snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-  //   files: ['qmg_20220218.png', 'qmg_20220218_2.png', 'qmg_20220218_3.png'],
-  //   description: 'No GT — visual review only (early 2022)',
-  // },
-  {
     dateKey: '20220218',
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20220218.png', 'qmg_20220218_2.png', 'qmg_20220218_3.png'],
     description: '5 GT tickers (TQQQ, MOS, FCX, EWMC, COPX) — first ever Quullamaggie video',
-  },
-  {
-    dateKey: '20220318',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220318.png', 'qmg_20220318_2.png', 'qmg_20220318_3.png'],
-    description: '7 GT tickers (NUGT, FCX, REGN, URA, COPX, URNM, KWEB)',
-  },
-  {
-    dateKey: '20220413',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220413.png', 'qmg_20220413_2.png', 'qmg_20220413_3.png'],
-    description: '11 GT tickers (WEAT, LHX, REGN, LMT, X, FCX, COPX, NUGT, JNUG, URA, URNM) — largest after 20220323',
-  },
-  {
-    dateKey: '20220517',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220517.png', 'qmg_20220517_2.png', 'qmg_20220517_3.png'],
-    description: '7 GT tickers (FNGU, TQQQ, OXY, COIN, ERX, AR, WEAT)',
-  },
-  {
-    dateKey: '20230605',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20230605.png', 'qmg_20230605_2.png', 'qmg_20230605_3.png'],
-    description: '11 GT tickers (IMGN, ARQQ, CVNA, IOT, PLTR, GSIT, MNDY, APLD, AI, QBTS, DNA) — wider table layout',
-    cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
   },
   {
     dateKey: '20220222',
@@ -190,10 +79,28 @@ const VIDEOS = [
     description: '7 GT (NUGT, FCX, X, ERX, EDV, COPX, AGQ)',
   },
   {
+    dateKey: '20220318',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220318.png', 'qmg_20220318_2.png', 'qmg_20220318_3.png'],
+    description: '7 GT tickers (NUGT, FCX, REGN, URA, COPX, URNM, KWEB)',
+  },
+  {
     dateKey: '20220321',
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20220321.png', 'qmg_20220321_2.png', 'qmg_20220321_3.png'],
     description: '8 GT (DIDI, NUGT, COPX, URNM, REGN, FCX, NUZE, X)',
+  },
+  {
+    dateKey: '20220323',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220323.png', 'qmg_20220323_2.png', 'qmg_20220323_3.png'],
+    description: '11 GT tickers (largest position list)',
+  },
+  {
+    dateKey: '20220330',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220330.png', 'qmg_20220330_2.png', 'qmg_20220330_3.png'],
+    description: '8 GT tickers (NFLX, KWEB, REGN, LABU, COPX, X, NUGT, FCX)',
   },
   {
     dateKey: '20220331',
@@ -202,10 +109,28 @@ const VIDEOS = [
     description: '8 GT (COPX, KWEB, SPXL, TQQQ, X, REGN, FCX, NUGT)',
   },
   {
+    dateKey: '20220405',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220405.png', 'qmg_20220405_2.png', 'qmg_20220405_3.png'],
+    description: '11 GT tickers (CWEB, REGN, KWEB, JNUG, GGPI, TAN, NEM, COPX, FCX, NUGT, X)',
+  },
+  {
     dateKey: '20220406',
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20220406.png', 'qmg_20220406_2.png', 'qmg_20220406_3.png'],
     description: '7 GT (X, FCX, REGN, COPX, NUGT, NEM, LHX)',
+  },
+  {
+    dateKey: '20220412',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220412.png', 'qmg_20220412_2.png', 'qmg_20220412_3.png'],
+    description: '11 GT (LHX, LMT, URA, URNM, WEAT, X, COPX, FCX, REGN, NUGT, JNUG)',
+  },
+  {
+    dateKey: '20220413',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220413.png', 'qmg_20220413_2.png', 'qmg_20220413_3.png'],
+    description: '11 GT tickers (WEAT, LHX, REGN, LMT, X, FCX, COPX, NUGT, JNUG, URA, URNM) — largest after 20220323',
   },
   {
     dateKey: '20220414',
@@ -238,6 +163,24 @@ const VIDEOS = [
     description: '4 GT (KOLD, WEAT, VERU, BOIL)',
   },
   {
+    dateKey: '20220426',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220426.png', 'qmg_20220426_2.png', 'qmg_20220426_3.png'],
+    description: '2 GT (BOIL, WEAT) — minimal position list',
+  },
+  {
+    dateKey: '20220427',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220427.png'],
+    description: '4 GT tickers (TSLA, BOIL, WEAT, KOLD)',
+  },
+  {
+    dateKey: '20220428',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220428.png', 'qmg_20220428_2.png', 'qmg_20220428_3.png'],
+    description: '4 GT tickers',
+  },
+  {
     dateKey: '20220429',
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20220429.png', 'qmg_20220429_2.png', 'qmg_20220429_3.png'],
@@ -250,10 +193,58 @@ const VIDEOS = [
     description: '4 GT (UCO, WEAT, TSLA, LTHM)',
   },
   {
+    dateKey: '20220510',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220510.png', 'qmg_20220510_2.png', 'qmg_20220510_3.png'],
+    description: '2 GT tickers',
+  },
+  {
+    dateKey: '20220517',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220517.png', 'qmg_20220517_2.png', 'qmg_20220517_3.png'],
+    description: '7 GT tickers (FNGU, TQQQ, OXY, COIN, ERX, AR, WEAT)',
+  },
+  {
+    dateKey: '20220606',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220606.png', 'qmg_20220606_2.png', 'qmg_20220606_3.png'],
+    description: '8 GT tickers (dense position list, OCR-difficult)',
+  },
+  {
+    dateKey: '20220607',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220607.png', 'qmg_20220607_2.png', 'qmg_20220607_3.png'],
+    description: '7 GT tickers',
+  },
+  {
+    dateKey: '20220608',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220608.png', 'qmg_20220608_2.png', 'qmg_20220608_3.png'],
+    description: '9 GT tickers (largest after 20220323, OCR-difficult)',
+  },
+  {
+    dateKey: '20220614',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220614.png', 'qmg_20220614_2.png', 'qmg_20220614_3.png'],
+    description: '3 GT tickers',
+  },
+  {
     dateKey: '20221104',
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20221104.png', 'qmg_20221104_2.png', 'qmg_20221104_3.png'],
     description: '1 GT (OIH) — minimal position list',
+  },
+  {
+    dateKey: '20221117',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20221117.png', 'qmg_20221117_2.png', 'qmg_20221117_3.png'],
+    description: '6 GT tickers (FREY, OIH, ASML, U, SI, SOXL)',
+  },
+  {
+    dateKey: '20230126',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20230126.png', 'qmg_20230126_2.png', 'qmg_20230126_3.png'],
+    description: '8 GT tickers (CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS)',
   },
   {
     dateKey: '20230518',
@@ -263,16 +254,10 @@ const VIDEOS = [
     cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
   },
   {
-    dateKey: '20220412',
+    dateKey: '20230522',
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220412.png', 'qmg_20220412_2.png', 'qmg_20220412_3.png'],
-    description: '11 GT (LHX, LMT, URA, URNM, WEAT, X, COPX, FCX, REGN, NUGT, JNUG)',
-  },
-  {
-    dateKey: '20220426',
-    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
-    files: ['qmg_20220426.png', 'qmg_20220426_2.png', 'qmg_20220426_3.png'],
-    description: '2 GT (BOIL, WEAT) — minimal position list',
+    files: ['qmg_20230522.png', 'qmg_20230522_2.png', 'qmg_20230522_3.png'],
+    description: '7 GT tickers (LI, IMGN, SOUN, AI, CVNA, APLD, PLTR)',
   },
   {
     dateKey: '20230523',
@@ -296,6 +281,13 @@ const VIDEOS = [
     cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
   },
   {
+    dateKey: '20230605',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20230605.png', 'qmg_20230605_2.png', 'qmg_20230605_3.png'],
+    description: '11 GT tickers (IMGN, ARQQ, CVNA, IOT, PLTR, GSIT, MNDY, APLD, AI, QBTS, DNA) — wider table layout',
+    cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
+  },
+  {
     dateKey: '20230608',
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20230608.png', 'qmg_20230608_2.png', 'qmg_20230608_3.png'],
@@ -310,6 +302,7 @@ const VIDEOS = [
     cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
   },
 ];
+
 
 const CROPS_OUT_DIR = path.join(ROOT, 'data', 'video_scan_test', '_review_crops');
 
