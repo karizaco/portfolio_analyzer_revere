@@ -55,6 +55,81 @@ Tested across 13 GT videos with the wider crop (0.86, 0.14, 0.45):
 The merged column-aware numbers aren't shown in the HTML page since the
 single-capture column-aware already filters chart-area text well.
 
+## Low-recall analysis (41 GT videos, 118 captures)
+
+After OCR-ing 41 Quullamaggie videos spanning Feb 2022 - Dec 2023, I
+analyzed why some captures have very low recall. Three distinct failure
+modes emerged:
+
+### Mode 1: Trade-Ideas platform (20220218, 20220318, 20220222)
+
+These early 2022 Quullamaggie videos used the **Trade-Ideas** trading
+platform instead of the modern TC2000/MetaStock. The UI is fundamentally
+different:
+
+- Smaller font (~10px vs ~16px in TC2000)
+- Narrower ticker column
+- Different anti-aliasing
+- Older Windows font rendering
+
+Result: Tesseract reads the ticker column as gibberish (e.g.
+"A-Posti@ im: 1 E88 x" instead of "A - Positions"). 0/15 (0%) GT
+tickers detected across these 3 videos.
+
+Fix: would need a different OCR preprocessing pipeline (darker threshold,
+different sharpening params) or a custom Tesseract config trained on
+Trade-Ideas UI screenshots. Out of scope for the current pipeline.
+
+### Mode 2: Sparse position lists (20221104, 20220425, 20220426)
+
+The column-detection algorithm requires a minimum of **3 ticker-shape words
+in the dominant column** to identify it. Single-ticker lists (1-2 tickers)
+fail this check, so `inListTickers` is empty and no tickers are accepted.
+
+- 20221104: 1 ticker (OIH) — 0/1 recall (column detection fails on sparse list)
+- 20220425: 4 tickers — 25% recall (passes threshold but column is narrow)
+- 20220426: 2 tickers — 100% recall (small list, Tesseract reads cleanly)
+
+Fix: relax the `tickerWords.length < 3` threshold to `>= 1`. Then any
+single ticker that lands in the column with a price-on-right would be
+accepted. Risk: more chart-area FPs when the chart happens to have 1-2
+ticker-shape words aligned.
+
+### Mode 3: Dense position lists with new UI (20230518+)
+
+Videos from May 2023 onwards use a wider table layout with extra columns
+(`Dol Vol`, `Vol Buzz`, `ADR % 20 days Daily`). The default crop
+(0.86, 0.14) cuts off the left edge of the ticker column.
+
+Fix: use wider crop (0.83, 0.17) for these videos. Already implemented
+via `cropOverride` field in the build script.
+
+Result: even with the wider crop, dense lists (11-15 tickers) hit
+Tesseract ceiling (~15-30% recall) because the column text is too small
+and dense for Tesseract to read consistently.
+
+### Mode 4: Garbled OCR on single captures (most low-recall cases)
+
+For dense lists where Tesseract garbles some rows, **single-capture
+parsing produces many false negatives** (correct tickers missed because
+OCR returns garbage) and many false positives (chart text accepted as
+ticker-shape). Examples:
+- 20230602 (15 GT): 20% recall, 75 FPs
+- 20230608 (13 GT): 15% recall, 33 FPs
+- 20230609 (13 GT): 15% recall, 40 FPs
+
+Fix: **multi-frame merge** consistently reduces FPs (75→14, 33→11, 40→4)
+while keeping recall similar. Already implemented.
+
+### Summary by mode
+
+| Mode | Videos | Count | Root cause | Fix |
+|------|--------|-------|------------|-----|
+| Trade-Ideas UI | 20220218, 20220318, 20220222 | 3 | Different platform, smaller font | Custom OCR pipeline |
+| Sparse list | 20221104 | 1 | Min-3 threshold | Lower to 1 |
+| New UI dense | 20230518, 20230523, 20230601-09 | 7 | Crop too narrow | Wider crop (done) |
+| Garbled OCR | most others | many | Tesseract ceiling | Multi-frame merge (done) |
+
 ## Resolution Reality
 
 - **93% of Quullamaggie videos in `downloads_1080p/` are true 1920×1080**
