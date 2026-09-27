@@ -13,23 +13,42 @@ const ROOT = path.join(__dirname, '..');
 // including header rows.
 const CROP = { x: 0.86, y: 0.55, w: 0.14, h: 0.45 };
 
-// Ground-truth tickers per video.
-const GT = {
-  '20220323': ['BOIL','JNUG','NUGT','X','URA','FCX','WEAT','COPX','URNM','REGN','KWEB'],
-  '20220510': ['VRM','TSLA'],
-  '20220428': ['CWEB','KWEB','TSLA','WEAT'],
-  '20220614': ['UVXY','VLO','UCO'],
-  '20220228': [],
-  '20220427': ['TSLA','BOIL','WEAT','KOLD'],
-  '20220606': ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
-  '20220607': ['UCO','VLO','ALB','BOIL','NFLX','TNA','LTHM'],
-  '20220608': ['SIGA','TNA','VLO','UCO','NFLX','ALB','BOIL','LTHM','AERC'],
-  '20220330': ['NFLX','KWEB','REGN','LABU','COPX','X','NUGT','FCX'],
-  '20220405': ['CWEB','REGN','KWEB','JNUG','GGPI','TAN','NEM','COPX','FCX','NUGT','X'],
-  '20221117': ['FREY','OIH','ASML','U','SI','SOXL'],
-  '20230126': ['CVNA','FCX','TNA','CWEB','YINN','PDD','MDGL','GNS'],
-  '20230522': ['LI','IMGN','SOUN','AI','CVNA','APLD','PLTR'],
-};
+// Ground-truth tickers per video (loaded from data/qmg_ground_truth.json at runtime
+// so per-capture GT can vary — see notes in that file).
+let GT = {};
+try {
+  GT = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/qmg_ground_truth.json'), 'utf8'));
+} catch (e) {
+  console.warn('Could not load data/qmg_ground_truth.json:', e.message);
+}
+
+// Helper to get per-capture GT (returns array of tickers; empty array if no GT).
+function gtForCapture(dateKey, captureIdx) {
+  const entry = GT[dateKey] && GT[dateKey][String(captureIdx)];
+  if (!entry) return [];
+  if (Array.isArray(entry)) return entry;
+  if (entry.tickers) return entry.tickers;
+  return [];
+}
+
+// Helper to extract a flat array of all GT tickers for a video
+// (union across all captures — for display purposes).
+function gtDisplay(dateKey) {
+  const ve = GT[dateKey];
+  if (!ve) return [];
+  if (Array.isArray(ve)) return ve;
+  const out = [];
+  const seen = new Set();
+  for (const k of Object.keys(ve)) {
+    if (k.startsWith('_')) continue;
+    const c = ve[k];
+    const arr = Array.isArray(c) ? c : (c && c.tickers) || [];
+    for (const t of arr) {
+      if (!seen.has(t)) { seen.add(t); out.push(t); }
+    }
+  }
+  return out;
+}
 
 // All videos to show in the comparison. Each video lists the captures to OCR.
 // Uses the qmg-1080p-ocr-v2 batch run from 2026-09-23 which has snapshots for
@@ -112,6 +131,31 @@ const VIDEOS = [
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20230522.png', 'qmg_20230522_2.png', 'qmg_20230522_3.png'],
     description: '7 GT tickers (LI, IMGN, SOUN, AI, CVNA, APLD, PLTR)',
+  },
+  // --- "no GT" videos for visual review (OCR output only, ground truth TBD) ---
+  {
+    dateKey: '20220218 (no GT)',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220218.png', 'qmg_20220218_2.png', 'qmg_20220218_3.png'],
+    description: 'No GT — visual review only (early 2022)',
+  },
+  {
+    dateKey: '20220412 (no GT)',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20220412.png', 'qmg_20220412_2.png', 'qmg_20220412_3.png'],
+    description: 'No GT — visual review only',
+  },
+  {
+    dateKey: '20230602 (no GT)',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20230602.png', 'qmg_20230602_2.png', 'qmg_20230602_3.png'],
+    description: 'No GT — visual review only (mid 2023)',
+  },
+  {
+    dateKey: '20231215 (no GT)',
+    snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
+    files: ['qmg_20231215.png', 'qmg_20231215_2.png', 'qmg_20231215_3.png'],
+    description: 'No GT — visual review only (late 2023)',
   },
 ];
 
@@ -196,7 +240,9 @@ async function main() {
       allColumnLists.push(detectedColumn);
       allLegacyLists.push(detectedLegacy);
 
-      const gt = GT[video.dateKey] || [];
+      // Per-capture GT: filename suffix → capture index ('' → 0, '_2' → 1, '_3' → 2).
+      const captureIdx = file.endsWith('_3.png') ? '2' : file.endsWith('_2.png') ? '1' : '0';
+      const gt = gtForCapture(video.dateKey, captureIdx);
 
       const correctColumn = gt.filter(t => detectedColumn.includes(t));
       const extraColumn = detectedColumn.filter(t => !gt.includes(t));
@@ -208,6 +254,7 @@ async function main() {
       // Captures without GT still get evaluated, just don't track recall.
       captures.push({
         file,
+        gt,
         crops: {
           // Single level of "../" since the HTML is at tools/qmg_crop_comparison.html
           // and the crops are at data/video_scan_test/_review_crops/.
@@ -230,7 +277,27 @@ async function main() {
     // Dramatically reduces FPs from single-frame OCR garbling.
     const mergedColumn = mergeMultiplePositionLists(allColumnLists, { minOccurrences: 2 });
     const mergedLegacy = mergeMultiplePositionLists(allLegacyLists, { minOccurrences: 2 });
-    const gt = GT[video.dateKey] || [];
+    // Build the union of GT tickers across all captures of this video.
+    // Some videos (20220606) have capture-indexed GT — take the union so
+    // the merged aggregate counts tickers that appear in any capture.
+    const videoEntry = GT[video.dateKey];
+    const gtSet = new Set();
+    if (videoEntry) {
+      if (Array.isArray(videoEntry)) {
+        for (const t of videoEntry) gtSet.add(t);
+      } else {
+        for (const k of Object.keys(videoEntry)) {
+          if (k.startsWith('_')) continue;
+          const c = videoEntry[k];
+          if (Array.isArray(c)) {
+            for (const t of c) gtSet.add(t);
+          } else if (c && c.tickers) {
+            for (const t of c.tickers) gtSet.add(t);
+          }
+        }
+      }
+    }
+    const gt = [...gtSet];
     videoResults.push({
       ...video,
       captures,
@@ -251,7 +318,7 @@ async function main() {
 
   // Per-video aggregates
   const aggregateStats = videoResults.map(v => {
-    const gt = GT[v.dateKey] || [];
+    const gt = gtDisplay(v.dateKey);
     const totGT = gt.length;
     // Count UNIQUE tickers found across ALL captures (not summed duplicates)
     const allColumnDetected = new Set();
@@ -377,9 +444,12 @@ ${aggregateStats.map(s => `
   The right column is often the best tradeoff for downstream consumers.
 </p>
 
-${videoResults.map(v => `
+${videoResults.map(v => {
+  // Build display GT: union of all per-capture GTs, or "no GT" if none.
+  const displayGT = gtDisplay(v.dateKey);
+  return `
 <h2>${v.dateKey} — ${v.description}</h2>
-<p style="color:#888; font-size:12px;">GT: ${(GT[v.dateKey] || []).join(', ') || '(none)'}</p>
+<p style="color:#888; font-size:12px;">GT: ${displayGT.length ? displayGT.join(', ') : '<span style="color:#666">(no GT — visual review only)</span>'}</p>
 
 ${v.mergedLegacy && v.mergedLegacy.list.length > 0 || (v.mergedColumn && v.mergedColumn.list.length > 0) ? `
 <div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
@@ -389,10 +459,13 @@ ${v.mergedLegacy && v.mergedLegacy.list.length > 0 || (v.mergedColumn && v.merge
   &nbsp;|&nbsp;
   <b>Column-aware:</b> <span style="color:#fff">${v.mergedColumn.list.join(', ') || '∅'}</span>
   ${v.mergedColumn.extra.length > 0 ? `<span style="color:#fa6"> (+${v.mergedColumn.extra.length} FP: ${v.mergedColumn.extra.join(', ')})</span>` : ''}
-  &nbsp;<span style="color:#888">(GT missed: ${v.mergedLegacy ? (GT[v.dateKey] || []).filter(t => !v.mergedLegacy.list.includes(t)).join(', ') || '(none)' : ''})</span>
+  &nbsp;<span style="color:#888">(GT missed: ${v.mergedLegacy ? displayGT.filter(t => !v.mergedLegacy.list.includes(t)).join(', ') || '(none)' : ''})</span>
 </div>` : ''}
 
-${v.captures.map((cap, idx) => `
+${v.captures.map((cap, idx) => {
+  // Per-capture GT (varies between captures in some videos)
+  const capGT = cap.gt || [];
+  return `
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -409,14 +482,14 @@ ${v.captures.map((cap, idx) => `
       <div class="recall-row">
         <div>
           <div class="label">Legacy parser</div>
-          <div class="${cap.correctLegacy.length >= (GT[v.dateKey] || []).length * 0.6 ? 'good' : cap.correctLegacy.length >= 2 ? 'warn' : 'bad'}" style="font-size:16px; font-weight:600;">
-            ${cap.correctLegacy.length}/${(GT[v.dateKey] || []).length} correct, ${cap.extraLegacy.length} FP
+          <div class="${cap.correctLegacy.length >= capGT.length * 0.6 ? 'good' : cap.correctLegacy.length >= 2 ? 'warn' : 'bad'}" style="font-size:16px; font-weight:600;">
+            ${cap.correctLegacy.length}/${capGT.length} correct, ${cap.extraLegacy.length} FP
           </div>
         </div>
         <div>
           <div class="label">Column-aware parser</div>
-          <div class="${cap.correctColumn.length >= (GT[v.dateKey] || []).length * 0.6 ? 'good' : cap.correctColumn.length >= 2 ? 'warn' : 'bad'}" style="font-size:16px; font-weight:600;">
-            ${cap.correctColumn.length}/${(GT[v.dateKey] || []).length} correct, ${cap.extraColumn.length} FP
+          <div class="${cap.correctColumn.length >= capGT.length * 0.6 ? 'good' : cap.correctColumn.length >= 2 ? 'warn' : 'bad'}" style="font-size:16px; font-weight:600;">
+            ${cap.correctColumn.length}/${capGT.length} correct, ${cap.extraColumn.length} FP
           </div>
         </div>
       </div>
@@ -425,9 +498,9 @@ ${v.captures.map((cap, idx) => `
         <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>${cap.missingColumn.join(', ')}</b> — check OCR crop to see if Tesseract garbled these</div>
       ` : ''}
 
-      <div class="gt-list-label">Ground truth tickers (${(GT[v.dateKey] || []).length})</div>
+      <div class="gt-list-label">Ground truth tickers (${capGT.length})</div>
       <div class="ticker-grid">
-        ${(GT[v.dateKey] || []).map(t => {
+        ${capGT.map(t => {
           const colHit = cap.correctColumn.includes(t);
           const legHit = cap.correctLegacy.includes(t);
           let cls = 'gt-missed';
@@ -450,8 +523,10 @@ ${v.captures.map((cap, idx) => `
       <div class="ocr-text">${cap.ocrText || '(empty)'}</div>
     </div>
   </div>
-`).join('')}
-`).join('')}
+`;
+}).join('')}
+`;
+}).join('')}
 </body>
 </html>`;
 
