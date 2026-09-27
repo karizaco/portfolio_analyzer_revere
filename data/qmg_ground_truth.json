@@ -317,6 +317,21 @@
   "20230522": {
     "0": ["LI","IMGN","SOUN","AI","CVNA","APLD","PLTR"]
   },
+  "20220218": {
+    "0": ["TQQQ","MOS","FCX","EWMC","COPX"]
+  },
+  "20220318": {
+    "0": ["NUGT","FCX","REGN","URA","COPX","URNM","KWEB"]
+  },
+  "20220413": {
+    "0": ["WEAT","LHX","REGN","LMT","X","FCX","COPX","NUGT","JNUG","URA","URNM"]
+  },
+  "20220517": {
+    "0": ["FNGU","TQQQ","OXY","COIN","ERX","AR","WEAT"]
+  },
+  "20230605": {
+    "0": ["IMGN","ARQQ","CVNA","IOT","PLTR","GSIT","MNDY","APLD","AI","QBTS","DNA"]
+  },
   "_meta": "Per-capture GT. Keys are dateKey (YYYYMMDD) → capture-index (0=qmg_*.png, 1=qmg_*_2.png, 2=qmg_*_3.png). crop: [x1,y1,x2,y2] in source-frame pixels.",
   "_source": "Verified by visual inspection of crop_comparison.html snapshots.",
   "_notes": {
