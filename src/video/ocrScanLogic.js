@@ -358,9 +358,30 @@ function summarizeLumaBuffer(buffer, width, height) {
   let verticalEdgeHits = 0;
   let horizontalComparisons = 0;
   let verticalComparisons = 0;
+  // Quullamaggie position list sits in the bottom-right of the frame
+  // (roughly x=1700-1920, y=600-1080 at 1080p, which is the right ~10%
+  // and bottom ~45% of the frame). Count row density AND mid-tone density
+  // (chart candle highlights) ONLY in that region to avoid the high-contrast
+  // photo overlay in Google Drive etc.
+  const tickerColLeft = Math.floor(width * 0.85);
+  const tickerColRight = width;
+  const tickerRowTop = Math.floor(height * 0.55);
+  const tickerRowBottom = height;
+  // Mid-tone density: count pixels in 51-150 brightness range within the
+  // ticker region. The position list has ticker text (mid-tone) on dark
+  // background; a clean Google Drive frame has almost no mid-tone pixels.
+  let midToneTicker = 0;
+  let totalTickerPixels = 0;
+  const rowTopsByCol = new Array(width).fill(0);
+  let rowTransitions = 0;
+  // Track leftmost & rightmost bright column for ticker-column detection.
+  let leftmostBright = width;
+  let rightmostBright = 0;
 
   for (let index = 0; index < buffer.length; index += 1) {
     const value = buffer[index];
+    const rowIndex = Math.floor(index / width);
+    const columnIndex = index - rowIndex * width;
     total += value;
     totalSquares += value * value;
 
@@ -370,6 +391,27 @@ function summarizeLumaBuffer(buffer, width, height) {
 
     if (value <= 96) {
       darkPixels += 1;
+    }
+    if (value >= 130) {
+      // Track bright pixel column range (helps locate position list area)
+      if (columnIndex < leftmostBright) leftmostBright = columnIndex;
+      if (columnIndex > rightmostBright) rightmostBright = columnIndex;
+      // Detect dark-to-bright transitions ONLY in the ticker column region.
+      // This avoids the high-contrast photo overlay (Google Drive etc.)
+      // from dominating the row-density score.
+      if (rowIndex >= tickerRowTop && rowIndex < tickerRowBottom &&
+          columnIndex >= tickerColLeft && columnIndex < tickerColRight) {
+        totalTickerPixels += 1;
+        if (value >= 51 && value <= 150) {
+          midToneTicker += 1;
+        }
+        if (rowIndex > 0) {
+          const above = buffer[(rowIndex - 1) * width + columnIndex];
+          if (above <= 110 && value >= 130) {
+            rowTopsByCol[columnIndex] += 1;
+          }
+        }
+      }
     }
   }
 
@@ -393,6 +435,15 @@ function summarizeLumaBuffer(buffer, width, height) {
     }
   }
 
+  // Sum row tops across columns. Quullamaggie position list has ~10-15 rows
+  // of white text on dark background, so totalRowTops should be high.
+  let totalRowTops = 0;
+  let maxColRowTops = 0;
+  for (const n of rowTopsByCol) {
+    totalRowTops += n;
+    if (n > maxColRowTops) maxColRowTops = n;
+  }
+
   const pixelCount = Math.max(buffer.length, 1);
   const meanLuma = total / pixelCount;
   const variance = Math.max((totalSquares / pixelCount) - (meanLuma * meanLuma), 0);
@@ -408,6 +459,11 @@ function summarizeLumaBuffer(buffer, width, height) {
     horizontalEdgeHits,
     horizontalEdgeRatio: horizontalComparisons > 0 ? horizontalEdgeHits / horizontalComparisons : 0,
     meanLuma,
+    rowDensity: totalRowTops,
+    maxColRowDensity: maxColRowTops,
+    brightColumnLeft: leftmostBright,
+    brightColumnRight: rightmostBright,
+    midToneRatioTicker: totalTickerPixels > 0 ? midToneTicker / totalTickerPixels : 0,
     stdDev: Math.sqrt(variance),
     verticalComparisons,
     verticalEdgeHits,
@@ -439,6 +495,29 @@ function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporal
   score += Math.max(0, table.darkWeight - (Math.abs(stats.darkRatio - table.darkTarget) * table.darkSlope));
   score += Math.max(0, table.edgeWeight - (Math.abs(stats.edgeRatio - table.edgeTarget) * table.edgeSlope));
   score += Math.max(0, table.stdDevWeight - (Math.abs(stats.stdDev - table.stdDevTarget) / table.stdDevSlope));
+
+  // Row density: for chart_stream, the position list has many horizontal
+  // text bands. Higher row density → better candidate. Currently only
+  // applied when table.rowDensityWeight > 0.
+  if (table.rowDensityWeight > 0) {
+    const rowD = Number(stats.rowDensity || 0);
+    const target = Number(table.rowDensityTarget || 0);
+    const slope = Number(table.rowDensitySlope || 1);
+    score += Math.max(0, table.rowDensityWeight - Math.abs(rowD - target) / slope);
+  }
+
+  // Mid-tone ratio in the ticker region: the position list has ticker text
+  // (mid-tone gray) on dark background. A clean Google Drive frame has
+  // almost no mid-tone pixels — the photo overlay is bright on a different
+  // color background, not the same mid-tone range. We REWARD high mid-tone
+  // ratio in the ticker rectangle.
+  if (table.midToneWeight > 0) {
+    const mtr = Number(stats.midToneRatioTicker || 0);
+    // Linear reward: 0 mid-tone = 0 contribution, 1.0 mid-tone = full
+    // weight. The position list reliably scores 0.5-0.85; Google Drive
+    // and other distractions score < 0.05.
+    score += table.midToneWeight * Math.min(1.0, mtr);
+  }
 
   if (stats.meanLuma < table.meanLumaFloor) {
     score -= table.meanLumaPenalty;
@@ -534,18 +613,38 @@ const PREFILTER_PROFILES = Object.freeze({
   chart_stream: Object.freeze({
     // Chart frames: ~4% bright (axis labels, tickers in overlay), ~55% dark
     // (chart body + dark UI chrome), ~0.10 edge ratio, stdDev ~55.
-    brightWeight: 12,
+    // The chart_stream prefilter prioritizes frames where the POSITION LIST
+    // is visible (mid-tone density in the bottom-right rectangle). The
+    // darkRatio/brightRatio/edgeRatio terms are de-weighted because they
+    // match equally well on Google Drive overlays, browser tabs, and other
+    // high-contrast distractions that obscure the position list.
+    brightWeight: 4,
     brightTarget: 0.04,
     brightSlope: 30,
-    darkWeight: 8,
+    darkWeight: 3,
     darkTarget: 0.55,
     darkSlope: 20,
-    edgeWeight: 8,
+    edgeWeight: 3,
     edgeTarget: 0.10,
     edgeSlope: 100,
-    stdDevWeight: 6,
+    stdDevWeight: 3,
     stdDevTarget: 55,
     stdDevSlope: 12,
+    // Row density: Quullamaggie position list has 10-15 rows of white text on
+    // dark background. The total row-density score counts dark-to-bright
+    // transitions across all columns. Target ~150 (≈10 rows × ~15 cols/row
+    // of text strokes). A single-overlay-text frame has much lower density.
+    rowDensityWeight: 10,
+    rowDensityTarget: 150,
+    rowDensitySlope: 0.05,
+    // Mid-tone ratio in ticker region: ratio of pixels in brightness range
+    // 51-150 (gray text) within the right-bottom ticker rectangle. A clean
+    // Google Drive frame has < 1% mid-tone; a real position list frame
+    // has 5-10% mid-tone from the ticker text rendering. This is the
+    // strongest signal that the position list is visible.
+    midToneWeight: 30,
+    midToneTarget: 0.5,
+    midToneSlope: 0.2,
     // Loosen the meanLuma gate: chart frames have mean luma 50–90 (dark UI
     // chrome dominates). Early-2022 QMG chart-stream videos can be very dark
     // (meanLuma ~13-17), so the floor is dropped to 30 (was 60, was 140).
