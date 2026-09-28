@@ -315,14 +315,20 @@ async function preprocessForOcr(snapshotPath, cropOverride = null) {
   const top = Math.round(meta.height * region.y);
   const cropW = Math.round(meta.width * region.w);
   const cropH = Math.round(meta.height * region.h);
+  // Updated 2026-09-25: 5x upscale + sharpen sigma 2.0 + 100px black padding.
+  // See src/ocr/ocrImage.js for the rationale (matching the production pipeline).
   const ocrBuf = await sharp(snapshotPath)
     .extract({ left, top, width: cropW, height: cropH })
-    .resize(cropW * 3, cropH * 3, { kernel: 'lanczos3' })
+    .resize(cropW * 5, cropH * 5, { kernel: 'lanczos3' })
     .grayscale()
     .negate()
     .linear(1.8, -64)
     .normalize()
-    .sharpen({ sigma: 1.5 })
+    .sharpen({ sigma: 2.0 })
+    .extend({
+      top: 100, bottom: 100, left: 100, right: 100,
+      background: { r: 0, g: 0, b: 0 }
+    })
     .withMetadata({ density: 300 })
     .png()
     .toBuffer();
