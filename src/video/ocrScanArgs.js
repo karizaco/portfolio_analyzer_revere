@@ -33,6 +33,9 @@ function printHelp() {
     '  --review-threshold <n>     Review score threshold, default 4',
     '  --max-captures <n>         Maximum screenshots to save per video, default 3',
     '  --progress-interval <n>    Report OCR progress every N frames, default 10',
+    '  --batch-snapshots          Extract a batch of N frames within ±W seconds of the best-scoring frame. All frames show the same position list state, so multi-frame merge is valid. Use with --batch-count and --batch-window.',
+    '  --batch-count <n>          Number of frames in the batch (default 5)',
+    '  --batch-window <seconds>   Window around the center timestamp (default 4)',
     '  --top-candidates <n>       Include the top N candidate timestamps in the result, default 5',
     '  --keep-frames              Keep sampled intermediate frames',
     '  --skip-keyframes           Do not invoke ffprobe to locate the nearest keyframe per capture',
@@ -98,6 +101,9 @@ function parsePixelRegion(raw) {
 function buildDefaultOptions(defaultOutputRoot) {
   return {
     basename: 'revere',
+    batchCount: 5,
+    batchSnapshots: false,
+    batchWindowSeconds: 4,
     chartStreamParser: false,
     confusionRadius: 1,
     ffmpegBin: 'ffmpeg',
@@ -208,6 +214,17 @@ function parseArgs(argv, overrides = {}) {
         break;
       case '--max-captures':
         options.maxCapturesPerVideo = Number(nextValue);
+        index += 1;
+        break;
+      case '--batch-snapshots':
+        options.batchSnapshots = true;
+        break;
+      case '--batch-count':
+        options.batchCount = Number(nextValue);
+        index += 1;
+        break;
+      case '--batch-window':
+        options.batchWindowSeconds = Number(nextValue);
         index += 1;
         break;
       case '--progress-interval':

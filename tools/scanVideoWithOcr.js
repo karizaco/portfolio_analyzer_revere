@@ -427,6 +427,38 @@ function extractOcrFrame(videoPath, timestamp, outputPath, ffmpegBin, ocrFrameWi
   runFfmpegCommand(command, 'ffmpeg OCR frame extraction failed.');
 }
 
+// Extract N frames within a window of a center timestamp. Returns the
+// list of timestamps (seconds) for the extracted frames.
+// Used for batch snapshots that are valid for multi-frame merge — all
+// frames show the same position list state since they're within seconds
+// of each other.
+function extractBatchOcrFrames(videoPath, centerTimestamp, windowSeconds, count, ocrFrameDirectory, ffmpegBin, ocrFrameWidth, baseStem) {
+  const ffmpegBinResolved = resolveFfmpegBin(ffmpegBin);
+  const halfWindow = windowSeconds / 2;
+  // Spread count frames evenly across [center - halfWindow, center + halfWindow]
+  const timestamps = [];
+  for (let i = 0; i < count; i++) {
+    const t = centerTimestamp - halfWindow + (i * windowSeconds) / Math.max(1, count - 1);
+    timestamps.push(t);
+  }
+  const extracted = [];
+  for (let i = 0; i < timestamps.length; i++) {
+    const ts = timestamps[i];
+    const outPath = path.join(ocrFrameDirectory, `${baseStem}_batch_t${ts.toFixed(2)}_i${i}.png`);
+    const command = [
+      ffmpegBinResolved, '-hide_banner', '-loglevel', 'error',
+      '-ss', ts.toFixed(3),
+      '-i', videoPath,
+      '-frames:v', '1',
+      '-vf', buildScaleFilter(ocrFrameWidth),
+      outPath
+    ];
+    runFfmpegCommand(command, `ffmpeg batch frame extraction at t=${ts} failed.`);
+    extracted.push({ timestamp: ts, framePath: outPath });
+  }
+  return extracted;
+}
+
 async function preflightOutputExtraction(videoPath, outputKind, logsDirectory, probeKey, ffmpegBin) {
   const extension = '.png';
   const preflightOutputPath = path.join(logsDirectory, `${probeKey}_preflight${extension}`);
@@ -517,26 +549,59 @@ async function prefilterFrames({ fps, framePaths, outputKind, prefilterProfile, 
   };
 }
 
+/**
+ * Run chart-stream OCR at a specific scale and return the parsed result.
+ * Returns { ocr, chartStream, tickerCount, ocrText }
+ */
+async function runChartStreamOcr(framePath, phashRegionFraction, scale) {
+  const ocr = await ocrImage(framePath, {
+    chartStream: true,
+    overlayRegion: phashRegionFraction,
+    overlayScale: scale,
+  });
+  const chartStream = parseChartStreamPositionList({ ocr });
+  const tickerCount = (chartStream && chartStream.position_list && chartStream.position_list.length)
+    ? chartStream.position_list.length
+    : 0;
+  return { ocr, chartStream, tickerCount };
+}
+
 async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats, prefilterScore, options = {}) {
+  // Optional override timestamp (used for batch snapshots where frameIndex
+  // doesn't correspond to the original sample-frame index).
+  const explicitTimestamp = Number.isFinite(options.timestamp) ? options.timestamp : null;
   const { chartStreamParser = false, phashRegion = null, phashRegionFraction = null } = options;
-  // When chart-stream parser is active, pass overlay region so ocrImage can crop it before OCR
-  const ocrOptions = chartStreamParser
-    ? { chartStream: true, overlayRegion: phashRegionFraction, overlayScale: 3 }
-    : {};
-  const ocr = await ocrImage(framePath, ocrOptions);
+
+  let ocr, chartStream, tickerSource;
+  if (chartStreamParser) {
+    // Dual-scale: run both 3x and 4x, pick the one with more tickers
+    const [r3, r4] = await Promise.all([
+      runChartStreamOcr(framePath, phashRegionFraction, 3),
+      runChartStreamOcr(framePath, phashRegionFraction, 4),
+    ]);
+    // Prefer by ticker count; tie-break by OCR confidence
+    const pick = r4.tickerCount > r3.tickerCount ? r4
+      : r3.tickerCount > r4.tickerCount ? r3
+      : (r4.ocr.confidence || 0) > (r3.ocr.confidence || 0) ? r4 : r3;
+    ocr = pick.ocr;
+    chartStream = pick.chartStream;
+    tickerSource = chartStream && chartStream.position_list ? chartStream.position_list : [];
+  } else {
+    ocr = await ocrImage(framePath);
+    chartStream = null;
+    tickerSource = [];
+  }
+
   const parsed = chartStreamParser
     ? null
     : parseScreenshot({
       metadata: buildFrameMetadata(framePath, dateKey, frameIndex),
       ocr
     });
-  const chartStream = chartStreamParser ? parseChartStreamPositionList({ ocr }) : null;
-  // When chartStreamParser is active, use its position_list as the ticker source;
-  // otherwise fall back to the full-text extractor (GRO/TURBO path).
-  const tickerSource = chartStream && chartStream.position_list ? chartStream.position_list : [];
+
   const [phash, phashOverlay, tickers] = await Promise.all([
     computePerceptualHash(framePath).catch(() => null),
-    computeRegionHash(framePath, phashRegion, phashRegionFraction),
+    chartStreamParser ? computeRegionHash(framePath, phashRegion, phashRegionFraction) : Promise.resolve(null),
     Promise.resolve(
       chartStreamParser && tickerSource.length
         ? tickerSource
@@ -565,7 +630,7 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     screenLayout: detectScreenLayout(ocr.text, ocr.lines),
     stats,
     tickers,
-    timestamp: buildFrameTimestamp(frameIndex, fps)
+    timestamp: explicitTimestamp != null ? explicitTimestamp : buildFrameTimestamp(frameIndex, fps)
   };
 }
 
@@ -656,7 +721,7 @@ async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps, sta
     screenLayout: detectScreenLayout(ocr.text, ocr.lines),
     stats,
     tickers,
-    timestamp: buildFrameTimestamp(frameIndex, fps)
+    timestamp: explicitTimestamp != null ? explicitTimestamp : buildFrameTimestamp(frameIndex, fps)
   };
 }
 
@@ -729,7 +794,7 @@ async function scanFrames({
         fps,
         frameRow.stats,
         frameRow.prefilterScore,
-        candidateOptions
+        { ...candidateOptions, timestamp: frameRow.timestamp }
       );
       candidates.push(candidate);
       if (candidate.score >= strongThreshold) {
@@ -1036,6 +1101,46 @@ async function main() {
       neighborRadius: options.prefilterNeighbors
     });
     const bestPrefilter = prefilterResult.bestRow;
+
+    // Batch snapshot mode: pick the best-scoring frame and extract N
+    // additional frames within a window of that timestamp. All frames
+    // show the same position list state since they're seconds apart,
+    // making multi-frame merge valid.
+    let batchMode = false;
+    let batchCenterTs = null;
+    if (options.batchSnapshots && bestPrefilter) {
+      batchMode = true;
+      batchCenterTs = bestPrefilter.timestamp;
+      const baseStem = `${dateKey}_${path.basename(videoPath, path.extname(videoPath)).slice(0, 40)}`;
+      const extracted = extractBatchOcrFrames(
+        videoPath,
+        batchCenterTs,
+        options.batchWindowSeconds || 4,
+        options.batchCount || 5,
+        ocrFrameDirectory,
+        options.ffmpegBin,
+        options.ocrFrameWidth,
+        baseStem
+      );
+      // Replace selectedFrameRows with batch frames. Give each its own
+      // stats snapshot with the correct timestamp so the OCR pass records
+      // the right capture time.
+      selectedFrameRows.length = 0;
+      for (let i = 0; i < extracted.length; i += 1) {
+        const ts = extracted[i].timestamp;
+        const frameStats = { ...bestPrefilter.stats, timestamp: ts };
+        selectedFrameRows.push({
+          frameIndex: i,
+          framePath: extracted[i].framePath,
+          prefilterScore: bestPrefilter.prefilterScore,
+          stats: frameStats,
+          timestamp: ts
+        });
+      }
+      console.log(
+        `[scan:${options.outputKind}] batch mode: extracted ${selectedFrameRows.length} frames within ±${(options.batchWindowSeconds || 4) / 2}s of t=${batchCenterTs.toFixed(1)}`
+      );
+    }
 
     console.log(
       `[scan:${options.outputKind}] prefilter kept ${selectedFrameRows.length}/${framePaths.length} frame(s) for OCR`
