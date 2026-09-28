@@ -58,7 +58,7 @@ const VIDEOS = [
     dateKey: '20220218',
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20220218.png', 'qmg_20220218_2.png', 'qmg_20220218_3.png'],
-    description: '5 GT tickers (TQQQ, MOS, FCX, EWMC, COPX) — first ever Quullamaggie video',
+    description: '9 GT tickers per capture — first Quullamaggie video, Trade-Ideas UI',
   },
   {
     dateKey: '20220222',

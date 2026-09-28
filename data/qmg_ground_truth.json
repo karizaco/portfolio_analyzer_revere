@@ -91,7 +91,7 @@
       "NFLX"
     ],
     "3": [
-      "GOVX",
+      "BOIL",
       "LABU",
       "UCO",
       "ALB",
@@ -318,7 +318,9 @@
     "0": ["LI","IMGN","SOUN","AI","CVNA","APLD","PLTR"]
   },
   "20220218": {
-    "0": ["TQQQ","MOS","FCX","EWMC","COPX"]
+    "0": ["UPST","DVN","NRGU","MOS","TQQQ","TSLA","FCX","DWAC","COPX"],
+    "1": ["ROKU","TQQQ","TSLA","FCX","COPX","MOS","NRGU","DWAC","DVN"],
+    "2": ["UPST","DVN","NRGU","MOS","TQQQ","TSLA","DCX","DWAC","COPX"]
   },
   "20220318": {
     "0": ["NUGT","FCX","REGN","URA","COPX","URNM","KWEB"]
@@ -333,7 +335,9 @@
     "0": ["IMGN","ARQQ","CVNA","IOT","PLTR","GSIT","MNDY","APLD","AI","QBTS","DNA"]
   },
   "20220222": {
-    "0": ["NUGT","MOS","TQQQ","FCX","TSLA"]
+    "0": ["NRGU","DVN","MOS","COPX","TQQQ","FCX","TSLA"],
+    "1": ["NRGU","DVN","MOS","COPX","TQQQ","FCX","TSLA"],
+    "2": ["NDGU","DVN","MOS","COPX","TQQQ","FCX","TSLA"]
   },
   "20220301": {
     "0": ["IBKR","CRH","XLV","KRE","MP","NUGT","EDV","RSX","FCX","VLO","COPX"]
@@ -348,7 +352,9 @@
     "0": ["COPX","KWEB","SPXL","TQQQ","X","REGN","FCX","NUGT"]
   },
   "20220406": {
-    "0": ["X","FCX","REGN","COPX","NUGT","NEM","LHX"]
+    "0": ["X","FCX","REGN","COPX","NUGT","NEM","LHX"],
+    "1": ["X","FCX","REGN","COPX","NUGT","NEM","LHX"],
+    "2": ["FCX","COPX","X","LHX","NUGT","LMT","NEM","REGN"]
   },
   "20220414": {
     "0": ["NUGT","JNUG","WEAT","GUSH","COPX","URA","URNM","X","REGN","FCX","LMT"]
@@ -381,7 +387,9 @@
     "0": ["LHX","LMT","URA","URNM","WEAT","X","COPX","FCX","REGN","NUGT","JNUG"]
   },
   "20220426": {
-    "0": ["BOIL","WEAT"]
+    "0": ["BOIL","WEAT"],
+    "1": ["BOIL","WEAT"],
+    "2": ["BOIL","WEAT"]
   },
   "20230523": {
     "0": ["QBTS","LI","SOUN","IMGN","FTCH","MNDY","APLD","PLTR","DNA","AI","CVNA"]
