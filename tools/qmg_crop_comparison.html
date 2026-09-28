@@ -55,8 +55,10 @@
     <th rowspan="2">GT tickers</th>
     <th colspan="2">Legacy (single capture)</th>
     <th colspan="2">Column-aware (single)</th>
+    <th colspan="2">Multi-frame merge (batch only)</th>
   </tr>
   <tr>
+    <th>Recall</th><th>Precision (FPs)</th>
     <th>Recall</th><th>Precision (FPs)</th>
     <th>Recall</th><th>Precision (FPs)</th>
   </tr>
@@ -68,6 +70,7 @@
     <td class="bad">25% (3 FPs)</td>
     <td class="bad">0% (0/11)</td>
     <td class="bad">0% (3 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220222</b><br><span style="color:#888; font-size:11px">5 GT (NUGT, MOS, TQQQ, FCX, TSLA)</span></td>
@@ -76,6 +79,7 @@
     <td class="bad">25% (3 FPs)</td>
     <td class="warn">25% (2/8)</td>
     <td class="good">67% (1 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220301</b><br><span style="color:#888; font-size:11px">11 GT (IBKR, CRH, XLV, KRE, MP, NUGT, EDV, RSX, FCX, VLO, COPX)</span></td>
@@ -84,6 +88,7 @@
     <td class="bad">75% (2 FPs)</td>
     <td class="warn">27% (3/11)</td>
     <td class="bad">60% (3 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220302</b><br><span style="color:#888; font-size:11px">7 GT (NUGT, FCX, X, ERX, EDV, COPX, AGQ)</span></td>
@@ -92,6 +97,7 @@
     <td class="bad">67% (3 FPs)</td>
     <td class="warn">29% (2/7)</td>
     <td class="bad">67% (2 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220318</b><br><span style="color:#888; font-size:11px">7 GT tickers (NUGT, FCX, REGN, URA, COPX, URNM, KWEB)</span></td>
@@ -100,6 +106,7 @@
     <td class="bad">43% (5 FPs)</td>
     <td class="warn">29% (2/7)</td>
     <td class="bad">40% (4 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220321</b><br><span style="color:#888; font-size:11px">8 GT (DIDI, NUGT, COPX, URNM, REGN, FCX, NUZE, X)</span></td>
@@ -108,6 +115,7 @@
     <td class="bad">30% (9 FPs)</td>
     <td class="bad">13% (1/8)</td>
     <td class="bad">33% (2 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220323</b><br><span style="color:#888; font-size:11px">11 GT tickers (largest position list)</span></td>
@@ -116,6 +124,7 @@
     <td class="good">91% (1 FPs)</td>
     <td class="good">73% (8/11)</td>
     <td class="bad">73% (3 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220330</b><br><span style="color:#888; font-size:11px">8 GT tickers (NFLX, KWEB, REGN, LABU, COPX, X, NUGT, FCX)</span></td>
@@ -124,6 +133,7 @@
     <td class="bad">88% (8 FPs)</td>
     <td class="good">50% (4/8)</td>
     <td class="bad">50% (8 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220331</b><br><span style="color:#888; font-size:11px">8 GT (COPX, KWEB, SPXL, TQQQ, X, REGN, FCX, NUGT)</span></td>
@@ -132,6 +142,7 @@
     <td class="bad">88% (8 FPs)</td>
     <td class="good">75% (6/8)</td>
     <td class="bad">67% (9 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220405</b><br><span style="color:#888; font-size:11px">11 GT tickers (CWEB, REGN, KWEB, JNUG, GGPI, TAN, NEM, COPX, FCX, NUGT, X)</span></td>
@@ -140,6 +151,7 @@
     <td class="bad">67% (11 FPs)</td>
     <td class="good">73% (8/11)</td>
     <td class="bad">44% (16 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220406</b><br><span style="color:#888; font-size:11px">7 GT (X, FCX, REGN, COPX, NUGT, NEM, LHX)</span></td>
@@ -148,6 +160,7 @@
     <td class="good">100% (0 FPs)</td>
     <td class="good">63% (5/8)</td>
     <td class="bad">71% (2 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220412</b><br><span style="color:#888; font-size:11px">11 GT (LHX, LMT, URA, URNM, WEAT, X, COPX, FCX, REGN, NUGT, JNUG)</span></td>
@@ -156,6 +169,7 @@
     <td class="bad">86% (7 FPs)</td>
     <td class="good">64% (7/11)</td>
     <td class="bad">64% (10 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220413</b><br><span style="color:#888; font-size:11px">11 GT tickers (WEAT, LHX, REGN, LMT, X, FCX, COPX, NUGT, JNUG, URA, URNM) — largest after 20220323</span></td>
@@ -164,6 +178,7 @@
     <td class="bad">67% (9 FPs)</td>
     <td class="warn">36% (4/11)</td>
     <td class="bad">33% (12 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220414</b><br><span style="color:#888; font-size:11px">11 GT (NUGT, JNUG, WEAT, GUSH, COPX, URA, URNM, X, REGN, FCX, LMT)</span></td>
@@ -172,6 +187,7 @@
     <td class="bad">100% (7 FPs)</td>
     <td class="good">55% (6/11)</td>
     <td class="bad">46% (11 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220418</b><br><span style="color:#888; font-size:11px">12 GT (VERU, WEAT, URA, URNM, FCX, LMT, COPX, REGN, GUSH, X, NUGT, JNUG)</span></td>
@@ -180,6 +196,7 @@
     <td class="bad">50% (10 FPs)</td>
     <td class="bad">17% (2/12)</td>
     <td class="bad">13% (14 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220419</b><br><span style="color:#888; font-size:11px">14 GT (VERU, URNM, URA, REGN, JNUG, LMT, NUGT, X, COPX, WEAT, FCX, GUSH, BOIL, KOLD)</span></td>
@@ -188,6 +205,7 @@
     <td class="bad">100% (9 FPs)</td>
     <td class="good">50% (7/14)</td>
     <td class="bad">54% (13 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220421</b><br><span style="color:#888; font-size:11px">16 GT (FCX, JNUG, NUGT, COPX, WEAT, VERU, URNM, URA, REGN, X, GUSH, LAC, UCO, FTNT, BOIL, TSLA) — largest</span></td>
@@ -196,6 +214,7 @@
     <td class="bad">60% (14 FPs)</td>
     <td class="good">56% (9/16)</td>
     <td class="bad">53% (14 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220425</b><br><span style="color:#888; font-size:11px">4 GT (KOLD, WEAT, VERU, BOIL)</span></td>
@@ -204,6 +223,7 @@
     <td class="bad">67% (3 FPs)</td>
     <td class="good">50% (2/4)</td>
     <td class="bad">50% (4 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220426</b><br><span style="color:#888; font-size:11px">2 GT (BOIL, WEAT) — minimal position list</span></td>
@@ -212,6 +232,31 @@
     <td class="bad">40% (3 FPs)</td>
     <td class="good">100% (2/2)</td>
     <td class="good">100% (0 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
+  </tr>
+  <tr>
+    <td><b>20220323 (batch t=1020s)</b><br><span style="color:#888; font-size:11px">11 GT tickers — batch (5 frames within 4s). Multi-frame merge valid here.</span></td>
+    <td>11</td>
+    <td class="good">91% (10/11)</td>
+    <td class="good">100% (0 FPs)</td>
+    <td class="good">91% (10/11)</td>
+    <td class="good">91% (1 FPs)</td>
+    
+    <td class="bad">undefined% (/11)</td>
+    <td class="bad">undefined% (undefined FPs)</td>
+    
+  </tr>
+  <tr>
+    <td><b>20220428 (batch t=1300s)</b><br><span style="color:#888; font-size:11px">4 GT tickers — batch (5 frames within 4s). Multi-frame merge valid here.</span></td>
+    <td>4</td>
+    <td class="good">100% (4/4)</td>
+    <td class="bad">67% (2 FPs)</td>
+    <td class="good">75% (3/4)</td>
+    <td class="good">75% (1 FPs)</td>
+    
+    <td class="bad">undefined% (/4)</td>
+    <td class="bad">undefined% (undefined FPs)</td>
+    
   </tr>
   <tr>
     <td><b>20220427</b><br><span style="color:#888; font-size:11px">4 GT tickers (TSLA, BOIL, WEAT, KOLD)</span></td>
@@ -220,6 +265,7 @@
     <td class="bad">60% (2 FPs)</td>
     <td class="bad">22% (2/9)</td>
     <td class="good">67% (1 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220428</b><br><span style="color:#888; font-size:11px">4 GT tickers</span></td>
@@ -228,6 +274,7 @@
     <td class="good">80% (1 FPs)</td>
     <td class="good">100% (4/4)</td>
     <td class="good">100% (0 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220429</b><br><span style="color:#888; font-size:11px">5 GT (WEAT, GUSH, TSLA, X, SWN)</span></td>
@@ -236,6 +283,7 @@
     <td class="bad">75% (3 FPs)</td>
     <td class="good">60% (3/5)</td>
     <td class="bad">50% (5 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220506</b><br><span style="color:#888; font-size:11px">4 GT (UCO, WEAT, TSLA, LTHM)</span></td>
@@ -244,6 +292,7 @@
     <td class="bad">80% (5 FPs)</td>
     <td class="good">100% (4/4)</td>
     <td class="bad">80% (5 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220510</b><br><span style="color:#888; font-size:11px">2 GT tickers</span></td>
@@ -252,6 +301,7 @@
     <td class="good">67% (1 FPs)</td>
     <td class="good">100% (2/2)</td>
     <td class="bad">50% (2 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220517</b><br><span style="color:#888; font-size:11px">7 GT tickers (FNGU, TQQQ, OXY, COIN, ERX, AR, WEAT)</span></td>
@@ -260,6 +310,7 @@
     <td class="bad">60% (5 FPs)</td>
     <td class="good">57% (4/7)</td>
     <td class="bad">50% (8 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220606</b><br><span style="color:#888; font-size:11px">8 GT tickers (dense position list, OCR-difficult)</span></td>
@@ -268,6 +319,7 @@
     <td class="bad">73% (3 FPs)</td>
     <td class="good">89% (8/9)</td>
     <td class="bad">57% (6 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220607</b><br><span style="color:#888; font-size:11px">7 GT tickers</span></td>
@@ -276,6 +328,7 @@
     <td class="good">86% (1 FPs)</td>
     <td class="good">57% (4/7)</td>
     <td class="good">80% (1 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220608</b><br><span style="color:#888; font-size:11px">9 GT tickers (largest after 20220323, OCR-difficult)</span></td>
@@ -284,6 +337,7 @@
     <td class="bad">56% (4 FPs)</td>
     <td class="warn">44% (4/9)</td>
     <td class="bad">44% (5 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20220614</b><br><span style="color:#888; font-size:11px">3 GT tickers</span></td>
@@ -292,6 +346,7 @@
     <td class="bad">67% (2 FPs)</td>
     <td class="bad">0% (0/3)</td>
     <td class="bad">0% (3 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20221104</b><br><span style="color:#888; font-size:11px">1 GT (OIH) — minimal position list</span></td>
@@ -300,6 +355,7 @@
     <td class="good">0% (1 FPs)</td>
     <td class="bad">0% (0/1)</td>
     <td class="good">0% (1 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20221117</b><br><span style="color:#888; font-size:11px">6 GT tickers (FREY, OIH, ASML, U, SI, SOXL)</span></td>
@@ -308,6 +364,7 @@
     <td class="good">83% (1 FPs)</td>
     <td class="good">50% (3/6)</td>
     <td class="good">75% (1 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20230126</b><br><span style="color:#888; font-size:11px">8 GT tickers (CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS)</span></td>
@@ -316,6 +373,7 @@
     <td class="bad">78% (2 FPs)</td>
     <td class="good">88% (7/8)</td>
     <td class="bad">78% (2 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20230518</b><br><span style="color:#888; font-size:11px">7 GT (PLTR, LI, AI, SHOP, MNDY, IMGN, APLD) — wider table layout</span></td>
@@ -324,6 +382,7 @@
     <td class="bad">38% (7 FPs)</td>
     <td class="warn">29% (2/7)</td>
     <td class="bad">25% (7 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20230522</b><br><span style="color:#888; font-size:11px">7 GT tickers (LI, IMGN, SOUN, AI, CVNA, APLD, PLTR)</span></td>
@@ -332,6 +391,7 @@
     <td class="bad">40% (5 FPs)</td>
     <td class="warn">43% (3/7)</td>
     <td class="bad">30% (10 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20230523</b><br><span style="color:#888; font-size:11px">11 GT (QBTS, LI, SOUN, IMGN, FTCH, MNDY, APLD, PLTR, DNA, AI, CVNA)</span></td>
@@ -340,6 +400,7 @@
     <td class="bad">14% (7 FPs)</td>
     <td class="bad">0% (0/11)</td>
     <td class="bad">0% (7 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20230601</b><br><span style="color:#888; font-size:11px">9 GT (QBTS, APLD, AI, DNA, CVNA, IONQ, PLTR, IMGN, MNDY)</span></td>
@@ -348,6 +409,7 @@
     <td class="bad">75% (4 FPs)</td>
     <td class="good">56% (5/9)</td>
     <td class="bad">45% (10 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20230602</b><br><span style="color:#888; font-size:11px">15 GT (IOT, TEAM, MTCH, QBTS, ARQQ, RGTI, IMGN, PLTR, CVNA, MNDY, APLD, DNA, IONQ, AI, GSIT) — largest yet</span></td>
@@ -356,6 +418,7 @@
     <td class="bad">40% (4 FPs)</td>
     <td class="bad">7% (1/15)</td>
     <td class="bad">8% (13 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20230605</b><br><span style="color:#888; font-size:11px">11 GT tickers (IMGN, ARQQ, CVNA, IOT, PLTR, GSIT, MNDY, APLD, AI, QBTS, DNA) — wider table layout</span></td>
@@ -364,6 +427,7 @@
     <td class="bad">50% (3 FPs)</td>
     <td class="warn">27% (3/11)</td>
     <td class="bad">30% (7 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20230608</b><br><span style="color:#888; font-size:11px">13 GT (CVNA, QBTS, APLD, ARQQ, IMGN, IOT, GTLB, RGTI, DNA, MNDY, AI, PLTR, GSIT)</span></td>
@@ -372,6 +436,7 @@
     <td class="bad">20% (5 FPs)</td>
     <td class="bad">15% (2/13)</td>
     <td class="bad">22% (8 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
   <tr>
     <td><b>20230609</b><br><span style="color:#888; font-size:11px">13 GT (RGTI, QBTS, IMGN, CVNA, IOT, ARQQ, AI, PLTR, DNA, GTLB, GSIT, APLD, MNDY)</span></td>
@@ -380,17 +445,22 @@
     <td class="bad">33% (5 FPs)</td>
     <td class="warn">31% (4/13)</td>
     <td class="bad">29% (12 FPs)</td>
+    <td colspan="2" style="color:#666">n/a (captures minutes apart)</td>
   </tr>
 </table>
 <p style="color:#888; font-size:11px; margin-top:6px">
-  <b>Reading the table:</b> Each cell shows recall (correct tickers / GT tickers) and precision
-  (correct / detected, with FP count). "Legacy" = any ticker-shape token in the seed lexicon.
-  "Column-aware" = only tickers in the dominant column with price-on-right.
+  <b>Reading the table:</b> Each cell shows recall (correct / GT) and precision (FPs).
+  "Legacy" = any ticker-shape token in lexicon. "Column-aware" = only tickers in the
+  dominant column with price-on-right. For batch snapshots only (where multiple
+  captures are within seconds), a "Multi-frame merge" column shows the ≥2/5
+  consensus result.
 </p>
 
 
 <h2>20220218 — 9 GT tickers per capture — first Quullamaggie video, Trade-Ideas UI</h2>
 <p style="color:#888; font-size:12px;">GT: UPST, DVN, NRGU, MOS, TQQQ, TSLA, FCX, DWAC, COPX, ROKU, DCX</p>
+
+
 
 
   <div class="capture-row">
@@ -609,6 +679,8 @@ BY amen 8 |
 <p style="color:#888; font-size:12px;">GT: NRGU, DVN, MOS, COPX, TQQQ, FCX, TSLA, NDGU</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -814,6 +886,8 @@ PY omen |
 
 <h2>20220301 — 11 GT (IBKR, CRH, XLV, KRE, MP, NUGT, EDV, RSX, FCX, VLO, COPX)</h2>
 <p style="color:#888; font-size:12px;">GT: IBKR, CRH, XLV, KRE, MP, NUGT, EDV, RSX, FCX, VLO, COPX</p>
+
+
 
 
   <div class="capture-row">
@@ -1039,6 +1113,8 @@ PY omen 8 |
 <p style="color:#888; font-size:12px;">GT: NUGT, FCX, X, ERX, EDV, COPX, AGQ</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -1243,6 +1319,8 @@ WH oamae "
 
 <h2>20220318 — 7 GT tickers (NUGT, FCX, REGN, URA, COPX, URNM, KWEB)</h2>
 <p style="color:#888; font-size:12px;">GT: NUGT, FCX, REGN, URA, COPX, URNM, KWEB</p>
+
+
 
 
   <div class="capture-row">
@@ -1460,6 +1538,8 @@ PY oman @ |
 <p style="color:#888; font-size:12px;">GT: DIDI, NUGT, COPX, URNM, REGN, FCX, NUZE, X</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -1674,6 +1754,8 @@ PY onan 8 |
 
 <h2>20220323 — 11 GT tickers (largest position list)</h2>
 <p style="color:#888; font-size:12px;">GT: BOIL, JNUG, NUGT, X, URA, FCX, WEAT, COPX, URNM, REGN, KWEB</p>
+
+
 
 
   <div class="capture-row">
@@ -1904,6 +1986,8 @@ A Ee 20323  =  |
 <p style="color:#888; font-size:12px;">GT: NFLX, KWEB, REGN, LABU, COPX, X, NUGT, FCX</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -2116,6 +2200,8 @@ Zon
 
 <h2>20220331 — 8 GT (COPX, KWEB, SPXL, TQQQ, X, REGN, FCX, NUGT)</h2>
 <p style="color:#888; font-size:12px;">GT: COPX, KWEB, SPXL, TQQQ, X, REGN, FCX, NUGT</p>
+
+
 
 
   <div class="capture-row">
@@ -2337,6 +2423,8 @@ BY pn B  |
 <p style="color:#888; font-size:12px;">GT: CWEB, REGN, KWEB, JNUG, GGPI, TAN, NEM, COPX, FCX, NUGT, X</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -2547,6 +2635,8 @@ p      = NUGT | +315%| «774%
 
 <h2>20220406 — 7 GT (X, FCX, REGN, COPX, NUGT, NEM, LHX)</h2>
 <p style="color:#888; font-size:12px;">GT: X, FCX, REGN, COPX, NUGT, NEM, LHX, LMT</p>
+
+
 
 
   <div class="capture-row">
@@ -2762,6 +2852,8 @@ Fal     0
 <p style="color:#888; font-size:12px;">GT: LHX, LMT, URA, URNM, WEAT, X, COPX, FCX, REGN, NUGT, JNUG</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -2967,6 +3059,8 @@ aR =A 22.08.12  5 |
 
 <h2>20220413 — 11 GT tickers (WEAT, LHX, REGN, LMT, X, FCX, COPX, NUGT, JNUG, URA, URNM) — largest after 20220323</h2>
 <p style="color:#888; font-size:12px;">GT: WEAT, LHX, REGN, LMT, X, FCX, COPX, NUGT, JNUG, URA, URNM</p>
+
+
 
 
   <div class="capture-row">
@@ -3177,6 +3271,8 @@ ARE nzzo813  =  |
 
 <h2>20220414 — 11 GT (NUGT, JNUG, WEAT, GUSH, COPX, URA, URNM, X, REGN, FCX, LMT)</h2>
 <p style="color:#888; font-size:12px;">GT: NUGT, JNUG, WEAT, GUSH, COPX, URA, URNM, X, REGN, FCX, LMT</p>
+
+
 
 
   <div class="capture-row">
@@ -3392,6 +3488,8 @@ AB peers BB  |
 <p style="color:#888; font-size:12px;">GT: VERU, WEAT, URA, URNM, FCX, LMT, COPX, REGN, GUSH, X, NUGT, JNUG</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -3601,6 +3699,8 @@ ARE 022.001  5) |
 
 <h2>20220419 — 14 GT (VERU, URNM, URA, REGN, JNUG, LMT, NUGT, X, COPX, WEAT, FCX, GUSH, BOIL, KOLD)</h2>
 <p style="color:#888; font-size:12px;">GT: VERU, URNM, URA, REGN, JNUG, LMT, NUGT, X, COPX, WEAT, FCX, GUSH, BOIL, KOLD</p>
+
+
 
 
   <div class="capture-row">
@@ -3824,6 +3924,8 @@ A. Lo    14 Items in Personal Watchlist L</div>
 <p style="color:#888; font-size:12px;">GT: FCX, JNUG, NUGT, COPX, WEAT, VERU, URNM, URA, REGN, X, GUSH, LAC, UCO, FTNT, BOIL, TSLA</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -4037,6 +4139,8 @@ R= zs  =  |
 
 <h2>20220425 — 4 GT (KOLD, WEAT, VERU, BOIL)</h2>
 <p style="color:#888; font-size:12px;">GT: KOLD, WEAT, VERU, BOIL</p>
+
+
 
 
   <div class="capture-row">
@@ -4253,6 +4357,8 @@ FaN    ))
 <p style="color:#888; font-size:12px;">GT: BOIL, WEAT</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -4453,8 +4559,697 @@ ARE es BB  |
   </div>
 
 
+<h2>20220323 (batch t=1020s) — 11 GT tickers — batch (5 frames within 4s). Multi-frame merge valid here.</h2>
+<p style="color:#888; font-size:12px;">GT: BOIL, JNUG, NUGT, X, URA, FCX, WEAT, COPX, URNM, REGN, KWEB</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/5 captures):</b>
+  &nbsp;<b>Detected:</b> <span style="color:#fff">BOIL, COPX, KWEB, NUGT, REGN, URA, URNM, WEAT, X</span>
+  &nbsp;<span style="color:#888">(GT missed: JNUG, FCX)</span>
+</div>
+
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220323 (batch t=1020s)__qmg_20220323_batch1_batch_t1018.00_i0__raw_crop.png" alt="raw crop 0">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220323 (batch t=1020s)__qmg_20220323_batch1_batch_t1018.00_i0__ocr_crop.png" alt="ocr crop 0">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 56</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220323_batch1_batch_t1018.00_i0.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            10/11 correct, 0 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            6/11 correct, 1 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>JNUG, X, URA, FCX, KWEB</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (11)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">BOIL</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">JNUG</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">NUGT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">X</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">URA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">FCX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">COPX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URNM</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">REGN</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">KWEB</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">INUG</div>
+          
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">55.00
+ot 1 Izem in Watchlist
+A - Positio @ sym: ¥ = &F +b X
+50,00 [Fug Sym |wCranm ¥ PreBuzz |X
+BOIL | +335%| +1045%
+| = INUG   +260%  +6989%
+P= NUGT  +267%  +302,6%
+45.00   =X     +2,45% +295,1%
+«       = URA    +0A1% | +3504%
+= FCX    +0,77% +61,2%
+a            P= WEAT   +028% +1642 7%
+W343     Arith © | m= copx   002% +258,8%
+P= URNM | +048% +1107%
+€ 400 (x   = REGN    085% «581%
+| P= KWEB    306% +S004%
+200 Om
+|
+EL    11 Items in Personal Watchlkz Last Sorted C
+14:34
+\     )
+DG onry BW
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220323 (batch t=1020s)__qmg_20220323_batch1_batch_t1019.00_i1__raw_crop.png" alt="raw crop 1">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220323 (batch t=1020s)__qmg_20220323_batch1_batch_t1019.00_i1__ocr_crop.png" alt="ocr crop 1">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 50</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220323_batch1_batch_t1019.00_i1.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            9/11 correct, 0 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            9/11 correct, 0 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>FCX, URNM</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (11)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">BOIL</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">JNUG</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">NUGT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">X</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">FCX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">COPX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">URNM</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">REGN</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div>
+      </div>
+
+      <div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives on both parsers</div>
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">55,00
+ 1 of 1 Item in Watchlist
+A -Positio @ 5m: bL=84X
+50.00  | Fug Sym |%Cranm ¥ PreBuzz |
+P= BOIL   +335% | +1045%
+CP OINUG | «260% +693 0%
+B= NUGT | +267% +3026%
+45.00   =X      +245%  +2951%
+«      = URA   +041% | +3504%
+RX    “077% +60,7%
+a I WEAT | +028% +15997
+342       Arith ~ | = copx    002% +2588%
+Pm URNM | &lt;048%  +1107%
+«i000 | REGN    065%]  +581%
+| P= KWEB | 3.147% +496,2%
+200 (Ox
+|=
+EE Ee    11 Items in Personal Watchlist Last Sorted C
+1434
+Fa     0)
+DY gn B |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220323 (batch t=1020s)__qmg_20220323_batch1_batch_t1020.00_i2__raw_crop.png" alt="raw crop 2">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220323 (batch t=1020s)__qmg_20220323_batch1_batch_t1020.00_i2__ocr_crop.png" alt="ocr crop 2">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 52</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220323_batch1_batch_t1020.00_i2.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            9/11 correct, 0 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            9/11 correct, 0 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>FCX, URNM</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (11)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">BOIL</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">JNUG</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">NUGT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">X</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">FCX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">COPX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">URNM</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">REGN</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div>
+      </div>
+
+      <div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives on both parsers</div>
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">55,00
+ 1 of 1 Item in Watchlist
+A -Positio @ 5m: bL=84X
+50.00  | Fug Sym |%Cranm ¥ PreBuzz |
+P= BOIL    +335% +96,0%
+CP INUG | «260% +693 0%
+I NUGT | 270% +299,5%
+45.00   =X      +245%  +2951%
+«      = URA   +041% | +3504%
+RX    +0,66%  +60,2%
+a I WEAT | +028% +15997%
+093439       Arith ~ | = copx    002% +2588%
+Pm URNM | &lt;048%  +1107%
+«400 | REGN    065% +58,1%
+| j= KWEB    -3 194% +494,5%
+200 (Ox
+I
+EE Ee    11 Items in Personal Watchlist Last Sorted C
+1434
+Fa     0)
+DY gn B |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220323 (batch t=1020s)__qmg_20220323_batch1_batch_t1021.00_i3__raw_crop.png" alt="raw crop 3">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220323 (batch t=1020s)__qmg_20220323_batch1_batch_t1021.00_i3__ocr_crop.png" alt="ocr crop 3">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 52</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220323_batch1_batch_t1021.00_i3.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            9/11 correct, 0 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            10/11 correct, 0 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>FCX</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (11)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">BOIL</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">JNUG</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">NUGT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">X</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">FCX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">COPX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URNM</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">REGN</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div>
+      </div>
+
+      <div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives on both parsers</div>
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">55,00
+ 1 of 1 Item in Watchlist
+A -Positio @ 5m: bL=84X
+50.00  | Fug Sym |%Cranm ¥ PreBuzz |
+= BOIL    +339% +95,6%
+CE INUG | +2,58% +658,0%
+B= NUGT | +270% +2995%
+45.00   =X      +245%  +2951%
+«       = URA    +041% | +349.7%
+RX    20,72%  +60,5%
+a I WEAT | +028% +15884
+93440       Arith ~ | = copx    002% +2588%
+Pm URNM | &lt;048%  +1107%
+«400 | REGN    065% +58,1%
+| = KWEB   AN +404 5%
+200 (Ox
+| |      [71,4]
+EE Ee    11 Items in Personal Watchlist Last Sorted C
+14:34
+Fa     0)
+DY gn B |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220323 (batch t=1020s)__qmg_20220323_batch1_batch_t1022.00_i4__raw_crop.png" alt="raw crop 4">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220323 (batch t=1020s)__qmg_20220323_batch1_batch_t1022.00_i4__ocr_crop.png" alt="ocr crop 4">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 52</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220323_batch1_batch_t1022.00_i4.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            9/11 correct, 0 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            9/11 correct, 0 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>FCX, URNM</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (11)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">BOIL</div><div class="ticker gt-correct" title="Detected: legacy✗ column✓">JNUG</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">NUGT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">X</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">URA</div><div class="ticker gt-missed" title="Detected: legacy✗ column✗">FCX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">COPX</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">URNM</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">REGN</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div>
+      </div>
+
+      <div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives on both parsers</div>
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">55,00
+ 1 of 1 Item in Watchlist
+A -Positio @ 5m: bL=84X
+50,00  | Fug Sym [%Crange ¥ipre Buz |X
+P= BOIL    +339% +956%
+CP INUG | «258%  +6580%
+B= NUGT | +270% +2995%
+45.00  =X    +245%  +289,5%
+«       = URA    +045% +371.6%
+RX    +0,62%  +65.8%
+a I WEAT | +0,19% +1582,8
+wan       Arith ~ | = copx    004% +255.7%
+Pm URNM | &lt;048%  +1107%
+«400 | REGN    065% +58,1%
+| P= KWEB   AR +491.2%
+200 (Ox
+| |      (114K
+EE Ee    11 Items in Personal Watchlist Last Sorted C
+1434
+Fa     0)
+DY gn B |
+</div>
+    </div>
+  </div>
+
+
+<h2>20220428 (batch t=1300s) — 4 GT tickers — batch (5 frames within 4s). Multi-frame merge valid here.</h2>
+<p style="color:#888; font-size:12px;">GT: CWEB, KWEB, TSLA, WEAT</p>
+
+
+<div style="background:#1a1a1a; border-left:4px solid #6d6; padding:10px 14px; border-radius:4px; margin:8px 0; font-size:12px;">
+  <b style="color:#6d6">Multi-frame merge (≥2/5 captures):</b>
+  &nbsp;<b>Detected:</b> <span style="color:#fff">BE, CWEB, KWEB, TSLA, WEAT, X</span>
+  &nbsp;<span style="color:#888">(GT missed: (none))</span>
+</div>
+
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220428 (batch t=1300s)__qmg_20220428_batch1_batch_t1298.00_i0__raw_crop.png" alt="raw crop 0">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220428 (batch t=1300s)__qmg_20220428_batch1_batch_t1298.00_i0__ocr_crop.png" alt="ocr crop 0">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 54</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220428_batch1_batch_t1298.00_i0.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            3/4 correct, 2 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            3/4 correct, 0 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>TSLA</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (4)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✗ column✓">CWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">TSLA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">BE*</div><div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">0 Items in Watchlist         oo
+A - Positions @ sym: 8 = BE X
+Fag [Sym  [%Crange 4 VolBuzz [am >=
+49,00         = TSLA     157% 277.6% 52
+P= Ccwes     JO +469,9%      9(
+PB KWEB | 1.02% +875% 43
+11
+        P= WEAT    035% «112.8%    2,1
+10 J. 00            -—
+47.00
+4
+Arith ~
+4
+> OM
+3M
+Op
+15:46
+A       )
+BP pes BY)  |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220428 (batch t=1300s)__qmg_20220428_batch1_batch_t1299.00_i1__raw_crop.png" alt="raw crop 1">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220428 (batch t=1300s)__qmg_20220428_batch1_batch_t1299.00_i1__ocr_crop.png" alt="ocr crop 1">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 50</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220428_batch1_batch_t1299.00_i1.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            4/4 correct, 0 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            3/4 correct, 0 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>TSLA</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (4)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">CWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">TSLA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div>
+      </div>
+
+      <div style="color:#4a4; font-size:11px; margin-top:8px">✓ Zero false positives on both parsers</div>
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">0 Items in Watchlist        I
+A - Positions @ sym: bi = BX
+Fag [Sym  [%Crange 4 VolBuzz [am >=
+49.00         = TSLA     154% +2775% 52
+P= cweB    207% +469,5% 9
+P= KWEB     1LY9% | +87,7%     4.3
+«{43,10)           Po WEAT | 055 +1128% 27
+poi:            WEA | UR] #1145%] Af
+47.00
+&lt;
+Arith ~
+“
+> OM
+3M
+Op
+RE 00            4 lems in Personal Watchlist Last Sorted 03:39 Re-$
+15:46
+A      )
+2 mens BY)  |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220428 (batch t=1300s)__qmg_20220428_batch1_batch_t1300.00_i2__raw_crop.png" alt="raw crop 2">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220428 (batch t=1300s)__qmg_20220428_batch1_batch_t1300.00_i2__ocr_crop.png" alt="ocr crop 2">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 52</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220428_batch1_batch_t1300.00_i2.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            4/4 correct, 2 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            3/4 correct, 0 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>TSLA</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (4)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">CWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">TSLA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">BE*</div><div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">0 Items in Watchlist                  |
+A - Positions @ sym: 8 = BE X
+Fag [Sym  [%Crange 4 VolBuzz [am >=
+49,00      I TSLA    167% +2776% 52
+CP cweB    207% +469,5%    9c
+P= KWEB    123% +875%    43
+&lt;2809)        P= WEAT    035% «112.8%    2,1
+mE          = WEAT | 055% «m28% ~~ 21
+47.00
+4
+Arith ~
+4
+> OM
+3M
+Op
+15:46
+A     )
+BP pes BY) |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220428 (batch t=1300s)__qmg_20220428_batch1_batch_t1301.00_i3__raw_crop.png" alt="raw crop 3">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220428 (batch t=1300s)__qmg_20220428_batch1_batch_t1301.00_i3__ocr_crop.png" alt="ocr crop 3">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 52</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220428_batch1_batch_t1301.00_i3.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            4/4 correct, 1 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="warn" style="font-size:16px; font-weight:600;">
+            2/4 correct, 1 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>CWEB, TSLA</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (4)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✗">CWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">TSLA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          <div class="ticker fp" title="Column-aware FP">X</div>
+          
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text"> 0 Items in Watchlist                 |
+A - Positions @ sym: i = BFF X
+36.00            Fag Sym  [%Crange 4VolBuzz ao ™®™
+= TSLA     167%) 278.1%    52
+p= CWEB      207% +4695%      aC
+3400         P= KWEB     119% | «873%    4.3
+P= WEAT      035% +1128%      21
+32.00
+1 30.00
+Arith ~
+4
+)
+RE 00            4 lems in Personal Watchlist Last Sorted 03:39 Re-$
+15:46
+Fal       0]
+BY pons WA)  |
+</div>
+    </div>
+  </div>
+
+  <div class="capture-row">
+    <div class="crop-box">
+      <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220428 (batch t=1300s)__qmg_20220428_batch1_batch_t1302.00_i4__raw_crop.png" alt="raw crop 4">
+    </div>
+    <div class="crop-box">
+      <div class="crop-label">OCR CROP<br><span style="font-size:10px">(3× scale + invert + sharpen)</span></div>
+      <img src="../data/video_scan_test/_review_crops/20220428 (batch t=1300s)__qmg_20220428_batch1_batch_t1302.00_i4__ocr_crop.png" alt="ocr crop 4">
+      <div style="color:#888; font-size:11px; margin-top:6px">OCR conf: 59</div>
+    </div>
+    <div class="detection-box">
+      <div class="capture-title">qmg_20220428_batch1_batch_t1302.00_i4.png</div>
+
+      <div class="recall-row">
+        <div>
+          <div class="label">Legacy parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            4/4 correct, 1 FP
+          </div>
+        </div>
+        <div>
+          <div class="label">Column-aware parser</div>
+          <div class="good" style="font-size:16px; font-weight:600;">
+            3/4 correct, 0 FP
+          </div>
+        </div>
+      </div>
+
+      
+        <div class="missing-banner">⚠ Missed GT tickers (column-aware): <b>TSLA</b> — check OCR crop to see if Tesseract garbled these</div>
+      
+
+      <div class="gt-list-label">Ground truth tickers (4)</div>
+      <div class="ticker-grid">
+        <div class="ticker gt-correct" title="Detected: legacy✓ column✓">CWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">KWEB</div><div class="ticker gt-correct" title="Detected: legacy✓ column✗">TSLA</div><div class="ticker gt-correct" title="Detected: legacy✓ column✓">WEAT</div>
+      </div>
+
+      
+        <div class="gt-list-label">False positives (orange = FPs; column-aware should have FEWER)</div>
+        <div class="ticker-grid">
+          
+          <div class="ticker fp" title="Legacy-only FP (column filter rejected)" style="background:#2a1a1a">X*</div>
+        </div>
+      
+
+      <div class="gt-list-label">OCR text (Tesseract output)</div>
+      <div class="ocr-text">0 Items in Watchlist          ld
+A - Positionsv @ sym: i = BFF X
+54,00            Flag Sym    % Crange Avol Buzz   loony ™ 2
+P= TSLA    161% +278,0%    5.2
+Pe CWEB | 223% +4682%  9f
+52.00            PB KWEB | 1.27% +873% 43
+P= WEAT      055% «112.8%      27
+50.00
+48.00
+47.16
+Arith ~
+4
+“ 0.00              4 Items in Personal Watchlist Last Somed 03:39 Re-$
+15:46
+Fal       0]
+2 omens BA)  |
+</div>
+    </div>
+  </div>
+
+
 <h2>20220427 — 4 GT tickers (TSLA, BOIL, WEAT, KOLD)</h2>
 <p style="color:#888; font-size:12px;">GT: TSLA, BOIL, WEAT, KOLD, FAULL, LABU, NUGT, SOXL, UVXY</p>
+
+
 
 
   <div class="capture-row">
@@ -4528,6 +5323,8 @@ A     7)
 
 <h2>20220428 — 4 GT tickers</h2>
 <p style="color:#888; font-size:12px;">GT: CWEB, KWEB, TSLA, WEAT</p>
+
+
 
 
   <div class="capture-row">
@@ -4724,6 +5521,8 @@ BY pos WY)  |
 
 <h2>20220429 — 5 GT (WEAT, GUSH, TSLA, X, SWN)</h2>
 <p style="color:#888; font-size:12px;">GT: WEAT, GUSH, TSLA, X, SWN</p>
+
+
 
 
   <div class="capture-row">
@@ -4934,6 +5733,8 @@ BP pun BY)  |
 <p style="color:#888; font-size:12px;">GT: UCO, WEAT, TSLA, LTHM</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -5134,6 +5935,8 @@ LD 05.00 |
 <p style="color:#888; font-size:12px;">GT: TSLA, VRM</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -5330,6 +6133,8 @@ a x           | 2 mems in Personal Watchlst Las Somed 0333
 
 <h2>20220517 — 7 GT tickers (FNGU, TQQQ, OXY, COIN, ERX, AR, WEAT)</h2>
 <p style="color:#888; font-size:12px;">GT: FNGU, TQQQ, OXY, COIN, ERX, AR, WEAT</p>
+
+
 
 
   <div class="capture-row">
@@ -5536,6 +6341,8 @@ BY gsr BB |
 <p style="color:#888; font-size:12px;">GT: GOVX, LABU, UCO, ALB, CBIO, VLO, TNA, NFLX, BOIL</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -5738,6 +6545,8 @@ AB pies  |
 
 <h2>20220607 — 7 GT tickers</h2>
 <p style="color:#888; font-size:12px;">GT: UCO, VLO, ALB, BOIL, NFLX, TNA, LTHM</p>
+
+
 
 
   <div class="capture-row">
@@ -5945,6 +6754,8 @@ ERUPT) |
 
 <h2>20220608 — 9 GT tickers (largest after 20220323, OCR-difficult)</h2>
 <p style="color:#888; font-size:12px;">GT: SIGA, TNA, VLO, UCO, NFLX, ALB, BOIL, LTHM, AERC</p>
+
+
 
 
   <div class="capture-row">
@@ -6162,6 +6973,8 @@ AR 22.06.58  5) |
 <p style="color:#888; font-size:12px;">GT: UVXY, VLO, UCO</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -6369,6 +7182,8 @@ A     )
 <p style="color:#888; font-size:12px;">GT: OIH</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -6559,6 +7374,8 @@ BY ne BB  |
 
 <h2>20221117 — 6 GT tickers (FREY, OIH, ASML, U, SI, SOXL)</h2>
 <p style="color:#888; font-size:12px;">GT: FREY, OIH, ASML, U, SI, SOXL</p>
+
+
 
 
   <div class="capture-row">
@@ -6770,6 +7587,8 @@ ABE pr BY |
 
 <h2>20230126 — 8 GT tickers (CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS)</h2>
 <p style="color:#888; font-size:12px;">GT: CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS</p>
+
+
 
 
   <div class="capture-row">
@@ -6991,6 +7810,8 @@ ARE pins |
 <p style="color:#888; font-size:12px;">GT: PLTR, LI, AI, SHOP, MNDY, IMGN, APLD</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -7193,6 +8014,8 @@ AR 2025.05.18  8] |
 <p style="color:#888; font-size:12px;">GT: LI, IMGN, SOUN, AI, CVNA, APLD, PLTR</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -7378,6 +8201,8 @@ AR 2305.2  8 |
 
 <h2>20230523 — 11 GT (QBTS, LI, SOUN, IMGN, FTCH, MNDY, APLD, PLTR, DNA, AI, CVNA)</h2>
 <p style="color:#888; font-size:12px;">GT: QBTS, LI, SOUN, IMGN, FTCH, MNDY, APLD, PLTR, DNA, AI, CVNA</p>
+
+
 
 
   <div class="capture-row">
@@ -7580,6 +8405,8 @@ AE y25.08.23</div>
 
 <h2>20230601 — 9 GT (QBTS, APLD, AI, DNA, CVNA, IONQ, PLTR, IMGN, MNDY)</h2>
 <p style="color:#888; font-size:12px;">GT: QBTS, APLD, AI, DNA, CVNA, IONQ, PLTR, IMGN, MNDY</p>
+
+
 
 
   <div class="capture-row">
@@ -7788,6 +8615,8 @@ wine Flos [ams mak ames
 <p style="color:#888; font-size:12px;">GT: IOT, TEAM, MTCH, QBTS, ARQQ, RGTI, IMGN, PLTR, CVNA, MNDY, APLD, DNA, IONQ, AI, GSIT</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -7988,6 +8817,8 @@ hy    </div>
 
 <h2>20230605 — 11 GT tickers (IMGN, ARQQ, CVNA, IOT, PLTR, GSIT, MNDY, APLD, AI, QBTS, DNA) — wider table layout</h2>
 <p style="color:#888; font-size:12px;">GT: IMGN, ARQQ, CVNA, IOT, PLTR, GSIT, MNDY, APLD, AI, QBTS, DNA</p>
+
+
 
 
   <div class="capture-row">
@@ -8192,6 +9023,8 @@ A Ea ogo  8 |
 <p style="color:#888; font-size:12px;">GT: CVNA, QBTS, APLD, ARQQ, IMGN, IOT, GTLB, RGTI, DNA, MNDY, AI, PLTR, GSIT</p>
 
 
+
+
   <div class="capture-row">
     <div class="crop-box">
       <div class="crop-label">RAW CROP<br><span style="font-size:10px">(parser input, 250×434px)</span></div>
@@ -8389,6 +9222,8 @@ IDNA | dai 1084) 48M 477%
 
 <h2>20230609 — 13 GT (RGTI, QBTS, IMGN, CVNA, IOT, ARQQ, AI, PLTR, DNA, GTLB, GSIT, APLD, MNDY)</h2>
 <p style="color:#888; font-size:12px;">GT: RGTI, QBTS, IMGN, CVNA, IOT, ARQQ, AI, PLTR, DNA, GTLB, GSIT, APLD, MNDY</p>
+
+
 
 
   <div class="capture-row">
