@@ -1106,40 +1106,52 @@ async function main() {
     // additional frames within a window of that timestamp. All frames
     // show the same position list state since they're seconds apart,
     // making multi-frame merge valid.
+    //
+    // --batch-time overrides the center timestamp. This is needed when
+    // the prefilter's best-scoring frame is not where the position list
+    // is actually visible (e.g. user navigated away from the chart
+    // platform — only the chart-area overlay remains).
     let batchMode = false;
     let batchCenterTs = null;
-    if (options.batchSnapshots && bestPrefilter) {
-      batchMode = true;
-      batchCenterTs = bestPrefilter.timestamp;
-      const baseStem = `${dateKey}_${path.basename(videoPath, path.extname(videoPath)).slice(0, 40)}`;
-      const extracted = extractBatchOcrFrames(
-        videoPath,
-        batchCenterTs,
-        options.batchWindowSeconds || 4,
-        options.batchCount || 5,
-        ocrFrameDirectory,
-        options.ffmpegBin,
-        options.ocrFrameWidth,
-        baseStem
-      );
-      // Replace selectedFrameRows with batch frames. Give each its own
-      // stats snapshot with the correct timestamp so the OCR pass records
-      // the right capture time.
-      selectedFrameRows.length = 0;
-      for (let i = 0; i < extracted.length; i += 1) {
-        const ts = extracted[i].timestamp;
-        const frameStats = { ...bestPrefilter.stats, timestamp: ts };
-        selectedFrameRows.push({
-          frameIndex: i,
-          framePath: extracted[i].framePath,
-          prefilterScore: bestPrefilter.prefilterScore,
-          stats: frameStats,
-          timestamp: ts
-        });
+    if (options.batchSnapshots) {
+      const explicitTs = Number.isFinite(options.batchTimestamp) ? options.batchTimestamp : null;
+      batchCenterTs = explicitTs != null ? explicitTs : (bestPrefilter ? bestPrefilter.timestamp : null);
+      if (batchCenterTs == null) {
+        console.warn(`[scan:${options.outputKind}] batch mode requested but no center timestamp available (no --batch-time, no best prefilter)`);
+      } else {
+        batchMode = true;
+        const baseStem = `${dateKey}_${path.basename(videoPath, path.extname(videoPath)).slice(0, 40)}`;
+        const extracted = extractBatchOcrFrames(
+          videoPath,
+          batchCenterTs,
+          options.batchWindowSeconds || 4,
+          options.batchCount || 5,
+          ocrFrameDirectory,
+          options.ffmpegBin,
+          options.ocrFrameWidth,
+          baseStem
+        );
+        // Replace selectedFrameRows with batch frames. Give each its own
+        // stats snapshot with the correct timestamp so the OCR pass records
+        // the right capture time.
+        const baseStats = bestPrefilter ? bestPrefilter.stats : { timestamp: batchCenterTs };
+        selectedFrameRows.length = 0;
+        for (let i = 0; i < extracted.length; i += 1) {
+          const ts = extracted[i].timestamp;
+          const frameStats = { ...baseStats, timestamp: ts };
+          selectedFrameRows.push({
+            frameIndex: i,
+            framePath: extracted[i].framePath,
+            prefilterScore: bestPrefilter ? bestPrefilter.prefilterScore : 18,
+            stats: frameStats,
+            timestamp: ts
+          });
+        }
+        console.log(
+          `[scan:${options.outputKind}] batch mode: extracted ${selectedFrameRows.length} frames within ±${(options.batchWindowSeconds || 4) / 2}s of t=${batchCenterTs.toFixed(1)}` +
+            (explicitTs != null ? ' (explicit --batch-time)' : ' (best prefilter)')
+        );
       }
-      console.log(
-        `[scan:${options.outputKind}] batch mode: extracted ${selectedFrameRows.length} frames within ±${(options.batchWindowSeconds || 4) / 2}s of t=${batchCenterTs.toFixed(1)}`
-      );
     }
 
     console.log(

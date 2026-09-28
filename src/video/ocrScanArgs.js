@@ -36,6 +36,7 @@ function printHelp() {
     '  --batch-snapshots          Extract a batch of N frames within ±W seconds of the best-scoring frame. All frames show the same position list state, so multi-frame merge is valid. Use with --batch-count and --batch-window.',
     '  --batch-count <n>          Number of frames in the batch (default 5)',
     '  --batch-window <seconds>   Window around the center timestamp (default 4)',
+    '  --batch-time <seconds>     Override the center timestamp for batch snapshots (skips the best-scoring frame search). Use when you know the exact timestamp where the position list is visible.',
     '  --top-candidates <n>       Include the top N candidate timestamps in the result, default 5',
     '  --keep-frames              Keep sampled intermediate frames',
     '  --skip-keyframes           Do not invoke ffprobe to locate the nearest keyframe per capture',
@@ -103,6 +104,7 @@ function buildDefaultOptions(defaultOutputRoot) {
     basename: 'revere',
     batchCount: 5,
     batchSnapshots: false,
+    batchTimestamp: null,
     batchWindowSeconds: 4,
     chartStreamParser: false,
     confusionRadius: 1,
@@ -225,6 +227,10 @@ function parseArgs(argv, overrides = {}) {
         break;
       case '--batch-window':
         options.batchWindowSeconds = Number(nextValue);
+        index += 1;
+        break;
+      case '--batch-time':
+        options.batchTimestamp = Number(nextValue);
         index += 1;
         break;
       case '--progress-interval':
