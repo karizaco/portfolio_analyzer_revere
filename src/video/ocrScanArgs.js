@@ -37,6 +37,7 @@ function printHelp() {
     '  --batch-count <n>          Number of frames in the batch (default 5)',
     '  --batch-window <seconds>   Window around the center timestamp (default 4)',
     '  --batch-time <seconds>     Override the center timestamp for batch snapshots (skips the best-scoring frame search). Use when you know the exact timestamp where the position list is visible.',
+    '  --ocr-engine <name>        OCR engine: tesseract (default) | easyocr. EasyOCR reads QMG position lists much more accurately (~95% recall vs ~25%) at the cost of ~60s/frame vs ~1-2s. Only applies to chart-stream parser mode.',
     '  --top-candidates <n>       Include the top N candidate timestamps in the result, default 5',
     '  --keep-frames              Keep sampled intermediate frames',
     '  --skip-keyframes           Do not invoke ffprobe to locate the nearest keyframe per capture',
@@ -114,6 +115,7 @@ function buildDefaultOptions(defaultOutputRoot) {
     ffmpegBin: 'ffmpeg',
     fps: 0.25,
     maxCapturesPerVideo: 3,
+    ocrEngine: 'tesseract',
     ocrFrameWidth: 1280,
     outputKind: 'whiteboard',
     outputRoot: defaultOutputRoot,
@@ -244,6 +246,10 @@ function parseArgs(argv, overrides = {}) {
         options.topCandidates = Number(nextValue);
         index += 1;
         break;
+      case '--ocr-engine':
+        options.ocrEngine = String(nextValue);
+        index += 1;
+        break;
       case '--keep-frames':
         options.keepFrames = true;
         break;
@@ -340,6 +346,10 @@ function parseArgs(argv, overrides = {}) {
 
   if (!Number.isFinite(options.confusionRadius) || options.confusionRadius < 0) {
     throw new Error('`--confusion-radius` must be zero or a positive number.');
+  }
+
+  if (!['tesseract', 'easyocr'].includes(options.ocrEngine)) {
+    throw new Error(`Unsupported OCR engine: ${options.ocrEngine}. Use 'tesseract' or 'easyocr'.`);
   }
 
   if (!Number.isFinite(options.temporalDecay) || options.temporalDecay <= 0) {
