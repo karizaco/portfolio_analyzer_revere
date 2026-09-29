@@ -31,7 +31,7 @@ const { computePerceptualHashOfRegion, computePerceptualHashOfFractionalRegion }
 const { extractTickersFromOcrText } = require('../src/normalize/tickerScan');
 const { createProbeKey, parseArgs, printHelp } = require('../src/video/ocrScanArgs');
 const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
-const { parseChartStreamPositionList } = require('../src/parse/parseChartStream');
+const { parseChartStreamPositionList, mergeMultiplePositionLists } = require('../src/parse/parseChartStream');
 
 const OCR_TEXT_SNIPPET_MAX_CHARS = 200;
 const CAPTURE_MIN_FRAME_GAP = 10;
@@ -574,7 +574,11 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
 
   let ocr, chartStream, tickerSource;
   if (chartStreamParser) {
-    // Dual-scale: run both 3x and 4x, pick the one with more tickers
+    // Dual-scale: run both 3x and 4x, pick the one with more tickers.
+    // Tested 5x+6x on 2026-09-29 (more readable text) — produced different
+    // captured frames and worse recall on 20220606 (12.5% vs 25%). The
+    // OCR's frame selection is sensitive to scale; sticking with 3x+4x
+    // until we understand the scoring interaction.
     const [r3, r4] = await Promise.all([
       runChartStreamOcr(framePath, phashRegionFraction, 3),
       runChartStreamOcr(framePath, phashRegionFraction, 4),
@@ -886,7 +890,14 @@ function summarizeCandidate(candidate, outputKind, allCandidates = null, confusi
         parse_status: candidate.chartStream.parse_status || 'unknown',
         position_list: Array.isArray(candidate.chartStream.position_list) ? candidate.chartStream.position_list : [],
         price_action: candidate.chartStream.price_action || '',
-        tickers_rejected: Number(candidate.chartStream.tickers_rejected || 0)
+        tickers_rejected: Number(candidate.chartStream.tickers_rejected || 0),
+        // Diagnostics: surface the column-filter result and the actual rejected
+        // tokens (capped at 30 to keep probe logs small). Both fields were
+        // added to the parser output but require explicit propagation here.
+        column_filter: candidate.chartStream.column_filter || null,
+        tickers_rejected_list: Array.isArray(candidate.chartStream.tickers_rejected_list)
+          ? candidate.chartStream.tickers_rejected_list
+          : []
       }
     : null;
 
@@ -1276,7 +1287,15 @@ async function main() {
       top_candidate: summarizeCandidate(captureOutputs[0].candidate, options.outputKind, candidates, options.confusionRadius),
       top_candidates: scanResult.topCandidates,
       top_rejected_candidates: rejectedForReport.map((candidate) => summarizeCandidate(candidate, options.outputKind)),
-      whiteboard_segments: buildWhiteboardSegments(captureSummaries)
+      whiteboard_segments: buildWhiteboardSegments(captureSummaries),
+      // Multi-frame merge: union of all selected captures' position lists,
+      // keeping only tickers that appear in >=2 captures. Significantly
+      // improves recall for noisy QMG frames (e.g. 20220606: ALB+TNA on one
+      // frame, CBIO on another — merge captures all three).
+      merged_position_list: mergeMultiplePositionLists(
+        captureSummaries.map((c) => c.tickers || []),
+        { minOccurrences: 2 }
+      )
     };
     const logPath = await writeScanLog(logsDirectory, probeKey, result);
     result.log_path = logPath;
