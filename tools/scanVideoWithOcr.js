@@ -562,16 +562,21 @@ async function prefilterFrames({ fps, framePaths, outputKind, prefilterProfile, 
  * applied (we run Tesseract's sharp pipeline first, then feed EasyOCR the
  * cropped PNG) so the OCR input is the same as the Tesseract path.
  */
-async function runChartStreamOcr(framePath, phashRegionFraction, scale, ocrEngine = 'tesseract') {
+async function runChartStreamOcr(framePath, phashRegionFraction, scale, ocrEngine = 'tesseract', easyOcrOptions = {}) {
+  // For EasyOCR we optionally crop from the ORIGINAL video (videoPath +
+  // timestamp) instead of the 1280px-wide OCR-resolution frame. Cropping
+  // from the downscaled frame loses detail — verified 2026-09-29 that
+  // ffmpeg-crop from the original 1920px video produces clean EasyOCR
+  // output (75% recall on 20220606) while cropping from the OCR-resolution
+  // frame produces garbage (0% recall, captured text like "CD WEJ GNS").
   let ocr;
   if (ocrEngine === 'easyocr') {
     // EasyOCR works much better with ffmpeg's crop+scale than with sharp's
     // extract+resize+lanczos3 (verified 2026-09-29: 0% recall with sharp
-    // vs 75% recall with ffmpeg on the same frame). Use ffmpeg subprocess
-    // to extract the cropped region directly, then pass that PNG to the
-    // EasyOCR Python wrapper. Always use scale=5 (not the dual-scale
-    // 3/4 used for Tesseract) — EasyOCR is much slower (~60s/frame) so we
-    // don't need to run it twice; the bigger image produces cleaner OCR.
+    // vs 75% recall with ffmpeg on the same frame). Always use scale=5
+    // (not the dual-scale 3/4 used for Tesseract) — EasyOCR is much slower
+    // (~60s/frame) so we don't need to run it twice; the bigger image
+    // produces cleaner OCR.
     const EASYOCR_SCALE = 5;
     const { x, y, w, h } = phashRegionFraction;
     const cropFilter = `crop=in_w*${w}:in_h*${h}:in_w*${x}:in_h*${y},scale=${Math.round(w * 1920 * EASYOCR_SCALE)}:-1`;
@@ -579,9 +584,16 @@ async function runChartStreamOcr(framePath, phashRegionFraction, scale, ocrEngin
       os.tmpdir(),
       `qmg_easyocr_${process.pid}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.png`
     );
+    // Prefer cropping from the original 1920px video (much better OCR); fall
+    // back to the OCR-resolution frame only if videoPath isn't threaded
+    // through (e.g., legacy callers, unit tests).
+    const { videoPath: srcVideo, timestamp: srcTs } = easyOcrOptions;
+    const ffmpegArgs = srcVideo && Number.isFinite(srcTs)
+      ? ['-ss', String(srcTs), '-i', srcVideo]
+      : ['-i', framePath];
     await new Promise((resolve, reject) => {
       const ffmpeg = spawn('ffmpeg', [
-        '-i', framePath,
+        ...ffmpegArgs,
         '-frames:v', '1',
         '-vf', cropFilter,
         '-y', tmpPath,
@@ -618,6 +630,7 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     phashRegion = null,
     phashRegionFraction = null,
     ocrEngine = 'tesseract',
+    videoPath = null,
   } = options;
 
   let ocr, chartStream, tickerSource;
@@ -627,9 +640,10 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     // captured frames and worse recall on 20220606 (12.5% vs 25%). The
     // OCR's frame selection is sensitive to scale; sticking with 3x+4x
     // until we understand the scoring interaction.
+    const easyOcrOpts = { videoPath, timestamp: explicitTimestamp != null ? explicitTimestamp : stats.timestamp };
     const [r3, r4] = await Promise.all([
-      runChartStreamOcr(framePath, phashRegionFraction, 3, ocrEngine),
-      runChartStreamOcr(framePath, phashRegionFraction, 4, ocrEngine),
+      runChartStreamOcr(framePath, phashRegionFraction, 3, ocrEngine, easyOcrOpts),
+      runChartStreamOcr(framePath, phashRegionFraction, 4, ocrEngine, easyOcrOpts),
     ]);
     // Prefer by ticker count; tie-break by OCR confidence
     const pick = r4.tickerCount > r3.tickerCount ? r4
@@ -806,7 +820,8 @@ async function scanFrames({
     ocrEngine,
     phashRegion,
     phashRegionFraction,
-    prefilterProfile
+    prefilterProfile,
+    videoPath
   };
 
   // Skip OCR entirely for low-resolution source videos (360p/480p) — the

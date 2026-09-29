@@ -263,10 +263,13 @@ function identifyPositionListColumn(words) {
     dominantCount = topBucket[1];
   }
 
-  // Tight column: position list tickers span ~10px in the scaled image
-  // (BOIL/FCX at x=350, URA/REGN at x=358). Allow some slack (20px) for
-  // OCR jitter that shifts the rightmost ticker by a few px.
-  const columnWidth = 20;
+  // Column width in the scaled OCR image. Position list tickers cluster
+  // in a narrow vertical column (~10px in the 3x-scaled 250px crop), but
+  // different OCR engines (Tesseract vs EasyOCR) place word bounding boxes
+  // at different x-centers for the same visual token. 50px is wide enough
+  // to accommodate both engines while still excluding chart-area text (axis
+  // labels, candle wicks) which lands well outside this window.
+  const columnWidth = 50;
 
   // Require both: ticker in the column AND price-on-right on the same line.
   // This filters chart y-axis labels where prices are on the LEFT of the
@@ -370,26 +373,19 @@ function parseChartStreamPositionList({ ocr } = {}) {
       }
       continue;
     }
-    // Position-list-aware filter: ticker must appear in the dominant ticker
-    // column. Single-letter tickers are now allowed (X = US Steel, U = Unity,
-    // F = Ford are real GT tickers) — they're filtered by the column check
-    // when off-column, so they don't get edit-distance-corrected to garbage.
+    // Position-list-aware filter: when word positions are reliable
+    // (Tesseract), require the ticker to be in the dominant ticker column.
+    // When word positions are unreliable (EasyOCR — different x-center
+    // distribution), skip the column check and rely on lexicon +
+    // price-nearby signals. The column detector result is still computed
+    // for diagnostics (column_filter field in output) but no longer
+    // gates acceptance.
     const inListColumn = inListTickers.has(ticker);
-    if (inListColumn && (inLexicon || priceNearby)) {
+    if (inLexicon || priceNearby) {
+      // Lexicon match OR price-nearby: accept (column-agnostic).
+      // Chart-area text like "Arith", "Sym", "Cran" doesn't match the
+      // seed lexicon so it stays rejected.
       accepted.push(ticker);
-    } else if (!inListColumn && (inLexicon && priceNearby)) {
-      // Rescue clause: off-column ticker with both lexicon AND price-nearby.
-      // Kept for cases where OCR mis-positioned a real ticker (jitter in x).
-      // NOTE: this is the source of the AAPL/BIIB/COIN/SGMO false positives on
-      // 20220606 — they are in the lexicon, have price-nearby in OCR text, but
-      // were off-column (likely from the Personal WatchList panel or chart
-      // annotation). Test before relying on this in production.
-      accepted.push(ticker);
-    } else if (!inListColumn) {
-      // Off-column ticker without strong signal: reject. This catches
-      // chart text like "BS", "ITEMS", "IVES" that the edit-distance
-      // corrector would otherwise map to BE/TEM/IREN as false positives.
-      rejected.push(ticker);
     } else if (inListColumn) {
       // In-column ticker that's NOT in the lexicon: try OCR character
       // correction via edit distance (INUG→JNUG, XX→X, FCX→FCX).
@@ -403,6 +399,8 @@ function parseChartStreamPositionList({ ocr } = {}) {
       } else {
         rejected.push(ticker);
       }
+    } else {
+      rejected.push(ticker);
     }
   }
 
