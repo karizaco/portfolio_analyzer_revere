@@ -497,13 +497,27 @@ function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporal
   score += Math.max(0, table.stdDevWeight - (Math.abs(stats.stdDev - table.stdDevTarget) / table.stdDevSlope));
 
   // Row density: for chart_stream, the position list has many horizontal
-  // text bands. Higher row density → better candidate. Currently only
-  // applied when table.rowDensityWeight > 0.
+  // text bands. Higher row density → better candidate. Linear-reward
+  // formula: rowD / target capped at 1.0. (Previous formula subtracted
+  // |rowD-target|/slope, which made the contribution 0 for any realistic
+  // rowD given the unreachable target=150 / slope=0.05 in chart_stream.)
   if (table.rowDensityWeight > 0) {
     const rowD = Number(stats.rowDensity || 0);
-    const target = Number(table.rowDensityTarget || 0);
-    const slope = Number(table.rowDensitySlope || 1);
-    score += Math.max(0, table.rowDensityWeight - Math.abs(rowD - target) / slope);
+    const target = Number(table.rowDensityTarget || 1);
+    const fraction = target > 0 ? Math.min(1.0, rowD / target) : 0;
+    score += table.rowDensityWeight * fraction;
+  }
+
+  // Max-column row density: position-list frames concentrate text-row
+  // transitions in ONE column (the ticker column at x≈0.93 of the frame);
+  // intro/warmup frames scatter transitions across columns (chart axis
+  // labels, candle wicks). So maxColRowDensity is high for position list,
+  // low for intro. Weight this strongly to prefer position-list frames.
+  if (table.maxColRowDensityWeight > 0) {
+    const mcrd = Number(stats.maxColRowDensity || 0);
+    const target = Number(table.maxColRowDensityTarget || 1);
+    const fraction = target > 0 ? Math.min(1.0, mcrd / target) : 0;
+    score += table.maxColRowDensityWeight * fraction;
   }
 
   // Mid-tone ratio in the ticker region: the position list has ticker text
@@ -632,11 +646,21 @@ const PREFILTER_PROFILES = Object.freeze({
     stdDevSlope: 12,
     // Row density: Quullamaggie position list has 10-15 rows of white text on
     // dark background. The total row-density score counts dark-to-bright
-    // transitions across all columns. Target ~150 (≈10 rows × ~15 cols/row
-    // of text strokes). A single-overlay-text frame has much lower density.
+    // transitions across all columns. Linear reward: rowD / target. (The
+    // previous |rowD-target|/slope formula was dead because target=150 was
+    // unreachable; new linear formula treats it as a saturation point.)
     rowDensityWeight: 10,
     rowDensityTarget: 150,
     rowDensitySlope: 0.05,
+    // Max-column row density: position-list frames concentrate text-row
+    // transitions in ONE column (the ticker column at x≈0.93 of the frame);
+    // intro/warmup frames scatter them across columns. maxColRowDensity ≈
+    // 10-15 for a real position list, 1-3 for intro. Weight strongly (25)
+    // to flip the prefilter ranking toward actual position-list frames
+    // instead of intro/warmup frames.
+    maxColRowDensityWeight: 25,
+    maxColRowDensityTarget: 12,
+    maxColRowDensitySlope: 1,
     // Mid-tone ratio in ticker region: ratio of pixels in brightness range
     // 51-150 (gray text) within the right-bottom ticker rectangle. A clean
     // Google Drive frame has < 1% mid-tone; a real position list frame
