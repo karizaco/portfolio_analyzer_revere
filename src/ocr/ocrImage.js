@@ -54,6 +54,8 @@ async function preprocessImage(filePath, profileName, preprocessOptions = {}) {
   // overlayScale default raised from 3 → 5 (2026-09-25): the maxcrop test showed
   // 5x scale + black padding + sharpen 2.0 lifts Tesseract recall ~5pp on dense
   // position lists. Larger image = more pixels per character for Tesseract.
+  // EasyOCR also benefits from the same preprocessing (negate, contrast, etc.)
+  // when running on QMG chart-stream content.
   const { overlayRegion = null, overlayScale = 5 } = preprocessOptions;
   let pipeline = sharp(filePath);
 
@@ -230,6 +232,56 @@ async function runProfile(worker, filePath, profileName, preprocessOptions) {
   };
 }
 
+/**
+ * Run ONLY the chart-stream sharp preprocessing pipeline (extract region,
+ * upscale, grayscale, negate, contrast, normalize, sharpen, black border)
+ * and return the result as a PNG buffer. Used when feeding the cropped
+ * image to a non-Tesseract OCR engine (e.g. EasyOCR) — keeps the OCR input
+ * identical between engines so differences in recall are attributable to the
+ * recognizer, not preprocessing.
+ *
+ * Returns: Buffer (PNG).
+ */
+async function preprocessChartStreamToBuffer(filePath, preprocessOptions = {}) {
+  const buffer = await preprocessImage(filePath, 'chart-stream', preprocessOptions);
+  return buffer;
+}
+
+/**
+ * Minimal chart-stream preprocessing for OCR engines that work better on
+ * raw images than on Tesseract-style preprocessed (negate/contrast/sharpen)
+ * images. EasyOCR in particular was trained on natural images, so applying
+ * `negate` (white-on-dark → black-on-white) or `grayscale` hurts its
+ * accuracy (verified 2026-09-29: removing grayscale + negate brings EasyOCR
+ * recall on 20220606 from 0% to 75% on a manual frame extract).
+ *
+ * Pipeline: extract region → upscale by `overlayScale` → PNG.
+ * No negate, no linear contrast, no normalize, no sharpen, no grayscale, no
+ * black border. Color preservation lets EasyOCR see white-on-dark text in
+ * its natural orientation.
+ *
+ * Returns: Buffer (PNG).
+ */
+async function preprocessChartStreamRawToBuffer(filePath, preprocessOptions = {}) {
+  const { overlayRegion = null, overlayScale = 5 } = preprocessOptions;
+  if (!overlayRegion) {
+    throw new Error('preprocessChartStreamRawToBuffer requires overlayRegion');
+  }
+  const metadata = await sharp(filePath).metadata();
+  const width = metadata.width || 0;
+  const height = metadata.height || 0;
+  const { x, y, w, h } = overlayRegion;
+  const left = Math.round(x * width);
+  const top = Math.round(y * height);
+  const cropW = Math.round(w * width);
+  const cropH = Math.round(h * height);
+  return await sharp(filePath)
+    .extract({ left, top, width: cropW, height: cropH })
+    .resize(Math.round(cropW * overlayScale), Math.round(cropH * overlayScale), { kernel: 'lanczos3' })
+    .png()
+    .toBuffer();
+}
+
 async function ocrImage(filePath, preprocessOptions = {}) {
   const worker = await getWorker();
 
@@ -300,5 +352,7 @@ async function closeWorker() {
 
 module.exports = {
   closeWorker,
-  ocrImage
+  ocrImage,
+  preprocessChartStreamToBuffer,
+  preprocessChartStreamRawToBuffer
 };

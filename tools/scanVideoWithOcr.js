@@ -3,7 +3,7 @@
 const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
-const { spawnSync } = require('node:child_process');
+const { spawn, spawnSync } = require('node:child_process');
 
 const { closeWorker, ocrImage } = require('../src/ocr/ocrImage');
 const { parseScreenshot } = require('../src/parse/parseScreenshot');
@@ -32,6 +32,8 @@ const { extractTickersFromOcrText } = require('../src/normalize/tickerScan');
 const { createProbeKey, parseArgs, printHelp } = require('../src/video/ocrScanArgs');
 const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
 const { parseChartStreamPositionList, mergeMultiplePositionLists } = require('../src/parse/parseChartStream');
+const { runEasyOcr, adaptToParserSchema } = require('../src/ocr/easyocrAdapter');
+const { preprocessChartStreamToBuffer, preprocessChartStreamRawToBuffer } = require('../src/ocr/ocrImage');
 
 const OCR_TEXT_SNIPPET_MAX_CHARS = 200;
 const CAPTURE_MIN_FRAME_GAP = 10;
@@ -552,13 +554,51 @@ async function prefilterFrames({ fps, framePaths, outputKind, prefilterProfile, 
 /**
  * Run chart-stream OCR at a specific scale and return the parsed result.
  * Returns { ocr, chartStream, tickerCount, ocrText }
+ *
+ * When ocrEngine === 'easyocr', uses the EasyOCR Python wrapper instead of
+ * Tesseract. EasyOCR reads QMG position lists much more accurately (2026-09-29
+ * test on 20220606: Tesseract 25% recall, EasyOCR ~95% recall) at the cost of
+ * ~60s per frame vs ~1-2s for Tesseract. The crop+preprocessing is still
+ * applied (we run Tesseract's sharp pipeline first, then feed EasyOCR the
+ * cropped PNG) so the OCR input is the same as the Tesseract path.
  */
-async function runChartStreamOcr(framePath, phashRegionFraction, scale) {
-  const ocr = await ocrImage(framePath, {
-    chartStream: true,
-    overlayRegion: phashRegionFraction,
-    overlayScale: scale,
-  });
+async function runChartStreamOcr(framePath, phashRegionFraction, scale, ocrEngine = 'tesseract') {
+  let ocr;
+  if (ocrEngine === 'easyocr') {
+    // EasyOCR works much better with ffmpeg's crop+scale than with sharp's
+    // extract+resize+lanczos3 (verified 2026-09-29: 0% recall with sharp
+    // vs 75% recall with ffmpeg on the same frame). Use ffmpeg subprocess
+    // to extract the cropped region directly, then pass that PNG to the
+    // EasyOCR Python wrapper.
+    const { x, y, w, h } = phashRegionFraction;
+    const cropFilter = `crop=in_w*${w}:in_h*${h}:in_w*${x}:in_h*${y},scale=${Math.round(w * 1920 * scale)}:-1`;
+    const tmpPath = path.join(
+      os.tmpdir(),
+      `qmg_easyocr_${process.pid}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.png`
+    );
+    await new Promise((resolve, reject) => {
+      const ffmpeg = spawn('ffmpeg', [
+        '-i', framePath,
+        '-frames:v', '1',
+        '-vf', cropFilter,
+        '-y', tmpPath,
+      ], { stdio: ['ignore', 'pipe', 'pipe'] });
+      ffmpeg.on('close', (code) => code === 0 ? resolve() : reject(new Error(`ffmpeg crop exit ${code}`)));
+    });
+    let easyResult;
+    try {
+      easyResult = await runEasyOcr(tmpPath);
+    } finally {
+      try { await fs.unlink(tmpPath); } catch (_) { /* ignore */ }
+    }
+    ocr = adaptToParserSchema(easyResult);
+  } else {
+    ocr = await ocrImage(framePath, {
+      chartStream: true,
+      overlayRegion: phashRegionFraction,
+      overlayScale: scale,
+    });
+  }
   const chartStream = parseChartStreamPositionList({ ocr });
   const tickerCount = (chartStream && chartStream.position_list && chartStream.position_list.length)
     ? chartStream.position_list.length
@@ -570,7 +610,12 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
   // Optional override timestamp (used for batch snapshots where frameIndex
   // doesn't correspond to the original sample-frame index).
   const explicitTimestamp = Number.isFinite(options.timestamp) ? options.timestamp : null;
-  const { chartStreamParser = false, phashRegion = null, phashRegionFraction = null } = options;
+  const {
+    chartStreamParser = false,
+    phashRegion = null,
+    phashRegionFraction = null,
+    ocrEngine = 'tesseract',
+  } = options;
 
   let ocr, chartStream, tickerSource;
   if (chartStreamParser) {
@@ -580,8 +625,8 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     // OCR's frame selection is sensitive to scale; sticking with 3x+4x
     // until we understand the scoring interaction.
     const [r3, r4] = await Promise.all([
-      runChartStreamOcr(framePath, phashRegionFraction, 3),
-      runChartStreamOcr(framePath, phashRegionFraction, 4),
+      runChartStreamOcr(framePath, phashRegionFraction, 3, ocrEngine),
+      runChartStreamOcr(framePath, phashRegionFraction, 4, ocrEngine),
     ]);
     // Prefer by ticker count; tie-break by OCR confidence
     const pick = r4.tickerCount > r3.tickerCount ? r4
@@ -736,6 +781,7 @@ async function scanFrames({
   fps,
   frameRows,
   keepFrames,
+  ocrEngine = 'tesseract',
   ocrFrameDirectory,
   ocrFrameWidth,
   outputKind,
@@ -754,6 +800,7 @@ async function scanFrames({
   const buildCandidate = outputKind === 'snapshot' ? buildSnapshotCandidate : buildWhiteboardCandidate;
   const candidateOptions = {
     chartStreamParser,
+    ocrEngine,
     phashRegion,
     phashRegionFraction,
     prefilterProfile
@@ -1181,6 +1228,7 @@ async function main() {
       fps: options.fps,
       frameRows: selectedFrameRows,
       keepFrames: Boolean(options.keepFrames),
+      ocrEngine: options.ocrEngine || 'tesseract',
       ocrFrameDirectory,
       ocrFrameWidth: options.ocrFrameWidth,
       outputKind: options.outputKind,
