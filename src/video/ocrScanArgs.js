@@ -59,17 +59,20 @@ function printHelp() {
 //   - The position list table varies in width depending on layout — narrow
 //     tables (3 columns: Flag/Sym/%Change) span x=[1766-1911] (145px); wide
 //     tables (5 columns: Flag/Sym/%Change/PreBuzz/ADR) span x=[1742-1911]
-//     (169px). Some captures also show a "Personal WatchList" panel to
-//     the right with the SAME horizontal extent.
-//   - Tested across 8 GT videos (48 GT ticker appearances) at 1080p:
-//       0.91,0.09 (173px wide): 31% recall, 8 FPs — too narrow, cuts off
-//         the left edge of ticker text in dense tables
-//       0.87,0.13 (250px wide): 42% recall, 10 FPs — too wide, picks up
-//         chart annotations and Personal WatchList rows
-//       0.86,0.14 (269px wide): 48% recall, 7 FPs — best balance
-//   - The vertical range (y=0.55, h=0.45 → 486px) captures the full
-//     position list including any header rows that were cut off in
-//     earlier crops (y=0.58, h=0.40 → 432px).
+//     (169px). Some captures also show a "Personal WatchList" panel BELOW
+//     the position list (at y=0.95..1.00 of frame) with the SAME horizontal
+//     extent and identical row shape (TICKER | % | % | VOL) — that is where
+//     most false positives came from in the previous crop.
+//   - Tested on the actual captured frame at 1080p via per-row luma analysis:
+//       Position list text band: rows 83-273 of crop = y=0.627-0.803 (190 px)
+//       Watchlist panel band:    rows 431-480 of crop = y=0.949-0.994
+//       Gap (dark UI chrome):    rows 274-430 of crop = y=0.803-0.949
+//   - Previous crop (0.86,0.55,0.14,0.45 → 269x486 px @1080p) was ~2.5× taller
+//     than needed. The new crop (0.86,0.62,0.14,0.22 → 269x238 px) includes
+//     the entire position list band with ~10 px headroom on top, ends 110 px
+//     before the watchlist starts, and excludes chart y-axis bleed above.
+//   - The horizontal range (x=0.86, w=0.14) is unchanged — covers the widest
+//     5-column variant without clipping the left edge of ticker text.
 // The position-list-aware filter in src/parse/parseChartStream.js
 // (identifyPositionListColumn) is the second line of defense — it uses
 // per-word OCR positions to identify the dominant ticker column and

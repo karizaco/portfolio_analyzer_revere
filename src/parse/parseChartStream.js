@@ -7,7 +7,7 @@
 //
 // Filtering layers (most strict first):
 //   1. STRICT_TICKER_PATTERN — must look like an uppercase ticker (1-5 chars,
-//      starts with a letter).
+//      starts with a letter, optional `.X` class share suffix like BRK.A).
 //   2. Position-list-aware column filter (when ocr.words positions are
 //      available): ticker must land in the dominant vertical column
 //      (x=348-358 in the 3x-scaled 250px crop) AND have a price/percent
@@ -21,10 +21,12 @@
 //      correction on it produces random ticker-shaped false positives
 //      (BS→BE, IN→ON, SYM→SPYM, etc.).
 //
-// Single-letter tickers (A, I, P, M) are excluded by the column filter — they
-// appear all over the chart and get edit-distance-corrected to U/LI/MP,
-// causing false positives. The GT ticker "X" (US Steel) sometimes slips
-// through; this is a known limitation.
+// Single-letter tickers (X, U, F, etc.) are allowed in the column filter —
+// they're legitimate GT tickers (e.g. "X" = US Steel, "U" = Unity). The
+// column filter rejects them when they appear outside the position-list
+// column (chart text) so they don't get edit-distance-corrected to other
+// tickers (A→U, I→LI). In-column single-letter tokens are accepted if
+// they pass the price-nearby check.
 //
 // When ocr.words positions are NOT provided (legacy callers, test fixtures),
 // the parser falls back to the legacy behavior: price-nearby + lexicon +
@@ -37,7 +39,9 @@
 const { extractTickersFromOcrText, loadSeedLexiconSync, clearTickerScanCache } = require('../normalize/tickerScan');
 const { STRICT_TICKER_PATTERN } = require('../normalize/tickerExtraction');
 
-// Maximum edit distance for OCR character correction
+// Maximum edit distance for OCR character correction. Tested 3 on 2026-09-29
+// (might catch GOVX→"BGO" which needs 3 edits) — added FPs to non-peak frames
+// without helping peak recall. Reverted to 2.
 const MAX_OCR_EDIT_DISTANCE = 2;
 
 // Matches OCR-split prices:  $ 412.50  ($ split from digits by whitespace)
@@ -122,11 +126,50 @@ function hasPriceNear(ocrText, ticker) {
 // cannot be reliably localized and are rejected entirely — they cause too
 // many edit-distance corrections (A→U, I→LI, etc.).
 //
+// Panel boundaries: when the OCR has detected the "A-Positions" header
+// (fuzzy-matched from "A -Positionsy" / "A -Positionsv" etc.) we restrict
+// the column detection to lines BETWEEN that header and the "WatchList"
+// panel below. This excludes the Personal WatchList panel rows from the
+// accepted set — they share the position list's x-range and same row shape,
+// so the column filter alone cannot distinguish them.
+//
 // Returns { inListTickers: Set<string>, dominantColumnX, columnWidth }
+function findPanelBoundaries(words) {
+  // Returns { positionsLine, watchlistLine, topBoundary, bottomBoundary }.
+  // `topBoundary` is the line number of the "A-Positions" header (only
+  // ticker-shaped words on lines >= topBoundary are considered).
+  // `bottomBoundary` is the line number of the "WatchList" header (only
+  // ticker-shaped words on lines < bottomBoundary are considered).
+  // Returns nulls if no keywords detected.
+  let positionsLine = null;
+  let watchlistLine = null;
+  for (const w of words) {
+    const upper = (w.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
+    if (!upper) continue;
+    if (positionsLine == null && /POSITIONS|POSTNS|POSITON/.test(upper)) {
+      positionsLine = w.line;
+    }
+    if (watchlistLine == null && /WATCH|MAHL|PENAL|PENOR|WANCR/.test(upper)) {
+      watchlistLine = w.line;
+    }
+  }
+  return { positionsLine, watchlistLine };
+}
+
 function identifyPositionListColumn(words) {
   if (!Array.isArray(words) || !words.length) {
     return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
   }
+
+  // Detect panel boundaries via keyword matching. If both headers found,
+  // restrict ticker-word collection to lines inside [positionsLine+1, watchlistLine).
+  // This excludes chart text above and the Personal WatchList panel below.
+  const { positionsLine, watchlistLine } = findPanelBoundaries(words);
+  const lineIsInPanel = (line) => {
+    if (positionsLine != null && line <= positionsLine) return false;
+    if (watchlistLine != null && line >= watchlistLine) return false;
+    return true;
+  };
 
   // For each line: collect right-side price/percent tokens (x > ticker.right).
   // Real position list rows have the price token to the RIGHT of the ticker;
@@ -141,7 +184,7 @@ function identifyPositionListColumn(words) {
     const priceMatches = lineText.match(/[+\-]?\d+(?:\.\d+)?\s*%|[+\-]?\d+\.\d+|\$\s*\d/g);
     if (priceMatches && priceMatches.length) {
       const tickerXs = sameLineWords
-        .filter(x => /^[A-Z][A-Z0-9]{1,4}$/.test((x.text||'').toUpperCase().replace(/[^A-Z0-9.]/g,'')))
+        .filter(x => STRICT_TICKER_PATTERN.test((x.text||'').toUpperCase().replace(/[^A-Z0-9.]/g,'')))
         .map(x => ({ left: x.left, right: x.left + x.width }));
       const priceWords = sameLineWords.filter(x => /[%\$]|^\d+\.\d+$|^\d{2,4}$/.test(x.text));
       let maxTickerLeft = Math.max(0, ...tickerXs.map(t => t.left));
@@ -164,12 +207,19 @@ function identifyPositionListColumn(words) {
   // they're excluded from the column-finding step. This avoids the
   // ambiguity where chart-header words land at the same x as the ticker
   // column (e.g. SYM at x=177 ties with TSLA at x=179 in the same bucket).
+  //
+  // Also filter by panel boundary when keywords were detected: only
+  // consider words on lines between the "A-Positions" header and the
+  // "WatchList" panel header. This excludes the Personal WatchList panel
+  // below the position list (which has the same row shape and x-range,
+  // and would otherwise leak through as FPs).
   const priceAlignedTickers = [];
   const tickerWords = [];
   for (const w of words) {
     const upper = (w.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
     if (!upper) continue;
-    if (!/^[A-Z][A-Z0-9]{1,4}$/.test(upper)) continue;
+    if (!STRICT_TICKER_PATTERN.test(upper)) continue;
+    if (!lineIsInPanel(w.line)) continue;
     const center = w.left + w.width / 2;
     const entry = {
       center,
@@ -321,16 +371,19 @@ function parseChartStreamPositionList({ ocr } = {}) {
       continue;
     }
     // Position-list-aware filter: ticker must appear in the dominant ticker
-    // column. Single-letter tickers are excluded — they're too ambiguous
-    // (A, I, P, M appear all over the chart and get edit-distance-corrected
-    // to U/LI/MP/AMAT/etc., causing false positives).
+    // column. Single-letter tickers are now allowed (X = US Steel, U = Unity,
+    // F = Ford are real GT tickers) — they're filtered by the column check
+    // when off-column, so they don't get edit-distance-corrected to garbage.
     const inListColumn = inListTickers.has(ticker);
     if (inListColumn && (inLexicon || priceNearby)) {
       accepted.push(ticker);
     } else if (!inListColumn && (inLexicon && priceNearby)) {
-      // Off-column ticker with both lexicon AND price-nearby: this is
-      // strong signal that it's a real ticker (not chart text). Allow it
-      // through — chart annotation text rarely has both signals.
+      // Rescue clause: off-column ticker with both lexicon AND price-nearby.
+      // Kept for cases where OCR mis-positioned a real ticker (jitter in x).
+      // NOTE: this is the source of the AAPL/BIIB/COIN/SGMO false positives on
+      // 20220606 — they are in the lexicon, have price-nearby in OCR text, but
+      // were off-column (likely from the Personal WatchList panel or chart
+      // annotation). Test before relying on this in production.
       accepted.push(ticker);
     } else if (!inListColumn) {
       // Off-column ticker without strong signal: reject. This catches
@@ -374,7 +427,13 @@ function parseChartStreamPositionList({ ocr } = {}) {
     parse_status: accepted.length ? 'ok' : 'no_position_list',
     position_list: accepted.sort(),
     price_action: priceActionHint || '',
-    tickers_rejected: rejected.length
+    // Keep `tickers_rejected` as a number for backward compatibility with
+    // scoreChartStreamCandidate in tools/scanVideoWithOcr.js (-0.25 per reject).
+    tickers_rejected: rejected.length,
+    // Diagnostic: the actual rejected tokens (capped to keep probe logs small).
+    // Helps diagnose which chart-text/OCR-garble tokens are leaking into "rejected"
+    // status instead of being silently dropped. Was previously only a count.
+    tickers_rejected_list: rejected.slice(0, 30)
   };
 }
 
