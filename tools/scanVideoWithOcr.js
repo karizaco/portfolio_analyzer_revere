@@ -569,9 +569,12 @@ async function runChartStreamOcr(framePath, phashRegionFraction, scale, ocrEngin
     // extract+resize+lanczos3 (verified 2026-09-29: 0% recall with sharp
     // vs 75% recall with ffmpeg on the same frame). Use ffmpeg subprocess
     // to extract the cropped region directly, then pass that PNG to the
-    // EasyOCR Python wrapper.
+    // EasyOCR Python wrapper. Always use scale=5 (not the dual-scale
+    // 3/4 used for Tesseract) — EasyOCR is much slower (~60s/frame) so we
+    // don't need to run it twice; the bigger image produces cleaner OCR.
+    const EASYOCR_SCALE = 5;
     const { x, y, w, h } = phashRegionFraction;
-    const cropFilter = `crop=in_w*${w}:in_h*${h}:in_w*${x}:in_h*${y},scale=${Math.round(w * 1920 * scale)}:-1`;
+    const cropFilter = `crop=in_w*${w}:in_h*${h}:in_w*${x}:in_h*${y},scale=${Math.round(w * 1920 * EASYOCR_SCALE)}:-1`;
     const tmpPath = path.join(
       os.tmpdir(),
       `qmg_easyocr_${process.pid}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.png`
