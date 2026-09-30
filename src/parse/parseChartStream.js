@@ -471,11 +471,146 @@ function mergeMultiplePositionLists(positionLists, options = {}) {
     .sort();
 }
 
+// Multi-frame RAW-OCR token voting.
+//
+// The existing mergeMultiplePositionLists merges accepted ticker LISTS from
+// each frame. That doesn't help when each frame's garbled OCR maps to
+// different accepted tickers (BGO in frame 1 → BIIB, Tan in frame 2 → TNA,
+// etc.) — the lists have no overlap, the merge is empty.
+//
+// This function instead collects RAW ticker-shape tokens from each frame's
+// OCR text (Tesseract or EasyOCR), groups tokens that are within edit-
+// distance ≤ `maxDistance` of each other into clusters, then picks a
+// canonical representative per cluster (preferring tokens in the seed
+// lexicon, then most-frequent, then alphabetical).
+//
+// Real position-list tickers appear in EVERY frame under different garbled
+// forms (Tan/Tna/TNA/Tna in 5 frames). FPs (e.g., AAPL/BIIB from chart
+// annotations) appear once or twice and get outvoted by the cluster that
+// has both lexicon match AND higher frequency.
+//
+// Inputs:
+//   `frameTexts` — array of strings (one per frame), each is OCR text.
+//   `options`:
+//     - `maxDistance` (default 2) — edit distance for clustering
+//     - `minTokenLength` (default 2) — drop tokens shorter than this
+//     - `lexicon` — optional pre-loaded seed lexicon (default loads fresh)
+//     - `regex` — optional ticker-shape regex (default /^[A-Z][A-Z0-9.]{0,4}$/)
+//
+// Output: { clusters: [{ canonical, members, frequency }, ...], merged_list: [...] }
+function clusterRawOcrTokens(frameTexts, options = {}) {
+  const maxDistance = Number.isFinite(options.maxDistance)
+    ? options.maxDistance
+    : 2;
+  const minTokenLength = Number.isFinite(options.minTokenLength)
+    ? options.minTokenLength
+    : 2;
+  const regex = options.regex || /^[A-Z][A-Z0-9.]{0,4}$/;
+  const lexicon = options.lexicon || loadSeedLexiconSync();
+
+  // Step 1: collect tokens per frame (Set deduplicates within frame)
+  const perFrameTokens = frameTexts.map((text) => {
+    if (!text) return new Set();
+    const tokens = new Set();
+    for (const raw of String(text).split(/[\s,;:()\[\]{}<>\/\\|]+/)) {
+      const cleaned = raw.replace(/^\|+|\|+$/g, '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
+      if (cleaned.length < minTokenLength || cleaned.length > 5) continue;
+      if (!regex.test(cleaned)) continue;
+      tokens.add(cleaned);
+    }
+    return tokens;
+  });
+
+  // Step 2: compute per-token total frequency (counted once per frame, even
+  // if it appears multiple times in the same frame)
+  const frequency = new Map();
+  for (const tokens of perFrameTokens) {
+    for (const t of tokens) {
+      frequency.set(t, (frequency.get(t) || 0) + 1);
+    }
+  }
+  if (frequency.size === 0) {
+    return { clusters: [], merged_list: [] };
+  }
+
+  // Step 3: Union-Find clustering — tokens within maxDistance of each
+  // other share a cluster root. O(N²) which is fine for ~50 tokens/frame
+  // × 6 frames = 300 tokens (~90K pair comparisons, ~10ms).
+  const tokens = Array.from(frequency.keys());
+  const parent = new Map();
+  function find(x) {
+    let r = parent.get(x) ?? x;
+    if (r === x) return x;
+    r = find(r);
+    parent.set(x, r);
+    return r;
+  }
+  function union(a, b) {
+    const ra = find(a), rb = find(b);
+    if (ra !== rb) parent.set(ra, rb);
+  }
+  for (let i = 0; i < tokens.length; i += 1) {
+    parent.set(tokens[i], tokens[i]);
+    for (let j = i + 1; j < tokens.length; j += 1) {
+      if (Math.abs(tokens[i].length - tokens[j].length) > maxDistance) continue;
+      if (levenshtein(tokens[i], tokens[j]) <= maxDistance) {
+        union(tokens[i], tokens[j]);
+      }
+    }
+  }
+
+  // Step 4: group by root
+  const groups = new Map();
+  for (const t of tokens) {
+    const root = find(t);
+    if (!groups.has(root)) groups.set(root, []);
+    groups.get(root).push(t);
+  }
+
+  // Step 5: pick canonical per cluster. Prefer lexicon matches; if
+  // multiple lexicon matches, prefer most-frequent; tie-break alphabetically.
+  const clusters = [];
+  for (const [, members] of groups) {
+    members.sort((a, b) => {
+      const aLex = lexicon.tickerSet.has(a) ? 1 : 0;
+      const bLex = lexicon.tickerSet.has(b) ? 1 : 0;
+      if (aLex !== bLex) return bLex - aLex;  // lexicon match first
+      const aFreq = frequency.get(a) || 0;
+      const bFreq = frequency.get(b) || 0;
+      if (aFreq !== bFreq) return bFreq - aFreq;
+      return a.localeCompare(b);
+    });
+    const canonical = members[0];
+    // Drop clusters with no lexicon match (likely pure OCR noise)
+    if (!lexicon.tickerSet.has(canonical)) continue;
+    const totalFreq = members.reduce((s, m) => s + (frequency.get(m) || 0), 0);
+    clusters.push({
+      canonical,
+      members: members.sort(),
+      frequency: totalFreq
+    });
+  }
+
+  // Step 6: dedupe canonicals (Union-Find guarantees per-cluster uniqueness
+  // so this is just a defensive sort).
+  const seen = new Set();
+  const merged = [];
+  for (const c of clusters) {
+    if (seen.has(c.canonical)) continue;
+    seen.add(c.canonical);
+    merged.push(c.canonical);
+  }
+  merged.sort();
+
+  return { clusters, merged_list: merged };
+}
+
 module.exports = {
   hasPriceNear,
   identifyPositionListColumn,
   findCloseTickerMatch,
   mergeMultiplePositionLists,
+  clusterRawOcrTokens,
   parseChartStreamPositionList,
   extractAllTickerCandidates
 };
