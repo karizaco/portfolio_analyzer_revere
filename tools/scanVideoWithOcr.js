@@ -31,7 +31,7 @@ const { computePerceptualHashOfRegion, computePerceptualHashOfFractionalRegion }
 const { extractTickersFromOcrText } = require('../src/normalize/tickerScan');
 const { createProbeKey, parseArgs, printHelp } = require('../src/video/ocrScanArgs');
 const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
-const { parseChartStreamPositionList, mergeMultiplePositionLists } = require('../src/parse/parseChartStream');
+const { parseChartStreamPositionList, mergeMultiplePositionLists, clusterRawOcrTokens } = require('../src/parse/parseChartStream');
 const { runEasyOcr, adaptToParserSchema } = require('../src/ocr/easyocrAdapter');
 const { preprocessChartStreamToBuffer, preprocessChartStreamRawToBuffer } = require('../src/ocr/ocrImage');
 
@@ -1361,7 +1361,18 @@ async function main() {
       merged_position_list: mergeMultiplePositionLists(
         captureSummaries.map((c) => c.tickers || []),
         { minOccurrences: 2 }
-      )
+      ),
+      // Multi-frame RAW-OCR token voting. Collects raw ticker-shape tokens
+      // from each frame's OCR text (not the parser's accepted list), groups
+      // tokens within edit-distance 2 of each other into clusters, picks a
+      // canonical representative per cluster (preferring seed-lexicon
+      // matches). Surfaces tickers that the parser rejected due to OCR
+      // garbling but that appear consistently across frames. See
+      // src/parse/parseChartStream.js clusterRawOcrTokens for details.
+      merged_raw_token_list: clusterRawOcrTokens(
+        captureSummaries.map((c) => c.ocr_text || ''),
+        { maxDistance: 2, minTokenLength: 2 }
+      ).merged_list
     };
     const logPath = await writeScanLog(logsDirectory, probeKey, result);
     result.log_path = logPath;
