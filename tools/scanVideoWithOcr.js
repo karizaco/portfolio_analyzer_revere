@@ -592,7 +592,7 @@ async function runChartStreamOcr(framePath, phashRegionFraction, scale, ocrEngin
       ? ['-ss', String(srcTs), '-i', srcVideo]
       : ['-i', framePath];
     await new Promise((resolve, reject) => {
-      const ffmpeg = spawn('ffmpeg', [
+      const ffmpeg = spawn(resolveFfmpegBin(null), [
         ...ffmpegArgs,
         '-frames:v', '1',
         '-vf', cropFilter,
@@ -641,14 +641,22 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     // OCR's frame selection is sensitive to scale; sticking with 3x+4x
     // until we understand the scoring interaction.
     const easyOcrOpts = { videoPath, timestamp: explicitTimestamp != null ? explicitTimestamp : stats.timestamp };
-    const [r3, r4] = await Promise.all([
-      runChartStreamOcr(framePath, phashRegionFraction, 3, ocrEngine, easyOcrOpts),
-      runChartStreamOcr(framePath, phashRegionFraction, 4, ocrEngine, easyOcrOpts),
-    ]);
-    // Prefer by ticker count; tie-break by OCR confidence
-    const pick = r4.tickerCount > r3.tickerCount ? r4
-      : r3.tickerCount > r4.tickerCount ? r3
-      : (r4.ocr.confidence || 0) > (r3.ocr.confidence || 0) ? r4 : r3;
+    // For EasyOCR: the OCR branch hardcodes scale=5 internally (EasyOCR is
+    // slow enough that running it twice is wasteful). For Tesseract: dual-
+    // scale 3x+4x and pick the one with more tickers (legacy behavior).
+    let pick;
+    if (ocrEngine === 'easyocr') {
+      pick = await runChartStreamOcr(framePath, phashRegionFraction, 3, ocrEngine, easyOcrOpts);
+    } else {
+      const [r3, r4] = await Promise.all([
+        runChartStreamOcr(framePath, phashRegionFraction, 3, ocrEngine, easyOcrOpts),
+        runChartStreamOcr(framePath, phashRegionFraction, 4, ocrEngine, easyOcrOpts),
+      ]);
+      // Prefer by ticker count; tie-break by OCR confidence
+      pick = r4.tickerCount > r3.tickerCount ? r4
+        : r3.tickerCount > r4.tickerCount ? r3
+        : (r4.ocr.confidence || 0) > (r3.ocr.confidence || 0) ? r4 : r3;
+    }
     ocr = pick.ocr;
     chartStream = pick.chartStream;
     tickerSource = chartStream && chartStream.position_list ? chartStream.position_list : [];
@@ -793,6 +801,7 @@ async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps, sta
 
 async function scanFrames({
   chartStreamParser = false,
+  clusterMinFrequency = 1,
   dateKey,
   ffmpegBin,
   fps,
@@ -1241,6 +1250,7 @@ async function main() {
 
     const scanResult = await scanFrames({
       chartStreamParser: Boolean(options.chartStreamParser),
+      clusterMinFrequency: options.clusterMinFrequency,
       dateKey,
       ffmpegBin: options.ffmpegBin,
       fps: options.fps,
@@ -1258,6 +1268,11 @@ async function main() {
       topCandidates: options.topCandidates,
       videoPath
     });
+
+  console.log(
+    `[scan:${options.outputKind}] prefilter kept ${selectedFrameRows.length}/${framePaths.length} frame(s) for OCR`
+      + (bestPrefilter ? `; best prefilter ${bestPrefilter.prefilterScore.toFixed(2)} at ${formatDuration(bestPrefilter.timestamp)}` : '')
+  );
     const candidates = scanResult.candidates;
     for (const candidate of candidates) {
       candidate.nearestFfmpegKeyframeTs = nearestKeyframe(keyframePtsList, candidate.timestamp);
@@ -1331,6 +1346,15 @@ async function main() {
       candidates,
       options.confusionRadius
     ));
+    // Multi-frame RAW-OCR token voting (run once, expose both fields).
+    // See src/parse/parseChartStream.js clusterRawOcrTokens for details.
+    // Use top_candidates (all OCR'd frames, pre-dedup) rather than
+    // captureSummaries (post-dedup) so the clusterer sees every frame
+    // the OCR pass produced, not just the picked subset.
+    const clusterResult = clusterRawOcrTokens(
+      (scanResult.topCandidates || []).map((c) => c.ocr_text || ''),
+      { maxDistance: 1, minTokenLength: 2, minFrequency: 1 }
+    );
     const result = {
       ...resultBase,
       captured_count: captureOutputs.length,
@@ -1369,13 +1393,16 @@ async function main() {
       // matches). Surfaces tickers that the parser rejected due to OCR
       // garbling but that appear consistently across frames. See
       // src/parse/parseChartStream.js clusterRawOcrTokens for details.
-      // Use top_candidates (all OCR'd frames, pre-dedup) rather than
-      // captureSummaries (post-dedup) so the clusterer sees every frame
-      // the OCR pass produced, not just the picked subset.
-      merged_raw_token_list: clusterRawOcrTokens(
-        (scanResult.topCandidates || []).map((c) => c.ocr_text || ''),
-        { maxDistance: 1, minTokenLength: 2 }
-      ).merged_list
+      // Expose both the canonical merged list AND the per-cluster
+      // diagnostics (canonical, members, frequency). The clusterResult
+      // variable is declared ABOVE this object literal so we can hoist the
+      // expensive clusterRawOcrTokens() call out of the property values.
+      merged_raw_token_list: clusterResult.merged_list,
+      merged_raw_token_clusters: clusterResult.clusters.map((c) => ({
+        canonical: c.canonical,
+        members: c.members,
+        frequency: c.frequency
+      }))
     };
     const logPath = await writeScanLog(logsDirectory, probeKey, result);
     result.log_path = logPath;
