@@ -1369,9 +1369,12 @@ async function main() {
       // matches). Surfaces tickers that the parser rejected due to OCR
       // garbling but that appear consistently across frames. See
       // src/parse/parseChartStream.js clusterRawOcrTokens for details.
+      // Use top_candidates (all OCR'd frames, pre-dedup) rather than
+      // captureSummaries (post-dedup) so the clusterer sees every frame
+      // the OCR pass produced, not just the picked subset.
       merged_raw_token_list: clusterRawOcrTokens(
-        captureSummaries.map((c) => c.ocr_text || ''),
-        { maxDistance: 2, minTokenLength: 2 }
+        (scanResult.topCandidates || []).map((c) => c.ocr_text || ''),
+        { maxDistance: 1, minTokenLength: 2 }
       ).merged_list
     };
     const logPath = await writeScanLog(logsDirectory, probeKey, result);
