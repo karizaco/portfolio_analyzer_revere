@@ -254,7 +254,7 @@ The chart-stream pipeline supports two OCR engines via `--ocr-engine tesseract|e
 - **`tesseract`** (default): legacy, ~25% recall on 20220606. Use only when EasyOCR is unavailable or for very fast scans.
 - **`easyocr`** (recommended): ~75% recall on 20220606, ~60s/frame. **3× recall improvement** justifies the cost for QMG chart-stream videos.
 
-EasyOCR is a Python package; install via `pip install easyocr` (Python 3.11 required — paddleocr/easyocr wheels aren't published for 3.14). The default interpreter is `C:/Users/admin/AppData/Local/Programs/Python/Python311/python.exe`; override via `EASYOCR_PYTHON` env var.
+EasyOCR is a Python package; install via `pip install easyocr`. EasyOCR 1.7.2+ ships wheels for Python 3.9 through 3.14, so any modern interpreter works — the older "Python 3.11 required" guidance is outdated. The default interpreter lookup tries `C:/ProgramData/anaconda3/python.exe` first (recommended because anaconda usually has CUDA-enabled torch), then several common standalone install paths, and finally falls back to `python` on PATH. Override via `EASYOCR_PYTHON` env var or `--easyocr-python` CLI flag.
 
 ### Verified end-to-end result on 20220606 (commit d824431)
 
