@@ -499,9 +499,13 @@ function mergeMultiplePositionLists(positionLists, options = {}) {
 //
 // Output: { clusters: [{ canonical, members, frequency }, ...], merged_list: [...] }
 function clusterRawOcrTokens(frameTexts, options = {}) {
+  // Default to 1 (not 2): with edit-distance 2, unrelated tokens like ALB↔NFL
+  // cluster through shared bridges (INA, NFU) and over-merge. Distance 1 is
+  // strict enough that ONLY obvious garbled variants (e.g. NFU↔NFL, INA↔TNA)
+  // cluster together.
   const maxDistance = Number.isFinite(options.maxDistance)
     ? options.maxDistance
-    : 2;
+    : 1;
   const minTokenLength = Number.isFinite(options.minTokenLength)
     ? options.minTokenLength
     : 2;
@@ -567,8 +571,12 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
     groups.get(root).push(t);
   }
 
-  // Step 5: pick canonical per cluster. Prefer lexicon matches; if
-  // multiple lexicon matches, prefer most-frequent; tie-break alphabetically.
+  // Step 5: pick canonical per cluster.
+  // - If any cluster member is in the seed lexicon, prefer that.
+  // - Otherwise, edit-distance-correct to the closest lexicon ticker
+  //   (so e.g. INA → TNA, NFU → NFLX survive even when the OCR garbled
+  //   the canonical form).
+  // - If no lexicon match within maxDistance, drop the cluster.
   const clusters = [];
   for (const [, members] of groups) {
     members.sort((a, b) => {
@@ -580,9 +588,31 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
       if (aFreq !== bFreq) return bFreq - aFreq;
       return a.localeCompare(b);
     });
-    const canonical = members[0];
-    // Drop clusters with no lexicon match (likely pure OCR noise)
-    if (!lexicon.tickerSet.has(canonical)) continue;
+    // Find canonical: prefer direct lexicon match, fall back to
+    // edit-distance lookup against the seed lexicon.
+    let canonical = null;
+    for (const m of members) {
+      if (lexicon.tickerSet.has(m)) { canonical = m; break; }
+    }
+    if (!canonical) {
+      // Edit-distance correction: find the closest lexicon ticker to
+      // any cluster member within maxDistance.
+      let best = null;
+      let bestDist = Infinity;
+      for (const m of members) {
+        const corr = findCloseTickerMatch(m, lexicon);
+        if (corr) {
+          const d = levenshtein(m, corr);
+          if (d < bestDist) { bestDist = d; best = corr; }
+        }
+      }
+      // findCloseTickerMatch already caps at MAX_OCR_EDIT_DISTANCE (2);
+      // we additionally require d <= maxDistance (parameter, also 2 default).
+      if (best && bestDist <= maxDistance) {
+        canonical = best;
+      }
+    }
+    if (!canonical) continue;
     const totalFreq = members.reduce((s, m) => s + (frequency.get(m) || 0), 0);
     clusters.push({
       canonical,
