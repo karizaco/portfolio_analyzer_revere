@@ -32,6 +32,7 @@ function printHelp() {
     '  --strong-threshold <n>     Autosave score threshold, default 6',
     '  --review-threshold <n>     Review score threshold, default 4',
     '  --max-captures <n>         Maximum screenshots to save per video, default 3',
+    '  --cluster-min-frequency <n> Minimum cluster frequency for multi-frame OCR token voting, default 1 (no filtering)',
     '  --progress-interval <n>    Report OCR progress every N frames, default 10',
     '  --batch-snapshots          Extract a batch of N frames within ±W seconds of the best-scoring frame. All frames show the same position list state, so multi-frame merge is valid. Use with --batch-count and --batch-window.',
     '  --batch-count <n>          Number of frames in the batch (default 5)',
@@ -111,6 +112,7 @@ function buildDefaultOptions(defaultOutputRoot) {
     batchTimestamp: null,
     batchWindowSeconds: 4,
     chartStreamParser: false,
+    clusterMinFrequency: 1,
     confusionRadius: 1,
     ffmpegBin: 'ffmpeg',
     fps: 0.25,
@@ -221,6 +223,10 @@ function parseArgs(argv, overrides = {}) {
         break;
       case '--max-captures':
         options.maxCapturesPerVideo = Number(nextValue);
+        index += 1;
+        break;
+      case '--cluster-min-frequency':
+        options.clusterMinFrequency = Number(nextValue);
         index += 1;
         break;
       case '--batch-snapshots':
@@ -342,6 +348,10 @@ function parseArgs(argv, overrides = {}) {
 
   if (!Number.isFinite(options.maxCapturesPerVideo) || options.maxCapturesPerVideo <= 0) {
     throw new Error('`--max-captures` must be a positive number.');
+  }
+
+  if (!Number.isFinite(options.clusterMinFrequency) || !Number.isInteger(options.clusterMinFrequency) || options.clusterMinFrequency < 1) {
+    throw new Error('`--cluster-min-frequency` must be an integer >= 1.');
   }
 
   if (!Number.isFinite(options.confusionRadius) || options.confusionRadius < 0) {
