@@ -187,7 +187,9 @@ async function getWorker() {
 
 // Parse Tesseract TSV output into per-word position records.
 // TSV columns: level page block par line word left top width height conf text
-// Returns array of { text, left, top, width, height, conf } for level=5 (word) only.
+// Returns array of { text, left, top, width, height, conf, line } for level=5 (word) only.
+// The `line` field (TSV column 4) is the line index for that word; downstream
+// parsers (parseChartStream.js) use it for panel-boundary detection (Filter G).
 function parseTsvWords(tsvString) {
   if (!tsvString || typeof tsvString !== 'string') {
     return [];
@@ -206,6 +208,7 @@ function parseTsvWords(tsvString) {
       conf: Number(cols[10]),
       height: Number(cols[9]),
       left: Number(cols[6]),
+      line: Number(cols[4]),
       text,
       top: Number(cols[7]),
       width: Number(cols[8])

@@ -347,6 +347,49 @@ function parseChartStreamPositionList({ ocr } = {}) {
     ? identifyPositionListColumn(words)
     : { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
 
+  // Build per-ticker line + word lookups from raw OCR word positions.
+  // - tickerLineMap: ticker → array of line indices (used by Filter G)
+  // - tickerWordMap: ticker → first raw word record with bbox (used by Filter B)
+  // These are skipped when the OCR engine does not surface per-word positions.
+  const tickerLineMap = new Map();
+  const tickerWordMap = new Map();
+  if (hasWordPositions) {
+    for (const w of words) {
+      const upper = (w.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
+      if (!upper || !STRICT_TICKER_PATTERN.test(upper)) continue;
+      if (Number.isFinite(w.line)) {
+        if (!tickerLineMap.has(upper)) tickerLineMap.set(upper, []);
+        tickerLineMap.get(upper).push(w.line);
+      }
+      if (!tickerWordMap.has(upper)) tickerWordMap.set(upper, w);
+    }
+  }
+
+  // Panel-line reject gate (Filter G).
+  // The parser already detects `positionsLine` and `watchlistLine` via
+  // `findPanelBoundaries` and uses `lineIsInPanel` to RESTRICT word
+  // collection in the column detector. The gap (in the prior parser) was
+  // that a token that passes the in-lexicon OR price-nearby check was
+  // accepted regardless of whether its line was inside the position-list
+  // panel. This is the one-line reject at the accept point that fixes it.
+  //
+  // Safety: only active when BOTH boundaries are detected. Partial
+  // detection (e.g. only positionsLine, but not watchlistLine) is
+  // unreliable — the regex matches POSITON/POSTNS/MALH variants on
+  // dark frames, and a mis-detected boundary could either let FPs through
+  // or kill real tickers. When gate detection fails, fall back to the
+  // pre-Filter-G behavior (accept based on lexicon + price-nearby).
+  const { positionsLine, watchlistLine } = hasWordPositions
+    ? findPanelBoundaries(words)
+    : { positionsLine: null, watchlistLine: null };
+  const panelGateActive = positionsLine != null && watchlistLine != null;
+  const lineIsInPanel = (line) => {
+    if (!panelGateActive) return true;
+    if (positionsLine != null && line <= positionsLine) return false;
+    if (watchlistLine != null && line >= watchlistLine) return false;
+    return true;
+  };
+
   // Primary extraction: ALL ticker-shaped tokens (no lexicon filter)
   const allCandidates = extractAllTickerCandidates(text);
 
@@ -364,6 +407,10 @@ function parseChartStreamPositionList({ ocr } = {}) {
   const occurrenceCounts = countTickerOccurrences(text);
   const accepted = [];
   const rejected = [];
+  // canonicalToRawTicker: when edit-distance correction produces a canonical
+  // (e.g. INA → TNA), record which raw token produced it so Filter B can
+  // look up the right bounding box.
+  const canonicalToRawTicker = new Map();
   for (const ticker of allCandidates) {
     const priceNearby = hasPriceNear(text, ticker);
     const inLexicon = lexicon.tickerSet.has(ticker);
@@ -375,6 +422,7 @@ function parseChartStreamPositionList({ ocr } = {}) {
       } else {
         const correction = findCloseTickerMatch(ticker, lexicon);
         if (correction && !accepted.includes(correction)) {
+          canonicalToRawTicker.set(correction, ticker);
           accepted.push(correction);
         } else {
           rejected.push(ticker);
@@ -391,6 +439,21 @@ function parseChartStreamPositionList({ ocr } = {}) {
     // gates acceptance.
     const inListColumn = inListTickers.has(ticker);
     if (inLexicon || priceNearby) {
+      // Filter G: panel-line reject gate. If panel boundaries were
+      // detected, reject any ticker whose ONLY occurrences have lines
+      // outside the position-list panel (chart-area above the panel, or
+      // Personal WatchList panel below the panel). A ticker with at
+      // least one in-panel occurrence is kept — this handles the 1-2
+      // frame transition case where a watchlist row overlaps the
+      // position list briefly.
+      if (panelGateActive) {
+        const linesForTicker = tickerLineMap.get(ticker);
+        const inPanel = linesForTicker && linesForTicker.some((l) => lineIsInPanel(l));
+        if (!inPanel) {
+          rejected.push(ticker);
+          continue;
+        }
+      }
       // Lexicon match OR price-nearby: accept (column-agnostic).
       // Chart-area text like "Arith", "Sym", "Cran" doesn't match the
       // seed lexicon so it stays rejected.
@@ -401,6 +464,7 @@ function parseChartStreamPositionList({ ocr } = {}) {
       const correction = findCloseTickerMatch(ticker, lexicon);
       if (correction) {
         if (!accepted.includes(correction)) {
+          canonicalToRawTicker.set(correction, ticker);
           accepted.push(correction);
         } else {
           rejected.push(ticker);
@@ -410,6 +474,65 @@ function parseChartStreamPositionList({ ocr } = {}) {
       }
     } else {
       rejected.push(ticker);
+    }
+  }
+
+  // Filter B: position-aware bounding-box y-range filter.
+  // Real position-list tickers share a consistent y-range (one row per
+  // ticker in the position-list column). Chart-area tokens (NVDA on a
+  // chart-axis label, AMD/INTC/MU in a sub-plot annotation, MSTR/COIN
+  // bleeding from chart overlay) have bboxes that fall outside this
+  // range. Compute the median y-center of accepted tickers' bboxes
+  // and reject any ticker whose y-center falls outside [yMedian - 2*lineHeight,
+  // yMedian + 2*lineHeight].
+  //
+  // Requires at least 2 accepted tickers to compute median. Falls back
+  // to skipping the filter when fewer accepted tickers exist (rare —
+  // these are sparse single-ticker frames where position-aware filtering
+  // would be unreliable).
+  let bboxFilterInfo = null;
+  if (hasWordPositions && accepted.length >= 2) {
+    const acceptedBboxes = [];
+    for (const ticker of accepted) {
+      const rawTicker = canonicalToRawTicker.get(ticker) || ticker;
+      const w = tickerWordMap.get(rawTicker);
+      if (w && Number.isFinite(w.top) && Number.isFinite(w.height) && w.height > 0) {
+        acceptedBboxes.push({ ticker, yCenter: w.top + w.height / 2 });
+      }
+    }
+    if (acceptedBboxes.length >= 2) {
+      const ys = acceptedBboxes.map((b) => b.yCenter).sort((a, b) => a - b);
+      const yMedian = ys[Math.floor(ys.length / 2)];
+      const lineHeights = words
+        .filter((w) => Number.isFinite(w.height) && w.height > 0)
+        .map((w) => w.height)
+        .sort((a, b) => a - b);
+      const lineHeight = lineHeights.length
+        ? lineHeights[Math.floor(lineHeights.length / 2)]
+        : 20;  // fallback for sparse words
+      const yMin = yMedian - 2 * lineHeight;
+      const yMax = yMedian + 2 * lineHeight;
+      const withinBbox = new Set();
+      for (const { ticker, yCenter } of acceptedBboxes) {
+        if (yCenter >= yMin && yCenter <= yMax) {
+          withinBbox.add(ticker);
+        } else {
+          rejected.push(ticker);
+        }
+      }
+      // Re-filter accepted in place, preserving order
+      for (let i = accepted.length - 1; i >= 0; i -= 1) {
+        if (!withinBbox.has(accepted[i])) {
+          accepted.splice(i, 1);
+        }
+      }
+      bboxFilterInfo = {
+        y_median: yMedian,
+        line_height: lineHeight,
+        y_min: yMin,
+        y_max: yMax,
+        rejected_count: acceptedBboxes.length - withinBbox.size
+      };
     }
   }
 
@@ -440,7 +563,17 @@ function parseChartStreamPositionList({ ocr } = {}) {
     // Diagnostic: the actual rejected tokens (capped to keep probe logs small).
     // Helps diagnose which chart-text/OCR-garble tokens are leaking into "rejected"
     // status instead of being silently dropped. Was previously only a count.
-    tickers_rejected_list: rejected.slice(0, 30)
+    tickers_rejected_list: rejected.slice(0, 30),
+    // Diagnostic: panel-line reject gate (Filter G) info. `null` when gate was
+    // inactive (boundary detection failed or no word positions).
+    panel_gate: panelGateActive ? {
+      positions_line: positionsLine,
+      watchlist_line: watchlistLine,
+      active: true
+    } : null,
+    // Diagnostic: bbox y-range filter (Filter B) info. Populated when the
+    // filter ran (at least 2 accepted tickers with bbox info available).
+    bbox_filter: bboxFilterInfo
   };
 }
 
@@ -501,17 +634,25 @@ function mergeMultiplePositionLists(positionLists, options = {}) {
 // Inputs:
 //   `frameTexts` — array of strings (one per frame), each is OCR text.
 //   `options`:
-//     - `maxDistance` (default 2) — edit distance for clustering
+//     - `maxDistance` (default 1) — edit distance for clustering. With
+//       edit-distance 2, unrelated tokens like ALB↔NFL cluster through
+//       shared bridges (INA, NFU) and over-merge. Distance 1 is strict
+//       enough that ONLY obvious garbled variants cluster together.
 //     - `minTokenLength` (default 2) — drop tokens shorter than this
+//     - `minFrequency` (default 2) — Filter A: per-canonical frame
+//       count. The cluster must span at least this many distinct frames
+//       (union of frame sets across all cluster members). Single-frame
+//       OCR garbles (VIO→VLO, NFU→NFLX, INA→TNA, BUCO→UCO) and chart-
+//       area tickers that bleed in briefly (MARA/RIOT/HUT/BTBT) appear
+//       in only 1 frame and get filtered out at default=2. This is the
+//       clusterer counterpart to mergeMultiplePositionLists'
+//       `minOccurrences` (which gates the position-list path).
 //     - `lexicon` — optional pre-loaded seed lexicon (default loads fresh)
 //     - `regex` — optional ticker-shape regex (default /^[A-Z][A-Z0-9.]{0,4}$/)
 //
-// Output: { clusters: [{ canonical, members, frequency }, ...], merged_list: [...] }
+// Output: { clusters: [{ canonical, members, frequency, frameCount }, ...],
+//           merged_list: [...] }
 function clusterRawOcrTokens(frameTexts, options = {}) {
-  // Default to 1 (not 2): with edit-distance 2, unrelated tokens like ALB↔NFL
-  // cluster through shared bridges (INA, NFU) and over-merge. Distance 1 is
-  // strict enough that ONLY obvious garbled variants (e.g. NFU↔NFL, INA↔TNA)
-  // cluster together.
   const maxDistance = Number.isFinite(options.maxDistance)
     ? options.maxDistance
     : 1;
@@ -534,8 +675,22 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
     return tokens;
   });
 
+  // Step 1.5 (Filter A): track per-token frame indices so we can compute
+  // each cluster's distinct-frame count (union of frame sets across members).
+  // Without this, we only know each token's per-frame frequency (which
+  // overcounts when a cluster has multiple distinct members each appearing
+  // once or twice in different frames).
+  const tokenFrameIndices = new Map();
+  for (let fi = 0; fi < perFrameTokens.length; fi += 1) {
+    for (const t of perFrameTokens[fi]) {
+      if (!tokenFrameIndices.has(t)) tokenFrameIndices.set(t, new Set());
+      tokenFrameIndices.get(t).add(fi);
+    }
+  }
+
   // Step 2: compute per-token total frequency (counted once per frame, even
-  // if it appears multiple times in the same frame)
+  // if it appears multiple times in the same frame). Used for canonical
+  // tiebreaking and as the `frequency` field in the diagnostic output.
   const frequency = new Map();
   for (const tokens of perFrameTokens) {
     for (const t of tokens) {
@@ -580,12 +735,24 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
     groups.get(root).push(t);
   }
 
+  // Filter A: per-canonical minimum frame occurrences.
+  // Default 2 (was 1 prior to 2026-10-01 commit). The flag is exposed as
+  // `--cluster-min-frequency` for both the function param and the CLI
+  // argument. Pass `minFrequency: 1` to disable filtering (backward compat).
+  const minFrequency = Number.isFinite(options.minFrequency)
+    ? options.minFrequency
+    : 2;
+
   // Step 5: pick canonical per cluster.
   // - If any cluster member is in the seed lexicon, prefer that.
   // - Otherwise, edit-distance-correct to the closest lexicon ticker
   //   (so e.g. INA → TNA, NFU → NFLX survive even when the OCR garbled
   //   the canonical form).
   // - If no lexicon match within maxDistance, drop the cluster.
+  // - Apply Filter A: drop cluster whose distinct-frame count (union of
+  //   frame sets across members) is below `minFrequency`. This catches
+  //   single-frame OCR garbles (VIO→VLO, NFU→NFLX, INA→TNA, BUCO→UCO)
+  //   and chart-area tickers that bleed in briefly.
   const clusters = [];
   for (const [, members] of groups) {
     members.sort((a, b) => {
@@ -625,20 +792,24 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
       }
     }
     if (!canonical) continue;
+    // Filter A: compute distinct-frame count for the cluster (union of
+    // frame sets across all members). This catches single-frame OCR
+    // garbles (e.g. VIO→VLO cluster only spans the 1 frame where VIO
+    // appeared) and chart-area bleed (MARA in 1 frame gets filtered).
+    const clusterFrames = new Set();
+    for (const m of members) {
+      const frames = tokenFrameIndices.get(m);
+      if (frames) {
+        for (const fi of frames) clusterFrames.add(fi);
+      }
+    }
+    if (clusterFrames.size < minFrequency) continue;
     const totalFreq = members.reduce((s, m) => s + (frequency.get(m) || 0), 0);
-    // Drop clusters whose combined frame frequency is below the user-supplied
-    // minimum (default 1 = no filtering, preserves backward compatibility).
-    // Single-frame OCR garbles ("BIIB" once, "TAN" once) get filtered out when
-    // the user raises minFrequency to 2 or higher; this is the clusterer
-    // counterpart to mergeMultiplePositionLists' minOccurrences option.
-    const minFrequency = Number.isFinite(options.minFrequency)
-      ? options.minFrequency
-      : 1;
-    if (totalFreq < minFrequency) continue;
     clusters.push({
       canonical,
-      members: members.sort(),
-      frequency: totalFreq
+      frameCount: clusterFrames.size,
+      frequency: totalFreq,
+      members: members.sort()
     });
   }
 
