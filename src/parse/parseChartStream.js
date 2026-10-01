@@ -626,6 +626,15 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
     }
     if (!canonical) continue;
     const totalFreq = members.reduce((s, m) => s + (frequency.get(m) || 0), 0);
+    // Drop clusters whose combined frame frequency is below the user-supplied
+    // minimum (default 1 = no filtering, preserves backward compatibility).
+    // Single-frame OCR garbles ("BIIB" once, "TAN" once) get filtered out when
+    // the user raises minFrequency to 2 or higher; this is the clusterer
+    // counterpart to mergeMultiplePositionLists' minOccurrences option.
+    const minFrequency = Number.isFinite(options.minFrequency)
+      ? options.minFrequency
+      : 1;
+    if (totalFreq < minFrequency) continue;
     clusters.push({
       canonical,
       members: members.sort(),
