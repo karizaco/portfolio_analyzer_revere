@@ -237,9 +237,11 @@ function identifyPositionListColumn(words) {
       priceAlignedTickers.push(entry);
     }
   }
-  if (tickerWords.length < 3) {
-    return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
-  }
+  // Note: do NOT early-return on <3 ticker-shape words. A sparse position list
+  // (e.g. 2 tickers visible) is still legitimate. The priceAlignedTickers /
+  // densest-bucket fallback below handles the column-detection case, and the
+  // caller (parseChartStreamPositionList) falls back to lexicon+price-nearby
+  // when no column can be confidently identified.
 
   // Determine the column center. Prefer the median x of price-aligned
   // tickers (these are real position list rows); fall back to the densest
@@ -320,6 +322,7 @@ function parseChartStreamPositionList({ ocr } = {}) {
     return {
       confidence: 0,
       parse_status: 'no_ocr',
+      ocr_executed: false, // distinguishes "OCR did not run" from "OCR ran but found nothing"
       position_list: [],
       price_action: '',
       tickers_rejected: 0
@@ -351,6 +354,7 @@ function parseChartStreamPositionList({ ocr } = {}) {
     return {
       confidence: 0,
       parse_status: 'no_ticker_shapes',
+      ocr_executed: true, // OCR ran; no ticker-shaped tokens survived
       position_list: [],
       price_action: '',
       tickers_rejected: 0
