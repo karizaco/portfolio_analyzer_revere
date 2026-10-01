@@ -801,7 +801,6 @@ async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps, sta
 
 async function scanFrames({
   chartStreamParser = false,
-  clusterMinFrequency = 1,
   dateKey,
   ffmpegBin,
   fps,
@@ -1250,7 +1249,6 @@ async function main() {
 
     const scanResult = await scanFrames({
       chartStreamParser: Boolean(options.chartStreamParser),
-      clusterMinFrequency: options.clusterMinFrequency,
       dateKey,
       ffmpegBin: options.ffmpegBin,
       fps: options.fps,
@@ -1353,7 +1351,11 @@ async function main() {
     // the OCR pass produced, not just the picked subset.
     const clusterResult = clusterRawOcrTokens(
       (scanResult.topCandidates || []).map((c) => c.ocr_text || ''),
-      { maxDistance: 1, minTokenLength: 2, minFrequency: 1 }
+      // Filter A: per-canonical frame count. Default 2 (was 1). Filters
+      // single-frame OCR garbles (VIO→VLO, NFU→NFLX, INA→TNA, BUCO→UCO)
+      // and chart-area tickers that bleed in briefly. Override via
+      // --cluster-min-frequency <n> (1 disables the filter).
+      { maxDistance: 1, minTokenLength: 2, minFrequency: options.clusterMinFrequency || 2 }
     );
     const result = {
       ...resultBase,
