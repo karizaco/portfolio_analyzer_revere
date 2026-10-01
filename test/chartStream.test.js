@@ -320,3 +320,66 @@ test('mergeMultiplePositionLists accepts tickers in ≥minOccurrences captures',
   );
   assert.deepEqual(withEmpty, ['AAPL']);
 });
+
+
+// Regression tests for parseChartStreamPositionList:
+//   1. Sparse 2-token position lists are NOT short-circuited by the column detector
+//      (previously identifyPositionListColumn early-returned when tickerWords.length < 3).
+//   2. The no_ocr branch exposes ocr_executed:false so downstream callers can
+//      distinguish "OCR did not run" from "OCR ran and found nothing" without
+//      using negative confidence values that would corrupt ranking math
+//      (e.g. scoreChartStreamCandidate multiplies confidence by 12).
+
+test('parseChartStreamPositionList: sparse 2-token position list is not dropped by column detector', () => {
+  // Two real tickers in the position-list column (x=348..388) with prices to the right.
+  // Previously identifyPositionListColumn early-returned empty because tickerWords.length === 2 < 3.
+  const ocr = {
+    text: 'NVDA  $134.20\nTSLA  $245.10',
+    lines: ['NVDA  $134.20', 'TSLA  $245.10'],
+    words: [
+      { text: 'NVDA', left: 348, width: 40, line: 1 },
+      { text: '$134.20', left: 400, width: 60, line: 1 },
+      { text: 'TSLA', left: 350, width: 40, line: 2 },
+      { text: '$245.10', left: 402, width: 60, line: 2 },
+    ],
+  };
+  const result = parseChartStreamPositionList({ ocr });
+  // NVDA and TSLA are in the seed lexicon, so the legacy/price-nearby path
+  // must accept them regardless of the column-detector result.
+  assert.ok(result.position_list.includes('NVDA'),
+    `expected NVDA in position_list, got ${JSON.stringify(result.position_list)}`);
+  assert.ok(result.position_list.includes('TSLA'),
+    `expected TSLA in position_list, got ${JSON.stringify(result.position_list)}`);
+});
+
+test('parseChartStreamPositionList: no_ocr branch exposes ocr_executed=false sentinel', () => {
+  const result = parseChartStreamPositionList({ ocr: { text: '', lines: [], words: [] } });
+  assert.equal(result.parse_status, 'no_ocr');
+  // Confidence stays at 0 (NOT a negative sentinel) so downstream
+  // scoreChartStreamCandidate math (confidence * 12) does not produce a
+  // negative score that would corrupt candidate ranking.
+  assert.equal(result.confidence, 0,
+    `no_ocr must return confidence=0 to keep ranking math safe, got ${result.confidence}`);
+  assert.equal(result.ocr_executed, false,
+    `no_ocr must set ocr_executed=false, got ${result.ocr_executed}`);
+});
+
+test('parseChartStreamPositionList: no_ticker_shapes branch sets ocr_executed=true', () => {
+  // OCR runs but the text contains no ticker-shaped tokens.
+  const ocr = {
+    text: 'some intro text\nno tickers here',
+    lines: ['some intro text', 'no tickers here'],
+    words: [
+      { text: 'some', left: 10, width: 40, line: 1 },
+      { text: 'intro', left: 60, width: 50, line: 1 },
+      { text: 'no', left: 10, width: 20, line: 2 },
+      { text: 'tickers', left: 40, width: 70, line: 2 },
+    ],
+  };
+  const result = parseChartStreamPositionList({ ocr });
+  assert.equal(result.parse_status, 'no_ticker_shapes');
+  assert.equal(result.confidence, 0,
+    `no_ticker_shapes must return confidence=0, got ${result.confidence}`);
+  assert.equal(result.ocr_executed, true,
+    `no_ticker_shapes must set ocr_executed=true, got ${result.ocr_executed}`);
+});
