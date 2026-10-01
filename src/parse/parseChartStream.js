@@ -80,7 +80,12 @@ function findCloseTickerMatch(token, lexicon) {
   let bestDist = Infinity;
   for (const ticker of lexicon.tickers) {
     const dist = levenshtein(upper, ticker);
-    if (dist < bestDist && dist <= MAX_OCR_EDIT_DISTANCE) {
+    if (dist > MAX_OCR_EDIT_DISTANCE) continue;
+    // Prefer strictly smaller distance. On equal distance, prefer the longer
+    // ticker (more specific: NFLX over BTU at distance 2 from NFU). This
+    // matters for tokens like NFU/NFL/INT/INA where the right answer has
+    // an extra character the OCR dropped.
+    if (dist < bestDist || (dist === bestDist && (best == null || ticker.length > best.length))) {
       bestDist = dist;
       best = ticker;
     }
@@ -595,8 +600,11 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
       if (lexicon.tickerSet.has(m)) { canonical = m; break; }
     }
     if (!canonical) {
-      // Edit-distance correction: find the closest lexicon ticker to
-      // any cluster member within maxDistance.
+      // Edit-distance correction: find the closest lexicon ticker to any
+      // cluster member. Use the higher MAX_OCR_EDIT_DISTANCE threshold here
+      // (not the clusterer param `maxDistance`) so we recover canonicals
+      // when the OCR dropped a character (NFU→NFLX requires edit distance 2).
+      // Cluster grouping itself stays tight at the param threshold.
       let best = null;
       let bestDist = Infinity;
       for (const m of members) {
@@ -606,9 +614,9 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
           if (d < bestDist) { bestDist = d; best = corr; }
         }
       }
-      // findCloseTickerMatch already caps at MAX_OCR_EDIT_DISTANCE (2);
-      // we additionally require d <= maxDistance (parameter, also 2 default).
-      if (best && bestDist <= maxDistance) {
+      // findCloseTickerMatch already caps at MAX_OCR_EDIT_DISTANCE (2),
+      // so bestDist is always <= 2 here. No additional threshold check needed.
+      if (best) {
         canonical = best;
       }
     }
