@@ -7,21 +7,34 @@
 // Used as an alternative OCR engine when Tesseract produces too-garbled
 // text for QMG position lists. See _easyocr_ocr.py for the Python side.
 //
-// On Windows, the recommended Python interpreter is 3.11 because paddleocr
-// / easyocr wheels aren't published for 3.14. Override via EASYOCR_PYTHON
-// env var or --easyocr-python CLI arg.
+// On Windows, EasyOCR 1.7.2+ ships wheels for Python 3.9 through 3.14,
+// so any modern Python works. The legacy "Python 3.11 required" guidance
+// in older docs no longer applies. Override via the EASYOCR_PYTHON env var
+// or --easyocr-python CLI arg. The anaconda Python is recommended on dev
+// machines because it usually has CUDA-enabled torch pre-installed.
 
 const { spawn } = require('node:child_process');
 const path = require('node:path');
 const fs = require('node:fs');
 
-const DEFAULT_PYTHON_311 = 'C:/Users/admin/AppData/Local/Programs/Python/Python311/python.exe';
+// Try the recommended Python first (anaconda with CUDA torch), then fall
+// back to any standalone install under the user's AppData. The legacy
+// Python 3.11 path is preserved as a fallback for older setups.
+const DEFAULT_PYTHON_CANDIDATES = [
+  'C:/ProgramData/anaconda3/python.exe',
+  'C:/Users/Admin/AppData/Local/Programs/Python/Python311/python.exe',
+  'C:/Users/Admin/AppData/Local/Programs/Python/Python310/python.exe',
+  'C:/Users/Admin/AppData/Local/Programs/Python/Python39/python.exe',
+  'C:/Python314/python.exe',
+];
 
 function pickPython(explicitPath) {
   if (explicitPath && fs.existsSync(explicitPath)) return explicitPath;
   const envPath = process.env.EASYOCR_PYTHON;
   if (envPath && fs.existsSync(envPath)) return envPath;
-  if (fs.existsSync(DEFAULT_PYTHON_311)) return DEFAULT_PYTHON_311;
+  for (const candidate of DEFAULT_PYTHON_CANDIDATES) {
+    if (fs.existsSync(candidate)) return candidate;
+  }
   return 'python';
 }
 
