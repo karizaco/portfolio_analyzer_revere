@@ -16,7 +16,6 @@ const path = require('node:path');
 const fs = require('node:fs');
 
 const DEFAULT_PYTHON_311 = 'C:/Users/admin/AppData/Local/Programs/Python/Python311/python.exe';
-const FALLBACK_PYTHONS = ['python3.11', 'python3', 'python'];
 
 function pickPython(explicitPath) {
   if (explicitPath && fs.existsSync(explicitPath)) return explicitPath;
