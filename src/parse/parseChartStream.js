@@ -813,8 +813,8 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
     });
   }
 
-  // Step 6: dedupe canonicals (Union-Find guarantees per-cluster uniqueness
-  // so this is just a defensive sort).
+  // Step 6: build merged list. The Filter A pass above already filtered
+  // clusters by minFrequency; this is just the canonical → merged list.
   const seen = new Set();
   const merged = [];
   for (const c of clusters) {
