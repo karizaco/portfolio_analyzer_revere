@@ -65,6 +65,33 @@ if (!fs.existsSync(dbPath)) {
 }
 fs.mkdirSync(dlDir, { recursive: true });
 
+// Identify the machine that produced each download. Captured once per run
+// and stamped into every checkpoint entry (done[]/errored/blocked) and the
+// summary JSON. When the checkpoint is copied between machines (e.g. via
+// git, rsync, or shared drive), downstream code can tell which machine
+// performed the download by inspecting `downloaded_by`.
+const os = require('os');
+const RUN_MACHINE = {
+  hostname: os.hostname(),
+    user: (process.env.USERNAME || process.env.USER || 'unknown'),
+    platform: `${process.platform}-${process.arch}`,
+    node_version: process.version,
+    captured_at: new Date().toISOString(),
+  };
+function stampMachine(entry) {
+  // Stamp with the run's machine info. Tolerate either legacy (string) or
+  // new (object) checkpoint.done[] entries — legacy entries are migrated
+  // to { id, downloaded_by } in place when seen.
+  if (typeof entry === 'string') {
+    return { id: entry, downloaded_by: RUN_MACHINE };
+  }
+  if (entry && typeof entry === 'object') {
+    if (!entry.downloaded_by) entry.downloaded_by = RUN_MACHINE;
+    return entry;
+  }
+  return entry;
+}
+
 const checkpoint = (() => {
   try { return JSON.parse(fs.readFileSync(checkpointPath, 'utf8')); }
   catch { return { height, done: [], errored: {}, blocked: [] }; }
@@ -73,6 +100,11 @@ if (Number(checkpoint.height) !== height) checkpoint.height = height;
 checkpoint.done = Array.isArray(checkpoint.done) ? checkpoint.done : [];
 checkpoint.errored = (typeof checkpoint.errored === 'object' && checkpoint.errored) || {};
 checkpoint.blocked = Array.isArray(checkpoint.blocked) ? checkpoint.blocked : [];
+
+// Migrate any legacy string entries to { id, downloaded_by } form so the
+// file shape stays consistent across older/newer runs of this script.
+checkpoint.done = checkpoint.done.map(stampMachine);
+checkpoint.blocked = checkpoint.blocked.map(stampMachine);
 
 console.log(`[qmg1080] height=${height}p format=${formatCode} limit=${limit} retry-errored=${retryErrored}`);
 console.log(`[qmg1080] checkpoint: ${checkpoint.done.length} done, ${Object.keys(checkpoint.errored).length} errored`);
@@ -112,7 +144,7 @@ let skippedCheckpoint = 0;
 let skippedErrored = 0;
 for (const row of allRows) {
   const { video_id: videoId, upload_date: uploadDate } = row;
-  if (checkpoint.done.includes(videoId)) { skippedCheckpoint += 1; continue; }
+  if (checkpoint.done.some((e) => (typeof e === 'string' ? e : e.id) === videoId)) { skippedCheckpoint += 1; continue; }
   if (!retryErrored && checkpoint.errored[videoId]) { skippedErrored += 1; continue; }
   if (checkpoint.blocked.includes(videoId)) { skippedErrored += 1; continue; }
   const expected = path.join(dlDir, `${uploadDate}_${videoId}.mp4`);
@@ -148,7 +180,7 @@ for (const row of todo) {
     '--no-playlist',
     '-f', formatCode,
     '--js-runtimes', 'node',
-    '--extractor-args', 'youtube:player_client=tv',
+    '--extractor-args', 'youtube:player_client=mediaconnect',
     ...(cookiesFile ? ['--cookies', cookiesFile] : []),
     '-o', outTemplate,
     `https://www.youtube.com/watch?v=${videoId}`
@@ -161,16 +193,17 @@ for (const row of todo) {
     checkpoint.errored[videoId] = {
       upload_date: uploadDate,
       last_error_at: new Date().toISOString(),
-      exit_code: r.status
+      exit_code: r.status,
+      failed_on: RUN_MACHINE,
     };
     saveCheckpoint();
-    console.log(`[qmg1080] ERROR ${videoId} exit=${r.status} elapsed=${elapsed}s`);
+    console.log(`[qmg1080] ERROR ${videoId} exit=${r.status} elapsed=${elapsed}s on ${RUN_MACHINE.hostname}/${RUN_MACHINE.user}`);
     continue;
   }
 
   const sizeMb = (fs.statSync(expected).size / 1024 / 1024).toFixed(1);
-  console.log(`[qmg1080] OK ${videoId} ${sizeMb} MB in ${elapsed}s`);
-  checkpoint.done.push(videoId);
+  console.log(`[qmg1080] OK ${videoId} ${sizeMb} MB in ${elapsed}s on ${RUN_MACHINE.hostname}/${RUN_MACHINE.user}`);
+  checkpoint.done.push(stampMachine(videoId));
   delete checkpoint.errored[videoId];
   finalizeRow(videoId, expected);
   saveCheckpoint();
