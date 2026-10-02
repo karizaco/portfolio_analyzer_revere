@@ -1357,6 +1357,18 @@ async function main() {
       // --cluster-min-frequency <n> (1 disables the filter).
       { maxDistance: 1, minTokenLength: 2, minFrequency: options.clusterMinFrequency || 2 }
     );
+    // Fallback: captures whose parser column_filter rejected everything
+    // (e.g. EasyOCR's word bboxes land outside the column band that
+    // Tesseract's heuristics expect) end up with empty `tickers` even
+    // though the clusterer has the right answer across frames. Backfill
+    // those captures' `tickers` from the cluster's merged list so that
+    // downstream consumers (_summarize_existing.py, dashboards) get
+    // the cluster's recall instead of the parser's empty list.
+    for (const cap of captureSummaries) {
+      if ((!cap.tickers || cap.tickers.length === 0) && clusterResult.merged_list.length > 0) {
+        cap.tickers = clusterResult.merged_list.slice();
+      }
+    }
     const result = {
       ...resultBase,
       captured_count: captureOutputs.length,
