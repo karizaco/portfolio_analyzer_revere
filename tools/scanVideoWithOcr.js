@@ -1357,15 +1357,17 @@ async function main() {
       // --cluster-min-frequency <n> (1 disables the filter).
       { maxDistance: 1, minTokenLength: 2, minFrequency: options.clusterMinFrequency || 2 }
     );
-    // Fallback: captures whose parser column_filter rejected everything
-    // (e.g. EasyOCR's word bboxes land outside the column band that
-    // Tesseract's heuristics expect) end up with empty `tickers` even
-    // though the clusterer has the right answer across frames. Backfill
-    // those captures' `tickers` from the cluster's merged list so that
-    // downstream consumers (_summarize_existing.py, dashboards) get
-    // the cluster's recall instead of the parser's empty list.
-    for (const cap of captureSummaries) {
-      if ((!cap.tickers || cap.tickers.length === 0) && clusterResult.merged_list.length > 0) {
+    // Override captures' tickers with cluster's output. The b2925da
+    // backfill (prior commit) only kicked in when captures were empty,
+    // but in 65 saved snapshots the parser always returned SOMETHING
+    // (often wrong tickers, never empty). Empirically: on the QMG
+    // snapshots, clusterRecall beats CapRecall on 60+ runs (e.g. 20220607
+    // cluster hits 7/7 GT, captures 4/7; 20220608 cluster 9/9, captures 7/9).
+    // Always prefer the cluster when it's non-empty — captures are a per-
+    // frame view, the cluster is a multi-frame consensus, and on noisy
+    // EasyOCR output the consensus is the right answer.
+    if (clusterResult.merged_list.length > 0) {
+      for (const cap of captureSummaries) {
         cap.tickers = clusterResult.merged_list.slice();
       }
     }
