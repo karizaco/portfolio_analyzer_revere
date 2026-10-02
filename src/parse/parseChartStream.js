@@ -191,7 +191,14 @@ function identifyPositionListColumn(words) {
       const tickerXs = sameLineWords
         .filter(x => STRICT_TICKER_PATTERN.test((x.text||'').toUpperCase().replace(/[^A-Z0-9.]/g,'')))
         .map(x => ({ left: x.left, right: x.left + x.width }));
-      const priceWords = sameLineWords.filter(x => /[%\$]|^\d+\.\d+$|^\d{2,4}$/.test(x.text));
+      // QMG position-list rows show prices as decimals (e.g. 550.34), not
+      // bare integers. The bare-integer fallback `^\d{2,4}$` was admitting
+      // chart-axis labels like 3500, 700 as "price" tokens, which made the
+      // lineRightHasPrice check fire on chart-area lines and admitted
+      // 2-3 char ticker-shape tokens (BE, ON, LI, PL) as position-list rows.
+      // Filter A catches single-frame ones, but persistent FPs across
+      // multiple frames survive. Drop the bare-integer pattern.
+      const priceWords = sameLineWords.filter(x => /[%\$]|^\d+\.\d+$/.test(x.text));
       let maxTickerLeft = Math.max(0, ...tickerXs.map(t => t.left));
       let minPriceRight = Infinity;
       for (const p of priceWords) {
