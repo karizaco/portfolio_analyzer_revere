@@ -24,6 +24,24 @@ const SNAPSHOT_DIRS = {
   'qmg-1080p-batch2': SNAPSHOT_DIR_BATCH2,
 };
 
+// Probe log layout is identical to batch2 (one log file per video under
+// <batch>/ocr_probe/logs/*.json). Auto-discover any such subdir under
+// data/video_ocr_probe/ — keeps the review page in sync with future
+// validation runs (val_baseline_*, val_filtered_*, qmg-1080p-batch3, ...).
+const PROBE_ROOT = 'data/video_ocr_probe';
+const KNOWN_BATCHES = new Set(Object.keys(SNAPSHOT_DIRS));
+if (fs.existsSync(PROBE_ROOT)) {
+  for (const entry of fs.readdirSync(PROBE_ROOT)) {
+    const logDir = path.join(PROBE_ROOT, entry, 'ocr_probe', 'logs');
+    if (!fs.existsSync(logDir)) continue;
+    if (KNOWN_BATCHES.has(entry)) continue;
+    // Skip the legacy batch1 folder — it reads from analysis.json, not
+    // per-video log files.
+    if (entry === 'qmg-1080p-batch1') continue;
+    SNAPSHOT_DIRS[entry] = path.join(PROBE_ROOT, entry, 'snapshots');
+  }
+}
+
 // Human-verified ground truth tickers per snapshot (dateKey → capture-index → gt list)
 // For captures beyond the first: ci=0 → no suffix, ci=1 → "_2", ci=2 → "_3", etc.
 const GROUND_TRUTH = {
@@ -78,7 +96,9 @@ const GROUND_TRUTH = {
 // OUTPUT_HTML is in tools/, so relative from tools/ to snapshots is ../data/...
 const SNAPSHOT_RELATIVE_PATH = path.relative(path.dirname(OUTPUT_HTML), SNAPSHOT_DIR_BATCH1).replace(/\\/g, '/');
 
-const d = JSON.parse(fs.readFileSync(ANALYSIS_JSON, 'utf8'));
+const d = fs.existsSync(ANALYSIS_JSON)
+  ? JSON.parse(fs.readFileSync(ANALYSIS_JSON, 'utf8'))
+  : { videos: [] };
 const batch1Videos = d.videos || [];
 
 // Also read batch2 probe logs directly
@@ -91,13 +111,15 @@ function snapPath(absPath, snapshotDirs) {
   return rel;
 }
 
-// Build a map of batch2 captures from their probe log files
+// Build a map of batch2 captures from their probe log files.
+// Also covers any auto-discovered batch (val_baseline_*, val_filtered_*, ...).
 const batch2Captures = [];
-if (fs.existsSync(BATCH2_LOG_DIR)) {
-  const logFiles = fs.readdirSync(BATCH2_LOG_DIR).filter(f => f.endsWith('.json'));
+function readBatchLogs(batchLabel, logDir) {
+  if (!fs.existsSync(logDir)) return;
+  const logFiles = fs.readdirSync(logDir).filter(f => f.endsWith('.json'));
   for (const lf of logFiles) {
     try {
-      const log = JSON.parse(fs.readFileSync(path.join(BATCH2_LOG_DIR, lf), 'utf8'));
+      const log = JSON.parse(fs.readFileSync(path.join(logDir, lf), 'utf8'));
       const caps = log.captures || [];
       for (const c of caps) {
         const dateKey = log.date_key || '';
@@ -105,20 +127,30 @@ if (fs.existsSync(BATCH2_LOG_DIR)) {
         batch2Captures.push({
           dateKey,
           videoId,
-          logPath: path.join(BATCH2_LOG_DIR, lf),
+          logPath: path.join(logDir, lf),
           c,
           log,
+          _batch: batchLabel,
         });
       }
     } catch(e) {}
   }
 }
+readBatchLogs('batch2', BATCH2_LOG_DIR);
+for (const batchLabel of Object.keys(SNAPSHOT_DIRS)) {
+  if (batchLabel === 'qmg-1080p-batch1' || batchLabel === 'qmg-1080p-batch2') continue;
+  const logDir = path.join(PROBE_ROOT, batchLabel, 'ocr_probe', 'logs');
+  readBatchLogs(batchLabel, logDir);
+}
 
-// Group batch2 captures by video
+// Group batch2 + auto-discovered captures by (dateKey + batch label) so a
+// val_baseline_20220614 capture and a val_filtered_20220614 capture appear
+// as two distinct "videos" with their own rows.
 const batch2ByVideo = {};
 for (const cap of batch2Captures) {
-  if (!batch2ByVideo[cap.dateKey]) batch2ByVideo[cap.dateKey] = [];
-  batch2ByVideo[cap.dateKey].push(cap);
+  const key = `${cap.dateKey}|${cap._batch}`;
+  if (!batch2ByVideo[key]) batch2ByVideo[key] = [];
+  batch2ByVideo[key].push(cap);
 }
 
 // Build unified video list
@@ -129,14 +161,16 @@ for (const v of batch1Videos) {
   allVideos.push({ ...v, _batch: 'batch1' });
 }
 
-// Add batch2 videos (by dateKey)
-for (const dateKey of Object.keys(batch2ByVideo).sort()) {
-  const caps = batch2ByVideo[dateKey];
+// Add batch2 + auto-discovered videos (by dateKey + batch)
+for (const key of Object.keys(batch2ByVideo).sort()) {
+  const caps = batch2ByVideo[key];
+  const dateKey = caps[0].dateKey;
+  const batchLabel = caps[0]._batch;
   allVideos.push({
     date_key: dateKey,
     video_path: '',
     captures: caps.map(c => c.c),
-    _batch: 'batch2',
+    _batch: batchLabel,
     _logPath: caps[0]?.logPath || '',
   });
 }
@@ -176,7 +210,7 @@ for (const v of videos) {
     const snapIdx = ci === 0 ? '' : String(ci + 1);
     const snapFile = `qmg_${dateKey}${snapIdx ? '_' + snapIdx : ''}.png`;
     // Use batch-specific snapshot dir
-    const snapDir = v._batch === 'batch2' ? SNAPSHOT_DIR_BATCH2 : SNAPSHOT_DIR_BATCH1;
+    const snapDir = SNAPSHOT_DIRS[v._batch] || SNAPSHOT_DIR_BATCH1;
     const snapAbs = path.join(snapDir, snapFile);
     const snapRel = snapPath(snapAbs);
     const conf = c.ocr_confidence != null ? Number(c.ocr_confidence) : null;
