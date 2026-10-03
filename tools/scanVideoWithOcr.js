@@ -12,6 +12,9 @@ const {
   parseWhiteboardScreenshot
 } = require('../src/parse/parseWhiteboardScreenshot');
 const {
+  parseWhiteboardScreenshotWithBoxes
+} = require('../src/parse/parseWhiteboardScreenshotWithBoxes');
+const {
   analyzeFrameBeforeOcr,
   allocateOutputPath,
   chooseBestCandidate,
@@ -758,10 +761,16 @@ function scoreChartStreamCandidate(chartStream, ocrConfidence) {
 async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps, stats, prefilterScore, options = {}) {
   const { prefilterProfile = PREFILTER_PROFILE_DEFAULT, phashRegion = null, phashRegionFraction = null } = options;
   const ocr = await ocrImage(framePath);
-  const parsedRows = parseWhiteboardScreenshot({
-    metadata: buildFrameMetadata(framePath, dateKey, frameIndex),
-    ocr
+
+  // Try the bounding-box positional parser first; fall back to text-only if it
+  // returns null (no words data, window detection failed, or no holdings found).
+  const metadata = buildFrameMetadata(framePath, dateKey, frameIndex);
+  const boxedRows = await parseWhiteboardScreenshotWithBoxes({
+    metadata,
+    ocr,
+    framePath
   });
+  const parsedRows = boxedRows || parseWhiteboardScreenshot({ metadata, ocr });
   const scoring = scoreWhiteboardCandidateBreakdown(
     parsedRows,
     ocr.confidence,
