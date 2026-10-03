@@ -777,11 +777,18 @@ async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps, sta
     { ...ocr, stats },
     { prefilterProfile }
   );
-  const [phash, phashOverlay, tickers] = await Promise.all([
+  const [phash, phashOverlay] = await Promise.all([
     computePerceptualHash(framePath).catch(() => null),
     computeRegionHash(framePath, phashRegion, phashRegionFraction),
-    Promise.resolve(extractTickersFromOcrText(ocr.text))
   ]);
+
+  // Use tickers from the positional parser (tickers_from_bbox) if available,
+  // otherwise fall back to the clusterer's raw text tickers.
+  const positionalTickers = (parsedRows || [])
+    .flatMap(row => (row.tickers_from_bbox || row.holdings_from_bbox || []));
+  const tickers = positionalTickers.length
+    ? positionalTickers
+    : extractTickersFromOcrText(ocr.text);
 
   return {
     frameIndex,
@@ -804,7 +811,7 @@ async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps, sta
     screenLayout: detectScreenLayout(ocr.text, ocr.lines),
     stats,
     tickers,
-    timestamp: explicitTimestamp != null ? explicitTimestamp : buildFrameTimestamp(frameIndex, fps)
+    timestamp: stats.timestamp != null ? stats.timestamp : buildFrameTimestamp(frameIndex, fps)
   };
 }
 
@@ -951,7 +958,9 @@ function parsedObservationSummary(row) {
     parse_status: row.parse_status || 'unknown',
     issue_codes: splitIssueCodes(row.issue_codes),
     ocr_confidence: Number(row.ocr_confidence || 0),
-    ocr_profile: row.ocr_profile || null
+    ocr_profile: row.ocr_profile || null,
+    // Bounding-box positional tickers (from parseWhiteboardScreenshotWithBoxes)
+    tickers_from_bbox: Array.isArray(row.tickers_from_bbox) ? row.tickers_from_bbox : [],
   };
 }
 
