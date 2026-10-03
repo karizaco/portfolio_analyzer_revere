@@ -349,10 +349,34 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon }) {
     colonRight = groRight > 0 ? groRight + 50 : (windowBounds ? windowBounds.windowLeft + 200 : 200);
   }
 
-  const labelYCenter = labelRow.yCenter;
-  const maxRight = windowBounds
+  // Use the GRO label word's own y-center as the reference, not the row average.
+  // When Tesseract merges rows (GRO + tickers on same "line"), the row average
+  // is somewhere between GRO (y~360) and tickers (y~529), making yDist checks fail.
+  let labelYCenter = labelRow.yCenter;
+  const groWord = labelRow.words.find(w =>
+    w.text.replace(/[^A-Z0-9]/gi, '').toUpperCase() === 'GRO'
+  );
+  if (groWord) {
+    labelYCenter = groWord.top + groWord.height / 2;
+  }
+
+  let maxRight = windowBounds
     ? windowBounds.windowLeft + windowBounds.windowWidth - 10
     : Infinity;
+
+  // If no window bounds, use TURBO label position or a generous estimate.
+  // The TURBO label is at x~350 (left side of whiteboard), so it won't help
+  // for bounding the GRO tickers which are on the right side.
+  if (!windowBounds || maxRight === Infinity) {
+    // Use a generous maxRight that covers the full ticker area on the right.
+    // The GRO tickers end around x=1200; use GRO_right * 3 as safe upper bound.
+    let groRight = -1;
+    for (const word of labelRow.words) {
+      const cleaned = word.text.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+      if (cleaned === 'GRO') { groRight = word.left + word.width; break; }
+    }
+    maxRight = groRight > 0 ? groRight * 3 : colonRight + 800;
+  }
 
   const accepted = [];
   const rejected = [];
@@ -360,7 +384,9 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon }) {
   for (const row of rows) {
     const yDist = Math.abs(row.yCenter - labelYCenter);
 
-    if (yDist === 0) {
+    // Accept words within 30px vertically of the GRO label. This handles the
+    // case where tickers are on the same OCR "line" but slightly offset.
+    if (yDist <= 30) {
       // Same row as the label: extract tickers to the right of colon
       for (const word of row.words) {
         if (word.left <= colonRight) continue;
@@ -387,10 +413,6 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon }) {
               }
               continue;
             }
-            // DEBUG: log every accepted
-            if (['LLY','U','BE','MP'].includes(ticker)) {
-              console.error('  [yDist=0 ACCEPT plain]', JSON.stringify({ticker, raw, x:word.left}));
-            }
             accepted.push({ ticker, word, corrected: null });
           }
         } else {
@@ -403,14 +425,6 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon }) {
             continue;
           }
           accepted.push({ ticker: cleaned, word, corrected: null });
-        }
-      }
-    } else if (yDist <= 30) {
-      // Adjacent row within 30px: reject ticker-shaped words (SECTORS noise)
-      for (const word of row.words) {
-        const cleaned = cleanTickerToken(word.text);
-        if (isTickerShape(word.text)) {
-          rejected.push({ text: cleaned, reason: 'ADJACENT_ROW_REJECTED', word });
         }
       }
     }
