@@ -335,7 +335,18 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon }) {
     }
   }
   if (colonRight < 0) {
-    colonRight = windowBounds ? windowBounds.windowLeft + 200 : 200;
+    // No standalone HOLDINGS word found — use the GRO label's right edge as
+    // fallback. On this whiteboard layout, GRO is at x~440 and tickers start
+    // at x~480, so GRO_right + 50 gives enough margin.
+    let groRight = -1;
+    for (const word of labelRow.words) {
+      const cleaned = word.text.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+      if (cleaned === 'GRO') {
+        groRight = word.left + word.width;
+        break;
+      }
+    }
+    colonRight = groRight > 0 ? groRight + 50 : (windowBounds ? windowBounds.windowLeft + 200 : 200);
   }
 
   const labelYCenter = labelRow.yCenter;
@@ -505,59 +516,32 @@ async function parseWhiteboardScreenshotWithBoxes({ metadata, ocr, framePath }) 
   if (rows.length === 0) return null;
 
   // Step 3: Find the GRO HOLDINGS row
-  // Strategy: A GRO/TURBO label must be near HOLDINGS (same line or ±1 line).
-  // The percentage row "+0.12% GRO +0.14% TURBO" fails this test because
-  // HOLDINGS never appears nearby, so it is correctly rejected.
+  // Strategy: A GRO label must be on the SAME row as HOLDINGS (not just nearby).
+  // The "RVAB/REBAR" row contains GRO but no HOLDINGS — skip it.
   const groHoldingsRow = (() => {
-    const labelKeywords = ['GRO', 'TURBO'];
     const holdingsKeywords = ['HOLDINGS', 'HOLD', 'HLDGS', 'HOLDING'];
 
     for (const row of rows) {
       const rowWords = row.words.map(w => w.text.replace(/[^A-Z]/gi, '').toUpperCase());
-      const rowHasLabel = rowWords.some(w => labelKeywords.includes(w));
-      if (!rowHasLabel) continue;
-
-      // Check this row and ±1 adjacent rows for HOLDINGS keyword
-      const rowIdx = rows.indexOf(row);
-      let foundHoldings = false;
-      for (const offset of [-1, 0, 1]) {
-        const adjIdx = rowIdx + offset;
-        if (adjIdx < 0 || adjIdx >= rows.length) continue;
-        const adjWords = rows[adjIdx].words.map(w => w.text.replace(/[^A-Z]/gi, '').toUpperCase());
-        if (adjWords.some(w => holdingsKeywords.includes(w))) {
-          foundHoldings = true;
-          break;
-        }
-      }
-
-      if (foundHoldings) return row;
+      // Require BOTH GRO and HOLDINGS on the same row
+      const hasGro = rowWords.some(w => w === 'GRO');
+      const hasHoldings = rowWords.some(w => holdingsKeywords.some(hk => w.includes(hk)));
+      if (hasGro && hasHoldings) return row;
     }
     return null;
   })();
 
   // Step 4: Find the TURBO HOLDINGS row (below GRO)
-  // Same keyword-proximity strategy: TURBO must be near HOLDINGS (±1 line)
+  // Require TURBO and HOLDINGS on the same row.
   let turboHoldingsRow = null;
   const holdingsKeywords = ['HOLDINGS', 'HOLD', 'HLDGS', 'HOLDING'];
   if (groHoldingsRow) {
     const groIndex = rows.indexOf(groHoldingsRow);
     for (let i = groIndex + 1; i < rows.length; i++) {
       const rowWords = rows[i].words.map(w => w.text.replace(/[^A-Z]/gi, '').toUpperCase());
-      if (!rowWords.includes('TURBO')) continue;
-
-      // Check this row and ±1 adjacent rows for HOLDINGS keyword
-      let foundHoldings = false;
-      for (const offset of [-1, 0, 1]) {
-        const adjIdx = i + offset;
-        if (adjIdx < 0 || adjIdx >= rows.length) continue;
-        const adjWords = rows[adjIdx].words.map(w => w.text.replace(/[^A-Z]/gi, '').toUpperCase());
-        if (adjWords.some(w => holdingsKeywords.includes(w))) {
-          foundHoldings = true;
-          break;
-        }
-      }
-
-      if (foundHoldings) {
+      const hasTurbo = rowWords.some(w => w === 'TURBO');
+      const hasHoldings = rowWords.some(w => holdingsKeywords.some(hk => w.includes(hk)));
+      if (hasTurbo && hasHoldings) {
         turboHoldingsRow = rows[i];
         break;
       }
