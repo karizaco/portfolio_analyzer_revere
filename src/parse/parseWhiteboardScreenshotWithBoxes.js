@@ -237,7 +237,10 @@ function cleanTickerToken(token) {
   const cleaned = String(token)
     .replace(/^\(+|\)+$/g, '')
     .replace(/^[|\s]+|[|\s]+$/g, '')
-    .replace(/^[^A-Z0-9]+|[^A-Z0-9.]+$/gi, '');
+    .replace(/^[^A-Z0-9]+|[^A-Z0-9.]+$/gi, '')
+    // Strip trailing periods (e.g. "SMTC." → "SMTC") — Tesseract often
+    // attaches sentence-ending punctuation to the last ticker in a row.
+    .replace(/\.+$/, '');
   return cleaned.toUpperCase();
 }
 
@@ -372,6 +375,10 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon }) {
                 rejected.push({ text: ticker, reason: 'NOT_IN_LEXICON', word });
               }
               continue;
+            }
+            // DEBUG: log every accepted
+            if (['LLY','U','BE','MP'].includes(ticker)) {
+              console.error('  [yDist=0 ACCEPT plain]', JSON.stringify({ticker, raw, x:word.left}));
             }
             accepted.push({ ticker, word, corrected: null });
           }
@@ -602,7 +609,11 @@ async function parseWhiteboardScreenshotWithBoxes({ metadata, ocr, framePath }) 
   if (turboHoldingsRow) {
     const turboIdx = rows.indexOf(turboHoldingsRow);
     for (let i = turboIdx + 1; i < Math.min(turboIdx + 4, rows.length); i++) {
-      if (findKeywordWordsInRow(rows[i], /\b(RVAB|REBAR)\b/i).length > 0) {
+      // Skip rows that contain GRO label — the TURBO action row search can
+      // accidentally match the GRO action row (RVAB below GRO HOLDINGS) when
+      // Tesseract doesn't produce a distinct TURBO action row.
+      const hasGroLabel = findKeywordWordsInRow(rows[i], /\bGRO\b/i).length > 0;
+      if (!hasGroLabel && findKeywordWordsInRow(rows[i], /\b(RVAB|REBAR)\b/i).length > 0) {
         turboActionRow = rows[i];
         break;
       }
