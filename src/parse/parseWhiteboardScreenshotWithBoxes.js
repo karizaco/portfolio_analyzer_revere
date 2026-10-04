@@ -342,6 +342,52 @@ function tokenizeMergedTickers(word, lexicon) {
     }
   }
 
+  // --- Ticker-database-aware splitting for OCR merges ---
+  // When Tesseract merges two tickers without a comma (e.g. "TQQQNCLD"),
+  // the comma/slash splitting above doesn't catch them. Try to split
+  // remaining unrecognized tokens by trying all possible prefix partitions
+  // and picking the one where ALL parts are valid tickers.
+  if (result.some(t => !lexicon.has(t) && t.length > 4)) {
+    const remainingTokens = [];
+    for (const token of result) {
+      if (lexicon.has(token)) {
+        remainingTokens.push(token);
+        continue;
+      }
+      // Try to split: find all possible splits where every part is in lexicon
+      const splits = [];
+      // Enumerate all ways to partition token into 2+ parts (each 2-5 chars)
+      const maxParts = Math.floor(token.length / 2);
+      function trySplit(start, path) {
+        if (start === token.length) {
+          // All parts consumed — check if all are valid tickers
+          const allValid = path.every(p => lexicon.has(p));
+          if (allValid) splits.push([...path]);
+          return;
+        }
+        if (path.length >= maxParts) return;
+        for (let len = 2; len <= Math.min(5, token.length - start); len++) {
+          const part = token.slice(start, start + len);
+          if (lexicon.has(part)) {
+            trySplit(start + len, [...path, part]);
+          }
+        }
+      }
+      trySplit(0, []);
+      if (splits.length > 0) {
+        // Pick the split with the most parts (most granular = least leftover)
+        splits.sort((a, b) => b.length - a.length);
+        remainingTokens.push(...splits[0]);
+      }
+      // If no valid split found, keep original token (will be filtered downstream)
+      // or accept it if it passes basic ticker shape
+      if (splits.length === 0 && token.length <= 5 && STRICT_TICKER_PATTERN.test(token)) {
+        remainingTokens.push(token);
+      }
+    }
+    return remainingTokens;
+  }
+
   return result;
 }
 
