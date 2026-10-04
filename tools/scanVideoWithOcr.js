@@ -1412,14 +1412,18 @@ async function main() {
       top_candidates: scanResult.topCandidates,
       top_rejected_candidates: rejectedForReport.map((candidate) => summarizeCandidate(candidate, options.outputKind)),
       whiteboard_segments: buildWhiteboardSegments(captureSummaries),
-      // Multi-frame merge: union of all selected captures' position lists,
-      // keeping only tickers that appear in >=2 captures. Significantly
-      // improves recall for noisy QMG frames (e.g. 20220606: ALB+TNA on one
-      // frame, CBIO on another — merge captures all three).
-      merged_position_list: mergeMultiplePositionLists(
-        captureSummaries.map((c) => c.tickers || []),
-        { minOccurrences: 2 }
-      ),
+      // Multi-frame merge: use the clusterer's merged token list (from raw OCR
+      // across all selected frames) when available. Falls back to the per-capture
+      // tickers list when the clusterer produced no clusters. The clusterer
+      // significantly outperforms per-capture extraction on noisy frames where the
+      // positional parser finds nothing (e.g. 20260924 Revere: clusterer gets
+      // 10/14 GRO + 7/9 TURBO, per-capture gets 0).
+      merged_position_list: (clusterResult?.merged_list?.length
+        ? clusterResult.merged_list
+        : mergeMultiplePositionLists(
+            captureSummaries.map((c) => c.tickers || []),
+            { minOccurrences: 2 }
+          )),
       // Multi-frame RAW-OCR token voting. Collects raw ticker-shape tokens
       // from each frame's OCR text (not the parser's accepted list), groups
       // tokens within edit-distance 2 of each other into clusters, picks a
