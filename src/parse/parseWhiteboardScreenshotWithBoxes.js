@@ -232,6 +232,50 @@ function findKeywordWordsInRow(row, keywordPattern) {
 
 // ---------- Ticker Extraction from Row ----------
 
+/**
+ * Check if a ticker appears in the correct section of the OCR text.
+ * Used by Mode A to distinguish GRO tickers from TURBO/SECTORS tickers
+ * when they are all on the same merged OCR line.
+ */
+function tickerInSection(ocrText, ticker, portfolio) {
+  if (!ocrText || !ticker) return true;  // no text to check, accept
+  const upper = ocrText.toUpperCase();
+  const t = ticker.toUpperCase();
+
+  // Find section boundaries
+  const groMatch = upper.match(/\*?\s*GRO\s+HOLDINGS\s*:/i);
+  const turboMatch = upper.match(/\*?\s*TURBO\s+HOLDINGS\s*:/i);
+
+  if (portfolio === 'GRO') {
+    // GRO tickers must appear between GRO HOLDINGS and either:
+    // 1. TURBO HOLDINGS section, OR
+    // 2. GRO RVAB/REBAR action line (starts with "* GRO RVAB")
+    // The action line text ("BUY NET ADD to BE PLTR SELL LITE, NCLD DOCN") must NOT be included.
+    const groPos = groMatch ? upper.indexOf(groMatch[0]) : -1;
+    if (groPos < 0) return true;  // can't find section, accept
+    // Find the action line start (* GRO RVAB or * GRO RVAB/REBAR)
+    const rvabMatch = upper.match(/\*\s*GRO\s+RVAB\/?REBAR\s*:/);
+    const rvabPos = rvabMatch ? upper.indexOf(rvabMatch[0]) : -1;
+    const turboPos = turboMatch ? upper.indexOf(turboMatch[0]) : -1;
+    // Stop at whichever comes first: action line or TURBO HOLDINGS
+    let sectionEnd = upper.length;
+    if (rvabPos > groPos) sectionEnd = rvabPos;
+    if (turboPos > groPos && turboPos < sectionEnd) sectionEnd = turboPos;
+    const section = upper.slice(groPos, sectionEnd);
+    return section.includes(t);
+  } else if (portfolio === 'TURBO') {
+    // TURBO tickers must appear between TURBO HOLDINGS and next section
+    const turboPos = turboMatch ? upper.indexOf(turboMatch[0]) : -1;
+    if (turboPos < 0) return true;  // can't find section, accept
+    // Find '* ' (asterisk + space = start of new line) from turbo position onward
+    const nextSection = upper.indexOf('* ', turboPos + 10);
+    const sectionEnd = nextSection > turboPos ? nextSection : upper.length;
+    const section = upper.slice(turboPos, sectionEnd);
+    return section.includes(t);
+  }
+  return true;  // unknown portfolio, accept
+}
+
 function cleanTickerToken(token) {
   if (!token) return '';
   const cleaned = String(token)
@@ -306,12 +350,19 @@ function tokenizeMergedTickers(word, lexicon) {
  *
  * Strategy:
  * 1. Find the "HOLDINGS:" word — its right edge marks the start of the ticker list
- * 2. For words strictly to the right of the colon on the label row:
- *    a. If the word is a plain ticker (no comma/slash) → accept directly
- *    b. If the word is a merged group (contains comma or slash) → split and tokenize
- * 3. Reject any ticker-shaped words on adjacent rows within 30px
+ * 2. Only accept words that share the GRO/TURBO keyword's Tesseract line number.
+ *    This is critical because:
+ *    - When Tesseract MERGES the label row with tickers below it, all share
+ *      the same line number → GRO tickers are accepted (correct).
+ *    - SECTORS tickers are on a different Tesseract line → rejected (correct).
+ *    - Using y-distance (yDist) FAILS here because the merged row's yCenter
+ *      (≈444, average of GRO at y~360 and tickers at y~529) makes SECTORS
+ *      tickers seem close (yDist=6) and actual GRO tickers seem far (yDist=85).
+ * 3. For words on the correct line, also enforce:
+ *    - ticker.left >= colonRight + 80 (must be to the right of the label)
+ *    - ticker.left + ticker.width <= maxRight
  */
-function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon }) {
+function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon, portfolio, ocrText }) {
   if (!rows || !rows.length || !labelRow) {
     return { tickers: [], rejected: [] };
   }
@@ -349,27 +400,12 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon }) {
     colonRight = groRight > 0 ? groRight + 50 : (windowBounds ? windowBounds.windowLeft + 200 : 200);
   }
 
-  // Use the GRO label word's own y-center as the reference, not the row average.
-  // When Tesseract merges rows (GRO + tickers on same "line"), the row average
-  // is somewhere between GRO (y~360) and tickers (y~529), making yDist checks fail.
-  let labelYCenter = labelRow.yCenter;
-  const groWord = labelRow.words.find(w =>
-    w.text.replace(/[^A-Z0-9]/gi, '').toUpperCase() === 'GRO'
-  );
-  if (groWord) {
-    labelYCenter = groWord.top + groWord.height / 2;
-  }
-
   let maxRight = windowBounds
     ? windowBounds.windowLeft + windowBounds.windowWidth - 10
     : Infinity;
 
-  // If no window bounds, use TURBO label position or a generous estimate.
-  // The TURBO label is at x~350 (left side of whiteboard), so it won't help
-  // for bounding the GRO tickers which are on the right side.
+  // If no window bounds, use a generous estimate.
   if (!windowBounds || maxRight === Infinity) {
-    // Use a generous maxRight that covers the full ticker area on the right.
-    // The GRO tickers end around x=1200; use GRO_right * 3 as safe upper bound.
     let groRight = -1;
     for (const word of labelRow.words) {
       const cleaned = word.text.replace(/[^A-Z0-9]/gi, '').toUpperCase();
@@ -378,54 +414,160 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon }) {
     maxRight = groRight > 0 ? groRight * 3 : colonRight + 800;
   }
 
+  // Also bound by TURBO label's left edge — TURBO comes after GRO,
+  // so its left edge marks where the GRO section ends. This prevents
+  // Mode A from accepting action-row tickers (LITE, NCLD, DOCN) that
+  // Tesseract places to the right of GRO HOLDINGS within the GRO section.
+  if (maxRight === Infinity) {
+    let turboLeft = Infinity;
+    for (const row of rows) {
+      for (const word of row.words) {
+        const cleaned = word.text.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+        if (cleaned === 'TURBO') {
+          turboLeft = Math.min(turboLeft, word.left);
+        }
+      }
+    }
+    if (turboLeft < Infinity) {
+      maxRight = Math.min(maxRight, turboLeft - 20);
+    }
+  }
+
   const accepted = [];
   const rejected = [];
 
-  for (const row of rows) {
-    const yDist = Math.abs(row.yCenter - labelYCenter);
+  // Two-mode extraction strategy:
+  // Mode A — merged row: Tesseract merges the GRO/HOLDINGS label with tickers
+  // into one OCR line (e.g., "GRO HOLDINGS: SPYM,UPRO,TQQQ,"). In this case,
+  // the tickers are ON the same row as the label, to the right of colonRight.
+  // Mode B — split row: Tesseract places the label on one row and tickers
+  // on the next row. In this case, we scan the row below the label row.
+  //
+  // Implementation: scan both the merged row AND the next row, accept tickers
+  // from whichever row produces valid results. Mode A is tried first.
 
-    // Accept words within 30px vertically of the GRO label. This handles the
-    // case where tickers are on the same OCR "line" but slightly offset.
-    if (yDist <= 30) {
-      // Same row as the label: extract tickers to the right of colon
-      for (const word of row.words) {
-        if (word.left <= colonRight) continue;
-        if (word.left + word.width > maxRight) continue;
+  // Find the GRO/TURBO keyword word to get its Tesseract line number.
+  const labelKeywords = ['GRO', 'TURBO'];
+  const labelKeywordWord = labelRow.words.find(w => {
+    const cleaned = w.text.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+    return labelKeywords.includes(cleaned);
+  });
+  const labelLine = labelKeywordWord ? labelKeywordWord.line : labelRow.lineNum;
 
-        const raw = word.text;
-        const isMergedGroup = /[,\/]/.test(raw);
+  // Mode B: split row case — label on one row, tickers on the row below.
+  // Mode A: merged row case — label and tickers on the same OCR line.
+  // Mode B is tried first because it's cleaner and avoids SECTORS/Forex bleed.
+  const labelRowIndex = rows.indexOf(labelRow);
+  const nextRow = labelRowIndex >= 0 && labelRowIndex < rows.length - 1
+    ? rows[labelRowIndex + 1]
+    : null;
 
-        if (isMergedGroup) {
-          // Split merged group into individual tokens
-          const tokens = tokenizeMergedTickers(word, lexicon);
-          for (const ticker of tokens) {
-            if (!STRICT_TICKER_PATTERN.test(ticker)) {
-              rejected.push({ text: ticker, reason: 'MERGED_TOKEN_NOT_TICKER', word });
-              continue;
-            }
-            const inLexicon = lexicon.has(ticker);
-            if (!inLexicon && !hasPriceNear(raw, ticker)) {
-              const correction = findCloseTickerMatch(ticker, { tickerSet: lexicon, tickers: [...lexicon] });
-              if (correction && lexicon.has(correction)) {
-                accepted.push({ ticker: correction, word, corrected: ticker });
-              } else {
-                rejected.push({ text: ticker, reason: 'NOT_IN_LEXICON', word });
-              }
-              continue;
-            }
-            accepted.push({ ticker, word, corrected: null });
-          }
-        } else {
-          // Plain single ticker word
-          const cleaned = cleanTickerToken(word.text);
-          if (!isTickerShape(word.text)) continue;
-          const inLexicon = lexicon.has(cleaned);
-          if (!inLexicon && !hasPriceNear(word.text, cleaned)) {
-            rejected.push({ text: cleaned, reason: 'NOT_IN_LEXICON', word });
+  // Mode B: try the row below the label row first (split row case).
+  // If the label and tickers are on separate rows, Mode B gets ONLY the ticker row,
+  // avoiding SECTORS/Forex words that Mode A (merged) accidentally includes.
+  if (nextRow) {
+    for (const word of nextRow.words) {
+      if (word.left < colonRight) continue;
+      if (word.left + word.width > maxRight) continue;
+
+      const raw = word.text;
+      const isMergedGroup = /[,\/]/.test(raw);
+
+      if (isMergedGroup) {
+        const tokens = tokenizeMergedTickers(word, lexicon);
+        for (const ticker of tokens) {
+          if (!STRICT_TICKER_PATTERN.test(ticker)) {
+            rejected.push({ text: ticker, reason: 'MERGED_TOKEN_NOT_TICKER', word });
             continue;
           }
-          accepted.push({ ticker: cleaned, word, corrected: null });
+          // Filter by section — prevents action-row bleed (LITE, NCLD, DOCN in GRO section)
+          if (!tickerInSection(ocrText, ticker, portfolio)) {
+            rejected.push({ text: ticker, reason: 'WRONG_SECTION', word });
+            continue;
+          }
+          const inLexicon = lexicon.has(ticker);
+          if (!inLexicon && !hasPriceNear(raw, ticker)) {
+            const correction = findCloseTickerMatch(ticker, { tickerSet: lexicon, tickers: [...lexicon] });
+            if (correction && lexicon.has(correction)) {
+              accepted.push({ ticker: correction, word, corrected: ticker });
+            } else {
+              rejected.push({ text: ticker, reason: 'NOT_IN_LEXICON', word });
+            }
+            continue;
+          }
+          accepted.push({ ticker, word, corrected: null });
         }
+      } else {
+        const cleaned = cleanTickerToken(word.text);
+        if (!isTickerShape(word.text)) continue;
+        // Filter by section — prevents action-row bleed in Mode B (LITE, NCLD, DOCN)
+        if (!tickerInSection(ocrText, cleaned, portfolio)) {
+          rejected.push({ text: cleaned, reason: 'WRONG_SECTION', word });
+          continue;
+        }
+        const inLexicon = lexicon.has(cleaned);
+        if (!inLexicon && !hasPriceNear(word.text, cleaned)) {
+          rejected.push({ text: cleaned, reason: 'NOT_IN_LEXICON', word });
+          continue;
+        }
+        accepted.push({ ticker: cleaned, word, corrected: null });
+      }
+    }
+  }
+
+  // Mode A: if Mode B found fewer than 12 tickers, the frame probably has merged
+  // groups that Mode B (next-row scan) can't see. Mode A scans the label row too.
+  // Threshold of 12: Mode B in good frames finds 15-16 GRO tickers; if we got fewer,
+  // run Mode A to catch merged groups (TNA, DOCN, LABU).
+  if (accepted.length < 12) {
+    for (const word of labelRow.words) {
+      if (word.left + word.width > maxRight) continue;
+
+      const raw = word.text;
+      const isMergedGroup = /[,\/]/.test(raw);
+
+      if (isMergedGroup) {
+        // For merged groups (e.g., "SPYM,UPRO,TQQQ,"), accept regardless of colonRight.
+        // The colonRight threshold is only for standalone words (to skip the GRO/HOLDINGS
+        // label). Merged ticker groups always start to the right of the label.
+        const tokens = tokenizeMergedTickers(word, lexicon);
+        for (const ticker of tokens) {
+          if (!STRICT_TICKER_PATTERN.test(ticker)) {
+            rejected.push({ text: ticker, reason: 'MERGED_TOKEN_NOT_TICKER', word });
+            continue;
+          }
+          // Filter by section: GRO tickers must appear in GRO section of OCR text,
+          // TURBO tickers in TURBO section. This prevents SECTORS bleed (DASH, DELL,
+          // COPX, TAN, URNM, OIH) from leaking into the wrong portfolio.
+          if (!tickerInSection(ocrText, ticker, portfolio)) {
+            rejected.push({ text: ticker, reason: 'WRONG_SECTION', word });
+            continue;
+          }
+          const inLexicon = lexicon.has(ticker);
+          if (!inLexicon && !hasPriceNear(raw, ticker)) {
+            const correction = findCloseTickerMatch(ticker, { tickerSet: lexicon, tickers: [...lexicon] });
+            if (correction && lexicon.has(correction)) {
+              accepted.push({ ticker: correction, word, corrected: ticker });
+            } else {
+              rejected.push({ text: ticker, reason: 'NOT_IN_LEXICON', word });
+            }
+            continue;
+          }
+          accepted.push({ ticker, word, corrected: null });
+        }
+      } else {
+        // Standalone ticker-shaped words on the label row — these are real tickers
+        // (e.g., DOCN on 20260922) that Tesseract didn't merge with a group.
+        // The section filter prevents SECTORS bleed (DASH, COPX, TAN, etc.).
+        const cleaned = cleanTickerToken(word.text);
+        if (!isTickerShape(word.text)) continue;
+        if (!tickerInSection(ocrText, cleaned, portfolio)) continue;  // skip SECTORS bleed
+        const inLexicon = lexicon.has(cleaned);
+        if (!inLexicon && !hasPriceNear(word.text, cleaned)) {
+          rejected.push({ text: cleaned, reason: 'NOT_IN_LEXICON', word });
+          continue;
+        }
+        accepted.push({ ticker: cleaned, word, corrected: null });
       }
     }
   }
@@ -532,32 +674,105 @@ async function parseWhiteboardScreenshotWithBoxes({ metadata, ocr, framePath }) 
   // Step 3: Find the GRO HOLDINGS row
   // Strategy: A GRO label must be on the SAME row as HOLDINGS (not just nearby).
   // The "RVAB/REBAR" row contains GRO but no HOLDINGS — skip it.
-  const groHoldingsRow = (() => {
-    const holdingsKeywords = ['HOLDINGS', 'HOLD', 'HLDGS', 'HOLDING'];
-
-    for (const row of rows) {
-      const rowWords = row.words.map(w => w.text.replace(/[^A-Z]/gi, '').toUpperCase());
-      // Require BOTH GRO and HOLDINGS on the same row
-      const hasGro = rowWords.some(w => w === 'GRO');
-      const hasHoldings = rowWords.some(w => holdingsKeywords.some(hk => w.includes(hk)));
-      if (hasGro && hasHoldings) return row;
-    }
-    return null;
-  })();
-
-  // Step 4: Find the TURBO HOLDINGS row (below GRO)
-  // Require TURBO and HOLDINGS on the same row.
-  let turboHoldingsRow = null;
+  // Fallback: when Tesseract merges all content into 1-2 lines (e.g., 20260923),
+  // cluster by Y-coordinate and find GRO/TURBO/HOLDINGS rows independently.
   const holdingsKeywords = ['HOLDINGS', 'HOLD', 'HLDGS', 'HOLDING'];
-  if (groHoldingsRow) {
+  let groHoldingsRow = null;
+  let turboHoldingsRow = null;
+
+  // Primary: look for rows with both GRO and HOLDINGS
+  for (const row of rows) {
+    const rowWords = row.words.map(w => w.text.replace(/[^A-Z]/gi, '').toUpperCase());
+    const hasGro = rowWords.some(w => w === 'GRO');
+    const hasHoldings = rowWords.some(w => holdingsKeywords.some(hk => w.includes(hk)));
+    const hasTurbo = rowWords.some(w => w === 'TURBO');
+    if (hasGro && hasHoldings) { groHoldingsRow = row; continue; }
+    if (hasTurbo && hasHoldings) { turboHoldingsRow = row; }
+  }
+
+  // Fallback Y-coordinate clustering when Tesseract gave only 1-3 "rows"
+  if (!groHoldingsRow && rows.length <= 3) {
+    // Cluster by Y-coordinate with a 60px gap threshold
+    const WORD_Y_CLUSTER_GAP = 60;
+    const sortedWords = [...words].sort((a, b) => {
+      const ya = a.top + a.height / 2;
+      const yb = b.top + b.height / 2;
+      return ya - yb;
+    });
+    const yRows = [];
+    let currentRow = [];
+    let currentYCenter = null;
+    for (const w of sortedWords) {
+      const wy = w.top + w.height / 2;
+      if (currentYCenter === null || Math.abs(wy - currentYCenter) <= WORD_Y_CLUSTER_GAP) {
+        currentRow.push(w);
+        currentYCenter = currentYCenter === null ? wy : (currentYCenter * (currentRow.length - 1) + wy) / currentRow.length;
+      } else {
+        currentRow.sort((a, b) => a.left - b.left);
+        yRows.push({ yCenter: currentYCenter, words: currentRow });
+        currentRow = [w];
+        currentYCenter = wy;
+      }
+    }
+    if (currentRow.length > 0) {
+      currentRow.sort((a, b) => a.left - b.left);
+      yRows.push({ yCenter: currentYCenter, words: currentRow });
+    }
+
+    // Find GRO and HOLDINGS rows by keyword search
+    let groYRow = null, turboYRow = null, holdingsYRow = null;
+    for (const r of yRows) {
+      const rw = r.words.map(w => w.text.replace(/[^A-Z]/gi, '').toUpperCase());
+      if (rw.some(w => w === 'GRO')) groYRow = r;  // independent of TURBO
+      if (rw.some(w => w === 'TURBO')) turboYRow = r;  // independent of GRO
+      if (rw.some(w => holdingsKeywords.some(hk => w.includes(hk)))) holdingsYRow = r;
+    }
+
+    // Pair GRO with nearest HOLDINGS row above it
+    if (groYRow && holdingsYRow) {
+      const pair = yRows.filter(r => r.yCenter >= holdingsYRow.yCenter && r.yCenter <= groYRow.yCenter + 10);
+      if (pair.length > 0) groHoldingsRow = pair[0];
+      else if (groYRow) groHoldingsRow = groYRow; // fallback: use GRO row
+    } else if (groYRow) {
+      // No HOLDINGS row found — use GRO row as best effort
+      groHoldingsRow = groYRow;
+    }
+
+    // Pair TURBO with nearest HOLDINGS row above it (or use TURBO-only row)
+    if (turboYRow && holdingsYRow) {
+      const pair = yRows.filter(r => r.yCenter >= holdingsYRow.yCenter && r.yCenter <= turboYRow.yCenter + 10);
+      if (pair.length > 0) turboHoldingsRow = pair[0];
+      else if (turboYRow) turboHoldingsRow = turboYRow;
+    } else if (turboYRow) {
+      // No HOLDINGS row found — use TURBO row as best effort
+      turboHoldingsRow = turboYRow;
+    }
+  }
+
+  // Step 4: Find the TURBO HOLDINGS row
+  // If GRO and TURBO are on the same row as each other (Tesseract merged them),
+  // use the same row. Otherwise look for TURBO+HOLDINGS below GRO.
+  if (!turboHoldingsRow && groHoldingsRow) {
     const groIndex = rows.indexOf(groHoldingsRow);
-    for (let i = groIndex + 1; i < rows.length; i++) {
-      const rowWords = rows[i].words.map(w => w.text.replace(/[^A-Z]/gi, '').toUpperCase());
+    // First: check if TURBO+HOLDINGS is on the same row as GRO+HOLDINGS
+    if (groIndex >= 0) {
+      const rowWords = rows[groIndex].words.map(w => w.text.replace(/[^A-Z]/gi, '').toUpperCase());
       const hasTurbo = rowWords.some(w => w === 'TURBO');
       const hasHoldings = rowWords.some(w => holdingsKeywords.some(hk => w.includes(hk)));
       if (hasTurbo && hasHoldings) {
-        turboHoldingsRow = rows[i];
-        break;
+        turboHoldingsRow = rows[groIndex];
+      }
+    }
+    // Second: look for TURBO+HOLDINGS below GRO
+    if (!turboHoldingsRow) {
+      for (let i = groIndex + 1; i < rows.length; i++) {
+        const rowWords = rows[i].words.map(w => w.text.replace(/[^A-Z]/gi, '').toUpperCase());
+        const hasTurbo = rowWords.some(w => w === 'TURBO');
+        const hasHoldings = rowWords.some(w => holdingsKeywords.some(hk => w.includes(hk)));
+        if (hasTurbo && hasHoldings) {
+          turboHoldingsRow = rows[i];
+          break;
+        }
       }
     }
   }
@@ -571,12 +786,12 @@ async function parseWhiteboardScreenshotWithBoxes({ metadata, ocr, framePath }) 
 
   // Step 6: Extract GRO tickers — scan all rows within ±30px of the label row
   const groTickers = groHoldingsRow
-    ? extractTickersNearLabel({ rows, labelRow: groHoldingsRow, windowBounds, lexicon }).tickers
+    ? extractTickersNearLabel({ rows, labelRow: groHoldingsRow, windowBounds, lexicon, portfolio: 'GRO', ocrText: ocr.text }).tickers
     : [];
 
   // Step 7: Extract TURBO tickers
   const turboTickers = turboHoldingsRow
-    ? extractTickersNearLabel({ rows, labelRow: turboHoldingsRow, windowBounds, lexicon }).tickers
+    ? extractTickersNearLabel({ rows, labelRow: turboHoldingsRow, windowBounds, lexicon, portfolio: 'TURBO', ocrText: ocr.text }).tickers
     : [];
 
   // Step 8: Find BOTTOM LINE
