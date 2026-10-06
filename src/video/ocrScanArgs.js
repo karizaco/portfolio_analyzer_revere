@@ -4,13 +4,12 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 
 const { PREFILTER_PROFILE_DEFAULT } = require('../config/schema');
-
-const PIPELINE_PROFILE_DEFAULT = 'legacy';
-const SUPPORTED_PIPELINE_PROFILES = Object.freeze([
+const {
   PIPELINE_PROFILE_DEFAULT,
-  'qmg-experimental-v1',
-  'whiteboard-experimental-v1'
-]);
+  getPipelineProfileNames
+} = require('../config/pipelineProfiles');
+
+const SUPPORTED_PIPELINE_PROFILES = Object.freeze(getPipelineProfileNames());
 
 const DEFAULT_OUTPUT_ROOT = path.join(
   path.resolve(__dirname, '..', '..'),
@@ -25,7 +24,7 @@ function printHelp() {
     'Options:',
     '  --video <path>             Local video file to scan',
     '  --date <YYYYMMDD>          Optional date key override for output naming',
-    `  --pipeline-profile <name>  End-to-end pipeline profile, default ${PIPELINE_PROFILE_DEFAULT}`,
+    `  --pipeline-profile <name>  End-to-end pipeline profile, default ${PIPELINE_PROFILE_DEFAULT} (run node tools/runOcrProfiles.js --list for catalog)`,
     '  --output-kind <kind>       whiteboard | snapshot',
     '  --output-root <path>       Root directory for extracted outputs',
     '  --run-tag <name>           Optional subdirectory appended to output-root so same-day reruns do not overwrite previous results',

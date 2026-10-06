@@ -18,6 +18,7 @@
     "video:download": "node tools/runWhiteboardWorker.js download",
     "video:download-hires": "node tools/downloadHiresBatch.js",
     "video:download-hires:30": "node tools/downloadHiresBatch.js --limit 30 --height 720",
+    "video:profiles": "node tools/runOcrProfiles.js",
     "video:stamp-types": "node tools/stampExistingProbeLogs.js",
     "video:stamp-types:reclassify": "node tools/stampExistingProbeLogs.js --reclassify",
     "video:ocr-parallel": "bash tools/parallelOcrScan.sh",
