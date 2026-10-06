@@ -76,13 +76,16 @@ console.log(`[hires] height=${height}p format=${formatCode} limit=${limit} retry
 console.log(`[hires] checkpoint: ${checkpoint.done.length} done, ${Object.keys(checkpoint.errored).length} errored`);
 
 const py = process.platform === 'win32' ? 'py' : 'python3';
+const pathCondition = onlyIds.size
+    ? "(download_path IS NOT NULL OR download_path = '')"
+    : "download_path IS NOT NULL";
 const script = `
 import json, sqlite3, sys
 c = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
 c.row_factory = sqlite3.Row
 rows = c.execute(
     "SELECT video_id, upload_date, title, download_path FROM videos "
-    "WHERE status IN ('pending','scanning','error') AND download_path IS NOT NULL "
+    "WHERE status IN ('pending','scanning','error') AND ${pathCondition} "
     "AND upload_date IS NOT NULL AND upload_date != 'NA' "
     "ORDER BY upload_date DESC, video_id ASC"
 ).fetchall()

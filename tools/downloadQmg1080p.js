@@ -30,7 +30,7 @@ const { spawnSync } = require('node:child_process');
 
 const argv = process.argv.slice(2);
 const limit = Number(readFlag(argv, '--limit')) || 30;
-const height = 1080;
+const height = Number(readFlag(argv, '--height')) || 1080;
 const retryErrored = argv.includes('--retry-errored');
 const cookiesFile = readFlag(argv, '--cookies') || null;
 // Optional explicit allow-list of video_ids (used by the parallel download
@@ -49,11 +49,11 @@ const onlyIds = new Set(
     .map((s) => s.trim().toLowerCase())
 );
 
-if (![1080].includes(height)) {
-  console.error(`Unsupported --height ${height}; QMG is fixed at 1080p.`);
+if (![720, 1080].includes(height)) {
+  console.error(`Unsupported --height ${height}; qullamaggie supports 720 or 1080.`);
   process.exit(1);
 }
-const formatCode = String('137');
+const formatCode = String(height === 720 ? '136' : '137');
 
 const dbPath = path.resolve('data/video_pipeline/state.sqlite');
 const dlDir = path.resolve('data/video_pipeline/downloads_1080p');
@@ -147,7 +147,7 @@ for (const row of allRows) {
   if (checkpoint.done.some((e) => (typeof e === 'string' ? e : e.id) === videoId)) { skippedCheckpoint += 1; continue; }
   if (!retryErrored && checkpoint.errored[videoId]) { skippedErrored += 1; continue; }
   if (checkpoint.blocked.includes(videoId)) { skippedErrored += 1; continue; }
-  const expected = path.join(dlDir, `${uploadDate}_${videoId}.mp4`);
+  const expected = path.join(dlDir, `${uploadDate ? uploadDate + '_' : ''}${videoId}.mp4`);
   if (fs.existsSync(expected) && fs.statSync(expected).size > 1024 * 1024) {
     skippedDisk += 1;
     finalizeRow(videoId, expected);
@@ -172,7 +172,7 @@ const startedAt = Date.now();
 
 for (const row of todo) {
   const { video_id: videoId, upload_date: uploadDate, title } = row;
-  const outTemplate = path.join(dlDir, `${uploadDate}_${videoId}.%(ext)s`);
+  const outTemplate = path.join(dlDir, `${uploadDate ? uploadDate + '_' : ''}${videoId}.%(ext)s`);
   const started = Date.now();
   console.log(`[hires ${++downloaded}/${todo.length}] ${uploadDate} ${videoId} "${(title||'').slice(0, 50)}"`);
   const r = spawnSync(py, [
@@ -180,14 +180,14 @@ for (const row of todo) {
     '--no-playlist',
     '-f', formatCode,
     '--js-runtimes', 'node',
-    '--extractor-args', 'youtube:player_client=mediaconnect',
+    '--extractor-args', 'youtube:player_client=visios',
     ...(cookiesFile ? ['--cookies', cookiesFile] : []),
     '-o', outTemplate,
     `https://www.youtube.com/watch?v=${videoId}`
   ], { encoding: 'utf8', stdio: 'inherit' });
 
   const elapsed = ((Date.now() - started) / 1000).toFixed(1);
-  const expected = path.join(dlDir, `${uploadDate}_${videoId}.mp4`);
+  const expected = path.join(dlDir, `${uploadDate ? uploadDate + '_' : ''}${videoId}.mp4`);
   if (r.status !== 0 || !fs.existsSync(expected) || fs.statSync(expected).size < 1024 * 1024) {
     errored += 1;
     checkpoint.errored[videoId] = {

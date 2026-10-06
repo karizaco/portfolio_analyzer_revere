@@ -1147,6 +1147,7 @@ async function main() {
     chart_stream_parser: Boolean(options.chartStreamParser),
     date_key: dateKey,
     output_kind: options.outputKind,
+    pipeline_profile: options.pipelineProfile,
     phash_region: options.phashRegion || null,
     phash_region_fraction: options.phashRegionFraction || null,
     prefilter_profile: options.prefilterProfile,
@@ -1173,6 +1174,8 @@ async function main() {
   } else {
     console.log(`[scan:${options.outputKind}] skipping keyframe lookup (--skip-keyframes)`);
   }
+
+  console.log(`[scan:${options.outputKind}] pipeline profile ${options.pipelineProfile}`);
 
   try {
     console.log(`[scan:${options.outputKind}] preflighting final ${options.outputKind} output extraction`);
