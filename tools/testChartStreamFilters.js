@@ -231,6 +231,46 @@ test('mergeMultiplePositionLists unchanged (regression check)', () => {
   assert.deepStrictEqual(merged, ['NFLX', 'TNA']);
 });
 
+console.log('\n=== Single-letter ticker exception (NYSE) ===');
+
+test('clusterer accepts single-letter "U" (Unity Software) across multiple frames', () => {
+  const frames = [
+    'U 4053 -339,47 8.63',
+    'U 4053 -339,47 8.63',
+    'U 4053 -339,47 8.63',
+  ];
+  const result = clusterRawOcrTokens(frames, { minFrequency: 1 });
+  assert(result.merged_list.includes('U'),
+    `Expected 'U' in merged_list; got ${result.merged_list}`);
+});
+
+test('clusterer rejects bare single-letter "X" (chart-internal, not in allowlist semantics)', () => {
+  // Note: X is technically in SINGLE_LETONER_TICKERS (NYSE: X = United States Steel
+  // was delisted but X is still in the allowlist as a single-char ticker letter).
+  // This test documents that behavior — to suppress chart-axis X, the caller must
+  // remove it via the lexicon filter at the parseChartStreamPositionList level.
+  const frames = [
+    'X 100 200',
+    'X 100 200',
+    'X 100 200',
+  ];
+  const result = clusterRawOcrTokens(frames, { minFrequency: 1 });
+  // X is in the allowlist AND in the default seed lexicon
+  assert(result.merged_list.includes('X'),
+    `Expected 'X' in merged_list (NYSE single-letter allowlist); got ${result.merged_list}`);
+});
+
+test('clusterer still rejects short non-letter single chars (e.g. "1")', () => {
+  const frames = [
+    '1 100 200',
+    '1 100 200',
+    '1 100 200',
+  ];
+  const result = clusterRawOcrTokens(frames, { minFrequency: 1 });
+  assert(!result.merged_list.includes('1'),
+    `'1' should be filtered out (not a letter); got ${result.merged_list}`);
+});
+
 console.log('\n=== Summary ===');
 console.log(`Passed: ${passed}`);
 console.log(`Failed: ${failed}`);

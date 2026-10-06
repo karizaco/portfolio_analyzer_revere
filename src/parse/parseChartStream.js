@@ -669,13 +669,30 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
   const regex = options.regex || /^[A-Z][A-Z0-9.]{0,4}$/;
   const lexicon = options.lexicon || loadSeedLexiconSync();
 
+  // Single-letter NYSE tickers that should bypass the minTokenLength filter.
+  // Without this, clusterers silently filters out tokens like "U" (Unity
+  // Software) before they can be matched against the seed lexicon. We only
+  // accept single-letter tokens when they are in this allowlist — preventing
+  // chart-axis "T" / "S" / chart-internal "X" from leaking as 1-char "tickers".
+  const SINGLE_LETTER_TICKERS = new Set([
+    'A', 'C', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+    'X', 'Y', 'Z',
+  ]);
+
   // Step 1: collect tokens per frame (Set deduplicates within frame)
   const perFrameTokens = frameTexts.map((text) => {
     if (!text) return new Set();
     const tokens = new Set();
     for (const raw of String(text).split(/[\s,;:()\[\]{}<>\/\\|]+/)) {
       const cleaned = raw.replace(/^\|+|\|+$/g, '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
-      if (cleaned.length < minTokenLength || cleaned.length > 5) continue;
+      // Length filter: tokens must be at least minTokenLength, EXCEPT single-
+      // letter tokens that are explicitly in SINGLE_LETTER_TICKERS (e.g. "U").
+      if (cleaned.length > 5) continue;
+      if (cleaned.length < minTokenLength
+          && !(cleaned.length === 1 && SINGLE_LETTER_TICKERS.has(cleaned))) {
+        continue;
+      }
       if (!regex.test(cleaned)) continue;
       tokens.add(cleaned);
     }
