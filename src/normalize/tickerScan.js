@@ -21,22 +21,14 @@ const { buildTickerKnowledge, buildReferenceScores } = require('./repairHoldings
 const { STRICT_TICKER_PATTERN, tokenizeText, extractTickers } = require('./tickerExtraction');
 
 let cachedLexicon = null;
+let cachedLexiconKey = '';
 
 function normalizeSeedTicker(value) {
   return String(value || '').trim().toUpperCase();
 }
 
-function loadSeedLexiconSync(configDirectory) {
-  if (cachedLexicon) {
-    return cachedLexicon;
-  }
-
-  const resolvedDirectory = path.resolve(
-    configDirectory || path.join(__dirname, '..', '..', 'config')
-  );
-  const csvPath = path.join(resolvedDirectory, 'ticker_lexicon_seed.csv');
+function loadTickersFromCsv(csvPath) {
   const raw = fs.readFileSync(csvPath, 'utf8');
-
   const tickers = [];
   let isHeader = true;
   for (const line of raw.split(/\r?\n/)) {
@@ -52,9 +44,32 @@ function loadSeedLexiconSync(configDirectory) {
       tickers.push(ticker);
     }
   }
+  return tickers;
+}
 
+function loadSeedLexiconSync(configDirectory) {
+  const resolvedDirectory = path.resolve(
+    configDirectory || path.join(__dirname, '..', '..', 'config')
+  );
+  const csvPaths = [path.join(resolvedDirectory, 'ticker_lexicon_seed.csv')];
+  if (process.env.TICKER_LEXICON_APPEND_CSV) {
+    csvPaths.push(path.resolve(process.env.TICKER_LEXICON_APPEND_CSV));
+  }
+  const cacheKey = csvPaths.join('|');
+
+  if (cachedLexicon && cachedLexiconKey === cacheKey) {
+    return cachedLexicon;
+  }
+
+  const tickers = [];
+  for (const csvPath of csvPaths) {
+    tickers.push(...loadTickersFromCsv(csvPath));
+  }
+
+  cachedLexiconKey = cacheKey;
   cachedLexicon = {
-    csvPath,
+    csvPath: csvPaths[0],
+    csvPaths,
     tickers: [...new Set(tickers)].sort(),
     tickerSet: new Set(tickers)
   };
@@ -162,6 +177,7 @@ function tryLexiconSplits(token, lexicon) {
 
 function clearTickerScanCache() {
   cachedLexicon = null;
+  cachedLexiconKey = '';
 }
 
 module.exports = {
