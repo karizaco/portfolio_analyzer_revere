@@ -5,6 +5,13 @@ const crypto = require('node:crypto');
 
 const { PREFILTER_PROFILE_DEFAULT } = require('../config/schema');
 
+const PIPELINE_PROFILE_DEFAULT = 'legacy';
+const SUPPORTED_PIPELINE_PROFILES = Object.freeze([
+  PIPELINE_PROFILE_DEFAULT,
+  'qmg-experimental-v1',
+  'whiteboard-experimental-v1'
+]);
+
 const DEFAULT_OUTPUT_ROOT = path.join(
   path.resolve(__dirname, '..', '..'),
   'data',
@@ -18,6 +25,7 @@ function printHelp() {
     'Options:',
     '  --video <path>             Local video file to scan',
     '  --date <YYYYMMDD>          Optional date key override for output naming',
+    `  --pipeline-profile <name>  End-to-end pipeline profile, default ${PIPELINE_PROFILE_DEFAULT}`,
     '  --output-kind <kind>       whiteboard | snapshot',
     '  --output-root <path>       Root directory for extracted outputs',
     '  --run-tag <name>           Optional subdirectory appended to output-root so same-day reruns do not overwrite previous results',
@@ -121,6 +129,7 @@ function buildDefaultOptions(defaultOutputRoot) {
     ocrFrameWidth: 1280,
     outputKind: 'whiteboard',
     outputRoot: defaultOutputRoot,
+    pipelineProfile: PIPELINE_PROFILE_DEFAULT,
     phashHammingMax: 6,
     phashRegion: null,
     phashRegionFraction: null,
@@ -155,6 +164,10 @@ function parseArgs(argv, overrides = {}) {
     switch (argument) {
       case '--video':
         options.videoPath = path.resolve(nextValue);
+        index += 1;
+        break;
+      case '--pipeline-profile':
+        options.pipelineProfile = String(nextValue);
         index += 1;
         break;
       case '--video-dir':
@@ -374,6 +387,13 @@ function parseArgs(argv, overrides = {}) {
     throw new Error(`Unsupported prefilter profile: ${options.prefilterProfile}`);
   }
 
+  if (!SUPPORTED_PIPELINE_PROFILES.includes(options.pipelineProfile)) {
+    throw new Error(
+      `Unsupported pipeline profile: ${options.pipelineProfile}. `
+      + `Use one of: ${SUPPORTED_PIPELINE_PROFILES.join(', ')}`
+    );
+  }
+
   const sanitizedBasename = String(options.basename || 'revere').replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
   if (!sanitizedBasename) {
     throw new Error('`--basename` must contain at least one alphanumeric character.');
@@ -410,6 +430,8 @@ function createProbeKey(videoPath, dateKey, outputKind) {
 module.exports = {
   CHART_STREAM_REGION_FRACTION_DEFAULT,
   DEFAULT_OUTPUT_ROOT,
+  PIPELINE_PROFILE_DEFAULT,
+  SUPPORTED_PIPELINE_PROFILES,
   createProbeKey,
   parseArgs,
   parseFractionalRegion,

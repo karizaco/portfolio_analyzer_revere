@@ -2,6 +2,7 @@ node_modules/
 eng.traineddata
 data/extract_run.log
 data/video_pipeline/
+!data/video_pipeline/state.sqlite
 data/video_pipeline_*/
 data/video_ocr_probe/
 data/my_videos/

@@ -44,6 +44,7 @@ if (fs.existsSync(PROBE_ROOT)) {
 
 // Human-verified ground truth tickers per snapshot (dateKey → capture-index → gt list)
 // For captures beyond the first: ci=0 → no suffix, ci=1 → "_2", ci=2 → "_3", etc.
+// Crop coordinates are pixel bounds (x1,y1 top-left → x2,y2 bottom-right) on the source frame.
 const GROUND_TRUTH = {
   '20220606': {
     0: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
@@ -71,9 +72,21 @@ const GROUND_TRUTH = {
     2: ['SIGA','TNA','VLO','UCO','NFLX','ALB','BOIL','LTHM','AERC'],
   },
   '20220614': {
-    0: ['UVXY','VLO','UCO'],
-    1: ['UVXY','VLO','UCO'],
-    2: ['UVXY','VLO','UCO'],
+    0: { tickers: ['UVXY','VLO','UCO'], crop: [1716, 706, 1907, 778] },
+    1: { tickers: ['UVXY','VLO','UCO'], crop: [1716, 706, 1907, 778] },
+    2: { tickers: ['UVXY','VLO','UCO'], crop: [1716, 706, 1907, 778] },
+  },
+  '20220323': {
+    1: { tickers: ['BOIL','JNUG','NUGT','X','URA','FCX','WEAT','COPX','URNM','REGN','KWEB'], crop: [1766, 705, 1911, 906] },
+  },
+  '20220510': {
+    1: { tickers: ['VRM','TSLA'], crop: [1757, 703, 1903, 1022] },
+  },
+  '20220427': {
+    6: { tickers: ['TSLA','BOIL','WEAT','KOLD','KWEB','CWEB'], crop: [1776, 653, 1916, 1023] },
+  },
+  '20220428': {
+    1: { tickers: ['CWEB','KWEB','TSLA','WEAT'], crop: [1735, 653, 1912, 1024] },
   },
   '20221104': {
     0: [],   // not in ground truth set
@@ -90,6 +103,13 @@ const GROUND_TRUTH = {
     1: ['CVNA','FCX','TNA','CWEB','YINN','PDD','MDGL','GNS'],
     2: ['CVNA','FCX','TNA','CWEB','YINN','PDD','MDGL','GNS'],
   },
+};
+
+// Probe run timestamps (directory mtime used as approximate run date)
+// _batch value → run date
+const BATCH_RUN_DATE = {
+  'batch1':   '2026-09-20',
+  'batch2':   '2026-09-21',
 };
 
 // Resolve snapshot paths relative to OUTPUT_HTML's directory
@@ -231,17 +251,26 @@ for (const v of videos) {
       ? chartStream.price_action.replace(/\n/g, ' ').trim().substring(0, 60) : '—';
     const ocrSnippet = c.ocr_text_snippet || ocrText.substring(0, 120).replace(/\n/g, ' ');
 
-    // Video file size in MB (from downloads_1080p dir)
-    const vidFromName = dateKey; // dateKey is used to find the file
-    const vidBase = `data/video_pipeline/downloads_1080p/${dateKey}_${videoId}.mp4`;
-    let sizeMB = null;
-    try { const s = fs.statSync(vidBase); sizeMB = (s.size / 1024 / 1024).toFixed(0); } catch(e) {}
+    // Ground truth: handle both old array format and new object format
+    const rawGt = GROUND_TRUTH[dateKey]?.[ci];
+    let gtTickers = null;
+    let gtCrop = null;
+    if (rawGt != null) {
+      if (Array.isArray(rawGt)) {
+        gtTickers = rawGt;
+      } else {
+        gtTickers = rawGt.tickers;
+        gtCrop = rawGt.crop ? rawGt.crop.join(',') : null;
+      }
+    }
+
+    // Run date: derived from the probe batch
+    const runDate = BATCH_RUN_DATE[v._batch] || '—';
 
     videoRows.push({
       dateKey,
       videoId,
       snapRel,
-      sizeMB,
       snapFile,
       conf,
       confStr,
@@ -258,7 +287,9 @@ for (const v of videos) {
       priceAction: escapeHtml(priceAction),
       positionList,
       isTot: layout === 'tale_of_the_tape',
-      gt: GROUND_TRUTH[dateKey]?.[ci] || null,
+      gtTickers,
+      gtCrop,
+      runDate,
     });
   }
 }
@@ -349,13 +380,9 @@ const html = `<!DOCTYPE html>
   .no-tot .tot-tag { display: none; }
   tr.tot-row td { border-left: 3px solid var(--yellow); }
   tr.tot-row td:first-child { padding-left: 9px; }
-  .sortable { cursor: pointer; user-select: none; }
-  .sortable::after { content: ' ↕'; font-size: 9px; opacity: 0.4; }
-  th.sort-asc::after { content: ' ↑'; opacity: 1; }
-  th.sort-desc::after { content: ' ↓'; opacity: 1; }
-  .yellow-border td { border-left: 3px solid var(--yellow); border-right: 3px solid var(--yellow); }
-  .yellow-border td:first-child { border-left-width: 1px; }
-  .yellow-border td:last-child { border-right-width: 1px; }
+  .run-date { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text2); }
+  .gt-cell { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--green); }
+  .crop-cell { font-size: 10px; color: var(--text2); background: var(--bg3); padding: 1px 4px; border-radius: 3px; margin-left: 4px; }
 </style>
 </head>
 <body>
@@ -398,6 +425,7 @@ const html = `<!DOCTYPE html>
     <select id="filterLayout">
       <option value="">All</option>
       <option value="chart_stream">chart_stream</option>
+      <option value="tale_of_the_tape">tale_of_the_tape</option>
     </select>
   </div>
   <div class="filter-group">
@@ -405,15 +433,11 @@ const html = `<!DOCTYPE html>
     <select id="filterShow">
       <option value="all">All captures</option>
       <option value="lowconf">Low conf (&lt;40)</option>
+      <option value="tot">tale_of_the_tape only</option>
     </select>
   </div>
   <button onclick="clearFilters()" style="background:none;border:1px solid var(--border);color:var(--text2);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:11px;">Clear</button>
   <span class="filter-label" id="rowCount" style="margin-left:auto;">${totalCaptures} rows</span>
-  <span style="font-size:11px;color:var(--text2);">
-    &nbsp;·&nbsp;
-    <span style="display:inline-block;width:24px;height:3px;background:var(--yellow);vertical-align:middle;border-radius:1px;"></span>
-    = ground-truth match row
-  </span>
 </div>
 
 <div class="table-wrap">
@@ -422,15 +446,16 @@ const html = `<!DOCTYPE html>
 <tr>
   <th></th>
   <th>#</th>
-  <th class="sortable" data-sort="dateKey">Video</th>
-  <th class="sortable" data-sort="sizeMB">Size</th>
-  <th class="sortable" data-sort="ts">t (HMS)</th>
-  <th class="sortable" data-sort="conf">Conf</th>
+  <th>Video</th>
+  <th>Acc</th>
+  <th>t (HMS)</th>
+  <th>Conf</th>
   <th>Recall</th>
   <th>Tickers (detected)</th>
-  <th class="sortable" data-sort="layout">Layout</th>
-  <th class="sortable" data-sort="phOv">overlay ph</th>
+  <th>Layout</th>
+  <th>ph_overlay</th>
   <th>OCR snippet</th>
+  <th>Ground truth</th>
 </tr>
 </thead>
 <tbody id="tableBody">
@@ -441,23 +466,6 @@ const html = `<!DOCTYPE html>
 <script>
 const rows = ${rowsJson};
 const uniqueTickers = ${uniqueTickersJson};
-let sortKey = 'dateKey';
-let sortDir = 'asc';
-
-document.querySelectorAll('th.sortable').forEach(th => {
-  th.addEventListener('click', () => {
-    const key = th.dataset.sort;
-    if (sortKey === key) {
-      sortDir = sortDir === 'asc' ? 'desc' : 'asc';
-    } else {
-      sortKey = key;
-      sortDir = 'asc';
-    }
-    document.querySelectorAll('th.sortable').forEach(t => t.classList.remove('sort-asc','sort-desc'));
-    th.classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
-    render();
-  });
-});
 
 function clearFilters() {
   document.getElementById('filterConf').value = '';
@@ -465,9 +473,6 @@ function clearFilters() {
   document.getElementById('filterVideo').value = '';
   document.getElementById('filterLayout').value = '';
   document.getElementById('filterShow').value = 'all';
-  sortKey = 'dateKey';
-  sortDir = 'asc';
-  document.querySelectorAll('th.sortable').forEach(t => t.classList.remove('sort-asc','sort-desc'));
   render();
 }
 
@@ -478,6 +483,7 @@ function filterRow(r) {
   const layoutFilter = document.getElementById('filterLayout').value;
   const showFilter = document.getElementById('filterShow').value;
 
+  if (showFilter === 'tot' && r.layout !== 'tale_of_the_tape') return false;
   if (showFilter === 'lowconf' && (r.conf == null || r.conf >= 40)) return false;
   if (confThresh && (r.conf == null || r.conf >= confThresh)) return false;
   if (tickerFilter && !r.tickers.some(t => t === tickerFilter)) return false;
@@ -488,17 +494,6 @@ function filterRow(r) {
 
 function render() {
   const filtered = rows.filter(filterRow);
-  // Sort
-  filtered.sort((a, b) => {
-    let av = a[sortKey], bv = b[sortKey];
-    if (av == null) av = sortDir === 'asc' ? Infinity : -Infinity;
-    if (bv == null) bv = sortDir === 'asc' ? Infinity : -Infinity;
-    if (typeof av === 'string') av = av.toLowerCase();
-    if (typeof bv === 'string') bv = bv.toLowerCase();
-    if (av < bv) return sortDir === 'asc' ? -1 : 1;
-    if (av > bv) return sortDir === 'asc' ? 1 : -1;
-    return 0;
-  });
   document.getElementById('rowCount').textContent = filtered.length + ' rows';
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = '';
@@ -511,7 +506,17 @@ function render() {
       ? '<span class="badge badge-tot">tot</span>'
       : '<span class="badge badge-chart">chart</span>';
     const tickerBadges = r.tickers.map(t => '<span class="ticker">' + t + '</span>').join('');
-    const rowClass = r.gt ? 'yellow-border' : (isTot ? 'tot-row' : '');
+    const rowClass = isTot ? 'tot-row' : '';
+
+    const gtCell = r.gtTickers
+      ? '<span class="gt-cell">' + r.gtTickers.join(', ') + '</span>'
+      : '<span style="color:var(--text2)">—</span>';
+    const cropCell = r.gtCrop
+      ? '<span class="crop-cell" title="Crop: ' + r.gtCrop + '">' + r.gtCrop + '</span>'
+      : '';
+    const gtFull = r.gtTickers
+      ? r.gtTickers.join(', ') + (r.gtCrop ? '  [' + r.gtCrop + ']' : '')
+      : '';
 
     const tr = document.createElement('tr');
     tr.className = rowClass;
@@ -519,14 +524,15 @@ function render() {
       <td class="row-actions"><button class="expand-btn" onclick="toggleDetail(this)">+</button></td>
       <td>\${i + 1}</td>
       <td><span class="count-badge">\${r.dateKey}</span></td>
-      <td>\${r.sizeMB ? '<span class="size-mb">' + r.sizeMB + ' MB</span>' : '<span style="color:var(--text2)">—</span>'}</td>
+      <td><span class="run-date">\${r.runDate}</span></td>
       <td><span class="ts">\${r.tsHms}</span></td>
       <td><span class="conf-cell" style="\${confColorStyle}">\${r.confStr}</span></td>
-      <td>\${r.gt ? '<span class="recall-cell">' + (r.tickers.filter(t => r.gt.includes(t)).length) + '/' + r.gt.length + '</span>' : '<span style="color:var(--text2)">—</span>'}</td>
+      <td>\${r.gtTickers ? '<span class="recall-cell">' + (r.tickers.filter(t => r.gtTickers.includes(t)).length) + '/' + r.gtTickers.length + '</span>' : '<span style="color:var(--text2)">—</span>'}</td>
       <td><div class="ticker-list">\${tickerBadges || '<span style="color:var(--text2)">—</span>'}</div></td>
       <td>\${layoutBadge}</td>
       <td><span class="ph">\${r.phOv}</span></td>
       <td><span class="ocr-snippet" title="\${r.ocrText.replace(/"/g,'&quot;')}">\${r.ocrSnippet}</span></td>
+      <td>\${gtFull ? '<span class="gt-cell" title="Ground truth: ' + gtFull.replace(/"/g,'&quot;') + '">' + gtCell + ' ' + cropCell + '</span>' : '<span style="color:var(--text2)">—</span>'}</td>
     \`;
     tbody.appendChild(tr);
 
@@ -534,7 +540,7 @@ function render() {
     const detailTr = document.createElement('tr');
     detailTr.className = 'detail-row';
     const detailTd = document.createElement('td');
-    detailTd.colSpan = 11;
+    detailTd.colSpan = 12;
     detailTd.style.padding = '0';
     const parseStatusBadge = r.parseStatus === 'ok'
       ? '<span class="badge badge-ok">ok</span>'
