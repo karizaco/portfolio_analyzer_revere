@@ -326,8 +326,8 @@ function parseArgs(argv, overrides = {}) {
     throw new Error('`--progress-interval` must be a positive number.');
   }
 
-  if (!Number.isFinite(options.prefilterThreshold)) {
-    throw new Error('`--prefilter-threshold` must be numeric.');
+  if (!Number.isFinite(options.prefilterThreshold) || options.prefilterThreshold <= 0) {
+    throw new Error('`--prefilter-threshold` must be a positive number.');
   }
 
   if (!Number.isFinite(options.prefilterMinFrames) || options.prefilterMinFrames <= 0) {

@@ -44,9 +44,10 @@ function resolvePortfolioMetricLine(lines, portfolio) {
   );
   const lenient = structured || findLine(lines, buildPortfolioMetricMatcher(portfolio));
 
-  // Strip the trailing `^` / `~` / `|` that the lenient matcher tolerates
+  // Strip the trailing `^` / `~` / `|` (and a trailing `0` that OCR commonly
+  // glues to the keyword — "GRO0" or "TURBO0" instead of "GRO " / "TURBO ")
   // so downstream `parseMetricBundle` sees a clean portfolio keyword.
-  const cleaned = String(lenient || '').replace(/^([A-Z]+)[\^~\|]/, '$1');
+  const cleaned = String(lenient || '').replace(/^([A-Z]+)[\^~\|0]/, '$1');
 
   return normalizePortfolioLine(cleaned, portfolio);
 }
