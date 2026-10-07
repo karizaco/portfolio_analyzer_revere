@@ -55,6 +55,7 @@ function normalizeOcrFragment(value) {
       .replace(/\bPORTFOUIO\b/g, 'PORTFOLIO')
       .replace(/\bPORTFOLIQ\b/g, 'PORTFOLIO')
       .replace(/\bTUR8O\b/g, 'TURBO')
+      .replace(/\bTURBO0\b/g, 'TURBO')
       .replace(/\bGR0\b/g, 'GRO')
   );
 }
