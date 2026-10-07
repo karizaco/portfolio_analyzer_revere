@@ -177,6 +177,21 @@ test('parseArgs rejects unknown flags', () => {
   );
 });
 
+test('parseArgs rejects non-positive --prefilter-threshold', () => {
+  // 0 would collapse selectFramesForOcr's dynamic-threshold floor to 0 and
+  // cause the entire video to be OCR'd, blowing the OCR budget. There is no
+  // semantic for "disable prefilter" in this tool, so reject 0 and negatives.
+  assert.throws(
+    () => parseArgs(['--video', 'a.mp4', '--prefilter-threshold', '0'], { defaultOutputRoot: TEST_OUTPUT_ROOT }),
+    /`--prefilter-threshold` must be a positive number/
+  );
+
+  assert.throws(
+    () => parseArgs(['--video', 'a.mp4', '--prefilter-threshold', '-3'], { defaultOutputRoot: TEST_OUTPUT_ROOT }),
+    /`--prefilter-threshold` must be a positive number/
+  );
+});
+
 test('parseArgs rejects non-positive --max-captures', () => {
   assert.throws(
     () => parseArgs(['--video', 'a.mp4', '--max-captures', '0'], { defaultOutputRoot: TEST_OUTPUT_ROOT }),
