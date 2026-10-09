@@ -380,19 +380,24 @@
     "0": ["VERU","URNM","URA","REGN","JNUG","LMT","NUGT","X","COPX","WEAT","FCX","GUSH","BOIL","KOLD"]
   },
   "20220421": {
-    "0": ["FCX","JNUG","NUGT","COPX","WEAT","VERU","URNM","URA","REGN","X","GUSH","LAC","UCO","FTNT","BOIL","TSLA"]
+    "0": ["FCX","JNUG","NUGT","COPX","WEAT","VERU","URNM","URA","REGN","X","GUSH","LAC","UCO","FTNT","BOIL","TSLA"],
+    "1": ["FCX","JNUG","NUGT","COPX","WEAT","VERU","URNM","URA","REGN","X","GUSH","LAC","FTNT","BOIL","TSLA"],
+    "2": ["FCX","JNUG","NUGT","COPX","WEAT","VERU","URNM","URA","REGN","X","GUSH","LAC","FTNT","BOIL","TSLA"]
   },
   "20220425": {
-    "0": ["KOLD","WEAT","VERU","BOIL"]
+    "0": ["KOLD","WEAT","VERU","BOIL"],
+    "1": ["KOLD","WEAT","VERU","BOIL"]
   },
   "20220429": {
     "0": ["WEAT","GUSH","TSLA","X","SWN"]
   },
   "20220506": {
-    "0": ["UCO","WEAT","TSLA","LTHM"]
+    "0": ["UCO","WEAT","TSLA","LTHM"],
+    "1": ["UCO","WEAT","TSLA","LTHM"]
   },
   "20221104": {
-    "0": ["OIH"]
+    "0": ["OIH"],
+    "2": ["OIH"]
   },
   "20230518": {
     "0": ["PLTR","LI","AI","SHOP","MNDY","IMGN","APLD"]
@@ -418,16 +423,23 @@
     "0": ["CVNA","QBTS","APLD","ARQQ","IMGN","IOT","GTLB","RGTI","DNA","MNDY","AI","PLTR","GSIT"]
   },
   "20230609": {
-    "0": ["RGTI","QBTS","IMGN","CVNA","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","APLD","MNDY"]
+    "0": ["RGTI","QBTS","IMGN","CVNA","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","APLD","MNDY"],
+    "2": ["RGTI","QBTS","IMGN","CVNA","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","APLD","MNDY"]
   },
   "_meta": "Per-capture GT. Keys are dateKey (YYYYMMDD) → capture-index (0=qmg_*.png, 1=qmg_*_2.png, 2=qmg_*_3.png). crop: [x1,y1,x2,y2] in source-frame pixels. Note: 20230518+ videos use wider table layout — default crop (0.86,0.14) may cut off left edge; use 0.83,0.17 for newer videos. 20230519/20231201/20231215 are Revere earnings frames, not Quullamaggie position lists.",
   "_source": "Verified by visual inspection of crop_comparison.html snapshots.",
   "_notes": {
+    "20220421": "capture 0 includes UCO; captures 1/2 replace UCO with no extra ticker visible.",
+    "20220425": "capture 1 (_2) has the same 4 GT tickers as capture 0.",
+    "20220506": "capture 1 (_2) matches capture 0 (UCO, WEAT, TSLA, LTHM).",
     "20220323": "11 GT tickers consistent across captures",
     "20220427": "qmg_20220427.png has [TSLA, BOIL, WEAT, KOLD]. Earlier captures (frames 7/8/9 from different scan) had different positions.",
     "20220428": "4 GT tickers (CWEB, KWEB, TSLA, WEAT) — same across all 3 captures shown",
     "20220510": "captures 0/1 (qmg_20220510.png and _2.png) only have TSLA. capture 2 (_3.png) has [VRM, TSLA]. VRM is transient — only briefly visible.",
+    "20220606": "capture 0 shows GOVX...VLO; capture 1 (_2) shows BOIL instead of GOVX/VLO; capture 2 (_3) keeps BOIL and restores VLO.",
     "20220614": "captures 0/1 have [UVXY, VLO, UCO]. capture 2 has only [VLO, UCO] — UVXY was dropped (likely closed before capture).",
+    "20221104": "capture 2 (_3) confirms sparse single-name list with only OIH visible.",
+    "20230609": "capture 2 (_3) matches capture 0 for the 13-name newer-UI list.",
     "20220330": "8 GT tickers consistent",
     "20220405": "11 GT tickers — GGPI/NEM rare tickers; OCR-difficult",
     "20230522": "7 GT tickers (LI, IMGN, SOUN, AI, CVNA, APLD, PLTR) — AI/SOUN/IMGN newer tickers, OCR-difficult"

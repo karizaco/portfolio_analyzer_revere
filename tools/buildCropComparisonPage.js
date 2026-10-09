@@ -7,11 +7,10 @@ const Tesseract = require('tesseract.js');
 
 const ROOT = path.join(__dirname, '..');
 
-// Crop region — matches CHART_STREAM_REGION_FRACTION_DEFAULT (0.86,0.55,0.14,0.45).
-// 269x486 px at 1080p. Narrower than the original 250x434 default would
-// have been (0.87,0.13), but tall enough to capture the full position list
-// including header rows.
-const CROP = { x: 0.86, y: 0.55, w: 0.14, h: 0.45 };
+// Crop region — matches CHART_STREAM_REGION_FRACTION_DEFAULT.
+// 269x238 px at 1080p: tuned to keep the position-list band while excluding
+// most chart y-axis bleed above and the Personal WatchList panel below.
+const CROP = { x: 0.86, y: 0.62, w: 0.14, h: 0.22 };
 
 // Ground-truth tickers per video (loaded from data/qmg_ground_truth.json at runtime
 // so per-capture GT can vary — see notes in that file).

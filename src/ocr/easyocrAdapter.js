@@ -54,6 +54,10 @@ function runEasyOcr(imagePath, options = {}) {
       return;
     }
     const child = spawn(python, [scriptPath, imagePath], {
+      env: {
+        ...process.env,
+        KMP_DUPLICATE_LIB_OK: process.env.KMP_DUPLICATE_LIB_OK || 'TRUE',
+      },
       stdio: ['ignore', 'pipe', 'pipe'],
     });
     let stdout = '';
@@ -102,6 +106,7 @@ function adaptToParserSchema(easyocrResult) {
     text: String(easyocrResult.text || ''),
     lines: Array.isArray(easyocrResult.lines) ? easyocrResult.lines : [],
     words: words.map((w) => ({
+      lineKey: `easy:${Number(w.line || 0)}`,
       text: String(w.text || ''),
       left: Number(w.left || 0),
       top: Number(w.top || 0),

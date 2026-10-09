@@ -48,9 +48,9 @@ if (fs.existsSync(PROBE_ROOT)) {
 const GROUND_TRUTH = {
   '20220606': {
     0: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
-    // ci=1..11 are the same 3 videos re-captured at different timestamps
-    1: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
-    2: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
+    // ci=1 and ci=2 were later corrected from direct user GT for qmg_20220606_2/_3.
+    1: ['BOIL','LABU','UCO','ALB','CBIO','TNA','NFLX','SIGA'],
+    2: ['BOIL','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
     3: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
     4: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
     5: ['GOVX','LABU','UCO','ALB','CBIO','VLO','TNA','NFLX'],
@@ -85,13 +85,23 @@ const GROUND_TRUTH = {
   '20220427': {
     6: { tickers: ['TSLA','BOIL','WEAT','KOLD','KWEB','CWEB'], crop: [1776, 653, 1916, 1023] },
   },
+  '20220421': {
+    1: ['FCX','JNUG','NUGT','COPX','WEAT','VERU','URNM','URA','REGN','X','GUSH','LAC','FTNT','BOIL','TSLA'],
+    2: ['FCX','JNUG','NUGT','COPX','WEAT','VERU','URNM','URA','REGN','X','GUSH','LAC','FTNT','BOIL','TSLA'],
+  },
+  '20220425': {
+    1: ['KOLD','WEAT','VERU','BOIL'],
+  },
   '20220428': {
     1: { tickers: ['CWEB','KWEB','TSLA','WEAT'], crop: [1735, 653, 1912, 1024] },
+  },
+  '20220506': {
+    1: ['UCO','WEAT','TSLA','LTHM'],
   },
   '20221104': {
     0: [],   // not in ground truth set
     1: [],
-    2: [],
+    2: ['OIH'],
   },
   '20221117': {
     0: ['FREY','OIH','ASML','U','SI','SOXL'],
@@ -102,6 +112,9 @@ const GROUND_TRUTH = {
     0: ['CVNA','FCX','TNA','CWEB','YINN','PDD','MDGL','GNS'],
     1: ['CVNA','FCX','TNA','CWEB','YINN','PDD','MDGL','GNS'],
     2: ['CVNA','FCX','TNA','CWEB','YINN','PDD','MDGL','GNS'],
+  },
+  '20230609': {
+    2: ['RGTI','QBTS','IMGN','CVNA','IOT','ARQQ','AI','PLTR','DNA','GTLB','GSIT','APLD','MNDY'],
   },
 };
 
