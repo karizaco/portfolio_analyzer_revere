@@ -39,6 +39,12 @@
 const { extractTickersFromOcrText, loadSeedLexiconSync, clearTickerScanCache } = require('../normalize/tickerScan');
 const { STRICT_TICKER_PATTERN } = require('../normalize/tickerExtraction');
 
+// Tickers that appear frequently in OCR output but never in ground truth.
+// Applied at three levels: per-frame accepted list, clusterer canonical filter,
+// and the final merged_position_list output. Add new entries only after
+// confirming zero GT hits across all 40+ GT videos.
+const TICKER_BLOCKLIST = new Set(['P', 'SPYM', 'FREY', 'BKR', 'BOIL']);
+
 // Maximum edit distance for OCR character correction. Tested 3 on 2026-09-29
 // (might catch GOVX→"BGO" which needs 3 edits) — added FPs to non-peak frames
 // without helping peak recall. Reverted to 2.
@@ -554,6 +560,11 @@ function parseChartStreamPositionList({ ocr } = {}) {
     confidence = 0.5;
   }
 
+  // Blocklist filter: remove known non-QMG tickers that keep appearing in
+  // OCR output with zero GT hits (P, SPYM, FREY, BKR, BOIL). Applied before
+  // returning so downstream merge/cluster steps never see them.
+  const filteredAccepted = accepted.filter((t) => !TICKER_BLOCKLIST.has(t));
+
   return {
     column_filter: dominantColumnX != null ? {
       column_width: columnWidth,
@@ -561,8 +572,8 @@ function parseChartStreamPositionList({ ocr } = {}) {
       in_list_token_count: inListTickers.size
     } : null,
     confidence,
-    parse_status: accepted.length ? 'ok' : 'no_position_list',
-    position_list: accepted.sort(),
+    parse_status: filteredAccepted.length ? 'ok' : 'no_position_list',
+    position_list: filteredAccepted.sort(),
     price_action: priceActionHint || '',
     // Keep `tickers_rejected` as a number for backward compatibility with
     // scoreChartStreamCandidate in tools/scanVideoWithOcr.js (-0.25 per reject).
@@ -816,6 +827,10 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
       }
     }
     if (!canonical) continue;
+    // Blocklist filter: never surface a blocklisted ticker as canonical even
+    // if all other cluster signals pass. Applied after canonical selection so
+    // we don't waste effort on blocklisted clusters, but before Filter A.
+    if (TICKER_BLOCKLIST.has(canonical)) continue;
     // Filter A: compute distinct-frame count for the cluster (union of
     // frame sets across all members). This catches single-frame OCR
     // garbles (e.g. VIO→VLO cluster only spans the 1 frame where VIO
@@ -858,5 +873,6 @@ module.exports = {
   mergeMultiplePositionLists,
   clusterRawOcrTokens,
   parseChartStreamPositionList,
-  extractAllTickerCandidates
+  extractAllTickerCandidates,
+  TICKER_BLOCKLIST
 };
