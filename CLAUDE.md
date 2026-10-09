@@ -286,27 +286,45 @@ node tools/scanVideoWithOcr.js \
    EasyOCR's CNN is sensitive to anti-aliasing artifacts from the 1280→1345 downscale-then-upscale. The EasyOCR branch uses `ffmpeg -ss <ts> -i <videoPath>` (not `-i <ocr-resolution-frame>`) to avoid this.
 
 2. **The parser's column detector (identifyPositionListColumn) picks the WRONG dominant_x for EasyOCR.**
-   EasyOCR's word bounding boxes land at different x-centers than Tesseract's, so the bucket heuristic picks a chart-area column (~x=510) instead of the position-list column (~x=1218). The fix: column-gated acceptance was removed — the parser now accepts on `inLexicon || priceNearby` alone. Chart-area text ("SYM", "ARITH", "Cran") doesn't match the seed lexicon so it stays rejected.
+   EasyOCR's word bounding boxes land at different x-centers than Tesseract's, so the bucket heuristic picks a chart-area column (~x=490-510 in the 1345px EasyOCR crop) instead of the position-list column (~x=1218). Two fixes:
+   - **X-coordinate gate** (`src/parse/parseChartStream.js`): when `identifyPositionListColumn` fallback fires (no price-aligned tickers), reject if `dominantX < 1150` in EasyOCR crop coords. ~86% of chart-area bleed gets blocked here.
+   - **Blocklist** (`TICKER_BLOCKLIST`): `FREY` is the only confirmed persistent FP (clustered from chart annotations). P, SPYM, BKR, BOIL are real tickers — do NOT blocklist them.
 
 3. **Use scale=5 for EasyOCR, not the dual-scale 3+4 used for Tesseract.**
    EasyOCR is slow enough (~60s) that running it twice is wasteful; the bigger image produces cleaner OCR.
 
 4. **The chart_stream prefilter picks intro/warmup frames by default.**
-   The `midToneRatioTicker` signal fires on any chart content (candles, axis labels) in the bottom-right rectangle. The fix: added `maxColRowDensityWeight: 25` (max-row-density in the column) so position-list frames (text transitions stacked in one column) score higher than intro frames (transitions scattered).
+   The `midToneRatioTicker` signal fires on any chart content (candles, axis labels) in the bottom-right rectangle. The fix: added `maxColRowDensityWeight: 25` (max-row-density in the column) so position-list frames score higher than intro frames.
+
+5. **The clusterer (`clusterRawOcrTokens`) creates false-positive ticker clusters from chart noise.**
+   When the per-frame parser finds no price-aligned tickers (column filter fails), `clusterRawOcrTokens` runs on raw OCR text and clusters all ticker-shape words across frames. Chart-area tokens like DOOM/JOOM/QOOM get edit-distance-corrected to GOOG (dist=2 each), SSO (RISO/RSO dist=2), QS (S/S0/S0M all dist=2). The fix: in `src/parse/parseChartStream.js` line ~837, accept edit-distance-corrected canonicals only when ≥1 cluster member is at distance 1 from the canonical. This eliminates chart-noise clusters while keeping real corrections (INA→TNA dist=1).
 
 ### Pipeline stages for chart-stream
 
 ```text
 ffmpeg -ss <ts> -i <video>  →  ffmpeg crop=in_w*0.14:in_h*0.45:in_w*0.86:in_h*0.55,scale=1345:-1
-                             →  EasyOCR (Python subprocess)
-                             →  parseChartStreamPositionList (lexicon + price-nearby)
-                             →  scoreChartStreamCandidate (with parse_status='ok' bonus)
-                             →  pickTopDistinctCandidates (dedup + strongThreshold)
+                             →  EasyOCR (Python subprocess, ~60s/frame)
+                             →  parseChartStreamPositionList (lexicon + price-nearby + column filter)
+                             →  clusterRawOcrTokens (raw OCR token clustering across frames)
+                             →  pickTopDistinctCandidates (dedup by phash + frame gap)
 ```
 
-### Diagnostic fields exposed (since commit be9499a)
+### Diagnostic fields exposed
 
 - `chart_stream.column_filter` — `dominant_x`, `column_width`, `in_list_token_count` (diagnostic only, not gated)
-- `chart_stream.tickers_rejected_list` — first 30 rejected tokens (capped to keep probe logs small)
-- `chart_stream.position_list` — accepted tickers after parse
-- `merged_position_list` — multi-frame union (committed, not yet wired into scoring)
+- `chart_stream.tickers_rejected_list` — first 30 rejected tokens
+- `chart_stream.position_list` — accepted tickers after per-frame parse
+- `merged_position_list` — multi-frame clusterer output (dominant for EasyOCR runs)
+- `merged_raw_token_clusters` — per-cluster diagnostics: `{canonical, members, frequency, frameCount}`
+
+### Known limitations and next steps (as of 2026-10-09)
+
+**Precision floor (~50%)**: Even with all fixes, ~50% of `merged_position_list` entries are real tickers not in the specific video's position list (AERC, SIGA, COIN, X, etc.). The seed lexicon is too broad. Two root causes:
+1. Clusterer produces real tickers from chart noise via edit-distance correction
+2. Real tickers (X, COIN) appear in the video but aren't in that video's position list
+
+**Recall floor (~75-100% on good videos)**: Prefilter consistently misses some GT tickers (GOVX, LABU, NFLX, CBIO) on some videos. The `meanLumaFloor=30` penalty on historical dark streams (Dec 2021–Feb 2022) likely contributes. The prefilter needs recalibration for these eras.
+
+**PaddleOCR PP-OCRv6** (`tools/_paddleocr_ocr.py`): Could not install — Python 3.14 is installed; `paddlepaddle` has no cp314 wheel. Downgrade to Python 3.13 to benchmark. Interface is identical to `_easyocr_ocr.py` — schema is `{text, lines, words[{text,left,top,width,height,conf,line}],_engine,_image,_detection_count}`. Would run at ~7× EasyOCR speed (PP-OCRv6 on CPU with OpenVINO).
+
+**Ground truth accuracy**: The `data/qmg_ground_truth.json` must be verified per video — 20220510 GT was actually TSLA+VRM (not LABU/TNA as previously assumed). Always verify GT against the actual video content before trusting recall numbers.

@@ -43,7 +43,12 @@ const { STRICT_TICKER_PATTERN } = require('../normalize/tickerExtraction');
 // Applied at three levels: per-frame accepted list, clusterer canonical filter,
 // and the final merged_position_list output. Add new entries only after
 // confirming zero GT hits across all 40+ GT videos.
-const TICKER_BLOCKLIST = new Set(['P', 'SPYM', 'FREY', 'BKR', 'BOIL']);
+//
+// NOTE: P, SPYM, BKR, BOIL were previously blocklisted but are real tickers
+// and should NOT be removed from the lexicon. They are here for documentation
+// only; FREY is the only ticker confirmed as a persistent false positive
+// that is not a legitimate QMG trading candidate.
+const TICKER_BLOCKLIST = new Set(['FREY']);
 
 // Maximum edit distance for OCR character correction. Tested 3 on 2026-09-29
 // (might catch GOVX→"BGO" which needs 3 edits) — added FPs to non-peak frames
