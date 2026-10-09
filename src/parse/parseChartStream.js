@@ -304,6 +304,18 @@ function identifyPositionListColumn(words) {
     }
   }
 
+  // X-coordinate gate: the QMG position list occupies the rightmost portion of
+  // the frame (crop x=0.86 → position list starts at ~86% of crop width).
+  // When the fallback densest-bucket heuristic fires (no price-aligned tickers),
+  // dominantX often lands in the chart area (~790 in the 3x crop = ~790/3 ≈ 526
+  // in the original), producing massive FP bleed. Reject any column whose
+  // dominantX is below the position-list threshold.
+  // Scale-aware: threshold is in OCR-crop pixel coords (EasyOCR 1345px crop).
+  const X_POSITION_LIST_MIN = 1150;
+  if (dominantX < X_POSITION_LIST_MIN) {
+    return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
+  }
+
   return { columnWidth, dominantColumnX: dominantX, inListTickers };
 }
 
