@@ -43,6 +43,11 @@ const { STRICT_TICKER_PATTERN } = require('../normalize/tickerExtraction');
 // (might catch GOVX→"BGO" which needs 3 edits) — added FPs to non-peak frames
 // without helping peak recall. Reverted to 2.
 const MAX_OCR_EDIT_DISTANCE = 2;
+const SINGLE_LETTER_TICKERS = new Set([
+  'A', 'C', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+  'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+  'X', 'Y', 'Z',
+]);
 
 // Matches OCR-split prices:  $ 412.50  ($ split from digits by whitespace)
 // Also matches:  $412.50,  412.50,  HIGH/LOW/CLOSE/TARGET/STOP/BID/ASK
@@ -255,7 +260,7 @@ function identifyPositionListColumn(words) {
   // bucket of all ticker-shape words if not enough price-aligned candidates.
   let dominantX;
   let dominantCount;
-  if (priceAlignedTickers.length >= 2) {
+  if (priceAlignedTickers.length >= 1) {
     const xs = priceAlignedTickers.map(t => t.center).sort((a, b) => a - b);
     dominantX = xs[Math.floor(xs.length / 2)];
     dominantCount = priceAlignedTickers.length;
@@ -318,6 +323,66 @@ function extractAllTickerCandidates(ocrText) {
     }
   }
   return results;
+}
+
+function extractZoomStripTickerCandidates(zoomOcr, lexicon) {
+  if (!zoomOcr) return [];
+
+  const seen = new Set();
+  const accepted = [];
+  const maybeAdd = (rawToken, confidence = 0) => {
+    const cleaned = String(rawToken || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
+    if (!cleaned || !STRICT_TICKER_PATTERN.test(cleaned)) return false;
+    if (cleaned.length === 1 && !SINGLE_LETTER_TICKERS.has(cleaned)) return false;
+    if (/\d/.test(cleaned)) return false;
+    if (lexicon.tickerSet.has(cleaned)) {
+      if (!seen.has(cleaned)) {
+        seen.add(cleaned);
+        accepted.push({ source: 'exact', ticker: cleaned });
+      }
+      return true;
+    }
+    if (cleaned.length < 3) return false;
+    if (Number.isFinite(confidence) && confidence > 0 && confidence < 0.45) return false;
+    const correction = findCloseTickerMatch(cleaned, lexicon);
+    const correctionDistance = correction ? levenshtein(cleaned, correction) : Infinity;
+    if (correction && correctionDistance <= 1 && !seen.has(correction)) {
+      seen.add(correction);
+      accepted.push({ raw: cleaned, source: 'corrected', ticker: correction });
+      return true;
+    }
+    return false;
+  };
+
+  const words = Array.isArray(zoomOcr.words) ? zoomOcr.words : [];
+  if (words.length) {
+    const wordsByLine = new Map();
+    for (const word of words) {
+      const line = Number.isFinite(word.line) ? word.line : 0;
+      if (!wordsByLine.has(line)) wordsByLine.set(line, []);
+      wordsByLine.get(line).push(word);
+    }
+    for (const [, lineWords] of [...wordsByLine.entries()].sort((a, b) => a[0] - b[0])) {
+      lineWords.sort((left, right) => Number(left.left || 0) - Number(right.left || 0));
+      const tickerWords = lineWords.filter((word) => {
+        const cleaned = String(word.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
+        return cleaned && STRICT_TICKER_PATTERN.test(cleaned) && !/\d/.test(cleaned);
+      });
+      for (const word of tickerWords.slice(0, 2)) {
+        if (maybeAdd(word.text, Number(word.conf || 0))) {
+          break;
+        }
+      }
+    }
+  }
+
+  if (!accepted.length && zoomOcr.text) {
+    for (const token of String(zoomOcr.text).split(/[\s,;:()\[\]{}<>\/\\|]+/)) {
+      maybeAdd(token);
+    }
+  }
+
+  return accepted;
 }
 
 function parseChartStreamPositionList({ ocr } = {}) {
@@ -543,6 +608,51 @@ function parseChartStreamPositionList({ ocr } = {}) {
     }
   }
 
+  const structuredSupportPool = new Set(accepted);
+  for (const ticker of inListTickers) structuredSupportPool.add(ticker);
+  for (const [ticker, linesForTicker] of tickerLineMap.entries()) {
+    if (!panelGateActive || (linesForTicker && linesForTicker.some((line) => lineIsInPanel(line)))) {
+      structuredSupportPool.add(ticker);
+    }
+  }
+  const structuredSupportCandidates = [...structuredSupportPool];
+  const hasMainSupportForZoomTicker = (ticker) => {
+    for (const mainCandidate of structuredSupportCandidates) {
+      if (mainCandidate === ticker) return true;
+      if (Math.abs(mainCandidate.length - ticker.length) <= MAX_OCR_EDIT_DISTANCE
+          && levenshtein(mainCandidate, ticker) <= MAX_OCR_EDIT_DISTANCE) {
+        return true;
+      }
+      const corrected = findCloseTickerMatch(mainCandidate, lexicon);
+      if (corrected === ticker) return true;
+    }
+    return false;
+  };
+  const zoomStripInputs = Array.isArray(ocr && ocr.zoomTickerStrips)
+    ? ocr.zoomTickerStrips
+    : (ocr && ocr.zoomTickerStrip ? [ocr.zoomTickerStrip] : []);
+  const rawZoomStripCandidates = zoomStripInputs.flatMap((zoomOcr) => extractZoomStripTickerCandidates(zoomOcr, lexicon));
+  const zoomSupport = new Map();
+  for (const candidate of rawZoomStripCandidates) {
+    const key = `${candidate.source}:${candidate.ticker}`;
+    if (!zoomSupport.has(key)) {
+      zoomSupport.set(key, { ...candidate, supportCount: 0 });
+    }
+    zoomSupport.get(key).supportCount += 1;
+  }
+  const zoomStripCandidates = [...zoomSupport.values()].filter((candidate) => {
+    const hasStructuredSupport = hasMainSupportForZoomTicker(candidate.ticker);
+    if (candidate.source === 'exact') {
+      return candidate.supportCount >= 2 || (candidate.supportCount >= 1 && hasStructuredSupport);
+    }
+    return candidate.supportCount >= 2 && hasStructuredSupport;
+  });
+  for (const { ticker } of zoomStripCandidates) {
+    if (!accepted.includes(ticker)) {
+      accepted.push(ticker);
+    }
+  }
+
   const priceActionHint = lines.find((line) => PRICE_TOKEN_PATTERN.test(line)) || '';
 
   // Confidence: 1.0 when at least 3 tickers accepted AND at least one had a
@@ -581,6 +691,17 @@ function parseChartStreamPositionList({ ocr } = {}) {
     // Diagnostic: bbox y-range filter (Filter B) info. Populated when the
     // filter ran (at least 2 accepted tickers with bbox info available).
     bbox_filter: bboxFilterInfo
+    ,
+    zoom_ticker_strip: ocr && ocr.zoomTickerStrip ? {
+      candidate_count: zoomStripCandidates.length,
+      candidates: zoomStripCandidates.slice(0, 20).map((candidate) => candidate.ticker),
+      raw_candidates: rawZoomStripCandidates.slice(0, 20).map((candidate) => candidate.ticker),
+      support_counts: zoomStripCandidates.slice(0, 20).map((candidate) => ({
+        support_count: candidate.supportCount,
+        ticker: candidate.ticker,
+      })),
+      variants: zoomStripInputs.map((zoomOcr) => zoomOcr.variant || null).filter(Boolean)
+    } : null
   };
 }
 
@@ -674,12 +795,6 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
   // Software) before they can be matched against the seed lexicon. We only
   // accept single-letter tokens when they are in this allowlist — preventing
   // chart-axis "T" / "S" / chart-internal "X" from leaking as 1-char "tickers".
-  const SINGLE_LETTER_TICKERS = new Set([
-    'A', 'C', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-    'X', 'Y', 'Z',
-  ]);
-
   // Step 1: collect tokens per frame (Set deduplicates within frame)
   const perFrameTokens = frameTexts.map((text) => {
     if (!text) return new Set();
@@ -857,6 +972,7 @@ module.exports = {
   findCloseTickerMatch,
   mergeMultiplePositionLists,
   clusterRawOcrTokens,
+  extractZoomStripTickerCandidates,
   parseChartStreamPositionList,
   extractAllTickerCandidates
 };

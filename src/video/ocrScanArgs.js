@@ -54,7 +54,7 @@ function printHelp() {
     '  --basename <name>          Snapshot PNG prefix + screenshot discovery stem, default "revere"',
     '  --phash-region <x,y,w,h>  Region in pixels for the overlay pHash (optional)',
     '  --phash-hamming-max <n>    Max Hamming distance for overlay pHash dedup, default 6',
-    '  --phash-region-fraction <xf,yf,wf,hf> Fractional overlay region (0..1); chart_stream default "0.87,0.58,0.13,0.40"',
+    '  --phash-region-fraction <xf,yf,wf,hf> Fractional overlay region (0..1); chart_stream default "0.86,0.62,0.14,0.22"',
     '  --temporal-decay <secs>    Seconds over which early-frame boost decays to zero, default 1800',
     '  --chart-stream-parser      Replace the GRO/TURBO whiteboard parser with parseChartStream',
     '  --help                     Show this help text',
@@ -86,7 +86,7 @@ function printHelp() {
 // (identifyPositionListColumn) is the second line of defense — it uses
 // per-word OCR positions to identify the dominant ticker column and
 // rejects chart-area tokens that survived the crop widening.
-const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.86,0.55,0.14,0.45';
+const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.86,0.62,0.14,0.22';
 
 function parseFractionalRegion(raw) {
   if (!raw) return null;
