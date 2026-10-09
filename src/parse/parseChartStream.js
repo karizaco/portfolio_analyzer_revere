@@ -835,7 +835,19 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
       // findCloseTickerMatch already caps at MAX_OCR_EDIT_DISTANCE (2),
       // so bestDist is always <= 2 here. No additional threshold check needed.
       if (best) {
-        canonical = best;
+        // Tight edit-distance check: accept edit-distance-corrected canonicals only when
+        // at least one cluster member is at distance 1 from the canonical (tight edit).
+        // Real ticker corrections (INA→TNA, NFU→NFLX, DON→COIN) have a member at distance 1.
+        // Chart-noise clusters (DOOM/JOOM/QOOM→GOOG, RISO/RSO→SSO) have all members at
+        // distance 2, so they get dropped even though they pass the "within distance 2" check.
+        const hasTightEdit = members.some((m) => {
+          if (lexicon.tickerSet.has(m)) return false; // direct matches already handled
+          const d = levenshtein(m, best);
+          return d === 1;
+        });
+        if (hasTightEdit) {
+          canonical = best;
+        }
       }
     }
     if (!canonical) continue;
