@@ -34,7 +34,7 @@ const { computePerceptualHashOfRegion, computePerceptualHashOfFractionalRegion }
 const { extractTickersFromOcrText } = require('../src/normalize/tickerScan');
 const { createProbeKey, parseArgs, printHelp } = require('../src/video/ocrScanArgs');
 const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
-const { parseChartStreamPositionList, mergeMultiplePositionLists, clusterRawOcrTokens } = require('../src/parse/parseChartStream');
+const { parseChartStreamPositionList, mergeMultiplePositionLists, clusterRawOcrTokens, TICKER_BLOCKLIST } = require('../src/parse/parseChartStream');
 const { runEasyOcr, adaptToParserSchema } = require('../src/ocr/easyocrAdapter');
 const { preprocessChartStreamToBuffer, preprocessChartStreamRawToBuffer } = require('../src/ocr/ocrImage');
 
@@ -1421,12 +1421,17 @@ async function main() {
       // significantly outperforms per-capture extraction on noisy frames where the
       // positional parser finds nothing (e.g. 20260924 Revere: clusterer gets
       // 10/14 GRO + 7/9 TURBO, per-capture gets 0).
-      merged_position_list: (clusterResult?.merged_list?.length
-        ? clusterResult.merged_list
-        : mergeMultiplePositionLists(
-            captureSummaries.map((c) => c.tickers || []),
-            { minOccurrences: 2 }
-          )),
+      merged_position_list: (() => {
+        const raw = clusterResult?.merged_list?.length
+          ? clusterResult.merged_list
+          : mergeMultiplePositionLists(
+              captureSummaries.map((c) => c.tickers || []),
+              { minOccurrences: 2 }
+            );
+        // Final blocklist filter: defense-in-depth against persistent FPs that
+        // slip through the per-frame parser and clusterer (P, SPYM, FREY, etc.).
+        return raw.filter((t) => !TICKER_BLOCKLIST.has(t));
+      })(),
       // Multi-frame RAW-OCR token voting. Collects raw ticker-shape tokens
       // from each frame's OCR text (not the parser's accepted list), groups
       // tokens within edit-distance 2 of each other into clusters, picks a
