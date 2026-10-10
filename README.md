@@ -133,6 +133,34 @@ node tools/buildQmgReviewPage.js   # rebuild review page
 # open tools/qmg_snapshot_review.html in a browser
 ```
 
+### Portable remote benchmark kit
+
+For low-resource remote runners, use the portable curated benchmark instead of a
+full video sweep. It uses the repo's Tesseract path only and requires a small
+out-of-band snapshot bundle rather than the full scan directories.
+
+Required curated 1080p snapshots:
+
+- `qmg_20220218_2.png`
+- `qmg_20220606_2.png`
+- `qmg_20221104_3.png`
+- `qmg_20230609_3.png`
+
+Run:
+
+```bash
+npm run qmg:benchmark:curated -- --snapshot-root /path/to/qmg-curated-snapshots
+```
+
+Artifacts are written to `artifacts/qmg_ocr_remote/` as:
+
+- `REPORT.txt`
+- `benchmark_results.json`
+
+The command exits early if the snapshot root is missing or if any curated PNG is
+absent, so remote runs fail clearly rather than silently falling back to the
+wrong artifact set.
+
 ### Known OCR Failure Modes
 
 These are **character-level confusions** from the overlay font:
