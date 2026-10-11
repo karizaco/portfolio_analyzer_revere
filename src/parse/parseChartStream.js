@@ -906,28 +906,32 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
     // Find canonical: prefer direct lexicon match, fall back to
     // edit-distance lookup against the seed lexicon.
     let canonical = null;
+    // Strategy 1: direct lexicon match
     for (const m of members) {
       if (lexicon.tickerSet.has(m)) { canonical = m; break; }
     }
+    // Strategy 2: 4+ char member with >= 2 shared prefix chars
     if (!canonical) {
-      // Edit-distance correction: find the closest lexicon ticker to any
-      // cluster member. Use the higher MAX_OCR_EDIT_DISTANCE threshold here
-      // (not the clusterer param `maxDistance`) so we recover canonicals
-      // when the OCR dropped a character (NFU→NFLX requires edit distance 2).
-      // Cluster grouping itself stays tight at the param threshold.
-      let best = null;
-      let bestDist = Infinity;
       for (const m of members) {
+        if (m.length < 4) continue;
         const corr = findCloseTickerMatch(m, lexicon);
-        if (corr) {
-          const d = levenshtein(m, corr);
-          if (d < bestDist) { bestDist = d; best = corr; }
+        if (!corr) continue;
+        let sharedPrefix = 0;
+        const limit = Math.min(3, m.length, corr.length);
+        for (let i = 0; i < limit; i++) {
+          if (m[i] === corr[i]) sharedPrefix += 1;
         }
+        if (sharedPrefix >= 2) { canonical = corr; break; }
       }
-      // findCloseTickerMatch already caps at MAX_OCR_EDIT_DISTANCE (2),
-      // so bestDist is always <= 2 here. No additional threshold check needed.
-      if (best) {
-        canonical = best;
+    }
+    // Strategy 3: 3-char member with d=1 to the correction
+    if (!canonical) {
+      for (const m of members) {
+        if (m.length !== 3) continue;
+        const corr = findCloseTickerMatch(m, lexicon);
+        if (!corr) continue;
+        const d = levenshtein(m, corr);
+        if (d <= 1) { canonical = corr; break; }
       }
     }
     if (!canonical) continue;
