@@ -1370,24 +1370,31 @@ async function main() {
     // Use top_candidates (all OCR'd frames, pre-dedup) rather than
     // captureSummaries (post-dedup) so the clusterer sees every frame
     // the OCR pass produced, not just the picked subset.
+    // For snapshot mode (QMG chart_stream): use per-frame position_list
+    // (column-filtered tickers) instead of raw OCR text to avoid chart-area
+    // ticker bleed into the clusterer. Skip frames with no position_list.
+    // For whiteboard mode (Revere): use raw ocr_text as before.
+    const clusterInput = (options.outputKind === 'snapshot')
+      ? (scanResult.topCandidates || [])
+          .filter((c) => Array.isArray(c.chartStream?.position_list) && c.chartStream.position_list.length > 0)
+          .map((c) => c.chartStream.position_list.join(' '))
+      : (scanResult.topCandidates || []).map((c) => c.ocr_text || '');
     const clusterResult = clusterRawOcrTokens(
-      (scanResult.topCandidates || []).map((c) => c.ocr_text || ''),
+      clusterInput,
       // Filter A: per-canonical frame count. Default 2 (was 1). Filters
       // single-frame OCR garbles (VIO→VLO, NFU→NFLX, INA→TNA, BUCO→UCO)
       // and chart-area tickers that bleed in briefly. Override via
       // --cluster-min-frequency <n> (1 disables the filter).
       { maxDistance: 1, minTokenLength: 2, minFrequency: options.clusterMinFrequency || 2 }
     );
-    // Override captures' tickers with cluster's output. The b2925da
-    // backfill (prior commit) only kicked in when captures were empty,
-    // but in 65 saved snapshots the parser always returned SOMETHING
-    // (often wrong tickers, never empty). Empirically: on the QMG
-    // snapshots, clusterRecall beats CapRecall on 60+ runs (e.g. 20220607
-    // cluster hits 7/7 GT, captures 4/7; 20220608 cluster 9/9, captures 7/9).
-    // Always prefer the cluster when it's non-empty — captures are a per-
-    // frame view, the cluster is a multi-frame consensus, and on noisy
-    // EasyOCR output the consensus is the right answer.
-    if (clusterResult.merged_list.length > 0) {
+    // Override captures' tickers with clusterer's output ONLY for chart_stream
+    // mode (QMG). For whiteboard mode (Revere), the structured GRO/TURBO
+    // parser produces tickers_from_bbox which is the correct signal — the
+    // clusterer runs on full-frame OCR text and produces garbage (55-58
+    // random tickers) that would overwrite the structured holdings.
+    // Note: aggregateScanResults.js reads captures[n].tickers, so the
+    // per-capture tickers_from_bbox is what matters for Revere.
+    if (options.outputKind === 'snapshot' && clusterResult.merged_list.length > 0) {
       for (const cap of captureSummaries) {
         cap.tickers = clusterResult.merged_list.slice();
       }
@@ -1415,21 +1422,24 @@ async function main() {
       top_candidates: scanResult.topCandidates,
       top_rejected_candidates: rejectedForReport.map((candidate) => summarizeCandidate(candidate, options.outputKind)),
       whiteboard_segments: buildWhiteboardSegments(captureSummaries),
-      // Multi-frame merge: use the clusterer's merged token list (from raw OCR
-      // across all selected frames) when available. Falls back to the per-capture
-      // tickers list when the clusterer produced no clusters. The clusterer
-      // significantly outperforms per-capture extraction on noisy frames where the
-      // positional parser finds nothing (e.g. 20260924 Revere: clusterer gets
-      // 10/14 GRO + 7/9 TURBO, per-capture gets 0).
+      // Multi-frame merge: for chart_stream (snapshot) mode use the clusterer
+      // (raw OCR token clustering). For whiteboard mode, use the structured
+      // tickers_from_bbox arrays from the GRO/TURBO parser — the clusterer
+      // produces garbage (55-58 random tickers from full-frame OCR) for Revere.
       merged_position_list: (() => {
-        const raw = clusterResult?.merged_list?.length
-          ? clusterResult.merged_list
-          : mergeMultiplePositionLists(
-              captureSummaries.map((c) => c.tickers || []),
-              { minOccurrences: 2 }
-            );
-        // Final blocklist filter: defense-in-depth against persistent FPs that
-        // slip through the per-frame parser and clusterer (P, SPYM, FREY, etc.).
+        let raw;
+        if (options.outputKind === 'snapshot' && clusterResult?.merged_list?.length) {
+          raw = clusterResult.merged_list;
+        } else {
+          // For whiteboard (Revere) or when clusterer produced nothing:
+          // use per-capture tickers_from_bbox (GRO/TURBO structured holdings).
+          // captureSummaries[n].tickers holds the parsed tickers for whiteboard
+          // (unchanged by the clusterer override above for whiteboard mode).
+          raw = mergeMultiplePositionLists(
+            captureSummaries.map((c) => c.tickers || []),
+            { minOccurrences: 2 }
+          );
+        }
         return raw.filter((t) => !TICKER_BLOCKLIST.has(t));
       })(),
       // Multi-frame RAW-OCR token voting. Collects raw ticker-shape tokens
