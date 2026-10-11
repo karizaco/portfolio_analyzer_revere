@@ -256,20 +256,31 @@ The chart-stream pipeline supports two OCR engines via `--ocr-engine tesseract|e
 
 EasyOCR is a Python package; install via `pip install easyocr`. EasyOCR 1.7.2+ ships wheels for Python 3.9 through 3.14, so any modern interpreter works — the older "Python 3.11 required" guidance is outdated. The default interpreter lookup tries `C:/ProgramData/anaconda3/python.exe` first (recommended because anaconda usually has CUDA-enabled torch), then several common standalone install paths, and finally falls back to `python` on PATH. Override via `EASYOCR_PYTHON` env var or `--easyocr-python` CLI flag.
 
-### Verified end-to-end result on 20220606 (commit d824431)
+**Required env var**: `KMP_DUPLICATE_LIB_OK=TRUE` must be set when running EasyOCR — Intel OpenMP (used by EasyOCR's CPU backend) emits duplicate symbol warnings that crash the process without this flag.
+
+### Current crop and EasyOCR defaults
+
+The chart-stream pipeline uses a narrow crop targeting the position-list column in the bottom-right:
 
 ```
+{x: 0.87, y: 0.58, w: 0.13, h: 0.40}   ← 13% width × 40% height, anchored bottom-right
+```
+
+This crop is defined as `CHART_STREAM_REGION_FRACTION_DEFAULT = '0.86,0.55,0.14,0.45'` in `src/video/ocrScanArgs.js`
+(note the format is `x,y,w,h` with y representing the TOP edge, so `y=0.55, h=0.45` anchors the crop 55% from
+the top, giving a bottom-anchored crop equivalent to `{x:0.86, y:0.55, w:0.14, h:0.45}`).
+
+Defaults for a full EasyOCR scan:
+```
 node tools/scanVideoWithOcr.js \
-  --video data/video_pipeline/downloads_1080p/20220606_Axs8VyUKFRk.mp4 \
-  --date 20220606 \
+  --video <path> --date <date> \
   --prefilter-profile chart_stream --chart-stream-parser \
   --basename qmg --output-kind snapshot \
   --max-captures 1 --fps 0.25 --prefilter-max-frames 6 \
   --ocr-engine easyocr
 ```
 
-→ Captured frame at 00:42:00: `[ALB, CBIO, COIN, GOVX, LABU, UCO, VLO, X]`
-→ 6/8 GT tickers (75% recall: ALB, CBIO, GOVX, LABU, UCO, VLO)
+Set `KMP_DUPLICATE_LIB_OK=TRUE` when running EasyOCR to suppress Intel OpenMP duplicate-symbol warnings.
 
 ### Why EasyOCR beats Tesseract for QMG position lists
 
@@ -297,7 +308,7 @@ node tools/scanVideoWithOcr.js \
    The `midToneRatioTicker` signal fires on any chart content (candles, axis labels) in the bottom-right rectangle. The fix: added `maxColRowDensityWeight: 25` (max-row-density in the column) so position-list frames score higher than intro frames.
 
 5. **The clusterer (`clusterRawOcrTokens`) creates false-positive ticker clusters from chart noise.**
-   When the per-frame parser finds no price-aligned tickers (column filter fails), `clusterRawOcrTokens` runs on raw OCR text and clusters all ticker-shape words across frames. Chart-area tokens like DOOM/JOOM/QOOM get edit-distance-corrected to GOOG (dist=2 each), SSO (RISO/RSO dist=2), QS (S/S0/S0M all dist=2). The fix: in `src/parse/parseChartStream.js` line ~837, accept edit-distance-corrected canonicals only when ≥1 cluster member is at distance 1 from the canonical. This eliminates chart-noise clusters while keeping real corrections (INA→TNA dist=1).
+   When the per-frame parser finds no price-aligned tickers (column filter fails), `clusterRawOcrTokens` runs on raw OCR text and clusters all ticker-shape words across frames. Chart-area tokens like DOOM/JOOM/QOOM get edit-distance-corrected to GOOG (dist=2 each), SSO (RISO/RSO dist=2), QS (S/S0/S0M all dist=2). The fix: in `scanVideoWithOcr.js`, snapshot mode (QMG chart-stream) feeds `position_list` (column-filtered tickers) to the clusterer instead of raw OCR text, eliminating chart-area bleed. Additionally, edit-distance-corrected canonicals are accepted only when at least one cluster member is within distance 1 of the canonical, which eliminates chart-noise clusters while keeping real corrections (INA→TNA dist=1).
 
 ### Pipeline stages for chart-stream
 

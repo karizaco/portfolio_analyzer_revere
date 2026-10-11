@@ -4,7 +4,7 @@ OCR-powered pipeline that crawls YouTube channels (Qullamaggie, Revere), extract
 position/ticker data from video frames, normalizes tickers, and produces portfolio
 analytics.
 
-Stack: Node.js + Python (yt-dlp/ffmpeg) + SQLite + Tesseract OCR + sharp.
+Stack: Node.js + Python (yt-dlp/ffmpeg) + SQLite + EasyOCR + Tesseract OCR + sharp.
 
 ---
 
@@ -69,12 +69,12 @@ python tools/whiteboard_worker.py catalog \
 # Download QMG videos at 1080p
 node tools/downloadQmg1080p.js --cookies youtube_cookies.txt --limit 200
 
-# Run OCR on downloaded videos
-python tools/parallelOcrScan.py \
-  --prefilter-profile chart_stream \
-  --basename qmg \
-  --chart-stream-parser \
-  --channel qullamaggie
+# Run OCR on downloaded videos (EasyOCR recommended)
+KMP_DUPLICATE_LIB_OK=TRUE node tools/scanVideoWithOcr.js \
+  --video-dir data/video_pipeline/downloads_1080p/ \
+  --prefilter-profile chart_stream --chart-stream-parser \
+  --basename qmg --output-kind snapshot \
+  --ocr-engine easyocr
 
 # Aggregate results
 node tools/aggregateScanResults.js data/video_scan_YYYYMMDD/
@@ -92,17 +92,17 @@ Qullamaggie's live trading sessions show a **position-list overlay** in the bott
   1. **Lexicon membership** — ticker appears in `config/ticker_lexicon_seed.csv`
   2. **Price-nearby** — ticker appears within 12 characters of a price token (`$`, decimal number, `HIGH/LOW/CLOSE/TARGET/STOP/BID/ASK`, or `+/-value%`)
 
-- **OCR pipeline**: `src/ocr/ocrImage.js` (`chart-stream` profile) — crops overlay region, upscales 3× with lanczos3, grayscale, `negate()` (white-on-dark → black-on-white), normalize, sharpen(σ=1.5), linear(1.8, −64), then Tesseract.
+- **OCR pipeline**: `src/ocr/easyocrAdapter.js` (EasyOCR, recommended) or `src/ocr/ocrImage.js` (Tesseract, legacy). EasyOCR crops from the original 1920px video at `{x:0.87, y:0.58, w:0.13, h:0.40}`, scales 5× to 1345px wide, then runs the CNN.
 
-- **Scanner**: `tools/scanVideoWithOcr.js` uses `--prefilter-profile chart_stream` and `--chart-stream-parser`. Default crop is `{x:0.70, y:0.60, w:0.30, h:0.40}`.
+- **Scanner**: `tools/scanVideoWithOcr.js` uses `--prefilter-profile chart_stream` and `--chart-stream-parser`. Default crop is `{x:0.87, y:0.58, w:0.13, h:0.40}` (position-list column targeted).
 
-### Validated Crop Region
+### Current Crop Region
 
 ```
-{x: 0.70, y: 0.60, w: 0.30, h: 0.40}   ← 30% width × 40% height, anchored bottom-right
+{x: 0.87, y: 0.58, w: 0.13, h: 0.40}   ← 13% width × 40% height, anchored bottom-right
 ```
 
-This was validated against human-verified snapshots. Mean ticker recall: **56%** with this crop vs 44–47% for wider crops. **Do not widen this crop without re-validating.**
+The crop targets the position-list column specifically (not the chart area). This is the `CHART_STREAM_REGION_FRACTION_DEFAULT` in `src/video/ocrScanArgs.js`. EasyOCR is used with this crop for ~75% recall on 20220606 vs ~25% with Tesseract on the old wider crop.
 
 ### Resolution Requirements
 
@@ -116,22 +116,7 @@ This was validated against human-verified snapshots. Mean ticker recall: **56%**
 
 ### Ground Truth Test Set
 
-Human-verified tickers for 6 QMG snapshots (1920×1080):
-
-| Video | Ground Truth |
-|-------|-------------|
-| 20220606 | GOVX, LABU, UCO, ALB, CBIO, VLO, TNA, NFLX |
-| 20220607 | UCO, VLO, ALB, BOIL, NFLX, TNA, LTHM |
-| 20220608 | SIGA, TNA, VLO, UCO, NFLX, ALB, BOIL, LTHM, AERC |
-| 20220614 | UVXY, VLO, UCO |
-| 20221117 | FREY, OIH, ASML, U, SI, SOXL |
-| 20230126 | CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS |
-
-Run the ground truth test:
-```bash
-node tools/buildQmgReviewPage.js   # rebuild review page
-# open tools/qmg_snapshot_review.html in a browser
-```
+Human-verified tickers for QMG snapshots are in `data/qmg_ground_truth.json`. The file contains 42 dated entries. Always verify GT against the actual video content before trusting recall numbers — some entries (e.g. 20220510) were recorded with incorrect assumptions.
 
 ### Known OCR Failure Modes
 
@@ -227,13 +212,12 @@ node tools/downloadQmg1080p.js --cookies youtube_cookies.txt --limit 200
 # Revere 720p batch download
 node tools/downloadHiresBatch.js --limit 30 --height 720
 
-# Parallel OCR
-python tools/parallelOcrScan.py \
-  --prefilter-profile chart_stream \
-  --basename qmg \
-  --chart-stream-parser \
-  --channel qullamaggie \
-  --workers 4
+# QMG chart-stream OCR (EasyOCR)
+KMP_DUPLICATE_LIB_OK=TRUE node tools/scanVideoWithOcr.js \
+  --video-dir data/video_pipeline/downloads_1080p/ \
+  --prefilter-profile chart_stream --chart-stream-parser \
+  --basename qmg --output-kind snapshot \
+  --ocr-engine easyocr
 
 # Aggregate scan results
 node tools/aggregateScanResults.js data/video_scan_YYYYMMDD/
