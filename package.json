@@ -31,6 +31,7 @@
     "video:fetch-captions": "node tools/fetchCaptions.js",
     "video:fetch-captions:qmg": "CHANNEL=qullamaggie node tools/fetchCaptions.js",
     "video:fetch-captions:revere": "CHANNEL=revere node tools/fetchCaptions.js",
+    "qmg:benchmark:curated": "node tools/runQmgCuratedBenchmark.js",
     "fixture:build-synthetic": "node tools/buildSyntheticWhiteboardVideo.js",
     "fixture:build-synthetic:qmg": "node tools/buildSyntheticChartStreamVideo.js",
     "video:dryrun-yt": "bash tools/dryrun_yt_dlp_pipeline.sh",

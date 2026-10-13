@@ -1,0 +1,1143 @@
+{
+  "basename": "qmg",
+  "channel": "qmg",
+  "chart_stream_parser": true,
+  "date_key": "20220606",
+  "output_kind": "snapshot",
+  "pipeline_profile": "legacy",
+  "phash_region": null,
+  "phash_region_fraction": {
+    "x": 0.86,
+    "y": 0.62,
+    "w": 0.14,
+    "h": 0.22
+  },
+  "prefilter_profile": "chart_stream",
+  "temporal_decay": 1800,
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_1080p\\20220606_ST8lvpOVjeM.mp4",
+  "captured_count": 3,
+  "captures": [
+    {
+      "chart_stream": {
+        "confidence": 0.5,
+        "parse_status": "ok",
+        "position_list": [
+          "CBIO",
+          "UCO",
+          "VLO"
+        ],
+        "price_action": "",
+        "tickers_rejected": 15,
+        "column_filter": {
+          "column_width": 50,
+          "dominant_x": 510,
+          "in_list_token_count": 0
+        },
+        "tickers_rejected_list": [
+          "A",
+          "SYMS",
+          "ROJNT",
+          "PRC",
+          "BUZZ",
+          "MRCE",
+          "SYM",
+          "DL",
+          "INA",
+          "NFU",
+          "ARITH",
+          "JOM",
+          "X",
+          "LABU",
+          "SIGA"
+        ]
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\qmg-bench\\ocr_probe\\frames\\20220606_20220606_st8lvpovjem_65e266db_snapshot\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0.5095270668359525,
+      "ocr_profile": "",
+      "ocr_text": "JennMaichln\n70,00\nA Positions Syms +X\nRojnt Prc Buzz Mrce\n6b Sym Dl\nLABU 6 653 2,63| 15,99\n69,00\nINA 437ur 4133 844|\nNFU 1,673 ~0436 5,64\nVLO ~0,763 027 405\n68,00\nCBIO 0c03 0,27 78,10\nUCO @ 2,33| 504\nArith SIGA 7054 8,83 16,35\nJom",
+      "ocr_text_snippet": "JennMaichln 70,00 A Positions Syms +X Rojnt Prc Buzz Mrce 6b Sym Dl LABU 6 653 2,63| 15,99 69,00 INA 437ur 4133 844| NFU 1,673 ~0436 5,64 VLO ~0,763 027 405 68,00 CBIO 0c03 0,27 78,10 UCO @ 2,33| 5...",
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "bf29d2b3d26498d0",
+      "phash_overlay": "d02f272d7df6c0c0",
+      "phash_region": {
+        "x": 0.86,
+        "y": 0.62,
+        "w": 0.14,
+        "h": 0.22
+      },
+      "prefilter_profile": "chart_stream",
+      "prefilter_score": 24.12,
+      "prefilter_stats": {
+        "brightRatio": 0.011111111111111112,
+        "darkRatio": 0.9527083333333334,
+        "edgeRatio": 0.11932018938590912,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1546,
+        "horizontalEdgeRatio": 0.109250229665748,
+        "meanLuma": 18.445208333333333,
+        "rowDensity": 3,
+        "maxColRowDensity": 1,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 159,
+        "midToneRatioTicker": 0.6666666666666666,
+        "stdDev": 38.569791332451096,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1831,
+        "verticalEdgeRatio": 0.12939014910607025,
+        "timestamp": 0
+      },
+      "score": 10.78,
+      "score_breakdown": null,
+      "screen_layout": "chart",
+      "tickers": [
+        "AERC",
+        "ALB",
+        "BKR",
+        "BOIL",
+        "CBIO",
+        "GOVX",
+        "LABU",
+        "P",
+        "QS",
+        "REGN",
+        "SGMO",
+        "SIGA",
+        "SPYM",
+        "TAN",
+        "TNA",
+        "UCO",
+        "VLO",
+        "X"
+      ],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00",
+      "output_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\qmg-bench\\snapshots\\qmg_20220606.png"
+    },
+    {
+      "chart_stream": {
+        "confidence": 0.5,
+        "parse_status": "ok",
+        "position_list": [
+          "ALB",
+          "LABU",
+          "UCO"
+        ],
+        "price_action": "",
+        "tickers_rejected": 17,
+        "column_filter": {
+          "column_width": 50,
+          "dominant_x": 510,
+          "in_list_token_count": 0
+        },
+        "tickers_rejected_list": [
+          "WACHN",
+          "A",
+          "SYMS",
+          "CAN",
+          "PRC",
+          "BUZZ",
+          "ISYM",
+          "DON",
+          "JO",
+          "HAOS",
+          "ARITH",
+          "INA",
+          "NF",
+          "X",
+          "BOIL",
+          "CBIO",
+          "VLO"
+        ]
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 252,
+      "frame_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\qmg-bench\\ocr_probe\\frames\\20220606_20220606_st8lvpovjem_65e266db_snapshot\\ocr\\ocr_000253.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 1008,
+      "observed_date": null,
+      "ocr_confidence": 0.42218182731779264,
+      "ocr_profile": "",
+      "ocr_text": "3ienti Wachn\nA Positions Syms 30 +X\ncan Prc Buzz Marcen\n1,00 3, ISym Don\nBOIL 4147398 1328,13 10,.92\nLABU 40,163 467,2r| 15,83\nUCO Jo Haos 485\n0,75\nALB 1873 726 3a1 5,881\nCBIO 8 00x[ 4877,23 78,63\nVLO 119x 37baS 3,95 \nArith INA L0x 69,13 8,34\nNF 1,653| 0s3 54\nSs00m",
+      "ocr_text_snippet": "3ienti Wachn A Positions Syms 30 +X can Prc Buzz Marcen 1,00 3, ISym Don BOIL 4147398 1328,13 10,.92 LABU 40,163 467,2r| 15,83 UCO Jo Haos 485 0,75 ALB 1873 726 3a1 5,881 CBIO 8 00x[ 4877,23 78,63 ...",
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "af69cee0d26172d0",
+      "phash_overlay": "c43b392935ccd5c5",
+      "phash_region": {
+        "x": 0.86,
+        "y": 0.62,
+        "w": 0.14,
+        "h": 0.22
+      },
+      "prefilter_profile": "chart_stream",
+      "prefilter_score": 14.89,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.9691666666666666,
+        "edgeRatio": 0.10218359126563493,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1221,
+        "horizontalEdgeRatio": 0.08628365486538053,
+        "meanLuma": 13.514166666666666,
+        "rowDensity": 3,
+        "maxColRowDensity": 1,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 155,
+        "midToneRatioTicker": 0.6666666666666666,
+        "stdDev": 27.04401133902949,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1671,
+        "verticalEdgeRatio": 0.11808352766588934,
+        "timestamp": 1008
+      },
+      "score": 10.27,
+      "score_breakdown": null,
+      "screen_layout": "unknown_text",
+      "tickers": [
+        "AERC",
+        "ALB",
+        "BKR",
+        "BOIL",
+        "CBIO",
+        "GOVX",
+        "LABU",
+        "P",
+        "QS",
+        "REGN",
+        "SGMO",
+        "SIGA",
+        "SPYM",
+        "TAN",
+        "TNA",
+        "UCO",
+        "VLO",
+        "X"
+      ],
+      "timestamp": 1008,
+      "timestamp_hms": "00:16:48",
+      "output_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\qmg-bench\\snapshots\\qmg_20220606_2.png"
+    },
+    {
+      "chart_stream": {
+        "confidence": 0.5,
+        "parse_status": "ok",
+        "position_list": [
+          "CBIO",
+          "LABU",
+          "UCO"
+        ],
+        "price_action": "",
+        "tickers_rejected": 18,
+        "column_filter": {
+          "column_width": 50,
+          "dominant_x": 510,
+          "in_list_token_count": 0
+        },
+        "tickers_rejected_list": [
+          "A",
+          "S",
+          "SXMS",
+          "GAN",
+          "PRC",
+          "BUZZ",
+          "F",
+          "ISYM",
+          "DOL",
+          "INA",
+          "ARITH",
+          "NFU",
+          "DA",
+          "ISOM",
+          "X",
+          "BOIL",
+          "VLO",
+          "SIGA"
+        ]
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 126,
+      "frame_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\qmg-bench\\ocr_probe\\frames\\20220606_20220606_st8lvpovjem_65e266db_snapshot\\ocr\\ocr_000127.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 506.666667,
+      "observed_date": null,
+      "ocr_confidence": 0.4453652660621316,
+      "ocr_profile": "",
+      "ocr_text": "JnWachn\n60,00\nA Positions S Sxms 30 +X\nGan Prc Buzz Maacer\nF, ISym Dol\nBOIL 715,133 ~81883 10,92\nLABU 2503 628,33 15,66\nS0,00\nUCO 0894 4463| 484\nCBIO 8 803| 367445 78,63\nVLO 0483 3143633| 3,94\nINA 45555 9353 8,28\nArith NFU 275 335,13 541\nSIGA Da 4758x 76,03\nISom",
+      "ocr_text_snippet": "JnWachn 60,00 A Positions S Sxms 30 +X Gan Prc Buzz Maacer F, ISym Dol BOIL 715,133 ~81883 10,92 LABU 2503 628,33 15,66 S0,00 UCO 0894 4463| 484 CBIO 8 803| 367445 78,63 VLO 0483 3143633| 3,94 INA ...",
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "afe9da60d619d8c0",
+      "phash_overlay": "d02f2d2379f2d1d0",
+      "phash_region": {
+        "x": 0.86,
+        "y": 0.62,
+        "w": 0.14,
+        "h": 0.22
+      },
+      "prefilter_profile": "chart_stream",
+      "prefilter_score": 14.44,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.9688194444444445,
+        "edgeRatio": 0.11447954208183167,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1319,
+        "horizontalEdgeRatio": 0.09320896049749135,
+        "meanLuma": 14.787777777777778,
+        "rowDensity": 3,
+        "maxColRowDensity": 1,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 158,
+        "midToneRatioTicker": 0.6666666666666666,
+        "stdDev": 27.54057543083892,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1921,
+        "verticalEdgeRatio": 0.135750123666172,
+        "timestamp": 504
+      },
+      "score": 10.02,
+      "score_breakdown": null,
+      "screen_layout": "unknown_text",
+      "tickers": [
+        "AERC",
+        "ALB",
+        "BKR",
+        "BOIL",
+        "CBIO",
+        "GOVX",
+        "LABU",
+        "P",
+        "QS",
+        "REGN",
+        "SGMO",
+        "SIGA",
+        "SPYM",
+        "TAN",
+        "TNA",
+        "UCO",
+        "VLO",
+        "X"
+      ],
+      "timestamp": 504,
+      "timestamp_hms": "00:08:24",
+      "output_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\qmg-bench\\snapshots\\qmg_20220606_3.png"
+    }
+  ],
+  "frame_count": 759,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 571,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 6,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\qmg-bench\\snapshots\\qmg_20220606.png",
+  "prefilter_best_score": 29.68,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "chart_stream": {
+      "confidence": 0.5,
+      "parse_status": "ok",
+      "position_list": [
+        "CBIO",
+        "UCO",
+        "VLO"
+      ],
+      "price_action": "",
+      "tickers_rejected": 15,
+      "column_filter": {
+        "column_width": 50,
+        "dominant_x": 510,
+        "in_list_token_count": 0
+      },
+      "tickers_rejected_list": [
+        "A",
+        "SYMS",
+        "ROJNT",
+        "PRC",
+        "BUZZ",
+        "MRCE",
+        "SYM",
+        "DL",
+        "INA",
+        "NFU",
+        "ARITH",
+        "JOM",
+        "X",
+        "LABU",
+        "SIGA"
+      ]
+    },
+    "confusion_with_nearby": [],
+    "frame_index": 0,
+    "frame_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\qmg-bench\\ocr_probe\\frames\\20220606_20220606_st8lvpovjem_65e266db_snapshot\\ocr\\ocr_000001.png",
+    "is_intro_card": false,
+    "issue_codes": [],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 0,
+    "observed_date": null,
+    "ocr_confidence": 0.5095270668359525,
+    "ocr_profile": "",
+    "ocr_text": "JennMaichln\n70,00\nA Positions Syms +X\nRojnt Prc Buzz Mrce\n6b Sym Dl\nLABU 6 653 2,63| 15,99\n69,00\nINA 437ur 4133 844|\nNFU 1,673 ~0436 5,64\nVLO ~0,763 027 405\n68,00\nCBIO 0c03 0,27 78,10\nUCO @ 2,33| 504\nArith SIGA 7054 8,83 16,35\nJom",
+    "ocr_text_snippet": "JennMaichln 70,00 A Positions Syms +X Rojnt Prc Buzz Mrce 6b Sym Dl LABU 6 653 2,63| 15,99 69,00 INA 437ur 4133 844| NFU 1,673 ~0436 5,64 VLO ~0,763 027 405 68,00 CBIO 0c03 0,27 78,10 UCO @ 2,33| 5...",
+    "output_kind": "snapshot",
+    "parsed_observations": [],
+    "parsed_row_count": 0,
+    "phash": "bf29d2b3d26498d0",
+    "phash_overlay": "d02f272d7df6c0c0",
+    "phash_region": {
+      "x": 0.86,
+      "y": 0.62,
+      "w": 0.14,
+      "h": 0.22
+    },
+    "prefilter_profile": "chart_stream",
+    "prefilter_score": 24.12,
+    "prefilter_stats": {
+      "brightRatio": 0.011111111111111112,
+      "darkRatio": 0.9527083333333334,
+      "edgeRatio": 0.11932018938590912,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1546,
+      "horizontalEdgeRatio": 0.109250229665748,
+      "meanLuma": 18.445208333333333,
+      "rowDensity": 3,
+      "maxColRowDensity": 1,
+      "brightColumnLeft": 0,
+      "brightColumnRight": 159,
+      "midToneRatioTicker": 0.6666666666666666,
+      "stdDev": 38.569791332451096,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 1831,
+      "verticalEdgeRatio": 0.12939014910607025,
+      "timestamp": 0
+    },
+    "score": 10.78,
+    "score_breakdown": null,
+    "screen_layout": "chart",
+    "tickers": [
+      "CBIO",
+      "UCO",
+      "VLO"
+    ],
+    "timestamp": 0,
+    "timestamp_hms": "00:00:00"
+  },
+  "top_candidates": [
+    {
+      "chart_stream": {
+        "confidence": 0.5,
+        "parse_status": "ok",
+        "position_list": [
+          "CBIO",
+          "UCO",
+          "VLO"
+        ],
+        "price_action": "",
+        "tickers_rejected": 15,
+        "column_filter": {
+          "column_width": 50,
+          "dominant_x": 510,
+          "in_list_token_count": 0
+        },
+        "tickers_rejected_list": [
+          "A",
+          "SYMS",
+          "ROJNT",
+          "PRC",
+          "BUZZ",
+          "MRCE",
+          "SYM",
+          "DL",
+          "INA",
+          "NFU",
+          "ARITH",
+          "JOM",
+          "X",
+          "LABU",
+          "SIGA"
+        ]
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\qmg-bench\\ocr_probe\\frames\\20220606_20220606_st8lvpovjem_65e266db_snapshot\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0.5095270668359525,
+      "ocr_profile": "",
+      "ocr_text": "JennMaichln\n70,00\nA Positions Syms +X\nRojnt Prc Buzz Mrce\n6b Sym Dl\nLABU 6 653 2,63| 15,99\n69,00\nINA 437ur 4133 844|\nNFU 1,673 ~0436 5,64\nVLO ~0,763 027 405\n68,00\nCBIO 0c03 0,27 78,10\nUCO @ 2,33| 504\nArith SIGA 7054 8,83 16,35\nJom",
+      "ocr_text_snippet": "JennMaichln 70,00 A Positions Syms +X Rojnt Prc Buzz Mrce 6b Sym Dl LABU 6 653 2,63| 15,99 69,00 INA 437ur 4133 844| NFU 1,673 ~0436 5,64 VLO ~0,763 027 405 68,00 CBIO 0c03 0,27 78,10 UCO @ 2,33| 5...",
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "bf29d2b3d26498d0",
+      "phash_overlay": "d02f272d7df6c0c0",
+      "phash_region": {
+        "x": 0.86,
+        "y": 0.62,
+        "w": 0.14,
+        "h": 0.22
+      },
+      "prefilter_profile": "chart_stream",
+      "prefilter_score": 24.12,
+      "prefilter_stats": {
+        "brightRatio": 0.011111111111111112,
+        "darkRatio": 0.9527083333333334,
+        "edgeRatio": 0.11932018938590912,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1546,
+        "horizontalEdgeRatio": 0.109250229665748,
+        "meanLuma": 18.445208333333333,
+        "rowDensity": 3,
+        "maxColRowDensity": 1,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 159,
+        "midToneRatioTicker": 0.6666666666666666,
+        "stdDev": 38.569791332451096,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1831,
+        "verticalEdgeRatio": 0.12939014910607025,
+        "timestamp": 0
+      },
+      "score": 10.78,
+      "score_breakdown": null,
+      "screen_layout": "chart",
+      "tickers": [
+        "CBIO",
+        "UCO",
+        "VLO"
+      ],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "chart_stream": {
+        "confidence": 0.5,
+        "parse_status": "ok",
+        "position_list": [
+          "ALB",
+          "LABU",
+          "UCO"
+        ],
+        "price_action": "",
+        "tickers_rejected": 17,
+        "column_filter": {
+          "column_width": 50,
+          "dominant_x": 510,
+          "in_list_token_count": 0
+        },
+        "tickers_rejected_list": [
+          "WACHN",
+          "A",
+          "SYMS",
+          "CAN",
+          "PRC",
+          "BUZZ",
+          "ISYM",
+          "DON",
+          "JO",
+          "HAOS",
+          "ARITH",
+          "INA",
+          "NF",
+          "X",
+          "BOIL",
+          "CBIO",
+          "VLO"
+        ]
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 252,
+      "frame_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\qmg-bench\\ocr_probe\\frames\\20220606_20220606_st8lvpovjem_65e266db_snapshot\\ocr\\ocr_000253.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0.42218182731779264,
+      "ocr_profile": "",
+      "ocr_text": "3ienti Wachn\nA Positions Syms 30 +X\ncan Prc Buzz Marcen\n1,00 3, ISym Don\nBOIL 4147398 1328,13 10,.92\nLABU 40,163 467,2r| 15,83\nUCO Jo Haos 485\n0,75\nALB 1873 726 3a1 5,881\nCBIO 8 00x[ 4877,23 78,63\nVLO 119x 37baS 3,95 \nArith INA L0x 69,13 8,34\nNF 1,653| 0s3 54\nSs00m",
+      "ocr_text_snippet": "3ienti Wachn A Positions Syms 30 +X can Prc Buzz Marcen 1,00 3, ISym Don BOIL 4147398 1328,13 10,.92 LABU 40,163 467,2r| 15,83 UCO Jo Haos 485 0,75 ALB 1873 726 3a1 5,881 CBIO 8 00x[ 4877,23 78,63 ...",
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "af69cee0d26172d0",
+      "phash_overlay": "c43b392935ccd5c5",
+      "phash_region": {
+        "x": 0.86,
+        "y": 0.62,
+        "w": 0.14,
+        "h": 0.22
+      },
+      "prefilter_profile": "chart_stream",
+      "prefilter_score": 14.89,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.9691666666666666,
+        "edgeRatio": 0.10218359126563493,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1221,
+        "horizontalEdgeRatio": 0.08628365486538053,
+        "meanLuma": 13.514166666666666,
+        "rowDensity": 3,
+        "maxColRowDensity": 1,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 155,
+        "midToneRatioTicker": 0.6666666666666666,
+        "stdDev": 27.04401133902949,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1671,
+        "verticalEdgeRatio": 0.11808352766588934,
+        "timestamp": 1008
+      },
+      "score": 10.27,
+      "score_breakdown": null,
+      "screen_layout": "unknown_text",
+      "tickers": [
+        "ALB",
+        "LABU",
+        "UCO"
+      ],
+      "timestamp": 1008,
+      "timestamp_hms": "00:16:48"
+    },
+    {
+      "chart_stream": {
+        "confidence": 0.5,
+        "parse_status": "ok",
+        "position_list": [
+          "CBIO",
+          "LABU",
+          "UCO"
+        ],
+        "price_action": "",
+        "tickers_rejected": 18,
+        "column_filter": {
+          "column_width": 50,
+          "dominant_x": 510,
+          "in_list_token_count": 0
+        },
+        "tickers_rejected_list": [
+          "A",
+          "S",
+          "SXMS",
+          "GAN",
+          "PRC",
+          "BUZZ",
+          "F",
+          "ISYM",
+          "DOL",
+          "INA",
+          "ARITH",
+          "NFU",
+          "DA",
+          "ISOM",
+          "X",
+          "BOIL",
+          "VLO",
+          "SIGA"
+        ]
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 126,
+      "frame_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\qmg-bench\\ocr_probe\\frames\\20220606_20220606_st8lvpovjem_65e266db_snapshot\\ocr\\ocr_000127.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0.4453652660621316,
+      "ocr_profile": "",
+      "ocr_text": "JnWachn\n60,00\nA Positions S Sxms 30 +X\nGan Prc Buzz Maacer\nF, ISym Dol\nBOIL 715,133 ~81883 10,92\nLABU 2503 628,33 15,66\nS0,00\nUCO 0894 4463| 484\nCBIO 8 803| 367445 78,63\nVLO 0483 3143633| 3,94\nINA 45555 9353 8,28\nArith NFU 275 335,13 541\nSIGA Da 4758x 76,03\nISom",
+      "ocr_text_snippet": "JnWachn 60,00 A Positions S Sxms 30 +X Gan Prc Buzz Maacer F, ISym Dol BOIL 715,133 ~81883 10,92 LABU 2503 628,33 15,66 S0,00 UCO 0894 4463| 484 CBIO 8 803| 367445 78,63 VLO 0483 3143633| 3,94 INA ...",
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "afe9da60d619d8c0",
+      "phash_overlay": "d02f2d2379f2d1d0",
+      "phash_region": {
+        "x": 0.86,
+        "y": 0.62,
+        "w": 0.14,
+        "h": 0.22
+      },
+      "prefilter_profile": "chart_stream",
+      "prefilter_score": 14.44,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.9688194444444445,
+        "edgeRatio": 0.11447954208183167,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1319,
+        "horizontalEdgeRatio": 0.09320896049749135,
+        "meanLuma": 14.787777777777778,
+        "rowDensity": 3,
+        "maxColRowDensity": 1,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 158,
+        "midToneRatioTicker": 0.6666666666666666,
+        "stdDev": 27.54057543083892,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1921,
+        "verticalEdgeRatio": 0.135750123666172,
+        "timestamp": 504
+      },
+      "score": 10.02,
+      "score_breakdown": null,
+      "screen_layout": "unknown_text",
+      "tickers": [
+        "CBIO",
+        "LABU",
+        "UCO"
+      ],
+      "timestamp": 504,
+      "timestamp_hms": "00:08:24"
+    },
+    {
+      "chart_stream": {
+        "confidence": 0.5,
+        "parse_status": "ok",
+        "position_list": [
+          "ALB",
+          "COIN",
+          "UCO"
+        ],
+        "price_action": "",
+        "tickers_rejected": 19,
+        "column_filter": {
+          "column_width": 50,
+          "dominant_x": 510,
+          "in_list_token_count": 0
+        },
+        "tickers_rejected_list": [
+          "IMTIN",
+          "A",
+          "S",
+          "SYMS",
+          "SYM",
+          "RCJN",
+          "MOL",
+          "BUZ",
+          "EER",
+          "IEX",
+          "ARITH",
+          "INA",
+          "NFU",
+          "QOM",
+          "X",
+          "GOVX",
+          "LABU",
+          "CBIO",
+          "VLO"
+        ]
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 504,
+      "frame_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\qmg-bench\\ocr_probe\\frames\\20220606_20220606_st8lvpovjem_65e266db_snapshot\\ocr\\ocr_000505.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0.5093725288726777,
+      "ocr_profile": "",
+      "ocr_text": "5 imtin Wiachn\nA Positions S Syms +X\n38,00 6, Sym Rcjn Mol Buz Eer\nGOVX 715,2385 71245,28 31,91\nLABU IEX 431843 15,97\nCOIN 8,203 167,73 74,89\nUCO 3052 3u6c 491\n36,00\nALB 3203 71a03 5,83\nCBIO 320a 297,93 78,63\nArith VLO 1,353 43063. 3,96 \nINA 41,153| 455 8,38|\nNFU 1633 a 5451\nQoM",
+      "ocr_text_snippet": "5 imtin Wiachn A Positions S Syms +X 38,00 6, Sym Rcjn Mol Buz Eer GOVX 715,2385 71245,28 31,91 LABU IEX 431843 15,97 COIN 8,203 167,73 74,89 UCO 3052 3u6c 491 36,00 ALB 3203 71a03 5,83 CBIO 320a 2...",
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "ff215ee1d231d8c0",
+      "phash_overlay": "f00b0a227cf7c5d5",
+      "phash_region": {
+        "x": 0.86,
+        "y": 0.62,
+        "w": 0.14,
+        "h": 0.22
+      },
+      "prefilter_profile": "chart_stream",
+      "prefilter_score": 18.62,
+      "prefilter_stats": {
+        "brightRatio": 0.011111111111111112,
+        "darkRatio": 0.9561805555555556,
+        "edgeRatio": 0.11243021694579888,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1364,
+        "horizontalEdgeRatio": 0.09638894777754223,
+        "meanLuma": 16.821666666666665,
+        "rowDensity": 3,
+        "maxColRowDensity": 1,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 159,
+        "midToneRatioTicker": 0.6666666666666666,
+        "stdDev": 37.27292176932501,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1818,
+        "verticalEdgeRatio": 0.12847148611405554,
+        "timestamp": 2016
+      },
+      "score": 9.78,
+      "score_breakdown": null,
+      "screen_layout": "unknown_text",
+      "tickers": [
+        "ALB",
+        "COIN",
+        "UCO"
+      ],
+      "timestamp": 2016,
+      "timestamp_hms": "00:33:36"
+    },
+    {
+      "chart_stream": {
+        "confidence": 0.5,
+        "parse_status": "ok",
+        "position_list": [
+          "ALB",
+          "LABU",
+          "UCO"
+        ],
+        "price_action": "",
+        "tickers_rejected": 21,
+        "column_filter": {
+          "column_width": 50,
+          "dominant_x": 510,
+          "in_list_token_count": 0
+        },
+        "tickers_rejected_list": [
+          "A",
+          "S",
+          "SYS",
+          "ROJN",
+          "MOL",
+          "BUZ",
+          "KFCE",
+          "E",
+          "SYM",
+          "DO",
+          "JATA",
+          "FZDX",
+          "FAR",
+          "ARITH",
+          "INA",
+          "NFU",
+          "FZX",
+          "X",
+          "GOVX",
+          "CBIO",
+          "VLO"
+        ]
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 378,
+      "frame_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\qmg-bench\\ocr_probe\\frames\\20220606_20220606_st8lvpovjem_65e266db_snapshot\\ocr\\ocr_000379.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0.4730449474552202,
+      "ocr_profile": "",
+      "ocr_text": "66 00 Kemtin Waichin\nA Positions S Sys +X\nRojn Mol Buz Kfce\nE, Sym Do\n65,00\nGOVX 318 273 71406,633 31,91\nLABU Jata 48723 15,93\nUCO Ve3 387 488\n6400\nALB 2143 101,53 5,82|\nCBIO Fzdx 256 338  78,63\n63,00 VLO Far 34503 3,95 \nArith INA ~0j8r 6413 8,38\nNFU Fzx 1561 545",
+      "ocr_text_snippet": "66 00 Kemtin Waichin A Positions S Sys +X Rojn Mol Buz Kfce E, Sym Do 65,00 GOVX 318 273 71406,633 31,91 LABU Jata 48723 15,93 UCO Ve3 387 488 6400 ALB 2143 101,53 5,82| CBIO Fzdx 256 338 78,63 63,...",
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "afa9e6a0d261d8f0",
+      "phash_overlay": "d02f0f2b3dedc1a0",
+      "phash_region": {
+        "x": 0.86,
+        "y": 0.62,
+        "w": 0.14,
+        "h": 0.22
+      },
+      "prefilter_profile": "chart_stream",
+      "prefilter_score": 12.92,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.9660416666666667,
+        "edgeRatio": 0.10872023178573953,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1342,
+        "horizontalEdgeRatio": 0.09483428732951735,
+        "meanLuma": 14.479375,
+        "rowDensity": 3,
+        "maxColRowDensity": 1,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 155,
+        "midToneRatioTicker": 0.6666666666666666,
+        "stdDev": 27.924598219499707,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1735,
+        "verticalEdgeRatio": 0.1226061762419617,
+        "timestamp": 1512
+      },
+      "score": 9.27,
+      "score_breakdown": null,
+      "screen_layout": "unknown_text",
+      "tickers": [
+        "ALB",
+        "LABU",
+        "UCO"
+      ],
+      "timestamp": 1512,
+      "timestamp_hms": "00:25:12"
+    }
+  ],
+  "top_rejected_candidates": [],
+  "whiteboard_segments": [
+    {
+      "capture_count": 1,
+      "end_ts": 0,
+      "end_hms": "00:00:00",
+      "is_intro_card": false,
+      "layout": "chart",
+      "peak_frame_index": 0,
+      "peak_score": 10.78,
+      "start_hms": "00:00:00",
+      "start_ts": 0
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 504,
+      "end_hms": "00:08:24",
+      "is_intro_card": false,
+      "layout": "unknown_text",
+      "peak_frame_index": 126,
+      "peak_score": 10.02,
+      "start_hms": "00:08:24",
+      "start_ts": 504
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 1008,
+      "end_hms": "00:16:48",
+      "is_intro_card": false,
+      "layout": "unknown_text",
+      "peak_frame_index": 252,
+      "peak_score": 10.27,
+      "start_hms": "00:16:48",
+      "start_ts": 1008
+    }
+  ],
+  "merged_position_list": [
+    "AERC",
+    "ALB",
+    "BKR",
+    "BOIL",
+    "CBIO",
+    "GOVX",
+    "LABU",
+    "P",
+    "QS",
+    "REGN",
+    "SGMO",
+    "SIGA",
+    "SPYM",
+    "TAN",
+    "TNA",
+    "UCO",
+    "VLO",
+    "X"
+  ],
+  "merged_raw_token_list": [
+    "AERC",
+    "ALB",
+    "BKR",
+    "BOIL",
+    "CBIO",
+    "GOVX",
+    "LABU",
+    "P",
+    "QS",
+    "REGN",
+    "SGMO",
+    "SIGA",
+    "SPYM",
+    "TAN",
+    "TNA",
+    "UCO",
+    "VLO",
+    "X"
+  ],
+  "merged_raw_token_clusters": [
+    {
+      "canonical": "P",
+      "members": [
+        "A",
+        "F"
+      ],
+      "frequency": 6
+    },
+    {
+      "canonical": "SGMO",
+      "members": [
+        "SXMS",
+        "SYMS"
+      ],
+      "frequency": 4
+    },
+    {
+      "canonical": "X",
+      "members": [
+        "DA",
+        "DL",
+        "S0",
+        "X"
+      ],
+      "frequency": 8
+    },
+    {
+      "canonical": "REGN",
+      "members": [
+        "RCJN",
+        "ROJN",
+        "ROJNT"
+      ],
+      "frequency": 3
+    },
+    {
+      "canonical": "AERC",
+      "members": [
+        "PRC"
+      ],
+      "frequency": 3
+    },
+    {
+      "canonical": "BKR",
+      "members": [
+        "BUZ",
+        "BUZZ"
+      ],
+      "frequency": 5
+    },
+    {
+      "canonical": "SPYM",
+      "members": [
+        "ISOM",
+        "ISYM",
+        "SYM"
+      ],
+      "frequency": 6
+    },
+    {
+      "canonical": "LABU",
+      "members": [
+        "LABU"
+      ],
+      "frequency": 5
+    },
+    {
+      "canonical": "TNA",
+      "members": [
+        "INA"
+      ],
+      "frequency": 5
+    },
+    {
+      "canonical": "QS",
+      "members": [
+        "DO",
+        "DON",
+        "JO",
+        "JOM",
+        "NF",
+        "NFU",
+        "S"
+      ],
+      "frequency": 12
+    },
+    {
+      "canonical": "VLO",
+      "members": [
+        "VLO"
+      ],
+      "frequency": 5
+    },
+    {
+      "canonical": "CBIO",
+      "members": [
+        "CBIO"
+      ],
+      "frequency": 5
+    },
+    {
+      "canonical": "UCO",
+      "members": [
+        "UCO"
+      ],
+      "frequency": 5
+    },
+    {
+      "canonical": "SIGA",
+      "members": [
+        "SIGA"
+      ],
+      "frequency": 2
+    },
+    {
+      "canonical": "TAN",
+      "members": [
+        "CAN",
+        "GAN"
+      ],
+      "frequency": 2
+    },
+    {
+      "canonical": "BOIL",
+      "members": [
+        "BOIL"
+      ],
+      "frequency": 2
+    },
+    {
+      "canonical": "ALB",
+      "members": [
+        "ALB"
+      ],
+      "frequency": 3
+    },
+    {
+      "canonical": "BOIL",
+      "members": [
+        "DOL",
+        "MOL"
+      ],
+      "frequency": 3
+    },
+    {
+      "canonical": "GOVX",
+      "members": [
+        "GOVX"
+      ],
+      "frequency": 2
+    }
+  ]
+}
