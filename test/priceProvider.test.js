@@ -133,6 +133,76 @@ test('createYahooPriceProvider uses dataset-wide default ranges to avoid repeate
   assert.equal(requestCount, 1);
 });
 
+test('createYahooPriceProvider retries a ticker after a transient network_error cache entry', async () => {
+  const cacheDirectory = await fs.mkdtemp(path.join(os.tmpdir(), 'revere-price-cache-retry-'));
+  let requestIndex = 0;
+  const responses = [
+    () => { throw new Error('transient network error'); },
+    () => ({
+      chart: {
+        result: [
+          {
+            indicators: {
+              adjclose: [{ adjclose: [100, 105] }],
+              quote: [{ close: [100, 105] }]
+            },
+            timestamp: [1704326400, 1704412800]
+          }
+        ]
+      }
+    })
+  ];
+  const provider = createYahooPriceProvider({
+    cacheDirectory,
+    requestJson: async () => {
+      const handler = responses[Math.min(requestIndex, responses.length - 1)];
+      requestIndex += 1;
+      return handler();
+    }
+  });
+
+  const first = await provider.getPricePoint('RETRY', '2024-01-05');
+  assert.equal(first.priceStatus, 'network_error');
+
+  // Second lookup must re-attempt the fetch. Both the in-memory series cache
+  // (cacheCoversRange must NOT treat an empty-prices `network_error` entry as
+  // covering the range) AND the per-(ticker,date) point lookup cache must
+  // evict the failed promise — otherwise the cached rejected lookup is
+  // returned without ever calling loadTickerSeries again.
+  const second = await provider.getPricePoint('RETRY', '2024-01-05');
+  assert.equal(second.priceStatus, 'ok');
+  assert.equal(second.price, 105);
+  assert.equal(requestIndex, 2);
+
+  // Successful lookups for the same (ticker, date) are still cached — a third
+  // call must hit the in-flight cache and not trigger another fetch.
+  const third = await provider.getPricePoint('RETRY', '2024-01-05');
+  assert.equal(third.priceStatus, 'ok');
+  assert.equal(third.price, 105);
+  assert.equal(requestIndex, 2);
+});
+
+test('createYahooPriceProvider still caches empty histories (no_market_data) terminally', async () => {
+  // Sanity check that the network_error retry fix did not regress the
+  // `no_market_data` terminal-cache behaviour: a genuinely empty Yahoo
+  // response must still be cached as terminal so we do not hammer Yahoo
+  // for tickers it will never have.
+  let requestCount = 0;
+  const provider = createYahooPriceProvider({
+    cacheDirectory: await fs.mkdtemp(path.join(os.tmpdir(), 'revere-price-cache-nomd-')),
+    requestJson: async () => {
+      requestCount += 1;
+      return { chart: { result: [] } };
+    }
+  });
+
+  const first = await provider.getPricePoint('NOMD', '2024-01-05');
+  const second = await provider.getPricePoint('NOMD', '2024-01-10');
+  assert.equal(first.priceStatus, 'no_market_data');
+  assert.equal(second.priceStatus, 'no_market_data');
+  assert.equal(requestCount, 1);
+});
+
 test('createYahooPriceProvider prefetches multiple tickers with shared ranges', async () => {
   let requestCount = 0;
   const provider = createYahooPriceProvider({
