@@ -101,10 +101,23 @@ function mergePricePoints(existingPoints, incomingPoints) {
 }
 
 function cacheCoversRange(cacheEntry, fromDate, toDate) {
+  // `missing_ticker` / `no_market_data` are terminal (Yahoo genuinely has no
+  // quotes for that symbol). `network_error` is intentionally NOT terminal
+  // because shouldPersistCache() excludes it from disk, and a transient
+  // network blip must not permanently prevent the ticker from resolving once
+  // connectivity returns.
   const terminalEmptyStatus = cacheEntry
-    && ['missing_ticker', 'network_error', 'no_market_data'].includes(cacheEntry.status);
+    && ['missing_ticker', 'no_market_data'].includes(cacheEntry.status);
   if (terminalEmptyStatus) {
     return true;
+  }
+
+  // An empty-prices `network_error` entry still has `from_date` / `to_date`
+  // populated, so the coverage check below would otherwise report the range
+  // as "covered" and skip the retry. Short-circuit explicitly so the caller
+  // re-fetches.
+  if (cacheEntry && cacheEntry.status === 'network_error') {
+    return false;
   }
 
   return Boolean(
@@ -428,7 +441,18 @@ function createYahooPriceProvider(options = {}) {
     })();
 
     pointLookupCache.set(pointCacheKey, pointPromise);
-    return pointPromise;
+    try {
+      const resolved = await pointPromise;
+      if (resolved && resolved.priceStatus === 'network_error') {
+        // Do not let a transient network failure stick in the per-lookup cache;
+        // the next call for the same (ticker, date) must be allowed to retry.
+        pointLookupCache.delete(pointCacheKey);
+      }
+      return resolved;
+    } catch (error) {
+      pointLookupCache.delete(pointCacheKey);
+      throw error;
+    }
   }
 
   async function getPositionPrices(position) {
