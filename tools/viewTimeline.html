@@ -49,6 +49,9 @@
     .pill.type-live_update { background: rgba(251, 191, 36, 0.18); color: var(--warn); }
     .pill.type-chart_stream { background: rgba(168, 85, 247, 0.18); color: #c084fc; }
     .pill.type-untagged { background: rgba(239, 68, 68, 0.18); color: var(--bad); }
+    .pill.rooppel { background: rgba(251, 191, 36, 0.18); color: var(--warn); }
+    .pill.signal-holding { background: rgba(251, 191, 36, 0.25); color: #fbbf24; font-weight: 600; }
+    .pill.signal-idea { background: rgba(148, 163, 184, 0.15); color: var(--muted); }
     .filterbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
     .filterbar .label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px; }
     .filterbar .chip { padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); font-size: 12px; cursor: pointer; transition: all .12s ease; }
@@ -58,6 +61,7 @@
     .filterbar .chip.active.feature { background: var(--muted); border-color: var(--muted); }
     .filterbar .chip.active.live_update { background: var(--warn); border-color: var(--warn); color: #1f1707; }
     .filterbar .chip.active.chart_stream { background: #c084fc; border-color: #c084fc; color: #1f1707; }
+    .filterbar .chip.active.rooppel { background: #fbbf24; border-color: #fbbf24; color: #1f1707; }
     .badge { display: inline-flex; align-items: center; gap: 4px; }
     .type-summary { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; font-size: 12px; color: var(--muted); }
     .type-summary span strong { color: var(--ink); }
@@ -80,9 +84,44 @@
       <button type="button" class="chip live_update" data-type="live_update">Live</button>
       <button type="button" class="chip chart_stream" data-type="chart_stream">Chart Stream</button>
       <button type="button" class="chip" data-type="untagged">Untagged</button>
+      <button type="button" class="chip" data-type="roppel">Roppel</button>
     </div>
 
     <section class="kpis" id="kpis"></section>
+
+    <section id="roppelPanel" style="display:none">
+      <h2>Roppel Report signals</h2>
+      <section class="panels">
+        <div class="panel">
+          <h3>Reports per month</h3>
+          <canvas id="roppelReportChart" height="140"></canvas>
+        </div>
+        <div class="panel">
+          <h3>Signal types</h3>
+          <canvas id="roppelSignalTypeChart" height="140"></canvas>
+        </div>
+        <div class="panel full">
+          <h3>Roppel tickers by date</h3>
+          <canvas id="roppelTickerChart" height="100"></canvas>
+          <div class="tickers" id="roppelTopTickers"></div>
+        </div>
+      </section>
+
+      <h2>Roppel signals — per report</h2>
+      <section class="panel full">
+        <table id="roppelTable">
+          <thead><tr>
+            <th>report_date</th>
+            <th>source_file</th>
+            <th>has_disclosure</th>
+            <th class="num">holdings</th>
+            <th class="num">ideas</th>
+            <th>tickers</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </section>
 
     <h2>Signals over time</h2>
     <section class="panels">
@@ -157,7 +196,8 @@
   const state = {
     timeline: null,
     activeType: 'all',
-    charts: {}
+    charts: {},
+    roppel: null  // { signals: [...], reports: [...] }
   };
 
   function layoutColor(layout) {
@@ -175,11 +215,15 @@
   }
 
   function videoMatchesType(v, type) {
-    if (type === 'all') return true;
+    if (type === 'all' || type === 'roppel') return true;
     return (v.video_type || 'untagged') === type;
   }
 
   function filterTimeline(timeline, type) {
+    if (type === 'roppel') {
+      // Roppel is handled separately in renderRoppel; return empty so video charts hide.
+      return { per_video: [], per_day: [], filtered_totals: { videos: 0, videos_with_captures: 0, captures: 0, unique_tickers: 0, top_tickers: [] } };
+    }
     const per_video = timeline.per_video.filter((v) => videoMatchesType(v, type));
     // Recompute per_day from filtered videos for accurate per-day rollups.
     const dayMap = new Map();
@@ -249,6 +293,36 @@
 
   function render() {
     if (!state.timeline) return;
+
+    // Roppel is a separate view
+    if (state.activeType === 'roppel') {
+      destroyCharts();
+      if (state.roppel) {
+        const { signals, reports } = state.roppel;
+        const holdingCount = signals.filter((s) => s.signal_type === 'HOLDING').length;
+        const ideaCount = signals.filter((s) => s.signal_type === 'IDEA').length;
+        const uniqueTickers = new Set(signals.map((s) => s.ticker)).size;
+        document.getElementById('kpis').innerHTML = `
+          <div class="kpi"><div class="label">Reports</div><div class="value">${reports.length}</div><div class="sub">${reports.filter((r) => r.has_disclosure === 'true').length} with disclosure</div></div>
+          <div class="kpi"><div class="label">Holdings signals</div><div class="value">${holdingCount}</div><div class="sub">from disclosure pages</div></div>
+          <div class="kpi"><div class="label">Idea signals</div><div class="value">${ideaCount}</div><div class="sub">from actionable ideas sections</div></div>
+          <div class="kpi"><div class="label">Unique tickers</div><div class="value">${uniqueTickers}</div><div class="sub">across all Roppel reports</div></div>
+        `;
+      }
+      // Hide video sections
+      document.getElementById('roppelPanel').style.display = '';
+      document.querySelectorAll('main > h2').forEach((h) => { h.style.display = 'none'; });
+      const afterKpis = document.querySelector('.kpis').nextElementSibling;
+      if (afterKpis) afterKpis.style.display = 'none'; // "Signals over time" heading
+      renderRoppel();
+      return;
+    }
+
+    // Show video panels, hide Roppel panel
+    document.getElementById('roppelPanel').style.display = 'none';
+    const sectionHeadings = document.querySelectorAll('main > h2');
+    sectionHeadings.forEach((h) => { h.style.display = ''; });
+
     const { per_video, per_day, filtered_totals } = filterTimeline(state.timeline, state.activeType);
 
     // KPIs reflect the filtered slice.
@@ -444,8 +518,9 @@
   function wireFilterbar() {
     document.querySelectorAll('#filterbar .chip').forEach((btn) => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('#filterbar .chip').forEach((b) => b.classList.remove('active'));
+        document.querySelectorAll('#filterbar .chip').forEach((b) => b.classList.remove('active', 'rooppel'));
         btn.classList.add('active');
+        if (btn.dataset.type === 'roppel') btn.classList.add('rooppel');
         state.activeType = btn.dataset.type;
         if (history.replaceState) {
           const u = new URL(window.location.href);
@@ -459,12 +534,13 @@
 
   function readHashFilter() {
     const m = (window.location.hash || '').match(/type=([a-z_]+)/);
-    if (m && ['daily', 'weekend_review', 'feature', 'live_update', 'chart_stream', 'untagged', 'all'].includes(m[1])) {
+    if (m && ['daily', 'weekend_review', 'feature', 'live_update', 'chart_stream', 'untagged', 'all', 'roppel'].includes(m[1])) {
       state.activeType = m[1];
       const btn = document.querySelector(`#filterbar .chip[data-type="${state.activeType}"]`);
       if (btn) {
-        document.querySelectorAll('#filterbar .chip').forEach((b) => b.classList.remove('active'));
+        document.querySelectorAll('#filterbar .chip').forEach((b) => b.classList.remove('active', 'rooppel'));
         btn.classList.add('active');
+        if (state.activeType === 'roppel') btn.classList.add('rooppel');
       }
     }
   }
@@ -485,9 +561,115 @@
       generated_at=${timeline.generated_at} ·
       <code>timeline.json</code>
     `;
+
+    // Load Roppel data (soft fail — it's optional)
+    try {
+      const signalsUrl = new URL('../sources/roppel/roppel_signals.csv', document.location.href).toString();
+      const reportsUrl = new URL('../sources/roppel/roppel_reports.csv', document.location.href).toString();
+      const [signalsResp, reportsResp] = await Promise.all([
+        fetch(signalsUrl),
+        fetch(reportsUrl)
+      ]);
+      if (signalsResp.ok && reportsResp.ok) {
+        const [signalsText, reportsText] = await Promise.all([
+          signalsResp.text(),
+          reportsResp.text()
+        ]);
+        state.roppel = {
+          signals: parseCSV(signalsText),
+          reports: parseCSV(reportsText)
+        };
+      }
+    } catch (e) {
+      console.warn('Roppel data could not be loaded:', e);
+    }
+
     wireFilterbar();
     readHashFilter();
     render();
+  }
+
+  function parseCSV(text) {
+    const lines = text.trim().split('\n');
+    if (!lines.length) return [];
+    const headers = lines[0].split(',');
+    return lines.slice(1).map((line) => {
+      const vals = line.split(',');
+      const row = {};
+      headers.forEach((h, i) => { row[h.trim()] = (vals[i] || '').trim(); });
+      return row;
+    });
+  }
+
+  function renderRoppel() {
+    const r = state.roppel;
+    if (!r) return;
+
+    const byDate = {};
+    for (const s of r.signals) {
+      if (!byDate[s.report_date]) byDate[s.report_date] = [];
+      byDate[s.report_date].push(s);
+    }
+
+    const dates = Object.keys(byDate).sort();
+    const holdingsPerDate = dates.map((d) => byDate[d].filter((s) => s.signal_type === 'HOLDING').length);
+    const ideasPerDate = dates.map((d) => byDate[d].filter((s) => s.signal_type === 'IDEA').length);
+
+    const allTickers = {};
+    for (const s of r.signals) allTickers[s.ticker] = (allTickers[s.ticker] || 0) + 1;
+    const topTickers = Object.entries(allTickers).sort((a, b) => b[1] - a[1]).slice(0, 30);
+
+    // Report table
+    const tbody = document.querySelector('#roppelTable tbody');
+    tbody.innerHTML = r.reports
+      .sort((a, b) => (a.report_date || '').localeCompare(b.report_date || ''))
+      .map((rep) => {
+        const sigs = byDate[rep.report_date] || [];
+        const holdings = sigs.filter((s) => s.signal_type === 'HOLDING');
+        const ideas = sigs.filter((s) => s.signal_type === 'IDEA');
+        return `<tr>
+          <td>${rep.report_date}</td>
+          <td><code style="font-size:11px">${rep.source_file}</code></td>
+          <td>${rep.has_disclosure === 'true' ? '✓' : '—'}</td>
+          <td class="num">${holdings.length}</td>
+          <td class="num">${ideas.length}</td>
+          <td>${[...holdings.slice(0,6), ...ideas.slice(0,6)].map((s) =>
+            s.signal_type === 'HOLDING'
+              ? `<span class="pill signal-holding">${s.ticker}</span>`
+              : `<span class="pill signal-idea">${s.ticker}</span>`
+          ).join(' ')}</td>
+        </tr>`;
+      }).join('');
+
+    document.getElementById('roppelTopTickers').innerHTML = topTickers
+      .map(([t, c]) => `<span class="ticker">${t}<span class="count">${c}</span></span>`).join('');
+
+    destroyCharts();
+    state.charts.roppelReports = new Chart(document.getElementById('roppelReportChart').getContext('2d'), {
+      type: 'bar',
+      data: { labels: dates.map((d) => d.slice(0,7)), datasets: [
+        { label: 'holdings', data: holdingsPerDate, backgroundColor: 'rgba(251,191,36,0.7)', borderColor: '#fbbf24' },
+        { label: 'ideas', data: ideasPerDate, backgroundColor: 'rgba(148,163,184,0.5)', borderColor: '#94a3b8' }
+      ]},
+      options: { responsive:true, plugins:{legend:{labels:{color:'#cbd5e1'}}}, scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'rgba(31,41,55,0.6)'}},y:{beginAtZero:true,ticks:{color:'#94a3b8'},grid:{color:'rgba(31,41,55,0.6)'}} }}
+    });
+
+    state.charts.roppelSignalTypes = new Chart(document.getElementById('roppelSignalTypeChart').getContext('2d'), {
+      type: 'doughnut',
+      data: { labels:['HOLDING','IDEA'], datasets:[{ data:[r.signals.filter(s=>s.signal_type==='HOLDING').length, r.signals.filter(s=>s.signal_type==='IDEA').length], backgroundColor:['rgba(251,191,36,0.8)','rgba(148,163,184,0.6)'], borderColor:['#fbbf24','#94a3b8'] }]},
+      options: { responsive:true, plugins:{legend:{labels:{color:'#cbd5e1'}}} }
+    });
+
+    let running = new Set();
+    const cumulative = [];
+    dates.forEach((d) => { (byDate[d]||[]).forEach((s) => running.add(s.ticker)); cumulative.push(running.size); });
+    state.charts.roppelTickers = new Chart(document.getElementById('roppelTickerChart').getContext('2d'), {
+      type: 'line',
+      data: { labels:dates, datasets:[{ label:'cumulative unique tickers', data:cumulative, borderColor:'#fbbf24', backgroundColor:'rgba(251,191,36,0.15)', fill:true, tension:0.15, pointRadius:3 }]},
+      options: { responsive:true, plugins:{legend:{labels:{color:'#cbd5e1'}}}, scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'rgba(31,41,55,0.6)'}},y:{ticks:{color:'#94a3b8'},grid:{color:'rgba(31,41,55,0.6)'}} }}
+    });
+
+    document.getElementById('roppelPanel').style.display = 'block';
   }
 
   main();
