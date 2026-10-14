@@ -601,6 +601,22 @@
     });
   }
 
+  function buildVideoCumulativeOverlay(timeline) {
+    // Build a date-sorted list of cumulative video tickers to overlay on the Roppel chart.
+    // Uses the timeline's per_day rollup (already computed).
+    const perDay = timeline.per_day || [];
+    const sorted = [...perDay].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+    const running = new Set();
+    const result = [];
+    for (const day of sorted) {
+      if (day.ticker_union) {
+        for (const t of day.ticker_union) running.add(t);
+      }
+      result.push(running.size);
+    }
+    return result;
+  }
+
   function renderRoppel() {
     const r = state.roppel;
     if (!r) return;
@@ -665,7 +681,26 @@
     dates.forEach((d) => { (byDate[d]||[]).forEach((s) => running.add(s.ticker)); cumulative.push(running.size); });
     state.charts.roppelTickers = new Chart(document.getElementById('roppelTickerChart').getContext('2d'), {
       type: 'line',
-      data: { labels:dates, datasets:[{ label:'cumulative unique tickers', data:cumulative, borderColor:'#fbbf24', backgroundColor:'rgba(251,191,36,0.15)', fill:true, tension:0.15, pointRadius:3 }]},
+      data: {
+        labels: dates,
+        datasets: [
+          {
+            label: 'Roppel cumulative unique tickers',
+            data: cumulative,
+            borderColor: '#fbbf24',
+            backgroundColor: 'rgba(251,191,36,0.15)',
+            fill: true, tension: 0.15, pointRadius: 3
+          },
+          // Overlay video ticker coverage for context (read from timeline if available)
+          ...(state.timeline ? [{
+            label: 'Video cumulative unique tickers',
+            data: buildVideoCumulativeOverlay(state.timeline),
+            borderColor: 'rgba(56,189,248,0.6)',
+            backgroundColor: 'transparent',
+            fill: false, tension: 0.15, pointRadius: 2, borderDash: [4, 4]
+          }] : [])
+        ]
+      },
       options: { responsive:true, plugins:{legend:{labels:{color:'#cbd5e1'}}}, scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'rgba(31,41,55,0.6)'}},y:{ticks:{color:'#94a3b8'},grid:{color:'rgba(31,41,55,0.6)'}} }}
     });
 
