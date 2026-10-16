@@ -118,10 +118,17 @@ function countTickerOccurrences(ocrText) {
 
 function hasPriceNear(ocrText, ticker) {
   if (!ocrText) return false;
-  // Search for the ticker as a whole word; accept up to 12 trailing chars
+  // Search for the ticker as a whole word; accept up to 15 trailing chars
   // (the OCR frequently splits dollar prices from the symbol, e.g. "GOVX | +1827%").
+  // Supports both dot-decimals (14.86) and comma-decimals (7,36) which EasyOCR
+  // commonly produces on non-US keyboards.
   const proximityPattern = new RegExp(
-    `\\b${ticker}\\b[^A-Z0-9.]{0,12}(\\$\\s*\\d|\\d+\\.\\d|\\b(?:HIGH|LOW|CLOSE|TARGET|STOP|BID|ASK)\\b|[+-]\\d+(?:\\.\\d+)?%)`,
+    `\\b${ticker}\\b[^A-Z0-9.]{0,15}(`
+      + `\\$\\s*\\d|`
+      + `\\d[\\d,]*(?:\\.\\d+)?|`
+      + `\\b(?:HIGH|LOW|CLOSE|TARGET|STOP|BID|ASK)\\b|`
+      + `[+-]\\d[\\d,]*(?:\\.\\d+)?%`
+      + `)`,
     'i'
   );
   return proximityPattern.test(ocrText);
@@ -197,7 +204,9 @@ function identifyPositionListColumn(words) {
     const sameLineWords = words.filter(x => x.line === w.line);
     const lineText = sameLineWords.map(x => x.text).join(' ');
     // Look for percent tokens ("+1.45%", "-0.08%") or dollar prices anywhere.
-    const priceMatches = lineText.match(/[+\-]?\d+(?:\.\d+)?\s*%|[+\-]?\d+\.\d+|\$\s*\d/g);
+    // Supports comma-decimals (7,36) and dot-decimals (14.86) which EasyOCR
+    // produces on non-US keyboards.
+    const priceMatches = lineText.match(/[+\-]?\d+(?:[.,]\d+)?\s*%|[+\-]?\d+[.,]\d+|\$\s*\d/g);
     if (priceMatches && priceMatches.length) {
       const tickerXs = sameLineWords
         .filter(x => STRICT_TICKER_PATTERN.test((x.text||'').toUpperCase().replace(/[^A-Z0-9.]/g,'')))
@@ -209,7 +218,8 @@ function identifyPositionListColumn(words) {
       // 2-3 char ticker-shape tokens (BE, ON, LI, PL) as position-list rows.
       // Filter A catches single-frame ones, but persistent FPs across
       // multiple frames survive. Drop the bare-integer pattern.
-      const priceWords = sameLineWords.filter(x => /[%\$]|^\d+\.\d+$/.test(x.text));
+      // Support comma-decimals (7,36) and dot-decimals (14.86).
+      const priceWords = sameLineWords.filter(x => /[%\$]|^\d+(?:[.,]\d+)$/.test(x.text));
       let maxTickerLeft = Math.max(0, ...tickerXs.map(t => t.left));
       let minPriceRight = Infinity;
       for (const p of priceWords) {
