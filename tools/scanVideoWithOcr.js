@@ -610,12 +610,18 @@ async function runChartStreamOcr(framePath, phashRegionFraction, scale, ocrEngin
       try { await fs.unlink(tmpPath); } catch (_) { /* ignore */ }
     }
     ocr = adaptToParserSchema(easyResult);
+    // Attach the crop width so parseChartStreamPositionList can compute a
+    // scale-aware X_POSITION_LIST_MIN threshold for identifyPositionListColumn.
+    ocr._cropWidth = Math.round(w * 1920 * EASYOCR_SCALE);
   } else {
     ocr = await ocrImage(framePath, {
       chartStream: true,
       overlayRegion: phashRegionFraction,
       overlayScale: scale,
     });
+    // Tesseract crop is extracted from the 1280px-wide prefilter frame at
+    // 3x or 4x scale; use 750 as the canonical Tesseract crop width.
+    ocr._cropWidth = 750;
   }
   const chartStream = parseChartStreamPositionList({ ocr });
   const tickerCount = (chartStream && chartStream.position_list && chartStream.position_list.length)
@@ -1385,7 +1391,7 @@ async function main() {
       // single-frame OCR garbles (VIO→VLO, NFU→NFLX, INA→TNA, BUCO→UCO)
       // and chart-area tickers that bleed in briefly. Override via
       // --cluster-min-frequency <n> (1 disables the filter).
-      { maxDistance: 1, minTokenLength: 2, minFrequency: options.clusterMinFrequency || 2 }
+      { maxDistance: 1, minTokenLength: 2, minFrequency: options.clusterMinFrequency || 1 }
     );
     // Override captures' tickers with clusterer's output ONLY for chart_stream
     // mode (QMG). For whiteboard mode (Revere), the structured GRO/TURBO
@@ -1437,7 +1443,7 @@ async function main() {
           // (unchanged by the clusterer override above for whiteboard mode).
           raw = mergeMultiplePositionLists(
             captureSummaries.map((c) => c.tickers || []),
-            { minOccurrences: 2 }
+            { minOccurrences: 1 }
           );
         }
         return raw.filter((t) => !TICKER_BLOCKLIST.has(t));
