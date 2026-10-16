@@ -687,6 +687,50 @@ const PREFILTER_PROFILES = Object.freeze({
     // Positive boost: chart-likeness is GOOD. Score 0–6 instead of -6 to 0.
     chartLikenessBoost: 8,
     prefilterThresholdDefault: 8
+  }),
+  // Tale of the Tape (ToTT) format: the Positions table sits in the
+  // center-right of the frame (x≈50-87%, y≈58-97%), NOT the bottom-right
+  // corner. The same chart-stream parser (position-list column + price alignment)
+  // works once we OCR the right region. Prefilter stats also target this
+  // center-right region instead of bottom-right.
+  tale_of_the_tape: Object.freeze({
+    // Stats region: center-right for ToTT position list
+    // (x=50-87%, y=58-97% of frame — see tot_crop in ocrScanArgs.js)
+    brightWeight: 3,
+    brightTarget: 0.05,
+    brightSlope: 30,
+    darkWeight: 3,
+    darkTarget: 0.52,
+    darkSlope: 20,
+    edgeWeight: 3,
+    edgeTarget: 0.10,
+    edgeSlope: 100,
+    stdDevWeight: 3,
+    stdDevTarget: 50,
+    stdDevSlope: 12,
+    // ToTT position list has similar row density to chart_stream
+    rowDensityWeight: 8,
+    rowDensityTarget: 100,
+    rowDensitySlope: 0.05,
+    maxColRowDensityWeight: 20,
+    maxColRowDensityTarget: 10,
+    maxColRowDensitySlope: 1,
+    midToneWeight: 25,
+    midToneTarget: 0.45,
+    midToneSlope: 0.2,
+    // Looser meanLuma — ToTT slides can be brighter than chart_stream
+    meanLumaFloor: 35,
+    meanLumaPenalty: 6,
+    brightRatioFloor: 0.005,
+    brightRatioPenalty: 6,
+    darkRatioFloor: 0.22,
+    darkRatioFloorPenalty: 4,
+    darkRatioCeil: 0.90,
+    darkRatioCeilPenalty: 6,
+    snapshotEdgeBoost: 20,
+    snapshotEdgeBoostCap: 2,
+    chartLikenessBoost: 6,
+    prefilterThresholdDefault: 6
   })
 });
 

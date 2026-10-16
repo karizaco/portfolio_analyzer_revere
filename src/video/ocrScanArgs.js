@@ -50,7 +50,7 @@ function printHelp() {
     '  --keep-frames              Keep sampled intermediate frames',
     '  --skip-keyframes           Do not invoke ffprobe to locate the nearest keyframe per capture',
     '  --confusion-radius <n>     Adjacent-frame lookup window for confusion_with_nearby, default 1',
-    '  --prefilter-profile <p>    whiteboard | chart_stream (drives prefilter score table + keyword guard)',
+    '  --prefilter-profile <p>    whiteboard | chart_stream | tale_of_the_tape (drives prefilter score table + keyword guard)',
     '  --basename <name>          Snapshot PNG prefix + screenshot discovery stem, default "revere"',
     '  --phash-region <x,y,w,h>  Region in pixels for the overlay pHash (optional)',
     '  --phash-hamming-max <n>    Max Hamming distance for overlay pHash dedup, default 6',
@@ -87,6 +87,9 @@ function printHelp() {
 // per-word OCR positions to identify the dominant ticker column and
 // rejects chart-area tokens that survived the crop widening.
 const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.86,0.55,0.14,0.45';
+// Tale-of-the-Tape (ToTT) position list sits center-right in the frame
+// (x≈50-95%, y≈58-97%), not the bottom-right corner like classic chart_stream.
+const TALE_OF_THE_TAPE_CROP_FRACTION = '0.50,0.55,0.45,0.43';
 
 function parseFractionalRegion(raw) {
   if (!raw) return null;
@@ -382,7 +385,7 @@ function parseArgs(argv, overrides = {}) {
     throw new Error('`--phash-hamming-max` must be an integer between 0 and 64.');
   }
 
-  if (!['whiteboard', 'chart_stream'].includes(options.prefilterProfile)) {
+  if (!['whiteboard', 'chart_stream', 'tale_of_the_tape'].includes(options.prefilterProfile)) {
     throw new Error(`Unsupported prefilter profile: ${options.prefilterProfile}`);
   }
 
@@ -407,10 +410,13 @@ function parseArgs(argv, overrides = {}) {
     options.phashRegionFraction = parseFractionalRegion(CHART_STREAM_REGION_FRACTION_DEFAULT);
   }
 
-  // chart_stream prefilter + chart-stream parser must be used together: the prefilter
-  // finds dark candlestick-chart frames and the parser extracts position lists from them.
-  // Auto-enable so the user only needs --prefilter-profile chart_stream.
-  if (options.prefilterProfile === 'chart_stream') {
+  // tale_of_the_tape uses the center-right crop for the Positions table.
+  if (options.prefilterProfile === 'tale_of_the_tape' && !options.phashRegion && !options.phashRegionFraction) {
+    options.phashRegionFraction = parseFractionalRegion(TALE_OF_THE_TAPE_CROP_FRACTION);
+  }
+
+  // chart_stream and tale_of_the_tape prefilters use the chart-stream parser.
+  if (options.prefilterProfile === 'chart_stream' || options.prefilterProfile === 'tale_of_the_tape') {
     options.chartStreamParser = true;
   }
 
@@ -431,6 +437,7 @@ module.exports = {
   DEFAULT_OUTPUT_ROOT,
   PIPELINE_PROFILE_DEFAULT,
   SUPPORTED_PIPELINE_PROFILES,
+  TALE_OF_THE_TAPE_CROP_FRACTION,
   createProbeKey,
   parseArgs,
   parseFractionalRegion,
