@@ -44,7 +44,7 @@ except ImportError:
 
 # PDF image rendering
 try:
-    import fitz
+    import pymupdf as fitz
 except ImportError:
     fitz = None
     warnings.warn("PyMuPDF not installed — chart image rendering disabled.")

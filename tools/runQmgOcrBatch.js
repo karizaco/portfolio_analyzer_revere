@@ -23,8 +23,8 @@ const VIDEO_DIR_1080 = path.join(ROOT, 'data', 'video_pipeline', 'downloads_1080
 const VIDEO_DIR_HIRES = path.join(ROOT, 'data', 'video_pipeline', 'downloads_hires');
 const OUT_ROOT = path.join(ROOT, 'data', 'video_scan_test', '_rerun');
 
-// Per-video timeout: EasyOCR at ~60-90s/frame × 6 frames = 360-540s; give 20 min
-const PER_VIDEO_TIMEOUT_MS = 20 * 60 * 1000;
+// Per-video timeout: EasyOCR at ~60-90s/frame × 6 frames = 360-540s; give 40 min for longer videos
+const PER_VIDEO_TIMEOUT_MS = 40 * 60 * 1000;
 
 const DEFAULT_FLAGS = [
   '--prefilter-profile', 'chart_stream',
@@ -44,6 +44,7 @@ function parseArgs(argv) {
     chunk: null,
     allUnscanned: false,
     dryRun: false,
+    lowCpu: false,
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -52,6 +53,7 @@ function parseArgs(argv) {
     else if (a === '--chunk') args.chunk = parseInt(argv[++i] || '1', 10);
     else if (a === '--all-unscanned') args.allUnscanned = true;
     else if (a === '--dry-run') args.dryRun = true;
+    else if (a === '--low-cpu') args.lowCpu = true;
   }
   return args;
 }
@@ -130,7 +132,12 @@ function scoreResult(log, gtEntry) {
 
 async function runScan(dateKey, video, runTag, extraFlags = []) {
   const videoPath = path.join(video.dir, video.file);
-  const env = { ...process.env, KMP_DUPLICATE_LIB_OK: 'TRUE' };
+  const env = {
+    ...process.env,
+    KMP_DUPLICATE_LIB_OK: 'TRUE',
+    OMP_NUM_THREADS: '1',
+    MKL_NUM_THREADS: '1',
+  };
 
   const cmd = [
     'node',
@@ -231,14 +238,20 @@ async function main() {
     console.error('Usage: node runQmgOcrBatch.js --dates d1,d2 [--parallel N]');
     console.error('   or: node runQmgOcrBatch.js --all-unscanned [--parallel N]');
     console.error('   or: node runQmgOcrBatch.js --chunk N [--parallel N]');
+    console.error('   or: node runQmgOcrBatch.js --low-cpu --chunk N [--parallel N]');
     process.exit(1);
   }
+
+  // Cap parallelism when --low-cpu is set (single-threaded EasyOCR can't benefit from more)
+  const parallel = args.lowCpu
+    ? Math.min(args.parallel, 2)
+    : args.parallel;
 
   const runTag = `qmg-easyocr-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
   console.log(`\n=== QMG EasyOCR Batch ===`);
   console.log(`Run tag: ${runTag}`);
   console.log(`Dates: ${dates.join(', ')}`);
-  console.log(`Parallelism: ${args.parallel}`);
+  console.log(`Parallelism: ${parallel}${args.lowCpu ? ' (low-cpu mode)' : ''}`);
   console.log(`Output: ${OUT_ROOT}/${runTag}/\n`);
 
   if (args.dryRun) {
@@ -255,7 +268,7 @@ async function main() {
   const jobs = dates.map(d => ({ date: d, video: findVideo(d) }))
     .filter(j => j.video !== null);
 
-  const results = await runPool(jobs, args.parallel, async ({ date, video }, idx) => {
+  const results = await runPool(jobs, parallel, async ({ date, video }, idx) => {
     return runScan(date, video, runTag);
   });
 

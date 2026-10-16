@@ -118,12 +118,12 @@ function countTickerOccurrences(ocrText) {
 
 function hasPriceNear(ocrText, ticker) {
   if (!ocrText) return false;
-  // Search for the ticker as a whole word; accept up to 15 trailing chars
+  // Search for the ticker as a whole word; accept up to 25 trailing chars
   // (the OCR frequently splits dollar prices from the symbol, e.g. "GOVX | +1827%").
   // Supports both dot-decimals (14.86) and comma-decimals (7,36) which EasyOCR
   // commonly produces on non-US keyboards.
   const proximityPattern = new RegExp(
-    `\\b${ticker}\\b[^A-Z0-9.]{0,15}(`
+    `\\b${ticker}\\b[^A-Z0-9.]{0,25}(`
       + `\\$\\s*\\d|`
       + `\\d[\\d,]*(?:\\.\\d+)?|`
       + `\\b(?:HIGH|LOW|CLOSE|TARGET|STOP|BID|ASK)\\b|`
@@ -179,7 +179,7 @@ function findPanelBoundaries(words) {
   return { positionsLine, watchlistLine };
 }
 
-function identifyPositionListColumn(words) {
+function identifyPositionListColumn(words, cropWidth = null) {
   if (!Array.isArray(words) || !words.length) {
     return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
   }
@@ -291,7 +291,7 @@ function identifyPositionListColumn(words) {
     }
     const sortedBuckets = [...buckets.entries()].sort((a, b) => b[1] - a[1]);
     const topBucket = sortedBuckets[0];
-    if (!topBucket || topBucket[1] < 3) {
+    if (!topBucket || topBucket[1] < 2) {
       return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
     }
     dominantX = topBucket[0] + bucketWidth / 2;
@@ -325,8 +325,18 @@ function identifyPositionListColumn(words) {
   // dominantX often lands in the chart area (~790 in the 3x crop = ~790/3 ≈ 526
   // in the original), producing massive FP bleed. Reject any column whose
   // dominantX is below the position-list threshold.
-  // Scale-aware: threshold is in OCR-crop pixel coords (EasyOCR 1345px crop).
-  const X_POSITION_LIST_MIN = 1150;
+  //
+  // Scale-aware: 1150 was calibrated for the Tesseract 3x-scaled 750px crop
+  // (750 * 0.86 ≈ 645px right edge, threshold set 505px above that).
+  // For EasyOCR at 1340px crop, the same relative position is
+  // 1340 * 0.86 ≈ 1152px — but EasyOCR's bounding boxes are anchored
+  // differently (they include more context, so position-list tickers land at
+  // ~450px in the 1340px crop, NOT at the right edge). Use cropWidth to
+  // scale the threshold proportionally. When cropWidth is not provided, use
+  // the original Tesseract-calibrated value.
+  const X_POSITION_LIST_MIN = cropWidth != null
+    ? Math.round(1150 * (cropWidth / 750))
+    : 1150;
   if (dominantX < X_POSITION_LIST_MIN) {
     return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
   }
@@ -384,7 +394,7 @@ function parseChartStreamPositionList({ ocr } = {}) {
   // keep working.
   const hasWordPositions = words && words.length > 0;
   const { inListTickers, dominantColumnX, columnWidth } = hasWordPositions
-    ? identifyPositionListColumn(words)
+    ? identifyPositionListColumn(words, ocr._cropWidth || null)
     : { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
 
   // Build per-ticker line + word lookups from raw OCR word positions.
