@@ -41,6 +41,9 @@ const SOURCES = [
   'qmg-batch-g',
   'qmg-batch-h',
   'qmg-batch-i',
+  'qmg-easyocr-20261011',
+  'qmg-easyocr-20261012',
+  'qmg-easyocr-20261017',
 ].map(tag => ({
   tag,
   logDir: path.join(PROBE_ROOT, tag, 'ocr_probe', 'logs'),

@@ -35,6 +35,9 @@ const DEFAULT_FLAGS = [
   '--fps', '0.25',
   '--prefilter-max-frames', '6',
   '--max-captures', '3',
+  '--batch-snapshots',
+  '--batch-count', '5',
+  '--batch-window', '4',
 ];
 
 function parseArgs(argv) {
