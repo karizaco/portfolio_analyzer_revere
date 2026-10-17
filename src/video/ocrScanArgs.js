@@ -54,7 +54,7 @@ function printHelp() {
     '  --basename <name>          Snapshot PNG prefix + screenshot discovery stem, default "revere"',
     '  --phash-region <x,y,w,h>  Region in pixels for the overlay pHash (optional)',
     '  --phash-hamming-max <n>    Max Hamming distance for overlay pHash dedup, default 6',
-    '  --phash-region-fraction <xf,yf,wf,hf> Fractional overlay region (0..1); chart_stream default "0.87,0.58,0.13,0.40"',
+    '  --phash-region-fraction <xf,yf,wf,hf> Fractional overlay region (0..1); chart_stream default "0.86,0.55,0.14,0.45" (use "0.83,0.55,0.17,0.45" for 2023-era wider-layout videos)',
     '  --temporal-decay <secs>    Seconds over which early-frame boost decays to zero, default 1800',
     '  --chart-stream-parser      Replace the GRO/TURBO whiteboard parser with parseChartStream',
     '  --help                     Show this help text',
