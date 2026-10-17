@@ -20,3 +20,9 @@ data/video_scan_*/**/ocr_probe/frames/
 data/video_scan_test/
 **/__pycache__/
 data/discord_pipeline/.cache/
+# Bundled binaries
+tools/ffmpeg.exe
+tools/ffprobe.exe
+# Plan files
+*.plan.md
+CLAUDE_RAPPEL_PLAN.md
