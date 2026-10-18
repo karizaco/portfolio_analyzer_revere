@@ -20,25 +20,26 @@ git pull  # keep in sync with this machine
 ### 2. Install dependencies
 
 ```bash
-# Install Node.js deps
 npm install
-
-# Install EasyOCR Python deps (if not already installed)
-# Requires Python with PyTorch + OpenCV + NumPy
-pip install easyocr opencv-python numpy torch  # or use existing conda env
 
 # Verify EasyOCR works:
 python -c "import easyocr; print('EasyOCR OK')"
+# If not installed:
+pip install easyocr opencv-python numpy torch
 ```
 
-### 3. Sync video files (optional but recommended)
+### 3. Sync video files
 
-The videos live in `data/video_pipeline/downloads_1080p/` and
-`data/video_pipeline/downloads_hires/`. You can either:
+Videos are in two directories. **Check both** — some 2022-era dates are in hires:
 
-**Option A — rsync over network** (fast if on same LAN):
 ```bash
-# On THIS machine (the low-CPU one), run:
+# Check which files you need:
+ls data/video_pipeline/downloads_1080p/ | grep -E "^(20220414|20220418|20220419|20220421|20220425|20220426|20220428|20220506|20220510|20220517|20220606|20220614|20221117|20230601|20220323)"
+ls data/video_pipeline/downloads_hires/ | grep -E "^(20220414|20220418|20220419|20220421|20220425|20220426|20220428|20220506|20220510|20220517|20220606|20220614|20221117|20230601|20220323)"
+```
+
+**Rsync to remote:**
+```bash
 rsync -avz --progress \
   data/video_pipeline/downloads_1080p/ \
   user@remote:/path/to/portfolio_analyzer_revere/data/video_pipeline/downloads_1080p/
@@ -48,51 +49,42 @@ rsync -avz --progress \
   user@remote:/path/to/portfolio_analyzer_revere/data/video_pipeline/downloads_hires/
 ```
 
-**Option B — work over network share** (no sync needed):
-Mount the project directory via SMB/network share and run directly.
-The remote machine just needs access to the video files.
-
-### 4. Sync ground truth
+### 4. Sync ground truth and data dir
 
 ```bash
-# Copy GT file
-scp user@this-machine:/path/to/qmg_ground_truth.json \
-      user@remote:/path/to/portfolio_analyzer_revere/data/
-
-# Or copy the whole data dir
 rsync -avz --progress data/ user@remote:/path/to/portfolio_analyzer_revere/data/
 ```
 
 ### 5. Run the batch — NO --low-cpu!
 
 ```bash
-# Navigate to project
 cd portfolio_analyzer_revere
 
-# Run a chunk of dates (e.g. 5 at a time)
+# Run the 16 remaining dates (split into chunks of 4):
 node tools/runQmgOcrBatch.js \
-  --dates 20220302,20220318,20220321,20220405,20220406 \
-  --parallel 4 \
-  --chunk 1
+  --dates 20220414,20220418,20220419,20220421 \
+  --parallel 4
 
-# Or run all unscanned dates:
-node tools/runQmgOcrBatch.js --all-unscanned --parallel 4
+node tools/runQmgOcrBatch.js \
+  --dates 20220425,20220426,20220428,20220506 \
+  --parallel 4
+
+node tools/runQmgOcrBatch.js \
+  --dates 20220510,20220517,20220606,20220614 \
+  --parallel 4
+
+node tools/runQmgOcrBatch.js \
+  --dates 20220323,20221117,20230601 \
+  --parallel 4
 ```
 
 **IMPORTANT: Do NOT use `--low-cpu` on this machine.** That flag is only
-for the low-CPU machine. On this machine, EasyOCR should use all available
-cores.
+for the low-CPU machine.
 
 ### 6. Copy results back
 
-After each chunk, copy the scan output back:
-
 ```bash
-# On the REMOTE machine, scp the results:
-scp -r data/video_ocr_probe/qmg-easyocr-YYYYMMDD/ \
-      user@this-machine:/path/to/portfolio_analyzer_revere/data/video_ocr_probe/
-
-# OR rsync the whole probe dir:
+# On the REMOTE machine, rsync results back:
 rsync -avz --progress \
   data/video_ocr_probe/qmg-easyocr-YYYYMMDD/ \
   user@this-machine:/path/to/portfolio_analyzer_revere/data/video_ocr_probe/
@@ -103,7 +95,6 @@ rsync -avz --progress \
 On THIS machine, after copying results back:
 
 ```bash
-# Score all results
 node -e "
 const fs = require('fs');
 const gt = require('./data/qmg_ground_truth.json');
@@ -127,51 +118,129 @@ console.log('TOTAL: '+totalHit+'/'+totalGT+' ('+Math.round(100*totalHit/totalGT)
 "
 ```
 
-## File locations
+---
 
-| File | Location |
-|------|----------|
-| GT file | `data/qmg_ground_truth.json` |
-| 2022-era videos | `data/video_pipeline/downloads_1080p/` (720p files on disk despite dir name) |
-| 2023-era videos | `data/video_pipeline/downloads_1080p/` |
-| Scan output | `data/video_ocr_probe/qmg-easyocr-YYYYMMDD/ocr_probe/logs/` |
+## Remaining Dates to Scan (16 total)
 
-## Date ranges
+| Date | Video File | Notes |
+|------|-----------|-------|
+| 20220414 | `downloads_1080p/20220414_mKkOtiFjc_E.mp4` | 2022-era |
+| 20220418 | `downloads_1080p/20220418_KQplQq01oy0.mp4` | 2022-era |
+| 20220419 | `downloads_1080p/20220419_yn2pIMXdFg8.mp4` | 2022-era |
+| 20220421 | `downloads_1080p/20220421_BMl5Ml24crg.mp4` | 2022-era |
+| 20220425 | `downloads_1080p/20220425_s6jdpRmrGck.mp4` | 2022-era |
+| 20220426 | `downloads_1080p/20220426_uDfm0ClZ8yE.mp4` | 2022-era |
+| 20220428 | `downloads_1080p/20220428_PquLytys1k4.mp4` | 2022-era |
+| 20220506 | `downloads_1080p/20220506_NtIRVae1Igo.mp4` | 2022-era |
+| 20220510 | `downloads_1080p/20220510_3ZRiHbMRr0w.mp4` | 2022-era |
+| 20220517 | `downloads_1080p/20220517_eX7XDCdoa0c.mp4` | 2022-era |
+| 20220606 | `downloads_1080p/20220606_Axs8VyUKFRk.mp4` OR `20220606_ST8lvpOVjeM.mp4` OR `20220606_aaIlqb7HUJQ.mp4` | Has 3 files — scan ALL 3 |
+| 20220614 | `downloads_1080p/20220614_faG8Mb_tV9g.mp4` | 2022-era |
+| 20220323 | `downloads_1080p/20220323_Xsk8dD6eoEA.mp4` | Low-CPU machine did 64% |
+| 20221117 | `downloads_1080p/20221117_sN_vorSS83c.mp4` | Late 2022-era |
+| 20230601 | `downloads_1080p/20230601_1HFPeLD2zwc.mp4` | 2023-era, wide crop + temporal-decay=0 |
 
-| Era | Dates | temporal-decay |
-|-----|-------|---------------|
-| 2022-era (pre-mid-2023) | 20220218 – 20220517 | 1800 (boost early frames) |
-| 2023-era (mid-2023+) | 20230518 – 20230609 | 0 (no bias) |
+### Notes on 20220606
+There are 3 video files for 20220606. Run all 3:
+```bash
+node tools/runQmgOcrBatch.js \
+  --dates 20220606,20220606b,20220606c \
+  --parallel 4
+```
 
-The batch script applies the correct `--temporal-decay` automatically per date.
+### Notes on 20230601
+This is a 2023-era date — it needs:
+- Wide crop: `--phash-region-fraction 0.83,0.55,0.17,0.45`
+- No temporal decay: `--temporal-decay 0`
+
+The batch runner applies these automatically via `WIDE_CROP_DATES`.
+
+---
+
+## Already Scanned (26 dates)
+
+| Date | Score | Source |
+|------|-------|--------|
+| 20220218 | 6/10 (60%) | Prior run |
+| 20220222 | 4/7 (57%) | Prior run |
+| 20220223 | ~5/11 (45%) | Prior run |
+| 20220301 | 4/11 (36%) | Prior run |
+| 20220302 | ~4/7 (57%) | Prior run |
+| 20220318 | ~4/7 (57%) | Prior run |
+| 20220321 | ~4/8 (50%) | Prior run |
+| **20220323** | **7/11 (64%)** | Low-CPU machine |
+| 20220330 | 6/8 (75%) | Prior run |
+| 20220331 | 5/8 (63%) | Prior run |
+| 20220405 | 6/11 (55%) | Prior run |
+| 20220406 | 4/8 (50%) | Prior run |
+| **20220412** | **7/11 (64%)** | Low-CPU machine |
+| 20220413 | ~5/11 (45%) | Prior run |
+| 20220427 | ~2/3 (67%) | Prior run |
+| 20220429 | ~2/5 (40%) | Prior run |
+| 20220607 | 4/7 (57%) | Prior run |
+| 20220608 | 4/9 (44%) | Prior run |
+| 20221104 | 1/1 (100%) | Prior run |
+| 20230126 | 3/8 (38%) | Prior run |
+| 20230518 | 5/8 (63%) | Prior run |
+| 20230522 | 3/7 (43%) | Prior run |
+| 20230523 | 5/11 (45%) | Prior run |
+| 20230602 | 5/12 (42%) | Prior run |
+| 20230605 | 7/11 (64%) | Prior run |
+| 20230608 | 2/13 (15%) | Prior run |
+| 20230609 | 5/13 (38%) | Prior run |
+
+**Low-CPU machine results (2022-era, 5 dates):** 29/49 = 59%
+
+---
+
+## Flag Settings
+
+| Era | Dates | temporal-decay | Crop |
+|-----|-------|---------------|------|
+| 2022-era | 20220218 – 20220517 | 1800 (boost early) | Default (0.86,0.55,0.14,0.45) |
+| 2023-era | 20230518 – 20230609 | 0 (no bias) | Wide (0.83,0.55,0.17,0.45) |
+
+The batch runner (`runQmgOcrBatch.js`) applies the correct flags automatically.
+
+Default EasyOCR settings used:
+- `--max-captures 3 --batch-snapshots --batch-count 5 --batch-window 4`
+- `--fps 0.25 --prefilter-max-frames 12`
+- `--ocr-engine easyocr`
+
+---
 
 ## Common commands
 
 ```bash
-# Run specific dates
-node tools/runQmgOcrBatch.js --dates 20220302,20220318,20220321,20220405,20220406 --parallel 4
+# Chunk 1 (4 dates)
+node tools/runQmgOcrBatch.js \
+  --dates 20220414,20220418,20220419,20220421 \
+  --parallel 4
 
-# Run next chunk
-node tools/runQmgOcrBatch.js --chunk 2 --parallel 4
+# Chunk 2 (4 dates)
+node tools/runQmgOcrBatch.js \
+  --dates 20220425,20220426,20220428,20220506 \
+  --parallel 4
 
-# Dry run (shows what would run)
+# Chunk 3 (4 dates)
+node tools/runQmgOcrBatch.js \
+  --dates 20220510,20220517,20220606,20220614 \
+  --parallel 4
+
+# Chunk 4 (4 dates, 20220606x3 + 2023-era + late 2022)
+node tools/runQmgOcrBatch.js \
+  --dates 20220323,20220606,20220606b,20220606c,20221117,20230601 \
+  --parallel 4
+
+# Dry run (verify what would run)
 node tools/runQmgOcrBatch.js --all-unscanned --parallel 4 --dry-run
-
-# Run a single video directly (no batch runner)
-KMP_DUPLICATE_LIB_OK=TRUE node tools/scanVideoWithOcr.js \
-  --video data/video_pipeline/downloads_1080p/20220302_BAlC_cRvESM.mp4 \
-  --date 20220302 --run-tag qmg-easyocr-YYYYMMDD \
-  --prefilter-profile chart_stream --chart-stream-parser \
-  --basename qmg --output-kind snapshot \
-  --ocr-engine easyocr \
-  --fps 0.25 --prefilter-max-frames 12 --max-captures 3 \
-  --batch-snapshots --batch-count 5 --batch-window 4 \
-  --temporal-decay 1800
 ```
+
+---
 
 ## Notes
 
-- 2022-era videos on disk are actually 720p (1280×720) despite being in `downloads_1080p/`
-- 2023-era dates need wide crop (`--phash-region-fraction 0.83,0.55,0.17,0.45`) — batch applies this automatically
-- EasyOCR takes ~60s/frame on CPU; with full CPU, `--max-captures 3 --batch-count 5` finishes in ~10-15 min/video
-- With 4 parallel workers, expect ~5-10 videos per hour
+- 2022-era videos are in `downloads_1080p/` but are actually 720p (1280×720) on disk
+- EasyOCR takes ~60s/frame on CPU; with `--max-captures 3 --batch-count 5` expect ~10-15 min/video
+- With 4 parallel workers, each chunk of 4 dates finishes in ~15-20 min
+- 20220606 has 3 video files — all need scanning to cover the full stream
