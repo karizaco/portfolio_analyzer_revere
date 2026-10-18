@@ -152,6 +152,23 @@ Running `tools/scanAllGtVideos.js` or `tools/scanVideoWithOcr.js` against Quulla
 - **Do NOT `ls` or `Read` `data/video_scan_test/_rerun/` directly** — those directories hold hundreds-to-thousands of PNGs each. Use `Glob` with a pattern or delegate to an Explore agent. Listing them bloats context.
 - **Do NOT run `tools/retry_age_restricted.py` without explicit user confirmation** — 138 sequential `yt-dlp` subprocesses, ~3.5 h worst case.
 
+### EasyOCR — ALWAYS use `--low-cpu`
+
+EasyOCR uses PyTorch + OpenCV + NumPy, each spawning multi-threaded thread pools. **Without `--low-cpu`, parallel scans saturate all CPU cores**, causing 10× slowdown (60s/frame → 600s/frame) and system freeze.
+
+**Every EasyOCR command MUST include `--low-cpu`:**
+
+```bash
+# Batch runner
+node tools/runQmgOcrBatch.js --dates d1,d2,... --low-cpu --parallel 4
+
+# Individual scan
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 KMP_DUPLICATE_LIB_OK=TRUE \
+  node tools/scanVideoWithOcr.js ... --ocr-engine easyocr
+```
+
+`--low-cpu` in `runQmgOcrBatch.js` enforces `OMP_NUM_THREADS=1`, `MKL_NUM_THREADS=1`, `KMP_DUPLICATE_LIB_OK=TRUE` and caps parallelism at `--parallel 2` max. There is no acceptable reason to omit it — the machine will freeze.
+
 ---
 
 ## Data folder policy

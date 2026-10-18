@@ -38,7 +38,7 @@ const DEFAULT_FLAGS = [
   '--batch-snapshots',
   '--batch-count', '8',
   '--batch-window', '4',
-  '--temporal-decay', '0',   // Disable temporal boost — was causing intro cards at ts=2 to beat position-list frames at ts=158
+  '--temporal-decay', '1800', // Boost early frames — verified better on 20220218 (6/10 vs 4/7)
 ];
 
 // 2023-era videos use a wider position-list table that overflows the default crop
@@ -55,11 +55,17 @@ const WIDE_CROP_DATES = new Set([
   '20230623', '20230626', '20230627', '20230628', '20230629', '20230630',
 ]);
 
+// 2022-era (pre-mid-2023): position lists appear early in the stream (ts=40-390).
+// 2023-era (mid-2023+): position lists appear later (ts=1940-5627).
+// Use --temporal-decay 1800 for 2022-era (boost early frames) and
+// --temporal-decay 0 for 2023-era (no bias, let prefilter score decide).
 function getFlagsForDate(dateKey) {
   const extraFlags = [];
   if (WIDE_CROP_DATES.has(dateKey)) {
     extraFlags.push('--phash-region-fraction', '0.83,0.55,0.17,0.45');
+    extraFlags.push('--temporal-decay', '0'); // 2023-era: position list appears late
   }
+  // 2022-era gets the default --temporal-decay 1800 from DEFAULT_FLAGS
   return extraFlags;
 }
 
