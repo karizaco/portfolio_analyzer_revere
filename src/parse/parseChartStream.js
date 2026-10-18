@@ -122,10 +122,18 @@ function hasPriceNear(ocrText, ticker) {
   // (the OCR frequently splits dollar prices from the symbol, e.g. "GOVX | +1827%").
   // Supports both dot-decimals (14.86) and comma-decimals (7,36) which EasyOCR
   // commonly produces on non-US keyboards.
+  // Supports:
+  //   $412       — dollar amount
+  //   14.86      — dot-decimal (US format)
+  //   7,36       — comma-decimal (European format, no trailing decimal)
+  //   7,36.50    — comma-decimal with trailing decimal
+  //   +1827%     — percent change
+  //   HIGH/LOW/CLOSE/etc. — financial keywords
   const proximityPattern = new RegExp(
     `\\b${ticker}\\b[^A-Z0-9.]{0,25}(`
       + `\\$\\s*\\d|`
-      + `\\d[\\d,]*(?:\\.\\d+)?|`
+      + `\\d+(?:[.,]\\d+)+(?:\\.\\d+)?|`
+      + `\\b\\d{4,6}\\b|`                       // bare 4-6 digit price (e.g. 28M → 28M is not, but 28 alone could be)
       + `\\b(?:HIGH|LOW|CLOSE|TARGET|STOP|BID|ASK)\\b|`
       + `[+-]\\d[\\d,]*(?:\\.\\d+)?%`
       + `)`,
@@ -560,8 +568,19 @@ function parseChartStreamPositionList({ ocr } = {}) {
       const lineHeight = lineHeights.length
         ? lineHeights[Math.floor(lineHeights.length / 2)]
         : 20;  // fallback for sparse words
-      const yMin = yMedian - 2 * lineHeight;
-      const yMax = yMedian + 2 * lineHeight;
+      // Position lists are sorted by market cap (largest → smallest, top → bottom
+      // of the UI panel). The tickers form a contiguous vertical stack with
+      // roughly equal spacing. A ±2×lineHeight range is only ~112px (2×56px)
+      // which is too tight — the median-centered range clips the TOP 1-2 rows
+      // and BOTTOM 1-2 rows of the position list, losing 15-25% of tickers.
+      // Widen to ±8×lineHeight (~448px for lineHeight=56). Calibrated on the
+      // 20230518 case where position-list tickers span 744-1314px (PLTR at the
+      // top, APLD at the bottom) — ±8× gives yMin=665, yMax=1561, accepting
+      // all GT tickers in that video. This comfortably covers 10+ row position
+      // lists. The risk is allowing chart-area bleed FPs, which the lexicon
+      // filter and clusterer handle.
+      const yMin = yMedian - 8 * lineHeight;
+      const yMax = yMedian + 8 * lineHeight;
       const withinBbox = new Set();
       for (const { ticker, yCenter } of acceptedBboxes) {
         if (yCenter >= yMin && yCenter <= yMax) {

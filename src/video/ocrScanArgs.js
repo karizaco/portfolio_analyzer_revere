@@ -40,6 +40,7 @@ function printHelp() {
     '  --review-threshold <n>     Review score threshold, default 4',
     '  --max-captures <n>         Maximum screenshots to save per video, default 3',
     '  --cluster-min-frequency <n> Minimum per-canonical frame count for multi-frame OCR token voting, default 1 (set to 2 to filter single-frame garbles)',
+    '  --position-merge-min-occurrences <n>  Min capture count for position merge, default 1 (set to 2 for intersection mode)',
     '  --progress-interval <n>    Report OCR progress every N frames, default 10',
     '  --batch-snapshots          Extract a batch of N frames within ±W seconds of the best-scoring frame. All frames show the same position list state, so multi-frame merge is valid. Use with --batch-count and --batch-window.',
     '  --batch-count <n>          Number of frames in the batch (default 5)',
@@ -128,6 +129,7 @@ function buildDefaultOptions(defaultOutputRoot) {
     fps: 0.25,
     maxCapturesPerVideo: 3,
     ocrEngine: 'tesseract',
+    positionMergeMinOccurrences: 1,
     ocrFrameWidth: 1280,
     outputKind: 'whiteboard',
     outputRoot: defaultOutputRoot,
@@ -242,6 +244,10 @@ function parseArgs(argv, overrides = {}) {
         break;
       case '--cluster-min-frequency':
         options.clusterMinFrequency = Number(nextValue);
+        index += 1;
+        break;
+      case '--position-merge-min-occurrences':
+        options.positionMergeMinOccurrences = Number(nextValue);
         index += 1;
         break;
       case '--batch-snapshots':
@@ -369,6 +375,10 @@ function parseArgs(argv, overrides = {}) {
     throw new Error('`--cluster-min-frequency` must be an integer >= 1.');
   }
 
+  if (!Number.isFinite(options.positionMergeMinOccurrences) || !Number.isInteger(options.positionMergeMinOccurrences) || options.positionMergeMinOccurrences < 1) {
+    throw new Error('`--position-merge-min-occurrences` must be an integer >= 1.');
+  }
+
   if (!Number.isFinite(options.confusionRadius) || options.confusionRadius < 0) {
     throw new Error('`--confusion-radius` must be zero or a positive number.');
   }
@@ -377,8 +387,8 @@ function parseArgs(argv, overrides = {}) {
     throw new Error(`Unsupported OCR engine: ${options.ocrEngine}. Use 'tesseract' or 'easyocr'.`);
   }
 
-  if (!Number.isFinite(options.temporalDecay) || options.temporalDecay <= 0) {
-    throw new Error('`--temporal-decay` must be a positive number of seconds.');
+  if (!Number.isFinite(options.temporalDecay) || options.temporalDecay < 0) {
+    throw new Error('`--temporal-decay` must be a non-negative number of seconds (0 to disable the boost).');
   }
 
   if (!Number.isFinite(options.phashHammingMax) || options.phashHammingMax < 0 || options.phashHammingMax > 64) {
