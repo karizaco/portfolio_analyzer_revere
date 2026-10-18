@@ -25,10 +25,6 @@
     "9": {
       "tickers": ["KOLD"],
       "crop": [1776, 653, 1916, 1023]
-    },
-    "7": {
-      "tickers": ["FAULL", "LABU", "NUGT", "SOXL", "UVXY", "WEAT"],
-      "crop": [1776, 653, 1916, 1023]
     }
   },
   "20220428": {
@@ -334,7 +330,7 @@
   "20220218": {
     "0": ["UPST","DVN","NRGU","MOS","TQQQ","TSLA","FCX","DWAC","COPX"],
     "1": ["ROKU","TQQQ","TSLA","FCX","COPX","MOS","NRGU","DWAC","DVN"],
-    "2": ["UPST","DVN","NRGU","MOS","TQQQ","TSLA","DCX","DWAC","COPX"]
+    "2": ["UPST","DVN","NRGU","MOS","TQQQ","TSLA","DWAC","COPX"]
   },
   "20220318": {
     "0": ["NUGT","FCX","REGN","URA","COPX","URNM","KWEB"]
@@ -351,7 +347,7 @@
   "20220222": {
     "0": ["NRGU","DVN","MOS","COPX","TQQQ","FCX","TSLA"],
     "1": ["NRGU","DVN","MOS","COPX","TQQQ","FCX","TSLA"],
-    "2": ["NDGU","DVN","MOS","COPX","TQQQ","FCX","TSLA"]
+    "2": ["NRGU","DVN","MOS","COPX","TQQQ","FCX","TSLA"]
   },
   "20220301": {
     "0": ["IBKR","CRH","XLV","KRE","MP","NUGT","EDV","RSX","FCX","VLO","COPX"]
@@ -430,6 +426,9 @@
     "20220614": "captures 0/1 have [UVXY, VLO, UCO]. capture 2 has only [VLO, UCO] — UVXY was dropped (likely closed before capture).",
     "20220330": "8 GT tickers consistent",
     "20220405": "11 GT tickers — GGPI/NEM rare tickers; OCR-difficult",
-    "20230522": "7 GT tickers (LI, IMGN, SOUN, AI, CVNA, APLD, PLTR) — AI/SOUN/IMGN newer tickers, OCR-difficult"
-  }
+    "20230522": "7 GT tickers (LI, IMGN, SOUN, AI, CVNA, APLD, PLTR) — AI/SOUN/IMGN newer tickers, OCR-difficult",
+    "20230602": "15 GT tickers — IOT/ARQQ/RGTI/GSIT are newer tickers",
+    "20230608": "13 GT tickers — CVNA/QBTS/RGTI/GTLB/GSIT newer tickers, OCR-difficult"
+  },
+  "_gt_corrections": "2024-10-17: Removed phantom DCX from 20220218[2]. Fixed NDGU→NRGU in 20220222[2]. Removed hallucination FAULL from 20220427[7] (capture 7 is not a valid QMG position list frame)."
 }

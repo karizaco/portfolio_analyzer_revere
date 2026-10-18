@@ -33,12 +33,35 @@ const DEFAULT_FLAGS = [
   '--output-kind', 'snapshot',
   '--ocr-engine', 'easyocr',
   '--fps', '0.25',
-  '--prefilter-max-frames', '6',
+  '--prefilter-max-frames', '12',
   '--max-captures', '3',
   '--batch-snapshots',
-  '--batch-count', '5',
+  '--batch-count', '8',
   '--batch-window', '4',
+  '--temporal-decay', '0',   // Disable temporal boost — was causing intro cards at ts=2 to beat position-list frames at ts=158
 ];
+
+// 2023-era videos use a wider position-list table that overflows the default crop
+// (x=0.86, w=0.14). The ticker column starts further left, so we widen the crop
+// to capture the full table. Dates confirmed to need wide crop: 20230518, 20230522,
+// 20230523, 20230602, 20230605, 20230608, 20230609. Additional nearby dates are
+// included based on layout era (mid-2023 onward). See qmg_ground_truth.json _meta.
+const WIDE_CROP_DATES = new Set([
+  '20230518', '20230521', '20230522', '20230523', '20230524',
+  '20230525', '20230526', '20230527', '20230531',
+  '20230601', '20230602', '20230605', '20230606', '20230607',
+  '20230608', '20230609', '20230613', '20230614',
+  '20230615', '20230616', '20230620', '20230621', '20230622',
+  '20230623', '20230626', '20230627', '20230628', '20230629', '20230630',
+]);
+
+function getFlagsForDate(dateKey) {
+  const extraFlags = [];
+  if (WIDE_CROP_DATES.has(dateKey)) {
+    extraFlags.push('--phash-region-fraction', '0.83,0.55,0.17,0.45');
+  }
+  return extraFlags;
+}
 
 function parseArgs(argv) {
   const args = {
@@ -272,7 +295,7 @@ async function main() {
     .filter(j => j.video !== null);
 
   const results = await runPool(jobs, parallel, async ({ date, video }, idx) => {
-    return runScan(date, video, runTag);
+    return runScan(date, video, runTag, getFlagsForDate(date));
   });
 
   // Report

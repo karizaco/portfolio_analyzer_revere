@@ -407,7 +407,16 @@ function summarizeLumaBuffer(buffer, width, height) {
         }
         if (rowIndex > 0) {
           const above = buffer[(rowIndex - 1) * width + columnIndex];
+          // Count BOTH dark→bright (top edges of white text) AND
+          // bright→dark (bottom edges). A text row has a top transition
+          // (dark→bright) and a bottom transition (bright→dark). Previously
+          // only top edges were counted, giving rowDensity=3 for any dark
+          // background with some bright pixels. Now we count both to
+          // properly distinguish 3 rows of noise from 12 rows of text.
           if (above <= 110 && value >= 130) {
+            rowTopsByCol[columnIndex] += 1;
+          }
+          if (above >= 130 && value <= 110) {
             rowTopsByCol[columnIndex] += 1;
           }
         }
@@ -573,7 +582,7 @@ function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporal
   // Temporal boost: frames near the start of the stream get a bonus that
   // decays to zero after `temporalDecay` seconds. QMG position lists are
   // most likely to change in the first 20–30 minutes of a stream.
-  if (isFinite(temporalDecay) && temporalDecay > 0 && profile === 'chart_stream') {
+  if (isFinite(temporalDecay) && temporalDecay > 0) {
     const tsCandidate = timestamp !== undefined ? timestamp : (stats && stats.timestamp);
     const ts = Number(tsCandidate);
     if (Number.isFinite(ts)) {

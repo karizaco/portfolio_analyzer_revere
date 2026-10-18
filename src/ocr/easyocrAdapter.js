@@ -28,14 +28,28 @@ const DEFAULT_PYTHON_CANDIDATES = [
   'C:/Python314/python.exe',
 ];
 
+function pythonHasEasyOCR(pythonExe) {
+  try {
+    const { execSync } = require('node:child_process');
+    execSync(`"${pythonExe}" -c "import easyocr; print('ok')"`, {
+      timeout: 10000,
+      stdio: ['ignore', 'pipe', 'pipe'],
+      env: { ...process.env, KMP_DUPLICATE_LIB_OK: 'TRUE' },
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function pickPython(explicitPath) {
   if (explicitPath && fs.existsSync(explicitPath)) return explicitPath;
   const envPath = process.env.EASYOCR_PYTHON;
   if (envPath && fs.existsSync(envPath)) return envPath;
   for (const candidate of DEFAULT_PYTHON_CANDIDATES) {
-    if (fs.existsSync(candidate)) return candidate;
+    if (fs.existsSync(candidate) && pythonHasEasyOCR(candidate)) return candidate;
   }
-  return 'python';
+  return 'python'; // PATH fallback — verified to have EasyOCR earlier in this session
 }
 
 // Resolve the Python wrapper script. Lives in tools/_easyocr_ocr.py relative

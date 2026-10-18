@@ -277,7 +277,7 @@ function nearestKeyframe(ptsList, target) {
   return Math.abs(candidate - target) <= Math.abs(previous - target) ? candidate : previous;
 }
 
-function computeOcrEngineMetadata() {
+function computeOcrEngineMetadata(ocrEngine) {
   let tesseractVersion = 'unknown';
   try {
     tesseractVersion = require('tesseract.js/package.json').version;
@@ -285,6 +285,7 @@ function computeOcrEngineMetadata() {
   }
 
   return {
+    ocr_engine: ocrEngine || 'tesseract',
     tesseract_version: tesseractVersion,
     language: 'eng',
     dpi: 300,
@@ -612,6 +613,8 @@ async function runChartStreamOcr(framePath, phashRegionFraction, scale, ocrEngin
     ocr = adaptToParserSchema(easyResult);
     // Attach the crop width so parseChartStreamPositionList can compute a
     // scale-aware X_POSITION_LIST_MIN threshold for identifyPositionListColumn.
+    // The EasyOCR output is scaled to `Math.round(w * 1920 * EASYOCR_SCALE)` pixels
+    // wide. Use this as the canonical crop width for coordinate scaling.
     ocr._cropWidth = Math.round(w * 1920 * EASYOCR_SCALE);
   } else {
     ocr = await ocrImage(framePath, {
@@ -702,6 +705,9 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     ocrProfile: ocr.profileName,
     ocrText: ocr.text || '',
     ocrTextSnippet: extractOcrTextSnippet(ocr.text),
+    ocrWords: Array.isArray(ocr.words) ? ocr.words.map(({ text, left, top, width, height, conf, line }) => ({
+      text, left, top, width, height, conf, line,
+    })) : [],
     parsed,
     parsedRows: null,
     phash,
@@ -992,6 +998,8 @@ function summarizeCandidate(candidate, outputKind, allCandidates = null, confusi
         // tokens (capped at 30 to keep probe logs small). Both fields were
         // added to the parser output but require explicit propagation here.
         column_filter: candidate.chartStream.column_filter || null,
+        bbox_filter: candidate.chartStream.bbox_filter || null,
+        panel_gate: candidate.chartStream.panel_gate || null,
         tickers_rejected_list: Array.isArray(candidate.chartStream.tickers_rejected_list)
           ? candidate.chartStream.tickers_rejected_list
           : []
@@ -1014,6 +1022,7 @@ function summarizeCandidate(candidate, outputKind, allCandidates = null, confusi
     ocr_profile: candidate.ocrProfile || '',
     ocr_text: candidate.ocrText || '',
     ocr_text_snippet: candidate.ocrTextSnippet || '',
+    ocr_words: candidate.ocrWords || [],
     output_kind: outputKind,
     parsed_observations: parsedObservations,
     parsed_row_count: parsedRows.length || (candidate.parsed ? 1 : 0),
@@ -1161,7 +1170,7 @@ async function main() {
     video_path: videoPath
   };
 
-  const ocrEngineMetadata = computeOcrEngineMetadata();
+  const ocrEngineMetadata = computeOcrEngineMetadata(options.ocrEngine);
   let keyframePtsList = [];
   let keyframeLookupSkipped = Boolean(options.skipKeyframes);
   if (!keyframeLookupSkipped) {
@@ -1443,7 +1452,7 @@ async function main() {
           // (unchanged by the clusterer override above for whiteboard mode).
           raw = mergeMultiplePositionLists(
             captureSummaries.map((c) => c.tickers || []),
-            { minOccurrences: 1 }
+            { minOccurrences: options.positionMergeMinOccurrences }
           );
         }
         return raw.filter((t) => !TICKER_BLOCKLIST.has(t));
