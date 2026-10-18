@@ -209,6 +209,41 @@ to prune old probe and scan subdirectories, keeping only the 3 most-recent per f
 
 ---
 
+## QMG OCR batch processing runbook
+
+Use `tools/runQmgOcrBatch.js` to process multiple videos with EasyOCR. Each video gets
+automatically-tuned `--temporal-decay` and `--phash-region-fraction` per date range.
+
+### Run in chunks of 5 (never all at once — monitor each chunk before continuing)
+
+```bash
+# Sync videos + data from remote machine first, then:
+
+# Chunk 1
+node tools/runQmgOcrBatch.js --dates 20220414,20220418,20220419,20220421 --parallel 4
+
+# Chunk 2
+node tools/runQmgOcrBatch.js --dates 20220425,20220426,20220428,20220506 --parallel 4
+
+# Chunk 3
+node tools/runQmgOcrBatch.js --dates 20220510,20220517,20220606,20220614 --parallel 4
+
+# Chunk 4
+node tools/runQmgOcrBatch.js --dates 20220323,20220606,20220606b,20220606c,20221117,20230601 --parallel 4
+```
+
+After each chunk completes, check for orphans before continuing:
+```bash
+tasklist | findstr ffmpeg.exe
+tasklist | findstr node.exe
+# Kill any orphans before next chunk
+```
+
+Results go to `data/video_ocr_probe/qmg-easyocr-YYYYMMDD/`. Rsync back to this machine
+for local scoring with `data/compile_results.js`.
+
+---
+
 ## Codebase map
 
 ### Entry points
