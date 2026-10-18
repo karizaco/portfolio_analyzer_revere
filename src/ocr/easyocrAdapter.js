@@ -77,8 +77,8 @@ function runEasyOcr(imagePath, options = {}) {
     child.stderr.on('data', (d) => { stderr += d.toString(); });
     const killTimer = setTimeout(() => {
       child.kill('SIGTERM');
-      reject(new Error(`EasyOCR timeout after ${options.timeoutMs || 180000}ms\nstderr: ${stderr}`));
-    }, options.timeoutMs || 180000);
+      reject(new Error(`EasyOCR timeout after ${options.timeoutMs || 600000}ms\nstderr: ${stderr}`));
+    }, options.timeoutMs || 600000);
     child.on('close', (code) => {
       clearTimeout(killTimer);
       if (code !== 0) {
