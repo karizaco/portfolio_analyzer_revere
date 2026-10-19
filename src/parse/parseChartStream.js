@@ -637,15 +637,14 @@ function parseChartStreamPositionList({ ocr } = {}) {
         : 20;  // fallback for sparse words
       // Position lists are sorted by market cap (largest → smallest, top → bottom
       // of the UI panel). The tickers form a contiguous vertical stack with
-      // roughly equal spacing. A ±2×lineHeight range is only ~112px (2×56px)
-      // which is too tight — the median-centered range clips the TOP 1-2 rows
-      // and BOTTOM 1-2 rows of the position list, losing 15-25% of tickers.
-      // Widen to ±8×lineHeight (~448px for lineHeight=56). Calibrated on the
-      // 20230518 case where position-list tickers span 744-1314px (PLTR at the
-      // top, APLD at the bottom) — ±8× gives yMin=665, yMax=1561, accepting
-      // all GT tickers in that video. This comfortably covers 10+ row position
-      // lists. The risk is allowing chart-area bleed FPs, which the lexicon
-      // filter and clusterer handle.
+      // roughly equal spacing. Use ±8×lineHeight (~448px for lineHeight=56)
+      // as the accept range around the median y-center. Calibrated on the 20230518
+      // case where position-list tickers span 744-1314px (PLTR at top, APLD at
+      // bottom) — ±8× gives yMin=665, yMax=1561, accepting all GT tickers.
+      // A tighter ±2× range (~112px) clipped the top and bottom rows of the
+      // position list, losing 15-25% of tickers. The wider range comfortably
+      // covers 10+ row position lists. Chart-area bleed FPs that land outside
+      // this range are handled by the lexicon filter and clusterer.
       const yMin = yMedian - 8 * lineHeight;
       const yMax = yMedian + 8 * lineHeight;
       const withinBbox = new Set();

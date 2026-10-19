@@ -1400,7 +1400,7 @@ async function main() {
       // single-frame OCR garbles (VIO→VLO, NFU→NFLX, INA→TNA, BUCO→UCO)
       // and chart-area tickers that bleed in briefly. Override via
       // --cluster-min-frequency <n> (1 disables the filter).
-      { maxDistance: 1, minTokenLength: 2, minFrequency: options.clusterMinFrequency || 1 }
+      { maxDistance: 1, minTokenLength: 2, minFrequency: options.clusterMinFrequency || 2 }
     );
     // Override captures' tickers with clusterer's output ONLY for chart_stream
     // mode (QMG). For whiteboard mode (Revere), the structured GRO/TURBO

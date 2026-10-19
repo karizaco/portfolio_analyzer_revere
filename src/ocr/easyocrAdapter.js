@@ -132,7 +132,8 @@ function adaptToParserSchema(easyocrResult) {
     })),
     confidence,
     _engine: 'easyocr',
+    // cropWidth used by identifyPositionListColumn in parseChartStream.js to scale
+    // X_POSITION_LIST_MIN. EasyOCR crops to 1340px wide; Tesseract 3x-crop is 750px.
+    _cropWidth: 1340,
   };
 }
-
-module.exports = { runEasyOcr, adaptToParserSchema, pickPython, resolveWrapperPath };
