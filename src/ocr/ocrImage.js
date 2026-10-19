@@ -1,10 +1,16 @@
+const fs = require('node:fs/promises');
+const os = require('node:os');
+const path = require('node:path');
 const sharp = require('sharp');
 const Tesseract = require('tesseract.js');
 const { TEXT_DENSITY_KEYWORDS } = require('../video/ocrScanLogic');
+const { parseChartStreamPositionList } = require('../parse/parseChartStream');
+const { adaptToParserSchema, runEasyOcr } = require('./easyocrAdapter');
 
 const createWorker = Tesseract.createWorker;
 const BOTTOM_CROP_RATIO = 0.7;
 const OCR_DPI = 300;
+const TICKER_STRIP_RELATIVE_REGION = Object.freeze({ x: 0.24, y: 0.02, w: 0.70, h: 0.92 });
 
 let workerPromise;
 
@@ -50,13 +56,29 @@ function findKeywords(text) {
   return found;
 }
 
+function composeRelativeRegion(outerRegion, innerRegion) {
+  if (!outerRegion) return innerRegion || null;
+  if (!innerRegion) return outerRegion;
+  return {
+    x: outerRegion.x + outerRegion.w * innerRegion.x,
+    y: outerRegion.y + outerRegion.h * innerRegion.y,
+    w: outerRegion.w * innerRegion.w,
+    h: outerRegion.h * innerRegion.h,
+  };
+}
+
 async function preprocessImage(filePath, profileName, preprocessOptions = {}) {
   // overlayScale default raised from 3 → 5 (2026-09-25): the maxcrop test showed
   // 5x scale + black padding + sharpen 2.0 lifts Tesseract recall ~5pp on dense
   // position lists. Larger image = more pixels per character for Tesseract.
   // EasyOCR also benefits from the same preprocessing (negate, contrast, etc.)
   // when running on QMG chart-stream content.
-  const { overlayRegion = null, overlayScale = 5 } = preprocessOptions;
+  const {
+    chartStreamVariant = 'boosted',
+    overlayFocusRegion = null,
+    overlayRegion = null,
+    overlayScale = 5
+  } = preprocessOptions;
   let pipeline = sharp(filePath);
 
   // --- bottom-half profiles (legacy whiteboard) ---
@@ -78,7 +100,8 @@ async function preprocessImage(filePath, profileName, preprocessOptions = {}) {
     const metadata = await pipeline.metadata();
     const width = metadata.width || 0;
     const height = metadata.height || 0;
-    const { x, y, w, h } = overlayRegion;
+    const resolvedOverlayRegion = composeRelativeRegion(overlayRegion, overlayFocusRegion);
+    const { x, y, w, h } = resolvedOverlayRegion;
     // Convert fractional coords to absolute pixels
     const left = Math.round(x * width);
     const top = Math.round(y * height);
@@ -96,14 +119,29 @@ async function preprocessImage(filePath, profileName, preprocessOptions = {}) {
       .extract({ left, top, width: cropW, height: cropH })
       .resize(Math.round(cropW * overlayScale), Math.round(cropH * overlayScale), { kernel: 'lanczos3' })
       .grayscale()
-      .negate()   // invert: white-on-dark → black-on-white
-      .linear(1.8, -64)  // contrast boost first
-      .normalize()         // then stretch to full range
-      .sharpen({ sigma: 2.0 })
-      .extend({
-        top: 100, bottom: 100, left: 100, right: 100,
-        background: { r: 0, g: 0, b: 0 }
-      });
+      .negate();   // invert: white-on-dark → black-on-white
+    if (chartStreamVariant === 'binary') {
+      pipeline = pipeline
+        .linear(2.2, -96)
+        .normalize()
+        .median(1)
+        .threshold(168)
+        .sharpen({ sigma: 1.4 });
+    } else if (chartStreamVariant === 'highcontrast') {
+      pipeline = pipeline
+        .linear(2.5, -110)
+        .normalize()
+        .sharpen({ sigma: 2.4 });
+    } else {
+      pipeline = pipeline
+        .linear(1.8, -64)  // contrast boost first
+        .normalize()       // then stretch to full range
+        .sharpen({ sigma: 2.0 });
+    }
+    pipeline = pipeline.extend({
+      top: 100, bottom: 100, left: 100, right: 100,
+      background: { r: 0, g: 0, b: 0 }
+    });
     return pipeline
       .withMetadata({ density: OCR_DPI })
       .png()
@@ -196,6 +234,8 @@ function parseTsvWords(tsvString) {
   }
   const out = [];
   const lines = tsvString.split('\n');
+  const lineIndexByKey = new Map();
+  let nextLineIndex = 0;
   for (let i = 1; i < lines.length; i += 1) {
     const line = lines[i];
     if (!line || !line.trim()) continue;
@@ -204,11 +244,20 @@ function parseTsvWords(tsvString) {
     if (Number(cols[0]) !== 5) continue;
     const text = (cols[11] || '').trim();
     if (!text) continue;
+    const lineKey = `${cols[1]}:${cols[2]}:${cols[3]}:${cols[4]}`;
+    if (!lineIndexByKey.has(lineKey)) {
+      lineIndexByKey.set(lineKey, nextLineIndex);
+      nextLineIndex += 1;
+    }
     out.push({
+      block: Number(cols[2]),
       conf: Number(cols[10]),
       height: Number(cols[9]),
       left: Number(cols[6]),
-      line: Number(cols[4]),
+      line: lineIndexByKey.get(lineKey),
+      lineKey,
+      lineNumber: Number(cols[4]),
+      paragraph: Number(cols[3]),
       text,
       top: Number(cols[7]),
       width: Number(cols[8])
@@ -233,6 +282,23 @@ async function runProfile(worker, filePath, profileName, preprocessOptions) {
     text,
     words: parseTsvWords(result.data.tsv)
   };
+}
+
+function scoreChartStreamOcrCandidate(result) {
+  const parsed = parseChartStreamPositionList({ ocr: result });
+  const positionCount = Array.isArray(parsed.position_list) ? parsed.position_list.length : 0;
+  const inColumnCount = parsed.column_filter && Number.isFinite(parsed.column_filter.in_list_token_count)
+    ? parsed.column_filter.in_list_token_count
+    : 0;
+  const score = (
+    positionCount * 20
+    + (parsed.confidence || 0) * 10
+    + (parsed.price_action ? 4 : 0)
+    + Math.min(inColumnCount, 6) * 2
+    + Number(result.confidence || 0) / 25
+    - Number(parsed.tickers_rejected || 0) * 0.25
+  );
+  return { parsed, score };
 }
 
 /**
@@ -266,14 +332,15 @@ async function preprocessChartStreamToBuffer(filePath, preprocessOptions = {}) {
  * Returns: Buffer (PNG).
  */
 async function preprocessChartStreamRawToBuffer(filePath, preprocessOptions = {}) {
-  const { overlayRegion = null, overlayScale = 5 } = preprocessOptions;
+  const { overlayFocusRegion = null, overlayRegion = null, overlayScale = 5 } = preprocessOptions;
   if (!overlayRegion) {
     throw new Error('preprocessChartStreamRawToBuffer requires overlayRegion');
   }
   const metadata = await sharp(filePath).metadata();
   const width = metadata.width || 0;
   const height = metadata.height || 0;
-  const { x, y, w, h } = overlayRegion;
+  const resolvedOverlayRegion = composeRelativeRegion(overlayRegion, overlayFocusRegion);
+  const { x, y, w, h } = resolvedOverlayRegion;
   const left = Math.round(x * width);
   const top = Math.round(y * height);
   const cropW = Math.round(w * width);
@@ -285,20 +352,122 @@ async function preprocessChartStreamRawToBuffer(filePath, preprocessOptions = {}
     .toBuffer();
 }
 
-async function ocrImage(filePath, preprocessOptions = {}) {
-  const worker = await getWorker();
+async function runEasyOcrFromBuffer(buffer, tempPrefix, options = {}) {
+  const tempPath = path.join(
+    os.tmpdir(),
+    `${tempPrefix}_${process.pid}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.png`
+  );
+  await fs.writeFile(tempPath, buffer);
+  try {
+    const easyResult = await runEasyOcr(tempPath, options);
+    return adaptToParserSchema(easyResult);
+  } finally {
+    try { await fs.unlink(tempPath); } catch (_) { /* ignore cleanup failure */ }
+  }
+}
 
+async function buildTickerStripOcr(worker, filePath, preprocessOptions = {}) {
+  const baseOptions = {
+    ...preprocessOptions,
+    overlayFocusRegion: TICKER_STRIP_RELATIVE_REGION,
+  };
+  const stripVariants = ['binary', 'highcontrast'];
+  const results = [];
+  for (const variant of stripVariants) {
+    const result = await runProfile(worker, filePath, 'chart-stream', {
+      ...baseOptions,
+      chartStreamVariant: variant,
+      overlayScale: Math.max(8, Number(preprocessOptions.overlayScale) || 8),
+    });
+    const alphaChars = (String(result.text || '').match(/[A-Z]/gi) || []).length;
+    results.push({
+      ...result,
+      _stripScore: alphaChars + Number(result.confidence || 0) / 10,
+      variant: `tesseract-strip-${variant}`,
+    });
+  }
+  results.sort((left, right) => right._stripScore - left._stripScore);
+  return results;
+}
+
+async function ocrImage(filePath, preprocessOptions = {}) {
   // When chartStream mode is active, use the dedicated overlay-crop profile
   if (preprocessOptions.chartStream) {
-    const chartStreamResult = await runProfile(worker, filePath, 'chart-stream', preprocessOptions);
+    if (preprocessOptions.ocrEngine === 'easyocr') {
+      const worker = await getWorker();
+      const rawBuffer = await preprocessChartStreamRawToBuffer(filePath, {
+        ...preprocessOptions,
+        overlayScale: Math.max(5, Number(preprocessOptions.overlayScale) || 5),
+      });
+      const normalized = await runEasyOcrFromBuffer(rawBuffer, 'qmg_chart_stream_easyocr', preprocessOptions.easyOcrOptions || {});
+      const zoomTickerStrips = await buildTickerStripOcr(worker, filePath, {
+        ...preprocessOptions,
+        ocrEngine: 'tesseract',
+      });
+      return {
+        ...normalized,
+        bottomConfidence: 0,
+        bottomProfile: '',
+        bottomText: '',
+        chartStreamVariant: 'easyocr-raw',
+        chartStreamVariantCandidates: [{
+          confidence: normalized.confidence,
+          profileName: 'chart-stream-easyocr',
+          score: normalized.confidence,
+          variant: 'easyocr-raw',
+        }],
+        profileName: 'chart-stream-easyocr',
+        zoomTickerStrip: zoomTickerStrips[0] || null,
+        zoomTickerStrips,
+      };
+    }
+
+    const worker = await getWorker();
+    const chartStreamVariants = preprocessOptions.chartStreamVariants || ['boosted', 'binary', 'highcontrast'];
+    const variantResults = [];
+    for (const variant of chartStreamVariants) {
+      const result = await runProfile(worker, filePath, 'chart-stream', {
+        ...preprocessOptions,
+        chartStreamVariant: variant
+      });
+      const scored = scoreChartStreamOcrCandidate(result);
+      variantResults.push({
+        ...result,
+        chartStreamVariant: variant,
+        chartStreamVariantScore: scored.score,
+        chartStreamVariantPreview: {
+          inListTokenCount: scored.parsed.column_filter ? scored.parsed.column_filter.in_list_token_count : 0,
+          parseStatus: scored.parsed.parse_status,
+          positionCount: Array.isArray(scored.parsed.position_list) ? scored.parsed.position_list.length : 0,
+        }
+      });
+    }
+    variantResults.sort((left, right) => {
+      if (right.chartStreamVariantScore !== left.chartStreamVariantScore) {
+        return right.chartStreamVariantScore - left.chartStreamVariantScore;
+      }
+      return Number(right.confidence || 0) - Number(left.confidence || 0);
+    });
+    const chartStreamResult = variantResults[0];
+    const zoomTickerStrips = await buildTickerStripOcr(worker, filePath, preprocessOptions);
     return {
       ...chartStreamResult,
       bottomConfidence: 0,
       bottomProfile: '',
-      bottomText: ''
+      bottomText: '',
+      zoomTickerStrip: zoomTickerStrips[0] || null,
+      zoomTickerStrips,
+      chartStreamVariantCandidates: variantResults.map((result) => ({
+        confidence: result.confidence,
+        preview: result.chartStreamVariantPreview,
+        profileName: result.profileName,
+        score: result.chartStreamVariantScore,
+        variant: result.chartStreamVariant,
+      }))
     };
   }
 
+  const worker = await getWorker();
   const thresholdResult = await runProfile(worker, filePath, 'threshold', preprocessOptions);
 
   let selectedResult = thresholdResult;
