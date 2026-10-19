@@ -135,7 +135,9 @@ function hasPriceNear(ocrText, ticker) {
       + `\\d+(?:[.,]\\d+)+(?:\\.\\d+)?|`
       + `\\b\\d{4,6}\\b|`                       // bare 4-6 digit price (e.g. 28M → 28M is not, but 28 alone could be)
       + `\\b(?:HIGH|LOW|CLOSE|TARGET|STOP|BID|ASK)\\b|`
-      + `[+-]\\d[\\d,]*(?:\\.\\d+)?%`
+      + `[+-]\\d[\\d,]*%|`                      // percent change with % (e.g. +1827%)
+      + `[+-]\\d[\\d,]*\\b\\|`                  // percent change with | (e.g. +1238| — EasyOCR renders % as |)
+      + `\\|[+-]\\d[\\d,]*%`                    // percent change with | BEFORE ticker (e.g. |+1238%)
       + `)`,
     'i'
   );
