@@ -991,6 +991,7 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
           if (m[i] === corr[i]) sharedPrefix += 1;
         }
         if (sharedPrefix >= 2) { canonical = corr; break; }
+      }
     }
     // Strategy 3: 3-char member with d=1 to the correction
     if (!canonical) {
