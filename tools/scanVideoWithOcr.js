@@ -12,6 +12,9 @@ const {
   parseWhiteboardScreenshot
 } = require('../src/parse/parseWhiteboardScreenshot');
 const {
+  parseWhiteboardScreenshotWithBoxes
+} = require('../src/parse/parseWhiteboardScreenshotWithBoxes');
+const {
   analyzeFrameBeforeOcr,
   allocateOutputPath,
   chooseBestCandidate,
@@ -31,7 +34,7 @@ const { computePerceptualHashOfRegion, computePerceptualHashOfFractionalRegion }
 const { extractTickersFromOcrText } = require('../src/normalize/tickerScan');
 const { createProbeKey, parseArgs, printHelp } = require('../src/video/ocrScanArgs');
 const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
-const { parseChartStreamPositionList, mergeMultiplePositionLists, clusterRawOcrTokens } = require('../src/parse/parseChartStream');
+const { parseChartStreamPositionList, mergeMultiplePositionLists, clusterRawOcrTokens, TICKER_BLOCKLIST } = require('../src/parse/parseChartStream');
 const { runEasyOcr, adaptToParserSchema } = require('../src/ocr/easyocrAdapter');
 const { preprocessChartStreamToBuffer, preprocessChartStreamRawToBuffer } = require('../src/ocr/ocrImage');
 
@@ -274,7 +277,7 @@ function nearestKeyframe(ptsList, target) {
   return Math.abs(candidate - target) <= Math.abs(previous - target) ? candidate : previous;
 }
 
-function computeOcrEngineMetadata() {
+function computeOcrEngineMetadata(ocrEngine) {
   let tesseractVersion = 'unknown';
   try {
     tesseractVersion = require('tesseract.js/package.json').version;
@@ -282,6 +285,7 @@ function computeOcrEngineMetadata() {
   }
 
   return {
+    ocr_engine: ocrEngine || 'tesseract',
     tesseract_version: tesseractVersion,
     language: 'eng',
     dpi: 300,
@@ -607,12 +611,20 @@ async function runChartStreamOcr(framePath, phashRegionFraction, scale, ocrEngin
       try { await fs.unlink(tmpPath); } catch (_) { /* ignore */ }
     }
     ocr = adaptToParserSchema(easyResult);
+    // Attach the crop width so parseChartStreamPositionList can compute a
+    // scale-aware X_POSITION_LIST_MIN threshold for identifyPositionListColumn.
+    // The EasyOCR output is scaled to `Math.round(w * 1920 * EASYOCR_SCALE)` pixels
+    // wide. Use this as the canonical crop width for coordinate scaling.
+    ocr._cropWidth = Math.round(w * 1920 * EASYOCR_SCALE);
   } else {
     ocr = await ocrImage(framePath, {
       chartStream: true,
       overlayRegion: phashRegionFraction,
       overlayScale: scale,
     });
+    // Tesseract crop is extracted from the 1280px-wide prefilter frame at
+    // 3x or 4x scale; use 750 as the canonical Tesseract crop width.
+    ocr._cropWidth = 750;
   }
   const chartStream = parseChartStreamPositionList({ ocr });
   const tickerCount = (chartStream && chartStream.position_list && chartStream.position_list.length)
@@ -693,6 +705,9 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     ocrProfile: ocr.profileName,
     ocrText: ocr.text || '',
     ocrTextSnippet: extractOcrTextSnippet(ocr.text),
+    ocrWords: Array.isArray(ocr.words) ? ocr.words.map(({ text, left, top, width, height, conf, line }) => ({
+      text, left, top, width, height, conf, line,
+    })) : [],
     parsed,
     parsedRows: null,
     phash,
@@ -758,21 +773,34 @@ function scoreChartStreamCandidate(chartStream, ocrConfidence) {
 async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps, stats, prefilterScore, options = {}) {
   const { prefilterProfile = PREFILTER_PROFILE_DEFAULT, phashRegion = null, phashRegionFraction = null } = options;
   const ocr = await ocrImage(framePath);
-  const parsedRows = parseWhiteboardScreenshot({
-    metadata: buildFrameMetadata(framePath, dateKey, frameIndex),
-    ocr
+
+  // Try the bounding-box positional parser first; fall back to text-only if it
+  // returns null (no words data, window detection failed, or no holdings found).
+  const metadata = buildFrameMetadata(framePath, dateKey, frameIndex);
+  const boxedRows = await parseWhiteboardScreenshotWithBoxes({
+    metadata,
+    ocr,
+    framePath
   });
+  const parsedRows = boxedRows || parseWhiteboardScreenshot({ metadata, ocr });
   const scoring = scoreWhiteboardCandidateBreakdown(
     parsedRows,
     ocr.confidence,
     { ...ocr, stats },
     { prefilterProfile }
   );
-  const [phash, phashOverlay, tickers] = await Promise.all([
+  const [phash, phashOverlay] = await Promise.all([
     computePerceptualHash(framePath).catch(() => null),
     computeRegionHash(framePath, phashRegion, phashRegionFraction),
-    Promise.resolve(extractTickersFromOcrText(ocr.text))
   ]);
+
+  // Use tickers from the positional parser (tickers_from_bbox) if available,
+  // otherwise fall back to the clusterer's raw text tickers.
+  const positionalTickers = (parsedRows || [])
+    .flatMap(row => (row.tickers_from_bbox || row.holdings_from_bbox || []));
+  const tickers = positionalTickers.length
+    ? positionalTickers
+    : extractTickersFromOcrText(ocr.text);
 
   return {
     frameIndex,
@@ -795,7 +823,7 @@ async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps, sta
     screenLayout: detectScreenLayout(ocr.text, ocr.lines),
     stats,
     tickers,
-    timestamp: explicitTimestamp != null ? explicitTimestamp : buildFrameTimestamp(frameIndex, fps)
+    timestamp: stats.timestamp != null ? stats.timestamp : buildFrameTimestamp(frameIndex, fps)
   };
 }
 
@@ -942,7 +970,9 @@ function parsedObservationSummary(row) {
     parse_status: row.parse_status || 'unknown',
     issue_codes: splitIssueCodes(row.issue_codes),
     ocr_confidence: Number(row.ocr_confidence || 0),
-    ocr_profile: row.ocr_profile || null
+    ocr_profile: row.ocr_profile || null,
+    // Bounding-box positional tickers (from parseWhiteboardScreenshotWithBoxes)
+    tickers_from_bbox: Array.isArray(row.tickers_from_bbox) ? row.tickers_from_bbox : [],
   };
 }
 
@@ -968,6 +998,8 @@ function summarizeCandidate(candidate, outputKind, allCandidates = null, confusi
         // tokens (capped at 30 to keep probe logs small). Both fields were
         // added to the parser output but require explicit propagation here.
         column_filter: candidate.chartStream.column_filter || null,
+        bbox_filter: candidate.chartStream.bbox_filter || null,
+        panel_gate: candidate.chartStream.panel_gate || null,
         tickers_rejected_list: Array.isArray(candidate.chartStream.tickers_rejected_list)
           ? candidate.chartStream.tickers_rejected_list
           : []
@@ -990,6 +1022,7 @@ function summarizeCandidate(candidate, outputKind, allCandidates = null, confusi
     ocr_profile: candidate.ocrProfile || '',
     ocr_text: candidate.ocrText || '',
     ocr_text_snippet: candidate.ocrTextSnippet || '',
+    ocr_words: candidate.ocrWords || [],
     output_kind: outputKind,
     parsed_observations: parsedObservations,
     parsed_row_count: parsedRows.length || (candidate.parsed ? 1 : 0),
@@ -1129,6 +1162,7 @@ async function main() {
     chart_stream_parser: Boolean(options.chartStreamParser),
     date_key: dateKey,
     output_kind: options.outputKind,
+    pipeline_profile: options.pipelineProfile,
     phash_region: options.phashRegion || null,
     phash_region_fraction: options.phashRegionFraction || null,
     prefilter_profile: options.prefilterProfile,
@@ -1136,7 +1170,7 @@ async function main() {
     video_path: videoPath
   };
 
-  const ocrEngineMetadata = computeOcrEngineMetadata();
+  const ocrEngineMetadata = computeOcrEngineMetadata(options.ocrEngine);
   let keyframePtsList = [];
   let keyframeLookupSkipped = Boolean(options.skipKeyframes);
   if (!keyframeLookupSkipped) {
@@ -1155,6 +1189,8 @@ async function main() {
   } else {
     console.log(`[scan:${options.outputKind}] skipping keyframe lookup (--skip-keyframes)`);
   }
+
+  console.log(`[scan:${options.outputKind}] pipeline profile ${options.pipelineProfile}`);
 
   try {
     console.log(`[scan:${options.outputKind}] preflighting final ${options.outputKind} output extraction`);
@@ -1349,24 +1385,31 @@ async function main() {
     // Use top_candidates (all OCR'd frames, pre-dedup) rather than
     // captureSummaries (post-dedup) so the clusterer sees every frame
     // the OCR pass produced, not just the picked subset.
+    // For snapshot mode (QMG chart_stream): use per-frame position_list
+    // (column-filtered tickers) instead of raw OCR text to avoid chart-area
+    // ticker bleed into the clusterer. Skip frames with no position_list.
+    // For whiteboard mode (Revere): use raw ocr_text as before.
+    const clusterInput = (options.outputKind === 'snapshot')
+      ? (scanResult.topCandidates || [])
+          .filter((c) => Array.isArray(c.chartStream?.position_list) && c.chartStream.position_list.length > 0)
+          .map((c) => c.chartStream.position_list.join(' '))
+      : (scanResult.topCandidates || []).map((c) => c.ocr_text || '');
     const clusterResult = clusterRawOcrTokens(
-      (scanResult.topCandidates || []).map((c) => c.ocr_text || ''),
+      clusterInput,
       // Filter A: per-canonical frame count. Default 2 (was 1). Filters
       // single-frame OCR garbles (VIO→VLO, NFU→NFLX, INA→TNA, BUCO→UCO)
       // and chart-area tickers that bleed in briefly. Override via
       // --cluster-min-frequency <n> (1 disables the filter).
-      { maxDistance: 1, minTokenLength: 2, minFrequency: options.clusterMinFrequency || 2 }
+      { maxDistance: 1, minTokenLength: 2, minFrequency: options.clusterMinFrequency || 1 }
     );
-    // Override captures' tickers with cluster's output. The b2925da
-    // backfill (prior commit) only kicked in when captures were empty,
-    // but in 65 saved snapshots the parser always returned SOMETHING
-    // (often wrong tickers, never empty). Empirically: on the QMG
-    // snapshots, clusterRecall beats CapRecall on 60+ runs (e.g. 20220607
-    // cluster hits 7/7 GT, captures 4/7; 20220608 cluster 9/9, captures 7/9).
-    // Always prefer the cluster when it's non-empty — captures are a per-
-    // frame view, the cluster is a multi-frame consensus, and on noisy
-    // EasyOCR output the consensus is the right answer.
-    if (clusterResult.merged_list.length > 0) {
+    // Override captures' tickers with clusterer's output ONLY for chart_stream
+    // mode (QMG). For whiteboard mode (Revere), the structured GRO/TURBO
+    // parser produces tickers_from_bbox which is the correct signal — the
+    // clusterer runs on full-frame OCR text and produces garbage (55-58
+    // random tickers) that would overwrite the structured holdings.
+    // Note: aggregateScanResults.js reads captures[n].tickers, so the
+    // per-capture tickers_from_bbox is what matters for Revere.
+    if (options.outputKind === 'snapshot' && clusterResult.merged_list.length > 0) {
       for (const cap of captureSummaries) {
         cap.tickers = clusterResult.merged_list.slice();
       }
@@ -1394,14 +1437,26 @@ async function main() {
       top_candidates: scanResult.topCandidates,
       top_rejected_candidates: rejectedForReport.map((candidate) => summarizeCandidate(candidate, options.outputKind)),
       whiteboard_segments: buildWhiteboardSegments(captureSummaries),
-      // Multi-frame merge: union of all selected captures' position lists,
-      // keeping only tickers that appear in >=2 captures. Significantly
-      // improves recall for noisy QMG frames (e.g. 20220606: ALB+TNA on one
-      // frame, CBIO on another — merge captures all three).
-      merged_position_list: mergeMultiplePositionLists(
-        captureSummaries.map((c) => c.tickers || []),
-        { minOccurrences: 2 }
-      ),
+      // Multi-frame merge: for chart_stream (snapshot) mode use the clusterer
+      // (raw OCR token clustering). For whiteboard mode, use the structured
+      // tickers_from_bbox arrays from the GRO/TURBO parser — the clusterer
+      // produces garbage (55-58 random tickers from full-frame OCR) for Revere.
+      merged_position_list: (() => {
+        let raw;
+        if (options.outputKind === 'snapshot' && clusterResult?.merged_list?.length) {
+          raw = clusterResult.merged_list;
+        } else {
+          // For whiteboard (Revere) or when clusterer produced nothing:
+          // use per-capture tickers_from_bbox (GRO/TURBO structured holdings).
+          // captureSummaries[n].tickers holds the parsed tickers for whiteboard
+          // (unchanged by the clusterer override above for whiteboard mode).
+          raw = mergeMultiplePositionLists(
+            captureSummaries.map((c) => c.tickers || []),
+            { minOccurrences: options.positionMergeMinOccurrences }
+          );
+        }
+        return raw.filter((t) => !TICKER_BLOCKLIST.has(t));
+      })(),
       // Multi-frame RAW-OCR token voting. Collects raw ticker-shape tokens
       // from each frame's OCR text (not the parser's accepted list), groups
       // tokens within edit-distance 2 of each other into clusters, picks a

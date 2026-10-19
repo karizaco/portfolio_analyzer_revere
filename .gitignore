@@ -2,6 +2,7 @@ node_modules/
 eng.traineddata
 data/extract_run.log
 data/video_pipeline/
+!data/video_pipeline/state.sqlite
 data/video_pipeline_*/
 data/video_ocr_probe/
 data/my_videos/
@@ -19,3 +20,9 @@ data/video_scan_*/**/ocr_probe/frames/
 data/video_scan_test/
 **/__pycache__/
 data/discord_pipeline/.cache/
+# Bundled binaries
+tools/ffmpeg.exe
+tools/ffprobe.exe
+# Plan files
+*.plan.md
+CLAUDE_RAPPEL_PLAN.md

@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QMG OCR Results — 72 videos</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d; --text: #e6edf3; --text2: #8b949e; --accent: #58a6ff; --green: #4ade80; --yellow: #fbbf24; --red: #f87171; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: "Inter", sans-serif; font-size: 13px; }
+  .header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .header h1 { font-size: 16px; font-weight: 600; }
+  .stat { display: flex; flex-direction: column; gap: 2px; }
+  .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text2); }
+  .stat-value { font-size: 18px; font-weight: 600; font-family: "JetBrains Mono", monospace; }
+  .filters { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 10px 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .filter-group { display: flex; align-items: center; gap: 6px; }
+  .filter-label { font-size: 11px; color: var(--text2); }
+  input, select { background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 4px 8px; border-radius: 4px; font-size: 12px; font-family: inherit; }
+  input { width: 120px; }
+  button { background: none; border: 1px solid var(--border); color: var(--text2); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+  button:hover { background: var(--bg3); color: var(--text); }
+  .badge { display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 11px; font-weight: 500; font-family: "JetBrains Mono", monospace; }
+  .badge-chart { background: rgba(88,166,255,0.15); color: var(--accent); }
+  .badge-tot { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .badge-gt { background: rgba(74,222,128,0.15); color: var(--green); }
+  .badge-nogt { background: rgba(139,148,158,0.15); color: var(--text2); }
+  table { width: 100%; border-collapse: collapse; }
+  th { background: var(--bg2); position: sticky; top: 0; text-align: left; padding: 8px 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text2); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:hover td { background: rgba(88,166,255,0.04); }
+  tr.tot-row td { border-left: 3px solid var(--yellow); }
+  .date-cell { font-family: "JetBrains Mono", monospace; font-weight: 600; color: var(--accent); white-space: nowrap; }
+  .conf-cell { font-family: "JetBrains Mono", monospace; font-size: 12px; }
+  .ticker-list { display: flex; flex-wrap: wrap; gap: 3px; }
+  .ticker-hit { background: rgba(74,222,128,0.12); color: var(--green); padding: 1px 5px; border-radius: 3px; font-size: 11px; font-family: "JetBrains Mono", monospace; font-weight: 500; }
+  .ticker-fp { background: rgba(248,113,113,0.12); color: var(--red); padding: 1px 5px; border-radius: 3px; font-size: 11px; font-family: "JetBrains Mono", monospace; font-weight: 500; }
+  .ticker-missing { background: rgba(251,191,36,0.12); color: var(--yellow); padding: 1px 5px; border-radius: 3px; font-size: 11px; font-family: "JetBrains Mono", monospace; }
+  .ticker-plain { background: rgba(88,166,255,0.10); color: var(--text); padding: 1px 5px; border-radius: 3px; font-size: 11px; font-family: "JetBrains Mono", monospace; }
+  .ts { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--text2); }
+  .ocr-snippet { font-size: 11px; color: var(--text2); max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fps-cell { font-size: 11px; color: var(--red); }
+  .miss-cell { font-size: 11px; color: var(--yellow); }
+  .no-gt-row td { opacity: 0.7; }
+  #rowCount { margin-left: auto; font-size: 11px; color: var(--text2); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>QMG OCR Results — qmg-easyocr-v1</h1>
+  <div class="stat"><span class="stat-label">Videos</span><span class="stat-value">72</span></div>
+  <div class="stat"><span class="stat-label">Captures</span><span class="stat-value">72</span></div>
+  <div class="stat"><span class="stat-label">GT Videos</span><span class="stat-value">40</span></div>
+  <div class="stat"><span class="stat-label">Recall</span><span class="stat-value">59%</span></div>
+  <div class="stat"><span class="stat-label">Unique Tickers</span><span class="stat-value">148</span></div>
+</div>
+
+<div class="filters">
+  <div class="filter-group"><span class="filter-label">Ticker:</span><input type="text" id="filterTicker" placeholder="e.g. P"></div>
+  <div class="filter-group"><span class="filter-label">Video:</span><input type="text" id="filterVideo" placeholder="e.g. 20220606"></div>
+  <div class="filter-group"><span class="filter-label">GT:</span><select id="filterGT"><option value="">All</option><option value="gt">Has GT</option><option value="nogt">No GT</option></select></div>
+  <button onclick="clearFilters()">Clear</button>
+  <span id="rowCount">72 rows</span>
+</div>
+
+<table id="mainTable">
+<thead><tr><th>Date</th><th>Layout</th><th>TS</th><th>Conf%</th><th>Tickers</th><th>Hits (GT)</th><th>False Positives</th><th>Missing (GT)</th><th>OCR Snippet</th></tr></thead>
+<tbody>
+<tr class="no-gt-row"><td class="date-cell">20231215 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:13:36</td><td class="conf-cell">43%</td><td class="ticker-list"><span class="ticker-plain">AERC</span><span class="ticker-plain">BKR</span><span class="ticker-plain">BOIL</span><span class="ticker-plain">LI</span><span class="ticker-plain">ON</span><span class="ticker-plain">SGMO</span><span class="ticker-plain">TSM</span><span class="ticker-plain">UCO</span><span class="ticker-plain">X</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="Hasaed035 Rot
+Filtet Eda Symns Bit +X
+Dol Vol Vol Buzz
+0
+545 5080k 1108,176|
+706 5IM 662 15
+464 J34M 403,57
+I| 3 50 285M">Hasaed035 Rot
+Filtet Eda Symns Bit +X
+Dol Vol Vol Buzz
+0
+545 5080k 1108,176|
+706 5IM 662 15
+464 J34M 403,57
+I| 3 50 285M</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20231201 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:15:52</td><td class="conf-cell">40%</td><td class="ticker-list"><span class="ticker-plain">BNTX</span><span class="ticker-plain">DBRG</span><span class="ticker-plain">DDOG</span><span class="ticker-plain">EDIT</span><span class="ticker-plain">FCX</span><span class="ticker-plain">FREY</span><span class="ticker-plain">GNS</span><span class="ticker-plain">HAL</span><span class="ticker-plain">LI</span><span class="ticker-plain">ON</span><span class="ticker-plain">ONON</span><span class="ticker-plain">PDD</span><span class="ticker-plain">PLTR</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">X</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="OmnaWaalt Lnsoido Roron
+A  Positions I Filtet Edr Symes 4X
+6o Sym CrJnde Dol Val Pre Buzz
+PDD 855 3,56 Tizzm 4458 4x
+Sym">OmnaWaalt Lnsoido Roron
+A  Positions I Filtet Edr Symes 4X
+6o Sym CrJnde Dol Val Pre Buzz
+PDD 855 3,56 Tizzm 4458 4x
+Sym</td></tr>
+<tr class="tot-row"><td class="date-cell">20230609 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">tale_of_the_tape</span></td><td class="ts">00:48:36</td><td class="conf-cell">38%</td><td class="ticker-list"><span class="ticker-fp">AERC</span><span class="ticker-hit">APLD</span><span class="ticker-fp">ARKG</span><span class="ticker-fp">ARM</span><span class="ticker-fp">BIIB</span><span class="ticker-fp">BKR</span><span class="ticker-fp">BOIL</span><span class="ticker-fp">CF</span><span class="ticker-hit">CVNA</span><span class="ticker-fp">HAL</span><span class="ticker-fp">ILMN</span><span class="ticker-fp">MP</span><span class="ticker-fp">NBIS</span><span class="ticker-fp">NUGT</span><span class="ticker-fp">ON</span><span class="ticker-fp">ONON</span><span class="ticker-fp">QS</span><span class="ticker-fp">RIOT</span><span class="ticker-fp">SI</span><span class="ticker-fp">SNDK</span><span class="ticker-fp">TNA</span><span class="ticker-fp">X</span></td><td><span class="ticker-hit">APLD</span><span class="ticker-hit">CVNA</span></td><td><span class="fps-cell">AERC, ARKG, ARM, BIIB, BKR, BOIL…</span></td><td><span class="miss-cell">RGTI, QBTS, IMGN, IOT, ARQQ, AI…</span></td><td class="ocr-snippet" title="37ot8 iena m uatchi Jsoado Ba on
+A  Positions Filtet | Edr Syms +X
+FVo Sym Cunde Dol Val Vol Buz
+RGII 70,143123.,63 5 SM">37ot8 iena m uatchi Jsoado Ba on
+A  Positions Filtet | Edr Syms +X
+FVo Sym Cunde Dol Val Vol Buz
+RGII 70,143123.,63 5 SM</td></tr>
+<tr class="tot-row"><td class="date-cell">20230608 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">tale_of_the_tape</span></td><td class="ts">01:05:00</td><td class="conf-cell">35%</td><td class="ticker-list"><span class="ticker-fp">BOIL</span><span class="ticker-fp">COIN</span><span class="ticker-fp">DASH</span><span class="ticker-fp">EDIT</span><span class="ticker-fp">ON</span><span class="ticker-fp">ONON</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-fp">TSM</span><span class="ticker-fp">U</span></td><td>—</td><td><span class="fps-cell">BOIL, COIN, DASH, EDIT, ON, ONON…</span></td><td><span class="miss-cell">CVNA, QBTS, APLD, ARQQ, IMGN, IOT…</span></td><td class="ocr-snippet" title="L Jasoiod Roor
+(Fitter Edit Symg 5 4X
+Conn
+Tan IDol Vol Nol Buzz
+26,143 1340 628 8M 7933
+15,4693131,31 13.1M ~87038
+19,6">L Jasoiod Roor
+(Fitter Edit Symg 5 4X
+Conn
+Tan IDol Vol Nol Buzz
+26,143 1340 628 8M 7933
+15,4693131,31 13.1M ~87038
+19,6</td></tr>
+<tr class=""><td class="date-cell">20230605 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:20:00</td><td class="conf-cell">34%</td><td class="ticker-list"><span class="ticker-fp">AAPL</span><span class="ticker-fp">ALB</span><span class="ticker-fp">ARM</span><span class="ticker-fp">ASML</span><span class="ticker-fp">CCI</span><span class="ticker-fp">CHPT</span><span class="ticker-fp">COIN</span><span class="ticker-fp">FLUT</span><span class="ticker-fp">ILMN</span><span class="ticker-fp">ON</span><span class="ticker-fp">SGMO</span><span class="ticker-fp">X</span><span class="ticker-fp">XOM</span></td><td>—</td><td><span class="fps-cell">AAPL, ALB, ARM, ASML, CCI, CHPT…</span></td><td><span class="miss-cell">IMGN, ARQQ, CVNA, IOT, PLTR, GSIT…</span></td><td class="ocr-snippet" title="Al LorsoenJ 0n6
+5 Filtet {t Syis MNDY +X
+Ja
+Chae Dol Vol Vol &amp;ua
+3,6936  5,27 Z05M 48419
+6 3586/17.66 2246k 940x
+2 3026/">Al LorsoenJ 0n6
+5 Filtet {t Syis MNDY +X
+Ja
+Chae Dol Vol Vol &amp;ua
+3,6936  5,27 Z05M 48419
+6 3586/17.66 2246k 940x
+2 3026/</td></tr>
+<tr class="tot-row"><td class="date-cell">20230602 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">tale_of_the_tape</span></td><td class="ts">00:06:16</td><td class="conf-cell">35%</td><td class="ticker-list"><span class="ticker-fp">AERC</span><span class="ticker-hit">APLD</span><span class="ticker-fp">BEAM</span><span class="ticker-fp">BITO</span><span class="ticker-fp">BKR</span><span class="ticker-fp">BOIL</span><span class="ticker-fp">BTU</span><span class="ticker-fp">CRDO</span><span class="ticker-hit">CVNA</span><span class="ticker-fp">EDIT</span><span class="ticker-fp">FANG</span><span class="ticker-fp">FLUT</span><span class="ticker-fp">FREY</span><span class="ticker-fp">HAL</span><span class="ticker-fp">ILMN</span><span class="ticker-fp">MP</span><span class="ticker-fp">MU</span><span class="ticker-fp">ON</span><span class="ticker-fp">ONON</span><span class="ticker-fp">PINS</span><span class="ticker-hit">PLTR</span><span class="ticker-fp">REGN</span><span class="ticker-fp">RIOT</span><span class="ticker-fp">SI</span><span class="ticker-fp">SNDK</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TNA</span><span class="ticker-fp">TSM</span><span class="ticker-fp">U</span><span class="ticker-fp">X</span></td><td><span class="ticker-hit">APLD</span><span class="ticker-hit">CVNA</span><span class="ticker-hit">PLTR</span></td><td><span class="fps-cell">AERC, BEAM, BITO, BKR, BOIL, BTU…</span></td><td><span class="miss-cell">IOT, TEAM, MTCH, QBTS, ARQQ, RGTI…</span></td><td class="ocr-snippet" title="BAB4 0299 5 J4Am 90r
+PARA 29278 6.0M 7164393
+Hal 32u 89m 38328
+25032 ienuuachn Jensoioo x Boso
+A A Positions Filter | Ed">BAB4 0299 5 J4Am 90r
+PARA 29278 6.0M 7164393
+Hal 32u 89m 38328
+25032 ienuuachn Jensoioo x Boso
+A A Positions Filter | Ed</td></tr>
+<tr class="tot-row"><td class="date-cell">20230601 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">tale_of_the_tape</span></td><td class="ts">00:52:00</td><td class="conf-cell">37%</td><td class="ticker-list"><span class="ticker-hit">APLD</span><span class="ticker-fp">ARM</span><span class="ticker-fp">BKR</span><span class="ticker-fp">BOIL</span><span class="ticker-fp">COIN</span><span class="ticker-hit">CVNA</span><span class="ticker-fp">GNS</span><span class="ticker-fp">HAL</span><span class="ticker-fp">MP</span><span class="ticker-fp">NBIS</span><span class="ticker-fp">NIO</span><span class="ticker-fp">ON</span><span class="ticker-fp">ONON</span><span class="ticker-hit">PLTR</span><span class="ticker-fp">SNDK</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-fp">U</span><span class="ticker-fp">X</span><span class="ticker-fp">YINN</span></td><td><span class="ticker-hit">APLD</span><span class="ticker-hit">CVNA</span><span class="ticker-hit">PLTR</span></td><td><span class="fps-cell">ARM, BKR, BOIL, COIN, GNS, HAL…</span></td><td><span class="miss-cell">QBTS, AI, DNA, IONQ, IMGN, MNDY</span></td><td class="ocr-snippet" title="inn Pior Waala Jan sondol 3 Sor
+A  Positions 4 Filtet Eda Syms +X
+Fuo Sym Cunde Dol Val Vol Buz
+0
+A 76 0u3| 10,75 664.9m">inn Pior Waala Jan sondol 3 Sor
+A  Positions 4 Filtet Eda Syms +X
+Fuo Sym Cunde Dol Val Vol Buz
+0
+A 76 0u3| 10,75 664.9m</td></tr>
+<tr class="tot-row"><td class="date-cell">20230523 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">tale_of_the_tape</span></td><td class="ts">00:33:20</td><td class="conf-cell">40%</td><td class="ticker-list"><span class="ticker-fp">BKR</span><span class="ticker-fp">EDIT</span><span class="ticker-fp">HAL</span><span class="ticker-fp">HPE</span><span class="ticker-fp">MP</span><span class="ticker-fp">MRO</span><span class="ticker-fp">ON</span><span class="ticker-fp">ONON</span><span class="ticker-fp">RIOT</span><span class="ticker-fp">SGMO</span><span class="ticker-fp">X</span></td><td>—</td><td><span class="fps-cell">BKR, EDIT, HAL, HPE, MP, MRO…</span></td><td><span class="miss-cell">QBTS, LI, SOUN, IMGN, FTCH, MNDY…</span></td><td class="ocr-snippet" title="euachd
+5 Filter Edtt Synts 5 4X
+Cts
+Dol Vol Vol Buz
+hije
+J0,8  17,57 LJM  709u,6|
+Tr 3,66 201M 42637
+2963| 10,74 103M 27">euachd
+5 Filter Edtt Synts 5 4X
+Cts
+Dol Vol Vol Buz
+hije
+J0,8  17,57 LJM  709u,6|
+Tr 3,66 201M 42637
+2963| 10,74 103M 27</td></tr>
+<tr class=""><td class="date-cell">20230522 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:16:16</td><td class="conf-cell">40%</td><td class="ticker-list"><span class="ticker-fp">AERC</span><span class="ticker-hit">APLD</span><span class="ticker-fp">BKR</span><span class="ticker-fp">BOIL</span><span class="ticker-fp">COIN</span><span class="ticker-hit">CVNA</span><span class="ticker-fp">FREY</span><span class="ticker-fp">HAL</span><span class="ticker-fp">ILMN</span><span class="ticker-fp">ONON</span><span class="ticker-fp">PDD</span><span class="ticker-fp">SGMO</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">U</span><span class="ticker-fp">VLO</span><span class="ticker-fp">X</span></td><td><span class="ticker-hit">APLD</span><span class="ticker-hit">CVNA</span></td><td><span class="fps-cell">AERC, BKR, BOIL, COIN, FREY, HAL…</span></td><td><span class="miss-cell">LI, IMGN, SOUN, AI, PLTR</span></td><td class="ocr-snippet" title="Stonne
+A Positions 1 Filtet Eda Symts 5 4*
+49 Sym Gaoe Dol Val Vol Buz
+U 41779x 3,68 22AM J40 4%|
+INGN 4053 8,29 46M 209">Stonne
+A Positions 1 Filtet Eda Symts 5 4*
+49 Sym Gaoe Dol Val Vol Buz
+U 41779x 3,68 22AM J40 4%|
+INGN 4053 8,29 46M 209</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20230519 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:12:24</td><td class="conf-cell">40%</td><td class="ticker-list"><span class="ticker-plain">AERC</span><span class="ticker-plain">APLD</span><span class="ticker-plain">BKR</span><span class="ticker-plain">COIN</span><span class="ticker-plain">CVNA</span><span class="ticker-plain">FCX</span><span class="ticker-plain">HAL</span><span class="ticker-plain">ILMN</span><span class="ticker-plain">ON</span><span class="ticker-plain">PDD</span><span class="ticker-plain">REGN</span><span class="ticker-plain">SHOP</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">TAN</span><span class="ticker-plain">U</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="Een  Wacln Jas 0i&amp;gt; En Son
+A Positions Filtet Eaa ISvins 5 +X
+39 Sym % Change Dol Val Pre Buzz
+CVNA 00r  1292 IM 593|
+Apl">Een  Wacln Jas 0i&amp;gt; En Son
+A Positions Filtet Eaa ISvins 5 +X
+39 Sym % Change Dol Val Pre Buzz
+CVNA 00r  1292 IM 593|
+…</td></tr>
+<tr class=""><td class="date-cell">20230518 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:32:48</td><td class="conf-cell">37%</td><td class="ticker-list"><span class="ticker-fp">BKR</span><span class="ticker-fp">EDIT</span><span class="ticker-fp">FCEL</span><span class="ticker-fp">MP</span><span class="ticker-fp">NEM</span><span class="ticker-fp">ON</span><span class="ticker-fp">ONON</span><span class="ticker-fp">SGMO</span><span class="ticker-fp">TEAM</span><span class="ticker-fp">TSM</span><span class="ticker-fp">U</span><span class="ticker-fp">X</span></td><td>—</td><td><span class="fps-cell">BKR, EDIT, FCEL, MP, NEM, ON…</span></td><td><span class="miss-cell">PLTR, LI, AI, SHOP, MNDY, IMGN…</span></td><td class="ocr-snippet" title="Ht JSid0s BcSon
+5 &quot; Filter Bdit Syma 50 4X
+Coie
+Dol Vol Vol Buzz
+Nje
+43,837/11,55 15.9M 4488,1
+Jd 7,53 1512M 3298,97
+447">Ht JSid0s BcSon
+5 &quot; Filter Bdit Syma 50 4X
+Coie
+Dol Vol Vol Buzz
+Nje
+43,837/11,55 15.9M 4488,1
+Jd 7,53 1512M 3298,97
+447</td></tr>
+<tr class=""><td class="date-cell">20230126 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:19:44</td><td class="conf-cell">45%</td><td class="ticker-list"><span class="ticker-fp">BKR</span><span class="ticker-hit">CVNA</span><span class="ticker-hit">CWEB</span><span class="ticker-hit">FCX</span><span class="ticker-fp">FLUT</span><span class="ticker-fp">FREY</span><span class="ticker-fp">GEV</span><span class="ticker-hit">GNS</span><span class="ticker-hit">MDGL</span><span class="ticker-hit">PDD</span><span class="ticker-fp">REGN</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-fp">X</span><span class="ticker-fp">XOM</span><span class="ticker-hit">YINN</span></td><td><span class="ticker-hit">CVNA</span><span class="ticker-hit">CWEB</span><span class="ticker-hit">FCX</span><span class="ticker-hit">GNS</span><span class="ticker-hit">MDGL</span><span class="ticker-hit">PDD</span><span class="ticker-hit">YINN</span></td><td><span class="fps-cell">BKR, FLUT, FREY, GEV, REGN, SPYM…</span></td><td><span class="miss-cell">TNA</span></td><td class="ocr-snippet" title="J00,C0
+Retnnarhlet LsrJ028 Ree
+A Syms CVNA +X
+S0,00
+Pre Buz T
+Fua Sym Ecun
+CVNA 73587 244,296/ 15,9
+FCX 205+226,8%| 3,7
+">J00,C0
+Retnnarhlet LsrJ028 Ree
+A Syms CVNA +X
+S0,00
+Pre Buz T
+Fua Sym Ecun
+CVNA 73587 244,296/ 15,9
+FCX 205+226,8%| 3,7
+</td></tr>
+<tr class=""><td class="date-cell">20221117 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:19:52</td><td class="conf-cell">42%</td><td class="ticker-list"><span class="ticker-fp">AERC</span><span class="ticker-hit">ASML</span><span class="ticker-fp">BKR</span><span class="ticker-fp">BOIL</span><span class="ticker-fp">CF</span><span class="ticker-hit">FREY</span><span class="ticker-hit">OIH</span><span class="ticker-fp">QS</span><span class="ticker-hit">SOXL</span><span class="ticker-fp">SPYM</span><span class="ticker-hit">U</span></td><td><span class="ticker-hit">ASML</span><span class="ticker-hit">FREY</span><span class="ticker-hit">OIH</span><span class="ticker-hit">SOXL</span><span class="ticker-hit">U</span></td><td><span class="fps-cell">AERC, BKR, BOIL, CF, QS, SPYM</span></td><td><span class="miss-cell">SI</span></td><td class="ocr-snippet" title="50,00
+oenvachn
+45,00 A Positions Sym5 +X
+P; Sym Chto lere Buz
+FREY 2603 Fsa 6,32
+40,00 OIH Ha 49303 325
+ASML 02E 70393 3">50,00
+oenvachn
+45,00 A Positions Sym5 +X
+P; Sym Chto lere Buz
+FREY 2603 Fsa 6,32
+40,00 OIH Ha 49303 325
+ASML 02E 70393 3</td></tr>
+<tr class=""><td class="date-cell">20221104 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:46:40</td><td class="conf-cell">44%</td><td class="ticker-list"><span class="ticker-fp">ARKG</span><span class="ticker-fp">BKR</span><span class="ticker-fp">BOIL</span><span class="ticker-fp">FLUT</span><span class="ticker-fp">FREY</span><span class="ticker-hit">OIH</span><span class="ticker-fp">ON</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">U</span><span class="ticker-fp">X</span><span class="ticker-fp">XOM</span></td><td><span class="ticker-hit">OIH</span></td><td><span class="fps-cell">ARKG, BKR, BOIL, FLUT, FREY, ON…</span></td><td>—</td><td class="ocr-snippet" title="70,00
+;86eninpnoli marnla
+A Positions Sym5 +X
+Cun Vol Buz Jen
+Fua Sym oe
+OIH 40293 7147 396 | 3,79
+60,00
+50,00
+Arith 
+Zo">70,00
+;86eninpnoli marnla
+A Positions Sym5 +X
+Cun Vol Buz Jen
+Fua Sym oe
+OIH 40293 7147 396 | 3,79
+60,00
+50,00
+Arith 
+Zo</td></tr>
+<tr class=""><td class="date-cell">20220614 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:00:00</td><td class="conf-cell">43%</td><td class="ticker-list"><span class="ticker-fp">AERC</span><span class="ticker-fp">BKR</span><span class="ticker-fp">COIN</span><span class="ticker-fp">PL</span><span class="ticker-fp">RIOT</span><span class="ticker-fp">SI</span><span class="ticker-fp">SPYM</span><span class="ticker-hit">UCO</span><span class="ticker-hit">UVXY</span><span class="ticker-hit">VLO</span><span class="ticker-fp">X</span><span class="ticker-fp">XOM</span></td><td><span class="ticker-hit">UCO</span><span class="ticker-hit">UVXY</span><span class="ticker-hit">VLO</span></td><td><span class="fps-cell">AERC, BKR, COIN, PL, RIOT, SI…</span></td><td>—</td><td class="ocr-snippet" title="
+0ienaMatctt;
+65,00
+A S Positions Sc Syms +X
+Maraen
+6b Sym Rojn Prc Buzz
+Da
+UvXY Je5t 23,13 8,99
+VLO 40,183 ~0z 403
+UCO ">
+0ienaMatctt;
+65,00
+A S Positions Sc Syms +X
+Maraen
+6b Sym Rojn Prc Buzz
+Da
+UvXY Je5t 23,13 8,99
+VLO 40,183 ~0z 403
+UCO </td></tr>
+<tr class=""><td class="date-cell">20220608 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:10:16</td><td class="conf-cell">43%</td><td class="ticker-list"><span class="ticker-hit">AERC</span><span class="ticker-hit">ALB</span><span class="ticker-fp">BKR</span><span class="ticker-hit">BOIL</span><span class="ticker-fp">CAVA</span><span class="ticker-fp">COIN</span><span class="ticker-fp">DELL</span><span class="ticker-fp">ILMN</span><span class="ticker-hit">LTHM</span><span class="ticker-fp">ORCL</span><span class="ticker-fp">RBLX</span><span class="ticker-fp">SI</span><span class="ticker-hit">SIGA</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-hit">TNA</span><span class="ticker-fp">U</span><span class="ticker-hit">UCO</span><span class="ticker-hit">VLO</span><span class="ticker-fp">X</span><span class="ticker-fp">XOM</span></td><td><span class="ticker-hit">AERC</span><span class="ticker-hit">ALB</span><span class="ticker-hit">BOIL</span><span class="ticker-hit">LTHM</span><span class="ticker-hit">SIGA</span><span class="ticker-hit">TNA</span><span class="ticker-hit">UCO</span><span class="ticker-hit">VLO</span></td><td><span class="fps-cell">BKR, CAVA, COIN, DELL, ILMN, ORCL…</span></td><td><span class="miss-cell">NFLX</span></td><td class="ocr-snippet" title="26,00
+25,00
+3inuachn
+A  Position: Syins LTHM 30 +X
+6 ISym can Prc Buzz 5rer
+24,00
+SIGA 42783 6,15 76,91
+UCO 41,3r F1 446">26,00
+25,00
+3inuachn
+A  Position: Syins LTHM 30 +X
+6 ISym can Prc Buzz 5rer
+24,00
+SIGA 42783 6,15 76,91
+UCO 41,3r F1 446</td></tr>
+<tr class=""><td class="date-cell">20220607 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:39:28</td><td class="conf-cell">43%</td><td class="ticker-list"><span class="ticker-fp">AERC</span><span class="ticker-hit">ALB</span><span class="ticker-fp">BKR</span><span class="ticker-hit">BOIL</span><span class="ticker-fp">COIN</span><span class="ticker-fp">DVN</span><span class="ticker-fp">INTC</span><span class="ticker-fp">JNUG</span><span class="ticker-hit">LTHM</span><span class="ticker-fp">MP</span><span class="ticker-hit">NFLX</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-hit">TNA</span><span class="ticker-fp">U</span><span class="ticker-hit">UCO</span><span class="ticker-hit">VLO</span><span class="ticker-fp">X</span><span class="ticker-fp">XOM</span></td><td><span class="ticker-hit">ALB</span><span class="ticker-hit">BOIL</span><span class="ticker-hit">LTHM</span><span class="ticker-hit">NFLX</span><span class="ticker-hit">TNA</span><span class="ticker-hit">UCO</span><span class="ticker-hit">VLO</span></td><td><span class="fps-cell">AERC, BKR, COIN, DVN, INTC, JNUG…</span></td><td>—</td><td class="ocr-snippet" title="30,00
+7imuaichin
+A Positions S Syms +X
+28,00
+Mol Buz Macaen
+Fsa ISym Rojnt Den
+UCO 338r 7658| 462
+VLO 1623 37262. 3,83
+A">30,00
+7imuaichin
+A Positions S Syms +X
+28,00
+Mol Buz Macaen
+Fsa ISym Rojnt Den
+UCO 338r 7658| 462
+VLO 1623 37262. 3,83
+A</td></tr>
+<tr class=""><td class="date-cell">20220606 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:16:48</td><td class="conf-cell">48%</td><td class="ticker-list"><span class="ticker-fp">AERC</span><span class="ticker-hit">ALB</span><span class="ticker-fp">BKR</span><span class="ticker-fp">BOIL</span><span class="ticker-hit">CBIO</span><span class="ticker-fp">COIN</span><span class="ticker-hit">GOVX</span><span class="ticker-hit">LABU</span><span class="ticker-hit">NFLX</span><span class="ticker-fp">ON</span><span class="ticker-fp">RIOT</span><span class="ticker-fp">SI</span><span class="ticker-fp">SIGA</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-hit">TNA</span><span class="ticker-hit">UCO</span><span class="ticker-hit">VLO</span><span class="ticker-fp">X</span><span class="ticker-fp">XOM</span></td><td><span class="ticker-hit">ALB</span><span class="ticker-hit">CBIO</span><span class="ticker-hit">GOVX</span><span class="ticker-hit">LABU</span><span class="ticker-hit">NFLX</span><span class="ticker-hit">TNA</span><span class="ticker-hit">UCO</span><span class="ticker-hit">VLO</span></td><td><span class="fps-cell">AERC, BKR, BOIL, COIN, ON, RIOT…</span></td><td>—</td><td class="ocr-snippet" title="1,50
+125
+Zent  uatch
+A Positions Syms 30 +X
+con Prc Buzz Marcer
+1,00 F, Sym Don
+BOIL 4147395 1328,15 10,92
+LABU 40,163 4">1,50
+125
+Zent  uatch
+A Positions Syms 30 +X
+con Prc Buzz Marcer
+1,00 F, Sym Don
+BOIL 4147395 1328,15 10,92
+LABU 40,163 4</td></tr>
+<tr class=""><td class="date-cell">20220517 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:15:44</td><td class="conf-cell">53%</td><td class="ticker-list"><span class="ticker-fp">AERC</span><span class="ticker-fp">ARM</span><span class="ticker-fp">AVGO</span><span class="ticker-fp">BKR</span><span class="ticker-hit">COIN</span><span class="ticker-fp">FANG</span><span class="ticker-fp">FLUT</span><span class="ticker-fp">FREY</span><span class="ticker-fp">GOOG</span><span class="ticker-fp">LI</span><span class="ticker-fp">ON</span><span class="ticker-fp">ONON</span><span class="ticker-hit">OXY</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">STX</span><span class="ticker-hit">TQQQ</span><span class="ticker-fp">U</span><span class="ticker-hit">WEAT</span><span class="ticker-fp">X</span><span class="ticker-fp">XOM</span></td><td><span class="ticker-hit">COIN</span><span class="ticker-hit">OXY</span><span class="ticker-hit">TQQQ</span><span class="ticker-hit">WEAT</span></td><td><span class="fps-cell">AERC, ARM, AVGO, BKR, FANG, FLUT…</span></td><td><span class="miss-cell">FNGU, ERX, AR</span></td><td class="ocr-snippet" title="50,00 7emnaintachig
+A Positions St Sym$ 5 +X
+Fu9 Sym Rcan Pre Buzz 557
+OXY 30253 25413 6,11
+4086} ERX 1,2996 41or 749
+Jo">50,00 7emnaintachig
+A Positions St Sym$ 5 +X
+Fu9 Sym Rcan Pre Buzz 557
+OXY 30253 25413 6,11
+4086} ERX 1,2996 41or 749
+Jo</td></tr>
+<tr class=""><td class="date-cell">20220510 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:10:56</td><td class="conf-cell">37%</td><td class="ticker-list"><span class="ticker-fp">AFRM</span><span class="ticker-fp">BKR</span><span class="ticker-fp">BOIL</span><span class="ticker-fp">COIN</span><span class="ticker-fp">FLUT</span><span class="ticker-fp">FREY</span><span class="ticker-fp">ON</span><span class="ticker-fp">SPYM</span><span class="ticker-hit">TSLA</span><span class="ticker-fp">U</span><span class="ticker-fp">VRM</span><span class="ticker-fp">X</span></td><td><span class="ticker-hit">TSLA</span></td><td><span class="fps-cell">AFRM, BKR, BOIL, COIN, FLUT, FREY…</span></td><td>—</td><td class="ocr-snippet" title="17,0
+Fennraln LSedor Rson
+A Positions Srmn $ 5 4X
+75,00
+Pie Buz Mo
+Fu9 Sym Cun
+L
+Vrm 773,593 10292 4
+TSLA 2,982 310,795
+">17,0
+Fennraln LSedor Rson
+A Positions Srmn $ 5 4X
+75,00
+Pie Buz Mo
+Fu9 Sym Cun
+L
+Vrm 773,593 10292 4
+TSLA 2,982 310,795
+</td></tr>
+<tr class=""><td class="date-cell">20220506 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:03:12</td><td class="conf-cell">51%</td><td class="ticker-list"><span class="ticker-fp">CCI</span><span class="ticker-fp">FREY</span><span class="ticker-fp">GOOG</span><span class="ticker-hit">LTHM</span><span class="ticker-fp">MP</span><span class="ticker-fp">PL</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-hit">TSLA</span><span class="ticker-fp">TSM</span><span class="ticker-fp">U</span><span class="ticker-hit">UCO</span><span class="ticker-hit">WEAT</span></td><td><span class="ticker-hit">LTHM</span><span class="ticker-hit">TSLA</span><span class="ticker-hit">UCO</span><span class="ticker-hit">WEAT</span></td><td><span class="fps-cell">CCI, FREY, GOOG, MP, PL, SPYM…</span></td><td>—</td><td class="ocr-snippet" title="0 Iemaintocha La Soiod Rosor
+80,00
+A Positions Symng 50 4X
+Pre Buzz Nca
+Fuo Sym Cant E
+UCO 4137 5,3 5
+75,00
+WEAT 0C036 1">0 Iemaintocha La Soiod Rosor
+80,00
+A Positions Symng 50 4X
+Pre Buzz Nca
+Fuo Sym Cant E
+UCO 4137 5,3 5
+75,00
+WEAT 0C036 1</td></tr>
+<tr class=""><td class="date-cell">20220429 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:23:28</td><td class="conf-cell">37%</td><td class="ticker-list"><span class="ticker-fp">BKR</span><span class="ticker-fp">CRDO</span><span class="ticker-fp">DASH</span><span class="ticker-fp">FREY</span><span class="ticker-fp">FSR</span><span class="ticker-fp">HAL</span><span class="ticker-fp">ON</span><span class="ticker-fp">PINS</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-hit">TSLA</span><span class="ticker-fp">U</span><span class="ticker-fp">UCO</span><span class="ticker-hit">WEAT</span><span class="ticker-hit">X</span><span class="ticker-fp">XOM</span></td><td><span class="ticker-hit">TSLA</span><span class="ticker-hit">WEAT</span><span class="ticker-hit">X</span></td><td><span class="fps-cell">BKR, CRDO, DASH, FREY, FSR, HAL…</span></td><td><span class="miss-cell">GUSH, SWN</span></td><td class="ocr-snippet" title="Ae
+3odimnuathg Iasc05e RSci
+A Positions Symn3 50 4*
+Fso Sym Can Mol Buz 5
+78,00
+WEAT 480D 172ir 27
+GUSH 40,673 63 586 | ">Ae
+3odimnuathg Iasc05e RSci
+A Positions Symn3 50 4*
+Fso Sym Can Mol Buz 5
+78,00
+WEAT 480D 172ir 27
+GUSH 40,673 63 586 | </td></tr>
+<tr class=""><td class="date-cell">20220428 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:16:32</td><td class="conf-cell">46%</td><td class="ticker-list"><span class="ticker-fp">BKR</span><span class="ticker-fp">BOIL</span><span class="ticker-fp">CAVA</span><span class="ticker-hit">CWEB</span><span class="ticker-fp">FSR</span><span class="ticker-fp">MP</span><span class="ticker-fp">NEM</span><span class="ticker-fp">ON</span><span class="ticker-fp">ONON</span><span class="ticker-fp">SPYM</span><span class="ticker-hit">TSLA</span><span class="ticker-fp">U</span><span class="ticker-hit">WEAT</span><span class="ticker-fp">YINN</span></td><td><span class="ticker-hit">CWEB</span><span class="ticker-hit">TSLA</span><span class="ticker-hit">WEAT</span></td><td><span class="fps-cell">BKR, BOIL, CAVA, FSR, MP, NEM…</span></td><td><span class="miss-cell">KWEB</span></td><td class="ocr-snippet" title="0 eemn in atchie
+S0,00 A Positions Symng 50 4X
+Mol Buz Ma
+Fso Sym Icane Bl
+TSU Lun 228,2* 5,
+49,00 CWEB Do 648.27 9
+KWEB">0 eemn in atchie
+S0,00 A Positions Symng 50 4X
+Mol Buz Ma
+Fso Sym Icane Bl
+TSU Lun 228,2* 5,
+49,00 CWEB Do 648.27 9
+KWEB</td></tr>
+<tr class=""><td class="date-cell">20220427 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:08:48</td><td class="conf-cell">51%</td><td class="ticker-list"><span class="ticker-fp">APLD</span><span class="ticker-hit">BOIL</span><span class="ticker-fp">CAVA</span><span class="ticker-fp">FREY</span><span class="ticker-fp">FSR</span><span class="ticker-fp">HAL</span><span class="ticker-fp">MP</span><span class="ticker-fp">SI</span><span class="ticker-fp">SPYM</span><span class="ticker-hit">TSLA</span><span class="ticker-fp">U</span><span class="ticker-hit">WEAT</span><span class="ticker-fp">XOM</span><span class="ticker-fp">YINN</span></td><td><span class="ticker-hit">BOIL</span><span class="ticker-hit">TSLA</span><span class="ticker-hit">WEAT</span></td><td><span class="fps-cell">APLD, CAVA, FREY, FSR, HAL, MP…</span></td><td><span class="miss-cell">KOLD</span></td><td class="ocr-snippet" title="27,00
+J lcnann Votchg La5 Sicd0b%
+A Posit Sying 50 4X
+Fuo Sym Cante Pre Buzz
+TSLA 3.9896 401,82
+Ia 2600
+25,28 BOIL 547 4">27,00
+J lcnann Votchg La5 Sicd0b%
+A Posit Sying 50 4X
+Fuo Sym Cante Pre Buzz
+TSLA 3.9896 401,82
+Ia 2600
+25,28 BOIL 547 4</td></tr>
+<tr class=""><td class="date-cell">20220426 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:05:20</td><td class="conf-cell">48%</td><td class="ticker-list"><span class="ticker-hit">BOIL</span><span class="ticker-fp">FREY</span><span class="ticker-fp">FSR</span><span class="ticker-fp">ILMN</span><span class="ticker-fp">MP</span><span class="ticker-fp">ON</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-fp">U</span><span class="ticker-hit">WEAT</span><span class="ticker-fp">YINN</span></td><td><span class="ticker-hit">BOIL</span><span class="ticker-hit">WEAT</span></td><td><span class="fps-cell">FREY, FSR, ILMN, MP, ON, SPYM…</span></td><td>—</td><td class="ocr-snippet" title="0 mintthin
+Joocd
+A Posit Symng 50 4X
+Fuo Sym Cant Pre Buzz
+BOIL 0628 80,69
+WEAT 2162 457,0x
+95,00
+90,00
+S
+88,16
+B0
+85,00">0 mintthin
+Joocd
+A Posit Symng 50 4X
+Fuo Sym Cant Pre Buzz
+BOIL 0628 80,69
+WEAT 2162 457,0x
+95,00
+90,00
+S
+88,16
+B0
+85,00</td></tr>
+<tr class=""><td class="date-cell">20220425 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:25:20</td><td class="conf-cell">51%</td><td class="ticker-list"><span class="ticker-fp">APLD</span><span class="ticker-fp">ARM</span><span class="ticker-hit">BOIL</span><span class="ticker-fp">CAVA</span><span class="ticker-fp">CVNA</span><span class="ticker-fp">DASH</span><span class="ticker-fp">FREY</span><span class="ticker-fp">FSR</span><span class="ticker-fp">JNUG</span><span class="ticker-fp">KLAC</span><span class="ticker-fp">MP</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">U</span><span class="ticker-fp">VERV</span><span class="ticker-hit">WEAT</span><span class="ticker-fp">XOM</span><span class="ticker-fp">YINN</span></td><td><span class="ticker-hit">BOIL</span><span class="ticker-hit">WEAT</span></td><td><span class="fps-cell">APLD, ARM, CAVA, CVNA, DASH, FREY…</span></td><td><span class="miss-cell">KOLD, VERU</span></td><td class="ocr-snippet" title="0 Iema intatchin
+A Posit Sying 50 4X
+95,00
+Foo Sym Cant Pre Buzz
+KOLD JAt 386,67
+WEAT 0,8536 6994
+90,00
+VERU 34876 223,0">0 Iema intatchin
+A Posit Sying 50 4X
+95,00
+Foo Sym Cant Pre Buzz
+KOLD JAt 386,67
+WEAT 0,8536 6994
+90,00
+VERU 34876 223,0</td></tr>
+<tr class=""><td class="date-cell">20220421 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:00:00</td><td class="conf-cell">44%</td><td class="ticker-list"><span class="ticker-fp">BKR</span><span class="ticker-hit">BOIL</span><span class="ticker-fp">CF</span><span class="ticker-hit">COPX</span><span class="ticker-fp">DASH</span><span class="ticker-fp">FREY</span><span class="ticker-hit">FTNT</span><span class="ticker-fp">HAL</span><span class="ticker-fp">IREN</span><span class="ticker-hit">JNUG</span><span class="ticker-fp">MP</span><span class="ticker-hit">NUGT</span><span class="ticker-fp">ON</span><span class="ticker-hit">REGN</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-fp">TSM</span><span class="ticker-hit">URA</span><span class="ticker-hit">URNM</span><span class="ticker-fp">VERV</span><span class="ticker-hit">WEAT</span><span class="ticker-hit">X</span><span class="ticker-fp">YINN</span></td><td><span class="ticker-hit">BOIL</span><span class="ticker-hit">COPX</span><span class="ticker-hit">FTNT</span><span class="ticker-hit">JNUG</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-hit">URA</span><span class="ticker-hit">URNM</span><span class="ticker-hit">WEAT</span><span class="ticker-hit">X</span></td><td><span class="fps-cell">BKR, CF, DASH, FREY, HAL, IREN…</span></td><td><span class="miss-cell">FCX, VERU, GUSH, LAC, UCO, TSLA</span></td><td class="ocr-snippet" title="Rms inoeton tchic
+A Posit Symg 50 4X
+3400 Can Pre Buzz
+Fuo Sym
+FCX 3oi 157
+NUGT 2ux 0,93
+JNUG 2683 L1a
+VERU Jaci 10
+33,0">Rms inoeton tchic
+A Posit Symg 50 4X
+3400 Can Pre Buzz
+Fuo Sym
+FCX 3oi 157
+NUGT 2ux 0,93
+JNUG 2683 L1a
+VERU Jaci 10
+33,0</td></tr>
+<tr class=""><td class="date-cell">20220419 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:19:12</td><td class="conf-cell">39%</td><td class="ticker-list"><span class="ticker-fp">APLD</span><span class="ticker-fp">BKR</span><span class="ticker-hit">BOIL</span><span class="ticker-hit">COPX</span><span class="ticker-fp">DASH</span><span class="ticker-fp">FLUT</span><span class="ticker-fp">FREY</span><span class="ticker-fp">GOOG</span><span class="ticker-hit">JNUG</span><span class="ticker-fp">LI</span><span class="ticker-fp">MRO</span><span class="ticker-hit">NUGT</span><span class="ticker-fp">ON</span><span class="ticker-fp">ONON</span><span class="ticker-hit">REGN</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-fp">U</span><span class="ticker-hit">URA</span><span class="ticker-hit">URNM</span><span class="ticker-fp">VERV</span><span class="ticker-hit">WEAT</span><span class="ticker-hit">X</span><span class="ticker-fp">XOM</span></td><td><span class="ticker-hit">BOIL</span><span class="ticker-hit">COPX</span><span class="ticker-hit">JNUG</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-hit">URA</span><span class="ticker-hit">URNM</span><span class="ticker-hit">WEAT</span><span class="ticker-hit">X</span></td><td><span class="fps-cell">APLD, BKR, DASH, FLUT, FREY, GOOG…</span></td><td><span class="miss-cell">VERU, LMT, FCX, GUSH, KOLD</span></td><td class="ocr-snippet" title="3
+Tmn In Gocchin
+A Posit Sjn : 50 #X
+79,00
+Fu9 Sym Can Mol Buzz
+BOIL JS4r 452647
+JNUG 2282 F10771
+78,00
+NUGT 2ron 73751
+">3
+Tmn In Gocchin
+A Posit Sjn : 50 #X
+79,00
+Fu9 Sym Can Mol Buzz
+BOIL JS4r 452647
+JNUG 2282 F10771
+78,00
+NUGT 2ron 73751
+</td></tr>
+<tr class=""><td class="date-cell">20220418 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:33:20</td><td class="conf-cell">40%</td><td class="ticker-list"><span class="ticker-fp">BE</span><span class="ticker-fp">BKR</span><span class="ticker-fp">BOIL</span><span class="ticker-hit">COPX</span><span class="ticker-fp">DASH</span><span class="ticker-hit">FCX</span><span class="ticker-fp">FLUT</span><span class="ticker-fp">FREY</span><span class="ticker-fp">FSR</span><span class="ticker-fp">HUT</span><span class="ticker-hit">JNUG</span><span class="ticker-hit">NUGT</span><span class="ticker-fp">ON</span><span class="ticker-hit">REGN</span><span class="ticker-fp">SCCO</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-fp">U</span><span class="ticker-fp">UCO</span><span class="ticker-hit">URA</span><span class="ticker-hit">URNM</span><span class="ticker-fp">VERV</span><span class="ticker-hit">WEAT</span><span class="ticker-hit">X</span></td><td><span class="ticker-hit">COPX</span><span class="ticker-hit">FCX</span><span class="ticker-hit">JNUG</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-hit">URA</span><span class="ticker-hit">URNM</span><span class="ticker-hit">WEAT</span><span class="ticker-hit">X</span></td><td><span class="fps-cell">BE, BKR, BOIL, DASH, FLUT, FREY…</span></td><td><span class="miss-cell">VERU, LMT, GUSH</span></td><td class="ocr-snippet" title="65,00
+An mtatchin
+A Posit Symns +X
+Fus Sym Can Mol Buz
+VERU Josa 96487
+WEAT 43023| 3a02
+60.00
+URA ni 4176,17
+URNM ornai ">65,00
+An mtatchin
+A Posit Symns +X
+Fus Sym Can Mol Buz
+VERU Josa 96487
+WEAT 43023| 3a02
+60.00
+URA ni 4176,17
+URNM ornai </td></tr>
+<tr class=""><td class="date-cell">20220414 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:11:44</td><td class="conf-cell">41%</td><td class="ticker-list"><span class="ticker-fp">BKR</span><span class="ticker-fp">BOIL</span><span class="ticker-hit">COPX</span><span class="ticker-fp">DASH</span><span class="ticker-hit">FCX</span><span class="ticker-fp">FLUT</span><span class="ticker-fp">FREY</span><span class="ticker-fp">GOOG</span><span class="ticker-hit">JNUG</span><span class="ticker-fp">LI</span><span class="ticker-fp">MP</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-fp">SGMO</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-hit">URA</span><span class="ticker-hit">URNM</span><span class="ticker-hit">WEAT</span><span class="ticker-hit">X</span></td><td><span class="ticker-hit">COPX</span><span class="ticker-hit">FCX</span><span class="ticker-hit">JNUG</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-hit">URA</span><span class="ticker-hit">URNM</span><span class="ticker-hit">WEAT</span><span class="ticker-hit">X</span></td><td><span class="fps-cell">BKR, BOIL, DASH, FLUT, FREY, GOOG…</span></td><td><span class="miss-cell">GUSH, LMT</span></td><td class="ocr-snippet" title="2450
+Aen indtakhin
+A Sym5 URA #X
+24,00 Fu9 Sym ecan Pre Buzt
+NUGI JaB 6001
+JNUG 053 3458,93
+MEAT Ont 355234
+23,50
+GUSH 0">2450
+Aen indtakhin
+A Sym5 URA #X
+24,00 Fu9 Sym ecan Pre Buzt
+NUGI JaB 6001
+JNUG 053 3458,93
+MEAT Ont 355234
+23,50
+GUSH 0</td></tr>
+<tr class=""><td class="date-cell">20220413 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:38:08</td><td class="conf-cell">43%</td><td class="ticker-list"><span class="ticker-fp">BKR</span><span class="ticker-fp">BOIL</span><span class="ticker-hit">COPX</span><span class="ticker-fp">CVX</span><span class="ticker-hit">FCX</span><span class="ticker-fp">FLUT</span><span class="ticker-fp">FREY</span><span class="ticker-fp">GEV</span><span class="ticker-fp">HUT</span><span class="ticker-hit">JNUG</span><span class="ticker-fp">LI</span><span class="ticker-hit">NUGT</span><span class="ticker-fp">PL</span><span class="ticker-hit">REGN</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-fp">TSEM</span><span class="ticker-fp">U</span><span class="ticker-hit">URA</span><span class="ticker-hit">URNM</span><span class="ticker-hit">WEAT</span><span class="ticker-hit">X</span></td><td><span class="ticker-hit">COPX</span><span class="ticker-hit">FCX</span><span class="ticker-hit">JNUG</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-hit">URA</span><span class="ticker-hit">URNM</span><span class="ticker-hit">WEAT</span><span class="ticker-hit">X</span></td><td><span class="fps-cell">BKR, BOIL, CVX, FLUT, FREY, GEV…</span></td><td><span class="miss-cell">LHX, LMT</span></td><td class="ocr-snippet" title="32,00
+Fnukhn
+A Syms +X
+31,00
+Fu9 Sym ecan Mol Buz
+REGN 40, 682 20
+302
+WHX ~0,397| 70204
+30,00 COPX Kido
+K170
+URA 43253 A">32,00
+Fnukhn
+A Syms +X
+31,00
+Fu9 Sym ecan Mol Buz
+REGN 40, 682 20
+302
+WHX ~0,397| 70204
+30,00 COPX Kido
+K170
+URA 43253 A</td></tr>
+<tr class="tot-row"><td class="date-cell">20220412 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">tale_of_the_tape</span></td><td class="ts">00:18:08</td><td class="conf-cell">39%</td><td class="ticker-list"><span class="ticker-fp">AMD</span><span class="ticker-fp">BKR</span><span class="ticker-fp">BOIL</span><span class="ticker-hit">COPX</span><span class="ticker-fp">DASH</span><span class="ticker-hit">FCX</span><span class="ticker-fp">FLUT</span><span class="ticker-fp">FREY</span><span class="ticker-fp">GOOG</span><span class="ticker-hit">JNUG</span><span class="ticker-fp">LI</span><span class="ticker-hit">NUGT</span><span class="ticker-fp">ON</span><span class="ticker-hit">REGN</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-fp">U</span><span class="ticker-hit">URA</span><span class="ticker-hit">URNM</span><span class="ticker-hit">WEAT</span><span class="ticker-hit">X</span></td><td><span class="ticker-hit">COPX</span><span class="ticker-hit">FCX</span><span class="ticker-hit">JNUG</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-hit">URA</span><span class="ticker-hit">URNM</span><span class="ticker-hit">WEAT</span><span class="ticker-hit">X</span></td><td><span class="fps-cell">AMD, BKR, BOIL, DASH, FLUT, FREY…</span></td><td><span class="miss-cell">LHX, LMT</span></td><td class="ocr-snippet" title="2973
+650,00
+Am in atchin Ias 8190s 3e
+640,00 A Sym5-REGN +X
+Fu9 Sym Rcan Pre Buzz
+REGN +0,144 471ar
+630,00
+U +0,80%5 449">2973
+650,00
+Am in atchin Ias 8190s 3e
+640,00 A Sym5-REGN +X
+Fu9 Sym Rcan Pre Buzz
+REGN +0,144 471ar
+630,00
+U +0,80%5 449</td></tr>
+<tr class=""><td class="date-cell">20220406 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:44:32</td><td class="conf-cell">34%</td><td class="ticker-list"><span class="ticker-fp">BE</span><span class="ticker-fp">BOIL</span><span class="ticker-fp">CBIO</span><span class="ticker-fp">CF</span><span class="ticker-hit">COPX</span><span class="ticker-fp">CVX</span><span class="ticker-hit">FCX</span><span class="ticker-fp">HOOD</span><span class="ticker-hit">NEM</span><span class="ticker-hit">NUGT</span><span class="ticker-fp">PINS</span><span class="ticker-hit">REGN</span><span class="ticker-fp">U</span><span class="ticker-fp">UCO</span><span class="ticker-hit">X</span><span class="ticker-fp">XOM</span></td><td><span class="ticker-hit">COPX</span><span class="ticker-hit">FCX</span><span class="ticker-hit">NEM</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-hit">X</span></td><td><span class="fps-cell">BE, BOIL, CBIO, CF, CVX, HOOD…</span></td><td><span class="miss-cell">LHX</span></td><td class="ocr-snippet" title="4512 Jenn Wacnla
+45,00
+A Syms FCX +X
+79 Sym Chao Vol Buze
+FCX J 741.9%
+COPX lou 352,63
+Mo0
+0,983e c
+IHX 13878 939
+NUGI 3">4512 Jenn Wacnla
+45,00
+A Syms FCX +X
+79 Sym Chao Vol Buze
+FCX J 741.9%
+COPX lou 352,63
+Mo0
+0,983e c
+IHX 13878 939
+NUGI 3</td></tr>
+<tr class=""><td class="date-cell">20220405 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:00:00</td><td class="conf-cell">31%</td><td class="ticker-list"><span class="ticker-fp">AERC</span><span class="ticker-fp">BE</span><span class="ticker-fp">BKR</span><span class="ticker-fp">BOIL</span><span class="ticker-fp">CBIO</span><span class="ticker-hit">COPX</span><span class="ticker-hit">CWEB</span><span class="ticker-hit">FCX</span><span class="ticker-hit">JNUG</span><span class="ticker-fp">LI</span><span class="ticker-fp">LRCX</span><span class="ticker-hit">NEM</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-fp">SPYM</span><span class="ticker-hit">TAN</span><span class="ticker-fp">U</span><span class="ticker-fp">URA</span><span class="ticker-fp">URNM</span><span class="ticker-hit">X</span></td><td><span class="ticker-hit">COPX</span><span class="ticker-hit">CWEB</span><span class="ticker-hit">FCX</span><span class="ticker-hit">JNUG</span><span class="ticker-hit">NEM</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-hit">TAN</span><span class="ticker-hit">X</span></td><td><span class="fps-cell">AERC, BE, BKR, BOIL, CBIO, LI…</span></td><td><span class="miss-cell">KWEB, GGPI</span></td><td class="ocr-snippet" title="10,50
+Jo
+10,35
+Jo
+JennWaala
+10.25
+A Positic Syms +X
+6a (Sym Chro lerc Buz
+10,00
+FCX 3047 303*
+NUGI ~057n3 3048
+COPX ~032">10,50
+Jo
+10,35
+Jo
+JennWaala
+10.25
+A Positic Syms +X
+6a (Sym Chro lerc Buz
+10,00
+FCX 3047 303*
+NUGI ~057n3 3048
+COPX ~032</td></tr>
+<tr class=""><td class="date-cell">20220331 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:13:36</td><td class="conf-cell">37%</td><td class="ticker-list"><span class="ticker-fp">BKR</span><span class="ticker-fp">CBIO</span><span class="ticker-hit">COPX</span><span class="ticker-hit">FCX</span><span class="ticker-fp">FREY</span><span class="ticker-hit">KWEB</span><span class="ticker-fp">LI</span><span class="ticker-fp">MRO</span><span class="ticker-fp">NEM</span><span class="ticker-hit">NUGT</span><span class="ticker-fp">ON</span><span class="ticker-fp">ONON</span><span class="ticker-hit">REGN</span><span class="ticker-fp">SOXL</span><span class="ticker-fp">SPYM</span><span class="ticker-hit">TQQQ</span><span class="ticker-fp">U</span><span class="ticker-hit">X</span><span class="ticker-fp">XOM</span></td><td><span class="ticker-hit">COPX</span><span class="ticker-hit">FCX</span><span class="ticker-hit">KWEB</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-hit">TQQQ</span><span class="ticker-hit">X</span></td><td><span class="fps-cell">BKR, CBIO, FREY, LI, MRO, NEM…</span></td><td><span class="miss-cell">SPXL</span></td><td class="ocr-snippet" title="46,00
+Romawana
+A Positice Sym$ 5 +X
+MOO
+39 ISym Cho lere Buzz
+TCQ Fa 431,0%
+KVEB Jo 227,696 
+42,00
+SPXL 07878 4,878|
+REG">46,00
+Romawana
+A Positice Sym$ 5 +X
+MOO
+39 ISym Cho lere Buzz
+TCQ Fa 431,0%
+KVEB Jo 227,696 
+42,00
+SPXL 07878 4,878|
+REG</td></tr>
+<tr class=""><td class="date-cell">20220330 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:09:32</td><td class="conf-cell">41%</td><td class="ticker-list"><span class="ticker-fp">AERC</span><span class="ticker-fp">BKR</span><span class="ticker-fp">CBIO</span><span class="ticker-fp">CF</span><span class="ticker-hit">COPX</span><span class="ticker-hit">FCX</span><span class="ticker-fp">FREY</span><span class="ticker-fp">GOOG</span><span class="ticker-fp">JNUG</span><span class="ticker-hit">KWEB</span><span class="ticker-hit">LABU</span><span class="ticker-hit">NFLX</span><span class="ticker-hit">NUGT</span><span class="ticker-fp">ON</span><span class="ticker-fp">ORCL</span><span class="ticker-hit">REGN</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">U</span><span class="ticker-hit">X</span><span class="ticker-fp">XOM</span></td><td><span class="ticker-hit">COPX</span><span class="ticker-hit">FCX</span><span class="ticker-hit">KWEB</span><span class="ticker-hit">LABU</span><span class="ticker-hit">NFLX</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-hit">X</span></td><td><span class="fps-cell">AERC, BKR, CBIO, CF, FREY, GOOG…</span></td><td>—</td><td class="ocr-snippet" title="F
+180,00
+HuD
+3inawec
+A Positic Srm 5 +X
+178 C0 39 Sym Cho Pre Buzz
+1,90% 4415% |
+COPX 40,8893| 207, 193
+FCX 2283| 7169,3">F
+180,00
+HuD
+3inawec
+A Positic Srm 5 +X
+178 C0 39 Sym Cho Pre Buzz
+1,90% 4415% |
+COPX 40,8893| 207, 193
+FCX 2283| 7169,3</td></tr>
+<tr class=""><td class="date-cell">20220323 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:00:00</td><td class="conf-cell">47%</td><td class="ticker-list"><span class="ticker-hit">BOIL</span><span class="ticker-hit">COPX</span><span class="ticker-fp">FLUT</span><span class="ticker-fp">FREY</span><span class="ticker-fp">GNS</span><span class="ticker-hit">JNUG</span><span class="ticker-hit">KWEB</span><span class="ticker-fp">MP</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-fp">U</span><span class="ticker-hit">URA</span><span class="ticker-hit">URNM</span><span class="ticker-hit">WEAT</span><span class="ticker-hit">X</span><span class="ticker-fp">XOM</span></td><td><span class="ticker-hit">BOIL</span><span class="ticker-hit">COPX</span><span class="ticker-hit">JNUG</span><span class="ticker-hit">KWEB</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-hit">URA</span><span class="ticker-hit">URNM</span><span class="ticker-hit">WEAT</span><span class="ticker-hit">X</span></td><td><span class="fps-cell">FLUT, FREY, GNS, MP, SPYM, TAN…</span></td><td><span class="miss-cell">FCX</span></td><td class="ocr-snippet" title="27,00
+26,00
+7minsrkhin Jansoiadod
+A P {SymseY 5 +X
+25,00
+Fu9 Sym Roan Pre Buzz
+BOIL 44837 4122%|
+2400 WEAT 4170
+13,13
+UR">27,00
+26,00
+7minsrkhin Jansoiadod
+A P {SymseY 5 +X
+25,00
+Fu9 Sym Roan Pre Buzz
+BOIL 44837 4122%|
+2400 WEAT 4170
+13,13
+UR</td></tr>
+<tr class="tot-row"><td class="date-cell">20220321 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">tale_of_the_tape</span></td><td class="ts">00:31:28</td><td class="conf-cell">46%</td><td class="ticker-list"><span class="ticker-fp">BKR</span><span class="ticker-fp">BOIL</span><span class="ticker-hit">COPX</span><span class="ticker-fp">DELL</span><span class="ticker-hit">FCX</span><span class="ticker-fp">FREY</span><span class="ticker-fp">IBIT</span><span class="ticker-fp">JNUG</span><span class="ticker-fp">KWEB</span><span class="ticker-fp">NEM</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-fp">RIOT</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TAN</span><span class="ticker-fp">U</span><span class="ticker-fp">URA</span><span class="ticker-hit">URNM</span><span class="ticker-fp">WEAT</span><span class="ticker-hit">X</span><span class="ticker-fp">XOM</span><span class="ticker-fp">YINN</span></td><td><span class="ticker-hit">COPX</span><span class="ticker-hit">FCX</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-hit">URNM</span><span class="ticker-hit">X</span></td><td><span class="fps-cell">BKR, BOIL, DELL, FREY, IBIT, JNUG…</span></td><td><span class="miss-cell">DIDI, NUZE</span></td><td class="ocr-snippet" title="65,00
+IPI 70,7155| 9,2M
+TELL 6,363[ 109M1
+CENX 71,203 I154
+RiOT Oi 302m
+Jienin Wacht
+60,00
+A Symg   JNUG 4*
+Foo Sym Ecan">65,00
+IPI 70,7155| 9,2M
+TELL 6,363[ 109M1
+CENX 71,203 I154
+RiOT Oi 302m
+Jienin Wacht
+60,00
+A Symg   JNUG 4*
+Foo Sym Ecan</td></tr>
+<tr class=""><td class="date-cell">20220318 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:09:44</td><td class="conf-cell">45%</td><td class="ticker-list"><span class="ticker-fp">ARM</span><span class="ticker-fp">BOIL</span><span class="ticker-hit">COPX</span><span class="ticker-hit">FCX</span><span class="ticker-fp">FREY</span><span class="ticker-fp">FSR</span><span class="ticker-hit">KWEB</span><span class="ticker-fp">LCID</span><span class="ticker-hit">NUGT</span><span class="ticker-fp">ON</span><span class="ticker-hit">REGN</span><span class="ticker-fp">REMX</span><span class="ticker-fp">SEDG</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TEM</span><span class="ticker-fp">U</span><span class="ticker-hit">URA</span><span class="ticker-hit">URNM</span><span class="ticker-fp">X</span><span class="ticker-fp">ZS</span></td><td><span class="ticker-hit">COPX</span><span class="ticker-hit">FCX</span><span class="ticker-hit">KWEB</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">REGN</span><span class="ticker-hit">URA</span><span class="ticker-hit">URNM</span></td><td><span class="fps-cell">ARM, BOIL, FREY, FSR, LCID, ON…</span></td><td>—</td><td class="ocr-snippet" title="55,00
+Imns intatchig
+A Symg NUGI +X
+50,00
+F5o Sym Lcan Pre Buzz
+X 3833 23138
+NUGT on 3110,13
+KX Ont ~487.61
+REGN 02 567,">55,00
+Imns intatchig
+A Symg NUGI +X
+50,00
+F5o Sym Lcan Pre Buzz
+X 3833 23138
+NUGT on 3110,13
+KX Ont ~487.61
+REGN 02 567,</td></tr>
+<tr class=""><td class="date-cell">20220302 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:16:48</td><td class="conf-cell">43%</td><td class="ticker-list"><span class="ticker-fp">AERC</span><span class="ticker-fp">AVGO</span><span class="ticker-fp">BOIL</span><span class="ticker-hit">COPX</span><span class="ticker-fp">DASH</span><span class="ticker-hit">FCX</span><span class="ticker-fp">FLUT</span><span class="ticker-fp">FREY</span><span class="ticker-fp">LI</span><span class="ticker-hit">NUGT</span><span class="ticker-fp">ORCL</span><span class="ticker-fp">PSX</span><span class="ticker-fp">ROKU</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">SSO</span><span class="ticker-fp">U</span><span class="ticker-hit">X</span><span class="ticker-fp">YINN</span></td><td><span class="ticker-hit">COPX</span><span class="ticker-hit">FCX</span><span class="ticker-hit">NUGT</span><span class="ticker-hit">X</span></td><td><span class="fps-cell">AERC, AVGO, BOIL, DASH, FLUT, FREY…</span></td><td><span class="miss-cell">ERX, EDV, AGQ</span></td><td class="ocr-snippet" title="H00
+Ot2rmntornlet
+A Positit_ Sying 50 #X
+9,50
+Fuo Sym Rode Pre Buzz
+NUGT noni 531.620
+GUSH 4845 606.226
+9,00 FCX 0,2975 ">H00
+Ot2rmntornlet
+A Positit_ Sying 50 #X
+9,50
+Fuo Sym Rode Pre Buzz
+NUGT noni 531.620
+GUSH 4845 606.226
+9,00 FCX 0,2975 </td></tr>
+<tr class=""><td class="date-cell">20220301 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:14:56</td><td class="conf-cell">48%</td><td class="ticker-list"><span class="ticker-fp">AERC</span><span class="ticker-fp">BOIL</span><span class="ticker-hit">COPX</span><span class="ticker-fp">DASH</span><span class="ticker-fp">FLUT</span><span class="ticker-fp">FREY</span><span class="ticker-hit">MP</span><span class="ticker-hit">NUGT</span><span class="ticker-fp">ON</span><span class="ticker-fp">PSX</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">YINN</span></td><td><span class="ticker-hit">COPX</span><span class="ticker-hit">MP</span><span class="ticker-hit">NUGT</span></td><td><span class="fps-cell">AERC, BOIL, DASH, FLUT, FREY, ON…</span></td><td><span class="miss-cell">IBKR, CRH, XLV, KRE, EDV, RSX…</span></td><td class="ocr-snippet" title="21,00
+20,00
+3 emaintatchie
+A Syms FC 5+*
+Fuo Sym Rorr Pre Buzz
+79,00
+GUSH 334496 400,88
+ERX 27395 360,03
+NUGT 44619 4197">21,00
+20,00
+3 emaintatchie
+A Syms FC 5+*
+Fuo Sym Rorr Pre Buzz
+79,00
+GUSH 334496 400,88
+ERX 27395 360,03
+NUGT 44619 4197</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220228 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:50:36</td><td class="conf-cell">46%</td><td class="ticker-list"><span class="ticker-plain">AERC</span><span class="ticker-plain">ASML</span><span class="ticker-plain">BOIL</span><span class="ticker-plain">COPX</span><span class="ticker-plain">DASH</span><span class="ticker-plain">FREY</span><span class="ticker-plain">FSR</span><span class="ticker-plain">LEU</span><span class="ticker-plain">LI</span><span class="ticker-plain">MP</span><span class="ticker-plain">ON</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">YINN</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="F I s 230
+F UR Oa 211
+T1,0
+F MB 0653 3,03
+P KRE Oosa
+P XHB Oot 271
+3180 mongawanls Lscetj (
+10.50 A Positi Symn g 5 4X
+F">F I s 230
+F UR Oa 211
+T1,0
+F MB 0653 3,03
+P KRE Oosa
+P XHB Oot 271
+3180 mongawanls Lscetj (
+10.50 A Positi Symn g 5 4X
+F</td></tr>
+<tr class=""><td class="date-cell">20220222 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:25:00</td><td class="conf-cell">42%</td><td class="ticker-list"><span class="ticker-fp">BE</span><span class="ticker-hit">COPX</span><span class="ticker-hit">DVN</span><span class="ticker-fp">FANG</span><span class="ticker-hit">FCX</span><span class="ticker-fp">FLUT</span><span class="ticker-fp">FREY</span><span class="ticker-fp">FSR</span><span class="ticker-fp">MAGS</span><span class="ticker-fp">MP</span><span class="ticker-fp">NUGT</span><span class="ticker-fp">ON</span><span class="ticker-fp">SPYM</span><span class="ticker-hit">TQQQ</span><span class="ticker-hit">TSLA</span><span class="ticker-fp">U</span><span class="ticker-fp">YINN</span></td><td><span class="ticker-hit">COPX</span><span class="ticker-hit">DVN</span><span class="ticker-hit">FCX</span><span class="ticker-hit">TQQQ</span><span class="ticker-hit">TSLA</span></td><td><span class="fps-cell">BE, FANG, FLUT, FREY, FSR, MAGS…</span></td><td><span class="miss-cell">NRGU, MOS</span></td><td class="ocr-snippet" title="47,00
+Tn in occhig
+A Syuns DVN U 4X
+45,00
+Fuo Sym Koue Vol Buzz
+NRGU 4,6025 230,895
+DVN de 346,79
+MOS 0843e 7185.93
+43,0">47,00
+Tn in occhig
+A Syuns DVN U 4X
+45,00
+Fuo Sym Koue Vol Buzz
+NRGU 4,6025 230,895
+DVN de 346,79
+MOS 0843e 7185.93
+43,0</td></tr>
+<tr class=""><td class="date-cell">20220218 <span class="badge badge-gt">GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:30:24</td><td class="conf-cell">44%</td><td class="ticker-list"><span class="ticker-fp">ARM</span><span class="ticker-fp">BKR</span><span class="ticker-fp">BOIL</span><span class="ticker-fp">COIN</span><span class="ticker-hit">COPX</span><span class="ticker-hit">DVN</span><span class="ticker-fp">FLUT</span><span class="ticker-fp">FREY</span><span class="ticker-fp">KLAC</span><span class="ticker-fp">MAGS</span><span class="ticker-fp">NUGT</span><span class="ticker-fp">ROKU</span><span class="ticker-fp">SPOT</span><span class="ticker-fp">SPYM</span><span class="ticker-fp">TNA</span><span class="ticker-hit">TQQQ</span><span class="ticker-hit">TSLA</span><span class="ticker-fp">U</span><span class="ticker-fp">YINN</span><span class="ticker-fp">ZETA</span></td><td><span class="ticker-hit">COPX</span><span class="ticker-hit">DVN</span><span class="ticker-hit">TQQQ</span><span class="ticker-hit">TSLA</span></td><td><span class="fps-cell">ARM, BKR, BOIL, COIN, FLUT, FREY…</span></td><td><span class="miss-cell">UPST, NRGU, MOS, FCX, DWAC</span></td><td class="ocr-snippet" title="800,00
+750,00
+Aemn In otchie
+A Positi Sying 50 4X
+Foo Sym Rore Vol Buzz
+700,00
+ROKU 3096r 3963.4
+U
+67291 toCQ 027x 477,8">800,00
+750,00
+Aemn In otchie
+A Positi Sying 50 4X
+Foo Sym Rore Vol Buzz
+700,00
+ROKU 3096r 3963.4
+U
+67291 toCQ 027x 477,8</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220217 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:10:00</td><td class="conf-cell">41%</td><td class="ticker-list"><span class="ticker-plain">BKR</span><span class="ticker-plain">BOIL</span><span class="ticker-plain">COPX</span><span class="ticker-plain">CRM</span><span class="ticker-plain">DVN</span><span class="ticker-plain">FANG</span><span class="ticker-plain">FCX</span><span class="ticker-plain">FREY</span><span class="ticker-plain">FSR</span><span class="ticker-plain">GNS</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">KWEB</span><span class="ticker-plain">MAGS</span><span class="ticker-plain">NUGT</span><span class="ticker-plain">ON</span><span class="ticker-plain">RBRK</span><span class="ticker-plain">RIVN</span><span class="ticker-plain">SPOT</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">U</span><span class="ticker-plain">UCO</span><span class="ticker-plain">X</span><span class="ticker-plain">XOM</span><span class="ticker-plain">YINN</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="47,.00
+46.00
+IemnncnErg
+45,00
+A SyingDVN 4X
+Fuo Sym Korre Pre Buz
+40O UC 307 271,49
+MOS 0.093 302.08
+DWAC 30, 8395 61,17">47,.00
+46.00
+IemnncnErg
+45,00
+A SyingDVN 4X
+Fuo Sym Korre Pre Buz
+40O UC 307 271,49
+MOS 0.093 302.08
+DWAC 30, 8395 61,17</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220211 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:14:48</td><td class="conf-cell">45%</td><td class="ticker-list"><span class="ticker-plain">ADBE</span><span class="ticker-plain">ALB</span><span class="ticker-plain">BE</span><span class="ticker-plain">BOIL</span><span class="ticker-plain">CCJ</span><span class="ticker-plain">CF</span><span class="ticker-plain">COPX</span><span class="ticker-plain">DDOG</span><span class="ticker-plain">FCX</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">FREY</span><span class="ticker-plain">GOOG</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">LCID</span><span class="ticker-plain">NUGT</span><span class="ticker-plain">ON</span><span class="ticker-plain">RBRK</span><span class="ticker-plain">SGMO</span><span class="ticker-plain">SI</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">URA</span><span class="ticker-plain">X</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="740,00
+735,00
+Deceinnle
+130,00
+A Symg DLCg 4X
+FuJ Sym de Pre Buzz
+125,00 FCX US 247,036
+COPX 0363 41158
+NOs OSt 7167.386">740,00
+735,00
+Deceinnle
+130,00
+A Symg DLCg 4X
+FuJ Sym de Pre Buzz
+125,00 FCX US 247,036
+COPX 0363 41158
+NOs OSt 7167.386</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220210 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:11:44</td><td class="conf-cell">44%</td><td class="ticker-list"><span class="ticker-plain">ALB</span><span class="ticker-plain">BE</span><span class="ticker-plain">BOIL</span><span class="ticker-plain">CF</span><span class="ticker-plain">CHPT</span><span class="ticker-plain">COIN</span><span class="ticker-plain">COPX</span><span class="ticker-plain">DDOG</span><span class="ticker-plain">FCX</span><span class="ticker-plain">FREY</span><span class="ticker-plain">HUT</span><span class="ticker-plain">IREN</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">MP</span><span class="ticker-plain">NBIS</span><span class="ticker-plain">NUGT</span><span class="ticker-plain">QS</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">TSM</span><span class="ticker-plain">U</span><span class="ticker-plain">UCO</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="3202
+300
+Ecnnnle
+28.0 A Positie Syins 5 4X
+Euo Sym Rorae Pre Buzz
+DCFC F26D 4470,0x
+26.00
+DDOG 13,5071 2020,0
+FCX 24826|">3202
+300
+Ecnnnle
+28.0 A Positie Syins 5 4X
+Euo Sym Rorae Pre Buzz
+DCFC F26D 4470,0x
+26.00
+DDOG 13,5071 2020,0
+FCX 24826|</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220209 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:22:12</td><td class="conf-cell">44%</td><td class="ticker-list"><span class="ticker-plain">BOIL</span><span class="ticker-plain">CF</span><span class="ticker-plain">COPX</span><span class="ticker-plain">FCX</span><span class="ticker-plain">FREY</span><span class="ticker-plain">GOOG</span><span class="ticker-plain">HUT</span><span class="ticker-plain">IREN</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">LCID</span><span class="ticker-plain">NBIS</span><span class="ticker-plain">NUGT</span><span class="ticker-plain">ON</span><span class="ticker-plain">RIOT</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">U</span><span class="ticker-plain">X</span><span class="ticker-plain">YINN</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="7200
+7100
+Senroc
+A Positi_ Sying 50 #X
+Euo Sym Roe Vol Buzz
+DCFC 35.223 710053 }
+70.0
+FCX 3873 477,7%
+ToOQ 3.643 96,93
+C">7200
+7100
+Senroc
+A Positi_ Sying 50 #X
+Euo Sym Roe Vol Buzz
+DCFC 35.223 710053 }
+70.0
+FCX 3873 477,7%
+ToOQ 3.643 96,93
+C</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220208 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:23:44</td><td class="conf-cell">39%</td><td class="ticker-list"><span class="ticker-plain">BE</span><span class="ticker-plain">BOIL</span><span class="ticker-plain">CF</span><span class="ticker-plain">COPX</span><span class="ticker-plain">DASH</span><span class="ticker-plain">FREY</span><span class="ticker-plain">IREN</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">LI</span><span class="ticker-plain">MP</span><span class="ticker-plain">NBIS</span><span class="ticker-plain">NUGT</span><span class="ticker-plain">ON</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">U</span><span class="ticker-plain">XOM</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="3 e
+SMH uia 383
+J5000
+P VM od 216
+F XlK O0t 2,78
+P 00Q onox 275
+140,00
+39 lemain Yacchio Jat SJioo V
+A Positi Syms 50 4X">3 e
+SMH uia 383
+J5000
+P VM od 216
+F XlK O0t 2,78
+P 00Q onox 275
+140,00
+39 lemain Yacchio Jat SJioo V
+A Positi Syms 50 4X</td></tr>
+<tr class="tot-row"><td class="date-cell">20220207 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">tale_of_the_tape</span></td><td class="ts">00:28:00</td><td class="conf-cell">41%</td><td class="ticker-list"><span class="ticker-plain">AAPL</span><span class="ticker-plain">CF</span><span class="ticker-plain">DASH</span><span class="ticker-plain">FREY</span><span class="ticker-plain">GOOG</span><span class="ticker-plain">HOOD</span><span class="ticker-plain">HUT</span><span class="ticker-plain">IREN</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">LI</span><span class="ticker-plain">MARA</span><span class="ticker-plain">MRNA</span><span class="ticker-plain">NBIS</span><span class="ticker-plain">NUGT</span><span class="ticker-plain">SEDG</span><span class="ticker-plain">SNAP</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">SSO</span><span class="ticker-plain">TSLA</span><span class="ticker-plain">U</span><span class="ticker-plain">XOM</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title=" 
+AauU
+CFLT 4663 976
+NET 48,253 185,03
+435,00 FCEL 393 9,98
+ApPS 3,363| 21,0h
+25 Kmnain&quot;athc
+430,00 A Syms XopP 4*
+Euo S"> 
+AauU
+CFLT 4663 976
+NET 48,253 185,03
+435,00 FCEL 393 9,98
+ApPS 3,363| 21,0h
+25 Kmnain&quot;athc
+430,00 A Syms XopP 4*
+Euo S</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220204 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:53:00</td><td class="conf-cell">42%</td><td class="ticker-list"><span class="ticker-plain">BOIL</span><span class="ticker-plain">CCJ</span><span class="ticker-plain">COIN</span><span class="ticker-plain">DASH</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">FREY</span><span class="ticker-plain">IREN</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">LCID</span><span class="ticker-plain">NBIS</span><span class="ticker-plain">NUGT</span><span class="ticker-plain">RIOT</span><span class="ticker-plain">SOXL</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">X</span><span class="ticker-plain">XOM</span><span class="ticker-plain">YINN</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="1200
+3eeninnle
+A Positit Syis 50 4X
+Jic Euo Sym Roe Vol Buzz
+DWAC 29696 7.67
+KRBN 178 718 236
+XOP 3,6586 | 208,156
+70.00">1200
+3eeninnle
+A Positit Syis 50 4X
+Jic Euo Sym Roe Vol Buzz
+DWAC 29696 7.67
+KRBN 178 718 236
+XOP 3,6586 | 208,156
+70.00</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220203 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:47:00</td><td class="conf-cell">39%</td><td class="ticker-list"><span class="ticker-plain">BITO</span><span class="ticker-plain">BNTX</span><span class="ticker-plain">BOIL</span><span class="ticker-plain">CRM</span><span class="ticker-plain">DASH</span><span class="ticker-plain">FREY</span><span class="ticker-plain">GOOG</span><span class="ticker-plain">HPE</span><span class="ticker-plain">IREN</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">LI</span><span class="ticker-plain">NIO</span><span class="ticker-plain">NUGT</span><span class="ticker-plain">RIOT</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">U</span><span class="ticker-plain">XOM</span><span class="ticker-plain">YINN</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="165,00
+0ecnnthle
+A Positi_ Sying 50 +X
+Euo Sym Roe Vol Buzz
+KRBN 0993 411881
+160,00
+TOOQ J0e 407.590
+NRGU 3553 400 3*
+NO">165,00
+0ecnnthle
+A Positi_ Sying 50 +X
+Euo Sym Roe Vol Buzz
+KRBN 0993 411881
+160,00
+TOOQ J0e 407.590
+NRGU 3553 400 3*
+NO</td></tr>
+<tr class="tot-row"><td class="date-cell">20220202 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">tale_of_the_tape</span></td><td class="ts">00:11:20</td><td class="conf-cell">41%</td><td class="ticker-list"><span class="ticker-plain">BOIL</span><span class="ticker-plain">DASH</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">FREY</span><span class="ticker-plain">HUBS</span><span class="ticker-plain">IREN</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">LI</span><span class="ticker-plain">LLY</span><span class="ticker-plain">NBIS</span><span class="ticker-plain">NUGT</span><span class="ticker-plain">ON</span><span class="ticker-plain">P</span><span class="ticker-plain">SOXL</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">TQQQ</span><span class="ticker-plain">U</span><span class="ticker-plain">X</span><span class="ticker-plain">XOM</span><span class="ticker-plain">YINN</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title=" U
+P XU 0.,00r 224
+440,00
+P XlK 0.353 2,85
+P WWM 0,053 3,06
+435,00 P XlE 07oa 291
+Fonti iemain Yokhg La Smod
+A Positie S"> U
+P XU 0.,00r 224
+440,00
+P XlK 0.353 2,85
+P WWM 0,053 3,06
+435,00 P XlE 07oa 291
+Fonti iemain Yokhg La Smod
+A Positie S</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220201 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:18:16</td><td class="conf-cell">40%</td><td class="ticker-list"><span class="ticker-plain">BOIL</span><span class="ticker-plain">CCJ</span><span class="ticker-plain">FREY</span><span class="ticker-plain">HUBS</span><span class="ticker-plain">LCID</span><span class="ticker-plain">NBIS</span><span class="ticker-plain">ON</span><span class="ticker-plain">P</span><span class="ticker-plain">RIOT</span><span class="ticker-plain">SGMO</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">TQQQ</span><span class="ticker-plain">U</span><span class="ticker-plain">YINN</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="C0,0O
+9800
+Eenmenle
+A Positit Sying 50 #X
+Fuo Sym Raae Pre Buzz
+96.00 ToOQ 065x 214.,28
+HUBS 0u53 82,03
+P NOS 29396 | 38">C0,0O
+9800
+Eenmenle
+A Positit Sying 50 #X
+Fuo Sym Raae Pre Buzz
+96.00 ToOQ 065x 214.,28
+HUBS 0u53 82,03
+P NOS 29396 | 38</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220131 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:00:00</td><td class="conf-cell">39%</td><td class="ticker-list"><span class="ticker-plain">BE</span><span class="ticker-plain">BOIL</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">FREY</span><span class="ticker-plain">GEV</span><span class="ticker-plain">GOOG</span><span class="ticker-plain">HOOD</span><span class="ticker-plain">LI</span><span class="ticker-plain">P</span><span class="ticker-plain">ROKU</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">X</span><span class="ticker-plain">YINN</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="G0,00
+Sand Zrntnlet
+56,69
+86 A  Positi_ Sying 50 #X
+55,00 Fuo Sym 4 Cee Pre Buzz
+S0.0o
+Gaq Arith 3
+bod
+Hoom
+1
+Soc
+265,9k">G0,00
+Sand Zrntnlet
+56,69
+86 A  Positi_ Sying 50 #X
+55,00 Fuo Sym 4 Cee Pre Buzz
+S0.0o
+Gaq Arith 3
+bod
+Hoom
+1
+Soc
+265,9k</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220128 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:17:00</td><td class="conf-cell">50%</td><td class="ticker-list"><span class="ticker-plain">BE</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">FREY</span><span class="ticker-plain">HOOD</span><span class="ticker-plain">LCID</span><span class="ticker-plain">P</span><span class="ticker-plain">ROKU</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">YINN</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="270,00
+265,00 orenntnlet
+A Positi Sying 50 4X
+365
+261,66 Fuo Sym 3 de Pre Buzz
+Jla
+260,00
+255,00
+31
+94 Arith 3
+IS4
+Lom
+1">270,00
+265,00 orenntnlet
+A Positi Sying 50 4X
+365
+261,66 Fuo Sym 3 de Pre Buzz
+Jla
+260,00
+255,00
+31
+94 Arith 3
+IS4
+Lom
+1</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220127 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:28:00</td><td class="conf-cell">38%</td><td class="ticker-list"><span class="ticker-plain">CCJ</span><span class="ticker-plain">CWEB</span><span class="ticker-plain">FREY</span><span class="ticker-plain">HOOD</span><span class="ticker-plain">LCID</span><span class="ticker-plain">ON</span><span class="ticker-plain">P</span><span class="ticker-plain">ROKU</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">YINN</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="G0.0n
+55.60
+3eeninnle
+550J
+A Positit_ Sy g 50 4X
+Fuo Sym Rarde Pre Buzz
+502
+952 Arith 3
+coc
+ocM
+16,6M4
+0o
+Demmeconitnla ">G0.0n
+55.60
+3eeninnle
+550J
+A Positit_ Sy g 50 4X
+Fuo Sym Rarde Pre Buzz
+502
+952 Arith 3
+coc
+ocM
+16,6M4
+0o
+Demmeconitnla </td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220126 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:08:56</td><td class="conf-cell">45%</td><td class="ticker-list"><span class="ticker-plain">ASML</span><span class="ticker-plain">CCJ</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">FREY</span><span class="ticker-plain">LI</span><span class="ticker-plain">P</span><span class="ticker-plain">RIOT</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">YINN</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="540
+9enntnet
+5200 A Positi_ Sying 50 4X
+Fuo Sym I dde Pre Buzz
+50.0o
+020 Arith 3
+ISu
+Lom
+1
+Sodo
+Z,K
+Demdronimnla Lsnd
+75">540
+9enntnet
+5200 A Positi_ Sying 50 4X
+Fuo Sym I dde Pre Buzz
+50.0o
+020 Arith 3
+ISu
+Lom
+1
+Sodo
+Z,K
+Demdronimnla Lsnd
+75</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220124 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:18:08</td><td class="conf-cell">43%</td><td class="ticker-list"><span class="ticker-plain">BOIL</span><span class="ticker-plain">FCX</span><span class="ticker-plain">FREY</span><span class="ticker-plain">LCID</span><span class="ticker-plain">LI</span><span class="ticker-plain">P</span><span class="ticker-plain">PSX</span><span class="ticker-plain">ROKU</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">U</span><span class="ticker-plain">UVXY</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="2C0,00
+790,00 Trcnnetorsi Mjrhlet
+A Positi Syng 5 4X
+Fuo Sym Rote Pre Buzz
+7120,00 FCX CId U 528.286
+UX 713.,083 913.23
+">2C0,00
+790,00 Trcnnetorsi Mjrhlet
+A Positi Syng 5 4X
+Fuo Sym Rote Pre Buzz
+7120,00 FCX CId U 528.286
+UX 713.,083 913.23
+</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220121 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:24:12</td><td class="conf-cell">37%</td><td class="ticker-list"><span class="ticker-plain">AERC</span><span class="ticker-plain">BOIL</span><span class="ticker-plain">CCJ</span><span class="ticker-plain">FCX</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">FREY</span><span class="ticker-plain">HUT</span><span class="ticker-plain">LCID</span><span class="ticker-plain">LI</span><span class="ticker-plain">ON</span><span class="ticker-plain">P</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">VSCO</span><span class="ticker-plain">X</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="13.00
+0ecaninlet
+A Positit Sying 50 #X
+EuJ Sym Ra Vol Buzz
+720
+FCX Jatt 4182,586
+FUIU Moo 2424%0
+VC JJ 750,65
+ERX D 348.">13.00
+0ecaninlet
+A Positit Sying 50 #X
+EuJ Sym Ra Vol Buzz
+720
+FCX Jatt 4182,586
+FUIU Moo 2424%0
+VC JJ 750,65
+ERX D 348.</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220118 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:20:40</td><td class="conf-cell">36%</td><td class="ticker-list"><span class="ticker-plain">AERC</span><span class="ticker-plain">BOIL</span><span class="ticker-plain">COIN</span><span class="ticker-plain">FCX</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">FREY</span><span class="ticker-plain">GNS</span><span class="ticker-plain">INTC</span><span class="ticker-plain">LCID</span><span class="ticker-plain">MU</span><span class="ticker-plain">P</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">U</span><span class="ticker-plain">X</span><span class="ticker-plain">XOM</span><span class="ticker-plain">XPEV</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="380,00
+Aennical
+A Positi Syms +X
+Gncida
+374,52 Pre Buzz
+09 Sym Eoge
+Ens
+FC 0,14x 4152k
+Jone 23438
+953i U 100, 7%
+Lc Foa ">380,00
+Aennical
+A Positi Syms +X
+Gncida
+374,52 Pre Buzz
+09 Sym Eoge
+Ens
+FC 0,14x 4152k
+Jone 23438
+953i U 100, 7%
+Lc Foa </td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220114 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:00:00</td><td class="conf-cell">29%</td><td class="ticker-list"><span class="ticker-plain">AERC</span><span class="ticker-plain">BOIL</span><span class="ticker-plain">CF</span><span class="ticker-plain">CRDO</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">FREY</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">LCID</span><span class="ticker-plain">LITE</span><span class="ticker-plain">MRO</span><span class="ticker-plain">MU</span><span class="ticker-plain">P</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">UCO</span><span class="ticker-plain">XPEV</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="I 29,15
+45251J
+Oenin Waalat
+28.00
+A Syms LC * +*
+Fua Sym Cige Pre Buzz
+LAc Kcano A13r
+27.00
+ICD 91a 4167
+TC Foo ~081
+Hro">I 29,15
+45251J
+Oenin Waalat
+28.00
+A Syms LC * +*
+Fua Sym Cige Pre Buzz
+LAc Kcano A13r
+27.00
+ICD 91a 4167
+TC Foo ~081
+Hro</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220113 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:00:00</td><td class="conf-cell">37%</td><td class="ticker-list"><span class="ticker-plain">BKR</span><span class="ticker-plain">CF</span><span class="ticker-plain">CRM</span><span class="ticker-plain">DBRG</span><span class="ticker-plain">FANG</span><span class="ticker-plain">FCX</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">FREY</span><span class="ticker-plain">JNUG</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">KWEB</span><span class="ticker-plain">LCID</span><span class="ticker-plain">MU</span><span class="ticker-plain">P</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">SSO</span><span class="ticker-plain">TSLA</span><span class="ticker-plain">TSM</span><span class="ticker-plain">X</span><span class="ticker-plain">XPEV</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="30,00
+0iaitikhn
+29,00
+A Syms Crx +X
+Fu9 Sym Rorg Pre Buzt
+28,00 KWEB 038i Al48
+FUIU 1553 427
+FCX 4863 4138
+27,00
+u 4s03 ">30,00
+0iaitikhn
+29,00
+A Syms Crx +X
+Fu9 Sym Rorg Pre Buzt
+28,00 KWEB 038i Al48
+FUIU 1553 427
+FCX 4863 4138
+27,00
+u 4s03 </td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220112 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:08:08</td><td class="conf-cell">40%</td><td class="ticker-list"><span class="ticker-plain">AERC</span><span class="ticker-plain">BOIL</span><span class="ticker-plain">BTBT</span><span class="ticker-plain">COIN</span><span class="ticker-plain">FCX</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">FREY</span><span class="ticker-plain">GOOG</span><span class="ticker-plain">KWEB</span><span class="ticker-plain">LCID</span><span class="ticker-plain">LI</span><span class="ticker-plain">MU</span><span class="ticker-plain">ON</span><span class="ticker-plain">P</span><span class="ticker-plain">XOM</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="1 Co0,UO
+Iemn M atchin
+A Posit Syms +X
+950,00 Fus Sym Ou9e Pre Bux
+FUIU 3457s 4779
+FCX 3407n| 330
+KWEB 387878 [ 4378
+LAC">1 Co0,UO
+Iemn M atchin
+A Posit Syms +X
+950,00 Fus Sym Ou9e Pre Bux
+FUIU 3457s 4779
+FCX 3407n| 330
+KWEB 387878 [ 4378
+LAC</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220110 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:13:24</td><td class="conf-cell">38%</td><td class="ticker-list"><span class="ticker-plain">AERC</span><span class="ticker-plain">BKR</span><span class="ticker-plain">DOCN</span><span class="ticker-plain">FANG</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">FREY</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">LCID</span><span class="ticker-plain">LI</span><span class="ticker-plain">MU</span><span class="ticker-plain">P</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">X</span><span class="ticker-plain">XOM</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="Fns
+2985
+Ban
+29,75
+0 ienns intarchin
+29,50
+A Posit Syms +X
+Fu9 Sym Rong Pre Buzt
+ICID ~0nx| 142,93
+29,25
+FX Tsx 448,3
+ER">Fns
+2985
+Ban
+29,75
+0 ienns intarchin
+29,50
+A Posit Syms +X
+Fu9 Sym Rong Pre Buzt
+ICID ~0nx| 142,93
+29,25
+FX Tsx 448,3
+ER</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220106 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:24:12</td><td class="conf-cell">42%</td><td class="ticker-list"><span class="ticker-plain">AERC</span><span class="ticker-plain">ARKG</span><span class="ticker-plain">BKR</span><span class="ticker-plain">BOIL</span><span class="ticker-plain">DDOG</span><span class="ticker-plain">FCX</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">FREY</span><span class="ticker-plain">JNUG</span><span class="ticker-plain">MU</span><span class="ticker-plain">P</span><span class="ticker-plain">PLTR</span><span class="ticker-plain">ROKU</span><span class="ticker-plain">SCCO</span><span class="ticker-plain">SOXL</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">TSM</span><span class="ticker-plain">XOM</span><span class="ticker-plain">XPEV</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="70,50
+0 mkach
+A Posit S5mns +X
+F59 Sym Cung Pre Buz
+70.0O
+ERX 45,393 3413,93
+42287 3402 58
+SOX 72845 4313,88
+950 XPEV 42">70,50
+0 mkach
+A Posit S5mns +X
+F59 Sym Cung Pre Buz
+70.0O
+ERX 45,393 3413,93
+42287 3402 58
+SOX 72845 4313,88
+950 XPEV 42</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220105 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">01:03:20</td><td class="conf-cell">41%</td><td class="ticker-list"><span class="ticker-plain">AERC</span><span class="ticker-plain">APH</span><span class="ticker-plain">ARKG</span><span class="ticker-plain">BEAM</span><span class="ticker-plain">BKR</span><span class="ticker-plain">BOIL</span><span class="ticker-plain">CCJ</span><span class="ticker-plain">COIN</span><span class="ticker-plain">FCX</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">HOOD</span><span class="ticker-plain">JNUG</span><span class="ticker-plain">MP</span><span class="ticker-plain">MU</span><span class="ticker-plain">ON</span><span class="ticker-plain">P</span><span class="ticker-plain">PANW</span><span class="ticker-plain">SGMO</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">TEAM</span><span class="ticker-plain">URA</span><span class="ticker-plain">XOM</span><span class="ticker-plain">XPEV</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="39,00
+Aem iuacha
+38, 00
+A Posit Sms t+X
+Fu9 Sym Coa Nol Bux
+cC 40 249| 3467 }
+37,00
+URA 30,023 4853 3
+NUE 72531 3457,
+36">39,00
+Aem iuacha
+38, 00
+A Posit Sms t+X
+Fu9 Sym Coa Nol Bux
+cC 40 249| 3467 }
+37,00
+URA 30,023 4853 3
+NUE 72531 3457,
+36</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220104 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:09:40</td><td class="conf-cell">42%</td><td class="ticker-list"><span class="ticker-plain">BKR</span><span class="ticker-plain">BOIL</span><span class="ticker-plain">DOCN</span><span class="ticker-plain">FANG</span><span class="ticker-plain">FCX</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">FREY</span><span class="ticker-plain">GEV</span><span class="ticker-plain">HAL</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">MU</span><span class="ticker-plain">P</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">TSM</span><span class="ticker-plain">XOM</span><span class="ticker-plain">XPEV</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="70z,00
+J00,00
+iemnutkhin
+A Posit Svms +X
+Fu9 Sym Coix Pre Buz
+98,00
+43,49% 2804
+ERX 2487| 129u
+SOX 1,00% 628,9
+96,00
+LC ">70z,00
+J00,00
+iemnutkhin
+A Posit Svms +X
+Fu9 Sym Coix Pre Buz
+98,00
+43,49% 2804
+ERX 2487| 129u
+SOX 1,00% 628,9
+96,00
+LC </td></tr>
+<tr class="no-gt-row"><td class="date-cell">20220103 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart</span></td><td class="ts">00:00:00</td><td class="conf-cell">82%</td><td class="ticker-list"><span class="ticker-plain">ARKG</span><span class="ticker-plain">BE</span><span class="ticker-plain">BTBT</span><span class="ticker-plain">CCI</span><span class="ticker-plain">CRDO</span><span class="ticker-plain">DBX</span><span class="ticker-plain">DELL</span><span class="ticker-plain">DOCN</span><span class="ticker-plain">FCX</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">HPE</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">MDB</span><span class="ticker-plain">MU</span><span class="ticker-plain">P</span><span class="ticker-plain">PANW</span><span class="ticker-plain">SI</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">TEM</span><span class="ticker-plain">UCO</span><span class="ticker-plain">X</span><span class="ticker-plain">XPEV</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="1
+7522
+^p&quot; 5
+2022-01-03">1
+7522
+^p&quot; 5
+2022-01-03</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20211231 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:44:48</td><td class="conf-cell">42%</td><td class="ticker-list"><span class="ticker-plain">ARM</span><span class="ticker-plain">BKR</span><span class="ticker-plain">BOIL</span><span class="ticker-plain">CCI</span><span class="ticker-plain">CRWD</span><span class="ticker-plain">DASH</span><span class="ticker-plain">DOCN</span><span class="ticker-plain">FCX</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">MDB</span><span class="ticker-plain">MU</span><span class="ticker-plain">P</span><span class="ticker-plain">PANW</span><span class="ticker-plain">QS</span><span class="ticker-plain">U</span><span class="ticker-plain">X</span><span class="ticker-plain">XOM</span><span class="ticker-plain">XPEV</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="300
+30,00
+3 luikhn
+A Syms UX +X
+29,00 Sym Co Nol Buz
+Fug
+ToCQ Jn 481,6
+25 ~0292 Ant
+MDB 0163 JaS
+28.00
+PANW 4053 SS
+Mu U">300
+30,00
+3 luikhn
+A Syms UX +X
+29,00 Sym Co Nol Buz
+Fug
+ToCQ Jn 481,6
+25 ~0292 Ant
+MDB 0163 JaS
+28.00
+PANW 4053 SS
+Mu U</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20211230 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">00:33:12</td><td class="conf-cell">35%</td><td class="ticker-list"><span class="ticker-plain">AMD</span><span class="ticker-plain">BE</span><span class="ticker-plain">BKR</span><span class="ticker-plain">CF</span><span class="ticker-plain">CRWD</span><span class="ticker-plain">GOOG</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">LEU</span><span class="ticker-plain">MDB</span><span class="ticker-plain">MU</span><span class="ticker-plain">P</span><span class="ticker-plain">PANW</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">TER</span><span class="ticker-plain">TQQQ</span><span class="ticker-plain">TSM</span><span class="ticker-plain">U</span><span class="ticker-plain">XOM</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="755,00
+0iaikhn
+750,00
+A SymsECoQ E+*
+Fu9 (Sym Cos MolBuz
+MU 9553 4201,92
+TooQ +0,12% 051.0
+7145,00 MEU FAC
+~0,662
+PANW ~">755,00
+0iaikhn
+750,00
+A SymsECoQ E+*
+Fu9 (Sym Cos MolBuz
+MU 9553 4201,92
+TooQ +0,12% 051.0
+7145,00 MEU FAC
+~0,662
+PANW ~</td></tr>
+<tr class="no-gt-row"><td class="date-cell">20211229 <span class="badge badge-nogt">no-GT</span></td><td><span class="badge badge-chart">chart_stream</span></td><td class="ts">01:14:00</td><td class="conf-cell">32%</td><td class="ticker-list"><span class="ticker-plain">AMD</span><span class="ticker-plain">ARKG</span><span class="ticker-plain">BKR</span><span class="ticker-plain">EDIT</span><span class="ticker-plain">ETSY</span><span class="ticker-plain">FCX</span><span class="ticker-plain">FLUT</span><span class="ticker-plain">KLAC</span><span class="ticker-plain">LCID</span><span class="ticker-plain">LI</span><span class="ticker-plain">MDB</span><span class="ticker-plain">MU</span><span class="ticker-plain">OIH</span><span class="ticker-plain">ON</span><span class="ticker-plain">P</span><span class="ticker-plain">PANW</span><span class="ticker-plain">PLTR</span><span class="ticker-plain">SGMO</span><span class="ticker-plain">SNOW</span><span class="ticker-plain">SPCE</span><span class="ticker-plain">SPYM</span><span class="ticker-plain">UCO</span><span class="ticker-plain">X</span><span class="ticker-plain">XOM</span><span class="ticker-plain">ZS</span></td><td>—</td><td>—</td><td>—</td><td class="ocr-snippet" title="1150,00
+3 ems intakhn
+1 100,00
+A Syms NEU +X
+Fu9 (Sym O Mol Buz
+LAC 9aE 00
+GME 390 36
+1050,00
+ICID Oson 07
+PLIR DRA ~2SH">1150,00
+3 ems intakhn
+1 100,00
+A Syms NEU +X
+Fu9 (Sym O Mol Buz
+LAC 9aE 00
+GME 390 36
+1050,00
+ICID Oson 07
+PLIR DRA ~2SH</td></tr>
+</tbody>
+</table>
+
+<script>
+const rows = [{"dk":"20231215","tickers":["AERC","BKR","BOIL","LI","ON","SGMO","TSM","UCO","X"],"layout":"chart_stream","conf":43,"tsHms":"00:13:36","ocrSnippet":"Hasaed035 Rot\nFiltet Eda Symns Bit +X\nDol Vol Vol Buzz\n0\n545 5080k 1108,176|\n706 5IM 662 15\n464 J34M 403,57\nI| 3 50 285M","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20231201","tickers":["BNTX","DBRG","DDOG","EDIT","FCX","FREY","GNS","HAL","LI","ON","ONON","PDD","PLTR","SPYM","X"],"layout":"chart_stream","conf":40,"tsHms":"00:15:52","ocrSnippet":"OmnaWaalt Lnsoido Roron\nA  Positions I Filtet Edr Symes 4X\n6o Sym CrJnde Dol Val Pre Buzz\nPDD 855 3,56 Tizzm 4458 4x\nSym","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20230609","tickers":["AERC","APLD","ARKG","ARM","BIIB","BKR","BOIL","CF","CVNA","HAL","ILMN","MP","NBIS","NUGT","ON","ONON","QS","RIOT","SI","SNDK","TNA","X"],"layout":"tale_of_the_tape","conf":38,"tsHms":"00:48:36","ocrSnippet":"37ot8 iena m uatchi Jsoado Ba on\nA  Positions Filtet | Edr Syms +X\nFVo Sym Cunde Dol Val Vol Buz\nRGII 70,143123.,63 5 SM","hasGT":true,"hits":["APLD","CVNA"],"fps":["AERC","ARKG","ARM","BIIB","BKR","BOIL","CF","HAL","ILMN","MP","NBIS","NUGT","ON","ONON","QS","RIOT","SI","SNDK","TNA","X"],"missing":["RGTI","QBTS","IMGN","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","MNDY"],"gtTickers":["RGTI","QBTS","IMGN","CVNA","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","APLD","MNDY"]},{"dk":"20230608","tickers":["BOIL","COIN","DASH","EDIT","ON","ONON","SPYM","TAN","TSM","U"],"layout":"tale_of_the_tape","conf":35,"tsHms":"01:05:00","ocrSnippet":"L Jasoiod Roor\n(Fitter Edit Symg 5 4X\nConn\nTan IDol Vol Nol Buzz\n26,143 1340 628 8M 7933\n15,4693131,31 13.1M ~87038\n19,6","hasGT":true,"hits":[],"fps":["BOIL","COIN","DASH","EDIT","ON","ONON","SPYM","TAN","TSM","U"],"missing":["CVNA","QBTS","APLD","ARQQ","IMGN","IOT","GTLB","RGTI","DNA","MNDY","AI","PLTR","GSIT"],"gtTickers":["CVNA","QBTS","APLD","ARQQ","IMGN","IOT","GTLB","RGTI","DNA","MNDY","AI","PLTR","GSIT"]},{"dk":"20230605","tickers":["AAPL","ALB","ARM","ASML","CCI","CHPT","COIN","FLUT","ILMN","ON","SGMO","X","XOM"],"layout":"chart_stream","conf":34,"tsHms":"00:20:00","ocrSnippet":"Al LorsoenJ 0n6\n5 Filtet {t Syis MNDY +X\nJa\nChae Dol Vol Vol &ua\n3,6936  5,27 Z05M 48419\n6 3586/17.66 2246k 940x\n2 3026/","hasGT":true,"hits":[],"fps":["AAPL","ALB","ARM","ASML","CCI","CHPT","COIN","FLUT","ILMN","ON","SGMO","X","XOM"],"missing":["IMGN","ARQQ","CVNA","IOT","PLTR","GSIT","MNDY","APLD","AI","QBTS","DNA"],"gtTickers":["IMGN","ARQQ","CVNA","IOT","PLTR","GSIT","MNDY","APLD","AI","QBTS","DNA"]},{"dk":"20230602","tickers":["AERC","APLD","BEAM","BITO","BKR","BOIL","BTU","CRDO","CVNA","EDIT","FANG","FLUT","FREY","HAL","ILMN","MP","MU","ON","ONON","PINS","PLTR","REGN","RIOT","SI","SNDK","SPYM","TNA","TSM","U","X"],"layout":"tale_of_the_tape","conf":35,"tsHms":"00:06:16","ocrSnippet":"BAB4 0299 5 J4Am 90r\nPARA 29278 6.0M 7164393\nHal 32u 89m 38328\n25032 ienuuachn Jensoioo x Boso\nA A Positions Filter | Ed","hasGT":true,"hits":["APLD","CVNA","PLTR"],"fps":["AERC","BEAM","BITO","BKR","BOIL","BTU","CRDO","EDIT","FANG","FLUT","FREY","HAL","ILMN","MP","MU","ON","ONON","PINS","REGN","RIOT","SI","SNDK","SPYM","TNA","TSM","U","X"],"missing":["IOT","TEAM","MTCH","QBTS","ARQQ","RGTI","IMGN","MNDY","DNA","IONQ","AI","GSIT"],"gtTickers":["IOT","TEAM","MTCH","QBTS","ARQQ","RGTI","IMGN","PLTR","CVNA","MNDY","APLD","DNA","IONQ","AI","GSIT"]},{"dk":"20230601","tickers":["APLD","ARM","BKR","BOIL","COIN","CVNA","GNS","HAL","MP","NBIS","NIO","ON","ONON","PLTR","SNDK","SPYM","TAN","U","X","YINN"],"layout":"tale_of_the_tape","conf":37,"tsHms":"00:52:00","ocrSnippet":"inn Pior Waala Jan sondol 3 Sor\nA  Positions 4 Filtet Eda Syms +X\nFuo Sym Cunde Dol Val Vol Buz\n0\nA 76 0u3| 10,75 664.9m","hasGT":true,"hits":["APLD","CVNA","PLTR"],"fps":["ARM","BKR","BOIL","COIN","GNS","HAL","MP","NBIS","NIO","ON","ONON","SNDK","SPYM","TAN","U","X","YINN"],"missing":["QBTS","AI","DNA","IONQ","IMGN","MNDY"],"gtTickers":["QBTS","APLD","AI","DNA","CVNA","IONQ","PLTR","IMGN","MNDY"]},{"dk":"20230523","tickers":["BKR","EDIT","HAL","HPE","MP","MRO","ON","ONON","RIOT","SGMO","X"],"layout":"tale_of_the_tape","conf":40,"tsHms":"00:33:20","ocrSnippet":"euachd\n5 Filter Edtt Synts 5 4X\nCts\nDol Vol Vol Buz\nhije\nJ0,8  17,57 LJM  709u,6|\nTr 3,66 201M 42637\n2963| 10,74 103M 27","hasGT":true,"hits":[],"fps":["BKR","EDIT","HAL","HPE","MP","MRO","ON","ONON","RIOT","SGMO","X"],"missing":["QBTS","LI","SOUN","IMGN","FTCH","MNDY","APLD","PLTR","DNA","AI","CVNA"],"gtTickers":["QBTS","LI","SOUN","IMGN","FTCH","MNDY","APLD","PLTR","DNA","AI","CVNA"]},{"dk":"20230522","tickers":["AERC","APLD","BKR","BOIL","COIN","CVNA","FREY","HAL","ILMN","ONON","PDD","SGMO","SPYM","U","VLO","X"],"layout":"chart_stream","conf":40,"tsHms":"00:16:16","ocrSnippet":"Stonne\nA Positions 1 Filtet Eda Symts 5 4*\n49 Sym Gaoe Dol Val Vol Buz\nU 41779x 3,68 22AM J40 4%|\nINGN 4053 8,29 46M 209","hasGT":true,"hits":["APLD","CVNA"],"fps":["AERC","BKR","BOIL","COIN","FREY","HAL","ILMN","ONON","PDD","SGMO","SPYM","U","VLO","X"],"missing":["LI","IMGN","SOUN","AI","PLTR"],"gtTickers":["LI","IMGN","SOUN","AI","CVNA","APLD","PLTR"]},{"dk":"20230519","tickers":["AERC","APLD","BKR","COIN","CVNA","FCX","HAL","ILMN","ON","PDD","REGN","SHOP","SPYM","TAN","U"],"layout":"chart_stream","conf":40,"tsHms":"00:12:24","ocrSnippet":"Een  Wacln Jas 0i&gt; En Son\nA Positions Filtet Eaa ISvins 5 +X\n39 Sym % Change Dol Val Pre Buzz\nCVNA 00r  1292 IM 593|\n","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20230518","tickers":["BKR","EDIT","FCEL","MP","NEM","ON","ONON","SGMO","TEAM","TSM","U","X"],"layout":"chart_stream","conf":37,"tsHms":"00:32:48","ocrSnippet":"Ht JSid0s BcSon\n5 \" Filter Bdit Syma 50 4X\nCoie\nDol Vol Vol Buzz\nNje\n43,837/11,55 15.9M 4488,1\nJd 7,53 1512M 3298,97\n447","hasGT":true,"hits":[],"fps":["BKR","EDIT","FCEL","MP","NEM","ON","ONON","SGMO","TEAM","TSM","U","X"],"missing":["PLTR","LI","AI","SHOP","MNDY","IMGN","APLD"],"gtTickers":["PLTR","LI","AI","SHOP","MNDY","IMGN","APLD"]},{"dk":"20230126","tickers":["BKR","CVNA","CWEB","FCX","FLUT","FREY","GEV","GNS","MDGL","PDD","REGN","SPYM","TAN","X","XOM","YINN"],"layout":"chart_stream","conf":45,"tsHms":"00:19:44","ocrSnippet":"J00,C0\nRetnnarhlet LsrJ028 Ree\nA Syms CVNA +X\nS0,00\nPre Buz T\nFua Sym Ecun\nCVNA 73587 244,296/ 15,9\nFCX 205+226,8%| 3,7\n","hasGT":true,"hits":["CVNA","CWEB","FCX","GNS","MDGL","PDD","YINN"],"fps":["BKR","FLUT","FREY","GEV","REGN","SPYM","TAN","X","XOM"],"missing":["TNA"],"gtTickers":["CVNA","FCX","TNA","CWEB","YINN","PDD","MDGL","GNS"]},{"dk":"20221117","tickers":["AERC","ASML","BKR","BOIL","CF","FREY","OIH","QS","SOXL","SPYM","U"],"layout":"chart_stream","conf":42,"tsHms":"00:19:52","ocrSnippet":"50,00\noenvachn\n45,00 A Positions Sym5 +X\nP; Sym Chto lere Buz\nFREY 2603 Fsa 6,32\n40,00 OIH Ha 49303 325\nASML 02E 70393 3","hasGT":true,"hits":["ASML","FREY","OIH","SOXL","U"],"fps":["AERC","BKR","BOIL","CF","QS","SPYM"],"missing":["SI"],"gtTickers":["FREY","OIH","ASML","U","SI","SOXL"]},{"dk":"20221104","tickers":["ARKG","BKR","BOIL","FLUT","FREY","OIH","ON","SPYM","U","X","XOM"],"layout":"chart_stream","conf":44,"tsHms":"00:46:40","ocrSnippet":"70,00\n;86eninpnoli marnla\nA Positions Sym5 +X\nCun Vol Buz Jen\nFua Sym oe\nOIH 40293 7147 396 | 3,79\n60,00\n50,00\nArith \nZo","hasGT":true,"hits":["OIH"],"fps":["ARKG","BKR","BOIL","FLUT","FREY","ON","SPYM","U","X","XOM"],"missing":[],"gtTickers":["OIH"]},{"dk":"20220614","tickers":["AERC","BKR","COIN","PL","RIOT","SI","SPYM","UCO","UVXY","VLO","X","XOM"],"layout":"chart_stream","conf":43,"tsHms":"00:00:00","ocrSnippet":"\n0ienaMatctt;\n65,00\nA S Positions Sc Syms +X\nMaraen\n6b Sym Rojn Prc Buzz\nDa\nUvXY Je5t 23,13 8,99\nVLO 40,183 ~0z 403\nUCO ","hasGT":true,"hits":["UCO","UVXY","VLO"],"fps":["AERC","BKR","COIN","PL","RIOT","SI","SPYM","X","XOM"],"missing":[],"gtTickers":["UVXY","VLO","UCO"]},{"dk":"20220608","tickers":["AERC","ALB","BKR","BOIL","CAVA","COIN","DELL","ILMN","LTHM","ORCL","RBLX","SI","SIGA","SPYM","TAN","TNA","U","UCO","VLO","X","XOM"],"layout":"chart_stream","conf":43,"tsHms":"00:10:16","ocrSnippet":"26,00\n25,00\n3inuachn\nA  Position: Syins LTHM 30 +X\n6 ISym can Prc Buzz 5rer\n24,00\nSIGA 42783 6,15 76,91\nUCO 41,3r F1 446","hasGT":true,"hits":["AERC","ALB","BOIL","LTHM","SIGA","TNA","UCO","VLO"],"fps":["BKR","CAVA","COIN","DELL","ILMN","ORCL","RBLX","SI","SPYM","TAN","U","X","XOM"],"missing":["NFLX"],"gtTickers":["SIGA","TNA","VLO","UCO","NFLX","ALB","BOIL","LTHM","AERC"]},{"dk":"20220607","tickers":["AERC","ALB","BKR","BOIL","COIN","DVN","INTC","JNUG","LTHM","MP","NFLX","SPYM","TAN","TNA","U","UCO","VLO","X","XOM"],"layout":"chart_stream","conf":43,"tsHms":"00:39:28","ocrSnippet":"30,00\n7imuaichin\nA Positions S Syms +X\n28,00\nMol Buz Macaen\nFsa ISym Rojnt Den\nUCO 338r 7658| 462\nVLO 1623 37262. 3,83\nA","hasGT":true,"hits":["ALB","BOIL","LTHM","NFLX","TNA","UCO","VLO"],"fps":["AERC","BKR","COIN","DVN","INTC","JNUG","MP","SPYM","TAN","U","X","XOM"],"missing":[],"gtTickers":["UCO","VLO","ALB","BOIL","NFLX","TNA","LTHM"]},{"dk":"20220606","tickers":["AERC","ALB","BKR","BOIL","CBIO","COIN","GOVX","LABU","NFLX","ON","RIOT","SI","SIGA","SPYM","TAN","TNA","UCO","VLO","X","XOM"],"layout":"chart_stream","conf":48,"tsHms":"00:16:48","ocrSnippet":"1,50\n125\nZent  uatch\nA Positions Syms 30 +X\ncon Prc Buzz Marcer\n1,00 F, Sym Don\nBOIL 4147395 1328,15 10,92\nLABU 40,163 4","hasGT":true,"hits":["ALB","CBIO","GOVX","LABU","NFLX","TNA","UCO","VLO"],"fps":["AERC","BKR","BOIL","COIN","ON","RIOT","SI","SIGA","SPYM","TAN","X","XOM"],"missing":[],"gtTickers":["GOVX","LABU","UCO","ALB","CBIO","VLO","TNA","NFLX"]},{"dk":"20220517","tickers":["AERC","ARM","AVGO","BKR","COIN","FANG","FLUT","FREY","GOOG","LI","ON","ONON","OXY","SPYM","STX","TQQQ","U","WEAT","X","XOM"],"layout":"chart_stream","conf":53,"tsHms":"00:15:44","ocrSnippet":"50,00 7emnaintachig\nA Positions St Sym$ 5 +X\nFu9 Sym Rcan Pre Buzz 557\nOXY 30253 25413 6,11\n4086} ERX 1,2996 41or 749\nJo","hasGT":true,"hits":["COIN","OXY","TQQQ","WEAT"],"fps":["AERC","ARM","AVGO","BKR","FANG","FLUT","FREY","GOOG","LI","ON","ONON","SPYM","STX","U","X","XOM"],"missing":["FNGU","ERX","AR"],"gtTickers":["FNGU","TQQQ","OXY","COIN","ERX","AR","WEAT"]},{"dk":"20220510","tickers":["AFRM","BKR","BOIL","COIN","FLUT","FREY","ON","SPYM","TSLA","U","VRM","X"],"layout":"chart_stream","conf":37,"tsHms":"00:10:56","ocrSnippet":"17,0\nFennraln LSedor Rson\nA Positions Srmn $ 5 4X\n75,00\nPie Buz Mo\nFu9 Sym Cun\nL\nVrm 773,593 10292 4\nTSLA 2,982 310,795\n","hasGT":true,"hits":["TSLA"],"fps":["AFRM","BKR","BOIL","COIN","FLUT","FREY","ON","SPYM","U","VRM","X"],"missing":[],"gtTickers":["TSLA"]},{"dk":"20220506","tickers":["CCI","FREY","GOOG","LTHM","MP","PL","SPYM","TAN","TSLA","TSM","U","UCO","WEAT"],"layout":"chart_stream","conf":51,"tsHms":"00:03:12","ocrSnippet":"0 Iemaintocha La Soiod Rosor\n80,00\nA Positions Symng 50 4X\nPre Buzz Nca\nFuo Sym Cant E\nUCO 4137 5,3 5\n75,00\nWEAT 0C036 1","hasGT":true,"hits":["LTHM","TSLA","UCO","WEAT"],"fps":["CCI","FREY","GOOG","MP","PL","SPYM","TAN","TSM","U"],"missing":[],"gtTickers":["UCO","WEAT","TSLA","LTHM"]},{"dk":"20220429","tickers":["BKR","CRDO","DASH","FREY","FSR","HAL","ON","PINS","SPYM","TAN","TSLA","U","UCO","WEAT","X","XOM"],"layout":"chart_stream","conf":37,"tsHms":"00:23:28","ocrSnippet":"Ae\n3odimnuathg Iasc05e RSci\nA Positions Symn3 50 4*\nFso Sym Can Mol Buz 5\n78,00\nWEAT 480D 172ir 27\nGUSH 40,673 63 586 | ","hasGT":true,"hits":["TSLA","WEAT","X"],"fps":["BKR","CRDO","DASH","FREY","FSR","HAL","ON","PINS","SPYM","TAN","U","UCO","XOM"],"missing":["GUSH","SWN"],"gtTickers":["WEAT","GUSH","TSLA","X","SWN"]},{"dk":"20220428","tickers":["BKR","BOIL","CAVA","CWEB","FSR","MP","NEM","ON","ONON","SPYM","TSLA","U","WEAT","YINN"],"layout":"chart_stream","conf":46,"tsHms":"00:16:32","ocrSnippet":"0 eemn in atchie\nS0,00 A Positions Symng 50 4X\nMol Buz Ma\nFso Sym Icane Bl\nTSU Lun 228,2* 5,\n49,00 CWEB Do 648.27 9\nKWEB","hasGT":true,"hits":["CWEB","TSLA","WEAT"],"fps":["BKR","BOIL","CAVA","FSR","MP","NEM","ON","ONON","SPYM","U","YINN"],"missing":["KWEB"],"gtTickers":["CWEB","KWEB","TSLA","WEAT"]},{"dk":"20220427","tickers":["APLD","BOIL","CAVA","FREY","FSR","HAL","MP","SI","SPYM","TSLA","U","WEAT","XOM","YINN"],"layout":"chart_stream","conf":51,"tsHms":"00:08:48","ocrSnippet":"27,00\nJ lcnann Votchg La5 Sicd0b%\nA Posit Sying 50 4X\nFuo Sym Cante Pre Buzz\nTSLA 3.9896 401,82\nIa 2600\n25,28 BOIL 547 4","hasGT":true,"hits":["BOIL","TSLA","WEAT"],"fps":["APLD","CAVA","FREY","FSR","HAL","MP","SI","SPYM","U","XOM","YINN"],"missing":["KOLD"],"gtTickers":["TSLA","BOIL","WEAT","KOLD"]},{"dk":"20220426","tickers":["BOIL","FREY","FSR","ILMN","MP","ON","SPYM","TAN","U","WEAT","YINN"],"layout":"chart_stream","conf":48,"tsHms":"00:05:20","ocrSnippet":"0 mintthin\nJoocd\nA Posit Symng 50 4X\nFuo Sym Cant Pre Buzz\nBOIL 0628 80,69\nWEAT 2162 457,0x\n95,00\n90,00\nS\n88,16\nB0\n85,00","hasGT":true,"hits":["BOIL","WEAT"],"fps":["FREY","FSR","ILMN","MP","ON","SPYM","TAN","U","YINN"],"missing":[],"gtTickers":["BOIL","WEAT"]},{"dk":"20220425","tickers":["APLD","ARM","BOIL","CAVA","CVNA","DASH","FREY","FSR","JNUG","KLAC","MP","SPYM","U","VERV","WEAT","XOM","YINN"],"layout":"chart_stream","conf":51,"tsHms":"00:25:20","ocrSnippet":"0 Iema intatchin\nA Posit Sying 50 4X\n95,00\nFoo Sym Cant Pre Buzz\nKOLD JAt 386,67\nWEAT 0,8536 6994\n90,00\nVERU 34876 223,0","hasGT":true,"hits":["BOIL","WEAT"],"fps":["APLD","ARM","CAVA","CVNA","DASH","FREY","FSR","JNUG","KLAC","MP","SPYM","U","VERV","XOM","YINN"],"missing":["KOLD","VERU"],"gtTickers":["KOLD","WEAT","VERU","BOIL"]},{"dk":"20220421","tickers":["BKR","BOIL","CF","COPX","DASH","FREY","FTNT","HAL","IREN","JNUG","MP","NUGT","ON","REGN","SPYM","TAN","TSM","URA","URNM","VERV","WEAT","X","YINN"],"layout":"chart_stream","conf":44,"tsHms":"00:00:00","ocrSnippet":"Rms inoeton tchic\nA Posit Symg 50 4X\n3400 Can Pre Buzz\nFuo Sym\nFCX 3oi 157\nNUGT 2ux 0,93\nJNUG 2683 L1a\nVERU Jaci 10\n33,0","hasGT":true,"hits":["BOIL","COPX","FTNT","JNUG","NUGT","REGN","URA","URNM","WEAT","X"],"fps":["BKR","CF","DASH","FREY","HAL","IREN","MP","ON","SPYM","TAN","TSM","VERV","YINN"],"missing":["FCX","VERU","GUSH","LAC","UCO","TSLA"],"gtTickers":["FCX","JNUG","NUGT","COPX","WEAT","VERU","URNM","URA","REGN","X","GUSH","LAC","UCO","FTNT","BOIL","TSLA"]},{"dk":"20220419","tickers":["APLD","BKR","BOIL","COPX","DASH","FLUT","FREY","GOOG","JNUG","LI","MRO","NUGT","ON","ONON","REGN","SPYM","TAN","U","URA","URNM","VERV","WEAT","X","XOM"],"layout":"chart_stream","conf":39,"tsHms":"00:19:12","ocrSnippet":"3\nTmn In Gocchin\nA Posit Sjn : 50 #X\n79,00\nFu9 Sym Can Mol Buzz\nBOIL JS4r 452647\nJNUG 2282 F10771\n78,00\nNUGT 2ron 73751\n","hasGT":true,"hits":["BOIL","COPX","JNUG","NUGT","REGN","URA","URNM","WEAT","X"],"fps":["APLD","BKR","DASH","FLUT","FREY","GOOG","LI","MRO","ON","ONON","SPYM","TAN","U","VERV","XOM"],"missing":["VERU","LMT","FCX","GUSH","KOLD"],"gtTickers":["VERU","URNM","URA","REGN","JNUG","LMT","NUGT","X","COPX","WEAT","FCX","GUSH","BOIL","KOLD"]},{"dk":"20220418","tickers":["BE","BKR","BOIL","COPX","DASH","FCX","FLUT","FREY","FSR","HUT","JNUG","NUGT","ON","REGN","SCCO","SPYM","TAN","U","UCO","URA","URNM","VERV","WEAT","X"],"layout":"chart_stream","conf":40,"tsHms":"00:33:20","ocrSnippet":"65,00\nAn mtatchin\nA Posit Symns +X\nFus Sym Can Mol Buz\nVERU Josa 96487\nWEAT 43023| 3a02\n60.00\nURA ni 4176,17\nURNM ornai ","hasGT":true,"hits":["COPX","FCX","JNUG","NUGT","REGN","URA","URNM","WEAT","X"],"fps":["BE","BKR","BOIL","DASH","FLUT","FREY","FSR","HUT","ON","SCCO","SPYM","TAN","U","UCO","VERV"],"missing":["VERU","LMT","GUSH"],"gtTickers":["VERU","WEAT","URA","URNM","FCX","LMT","COPX","REGN","GUSH","X","NUGT","JNUG"]},{"dk":"20220414","tickers":["BKR","BOIL","COPX","DASH","FCX","FLUT","FREY","GOOG","JNUG","LI","MP","NUGT","REGN","SGMO","SPYM","TAN","URA","URNM","WEAT","X"],"layout":"chart_stream","conf":41,"tsHms":"00:11:44","ocrSnippet":"2450\nAen indtakhin\nA Sym5 URA #X\n24,00 Fu9 Sym ecan Pre Buzt\nNUGI JaB 6001\nJNUG 053 3458,93\nMEAT Ont 355234\n23,50\nGUSH 0","hasGT":true,"hits":["COPX","FCX","JNUG","NUGT","REGN","URA","URNM","WEAT","X"],"fps":["BKR","BOIL","DASH","FLUT","FREY","GOOG","LI","MP","SGMO","SPYM","TAN"],"missing":["GUSH","LMT"],"gtTickers":["NUGT","JNUG","WEAT","GUSH","COPX","URA","URNM","X","REGN","FCX","LMT"]},{"dk":"20220413","tickers":["BKR","BOIL","COPX","CVX","FCX","FLUT","FREY","GEV","HUT","JNUG","LI","NUGT","PL","REGN","SPYM","TAN","TSEM","U","URA","URNM","WEAT","X"],"layout":"chart_stream","conf":43,"tsHms":"00:38:08","ocrSnippet":"32,00\nFnukhn\nA Syms +X\n31,00\nFu9 Sym ecan Mol Buz\nREGN 40, 682 20\n302\nWHX ~0,397| 70204\n30,00 COPX Kido\nK170\nURA 43253 A","hasGT":true,"hits":["COPX","FCX","JNUG","NUGT","REGN","URA","URNM","WEAT","X"],"fps":["BKR","BOIL","CVX","FLUT","FREY","GEV","HUT","LI","PL","SPYM","TAN","TSEM","U"],"missing":["LHX","LMT"],"gtTickers":["WEAT","LHX","REGN","LMT","X","FCX","COPX","NUGT","JNUG","URA","URNM"]},{"dk":"20220412","tickers":["AMD","BKR","BOIL","COPX","DASH","FCX","FLUT","FREY","GOOG","JNUG","LI","NUGT","ON","REGN","SPYM","TAN","U","URA","URNM","WEAT","X"],"layout":"tale_of_the_tape","conf":39,"tsHms":"00:18:08","ocrSnippet":"2973\n650,00\nAm in atchin Ias 8190s 3e\n640,00 A Sym5-REGN +X\nFu9 Sym Rcan Pre Buzz\nREGN +0,144 471ar\n630,00\nU +0,80%5 449","hasGT":true,"hits":["COPX","FCX","JNUG","NUGT","REGN","URA","URNM","WEAT","X"],"fps":["AMD","BKR","BOIL","DASH","FLUT","FREY","GOOG","LI","ON","SPYM","TAN","U"],"missing":["LHX","LMT"],"gtTickers":["LHX","LMT","URA","URNM","WEAT","X","COPX","FCX","REGN","NUGT","JNUG"]},{"dk":"20220406","tickers":["BE","BOIL","CBIO","CF","COPX","CVX","FCX","HOOD","NEM","NUGT","PINS","REGN","U","UCO","X","XOM"],"layout":"chart_stream","conf":34,"tsHms":"00:44:32","ocrSnippet":"4512 Jenn Wacnla\n45,00\nA Syms FCX +X\n79 Sym Chao Vol Buze\nFCX J 741.9%\nCOPX lou 352,63\nMo0\n0,983e c\nIHX 13878 939\nNUGI 3","hasGT":true,"hits":["COPX","FCX","NEM","NUGT","REGN","X"],"fps":["BE","BOIL","CBIO","CF","CVX","HOOD","PINS","U","UCO","XOM"],"missing":["LHX"],"gtTickers":["X","FCX","REGN","COPX","NUGT","NEM","LHX"]},{"dk":"20220405","tickers":["AERC","BE","BKR","BOIL","CBIO","COPX","CWEB","FCX","JNUG","LI","LRCX","NEM","NUGT","REGN","SPYM","TAN","U","URA","URNM","X"],"layout":"chart_stream","conf":31,"tsHms":"00:00:00","ocrSnippet":"10,50\nJo\n10,35\nJo\nJennWaala\n10.25\nA Positic Syms +X\n6a (Sym Chro lerc Buz\n10,00\nFCX 3047 303*\nNUGI ~057n3 3048\nCOPX ~032","hasGT":true,"hits":["COPX","CWEB","FCX","JNUG","NEM","NUGT","REGN","TAN","X"],"fps":["AERC","BE","BKR","BOIL","CBIO","LI","LRCX","SPYM","U","URA","URNM"],"missing":["KWEB","GGPI"],"gtTickers":["CWEB","REGN","KWEB","JNUG","GGPI","TAN","NEM","COPX","FCX","NUGT","X"]},{"dk":"20220331","tickers":["BKR","CBIO","COPX","FCX","FREY","KWEB","LI","MRO","NEM","NUGT","ON","ONON","REGN","SOXL","SPYM","TQQQ","U","X","XOM"],"layout":"chart_stream","conf":37,"tsHms":"00:13:36","ocrSnippet":"46,00\nRomawana\nA Positice Sym$ 5 +X\nMOO\n39 ISym Cho lere Buzz\nTCQ Fa 431,0%\nKVEB Jo 227,696 \n42,00\nSPXL 07878 4,878|\nREG","hasGT":true,"hits":["COPX","FCX","KWEB","NUGT","REGN","TQQQ","X"],"fps":["BKR","CBIO","FREY","LI","MRO","NEM","ON","ONON","SOXL","SPYM","U","XOM"],"missing":["SPXL"],"gtTickers":["COPX","KWEB","SPXL","TQQQ","X","REGN","FCX","NUGT"]},{"dk":"20220330","tickers":["AERC","BKR","CBIO","CF","COPX","FCX","FREY","GOOG","JNUG","KWEB","LABU","NFLX","NUGT","ON","ORCL","REGN","SPYM","U","X","XOM"],"layout":"chart_stream","conf":41,"tsHms":"00:09:32","ocrSnippet":"F\n180,00\nHuD\n3inawec\nA Positic Srm 5 +X\n178 C0 39 Sym Cho Pre Buzz\n1,90% 4415% |\nCOPX 40,8893| 207, 193\nFCX 2283| 7169,3","hasGT":true,"hits":["COPX","FCX","KWEB","LABU","NFLX","NUGT","REGN","X"],"fps":["AERC","BKR","CBIO","CF","FREY","GOOG","JNUG","ON","ORCL","SPYM","U","XOM"],"missing":[],"gtTickers":["NFLX","KWEB","REGN","LABU","COPX","X","NUGT","FCX"]},{"dk":"20220323","tickers":["BOIL","COPX","FLUT","FREY","GNS","JNUG","KWEB","MP","NUGT","REGN","SPYM","TAN","U","URA","URNM","WEAT","X","XOM"],"layout":"chart_stream","conf":47,"tsHms":"00:00:00","ocrSnippet":"27,00\n26,00\n7minsrkhin Jansoiadod\nA P {SymseY 5 +X\n25,00\nFu9 Sym Roan Pre Buzz\nBOIL 44837 4122%|\n2400 WEAT 4170\n13,13\nUR","hasGT":true,"hits":["BOIL","COPX","JNUG","KWEB","NUGT","REGN","URA","URNM","WEAT","X"],"fps":["FLUT","FREY","GNS","MP","SPYM","TAN","U","XOM"],"missing":["FCX"],"gtTickers":["BOIL","JNUG","NUGT","X","URA","FCX","WEAT","COPX","URNM","REGN","KWEB"]},{"dk":"20220321","tickers":["BKR","BOIL","COPX","DELL","FCX","FREY","IBIT","JNUG","KWEB","NEM","NUGT","REGN","RIOT","SPYM","TAN","U","URA","URNM","WEAT","X","XOM","YINN"],"layout":"tale_of_the_tape","conf":46,"tsHms":"00:31:28","ocrSnippet":"65,00\nIPI 70,7155| 9,2M\nTELL 6,363[ 109M1\nCENX 71,203 I154\nRiOT Oi 302m\nJienin Wacht\n60,00\nA Symg   JNUG 4*\nFoo Sym Ecan","hasGT":true,"hits":["COPX","FCX","NUGT","REGN","URNM","X"],"fps":["BKR","BOIL","DELL","FREY","IBIT","JNUG","KWEB","NEM","RIOT","SPYM","TAN","U","URA","WEAT","XOM","YINN"],"missing":["DIDI","NUZE"],"gtTickers":["DIDI","NUGT","COPX","URNM","REGN","FCX","NUZE","X"]},{"dk":"20220318","tickers":["ARM","BOIL","COPX","FCX","FREY","FSR","KWEB","LCID","NUGT","ON","REGN","REMX","SEDG","SPYM","TEM","U","URA","URNM","X","ZS"],"layout":"chart_stream","conf":45,"tsHms":"00:09:44","ocrSnippet":"55,00\nImns intatchig\nA Symg NUGI +X\n50,00\nF5o Sym Lcan Pre Buzz\nX 3833 23138\nNUGT on 3110,13\nKX Ont ~487.61\nREGN 02 567,","hasGT":true,"hits":["COPX","FCX","KWEB","NUGT","REGN","URA","URNM"],"fps":["ARM","BOIL","FREY","FSR","LCID","ON","REMX","SEDG","SPYM","TEM","U","X","ZS"],"missing":[],"gtTickers":["NUGT","FCX","REGN","URA","COPX","URNM","KWEB"]},{"dk":"20220302","tickers":["AERC","AVGO","BOIL","COPX","DASH","FCX","FLUT","FREY","LI","NUGT","ORCL","PSX","ROKU","SPYM","SSO","U","X","YINN"],"layout":"chart_stream","conf":43,"tsHms":"00:16:48","ocrSnippet":"H00\nOt2rmntornlet\nA Positit_ Sying 50 #X\n9,50\nFuo Sym Rode Pre Buzz\nNUGT noni 531.620\nGUSH 4845 606.226\n9,00 FCX 0,2975 ","hasGT":true,"hits":["COPX","FCX","NUGT","X"],"fps":["AERC","AVGO","BOIL","DASH","FLUT","FREY","LI","ORCL","PSX","ROKU","SPYM","SSO","U","YINN"],"missing":["ERX","EDV","AGQ"],"gtTickers":["NUGT","FCX","X","ERX","EDV","COPX","AGQ"]},{"dk":"20220301","tickers":["AERC","BOIL","COPX","DASH","FLUT","FREY","MP","NUGT","ON","PSX","SPYM","YINN"],"layout":"chart_stream","conf":48,"tsHms":"00:14:56","ocrSnippet":"21,00\n20,00\n3 emaintatchie\nA Syms FC 5+*\nFuo Sym Rorr Pre Buzz\n79,00\nGUSH 334496 400,88\nERX 27395 360,03\nNUGT 44619 4197","hasGT":true,"hits":["COPX","MP","NUGT"],"fps":["AERC","BOIL","DASH","FLUT","FREY","ON","PSX","SPYM","YINN"],"missing":["IBKR","CRH","XLV","KRE","EDV","RSX","FCX","VLO"],"gtTickers":["IBKR","CRH","XLV","KRE","MP","NUGT","EDV","RSX","FCX","VLO","COPX"]},{"dk":"20220228","tickers":["AERC","ASML","BOIL","COPX","DASH","FREY","FSR","LEU","LI","MP","ON","SPYM","YINN"],"layout":"chart_stream","conf":46,"tsHms":"00:50:36","ocrSnippet":"F I s 230\nF UR Oa 211\nT1,0\nF MB 0653 3,03\nP KRE Oosa\nP XHB Oot 271\n3180 mongawanls Lscetj (\n10.50 A Positi Symn g 5 4X\nF","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220222","tickers":["BE","COPX","DVN","FANG","FCX","FLUT","FREY","FSR","MAGS","MP","NUGT","ON","SPYM","TQQQ","TSLA","U","YINN"],"layout":"chart_stream","conf":42,"tsHms":"00:25:00","ocrSnippet":"47,00\nTn in occhig\nA Syuns DVN U 4X\n45,00\nFuo Sym Koue Vol Buzz\nNRGU 4,6025 230,895\nDVN de 346,79\nMOS 0843e 7185.93\n43,0","hasGT":true,"hits":["COPX","DVN","FCX","TQQQ","TSLA"],"fps":["BE","FANG","FLUT","FREY","FSR","MAGS","MP","NUGT","ON","SPYM","U","YINN"],"missing":["NRGU","MOS"],"gtTickers":["NRGU","DVN","MOS","COPX","TQQQ","FCX","TSLA"]},{"dk":"20220218","tickers":["ARM","BKR","BOIL","COIN","COPX","DVN","FLUT","FREY","KLAC","MAGS","NUGT","ROKU","SPOT","SPYM","TNA","TQQQ","TSLA","U","YINN","ZETA"],"layout":"chart_stream","conf":44,"tsHms":"00:30:24","ocrSnippet":"800,00\n750,00\nAemn In otchie\nA Positi Sying 50 4X\nFoo Sym Rore Vol Buzz\n700,00\nROKU 3096r 3963.4\nU\n67291 toCQ 027x 477,8","hasGT":true,"hits":["COPX","DVN","TQQQ","TSLA"],"fps":["ARM","BKR","BOIL","COIN","FLUT","FREY","KLAC","MAGS","NUGT","ROKU","SPOT","SPYM","TNA","U","YINN","ZETA"],"missing":["UPST","NRGU","MOS","FCX","DWAC"],"gtTickers":["UPST","DVN","NRGU","MOS","TQQQ","TSLA","FCX","DWAC","COPX"]},{"dk":"20220217","tickers":["BKR","BOIL","COPX","CRM","DVN","FANG","FCX","FREY","FSR","GNS","KLAC","KWEB","MAGS","NUGT","ON","RBRK","RIVN","SPOT","SPYM","U","UCO","X","XOM","YINN"],"layout":"chart_stream","conf":41,"tsHms":"00:10:00","ocrSnippet":"47,.00\n46.00\nIemnncnErg\n45,00\nA SyingDVN 4X\nFuo Sym Korre Pre Buz\n40O UC 307 271,49\nMOS 0.093 302.08\nDWAC 30, 8395 61,17","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220211","tickers":["ADBE","ALB","BE","BOIL","CCJ","CF","COPX","DDOG","FCX","FLUT","FREY","GOOG","KLAC","LCID","NUGT","ON","RBRK","SGMO","SI","SPYM","URA","X"],"layout":"chart_stream","conf":45,"tsHms":"00:14:48","ocrSnippet":"740,00\n735,00\nDeceinnle\n130,00\nA Symg DLCg 4X\nFuJ Sym de Pre Buzz\n125,00 FCX US 247,036\nCOPX 0363 41158\nNOs OSt 7167.386","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220210","tickers":["ALB","BE","BOIL","CF","CHPT","COIN","COPX","DDOG","FCX","FREY","HUT","IREN","KLAC","MP","NBIS","NUGT","QS","SPYM","TSM","U","UCO"],"layout":"chart_stream","conf":44,"tsHms":"00:11:44","ocrSnippet":"3202\n300\nEcnnnle\n28.0 A Positie Syins 5 4X\nEuo Sym Rorae Pre Buzz\nDCFC F26D 4470,0x\n26.00\nDDOG 13,5071 2020,0\nFCX 24826|","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220209","tickers":["BOIL","CF","COPX","FCX","FREY","GOOG","HUT","IREN","KLAC","LCID","NBIS","NUGT","ON","RIOT","SPYM","U","X","YINN"],"layout":"chart_stream","conf":44,"tsHms":"00:22:12","ocrSnippet":"7200\n7100\nSenroc\nA Positi_ Sying 50 #X\nEuo Sym Roe Vol Buzz\nDCFC 35.223 710053 }\n70.0\nFCX 3873 477,7%\nToOQ 3.643 96,93\nC","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220208","tickers":["BE","BOIL","CF","COPX","DASH","FREY","IREN","KLAC","LI","MP","NBIS","NUGT","ON","SPYM","U","XOM"],"layout":"chart_stream","conf":39,"tsHms":"00:23:44","ocrSnippet":"3 e\nSMH uia 383\nJ5000\nP VM od 216\nF XlK O0t 2,78\nP 00Q onox 275\n140,00\n39 lemain Yacchio Jat SJioo V\nA Positi Syms 50 4X","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220207","tickers":["AAPL","CF","DASH","FREY","GOOG","HOOD","HUT","IREN","KLAC","LI","MARA","MRNA","NBIS","NUGT","SEDG","SNAP","SPYM","SSO","TSLA","U","XOM"],"layout":"tale_of_the_tape","conf":41,"tsHms":"00:28:00","ocrSnippet":" \nAauU\nCFLT 4663 976\nNET 48,253 185,03\n435,00 FCEL 393 9,98\nApPS 3,363| 21,0h\n25 Kmnain\"athc\n430,00 A Syms XopP 4*\nEuo S","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220204","tickers":["BOIL","CCJ","COIN","DASH","FLUT","FREY","IREN","KLAC","LCID","NBIS","NUGT","RIOT","SOXL","SPYM","X","XOM","YINN"],"layout":"chart_stream","conf":42,"tsHms":"00:53:00","ocrSnippet":"1200\n3eeninnle\nA Positit Syis 50 4X\nJic Euo Sym Roe Vol Buzz\nDWAC 29696 7.67\nKRBN 178 718 236\nXOP 3,6586 | 208,156\n70.00","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220203","tickers":["BITO","BNTX","BOIL","CRM","DASH","FREY","GOOG","HPE","IREN","KLAC","LI","NIO","NUGT","RIOT","SPYM","U","XOM","YINN"],"layout":"chart_stream","conf":39,"tsHms":"00:47:00","ocrSnippet":"165,00\n0ecnnthle\nA Positi_ Sying 50 +X\nEuo Sym Roe Vol Buzz\nKRBN 0993 411881\n160,00\nTOOQ J0e 407.590\nNRGU 3553 400 3*\nNO","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220202","tickers":["BOIL","DASH","FLUT","FREY","HUBS","IREN","KLAC","LI","LLY","NBIS","NUGT","ON","P","SOXL","SPYM","TQQQ","U","X","XOM","YINN"],"layout":"tale_of_the_tape","conf":41,"tsHms":"00:11:20","ocrSnippet":" U\nP XU 0.,00r 224\n440,00\nP XlK 0.353 2,85\nP WWM 0,053 3,06\n435,00 P XlE 07oa 291\nFonti iemain Yokhg La Smod\nA Positie S","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220201","tickers":["BOIL","CCJ","FREY","HUBS","LCID","NBIS","ON","P","RIOT","SGMO","SPYM","TQQQ","U","YINN"],"layout":"chart_stream","conf":40,"tsHms":"00:18:16","ocrSnippet":"C0,0O\n9800\nEenmenle\nA Positit Sying 50 #X\nFuo Sym Raae Pre Buzz\n96.00 ToOQ 065x 214.,28\nHUBS 0u53 82,03\nP NOS 29396 | 38","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220131","tickers":["BE","BOIL","FLUT","FREY","GEV","GOOG","HOOD","LI","P","ROKU","SPYM","X","YINN"],"layout":"chart_stream","conf":39,"tsHms":"00:00:00","ocrSnippet":"G0,00\nSand Zrntnlet\n56,69\n86 A  Positi_ Sying 50 #X\n55,00 Fuo Sym 4 Cee Pre Buzz\nS0.0o\nGaq Arith 3\nbod\nHoom\n1\nSoc\n265,9k","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220128","tickers":["BE","FLUT","FREY","HOOD","LCID","P","ROKU","SPYM","YINN"],"layout":"chart_stream","conf":50,"tsHms":"00:17:00","ocrSnippet":"270,00\n265,00 orenntnlet\nA Positi Sying 50 4X\n365\n261,66 Fuo Sym 3 de Pre Buzz\nJla\n260,00\n255,00\n31\n94 Arith 3\nIS4\nLom\n1","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220127","tickers":["CCJ","CWEB","FREY","HOOD","LCID","ON","P","ROKU","SPYM","YINN"],"layout":"chart_stream","conf":38,"tsHms":"00:28:00","ocrSnippet":"G0.0n\n55.60\n3eeninnle\n550J\nA Positit_ Sy g 50 4X\nFuo Sym Rarde Pre Buzz\n502\n952 Arith 3\ncoc\nocM\n16,6M4\n0o\nDemmeconitnla ","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220126","tickers":["ASML","CCJ","FLUT","FREY","LI","P","RIOT","SPYM","YINN"],"layout":"chart_stream","conf":45,"tsHms":"00:08:56","ocrSnippet":"540\n9enntnet\n5200 A Positi_ Sying 50 4X\nFuo Sym I dde Pre Buzz\n50.0o\n020 Arith 3\nISu\nLom\n1\nSodo\nZ,K\nDemdronimnla Lsnd\n75","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220124","tickers":["BOIL","FCX","FREY","LCID","LI","P","PSX","ROKU","SPYM","U","UVXY"],"layout":"chart_stream","conf":43,"tsHms":"00:18:08","ocrSnippet":"2C0,00\n790,00 Trcnnetorsi Mjrhlet\nA Positi Syng 5 4X\nFuo Sym Rote Pre Buzz\n7120,00 FCX CId U 528.286\nUX 713.,083 913.23\n","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220121","tickers":["AERC","BOIL","CCJ","FCX","FLUT","FREY","HUT","LCID","LI","ON","P","SPYM","VSCO","X"],"layout":"chart_stream","conf":37,"tsHms":"00:24:12","ocrSnippet":"13.00\n0ecaninlet\nA Positit Sying 50 #X\nEuJ Sym Ra Vol Buzz\n720\nFCX Jatt 4182,586\nFUIU Moo 2424%0\nVC JJ 750,65\nERX D 348.","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220118","tickers":["AERC","BOIL","COIN","FCX","FLUT","FREY","GNS","INTC","LCID","MU","P","SPYM","U","X","XOM","XPEV"],"layout":"chart_stream","conf":36,"tsHms":"00:20:40","ocrSnippet":"380,00\nAennical\nA Positi Syms +X\nGncida\n374,52 Pre Buzz\n09 Sym Eoge\nEns\nFC 0,14x 4152k\nJone 23438\n953i U 100, 7%\nLc Foa ","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220114","tickers":["AERC","BOIL","CF","CRDO","FLUT","FREY","KLAC","LCID","LITE","MRO","MU","P","SPYM","UCO","XPEV"],"layout":"chart_stream","conf":29,"tsHms":"00:00:00","ocrSnippet":"I 29,15\n45251J\nOenin Waalat\n28.00\nA Syms LC * +*\nFua Sym Cige Pre Buzz\nLAc Kcano A13r\n27.00\nICD 91a 4167\nTC Foo ~081\nHro","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220113","tickers":["BKR","CF","CRM","DBRG","FANG","FCX","FLUT","FREY","JNUG","KLAC","KWEB","LCID","MU","P","SPYM","SSO","TSLA","TSM","X","XPEV"],"layout":"chart_stream","conf":37,"tsHms":"00:00:00","ocrSnippet":"30,00\n0iaitikhn\n29,00\nA Syms Crx +X\nFu9 Sym Rorg Pre Buzt\n28,00 KWEB 038i Al48\nFUIU 1553 427\nFCX 4863 4138\n27,00\nu 4s03 ","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220112","tickers":["AERC","BOIL","BTBT","COIN","FCX","FLUT","FREY","GOOG","KWEB","LCID","LI","MU","ON","P","XOM"],"layout":"chart_stream","conf":40,"tsHms":"00:08:08","ocrSnippet":"1 Co0,UO\nIemn M atchin\nA Posit Syms +X\n950,00 Fus Sym Ou9e Pre Bux\nFUIU 3457s 4779\nFCX 3407n| 330\nKWEB 387878 [ 4378\nLAC","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220110","tickers":["AERC","BKR","DOCN","FANG","FLUT","FREY","KLAC","LCID","LI","MU","P","SPYM","X","XOM"],"layout":"chart_stream","conf":38,"tsHms":"00:13:24","ocrSnippet":"Fns\n2985\nBan\n29,75\n0 ienns intarchin\n29,50\nA Posit Syms +X\nFu9 Sym Rong Pre Buzt\nICID ~0nx| 142,93\n29,25\nFX Tsx 448,3\nER","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220106","tickers":["AERC","ARKG","BKR","BOIL","DDOG","FCX","FLUT","FREY","JNUG","MU","P","PLTR","ROKU","SCCO","SOXL","SPYM","TSM","XOM","XPEV"],"layout":"chart_stream","conf":42,"tsHms":"00:24:12","ocrSnippet":"70,50\n0 mkach\nA Posit S5mns +X\nF59 Sym Cung Pre Buz\n70.0O\nERX 45,393 3413,93\n42287 3402 58\nSOX 72845 4313,88\n950 XPEV 42","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220105","tickers":["AERC","APH","ARKG","BEAM","BKR","BOIL","CCJ","COIN","FCX","FLUT","HOOD","JNUG","MP","MU","ON","P","PANW","SGMO","SPYM","TEAM","URA","XOM","XPEV"],"layout":"chart_stream","conf":41,"tsHms":"01:03:20","ocrSnippet":"39,00\nAem iuacha\n38, 00\nA Posit Sms t+X\nFu9 Sym Coa Nol Bux\ncC 40 249| 3467 }\n37,00\nURA 30,023 4853 3\nNUE 72531 3457,\n36","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220104","tickers":["BKR","BOIL","DOCN","FANG","FCX","FLUT","FREY","GEV","HAL","KLAC","MU","P","SPYM","TSM","XOM","XPEV"],"layout":"chart_stream","conf":42,"tsHms":"00:09:40","ocrSnippet":"70z,00\nJ00,00\niemnutkhin\nA Posit Svms +X\nFu9 Sym Coix Pre Buz\n98,00\n43,49% 2804\nERX 2487| 129u\nSOX 1,00% 628,9\n96,00\nLC ","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20220103","tickers":["ARKG","BE","BTBT","CCI","CRDO","DBX","DELL","DOCN","FCX","FLUT","HPE","KLAC","MDB","MU","P","PANW","SI","SPYM","TEM","UCO","X","XPEV"],"layout":"chart","conf":82,"tsHms":"00:00:00","ocrSnippet":"1\n7522\n^p\" 5\n2022-01-03","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20211231","tickers":["ARM","BKR","BOIL","CCI","CRWD","DASH","DOCN","FCX","KLAC","MDB","MU","P","PANW","QS","U","X","XOM","XPEV"],"layout":"chart_stream","conf":42,"tsHms":"00:44:48","ocrSnippet":"300\n30,00\n3 luikhn\nA Syms UX +X\n29,00 Sym Co Nol Buz\nFug\nToCQ Jn 481,6\n25 ~0292 Ant\nMDB 0163 JaS\n28.00\nPANW 4053 SS\nMu U","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20211230","tickers":["AMD","BE","BKR","CF","CRWD","GOOG","KLAC","LEU","MDB","MU","P","PANW","SPYM","TER","TQQQ","TSM","U","XOM"],"layout":"chart_stream","conf":35,"tsHms":"00:33:12","ocrSnippet":"755,00\n0iaikhn\n750,00\nA SymsECoQ E+*\nFu9 (Sym Cos MolBuz\nMU 9553 4201,92\nTooQ +0,12% 051.0\n7145,00 MEU FAC\n~0,662\nPANW ~","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null},{"dk":"20211229","tickers":["AMD","ARKG","BKR","EDIT","ETSY","FCX","FLUT","KLAC","LCID","LI","MDB","MU","OIH","ON","P","PANW","PLTR","SGMO","SNOW","SPCE","SPYM","UCO","X","XOM","ZS"],"layout":"chart_stream","conf":32,"tsHms":"01:14:00","ocrSnippet":"1150,00\n3 ems intakhn\n1 100,00\nA Syms NEU +X\nFu9 (Sym O Mol Buz\nLAC 9aE 00\nGME 390 36\n1050,00\nICID Oson 07\nPLIR DRA ~2SH","hasGT":false,"hits":[],"fps":[],"missing":[],"gtTickers":null}];
+
+function clearFilters() {
+  document.getElementById("filterTicker").value = "";
+  document.getElementById("filterVideo").value = "";
+  document.getElementById("filterGT").value = "";
+  applyFilters();
+}
+
+function applyFilters() {
+  const ft = document.getElementById("filterTicker").value.trim().toUpperCase();
+  const fv = document.getElementById("filterVideo").value.trim();
+  const fg = document.getElementById("filterGT").value;
+  const trs = document.querySelectorAll("#mainTable tbody tr");
+  let visible = 0;
+  trs.forEach((tr, i) => {
+    const r = rows[i];
+    let show = true;
+    if (ft && !r.tickers.some(t => t.startsWith(ft))) show = false;
+    if (fv && !r.dk.includes(fv)) show = false;
+    if (fg === "gt" && !r.hasGT) show = false;
+    if (fg === "nogt" && r.hasGT) show = false;
+    tr.style.display = show ? "" : "none";
+    if (show) visible++;
+  });
+  document.getElementById("rowCount").textContent = visible + " rows";
+}
+
+document.getElementById("filterTicker").addEventListener("input", applyFilters);
+document.getElementById("filterVideo").addEventListener("input", applyFilters);
+document.getElementById("filterGT").addEventListener("change", applyFilters);
+</script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+{
+  "results": [
+    {
+      "videoId": "rffHnm23pKo",
+      "date": "20220211",
+      "status": "ok",
+      "elapsed": 226
+    },
+    {
+      "videoId": "9uhm2AUgiOs",
+      "date": "20220217",
+      "status": "ok",
+      "elapsed": 236
+    },
+    {
+      "videoId": "Cd_IXyHwO3o",
+      "date": "20220218",
+      "status": "ok",
+      "elapsed": 208
+    },
+    {
+      "videoId": "X1Rp33_-R9E",
+      "date": "20220222",
+      "status": "ok",
+      "elapsed": 204
+    },
+    {
+      "videoId": "uX2B8fAMuLE",
+      "date": "20220228",
+      "status": "ok",
+      "elapsed": 281
+    },
+    {
+      "videoId": "BYPiofqBhvQ",
+      "date": "20220301",
+      "status": "ok",
+      "elapsed": 266
+    },
+    {
+      "videoId": "BAlC_cRvESM",
+      "date": "20220302",
+      "status": "ok",
+      "elapsed": 212
+    },
+    {
+      "videoId": "CRvSLzJs6i8",
+      "date": "20220318",
+      "status": "ok",
+      "elapsed": 205
+    },
+    {
+      "videoId": "Fsh39kp9XPM",
+      "date": "20220321",
+      "status": "io_error",
+      "error": "exit 1",
+      "stderr": "ortfolio_analyzer_revere\\data\\video_scan_test\\_rerun\\qmg-alt-timeout5\\ocr_probe\\frames\\20220321_20220321_fsh39kp9xpm_e8257bab_snapshot\\ocr\\ocr_000001.png\r\n[vost#0:0/png @ 0000021cd693bc80] Error submitting a packet to the muxer: I/O error\r\n    Last message repeated 1 times\r\n[out#0/image2 @ 0000021cd62b28c0] Error muxing a packet\r\n[out#0/image2 @ 0000021cd62b28c0] Task finished with error code: -5 (I/O error)\r\n[out#0/image2 @ 0000021cd62b28c0] Terminating thread with return code -5 (I/O error)\r\n\n",
+      "note": "timeout5 - I/O error on frames dir"
+    },
+    {
+      "videoId": "B2PcGc--FnM",
+      "date": "20220330",
+      "status": "ok",
+      "elapsed": 241
+    },
+    {
+      "videoId": "CkJEeFvlDzc",
+      "date": "20220331",
+      "status": "ok",
+      "elapsed": 202
+    },
+    {
+      "videoId": "fXN3uTL01f4",
+      "date": "20220405",
+      "status": "io_error",
+      "error": "exit 1",
+      "stderr": "ortfolio_analyzer_revere\\data\\video_scan_test\\_rerun\\qmg-alt-timeout5\\ocr_probe\\frames\\20220405_20220405_fxn3utl01f4_773d63c7_snapshot\\ocr\\ocr_000001.png\r\n[vost#0:0/png @ 0000025da694bcc0] Error submitting a packet to the muxer: I/O error\r\n    Last message repeated 1 times\r\n[out#0/image2 @ 0000025da62428c0] Error muxing a packet\r\n[out#0/image2 @ 0000025da62428c0] Task finished with error code: -5 (I/O error)\r\n[out#0/image2 @ 0000025da62428c0] Terminating thread with return code -5 (I/O error)\r\n\n",
+      "note": "timeout5 - I/O error on frames dir"
+    },
+    {
+      "videoId": "TeWiXhJTeyI",
+      "date": "20220406",
+      "status": "ok",
+      "elapsed": 240
+    },
+    {
+      "videoId": "bnPcAPjdAz4",
+      "date": "20220412",
+      "status": "ok",
+      "elapsed": 243
+    },
+    {
+      "videoId": "n6Gm1mLN7T0",
+      "date": "20220413",
+      "status": "ok",
+      "elapsed": 218
+    },
+    {
+      "videoId": "wPMNdbuaoJc",
+      "date": "20220427",
+      "status": "ok",
+      "elapsed": 197
+    },
+    {
+      "videoId": "K4PzGs13b-4",
+      "date": "20220429",
+      "status": "ok",
+      "elapsed": 214
+    },
+    {
+      "videoId": "xtDinDnf3-o",
+      "date": "20221104",
+      "status": "ok",
+      "elapsed": 219
+    },
+    {
+      "videoId": "1AJIzXSkfyM",
+      "date": "20230518",
+      "status": "ok",
+      "elapsed": 200
+    },
+    {
+      "videoId": "8Pa6cllRZNw",
+      "date": "20230522",
+      "status": "ok",
+      "elapsed": 197
+    },
+    {
+      "videoId": "1HFPeLD2zwc",
+      "date": "20230601",
+      "status": "timeout"
+    },
+    {
+      "videoId": "30ksgwzWboo",
+      "date": "20230602",
+      "status": "timeout"
+    },
+    {
+      "videoId": "C7ZZhSxYYLk",
+      "date": "20230605",
+      "status": "ok",
+      "elapsed": 231
+    },
+    {
+      "videoId": "SLhbpNuHegw",
+      "date": "20230608",
+      "status": "ok",
+      "elapsed": 251
+    },
+    {
+      "videoId": "VdQSDGZBLQE",
+      "date": "20230609",
+      "status": "timeout"
+    },
+    {
+      "videoId": "1HFPeLD2zwc",
+      "date": "20230601",
+      "status": "ok",
+      "elapsed": 960,
+      "note": "timeout5 - wrote captures before timeout"
+    },
+    {
+      "videoId": "30ksgwzWboo",
+      "date": "20230602",
+      "status": "ok",
+      "elapsed": 960,
+      "note": "timeout5 - wrote captures before timeout"
+    },
+    {
+      "videoId": "VdQSDGZBLQE",
+      "date": "20230609",
+      "status": "ok",
+      "elapsed": 960,
+      "note": "timeout5 - wrote captures before timeout"
+    }
+  ]
+}

@@ -244,8 +244,8 @@ const aggregateJson = {
     intro_card_captures: videos.reduce((sum, video) => sum + video.captures.filter((c) => c.is_intro_card).length, 0),
     whiteboard_segments_total: videos.reduce((sum, video) => sum + (Array.isArray(video.whiteboard_segments) ? video.whiteboard_segments.length : 0), 0),
     intro_card_segments: videos.reduce((sum, video) => sum + (Array.isArray(video.whiteboard_segments) ? video.whiteboard_segments.filter((s) => s.is_intro_card).length : 0), 0),
-    captures_with_tickers: videos.reduce((sum, video) => sum + video.captures.filter((c) => (c.tickers || []).length > 0).length, 0),
-    unique_tickers: [...new Set(videos.flatMap((video) => video.captures.flatMap((c) => c.tickers || [])))].sort(),
+    captures_with_tickers: videos.reduce((sum, video) => sum + video.captures.filter((c) => getCaptureTickers(c).length > 0).length, 0),
+    unique_tickers: [...new Set(videos.flatMap((video) => video.captures.flatMap((c) => getCaptureTickers(c))))].sort(),
     captures_with_keyframe_ts: videos.reduce((sum, video) => sum + video.captures.filter((c) => Number.isFinite(c.nearest_ffmpeg_keyframe_ts)).length, 0),
     unique_phashes: uniquePhashes,
     phash_collisions: phashCollisions,
@@ -313,6 +313,26 @@ function countPhashCollisions(phashList) {
 
 function tableCell(value) {
   return String(value == null ? '' : value).replace(/\|/g, '\\|');
+}
+
+/**
+ * Returns the appropriate ticker list for a capture, based on its screen layout.
+ * - chart_stream: use column-filtered, per-frame parsed tickers (chart_stream.position_list)
+ * - whiteboard: use structured GRO/TURBO holdings from bbox parser (tickers_from_bbox)
+ * - raw clusterer output (capture.tickers): fall back only when neither is available
+ */
+function getCaptureTickers(capture) {
+  if (capture.screen_layout === 'chart_stream') {
+    return Array.isArray(capture.chart_stream?.position_list)
+      ? capture.chart_stream.position_list
+      : [];
+  }
+  if (capture.screen_layout === 'whiteboard' || capture.screen_layout === 'structured_whiteboard') {
+    return Array.isArray(capture.tickers_from_bbox)
+      ? capture.tickers_from_bbox
+      : [];
+  }
+  return Array.isArray(capture.tickers) ? capture.tickers : [];
 }
 
 function renderTickersCell(tickers, limit = TICKERS_TABLE_LIMIT) {
@@ -412,7 +432,7 @@ function renderMarkdown(aggregate) {
         const introMark = capture.is_intro_card ? '✓' : '·';
         const phashShort = capture.phash ? capture.phash.slice(0, 8) : '—';
         lines.push(
-          `| ${captureIndex + 1} | ${formatHms(capture.timestamp)} | ${capture.score.toFixed(1)} | ${capture.screen_layout || '?'} | ${capture.observed_date || '—'} | ${introMark} | ${renderTickersCell(capture.tickers)} | ${phashShort} | ${renderKeyframeDelta(capture)} | ${snippet}… |`
+          `| ${captureIndex + 1} | ${formatHms(capture.timestamp)} | ${capture.score.toFixed(1)} | ${capture.screen_layout || '?'} | ${capture.observed_date || '—'} | ${introMark} | ${renderTickersCell(getCaptureTickers(capture))} | ${phashShort} | ${renderKeyframeDelta(capture)} | ${snippet}… |`
         );
       });
     lines.push('');

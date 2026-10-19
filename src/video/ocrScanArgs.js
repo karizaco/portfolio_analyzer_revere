@@ -4,6 +4,12 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 
 const { PREFILTER_PROFILE_DEFAULT } = require('../config/schema');
+const {
+  PIPELINE_PROFILE_DEFAULT,
+  getPipelineProfileNames
+} = require('../config/pipelineProfiles');
+
+const SUPPORTED_PIPELINE_PROFILES = Object.freeze(getPipelineProfileNames());
 
 const DEFAULT_OUTPUT_ROOT = path.join(
   path.resolve(__dirname, '..', '..'),
@@ -18,6 +24,7 @@ function printHelp() {
     'Options:',
     '  --video <path>             Local video file to scan',
     '  --date <YYYYMMDD>          Optional date key override for output naming',
+    `  --pipeline-profile <name>  End-to-end pipeline profile, default ${PIPELINE_PROFILE_DEFAULT} (run node tools/runOcrProfiles.js --list for catalog)`,
     '  --output-kind <kind>       whiteboard | snapshot',
     '  --output-root <path>       Root directory for extracted outputs',
     '  --run-tag <name>           Optional subdirectory appended to output-root so same-day reruns do not overwrite previous results',
@@ -32,7 +39,8 @@ function printHelp() {
     '  --strong-threshold <n>     Autosave score threshold, default 6',
     '  --review-threshold <n>     Review score threshold, default 4',
     '  --max-captures <n>         Maximum screenshots to save per video, default 3',
-    '  --cluster-min-frequency <n> Minimum per-canonical frame count for multi-frame OCR token voting, default 2 (filters single-frame garbles; pass 1 to disable)',
+    '  --cluster-min-frequency <n> Minimum per-canonical frame count for multi-frame OCR token voting, default 1 (set to 2 to filter single-frame garbles)',
+    '  --position-merge-min-occurrences <n>  Min capture count for position merge, default 1 (set to 2 for intersection mode)',
     '  --progress-interval <n>    Report OCR progress every N frames, default 10',
     '  --batch-snapshots          Extract a batch of N frames within ±W seconds of the best-scoring frame. All frames show the same position list state, so multi-frame merge is valid. Use with --batch-count and --batch-window.',
     '  --batch-count <n>          Number of frames in the batch (default 5)',
@@ -43,11 +51,12 @@ function printHelp() {
     '  --keep-frames              Keep sampled intermediate frames',
     '  --skip-keyframes           Do not invoke ffprobe to locate the nearest keyframe per capture',
     '  --confusion-radius <n>     Adjacent-frame lookup window for confusion_with_nearby, default 1',
-    '  --prefilter-profile <p>    whiteboard | chart_stream (drives prefilter score table + keyword guard)',
+    '  --prefilter-profile <p>    whiteboard | chart_stream | tale_of_the_tape (drives prefilter score table + keyword guard)',
     '  --basename <name>          Snapshot PNG prefix + screenshot discovery stem, default "revere"',
     '  --phash-region <x,y,w,h>  Region in pixels for the overlay pHash (optional)',
     '  --phash-hamming-max <n>    Max Hamming distance for overlay pHash dedup, default 6',
-    '  --phash-region-fraction <xf,yf,wf,hf> Fractional overlay region (0..1); chart_stream default "0.87,0.58,0.13,0.40"',
+<<<<<<< HEAD
+    '  --phash-region-fraction <xf,yf,wf,hf> Fractional overlay region (0..1); chart_stream default "0.86,0.62,0.14,0.22"',
     '  --temporal-decay <secs>    Seconds over which early-frame boost decays to zero, default 1800',
     '  --chart-stream-parser      Replace the GRO/TURBO whiteboard parser with parseChartStream',
     '  --help                     Show this help text',
@@ -79,7 +88,7 @@ function printHelp() {
 // (identifyPositionListColumn) is the second line of defense — it uses
 // per-word OCR positions to identify the dominant ticker column and
 // rejects chart-area tokens that survived the crop widening.
-const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.86,0.55,0.14,0.45';
+const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.86,0.62,0.14,0.22';
 
 function parseFractionalRegion(raw) {
   if (!raw) return null;
@@ -112,15 +121,17 @@ function buildDefaultOptions(defaultOutputRoot) {
     batchTimestamp: null,
     batchWindowSeconds: 4,
     chartStreamParser: false,
-    clusterMinFrequency: 2,
+    clusterMinFrequency: 1,
     confusionRadius: 1,
     ffmpegBin: 'ffmpeg',
     fps: 0.25,
     maxCapturesPerVideo: 3,
     ocrEngine: 'tesseract',
+    positionMergeMinOccurrences: 1,
     ocrFrameWidth: 1280,
     outputKind: 'whiteboard',
     outputRoot: defaultOutputRoot,
+    pipelineProfile: PIPELINE_PROFILE_DEFAULT,
     phashHammingMax: 6,
     phashRegion: null,
     phashRegionFraction: null,
@@ -155,6 +166,10 @@ function parseArgs(argv, overrides = {}) {
     switch (argument) {
       case '--video':
         options.videoPath = path.resolve(nextValue);
+        index += 1;
+        break;
+      case '--pipeline-profile':
+        options.pipelineProfile = String(nextValue);
         index += 1;
         break;
       case '--video-dir':
@@ -227,6 +242,10 @@ function parseArgs(argv, overrides = {}) {
         break;
       case '--cluster-min-frequency':
         options.clusterMinFrequency = Number(nextValue);
+        index += 1;
+        break;
+      case '--position-merge-min-occurrences':
+        options.positionMergeMinOccurrences = Number(nextValue);
         index += 1;
         break;
       case '--batch-snapshots':
@@ -354,6 +373,10 @@ function parseArgs(argv, overrides = {}) {
     throw new Error('`--cluster-min-frequency` must be an integer >= 1.');
   }
 
+  if (!Number.isFinite(options.positionMergeMinOccurrences) || !Number.isInteger(options.positionMergeMinOccurrences) || options.positionMergeMinOccurrences < 1) {
+    throw new Error('`--position-merge-min-occurrences` must be an integer >= 1.');
+  }
+
   if (!Number.isFinite(options.confusionRadius) || options.confusionRadius < 0) {
     throw new Error('`--confusion-radius` must be zero or a positive number.');
   }
@@ -362,16 +385,23 @@ function parseArgs(argv, overrides = {}) {
     throw new Error(`Unsupported OCR engine: ${options.ocrEngine}. Use 'tesseract' or 'easyocr'.`);
   }
 
-  if (!Number.isFinite(options.temporalDecay) || options.temporalDecay <= 0) {
-    throw new Error('`--temporal-decay` must be a positive number of seconds.');
+  if (!Number.isFinite(options.temporalDecay) || options.temporalDecay < 0) {
+    throw new Error('`--temporal-decay` must be a non-negative number of seconds (0 to disable the boost).');
   }
 
   if (!Number.isFinite(options.phashHammingMax) || options.phashHammingMax < 0 || options.phashHammingMax > 64) {
     throw new Error('`--phash-hamming-max` must be an integer between 0 and 64.');
   }
 
-  if (!['whiteboard', 'chart_stream'].includes(options.prefilterProfile)) {
+  if (!['whiteboard', 'chart_stream', 'tale_of_the_tape'].includes(options.prefilterProfile)) {
     throw new Error(`Unsupported prefilter profile: ${options.prefilterProfile}`);
+  }
+
+  if (!SUPPORTED_PIPELINE_PROFILES.includes(options.pipelineProfile)) {
+    throw new Error(
+      `Unsupported pipeline profile: ${options.pipelineProfile}. `
+      + `Use one of: ${SUPPORTED_PIPELINE_PROFILES.join(', ')}`
+    );
   }
 
   const sanitizedBasename = String(options.basename || 'revere').replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
@@ -388,10 +418,13 @@ function parseArgs(argv, overrides = {}) {
     options.phashRegionFraction = parseFractionalRegion(CHART_STREAM_REGION_FRACTION_DEFAULT);
   }
 
-  // chart_stream prefilter + chart-stream parser must be used together: the prefilter
-  // finds dark candlestick-chart frames and the parser extracts position lists from them.
-  // Auto-enable so the user only needs --prefilter-profile chart_stream.
-  if (options.prefilterProfile === 'chart_stream') {
+  // tale_of_the_tape uses the center-right crop for the Positions table.
+  if (options.prefilterProfile === 'tale_of_the_tape' && !options.phashRegion && !options.phashRegionFraction) {
+    options.phashRegionFraction = parseFractionalRegion(TALE_OF_THE_TAPE_CROP_FRACTION);
+  }
+
+  // chart_stream and tale_of_the_tape prefilters use the chart-stream parser.
+  if (options.prefilterProfile === 'chart_stream' || options.prefilterProfile === 'tale_of_the_tape') {
     options.chartStreamParser = true;
   }
 
@@ -410,6 +443,9 @@ function createProbeKey(videoPath, dateKey, outputKind) {
 module.exports = {
   CHART_STREAM_REGION_FRACTION_DEFAULT,
   DEFAULT_OUTPUT_ROOT,
+  PIPELINE_PROFILE_DEFAULT,
+  SUPPORTED_PIPELINE_PROFILES,
+  TALE_OF_THE_TAPE_CROP_FRACTION,
   createProbeKey,
   parseArgs,
   parseFractionalRegion,

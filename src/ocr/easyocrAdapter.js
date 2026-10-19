@@ -28,14 +28,28 @@ const DEFAULT_PYTHON_CANDIDATES = [
   'C:/Python314/python.exe',
 ];
 
+function pythonHasEasyOCR(pythonExe) {
+  try {
+    const { execSync } = require('node:child_process');
+    execSync(`"${pythonExe}" -c "import easyocr; print('ok')"`, {
+      timeout: 10000,
+      stdio: ['ignore', 'pipe', 'pipe'],
+      env: { ...process.env, KMP_DUPLICATE_LIB_OK: 'TRUE' },
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function pickPython(explicitPath) {
   if (explicitPath && fs.existsSync(explicitPath)) return explicitPath;
   const envPath = process.env.EASYOCR_PYTHON;
   if (envPath && fs.existsSync(envPath)) return envPath;
   for (const candidate of DEFAULT_PYTHON_CANDIDATES) {
-    if (fs.existsSync(candidate)) return candidate;
+    if (fs.existsSync(candidate) && pythonHasEasyOCR(candidate)) return candidate;
   }
-  return 'python';
+  return 'python'; // PATH fallback — verified to have EasyOCR earlier in this session
 }
 
 // Resolve the Python wrapper script. Lives in tools/_easyocr_ocr.py relative
@@ -54,7 +68,12 @@ function runEasyOcr(imagePath, options = {}) {
       return;
     }
     const child = spawn(python, [scriptPath, imagePath], {
+      env: {
+        ...process.env,
+        KMP_DUPLICATE_LIB_OK: process.env.KMP_DUPLICATE_LIB_OK || 'TRUE',
+      },
       stdio: ['ignore', 'pipe', 'pipe'],
+      env: { ...process.env, KMP_DUPLICATE_LIB_OK: 'TRUE' },
     });
     let stdout = '';
     let stderr = '';
@@ -62,8 +81,8 @@ function runEasyOcr(imagePath, options = {}) {
     child.stderr.on('data', (d) => { stderr += d.toString(); });
     const killTimer = setTimeout(() => {
       child.kill('SIGTERM');
-      reject(new Error(`EasyOCR timeout after ${options.timeoutMs || 180000}ms\nstderr: ${stderr}`));
-    }, options.timeoutMs || 180000);
+      reject(new Error(`EasyOCR timeout after ${options.timeoutMs || 600000}ms\nstderr: ${stderr}`));
+    }, options.timeoutMs || 600000);
     child.on('close', (code) => {
       clearTimeout(killTimer);
       if (code !== 0) {
@@ -102,6 +121,7 @@ function adaptToParserSchema(easyocrResult) {
     text: String(easyocrResult.text || ''),
     lines: Array.isArray(easyocrResult.lines) ? easyocrResult.lines : [],
     words: words.map((w) => ({
+      lineKey: `easy:${Number(w.line || 0)}`,
       text: String(w.text || ''),
       left: Number(w.left || 0),
       top: Number(w.top || 0),
