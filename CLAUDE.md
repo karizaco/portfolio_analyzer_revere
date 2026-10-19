@@ -242,6 +242,30 @@ tasklist | findstr node.exe
 Results go to `data/video_ocr_probe/qmg-easyocr-YYYYMMDD/`. Rsync back to this machine
 for local scoring with `data/compile_results.js`.
 
+### Dual-batch comparison run (2026-10-18/19)
+
+**Baseline** (default settings):
+```bash
+node tools/qmg_ocr_batch_daemon.js remaining
+# Output: data/video_scan_test/_rerun/qmg-batch-remaining/
+# Flags: --max-captures 1 --fps 0.25 --prefilter-max-frames 6
+# Results: 25/52 OK (25 not_found due to lowercase video ID mismatch)
+```
+
+**Alt** (2 captures instead of 1, low-CPU parallelism=2):
+```bash
+node tools/qmg_alt_batch_daemon.js alt
+# Output: data/video_scan_test/_rerun/qmg-alt-alt/ + qmg-alt-timeout5/
+# Flags: --max-captures 2 --fps 0.25 --prefilter-max-frames 6
+# Results: 23/25 OK (2 io_error on 20220321/20220405)
+```
+
+**Known issue**: Windows Node.js `spawn()` throws `EFTYPE` when given a `.js` path directly as the command.
+Fix: always use `spawn('node', ['path/to/script.js', ...args])` not `spawn('path/to/script.js', [...args])`.
+
+Batch files: `data/qmg_alt_batch.json` (alt) and `data/video_scan_batch_remaining.json` (baseline).
+Results: `data/qmg_alt_batch_results.json` and `data/video_scan_batch_remaining_results.json`.
+
 ---
 
 ## Codebase map
