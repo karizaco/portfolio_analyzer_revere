@@ -447,10 +447,17 @@ function summarizeLumaBuffer(buffer, width, height) {
   // Sum row tops across columns. Quullamaggie position list has ~10-15 rows
   // of white text on dark background, so totalRowTops should be high.
   let totalRowTops = 0;
-  let maxColRowTops = 0;
+  // multiColStripeCount: how many columns have ≥2 row-top transitions.
+  // Position list has 3 spread columns (ticker + price + change) × 2-4
+  // transitions each → 3 columns above threshold. Intro frames have 1 column
+  // with many transitions but others at 0 → fewer columns above threshold.
+  // This distinguishes "many columns with few transitions" (position list)
+  // from "one column with many transitions" (intro/chart area).
+  const STRIPE_THRESHOLD = 2;
+  let multiColStripeCount = 0;
   for (const n of rowTopsByCol) {
     totalRowTops += n;
-    if (n > maxColRowTops) maxColRowTops = n;
+    if (n >= STRIPE_THRESHOLD) multiColStripeCount += 1;
   }
 
   const pixelCount = Math.max(buffer.length, 1);
@@ -469,7 +476,7 @@ function summarizeLumaBuffer(buffer, width, height) {
     horizontalEdgeRatio: horizontalComparisons > 0 ? horizontalEdgeHits / horizontalComparisons : 0,
     meanLuma,
     rowDensity: totalRowTops,
-    maxColRowDensity: maxColRowTops,
+    multiColStripeCount: multiColStripeCount,
     brightColumnLeft: leftmostBright,
     brightColumnRight: rightmostBright,
     midToneRatioTicker: totalTickerPixels > 0 ? midToneTicker / totalTickerPixels : 0,
@@ -517,16 +524,15 @@ function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporal
     score += table.rowDensityWeight * fraction;
   }
 
-  // Max-column row density: position-list frames concentrate text-row
-  // transitions in ONE column (the ticker column at x≈0.93 of the frame);
-  // intro/warmup frames scatter transitions across columns (chart axis
-  // labels, candle wicks). So maxColRowDensity is high for position list,
-  // low for intro. Weight this strongly to prefer position-list frames.
-  if (table.maxColRowDensityWeight > 0) {
-    const mcrd = Number(stats.maxColRowDensity || 0);
-    const target = Number(table.maxColRowDensityTarget || 1);
-    const fraction = target > 0 ? Math.min(1.0, mcrd / target) : 0;
-    score += table.maxColRowDensityWeight * fraction;
+  // Multi-column stripe count: how many columns have ≥2 row-top transitions.
+  // Position list has 3 spread columns (ticker + price + change) → 3 stripes.
+  // Intro frames concentrate transitions in 1 column → 1 stripe. Weight 20
+  // to help distinguish position-list frames from intro frames.
+  if (table.multiColStripeCountWeight > 0) {
+    const stripes = Number(stats.multiColStripeCount || 0);
+    const target = Number(table.multiColStripeCountTarget || 3);
+    const fraction = target > 0 ? Math.min(1.0, stripes / target) : 0;
+    score += table.multiColStripeCountWeight * fraction;
   }
 
   // Mid-tone ratio in the ticker region: the position list has ticker text
@@ -661,15 +667,12 @@ const PREFILTER_PROFILES = Object.freeze({
     rowDensityWeight: 10,
     rowDensityTarget: 150,
     rowDensitySlope: 0.05,
-    // Max-column row density: position-list frames concentrate text-row
-    // transitions in ONE column (the ticker column at x≈0.93 of the frame);
-    // intro/warmup frames scatter them across columns. maxColRowDensity ≈
-    // 10-15 for a real position list, 1-3 for intro. Weight strongly (25)
-    // to flip the prefilter ranking toward actual position-list frames
-    // instead of intro/warmup frames.
-    maxColRowDensityWeight: 25,
-    maxColRowDensityTarget: 12,
-    maxColRowDensitySlope: 1,
+    // Multi-column stripe count: how many columns have ≥2 row-top transitions.
+    // Position list has 3 spread columns (ticker + price + change) → ~3 stripes.
+    // Intro frames concentrate in 1 column → ~1 stripe. Replaces the old
+    // maxColRowDensity metric which was measuring the wrong thing.
+    multiColStripeCountWeight: 20,
+    multiColStripeCountTarget: 3,
     // Mid-tone ratio in ticker region: ratio of pixels in brightness range
     // 51-150 (gray text) within the right-bottom ticker rectangle. A clean
     // Google Drive frame has < 1% mid-tone; a real position list frame
@@ -721,9 +724,8 @@ const PREFILTER_PROFILES = Object.freeze({
     rowDensityWeight: 8,
     rowDensityTarget: 100,
     rowDensitySlope: 0.05,
-    maxColRowDensityWeight: 20,
-    maxColRowDensityTarget: 10,
-    maxColRowDensitySlope: 1,
+    multiColStripeCountWeight: 15,
+    multiColStripeCountTarget: 3,
     midToneWeight: 25,
     midToneTarget: 0.45,
     midToneSlope: 0.2,
