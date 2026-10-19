@@ -4,12 +4,9 @@ const { spawn } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const ROOT = path.resolve(__dirname, '..');
-const DEFAULT_GT_PATH = path.join(ROOT, 'data', 'qmg_ground_truth.json');
-
-function loadQmgGroundTruth(gtPath = DEFAULT_GT_PATH) {
-  return JSON.parse(fs.readFileSync(gtPath, 'utf8'));
-}
+const {
+  loadQmgGroundTruth,
+} = require('../src/qmg/qmgGroundTruth');
 
 // GT for the two locally-available videos.
 // Video paths are relative to data/video_pipeline/downloads_1080p/ or downloads_hires/.
