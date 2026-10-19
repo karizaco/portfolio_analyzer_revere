@@ -55,7 +55,6 @@ function printHelp() {
     '  --basename <name>          Snapshot PNG prefix + screenshot discovery stem, default "revere"',
     '  --phash-region <x,y,w,h>  Region in pixels for the overlay pHash (optional)',
     '  --phash-hamming-max <n>    Max Hamming distance for overlay pHash dedup, default 6',
-<<<<<<< HEAD
     '  --phash-region-fraction <xf,yf,wf,hf> Fractional overlay region (0..1); chart_stream default "0.86,0.62,0.14,0.22"',
     '  --temporal-decay <secs>    Seconds over which early-frame boost decays to zero, default 1800',
     '  --chart-stream-parser      Replace the GRO/TURBO whiteboard parser with parseChartStream',
@@ -66,29 +65,9 @@ function printHelp() {
 
 // Default fractional overlay region for chart-stream OCR. Qullamaggie's
 // position-list overlay sits in the bottom-right corner of a streamed chart frame.
-// At 1080p (1920x1080):
-//   - The position list table varies in width depending on layout — narrow
-//     tables (3 columns: Flag/Sym/%Change) span x=[1766-1911] (145px); wide
-//     tables (5 columns: Flag/Sym/%Change/PreBuzz/ADR) span x=[1742-1911]
-//     (169px). Some captures also show a "Personal WatchList" panel BELOW
-//     the position list (at y=0.95..1.00 of frame) with the SAME horizontal
-//     extent and identical row shape (TICKER | % | % | VOL) — that is where
-//     most false positives came from in the previous crop.
-//   - Tested on the actual captured frame at 1080p via per-row luma analysis:
-//       Position list text band: rows 83-273 of crop = y=0.627-0.803 (190 px)
-//       Watchlist panel band:    rows 431-480 of crop = y=0.949-0.994
-//       Gap (dark UI chrome):    rows 274-430 of crop = y=0.803-0.949
-//   - Previous crop (0.86,0.55,0.14,0.45 → 269x486 px @1080p) was ~2.5× taller
-//     than needed. The new crop (0.86,0.62,0.14,0.22 → 269x238 px) includes
-//     the entire position list band with ~10 px headroom on top, ends 110 px
-//     before the watchlist starts, and excludes chart y-axis bleed above.
-//   - The horizontal range (x=0.86, w=0.14) is unchanged — covers the widest
-//     5-column variant without clipping the left edge of ticker text.
-// The position-list-aware filter in src/parse/parseChartStream.js
-// (identifyPositionListColumn) is the second line of defense — it uses
-// per-word OCR positions to identify the dominant ticker column and
-// rejects chart-area tokens that survived the crop widening.
 const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.86,0.62,0.14,0.22';
+// Tale-of-the-Tape position list sits center-right in the frame (x≈50-95%, y≈55-98%)
+const TALE_OF_THE_TAPE_CROP_FRACTION = '0.50,0.55,0.45,0.43';
 
 function parseFractionalRegion(raw) {
   if (!raw) return null;
