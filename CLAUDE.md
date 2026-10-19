@@ -152,6 +152,23 @@ Running `tools/scanAllGtVideos.js` or `tools/scanVideoWithOcr.js` against Quulla
 - **Do NOT `ls` or `Read` `data/video_scan_test/_rerun/` directly** — those directories hold hundreds-to-thousands of PNGs each. Use `Glob` with a pattern or delegate to an Explore agent. Listing them bloats context.
 - **Do NOT run `tools/retry_age_restricted.py` without explicit user confirmation** — 138 sequential `yt-dlp` subprocesses, ~3.5 h worst case.
 
+### EasyOCR — ALWAYS use `--low-cpu`
+
+EasyOCR uses PyTorch + OpenCV + NumPy, each spawning multi-threaded thread pools. **Without `--low-cpu`, parallel scans saturate all CPU cores**, causing 10× slowdown (60s/frame → 600s/frame) and system freeze.
+
+**Every EasyOCR command MUST include `--low-cpu`:**
+
+```bash
+# Batch runner
+node tools/runQmgOcrBatch.js --dates d1,d2,... --low-cpu --parallel 4
+
+# Individual scan
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 KMP_DUPLICATE_LIB_OK=TRUE \
+  node tools/scanVideoWithOcr.js ... --ocr-engine easyocr
+```
+
+`--low-cpu` in `runQmgOcrBatch.js` enforces `OMP_NUM_THREADS=1`, `MKL_NUM_THREADS=1`, `KMP_DUPLICATE_LIB_OK=TRUE` and caps parallelism at `--parallel 2` max. There is no acceptable reason to omit it — the machine will freeze.
+
 ---
 
 ## Data folder policy
@@ -189,6 +206,65 @@ artifacts that should not be persisted.
 
 Run `node tools/prune_old_probes.js` (dry-run first, then `--execute`) periodically
 to prune old probe and scan subdirectories, keeping only the 3 most-recent per family.
+
+---
+
+## QMG OCR batch processing runbook
+
+Use `tools/runQmgOcrBatch.js` to process multiple videos with EasyOCR. Each video gets
+automatically-tuned `--temporal-decay` and `--phash-region-fraction` per date range.
+
+### Run in chunks of 5 (never all at once — monitor each chunk before continuing)
+
+```bash
+# Sync videos + data from remote machine first, then:
+
+# Chunk 1
+node tools/runQmgOcrBatch.js --dates 20220414,20220418,20220419,20220421 --parallel 4
+
+# Chunk 2
+node tools/runQmgOcrBatch.js --dates 20220425,20220426,20220428,20220506 --parallel 4
+
+# Chunk 3
+node tools/runQmgOcrBatch.js --dates 20220510,20220517,20220606,20220614 --parallel 4
+
+# Chunk 4
+node tools/runQmgOcrBatch.js --dates 20220323,20220606,20220606b,20220606c,20221117,20230601 --parallel 4
+```
+
+After each chunk completes, check for orphans before continuing:
+```bash
+tasklist | findstr ffmpeg.exe
+tasklist | findstr node.exe
+# Kill any orphans before next chunk
+```
+
+Results go to `data/video_ocr_probe/qmg-easyocr-YYYYMMDD/`. Rsync back to this machine
+for local scoring with `data/compile_results.js`.
+
+### Dual-batch comparison run (2026-10-18/19)
+
+**Baseline** (default settings):
+```bash
+node tools/qmg_ocr_batch_daemon.js remaining
+# Output: data/video_scan_test/_rerun/qmg-batch-remaining/
+# Flags: --max-captures 1 --fps 0.25 --prefilter-max-frames 6
+# Results: 25/52 OK (25 not_found due to lowercase video ID mismatch)
+```
+
+**Alt** (2 captures instead of 1, low-CPU parallelism=2):
+```bash
+node tools/qmg_alt_batch_daemon.js alt
+# Output: data/video_scan_test/_rerun/qmg-alt-alt/ + qmg-alt-timeout5/
+# Flags: --max-captures 2 --fps 0.25 --prefilter-max-frames 6
+# Results: 23/25 OK (2 io_error on 20220321/20220405)
+```
+
+**Known issue**: Windows Node.js `spawn()` throws `EFTYPE` when given a `.js` path directly as the command.
+Fix: always use `spawn('node', ['path/to/script.js', ...args])` not `spawn('path/to/script.js', [...args])`.
+
+Batch files: `data/qmg_alt_batch.json` (alt) and `data/video_scan_batch_remaining.json` (baseline).
+Results: `data/qmg_alt_batch_results.json` and `data/video_scan_batch_remaining_results.json`.
 
 ---
 
@@ -256,20 +332,31 @@ The chart-stream pipeline supports two OCR engines via `--ocr-engine tesseract|e
 
 EasyOCR is a Python package; install via `pip install easyocr`. EasyOCR 1.7.2+ ships wheels for Python 3.9 through 3.14, so any modern interpreter works — the older "Python 3.11 required" guidance is outdated. The default interpreter lookup tries `C:/ProgramData/anaconda3/python.exe` first (recommended because anaconda usually has CUDA-enabled torch), then several common standalone install paths, and finally falls back to `python` on PATH. Override via `EASYOCR_PYTHON` env var or `--easyocr-python` CLI flag.
 
-### Verified end-to-end result on 20220606 (commit d824431)
+**Required env var**: `KMP_DUPLICATE_LIB_OK=TRUE` must be set when running EasyOCR — Intel OpenMP (used by EasyOCR's CPU backend) emits duplicate symbol warnings that crash the process without this flag.
+
+### Current crop and EasyOCR defaults
+
+The chart-stream pipeline uses a narrow crop targeting the position-list column in the bottom-right:
 
 ```
+{x: 0.87, y: 0.58, w: 0.13, h: 0.40}   ← 13% width × 40% height, anchored bottom-right
+```
+
+This crop is defined as `CHART_STREAM_REGION_FRACTION_DEFAULT = '0.86,0.55,0.14,0.45'` in `src/video/ocrScanArgs.js`
+(note the format is `x,y,w,h` with y representing the TOP edge, so `y=0.55, h=0.45` anchors the crop 55% from
+the top, giving a bottom-anchored crop equivalent to `{x:0.86, y:0.55, w:0.14, h:0.45}`).
+
+Defaults for a full EasyOCR scan:
+```
 node tools/scanVideoWithOcr.js \
-  --video data/video_pipeline/downloads_1080p/20220606_Axs8VyUKFRk.mp4 \
-  --date 20220606 \
+  --video <path> --date <date> \
   --prefilter-profile chart_stream --chart-stream-parser \
   --basename qmg --output-kind snapshot \
   --max-captures 1 --fps 0.25 --prefilter-max-frames 6 \
   --ocr-engine easyocr
 ```
 
-→ Captured frame at 00:42:00: `[ALB, CBIO, COIN, GOVX, LABU, UCO, VLO, X]`
-→ 6/8 GT tickers (75% recall: ALB, CBIO, GOVX, LABU, UCO, VLO)
+Set `KMP_DUPLICATE_LIB_OK=TRUE` when running EasyOCR to suppress Intel OpenMP duplicate-symbol warnings.
 
 ### Why EasyOCR beats Tesseract for QMG position lists
 
@@ -286,27 +373,45 @@ node tools/scanVideoWithOcr.js \
    EasyOCR's CNN is sensitive to anti-aliasing artifacts from the 1280→1345 downscale-then-upscale. The EasyOCR branch uses `ffmpeg -ss <ts> -i <videoPath>` (not `-i <ocr-resolution-frame>`) to avoid this.
 
 2. **The parser's column detector (identifyPositionListColumn) picks the WRONG dominant_x for EasyOCR.**
-   EasyOCR's word bounding boxes land at different x-centers than Tesseract's, so the bucket heuristic picks a chart-area column (~x=510) instead of the position-list column (~x=1218). The fix: column-gated acceptance was removed — the parser now accepts on `inLexicon || priceNearby` alone. Chart-area text ("SYM", "ARITH", "Cran") doesn't match the seed lexicon so it stays rejected.
+   EasyOCR's word bounding boxes land at different x-centers than Tesseract's, so the bucket heuristic picks a chart-area column (~x=490-510 in the 1345px EasyOCR crop) instead of the position-list column (~x=1218). Two fixes:
+   - **X-coordinate gate** (`src/parse/parseChartStream.js`): when `identifyPositionListColumn` fallback fires (no price-aligned tickers), reject if `dominantX < 1150` in EasyOCR crop coords. ~86% of chart-area bleed gets blocked here.
+   - **Blocklist** (`TICKER_BLOCKLIST`): `FREY` is the only confirmed persistent FP (clustered from chart annotations). P, SPYM, BKR, BOIL are real tickers — do NOT blocklist them.
 
 3. **Use scale=5 for EasyOCR, not the dual-scale 3+4 used for Tesseract.**
    EasyOCR is slow enough (~60s) that running it twice is wasteful; the bigger image produces cleaner OCR.
 
 4. **The chart_stream prefilter picks intro/warmup frames by default.**
-   The `midToneRatioTicker` signal fires on any chart content (candles, axis labels) in the bottom-right rectangle. The fix: added `maxColRowDensityWeight: 25` (max-row-density in the column) so position-list frames (text transitions stacked in one column) score higher than intro frames (transitions scattered).
+   The `midToneRatioTicker` signal fires on any chart content (candles, axis labels) in the bottom-right rectangle. The fix: added `maxColRowDensityWeight: 25` (max-row-density in the column) so position-list frames score higher than intro frames.
+
+5. **The clusterer (`clusterRawOcrTokens`) creates false-positive ticker clusters from chart noise.**
+   When the per-frame parser finds no price-aligned tickers (column filter fails), `clusterRawOcrTokens` runs on raw OCR text and clusters all ticker-shape words across frames. Chart-area tokens like DOOM/JOOM/QOOM get edit-distance-corrected to GOOG (dist=2 each), SSO (RISO/RSO dist=2), QS (S/S0/S0M all dist=2). The fix: in `scanVideoWithOcr.js`, snapshot mode (QMG chart-stream) feeds `position_list` (column-filtered tickers) to the clusterer instead of raw OCR text, eliminating chart-area bleed. Additionally, edit-distance-corrected canonicals are accepted only when at least one cluster member is within distance 1 of the canonical, which eliminates chart-noise clusters while keeping real corrections (INA→TNA dist=1).
 
 ### Pipeline stages for chart-stream
 
 ```text
 ffmpeg -ss <ts> -i <video>  →  ffmpeg crop=in_w*0.14:in_h*0.45:in_w*0.86:in_h*0.55,scale=1345:-1
-                             →  EasyOCR (Python subprocess)
-                             →  parseChartStreamPositionList (lexicon + price-nearby)
-                             →  scoreChartStreamCandidate (with parse_status='ok' bonus)
-                             →  pickTopDistinctCandidates (dedup + strongThreshold)
+                             →  EasyOCR (Python subprocess, ~60s/frame)
+                             →  parseChartStreamPositionList (lexicon + price-nearby + column filter)
+                             →  clusterRawOcrTokens (raw OCR token clustering across frames)
+                             →  pickTopDistinctCandidates (dedup by phash + frame gap)
 ```
 
-### Diagnostic fields exposed (since commit be9499a)
+### Diagnostic fields exposed
 
 - `chart_stream.column_filter` — `dominant_x`, `column_width`, `in_list_token_count` (diagnostic only, not gated)
-- `chart_stream.tickers_rejected_list` — first 30 rejected tokens (capped to keep probe logs small)
-- `chart_stream.position_list` — accepted tickers after parse
-- `merged_position_list` — multi-frame union (committed, not yet wired into scoring)
+- `chart_stream.tickers_rejected_list` — first 30 rejected tokens
+- `chart_stream.position_list` — accepted tickers after per-frame parse
+- `merged_position_list` — multi-frame clusterer output (dominant for EasyOCR runs)
+- `merged_raw_token_clusters` — per-cluster diagnostics: `{canonical, members, frequency, frameCount}`
+
+### Known limitations and next steps (as of 2026-10-09)
+
+**Precision floor (~50%)**: Even with all fixes, ~50% of `merged_position_list` entries are real tickers not in the specific video's position list (AERC, SIGA, COIN, X, etc.). The seed lexicon is too broad. Two root causes:
+1. Clusterer produces real tickers from chart noise via edit-distance correction
+2. Real tickers (X, COIN) appear in the video but aren't in that video's position list
+
+**Recall floor (~75-100% on good videos)**: Prefilter consistently misses some GT tickers (GOVX, LABU, NFLX, CBIO) on some videos. The `meanLumaFloor=30` penalty on historical dark streams (Dec 2021–Feb 2022) likely contributes. The prefilter needs recalibration for these eras.
+
+**PaddleOCR PP-OCRv6** (`tools/_paddleocr_ocr.py`): Could not install — Python 3.14 is installed; `paddlepaddle` has no cp314 wheel. Downgrade to Python 3.13 to benchmark. Interface is identical to `_easyocr_ocr.py` — schema is `{text, lines, words[{text,left,top,width,height,conf,line}],_engine,_image,_detection_count}`. Would run at ~7× EasyOCR speed (PP-OCRv6 on CPU with OpenVINO).
+
+**Ground truth accuracy**: The `data/qmg_ground_truth.json` must be verified per video — 20220510 GT was actually TSLA+VRM (not LABU/TNA as previously assumed). Always verify GT against the actual video content before trusting recall numbers.

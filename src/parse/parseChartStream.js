@@ -39,10 +39,26 @@
 const { extractTickersFromOcrText, loadSeedLexiconSync, clearTickerScanCache } = require('../normalize/tickerScan');
 const { STRICT_TICKER_PATTERN } = require('../normalize/tickerExtraction');
 
+// Tickers that appear frequently in OCR output but never in ground truth.
+// Applied at three levels: per-frame accepted list, clusterer canonical filter,
+// and the final merged_position_list output. Add new entries only after
+// confirming zero GT hits across all 40+ GT videos.
+//
+// NOTE: P, SPYM, BKR, BOIL were previously blocklisted but are real tickers
+// and should NOT be removed from the lexicon. They are here for documentation
+// only; FREY is the only ticker confirmed as a persistent false positive
+// that is not a legitimate QMG trading candidate.
+const TICKER_BLOCKLIST = new Set(['FREY']);
+
 // Maximum edit distance for OCR character correction. Tested 3 on 2026-09-29
 // (might catch GOVX→"BGO" which needs 3 edits) — added FPs to non-peak frames
 // without helping peak recall. Reverted to 2.
 const MAX_OCR_EDIT_DISTANCE = 2;
+const SINGLE_LETTER_TICKERS = new Set([
+  'A', 'C', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+  'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+  'X', 'Y', 'Z',
+]);
 
 // Matches OCR-split prices:  $ 412.50  ($ split from digits by whitespace)
 // Also matches:  $412.50,  412.50,  HIGH/LOW/CLOSE/TARGET/STOP/BID/ASK
@@ -107,10 +123,27 @@ function countTickerOccurrences(ocrText) {
 
 function hasPriceNear(ocrText, ticker) {
   if (!ocrText) return false;
-  // Search for the ticker as a whole word; accept up to 12 trailing chars
+  // Search for the ticker as a whole word; accept up to 25 trailing chars
   // (the OCR frequently splits dollar prices from the symbol, e.g. "GOVX | +1827%").
+  // Supports both dot-decimals (14.86) and comma-decimals (7,36) which EasyOCR
+  // commonly produces on non-US keyboards.
+  // Supports:
+  //   $412       — dollar amount
+  //   14.86      — dot-decimal (US format)
+  //   7,36       — comma-decimal (European format, no trailing decimal)
+  //   7,36.50    — comma-decimal with trailing decimal
+  //   +1827%     — percent change
+  //   HIGH/LOW/CLOSE/etc. — financial keywords
   const proximityPattern = new RegExp(
-    `\\b${ticker}\\b[^A-Z0-9.]{0,12}(\\$\\s*\\d|\\d+\\.\\d|\\b(?:HIGH|LOW|CLOSE|TARGET|STOP|BID|ASK)\\b|[+-]\\d+(?:\\.\\d+)?%)`,
+    `\\b${ticker}\\b[^A-Z0-9.]{0,25}(`
+      + `\\$\\s*\\d|`
+      + `\\d+(?:[.,]\\d+)+(?:\\.\\d+)?|`
+      + `\\b\\d{4,6}\\b|`                       // bare 4-6 digit price (e.g. 28M → 28M is not, but 28 alone could be)
+      + `\\b(?:HIGH|LOW|CLOSE|TARGET|STOP|BID|ASK)\\b|`
+      + `[+-]\\d[\\d,]*%|`                      // percent change with % (e.g. +1827%)
+      + `[+-]\\d[\\d,]*\\b\\|`                  // percent change with | (e.g. +1238| — EasyOCR renders % as |)
+      + `\\|[+-]\\d[\\d,]*%`                    // percent change with | BEFORE ticker (e.g. |+1238%)
+      + `)`,
     'i'
   );
   return proximityPattern.test(ocrText);
@@ -161,7 +194,7 @@ function findPanelBoundaries(words) {
   return { positionsLine, watchlistLine };
 }
 
-function identifyPositionListColumn(words) {
+function identifyPositionListColumn(words, cropWidth = null) {
   if (!Array.isArray(words) || !words.length) {
     return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
   }
@@ -186,7 +219,9 @@ function identifyPositionListColumn(words) {
     const sameLineWords = words.filter(x => x.line === w.line);
     const lineText = sameLineWords.map(x => x.text).join(' ');
     // Look for percent tokens ("+1.45%", "-0.08%") or dollar prices anywhere.
-    const priceMatches = lineText.match(/[+\-]?\d+(?:\.\d+)?\s*%|[+\-]?\d+\.\d+|\$\s*\d/g);
+    // Supports comma-decimals (7,36) and dot-decimals (14.86) which EasyOCR
+    // produces on non-US keyboards.
+    const priceMatches = lineText.match(/[+\-]?\d+(?:[.,]\d+)?\s*%|[+\-]?\d+[.,]\d+|\$\s*\d/g);
     if (priceMatches && priceMatches.length) {
       const tickerXs = sameLineWords
         .filter(x => STRICT_TICKER_PATTERN.test((x.text||'').toUpperCase().replace(/[^A-Z0-9.]/g,'')))
@@ -198,7 +233,8 @@ function identifyPositionListColumn(words) {
       // 2-3 char ticker-shape tokens (BE, ON, LI, PL) as position-list rows.
       // Filter A catches single-frame ones, but persistent FPs across
       // multiple frames survive. Drop the bare-integer pattern.
-      const priceWords = sameLineWords.filter(x => /[%\$]|^\d+\.\d+$/.test(x.text));
+      // Support comma-decimals (7,36) and dot-decimals (14.86).
+      const priceWords = sameLineWords.filter(x => /[%\$]|^\d+(?:[.,]\d+)$/.test(x.text));
       let maxTickerLeft = Math.max(0, ...tickerXs.map(t => t.left));
       let minPriceRight = Infinity;
       for (const p of priceWords) {
@@ -255,7 +291,7 @@ function identifyPositionListColumn(words) {
   // bucket of all ticker-shape words if not enough price-aligned candidates.
   let dominantX;
   let dominantCount;
-  if (priceAlignedTickers.length >= 2) {
+  if (priceAlignedTickers.length >= 1) {
     const xs = priceAlignedTickers.map(t => t.center).sort((a, b) => a - b);
     dominantX = xs[Math.floor(xs.length / 2)];
     dominantCount = priceAlignedTickers.length;
@@ -270,7 +306,7 @@ function identifyPositionListColumn(words) {
     }
     const sortedBuckets = [...buckets.entries()].sort((a, b) => b[1] - a[1]);
     const topBucket = sortedBuckets[0];
-    if (!topBucket || topBucket[1] < 3) {
+    if (!topBucket || topBucket[1] < 2) {
       return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
     }
     dominantX = topBucket[0] + bucketWidth / 2;
@@ -298,6 +334,28 @@ function identifyPositionListColumn(words) {
     }
   }
 
+  // X-coordinate gate: the QMG position list occupies the rightmost portion of
+  // the frame (crop x=0.86 → position list starts at ~86% of crop width).
+  // When the fallback densest-bucket heuristic fires (no price-aligned tickers),
+  // dominantX often lands in the chart area (~790 in the 3x crop = ~790/3 ≈ 526
+  // in the original), producing massive FP bleed. Reject any column whose
+  // dominantX is below the position-list threshold.
+  //
+  // Scale-aware: 1150 was calibrated for the Tesseract 3x-scaled 750px crop
+  // (750 * 0.86 ≈ 645px right edge, threshold set 505px above that).
+  // For EasyOCR at 1340px crop, the same relative position is
+  // 1340 * 0.86 ≈ 1152px — but EasyOCR's bounding boxes are anchored
+  // differently (they include more context, so position-list tickers land at
+  // ~450px in the 1340px crop, NOT at the right edge). Use cropWidth to
+  // scale the threshold proportionally. When cropWidth is not provided, use
+  // the original Tesseract-calibrated value.
+  const X_POSITION_LIST_MIN = cropWidth != null
+    ? Math.round(1150 * (cropWidth / 750))
+    : 1150;
+  if (dominantX < X_POSITION_LIST_MIN) {
+    return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
+  }
+
   return { columnWidth, dominantColumnX: dominantX, inListTickers };
 }
 
@@ -318,6 +376,66 @@ function extractAllTickerCandidates(ocrText) {
     }
   }
   return results;
+}
+
+function extractZoomStripTickerCandidates(zoomOcr, lexicon) {
+  if (!zoomOcr) return [];
+
+  const seen = new Set();
+  const accepted = [];
+  const maybeAdd = (rawToken, confidence = 0) => {
+    const cleaned = String(rawToken || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
+    if (!cleaned || !STRICT_TICKER_PATTERN.test(cleaned)) return false;
+    if (cleaned.length === 1 && !SINGLE_LETTER_TICKERS.has(cleaned)) return false;
+    if (/\d/.test(cleaned)) return false;
+    if (lexicon.tickerSet.has(cleaned)) {
+      if (!seen.has(cleaned)) {
+        seen.add(cleaned);
+        accepted.push({ source: 'exact', ticker: cleaned });
+      }
+      return true;
+    }
+    if (cleaned.length < 3) return false;
+    if (Number.isFinite(confidence) && confidence > 0 && confidence < 0.45) return false;
+    const correction = findCloseTickerMatch(cleaned, lexicon);
+    const correctionDistance = correction ? levenshtein(cleaned, correction) : Infinity;
+    if (correction && correctionDistance <= 1 && !seen.has(correction)) {
+      seen.add(correction);
+      accepted.push({ raw: cleaned, source: 'corrected', ticker: correction });
+      return true;
+    }
+    return false;
+  };
+
+  const words = Array.isArray(zoomOcr.words) ? zoomOcr.words : [];
+  if (words.length) {
+    const wordsByLine = new Map();
+    for (const word of words) {
+      const line = Number.isFinite(word.line) ? word.line : 0;
+      if (!wordsByLine.has(line)) wordsByLine.set(line, []);
+      wordsByLine.get(line).push(word);
+    }
+    for (const [, lineWords] of [...wordsByLine.entries()].sort((a, b) => a[0] - b[0])) {
+      lineWords.sort((left, right) => Number(left.left || 0) - Number(right.left || 0));
+      const tickerWords = lineWords.filter((word) => {
+        const cleaned = String(word.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
+        return cleaned && STRICT_TICKER_PATTERN.test(cleaned) && !/\d/.test(cleaned);
+      });
+      for (const word of tickerWords.slice(0, 2)) {
+        if (maybeAdd(word.text, Number(word.conf || 0))) {
+          break;
+        }
+      }
+    }
+  }
+
+  if (!accepted.length && zoomOcr.text) {
+    for (const token of String(zoomOcr.text).split(/[\s,;:()\[\]{}<>\/\\|]+/)) {
+      maybeAdd(token);
+    }
+  }
+
+  return accepted;
 }
 
 function parseChartStreamPositionList({ ocr } = {}) {
@@ -351,7 +469,7 @@ function parseChartStreamPositionList({ ocr } = {}) {
   // keep working.
   const hasWordPositions = words && words.length > 0;
   const { inListTickers, dominantColumnX, columnWidth } = hasWordPositions
-    ? identifyPositionListColumn(words)
+    ? identifyPositionListColumn(words, ocr._cropWidth || null)
     : { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
 
   // Build per-ticker line + word lookups from raw OCR word positions.
@@ -517,8 +635,19 @@ function parseChartStreamPositionList({ ocr } = {}) {
       const lineHeight = lineHeights.length
         ? lineHeights[Math.floor(lineHeights.length / 2)]
         : 20;  // fallback for sparse words
-      const yMin = yMedian - 2 * lineHeight;
-      const yMax = yMedian + 2 * lineHeight;
+      // Position lists are sorted by market cap (largest → smallest, top → bottom
+      // of the UI panel). The tickers form a contiguous vertical stack with
+      // roughly equal spacing. A ±2×lineHeight range is only ~112px (2×56px)
+      // which is too tight — the median-centered range clips the TOP 1-2 rows
+      // and BOTTOM 1-2 rows of the position list, losing 15-25% of tickers.
+      // Widen to ±8×lineHeight (~448px for lineHeight=56). Calibrated on the
+      // 20230518 case where position-list tickers span 744-1314px (PLTR at the
+      // top, APLD at the bottom) — ±8× gives yMin=665, yMax=1561, accepting
+      // all GT tickers in that video. This comfortably covers 10+ row position
+      // lists. The risk is allowing chart-area bleed FPs, which the lexicon
+      // filter and clusterer handle.
+      const yMin = yMedian - 8 * lineHeight;
+      const yMax = yMedian + 8 * lineHeight;
       const withinBbox = new Set();
       for (const { ticker, yCenter } of acceptedBboxes) {
         if (yCenter >= yMin && yCenter <= yMax) {
@@ -543,6 +672,51 @@ function parseChartStreamPositionList({ ocr } = {}) {
     }
   }
 
+  const structuredSupportPool = new Set(accepted);
+  for (const ticker of inListTickers) structuredSupportPool.add(ticker);
+  for (const [ticker, linesForTicker] of tickerLineMap.entries()) {
+    if (!panelGateActive || (linesForTicker && linesForTicker.some((line) => lineIsInPanel(line)))) {
+      structuredSupportPool.add(ticker);
+    }
+  }
+  const structuredSupportCandidates = [...structuredSupportPool];
+  const hasMainSupportForZoomTicker = (ticker) => {
+    for (const mainCandidate of structuredSupportCandidates) {
+      if (mainCandidate === ticker) return true;
+      if (Math.abs(mainCandidate.length - ticker.length) <= MAX_OCR_EDIT_DISTANCE
+          && levenshtein(mainCandidate, ticker) <= MAX_OCR_EDIT_DISTANCE) {
+        return true;
+      }
+      const corrected = findCloseTickerMatch(mainCandidate, lexicon);
+      if (corrected === ticker) return true;
+    }
+    return false;
+  };
+  const zoomStripInputs = Array.isArray(ocr && ocr.zoomTickerStrips)
+    ? ocr.zoomTickerStrips
+    : (ocr && ocr.zoomTickerStrip ? [ocr.zoomTickerStrip] : []);
+  const rawZoomStripCandidates = zoomStripInputs.flatMap((zoomOcr) => extractZoomStripTickerCandidates(zoomOcr, lexicon));
+  const zoomSupport = new Map();
+  for (const candidate of rawZoomStripCandidates) {
+    const key = `${candidate.source}:${candidate.ticker}`;
+    if (!zoomSupport.has(key)) {
+      zoomSupport.set(key, { ...candidate, supportCount: 0 });
+    }
+    zoomSupport.get(key).supportCount += 1;
+  }
+  const zoomStripCandidates = [...zoomSupport.values()].filter((candidate) => {
+    const hasStructuredSupport = hasMainSupportForZoomTicker(candidate.ticker);
+    if (candidate.source === 'exact') {
+      return candidate.supportCount >= 2 || (candidate.supportCount >= 1 && hasStructuredSupport);
+    }
+    return candidate.supportCount >= 2 && hasStructuredSupport;
+  });
+  for (const { ticker } of zoomStripCandidates) {
+    if (!accepted.includes(ticker)) {
+      accepted.push(ticker);
+    }
+  }
+
   const priceActionHint = lines.find((line) => PRICE_TOKEN_PATTERN.test(line)) || '';
 
   // Confidence: 1.0 when at least 3 tickers accepted AND at least one had a
@@ -554,6 +728,11 @@ function parseChartStreamPositionList({ ocr } = {}) {
     confidence = 0.5;
   }
 
+  // Blocklist filter: remove known non-QMG tickers that keep appearing in
+  // OCR output with zero GT hits (P, SPYM, FREY, BKR, BOIL). Applied before
+  // returning so downstream merge/cluster steps never see them.
+  const filteredAccepted = accepted.filter((t) => !TICKER_BLOCKLIST.has(t));
+
   return {
     column_filter: dominantColumnX != null ? {
       column_width: columnWidth,
@@ -561,8 +740,8 @@ function parseChartStreamPositionList({ ocr } = {}) {
       in_list_token_count: inListTickers.size
     } : null,
     confidence,
-    parse_status: accepted.length ? 'ok' : 'no_position_list',
-    position_list: accepted.sort(),
+    parse_status: filteredAccepted.length ? 'ok' : 'no_position_list',
+    position_list: filteredAccepted.sort(),
     price_action: priceActionHint || '',
     // Keep `tickers_rejected` as a number for backward compatibility with
     // scoreChartStreamCandidate in tools/scanVideoWithOcr.js (-0.25 per reject).
@@ -581,6 +760,17 @@ function parseChartStreamPositionList({ ocr } = {}) {
     // Diagnostic: bbox y-range filter (Filter B) info. Populated when the
     // filter ran (at least 2 accepted tickers with bbox info available).
     bbox_filter: bboxFilterInfo
+    ,
+    zoom_ticker_strip: ocr && ocr.zoomTickerStrip ? {
+      candidate_count: zoomStripCandidates.length,
+      candidates: zoomStripCandidates.slice(0, 20).map((candidate) => candidate.ticker),
+      raw_candidates: rawZoomStripCandidates.slice(0, 20).map((candidate) => candidate.ticker),
+      support_counts: zoomStripCandidates.slice(0, 20).map((candidate) => ({
+        support_count: candidate.supportCount,
+        ticker: candidate.ticker,
+      })),
+      variants: zoomStripInputs.map((zoomOcr) => zoomOcr.variant || null).filter(Boolean)
+    } : null
   };
 }
 
@@ -674,12 +864,6 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
   // Software) before they can be matched against the seed lexicon. We only
   // accept single-letter tokens when they are in this allowlist — preventing
   // chart-axis "T" / "S" / chart-internal "X" from leaking as 1-char "tickers".
-  const SINGLE_LETTER_TICKERS = new Set([
-    'A', 'C', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-    'X', 'Y', 'Z',
-  ]);
-
   // Step 1: collect tokens per frame (Set deduplicates within frame)
   const perFrameTokens = frameTexts.map((text) => {
     if (!text) return new Set();
@@ -791,31 +975,38 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
     // Find canonical: prefer direct lexicon match, fall back to
     // edit-distance lookup against the seed lexicon.
     let canonical = null;
+    // Strategy 1: direct lexicon match
     for (const m of members) {
       if (lexicon.tickerSet.has(m)) { canonical = m; break; }
     }
+    // Strategy 2: 4+ char member with >= 2 shared prefix chars
     if (!canonical) {
-      // Edit-distance correction: find the closest lexicon ticker to any
-      // cluster member. Use the higher MAX_OCR_EDIT_DISTANCE threshold here
-      // (not the clusterer param `maxDistance`) so we recover canonicals
-      // when the OCR dropped a character (NFU→NFLX requires edit distance 2).
-      // Cluster grouping itself stays tight at the param threshold.
-      let best = null;
-      let bestDist = Infinity;
       for (const m of members) {
+        if (m.length < 4) continue;
         const corr = findCloseTickerMatch(m, lexicon);
-        if (corr) {
-          const d = levenshtein(m, corr);
-          if (d < bestDist) { bestDist = d; best = corr; }
+        if (!corr) continue;
+        let sharedPrefix = 0;
+        const limit = Math.min(3, m.length, corr.length);
+        for (let i = 0; i < limit; i++) {
+          if (m[i] === corr[i]) sharedPrefix += 1;
         }
-      }
-      // findCloseTickerMatch already caps at MAX_OCR_EDIT_DISTANCE (2),
-      // so bestDist is always <= 2 here. No additional threshold check needed.
-      if (best) {
-        canonical = best;
+        if (sharedPrefix >= 2) { canonical = corr; break; }
+    }
+    // Strategy 3: 3-char member with d=1 to the correction
+    if (!canonical) {
+      for (const m of members) {
+        if (m.length !== 3) continue;
+        const corr = findCloseTickerMatch(m, lexicon);
+        if (!corr) continue;
+        const d = levenshtein(m, corr);
+        if (d <= 1) { canonical = corr; break; }
       }
     }
     if (!canonical) continue;
+    // Blocklist filter: never surface a blocklisted ticker as canonical even
+    // if all other cluster signals pass. Applied after canonical selection so
+    // we don't waste effort on blocklisted clusters, but before Filter A.
+    if (TICKER_BLOCKLIST.has(canonical)) continue;
     // Filter A: compute distinct-frame count for the cluster (union of
     // frame sets across all members). This catches single-frame OCR
     // garbles (e.g. VIO→VLO cluster only spans the 1 frame where VIO
@@ -857,6 +1048,8 @@ module.exports = {
   findCloseTickerMatch,
   mergeMultiplePositionLists,
   clusterRawOcrTokens,
+  extractZoomStripTickerCandidates,
   parseChartStreamPositionList,
-  extractAllTickerCandidates
+  extractAllTickerCandidates,
+  TICKER_BLOCKLIST
 };
