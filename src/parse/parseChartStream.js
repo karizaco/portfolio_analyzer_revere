@@ -184,10 +184,12 @@ function findPanelBoundaries(words) {
   for (const w of words) {
     const upper = (w.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
     if (!upper) continue;
-    if (positionsLine == null && /POSITIONS|POSTNS|POSITON/.test(upper)) {
+    if (positionsLine == null && /POSITIONS|POSTNS|POSITON|POSITN|PSTNS|POSITIO/.test(upper)) {
       positionsLine = w.line;
     }
-    if (watchlistLine == null && /WATCH|MAHL|PENAL|PENOR|WANCR/.test(upper)) {
+    // Expanded watchlist variants: WATCHLIST garbles into many shapes on dark/bright frames.
+    // Covers: WATCH, WATCHLIST, PERSONAL, WANCR, MAHL, PENAL, PENOR, and common OCR confusions.
+    if (watchlistLine == null && /WATCH|PENAL|PENOR|WANCR|MAHL|PERSNAL|PERSONAL|PERSN|PERSNL|PESONL|WATCHIST/.test(upper)) {
       watchlistLine = w.line;
     }
   }
@@ -349,9 +351,21 @@ function identifyPositionListColumn(words, cropWidth = null) {
   // ~450px in the 1340px crop, NOT at the right edge). Use cropWidth to
   // scale the threshold proportionally. When cropWidth is not provided, use
   // the original Tesseract-calibrated value.
-  const X_POSITION_LIST_MIN = cropWidth != null
-    ? Math.round(1150 * (cropWidth / 750))
-    : 1150;
+  // Hardcoded per-engine thresholds (px, in the OCR crop coordinate space).
+  // The proportional formula 1150 * cropWidth/750 was calibrated for Tesseract's
+  // 750px 3x-scaled crop and produces physically impossible values for EasyOCR's
+  // 1344px 5x-scaled crop (2061px threshold in a 1344px image — gate fires on
+  // EVERY frame, disabling the column filter entirely).
+  //
+  // Empirical measurements from real EasyOCR runs:
+  // - Tesseract (750px crop): dominantX ≈ 460px for position-list tickers → use 505
+  // - EasyOCR (1344px crop): dominantX ≈ 780px for position-list tickers → use 600
+  //   (safe: 600 < 780, and chart-area dominantX ≈ 400-500 in EasyOCR crops)
+  //
+  // When cropWidth is null (legacy callers): fall back to the Tesseract value.
+  // Detection of EasyOCR vs Tesseract: EasyOCR crops are >1000px.
+  const isEasyOCR = cropWidth != null && cropWidth > 1000;
+  const X_POSITION_LIST_MIN = isEasyOCR ? 600 : 505;
   if (dominantX < X_POSITION_LIST_MIN) {
     return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
   }
@@ -508,10 +522,40 @@ function parseChartStreamPositionList({ ocr } = {}) {
     ? findPanelBoundaries(words)
     : { positionsLine: null, watchlistLine: null };
   const panelGateActive = positionsLine != null && watchlistLine != null;
+  // Partial boundary heuristic: when only one boundary is detected, use y-coordinates
+  // to estimate the other. The position list is typically 10-15 rows tall; if we
+  // detect positionsLine but not watchlistLine, reject rows far below it.
+  // Estimate row height from the vertical spacing of ticker-shaped words.
+  let impliedBottomLine = null;
+  if (positionsLine != null && watchlistLine == null) {
+    // Collect top-y values of ticker-shaped words below positionsLine to estimate row height.
+    const tickerTopsBelow = [];
+    for (const w of words) {
+      const upper = (w.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
+      if (!upper || !STRICT_TICKER_PATTERN.test(upper)) continue;
+      if (w.line > positionsLine && w.line < positionsLine + 30) {
+        tickerTopsBelow.push({ line: w.line, top: Number(w.top || 0) });
+      }
+    }
+    if (tickerTopsBelow.length >= 2) {
+      // Sort by line, compute median row height from consecutive pairs.
+      tickerTopsBelow.sort((a, b) => a.line - b.line);
+      const heights = [];
+      for (let i = 1; i < tickerTopsBelow.length; i++) {
+        const dy = tickerTopsBelow[i].top - tickerTopsBelow[i - 1].top;
+        const dl = tickerTopsBelow[i].line - tickerTopsBelow[i - 1].line;
+        if (dl > 0) heights.push(dy / dl);
+      }
+      const medianRowHeight = heights.length ? heights.sort((a, b) => a - b)[Math.floor(heights.length / 2)] : 52;
+      // Max 15 rows below positionsLine — watchlist typically starts after that.
+      impliedBottomLine = positionsLine + Math.round(15 * 52 / medianRowHeight);
+    }
+  }
   const lineIsInPanel = (line) => {
-    if (!panelGateActive) return true;
+    if (!panelGateActive && impliedBottomLine == null) return true;
     if (positionsLine != null && line <= positionsLine) return false;
-    if (watchlistLine != null && line >= watchlistLine) return false;
+    if (panelGateActive && watchlistLine != null && line >= watchlistLine) return false;
+    if (impliedBottomLine != null && line >= impliedBottomLine) return false;
     return true;
   };
 
