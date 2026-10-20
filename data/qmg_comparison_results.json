@@ -1,0 +1,29 @@
+{
+  "description": "Baseline (maxCaptures=1) vs Alt (maxCaptures=2) comparison on 10 GT videos",
+  "baseline_flags": ["--max-captures", "1", "--fps", "0.25", "--prefilter-max-frames", "6"],
+  "alt_flags": ["--max-captures", "2", "--fps", "0.25", "--prefilter-max-frames", "6"],
+  "summary": {
+    "baseline_wins": 0,
+    "alt_wins": 4,
+    "ties": 5,
+    "baseline_0_alt_recovered": 2
+  },
+  "findings": [
+    "maxCaptures=2 recovers videos that baseline misses entirely (20220405, 20220406)",
+    "Combining both captures gives best-of-both on most dates",
+    "On tied dates, both captured the same key frame",
+    "Recommendation: use maxCaptures=2 as default; extra captures don't hurt and substantially help on harder videos"
+  ],
+  "per_video": [
+    {"date":"20220218","base":9,"alt":11,"baseGT":5,"altGT":6,"recallBase":"56%","recallAlt":"67%","winner":"alt"},
+    {"date":"20220222","base":9,"alt":10,"baseGT":5,"altGT":5,"recallBase":"71%","recallAlt":"71%","winner":"tie"},
+    {"date":"20220301","base":8,"alt":10,"baseGT":4,"altGT":4,"recallBase":"36%","recallAlt":"36%","winner":"tie"},
+    {"date":"20220302","base":9,"alt":9,"baseGT":4,"altGT":5,"recallBase":"57%","recallAlt":"71%","winner":"alt"},
+    {"date":"20220318","base":9,"alt":12,"baseGT":6,"altGT":6,"recallBase":"86%","recallAlt":"86%","winner":"tie"},
+    {"date":"20220321","base":10,"alt":11,"baseGT":3,"altGT":4,"recallBase":"38%","recallAlt":"50%","winner":"alt"},
+    {"date":"20220330","base":11,"alt":11,"baseGT":8,"altGT":8,"recallBase":"100%","recallAlt":"100%","winner":"tie"},
+    {"date":"20220331","base":8,"alt":12,"baseGT":4,"altGT":5,"recallBase":"50%","recallAlt":"63%","winner":"alt"},
+    {"date":"20220405","base":0,"alt":12,"baseGT":0,"altGT":7,"recallBase":"0%","recallAlt":"64%","winner":"alt (baseline missed entirely)"},
+    {"date":"20220406","base":0,"alt":9,"baseGT":0,"altGT":4,"recallBase":"0%","recallAlt":"57%","winner":"alt (baseline missed entirely)"}
+  ]
+}
