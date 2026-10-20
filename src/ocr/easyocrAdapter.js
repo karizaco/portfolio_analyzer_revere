@@ -145,8 +145,11 @@ function adaptToParserSchema(easyocrResult, options = {}) {
     })),
     confidence,
     _engine: 'easyocr',
-    // cropWidth used by identifyPositionListColumn in parseChartStream.js to scale
-    // X_POSITION_LIST_MIN. Measured from the OCR input image by the caller.
+    // Width of the image EasyOCR actually read, in pixels — the caller measures
+    // it from the crop it produced. Not hardcoded: the upscale factor depends on
+    // source resolution and crop fraction, so it varies per run. (The position
+    // column gate in parseChartStream.js no longer branches on this value, but
+    // it is kept for diagnostics.)
     _cropWidth: Number.isFinite(options.cropWidth) ? options.cropWidth : null,
   };
 }
