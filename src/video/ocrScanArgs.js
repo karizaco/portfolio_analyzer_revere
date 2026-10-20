@@ -100,7 +100,7 @@ function buildDefaultOptions(defaultOutputRoot) {
     batchTimestamp: null,
     batchWindowSeconds: 4,
     chartStreamParser: false,
-    clusterMinFrequency: 1,
+    clusterMinFrequency: 2,
     confusionRadius: 1,
     ffmpegBin: 'ffmpeg',
     fps: 0.25,
@@ -405,6 +405,19 @@ function parseArgs(argv, overrides = {}) {
   // chart_stream and tale_of_the_tape prefilters use the chart-stream parser.
   if (options.prefilterProfile === 'chart_stream' || options.prefilterProfile === 'tale_of_the_tape') {
     options.chartStreamParser = true;
+  }
+
+  // chart_stream profile frames score 8-12 on valid dark position-list frames.
+  // Lower the prefilter threshold to match the profile's own floor (8) so
+  // frames scoring 8-9 are not excluded before OCR.
+  if (options.prefilterProfile === 'chart_stream' && !('prefilterThreshold' in options)) {
+    options.prefilterThreshold = 8;
+  }
+
+  // chart_stream mode benefits from multi-frame consensus — capture 2 frames so the
+  // clusterer has enough data to filter single-frame OCR garbles.
+  if (options.prefilterProfile === 'chart_stream' && !('maxCapturesPerVideo' in options)) {
+    options.maxCapturesPerVideo = 2;
   }
 
   return options;
