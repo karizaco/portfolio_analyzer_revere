@@ -221,8 +221,10 @@ to prune old probe and scan subdirectories, keeping only the 3 most-recent per f
 
 ### Sparse checkout is DISABLED — do not re-enable it
 
-`core.sparseCheckout` is now `false` in this repo and there is no pattern set left in
-`.git/info/sparse-checkout`. This is deliberate and permanent.
+`core.sparseCheckout` and `core.sparseCheckoutCone` are both `false` in this repo, so
+git ignores any pattern set and never prunes the working tree. A stale pattern file may
+still exist at `.git/info/sparse-checkout`; it is **inert** while sparse-checkout is off.
+Do not re-enable it.
 
 **What happened on 2026-10-21:** the repo was a cone-mode sparse checkout whose pattern
 set included `data/qmg_ground_truth.json` but *not* `data/video_pipeline/`. At 14:41:23
@@ -237,15 +239,28 @@ Evidence from the session transcript: `du -sh data/video_pipeline/*` reported
 reading seconds earlier; at 14:42:58 the directory held only the tracked `state.sqlite`,
 freshly re-materialised from the index.
 
+**Do not over-claim the internals.** A scratch-repo reproduction did *not* reproduce the
+untracked-file loss: git 2.44 printed
+`warning: directory 'data/video_pipeline/' contains untracked files, but is not in the
+sparse-checkout cone` and left the files alone. What is proven is the **timing** and the
+**only candidate command**, not git's exact internal code path.
+
 **Three independent guards now exist. Do not remove any of them:**
 
-1. `core.sparseCheckout=false` — no pattern set exists to re-apply.
+1. `core.sparseCheckout=false` and `core.sparseCheckoutCone=false` — git never prunes.
 2. A `PreToolUse` hook (`.claude/settings.json` → `tools/guardDestructiveBash.js`)
    blocks `git sparse-checkout add|set|init|reapply`, `git config
    core.sparseCheckout*=true`, `git clean -f`, and recursive deletes that target the
    media directory or any path outside the project. Self-test:
-   `node tools/guardSelfTest.js` (19/19).
+   `node tools/guardSelfTest.js` (27/27); also runs as part of `npm test`
+   (`test/guardDestructiveBash.test.js`, 28 cases).
 3. `.gitignore` keeps `data/video_pipeline/` untracked except `state.sqlite`.
+
+The guard inspects the **command line**, not prose: commit-message bodies (`-m`, `-F`,
+heredocs) are stripped first, so the incident can still be documented in a commit, while
+a real invocation later in the same command line is still blocked. It also only inspects
+paths once a recursive delete is present, so read-only commands that merely mention a
+path outside the project are not blocked.
 
 **If you need to change which files are tracked, edit `.gitignore` — never the
 sparse-checkout set.** To materialise files, use `git checkout -- <path>`.
@@ -259,6 +274,20 @@ changes — and it removes this entire failure mode.
 `data/video_pipeline/state.sqlite` is the authoritative record of what should be on disk
 (channel, upload date, expected filename per video). If the media is missing, regenerate
 the inventory from it with `tools/inventoryLostVideos.py` rather than guessing.
+
+### What survived the 2026-10-21 loss — do not re-derive this
+
+Measured 2026-10-21 with `tools/snapshotCensus.js` and `tools/snapshotCoverage.js`:
+
+| Asset | Status |
+|---|---|
+| OCR **text** results | **Intact.** 767 `logs/*_snapshot.json` files under `data/`, 390 with a non-empty `merged_position_list`, 80 distinct date-keys with ticker output. 475 Tesseract, 90 EasyOCR. |
+| Snapshot **images** | **582 of 756 usable** (527 @1920px, 55 @1280px). The 174 low-res ones (640px prefilter samples) come only from `qmg-ocr-20260917-v2` and `qmg-ocr-20260917-missing19`. Every `_rerun` batch dir is 100% usable. |
+| **Videos** | **Gone.** 718 files, ~220.5 GiB (215 GiB `downloads_1080p` + 5.5 GiB `downloads_hires` + 0 `downloads`), per `du` at 14:33:56. |
+
+**The extracted tickers were not lost** — re-downloading the videos is not required to
+keep the OCR results. Re-download only if you need to re-run OCR at a different crop,
+engine, or frame density.
 
 ---
 
