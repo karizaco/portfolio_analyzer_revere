@@ -410,13 +410,18 @@ function parseArgs(argv, overrides = {}) {
   // chart_stream profile frames score 8-12 on valid dark position-list frames.
   // Lower the prefilter threshold to match the profile's own floor (8) so
   // frames scoring 8-9 are not excluded before OCR.
-  if (options.prefilterProfile === 'chart_stream' && !('prefilterThreshold' in options)) {
+  //
+  // The guard must check whether the user PASSED the flag, not whether the
+  // key exists in `options` — buildDefaultOptions always populates both
+  // keys, so an `'x' in options` test is always true and the override
+  // would never fire.
+  if (options.prefilterProfile === 'chart_stream' && !argv.includes('--prefilter-threshold')) {
     options.prefilterThreshold = 8;
   }
 
   // chart_stream mode benefits from multi-frame consensus — capture 2 frames so the
   // clusterer has enough data to filter single-frame OCR garbles.
-  if (options.prefilterProfile === 'chart_stream' && !('maxCapturesPerVideo' in options)) {
+  if (options.prefilterProfile === 'chart_stream' && !argv.includes('--max-captures')) {
     options.maxCapturesPerVideo = 2;
   }
 
