@@ -225,5 +225,19 @@
       "Bash(py -3 -c \"import sqlite3; c = sqlite3.connect\\('data/video_pipeline/state.sqlite'\\); print\\('qullamaggie count:', c.execute\\(\\\\\"SELECT COUNT\\(*\\) FROM videos WHERE channel='qullamaggie'\\\\\"\\).fetchone\\(\\)[0]\\); print\\('revere count:', c.execute\\(\\\\\"SELECT COUNT\\(*\\) FROM videos WHERE channel='revere'\\\\\"\\).fetchone\\(\\)[0]\\)\")",
       "Bash(py -3 tools/whiteboard_worker.py catalog --source-url \"https://www.youtube.com/@Qullamaggie/videos\" --channel qullamaggie --limit 50 --playlist-items 1-44,46-50)"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/tools/guardDestructiveBash.js\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }

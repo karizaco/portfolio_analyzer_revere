@@ -27,6 +27,18 @@ Never delete a video because it seems "too small to be FullHD" — this reasonin
 
 The `downloads/`, `downloads_hires/`, `downloads_1080p/` directories have historically held mixed content. Before deleting from any of these directories, **always verify the actual video channel via SQLite** (`videos` table, `channel` column). The directory names describe the preferred resolution, not the channel.
 
+### Never scan the filesystem without permission
+
+**Do not run filesystem-wide or multi-drive file searches** — `find /c`, `find /d`, `find /f`,
+`find /p`, "where did this file go" sweeps across other volumes — unless the user has
+explicitly approved that exact search. The user's other drives and personal files (their
+pCloud trading-course library, `D:`, `F:`, `P:`) are theirs to control. Do not run such
+searches in the background either.
+
+Investigation stays inside `C:/Users/Admin/Projects/portfolio_analyzer_revere`. If evidence
+points outside it, name the exact path and command, then wait for approval. To find where a
+user keeps a backup, **ask them** — do not go looking.
+
 ### YouTube cookie sessions expire
 
 YouTube session cookies in `youtube_cookies.txt` expire and become 0-byte files. When downloads fail with `"does not look like a Netscape format cookies file"`, re-export fresh cookies from Firefox Cookie-Editor and convert to Netscape format.
@@ -207,32 +219,46 @@ artifacts that should not be persisted.
 Run `node tools/prune_old_probes.js` (dry-run first, then `--execute`) periodically
 to prune old probe and scan subdirectories, keeping only the 3 most-recent per family.
 
-### Sparse checkout — the working tree is a sparse checkout
+### Sparse checkout is DISABLED — do not re-enable it
 
-`.git/info/sparse-checkout` limits which tracked files are materialized. Two entries
-are **not optional**:
+`core.sparseCheckout` is now `false` in this repo and there is no pattern set left in
+`.git/info/sparse-checkout`. This is deliberate and permanent.
 
-```
-/test/               ← without it the test suite cannot run at all
-/data/video_pipeline/ ← without it, git removes the directory tree from disk
-```
+**What happened on 2026-10-21:** the repo was a cone-mode sparse checkout whose pattern
+set included `data/qmg_ground_truth.json` but *not* `data/video_pipeline/`. At 14:41:23
+I ran `git sparse-checkout add test` to materialise the `test/` directory. Re-applying
+the sparse set pruned `data/video_pipeline/` out of the working tree. The ~215 GB of
+downloaded videos inside it (718 untracked, gitignored `.mp4` files) were destroyed with
+it and could not be restored — git had no copy, and they were never committed.
 
-**`git sparse-checkout add <path>` can delete large amounts of untracked data.** Git's
-`verify_absent()` path removes an excluded directory *recursively, including untracked
-files inside it*. On 2026-10-21, `git sparse-checkout add test` removed
-`data/video_pipeline/` — and with it ~215 GB of untracked `.mp4` files that git could
-not restore, because they were never committed.
+Evidence from the session transcript: `du -sh data/video_pipeline/*` reported
+`215G downloads_1080p` at 14:33:56; the in-flight scan's ffmpeg reported
+`Error opening input: No such file or directory` at 14:41:59 for a video it had been
+reading seconds earlier; at 14:42:58 the directory held only the tracked `state.sqlite`,
+freshly re-materialised from the index.
 
-Rules:
+**Three independent guards now exist. Do not remove any of them:**
 
-- Before running any `git sparse-checkout` command, confirm `.git/info/sparse-checkout`
-  lists `/data/video_pipeline/` and `/test/`.
-- Prefer `git sparse-checkout reapply` (materializes only; removes nothing) over
-  `add`/`set` when you only need to widen the pattern set.
-- The downloaded videos are **not** in git. `data/video_pipeline/state.sqlite` is the
-  only authoritative record of what should be on disk — it lists every video's
-  channel, upload date and expected filename. If the media is lost, regenerate the
-  inventory from it (see `tools/inventoryLostVideos.py`) rather than guessing.
+1. `core.sparseCheckout=false` — no pattern set exists to re-apply.
+2. A `PreToolUse` hook (`.claude/settings.json` → `tools/guardDestructiveBash.js`)
+   blocks `git sparse-checkout add|set|init|reapply`, `git config
+   core.sparseCheckout*=true`, `git clean -f`, and recursive deletes that target the
+   media directory or any path outside the project. Self-test:
+   `node tools/guardSelfTest.js` (19/19).
+3. `.gitignore` keeps `data/video_pipeline/` untracked except `state.sqlite`.
+
+**If you need to change which files are tracked, edit `.gitignore` — never the
+sparse-checkout set.** To materialise files, use `git checkout -- <path>`.
+
+**The media should not live inside the git working tree.** When the videos are
+re-downloaded, put them outside the repo (e.g. `C:/Users/Admin/Projects/portfolio_analyzer_revere_media/`)
+and point the tooling at that directory. `state.sqlite` stores absolute `download_path`
+values, and the scan/download tools take `--video-dir`, so this works without code
+changes — and it removes this entire failure mode.
+
+`data/video_pipeline/state.sqlite` is the authoritative record of what should be on disk
+(channel, upload date, expected filename per video). If the media is missing, regenerate
+the inventory from it with `tools/inventoryLostVideos.py` rather than guessing.
 
 ---
 
