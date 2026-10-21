@@ -59,15 +59,68 @@ function resolveWrapperPath() {
   return path.resolve(__dirname, '..', '..', 'tools', '_easyocr_ocr.py');
 }
 
+// Detection/recognition tuning forwarded to `_easyocr_ocr.py` as `key=value`
+// args. Omitting a key leaves EasyOCR's own default in place, so production
+// scans are unaffected unless a caller opts in.
+const READTEXT_TUNING_KEYS = [
+  'width_ths',
+  'height_ths',
+  'add_margin',
+  'contrast_ths',
+  'adjust_contrast',
+  'mag_ratio',
+  'allowlist',
+  'text_threshold',
+  'low_text',
+  'link_threshold',
+];
+
+function buildEasyOcrArgs(imagePath, options = {}) {
+  const args = [imagePath];
+  for (const key of READTEXT_TUNING_KEYS) {
+    if (options[key] === undefined || options[key] === null) continue;
+    args.push(`${key}=${typeof options[key] === 'object'
+      ? JSON.stringify(options[key])
+      : String(options[key])}`);
+  }
+  return args;
+}
+
 function runEasyOcr(imagePath, options = {}) {
+  return runEasyOcrBatch([imagePath], options)
+    .then((results) => {
+      const result = results[0];
+      if (result && result.error) {
+        throw new Error(`EasyOCR: ${result.error}${result.traceback ? `\n${result.traceback}` : ''}`);
+      }
+      return result;
+    });
+}
+
+// OCR many images in ONE process. EasyOCR loads an ~80MB model per process, so
+// the previous one-spawn-per-frame shape spent more wall-clock loading models
+// than reading text — a 12-frame scan paid 12 model loads. Batch mode loads
+// once and costs only recognition time per image.
+//
+// Returns an array in the same order as `imagePaths`. A per-image failure is
+// reported as `{ error }` at that index rather than failing the whole batch.
+function runEasyOcrBatch(imagePaths, options = {}) {
   const python = pickPython(options.pythonPath);
   const scriptPath = resolveWrapperPath();
+  if (!Array.isArray(imagePaths) || !imagePaths.length) {
+    return Promise.resolve([]);
+  }
   return new Promise((resolve, reject) => {
-    if (!fs.existsSync(imagePath)) {
-      reject(new Error(`EasyOCR: image not found: ${imagePath}`));
+    const missing = imagePaths.filter((p) => !fs.existsSync(p));
+    if (missing.length === imagePaths.length) {
+      reject(new Error(`EasyOCR: image not found: ${missing[0]}`));
       return;
     }
-    const child = spawn(python, [scriptPath, imagePath], {
+    const args = [scriptPath];
+    for (const imagePath of imagePaths) {
+      args.push(...buildEasyOcrArgs(imagePath, options));
+    }
+    const child = spawn(python, args, {
       stdio: ['ignore', 'pipe', 'pipe'],
       // Low-CPU env is MANDATORY (see CLAUDE.md): EasyOCR's PyTorch/OpenMP
       // backend otherwise spawns one thread per core per process and
@@ -84,10 +137,15 @@ function runEasyOcr(imagePath, options = {}) {
     let stderr = '';
     child.stdout.on('data', (d) => { stdout += d.toString(); });
     child.stderr.on('data', (d) => { stderr += d.toString(); });
+    // One process now serves the whole batch, so the budget has to cover
+    // recognition for every image, not just one (~60-150s each on CPU) plus the
+    // one-time model load.
+    const perImageMs = options.timeoutMs || 600000;
+    const totalMs = Math.ceil(perImageMs * imagePaths.length) + 120000;
     const killTimer = setTimeout(() => {
       child.kill('SIGTERM');
-      reject(new Error(`EasyOCR timeout after ${options.timeoutMs || 600000}ms\nstderr: ${stderr}`));
-    }, options.timeoutMs || 600000);
+      reject(new Error(`EasyOCR timeout after ${totalMs}ms for ${imagePaths.length} image(s)\nstderr: ${stderr}`));
+    }, totalMs);
     child.on('close', (code) => {
       clearTimeout(killTimer);
       if (code !== 0) {
@@ -96,8 +154,13 @@ function runEasyOcr(imagePath, options = {}) {
       }
       try {
         const parsed = JSON.parse(stdout);
-        if (parsed.error) {
-          reject(new Error(`EasyOCR returned error: ${parsed.error}\nstderr: ${stderr}`));
+        if (!Array.isArray(parsed)) {
+          // Single-image mode: the wrapper emits a bare object.
+          if (parsed && parsed.error) {
+            reject(new Error(`EasyOCR returned error: ${parsed.error}\nstderr: ${stderr}`));
+            return;
+          }
+          resolve([parsed]);
           return;
         }
         resolve(parsed);
@@ -154,4 +217,12 @@ function adaptToParserSchema(easyocrResult, options = {}) {
   };
 }
 
-module.exports = { runEasyOcr, adaptToParserSchema, pickPython, resolveWrapperPath };
+module.exports = {
+  runEasyOcr,
+  runEasyOcrBatch,
+  adaptToParserSchema,
+  pickPython,
+  resolveWrapperPath,
+  buildEasyOcrArgs,
+  READTEXT_TUNING_KEYS,
+};
