@@ -49,6 +49,7 @@ function printHelp() {
     '  --ocr-engine <name>        OCR engine: tesseract (default) | easyocr. EasyOCR reads QMG position lists much more accurately (~95% recall vs ~25%) at the cost of ~60s/frame vs ~1-2s. Only applies to chart-stream parser mode.',
     '  --top-candidates <n>       Include the top N candidate timestamps in the result, default 5',
     '  --keep-frames              Keep sampled intermediate frames',
+    '  --keep-ocr-crops           Keep the cropped position-list panel PNGs that get fed to the OCR engine (under ocr_probe/crops/). Lets OCR settings be re-benchmarked without a full re-scan.',
     '  --skip-keyframes           Do not invoke ffprobe to locate the nearest keyframe per capture',
     '  --confusion-radius <n>     Adjacent-frame lookup window for confusion_with_nearby, default 1',
     '  --prefilter-profile <p>    whiteboard | chart_stream | tale_of_the_tape (drives prefilter score table + keyword guard)',
@@ -104,6 +105,7 @@ function buildDefaultOptions(defaultOutputRoot) {
     confusionRadius: 1,
     ffmpegBin: 'ffmpeg',
     fps: 0.25,
+    keepOcrCrops: false,
     maxCapturesPerVideo: 3,
     ocrEngine: 'tesseract',
     positionMergeMinOccurrences: 1,
@@ -256,6 +258,9 @@ function parseArgs(argv, overrides = {}) {
         break;
       case '--keep-frames':
         options.keepFrames = true;
+        break;
+      case '--keep-ocr-crops':
+        options.keepOcrCrops = true;
         break;
       case '--skip-keyframes':
         options.skipKeyframes = true;

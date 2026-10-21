@@ -214,6 +214,31 @@ function resolveFfprobeBin(explicitValue) {
   return null;
 }
 
+// Source width, cached per video path. The EasyOCR crop filter scales to
+// `cropFractionWidth * sourceWidth * scale`, so a hardcoded 1920 produces a
+// wrong target width (and a wrong `_cropWidth`) for any non-1080p source.
+// Returns 1920 when ffprobe is unavailable so behaviour is unchanged in that case.
+const sourceWidthCache = new Map();
+function resolveSourceWidth(videoPath, fallback = 1920) {
+  if (!videoPath) return fallback;
+  if (sourceWidthCache.has(videoPath)) return sourceWidthCache.get(videoPath);
+  const ffprobeBin = resolveFfprobeBin(null);
+  let width = fallback;
+  if (ffprobeBin) {
+    const result = spawnSync(ffprobeBin, [
+      '-v', 'error',
+      '-select_streams', 'v:0',
+      '-show_entries', 'stream=width',
+      '-of', 'csv=p=0',
+      videoPath
+    ], { encoding: 'utf8' });
+    const parsed = parseInt((result.stdout || '').trim(), 10);
+    if (!Number.isNaN(parsed) && parsed > 0) width = parsed;
+  }
+  sourceWidthCache.set(videoPath, width);
+  return width;
+}
+
 // Run ffprobe once per video to harvest the list of keyframe PTS values,
 // then find the nearest keyframe to each capture's timestamp. Returns
 // `{ptsList, skipped}` so callers can flag the run as "no ffprobe available"
@@ -583,15 +608,20 @@ async function runChartStreamOcr(framePath, phashRegionFraction, scale, ocrEngin
     // produces cleaner OCR.
     const EASYOCR_SCALE = 5;
     const { x, y, w, h } = phashRegionFraction;
-    const cropFilter = `crop=in_w*${w}:in_h*${h}:in_w*${x}:in_h*${y},scale=${Math.round(w * 1920 * EASYOCR_SCALE)}:-1`;
+    const { videoPath: srcVideo, timestamp: srcTs } = easyOcrOptions;
+    // Scale to a fixed pixel width derived from the real source width, not a
+    // hardcoded 1920 — otherwise a 720p source produces a target 27% narrower
+    // than intended and every word box lands at the wrong x.
+    const sourceWidth = resolveSourceWidth(srcVideo || framePath);
+    const cropWidthPx = Math.round(w * sourceWidth * EASYOCR_SCALE);
+    const cropFilter = `crop=in_w*${w}:in_h*${h}:in_w*${x}:in_h*${y},scale=${cropWidthPx}:-1`;
     const tmpPath = path.join(
       os.tmpdir(),
       `qmg_easyocr_${process.pid}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.png`
     );
-    // Prefer cropping from the original 1920px video (much better OCR); fall
+    // Prefer cropping from the original video (much better OCR); fall
     // back to the OCR-resolution frame only if videoPath isn't threaded
     // through (e.g., legacy callers, unit tests).
-    const { videoPath: srcVideo, timestamp: srcTs } = easyOcrOptions;
     const ffmpegArgs = srcVideo && Number.isFinite(srcTs)
       ? ['-ss', String(srcTs), '-i', srcVideo]
       : ['-i', framePath];
@@ -608,14 +638,25 @@ async function runChartStreamOcr(framePath, phashRegionFraction, scale, ocrEngin
     try {
       easyResult = await runEasyOcr(tmpPath);
     } finally {
+      // Retain the panel crop when asked. EasyOCR settings (detection
+      // thresholds, allowlist, crop window) can only be re-benchmarked against
+      // the exact pixels the engine saw, and a full re-scan costs ~12 min/video.
+      // One harvest run with --keep-ocr-crops makes every later experiment a
+      // seconds-long loop instead.
+      const keepCrop = easyOcrOptions.keepCropPath;
+      if (keepCrop) {
+        try {
+          await fs.mkdir(path.dirname(keepCrop), { recursive: true });
+          await fs.copyFile(tmpPath, keepCrop);
+        } catch (_) { /* best effort — never fail a scan over this */ }
+      }
       try { await fs.unlink(tmpPath); } catch (_) { /* ignore */ }
     }
     ocr = adaptToParserSchema(easyResult);
-    // Attach the crop width so parseChartStreamPositionList can compute a
-    // scale-aware X_POSITION_LIST_MIN threshold for identifyPositionListColumn.
-    // The EasyOCR output is scaled to `Math.round(w * 1920 * EASYOCR_SCALE)` pixels
-    // wide. Use this as the canonical crop width for coordinate scaling.
-    ocr._cropWidth = Math.round(w * 1920 * EASYOCR_SCALE);
+    // Attach the true pixel width of the crop EasyOCR read. Coordinate
+    // consumers (identifyPositionListColumn diagnostics, the column gate)
+    // need the real geometry, which varies with source resolution.
+    ocr._cropWidth = cropWidthPx;
   } else {
     ocr = await ocrImage(framePath, {
       chartStream: true,
@@ -639,6 +680,8 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
   const explicitTimestamp = Number.isFinite(options.timestamp) ? options.timestamp : null;
   const {
     chartStreamParser = false,
+    keepOcrCrops = false,
+    ocrCropDirectory = null,
     phashRegion = null,
     phashRegionFraction = null,
     ocrEngine = 'tesseract',
@@ -653,6 +696,13 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     // OCR's frame selection is sensitive to scale; sticking with 3x+4x
     // until we understand the scoring interaction.
     const easyOcrOpts = { videoPath, timestamp: explicitTimestamp != null ? explicitTimestamp : stats.timestamp };
+    // Retain the exact panel crop the engine reads, so OCR settings can be
+    // re-benchmarked without re-scanning. Name it by timestamp so the crop is
+    // traceable back to the capture it produced.
+    if (keepOcrCrops && ocrCropDirectory) {
+      const tsLabel = String(Math.round(Number(easyOcrOpts.timestamp) || 0)).padStart(6, '0');
+      easyOcrOpts.keepCropPath = path.join(ocrCropDirectory, `crop_${tsLabel}.png`);
+    }
     // For EasyOCR: the OCR branch hardcodes scale=5 internally (EasyOCR is
     // slow enough that running it twice is wasteful). For Tesseract: dual-
     // scale 3x+4x and pick the one with more tickers (legacy behavior).
@@ -835,6 +885,7 @@ async function scanFrames({
   frameRows,
   keepFrames,
   ocrEngine = 'tesseract',
+  ocrCropDirectory = null,
   ocrFrameDirectory,
   ocrFrameWidth,
   outputKind,
@@ -853,6 +904,8 @@ async function scanFrames({
   const buildCandidate = outputKind === 'snapshot' ? buildSnapshotCandidate : buildWhiteboardCandidate;
   const candidateOptions = {
     chartStreamParser,
+    keepOcrCrops: Boolean(ocrCropDirectory),
+    ocrCropDirectory,
     ocrEngine,
     phashRegion,
     phashRegionFraction,
@@ -1150,11 +1203,19 @@ async function main() {
   const frameDirectory = path.join(frameRoot, 'sample');
   const ocrFrameDirectory = path.join(frameRoot, 'ocr');
   const logsDirectory = path.join(probeRoot, 'logs');
+  // Cropped position-list panels, kept only with --keep-ocr-crops. These are
+  // the exact pixels the OCR engine reads, so they are the input to any future
+  // recognition benchmark (see tools/qmgOcrBenchmark.js).
+  const ocrCropDirectory = path.join(probeRoot, 'crops', probeKey);
 
   await safeDeleteDirectory(frameRoot);
+  await safeDeleteDirectory(path.join(probeRoot, 'crops'));
   await ensureDirectoryExists(frameDirectory);
   await ensureDirectoryExists(ocrFrameDirectory);
   await ensureDirectoryExists(logsDirectory);
+  if (options.keepOcrCrops) {
+    await ensureDirectoryExists(ocrCropDirectory);
+  }
 
   const resultBase = {
     basename: options.basename,
@@ -1291,6 +1352,7 @@ async function main() {
       frameRows: selectedFrameRows,
       keepFrames: Boolean(options.keepFrames),
       ocrEngine: options.ocrEngine || 'tesseract',
+      ocrCropDirectory: options.keepOcrCrops ? ocrCropDirectory : null,
       ocrFrameDirectory,
       ocrFrameWidth: options.ocrFrameWidth,
       outputKind: options.outputKind,
