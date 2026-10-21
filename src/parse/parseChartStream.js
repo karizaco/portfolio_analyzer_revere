@@ -39,6 +39,9 @@
 const { extractTickersFromOcrText, loadSeedLexiconSync, clearTickerScanCache } = require('../normalize/tickerScan');
 const { STRICT_TICKER_PATTERN } = require('../normalize/tickerExtraction');
 
+const fs = require('node:fs');
+const path = require('node:path');
+
 // Tickers that appear frequently in OCR output but never in ground truth.
 // Applied at three levels: per-frame accepted list, clusterer canonical filter,
 // and the final merged_position_list output. Add new entries only after
@@ -63,6 +66,46 @@ const SINGLE_LETTER_TICKERS = new Set([
 // Matches OCR-split prices:  $ 412.50  ($ split from digits by whitespace)
 // Also matches:  $412.50,  412.50,  HIGH/LOW/CLOSE/TARGET/STOP/BID/ASK
 const PRICE_TOKEN_PATTERN = /\$\s*\d+(?:\.\d+)?|\d+\.\d+|\b(?:high|low|close|target|stop|bid|ask)\b/i;
+
+// Curated OCR-confusion aliases: garbled form -> canonical ticker.
+//
+// Needed because a systematic misread can land on ANOTHER VALID ticker, in
+// which case neither the lexicon check nor edit-distance correction fires —
+// `findCloseTickerMatch` returns null for anything already in the lexicon, so
+// the garble is emitted verbatim and counts as a false positive while the real
+// ticker counts as a miss.
+//
+// Every entry here is mined from measured output, not guessed: each garbled
+// form appeared as a false positive and its canonical counterpart was in the
+// same frame's ground truth. They all encode the same two overlay-font
+// confusions — Q rendered as O, and T rendered as I.
+//
+// Applied ONLY to tokens that landed in the position-list column, so a
+// coincidental match in chart text is never rewritten.
+//
+// Sourced from config/ticker_ocr_confusions.csv.
+const OCR_CONFUSION_CSV = path.resolve(__dirname, '..', '..', 'config', 'ticker_ocr_confusions.csv');
+let cachedConfusionMap = null;
+function loadOcrConfusionMap() {
+  if (cachedConfusionMap) return cachedConfusionMap;
+  const map = new Map();
+  try {
+    const raw = fs.readFileSync(OCR_CONFUSION_CSV, 'utf8');
+    let isHeader = true;
+    for (const line of raw.split(/\r?\n/)) {
+      if (isHeader) {
+        isHeader = false;
+        if (/^garbled\s*,/i.test(line)) continue;
+      }
+      const [garbled, canonical] = line.split(',').map((v) => String(v || '').trim().toUpperCase());
+      if (garbled && canonical && garbled !== canonical) map.set(garbled, canonical);
+    }
+  } catch {
+    // Missing config is not fatal — the parser just loses alias repair.
+  }
+  cachedConfusionMap = map;
+  return map;
+}
 
 function normalizeWhitespace(value) {
   return String(value || '').replace(/\s+/g, ' ').trim();
@@ -230,21 +273,27 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
     const lineText = sameLineWords.map(x => x.text).join(' ');
     // Look for percent tokens ("+1.45%", "-0.08%") or dollar prices anywhere.
     // Supports comma-decimals (7,36) and dot-decimals (14.86) which EasyOCR
-    // produces on non-US keyboards.
-    const priceMatches = lineText.match(/[+\-]?\d+(?:[.,]\d+)?\s*%|[+\-]?\d+[.,]\d+|\$\s*\d/g);
+    // produces on non-US keyboards, plus the bare-integer columns the 2022-era
+    // QMG UI renders ("374935", "0953"). The bare-integer alternative used to
+    // be absent here, which made whole 2022-era position rows fail the
+    // price-alignment test and get deleted (NRGU, MOS on 20220218).
+    const priceMatches = lineText.match(/[+\-]?\d+(?:[.,]\d+)?\s*%|[+\-]?\d+[.,]\d+|\$\s*\d|\d{2,}/g);
     if (priceMatches && priceMatches.length) {
       const tickerXs = sameLineWords
         .filter(x => STRICT_TICKER_PATTERN.test((x.text||'').toUpperCase().replace(/[^A-Z0-9.]/g,'')))
         .map(x => ({ left: x.left, right: x.left + x.width }));
-      // QMG position-list rows show prices as decimals (e.g. 550.34), not
-      // bare integers. The bare-integer fallback `^\d{2,4}$` was admitting
-      // chart-axis labels like 3500, 700 as "price" tokens, which made the
-      // lineRightHasPrice check fire on chart-area lines and admitted
-      // 2-3 char ticker-shape tokens (BE, ON, LI, PL) as position-list rows.
-      // Filter A catches single-frame ones, but persistent FPs across
-      // multiple frames survive. Drop the bare-integer pattern.
-      // Support comma-decimals (7,36) and dot-decimals (14.86).
-      const priceWords = sameLineWords.filter(x => /[%\$]|^\d+(?:[.,]\d+)$/.test(x.text));
+      // Price tokens to the RIGHT of the ticker. Three UI generations are in
+      // the corpus:
+      //   - 2022-era: bare integers in separate columns ("374935", "0953")
+      //   - 2023-era: comma-decimals ("7,36", "726,78")
+      //   - percent / dollar forms ("+1827%", "$412")
+      // The bare-integer fallback used to be dropped because chart-axis labels
+      // (3500, 700) counted as "price" and let chart tokens in. That is now
+      // handled structurally by the column gate in parseChartStreamPositionList:
+      // a chart-axis token is not in the position-list column, so it is rejected
+      // regardless of what sits to its right. Re-admitting bare integers is what
+      // lets 2022-era rows (NRGU, MOS) survive — they were being dropped whole.
+      const priceWords = sameLineWords.filter(x => /[%\$]|^\d+(?:[.,]\d+)*$/.test(x.text));
       let maxTickerLeft = Math.max(0, ...tickerXs.map(t => t.left));
       let minPriceRight = Infinity;
       for (const p of priceWords) {
@@ -336,18 +385,24 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
   // labels, candle wicks) which lands well outside this window.
   const columnWidth = 50;
 
-  // Require both: ticker in the column AND price-on-right on the same line.
-  // This filters chart y-axis labels where prices are on the LEFT of the
-  // ticker-shape word ("25.00 | Bs | 8+"), and chart header words
-  // (SYM/Cran/Pre/Buzz) that happen to land at column x.
-  const inListTickers = new Set();
-  for (const tw of tickerWords) {
-    if (Math.abs(tw.center - dominantX) <= columnWidth / 2) {
-      if (lineRightHasPrice.get(tw.line)) {
-        inListTickers.add(tw.text);
-      }
-    }
-  }
+  // inListTickers: ticker-shaped words that sit in the dominant column.
+  //
+  // Column membership is the primary structural signal — chart-area text
+  // (y-axis labels at the far left, header words Sym/Pre/Buzz at other x)
+  // simply is not in this column. Price-on-right used to be a REQUIRED
+  // co-condition, but it is format-specific and silently deleted whole
+  // position rows on the 2022-era UI where prices render as bare integers
+  // ("374935") rather than decimals ("726,78") or percents. On 20220218 that
+  // requirement dropped NRGU and MOS — both real GT tickers the OCR read
+  // perfectly. Prefer price-aligned rows, but fall back to pure column
+  // membership when the price heuristic finds too few of them.
+  const columnMembers = tickerWords.filter(
+    (tw) => Math.abs(tw.center - dominantX) <= columnWidth / 2
+  );
+  const priceAlignedMembers = columnMembers.filter((tw) => lineRightHasPrice.get(tw.line));
+  const inListTickers = new Set(
+    (priceAlignedMembers.length >= 3 ? priceAlignedMembers : columnMembers).map((tw) => tw.text)
+  );
 
   // X-coordinate gate: the QMG position list occupies the rightmost portion of
   // the frame (crop x=0.86 → position list starts at ~86% of crop width).
@@ -370,36 +425,35 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
   // - EasyOCR  (1344px crop): dominantX ≈ 780px for position-list tickers → 600
   //   (safe: 600 < 780, and chart-area dominantX ≈ 400-500 in EasyOCR crops)
   //
-  // The earlier proportional formula 1150 * cropWidth/750 was calibrated for
-  // Tesseract's 750px crop and produced physically impossible values for
-  // EasyOCR's 1344px crop (2061px threshold in a 1344px image — the gate fires
-  // on EVERY frame, disabling the column filter entirely).
+  // Confidence gate: is `dominantX` a genuine stacked position-list column?
   //
-  // The two engines need separate constants because their crops cover
-  // different parts of the frame and their word boxes anchor differently:
-  // Tesseract's chart-stream crop is a fixed 250px region upscaled 3x, so it
-  // is always 750px wide regardless of source resolution. EasyOCR's crop is
-  // a fraction of the source frame upscaled 5x, so its width IS
-  // resolution-dependent (1344px at 1080p, ~894px at 720p) — the EasyOCR
-  // threshold is scaled from its 1344px reference so 720p sources still work.
+  // An absolute x-coordinate threshold cannot work here. Qullamaggie moved the
+  // panel between video eras and the crop width changed with it, so no fixed px
+  // value survives both ends of the corpus:
+  //   - 2022-era, crop w=0.14 (1344px wide): position column at x≈777
+  //   - 2023-era, crop w=0.17 (1632px wide): position column at x≈575
+  // A threshold of 600 passes the first and rejects the second; 500 does the
+  // reverse. Either way the whole column filter is silently disabled on one era
+  // (the log shows `col_filter: null`, which is the tell).
   //
-  // Engine detection uses the OCR result's `_engine` field, not the crop
-  // width: a 720p EasyOCR crop is 894px, which the old `cropWidth > 1000`
-  // heuristic misclassified as Tesseract.
-  const EASYOCR_REFERENCE_CROP_WIDTH = 1344;
-  const EASYOCR_POSITION_LIST_MIN = 600;
-  const TESSERACT_POSITION_LIST_MIN = 505;
-  const isEasyOCR = engine === 'easyocr';
-  const X_POSITION_LIST_MIN = cropWidth == null
-    ? TESSERACT_POSITION_LIST_MIN
-    : isEasyOCR
-      ? Math.round(EASYOCR_POSITION_LIST_MIN * (cropWidth / EASYOCR_REFERENCE_CROP_WIDTH))
-      : TESSERACT_POSITION_LIST_MIN;
-  if (!columnIsPriceAligned && dominantX < X_POSITION_LIST_MIN) {
+  // So test the SHAPE rather than the position. A real position list is a tight
+  // vertical stack: several ticker-shaped words inside one narrow x-window,
+  // spread down several distinct rows. Chart text and axis labels never stack
+  // that way regardless of era or crop.
+  //
+  // A column that is already price-aligned is trusted outright — those rows
+  // have a price token to the right of the ticker, which is the strongest
+  // single indicator and costs nothing to check.
+  const stackMembers = tickerWords.filter(
+    (tw) => Math.abs(tw.center - dominantX) <= columnWidth / 2
+  );
+  const stackLines = new Set(stackMembers.map((tw) => tw.line));
+  const stackIsReal = stackMembers.length >= 4 && stackLines.size >= 4;
+  if (!stackIsReal && !(columnIsPriceAligned && priceAlignedTickers.length >= 2)) {
     return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
   }
 
-  return { columnWidth, dominantColumnX: dominantX, inListTickers };
+  return { columnWidth, dominantColumnX: dominantX, inListTickers, stackLines: stackLines.size };
 }
 
 // Extract ALL ticker-shaped tokens from OCR text (ignores lexicon).
@@ -608,6 +662,9 @@ function parseChartStreamPositionList({ ocr } = {}) {
   }
 
   const occurrenceCounts = countTickerOccurrences(text);
+  // Column gate is a whole-frame decision (does the detector trust its own
+  // column?), so compute it once here rather than per token.
+  const columnGateActive = dominantColumnX != null && inListTickers.size >= 3;
   const accepted = [];
   const rejected = [];
   // canonicalToRawTicker: when edit-distance correction produces a canonical
@@ -633,15 +690,37 @@ function parseChartStreamPositionList({ ocr } = {}) {
       }
       continue;
     }
-    // Position-list-aware filter: when word positions are reliable
-    // (Tesseract), require the ticker to be in the dominant ticker column.
-    // When word positions are unreliable (EasyOCR — different x-center
-    // distribution), skip the column check and rely on lexicon +
-    // price-nearby signals. The column detector result is still computed
-    // for diagnostics (column_filter field in output) but no longer
-    // gates acceptance.
-    const inListColumn = inListTickers.has(ticker);
-    if (inLexicon || priceNearby) {
+    // Position-list-aware filter: require the ticker to be in the dominant
+    // ticker column when the column detector is confident.
+    //
+    // The `inLexicon || priceNearby` branch used to accept column-agnostically.
+    // That leaks badly on EasyOCR frames because `hasPriceNear` matches against
+    // the ENTIRE flattened OCR text: a ticker at the end of one line happily
+    // matches a price at the start of the next line, so every ticker in the
+    // frame looks "price-nearby" and chart-header noise (BROS, ONKS, FX)
+    // walks straight in. Verified on 20220218: precision fell 86% → 40%.
+    //
+    // The column filter is the structural signal that actually distinguishes a
+    // position-list row from chart noise — real rows put the ticker in a tight
+    // vertical column with a price to its right. Gate on it whenever the
+    // detector found a column with enough evidence (>= 3 in-list tokens), and
+    // fall back to the old column-agnostic behaviour when it did not, so
+    // sparse/garbled frames are not penalised.
+    // In the dominant column but NOT in the lexicon: this is almost certainly
+      // an OCR garble of a real ticker, so run edit-distance correction FIRST
+      // and only fall back to accepting the raw token. Previously the
+      // `inLexicon || priceNearby` test came first, and because hasPriceNear
+      // scans the whole flattened text it fired on nearly every token — so
+      // garbles were accepted verbatim (FX for FCX, TTOCQ for TQQQ) and never
+      // reached the corrector below.
+      const inListColumn = inListTickers.has(ticker);
+      if (columnGateActive && !inListColumn && !(inLexicon && inListTickers.size >= 6)) {
+        // Column detector is confident and this token is not a position-list row.
+        // Reject it before the lexicon/price-nearby path can admit it.
+        rejected.push(ticker);
+        continue;
+      }
+      if (inLexicon || priceNearby) {
       // Filter G: panel-line reject gate. If panel boundaries were
       // detected, reject any ticker whose ONLY occurrences have lines
       // outside the position-list panel (chart-area above the panel, or
@@ -657,26 +736,53 @@ function parseChartStreamPositionList({ ocr } = {}) {
           continue;
         }
       }
-      // Lexicon match OR price-nearby: accept (column-agnostic).
+      // Lexicon match OR price-nearby: accept.
       // Chart-area text like "Arith", "Sym", "Cran" doesn't match the
       // seed lexicon so it stays rejected.
       accepted.push(ticker);
-    } else if (inListColumn) {
-      // In-column ticker that's NOT in the lexicon: try OCR character
-      // correction via edit distance (INUG→JNUG, XX→X, FCX→FCX).
-      const correction = findCloseTickerMatch(ticker, lexicon);
-      if (correction) {
-        if (!accepted.includes(correction)) {
-          canonicalToRawTicker.set(correction, ticker);
-          accepted.push(correction);
-        } else {
-          rejected.push(ticker);
-        }
-      } else {
-        rejected.push(ticker);
-      }
     } else {
       rejected.push(ticker);
+    }
+  }
+
+  // Post-pass: repair garbled in-column tickers.
+  //
+  // A token that landed in the position-list column but is NOT in the lexicon
+  // is almost certainly an OCR garble of a real ticker (FX→FCX, TTOCQ→TQQQ,
+  // TSUA→TSLA). hasPriceNear scans the whole flattened text so these tokens
+  // were already accepted verbatim on the branch above and never reached the
+  // edit-distance corrector. Correct them here, but only at distance 1 and
+  // only when the correction is unambiguous — at distance 2 findCloseTickerMatch
+  // starts inventing tickers (UPST→KLAC, DWAC→SPOT), which costs more recall
+  // than the repair gains.
+  if (columnGateActive) {
+    const confusionMap = loadOcrConfusionMap();
+    for (let i = accepted.length - 1; i >= 0; i -= 1) {
+      const raw = accepted[i];
+      if (!inListTickers.has(raw)) continue;
+      // Curated confusion alias first — this is the only path that can repair a
+      // garble that happens to BE a valid ticker (AROQ→ARQQ, IOI→IOT).
+      const aliased = confusionMap.get(raw);
+      if (aliased && lexicon.tickerSet.has(aliased) && !accepted.includes(aliased)) {
+        canonicalToRawTicker.set(aliased, raw);
+        accepted[i] = aliased;
+        continue;
+      }
+      if (lexicon.tickerSet.has(raw)) continue;
+      let best = null;
+      let bestDist = Infinity;
+      for (const candidate of lexicon.tickers) {
+        if (Math.abs(candidate.length - raw.length) > 1) continue;
+        const dist = levenshtein(raw, candidate);
+        if (dist < bestDist || (dist === bestDist && candidate.length > best.length)) {
+          bestDist = dist;
+          best = candidate;
+        }
+      }
+      if (best && bestDist === 1 && !accepted.includes(best)) {
+        canonicalToRawTicker.set(best, raw);
+        accepted[i] = best;
+      }
     }
   }
 
