@@ -49,9 +49,15 @@ const path = require('node:path');
 //
 // NOTE: P, SPYM, BKR, BOIL were previously blocklisted but are real tickers
 // and should NOT be removed from the lexicon. They are here for documentation
-// only; FREY is the only ticker confirmed as a persistent false positive
-// that is not a legitimate QMG trading candidate.
-const TICKER_BLOCKLIST = new Set(['FREY']);
+// only.
+//
+// ATR (Average True Range) is NOT a ticker at all — it is the indicator label
+// rendered at the bottom of every chart in every video. It surfaced as a false
+// positive in 4 GT dates (20230602/20230605/20230608/20230609) purely because it
+// sits inside the crop with numbers around it. Do not re-add it to the lexicon
+// on the grounds that "ATR is a real ticker" — it is a real ticker symbol, just
+// never a position on Qullamaggie's list.
+const TICKER_BLOCKLIST = new Set(['FREY', 'ATR']);
 
 // Maximum edit distance for OCR character correction. Tested 3 on 2026-09-29
 // (might catch GOVX→"BGO" which needs 3 edits) — added FPs to non-peak frames
@@ -739,6 +745,13 @@ function parseChartStreamPositionList({ ocr } = {}) {
       // Lexicon match OR price-nearby: accept.
       // Chart-area text like "Arith", "Sym", "Cran" doesn't match the
       // seed lexicon so it stays rejected.
+      accepted.push(ticker);
+    } else if (inListColumn) {
+      // In the position-list column, but neither a known ticker nor
+      // price-nearby. The column gate has already established this is a real
+      // row, so this is a ticker missing from the seed lexicon rather than
+      // chart noise — accept it as read rather than discard it. (MOS on
+      // 20220218 was being dropped here, costing a real GT hit.)
       accepted.push(ticker);
     } else {
       rejected.push(ticker);
