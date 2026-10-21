@@ -32,3 +32,7 @@ youtube_cookies.txt
 *.cookies.txt
 # Stray SQLite copies
 state.sqlite2
+
+# Transient download-run artifacts
+data/_download_*.log
+data/_target_ids.txt
