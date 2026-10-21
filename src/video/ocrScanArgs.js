@@ -407,22 +407,18 @@ function parseArgs(argv, overrides = {}) {
     options.chartStreamParser = true;
   }
 
-  // chart_stream profile frames score 8-12 on valid dark position-list frames.
-  // Lower the prefilter threshold to match the profile's own floor (8) so
-  // frames scoring 8-9 are not excluded before OCR.
-  //
-  // The guard must check whether the user PASSED the flag, not whether the
-  // key exists in `options` — buildDefaultOptions always populates both
-  // keys, so an `'x' in options` test is always true and the override
-  // would never fire.
-  if (options.prefilterProfile === 'chart_stream' && !argv.includes('--prefilter-threshold')) {
-    options.prefilterThreshold = 8;
-  }
-
   // chart_stream mode benefits from multi-frame consensus — capture 2 frames so the
   // clusterer has enough data to filter single-frame OCR garbles.
   if (options.prefilterProfile === 'chart_stream' && !argv.includes('--max-captures')) {
     options.maxCapturesPerVideo = 2;
+  }
+
+  // Cap the OCR frame budget for chart_stream. EasyOCR runs ~60s/frame, so the
+  // default 60-frame budget would mean a ~60 min/video scan. selectFramesForOcr
+  // picks the highest-scoring frames, so 12 gives the same capture quality as
+  // 60 at 1/5 the wall cost. Callers can still raise it via --prefilter-max-frames.
+  if (options.prefilterProfile === 'chart_stream' && !argv.includes('--prefilter-max-frames')) {
+    options.prefilterMaxFrames = 12;
   }
 
   return options;
