@@ -30,11 +30,15 @@ function clampRegion({ x, y, width, height }, sourceWidth, sourceHeight) {
   };
 }
 
-// Pure helper: turn a fractional region {xFraction, yFraction, wFraction, hFraction}
+// Pure helper: turn a fractional region {x, y, w, h} (each value 0..1)
 // into absolute pixels against the source dimensions. Fractional regions
 // make the caller code independent of resolution — the chart-stream overlay
 // sits at ~70%/84% for almost every YouTube layout, so a fraction-based
 // input is the right default for the channel.
+//
+// NOTE: the key names are `x`/`y`/`w`/`h` even though the values are
+// fractions — this matches `parseFractionalRegion()` in src/video/ocrScanArgs.js,
+// which is what every production caller passes in.
 function resolveFractionalRegion(sourceWidth, sourceHeight, fractionRegion) {
   if (!fractionRegion) {
     return null;

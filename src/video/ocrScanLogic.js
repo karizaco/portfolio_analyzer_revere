@@ -588,7 +588,12 @@ function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporal
   // Temporal boost: frames near the start of the stream get a bonus that
   // decays to zero after `temporalDecay` seconds. QMG position lists are
   // most likely to change in the first 20–30 minutes of a stream.
-  if (isFinite(temporalDecay) && temporalDecay > 0) {
+  //
+  // Chart-stream only: the heuristic is about QMG position lists, and
+  // Revere whiteboard scans pick their capture by a completely different
+  // signal. Applying it to whiteboard would silently re-rank every Revere
+  // capture toward the first 30 minutes of the stream.
+  if (isFinite(temporalDecay) && temporalDecay > 0 && profile === 'chart_stream') {
     const tsCandidate = timestamp !== undefined ? timestamp : (stats && stats.timestamp);
     const ts = Number(tsCandidate);
     if (Number.isFinite(ts)) {

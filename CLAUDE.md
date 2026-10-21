@@ -242,9 +242,23 @@ Rules:
 npm test        # node --test test/*.test.js
 ```
 
-153 tests, 148 passing. The 5 failures are pre-existing and unrelated to the QMG chart-stream
-work: `computePerceptualHashOfFractionalRegion`, the chart-stream e2e snapshot, the
-`no_ticker_shapes` parse branch, `qmgGroundTruth`, and the whiteboard temporal-decay case.
+157 tests, all passing (as of 2026-10-21).
+
+### Ground-truth benchmark fixtures — read before trusting a recall number
+
+`test/qmgGroundTruth.test.js` is the curated recall/precision benchmark. Two rules:
+
+- **A snapshot must be at OCR resolution (≥1280px wide).** Several snapshot sets under
+  `data/video_scan_20260917/.../snapshots/` were saved at the *prefilter sample width*
+  (640×360). Cropping the chart-stream region out of one of those leaves a ~90×79px patch
+  that OCRs to nothing, so the benchmark reports 0% recall for every case and looks like a
+  total pipeline failure. The test now skips sub-1280px snapshots and prefers the widest
+  candidate it finds.
+- **The snapshot filename index is `captureIndex + 1`** (`qmg_20220606_2.png` is capture
+  index 1). The ground truth is keyed by capture index.
+
+The test also calls `closeWorker()` when it finishes — `ocrImage()` leaves a Tesseract worker
+running, which keeps the event loop alive and hangs the process.
 
 ---
 
@@ -473,30 +487,45 @@ ffmpeg -ss <ts> -i <video>  →  sharp: extract crop region, upscale ×5, PNG (n
 ### Column detection (`X_POSITION_LIST_MIN`)
 
 `identifyPositionListColumn` in `src/parse/parseChartStream.js` locates the position-list column
-and rejects chart-area columns. Its threshold is an absolute x-coordinate that must be
-**scaled by the actual OCR crop width**:
+and rejects chart-area columns. There are two ways it finds that column:
+
+1. **Price-aligned** (strong): tickers on rows that have a price to their right. The median
+   x of those tickers is the column.
+2. **Densest bucket** (fallback): the x-bucket with the most ticker-shaped words.
+
+Only the **fallback** path is subject to the x-coordinate gate:
 
 ```
-X_POSITION_LIST_MIN = round(1150 * (cropWidth / 1345))
+EasyOCR  (1344px reference crop): X_POSITION_LIST_MIN = 600
+Tesseract (750px crop):           X_POSITION_LIST_MIN = 505
 ```
 
-The 1150 reference was measured in the **1345px EasyOCR crop** (position-list column at
-x≈1218; chart-area column at x≈490-510). `cropWidth` is read from `_cropWidth` on the OCR
-result, which `src/ocr/ocrImage.js` measures from the OCR input image at runtime.
+The EasyOCR threshold is scaled from its 1344px reference so 720p sources (895px crop) still
+work: `round(600 * cropWidth / 1344)`. `cropWidth` comes from `_cropWidth` on the OCR result,
+which `src/ocr/ocrImage.js` measures from the OCR input image at runtime — **never hardcode it**.
 
-Two traps this scaling exists to avoid:
+**The gate must NOT be applied to a price-aligned column.** The position-list column's x
+position varies between videos (measured in a 1345px EasyOCR crop: 20220218 → x≈710,
+20220606 → x≈444). Gating an absolute threshold on a correctly-detected, price-validated
+column silently dropped *every* ticker on 20220606 while the detector was working perfectly.
+That bug cut 20220606 recall from 75% to 12.5%.
 
-- **Scaling from the wrong reference.** Scaling from 750 (the Tesseract crop width) yields
-  2062 for a 1345px image — larger than the image, so the gate rejects *every* column and
-  the column filter silently contributes nothing. This regression shipped in commit `0c6f393`.
-- **Applying the EasyOCR threshold to the Tesseract crop.** The old fixed 1150 was larger
-  than a 750px image, which is why the Tesseract column filter was reported as "completely
-  broken". Scaling from 1345 gives `round(1150 * 750/1345) = 641`, which is correct for
-  Tesseract too (its position list sits at x≈645).
+**Engine detection** uses the OCR result's `_engine` field, not the crop width: a 720p EasyOCR
+crop is 895px, which the old `cropWidth > 1000` heuristic misclassified as Tesseract.
 
 Note the column filter is **diagnostic for EasyOCR**: the accept path uses lexicon +
 price-nearby, and the column result only gates non-lexicon, non-price-nearby tickers
 (see the `inListColumn` branch in `parseChartStreamPositionList`).
+
+### Panel-boundary gate (positions / watchlist)
+
+`findPanelBoundaries` locates the "POSITIONS" header line and the "Personal WatchList" header
+line and uses them to restrict which rows may contain position-list tickers.
+
+**The watchlist bound only applies when the watchlist header is BELOW the positions header.**
+A stray `Watch…` token picked up above the panel (a chat overlay, a streamer name) would
+otherwise act as a lower bound and reject *every* real row. Same rule applies inside
+`identifyPositionListColumn`'s `lineIsInPanel` and to `panelGateActive`.
 
 ### Diagnostic fields exposed
 
@@ -506,13 +535,29 @@ price-nearby, and the column result only gates non-lexicon, non-price-nearby tic
 - `merged_position_list` — multi-frame clusterer output (dominant for EasyOCR runs)
 - `merged_raw_token_clusters` — per-cluster diagnostics: `{canonical, members, frequency, frameCount}`
 
-### Known limitations and next steps (as of 2026-10-09)
+### Known limitations and next steps (as of 2026-10-21)
 
-**Precision floor (~50%)**: Even with all fixes, ~50% of `merged_position_list` entries are real tickers not in the specific video's position list (AERC, SIGA, COIN, X, etc.). The seed lexicon is too broad. Two root causes:
-1. Clusterer produces real tickers from chart noise via edit-distance correction
-2. Real tickers (X, COIN) appear in the video but aren't in that video's position list
+**Measured on the curated GT benchmark** (`test/qmgGroundTruth.test.js`, 4 captures,
+EasyOCR, single frame each — not a multi-frame consensus run):
 
-**Recall floor (~75-100% on good videos)**: Prefilter consistently misses some GT tickers (GOVX, LABU, NFLX, CBIO) on some videos. The `meanLumaFloor=30` penalty on historical dark streams (Dec 2021–Feb 2022) likely contributes. The prefilter needs recalibration for these eras.
+| case | date | recall | FP |
+|---|---|---|---|
+| trade_ideas | 20220218[1] | 66.7% (6/9) | 3 |
+| sparse | 20221104[0] | 100% (1/1) | 3 |
+| normal_2022 | 20220606[1] | 75.0% (6/8) | 4 |
+| dense_2023 | 20230609[0] | 53.8% (7/13) | 1 |
+
+Overall mean recall 73.9%. These numbers were previously meaningless — the benchmark was
+resolving 640×360 prefilter frames, so every case scored 0%.
+
+**Precision floor**: 1–4 false positives per capture. Remaining FP sources:
+`TQQQ`→`TOCA` (OCR misread of a real ticker), chart-area tokens that happen to be in the
+seed lexicon (`ISYM`, `MEL`, `CON`), and one-letter tokens (`ON`, `X`).
+
+**Recall floor**: `20220606` still misses GOVX and NFLX; `20230609` misses 6 of 13. The
+`meanLumaFloor=30` penalty on historical dark streams (Dec 2021–Feb 2022) likely contributes
+to the prefilter missing frames entirely.
+
 
 **PaddleOCR PP-OCRv6** (`tools/_paddleocr_ocr.py`): Could not install — Python 3.14 is installed; `paddlepaddle` has no cp314 wheel. Downgrade to Python 3.13 to benchmark. Interface is identical to `_easyocr_ocr.py` — schema is `{text, lines, words[{text,left,top,width,height,conf,line}],_engine,_image,_detection_count}`. Would run at ~7× EasyOCR speed (PP-OCRv6 on CPU with OpenVINO).
 

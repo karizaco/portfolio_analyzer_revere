@@ -22,7 +22,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const { ocrImage } = require('../src/ocr/ocrImage');
+const { ocrImage, closeWorker } = require('../src/ocr/ocrImage');
 const { parseChartStreamPositionList } = require('../src/parse/parseChartStream');
 const {
   getGroundTruthForCapture,
@@ -39,13 +39,44 @@ const SNAPSHOT_ROOTS = [
   path.join('data', 'video_scan_20260917', 'qmg-ocr-20260917-missing19', 'qmg-ocr-20260917-missing19', 'snapshots'),
   path.join('data', 'video_ocr_probe', 'qmg-1080p-batch1', 'snapshots'),
   path.join('data', 'video_ocr_probe', 'qmg-1080p-batch2', 'snapshots'),
+  path.join('data', 'video_ocr_probe', 'snapshots'),
 ];
+
+// A snapshot is only usable for OCR if it was saved at OCR resolution.
+// The `missing19` run wrote prefilter sample frames (640x360): cropping the
+// chart-stream region out of one of those leaves a ~90x79px patch, which
+// OCRs to nothing and makes the whole benchmark report 0% recall.
+// Require at least this width and skip anything smaller.
+const MIN_SNAPSHOT_WIDTH = 1280;
+
+/**
+ * Scratch re-run directories also contain full-resolution snapshots.
+ * `data/video_scan_test/_rerun/<run-tag>/snapshots/qmg_<date>[_<n>].png`
+ * These are untracked, so this is a best-effort extra source — never a
+ * required one.
+ */
+function rerunSnapshotRoots() {
+  const rerunRoot = path.join('data', 'video_scan_test', '_rerun');
+  try {
+    return fs.readdirSync(rerunRoot, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => path.join(rerunRoot, entry.name, 'snapshots'))
+      .filter((dir) => fs.existsSync(dir));
+  } catch (_) {
+    return [];
+  }
+}
 
 const CURATED_CASES = [
   { dateKey: '20220218', captureIndex: 1, mode: 'trade_ideas' },
-  { dateKey: '20221104', captureIndex: 2, mode: 'sparse' },
+  // Ground truth for 20221104 covers captures 0 and 2, but only capture 0
+  // has a snapshot at OCR resolution (capture 2 exists only as a 640x360
+  // prefilter frame, which OCRs to nothing).
+  { dateKey: '20221104', captureIndex: 0, mode: 'sparse' },
   { dateKey: '20220606', captureIndex: 1, mode: 'normal_2022' },
-  { dateKey: '20230609', captureIndex: 2, mode: 'dense_2023' },
+  // Ground truth for 20230609 only covers capture 0 (13 tickers). Capture 2
+  // has no labels, so it would count as a 0% case and drag the mean down.
+  { dateKey: '20230609', captureIndex: 0, mode: 'dense_2023' },
 ];
 
 const REQUIRED_MODE_THRESHOLDS = Object.freeze({
@@ -61,13 +92,37 @@ function snapshotFileName(dateKey, captureIndex) {
   return `qmg_${dateKey}${suffix}.png`;
 }
 
-function resolveSnapshotPath(dateKey, captureIndex) {
-  const fileName = snapshotFileName(dateKey, captureIndex);
-  for (const root of SNAPSHOT_ROOTS) {
-    const candidate = path.resolve(root, fileName);
-    if (fs.existsSync(candidate)) return candidate;
+async function imageWidth(filePath) {
+  try {
+    const sharp = require('sharp');
+    const meta = await sharp(filePath).metadata();
+    return meta.width || 0;
+  } catch (_) {
+    return 0;
   }
-  return null;
+}
+
+/**
+ * Resolve the best usable snapshot for a (date, captureIndex) pair.
+ * Searches the known roots plus the scratch re-run dirs and keeps the
+ * widest image, so a 1920x1080 frame always wins over a 640x360 one.
+ * Returns null when no snapshot at OCR resolution exists.
+ */
+async function resolveSnapshotPath(dateKey, captureIndex) {
+  const fileName = snapshotFileName(dateKey, captureIndex);
+  const roots = [...SNAPSHOT_ROOTS, ...rerunSnapshotRoots()];
+  let best = null;
+  let bestWidth = 0;
+  for (const root of roots) {
+    const candidate = path.resolve(root, fileName);
+    if (!fs.existsSync(candidate)) continue;
+    const width = await imageWidth(candidate);
+    if (width > bestWidth) {
+      best = candidate;
+      bestWidth = width;
+    }
+  }
+  return bestWidth >= MIN_SNAPSHOT_WIDTH ? best : null;
 }
 
 function recall(found, gt) {
@@ -91,7 +146,7 @@ async function runTests() {
 
   for (const testCase of CURATED_CASES) {
     const { dateKey, captureIndex, mode } = testCase;
-    const snapshotPath = resolveSnapshotPath(dateKey, captureIndex);
+    const snapshotPath = await resolveSnapshotPath(dateKey, captureIndex);
     if (!snapshotPath) {
       missingSnapshots.push(`${dateKey}[${captureIndex}]`);
       continue;
@@ -99,6 +154,10 @@ async function runTests() {
 
     const gtCapture = getGroundTruthForCapture(gt, dateKey, captureIndex);
     const gtTickers = gtCapture.tickers;
+    if (!gtTickers.length) {
+      console.log(`${mode.padEnd(11)} ${dateKey}[${captureIndex}]   skipped: no ground truth for this capture`);
+      continue;
+    }
     let ocrResult;
     try {
       ocrResult = await ocrImage(snapshotPath, {
@@ -173,12 +232,23 @@ async function runTests() {
   );
 }
 
+// The Tesseract worker spawned by ocrImage() keeps the event loop alive, so
+// the process never exits on its own unless it is terminated explicitly.
+// tools/scanVideoWithOcr.js does this; a library caller must too.
+async function runTestsWithCleanup() {
+  try {
+    return await runTests();
+  } finally {
+    await closeWorker();
+  }
+}
+
 const isMain = require.main === module;
 if (isMain) {
-  runTests().catch((error) => {
+  runTestsWithCleanup().catch((error) => {
     console.error(error && error.stack ? error.stack : String(error));
     process.exit(1);
   });
 } else {
-  module.exports = { runTests };
+  module.exports = { runTests: runTestsWithCleanup };
 }

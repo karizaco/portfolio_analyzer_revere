@@ -17,8 +17,23 @@ const os = require('node:os');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
+const { CHART_STREAM_REGION_FRACTION_DEFAULT, parseFractionalRegion } = require('../src/video/ocrScanArgs');
+
 const WORKSPACE_ROOT = path.resolve(__dirname, '..');
 const FIXTURE_VIDEO = path.join(WORKSPACE_ROOT, 'test', 'fixtures', 'local_20260104_sample_chart_stream.mp4');
+
+// The fixture is 1080p so that the position list can sit in BOTH regions the
+// pipeline looks at:
+//   - the chart-stream OCR crop (src/video/ocrScanArgs.js) — x 0.86..1.0,
+//     y 0.62..0.84 of the frame
+//   - the prefilter's ticker rectangle (src/video/ocrScanLogic.js) — x
+//     0.85..1.0, y 0.55..1.0 of the frame
+// At 720p those two regions barely overlap (the OCR crop ends at y=0.84 and
+// the prefilter rectangle starts at y=0.55 but the position list has to sit
+// in the bottom 18% to clear the watchlist panel), so the fixture could not
+// be seen by both stages at once.
+const FRAME_WIDTH = 1920;
+const FRAME_HEIGHT = 1080;
 
 const DEFAULT_WIN_FFMPEG_PATHS = [
   'C:/ffmpeg/bin/ffmpeg.exe',
@@ -98,8 +113,8 @@ function runFfmpeg(ffmpegBin, args) {
 }
 
 // Render one synthetic chart-stream frame:
-//   - Dark canvas (480×270) with a faint candlestick grid.
-//   - "POSITION LIST" box in the bottom-right at x=336, y=216, w=128, h=48.
+//   - Dark canvas (1920x1080) with a faint candlestick grid.
+//   - "POSITION LIST" box placed inside the chart-stream OCR crop.
 //   - Three tickers + dollar prices drawn over the box per frame, sourced
 //     from `rows[frameIndex]` so each of the 16 frames sees a different list.
 //   - The position-list box is bright-on-dark so the OCR pipeline can read
@@ -111,26 +126,42 @@ function buildChartStreamVideo(ffmpegBin, outputPath, rows) {
     ? `fontfile='${fontFile.replace(/:/g, '\\:')}'`
     : null;
 
+  // Place the position list from the crop constant instead of hardcoded
+  // pixels, so the fixture cannot silently drift away from the region the
+  // pipeline actually reads.
+  const crop = parseFractionalRegion(CHART_STREAM_REGION_FRACTION_DEFAULT);
+  const boxLeft = Math.round(crop.x * FRAME_WIDTH);
+  const boxTop = Math.round(crop.y * FRAME_HEIGHT);
+  const boxWidth = Math.round(crop.w * FRAME_WIDTH);
+  const boxHeight = Math.round(crop.h * FRAME_HEIGHT);
+  // Real QMG frames put the ticker column at ~53% of the crop width and the
+  // price to its right; mirror that so the column detector sees a realistic
+  // layout rather than text jammed against the left edge.
+  const tickerColumnX = Math.round(boxLeft + boxWidth * 0.53);
+  const headerY = boxTop + 8;
+  const firstRowY = boxTop + Math.round(boxHeight * 0.16);
+  const rowStep = Math.round(boxHeight * 0.13);
+  const fontSize = 20;
+
   // Build the full video filter graph. Input is a dark color source; the
   // grid is part of -vf (not the -i spec) so ffmpeg's lavfi parser accepts it.
   const drawTextFilters = [];
   // Static POSITION LIST chrome (box + border + label) applies to all frames.
-  // Scale coordinates from 480x270 → 1280x720 (2.67x).
   drawTextFilters.push(
-    `drawgrid=w=160:h=160:t=1:c=0x1f2933@0.6`,
-    `drawbox=x=896:y=576:w=342:h=128:color=0x111827@0.95:t=fill`,
-    `drawbox=x=896:y=576:w=342:h=128:color=0xe5e7eb@0.8:t=2`,
-    `drawtext=${fontOption ? fontOption + ':' : ''}text='POSITION LIST':fontcolor=white:fontsize=27:x=918:y=592`
+    `drawgrid=w=240:h=240:t=1:c=0x1f2933@0.6`,
+    `drawbox=x=${boxLeft}:y=${boxTop}:w=${boxWidth}:h=${boxHeight}:color=0x111827@0.95:t=fill`,
+    `drawbox=x=${boxLeft}:y=${boxTop}:w=${boxWidth}:h=${boxHeight}:color=0xe5e7eb@0.8:t=2`,
+    `drawtext=${fontOption ? fontOption + ':' : ''}text='POSITION LIST':fontcolor=white:fontsize=${fontSize}:x=${boxLeft + 8}:y=${headerY}`
   );
   // Per-frame ticker rows. Use enable='eq(n\,N)' so each filter only paints
   // one frame — this is how we get the position list to change across the
   // 16 frames so the pHash_overlay test sees different overlay hashes.
   rows.forEach((row, frameIndex) => {
     row.forEach((cell, rowIdx) => {
-      const yOffset = 619 + rowIdx * 27;
+      const yOffset = firstRowY + rowIdx * rowStep;
       drawTextFilters.push(
-        `drawtext=${fontOption ? fontOption + ':' : ''}text='${cell}':fontcolor=white:fontsize=24:` +
-          `x=918:y=${yOffset}:enable='eq(n\\,${frameIndex})'`
+        `drawtext=${fontOption ? fontOption + ':' : ''}text='${cell}':fontcolor=white:fontsize=${fontSize}:` +
+          `x=${tickerColumnX}:y=${yOffset}:enable='eq(n\\,${frameIndex})'`
       );
     });
   });
@@ -140,7 +171,7 @@ function buildChartStreamVideo(ffmpegBin, outputPath, rows) {
     '-hide_banner',
     '-loglevel', 'error',
     '-f', 'lavfi',
-    '-i', 'color=c=0x0d1117:s=1280x720:d=4:r=4',
+    '-i', `color=c=0x0d1117:s=${FRAME_WIDTH}x${FRAME_HEIGHT}:d=4:r=4`,
     '-frames:v', '16',
     '-vf', drawTextFilters.join(','),
     '-an',
