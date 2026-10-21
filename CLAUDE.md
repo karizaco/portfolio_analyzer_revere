@@ -43,36 +43,47 @@ user keeps a backup, **ask them** — do not go looking.
 
 YouTube session cookies in `youtube_cookies.txt` expire and become 0-byte files. When downloads fail with `"does not look like a Netscape format cookies file"`, re-export fresh cookies from Firefox Cookie-Editor and convert to Netscape format.
 
-### YouTube downloads: use `visios` client, not `tv`
+### YouTube downloads: use the visionOS client, not `tv`
 
-Bot protection blocks the `tv` client even with valid cookies — it returns "Video unavailable" for ALL videos regardless of whether they exist. The `visios` (visionOS API) client bypasses this.
+Bot protection blocks the `tv` client even with valid cookies — it returns "Video unavailable" for ALL videos regardless of whether they exist. The visionOS (Apple Vision Pro API) client bypasses this.
 
 **Always use these flags together:**
 ```bash
---extractor-args "youtube:player_client=visios" --js-runtimes node
+--extractor-args "youtube:player_client=visionos" --js-runtimes node
 ```
 
-`--js-runtimes node` is required — without it, yt-dlp cannot execute the visios player extraction and falls back to storyboard-only (no video). The `tv` client does not need the JS runtime, which is why it seemed to work until the bot-block kicked in.
+`--js-runtimes node` is required — without it, yt-dlp cannot execute the visionos player extraction and falls back to storyboard-only (no video). The `tv` client does not need the JS runtime, which is why it seemed to work until the bot-block kicked in.
+
+**The client was renamed.** Older yt-dlp builds call it `visios`; builds from 2026.08 call it
+`visionos` and print `Skipping unsupported client "visios"` for the old name. Always
+check which name your build accepts:
+
+```bash
+py -3 -c "import yt_dlp.extractor.youtube._video as v; print(list(v.INNERTUBE_CLIENTS.keys()))"
+```
+
+`tools/downloadQmg1080p.js` probes this at runtime, so it works on either build.
 
 **What fails:**
 - `tv` client → "Video unavailable" (bot protection)
 - `android` client → SABR-only formats, no MP4 streams
 - `web_safari` client → "Video unavailable" (bot protection)
 
-**What works:** `visios` with `--js-runtimes node`
+**What works:** `visionos` with `--js-runtimes node`
 
 ### Bot protection symptoms and diagnosis
 
 | Symptom | yt-dlp message | Actual cause |
 |---------|----------------|--------------|
-| All videos return unavailable | `"Video unavailable"` | Bot protection on `tv` client — switch to `visios` |
+| All videos return unavailable | `"Video unavailable"` | Bot protection on `tv` client — switch to `visionos` |
 | Page needs reload | `"The page needs to be reloaded."` | Heavy bot/captcha — try again later |
-| SABR formats only | `"Some formats have been skipped"` + no MP4 URLs | `android` client — switch to `visios` |
-| No JS runtime | `"No supported JavaScript runtime could be found"` | yt-dlp can't extract visios without `--js-runtimes node` |
+| SABR formats only | `"Some formats have been skipped"` + no MP4 URLs | `android` client — switch to `visionos` |
+| No JS runtime | `"No supported JavaScript runtime could be found"` | yt-dlp can't extract visionos without `--js-runtimes node` |
+| Client name rejected | `"Skipping unsupported client \"visios\""` | yt-dlp build is new enough to want `visionos` |
 | Cookie file error | `"does not look like a Netscape format"` | Cookie SID/`__Secure-3PSID` expired or malformed |
 | Rate-limited | `"rate-limited by YouTube for up to an hour"` | Too many rapid requests — pause 30–60 min before retrying |
 
-**Never assume a video is truly unavailable** just because yt-dlp returns "Video unavailable" — the `tv` client is almost always bot-blocked. Test with `visios` before concluding a video is gone.
+**Never assume a video is truly unavailable** just because yt-dlp returns "Video unavailable" — the `tv` client is almost always bot-blocked. Test with `visionos` before concluding a video is gone.
 
 ### YouTube rate-limiting
 
@@ -252,24 +263,62 @@ sparse-checkout cone` and left the files alone. What is proven is the **timing**
    blocks `git sparse-checkout add|set|init|reapply`, `git config
    core.sparseCheckout*=true`, `git clean -f`, and recursive deletes that target the
    media directory or any path outside the project. Self-test:
-   `node tools/guardSelfTest.js` (27/27); also runs as part of `npm test`
-   (`test/guardDestructiveBash.test.js`, 28 cases).
+   `node tools/guardSelfTest.js` (36/36); also runs as part of `npm test`
+   (`test/guardDestructiveBash.test.js`).
 3. `.gitignore` keeps `data/video_pipeline/` untracked except `state.sqlite`.
 
 The guard inspects the **command line**, not prose: commit-message bodies (`-m`, `-F`,
 heredocs) are stripped first, so the incident can still be documented in a commit, while
 a real invocation later in the same command line is still blocked. It also only inspects
 paths once a recursive delete is present, so read-only commands that merely mention a
-path outside the project are not blocked.
+path outside the project are not blocked. The `git clean` and `git config` rules are
+scoped to *their own* arguments — a greedy match would fire on an unrelated `rm -f`
+later in the same line.
 
 **If you need to change which files are tracked, edit `.gitignore` — never the
 sparse-checkout set.** To materialise files, use `git checkout -- <path>`.
 
-**The media should not live inside the git working tree.** When the videos are
-re-downloaded, put them outside the repo (e.g. `C:/Users/Admin/Projects/portfolio_analyzer_revere_media/`)
-and point the tooling at that directory. `state.sqlite` stores absolute `download_path`
-values, and the scan/download tools take `--video-dir`, so this works without code
-changes — and it removes this entire failure mode.
+### The media lives OUTSIDE the git working tree — do not move it back
+
+Re-downloaded videos go to:
+
+```
+C:/Users/Admin/Projects/portfolio_analyzer_revere_media/downloads_1080p/
+```
+
+This is a **sibling** of the repo, not a child of it, and that is the point. Verified on
+2026-10-21: `git status` sees 0 entries there, `git ls-files` tracks 0 files there, and
+a full `git clean -ndx` preview lists **0** of them. Even if sparse-checkout were
+re-enabled and pruned the working tree, git has no path to these files. This removes
+the failure mode structurally, rather than relying on the hook to never fire.
+
+`state.sqlite` stores absolute `download_path` values, so pointing the tooling at the
+new directory needs no code change:
+
+```bash
+node tools/downloadQmg1080p.js --limit 30 --dl-dir "C:/Users/Admin/Projects/portfolio_analyzer_revere_media/downloads_1080p"
+node tools/scanVideoWithOcr.js --video-dir "C:/Users/Admin/Projects/portfolio_analyzer_revere_media/downloads_1080p" --file <path> ...
+```
+
+### Re-downloading a lost video
+
+Rows whose media was destroyed still point at the old in-tree paths, and the downloader
+skips rows whose `download_path` mentions `downloads_1080p` or whose status is
+`scanning`/`done`. Reset them first — `tools/resetLostVideoRows.py` clears
+`download_path` and sets `status='pending'`, and writes the previous values to a JSON
+manifest so the change is reversible:
+
+```bash
+py -3 tools/resetLostVideoRows.py --ids id1,id2,... --dry-run   # inspect
+py -3 tools/resetLostVideoRows.py --ids id1,id2,...             # apply
+py -3 tools/resetLostVideoRows.py --manifest data/_lost_rows_manifest.json --restore
+```
+
+**The player-client name changed.** CLAUDE.md used to say `visios`; current yt-dlp
+builds (2026.08+) call it `visionos` and print `Skipping unsupported client "visios"`
+for the old name. `tools/downloadQmg1080p.js` now probes `INNERTUBE_CLIENTS` at runtime
+and uses whichever name the installed yt-dlp has, so it works on both old and new
+builds. `--js-runtimes node` is still required.
 
 `data/video_pipeline/state.sqlite` is the authoritative record of what should be on disk
 (channel, upload date, expected filename per video). If the media is missing, regenerate
@@ -283,11 +332,32 @@ Measured 2026-10-21 with `tools/snapshotCensus.js` and `tools/snapshotCoverage.j
 |---|---|
 | OCR **text** results | **Intact.** 767 `logs/*_snapshot.json` files under `data/`, 390 with a non-empty `merged_position_list`, 80 distinct date-keys with ticker output. 475 Tesseract, 90 EasyOCR. |
 | Snapshot **images** | **582 of 756 usable** (527 @1920px, 55 @1280px). The 174 low-res ones (640px prefilter samples) come only from `qmg-ocr-20260917-v2` and `qmg-ocr-20260917-missing19`. Every `_rerun` batch dir is 100% usable. |
-| **Videos** | **Gone.** 718 files, ~220.5 GiB (215 GiB `downloads_1080p` + 5.5 GiB `downloads_hires` + 0 `downloads`), per `du` at 14:33:56. |
+| **Videos** | **30 of 718 re-downloaded** (5.5 GiB, all verified 1920×1080 by ffprobe) into the out-of-tree media dir. The remaining 688 are still gone — re-download in chunks. |
 
 **The extracted tickers were not lost** — re-downloading the videos is not required to
 keep the OCR results. Re-download only if you need to re-run OCR at a different crop,
 engine, or frame density.
+
+### Re-download progress
+
+30 of the 718 lost videos were re-downloaded on 2026-10-21 (the 30 most recent
+qullamaggie chart-stream videos, 2022-04-25 → 2023-12-15). All 30 verified as real
+1920×1080 by ffprobe. Their `state.sqlite` rows now carry absolute paths into the
+out-of-tree media dir and `status='scanning'`.
+
+To continue, repeat the same three steps for the next batch of ids:
+
+```bash
+py -3 tools/resetLostVideoRows.py --ids <comma-separated ids> --dry-run
+py -3 tools/resetLostVideoRows.py --ids <comma-separated ids>
+node tools/downloadQmg1080p.js --limit 30 --only-ids <same ids> \
+  --dl-dir "C:/Users/Admin/Projects/portfolio_analyzer_revere_media/downloads_1080p" \
+  --cookies data/youtube_cookies.txt
+```
+
+**Disk is the binding constraint**: 253 GB free on C:, and the full 718-video set is
+~220 GiB. It fits, but only just — reclaim `data/video_scan_test/_rerun` (5.9 GiB of
+regenerable `frames/` PNGs) first if a batch runs short.
 
 ---
 
@@ -297,7 +367,7 @@ engine, or frame density.
 npm test        # node --test test/*.test.js
 ```
 
-157 tests, all passing (as of 2026-10-21).
+185 tests, all passing (as of 2026-10-21).
 
 ### Ground-truth benchmark fixtures — read before trusting a recall number
 

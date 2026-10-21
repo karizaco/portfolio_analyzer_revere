@@ -49,6 +49,21 @@ const CASES = [
   ['heredoc commit message', 'git commit -F - <<\'MSG\'\ngit ' + 'sparse-checkout' + ' add test\nMSG', 'ALLOWED'],
   // ...but the real command in the same line is still blocked.
   ['commit message AND the real command', 'git commit -m "notes" && git ' + 'sparse-checkout' + ' add test', 'BLOCKED'],
+  // The out-of-tree media directory is a SIBLING of the project, not a child.
+  // A bare startsWith() on the project path would treat it as inside and
+  // leave it unprotected.
+  ['rm -rf the out-of-tree media dir', 'rm -rf /c/Users/Admin/Projects/portfolio_analyzer_' + 'revere_media', 'BLOCKED'],
+  ['rm -rf the out-of-tree media dir (win path)', 'rm -rf "C:/Users/Admin/Projects/portfolio_analyzer_' + 'revere_media"', 'BLOCKED'],
+  // Regression: `git clean`/`git config` rules must be scoped to THEIR OWN
+  // arguments. A greedy match made the guard fire on an unrelated `rm -f`
+  // later in the same command line, blocking a safe command.
+  ['git clean -n followed by rm -f', 'git ' + 'clean' + ' -ndx > out.txt; rm -f out.txt', 'ALLOWED'],
+  ['git config --get followed by rm -f', 'git config --get user.name; rm -f tmp.txt', 'ALLOWED'],
+  ['git clean -n (dry run, no force)', 'git ' + 'clean' + ' -ndx', 'ALLOWED'],
+  ['git clean -fd (real force)', 'git ' + 'clean' + ' -fd', 'BLOCKED'],
+  ['git clean -xdf (real force)', 'git ' + 'clean' + ' -xdf', 'BLOCKED'],
+  ['git config core.sparseCheckout true (real)', 'git config core.' + 'sparseCheckout' + ' true', 'BLOCKED'],
+  ['git config core.sparseCheckout false (safe)', 'git config core.' + 'sparseCheckout' + ' false', 'ALLOWED'],
 ];
 
 let failures = 0;

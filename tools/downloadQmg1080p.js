@@ -56,7 +56,11 @@ if (![720, 1080].includes(height)) {
 const formatCode = String(height === 720 ? '136' : '137');
 
 const dbPath = path.resolve('data/video_pipeline/state.sqlite');
-const dlDir = path.resolve('data/video_pipeline/downloads_1080p');
+// Where the mp4s land. Defaults to the historic in-tree location, but the
+// 2026-10-21 loss showed the media must NOT live inside the git working tree
+// — a sparse-checkout prune took 718 untracked mp4s with it and git could
+// not restore them. Pass --dl-dir to redirect the downloads outside the repo.
+const dlDir = path.resolve(readFlag(argv, '--dl-dir') || 'data/video_pipeline/downloads_1080p');
 const checkpointPath = path.join(dlDir, '_qmg_1080p_checkpoint.json');
 
 if (!fs.existsSync(dbPath)) {
@@ -106,10 +110,39 @@ checkpoint.blocked = Array.isArray(checkpoint.blocked) ? checkpoint.blocked : []
 checkpoint.done = checkpoint.done.map(stampMachine);
 checkpoint.blocked = checkpoint.blocked.map(stampMachine);
 
+const py = process.platform === 'win32' ? 'py' : 'python3';
+
+/**
+ * Which YouTube player client to ask for.
+ *
+ * The visionOS client is the one that gets past YouTube's bot protection and
+ * exposes the full DASH ladder (format 137 = 1080p). But yt-dlp renamed it:
+ * builds from 2025 and earlier call it `visios`, newer ones call it
+ * `visionos` and print "Skipping unsupported client" for the old name. The
+ * name is probed from the installed yt-dlp rather than hardcoded, because
+ * getting it wrong silently degrades the download to whatever fallback
+ * client happens to work.
+ */
+function detectPlayerClient() {
+  const probe = spawnSync(py, ['-3', '-c',
+    'import yt_dlp.extractor.youtube._video as v; ' +
+    'ks=list(getattr(v,"INNERTUBE_CLIENTS",{}).keys()); ' +
+    'print("visionos" if "visionos" in ks else ("visios" if "visios" in ks else ""))'
+  ], { encoding: 'utf8' });
+  const found = (probe.stdout || '').trim().split(/\s+/).pop();
+  if (found === 'visionos' || found === 'visios') return found;
+  console.error(`[qmg1080] WARN: could not detect the visionOS client name (yt-dlp ${probe.stdout || ''}); ` +
+    'falling back to the default client. If downloads fail with "Video unavailable", install a newer yt-dlp.');
+  return 'visionos';
+}
+
+const playerClient = detectPlayerClient();
+
 console.log(`[qmg1080] height=${height}p format=${formatCode} limit=${limit} retry-errored=${retryErrored}`);
+console.log(`[qmg1080] output dir: ${dlDir}`);
+console.log(`[qmg1080] player client: ${playerClient}`);
 console.log(`[qmg1080] checkpoint: ${checkpoint.done.length} done, ${Object.keys(checkpoint.errored).length} errored`);
 
-const py = process.platform === 'win32' ? 'py' : 'python3';
 const script = `
 import json, sqlite3, sys
 c = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
@@ -180,7 +213,7 @@ for (const row of todo) {
     '--no-playlist',
     '-f', formatCode,
     '--js-runtimes', 'node',
-    '--extractor-args', 'youtube:player_client=visios',
+    '--extractor-args', `youtube:player_client=${playerClient}`,
     ...(cookiesFile ? ['--cookies', cookiesFile] : []),
     '-o', outTemplate,
     `https://www.youtube.com/watch?v=${videoId}`

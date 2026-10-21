@@ -34,6 +34,10 @@ const IRREPLACEABLE = [
   'downloads_1080p',
   'downloads_hires',
   'state.sqlite',
+  // The out-of-tree media directory the re-downloads land in. It is a sibling
+  // of the project, so it must be named explicitly — a bare "outside the
+  // project" rule would cover it, but naming it makes the intent obvious.
+  'portfolio_analyzer_revere_media',
 ];
 
 /**
@@ -50,6 +54,21 @@ function stripMessageBodies(command) {
     .replace(/(-m|--message|-F|--file)\s+"[^"]*"/g, '$1 ""')
     .replace(/(-m|--message)\s+'[^']*'/g, "$1 ''")
     .replace(/<<'?[A-Z_]+'?\s*(\r?\n[\s\S]*)?$/m, '');
+}
+
+/**
+ * Is this path inside the project working tree?
+ *
+ * The boundary check must be on a path *separator*, not a bare prefix. The
+ * media directory `portfolio_analyzer_revere_media` is a sibling of the
+ * project, not a child of it — a bare `startsWith` would wrongly treat it as
+ * inside the project and leave it unprotected.
+ */
+function isInsideProject(normalizedPath) {
+  const project = PROJECT_DIR.replace(/\\/g, '/').toLowerCase();
+  const p = normalizedPath.toLowerCase();
+  if (p === project) return true;
+  return p.startsWith(project.endsWith('/') ? project : project + '/');
 }
 
 /**
@@ -79,7 +98,10 @@ function findViolation(command) {
   }
 
   // 2. Do not re-enable sparse-checkout via raw config.
-  if (/\bgit\s+config\b[^\n]*core\.sparseCheckout(Cone)?\s+true/i.test(cmd)) {
+  //    Scoped to `git config`'s own arguments, so a later unrelated command on
+  //    the same line cannot trigger it by accident.
+  const configMatch = cmd.match(/\bgit\s+config\b((?:\s+-{1,2}[A-Za-z][\w-]*)*(?:\s+[^\s]+)*)/);
+  if (configMatch && /core\.sparseCheckout(Cone)?\s+true/i.test(configMatch[1])) {
     return {
       rule: 'sparse-checkout-config',
       reason:
@@ -89,7 +111,11 @@ function findViolation(command) {
   }
 
   // 3. `git clean` deletes untracked files — which is where the media lives.
-  if (/\bgit\s+clean\b[^\n]*\s-[a-z]*f/i.test(cmd)) {
+  //    The force flag must be one of `git clean`'s OWN flags. Matching it
+  //    loosely (e.g. `git clean[^\n]*-f`) makes the rule fire on an unrelated
+  //    `rm -f` later in the same command line, which blocks safe commands.
+  const cleanMatch = cmd.match(/\bgit\s+clean\b((?:\s+-{1,2}[A-Za-z][\w-]*)*)/);
+  if (cleanMatch && /(^|\s)-{1,2}[A-Za-z]*f/i.test(cleanMatch[1])) {
     return {
       rule: 'git-clean',
       reason:
@@ -137,7 +163,7 @@ function findViolation(command) {
   const tempLike = /(^|[\\\/])(tmp|temp|Temp|C:[\/\\]tmp)([\\\/]|$)/;
   for (const target of absoluteTargets) {
     const normalized = target.replace(/\\/g, '/');
-    if (normalized.toLowerCase().startsWith(PROJECT_DIR.toLowerCase().replace(/\\/g, '/'))) continue;
+    if (isInsideProject(normalized)) continue;
     if (tempLike.test(normalized)) continue;
     if (/^\/(tmp|var|opt|usr|etc)\//.test(normalized)) continue;
     return {

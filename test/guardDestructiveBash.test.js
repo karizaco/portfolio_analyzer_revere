@@ -42,8 +42,14 @@ const BLOCKED = [
   ['rmdir /s on the media dir', 'rmdir /s /q data/video_' + 'pipeline'],
   ['PowerShell Remove-Item -Recurse', 'Remove-Item -Recurse data/video_' + 'pipeline'],
   ['rm -rf .git', 'rm -rf .git'],
+  // The out-of-tree media directory is a SIBLING of the project, not a child.
+  // A bare startsWith() on the project path would treat it as inside the
+  // project and leave it unprotected.
+  ['rm -rf the out-of-tree media dir', 'rm -rf /c/Users/Admin/Projects/portfolio_analyzer_' + 'revere_media'],
+  ['rm -rf the out-of-tree media dir (win path)', 'rm -rf "C:/Users/Admin/Projects/portfolio_analyzer_' + 'revere_media"'],
   // The real command still gets blocked even when it follows a commit message.
   ['commit message AND the real command', 'git commit -m "notes" && git ' + 'sparse-checkout' + ' add test'],
+  ['git clean -xdf (real force)', 'git ' + 'clean' + ' -xdf'],
 ];
 
 const ALLOWED = [
@@ -65,6 +71,12 @@ const ALLOWED = [
   // invocation — documenting the incident has to be possible.
   ['commit message mentioning the incident', 'git commit -m "block git ' + 'sparse-checkout' + ' add test"'],
   ['commit message with rm -rf in prose', 'git commit -m "the rm -rf of .git was blocked"'],
+  // The `git clean` / `git config` rules must be scoped to their own args — a
+  // greedy match fired on an unrelated `rm -f` later in the same line.
+  ['git clean -n followed by rm -f', 'git ' + 'clean' + ' -ndx > out.txt; rm -f out.txt'],
+  ['git config --get followed by rm -f', 'git config --get user.name; rm -f tmp.txt'],
+  ['git clean -n (dry run, no force)', 'git ' + 'clean' + ' -ndx'],
+  ['git config core.sparseCheckout false (safe)', 'git config core.' + 'sparseCheckout' + ' false'],
 ];
 
 for (const [desc, command] of BLOCKED) {
