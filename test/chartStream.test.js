@@ -201,7 +201,10 @@ test('computePerceptualHashOfFractionalRegion resolves to absolute pixels agains
     }
   });
   try {
-    const fractionRegion = { xFraction: 0.70, yFraction: 0.84, wFraction: 0.28, hFraction: 0.14 };
+    // Key names are x/y/w/h even though the values are fractions — this is the
+    // shape `parseFractionalRegion()` (src/video/ocrScanArgs.js) produces and
+    // the only shape production callers pass.
+    const fractionRegion = { x: 0.70, y: 0.84, w: 0.28, h: 0.14 };
     const absolute = resolveFractionalRegion(480, 270, fractionRegion);
     assert.equal(absolute.x, Math.round(0.70 * 480));
     assert.equal(absolute.y, Math.round(0.84 * 270));
@@ -365,7 +368,30 @@ test('parseChartStreamPositionList: no_ocr branch exposes ocr_executed=false sen
 });
 
 test('parseChartStreamPositionList: no_ticker_shapes branch sets ocr_executed=true', () => {
-  // OCR runs but the text contains no ticker-shaped tokens.
+  // OCR runs but the text contains no ticker-shaped tokens at all.
+  // STRICT_TICKER_PATTERN is /^[A-Z]{1,5}(\.[A-Z]{1,2})?$/ — it needs at
+  // least one letter, so a numeric-only OCR result yields no candidates.
+  const ocr = {
+    text: '42 2023 91 100',
+    lines: ['42 2023 91 100'],
+    words: [
+      { text: '42', left: 10, width: 20, line: 1 },
+      { text: '2023', left: 40, width: 30, line: 1 },
+    ],
+  };
+  const result = parseChartStreamPositionList({ ocr });
+  assert.equal(result.parse_status, 'no_ticker_shapes');
+  assert.equal(result.confidence, 0,
+    `no_ticker_shapes must return confidence=0, got ${result.confidence}`);
+  assert.equal(result.ocr_executed, true,
+    `no_ticker_shapes must set ocr_executed=true, got ${result.ocr_executed}`);
+});
+
+test('parseChartStreamPositionList: intro text yields no_position_list with ocr_executed=true', () => {
+  // Prose OCR DOES produce ticker-shaped tokens ("NO", "TEXT", "HERE" all
+  // match STRICT_TICKER_PATTERN), but none survive the lexicon / price /
+  // column filters. That is a different outcome from "no ticker shapes":
+  // candidates existed and were rejected.
   const ocr = {
     text: 'some intro text\nno tickers here',
     lines: ['some intro text', 'no tickers here'],
@@ -377,9 +403,9 @@ test('parseChartStreamPositionList: no_ticker_shapes branch sets ocr_executed=tr
     ],
   };
   const result = parseChartStreamPositionList({ ocr });
-  assert.equal(result.parse_status, 'no_ticker_shapes');
+  assert.equal(result.parse_status, 'no_position_list');
   assert.equal(result.confidence, 0,
-    `no_ticker_shapes must return confidence=0, got ${result.confidence}`);
+    `no_position_list must return confidence=0, got ${result.confidence}`);
   assert.equal(result.ocr_executed, true,
-    `no_ticker_shapes must set ocr_executed=true, got ${result.ocr_executed}`);
+    `no_position_list must set ocr_executed=true, got ${result.ocr_executed}`);
 });

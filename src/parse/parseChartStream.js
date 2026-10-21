@@ -204,10 +204,18 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
   // Detect panel boundaries via keyword matching. If both headers found,
   // restrict ticker-word collection to lines inside [positionsLine+1, watchlistLine).
   // This excludes chart text above and the Personal WatchList panel below.
+  //
+  // The watchlist bound only applies when the watchlist header is BELOW the
+  // positions header. On some frames a stray "Watch..." token (a chat
+  // overlay, a streamer name) is picked up above the panel; using it as a
+  // lower bound then rejects every row, because every position-list row is
+  // below that line.
   const { positionsLine, watchlistLine } = findPanelBoundaries(words);
+  const watchlistBelowPositions = watchlistLine != null
+    && (positionsLine == null || watchlistLine > positionsLine);
   const lineIsInPanel = (line) => {
     if (positionsLine != null && line <= positionsLine) return false;
-    if (watchlistLine != null && line >= watchlistLine) return false;
+    if (watchlistBelowPositions && line >= watchlistLine) return false;
     return true;
   };
 
@@ -293,10 +301,15 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
   // bucket of all ticker-shape words if not enough price-aligned candidates.
   let dominantX;
   let dominantCount;
+  // Whether the column was found by price alignment (strong evidence) or by
+  // the densest-bucket fallback (weak evidence). Only the weak path is
+  // subject to the X-coordinate gate below.
+  let columnIsPriceAligned = false;
   if (priceAlignedTickers.length >= 1) {
     const xs = priceAlignedTickers.map(t => t.center).sort((a, b) => a - b);
     dominantX = xs[Math.floor(xs.length / 2)];
     dominantCount = priceAlignedTickers.length;
+    columnIsPriceAligned = true;
   } else {
     // Fallback to densest-bucket heuristic (preserves previous behavior for
     // frames where no line has a clear price-on-right pattern).
@@ -343,6 +356,14 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
   // in the original), producing massive FP bleed. Reject any column whose
   // dominantX is below the position-list threshold.
   //
+  // The gate applies to the FALLBACK path only. A column found by price
+  // alignment is already validated by a price sitting to the right of the
+  // ticker on the same row, and its x position varies between videos
+  // (measured: 20220218 → x≈710, 20220606 → x≈444, both in a 1345px EasyOCR
+  // crop). Gating those on an absolute pixel threshold silently dropped
+  // every ticker on 20220606 while the column detector was working
+  // perfectly.
+  //
   // Per-engine thresholds (px, in the OCR crop coordinate space), from
   // empirical measurements on real runs:
   // - Tesseract (750px crop): dominantX ≈ 460px for position-list tickers → 505
@@ -374,7 +395,7 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
     : isEasyOCR
       ? Math.round(EASYOCR_POSITION_LIST_MIN * (cropWidth / EASYOCR_REFERENCE_CROP_WIDTH))
       : TESSERACT_POSITION_LIST_MIN;
-  if (dominantX < X_POSITION_LIST_MIN) {
+  if (!columnIsPriceAligned && dominantX < X_POSITION_LIST_MIN) {
     return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
   }
 
@@ -529,7 +550,12 @@ function parseChartStreamPositionList({ ocr } = {}) {
   const { positionsLine, watchlistLine } = hasWordPositions
     ? findPanelBoundaries(words)
     : { positionsLine: null, watchlistLine: null };
-  const panelGateActive = positionsLine != null && watchlistLine != null;
+  // The gate needs the watchlist header to sit BELOW the positions header.
+  // A "Watch..." token picked up above the panel (chat overlay, streamer
+  // name) would otherwise act as a lower bound and reject every real row.
+  const panelGateActive = positionsLine != null
+    && watchlistLine != null
+    && watchlistLine > positionsLine;
   // Partial boundary heuristic: when only one boundary is detected, use y-coordinates
   // to estimate the other. The position list is typically 10-15 rows tall; if we
   // detect positionsLine but not watchlistLine, reject rows far below it.
@@ -791,6 +817,7 @@ function parseChartStreamPositionList({ ocr } = {}) {
       in_list_token_count: inListTickers.size
     } : null,
     confidence,
+    ocr_executed: true, // OCR ran and produced candidates; they were all rejected
     parse_status: filteredAccepted.length ? 'ok' : 'no_position_list',
     position_list: filteredAccepted.sort(),
     price_action: priceActionHint || '',
