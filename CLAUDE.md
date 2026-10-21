@@ -207,6 +207,45 @@ artifacts that should not be persisted.
 Run `node tools/prune_old_probes.js` (dry-run first, then `--execute`) periodically
 to prune old probe and scan subdirectories, keeping only the 3 most-recent per family.
 
+### Sparse checkout — the working tree is a sparse checkout
+
+`.git/info/sparse-checkout` limits which tracked files are materialized. Two entries
+are **not optional**:
+
+```
+/test/               ← without it the test suite cannot run at all
+/data/video_pipeline/ ← without it, git removes the directory tree from disk
+```
+
+**`git sparse-checkout add <path>` can delete large amounts of untracked data.** Git's
+`verify_absent()` path removes an excluded directory *recursively, including untracked
+files inside it*. On 2026-10-21, `git sparse-checkout add test` removed
+`data/video_pipeline/` — and with it ~215 GB of untracked `.mp4` files that git could
+not restore, because they were never committed.
+
+Rules:
+
+- Before running any `git sparse-checkout` command, confirm `.git/info/sparse-checkout`
+  lists `/data/video_pipeline/` and `/test/`.
+- Prefer `git sparse-checkout reapply` (materializes only; removes nothing) over
+  `add`/`set` when you only need to widen the pattern set.
+- The downloaded videos are **not** in git. `data/video_pipeline/state.sqlite` is the
+  only authoritative record of what should be on disk — it lists every video's
+  channel, upload date and expected filename. If the media is lost, regenerate the
+  inventory from it (see `tools/inventoryLostVideos.py`) rather than guessing.
+
+---
+
+## Testing
+
+```bash
+npm test        # node --test test/*.test.js
+```
+
+153 tests, 148 passing. The 5 failures are pre-existing and unrelated to the QMG chart-stream
+work: `computePerceptualHashOfFractionalRegion`, the chart-stream e2e snapshot, the
+`no_ticker_shapes` parse branch, `qmgGroundTruth`, and the whiteboard temporal-decay case.
+
 ---
 
 ## QMG OCR batch processing runbook
@@ -262,6 +301,24 @@ node tools/qmg_alt_batch_daemon.js alt
 
 **Known issue**: Windows Node.js `spawn()` throws `EFTYPE` when given a `.js` path directly as the command.
 Fix: always use `spawn('node', ['path/to/script.js', ...args])` not `spawn('path/to/script.js', [...args])`.
+
+**Daemon support module**: `tools/qmg_scan_daemon_support.js` provides the three guards every
+scan daemon must use:
+
+- `checkFreeSpace(dir)` — preflight disk check (default 20 GB free). A disk that fills mid-run
+  kills ffmpeg with `No space left on device`, which surfaces as a misleading `io_error` on
+  the affected videos rather than as a disk problem.
+- `lowCpuEnv()` — `OMP_NUM_THREADS=1`, `MKL_NUM_THREADS=1`, `KMP_DUPLICATE_LIB_OK=TRUE`.
+  Also enforced inside `src/ocr/easyocrAdapter.js`, so it applies even to ad-hoc invocations.
+- `writeResults(file, payload, { keyOf, scored, mode: 'merge' })` — never-regressing results
+  writing. A re-run whose leg failed keeps the previous success instead of overwriting it.
+  Without this, a broken run silently destroyed a good results file (this happened to
+  `data/qmg_comparison_results.json` on 2026-10-19).
+
+**Disk space is a live constraint.** `data/video_pipeline/downloads_1080p` alone is ~215 GB and
+`data/video_scan_test/_rerun` grows by ~400 MB per video. The `frames/` subdirectory of each
+run tag holds regenerable intermediate PNGs and is the cheapest thing to reclaim — but it is
+not covered by `tools/prune_old_probes.js` (which only handles `data/video_ocr_probe/`).
 
 Batch files: `data/qmg_alt_batch.json` (alt) and `data/video_scan_batch_remaining.json` (baseline).
 Results: `data/qmg_alt_batch_results.json` and `data/video_scan_batch_remaining_results.json`.
@@ -339,12 +396,27 @@ EasyOCR is a Python package; install via `pip install easyocr`. EasyOCR 1.7.2+ s
 The chart-stream pipeline uses a narrow crop targeting the position-list column in the bottom-right:
 
 ```
-{x: 0.87, y: 0.58, w: 0.13, h: 0.40}   ← 13% width × 40% height, anchored bottom-right
+CHART_STREAM_REGION_FRACTION_DEFAULT = '0.86,0.62,0.14,0.22'   ← x,y,w,h (y = TOP edge)
 ```
 
-This crop is defined as `CHART_STREAM_REGION_FRACTION_DEFAULT = '0.86,0.55,0.14,0.45'` in `src/video/ocrScanArgs.js`
-(note the format is `x,y,w,h` with y representing the TOP edge, so `y=0.55, h=0.45` anchors the crop 55% from
-the top, giving a bottom-anchored crop equivalent to `{x:0.86, y:0.55, w:0.14, h:0.45}`).
+This is defined in `src/video/ocrScanArgs.js` and is the default `phashRegionFraction` for the
+`chart_stream` prefilter profile. The crop covers x ∈ [86%, 100%] and y ∈ [62%, 84%] of the frame.
+
+**The crop region and the OCR crop width are different things.** The OCR engine receives a
+*further* crop of that region, upscaled:
+
+| Engine | Chart-stream region | Upscale | OCR input width (1080p source) |
+|---|---|---|---|
+| EasyOCR | x∈[0.86,1.0] of the frame | ×5 | round(0.14·1920)·5 = **1345px** |
+| Tesseract | 250px-wide chart region | ×3 | 250·3 = **750px** |
+
+The 1345px width is **resolution-dependent** — a 720p source gives round(0.14·1280)·5 = 895px.
+Note the same video IDs exist in BOTH `downloads_1080p` (1920×1080) and `downloads_hires`
+(1280×720), so a scan can legitimately run at either width.
+
+This matters because `parseChartStream.js` scales its `X_POSITION_LIST_MIN` threshold by the
+actual OCR crop width (see "Column detection" below). **Never hardcode the crop width** — it
+is measured from the OCR input image at runtime (`_cropWidth` on the OCR result).
 
 Defaults for a full EasyOCR scan:
 ```
@@ -356,7 +428,9 @@ node tools/scanVideoWithOcr.js \
   --ocr-engine easyocr
 ```
 
-Set `KMP_DUPLICATE_LIB_OK=TRUE` when running EasyOCR to suppress Intel OpenMP duplicate-symbol warnings.
+`OMP_NUM_THREADS=1`, `MKL_NUM_THREADS=1` and `KMP_DUPLICATE_LIB_OK=TRUE` are set
+automatically by `src/ocr/easyocrAdapter.js` at the Python spawn — the single choke point for
+every EasyOCR invocation. Do not bypass it.
 
 ### Why EasyOCR beats Tesseract for QMG position lists
 
@@ -389,12 +463,40 @@ Set `KMP_DUPLICATE_LIB_OK=TRUE` when running EasyOCR to suppress Intel OpenMP du
 ### Pipeline stages for chart-stream
 
 ```text
-ffmpeg -ss <ts> -i <video>  →  ffmpeg crop=in_w*0.14:in_h*0.45:in_w*0.86:in_h*0.55,scale=1345:-1
+ffmpeg -ss <ts> -i <video>  →  sharp: extract crop region, upscale ×5, PNG (no grayscale/negate for EasyOCR)
                              →  EasyOCR (Python subprocess, ~60s/frame)
                              →  parseChartStreamPositionList (lexicon + price-nearby + column filter)
                              →  clusterRawOcrTokens (raw OCR token clustering across frames)
                              →  pickTopDistinctCandidates (dedup by phash + frame gap)
 ```
+
+### Column detection (`X_POSITION_LIST_MIN`)
+
+`identifyPositionListColumn` in `src/parse/parseChartStream.js` locates the position-list column
+and rejects chart-area columns. Its threshold is an absolute x-coordinate that must be
+**scaled by the actual OCR crop width**:
+
+```
+X_POSITION_LIST_MIN = round(1150 * (cropWidth / 1345))
+```
+
+The 1150 reference was measured in the **1345px EasyOCR crop** (position-list column at
+x≈1218; chart-area column at x≈490-510). `cropWidth` is read from `_cropWidth` on the OCR
+result, which `src/ocr/ocrImage.js` measures from the OCR input image at runtime.
+
+Two traps this scaling exists to avoid:
+
+- **Scaling from the wrong reference.** Scaling from 750 (the Tesseract crop width) yields
+  2062 for a 1345px image — larger than the image, so the gate rejects *every* column and
+  the column filter silently contributes nothing. This regression shipped in commit `0c6f393`.
+- **Applying the EasyOCR threshold to the Tesseract crop.** The old fixed 1150 was larger
+  than a 750px image, which is why the Tesseract column filter was reported as "completely
+  broken". Scaling from 1345 gives `round(1150 * 750/1345) = 641`, which is correct for
+  Tesseract too (its position list sits at x≈645).
+
+Note the column filter is **diagnostic for EasyOCR**: the accept path uses lexicon +
+price-nearby, and the column result only gates non-lexicon, non-price-nearby tickers
+(see the `inListColumn` branch in `parseChartStreamPositionList`).
 
 ### Diagnostic fields exposed
 

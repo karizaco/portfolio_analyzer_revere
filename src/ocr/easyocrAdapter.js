@@ -68,12 +68,17 @@ function runEasyOcr(imagePath, options = {}) {
       return;
     }
     const child = spawn(python, [scriptPath, imagePath], {
+      stdio: ['ignore', 'pipe', 'pipe'],
+      // Low-CPU env is MANDATORY (see CLAUDE.md): EasyOCR's PyTorch/OpenMP
+      // backend otherwise spawns one thread per core per process and
+      // saturates the whole machine. Enforced here — at the single choke
+      // point for every EasyOCR call — so no caller can forget it.
       env: {
         ...process.env,
-        KMP_DUPLICATE_LIB_OK: process.env.KMP_DUPLICATE_LIB_OK || 'TRUE',
+        OMP_NUM_THREADS: '1',
+        MKL_NUM_THREADS: '1',
+        KMP_DUPLICATE_LIB_OK: 'TRUE',
       },
-      stdio: ['ignore', 'pipe', 'pipe'],
-      env: { ...process.env, KMP_DUPLICATE_LIB_OK: 'TRUE' },
     });
     let stdout = '';
     let stderr = '';
@@ -111,7 +116,15 @@ function runEasyOcr(imagePath, options = {}) {
 // chart-stream parser expects. Currently identical to EasyOCR's output
 // (already has text/lines/words), but we explicitly normalize the field
 // names and compute an overall confidence from per-word confidences.
-function adaptToParserSchema(easyocrResult) {
+//
+// `options.cropWidth` MUST be the pixel width of the image EasyOCR actually
+// read. parseChartStream.js scales its X_POSITION_LIST_MIN threshold by
+// (cropWidth / 750) to locate the position-list column, so a wrong width
+// silently rejects every ticker (too large) or accepts chart-area bleed
+// (too small). It depends on the source video resolution AND the overlay
+// upscale factor — e.g. 1920x1080 @ scale 5 -> 1345px, 1280x720 @ scale 5
+// -> 895px — so it must be measured, never hardcoded.
+function adaptToParserSchema(easyocrResult, options = {}) {
   const words = Array.isArray(easyocrResult.words) ? easyocrResult.words : [];
   const confs = words.map((w) => Number(w.conf || 0)).filter((c) => c > 0);
   const confidence = confs.length
@@ -133,7 +146,9 @@ function adaptToParserSchema(easyocrResult) {
     confidence,
     _engine: 'easyocr',
     // cropWidth used by identifyPositionListColumn in parseChartStream.js to scale
-    // X_POSITION_LIST_MIN. EasyOCR crops to 1340px wide; Tesseract 3x-crop is 750px.
-    _cropWidth: 1340,
+    // X_POSITION_LIST_MIN. Measured from the OCR input image by the caller.
+    _cropWidth: Number.isFinite(options.cropWidth) ? options.cropWidth : null,
   };
 }
+
+module.exports = { runEasyOcr, adaptToParserSchema, pickPython, resolveWrapperPath };

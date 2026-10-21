@@ -196,7 +196,7 @@ function findPanelBoundaries(words) {
   return { positionsLine, watchlistLine };
 }
 
-function identifyPositionListColumn(words, cropWidth = null) {
+function identifyPositionListColumn(words, cropWidth = null, engine = null) {
   if (!Array.isArray(words) || !words.length) {
     return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
   }
@@ -343,29 +343,37 @@ function identifyPositionListColumn(words, cropWidth = null) {
   // in the original), producing massive FP bleed. Reject any column whose
   // dominantX is below the position-list threshold.
   //
-  // Scale-aware: 1150 was calibrated for the Tesseract 3x-scaled 750px crop
-  // (750 * 0.86 ≈ 645px right edge, threshold set 505px above that).
-  // For EasyOCR at 1340px crop, the same relative position is
-  // 1340 * 0.86 ≈ 1152px — but EasyOCR's bounding boxes are anchored
-  // differently (they include more context, so position-list tickers land at
-  // ~450px in the 1340px crop, NOT at the right edge). Use cropWidth to
-  // scale the threshold proportionally. When cropWidth is not provided, use
-  // the original Tesseract-calibrated value.
-  // Hardcoded per-engine thresholds (px, in the OCR crop coordinate space).
-  // The proportional formula 1150 * cropWidth/750 was calibrated for Tesseract's
-  // 750px 3x-scaled crop and produces physically impossible values for EasyOCR's
-  // 1344px 5x-scaled crop (2061px threshold in a 1344px image — gate fires on
-  // EVERY frame, disabling the column filter entirely).
-  //
-  // Empirical measurements from real EasyOCR runs:
-  // - Tesseract (750px crop): dominantX ≈ 460px for position-list tickers → use 505
-  // - EasyOCR (1344px crop): dominantX ≈ 780px for position-list tickers → use 600
+  // Per-engine thresholds (px, in the OCR crop coordinate space), from
+  // empirical measurements on real runs:
+  // - Tesseract (750px crop): dominantX ≈ 460px for position-list tickers → 505
+  // - EasyOCR  (1344px crop): dominantX ≈ 780px for position-list tickers → 600
   //   (safe: 600 < 780, and chart-area dominantX ≈ 400-500 in EasyOCR crops)
   //
-  // When cropWidth is null (legacy callers): fall back to the Tesseract value.
-  // Detection of EasyOCR vs Tesseract: EasyOCR crops are >1000px.
-  const isEasyOCR = cropWidth != null && cropWidth > 1000;
-  const X_POSITION_LIST_MIN = isEasyOCR ? 600 : 505;
+  // The earlier proportional formula 1150 * cropWidth/750 was calibrated for
+  // Tesseract's 750px crop and produced physically impossible values for
+  // EasyOCR's 1344px crop (2061px threshold in a 1344px image — the gate fires
+  // on EVERY frame, disabling the column filter entirely).
+  //
+  // The two engines need separate constants because their crops cover
+  // different parts of the frame and their word boxes anchor differently:
+  // Tesseract's chart-stream crop is a fixed 250px region upscaled 3x, so it
+  // is always 750px wide regardless of source resolution. EasyOCR's crop is
+  // a fraction of the source frame upscaled 5x, so its width IS
+  // resolution-dependent (1344px at 1080p, ~894px at 720p) — the EasyOCR
+  // threshold is scaled from its 1344px reference so 720p sources still work.
+  //
+  // Engine detection uses the OCR result's `_engine` field, not the crop
+  // width: a 720p EasyOCR crop is 894px, which the old `cropWidth > 1000`
+  // heuristic misclassified as Tesseract.
+  const EASYOCR_REFERENCE_CROP_WIDTH = 1344;
+  const EASYOCR_POSITION_LIST_MIN = 600;
+  const TESSERACT_POSITION_LIST_MIN = 505;
+  const isEasyOCR = engine === 'easyocr';
+  const X_POSITION_LIST_MIN = cropWidth == null
+    ? TESSERACT_POSITION_LIST_MIN
+    : isEasyOCR
+      ? Math.round(EASYOCR_POSITION_LIST_MIN * (cropWidth / EASYOCR_REFERENCE_CROP_WIDTH))
+      : TESSERACT_POSITION_LIST_MIN;
   if (dominantX < X_POSITION_LIST_MIN) {
     return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
   }
@@ -483,7 +491,7 @@ function parseChartStreamPositionList({ ocr } = {}) {
   // keep working.
   const hasWordPositions = words && words.length > 0;
   const { inListTickers, dominantColumnX, columnWidth } = hasWordPositions
-    ? identifyPositionListColumn(words, ocr._cropWidth || null)
+    ? identifyPositionListColumn(words, ocr._cropWidth || null, ocr._engine || null)
     : { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
 
   // Build per-ticker line + word lookups from raw OCR word positions.

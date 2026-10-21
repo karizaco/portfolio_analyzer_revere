@@ -5,6 +5,7 @@
   "description": "Extract portfolio snapshots from Revere screenshots into CSV files.",
   "type": "commonjs",
   "scripts": {
+    "test": "node --test test/*.test.js",
     "discover": "node src/index.js discover",
     "extract": "node src/index.js extract",
     "extract:sample": "node src/index.js extract --limit 5",
