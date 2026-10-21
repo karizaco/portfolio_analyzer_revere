@@ -1,0 +1,473 @@
+{
+  "baseline": [
+    {
+      "videoId": "Cd_IXyHwO3o",
+      "date": "20220218",
+      "status": "ok",
+      "elapsed": 184,
+      "label": "BASE"
+    },
+    {
+      "videoId": "X1Rp33_-R9E",
+      "date": "20220222",
+      "status": "ok",
+      "elapsed": 175,
+      "label": "BASE"
+    },
+    {
+      "videoId": "BYPiofqBhvQ",
+      "date": "20220301",
+      "status": "ok",
+      "elapsed": 283,
+      "label": "BASE"
+    },
+    {
+      "videoId": "BAlC_cRvESM",
+      "date": "20220302",
+      "status": "ok",
+      "elapsed": 283,
+      "label": "BASE"
+    },
+    {
+      "videoId": "CRvSLzJs6i8",
+      "date": "20220318",
+      "status": "ok",
+      "elapsed": 288,
+      "label": "BASE"
+    },
+    {
+      "videoId": "Fsh39kp9XPM",
+      "date": "20220321",
+      "status": "ok",
+      "elapsed": 310,
+      "label": "BASE"
+    },
+    {
+      "videoId": "B2PcGc--FnM",
+      "date": "20220330",
+      "status": "ok",
+      "elapsed": 303,
+      "label": "BASE"
+    },
+    {
+      "videoId": "CkJEeFvlDzc",
+      "date": "20220331",
+      "status": "ok",
+      "elapsed": 280,
+      "label": "BASE"
+    },
+    {
+      "videoId": "fXN3uTL01f4",
+      "date": "20220405",
+      "status": "error",
+      "label": "BASE",
+      "error": "exit 1",
+      "stderr": "\r\n[out#0/image2 @ 00000227d07926c0] Task finished with error code: -28 (No space left on device)\r\n[out#0/image2 @ 00000227d07926c0] Terminating thread with return code -28 (No space left on device)\r\n\n"
+    },
+    {
+      "videoId": "TeWiXhJTeyI",
+      "date": "20220406",
+      "status": "error",
+      "label": "BASE",
+      "error": "exit 1",
+      "stderr": "\r\n[out#0/image2 @ 000001b1af70e280] Task finished with error code: -28 (No space left on device)\r\n[out#0/image2 @ 000001b1af70e280] Terminating thread with return code -28 (No space left on device)\r\n\n"
+    }
+  ],
+  "alt": [
+    {
+      "videoId": "Cd_IXyHwO3o",
+      "date": "20220218",
+      "status": "timeout",
+      "label": "ALT2"
+    },
+    {
+      "videoId": "X1Rp33_-R9E",
+      "date": "20220222",
+      "status": "timeout",
+      "label": "ALT2"
+    },
+    {
+      "videoId": "BYPiofqBhvQ",
+      "date": "20220301",
+      "status": "ok",
+      "elapsed": 204,
+      "label": "ALT2"
+    },
+    {
+      "videoId": "BAlC_cRvESM",
+      "date": "20220302",
+      "status": "ok",
+      "elapsed": 203,
+      "label": "ALT2"
+    },
+    {
+      "videoId": "CRvSLzJs6i8",
+      "date": "20220318",
+      "status": "error",
+      "label": "ALT2",
+      "error": "exit 1",
+      "stderr": "zer_revere\\data\\video_scan_test\\_rerun\\qmg-compare-alt2\\ocr_probe\\logs\\20220318_20220318_crvslzjs6i8_0791e38b_snapshot.json\nAll OCR frame evaluations failed. First error: runEasyOcr is not a function\n"
+    },
+    {
+      "videoId": "Fsh39kp9XPM",
+      "date": "20220321",
+      "status": "error",
+      "label": "ALT2",
+      "error": "exit 1",
+      "stderr": "zer_revere\\data\\video_scan_test\\_rerun\\qmg-compare-alt2\\ocr_probe\\logs\\20220321_20220321_fsh39kp9xpm_e8257bab_snapshot.json\nAll OCR frame evaluations failed. First error: runEasyOcr is not a function\n"
+    },
+    {
+      "videoId": "B2PcGc--FnM",
+      "date": "20220330",
+      "status": "error",
+      "label": "ALT2",
+      "error": "exit 1",
+      "stderr": "zer_revere\\data\\video_scan_test\\_rerun\\qmg-compare-alt2\\ocr_probe\\logs\\20220330_20220330_b2pcgc--fnm_c72cae58_snapshot.json\nAll OCR frame evaluations failed. First error: runEasyOcr is not a function\n"
+    },
+    {
+      "videoId": "CkJEeFvlDzc",
+      "date": "20220331",
+      "status": "error",
+      "label": "ALT2",
+      "error": "exit 1",
+      "stderr": "zer_revere\\data\\video_scan_test\\_rerun\\qmg-compare-alt2\\ocr_probe\\logs\\20220331_20220331_ckjeefvldzc_96a6eb78_snapshot.json\nAll OCR frame evaluations failed. First error: runEasyOcr is not a function\n"
+    },
+    {
+      "videoId": "fXN3uTL01f4",
+      "date": "20220405",
+      "status": "error",
+      "label": "ALT2",
+      "error": "exit 1",
+      "stderr": "zer_revere\\data\\video_scan_test\\_rerun\\qmg-compare-alt2\\ocr_probe\\logs\\20220405_20220405_fxn3utl01f4_773d63c7_snapshot.json\nAll OCR frame evaluations failed. First error: runEasyOcr is not a function\n"
+    },
+    {
+      "videoId": "TeWiXhJTeyI",
+      "date": "20220406",
+      "status": "error",
+      "label": "ALT2",
+      "error": "exit 1",
+      "stderr": "zer_revere\\data\\video_scan_test\\_rerun\\qmg-compare-alt2\\ocr_probe\\logs\\20220406_20220406_tewixhjteyi_e1cdd817_snapshot.json\nAll OCR frame evaluations failed. First error: runEasyOcr is not a function\n"
+    }
+  ],
+  "comparison": [
+    {
+      "date": "20220218",
+      "videoId": "Cd_IXyHwO3o",
+      "baseStatus": "ok",
+      "altStatus": "timeout",
+      "baseList": [
+        "COPX",
+        "DVN",
+        "DWAC",
+        "FX",
+        "MOS",
+        "NRGU",
+        "ON",
+        "TSUA",
+        "UVXY"
+      ],
+      "altList": [],
+      "overlap": [],
+      "onlyBase": [
+        "COPX",
+        "DVN",
+        "DWAC",
+        "FX",
+        "MOS",
+        "NRGU",
+        "ON",
+        "TSUA",
+        "UVXY"
+      ],
+      "onlyAlt": [],
+      "baseCount": 9,
+      "altCount": 0
+    },
+    {
+      "date": "20220222",
+      "videoId": "X1Rp33_-R9E",
+      "baseStatus": "ok",
+      "altStatus": "timeout",
+      "baseList": [
+        "COPX",
+        "DVN",
+        "EAGAL",
+        "J",
+        "MOS",
+        "NRGU",
+        "ONA",
+        "OU",
+        "TSLA"
+      ],
+      "altList": [],
+      "overlap": [],
+      "onlyBase": [
+        "COPX",
+        "DVN",
+        "EAGAL",
+        "J",
+        "MOS",
+        "NRGU",
+        "ONA",
+        "OU",
+        "TSLA"
+      ],
+      "onlyAlt": [],
+      "baseCount": 9,
+      "altCount": 0
+    },
+    {
+      "date": "20220301",
+      "videoId": "BYPiofqBhvQ",
+      "baseStatus": "ok",
+      "altStatus": "ok",
+      "baseList": [
+        "AA",
+        "COPX",
+        "ERX",
+        "FCX",
+        "GUSH",
+        "MP",
+        "NUGT",
+        "X"
+      ],
+      "altList": [
+        "AA",
+        "COPX",
+        "ERX",
+        "FCX",
+        "FX",
+        "GUSH",
+        "MP",
+        "NUGT",
+        "RSX",
+        "X"
+      ],
+      "overlap": [
+        "AA",
+        "COPX",
+        "ERX",
+        "FCX",
+        "GUSH",
+        "MP",
+        "NUGT",
+        "X"
+      ],
+      "onlyBase": [],
+      "onlyAlt": [
+        "FX",
+        "RSX"
+      ],
+      "baseCount": 8,
+      "altCount": 10
+    },
+    {
+      "date": "20220302",
+      "videoId": "BAlC_cRvESM",
+      "baseStatus": "ok",
+      "altStatus": "ok",
+      "baseList": [
+        "COPY",
+        "ERX",
+        "FCX",
+        "GUSH",
+        "NUGT",
+        "RSX",
+        "TION",
+        "U",
+        "X"
+      ],
+      "altList": [
+        "COPX",
+        "COPY",
+        "ERX",
+        "FCX",
+        "GUSH",
+        "NUGT",
+        "RSX",
+        "TION",
+        "U",
+        "X"
+      ],
+      "overlap": [
+        "COPY",
+        "ERX",
+        "FCX",
+        "GUSH",
+        "NUGT",
+        "RSX",
+        "TION",
+        "U",
+        "X"
+      ],
+      "onlyBase": [],
+      "onlyAlt": [
+        "COPX"
+      ],
+      "baseCount": 9,
+      "altCount": 10
+    },
+    {
+      "date": "20220318",
+      "videoId": "CRvSLzJs6i8",
+      "baseStatus": "ok",
+      "altStatus": "error",
+      "baseList": [
+        "COPX",
+        "DON",
+        "KWEB",
+        "NUGT",
+        "ORA",
+        "REGN",
+        "URA",
+        "URNM",
+        "X"
+      ],
+      "altList": [],
+      "overlap": [],
+      "onlyBase": [
+        "COPX",
+        "DON",
+        "KWEB",
+        "NUGT",
+        "ORA",
+        "REGN",
+        "URA",
+        "URNM",
+        "X"
+      ],
+      "onlyAlt": [],
+      "baseCount": 9,
+      "altCount": 0
+    },
+    {
+      "date": "20220321",
+      "videoId": "Fsh39kp9XPM",
+      "baseStatus": "ok",
+      "altStatus": "error",
+      "baseList": [
+        "COPX",
+        "FX",
+        "JNUG",
+        "KWEB",
+        "NEM",
+        "O",
+        "REGN",
+        "URA",
+        "URNM",
+        "WEAT"
+      ],
+      "altList": [],
+      "overlap": [],
+      "onlyBase": [
+        "COPX",
+        "FX",
+        "JNUG",
+        "KWEB",
+        "NEM",
+        "O",
+        "REGN",
+        "URA",
+        "URNM",
+        "WEAT"
+      ],
+      "onlyAlt": [],
+      "baseCount": 10,
+      "altCount": 0
+    },
+    {
+      "date": "20220330",
+      "videoId": "B2PcGc--FnM",
+      "baseStatus": "ok",
+      "altStatus": "error",
+      "baseList": [
+        "COPX",
+        "FCX",
+        "KWEB",
+        "LABU",
+        "N",
+        "NFLX",
+        "NUGT",
+        "O",
+        "REGN",
+        "SYM",
+        "X"
+      ],
+      "altList": [],
+      "overlap": [],
+      "onlyBase": [
+        "COPX",
+        "FCX",
+        "KWEB",
+        "LABU",
+        "N",
+        "NFLX",
+        "NUGT",
+        "O",
+        "REGN",
+        "SYM",
+        "X"
+      ],
+      "onlyAlt": [],
+      "baseCount": 11,
+      "altCount": 0
+    },
+    {
+      "date": "20220331",
+      "videoId": "CkJEeFvlDzc",
+      "baseStatus": "ok",
+      "altStatus": "error",
+      "baseList": [
+        "ANT",
+        "BOX",
+        "COPX",
+        "FCX",
+        "NEM",
+        "ONE",
+        "REGN",
+        "SPXL"
+      ],
+      "altList": [],
+      "overlap": [],
+      "onlyBase": [
+        "ANT",
+        "BOX",
+        "COPX",
+        "FCX",
+        "NEM",
+        "ONE",
+        "REGN",
+        "SPXL"
+      ],
+      "onlyAlt": [],
+      "baseCount": 8,
+      "altCount": 0
+    },
+    {
+      "date": "20220405",
+      "videoId": "fXN3uTL01f4",
+      "baseStatus": "error",
+      "altStatus": "error",
+      "baseList": [],
+      "altList": [],
+      "overlap": [],
+      "onlyBase": [],
+      "onlyAlt": [],
+      "baseCount": 0,
+      "altCount": 0
+    },
+    {
+      "date": "20220406",
+      "videoId": "TeWiXhJTeyI",
+      "baseStatus": "error",
+      "altStatus": "error",
+      "baseList": [],
+      "altList": [],
+      "overlap": [],
+      "onlyBase": [],
+      "onlyAlt": [],
+      "baseCount": 0,
+      "altCount": 0
+    }
+  ]
+}

@@ -273,6 +273,12 @@ async function runProfile(worker, filePath, profileName, preprocessOptions) {
   // see no change.
   const result = await worker.recognize(imageBuffer, {}, { tsv: true });
   const text = result.data.text || '';
+  // Pixel width of the image the OCR actually read. parseChartStream.js scales
+  // its X_POSITION_LIST_MIN threshold by this, so it must be measured, not
+  // assumed — the chart-stream crop width depends on source resolution and
+  // the upscale factor (250px x3 = 750 for Tesseract, 269px x5 = 1345 for
+  // EasyOCR at 1080p).
+  const meta = await sharp(imageBuffer).metadata();
   return {
     confidence: Number(result.data.confidence || 0),
     keywords: findKeywords(text),
@@ -280,7 +286,9 @@ async function runProfile(worker, filePath, profileName, preprocessOptions) {
     profileName,
     score: scoreOcrResult(text),
     text,
-    words: parseTsvWords(result.data.tsv)
+    words: parseTsvWords(result.data.tsv),
+    _cropWidth: meta.width,
+    _engine: 'tesseract'
   };
 }
 
@@ -359,8 +367,12 @@ async function runEasyOcrFromBuffer(buffer, tempPrefix, options = {}) {
   );
   await fs.writeFile(tempPath, buffer);
   try {
+    // Measure the width of the image EasyOCR actually sees. parseChartStream.js
+    // scales X_POSITION_LIST_MIN by (cropWidth / 750), so this must reflect the
+    // real OCR input — it varies with source resolution and overlay upscale.
+    const meta = await sharp(buffer).metadata();
     const easyResult = await runEasyOcr(tempPath, options);
-    return adaptToParserSchema(easyResult);
+    return adaptToParserSchema(easyResult, { cropWidth: meta.width });
   } finally {
     try { await fs.unlink(tempPath); } catch (_) { /* ignore cleanup failure */ }
   }

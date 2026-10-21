@@ -6,6 +6,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
+const { checkFreeSpace, lowCpuEnv, writeResults } = require('./qmg_scan_daemon_support');
 
 const ROOT = path.resolve(__dirname, '..');
 const BATCH_FILE = path.join(ROOT, 'data', 'qmg_comparison_batch.json');
@@ -70,7 +71,7 @@ async function runScan(video, flags, label) {
   const start = Date.now();
 
   return new Promise((resolve) => {
-    const child = spawn('node', [path.join(ROOT, 'tools', 'scanVideoWithOcr.js'), '--video', file, '--date', date, ...flags], { stdio: ['ignore', 'pipe', 'pipe'] });
+    const child = spawn('node', [path.join(ROOT, 'tools', 'scanVideoWithOcr.js'), '--video', file, '--date', date, ...flags], { stdio: ['ignore', 'pipe', 'pipe'], env: lowCpuEnv() });
     let stderr = '';
     child.stderr.on('data', (d) => { stderr += d.toString(); });
     const timer = setTimeout(() => {
@@ -110,20 +111,43 @@ async function main() {
   console.log(`=== QMG Comparison: ${total} videos ===\n`);
   const results = { baseline: [], alt: [], comparison: [] };
 
+  // Resume support: a leg that already succeeded for a video is not re-run.
+  // (The 2026-10-19 run produced 10/10 baseline logs before dying on the alt
+  // leg, and re-running the baseline wasted ~45 minutes of OCR.)
+  const prior = fs.existsSync(RESULTS_FILE)
+    ? (() => { try { return JSON.parse(fs.readFileSync(RESULTS_FILE, 'utf8')); } catch (_) { return null; } })()
+    : null;
+  const priorBaseline = new Map((prior?.baseline || []).filter(r => r.status === 'ok').map(r => [r.videoId, r]));
+  const priorAlt = new Map((prior?.alt || []).filter(r => r.status === 'ok').map(r => [r.videoId, r]));
+
+  // Fail loudly before burning an hour of OCR on a disk that cannot hold
+  // the extracted frames.
+  checkFreeSpace(path.join(ROOT, 'data/video_scan_test/_rerun'));
+
   // Run baseline (2 at a time — low CPU)
   console.log('\n--- BASELINE (maxCaptures=1) ---');
   for (let i = 0; i < videos.length; i += 2) {
     const chunk = videos.slice(i, i + 2);
-    const r = await Promise.all(chunk.map(v => runScan(v, BASELINE_FLAGS, 'BASE')));
+    const r = await Promise.all(chunk.map(v => {
+      const cached = priorBaseline.get(v.video_id);
+      if (cached) { console.log(`[BASE] SKIP ${v.date} ${v.video_id} (cached)`); return cached; }
+      return runScan(v, BASELINE_FLAGS, 'BASE');
+    }));
     results.baseline.push(...r);
+    persist(results);
   }
 
   // Run alt (2 at a time)
   console.log('\n--- ALT (maxCaptures=2) ---');
   for (let i = 0; i < videos.length; i += 2) {
     const chunk = videos.slice(i, i + 2);
-    const r = await Promise.all(chunk.map(v => runScan(v, ALT_FLAGS, 'ALT2')));
+    const r = await Promise.all(chunk.map(v => {
+      const cached = priorAlt.get(v.video_id);
+      if (cached) { console.log(`[ALT2] SKIP ${v.date} ${v.video_id} (cached)`); return cached; }
+      return runScan(v, ALT_FLAGS, 'ALT2');
+    }));
     results.alt.push(...r);
+    persist(results);
   }
 
   // Compare
@@ -136,8 +160,6 @@ async function main() {
 
     let baseList = [], altList = [];
     if (baseOk) {
-      const logFile = `data/video_scan_test/_rerun/qmg-compare-base/ocr_probe/logs/${video.date}_${video.date}_${video.video_id.toLowerCase()}_*_snapshot.json`;
-      // find the log file
       const logs = fs.readdirSync('data/video_scan_test/_rerun/qmg-compare-base/ocr_probe/logs/').filter(f => f.startsWith(video.date + '_'));
       if (logs.length > 0) baseList = await getMergedList(`data/video_scan_test/_rerun/qmg-compare-base/ocr_probe/logs/${logs[0]}`);
     }
@@ -169,9 +191,24 @@ async function main() {
     if (onlyBase.length > 0) console.log(`  BASE-only: ${onlyBase.join(', ')}`);
   }
 
-  fs.writeFileSync(RESULTS_FILE, JSON.stringify(results, null, 2));
+  persist(results);
   console.log(`\nResults: ${RESULTS_FILE}`);
   process.exit(0);
+}
+
+/**
+ * Persist without ever regressing: writeResults keeps the best-known row
+ * per video, so a re-run whose leg failed cannot overwrite a good result
+ * from a previous run. (This is what clobbered the curated comparison
+ * results file on 2026-10-19.)
+ */
+function persist(results) {
+  const score = (r) => (r && r.status === 'ok' ? 2 : r && r.status ? 1 : 0);
+  writeResults(RESULTS_FILE, results, {
+    keyOf: (r) => `${r.date}_${r.videoId}_${r.label || ''}`,
+    scored: score,
+    mode: 'merge'
+  });
 }
 
 main().catch(e => { console.error(e); process.exit(1); });

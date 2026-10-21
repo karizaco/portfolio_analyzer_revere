@@ -6,6 +6,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
+const { checkFreeSpace, lowCpuEnv } = require('./qmg_scan_daemon_support');
 
 const ROOT = path.resolve(__dirname, '..');
 const BATCH = process.argv[2] || 'alt';
@@ -94,7 +95,7 @@ async function runScan(video) {
       '--video', file,
       '--date', date,
       ...SCAN_FLAGS,
-    ], { stdio: ['ignore', 'pipe', 'pipe'] });
+    ], { stdio: ['ignore', 'pipe', 'pipe'], env: lowCpuEnv() });
 
     let stderr = '';
     child.stderr.on('data', (d) => { stderr += d.toString(); });
@@ -128,6 +129,11 @@ async function runScan(video) {
 async function main() {
   const PARALLEL = 2; // low-CPU mode: max 2 concurrent scans
   let idx = 0;
+
+  // Fail loudly before burning an hour of OCR on a disk that cannot hold
+  // the extracted frames. A mid-run disk-full surfaces as a misleading
+  // ffmpeg "No space left on device" io_error on the affected videos.
+  checkFreeSpace(path.join(ROOT, 'data/video_scan_test/_rerun'));
 
   while (idx < remaining.length) {
     const chunk = remaining.slice(idx, idx + PARALLEL);
