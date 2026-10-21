@@ -224,3 +224,36 @@ test('createProbeKey sanitizes special characters and falls back when empty', ()
   const fallback = createProbeKey('/path/!!!@@@', '20250908', 'whiteboard');
   assert.match(fallback, /^20250908_video_[0-9a-f]{8}_whiteboard$/);
 });
+
+test('chart_stream profile lowers the prefilter threshold and captures 2 frames by default', () => {
+  const options = parseArgs([
+    '--video', '/tmp/a.mp4',
+    '--prefilter-profile', 'chart_stream'
+  ], { defaultOutputRoot: TEST_OUTPUT_ROOT });
+
+  assert.equal(options.prefilterThreshold, 8);
+  assert.equal(options.maxCapturesPerVideo, 2);
+  assert.equal(options.chartStreamParser, true);
+});
+
+test('chart_stream profile honours explicit --prefilter-threshold and --max-captures', () => {
+  const options = parseArgs([
+    '--video', '/tmp/a.mp4',
+    '--prefilter-profile', 'chart_stream',
+    '--prefilter-threshold', '12',
+    '--max-captures', '1'
+  ], { defaultOutputRoot: TEST_OUTPUT_ROOT });
+
+  assert.equal(options.prefilterThreshold, 12);
+  assert.equal(options.maxCapturesPerVideo, 1);
+});
+
+test('non chart_stream profiles keep the global defaults', () => {
+  const options = parseArgs([
+    '--video', '/tmp/a.mp4',
+    '--prefilter-profile', 'whiteboard'
+  ], { defaultOutputRoot: TEST_OUTPUT_ROOT });
+
+  assert.equal(options.prefilterThreshold, 14);
+  assert.equal(options.maxCapturesPerVideo, 3);
+});
