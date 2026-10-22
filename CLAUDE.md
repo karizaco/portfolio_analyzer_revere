@@ -324,6 +324,24 @@ builds. `--js-runtimes node` is still required.
 (channel, upload date, expected filename per video). If the media is missing, regenerate
 the inventory from it with `tools/inventoryLostVideos.py` rather than guessing.
 
+### The 39 known 720p-only videos get their own directory
+
+38 of the 502 still-missing qullamaggie videos are on the hardcoded 720p-only list (all
+but `0Ew3DImAZlw`, which was done first). Asking for format 137 on those fails with
+`Requested format is not available` — that is the *genuine* no-1080p case, not
+throttling. Download them at 720p (format 136) into a separate out-of-tree directory so
+they are not mistaken for 1080p media:
+
+```bash
+node tools/downloadQmg1080p.js --limit 40 --height 720 --only-ids <the 39 ids> \
+  --dl-dir "C:/Users/Admin/Projects/portfolio_analyzer_revere_media/downloads_720p" \
+  --cookies data/youtube_cookies.txt
+```
+
+That lands 1280×720 files, which the OCR pipeline handles correctly — `parseChartStream.js`
+scales `X_POSITION_LIST_MIN` off the measured crop width, so a 720p source is fine
+(895px crop instead of 1345px).
+
 ### What survived the 2026-10-21 loss — do not re-derive this
 
 Measured 2026-10-21 with `tools/snapshotCensus.js` and `tools/snapshotCoverage.js`:
@@ -367,7 +385,7 @@ regenerable `frames/` PNGs) first if a batch runs short.
 npm test        # node --test test/*.test.js
 ```
 
-185 tests, all passing (as of 2026-10-21).
+192 tests, all passing (as of 2026-10-21).
 
 ### Ground-truth benchmark fixtures — read before trusting a recall number
 
