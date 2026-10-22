@@ -33,6 +33,9 @@ const limit = Number(readFlag(argv, '--limit')) || 30;
 const height = Number(readFlag(argv, '--height')) || 1080;
 const retryErrored = argv.includes('--retry-errored');
 const cookiesFile = readFlag(argv, '--cookies') || null;
+// Which channel to pull from. The 2026-10-21 re-download covers qullamaggie
+// at 1080p and revere at 720p (revere only ever had 720p uploads here).
+const channel = readFlag(argv, '--channel') || 'qullamaggie';
 // Optional explicit allow-list of video_ids (used by the parallel download
 // wrapper to fan out N workers across disjoint slices of the catalog).
 // When set, the candidate query filters to this list (case-insensitive).
@@ -147,12 +150,21 @@ const script = `
 import json, sqlite3, sys
 c = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
 c.row_factory = sqlite3.Row
-rows = c.execute(
-    "SELECT video_id, upload_date, title, download_path FROM videos "
-    "WHERE status IN ('pending','scanning','pending') AND download_path NOT LIKE '%downloads_1080p%' "
-    "AND channel = 'qullamaggie' "
-    "ORDER BY upload_date DESC, video_id ASC"
-).fetchall()
+channel_filter = ${JSON.stringify(channel)}
+if channel_filter and channel_filter != "any":
+    rows = c.execute(
+        "SELECT video_id, upload_date, title, download_path FROM videos "
+        "WHERE status IN ('pending','scanning','pending') AND download_path NOT LIKE '%downloads_1080p%' "
+        "AND channel = ? "
+        "ORDER BY upload_date DESC, video_id ASC",
+        (channel_filter,)
+    ).fetchall()
+else:
+    rows = c.execute(
+        "SELECT video_id, upload_date, title, download_path FROM videos "
+        "WHERE status IN ('pending','scanning','pending') AND download_path NOT LIKE '%downloads_1080p%' "
+        "ORDER BY upload_date DESC, video_id ASC"
+    ).fetchall()
 out = [dict(r) for r in rows]
 json.dump(out, sys.stdout)
 `;

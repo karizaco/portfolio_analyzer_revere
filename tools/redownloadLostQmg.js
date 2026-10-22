@@ -43,6 +43,10 @@ const MEDIA_ROOT = readFlag(argv, '--media-root')
 const DL_1080 = path.join(MEDIA_ROOT, 'downloads_1080p');
 const DL_720 = path.join(MEDIA_ROOT, 'downloads_720p');
 const DB = path.join(PROJECT, 'data', 'video_pipeline', 'state.sqlite');
+// The record of the 718 videos destroyed on 2026-10-21, generated from the
+// pre-loss state.sqlite in git HEAD. This — not the live DB — defines the
+// lost set, because resetting a row clears its download_path.
+const LEDGER = path.join(PROJECT, 'data', '_lost_videos_ledger.json');
 const PY = process.platform === 'win32' ? 'py' : 'python3';
 
 // The hardcoded 39 IDs that genuinely have no 1080p upload. These are fetched
@@ -74,15 +78,15 @@ function freeGb(dir) {
   }
 }
 
-/** Every qullamaggie row, with its download_path. */
+/** Every row in the catalog, with its download_path. */
 function catalog() {
   const script = `
 import sqlite3, json, sys
 c = sqlite3.connect(r"${DB.replace(/\\/g, '/')}")
 c.row_factory = sqlite3.Row
 rows = c.execute(
-    "SELECT video_id, upload_date, title, download_path FROM videos "
-    "WHERE channel='qullamaggie' ORDER BY upload_date DESC, video_id ASC"
+    "SELECT video_id, channel, upload_date, title, download_path FROM videos "
+    "ORDER BY channel, upload_date DESC, video_id ASC"
 ).fetchall()
 json.dump([dict(r) for r in rows], sys.stdout)
 `;
@@ -98,19 +102,45 @@ const norm = (p) => String(p || '').replace(/\\/g, '/').toLowerCase();
 const mediaRootNorm = norm(MEDIA_ROOT);
 
 /**
- * A row is "lost" if it still points at a destroyed in-tree media path, or at
- * nothing at all, and it is not already downloaded out-of-tree.
+ * Split the catalog into what is already recovered and what is still lost.
+ *
+ * The authority for "what was lost" is `data/_lost_videos_ledger.json`, not
+ * the current SQLite paths: resetting a row clears its `download_path`, so
+ * inferring the lost set from the live DB loses rows mid-run (and on resume).
+ * The ledger was generated from the pre-loss `state.sqlite` as it stood in
+ * git HEAD, and holds exactly the 718 rows that pointed at the destroyed
+ * in-tree media directories.
+ *
+ * "Recovered" = the row's path now points inside the out-of-tree media root.
+ * Scope comes from the ledger, overridden to 720p for the hardcoded IDs that
+ * genuinely have no 1080p upload on YouTube.
  */
 function partition(rows) {
+  const byId = new Map(rows.map((r) => [r.video_id, r]));
   const done = new Set();
-  for (const r of rows) {
-    if (norm(r.download_path).startsWith(mediaRootNorm)) done.add(r.video_id);
+  const scopes = { qmg1080: [], other720: [] };
+
+  let ledger;
+  try {
+    ledger = JSON.parse(fs.readFileSync(LEDGER, 'utf8'));
+  } catch (e) {
+    console.error('[redownload] cannot read the lost-videos ledger at ' + LEDGER + ': ' + e.message);
+    console.error('[redownload] it is the record of the 718 videos destroyed on 2026-10-21 — ' +
+      'regenerate it before running.');
+    process.exit(1);
   }
-  const lost = rows.filter(
-    (r) => !done.has(r.video_id) &&
-      norm(r.download_path).includes('downloads_1080p')
-  );
-  return { done, lost };
+
+  for (const entry of ledger) {
+    const row = byId.get(entry.video_id);
+    if (!row) continue;                       // not in the live catalog
+    const p = norm(row.download_path);
+    if (p.startsWith(mediaRootNorm)) { done.add(entry.video_id); continue; }
+    if (!p) { /* reset but not yet downloaded — still lost */ }
+
+    const want720 = entry.scope === '720p' || KNOWN_720P_ONLY.has(entry.video_id);
+    (want720 ? scopes.other720 : scopes.qmg1080).push(row);
+  }
+  return { done, scopes };
 }
 
 /** Reset the stale rows so the downloader will consider them. */
@@ -124,11 +154,12 @@ function resetRows(ids) {
 }
 
 /** Download a batch. Returns the ids that landed on disk. */
-function download(ids, dlDir, height) {
+function download(ids, dlDir, height, channel) {
   const args = [
     path.join(PROJECT, 'tools', 'downloadQmg1080p.js'),
     '--limit', String(ids.length),
     '--height', String(height),
+    '--channel', channel,
     '--only-ids', ids.join(','),
     '--dl-dir', dlDir,
   ];
@@ -168,23 +199,20 @@ fs.mkdirSync(DL_1080, { recursive: true });
 fs.mkdirSync(DL_720, { recursive: true });
 
 const rows = catalog();
-const { done, lost } = partition(rows);
+const { done, scopes } = partition(rows);
 
 console.log('[redownload] media root   : ' + MEDIA_ROOT);
 console.log('[redownload] already have : ' + done.size);
-console.log('[redownload] still lost   : ' + lost.length);
 console.log('[redownload] free on C:   : ' + freeGb(PROJECT).toFixed(1) + ' GB');
-
-const to720 = lost.filter((r) => KNOWN_720P_ONLY.has(r.video_id));
-const to1080 = lost.filter((r) => !KNOWN_720P_ONLY.has(r.video_id));
-console.log('[redownload] of those, ' + to720.length + ' are known 720p-only, ' +
-  to1080.length + ' should have a 1080p upload');
+console.log('[redownload] still lost   : ' +
+  (scopes.qmg1080.length + scopes.other720.length) +
+  '  (' + scopes.qmg1080.length + ' @1080p, ' + scopes.other720.length + ' @720p)');
 
 if (dryRun) {
   console.log('\n[redownload] DRY RUN — next 1080p ids:');
-  console.log(to1080.slice(0, batchSize).map((r) => r.video_id).join(','));
+  console.log(scopes.qmg1080.slice(0, batchSize).map((r) => r.video_id).join(','));
   console.log('\n[redownload] DRY RUN — next 720p ids:');
-  console.log(to720.slice(0, batchSize).map((r) => r.video_id).join(','));
+  console.log(scopes.other720.slice(0, batchSize).map((r) => r.video_id).join(','));
   process.exit(0);
 }
 
@@ -205,10 +233,10 @@ while (true) {
     break;
   }
 
-  // Take a batch of 1080p-eligible videos. The 720p-only ones are handled
-  // first, in a single batch, because they need a different height.
-  const use720 = to720.length > 0;
-  const pool = use720 ? to720 : to1080;
+  // 1080p-eligible qullamaggie videos first; the 720p scope (revere plus the
+  // known 720p-only IDs) afterwards, because it needs a different height.
+  const use720 = scopes.qmg1080.length === 0;
+  const pool = use720 ? scopes.other720 : scopes.qmg1080;
   if (!pool.length) {
     console.log('[redownload] nothing left to download.');
     break;
@@ -217,13 +245,14 @@ while (true) {
   const ids = batch.map((r) => r.video_id);
   const dlDir = use720 ? DL_720 : DL_1080;
   const height = use720 ? 720 : 1080;
+  const channel = use720 ? 'any' : 'qullamaggie';
 
   console.log('\n[redownload] === batch ' + (batches + 1) + ' === ' +
-    ids.length + ' videos @' + height + 'p -> ' + dlDir);
+    ids.length + ' videos @' + height + 'p (' + channel + ') -> ' + dlDir);
   console.log('[redownload] free before: ' + freeGb(PROJECT).toFixed(1) + ' GB');
 
   resetRows(ids);
-  download(ids, dlDir, height);
+  download(ids, dlDir, height, channel);
 
   const check = verify(dlDir, ids, height === 720 ? 1280 : 1920, 1080);
   const okIds = check.filter((c) => c.ok).map((c) => c.id);
@@ -236,13 +265,7 @@ while (true) {
 
   // Remove the batch from the pool either way, so a video that cannot be
   // fetched at this height does not wedge the loop forever.
-  const doneSet = new Set(ids);
-  if (use720) {
-    to720.splice(0, ids.length);
-  } else {
-    to1080.splice(0, ids.length);
-  }
-  void doneSet;
+  pool.splice(0, ids.length);
 
   batches += 1;
   console.log('[redownload] cumulative verified: ' + verified1080 + ' @1080p, ' +
