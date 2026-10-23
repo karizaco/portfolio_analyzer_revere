@@ -184,11 +184,14 @@ function probe(file) {
 /**
  * Verify a batch of files against an expected HEIGHT.
  *
- * Height, not exact dimensions: YouTube's 1080p uploads are not always
- * 1920x1080. Revere's uploads, for instance, come down as 1670x1080 — same
- * 1080p stream, narrower frame. Comparing against a hardcoded 1920x1080
- * would fail every one of them.
+ * Height, not exact dimensions: YouTube's "1080p" uploads are not uniform.
+ * The revere frames measure 1670x1080, 1728x1080, 1920x1078 and 1920x1080
+ * across a four-video sample. Comparing against a hardcoded 1920x1080 would
+ * fail every one of them; so would an exact-height check, because 1078 is a
+ * crop of 1080. A small tolerance on the height is the right test.
  */
+const HEIGHT_TOLERANCE = 4;
+
 function verify(dir, ids, wantHeight) {
   const results = [];
   for (const id of ids) {
@@ -198,7 +201,7 @@ function verify(dir, ids, wantHeight) {
     const file = path.join(dir, found[0]);
     const dims = probe(file);
     const height = Number((dims.split(',')[1] || 0));
-    const ok = height === wantHeight;
+    const ok = Math.abs(height - wantHeight) <= HEIGHT_TOLERANCE;
     results.push({ id, ok, dims, file: path.basename(file) });
   }
   return results;

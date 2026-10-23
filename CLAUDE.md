@@ -353,10 +353,12 @@ download policy at the time, not YouTube's format ladder.
 is fetched at 1080p first, and only videos with genuinely no 1080p stream fall back
 to 720p.
 
-**Revere's 1080p uploads are not 1920×1080.** `-e2AV8iAAFw` comes down as
-1670×1080. Verify by **height**, not by exact dimensions — a hardcoded
-`1920x1080` check fails every revere file. `tools/redownloadLostQmg.js` compares
-height only for this reason.
+**Revere's 1080p uploads are not 1920×1080, and not even a fixed height.** A
+six-video sample of revere format-137 frames measured 1670×1080, 1728×1080,
+1920×1078 and 1920×1080. Verify by **height with a small tolerance**, never by
+exact dimensions — a hardcoded `1920x1080` check fails most revere files, and an
+exact-height check fails the 1078 crop. `tools/redownloadLostQmg.js` uses
+`|height − target| ≤ 4`.
 
 **Never add an ID to the 39 list from a "format unavailable" error.** Per the
 throttling rule above, that error on a non-listed video means YouTube is throttling,
