@@ -326,11 +326,11 @@ the inventory from it with `tools/inventoryLostVideos.py` rather than guessing.
 
 ### The 39 known 720p-only videos get their own directory
 
-38 of the 502 still-missing qullamaggie videos are on the hardcoded 720p-only list (all
-but `0Ew3DImAZlw`, which was done first). Asking for format 137 on those fails with
+All 39 IDs on the hardcoded 720p-only list are downloaded and live in
+`downloads_720p/`. Asking for format 137 on those fails with
 `Requested format is not available` — that is the *genuine* no-1080p case, not
-throttling. Download them at 720p (format 136) into a separate out-of-tree directory so
-they are not mistaken for 1080p media:
+throttling. They are fetched at 720p (format 136) into a separate out-of-tree
+directory so they are not mistaken for 1080p media:
 
 ```bash
 node tools/downloadQmg1080p.js --limit 40 --height 720 --only-ids <the 39 ids> \
@@ -342,6 +342,27 @@ That lands 1280×720 files, which the OCR pipeline handles correctly — `parseC
 scales `X_POSITION_LIST_MIN` off the measured crop width, so a 720p source is fine
 (895px crop instead of 1345px).
 
+**A video's original directory does NOT tell you its available resolution.** The 26
+qullamaggie videos that had been in `downloads_hires/` turned out to have 1080p
+uploads — 21 of them downloaded fine at format 137. Original placement reflects the
+download policy at the time, not YouTube's format ladder. The same is expected for
+the 151 revere videos, which were fetched at 720p by `downloadHiresBatch --height 720`.
+
+**Never add an ID to the 39 list from a "format unavailable" error.** Per the
+throttling rule above, that error on a non-listed video means YouTube is throttling,
+not that the video lacks 1080p. Confirm with `--list-formats` before concluding a
+video genuinely has no 1080p.
+
+### The authoritative lost set: `data/_lost_videos_ledger.json`
+
+718 entries, generated from the pre-loss `state.sqlite` as it stood in git HEAD:
+541 qullamaggie @1080p, 26 qullamaggie @720p, 151 revere @720p. The count matches
+the 718 files lost exactly.
+
+**Use this ledger, not the live SQLite paths, to decide what is still missing.**
+Resetting a row clears its `download_path`, so inferring the lost set from the live
+DB silently drops in-flight and already-reset rows from the plan.
+
 ### What survived the 2026-10-21 loss — do not re-derive this
 
 Measured 2026-10-21 with `tools/snapshotCensus.js` and `tools/snapshotCoverage.js`:
@@ -350,7 +371,7 @@ Measured 2026-10-21 with `tools/snapshotCensus.js` and `tools/snapshotCoverage.j
 |---|---|
 | OCR **text** results | **Intact.** 767 `logs/*_snapshot.json` files under `data/`, 390 with a non-empty `merged_position_list`, 80 distinct date-keys with ticker output. 475 Tesseract, 90 EasyOCR. |
 | Snapshot **images** | **582 of 756 usable** (527 @1920px, 55 @1280px). The 174 low-res ones (640px prefilter samples) come only from `qmg-ocr-20260917-v2` and `qmg-ocr-20260917-missing19`. Every `_rerun` batch dir is 100% usable. |
-| **Videos** | **30 of 718 re-downloaded** (5.5 GiB, all verified 1920×1080 by ffprobe) into the out-of-tree media dir. The remaining 688 are still gone — re-download in chunks. |
+| **Videos** | **248 of 718 re-downloaded** into the out-of-tree media dir: 209 @1920×1080 + 39 @1280×720. All verified by ffprobe — never inferred from filesize. 470 still to go. |
 
 **The extracted tickers were not lost** — re-downloading the videos is not required to
 keep the OCR results. Re-download only if you need to re-run OCR at a different crop,
@@ -358,10 +379,12 @@ engine, or frame density.
 
 ### Re-download progress
 
-30 of the 718 lost videos were re-downloaded on 2026-10-21 (the 30 most recent
-qullamaggie chart-stream videos, 2022-04-25 → 2023-12-15). All 30 verified as real
-1920×1080 by ffprobe. Their `state.sqlite` rows now carry absolute paths into the
-out-of-tree media dir and `status='scanning'`.
+| Scope | Recovered | Remaining |
+|---|---|---|
+| qullamaggie @1080p (502 plain) | 188 | 314 |
+| qullamaggie @720p — the hardcoded 39 | 39 | 0 |
+| revere + qullamaggie @720p scope (177) | 21 | 156 |
+| **Total** | **248 / 718** | **470** |
 
 To continue, repeat the same three steps for the next batch of ids:
 
@@ -373,9 +396,24 @@ node tools/downloadQmg1080p.js --limit 30 --only-ids <same ids> \
   --cookies data/youtube_cookies.txt
 ```
 
-**Disk is the binding constraint**: 253 GB free on C:, and the full 718-video set is
-~220 GiB. It fits, but only just — reclaim `data/video_scan_test/_rerun` (5.9 GiB of
-regenerable `frames/` PNGs) first if a batch runs short.
+The downloader is resumable: the checkpoint file in each media dir
+(`_qmg_1080p_checkpoint.json`) remembers what succeeded, so re-running the same
+command after an interruption picks up exactly the stragglers.
+
+`tools/redownloadLostQmg.js` does all of this in one call and verifies every landed
+file with ffprobe. Use it for a single batch:
+
+```bash
+node tools/redownloadLostQmg.js --batch 30 --media-root "C:/Users/Admin/Projects/portfolio_analyzer_revere_media"
+```
+
+**Disk is the binding constraint**: ~177 GB free on C:, and the remaining ~470 videos
+need ~150 GiB at the measured average of 0.36 GiB per 1080p file. It fits, but only
+just. The `frames/` subdirectories under `data/video_scan_test/_rerun/` hold
+regenerable OCR intermediate PNGs (45,038 of them, 5.5 GiB) and are the cheapest
+thing to reclaim — but they are **not** covered by `tools/prune_old_probes.js`, which
+only handles `data/video_ocr_probe/`. The scan *results* (`logs/*.json`) and
+snapshots live outside `frames/` and are untouched by that cleanup.
 
 ---
 
