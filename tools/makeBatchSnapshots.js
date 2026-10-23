@@ -23,6 +23,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
+const { resolveFfmpegBin } = require('../src/video/ffmpegBin');
+
 const argv = process.argv.slice(2);
 function arg(name, def) {
   const i = argv.indexOf(name);
@@ -41,15 +43,8 @@ if (!videoPath || isNaN(timestamp)) {
   process.exit(1);
 }
 
-// Resolve ffmpeg
-function resolveFfmpegBin() {
-  const direct = 'C:/Users/admin/Projects/portfolio_analyzer_revere/tools/ffmpeg.exe';
-  try { require('node:fs').accessSync(direct); return direct; } catch { /* ignore */ }
-  return 'ffmpeg';
-}
-
 fs.mkdirSync(outDir, { recursive: true });
-const ffmpegBin = resolveFfmpegBin();
+const ffmpegBin = resolveFfmpegBin(null);
 
 const baseName = namePrefix || path.basename(videoPath, path.extname(videoPath)).slice(0, 40);
 const halfWindow = windowSeconds / 2;

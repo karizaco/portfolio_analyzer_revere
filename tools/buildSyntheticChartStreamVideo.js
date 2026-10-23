@@ -13,11 +13,11 @@
 //   test/fixtures/local_20260104_sample_chart_stream.mp4
 
 const fs = require('node:fs');
-const os = require('node:os');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
 const { CHART_STREAM_REGION_FRACTION_DEFAULT, parseFractionalRegion } = require('../src/video/ocrScanArgs');
+const { resolveFfmpegBin } = require('../src/video/ffmpegBin');
 
 const WORKSPACE_ROOT = path.resolve(__dirname, '..');
 const FIXTURE_VIDEO = path.join(WORKSPACE_ROOT, 'test', 'fixtures', 'local_20260104_sample_chart_stream.mp4');
@@ -34,50 +34,6 @@ const FIXTURE_VIDEO = path.join(WORKSPACE_ROOT, 'test', 'fixtures', 'local_20260
 // be seen by both stages at once.
 const FRAME_WIDTH = 1920;
 const FRAME_HEIGHT = 1080;
-
-const DEFAULT_WIN_FFMPEG_PATHS = [
-  'C:/ffmpeg/bin/ffmpeg.exe',
-  'C:/Program Files/ffmpeg/bin/ffmpeg.exe'
-];
-
-function resolveFfmpegBin() {
-  if (process.env.FFMPEG_BIN && fs.existsSync(process.env.FFMPEG_BIN)) {
-    return process.env.FFMPEG_BIN;
-  }
-
-  const which = spawnSync('where', ['ffmpeg'], { encoding: 'utf8' });
-  if (which.status === 0 && which.stdout) {
-    const first = which.stdout.split(/\r?\n/).map((line) => line.trim()).find(Boolean);
-    if (first) {
-      return first;
-    }
-  }
-
-  for (const candidate of DEFAULT_WIN_FFMPEG_PATHS) {
-    if (fs.existsSync(candidate)) {
-      return candidate;
-    }
-  }
-
-  const wingetRoot = path.join(os.homedir(), 'AppData', 'Local', 'Microsoft', 'WinGet', 'Packages');
-  if (fs.existsSync(wingetRoot)) {
-    const matches = fs.readdirSync(wingetRoot, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory() && entry.name.startsWith('Gyan.FFmpeg'))
-      .flatMap((entry) => {
-        const vendorRoot = path.join(wingetRoot, entry.name);
-        return fs.readdirSync(vendorRoot, { withFileTypes: true })
-          .filter((child) => child.isDirectory())
-          .map((child) => path.join(vendorRoot, child.name, 'bin', 'ffmpeg.exe'));
-      })
-      .filter((candidate) => fs.existsSync(candidate))
-      .sort();
-    if (matches.length) {
-      return matches[matches.length - 1];
-    }
-  }
-
-  return 'ffmpeg';
-}
 
 function resolveFontFile() {
   if (process.env.REVERE_FONT_FILE && fs.existsSync(process.env.REVERE_FONT_FILE)) {
