@@ -20,6 +20,11 @@ behaviour exactly, which is what production scans rely on):
     text_threshold  minimum box confidence to be considered text
     low_text        lower bound for linking words into lines
     link_threshold  min similarity to merge neighbouring words
+    recognize_only  bool: skip text DETECTION and recognise the whole image
+                    as a single text box. The caller already knows where the
+                    text is, so the detector only adds ways to lose it: on a
+                    6px-tall ticker glyph the detector drops the leading
+                    letter ("FCX" -> "KX").
 
 Values are parsed as JSON when possible (so booleans and lists work), else as
 raw strings. Unknown keys are ignored so a newer caller cannot break an older
@@ -133,6 +138,23 @@ try:
         _allowed = set(str(read_kwargs['allowlist']))
         read_kwargs['allowlist'] = ''.join(sorted(_allowed))
 
+    # Recogniser-only mode: the caller has already located the text (a table
+    # cell), so the DETECTOR is pure loss. On the Qullamaggie position list
+    # the glyphs are ~6 src px tall; the detector's box merging drops the
+    # leading letter of a ticker ("FCX" -> "KX") while the recogniser reads
+    # the same pixels correctly when it is handed the box directly.
+    _recognize_only = bool(TUNING.get('recognize_only', False))
+    _recognize_kwargs = {}
+    if _recognize_only:
+        for _key in ('allowlist', 'text_score', 'beamWidth'):
+            if _key in TUNING:
+                _recognize_kwargs[_key] = TUNING[_key]
+        # The detector-only tuning keys do not apply to the recogniser.
+        read_kwargs = {'detail': 1}
+        for _key in ('allowlist',):
+            if _key in _recognize_kwargs:
+                read_kwargs[_key] = _recognize_kwargs[_key]
+
     if len(read_kwargs) > 1:
         log(f"readtext tuning: { {k: v for k, v in read_kwargs.items() if k != 'detail'} }")
 
@@ -140,7 +162,18 @@ try:
         """OCR a single image and shape it into the parser's schema."""
         t0 = time.time()
         try:
-            raw = _READER.readtext(path, **read_kwargs)
+            if _recognize_only:
+                import cv2
+                _img = cv2.imread(path, cv2.IMREAD_COLOR)
+                if _img is None:
+                    raise ValueError(f"cannot read image: {path}")
+                _h, _w = _img.shape[:2]
+                _box = [[[0, 0], [_w, 0], [_w, _h], [0, _h]]]
+                raw, _elapse = _READER.recognize(
+                    _img, horizontal_list=_box, detail=1, **_recognize_kwargs
+                )
+            else:
+                raw = _READER.readtext(path, **read_kwargs)
         except TypeError as exc:
             # An option this EasyOCR build does not accept must not sink the
             # scan: retry with defaults and say so on stderr.
