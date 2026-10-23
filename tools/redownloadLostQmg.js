@@ -112,8 +112,11 @@ const mediaRootNorm = norm(MEDIA_ROOT);
  * in-tree media directories.
  *
  * "Recovered" = the row's path now points inside the out-of-tree media root.
- * Scope comes from the ledger, overridden to 720p for the hardcoded IDs that
- * genuinely have no 1080p upload on YouTube.
+ *
+ * The ledger's `scope` records which DIRECTORY the original file sat in, not
+ * which resolutions YouTube offers. It is used here only to split the work
+ * into two pools; both are fetched at 1080p first, because probing on
+ * 2026-10-23 showed format 137 is available for the revere uploads too.
  */
 function partition(rows) {
   const byId = new Map(rows.map((r) => [r.video_id, r]));
@@ -178,19 +181,37 @@ function probe(file) {
   return (r.stdout || '').trim();
 }
 
-function verify(dir, ids, wantW, wantH) {
+/**
+ * Verify a batch of files against an expected HEIGHT.
+ *
+ * Height, not exact dimensions: YouTube's 1080p uploads are not always
+ * 1920x1080. Revere's uploads, for instance, come down as 1670x1080 — same
+ * 1080p stream, narrower frame. Comparing against a hardcoded 1920x1080
+ * would fail every one of them.
+ */
+function verify(dir, ids, wantHeight) {
   const results = [];
   for (const id of ids) {
-    const prefix = dir.split('/').pop();
     // The downloader names files <upload_date>_<id>.mp4 when a date is known.
     const found = fs.readdirSync(dir).filter((f) => f.endsWith(`_${id}.mp4`) || f === `${id}.mp4`);
     if (!found.length) { results.push({ id, ok: false, why: 'no file' }); continue; }
     const file = path.join(dir, found[0]);
     const dims = probe(file);
-    const ok = dims === `${wantW},${wantH}`;
+    const height = Number((dims.split(',')[1] || 0));
+    const ok = height === wantHeight;
     results.push({ id, ok, dims, file: path.basename(file) });
   }
   return results;
+}
+
+/** Which of `ids` the downloader recorded as successful in `dlDir`'s checkpoint. */
+function checkpointDone(dlDir) {
+  try {
+    const cp = JSON.parse(fs.readFileSync(path.join(dlDir, '_qmg_1080p_checkpoint.json'), 'utf8'));
+    return new Set((cp.done || []).map((e) => (typeof e === 'string' ? e : e.id)));
+  } catch (_) {
+    return new Set();
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -209,9 +230,9 @@ console.log('[redownload] still lost   : ' +
   '  (' + scopes.qmg1080.length + ' @1080p, ' + scopes.other720.length + ' @720p)');
 
 if (dryRun) {
-  console.log('\n[redownload] DRY RUN — next 1080p ids:');
+  console.log('\n[redownload] DRY RUN — next 1080p ids (pool 1):');
   console.log(scopes.qmg1080.slice(0, batchSize).map((r) => r.video_id).join(','));
-  console.log('\n[redownload] DRY RUN — next 720p ids:');
+  console.log('\n[redownload] DRY RUN — next ids (pool 2, 1080p first, 720p fallback):');
   console.log(scopes.other720.slice(0, batchSize).map((r) => r.video_id).join(','));
   process.exit(0);
 }
@@ -233,38 +254,60 @@ while (true) {
     break;
   }
 
-  // 1080p-eligible qullamaggie videos first; the 720p scope (revere plus the
-  // known 720p-only IDs) afterwards, because it needs a different height.
-  const use720 = scopes.qmg1080.length === 0;
-  const pool = use720 ? scopes.other720 : scopes.qmg1080;
+  // 1080p-eligible qullamaggie videos first, then the "other" scope (the 26
+  // qullamaggie + 151 revere videos that originally sat in downloads_hires).
+  //
+  // The ledger's scope records which DIRECTORY the original file was in, not
+  // what YouTube offers. Probing revere on 2026-10-23 showed format 137
+  // (1080p) IS available for revere uploads — one comes down as 1670x1080,
+  // not 1920x1080. So the whole "other" scope is attempted at 1080p first and
+  // only the videos that genuinely have no 1080p stream fall back to 720p.
+  const useOther = scopes.qmg1080.length === 0;
+  const pool = useOther ? scopes.other720 : scopes.qmg1080;
   if (!pool.length) {
     console.log('[redownload] nothing left to download.');
     break;
   }
   const batch = pool.slice(0, batchSize);
   const ids = batch.map((r) => r.video_id);
-  const dlDir = use720 ? DL_720 : DL_1080;
-  const height = use720 ? 720 : 1080;
-  const channel = use720 ? 'any' : 'qullamaggie';
+  const channel = useOther ? 'any' : 'qullamaggie';
 
   console.log('\n[redownload] === batch ' + (batches + 1) + ' === ' +
-    ids.length + ' videos @' + height + 'p (' + channel + ') -> ' + dlDir);
+    ids.length + ' videos @1080p (' + channel + ') -> ' + DL_1080);
   console.log('[redownload] free before: ' + freeGb(PROJECT).toFixed(1) + ' GB');
 
   resetRows(ids);
-  download(ids, dlDir, height, channel);
+  download(ids, DL_1080, 1080, channel);
 
-  const check = verify(dlDir, ids, height === 720 ? 1280 : 1920, 1080);
+  const landed1080 = checkpointDone(DL_1080);
+  const failedAt1080 = ids.filter((id) => !landed1080.has(id));
+
+  // Anything that has no 1080p stream gets one more attempt at 720p.
+  let badIds = failedAt1080;
+  if (failedAt1080.length) {
+    console.log('[redownload] ' + failedAt1080.length +
+      ' video(s) have no 1080p stream; retrying them at 720p.');
+    resetRows(failedAt1080);
+    download(failedAt1080, DL_720, 720, 'any');
+    const landed720 = checkpointDone(DL_720);
+    const ok720 = failedAt1080.filter((id) => landed720.has(id));
+    const check720 = verify(DL_720, ok720, 720);
+    verified720 += check720.filter((c) => c.ok).length;
+    badIds = failedAt1080.filter((id) => !landed720.has(id));
+    console.log('[redownload] 720p fallback: ' + check720.filter((c) => c.ok).length +
+      ' verified @720p, ' + badIds.length + ' still missing');
+  }
+
+  const check = verify(DL_1080, ids.filter((id) => landed1080.has(id)), 1080);
   const okIds = check.filter((c) => c.ok).map((c) => c.id);
-  const badIds = check.filter((c) => !c.ok).map((c) => c.id);
-  if (use720) verified720 += okIds.length; else verified1080 += okIds.length;
+  verified1080 += okIds.length;
   failed += badIds.length;
   console.log('[redownload] batch ' + (batches + 1) + ': ' + okIds.length +
-    ' verified @' + (height === 720 ? '1280x720' : '1920x1080') + ', ' +
-    badIds.length + ' not verified' + (badIds.length ? ' (' + badIds.join(',') + ')' : ''));
+    ' verified @1080p, ' + badIds.length + ' not verified' +
+    (badIds.length ? ' (' + badIds.join(',') + ')' : ''));
 
   // Remove the batch from the pool either way, so a video that cannot be
-  // fetched at this height does not wedge the loop forever.
+  // fetched does not wedge the loop forever.
   pool.splice(0, ids.length);
 
   batches += 1;
