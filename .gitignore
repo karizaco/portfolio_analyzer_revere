@@ -26,3 +26,18 @@ tools/ffprobe.exe
 # Plan files
 *.plan.md
 CLAUDE_RAPPEL_PLAN.md
+# One-off diagnostic scripts written at the repo root while working out the
+# Qullamaggie position-list geometry. Their findings live in
+# docs/qmg-positions-layout-findings.md and the src/video/position*.js modules.
+dbg_*.js
+dbg_*.cjs
+# Manual crop of position-panel regions, kept only for visual inspection.
+# No tool writes these; the frames they were cut from live under the
+# gitignored data/video_scan_test/ tree.
+data/qmg_corpus_crops/
+# Labelled corpus built by tools/buildPositionCorpus.js. It is a tool output,
+# so it stays out of git by default — BUT it cannot be rebuilt from a clean
+# clone, because the frames it was measured from live under the gitignored
+# data/video_scan_test/ tree. Once it has entries, commit it explicitly:
+#   git add -f data/qmg_position_corpus.json
+data/qmg_position_corpus.json
