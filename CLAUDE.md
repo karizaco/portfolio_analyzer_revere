@@ -345,8 +345,18 @@ scales `X_POSITION_LIST_MIN` off the measured crop width, so a 720p source is fi
 **A video's original directory does NOT tell you its available resolution.** The 26
 qullamaggie videos that had been in `downloads_hires/` turned out to have 1080p
 uploads — 21 of them downloaded fine at format 137. Original placement reflects the
-download policy at the time, not YouTube's format ladder. The same is expected for
-the 151 revere videos, which were fetched at 720p by `downloadHiresBatch --height 720`.
+download policy at the time, not YouTube's format ladder.
+
+**Confirmed 2026-10-23: the revere uploads have 1080p too.** `--list-formats` on
+`-e2AV8iAAFw` and `0R1_i4G7dIw` both offer format 137. So the whole "720p scope"
+(the 26 qullamaggie + 151 revere videos that originally sat in `downloads_hires/`)
+is fetched at 1080p first, and only videos with genuinely no 1080p stream fall back
+to 720p.
+
+**Revere's 1080p uploads are not 1920×1080.** `-e2AV8iAAFw` comes down as
+1670×1080. Verify by **height**, not by exact dimensions — a hardcoded
+`1920x1080` check fails every revere file. `tools/redownloadLostQmg.js` compares
+height only for this reason.
 
 **Never add an ID to the 39 list from a "format unavailable" error.** Per the
 throttling rule above, that error on a non-listed video means YouTube is throttling,
@@ -363,6 +373,9 @@ the 718 files lost exactly.
 Resetting a row clears its `download_path`, so inferring the lost set from the live
 DB silently drops in-flight and already-reset rows from the plan.
 
+`node tools/ledgerStatus.js` tallies recovered-vs-lost per scope against the
+ledger; `--next-ids N` also prints the next N ids for each pool.
+
 ### What survived the 2026-10-21 loss — do not re-derive this
 
 Measured 2026-10-21 with `tools/snapshotCensus.js` and `tools/snapshotCoverage.js`:
@@ -371,7 +384,7 @@ Measured 2026-10-21 with `tools/snapshotCensus.js` and `tools/snapshotCoverage.j
 |---|---|
 | OCR **text** results | **Intact.** 767 `logs/*_snapshot.json` files under `data/`, 390 with a non-empty `merged_position_list`, 80 distinct date-keys with ticker output. 475 Tesseract, 90 EasyOCR. |
 | Snapshot **images** | **582 of 756 usable** (527 @1920px, 55 @1280px). The 174 low-res ones (640px prefilter samples) come only from `qmg-ocr-20260917-v2` and `qmg-ocr-20260917-missing19`. Every `_rerun` batch dir is 100% usable. |
-| **Videos** | **248 of 718 re-downloaded** into the out-of-tree media dir: 209 @1920×1080 + 39 @1280×720. All verified by ffprobe — never inferred from filesize. 470 still to go. |
+| **Videos** | **308 of 718 re-downloaded** into the out-of-tree media dir: 269 @1080p + 39 @720p. All verified by ffprobe — never inferred from filesize. 410 still to go. |
 
 **The extracted tickers were not lost** — re-downloading the videos is not required to
 keep the OCR results. Re-download only if you need to re-run OCR at a different crop,
@@ -379,12 +392,15 @@ engine, or frame density.
 
 ### Re-download progress
 
+Measured 2026-10-23 with `node tools/ledgerStatus.js`.
+
 | Scope | Recovered | Remaining |
 |---|---|---|
-| qullamaggie @1080p (502 plain) | 188 | 314 |
-| qullamaggie @720p — the hardcoded 39 | 39 | 0 |
-| revere + qullamaggie @720p scope (177) | 21 | 156 |
-| **Total** | **248 / 718** | **470** |
+| qullamaggie @1080p | 249 | 254 |
+| qullamaggie @720p-scope | 21 | 5 |
+| qullamaggie @720p — the hardcoded 39 | 38 | 0 |
+| revere @720p-scope | 0 | 151 |
+| **Total** | **308 / 718** | **410** |
 
 To continue, repeat the same three steps for the next batch of ids:
 
@@ -407,13 +423,15 @@ file with ffprobe. Use it for a single batch:
 node tools/redownloadLostQmg.js --batch 30 --media-root "C:/Users/Admin/Projects/portfolio_analyzer_revere_media"
 ```
 
-**Disk is the binding constraint**: ~177 GB free on C:, and the remaining ~470 videos
-need ~150 GiB at the measured average of 0.36 GiB per 1080p file. It fits, but only
-just. The `frames/` subdirectories under `data/video_scan_test/_rerun/` hold
-regenerable OCR intermediate PNGs (45,038 of them, 5.5 GiB) and are the cheapest
-thing to reclaim — but they are **not** covered by `tools/prune_old_probes.js`, which
-only handles `data/video_ocr_probe/`. The scan *results* (`logs/*.json`) and
-snapshots live outside `frames/` and are untouched by that cleanup.
+**Disk is the binding constraint**: ~157 GB free on C:, and the remaining ~410 videos
+need ~119 GiB — the 285 qullamaggie files at the measured 0.37 GiB average (~106 GiB),
+plus the 151 revere files at ~0.09 GiB each (~14 GiB), since revere uploads are much
+shorter. It fits, but only just. The `frames/` subdirectories under
+`data/video_scan_test/_rerun/` hold regenerable OCR intermediate PNGs (45,038 of them,
+5.5 GiB) and are the cheapest thing to reclaim — but they are **not** covered by
+`tools/prune_old_probes.js`, which only handles `data/video_ocr_probe/`. The scan
+*results* (`logs/*.json`) and snapshots live outside `frames/` and are untouched by
+that cleanup.
 
 ---
 
