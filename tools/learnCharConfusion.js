@@ -25,10 +25,20 @@
 // USAGE
 //   node tools/learnCharConfusion.js [--corpus file] [--out file]
 //                                    [--max-mean-cost N] [--min-exact N]
-//                                    [--report N]
+//                                    [--report N] [--force]
 //
 // The corpus is the expensive part (it runs OCR); this tool is pure string
 // work and can be re-run whenever the corpus or the alignment changes.
+//
+// REFUSING TO CLOBBER
+// The default --out is the TRACKED config/ticker_char_confusion.csv, and
+// this file is hand-maintained knowledge: it holds the misreads recorded in
+// docs/qmg-positions-layout-findings.md, which cannot be re-learned from a
+// corpus that has since been rebuilt (and emptied). An unguarded write
+// replaces that with a header-only file the moment the corpus is missing or
+// unusable — silently, and with no way to tell from the output. So: an
+// unusable corpus aborts, and an empty matrix never replaces a non-empty
+// one, unless --force says so.
 
 const fs = require('node:fs');
 const path = require('node:path');
@@ -49,6 +59,7 @@ function parseArgs(argv) {
     maxMeanCost: DEFAULT_MAX_MEAN_COST,
     minExactRatio: DEFAULT_MIN_EXACT_RATIO,
     report: 25,
+    force: false,
   };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
@@ -57,9 +68,10 @@ function parseArgs(argv) {
     else if (a === '--max-mean-cost') args.maxMeanCost = Number(argv[++i]);
     else if (a === '--min-exact-ratio') args.minExactRatio = Number(argv[++i]);
     else if (a === '--report') args.report = Number(argv[++i]);
+    else if (a === '--force') args.force = true;
     else if (a === '--help' || a === '-h') {
       console.log('usage: node tools/learnCharConfusion.js [--corpus file] [--out file] '
-        + '[--max-mean-cost N] [--min-exact-ratio N] [--report N]');
+        + '[--max-mean-cost N] [--min-exact-ratio N] [--report N] [--force]');
       process.exit(0);
     }
   }
@@ -132,6 +144,23 @@ function uniqueHypotheses(row) {
   return [...seen.keys()];
 }
 
+/**
+ * Does this CSV carry any data rows?
+ *
+ * A confusion matrix is "empty" when every line is a comment or blank. A
+ * header-only file is what an unguarded write leaves behind, and it is
+ * indistinguishable from a real file by size alone.
+ */
+function fileHasContent(p) {
+  try {
+    return fs.readFileSync(p, 'utf8')
+      .split('\n')
+      .some((line) => line.trim() && !line.trim().startsWith('#'));
+  } catch {
+    return false;
+  }
+}
+
 function main() {
   const args = parseArgs(process.argv);
   if (!fs.existsSync(args.corpus)) {
@@ -186,6 +215,26 @@ function main() {
     })
     .sort((a, b) => (b.count - a.count) || a.from.localeCompare(b.from) || a.to.localeCompare(b.to));
 
+  // Nothing usable came out of the corpus. Writing now would replace the
+  // tracked matrix with a header-only file, and that matrix is hand-maintained
+  // knowledge which a rebuilt corpus cannot restore.
+  if (!usedEntries && !args.force) {
+    console.error(`refusing to write ${args.out}: no corpus entry could be paired with the truth`);
+    console.error(`  entries=${entries.length} used=${usedEntries} skipped=${skippedEntries}`);
+    console.error('  the corpus is empty, mis-detected, or was built with other thresholds');
+    console.error('  fix the corpus, loosen --max-mean-cost/--min-exact-ratio, or pass --force');
+    process.exit(1);
+  }
+
+  // An empty matrix is a legitimate outcome for a corpus whose reads are all
+  // exact — but it must not replace a non-empty file.
+  if (!rows.length && !args.force && fileHasContent(args.out)) {
+    console.error(`refusing to replace the existing ${args.out} with an empty matrix`);
+    console.error('  the corpus produced no character confusions');
+    console.error('  pass --force to overwrite anyway');
+    process.exit(1);
+  }
+
   const header = [
     '# Character-level OCR confusion matrix, learned by tools/learnCharConfusion.js',
     '# from,to,count — the number of times a read showed `from` where the',
@@ -208,4 +257,8 @@ function main() {
   console.log(`\nwrote ${path.relative(ROOT, args.out)}`);
 }
 
-main();
+// Runnable as a script, but also require()-able so the tests can check the
+// argument defaults and the alignment without writing a file.
+if (require.main === module) main();
+
+module.exports = { parseArgs, alignCharacters, uniqueHypotheses, fileHasContent };
