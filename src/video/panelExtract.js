@@ -2,7 +2,10 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { execFileSync } = require('node:child_process');
+const { execFileSync, spawn } = require('node:child_process');
+const sharp = require('sharp');
+
+const { resolveFfmpegBin, resolveFfprobeBin } = require('./ffmpegBin.js');
 
 // Extracting the panel crop straight from the SOURCE video frame.
 //
@@ -24,9 +27,20 @@ const { execFileSync } = require('node:child_process');
  * Resolution is measured with ffprobe, never inferred from the file size: a
  * 10-minute FullHD video can be under 1 GB and a 2-hour 720p video can be
  * 2 GB (see CLAUDE.md).
+ *
+ * @param {string} videoPath
+ * @param {{ffprobeBin?: string}} [options] override the resolved binary.
+ * @returns {{width: number, height: number}}
  */
-function probeVideoSize(videoPath) {
-  const out = execFileSync('ffprobe', [
+function probeVideoSize(videoPath, options = {}) {
+  const ffprobeBin = options.ffprobeBin || resolveFfprobeBin(null);
+  if (!ffprobeBin) {
+    throw new Error(
+      `ffprobe not found: cannot measure ${videoPath}. Install ffmpeg (winget ` +
+      'Gyan.FFmpeg) or set FFPROBE_BIN to the ffprobe executable.'
+    );
+  }
+  const out = execFileSync(ffprobeBin, [
     '-v', 'quiet', '-print_format', 'json', '-show_streams', videoPath,
   ], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
   const streams = JSON.parse(out).streams || [];
@@ -72,7 +86,8 @@ async function extractPanelCrop(videoPath, ts, region, outPath, options = {}) {
   if (!fs.existsSync(videoPath)) {
     throw new Error(`video not found: ${videoPath}`);
   }
-  const size = options.frameSize || probeVideoSize(videoPath);
+  const ffmpegBin = options.ffmpegBin || resolveFfmpegBin(null);
+  const size = options.frameSize || probeVideoSize(videoPath, options);
   const px = regionToPixels(region, size.width, size.height);
 
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
@@ -85,10 +100,12 @@ async function extractPanelCrop(videoPath, ts, region, outPath, options = {}) {
     outPath,
   ];
   await new Promise((resolve, reject) => {
-    const child = require('node:child_process').spawn('ffmpeg', args, { stdio: ['ignore', 'ignore', 'pipe'] });
+    const child = spawn(ffmpegBin, args, { stdio: ['ignore', 'ignore', 'pipe'] });
     let stderr = '';
     child.stderr.on('data', (d) => { stderr += d.toString(); });
-    child.on('error', reject);
+    child.on('error', (error) => {
+      reject(new Error(`ffmpeg spawn failed (${ffmpegBin}): ${error.message}`));
+    });
     child.on('close', (code) => {
       if (code !== 0) {
         reject(new Error(`ffmpeg exited ${code}: ${stderr.slice(0, 400)}`));
@@ -101,7 +118,7 @@ async function extractPanelCrop(videoPath, ts, region, outPath, options = {}) {
   if (!fs.existsSync(outPath) || fs.statSync(outPath).size === 0) {
     throw new Error(`ffmpeg produced no output for ${videoPath} @ ${ts}s`);
   }
-  const meta = await require('sharp')(outPath).metadata();
+  const meta = await sharp(outPath).metadata();
   return { file: outPath, width: meta.width, height: meta.height };
 }
 

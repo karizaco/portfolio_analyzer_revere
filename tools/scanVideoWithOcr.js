@@ -36,6 +36,7 @@ const { createProbeKey, parseArgs, printHelp } = require('../src/video/ocrScanAr
 const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
 const { parseChartStreamPositionList, mergeMultiplePositionLists, clusterRawOcrTokens, TICKER_BLOCKLIST } = require('../src/parse/parseChartStream');
 const { runEasyOcr, adaptToParserSchema } = require('../src/ocr/easyocrAdapter');
+const { resolveFfmpegBin, resolveFfprobeBin } = require('../src/video/ffmpegBin');
 const { preprocessChartStreamToBuffer, preprocessChartStreamRawToBuffer } = require('../src/ocr/ocrImage');
 
 const OCR_TEXT_SNIPPET_MAX_CHARS = 200;
@@ -131,87 +132,6 @@ function logProgress({ bestCandidate, outputKind, processedCount, startedAt, tot
   console.log(
     `[scan:${outputKind}] OCR ${processedCount}/${totalFrames} frames (${percent}%) after ${formatDuration(elapsedSeconds)}; ${bestSummary}`
   );
-}
-
-function resolveFfmpegBin(explicitValue) {
-  if (explicitValue && explicitValue !== 'ffmpeg') {
-    return explicitValue;
-  }
-
-  const localPath = process.env.PATH || '';
-  if (localPath.toLowerCase().includes('ffmpeg')) {
-    return 'ffmpeg';
-  }
-
-  const directCandidates = [
-    'C:/ffmpeg/bin/ffmpeg.exe',
-    'C:/Program Files/ffmpeg/bin/ffmpeg.exe'
-  ];
-  for (const candidate of directCandidates) {
-    try {
-      require('node:fs').accessSync(candidate);
-      return candidate;
-    } catch {
-    }
-  }
-
-  const wingetRoot = path.join(os.homedir(), 'AppData', 'Local', 'Microsoft', 'WinGet', 'Packages');
-  try {
-    const vendorDirectories = require('node:fs').readdirSync(wingetRoot, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory() && entry.name.startsWith('Gyan.FFmpeg'))
-      .map((entry) => path.join(wingetRoot, entry.name));
-
-    for (const vendorDirectory of vendorDirectories) {
-      const nestedEntries = require('node:fs').readdirSync(vendorDirectory, { withFileTypes: true })
-        .filter((entry) => entry.isDirectory())
-        .map((entry) => path.join(vendorDirectory, entry.name, 'bin', 'ffmpeg.exe'));
-      const match = nestedEntries.find((candidate) => require('node:fs').existsSync(candidate));
-      if (match) {
-        return match;
-      }
-    }
-  } catch {
-  }
-
-  return explicitValue || 'ffmpeg';
-}
-
-// Sibling helper: locate ffprobe.exe in the same install as ffmpeg. Returns
-// `null` (instead of throwing) when no candidate exists so callers can fall
-// back to "keyframe lookup skipped" without aborting the scan.
-function resolveFfprobeBin(explicitValue) {
-  if (explicitValue && explicitValue !== 'ffprobe') {
-    return explicitValue;
-  }
-
-  const localPath = process.env.PATH || '';
-  if (localPath.toLowerCase().includes('ffmpeg') || localPath.toLowerCase().includes('ffprobe')) {
-    return 'ffprobe';
-  }
-
-  const ffmpegBin = resolveFfmpegBin(null);
-  if (ffmpegBin && ffmpegBin !== 'ffmpeg') {
-    const sibling = path.join(path.dirname(ffmpegBin), 'ffprobe.exe');
-    try {
-      require('node:fs').accessSync(sibling);
-      return sibling;
-    } catch {
-    }
-  }
-
-  const directCandidates = [
-    'C:/ffmpeg/bin/ffprobe.exe',
-    'C:/Program Files/ffmpeg/bin/ffprobe.exe'
-  ];
-  for (const candidate of directCandidates) {
-    try {
-      require('node:fs').accessSync(candidate);
-      return candidate;
-    } catch {
-    }
-  }
-
-  return null;
 }
 
 // Source width, cached per video path. The EasyOCR crop filter scales to
