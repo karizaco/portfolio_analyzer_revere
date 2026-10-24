@@ -127,7 +127,13 @@ for (const row of rows) {
   // Auto-enable chart-stream parser when the prefilter profile asks for it
   // (typical Qullamaggie run). The CHART_STREAM_PARSER=1 env override stays
   // useful when a user wants the parser on a whiteboard-profile run.
-  const useChartStreamParser = prefilterProfileArg === 'chart_stream' || process.env.CHART_STREAM_PARSER === '1';
+  //
+  // The positions-TABLE profile is also a snapshot profile: it publishes its
+  // holdings in the chart_stream shape, so it needs --output-kind snapshot
+  // too. Without it the scan tool refuses the combination.
+  const useChartStreamParser = prefilterProfileArg === 'chart_stream'
+    || prefilterProfileArg === 'position_table'
+    || process.env.CHART_STREAM_PARSER === '1';
   if (useChartStreamParser) {
     // The parser is only valid with --output-kind snapshot (it replaces the
     // GRO/TURBO whiteboard parser with parseChartStreamPositionList).

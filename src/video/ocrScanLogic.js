@@ -349,7 +349,7 @@ function scoreChartLikeness(stats) {
   return 0;
 }
 
-function summarizeLumaBuffer(buffer, width, height) {
+function summarizeLumaBuffer(buffer, width, height, region) {
   let total = 0;
   let totalSquares = 0;
   let brightPixels = 0;
@@ -363,9 +363,16 @@ function summarizeLumaBuffer(buffer, width, height) {
   // and bottom ~45% of the frame). Count row density AND mid-tone density
   // (chart candle highlights) ONLY in that region to avoid the high-contrast
   // photo overlay in Google Drive etc.
-  const tickerColLeft = Math.floor(width * 0.85);
+  //
+  // The `position_table` profile widens this rectangle upward, because the
+  // 2023-era sidebar puts the table higher up the frame (measured x
+  // 1606-1648, y 444-708 of 1920x1080 — docs/qmg-positions-layout-findings.md,
+  // § 'Measured geometry per corpus frame').
+  const tickerLeft = region && Number.isFinite(region.left) ? region.left : 0.85;
+  const tickerTop = region && Number.isFinite(region.top) ? region.top : 0.55;
+  const tickerColLeft = Math.floor(width * tickerLeft);
   const tickerColRight = width;
-  const tickerRowTop = Math.floor(height * 0.55);
+  const tickerRowTop = Math.floor(height * tickerTop);
   const tickerRowBottom = height;
   // Mid-tone density: count pixels in 51-150 brightness range within the
   // ticker region. The position list has ticker text (mid-tone) on dark
@@ -487,7 +494,7 @@ function summarizeLumaBuffer(buffer, width, height) {
   };
 }
 
-async function analyzeFrameBeforeOcr(framePath) {
+async function analyzeFrameBeforeOcr(framePath, region) {
   const { data, info } = await sharp(framePath)
     .flatten({ background: '#ffffff' })
     .grayscale()
@@ -500,7 +507,7 @@ async function analyzeFrameBeforeOcr(framePath) {
     .raw()
     .toBuffer({ resolveWithObject: true });
 
-  return summarizeLumaBuffer(data, info.width, info.height);
+  return summarizeLumaBuffer(data, info.width, info.height, region);
 }
 
 function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporalDecay = Infinity, timestamp = undefined) {
@@ -593,7 +600,8 @@ function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporal
   // Revere whiteboard scans pick their capture by a completely different
   // signal. Applying it to whiteboard would silently re-rank every Revere
   // capture toward the first 30 minutes of the stream.
-  if (isFinite(temporalDecay) && temporalDecay > 0 && profile === 'chart_stream') {
+  if (isFinite(temporalDecay) && temporalDecay > 0
+    && (profile === 'chart_stream' || profile === 'position_table')) {
     const tsCandidate = timestamp !== undefined ? timestamp : (stats && stats.timestamp);
     const ts = Number(tsCandidate);
     if (Number.isFinite(ts)) {
@@ -703,6 +711,59 @@ const PREFILTER_PROFILES = Object.freeze({
     snapshotEdgeBoostCap: 2,
     // Positive boost: chart-likeness is GOOD. Score 0–6 instead of -6 to 0.
     chartLikenessBoost: 8,
+    prefilterThresholdDefault: 8
+  }),
+  // The positions TABLE reader (src/video/positionTableScan.js). Same
+  // content as chart_stream — a TradingView candlestick frame with the
+  // position list in the right-hand panel — but read by a different
+  // pipeline, so it gets its own profile.
+  //
+  // The one real difference is the ticker rectangle. chart_stream watches
+  // the bottom-right corner, which is where the 2022-era floating panel
+  // sits. The 2023-era SIDEBAR puts the table much higher up (measured
+  // x 1606-1648, y 444-708 of 1920x1080 —
+  // docs/qmg-positions-layout-findings.md, § 'Measured geometry per corpus
+  // frame'), so the rectangle is
+  // widened upward and leftward to cover both layouts.
+  //
+  // The weights are inherited from chart_stream rather than tuned from
+  // scratch: the table reader validates its own input (it looks for a
+  // title bar and refuses to claim a table it cannot identify), so the
+  // prefilter only has to get the frames into the right neighbourhood.
+  position_table: Object.freeze({
+    brightWeight: 4,
+    brightTarget: 0.04,
+    brightSlope: 30,
+    darkWeight: 3,
+    darkTarget: 0.55,
+    darkSlope: 20,
+    edgeWeight: 3,
+    edgeTarget: 0.10,
+    edgeSlope: 100,
+    stdDevWeight: 3,
+    stdDevTarget: 55,
+    stdDevSlope: 12,
+    rowDensityWeight: 10,
+    rowDensityTarget: 150,
+    rowDensitySlope: 0.05,
+    multiColStripeCountWeight: 20,
+    multiColStripeCountTarget: 3,
+    midToneWeight: 30,
+    midToneTarget: 0.5,
+    midToneSlope: 0.2,
+    meanLumaFloor: 30,
+    meanLumaPenalty: 6,
+    brightRatioFloor: 0.005,
+    brightRatioPenalty: 6,
+    darkRatioFloor: 0.20,
+    darkRatioFloorPenalty: 4,
+    darkRatioCeil: 0.92,
+    darkRatioCeilPenalty: 6,
+    snapshotEdgeBoost: 25,
+    snapshotEdgeBoostCap: 2,
+    chartLikenessBoost: 8,
+    // The rectangle the mid-tone and row-density signals are measured in.
+    tickerRegion: Object.freeze({ left: 0.78, top: 0.28 }),
     prefilterThresholdDefault: 8
   }),
   // Tale of the Tape (ToTT) format: the Positions table sits in the
