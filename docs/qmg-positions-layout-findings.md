@@ -33,7 +33,7 @@ The position list is a **TradingView GUI table**, not a chart overlay.
 |---|---|---|
 | where | floating panel, bottom-right over the chart | right sidebar |
 | table left edge | x ≈ 1771 | x ≈ 1678 (20230609), 1580 (20230608) |
-| ticker column | x 1793–1827 | x 1697–1728 (20230609), 1606–1648 (20230608) |
+| ticker column | x 1793–1827 | x 1697–1739 (20230609), 1606–1648 (20230608) |
 | row pitch | **18 src px** | **18 src px** |
 | 4th/5th header | `Dol Vol Daily` (watchlist) / `Pre Buzz` (positions) | `Dol Vol` / `Vol Buzz` |
 | other tables in frame | watchlist above (y 63–286) | watchlist above (y ≤ 660) |
@@ -171,6 +171,10 @@ the watchlist from the positions table. Only the title bar can.
   model) recall 58.7 %, precision 74.0 %. All 13 false positives are reads
   that are *themselves valid tickers but wrong* (`PYPL←COPX`, `MPC←MOS`,
   `RIVN←DVN`, `IOI←IOT`, `AROQ←ARQQ`, `PLIR←PLTR`, `NRGU←NDGU`).
+  The corpus is built by `tools/buildPositionCorpus.js` and is **not
+  checked in** — the frames it was measured from live under the
+  gitignored `data/video_scan_test/` tree — so these figures are not
+  reproducible from a clean clone.
 - GT row order does **not** always equal table row order (20230608 and
   20220323 differ), so rows must be matched to truth by an **assignment**,
   not a fixed offset.
@@ -306,12 +310,19 @@ candidate scores) and mirrored at the capture's top level as
 | `bottom_most` | yes | the watchlist is docked **above** the positions table |
 | `sole_candidate` | **only if a watchlist was identified and vetoed, and the survivor is below it** | otherwise "the only table in the panel" could just as easily be the watchlist |
 
-That last row is measured, not hypothetical. On 20220222 c0 the detector
-produced **only** the watchlist as a candidate, and its title read as
-`XSM` — which the watchlist rule does not recognise. Publishing it would
-put watchlist entries into the portfolio as holdings. A lone table with no
+That last row is measured, not hypothetical. On 20220222 the detector
+produced **only** the watchlist as a candidate on one of the corpus
+frames, and its title was mangled beyond recognition — the `XSM` read,
+which the watchlist rule does not match. Publishing it would put
+watchlist entries into the portfolio as holdings. A lone table with no
 readable title is therefore located but **not published**, and the scan
 falls back to the legacy reader.
+
+(The discriminator table above attributes the `XSM` read to 20220222 c1;
+an earlier draft of this paragraph attributed it to c0, whose watchlist
+read `XWL`. The two cannot be reconciled from the artifacts — the corpus
+file is empty — and the attribution does not change the rule: a lone
+table with no readable title is located but not published either way.)
 
 The same applies to the title rule itself. `looksLikePositionsTitle`
 matches the **literal** substring `POS` and nothing looser — see
@@ -414,8 +425,32 @@ table-published frames are left alone.
 > `merged_raw_token_list: []` and zero clusters — that is the bug, visible
 > in the logs. It also means `merged_position_list` was coming from
 > `mergeMultiplePositionLists` over the per-capture lists rather than from
-> the clusterer; both paths are now covered by the same rule, since the
-> captures carry the clusterer's output.
+> the clusterer.
+>
+> The consensus is a **video-level** reading, so it is published in
+> `merged_position_list` and not in the individual captures. A capture
+> keeps what its own frame showed: `captures[n].tickers` and
+> `captures[n].chart_stream.position_list` are the same list for a
+> chart_stream capture, and writing the consensus into only one of them
+> would publish two different holdings lists for one capture — with the
+> aggregator reading the one that was not overwritten.
+>
+> The clusterer also repairs against the **observed** lexicon
+> (`loadDecodeLexiconSync`), not the seed lexicon. The seed lexicon is the
+> whole-panel parser's allowlist and it is missing 26 tickers Qullamaggie
+> actually held (UPST, NRGU, MOS, DWAC, SWN, ...). Against the seed
+> lexicon the clusterer rewrites a holding it does not know to a
+> neighbouring seed ticker — on 20220218 that turned NRGU into NUGI and
+> lost UPST outright.
+>
+> **Correction to commit `bdd4dbc`.** That commit's message claims the
+> clusterer "removes OCR garbage (20220218: 15 tokens of ONKS/TTOCQ/UPST
+> -> 9 clean tokens incl. ROKU and FCX)". UPST was not garbage: it is a
+> real 20220218 ground-truth holding, and the 9-token list it describes
+> drops four further ground-truth tickers while adding four that are not
+> in the ground truth. The clusterer is not a cleaner — it is a vote, and
+> a vote can lose a holding. The backing scan log is gitignored, so the
+> claim cannot be re-checked from the repository.
 
 ## Measured results
 
@@ -454,10 +489,14 @@ node tools/scanVideoWithOcr.js \
 | tickers | `NRGU`, `DVN`, `MOS`, `COPX`, `TQQQ`, `FCX`, `TSLA` |
 | ground truth (`20220222` capture 0) | `NRGU`, `DVN`, `MOS`, `COPX`, `TQQQ`, `FCX`, `TSLA` |
 
-**100 % recall, 100 % precision.** The captures carry
-`ticker_source: 'position_table'`, so the clusterer left them alone — and
-`merged_raw_token_list` is empty for the same reason: all three OCR'd frames
-were table-published, so none of them was eligible for the clusterer.
+**100 % recall, 100 % precision.** The two published captures carry
+`ticker_source: 'position_table'`, so the clusterer left them alone. The
+**third** OCR'd frame (index 150) was not table-published — its reading was
+`verified: false`, `reason: 'sole_candidate'` — so it was the legacy crop
+reader's, and it was the only frame the clusterer was eligible to repair.
+`merged_raw_token_list` is empty for a different reason: the clusterer's
+input was empty, because it read `chartStream.position_list` off the
+top-candidate **summaries**, which spell the field `chart_stream`.
 
 ### 20230609 c0: the 2023 sidebar, and why it publishes nothing
 
@@ -482,14 +521,17 @@ ticker column's ink has to be found at y 726–942 in the first place.
 
 One frame is two EasyOCR batches: one wide probe strip per candidate
 column, then one narrow strip per strip variant on the winner. On an idle
-machine a frame takes **54–65 s** (measured on the four frames above).
+machine a frame takes **54–65 s**. (Read off the console during the e2e
+run above; the probe logs carry no timing field, so the number is not
+reproducible from an artifact.)
 
 That number is not a constant, though, and the reason is the adapter's
 budget: `runEasyOcrBatch` spends `perImageMs × imageCount + 120000`, so a
 **fixed** per-image timeout makes the cost of a frame scale with the number
 of candidate columns. Four probe strips at 300 s each is a 22-minute probe
 on its own, which is how one frame came to carry a 39-minute budget and take
-**4 948 s** (that one was a contended machine, not the code).
+**4 948 s** (that one was a contended machine, not the code — and, like the
+number above, it is not recorded in an artifact).
 
 So the timeout is **derived from a frame budget** instead. The budget is
 900 000 ms (15 min) by default — `--table-frame-budget-ms` overrides it —

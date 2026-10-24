@@ -37,6 +37,7 @@ const {
   shortlistCandidates,
   stripRowsFor,
   evaluateCandidate,
+  perImageTimeoutMs,
   PROBE_ROWS,
   PROBE_STRIP_ROWS
 } = require('../src/video/positionTableScan');
@@ -212,6 +213,22 @@ test('the header is found even when it is glued to the flag column', () => {
   assert.equal(evaluated.dataStart, 2);
 });
 
+test('the header search starts BELOW the title', () => {
+  // The title bar carries a "Syms" column-visibility button, so the title
+  // cell can read as both the table's name and the word "Sym". A header
+  // search that started at row 0 would read the TITLE as the header, and
+  // the real header below it would survive as a holding — "FUOSYM" would
+  // be published as a position.
+  const evaluated = evaluateCandidate(
+    candidate({ rows: rows(9) }),
+    reading(['APOSI Syms', 'FUOSYM', 'UPST']),
+    { lexicon: LEXICON }
+  );
+  assert.equal(evaluated.titleRow, 0, 'the title is still the title');
+  assert.equal(evaluated.headerRow, 1, 'the real header, not the title’s own button');
+  assert.equal(evaluated.dataStart, 2, 'so the header is not published as a holding');
+});
+
 // ---------------------------------------------------------------------------
 // Choosing the table
 // ---------------------------------------------------------------------------
@@ -325,6 +342,39 @@ test('a watchlist title vetoes a candidate', () => {
 
   assert.equal(selection.index, 1, 'the watchlist must not win');
   assert.notEqual(selection.reason, 'title');
+});
+
+test('a table that reads as BOTH a positions title and a watchlist is vetoed', () => {
+  // The watchlist's title bar was garbled into something containing "POS",
+  // so the candidate reads as a TITLED positions table — and the title
+  // rule is decisive. Without the veto it would win and be published: the
+  // watchlist's entries would become the portfolio's holdings.
+  //
+  // The positions table in this frame has no readable title, so nothing
+  // else can settle it — the veto is the only thing standing between the
+  // watchlist and the published list.
+  const watchlist = candidate({
+    rows: rows(12, 500),
+    rowCount: 12,
+    top: 500,
+    bottom: 500 + 11 * 18 + 13
+  });
+  const positions = candidate({
+    rows: rows(9, 740),
+    rowCount: 9,
+    top: 740,
+    bottom: 740 + 8 * 18 + 13
+  });
+
+  const selection = selectPositionsTable(
+    [watchlist, positions],
+    [reading(['APOSI', 'XIWL', 'UPST']), reading(['MOS', 'TQQQ', 'COPX'])],
+    { lexicon: LEXICON }
+  );
+
+  assert.equal(selection.index, 1, 'the watchlist must not be published as the positions table');
+  assert.equal(selection.reason, 'sole_candidate', 'the survivor is what is left after the veto');
+  assert.equal(selection.verified, true, 'and it is claimed, because a watchlist was vetoed');
 });
 
 test('nothing is claimed when no candidate looks like a table', () => {
@@ -488,8 +538,18 @@ test('the winner index is the candidate index, not the evaluation index', () => 
 
   const selection = selectPositionsTable(
     [watchlist, positions],
-    [reading(['', '', '']), reading(['APOSI', 'FUOSYM', 'DVN'])],
+    // The first probe read NOTHING, so it is skipped and the evaluations
+    // array ends up one entry shorter than the candidates array. Without
+    // this the test would pass for the wrong reason: with both probes
+    // readable the two arrays are the same length and the distinction
+    // this test is about could not show up.
+    [reading([]), reading(['APOSI', 'FUOSYM', 'DVN'])],
     { lexicon: LEXICON }
+  );
+  assert.equal(
+    selection.evaluations.length,
+    1,
+    'the failed probe must leave the evaluations shorter than the candidates'
   );
   assert.equal(selection.reason, 'title');
   assert.equal(selection.index, 1, 'the index must address the candidates array');
@@ -581,7 +641,9 @@ test('a frame too narrow to read is refused before any OCR happens', async () =>
   // garbage; refusing it hands the frame back to the legacy reader.
   //
   // The refusal has to happen BEFORE the OCR, or a 720p source would cost a
-  // full EasyOCR pass per frame to learn nothing.
+  // full EasyOCR pass per frame to learn nothing. This frame is blank, so
+  // a reader that got as far as looking for ticker columns would have come
+  // back as 'no_candidates' — the reason is what pins the order.
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'qmg-table-width-'));
   const file = path.join(dir, 'narrow.png');
   try {
@@ -594,11 +656,39 @@ test('a frame too narrow to read is refused before any OCR happens', async () =>
     assert.equal(result.found, false);
     assert.equal(result.verified, false);
     assert.equal(result.reason, 'source_too_narrow');
+    assert.equal(result.candidates, 0, 'the column detection that feeds the OCR never ran');
     assert.deepEqual(result.tickers, [], 'nothing is published from a frame that cannot be read');
+    assert.deepEqual(result.decoded, []);
   } finally {
-    fs.unlinkSync(file);
-    fs.rmdirSync(dir);
+    // A setup failure must not be masked by the cleanup, and the temp
+    // directory must not be left behind.
+    fs.rmSync(dir, { recursive: true, force: true });
   }
+});
+
+// ---------------------------------------------------------------------------
+// The per-image timeout
+// ---------------------------------------------------------------------------
+
+test('the per-image timeout is derived from the frame budget', () => {
+  // The reader spends two OCR batches per frame (a title probe over every
+  // candidate column, then a ticker read over the winner), and the frame
+  // budget is split between the phases and then across the images of the
+  // phase. The per-image timeout is what keeps a frame with many candidate
+  // columns from running for an hour, so it has to scale with the number
+  // of images in the batch.
+  assert.equal(perImageTimeoutMs(1), 300000, 'one image gets the OCR timeout');
+  assert.equal(perImageTimeoutMs(4), 82500, 'four images split the phase budget');
+  assert.equal(perImageTimeoutMs(20), 30000, 'the floor keeps a single image from being killed instantly');
+});
+
+test('the per-image timeout never exceeds the OCR timeout', () => {
+  assert.equal(perImageTimeoutMs(1, { timeoutMs: 60000 }), 60000);
+  assert.equal(perImageTimeoutMs(1, { timeoutMs: 5000 }), 30000, 'the floor wins over a tiny cap');
+});
+
+test('a smaller frame budget buys a smaller per-image timeout', () => {
+  assert.equal(perImageTimeoutMs(1, { frameBudgetMs: 400000 }), 80000);
 });
 
 // ---------------------------------------------------------------------------

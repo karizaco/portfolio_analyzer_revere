@@ -19,6 +19,8 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const { publishTableHoldings, readerForFrame } = require('../src/video/positionTablePublish');
 
@@ -102,4 +104,25 @@ test('the reader label only ever has two values', () => {
     readerForFrame({ table: reading({ verified: false }) }),
   ]);
   assert.deepEqual([...labels].sort(), ['chart_stream', 'position_table']);
+});
+
+test('the production scan publishes through these rules', () => {
+  // The rules above are only worth anything if the production scan USES
+  // them. tools/scanVideoWithOcr.js is a CLI script that runs its main()
+  // when it is required, so it cannot be imported here — the wiring is
+  // asserted against its source instead.
+  //
+  // Without this, the rules could stay green while the scan tool quietly
+  // went back to deciding publication on its own.
+  const source = fs.readFileSync(
+    path.join(__dirname, '..', 'tools', 'scanVideoWithOcr.js'),
+    'utf8'
+  );
+  assert.match(
+    source,
+    /require\('\.\.\/src\/video\/positionTablePublish'\)/,
+    'the scan tool must import the tested rules'
+  );
+  assert.match(source, /publishTableHoldings\(/, 'the scan tool must decide publication with the tested rule');
+  assert.match(source, /readerForFrame\(/, 'the scan tool must label the reader with the tested rule');
 });

@@ -56,7 +56,14 @@ current.videos.forEach((cv, i) => {
   console.log('  intro_card_captures=' + introCap + '/' + cv.captures.length + '  segments=' + segs.length + ' (intro=' + introSeg + ')');
   console.log('  tickers_captures=' + tickersCap + '/' + cv.captures.length + '  unique_phashes=' + phashesSet.size);
   if (cv.ocr_engine_metadata) {
-    console.log('  ocr_engine=' + cv.ocr_engine_metadata.tesseract_version + ' lang=' + cv.ocr_engine_metadata.language);
+    // The engine that actually ran — the metadata carries the tesseract
+    // version too, but printing that for an EasyOCR run names the wrong
+    // engine.
+    const engine = cv.ocr_engine_metadata;
+    const engineName = engine.ocr_engine === 'easyocr'
+      ? 'easyocr'
+      : `tesseract.js ${engine.tesseract_version}`;
+    console.log('  ocr_engine=' + engineName + ' lang=' + engine.language);
   }
   console.log('  keyframe_lookup=' + (cv.nearest_ffmpeg_keyframe_lookups_skipped ? 'skipped' : `${cv.nearest_ffmpeg_keyframe_pts_total} pts`));
   if (Array.isArray(cv.top_rejected_candidates) && cv.top_rejected_candidates.length) {

@@ -32,7 +32,7 @@ const {
 } = require('../src/video/ocrScanLogic');
 const { computePerceptualHash, hammingDistance } = require('../src/video/imageHash');
 const { computePerceptualHashOfRegion, computePerceptualHashOfFractionalRegion } = require('../src/video/imageHashRegion');
-const { extractTickersFromOcrText } = require('../src/normalize/tickerScan');
+const { extractTickersFromOcrText, loadDecodeLexiconSync, loadSeedLexiconSync } = require('../src/normalize/tickerScan');
 const { createProbeKey, parseArgs, printHelp } = require('../src/video/ocrScanArgs');
 const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
 const { parseChartStreamPositionList, mergeMultiplePositionLists, clusterRawOcrTokens, TICKER_BLOCKLIST } = require('../src/parse/parseChartStream');
@@ -706,6 +706,7 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
   let ocr, chartStream, tickerSource;
   let positionTable = null;
   let tableHoldings = [];
+  let tablePublished = false;
 
   // The legacy crop reader always reads the CHART-STREAM crop.
   //
@@ -739,6 +740,7 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
       // src/video/positionTablePublish.js so it can be tested.
       const published = publishTableHoldings(table);
       if (published) {
+        tablePublished = true;
         tableHoldings = published;
         chartStream = buildTableChartStream(table);
         tickerSource = chartStream.position_list;
@@ -758,11 +760,13 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
       console.log(`[scan:snapshot] position table read failed: ${error.message}`);
     }
   }
-  // The legacy reader runs unless the table reader actually produced
-  // holdings. Both conditions have to agree, or a frame that found a table
-  // but decoded nothing from it would fall through neither branch and
-  // leave `ocr` undefined.
-  if (chartStreamParser && tableHoldings.length === 0) {
+  // The legacy reader runs unless the table reader PUBLISHED something.
+  // The take-over decision is the tested rule, not an array-length
+  // coincidence: publishTableHoldings returns null for a table that
+  // decoded nothing, and both conditions have to agree, or a frame that
+  // found a table but decoded nothing from it would fall through neither
+  // branch and leave `ocr` undefined.
+  if (chartStreamParser && !tablePublished) {
     // Dual-scale: run both 3x and 4x, pick the one with more tickers.
     // Tested 5x+6x on 2026-09-29 (more readable text) — produced different
     // captured frames and worse recall on 20220606 (12.5% vs 25%). The
@@ -894,6 +898,16 @@ function scoreChartStreamCandidate(chartStream, ocrConfidence) {
   let score = Number(chartStream.confidence || 0) * 12;
   score += Array.isArray(chartStream.position_list) ? chartStream.position_list.length * 1.5 : 0;
   if (chartStream.price_action) {
+    score += 2;
+  }
+  // The positions-TABLE reader never sees a price, so it cannot earn the
+  // price_action bonus that a legacy crop read earns for a price sitting
+  // next to the ticker. Its corroboration is a different one: every cell
+  // was decoded against the lexicon and the confidence already reports how
+  // much of the table was readable. Without a matching bonus a table
+  // capture ranks BELOW a legacy capture of the same screen, and the
+  // capture dedup then keeps the worse of the two.
+  if (chartStream.position_table) {
     score += 2;
   }
   if (chartStream.parse_status === 'ok') {
@@ -1417,32 +1431,6 @@ async function main() {
     });
     const bestPrefilter = prefilterResult.bestRow;
 
-    // The table reader costs two EasyOCR batches per frame, so its frame
-    // budget is small — and selectFramesForOcr spends that budget on a
-    // UNIFORM sample, because its stride-based reserve is allowed to
-    // consume the whole allowance. A blind stride may never land on a
-    // frame with the table on screen, and the profile's own prefilter
-    // rectangle — which is what watches the 2023-era sidebar — would then
-    // have no effect at all.
-    //
-    // So in table mode the best-scoring frame is swapped in for the last
-    // uniform one. This is deliberately local to the table profile:
-    // selectFramesForOcr is shared with the chart_stream and whiteboard
-    // pipelines, and changing its selection there would change results
-    // that have already been measured.
-    if (options.positionTableParser && bestPrefilter && selectedFrameRows.length) {
-      const alreadySelected = selectedFrameRows.some(
-        (row) => row.frameIndex === bestPrefilter.frameIndex
-      );
-      if (!alreadySelected) {
-        selectedFrameRows[selectedFrameRows.length - 1] = bestPrefilter;
-        console.log(
-          `[scan:${options.outputKind}] table mode: swapped in the best prefilter frame `
-          + `(${bestPrefilter.prefilterScore.toFixed(2)} at ${formatDuration(bestPrefilter.timestamp)})`
-        );
-      }
-    }
-
     // Batch snapshot mode: pick the best-scoring frame and extract N
     // additional frames within a window of that timestamp. All frames
     // show the same position list state since they're seconds apart,
@@ -1492,6 +1480,71 @@ async function main() {
         console.log(
           `[scan:${options.outputKind}] batch mode: extracted ${selectedFrameRows.length} frames within ±${(options.batchWindowSeconds || 4) / 2}s of t=${batchCenterTs.toFixed(1)}` +
             (explicitTs != null ? ' (explicit --batch-time)' : ' (best prefilter)')
+        );
+      }
+    }
+
+    // The table reader costs two EasyOCR batches per frame, so its frame
+    // budget is small — and selectFramesForOcr spends that budget on a
+    // UNIFORM sample, because its stride-based reserve is allowed to
+    // consume the whole allowance. A blind stride may never land on a
+    // frame with the table on screen, and the profile's own prefilter
+    // rectangle — which is what watches the 2023-era sidebar — would then
+    // have no effect at all.
+    //
+    // So in table mode the best-scoring frame is swapped in for one of the
+    // uniform ones. This is deliberately local to the table profile:
+    // selectFramesForOcr is shared with the chart_stream and whiteboard
+    // pipelines, and changing its selection there would change results
+    // that have already been measured.
+    //
+    // Three details decide WHICH frame is swapped and WHETHER it is:
+    //
+    //  - The evicted frame is the uniform one NEAREST the best frame, not
+    //    the last one. The capture dedup drops any capture within
+    //    CAPTURE_MIN_FRAME_GAP of a better one, so the nearest uniform
+    //    frame is the one most likely to be discarded anyway; evicting it
+    //    keeps the temporal spread of the OCR set.
+    //  - The swap does not happen in batch mode. Batch mode REPLACES the
+    //    selected rows with its own window around the centre timestamp,
+    //    so a swap made before it would be logged and then thrown away.
+    //  - The best frame has to pass the profile's threshold. The uniform
+    //    reserve swallows the whole budget for a long video, so the seed
+    //    branch — the only part of selectFramesForOcr that consults the
+    //    threshold — never runs for this profile. Without this gate
+    //    --prefilter-threshold would have no effect at all.
+    if (!batchMode && options.positionTableParser && bestPrefilter && selectedFrameRows.length) {
+      const alreadySelected = selectedFrameRows.some(
+        (row) => row.frameIndex === bestPrefilter.frameIndex
+      );
+      const minScore = Number(options.prefilterThreshold || 0);
+      const bestScore = Number(bestPrefilter.prefilterScore || 0);
+      // The same relaxation selectFramesForOcr applies: when the whole
+      // video scores below the threshold, the threshold comes down to 60 %
+      // of itself rather than rejecting every frame.
+      const effectiveThreshold = bestScore >= minScore ? minScore : minScore * 0.6;
+      if (!alreadySelected && bestScore >= effectiveThreshold) {
+        let evictIndex = 0;
+        let nearestDistance = Infinity;
+        selectedFrameRows.forEach((row, index) => {
+          const distance = Math.abs(row.frameIndex - bestPrefilter.frameIndex);
+          if (distance < nearestDistance) {
+            nearestDistance = distance;
+            evictIndex = index;
+          }
+        });
+        const evicted = selectedFrameRows[evictIndex];
+        selectedFrameRows[evictIndex] = bestPrefilter;
+        console.log(
+          `[scan:${options.outputKind}] table mode: swapped in the best prefilter frame `
+          + `(${bestPrefilter.prefilterScore.toFixed(2)} at ${formatDuration(bestPrefilter.timestamp)})`
+          + ` in place of the uniform frame at ${formatDuration(evicted.timestamp)}`
+        );
+      } else if (!alreadySelected) {
+        console.log(
+          `[scan:${options.outputKind}] table mode: the best prefilter frame `
+          + `(${bestPrefilter.prefilterScore.toFixed(2)}) is below the threshold `
+          + `(${effectiveThreshold.toFixed(2)}), so it does not take a slot`
         );
       }
     }
@@ -1638,33 +1691,70 @@ async function main() {
     // could not identify falls back to the legacy crop reader, and that
     // frame still needs the clusterer's repair. Only frames the table
     // reader published are left alone.
+    // The lexicon the clusterer repairs against.
+    //
+    // The clusterer's job is to map an OCR garble back to a ticker that was
+    // really held, so it needs the WIDEST allowlist available. The seed
+    // lexicon is the whole-panel parser's allowlist and it is missing 26
+    // tickers Qullamaggie actually held (UPST, NRGU, MOS, DWAC, SWN, ...).
+    // A holding the seed does not know is either dropped from its cluster
+    // or rewritten to a neighbouring seed ticker — on 20220218 that turned
+    // NRGU into NUGI and lost UPST outright.
+    //
+    // The whiteboard branch feeds the clusterer raw OCR text, where chart
+    // ink IS present, so it keeps the seed allowlist as a filter.
+    const clusterLexicon = options.outputKind === 'snapshot'
+      ? loadDecodeLexiconSync()
+      : loadSeedLexiconSync();
+    // Filter A: per-canonical frame count. Default 2 (was 1). Filters
+    // single-frame OCR garbles (VIO→VLO, NFU→NFLX, INA→TNA, BUCO→UCO)
+    // and chart-area tickers that bleed in briefly. Override via
+    // --cluster-min-frequency <n> (1 disables the filter).
+    //
+    // The filter counts DISTINCT FRAMES, so it needs at least two frames to
+    // have anything to agree on. When the table reader published most of
+    // the frames there may be only ONE legacy frame left, and a filter that
+    // demands two would throw the whole consensus away and leave that frame
+    // with no repair at all — the opposite of what the per-frame bypass
+    // above promises. With one frame the filter is relaxed to 1.
+    //
+    // Only the snapshot branch is relaxed: there the consensus IS the
+    // published list. The whiteboard branch's clusterer output is a
+    // diagnostic only, so its filter is left exactly as documented.
+    const clusterMinFrequency = options.outputKind === 'snapshot'
+      ? Math.min(options.clusterMinFrequency || 2, Math.max(1, clusterInput.length))
+      : (options.clusterMinFrequency || 2);
     const clusterResult = clusterRawOcrTokens(
       clusterInput,
-      // Filter A: per-canonical frame count. Default 2 (was 1). Filters
-      // single-frame OCR garbles (VIO→VLO, NFU→NFLX, INA→TNA, BUCO→UCO)
-      // and chart-area tickers that bleed in briefly. Override via
-      // --cluster-min-frequency <n> (1 disables the filter).
-      { maxDistance: 1, minTokenLength: 2, minFrequency: options.clusterMinFrequency || 2 }
-    );
-    // Override captures' tickers with clusterer's output ONLY for chart_stream
-    // mode (QMG). For whiteboard mode (Revere), the structured GRO/TURBO
-    // parser produces tickers_from_bbox which is the correct signal — the
-    // clusterer runs on full-frame OCR text and produces garbage (55-58
-    // random tickers) that would overwrite the structured holdings.
-    // Note: aggregateScanResults.js reads captures[n].tickers, so the
-    // per-capture tickers_from_bbox is what matters for Revere.
-    //
-    // A capture the table reader published keeps its own holdings: the
-    // clusterer output is a consensus over the legacy frames, and applying
-    // it to a table capture would replace a lexicon-decoded reading with a
-    // vote.
-    if (options.outputKind === 'snapshot'
-      && clusterResult.merged_list.length > 0) {
-      for (const cap of captureSummaries) {
-        if (cap.ticker_source === 'position_table') continue;
-        cap.tickers = clusterResult.merged_list.slice();
+      {
+        maxDistance: 1,
+        minTokenLength: 2,
+        minFrequency: clusterMinFrequency,
+        lexicon: clusterLexicon
       }
-    }
+    );
+    // The clusterer's consensus is the PUBLISHED list for a chart_stream
+    // (QMG) scan: it is the only reading that has been repaired across
+    // frames. It is also a PRECISION filter — over the 64 archived
+    // snapshot logs that carry a ground truth it recovers 171 of 575
+    // ground-truth tickers against the union of the per-capture lists'
+    // 202, with 137 false positives against the union's 659. The trade is
+    // deliberate (commit 89af843): a single-frame OCR garble is worse
+    // than a missed holding.
+    //
+    // It is a VIDEO-level reading, so it belongs in merged_position_list,
+    // not in each capture. A capture keeps what its own frame showed —
+    // captures[n].tickers and captures[n].chart_stream.position_list are
+    // the same list for a chart_stream capture, and overwriting only one of
+    // them would publish two different holdings lists for one capture.
+    //
+    // A capture the table reader published keeps its own holdings in either
+    // case: the clusterer output is a consensus over the legacy frames, and
+    // applying it to a table capture would replace a lexicon-decoded
+    // reading with a vote.
+    const legacyConsensus = (options.outputKind === 'snapshot' && clusterResult.merged_list.length > 0)
+      ? clusterResult.merged_list
+      : null;
     const result = {
       ...resultBase,
       captured_count: captureOutputs.length,
@@ -1691,24 +1781,30 @@ async function main() {
       // Multi-frame merge.
       //
       // Merging the per-capture tickers covers every case with one rule:
-      // for a legacy chart_stream scan the captures were just overridden with
-      // the clusterer's consensus, so the merge IS the clusterer's list; for
-      // a table scan it adds the table reader's holdings to that consensus;
-      // for whiteboard it merges the structured GRO/TURBO holdings, which
-      // the clusterer must not touch.
+      // for a legacy chart_stream scan every capture contributes the
+      // clusterer's consensus, so the merge IS the clusterer's list; for a
+      // table scan the table captures contribute their own holdings and the
+      // legacy captures the consensus; for whiteboard it merges the
+      // structured GRO/TURBO holdings, which the clusterer must not touch.
       merged_position_list: (() => {
+        // A legacy capture contributes the clusterer's consensus (the only
+        // repaired reading of the whole video); a table capture contributes
+        // the holdings the table reader decoded against the lexicon.
+        const lists = captureSummaries.map((c) => {
+          if (c.ticker_source === 'position_table') return c.tickers || [];
+          return legacyConsensus || (c.tickers || []);
+        });
         const raw = mergeMultiplePositionLists(
-          captureSummaries.map((c) => c.tickers || []),
+          lists,
           { minOccurrences: options.positionMergeMinOccurrences }
         );
         return raw.filter((t) => !TICKER_BLOCKLIST.has(t));
       })(),
-      // Multi-frame RAW-OCR token voting. Collects raw ticker-shape tokens
-      // from each frame's OCR text (not the parser's accepted list), groups
-      // tokens within edit-distance 2 of each other into clusters, picks a
-      // canonical representative per cluster (preferring seed-lexicon
-      // matches). Surfaces tickers that the parser rejected due to OCR
-      // garbling but that appear consistently across frames. See
+      // Multi-frame RAW-OCR token voting. Groups the per-frame tokens within
+      // edit-distance 1 of each other into clusters and picks a canonical
+      // representative per cluster (preferring a lexicon match, then the
+      // closest one). Surfaces tickers the OCR garbled but that appear
+      // consistently across frames. See
       // src/parse/parseChartStream.js clusterRawOcrTokens for details.
       // Expose both the canonical merged list AND the per-cluster
       // diagnostics (canonical, members, frequency). The clusterResult

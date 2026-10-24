@@ -425,7 +425,14 @@ function renderMarkdown(aggregate) {
     lines.push(`- **Prefilter top:** ${video.prefilter_best} | **Thresholds:** strong=${video.thresholds.strong}, review=${video.thresholds.review}`);
     if (video.ocr_engine_metadata) {
       const engine = video.ocr_engine_metadata;
-      lines.push(`- **OCR engine:** tesseract.js ${engine.tesseract_version} | lang=${engine.language} | dpi=${engine.dpi} | psm=${engine.psm} | deskew=${engine.deskew}`);
+      // The engine that actually ran. The metadata carries the tesseract
+      // version as well, but a run driven by EasyOCR would otherwise be
+      // reported as "tesseract.js 6.0.1" — a report that names the wrong
+      // engine for the run it documents.
+      const engineName = engine.ocr_engine === 'easyocr'
+        ? 'easyocr'
+        : `tesseract.js ${engine.tesseract_version}`;
+      lines.push(`- **OCR engine:** ${engineName} | lang=${engine.language} | dpi=${engine.dpi} | psm=${engine.psm} | deskew=${engine.deskew}`);
     }
     lines.push(`- **Keyframe lookup:** ${video.nearest_ffmpeg_keyframe_lookups_skipped ? 'skipped (no ffprobe)' : `${video.nearest_ffmpeg_keyframe_pts_total} keyframes resolved`}`);
 
