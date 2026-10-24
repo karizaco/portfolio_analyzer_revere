@@ -352,10 +352,24 @@ function renderKeyframeDelta(capture) {
   return `${delta >= 0 ? '+' : ''}${delta}s`;
 }
 
+/**
+ * The label for the run's title.
+ *
+ * The output root is `data/video_scan_YYYYMMDD`, so the date is in its
+ * basename. The title used to be hardcoded to "2026-09-12 test run", which
+ * put the wrong date on every report written since — including the ones
+ * that are committed.
+ */
+function runLabel(outputRoot) {
+  const base = path.basename(String(outputRoot || ''));
+  const match = /^video_scan_(\d{8})/.exec(base);
+  return match ? match[1] : base;
+}
+
 function renderMarkdown(aggregate) {
   const totals = aggregate.totals;
   const lines = [];
-  lines.push('# OCR Video Scan Analysis — 2026-09-12 test run');
+  lines.push(`# OCR Video Scan Analysis — ${runLabel(aggregate.output_root)}`);
   lines.push('');
   lines.push(`**Output root:** [${aggregate.output_root}](${aggregate.output_root})  `);
   lines.push(`**Probe directory:** \`${aggregate.probe_directory}\`  `);

@@ -381,6 +381,78 @@ test('a lone table IS verified when a watchlist was identified and vetoed', () =
   assert.equal(selection.verified, true, 'the vetoed watchlist identifies the survivor');
 });
 
+test('a lone table ABOVE the vetoed watchlist is not claimed', () => {
+  // The watchlist is docked ABOVE the positions table, so "whatever is
+  // left" only means the positions table when the frame agrees. A
+  // survivor that sits above the watchlist is some other panel, and
+  // publishing it would publish the wrong one.
+  const watchlist = candidate({
+    rows: rows(12, 500),
+    rowCount: 12,
+    top: 500,
+    bottom: 500 + 11 * 18 + 13
+  });
+  const above = candidate({
+    rows: rows(9, 300),
+    rowCount: 9,
+    top: 300,
+    bottom: 300 + 8 * 18 + 13
+  });
+
+  const selection = selectPositionsTable(
+    [above, watchlist],
+    [reading(['UPST', 'DVN', 'NRGU']), reading(['XIWL', 'XSM', 'UPST'])],
+    { lexicon: LEXICON }
+  );
+  assert.equal(selection.verified, false, 'the survivor is not below the watchlist, so it is not claimed');
+});
+
+test('a holding that reads like the Sym header is not eaten as the header', () => {
+  // "Sym" is within two edits of TSM, XOM, ARM, CRM, SOL, STX, VRM, NEM,
+  // SWN, SLB, SLV, SLY, TEM, TSEM, SGMO, SSO and SPYM — all real tickers.
+  // The 2023-era positions table has NO header row (20230608 c0 is
+  // "1 title row + 13 data"), so the header search window reaches the
+  // first data rows and one of those holdings would be consumed as the
+  // header and silently dropped from the published list. There is no
+  // fallback for that: the legacy reader is skipped whenever the table
+  // publishes.
+  const only = candidate({
+    rows: rows(9, 740),
+    rowCount: 9,
+    top: 740,
+    bottom: 740 + 8 * 18 + 13
+  });
+  const evaluation = evaluateCandidate(
+    only,
+    reading(['APOSI', 'TSM', 'XOM', 'DVN', 'NRGU']),
+    { lexicon: LEXICON }
+  );
+
+  assert.equal(evaluation.titleRow, 0, 'the title is recognised');
+  assert.equal(evaluation.headerRow, -1, 'a holding is never taken for the header');
+  assert.equal(evaluation.dataStart, 1, 'the holdings start right below the title');
+});
+
+test('a real Sym header is still recognised', () => {
+  // The guard must not cost the header: the measured reads are "Sym",
+  // "FUOSYM" and "Syrn", and none of them is a lexicon ticker.
+  const only = candidate({
+    rows: rows(9, 740),
+    rowCount: 9,
+    top: 740,
+    bottom: 740 + 8 * 18 + 13
+  });
+  const evaluation = evaluateCandidate(
+    only,
+    reading(['APOSI', 'FUOSYM', 'UPST', 'DVN', 'NRGU']),
+    { lexicon: LEXICON }
+  );
+
+  assert.equal(evaluation.titleRow, 0);
+  assert.equal(evaluation.headerRow, 1, 'the header is found');
+  assert.equal(evaluation.dataStart, 2, 'the holdings start below the header');
+});
+
 test('a Sym header without ticker rows is not a table of holdings', () => {
   // MEASURED. On 20230609 c0 the only candidate carrying a Sym header
   // (it read "TSYMAGSI") had no readable ticker rows at all. A "has a

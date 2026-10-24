@@ -304,7 +304,7 @@ candidate scores) and mirrored at the capture's top level as
 |---|---|---|
 | `title` | yes | the title bar says "Positions" |
 | `bottom_most` | yes | the watchlist is docked **above** the positions table |
-| `sole_candidate` | **only if a watchlist was identified and vetoed** | otherwise "the only table in the panel" could just as easily be the watchlist |
+| `sole_candidate` | **only if a watchlist was identified and vetoed, and the survivor is below it** | otherwise "the only table in the panel" could just as easily be the watchlist |
 
 That last row is measured, not hypothetical. On 20220222 c0 the detector
 produced **only** the watchlist as a candidate, and its title read as
@@ -323,6 +323,44 @@ And a table is only *table-shaped* if it has ticker-shaped rows in it, not
 merely a `Sym` header: on 20230609 c0 the one candidate carrying a header
 (`TSYMAGSI`) had **no** readable ticker rows at all, and claiming it would
 have published a column of prices.
+
+#### Two guards that keep a HOLDING from being mistaken for chrome
+
+Both of these were found by adversarial review of the wired pipeline, after
+the first end-to-end scan had already passed. They are the same class of
+mistake: a piece of the table's chrome read as a holding, or a holding read
+as chrome, and the result is a holding silently missing from the output.
+
+**1. The column header is never a ticker.** `Sym` is within two edits of
+seventeen real tickers — `TSM`, `XOM`, `ARM`, `CRM`, `SOL`, `STX`, `VRM`,
+`NEM`, `SWN`, `SLB`, `SLV`, `SLY`, `TEM`, `TSEM`, `SGMO`, `SSO`, `SPYM` —
+and the header search runs in a three-row window below the title. On the
+2023-era table, which has **no header row at all** (20230608 c0 is
+"1 title row + 13 data"), that window reaches the first three data rows. So
+a holding read as `TSM` was taken for the header row, `dataStart` moved past
+it, and the holding was dropped from the published list — with no error, and
+no fallback to recover it, because the legacy reader is skipped whenever the
+table publishes.
+
+The fix mirrors the rule the title tests already use: **a read that is a
+lexicon ticker is never the header.** The measured header reads (`Sym`,
+`FUOSYM`, `Syrn`, `Svm`) are not tickers, so the header is still found; and a
+read that is *not* in the lexicon could not have been published anyway,
+because the decoder rejects every read that does not identify a ticker
+(`Sym` → `null`, `Syrn` → `null`, `Svm` → `null`).
+
+**2. A lone survivor has to be BELOW the watchlist.** The `sole_candidate`
+path claimed the one remaining table whenever *any* other candidate read a
+watchlist title — but "whatever is left" only means the positions table
+when the frame agrees. The watchlist is docked above the positions table,
+so the survivor's top has to be at or below the watchlist's bottom. A
+survivor above it (or overlapping it, which is what a merged sidebar
+cluster looks like) is some other panel.
+
+Both guards make the reader **more** conservative, in the direction the
+module already states as its principle: publishing the watchlist as
+positions, or losing a holding silently, are both worse than publishing
+nothing.
 
 ### Fail-safe
 

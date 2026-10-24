@@ -180,6 +180,34 @@ function looksLikePositionsTitle(text, options = {}) {
 }
 
 /**
+ * Is this read a ticker from the seed lexicon?
+ *
+ * The titles already refuse to fire on a holding, and the COLUMN HEADER has
+ * to refuse the same way. "Sym" is one edit distance from several real
+ * holdings — TSM, XOM, ARM, CRM, SOL, STX, VRM, NEM, SWN, SLB, SLV, SLY,
+ * TEM, TSEM, SGMO, SSO and SPYM are all within two edits of it — so a
+ * header row that swallows one of them silently drops a holding from the
+ * published list. There is no fallback for that: the legacy reader is
+ * skipped whenever the table publishes.
+ *
+ * A read that is NOT in the lexicon is left alone. The measured misreads of
+ * the header ("Syrn", "Svm", "FUOSYM") are not tickers, and a garbled
+ * holding that is not in the lexicon could not have been published anyway:
+ * the decoder rejects every read that does not identify a ticker.
+ *
+ * @param {string} text
+ * @param {{lexicon?: {tickerSet?: Set<string>}}} [options]
+ * @returns {boolean}
+ */
+function readsAsLexiconTicker(text, options = {}) {
+  const raw = String(text || '').trim();
+  const tickerSet = options.lexicon && options.lexicon.tickerSet;
+  if (!tickerSet) return false;
+  const letters = lettersOnly(raw);
+  return tickerSet.has(letters) || tickerSet.has(raw.toUpperCase());
+}
+
+/**
  * Is this the watchlist's title bar?
  *
  * The measured watchlist titles read XIWL and XWL (the third, XSM, is not
@@ -273,10 +301,18 @@ function evaluateCandidate(candidate, read, options = {}) {
   // search must start BELOW the title: otherwise the title's own button
   // would be read as the header and the real header would survive as a
   // holding.
+  //
+  // A read that is a lexicon ticker is never the header, for the same
+  // reason a ticker is never a title: "Sym" is within two edits of TSM,
+  // XOM, ARM, CRM, SOL, STX, VRM, NEM, SWN, SLB, SLV, SLY, TEM, TSEM,
+  // SGMO, SSO and SPYM, so without this guard a holding can be eaten as
+  // the header row and dropped from the published list. There is no
+  // fallback for that — the legacy reader is skipped whenever the table
+  // publishes.
   const headerRow = firstRowIndex(
     rows,
     titleRow >= 0 ? titleRow + 1 : 0,
-    (row) => symWordScore(row.text) >= 0,
+    (row) => symWordScore(row.text) >= 0 && !readsAsLexiconTicker(row.text, { lexicon }),
     PROBE_ROWS
   );
   const watchRow = firstRowIndex(
@@ -412,10 +448,36 @@ function selectPositionsTable(candidates, readings, options = {}) {
     // portfolio as holdings, which is worse than publishing nothing.
     // So a lone table is only claimed when a watchlist was positively
     // identified and vetoed.
-    return decision(tableLike[0], evaluations, 'sole_candidate', watchVetoed);
+    //
+    // AND the survivor has to be the table BELOW that watchlist. The
+    // watchlist is docked above the positions table, so "whatever is left"
+    // only means the positions table when the survivor really is lower
+    // down the frame. A survivor that sits above the watchlist — or
+    // overlaps it, which is what a merged sidebar cluster looks like — is
+    // some other panel, and publishing it would publish the wrong one.
+    const survivor = tableLike[0];
+    const belowWatchlist = evaluations
+      .filter((e) => e.watchRow >= 0)
+      .every((watchEval) => startsBelow(survivor, watchEval));
+    return decision(survivor, evaluations, 'sole_candidate', watchVetoed && belowWatchlist);
   }
   const winner = tableLike.reduce((a, b) => betterByBottom(a, b));
   return decision(winner, evaluations, 'bottom_most', true);
+}
+
+/**
+ * Does the survivor start BELOW the vetoed watchlist?
+ *
+ * The watchlist is docked above the positions table, so the survivor is the
+ * positions table only when the frame agrees. A candidate whose geometry is
+ * missing cannot be shown to be below the watchlist, so it is not claimed.
+ */
+function startsBelow(survivor, watchEval) {
+  const survivorCandidate = survivor && survivor.candidate;
+  const watchCandidate = watchEval && watchEval.candidate;
+  if (!survivorCandidate || !watchCandidate) return false;
+  if (!Number.isFinite(survivorCandidate.top) || !Number.isFinite(watchCandidate.bottom)) return false;
+  return survivorCandidate.top >= watchCandidate.bottom;
 }
 
 /**
@@ -848,6 +910,7 @@ module.exports = {
   looksLikeWatchlistTitle,
   perImageTimeoutMs,
   readPositionTable,
+  readsAsLexiconTicker,
   reconcileTitleHeader,
   resolveDataRowStart,
   selectPositionsTable,
