@@ -449,6 +449,37 @@ shorter. It fits, but only just. The `frames/` subdirectories under
 *results* (`logs/*.json`) and snapshots live outside `frames/` and are untouched by
 that cleanup.
 
+### OCR on the restored media — validated 2026-10-24
+
+Two ground-truth videos were re-scanned from the out-of-tree media to confirm
+the restored files work end-to-end with the OCR pipeline. Run tag
+`qmg-restore-20261024`, output under `data/video_scan_20261024/`:
+
+```bash
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 KMP_DUPLICATE_LIB_OK=TRUE \
+node tools/scanVideoWithOcr.js \
+  --video "C:/Users/Admin/Projects/portfolio_analyzer_revere_media/downloads_1080p/20220218_Cd_IXyHwO3o.mp4" \
+  --date 20220218 --output-root data/video_scan_20261024 --run-tag qmg-restore-20261024 \
+  --prefilter-profile chart_stream --chart-stream-parser --basename qmg \
+  --output-kind snapshot --ocr-engine easyocr --fps 0.25 --prefilter-max-frames 12 \
+  --max-captures 3 --batch-snapshots --batch-count 8 --batch-window 4 --temporal-decay 1800
+```
+
+| video | recall (exact) | false positives | note |
+|---|---|---|---|
+| 20220218 | 7/9 = 77.8% | **0** | `TOCQ`→TQQQ and `TSUA`→TSLA are misreads of real GT tickers; the snapshot image visually shows all 9 GT tickers in the POSITIONS panel |
+| 20220606 | 4/8 = 50% | 6 | `INA`/`OTNA`→TNA, `NFU`→NFLX are misreads; GOVX and ALB missed |
+
+The 20220218 result is **cleaner than any pre-loss run** — the surviving
+`qmg-alt-alt` log for the same video has 3 false positives and the
+pre-blocklist `qmg-batch-a` log has 14. Both restored files are full
+1920×1080 with legible position lists, so the media loss cost nothing but
+the file copies.
+
+Timings with `OMP_NUM_THREADS=1` alongside a concurrent download: 4 min
+(20220218) and 11 min (20220606). No ffmpeg orphans left behind. The
+low-cpu env vars are what keep this safe to run next to a download.
+
 ---
 
 ## Testing
