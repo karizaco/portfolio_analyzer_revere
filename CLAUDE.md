@@ -135,7 +135,7 @@ QMG video IDs can start with `_` (e.g. `_9o5_4iZ0zjI`). yt-dlp may truncate thes
 
 ### Scan orchestration safety (Windows) — NEVER freeze the user's machine
 
-Running `tools/scanAllGtVideos.js` or `tools/scanVideoWithOcr.js` against Quullamaggie chart-stream content without preparation has historically caused multi-hour freezes. The mechanism (root cause analysis in `enchanted-giggling-toucan.md` plan file):
+Running `tools/scanAllGtVideos.js` or `tools/scanVideoWithOcr.js` against Qullamaggie chart-stream content without preparation has historically caused multi-hour freezes. The mechanism (root cause analysis in `enchanted-giggling-toucan.md` plan file):
 
 1. `chart_stream` OCR pipeline does **24 Tesseract calls per video** (12 candidates × scale 3× + scale 4× in parallel), single shared worker → **8–15 min/video** on CPU.
 2. The orchestrator's per-video kill timer is **300 s** — every video hits SIGTERM mid-OCR.
@@ -242,7 +242,7 @@ Rules:
 npm test        # node --test test/*.test.js
 ```
 
-157 tests, all passing (as of 2026-10-21).
+226 tests, all passing (as of 2026-10-24).
 
 ### Ground-truth benchmark fixtures — read before trusting a recall number
 
@@ -354,6 +354,8 @@ Results: `data/qmg_alt_batch_results.json` and `data/video_scan_batch_remaining_
 - `src/video/ocrScanArgs.js` — CLI argument parsing; `CHART_STREAM_REGION_FRACTION_DEFAULT`
 - `src/parse/parseChartStream.js` — Qullamaggie position-list ticker extraction
 - `src/parse/parseWhiteboardScreenshot.js` — GRO/TURBO/Revere whiteboard parser
+- `src/video/positionTableScan.js` — positions-TABLE reader (source-resolution, lexicon-constrained)
+- `src/video/panelExtract.js` — source-resolution panel crops (shared ffmpeg/ffprobe resolver)
 - `src/video/imageHash.js` — full-frame pHash
 - `src/video/imageHashRegion.js` — region-crop pHash (chart overlay)
 
@@ -562,3 +564,67 @@ to the prefilter missing frames entirely.
 **PaddleOCR PP-OCRv6** (`tools/_paddleocr_ocr.py`): Could not install — Python 3.14 is installed; `paddlepaddle` has no cp314 wheel. Downgrade to Python 3.13 to benchmark. Interface is identical to `_easyocr_ocr.py` — schema is `{text, lines, words[{text,left,top,width,height,conf,line}],_engine,_image,_detection_count}`. Would run at ~7× EasyOCR speed (PP-OCRv6 on CPU with OpenVINO).
 
 **Ground truth accuracy**: The `data/qmg_ground_truth.json` must be verified per video — 20220510 GT was actually TSLA+VRM (not LABU/TNA as previously assumed). Always verify GT against the actual video content before trusting recall numbers.
+
+---
+
+## Positions-TABLE reader (`position_table` profile)
+
+The Qullamaggie position list is a **TradingView GUI table**, not a chart overlay. Two
+layouts exist and the legacy crop reader only ever saw the first:
+
+| layout | ticker column (of 1920) | y range |
+|---|---|---|
+| 2022-era floating panel, bottom-right | x ≈ 1793 | lower third |
+| 2023-era right sidebar | x 1606–1648 or 1697–1739 | y 444–708 |
+
+`src/video/positionTableScan.js` reads it. Two phases per frame:
+
+1. **Wide title probe** — the ticker column plus 60 px to the left, first 8 ladder
+   rows — to work out *which* table is the positions table.
+2. **Narrow ticker-column read** at three strip variants; each variant's reading of a
+   cell is one hypothesis, decoded against the lexicon (`decodeCell`).
+
+### The rules that matter
+
+- **Source resolution is mandatory.** The table's ticker glyphs are ~6.8 *source* px
+  tall. A 1280-wide OCR frame renders them ~4.5 px and the panel reads as
+  `US / D / WCU / W / KOCO` instead of `UPST / DVN / NRGU / MOS / TQQQ`. Frames below
+  1600 px wide are refused (`MIN_SOURCE_WIDTH_PX`).
+- **The title discriminator is the literal substring `"POS"`.** "A - Positions" is
+  truncated by the panel width to `APOSI` / `APOSIS` / `AUPOSS` / `POSOS` — all contain
+  `POS`. Every measured near-miss of `POS` at edit distance 1 was a **false positive**
+  (`RPISLVE`, `RPISLU`, `ROSIM`). There is no digit folding: `interpretColumnStrip`
+  strips every non-`A-Z` character before the title check, so a digit-obscured title
+  can never reach the title rule. When the title does **not** overlap the ticker
+  column the tie-break is that the positions table is the **bottom-most** table in
+  the region — that is the `bottom_most` discriminator, not a title match.
+- **A table is published only when positively identified** (`title`, `bottom_most`, or
+  `sole_candidate` with a positively-identified watchlist vetoed) **and** it decoded
+  something. A lone untitled table is *located* but not published.
+- **Table-likeness** needs ≥2 ticker-shaped rows (`tickerishRows >= 2`). A `Sym`
+  header alone is not enough.
+- **The clusterer is bypassed per FRAME, not per profile.** Each capture carries a
+  `ticker_source`; a frame the table reader could not identify falls back to the
+  legacy crop reader and still needs the clusterer's repair.
+
+### Running it
+
+```bash
+node tools/scanVideoWithOcr.js \
+  --video data/video_pipeline/downloads_1080p/<file>.mp4 --date 20220222 \
+  --prefilter-profile position_table --output-kind snapshot \
+  --basename qmg
+```
+
+`--prefilter-profile position_table` implies `--output-kind snapshot`, `--native-ocr-frame`
+and EasyOCR. It costs two EasyOCR batches per frame (~54–65 s/frame); the per-image
+timeout is derived from `--table-frame-budget-ms` (default 900000) rather than fixed,
+so the cost scales with the number of candidates rather than multiplying it.
+
+### Diagnostics
+
+`position_table` in the probe log: `discriminator` (`title` / `bottom_most` /
+`sole_candidate`), `title_text`, `header_text`, `rows`, `column`, `variants`,
+`candidate_scores`, `decoded`, and `verified` (whether it was published).
+
+Full derivation and measurements: `docs/qmg-positions-layout-findings.md`.
