@@ -37,6 +37,7 @@ function printHelp() {
     '  --prefilter-max-frames <n> Maximum frames to OCR, default 60',
     '  --prefilter-neighbors <n>  Neighbor frames kept around strong prefilter hits, default 1',
     '  --strong-threshold <n>     Autosave score threshold, default 6',
+    '  --table-frame-budget-ms <n>  Wall-clock budget for one frame of the positions-TABLE reader, default 900000 (15 min). The per-image OCR timeout is derived from it.',
     '  --review-threshold <n>     Review score threshold, default 4',
     '  --max-captures <n>         Maximum screenshots to save per video, default 3',
     '  --cluster-min-frequency <n> Minimum per-canonical frame count for multi-frame OCR token voting, default 1 (set to 2 to filter single-frame garbles)',
@@ -52,7 +53,7 @@ function printHelp() {
     '  --keep-ocr-crops           Keep the cropped position-list panel PNGs that get fed to the OCR engine (under ocr_probe/crops/). Lets OCR settings be re-benchmarked without a full re-scan.',
     '  --skip-keyframes           Do not invoke ffprobe to locate the nearest keyframe per capture',
     '  --confusion-radius <n>     Adjacent-frame lookup window for confusion_with_nearby, default 1',
-    '  --prefilter-profile <p>    whiteboard | chart_stream | tale_of_the_tape (drives prefilter score table + keyword guard)',
+    '  --prefilter-profile <p>    whiteboard | chart_stream | tale_of_the_tape | position_table (drives prefilter score table + keyword guard)',
     '  --basename <name>          Snapshot PNG prefix + screenshot discovery stem, default "revere"',
     '  --phash-region <x,y,w,h>  Region in pixels for the overlay pHash (optional)',
     '  --phash-hamming-max <n>    Max Hamming distance for overlay pHash dedup, default 6',
@@ -69,6 +70,22 @@ function printHelp() {
 const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.86,0.62,0.14,0.22';
 // Tale-of-the-Tape position list sits center-right in the frame (x≈50-95%, y≈55-98%)
 const TALE_OF_THE_TAPE_CROP_FRACTION = '0.50,0.55,0.45,0.43';
+// The positions-TABLE reader does not use a fixed crop at all — it LOCATES
+// the table in the frame. This region is only the overlay pHash, used to
+// tell one capture from another, so it covers the whole right-hand strip
+// where the table can be in either the 2022 or the 2023 layout.
+const POSITION_TABLE_REGION_FRACTION = '0.78,0.28,0.22,0.72';
+// Wall-clock budget for ONE frame of the positions-TABLE reader. The reader
+// spends two OCR batches per frame (a title probe over every candidate
+// column, then a ticker read over the winner), so the per-image timeout has
+// to be derived from the number of images rather than fixed — a fixed
+// timeout would let a frame with many candidate columns run for an hour.
+//
+// The value is duplicated from DEFAULT_FRAME_BUDGET_MS in
+// src/video/positionTableScan.js on purpose: the args module stays free of
+// the OCR stack (sharp + the EasyOCR adapter), so requiring it here would
+// pull a subprocess-spawning module into every CLI parse.
+const TABLE_FRAME_BUDGET_MS_DEFAULT = 900000;
 
 function parseFractionalRegion(raw) {
   if (!raw) return null;
@@ -108,7 +125,9 @@ function buildDefaultOptions(defaultOutputRoot) {
     keepOcrCrops: false,
     maxCapturesPerVideo: 3,
     ocrEngine: 'tesseract',
+    nativeOcrFrame: false,
     positionMergeMinOccurrences: 1,
+    positionTableParser: false,
     ocrFrameWidth: 1280,
     outputKind: 'whiteboard',
     outputRoot: defaultOutputRoot,
@@ -126,6 +145,7 @@ function buildDefaultOptions(defaultOutputRoot) {
     sampleWidth: 640,
     skipKeyframes: false,
     strongThreshold: 6,
+    tableFrameBudgetMs: null,
     temporalDecay: 1800,
     topCandidates: 5
   };
@@ -211,6 +231,10 @@ function parseArgs(argv, overrides = {}) {
         break;
       case '--strong-threshold':
         options.strongThreshold = Number(nextValue);
+        index += 1;
+        break;
+      case '--table-frame-budget-ms':
+        options.tableFrameBudgetMs = Number(nextValue);
         index += 1;
         break;
       case '--review-threshold':
@@ -365,6 +389,11 @@ function parseArgs(argv, overrides = {}) {
     throw new Error('`--confusion-radius` must be zero or a positive number.');
   }
 
+  if (options.tableFrameBudgetMs !== null
+    && (!Number.isFinite(options.tableFrameBudgetMs) || options.tableFrameBudgetMs <= 0)) {
+    throw new Error('`--table-frame-budget-ms` must be a positive number.');
+  }
+
   if (!['tesseract', 'easyocr'].includes(options.ocrEngine)) {
     throw new Error(`Unsupported OCR engine: ${options.ocrEngine}. Use 'tesseract' or 'easyocr'.`);
   }
@@ -377,7 +406,7 @@ function parseArgs(argv, overrides = {}) {
     throw new Error('`--phash-hamming-max` must be an integer between 0 and 64.');
   }
 
-  if (!['whiteboard', 'chart_stream', 'tale_of_the_tape'].includes(options.prefilterProfile)) {
+  if (!['whiteboard', 'chart_stream', 'tale_of_the_tape', 'position_table'].includes(options.prefilterProfile)) {
     throw new Error(`Unsupported prefilter profile: ${options.prefilterProfile}`);
   }
 
@@ -407,9 +436,75 @@ function parseArgs(argv, overrides = {}) {
     options.phashRegionFraction = parseFractionalRegion(TALE_OF_THE_TAPE_CROP_FRACTION);
   }
 
+  // The positions-TABLE reader locates the table itself, so it needs no
+  // fixed crop — but it does need a pHash region to tell captures apart.
+  if (options.prefilterProfile === 'position_table' && !options.phashRegion && !options.phashRegionFraction) {
+    options.phashRegionFraction = parseFractionalRegion(POSITION_TABLE_REGION_FRACTION);
+  }
+
+  // The crop the LEGACY chart-stream reader OCRs.
+  //
+  // In every profile except position_table this is the pHash region, which
+  // is what the legacy reader has always been given. In table mode it is
+  // NOT: the table profile's region is a capture-dedup rectangle covering
+  // the whole right-hand strip, five times the area of the chart_stream
+  // crop and in the wrong place for the legacy column filter. The legacy
+  // reader is the chart-stream reader, so it gets the chart-stream crop.
+  //
+  // It also cannot be null: `runChartStreamOcr` destructures it, and in
+  // table mode `--phash-region` (a PIXEL region) leaves the fractional one
+  // unset — which used to crash the fail-safe path with a TypeError.
+  options.chartStreamCropFraction = options.prefilterProfile === 'position_table'
+    ? parseFractionalRegion(CHART_STREAM_REGION_FRACTION_DEFAULT)
+    : options.phashRegionFraction;
+
   // chart_stream and tale_of_the_tape prefilters use the chart-stream parser.
   if (options.prefilterProfile === 'chart_stream' || options.prefilterProfile === 'tale_of_the_tape') {
     options.chartStreamParser = true;
+  }
+
+  // The positions-TABLE reader has its own pipeline, but it publishes its
+  // result in the chart_stream shape, so the aggregator needs to be told.
+  if (options.prefilterProfile === 'position_table') {
+    options.chartStreamParser = true;
+    options.positionTableParser = true;
+    // The table's glyphs are ~6.8 SOURCE px tall. A 1280-wide OCR frame
+    // makes them ~4.5 px and the panel reads as "US / D / WCU / W / KOCO"
+    // instead of "UPST / DVN / NRGU / MOS / TQQQ" — so the table reader
+    // needs the source pixels. This is not a preference: at 1280 the table
+    // is not readable at all.
+    //
+    // So an explicit --ocr-frame-width is REFUSED rather than honoured:
+    // in table mode the flag can only downscale the reader's input, never
+    // improve on it, and honouring it would produce a silent, empty
+    // result.
+    if (argv.includes('--ocr-frame-width')) {
+      throw new Error(
+        '`--prefilter-profile position_table` cannot be combined with `--ocr-frame-width`: '
+        + 'the table reader needs the source pixels, and a downscaled frame is not readable.'
+      );
+    }
+    options.nativeOcrFrame = true;
+    // The table reader is EasyOCR-only: it reads a narrow, upscaled strip
+    // of the source frame, which is precisely what Tesseract's
+    // document-trained model is worst at. Asking for Tesseract here would
+    // silently run EasyOCR anyway, so it is refused instead.
+    if (argv.includes('--ocr-engine') && options.ocrEngine !== 'easyocr') {
+      throw new Error(
+        '`--prefilter-profile position_table` requires the easyocr engine: the table '
+        + 'reader reads an upscaled strip of the source frame, which tesseract cannot read.'
+      );
+    }
+    options.ocrEngine = 'easyocr';
+    // The table reader lives in the snapshot branch of the scan. With any
+    // other output kind it would be silently ignored, which is worse than
+    // being told the combination does not work.
+    if (options.outputKind !== 'snapshot') {
+      throw new Error(
+        '`--prefilter-profile position_table` requires `--output-kind snapshot`: '
+        + 'the table reader is part of the snapshot path.'
+      );
+    }
   }
 
   // chart_stream profile frames score 8-12 on valid dark position-list frames.
@@ -440,6 +535,28 @@ function parseArgs(argv, overrides = {}) {
     options.prefilterMaxFrames = 12;
   }
 
+  // The positions-TABLE reader costs two OCR batches per frame (a title
+  // probe over every candidate column, then a ticker read over the winner),
+  // so the frame budget is much smaller than chart_stream's 12. Three
+  // frames is enough for the multi-frame merge to have something to agree
+  // on; the table itself does not change between them.
+  if (options.prefilterProfile === 'position_table' && !argv.includes('--prefilter-threshold')) {
+    options.prefilterThreshold = 8;
+  }
+  if (options.prefilterProfile === 'position_table' && !argv.includes('--prefilter-max-frames')) {
+    options.prefilterMaxFrames = 3;
+  }
+  if (options.prefilterProfile === 'position_table' && !argv.includes('--max-captures')) {
+    options.maxCapturesPerVideo = 2;
+  }
+
+  // The table reader's per-frame wall-clock budget. It is what bounds the
+  // per-image OCR timeout, so it is the knob that keeps a frame with many
+  // candidate columns from running for an hour.
+  if (options.prefilterProfile === 'position_table' && !argv.includes('--table-frame-budget-ms')) {
+    options.tableFrameBudgetMs = TABLE_FRAME_BUDGET_MS_DEFAULT;
+  }
+
   return options;
 }
 
@@ -456,7 +573,9 @@ module.exports = {
   CHART_STREAM_REGION_FRACTION_DEFAULT,
   DEFAULT_OUTPUT_ROOT,
   PIPELINE_PROFILE_DEFAULT,
+  POSITION_TABLE_REGION_FRACTION,
   SUPPORTED_PIPELINE_PROFILES,
+  TABLE_FRAME_BUDGET_MS_DEFAULT,
   TALE_OF_THE_TAPE_CROP_FRACTION,
   createProbeKey,
   parseArgs,

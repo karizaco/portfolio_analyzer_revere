@@ -23,6 +23,7 @@ const {
   formatDuration,
   groupContiguousCandidates,
   inferDateKey,
+  PREFILTER_PROFILES,
   scoreFramePrefilter,
   scoreSnapshotCandidate,
   scoreWhiteboardCandidateBreakdown,
@@ -38,6 +39,7 @@ const { parseChartStreamPositionList, mergeMultiplePositionLists, clusterRawOcrT
 const { runEasyOcr, adaptToParserSchema } = require('../src/ocr/easyocrAdapter');
 const { resolveFfmpegBin, resolveFfprobeBin } = require('../src/video/ffmpegBin');
 const { preprocessChartStreamToBuffer, preprocessChartStreamRawToBuffer } = require('../src/ocr/ocrImage');
+const { readPositionTable } = require('../src/video/positionTableScan');
 
 const OCR_TEXT_SNIPPET_MAX_CHARS = 200;
 const CAPTURE_MIN_FRAME_GAP = 10;
@@ -157,6 +159,17 @@ function resolveSourceWidth(videoPath, fallback = 1920) {
   }
   sourceWidthCache.set(videoPath, width);
   return width;
+}
+
+// The width the OCR frames were actually written at.
+//
+// In native mode the OCR frame IS the source frame — no scale filter is
+// applied — so the source's own width is the honest answer. Reporting the
+// configured --ocr-frame-width there would say 1280 for frames that were
+// 1920 wide.
+function effectiveOcrFrameWidth(options, videoPath) {
+  if (options && options.nativeOcrFrame) return resolveSourceWidth(videoPath);
+  return options ? options.ocrFrameWidth : null;
 }
 
 // Run ffprobe once per video to harvest the list of keyframe PTS values,
@@ -358,7 +371,15 @@ function runFfmpegCommand(command, errorMessage) {
   }
 }
 
-function extractOcrFrame(videoPath, timestamp, outputPath, ffmpegBin, ocrFrameWidth) {
+// Extract the frame the OCR pass will read.
+//
+// `native` keeps the source's own pixels. The positions-TABLE reader needs
+// them: the table's ticker glyphs are ~6.8 source px tall, and the 1280-wide
+// OCR frame renders them ~4.5 px, at which point the panel reads as
+// "US / D / WCU / W / KOCO" instead of "UPST / DVN / NRGU / MOS / TQQQ".
+// Everything else reads the downscaled frame, which is what makes the
+// per-frame OCR affordable.
+function extractOcrFrame(videoPath, timestamp, outputPath, ffmpegBin, ocrFrameWidth, native = false) {
   const command = [
     resolveFfmpegBin(ffmpegBin),
     '-hide_banner',
@@ -369,11 +390,13 @@ function extractOcrFrame(videoPath, timestamp, outputPath, ffmpegBin, ocrFrameWi
     '-i',
     videoPath,
     '-frames:v',
-    '1',
-    '-vf',
-    buildScaleFilter(ocrFrameWidth),
-    outputPath
+    '1'
   ];
+
+  if (!native) {
+    command.push('-vf', buildScaleFilter(ocrFrameWidth));
+  }
+  command.push(outputPath);
 
   runFfmpegCommand(command, 'ffmpeg OCR frame extraction failed.');
 }
@@ -383,7 +406,7 @@ function extractOcrFrame(videoPath, timestamp, outputPath, ffmpegBin, ocrFrameWi
 // Used for batch snapshots that are valid for multi-frame merge — all
 // frames show the same position list state since they're within seconds
 // of each other.
-function extractBatchOcrFrames(videoPath, centerTimestamp, windowSeconds, count, ocrFrameDirectory, ffmpegBin, ocrFrameWidth, baseStem) {
+function extractBatchOcrFrames(videoPath, centerTimestamp, windowSeconds, count, ocrFrameDirectory, ffmpegBin, ocrFrameWidth, baseStem, native = false) {
   const ffmpegBinResolved = resolveFfmpegBin(ffmpegBin);
   const halfWindow = windowSeconds / 2;
   // Spread count frames evenly across [center - halfWindow, center + halfWindow]
@@ -400,10 +423,12 @@ function extractBatchOcrFrames(videoPath, centerTimestamp, windowSeconds, count,
       ffmpegBinResolved, '-hide_banner', '-loglevel', 'error',
       '-ss', ts.toFixed(3),
       '-i', videoPath,
-      '-frames:v', '1',
-      '-vf', buildScaleFilter(ocrFrameWidth),
-      outPath
+      '-frames:v', '1'
     ];
+    if (!native) {
+      command.push('-vf', buildScaleFilter(ocrFrameWidth));
+    }
+    command.push(outPath);
     runFfmpegCommand(command, `ffmpeg batch frame extraction at t=${ts} failed.`);
     extracted.push({ timestamp: ts, framePath: outPath });
   }
@@ -461,10 +486,15 @@ async function prefilterFrames({ fps, framePaths, outputKind, prefilterProfile, 
   const prefilterRows = [];
   let bestRow = null;
   const startedAt = Date.now();
+  // Some profiles watch a different rectangle for the position list: the
+  // 2023-era sidebar puts the table higher up the frame than the 2022-era
+  // bottom-right panel does.
+  const profileTable = PREFILTER_PROFILES[prefilterProfile] || null;
+  const tickerRegion = profileTable && profileTable.tickerRegion ? profileTable.tickerRegion : null;
 
   for (let index = 0; index < framePaths.length; index += 1) {
     const framePath = framePaths[index];
-    const stats = await analyzeFrameBeforeOcr(framePath);
+    const stats = await analyzeFrameBeforeOcr(framePath, tickerRegion);
     const timestamp = buildFrameTimestamp(index, fps);
     // Attach timestamp onto stats so scoreFramePrefilter temporal boost
     // (which historically read stats.timestamp) cannot produce NaN.
@@ -512,6 +542,12 @@ async function prefilterFrames({ fps, framePaths, outputKind, prefilterProfile, 
  * cropped PNG) so the OCR input is the same as the Tesseract path.
  */
 async function runChartStreamOcr(framePath, phashRegionFraction, scale, ocrEngine = 'tesseract', easyOcrOptions = {}) {
+  // The crop region is not optional. A pixel-region run (`--phash-region`)
+  // leaves the fractional one unset, and destructuring null used to throw a
+  // TypeError from the middle of this function.
+  if (!phashRegionFraction) {
+    throw new Error('chart-stream OCR needs a fractional crop region');
+  }
   // For EasyOCR we optionally crop from the ORIGINAL video (videoPath +
   // timestamp) instead of the 1280px-wide OCR-resolution frame. Cropping
   // from the downscaled frame loses detail — verified 2026-09-29 that
@@ -594,22 +630,136 @@ async function runChartStreamOcr(framePath, phashRegionFraction, scale, ocrEngin
   return { ocr, chartStream, tickerCount };
 }
 
+// Turn a positions-TABLE reading into the chart_stream shape the rest of
+// the pipeline already speaks.
+//
+// The shape is deliberate: tools/aggregateScanResults.js routes a capture's
+// tickers by `screen_layout` — 'chart_stream' reads
+// `chart_stream.position_list`. Publishing the table's holdings under that
+// name means the aggregator, the timeline viewer and the merge all work
+// unchanged.
+function buildTableChartStream(table) {
+  const decoded = table.decoded || [];
+  const readCount = decoded.length;
+  const accepted = decoded.filter((d) => d.ticker);
+  const meanConfidence = accepted.length
+    ? accepted.reduce((sum, d) => sum + Number(d.confidence || 0), 0) / accepted.length
+    : 0;
+  // Confidence is the recogniser's agreement scaled by how much of the
+  // table was readable at all: a table with 13 rows where 4 decode is not
+  // a confident reading of a 4-row table.
+  const confidence = readCount ? (accepted.length / readCount) * meanConfidence : 0;
+
+  return {
+    confidence: Number(confidence.toFixed(4)),
+    parse_status: 'ok',
+    position_list: accepted.map((d) => d.ticker),
+    price_action: '',
+    tickers_rejected: readCount - accepted.length,
+    tickers_rejected_list: table.rejected || [],
+    column_filter: {
+      dominant_x: table.column ? table.column.left : null,
+      column_width: table.column ? table.column.right - table.column.left : null,
+      in_list_token_count: accepted.length
+    },
+    bbox_filter: null,
+    panel_gate: {
+      panel_gate_active: true,
+      title_row: table.titleRow,
+      positions_header_row: table.headerRow,
+      data_row_start: table.dataRowStart
+    },
+    position_table: {
+      discriminator: table.discriminator || table.reason,
+      title_text: table.titleText || '',
+      header_text: table.headerText || '',
+      title_row: table.titleRow,
+      header_row: table.headerRow,
+      data_row_start: table.dataRowStart,
+      rows: table.rows,
+      variants: table.variants || [],
+      column: table.column || null,
+      candidate_scores: table.candidate_scores || [],
+      decoded
+    }
+  };
+}
+
 async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats, prefilterScore, options = {}) {
   // Optional override timestamp (used for batch snapshots where frameIndex
   // doesn't correspond to the original sample-frame index).
   const explicitTimestamp = Number.isFinite(options.timestamp) ? options.timestamp : null;
   const {
+    chartStreamCropFraction = null,
     chartStreamParser = false,
     keepOcrCrops = false,
     ocrCropDirectory = null,
     phashRegion = null,
     phashRegionFraction = null,
     ocrEngine = 'tesseract',
+    positionTableParser = false,
+    tableFrameBudgetMs = null,
     videoPath = null,
   } = options;
 
   let ocr, chartStream, tickerSource;
-  if (chartStreamParser) {
+  let positionTable = null;
+  let tableHoldings = [];
+
+  // The legacy crop reader always reads the CHART-STREAM crop.
+  //
+  // `phashRegionFraction` is the capture-dedup rectangle, which in table mode
+  // is a wide strip covering the whole right-hand side — five times the area
+  // of the chart-stream crop and in the wrong place for the column filter.
+  // `chartStreamCropFraction` is the crop the legacy reader should use; the
+  // profile supplies it, and `phashRegionFraction` is the fallback for
+  // callers that do not.
+  const legacyCropFraction = chartStreamCropFraction || phashRegionFraction;
+  if (positionTableParser) {
+    // The positions-TABLE reader runs first: it LOCATES the table and reads
+    // it from the source pixels, which is the only way to read the 2023-era
+    // sidebar layout at all. If it does not find a table, fall through to
+    // the legacy crop reader so a scan never ends up with less than it
+    // would have had before.
+    try {
+      const table = await readPositionTable(framePath, {
+        engine: ocrEngine,
+        frameBudgetMs: tableFrameBudgetMs || undefined,
+        pythonPath: options.pythonPath
+      });
+      // The reading is kept even when it found nothing: `reason` says WHY
+      // no table was claimed, which is the only way to tell "this frame has
+      // no positions table" apart from "the table reader cannot see it".
+      positionTable = table;
+      // A table is only published when it was POSITIVELY identified as the
+      // positions table AND something in it decoded. "The only table in
+      // the panel" could be the watchlist, and a table that decoded
+      // nothing has no holdings to publish.
+      if (table.found && table.verified && table.tickers && table.tickers.length) {
+        tableHoldings = table.tickers;
+        chartStream = buildTableChartStream(table);
+        tickerSource = chartStream.position_list;
+        ocr = {
+          text: [table.titleText, ...tickerSource].filter(Boolean).join('\n'),
+          lines: [],
+          words: table.words || [],
+          confidence: chartStream.confidence,
+          profileName: 'position_table',
+          _engine: 'position_table'
+        };
+      }
+    } catch (error) {
+      // A failed table read must not fail the frame: the legacy reader is
+      // still there, and it is what the rest of the pipeline expects.
+      positionTable = { found: false, verified: false, reason: 'error', error: error.message };
+      console.log(`[scan:snapshot] position table read failed: ${error.message}`);
+    }
+  }
+  // The legacy reader runs unless the table reader actually produced
+  // holdings. Both conditions have to agree, or a frame that found a table
+  // but decoded nothing from it would fall through neither branch and
+  // leave `ocr` undefined.
+  if (chartStreamParser && tableHoldings.length === 0) {
     // Dual-scale: run both 3x and 4x, pick the one with more tickers.
     // Tested 5x+6x on 2026-09-29 (more readable text) — produced different
     // captured frames and worse recall on 20220606 (12.5% vs 25%). The
@@ -628,11 +778,11 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     // scale 3x+4x and pick the one with more tickers (legacy behavior).
     let pick;
     if (ocrEngine === 'easyocr') {
-      pick = await runChartStreamOcr(framePath, phashRegionFraction, 3, ocrEngine, easyOcrOpts);
+      pick = await runChartStreamOcr(framePath, legacyCropFraction, 3, ocrEngine, easyOcrOpts);
     } else {
       const [r3, r4] = await Promise.all([
-        runChartStreamOcr(framePath, phashRegionFraction, 3, ocrEngine, easyOcrOpts),
-        runChartStreamOcr(framePath, phashRegionFraction, 4, ocrEngine, easyOcrOpts),
+        runChartStreamOcr(framePath, legacyCropFraction, 3, ocrEngine, easyOcrOpts),
+        runChartStreamOcr(framePath, legacyCropFraction, 4, ocrEngine, easyOcrOpts),
       ]);
       // Prefer by ticker count; tie-break by OCR confidence
       pick = r4.tickerCount > r3.tickerCount ? r4
@@ -642,7 +792,7 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     ocr = pick.ocr;
     chartStream = pick.chartStream;
     tickerSource = chartStream && chartStream.position_list ? chartStream.position_list : [];
-  } else {
+  } else if (!chartStreamParser) {
     ocr = await ocrImage(framePath);
     chartStream = null;
     tickerSource = [];
@@ -673,6 +823,7 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     lowResFramePath: null,
     ocrConfidence: Number(parsed ? parsed.ocr_confidence : ocr.confidence || 0),
     ocrProfile: ocr.profileName,
+    positionTable,
     ocrText: ocr.text || '',
     ocrTextSnippet: extractOcrTextSnippet(ocr.text),
     ocrWords: Array.isArray(ocr.words) ? ocr.words.map(({ text, left, top, width, height, conf, line }) => ({
@@ -686,7 +837,17 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     prefilterProfile: options.prefilterProfile,
     prefilterScore,
     score: parsed ? scoreSnapshotCandidate(parsed) : scoreChartStreamCandidate(chartStream, ocr.confidence),
-    screenLayout: detectScreenLayout(ocr.text, ocr.lines),
+    // The table reader never sees a price, so detectScreenLayout — which
+    // requires at least two ticker tokens AND a price token — cannot
+    // recognise this frame. The layout is known by construction, so it is
+    // stated rather than guessed.
+    screenLayout: tableHoldings.length
+      ? 'chart_stream'
+      : detectScreenLayout(ocr.text, ocr.lines),
+    // Which reader produced this frame's holdings. The multi-frame clusterer
+    // repairs RAW crop reads, so it must not touch a frame whose holdings
+    // were decoded against the lexicon by the table reader.
+    tickerSource: tableHoldings.length ? 'position_table' : 'chart_stream',
     stats,
     tickers,
     timestamp: explicitTimestamp != null ? explicitTimestamp : buildFrameTimestamp(frameIndex, fps)
@@ -798,12 +959,14 @@ async function buildWhiteboardCandidate(framePath, frameIndex, dateKey, fps, sta
 }
 
 async function scanFrames({
+  chartStreamCropFraction = null,
   chartStreamParser = false,
   dateKey,
   ffmpegBin,
   fps,
   frameRows,
   keepFrames,
+  nativeOcrFrame = false,
   ocrEngine = 'tesseract',
   ocrCropDirectory = null,
   ocrFrameDirectory,
@@ -811,9 +974,11 @@ async function scanFrames({
   outputKind,
   phashRegion,
   phashRegionFraction,
+  positionTableParser = false,
   prefilterProfile,
   progressInterval,
   strongThreshold,
+  tableFrameBudgetMs = null,
   topCandidates,
   videoPath
 }) {
@@ -823,13 +988,16 @@ async function scanFrames({
   const startedAt = Date.now();
   const buildCandidate = outputKind === 'snapshot' ? buildSnapshotCandidate : buildWhiteboardCandidate;
   const candidateOptions = {
+    chartStreamCropFraction,
     chartStreamParser,
     keepOcrCrops: Boolean(ocrCropDirectory),
     ocrCropDirectory,
     ocrEngine,
     phashRegion,
     phashRegionFraction,
+    positionTableParser,
     prefilterProfile,
+    tableFrameBudgetMs,
     videoPath
   };
 
@@ -864,7 +1032,7 @@ async function scanFrames({
       `ocr_${String(frameRow.frameIndex + 1).padStart(6, '0')}.png`
     );
     try {
-      extractOcrFrame(videoPath, frameRow.timestamp, ocrFramePath, ffmpegBin, ocrFrameWidth);
+      extractOcrFrame(videoPath, frameRow.timestamp, ocrFramePath, ffmpegBin, ocrFrameWidth, nativeOcrFrame);
       const candidate = await buildCandidate(
         ocrFramePath,
         frameRow.frameIndex,
@@ -975,7 +1143,10 @@ function summarizeCandidate(candidate, outputKind, allCandidates = null, confusi
         panel_gate: candidate.chartStream.panel_gate || null,
         tickers_rejected_list: Array.isArray(candidate.chartStream.tickers_rejected_list)
           ? candidate.chartStream.tickers_rejected_list
-          : []
+          : [],
+        // The positions-TABLE reader's own diagnostics: which candidate
+        // column was chosen, why, and what it read.
+        position_table: candidate.chartStream.position_table || null
       }
     : null;
 
@@ -1002,12 +1173,47 @@ function summarizeCandidate(candidate, outputKind, allCandidates = null, confusi
     phash: candidate.phash || null,
     phash_overlay: candidate.phashOverlay || null,
     phash_region: candidate.phashRegion || null,
+    // Present only when the positions-TABLE reader ran. `found: false` with
+    // a reason says why no table was claimed — the scan fell back to the
+    // legacy crop reader in that case.
+    position_table: candidate.positionTable
+      ? {
+          found: Boolean(candidate.positionTable.found),
+          // "verified" means the table was positively identified as the
+          // POSITIONS table. An unverified pick is not published — it
+          // could be the watchlist — but it is reported, so a scan that
+          // found nothing says why.
+          verified: Boolean(candidate.positionTable.verified),
+          tickers_count: Array.isArray(candidate.positionTable.tickers)
+            ? candidate.positionTable.tickers.length
+            : null,
+          reason: candidate.positionTable.reason || candidate.positionTable.discriminator || null,
+          discriminator: candidate.positionTable.discriminator || null,
+          title_text: candidate.positionTable.titleText || '',
+          header_text: candidate.positionTable.headerText || '',
+          title_row: candidate.positionTable.titleRow === undefined ? null : candidate.positionTable.titleRow,
+          header_row: candidate.positionTable.headerRow === undefined ? null : candidate.positionTable.headerRow,
+          data_row_start: candidate.positionTable.dataRowStart === undefined
+            ? null
+            : candidate.positionTable.dataRowStart,
+          rows: candidate.positionTable.rows === undefined ? null : candidate.positionTable.rows,
+          column: candidate.positionTable.column || null,
+          variants: candidate.positionTable.variants || [],
+          candidate_scores: candidate.positionTable.candidate_scores || [],
+          decoded: candidate.positionTable.decoded || [],
+          error: candidate.positionTable.error || null
+        }
+      : null,
     prefilter_profile: candidate.prefilterProfile || null,
     prefilter_score: candidate.prefilterScore == null ? null : Number(candidate.prefilterScore.toFixed(2)),
     prefilter_stats: candidate.stats || null,
     score: candidate.score,
     score_breakdown: candidate.scoreBreakdown || null,
     screen_layout: candidate.screenLayout || 'unknown',
+    // Which reader produced this frame's holdings: 'position_table' (the
+    // lexicon-constrained table decoder) or 'chart_stream' (the legacy crop
+    // reader). The clusterer only repairs the latter.
+    ticker_source: candidate.tickerSource || null,
     tickers: Array.isArray(candidate.tickers) ? candidate.tickers : [],
     timestamp: candidate.timestamp,
     timestamp_hms: formatDuration(candidate.timestamp)
@@ -1146,6 +1352,11 @@ async function main() {
     pipeline_profile: options.pipelineProfile,
     phash_region: options.phashRegion || null,
     phash_region_fraction: options.phashRegionFraction || null,
+    // The positions-TABLE reader and whether the OCR frames were kept at
+    // the source resolution (they must be: the table's glyphs are ~6.8
+    // source px tall and unreadable at 1280).
+    position_table_parser: Boolean(options.positionTableParser),
+    native_ocr_frame: Boolean(options.nativeOcrFrame),
     prefilter_profile: options.prefilterProfile,
     temporal_decay: options.temporalDecay,
     video_path: videoPath
@@ -1203,6 +1414,32 @@ async function main() {
     });
     const bestPrefilter = prefilterResult.bestRow;
 
+    // The table reader costs two EasyOCR batches per frame, so its frame
+    // budget is small — and selectFramesForOcr spends that budget on a
+    // UNIFORM sample, because its stride-based reserve is allowed to
+    // consume the whole allowance. A blind stride may never land on a
+    // frame with the table on screen, and the profile's own prefilter
+    // rectangle — which is what watches the 2023-era sidebar — would then
+    // have no effect at all.
+    //
+    // So in table mode the best-scoring frame is swapped in for the last
+    // uniform one. This is deliberately local to the table profile:
+    // selectFramesForOcr is shared with the chart_stream and whiteboard
+    // pipelines, and changing its selection there would change results
+    // that have already been measured.
+    if (options.positionTableParser && bestPrefilter && selectedFrameRows.length) {
+      const alreadySelected = selectedFrameRows.some(
+        (row) => row.frameIndex === bestPrefilter.frameIndex
+      );
+      if (!alreadySelected) {
+        selectedFrameRows[selectedFrameRows.length - 1] = bestPrefilter;
+        console.log(
+          `[scan:${options.outputKind}] table mode: swapped in the best prefilter frame `
+          + `(${bestPrefilter.prefilterScore.toFixed(2)} at ${formatDuration(bestPrefilter.timestamp)})`
+        );
+      }
+    }
+
     // Batch snapshot mode: pick the best-scoring frame and extract N
     // additional frames within a window of that timestamp. All frames
     // show the same position list state since they're seconds apart,
@@ -1230,7 +1467,8 @@ async function main() {
           ocrFrameDirectory,
           options.ffmpegBin,
           options.ocrFrameWidth,
-          baseStem
+          baseStem,
+          Boolean(options.nativeOcrFrame)
         );
         // Replace selectedFrameRows with batch frames. Give each its own
         // stats snapshot with the correct timestamp so the OCR pass records
@@ -1265,12 +1503,14 @@ async function main() {
     );
 
     const scanResult = await scanFrames({
+      chartStreamCropFraction: options.chartStreamCropFraction || null,
       chartStreamParser: Boolean(options.chartStreamParser),
       dateKey,
       ffmpegBin: options.ffmpegBin,
       fps: options.fps,
       frameRows: selectedFrameRows,
       keepFrames: Boolean(options.keepFrames),
+      nativeOcrFrame: Boolean(options.nativeOcrFrame),
       ocrEngine: options.ocrEngine || 'tesseract',
       ocrCropDirectory: options.keepOcrCrops ? ocrCropDirectory : null,
       ocrFrameDirectory,
@@ -1278,9 +1518,11 @@ async function main() {
       outputKind: options.outputKind,
       phashRegion: options.phashRegion || null,
       phashRegionFraction: options.phashRegionFraction || null,
+      positionTableParser: Boolean(options.positionTableParser),
       prefilterProfile: options.prefilterProfile,
       progressInterval: options.progressInterval,
       strongThreshold: options.strongThreshold,
+      tableFrameBudgetMs: options.tableFrameBudgetMs || null,
       topCandidates: options.topCandidates,
       videoPath
     });
@@ -1322,7 +1564,7 @@ async function main() {
         nearest_ffmpeg_keyframe_pts_total: keyframePtsList.length,
         ocr_engine_metadata: ocrEngineMetadata,
         ocr_frame_count: selectedFrameRows.length,
-        ocr_frame_width: options.ocrFrameWidth,
+        ocr_frame_width: effectiveOcrFrameWidth(options, videoPath),
         prefilter_best_score: bestPrefilter ? bestPrefilter.prefilterScore : null,
         sample_frame_width: options.sampleWidth,
         status: 'no_match',
@@ -1364,18 +1606,35 @@ async function main() {
     ));
     // Multi-frame RAW-OCR token voting (run once, expose both fields).
     // See src/parse/parseChartStream.js clusterRawOcrTokens for details.
-    // Use top_candidates (all OCR'd frames, pre-dedup) rather than
-    // captureSummaries (post-dedup) so the clusterer sees every frame
-    // the OCR pass produced, not just the picked subset.
+    //
+    // The input comes from the RAW candidates (`scanResult.candidates`), not
+    // from `top_candidates`. The top candidates are SUMMARIES, and a summary
+    // spells the field `chart_stream` — reading `chartStream.position_list`
+    // off a summary is always undefined, which silently emptied the
+    // clusterer's input and disabled Filter A entirely. The raw candidates
+    // also cover every OCR'd frame, not just the top N.
+    //
     // For snapshot mode (QMG chart_stream): use per-frame position_list
     // (column-filtered tickers) instead of raw OCR text to avoid chart-area
     // ticker bleed into the clusterer. Skip frames with no position_list.
     // For whiteboard mode (Revere): use raw ocr_text as before.
+    const rawCandidates = scanResult.candidates || [];
     const clusterInput = (options.outputKind === 'snapshot')
-      ? (scanResult.topCandidates || [])
+      ? rawCandidates
+          .filter((c) => c.tickerSource !== 'position_table')
           .filter((c) => Array.isArray(c.chartStream?.position_list) && c.chartStream.position_list.length > 0)
           .map((c) => c.chartStream.position_list.join(' '))
       : (scanResult.topCandidates || []).map((c) => c.ocr_text || '');
+    // The positions-TABLE reader does not need the clusterer. It exists to
+    // repair garbled tokens in a RAW crop read; the table reader already
+    // decodes each cell against the lexicon, and its output is a list of
+    // holdings, not a bag of tokens. Running the clusterer over it would
+    // only be a chance to replace good readings with bad ones.
+    //
+    // The bypass is PER FRAME, not per profile: a frame the table reader
+    // could not identify falls back to the legacy crop reader, and that
+    // frame still needs the clusterer's repair. Only frames the table
+    // reader published are left alone.
     const clusterResult = clusterRawOcrTokens(
       clusterInput,
       // Filter A: per-canonical frame count. Default 2 (was 1). Filters
@@ -1391,8 +1650,15 @@ async function main() {
     // random tickers) that would overwrite the structured holdings.
     // Note: aggregateScanResults.js reads captures[n].tickers, so the
     // per-capture tickers_from_bbox is what matters for Revere.
-    if (options.outputKind === 'snapshot' && clusterResult.merged_list.length > 0) {
+    //
+    // A capture the table reader published keeps its own holdings: the
+    // clusterer output is a consensus over the legacy frames, and applying
+    // it to a table capture would replace a lexicon-decoded reading with a
+    // vote.
+    if (options.outputKind === 'snapshot'
+      && clusterResult.merged_list.length > 0) {
       for (const cap of captureSummaries) {
+        if (cap.ticker_source === 'position_table') continue;
         cap.tickers = clusterResult.merged_list.slice();
       }
     }
@@ -1408,7 +1674,7 @@ async function main() {
       nearest_ffmpeg_keyframe_pts_total: keyframePtsList.length,
       ocr_engine_metadata: ocrEngineMetadata,
       ocr_frame_count: selectedFrameRows.length,
-      ocr_frame_width: options.ocrFrameWidth,
+      ocr_frame_width: effectiveOcrFrameWidth(options, videoPath),
       output_path: captureOutputs[0].outputPath,
       prefilter_best_score: bestPrefilter ? bestPrefilter.prefilterScore : null,
       review_threshold: options.reviewThreshold,
@@ -1419,24 +1685,19 @@ async function main() {
       top_candidates: scanResult.topCandidates,
       top_rejected_candidates: rejectedForReport.map((candidate) => summarizeCandidate(candidate, options.outputKind)),
       whiteboard_segments: buildWhiteboardSegments(captureSummaries),
-      // Multi-frame merge: for chart_stream (snapshot) mode use the clusterer
-      // (raw OCR token clustering). For whiteboard mode, use the structured
-      // tickers_from_bbox arrays from the GRO/TURBO parser — the clusterer
-      // produces garbage (55-58 random tickers from full-frame OCR) for Revere.
+      // Multi-frame merge.
+      //
+      // Merging the per-capture tickers covers every case with one rule:
+      // for a legacy chart_stream scan the captures were just overridden with
+      // the clusterer's consensus, so the merge IS the clusterer's list; for
+      // a table scan it adds the table reader's holdings to that consensus;
+      // for whiteboard it merges the structured GRO/TURBO holdings, which
+      // the clusterer must not touch.
       merged_position_list: (() => {
-        let raw;
-        if (options.outputKind === 'snapshot' && clusterResult?.merged_list?.length) {
-          raw = clusterResult.merged_list;
-        } else {
-          // For whiteboard (Revere) or when clusterer produced nothing:
-          // use per-capture tickers_from_bbox (GRO/TURBO structured holdings).
-          // captureSummaries[n].tickers holds the parsed tickers for whiteboard
-          // (unchanged by the clusterer override above for whiteboard mode).
-          raw = mergeMultiplePositionLists(
-            captureSummaries.map((c) => c.tickers || []),
-            { minOccurrences: options.positionMergeMinOccurrences }
-          );
-        }
+        const raw = mergeMultiplePositionLists(
+          captureSummaries.map((c) => c.tickers || []),
+          { minOccurrences: options.positionMergeMinOccurrences }
+        );
         return raw.filter((t) => !TICKER_BLOCKLIST.has(t));
       })(),
       // Multi-frame RAW-OCR token voting. Collects raw ticker-shape tokens

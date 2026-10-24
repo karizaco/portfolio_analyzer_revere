@@ -20,6 +20,14 @@ const { resolveFfmpegBin, resolveFfprobeBin } = require('./ffmpegBin.js');
 //
 // Every crop therefore comes from the original video, never from the
 // OCR-resolution frame.
+//
+// SCOPE: this module extracts CROPS. Extracting a whole source-resolution
+// FRAME is the scan tool's job — `extractOcrFrame(..., native)` in
+// tools/scanVideoWithOcr.js — and the positions-TABLE reader consumes that
+// frame's path. There used to be a second implementation of the frame
+// extractor here; it was removed rather than left to drift, because two
+// implementations of the same thing is how the `chartStream` /
+// `chart_stream` field-name mismatch slipped into the clusterer.
 
 /**
  * The pixel size of a video's video stream.

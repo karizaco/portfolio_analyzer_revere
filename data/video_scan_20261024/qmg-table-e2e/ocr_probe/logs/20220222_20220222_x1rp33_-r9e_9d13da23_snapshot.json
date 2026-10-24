@@ -1,0 +1,2439 @@
+{
+  "basename": "qmg",
+  "channel": "qmg",
+  "chart_stream_parser": true,
+  "date_key": "20220222",
+  "output_kind": "snapshot",
+  "pipeline_profile": "legacy",
+  "phash_region": null,
+  "phash_region_fraction": {
+    "x": 0.78,
+    "y": 0.28,
+    "w": 0.22,
+    "h": 0.72
+  },
+  "position_table_parser": true,
+  "native_ocr_frame": true,
+  "prefilter_profile": "position_table",
+  "temporal_decay": 1800,
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_1080p\\20220222_X1Rp33_-R9E.mp4",
+  "captured_count": 2,
+  "captures": [
+    {
+      "chart_stream": {
+        "confidence": 0.8773,
+        "parse_status": "ok",
+        "position_list": [
+          "NRGU",
+          "DVN",
+          "MOS",
+          "COPX",
+          "TQQQ",
+          "FCX",
+          "TSLA"
+        ],
+        "price_action": "",
+        "tickers_rejected": 0,
+        "column_filter": {
+          "dominant_x": 1795,
+          "column_width": 24,
+          "in_list_token_count": 7
+        },
+        "bbox_filter": null,
+        "panel_gate": {
+          "panel_gate_active": true,
+          "title_row": -1,
+          "positions_header_row": -1,
+          "data_row_start": 0
+        },
+        "tickers_rejected_list": [],
+        "position_table": {
+          "discriminator": "bottom_most",
+          "title_text": "",
+          "header_text": "",
+          "title_row": -1,
+          "header_row": -1,
+          "data_row_start": 0,
+          "rows": 7,
+          "variants": [
+            "s6p4",
+            "s6p0",
+            "s8p2"
+          ],
+          "column": {
+            "left": 1795,
+            "right": 1819
+          },
+          "candidate_scores": [
+            {
+              "left": 1792,
+              "rows": 18,
+              "bottom": 411,
+              "score": 0,
+              "title": null,
+              "header": null,
+              "watch": null,
+              "tickerish_rows": 5
+            },
+            {
+              "left": 1795,
+              "rows": 7,
+              "bottom": 846,
+              "score": 0,
+              "title": null,
+              "header": null,
+              "watch": null,
+              "tickerish_rows": 5
+            },
+            {
+              "left": 1890,
+              "rows": 6,
+              "bottom": 344,
+              "score": 0,
+              "title": null,
+              "header": null,
+              "watch": null,
+              "tickerish_rows": 3
+            },
+            {
+              "left": 1808,
+              "rows": 4,
+              "bottom": 398,
+              "score": 0,
+              "title": null,
+              "header": null,
+              "watch": null,
+              "tickerish_rows": 4
+            }
+          ],
+          "decoded": [
+            {
+              "raw": "NRGU|NRGU|NRGU",
+              "ticker": "NRGU",
+              "cost": 0,
+              "confidence": 0.9974591732025146
+            },
+            {
+              "raw": "DVN|DVN|DVN",
+              "ticker": "DVN",
+              "cost": 0,
+              "confidence": 0.9961626576657865
+            },
+            {
+              "raw": "MOS|MOS|MOS",
+              "ticker": "MOS",
+              "cost": 0,
+              "confidence": 0.993699830996844
+            },
+            {
+              "raw": "COPX|COPX|COPX",
+              "ticker": "COPX",
+              "cost": 0,
+              "confidence": 0.9994686841964722
+            },
+            {
+              "raw": "TOCQ|TOCQ|TOCQ",
+              "ticker": "TQQQ",
+              "cost": 0.75,
+              "confidence": 0.8779242634773254
+            },
+            {
+              "raw": "KX|KCX|FCX",
+              "ticker": "FCX",
+              "cost": 0,
+              "confidence": 0.9477955277193371
+            },
+            {
+              "raw": "TSLA|TSUA|TSU",
+              "ticker": "TSLA",
+              "cost": 0,
+              "confidence": 0.3287011384963989
+            }
+          ]
+        }
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-table-e2e\\ocr_probe\\frames\\20220222_20220222_x1rp33_-r9e_9d13da23_snapshot\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 0,
+      "observed_date": null,
+      "ocr_confidence": 0.8773,
+      "ocr_profile": "position_table",
+      "ocr_text": "NRGU\nDVN\nMOS\nCOPX\nTQQQ\nFCX\nTSLA",
+      "ocr_text_snippet": "NRGU DVN MOS COPX TQQQ FCX TSLA",
+      "ocr_words": [
+        {
+          "text": "NRGU",
+          "left": 1793.5,
+          "top": 730.5,
+          "width": 27,
+          "height": 10,
+          "conf": 0.9974591732025146,
+          "line": 0
+        },
+        {
+          "text": "DVN",
+          "left": 1793.5,
+          "top": 748.5,
+          "width": 21.666666666666742,
+          "height": 10,
+          "conf": 0.9939069608857303,
+          "line": 1
+        },
+        {
+          "text": "MOS",
+          "left": 1793.8333333333333,
+          "top": 766.5,
+          "width": 22.333333333333485,
+          "height": 10,
+          "conf": 0.7694610422904047,
+          "line": 2
+        },
+        {
+          "text": "COPX",
+          "left": 1793.3333333333333,
+          "top": 784.3333333333334,
+          "width": 26.5,
+          "height": 11.166666666666629,
+          "conf": 0.9910200834274292,
+          "line": 3
+        },
+        {
+          "text": "TOCQ",
+          "left": 1792.5,
+          "top": 802,
+          "width": 29.5,
+          "height": 15.333333333333371,
+          "conf": 0.5772427320480347,
+          "line": 4
+        },
+        {
+          "text": "KX",
+          "left": 1793.5,
+          "top": 820.8333333333334,
+          "width": 19,
+          "height": 10,
+          "conf": 0.3667322279623425,
+          "line": 5
+        },
+        {
+          "text": "TSLA",
+          "left": 1793.5,
+          "top": 838.5,
+          "width": 22.333333333333258,
+          "height": 10.333333333333371,
+          "conf": 0.3287011384963989,
+          "line": 6
+        }
+      ],
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "bf3872a8d244f8d8",
+      "phash_overlay": "b9a5b94242dadf24",
+      "phash_region": {
+        "x": 0.78,
+        "y": 0.28,
+        "w": 0.22,
+        "h": 0.72
+      },
+      "position_table": {
+        "found": true,
+        "verified": true,
+        "tickers_count": 7,
+        "reason": "bottom_most",
+        "discriminator": "bottom_most",
+        "title_text": "",
+        "header_text": "",
+        "title_row": -1,
+        "header_row": -1,
+        "data_row_start": 0,
+        "rows": 7,
+        "column": {
+          "left": 1795,
+          "right": 1819
+        },
+        "variants": [
+          "s6p4",
+          "s6p0",
+          "s8p2"
+        ],
+        "candidate_scores": [
+          {
+            "left": 1792,
+            "rows": 18,
+            "bottom": 411,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 5
+          },
+          {
+            "left": 1795,
+            "rows": 7,
+            "bottom": 846,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 5
+          },
+          {
+            "left": 1890,
+            "rows": 6,
+            "bottom": 344,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 3
+          },
+          {
+            "left": 1808,
+            "rows": 4,
+            "bottom": 398,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 4
+          }
+        ],
+        "decoded": [
+          {
+            "raw": "NRGU|NRGU|NRGU",
+            "ticker": "NRGU",
+            "cost": 0,
+            "confidence": 0.9974591732025146
+          },
+          {
+            "raw": "DVN|DVN|DVN",
+            "ticker": "DVN",
+            "cost": 0,
+            "confidence": 0.9961626576657865
+          },
+          {
+            "raw": "MOS|MOS|MOS",
+            "ticker": "MOS",
+            "cost": 0,
+            "confidence": 0.993699830996844
+          },
+          {
+            "raw": "COPX|COPX|COPX",
+            "ticker": "COPX",
+            "cost": 0,
+            "confidence": 0.9994686841964722
+          },
+          {
+            "raw": "TOCQ|TOCQ|TOCQ",
+            "ticker": "TQQQ",
+            "cost": 0.75,
+            "confidence": 0.8779242634773254
+          },
+          {
+            "raw": "KX|KCX|FCX",
+            "ticker": "FCX",
+            "cost": 0,
+            "confidence": 0.9477955277193371
+          },
+          {
+            "raw": "TSLA|TSUA|TSU",
+            "ticker": "TSLA",
+            "cost": 0,
+            "confidence": 0.3287011384963989
+          }
+        ],
+        "error": null
+      },
+      "prefilter_profile": "position_table",
+      "prefilter_score": 27.93,
+      "prefilter_stats": {
+        "brightRatio": 0.011111111111111112,
+        "darkRatio": 0.955625,
+        "edgeRatio": 0.1155748710338492,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1375,
+        "horizontalEdgeRatio": 0.09716627800155465,
+        "meanLuma": 17.293680555555557,
+        "rowDensity": 11,
+        "multiColStripeCount": 1,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 159,
+        "midToneRatioTicker": 0.631578947368421,
+        "stdDev": 37.46514771621693,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1896,
+        "verticalEdgeRatio": 0.13398346406614373,
+        "timestamp": 0
+      },
+      "score": 25.07,
+      "score_breakdown": null,
+      "screen_layout": "chart_stream",
+      "ticker_source": "position_table",
+      "tickers": [
+        "NRGU",
+        "DVN",
+        "MOS",
+        "COPX",
+        "TQQQ",
+        "FCX",
+        "TSLA"
+      ],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-table-e2e\\snapshots\\qmg_20220222.png"
+    },
+    {
+      "chart_stream": {
+        "confidence": 0.8679,
+        "parse_status": "ok",
+        "position_list": [
+          "NRGU",
+          "DVN",
+          "MOS",
+          "COPX",
+          "TQQQ",
+          "FCX",
+          "TSLA"
+        ],
+        "price_action": "",
+        "tickers_rejected": 0,
+        "column_filter": {
+          "dominant_x": 1795,
+          "column_width": 24,
+          "in_list_token_count": 7
+        },
+        "bbox_filter": null,
+        "panel_gate": {
+          "panel_gate_active": true,
+          "title_row": -1,
+          "positions_header_row": -1,
+          "data_row_start": 0
+        },
+        "tickers_rejected_list": [],
+        "position_table": {
+          "discriminator": "bottom_most",
+          "title_text": "",
+          "header_text": "",
+          "title_row": -1,
+          "header_row": -1,
+          "data_row_start": 0,
+          "rows": 7,
+          "variants": [
+            "s6p4",
+            "s6p0",
+            "s8p2"
+          ],
+          "column": {
+            "left": 1795,
+            "right": 1819
+          },
+          "candidate_scores": [
+            {
+              "left": 1792,
+              "rows": 10,
+              "bottom": 250,
+              "score": -1000,
+              "title": null,
+              "header": null,
+              "watch": "XWL",
+              "tickerish_rows": 5
+            },
+            {
+              "left": 1795,
+              "rows": 7,
+              "bottom": 846,
+              "score": 0,
+              "title": null,
+              "header": null,
+              "watch": null,
+              "tickerish_rows": 5
+            },
+            {
+              "left": 1890,
+              "rows": 7,
+              "bottom": 250,
+              "score": 0,
+              "title": null,
+              "header": null,
+              "watch": null,
+              "tickerish_rows": 2
+            },
+            {
+              "left": 1792,
+              "rows": 5,
+              "bottom": 411,
+              "score": 100,
+              "title": null,
+              "header": "SAS",
+              "watch": null,
+              "tickerish_rows": 2
+            }
+          ],
+          "decoded": [
+            {
+              "raw": "NRGU|NRGU|NRGU",
+              "ticker": "NRGU",
+              "cost": 0,
+              "confidence": 0.999826967716217
+            },
+            {
+              "raw": "DVN|DVN|DVN",
+              "ticker": "DVN",
+              "cost": 0,
+              "confidence": 0.9854478256996212
+            },
+            {
+              "raw": "MOS|MOS|MOS",
+              "ticker": "MOS",
+              "cost": 0,
+              "confidence": 0.9912413965445117
+            },
+            {
+              "raw": "COPX|COPX|COPX",
+              "ticker": "COPX",
+              "cost": 0,
+              "confidence": 0.9989749789237976
+            },
+            {
+              "raw": "TQCQ|TOCQ|TOCQ",
+              "ticker": "TQQQ",
+              "cost": 0.5,
+              "confidence": 0.4693150818347931
+            },
+            {
+              "raw": "FX|FCX|FCX",
+              "ticker": "FCX",
+              "cost": 0,
+              "confidence": 0.980301209753242
+            },
+            {
+              "raw": "TSLA|TSUA|TSU",
+              "ticker": "TSLA",
+              "cost": 0,
+              "confidence": 0.6502946019172668
+            }
+          ]
+        }
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 147,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-table-e2e\\ocr_probe\\frames\\20220222_20220222_x1rp33_-r9e_9d13da23_snapshot\\ocr\\ocr_000148.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 586.666667,
+      "observed_date": null,
+      "ocr_confidence": 0.8679,
+      "ocr_profile": "position_table",
+      "ocr_text": "NRGU\nDVN\nMOS\nCOPX\nTQQQ\nFCX\nTSLA",
+      "ocr_text_snippet": "NRGU DVN MOS COPX TQQQ FCX TSLA",
+      "ocr_words": [
+        {
+          "text": "NRGU",
+          "left": 1793.3333333333333,
+          "top": 730.1666666666666,
+          "width": 27.166666666666742,
+          "height": 10.666666666666742,
+          "conf": 0.8115103627535346,
+          "line": 0
+        },
+        {
+          "text": "DVN",
+          "left": 1793.6666666666667,
+          "top": 749,
+          "width": 21.333333333333258,
+          "height": 9.333333333333371,
+          "conf": 0.9217446585544888,
+          "line": 1
+        },
+        {
+          "text": "MOS",
+          "left": 1794,
+          "top": 767,
+          "width": 21.833333333333258,
+          "height": 9.333333333333371,
+          "conf": 0.9693591932440534,
+          "line": 2
+        },
+        {
+          "text": "COPX",
+          "left": 1792.8333333333333,
+          "top": 783.8333333333334,
+          "width": 27.5,
+          "height": 12.833333333333258,
+          "conf": 0.9989519715309143,
+          "line": 3
+        },
+        {
+          "text": "TQCQ",
+          "left": 1792.1666666666667,
+          "top": 801.3333333333334,
+          "width": 29.833333333333258,
+          "height": 16.5,
+          "conf": 0.4693150818347931,
+          "line": 4
+        },
+        {
+          "text": "FX",
+          "left": 1793.5,
+          "top": 820.8333333333334,
+          "width": 19,
+          "height": 10,
+          "conf": 0.6527949045223868,
+          "line": 5
+        },
+        {
+          "text": "TSLA",
+          "left": 1793.3333333333333,
+          "top": 838.3333333333334,
+          "width": 22.5,
+          "height": 10.5,
+          "conf": 0.6502946019172668,
+          "line": 6
+        }
+      ],
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "bfb972a8d221d8d0",
+      "phash_overlay": "bd25bd4a425abf04",
+      "phash_region": {
+        "x": 0.78,
+        "y": 0.28,
+        "w": 0.22,
+        "h": 0.72
+      },
+      "position_table": {
+        "found": true,
+        "verified": true,
+        "tickers_count": 7,
+        "reason": "bottom_most",
+        "discriminator": "bottom_most",
+        "title_text": "",
+        "header_text": "",
+        "title_row": -1,
+        "header_row": -1,
+        "data_row_start": 0,
+        "rows": 7,
+        "column": {
+          "left": 1795,
+          "right": 1819
+        },
+        "variants": [
+          "s6p4",
+          "s6p0",
+          "s8p2"
+        ],
+        "candidate_scores": [
+          {
+            "left": 1792,
+            "rows": 10,
+            "bottom": 250,
+            "score": -1000,
+            "title": null,
+            "header": null,
+            "watch": "XWL",
+            "tickerish_rows": 5
+          },
+          {
+            "left": 1795,
+            "rows": 7,
+            "bottom": 846,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 5
+          },
+          {
+            "left": 1890,
+            "rows": 7,
+            "bottom": 250,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 2
+          },
+          {
+            "left": 1792,
+            "rows": 5,
+            "bottom": 411,
+            "score": 100,
+            "title": null,
+            "header": "SAS",
+            "watch": null,
+            "tickerish_rows": 2
+          }
+        ],
+        "decoded": [
+          {
+            "raw": "NRGU|NRGU|NRGU",
+            "ticker": "NRGU",
+            "cost": 0,
+            "confidence": 0.999826967716217
+          },
+          {
+            "raw": "DVN|DVN|DVN",
+            "ticker": "DVN",
+            "cost": 0,
+            "confidence": 0.9854478256996212
+          },
+          {
+            "raw": "MOS|MOS|MOS",
+            "ticker": "MOS",
+            "cost": 0,
+            "confidence": 0.9912413965445117
+          },
+          {
+            "raw": "COPX|COPX|COPX",
+            "ticker": "COPX",
+            "cost": 0,
+            "confidence": 0.9989749789237976
+          },
+          {
+            "raw": "TQCQ|TOCQ|TOCQ",
+            "ticker": "TQQQ",
+            "cost": 0.5,
+            "confidence": 0.4693150818347931
+          },
+          {
+            "raw": "FX|FCX|FCX",
+            "ticker": "FCX",
+            "cost": 0,
+            "confidence": 0.980301209753242
+          },
+          {
+            "raw": "TSLA|TSUA|TSU",
+            "ticker": "TSLA",
+            "cost": 0,
+            "confidence": 0.6502946019172668
+          }
+        ],
+        "error": null
+      },
+      "prefilter_profile": "position_table",
+      "prefilter_score": 45.23,
+      "prefilter_stats": {
+        "brightRatio": 0.011111111111111112,
+        "darkRatio": 0.9538888888888889,
+        "edgeRatio": 0.11059289096176948,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1330,
+        "horizontalEdgeRatio": 0.09398629072150379,
+        "meanLuma": 16.97861111111111,
+        "rowDensity": 12,
+        "multiColStripeCount": 3,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 159,
+        "midToneRatioTicker": 0.8,
+        "stdDev": 37.81259656757386,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1800,
+        "verticalEdgeRatio": 0.1271994912020352,
+        "timestamp": 588
+      },
+      "score": 24.96,
+      "score_breakdown": null,
+      "screen_layout": "chart_stream",
+      "ticker_source": "position_table",
+      "tickers": [
+        "NRGU",
+        "DVN",
+        "MOS",
+        "COPX",
+        "TQQQ",
+        "FCX",
+        "TSLA"
+      ],
+      "timestamp": 588,
+      "timestamp_hms": "00:09:48",
+      "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-table-e2e\\snapshots\\qmg_20220222_2.png"
+    }
+  ],
+  "frame_count": 452,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 2,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 340,
+  "ocr_engine_metadata": {
+    "ocr_engine": "easyocr",
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 3,
+  "ocr_frame_width": 1920,
+  "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-table-e2e\\snapshots\\qmg_20220222.png",
+  "prefilter_best_score": 45.23,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "chart_stream": {
+      "confidence": 0.8773,
+      "parse_status": "ok",
+      "position_list": [
+        "NRGU",
+        "DVN",
+        "MOS",
+        "COPX",
+        "TQQQ",
+        "FCX",
+        "TSLA"
+      ],
+      "price_action": "",
+      "tickers_rejected": 0,
+      "column_filter": {
+        "dominant_x": 1795,
+        "column_width": 24,
+        "in_list_token_count": 7
+      },
+      "bbox_filter": null,
+      "panel_gate": {
+        "panel_gate_active": true,
+        "title_row": -1,
+        "positions_header_row": -1,
+        "data_row_start": 0
+      },
+      "tickers_rejected_list": [],
+      "position_table": {
+        "discriminator": "bottom_most",
+        "title_text": "",
+        "header_text": "",
+        "title_row": -1,
+        "header_row": -1,
+        "data_row_start": 0,
+        "rows": 7,
+        "variants": [
+          "s6p4",
+          "s6p0",
+          "s8p2"
+        ],
+        "column": {
+          "left": 1795,
+          "right": 1819
+        },
+        "candidate_scores": [
+          {
+            "left": 1792,
+            "rows": 18,
+            "bottom": 411,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 5
+          },
+          {
+            "left": 1795,
+            "rows": 7,
+            "bottom": 846,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 5
+          },
+          {
+            "left": 1890,
+            "rows": 6,
+            "bottom": 344,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 3
+          },
+          {
+            "left": 1808,
+            "rows": 4,
+            "bottom": 398,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 4
+          }
+        ],
+        "decoded": [
+          {
+            "raw": "NRGU|NRGU|NRGU",
+            "ticker": "NRGU",
+            "cost": 0,
+            "confidence": 0.9974591732025146
+          },
+          {
+            "raw": "DVN|DVN|DVN",
+            "ticker": "DVN",
+            "cost": 0,
+            "confidence": 0.9961626576657865
+          },
+          {
+            "raw": "MOS|MOS|MOS",
+            "ticker": "MOS",
+            "cost": 0,
+            "confidence": 0.993699830996844
+          },
+          {
+            "raw": "COPX|COPX|COPX",
+            "ticker": "COPX",
+            "cost": 0,
+            "confidence": 0.9994686841964722
+          },
+          {
+            "raw": "TOCQ|TOCQ|TOCQ",
+            "ticker": "TQQQ",
+            "cost": 0.75,
+            "confidence": 0.8779242634773254
+          },
+          {
+            "raw": "KX|KCX|FCX",
+            "ticker": "FCX",
+            "cost": 0,
+            "confidence": 0.9477955277193371
+          },
+          {
+            "raw": "TSLA|TSUA|TSU",
+            "ticker": "TSLA",
+            "cost": 0,
+            "confidence": 0.3287011384963989
+          }
+        ]
+      }
+    },
+    "confusion_with_nearby": [],
+    "frame_index": 0,
+    "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-table-e2e\\ocr_probe\\frames\\20220222_20220222_x1rp33_-r9e_9d13da23_snapshot\\ocr\\ocr_000001.png",
+    "is_intro_card": false,
+    "issue_codes": [],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 0,
+    "observed_date": null,
+    "ocr_confidence": 0.8773,
+    "ocr_profile": "position_table",
+    "ocr_text": "NRGU\nDVN\nMOS\nCOPX\nTQQQ\nFCX\nTSLA",
+    "ocr_text_snippet": "NRGU DVN MOS COPX TQQQ FCX TSLA",
+    "ocr_words": [
+      {
+        "text": "NRGU",
+        "left": 1793.5,
+        "top": 730.5,
+        "width": 27,
+        "height": 10,
+        "conf": 0.9974591732025146,
+        "line": 0
+      },
+      {
+        "text": "DVN",
+        "left": 1793.5,
+        "top": 748.5,
+        "width": 21.666666666666742,
+        "height": 10,
+        "conf": 0.9939069608857303,
+        "line": 1
+      },
+      {
+        "text": "MOS",
+        "left": 1793.8333333333333,
+        "top": 766.5,
+        "width": 22.333333333333485,
+        "height": 10,
+        "conf": 0.7694610422904047,
+        "line": 2
+      },
+      {
+        "text": "COPX",
+        "left": 1793.3333333333333,
+        "top": 784.3333333333334,
+        "width": 26.5,
+        "height": 11.166666666666629,
+        "conf": 0.9910200834274292,
+        "line": 3
+      },
+      {
+        "text": "TOCQ",
+        "left": 1792.5,
+        "top": 802,
+        "width": 29.5,
+        "height": 15.333333333333371,
+        "conf": 0.5772427320480347,
+        "line": 4
+      },
+      {
+        "text": "KX",
+        "left": 1793.5,
+        "top": 820.8333333333334,
+        "width": 19,
+        "height": 10,
+        "conf": 0.3667322279623425,
+        "line": 5
+      },
+      {
+        "text": "TSLA",
+        "left": 1793.5,
+        "top": 838.5,
+        "width": 22.333333333333258,
+        "height": 10.333333333333371,
+        "conf": 0.3287011384963989,
+        "line": 6
+      }
+    ],
+    "output_kind": "snapshot",
+    "parsed_observations": [],
+    "parsed_row_count": 0,
+    "phash": "bf3872a8d244f8d8",
+    "phash_overlay": "b9a5b94242dadf24",
+    "phash_region": {
+      "x": 0.78,
+      "y": 0.28,
+      "w": 0.22,
+      "h": 0.72
+    },
+    "position_table": {
+      "found": true,
+      "verified": true,
+      "tickers_count": 7,
+      "reason": "bottom_most",
+      "discriminator": "bottom_most",
+      "title_text": "",
+      "header_text": "",
+      "title_row": -1,
+      "header_row": -1,
+      "data_row_start": 0,
+      "rows": 7,
+      "column": {
+        "left": 1795,
+        "right": 1819
+      },
+      "variants": [
+        "s6p4",
+        "s6p0",
+        "s8p2"
+      ],
+      "candidate_scores": [
+        {
+          "left": 1792,
+          "rows": 18,
+          "bottom": 411,
+          "score": 0,
+          "title": null,
+          "header": null,
+          "watch": null,
+          "tickerish_rows": 5
+        },
+        {
+          "left": 1795,
+          "rows": 7,
+          "bottom": 846,
+          "score": 0,
+          "title": null,
+          "header": null,
+          "watch": null,
+          "tickerish_rows": 5
+        },
+        {
+          "left": 1890,
+          "rows": 6,
+          "bottom": 344,
+          "score": 0,
+          "title": null,
+          "header": null,
+          "watch": null,
+          "tickerish_rows": 3
+        },
+        {
+          "left": 1808,
+          "rows": 4,
+          "bottom": 398,
+          "score": 0,
+          "title": null,
+          "header": null,
+          "watch": null,
+          "tickerish_rows": 4
+        }
+      ],
+      "decoded": [
+        {
+          "raw": "NRGU|NRGU|NRGU",
+          "ticker": "NRGU",
+          "cost": 0,
+          "confidence": 0.9974591732025146
+        },
+        {
+          "raw": "DVN|DVN|DVN",
+          "ticker": "DVN",
+          "cost": 0,
+          "confidence": 0.9961626576657865
+        },
+        {
+          "raw": "MOS|MOS|MOS",
+          "ticker": "MOS",
+          "cost": 0,
+          "confidence": 0.993699830996844
+        },
+        {
+          "raw": "COPX|COPX|COPX",
+          "ticker": "COPX",
+          "cost": 0,
+          "confidence": 0.9994686841964722
+        },
+        {
+          "raw": "TOCQ|TOCQ|TOCQ",
+          "ticker": "TQQQ",
+          "cost": 0.75,
+          "confidence": 0.8779242634773254
+        },
+        {
+          "raw": "KX|KCX|FCX",
+          "ticker": "FCX",
+          "cost": 0,
+          "confidence": 0.9477955277193371
+        },
+        {
+          "raw": "TSLA|TSUA|TSU",
+          "ticker": "TSLA",
+          "cost": 0,
+          "confidence": 0.3287011384963989
+        }
+      ],
+      "error": null
+    },
+    "prefilter_profile": "position_table",
+    "prefilter_score": 27.93,
+    "prefilter_stats": {
+      "brightRatio": 0.011111111111111112,
+      "darkRatio": 0.955625,
+      "edgeRatio": 0.1155748710338492,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1375,
+      "horizontalEdgeRatio": 0.09716627800155465,
+      "meanLuma": 17.293680555555557,
+      "rowDensity": 11,
+      "multiColStripeCount": 1,
+      "brightColumnLeft": 0,
+      "brightColumnRight": 159,
+      "midToneRatioTicker": 0.631578947368421,
+      "stdDev": 37.46514771621693,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 1896,
+      "verticalEdgeRatio": 0.13398346406614373,
+      "timestamp": 0
+    },
+    "score": 25.07,
+    "score_breakdown": null,
+    "screen_layout": "chart_stream",
+    "ticker_source": "position_table",
+    "tickers": [
+      "NRGU",
+      "DVN",
+      "MOS",
+      "COPX",
+      "TQQQ",
+      "FCX",
+      "TSLA"
+    ],
+    "timestamp": 0,
+    "timestamp_hms": "00:00:00"
+  },
+  "top_candidates": [
+    {
+      "chart_stream": {
+        "confidence": 0.8773,
+        "parse_status": "ok",
+        "position_list": [
+          "NRGU",
+          "DVN",
+          "MOS",
+          "COPX",
+          "TQQQ",
+          "FCX",
+          "TSLA"
+        ],
+        "price_action": "",
+        "tickers_rejected": 0,
+        "column_filter": {
+          "dominant_x": 1795,
+          "column_width": 24,
+          "in_list_token_count": 7
+        },
+        "bbox_filter": null,
+        "panel_gate": {
+          "panel_gate_active": true,
+          "title_row": -1,
+          "positions_header_row": -1,
+          "data_row_start": 0
+        },
+        "tickers_rejected_list": [],
+        "position_table": {
+          "discriminator": "bottom_most",
+          "title_text": "",
+          "header_text": "",
+          "title_row": -1,
+          "header_row": -1,
+          "data_row_start": 0,
+          "rows": 7,
+          "variants": [
+            "s6p4",
+            "s6p0",
+            "s8p2"
+          ],
+          "column": {
+            "left": 1795,
+            "right": 1819
+          },
+          "candidate_scores": [
+            {
+              "left": 1792,
+              "rows": 18,
+              "bottom": 411,
+              "score": 0,
+              "title": null,
+              "header": null,
+              "watch": null,
+              "tickerish_rows": 5
+            },
+            {
+              "left": 1795,
+              "rows": 7,
+              "bottom": 846,
+              "score": 0,
+              "title": null,
+              "header": null,
+              "watch": null,
+              "tickerish_rows": 5
+            },
+            {
+              "left": 1890,
+              "rows": 6,
+              "bottom": 344,
+              "score": 0,
+              "title": null,
+              "header": null,
+              "watch": null,
+              "tickerish_rows": 3
+            },
+            {
+              "left": 1808,
+              "rows": 4,
+              "bottom": 398,
+              "score": 0,
+              "title": null,
+              "header": null,
+              "watch": null,
+              "tickerish_rows": 4
+            }
+          ],
+          "decoded": [
+            {
+              "raw": "NRGU|NRGU|NRGU",
+              "ticker": "NRGU",
+              "cost": 0,
+              "confidence": 0.9974591732025146
+            },
+            {
+              "raw": "DVN|DVN|DVN",
+              "ticker": "DVN",
+              "cost": 0,
+              "confidence": 0.9961626576657865
+            },
+            {
+              "raw": "MOS|MOS|MOS",
+              "ticker": "MOS",
+              "cost": 0,
+              "confidence": 0.993699830996844
+            },
+            {
+              "raw": "COPX|COPX|COPX",
+              "ticker": "COPX",
+              "cost": 0,
+              "confidence": 0.9994686841964722
+            },
+            {
+              "raw": "TOCQ|TOCQ|TOCQ",
+              "ticker": "TQQQ",
+              "cost": 0.75,
+              "confidence": 0.8779242634773254
+            },
+            {
+              "raw": "KX|KCX|FCX",
+              "ticker": "FCX",
+              "cost": 0,
+              "confidence": 0.9477955277193371
+            },
+            {
+              "raw": "TSLA|TSUA|TSU",
+              "ticker": "TSLA",
+              "cost": 0,
+              "confidence": 0.3287011384963989
+            }
+          ]
+        }
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-table-e2e\\ocr_probe\\frames\\20220222_20220222_x1rp33_-r9e_9d13da23_snapshot\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0.8773,
+      "ocr_profile": "position_table",
+      "ocr_text": "NRGU\nDVN\nMOS\nCOPX\nTQQQ\nFCX\nTSLA",
+      "ocr_text_snippet": "NRGU DVN MOS COPX TQQQ FCX TSLA",
+      "ocr_words": [
+        {
+          "text": "NRGU",
+          "left": 1793.5,
+          "top": 730.5,
+          "width": 27,
+          "height": 10,
+          "conf": 0.9974591732025146,
+          "line": 0
+        },
+        {
+          "text": "DVN",
+          "left": 1793.5,
+          "top": 748.5,
+          "width": 21.666666666666742,
+          "height": 10,
+          "conf": 0.9939069608857303,
+          "line": 1
+        },
+        {
+          "text": "MOS",
+          "left": 1793.8333333333333,
+          "top": 766.5,
+          "width": 22.333333333333485,
+          "height": 10,
+          "conf": 0.7694610422904047,
+          "line": 2
+        },
+        {
+          "text": "COPX",
+          "left": 1793.3333333333333,
+          "top": 784.3333333333334,
+          "width": 26.5,
+          "height": 11.166666666666629,
+          "conf": 0.9910200834274292,
+          "line": 3
+        },
+        {
+          "text": "TOCQ",
+          "left": 1792.5,
+          "top": 802,
+          "width": 29.5,
+          "height": 15.333333333333371,
+          "conf": 0.5772427320480347,
+          "line": 4
+        },
+        {
+          "text": "KX",
+          "left": 1793.5,
+          "top": 820.8333333333334,
+          "width": 19,
+          "height": 10,
+          "conf": 0.3667322279623425,
+          "line": 5
+        },
+        {
+          "text": "TSLA",
+          "left": 1793.5,
+          "top": 838.5,
+          "width": 22.333333333333258,
+          "height": 10.333333333333371,
+          "conf": 0.3287011384963989,
+          "line": 6
+        }
+      ],
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "bf3872a8d244f8d8",
+      "phash_overlay": "b9a5b94242dadf24",
+      "phash_region": {
+        "x": 0.78,
+        "y": 0.28,
+        "w": 0.22,
+        "h": 0.72
+      },
+      "position_table": {
+        "found": true,
+        "verified": true,
+        "tickers_count": 7,
+        "reason": "bottom_most",
+        "discriminator": "bottom_most",
+        "title_text": "",
+        "header_text": "",
+        "title_row": -1,
+        "header_row": -1,
+        "data_row_start": 0,
+        "rows": 7,
+        "column": {
+          "left": 1795,
+          "right": 1819
+        },
+        "variants": [
+          "s6p4",
+          "s6p0",
+          "s8p2"
+        ],
+        "candidate_scores": [
+          {
+            "left": 1792,
+            "rows": 18,
+            "bottom": 411,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 5
+          },
+          {
+            "left": 1795,
+            "rows": 7,
+            "bottom": 846,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 5
+          },
+          {
+            "left": 1890,
+            "rows": 6,
+            "bottom": 344,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 3
+          },
+          {
+            "left": 1808,
+            "rows": 4,
+            "bottom": 398,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 4
+          }
+        ],
+        "decoded": [
+          {
+            "raw": "NRGU|NRGU|NRGU",
+            "ticker": "NRGU",
+            "cost": 0,
+            "confidence": 0.9974591732025146
+          },
+          {
+            "raw": "DVN|DVN|DVN",
+            "ticker": "DVN",
+            "cost": 0,
+            "confidence": 0.9961626576657865
+          },
+          {
+            "raw": "MOS|MOS|MOS",
+            "ticker": "MOS",
+            "cost": 0,
+            "confidence": 0.993699830996844
+          },
+          {
+            "raw": "COPX|COPX|COPX",
+            "ticker": "COPX",
+            "cost": 0,
+            "confidence": 0.9994686841964722
+          },
+          {
+            "raw": "TOCQ|TOCQ|TOCQ",
+            "ticker": "TQQQ",
+            "cost": 0.75,
+            "confidence": 0.8779242634773254
+          },
+          {
+            "raw": "KX|KCX|FCX",
+            "ticker": "FCX",
+            "cost": 0,
+            "confidence": 0.9477955277193371
+          },
+          {
+            "raw": "TSLA|TSUA|TSU",
+            "ticker": "TSLA",
+            "cost": 0,
+            "confidence": 0.3287011384963989
+          }
+        ],
+        "error": null
+      },
+      "prefilter_profile": "position_table",
+      "prefilter_score": 27.93,
+      "prefilter_stats": {
+        "brightRatio": 0.011111111111111112,
+        "darkRatio": 0.955625,
+        "edgeRatio": 0.1155748710338492,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1375,
+        "horizontalEdgeRatio": 0.09716627800155465,
+        "meanLuma": 17.293680555555557,
+        "rowDensity": 11,
+        "multiColStripeCount": 1,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 159,
+        "midToneRatioTicker": 0.631578947368421,
+        "stdDev": 37.46514771621693,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1896,
+        "verticalEdgeRatio": 0.13398346406614373,
+        "timestamp": 0
+      },
+      "score": 25.07,
+      "score_breakdown": null,
+      "screen_layout": "chart_stream",
+      "ticker_source": "position_table",
+      "tickers": [
+        "NRGU",
+        "DVN",
+        "MOS",
+        "COPX",
+        "TQQQ",
+        "FCX",
+        "TSLA"
+      ],
+      "timestamp": 0,
+      "timestamp_hms": "00:00:00"
+    },
+    {
+      "chart_stream": {
+        "confidence": 0.8679,
+        "parse_status": "ok",
+        "position_list": [
+          "NRGU",
+          "DVN",
+          "MOS",
+          "COPX",
+          "TQQQ",
+          "FCX",
+          "TSLA"
+        ],
+        "price_action": "",
+        "tickers_rejected": 0,
+        "column_filter": {
+          "dominant_x": 1795,
+          "column_width": 24,
+          "in_list_token_count": 7
+        },
+        "bbox_filter": null,
+        "panel_gate": {
+          "panel_gate_active": true,
+          "title_row": -1,
+          "positions_header_row": -1,
+          "data_row_start": 0
+        },
+        "tickers_rejected_list": [],
+        "position_table": {
+          "discriminator": "bottom_most",
+          "title_text": "",
+          "header_text": "",
+          "title_row": -1,
+          "header_row": -1,
+          "data_row_start": 0,
+          "rows": 7,
+          "variants": [
+            "s6p4",
+            "s6p0",
+            "s8p2"
+          ],
+          "column": {
+            "left": 1795,
+            "right": 1819
+          },
+          "candidate_scores": [
+            {
+              "left": 1792,
+              "rows": 10,
+              "bottom": 250,
+              "score": -1000,
+              "title": null,
+              "header": null,
+              "watch": "XWL",
+              "tickerish_rows": 5
+            },
+            {
+              "left": 1795,
+              "rows": 7,
+              "bottom": 846,
+              "score": 0,
+              "title": null,
+              "header": null,
+              "watch": null,
+              "tickerish_rows": 5
+            },
+            {
+              "left": 1890,
+              "rows": 7,
+              "bottom": 250,
+              "score": 0,
+              "title": null,
+              "header": null,
+              "watch": null,
+              "tickerish_rows": 2
+            },
+            {
+              "left": 1792,
+              "rows": 5,
+              "bottom": 411,
+              "score": 100,
+              "title": null,
+              "header": "SAS",
+              "watch": null,
+              "tickerish_rows": 2
+            }
+          ],
+          "decoded": [
+            {
+              "raw": "NRGU|NRGU|NRGU",
+              "ticker": "NRGU",
+              "cost": 0,
+              "confidence": 0.999826967716217
+            },
+            {
+              "raw": "DVN|DVN|DVN",
+              "ticker": "DVN",
+              "cost": 0,
+              "confidence": 0.9854478256996212
+            },
+            {
+              "raw": "MOS|MOS|MOS",
+              "ticker": "MOS",
+              "cost": 0,
+              "confidence": 0.9912413965445117
+            },
+            {
+              "raw": "COPX|COPX|COPX",
+              "ticker": "COPX",
+              "cost": 0,
+              "confidence": 0.9989749789237976
+            },
+            {
+              "raw": "TQCQ|TOCQ|TOCQ",
+              "ticker": "TQQQ",
+              "cost": 0.5,
+              "confidence": 0.4693150818347931
+            },
+            {
+              "raw": "FX|FCX|FCX",
+              "ticker": "FCX",
+              "cost": 0,
+              "confidence": 0.980301209753242
+            },
+            {
+              "raw": "TSLA|TSUA|TSU",
+              "ticker": "TSLA",
+              "cost": 0,
+              "confidence": 0.6502946019172668
+            }
+          ]
+        }
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 147,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-table-e2e\\ocr_probe\\frames\\20220222_20220222_x1rp33_-r9e_9d13da23_snapshot\\ocr\\ocr_000148.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0.8679,
+      "ocr_profile": "position_table",
+      "ocr_text": "NRGU\nDVN\nMOS\nCOPX\nTQQQ\nFCX\nTSLA",
+      "ocr_text_snippet": "NRGU DVN MOS COPX TQQQ FCX TSLA",
+      "ocr_words": [
+        {
+          "text": "NRGU",
+          "left": 1793.3333333333333,
+          "top": 730.1666666666666,
+          "width": 27.166666666666742,
+          "height": 10.666666666666742,
+          "conf": 0.8115103627535346,
+          "line": 0
+        },
+        {
+          "text": "DVN",
+          "left": 1793.6666666666667,
+          "top": 749,
+          "width": 21.333333333333258,
+          "height": 9.333333333333371,
+          "conf": 0.9217446585544888,
+          "line": 1
+        },
+        {
+          "text": "MOS",
+          "left": 1794,
+          "top": 767,
+          "width": 21.833333333333258,
+          "height": 9.333333333333371,
+          "conf": 0.9693591932440534,
+          "line": 2
+        },
+        {
+          "text": "COPX",
+          "left": 1792.8333333333333,
+          "top": 783.8333333333334,
+          "width": 27.5,
+          "height": 12.833333333333258,
+          "conf": 0.9989519715309143,
+          "line": 3
+        },
+        {
+          "text": "TQCQ",
+          "left": 1792.1666666666667,
+          "top": 801.3333333333334,
+          "width": 29.833333333333258,
+          "height": 16.5,
+          "conf": 0.4693150818347931,
+          "line": 4
+        },
+        {
+          "text": "FX",
+          "left": 1793.5,
+          "top": 820.8333333333334,
+          "width": 19,
+          "height": 10,
+          "conf": 0.6527949045223868,
+          "line": 5
+        },
+        {
+          "text": "TSLA",
+          "left": 1793.3333333333333,
+          "top": 838.3333333333334,
+          "width": 22.5,
+          "height": 10.5,
+          "conf": 0.6502946019172668,
+          "line": 6
+        }
+      ],
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "bfb972a8d221d8d0",
+      "phash_overlay": "bd25bd4a425abf04",
+      "phash_region": {
+        "x": 0.78,
+        "y": 0.28,
+        "w": 0.22,
+        "h": 0.72
+      },
+      "position_table": {
+        "found": true,
+        "verified": true,
+        "tickers_count": 7,
+        "reason": "bottom_most",
+        "discriminator": "bottom_most",
+        "title_text": "",
+        "header_text": "",
+        "title_row": -1,
+        "header_row": -1,
+        "data_row_start": 0,
+        "rows": 7,
+        "column": {
+          "left": 1795,
+          "right": 1819
+        },
+        "variants": [
+          "s6p4",
+          "s6p0",
+          "s8p2"
+        ],
+        "candidate_scores": [
+          {
+            "left": 1792,
+            "rows": 10,
+            "bottom": 250,
+            "score": -1000,
+            "title": null,
+            "header": null,
+            "watch": "XWL",
+            "tickerish_rows": 5
+          },
+          {
+            "left": 1795,
+            "rows": 7,
+            "bottom": 846,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 5
+          },
+          {
+            "left": 1890,
+            "rows": 7,
+            "bottom": 250,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 2
+          },
+          {
+            "left": 1792,
+            "rows": 5,
+            "bottom": 411,
+            "score": 100,
+            "title": null,
+            "header": "SAS",
+            "watch": null,
+            "tickerish_rows": 2
+          }
+        ],
+        "decoded": [
+          {
+            "raw": "NRGU|NRGU|NRGU",
+            "ticker": "NRGU",
+            "cost": 0,
+            "confidence": 0.999826967716217
+          },
+          {
+            "raw": "DVN|DVN|DVN",
+            "ticker": "DVN",
+            "cost": 0,
+            "confidence": 0.9854478256996212
+          },
+          {
+            "raw": "MOS|MOS|MOS",
+            "ticker": "MOS",
+            "cost": 0,
+            "confidence": 0.9912413965445117
+          },
+          {
+            "raw": "COPX|COPX|COPX",
+            "ticker": "COPX",
+            "cost": 0,
+            "confidence": 0.9989749789237976
+          },
+          {
+            "raw": "TQCQ|TOCQ|TOCQ",
+            "ticker": "TQQQ",
+            "cost": 0.5,
+            "confidence": 0.4693150818347931
+          },
+          {
+            "raw": "FX|FCX|FCX",
+            "ticker": "FCX",
+            "cost": 0,
+            "confidence": 0.980301209753242
+          },
+          {
+            "raw": "TSLA|TSUA|TSU",
+            "ticker": "TSLA",
+            "cost": 0,
+            "confidence": 0.6502946019172668
+          }
+        ],
+        "error": null
+      },
+      "prefilter_profile": "position_table",
+      "prefilter_score": 45.23,
+      "prefilter_stats": {
+        "brightRatio": 0.011111111111111112,
+        "darkRatio": 0.9538888888888889,
+        "edgeRatio": 0.11059289096176948,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1330,
+        "horizontalEdgeRatio": 0.09398629072150379,
+        "meanLuma": 16.97861111111111,
+        "rowDensity": 12,
+        "multiColStripeCount": 3,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 159,
+        "midToneRatioTicker": 0.8,
+        "stdDev": 37.81259656757386,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1800,
+        "verticalEdgeRatio": 0.1271994912020352,
+        "timestamp": 588
+      },
+      "score": 24.96,
+      "score_breakdown": null,
+      "screen_layout": "chart_stream",
+      "ticker_source": "position_table",
+      "tickers": [
+        "NRGU",
+        "DVN",
+        "MOS",
+        "COPX",
+        "TQQQ",
+        "FCX",
+        "TSLA"
+      ],
+      "timestamp": 588,
+      "timestamp_hms": "00:09:48"
+    },
+    {
+      "chart_stream": {
+        "confidence": 1,
+        "parse_status": "ok",
+        "position_list": [
+          "COPX",
+          "DVN",
+          "FCX",
+          "NRGU",
+          "TQQQ"
+        ],
+        "price_action": "FX 30.335| 317593",
+        "tickers_rejected": 15,
+        "column_filter": {
+          "column_width": 50,
+          "dominant_x": 787,
+          "in_list_token_count": 5
+        },
+        "bbox_filter": {
+          "y_median": 599,
+          "line_height": 52,
+          "y_min": 183,
+          "y_max": 1015,
+          "rejected_count": 0
+        },
+        "panel_gate": null,
+        "tickers_rejected_list": [
+          "RMIN",
+          "OTHI",
+          "A",
+          "SYMNG",
+          "FUO",
+          "SYM",
+          "QN",
+          "PRE",
+          "BUZ",
+          "MOS",
+          "OS",
+          "DO",
+          "ARITH",
+          "TSLA",
+          "L"
+        ],
+        "position_table": null
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 150,
+      "frame_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-table-e2e\\ocr_probe\\frames\\20220222_20220222_x1rp33_-r9e_9d13da23_snapshot\\ocr\\ocr_000151.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0.41873669874870467,
+      "ocr_profile": "",
+      "ocr_text": "Rmin *othi\nA Positi Symng 50 4*\n36,00\nFuo Sym Qn [Pre Buz\nNRGU 593985 858 49\n35,00 DVN 44428 937, 83\nMOS 16293 oS\nCOPX 30,1293 7416,63\n3400\nToCQ Do 34894\nFX 30.335| 317593\n0312 Arith TSLA L 4299a",
+      "ocr_text_snippet": "Rmin *othi A Positi Symng 50 4* 36,00 Fuo Sym Qn [Pre Buz NRGU 593985 858 49 35,00 DVN 44428 937, 83 MOS 16293 oS COPX 30,1293 7416,63 3400 ToCQ Do 34894 FX 30.335| 317593 0312 Arith TSLA L 4299a",
+      "ocr_words": [
+        {
+          "text": "Rmin *othi",
+          "left": 658,
+          "top": 36,
+          "width": 310,
+          "height": 48,
+          "conf": 0.004415305592116498,
+          "line": 0
+        },
+        {
+          "text": "A",
+          "left": 627,
+          "top": 117,
+          "width": 44,
+          "height": 54,
+          "conf": 0.9880750199966002,
+          "line": 1
+        },
+        {
+          "text": "4*",
+          "left": 1227,
+          "top": 115,
+          "width": 116,
+          "height": 60,
+          "conf": 0.2510146863898814,
+          "line": 1
+        },
+        {
+          "text": "Positi",
+          "left": 708,
+          "top": 118,
+          "width": 148,
+          "height": 56,
+          "conf": 0.622699567512149,
+          "line": 1
+        },
+        {
+          "text": "Symng",
+          "left": 914,
+          "top": 122,
+          "width": 108,
+          "height": 52,
+          "conf": 0.27543048782163065,
+          "line": 1
+        },
+        {
+          "text": "50",
+          "left": 1169,
+          "top": 129,
+          "width": 54,
+          "height": 38,
+          "conf": 0.74804416067796,
+          "line": 1
+        },
+        {
+          "text": "36,00",
+          "left": 404,
+          "top": 168,
+          "width": 138,
+          "height": 56,
+          "conf": 0.6469512239822204,
+          "line": 2
+        },
+        {
+          "text": "[Pre Buz",
+          "left": 1122,
+          "top": 210,
+          "width": 186,
+          "height": 54,
+          "conf": 0.2636736099717585,
+          "line": 3
+        },
+        {
+          "text": "Sym",
+          "left": 713,
+          "top": 213,
+          "width": 102,
+          "height": 60,
+          "conf": 0.9969001238082047,
+          "line": 3
+        },
+        {
+          "text": "Fuo",
+          "left": 612.2286241230208,
+          "top": 213.08996776509676,
+          "width": 92.54275175395833,
+          "height": 61.820064469806454,
+          "conf": 0.08255553406022405,
+          "line": 3
+        },
+        {
+          "text": "Qn",
+          "left": 928,
+          "top": 218,
+          "width": 135,
+          "height": 52,
+          "conf": 0.03745889636401975,
+          "line": 3
+        },
+        {
+          "text": "NRGU",
+          "left": 718,
+          "top": 302,
+          "width": 138,
+          "height": 52,
+          "conf": 0.9987745881080627,
+          "line": 4
+        },
+        {
+          "text": "593985",
+          "left": 986,
+          "top": 304,
+          "width": 136,
+          "height": 50,
+          "conf": 0.13737679454938942,
+          "line": 4
+        },
+        {
+          "text": "858 49",
+          "left": 1192,
+          "top": 302,
+          "width": 152,
+          "height": 54,
+          "conf": 0.5105729377748587,
+          "line": 4
+        },
+        {
+          "text": "DVN",
+          "left": 720,
+          "top": 394,
+          "width": 106,
+          "height": 48,
+          "conf": 0.7241100766377754,
+          "line": 5
+        },
+        {
+          "text": "44428",
+          "left": 966,
+          "top": 394,
+          "width": 156,
+          "height": 50,
+          "conf": 0.07003615189231388,
+          "line": 5
+        },
+        {
+          "text": "937, 83",
+          "left": 1192,
+          "top": 394,
+          "width": 152,
+          "height": 50,
+          "conf": 0.2306620309331416,
+          "line": 5
+        },
+        {
+          "text": "35,00",
+          "left": 403,
+          "top": 393,
+          "width": 140,
+          "height": 60,
+          "conf": 0.9931907532412834,
+          "line": 5
+        },
+        {
+          "text": "oS",
+          "left": 1215,
+          "top": 484,
+          "width": 129,
+          "height": 50,
+          "conf": 0.23787671186888504,
+          "line": 6
+        },
+        {
+          "text": "MOS",
+          "left": 719,
+          "top": 484,
+          "width": 116,
+          "height": 52,
+          "conf": 0.5266903193851998,
+          "line": 6
+        },
+        {
+          "text": "16293",
+          "left": 990,
+          "top": 484,
+          "width": 134,
+          "height": 52,
+          "conf": 0.40499195605969984,
+          "line": 6
+        },
+        {
+          "text": "COPX",
+          "left": 718,
+          "top": 574,
+          "width": 132,
+          "height": 50,
+          "conf": 0.9230372309684753,
+          "line": 7
+        },
+        {
+          "text": "30,1293",
+          "left": 960,
+          "top": 574,
+          "width": 164,
+          "height": 52,
+          "conf": 0.1591098659396237,
+          "line": 7
+        },
+        {
+          "text": "7416,63",
+          "left": 1172,
+          "top": 574,
+          "width": 172,
+          "height": 52,
+          "conf": 0.2289487971711463,
+          "line": 7
+        },
+        {
+          "text": "3400",
+          "left": 400,
+          "top": 619,
+          "width": 143,
+          "height": 62,
+          "conf": 0.9499536156654358,
+          "line": 8
+        },
+        {
+          "text": "Do",
+          "left": 990,
+          "top": 664,
+          "width": 134,
+          "height": 50,
+          "conf": 0.0234103054515782,
+          "line": 9
+        },
+        {
+          "text": "34894",
+          "left": 1192,
+          "top": 664,
+          "width": 152,
+          "height": 50,
+          "conf": 0.3621613268303146,
+          "line": 9
+        },
+        {
+          "text": "ToCQ",
+          "left": 717,
+          "top": 662,
+          "width": 146,
+          "height": 57,
+          "conf": 0.5174691677093506,
+          "line": 9
+        },
+        {
+          "text": "FX",
+          "left": 718,
+          "top": 754,
+          "width": 94,
+          "height": 50,
+          "conf": 0.2601547925011968,
+          "line": 10
+        },
+        {
+          "text": "317593",
+          "left": 1170,
+          "top": 754,
+          "width": 174,
+          "height": 52,
+          "conf": 0.03583590430042483,
+          "line": 10
+        },
+        {
+          "text": "30.335|",
+          "left": 959,
+          "top": 750,
+          "width": 164,
+          "height": 61,
+          "conf": 0.20776499245741353,
+          "line": 10
+        },
+        {
+          "text": "Arith",
+          "left": 398,
+          "top": 836,
+          "width": 145,
+          "height": 65,
+          "conf": 0.8742477318484543,
+          "line": 11
+        },
+        {
+          "text": "0312",
+          "left": 21,
+          "top": 841,
+          "width": 141,
+          "height": 60,
+          "conf": 0.4350622296333313,
+          "line": 11
+        },
+        {
+          "text": "TSLA",
+          "left": 718,
+          "top": 844,
+          "width": 114,
+          "height": 54,
+          "conf": 0.2194210364614154,
+          "line": 11
+        },
+        {
+          "text": "4299a",
+          "left": 1172,
+          "top": 846,
+          "width": 172,
+          "height": 50,
+          "conf": 0.09063458747036,
+          "line": 11
+        },
+        {
+          "text": "L",
+          "left": 992,
+          "top": 846,
+          "width": 132,
+          "height": 52,
+          "conf": 0.035808633917472577,
+          "line": 11
+        }
+      ],
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "af09f2a9d221f8f0",
+      "phash_overlay": "bda5b9da421a9b05",
+      "phash_region": {
+        "x": 0.78,
+        "y": 0.28,
+        "w": 0.22,
+        "h": 0.72
+      },
+      "position_table": {
+        "found": true,
+        "verified": false,
+        "tickers_count": 7,
+        "reason": "sole_candidate",
+        "discriminator": "sole_candidate",
+        "title_text": "",
+        "header_text": "",
+        "title_row": -1,
+        "header_row": -1,
+        "data_row_start": 0,
+        "rows": 7,
+        "column": {
+          "left": 1795,
+          "right": 1819
+        },
+        "variants": [
+          "s6p4",
+          "s6p0",
+          "s8p2"
+        ],
+        "candidate_scores": [
+          {
+            "left": 1795,
+            "rows": 7,
+            "bottom": 846,
+            "score": 0,
+            "title": null,
+            "header": null,
+            "watch": null,
+            "tickerish_rows": 6
+          },
+          {
+            "left": 1792,
+            "rows": 3,
+            "bottom": 411,
+            "score": 100,
+            "title": null,
+            "header": "SLO",
+            "watch": null,
+            "tickerish_rows": 1
+          }
+        ],
+        "decoded": [
+          {
+            "raw": "NRGU|NRGU|NRGU",
+            "ticker": "NRGU",
+            "cost": 0,
+            "confidence": 0.9998019933700562
+          },
+          {
+            "raw": "DVN|DVN|DVN",
+            "ticker": "DVN",
+            "cost": 0,
+            "confidence": 0.9519406519119221
+          },
+          {
+            "raw": "MOS|MOS|MOS",
+            "ticker": "MOS",
+            "cost": 0,
+            "confidence": 0.9904484031306379
+          },
+          {
+            "raw": "COPX|COPX|COPX",
+            "ticker": "COPX",
+            "cost": 0,
+            "confidence": 0.9992325305938721
+          },
+          {
+            "raw": "TOCQ|TOCQ|TOCQ",
+            "ticker": "TQQQ",
+            "cost": 0.75,
+            "confidence": 0.6161249279975891
+          },
+          {
+            "raw": "FX|FCX|FCX",
+            "ticker": "FCX",
+            "cost": 0,
+            "confidence": 0.9864166312949375
+          },
+          {
+            "raw": "TSUA|TSUA|TSU",
+            "ticker": "TSLA",
+            "cost": 0.5,
+            "confidence": 0.7186101675033569
+          }
+        ],
+        "error": null
+      },
+      "prefilter_profile": "position_table",
+      "prefilter_score": 37.31,
+      "prefilter_stats": {
+        "brightRatio": 0,
+        "darkRatio": 0.9616666666666667,
+        "edgeRatio": 0.11232421736979718,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1305,
+        "horizontalEdgeRatio": 0.09221963112147552,
+        "meanLuma": 16.23138888888889,
+        "rowDensity": 12,
+        "multiColStripeCount": 3,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 159,
+        "midToneRatioTicker": 0.8,
+        "stdDev": 30.495508562990583,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1874,
+        "verticalEdgeRatio": 0.13242880361811887,
+        "timestamp": 600
+      },
+      "score": 21.77,
+      "score_breakdown": null,
+      "screen_layout": "chart_stream",
+      "ticker_source": "chart_stream",
+      "tickers": [
+        "COPX",
+        "DVN",
+        "FCX",
+        "NRGU",
+        "TQQQ"
+      ],
+      "timestamp": 600,
+      "timestamp_hms": "00:10:00"
+    }
+  ],
+  "top_rejected_candidates": [],
+  "whiteboard_segments": [
+    {
+      "capture_count": 1,
+      "end_ts": 0,
+      "end_hms": "00:00:00",
+      "is_intro_card": false,
+      "layout": "chart_stream",
+      "peak_frame_index": 0,
+      "peak_score": 25.07,
+      "start_hms": "00:00:00",
+      "start_ts": 0
+    },
+    {
+      "capture_count": 1,
+      "end_ts": 588,
+      "end_hms": "00:09:48",
+      "is_intro_card": false,
+      "layout": "chart_stream",
+      "peak_frame_index": 147,
+      "peak_score": 24.96,
+      "start_hms": "00:09:48",
+      "start_ts": 588
+    }
+  ],
+  "merged_position_list": [
+    "COPX",
+    "DVN",
+    "FCX",
+    "MOS",
+    "NRGU",
+    "TQQQ",
+    "TSLA"
+  ],
+  "merged_raw_token_list": [],
+  "merged_raw_token_clusters": []
+}
