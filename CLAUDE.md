@@ -603,6 +603,14 @@ layouts exist and the legacy crop reader only ever saw the first:
   something. A lone untitled table is *located* but not published.
 - **Table-likeness** needs ≥2 ticker-shaped rows (`tickerishRows >= 2`). A `Sym`
   header alone is not enough.
+- **A read that is a lexicon ticker is never the header.** `Sym` is within two edits
+  of 17 real tickers (TSM, XOM, ARM, CRM, SOL, STX, VRM, NEM, SWN, SLB, SLV, SLY,
+  TEM, TSEM, SGMO, SSO, SPYM), and the 2023-era table has no header row at all — so
+  the header window reaches the first data rows and a holding can be eaten as the
+  header and silently dropped.
+- **A lone survivor has to be BELOW the vetoed watchlist.** The watchlist is docked
+  above the positions table, so "whatever is left" only means the positions table
+  when the frame agrees.
 - **The clusterer is bypassed per FRAME, not per profile.** Each capture carries a
   `ticker_source`; a frame the table reader could not identify falls back to the
   legacy crop reader and still needs the clusterer's repair.
