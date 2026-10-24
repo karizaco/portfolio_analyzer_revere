@@ -165,6 +165,9 @@ function download(ids, dlDir, height, channel) {
     '--channel', channel,
     '--only-ids', ids.join(','),
     '--dl-dir', dlDir,
+    // A video that was throttled is recorded in the checkpoint's errored map.
+    // Retry those rather than treating the earlier failure as final.
+    '--retry-errored',
   ];
   if (fs.existsSync(path.join(PROJECT, cookiesFile))) {
     args.push('--cookies', cookiesFile);
@@ -215,6 +218,33 @@ function checkpointDone(dlDir) {
   } catch (_) {
     return new Set();
   }
+}
+
+/**
+ * Does this video actually offer a 1080p stream?
+ *
+ * "Requested format is not available" is ambiguous: on the hardcoded
+ * 720p-only IDs it means the upload genuinely has no 1080p stream, but on
+ * ANY other video YouTube is usually throttling and lying. Confirmed on
+ * 2026-10-24: `i-FvQ9bD9S8` failed its 1080p attempt yet `--list-formats`
+ * shows format 137 present.
+ *
+ * So before downgrading anything to 720p, ask YouTube what the ladder
+ * actually contains. Only a video with no 137 gets the 720p copy; the rest
+ * stay errored for a later retry with fresh cookies.
+ */
+function has1080pStream(videoId) {
+  const r = spawnSync(PY, ['-3', '-m', 'yt_dlp', '--no-playlist', '-j',
+    '--js-runtimes', 'node',
+    '--extractor-args', 'youtube:player_client=visionos',
+    ...(fs.existsSync(path.join(PROJECT, cookiesFile))
+      ? ['--cookies', path.join(PROJECT, cookiesFile)] : []),
+    `https://www.youtube.com/watch?v=${videoId}`],
+    { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+  if (r.status !== 0) return null;              // could not tell
+  let info;
+  try { info = JSON.parse(r.stdout); } catch (_) { return null; }
+  return (info.formats || []).some((f) => f.format_id === '137');
 }
 
 // ---------------------------------------------------------------------------
@@ -285,20 +315,44 @@ while (true) {
   const landed1080 = checkpointDone(DL_1080);
   const failedAt1080 = ids.filter((id) => !landed1080.has(id));
 
-  // Anything that has no 1080p stream gets one more attempt at 720p.
+  // Anything that failed at 1080p gets checked against YouTube's real format
+  // ladder before being downgraded. A video that DOES offer 137 was throttled,
+  // not downgraded-worthy — it stays errored for a later retry with fresh
+  // cookies, because a 720p copy is strictly worse than what was lost.
   let badIds = failedAt1080;
+  const retryIds = [];
   if (failedAt1080.length) {
     console.log('[redownload] ' + failedAt1080.length +
-      ' video(s) have no 1080p stream; retrying them at 720p.');
-    resetRows(failedAt1080);
-    download(failedAt1080, DL_720, 720, 'any');
-    const landed720 = checkpointDone(DL_720);
-    const ok720 = failedAt1080.filter((id) => landed720.has(id));
-    const check720 = verify(DL_720, ok720, 720);
-    verified720 += check720.filter((c) => c.ok).length;
-    badIds = failedAt1080.filter((id) => !landed720.has(id));
-    console.log('[redownload] 720p fallback: ' + check720.filter((c) => c.ok).length +
-      ' verified @720p, ' + badIds.length + ' still missing');
+      ' video(s) failed at 1080p; checking which genuinely lack a 1080p stream.');
+    const genuine720 = [];
+    const throttled = [];
+    for (const id of failedAt1080) {
+      const has1080 = has1080pStream(id);
+      if (has1080 === false) genuine720.push(id);
+      else if (has1080 === true) throttled.push(id);
+      else throttled.push(id);                   // could not tell — assume throttled
+    }
+    if (throttled.length) {
+      retryIds.push(...throttled);
+      console.log('[redownload] ' + throttled.length +
+        ' video(s) DO offer 1080p but the attempt failed (throttled); left errored ' +
+        'for a later retry, NOT downgraded: ' + throttled.join(','));
+    }
+    if (genuine720.length) {
+      console.log('[redownload] ' + genuine720.length +
+        ' video(s) genuinely have no 1080p stream; fetching them at 720p.');
+      resetRows(genuine720);
+      download(genuine720, DL_720, 720, 'any');
+      const landed720 = checkpointDone(DL_720);
+      const ok720 = genuine720.filter((id) => landed720.has(id));
+      const check720 = verify(DL_720, ok720, 720);
+      verified720 += check720.filter((c) => c.ok).length;
+      badIds = throttled.concat(genuine720.filter((id) => !landed720.has(id)));
+      console.log('[redownload] 720p fallback: ' + check720.filter((c) => c.ok).length +
+        ' verified @720p, ' + badIds.length + ' still missing');
+    } else {
+      badIds = throttled;
+    }
   }
 
   const check = verify(DL_1080, ids.filter((id) => landed1080.has(id)), 1080);
@@ -309,9 +363,19 @@ while (true) {
     ' verified @1080p, ' + badIds.length + ' not verified' +
     (badIds.length ? ' (' + badIds.join(',') + ')' : ''));
 
-  // Remove the batch from the pool either way, so a video that cannot be
-  // fetched does not wedge the loop forever.
+  // Remove the batch from the pool, but put back anything that was merely
+  // throttled — it still has a 1080p stream waiting to be fetched, so it must
+  // not be silently abandoned. Genuinely unavailable videos are dropped, so a
+  // video that cannot be fetched does not wedge the loop forever.
   pool.splice(0, ids.length);
+  for (const id of retryIds) {
+    const row = rows.find((r) => r.video_id === id);
+    if (row) pool.unshift(row);
+  }
+  if (retryIds.length) {
+    console.log('[redownload] requeued ' + retryIds.length +
+      ' throttled video(s) for a later attempt: ' + retryIds.join(','));
+  }
 
   batches += 1;
   console.log('[redownload] cumulative verified: ' + verified1080 + ' @1080p, ' +
