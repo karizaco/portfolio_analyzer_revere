@@ -18,10 +18,22 @@ const fs = require('node:fs');
 const path = require('path');
 const { spawn, execSync } = require('node:child_process');
 
+function readFlag(flag, argv = process.argv.slice(2)) {
+  const i = argv.indexOf(flag);
+  return i === -1 ? null : (argv[i + 1] || '');
+}
+
 const ROOT = path.resolve(__dirname, '..');
-const VIDEO_DIR_1080 = path.join(ROOT, 'data', 'video_pipeline', 'downloads_1080p');
-const VIDEO_DIR_HIRES = path.join(ROOT, 'data', 'video_pipeline', 'downloads_hires');
-const OUT_ROOT = path.join(ROOT, 'data', 'video_scan_test', '_rerun');
+// The media lives OUTSIDE the git working tree since the 2026-10-21 loss —
+// see CLAUDE.md. The old in-tree paths are kept only as a fallback so this
+// runner still works on a machine that has never been cleaned out.
+const MEDIA_ROOT = readFlag('--media-root')
+  || 'C:/Users/Admin/Projects/portfolio_analyzer_revere_media';
+const VIDEO_DIR_1080 = path.join(MEDIA_ROOT, 'downloads_1080p');
+const VIDEO_DIR_720 = path.join(MEDIA_ROOT, 'downloads_720p');
+const VIDEO_DIR_HIRES = path.join(MEDIA_ROOT, 'downloads_720p');
+const OUT_ROOT = readFlag('--output-root') || path.join(ROOT, 'data', 'video_scan_test', '_rerun');
+const RUN_TAG = readFlag('--run-tag');
 
 // Per-video timeout: EasyOCR at ~60-90s/frame × 6 frames = 360-540s; give 40 min for longer videos
 const PER_VIDEO_TIMEOUT_MS = 40 * 60 * 1000;
@@ -90,13 +102,75 @@ function parseArgs(argv) {
   return args;
 }
 
+/**
+ * Map a date-key to the video file on disk.
+ *
+ * The re-downloaded files are named `<date>_<id>.mp4` only when the date was
+ * known at download time; most are bare `<id>.mp4`. `data/qmg_video_recovery_manifest.json`
+ * records the date for every one of the 718 videos, so use it to resolve the
+ * bare names. Falls back to the date-prefixed filename.
+ */
+const manifest = (() => {
+  try {
+    return JSON.parse(
+      fs.readFileSync(path.join(ROOT, 'data', 'qmg_video_recovery_manifest.json'), 'utf8')
+    ).videos || [];
+  } catch (_) {
+    return [];
+  }
+})();
+
+const byDate = new Map();
+for (const v of manifest) {
+  if (!v.date || v.channel !== 'qullamaggie') continue;
+  if (!byDate.has(v.date)) byDate.set(v.date, []);
+  byDate.get(v.date).push(v.video_id);
+}
+
+/** Every video_id on disk, per directory, keyed by bare id. */
+function indexDir(dir) {
+  const m = new Map();
+  let entries;
+  try {
+    entries = fs.readdirSync(dir);
+  } catch (_) {
+    return m;
+  }
+  for (const f of entries) {
+    if (!f.endsWith('.mp4')) continue;
+    const id = f.replace(/^\d+_/, '').replace(/\.mp4$/, '');
+    m.set(id, f);
+  }
+  return m;
+}
+
+let index1080 = null;
+let index720 = null;
+
 function findVideo(dateKey) {
-  // Prefer 1080p
-  const files1080 = fs.readdirSync(VIDEO_DIR_1080);
+  if (index1080 === null) {
+    index1080 = indexDir(VIDEO_DIR_1080);
+    index720 = indexDir(VIDEO_DIR_720);
+  }
+
+  const ids = byDate.get(dateKey) || [];
+  for (const id of ids) {
+    if (index1080.has(id)) {
+      return { file: index1080.get(id), dir: VIDEO_DIR_1080, resolution: '1080p', videoId: id };
+    }
+  }
+  for (const id of ids) {
+    if (index720.has(id)) {
+      return { file: index720.get(id), dir: VIDEO_DIR_720, resolution: '720p', videoId: id };
+    }
+  }
+
+  // Fall back to a date-prefixed filename (e.g. for videos not in the manifest).
+  const files1080 = fs.existsSync(VIDEO_DIR_1080) ? fs.readdirSync(VIDEO_DIR_1080) : [];
   const match1080 = files1080.find(f => f.startsWith(dateKey + '_') && f.endsWith('.mp4'));
   if (match1080) return { file: match1080, dir: VIDEO_DIR_1080, resolution: '1080p' };
 
-  const filesHires = fs.readdirSync(VIDEO_DIR_HIRES);
+  const filesHires = fs.existsSync(VIDEO_DIR_HIRES) ? fs.readdirSync(VIDEO_DIR_HIRES) : [];
   const matchHires = filesHires.find(f => f.startsWith(dateKey + '_') && f.endsWith('.mp4'));
   if (matchHires) return { file: matchHires, dir: VIDEO_DIR_HIRES, resolution: '720p' };
 
@@ -279,7 +353,7 @@ async function main() {
     ? Math.min(args.parallel, 2)
     : args.parallel;
 
-  const runTag = `qmg-easyocr-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
+  const runTag = RUN_TAG || `qmg-easyocr-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
   console.log(`\n=== QMG EasyOCR Batch ===`);
   console.log(`Run tag: ${runTag}`);
   console.log(`Dates: ${dates.join(', ')}`);
@@ -309,16 +383,23 @@ async function main() {
   let totalHit = 0, totalGt = 0, totalFp = 0;
   for (const r of results) {
     if (r.status !== 'OK' || !r.log) {
-      console.log(`  ${r.date}: ${r.status}`);
+      console.log(`  ${r.dateKey}: ${r.status}`);
       continue;
     }
-    const gtEntry = gt[r.date];
-    if (!gtEntry) continue;
+    const gtEntry = gt[r.dateKey];
+    if (!gtEntry) {
+      // No ground truth for this date — still report what was read. The
+      // tickers are the point; the score is simply not computable yet.
+      const merged = r.log.merged_position_list || [];
+      console.log(`  ${r.dateKey}: (no GT) ${merged.length} ticker(s): ` +
+        (merged.join(',') || 'none') + ` | time=${r.elapsed}s`);
+      continue;
+    }
     const s = scoreResult(r.log, gtEntry);
     totalHit += s.hit;
     totalGt += s.hit + s.miss;
     totalFp += s.fp;
-    console.log(`  ${r.date}: recall=${s.recall} (${s.recallPct}%) | FP=${s.fpTickers.join(',') || 'none'} | time=${r.elapsed}s`);
+    console.log(`  ${r.dateKey}: recall=${s.recall} (${s.recallPct}%) | miss=${s.missTickers.join(',') || 'none'} | FP=${s.fpTickers.join(',') || 'none'} | time=${r.elapsed}s`);
   }
   console.log(`\nOverall: ${totalHit}/${totalGt} = ${Math.round(100*totalHit/totalGt)}% recall, ${totalFp} FPs`);
 }

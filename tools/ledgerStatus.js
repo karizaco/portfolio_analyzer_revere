@@ -33,7 +33,7 @@ const KNOWN_720P_ONLY = new Set(
    'Nlc2r-uz6Gg,O333thFuU40,PvL5_kwE0fI,R7nACKgTydc,SZ0QELUoCJ4,' +
    'SrIGW4fvzFE,UG1vfP9hCH0,UmAdr1cM3RY,V5ETDZgbnOs,gqzntxo4DdI,' +
    'jtyYLDlgdbE,l2olCkDuHGo,n8SWEpUNylE,o3IoaGLCxz4,oRX7YeTLdRg,' +
-   'pomzmadhQV0,sUU3mKLgok,ttKgeB-cZbY,u84s3-ehrw4').split(',')
+   'pomzmadhQV0,sUU3mXKLgok,ttKgeB-cZbY,u84s3-ehrw4').split(',')
 );
 
 function readFlag(flag) {
