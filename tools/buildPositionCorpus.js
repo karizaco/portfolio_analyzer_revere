@@ -131,7 +131,6 @@ function truthOf(value) {
  */
 function indexSnapshots() {
   const out = new Map();
-  const seenRuns = new Set();
   const walk = (dir, depth) => {
     if (depth > 6) return;
     let ents;
@@ -153,18 +152,29 @@ function indexSnapshots() {
       const key = `${m[1]}|${capture}`;
       // The run directory decides which frame is canonical: a later run
       // supersedes an earlier one for the same date and capture.
-      const run = path.relative(ROOT, dir).split(path.sep).slice(0, 3).join('/');
+      //
+      // The comparison has to use the WHOLE run path. The first three path
+      // segments are identical for every run under
+      // data/video_scan_test/_rerun/, so comparing them ties all of those
+      // runs together and leaves the winner to the directory walk's order,
+      // which is arbitrary. Two runs of the same video can hold a
+      // different moment of the screen — and therefore a different table —
+      // so the choice decides what the corpus is a corpus OF. The
+      // modification time is the "later run" signal; the path breaks a tie
+      // between runs written in the same instant, so the choice is
+      // reproducible.
+      const run = path.relative(ROOT, dir).replace(/\\/g, '/');
+      const written = fs.statSync(dir).mtimeMs;
       const prev = out.get(key);
       if (!prev) {
-        out.set(key, { file: full, date: m[1], capture, width, run });
-      } else if (run > prev.run) {
-        out.set(key, { file: full, date: m[1], capture, width, run });
+        out.set(key, { file: full, date: m[1], capture, width, run, written });
+      } else if (written > prev.written || (written === prev.written && run > prev.run)) {
+        out.set(key, { file: full, date: m[1], capture, width, run, written });
       }
     }
   };
   for (const d of fs.readdirSync(path.join(ROOT, 'data'))) {
     if (!d.startsWith('video_scan')) continue;
-    seenRuns.add(d);
     walk(path.join(ROOT, 'data', d), 0);
   }
   return out;

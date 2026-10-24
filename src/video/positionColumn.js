@@ -56,6 +56,14 @@ const WORD_MIN_WIDTH = 3;
 const WORD_MAX_WIDTH = 64;
 const WORD_MAX_HEIGHT = 14;
 
+// How much of the LONGER of two runs a run must cover to continue the same
+// glyph. A letter tapers — the stem of a "T" is 1 px inside a 7 px bar,
+// the vertex of a "V" the same — so a stem has to keep merging. The 1 px
+// panel border under a 51 px header rule has to stop. The floor sits
+// between the two ratios: below the 1-in-20 stem (0.05) and above the
+// 1-in-51 border (0.02).
+const MIN_MERGE_SUPPORT = 0.03;
+
 // Anti-aliasing drops single columns out of the middle of a glyph often
 // enough that a strict run test splits "TQQQ" in two. Closing the mask with
 // a 3x3 structuring element fills those gaps before anything else runs.
@@ -191,7 +199,19 @@ function extractWords(mask, width, height, options = {}) {
             const c = cands[k];
             const overlap = Math.min(x1, c.x1) - Math.max(x0, c.x0) + 1;
             const shorter = Math.min(x1 - x0 + 1, c.x1 - c.x0 + 1);
-            if (overlap > 0 && overlap / shorter > 0.4 && overlap > bestOverlap) {
+            // A run only continues the glyph if it covers a real part of the
+            // LONGER of the two, not just of the shorter one. The "shorter"
+            // test alone lets a 1 px run join a 51 px one in either
+            // direction, because the small run is wholly inside the big one.
+            // That is how the positions table's header RULE (51 px) fuses
+            // with the panel BORDER (1 px) below it into one glyph spanning
+            // the whole table — and the consume step then deletes the
+            // ticker of every row in between.
+            const longer = Math.max(x1 - x0 + 1, c.x1 - c.x0 + 1);
+            if (overlap > 0
+              && overlap / shorter > 0.4
+              && overlap / longer >= MIN_MERGE_SUPPORT
+              && overlap > bestOverlap) {
               bestOverlap = overlap;
               bestIdx = k;
             }

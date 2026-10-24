@@ -1,9 +1,21 @@
 # Qullamaggie positions table — measured layout facts
 
-Everything here was measured on real 1920×1080 frames from
-`data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/`. The frames are
-1920-wide "source" snapshots (the OCR-resolution 1280-wide renders are
-unreadable — see the note at the end).
+Everything here was measured on real 1920×1080 frames — "source" snapshots,
+not the OCR-resolution 1280-wide renders, which are unreadable (see the note
+at the end).
+
+**A frame's identity is its FILE, not its label.** The same capture label —
+`20230609 c0` — names several *different* PNGs: four files are called
+`qmg_20230609.png` in four different run directories, and they hold three
+distinct images (two of the four are byte-identical). Two measurements
+labelled "20230609 c0" can therefore disagree without either being wrong —
+and did, until this document was re-checked against the artifacts. Every
+table below names the file it was measured on, with the first eight hex
+digits of its md5.
+
+The frames live under the gitignored `data/video_scan_test/` and
+`data/video_ocr_probe/` trees, so these numbers are **not reproducible from a
+clean clone** — only from a machine that still has the runs.
 
 ## The widget
 
@@ -43,15 +55,120 @@ region**: the watchlist is docked above it.
 
 ## Measured geometry per corpus frame
 
-| frame | ticker column | ink rows | GT | note |
-|---|---|---|---|---|
-| 20220218 c1 | 1795–1820 | 9 | 9 | rows start at the first data row |
-| 20220218 c2 | 1795–1820 | 9 | 9 | |
-| 20220222 c0 | 1792–1815 | 12 | 7 | **picked the WATCHLIST** — no positions candidate found |
-| 20220222 c1 | 1794–1830 | 9 | 7 | title read `APOSI`, header read `FUOSYM` |
-| 20220222 c2 | 1795–1819 | 7 | 7 | |
-| 20230608 c0 | 1606–1648 | 14 | 13 | title read `APOSIS`; 1 title row + 13 data |
-| 20230609 c0 | 1697–1739 | 16 | 13 | title read `AUPOSS`; 2 title/header rows + 13 data |
+The detector's **top candidate** — the one it would read — for each frame
+this document cites, measured with the merge fix in place (§ 'The
+glyph-merge rule'). The candidate's own `left`/`right`, not the padded
+column it reports.
+
+| frame (file · md5) | ticker column | ink rows | band | GT | note |
+|---|---|---|---|---|---|
+| 20220218 c1 · `qmg_20220218_2.png` · d6a45e35 | 1795–1820 | 9 | y 732–882 | 9 | rows start at the first data row |
+| 20220218 c2 · `qmg_20220218_3.png` · 8eaeba13 | 1795–1820 | 9 | y 732–882 | 9 | |
+| 20220222 c0 · `qmg_20220222.png` · fc63546d | 1792–1815 | 12 | y 64–286 | 7 | the **WATCHLIST** is the top candidate; the positions table is the second (`1795–1819`, 7 rows, y 732–846) |
+| 20220222 c1 · `qmg_20220222_2.png` · 8454ed2d | 1794–1816 | 12 | y 63–286 | 7 | the positions table is the second candidate (`1794–1830`, 9 rows, y 695–846); title read `APOSI`, header read `FUOSYM` |
+| 20220222 c2 · `qmg_20220222_3.png` · 52a6d7f6 | 1795–1819 | 7 | y 732–846 | 7 | |
+| 20230608 c0 · `qmg_20230608.png` · 287032ad | 1606–1648 | 14 | y 617–880 | 13 | title read `APOSIS`; 1 title row + 13 data |
+| 20230609 c0 · `qmg_20230609.png` · d53cb5fa | 1697–1739 | 16 | y 658–937 | 13 | title read `AUPOSS`; 2 title/header rows + 13 data |
+| 20230609 c0 · `qmg_20230609.png` · ee3bc2bf | 1697–1739 | 16 | y 658–937 | 13 | **the same label, a different file** — see § 'The glyph-merge rule' |
+
+The last two rows are the same date, the same capture index and the same
+filename in two different run directories, and they are **different images**.
+Before the merge fix the second of them detected the watchlist instead; see
+§ '20230609 c0: the 2023 sidebar'.
+
+## The glyph-merge rule, and the bug it caused
+
+`extractWords` (`src/video/positionColumn.js`) builds glyphs out of
+horizontal ink runs: it seeds a glyph on a run and grows it up and down by
+chaining runs that overlap it. The chaining test was
+
+```js
+overlap / shorter > 0.4
+```
+
+where `shorter` is the **shorter** of the two runs. That test is symmetric,
+and the symmetry is the bug: a 1 px run is wholly inside a 51 px run, so it
+covers 100 % of *itself* and the shorter of the two is the 1 px one. A 1 px
+panel border sitting under a 51 px header rule therefore joined the rule.
+
+The consequence was not a slightly wrong glyph. On the 2023 sidebar the
+merged glyph was
+
+```text
+x 1677..1729   y 687..884   (53 x 198)
+```
+
+— the 51 px header rule at y 687 fused with the 1 px panel border below it
+(the border's x-range is *inside* the rule's, so it covers 100 % of itself
+and passes a symmetric test) and spanned the whole table. `extractWords`
+then *consumes* every run in a glyph's row span that overlaps its bounding
+box, so the merged glyph deleted the ticker of every row in between. The
+positions table lost its middle rows and the reader had nothing to claim.
+
+The fix adds a second, asymmetric test: the candidate must also cover
+`MIN_MERGE_SUPPORT` (3 %) of the **longer** of the two runs. A letter's stem
+is 1 px inside a 7 px bar (1/7 ≈ 14 %), so it still merges; a 1 px border
+under a 51 px rule (1/51 ≈ 2 %) does not.
+
+The threshold is not a free parameter. It has to sit **below** the 1-in-20
+ratio a letter's stem has inside a 20 px bar (0.05) — a stem must keep
+merging — and **above** the 1-in-51 ratio the 1 px panel border has under
+the header rule (0.02) — chrome must not. 3 % sits in that window, and
+`test/positionColumnMerge.test.js` pins both sides of it.
+
+### What it changed, over the whole corpus
+
+`findTickerColumnByInkRuns` is a pure image pass — no OCR, ~0.1 s a frame —
+so it can be run over every source-width snapshot on disk. Over the **252**
+1920-wide snapshots in the scratch tree:
+
+| | frames |
+|---|---|
+| shortlist unchanged | 116 |
+| shortlist changed | 136 |
+| … of those, a different TOP candidate | 109 |
+| … of those, the same set in a different order | 4 |
+| … empty before, populated after | **13** |
+| … populated before, empty after | **0** |
+
+Nothing that was found stopped being found. Over the 65 distinct frames of
+the seven measured dates the winning column moved on **32** of them, and
+almost every move was *onto* the table:
+
+| frame (md5) | before | after |
+|---|---|---|
+| 20220218 c0 · a68ab8b2 | `1792-1815`, 6 rows at y 64–178 (chart-area junk) | `1795-1820`, 9 rows at y 732–882 |
+| 20220606 c1 · 93514908 | `1741-1762`, 4 rows at y 100–161 | `1741-1762`, 8 rows at y 730–862 |
+| 20220607 c1 · 029cd1f9 | `148-188`, 3 rows at y 44–87 (chart area) | `1738-1761`, 7 rows at y 730–844 |
+| 20230609 c0 · ee3bc2bf | `1697-1723`, 17 rows at y 325–636 (**the watchlist**) | `1697-1739`, 16 rows at y 658–937 (**the positions table**) |
+| 20230609 c1 · d8b376be | `1697-1721`, 4 rows at y 58–119 | `1697-1723`, 12 rows at y 715–937 |
+
+### The cost: the title bar leaves the ladder
+
+On the 20220607 family the fix goes the other way. The winning ladder now
+starts at y 730 instead of y 693, so the **title row is no longer part of
+the candidate** and the reader falls back from the `title` discriminator to
+`bottom_most`. Measured on the same frame, both ways:
+
+| | before | after |
+|---|---|---|
+| candidate | `1740-1780`, 9 rows at y 693–844 | `1741-1763`, 7 rows at y 730–844 |
+| discriminator | `title` (`APOSIT`) | `bottom_most` |
+| published | UCO, VLO, ALB, BOIL, **NFLX**, TNA, LTHM | UCO, VLO, ALB, BOIL, **NFU**, TNA, LTHM |
+| recall | 7/7 | 6/7 |
+
+The cause is a pre-existing fragility that the fix *exposes* rather than
+creates: the title word's left edge (x 1740) is 2 px from a stray word's at
+the top of the frame (x 1738) and 1 px from the ladder's (x 1742), and the
+grouping takes the **first** group within tolerance, not the closest. Before
+the fix the title was merged with the rule above it into one wide glyph, so
+it landed in the ladder by accident.
+
+Making the closest group win restores the title row on 20220607 — and
+merges the watchlist and the positions table into one 24-row ladder on
+20230609, which is the frame the whole fix was for. The two rules cannot
+both hold; the one that keeps the 2023 sidebar readable is the one that
+ships.
 
 ## THE DISCRIMINATOR: the title bar is readable from the ticker column
 
@@ -101,9 +218,10 @@ contains no literal `POS` and is therefore not claimed. Mapping digits back to
 letters would be inventing evidence the OCR did not produce.
 
 The consequence is not subtle. With the near-miss rule the reader picked the
-**watchlist** on 20230609 c0 and published its holdings (`ABNB`, `AMD`,
-`SHOP`, `RIVN`, `NVDA`, `RBLX`, `ZS`, `NFLX`, `DDOG`) as positions: 0 %
-recall, and a portfolio holding a stock the streamer never bought.
+**watchlist** on 20230609 c0 (the 20261017 copy, md5 `ee3bc2bf`) and
+published its holdings (`ABNB`, `AMD`, `SHOP`, `RIVN`, `NVDA`, `RBLX`,
+`ZS`, `NFLX`, `DDOG`) as positions: 0 % recall, and a portfolio holding a
+stock the streamer never bought.
 
 Note that the reads are **not stable** — the same frame read the watchlist
 title as `RPISLVE` in one run and `RPISLU` in the next. EasyOCR is not
@@ -165,12 +283,29 @@ the watchlist from the positions table. Only the title bar can.
 - Lexicon: `loadDecodeLexiconSync()` (seed + observed, 259 tickers) covers
   **100 %** of the 678 GT ticker occurrences. `loadSeedLexiconSync()` (233)
   misses 26 distinct GT tickers = 63 occurrences (9.3 %).
+- **The decoder's floor.** `maxCost` is 0.85, an insertion or a deletion
+  costs 1.5 and an unexplained substitution 1.0 — so a read is only
+  repairable when a *character was misread*, never when one is missing or
+  extra. `ATR` → `PLTR` costs 2.5 and `A` → `AI` 1.5; neither is reachable.
+  Raising `maxCost` to reach them only manufactures false positives (`AR`,
+  `TSM`), because the ambiguity grows faster than the reach.
+- **The lexicon contains OCR variants, and they publish verbatim.** Ten rows
+  of `config/ticker_lexicon_seed.csv` are not tickers but the *shape* a
+  ticker takes when it is misread — `AROQ`, `ARCQ`, `OBTS`, `GSII`, `IOI`,
+  `PLIR`, `NUGI`, `~09r3`, `GSlT`, `MNOY`, each with a note saying which
+  ticker it came from. An exact lexicon hit short-circuits the decoder at
+  cost 0, so `PLIR` publishes as `PLIR` at 0.000 and never competes with
+  `PLTR` at 0.250. That is where 4 of the 7 false positives in § 'Measured
+  results` come from. Deleting those rows would let `PLIR` decode to
+  `PLTR`, but it would also drop the readings whose *true* ticker is not in
+  the lexicon at all (`~09r3` → `URNM`), so it has not been done.
 - Recogniser errors are **stable** across scale / kernel / colour / grayscale —
   only a lexicon constraint or a second recogniser can fix them.
 - Measured on a 4-date corpus: raw recall 58.7 %; decoded (no confusion
   model) recall 58.7 %, precision 74.0 %. All 13 false positives are reads
-  that are *themselves valid tickers but wrong* (`PYPL←COPX`, `MPC←MOS`,
-  `RIVN←DVN`, `IOI←IOT`, `AROQ←ARQQ`, `PLIR←PLTR`, `NRGU←NDGU`).
+  that identify a *different* ticker — either another real ticker
+  (`PYPL←COPX`, `MPC←MOS`, `RIVN←DVN`, `NRGU←NDGU`) or the lexicon's own
+  OCR variants (`IOI←IOT`, `AROQ←ARQQ`, `PLIR←PLTR`).
   The corpus is built by `tools/buildPositionCorpus.js` and is **not
   checked in** — the frames it was measured from live under the
   gitignored `data/video_scan_test/` tree — so these figures are not
@@ -454,15 +589,34 @@ table-published frames are left alone.
 
 ## Measured results
 
-`readPositionTable` run directly over four real 1920-wide source frames,
-one capture each, with the ground truth from `data/qmg_ground_truth.json`:
+`readPositionTable` run directly over six real 1920-wide source frames, one
+capture each, with the ground truth from `data/qmg_ground_truth.json`. The
+rows are keyed by **file**, because the label is not unique:
 
-| frame | recall | precision | what happened |
-|---|---|---|---|
-| 20220218 c1 | 88.9 % (8/9) | 88.9 % | watchlist vetoed by its `XIWL` title → `sole_candidate`, verified. `ROKU` read as `UPST` |
-| 20220222 c1 | **100 %** (7/7) | **100 %** | title read `POSI`, header `SYM` → `title` |
-| 20230608 c0 | 76.9 % (10/13) | 76.9 % | title read `POSITIC` → `title`. The three misses are misreads of real tickers: `GSIT`→`GSII`, `IOT`→`IOI`, `PLTR`→`PLIR` |
-| 20230609 c0 | 0 % | — | **nothing published** — see below |
+| frame (file · md5) | discriminator | recall | FP | what happened |
+|---|---|---|---|---|
+| 20220218 c1 · `qmg_20220218_2.png` · d6a45e35 | `sole_candidate` | 8/9 = 88.9 % | 1 | the watchlist was vetoed by its `XIWL` title, so the survivor was published; `ROKU` read as `UPST` |
+| 20220222 c1 · `qmg_20220222_2.png` · a1bdb944 | `bottom_most` | 7/7 = **100 %** | 0 | the frame the e2e scan below produced (`video_scan_20261024/qmg-table-e2e`) |
+| 20221104 c0 · `qmg_20221104.png` · 59cba1f3 | `title` | 1/1 = **100 %** | 0 | title read `POSTS`, header `SM` — a single holding, `OIH` |
+| 20220606 c1 · `qmg_20220606_2.png` · 93514908 | `bottom_most` | 6/8 = 75 % | 2 | `BOIL` and `NFU` are false positives |
+| 20230608 c0 · `qmg_20230608.png` · 287032ad | `title` | 10/13 = 76.9 % | 3 | title read `POSITIC`. The three misses are misreads of real tickers: `GSIT`→`GSII`, `IOT`→`IOI`, `PLTR`→`PLIR` |
+| 20230609 c0 · `qmg_20230609.png` · ee3bc2bf | `title` | 10/13 = 76.9 % | 1 | title read `POSIIC`, header `SYM`; `ARQQ` read as `AROQ` |
+| **total** | | **42/51 = 82.4 %** | **7** | |
+
+One more frame was measured **both** ways, with and without the merge fix:
+
+| frame (file · md5) | before | after |
+|---|---|---|
+| 20220607 c1 · `qmg_20220607_2.png` · a7b6b283 | `title` (`APOSIT`), 7/7, 0 FP | `bottom_most`, 6/7, 1 FP (`NFU` for `NFLX`) |
+
+which is the title-row cost of the merge fix, quantified in § 'The
+glyph-merge rule'.
+
+The reads are **not stable** — EasyOCR is not deterministic on glyphs this
+small, so every number here is a measurement of one run. The 20220222 c1
+row is the clearest case: the frame's candidate list is identical before and
+after the merge fix, yet the same frame has been read as `title` in one run
+and `bottom_most` in another.
 
 For comparison, the legacy `chart_stream` reader reaches 58.7 % raw recall
 on the same four-date corpus (§ 'Decoder facts').
@@ -498,32 +652,43 @@ reader's, and it was the only frame the clusterer was eligible to repair.
 input was empty, because it read `chartStream.position_list` off the
 top-candidate **summaries**, which spell the field `chart_stream`.
 
-### 20230609 c0: the 2023 sidebar, and why it publishes nothing
+### 20230609 c0: the 2023 sidebar, and what it used to publish
 
 The positions table in this frame is at x 1697–1739 with 13 data rows at
-y 726–942. The ink-run detector finds that column **only** for the
-watchlist rows above it (a 17-row ladder ending at y 636) and for three
-stragglers at y 894–937; the twelve rows between are not detected as a
-column at all. The ticker column of the positions table is therefore not
-among the candidates, and the reader has nothing to claim.
+y 726–942. Two copies of this frame exist — `qmg_20230609.png` in the
+20261012 run (md5 `d53cb5fa`) and in the 20261017 run (md5 `ee3bc2bf`) —
+and they behaved differently, because the **pixels** differ, not the code.
 
-It does not claim the wrong thing either, which is the point of the
-`verified` rule and of the literal-`POS` title rule: the watchlist's title
-read as `RPISLU` is not a title, the one candidate carrying a `Sym` header
-has no ticker rows, and the table that does look table-shaped is the
-watchlist. So the frame publishes **nothing** and the scan falls back to
-the legacy reader — which is no worse than the legacy reader on its own.
+On the 20261017 copy the ink-run detector found a 17-row ladder at
+x 1695–1725 ending at y 631 and three stragglers at y 894–937: the
+positions table's ticker column was **not** among the candidates at all. The
+reader had nothing to claim, and the frame published nothing.
 
-Closing this gap is a **detection** problem, not a reading problem: the
-ticker column's ink has to be found at y 726–942 in the first place.
+The reason was not "the rows are not detected as a column" — it was one
+merged glyph. The header rule at y 687 (51 px wide) and the panel border
+below it (1 px wide) satisfied the old merge test and fused into a single
+glyph spanning y 687–884; the consume step then deleted the ticker of every
+row in between. § 'The glyph-merge rule' has the mechanics.
+
+With the merge fixed the same frame yields the positions table:
+`1697–1739`, 16 rows at y 658–937, and the reader publishes 10 of the 13
+ground-truth holdings — 76.9 %, with 1 false positive (`AROQ` for `ARQQ`).
+
+It is worth saying what the reader did **not** do in the meantime. It did
+not publish the watchlist. The watchlist's title read as `RPISLU` is not a
+title, the one candidate carrying a `Sym` header has no ticker rows, and the
+table that does look table-shaped is the watchlist — so a frame that could
+not be claimed published nothing, and the scan fell back to the legacy
+reader, which is no worse than the legacy reader on its own.
 
 ### Cost
 
 One frame is two EasyOCR batches: one wide probe strip per candidate
 column, then one narrow strip per strip variant on the winner. On an idle
-machine a frame takes **54–65 s**. (Read off the console during the e2e
-run above; the probe logs carry no timing field, so the number is not
-reproducible from an artifact.)
+machine a frame takes **162–257 s** — the six frames in § 'Measured
+results' cost 170, 207, 162, 200, 257 and 245 s, and the 20220607 frame
+cost 186 s. (Read off the console during those runs; the probe logs carry
+no timing field, so the number is not reproducible from an artifact.)
 
 That number is not a constant, though, and the reason is the adapter's
 budget: `runEasyOcrBatch` spends `perImageMs × imageCount + 120000`, so a
