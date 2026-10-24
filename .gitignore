@@ -18,6 +18,9 @@ data/video_scan_*/fix-final/screenshots/
 data/video_scan_*/**/ocr_probe/frames/
 # Test runs and probes — temporary artifacts
 data/video_scan_test/
+# Scratch output roots the e2e scan tests create under data/. They are removed
+# in a finally block, but an interrupted run leaves them behind.
+data/video_ocr_e2e_*/
 **/__pycache__/
 data/discord_pipeline/.cache/
 # Bundled binaries
@@ -31,6 +34,9 @@ CLAUDE_RAPPEL_PLAN.md
 # docs/qmg-positions-layout-findings.md and the src/video/position*.js modules.
 dbg_*.js
 dbg_*.cjs
+# Throwaway diagnostic scripts written while chasing a specific bug.
+*_tmp.js
+*_tmp.cjs
 # Manual crop of position-panel regions, kept only for visual inspection.
 # No tool writes these; the frames they were cut from live under the
 # gitignored data/video_scan_test/ tree.
