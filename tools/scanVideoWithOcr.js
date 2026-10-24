@@ -40,6 +40,7 @@ const { runEasyOcr, adaptToParserSchema } = require('../src/ocr/easyocrAdapter')
 const { resolveFfmpegBin, resolveFfprobeBin } = require('../src/video/ffmpegBin');
 const { preprocessChartStreamToBuffer, preprocessChartStreamRawToBuffer } = require('../src/ocr/ocrImage');
 const { readPositionTable } = require('../src/video/positionTableScan');
+const { publishTableHoldings, readerForFrame } = require('../src/video/positionTablePublish');
 
 const OCR_TEXT_SNIPPET_MAX_CHARS = 200;
 const CAPTURE_MIN_FRAME_GAP = 10;
@@ -734,9 +735,11 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
       // A table is only published when it was POSITIVELY identified as the
       // positions table AND something in it decoded. "The only table in
       // the panel" could be the watchlist, and a table that decoded
-      // nothing has no holdings to publish.
-      if (table.found && table.verified && table.tickers && table.tickers.length) {
-        tableHoldings = table.tickers;
+      // nothing has no holdings to publish. The rule itself lives in
+      // src/video/positionTablePublish.js so it can be tested.
+      const published = publishTableHoldings(table);
+      if (published) {
+        tableHoldings = published;
         chartStream = buildTableChartStream(table);
         tickerSource = chartStream.position_list;
         ocr = {
@@ -847,7 +850,7 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     // Which reader produced this frame's holdings. The multi-frame clusterer
     // repairs RAW crop reads, so it must not touch a frame whose holdings
     // were decoded against the lexicon by the table reader.
-    tickerSource: tableHoldings.length ? 'position_table' : 'chart_stream',
+    tickerSource: readerForFrame({ table: positionTable }),
     stats,
     tickers,
     timestamp: explicitTimestamp != null ? explicitTimestamp : buildFrameTimestamp(frameIndex, fps)
