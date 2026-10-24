@@ -365,6 +365,20 @@ throttling rule above, that error on a non-listed video means YouTube is throttl
 not that the video lacks 1080p. Confirm with `--list-formats` before concluding a
 video genuinely has no 1080p.
 
+**Never downgrade a throttled video to 720p.** Confirmed 2026-10-24:
+`i-FvQ9bD9S8` failed its format-137 attempt, got fetched at 720p instead —
+and `--list-formats` showed format 137 *present*. YouTube was throttling and
+lying. A 720p copy is strictly worse than what was lost, so the rule is:
+
+1. Ask what the format ladder actually contains (`--list-formats`, or `-j`).
+2. No 137 → the video genuinely has no 1080p stream → fetch it at 720p.
+3. 137 present but the download failed → it was throttled → leave it errored
+   and retry later with fresh cookies. **Do not** take the 720p copy.
+
+`tools/redownloadLostQmg.js` implements this: it checks each failure against
+the real ladder before downgrading, requeues throttled videos for a later
+attempt, and passes `--retry-errored` so a requeued video is actually retried.
+
 ### The authoritative lost set: `data/_lost_videos_ledger.json`
 
 718 entries, generated from the pre-loss `state.sqlite` as it stood in git HEAD:
