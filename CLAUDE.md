@@ -242,7 +242,7 @@ Rules:
 npm test        # node --test test/*.test.js
 ```
 
-226 tests, all passing (as of 2026-10-24).
+247 tests, all passing (as of 2026-10-24).
 
 ### Ground-truth benchmark fixtures — read before trusting a recall number
 
@@ -476,6 +476,21 @@ every EasyOCR invocation. Do not bypass it.
 5. **The clusterer (`clusterRawOcrTokens`) creates false-positive ticker clusters from chart noise.**
    When the per-frame parser finds no price-aligned tickers (column filter fails), `clusterRawOcrTokens` runs on raw OCR text and clusters all ticker-shape words across frames. Chart-area tokens like DOOM/JOOM/QOOM get edit-distance-corrected to GOOG (dist=2 each), SSO (RISO/RSO dist=2), QS (S/S0/S0M all dist=2). The fix: in `scanVideoWithOcr.js`, snapshot mode (QMG chart-stream) feeds `position_list` (column-filtered tickers) to the clusterer instead of raw OCR text, eliminating chart-area bleed. Additionally, edit-distance-corrected canonicals are accepted only when at least one cluster member is within distance 1 of the canonical, which eliminates chart-noise clusters while keeping real corrections (INA→TNA dist=1).
 
+6. **The clusterer repairs against the OBSERVED lexicon, not the seed lexicon.**
+   `loadSeedLexiconSync()` (233 tickers) is the whole-panel parser's allowlist and it is
+   missing 26 tickers Qullamaggie actually held (UPST, NRGU, MOS, DWAC, SWN, ...). A
+   holding the seed does not know is either dropped from its cluster or rewritten to a
+   neighbouring seed ticker — on 20220218 that turned NRGU into NUGI and lost UPST
+   outright. Snapshot mode therefore passes `loadDecodeLexiconSync()` (seed + observed =
+   259) to the clusterer; the whiteboard branch keeps the seed allowlist as a filter,
+   because there the clusterer reads raw OCR text where chart ink IS present.
+
+7. **Filter A counts DISTINCT FRAMES, so it needs two frames to have anything to agree
+   on.** With one legacy frame left the filter would empty the consensus and leave that
+   frame with no repair at all — the opposite of what the per-frame table bypass
+   promises. The scan tool therefore relaxes `minFrequency` to 1 when only one frame
+   contributes.
+
 ### Pipeline stages for chart-stream
 
 ```text
@@ -534,7 +549,12 @@ otherwise act as a lower bound and reject *every* real row. Same rule applies in
 - `chart_stream.column_filter` — `dominant_x`, `column_width`, `in_list_token_count` (diagnostic only, not gated)
 - `chart_stream.tickers_rejected_list` — first 30 rejected tokens
 - `chart_stream.position_list` — accepted tickers after per-frame parse
-- `merged_position_list` — multi-frame clusterer output (dominant for EasyOCR runs)
+- `merged_position_list` — the VIDEO-level holdings list. For a chart_stream scan it is
+  the multi-frame clusterer's consensus (the only reading repaired across frames); for a
+  position_table scan the table captures contribute their own decoded holdings. A
+  capture keeps what its OWN frame showed — `captures[n].tickers` and
+  `captures[n].chart_stream.position_list` are the same list for a chart_stream capture,
+  and the aggregator reads the latter.
 - `merged_raw_token_clusters` — per-cluster diagnostics: `{canonical, members, frequency, frameCount}`
 
 ### Known limitations and next steps (as of 2026-10-21)
@@ -590,6 +610,14 @@ layouts exist and the legacy crop reader only ever saw the first:
   tall. A 1280-wide OCR frame renders them ~4.5 px and the panel reads as
   `US / D / WCU / W / KOCO` instead of `UPST / DVN / NRGU / MOS / TQQQ`. Frames below
   1600 px wide are refused (`MIN_SOURCE_WIDTH_PX`).
+- **The frame budget is uniform, so the best frame is swapped in.**
+  `selectFramesForOcr` reserves a uniform sample across the timeline, and its stride
+  heuristic makes that reserve the WHOLE budget for a long video — which starves the
+  only branch that consults `--prefilter-threshold`. So in table mode the best-scoring
+  prefilter frame replaces the uniform frame **nearest** it (not the last one: the
+  nearest is the one the capture dedup would drop anyway). The swap does not happen in
+  batch mode, where the selected rows are replaced wholesale, and the best frame has
+  to pass the threshold — otherwise `--prefilter-threshold` would do nothing at all.
 - **The title discriminator is the literal substring `"POS"`.** "A - Positions" is
   truncated by the panel width to `APOSI` / `APOSIS` / `AUPOSS` / `POSOS` — all contain
   `POS`. Every measured near-miss of `POS` at edit distance 1 was a **false positive**
@@ -624,10 +652,12 @@ node tools/scanVideoWithOcr.js \
   --basename qmg
 ```
 
-`--prefilter-profile position_table` implies `--output-kind snapshot`, `--native-ocr-frame`
-and EasyOCR. It costs two EasyOCR batches per frame (~54–65 s/frame); the per-image
-timeout is derived from `--table-frame-budget-ms` (default 900000) rather than fixed,
-so the cost scales with the number of candidates rather than multiplying it.
+`--prefilter-profile position_table` REQUIRES `--output-kind snapshot` — the combination is
+refused otherwise — and forces the source-resolution OCR frame and EasyOCR. There is no
+`--native-ocr-frame` flag: the source frame is implied by the profile. It costs two
+EasyOCR batches per frame; the per-image timeout is derived from
+`--table-frame-budget-ms` (default 900000) rather than fixed, so the cost scales with
+the number of candidates rather than multiplying it.
 
 ### Diagnostics
 

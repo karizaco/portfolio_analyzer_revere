@@ -3,7 +3,7 @@
 **Output root:** [C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20261024](C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20261024)  
 **Probe directory:** `C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20261024`  
 **Saved screenshots:** `C:\Users\admin\Projects\portfolio_analyzer_revere\data\video_scan_20261024\screenshots` (0 PNGs)  
-**Generated at:** 2026-10-24T13:32:37.735Z  
+**Generated at:** 2026-10-24T15:29:59.018Z  
 
 ## Totals
 
@@ -35,7 +35,7 @@
 - **Status:** done
 - **Frame budget:** 452 sampled → 3 OCR → 2 saved
 - **Prefilter top:** 45.23 | **Thresholds:** strong=6, review=4
-- **OCR engine:** tesseract.js 6.0.1 | lang=eng | dpi=300 | psm=null | deskew=false
+- **OCR engine:** easyocr | lang=eng | dpi=300 | psm=null | deskew=false
 - **Keyframe lookup:** 340 keyframes resolved
 
 | # | t (HH:MM:SS) | score | layout | obs.date | intro? | tickers | phash | keyframe Δ | snippet |

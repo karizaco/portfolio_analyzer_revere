@@ -1122,8 +1122,15 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
     const ra = find(a), rb = find(b);
     if (ra !== rb) parent.set(ra, rb);
   }
+  // Every token starts as its own root. The initialisation has to happen
+  // BEFORE the comparison loop: `parent.set(tokens[i], tokens[i])` inside
+  // the loop resets a token that an earlier iteration had already merged
+  // into another cluster, which splits that cluster again and makes the
+  // result depend on the order the tokens happened to arrive in.
+  for (const token of tokens) {
+    parent.set(token, token);
+  }
   for (let i = 0; i < tokens.length; i += 1) {
-    parent.set(tokens[i], tokens[i]);
     for (let j = i + 1; j < tokens.length; j += 1) {
       if (Math.abs(tokens[i].length - tokens[j].length) > maxDistance) continue;
       if (levenshtein(tokens[i], tokens[j]) <= maxDistance) {
