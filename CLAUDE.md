@@ -73,7 +73,19 @@ The current session has been rate-limited by YouTube for up to an hour.
 - **Batch downloads** with `--limit 200` are safer because each download takes 20–60s, naturally spacing requests.
 - If rate-limited: **stop all YouTube activity for 30–60 minutes** before retrying.
 - Do NOT run catalog refresh and batch downloads concurrently — they compete for the same rate-limit budget.
-- The `--sleep-requests` yt-dlp flag does NOT help for catalog refresh (it runs a separate invocation per video).
+- The `--sleep-requests` yt-dlp flag does NOT help `tools/importQmgChannel.js` — it resolves upload dates with a
+  separate yt-dlp invocation **per video**, and a per-process flag cannot space requests across processes. It DOES
+  help `whiteboard_worker.py catalog`, which is a **single** invocation over the channel URL. Two different
+  "catalog refresh" tools, opposite behaviour — check which one you are running before reaching for the flag.
+
+### Catalog worker: a partial run is kept
+
+`whiteboard_worker.py catalog` parses yt-dlp's stdout **before** it looks at yt-dlp's exit code, so a per-video
+failure does not throw away the rows that succeeded. A full Qullamaggie catalog is ~700 metadata requests and
+~3.5 h; checking the exit code first cost one such run entirely (a DNS blip near the end, 3 h 23 min, no rows
+kept). The summary reports `status: "ok"` or `"partial"` plus `yt_dlp_returncode`; a run that produced no rows
+at all still fails, and reports yt-dlp's own error. Regression-tested in
+`test/whiteboardWorkerCatalog.test.js` with a fake yt-dlp — no network required.
 
 ### YouTube throttling: "age restriction" and "format not available"
 
