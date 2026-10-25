@@ -274,17 +274,17 @@ async function runScan(dateKey, video, runTag, extraFlags = []) {
 
     let stderr = '';
     child.stderr.on('data', d => { stderr += d.toString(); });
+    // Drain stdout. scanVideoWithOcr.js prints the whole scan result as one
+    // JSON blob, which is larger than the 64 KB pipe buffer — if nobody reads
+    // it the child blocks on write() and never exits. Two videos hung this
+    // way on 2026-10-24: the OCR completed and the log was written, but the
+    // process sat there until the timeout killed it.
+    child.stdout.on('data', () => {});
 
     child.on('close', (code) => {
       clearTimeout(killTimer);
       const elapsed = ((Date.now() - start) / 1000).toFixed(0);
       const status = killed ? 'TIMEOUT' : code === 0 ? 'OK' : 'ERROR';
-
-      if (killed || code !== 0) {
-        console.log(`[${dateKey}] ${status} after ${elapsed}s (code=${code})`);
-        resolve({ dateKey, status, elapsed: parseInt(elapsed), error: stderr.slice(0, 200) });
-        return;
-      }
 
       // Read result
       const logFile = path.join(OUT_ROOT, runTag, 'ocr_probe', 'logs');
@@ -295,6 +295,22 @@ async function runScan(dateKey, video, runTag, extraFlags = []) {
           log = JSON.parse(fs.readFileSync(path.join(logFile, files[0]), 'utf8'));
         }
       } catch {}
+
+      // A scan that wrote its log but then hung (see the stdout-drain note
+      // above) is a SUCCESS, not a failure — the OCR result is on disk. Only
+      // report TIMEOUT/ERROR when there is no usable log.
+      if (log && log.status !== 'error') {
+        console.log(`[${dateKey}] OK after ${elapsed}s | captures=${log.captured_count || '?'}` +
+          (killed ? ' (recovered: log was written before the timeout)' : ''));
+        resolve({ dateKey, status: 'OK', elapsed: parseInt(elapsed), log });
+        return;
+      }
+
+      if (killed || code !== 0) {
+        console.log(`[${dateKey}] ${status} after ${elapsed}s (code=${code})`);
+        resolve({ dateKey, status, elapsed: parseInt(elapsed), error: stderr.slice(0, 200) });
+        return;
+      }
 
       console.log(`[${dateKey}] OK after ${elapsed}s | captures=${log?.captured_count || '?'}`);
       resolve({ dateKey, status: 'OK', elapsed: parseInt(elapsed), log });
