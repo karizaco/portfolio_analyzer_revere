@@ -68,12 +68,8 @@ function runEasyOcr(imagePath, options = {}) {
       return;
     }
     const child = spawn(python, [scriptPath, imagePath], {
-      env: {
-        ...process.env,
-        KMP_DUPLICATE_LIB_OK: process.env.KMP_DUPLICATE_LIB_OK || 'TRUE',
-      },
-      stdio: ['ignore', 'pipe', 'pipe'],
       env: { ...process.env, KMP_DUPLICATE_LIB_OK: 'TRUE' },
+      stdio: ['ignore', 'pipe', 'pipe'],
     });
     let stdout = '';
     let stderr = '';

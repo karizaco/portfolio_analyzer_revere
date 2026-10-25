@@ -809,7 +809,7 @@
   "20220218": {
     "0": ["UPST","DVN","NRGU","MOS","TQQQ","TSLA","FCX","DWAC","COPX"],
     "1": ["ROKU","TQQQ","TSLA","FCX","COPX","MOS","NRGU","DWAC","DVN"],
-    "2": ["UPST","DVN","NRGU","MOS","TQQQ","TSLA","DCX","DWAC","COPX"]
+    "2": ["UPST","DVN","NRGU","MOS","TQQQ","TSLA","DWAC","COPX"]
   },
   "20220318": {
     "0": ["NUGT","FCX","REGN","URA","COPX","URNM","KWEB"]
@@ -826,7 +826,7 @@
   "20220222": {
     "0": ["NRGU","DVN","MOS","COPX","TQQQ","FCX","TSLA"],
     "1": ["NRGU","DVN","MOS","COPX","TQQQ","FCX","TSLA"],
-    "2": ["NDGU","DVN","MOS","COPX","TQQQ","FCX","TSLA"]
+    "2": ["NRGU","DVN","MOS","COPX","TQQQ","FCX","TSLA"]
   },
   "20220301": {
     "0": ["IBKR","CRH","XLV","KRE","MP","NUGT","EDV","RSX","FCX","VLO","COPX"]
@@ -875,7 +875,7 @@
     "2": ["OIH"]
   },
   "20230518": {
-    "0": ["PLTR","LI","AI","SHOP","MNDY","IMGN","APLD"]
+    "0": ["APLD","AI","PLTR","CVNA","IMGN","SHOP","MNDY","LI"]
   },
   "20220412": {
     "0": ["LHX","LMT","URA","URNM","WEAT","X","COPX","FCX","REGN","NUGT","JNUG"]
@@ -884,7 +884,6 @@
     "0": ["BOIL","WEAT"],
     "1": ["BOIL","WEAT"],
     "2": ["BOIL","WEAT"]
->>>>>>> origin/fix/cluster-fix-3stage
   },
   "20230523": {
     "0": [
@@ -963,7 +962,8 @@
     ]
   },
   "20230609": {
-    "0": ["RGTI","QBTS","IMGN","CVNA","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","APLD","MNDY"]
+    "0": ["RGTI","QBTS","IMGN","CVNA","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","APLD","MNDY"],
+    "2": ["RGTI","QBTS","IMGN","CVNA","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","APLD","MNDY"]
   },
   "20220323 (batch t=1020s)": {
     "0": [
@@ -1063,10 +1063,6 @@
       "TSLA",
       "WEAT"
     ]
-=======
-    "0": ["RGTI","QBTS","IMGN","CVNA","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","APLD","MNDY"],
-    "2": ["RGTI","QBTS","IMGN","CVNA","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","APLD","MNDY"]
->>>>>>> origin/fix/cluster-fix-3stage
   },
   "_meta": "Per-capture GT. Keys are dateKey (YYYYMMDD) → capture-index (0=qmg_*.png, 1=qmg_*_2.png, 2=qmg_*_3.png). crop: [x1,y1,x2,y2] in source-frame pixels. Note: 20230518+ videos use wider table layout — default crop (0.86,0.14) may cut off left edge; use 0.83,0.17 for newer videos. 20230519/20231201/20231215 are Revere earnings frames, not Quullamaggie position lists.",
   "_source": "Verified by visual inspection of crop_comparison.html snapshots.",
@@ -1075,18 +1071,18 @@
     "20220425": "capture 1 (_2) has the same 4 GT tickers as capture 0.",
     "20220506": "capture 1 (_2) matches capture 0 (UCO, WEAT, TSLA, LTHM).",
     "20220323": "11 GT tickers consistent across captures",
-    "20220330": "8 GT tickers consistent",
-    "20220405": "11 GT tickers — GGPI/NEM rare tickers; OCR-difficult",
     "20220427": "qmg_20220427.png has [TSLA, BOIL, WEAT, KOLD]. Earlier captures (frames 7/8/9 from different scan) had different positions.",
     "20220428": "4 GT tickers (CWEB, KWEB, TSLA, WEAT) — same across all 3 captures shown",
     "20220510": "captures 0/1 (qmg_20220510.png and _2.png) only have TSLA. capture 2 (_3.png) has [VRM, TSLA]. VRM is transient — only briefly visible.",
     "20220606": "capture 0 shows GOVX...VLO; capture 1 (_2) shows BOIL instead of GOVX/VLO; capture 2 (_3) keeps BOIL and restores VLO.",
     "20220614": "captures 0/1 have [UVXY, VLO, UCO]. capture 2 has only [VLO, UCO] — UVXY was dropped (likely closed before capture).",
-<<<<<<< HEAD
     "20221104": "capture 2 (_3) confirms sparse single-name list with only OIH visible.",
     "20230609": "capture 2 (_3) matches capture 0 for the 13-name newer-UI list.",
     "20220330": "8 GT tickers consistent",
     "20220405": "11 GT tickers — GGPI/NEM rare tickers; OCR-difficult",
-    "20230522": "7 GT tickers (LI, IMGN, SOUN, AI, CVNA, APLD, PLTR) — AI/SOUN/IMGN newer tickers, OCR-difficult"
-  }
+    "20230522": "7 GT tickers (LI, IMGN, SOUN, AI, CVNA, APLD, PLTR) — AI/SOUN/IMGN newer tickers, OCR-difficult",
+    "20230602": "15 GT tickers — IOT/ARQQ/RGTI/GSIT are newer tickers",
+    "20230608": "13 GT tickers — CVNA/QBTS/RGTI/GTLB/GSIT newer tickers, OCR-difficult"
+  },
+  "_gt_corrections": "2024-10-17: Removed phantom DCX from 20220218[2]. Fixed NDGU→NRGU in 20220222[2]. Removed hallucination FAULL from 20220427[7] (capture 7 is not a valid QMG position list frame)."
 }

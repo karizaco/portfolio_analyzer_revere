@@ -79,6 +79,9 @@ async function preprocessImage(filePath, profileName, preprocessOptions = {}) {
     overlayRegion = null,
     overlayScale = 5
   } = preprocessOptions;
+  if (!Number.isFinite(Number(overlayScale)) || Number(overlayScale) <= 0) {
+    throw new Error('overlayScale must be a positive number.');
+  }
   let pipeline = sharp(filePath);
 
   // --- bottom-half profiles (legacy whiteboard) ---
@@ -101,6 +104,19 @@ async function preprocessImage(filePath, profileName, preprocessOptions = {}) {
     const width = metadata.width || 0;
     const height = metadata.height || 0;
     const resolvedOverlayRegion = composeRelativeRegion(overlayRegion, overlayFocusRegion);
+    if (!resolvedOverlayRegion
+      || !Number.isFinite(resolvedOverlayRegion.x)
+      || !Number.isFinite(resolvedOverlayRegion.y)
+      || !Number.isFinite(resolvedOverlayRegion.w)
+      || !Number.isFinite(resolvedOverlayRegion.h)
+      || resolvedOverlayRegion.x < 0
+      || resolvedOverlayRegion.y < 0
+      || resolvedOverlayRegion.w <= 0
+      || resolvedOverlayRegion.h <= 0
+      || resolvedOverlayRegion.x + resolvedOverlayRegion.w > 1.001
+      || resolvedOverlayRegion.y + resolvedOverlayRegion.h > 1.001) {
+      throw new Error('Invalid chart-stream overlay region.');
+    }
     const { x, y, w, h } = resolvedOverlayRegion;
     // Convert fractional coords to absolute pixels
     const left = Math.round(x * width);

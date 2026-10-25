@@ -6,7 +6,8 @@ const crypto = require('node:crypto');
 const { PREFILTER_PROFILE_DEFAULT } = require('../config/schema');
 const {
   PIPELINE_PROFILE_DEFAULT,
-  getPipelineProfileNames
+  getPipelineProfileNames,
+  getPipelineProfileSet
 } = require('../config/pipelineProfiles');
 
 const SUPPORTED_PIPELINE_PROFILES = Object.freeze(getPipelineProfileNames());
@@ -149,6 +150,10 @@ function parseArgs(argv, overrides = {}) {
         break;
       case '--pipeline-profile':
         options.pipelineProfile = String(nextValue);
+        index += 1;
+        break;
+      case '--pipeline-profile-set':
+        options.pipelineProfileSet = String(nextValue);
         index += 1;
         break;
       case '--video-dir':
@@ -381,6 +386,15 @@ function parseArgs(argv, overrides = {}) {
       `Unsupported pipeline profile: ${options.pipelineProfile}. `
       + `Use one of: ${SUPPORTED_PIPELINE_PROFILES.join(', ')}`
     );
+  }
+
+  if (options.pipelineProfileSet) {
+    const profileSet = getPipelineProfileSet(options.pipelineProfileSet);
+    if (!profileSet.includes(options.pipelineProfile)) {
+      throw new Error(
+        `Pipeline profile ${options.pipelineProfile} is not part of set ${options.pipelineProfileSet}.`
+      );
+    }
   }
 
   const sanitizedBasename = String(options.basename || 'revere').replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
