@@ -884,7 +884,6 @@
     "0": ["BOIL","WEAT"],
     "1": ["BOIL","WEAT"],
     "2": ["BOIL","WEAT"]
->>>>>>> origin/fix/cluster-fix-3stage
   },
   "20230523": {
     "0": [
@@ -963,7 +962,8 @@
     ]
   },
   "20230609": {
-    "0": ["RGTI","QBTS","IMGN","CVNA","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","APLD","MNDY"]
+    "0": ["RGTI","QBTS","IMGN","CVNA","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","APLD","MNDY"],
+    "2": ["RGTI","QBTS","IMGN","CVNA","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","APLD","MNDY"]
   },
   "20220323 (batch t=1020s)": {
     "0": [
@@ -1063,10 +1063,6 @@
       "TSLA",
       "WEAT"
     ]
-=======
-    "0": ["RGTI","QBTS","IMGN","CVNA","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","APLD","MNDY"],
-    "2": ["RGTI","QBTS","IMGN","CVNA","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","APLD","MNDY"]
->>>>>>> origin/fix/cluster-fix-3stage
   },
   "_meta": "Per-capture GT. Keys are dateKey (YYYYMMDD) → capture-index (0=qmg_*.png, 1=qmg_*_2.png, 2=qmg_*_3.png). crop: [x1,y1,x2,y2] in source-frame pixels. Note: 20230518+ videos use wider table layout — default crop (0.86,0.14) may cut off left edge; use 0.83,0.17 for newer videos. 20230519/20231201/20231215 are Revere earnings frames, not Quullamaggie position lists.",
   "_source": "Verified by visual inspection of crop_comparison.html snapshots.",
@@ -1082,7 +1078,6 @@
     "20220510": "captures 0/1 (qmg_20220510.png and _2.png) only have TSLA. capture 2 (_3.png) has [VRM, TSLA]. VRM is transient — only briefly visible.",
     "20220606": "capture 0 shows GOVX...VLO; capture 1 (_2) shows BOIL instead of GOVX/VLO; capture 2 (_3) keeps BOIL and restores VLO.",
     "20220614": "captures 0/1 have [UVXY, VLO, UCO]. capture 2 has only [VLO, UCO] — UVXY was dropped (likely closed before capture).",
-<<<<<<< HEAD
     "20221104": "capture 2 (_3) confirms sparse single-name list with only OIH visible.",
     "20230609": "capture 2 (_3) matches capture 0 for the 13-name newer-UI list.",
     "20220330": "8 GT tickers consistent",

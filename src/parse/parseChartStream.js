@@ -872,12 +872,13 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
       const cleaned = raw.replace(/^\|+|\|+$/g, '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
       // Length filter: tokens must be at least minTokenLength, EXCEPT single-
       // letter tokens that are explicitly in SINGLE_LETTER_TICKERS (e.g. "U").
-      if (cleaned.length > 5) continue;
+      if (!regex.test(cleaned)) continue;
       if (cleaned.length < minTokenLength
-          && !(cleaned.length === 1 && SINGLE_LETTER_TICKERS.has(cleaned))) {
+          && !(options.minTokenLength === undefined
+            && cleaned.length === 1
+            && SINGLE_LETTER_TICKERS.has(cleaned))) {
         continue;
       }
-      if (!regex.test(cleaned)) continue;
       tokens.add(cleaned);
     }
     return tokens;
@@ -990,7 +991,10 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
         for (let i = 0; i < limit; i++) {
           if (m[i] === corr[i]) sharedPrefix += 1;
         }
-        if (sharedPrefix >= 2) { canonical = corr; break; }
+        if (sharedPrefix >= 2 && levenshtein(m, corr) <= maxDistance) {
+          canonical = corr;
+          break;
+        }
       }
     }
     // Strategy 3: 3-char member with d=1 to the correction
@@ -1000,7 +1004,7 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
         const corr = findCloseTickerMatch(m, lexicon);
         if (!corr) continue;
         const d = levenshtein(m, corr);
-        if (d <= 1) { canonical = corr; break; }
+        if (d <= Math.min(1, maxDistance)) { canonical = corr; break; }
       }
     }
     if (!canonical) continue;

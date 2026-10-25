@@ -65,6 +65,10 @@ function formatDateKey(year, month, day) {
   if (month < 1 || month > 12 || day < 1 || day > 31) {
     return null;
   }
+  const daysInMonth = new Date(year, month, 0).getDate();
+  if (day > daysInMonth) {
+    return null;
+  }
   return `${String(year).padStart(4, '0')}${String(month).padStart(2, '0')}${String(day).padStart(2, '0')}`;
 }
 
@@ -588,7 +592,7 @@ function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporal
   // Temporal boost: frames near the start of the stream get a bonus that
   // decays to zero after `temporalDecay` seconds. QMG position lists are
   // most likely to change in the first 20–30 minutes of a stream.
-  if (isFinite(temporalDecay) && temporalDecay > 0) {
+  if (profile !== 'whiteboard' && isFinite(temporalDecay) && temporalDecay > 0) {
     const tsCandidate = timestamp !== undefined ? timestamp : (stats && stats.timestamp);
     const ts = Number(tsCandidate);
     if (Number.isFinite(ts)) {
@@ -748,8 +752,11 @@ const PREFILTER_PROFILES = Object.freeze({
 function groupContiguousCandidates(candidates) {
   const windows = [];
   let currentWindow = [];
+  const orderedCandidates = candidates
+    .slice()
+    .sort((left, right) => left.frameIndex - right.frameIndex);
 
-  for (const candidate of candidates) {
+  for (const candidate of orderedCandidates) {
     if (!currentWindow.length) {
       currentWindow = [candidate];
       continue;
@@ -827,8 +834,12 @@ function selectFramesForOcr(prefilterRows, options = {}) {
     return [];
   }
 
-  const rowsByIndex = new Map(prefilterRows.map((row) => [row.frameIndex, row]));
-  const sortedByScore = prefilterRows
+  const validRows = prefilterRows.filter((row) =>
+    Number.isFinite(Number(row.frameIndex))
+    && Number.isFinite(Number(row.prefilterScore))
+  );
+  const rowsByIndex = new Map(validRows.map((row) => [row.frameIndex, row]));
+  const sortedByScore = validRows
     .slice()
     .sort((left, right) => {
       if (right.prefilterScore !== left.prefilterScore) {
@@ -868,7 +879,7 @@ function selectFramesForOcr(prefilterRows, options = {}) {
     // so a stride wider than ~20 s risks missing them entirely.
     let strideBasedReserve = baseline;
     if (prefilterRows.length > 0) {
-      const sample = prefilterRows[Math.min(1, prefilterRows.length - 1)];
+      const sample = validRows[Math.min(1, validRows.length - 1)];
       const secondsPerStep = sample.frameIndex > 0
         ? sample.timestamp / sample.frameIndex
         : 4;
@@ -923,10 +934,10 @@ function selectFramesForOcr(prefilterRows, options = {}) {
   // The uniform sample is budgeted BEFORE the seed loop so it cannot be
   // starved by an early burst of high-scoring chart frames.
   if (uniformReserve > 0) {
-    const totalRows = prefilterRows.length;
+    const totalRows = validRows.length;
     const stride = Math.max(1, Math.floor(totalRows / uniformReserve));
     for (let offset = 0; offset < totalRows && selected.size < maxFrames; offset += stride) {
-      const row = prefilterRows[offset];
+      const row = validRows[offset];
       if (!selected.has(row.frameIndex)) {
         selected.set(row.frameIndex, row);
       }
@@ -958,6 +969,12 @@ function inferDateKey(videoPath, explicitDateKey = '') {
 
 function allocateOutputPath(outputRoot, outputKind, dateKey, suffix = null, basename = 'revere') {
   const safeBasename = String(basename || 'revere').replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase() || 'revere';
+  if (!['whiteboard', 'snapshot'].includes(outputKind)) {
+    throw new Error(`Unsupported output kind: ${outputKind}`);
+  }
+  if (typeof outputRoot !== 'string' || !outputRoot.trim()) {
+    throw new Error('outputRoot must be a non-empty path.');
+  }
   const targetDirectory = path.join(outputRoot, outputKind === 'snapshot' ? 'snapshots' : 'screenshots');
   fs.mkdirSync(targetDirectory, { recursive: true });
 
