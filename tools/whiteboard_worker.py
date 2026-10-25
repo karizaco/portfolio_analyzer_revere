@@ -476,10 +476,20 @@ def parse_catalog_line(line: str) -> dict[str, str] | None:
     }
 
 
-def write_catalog_snapshot(catalog_directory: Path, content: str) -> Path:
-    snapshot_path = catalog_directory / f'catalog_{utc_timestamp_slug()}.tsv'
+def write_catalog_snapshot(catalog_directory: Path, content: str, stderr: str = '') -> tuple[Path, Path]:
+    """Write the catalog rows, and yt-dlp's stderr, as a pair of sibling files.
+
+    The stderr file is what tells you WHICH videos the run failed on. On a
+    partial run yt-dlp prints one "ERROR: [youtube] <id>: ..." line per
+    failed video, and that list is exactly what the next run has to go and
+    fetch -- without it, a partial import only says how MANY are missing.
+    """
+    slug = utc_timestamp_slug()
+    snapshot_path = catalog_directory / f'catalog_{slug}.tsv'
     snapshot_path.write_text(content, encoding='utf-8')
-    return snapshot_path
+    stderr_path = catalog_directory / f'catalog_{slug}.stderr.txt'
+    stderr_path.write_text(stderr, encoding='utf-8')
+    return snapshot_path, stderr_path
 
 
 def write_log_file(log_directory: Path, stem: str, stdout: str, stderr: str) -> Path:
@@ -1514,6 +1524,10 @@ def command_catalog(args: argparse.Namespace) -> int:
         print(message, file=sys.stderr)
         return result.returncode or 1
 
+    # Write the snapshot BEFORE reporting, so the warning can point at the
+    # file that names the videos the run failed on.
+    snapshot_path, stderr_path = write_catalog_snapshot(paths['catalog'], result.stdout, result.stderr)
+
     if result.returncode != 0:
         # yt-dlp failed on SOME videos but printed complete records for the
         # others. Those records are good — a per-video failure on video 600
@@ -1523,12 +1537,12 @@ def command_catalog(args: argparse.Namespace) -> int:
         # all of it when DNS blipped near the end.)
         print(
             f'WARNING: yt-dlp exited {result.returncode} but printed {len(rows)} usable rows; '
-            'importing them. The videos it failed on are missing and need another run.',
+            'importing them. The videos it failed on are missing and need another run. '
+            f'yt-dlp named them here: {stderr_path}',
             file=sys.stderr,
         )
 
     missing_upload_dates = sum(1 for row in rows if not row['upload_date'])
-    snapshot_path = write_catalog_snapshot(paths['catalog'], result.stdout)
 
     with connect_database(db_path) as connection:
         initialize_schema(connection)
@@ -1564,6 +1578,7 @@ def command_catalog(args: argparse.Namespace) -> int:
         'updated': updated,
         'yt_dlp_command': command,
         'yt_dlp_returncode': result.returncode,
+        'yt_dlp_stderr_path': str(stderr_path),
     }, indent=2))
 
     if malformed_lines:
