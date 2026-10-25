@@ -443,6 +443,9 @@ def build_catalog_command(args: argparse.Namespace) -> list[str]:
     if args.extractor_args:
         command.extend(['--extractor-args', args.extractor_args])
 
+    if getattr(args, 'sleep_requests', 0):
+        command.extend(['--sleep-requests', str(args.sleep_requests)])
+
     command.extend([
         '--print',
         '%(id)s\t%(upload_date)s\t%(title)s',
@@ -1494,10 +1497,6 @@ def command_catalog(args: argparse.Namespace) -> int:
 
     command = build_catalog_command(args)
     result = subprocess.run(command, capture_output=True, text=True, check=False)
-    if result.returncode != 0:
-        message = result.stderr.strip() or result.stdout.strip() or 'yt-dlp catalog command failed.'
-        print(message, file=sys.stderr)
-        return result.returncode
 
     rows = []
     malformed_lines = []
@@ -1509,8 +1508,24 @@ def command_catalog(args: argparse.Namespace) -> int:
             malformed_lines.append(raw_line)
 
     if not rows:
-        print('No catalog rows were returned by yt-dlp.', file=sys.stderr)
-        return 1
+        # Nothing usable came back, so there is nothing to import. Report
+        # yt-dlp's own failure, which is the more useful message.
+        message = result.stderr.strip() or result.stdout.strip() or 'yt-dlp catalog command failed.'
+        print(message, file=sys.stderr)
+        return result.returncode or 1
+
+    if result.returncode != 0:
+        # yt-dlp failed on SOME videos but printed complete records for the
+        # others. Those records are good — a per-video failure on video 600
+        # does not invalidate videos 1..599 — so they are imported, and the
+        # failure is reported rather than swallowed. The next run fills the
+        # gap. (A full Qullamaggie catalog is ~3.5 h; bailing here once cost
+        # all of it when DNS blipped near the end.)
+        print(
+            f'WARNING: yt-dlp exited {result.returncode} but printed {len(rows)} usable rows; '
+            'importing them. The videos it failed on are missing and need another run.',
+            file=sys.stderr,
+        )
 
     missing_upload_dates = sum(1 for row in rows if not row['upload_date'])
     snapshot_path = write_catalog_snapshot(paths['catalog'], result.stdout)
@@ -1545,9 +1560,10 @@ def command_catalog(args: argparse.Namespace) -> int:
         'pipeline_root': str(pipeline_root),
         'raw_output_path': str(snapshot_path),
         'source_url': args.source_url,
-        'status': 'ok',
+        'status': 'ok' if result.returncode == 0 else 'partial',
         'updated': updated,
         'yt_dlp_command': command,
+        'yt_dlp_returncode': result.returncode,
     }, indent=2))
 
     if malformed_lines:
@@ -1631,6 +1647,16 @@ def build_parser() -> argparse.ArgumentParser:
              'ios+android+web_safari+web client set is the most permissive '
              'metadata-fetcher for Revere-style channels; the catalog defaults '
              'match the download defaults.',
+    )
+    catalog_parser.add_argument(
+        '--sleep-requests',
+        type=float,
+        default=0.0,
+        help='Seconds to sleep between yt-dlp requests. A full Qullamaggie '
+             'catalog is ~700 metadata requests back to back; spacing them out '
+             'keeps the run off the rate limiter and off the DNS resolver, and '
+             'leaves the request budget free for a download running on another '
+             'machine at the same time.',
     )
     catalog_parser.set_defaults(handler=command_catalog)
 
