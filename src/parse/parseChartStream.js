@@ -873,8 +873,11 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
       // Length filter: tokens must be at least minTokenLength, EXCEPT single-
       // letter tokens that are explicitly in SINGLE_LETTER_TICKERS (e.g. "U").
       if (!regex.test(cleaned)) continue;
+      // Allowlisted single-letter tickers survive at the default and the
+      // production setting (minTokenLength: 2, tools/scanVideoWithOcr.js);
+      // only an explicit stricter minimum (>= 3) drops them.
       if (cleaned.length < minTokenLength
-          && !(options.minTokenLength === undefined
+          && !(minTokenLength <= 2
             && cleaned.length === 1
             && SINGLE_LETTER_TICKERS.has(cleaned))) {
         continue;
