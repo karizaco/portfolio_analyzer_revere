@@ -148,21 +148,35 @@ git show a15f66a:src/video/positionColumn.js > C:/tmp/positionColumn_before.js
 node tools/measureColumnMergeImpact.js --before C:/tmp/positionColumn_before.js
 ```
 
+(The "before" copy may sit outside the repo: the tool compiles it with the
+repo's module resolution, so a file in `C:/tmp` can still `require('sharp')`.
+A plain `require()` of that copy fails with `Cannot find module 'sharp'`,
+which is what the tool used to do.)
+
 | | frames |
 |---|---|
 | shortlist unchanged | 116 |
 | shortlist changed | 136 |
 | … of those, a different TOP candidate | 109 |
-| … of those, the same shortlist with a different winner | 4 |
+| … of those, the winner changed and the REST of the shortlist did not | 4 |
 | … empty before, populated after | **13** |
 | … populated before, empty after | **0** |
 
 The 136 split four ways: 13 frames had no shortlist before and have one
-now; of the other 123, **4** kept the same candidates and only changed which
-one wins, 92 changed the winner *and* the rest of the list, and 27 kept the
-same winner and changed the rest of the list. The 4 are a subset of the 109,
-not a separate class — which is worth saying, because the two numbers were
-once read as if they were disjoint.
+now; of the other 123, **4** changed the winner while the rest of the
+shortlist stayed character-identical, 92 changed the winner *and* the rest of
+the list, and 27 kept the same winner and changed the rest of the list. The 4
+are a subset of the 109, not a separate class — which is worth saying, because
+the two numbers were once read as if they were disjoint.
+
+Read the 4 the way the tool counts it, not the way the phrase invites: on
+those frames the **rest** of the list is unchanged, and the old winner is
+*gone* — it is not in the new shortlist at all. Measured at the set level
+(the candidate set compared without order), **all 136** changed frames have a
+different set of candidates: "the same candidates in a different order" is
+**0**, and "the same set in the same order" is 0 as well (that would be
+`unchanged`). So the fix never merely reshuffled a shortlist; on every frame
+it changed which columns the reader was offered.
 
 Nothing that was found stopped being found: `populated before, empty after`
 is **0**. Over the 65 distinct frames of the seven measured dates the winning

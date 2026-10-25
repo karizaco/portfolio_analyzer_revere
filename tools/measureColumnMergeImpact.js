@@ -32,19 +32,30 @@
 //
 //   --after defaults to the detector in the working tree.
 //
+//   The "before" file may sit OUTSIDE the repo: it is compiled with the
+//   repo's module resolution, so a copy in C:/tmp can still require
+//   'sharp'.
+//
 // OUTPUT
 //   The frame count and the breakdown the findings doc quotes. The doc's
 //   numbers are the ones printed for --before a15f66a / --after 1159ec0
 //   over the 252 source-width snapshots under data/video_scan*.
 //
 // NOTE ON THE 4
-//   "Same shortlist, different winner" counts frames whose top candidate
-//   changed while the REST of the shortlist is character-for-character
-//   identical. It is a SUBSET of "different TOP candidate", not a
-//   separate class.
+//   "The winner changed and the REST of the shortlist did not" counts
+//   frames whose top candidate changed while the REST of the shortlist is
+//   character-for-character identical. It is a SUBSET of "different TOP
+//   candidate", not a separate class.
+//
+//   "The rest" is the whole meaning of the number: the old winner is not
+//   in the new shortlist at all. The tool also reports the SET-level
+//   comparison (candidate set compared without order) so the phrase cannot
+//   be misread as "the same candidates, reshuffled" — that count is 0.
+//   Every changed frame has a different candidate SET.
 
 const fs = require('node:fs');
 const path = require('node:path');
+const Module = require('node:module');
 
 const ROOT = path.resolve(__dirname, '..');
 const { shortlistCandidates } = require(path.join(ROOT, 'src', 'video', 'positionTableScan.js'));
@@ -53,6 +64,25 @@ const { shortlistCandidates } = require(path.join(ROOT, 'src', 'video', 'positio
 // than from the 1280x720 OCR-resolution frame. Same constant as
 // tools/buildPositionCorpus.js.
 const MIN_WIDTH = 1600;
+
+/**
+ * Load a detector from an arbitrary path.
+ *
+ * The "before" detector is normally a copy of the pre-fix source sitting
+ * OUTSIDE the repo (C:/tmp/...), where a plain require() of 'sharp' fails:
+ * module resolution walks up from the file's own directory, and C:/tmp has
+ * no node_modules. So the module is compiled with the REPO's resolution
+ * paths instead — the copy may live anywhere.
+ */
+function loadDetector(file) {
+  const src = fs.readFileSync(file, 'utf8');
+  const m = new Module(file, null);
+  m.filename = file;
+  m.paths = Module._nodeModulePaths(path.dirname(file))
+    .concat(Module._nodeModulePaths(ROOT));
+  m._compile(src, file);
+  return m.exports;
+}
 
 function parseArgs(argv) {
   const args = {
@@ -126,8 +156,8 @@ async function shortlistOf(detector, file, width) {
 
 async function main() {
   const args = parseArgs(process.argv);
-  const before = require(args.before);
-  const after = require(args.after);
+  const before = loadDetector(args.before);
+  const after = loadDetector(args.after);
   const snapshots = collectSnapshots(args.dataRoot);
   console.log(`snapshots: ${snapshots.length}`);
 
@@ -139,6 +169,11 @@ async function main() {
     differentTopSameRest: 0,
     differentTopDifferentRest: 0,
     sameTop: 0,
+    // SET-level: the candidate set compared WITHOUT order. Guards against
+    // reading "the rest of the shortlist did not change" as "the same
+    // candidates, reshuffled".
+    sameSetDifferentOrder: 0,
+    differentSet: 0,
   };
   const widths = new Set();
   let i = 0;
@@ -157,6 +192,11 @@ async function main() {
     }
     if (JSON.stringify(B) === JSON.stringify(A)) { counts.unchanged += 1; continue; }
     counts.changed += 1;
+    const sb = new Set(B);
+    const sa = new Set(A);
+    const setEqual = sb.size === sa.size && [...sb].every((x) => sa.has(x));
+    if (setEqual) counts.sameSetDifferentOrder += 1;
+    else counts.differentSet += 1;
     const tb = B[0] || null;
     const ta = A[0] || null;
     if (!B.length && A.length) { counts.emptyToPopulated += 1; continue; }
@@ -182,7 +222,7 @@ async function main() {
   console.log(`| shortlist unchanged | ${counts.unchanged} |`);
   console.log(`| shortlist changed | ${counts.changed} |`);
   console.log(`| ... of those, a different TOP candidate | ${differentTop} |`);
-  console.log(`| ... of those, the same shortlist with a different winner | ${counts.differentTopSameRest} |`);
+  console.log(`| ... of those, the winner changed and the REST of the shortlist did not | ${counts.differentTopSameRest} |`);
   console.log(`| ... empty before, populated after | **${counts.emptyToPopulated}** |`);
   console.log(`| ... populated before, empty after | **${counts.populatedToEmpty}** |`);
   console.log('');
@@ -194,6 +234,10 @@ async function main() {
   const split = counts.emptyToPopulated + counts.differentTopSameRest
     + counts.differentTopDifferentRest + counts.sameTop;
   console.log(`  (sum ${split}, changed ${counts.changed})`);
+  console.log('');
+  console.log(`at the SET level (order ignored):`);
+  console.log(`  ${counts.sameSetDifferentOrder} same candidate set, different order`);
+  console.log(`  ${counts.differentSet} a different candidate set`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });
