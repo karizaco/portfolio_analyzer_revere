@@ -589,26 +589,51 @@ otherwise act as a lower bound and reject *every* real row. Same rule applies in
   The clusterer computes a per-cluster `frameCount` (`src/parse/parseChartStream.js:1230`) but the
   emitter does not write it (`tools/scanVideoWithOcr.js:1814-1818`), so it never appears in the logs.
 
-### Known limitations and next steps (as of 2026-10-21)
+### Known limitations and next steps (as of 2026-10-25)
 
 **Measured on the curated GT benchmark** (`test/qmgGroundTruth.test.js`, 4 captures,
-EasyOCR, single frame each — not a multi-frame consensus run):
+EasyOCR, single frame each — not a multi-frame consensus run), at commit `8070601`:
 
 | case | date | recall | FP |
 |---|---|---|---|
-| trade_ideas | 20220218[1] | 66.7% (6/9) | 3 |
+| trade_ideas | 20220218[1] | 88.9% (8/9) | 2 |
 | sparse | 20221104[0] | 100% (1/1) | 3 |
-| normal_2022 | 20220606[1] | 75.0% (6/8) | 4 |
-| dense_2023 | 20230609[0] | 53.8% (7/13) | 1 |
+| normal_2022 | 20220606[1] | 87.5% (7/8) | 3 |
+| dense_2023 | 20230609[0] | 46.2% (6/13) | 3 |
 
-Overall mean recall 73.9%. These numbers were previously meaningless — the benchmark was
+Overall mean recall 80.6%. These numbers were previously meaningless — the benchmark was
 resolving 640×360 prefilter frames, so every case scored 0%.
 
-**Precision floor**: 1–4 false positives per capture. Remaining FP sources:
+**The benchmark is deterministic, not noisy.** Two consecutive runs (2026-10-25, 512 s and
+461 s) produced byte-identical per-case numbers, hits and FP counts. So a change in this
+table means the *code* or the *input frames* changed — not that the measurement drifted.
+
+**The input frames are not pinned.** `resolveSnapshotPath` scans `SNAPSHOT_ROOTS` plus every
+`data/video_scan_test/_rerun/<run-tag>/snapshots/` directory and keeps the **widest** file
+named `qmg_<date>[_<n>].png`. A new re-run directory can therefore change which frame a case
+is scored on — the same "a frame's identity is its FILE, not its label" trap as elsewhere.
+Re-measure and re-read the table together; they are only valid as a pair.
+
+The frames the 80.6% measurement above was taken on, all 1920 px:
+
+| case | frame |
+|---|---|
+| trade_ideas | `data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220218_2.png` |
+| sparse | `data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20221104.png` |
+| normal_2022 | `data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606_2.png` |
+| dense_2023 | `data/video_scan_test/_rerun/qmg-easyocr-20261012/snapshots/qmg_20230609.png` |
+
+Two of the four live under the **gitignored** `data/video_scan_test/` tree, so a clean clone
+cannot reproduce the benchmark at all. The earlier 73.9% figure was not measured against a
+named frame set, which is why it cannot be reconciled with 80.6% from the record alone.
+
+**Precision floor**: 2–3 false positives per capture. Remaining FP sources:
 `TQQQ`→`TOCA` (OCR misread of a real ticker), chart-area tokens that happen to be in the
 seed lexicon (`ISYM`, `MEL`, `CON`), and one-letter tokens (`ON`, `X`).
 
-**Recall floor**: `20220606` still misses GOVX and NFLX; `20230609` misses 6 of 13. The
+**Recall floor**: `20220606` now misses only `TNA` (GOVX and NFLX are found); `20230609`
+misses 7 of 13 — `IOT`, `AI`, `PLTR`, `GTLB`, `GSIT`, `APLD`, `MNDY` — and is the case
+that holds the mean down. The
 `meanLumaFloor=30` penalty on historical dark streams (Dec 2021–Feb 2022) likely contributes
 to the prefilter missing frames entirely.
 
