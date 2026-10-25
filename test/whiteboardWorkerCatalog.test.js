@@ -143,6 +143,15 @@ test('the catalog worker', { skip: PY ? false : 'no python launcher available' }
     assert.strictEqual(json.yt_dlp_returncode, 1);
     assert.match(r.stderr, /importing them/i);
 
+    // The run has to say WHICH videos failed, not just how many. yt-dlp
+    // prints one "ERROR: [youtube] <id>" line per failed video, and that is
+    // the list the next run has to go and fetch -- so it is kept next to
+    // the snapshot instead of being discarded with the exit code.
+    const stderrPath = json.yt_dlp_stderr_path;
+    assert.ok(stderrPath, 'the summary names the file yt-dlp said why in');
+    assert.ok(fs.existsSync(stderrPath), 'the stderr file exists');
+    assert.match(fs.readFileSync(stderrPath, 'utf8'), /eee555/);
+
     const videos = readVideos(path.join(pipelineRoot, 'state.sqlite'));
     const ids = videos.map((v) => v[0]);
     assert.ok(ids.includes('ccc333'), 'the rows yt-dlp did print are imported');
