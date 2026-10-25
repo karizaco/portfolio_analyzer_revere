@@ -196,9 +196,17 @@ function findPanelBoundaries(words) {
   return { positionsLine, watchlistLine };
 }
 
-function identifyPositionListColumn(words, cropWidth = null, engine = null) {
+function identifyPositionListColumn(words, cropWidth = null, engine = null, options = {}) {
   if (!Array.isArray(words) || !words.length) {
-    return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
+    return {
+      inListTickers: new Set(),
+      inColumnTickers: new Set(),
+      columnIsPriceAligned: false,
+      columnTokenCount: 0,
+      dominantColumnX: null,
+      dominantLeft: null,
+      columnWidth: 0
+    };
   }
 
   // Detect panel boundaries via keyword matching. If both headers found,
@@ -273,18 +281,27 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
   // and would otherwise leak through as FPs).
   const priceAlignedTickers = [];
   const tickerWords = [];
+  // Every ticker-shaped word, regardless of the panel gate. The column
+  // MEMBERSHIP test (used by the optional accept-path gate) must not depend
+  // on the panel gate: a mis-detected "POSITIONS" header can exclude the
+  // very row we want to keep, and a gate built on the same restricted set
+  // would then reject a genuine position. The panel gate still shapes the
+  // column DETECTION (dominantX), which is where it helps.
+  const allTickerWords = [];
   for (const w of words) {
     const upper = (w.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
     if (!upper) continue;
     if (!STRICT_TICKER_PATTERN.test(upper)) continue;
-    if (!lineIsInPanel(w.line)) continue;
     const center = w.left + w.width / 2;
     const entry = {
       center,
+      left: w.left,
       line: w.line,
       right: w.left + w.width,
       text: upper
     };
+    allTickerWords.push(entry);
+    if (!lineIsInPanel(w.line)) continue;
     tickerWords.push(entry);
     if (lineRightHasPrice.get(w.line)) {
       priceAlignedTickers.push(entry);
@@ -301,6 +318,16 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
   // bucket of all ticker-shape words if not enough price-aligned candidates.
   let dominantX;
   let dominantCount;
+  // The LEFT edge of the column, not its center.
+  //
+  // The QMG overlay renders the ticker column left-aligned: every ticker in
+  // the column starts at the same x (measured on the 20220421 EasyOCR
+  // frame: 732, 733, 733, 733, 734, 734, 734, 734, 735, 736, 736 across
+  // fourteen consecutive rows), while the CENTER varies with the length of
+  // the ticker — "X" centers at 757 and "URNM" at 807 for the same left
+  // edge. A center-based band therefore misses short tickers, which is
+  // exactly where the ground truth has single-letter positions.
+  let dominantLeft;
   // Whether the column was found by price alignment (strong evidence) or by
   // the densest-bucket fallback (weak evidence). Only the weak path is
   // subject to the X-coordinate gate below.
@@ -310,6 +337,8 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
     dominantX = xs[Math.floor(xs.length / 2)];
     dominantCount = priceAlignedTickers.length;
     columnIsPriceAligned = true;
+    const lefts = priceAlignedTickers.map(t => t.left).sort((a, b) => a - b);
+    dominantLeft = lefts[Math.floor(lefts.length / 2)];
   } else {
     // Fallback to densest-bucket heuristic (preserves previous behavior for
     // frames where no line has a clear price-on-right pattern).
@@ -317,15 +346,26 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
     const buckets = new Map();
     for (const tw of tickerWords) {
       const bucket = Math.floor(tw.center / bucketWidth) * bucketWidth;
-      buckets.set(bucket, (buckets.get(bucket) || 0) + 1);
+      if (!buckets.has(bucket)) buckets.set(bucket, []);
+      buckets.get(bucket).push(tw);
     }
-    const sortedBuckets = [...buckets.entries()].sort((a, b) => b[1] - a[1]);
+    const sortedBuckets = [...buckets.entries()].sort((a, b) => b[1].length - a[1].length);
     const topBucket = sortedBuckets[0];
-    if (!topBucket || topBucket[1] < 2) {
-      return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
+    if (!topBucket || topBucket[1].length < 2) {
+      return {
+        inListTickers: new Set(),
+        inColumnTickers: new Set(),
+        columnIsPriceAligned: false,
+        columnTokenCount: 0,
+        dominantColumnX: null,
+        dominantLeft: null,
+        columnWidth: 0
+      };
     }
     dominantX = topBucket[0] + bucketWidth / 2;
-    dominantCount = topBucket[1];
+    dominantCount = topBucket[1].length;
+    const lefts = topBucket[1].map(t => t.left).sort((a, b) => a - b);
+    dominantLeft = lefts[Math.floor(lefts.length / 2)];
   }
 
   // Column width in the scaled OCR image. Position list tickers cluster
@@ -341,6 +381,23 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
   // ticker-shape word ("25.00 | Bs | 8+"), and chart header words
   // (SYM/Cran/Pre/Buzz) that happen to land at column x.
   const inListTickers = new Set();
+  // Every ticker-shaped word that lands in the column, whether or not its
+  // line had a price to the right. The optional accept-path gate uses this:
+  // a token in the SHARES or PRICE column is not a position, whatever the
+  // text-based price-nearby check says about it.
+  const inColumnTickers = new Set();
+  // The left-edge tolerance is tighter than the center tolerance: real
+  // ticker lefts in the same column cluster within a few pixels (measured
+  // 732-736 across fourteen consecutive rows), so a narrow band still keeps
+  // every real position while excluding anything merely nearby.
+  const leftTolerance = Number.isFinite(options.leftTolerance)
+    ? options.leftTolerance
+    : columnWidth / 2;
+  for (const tw of allTickerWords) {
+    if (dominantLeft != null && Math.abs(tw.left - dominantLeft) <= leftTolerance) {
+      inColumnTickers.add(tw.text);
+    }
+  }
   for (const tw of tickerWords) {
     if (Math.abs(tw.center - dominantX) <= columnWidth / 2) {
       if (lineRightHasPrice.get(tw.line)) {
@@ -396,10 +453,31 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
       ? Math.round(EASYOCR_POSITION_LIST_MIN * (cropWidth / EASYOCR_REFERENCE_CROP_WIDTH))
       : TESSERACT_POSITION_LIST_MIN;
   if (!columnIsPriceAligned && dominantX < X_POSITION_LIST_MIN) {
-    return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
+    return {
+      inListTickers: new Set(),
+      inColumnTickers: new Set(),
+      columnIsPriceAligned: false,
+      columnTokenCount: 0,
+      dominantColumnX: null,
+      dominantLeft: null,
+      columnWidth: 0
+    };
   }
 
-  return { columnWidth, dominantColumnX: dominantX, inListTickers };
+  return {
+    columnWidth,
+    dominantColumnX: dominantX,
+    inListTickers,
+    // Diagnostic + gate inputs.
+    inColumnTickers,
+    columnIsPriceAligned,
+    // How many DISTINCT rows were confirmed as position rows (a
+    // ticker-shaped word in this band with a price to its right). This is
+    // the confidence measure for the column: two or more such rows means
+    // we know where the ticker column is.
+    columnTokenCount: inListTickers.size,
+    dominantLeft,
+  };
 }
 
 // Extract ALL ticker-shaped tokens from OCR text (ignores lexicon).
@@ -511,9 +589,67 @@ function parseChartStreamPositionList({ ocr } = {}) {
   // price-nearby + lexicon + edit-distance behavior so existing callers
   // keep working.
   const hasWordPositions = words && words.length > 0;
-  const { inListTickers, dominantColumnX, columnWidth } = hasWordPositions
-    ? identifyPositionListColumn(words, ocr._cropWidth || null, ocr._engine || null)
-    : { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
+  const {
+    inListTickers,
+    dominantColumnX,
+    columnWidth,
+    inColumnTickers,
+    columnIsPriceAligned,
+    columnTokenCount,
+    dominantLeft,
+  } = hasWordPositions
+    ? identifyPositionListColumn(words, ocr._cropWidth || null, ocr._engine || null, {
+      leftTolerance: ocr._columnGateTolerance,
+    })
+    : {
+      inListTickers: new Set(),
+      dominantColumnX: null,
+      columnWidth: 0,
+      inColumnTickers: new Set(),
+      columnIsPriceAligned: false,
+      columnTokenCount: 0,
+      dominantLeft: null,
+    };
+
+  // Optional accept-path column gate.
+  //
+  // The QMG position list is three columns of text: ticker | shares | price.
+  // The accept path below is text-based ("is this token in the lexicon, or
+  // does a price-like token follow it in the OCR text?"), which cannot tell
+  // the ticker column from the shares column or the price column — so a
+  // garbled shares value ("0,9483" → "OST") or a stray price-column letter
+  // ("U", "X") is admitted as a position.
+  //
+  // When the column detector is confident — the column was found by price
+  // alignment and at least two rows confirmed it (a ticker-shaped word in
+  // the band with a price to its right) — a token that does not land in
+  // that column cannot be a position, whatever the text says.
+  //
+  // The gate is RELATIVE to the detected column, so it does not care where
+  // in the frame the column sits — which is what varies between videos.
+  //
+  // `ocr._columnGate` selects how the gate is applied:
+  //   false            — off
+  //   'post'           — after Filter B (keeps Filter B's y-band stable)
+  //   'inloop'         — inside the accept loop (rejects earlier)
+  //   true / undefined — 'inloop' (default)
+  //
+  // 'inloop' is the default because it measured strictly better on the
+  // ground-truth benchmark: same recall (476/898) with 158 false positives
+  // instead of 206. 'post' costs recall (448/898) for a similar FP cut.
+  // See tools/compareColumnGate.js to reproduce the measurement.
+  const columnGateMode = ocr._columnGate === false ? null
+    : (ocr._columnGate === 'post' || ocr._columnGate === 'inloop') ? ocr._columnGate
+      : 'inloop';
+  // `columnTokenCount` is the number of distinct rows confirmed as position
+  // rows (a ticker-shaped word in the column band with a price to its right).
+  // Requiring two of them is what makes the gate safe: the column is only
+  // trusted once two independent rows agree on where it is.
+  const columnGateActive = columnGateMode != null
+    && columnIsPriceAligned
+    && columnTokenCount >= (Number.isFinite(ocr._columnGateMinTokens) ? ocr._columnGateMinTokens : 2)
+    && dominantColumnX != null
+    && dominantLeft != null;
 
   // Build per-ticker line + word lookups from raw OCR word positions.
   // - tickerLineMap: ticker → array of line indices (used by Filter G)
@@ -660,6 +796,16 @@ function parseChartStreamPositionList({ ocr } = {}) {
       // Lexicon match OR price-nearby: accept (column-agnostic).
       // Chart-area text like "Arith", "Sym", "Cran" doesn't match the
       // seed lexicon so it stays rejected.
+      //
+      // The optional column gate is applied here only in 'inloop' mode — see
+      // the post-Filter-B pass below. Applying it inside the loop changes
+      // which tickers reach Filter B, which changes Filter B's median y,
+      // which changes which tickers survive. Applying it after Filter B
+      // keeps the y-band computation stable.
+      if (columnGateMode === 'inloop' && columnGateActive && !inColumnTickers.has(ticker)) {
+        rejected.push(ticker);
+        continue;
+      }
       accepted.push(ticker);
     } else if (inListColumn) {
       // In-column ticker that's NOT in the lexicon: try OCR character
@@ -749,6 +895,20 @@ function parseChartStreamPositionList({ ocr } = {}) {
     }
   }
 
+  // Column gate, 'post' variant: the same rule as the accept-loop variant,
+  // but applied after Filter B. Filter B derives its y-band from the median
+  // of the accepted tickers, so gating inside the accept loop shifts that
+  // median — which is why 'inloop' and 'post' do not agree on the same
+  // frames, and why the two were measured separately.
+  if (columnGateMode === 'post' && columnGateActive) {
+    for (let i = accepted.length - 1; i >= 0; i -= 1) {
+      if (!inColumnTickers.has(accepted[i])) {
+        rejected.push(accepted[i]);
+        accepted.splice(i, 1);
+      }
+    }
+  }
+
   const structuredSupportPool = new Set(accepted);
   for (const ticker of inListTickers) structuredSupportPool.add(ticker);
   for (const [ticker, linesForTicker] of tickerLineMap.entries()) {
@@ -814,7 +974,11 @@ function parseChartStreamPositionList({ ocr } = {}) {
     column_filter: dominantColumnX != null ? {
       column_width: columnWidth,
       dominant_x: dominantColumnX,
-      in_list_token_count: inListTickers.size
+      in_list_token_count: inListTickers.size,
+      // Diagnostics for the optional accept-path column gate.
+      column_is_price_aligned: columnIsPriceAligned,
+      column_token_count: columnTokenCount,
+      column_gate_active: columnGateActive
     } : null,
     confidence,
     ocr_executed: true, // OCR ran and produced candidates; they were all rejected

@@ -672,6 +672,13 @@ Results: `data/qmg_alt_batch_results.json` and `data/video_scan_batch_remaining_
 - `tools/aggregateOcrTimeline.js` — merge into `timeline.json`
 - `tools/viewTimeline.html` — interactive timeline viewer
 
+### Offline analysis tools (no video, no OCR — seconds instead of minutes)
+- `tools/reparseOcrLogs.js` — re-derive `merged_position_list` from the OCR already stored
+  in scan logs; `--write` to persist, `--gt` to score against ground truth
+- `tools/compareColumnGate.js` — A/B the accept-path column gate against the GT
+- `tools/compareMergeModes.js` — A/B the stored merged list against the multi-frame clusterer
+- `tools/listOcrTargets.js` — videos on disk with a date, no GT, and no EasyOCR log yet
+
 ### OCR pipeline
 - `src/ocr/ocrImage.js` — Tesseract wrapper; `chart-stream` profile crops overlay region
 - `src/video/ocrScanLogic.js` — prefilter scoring, candidate building, screenshot logic
@@ -863,6 +870,70 @@ Note the column filter is **diagnostic for EasyOCR**: the accept path uses lexic
 price-nearby, and the column result only gates non-lexicon, non-price-nearby tickers
 (see the `inListColumn` branch in `parseChartStreamPositionList`).
 
+### The ticker column is LEFT-aligned — band on the left edge, not the center
+
+The QMG overlay renders the position list as three left-aligned columns:
+`ticker | shares | price`. In the 1345px EasyOCR crop of the 20220421 frame:
+
+| column | left edge | centers |
+|---|---|---|
+| ticker | 732–736 (all fourteen rows) | 757–807 (varies with ticker length) |
+| shares | 976–1000 | ~1040–1053 |
+| price | 1185–1250 | ~1230–1293 |
+
+The **left edge is the stable anchor**; the center moves with the length of the ticker.
+"X" and "URNM" share a left edge of 735 but center at 757 and 807. A center-based band
+of ±25px therefore drops every short ticker — which is exactly where the ground truth
+has single-letter positions (X, U).
+
+`identifyPositionListColumn` now returns `dominantLeft` (median left edge of the
+price-aligned rows) and builds `inColumnTickers` from the **left** edge, while
+`dominantX` (the center) stays for the `X_POSITION_LIST_MIN` gate and diagnostics.
+
+### The accept-path column gate (`ocr._columnGate`)
+
+The accept path is text-based: "is this token in the lexicon, or does a price-like token
+follow it in the OCR text?" That cannot tell the ticker column from the shares or price
+column, so a garbled shares value ("0,9483" → `OST`) or a stray price-column letter
+(`U`, `X`) is admitted as a position.
+
+The gate rejects any token that does not land in the detected ticker column. It is
+**relative to the detected column**, so it survives the overlay drifting left over time
+(the column is at x≈765 in 2022 and x≈620 by late 2023 in the 1345px crop).
+
+The gate only engages when the column detector is confident:
+
+- the column was found by **price alignment** (not the densest-bucket fallback), and
+- at least **two rows confirmed it** — a ticker-shaped word in the band with a price to
+  its right (`columnTokenCount`).
+
+Measured with `node tools/compareColumnGate.js` over 102 ground-truth-scored EasyOCR logs
+(full multi-frame pipeline: per-frame parse → `clusterRawOcrTokens`):
+
+| arm | recall | FP |
+|---|---|---|
+| no gate | 476/898 (53%) | 206 |
+| gate `'inloop'` (in the accept loop) | **476/898 (53%)** | **158** |
+| gate `'post'` (after Filter B) | 448/898 (50%) | 130 |
+
+`'inloop'` is the default — same recall, 23% fewer false positives. `'post'` costs
+recall, because Filter B derives its y-band from the median of the accepted tickers, so
+gating *before* Filter B shifts that median and can push a genuine position out of the
+band. Set `ocr._columnGate = false` to disable; `'post'` is available for comparison.
+
+Tuning knobs (both measured, both worse or neutral): `ocr._columnGateTolerance`
+(left-edge band half-width; 25 → 6 changes nothing, because the columns are 250px
+apart), `ocr._columnGateMinTokens` (2 → 3+ loses recall and FP).
+
+### The multi-frame clusterer was dead (fixed 2026-10-25)
+
+`tools/scanVideoWithOcr.js` feeds `clusterRawOcrTokens` the per-frame `position_list` so
+chart-area text never reaches the clusterer. But it read `c.chartStream.position_list`
+while `summarizeCandidate` writes the parse under the snake_case key **`chart_stream`** —
+so every candidate was filtered out, the clusterer ran on an empty input, and
+`merged_position_list` was just the single phash-deduped capture's tickers. **The
+multi-frame vote never happened.** Both spellings are now accepted.
+
 ### Panel-boundary gate (positions / watchlist)
 
 `findPanelBoundaries` locates the "POSITIONS" header line and the "Personal WatchList" header
@@ -875,7 +946,8 @@ otherwise act as a lower bound and reject *every* real row. Same rule applies in
 
 ### Diagnostic fields exposed
 
-- `chart_stream.column_filter` — `dominant_x`, `column_width`, `in_list_token_count` (diagnostic only, not gated)
+- `chart_stream.column_filter` — `dominant_x`, `column_width`, `in_list_token_count`, plus
+  `column_is_price_aligned`, `column_token_count`, `column_gate_active`
 - `chart_stream.tickers_rejected_list` — first 30 rejected tokens
 - `chart_stream.position_list` — accepted tickers after per-frame parse
 - `merged_position_list` — multi-frame clusterer output (dominant for EasyOCR runs)

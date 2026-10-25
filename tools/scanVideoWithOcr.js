@@ -1389,10 +1389,19 @@ async function main() {
     // (column-filtered tickers) instead of raw OCR text to avoid chart-area
     // ticker bleed into the clusterer. Skip frames with no position_list.
     // For whiteboard mode (Revere): use raw ocr_text as before.
+    //
+    // NOTE the key: `scanResult.topCandidates` holds the SUMMARIZED
+    // candidates, and summarizeCandidate writes the parse under the
+    // snake_case key `chart_stream`. Reading `c.chartStream` here silently
+    // yielded undefined for every candidate, so the filter dropped them all
+    // and the clusterer ran on an empty input — which meant the multi-frame
+    // vote never happened and merged_position_list was just the single
+    // phash-deduped capture's tickers. Accept either spelling.
     const clusterInput = (options.outputKind === 'snapshot')
       ? (scanResult.topCandidates || [])
-          .filter((c) => Array.isArray(c.chartStream?.position_list) && c.chartStream.position_list.length > 0)
-          .map((c) => c.chartStream.position_list.join(' '))
+          .map((c) => c.chart_stream || c.chartStream)
+          .filter((cs) => Array.isArray(cs?.position_list) && cs.position_list.length > 0)
+          .map((cs) => cs.position_list.join(' '))
       : (scanResult.topCandidates || []).map((c) => c.ocr_text || '');
     const clusterResult = clusterRawOcrTokens(
       clusterInput,
