@@ -934,7 +934,40 @@ so every candidate was filtered out, the clusterer ran on an empty input, and
 `merged_position_list` was just the single phash-deduped capture's tickers. **The
 multi-frame vote never happened.** Both spellings are now accepted.
 
+### Re-deriving old logs without re-running OCR
+
+Every scan log stores the raw OCR of each captured frame (`top_candidates[].ocr_text`
+and `top_candidates[].ocr_words`), so the parser and the clusterer can be re-run over
+that data without touching the video again. `tools/reparseOcrLogs.js` does exactly that —
+seconds instead of minutes per video, and it applies a parser fix retroactively to every
+video already scanned.
+
+```bash
+node tools/reparseOcrLogs.js --gt                     # dry run, scored against ground truth
+node tools/reparseOcrLogs.js --out data/qmg_reparsed.json   # write a sidecar (non-destructive)
+node tools/reparseOcrLogs.js --write --exclude <tag>  # rewrite the logs in place
+```
+
+**Two gotchas, both fixed in the tool:**
+
+- The faithfulness check must be a **data** check, not an output check. It used to compare
+  the fresh parse against the log's stored per-frame parse — which stops matching the
+  moment the parser changes, so every log got skipped. It now checks that every candidate
+  carries OCR text.
+- `--write` never regresses: a re-parse that yields an empty merged list keeps the
+  previous value.
+
+Measured over the 52 ground-truth-scored EasyOCR logs (the dead-clusterer + no-gate state
+vs. the re-parse):
+
+| | recall | FP | total tickers |
+|---|---|---|---|
+| stored | 247/459 (54%) | 234 | 793 |
+| re-parsed | 242/459 (53%) | **81** | 499 |
+
 ### Panel-boundary gate (positions / watchlist)
+
+**Measured on the curated GT benchmark** (`test/qmgGroundTruth.test.js`, 4 captures,
 
 `findPanelBoundaries` locates the "POSITIONS" header line and the "Personal WatchList" header
 line and uses them to restrict which rows may contain position-list tickers.

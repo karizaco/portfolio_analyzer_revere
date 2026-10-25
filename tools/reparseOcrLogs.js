@@ -43,6 +43,15 @@ const WRITE = argv.includes('--write');
 const GT_ONLY = argv.includes('--gt');
 const RUN_TAG = flag('--run-tag', null);
 const LIMIT = parseInt(flag('--limit', '0'), 10) || 0;
+// Skip any log whose path contains this substring. Used to leave a
+// concurrently-running sweep's own output alone (the sweep writes each log
+// once, when its video finishes; rewriting one at the same moment would
+// lose the sweep's result).
+const EXCLUDE = flag('--exclude', null);
+// Write the re-derived results to this JSON file instead of rewriting the
+// logs in place. Non-destructive: the sidecar maps each log path to its
+// re-derived merged list, so applying it is a separate, reviewable step.
+const OUT = flag('--out', null);
 
 function collectLogFiles(dir, out) {
   let entries;
@@ -105,10 +114,16 @@ function ocrFromCandidate(candidate, log, cropWidth) {
 /**
  * Re-derive the merged position list for one log.
  *
- * `framesReproved` reports whether the fresh parse reproduces the per-frame
- * position lists the log already stores. A log whose stored OCR is incomplete
- * (older runs wrote no word boxes) cannot be re-derived faithfully, so the
- * caller skips it rather than writing a bogus result.
+ * `framesReproved` reports whether the CURRENT parser reproduces the per-frame
+ * position lists the log already stores. It is informational only: the parser
+ * has changed since those logs were written (the column gate, the blocklist,
+ * the left-edge column band), so a mismatch is expected and is exactly the
+ * point of the re-parse.
+ *
+ * `faithful` is a DATA check, not an output check: every candidate must carry
+ * enough OCR to replay it. Older runs stored no word boxes, so those frames
+ * are replayed through the legacy text-only path — which is exactly what the
+ * pipeline did at the time, so the replay stays faithful.
  */
 function reparse(log) {
   const candidates = Array.isArray(log.top_candidates) ? log.top_candidates : [];
@@ -117,9 +132,11 @@ function reparse(log) {
   const perFrame = [];
   let framesReproved = 0;
   let framesCompared = 0;
+  let framesWithData = 0;
   for (const c of candidates) {
     const ocr = ocrFromCandidate(c, log, cropWidth);
     if (!ocr || !ocr.text) continue;
+    framesWithData++;
     const parsed = parseChartStreamPositionList({ ocr });
     const stored = c.chart_stream && Array.isArray(c.chart_stream.position_list)
       ? c.chart_stream.position_list
@@ -153,7 +170,8 @@ function reparse(log) {
     perFrame,
     framesCompared,
     framesReproved,
-    faithful: framesCompared === 0 || framesReproved === framesCompared,
+    // Every candidate carried OCR text, so every frame can be replayed.
+    faithful: framesWithData === candidates.length && candidates.length > 0,
   };
 }
 
@@ -192,18 +210,29 @@ else roots.unshift(path.join(ROOT, 'data', 'video_scan_test', '_rerun'));
 
 const files = [];
 for (const r of roots) collectLogFiles(r, files);
+// The roots overlap (`data/` contains `data/video_scan_test/_rerun/`), so the
+// same log can be collected twice. De-duplicate by resolved path.
+const seenPaths = new Set();
+const uniqueFiles = files.filter((f) => {
+  const key = path.resolve(f);
+  if (seenPaths.has(key)) return false;
+  seenPaths.add(key);
+  return !EXCLUDE || !key.includes(EXCLUDE);
+});
 const gt = loadGT();
 
 let nParsed = 0;
 let nChanged = 0;
 let nUnfaithful = 0;
+let nSkippedEmpty = 0;
 let nScored = 0;
 let hits = 0;
 let gtSize = 0;
 let fps = 0;
 const rows = [];
+const outPayload = {};
 
-for (const file of files) {
+for (const file of uniqueFiles) {
   let log;
   try {
     log = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -216,9 +245,8 @@ for (const file of files) {
   const result = reparse(log);
   if (!result) continue;
   if (!result.faithful) {
-    // The stored OCR for this log cannot reproduce its own per-frame parse,
-    // so the log is missing data (older runs wrote no word boxes). Re-deriving
-    // it would replace a good result with a guess.
+    // The stored OCR for this log is missing data for at least one frame.
+    // Re-deriving it would replace a good result with a guess.
     nUnfaithful++;
     continue;
   }
@@ -244,7 +272,29 @@ for (const file of files) {
   line += `\n     old: ${before || '(none)'}\n     new: ${after || '(none)'}`;
   rows.push(line);
 
+  if (OUT) {
+    outPayload[path.relative(ROOT, file).split(path.sep).join('/')] = {
+      date_key: dateKey,
+      before: log.merged_position_list || [],
+      after: result.merged,
+      changed,
+      per_frame: result.perFrame.map((f) => ({
+        frame_index: f.frameIndex,
+        timestamp: f.timestamp,
+        position_list: f.positionList,
+        parse_status: f.parseStatus,
+      })),
+      clusters: result.clusters,
+    };
+  }
+
   if (WRITE && changed) {
+    // Never regress: a re-parse that yields an EMPTY merged list would
+    // replace a good result with nothing. Keep the previous value instead.
+    if (result.merged.length === 0 && (log.merged_position_list || []).length > 0) {
+      nSkippedEmpty++;
+      continue;
+    }
     // Keep the log's structure: update the per-candidate position lists and
     // the merged list so downstream tooling sees the re-parsed values.
     const byFrame = new Map(result.perFrame.map((f) => [f.frameIndex, f]));
@@ -260,12 +310,20 @@ for (const file of files) {
   }
 }
 
+if (OUT) {
+  fs.writeFileSync(OUT, JSON.stringify(outPayload, null, 1));
+  console.log('[reparse] wrote ' + Object.keys(outPayload).length + ' re-derived results to ' + OUT);
+}
+
 console.log('[reparse] ' + nParsed + ' logs replayed faithfully' +
   (WRITE ? ' (writing changes)' : ' (dry run)'));
 console.log('[reparse] ' + nChanged + ' merged lists differ from the stored value');
 if (nUnfaithful) {
-  console.log('[reparse] ' + nUnfaithful + ' logs skipped: stored OCR cannot reproduce ' +
-    'its own per-frame parse (incomplete word boxes)');
+  console.log('[reparse] ' + nUnfaithful + ' logs skipped: at least one frame has no stored OCR text');
+}
+if (nSkippedEmpty) {
+  console.log('[reparse] ' + nSkippedEmpty + ' logs kept their previous merged list ' +
+    '(the re-parse produced an empty list)');
 }
 if (nScored) {
   console.log('[reparse] against ground truth: ' + hits + '/' + gtSize +
