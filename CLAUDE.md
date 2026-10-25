@@ -482,6 +482,84 @@ low-cpu env vars are what keep this safe to run next to a download.
 
 ---
 
+## Video dates — `tools/qmgVideoDates.js`
+
+Most catalogued videos have no upload date on file, so the OCR pipeline had
+nothing to name its output after. `tools/qmgVideoDates.js` builds the best
+available date for every catalogued video and writes
+`data/qmg_video_dates.json` = `{ "<video_id>": {date, confidence} }`, where
+confidence is `exact` | `year` | `interpolated`.
+
+Sources, in decreasing trust:
+
+| source | what it gives |
+|---|---|
+| `data/qmg_upload_dates.json` | the catalog's own `upload_date` (dumped from `state.sqlite` by `tools/dumpUploadDates.py`) |
+| `data/qmg_date_anchors.json` | the same dates plus ones recovered from scan logs — **only** when the log's video filename starts with `<dateKey>_` (the file was named after its upload date). A log whose date_key was just the scan date must never be used as an anchor; mixing those in dated 449 of 588 videos to 2026-10-0x |
+| `data/qmg_extra_dates.json` | hand-probed upload dates (one `yt-dlp -J` each) for videos the other sources miss |
+| `data/qmg_tab_dates.tsv` | a flat crawl of the channel's Videos tab. **The year only is meaningful** — yt-dlp renders YouTube's "3 years ago" as the current day-of-month, so every entry lands on the same day |
+
+The playlist (`data/qmg_playlist_full.txt`) is strictly newest-first, so index
+order is a reliable time axis. Each undated video is interpolated between the
+exact anchors that bracket it, bounded by its approximate year.
+
+**The only correctness check applied to anchors is monotonicity**: an anchor
+whose date is newer than the anchor before it is provably wrong (the catalog's
+`upload_date` is not always right — `Quo56MNcUxA` is catalogued as 20220517
+but YouTube says 20211217). A rate/outlier smoothness filter was tried and
+**rejected** — QMG's upload rate is irregular enough (an 80-day gap between
+adjacent videos is normal) that any smoothness test throws away correct dates.
+
+Current output: 588 videos, 93 exact / 356 year / 139 interpolated, spanning
+2017-01-22 .. 2023-12-15. Leave-one-out accuracy over the interior anchors:
+31% exact, 63% within 1 day, 82% within 3 days.
+
+Rebuild with:
+
+```bash
+py -3 tools/dumpUploadDates.py                 # state.sqlite -> data/qmg_upload_dates.json
+node tools/videoDateAnchors.js --write data/qmg_date_anchors.json
+node tools/qmgVideoDates.js --check            # leave-one-out report
+```
+
+---
+
+## OCR sweep over the no-GT videos — `tools/qmgOcrSweep.js`
+
+The user asked for OCR on more videos, "including those where you don't know
+the GTs". The curated benchmark covers only a handful of dates, so the widest
+source of signal is running the pipeline over the whole restored catalogue and
+reading the tickers off the frames.
+
+`tools/qmgOcrSweep.js` is a resumable daemon:
+
+- The work list comes from `tools/listOcrTargets.js` → `collectTargets()`:
+  a video on disk, with a date, no ground truth, and no surviving EasyOCR log.
+  Because the selection is derived from what is on disk, a scanned video drops
+  out of the list on the next pass — the sweep resumes for free.
+- Each chunk is a separate `tools/runQmgOcrBatch.js` invocation, which owns
+  the per-date crop / temporal-decay logic. The sweep only decides WHAT to run
+  and records WHAT came back.
+- Failures are recorded in `data/qmg_ocr_sweep.json` so a failing video does
+  not spin the loop forever. A re-run that fails keeps the earlier success.
+- A lock file (`data/qmg_ocr_sweep.lock`) keeps two sweeps from running at
+  once; a stale lock (dead pid) is cleared automatically.
+- `--max-videos N` bounds a session; the sweep is safe to stop and restart.
+
+```bash
+node tools/qmgOcrSweep.js --dry-run                    # show the work list
+node tools/qmgOcrSweep.js --chunk 8 --max-videos 40    # bounded session
+node tools/qmgOcrSweep.js --batch-count 4 --batch-window 30
+```
+
+The sweep prints a ticker-frequency histogram at the end — the most useful
+output when there is no ground truth to score against.
+
+**"Already scanned" must be tracked per VIDEO, not per date.** Several videos
+share an interpolated date, so a date-keyed set hides all but one of them.
+
+---
+
 ## Testing
 
 ```bash
@@ -691,6 +769,28 @@ node tools/scanVideoWithOcr.js \
 `OMP_NUM_THREADS=1`, `MKL_NUM_THREADS=1` and `KMP_DUPLICATE_LIB_OK=TRUE` are set
 automatically by `src/ocr/easyocrAdapter.js` at the Python spawn — the single choke point for
 every EasyOCR invocation. Do not bypass it.
+
+### The position-list overlay drifts LEFT over time — pick the crop by date
+
+The default crop (x=0.86, w=0.14) covers the ticker column in 2022, but the
+overlay moves left as the stream format changes. Measured on the frames
+themselves:
+
+| era | ticker column at (frame x) | crop to use |
+|---|---|---|
+| 2022 (through Apr 2023) | ≈ 0.90 – 0.93 | default `0.86,0.62,0.14,0.22` |
+| May 2023 – Nov 2023 | ≈ 0.846 | `0.83,0.55,0.17,0.45` |
+| Dec 2023 onward | ≈ 0.827 – 0.839 | `0.80,0.60,0.20,0.26` |
+
+`tools/runQmgOcrBatch.js` applies this automatically via `cropForDate()` and
+also sets `--temporal-decay 0` for the 2023 eras (the position list appears
+*late* in those streams, so the 2022-era early-frame bias is wrong).
+
+A crop that starts to the left of the ticker column also pulls in chart area,
+which is where the false positives come from — hence the narrowest crop that
+still covers the column. Verified on `20231215_JNVA5cd_m7M.mp4`: the new crop
+reads `DDOG, DKNG, GME, JST, LND, PDD, SMCI` where the default crop read only
+`U`.
 
 ### Why EasyOCR beats Tesseract for QMG position lists
 

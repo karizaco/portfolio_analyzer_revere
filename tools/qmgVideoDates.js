@@ -173,11 +173,6 @@ function bracket(index) {
  */
 function dateAt(index) {
   const { prev, next } = bracket(index);
-  if (process.env.DEBUG_DATE && index === Number(process.env.DEBUG_DATE)) {
-    console.error('[debug] index=' + index +
-      ' prev=' + (prev ? prev.index + ':' + prev.date : '-') +
-      ' next=' + (next ? next.index + ':' + next.date : '-'));
-  }
   if (prev && next) {
     const span = next.index - prev.index;
     const frac = span === 0 ? 0 : (index - prev.index) / span;
