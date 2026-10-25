@@ -53,19 +53,52 @@ const DEFAULT_FLAGS = [
   '--temporal-decay', '1800', // Boost early frames — verified better on 20220218 (6/10 vs 4/7)
 ];
 
-// 2023-era videos use a wider position-list table that overflows the default crop
-// (x=0.86, w=0.14). The ticker column starts further left, so we widen the crop
-// to capture the full table. Dates confirmed to need wide crop: 20230518, 20230522,
-// 20230523, 20230602, 20230605, 20230608, 20230609. Additional nearby dates are
-// included based on layout era (mid-2023 onward). See qmg_ground_truth.json _meta.
-const WIDE_CROP_DATES = new Set([
-  '20230518', '20230521', '20230522', '20230523', '20230524',
-  '20230525', '20230526', '20230527', '20230531',
-  '20230601', '20230602', '20230605', '20230606', '20230607',
-  '20230608', '20230609', '20230613', '20230614',
-  '20230615', '20230616', '20230620', '20230621', '20230622',
-  '20230623', '20230626', '20230627', '20230628', '20230629', '20230630',
-]);
+/**
+ * Flags for one scan.
+ *
+ * `--batch-snapshots` overrides `--max-captures`: it OCRs exactly
+ * `--batch-count` frames around the best prefilter timestamp, so the OCR
+ * frame count per video is `--batch-count`, not `--max-captures`. At ~60 s
+ * per EasyOCR frame that is the knob that decides how many videos an hour.
+ */
+function flagsForScan(opts) {
+  const flags = DEFAULT_FLAGS.slice();
+  const set = (flag, value) => {
+    const i = flags.indexOf(flag);
+    if (i === -1) { flags.push(flag, String(value)); return; }
+    flags[i + 1] = String(value);
+  };
+  if (opts.batchCount != null) set('--batch-count', opts.batchCount);
+  if (opts.batchWindow != null) set('--batch-window', opts.batchWindow);
+  if (opts.fps != null) set('--fps', opts.fps);
+  if (opts.prefilterMaxFrames != null) set('--prefilter-max-frames', opts.prefilterMaxFrames);
+  return flags;
+}
+
+// The position-list overlay layout drifts left over time, so the default crop
+// (x=0.86, w=0.14) stops covering the ticker column. Measured on the frames
+// themselves, the ticker column sits at:
+//
+//   2022-era          frame x ~= 0.90 - 0.93   -> default crop is fine
+//   mid-2023          frame x ~= 0.846          -> needs x=0.83
+//   Dec-2023          frame x ~= 0.827 - 0.839  -> needs x=0.80
+//
+// A crop that starts to the left of the ticker column also pulls in chart
+// area, which is where the false positives come from — hence the narrowest
+// crop that still covers the column.
+//
+// See also qmg_ground_truth.json _meta: "20230518+ videos use wider table
+// layout — default crop (0.86,0.14) may cut off left edge".
+const CROP_2022 = null;                       // default crop
+const CROP_2023_MID = '0.83,0.55,0.17,0.45';  // May 2023 - Nov 2023
+const CROP_2023_LATE = '0.80,0.60,0.20,0.26'; // Dec 2023 onward
+
+/** The crop fraction to use for a date-key, or null for the default. */
+function cropForDate(dateKey) {
+  if (dateKey >= '20231201') return CROP_2023_LATE;
+  if (dateKey >= '20230501') return CROP_2023_MID;
+  return CROP_2022;
+}
 
 // 2022-era (pre-mid-2023): position lists appear early in the stream (ts=40-390).
 // 2023-era (mid-2023+): position lists appear later (ts=1940-5627).
@@ -73,8 +106,9 @@ const WIDE_CROP_DATES = new Set([
 // --temporal-decay 0 for 2023-era (no bias, let prefilter score decide).
 function getFlagsForDate(dateKey) {
   const extraFlags = [];
-  if (WIDE_CROP_DATES.has(dateKey)) {
-    extraFlags.push('--phash-region-fraction', '0.83,0.55,0.17,0.45');
+  const crop = cropForDate(dateKey);
+  if (crop) {
+    extraFlags.push('--phash-region-fraction', crop);
     extraFlags.push('--temporal-decay', '0'); // 2023-era: position list appears late
   }
   // 2022-era gets the default --temporal-decay 1800 from DEFAULT_FLAGS
@@ -85,19 +119,29 @@ function parseArgs(argv) {
   const args = {
     parallel: 1,
     dates: null,
+    videos: null,
     chunk: null,
     allUnscanned: false,
     dryRun: false,
     lowCpu: false,
+    batchCount: null,
+    batchWindow: null,
+    fps: null,
+    prefilterMaxFrames: null,
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--parallel') args.parallel = Math.max(1, parseInt(argv[++i] || '1', 10));
     else if (a === '--dates') args.dates = (argv[++i] || '').split(',').filter(Boolean);
+    else if (a === '--videos') args.videos = (argv[++i] || '').split(',').filter(Boolean);
     else if (a === '--chunk') args.chunk = parseInt(argv[++i] || '1', 10);
     else if (a === '--all-unscanned') args.allUnscanned = true;
     else if (a === '--dry-run') args.dryRun = true;
     else if (a === '--low-cpu') args.lowCpu = true;
+    else if (a === '--batch-count') args.batchCount = parseInt(argv[++i] || '8', 10);
+    else if (a === '--batch-window') args.batchWindow = parseInt(argv[++i] || '4', 10);
+    else if (a === '--fps') args.fps = argv[++i];
+    else if (a === '--prefilter-max-frames') args.prefilterMaxFrames = parseInt(argv[++i] || '12', 10);
   }
   return args;
 }
@@ -125,6 +169,28 @@ for (const v of manifest) {
   if (!v.date || v.channel !== 'qullamaggie') continue;
   if (!byDate.has(v.date)) byDate.set(v.date, []);
   byDate.get(v.date).push(v.video_id);
+}
+
+// Videos with no date on file get one interpolated from the playlist order
+// (tools/qmgVideoDates.js). That covers the majority of the channel, which
+// is what makes it possible to OCR videos that have no ground truth.
+const DATE_FILE = readFlag('--date-file')
+  || 'data/qmg_video_dates.json';
+let dateOf = new Map();   // video_id -> YYYYMMDD
+try {
+  const inferred = JSON.parse(
+    fs.readFileSync(path.join(ROOT, DATE_FILE), 'utf8')
+  );
+  for (const [id, entry] of Object.entries(inferred)) {
+    const d = typeof entry === 'string' ? entry : entry.date;
+    if (!d || !/^\d{8}$/.test(d)) continue;
+    dateOf.set(id, d);
+    if (!byDate.has(d)) byDate.set(d, []);
+    if (!byDate.get(d).includes(id)) byDate.get(d).push(id);
+  }
+} catch (_) {
+  console.error('[batch] no ' + DATE_FILE + ' — run tools/qmgVideoDates.js ' +
+    'to reach videos that have no date on file.');
 }
 
 /** Every video_id on disk, per directory, keyed by bare id. */
@@ -179,6 +245,21 @@ function findVideo(dateKey) {
 
 function loadGT() {
   return JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'qmg_ground_truth.json'), 'utf8'));
+}
+
+/** Locate a video_id on disk, preferring the 1080p copy. */
+function findVideoById(videoId) {
+  if (index1080 === null) {
+    index1080 = indexDir(VIDEO_DIR_1080);
+    index720 = indexDir(VIDEO_DIR_720);
+  }
+  if (index1080.has(videoId)) {
+    return { file: index1080.get(videoId), dir: VIDEO_DIR_1080, resolution: '1080p', videoId };
+  }
+  if (index720.has(videoId)) {
+    return { file: index720.get(videoId), dir: VIDEO_DIR_720, resolution: '720p', videoId };
+  }
+  return null;
 }
 
 function getUnscannedDates(gt) {
@@ -236,7 +317,7 @@ function scoreResult(log, gtEntry) {
   };
 }
 
-async function runScan(dateKey, video, runTag, extraFlags = []) {
+async function runScan(dateKey, video, runTag, extraFlags = [], baseFlags = DEFAULT_FLAGS) {
   const videoPath = path.join(video.dir, video.file);
   const env = {
     ...process.env,
@@ -252,7 +333,7 @@ async function runScan(dateKey, video, runTag, extraFlags = []) {
     '--date', dateKey,
     '--output-root', OUT_ROOT,
     '--run-tag', runTag,
-    ...DEFAULT_FLAGS,
+    ...baseFlags,
     ...extraFlags,
   ];
 
@@ -290,9 +371,15 @@ async function runScan(dateKey, video, runTag, extraFlags = []) {
       const logFile = path.join(OUT_ROOT, runTag, 'ocr_probe', 'logs');
       let log = null;
       try {
-        const files = fs.readdirSync(logFile).filter(f => f.startsWith(dateKey + '_'));
-        if (files.length) {
-          log = JSON.parse(fs.readFileSync(path.join(logFile, files[0]), 'utf8'));
+        // Several videos can share an interpolated date, so match the log by
+        // video id, not just by the date prefix.
+        const stem = video.videoId.toLowerCase();
+        const files = fs.readdirSync(logFile).filter((f) =>
+          f.startsWith(dateKey + '_') && f.toLowerCase().includes(stem));
+        const picked = files[0] ||
+          fs.readdirSync(logFile).filter((f) => f.startsWith(dateKey + '_'))[0];
+        if (picked) {
+          log = JSON.parse(fs.readFileSync(path.join(logFile, picked), 'utf8'));
         }
       } catch {}
 
@@ -345,24 +432,44 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
   const gt = loadGT();
 
-  // Build date list
-  let dates;
-  if (args.dates) {
-    dates = args.dates;
+  // Build the work list. A job is (dateKey, video) — several videos can share
+  // an interpolated date, so targeting by date alone only ever reaches one of
+  // them. --videos takes explicit ids; --dates keeps the older behaviour of
+  // scanning the first on-disk match for each date.
+  let jobs = [];
+  if (args.videos) {
+    for (const id of args.videos) {
+      const video = findVideoById(id);
+      const dateKey = dateOf.get(id);
+      if (!video) { console.error('  ' + id + ': not on disk'); continue; }
+      if (!dateKey) { console.error('  ' + id + ': no date'); continue; }
+      jobs.push({ date: dateKey, video });
+    }
+  } else if (args.dates) {
+    for (const d of args.dates) {
+      const video = findVideo(d);
+      if (video) jobs.push({ date: d, video });
+    }
   } else if (args.allUnscanned) {
-    dates = getUnscannedDates(gt);
+    jobs = getUnscannedDates(gt)
+      .map((d) => ({ date: d, video: findVideo(d) }))
+      .filter((j) => j.video !== null);
   } else if (args.chunk) {
     const unscanned = getUnscannedDates(gt);
     const chunkSize = 5;
     const start = (args.chunk - 1) * chunkSize;
-    dates = unscanned.slice(start, start + chunkSize);
+    jobs = unscanned.slice(start, start + chunkSize)
+      .map((d) => ({ date: d, video: findVideo(d) }))
+      .filter((j) => j.video !== null);
   } else {
     console.error('Usage: node runQmgOcrBatch.js --dates d1,d2 [--parallel N]');
+    console.error('   or: node runQmgOcrBatch.js --videos id1,id2 [--parallel N]');
     console.error('   or: node runQmgOcrBatch.js --all-unscanned [--parallel N]');
     console.error('   or: node runQmgOcrBatch.js --chunk N [--parallel N]');
     console.error('   or: node runQmgOcrBatch.js --low-cpu --chunk N [--parallel N]');
     process.exit(1);
   }
+  const dates = jobs.map((j) => j.date);
 
   // Cap parallelism when --low-cpu is set (single-threaded EasyOCR can't benefit from more)
   const parallel = args.lowCpu
@@ -377,9 +484,8 @@ async function main() {
   console.log(`Output: ${OUT_ROOT}/${runTag}/\n`);
 
   if (args.dryRun) {
-    for (const d of dates) {
-      const v = findVideo(d);
-      console.log(`  ${d}: ${v ? v.file + ' (' + v.resolution + ')' : 'NOT FOUND'}`);
+    for (const j of jobs) {
+      console.log(`  ${j.date}  ${j.video.videoId}  ${j.video.file} (${j.video.resolution})`);
     }
     return;
   }
@@ -387,11 +493,9 @@ async function main() {
   // Ensure output dir exists
   fs.mkdirSync(path.join(OUT_ROOT, runTag), { recursive: true });
 
-  const jobs = dates.map(d => ({ date: d, video: findVideo(d) }))
-    .filter(j => j.video !== null);
-
+  const baseFlags = flagsForScan(args);
   const results = await runPool(jobs, parallel, async ({ date, video }, idx) => {
-    return runScan(date, video, runTag, getFlagsForDate(date));
+    return runScan(date, video, runTag, getFlagsForDate(date), baseFlags);
   });
 
   // Report
