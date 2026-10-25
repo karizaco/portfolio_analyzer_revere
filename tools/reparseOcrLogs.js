@@ -52,6 +52,9 @@ const EXCLUDE = flag('--exclude', null);
 // logs in place. Non-destructive: the sidecar maps each log path to its
 // re-derived merged list, so applying it is a separate, reviewable step.
 const OUT = flag('--out', null);
+// Restore the logs from a sidecar produced by --out. This is the undo for
+// an in-place --write.
+const RESTORE = flag('--restore', null);
 
 function collectLogFiles(dir, out) {
   let entries;
@@ -221,6 +224,42 @@ const uniqueFiles = files.filter((f) => {
 });
 const gt = loadGT();
 
+// --- Restore -----------------------------------------------------------------
+
+if (RESTORE) {
+  let payload;
+  try {
+    payload = JSON.parse(fs.readFileSync(RESTORE, 'utf8'));
+  } catch (err) {
+    console.error('[reparse] cannot read sidecar ' + RESTORE + ': ' + err.message);
+    process.exit(1);
+  }
+  let restored = 0;
+  let missing = 0;
+  for (const [rel, entry] of Object.entries(payload)) {
+    const file = path.join(ROOT, rel);
+    if (!fs.existsSync(file)) {
+      missing++;
+      continue;
+    }
+    const log = JSON.parse(fs.readFileSync(file, 'utf8'));
+    const byFrame = new Map((entry.before_per_frame || []).map((f) => [f.frame_index, f]));
+    for (const c of log.top_candidates || []) {
+      const f = byFrame.get(c.frame_index);
+      if (!f || !c.chart_stream) continue;
+      c.chart_stream.position_list = f.position_list;
+      c.tickers = f.position_list;
+    }
+    log.merged_position_list = entry.before || [];
+    if (entry.before_clusters) log.merged_raw_token_clusters = entry.before_clusters;
+    fs.writeFileSync(file, JSON.stringify(log, null, 2));
+    restored++;
+  }
+  console.log('[reparse] restored ' + restored + ' logs from ' + RESTORE +
+    (missing ? ', ' + missing + ' no longer on disk' : ''));
+  process.exit(0);
+}
+
 let nParsed = 0;
 let nChanged = 0;
 let nUnfaithful = 0;
@@ -233,6 +272,7 @@ const rows = [];
 const outPayload = {};
 
 for (const file of uniqueFiles) {
+  if (LIMIT && nParsed >= LIMIT) break;
   let log;
   try {
     log = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -273,11 +313,19 @@ for (const file of uniqueFiles) {
   rows.push(line);
 
   if (OUT) {
+    const byFrame = new Map(result.perFrame.map((f) => [f.frameIndex, f]));
     outPayload[path.relative(ROOT, file).split(path.sep).join('/')] = {
       date_key: dateKey,
       before: log.merged_position_list || [],
       after: result.merged,
       changed,
+      // The BEFORE state of every per-frame position list, so `--restore`
+      // can put a log back exactly as it was.
+      before_per_frame: (log.top_candidates || []).map((c) => ({
+        frame_index: c.frame_index,
+        position_list: (c.chart_stream && c.chart_stream.position_list) || [],
+      })),
+      before_clusters: log.merged_raw_token_clusters || null,
       per_frame: result.perFrame.map((f) => ({
         frame_index: f.frameIndex,
         timestamp: f.timestamp,
@@ -306,7 +354,7 @@ for (const file of uniqueFiles) {
     }
     log.merged_position_list = result.merged;
     log.merged_raw_token_clusters = result.clusters;
-    fs.writeFileSync(file, JSON.stringify(log, null, 1));
+    fs.writeFileSync(file, JSON.stringify(log, null, 2));
   }
 }
 
