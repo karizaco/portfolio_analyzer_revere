@@ -146,7 +146,7 @@ Running `tools/scanAllGtVideos.js` or `tools/scanVideoWithOcr.js` against Qullam
 
 - **Time ONE video first** with the exact flags the sweep will use. Confirm the log file appears at `data/video_scan_test/_rerun/<runTag>/ocr_probe/logs/<dateKey>_*.json` with non-empty captures. Only scale up after that.
 - **Run in chunks of 5–10 videos**, never 40 in one shot. The user can monitor each chunk and abort if one hangs.
-- **Pass `--parallel 4`** to the orchestrator. Worker pool is already implemented at `scanAllGtVideos.js:114-128`. Default `--parallel 1` is ~6.7 h wall for a 40-video sweep.
+- **Pass `--parallel 4`** to the orchestrator. Worker pool is already implemented at `scanAllGtVideos.js:134-148` (`runWithConcurrency`). Default `--parallel 1` is ~6.7 h wall for a 40-video sweep.
 - **Flag budget vs timeout**: for the default 300 s timeout, use `--fps 0.25 --prefilter-max-frames 12 --max-captures 1`. `--fps 1` is 4× denser than default; `--max-captures 3` will NOT finish in 300 s on the chart-stream profile (Tesseract alone is ~6 min lower bound).
 - **After any timeout**, check for orphans: `tasklist | findstr ffmpeg.exe` and `tasklist | findstr node.exe`. Kill them before continuing. Clean up half-written `frames/` dirs (often 100s of MB each).
 - **Do NOT `ls` or `Read` `data/video_scan_test/_rerun/` directly** — those directories hold hundreds-to-thousands of PNGs each. Use `Glob` with a pattern or delegate to an Explore agent. Listing them bloats context.
@@ -178,7 +178,7 @@ OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 KMP_DUPLICATE_LIB_OK=TRUE \
 | Directory | Preferred Resolution | Notes |
 |---|---|---|
 | `downloads/` | 720p | Historically held mixed qullamaggie+revere; currently empty after cleanup |
-| `downloads_hires/` | 720p | Mixed: ~98 revere + ~12 qullamaggie + ~19 unknown (verify via SQLite before deleting) |
+| `downloads_hires/` | 720p | Mixed: 126 revere + 26 qullamaggie per SQLite (152 rows, all present on disk) + ~14 `.mp4` with no `videos` row (verify via SQLite before deleting) |
 | `downloads_1080p/` | 1080p | qullamaggie 1080p (format 137); verify via ffprobe before assuming resolution |
 
 Verify channel via SQLite: `SELECT video_id, channel FROM videos WHERE video_id IN (...)`
@@ -242,7 +242,7 @@ Rules:
 npm test        # node --test test/*.test.js
 ```
 
-247 tests, all passing (as of 2026-10-24).
+251 tests, all passing (as of 2026-10-24).
 
 ### Ground-truth benchmark fixtures — read before trusting a recall number
 
@@ -329,13 +329,16 @@ scan daemon must use:
   Without this, a broken run silently destroyed a good results file (this happened to
   `data/qmg_comparison_results.json` on 2026-10-19).
 
-**Disk space is a live constraint.** `data/video_pipeline/downloads_1080p` alone is ~215 GB and
+**Disk space is a live constraint.** `data/video_pipeline/downloads_1080p` holds ~20 GB right now
+(49 `.mp4` = 9.5 GiB plus 39 partial `.part` downloads) and
 `data/video_scan_test/_rerun` grows by ~400 MB per video. The `frames/` subdirectory of each
 run tag holds regenerable intermediate PNGs and is the cheapest thing to reclaim — but it is
 not covered by `tools/prune_old_probes.js` (which only handles `data/video_ocr_probe/`).
 
-Batch files: `data/qmg_alt_batch.json` (alt) and `data/video_scan_batch_remaining.json` (baseline).
-Results: `data/qmg_alt_batch_results.json` and `data/video_scan_batch_remaining_results.json`.
+Batch files: `data/qmg_alt_batch.json` (alt). The baseline's `data/video_scan_batch_remaining.json`
+and its results file `data/video_scan_batch_remaining_results.json` have been deleted and are no
+longer in the tree.
+Results: `data/qmg_alt_batch_results.json`.
 
 ---
 
@@ -464,8 +467,8 @@ every EasyOCR invocation. Do not bypass it.
 
 2. **The parser's column detector (identifyPositionListColumn) picks the WRONG dominant_x for EasyOCR.**
    EasyOCR's word bounding boxes land at different x-centers than Tesseract's, so the bucket heuristic picks a chart-area column (~x=490-510 in the 1345px EasyOCR crop) instead of the position-list column (~x=1218). Two fixes:
-   - **X-coordinate gate** (`src/parse/parseChartStream.js`): when `identifyPositionListColumn` fallback fires (no price-aligned tickers), reject if `dominantX < 1150` in EasyOCR crop coords. ~86% of chart-area bleed gets blocked here.
-   - **Blocklist** (`TICKER_BLOCKLIST`): `FREY` is the only confirmed persistent FP (clustered from chart annotations). P, SPYM, BKR, BOIL are real tickers — do NOT blocklist them.
+   - **X-coordinate gate** (`src/parse/parseChartStream.js`): **REMOVED** — there is no `dominantX < 1150` gate in the code any more (no `1150` threshold in `src/`, `test/`, `config/` or the top-level `tools/*.js`; the constant `X_POSITION_LIST_MIN` survives only in comments). The live gate is structural: a column counts as the position list only if it has ≥ 4 ticker-shaped words within half a column width of the dominant x, spread over ≥ 4 distinct rows, or is price-aligned with ≥ 2 price-aligned tickers. See § 'Column detection'.
+   - **Blocklist** (`TICKER_BLOCKLIST`): `FREY` (clustered from chart annotations) and `ATR` (the indicator label at the bottom of every chart — it is a real ticker symbol but never a position on Qullamaggie's list, so it is deliberately blocked; see the comment in `src/parse/parseChartStream.js`). P, SPYM, BKR, BOIL are real tickers — do NOT blocklist them.
 
 3. **Use scale=5 for EasyOCR, not the dual-scale 3+4 used for Tesseract.**
    EasyOCR is slow enough (~60s) that running it twice is wasteful; the bigger image produces cleaner OCR.
@@ -494,14 +497,20 @@ every EasyOCR invocation. Do not bypass it.
 ### Pipeline stages for chart-stream
 
 ```text
-ffmpeg -ss <ts> -i <video>  →  sharp: extract crop region, upscale ×5, PNG (no grayscale/negate for EasyOCR)
+ffmpeg -ss <ts> -i <video>  →  ffmpeg crop+scale to 1345px (crop=…,scale=…), PNG (no grayscale/negate for EasyOCR)
                              →  EasyOCR (Python subprocess, ~60s/frame)
                              →  parseChartStreamPositionList (lexicon + price-nearby + column filter)
-                             →  clusterRawOcrTokens (raw OCR token clustering across frames)
                              →  pickTopDistinctCandidates (dedup by phash + frame gap)
+                             →  clusterRawOcrTokens (raw OCR token clustering across frames)
 ```
 
-### Column detection (`X_POSITION_LIST_MIN`)
+Note the order of the last two: capture selection happens **first**, and the clusterer runs on
+the already-selected candidates (`tools/scanVideoWithOcr.js:1595` and `:1727`). Note also that
+on the EasyOCR path **ffmpeg** does both the crop and the upscale — `sharp` is used only on the
+Tesseract path, where it extracts from the 1280-wide OCR-resolution frame at scale 3/4
+(`src/ocr/ocrImage.js:118-120`).
+
+### Column detection
 
 `identifyPositionListColumn` in `src/parse/parseChartStream.js` locates the position-list column
 and rejects chart-area columns. There are two ways it finds that column:
@@ -510,25 +519,34 @@ and rejects chart-area columns. There are two ways it finds that column:
    x of those tickers is the column.
 2. **Densest bucket** (fallback): the x-bucket with the most ticker-shaped words.
 
-Only the **fallback** path is subject to the x-coordinate gate:
+**The x-coordinate gate this section used to describe no longer exists in the code.**
+`X_POSITION_LIST_MIN` survives only in comments (`src/ocr/ocrImage.js:277`, `:371`,
+`src/ocr/easyocrAdapter.js:246`) — there is no such constant in `src/parse/parseChartStream.js`.
+`identifyPositionListColumn` still takes `cropWidth` and `engine` arguments
+(`src/parse/parseChartStream.js:248`) but never reads them, so neither the crop width nor the
+engine reaches the gate today.
 
-```
-EasyOCR  (1344px reference crop): X_POSITION_LIST_MIN = 600
-Tesseract (750px crop):           X_POSITION_LIST_MIN = 505
-```
+The live gate is **structural** (`src/parse/parseChartStream.js:453-460`): a column counts as a
+real position list only if it has **≥ 4 ticker-shaped words within half a column width of the
+dominant x, spread over ≥ 4 distinct rows**, or if it is price-aligned with **≥ 2**
+price-aligned tickers. Otherwise the filter returns no tickers at all
+(`inListTickers: new Set()`, `dominantColumnX: null`), which is the tell in the log
+(`column_filter: null`).
 
-The EasyOCR threshold is scaled from its 1344px reference so 720p sources (895px crop) still
-work: `round(600 * cropWidth / 1344)`. `cropWidth` comes from `_cropWidth` on the OCR result,
-which `src/ocr/ocrImage.js` measures from the OCR input image at runtime — **never hardcode it**.
+Two dead ends are worth remembering, because the shape test replaced both of them:
 
-**The gate must NOT be applied to a price-aligned column.** The position-list column's x
-position varies between videos (measured in a 1345px EasyOCR crop: 20220218 → x≈710,
-20220606 → x≈444). Gating an absolute threshold on a correctly-detected, price-validated
-column silently dropped *every* ticker on 20220606 while the detector was working perfectly.
-That bug cut 20220606 recall from 75% to 12.5%.
+- **An absolute x threshold cannot work.** The position-list column's x position varies
+  between videos (measured in a 1345px EasyOCR crop: 20220218 → x≈710, 20220606 → x≈444). Gating
+  an absolute threshold on a correctly-detected, price-validated column silently dropped
+  *every* ticker on 20220606 while the detector was working perfectly. That bug cut 20220606
+  recall from 75% to 12.5%.
+- **A threshold scaled by crop width cannot work either.** The panel moved between video eras
+  *and* the crop width changed with it, so no fixed px value survives both ends of the corpus.
 
-**Engine detection** uses the OCR result's `_engine` field, not the crop width: a 720p EasyOCR
-crop is 895px, which the old `cropWidth > 1000` heuristic misclassified as Tesseract.
+**Engine detection** used the OCR result's `_engine` field, not the crop width: a 720p EasyOCR
+crop is 895px, which the `cropWidth > 1000` heuristic misclassified as Tesseract. That
+heuristic lived in `src/parse/parseChartStream.js` and is in no file under `src/` or `tools/`
+now — `grep -rn "cropWidth > 1000" src/ tools/` finds nothing. Treat it as history.
 
 Note the column filter is **diagnostic for EasyOCR**: the accept path uses lexicon +
 price-nearby, and the column result only gates non-lexicon, non-price-nearby tickers
@@ -555,7 +573,9 @@ otherwise act as a lower bound and reject *every* real row. Same rule applies in
   capture keeps what its OWN frame showed — `captures[n].tickers` and
   `captures[n].chart_stream.position_list` are the same list for a chart_stream capture,
   and the aggregator reads the latter.
-- `merged_raw_token_clusters` — per-cluster diagnostics: `{canonical, members, frequency, frameCount}`
+- `merged_raw_token_clusters` — per-cluster diagnostics: `{canonical, members, frequency}`.
+  The clusterer computes a per-cluster `frameCount` (`src/parse/parseChartStream.js:1230`) but the
+  emitter does not write it (`tools/scanVideoWithOcr.js:1814-1818`), so it never appears in the logs.
 
 ### Known limitations and next steps (as of 2026-10-21)
 
@@ -581,7 +601,14 @@ seed lexicon (`ISYM`, `MEL`, `CON`), and one-letter tokens (`ON`, `X`).
 to the prefilter missing frames entirely.
 
 
-**PaddleOCR PP-OCRv6** (`tools/_paddleocr_ocr.py`): Could not install — Python 3.14 is installed; `paddlepaddle` has no cp314 wheel. Downgrade to Python 3.13 to benchmark. Interface is identical to `_easyocr_ocr.py` — schema is `{text, lines, words[{text,left,top,width,height,conf,line}],_engine,_image,_detection_count}`. Would run at ~7× EasyOCR speed (PP-OCRv6 on CPU with OpenVINO).
+**PaddleOCR PP-OCRv6**: the packages ARE installed — `tools/paddle311_env` (Python 3.11.9) has
+paddleocr 2.7.3 + paddlepaddle 2.6.2, and `tools/paddle312_env` / `tools/paddle_env`
+(Python 3.12.14) have the same. What fails is the **MODEL download**, not the install:
+`tools/paddle312_status.txt` records "PaddleOCR blocked: Baidu CDN
+(paddleocr.bj.bcebos.com) unreachable; packages install but model download fails. Use
+--easyocr-python tools/paddle311_env/Scripts/python.exe when network available." The adapter
+`tools/_paddleocr_ocr.py` **does not exist yet** — it still has to be written, with the same
+schema as `_easyocr_ocr.py` — `{text, lines, words[{text,left,top,width,height,conf,line}],_engine,_image,_detection_count}`. Would run at ~7× EasyOCR speed (PP-OCRv6 on CPU with OpenVINO).
 
 **Ground truth accuracy**: The `data/qmg_ground_truth.json` must be verified per video — 20220510 GT was actually TSLA+VRM (not LABU/TNA as previously assumed). Always verify GT against the actual video content before trusting recall numbers.
 
@@ -594,8 +621,8 @@ layouts exist and the legacy crop reader only ever saw the first:
 
 | layout | ticker column (of 1920) | y range |
 |---|---|---|
-| 2022-era floating panel, bottom-right | x ≈ 1793 | lower third |
-| 2023-era right sidebar | x 1606–1648 or 1697–1739 | y 444–708 |
+| 2022-era floating panel, bottom-right | x 1795–1820 | lower third |
+| 2023-era right sidebar | x 1606–1648 or 1697–1739 | y 617–937 |
 
 `src/video/positionTableScan.js` reads it. Two phases per frame:
 
@@ -626,11 +653,24 @@ layouts exist and the legacy crop reader only ever saw the first:
   can never reach the title rule. When the title does **not** overlap the ticker
   column the tie-break is that the positions table is the **bottom-most** table in
   the region — that is the `bottom_most` discriminator, not a title match.
-- **A table is published only when positively identified** (`title`, `bottom_most`, or
-  `sole_candidate` with a positively-identified watchlist vetoed) **and** it decoded
-  something. A lone untitled table is *located* but not published.
+- **A table is published when it was identified and it decoded something.**
+  `publishTableHoldings` publishes only a reading that is `found` **and** `verified` **and**
+  produced tickers; anything else falls back to the legacy crop reader. `title` is a positive
+  identification. `bottom_most` is only a **positional tie-break** — the lowest table in the
+  right-hand region — and is granted `verified` with no title evidence
+  (`src/video/positionTableScan.js:465`); it does require at least two table-shaped candidates
+  and picks the bottom-most of them. So a `bottom_most` publication is a prior, not an
+  identification, and it can carry false positives: at the pre-fix `a15f66a` the 20220606 c1
+  frame (`93514908`) had only **two** candidates — a 4-row chart-area column at y 100–161 and a
+  3-row one at y 376–436 — and `bottom_most` took the lower of the two, publishing one junk cell
+  that happened to hit the two-letter lexicon ticker `SE` — 0/8, 1 FP. `sole_candidate`
+  requires a positively-identified watchlist vetoed **and** the survivor below it; a lone
+  untitled table with nothing vetoed is *located* but not published, while a lone table
+  **below** a vetoed watchlist **is** published.
 - **Table-likeness** needs ≥2 ticker-shaped rows (`tickerishRows >= 2`). A `Sym`
-  header alone is not enough.
+  header alone is not enough. "Ticker-shaped" is loose — a **one-character** row counts
+  (`src/video/positionTableScan.js:330-335`, which rejects only `letters.length > 5`) — so a
+  column of 1–2 letter junk can qualify as a table.
 - **A read that is a lexicon ticker is never the header.** `Sym` is within two edits
   of 17 real tickers (TSM, XOM, ARM, CRM, SOL, STX, VRM, NEM, SWN, SLB, SLV, SLY,
   TEM, TSEM, SGMO, SSO, SPYM), and the 2023-era table has no header row at all — so
@@ -642,6 +682,39 @@ layouts exist and the legacy crop reader only ever saw the first:
 - **The clusterer is bypassed per FRAME, not per profile.** Each capture carries a
   `ticker_source`; a frame the table reader could not identify falls back to the
   legacy crop reader and still needs the clusterer's repair.
+- **The glyph-merge rule must be ASYMMETRIC.** `extractWords`
+  (`src/video/positionColumn.js`) chains row runs into glyphs. The chaining test is
+  `overlap / shorter > 0.4` **plus** `overlap / longer >= MIN_MERGE_SUPPORT` (3 %).
+  The second test is not optional: `shorter` alone is symmetric, so a 1 px panel
+  border wholly inside a 51 px header rule merges with it — the fused glyph spanned
+  the whole 2023 sidebar (y 687–884) and `extractWords`'s consume step then deleted
+  the ticker of every row in between. The floor sits in a narrow window: below the
+  1-in-20 ratio a letter's stem has inside a 20 px bar (0.05, must keep merging) and
+  above the 1-in-51 ratio the border has under the rule (0.02, must not).
+  `test/positionColumnMerge.test.js` pins both sides.
+- **The seed lexicon contains OCR VARIANTS, and they publish verbatim.** Nine rows of
+  `config/ticker_lexicon_seed.csv` (`AROQ`, `ARCQ`, `OBTS`, `GSII`, `IOI`, `PLIR`,
+  `NUGI`, `GSlT`, `MNOY`) are not tickers but the *shape* a ticker takes when
+  it is misread. An exact lexicon hit short-circuits the decoder at cost 0, so `PLIR`
+  publishes as `PLIR` at 0.000 and never competes with `PLTR` (whose repair would
+  cost 0.375 — `I>T` at count 3 of a model max of 4). That is where 4 of the 7
+  measured false positives came from. The tenth variant row, `~09r3`
+  (`config/ticker_lexicon_seed.csv:246`), is the exception: it **cannot** publish
+  anything, because the decoder strips every non-A-Z character out of the read before
+  the lookup (`src/normalize/tickerDecode.js:157`), so the read arrives as `R` and
+  never matches the key `~09R3`; `GSlT` publishes uppercased, as `GSLT`. Deleting the
+  variant rows would let `PLIR` decode to `PLTR` and nothing else would be lost —
+  `URNM` is itself a seeded row (`config/ticker_lexicon_seed.csv:200`) and decodes at
+  cost 0 either way — but it has not been done.
+- **A frame's identity is its FILE, not its label.** Four **source-width** files are named
+  `qmg_20230609.png` in four run directories and hold three distinct images (the tree also
+  holds two 640×360 prefilter renders under that name), so two
+  measurements labelled "20230609 c0" can disagree without either being wrong. Always
+  name the run directory, the file and its md5. `tools/buildPositionCorpus.js` used to
+  pick the canonical frame by the first three path segments of the run directory, which
+  every run under `data/video_scan_test/_rerun/` shares — the winner was decided by
+  directory-walk order, i.e. by accident. It now uses the whole run path with the
+  directory's mtime as the "later run" signal.
 
 ### Running it
 
@@ -659,10 +732,17 @@ EasyOCR batches per frame; the per-image timeout is derived from
 `--table-frame-budget-ms` (default 900000) rather than fixed, so the cost scales with
 the number of candidates rather than multiplying it.
 
+**Wall clock**: on an idle machine a frame costs **162–257 s** — the right order of
+magnitude, not a floor; EasyOCR swings by 2× on the same file between runs. The
+profile's 3 prefilter frames make a video **8–13 minutes**. That does not fit the
+300 s per-video kill timer in § 'Scan orchestration safety', so a table-mode run needs
+a timer of its own or fewer frames.
+
 ### Diagnostics
 
 `position_table` in the probe log: `discriminator` (`title` / `bottom_most` /
 `sole_candidate`), `title_text`, `header_text`, `rows`, `column`, `variants`,
-`candidate_scores`, `decoded`, and `verified` (whether it was published).
+`candidate_scores`, `decoded`, and `verified` (whether the table was **positively
+identified** — publication also needs a non-empty decode, see `publishTableHoldings`).
 
 Full derivation and measurements: `docs/qmg-positions-layout-findings.md`.
