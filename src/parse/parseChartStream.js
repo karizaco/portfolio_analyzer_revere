@@ -201,8 +201,10 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null, opti
     return {
       inListTickers: new Set(),
       inColumnTickers: new Set(),
+      rowNumberTickers: new Set(),
       columnIsPriceAligned: false,
       columnTokenCount: 0,
+      columnLeftCount: 0,
       dominantColumnX: null,
       dominantLeft: null,
       columnWidth: 0
@@ -357,6 +359,7 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null, opti
         inColumnTickers: new Set(),
         columnIsPriceAligned: false,
         columnTokenCount: 0,
+        columnLeftCount: 0,
         dominantColumnX: null,
         dominantLeft: null,
         columnWidth: 0
@@ -398,11 +401,53 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null, opti
       inColumnTickers.add(tw.text);
     }
   }
+  // How many ticker-shaped words share the dominant left edge. This is the
+  // confidence signal for the column: the position list is a tight
+  // left-aligned column, so a dozen words at the same left edge is strong
+  // evidence that the column was located correctly. `inListTickers` is NOT
+  // a good confidence signal — it only counts rows where a price was read to
+  // the right of the ticker, and EasyOCR garbles most of those numbers.
+  let columnLeftCount = 0;
+  if (dominantLeft != null) {
+    for (const tw of allTickerWords) {
+      if (Math.abs(tw.left - dominantLeft) <= leftTolerance) columnLeftCount++;
+    }
+  }
   for (const tw of tickerWords) {
     if (Math.abs(tw.center - dominantX) <= columnWidth / 2) {
       if (lineRightHasPrice.get(tw.line)) {
         inListTickers.add(tw.text);
       }
+    }
+  }
+
+  // Which band words sit on a ROW that carries data?
+  //
+  // The panel's column-header row ("Sym | Change | Vol | Buzz") sits at
+  // almost exactly the same x as the ticker column — measured: "Sym" at
+  // left=397 while the position rows run 402-404. So a left-edge band
+  // test alone admits the header word, and the edit-distance correction
+  // then maps SYM onto a real ticker (SPYM, distance 1), which is how a
+  // false positive gets a plausible-looking name.
+  //
+  // A real position row, by contrast, always has numbers to the right of
+  // the ticker (shares, then price). The header row has none — the "9" in
+  // "Sym 9 Change Vol Buzz" is a single digit, and the panel's price
+  // matcher deliberately ignores bare integers. Requiring a 2+ digit
+  // number to the right separates the header row from the data rows
+  // without depending on the header being read correctly.
+  const rowNumberTickers = new Set();
+  if (dominantLeft != null) {
+    const minDigits = Number.isFinite(options.numberMinDigits) ? options.numberMinDigits : 2;
+    const numberPattern = new RegExp('^\\d{' + minDigits + '}');
+    for (const tw of allTickerWords) {
+      if (Math.abs(tw.left - dominantLeft) > leftTolerance) continue;
+      const hasNumber = words.some((w) => {
+        if (w.line !== tw.line) return false;
+        if (!(w.left > tw.left)) return false;
+        return numberPattern.test((w.text || '').trim());
+      });
+      if (hasNumber) rowNumberTickers.add(tw.text);
     }
   }
 
@@ -456,8 +501,10 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null, opti
     return {
       inListTickers: new Set(),
       inColumnTickers: new Set(),
+      rowNumberTickers: new Set(),
       columnIsPriceAligned: false,
       columnTokenCount: 0,
+      columnLeftCount: 0,
       dominantColumnX: null,
       dominantLeft: null,
       columnWidth: 0
@@ -470,12 +517,18 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null, opti
     inListTickers,
     // Diagnostic + gate inputs.
     inColumnTickers,
+    // Band words that sit on a row carrying a 2+ digit number to the right.
+    rowNumberTickers,
     columnIsPriceAligned,
     // How many DISTINCT rows were confirmed as position rows (a
     // ticker-shaped word in this band with a price to its right). This is
     // the confidence measure for the column: two or more such rows means
     // we know where the ticker column is.
     columnTokenCount: inListTickers.size,
+    // How many ticker-shaped words share the dominant LEFT edge. Unlike
+    // columnTokenCount this does not depend on EasyOCR having read the
+    // numbers to the right of the ticker, which it usually has not.
+    columnLeftCount,
     dominantLeft,
   };
 }
@@ -594,20 +647,25 @@ function parseChartStreamPositionList({ ocr } = {}) {
     dominantColumnX,
     columnWidth,
     inColumnTickers,
+    rowNumberTickers,
     columnIsPriceAligned,
     columnTokenCount,
+    columnLeftCount,
     dominantLeft,
   } = hasWordPositions
     ? identifyPositionListColumn(words, ocr._cropWidth || null, ocr._engine || null, {
       leftTolerance: ocr._columnGateTolerance,
+      numberMinDigits: ocr._columnTrustNumberMinDigits,
     })
     : {
       inListTickers: new Set(),
       dominantColumnX: null,
       columnWidth: 0,
       inColumnTickers: new Set(),
+      rowNumberTickers: new Set(),
       columnIsPriceAligned: false,
       columnTokenCount: 0,
+      columnLeftCount: 0,
       dominantLeft: null,
     };
 
@@ -650,6 +708,38 @@ function parseChartStreamPositionList({ ocr } = {}) {
     && columnTokenCount >= (Number.isFinite(ocr._columnGateMinTokens) ? ocr._columnGateMinTokens : 2)
     && dominantColumnX != null
     && dominantLeft != null;
+
+  // Trusted-column mode (opt-in via `ocr._columnTrust`).
+  //
+  // The gate above only fires when the column was found by PRICE ALIGNMENT,
+  // i.e. when EasyOCR happened to read a number to the right of the ticker.
+  // On the real QMG overlay it usually did not: on the measured 20211019
+  // frame only 2 of 13 position rows had a readable price. So `inListTickers`
+  // is nearly empty, the accept path's `else if (inListColumn)` branch is
+  // effectively dead, and every position that is neither in the seed
+  // lexicon nor next to a price-like token is rejected — even when its
+  // word box sits exactly in the ticker column.
+  //
+  // The spatial signal is much stronger than the price signal: the QMG
+  // ticker column is LEFT-ALIGNED, so all its rows share one left edge
+  // (measured 732-740px across 20 consecutive rows in a 1345px EasyOCR
+  // crop), while chart-area junk sits ~300px to the left. `columnLeftCount`
+  // counts the ticker-shaped words that share the detected left edge; a
+  // dozen of them is decisive evidence that the column was located
+  // correctly.
+  //
+  // When the column is trusted, a token that lands in it is accepted even
+  // if it is not in the lexicon and has no price nearby — preferring an
+  // edit-distance correction to a real ticker when one exists.
+  //
+  // `ocr._columnTrustMinLeft` tunes how many words must share the left
+  // edge before the column is trusted (default 4).
+  const columnTrustMinLeft = Number.isFinite(ocr._columnTrustMinLeft)
+    ? ocr._columnTrustMinLeft
+    : 4;
+  const columnTrustActive = ocr._columnTrust === true
+    && dominantLeft != null
+    && columnLeftCount >= columnTrustMinLeft;
 
   // Build per-ticker line + word lookups from raw OCR word positions.
   // - tickerLineMap: ticker → array of line indices (used by Filter G)
@@ -777,6 +867,10 @@ function parseChartStreamPositionList({ ocr } = {}) {
     // for diagnostics (column_filter field in output) but no longer
     // gates acceptance.
     const inListColumn = inListTickers.has(ticker);
+    // A token that lands in a confidently-detected ticker column. Unlike
+    // `inListColumn` (which needs a readable price to the right) this only
+    // needs the word box to sit in the left-aligned ticker column.
+    const inTrustedColumn = columnTrustActive && inColumnTickers.has(ticker);
     if (inLexicon || priceNearby) {
       // Filter G: panel-line reject gate. If panel boundaries were
       // detected, reject any ticker whose ONLY occurrences have lines
@@ -807,9 +901,45 @@ function parseChartStreamPositionList({ ocr } = {}) {
         continue;
       }
       accepted.push(ticker);
-    } else if (inListColumn) {
+    } else if (inListColumn || inTrustedColumn) {
       // In-column ticker that's NOT in the lexicon: try OCR character
       // correction via edit distance (INUG→JNUG, XX→X, FCX→FCX).
+      //
+      // A ticker in a TRUSTED column but not price-aligned is a different
+      // case: the word box proves it sits in the position-list column, so
+      // it IS a position. Preferring the edit-distance correction there
+      // replaces the true ticker with a near-miss (GUSH→GUSY, and the
+      // panel header SYM→SPYM), so the raw token is preferred instead
+      // when `ocr._columnTrustRaw` is set.
+      if (inTrustedColumn && !inListColumn) {
+        // The panel gate still applies: the "Personal WatchList" panel
+        // below the position list has the SAME left-aligned column, so a
+        // watchlist ticker is in the column band too. Filter G is what
+        // separates the two panels.
+        if (panelGateActive) {
+          const linesForTicker = tickerLineMap.get(ticker);
+          const inPanel = linesForTicker && linesForTicker.some((l) => lineIsInPanel(l));
+          if (!inPanel) {
+            rejected.push(ticker);
+            continue;
+          }
+        }
+        // The column-header row ("Sym | Change | Vol | Buzz") shares the
+        // ticker column's x. A real position row carries a 2+ digit number
+        // to the right of the ticker; the header row does not.
+        if (ocr._columnTrustNeedNumber === true && !rowNumberTickers.has(ticker)) {
+          rejected.push(ticker);
+          continue;
+        }
+        if (ocr._columnTrustRaw === true) {
+          if (!accepted.includes(ticker)) {
+            accepted.push(ticker);
+          } else {
+            rejected.push(ticker);
+          }
+          continue;
+        }
+      }
       const correction = findCloseTickerMatch(ticker, lexicon);
       if (correction) {
         if (!accepted.includes(correction)) {
@@ -818,6 +948,12 @@ function parseChartStreamPositionList({ ocr } = {}) {
         } else {
           rejected.push(ticker);
         }
+      } else if (inTrustedColumn) {
+        // No correction exists — the token is not a near-miss of any
+        // known ticker. In a TRUSTED column that is fine: the word box
+        // proves it sits in the position-list ticker column, so it is a
+        // position whose ticker is simply not in the seed lexicon.
+        accepted.push(ticker);
       } else {
         rejected.push(ticker);
       }
@@ -871,9 +1007,27 @@ function parseChartStreamPositionList({ ocr } = {}) {
       // this range are handled by the lexicon filter and clusterer.
       const yMin = yMedian - 8 * lineHeight;
       const yMax = yMedian + 8 * lineHeight;
+      // In trusted-column mode the accept path has already restricted the
+      // list to the ticker column, so the median-centred band is the wrong
+      // shape: a 14-row panel spans ~22 line heights, and a ±8-line band
+      // around the middle clips the first two and last three rows.
+      //
+      // Measured on 20220419 (crop 0.86,0.55,0.14,0.45): the panel rows run
+      // y=418 (BOIL) to y=1593 (KOLD) with a 52px line height, the median
+      // row sits at 961, and the ±8 band [545, 1377] rejected BOIL, JNUG,
+      // REGN, VERU and KOLD — five of the fourteen real positions.
+      //
+      // In trust mode the band is derived from the column's own vertical
+      // extent instead, padded by one line height on each side.
+      let yMinFinal = yMin;
+      let yMaxFinal = yMax;
+      if (columnTrustActive && acceptedBboxes.length >= 2) {
+        yMinFinal = Math.min(...acceptedBboxes.map((b) => b.yCenter)) - lineHeight;
+        yMaxFinal = Math.max(...acceptedBboxes.map((b) => b.yCenter)) + lineHeight;
+      }
       const withinBbox = new Set();
       for (const { ticker, yCenter } of acceptedBboxes) {
-        if (yCenter >= yMin && yCenter <= yMax) {
+        if (yCenter >= yMinFinal && yCenter <= yMaxFinal) {
           withinBbox.add(ticker);
         } else {
           rejected.push(ticker);
@@ -888,8 +1042,8 @@ function parseChartStreamPositionList({ ocr } = {}) {
       bboxFilterInfo = {
         y_median: yMedian,
         line_height: lineHeight,
-        y_min: yMin,
-        y_max: yMax,
+        y_min: yMinFinal,
+        y_max: yMaxFinal,
         rejected_count: acceptedBboxes.length - withinBbox.size
       };
     }
@@ -978,7 +1132,16 @@ function parseChartStreamPositionList({ ocr } = {}) {
       // Diagnostics for the optional accept-path column gate.
       column_is_price_aligned: columnIsPriceAligned,
       column_token_count: columnTokenCount,
-      column_gate_active: columnGateActive
+      // How many ticker-shaped words share the dominant left edge — the
+      // confidence signal for the column when EasyOCR has not read the
+      // prices to the right of the tickers.
+      column_left_count: columnLeftCount,
+      // The LEFT edge of the detected column. Every position-list ticker
+      // shares this x, so it is the anchor for the column-band test.
+      dominant_left: dominantLeft,
+      column_gate_active: columnGateActive,
+      // True when the accept path trusted the detected column.
+      column_trust_active: columnTrustActive
     } : null,
     confidence,
     ocr_executed: true, // OCR ran and produced candidates; they were all rejected
@@ -1192,6 +1355,13 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
   const minFrequency = Number.isFinite(options.minFrequency)
     ? options.minFrequency
     : 2;
+  // Keep clusters whose token is not in the seed lexicon, as long as the
+  // token is seen in at least this many distinct frames. The lexicon is a
+  // seed, not a census — see Strategy 1b below.
+  const keepUnknown = options.keepUnknown === true;
+  const keepUnknownMinFrames = Number.isFinite(options.keepUnknownMinFrames)
+    ? options.keepUnknownMinFrames
+    : 3;
 
   // Step 5: pick canonical per cluster.
   // - If any cluster member is in the seed lexicon, prefer that.
@@ -1217,9 +1387,41 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
     // Find canonical: prefer direct lexicon match, fall back to
     // edit-distance lookup against the seed lexicon.
     let canonical = null;
+    // Filter A: compute distinct-frame count for the cluster (union of
+    // frame sets across all members). This catches single-frame OCR
+    // garbles (e.g. VIO→VLO cluster only spans the 1 frame where VIO
+    // appeared) and chart-area bleed (MARA in 1 frame gets filtered).
+    //
+    // Computed BEFORE canonical selection because the "keep unknown
+    // tokens" rule below is gated on the frame count.
+    const clusterFrames = new Set();
+    for (const m of members) {
+      const frames = tokenFrameIndices.get(m);
+      if (frames) {
+        for (const fi of frames) clusterFrames.add(fi);
+      }
+    }
     // Strategy 1: direct lexicon match
     for (const m of members) {
       if (lexicon.tickerSet.has(m)) { canonical = m; break; }
+    }
+    // Strategy 1b: keep the token as read.
+    //
+    // The seed lexicon is a seed, not a census — QMG holds positions in
+    // tickers that are not in it (GUSH, KOLD, AGQ, REGN, CWEB all appear in
+    // real position lists). The clusterer's lexicon requirement silently
+    // deleted them: on 20220419 the parser found BOIL, JNUG, NUGT, GUSH,
+    // KOLD, VERU in EVERY captured frame, and the clusterer returned none
+    // of GUSH, KOLD or VERU — GUSH and KOLD are not in the lexicon, and
+    // VERU was rewritten to the lexicon entry VERV (edit distance 1).
+    //
+    // When the per-frame parser has already confirmed the ticker column
+    // (the trusted-column mode), a token that survives in that many
+    // frames IS a position, whatever the lexicon says. So with
+    // `keepUnknown` the raw token becomes the canonical and the
+    // edit-distance rewrite is skipped.
+    if (!canonical && keepUnknown && clusterFrames.size >= keepUnknownMinFrames) {
+      canonical = members[0];
     }
     // Strategy 2: 4+ char member with >= 2 shared prefix chars
     if (!canonical) {
@@ -1250,17 +1452,6 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
     // if all other cluster signals pass. Applied after canonical selection so
     // we don't waste effort on blocklisted clusters, but before Filter A.
     if (TICKER_BLOCKLIST.has(canonical)) continue;
-    // Filter A: compute distinct-frame count for the cluster (union of
-    // frame sets across all members). This catches single-frame OCR
-    // garbles (e.g. VIO→VLO cluster only spans the 1 frame where VIO
-    // appeared) and chart-area bleed (MARA in 1 frame gets filtered).
-    const clusterFrames = new Set();
-    for (const m of members) {
-      const frames = tokenFrameIndices.get(m);
-      if (frames) {
-        for (const fi of frames) clusterFrames.add(fi);
-      }
-    }
     if (clusterFrames.size < minFrequency) continue;
     const totalFreq = members.reduce((s, m) => s + (frequency.get(m) || 0), 0);
     clusters.push({

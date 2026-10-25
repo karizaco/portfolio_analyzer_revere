@@ -62,6 +62,9 @@ const OUT = flag('--out', null);
 // Restore the logs from a sidecar produced by --out. This is the undo for
 // an in-place --write.
 const RESTORE = flag('--restore', null);
+// Reproduce the pre-2026-10-25 accept path (no trusted column, lexicon-only
+// cluster canonicals) instead of the current one.
+const LEGACY = argv.includes('--legacy');
 
 function collectLogFiles(dir, out) {
   let entries;
@@ -98,6 +101,7 @@ function cropWidthFor(log) {
 function ocrFromCandidate(candidate, log, cropWidth) {
   const words = Array.isArray(candidate.ocr_words) ? candidate.ocr_words : [];
   const text = candidate.ocr_text || '';
+  const engine = (log.ocr_engine_metadata && log.ocr_engine_metadata.ocr_engine) || null;
   if (!words.length) {
     // The pipeline still parsed this frame, through the legacy text-only
     // path. Reproduce that so the replay matches frame-for-frame.
@@ -112,13 +116,23 @@ function ocrFromCandidate(candidate, log, cropWidth) {
   const lines = [...linesByIndex.entries()]
     .sort((a, b) => a[0] - b[0])
     .map(([, texts]) => texts.join(' '));
-  return {
+  const ocr = {
     text: text || lines.join('\n'),
     lines,
     words,
     _cropWidth: cropWidth,
-    _engine: (log.ocr_engine_metadata && log.ocr_engine_metadata.ocr_engine) || null,
+    _engine: engine,
   };
+  // Mirror the production settings set in tools/scanVideoWithOcr.js for the
+  // EasyOCR chart-stream path. Tesseract runs keep the legacy accept path.
+  if (!LEGACY && engine === 'easyocr') {
+    ocr._columnTrust = true;
+    ocr._columnTrustMinLeft = 6;
+    ocr._columnTrustRaw = true;
+    ocr._columnTrustNeedNumber = true;
+    ocr._columnTrustNumberMinDigits = 3;
+  }
+  return ocr;
 }
 
 /**
@@ -173,6 +187,10 @@ function reparse(log) {
     maxDistance: 1,
     minTokenLength: 2,
     minFrequency: 2,
+    // Mirror tools/scanVideoWithOcr.js: keep a token that is not in the seed
+    // lexicon when it persists across frames.
+    keepUnknown: !LEGACY,
+    keepUnknownMinFrames: 3,
   });
   return {
     merged: clusterResult.merged_list || [],

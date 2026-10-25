@@ -616,6 +616,26 @@ async function runChartStreamOcr(framePath, phashRegionFraction, scale, ocrEngin
     // The EasyOCR output is scaled to `Math.round(w * 1920 * EASYOCR_SCALE)` pixels
     // wide. Use this as the canonical crop width for coordinate scaling.
     ocr._cropWidth = Math.round(w * 1920 * EASYOCR_SCALE);
+    // Trusted-column mode.
+    //
+    // The QMG position-list ticker column is LEFT-ALIGNED, so every row
+    // shares one x — a much stronger signal than "there is a price to the
+    // right of this token", which EasyOCR rarely reads correctly. With the
+    // column trusted, a token in it is a position even when it is neither
+    // in the seed lexicon nor next to a readable price; the raw token is
+    // kept (rather than rewritten to an edit-distance near-miss); and the
+    // row must carry a 3+ digit number to the right, which is what
+    // separates a position row from the panel's column-header row
+    // ("Sym | Change | Vol | Buzz" sits at the same x as the ticker column).
+    //
+    // Measured on the ground-truth corpus (tools/compareColumnGate.js):
+    // 583/898 recall (65%) with 269 false positives, against 476/898 (53%)
+    // with 158 false positives for the previous accept path.
+    ocr._columnTrust = true;
+    ocr._columnTrustMinLeft = 6;
+    ocr._columnTrustRaw = true;
+    ocr._columnTrustNeedNumber = true;
+    ocr._columnTrustNumberMinDigits = 3;
   } else {
     ocr = await ocrImage(framePath, {
       chartStream: true,
@@ -1409,7 +1429,21 @@ async function main() {
       // single-frame OCR garbles (VIO→VLO, NFU→NFLX, INA→TNA, BUCO→UCO)
       // and chart-area tickers that bleed in briefly. Override via
       // --cluster-min-frequency <n> (1 disables the filter).
-      { maxDistance: 1, minTokenLength: 2, minFrequency: options.clusterMinFrequency || 2 }
+      //
+      // `keepUnknown` lets a token that is NOT in the seed lexicon survive
+      // when it is seen in enough distinct frames. The seed lexicon is a
+      // seed, not a census: QMG holds GUSH, KOLD, AGQ, REGN and CWEB, and
+      // the lexicon requirement was deleting them (and rewriting VERU to
+      // the near-miss VERV). In snapshot mode the per-frame parser has
+      // already restricted the input to the ticker column, so a token
+      // that persists across frames is a position.
+      {
+        maxDistance: 1,
+        minTokenLength: 2,
+        minFrequency: options.clusterMinFrequency || 2,
+        keepUnknown: options.outputKind === 'snapshot',
+        keepUnknownMinFrames: 3,
+      }
     );
     // Override captures' tickers with clusterer's output ONLY for chart_stream
     // mode (QMG). For whiteboard mode (Revere), the structured GRO/TURBO
