@@ -48,6 +48,13 @@ const LIMIT = parseInt(flag('--limit', '0'), 10) || 0;
 // once, when its video finishes; rewriting one at the same moment would
 // lose the sweep's result).
 const EXCLUDE = flag('--exclude', null);
+// Only re-parse logs whose path contains one of these substrings.
+// Comma-separated. Use this to target a specific set of logs — for example
+// the handful a running sweep produced before a parser change landed.
+const INCLUDE = flag('--include', null);
+const INCLUDE_TOKENS = INCLUDE
+  ? INCLUDE.split(',').map((s) => s.trim()).filter(Boolean)
+  : null;
 // Write the re-derived results to this JSON file instead of rewriting the
 // logs in place. Non-destructive: the sidecar maps each log path to its
 // re-derived merged list, so applying it is a separate, reviewable step.
@@ -220,7 +227,9 @@ const uniqueFiles = files.filter((f) => {
   const key = path.resolve(f);
   if (seenPaths.has(key)) return false;
   seenPaths.add(key);
-  return !EXCLUDE || !key.includes(EXCLUDE);
+  if (EXCLUDE && key.includes(EXCLUDE)) return false;
+  if (INCLUDE_TOKENS && !INCLUDE_TOKENS.some((t) => key.includes(t))) return false;
+  return true;
 });
 const gt = loadGT();
 
