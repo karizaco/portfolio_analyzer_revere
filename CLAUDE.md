@@ -254,7 +254,7 @@ Rules:
 npm test        # node --test test/*.test.js
 ```
 
-251 tests, all passing (as of 2026-10-24).
+262 tests, all passing (as of 2026-10-26).
 
 ### Ground-truth benchmark fixtures — read before trusting a recall number
 
@@ -396,6 +396,12 @@ node tools/runWhiteboardWorker.js catalog --channel qullamaggie --source-url htt
 node tools/runWhiteboardWorker.js fill-dates --channel revere \
   --input data/catalog_flat/revere_needs_date.tsv --jobs 6
 
+# Second pass for the stragglers: same command, slower fallback clients.
+# Videos that already have a date are skipped, so only the failures are fetched.
+node tools/runWhiteboardWorker.js fill-dates --channel revere \
+  --input data/catalog_flat/revere_needs_date.tsv --jobs 6 \
+  --extractor-args "youtube:player_client=ios,android,web"
+
 # Download hires
 node tools/downloadHiresBatch.js --only-ids <ids> --height 720
 
@@ -427,11 +433,16 @@ That is not a mistake in the tool; it is what per-video metadata costs.
 
 Three facts that decide how you run it:
 
-- **The client set matters.** `youtube:player_client=ios,android,web` works.
+- **The client set matters more than anything else.** Measured on the same
+  videos, per video: `mweb` **4.2 s**, `mweb,ios,android,web` **8.5 s**,
+  `ios,android,web` **123 s** (on the 181-video Qullamaggie list). yt-dlp
+  queries **every** client in the list, so a longer list costs time on every
+  video — not only on the ones that fail. `mweb` alone is the fast path.
   `web` alone returns **nothing** (exit 1), and `web_safari,web` returns
   nothing either — `web_safari` is bot-blocked. The catalog's default set is
   `ios,android,web_safari,web`, so every video pays a full *failed*
   `web_safari` attempt before `web` succeeds. Dropping it is ~2× faster.
+  `mweb` needs a GVS PO Token for *streaming formats* only; metadata is fine.
 - **A partial run is kept.** The worker parses stdout before it looks at the
   exit code, so a run that fails on video 600 keeps videos 1..599. Killing
   the yt-dlp child mid-run is therefore safe and imports what it printed —
@@ -439,9 +450,22 @@ Three facts that decide how you run it:
 - **`fill-dates` does the rest.** The videos the catalog could not resolve are
   left in the DB with an empty `upload_date`. `fill-dates` takes a
   `video_id<TAB>title` TSV and resolves it directly, in `--jobs` parallel
-  slices, then upserts through the same `upsert_catalog_rows` (so `status` and
+  batches, then upserts through the same `upsert_catalog_rows` (so `status` and
   `download_path` are never touched). It reports `still_missing` so a second
   pass can pick up what failed.
+
+`fill-dates` has three properties that make a long run safe:
+
+- **It saves per batch, not at the end.** `--batch-size` (default 25) sets how
+  many videos one yt-dlp invocation covers, and each batch is written as it
+  lands. A run can be interrupted at any point and the work already done
+  survives — the same guarantee `catalog` has.
+- **It skips videos that already have a date.** So a second pass over the same
+  list only fetches the stragglers, which is what makes the slow fallback
+  client affordable: run the fast client over everything, then re-run with
+  `--extractor-args youtube:player_client=ios,android,web` for the failures.
+- **It prints progress per batch** to stderr, so a long run is not a black
+  box.
 
 Build the work list from the channel listing and the DB — the flat listing
 already carries every title, so only the date is missing:
