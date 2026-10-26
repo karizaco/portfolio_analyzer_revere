@@ -467,6 +467,30 @@ Three facts that decide how you run it:
 - **It prints progress per batch** to stderr, so a long run is not a black
   box.
 
+### The channel slug is NOT the YouTube handle — they do not round-trip
+
+`videos.channel` holds a **logical** name (`revere`, `qullamaggie`). The
+YouTube handle is a different string, and for Revere the two are **not
+interchangeable**:
+
+| logical channel | handle | |
+|---|---|---|
+| `revere` | `@revereasset` | the Revere channel |
+| `revere` | `@revere` | a **different, unrelated** channel |
+| `qullamaggie` | `@Qullamaggie` | (case does not matter here) |
+
+`@revere` and `@revereasset` return **completely disjoint video IDs** — a
+listing of one is not the other. So a `source_url` is never built by
+interpolating the channel name. `tools/whiteboard_worker.py` looks the handle
+up in `CHANNEL_SOURCE_URLS`, falls back to `--source-url`, and only for an
+unknown channel reads the URL back from the rows the DB already holds.
+
+This was a real bug: an early version of `fill-dates` built
+`https://www.youtube.com/@revere/videos` and stamped it on 1,582 Revere rows
+before the fix. The rows' dates and titles were right; only the channel
+pointer was wrong, which is exactly the kind of error that a glance at the
+data will not catch.
+
 Build the work list from the channel listing and the DB — the flat listing
 already carries every title, so only the date is missing:
 

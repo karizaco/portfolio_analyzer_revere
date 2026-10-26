@@ -1460,7 +1460,10 @@ def upsert_catalog_rows(connection: sqlite3.Connection, source_url: str, rows: l
                 updated_at
             ) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, ?)
             ON CONFLICT(video_id) DO UPDATE SET
-                source_url = excluded.source_url,
+                source_url = CASE
+                    WHEN excluded.source_url <> '' THEN excluded.source_url
+                    ELSE videos.source_url
+                END,
                 video_url = excluded.video_url,
                 title = excluded.title,
                 upload_date = CASE
@@ -1706,15 +1709,16 @@ def command_fill_dates(args: argparse.Namespace) -> int:
     if not effective_channel:
         print('Could not tell which channel this is: pass --channel.', file=sys.stderr)
         return 1
-    source_url = args.source_url or f'https://www.youtube.com/@{effective_channel}/videos'
-
     requested = len(wanted)
 
-    # A video that already has a date needs nothing. Skipping them makes a
-    # second pass cheap: run the fast client over the whole list, then run the
-    # slower fallbacks over the same list and only the stragglers are fetched.
     with connect_database(db_path) as connection:
         initialize_schema(connection)
+        source_url = resolve_channel_source_url(connection, effective_channel, args.source_url)
+
+        # A video that already has a date needs nothing. Skipping them makes a
+        # second pass cheap: run the fast client over the whole list, then run
+        # the slower fallbacks over the same list and only the stragglers are
+        # fetched.
         already_dated = {
             row['video_id'] for row in connection.execute(
                 "SELECT video_id FROM videos WHERE COALESCE(upload_date, '') <> ''"
@@ -1742,7 +1746,8 @@ def command_fill_dates(args: argparse.Namespace) -> int:
     with connect_database(db_path) as connection:
         initialize_schema(connection)
         set_setting(connection, 'channel', effective_channel)
-        set_setting(connection, 'source_url', source_url)
+        if source_url:
+            set_setting(connection, 'source_url', source_url)
 
         with ThreadPoolExecutor(max_workers=jobs) as pool:
             futures = {pool.submit(fetch_dates_for, batch, args): batch for batch in batches}
@@ -1799,6 +1804,38 @@ def infer_channel_from_url(source_url: str) -> str:
     if '@qullamaggie' in lowered or '/qullamaggie' in lowered:
         return 'qullamaggie'
     return ''
+
+
+# The logical channel name is NOT the YouTube handle, and the two do not
+# round-trip. 'revere' is listed at @revereasset -- @revere is a DIFFERENT,
+# unrelated channel, and the two return completely disjoint video IDs. So a
+# channel URL is never built by interpolating the slug; it is looked up here,
+# or taken from --source-url, or read back from the database.
+CHANNEL_SOURCE_URLS = {
+    'revere': 'https://www.youtube.com/@revereasset/videos',
+    'qullamaggie': 'https://www.youtube.com/@Qullamaggie/videos',
+}
+
+
+def resolve_channel_source_url(connection: sqlite3.Connection, channel: str, explicit: str = '') -> str:
+    """The channel URL a video's source_url should carry.
+
+    An explicit --source-url wins. Otherwise the known handle for the channel
+    is used, and only for a channel with no known handle is the URL read back
+    from the rows the database already holds. The channel slug is never
+    interpolated into a URL -- that produced a source_url pointing at an
+    unrelated channel.
+    """
+    if explicit:
+        return explicit
+    known = CHANNEL_SOURCE_URLS.get(channel)
+    if known:
+        return known
+    row = connection.execute(
+        "SELECT source_url FROM videos WHERE channel = ? AND COALESCE(source_url, '') <> '' LIMIT 1",
+        (channel,),
+    ).fetchone()
+    return row['source_url'] if row else ''
 
 
 def build_parser() -> argparse.ArgumentParser:
