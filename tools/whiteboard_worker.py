@@ -9,7 +9,7 @@ import sqlite3
 import subprocess
 import sys
 import tempfile
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 import shutil
@@ -1609,28 +1609,17 @@ def read_wanted_rows(path: str) -> list[tuple[str, str]]:
     return wanted
 
 
-def split_evenly(items: list, parts: int) -> list[list]:
-    """Split `items` into `parts` contiguous slices, as evenly as possible."""
-    if parts <= 1:
-        return [list(items)]
-    size = len(items) // parts
-    remainder = len(items) % parts
-    slices: list[list] = []
-    start = 0
-    for index in range(parts):
-        length = size + (1 if index < remainder else 0)
-        slices.append(items[start:start + length])
-        start += length
-    return [s for s in slices if s]
-
-
 def fetch_dates_for(entries: list[tuple[str, str]], args: argparse.Namespace) -> tuple[list[dict], list[str]]:
-    """Fetch upload_date for a slice of videos.
+    """Fetch upload_date for a batch of videos.
 
     One yt-dlp invocation over a batch file of `watch?v=` URLs. The client set
-    matters: `web` alone and `web_safari,web` both fail outright, and the
-    blocked `web_safari` in the default set costs a full failed attempt per
-    video. `ios,android,web` is the set that works.
+    matters more than anything else here. Measured on the same videos:
+    `mweb` alone took 4.2 s per video, `mweb,ios,android,web` took 8.5 s, and
+    `ios,android,web` took 123 s on the 181-video Qullamaggie list. yt-dlp
+    queries EVERY client in the list, so a longer list costs time on every
+    video, not only on the ones that fail. `web` alone and `web_safari,web`
+    both fail outright, and the blocked `web_safari` costs a full failed
+    attempt per video.
     """
     handle = tempfile.NamedTemporaryFile('w', suffix='.txt', delete=False, encoding='utf-8')
     try:
@@ -1689,10 +1678,16 @@ def command_fill_dates(args: argparse.Namespace) -> int:
     The catalog resolves every video of a channel one at a time, so a channel
     with thousands of videos takes hours and a per-video failure leaves a row
     with no metadata at all. This command takes the list of videos that are
-    still missing a date and resolves them directly, in parallel slices.
+    still missing a date and resolves them directly, in parallel batches.
 
-    Each video costs ~20 s of network wait and ~0.001 s of CPU, so the work
-    is free in CPU terms and parallelises cleanly.
+    Each video costs ~4 s of network wait and ~0.001 s of CPU, so the work is
+    free in CPU terms and parallelises cleanly.
+
+    The work is saved per BATCH, not at the end. A run over thousands of
+    videos is long enough to be worth interrupting -- the client set can be
+    tuned, the machine is busy, the user wants it stopped -- and a batch that
+    has been written is not lost when the run stops. `catalog` has the same
+    property: a partial run is kept.
     """
     pipeline_root = resolve_pipeline_root(args.pipeline_root)
     db_path = resolve_db_path(pipeline_root, args.db_path)
@@ -1713,29 +1708,68 @@ def command_fill_dates(args: argparse.Namespace) -> int:
         return 1
     source_url = args.source_url or f'https://www.youtube.com/@{effective_channel}/videos'
 
+    requested = len(wanted)
+
+    # A video that already has a date needs nothing. Skipping them makes a
+    # second pass cheap: run the fast client over the whole list, then run the
+    # slower fallbacks over the same list and only the stragglers are fetched.
+    with connect_database(db_path) as connection:
+        initialize_schema(connection)
+        already_dated = {
+            row['video_id'] for row in connection.execute(
+                "SELECT video_id FROM videos WHERE COALESCE(upload_date, '') <> ''"
+            )
+        }
+    skipped = [video_id for video_id, _ in wanted if video_id in already_dated]
+    wanted = [(video_id, title) for video_id, title in wanted if video_id not in already_dated]
+
     jobs = max(1, args.jobs)
-    slices = split_evenly(wanted, jobs)
+    batch_size = max(1, args.batch_size)
+    batches = [wanted[i:i + batch_size] for i in range(0, len(wanted), batch_size)]
     print(
         f'Filling {len(wanted)} videos for {effective_channel} '
-        f'in {len(slices)} parallel slices (client set: {args.extractor_args}).',
+        f'in {len(batches)} batches of up to {batch_size}, {jobs} at a time '
+        f'(client set: {args.extractor_args}); {len(skipped)} already have a date.',
         file=sys.stderr,
     )
 
     rows: list[dict] = []
     missing: list[str] = []
-    with ThreadPoolExecutor(max_workers=len(slices)) as pool:
-        for slice_rows, slice_missing in pool.map(
-            lambda chunk: fetch_dates_for(chunk, args), slices
-        ):
-            rows.extend(slice_rows)
-            missing.extend(slice_missing)
+    inserted = 0
+    updated = 0
+    attempted = 0
 
     with connect_database(db_path) as connection:
         initialize_schema(connection)
         set_setting(connection, 'channel', effective_channel)
         set_setting(connection, 'source_url', source_url)
-        set_setting(connection, 'last_catalog_import_at', utc_now_iso())
-        inserted, updated = upsert_catalog_rows(connection, source_url, rows, channel=effective_channel)
+
+        with ThreadPoolExecutor(max_workers=jobs) as pool:
+            futures = {pool.submit(fetch_dates_for, batch, args): batch for batch in batches}
+            for future in as_completed(futures):
+                batch = futures[future]
+                try:
+                    batch_rows, batch_missing = future.result()
+                except Exception as error:  # noqa: BLE001 - one bad batch must not sink the run
+                    batch_rows, batch_missing = [], [video_id for video_id, _ in batch]
+                    print(f'  batch failed: {error}', file=sys.stderr)
+
+                # Saved as each batch lands, so the work survives a stop.
+                batch_inserted, batch_updated = upsert_catalog_rows(
+                    connection, source_url, batch_rows, channel=effective_channel
+                )
+                inserted += batch_inserted
+                updated += batch_updated
+                rows.extend(batch_rows)
+                missing.extend(batch_missing)
+                attempted += len(batch)
+
+                set_setting(connection, 'last_catalog_import_at', utc_now_iso())
+                print(
+                    f'  {attempted}/{len(wanted)} attempted, {len(rows)} dated, '
+                    f'{len(missing)} still missing',
+                    file=sys.stderr,
+                )
 
     dated = sum(1 for row in rows if row['upload_date'])
     print(json.dumps({
@@ -1743,7 +1777,9 @@ def command_fill_dates(args: argparse.Namespace) -> int:
         'dated': dated,
         'inserted': inserted,
         'jobs': jobs,
-        'requested': len(wanted),
+        'requested': requested,
+        'attempted': attempted,
+        'skipped': len(skipped),
         'still_missing': missing,
         'still_missing_count': len(missing),
         'titles_only': len(rows) - dated,
@@ -1864,15 +1900,29 @@ def build_parser() -> argparse.ArgumentParser:
         '--jobs',
         type=int,
         default=4,
-        help='How many yt-dlp slices to run in parallel. Each video is ~20 s of '
+        help='How many yt-dlp batches to run in parallel. Each video is ~4 s of '
              'network wait and ~0.001 s of CPU, so this scales without costing CPU.',
     )
     fill_dates_parser.add_argument(
+        '--batch-size',
+        type=int,
+        default=25,
+        help='How many videos one yt-dlp invocation covers. Small batches save '
+             'their rows as they finish, so a long run shows progress and can '
+             'be interrupted without losing the work already done.',
+    )
+    fill_dates_parser.add_argument(
         '--extractor-args',
-        default='youtube:player_client=ios,android,web',
-        help='yt-dlp extractor args for the per-video fetch. The default set is '
-             'the one that works for metadata: `web` alone fails, and the '
-             'blocked `web_safari` costs a failed attempt per video.',
+        default='youtube:player_client=mweb',
+        help='yt-dlp extractor args for the per-video fetch. `mweb` alone is '
+             'the fast path: 4.2 s per video against 123 s for the '
+             'ios,android,web set, and 8.5 s for the two combined (measured '
+             'on the same 8 videos -- yt-dlp queries EVERY client in the '
+             'list, so extra clients cost time on every video, not only on '
+             'the ones that fail). Run the command a second time with '
+             '--extractor-args youtube:player_client=ios,android,web for the '
+             'videos `mweb` could not resolve; videos that already have a '
+             'date are skipped, so that pass only fetches the stragglers.',
     )
     fill_dates_parser.set_defaults(handler=command_fill_dates)
 

@@ -238,7 +238,11 @@ test('the catalog worker', { skip: PY ? false : 'no python launcher available' }
   await t.test('fill-dates resolves the dates the catalog could not', () => {
     // The gap-filler: the catalog resolves a channel one video at a time, so
     // the videos it fails on are left with no date at all. fill-dates takes
-    // that list and resolves it directly, in parallel slices.
+    // that list and resolves it directly, in parallel batches.
+    //
+    // Its own pipeline root: the catalog tests above share one, and their
+    // rows already have dates, which fill-dates skips.
+    const fillRoot = path.join(tmp, 'fill-pipeline');
     const fake = path.join(tmp, 'fake_yt_dlp_dates.py');
     fs.writeFileSync(fake, [
       'import sys',
@@ -263,24 +267,167 @@ test('the catalog worker', { skip: PY ? false : 'no python launcher available' }
     ].join('\n'), 'utf8');
 
     const r = runWorker([
-      '--pipeline-root', pipelineRoot, 'fill-dates',
+      '--pipeline-root', fillRoot, 'init',
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+
+    const run = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
       '--channel', 'test',
       '--input', input,
       '--jobs', '2',
       '--yt-dlp-bin', fake,
     ]);
-    assert.strictEqual(r.status, 0, r.stderr);
-    const json = readJson(r.stdout);
+    assert.strictEqual(run.status, 0, run.stderr);
+    const json = readJson(run.stdout);
     assert.strictEqual(json.requested, 4);
     assert.strictEqual(json.dated, 3, 'the three videos the fake resolved');
     assert.strictEqual(json.still_missing_count, 1);
     assert.deepStrictEqual(json.still_missing, ['skip888']);
 
-    const videos = readVideos(path.join(pipelineRoot, 'state.sqlite'));
+    const videos = readVideos(path.join(fillRoot, 'state.sqlite'));
     const byId = new Map(videos.map((v) => [v[0], v]));
     assert.strictEqual(byId.get('aaa111')[2], 'Filled aaa111', 'the title came from yt-dlp');
     assert.strictEqual(byId.get('aaa111')[1], '20240202', 'the date landed');
     assert.strictEqual(byId.get('aaa111')[3], 'test', 'the channel landed');
+  });
+
+  await t.test('fill-dates saves each batch as it lands', () => {
+    // A run over thousands of videos is long enough to be worth stopping, so
+    // the rows a finished batch produced must already be in the database --
+    // not sitting in memory until the very end.
+    //
+    // The fake dies on the SECOND batch. The first batch's rows must survive
+    // that, which they only do if the save happens per batch.
+    const fillRoot = path.join(tmp, 'fill-batches-pipeline');
+    const fake = path.join(tmp, 'fake_yt_dlp_batches.py');
+    fs.writeFileSync(fake, [
+      'import sys',
+      'args = sys.argv[1:]',
+      'path = args[args.index("--batch-file") + 1]',
+      'ids = [l.strip().split("v=")[-1] for l in open(path, encoding="utf-8") if l.strip()]',
+      'if ids[0].startswith("bbb"):',
+      '    sys.stderr.write("ERROR: [youtube] " + ids[0] + ": Unable to download API page\\n")',
+      '    sys.exit(1)',
+      'for vid in ids:',
+      '    sys.stdout.write(vid + "\\t20240303\\tFilled " + vid + "\\n")',
+      '',
+    ].join('\n'), 'utf8');
+
+    const input = path.join(tmp, 'wanted_batches.tsv');
+    fs.writeFileSync(input, [
+      'aaa111\tFirst',
+      'bbb222\tSecond',
+      '',
+    ].join('\n'), 'utf8');
+
+    assert.strictEqual(runWorker(['--pipeline-root', fillRoot, 'init']).status, 0);
+
+    const r = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'test',
+      '--input', input,
+      '--jobs', '1',
+      '--batch-size', '1',   // one video per batch, so the second batch is the failing one
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+    const json = readJson(r.stdout);
+    assert.strictEqual(json.dated, 1, 'the batch that worked was dated');
+    assert.deepStrictEqual(json.still_missing, ['bbb222'], 'the batch that failed is reported');
+
+    const videos = readVideos(path.join(fillRoot, 'state.sqlite'));
+    const byId = new Map(videos.map((v) => [v[0], v]));
+    assert.strictEqual(byId.get('aaa111')[1], '20240303',
+      'the first batch was saved even though the run went on to fail');
+  });
+
+  await t.test('fill-dates skips videos that already have a date', () => {
+    // The second pass. A video with a date needs nothing, so a re-run of the
+    // same list only fetches the stragglers -- which is what makes the
+    // slow fallback client affordable: it runs over the stragglers only.
+    const fillRoot = path.join(tmp, 'fill-skip-pipeline');
+    const fake = path.join(tmp, 'fake_yt_dlp_skip.py');
+    fs.writeFileSync(fake, [
+      'import sys',
+      'args = sys.argv[1:]',
+      'path = args[args.index("--batch-file") + 1]',
+      'for line in open(path, encoding="utf-8"):',
+      '    url = line.strip()',
+      '    if not url: continue',
+      '    vid = url.split("v=")[-1]',
+      '    sys.stdout.write(vid + "\\t20240505\\tFilled " + vid + "\\n")',
+      '',
+    ].join('\n'), 'utf8');
+
+    const input = path.join(tmp, 'wanted_skip.tsv');
+    fs.writeFileSync(input, [
+      'aaa111\tFirst',
+      'bbb222\tSecond',
+      '',
+    ].join('\n'), 'utf8');
+
+    assert.strictEqual(runWorker(['--pipeline-root', fillRoot, 'init']).status, 0);
+
+    const first = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'test',
+      '--input', input,
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(first.status, 0, first.stderr);
+    assert.strictEqual(readJson(first.stdout).dated, 2);
+
+    // Second pass: the fake would resolve both again, but neither is asked.
+    const second = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'test',
+      '--input', input,
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(second.status, 0, second.stderr);
+    const json = readJson(second.stdout);
+    assert.strictEqual(json.requested, 2, 'both were asked for');
+    assert.strictEqual(json.skipped, 2, 'both were skipped');
+    assert.strictEqual(json.attempted, 0, 'neither was fetched again');
+    assert.strictEqual(json.dated, 0, 'there was nothing left to date');
+  });
+
+  await t.test('fill-dates tries the fast client first', () => {
+    // `mweb` resolved the same videos far faster than `ios,android,web`
+    // (4.2 s vs 123 s per video, measured on the same list), and yt-dlp
+    // queries EVERY client in the list, so extra clients cost time on every
+    // video -- not only on the ones that fail.
+    const fillRoot = path.join(tmp, 'fill-client-pipeline');
+    const argvFile = path.join(tmp, 'argv.txt');
+    const fake = path.join(tmp, 'fake_yt_dlp_argv.py');
+    fs.writeFileSync(fake, [
+      'import sys, json',
+      'open(' + JSON.stringify(argvFile) + ', "w", encoding="utf-8").write(json.dumps(sys.argv))',
+      'sys.exit(0)',
+      '',
+    ].join('\n'), 'utf8');
+
+    assert.strictEqual(runWorker(['--pipeline-root', fillRoot, 'init']).status, 0);
+
+    const input = path.join(tmp, 'wanted_client.tsv');
+    fs.writeFileSync(input, 'aaa111\tFirst\n', 'utf8');
+
+    const r = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'test',
+      '--input', input,
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+    const argv = JSON.parse(fs.readFileSync(argvFile, 'utf8'));
+    const at = argv.indexOf('--extractor-args');
+    assert.ok(at >= 0, '--extractor-args reaches yt-dlp');
+    const clients = argv[at + 1].replace('youtube:player_client=', '').split(',');
+    assert.deepStrictEqual(clients, ['mweb'], 'the fast client is the default, and only it');
   });
 
   await t.test('--sleep-requests reaches yt-dlp', () => {
