@@ -392,6 +392,10 @@ Results: `data/qmg_alt_batch_results.json`.
 # Catalog (adds new videos from a channel)
 node tools/runWhiteboardWorker.js catalog --channel qullamaggie --source-url https://www.youtube.com/@Qullamaggie/videos
 
+# Fill in the upload_date of videos the catalog could not resolve
+node tools/runWhiteboardWorker.js fill-dates --channel revere \
+  --input data/catalog_flat/revere_needs_date.tsv --jobs 6
+
 # Download hires
 node tools/downloadHiresBatch.js --only-ids <ids> --height 720
 
@@ -406,6 +410,50 @@ node tools/aggregateScanResults.js data/video_scan_YYYYMMDD/
 node tools/prune_old_probes.js           # dry-run
 node tools/prune_old_probes.js --execute # actually delete
 ```
+
+### The catalog's real scale, and `fill-dates`
+
+The channel sizes, measured 2026-10-25 with a flat listing (one channel-page
+crawl, no per-video work, ~0 CPU):
+
+| channel | videos | notes |
+|---|---|---|
+| Qullamaggie | 588 | newest upload 2023-12-15 — the channel is dormant |
+| Revere | 1,811 | uploads daily |
+
+**A full catalog resolves one video at a time, at ~22 s each** (network wait,
+~0.001 s of CPU). Revere is therefore an ~11 h job, and Qullamaggie ~3.5 h.
+That is not a mistake in the tool; it is what per-video metadata costs.
+
+Three facts that decide how you run it:
+
+- **The client set matters.** `youtube:player_client=ios,android,web` works.
+  `web` alone returns **nothing** (exit 1), and `web_safari,web` returns
+  nothing either — `web_safari` is bot-blocked. The catalog's default set is
+  `ios,android,web_safari,web`, so every video pays a full *failed*
+  `web_safari` attempt before `web` succeeds. Dropping it is ~2× faster.
+- **A partial run is kept.** The worker parses stdout before it looks at the
+  exit code, so a run that fails on video 600 keeps videos 1..599. Killing
+  the yt-dlp child mid-run is therefore safe and imports what it printed —
+  pinned by a test.
+- **`fill-dates` does the rest.** The videos the catalog could not resolve are
+  left in the DB with an empty `upload_date`. `fill-dates` takes a
+  `video_id<TAB>title` TSV and resolves it directly, in `--jobs` parallel
+  slices, then upserts through the same `upsert_catalog_rows` (so `status` and
+  `download_path` are never touched). It reports `still_missing` so a second
+  pass can pick up what failed.
+
+Build the work list from the channel listing and the DB — the flat listing
+already carries every title, so only the date is missing:
+
+```bash
+py -3 -m yt_dlp --flat-playlist --skip-download --print "%(id)s\t%(title)s" \
+  "https://www.youtube.com/@revereasset/videos" > data/catalog_flat/revere.tsv
+```
+
+Note the flat listing writes a **literal** `\t`, not a tab, when the template
+is passed through a shell — split on `chr(92) + 't'` or pass the template
+through Python, where `\t` is a real tab.
 
 ---
 
