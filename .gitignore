@@ -49,3 +49,7 @@ data/qmg_corpus_crops/
 # data/video_scan_test/ tree. Once it has entries, commit it explicitly:
 #   git add -f data/qmg_position_corpus.json
 data/qmg_position_corpus.json
+# Channel listings and the work lists built from them, used to fill in the
+# upload_date of videos the catalog could not resolve. Both are regenerated
+# in a couple of minutes with one yt-dlp --flat-playlist call.
+data/catalog_flat/

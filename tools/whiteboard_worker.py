@@ -3,10 +3,13 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
 import re
 import sqlite3
 import subprocess
 import sys
+import tempfile
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
 import shutil
@@ -1587,6 +1590,168 @@ def command_catalog(args: argparse.Namespace) -> int:
     return 0
 
 
+def read_wanted_rows(path: str) -> list[tuple[str, str]]:
+    """Read a TSV of `video_id<TAB>title` — the videos whose metadata is missing."""
+    wanted: list[tuple[str, str]] = []
+    seen: set[str] = set()
+    with open(path, encoding='utf-8', errors='replace') as handle:
+        for raw_line in handle:
+            line = raw_line.rstrip('\n')
+            if not line.strip():
+                continue
+            parts = line.split('\t', 1)
+            video_id = parts[0].strip()
+            if not video_id or video_id in seen:
+                continue
+            seen.add(video_id)
+            title = parts[1].strip() if len(parts) > 1 else ''
+            wanted.append((video_id, title))
+    return wanted
+
+
+def split_evenly(items: list, parts: int) -> list[list]:
+    """Split `items` into `parts` contiguous slices, as evenly as possible."""
+    if parts <= 1:
+        return [list(items)]
+    size = len(items) // parts
+    remainder = len(items) % parts
+    slices: list[list] = []
+    start = 0
+    for index in range(parts):
+        length = size + (1 if index < remainder else 0)
+        slices.append(items[start:start + length])
+        start += length
+    return [s for s in slices if s]
+
+
+def fetch_dates_for(entries: list[tuple[str, str]], args: argparse.Namespace) -> tuple[list[dict], list[str]]:
+    """Fetch upload_date for a slice of videos.
+
+    One yt-dlp invocation over a batch file of `watch?v=` URLs. The client set
+    matters: `web` alone and `web_safari,web` both fail outright, and the
+    blocked `web_safari` in the default set costs a full failed attempt per
+    video. `ios,android,web` is the set that works.
+    """
+    handle = tempfile.NamedTemporaryFile('w', suffix='.txt', delete=False, encoding='utf-8')
+    try:
+        for video_id, _title in entries:
+            handle.write(f'https://www.youtube.com/watch?v={video_id}\n')
+        handle.close()
+
+        command = build_yt_dlp_prefix(args.yt_dlp_bin) + [
+            '--batch-file', handle.name,
+            '--skip-download',
+            '--ignore-errors',
+            '--js-runtimes', 'node',
+            '--extractor-args', args.extractor_args,
+            '--print', '%(id)s\t%(upload_date)s\t%(title)s',
+        ]
+
+        # yt-dlp's stdout is UTF-8, but on Windows Python encodes it with the
+        # console codepage, which mangles any title outside ASCII. Pin the
+        # child's encoding and decode the parent side the same way.
+        env = dict(os.environ)
+        env['PYTHONIOENCODING'] = 'utf-8'
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            encoding='utf-8',
+            errors='replace',
+            check=False,
+            env=env,
+        )
+    finally:
+        try:
+            os.unlink(handle.name)
+        except OSError:
+            pass
+
+    titles = {video_id: title for video_id, title in entries}
+    rows: list[dict] = []
+    resolved: set[str] = set()
+    for raw_line in result.stdout.splitlines():
+        parsed = parse_catalog_line(raw_line)
+        if not parsed:
+            continue
+        resolved.add(parsed['video_id'])
+        if not parsed['title']:
+            parsed['title'] = titles.get(parsed['video_id'], '')
+        rows.append(parsed)
+
+    missing = [video_id for video_id, _ in entries if video_id not in resolved]
+    return rows, missing
+
+
+def command_fill_dates(args: argparse.Namespace) -> int:
+    """Fill in the upload_date of videos the catalog listed but could not resolve.
+
+    The catalog resolves every video of a channel one at a time, so a channel
+    with thousands of videos takes hours and a per-video failure leaves a row
+    with no metadata at all. This command takes the list of videos that are
+    still missing a date and resolves them directly, in parallel slices.
+
+    Each video costs ~20 s of network wait and ~0.001 s of CPU, so the work
+    is free in CPU terms and parallelises cleanly.
+    """
+    pipeline_root = resolve_pipeline_root(args.pipeline_root)
+    db_path = resolve_db_path(pipeline_root, args.db_path)
+    paths = ensure_layout(pipeline_root)
+
+    if not db_path.exists():
+        print('Worker state is missing. Run `npm run video:init` first.', file=sys.stderr)
+        return 1
+
+    wanted = read_wanted_rows(args.input)
+    if not wanted:
+        print('Nothing to fill: the input list is empty.', file=sys.stderr)
+        return 1
+
+    effective_channel = args.channel or infer_channel_from_url(args.source_url or '')
+    if not effective_channel:
+        print('Could not tell which channel this is: pass --channel.', file=sys.stderr)
+        return 1
+    source_url = args.source_url or f'https://www.youtube.com/@{effective_channel}/videos'
+
+    jobs = max(1, args.jobs)
+    slices = split_evenly(wanted, jobs)
+    print(
+        f'Filling {len(wanted)} videos for {effective_channel} '
+        f'in {len(slices)} parallel slices (client set: {args.extractor_args}).',
+        file=sys.stderr,
+    )
+
+    rows: list[dict] = []
+    missing: list[str] = []
+    with ThreadPoolExecutor(max_workers=len(slices)) as pool:
+        for slice_rows, slice_missing in pool.map(
+            lambda chunk: fetch_dates_for(chunk, args), slices
+        ):
+            rows.extend(slice_rows)
+            missing.extend(slice_missing)
+
+    with connect_database(db_path) as connection:
+        initialize_schema(connection)
+        set_setting(connection, 'channel', effective_channel)
+        set_setting(connection, 'source_url', source_url)
+        set_setting(connection, 'last_catalog_import_at', utc_now_iso())
+        inserted, updated = upsert_catalog_rows(connection, source_url, rows, channel=effective_channel)
+
+    dated = sum(1 for row in rows if row['upload_date'])
+    print(json.dumps({
+        'channel': effective_channel,
+        'dated': dated,
+        'inserted': inserted,
+        'jobs': jobs,
+        'requested': len(wanted),
+        'still_missing': missing,
+        'still_missing_count': len(missing),
+        'titles_only': len(rows) - dated,
+        'updated': updated,
+    }, indent=2))
+    return 0
+
+
 def infer_channel_from_url(source_url: str) -> str:
     """Best-effort channel inference from a YouTube source URL. Returns '' if
     no rule matches so the caller can apply its own default."""
@@ -1674,6 +1839,42 @@ def build_parser() -> argparse.ArgumentParser:
              'machine at the same time.',
     )
     catalog_parser.set_defaults(handler=command_catalog)
+
+    fill_dates_parser = subparsers.add_parser(
+        'fill-dates',
+        help='Resolve the upload_date of a list of videos that the catalog could not.',
+    )
+    fill_dates_parser.add_argument(
+        '--input',
+        required=True,
+        help='TSV of video_id<TAB>title — the videos whose metadata is still missing.',
+    )
+    fill_dates_parser.add_argument(
+        '--channel',
+        default='',
+        help='Logical channel name written to videos.channel.',
+    )
+    fill_dates_parser.add_argument(
+        '--source-url',
+        default='',
+        help='Source URL recorded on the rows. Defaults to the channel URL.',
+    )
+    fill_dates_parser.add_argument('--yt-dlp-bin', default='yt-dlp', help='Path to the yt-dlp executable.')
+    fill_dates_parser.add_argument(
+        '--jobs',
+        type=int,
+        default=4,
+        help='How many yt-dlp slices to run in parallel. Each video is ~20 s of '
+             'network wait and ~0.001 s of CPU, so this scales without costing CPU.',
+    )
+    fill_dates_parser.add_argument(
+        '--extractor-args',
+        default='youtube:player_client=ios,android,web',
+        help='yt-dlp extractor args for the per-video fetch. The default set is '
+             'the one that works for metadata: `web` alone fails, and the '
+             'blocked `web_safari` costs a failed attempt per video.',
+    )
+    fill_dates_parser.set_defaults(handler=command_fill_dates)
 
     import_local_parser = subparsers.add_parser('import-local', help='Register local sample videos for direct scanning.')
     import_local_parser.add_argument('--video-dir', required=True, help='Directory containing readable local video files.')

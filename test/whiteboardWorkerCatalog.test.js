@@ -17,7 +17,7 @@ const assert = require('node:assert');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { spawnSync } = require('node:child_process');
+const { spawnSync, spawn } = require('node:child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const WORKER = path.join(ROOT, 'tools', 'whiteboard_worker.py');
@@ -68,6 +68,19 @@ function readJson(stdout) {
   } catch {
     return null;
   }
+}
+
+/** Wait for the fake yt-dlp to record its own pid, then return it. */
+async function waitForPid(pidFile, timeoutMs = 30000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (fs.existsSync(pidFile)) {
+      const pid = parseInt(fs.readFileSync(pidFile, 'utf8').trim(), 10);
+      if (Number.isFinite(pid) && pid > 0) return pid;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  throw new Error('the fake yt-dlp never reported its pid');
 }
 
 function readVideos(dbPath) {
@@ -171,6 +184,103 @@ test('the catalog worker', { skip: PY ? false : 'no python launcher available' }
 
     const videos = readVideos(path.join(pipelineRoot, 'state.sqlite'));
     assert.strictEqual(videos.length, 4, 'the four good rows from earlier runs are still there');
+  });
+
+  await t.test('a killed yt-dlp still yields the rows it printed', async () => {
+    // The harvest path. A long catalog run is worth interrupting — the
+    // client set can be tuned, the machine is busy, the user wants it
+    // stopped — and the rows yt-dlp already printed are complete records.
+    // Killing the yt-dlp child must therefore import them, not discard
+    // them the way a non-zero exit used to.
+    const pidFile = path.join(tmp, 'fake_pid.txt');
+    const file = path.join(tmp, 'fake_yt_dlp_hang.py');
+    fs.writeFileSync(file, [
+      'import os, sys, time',
+      `open(${JSON.stringify(pidFile)}, 'w').write(str(os.getpid()))`,
+      'sys.stdout.write("ggg777\\t20240107\\tSeventh video\\n")',
+      'sys.stdout.write("hhh888\\t20240108\\tEighth video\\n")',
+      'sys.stdout.flush()',
+      'time.sleep(300)',
+      '',
+    ].join('\n'), 'utf8');
+
+    const worker = spawn(PY.cmd, [...PY.args, WORKER,
+      '--pipeline-root', pipelineRoot, 'catalog',
+      '--source-url', 'https://www.youtube.com/@test/videos',
+      '--channel', 'test',
+      '--yt-dlp-bin', file,
+    ], { cwd: ROOT, encoding: 'utf8' });
+
+    let stdout = '';
+    let stderr = '';
+    worker.stdout.on('data', (d) => { stdout += d; });
+    worker.stderr.on('data', (d) => { stderr += d; });
+
+    // Wait for the fake to say it is running, then kill THAT process — the
+    // yt-dlp child, not the worker, which has to survive to do the import.
+    const grandchildPid = await waitForPid(pidFile);
+    spawnSync('taskkill', ['/PID', String(grandchildPid), '/F'], { encoding: 'utf8' });
+
+    const code = await new Promise((resolve) => worker.on('exit', resolve));
+
+    assert.strictEqual(code, 0, 'the worker finished the import');
+    const json = readJson(stdout);
+    assert.strictEqual(json.cataloged_rows, 2, 'the rows yt-dlp printed before it was killed');
+    assert.strictEqual(json.status, 'partial');
+    assert.match(stderr, /importing them/i);
+
+    const videos = readVideos(path.join(pipelineRoot, 'state.sqlite'));
+    const ids = videos.map((v) => v[0]);
+    assert.ok(ids.includes('ggg777'), 'the rows printed before the kill are imported');
+    assert.ok(ids.includes('hhh888'), 'the rows printed before the kill are imported');
+  });
+
+  await t.test('fill-dates resolves the dates the catalog could not', () => {
+    // The gap-filler: the catalog resolves a channel one video at a time, so
+    // the videos it fails on are left with no date at all. fill-dates takes
+    // that list and resolves it directly, in parallel slices.
+    const fake = path.join(tmp, 'fake_yt_dlp_dates.py');
+    fs.writeFileSync(fake, [
+      'import sys',
+      'args = sys.argv[1:]',
+      'path = args[args.index("--batch-file") + 1]',
+      'for line in open(path, encoding="utf-8"):',
+      '    url = line.strip()',
+      '    if not url: continue',
+      '    vid = url.split("v=")[-1]',
+      '    if vid == "skip888": continue',   // this one fails, like a blocked video
+      '    sys.stdout.write(vid + "\\t20240202\\tFilled " + vid + "\\n")',
+      '',
+    ].join('\n'), 'utf8');
+
+    const input = path.join(tmp, 'wanted.tsv');
+    fs.writeFileSync(input, [
+      'aaa111\tFirst wanted',
+      'bbb222\tSecond wanted',
+      'skip888\tWill fail',
+      'ccc333\tThird wanted',
+      '',
+    ].join('\n'), 'utf8');
+
+    const r = runWorker([
+      '--pipeline-root', pipelineRoot, 'fill-dates',
+      '--channel', 'test',
+      '--input', input,
+      '--jobs', '2',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+    const json = readJson(r.stdout);
+    assert.strictEqual(json.requested, 4);
+    assert.strictEqual(json.dated, 3, 'the three videos the fake resolved');
+    assert.strictEqual(json.still_missing_count, 1);
+    assert.deepStrictEqual(json.still_missing, ['skip888']);
+
+    const videos = readVideos(path.join(pipelineRoot, 'state.sqlite'));
+    const byId = new Map(videos.map((v) => [v[0], v]));
+    assert.strictEqual(byId.get('aaa111')[2], 'Filled aaa111', 'the title came from yt-dlp');
+    assert.strictEqual(byId.get('aaa111')[1], '20240202', 'the date landed');
+    assert.strictEqual(byId.get('aaa111')[3], 'test', 'the channel landed');
   });
 
   await t.test('--sleep-requests reaches yt-dlp', () => {
