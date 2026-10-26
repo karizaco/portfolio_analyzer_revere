@@ -91,7 +91,7 @@ function readVideos(dbPath) {
     fs.writeFileSync(script, [
       'import sqlite3, json, sys',
       'c = sqlite3.connect(sys.argv[1])',
-      'rows = c.execute("select video_id, upload_date, title, channel from videos order by video_id").fetchall()',
+      'rows = c.execute("select video_id, upload_date, title, channel, source_url from videos order by video_id").fetchall()',
       'print(json.dumps(rows))',
       '',
     ].join('\n'), 'utf8');
@@ -393,6 +393,99 @@ test('the catalog worker', { skip: PY ? false : 'no python launcher available' }
     assert.strictEqual(json.skipped, 2, 'both were skipped');
     assert.strictEqual(json.attempted, 0, 'neither was fetched again');
     assert.strictEqual(json.dated, 0, 'there was nothing left to date');
+  });
+
+  await t.test('fill-dates never builds a channel URL from the channel name', () => {
+    // The channel slug is NOT the YouTube handle and the two do not
+    // round-trip: 'revere' is listed at @revereasset, and @revere is a
+    // DIFFERENT channel that returns completely disjoint video IDs. A
+    // source_url built by interpolating the slug therefore points every
+    // row at the wrong channel.
+    const fillRoot = path.join(tmp, 'fill-url-pipeline');
+    const fake = path.join(tmp, 'fake_yt_dlp_url.py');
+    fs.writeFileSync(fake, [
+      'import sys',
+      'args = sys.argv[1:]',
+      'path = args[args.index("--batch-file") + 1]',
+      'for line in open(path, encoding="utf-8"):',
+      '    url = line.strip()',
+      '    if not url: continue',
+      '    vid = url.split("v=")[-1]',
+      '    sys.stdout.write(vid + "\\t20240606\\tFilled " + vid + "\\n")',
+      '',
+    ].join('\n'), 'utf8');
+
+    const input = path.join(tmp, 'wanted_url.tsv');
+    fs.writeFileSync(input, 'aaa111\tFirst\n', 'utf8');
+
+    assert.strictEqual(runWorker(['--pipeline-root', fillRoot, 'init']).status, 0);
+
+    const r = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'revere',
+      '--input', input,
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+
+    const videos = readVideos(path.join(fillRoot, 'state.sqlite'));
+    const row = videos.find((v) => v[0] === 'aaa111');
+    assert.ok(row, 'the video was written');
+    assert.strictEqual(row[4], 'https://www.youtube.com/@revereasset/videos',
+      'the row carries the channel\'s real URL, not one built from the slug');
+    assert.ok(!String(row[4]).includes('@revere/videos'),
+      'the unrelated @revere channel is never used');
+  });
+
+  await t.test('fill-dates keeps the source_url a row already has', () => {
+    // An empty source_url must not blank the one a row already carries --
+    // the upsert is non-destructive for source_url the same way it is for
+    // status and download_path.
+    const fillRoot = path.join(tmp, 'fill-keep-url-pipeline');
+    const fake = path.join(tmp, 'fake_yt_dlp_keep.py');
+    fs.writeFileSync(fake, [
+      'import sys',
+      'args = sys.argv[1:]',
+      'path = args[args.index("--batch-file") + 1]',
+      'for line in open(path, encoding="utf-8"):',
+      '    url = line.strip()',
+      '    if not url: continue',
+      '    vid = url.split("v=")[-1]',
+      '    sys.stdout.write(vid + "\\t20240707\\tFilled " + vid + "\\n")',
+      '',
+    ].join('\n'), 'utf8');
+
+    const input = path.join(tmp, 'wanted_keep.tsv');
+    fs.writeFileSync(input, 'aaa111\tFirst\n', 'utf8');
+
+    assert.strictEqual(runWorker(['--pipeline-root', fillRoot, 'init']).status, 0);
+
+    // A row that already knows where it came from.
+    const seed = path.join(tmp, 'seed_keep.py');
+    fs.writeFileSync(seed, [
+      'import sqlite3, sys',
+      'c = sqlite3.connect(sys.argv[1])',
+      "c.execute(\"insert into videos (video_id, source_url, video_url, title, upload_date, channel, status, created_at, updated_at) values ('aaa111', 'https://www.youtube.com/@somewhereelse/videos', 'https://www.youtube.com/watch?v=aaa111', 'Old', '', 'other', 'pending', '2024-01-01', '2024-01-01')\")",
+      'c.commit()',
+      '',
+    ].join('\n'), 'utf8');
+    const seeded = spawnSync(PY.cmd, [...PY.args, seed, path.join(fillRoot, 'state.sqlite')], { encoding: 'utf8' });
+    assert.strictEqual(seeded.status, 0, seeded.stderr);
+
+    const r = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'not-a-known-channel',
+      '--input', input,
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+
+    const videos = readVideos(path.join(fillRoot, 'state.sqlite'));
+    const row = videos.find((v) => v[0] === 'aaa111');
+    assert.strictEqual(row[4], 'https://www.youtube.com/@somewhereelse/videos',
+      'the source_url the row already had was not blanked');
   });
 
   await t.test('fill-dates tries the fast client first', () => {
