@@ -254,7 +254,7 @@ Rules:
 npm test        # node --test test/*.test.js
 ```
 
-262 tests, all passing (as of 2026-10-26).
+269 tests, all passing (as of 2026-10-26).
 
 ### Ground-truth benchmark fixtures — read before trusting a recall number
 
@@ -380,7 +380,8 @@ Results: `data/qmg_alt_batch_results.json`.
 - `src/normalize/repairHoldings.js` — Revere-only position repair
 
 ### Data
-- `data/video_pipeline/state.sqlite` — canonical SQLite database
+
+- `data/video_pipeline/state.sqlite` — canonical SQLite database, **tracked in git** (the catalog)
 - `data/db/schema.sql` — schema source of truth
 - `config/ticker_lexicon_seed.csv` — ticker allowlist (Revere + Qullamaggie)
 
@@ -392,15 +393,19 @@ Results: `data/qmg_alt_batch_results.json`.
 # Catalog (adds new videos from a channel)
 node tools/runWhiteboardWorker.js catalog --channel qullamaggie --source-url https://www.youtube.com/@Qullamaggie/videos
 
-# Fill in the upload_date of videos the catalog could not resolve
-node tools/runWhiteboardWorker.js fill-dates --channel revere \
-  --input data/catalog_flat/revere_needs_date.tsv --jobs 6
+# Fill in the upload_date of videos the catalog could not resolve.
+# --build-listing fetches the channel listing first, so this needs nothing but
+# the channel and the database -- it runs on a fresh clone.
+node tools/runWhiteboardWorker.js fill-dates --channel revere --build-listing --jobs 6
 
 # Second pass for the stragglers: same command, slower fallback clients.
 # Videos that already have a date are skipped, so only the failures are fetched.
-node tools/runWhiteboardWorker.js fill-dates --channel revere \
-  --input data/catalog_flat/revere_needs_date.tsv --jobs 6 \
+node tools/runWhiteboardWorker.js fill-dates --channel revere --build-listing --jobs 6 \
   --extractor-args "youtube:player_client=ios,android,web"
+
+# Work list from an existing listing instead of fetching one
+node tools/runWhiteboardWorker.js fill-dates --channel qullamaggie \
+  --from-listing data/catalog_flat/qullamaggie.tsv --jobs 6
 
 # Download hires
 node tools/downloadHiresBatch.js --only-ids <ids> --height 720
@@ -448,13 +453,12 @@ Three facts that decide how you run it:
   the yt-dlp child mid-run is therefore safe and imports what it printed —
   pinned by a test.
 - **`fill-dates` does the rest.** The videos the catalog could not resolve are
-  left in the DB with an empty `upload_date`. `fill-dates` takes a
-  `video_id<TAB>title` TSV and resolves it directly, in `--jobs` parallel
-  batches, then upserts through the same `upsert_catalog_rows` (so `status` and
-  `download_path` are never touched). It reports `still_missing` so a second
-  pass can pick up what failed.
+  left in the DB with an empty `upload_date`. `fill-dates` resolves them
+  directly, in `--jobs` parallel batches, then upserts through the same
+  `upsert_catalog_rows` (so `status` and `download_path` are never touched).
+  It reports `still_missing` so a second pass can pick up what failed.
 
-`fill-dates` has three properties that make a long run safe:
+`fill-dates` has four properties that make a long run safe:
 
 - **It saves per batch, not at the end.** `--batch-size` (default 25) sets how
   many videos one yt-dlp invocation covers, and each batch is written as it
@@ -466,6 +470,48 @@ Three facts that decide how you run it:
   `--extractor-args youtube:player_client=ios,android,web` for the failures.
 - **It prints progress per batch** to stderr, so a long run is not a black
   box.
+- **It records itself in `catalog_runs`.** The campaign that built the catalog
+  left no run row, so the audit table described a run that was not the one
+  that did the work.
+
+### `fill-dates` builds its own work list
+
+The work list used to be a file that only existed on the machine that made it
+— the script that built it lived in the temp directory, not in the repository
+— so `fill-dates --input` was a dead end for anyone else. It is now derived
+from the two inputs that are actually reproducible:
+
+```bash
+# Fetch the channel listing, diff it against the DB, resolve what is missing.
+# Needs nothing but the channel and the database, so it runs on a fresh clone.
+node tools/runWhiteboardWorker.js fill-dates --channel revere --build-listing
+
+# Or use a listing you already have.
+node tools/runWhiteboardWorker.js fill-dates --channel revere \
+  --from-listing data/catalog_flat/revere.tsv
+```
+
+`--input` still works and takes precedence when given.
+
+Two details the reader handles that bit the old path:
+
+- **The separator may be a literal `\t`, not a tab.** The listing in the
+  snippet below is produced through a shell, and the shell hands yt-dlp the
+  two characters backslash-t, which yt-dlp prints verbatim. Splitting on a
+  real tab yields one field per line, so the whole line — id *and* title —
+  becomes the `video_id`. The separator is detected once per file, and a
+  literal-`\t` listing is read correctly.
+- **The bytes may not be UTF-8.** yt-dlp's stdout passes through the console
+  codepage on Windows, so a title with an em-dash lands as cp1252. Decoding it
+  as UTF-8 mangles every such title in the file. The reader decodes as UTF-8
+  first and falls back to cp1252.
+
+A video whose date could not be resolved is still a video, and its title is
+known from the listing, so **`fill-dates` stores that title** rather than
+throwing it away. An age-restricted upload is the case that matters: nothing
+else can ever resolve it, so if the title is not stored it exists only in a
+scratch file. An existing title is never overwritten — the listing is a lossy
+copy of the titles (the console codepage drops emoji).
 
 ### The channel slug is NOT the YouTube handle — they do not round-trip
 
@@ -501,7 +547,35 @@ py -3 -m yt_dlp --flat-playlist --skip-download --print "%(id)s\t%(title)s" \
 
 Note the flat listing writes a **literal** `\t`, not a tab, when the template
 is passed through a shell — split on `chr(92) + 't'` or pass the template
-through Python, where `\t` is a real tab.
+through Python, where `\t` is a real tab. `fill-dates` reads both, so the
+listing can be handed to it directly.
+
+### What is in the repo, and what is only local
+
+| artifact | in git? | notes |
+|---|---|---|
+| `data/video_pipeline/state.sqlite` | **yes** | the catalog: 2,399 videos, 2,396 dated, plus 27 `catalog_runs` rows. The **only** tracked file under `data/video_pipeline/` (`.gitignore:4-5` ignore the directory and re-include this file) |
+| `data/catalog_flat/*.tsv` | no | a **cache**, regenerated in ~4.5 min of metadata-only network time. It carries no `upload_date` — the one field the catalog exists to capture — and it is lossy (cp1252, emoji dropped) |
+| `data/catalog_flat/*_needs_date.tsv`, `*_missing.tsv` | no | stale work lists from a completed gap-fill. `fill-dates` derives its own now |
+| `data/video_pipeline/catalog/catalog_*.tsv` | no | run snapshots, strictly worse than the DB |
+| `data/qmg_video_recovery_manifest.json` | **yes** | re-download manifest, regenerated from the DB by `tools/inventoryLostVideos.py` |
+
+The flat listings are **not** worth committing: they are reproducible, they go
+stale daily, they hold no dates, and 99.99% of their content is already in
+the DB. The three titles they uniquely held — for the age-restricted Qullamaggie
+videos — are now in the DB, so nothing is lost by leaving them out.
+
+Two things that were wrong in the committed data and are now fixed:
+
+- **`catalog_runs.raw_output_path` is an absolute Windows path**, so it points
+  at nothing on another machine.
+- **`missing_upload_dates` counts the rows yt-dlp printed**, not the videos the
+  channel has, so every run reports 0 while 3 videos are undated. `fill-dates`
+  records the honest number.
+- **Two mock rows leaked into the committed DB** — `abc123` / `def456`, the IDs
+  from `test/fixtures/mockYtDlpCatalog.py`, carrying `status='done'` and
+  `download_path` values for files that do not exist. They reached the tracked
+  recovery manifest as re-download targets. Removed on 2026-10-26.
 
 ---
 

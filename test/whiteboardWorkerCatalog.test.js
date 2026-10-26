@@ -539,4 +539,249 @@ test('the catalog worker', { skip: PY ? false : 'no python launcher available' }
     assert.ok(at >= 0, '--sleep-requests is in the yt-dlp command');
     assert.strictEqual(cmd[at + 1], '2.5');
   });
+
+  // ---------------------------------------------------------------------
+  // The gap-fill has to be runnable from a fresh clone.
+  //
+  // It used to need a work-list file that only existed on the machine that
+  // made it -- the script that built it lived in the temp directory, not in
+  // the repository -- so `fill-dates --input` was a dead end for anyone else.
+  // The listing and the database are the only two inputs, and both are
+  // reproducible, so the work list is now derived from them.
+  // ---------------------------------------------------------------------
+
+  await t.test('fill-dates reads a listing whose separator is a literal backslash-t', () => {
+    // The listing in CLAUDE.md is produced through a shell, and the shell hands
+    // yt-dlp the two characters backslash-t, which yt-dlp prints verbatim. A
+    // reader that splits on a real tab sees one field per line, so the whole
+    // line -- id AND title -- becomes the video_id, and every fetch is a miss.
+    const fillRoot = path.join(tmp, 'fill-literal-pipeline');
+    const fake = path.join(tmp, 'fake_yt_dlp_literal.py');
+    fs.writeFileSync(fake, [
+      'import sys',
+      'args = sys.argv[1:]',
+      'path = args[args.index("--batch-file") + 1]',
+      'for line in open(path, encoding="utf-8"):',
+      '    url = line.strip()',
+      '    if not url: continue',
+      '    vid = url.split("v=")[-1]',
+      '    sys.stdout.write(vid + "\\t20240505\\tFilled " + vid + "\\n")',
+      '',
+    ].join('\n'), 'utf8');
+
+    const listing = path.join(tmp, 'listing_literal.tsv');
+    fs.writeFileSync(listing, [
+      'aaa111\\tFirst listed',
+      'bbb222\\tSecond listed',
+      '',
+    ].join('\n'), 'utf8');
+
+    assert.strictEqual(runWorker(['--pipeline-root', fillRoot, 'init']).status, 0);
+
+    const r = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'test',
+      '--from-listing', listing,
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+    const json = readJson(r.stdout);
+    assert.strictEqual(json.requested, 2, 'both listed videos were wanted');
+    assert.strictEqual(json.dated, 2, 'both were dated');
+
+    const videos = readVideos(path.join(fillRoot, 'state.sqlite'));
+    const byId = new Map(videos.map((v) => [v[0], v]));
+    assert.strictEqual(byId.get('aaa111')[0], 'aaa111', 'the id was split off the title');
+    assert.strictEqual(byId.get('aaa111')[1], '20240505');
+  });
+
+  await t.test('fill-dates derives the work list from a listing and the database', () => {
+    // A video that already has a date needs nothing. The work list is the
+    // listing minus the dated videos -- the listing is the channel's ground
+    // truth of what exists, the database is the record of what is resolved.
+    const fillRoot = path.join(tmp, 'fill-derive-pipeline');
+    const fake = path.join(tmp, 'fake_yt_dlp_derive.py');
+    fs.writeFileSync(fake, [
+      'import sys',
+      'args = sys.argv[1:]',
+      'path = args[args.index("--batch-file") + 1]',
+      'for line in open(path, encoding="utf-8"):',
+      '    url = line.strip()',
+      '    if not url: continue',
+      '    vid = url.split("v=")[-1]',
+      '    sys.stdout.write(vid + "\\t20240606\\tFilled " + vid + "\\n")',
+      '',
+    ].join('\n'), 'utf8');
+
+    // Seed the database with one video that already has a date.
+    assert.strictEqual(runWorker(['--pipeline-root', fillRoot, 'init']).status, 0);
+    const seed = path.join(tmp, 'seed_dated.py');
+    fs.writeFileSync(seed, [
+      'import sqlite3, sys',
+      'c = sqlite3.connect(sys.argv[1])',
+      'c.execute("insert into videos (video_id, source_url, video_url, title, upload_date, channel, status, created_at, updated_at) values (?,?,?,?,?,?,?,?,?)",',
+      '  ("dated111", "https://example.com/x", "https://example.com/x", "Already dated", "20240101", "test", "pending", "2024-01-01", "2024-01-01"))',
+      'c.commit()',
+      '',
+    ].join('\n'), 'utf8');
+    const seedRun = spawnSync(PY.cmd, [...PY.args, seed, path.join(fillRoot, 'state.sqlite')], { encoding: 'utf8' });
+    assert.strictEqual(seedRun.status, 0, seedRun.stderr);
+
+    const listing = path.join(tmp, 'listing_derive.tsv');
+    fs.writeFileSync(listing, [
+      'dated111\tAlready dated',
+      'new111\tNeeds a date',
+      'new222\tAlso needs a date',
+      '',
+    ].join('\n'), 'utf8');
+
+    const r = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'test',
+      '--from-listing', listing,
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+    const json = readJson(r.stdout);
+    assert.strictEqual(json.requested, 2, 'the dated video was not wanted again');
+    assert.strictEqual(json.dated, 2);
+  });
+
+  await t.test('fill-dates builds the listing itself when told to', () => {
+    // The whole point: with --build-listing the gap-fill needs nothing but the
+    // channel and the database, so it runs on a fresh clone.
+    const fillRoot = path.join(tmp, 'fill-build-listing-pipeline');
+    const fake = path.join(tmp, 'fake_yt_dlp_build_listing.py');
+    fs.writeFileSync(fake, [
+      'import sys',
+      'args = sys.argv[1:]',
+      'if "--batch-file" in args:',
+      '    path = args[args.index("--batch-file") + 1]',
+      '    for line in open(path, encoding="utf-8"):',
+      '        url = line.strip()',
+      '        if not url: continue',
+      '        vid = url.split("v=")[-1]',
+      '        sys.stdout.write(vid + "\\t20240707\\tFilled " + vid + "\\n")',
+      'else:',
+      '    sys.stdout.write("lst111\\tListed one\\n")',
+      '    sys.stdout.write("lst222\\tListed two\\n")',
+      '',
+    ].join('\n'), 'utf8');
+
+    assert.strictEqual(runWorker(['--pipeline-root', fillRoot, 'init']).status, 0);
+
+    const r = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'test',
+      '--source-url', 'https://www.youtube.com/@test/videos',
+      '--build-listing',
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+    const json = readJson(r.stdout);
+    assert.strictEqual(json.requested, 2, 'both listed videos were wanted');
+    assert.strictEqual(json.dated, 2);
+
+    const videos = readVideos(path.join(fillRoot, 'state.sqlite'));
+    const byId = new Map(videos.map((v) => [v[0], v]));
+    assert.strictEqual(byId.get('lst111')[1], '20240707');
+  });
+
+  await t.test('fill-dates keeps the title of a video it could not date', () => {
+    // An age-restricted video is still a video, and the listing knows its
+    // title. If the title is thrown away, the one fact about that video lives
+    // only in a scratch file that is not in version control.
+    const fillRoot = path.join(tmp, 'fill-title-pipeline');
+    const fake = path.join(tmp, 'fake_yt_dlp_no_title.py');
+    fs.writeFileSync(fake, [
+      'import sys',
+      'args = sys.argv[1:]',
+      'path = args[args.index("--batch-file") + 1]',
+      'for line in open(path, encoding="utf-8"):',
+      '    url = line.strip()',
+      '    if not url: continue',
+      '    vid = url.split("v=")[-1]',
+      '    if vid == "blocked999": continue',
+      '    sys.stdout.write(vid + "\\t20240808\\tFilled " + vid + "\\n")',
+      '',
+    ].join('\n'), 'utf8');
+
+    const listing = path.join(tmp, 'listing_title.tsv');
+    fs.writeFileSync(listing, [
+      'ok111\tFine video',
+      'blocked999\tThe blocked one',
+      '',
+    ].join('\n'), 'utf8');
+
+    assert.strictEqual(runWorker(['--pipeline-root', fillRoot, 'init']).status, 0);
+
+    const r = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'test',
+      '--from-listing', listing,
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+    const json = readJson(r.stdout);
+    assert.strictEqual(json.still_missing_count, 1);
+    assert.strictEqual(json.titles_written, 1, 'the undated video kept its title');
+
+    const videos = readVideos(path.join(fillRoot, 'state.sqlite'));
+    const byId = new Map(videos.map((v) => [v[0], v]));
+    assert.strictEqual(byId.get('blocked999')[2], 'The blocked one', 'the title was stored');
+    assert.strictEqual(byId.get('blocked999')[1], '', 'and it still has no date');
+  });
+
+  await t.test('fill-dates records the run in the catalog history', () => {
+    // The campaign that built the catalog left no run row, so the audit table
+    // described a run that was not the one that did the work. Every fill-dates
+    // run records itself, the same way a catalog run does.
+    const fillRoot = path.join(tmp, 'fill-history-pipeline');
+    const fake = path.join(tmp, 'fake_yt_dlp_history.py');
+    fs.writeFileSync(fake, [
+      'import sys',
+      'args = sys.argv[1:]',
+      'path = args[args.index("--batch-file") + 1]',
+      'for line in open(path, encoding="utf-8"):',
+      '    url = line.strip()',
+      '    if not url: continue',
+      '    vid = url.split("v=")[-1]',
+      '    sys.stdout.write(vid + "\\t20240909\\tFilled " + vid + "\\n")',
+      '',
+    ].join('\n'), 'utf8');
+
+    assert.strictEqual(runWorker(['--pipeline-root', fillRoot, 'init']).status, 0);
+
+    const input = path.join(tmp, 'wanted_history.tsv');
+    fs.writeFileSync(input, 'aaa111\tFirst\n', 'utf8');
+
+    const r = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'test',
+      '--input', input,
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+
+    const script = path.join(fillRoot, 'read_runs.py');
+    fs.writeFileSync(script, [
+      'import sqlite3, json, sys',
+      'c = sqlite3.connect(sys.argv[1])',
+      'rows = c.execute("select channel, row_count, inserted_count, updated_count, missing_upload_dates from catalog_runs").fetchall()',
+      'print(json.dumps(rows))',
+      '',
+    ].join('\n'), 'utf8');
+    const read = spawnSync(PY.cmd, [...PY.args, script, path.join(fillRoot, 'state.sqlite')], { encoding: 'utf8' });
+    assert.strictEqual(read.status, 0, read.stderr);
+    const runs = JSON.parse(read.stdout.trim());
+    assert.strictEqual(runs.length, 1, 'the run was recorded');
+    assert.strictEqual(runs[0][0], 'test');
+    assert.strictEqual(runs[0][1], 1, 'one video was requested');
+    assert.strictEqual(runs[0][4], 0, 'and none was left without a date');
+  });
 });

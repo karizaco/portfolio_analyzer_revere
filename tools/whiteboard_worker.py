@@ -1593,23 +1593,198 @@ def command_catalog(args: argparse.Namespace) -> int:
     return 0
 
 
+# The separator in a listing file is not always a tab. The listing documented in
+# CLAUDE.md is produced through a shell, and the shell hands yt-dlp the two
+# characters backslash-t, which yt-dlp prints verbatim. A listing written from
+# Python carries a real tab. Both are read, and the choice is made once per
+# file rather than per line, so a title containing a tab cannot shift the
+# separator halfway down the file.
+LITERAL_TAB = chr(92) + 't'
+
+
 def read_wanted_rows(path: str) -> list[tuple[str, str]]:
-    """Read a TSV of `video_id<TAB>title` — the videos whose metadata is missing."""
+    """Read a TSV of `video_id<TAB>title` — the videos whose metadata is missing.
+
+    The same reader serves the channel listing and the work list built from it;
+    they have the same shape.
+
+    Two traps this survives, both of them real on this machine:
+
+    * The separator may be a real tab or a literal backslash-t. Splitting a
+      literal-tab listing on a real tab yields one field per line, and the
+      whole line -- id AND title -- becomes the video_id.
+    * The bytes may not be UTF-8. yt-dlp's stdout passes through the console
+      codepage on Windows, so a title with an em-dash lands as cp1252 and
+      decoding it as UTF-8 mangles every such title in the file. Decode as
+      UTF-8 first and fall back to cp1252 rather than replacing the characters.
+    """
+    with open(path, 'rb') as handle:
+        raw = handle.read()
+    try:
+        text = raw.decode('utf-8')
+    except UnicodeDecodeError:
+        text = raw.decode('cp1252', errors='replace')
+
+    separator = ''
+    for candidate in text.splitlines():
+        if not candidate.strip():
+            continue
+        if '\t' in candidate:
+            separator = '\t'
+        elif LITERAL_TAB in candidate:
+            separator = LITERAL_TAB
+        break
+    if not separator:
+        return []
+
     wanted: list[tuple[str, str]] = []
     seen: set[str] = set()
-    with open(path, encoding='utf-8', errors='replace') as handle:
-        for raw_line in handle:
-            line = raw_line.rstrip('\n')
-            if not line.strip():
-                continue
-            parts = line.split('\t', 1)
-            video_id = parts[0].strip()
-            if not video_id or video_id in seen:
-                continue
-            seen.add(video_id)
-            title = parts[1].strip() if len(parts) > 1 else ''
-            wanted.append((video_id, title))
+    for line in text.splitlines():
+        if not line.strip():
+            continue
+        parts = line.split(separator, 1)
+        video_id = parts[0].strip()
+        if not video_id or video_id in seen:
+            continue
+        seen.add(video_id)
+        title = parts[1].strip() if len(parts) > 1 else ''
+        wanted.append((video_id, title))
     return wanted
+
+
+def build_wanted_from_listing(
+    connection: sqlite3.Connection,
+    listing: list[tuple[str, str]],
+) -> list[tuple[str, str]]:
+    """The listing's videos whose upload_date the database does not have.
+
+    The listing is the channel's ground truth of what exists; the database is
+    the record of what has been dated. The difference is the work list, and
+    deriving it here is what makes the gap-fill runnable from a fresh clone --
+    the listing plus the database are the only two inputs, and both are
+    reproducible.
+    """
+    dated = {
+        row['video_id'] for row in connection.execute(
+            "SELECT video_id FROM videos WHERE COALESCE(upload_date, '') <> ''"
+        )
+    }
+    wanted: list[tuple[str, str]] = []
+    seen: set[str] = set()
+    for video_id, title in listing:
+        if video_id in dated or video_id in seen:
+            continue
+        seen.add(video_id)
+        wanted.append((video_id, title))
+    return wanted
+
+
+def fetch_channel_listing(
+    source_url: str,
+    args: argparse.Namespace,
+) -> tuple[list[tuple[str, str]], str, list[str]]:
+    """Ask YouTube for a channel's video list: id and title, no dates.
+
+    One yt-dlp invocation over the channel URL, so the listing costs one call
+    rather than one call per video. The template carries a REAL tab, which is
+    the difference between a listing this reader can parse and the
+    shell-produced one it has to special-case.
+
+    Returns the parsed rows, the raw stdout, and the command that produced
+    them.
+    """
+    command = build_yt_dlp_prefix(args.yt_dlp_bin) + [
+        '--flat-playlist',
+        '--skip-download',
+        '--ignore-errors',
+        '--js-runtimes', 'node',
+        '--extractor-args', args.listing_extractor_args,
+        '--print', '%(id)s\t%(title)s',
+        source_url,
+    ]
+    env = dict(os.environ)
+    env['PYTHONIOENCODING'] = 'utf-8'
+    result = subprocess.run(
+        command,
+        capture_output=True,
+        text=True,
+        encoding='utf-8',
+        errors='replace',
+        check=False,
+        env=env,
+    )
+
+    rows: list[tuple[str, str]] = []
+    seen: set[str] = set()
+    for line in result.stdout.splitlines():
+        if not line.strip():
+            continue
+        parts = line.split('\t', 1)
+        video_id = parts[0].strip()
+        if not video_id or video_id in seen:
+            continue
+        seen.add(video_id)
+        title = parts[1].strip() if len(parts) > 1 else ''
+        rows.append((video_id, title))
+    return rows, result.stdout, command
+
+
+def persist_missing_titles(
+    connection: sqlite3.Connection,
+    entries: list[tuple[str, str]],
+    source_url: str,
+    channel: str,
+) -> int:
+    """Store the title of a video whose date could not be fetched.
+
+    A video the channel listing names but that yt-dlp will not resolve -- an
+    age-restricted upload, say -- is still a video, and its title is known from
+    the listing. The database has a column for it. Leaving that column empty
+    means the one piece of information about such a video exists only in a
+    scratch file that is not in version control.
+
+    A title is only written where the database has none. The listing is a
+    lossy copy of the titles -- the Windows console codepage drops emoji -- so
+    a good title already in the database is never replaced by a worse one.
+    """
+    written = 0
+    timestamp = utc_now_iso()
+    for video_id, title in entries:
+        if not title:
+            continue
+        row = connection.execute(
+            'SELECT title FROM videos WHERE video_id = ?',
+            (video_id,),
+        ).fetchone()
+        if row is None:
+            connection.execute(
+                '''
+                INSERT INTO videos (
+                    video_id, source_url, video_url, title, upload_date,
+                    channel, status, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, '', ?, 'pending', ?, ?)
+                ''',
+                (
+                    video_id,
+                    source_url,
+                    f'https://www.youtube.com/watch?v={video_id}',
+                    title,
+                    channel,
+                    timestamp,
+                    timestamp,
+                ),
+            )
+            written += 1
+            continue
+        if (row['title'] or '').strip():
+            continue
+        connection.execute(
+            'UPDATE videos SET title = ?, updated_at = ? WHERE video_id = ?',
+            (title, timestamp, video_id),
+        )
+        written += 1
+    connection.commit()
+    return written
 
 
 def fetch_dates_for(entries: list[tuple[str, str]], args: argparse.Namespace) -> tuple[list[dict], list[str]]:
@@ -1700,20 +1875,42 @@ def command_fill_dates(args: argparse.Namespace) -> int:
         print('Worker state is missing. Run `npm run video:init` first.', file=sys.stderr)
         return 1
 
-    wanted = read_wanted_rows(args.input)
-    if not wanted:
-        print('Nothing to fill: the input list is empty.', file=sys.stderr)
-        return 1
+    wanted: list[tuple[str, str]] = []
+    listing: list[tuple[str, str]] = []
+    listing_output = ''
+    listing_command: list[str] = []
 
     effective_channel = args.channel or infer_channel_from_url(args.source_url or '')
     if not effective_channel:
         print('Could not tell which channel this is: pass --channel.', file=sys.stderr)
         return 1
-    requested = len(wanted)
 
     with connect_database(db_path) as connection:
         initialize_schema(connection)
         source_url = resolve_channel_source_url(connection, effective_channel, args.source_url)
+
+        # The listing is the channel's ground truth of what exists. It can be
+        # fetched here or read from a file; either way the work list is derived
+        # from it and the database, so nothing outside the repository is needed
+        # to decide what is still missing.
+        if args.build_listing:
+            if not source_url:
+                print('Could not tell which channel to list: pass --channel.', file=sys.stderr)
+                return 1
+            listing, listing_output, listing_command = fetch_channel_listing(source_url, args)
+            print(f'Listed {len(listing)} videos from {source_url}.', file=sys.stderr)
+        elif args.from_listing:
+            listing = read_wanted_rows(args.from_listing)
+            print(f'Read {len(listing)} videos from {args.from_listing}.', file=sys.stderr)
+
+        if args.input:
+            wanted = read_wanted_rows(args.input)
+        else:
+            wanted = build_wanted_from_listing(connection, listing)
+
+        if not wanted:
+            print('Nothing to fill: there is no video left without a date.', file=sys.stderr)
+            return 1
 
         # A video that already has a date needs nothing. Skipping them makes a
         # second pass cheap: run the fast client over the whole list, then run
@@ -1724,6 +1921,7 @@ def command_fill_dates(args: argparse.Namespace) -> int:
                 "SELECT video_id FROM videos WHERE COALESCE(upload_date, '') <> ''"
             )
         }
+    requested = len(wanted)
     skipped = [video_id for video_id, _ in wanted if video_id in already_dated]
     wanted = [(video_id, title) for video_id, title in wanted if video_id not in already_dated]
 
@@ -1777,6 +1975,54 @@ def command_fill_dates(args: argparse.Namespace) -> int:
                 )
 
     dated = sum(1 for row in rows if row['upload_date'])
+
+    # A video whose date could not be resolved is still a video, and its title
+    # is known from the listing. Store it, so the fact that this video exists
+    # does not depend on a scratch file that is not in version control.
+    missing_entries = [
+        (video_id, title)
+        for video_id, title in wanted
+        if video_id in set(missing)
+    ]
+    titles_written = 0
+    if missing_entries:
+        with connect_database(db_path) as connection:
+            initialize_schema(connection)
+            titles_written = persist_missing_titles(
+                connection, missing_entries, source_url, effective_channel
+            )
+
+    # The run is recorded, like every other catalog run. Without this the
+    # campaign that built the catalog left no trace of its command, its client
+    # set, or which videos it could not resolve.
+    #
+    # The artifact is the listing when the run fetched one -- that is what the
+    # run actually read -- and the work list otherwise.
+    slug = utc_timestamp_slug()
+    if listing_output:
+        snapshot_path = paths['catalog'] / f'listing_{slug}.tsv'
+        snapshot_path.write_text(listing_output, encoding='utf-8')
+    else:
+        snapshot_path = paths['catalog'] / f'fill_dates_{slug}.tsv'
+        snapshot_path.write_text(
+            ''.join(f'{video_id}\t{title}\n' for video_id, title in wanted),
+            encoding='utf-8',
+        )
+    with connect_database(db_path) as connection:
+        initialize_schema(connection)
+        record_catalog_run(
+            connection,
+            channel=effective_channel,
+            command=listing_command or ['fill-dates', '--input', args.input or ''],
+            inserted=inserted,
+            malformed_rows=0,
+            missing_upload_dates=len(missing),
+            raw_output_path=snapshot_path,
+            row_count=requested,
+            source_url=source_url,
+            updated=updated,
+        )
+
     print(json.dumps({
         'channel': effective_channel,
         'dated': dated,
@@ -1788,6 +2034,7 @@ def command_fill_dates(args: argparse.Namespace) -> int:
         'still_missing': missing,
         'still_missing_count': len(missing),
         'titles_only': len(rows) - dated,
+        'titles_written': titles_written,
         'updated': updated,
     }, indent=2))
     return 0
@@ -1919,8 +2166,27 @@ def build_parser() -> argparse.ArgumentParser:
     )
     fill_dates_parser.add_argument(
         '--input',
-        required=True,
-        help='TSV of video_id<TAB>title — the videos whose metadata is still missing.',
+        default='',
+        help='TSV of video_id<TAB>title — the videos whose metadata is still missing. '
+             'Optional when the work list is derived from a listing instead.',
+    )
+    fill_dates_parser.add_argument(
+        '--from-listing',
+        default='',
+        help='Derive the work list from a channel listing TSV (id<TAB>title) and the '
+             'database: the videos the listing names that the database has no date for.',
+    )
+    fill_dates_parser.add_argument(
+        '--build-listing',
+        action='store_true',
+        help='Fetch the channel listing with yt-dlp first, then fill. This needs '
+             'nothing but the channel and the database, so the gap-fill runs on a '
+             'fresh clone.',
+    )
+    fill_dates_parser.add_argument(
+        '--listing-extractor-args',
+        default='youtube:player_client=mweb',
+        help='yt-dlp extractor args for the channel listing.',
     )
     fill_dates_parser.add_argument(
         '--channel',
