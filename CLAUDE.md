@@ -251,10 +251,20 @@ Rules:
 ## Testing
 
 ```bash
-npm test        # node --test test/*.test.js
+npm test              # everything except the OCR benchmark (276 tests, ~2 min)
+npm run test:benchmark  # test/qmgGroundTruth.test.js alone (~23 min, EasyOCR)
+npm run test:all        # everything, benchmark included -- FAILS under contention
 ```
 
-269 tests, all passing (as of 2026-10-26).
+276 tests, all passing (as of 2026-10-28).
+
+**The benchmark has to run on its own.** `test/qmgGroundTruth.test.js` is a
+23-minute EasyOCR benchmark, and `node --test` runs the test *files* in
+parallel — against the rest of the suite it fails, because four EasyOCR
+benchmarks plus a dozen other files do not fit in one machine's memory and CPU
+at once. On its own it reproduces the table below exactly (88.9% / 100% /
+87.5% / 46.2%, overall 80.6%). `npm test` therefore skips it, and says so on
+the first line of its output.
 
 ### Ground-truth benchmark fixtures — read before trusting a recall number
 
@@ -271,6 +281,32 @@ npm test        # node --test test/*.test.js
 
 The test also calls `closeWorker()` when it finishes — `ocrImage()` leaves a Tesseract worker
 running, which keeps the event loop alive and hangs the process.
+
+### The benchmark cannot be run from a clone (open, as of 2026-10-28)
+
+**All four curated frames live under gitignored trees**, so a fresh clone has
+none of them:
+
+| case | the frame this machine scores | tracked copies |
+|---|---|---|
+| `trade_ideas` 20220218[1] | `data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220218_2.png` | **none** |
+| `sparse` 20221104[0] | `data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20221104.png` | 2, both 640×360 |
+| `normal_2022` 20220606[1] | `data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606_2.png` | 2, both 640×360 |
+| `dense_2023` 20230609[0] | `data/video_scan_test/_rerun/qmg-easyocr-20261012/snapshots/qmg_20230609.png` | 2, both 640×360 |
+
+The tracked copies are at the *prefilter sample width*, so the test's own
+`MIN_SNAPSHOT_WIDTH = 1280` filter rejects them, and
+`assert.equal(missingSnapshots.length, 0)` (`test/qmgGroundTruth.test.js:196`)
+**hard-fails on a fresh clone**. The fix is to commit the four 1920×1080 frames
+(`git add -f`) and to turn that assert into a skip-with-warning.
+
+**A frame's identity is its FILE, not its name.** Each benchmark filename
+exists in several directories and the copies are *different images* — five
+copies of `qmg_20220606_2.png`, three of them md5 `93514908`, which is the
+frame CLAUDE.md's `position_table` section describes as the bad one (a junk
+`SE` cell, 0/8). `resolveSnapshotPath` keeps the first candidate at the widest
+width, so which frame is scored depends on directory-walk order. Name the run
+directory, the file and its md5 whenever a number is quoted.
 
 ---
 
