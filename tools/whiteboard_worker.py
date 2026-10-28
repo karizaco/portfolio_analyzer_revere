@@ -16,7 +16,6 @@ import shutil
 
 WORKSPACE_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PIPELINE_ROOT = WORKSPACE_ROOT / 'data' / 'video_pipeline'
-SCHEMA_VERSION = 1
 SCHEMA_SQL_PATH = WORKSPACE_ROOT / 'data' / 'db' / 'schema.sql'
 REFERENCE_SUFFIXES = {'.jpg', '.jpeg', '.pgm', '.png', '.webp'}
 VIDEO_SUFFIXES = {'.mp4', '.mov', '.mkv', '.m4v', '.webm'}
@@ -127,6 +126,48 @@ def _apply_migrations(connection: sqlite3.Connection) -> None:
         )
         connection.execute(
             "INSERT OR IGNORE INTO schema_version (version) VALUES (1)"
+        )
+        connection.commit()
+
+    # Version 2: make `catalog_runs` portable and honest.
+    #
+    # `raw_output_path` held an absolute Windows path, so every pointer in the
+    # run history resolved on the machine that made the run and nowhere else.
+    # A path inside the repository is rewritten relative to the repository
+    # root; a path from another machine has no such form and is left alone --
+    # converting it would only make it wrong in a different way.
+    #
+    # `kind` separates a real catalog run from a test fixture. The fixtures
+    # used `example.com/mock-playlist`, which is self-labelling, but they
+    # still made up four of the twenty-eight rows in the audit table, and a
+    # reader had to know that to discount them.
+    if current < 2:
+        columns = {
+            row['name'] for row in connection.execute('PRAGMA table_info(catalog_runs)')
+        }
+        if 'kind' not in columns:
+            connection.execute(
+                "ALTER TABLE catalog_runs ADD COLUMN kind TEXT NOT NULL DEFAULT 'live'"
+            )
+        connection.execute(
+            "UPDATE catalog_runs SET kind = 'fixture' "
+            "WHERE source_url NOT LIKE '%youtube.com%'"
+        )
+        prefix = str(WORKSPACE_ROOT)
+        rows = connection.execute(
+            'SELECT run_id, raw_output_path FROM catalog_runs'
+        ).fetchall()
+        for row in rows:
+            stored = row['raw_output_path'] or ''
+            if not stored.lower().startswith(prefix.lower()):
+                continue
+            relative = stored[len(prefix):].lstrip('\\/').replace('\\', '/')
+            connection.execute(
+                'UPDATE catalog_runs SET raw_output_path = ? WHERE run_id = ?',
+                (relative, row['run_id']),
+            )
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_version (version) VALUES (2)"
         )
         connection.commit()
 
@@ -304,13 +345,21 @@ def fetch_latest_catalog_run(connection: sqlite3.Connection) -> dict[str, object
             updated_count,
             missing_upload_dates,
             malformed_rows,
-            created_at
+            created_at,
+            kind
         FROM catalog_runs
         ORDER BY run_id DESC
         LIMIT 1
         '''
     ).fetchone()
-    return dict(row) if row else None
+    if not row:
+        return None
+    result = dict(row)
+    # The stored path is relative to the repository so it means the same thing
+    # on every machine; the one handed back here is absolute, because the
+    # person reading it wants to open the file.
+    result['raw_output_path'] = resolve_portable_path(result.get('raw_output_path') or '')
+    return result
 
 
 def command_import_local(args: argparse.Namespace) -> int:
@@ -519,6 +568,45 @@ def build_command_prefix(command_bin: str) -> list[str]:
     return [command_bin]
 
 
+def portable_path(path: Path) -> str:
+    """A path that still means something on another machine.
+
+    The catalog's snapshot paths used to be absolute Windows paths, so every
+    pointer in the run history resolved on the machine that made the run and
+    nowhere else. A path inside the repository is stored relative to the
+    repository root; a path outside it -- a test's temporary directory, say --
+    has no such form and keeps its absolute one.
+    """
+    try:
+        return path.resolve().relative_to(WORKSPACE_ROOT).as_posix()
+    except ValueError:
+        return str(path)
+
+
+def resolve_portable_path(stored: str) -> str:
+    """Turn a stored path back into one you can open.
+
+    The inverse of `portable_path`: a relative path is resolved against the
+    repository root, an absolute one is left alone.
+    """
+    if not stored:
+        return stored
+    candidate = Path(stored)
+    if candidate.is_absolute():
+        return str(candidate)
+    return str((WORKSPACE_ROOT / candidate).resolve())
+
+
+def catalog_run_kind(source_url: str) -> str:
+    """Whether a catalog run was a real one or a test fixture.
+
+    The worker's fixtures point at `example.com/mock-playlist`. They are
+    self-labelling, but they still made up four of the twenty-eight rows in the
+    audit table, and a reader had to know that to discount them.
+    """
+    return 'live' if 'youtube.com' in (source_url or '').lower() else 'fixture'
+
+
 def record_catalog_run(
     connection: sqlite3.Connection,
     *,
@@ -544,20 +632,22 @@ def record_catalog_run(
             updated_count,
             missing_upload_dates,
             malformed_rows,
-            created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            created_at,
+            kind
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''',
         (
             source_url,
             channel,
             json.dumps(command),
-            str(raw_output_path),
+            portable_path(raw_output_path),
             row_count,
             inserted,
             updated,
             missing_upload_dates,
             malformed_rows,
             utc_now_iso(),
+            catalog_run_kind(source_url),
         ),
     )
     connection.commit()
