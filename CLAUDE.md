@@ -554,7 +554,7 @@ listing can be handed to it directly.
 
 | artifact | in git? | notes |
 |---|---|---|
-| `data/video_pipeline/state.sqlite` | **yes** | the catalog: 2,399 videos, 2,396 dated, plus 27 `catalog_runs` rows. The **only** tracked file under `data/video_pipeline/` (`.gitignore:4-5` ignore the directory and re-include this file) |
+| `data/video_pipeline/state.sqlite` | **yes** | the catalog: 2,401 videos, 2,398 dated, plus 28 `catalog_runs` rows. The **only** tracked file under `data/video_pipeline/` (`.gitignore:4-5` ignore the directory and re-include this file) |
 | `data/catalog_flat/*.tsv` | no | a **cache**, regenerated in ~4.5 min of metadata-only network time. It carries no `upload_date` — the one field the catalog exists to capture — and it is lossy (cp1252, emoji dropped) |
 | `data/catalog_flat/*_needs_date.tsv`, `*_missing.tsv` | no | stale work lists from a completed gap-fill. `fill-dates` derives its own now |
 | `data/video_pipeline/catalog/catalog_*.tsv` | no | run snapshots, strictly worse than the DB |
@@ -565,10 +565,18 @@ stale daily, they hold no dates, and 99.99% of their content is already in
 the DB. The three titles they uniquely held — for the age-restricted Qullamaggie
 videos — are now in the DB, so nothing is lost by leaving them out.
 
-Two things that were wrong in the committed data and are now fixed:
+Four things that were wrong in the committed data and are now fixed:
 
-- **`catalog_runs.raw_output_path` is an absolute Windows path**, so it points
-  at nothing on another machine.
+- **`catalog_runs.raw_output_path` was an absolute Windows path**, so it pointed
+  at nothing on another machine. It is now relative to the repository root
+  whenever the file it names is inside the repository (`portable_path()`), and
+  stays absolute when it is not — there is no honest relative form for a path
+  from another machine. `status` resolves it back to an openable path.
+- **`catalog_runs` did not say which rows were real.** The worker's own test
+  fixtures point at `example.com/mock-playlist`; they were self-labelling, but
+  they still made up four of the twenty-eight rows in the audit table and a
+  reader had to know that to discount them. The `kind` column now says `live`
+  or `fixture`.
 - **`missing_upload_dates` counts the rows yt-dlp printed**, not the videos the
   channel has, so every run reports 0 while 3 videos are undated. `fill-dates`
   records the honest number.
@@ -576,6 +584,19 @@ Two things that were wrong in the committed data and are now fixed:
   from `test/fixtures/mockYtDlpCatalog.py`, carrying `status='done'` and
   `download_path` values for files that do not exist. They reached the tracked
   recovery manifest as re-download targets. Removed on 2026-10-26.
+
+Both changes to `catalog_runs` ship as **migration version 2**
+(`_apply_migrations` in `tools/whiteboard_worker.py`), so an existing database
+is repaired in place when it is next opened. A fresh database gets the columns
+from `data/db/schema.sql` directly.
+
+### The gap-fill runs from a fresh clone
+
+`test/catalogFreshClone.test.js` is the proof. It copies the **tracked** files
+into a scratch directory — nothing else, no untracked file, nothing left over
+from an earlier run — and runs `fill-dates --build-listing` there against a
+fake yt-dlp. If the gap-fill ever needs a file that is not in git, that test
+fails.
 
 ---
 

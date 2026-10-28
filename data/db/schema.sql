@@ -53,7 +53,9 @@ CREATE TABLE IF NOT EXISTS catalog_runs (
     updated_count INTEGER NOT NULL,
     missing_upload_dates INTEGER NOT NULL,
     malformed_rows INTEGER NOT NULL,
-    created_at TEXT NOT NULL
+    created_at TEXT NOT NULL,
+    -- 'live' for a real channel run, 'fixture' for a test fixture.
+    kind TEXT NOT NULL DEFAULT 'live'
 );
 
 -- Discord pipeline tables -------------------------------------------------

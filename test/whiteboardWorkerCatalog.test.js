@@ -101,6 +101,22 @@ function readVideos(dbPath) {
   return JSON.parse(r.stdout.trim());
 }
 
+/** The catalog's audit table: one row per run, with its pointer and its kind. */
+function readRuns(dbPath) {
+  const script = path.join(path.dirname(dbPath), 'read_runs.py');
+  fs.writeFileSync(script, [
+    'import sqlite3, json, sys',
+    'c = sqlite3.connect(sys.argv[1])',
+    'c.row_factory = sqlite3.Row',
+    'rows = [dict(r) for r in c.execute("select source_url, channel, raw_output_path, kind from catalog_runs")]',
+    'print(json.dumps(rows))',
+    '',
+  ].join('\n'), 'utf8');
+  const r = spawnSync(PY.cmd, [...PY.args, script, dbPath], { encoding: 'utf8' });
+  assert.strictEqual(r.status, 0, r.stderr);
+  return JSON.parse(r.stdout.trim());
+}
+
 test('the catalog worker', { skip: PY ? false : 'no python launcher available' }, async (t) => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'qmg-catalog-'));
   const pipelineRoot = path.join(tmp, 'pipeline');
@@ -783,5 +799,199 @@ test('the catalog worker', { skip: PY ? false : 'no python launcher available' }
     assert.strictEqual(runs[0][0], 'test');
     assert.strictEqual(runs[0][1], 1, 'one video was requested');
     assert.strictEqual(runs[0][4], 0, 'and none was left without a date');
+  });
+
+  // A fake yt-dlp that fills in every video it is given.
+  function writeFillingFake(name) {
+    const file = path.join(tmp, name);
+    fs.writeFileSync(file, [
+      'import sys',
+      'args = sys.argv[1:]',
+      'path = args[args.index("--batch-file") + 1]',
+      'for line in open(path, encoding="utf-8"):',
+      '    url = line.strip()',
+      '    if not url: continue',
+      '    vid = url.split("v=")[-1]',
+      '    sys.stdout.write(vid + "\\t20240909\\tFilled " + vid + "\\n")',
+      '',
+    ].join('\n'), 'utf8');
+    return file;
+  }
+
+  await t.test('a run inside the repository records a repository-relative path', () => {
+    // `catalog_runs.raw_output_path` held an absolute Windows path, so every
+    // pointer in the audit table resolved on the machine that made the run and
+    // nowhere else. A path inside the repository is now stored relative to the
+    // repository root, so it means the same thing on every machine.
+    const inRepo = path.join(ROOT, 'data', 'video_pipeline', '_test_portable_path');
+    t.after(() => fs.rmSync(inRepo, { recursive: true, force: true }));
+
+    const fake = writeFillingFake('fake_yt_dlp_portable.py');
+    assert.strictEqual(runWorker(['--pipeline-root', inRepo, 'init']).status, 0);
+
+    const input = path.join(tmp, 'wanted_portable.tsv');
+    fs.writeFileSync(input, 'aaa111\tFirst\n', 'utf8');
+
+    const r = runWorker([
+      '--pipeline-root', inRepo, 'fill-dates',
+      '--channel', 'test',
+      '--source-url', 'https://www.youtube.com/@test/videos',
+      '--input', input,
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+
+    const runs = readRuns(path.join(inRepo, 'state.sqlite'));
+    assert.strictEqual(runs.length, 1);
+    const stored = runs[0].raw_output_path;
+    assert.ok(!path.isAbsolute(stored), `expected a relative path, got ${stored}`);
+    assert.ok(
+      stored.startsWith('data/video_pipeline/_test_portable_path/'),
+      `expected a path inside the repository, got ${stored}`,
+    );
+    assert.strictEqual(runs[0].kind, 'live');
+  });
+
+  await t.test('a run outside the repository keeps its absolute path', () => {
+    // There is no relative form for a path outside the repository. Converting
+    // it would only make it wrong in a different way, so it is left alone.
+    const outsideRoot = path.join(tmp, 'pipeline-outside');
+    const fake = writeFillingFake('fake_yt_dlp_outside.py');
+    assert.strictEqual(runWorker(['--pipeline-root', outsideRoot, 'init']).status, 0);
+
+    const input = path.join(tmp, 'wanted_outside.tsv');
+    fs.writeFileSync(input, 'aaa111\tFirst\n', 'utf8');
+
+    const r = runWorker([
+      '--pipeline-root', outsideRoot, 'fill-dates',
+      '--channel', 'test',
+      '--source-url', 'https://www.youtube.com/@test/videos',
+      '--input', input,
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+
+    const runs = readRuns(path.join(outsideRoot, 'state.sqlite'));
+    assert.strictEqual(runs.length, 1);
+    assert.ok(
+      path.isAbsolute(runs[0].raw_output_path),
+      `expected an absolute path, got ${runs[0].raw_output_path}`,
+    );
+  });
+
+  await t.test('a run that is not a channel is marked as a fixture', () => {
+    // The worker's own fixtures point at example.com/mock-playlist. They were
+    // self-labelling, but they still made up a sixth of the audit table, and a
+    // reader had to know that to discount them.
+    const fixtureRoot = path.join(tmp, 'pipeline-fixture');
+    const fake = writeFillingFake('fake_yt_dlp_fixture.py');
+    assert.strictEqual(runWorker(['--pipeline-root', fixtureRoot, 'init']).status, 0);
+
+    const input = path.join(tmp, 'wanted_fixture.tsv');
+    fs.writeFileSync(input, 'aaa111\tFirst\n', 'utf8');
+
+    const r = runWorker([
+      '--pipeline-root', fixtureRoot, 'fill-dates',
+      '--channel', 'test',
+      '--input', input,
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+
+    const runs = readRuns(path.join(fixtureRoot, 'state.sqlite'));
+    assert.strictEqual(runs.length, 1);
+    assert.strictEqual(runs[0].kind, 'fixture');
+    assert.strictEqual(runs[0].source_url, '');
+  });
+
+  await t.test('status reports a run path you can open', () => {
+    // The stored path is relative to the repository, so it means the same
+    // thing on every machine. The status report resolves it back, because the
+    // person reading it wants to open the file.
+    const inRepo = path.join(ROOT, 'data', 'video_pipeline', '_test_status_path');
+    t.after(() => fs.rmSync(inRepo, { recursive: true, force: true }));
+
+    const fake = writeFillingFake('fake_yt_dlp_status.py');
+    assert.strictEqual(runWorker(['--pipeline-root', inRepo, 'init']).status, 0);
+
+    const input = path.join(tmp, 'wanted_status.tsv');
+    fs.writeFileSync(input, 'aaa111\tFirst\n', 'utf8');
+
+    const filled = runWorker([
+      '--pipeline-root', inRepo, 'fill-dates',
+      '--channel', 'test',
+      '--source-url', 'https://www.youtube.com/@test/videos',
+      '--input', input,
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(filled.status, 0, filled.stderr);
+
+    const r = runWorker(['--pipeline-root', inRepo, 'status']);
+    assert.strictEqual(r.status, 0, r.stderr);
+    const json = readJson(r.stdout);
+    assert.ok(json.latest_catalog_run, 'the run is reported');
+    assert.strictEqual(json.latest_catalog_run.kind, 'live');
+    assert.ok(
+      path.isAbsolute(json.latest_catalog_run.raw_output_path),
+      `expected a path you can open, got ${json.latest_catalog_run.raw_output_path}`,
+    );
+    assert.ok(
+      json.latest_catalog_run.raw_output_path.includes('_test_status_path'),
+      json.latest_catalog_run.raw_output_path,
+    );
+  });
+
+  await t.test('the migration repairs a run table written by an older worker', () => {
+    // A database written before this change has no `kind` column and holds
+    // absolute paths. Opening it has to fix both -- otherwise the committed
+    // catalog keeps pointers that resolve on no other machine, and a reader
+    // has to know that the mock rows are not real runs.
+    const legacyRoot = path.join(tmp, 'pipeline-legacy');
+    fs.mkdirSync(legacyRoot, { recursive: true });
+    const legacyDb = path.join(legacyRoot, 'state.sqlite');
+
+    const inRepoPath = path.join(ROOT, 'data', 'video_pipeline', 'catalog', 'catalog_20260101T000000Z.tsv');
+    const outsidePath = path.join(tmp, 'elsewhere', 'catalog_20260102T000000Z.tsv');
+
+    const mk = path.join(tmp, 'make_legacy_db.py');
+    fs.writeFileSync(mk, [
+      'import sqlite3, json, sys',
+      'c = sqlite3.connect(sys.argv[1])',
+      'c.execute("create table catalog_runs (run_id integer primary key autoincrement, source_url text not null, channel text not null default \'\', command_json text not null, raw_output_path text not null, row_count integer not null, inserted_count integer not null, updated_count integer not null, missing_upload_dates integer not null, malformed_rows integer not null, created_at text not null)")',
+      'c.executemany("insert into catalog_runs (source_url, channel, command_json, raw_output_path, row_count, inserted_count, updated_count, missing_upload_dates, malformed_rows, created_at) values (?,?,?,?,?,?,?,?,?,?)", json.loads(sys.argv[2]))',
+      'c.commit()',
+      '',
+    ].join('\n'), 'utf8');
+
+    const rows = [
+      ['https://example.com/mock-playlist', 'revere', '[]', inRepoPath, 1, 1, 0, 0, 0, '2026-01-01 00:00:00'],
+      ['https://www.youtube.com/@revereasset/videos', 'revere', '[]', outsidePath, 1, 1, 0, 0, 0, '2026-01-01 00:00:00'],
+    ];
+    const made = spawnSync(PY.cmd, [...PY.args, mk, legacyDb, JSON.stringify(rows)], { encoding: 'utf8' });
+    assert.strictEqual(made.status, 0, made.stderr);
+
+    const r = runWorker(['--pipeline-root', legacyRoot, '--db-path', legacyDb, 'init']);
+    assert.strictEqual(r.status, 0, r.stderr);
+
+    const runs = readRuns(legacyDb);
+    assert.strictEqual(runs.length, 2);
+    const fixture = runs.find((x) => x.source_url.includes('example.com'));
+    const live = runs.find((x) => x.source_url.includes('youtube.com'));
+    assert.strictEqual(fixture.kind, 'fixture');
+    assert.strictEqual(live.kind, 'live');
+    assert.strictEqual(
+      fixture.raw_output_path,
+      'data/video_pipeline/catalog/catalog_20260101T000000Z.tsv',
+      'a path inside the repository became relative',
+    );
+    assert.strictEqual(
+      live.raw_output_path,
+      outsidePath,
+      'a path outside it was left alone',
+    );
   });
 });
