@@ -63,7 +63,18 @@ CREATE TABLE IF NOT EXISTS catalog_runs (
     created_at TEXT NOT NULL,
     channel TEXT NOT NULL DEFAULT '',
     -- 'live' for a real channel run, 'fixture' for a test fixture.
-    kind TEXT NOT NULL DEFAULT 'live'
+    kind TEXT NOT NULL DEFAULT 'live',
+    -- How many of the catalog's rows for this channel were NOT in the
+    -- listing this run fetched. See `not_listed` in the run's JSON summary:
+    -- a video missing from a `/videos` listing may have become a Short, a
+    -- livestream or members-only content, so this is an observation and not
+    -- proof of deletion.
+    not_listed_count INTEGER NOT NULL DEFAULT 0,
+    -- 1 when this run's listing covered the whole channel, 0 when it was
+    -- truncated or a video failed -- in which case a row missing from the
+    -- listing proves nothing. 0 is also the value for a run recorded before
+    -- this column existed: the run made no such claim.
+    listing_complete INTEGER NOT NULL DEFAULT 0
 );
 
 -- Discord pipeline tables -------------------------------------------------

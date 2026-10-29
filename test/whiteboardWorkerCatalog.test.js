@@ -907,6 +907,94 @@ test('the catalog worker', { skip: PY ? false : 'no python launcher available' }
     assert.strictEqual(runs[0].source_url, '');
   });
 
+  await t.test('a run reports the catalog rows its listing did not contain', () => {
+    // A channel's `/videos` listing is the channel's ground truth of what it
+    // currently shows, so a row the catalog holds and the listing does not is
+    // worth reporting. It is NOT proof of deletion -- a video that became a
+    // Short, a livestream or members-only content is not listed there either
+    // -- so nothing is deleted. The run says which rows it did not list.
+    const fake = writeFakeYtDlp(tmp, [['aaa111', '20240101', 'First video']], 0);
+    const before = readVideos(path.join(pipelineRoot, 'state.sqlite')).map((v) => v[0]).sort();
+    const r = runWorker([
+      '--pipeline-root', pipelineRoot, 'catalog',
+      '--source-url', 'https://www.youtube.com/@test/videos',
+      '--channel', 'test',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+    const json = readJson(r.stdout);
+    assert.strictEqual(json.not_listed_count, 6,
+      'every row the listing did not contain is reported');
+    assert.deepStrictEqual(
+      json.not_listed_video_ids.slice().sort(),
+      ['bbb222', 'ccc333', 'ddd444', 'fff666', 'ggg777', 'hhh888'],
+      'and they are the right ones: every row of the catalog except the one the listing had',
+    );
+    assert.strictEqual(json.listing_complete, true, 'an untruncated run with no errors saw everything');
+
+    // Nothing was deleted, and the count is in the audit row too.
+    const videos = readVideos(path.join(pipelineRoot, 'state.sqlite'));
+    assert.deepStrictEqual(videos.map((v) => v[0]).sort(), before,
+      'every row is still there -- a row missing from a listing is an observation, not a deletion');
+
+    const script = path.join(pipelineRoot, 'read_not_listed.py');
+    fs.writeFileSync(script, [
+      'import sqlite3, json, sys',
+      'c = sqlite3.connect(sys.argv[1])',
+      'rows = c.execute("select not_listed_count, listing_complete from catalog_runs order by run_id desc limit 1").fetchall()',
+      'print(json.dumps(rows))',
+      '',
+    ].join('\n'), 'utf8');
+    const read = spawnSync(PY.cmd, [...PY.args, script, path.join(pipelineRoot, 'state.sqlite')], { encoding: 'utf8' });
+    assert.strictEqual(read.status, 0, read.stderr);
+    const audit = JSON.parse(read.stdout.trim())[0];
+    assert.strictEqual(audit[0], 6, 'the audit row records the count');
+    assert.strictEqual(audit[1], 1,
+      'and records that the listing covered the whole channel, so the count can be read');
+  });
+
+  await t.test('a truncated run says its listing may be incomplete', () => {
+    // `--limit` truncates the listing, so a row the run did not list proves
+    // nothing about whether the channel still has it. The report has to say
+    // the listing cannot be shown to be complete.
+    const fake = writeFakeYtDlp(tmp, [['aaa111', '20240101', 'First video']], 0);
+    const r = runWorker([
+      '--pipeline-root', pipelineRoot, 'catalog',
+      '--source-url', 'https://www.youtube.com/@test/videos',
+      '--channel', 'test',
+      '--limit', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+    const json = readJson(r.stdout);
+    assert.strictEqual(json.listing_complete, false,
+      'a --limit run cannot prove it saw the whole channel');
+    assert.ok(json.not_listed_count > 0, 'the rows it did not list are still reported');
+  });
+
+  await t.test('a listing with no title does not blank the title a row has', () => {
+    // The upsert is non-destructive for the fields a listing may not carry.
+    // An empty title from a partial listing must not erase a good one.
+    const fake = path.join(tmp, 'fake_yt_dlp_empty_title.py');
+    fs.writeFileSync(fake, [
+      'import sys',
+      'sys.stdout.write("aaa111\\t20240101\\t\\n")',
+      '',
+    ].join('\n'), 'utf8');
+
+    const r = runWorker([
+      '--pipeline-root', pipelineRoot, 'catalog',
+      '--source-url', 'https://www.youtube.com/@test/videos',
+      '--channel', 'test',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+
+    const videos = readVideos(path.join(pipelineRoot, 'state.sqlite'));
+    const row = videos.find((v) => v[0] === 'aaa111');
+    assert.strictEqual(row[2], 'First video', 'the title the row already had survived');
+  });
+
   await t.test('status reports a run path you can open', () => {
     // The stored path is relative to the repository, so it means the same
     // thing on every machine. The status report resolves it back, because the

@@ -227,6 +227,48 @@ def _apply_migrations(connection: sqlite3.Connection) -> None:
         )
         connection.commit()
 
+    # Version 4: record how many catalog rows a run's listing did not contain.
+    #
+    # A channel's `/videos` listing is the channel's ground truth of what it
+    # currently shows, so a row the catalog holds and the listing does not is
+    # worth reporting: the video may have been deleted, made private, or
+    # turned into a Short or a members-only upload. It is an OBSERVATION and
+    # not proof of deletion, so nothing is deleted -- the count goes in the
+    # run's audit row and the ids go in the run's JSON summary.
+    if current < 4:
+        columns = {
+            row['name'] for row in connection.execute('PRAGMA table_info(catalog_runs)')
+        }
+        if 'not_listed_count' not in columns:
+            connection.execute(
+                'ALTER TABLE catalog_runs ADD COLUMN not_listed_count INTEGER NOT NULL DEFAULT 0'
+            )
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_version (version) VALUES (4)"
+        )
+        connection.commit()
+
+    # Version 5: say whether a run's listing covered the whole channel.
+    #
+    # `not_listed_count` on its own is not interpretable: a run that was
+    # truncated reports every row it did not list, and the number means
+    # nothing without knowing that. `listing_complete` is 1 when the run's
+    # listing was the channel's whole listing, and 0 when it was truncated or
+    # a video failed. 0 is also the value for a run recorded before this
+    # column existed: such a run made no such claim.
+    if current < 5:
+        columns = {
+            row['name'] for row in connection.execute('PRAGMA table_info(catalog_runs)')
+        }
+        if 'listing_complete' not in columns:
+            connection.execute(
+                'ALTER TABLE catalog_runs ADD COLUMN listing_complete INTEGER NOT NULL DEFAULT 0'
+            )
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_version (version) VALUES (5)"
+        )
+        connection.commit()
+
 
 def initialize_schema(connection: sqlite3.Connection) -> None:
     """Load and execute data/db/schema.sql, then run any pending data migrations."""
@@ -701,8 +743,10 @@ def record_catalog_run(
     channel: str = '',
     command: list[str],
     inserted: int,
+    listing_complete: bool = False,
     malformed_rows: int,
     missing_upload_dates: int,
+    not_listed_count: int = 0,
     raw_output_path: Path,
     row_count: int,
     source_url: str,
@@ -721,8 +765,10 @@ def record_catalog_run(
             missing_upload_dates,
             malformed_rows,
             created_at,
-            kind
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            kind,
+            not_listed_count,
+            listing_complete
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''',
         (
             source_url,
@@ -736,6 +782,8 @@ def record_catalog_run(
             malformed_rows,
             utc_now_iso(),
             catalog_run_kind(source_url),
+            not_listed_count,
+            1 if listing_complete else 0,
         ),
     )
     connection.commit()
@@ -1642,8 +1690,14 @@ def upsert_catalog_rows(connection: sqlite3.Connection, source_url: str, rows: l
                     WHEN excluded.source_url <> '' THEN excluded.source_url
                     ELSE videos.source_url
                 END,
-                video_url = excluded.video_url,
-                title = excluded.title,
+                video_url = CASE
+                    WHEN excluded.video_url <> '' THEN excluded.video_url
+                    ELSE videos.video_url
+                END,
+                title = CASE
+                    WHEN excluded.title <> '' THEN excluded.title
+                    ELSE videos.title
+                END,
                 upload_date = CASE
                     WHEN excluded.upload_date <> '' THEN excluded.upload_date
                     ELSE videos.upload_date
@@ -1673,6 +1727,46 @@ def upsert_catalog_rows(connection: sqlite3.Connection, source_url: str, rows: l
 
     connection.commit()
     return inserted, updated
+
+
+def find_not_listed(
+    connection: sqlite3.Connection,
+    *,
+    channel: str,
+    listed_video_ids: set[str],
+) -> list[str]:
+    """The catalog's rows for this channel that the listing did not contain.
+
+    A channel's `/videos` listing is what the channel currently shows, so a
+    row the catalog holds and the listing does not is worth reporting. It is
+    NOT proof of deletion: a video that became a Short, a livestream or
+    members-only content is not listed there either, and neither is one the
+    run failed to fetch. So nothing is deleted -- the caller reports it.
+    """
+    rows = connection.execute(
+        'SELECT video_id FROM videos WHERE channel = ? ORDER BY video_id',
+        (channel,),
+    ).fetchall()
+    return [row['video_id'] for row in rows if row['video_id'] not in listed_video_ids]
+
+
+def listing_is_complete(args: argparse.Namespace, stderr_text: str) -> bool:
+    """Could this run's listing have missed a video the channel has?
+
+    Three ways it can: the run was truncated (`--limit`, `--playlist-items`),
+    it stopped early (yt-dlp's exit code), or a single video failed -- which
+    `--ignore-errors` turns into a line on stderr and an exit code of 0.
+
+    A run that cannot be shown to be complete may still report rows it did
+    not list, but the report has to say so.
+    """
+    if getattr(args, 'limit', 0):
+        return False
+    if getattr(args, 'playlist_items', ''):
+        return False
+    if 'ERROR' in (stderr_text or ''):
+        return False
+    return True
 
 
 def command_catalog(args: argparse.Namespace) -> int:
@@ -1735,12 +1829,20 @@ def command_catalog(args: argparse.Namespace) -> int:
         set_path_setting(connection, 'last_catalog_output_path', snapshot_path)
         set_setting(connection, 'last_catalog_import_at', utc_now_iso())
         inserted, updated = upsert_catalog_rows(connection, args.source_url, rows, channel=effective_channel)
+        not_listed = find_not_listed(
+            connection,
+            channel=effective_channel,
+            listed_video_ids={row['video_id'] for row in rows},
+        )
+        listing_complete = listing_is_complete(args, result.stderr)
         record_catalog_run(
             connection,
             command=command,
             inserted=inserted,
             malformed_rows=len(malformed_lines),
             missing_upload_dates=missing_upload_dates,
+            not_listed_count=len(not_listed),
+            listing_complete=listing_complete,
             raw_output_path=snapshot_path,
             row_count=len(rows),
             source_url=args.source_url,
@@ -1753,8 +1855,11 @@ def command_catalog(args: argparse.Namespace) -> int:
         'channel': effective_channel,
         'db_path': str(db_path),
         'inserted': inserted,
+        'listing_complete': listing_complete,
         'malformed_rows': len(malformed_lines),
         'missing_upload_dates': missing_upload_dates,
+        'not_listed_count': len(not_listed),
+        'not_listed_video_ids': not_listed[:50],
         'pipeline_root': str(pipeline_root),
         'raw_output_path': str(snapshot_path),
         'source_url': args.source_url,
@@ -1764,6 +1869,22 @@ def command_catalog(args: argparse.Namespace) -> int:
         'yt_dlp_returncode': result.returncode,
         'yt_dlp_stderr_path': str(stderr_path),
     }, indent=2))
+
+    if not_listed:
+        qualification = (
+            "This run's listing covered the whole channel, so these are the rows the "
+            'channel no longer shows.'
+            if listing_complete else
+            "This run's listing was NOT complete -- it was truncated, or a video failed "
+            '-- so a row missing from it proves nothing here.'
+        )
+        print(
+            f'NOTE: {len(not_listed)} catalog row(s) for {effective_channel} were not in this '
+            f'run\'s listing. {qualification} A video missing from a /videos listing may '
+            'have become a Short, a livestream or members-only content -- it is not proof '
+            'of deletion, and nothing was deleted.',
+            file=sys.stderr,
+        )
 
     if malformed_lines:
         print(json.dumps({'malformed_examples': malformed_lines[:5]}, indent=2), file=sys.stderr)
