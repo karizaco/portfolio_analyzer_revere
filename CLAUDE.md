@@ -444,6 +444,10 @@ Results: `data/qmg_alt_batch_results.json`.
 - `tools/reportPartialDownloads.py` — reports the orphan `.part` files; never deletes (see below)
 - `tools/reconcileCatalogStatus.js` — reconciles `videos.status` against the filesystem (see below)
 
+### Catalog
+
+- `tools/resolveUndatedDates.js` — dates the rows `fill-dates` could not, by reading the watch page and cross-checking it against the listing order (see below)
+
 ### Data
 
 - `data/video_pipeline/state.sqlite` — canonical SQLite database, **tracked in git** (the catalog)
@@ -740,6 +744,10 @@ py -3 tools/reportPartialDownloads.py --json
 node tools/reconcileCatalogStatus.js           # report only
 node tools/reconcileCatalogStatus.js --execute # also reset the false claims
 node tools/reconcileCatalogStatus.js --json
+
+# Date the rows fill-dates could not (age-restricted uploads, which yt-dlp refuses)
+node tools/resolveUndatedDates.js --listing data/catalog_flat/qullamaggie.tsv
+node tools/resolveUndatedDates.js --listing data/catalog_flat/qullamaggie.tsv --execute
 ```
 
 ### The `status` column is not one thing — `src/video/videoStatus.js`
@@ -939,6 +947,73 @@ else can ever resolve it, so if the title is not stored it exists only in a
 scratch file. An existing title is never overwritten — the listing is a lossy
 copy of the titles (the console codepage drops emoji).
 
+### The rows `fill-dates` could not date — `tools/resolveUndatedDates.js`
+
+An **age-restricted** upload is refused by yt-dlp before its metadata is
+read, so `fill-dates` cannot date it and the row stays undated forever. An
+undated row falls out of every date-keyed layout the pipeline has, so this is
+not cosmetic: it is a video the pipeline cannot place in time.
+
+**The watch page carries the date anyway.** Its embedded JSON holds
+
+```json
+"uploadDate":"2022-03-03T06:59:31-08:00"
+```
+
+and YouTube serves it to a logged-out client even when the video itself is
+age-gated. Measured on 2026-10-29: the watch page agreed with the
+yt-dlp-resolved date for **12 of 12** Qullamaggie videos whose dates were
+already known.
+
+**But a date read out of a web page is not trusted on its own.** The channel
+listing is newest-first, so an undated video's date has to fall *between* its
+dated neighbours — and that bound comes from a completely different source.
+Two independent methods have to agree before anything is written:
+
+```text
+older < target <= newer
+```
+
+where `newer` is the nearest dated video **above** the target in the listing
+and `older` the nearest dated video **below** it. The newer end is inclusive
+(two videos can share a day); the older end is exclusive (the listing is
+strictly ordered).
+
+The tool refuses, rather than writes, when:
+
+| condition | why |
+|---|---|
+| the watch page carries no date | nothing to write |
+| no listing was supplied | nothing to cross-check against |
+| the video is not in the listing | its neighbours are unknown |
+| the listing offers **no dated neighbour** | a bound with nothing on either side constrains nothing, so every date would satisfy it — accepting one would mean trusting the page alone |
+| the date falls outside the bound | the two methods disagree |
+| the page could not be fetched | one unreachable page must not abandon the run |
+
+The last two rules are the ones that matter. A bound that constrains nothing
+is not a check, and a run that accepts a date it cannot corroborate is
+worse than a run that leaves the row undated.
+
+```bash
+node tools/resolveUndatedDates.js --listing data/catalog_flat/qullamaggie.tsv
+node tools/resolveUndatedDates.js --listing data/catalog_flat/qullamaggie.tsv --execute
+node tools/resolveUndatedDates.js --json
+```
+
+Dry-run by default, `--execute` to write. It records a `catalog_runs` row
+with `row_count_kind='work_list_videos'` and points `raw_output_path` at a
+run snapshot (`data/video_pipeline/catalog/resolve_undated_*.tsv`) that says
+**why** each row was or was not dated — the database records the counts, not
+the reasons. `listing_complete` is 1 only when every catalog row for the
+channel appears in the listing, which is the same test the worker uses.
+
+**On 2026-10-29 this closed the last three undated rows** in the catalog
+(all Qullamaggie, all age-restricted): `te9tmNOA38I` → 20220303,
+`xNL-i3acbVk` → 20220216, `fhH3wxpQxxE` → 20191029. The catalog now has
+**zero** undated rows. The dates were cross-checked against bounds derived
+independently from the listing order, and the bounds the tool computed match
+those derived bounds exactly.
+
 ### The channel slug is NOT the YouTube handle — they do not round-trip
 
 `videos.channel` holds a **logical** name (`revere`, `qullamaggie`). The
@@ -984,6 +1059,7 @@ listing can be handed to it directly.
 | `data/catalog_flat/*.tsv` | no | a **cache**, regenerated in ~4.5 min of metadata-only network time. It carries no `upload_date` — the one field the catalog exists to capture — and it is lossy (cp1252, emoji dropped) |
 | `data/catalog_flat/*_needs_date.tsv`, `*_missing.tsv` | no | stale work lists from a completed gap-fill. `fill-dates` derives its own now |
 | `data/video_pipeline/catalog/catalog_*.tsv` | no | run snapshots, strictly worse than the DB |
+| `data/video_pipeline/catalog/resolve_undated_*.tsv` | no | the run snapshots `tools/resolveUndatedDates.js` points `catalog_runs.raw_output_path` at — they say **why** each row was or was not dated |
 | `data/qmg_video_recovery_manifest.json` | **yes** | re-download manifest: the videos whose media is **missing** (537), plus the ones still on disk (179), regenerated from the DB and the filesystem by `tools/inventoryLostVideos.py` — see § 'The recovery manifest' |
 
 The flat listings are **not** worth committing: they are reproducible, they go
