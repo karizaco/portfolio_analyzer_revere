@@ -441,6 +441,7 @@ Results: `data/qmg_alt_batch_results.json`.
 ### Download
 - `src/video/downloadCandidates.js` — the 1080p candidate query + on-disk check + the JS half of the portable-path rule (see below)
 - `tools/reportPartialDownloads.py` — reports the orphan `.part` files; never deletes (see below)
+- `tools/reconcileCatalogStatus.js` — reconciles `videos.status` against the filesystem (see below)
 
 ### Data
 
@@ -733,7 +734,85 @@ node tools/prune_old_probes.js --execute # actually delete
 # Report the orphan .part files (REPORTS ONLY -- it never deletes)
 py -3 tools/reportPartialDownloads.py
 py -3 tools/reportPartialDownloads.py --json
+
+# Reconcile the catalog's status column against the filesystem
+node tools/reconcileCatalogStatus.js           # report only
+node tools/reconcileCatalogStatus.js --execute # also reset the false claims
+node tools/reconcileCatalogStatus.js --json
 ```
+
+### The `status` column is not one thing — `tools/reconcileCatalogStatus.js`
+
+`videos.status` is written by **three tools that mean three different things** by
+`done`:
+
+| writer | `done` means |
+|---|---|
+| `tools/whiteboard_worker.py` | a scan ran and an artifact was written (it also sets `output_path`) |
+| `tools/runAllOcr.js` | the OCR pass finished (it writes a probe log, not `output_path`) |
+| `tools/downloadHiresBatch.js` | the media is on disk |
+
+So the column cannot answer "has this video been processed?" on its own, and it
+certainly cannot answer "is this video downloaded?".
+
+**Both downloaders exclude `done` from their work.** Their candidate queries are
+
+```sql
+WHERE status IN ('pending','scanning','error')   -- downloadHiresBatch.js
+WHERE status IN ('pending','scanning')           -- downloadCandidates.js
+```
+
+A row that says `done` while its media has since been deleted is therefore
+invisible to every downloader: it is neither re-fetched nor reported as missing.
+**21 rows** were in that state on 2026-10-29 — all Revere, all pointing into the
+deleted `downloads/` directory.
+
+`tools/reconcileCatalogStatus.js` reports the reconciliation and, with
+`--execute`, resets the false claims back to `pending` so the downloaders can
+see them again. It resolves every pointer against the filesystem **and** looks
+for the media under the name the downloader itself writes
+(`<upload_date>_<video_id>.mp4`), because:
+
+- a pointer is not evidence that a file is missing, and not evidence that one is
+  present — 179 of 716 pointers resolve, 537 point at files that are gone;
+- a file can be on disk with **no pointer naming it** — 36 such files on
+  2026-10-29, 22 of them 1080p copies of Qullamaggie videos whose pointer names
+  the 720p copy instead.
+
+That second point is why the reset is 21 and not 23: `bEidyFtV-lY` and
+`M0pV73RV2qo` have stale pointers, but their media **is** on disk under the
+downloader's own name, so their `done` claim legitimately holds.
+
+**A file name can mean several video ids.** `idForms()` tries `<date>_<id>`,
+`<id>`, and the `-1080p` suffix, and strips a leading underscore — a September
+2026 download run prepended one, and some Qullamaggie ids start with one
+themselves, so `_Vn-EBl95hes.mp4` is the video `Vn-EBl95hes` and
+`__2urSPdZVec.mp4` is the video `_2urSPdZVec`. Without both spellings, 37 of the
+40 orphan `.part` files look like they belong to nothing.
+
+**The reset is safe for the OCR pipeline.** `runAllOcr.js` selects
+`status='scanning'`, so a reset row only re-enters the OCR pipeline after a
+downloader has fetched it again and set it back to `scanning`.
+
+Pinned by `test/reconcileCatalogStatus.test.js`. Its shipped-catalog test needs
+the filesystem, so it **skips on a fresh clone** — the media is not in git,
+only `state.sqlite` is.
+
+### `fill-dates --refresh`
+
+`fill-dates` normally **skips** the videos that already have a date, which is
+what makes a second pass over the same list cheap. But a date resolved wrongly
+once was then permanent. `--refresh` re-reads the rows that already have a
+date, so a wrong date can be corrected:
+
+```bash
+node tools/runWhiteboardWorker.js fill-dates --channel revere --build-listing --refresh
+```
+
+The upsert already overwrote `upload_date` with a freshly resolved one, so the
+flag's only job is to stop the work-list filter from dropping the row before it
+got there. The report gains `refresh` and `dates_changed` (how many dates
+actually moved).
 
 ### The catalog's real scale, and `fill-dates`
 

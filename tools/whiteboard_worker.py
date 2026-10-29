@@ -1997,6 +1997,8 @@ def read_wanted_rows(path: str) -> list[tuple[str, str]]:
 def build_wanted_from_listing(
     connection: sqlite3.Connection,
     listing: list[tuple[str, str]],
+    *,
+    refresh: bool = False,
 ) -> list[tuple[str, str]]:
     """The listing's videos whose upload_date the database does not have.
 
@@ -2005,8 +2007,12 @@ def build_wanted_from_listing(
     deriving it here is what makes the gap-fill runnable from a fresh clone --
     the listing plus the database are the only two inputs, and both are
     reproducible.
+
+    With `refresh`, the videos that already have a date are wanted too. A date
+    that was resolved wrongly is otherwise permanent: the skip is what makes a
+    second pass cheap, but it is also what makes the error unfalsifiable.
     """
-    dated = {
+    dated = set() if refresh else {
         row['video_id'] for row in connection.execute(
             "SELECT video_id FROM videos WHERE COALESCE(upload_date, '') <> ''"
         )
@@ -2248,7 +2254,7 @@ def command_fill_dates(args: argparse.Namespace) -> int:
         if args.input:
             wanted = read_wanted_rows(args.input)
         else:
-            wanted = build_wanted_from_listing(connection, listing)
+            wanted = build_wanted_from_listing(connection, listing, refresh=args.refresh)
 
         if not wanted:
             print('Nothing to fill: there is no video left without a date.', file=sys.stderr)
@@ -2258,14 +2264,28 @@ def command_fill_dates(args: argparse.Namespace) -> int:
         # second pass cheap: run the fast client over the whole list, then run
         # the slower fallbacks over the same list and only the stragglers are
         # fetched.
+        #
+        # `--refresh` turns that skip off. The upsert already overwrites a
+        # date with a freshly resolved one, so all this flag has to do is
+        # stop the work list from dropping the row before it gets there.
         already_dated = {
             row['video_id'] for row in connection.execute(
                 "SELECT video_id FROM videos WHERE COALESCE(upload_date, '') <> ''"
             )
         }
+        # The dates as they stand before the run, so the report can say how
+        # many of them the refresh actually changed.
+        dates_before = {
+            row['video_id']: row['upload_date'] for row in connection.execute(
+                "SELECT video_id, upload_date FROM videos"
+            )
+        }
     requested = len(wanted)
-    skipped = [video_id for video_id, _ in wanted if video_id in already_dated]
-    wanted = [(video_id, title) for video_id, title in wanted if video_id not in already_dated]
+    if args.refresh:
+        skipped = []
+    else:
+        skipped = [video_id for video_id, _ in wanted if video_id in already_dated]
+        wanted = [(video_id, title) for video_id, title in wanted if video_id not in already_dated]
 
     jobs = max(1, args.jobs)
     batch_size = max(1, args.batch_size)
@@ -2273,7 +2293,9 @@ def command_fill_dates(args: argparse.Namespace) -> int:
     print(
         f'Filling {len(wanted)} videos for {effective_channel} '
         f'in {len(batches)} batches of up to {batch_size}, {jobs} at a time '
-        f'(client set: {args.extractor_args}); {len(skipped)} already have a date.',
+        f'(client set: {args.extractor_args}); '
+        + ('refreshing, so rows that already have a date are re-read.'
+           if args.refresh else f'{len(skipped)} already have a date.'),
         file=sys.stderr,
     )
 
@@ -2318,6 +2340,16 @@ def command_fill_dates(args: argparse.Namespace) -> int:
 
     dated = sum(1 for row in rows if row['upload_date'])
 
+    # How many dates the refresh actually changed. "Re-read 1,814 videos and
+    # 0 dates changed" is a different claim from "re-read 1,814 videos", and
+    # only the first one says the refresh was worth its requests.
+    dates_changed = 0
+    if args.refresh:
+        for row in rows:
+            fresh = row.get('upload_date') or ''
+            if fresh and dates_before.get(row['video_id']) != fresh:
+                dates_changed += 1
+
     # A video whose date could not be resolved is still a video, and its title
     # is known from the listing. Store it, so the fact that this video exists
     # does not depend on a scratch file that is not in version control.
@@ -2350,12 +2382,15 @@ def command_fill_dates(args: argparse.Namespace) -> int:
             ''.join(f'{video_id}\t{title}\n' for video_id, title in wanted),
             encoding='utf-8',
         )
+    run_command = listing_command or ['fill-dates', '--input', args.input or '']
+    if args.refresh and not listing_command:
+        run_command = run_command + ['--refresh']
     with connect_database(db_path) as connection:
         initialize_schema(connection)
         record_catalog_run(
             connection,
             channel=effective_channel,
-            command=listing_command or ['fill-dates', '--input', args.input or ''],
+            command=run_command,
             inserted=inserted,
             malformed_rows=0,
             missing_upload_dates=len(missing),
@@ -2371,6 +2406,8 @@ def command_fill_dates(args: argparse.Namespace) -> int:
         'dated': dated,
         'inserted': inserted,
         'jobs': jobs,
+        'refresh': bool(args.refresh),
+        'dates_changed': dates_changed,
         'requested': requested,
         'attempted': attempted,
         'skipped': len(skipped),
@@ -2556,6 +2593,15 @@ def build_parser() -> argparse.ArgumentParser:
         help='How many videos one yt-dlp invocation covers. Small batches save '
              'their rows as they finish, so a long run shows progress and can '
              'be interrupted without losing the work already done.',
+    )
+    fill_dates_parser.add_argument(
+        '--refresh',
+        action='store_true',
+        help='Re-read the videos that already have a date, and overwrite the '
+             'date with the freshly resolved one. Without this a row whose '
+             'date was resolved wrongly keeps it forever: nothing ever reads '
+             'a row that already has a date, so the error is permanent. The '
+             'cost is one metadata request per video in the work list.',
     )
     fill_dates_parser.add_argument(
         '--extractor-args',

@@ -411,6 +411,125 @@ test('the catalog worker', { skip: PY ? false : 'no python launcher available' }
     assert.strictEqual(json.dated, 0, 'there was nothing left to date');
   });
 
+  await t.test('fill-dates --refresh re-reads the rows that already have a date', () => {
+    // A date that was resolved wrongly is otherwise permanent: the skip is
+    // what makes a second pass cheap, but it is also what makes the error
+    // unfalsifiable. `--refresh` turns the skip off and lets the freshly
+    // resolved date overwrite the old one.
+    const fillRoot = path.join(tmp, 'fill-refresh-pipeline');
+    const fake = path.join(tmp, 'fake_yt_dlp_refresh.py');
+    const writeFake = (date) => {
+      fs.writeFileSync(fake, [
+        'import sys',
+        'args = sys.argv[1:]',
+        'path = args[args.index("--batch-file") + 1]',
+        'for line in open(path, encoding="utf-8"):',
+        '    url = line.strip()',
+        '    if not url: continue',
+        '    vid = url.split("v=")[-1]',
+        `    sys.stdout.write(vid + "\\t${date}\\tFilled " + vid + "\\n")`,
+        '',
+      ].join('\n'), 'utf8');
+    };
+    writeFake('20240505');
+
+    const input = path.join(tmp, 'wanted_refresh.tsv');
+    fs.writeFileSync(input, [
+      'aaa111\tFirst',
+      'bbb222\tSecond',
+      '',
+    ].join('\n'), 'utf8');
+
+    assert.strictEqual(runWorker(['--pipeline-root', fillRoot, 'init']).status, 0);
+
+    const first = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'test',
+      '--input', input,
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(first.status, 0, first.stderr);
+    assert.strictEqual(readJson(first.stdout).dated, 2);
+
+    // The channel now says something different about both videos.
+    writeFake('20240606');
+
+    const refreshed = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'test',
+      '--input', input,
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+      '--refresh',
+    ]);
+    assert.strictEqual(refreshed.status, 0, refreshed.stderr);
+    const json = readJson(refreshed.stdout);
+    assert.strictEqual(json.refresh, true);
+    assert.strictEqual(json.requested, 2);
+    assert.strictEqual(json.skipped, 0, 'nothing was skipped -- that is the point');
+    assert.strictEqual(json.attempted, 2, 'both were fetched again');
+    assert.strictEqual(json.dated, 2);
+    assert.strictEqual(json.dates_changed, 2, 'both dates changed');
+
+    const videos = readVideos(path.join(fillRoot, 'state.sqlite'));
+    // readVideos returns tuples: video_id, upload_date, title, channel, source_url.
+    const dates = Object.fromEntries(videos.map((v) => [v[0], v[1]]));
+    assert.strictEqual(dates.aaa111, '20240606');
+    assert.strictEqual(dates.bbb222, '20240606');
+
+    // And without the flag the rows are still left alone.
+    const again = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'test',
+      '--input', input,
+      '--jobs', '1',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(again.status, 0, again.stderr);
+    assert.strictEqual(readJson(again.stdout).attempted, 0);
+    const after = readVideos(path.join(fillRoot, 'state.sqlite'));
+    const afterDates = Object.fromEntries(after.map((v) => [v[0], v[1]]));
+    assert.strictEqual(afterDates.aaa111, '20240606', 'the refreshed date stands');
+  });
+
+  await t.test('fill-dates --refresh reports no change when nothing moved', () => {
+    // "Re-read N videos and 0 dates changed" is a different claim from
+    // "re-read N videos", and only the first one says the refresh was worth
+    // its requests.
+    const fillRoot = path.join(tmp, 'fill-refresh-same-pipeline');
+    const fake = path.join(tmp, 'fake_yt_dlp_refresh_same.py');
+    fs.writeFileSync(fake, [
+      'import sys',
+      'args = sys.argv[1:]',
+      'path = args[args.index("--batch-file") + 1]',
+      'for line in open(path, encoding="utf-8"):',
+      '    url = line.strip()',
+      '    if not url: continue',
+      '    vid = url.split("v=")[-1]',
+      '    sys.stdout.write(vid + "\\t20240505\\tFilled " + vid + "\\n")',
+      '',
+    ].join('\n'), 'utf8');
+
+    const input = path.join(tmp, 'wanted_refresh_same.tsv');
+    fs.writeFileSync(input, 'aaa111\tFirst\n', 'utf8');
+
+    assert.strictEqual(runWorker(['--pipeline-root', fillRoot, 'init']).status, 0);
+    assert.strictEqual(runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'test', '--input', input, '--jobs', '1', '--yt-dlp-bin', fake,
+    ]).status, 0);
+
+    const refreshed = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'test', '--input', input, '--jobs', '1', '--yt-dlp-bin', fake, '--refresh',
+    ]);
+    assert.strictEqual(refreshed.status, 0, refreshed.stderr);
+    const json = readJson(refreshed.stdout);
+    assert.strictEqual(json.attempted, 1);
+    assert.strictEqual(json.dates_changed, 0, 'the date came back the same');
+  });
+
   await t.test('fill-dates never builds a channel URL from the channel name', () => {
     // The channel slug is NOT the YouTube handle and the two do not
     // round-trip: 'revere' is listed at @revereasset, and @revere is a
