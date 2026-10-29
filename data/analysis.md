@@ -1,29 +1,30 @@
-# OCR Video Scan Analysis — 2026-09-12 test run
+# OCR Video Scan Analysis — data
 
 **Output root:** [C:\Users\admin\Projects\portfolio_analyzer_revere\data](C:\Users\admin\Projects\portfolio_analyzer_revere\data)  
 **Probe directory:** `C:\Users\admin\Projects\portfolio_analyzer_revere\data`  
 **Saved screenshots:** `C:\Users\admin\Projects\portfolio_analyzer_revere\data\screenshots` (0 PNGs)  
-**Generated at:** 2026-09-19T13:59:26.060Z  
+**Generated at:** 2026-10-29T05:14:56.647Z  
 
 ## Totals
 
-- **Videos scanned:** 139 of 10
-- **Videos status=done:** 128
-- **Total captures saved:** 414
+- **Videos scanned:** 140 of 10
+- **Videos status=done:** 129
+- **Total captures saved:** 416
 - **Captures with OCR-observed date:** 278
 - **Intro-card captures:** 60
-- **Whiteboard segments:** 234 (40 intro-card)
-- **Captures with tickers:** 269 (unique tickers: 52)
-- **Captures with keyframe timestamp:** 356 (videos with lookup skipped: 3)
-- **Unique pHashes:** 220 (captures sharing a pHash: 144)
-- **Unique overlay pHashes (chart-stream):** 35 (collisions: 6)
-- **Captures per channel:** revere=373, qmg=41
-- **Unique screen layouts:** chart, dmi, structured_whiteboard, tale_of_the_tape
+- **Whiteboard segments:** 236 (40 intro-card)
+- **Captures with tickers:** 271 (unique tickers: 56)
+- **Captures with keyframe timestamp:** 358 (videos with lookup skipped: 3)
+- **Unique pHashes:** 222 (captures sharing a pHash: 144)
+- **Unique overlay pHashes (chart-stream):** 37 (collisions: 6)
+- **Captures per channel:** revere=373, qmg=43
+- **Unique screen layouts:** chart, chart_stream, dmi, structured_whiteboard, tale_of_the_tape
 - **Captures per layout:**
   - structured_whiteboard: 250
   - dmi: 120
   - chart: 36
   - tale_of_the_tape: 8
+  - chart_stream: 2
 
 ## Per-video summary
 
@@ -168,6 +169,7 @@
 | 137 | 20220419 · 20220419 · 20220419_yn2pIMXdFg8.mp4 | 577 | 60 | 3 | chart | 4.6 | 00:09:00 |
 | 138 | 20220421 · 20220421 · 20220421_BMl5Ml24crg.mp4 | 670 | 60 | 1 | tale_of_the_tape | 12.9 | 00:27:52 |
 | 139 | 20220425 · 20220425 · 20220425_s6jdpRmrGck.mp4 | 459 | 60 | 1 | tale_of_the_tape | 16.5 | 00:19:08 |
+| 140 | 20220222 · 20220222 · 20220222_X1Rp33_-R9E.mp4 | 452 | 3 | 2 | chart_stream | 25.1 | 00:00:00 |
 
 ## Captures (per video, in temporal order)
 
@@ -4949,11 +4951,35 @@
 **Saved files:**
 - [`qmg_20220425.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220425.png)
 
+### 140. 20220222_X1Rp33_-R9E.mp4
+
+- **Status:** done
+- **Frame budget:** 452 sampled → 3 OCR → 2 saved
+- **Prefilter top:** 45.23 | **Thresholds:** strong=6, review=4
+- **OCR engine:** easyocr | lang=eng | dpi=300 | psm=null | deskew=false
+- **Keyframe lookup:** 340 keyframes resolved
+
+| # | t (HH:MM:SS) | score | layout | obs.date | intro? | tickers | phash | keyframe Δ | snippet |
+|---|---|---:|---|---:|:---:|---|---|---:|---|
+| 1 | 00:00:00 | 25.1 | chart_stream | — | · | NRGU, DVN, MOS, COPX (+3) | bf3872a8 | +0s | NRGU DVN MOS COPX TQQQ FCX TSLA… |
+| 2 | 00:09:48 | 25.0 | chart_stream | — | · | NRGU, DVN, MOS, COPX (+3) | bfb972a8 | +1.33s | NRGU DVN MOS COPX TQQQ FCX TSLA… |
+
+**Whiteboard segments:**
+
+| # | layout | captures | start | end | peak score | intro? |
+|---|---|---:|---|---|---:|:---:|
+| 1 | chart_stream | 1 | 00:00:00 | 00:00:00 | 25.1 | · |
+| 2 | chart_stream | 1 | 00:09:48 | 00:09:48 | 25.0 | · |
+
+**Saved files:**
+- [`qmg_20220222.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20261024/qmg-table-e2e/snapshots/qmg_20220222.png)
+- [`qmg_20220222_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20261024/qmg-table-e2e/snapshots/qmg_20220222_2.png)
+
 ## Observations
 
 - 10/10 videos produced `status=done` with the OCR scanner; none failed.
-- 414 captures saved across 139 videos; 28 on disk include suffix-walk collisions.
-- Layout distribution: `structured_whiteboard`=250, `dmi`=120, `chart`=36, `tale_of_the_tape`=8
+- 416 captures saved across 140 videos; 28 on disk include suffix-walk collisions.
+- Layout distribution: `structured_whiteboard`=250, `dmi`=120, `chart`=36, `tale_of_the_tape`=8, `chart_stream`=2
 - `structured_whiteboard` dominates — the classifier picks the parser-rich `TALE OF THE TAPE` slide when the `screen_layout` signal converges with a clean double-portfolio block.
 - One third capture per video (a `dmi` slide) is also surfacing with `MISSING_METRIC_LINE` + `MISSING_BOTTOM_LINE` issues — the parser still cannot fully decode `DAILY MARKET INSIGHT` rows, which is a known gap covered by the new text-density scoring.
 

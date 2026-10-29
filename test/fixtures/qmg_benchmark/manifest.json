@@ -1,0 +1,50 @@
+{
+  "note": "The curated frames the QMG ground-truth benchmark scores. Tracked in git so the benchmark can run from a fresh clone. A frame's identity is its FILE, not its name: several DIFFERENT 1920x1080 images share each snapshot filename across run directories, so the md5 below is what identifies the frame. `capture_index` is the 0-based capture index the ground truth is keyed by; `snapshot_file_index` is the index in the original snapshot FILENAME, which is captureIndex + 1.",
+  "min_width": 1280,
+  "frames": [
+    {
+      "case": "trade_ideas",
+      "date_key": "20220218",
+      "capture_index": 1,
+      "snapshot_file_index": 2,
+      "file": "trade_ideas_20220218_c1.png",
+      "width": 1920,
+      "height": 1080,
+      "md5": "d6a45e350aeacf16c704d324f0ed18a5",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220218_2.png"
+    },
+    {
+      "case": "sparse",
+      "date_key": "20221104",
+      "capture_index": 0,
+      "snapshot_file_index": 1,
+      "file": "sparse_20221104_c0.png",
+      "width": 1920,
+      "height": 1080,
+      "md5": "7d766f71608427d09c8dbf0592b81445",
+      "source": "data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20221104.png"
+    },
+    {
+      "case": "normal_2022",
+      "date_key": "20220606",
+      "capture_index": 1,
+      "snapshot_file_index": 2,
+      "file": "normal_2022_20220606_c1.png",
+      "width": 1920,
+      "height": 1080,
+      "md5": "e34b828300318085b07166a87aa50f98",
+      "source": "data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606_2.png"
+    },
+    {
+      "case": "dense_2023",
+      "date_key": "20230609",
+      "capture_index": 0,
+      "snapshot_file_index": 1,
+      "file": "dense_2023_20230609_c0.png",
+      "width": 1920,
+      "height": 1080,
+      "md5": "d53cb5fab33eba46e73ba40a7477f91e",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261012/snapshots/qmg_20230609.png"
+    }
+  ]
+}
