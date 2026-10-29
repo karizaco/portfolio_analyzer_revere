@@ -251,12 +251,12 @@ Rules:
 ## Testing
 
 ```bash
-npm test              # everything except the OCR benchmark (339 tests, ~2 min)
+npm test              # everything except the OCR benchmark (344 tests, ~2 min)
 npm run test:benchmark  # test/qmgGroundTruth.test.js alone (~23 min, EasyOCR)
 npm run test:all        # everything, benchmark included -- FAILS under contention
 ```
 
-339 tests, all passing (as of 2026-10-29).
+344 tests, all passing (as of 2026-10-29).
 
 **The benchmark has to run on its own.** `test/qmgGroundTruth.test.js` is a
 23-minute EasyOCR benchmark, and `node --test` runs the test *files* in
@@ -413,6 +413,7 @@ Results: `data/qmg_alt_batch_results.json`.
 ### Entry points
 - `tools/whiteboard_worker.py` — catalog, screenshot, OCR worker (Python CLI)
 - `tools/scanVideoWithOcr.js` — per-video OCR + capture (Node.js CLI)
+- `tools/evalParserReplay.js` — replay the captured logs through the current parser and score it (see below)
 - `tools/aggregateScanResults.js` — merge scan output into `analysis.json`
 - `tools/aggregateOcrTimeline.js` — merge into `timeline.json`
 - `tools/viewTimeline.html` — interactive timeline viewer
@@ -704,6 +705,13 @@ node tools/scanVideoWithOcr.js --video-dir data/video_pipeline/downloads_hires/ 
 
 # Aggregate
 node tools/aggregateScanResults.js data/video_scan_YYYYMMDD/
+
+# Replay the captured logs through the current parser and score it.
+# Prints a census of what it could and could not reach -- read it with the
+# number, never without it.
+node tools/evalParserReplay.js
+node tools/evalParserReplay.js --json
+node tools/evalParserReplay.js data/video_ocr_probe data/video_scan_test/_rerun
 
 # Prune old probes
 node tools/prune_old_probes.js           # dry-run
@@ -1143,6 +1151,54 @@ schema as `_easyocr_ocr.py` — `{text, lines, words[{text,left,top,width,height
 
 ---
 
+## The replay tool is a surviving sample — `tools/evalParserReplay.js`
+
+`node tools/evalParserReplay.js` replays the captured probe logs through the
+**current** parser and scores it against `data/qmg_ground_truth.json`. It is the
+offline counterpart to a re-scan: parser changes are measured in seconds
+instead of ~12 min/video of EasyOCR.
+
+**Its number is a SURVIVING SAMPLE, not a corpus-wide figure, and the tool now
+says so on every run.** Three defects were fixed on 2026-10-29; before them the
+number was quietly wrong.
+
+| defect | what it did | fix |
+|---|---|---|
+| the ground truth was read by a local reimplementation | it only understood the array form, so the four dates whose GT is the object form `{tickers, crop}` — `20220323`, `20220427`, `20220428`, `20220510` — were **silently dropped**, 19 logs with real ground truth invisible | read it with `src/qmg/qmgGroundTruth.js`, the canonical reader |
+| the ground truth was counted **once per log file** | a date with five logs contributed its tickers five times: the denominator was **2.17×** the truth, and "dates scored" was a count of log rows | count it **once per date**; pool the date's predictions across its logs |
+| nothing reported how much of the corpus was reachable | 172 of 207 ground-truth logs (83%) never reached the scorer, and nothing said so | the tool prints a census, and prints the dates it could not measure |
+
+**Why the missing logs cannot simply be included.** The probe logs only carry
+per-word geometry (`ocr_words`) from commit `02e481f` (2026-10-18) onwards.
+Without word positions the parser's column gate, panel gate, Filter B and its
+in-column repair pass are all skipped, and it falls back to the legacy
+lexicon + price-nearby path — a **different, weaker parser**. Measured on the
+same word-bearing logs, forcing `words` to `[]` takes precision from
+**89.4 % to 27.8 %**. So a wordless log is excluded, not scored on `ocr_text`
+alone. Re-OCRing the **191 surviving snapshot PNGs** (covering 35 ground-truth
+dates) is the only sound way to widen the sample; only `20230601` has neither
+words nor a surviving snapshot.
+
+**The surviving sample is not random.** It is the post-2026-10-18 crop
+profile: 0 of 205 September logs carry `ocr_words`, 36 of 124 October ones do.
+Any statistic derived from it describes the later crop/tuning era only.
+
+The current figures:
+
+| root set | dates scored | recall | precision |
+|---|---|---|---|
+| default (8 probe roots) | 8 | **59.6 %** (53/89) | **93.0 %** (53/57) |
+| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **62.9 %** (107/170) | **80.5 %** (107/133) |
+
+`test/evalParserReplay.test.js` pins the *methodology* on synthetic fixtures —
+the real corpus is untracked, so a test asserting the real numbers would fail
+on a fresh clone.
+
+**Do not quote the replay number without its census.** `node
+tools/evalParserReplay.js --json` prints it in machine-readable form.
+
+---
+
 ## Positions-TABLE reader (`position_table` profile)
 
 The Qullamaggie position list is a **TradingView GUI table**, not a chart overlay. Two
@@ -1233,11 +1289,19 @@ layouts exist and the legacy crop reader only ever saw the first:
   (`src/normalize/tickerDecode.js:157`), so the read arrived as `R` and never matched
   the key. `GSlT` published uppercased, as `GSLT`.)
   **All eleven rows were deleted on 2026-10-29.** The measured effect, via the
-  no-OCR replay (`node tools/evalParserReplay.js`): recall **unchanged** at 56.3 %
-  (71/126) and precision **92.2 % → 93.4 %** (71/77) — the `OBTS` false positive
-  in 20230523 is gone and nothing was lost. The misreads now decode to the real
-  ticker: `PLIR` → `PLTR`, `NUGI` → `NRGU`, `MNOY` → `MNDY`, `GSLT` → `GSIT`.
-  `test/lexiconVariants.test.js` pins the outcome.
+  no-OCR replay (`node tools/evalParserReplay.js`) on its default roots:
+  recall **58.4 % → 59.6 %** (52/89 → 53/89) and precision
+  **91.2 % → 93.0 %** (52/57 → 53/57) — the `OBTS` false positive in 20230523
+  is gone and one more real ticker is found. On the wider corpus
+  (`node tools/evalParserReplay.js data/video_ocr_probe data/video_scan_test/_rerun`)
+  the effect is larger: recall **60.0 % → 62.9 %** (102/170 → 107/170) and
+  precision **76.7 % → 80.5 %** (102/133 → 107/133). *(These numbers were
+  re-measured on 2026-10-29 after the replay tool's own defects were fixed —
+  see § 'The replay tool is a surviving sample'. The figures quoted before
+  that — recall 56.3 % (71/126), precision 92.2 % → 93.4 % (71/77) — came
+  from the biased instrument and are withdrawn.)* The misreads now decode to
+  the real ticker: `PLIR` → `PLTR`, `NUGI` → `NRGU`, `MNOY` → `MNDY`,
+  `GSLT` → `GSIT`. `test/lexiconVariants.test.js` pins the outcome.
   - The **`JNUG` in the seed list at line 201 is a real ticker** (a seeded Qullamaggie
     chart ETF, junior gold miners 2×) and was **kept**. The deleted `JNUG` at line 245
     was a redundant duplicate of it.
