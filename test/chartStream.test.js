@@ -469,3 +469,107 @@ test('parseChartStreamPositionList: intro text yields no_position_list with ocr_
 // Measured on the replay corpus: recall 59.6% -> 66.3%, precision
 // 93.0% -> 95.2%, and every one of the ten holdings it recovers is in the
 // ground truth.
+
+const LIST_X = 780;
+const PRICE_X = 900;
+
+// A synthetic position list. The `alias` row carries a garbled price
+// ("$lO5.OO" — the letter O where a digit belongs), so the row is NOT
+// price-aligned even though its ticker sits in the column. That is the
+// situation the rescue exists for.
+function positionListFrame({ alias = 'OBTS', aliasPrice = '$lO5.OO', aliasIsPriceAligned = false, extraRows = [] } = {}) {
+  // The rows are numbered from 2, and the watchlist header and the watchlist
+  // row come after them — so an extra row lands INSIDE the position list,
+  // where the column gate can see it. A row placed below the watchlist
+  // header is not a position-list row at all, which is a different test.
+  const body = [
+    { token: 'AAPL', x: LIST_X, w: 40, price: '$214.50' },
+    { token: 'MSFT', x: LIST_X, w: 40, price: '$412.30' },
+    { token: alias, x: LIST_X, w: 40, price: aliasIsPriceAligned ? '$45.60' : aliasPrice },
+    { token: 'GSII', x: 300, w: 40 },
+    { token: 'TSLA', x: LIST_X, w: 40, price: '$342.10' },
+    ...extraRows,
+  ];
+  const rows = [
+    { line: 1, token: 'POSITIONS', x: 700, w: 90 },
+    ...body.map((row, i) => ({ ...row, line: i + 2 })),
+    { line: body.length + 2, token: 'WATCHLIST', x: 700, w: 90 },
+    { line: body.length + 3, token: 'PLIR', x: LIST_X, w: 40, price: '$lO8.OO' },
+  ];
+  const words = [];
+  const lines = [];
+  for (const row of rows) {
+    const parts = [row.token];
+    words.push({ text: row.token, left: row.x, top: 100 + row.line * 60, width: row.w, height: 30, line: row.line });
+    if (row.price) {
+      parts.push(row.price);
+      words.push({ text: row.price, left: PRICE_X, top: 100 + row.line * 60, width: 60, height: 30, line: row.line });
+    }
+    lines.push(parts.join(' '));
+  }
+  return { text: lines.join('\n'), lines, words };
+}
+
+test('parseChartStreamPositionList: a garbled price row is rescued from the curated alias table', () => {
+  // OBTS is QBTS with the leading Q read as an O. Its row's price is
+  // garbled, so the row is not price-aligned, so the column gate rejects
+  // the token and the holding is lost.
+  const result = parseChartStreamPositionList({ ocr: positionListFrame() });
+  assert.ok(result.position_list.includes('QBTS'),
+    `expected QBTS in ${JSON.stringify(result.position_list)}`);
+  assert.ok(!result.position_list.includes('OBTS'),
+    `the garbled form must not be published: ${JSON.stringify(result.position_list)}`);
+  assert.ok(result.position_list.includes('AAPL'));
+  assert.ok(result.position_list.includes('TSLA'));
+});
+
+test('parseChartStreamPositionList: a garble carrying a digit is rescued too', () => {
+  // QBT5 is QBTS with the trailing S read as a 5. It is not ticker-shaped
+  // at all — STRICT_TICKER_PATTERN is letters only — so it never becomes a
+  // candidate and can only be reached through the word list.
+  const result = parseChartStreamPositionList({ ocr: positionListFrame({ alias: 'QBT5' }) });
+  assert.ok(result.position_list.includes('QBTS'),
+    `expected QBTS in ${JSON.stringify(result.position_list)}`);
+  assert.ok(!result.position_list.includes('QBT5'),
+    `the garbled form must not be published: ${JSON.stringify(result.position_list)}`);
+});
+
+test('parseChartStreamPositionList: a garble and its canonical are never both published', () => {
+  // The frame contains the garble read cleanly AND the real ticker, both
+  // price-aligned. The repair pass cannot replace the garble in place
+  // (its canonical is already in the reading), so the raw survives it —
+  // and the rescue has to drop the raw rather than leave both.
+  const frame = positionListFrame({
+    alias: 'OBTS',
+    aliasIsPriceAligned: true,
+    extraRows: [{ line: 9, token: 'QBTS', x: LIST_X, w: 40, price: '$45.60' }],
+  });
+
+  const result = parseChartStreamPositionList({ ocr: frame });
+  assert.ok(result.position_list.includes('QBTS'));
+  assert.ok(!result.position_list.includes('OBTS'),
+    `the garbled form must not be published: ${JSON.stringify(result.position_list)}`);
+  assert.equal(result.position_list.filter((t) => t === 'QBTS').length, 1,
+    'the canonical appears exactly once');
+});
+
+test('parseChartStreamPositionList: a curated alias outside the column or below the watchlist is not rescued', () => {
+  // Two aliases the rescue must NOT touch:
+  //   - GSII at x=300, inside the panel but in the chart area. The column
+  //     is the structural evidence; a curated alias on its own is not.
+  //   - PLIR at x=780 on a row BELOW the Personal WatchList header. That
+  //     panel sits at the same x as the position list, so a row below it
+  //     is a watchlist row however well it lines up.
+  const result = parseChartStreamPositionList({ ocr: positionListFrame() });
+  assert.ok(!result.position_list.includes('GSIT'),
+    `a chart-area alias must not be rescued: ${JSON.stringify(result.position_list)}`);
+  assert.ok(!result.position_list.includes('PLTR'),
+    `a watchlist-row alias must not be rescued: ${JSON.stringify(result.position_list)}`);
+  assert.ok(!result.position_list.includes('GSII'));
+  assert.ok(!result.position_list.includes('PLIR'));
+  // The frame DOES hold a rescuable row, so this is a boundary test and not
+  // a vacuous one: the rescue must reach one alias and stop there.
+  assert.ok(result.position_list.includes('QBTS'),
+    `the in-column alias must still be rescued: ${JSON.stringify(result.position_list)}`);
+});
+
