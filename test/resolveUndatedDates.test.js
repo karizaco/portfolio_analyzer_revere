@@ -190,6 +190,21 @@ test('a video that is not in the listing is refused rather than trusted', async 
   assert.match(plan[0].reason, /not in the listing/);
 });
 
+test('a row from another channel says so, rather than blaming the listing', async () => {
+  // "not in the listing" is the wrong message for a row that is in the
+  // OTHER channel's listing -- and the fix for that is to run the tool once
+  // per channel, which the message has to say.
+  const plan = await planResolution([ROWS[0]], {
+    listingIds: ['somethingElse'],
+    listingChannel: 'revere',
+    knownDates: new Map(),
+    fetchHtml: () => watchPage('2022-03-03'),
+  });
+  assert.equal(plan[0].accepted, false);
+  assert.match(plan[0].reason, /listing is for channel 'revere'/);
+  assert.match(plan[0].reason, /once per channel/);
+});
+
 test('a watch page with no date is refused', async () => {
   const plan = await planResolution([ROWS[0]], {
     listingIds: ['te9tmNOA38I'],
