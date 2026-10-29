@@ -548,7 +548,10 @@ function acceptCandidates({ candidates, word, raw, portfolio, ocrText, accepted,
       // Unknown or ambiguous. A token with a price next to it is taken at
       // face value; anything else is dropped — a wrong ticker in a portfolio
       // report is worse than a missing one.
-      if (hasPriceNear(raw, text) && STRICT_TICKER_PATTERN.test(text)) {
+      // The shape test is the cheap one, so it goes first: a token that could
+      // never be a ticker should not cost a regex build (and an OCR token can
+      // carry metacharacters that a naive pattern would choke on).
+      if (STRICT_TICKER_PATTERN.test(text) && hasPriceNear(raw, text)) {
         accepted.push({ ticker: text, word, corrected: null });
         continue;
       }

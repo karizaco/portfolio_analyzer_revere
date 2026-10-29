@@ -170,8 +170,17 @@ function countTickerOccurrences(ocrText) {
   return counts;
 }
 
+// A ticker's text comes from the OCR, so it can carry regex metacharacters:
+// "1.02(-0.20" is a real reading from a whiteboard frame, and an unbalanced
+// "(" interpolated into a pattern throws "Unterminated group" — which took
+// down the whole parse, not just the one token.
+function escapeRegExp(value) {
+  return String(value == null ? '' : value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function hasPriceNear(ocrText, ticker) {
   if (!ocrText) return false;
+  if (!ticker) return false;
   // Search for the ticker as a whole word; accept up to 25 trailing chars
   // (the OCR frequently splits dollar prices from the symbol, e.g. "GOVX | +1827%").
   // Supports both dot-decimals (14.86) and comma-decimals (7,36) which EasyOCR
@@ -184,7 +193,7 @@ function hasPriceNear(ocrText, ticker) {
   //   +1827%     — percent change
   //   HIGH/LOW/CLOSE/etc. — financial keywords
   const proximityPattern = new RegExp(
-    `\\b${ticker}\\b[^A-Z0-9.]{0,25}(`
+    `\\b${escapeRegExp(ticker)}\\b[^A-Z0-9.]{0,25}(`
       + `\\$\\s*\\d|`
       + `\\d+(?:[.,]\\d+)+(?:\\.\\d+)?|`
       + `\\b\\d{4,6}\\b|`                       // bare 4-6 digit price (e.g. 28M → 28M is not, but 28 alone could be)
