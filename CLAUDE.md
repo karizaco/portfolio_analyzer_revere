@@ -437,6 +437,7 @@ Results: `data/qmg_alt_batch_results.json`.
 ### Aggregation
 - `src/video/captureTickers.js` — which field of a capture holds its holdings (see below)
 - `src/video/probeLogDirs.js` — the three probe-log directory layouts (see below)
+- `src/video/portablePaths.js` — makes the paths a probe log recorded portable for a committed artifact (see below)
 
 ### Download
 - `src/video/downloadCandidates.js` — the 1080p candidate query + on-disk check + the JS half of the portable-path rule (see below)
@@ -599,6 +600,59 @@ absolute in-repo pointers became repo-relative, and **not one** of them changed
 what they resolve to (each rewritten pointer was compared against its old
 absolute path — 0 mismatches, 179 present / 537 missing before and after). A
 pointer that points outside the repository is left alone.
+
+### A path recorded on ANOTHER machine — `src/video/portablePaths.js`
+
+The rule above answers "is this path inside the repository?" by comparing
+against **the current** repository root, which works for a path this machine
+wrote. The committed **probe logs** are a third case: they record the absolute
+paths of the machine that ran the scan, and that machine is often not this one.
+
+Measured on the committed `data/analysis.json` before the fix: **1,185**
+absolute path values — 629 `top_rejected_candidates[].frame_path`, 416
+`captures[].output_path` and 140 `video_path`. **1,175 of them pointed into
+this repository**, and therefore had an honest relative form; the other **10**
+pointed at `D:\courses_F\revere_asset\videos`, which is outside the
+repository and stays absolute. So the committed artifact named one person's
+home directory, and could not be regenerated from a fresh clone.
+
+`src/video/portablePaths.js` applies the same rule to paths that come out of a
+probe log, and answers "inside the repository?" by the repository's own
+layout rather than by the current root: **everything inside the repository
+lives under `data/`**, so a recorded path containing that segment is inside a
+checkout of this repository, wherever that checkout was. Two guards keep it
+honest:
+
+| guard | why |
+|---|---|
+| the segment after `data/` must be a directory this repository has (or a `video_scan_YYYYMMDD`) | `D:\my\data\videos\x.mp4` is not in the repository, and truncating it would point at a file that does not exist |
+| `data` must be a **whole** segment | `D:\mydata\videos\x.mp4` is not a marker |
+
+`portabilizePaths()` rewrites **only** values under a key that names a path
+(`output_path`, `video_path`, `frame_path`, `log_path`, `output_root`, …), so
+OCR text that happens to contain something path-shaped is left exactly as the
+OCR engine returned it.
+
+**The raw probe logs keep their absolute paths.** They are machine output —
+the record of what a run produced — and rewriting them would change the
+evidence. The *derived* artifact is the thing a reader consumes, and that is
+what is portable. `data/analysis.md`'s "Saved files" links are now relative
+to the report, so they resolve in a clone; they were `C:\Users\admin\...`
+before, which resolved nowhere else.
+
+Pinned by `test/analysisArtifactPortability.test.js`: the unit behaviour, the
+invariant on the committed artifact (**no absolute value may point into the
+repository**), and a **fresh-clone reproduction** — a copy of the tracked
+files is the only input available, so an untracked log or a hardcoded path
+shows up as a difference.
+
+**The aggregator is idempotent.** `writeIfChanged()` compares the rendered
+artifact with the committed one *ignoring the generation timestamp*, so a
+re-run over an unchanged corpus leaves the file byte-identical and says
+`unchanged … (same content, so it was not rewritten)`. A verification run
+used to dirty the working tree with a changed timestamp and nothing else,
+which made "did the aggregator change anything?" impossible to answer with
+`git diff`.
 
 ### The migrations are version-gated, and each one is additive
 

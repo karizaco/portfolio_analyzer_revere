@@ -6,9 +6,17 @@ const path = require('node:path');
 const { hammingDistance } = require('../src/video/imageHash');
 const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
 const { getCaptureTickers } = require('../src/video/captureTickers');
+const { toPortablePath } = require('../src/video/downloadCandidates');
+const { portabilizePaths } = require('../src/video/portablePaths');
 
 const argv = process.argv.slice(2);
 const userArg = argv.length ? path.resolve(argv[0]) : null;
+
+// The repository root, derived from this file's own location rather than
+// from the current directory: the artifacts this tool writes are committed,
+// and a path inside the repository has to be stored relative to its root so
+// that it still means something on another machine.
+const REPO_ROOT = path.resolve(__dirname, '..');
 
 /**
  * Resolve scan-date dir and optional run-tag filter from user input.
@@ -18,10 +26,16 @@ const userArg = argv.length ? path.resolve(argv[0]) : null;
  */
 function resolveScanRoots(userPath) {
   if (!userPath) {
-    // Scan everything: all scan-date dirs, then all subdirs that contain probe logs
-    const scanDates = fs.readdirSync('data')
+    // Scan everything: all scan-date dirs, then all subdirs that contain probe logs.
+    //
+    // Read from the repository root, not from the current directory: the
+    // artifact this tool writes goes to the repository root, so reading from
+    // somewhere else would aggregate one corpus and write it as though it
+    // were another.
+    const dataRoot = path.join(REPO_ROOT, 'data');
+    const scanDates = fs.readdirSync(dataRoot)
       .filter(n => /^video_scan_\d{8}$/.test(n))
-      .map(n => path.join('data', n));
+      .map(n => path.join(dataRoot, n));
     return scanDates.flatMap(sd => {
       if (!fs.existsSync(sd)) return [];
       return fs.readdirSync(sd)
@@ -49,7 +63,7 @@ function resolveScanRoots(userPath) {
 const scanEntries = resolveScanRoots(userArg);
 const outputBase = userArg
   ? ( /^video_scan_\d{8}$/.test(path.basename(userArg)) ? userArg : path.dirname(userArg) )
-  : path.resolve('data');
+  : path.resolve(REPO_ROOT, 'data');
 const screenshotsDirectory = userArg
   ? path.join(userArg, 'screenshots')
   : path.join(outputBase, 'screenshots');
@@ -229,9 +243,16 @@ const overlayPhashCollisions = countPhashCollisions(captureOverlayPhashes);
 
 const aggregateJson = {
   generated_at: new Date().toISOString(),
-  output_root: outputBase,
-  probe_directory: userArg || outputBase,
-  screenshots_directory: screenshotsDirectory,
+  // Portable paths. A committed artifact must not name one machine's
+  // directories: a fresh clone of the repository produced byte-identical
+  // output except for these values, because they named one machine's
+  // directories.
+  //
+  // The rule is the repository's own: a path inside the repository is stored
+  // relative to its root; a path outside keeps its absolute form.
+  output_root: toPortablePath(outputBase, REPO_ROOT),
+  probe_directory: toPortablePath(userArg || outputBase, REPO_ROOT),
+  screenshots_directory: toPortablePath(screenshotsDirectory, REPO_ROOT),
   totals: {
     videos_scanned: videos.length,
     total_captures: videos.reduce((sum, video) => sum + video.captured_count, 0),
@@ -256,14 +277,67 @@ const aggregateJson = {
   videos: videos
 };
 
+// The paths INSIDE the videos came out of the probe logs, which are
+// committed and were written by whichever machine ran the scan. Left alone
+// they put one machine's home directory into a tracked artifact: the
+// committed analysis held 1,185 absolute paths, 1,175 of them pointing
+// into this repository and therefore expressible relative to its root.
+//
+// `portabilizePaths` rewrites every value under a key that names a path,
+// and only those — OCR text that happens to contain something path-shaped
+// is left exactly as the OCR engine returned it. A path that points
+// OUTSIDE the repository keeps its absolute form, because there is no
+// honest relative form for a file that lives somewhere else entirely.
+portabilizePaths(aggregateJson, { repoRoot: REPO_ROOT });
+
 const analysisJsonPath = path.join(outputBase, 'analysis.json');
-fs.writeFileSync(analysisJsonPath, JSON.stringify(aggregateJson, null, 2), 'utf8');
-
 const analysisMdPath = path.join(outputBase, 'analysis.md');
-fs.writeFileSync(analysisMdPath, renderMarkdown(aggregateJson), 'utf8');
 
-console.log(`wrote ${analysisJsonPath}`);
-console.log(`wrote ${analysisMdPath}`);
+/**
+ * Write a file, unless the content is unchanged.
+ *
+ * The timestamp is the only part of these artifacts that moves between two
+ * runs over the same corpus -- and `data/analysis.json` is COMMITTED. So a
+ * verification run used to dirty the working tree with a changed timestamp
+ * and nothing else, which makes "did the aggregator change anything?"
+ * impossible to answer with `git diff`.
+ *
+ * The comparison ignores the timestamp, so a re-run over an unchanged corpus
+ * leaves the committed file byte-identical.
+ *
+ * @param {string} filePath
+ * @param {string} content
+ * @returns {boolean} true when the file was written
+ */
+function writeIfChanged(filePath, content) {
+  let previous = null;
+  try { previous = fs.readFileSync(filePath, 'utf8'); } catch { previous = null; }
+  if (previous !== null && withoutTimestamps(previous) === withoutTimestamps(content)) {
+    return false;
+  }
+  fs.writeFileSync(filePath, content, 'utf8');
+  return true;
+}
+
+/**
+ * Strip the generation timestamps out of a rendered artifact.
+ *
+ * @param {string} text
+ * @returns {string}
+ */
+function withoutTimestamps(text) {
+  return String(text).replace(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/g, '<timestamp>');
+}
+
+const wroteJson = writeIfChanged(analysisJsonPath, JSON.stringify(aggregateJson, null, 2));
+const wroteMd = writeIfChanged(analysisMdPath, renderMarkdown(aggregateJson, { mdPath: analysisMdPath }));
+
+console.log(wroteJson
+  ? `wrote ${analysisJsonPath}`
+  : `unchanged ${analysisJsonPath} (same content, so it was not rewritten)`);
+console.log(wroteMd
+  ? `wrote ${analysisMdPath}`
+  : `unchanged ${analysisMdPath} (same content, so it was not rewritten)`);
 
 function formatHms(totalSeconds) {
   if (!Number.isFinite(totalSeconds) || totalSeconds < 0) {
@@ -346,12 +420,34 @@ function runLabel(outputRoot) {
   return match ? match[1] : base;
 }
 
-function renderMarkdown(aggregate) {
+/**
+ * The link target for a path, relative to the markdown file's own directory.
+ *
+ * A markdown link resolves against the file that contains it, so a
+ * repository-relative path written into `data/analysis.md` has to be
+ * rewritten relative to `data/` to point at the same place. A path outside
+ * the repository keeps its absolute form, which is what it was.
+ *
+ * @param {string} target - the portable path
+ * @param {string} mdPath - where the markdown file is written
+ * @returns {string}
+ */
+function mdLinkTarget(target, mdPath) {
+  if (!target) return target;
+  if (path.isAbsolute(target)) return target;
+  const absolute = path.resolve(REPO_ROOT, target);
+  const relative = path.relative(path.dirname(mdPath), absolute);
+  if (!relative) return '.';
+  return relative.split(path.sep).join('/');
+}
+
+function renderMarkdown(aggregate, options = {}) {
   const totals = aggregate.totals;
+  const mdPath = options.mdPath || path.join(REPO_ROOT, 'data', 'analysis.md');
   const lines = [];
   lines.push(`# OCR Video Scan Analysis — ${runLabel(aggregate.output_root)}`);
   lines.push('');
-  lines.push(`**Output root:** [${aggregate.output_root}](${aggregate.output_root})  `);
+  lines.push(`**Output root:** [${aggregate.output_root}](${mdLinkTarget(aggregate.output_root, mdPath)})  `);
   lines.push(`**Probe directory:** \`${aggregate.probe_directory}\`  `);
   lines.push(`**Saved screenshots:** \`${aggregate.screenshots_directory}\` (${totals.screenshots_on_disk} PNGs)  `);
   lines.push(`**Generated at:** ${aggregate.generated_at}  `);
@@ -461,8 +557,11 @@ function renderMarkdown(aggregate) {
     }
     lines.push('**Saved files:**');
     for (const capture of video.captures) {
-      const name = path.basename(capture.output_path);
-      lines.push(`- [\`${name}\`](${capture.output_path.replace(/\\/g, '/')})`);
+      const name = path.basename(capture.output_path || '');
+      // The link is relative to THIS markdown file, so it resolves when the
+      // report is read from the repository — which it did not when the path
+      // was an absolute `C:\Users\...` string.
+      lines.push(`- [\`${name}\`](${mdLinkTarget(capture.output_path, mdPath)})`);
     }
     lines.push('');
   }
