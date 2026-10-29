@@ -1364,6 +1364,80 @@ A stray `Watch…` token picked up above the panel (a chat overlay, a streamer n
 otherwise act as a lower bound and reject *every* real row. Same rule applies inside
 `identifyPositionListColumn`'s `lineIsInPanel` and to `panelGateActive`.
 
+### The curated-alias rescue (added 2026-10-29)
+
+A garbled ticker in the position list is lost **before** the repair pass can ever see it,
+and the reason is structural.
+
+`inListTickers` is the **price-aligned subset** of the detected column. A row whose price
+is garbled (`$lO5.OO` for `$105.00`) is therefore *not* in `inListTickers`, so the column
+gate rejects it:
+
+```js
+if (columnGateActive && !inListColumn && !(inLexicon && inListTickers.size >= 6)) { … }
+```
+
+That gate is exactly what keeps chart-area ink out of the list, so the garbled ticker never
+reaches the "Post-pass: repair garbled in-column tickers" block — it is simply **missing**
+from the reading.
+
+The rescue substitutes the canonical from `config/ticker_ocr_confusions.csv` for a token
+that is **spatially inside the column**, whether or not the gate accepted it. Three rules
+keep it honest:
+
+| rule | why |
+|---|---|
+| the token is inside the column (`\|center − dominant_x\| ≤ column_width / 2`) | the column is the evidence that the token is a holding |
+| the token is **below** the positions header and **above** the watchlist header | the panel's *own* bounds, not the caller's `impliedBottomLine` |
+| the canonical is in the lexicon | the table is a curated list, not a generator |
+
+**The rescue runs AFTER the repair pass, and it replaces in place.** An earlier attempt
+pushed the canonical in *before* the repair pass; that pass's `!accepted.includes(aliased)`
+guard then failed, so the raw survived as a **duplicate false positive**, and the extra
+entries shifted Filter B's median y and evicted real holdings (`GTLB`, `DNA`, `APLD`,
+`UPST`). Precision fell from 93.0 % to 86.2 %. Replacing in place means a garble the
+repair pass already corrected is never joined by its canonical.
+
+**Two designs were tried and rejected — both are worth remembering:**
+
+- **A y-range gate on the rescued token.** The range is computed from the *accepted* set —
+  which excludes exactly the rows worth rescuing, because a garbled price is *why* they
+  were excluded. It rejected all eight rescuable holdings (OBTS 17 px above the range,
+  GSI1 19 px below).
+- **`impliedBottomLine`.** That is the caller's *heuristic* guess at where the list ends
+  (`positionsLine + round(15 · 52 / medianRowHeight)`), and the parser never applies it to
+  the accepted set. The real lists in the corpus are longer than 15 rows. Using it as a
+  bound blocked the remaining rescues (DIA, PLIR, GSII, GSI1, GS11).
+
+**Measured** with `node tools/evalParserReplay.js --json` on its default 8 roots. Census:
+42 files, 42 logs, 11 logs with words, 99 captures in ground-truth logs, **12 captures
+with words**, 40 ground-truth dates, 33 dates with a log, **8 dates scored**, 25 lost to
+missing words, 7 never seen. *(This is a surviving sample, not a corpus-wide figure — see
+§ 'The replay tool is a surviving sample'.)*
+
+| | baseline | after the rescue | after + `TTOCQ→TQQQ` |
+|---|---|---|---|
+| hit / gt / pred | 53 / 89 / 57 | 59 / 89 / 63 | **59 / 89 / 62** |
+| micro recall | 59.6 % | 66.3 % | **66.3 %** |
+| micro precision | 93.0 % | 93.7 % | **95.2 %** |
+
+A **corpus-wide audit** — baseline vs fixed over every word-bearing capture in the corpus,
+not only the scored ones — found **10 additions, every one of them in the ground truth,
+and no removals at all**: DNA ×1, GSIT ×3, PLTR ×1, QBTS ×2, RGTI ×2, TQQQ ×1.
+
+**`TTOCQ→TQQQ` was added to the confusion table** (2026-10-29): it is a recorded misread of
+`TQQQ` with no lexicon ticker within edit distance 1, so it published verbatim as a false
+positive.
+
+> **A ticker's text comes from the OCR, and `hasPriceNear` interpolates it into a
+> `RegExp`.** Interpolated raw, an unbalanced `(` produced `SyntaxError: Unterminated
+> group` and took down the **whole parse** — the whiteboard path reaches it through
+> `acceptCandidates`, where the candidate token is *not* shape-constrained (`"1.02(-0.20"`
+> is a real reading from a whiteboard frame). The ticker is now escaped
+> (`escapeRegExp`), and the whiteboard call site runs the cheap shape test before building
+> the pattern. Escaping also makes a dotted ticker literal: `BRK.B` no longer matches
+> `BRKXB`.
+
 ### Diagnostic fields exposed
 
 - `chart_stream.column_filter` — `dominant_x`, `column_width`, `in_list_token_count` (diagnostic only, not gated)
@@ -1382,24 +1456,32 @@ otherwise act as a lower bound and reject *every* real row. Same rule applies in
 ### Known limitations and next steps (as of 2026-10-29)
 
 **Measured on the curated GT benchmark** (`test/qmgGroundTruth.test.js`, 4 captures,
-EasyOCR, single frame each — not a multi-frame consensus run), at commit `8070601` and
+EasyOCR, single frame each — not a multi-frame consensus run), at commit `8070601`,
 **re-verified 2026-10-29 against the md5-pinned fixture frames** (864 s, all four cases
-passing, identical numbers):
+passing, identical numbers), and **re-measured the same day after the curated-alias rescue**
+(134 s, all four cases passing):
 
 | case | date | recall | FP |
 |---|---|---|---|
 | trade_ideas | 20220218[1] | 88.9% (8/9) | 2 |
 | sparse | 20221104[0] | 100% (1/1) | 3 |
 | normal_2022 | 20220606[1] | 87.5% (7/8) | 3 |
-| dense_2023 | 20230609[0] | 46.2% (6/13) | 3 |
+| dense_2023 | 20230609[0] | **53.8% (7/13)** | 3 |
 
-Overall mean recall 80.6%. These numbers were previously meaningless — the benchmark was
-resolving 640×360 prefilter frames, so every case scored 0%.
+Overall mean recall **82.6%** (was 80.6% before the curated-alias rescue; the rescue
+recovered **`GTLB`** on `20230609`, and the other three cases are unchanged). These numbers
+were previously meaningless — the benchmark was resolving 640×360 prefilter frames, so every
+case scored 0%.
 
 **The benchmark is deterministic, not noisy.** Two consecutive runs (2026-10-25, 512 s and
 461 s) produced byte-identical per-case numbers, hits and FP counts, and the 2026-10-29
 run against the pinned frames reproduced the table exactly. So a change in this table
 means the *code* or the *input frames* changed — not that the measurement drifted.
+
+**The wall clock is not the number.** The 82.6 % run took **134 s**, the 80.6 % run 864 s —
+the same frames, the same engine, no OCR cache (`ocrImage()` runs EasyOCR for real every
+time). EasyOCR swings by 2× on the same file between runs; the per-case numbers are
+what is stable.
 
 **The input frames ARE pinned (since 2026-10-29).** `resolveSnapshotPath` now prefers the
 tracked fixture in `test/fixtures/qmg_benchmark/` and verifies its md5; only if there is no
@@ -1409,7 +1491,7 @@ named `qmg_<date>[_<n>].png`. A new re-run directory can therefore no longer cha
 frame a case is scored on. The earlier 73.9% figure was not measured against a named frame
 set, which is why it cannot be reconciled with 80.6% from the record alone.
 
-The frames the 80.6% measurement above was taken on, all 1920 px — now tracked as fixtures
+The frames the 82.6% measurement above was taken on, all 1920 px — now tracked as fixtures
 (see § 'The benchmark's frames are now tracked'):
 
 | case | frame | md5 |
@@ -1424,7 +1506,7 @@ The frames the 80.6% measurement above was taken on, all 1920 px — now tracked
 seed lexicon (`ISYM`, `MEL`, `CON`), and one-letter tokens (`ON`, `X`).
 
 **Recall floor**: `20220606` now misses only `TNA` (GOVX and NFLX are found); `20230609`
-misses 7 of 13 — `IOT`, `AI`, `PLTR`, `GTLB`, `GSIT`, `APLD`, `MNDY` — and is the case
+misses **6 of 13** — `IOT`, `AI`, `PLTR`, `GSIT`, `APLD`, `MNDY` — and is the case
 that holds the mean down. The
 `meanLumaFloor=30` penalty on historical dark streams (Dec 2021–Feb 2022) likely contributes
 to the prefilter missing frames entirely.
@@ -1752,6 +1834,34 @@ would not exercise the geometry at all.
 
 A frame's identity is its **file + md5**, not its label: see
 `test/fixtures/revere_whiteboard/manifest.json`.
+
+### The fuzzy resolver was measured against the whole corpus, not just the fixtures
+
+The fixture test covers three frames. The **fuzzy resolver** (`src/normalize/tickerFuzzyResolve.js`)
+changes what the parser reads on *every* frame, so it was A/B'd over the whole cached
+corpus: the same OCR fed to the pre-resolver parser and to the current one, with the frames
+re-extracted so **both parsers see the same pixels** (Tesseract is not deterministic, so
+comparing two independent OCR passes would mix the parser effect with OCR noise).
+
+274 cached captures, of which **29 belong to a video with a ground truth**; 10 of those 29
+changed. Scored against the ground truth:
+
+| | count | in the ground truth |
+|---|---|---|
+| **added** by the new parser | 21 | **21 (100 %)** |
+| **removed** by the new parser | 4 | **0 (0 %)** |
+
+The four removals are the **action-line bleed**: on 20260924 the screen's own note reads
+`TURBO RVAB: 1.51 (-2.41%/-5.52%) O-TRIM P ADD to SPXL SELL DELL SMTC` — `DELL` and
+`SMTC` are what the action line *sells*, not holdings, and the old parser published them
+as TURBO holdings (with `BITO` and `SHOP`). The corrected parser reads that frame as
+GRO `{AMD, BE, DOCN, HPE, LITE, NCLD, P, PLTR, SKHY, SPYM, TQQQ, UPRO}` and TURBO
+`{ETHA, HPE, MRNA, SPYM, UPRO}` — no false positives, where the old parser had three.
+
+**So the resolver invents no holdings** on this corpus, and it removes exactly the
+holdings the action line contributed. The additions are all real ones the old parser
+missed (`IBIT` ×8, `NCLD`, `TQQQ`, `DOCN`, `LITE`, `ETHA`, `MRNA`, `PURR`, `SPYM`, `UPRO`,
+`HPE`).
 
 ### `tools/evalRevere.js` scores the RECORDED output
 
