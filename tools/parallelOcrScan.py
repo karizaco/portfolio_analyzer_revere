@@ -88,7 +88,11 @@ def _collect_jobs(args, workspace_root: pathlib.Path) -> list[tuple[str, str, pa
     for video_id, upload_date, download_path in rows:
         if not upload_date or upload_date == "NA":
             continue
-        p = pathlib.Path(download_path)
+        p = pathlib.Path(str(download_path).replace("\\", "/"))
+        if not p.is_absolute():
+            # The catalog stores repo-relative paths so they survive being
+            # checked out on another machine. Resolve against the workspace.
+            p = workspace_root / p
         if not p.exists():
             missing += 1
             continue

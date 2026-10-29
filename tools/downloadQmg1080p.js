@@ -28,7 +28,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
-const { CANDIDATE_SQL, findHiresOnDisk } = require('../src/video/downloadCandidates');
+const { CANDIDATE_SQL, findHiresOnDisk, toPortablePath } = require('../src/video/downloadCandidates');
 
 const argv = process.argv.slice(2);
 const limit = Number(readFlag(argv, '--limit')) || 30;
@@ -60,6 +60,10 @@ const formatCode = String(height === 720 ? '136' : '137');
 const dbPath = path.resolve('data/video_pipeline/state.sqlite');
 const dlDir = path.resolve('data/video_pipeline/downloads_1080p');
 const checkpointPath = path.join(dlDir, '_qmg_1080p_checkpoint.json');
+// The repository root, derived from the database's own location
+// (`<root>/data/video_pipeline/state.sqlite`). Stored paths are relative to
+// it, so it is what they have to be resolved against.
+const repoRoot = path.resolve(path.dirname(dbPath), '..', '..');
 
 if (!fs.existsSync(dbPath)) {
   console.error(`No SQLite at ${dbPath}. Run 'npm run video:init' first.`);
@@ -241,10 +245,14 @@ console.log(`[qmg1080] to resume: re-run with the same args (the same checkpoint
 console.log(`[qmg1080] to retry the errored list: --retry-errored`);
 
 function finalizeRow(videoId, hiresPath) {
+  // The catalog is committed to git, so the pointer it holds has to mean
+  // something on another machine: a path inside the repository is stored
+  // relative to its root.
+  const stored = toPortablePath(hiresPath, repoRoot);
   const update = `
 import sqlite3
 c = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
-c.execute("UPDATE videos SET download_path=?, status='scanning', error='' WHERE video_id=?", (${JSON.stringify(hiresPath)}, ${JSON.stringify(videoId)}))
+c.execute("UPDATE videos SET download_path=?, status='scanning', error='' WHERE video_id=?", (${JSON.stringify(stored)}, ${JSON.stringify(videoId)}))
 c.commit()
 `;
   const u = spawnSync(py, ['-3', '-c', update], { encoding: 'utf8' });

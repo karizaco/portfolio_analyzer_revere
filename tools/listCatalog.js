@@ -14,6 +14,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
+const { resolveCatalogPath } = require('../src/video/downloadCandidates.js');
 
 const argv = process.argv.slice(2);
 const wantJson = argv.includes('--json');
@@ -28,6 +29,11 @@ if (!fs.existsSync(dbPath)) {
   console.error(`No SQLite state at ${dbPath}. Run 'npm run video:init' first.`);
   process.exit(1);
 }
+
+// The repository root, derived from the database's own location
+// (`<root>/data/video_pipeline/state.sqlite`). Stored paths are relative to
+// it, so it is what they have to be resolved against.
+const repoRoot = path.resolve(path.dirname(dbPath), '..', '..');
 
 const py = process.platform === 'win32' ? 'py' : 'python3';
 const script = `
@@ -122,7 +128,11 @@ if (!rows.length) {
 console.log(`| channel | upload_date | video_id | status | downloaded | title | error |`);
 console.log('|---|---|---|---|:---:|---|---|');
 for (const r of rows) {
-  const downloaded = r.download_path && fs.existsSync(r.download_path) ? '✓' : '·';
+  // `download_path` is repo-relative when the file lives inside the
+  // repository, so it has to be resolved against the workspace root before
+  // it can be opened.
+  const localPath = r.download_path ? resolveCatalogPath(r.download_path, repoRoot) : null;
+  const downloaded = localPath && fs.existsSync(localPath) ? '✓' : '·';
   const title = (r.title || '').slice(0, 64) + ((r.title || '').length > 64 ? '…' : '');
   const err = r.error ? tableCell(r.error).slice(0, 40) : '';
   const channel = r.channel || 'revere';

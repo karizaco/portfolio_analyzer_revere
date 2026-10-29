@@ -1,6 +1,6 @@
 {
   "note": "Videos whose media is not on disk, according to state.sqlite and the filesystem of the machine that ran this tool, as of the generation date below. The catalog's download_path is a pointer that goes stale: a file can be deleted, or the pointer can name a file under an older naming scheme (<video_id>.mp4 instead of <upload_date>_<video_id>.mp4). Both are recorded as missing here. The videos still on disk are listed under present_videos, with their count, so the two sets can be told apart \u2014 and so the claim can be checked rather than believed. Regenerate after moving media between machines. Re-download with the visios client; see CLAUDE.md for the 39 hardcoded 720p-only IDs and the rate-limit rules.",
-  "generated_at": "2026-10-29T05:11:50.856290+00:00",
+  "generated_at": "2026-10-29T07:34:49.132023+00:00",
   "total": 537,
   "pointer_rows": 716,
   "present_count": 179,

@@ -11,25 +11,32 @@ CREATE TABLE IF NOT EXISTS schema_version (
 
 -- Video pipeline tables ---------------------------------------------------
 
+-- The column order below matches the tracked catalog in
+-- data/video_pipeline/state.sqlite exactly, so a fresh clone and the shipped
+-- database have the same table shape. Nothing reads this table positionally
+-- -- every query names its columns -- but the two being interchangeable is
+-- worth the ordering constraint, and the shipped table's CHECK on `status` is
+-- a real constraint the shipped catalog enforces.
 CREATE TABLE IF NOT EXISTS videos (
     video_id TEXT PRIMARY KEY,
     source_url TEXT NOT NULL DEFAULT '',
     video_url TEXT NOT NULL DEFAULT '',
     title TEXT NOT NULL DEFAULT '',
     upload_date TEXT NOT NULL DEFAULT '',
-    channel TEXT NOT NULL DEFAULT '',
-    status TEXT NOT NULL DEFAULT 'pending',
+    status TEXT NOT NULL DEFAULT 'pending'
+        CHECK (status IN ('pending', 'downloading', 'scanning', 'review', 'done', 'no_match', 'error')),
     download_path TEXT NOT NULL DEFAULT '',
     output_path TEXT NOT NULL DEFAULT '',
     selected_timestamp REAL,
     selected_score REAL,
     review_reason TEXT NOT NULL DEFAULT '',
     error TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    channel TEXT NOT NULL DEFAULT '',
     transcript_path TEXT NOT NULL DEFAULT '',
     transcript_segment_count INTEGER NOT NULL DEFAULT 0,
-    transcript_fetched_at TEXT NOT NULL DEFAULT '',
-    created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL
+    transcript_fetched_at TEXT NOT NULL DEFAULT ''
 );
 
 CREATE INDEX IF NOT EXISTS idx_videos_status ON videos(status);
@@ -42,10 +49,10 @@ CREATE TABLE IF NOT EXISTS worker_settings (
     updated_at TEXT NOT NULL
 );
 
+-- Column order matches the tracked catalog in data/video_pipeline/state.sqlite.
 CREATE TABLE IF NOT EXISTS catalog_runs (
     run_id INTEGER PRIMARY KEY AUTOINCREMENT,
     source_url TEXT NOT NULL,
-    channel TEXT NOT NULL DEFAULT '',
     command_json TEXT NOT NULL,
     raw_output_path TEXT NOT NULL,
     row_count INTEGER NOT NULL,
@@ -54,6 +61,7 @@ CREATE TABLE IF NOT EXISTS catalog_runs (
     missing_upload_dates INTEGER NOT NULL,
     malformed_rows INTEGER NOT NULL,
     created_at TEXT NOT NULL,
+    channel TEXT NOT NULL DEFAULT '',
     -- 'live' for a real channel run, 'fixture' for a test fixture.
     kind TEXT NOT NULL DEFAULT 'live'
 );
