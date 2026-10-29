@@ -154,12 +154,14 @@ function undatedRows(db) {
  * @param {object[]} rows - the undated catalog rows
  * @param {object} [options]
  * @param {string[]} [options.listingIds] - the channel listing, newest first
+ * @param {string} [options.listingChannel] - the channel the listing belongs to
  * @param {Map<string,string>} [options.knownDates] - video id -> `YYYYMMDD`
  * @param {(url: string) => Promise<string>} [options.fetchHtml]
  * @returns {Promise<object[]>} one plan per row
  */
 async function planResolution(rows, options = {}) {
   const listingIds = options.listingIds || null;
+  const listingChannel = options.listingChannel || null;
   const knownDates = options.knownDates || new Map();
   const fetchHtml = options.fetchHtml || defaultFetchHtml;
 
@@ -203,7 +205,13 @@ async function planResolution(rows, options = {}) {
       continue;
     }
     if (!plan.inListing) {
-      plan.reason = 'the video is not in the listing, so its date cannot be cross-checked';
+      // Say WHICH listing, because "not in the listing" is the wrong message
+      // for a row that belongs to a different channel's listing -- and the
+      // fix for that is to run the tool once per channel.
+      plan.reason = (listingChannel && row.channel && row.channel !== listingChannel)
+        ? `the supplied listing is for channel '${listingChannel}' and this row belongs to `
+          + `'${row.channel}' -- run the tool once per channel`
+        : 'the video is not in the listing, so its date cannot be cross-checked';
       plans.push(plan);
       continue;
     }
@@ -432,6 +440,7 @@ async function main(argv = process.argv.slice(2)) {
   const rows = undatedRows(db);
 
   let listingIds = null;
+  let listingChannel = null;
   const knownDates = new Map();
   if (listingPath) {
     if (!fs.existsSync(listingPath)) {
@@ -446,9 +455,24 @@ async function main(argv = process.argv.slice(2)) {
       + 'AND upload_date <> \'NA\'',
     ).all();
     for (const row of dated) knownDates.set(row.video_id, row.upload_date);
+
+    // Which channel does this listing belong to? The one whose catalog rows
+    // it holds the most of. The catalog's `channel` is a logical name
+    // (`revere`, `qullamaggie`), not the YouTube handle, so this cannot be
+    // read off the file name.
+    const inListing = new Set(listingIds);
+    const byChannel = new Map();
+    for (const row of db.prepare('SELECT video_id, channel FROM videos').all()) {
+      if (!inListing.has(row.video_id)) continue;
+      byChannel.set(row.channel, (byChannel.get(row.channel) || 0) + 1);
+    }
+    let best = 0;
+    for (const [channel, count] of byChannel) {
+      if (count > best) { best = count; listingChannel = channel; }
+    }
   }
 
-  const plan = await planResolution(rows, { listingIds, knownDates });
+  const plan = await planResolution(rows, { listingIds, listingChannel, knownDates });
 
   // How complete is the listing we cross-checked against?
   //
@@ -458,16 +482,16 @@ async function main(argv = process.argv.slice(2)) {
   // that holds every row the catalog knows about is at least as complete as
   // the catalog, so it can attest.
   //
-  // A work list spanning two channels cannot be covered by one listing, so
-  // that case attests nothing.
-  const channels = new Set(rows.map((r) => r.channel).filter(Boolean));
-  let notListedCount = plan.filter((p) => !p.inListing).length;
+  // Both counts are about the LISTING's channel, not the work list's -- a
+  // work list spanning two channels cannot be covered by one listing, and
+  // `not_listed_count` means "rows of this channel the listing did not hold".
+  let notListedCount = 0;
   let listingComplete = 0;
-  if (listingIds && channels.size === 1) {
-    const channel = [...channels][0];
+  if (listingIds && listingChannel) {
     const inListing = new Set(listingIds);
-    const channelRows = db.prepare('SELECT video_id FROM videos WHERE channel = ?').all(channel);
-    listingComplete = channelRows.every((r) => inListing.has(r.video_id)) ? 1 : 0;
+    const channelRows = db.prepare('SELECT video_id FROM videos WHERE channel = ?').all(listingChannel);
+    notListedCount = channelRows.filter((r) => !inListing.has(r.video_id)).length;
+    listingComplete = notListedCount === 0 ? 1 : 0;
   }
 
   let result = null;
