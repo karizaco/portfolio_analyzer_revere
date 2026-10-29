@@ -12,11 +12,22 @@
 // pipeline picks them up automatically.
 //
 // Resumability:
-//   1. SQLite `status='done'` rows are skipped.
-//   2. Already-on-disk hires mp4s are skipped (also flipped to `status='done'`).
+//   1. SQLite `status='done'` rows are skipped — a `done` row has been OCR'd,
+//      so there is nothing here for a downloader to do.
+//   2. Already-on-disk 1080p mp4s are skipped. The row's status is set to
+//      `scanning`, NOT to `done`: `scanning` is the state that means "the
+//      media is on disk, the OCR queue has not run on it yet", and it is what
+//      tools/runAllOcr.js selects.
 //   3. A checkpoint file (`_download_checkpoint.json`) remembers which ids
 //      have succeeded and which have errored. Re-running the script mid-batch
 //      picks up exactly where it left off, even after a hard kill.
+//
+// THE TRAP IN RULE 1
+// `done` records that a pass finished. It says nothing about whether the file
+// is still on disk. A row that was OCR'd and whose mp4 was later deleted is
+// therefore skipped here forever: neither re-fetched nor reported as
+// missing. `tools/reconcileCatalogStatus.js` is the repair; see
+// src/video/videoStatus.js for what each status means.
 //
 // Usage:
 //   node tools/downloadQmg1080p.js                 # qullamaggie 1080p
@@ -29,6 +40,8 @@ const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
 const { CANDIDATE_SQL, findHiresOnDisk, toPortablePath } = require('../src/video/downloadCandidates');
+// The candidate query's status list lives in src/video/videoStatus.js, which
+// is where each status's meaning is written down.
 
 const argv = process.argv.slice(2);
 const limit = Number(readFlag(argv, '--limit')) || 30;

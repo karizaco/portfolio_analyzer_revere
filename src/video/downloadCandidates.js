@@ -3,6 +3,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
+const { DOWNLOAD_CANDIDATE_STATUSES, HIRES_CANDIDATE_STATUSES, sqlStatusList } = require('./videoStatus');
+
 // Which videos still need downloading.
 //
 // THE PROBLEM THIS SOLVES
@@ -36,9 +38,16 @@ const MIN_FILE_BYTES = 1024 * 1024;
 // The status filter keeps out rows that have already been OCR'd. The
 // download_path is NOT filtered here — the filesystem check below decides,
 // because a path string cannot tell a present file from a deleted one.
+//
+// The status list comes from src/video/videoStatus.js, which is where the
+// meaning of each status is written down. Note what the filter leaves out:
+// `done`. A `done` row has been OCR'd, and the OCR pass is why this tool
+// has nothing to do with it — but `done` says nothing about whether the
+// media is still on disk, so a `done` row whose file was deleted is
+// invisible here. That is what tools/reconcileCatalogStatus.js repairs.
 const CANDIDATE_SQL = `
-SELECT video_id, upload_date, title, download_path FROM videos
-WHERE status IN ('pending','scanning')
+SELECT video_id, upload_date, title, download_path, status FROM videos
+WHERE status IN (${sqlStatusList(HIRES_CANDIDATE_STATUSES)})
 AND channel = 'qullamaggie'
 ORDER BY upload_date DESC, video_id ASC
 `;
@@ -131,10 +140,38 @@ function findHiresOnDisk(row, options = {}) {
   return null;
 }
 
+/**
+ * The candidate query for the 720p batch downloader.
+ *
+ * It differs from the 1080p one in three ways: it is not restricted to
+ * Qullamaggie, it retries `error` rows, and it can be narrowed to an
+ * explicit list of ids.
+ *
+ * The status filter comes from src/video/videoStatus.js, like the 1080p
+ * query's -- so the two downloaders cannot drift apart on what a status
+ * means.
+ *
+ * @param {object} [options]
+ * @param {string} [options.pathCondition] - an extra SQL condition on the pointer
+ * @returns {string}
+ */
+function buildDownloadCandidateSql(options = {}) {
+  const pathCondition = options.pathCondition || 'download_path IS NOT NULL';
+  return `
+SELECT video_id, upload_date, title, download_path, status FROM videos
+WHERE status IN (${sqlStatusList(DOWNLOAD_CANDIDATE_STATUSES)}) AND ${pathCondition}
+AND upload_date IS NOT NULL AND upload_date != 'NA'
+ORDER BY upload_date DESC, video_id ASC
+`;
+}
+
 module.exports = {
   CANDIDATE_SQL,
+  DOWNLOAD_CANDIDATE_STATUSES,
+  HIRES_CANDIDATE_STATUSES,
   MIN_FILE_BYTES,
   REPO_DATA_MARKER,
+  buildDownloadCandidateSql,
   findHiresOnDisk,
   isHiresPath,
   resolveCatalogPath,
