@@ -1,9 +1,10 @@
 {
-  "note": "Videos whose media is not on disk, according to state.sqlite and the filesystem of the machine that ran this tool, as of the generation date below. The catalog's download_path is a pointer that goes stale: a file can be deleted, or the pointer can name a file under an older naming scheme (<video_id>.mp4 instead of <upload_date>_<video_id>.mp4). Both are recorded as missing here. The videos still on disk are listed under present_videos, with their count, so the two sets can be told apart \u2014 and so the claim can be checked rather than believed. Regenerate after moving media between machines. Re-download with the visios client; see CLAUDE.md for the 39 hardcoded 720p-only IDs and the rate-limit rules.",
-  "generated_at": "2026-10-29T07:34:49.132023+00:00",
-  "total": 537,
+  "note": "Videos whose media is not on disk, according to state.sqlite and the filesystem of the machine that ran this tool, as of the generation date below. The catalog's download_path is a pointer that goes stale: a file can be deleted, or the pointer can name a file under an older naming scheme (<video_id>.mp4 instead of <upload_date>_<video_id>.mp4). Both are recorded as missing here. The videos still on disk are listed under present_videos, with their count, so the two sets can be told apart \u2014 and so the claim can be checked rather than believed. Each present entry records whether it was found by its pointer (found_by: pointer) or by the name the downloader writes (found_by: own_name) \u2014 a file can be on disk with no pointer naming it. Regenerate after moving media between machines. Re-download with the visios client; see CLAUDE.md for the 39 hardcoded 720p-only IDs and the rate-limit rules. tools/reconcileCatalogStatus.js reports the media that has no pointer naming it and reconciles the status column against the filesystem.",
+  "generated_at": "2026-10-29T10:37:41.916767+00:00",
+  "total": 535,
   "pointer_rows": 716,
-  "present_count": 179,
+  "present_count": 181,
+  "present_by_own_name_count": 2,
   "qullamaggie_count": 514,
   "qullamaggie_present_count": 53,
   "videos": [
@@ -228,17 +229,6 @@
       "pointer_uses_legacy_name": false
     },
     {
-      "video_id": "bEidyFtV-lY",
-      "channel": "revere",
-      "date": "20260512",
-      "dir": "downloads",
-      "filename": "20260512_bEidyFtV-lY.mp4",
-      "expected_filename": "20260512_bEidyFtV-lY.mp4",
-      "title": "STRONG CLOSE DESPITE MINOR PRESSURE ACROSS MOMENTUM & GROWTH LEADERS",
-      "present": false,
-      "pointer_uses_legacy_name": false
-    },
-    {
       "video_id": "KLXYB7IMwPI",
       "channel": "revere",
       "date": "20260511",
@@ -246,17 +236,6 @@
       "filename": "20260511_KLXYB7IMwPI.mp4",
       "expected_filename": "20260511_KLXYB7IMwPI.mp4",
       "title": "LEADERS DAY AS MANY SMALL AND MID CAP NAMES MAKE ENORMOUS MOVES.",
-      "present": false,
-      "pointer_uses_legacy_name": false
-    },
-    {
-      "video_id": "M0pV73RV2qo",
-      "channel": "revere",
-      "date": "20260509",
-      "dir": "downloads",
-      "filename": "20260509_M0pV73RV2qo.mp4",
-      "expected_filename": "20260509_M0pV73RV2qo.mp4",
-      "title": "Weekend Review, Major past week of key growth leader eps reports, why ",
       "present": false,
       "pointer_uses_legacy_name": false
     },
@@ -5924,7 +5903,9 @@
       "filename": "20260912_7t50ZiB7-Bk.mp4",
       "expected_filename": "20260912_7t50ZiB7-Bk.mp4",
       "title": "WEEKEND REVIEW $DELL $HPE $NTAP $AMD $SKHY $SMTC $LITE SHOW LEADERSHIP",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260912_7t50ZiB7-Bk.mp4"
     },
     {
       "video_id": "0_YeDfX1atU",
@@ -5934,7 +5915,9 @@
       "filename": "20260911_0_YeDfX1atU.mp4",
       "expected_filename": "20260911_0_YeDfX1atU.mp4",
       "title": "SELECT LEADERS STANDOUT AS INDEXES SNAP BACK DESPITE HOT CPI PRINT.  $",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260911_0_YeDfX1atU.mp4"
     },
     {
       "video_id": "nGkeyUSs26U",
@@ -5944,7 +5927,9 @@
       "filename": "20260911_nGkeyUSs26U.mp4",
       "expected_filename": "20260911_nGkeyUSs26U.mp4",
       "title": "OIL TOPS $100! 3 FAILED BREAKOUTS, 4TH TIME THE CHARM? | Your Money Po",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260911_nGkeyUSs26U.mp4"
     },
     {
       "video_id": "ZbcQw4xdVxo",
@@ -5954,7 +5939,9 @@
       "filename": "20260910_ZbcQw4xdVxo.mp4",
       "expected_filename": "20260910_ZbcQw4xdVxo.mp4",
       "title": "HOT PPI AND HIGHER YIELDS LEAD TO FURTHER WEAKNESS. CPI TOMORROW...",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260910_ZbcQw4xdVxo.mp4"
     },
     {
       "video_id": "iCGc5ObTkrs",
@@ -5964,7 +5951,9 @@
       "filename": "20260909_iCGc5ObTkrs.mp4",
       "expected_filename": "20260909_iCGc5ObTkrs.mp4",
       "title": "OIL, YIELDS, AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWIND",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260909_iCGc5ObTkrs.mp4"
     },
     {
       "video_id": "wUc1Mdt6WX8",
@@ -5974,7 +5963,9 @@
       "filename": "20260908_wUc1Mdt6WX8.mp4",
       "expected_filename": "20260908_wUc1Mdt6WX8.mp4",
       "title": "INDEX FALL ON MID EAST TENSIONS AS MKT AWAITS CPI & PPI $SPCX, $AMD, $",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260908_wUc1Mdt6WX8.mp4"
     },
     {
       "video_id": "Trp_SzVuqHU",
@@ -5984,7 +5975,9 @@
       "filename": "20260905_Trp_SzVuqHU.mp4",
       "expected_filename": "20260905_Trp_SzVuqHU.mp4",
       "title": "9/5 Weekend Review $DELL and $DRAM ignite AI rebound, PPI and CPI watc",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260905_Trp_SzVuqHU.mp4"
     },
     {
       "video_id": "bPeges-eRl0",
@@ -5994,7 +5987,9 @@
       "filename": "20260904_bPeges-eRl0.mp4",
       "expected_filename": "20260904_bPeges-eRl0.mp4",
       "title": "STRONG JOBS NUMBER PAUSES INDEXES, BUT A-I STOCKS RALLY.          $MU ",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260904_bPeges-eRl0.mp4"
     },
     {
       "video_id": "IFHvAJlTEX4",
@@ -6004,7 +5999,9 @@
       "filename": "20260904_IFHvAJlTEX4.mp4",
       "expected_filename": "20260904_IFHvAJlTEX4.mp4",
       "title": "REVIVAL OF MEMORY STOCKS? BONDS VS DISINFLATION?!  | Your Money Podcas",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260904_IFHvAJlTEX4.mp4"
     },
     {
       "video_id": "cD6vyCEZcMs",
@@ -6014,7 +6011,9 @@
       "filename": "20260903_cD6vyCEZcMs.mp4",
       "expected_filename": "20260903_cD6vyCEZcMs.mp4",
       "title": "DOVISH COMMENTARY FUELS DAY 2 RALLY ATTEMPT",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260903_cD6vyCEZcMs.mp4"
     },
     {
       "video_id": "J0g7dg5T2hA",
@@ -6024,7 +6023,9 @@
       "filename": "20260902_J0g7dg5T2hA.mp4",
       "expected_filename": "20260902_J0g7dg5T2hA.mp4",
       "title": "RELIEF BOUNCE AFTER 3 DAYS DOWN: MORE CHOP OR A REVERSAL?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260902_J0g7dg5T2hA.mp4"
     },
     {
       "video_id": "hATbxNdNd_4",
@@ -6034,7 +6035,9 @@
       "filename": "20260901_hATbxNdNd_4.mp4",
       "expected_filename": "20260901_hATbxNdNd_4.mp4",
       "title": "WEAK START TO THE SEASONALLY WORST MONTH...HERE'S WHAT TO LOOK FOR NEX",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260901_hATbxNdNd_4.mp4"
     },
     {
       "video_id": "yh5JJST8HnU",
@@ -6044,7 +6047,9 @@
       "filename": "20260831_yh5JJST8HnU.mp4",
       "expected_filename": "20260831_yh5JJST8HnU.mp4",
       "title": "THE END OF SUMMER IS HERE. WHAT TO EXPECT NEXT?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260831_yh5JJST8HnU.mp4"
     },
     {
       "video_id": "J_zufSc2jlA",
@@ -6054,7 +6059,9 @@
       "filename": "20260829_J_zufSc2jlA.mp4",
       "expected_filename": "20260829_J_zufSc2jlA.mp4",
       "title": "8/29 Weekend Review - Warsh flexes hawlkish stance fueling rate hike o",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260829_J_zufSc2jlA.mp4"
     },
     {
       "video_id": "4ifiZRA5dc4",
@@ -6064,7 +6071,9 @@
       "filename": "20260828_4ifiZRA5dc4.mp4",
       "expected_filename": "20260828_4ifiZRA5dc4.mp4",
       "title": "DOLLAR & YIELDS RISE ON HAWKISH WARSH, RECENT LEADERS FALTER.    $ABNB",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260828_4ifiZRA5dc4.mp4"
     },
     {
       "video_id": "J-UAEy83zuY",
@@ -6074,7 +6083,9 @@
       "filename": "20260828_J-UAEy83zuY.mp4",
       "expected_filename": "20260828_J-UAEy83zuY.mp4",
       "title": "TRUMP ACCOUNTS... YES OR NO? PLUS... SAY \"HI\" TO REVERE'S AI AGENT | Y",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260828_J-UAEy83zuY.mp4"
     },
     {
       "video_id": "ceukarQYqWg",
@@ -6084,7 +6095,9 @@
       "filename": "20260827_ceukarQYqWg.mp4",
       "expected_filename": "20260827_ceukarQYqWg.mp4",
       "title": "Cyber, Software, and Semis Rally on Key earnings reports, broad market",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260827_ceukarQYqWg.mp4"
     },
     {
       "video_id": "tPgL40J4XTM",
@@ -6094,7 +6107,9 @@
       "filename": "20260826_tPgL40J4XTM.mp4",
       "expected_filename": "20260826_tPgL40J4XTM.mp4",
       "title": "PCE INFLATION AND NVIDIA EARNINGS...WHAT WAS THE OUTCOME??",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260826_tPgL40J4XTM.mp4"
     },
     {
       "video_id": "Ja2WJcG7ZdA",
@@ -6104,7 +6119,9 @@
       "filename": "20260825_Ja2WJcG7ZdA.mp4",
       "expected_filename": "20260825_Ja2WJcG7ZdA.mp4",
       "title": "ALTERNATING RED/GREEN DAYS CONTINUES AS BEATEN-DOWN A/I STOCKS BOUNCE;",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260825_Ja2WJcG7ZdA.mp4"
     },
     {
       "video_id": "vZ08xA3Penk",
@@ -6114,7 +6131,9 @@
       "filename": "20260824_vZ08xA3Penk.mp4",
       "expected_filename": "20260824_vZ08xA3Penk.mp4",
       "title": "THE LEADER PUZZLE IS CHANGING...WHAT SHOULD YOU LOOK OUT FOR??",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260824_vZ08xA3Penk.mp4"
     },
     {
       "video_id": "cwk0qIT_aVE",
@@ -6124,7 +6143,9 @@
       "filename": "20260822_cwk0qIT_aVE.mp4",
       "expected_filename": "20260822_cwk0qIT_aVE.mp4",
       "title": "Weekend Review-New Bond Policy fails to quiet Long bonds, Dollar plumi",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260822_cwk0qIT_aVE.mp4"
     },
     {
       "video_id": "JWawBTDc4n8",
@@ -6134,7 +6155,9 @@
       "filename": "20260821_JWawBTDc4n8.mp4",
       "expected_filename": "20260821_JWawBTDc4n8.mp4",
       "title": "BULLS SHOW UP AS INDEXES REGAIN KEY SHORT-TERM LEVELS",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260821_JWawBTDc4n8.mp4"
     },
     {
       "video_id": "cG0bqg1j7uA",
@@ -6144,7 +6167,9 @@
       "filename": "20260821_cG0bqg1j7uA.mp4",
       "expected_filename": "20260821_cG0bqg1j7uA.mp4",
       "title": "MODERNA UP 200%?! BTC BOOMS AS AI NAMES ROTATE INTO VALUE STOCKS | You",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260821_cG0bqg1j7uA.mp4"
     },
     {
       "video_id": "0R1_i4G7dIw",
@@ -6154,7 +6179,9 @@
       "filename": "20260820_0R1_i4G7dIw.mp4",
       "expected_filename": "20260820_0R1_i4G7dIw.mp4",
       "title": "TRUMP ANNOUNCES ECONOMIC WARFARE ON IRAN SENDING YIELDS AND OIL HIGHER",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260820_0R1_i4G7dIw.mp4"
     },
     {
       "video_id": "NXmuO8bCCs4",
@@ -6164,7 +6191,9 @@
       "filename": "20260819_NXmuO8bCCs4.mp4",
       "expected_filename": "20260819_NXmuO8bCCs4.mp4",
       "title": "TREASURY YIELD CURVE CONTROL INTERVENTION; MODERNA BIG CANCER VACCINE ",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260819_NXmuO8bCCs4.mp4"
     },
     {
       "video_id": "aif6DX_xz8I",
@@ -6174,7 +6203,9 @@
       "filename": "20260818_aif6DX_xz8I.mp4",
       "expected_filename": "20260818_aif6DX_xz8I.mp4",
       "title": "A-I STOCKS BLASTED, RECENT PROGRESS IN MOST GROWTH LEADERS UNDONE; TOD",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260818_aif6DX_xz8I.mp4"
     },
     {
       "video_id": "2Wv_SBwhArA",
@@ -6184,7 +6215,9 @@
       "filename": "20260817_2Wv_SBwhArA.mp4",
       "expected_filename": "20260817_2Wv_SBwhArA.mp4",
       "title": "30-YEAR YIELDS MAKING NEW HIGHS PUTTING SOME PRESSURE ON INDEXES",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260817_2Wv_SBwhArA.mp4"
     },
     {
       "video_id": "YlynBrXzngA",
@@ -6194,7 +6227,9 @@
       "filename": "20260815_YlynBrXzngA.mp4",
       "expected_filename": "20260815_YlynBrXzngA.mp4",
       "title": "8/15 Weekend Review, AI surges on $NBIS $LITE $SMCI eps, VIX flashing ",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260815_YlynBrXzngA.mp4"
     },
     {
       "video_id": "etNNGIwqZWo",
@@ -6204,7 +6239,9 @@
       "filename": "20260814_etNNGIwqZWo.mp4",
       "expected_filename": "20260814_etNNGIwqZWo.mp4",
       "title": "LEADERS TAKE A BREATHER AS INDEXES PULL BACK ON LIGHT VOLUME",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260814_etNNGIwqZWo.mp4"
     },
     {
       "video_id": "K307gBsCRGg",
@@ -6214,7 +6251,9 @@
       "filename": "20260814_K307gBsCRGg.mp4",
       "expected_filename": "20260814_K307gBsCRGg.mp4",
       "title": "AI STOCKS ARE BACK! Fiber, Memory & NeoCloud Leaders Revealed | Your M",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260814_K307gBsCRGg.mp4"
     },
     {
       "video_id": "eWeJSMLlZLs",
@@ -6224,7 +6263,9 @@
       "filename": "20260813_eWeJSMLlZLs.mp4",
       "expected_filename": "20260813_eWeJSMLlZLs.mp4",
       "title": "SPX AND NASDAQ BREAKOUT OF A 6-DAY CONSOLIDATION",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260813_eWeJSMLlZLs.mp4"
     },
     {
       "video_id": "BA2sWh6ftdM",
@@ -6234,7 +6275,9 @@
       "filename": "20260812_BA2sWh6ftdM.mp4",
       "expected_filename": "20260812_BA2sWh6ftdM.mp4",
       "title": "MARKET CLEARS CPI HURDLE, AI STOCKS SNAP BACK, S&P 500 COILED IN 6-DAY",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260812_BA2sWh6ftdM.mp4"
     },
     {
       "video_id": "ajyhtTFYlpw",
@@ -6244,7 +6287,9 @@
       "filename": "20260811_ajyhtTFYlpw.mp4",
       "expected_filename": "20260811_ajyhtTFYlpw.mp4",
       "title": "FIFTH STRAIGHT DAY OF TIGHT INDEX ACTION...WILL CPI TRIGGER A MOVE?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260811_ajyhtTFYlpw.mp4"
     },
     {
       "video_id": "u5F6yIo61oA",
@@ -6254,7 +6299,9 @@
       "filename": "20260810_u5F6yIo61oA.mp4",
       "expected_filename": "20260810_u5F6yIo61oA.mp4",
       "title": "MARKETS DIGEST AHEAD OF KEY INFLATION DATA THIS WEEK.",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260810_u5F6yIo61oA.mp4"
     },
     {
       "video_id": "XSlDBLIjrDY",
@@ -6264,7 +6311,9 @@
       "filename": "20260808_XSlDBLIjrDY.mp4",
       "expected_filename": "20260808_XSlDBLIjrDY.mp4",
       "title": "Weekend Review - Follow Through Day gaining traction, AI back in focus",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260808_XSlDBLIjrDY.mp4"
     },
     {
       "video_id": "EAI-qMrf_T0",
@@ -6274,7 +6323,9 @@
       "filename": "20260808_EAI-qMrf_T0.mp4",
       "expected_filename": "20260808_EAI-qMrf_T0.mp4",
       "title": "LEADERS LEAD AS INDEXES CLOSE STRONG",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260808_EAI-qMrf_T0.mp4"
     },
     {
       "video_id": "g40Q36Dpzf4",
@@ -6284,7 +6335,9 @@
       "filename": "20260807_g40Q36Dpzf4.mp4",
       "expected_filename": "20260807_g40Q36Dpzf4.mp4",
       "title": "LARGE CAPS UP, SMALL CAPS DOWN AS TECH BOOMS | Your Money Podcast Ep. ",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260807_g40Q36Dpzf4.mp4"
     },
     {
       "video_id": "K6PqP9qxoPA",
@@ -6294,7 +6347,9 @@
       "filename": "20260806_K6PqP9qxoPA.mp4",
       "expected_filename": "20260806_K6PqP9qxoPA.mp4",
       "title": "MORE DIGESTION IN INDEXES & LEADERS... WHERE TO NEXT?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260806_K6PqP9qxoPA.mp4"
     },
     {
       "video_id": "Lwsk2m1-Cus",
@@ -6304,7 +6359,9 @@
       "filename": "20260805_Lwsk2m1-Cus.mp4",
       "expected_filename": "20260805_Lwsk2m1-Cus.mp4",
       "title": "DIGESTION DAY FOLLOWING A 4-DAY THRUST OFF THE LEOPOLD LOW",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260805_Lwsk2m1-Cus.mp4"
     },
     {
       "video_id": "A22cuhvxR90",
@@ -6314,7 +6371,9 @@
       "filename": "20260804_A22cuhvxR90.mp4",
       "expected_filename": "20260804_A22cuhvxR90.mp4",
       "title": "POWERFUL ACTION LED BY A-I CARRIES S&P500 TO ALL-TIME HIGHS; PLUS...TH",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260804_A22cuhvxR90.mp4"
     },
     {
       "video_id": "XkXj19huomM",
@@ -6324,7 +6383,9 @@
       "filename": "20260803_XkXj19huomM.mp4",
       "expected_filename": "20260803_XkXj19huomM.mp4",
       "title": "S&P 500 ON THE VERGE OF NEW ATH'S; BROAD STRENGTH IN AI/TECH NAMES",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260803_XkXj19huomM.mp4"
     },
     {
       "video_id": "NjKPxvLNdEQ",
@@ -6334,7 +6395,9 @@
       "filename": "20260801_NjKPxvLNdEQ.mp4",
       "expected_filename": "20260801_NjKPxvLNdEQ.mp4",
       "title": "8/1 Weekend Review and month end review.  MSFT and AMZN boost indexes,",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260801_NjKPxvLNdEQ.mp4"
     },
     {
       "video_id": "auBgiSk-gV8",
@@ -6344,7 +6407,9 @@
       "filename": "20260731_auBgiSk-gV8.mp4",
       "expected_filename": "20260731_auBgiSk-gV8.mp4",
       "title": "AMZN AND MAG 7 LEAD INDEXES WITH AMZN EARNINGS, LONG TERM YEILDS BREAK",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260731_auBgiSk-gV8.mp4"
     },
     {
       "video_id": "5ov2coLmqfk",
@@ -6354,7 +6419,9 @@
       "filename": "20260731_5ov2coLmqfk.mp4",
       "expected_filename": "20260731_5ov2coLmqfk.mp4",
       "title": "AI TRACKING FOR HUGE CHANGES \u2013 BOOM OR BUST? | Your Money Podcast Ep. ",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260731_5ov2coLmqfk.mp4"
     },
     {
       "video_id": "xcv_5DwNPR0",
@@ -6364,7 +6431,9 @@
       "filename": "20260730_xcv_5DwNPR0.mp4",
       "expected_filename": "20260730_xcv_5DwNPR0.mp4",
       "title": "THIS IS THE CRAZIEST MARKET DRAMA OF 2026!",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260730_xcv_5DwNPR0.mp4"
     },
     {
       "video_id": "pM7a5mo5kpo",
@@ -6374,7 +6443,9 @@
       "filename": "20260729_pM7a5mo5kpo.mp4",
       "expected_filename": "20260729_pM7a5mo5kpo.mp4",
       "title": "FED RELIEF RALLY FADES AS SELLING BROADENS IN A-I STOCKS + OIL WEIGHS ",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260729_pM7a5mo5kpo.mp4"
     },
     {
       "video_id": "T-IyOIt4hTQ",
@@ -6384,7 +6455,9 @@
       "filename": "20260728_T-IyOIt4hTQ.mp4",
       "expected_filename": "20260728_T-IyOIt4hTQ.mp4",
       "title": "A-I STOCKS DUMP AGAIN, NON-TECH INDEXES RALLY; WATCH THESE 6 A-I TICKE",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260728_T-IyOIt4hTQ.mp4"
     },
     {
       "video_id": "xgjnEFgMCnc",
@@ -6394,7 +6467,9 @@
       "filename": "20260727_xgjnEFgMCnc.mp4",
       "expected_filename": "20260727_xgjnEFgMCnc.mp4",
       "title": "AI COMPLEX WEAKNESS CONTINUES DESPITE MIDDLE EAST CONFLICT RELIEF...",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260727_xgjnEFgMCnc.mp4"
     },
     {
       "video_id": "mM4-jwv5IiM",
@@ -6404,7 +6479,9 @@
       "filename": "20260726_mM4-jwv5IiM.mp4",
       "expected_filename": "20260726_mM4-jwv5IiM.mp4",
       "title": "W/E Review, AI 100 green as we highlight the top industry groups this ",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260726_mM4-jwv5IiM.mp4"
     },
     {
       "video_id": "xC63a7idsGQ",
@@ -6414,7 +6491,9 @@
       "filename": "20260724_xC63a7idsGQ.mp4",
       "expected_filename": "20260724_xC63a7idsGQ.mp4",
       "title": "THE SUMMER CHOP CONTINUES, WITH NO SHORTAGE OF VOLATILITY",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260724_xC63a7idsGQ.mp4"
     },
     {
       "video_id": "pbX2XvDq1RQ",
@@ -6424,7 +6503,9 @@
       "filename": "20260724_pbX2XvDq1RQ.mp4",
       "expected_filename": "20260724_pbX2XvDq1RQ.mp4",
       "title": "SHARK BAIT OR SMART MONEY? AI QUANTS TARGET RETAIL TRADERS | Your Mone",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260724_pbX2XvDq1RQ.mp4"
     },
     {
       "video_id": "nk_9uxnLsXo",
@@ -6434,7 +6515,9 @@
       "filename": "20260723_nk_9uxnLsXo.mp4",
       "expected_filename": "20260723_nk_9uxnLsXo.mp4",
       "title": "RISING OIL AND RISING YIELDS ARE MAJOR MARKET HEADWINDS...",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260723_nk_9uxnLsXo.mp4"
     },
     {
       "video_id": "npmyd1aKE8o",
@@ -6444,7 +6527,9 @@
       "filename": "20260722_npmyd1aKE8o.mp4",
       "expected_filename": "20260722_npmyd1aKE8o.mp4",
       "title": "SUMMER CHOP CONTINUES: S&P COILS, A-I NAMES BOUNCE, & SOFTWARE GETS SM",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260722_npmyd1aKE8o.mp4"
     },
     {
       "video_id": "P_AQPOnmKgk",
@@ -6454,7 +6539,9 @@
       "filename": "20260721_P_AQPOnmKgk.mp4",
       "expected_filename": "20260721_P_AQPOnmKgk.mp4",
       "title": "STRONG BOUNCE IN A-I STOCKS...CAN IT CONTINUE? HERE'S WHAT TO WATCH...",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260721_P_AQPOnmKgk.mp4"
     },
     {
       "video_id": "L-7fr9yIyzg",
@@ -6464,7 +6551,9 @@
       "filename": "20260720_L-7fr9yIyzg.mp4",
       "expected_filename": "20260720_L-7fr9yIyzg.mp4",
       "title": "MARKETS GAPPED UP AND FADED THE ENTIRE MOVE; SOME RS IN CRYPTO AND SOF",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260720_L-7fr9yIyzg.mp4"
     },
     {
       "video_id": "IZp66520hHo",
@@ -6474,7 +6563,9 @@
       "filename": "20260719_IZp66520hHo.mp4",
       "expected_filename": "20260719_IZp66520hHo.mp4",
       "title": "7/19 Weekend Review-Despite AI carnage, there are many 3 and 4 week ti",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260719_IZp66520hHo.mp4"
     },
     {
       "video_id": "w0Y8XZcJ4rg",
@@ -6484,7 +6575,9 @@
       "filename": "20260717_w0Y8XZcJ4rg.mp4",
       "expected_filename": "20260717_w0Y8XZcJ4rg.mp4",
       "title": "BROAD SELLING CONTINUES...COULD MEMORY STOCKS HAVE FOUND A SHORT-TERM ",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260717_w0Y8XZcJ4rg.mp4"
     },
     {
       "video_id": "FMeOqqhbJgE",
@@ -6494,7 +6587,9 @@
       "filename": "20260717_FMeOqqhbJgE.mp4",
       "expected_filename": "20260717_FMeOqqhbJgE.mp4",
       "title": "CARNAGE IN GROWTH STOCKS \u2013 BULLS TREAD WATER AS SPCX TUMBLES | Your Mo",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260717_FMeOqqhbJgE.mp4"
     },
     {
       "video_id": "jShFEqiOyKc",
@@ -6504,7 +6599,9 @@
       "filename": "20260716_jShFEqiOyKc.mp4",
       "expected_filename": "20260716_jShFEqiOyKc.mp4",
       "title": "MORE ROTATION, MORE CHOP, & THE CARNAGE IN AI STOCKS CONTINUES",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260716_jShFEqiOyKc.mp4"
     },
     {
       "video_id": "Ghinv97ESMQ",
@@ -6514,7 +6611,9 @@
       "filename": "20260715_Ghinv97ESMQ.mp4",
       "expected_filename": "20260715_Ghinv97ESMQ.mp4",
       "title": "CONTINUING TO SEE MASSIVE VOLATILITY IN AI STOCKS",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260715_Ghinv97ESMQ.mp4"
     },
     {
       "video_id": "0l4kO-SF7yc",
@@ -6524,7 +6623,9 @@
       "filename": "20260714_0l4kO-SF7yc.mp4",
       "expected_filename": "20260714_0l4kO-SF7yc.mp4",
       "title": "COOL CPI REPORT, AI STOCKS BOUNCE; INDEXES COILING FOR A MOVE...BUT WH",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260714_0l4kO-SF7yc.mp4"
     },
     {
       "video_id": "EbRL4cU4obQ",
@@ -6534,7 +6635,9 @@
       "filename": "20260714_EbRL4cU4obQ.mp4",
       "expected_filename": "20260714_EbRL4cU4obQ.mp4",
       "title": "CORRECTED: What is Causing Today's Renewed Weakness?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260714_EbRL4cU4obQ.mp4"
     },
     {
       "video_id": "JS2mEEngwH0",
@@ -6544,7 +6647,9 @@
       "filename": "20260711_JS2mEEngwH0.mp4",
       "expected_filename": "20260711_JS2mEEngwH0.mp4",
       "title": "7/11 Review, Mag 7 dominate with META and NVDA, AI and SOXX hold 10 we",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260711_JS2mEEngwH0.mp4"
     },
     {
       "video_id": "Uj8nPg-QtBc",
@@ -6554,7 +6659,9 @@
       "filename": "20260710_Uj8nPg-QtBc.mp4",
       "expected_filename": "20260710_Uj8nPg-QtBc.mp4",
       "title": "S&P500 BREAKING OUT ON MEGA CAP STRENGTH.",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260710_Uj8nPg-QtBc.mp4"
     },
     {
       "video_id": "eg4f-Uin0hQ",
@@ -6564,7 +6671,9 @@
       "filename": "20260710_eg4f-Uin0hQ.mp4",
       "expected_filename": "20260710_eg4f-Uin0hQ.mp4",
       "title": "IS FOMO COSTING YOU BIG? QUIT CHASING AND START PROTECTING | Your Mone",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260710_eg4f-Uin0hQ.mp4"
     },
     {
       "video_id": "Vq6t0TkaHwg",
@@ -6574,7 +6683,9 @@
       "filename": "20260709_Vq6t0TkaHwg.mp4",
       "expected_filename": "20260709_Vq6t0TkaHwg.mp4",
       "title": "SNAP-BACK RALLY IN AI STOCKS: IS THE S&P 500 ABOUT TO BREAK OUT?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260709_Vq6t0TkaHwg.mp4"
     },
     {
       "video_id": "0fPQI6704O0",
@@ -6584,7 +6695,9 @@
       "filename": "20260708_0fPQI6704O0.mp4",
       "expected_filename": "20260708_0fPQI6704O0.mp4",
       "title": "IRAN WAR FEARS BRUSHED OFF SO FAR, REVERSING LARGE PRE-MARKET LOSSES.",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260708_0fPQI6704O0.mp4"
     },
     {
       "video_id": "YxadnXtRlDQ",
@@ -6594,7 +6707,9 @@
       "filename": "20260707_YxadnXtRlDQ.mp4",
       "expected_filename": "20260707_YxadnXtRlDQ.mp4",
       "title": "AI STOCKS HIT HARD AGAIN, QQQ BREAKS SUPPORT; PLUS...A FULL PORTFOLIO ",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260707_YxadnXtRlDQ.mp4"
     },
     {
       "video_id": "iNjuaEivmNc",
@@ -6604,7 +6719,9 @@
       "filename": "20260706_iNjuaEivmNc.mp4",
       "expected_filename": "20260706_iNjuaEivmNc.mp4",
       "title": "ROTATION CONTINUES INTO SECTORS BEYOND AI STOCKS",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260706_iNjuaEivmNc.mp4"
     },
     {
       "video_id": "MhoMAtRai-4",
@@ -6614,7 +6731,9 @@
       "filename": "20260704_MhoMAtRai-4.mp4",
       "expected_filename": "20260704_MhoMAtRai-4.mp4",
       "title": "Weekend Review - S&P A/D line makes new highs while the AI 100 was dow",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260704_MhoMAtRai-4.mp4"
     },
     {
       "video_id": "Twg76X9vpD0",
@@ -6624,7 +6743,9 @@
       "filename": "20260702_Twg76X9vpD0.mp4",
       "expected_filename": "20260702_Twg76X9vpD0.mp4",
       "title": "CARNAGE IN AI STOCKS: MEMORY, SEMIS, OPTICS & NEOCLOUDS GET HAMMERED",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260702_Twg76X9vpD0.mp4"
     },
     {
       "video_id": "C7xYmeMf1ew",
@@ -6634,7 +6755,9 @@
       "filename": "20260702_C7xYmeMf1ew.mp4",
       "expected_filename": "20260702_C7xYmeMf1ew.mp4",
       "title": "ARE YOU READY IF THE BUBBLE BURSTS? AI WAVERS AS THE US CELEBRATES 250",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260702_C7xYmeMf1ew.mp4"
     },
     {
       "video_id": "Hs62rWgKWS8",
@@ -6644,7 +6767,9 @@
       "filename": "20260701_Hs62rWgKWS8.mp4",
       "expected_filename": "20260701_Hs62rWgKWS8.mp4",
       "title": "ARE THE MARKETS CHOOSING A DIRECTIONAL MOVE SOON?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260701_Hs62rWgKWS8.mp4"
     },
     {
       "video_id": "riPYD25nCvU",
@@ -6654,7 +6779,9 @@
       "filename": "20260701_riPYD25nCvU.mp4",
       "expected_filename": "20260701_riPYD25nCvU.mp4",
       "title": "From Bear Market Bottom to All-Time Highs: The 10-Step Regime Playbook",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260701_riPYD25nCvU.mp4"
     },
     {
       "video_id": "3khiUh18SGg",
@@ -6664,7 +6791,9 @@
       "filename": "20260630_3khiUh18SGg.mp4",
       "expected_filename": "20260630_3khiUh18SGg.mp4",
       "title": "SOLID CLOSE TO Q2 AS GROWTH LEADERS TAKE CHARGE; PLUS...A FULL PORTFOL",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260630_3khiUh18SGg.mp4"
     },
     {
       "video_id": "uYsTRIEYBOM",
@@ -6674,7 +6803,9 @@
       "filename": "20260629_uYsTRIEYBOM.mp4",
       "expected_filename": "20260629_uYsTRIEYBOM.mp4",
       "title": "INDEXES AND LEADERS HOLD KEY LEVELS FOLLOWING MORNING VOLATILITY.",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260629_uYsTRIEYBOM.mp4"
     },
     {
       "video_id": "vMRwBaCuqFs",
@@ -6684,7 +6815,9 @@
       "filename": "20260629_vMRwBaCuqFs.mp4",
       "expected_filename": "20260629_vMRwBaCuqFs.mp4",
       "title": "Why 95% of Traders Fail (And How to Fix It)",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260629_vMRwBaCuqFs.mp4"
     },
     {
       "video_id": "LiTQ1HqmQbI",
@@ -6694,7 +6827,9 @@
       "filename": "20260628_LiTQ1HqmQbI.mp4",
       "expected_filename": "20260628_LiTQ1HqmQbI.mp4",
       "title": "Weekend Review How to make sense of last week with massive index rebal",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260628_LiTQ1HqmQbI.mp4"
     },
     {
       "video_id": "gNtCkmnlFbw",
@@ -6704,7 +6839,9 @@
       "filename": "20260627_gNtCkmnlFbw.mp4",
       "expected_filename": "20260627_gNtCkmnlFbw.mp4",
       "title": "Look For This Chart Pattern Before Buying Any Stock",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260627_gNtCkmnlFbw.mp4"
     },
     {
       "video_id": "hlg5zAwuqPw",
@@ -6714,7 +6851,9 @@
       "filename": "20260626_hlg5zAwuqPw.mp4",
       "expected_filename": "20260626_hlg5zAwuqPw.mp4",
       "title": "Semis, Storage and AI sells off on OpenAI's plans to delay offering an",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260626_hlg5zAwuqPw.mp4"
     },
     {
       "video_id": "tldNhps605c",
@@ -6724,7 +6863,9 @@
       "filename": "20260626_tldNhps605c.mp4",
       "expected_filename": "20260626_tldNhps605c.mp4",
       "title": "WHY DO REVERE & THE BULL LOOK CONCERNED? WHEN THE BUBBLE BREAKS | Your",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260626_tldNhps605c.mp4"
     },
     {
       "video_id": "n7wbWdzAKO0",
@@ -6734,7 +6875,9 @@
       "filename": "20260625_n7wbWdzAKO0.mp4",
       "expected_filename": "20260625_n7wbWdzAKO0.mp4",
       "title": "WHAT DO MICRON'S EARNINGS MEAN FOR THE MARKET?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260625_n7wbWdzAKO0.mp4"
     },
     {
       "video_id": "NSJxNGbcMl0",
@@ -6744,7 +6887,9 @@
       "filename": "20260625_NSJxNGbcMl0.mp4",
       "expected_filename": "20260625_NSJxNGbcMl0.mp4",
       "title": "Why 90% of Traders Lose Money (The Math You Are Ignoring)",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260625_NSJxNGbcMl0.mp4"
     },
     {
       "video_id": "b-tfXSY8vKs",
@@ -6754,7 +6899,9 @@
       "filename": "20260624_b-tfXSY8vKs.mp4",
       "expected_filename": "20260624_b-tfXSY8vKs.mp4",
       "title": "AI STOCKS CONTINUED WEAKNESS...BUT WILL MU EARNINGS REVIVE THEM?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260624_b-tfXSY8vKs.mp4"
     },
     {
       "video_id": "PTtSg3CGa6c",
@@ -6764,7 +6911,9 @@
       "filename": "20260623_PTtSg3CGa6c.mp4",
       "expected_filename": "20260623_PTtSg3CGa6c.mp4",
       "title": "A-I STOCKS SMACKED AS SPX & QQQ BREAK 21EMA...PLUS, A FULL PORTFOLIO R",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260623_PTtSg3CGa6c.mp4"
     },
     {
       "video_id": "dZCVZAL0SOg",
@@ -6774,7 +6923,9 @@
       "filename": "20260623_dZCVZAL0SOg.mp4",
       "expected_filename": "20260623_dZCVZAL0SOg.mp4",
       "title": "The $400M Strategy Wall Street Doesn't Want You To See",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260623_dZCVZAL0SOg.mp4"
     },
     {
       "video_id": "R9a-JmoQDLE",
@@ -6784,7 +6935,9 @@
       "filename": "20260622_R9a-JmoQDLE.mp4",
       "expected_filename": "20260622_R9a-JmoQDLE.mp4",
       "title": "QUIET CHOPPY SUMMER TRADING \u2014 BUT SMALL CAPS ARE BREAKING OUT",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260622_R9a-JmoQDLE.mp4"
     },
     {
       "video_id": "bV7cCj9Mpwg",
@@ -6794,7 +6947,9 @@
       "filename": "20260621_bV7cCj9Mpwg.mp4",
       "expected_filename": "20260621_bV7cCj9Mpwg.mp4",
       "title": "From Bear to Bull: The Ultimate 10 Step Guide to Timing Market Re-Entr",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260621_bV7cCj9Mpwg.mp4"
     },
     {
       "video_id": "t30zeesTOAc",
@@ -6804,7 +6959,9 @@
       "filename": "20260619_t30zeesTOAc.mp4",
       "expected_filename": "20260619_t30zeesTOAc.mp4",
       "title": "Weekend Walkthrough - See the setups that resulted in Revere actively ",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260619_t30zeesTOAc.mp4"
     },
     {
       "video_id": "5k9ANLDQeXE",
@@ -6814,7 +6971,9 @@
       "filename": "20260618_5k9ANLDQeXE.mp4",
       "expected_filename": "20260618_5k9ANLDQeXE.mp4",
       "title": "POST-FOMC ACTION IS POSITIVE DESPITE A HAWKISH PAUSE.",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260618_5k9ANLDQeXE.mp4"
     },
     {
       "video_id": "QOvsT86cVg0",
@@ -6824,7 +6983,9 @@
       "filename": "20260618_QOvsT86cVg0.mp4",
       "expected_filename": "20260618_QOvsT86cVg0.mp4",
       "title": "The #1 Portfolio Trading Strategy Retail Investors Don't Know",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260618_QOvsT86cVg0.mp4"
     },
     {
       "video_id": "kMkJuiYj8cA",
@@ -6834,7 +6995,9 @@
       "filename": "20260617_kMkJuiYj8cA.mp4",
       "expected_filename": "20260617_kMkJuiYj8cA.mp4",
       "title": "HAWKISH FED SPARKS BROAD SELL-OFF",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260617_kMkJuiYj8cA.mp4"
     },
     {
       "video_id": "PGPVTY1LpBY",
@@ -6844,7 +7007,9 @@
       "filename": "20260616_PGPVTY1LpBY.mp4",
       "expected_filename": "20260616_PGPVTY1LpBY.mp4",
       "title": "Dow Climbs to Record as Tech and Semis Slip Ahead of Warsh\u2019s FOMC Debu",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260616_PGPVTY1LpBY.mp4"
     },
     {
       "video_id": "xbVIkwq_gg0",
@@ -6854,7 +7019,9 @@
       "filename": "20260616_xbVIkwq_gg0.mp4",
       "expected_filename": "20260616_xbVIkwq_gg0.mp4",
       "title": "Why Crypto, AI Stocks, and Commodities All Follow the EXACT Same Patte",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260616_xbVIkwq_gg0.mp4"
     },
     {
       "video_id": "Am3cmv2Y0aw",
@@ -6864,7 +7031,9 @@
       "filename": "20260615_Am3cmv2Y0aw.mp4",
       "expected_filename": "20260615_Am3cmv2Y0aw.mp4",
       "title": "PEACE AGREEMENT LEADS TO BROAD RALLY; SPCX HITS $2.5T MARK.",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260615_Am3cmv2Y0aw.mp4"
     },
     {
       "video_id": "oHp5RcBuo_8",
@@ -6874,7 +7043,9 @@
       "filename": "20260613_oHp5RcBuo_8.mp4",
       "expected_filename": "20260613_oHp5RcBuo_8.mp4",
       "title": "W/E REVIEW: Positive rotation with S&P holding 10 week ma.  Many 2 and",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260613_oHp5RcBuo_8.mp4"
     },
     {
       "video_id": "CXJnx5hi1Is",
@@ -6884,7 +7055,9 @@
       "filename": "20260612_CXJnx5hi1Is.mp4",
       "expected_filename": "20260612_CXJnx5hi1Is.mp4",
       "title": "SPACEX: THE LARGEST IPO IN HISTORY.",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260612_CXJnx5hi1Is.mp4"
     },
     {
       "video_id": "of7ldllufyg",
@@ -6894,7 +7067,9 @@
       "filename": "20260612_of7ldllufyg.mp4",
       "expected_filename": "20260612_of7ldllufyg.mp4",
       "title": "EVERYBODY WANTS SPACEX \u2013 IPO SHATTERS RECORDS AT $1.77 TRILLION | Your",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260612_of7ldllufyg.mp4"
     },
     {
       "video_id": "XC9fgdH8nIg",
@@ -6904,7 +7079,9 @@
       "filename": "20260611_XC9fgdH8nIg.mp4",
       "expected_filename": "20260611_XC9fgdH8nIg.mp4",
       "title": "Easing GEOPOLITICAL TENSIONS SPARK STRONG REBOUND IN LEADERS",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260611_XC9fgdH8nIg.mp4"
     },
     {
       "video_id": "boZRoKyPMB0",
@@ -6914,7 +7091,9 @@
       "filename": "20260610_boZRoKyPMB0.mp4",
       "expected_filename": "20260610_boZRoKyPMB0.mp4",
       "title": "WHAT ARE THE DOMINANT DRIVERS OF THE MARKET RIGHT NOW?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260610_boZRoKyPMB0.mp4"
     },
     {
       "video_id": "f9yIIIukH-k",
@@ -6924,7 +7103,9 @@
       "filename": "20260609_f9yIIIukH-k.mp4",
       "expected_filename": "20260609_f9yIIIukH-k.mp4",
       "title": "WILD WIDE & LOOSE ACTION IN LEADERS...NOT THE MARKET FOR POSITION TRAD",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260609_f9yIIIukH-k.mp4"
     },
     {
       "video_id": "gCVgT5qng68",
@@ -6934,7 +7115,9 @@
       "filename": "20260608_gCVgT5qng68.mp4",
       "expected_filename": "20260608_gCVgT5qng68.mp4",
       "title": "IS THE MARKET DUE FOR A CONSOLIDATION?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260608_gCVgT5qng68.mp4"
     },
     {
       "video_id": "o1PRwco3UgY",
@@ -6944,7 +7127,9 @@
       "filename": "20260606_o1PRwco3UgY.mp4",
       "expected_filename": "20260606_o1PRwco3UgY.mp4",
       "title": "Weekend Review -   HOT NFP leads to a spike in December rate hike odds",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260606_o1PRwco3UgY.mp4"
     },
     {
       "video_id": "w88fjo4VKuk",
@@ -6954,7 +7139,9 @@
       "filename": "20260605_w88fjo4VKuk.mp4",
       "expected_filename": "20260605_w88fjo4VKuk.mp4",
       "title": "IS THE AI RALLY OVER? NFP REPORT TRIGGERS MASSIVE SELL-OFF IN GROWTH S",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260605_w88fjo4VKuk.mp4"
     },
     {
       "video_id": "a7zObEZlEEM",
@@ -6964,7 +7151,9 @@
       "filename": "20260605_a7zObEZlEEM.mp4",
       "expected_filename": "20260605_a7zObEZlEEM.mp4",
       "title": "ELON'S SECRET WEAPON \u2013 SPACEX GOES PUBLIC AS AVGO PLUMMETS | Your Mone",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260605_a7zObEZlEEM.mp4"
     },
     {
       "video_id": "jBhmYtDyz90",
@@ -6974,7 +7163,9 @@
       "filename": "20260604_jBhmYtDyz90.mp4",
       "expected_filename": "20260604_jBhmYtDyz90.mp4",
       "title": "GAP DOWN, TREND UP; BULLS STEPPING UP TO THE PLATE",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260604_jBhmYtDyz90.mp4"
     },
     {
       "video_id": "gzKJIHyBPfA",
@@ -6984,7 +7175,33 @@
       "filename": "20260603_gzKJIHyBPfA.mp4",
       "expected_filename": "20260603_gzKJIHyBPfA.mp4",
       "title": "MARKET & LEADERS SEE FIRST PULLBACK... WHAT HAPPENS NEXT?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260603_gzKJIHyBPfA.mp4"
+    },
+    {
+      "video_id": "bEidyFtV-lY",
+      "channel": "revere",
+      "date": "20260512",
+      "dir": "downloads",
+      "filename": "20260512_bEidyFtV-lY.mp4",
+      "expected_filename": "20260512_bEidyFtV-lY.mp4",
+      "title": "STRONG CLOSE DESPITE MINOR PRESSURE ACROSS MOMENTUM & GROWTH LEADERS",
+      "present": true,
+      "found_by": "own_name",
+      "media_path": "data/video_pipeline/downloads_hires/20260512_bEidyFtV-lY.mp4"
+    },
+    {
+      "video_id": "M0pV73RV2qo",
+      "channel": "revere",
+      "date": "20260509",
+      "dir": "downloads",
+      "filename": "20260509_M0pV73RV2qo.mp4",
+      "expected_filename": "20260509_M0pV73RV2qo.mp4",
+      "title": "Weekend Review, Major past week of key growth leader eps reports, why ",
+      "present": true,
+      "found_by": "own_name",
+      "media_path": "data/video_pipeline/downloads_hires/20260509_M0pV73RV2qo.mp4"
     },
     {
       "video_id": "JNVA5cd_m7M",
@@ -6994,7 +7211,9 @@
       "filename": "20231215_JNVA5cd_m7M.mp4",
       "expected_filename": "20231215_JNVA5cd_m7M.mp4",
       "title": "Speculation money is back!",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20231215_JNVA5cd_m7M.mp4"
     },
     {
       "video_id": "TZnX1qEiOkM",
@@ -7004,7 +7223,9 @@
       "filename": "20231201_TZnX1qEiOkM.mp4",
       "expected_filename": "20231201_TZnX1qEiOkM.mp4",
       "title": "EP party!",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20231201_TZnX1qEiOkM.mp4"
     },
     {
       "video_id": "VdQSDGZBLQE",
@@ -7014,7 +7235,9 @@
       "filename": "20230609_VdQSDGZBLQE.mp4",
       "expected_filename": "20230609_VdQSDGZBLQE.mp4",
       "title": "Market mechanics, setups and more",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20230609_VdQSDGZBLQE.mp4"
     },
     {
       "video_id": "SLhbpNuHegw",
@@ -7024,7 +7247,9 @@
       "filename": "20230608_SLhbpNuHegw.mp4",
       "expected_filename": "20230608_SLhbpNuHegw.mp4",
       "title": "EPs, AI and quantum computing stocks",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20230608_SLhbpNuHegw.mp4"
     },
     {
       "video_id": "C7ZZhSxYYLk",
@@ -7034,7 +7259,9 @@
       "filename": "20230605_C7ZZhSxYYLk.mp4",
       "expected_filename": "20230605_C7ZZhSxYYLk.mp4",
       "title": "Zzzlow",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20230605_C7ZZhSxYYLk.mp4"
     },
     {
       "video_id": "1HFPeLD2zwc",
@@ -7044,7 +7271,9 @@
       "filename": "20230601_1HFPeLD2zwc.mp4",
       "expected_filename": "20230601_1HFPeLD2zwc.mp4",
       "title": "AI and the shittier the stock, the bigger the move.",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20230601_1HFPeLD2zwc.mp4"
     },
     {
       "video_id": "2UgJ5CvVVK4",
@@ -7054,7 +7283,9 @@
       "filename": "20230523_2UgJ5CvVVK4.mp4",
       "expected_filename": "20230523_2UgJ5CvVVK4.mp4",
       "title": "EPs good follow through. AI and Quantum names waking up",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20230523_2UgJ5CvVVK4.mp4"
     },
     {
       "video_id": "8Pa6cllRZNw",
@@ -7064,7 +7295,9 @@
       "filename": "20230522_8Pa6cllRZNw.mp4",
       "expected_filename": "20230522_8Pa6cllRZNw.mp4",
       "title": "May 22 Stream",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20230522_8Pa6cllRZNw.mp4"
     },
     {
       "video_id": "_y9Wo0eBP4A",
@@ -7074,7 +7307,9 @@
       "filename": "20230519__y9Wo0eBP4A.mp4",
       "expected_filename": "20230519__y9Wo0eBP4A.mp4",
       "title": "Episodic Pivots, Kenny boy and old times",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20230519__y9Wo0eBP4A.mp4"
     },
     {
       "video_id": "1AJIzXSkfyM",
@@ -7084,7 +7319,9 @@
       "filename": "20230518_1AJIzXSkfyM.mp4",
       "expected_filename": "20230518_1AJIzXSkfyM.mp4",
       "title": "Episodic Pivots galore",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20230518_1AJIzXSkfyM.mp4"
     },
     {
       "video_id": "GdMs1y_RTnM",
@@ -7094,7 +7331,9 @@
       "filename": "20230126_GdMs1y_RTnM.mp4",
       "expected_filename": "20230126_GdMs1y_RTnM.mp4",
       "title": "New BULL?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20230126_GdMs1y_RTnM.mp4"
     },
     {
       "video_id": "sN_vorSS83c",
@@ -7104,7 +7343,9 @@
       "filename": "20221117_sN_vorSS83c.mp4",
       "expected_filename": "20221117_sN_vorSS83c.mp4",
       "title": "Gap down and bounce day",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20221117_sN_vorSS83c.mp4"
     },
     {
       "video_id": "xtDinDnf3-o",
@@ -7114,7 +7355,9 @@
       "filename": "20221104_xtDinDnf3-o.mp4",
       "expected_filename": "20221104_xtDinDnf3-o.mp4",
       "title": "Gap and fade",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20221104_xtDinDnf3-o.mp4"
     },
     {
       "video_id": "9lzYgB-b9yE",
@@ -7124,7 +7367,9 @@
       "filename": "20221104_9lzYgB-b9yE.mp4",
       "expected_filename": "20221104_9lzYgB-b9yE.mp4",
       "title": "I'm BACK! 2022-11-03",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20221104_9lzYgB-b9yE.mp4"
     },
     {
       "video_id": "faG8Mb_tV9g",
@@ -7134,7 +7379,9 @@
       "filename": "20220614_faG8Mb_tV9g.mp4",
       "expected_filename": "20220614_faG8Mb_tV9g.mp4",
       "title": "Meltdown scenario or dhort term bottom?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20220614_faG8Mb_tV9g.mp4"
     },
     {
       "video_id": "MWiFMdc6fBo",
@@ -7144,7 +7391,9 @@
       "filename": "20220608_MWiFMdc6fBo.mp4",
       "expected_filename": "20220608_MWiFMdc6fBo.mp4",
       "title": "Speculation money coming back",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20220608_MWiFMdc6fBo.mp4"
     },
     {
       "video_id": "i0Iq83_54Xs",
@@ -7154,7 +7403,9 @@
       "filename": "20220607_i0Iq83_54Xs.mp4",
       "expected_filename": "20220607_i0Iq83_54Xs.mp4",
       "title": "Energy sector going parabolic?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20220607_i0Iq83_54Xs.mp4"
     },
     {
       "video_id": "ST8lvpOVjeM",
@@ -7164,7 +7415,9 @@
       "filename": "20220606_ST8lvpOVjeM.mp4",
       "expected_filename": "20220606_ST8lvpOVjeM.mp4",
       "title": "Some things setting up",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20220606_ST8lvpOVjeM.mp4"
     },
     {
       "video_id": "aaIlqb7HUJQ",
@@ -7174,7 +7427,9 @@
       "filename": "20220606_aaIlqb7HUJQ.mp4",
       "expected_filename": "20220606_aaIlqb7HUJQ.mp4",
       "title": "Some things setting up",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20220606_aaIlqb7HUJQ.mp4"
     },
     {
       "video_id": "Axs8VyUKFRk",
@@ -7184,7 +7439,9 @@
       "filename": "20220606_Axs8VyUKFRk.mp4",
       "expected_filename": "20220606_Axs8VyUKFRk.mp4",
       "title": "Some things setting up",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20220606_Axs8VyUKFRk.mp4"
     },
     {
       "video_id": "eX7XDCdoa0c",
@@ -7194,7 +7451,9 @@
       "filename": "20220517_eX7XDCdoa0c.mp4",
       "expected_filename": "20220517_eX7XDCdoa0c.mp4",
       "title": "How long will this bear market rally last?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220517_eX7XDCdoa0c.mp4"
     },
     {
       "video_id": "3ZRiHbMRr0w",
@@ -7204,7 +7463,9 @@
       "filename": "20220510_3ZRiHbMRr0w.mp4",
       "expected_filename": "20220510_3ZRiHbMRr0w.mp4",
       "title": "Big opportunity awaits",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20220510_3ZRiHbMRr0w.mp4"
     },
     {
       "video_id": "NtIRVae1Igo",
@@ -7214,7 +7475,9 @@
       "filename": "20220506_NtIRVae1Igo.mp4",
       "expected_filename": "20220506_NtIRVae1Igo.mp4",
       "title": "shortest stream ever?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20220506_NtIRVae1Igo.mp4"
     },
     {
       "video_id": "K4PzGs13b-4",
@@ -7224,7 +7487,9 @@
       "filename": "20220429_K4PzGs13b-4.mp4",
       "expected_filename": "20220429_K4PzGs13b-4.mp4",
       "title": "no fat pitches",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20220429_K4PzGs13b-4.mp4"
     },
     {
       "video_id": "PquLytys1k4",
@@ -7234,7 +7499,9 @@
       "filename": "20220428_PquLytys1k4.mp4",
       "expected_filename": "20220428_PquLytys1k4.mp4",
       "title": "patience is king",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20220428_PquLytys1k4.mp4"
     },
     {
       "video_id": "wPMNdbuaoJc",
@@ -7244,7 +7511,9 @@
       "filename": "20220427_wPMNdbuaoJc.mp4",
       "expected_filename": "20220427_wPMNdbuaoJc.mp4",
       "title": "not many setups",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20220427_wPMNdbuaoJc.mp4"
     },
     {
       "video_id": "Q-oK6u6tZ3M",
@@ -7254,7 +7523,9 @@
       "filename": "20220427_Q-oK6u6tZ3M.mp4",
       "expected_filename": "20220427_Q-oK6u6tZ3M.mp4",
       "title": "not many setups",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20220427_Q-oK6u6tZ3M.mp4"
     },
     {
       "video_id": "dtFCCcfgf3Y",
@@ -7264,7 +7535,9 @@
       "filename": "20220427_dtFCCcfgf3Y.mp4",
       "expected_filename": "20220427_dtFCCcfgf3Y.mp4",
       "title": "not many setups",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20220427_dtFCCcfgf3Y.mp4"
     },
     {
       "video_id": "uDfm0ClZ8yE",
@@ -7274,7 +7547,9 @@
       "filename": "20220426_uDfm0ClZ8yE.mp4",
       "expected_filename": "20220426_uDfm0ClZ8yE.mp4",
       "title": "whoa things are slow",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20220426_uDfm0ClZ8yE.mp4"
     },
     {
       "video_id": "GOjwRa0EWBc",
@@ -7284,7 +7559,9 @@
       "filename": "20260916_GOjwRa0EWBc.mp4",
       "expected_filename": "20260916_GOjwRa0EWBc.mp4",
       "title": "THE FED JUST HIKED RATES FOR THE FIRST TIME SINCE 2023",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260916_GOjwRa0EWBc.mp4"
     },
     {
       "video_id": "NCp8mcHfsKc",
@@ -7294,7 +7571,9 @@
       "filename": "20260915_NCp8mcHfsKc.mp4",
       "expected_filename": "20260915_NCp8mcHfsKc.mp4",
       "title": "INDEXES RED ACROSS-THE-BOARD, ALL EYES WED ON REACTION TO FOMC'S EXPEC",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260915_NCp8mcHfsKc.mp4"
     },
     {
       "video_id": "6VD8H6twd2c",
@@ -7304,7 +7583,9 @@
       "filename": "20260914_6VD8H6twd2c.mp4",
       "expected_filename": "20260914_6VD8H6twd2c.mp4",
       "title": "SEMIS & AI INFRASTRUCTURE STOCKS GET HIT HARD AS MONEY ROTATES INTO CY",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260914_6VD8H6twd2c.mp4"
     },
     {
       "video_id": "s6jdpRmrGck",
@@ -7314,7 +7595,9 @@
       "filename": "20220425_s6jdpRmrGck.mp4",
       "expected_filename": "20220425_s6jdpRmrGck.mp4",
       "title": "patience is king",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220425_s6jdpRmrGck.mp4"
     },
     {
       "video_id": "BMl5Ml24crg",
@@ -7324,7 +7607,9 @@
       "filename": "20220421_BMl5Ml24crg.mp4",
       "expected_filename": "20220421_BMl5Ml24crg.mp4",
       "title": "give us some trends",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220421_BMl5Ml24crg.mp4"
     },
     {
       "video_id": "yn2pIMXdFg8",
@@ -7334,7 +7619,9 @@
       "filename": "20220419_yn2pIMXdFg8.mp4",
       "expected_filename": "20220419_yn2pIMXdFg8.mp4",
       "title": "EP scan",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220419_yn2pIMXdFg8.mp4"
     },
     {
       "video_id": "KQplQq01oy0",
@@ -7344,7 +7631,9 @@
       "filename": "20220418_KQplQq01oy0.mp4",
       "expected_filename": "20220418_KQplQq01oy0.mp4",
       "title": "portfolio straight up",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220418_KQplQq01oy0.mp4"
     },
     {
       "video_id": "mKkOtiFjc_E",
@@ -7354,7 +7643,9 @@
       "filename": "20220414_mKkOtiFjc_E.mp4",
       "expected_filename": "20220414_mKkOtiFjc_E.mp4",
       "title": "New setups emerging",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220414_mKkOtiFjc_E.mp4"
     },
     {
       "video_id": "n6Gm1mLN7T0",
@@ -7364,7 +7655,9 @@
       "filename": "20220413_n6Gm1mLN7T0.mp4",
       "expected_filename": "20220413_n6Gm1mLN7T0.mp4",
       "title": "Fucked by the oil & gas sector this whole week",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220413_n6Gm1mLN7T0.mp4"
     },
     {
       "video_id": "bnPcAPjdAz4",
@@ -7374,7 +7667,9 @@
       "filename": "20220412_bnPcAPjdAz4.mp4",
       "expected_filename": "20220412_bnPcAPjdAz4.mp4",
       "title": "Not many easter setups",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220412_bnPcAPjdAz4.mp4"
     },
     {
       "video_id": "TeWiXhJTeyI",
@@ -7384,7 +7679,9 @@
       "filename": "20220406_TeWiXhJTeyI.mp4",
       "expected_filename": "20220406_TeWiXhJTeyI.mp4",
       "title": "Epic stream filled with wisdom on trading psychology and relationships",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220406_TeWiXhJTeyI.mp4"
     },
     {
       "video_id": "fXN3uTL01f4",
@@ -7394,7 +7691,9 @@
       "filename": "20220405_fXN3uTL01f4.mp4",
       "expected_filename": "20220405_fXN3uTL01f4.mp4",
       "title": "Let's go",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220405_fXN3uTL01f4.mp4"
     },
     {
       "video_id": "CkJEeFvlDzc",
@@ -7404,7 +7703,9 @@
       "filename": "20220331_CkJEeFvlDzc.mp4",
       "expected_filename": "20220331_CkJEeFvlDzc.mp4",
       "title": "Waiting for setups",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220331_CkJEeFvlDzc.mp4"
     },
     {
       "video_id": "B2PcGc--FnM",
@@ -7414,7 +7715,9 @@
       "filename": "20220330_B2PcGc--FnM.mp4",
       "expected_filename": "20220330_B2PcGc--FnM.mp4",
       "title": "Big bounce - now what?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220330_B2PcGc--FnM.mp4"
     },
     {
       "video_id": "Xsk8dD6eoEA",
@@ -7424,7 +7727,9 @@
       "filename": "20220323_Xsk8dD6eoEA.mp4",
       "expected_filename": "20220323_Xsk8dD6eoEA.mp4",
       "title": "commodities boom",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220323_Xsk8dD6eoEA.mp4"
     },
     {
       "video_id": "Fsh39kp9XPM",
@@ -7434,7 +7739,9 @@
       "filename": "20220321_Fsh39kp9XPM.mp4",
       "expected_filename": "20220321_Fsh39kp9XPM.mp4",
       "title": "Commodities boom",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220321_Fsh39kp9XPM.mp4"
     },
     {
       "video_id": "CRvSLzJs6i8",
@@ -7444,7 +7751,9 @@
       "filename": "20220318_CRvSLzJs6i8.mp4",
       "expected_filename": "20220318_CRvSLzJs6i8.mp4",
       "title": "I'm back!",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220318_CRvSLzJs6i8.mp4"
     },
     {
       "video_id": "BAlC_cRvESM",
@@ -7454,7 +7763,9 @@
       "filename": "20220302_BAlC_cRvESM.mp4",
       "expected_filename": "20220302_BAlC_cRvESM.mp4",
       "title": "Russia stocks going toward zero",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220302_BAlC_cRvESM.mp4"
     },
     {
       "video_id": "BYPiofqBhvQ",
@@ -7464,7 +7775,9 @@
       "filename": "20220301_BYPiofqBhvQ.mp4",
       "expected_filename": "20220301_BYPiofqBhvQ.mp4",
       "title": "Commodity leaders",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220301_BYPiofqBhvQ.mp4"
     },
     {
       "video_id": "uX2B8fAMuLE",
@@ -7474,7 +7787,9 @@
       "filename": "20220228_uX2B8fAMuLE.mp4",
       "expected_filename": "20220228_uX2B8fAMuLE.mp4",
       "title": "Back from Italy!",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220228_uX2B8fAMuLE.mp4"
     },
     {
       "video_id": "X1Rp33_-R9E",
@@ -7484,7 +7799,9 @@
       "filename": "20220222_X1Rp33_-R9E.mp4",
       "expected_filename": "20220222_X1Rp33_-R9E.mp4",
       "title": "Thanks for joining, see you tomorrow!",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220222_X1Rp33_-R9E.mp4"
     },
     {
       "video_id": "Cd_IXyHwO3o",
@@ -7494,7 +7811,9 @@
       "filename": "20220218_Cd_IXyHwO3o.mp4",
       "expected_filename": "20220218_Cd_IXyHwO3o.mp4",
       "title": "What does $UPST do? It goes UP! (and DOWN)",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220218_Cd_IXyHwO3o.mp4"
     },
     {
       "video_id": "-3qtA_s7g9c",
@@ -7504,7 +7823,9 @@
       "filename": "_-3qtA_s7g9c.mp4",
       "expected_filename": "20220127_-3qtA_s7g9c.mp4",
       "title": "Patience is King",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/_-3qtA_s7g9c.mp4"
     },
     {
       "video_id": "-XbMHMO9sxo",
@@ -7514,7 +7835,9 @@
       "filename": "_-XbMHMO9sxo.mp4",
       "expected_filename": "20211027_-XbMHMO9sxo.mp4",
       "title": "Earnings season is here! (opportunity!)",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/_-XbMHMO9sxo.mp4"
     },
     {
       "video_id": "-SpiSkkY8c0",
@@ -7524,7 +7847,9 @@
       "filename": "_-SpiSkkY8c0.mp4",
       "expected_filename": "20201002_-SpiSkkY8c0.mp4",
       "title": "Leaders still leading? Does YOUR portfolio consist of leaders?",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/_-SpiSkkY8c0.mp4"
     },
     {
       "video_id": "-4SriUVLDKo",
@@ -7534,7 +7859,9 @@
       "filename": "_-4SriUVLDKo.mp4",
       "expected_filename": "20200520_-4SriUVLDKo.mp4",
       "title": "If Twitter says $MARK is worth $16 and I buy at $1.65... is that value",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/_-4SriUVLDKo.mp4"
     },
     {
       "video_id": "-NtTGFhV268",
@@ -7544,7 +7871,9 @@
       "filename": "_-NtTGFhV268.mp4",
       "expected_filename": "20200507_-NtTGFhV268.mp4",
       "title": "Earnings season opportunities!",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/_-NtTGFhV268.mp4"
     },
     {
       "video_id": "U4dbSz0u11k",
@@ -7554,7 +7883,9 @@
       "filename": "20260923_U4dbSz0u11k.mp4",
       "expected_filename": "20260923_U4dbSz0u11k.mp4",
       "title": "RED DAY, BUT LEADERS OK DESPITE MACRO HEADWINDS. $AMD $HPE $OKTA $P $M",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260923_U4dbSz0u11k.mp4"
     },
     {
       "video_id": "tWfLqBqt3RI",
@@ -7564,7 +7895,9 @@
       "filename": "20260922_tWfLqBqt3RI.mp4",
       "expected_filename": "20260922_tWfLqBqt3RI.mp4",
       "title": "AFTER A STRONG MONDAY, DID LEADERS & INDEXES HOLD UP?  PLUS...A FULL R",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260922_tWfLqBqt3RI.mp4"
     },
     {
       "video_id": "L1pSTw7oph0",
@@ -7574,7 +7907,9 @@
       "filename": "20260921_L1pSTw7oph0.mp4",
       "expected_filename": "20260921_L1pSTw7oph0.mp4",
       "title": "SPX QQQ RANGE BREAKOUT ON THE BACK OF MEGA CAP STRENGTH!",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260921_L1pSTw7oph0.mp4"
     },
     {
       "video_id": "T9cCyOaSwcM",
@@ -7584,7 +7919,9 @@
       "filename": "20261002_T9cCyOaSwcM.mp4",
       "expected_filename": "20261002_T9cCyOaSwcM.mp4",
       "title": "IS IT TIME TO RIDE THE WAVE AGAIN? | Your Money Podcast Ep. 610",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20261002_T9cCyOaSwcM.mp4"
     },
     {
       "video_id": "p561H7Nrzg8",
@@ -7594,7 +7931,9 @@
       "filename": "20261001_p561H7Nrzg8.mp4",
       "expected_filename": "20261001_p561H7Nrzg8.mp4",
       "title": "SEASONALITY IS STRONG, BREADTH IS OVERSOLD, LEADERS ARE HOLDING: CHECK",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20261001_p561H7Nrzg8.mp4"
     },
     {
       "video_id": "eraNSyydeLY",
@@ -7604,7 +7943,9 @@
       "filename": "20260929_eraNSyydeLY.mp4",
       "expected_filename": "20260929_eraNSyydeLY.mp4",
       "title": "NASDAQ, MEMORY AND SEMIS BASING INTO MICRON EARNINGS TOMORROW...",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260929_eraNSyydeLY.mp4"
     },
     {
       "video_id": "Fxi2xAVpp-A",
@@ -7614,7 +7955,9 @@
       "filename": "20260928_Fxi2xAVpp-A.mp4",
       "expected_filename": "20260928_Fxi2xAVpp-A.mp4",
       "title": "TRUMP REJECTS IRAN'S PROPOSAL, THREATS MORE BOMBINGS, OIL AND YIELDS C",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260928_Fxi2xAVpp-A.mp4"
     },
     {
       "video_id": "qJsa5L8QmHw",
@@ -7624,7 +7967,9 @@
       "filename": "20260926_qJsa5L8QmHw.mp4",
       "expected_filename": "20260926_qJsa5L8QmHw.mp4",
       "title": "9/26/26 WEEKEND REVIEW - STRONG WEEK FOR AI LEADERS AND MAG 7 DESPITE ",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260926_qJsa5L8QmHw.mp4"
     },
     {
       "video_id": "S-1qj2HuvPo",
@@ -7634,7 +7979,9 @@
       "filename": "20260925_S-1qj2HuvPo.mp4",
       "expected_filename": "20260925_S-1qj2HuvPo.mp4",
       "title": "STRONG WEEKLY CLOSES ON SPX AND QQQ. CRYPTO CONSOLIDATES.",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260925_S-1qj2HuvPo.mp4"
     },
     {
       "video_id": "WUALcZK1574",
@@ -7644,7 +7991,9 @@
       "filename": "20260925_WUALcZK1574.mp4",
       "expected_filename": "20260925_WUALcZK1574.mp4",
       "title": "STOCKS CRUSHED?! S&P NEAR HIGHS AS MARKET RALLIES | Your Money Podcast",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260925_WUALcZK1574.mp4"
     },
     {
       "video_id": "plSP0tefisg",
@@ -7654,7 +8003,9 @@
       "filename": "20260924_plSP0tefisg.mp4",
       "expected_filename": "20260924_plSP0tefisg.mp4",
       "title": "IRAN HEADLINE SPARKS INTRADAY REVERSAL AFTER GAP DOWN; LEADERS STRONG",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260924_plSP0tefisg.mp4"
     },
     {
       "video_id": "nrs6kvvvU-c",
@@ -7664,7 +8015,9 @@
       "filename": "20260918_nrs6kvvvU-c.mp4",
       "expected_filename": "20260918_nrs6kvvvU-c.mp4",
       "title": "HAWKISH FOMC - BUT WILL STOCKS CONTINUE HIGHER? | Your Money Podcast E",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260918_nrs6kvvvU-c.mp4"
     },
     {
       "video_id": "2Upkn6nrE3s",
@@ -7674,7 +8027,9 @@
       "filename": "20260917_2Upkn6nrE3s.mp4",
       "expected_filename": "20260917_2Upkn6nrE3s.mp4",
       "title": "LEADERS FLEX AS INDEXES KICK OFF DAY 1 RALLY ATTEMPT ON FOMC NEWS FAIL",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20260917_2Upkn6nrE3s.mp4"
     },
     {
       "video_id": "TvvNsySVX0g",
@@ -7684,7 +8039,9 @@
       "filename": "20261005_TvvNsySVX0g.mp4",
       "expected_filename": "20261005_TvvNsySVX0g.mp4",
       "title": "THE RALLY IS BROADENING OUT! HERE'S HOW WE'RE POSITIONED FOR IT!",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20261005_TvvNsySVX0g.mp4"
     },
     {
       "video_id": "H7FxO8A92VI",
@@ -7694,7 +8051,9 @@
       "filename": "20261003_H7FxO8A92VI.mp4",
       "expected_filename": "20261003_H7FxO8A92VI.mp4",
       "title": "Weekend Review - More leaders join despite higher yields.  Optics shin",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20261003_H7FxO8A92VI.mp4"
     },
     {
       "video_id": "ODc07iRusRI",
@@ -7704,7 +8063,9 @@
       "filename": "20261002_ODc07iRusRI.mp4",
       "expected_filename": "20261002_ODc07iRusRI.mp4",
       "title": "LEADERS & INDEXES BREAK HIGHER DESPITE RISING YIELDS. $AMD $ASX $DELL ",
-      "present": true
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_hires/20261002_ODc07iRusRI.mp4"
     }
   ]
 }
