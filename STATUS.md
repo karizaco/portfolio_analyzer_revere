@@ -1,25 +1,117 @@
 # OCR queue status
 
-Last update: 2026-09-16 (recovery round complete)
+**The numbers in this file are a snapshot, and they decay.** The catalog
+(`data/video_pipeline/state.sqlite`) is the source of truth; § *Re-measuring*
+has the commands that regenerate every figure here. Measured **2026-10-29**.
 
-## Current state
+## Current state (measured 2026-10-29)
 
-SQLite catalog `data/video_pipeline/state.sqlite` is fully drained:
+### The catalog
 
-| status                | count |
-| --------------------- | ----- |
-| `done`                | 115   |
-| `error`               | 17    |
-| `pending` / `scanning`| 0     |
+2,402 videos — 1,814 Revere + 588 Qullamaggie — and **every row is dated**
+(0 rows with an empty `upload_date`).
 
-The 17 `error` rows are all whiteboard-free videos: OCR ran cleanly (exit 0) but
-the prefilter never promoted a candidate to a capture. The shared error reason
-is `whiteboard-free — OCR ran clean but found no whiteboard captures` (these are
-genuinely whiteboard-free Revere episodes, not scanner failures).
+| channel | total | pending | scanning | done | no_match |
+|---|---|---|---|---|---|
+| revere | 1,814 | 1,686 | 16 | 95 | 17 |
+| qullamaggie | 588 | 219 | 369 | 0 | 0 |
+| **total** | **2,402** | **1,905** | **385** | **95** | **17** |
 
-## How we got here
+`catalog_runs` holds **30** audit rows — 26 `live`, 4 `fixture`.
 
-Two cooperating rounds on the 107 hires-batch videos.
+**What `status` means** is documented in `src/video/videoStatus.js`. The one
+thing worth holding on to: `scanning` means *the media is on disk* — and it is
+also the queue both OCR paths read. `done` means *a pass finished*; it says
+nothing about whether the file is still there.
+
+### Status against the filesystem
+
+`node tools/reconcileCatalogStatus.js` (report only):
+
+| | count |
+|---|---|
+| `done`, media present — the claim holds | 95 |
+| `pending`/`scanning`, media present | 70 |
+| `pending`/`scanning`, media missing | **2,220** |
+| `review` / `no_match` / `error` | 17 |
+| rows carrying a `download_path` | 716 |
+| …of those, the pointer resolves to a file that is there | 179 |
+| …of those, the pointer points at a file that is gone | 537 |
+| files on disk that **no pointer names** | 36 |
+
+"No row claims `done` without having the media" — the reconciler says so
+explicitly, and it can, because it asks the filesystem **two** questions: does
+the *pointer* resolve, and does a file named the way the downloader writes it
+(`<upload_date>_<video_id>.mp4`) exist? Across the whole catalog **3 rows**
+have their media present under the downloader's own name while their pointer
+does not resolve; two of them (`bEidyFtV-lY`, `M0pV73RV2qo`) are `done` rows,
+so their claim legitimately holds.
+
+The 2,220 breaks down as:
+
+| | count | what it means |
+|---|---|---|
+| has a pointer, and the media is gone | **535** | the re-download list (`data/qmg_video_recovery_manifest.json`): 219 `pending` (198 Qullamaggie + 21 Revere) and 316 `scanning` (all Qullamaggie) |
+| has no pointer at all | 1,685 | never downloaded |
+
+The 70 that *do* have their media are 69 whose pointer resolves (all
+`scanning`, ready for the OCR queue) and 1 found only under the downloader's
+own name.
+
+### The media on disk
+
+| directory | `.mp4` | `.part` |
+|---|---|---|
+| `data/video_pipeline/downloads/` | 0 | 0 |
+| `data/video_pipeline/downloads_hires/` | 166 | 1 |
+| `data/video_pipeline/downloads_1080p/` | 49 | 39 |
+
+The 40 `.part` files are **10.15 GiB** of interrupted downloads. One of them
+is redundant (the completed copy of the same video exists); the other 39 are
+the only copy of their download. `py -3 tools/reportPartialDownloads.py`
+reports them and **never deletes** — a partial file may be the only copy of
+something worth resuming.
+
+### The outstanding work
+
+| # | what | size | notes |
+|---|---|---|---|
+| 1 | re-download the lost media | 535 videos | 514 Qullamaggie + 21 Revere. `data/qmg_video_recovery_manifest.json` is the list; 219 are `pending` and 316 `scanning`, so both downloaders already list them. |
+| 2 | download the Qullamaggie 1080p corpus | 539 videos | 588 candidates, 49 already on disk. Use the `visios` client — see CLAUDE.md. |
+| 3 | the `position_table` sweep | the Qullamaggie videos whose positions list is a TradingView table | 10–16 h of EasyOCR at 162–257 s/frame. Layout analysis in `docs/qmg-positions-layout-findings.md`. |
+| 4 | re-OCR for the current parser | — | the recorded readings predate the parser fixes. `tools/evalParserReplay.js` scores the *current* parser over the recorded logs, so the parser is measurable without re-scanning. |
+
+## Re-measuring
+
+Everything in § *Current state* comes from four commands:
+
+```bash
+# the catalog — status counts per channel, and the audit table
+python -c "import sqlite3;c=sqlite3.connect('data/video_pipeline/state.sqlite');print(list(c.execute('SELECT channel,status,COUNT(*) FROM videos GROUP BY channel,status')));print(list(c.execute('SELECT kind,COUNT(*) FROM catalog_runs GROUP BY kind')))"
+
+# status against the filesystem
+node tools/reconcileCatalogStatus.js
+
+# the media, per directory
+python - <<'PY'
+import os
+for d in ('downloads', 'downloads_hires', 'downloads_1080p'):
+    p = os.path.join('data/video_pipeline', d)
+    files = os.listdir(p) if os.path.isdir(p) else []
+    print(d, sum(f.endswith('.mp4') for f in files), 'mp4,',
+          sum(f.endswith('.part') for f in files), 'part')
+PY
+
+# the lost media, as a re-download list
+py -3 tools/inventoryLostVideos.py
+```
+
+## How we got here — the September 2026 campaign
+
+Everything below records the **2026-09-15/16 OCR campaign**, kept because it
+records which bugs were found and fixed. It describes a catalog of 132 videos;
+today's catalog has 2,402. The three bugs in § *Bugs fixed in round 2* are
+fixed in the current tree — this is the record of how, not a to-do list.
 
 ### Round 1 — 2026-09-15 (initial scan)
 
@@ -36,7 +128,8 @@ Round-1 timeline rollups (per `analysis.json`):
 Together: **30 unique videos** OCR'd, 88 captures, **19 daily + 7 weekend_review + 4 feature**.
 
 The serial run skipped 78 rows that were already `done` (from prior
-`ocr-20260912`/`20260913`/`20260914` runs). Catalog state at the end of round 1:
+`ocr-20260912`/`ocr-20260913`/`ocr-20260914` runs). Catalog state at the end of round 1:
+
 **36 unique `done`** (the 29 from the serial run were the *new* ones — counting
 the 7 from the parallel run brings the net new in this round to 36). This left
 71 videos in the catalog (107 minus 36 = 71) without a probe log written under
@@ -77,9 +170,11 @@ SQLite flip after round 2:
 | `scanning` -> `done`  | 61    | probe log has captures                                                 |
 | `scanning` -> `error` | 17    | probe log is whiteboard-free (`captures: []`); OCR ran clean, no match |
 
-Combined with round 1, **every video in the catalog now has either `done` (115) or `error` (17)**.
+Combined with round 1, every video in the catalog then had either `done` (115)
+or `error` (17). Those 17 rows are the `no_match` rows in today's table — the
+schema now separates "the scan found nothing" from "the pass failed".
 
-## Bugs fixed in round 2
+### Bugs fixed in round 2
 
 Three idempotency bugs in `tools/parallelOcrScan.py` were silently wasting work
 on every prior run. All fixed in commit `9482772`:
@@ -113,18 +208,18 @@ Also in `9482772`:
   recovery `.STATUS.json` (next-step field, probe log count) was written
   manually as a one-off because of this.
 
-## Files of interest
+### Files of interest
 
 | path                                                                                | what it is                                                                  |
 |-------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| `data/video_pipeline/state.sqlite`                                                  | source of truth (115 done + 17 error)                                       |
+| `data/video_pipeline/state.sqlite`                                                  | source of truth (see § Current state — the status column counts in this file are a snapshot) |
 | `data/video_scan_20260915/ocr-20260915/`                                            | round-1 serial-run probe logs + timeline                                    |
 | `data/video_scan_20260915/ocr-20260915-p4/`                                         | round-1 parallel-run probe logs                                             |
 | `data/video_scan_20260915/ocr-20260915-backfill/`                                   | round-2 backfill (driver crashed); recovery `.STATUS.json` written manually |
 | `data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/`             | round-2 aggregated probe logs + `analysis.json` / `analysis.md`             |
 | `data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/` | 333 PNGs from the backfill                                                  |
 
-## How to resume / inspect a future session
+### How to resume / inspect a future session
 
 Per-run state lives at:
 
@@ -136,7 +231,7 @@ If a session loses context, read those files in order: `.STATUS.json` (where
 we are), `run_summary.json` (what happened), `analysis.json` (what's
 consumable).
 
-## Known constraints (read-only)
+### Known constraints (read-only)
 
 - `D:\courses_F\revere_asset` is read-only reference asset directory; never write into it.
 - Windows path mangling through bash heredocs is a recurring trap — anything

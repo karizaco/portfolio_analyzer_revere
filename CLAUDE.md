@@ -458,6 +458,7 @@ Results: `data/qmg_alt_batch_results.json`.
 - `data/video_pipeline/state.sqlite` — canonical SQLite database, **tracked in git** (the catalog)
 - `data/db/schema.sql` — schema source of truth
 - `config/ticker_lexicon_seed.csv` — ticker allowlist (Revere + Qullamaggie)
+- `STATUS.md` — the measured current state (catalog counts, media on disk, the outstanding work) and the September 2026 OCR campaign history. Its numbers are a snapshot; § *Re-measuring* there has the commands that regenerate them.
 
 ---
 
@@ -586,10 +587,12 @@ pointer resolves only 27 of them. The other 22 are the videos whose pointer is
 empty or names the older scheme, so the pointer is the wrong way to ask
 "is it already downloaded?".
 
-**The 535 need nothing written for them.** 198 are `pending` and 316 are
+**The 535 need nothing written for them.** 219 are `pending` and 316 are
 `scanning`, and both downloaders' candidate lists already contain those two
-statuses, so they will be fetched. What is *not* the case is a bulk pointer
-repair: of the 535, only the two rows above have their media anywhere on disk,
+statuses, so they will be fetched. (The split by channel is 198 Qullamaggie
+`pending` + 21 Revere `pending` + 316 Qullamaggie `scanning`; the 198/316
+figures are the Qullamaggie subset alone.) What is *not* the case is a bulk
+pointer repair: of the 535, only the two rows above have their media anywhere on disk,
 and every other one is genuinely lost. Pointing a row at a `.part` file, or at
 any file whose name merely *contains* the video id, would suppress 37 further
 1080p downloads — `findHiresOnDisk`'s pointer branch has no size check.
