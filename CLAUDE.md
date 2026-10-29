@@ -251,12 +251,12 @@ Rules:
 ## Testing
 
 ```bash
-npm test              # everything except the OCR benchmark (344 tests, ~2 min)
+npm test              # everything except the OCR benchmark (471 tests, ~30 s)
 npm run test:benchmark  # test/qmgGroundTruth.test.js alone (~23 min, EasyOCR)
 npm run test:all        # everything, benchmark included -- FAILS under contention
 ```
 
-344 tests, all passing (as of 2026-10-29).
+471 tests, all passing (as of 2026-10-29).
 
 **The benchmark has to run on its own.** `test/qmgGroundTruth.test.js` is a
 23-minute EasyOCR benchmark, and `node --test` runs the test *files* in
@@ -414,6 +414,7 @@ Results: `data/qmg_alt_batch_results.json`.
 - `tools/whiteboard_worker.py` — catalog, screenshot, OCR worker (Python CLI)
 - `tools/scanVideoWithOcr.js` — per-video OCR + capture (Node.js CLI)
 - `tools/evalParserReplay.js` — replay the captured logs through the current parser and score it (see below)
+- `tools/evalRevere.js` — score the Revere whiteboard path against `data/revere_ground_truth.json` (see below)
 - `tools/aggregateScanResults.js` — merge scan output into `analysis.json`
 - `tools/aggregateOcrTimeline.js` — merge into `timeline.json`
 - `tools/viewTimeline.html` — interactive timeline viewer
@@ -424,6 +425,7 @@ Results: `data/qmg_alt_batch_results.json`.
 - `src/video/ocrScanArgs.js` — CLI argument parsing; `CHART_STREAM_REGION_FRACTION_DEFAULT`
 - `src/parse/parseChartStream.js` — Qullamaggie position-list ticker extraction
 - `src/parse/parseWhiteboardScreenshot.js` — GRO/TURBO/Revere whiteboard parser
+- `src/parse/parseWhiteboardScreenshotWithBoxes.js` — the Revere whiteboard's POSITIONAL parser (the one the scan tool runs)
 - `src/video/positionTableScan.js` — positions-TABLE reader (source-resolution, lexicon-constrained)
 - `src/video/panelExtract.js` — source-resolution panel crops (shared ffmpeg/ffprobe resolver)
 - `src/video/imageHash.js` — full-frame pHash
@@ -431,6 +433,7 @@ Results: `data/qmg_alt_batch_results.json`.
 
 ### Normalization
 - `src/normalize/tickerScan.js` — seed lexicon + strict ticker pattern
+- `src/normalize/tickerFuzzyResolve.js` — the resolver: match lexicon vs allow list, ambiguity-aware correction, fused-token splitting (see below)
 - `src/normalize/videoTypeClassifier.js` — whiteboard / chart_stream / DMI / tale_of_the_tape
 - `src/normalize/repairHoldings.js` — Revere-only position repair
 
@@ -813,6 +816,11 @@ node tools/aggregateScanResults.js data/video_scan_YYYYMMDD/
 node tools/evalParserReplay.js
 node tools/evalParserReplay.js --json
 node tools/evalParserReplay.js data/video_ocr_probe data/video_scan_test/_rerun
+
+# Score the Revere whiteboard path against its ground truth.
+# This scores the RECORDED probe logs, not a re-parse.
+node tools/evalRevere.js
+node tools/evalRevere.js --json
 
 # Prune old probes
 node tools/prune_old_probes.js           # dry-run
@@ -1638,3 +1646,136 @@ a timer of its own or fewer frames.
 identified** — publication also needs a non-empty decode, see `publishTableHoldings`).
 
 Full derivation and measurements: `docs/qmg-positions-layout-findings.md`.
+
+---
+
+## The Revere whiteboard parser
+
+`src/parse/parseWhiteboardScreenshotWithBoxes.js` is the **positional** parser
+for Revere's whiteboard — the screen with two portfolios, `GRO` and `TURBO`,
+each with a `HOLDINGS:` list and an action line. It is a different parser
+from `src/parse/parseWhiteboardScreenshot.js` (the whole-panel one), and it
+is the one `tools/scanVideoWithOcr.js` runs for Revere.
+
+The screen's geometry comes from the **pixels**, not the OCR: the whiteboard
+window is detected by `detectWhiteboardWindow()` (per-row bright counts →
+contiguous bright ranges → a dark-border scan), and the holdings list is
+bounded by it. A frame that yields no window yields no holdings at all.
+
+### Two lexicons, two jobs — `src/normalize/tickerFuzzyResolve.js`
+
+The single most important distinction in this parser:
+
+| lexicon | what it answers | source |
+|---|---|---|
+| **match** | what a token MAY **be** | seed + observed (249) |
+| **allow** | what may be **REPORTED** | seed only (223) |
+
+`loadSeedLexiconSync()` is the allow list. `loadDecodeLexiconSync()` (seed +
+observed) is the match lexicon. **SPXL is match-only**: the parser resolves it
+to *itself* rather than to a neighbouring seed ticker (SOXL), and then drops
+it because the allow list does not have it. That is the intended behaviour,
+not a bug — but see § 'SPXL' below.
+
+A correction must be the **unique** candidate at the minimum edit distance.
+`IBT` is one edit from both `IBIT` and `IOT`; `SPO` from both `SPOT` and
+`SSO`. Neither is guessed — a wrong holding in a portfolio report is worse
+than a missing one. `MAX_OCR_EDIT_DISTANCE = 2`.
+
+### The rules that matter
+
+- **A misread portfolio label costs the WHOLE portfolio.** Tesseract reads
+  `TURBO` as `TURBG` (20260924). A label that matches exactly is never found,
+  and the section filter **fails open** when it cannot find a section — so
+  the action line's tickers (DELL, SMTC) come in as holdings. The label now
+  matches at one edit (`matchesPortfolioLabel`), and only for a word long
+  enough to *be* the label: `GR` (what `GRO` becomes when the O is lost) is
+  not accepted.
+
+- **The action line must not bleed in.** The section ends at the portfolio's
+  **own labelled action line** (`GRO RVAB/REBAR:`), not at the next `* `.
+  The action line does not always start with `* ` — the OCR often reads it
+  as a quote — so the labelled header is the reliable end.
+
+- **A correction is only safe inside a LIST of holdings.** The chart is drawn
+  beside the holdings list, on the same OCR lines, and its annotations are
+  one edit away from real tickers (`wal”` → HAL, `by` → BE, `rang` → FANG).
+  Correcting an isolated word invents holdings out of the chart. So:
+  - a **merged group** (comma or slash) *is* the evidence — every part may be
+    corrected;
+  - a **standalone word** needs the **capitals** to stand in for that
+    evidence. The holdings list is set in capitals; the chart's ink is not.
+    `isUpperCaseWord()` is therefore the case rule, and it gates the
+    *correction* only — a ticker the lexicon knows is accepted whatever case
+    the OCR gave it.
+
+- **The section filter runs on the RAW text.** A corrected ticker (`TGQQ` →
+  `TQQQ`) is not in the OCR text at all, so filtering on the corrected form
+  would have it rejected by every section. Each candidate carries the raw
+  text it came from.
+
+- **A lost separator fuses two holdings.** Tesseract drops the comma between
+  two holdings and renders the loss as nothing (`TQQNCLD`, `TGQQ`) or as a
+  period (`LITE.OOCN`). `splitFusedTicker()` walks 2–5 character partitions
+  and requires **every** part to resolve. Two rules keep it honest:
+  - a token shorter than 5 characters is never split (`UP.` is not `U`+`P`;
+    the screen really says `MU,P`), and
+  - a **two-character** part must be an **exact** ticker — `SP` cannot be
+    "corrected" into `SPY`.
+
+- **The expansion runs before the shape test.** A word that is not
+  ticker-shaped is still worth expanding when it holds two holdings the OCR
+  ran together. The word is dropped only when nothing in it resolves.
+
+### The measurement, and what it is a measurement of
+
+`data/revere_ground_truth.json` holds the holdings for 20260922–20260928.
+`test/parseWhiteboardHoldings.test.js` drives the parser over **three real
+frames** with both the pixels and the OCR result frozen:
+
+| | readings hit | recall |
+|---|---|---|
+| before the fix | 79 / 95 | 83.2 % |
+| after the fix | **90 / 95** | **94.7 %** |
+
+Precision is 100 % on both — the parser invents nothing. The five readings
+still missing are **OCR losses**, not parser decisions, and they were verified
+against the pixels: `MU,P` was read as `UP.` (the M is gone; P cannot be
+recovered from what is left), `IBIT` as `IBT` (ambiguous), `SPCX` as `SPO`
+(ambiguous), and `,P,` was dropped whole.
+
+**The fixtures keep the pixels as well as the OCR.** The OCR is frozen
+because a Tesseract upgrade would move the numbers and the test would stop
+meaning anything. The pixels are kept because the window is detected by pixel
+analysis and the holdings list is bounded by it — a fixture with only the OCR
+would not exercise the geometry at all.
+
+A frame's identity is its **file + md5**, not its label: see
+`test/fixtures/revere_whiteboard/manifest.json`.
+
+### `tools/evalRevere.js` scores the RECORDED output
+
+The Revere counterpart of `tools/evalParserReplay.js`. It finds the probe
+logs that captured each ground-truth frame, pools the readings of the runs
+that captured it, and scores them.
+
+Two properties worth knowing before quoting its number:
+
+- **It scores what the pipeline recorded, not a re-parse.** A parser fix is
+  therefore invisible here until the videos are re-scanned — the numbers that
+  move immediately come from the fixture test.
+- **Consensus across runs is an INTERSECTION, not a union.** When two runs
+  captured the same frame and one read a ticker the other did not, the ticker
+  is not in the consensus: the frame does not show it, so one of the two
+  readings is wrong, and the honest reading is the one both agree on.
+
+### SPXL — a known gap, reported not fixed
+
+`SPXL` is in the **match** lexicon but not in the **allow** list, so the
+parser resolves it and drops it. It is also missing from **every** TURBO
+holdings list in `data/revere_ground_truth.json`, although the screen shows
+it on all four dates and 20260924's own note reads "ADD to SPXL". Neither the
+ground truth nor `config/ticker_lexicon_seed.csv` was changed: the ground
+truth is a record of what the screen showed, and the allow list is the
+project's decision about what may be reported. **This needs the user's
+decision, not a silent fix.**
