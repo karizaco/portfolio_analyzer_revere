@@ -262,6 +262,61 @@ test('every relative pointer that resolves points at a file that is there', { sk
   db.close();
 });
 
+test('the migration says what each old run row_count counts', { skip: PY ? false : 'no python launcher available' }, () => {
+  // `row_count` means two different things depending on the run: the rows a
+  // channel listing yielded, or the videos in a work list. A reader of the
+  // audit table could not tell which. The old rows are reconstructed from the
+  // artifact each run wrote -- its file name says which kind of run it was --
+  // rather than guessed.
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'portable-rowkind-'));
+  try {
+    const legacyDb = path.join(dir, 'state.sqlite');
+    const legacy = new DatabaseSync(legacyDb);
+    legacy.exec(`CREATE TABLE catalog_runs (
+      run_id INTEGER PRIMARY KEY AUTOINCREMENT, source_url TEXT NOT NULL,
+      command_json TEXT NOT NULL, raw_output_path TEXT NOT NULL,
+      row_count INTEGER NOT NULL, inserted_count INTEGER NOT NULL,
+      updated_count INTEGER NOT NULL, missing_upload_dates INTEGER NOT NULL,
+      malformed_rows INTEGER NOT NULL, created_at TEXT NOT NULL
+    )`);
+    const insert = legacy.prepare(
+      'INSERT INTO catalog_runs (source_url, command_json, raw_output_path, row_count,'
+      + ' inserted_count, updated_count, missing_upload_dates, malformed_rows, created_at)'
+      + ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    const addRun = (artifact, rowCount) => insert.run(
+      'https://x', '[]', artifact, rowCount, 1, 0, 0, 0, '2026-01-01');
+    addRun('catalog_20260101T000000Z.tsv', 10);
+    addRun('listing_20260101T000000Z.tsv', 20);
+    addRun('fill_dates_20260101T000000Z.tsv', 30);
+    addRun('something_else.tsv', 40);
+    legacy.close();
+
+    const out = runPython([
+      'import sqlite3',
+      'conn = sqlite3.connect(sys.argv[1])',
+      'conn.row_factory = sqlite3.Row',
+      'ww.initialize_schema(conn)',
+      'rows = [(r["row_count"], r["row_count_kind"]) for r in conn.execute("select row_count, row_count_kind from catalog_runs order by row_count")]',
+      'versions = [r["version"] for r in conn.execute("select version from schema_version order by version")]',
+      'print(json.dumps({"rows": rows, "versions": versions}))',
+      '',
+    ].join('\n'), [legacyDb]);
+
+    assert.deepEqual(out.rows, [
+      [10, 'listing_rows'],
+      [20, 'work_list_videos'],
+      [30, 'work_list_videos'],
+      [40, ''],
+    ], 'each row says what it counts, and an unrecognised artifact says nothing');
+    assert.ok(out.versions.includes(6), `expected version 6 among ${out.versions.join(', ')}`);
+  } finally {
+    // `maxRetries` matters on Windows: the SQLite handle the worker opened
+    // can still be closing when the test's cleanup runs, and a busy directory
+    // is a transient failure rather than a real one.
+    fs.rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+  }
+});
+
 // ---------------------------------------------------------------------------
 // The schema and the shipped table
 // ---------------------------------------------------------------------------

@@ -606,6 +606,19 @@ order and records them in `schema_version`:
 | 3 | rewrites absolute in-repo `videos.download_path` and path-shaped `worker_settings` rows to the portable form |
 | 4 | adds `catalog_runs.not_listed_count` |
 | 5 | adds `catalog_runs.listing_complete` |
+| 6 | adds `catalog_runs.row_count_kind`, then reconstructs it for the old rows |
+
+**`row_count` means two different things.** A catalog run counts the rows a
+channel listing yielded; a `fill-dates` run counts the videos in its work
+list. The two are not comparable, and the audit table did not say which was
+which. `row_count_kind` now says it: `listing_rows` or `work_list_videos`,
+and `''` for a run that made no such claim.
+
+**The old rows are reconstructed, not guessed.** Version 6 reads each run's
+`raw_output_path` and takes the artifact's file name: `catalog_*` is a
+listing run, `listing_*` / `fill_dates_*` are work-list runs, and anything
+else claims nothing. In the shipped catalog that is 27 `listing_rows` and 2
+`work_list_videos`.
 
 **Version 1 has to add the column before it backfills it.** It once ran
 `UPDATE catalog_runs SET channel = …` unconditionally, which aborts with

@@ -269,6 +269,45 @@ def _apply_migrations(connection: sqlite3.Connection) -> None:
         )
         connection.commit()
 
+    # Version 6: say what `row_count` counts.
+    #
+    # The column means two different things depending on the run: for a
+    # `catalog` run it is the number of rows the channel listing yielded, and
+    # for a `fill-dates` run it is the number of videos in the work list. A
+    # reader of the audit table could not tell which, and the two are not
+    # comparable.
+    #
+    # The old rows are reconstructed from the artifact each run wrote -- the
+    # snapshot's file name says which kind of run it was -- rather than
+    # guessed. A run whose artifact name says neither keeps the empty string:
+    # it made no such claim.
+    if current < 6:
+        columns = {
+            row['name'] for row in connection.execute('PRAGMA table_info(catalog_runs)')
+        }
+        if 'row_count_kind' not in columns:
+            connection.execute(
+                "ALTER TABLE catalog_runs ADD COLUMN row_count_kind TEXT NOT NULL DEFAULT ''"
+            )
+        for row in connection.execute(
+            "SELECT run_id, raw_output_path FROM catalog_runs WHERE row_count_kind = ''"
+        ).fetchall():
+            name = os.path.basename(str(row['raw_output_path'] or '').replace('\\', '/'))
+            if name.startswith('catalog_'):
+                kind = 'listing_rows'
+            elif name.startswith(('listing_', 'fill_dates_')):
+                kind = 'work_list_videos'
+            else:
+                continue
+            connection.execute(
+                'UPDATE catalog_runs SET row_count_kind = ? WHERE run_id = ?',
+                (kind, row['run_id']),
+            )
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_version (version) VALUES (6)"
+        )
+        connection.commit()
+
 
 def initialize_schema(connection: sqlite3.Connection) -> None:
     """Load and execute data/db/schema.sql, then run any pending data migrations."""
@@ -749,6 +788,7 @@ def record_catalog_run(
     not_listed_count: int = 0,
     raw_output_path: Path,
     row_count: int,
+    row_count_kind: str = '',
     source_url: str,
     updated: int,
 ) -> None:
@@ -767,8 +807,9 @@ def record_catalog_run(
             created_at,
             kind,
             not_listed_count,
-            listing_complete
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            listing_complete,
+            row_count_kind
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''',
         (
             source_url,
@@ -784,6 +825,7 @@ def record_catalog_run(
             catalog_run_kind(source_url),
             not_listed_count,
             1 if listing_complete else 0,
+            row_count_kind,
         ),
     )
     connection.commit()
@@ -1845,6 +1887,7 @@ def command_catalog(args: argparse.Namespace) -> int:
             listing_complete=listing_complete,
             raw_output_path=snapshot_path,
             row_count=len(rows),
+            row_count_kind='listing_rows',
             source_url=args.source_url,
             updated=updated,
             channel=effective_channel,
@@ -2318,6 +2361,7 @@ def command_fill_dates(args: argparse.Namespace) -> int:
             missing_upload_dates=len(missing),
             raw_output_path=snapshot_path,
             row_count=requested,
+            row_count_kind='work_list_videos',
             source_url=source_url,
             updated=updated,
         )
