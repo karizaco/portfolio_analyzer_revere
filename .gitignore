@@ -30,6 +30,17 @@ tools/ffprobe.exe
 # Plan files
 *.plan.md
 CLAUDE_RAPPEL_PLAN.md
+# Scratch written at the repository ROOT during one-off investigations. The
+# findings live in docs/ and in the src/ modules; the scratch itself is
+# recoverable from git history, so it does not belong in the tree.
+# Anchored at the root on purpose: tools/ and test/ keep their own
+# underscore-prefixed helpers on purpose.
+/PLAN_*.md
+/Usersadmin.claudeplans*.md
+/*.log
+/_*.js
+/_*.py
+/debug_*.py
 # One-off diagnostic scripts written at the repo root while working out the
 # Qullamaggie position-list geometry. Their findings live in
 # docs/qmg-positions-layout-findings.md and the src/video/position*.js modules.
