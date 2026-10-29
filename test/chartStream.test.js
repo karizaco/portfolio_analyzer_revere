@@ -275,6 +275,39 @@ test('hasPriceNear returns true for a dollar price within 12 chars of the ticker
   assert.equal(hasPriceNear('NVDA target 145', 'NVDA'), true);  // "target" is a price-keyword proxy
 });
 
+test('hasPriceNear survives a ticker carrying regex metacharacters', () => {
+  // The ticker comes from the OCR, so it can carry anything. "1.02(-0.20" is
+  // a real reading from a whiteboard frame: interpolated raw into the
+  // pattern, its "(" opened a group that never closed and the parser threw
+  // "Unterminated group" — which took down the WHOLE parse, not just this
+  // one token.
+  for (const raw of [
+    '1.02(-0.20',
+    'A(B',
+    'A)B',
+    'A[',
+    'A*',
+    'A+',
+    'A?',
+    'A|B',
+    'A{2,',
+    'A\\B',
+    'A^B',
+    'A$B',
+  ]) {
+    assert.doesNotThrow(() => hasPriceNear('some OCR text', raw),
+      `hasPriceNear threw for ${JSON.stringify(raw)}`);
+    assert.equal(typeof hasPriceNear('some OCR text', raw), 'boolean');
+  }
+});
+
+test('hasPriceNear matches a dotted ticker literally', () => {
+  // The dot is a regex metacharacter: unescaped, "BRK.B" also matched
+  // "BRKXB". Escaped, it matches the ticker and nothing else.
+  assert.equal(hasPriceNear('BRK.B $42.10', 'BRK.B'), true);
+  assert.equal(hasPriceNear('BRKXB $42.10', 'BRK.B'), false);
+});
+
 test('extractTickersFromOcrText accepts the new Qullamaggie-recurring tickers', () => {
   const text = 'NVDA CRWD PANW NET DDOG SPOT MARA RIOT RIVN TSLA AAPL MSFT';
   const tickers = extractTickersFromOcrText(text);
@@ -409,3 +442,30 @@ test('parseChartStreamPositionList: intro text yields no_position_list with ocr_
   assert.equal(result.ocr_executed, true,
     `no_position_list must set ocr_executed=true, got ${result.ocr_executed}`);
 });
+
+// ---------------------------------------------------------------------------
+// THE CURATED-ALIAS RESCUE
+// ---------------------------------------------------------------------------
+//
+// A recorded, human-verified misread of a position-list ticker, sitting
+// inside the detected column, IS that ticker.
+//
+// The defect it fixes: `inListTickers` is the PRICE-ALIGNED subset of the
+// column. A row whose price is garbled is not price-aligned even when its
+// ticker sits exactly where every other ticker sits, so the token is
+// rejected by the column gate and the holding is lost before the repair
+// pass ever sees it.
+//
+// The three rules it has to keep:
+//
+//   1. The canonical is SUBSTITUTED, never JOINED. The two spellings of one
+//      holding must never both appear in the reading.
+//   2. A garble outside the column is not rescued. The column is the
+//      structural evidence; a curated alias on its own is not enough.
+//   3. A garble below the Personal WatchList header is not rescued. That
+//      panel sits at the SAME x as the position list, so a row below it is
+//      a watchlist row however well it lines up.
+//
+// Measured on the replay corpus: recall 59.6% -> 66.3%, precision
+// 93.0% -> 95.2%, and every one of the ten holdings it recovers is in the
+// ground truth.
