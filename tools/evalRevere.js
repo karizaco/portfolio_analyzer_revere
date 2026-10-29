@@ -14,6 +14,10 @@
 //   node tools/evalRevere.js --tolerance 60        # seconds a capture may be
 //                                                   # away from a ground-truth frame
 //   node tools/evalRevere.js --json
+//   node tools/evalRevere.js --replay              # re-OCR and re-parse the
+//                                                   # ground-truth frames with
+//                                                   # the CURRENT parser
+//   node tools/evalRevere.js --replay --ocr-cache data/revere_ocr_cache.json
 //
 // Exit code is always 0 — this is a report, not a gate.
 //
@@ -23,8 +27,8 @@
 //
 // The ground truth is keyed by DATE -> FRAME -> {gro, turbo}. A frame is a
 // single whiteboard screenshot, and the two portfolios are read separately, so
-// the unit of measurement is (frame, portfolio) — the ground truth holds 144
-// such readings across 6 frames.
+// the unit of measurement is (frame, portfolio) — the ground truth holds 12
+// such readings across 6 frames, carrying 143 holdings between them.
 //
 // A ground-truth frame names its own video and its own wall-clock position
 // (`tWfLqBqt3RI_001136` = video tWfLqBqt3RI at 00:11:36). The tool pairs a
@@ -63,7 +67,9 @@
 // how much of the ground truth it covers.
 
 const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
+const { spawnSync } = require('node:child_process');
 
 const { buildLogsDirectories } = require('../src/video/probeLogDirs');
 
@@ -90,6 +96,11 @@ const DEFAULT_STATIC_ROOTS = Object.freeze([
 
 const DATE_KEY_RE = /^\d{8}$/;
 const FRAME_ID_RE = /^(.+)_(\d{2})(\d{2})(\d{2})(?:_([A-Za-z0-9]+))?$/;
+
+// Where the downloaded media lives, in the order the downloader prefers. The
+// names describe the preferred resolution, not the channel.
+const MEDIA_DIRS = Object.freeze(['downloads_1080p', 'downloads_hires', 'downloads']);
+const MEDIA_ROOT = path.join(PROJECT_ROOT, 'data', 'video_pipeline');
 
 // ---------------------------------------------------------------------------
 // THE CANONICAL GROUND-TRUTH READER
@@ -753,6 +764,297 @@ function percent(part, whole) {
   return whole ? ((part / whole) * 100).toFixed(1) : '0.0';
 }
 
+// ---------------------------------------------------------------------------
+// REPLAY: re-extract, re-OCR and re-parse the ground-truth frames
+// ---------------------------------------------------------------------------
+//
+// The default mode scores the pipeline's RECORDED output, so a parser fix is
+// invisible in it until the videos are re-scanned — and a re-scan of Revere
+// costs 8-13 minutes per video. The replay mode closes that loop: it
+// re-extracts the frames the corpus captured, re-OCRs them and re-runs the
+// CURRENT parser, so a parser change is measurable in seconds.
+//
+// The replayed readings REPLACE the recorded ones for the captures it could
+// replay. Everything else is left as recorded, and the census says how many
+// captures were replayed — so the number never silently mixes two eras.
+//
+// Tesseract is NOT deterministic, so a replay's numbers move slightly between
+// runs. That is why the fixture test (test/parseWhiteboardHoldings.test.js)
+// freezes the OCR: the replay answers "what would a re-scan produce now",
+// and the fixture test answers "what did the parser do to this exact input".
+//
+//   node tools/evalRevere.js --replay
+//   node tools/evalRevere.js --replay --json
+//   node tools/evalRevere.js --replay --ocr-cache data/revere_ocr_cache.json
+
+/**
+ * Index the downloaded media by its lower-cased file stem.
+ *
+ * The catalog's video ids are lower-cased by the probe logs, while the files
+ * on disk keep their case, so the index is keyed in lower case.
+ *
+ * @returns {Map<string, string>} lower-cased stem -> absolute path
+ */
+function buildMediaIndex(options = {}) {
+  const dirs = options.dirs || MEDIA_DIRS;
+  const root = options.root || MEDIA_ROOT;
+  const index = new Map();
+  for (const dir of dirs) {
+    const base = path.join(root, dir);
+    if (!fs.existsSync(base)) continue;
+    let entries = [];
+    try {
+      entries = fs.readdirSync(base);
+    } catch {
+      continue;
+    }
+    for (const name of entries) {
+      if (!name.toLowerCase().endsWith('.mp4')) continue;
+      const stem = name.slice(0, -4).toLowerCase();
+      if (!index.has(stem)) index.set(stem, path.join(base, name));
+    }
+  }
+  return index;
+}
+
+/**
+ * The file names a video id could be under.
+ *
+ * Three spellings turn up in this tree, and a file has to be matched against
+ * all of them:
+ *
+ *   `<date>_<id>.mp4`  the downloader's own name
+ *   `<id>.mp4`         the older scheme, with no date
+ *
+ * And the id itself may carry a leading underscore — some Qullamaggie ids
+ * start with one, and a September 2026 download run prepended another. So
+ * `_-3qtA_s7g9c.mp4` is the video `-3qtA_s7g9c`, while `__2urSPdZVec.mp4` is
+ * the video `_2urSPdZVec`.
+ *
+ * @param {string} videoId
+ * @param {string} dateKey
+ * @returns {string[]}
+ */
+function videoFileForms(videoId, dateKey) {
+  const bare = String(videoId || '').trim().toLowerCase();
+  if (!bare) return [];
+  const forms = [];
+  if (dateKey) forms.push(`${dateKey}_${bare}`);
+  forms.push(bare);
+  if (!bare.startsWith('_')) forms.push(`_${bare}`);
+  return [...new Set(forms)];
+}
+
+/**
+ * Find a video's media on disk.
+ *
+ * @param {Map<string,string>} index - from buildMediaIndex()
+ * @param {string} videoId
+ * @param {string} dateKey
+ * @returns {string|null}
+ */
+function findVideoOnDisk(index, videoId, dateKey) {
+  for (const form of videoFileForms(videoId, dateKey)) {
+    const hit = index.get(form);
+    if (hit) return hit;
+  }
+  return null;
+}
+
+/**
+ * The captures worth replaying: those a ground-truth frame could be scored
+ * against, and whose video is on disk.
+ *
+ * The tolerance test is the SAME one scoreGroundTruth() applies, so the
+ * replay covers exactly the captures that can carry a reading.
+ *
+ * @returns {Array<object>} {videoId, timestamp, dateKey, videoPath, keys}
+ */
+function collectReplayTargets({ gt, logs, toleranceSeconds = DEFAULT_TOLERANCE_SECONDS, index }) {
+  const frames = listGroundTruthFrames(gt);
+  const targets = new Map();
+  for (const frame of frames) {
+    if (frame.timestampSeconds === null) continue;
+    for (const log of logs) {
+      if (log.dateKey !== frame.dateKey) continue;
+      for (const capture of log.captures) {
+        const timestamp = Number(capture && capture.timestamp);
+        if (!Number.isFinite(timestamp)) continue;
+        if (Math.abs(timestamp - frame.timestampSeconds) > toleranceSeconds) continue;
+        const key = `${log.videoId}@${timestamp}`;
+        if (targets.has(key)) {
+          targets.get(key).keys.push(key);
+          continue;
+        }
+        const videoPath = findVideoOnDisk(index, log.videoId, log.dateKey);
+        if (!videoPath) continue;
+        targets.set(key, {
+          key,
+          videoId: log.videoId,
+          timestamp,
+          dateKey: log.dateKey,
+          videoPath,
+          keys: [key],
+        });
+      }
+    }
+  }
+  return [...targets.values()].sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0));
+}
+
+/**
+ * Load an OCR cache, if there is one.
+ *
+ * The cache maps `videoId@timestamp` to the OCR result, so two parser
+ * versions can be compared over the SAME input — the only way to attribute
+ * a difference to the parser, because Tesseract is not deterministic.
+ *
+ * @param {string|null} file
+ * @returns {Map<string, object>}
+ */
+function loadOcrCache(file) {
+  const cache = new Map();
+  if (!file) return cache;
+  if (!fs.existsSync(file)) return cache;
+  let parsed;
+  try {
+    parsed = JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch (err) {
+    throw new Error(`could not read the OCR cache ${file}: ${err.message}`);
+  }
+  const entries = parsed && parsed.captures && typeof parsed.captures === 'object'
+    ? parsed.captures
+    : parsed;
+  for (const [key, value] of Object.entries(entries || {})) {
+    if (value && typeof value === 'object' && typeof value.text === 'string') cache.set(key, value);
+  }
+  return cache;
+}
+
+/**
+ * Write the OCR cache back, so a later run can reuse it.
+ */
+function writeOcrCache(file, cache) {
+  if (!file) return;
+  const out = {};
+  for (const [key, value] of cache.entries()) out[key] = value;
+  fs.writeFileSync(file, JSON.stringify({ captures: out }));
+}
+
+/**
+ * Replay the captures: extract the frame, OCR it, run the current parser.
+ *
+ * @param {Array<object>} targets - from collectReplayTargets()
+ * @param {Map<string, object>} cache - the OCR cache
+ * @param {(message: string) => void} [onProgress]
+ * @returns {Promise<Map<string, object>>} key -> {parsed_observations, text}
+ */
+async function replayCaptures(targets, cache, onProgress = () => {}) {
+  const { resolveFfmpegBin } = require('../src/video/ffmpegBin');
+  const { ocrImage, closeWorker } = require('../src/ocr/ocrImage');
+  const {
+    parseWhiteboardScreenshotWithBoxes,
+  } = require('../src/parse/parseWhiteboardScreenshotWithBoxes');
+
+  const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'revere-replay-'));
+  const ffmpeg = resolveFfmpegBin(null);
+  const results = new Map();
+
+  try {
+    for (const target of targets) {
+      const framePath = path.join(workDir, `f_${target.videoId}_${target.timestamp}.png`);
+      const extracted = spawnSync(ffmpeg, [
+        '-hide_banner', '-loglevel', 'error',
+        '-ss', String(target.timestamp), '-i', target.videoPath,
+        '-frames:v', '1',
+        // The same width the scan tool extracts its OCR frame at
+        // (--ocr-frame-width, default 1280). A replay at another width would
+        // not be measuring the pipeline.
+        '-vf', 'scale=1280:-2',
+        framePath,
+      ], { encoding: 'utf8' });
+      if (extracted.status !== 0) {
+        onProgress(`  replay skipped ${target.key}: ffmpeg failed`);
+        continue;
+      }
+
+      let ocr = cache.get(target.key);
+      if (!ocr) {
+        try {
+          const result = await ocrImage(framePath);
+          ocr = {
+            text: result.text,
+            words: (result.words || []).map((word) => ({
+              text: word.text, left: word.left, top: word.top,
+              width: word.width, height: word.height, line: word.line,
+            })),
+          };
+          cache.set(target.key, ocr);
+        } catch (err) {
+          onProgress(`  replay skipped ${target.key}: OCR failed (${err.message})`);
+          continue;
+        }
+      }
+
+      const rows = await parseWhiteboardScreenshotWithBoxes({
+        metadata: { asOfDate: target.dateKey, fileName: path.basename(target.videoPath), sequence: '' },
+        ocr: { text: ocr.text, words: ocr.words },
+        framePath,
+      });
+      results.set(target.key, {
+        parsed_observations: (rows || []).map((row) => ({
+          portfolio: row.portfolio,
+          tickers_from_bbox: row.tickers_from_bbox,
+        })),
+        text: ocr.text,
+      });
+      onProgress(`  replayed ${target.key}`);
+    }
+  } finally {
+    await closeWorker();
+    fs.rmSync(workDir, { recursive: true, force: true });
+  }
+  return results;
+}
+
+/**
+ * Replay the ground-truth frames and score them.
+ *
+ * @returns {Promise<object>} the same report shape scoreGroundTruth() returns
+ */
+async function runReplay({ gt, logs, toleranceSeconds, cacheFile, onProgress = () => {} }) {
+  const index = buildMediaIndex();
+  const targets = collectReplayTargets({ gt, logs, toleranceSeconds, index });
+  const cache = loadOcrCache(cacheFile);
+  const replayed = await replayCaptures(targets, cache, onProgress);
+  writeOcrCache(cacheFile, cache);
+
+  // Swap the replayed readings into a COPY of the logs. The captures that
+  // could not be replayed keep their recorded readings, and the census says
+  // how many were replayed — so the number never mixes two eras silently.
+  const replayedLogs = logs.map((log) => ({
+    ...log,
+    captures: (log.captures || []).map((capture) => {
+      const timestamp = Number(capture && capture.timestamp);
+      if (!Number.isFinite(timestamp)) return capture;
+      const key = `${log.videoId}@${timestamp}`;
+      const entry = replayed.get(key);
+      if (!entry) return capture;
+      return { ...capture, parsed_observations: entry.parsed_observations };
+    }),
+  }));
+
+  const report = scoreGroundTruth({ gt, logs: replayedLogs, toleranceSeconds });
+  report.replay = {
+    targets: targets.length,
+    replayed: replayed.size,
+    not_replayed: targets.length - replayed.size,
+    videos_on_disk: index.size,
+  };
+  return report;
+}
+
+
 function printFrameRows(perFrame) {
   for (const frame of perFrame) {
     const parts = PORTFOLIOS.map((portfolio) => {
@@ -777,13 +1079,21 @@ function printFrameRows(perFrame) {
   }
 }
 
-function main(argv = process.argv.slice(2)) {
+async function main(argv = process.argv.slice(2)) {
   const asJson = argv.includes('--json');
+  const replay = argv.includes('--replay');
+  let cacheFile = null;
   const roots = [];
   let toleranceSeconds = DEFAULT_TOLERANCE_SECONDS;
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === '--json') continue;
+    if (arg === '--replay') continue;
+    if (arg === '--ocr-cache') {
+      cacheFile = path.resolve(PROJECT_ROOT, argv[index + 1]);
+      index += 1;
+      continue;
+    }
     if (arg === '--tolerance') {
       toleranceSeconds = Number(argv[index + 1]);
       index += 1;
@@ -798,13 +1108,27 @@ function main(argv = process.argv.slice(2)) {
 
   const gt = readRevereGroundTruth();
   const { logs, files, directories } = readProbeLogs(effectiveRoots);
-  const report = scoreGroundTruth({ gt, logs, toleranceSeconds: tolerance });
+  let report;
+  if (replay) {
+    if (!asJson) console.log('--- replaying the ground-truth frames with the current parser ---');
+    report = await runReplay({
+      gt,
+      logs,
+      toleranceSeconds: tolerance,
+      cacheFile,
+      onProgress: asJson ? () => {} : (message) => console.log(message),
+    });
+  } else {
+    report = scoreGroundTruth({ gt, logs, toleranceSeconds: tolerance });
+  }
   const { census, totals } = report;
 
   if (asJson) {
     console.log(JSON.stringify({
       roots: effectiveRoots,
       tolerance_seconds: tolerance,
+      replay: Boolean(replay),
+      replay_census: report.replay || null,
       log_directories: directories.length,
       log_files: files.length,
       census,
@@ -815,6 +1139,18 @@ function main(argv = process.argv.slice(2)) {
       per_frame: report.perFrame,
     }, null, 2));
     return 0;
+  }
+
+  if (replay && report.replay) {
+    console.log('');
+    console.log('--- the replay ---');
+    console.log(`captures worth replaying : ${report.replay.targets}`);
+    console.log(`  replayed               : ${report.replay.replayed}`);
+    console.log(`  not replayed           : ${report.replay.not_replayed}`);
+    console.log(`videos on disk          : ${report.replay.videos_on_disk}`);
+    console.log('Tesseract is not deterministic: a replayed number moves slightly');
+    console.log('between runs. The repeatable number is the fixture test\'s.');
+    console.log('');
   }
 
   console.log('--- per frame ---');
@@ -884,20 +1220,31 @@ module.exports = {
   DEFAULT_GT_PATH,
   DEFAULT_TOLERANCE_SECONDS,
   PORTFOLIOS,
+  buildMediaIndex,
   collectLogFiles,
+  collectReplayTargets,
   defaultRoots,
   discoverLogDirectories,
+  findVideoOnDisk,
   listGroundTruthDateKeys,
   listGroundTruthFrames,
   listGroundTruthReadings,
+  loadOcrCache,
   parseFrameId,
   readCaptureReadings,
   readProbeLog,
   readProbeLogs,
   readRevereGroundTruth,
+  replayCaptures,
+  runReplay,
   scoreGroundTruth,
+  videoFileForms,
+  writeOcrCache,
 };
 
 if (require.main === module) {
-  main();
+  main().catch((err) => {
+    console.error(err);
+    process.exitCode = 1;
+  });
 }

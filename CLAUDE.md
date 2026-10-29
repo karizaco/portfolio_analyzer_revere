@@ -1769,6 +1769,31 @@ Two properties worth knowing before quoting its number:
   is not in the consensus: the frame does not show it, so one of the two
   readings is wrong, and the honest reading is the one both agree on.
 
+### `--replay` closes the loop
+
+```bash
+node tools/evalRevere.js --replay
+node tools/evalRevere.js --replay --ocr-cache data/revere_ocr_cache.json
+```
+
+`--replay` re-extracts the frames the corpus captured, re-OCRs them and
+re-runs the **current** parser, so a parser change is measurable in seconds
+instead of after an 8–13 minute re-scan. The replayed readings replace the
+recorded ones for the captures it could replay; everything else is left as
+recorded, and the census says how many were replayed — so the number never
+mixes two eras silently. Measured over the four ground-truth dates:
+**94.4 % recall (135/143), 100 % precision**, against the recorded
+88.1 % / 98.4 %.
+
+The replay extracts at the same width the scan tool does
+(`--ocr-frame-width`, default 1280), so it measures the pipeline and not a
+different frame size.
+
+**Tesseract is not deterministic**, so a replayed number moves slightly
+between runs — that is what the OCR cache is for: two parser versions over
+the *same* cached OCR is the only comparison that can attribute a difference
+to the parser. The repeatable number is the fixture test's.
+
 ### SPXL — a known gap, reported not fixed
 
 `SPXL` is in the **match** lexicon but not in the **allow** list, so the

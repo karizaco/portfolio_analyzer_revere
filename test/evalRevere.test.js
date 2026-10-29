@@ -243,3 +243,116 @@ test('the shipped ground truth is readable and every frame id parses', () => {
     assert.ok(frame.holdings.GRO.length > 0 || frame.holdings.TURBO.length > 0);
   }
 });
+
+// ---------------------------------------------------------------------------
+// THE REPLAY
+// ---------------------------------------------------------------------------
+//
+// The replay re-extracts, re-OCRs and re-parses the ground-truth frames, so a
+// parser fix is measurable in seconds instead of after an 8-13 minute re-scan.
+// Two things about it have to be pinned:
+//
+//   6. The video is found by the DOWNLOADER'S OWN NAME, in every spelling it
+//      has taken. A September 2026 download run prepended an underscore to
+//      the id, and some Qullamaggie ids start with one themselves — so
+//      `_Vn-EBl95hes.mp4` is the video `Vn-EBl95hes` and
+//      `__2urSPdZVec.mp4` is the video `_2urSPdZVec`. Matching one spelling
+//      only would find no media for 37 of 40 files.
+//   7. A capture whose video is NOT on disk is not a replay target. It cannot
+//      be replayed, and pretending otherwise would put a capture in the
+//      denominator with no prediction behind it.
+
+test('a video is found under every spelling its file name has taken', () => {
+  const { videoFileForms } = require('../tools/evalRevere');
+
+  assert.deepEqual(
+    videoFileForms('tWfLqBqt3RI', '20260922'),
+    ['20260922_twflqbqt3ri', 'twflqbqt3ri', '_twflqbqt3ri'],
+    'the dated name, the bare name, and the underscore-prefixed name',
+  );
+
+  // An id that already starts with an underscore must not get a second one.
+  assert.deepEqual(
+    videoFileForms('_2urSPdZVec', '20260922'),
+    ['20260922__2urspdzvec', '_2urspdzvec'],
+  );
+
+  assert.deepEqual(videoFileForms('', '20260922'), [], 'no id, no forms');
+});
+
+test('the media index is keyed in lower case, because the ids are', () => {
+  const { buildMediaIndex, findVideoOnDisk } = require('../tools/evalRevere');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'evalrevere-media-'));
+  const media = path.join(dir, 'downloads_hires');
+  fs.mkdirSync(media);
+  try {
+    fs.writeFileSync(path.join(media, '20260922_tWfLqBqt3RI.mp4'), 'x');
+    fs.writeFileSync(path.join(media, '_Vn-EBl95hes.mp4'), 'x');
+    const index = buildMediaIndex({ root: dir, dirs: ['downloads_hires'] });
+
+    assert.equal(
+      findVideoOnDisk(index, 'twflqbqt3ri', '20260922'),
+      path.join(media, '20260922_tWfLqBqt3RI.mp4'),
+      'the file keeps its case; the id does not',
+    );
+    assert.equal(
+      findVideoOnDisk(index, 'vn-ebl95hes', '20260922'),
+      path.join(media, '_Vn-EBl95hes.mp4'),
+      'the prepended underscore is tried',
+    );
+    assert.equal(findVideoOnDisk(index, 'nosuchvideo', '20260922'), null);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('only a capture whose video is on disk is a replay target', () => {
+  const { collectReplayTargets } = require('../tools/evalRevere');
+  const index = new Map([['20260101_videoaaa', '/media/20260101_videoAAA.mp4']]);
+  const logs = [
+    log('20260101', 'videoaaa', [capture(100, { GRO: ['AAA'] })], '/tmp/one.json'),
+    log('20260101', 'videobbb', [capture(100, { GRO: ['EEE'] })], '/tmp/two.json'),
+  ];
+  const targets = collectReplayTargets({
+    gt: GROUND_TRUTH,
+    logs,
+    toleranceSeconds: 120,
+    index,
+  });
+
+  assert.equal(targets.length, 1, 'the capture whose video is missing is not a target');
+  assert.equal(targets[0].videoId, 'videoaaa');
+  assert.equal(targets[0].timestamp, 100);
+  assert.ok(targets[0].videoPath.endsWith('20260101_videoAAA.mp4'));
+});
+
+test('a capture beyond the tolerance is not a replay target either', () => {
+  const { collectReplayTargets } = require('../tools/evalRevere');
+  const index = new Map([['20260101_videoaaa', '/media/20260101_videoAAA.mp4']]);
+  const logs = [log('20260101', 'videoaaa', [capture(100 + 500, { GRO: ['AAA'] })], '/tmp/one.json')];
+  const targets = collectReplayTargets({
+    gt: GROUND_TRUTH,
+    logs,
+    toleranceSeconds: 120,
+    index,
+  });
+  assert.equal(targets.length, 0, 'a different moment in the video is not the frame');
+});
+
+test('the OCR cache round-trips, and a missing cache is an empty one', () => {
+  const { loadOcrCache, writeOcrCache } = require('../tools/evalRevere');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'evalrevere-cache-'));
+  try {
+    const file = path.join(dir, 'cache.json');
+    assert.equal(loadOcrCache(file).size, 0, 'a cache that is not there yet is empty, not an error');
+
+    const cache = new Map([['videoaaa@100', { text: 'hello', words: [{ text: 'hello', left: 1, top: 2, width: 3, height: 4, line: 0 }] }]]);
+    writeOcrCache(file, cache);
+    const loaded = loadOcrCache(file);
+    assert.equal(loaded.size, 1);
+    assert.equal(loaded.get('videoaaa@100').text, 'hello');
+    assert.equal(loaded.get('videoaaa@100').words.length, 1);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
