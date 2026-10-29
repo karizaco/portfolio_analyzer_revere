@@ -251,12 +251,12 @@ Rules:
 ## Testing
 
 ```bash
-npm test              # everything except the OCR benchmark (323 tests, ~2 min)
+npm test              # everything except the OCR benchmark (339 tests, ~2 min)
 npm run test:benchmark  # test/qmgGroundTruth.test.js alone (~23 min, EasyOCR)
 npm run test:all        # everything, benchmark included -- FAILS under contention
 ```
 
-323 tests, all passing (as of 2026-10-29).
+339 tests, all passing (as of 2026-10-29).
 
 **The benchmark has to run on its own.** `test/qmgGroundTruth.test.js` is a
 23-minute EasyOCR benchmark, and `node --test` runs the test *files* in
@@ -438,7 +438,8 @@ Results: `data/qmg_alt_batch_results.json`.
 - `src/video/probeLogDirs.js` — the three probe-log directory layouts (see below)
 
 ### Download
-- `src/video/downloadCandidates.js` — the 1080p candidate query + on-disk check (see below)
+- `src/video/downloadCandidates.js` — the 1080p candidate query + on-disk check + the JS half of the portable-path rule (see below)
+- `tools/reportPartialDownloads.py` — reports the orphan `.part` files; never deletes (see below)
 
 ### Data
 
@@ -555,6 +556,125 @@ empty or names the older scheme, so the pointer is the wrong way to ask
 
 ---
 
+## Catalog paths, migrations and the listing report (2026-10-29)
+
+### A stored path is relative when it can be
+
+The tracked catalog is read on other machines, so a path inside the repository
+is stored **relative to the repository root**, and a path outside it keeps its
+absolute form — there is no honest relative form for a path from another
+machine. The rule, in one line:
+
+```python
+def portable_stored_path(value):
+    """A path inside the repo becomes repo-relative; one outside stays absolute."""
+    if not value: return value
+    candidate = Path(str(value))
+    if not candidate.is_absolute(): return str(value)
+    return portable_path(candidate)
+```
+
+**Two implementations of this rule exist and must agree** — the column is
+written from Python and from JavaScript:
+
+| language | function | file |
+|---|---|---|
+| Python | `portable_stored_path()` | `tools/whiteboard_worker.py` |
+| JavaScript | `toPortablePath()` | `src/video/downloadCandidates.js` |
+
+`test/catalogPathPortability.test.js` pins the agreement: it asserts the two
+produce the same string for the same input, that they round-trip through
+`resolveCatalogPath()`, and that **every** relative pointer in the shipped
+catalog resolves to a file that is actually there.
+
+**Migration 3** rewrote the shipped catalog's pointers in place: **392**
+absolute in-repo pointers became repo-relative, and **not one** of them changed
+what they resolve to (each rewritten pointer was compared against its old
+absolute path — 0 mismatches, 179 present / 537 missing before and after). A
+pointer that points outside the repository is left alone.
+
+### The migrations are version-gated, and each one is additive
+
+`_apply_migrations()` in `tools/whiteboard_worker.py` applies migrations in
+order and records them in `schema_version`:
+
+| version | what it does |
+|---|---|
+| 1 | adds `channel` to `videos` and `catalog_runs`, then backfills it |
+| 2 | adds `catalog_runs.kind` (`live` / `fixture`) |
+| 3 | rewrites absolute in-repo `videos.download_path` and path-shaped `worker_settings` rows to the portable form |
+| 4 | adds `catalog_runs.not_listed_count` |
+| 5 | adds `catalog_runs.listing_complete` |
+
+**Version 1 has to add the column before it backfills it.** It once ran
+`UPDATE catalog_runs SET channel = …` unconditionally, which aborts with
+"no such column: channel" on a database written before that column existed —
+leaving the database unopenable rather than half-migrated. The `PRAGMA
+table_info` guard that version 2 uses for `kind` now guards version 1 too.
+
+**Versions 4 and 5 are two migrations, not one.** Adding `listing_complete` to
+an existing version 4 was a mistake: the `catalog --playlist-items 1` run had
+already applied and recorded version 4, so `current < 4` was false and the new
+`ALTER TABLE` never ran. Splitting it into version 5 fixed it. The lesson is
+general: **a migration version, once applied, is closed.**
+
+### The catalog's rows a listing did not contain
+
+`catalog` now reports which of the channel's catalog rows were **not** in the
+listing the run fetched (`not_listed`, `not_listed_count`, and the ids
+themselves), and records both that count and `listing_complete` in the
+`catalog_runs` audit row.
+
+**Absence from a `/videos` listing is an observation, not proof of deletion.**
+A video that became a Short, a livestream or members-only content is not
+listed there either. And `listing_complete` is 0 whenever the listing cannot
+be trusted — a `--limit`, a `--playlist-items`, or any `ERROR` on stderr makes
+a missing row prove nothing. (`--ignore-errors` makes yt-dlp exit 0 on a
+per-video failure, so the exit code alone cannot prove a listing was complete;
+the stderr `ERROR` lines are what matters.)
+
+**The 2026-10-28 audit's "7 Revere rows are no longer returned by the channel"
+does not reproduce.** Against a fresh listing of `@revereasset` taken 2026-10-29
+(1,814 videos) against a catalog of 1,813 Revere rows, **zero** rows were
+missing from the listing; the only difference was one brand-new upload
+(`NqkkWLhHiL0`, 2026-10-28), which has since been added. The original claim came
+from a listing that was itself stale.
+
+The catalog now holds **2,402 videos** (1,814 Revere + 588 Qullamaggie), and
+**zero** rows are missing from their channel's listing.
+
+### The orphan `.part` files — `tools/reportPartialDownloads.py`
+
+40 partial downloads, **10.15 GiB**, sit in the pipeline directories. A `.part`
+file is yt-dlp's name for a download in progress; one that stopped growing
+means the download was killed and left the file behind. The tool **reports and
+never deletes** — a partial file may be the only copy of a download worth
+resuming, so reclaiming the space is a separate, deliberate step.
+
+| | |
+|---|---|
+| in the catalog | **40 of 40** |
+| a completed copy exists (the partial file is redundant) | **1** |
+| no completed copy exists (the partial file is all there is) | **39** |
+
+All 40 are Qullamaggie, all dated 2026-09-22…24. The one redundant file is
+`downloads_hires/20230601_1HFPeLD2zwc.mp4.part` (247.4 MB) — the completed
+`downloads_1080p/20230601_1HFPeLD2zwc.mp4` exists. The other 39 are the only
+copy of those downloads.
+
+**Matching a `.part` file to a video needs both id forms.** A September 2026
+download run named its files `<_id>.mp4.part`, with an underscore prepended to
+the id — and some Qullamaggie ids start with an underscore themselves. So
+`_Vn-EBl95hes.mp4.part` is the video `Vn-EBl95hes`, and `__2urSPdZVec.mp4.part`
+is the video `_2urSPdZVec`. Without both forms, **37 of the 40 files look like
+they are not in the catalog at all.**
+
+One video was downloaded twice under both spellings:
+`downloads_1080p/uTMK9uhQZCc.mp4.part` (1005.8 MB) and
+`downloads_1080p/_uTMK9uhQZCc.mp4.part` (624.4 MB).
+
+---
+
 ## Common commands
 
 ```bash
@@ -588,6 +708,10 @@ node tools/aggregateScanResults.js data/video_scan_YYYYMMDD/
 # Prune old probes
 node tools/prune_old_probes.js           # dry-run
 node tools/prune_old_probes.js --execute # actually delete
+
+# Report the orphan .part files (REPORTS ONLY -- it never deletes)
+py -3 tools/reportPartialDownloads.py
+py -3 tools/reportPartialDownloads.py --json
 ```
 
 ### The catalog's real scale, and `fill-dates`
@@ -722,7 +846,7 @@ listing can be handed to it directly.
 
 | artifact | in git? | notes |
 |---|---|---|
-| `data/video_pipeline/state.sqlite` | **yes** | the catalog: 2,401 videos, 2,398 dated, plus 28 `catalog_runs` rows. The **only** tracked file under `data/video_pipeline/` (`.gitignore:4-5` ignore the directory and re-include this file) |
+| `data/video_pipeline/state.sqlite` | **yes** | the catalog: 2,402 videos, plus the `catalog_runs` audit table. The **only** tracked file under `data/video_pipeline/` (`.gitignore:4-5` ignore the directory and re-include this file) |
 | `data/catalog_flat/*.tsv` | no | a **cache**, regenerated in ~4.5 min of metadata-only network time. It carries no `upload_date` — the one field the catalog exists to capture — and it is lossy (cp1252, emoji dropped) |
 | `data/catalog_flat/*_needs_date.tsv`, `*_missing.tsv` | no | stale work lists from a completed gap-fill. `fill-dates` derives its own now |
 | `data/video_pipeline/catalog/catalog_*.tsv` | no | run snapshots, strictly worse than the DB |
@@ -757,6 +881,13 @@ Both changes to `catalog_runs` ship as **migration version 2**
 (`_apply_migrations` in `tools/whiteboard_worker.py`), so an existing database
 is repaired in place when it is next opened. A fresh database gets the columns
 from `data/db/schema.sql` directly.
+
+`data/db/schema.sql` now describes the **`videos` and `catalog_runs` tables
+exactly as the shipped catalog has them** — same columns, same order, same
+CHECK constraint on `videos.status`. A fresh clone and the shipped database
+therefore have the same table shape. Nothing reads the table positionally, so
+this is a consistency constraint rather than a functional requirement — but the
+two being interchangeable is worth the ordering.
 
 ### The gap-fill runs from a fresh clone
 
