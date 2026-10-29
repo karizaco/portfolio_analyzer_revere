@@ -529,19 +529,35 @@ older naming scheme** (`downloads_1080p/<video_id>.mp4` instead of
 resolved whatever happened to the media.
 
 A pointer is not evidence that a file is missing, and not evidence that one is
-present. The tool now **resolves every pointer against the filesystem** and
-records the answer. The 716 pointer rows break down exactly:
+present. The tool now asks the disk **two** questions for every row, because
+there are two ways a row's media can be found: does the **pointer** resolve to
+a real file, and does a file named **the way the downloader writes it**
+(`<upload_date>_<video_id>.mp4`) exist in one of the download directories?
 
-| directory | naming scheme | missing | present |
+**The second question is the one a pointer-only inventory does not ask.** A
+video can be on disk with no pointer naming it, and two rows in the shipped
+catalog are in exactly that state — `bEidyFtV-lY` and `M0pV73RV2qo`, both
+Revere, both with their media in `downloads_hires` under the downloader's own
+name while their pointer names the `downloads/` directory that was emptied on
+2026-10-21. Asking only about the pointer called them **missing** and put
+them in the re-download list, which contradicts the tool's own stated
+principle in the most literal way possible. The two-question rule is the one
+`tools/reconcileCatalogStatus.js` and `src/video/downloadCandidates.js`
+already use; the inventory now uses the same one.
+
+The 716 pointer rows break down exactly:
+
+| where the media is | naming scheme | missing | present |
 |---|---|---|---|
 | `downloads_1080p` | `<video_id>.mp4` (the older scheme) | **514** | 0 |
 | `downloads_1080p` | `<upload_date>_<video_id>.mp4` (today's) | 0 | 27 |
 | `downloads_hires` | — | 0 | 152 |
-| `downloads/` | — | **23** | 0 |
-| **total** | | **537** | **179** |
+| `downloads_hires` | (pointer stale, media under the own name) | 0 | 2 |
+| `downloads/` | — | **21** | 0 |
+| **total** | | **535** | **181** |
 
 So **every** missing row is one the current naming convention cannot reach: 514
-because the pointer names the bare `<video_id>.mp4` and 23 because the whole
+because the pointer names the bare `<video_id>.mp4` and 21 because the whole
 `downloads/` directory is gone.
 
 The manifest has:
@@ -549,18 +565,30 @@ The manifest has:
 | key | meaning |
 |---|---|
 | `pointer_rows` | rows in the catalog with a pointer (716) |
-| `present_count` / `present_videos` | how many of those are actually on disk (179) |
-| `total` / `videos` | the **missing** ones — the re-download list (537) |
+| `present_count` / `present_videos` | how many of those are actually on disk (181) |
+| `present_by_own_name_count` | how many were found by their own name, not by their pointer (2) |
+| `total` / `videos` | the **missing** ones — the re-download list (535) |
 | `qullamaggie_count` / `qullamaggie_present_count` | the QMG subset (514 missing, 53 present) |
 
 Each entry carries `expected_filename` (the name the file has *today*) and
-`pointer_uses_legacy_name` (why the pointer does not resolve).
+`pointer_uses_legacy_name` (why the pointer does not resolve). Each **present**
+entry also carries `found_by` (`pointer` or `own_name`) and `media_path` (where
+the file actually is — relative to the repository root when it is inside it,
+absolute when it is not).
 
 **A file can be on disk with no pointer naming it.** `downloads_1080p` holds 49
 `.mp4`, and **all 49 are found by the downloader's own name** — the catalog
 pointer resolves only 27 of them. The other 22 are the videos whose pointer is
 empty or names the older scheme, so the pointer is the wrong way to ask
 "is it already downloaded?".
+
+**The 535 need nothing written for them.** 198 are `pending` and 316 are
+`scanning`, and both downloaders' candidate lists already contain those two
+statuses, so they will be fetched. What is *not* the case is a bulk pointer
+repair: of the 535, only the two rows above have their media anywhere on disk,
+and every other one is genuinely lost. Pointing a row at a `.part` file, or at
+any file whose name merely *contains* the video id, would suppress 37 further
+1080p downloads — `findHiresOnDisk`'s pointer branch has no size check.
 
 ---
 
@@ -1114,7 +1142,7 @@ listing can be handed to it directly.
 | `data/catalog_flat/*_needs_date.tsv`, `*_missing.tsv` | no | stale work lists from a completed gap-fill. `fill-dates` derives its own now |
 | `data/video_pipeline/catalog/catalog_*.tsv` | no | run snapshots, strictly worse than the DB |
 | `data/video_pipeline/catalog/resolve_undated_*.tsv` | no | the run snapshots `tools/resolveUndatedDates.js` points `catalog_runs.raw_output_path` at — they say **why** each row was or was not dated |
-| `data/qmg_video_recovery_manifest.json` | **yes** | re-download manifest: the videos whose media is **missing** (537), plus the ones still on disk (179), regenerated from the DB and the filesystem by `tools/inventoryLostVideos.py` — see § 'The recovery manifest' |
+| `data/qmg_video_recovery_manifest.json` | **yes** | re-download manifest: the videos whose media is **missing** (535), plus the ones still on disk (181), regenerated from the DB and the filesystem by `tools/inventoryLostVideos.py` — see § 'The recovery manifest' |
 
 The flat listings are **not** worth committing: they are reproducible, they go
 stale daily, they hold no dates, and 99.99% of their content is already in
