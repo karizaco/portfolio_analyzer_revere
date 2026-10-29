@@ -251,12 +251,12 @@ Rules:
 ## Testing
 
 ```bash
-npm test              # everything except the OCR benchmark (276 tests, ~2 min)
+npm test              # everything except the OCR benchmark (323 tests, ~2 min)
 npm run test:benchmark  # test/qmgGroundTruth.test.js alone (~23 min, EasyOCR)
 npm run test:all        # everything, benchmark included -- FAILS under contention
 ```
 
-276 tests, all passing (as of 2026-10-28).
+323 tests, all passing (as of 2026-10-29).
 
 **The benchmark has to run on its own.** `test/qmgGroundTruth.test.js` is a
 23-minute EasyOCR benchmark, and `node --test` runs the test *files* in
@@ -265,6 +265,10 @@ benchmarks plus a dozen other files do not fit in one machine's memory and CPU
 at once. On its own it reproduces the table below exactly (88.9% / 100% /
 87.5% / 46.2%, overall 80.6%). `npm test` therefore skips it, and says so on
 the first line of its output.
+
+**Re-verified 2026-10-29 against the pinned fixtures**: the same four numbers,
+all four cases passing, in 864 s. The frames are now md5-pinned, so this
+number is a property of (code, frame) and the two must be quoted together.
 
 ### Ground-truth benchmark fixtures — read before trusting a recall number
 
@@ -282,31 +286,45 @@ the first line of its output.
 The test also calls `closeWorker()` when it finishes — `ocrImage()` leaves a Tesseract worker
 running, which keeps the event loop alive and hangs the process.
 
-### The benchmark cannot be run from a clone (open, as of 2026-10-28)
+### The benchmark's frames are now tracked (fixed 2026-10-29)
 
-**All four curated frames live under gitignored trees**, so a fresh clone has
-none of them:
+**All four curated frames used to live under gitignored trees**, so a fresh clone
+had none of them, and the only tracked copies were at the *prefilter sample width*
+(640×360) — which the test's own `MIN_SNAPSHOT_WIDTH = 1280` filter rejects. The
+hard `assert.equal(missingSnapshots.length, 0)` therefore **failed on every fresh
+clone**.
 
-| case | the frame this machine scores | tracked copies |
-|---|---|---|
-| `trade_ideas` 20220218[1] | `data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220218_2.png` | **none** |
-| `sparse` 20221104[0] | `data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20221104.png` | 2, both 640×360 |
-| `normal_2022` 20220606[1] | `data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606_2.png` | 2, both 640×360 |
-| `dense_2023` 20230609[0] | `data/video_scan_test/_rerun/qmg-easyocr-20261012/snapshots/qmg_20230609.png` | 2, both 640×360 |
+The four 1920×1080 frames are now committed under `test/fixtures/qmg_benchmark/`,
+with a `manifest.json` that records, per frame, the case, the capture index, the
+snapshot file index, the pixel size, the **md5** and the path it was copied from:
 
-The tracked copies are at the *prefilter sample width*, so the test's own
-`MIN_SNAPSHOT_WIDTH = 1280` filter rejects them, and
-`assert.equal(missingSnapshots.length, 0)` (`test/qmgGroundTruth.test.js:196`)
-**hard-fails on a fresh clone**. The fix is to commit the four 1920×1080 frames
-(`git add -f`) and to turn that assert into a skip-with-warning.
+| case | fixture | md5 | copied from |
+|---|---|---|---|
+| `trade_ideas` 20220218[1] | `trade_ideas_20220218_c1.png` | `d6a45e350aeacf16c704d324f0ed18a5` | `data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220218_2.png` |
+| `sparse` 20221104[0] | `sparse_20221104_c0.png` | `7d766f71608427d09c8dbf0592b81445` | `data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20221104.png` |
+| `normal_2022` 20220606[1] | `normal_2022_20220606_c1.png` | `e34b828300318085b07166a87aa50f98` | `data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606_2.png` |
+| `dense_2023` 20230609[0] | `dense_2023_20230609_c0.png` | `d53cb5fab33eba46e73ba40a7477f91e` | `data/video_scan_test/_rerun/qmg-easyocr-20261012/snapshots/qmg_20230609.png` |
+
+`resolveSnapshotPath` now **prefers the tracked fixture** and falls back to the old
+widest-candidate search. It verifies the fixture's md5 and **throws** if the file
+has changed, because replacing a frame silently would invalidate every recorded
+number. A curated case whose frame cannot be found is now **skipped with a
+warning** rather than failing the run — the benchmark degrades to "fewer cases",
+not to "no answer".
+
+`test/qmgBenchmarkFixtures.test.js` is the fast half of this check (seconds, no
+OCR): every curated case has a tracked frame, every frame is at OCR resolution,
+every frame's md5 matches the manifest, and the manifest records where each frame
+came from.
 
 **A frame's identity is its FILE, not its name.** Each benchmark filename
 exists in several directories and the copies are *different images* — five
 copies of `qmg_20220606_2.png`, three of them md5 `93514908`, which is the
 frame CLAUDE.md's `position_table` section describes as the bad one (a junk
-`SE` cell, 0/8). `resolveSnapshotPath` keeps the first candidate at the widest
-width, so which frame is scored depends on directory-walk order. Name the run
-directory, the file and its md5 whenever a number is quoted.
+`SE` cell, 0/8). Before the fixtures were pinned, which frame the benchmark
+scored depended on directory-walk order. Now it is pinned by md5. **Name the run
+directory, the file and its md5 whenever a number is quoted** — and if a frame is
+deliberately replaced, update `manifest.json` and the recorded numbers together.
 
 ---
 
@@ -415,11 +433,125 @@ Results: `data/qmg_alt_batch_results.json`.
 - `src/normalize/videoTypeClassifier.js` — whiteboard / chart_stream / DMI / tale_of_the_tape
 - `src/normalize/repairHoldings.js` — Revere-only position repair
 
+### Aggregation
+- `src/video/captureTickers.js` — which field of a capture holds its holdings (see below)
+- `src/video/probeLogDirs.js` — the three probe-log directory layouts (see below)
+
+### Download
+- `src/video/downloadCandidates.js` — the 1080p candidate query + on-disk check (see below)
+
 ### Data
 
 - `data/video_pipeline/state.sqlite` — canonical SQLite database, **tracked in git** (the catalog)
 - `data/db/schema.sql` — schema source of truth
 - `config/ticker_lexicon_seed.csv` — ticker allowlist (Revere + Qullamaggie)
+
+---
+
+## Aggregation and download plumbing (fixed 2026-10-29)
+
+Five defects, all fixed together. Each is pinned by a test.
+
+### Which field of a capture holds its holdings — `src/video/captureTickers.js`
+
+The aggregator used to read `capture.tickers_from_bbox` for whiteboard captures.
+**No writer emits that field at capture level**: across 677 probe logs / 1281
+captures it is present in **zero**. The value the whiteboard parser actually
+produces lives in `capture.parsed_observations[].tickers_from_bbox` — a strict
+subset — and the full reading lives in `capture.tickers`.
+
+Routing a capture's holdings by screen layout:
+
+| layout | field | notes |
+|---|---|---|
+| `chart_stream` | `capture.chart_stream.position_list` | the column-filtered, per-frame reading |
+| everything else | `capture.tickers` | the whiteboard/clusterer consensus |
+
+The measured effect of getting this wrong: **269 captures with tickers / 52
+unique tickers** → **271 / 56**. The four recovered tickers (`COPX`, `DVN`,
+`MOS`, `NRGU`) are real Qullamaggie holdings, and two chart-stream captures
+contribute at all for the first time. **Re-running the aggregator used to
+regress the committed `data/analysis.json`** — that is what this fix stopped.
+
+### The three probe-log directory layouts — `src/video/probeLogDirs.js`
+
+A run tag's probe logs live under one of three layouts:
+
+| layout | path | produced by |
+|---|---|---|
+| flat | `<date>/<tag>/ocr_probe/logs` | `scanVideoWithOcr.js` |
+| doubled | `<date>/<tag>/<tag>/ocr_probe/logs` | `parallelOcrScan.py` |
+| legacy root | `<date>/ocr_probe/logs` | the pre-Qullamaggie structure |
+
+`tools/aggregateOcrTimeline.js` resolved only the flat layout, so it **could not
+find the logs of any doubled-layout run** — every run with a committed
+`timeline.json` uses the doubled layout, and the tool exited 1 with
+"No probe logs found" before writing anything. Both aggregators now share one
+list, in `src/video/probeLogDirs.js`, so they cannot drift apart again; the
+first layout that exists wins.
+
+### The 1080p candidate query — `src/video/downloadCandidates.js`
+
+`tools/downloadQmg1080p.js` selected **47 of 588** Qullamaggie rows: its SQL
+required `download_path NOT LIKE '%downloads_1080p%'`, which excluded every row
+whose pointer mentioned that directory — including the rows that needed a
+*second* 1080p copy. The query is now in `src/video/downloadCandidates.js` and
+shared between the tool and the tests:
+
+```sql
+SELECT video_id, upload_date, title, download_path FROM videos
+WHERE status IN ('pending','scanning')
+AND channel = 'qullamaggie'
+ORDER BY upload_date DESC, video_id ASC
+```
+
+**588 candidates, 49 already on disk, 539 still need a 1080p download.**
+`findHiresOnDisk` checks the downloader's own name (`<date>_<id>.mp4`) and then
+the catalog pointer, and only accepts a path inside `downloads_1080p` — a
+720p copy in `downloads_hires` deliberately does **not** count.
+
+### The recovery manifest — `tools/inventoryLostVideos.py`
+
+The manifest listed every catalog row that had a `download_path` (716 of them)
+and its note claimed they had all been deleted on 2026-10-21. That was wrong on
+both counts: **179 are still on disk**, and **514 point at a filename under an
+older naming scheme** (`downloads_1080p/<video_id>.mp4` instead of
+`downloads_1080p/<upload_date>_<video_id>.mp4`), so those pointers never
+resolved whatever happened to the media.
+
+A pointer is not evidence that a file is missing, and not evidence that one is
+present. The tool now **resolves every pointer against the filesystem** and
+records the answer. The 716 pointer rows break down exactly:
+
+| directory | naming scheme | missing | present |
+|---|---|---|---|
+| `downloads_1080p` | `<video_id>.mp4` (the older scheme) | **514** | 0 |
+| `downloads_1080p` | `<upload_date>_<video_id>.mp4` (today's) | 0 | 27 |
+| `downloads_hires` | — | 0 | 152 |
+| `downloads/` | — | **23** | 0 |
+| **total** | | **537** | **179** |
+
+So **every** missing row is one the current naming convention cannot reach: 514
+because the pointer names the bare `<video_id>.mp4` and 23 because the whole
+`downloads/` directory is gone.
+
+The manifest has:
+
+| key | meaning |
+|---|---|
+| `pointer_rows` | rows in the catalog with a pointer (716) |
+| `present_count` / `present_videos` | how many of those are actually on disk (179) |
+| `total` / `videos` | the **missing** ones — the re-download list (537) |
+| `qullamaggie_count` / `qullamaggie_present_count` | the QMG subset (514 missing, 53 present) |
+
+Each entry carries `expected_filename` (the name the file has *today*) and
+`pointer_uses_legacy_name` (why the pointer does not resolve).
+
+**A file can be on disk with no pointer naming it.** `downloads_1080p` holds 49
+`.mp4`, and **all 49 are found by the downloader's own name** — the catalog
+pointer resolves only 27 of them. The other 22 are the videos whose pointer is
+empty or names the older scheme, so the pointer is the wrong way to ask
+"is it already downloaded?".
 
 ---
 
@@ -594,7 +726,7 @@ listing can be handed to it directly.
 | `data/catalog_flat/*.tsv` | no | a **cache**, regenerated in ~4.5 min of metadata-only network time. It carries no `upload_date` — the one field the catalog exists to capture — and it is lossy (cp1252, emoji dropped) |
 | `data/catalog_flat/*_needs_date.tsv`, `*_missing.tsv` | no | stale work lists from a completed gap-fill. `fill-dates` derives its own now |
 | `data/video_pipeline/catalog/catalog_*.tsv` | no | run snapshots, strictly worse than the DB |
-| `data/qmg_video_recovery_manifest.json` | **yes** | re-download manifest, regenerated from the DB by `tools/inventoryLostVideos.py` |
+| `data/qmg_video_recovery_manifest.json` | **yes** | re-download manifest: the videos whose media is **missing** (537), plus the ones still on disk (179), regenerated from the DB and the filesystem by `tools/inventoryLostVideos.py` — see § 'The recovery manifest' |
 
 The flat listings are **not** worth committing: they are reproducible, they go
 stale daily, they hold no dates, and 99.99% of their content is already in
@@ -816,10 +948,12 @@ otherwise act as a lower bound and reject *every* real row. Same rule applies in
   The clusterer computes a per-cluster `frameCount` (`src/parse/parseChartStream.js:1230`) but the
   emitter does not write it (`tools/scanVideoWithOcr.js:1814-1818`), so it never appears in the logs.
 
-### Known limitations and next steps (as of 2026-10-25)
+### Known limitations and next steps (as of 2026-10-29)
 
 **Measured on the curated GT benchmark** (`test/qmgGroundTruth.test.js`, 4 captures,
-EasyOCR, single frame each — not a multi-frame consensus run), at commit `8070601`:
+EasyOCR, single frame each — not a multi-frame consensus run), at commit `8070601` and
+**re-verified 2026-10-29 against the md5-pinned fixture frames** (864 s, all four cases
+passing, identical numbers):
 
 | case | date | recall | FP |
 |---|---|---|---|
@@ -832,27 +966,27 @@ Overall mean recall 80.6%. These numbers were previously meaningless — the ben
 resolving 640×360 prefilter frames, so every case scored 0%.
 
 **The benchmark is deterministic, not noisy.** Two consecutive runs (2026-10-25, 512 s and
-461 s) produced byte-identical per-case numbers, hits and FP counts. So a change in this
-table means the *code* or the *input frames* changed — not that the measurement drifted.
+461 s) produced byte-identical per-case numbers, hits and FP counts, and the 2026-10-29
+run against the pinned frames reproduced the table exactly. So a change in this table
+means the *code* or the *input frames* changed — not that the measurement drifted.
 
-**The input frames are not pinned.** `resolveSnapshotPath` scans `SNAPSHOT_ROOTS` plus every
-`data/video_scan_test/_rerun/<run-tag>/snapshots/` directory and keeps the **widest** file
-named `qmg_<date>[_<n>].png`. A new re-run directory can therefore change which frame a case
-is scored on — the same "a frame's identity is its FILE, not its label" trap as elsewhere.
-Re-measure and re-read the table together; they are only valid as a pair.
+**The input frames ARE pinned (since 2026-10-29).** `resolveSnapshotPath` now prefers the
+tracked fixture in `test/fixtures/qmg_benchmark/` and verifies its md5; only if there is no
+fixture does it fall back to scanning `SNAPSHOT_ROOTS` plus every
+`data/video_scan_test/_rerun/<run-tag>/snapshots/` directory and keeping the **widest** file
+named `qmg_<date>[_<n>].png`. A new re-run directory can therefore no longer change which
+frame a case is scored on. The earlier 73.9% figure was not measured against a named frame
+set, which is why it cannot be reconciled with 80.6% from the record alone.
 
-The frames the 80.6% measurement above was taken on, all 1920 px:
+The frames the 80.6% measurement above was taken on, all 1920 px — now tracked as fixtures
+(see § 'The benchmark's frames are now tracked'):
 
-| case | frame |
-|---|---|
-| trade_ideas | `data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220218_2.png` |
-| sparse | `data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20221104.png` |
-| normal_2022 | `data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606_2.png` |
-| dense_2023 | `data/video_scan_test/_rerun/qmg-easyocr-20261012/snapshots/qmg_20230609.png` |
-
-Two of the four live under the **gitignored** `data/video_scan_test/` tree, so a clean clone
-cannot reproduce the benchmark at all. The earlier 73.9% figure was not measured against a
-named frame set, which is why it cannot be reconciled with 80.6% from the record alone.
+| case | frame | md5 |
+|---|---|---|
+| trade_ideas | `test/fixtures/qmg_benchmark/trade_ideas_20220218_c1.png` | `d6a45e350aeacf16c704d324f0ed18a5` |
+| sparse | `test/fixtures/qmg_benchmark/sparse_20221104_c0.png` | `7d766f71608427d09c8dbf0592b81445` |
+| normal_2022 | `test/fixtures/qmg_benchmark/normal_2022_20220606_c1.png` | `e34b828300318085b07166a87aa50f98` |
+| dense_2023 | `test/fixtures/qmg_benchmark/dense_2023_20230609_c0.png` | `d53cb5fab33eba46e73ba40a7477f91e` |
 
 **Precision floor**: 2–3 false positives per capture. Remaining FP sources:
 `TQQQ`→`TOCA` (OCR misread of a real ticker), chart-area tokens that happen to be in the
@@ -956,20 +1090,35 @@ layouts exist and the legacy crop reader only ever saw the first:
   1-in-20 ratio a letter's stem has inside a 20 px bar (0.05, must keep merging) and
   above the 1-in-51 ratio the border has under the rule (0.02, must not).
   `test/positionColumnMerge.test.js` pins both sides.
-- **The seed lexicon contains OCR VARIANTS, and they publish verbatim.** Nine rows of
-  `config/ticker_lexicon_seed.csv` (`AROQ`, `ARCQ`, `OBTS`, `GSII`, `IOI`, `PLIR`,
-  `NUGI`, `GSlT`, `MNOY`) are not tickers but the *shape* a ticker takes when
-  it is misread. An exact lexicon hit short-circuits the decoder at cost 0, so `PLIR`
-  publishes as `PLIR` at 0.000 and never competes with `PLTR` (whose repair would
-  cost 0.375 — `I>T` at count 3 of a model max of 4). That is where 4 of the 7
-  measured false positives came from. The tenth variant row, `~09r3`
-  (`config/ticker_lexicon_seed.csv:246`), is the exception: it **cannot** publish
-  anything, because the decoder strips every non-A-Z character out of the read before
-  the lookup (`src/normalize/tickerDecode.js:157`), so the read arrives as `R` and
-  never matches the key `~09R3`; `GSlT` publishes uppercased, as `GSLT`. Deleting the
-  variant rows would let `PLIR` decode to `PLTR` and nothing else would be lost —
-  `URNM` is itself a seeded row (`config/ticker_lexicon_seed.csv:200`) and decodes at
-  cost 0 either way — but it has not been done.
+- **The seed lexicon used to contain OCR VARIANTS, and they published verbatim.**
+  Eleven rows of `config/ticker_lexicon_seed.csv` were not tickers but the *shape* a
+  ticker takes when it is misread: `AROQ`, `ARCQ`, `OBTS`, `GSII`, `IOI`, `PLIR`,
+  `NUGI`, `JNUG`, `~09r3`, `GSlT`, `MNOY`. An exact lexicon hit short-circuits the
+  decoder at cost 0, so `PLIR` published as `PLIR` at 0.000 and never competed with
+  `PLTR` (whose repair would cost 0.375 — `I>T` at count 3 of a model max of 4).
+  That is where 4 of the 7 measured false positives came from. (`~09r3` was the
+  exception: it could publish nothing, because the decoder strips every non-A-Z
+  character out of the read before the lookup
+  (`src/normalize/tickerDecode.js:157`), so the read arrived as `R` and never matched
+  the key. `GSlT` published uppercased, as `GSLT`.)
+  **All eleven rows were deleted on 2026-10-29.** The measured effect, via the
+  no-OCR replay (`node tools/evalParserReplay.js`): recall **unchanged** at 56.3 %
+  (71/126) and precision **92.2 % → 93.4 %** (71/77) — the `OBTS` false positive
+  in 20230523 is gone and nothing was lost. The misreads now decode to the real
+  ticker: `PLIR` → `PLTR`, `NUGI` → `NRGU`, `MNOY` → `MNDY`, `GSLT` → `GSIT`.
+  `test/lexiconVariants.test.js` pins the outcome.
+  - The **`JNUG` in the seed list at line 201 is a real ticker** (a seeded Qullamaggie
+    chart ETF, junior gold miners 2×) and was **kept**. The deleted `JNUG` at line 245
+    was a redundant duplicate of it.
+  - Two of the misreads are recorded as **alias rows** in
+    `config/ticker_ocr_confusions.csv` instead (`MNOY→MNDY`, `GSLT→GSIT`), which is
+    where a chart-stream misread belongs: that file applies to in-column tokens only,
+    and only when the column gate is active.
+  - The **`O,D` row added to `config/ticker_char_confusion.csv`** is strictly
+    additive: over the 3,549 O-containing single-substitution reads in the corpus it
+    changes **0** existing decodes, loses **0**, and gains **38** correct repairs
+    (`MNOY→MNDY@0.625`, `AMO→AMD@0.625`). `test/lexiconVariants.test.js` pins
+    gained=38, changed=0, lost=0.
 - **A frame's identity is its FILE, not its label.** Four **source-width** files are named
   `qmg_20230609.png` in four run directories and hold three distinct images (the tree also
   holds two 640×360 prefilter renders under that name), so two

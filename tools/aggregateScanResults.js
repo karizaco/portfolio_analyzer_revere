@@ -5,6 +5,7 @@ const path = require('node:path');
 
 const { hammingDistance } = require('../src/video/imageHash');
 const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
+const { getCaptureTickers } = require('../src/video/captureTickers');
 
 const argv = process.argv.slice(2);
 const userArg = argv.length ? path.resolve(argv[0]) : null;
@@ -59,14 +60,13 @@ const screenshotsDirectory = userArg
  * - single:      data/video_scan_<DATE>/<runTag>/ocr_probe/logs   (same as flat, for clarity)
  * - doubled:     data/video_scan_<DATE>/<runTag>/<runTag>/ocr_probe/logs
  * - legacy-root: data/video_scan_<DATE>/ocr_probe/logs
+ *
+ * The list lives in src/video/probeLogDirs.js so that every tool that reads
+ * probe logs probes the SAME layouts — the two aggregators had drifted apart
+ * once already, and the copy that went stale is why the timeline aggregator
+ * could not find the logs of any doubled-layout run.
  */
-function buildLogsDirectories(scanDateDir, runTag) {
-  return [
-    path.join(scanDateDir, runTag, 'ocr_probe', 'logs'),                 // flat / single
-    path.join(scanDateDir, runTag, runTag, 'ocr_probe', 'logs'),          // doubled (legacy from parallelOcrScan.py)
-    path.join(scanDateDir, 'ocr_probe', 'logs'),                          // legacy root-level (pre-Qullamaggie structure)
-  ];
-}
+const { buildLogsDirectories } = require('../src/video/probeLogDirs');
 
 const PHASH_COLLISION_THRESHOLD = 5;
 const OCR_TEXT_TABLE_MAX_CHARS = 80;
@@ -313,26 +313,6 @@ function countPhashCollisions(phashList) {
 
 function tableCell(value) {
   return String(value == null ? '' : value).replace(/\|/g, '\\|');
-}
-
-/**
- * Returns the appropriate ticker list for a capture, based on its screen layout.
- * - chart_stream: use column-filtered, per-frame parsed tickers (chart_stream.position_list)
- * - whiteboard: use structured GRO/TURBO holdings from bbox parser (tickers_from_bbox)
- * - raw clusterer output (capture.tickers): fall back only when neither is available
- */
-function getCaptureTickers(capture) {
-  if (capture.screen_layout === 'chart_stream') {
-    return Array.isArray(capture.chart_stream?.position_list)
-      ? capture.chart_stream.position_list
-      : [];
-  }
-  if (capture.screen_layout === 'whiteboard' || capture.screen_layout === 'structured_whiteboard') {
-    return Array.isArray(capture.tickers_from_bbox)
-      ? capture.tickers_from_bbox
-      : [];
-  }
-  return Array.isArray(capture.tickers) ? capture.tickers : [];
 }
 
 function renderTickersCell(tickers, limit = TICKERS_TABLE_LIMIT) {

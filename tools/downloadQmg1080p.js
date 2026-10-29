@@ -28,6 +28,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
+const { CANDIDATE_SQL, findHiresOnDisk } = require('../src/video/downloadCandidates');
+
 const argv = process.argv.slice(2);
 const limit = Number(readFlag(argv, '--limit')) || 30;
 const height = Number(readFlag(argv, '--height')) || 1080;
@@ -114,12 +116,7 @@ const script = `
 import json, sqlite3, sys
 c = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
 c.row_factory = sqlite3.Row
-rows = c.execute(
-    "SELECT video_id, upload_date, title, download_path FROM videos "
-    "WHERE status IN ('pending','scanning','pending') AND download_path NOT LIKE '%downloads_1080p%' "
-    "AND channel = 'qullamaggie' "
-    "ORDER BY upload_date DESC, video_id ASC"
-).fetchall()
+rows = c.execute(${JSON.stringify(CANDIDATE_SQL)}).fetchall()
 out = [dict(r) for r in rows]
 json.dump(out, sys.stdout)
 `;
@@ -137,21 +134,36 @@ if (onlyIds.size) {
   console.log(`[qmg1080] after explicit allow-list: ${allRows.length} rows`);
 }
 
+// The catalog's `download_path` is a POINTER, and it goes stale: it records
+// where a file was when some machine downloaded it, and nothing updates it
+// when the file is later deleted. Of the 541 QMG rows that point into
+// downloads_1080p, only 27 still resolve on disk — the other 514 are
+// pointers to files that are gone.
+//
+// So "is this video already downloaded?" has to be answered by the
+// FILESYSTEM, not by the string in the column. The old query answered it
+// with `download_path NOT LIKE '%downloads_1080p%'`, which excluded every
+// row whose pointer mentioned the target directory — including the 514
+// whose file is gone. That selected 47 of 588 QMG rows and made the
+// missing videos impossible to re-fetch with the tool meant to fetch them.
+//
+// The selection logic lives in src/video/downloadCandidates.js so it can be
+// tested without running a download.
 const todo = [];
 let skippedDone = 0;
 let skippedDisk = 0;
 let skippedCheckpoint = 0;
 let skippedErrored = 0;
 for (const row of allRows) {
-  const { video_id: videoId, upload_date: uploadDate } = row;
+  const { video_id: videoId } = row;
   if (checkpoint.done.some((e) => (typeof e === 'string' ? e : e.id) === videoId)) { skippedCheckpoint += 1; continue; }
   if (!retryErrored && checkpoint.errored[videoId]) { skippedErrored += 1; continue; }
   if (checkpoint.blocked.includes(videoId)) { skippedErrored += 1; continue; }
-  const expected = path.join(dlDir, `${uploadDate ? uploadDate + '_' : ''}${videoId}.mp4`);
-  if (fs.existsSync(expected) && fs.statSync(expected).size > 1024 * 1024) {
+  const onDisk = findHiresOnDisk(row, { dir: dlDir });
+  if (onDisk) {
     skippedDisk += 1;
-    finalizeRow(videoId, expected);
-    checkpoint.done.push(videoId);
+    finalizeRow(videoId, onDisk);
+    checkpoint.done.push(stampMachine(videoId));
     continue;
   }
   todo.push(row);

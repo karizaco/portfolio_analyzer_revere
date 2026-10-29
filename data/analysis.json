@@ -1,15 +1,16 @@
 {
-  "generated_at": "2026-09-19T13:59:26.060Z",
+  "generated_at": "2026-10-29T05:14:56.647Z",
   "output_root": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data",
   "probe_directory": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data",
   "screenshots_directory": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\screenshots",
   "totals": {
-    "videos_scanned": 139,
-    "total_captures": 414,
+    "videos_scanned": 140,
+    "total_captures": 416,
     "screenshots_on_disk": 0,
-    "captures_status_done": 128,
+    "captures_status_done": 129,
     "unique_screen_layouts": [
       "chart",
+      "chart_stream",
       "dmi",
       "structured_whiteboard",
       "tale_of_the_tape"
@@ -18,25 +19,28 @@
       "structured_whiteboard": 250,
       "dmi": 120,
       "chart": 36,
-      "tale_of_the_tape": 8
+      "tale_of_the_tape": 8,
+      "chart_stream": 2
     },
     "captures_per_channel": {
       "revere": 373,
-      "qmg": 41
+      "qmg": 43
     },
     "captures_with_observed_date": 278,
     "intro_card_captures": 60,
-    "whiteboard_segments_total": 234,
+    "whiteboard_segments_total": 236,
     "intro_card_segments": 40,
-    "captures_with_tickers": 269,
+    "captures_with_tickers": 271,
     "unique_tickers": [
       "APH",
       "ARKG",
       "ARM",
       "BE",
       "CF",
+      "COPX",
       "CRM",
       "DELL",
+      "DVN",
       "ETHA",
       "FANG",
       "FCX",
@@ -51,9 +55,11 @@
       "LABU",
       "LI",
       "LLY",
+      "MOS",
       "MRVL",
       "MU",
       "NBIS",
+      "NRGU",
       "NVDA",
       "OKTA",
       "ON",
@@ -83,7 +89,7 @@
       "URA",
       "ZETA"
     ],
-    "captures_with_keyframe_ts": 356,
+    "captures_with_keyframe_ts": 358,
     "unique_phashes": [
       "c691f74dc0103fe5",
       "807f01cd8705ff4d",
@@ -304,7 +310,9 @@
       "afe8fae0d240f2c8",
       "afa8f268d660f2d0",
       "afa9f2e8d230e0d8",
-      "af2cdae8d239e0c4"
+      "af2cdae8d239e0c4",
+      "bf3872a8d244f8d8",
+      "bfb972a8d221d8d0"
     ],
     "phash_collisions": 144,
     "unique_overlay_phashes": [
@@ -342,7 +350,9 @@
       "c6c63d69c3981cc7",
       "c7c03d89c39c3c67",
       "c5c09d89c99c3ce7",
-      "c7c23dc9c39c3c83"
+      "c7c23dc9c39c3c83",
+      "b9a5b94242dadf24",
+      "bd25bd4a425abf04"
     ],
     "overlay_phash_collisions": 6,
     "videos_with_keyframe_lookup_skipped": 3
@@ -356,6 +366,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -538,6 +549,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -728,6 +740,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -907,6 +920,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -1091,6 +1105,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -1273,6 +1288,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -1459,6 +1475,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -1631,6 +1648,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -1813,6 +1831,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -1995,6 +2014,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -2183,6 +2203,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -2840,6 +2861,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -3604,6 +3626,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -4359,6 +4382,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -5116,6 +5140,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -5859,6 +5884,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -6617,6 +6643,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -7275,6 +7302,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -7931,6 +7959,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -8683,6 +8712,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -9433,6 +9463,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -10179,6 +10210,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -10944,6 +10976,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -11604,6 +11637,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -12360,6 +12394,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -13131,6 +13166,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -13909,6 +13945,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -14656,6 +14693,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -15314,6 +15352,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -16082,6 +16121,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -16845,6 +16885,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -17592,6 +17633,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -18241,6 +18283,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -18983,6 +19026,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -19735,6 +19779,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -20467,6 +20512,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -21237,6 +21283,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -21969,6 +22016,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -22721,6 +22769,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -23459,6 +23508,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -24218,6 +24268,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -24978,6 +25029,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -25716,6 +25768,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -26465,6 +26518,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -27209,6 +27263,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -27980,6 +28035,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -28735,6 +28791,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -29500,6 +29557,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -30289,6 +30347,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -31022,6 +31081,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -31755,6 +31815,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -32363,6 +32424,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -33145,6 +33207,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -33886,6 +33949,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -34621,6 +34685,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -35354,6 +35419,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -36146,6 +36212,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -36912,6 +36979,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -37668,6 +37736,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -38413,6 +38482,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -39148,6 +39218,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -39901,6 +39972,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -40671,6 +40743,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -41431,6 +41504,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -42163,6 +42237,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -42911,6 +42986,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -43570,6 +43646,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -44335,6 +44412,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -45115,6 +45193,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -45856,6 +45935,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -46612,6 +46692,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -47365,6 +47446,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -48120,6 +48202,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -48876,6 +48959,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -49643,6 +49727,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -50385,6 +50470,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -51165,6 +51251,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -51908,6 +51995,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -52645,6 +52733,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -53392,6 +53481,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -54142,6 +54232,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -54886,6 +54977,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -55658,6 +55750,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -56395,6 +56488,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -57147,6 +57241,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -57895,6 +57990,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -58676,6 +58772,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -59419,6 +59516,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -60172,6 +60270,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -60930,6 +61029,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -61591,6 +61691,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -62357,6 +62458,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -63040,6 +63142,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -63794,6 +63897,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -64572,6 +64676,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -65337,6 +65442,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -66104,6 +66210,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -66762,6 +66869,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -67522,6 +67630,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -68301,6 +68410,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -69085,6 +69195,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -69836,6 +69947,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -70591,6 +70703,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -71338,6 +71451,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -72128,6 +72242,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -72641,6 +72756,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -73427,6 +73543,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -74175,6 +74292,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -74925,6 +75043,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -75577,6 +75696,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -76357,6 +76477,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -77134,6 +77255,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -77894,6 +78016,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -78645,6 +78768,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -79422,6 +79546,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -80167,6 +80292,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -80944,6 +81070,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -81742,6 +81869,7 @@
       "channel": "",
       "basename": "",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -82505,6 +82633,7 @@
       "channel": "revere",
       "basename": "revere",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -83286,6 +83415,7 @@
       "channel": "revere",
       "basename": "revere",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -84094,6 +84224,7 @@
       "channel": "revere",
       "basename": "revere",
       "prefilter_profile": "whiteboard",
+      "temporal_decay": null,
       "chart_stream_parser": false,
       "status": "done",
       "frame_counts": {
@@ -84870,6 +85001,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "done",
       "frame_counts": {
@@ -85248,6 +85380,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "review",
       "frame_counts": {
@@ -85731,6 +85864,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "done",
       "frame_counts": {
@@ -86173,6 +86307,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "done",
       "frame_counts": {
@@ -86550,6 +86685,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "review",
       "frame_counts": {
@@ -87044,6 +87180,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "review",
       "frame_counts": {
@@ -87480,6 +87617,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "review",
       "frame_counts": {
@@ -87921,6 +88059,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "done",
       "frame_counts": {
@@ -88297,6 +88436,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "review",
       "frame_counts": {
@@ -88742,6 +88882,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "review",
       "frame_counts": {
@@ -89161,6 +89302,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "review",
       "frame_counts": {
@@ -89655,6 +89797,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "review",
       "frame_counts": {
@@ -90138,6 +90281,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "done",
       "frame_counts": {
@@ -90516,6 +90660,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "review",
       "frame_counts": {
@@ -90798,6 +90943,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "review",
       "frame_counts": {
@@ -91186,6 +91332,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "review",
       "frame_counts": {
@@ -91680,6 +91827,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "done",
       "frame_counts": {
@@ -92057,6 +92205,7 @@
       "channel": "qmg",
       "basename": "qmg",
       "prefilter_profile": "chart_stream",
+      "temporal_decay": null,
       "chart_stream_parser": true,
       "status": "done",
       "frame_counts": {
@@ -92426,6 +92575,453 @@
           "timestamp_hms": "00:22:52"
         }
       ]
+    },
+    {
+      "probe_file": "20220222_20220222_x1rp33_-r9e_9d13da23_snapshot.json",
+      "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_pipeline\\downloads_1080p\\20220222_X1Rp33_-R9E.mp4",
+      "date_key": "20220222",
+      "output_kind": "snapshot",
+      "channel": "qmg",
+      "basename": "qmg",
+      "prefilter_profile": "position_table",
+      "temporal_decay": 1800,
+      "chart_stream_parser": true,
+      "status": "done",
+      "frame_counts": {
+        "sample": 452,
+        "ocr": 3,
+        "captures": 2
+      },
+      "prefilter_best": 45.23,
+      "thresholds": {
+        "strong": 6,
+        "review": 4
+      },
+      "ocr_engine_metadata": {
+        "ocr_engine": "easyocr",
+        "tesseract_version": "6.0.1",
+        "language": "eng",
+        "dpi": 300,
+        "psm": null,
+        "preserve_interword_spaces": "1",
+        "deskew": false
+      },
+      "nearest_ffmpeg_keyframe_lookups_skipped": false,
+      "nearest_ffmpeg_keyframe_pts_total": 340,
+      "captured_count": 2,
+      "captures": [
+        {
+          "timestamp": 0,
+          "timestamp_hms": "00:00:00",
+          "frame_index": 0,
+          "score": 25.07,
+          "prefilter_score": 27.93,
+          "prefilter_stats": {
+            "brightRatio": 0.011111111111111112,
+            "darkRatio": 0.955625,
+            "edgeRatio": 0.1155748710338492,
+            "horizontalComparisons": 14151,
+            "horizontalEdgeHits": 1375,
+            "horizontalEdgeRatio": 0.09716627800155465,
+            "meanLuma": 17.293680555555557,
+            "rowDensity": 11,
+            "multiColStripeCount": 1,
+            "brightColumnLeft": 0,
+            "brightColumnRight": 159,
+            "midToneRatioTicker": 0.631578947368421,
+            "stdDev": 37.46514771621693,
+            "verticalComparisons": 14151,
+            "verticalEdgeHits": 1896,
+            "verticalEdgeRatio": 0.13398346406614373,
+            "timestamp": 0
+          },
+          "ocr_confidence": 0.8773,
+          "ocr_profile": "position_table",
+          "ocr_text": "NRGU\nDVN\nMOS\nCOPX\nTQQQ\nFCX\nTSLA",
+          "ocr_text_snippet": "NRGU DVN MOS COPX TQQQ FCX TSLA",
+          "parsed_observations": [],
+          "tickers": [
+            "NRGU",
+            "DVN",
+            "MOS",
+            "COPX",
+            "TQQQ",
+            "FCX",
+            "TSLA"
+          ],
+          "phash": "bf3872a8d244f8d8",
+          "phash_overlay": "b9a5b94242dadf24",
+          "phash_region": {
+            "x": 0.78,
+            "y": 0.28,
+            "w": 0.22,
+            "h": 0.72
+          },
+          "chart_stream": {
+            "confidence": 0.8773,
+            "parse_status": "ok",
+            "position_list": [
+              "NRGU",
+              "DVN",
+              "MOS",
+              "COPX",
+              "TQQQ",
+              "FCX",
+              "TSLA"
+            ],
+            "price_action": "",
+            "tickers_rejected": 0,
+            "column_filter": {
+              "dominant_x": 1795,
+              "column_width": 24,
+              "in_list_token_count": 7
+            },
+            "bbox_filter": null,
+            "panel_gate": {
+              "panel_gate_active": true,
+              "title_row": -1,
+              "positions_header_row": -1,
+              "data_row_start": 0
+            },
+            "tickers_rejected_list": [],
+            "position_table": {
+              "discriminator": "bottom_most",
+              "title_text": "",
+              "header_text": "",
+              "title_row": -1,
+              "header_row": -1,
+              "data_row_start": 0,
+              "rows": 7,
+              "variants": [
+                "s6p4",
+                "s6p0",
+                "s8p2"
+              ],
+              "column": {
+                "left": 1795,
+                "right": 1819
+              },
+              "candidate_scores": [
+                {
+                  "left": 1792,
+                  "rows": 18,
+                  "bottom": 411,
+                  "score": 0,
+                  "title": null,
+                  "header": null,
+                  "watch": null,
+                  "tickerish_rows": 5
+                },
+                {
+                  "left": 1795,
+                  "rows": 7,
+                  "bottom": 846,
+                  "score": 0,
+                  "title": null,
+                  "header": null,
+                  "watch": null,
+                  "tickerish_rows": 5
+                },
+                {
+                  "left": 1890,
+                  "rows": 6,
+                  "bottom": 344,
+                  "score": 0,
+                  "title": null,
+                  "header": null,
+                  "watch": null,
+                  "tickerish_rows": 3
+                },
+                {
+                  "left": 1808,
+                  "rows": 4,
+                  "bottom": 398,
+                  "score": 0,
+                  "title": null,
+                  "header": null,
+                  "watch": null,
+                  "tickerish_rows": 4
+                }
+              ],
+              "decoded": [
+                {
+                  "raw": "NRGU|NRGU|NRGU",
+                  "ticker": "NRGU",
+                  "cost": 0,
+                  "confidence": 0.9974591732025146
+                },
+                {
+                  "raw": "DVN|DVN|DVN",
+                  "ticker": "DVN",
+                  "cost": 0,
+                  "confidence": 0.9961626576657865
+                },
+                {
+                  "raw": "MOS|MOS|MOS",
+                  "ticker": "MOS",
+                  "cost": 0,
+                  "confidence": 0.993699830996844
+                },
+                {
+                  "raw": "COPX|COPX|COPX",
+                  "ticker": "COPX",
+                  "cost": 0,
+                  "confidence": 0.9994686841964722
+                },
+                {
+                  "raw": "TOCQ|TOCQ|TOCQ",
+                  "ticker": "TQQQ",
+                  "cost": 0.75,
+                  "confidence": 0.8779242634773254
+                },
+                {
+                  "raw": "KX|KCX|FCX",
+                  "ticker": "FCX",
+                  "cost": 0,
+                  "confidence": 0.9477955277193371
+                },
+                {
+                  "raw": "TSLA|TSUA|TSU",
+                  "ticker": "TSLA",
+                  "cost": 0,
+                  "confidence": 0.3287011384963989
+                }
+              ]
+            }
+          },
+          "low_res_frame_path": null,
+          "nearest_ffmpeg_keyframe_ts": 0,
+          "confusion_with_nearby": [],
+          "screen_layout": "chart_stream",
+          "issue_codes": [],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-table-e2e\\snapshots\\qmg_20220222.png",
+          "observed_date": null,
+          "is_intro_card": false,
+          "score_breakdown": null
+        },
+        {
+          "timestamp": 588,
+          "timestamp_hms": "00:09:48",
+          "frame_index": 147,
+          "score": 24.96,
+          "prefilter_score": 45.23,
+          "prefilter_stats": {
+            "brightRatio": 0.011111111111111112,
+            "darkRatio": 0.9538888888888889,
+            "edgeRatio": 0.11059289096176948,
+            "horizontalComparisons": 14151,
+            "horizontalEdgeHits": 1330,
+            "horizontalEdgeRatio": 0.09398629072150379,
+            "meanLuma": 16.97861111111111,
+            "rowDensity": 12,
+            "multiColStripeCount": 3,
+            "brightColumnLeft": 0,
+            "brightColumnRight": 159,
+            "midToneRatioTicker": 0.8,
+            "stdDev": 37.81259656757386,
+            "verticalComparisons": 14151,
+            "verticalEdgeHits": 1800,
+            "verticalEdgeRatio": 0.1271994912020352,
+            "timestamp": 588
+          },
+          "ocr_confidence": 0.8679,
+          "ocr_profile": "position_table",
+          "ocr_text": "NRGU\nDVN\nMOS\nCOPX\nTQQQ\nFCX\nTSLA",
+          "ocr_text_snippet": "NRGU DVN MOS COPX TQQQ FCX TSLA",
+          "parsed_observations": [],
+          "tickers": [
+            "NRGU",
+            "DVN",
+            "MOS",
+            "COPX",
+            "TQQQ",
+            "FCX",
+            "TSLA"
+          ],
+          "phash": "bfb972a8d221d8d0",
+          "phash_overlay": "bd25bd4a425abf04",
+          "phash_region": {
+            "x": 0.78,
+            "y": 0.28,
+            "w": 0.22,
+            "h": 0.72
+          },
+          "chart_stream": {
+            "confidence": 0.8679,
+            "parse_status": "ok",
+            "position_list": [
+              "NRGU",
+              "DVN",
+              "MOS",
+              "COPX",
+              "TQQQ",
+              "FCX",
+              "TSLA"
+            ],
+            "price_action": "",
+            "tickers_rejected": 0,
+            "column_filter": {
+              "dominant_x": 1795,
+              "column_width": 24,
+              "in_list_token_count": 7
+            },
+            "bbox_filter": null,
+            "panel_gate": {
+              "panel_gate_active": true,
+              "title_row": -1,
+              "positions_header_row": -1,
+              "data_row_start": 0
+            },
+            "tickers_rejected_list": [],
+            "position_table": {
+              "discriminator": "bottom_most",
+              "title_text": "",
+              "header_text": "",
+              "title_row": -1,
+              "header_row": -1,
+              "data_row_start": 0,
+              "rows": 7,
+              "variants": [
+                "s6p4",
+                "s6p0",
+                "s8p2"
+              ],
+              "column": {
+                "left": 1795,
+                "right": 1819
+              },
+              "candidate_scores": [
+                {
+                  "left": 1792,
+                  "rows": 10,
+                  "bottom": 250,
+                  "score": -1000,
+                  "title": null,
+                  "header": null,
+                  "watch": "XWL",
+                  "tickerish_rows": 5
+                },
+                {
+                  "left": 1795,
+                  "rows": 7,
+                  "bottom": 846,
+                  "score": 0,
+                  "title": null,
+                  "header": null,
+                  "watch": null,
+                  "tickerish_rows": 5
+                },
+                {
+                  "left": 1890,
+                  "rows": 7,
+                  "bottom": 250,
+                  "score": 0,
+                  "title": null,
+                  "header": null,
+                  "watch": null,
+                  "tickerish_rows": 2
+                },
+                {
+                  "left": 1792,
+                  "rows": 5,
+                  "bottom": 411,
+                  "score": 100,
+                  "title": null,
+                  "header": "SAS",
+                  "watch": null,
+                  "tickerish_rows": 2
+                }
+              ],
+              "decoded": [
+                {
+                  "raw": "NRGU|NRGU|NRGU",
+                  "ticker": "NRGU",
+                  "cost": 0,
+                  "confidence": 0.999826967716217
+                },
+                {
+                  "raw": "DVN|DVN|DVN",
+                  "ticker": "DVN",
+                  "cost": 0,
+                  "confidence": 0.9854478256996212
+                },
+                {
+                  "raw": "MOS|MOS|MOS",
+                  "ticker": "MOS",
+                  "cost": 0,
+                  "confidence": 0.9912413965445117
+                },
+                {
+                  "raw": "COPX|COPX|COPX",
+                  "ticker": "COPX",
+                  "cost": 0,
+                  "confidence": 0.9989749789237976
+                },
+                {
+                  "raw": "TQCQ|TOCQ|TOCQ",
+                  "ticker": "TQQQ",
+                  "cost": 0.5,
+                  "confidence": 0.4693150818347931
+                },
+                {
+                  "raw": "FX|FCX|FCX",
+                  "ticker": "FCX",
+                  "cost": 0,
+                  "confidence": 0.980301209753242
+                },
+                {
+                  "raw": "TSLA|TSUA|TSU",
+                  "ticker": "TSLA",
+                  "cost": 0,
+                  "confidence": 0.6502946019172668
+                }
+              ]
+            }
+          },
+          "low_res_frame_path": null,
+          "nearest_ffmpeg_keyframe_ts": 586.666667,
+          "confusion_with_nearby": [],
+          "screen_layout": "chart_stream",
+          "issue_codes": [],
+          "output_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-table-e2e\\snapshots\\qmg_20220222_2.png",
+          "observed_date": null,
+          "is_intro_card": false,
+          "score_breakdown": null
+        }
+      ],
+      "whiteboard_segments": [
+        {
+          "capture_count": 1,
+          "end_ts": 0,
+          "end_hms": "00:00:00",
+          "is_intro_card": false,
+          "layout": "chart_stream",
+          "peak_frame_index": 0,
+          "peak_score": 25.07,
+          "start_hms": "00:00:00",
+          "start_ts": 0
+        },
+        {
+          "capture_count": 1,
+          "end_ts": 588,
+          "end_hms": "00:09:48",
+          "is_intro_card": false,
+          "layout": "chart_stream",
+          "peak_frame_index": 147,
+          "peak_score": 24.96,
+          "start_hms": "00:09:48",
+          "start_ts": 588
+        }
+      ],
+      "unique_layouts": [
+        "chart_stream"
+      ],
+      "top_candidate": {
+        "timestamp": 0,
+        "score": 25.07,
+        "screen_layout": "chart_stream"
+      },
+      "top_rejected_candidates": []
     }
   ]
 }

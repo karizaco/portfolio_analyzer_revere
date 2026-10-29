@@ -1,6 +1,9 @@
 {
   "run_tag": "ocr-20260915-p4",
-  "generated_at": "2026-09-15T09:52:10.208Z",
+  "run_tags": [
+    "ocr-20260915-p4"
+  ],
+  "generated_at": "2026-10-29T04:56:23.303Z",
   "totals": {
     "videos": 6,
     "videos_with_captures": 6,
@@ -17,7 +20,11 @@
       "daily": 4,
       "weekend_review": 2
     },
+    "channel_counts": {
+      "revere": 6
+    },
     "unique_tickers": 24,
+    "unique_chart_stream_tickers": 0,
     "top_tickers": [
       {
         "ticker": "FCX",
@@ -124,6 +131,8 @@
       "video_id": "bpeges-erl0",
       "video_type": "daily",
       "video_type_label": "Daily",
+      "channel": "revere",
+      "output_kind": "6372125f",
       "captures": 3,
       "max_score": 97.69,
       "mean_score": 97.6,
@@ -152,6 +161,7 @@
         "TQQQ",
         "UPRO"
       ],
+      "chart_stream_tickers": [],
       "segments": 3
     },
     {
@@ -159,6 +169,8 @@
       "video_id": "trp_szvuqhu",
       "video_type": "weekend_review",
       "video_type_label": "Weekend",
+      "channel": "revere",
+      "output_kind": "053a9727",
       "captures": 3,
       "max_score": 45.58,
       "mean_score": 44.74,
@@ -172,6 +184,7 @@
       "ticker_union": [
         "DELL"
       ],
+      "chart_stream_tickers": [],
       "segments": 1
     },
     {
@@ -179,6 +192,8 @@
       "video_id": "wuc1mdt6wx8",
       "video_type": "daily",
       "video_type_label": "Daily",
+      "channel": "revere",
+      "output_kind": "acf1043e",
       "captures": 3,
       "max_score": 100.5,
       "mean_score": 100.34,
@@ -212,6 +227,7 @@
         "UPRO",
         "URA"
       ],
+      "chart_stream_tickers": [],
       "segments": 1
     },
     {
@@ -219,6 +235,8 @@
       "video_id": "zbcqw4xdvxo",
       "video_type": "daily",
       "video_type_label": "Daily",
+      "channel": "revere",
+      "output_kind": "4628e382",
       "captures": 3,
       "max_score": 108.18,
       "mean_score": 101.49,
@@ -251,6 +269,7 @@
         "UPRO",
         "URA"
       ],
+      "chart_stream_tickers": [],
       "segments": 2
     },
     {
@@ -258,6 +277,8 @@
       "video_id": "0_yedfx1atu",
       "video_type": "daily",
       "video_type_label": "Daily",
+      "channel": "revere",
+      "output_kind": "f23d62e3",
       "captures": 3,
       "max_score": 104.42,
       "mean_score": 104.42,
@@ -285,6 +306,7 @@
         "TQQQ",
         "UPRO"
       ],
+      "chart_stream_tickers": [],
       "segments": 1
     },
     {
@@ -292,6 +314,8 @@
       "video_id": "7t50zib7-bk",
       "video_type": "weekend_review",
       "video_type_label": "Weekend",
+      "channel": "revere",
+      "output_kind": "dcccf42e",
       "captures": 3,
       "max_score": 49.58,
       "mean_score": 49.26,
@@ -305,6 +329,7 @@
       "ticker_union": [
         "BE"
       ],
+      "chart_stream_tickers": [],
       "segments": 2
     }
   ],

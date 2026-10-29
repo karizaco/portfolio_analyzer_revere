@@ -11,6 +11,16 @@
 # the other way round is not merely mislabelled — it teaches the decoder
 # that the WRONG substitution is the cheap one.
 #
+# O,D is the one row added when the seed lexicon's OCR-VARIANT rows were
+# deleted (2026-10-29). Those rows listed the garbled FORM (MNOY) as if it
+# were a ticker, so a read of MNDY was published verbatim as MNOY — a false
+# positive — and never competed with MNDY. With the rows gone, the decoder
+# needs to be able to explain the O-for-D substitution on its own. Measured
+# over every single-substitution read of every lexicon ticker (21,029 of
+# them, 3,549 of which contain an O): this row changes NO existing decode,
+# loses none, and adds 38 correct repairs (MNOY->MNDY@0.625, AMO->AMD@0.625).
+# Pinned by test/lexiconVariants.test.js.
+#
 # PROVENANCE: these rows were transcribed from the misreads recorded in
 # docs/qmg-positions-layout-findings.md, not machine-learned from a corpus.
 # The corpus the learning tool reads (data/qmg_position_corpus.json) is
@@ -32,4 +42,5 @@ A,Q,1
 I,N,1
 L,I,1
 O,G,1
+O,D,1
 T,I,1
