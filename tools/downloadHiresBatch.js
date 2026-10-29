@@ -12,11 +12,24 @@
 // pipeline picks them up automatically.
 //
 // Resumability:
-//   1. SQLite `status='done'` rows are skipped.
-//   2. Already-on-disk hires mp4s are skipped (also flipped to `status='done'`).
+//   1. SQLite `status='done'` rows are skipped — a `done` row has been OCR'd,
+//      so there is nothing here for a downloader to do.
+//   2. Already-on-disk hires mp4s are skipped. The row's status is set to
+//      `scanning`, NOT to `done`: `scanning` is the state that means "the
+//      media is on disk, the OCR queue has not run on it yet", and it is what
+//      tools/runAllOcr.js selects.
 //   3. A checkpoint file (`_download_checkpoint.json`) remembers which ids
 //      have succeeded and which have errored. Re-running the script mid-batch
 //      picks up exactly where it left off, even after a hard kill.
+//
+// THE TRAP IN RULE 1
+// `done` records that a pass finished. It says nothing about whether the file
+// is still on disk. A row that was OCR'd and whose mp4 was later deleted is
+// therefore skipped here forever: neither re-fetched nor reported as
+// missing. That was true of 21 rows on 2026-10-29 — all Revere, all pointing
+// into the `downloads/` directory the 2026-10-21 cleanup removed.
+// `tools/reconcileCatalogStatus.js` is the repair; see src/video/videoStatus.js
+// for what each status means.
 //
 // Usage:
 //   node tools/downloadHiresBatch.js                  # 30 most-recent at 720p
@@ -28,7 +41,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
-const { toPortablePath } = require('../src/video/downloadCandidates');
+const { buildDownloadCandidateSql, toPortablePath } = require('../src/video/downloadCandidates');
 
 const argv = process.argv.slice(2);
 const limit = Number(readFlag(argv, '--limit')) || 30;
@@ -85,15 +98,13 @@ const py = process.platform === 'win32' ? 'py' : 'python3';
 const pathCondition = onlyIds.size
     ? "(download_path IS NOT NULL OR download_path = '')"
     : "download_path IS NOT NULL";
+const candidateSql = buildDownloadCandidateSql({ pathCondition });
 const script = `
 import json, sqlite3, sys
 c = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
 c.row_factory = sqlite3.Row
 rows = c.execute(
-    "SELECT video_id, upload_date, title, download_path FROM videos "
-    "WHERE status IN ('pending','scanning','error') AND ${pathCondition} "
-    "AND upload_date IS NOT NULL AND upload_date != 'NA' "
-    "ORDER BY upload_date DESC, video_id ASC"
+    ${JSON.stringify(candidateSql)}
 ).fetchall()
 out = [dict(r) for r in rows]
 json.dump(out, sys.stdout)

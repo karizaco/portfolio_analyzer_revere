@@ -440,6 +440,7 @@ Results: `data/qmg_alt_batch_results.json`.
 
 ### Download
 - `src/video/downloadCandidates.js` — the 1080p candidate query + on-disk check + the JS half of the portable-path rule (see below)
+- `src/video/videoStatus.js` — what each `videos.status` value means, who writes it, and the downloaders' work lists (see below)
 - `tools/reportPartialDownloads.py` — reports the orphan `.part` files; never deletes (see below)
 - `tools/reconcileCatalogStatus.js` — reconciles `videos.status` against the filesystem (see below)
 
@@ -741,31 +742,48 @@ node tools/reconcileCatalogStatus.js --execute # also reset the false claims
 node tools/reconcileCatalogStatus.js --json
 ```
 
-### The `status` column is not one thing — `tools/reconcileCatalogStatus.js`
+### The `status` column is not one thing — `src/video/videoStatus.js`
 
-`videos.status` is written by **three tools that mean three different things** by
-`done`:
+`videos.status` is one column with six writers, and the two that matter most
+disagree about what `done` means. The state machine, as it actually behaves:
 
-| writer | `done` means |
-|---|---|
-| `tools/whiteboard_worker.py` | a scan ran and an artifact was written (it also sets `output_path`) |
-| `tools/runAllOcr.js` | the OCR pass finished (it writes a probe log, not `output_path`) |
-| `tools/downloadHiresBatch.js` | the media is on disk |
+| status | means | written by |
+|---|---|---|
+| `pending` | the catalog row exists; the media has not been fetched | the catalog upsert |
+| `downloading` | a download has been claimed and has not finished | `whiteboard_worker.py command_download` |
+| `scanning` | **the media is on disk**; nothing has been scanned yet | **both downloaders**, `whiteboard_worker.py command_download` |
+| `review` | the scan found something that needs a human | `whiteboard_worker.py command_scan` |
+| `done` | an OCR pass finished — **or** a scan wrote an artifact | `runAllOcr.js`, `whiteboard_worker.py command_scan` |
+| `no_match` | the scan found nothing | `whiteboard_worker.py command_scan` |
+| `error` | the pass failed — **including "the media file is missing"** | `whiteboard_worker.py` |
+
+The order matters. **`scanning` is the state a downloader leaves a video in
+once the file is on disk**, and it is also the queue both OCR paths read — so
+the downloaders and the OCR paths are not independent. Neither downloader ever
+writes `done`; both write `scanning`.
 
 So the column cannot answer "has this video been processed?" on its own, and it
 certainly cannot answer "is this video downloaded?".
 
-**Both downloaders exclude `done` from their work.** Their candidate queries are
+**Both downloaders exclude `done` from their work**, because a `done` row is
+supposed to be finished:
 
 ```sql
 WHERE status IN ('pending','scanning','error')   -- downloadHiresBatch.js
 WHERE status IN ('pending','scanning')           -- downloadCandidates.js
 ```
 
-A row that says `done` while its media has since been deleted is therefore
+But `done` records that a *pass* finished — it says nothing about the file. A
+row that says `done` while its media has since been deleted is therefore
 invisible to every downloader: it is neither re-fetched nor reported as missing.
 **21 rows** were in that state on 2026-10-29 — all Revere, all pointing into the
-deleted `downloads/` directory.
+`downloads/` directory the 2026-10-21 cleanup removed.
+
+The asymmetry that makes this survivable for one path and not the other:
+`whiteboard_worker.py command_scan` marks a row `error` when its media file is
+missing, and `error` **is** a download candidate — so the worker heals itself on
+the next pass. `runAllOcr.js` flips `scanning` → `done` without looking at the
+filesystem, so nothing ever notices a file that vanished afterwards.
 
 `tools/reconcileCatalogStatus.js` reports the reconciliation and, with
 `--execute`, resets the false claims back to `pending` so the downloaders can
@@ -793,6 +811,22 @@ themselves, so `_Vn-EBl95hes.mp4` is the video `Vn-EBl95hes` and
 **The reset is safe for the OCR pipeline.** `runAllOcr.js` selects
 `status='scanning'`, so a reset row only re-enters the OCR pipeline after a
 downloader has fetched it again and set it back to `scanning`.
+
+**The four artifact columns are empty.** `output_path`, `review_reason`,
+`selected_timestamp` and `selected_score` are written **only** by
+`whiteboard_worker.py command_scan`, which has never run against this catalog
+— the Revere OCR goes through `runAllOcr.js`, which writes a probe log instead.
+So `status='done'` points at **no artifact through the database**; the artifact
+path lives in the probe log, and the probe directories are pruned (3 most
+recent per family) while the catalog is permanent.
+
+**The work lists come from one place.** `src/video/videoStatus.js` holds the
+meanings, the writers and the candidate status lists; both downloaders build
+their SQL filter from it, so they cannot drift apart.
+`test/catalogStatusContract.test.js` pins the contract: the schema's CHECK
+constraint against the module's list, the downloaders' filters against the
+module's, and the invariant that a `scanning` or `done` row has a
+`download_path`.
 
 Pinned by `test/reconcileCatalogStatus.test.js`. Its shipped-catalog test needs
 the filesystem, so it **skips on a fresh clone** — the media is not in git,

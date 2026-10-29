@@ -5,27 +5,26 @@
 //
 // WHY THIS EXISTS
 //
-// `videos.status` is written by three tools that mean three different things
-// by it:
+// `videos.status` cannot answer "is this video downloaded?". It is written by
+// six tools, and `done` in particular means two different things:
 //
-//   tools/whiteboard_worker.py   'done' = "scanned, an artifact was written"
-//                                            (also sets output_path,
-//                                            selected_timestamp, selected_score)
 //   tools/runAllOcr.js           'done' = "the OCR pass finished"
 //                                            (writes a probe log, not output_path)
-//   tools/downloadHiresBatch.js  'done' = "the media is on disk"
+//   tools/whiteboard_worker.py   'done' = "the scan wrote an artifact"
+//                                            (also sets output_path,
+//                                            selected_timestamp, selected_score)
 //
-// So the column cannot answer "has this video been processed?" on its own --
-// and it certainly cannot answer "is this video downloaded?".
+// The downloaders, meanwhile, leave a row in `scanning` once its media is on
+// disk -- they never write `done`. So `done` says a pass finished, and says
+// nothing at all about the file.
 //
-// Worse, both downloaders select their work with
-//
-//   WHERE status IN ('pending','scanning','error')
-//
-// which EXCLUDES 'done'. A row that says 'done' but whose media has since
-// been deleted is therefore invisible to every downloader: it is neither
-// re-fetched nor reported as missing. Measured on 2026-10-29: **23 rows**,
-// all Revere, all pointing into the deleted `downloads/` directory.
+// Worse, both downloaders select their work with a status filter that
+// EXCLUDES 'done', because a `done` row is supposed to be finished. A row
+// that says 'done' but whose media has since been deleted is therefore
+// invisible to every downloader: it is neither re-fetched nor reported as
+// missing. Measured on 2026-10-29: **21 rows** were in that state -- all
+// Revere, all pointing into the `downloads/` directory the 2026-10-21 cleanup
+// removed.
 //
 // This tool reports what the catalog claims against what is on disk, and with
 // `--execute` it resets the claims that are false. The reset is the whole
@@ -36,6 +35,9 @@
 // media is also looked for under the name the downloader itself writes
 // (`<upload_date>_<video_id>.mp4`). A file can be on disk with no pointer
 // naming it.
+//
+// The meanings of the status values are written down once, in
+// src/video/videoStatus.js.
 //
 // Usage:
 //   node tools/reconcileCatalogStatus.js              # report only
@@ -51,6 +53,7 @@ process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
 const { resolveCatalogPath } = require('../src/video/downloadCandidates');
+const { STATUS } = require('../src/video/videoStatus');
 
 const ROOT = path.resolve(__dirname, '..');
 const DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
@@ -66,8 +69,15 @@ const MEDIA_ROOT = path.join('data', 'video_pipeline');
 // A download smaller than this is a truncated file, not a video.
 const MIN_FILE_BYTES = 1024 * 1024;
 
-/** The status values that mean "this video still needs its media fetched". */
-const ACTIVE_STATUSES = new Set(['pending', 'scanning']);
+/**
+ * The status values that mean "this video still needs its media fetched".
+ *
+ * `error` is deliberately not here: it is used for a lot of things, and only
+ * one of them is a missing file. The reconciliation cannot tell which, so it
+ * leaves those rows for a human -- the report calls them "review / no_match
+ * / error".
+ */
+const ACTIVE_STATUSES = new Set([STATUS.PENDING, STATUS.SCANNING]);
 
 /**
  * The name a downloader writes a video under.
