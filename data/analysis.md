@@ -1,9 +1,9 @@
 # OCR Video Scan Analysis — data
 
-**Output root:** [C:\Users\admin\Projects\portfolio_analyzer_revere\data](C:\Users\admin\Projects\portfolio_analyzer_revere\data)  
-**Probe directory:** `C:\Users\admin\Projects\portfolio_analyzer_revere\data`  
-**Saved screenshots:** `C:\Users\admin\Projects\portfolio_analyzer_revere\data\screenshots` (0 PNGs)  
-**Generated at:** 2026-10-29T05:14:56.647Z  
+**Output root:** [data](.)  
+**Probe directory:** `data`  
+**Saved screenshots:** `data/screenshots` (0 PNGs)  
+**Generated at:** 2026-10-29T10:26:06.310Z  
 
 ## Totals
 
@@ -189,11 +189,11 @@
 | 5 | 00:21:28 | 97.3 | dmi | — | · | — | — | — | >> TALE OF THE TAPE — TUE, 11/15/22 << * MARKET STATE: BEAR MARKET RALLY > R * H… |
 
 **Saved files:**
-- [`20260912_ps_36.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_36.png)
-- [`20260912_ps_37.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_37.png)
-- [`20260912_ps_38.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_38.png)
-- [`20260912_ps_39.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_39.png)
-- [`20260912_ps_40.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_40.png)
+- [`20260912_ps_36.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_36.png)
+- [`20260912_ps_37.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_37.png)
+- [`20260912_ps_38.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_38.png)
+- [`20260912_ps_39.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_39.png)
+- [`20260912_ps_40.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_40.png)
 
 ### 2. Going Nowhere Day 12 Can These Recent Breakouts Offer Hope to Bu.mp4
 
@@ -211,11 +211,11 @@
 | 5 | 00:25:36 | 82.3 | tale_of_the_tape | — | · | — | — | — | > TALE OF THE TAPE — WED, 1/4/23 << ' >\| * MARKEY STATE: * HEADWINDS: USD, INFL… |
 
 **Saved files:**
-- [`20260912_ps_46.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_46.png)
-- [`20260912_ps_47.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_47.png)
-- [`20260912_ps_48.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_48.png)
-- [`20260912_ps_49.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_49.png)
-- [`20260912_ps_50.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_50.png)
+- [`20260912_ps_46.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_46.png)
+- [`20260912_ps_47.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_47.png)
+- [`20260912_ps_48.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_48.png)
+- [`20260912_ps_49.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_49.png)
+- [`20260912_ps_50.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_50.png)
 
 ### 3. INDEX FALL ON MID EAST TENSIONS AS MKT AWAITS CPI PPI SPCX AMD I.mp4
 
@@ -233,11 +233,11 @@
 | 5 | 00:08:16 | 100.4 | structured_whiteboard | — | · | — | — | — | >> TALE OF THE TAPE ~ TUESDAY, SEPTEMBER 8, 2026 << * MARKET STATE: UPTREND *STO… |
 
 **Saved files:**
-- [`20260912_ps_56.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_56.png)
-- [`20260912_ps_57.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_57.png)
-- [`20260912_ps_58.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_58.png)
-- [`20260912_ps_59.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_59.png)
-- [`20260912_ps_60.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_60.png)
+- [`20260912_ps_56.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_56.png)
+- [`20260912_ps_57.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_57.png)
+- [`20260912_ps_58.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_58.png)
+- [`20260912_ps_59.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_59.png)
+- [`20260912_ps_60.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_60.png)
 
 ### 4. Indexes Log a Negative Reversal...Is it Normal Action.mp4
 
@@ -255,11 +255,11 @@
 | 5 | 00:14:00 | 92.4 | dmi | — | · | — | — | — | 2> TALE OF THE TAPE - MON, 11/14/22 << * MARKET STATE: BEAR MARKET RALLY > B * H… |
 
 **Saved files:**
-- [`20260912_ps_66.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_66.png)
-- [`20260912_ps_67.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_67.png)
-- [`20260912_ps_68.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_68.png)
-- [`20260912_ps_69.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_69.png)
-- [`20260912_ps_70.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_70.png)
+- [`20260912_ps_66.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_66.png)
+- [`20260912_ps_67.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_67.png)
+- [`20260912_ps_68.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_68.png)
+- [`20260912_ps_69.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_69.png)
+- [`20260912_ps_70.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_70.png)
 
 ### 5. OIL YIELDS AND GEOPOLITICAL TENSIONS CONTINUE TO ACT AS A HEADWI.mp4
 
@@ -277,11 +277,11 @@
 | 5 | 00:06:36 | 119.6 | structured_whiteboard | — | · | — | — | — | ® Preview Flo ER View Go Tools Window Hep CG ®O ac dl #0 Lm TQ 8 8 Wedteps S0ePM… |
 
 **Saved files:**
-- [`20260912_ps_71.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_71.png)
-- [`20260912_ps_72.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_72.png)
-- [`20260912_ps_73.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_73.png)
-- [`20260912_ps_74.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_74.png)
-- [`20260912_ps_75.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_75.png)
+- [`20260912_ps_71.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_71.png)
+- [`20260912_ps_72.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_72.png)
+- [`20260912_ps_73.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_73.png)
+- [`20260912_ps_74.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_74.png)
+- [`20260912_ps_75.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_75.png)
 
 ### 6. Second Straight Down Day...Here are the Key Levels That Bulls Ne.mp4
 
@@ -299,11 +299,11 @@
 | 5 | 00:15:40 | 87.6 | dmi | — | · | — | — | — | > TALE OF THE TAPE — MON, 2/6/23 << ’ * MARKET STATE: UPTREND 5 * HEADWINDS: INF… |
 
 **Saved files:**
-- [`20260912_ps_31.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_31.png)
-- [`20260912_ps_32.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_32.png)
-- [`20260912_ps_33.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_33.png)
-- [`20260912_ps_34.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_34.png)
-- [`20260912_ps_35.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_35.png)
+- [`20260912_ps_31.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_31.png)
+- [`20260912_ps_32.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_32.png)
+- [`20260912_ps_33.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_33.png)
+- [`20260912_ps_34.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_34.png)
+- [`20260912_ps_35.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_35.png)
 
 ### 7. SELECT LEADERS STANDOUT AS INDEXES SNAP BACK DESPITE HOT CPI PRI.mp4
 
@@ -321,11 +321,11 @@
 | 5 | 00:20:48 | 104.4 | structured_whiteboard | — | · | — | — | — | > TALE OF THE TAPE — THURSDAY, SEPTEMBER 11, 2026 << * MARKET STATE: *STOINDEXES… |
 
 **Saved files:**
-- [`20260912_ps_26.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_26.png)
-- [`20260912_ps_27.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_27.png)
-- [`20260912_ps_28.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_28.png)
-- [`20260912_ps_29.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_29.png)
-- [`20260912_ps_30.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_30.png)
+- [`20260912_ps_26.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_26.png)
+- [`20260912_ps_27.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_27.png)
+- [`20260912_ps_28.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_28.png)
+- [`20260912_ps_29.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_29.png)
+- [`20260912_ps_30.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_30.png)
 
 ### 8. Split Decision Day As Both Bulls AND Bears Have Mixed Emotions.mp4
 
@@ -343,11 +343,11 @@
 | 5 | 00:18:00 | 95.1 | dmi | — | · | — | — | — | >> TALE OF THE TAPE - THUR, 11/17/22 << * MARKET STATE: BEAR MARKET RALLY 5 \| *… |
 
 **Saved files:**
-- [`20260912_ps_76.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_76.png)
-- [`20260912_ps_77.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_77.png)
-- [`20260912_ps_78.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_78.png)
-- [`20260912_ps_79.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_79.png)
-- [`20260912_ps_80.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_80.png)
+- [`20260912_ps_76.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_76.png)
+- [`20260912_ps_77.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_77.png)
+- [`20260912_ps_78.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_78.png)
+- [`20260912_ps_79.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_79.png)
+- [`20260912_ps_80.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_80.png)
 
 ### 9. Thanksgiving Week Kicks Off With a Yawn But We Did Add to a Posi.mp4
 
@@ -365,11 +365,11 @@
 | 5 | 00:15:00 | 93.4 | dmi | — | · | — | — | — | >> TALE OF THE TAPE — MON, 11/21/22 << * MARKET STATE: BEAR MARKET RALLY 2f HEAD… |
 
 **Saved files:**
-- [`20260912_ps_86.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_86.png)
-- [`20260912_ps_87.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_87.png)
-- [`20260912_ps_88.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_88.png)
-- [`20260912_ps_89.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_89.png)
-- [`20260912_ps_90.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_90.png)
+- [`20260912_ps_86.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_86.png)
+- [`20260912_ps_87.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_87.png)
+- [`20260912_ps_88.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_88.png)
+- [`20260912_ps_89.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_89.png)
+- [`20260912_ps_90.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_90.png)
 
 ### 10. THE BIG SHOW...The Sector Rotation Rally Edition.mp4
 
@@ -387,11 +387,11 @@
 | 5 | 00:20:16 | 76.6 | tale_of_the_tape | — | · | — | — | — | ja Brose @ ER Dc voroy PL bewdend @ © 2 - © x Fle Home et Daw Owign Lyout Adee M… |
 
 **Saved files:**
-- [`20260912_ps_81.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_81.png)
-- [`20260912_ps_82.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_82.png)
-- [`20260912_ps_83.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_83.png)
-- [`20260912_ps_84.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_84.png)
-- [`20260912_ps_85.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260912/fix-final/screenshots/20260912_ps_85.png)
+- [`20260912_ps_81.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_81.png)
+- [`20260912_ps_82.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_82.png)
+- [`20260912_ps_83.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_83.png)
+- [`20260912_ps_84.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_84.png)
+- [`20260912_ps_85.png`](video_scan_20260912/fix-final/screenshots/20260912_ps_85.png)
 
 ### 11. 20260509_M0pV73RV2qo.mp4
 
@@ -423,8 +423,8 @@
 | 1 | dmi | 2 | 00:00:32 | 00:01:36 | 27.8 | ✓ |
 
 **Saved files:**
-- [`20260509_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260509_ps.png)
-- [`20260509_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260509_ps_2.png)
+- [`20260509_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260509_ps.png)
+- [`20260509_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260509_ps_2.png)
 
 ### 12. 20260511_KLXYB7IMwPI.mp4
 
@@ -459,9 +459,9 @@
 | 3 | structured_whiteboard | 1 | 00:08:24 | 00:08:24 | 75.4 | · |
 
 **Saved files:**
-- [`20260511_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260511_ps.png)
-- [`20260511_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260511_ps_2.png)
-- [`20260511_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260511_ps_3.png)
+- [`20260511_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260511_ps.png)
+- [`20260511_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260511_ps_2.png)
+- [`20260511_ps_3.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260511_ps_3.png)
 
 ### 13. 20260512_bEidyFtV-lY.mp4
 
@@ -495,9 +495,9 @@
 | 2 | structured_whiteboard | 2 | 00:06:48 | 00:07:48 | 100.2 | · |
 
 **Saved files:**
-- [`20260512_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260512_ps.png)
-- [`20260512_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260512_ps_2.png)
-- [`20260512_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260512_ps_3.png)
+- [`20260512_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260512_ps.png)
+- [`20260512_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260512_ps_2.png)
+- [`20260512_ps_3.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260512_ps_3.png)
 
 ### 14. 20260513_EkcshOhf-bU.mp4
 
@@ -531,9 +531,9 @@
 | 2 | dmi | 1 | 00:11:48 | 00:11:48 | 55.7 | · |
 
 **Saved files:**
-- [`20260513_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260513_ps.png)
-- [`20260513_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260513_ps_2.png)
-- [`20260513_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260513_ps_3.png)
+- [`20260513_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260513_ps.png)
+- [`20260513_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260513_ps_2.png)
+- [`20260513_ps_3.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260513_ps_3.png)
 
 ### 15. 20260514_-e2AV8iAAFw.mp4
 
@@ -566,9 +566,9 @@
 | 1 | structured_whiteboard | 3 | 00:04:08 | 00:05:44 | 99.6 | · |
 
 **Saved files:**
-- [`20260514_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260514_ps.png)
-- [`20260514_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260514_ps_2.png)
-- [`20260514_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260514_ps_3.png)
+- [`20260514_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260514_ps.png)
+- [`20260514_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260514_ps_2.png)
+- [`20260514_ps_3.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260514_ps_3.png)
 
 ### 16. 20260515_n89eBEO-wdo.mp4
 
@@ -602,9 +602,9 @@
 | 2 | dmi | 2 | 00:05:48 | 00:06:36 | 90.1 | ✓ |
 
 **Saved files:**
-- [`20260515_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260515_ps.png)
-- [`20260515_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260515_ps_2.png)
-- [`20260515_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260515_ps_3.png)
+- [`20260515_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260515_ps.png)
+- [`20260515_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260515_ps_2.png)
+- [`20260515_ps_3.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260515_ps_3.png)
 
 ### 17. 20260516_xYK7t3tzrP0.mp4
 
@@ -636,8 +636,8 @@
 | 1 | dmi | 2 | 00:00:32 | 00:01:36 | 42.4 | ✓ |
 
 **Saved files:**
-- [`20260516_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260516_ps.png)
-- [`20260516_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260516_ps_2.png)
+- [`20260516_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260516_ps.png)
+- [`20260516_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260516_ps_2.png)
 
 ### 18. 20260518_pZbcUI1I3cs.mp4
 
@@ -669,8 +669,8 @@
 | 1 | structured_whiteboard | 2 | 00:04:12 | 00:05:00 | 86.5 | · |
 
 **Saved files:**
-- [`20260518_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260518_ps.png)
-- [`20260518_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260518_ps_2.png)
+- [`20260518_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260518_ps.png)
+- [`20260518_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260518_ps_2.png)
 
 ### 19. 20260519_KObSlgssKJA.mp4
 
@@ -703,9 +703,9 @@
 | 1 | structured_whiteboard | 3 | 00:04:24 | 00:06:12 | 101.6 | · |
 
 **Saved files:**
-- [`20260519_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260519_ps.png)
-- [`20260519_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260519_ps_2.png)
-- [`20260519_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260519_ps_3.png)
+- [`20260519_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260519_ps.png)
+- [`20260519_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260519_ps_2.png)
+- [`20260519_ps_3.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260519_ps_3.png)
 
 ### 20. 20260520_8bPIklobs0E.mp4
 
@@ -738,9 +738,9 @@
 | 1 | structured_whiteboard | 3 | 00:16:00 | 00:18:00 | 72.5 | · |
 
 **Saved files:**
-- [`20260520_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260520_ps.png)
-- [`20260520_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260520_ps_2.png)
-- [`20260520_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260520_ps_3.png)
+- [`20260520_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260520_ps.png)
+- [`20260520_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260520_ps_2.png)
+- [`20260520_ps_3.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260520_ps_3.png)
 
 ### 21. 20260521_Zv9NK2CvI-Q.mp4
 
@@ -773,9 +773,9 @@
 | 1 | dmi | 3 | 00:04:48 | 00:06:36 | 89.1 | · |
 
 **Saved files:**
-- [`20260521_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260521_ps.png)
-- [`20260521_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260521_ps_2.png)
-- [`20260521_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260521_ps_3.png)
+- [`20260521_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260521_ps.png)
+- [`20260521_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260521_ps_2.png)
+- [`20260521_ps_3.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260521_ps_3.png)
 
 ### 22. 20260522_Ax8XWcCgEnE.mp4
 
@@ -809,9 +809,9 @@
 | 2 | structured_whiteboard | 1 | 00:13:00 | 00:13:00 | 92.9 | · |
 
 **Saved files:**
-- [`20260522_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260522_ps.png)
-- [`20260522_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260522_ps_2.png)
-- [`20260522_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260522_ps_3.png)
+- [`20260522_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260522_ps.png)
+- [`20260522_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260522_ps_2.png)
+- [`20260522_ps_3.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260522_ps_3.png)
 
 ### 23. 20260523_ZkyDXXe0XkQ.mp4
 
@@ -843,8 +843,8 @@
 | 1 | dmi | 2 | 00:00:32 | 00:01:36 | 20.5 | · |
 
 **Saved files:**
-- [`20260523_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260523_ps.png)
-- [`20260523_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260523_ps_2.png)
+- [`20260523_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260523_ps.png)
+- [`20260523_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260523_ps_2.png)
 
 ### 24. 20260526_VftAN3ONxSM.mp4
 
@@ -878,9 +878,9 @@
 | 2 | structured_whiteboard | 1 | 00:13:20 | 00:13:20 | 94.1 | · |
 
 **Saved files:**
-- [`20260526_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260526_ps.png)
-- [`20260526_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260526_ps_2.png)
-- [`20260526_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260526_ps_3.png)
+- [`20260526_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260526_ps.png)
+- [`20260526_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260526_ps_2.png)
+- [`20260526_ps_3.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260526_ps_3.png)
 
 ### 25. 20260527_BqyY-stYKfU.mp4
 
@@ -915,9 +915,9 @@
 | 3 | structured_whiteboard | 1 | 00:05:36 | 00:05:36 | 96.9 | ✓ |
 
 **Saved files:**
-- [`20260527_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260527_ps.png)
-- [`20260527_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260527_ps_2.png)
-- [`20260527_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260527_ps_3.png)
+- [`20260527_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260527_ps.png)
+- [`20260527_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260527_ps_2.png)
+- [`20260527_ps_3.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260527_ps_3.png)
 
 ### 26. 20260528_tvF1GD_veWw.mp4
 
@@ -952,9 +952,9 @@
 | 3 | dmi | 1 | 00:05:48 | 00:05:48 | 67.6 | · |
 
 **Saved files:**
-- [`20260528_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260528_ps.png)
-- [`20260528_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260528_ps_2.png)
-- [`20260528_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260528_ps_3.png)
+- [`20260528_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260528_ps.png)
+- [`20260528_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260528_ps_2.png)
+- [`20260528_ps_3.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260528_ps_3.png)
 
 ### 27. 20260529_xEnilqUfPsk.mp4
 
@@ -987,9 +987,9 @@
 | 1 | structured_whiteboard | 3 | 00:07:40 | 00:09:00 | 88.4 | · |
 
 **Saved files:**
-- [`20260529_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260529_ps.png)
-- [`20260529_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260529_ps_2.png)
-- [`20260529_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260529_ps_3.png)
+- [`20260529_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260529_ps.png)
+- [`20260529_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260529_ps_2.png)
+- [`20260529_ps_3.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260529_ps_3.png)
 
 ### 28. 20260530_2wKnKIPywLc.mp4
 
@@ -1021,8 +1021,8 @@
 | 1 | dmi | 2 | 00:00:36 | 00:01:48 | 32.8 | · |
 
 **Saved files:**
-- [`20260530_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260530_ps.png)
-- [`20260530_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260530_ps_2.png)
+- [`20260530_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260530_ps.png)
+- [`20260530_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260530_ps_2.png)
 
 ### 29. 20260601_RkjvpdjPlQQ.mp4
 
@@ -1056,9 +1056,9 @@
 | 2 | structured_whiteboard | 1 | 00:11:12 | 00:11:12 | 81.5 | · |
 
 **Saved files:**
-- [`20260601_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260601_ps.png)
-- [`20260601_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260601_ps_2.png)
-- [`20260601_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260601_ps_3.png)
+- [`20260601_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260601_ps.png)
+- [`20260601_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260601_ps_2.png)
+- [`20260601_ps_3.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260601_ps_3.png)
 
 ### 30. 20260602_-pfJ5dndbwE.mp4
 
@@ -1092,9 +1092,9 @@
 | 2 | structured_whiteboard | 1 | 00:11:28 | 00:11:28 | 85.4 | · |
 
 **Saved files:**
-- [`20260602_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260602_ps.png)
-- [`20260602_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260602_ps_2.png)
-- [`20260602_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/full-20260914/full-20260914/screenshots/20260602_ps_3.png)
+- [`20260602_ps.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260602_ps.png)
+- [`20260602_ps_2.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260602_ps_2.png)
+- [`20260602_ps_3.png`](video_scan_20260914/full-20260914/full-20260914/screenshots/20260602_ps_3.png)
 
 ### 31. 20260512_bEidyFtV-lY-1080p.mp4
 
@@ -1128,9 +1128,9 @@
 | 2 | structured_whiteboard | 2 | 00:06:24 | 00:07:36 | 116.8 | · |
 
 **Saved files:**
-- [`20260512_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/pilot-1080p/pilot-1080p/screenshots/20260512_ps.png)
-- [`20260512_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/pilot-1080p/pilot-1080p/screenshots/20260512_ps_2.png)
-- [`20260512_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/pilot-1080p/pilot-1080p/screenshots/20260512_ps_3.png)
+- [`20260512_ps.png`](video_scan_20260914/pilot-1080p/pilot-1080p/screenshots/20260512_ps.png)
+- [`20260512_ps_2.png`](video_scan_20260914/pilot-1080p/pilot-1080p/screenshots/20260512_ps_2.png)
+- [`20260512_ps_3.png`](video_scan_20260914/pilot-1080p/pilot-1080p/screenshots/20260512_ps_3.png)
 
 ### 32. 20260509_M0pV73RV2qo.mp4
 
@@ -1162,8 +1162,8 @@
 | 1 | dmi | 2 | 00:00:32 | 00:01:36 | 50.2 | ✓ |
 
 **Saved files:**
-- [`20260509_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/pilot-720p/pilot-720p/screenshots/20260509_ps.png)
-- [`20260509_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/pilot-720p/pilot-720p/screenshots/20260509_ps_2.png)
+- [`20260509_ps.png`](video_scan_20260914/pilot-720p/pilot-720p/screenshots/20260509_ps.png)
+- [`20260509_ps_2.png`](video_scan_20260914/pilot-720p/pilot-720p/screenshots/20260509_ps_2.png)
 
 ### 33. 20260512_bEidyFtV-lY.mp4
 
@@ -1197,9 +1197,9 @@
 | 2 | structured_whiteboard | 2 | 00:06:24 | 00:07:24 | 117.6 | · |
 
 **Saved files:**
-- [`20260512_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/pilot-720p/pilot-720p/screenshots/20260512_ps.png)
-- [`20260512_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/pilot-720p/pilot-720p/screenshots/20260512_ps_2.png)
-- [`20260512_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260914/pilot-720p/pilot-720p/screenshots/20260512_ps_3.png)
+- [`20260512_ps.png`](video_scan_20260914/pilot-720p/pilot-720p/screenshots/20260512_ps.png)
+- [`20260512_ps_2.png`](video_scan_20260914/pilot-720p/pilot-720p/screenshots/20260512_ps_2.png)
+- [`20260512_ps_3.png`](video_scan_20260914/pilot-720p/pilot-720p/screenshots/20260512_ps_3.png)
 
 ### 34. 20260912_7t50ZiB7-Bk.mp4
 
@@ -1233,9 +1233,9 @@
 | 2 | dmi | 2 | 00:01:52 | 00:02:48 | 49.2 | ✓ |
 
 **Saved files:**
-- [`20260912_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/hires-smoke-720p/hires-smoke-720p/screenshots/20260912_ps.png)
-- [`20260912_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/hires-smoke-720p/hires-smoke-720p/screenshots/20260912_ps_2.png)
-- [`20260912_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/hires-smoke-720p/hires-smoke-720p/screenshots/20260912_ps_3.png)
+- [`20260912_ps.png`](video_scan_20260915/hires-smoke-720p/hires-smoke-720p/screenshots/20260912_ps.png)
+- [`20260912_ps_2.png`](video_scan_20260915/hires-smoke-720p/hires-smoke-720p/screenshots/20260912_ps_2.png)
+- [`20260912_ps_3.png`](video_scan_20260915/hires-smoke-720p/hires-smoke-720p/screenshots/20260912_ps_3.png)
 
 ### 35. 20260603_gzKJIHyBPfA.mp4
 
@@ -1268,9 +1268,9 @@
 | 1 | structured_whiteboard | 3 | 00:03:48 | 00:05:48 | 119.5 | · |
 
 **Saved files:**
-- [`20260603_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260603_ps.png)
-- [`20260603_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260603_ps_2.png)
-- [`20260603_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260603_ps_3.png)
+- [`20260603_ps.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260603_ps.png)
+- [`20260603_ps_2.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260603_ps_2.png)
+- [`20260603_ps_3.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260603_ps_3.png)
 
 ### 36. 20260604_jBhmYtDyz90.mp4
 
@@ -1303,9 +1303,9 @@
 | 1 | structured_whiteboard | 3 | 00:04:48 | 00:06:16 | 92.7 | · |
 
 **Saved files:**
-- [`20260604_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260604_ps.png)
-- [`20260604_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260604_ps_2.png)
-- [`20260604_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260604_ps_3.png)
+- [`20260604_ps.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260604_ps.png)
+- [`20260604_ps_2.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260604_ps_2.png)
+- [`20260604_ps_3.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260604_ps_3.png)
 
 ### 37. 20260605_w88fjo4VKuk.mp4
 
@@ -1338,9 +1338,9 @@
 | 1 | structured_whiteboard | 3 | 00:05:36 | 00:07:28 | 118.8 | · |
 
 **Saved files:**
-- [`20260605_ps_7.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260605_ps_7.png)
-- [`20260605_ps_8.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260605_ps_8.png)
-- [`20260605_ps_9.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260605_ps_9.png)
+- [`20260605_ps_7.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260605_ps_7.png)
+- [`20260605_ps_8.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260605_ps_8.png)
+- [`20260605_ps_9.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260605_ps_9.png)
 
 ### 38. 20260606_o1PRwco3UgY.mp4
 
@@ -1374,9 +1374,9 @@
 | 2 | dmi | 2 | 00:02:20 | 00:03:16 | 49.3 | ✓ |
 
 **Saved files:**
-- [`20260606_ps_7.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260606_ps_7.png)
-- [`20260606_ps_8.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260606_ps_8.png)
-- [`20260606_ps_9.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260606_ps_9.png)
+- [`20260606_ps_7.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260606_ps_7.png)
+- [`20260606_ps_8.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260606_ps_8.png)
+- [`20260606_ps_9.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260606_ps_9.png)
 
 ### 39. 20260608_gCVgT5qng68.mp4
 
@@ -1410,9 +1410,9 @@
 | 2 | structured_whiteboard | 2 | 00:04:48 | 00:06:00 | 112.9 | · |
 
 **Saved files:**
-- [`20260608_ps_7.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260608_ps_7.png)
-- [`20260608_ps_8.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260608_ps_8.png)
-- [`20260608_ps_9.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260608_ps_9.png)
+- [`20260608_ps_7.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260608_ps_7.png)
+- [`20260608_ps_8.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260608_ps_8.png)
+- [`20260608_ps_9.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260608_ps_9.png)
 
 ### 40. 20260609_f9yIIIukH-k.mp4
 
@@ -1445,9 +1445,9 @@
 | 1 | structured_whiteboard | 3 | 00:12:40 | 00:14:00 | 90.8 | · |
 
 **Saved files:**
-- [`20260609_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260609_ps_4.png)
-- [`20260609_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260609_ps_5.png)
-- [`20260609_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260609_ps_6.png)
+- [`20260609_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260609_ps_4.png)
+- [`20260609_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260609_ps_5.png)
+- [`20260609_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260609_ps_6.png)
 
 ### 41. 20260610_boZRoKyPMB0.mp4
 
@@ -1480,9 +1480,9 @@
 | 1 | structured_whiteboard | 3 | 00:05:12 | 00:07:12 | 98.9 | · |
 
 **Saved files:**
-- [`20260610_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260610_ps_4.png)
-- [`20260610_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260610_ps_5.png)
-- [`20260610_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260610_ps_6.png)
+- [`20260610_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260610_ps_4.png)
+- [`20260610_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260610_ps_5.png)
+- [`20260610_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260610_ps_6.png)
 
 ### 42. 20260611_XC9fgdH8nIg.mp4
 
@@ -1516,9 +1516,9 @@
 | 2 | structured_whiteboard | 1 | 00:09:36 | 00:09:36 | 106.1 | · |
 
 **Saved files:**
-- [`20260611_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260611_ps_4.png)
-- [`20260611_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260611_ps_5.png)
-- [`20260611_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260611_ps_6.png)
+- [`20260611_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260611_ps_4.png)
+- [`20260611_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260611_ps_5.png)
+- [`20260611_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260611_ps_6.png)
 
 ### 43. 20260612_CXJnx5hi1Is.mp4
 
@@ -1552,9 +1552,9 @@
 | 2 | structured_whiteboard | 1 | 00:07:24 | 00:07:24 | 110.0 | · |
 
 **Saved files:**
-- [`20260612_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260612_ps_4.png)
-- [`20260612_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260612_ps_5.png)
-- [`20260612_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260612_ps_6.png)
+- [`20260612_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260612_ps_4.png)
+- [`20260612_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260612_ps_5.png)
+- [`20260612_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260612_ps_6.png)
 
 ### 44. 20260613_oHp5RcBuo_8.mp4
 
@@ -1588,9 +1588,9 @@
 | 2 | dmi | 2 | 00:02:40 | 00:03:44 | 48.5 | · |
 
 **Saved files:**
-- [`20260613_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260613_ps_4.png)
-- [`20260613_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260613_ps_5.png)
-- [`20260613_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260613_ps_6.png)
+- [`20260613_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260613_ps_4.png)
+- [`20260613_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260613_ps_5.png)
+- [`20260613_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260613_ps_6.png)
 
 ### 45. 20260615_Am3cmv2Y0aw.mp4
 
@@ -1624,9 +1624,9 @@
 | 2 | structured_whiteboard | 1 | 00:06:40 | 00:06:40 | 76.3 | · |
 
 **Saved files:**
-- [`20260615_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260615_ps_4.png)
-- [`20260615_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260615_ps_5.png)
-- [`20260615_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260615_ps_6.png)
+- [`20260615_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260615_ps_4.png)
+- [`20260615_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260615_ps_5.png)
+- [`20260615_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260615_ps_6.png)
 
 ### 46. 20260616_PGPVTY1LpBY.mp4
 
@@ -1661,9 +1661,9 @@
 | 3 | structured_whiteboard | 1 | 00:09:36 | 00:09:36 | 102.8 | · |
 
 **Saved files:**
-- [`20260616_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260616_ps_4.png)
-- [`20260616_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260616_ps_5.png)
-- [`20260616_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260616_ps_6.png)
+- [`20260616_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260616_ps_4.png)
+- [`20260616_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260616_ps_5.png)
+- [`20260616_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260616_ps_6.png)
 
 ### 47. 20260617_kMkJuiYj8cA.mp4
 
@@ -1698,9 +1698,9 @@
 | 3 | structured_whiteboard | 1 | 00:07:36 | 00:07:36 | 116.7 | · |
 
 **Saved files:**
-- [`20260617_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260617_ps_4.png)
-- [`20260617_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260617_ps_5.png)
-- [`20260617_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260617_ps_6.png)
+- [`20260617_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260617_ps_4.png)
+- [`20260617_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260617_ps_5.png)
+- [`20260617_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260617_ps_6.png)
 
 ### 48. 20260618_5k9ANLDQeXE.mp4
 
@@ -1735,9 +1735,9 @@
 | 3 | structured_whiteboard | 1 | 00:07:24 | 00:07:24 | 90.0 | · |
 
 **Saved files:**
-- [`20260618_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260618_ps_4.png)
-- [`20260618_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260618_ps_5.png)
-- [`20260618_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260618_ps_6.png)
+- [`20260618_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260618_ps_4.png)
+- [`20260618_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260618_ps_5.png)
+- [`20260618_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260618_ps_6.png)
 
 ### 49. 20260619_t30zeesTOAc.mp4
 
@@ -1770,9 +1770,9 @@
 | 1 | dmi | 3 | 00:00:36 | 00:03:00 | 55.6 | · |
 
 **Saved files:**
-- [`20260619_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260619_ps_4.png)
-- [`20260619_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260619_ps_5.png)
-- [`20260619_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260619_ps_6.png)
+- [`20260619_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260619_ps_4.png)
+- [`20260619_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260619_ps_5.png)
+- [`20260619_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260619_ps_6.png)
 
 ### 50. 20260622_R9a-JmoQDLE.mp4
 
@@ -1805,9 +1805,9 @@
 | 1 | structured_whiteboard | 3 | 00:04:00 | 00:05:36 | 106.8 | · |
 
 **Saved files:**
-- [`20260622_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260622_ps_4.png)
-- [`20260622_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260622_ps_5.png)
-- [`20260622_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260622_ps_6.png)
+- [`20260622_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260622_ps_4.png)
+- [`20260622_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260622_ps_5.png)
+- [`20260622_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260622_ps_6.png)
 
 ### 51. 20260623_PTtSg3CGa6c.mp4
 
@@ -1840,9 +1840,9 @@
 | 3 | structured_whiteboard | 1 | 00:21:00 | 00:21:00 | 105.0 | · |
 
 **Saved files:**
-- [`20260623_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260623_ps_4.png)
-- [`20260623_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260623_ps_5.png)
-- [`20260623_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260623_ps_6.png)
+- [`20260623_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260623_ps_4.png)
+- [`20260623_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260623_ps_5.png)
+- [`20260623_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260623_ps_6.png)
 
 ### 52. 20260624_b-tfXSY8vKs.mp4
 
@@ -1876,9 +1876,9 @@
 | 2 | structured_whiteboard | 1 | 00:09:24 | 00:09:24 | 93.9 | · |
 
 **Saved files:**
-- [`20260624_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260624_ps_4.png)
-- [`20260624_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260624_ps_5.png)
-- [`20260624_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260624_ps_6.png)
+- [`20260624_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260624_ps_4.png)
+- [`20260624_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260624_ps_5.png)
+- [`20260624_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260624_ps_6.png)
 
 ### 53. 20260625_n7wbWdzAKO0.mp4
 
@@ -1912,9 +1912,9 @@
 | 2 | structured_whiteboard | 2 | 00:06:08 | 00:06:56 | 102.8 | · |
 
 **Saved files:**
-- [`20260625_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260625_ps_4.png)
-- [`20260625_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260625_ps_5.png)
-- [`20260625_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260625_ps_6.png)
+- [`20260625_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260625_ps_4.png)
+- [`20260625_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260625_ps_5.png)
+- [`20260625_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260625_ps_6.png)
 
 ### 54. 20260626_hlg5zAwuqPw.mp4
 
@@ -1947,9 +1947,9 @@
 | 1 | structured_whiteboard | 3 | 00:06:56 | 00:09:20 | 94.8 | · |
 
 **Saved files:**
-- [`20260626_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260626_ps_4.png)
-- [`20260626_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260626_ps_5.png)
-- [`20260626_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260626_ps_6.png)
+- [`20260626_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260626_ps_4.png)
+- [`20260626_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260626_ps_5.png)
+- [`20260626_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260626_ps_6.png)
 
 ### 55. 20260628_LiTQ1HqmQbI.mp4
 
@@ -1983,9 +1983,9 @@
 | 2 | dmi | 2 | 00:03:12 | 00:04:16 | 43.5 | ✓ |
 
 **Saved files:**
-- [`20260628_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260628_ps_4.png)
-- [`20260628_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260628_ps_5.png)
-- [`20260628_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260628_ps_6.png)
+- [`20260628_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260628_ps_4.png)
+- [`20260628_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260628_ps_5.png)
+- [`20260628_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260628_ps_6.png)
 
 ### 56. 20260629_uYsTRIEYBOM.mp4
 
@@ -2019,9 +2019,9 @@
 | 2 | structured_whiteboard | 1 | 00:09:12 | 00:09:12 | 83.2 | · |
 
 **Saved files:**
-- [`20260629_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260629_ps_4.png)
-- [`20260629_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260629_ps_5.png)
-- [`20260629_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260629_ps_6.png)
+- [`20260629_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260629_ps_4.png)
+- [`20260629_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260629_ps_5.png)
+- [`20260629_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260629_ps_6.png)
 
 ### 57. 20260630_3khiUh18SGg.mp4
 
@@ -2054,9 +2054,9 @@
 | 1 | structured_whiteboard | 3 | 00:14:24 | 00:16:24 | 80.9 | · |
 
 **Saved files:**
-- [`20260630_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260630_ps_4.png)
-- [`20260630_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260630_ps_5.png)
-- [`20260630_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260630_ps_6.png)
+- [`20260630_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260630_ps_4.png)
+- [`20260630_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260630_ps_5.png)
+- [`20260630_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260630_ps_6.png)
 
 ### 58. 20260701_Hs62rWgKWS8.mp4
 
@@ -2089,9 +2089,9 @@
 | 1 | structured_whiteboard | 3 | 00:04:24 | 00:06:16 | 106.9 | · |
 
 **Saved files:**
-- [`20260701_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260701_ps.png)
-- [`20260701_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260701_ps_2.png)
-- [`20260701_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260701_ps_3.png)
+- [`20260701_ps.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260701_ps.png)
+- [`20260701_ps_2.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260701_ps_2.png)
+- [`20260701_ps_3.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260701_ps_3.png)
 
 ### 59. 20260702_Twg76X9vpD0.mp4
 
@@ -2125,9 +2125,9 @@
 | 2 | structured_whiteboard | 2 | 00:05:36 | 00:06:56 | 123.5 | · |
 
 **Saved files:**
-- [`20260702_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260702_ps_4.png)
-- [`20260702_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260702_ps_5.png)
-- [`20260702_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260702_ps_6.png)
+- [`20260702_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260702_ps_4.png)
+- [`20260702_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260702_ps_5.png)
+- [`20260702_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260702_ps_6.png)
 
 ### 60. 20260704_MhoMAtRai-4.mp4
 
@@ -2161,9 +2161,9 @@
 | 2 | dmi | 1 | 00:05:08 | 00:05:08 | 54.2 | ✓ |
 
 **Saved files:**
-- [`20260704_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260704_ps_4.png)
-- [`20260704_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260704_ps_5.png)
-- [`20260704_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260704_ps_6.png)
+- [`20260704_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260704_ps_4.png)
+- [`20260704_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260704_ps_5.png)
+- [`20260704_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260704_ps_6.png)
 
 ### 61. 20260706_iNjuaEivmNc.mp4
 
@@ -2197,9 +2197,9 @@
 | 2 | structured_whiteboard | 2 | 00:05:20 | 00:06:08 | 105.4 | · |
 
 **Saved files:**
-- [`20260706_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260706_ps_4.png)
-- [`20260706_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260706_ps_5.png)
-- [`20260706_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260706_ps_6.png)
+- [`20260706_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260706_ps_4.png)
+- [`20260706_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260706_ps_5.png)
+- [`20260706_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260706_ps_6.png)
 
 ### 62. 20260707_YxadnXtRlDQ.mp4
 
@@ -2233,9 +2233,9 @@
 | 2 | structured_whiteboard | 2 | 00:16:00 | 00:16:48 | 96.6 | · |
 
 **Saved files:**
-- [`20260707_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260707_ps_4.png)
-- [`20260707_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260707_ps_5.png)
-- [`20260707_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260707_ps_6.png)
+- [`20260707_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260707_ps_4.png)
+- [`20260707_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260707_ps_5.png)
+- [`20260707_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260707_ps_6.png)
 
 ### 63. 20260708_0fPQI6704O0.mp4
 
@@ -2268,9 +2268,9 @@
 | 1 | structured_whiteboard | 3 | 00:05:00 | 00:06:36 | 100.7 | · |
 
 **Saved files:**
-- [`20260708_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260708_ps_4.png)
-- [`20260708_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260708_ps_5.png)
-- [`20260708_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260708_ps_6.png)
+- [`20260708_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260708_ps_4.png)
+- [`20260708_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260708_ps_5.png)
+- [`20260708_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260708_ps_6.png)
 
 ### 64. 20260709_Vq6t0TkaHwg.mp4
 
@@ -2303,9 +2303,9 @@
 | 1 | structured_whiteboard | 3 | 00:04:36 | 00:06:12 | 113.9 | · |
 
 **Saved files:**
-- [`20260709_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260709_ps_4.png)
-- [`20260709_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260709_ps_5.png)
-- [`20260709_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260709_ps_6.png)
+- [`20260709_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260709_ps_4.png)
+- [`20260709_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260709_ps_5.png)
+- [`20260709_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260709_ps_6.png)
 
 ### 65. 20260710_Uj8nPg-QtBc.mp4
 
@@ -2338,9 +2338,9 @@
 | 1 | structured_whiteboard | 3 | 00:05:24 | 00:07:24 | 108.9 | · |
 
 **Saved files:**
-- [`20260710_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260710_ps_4.png)
-- [`20260710_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260710_ps_5.png)
-- [`20260710_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260710_ps_6.png)
+- [`20260710_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260710_ps_4.png)
+- [`20260710_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260710_ps_5.png)
+- [`20260710_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260710_ps_6.png)
 
 ### 66. 20260711_JS2mEEngwH0.mp4
 
@@ -2372,8 +2372,8 @@
 | 1 | dmi | 2 | 00:00:48 | 00:01:36 | 45.1 | ✓ |
 
 **Saved files:**
-- [`20260711_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260711_ps_3.png)
-- [`20260711_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260711_ps_4.png)
+- [`20260711_ps_3.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260711_ps_3.png)
+- [`20260711_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260711_ps_4.png)
 
 ### 67. 20260714_0l4kO-SF7yc.mp4
 
@@ -2406,9 +2406,9 @@
 | 1 | structured_whiteboard | 3 | 00:12:48 | 00:14:48 | 96.2 | · |
 
 **Saved files:**
-- [`20260714_ps_7.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260714_ps_7.png)
-- [`20260714_ps_8.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260714_ps_8.png)
-- [`20260714_ps_9.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260714_ps_9.png)
+- [`20260714_ps_7.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260714_ps_7.png)
+- [`20260714_ps_8.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260714_ps_8.png)
+- [`20260714_ps_9.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260714_ps_9.png)
 
 ### 68. 20260714_EbRL4cU4obQ.mp4
 
@@ -2443,9 +2443,9 @@
 | 3 | structured_whiteboard | 1 | 00:08:36 | 00:08:36 | 84.0 | · |
 
 **Saved files:**
-- [`20260714_ps_10.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260714_ps_10.png)
-- [`20260714_ps_11.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260714_ps_11.png)
-- [`20260714_ps_12.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260714_ps_12.png)
+- [`20260714_ps_10.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260714_ps_10.png)
+- [`20260714_ps_11.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260714_ps_11.png)
+- [`20260714_ps_12.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260714_ps_12.png)
 
 ### 69. 20260715_Ghinv97ESMQ.mp4
 
@@ -2479,9 +2479,9 @@
 | 2 | structured_whiteboard | 2 | 00:04:00 | 00:05:12 | 114.9 | · |
 
 **Saved files:**
-- [`20260715_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260715_ps_4.png)
-- [`20260715_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260715_ps_5.png)
-- [`20260715_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260715_ps_6.png)
+- [`20260715_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260715_ps_4.png)
+- [`20260715_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260715_ps_5.png)
+- [`20260715_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260715_ps_6.png)
 
 ### 70. 20260716_jShFEqiOyKc.mp4
 
@@ -2516,9 +2516,9 @@
 | 3 | structured_whiteboard | 1 | 00:06:00 | 00:06:00 | 109.7 | · |
 
 **Saved files:**
-- [`20260716_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260716_ps_4.png)
-- [`20260716_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260716_ps_5.png)
-- [`20260716_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260716_ps_6.png)
+- [`20260716_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260716_ps_4.png)
+- [`20260716_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260716_ps_5.png)
+- [`20260716_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260716_ps_6.png)
 
 ### 71. 20260717_w0Y8XZcJ4rg.mp4
 
@@ -2552,9 +2552,9 @@
 | 2 | structured_whiteboard | 2 | 00:07:24 | 00:08:24 | 102.1 | · |
 
 **Saved files:**
-- [`20260717_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260717_ps_4.png)
-- [`20260717_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260717_ps_5.png)
-- [`20260717_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260717_ps_6.png)
+- [`20260717_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260717_ps_4.png)
+- [`20260717_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260717_ps_5.png)
+- [`20260717_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260717_ps_6.png)
 
 ### 72. 20260719_IZp66520hHo.mp4
 
@@ -2588,9 +2588,9 @@
 | 2 | dmi | 1 | 00:03:44 | 00:03:44 | 41.3 | · |
 
 **Saved files:**
-- [`20260719_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260719_ps_4.png)
-- [`20260719_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260719_ps_5.png)
-- [`20260719_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260719_ps_6.png)
+- [`20260719_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260719_ps_4.png)
+- [`20260719_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260719_ps_5.png)
+- [`20260719_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260719_ps_6.png)
 
 ### 73. 20260720_L-7fr9yIyzg.mp4
 
@@ -2624,9 +2624,9 @@
 | 2 | structured_whiteboard | 1 | 00:09:48 | 00:09:48 | 110.5 | · |
 
 **Saved files:**
-- [`20260720_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260720_ps_4.png)
-- [`20260720_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260720_ps_5.png)
-- [`20260720_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260720_ps_6.png)
+- [`20260720_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260720_ps_4.png)
+- [`20260720_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260720_ps_5.png)
+- [`20260720_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260720_ps_6.png)
 
 ### 74. 20260721_P_AQPOnmKgk.mp4
 
@@ -2660,9 +2660,9 @@
 | 2 | structured_whiteboard | 2 | 00:13:00 | 00:14:00 | 95.3 | · |
 
 **Saved files:**
-- [`20260721_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260721_ps_4.png)
-- [`20260721_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260721_ps_5.png)
-- [`20260721_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260721_ps_6.png)
+- [`20260721_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260721_ps_4.png)
+- [`20260721_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260721_ps_5.png)
+- [`20260721_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260721_ps_6.png)
 
 ### 75. 20260722_npmyd1aKE8o.mp4
 
@@ -2695,9 +2695,9 @@
 | 1 | structured_whiteboard | 3 | 00:05:52 | 00:07:28 | 116.7 | · |
 
 **Saved files:**
-- [`20260722_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260722_ps_4.png)
-- [`20260722_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260722_ps_5.png)
-- [`20260722_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260722_ps_6.png)
+- [`20260722_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260722_ps_4.png)
+- [`20260722_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260722_ps_5.png)
+- [`20260722_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260722_ps_6.png)
 
 ### 76. 20260723_nk_9uxnLsXo.mp4
 
@@ -2731,9 +2731,9 @@
 | 2 | structured_whiteboard | 1 | 00:08:48 | 00:08:48 | 86.0 | · |
 
 **Saved files:**
-- [`20260723_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260723_ps_4.png)
-- [`20260723_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260723_ps_5.png)
-- [`20260723_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260723_ps_6.png)
+- [`20260723_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260723_ps_4.png)
+- [`20260723_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260723_ps_5.png)
+- [`20260723_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260723_ps_6.png)
 
 ### 77. 20260724_xC63a7idsGQ.mp4
 
@@ -2767,9 +2767,9 @@
 | 2 | structured_whiteboard | 2 | 00:07:12 | 00:08:32 | 117.4 | · |
 
 **Saved files:**
-- [`20260724_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260724_ps_4.png)
-- [`20260724_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260724_ps_5.png)
-- [`20260724_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260724_ps_6.png)
+- [`20260724_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260724_ps_4.png)
+- [`20260724_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260724_ps_5.png)
+- [`20260724_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260724_ps_6.png)
 
 ### 78. 20260726_mM4-jwv5IiM.mp4
 
@@ -2802,9 +2802,9 @@
 | 1 | dmi | 3 | 00:00:56 | 00:02:48 | 44.7 | ✓ |
 
 **Saved files:**
-- [`20260726_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260726_ps_4.png)
-- [`20260726_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260726_ps_5.png)
-- [`20260726_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260726_ps_6.png)
+- [`20260726_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260726_ps_4.png)
+- [`20260726_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260726_ps_5.png)
+- [`20260726_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260726_ps_6.png)
 
 ### 79. 20260727_xgjnEFgMCnc.mp4
 
@@ -2837,9 +2837,9 @@
 | 1 | structured_whiteboard | 3 | 00:07:12 | 00:09:20 | 107.3 | · |
 
 **Saved files:**
-- [`20260727_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260727_ps_4.png)
-- [`20260727_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260727_ps_5.png)
-- [`20260727_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260727_ps_6.png)
+- [`20260727_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260727_ps_4.png)
+- [`20260727_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260727_ps_5.png)
+- [`20260727_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260727_ps_6.png)
 
 ### 80. 20260728_T-IyOIt4hTQ.mp4
 
@@ -2872,9 +2872,9 @@
 | 1 | structured_whiteboard | 3 | 00:11:20 | 00:13:40 | 89.8 | · |
 
 **Saved files:**
-- [`20260728_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260728_ps_4.png)
-- [`20260728_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260728_ps_5.png)
-- [`20260728_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260728_ps_6.png)
+- [`20260728_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260728_ps_4.png)
+- [`20260728_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260728_ps_5.png)
+- [`20260728_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260728_ps_6.png)
 
 ### 81. 20260729_pM7a5mo5kpo.mp4
 
@@ -2908,9 +2908,9 @@
 | 2 | structured_whiteboard | 2 | 00:06:24 | 00:07:12 | 123.2 | · |
 
 **Saved files:**
-- [`20260729_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260729_ps_4.png)
-- [`20260729_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260729_ps_5.png)
-- [`20260729_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260729_ps_6.png)
+- [`20260729_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260729_ps_4.png)
+- [`20260729_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260729_ps_5.png)
+- [`20260729_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260729_ps_6.png)
 
 ### 82. 20260730_xcv_5DwNPR0.mp4
 
@@ -2945,9 +2945,9 @@
 | 3 | structured_whiteboard | 1 | 00:10:24 | 00:10:24 | 77.8 | · |
 
 **Saved files:**
-- [`20260730_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260730_ps_4.png)
-- [`20260730_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260730_ps_5.png)
-- [`20260730_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260730_ps_6.png)
+- [`20260730_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260730_ps_4.png)
+- [`20260730_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260730_ps_5.png)
+- [`20260730_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260730_ps_6.png)
 
 ### 83. 20260731_auBgiSk-gV8.mp4
 
@@ -2981,9 +2981,9 @@
 | 2 | structured_whiteboard | 1 | 00:13:00 | 00:13:00 | 99.1 | · |
 
 **Saved files:**
-- [`20260731_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260731_ps_4.png)
-- [`20260731_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260731_ps_5.png)
-- [`20260731_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260731_ps_6.png)
+- [`20260731_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260731_ps_4.png)
+- [`20260731_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260731_ps_5.png)
+- [`20260731_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260731_ps_6.png)
 
 ### 84. 20260801_NjKPxvLNdEQ.mp4
 
@@ -3018,9 +3018,9 @@
 | 3 | dmi | 1 | 00:07:56 | 00:07:56 | 50.5 | ✓ |
 
 **Saved files:**
-- [`20260801_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260801_ps_4.png)
-- [`20260801_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260801_ps_5.png)
-- [`20260801_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260801_ps_6.png)
+- [`20260801_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260801_ps_4.png)
+- [`20260801_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260801_ps_5.png)
+- [`20260801_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260801_ps_6.png)
 
 ### 85. 20260803_XkXj19huomM.mp4
 
@@ -3054,9 +3054,9 @@
 | 2 | structured_whiteboard | 1 | 00:05:48 | 00:05:48 | 117.6 | · |
 
 **Saved files:**
-- [`20260803_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260803_ps_4.png)
-- [`20260803_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260803_ps_5.png)
-- [`20260803_ps_6.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260803_ps_6.png)
+- [`20260803_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260803_ps_4.png)
+- [`20260803_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260803_ps_5.png)
+- [`20260803_ps_6.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260803_ps_6.png)
 
 ### 86. 20260804_A22cuhvxR90.mp4
 
@@ -3091,9 +3091,9 @@
 | 3 | structured_whiteboard | 1 | 00:11:20 | 00:11:20 | 92.1 | · |
 
 **Saved files:**
-- [`20260804_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260804_ps.png)
-- [`20260804_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260804_ps_2.png)
-- [`20260804_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260804_ps_3.png)
+- [`20260804_ps.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260804_ps.png)
+- [`20260804_ps_2.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260804_ps_2.png)
+- [`20260804_ps_3.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260804_ps_3.png)
 
 ### 87. 20260805_Lwsk2m1-Cus.mp4
 
@@ -3126,9 +3126,9 @@
 | 1 | structured_whiteboard | 3 | 00:05:24 | 00:07:12 | 114.0 | · |
 
 **Saved files:**
-- [`20260805_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260805_ps.png)
-- [`20260805_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260805_ps_2.png)
-- [`20260805_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260805_ps_3.png)
+- [`20260805_ps.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260805_ps.png)
+- [`20260805_ps_2.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260805_ps_2.png)
+- [`20260805_ps_3.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260805_ps_3.png)
 
 ### 88. 20260806_K6PqP9qxoPA.mp4
 
@@ -3162,9 +3162,9 @@
 | 2 | structured_whiteboard | 2 | 00:05:00 | 00:05:48 | 106.6 | · |
 
 **Saved files:**
-- [`20260806_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260806_ps.png)
-- [`20260806_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260806_ps_2.png)
-- [`20260806_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260806_ps_3.png)
+- [`20260806_ps.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260806_ps.png)
+- [`20260806_ps_2.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260806_ps_2.png)
+- [`20260806_ps_3.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260806_ps_3.png)
 
 ### 89. 20260808_EAI-qMrf_T0.mp4
 
@@ -3199,9 +3199,9 @@
 | 3 | structured_whiteboard | 1 | 00:14:56 | 00:14:56 | 92.0 | · |
 
 **Saved files:**
-- [`20260808_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260808_ps.png)
-- [`20260808_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260808_ps_2.png)
-- [`20260808_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260808_ps_3.png)
+- [`20260808_ps.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260808_ps.png)
+- [`20260808_ps_2.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260808_ps_2.png)
+- [`20260808_ps_3.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260808_ps_3.png)
 
 ### 90. 20260808_XSlDBLIjrDY.mp4
 
@@ -3234,8 +3234,8 @@
 | 2 | dmi | 1 | 00:01:52 | 00:01:52 | 51.7 | ✓ |
 
 **Saved files:**
-- [`20260808_ps_4.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260808_ps_4.png)
-- [`20260808_ps_5.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260808_ps_5.png)
+- [`20260808_ps_4.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260808_ps_4.png)
+- [`20260808_ps_5.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260808_ps_5.png)
 
 ### 91. 20260810_u5F6yIo61oA.mp4
 
@@ -3269,9 +3269,9 @@
 | 2 | structured_whiteboard | 1 | 00:07:00 | 00:07:00 | 104.0 | · |
 
 **Saved files:**
-- [`20260810_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260810_ps.png)
-- [`20260810_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260810_ps_2.png)
-- [`20260810_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260810_ps_3.png)
+- [`20260810_ps.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260810_ps.png)
+- [`20260810_ps_2.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260810_ps_2.png)
+- [`20260810_ps_3.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260810_ps_3.png)
 
 ### 92. 20260811_ajyhtTFYlpw.mp4
 
@@ -3304,9 +3304,9 @@
 | 2 | structured_whiteboard | 1 | 00:19:20 | 00:19:20 | 86.0 | · |
 
 **Saved files:**
-- [`20260811_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260811_ps.png)
-- [`20260811_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260811_ps_2.png)
-- [`20260811_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260811_ps_3.png)
+- [`20260811_ps.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260811_ps.png)
+- [`20260811_ps_2.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260811_ps_2.png)
+- [`20260811_ps_3.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260811_ps_3.png)
 
 ### 93. 20260812_BA2sWh6ftdM.mp4
 
@@ -3340,9 +3340,9 @@
 | 2 | structured_whiteboard | 2 | 00:05:00 | 00:06:12 | 125.0 | · |
 
 **Saved files:**
-- [`20260812_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260812_ps.png)
-- [`20260812_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260812_ps_2.png)
-- [`20260812_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260812_ps_3.png)
+- [`20260812_ps.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260812_ps.png)
+- [`20260812_ps_2.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260812_ps_2.png)
+- [`20260812_ps_3.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260812_ps_3.png)
 
 ### 94. 20260813_eWeJSMLlZLs.mp4
 
@@ -3376,9 +3376,9 @@
 | 2 | structured_whiteboard | 1 | 00:11:12 | 00:11:12 | 88.7 | · |
 
 **Saved files:**
-- [`20260813_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260813_ps.png)
-- [`20260813_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260813_ps_2.png)
-- [`20260813_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260813_ps_3.png)
+- [`20260813_ps.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260813_ps.png)
+- [`20260813_ps_2.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260813_ps_2.png)
+- [`20260813_ps_3.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260813_ps_3.png)
 
 ### 95. 20260909_iCGc5ObTkrs.mp4
 
@@ -3411,9 +3411,9 @@
 | 1 | structured_whiteboard | 3 | 00:05:12 | 00:06:48 | 118.4 | · |
 
 **Saved files:**
-- [`20260909_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260909_ps.png)
-- [`20260909_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260909_ps_2.png)
-- [`20260909_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260909_ps_3.png)
+- [`20260909_ps.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260909_ps.png)
+- [`20260909_ps_2.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260909_ps_2.png)
+- [`20260909_ps_3.png`](video_scan_20260915/ocr-20260915-backfill/ocr-20260915-backfill/screenshots/20260909_ps_3.png)
 
 ### 96. 20260814_etNNGIwqZWo.mp4
 
@@ -3447,9 +3447,9 @@
 | 2 | structured_whiteboard | 2 | 00:16:00 | 00:17:04 | 98.8 | · |
 
 **Saved files:**
-- [`20260814_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260814_ps.png)
-- [`20260814_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260814_ps_2.png)
-- [`20260814_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260814_ps_3.png)
+- [`20260814_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260814_ps.png)
+- [`20260814_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260814_ps_2.png)
+- [`20260814_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260814_ps_3.png)
 
 ### 97. 20260815_YlynBrXzngA.mp4
 
@@ -3482,8 +3482,8 @@
 | 2 | dmi | 1 | 00:04:16 | 00:04:16 | 45.1 | ✓ |
 
 **Saved files:**
-- [`20260815_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260815_ps.png)
-- [`20260815_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260815_ps_2.png)
+- [`20260815_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260815_ps.png)
+- [`20260815_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260815_ps_2.png)
 
 ### 98. 20260817_2Wv_SBwhArA.mp4
 
@@ -3516,9 +3516,9 @@
 | 1 | structured_whiteboard | 3 | 00:06:56 | 00:08:32 | 110.5 | · |
 
 **Saved files:**
-- [`20260817_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260817_ps.png)
-- [`20260817_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260817_ps_2.png)
-- [`20260817_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260817_ps_3.png)
+- [`20260817_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260817_ps.png)
+- [`20260817_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260817_ps_2.png)
+- [`20260817_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260817_ps_3.png)
 
 ### 99. 20260818_aif6DX_xz8I.mp4
 
@@ -3552,9 +3552,9 @@
 | 2 | structured_whiteboard | 1 | 00:13:20 | 00:13:20 | 91.4 | · |
 
 **Saved files:**
-- [`20260818_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260818_ps.png)
-- [`20260818_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260818_ps_2.png)
-- [`20260818_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260818_ps_3.png)
+- [`20260818_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260818_ps.png)
+- [`20260818_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260818_ps_2.png)
+- [`20260818_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260818_ps_3.png)
 
 ### 100. 20260819_NXmuO8bCCs4.mp4
 
@@ -3588,9 +3588,9 @@
 | 2 | structured_whiteboard | 2 | 00:13:04 | 00:14:08 | 107.5 | · |
 
 **Saved files:**
-- [`20260819_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260819_ps.png)
-- [`20260819_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260819_ps_2.png)
-- [`20260819_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260819_ps_3.png)
+- [`20260819_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260819_ps.png)
+- [`20260819_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260819_ps_2.png)
+- [`20260819_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260819_ps_3.png)
 
 ### 101. 20260820_0R1_i4G7dIw.mp4
 
@@ -3624,9 +3624,9 @@
 | 2 | structured_whiteboard | 1 | 00:14:56 | 00:14:56 | 101.0 | · |
 
 **Saved files:**
-- [`20260820_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260820_ps.png)
-- [`20260820_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260820_ps_2.png)
-- [`20260820_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260820_ps_3.png)
+- [`20260820_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260820_ps.png)
+- [`20260820_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260820_ps_2.png)
+- [`20260820_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260820_ps_3.png)
 
 ### 102. 20260821_JWawBTDc4n8.mp4
 
@@ -3660,9 +3660,9 @@
 | 2 | structured_whiteboard | 2 | 00:17:24 | 00:18:36 | 100.9 | · |
 
 **Saved files:**
-- [`20260821_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260821_ps.png)
-- [`20260821_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260821_ps_2.png)
-- [`20260821_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260821_ps_3.png)
+- [`20260821_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260821_ps.png)
+- [`20260821_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260821_ps_2.png)
+- [`20260821_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260821_ps_3.png)
 
 ### 103. 20260822_cwk0qIT_aVE.mp4
 
@@ -3696,9 +3696,9 @@
 | 2 | dmi | 1 | 00:02:56 | 00:02:56 | 50.9 | ✓ |
 
 **Saved files:**
-- [`20260822_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260822_ps.png)
-- [`20260822_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260822_ps_2.png)
-- [`20260822_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260822_ps_3.png)
+- [`20260822_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260822_ps.png)
+- [`20260822_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260822_ps_2.png)
+- [`20260822_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260822_ps_3.png)
 
 ### 104. 20260824_vZ08xA3Penk.mp4
 
@@ -3732,9 +3732,9 @@
 | 2 | structured_whiteboard | 1 | 00:09:40 | 00:09:40 | 82.2 | · |
 
 **Saved files:**
-- [`20260824_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260824_ps.png)
-- [`20260824_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260824_ps_2.png)
-- [`20260824_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260824_ps_3.png)
+- [`20260824_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260824_ps.png)
+- [`20260824_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260824_ps_2.png)
+- [`20260824_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260824_ps_3.png)
 
 ### 105. 20260825_Ja2WJcG7ZdA.mp4
 
@@ -3765,9 +3765,9 @@
 | 2 | structured_whiteboard | 1 | 00:13:20 | 00:13:20 | 93.0 | · |
 
 **Saved files:**
-- [`20260825_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260825_ps.png)
-- [`20260825_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260825_ps_2.png)
-- [`20260825_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260825_ps_3.png)
+- [`20260825_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260825_ps.png)
+- [`20260825_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260825_ps_2.png)
+- [`20260825_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260825_ps_3.png)
 
 ### 106. 20260826_tPgL40J4XTM.mp4
 
@@ -3801,9 +3801,9 @@
 | 2 | structured_whiteboard | 2 | 00:12:16 | 00:13:36 | 96.3 | · |
 
 **Saved files:**
-- [`20260826_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260826_ps.png)
-- [`20260826_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260826_ps_2.png)
-- [`20260826_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260826_ps_3.png)
+- [`20260826_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260826_ps.png)
+- [`20260826_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260826_ps_2.png)
+- [`20260826_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260826_ps_3.png)
 
 ### 107. 20260827_ceukarQYqWg.mp4
 
@@ -3837,9 +3837,9 @@
 | 2 | structured_whiteboard | 2 | 00:09:20 | 00:10:16 | 99.3 | · |
 
 **Saved files:**
-- [`20260827_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260827_ps.png)
-- [`20260827_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260827_ps_2.png)
-- [`20260827_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260827_ps_3.png)
+- [`20260827_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260827_ps.png)
+- [`20260827_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260827_ps_2.png)
+- [`20260827_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260827_ps_3.png)
 
 ### 108. 20260828_4ifiZRA5dc4.mp4
 
@@ -3873,9 +3873,9 @@
 | 2 | structured_whiteboard | 2 | 00:18:00 | 00:19:12 | 93.5 | · |
 
 **Saved files:**
-- [`20260828_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260828_ps.png)
-- [`20260828_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260828_ps_2.png)
-- [`20260828_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260828_ps_3.png)
+- [`20260828_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260828_ps.png)
+- [`20260828_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260828_ps_2.png)
+- [`20260828_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260828_ps_3.png)
 
 ### 109. 20260829_J_zufSc2jlA.mp4
 
@@ -3907,8 +3907,8 @@
 | 1 | dmi | 2 | 00:01:12 | 00:02:24 | 49.9 | ✓ |
 
 **Saved files:**
-- [`20260829_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260829_ps.png)
-- [`20260829_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260829_ps_2.png)
+- [`20260829_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260829_ps.png)
+- [`20260829_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260829_ps_2.png)
 
 ### 110. 20260831_yh5JJST8HnU.mp4
 
@@ -3941,9 +3941,9 @@
 | 1 | structured_whiteboard | 3 | 00:09:40 | 00:12:00 | 80.3 | · |
 
 **Saved files:**
-- [`20260831_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260831_ps.png)
-- [`20260831_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260831_ps_2.png)
-- [`20260831_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260831_ps_3.png)
+- [`20260831_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260831_ps.png)
+- [`20260831_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260831_ps_2.png)
+- [`20260831_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260831_ps_3.png)
 
 ### 111. 20260901_hATbxNdNd_4.mp4
 
@@ -3977,9 +3977,9 @@
 | 2 | structured_whiteboard | 1 | 00:18:24 | 00:18:24 | 86.1 | · |
 
 **Saved files:**
-- [`20260901_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260901_ps.png)
-- [`20260901_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260901_ps_2.png)
-- [`20260901_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260901_ps_3.png)
+- [`20260901_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260901_ps.png)
+- [`20260901_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260901_ps_2.png)
+- [`20260901_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260901_ps_3.png)
 
 ### 112. 20260902_J0g7dg5T2hA.mp4
 
@@ -4013,9 +4013,9 @@
 | 2 | structured_whiteboard | 2 | 00:06:12 | 00:07:12 | 113.0 | · |
 
 **Saved files:**
-- [`20260902_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260902_ps.png)
-- [`20260902_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260902_ps_2.png)
-- [`20260902_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260902_ps_3.png)
+- [`20260902_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260902_ps.png)
+- [`20260902_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260902_ps_2.png)
+- [`20260902_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260902_ps_3.png)
 
 ### 113. 20260903_cD6vyCEZcMs.mp4
 
@@ -4049,9 +4049,9 @@
 | 2 | structured_whiteboard | 2 | 00:05:24 | 00:06:12 | 120.3 | · |
 
 **Saved files:**
-- [`20260903_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260903_ps.png)
-- [`20260903_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260903_ps_2.png)
-- [`20260903_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260903_ps_3.png)
+- [`20260903_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260903_ps.png)
+- [`20260903_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260903_ps_2.png)
+- [`20260903_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260903_ps_3.png)
 
 ### 114. 20260904_bPeges-eRl0.mp4
 
@@ -4086,9 +4086,9 @@
 | 3 | structured_whiteboard | 1 | 00:22:00 | 00:22:00 | 97.6 | · |
 
 **Saved files:**
-- [`20260904_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260904_ps.png)
-- [`20260904_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260904_ps_2.png)
-- [`20260904_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260904_ps_3.png)
+- [`20260904_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260904_ps.png)
+- [`20260904_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260904_ps_2.png)
+- [`20260904_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260904_ps_3.png)
 
 ### 115. 20260905_Trp_SzVuqHU.mp4
 
@@ -4121,9 +4121,9 @@
 | 1 | dmi | 3 | 00:00:48 | 00:02:24 | 45.6 | ✓ |
 
 **Saved files:**
-- [`20260905_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260905_ps.png)
-- [`20260905_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260905_ps_2.png)
-- [`20260905_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260905_ps_3.png)
+- [`20260905_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260905_ps.png)
+- [`20260905_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260905_ps_2.png)
+- [`20260905_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260905_ps_3.png)
 
 ### 116. 20260908_wUc1Mdt6WX8.mp4
 
@@ -4156,9 +4156,9 @@
 | 1 | structured_whiteboard | 3 | 00:05:52 | 00:07:44 | 100.5 | · |
 
 **Saved files:**
-- [`20260908_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260908_ps.png)
-- [`20260908_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260908_ps_2.png)
-- [`20260908_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260908_ps_3.png)
+- [`20260908_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260908_ps.png)
+- [`20260908_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260908_ps_2.png)
+- [`20260908_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260908_ps_3.png)
 
 ### 117. 20260910_ZbcQw4xdVxo.mp4
 
@@ -4192,9 +4192,9 @@
 | 2 | structured_whiteboard | 2 | 00:08:24 | 00:09:12 | 98.9 | · |
 
 **Saved files:**
-- [`20260910_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260910_ps.png)
-- [`20260910_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260910_ps_2.png)
-- [`20260910_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260910_ps_3.png)
+- [`20260910_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260910_ps.png)
+- [`20260910_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260910_ps_2.png)
+- [`20260910_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260910_ps_3.png)
 
 ### 118. 20260911_0_YeDfX1atU.mp4
 
@@ -4227,9 +4227,9 @@
 | 1 | structured_whiteboard | 3 | 00:19:12 | 00:20:48 | 104.4 | · |
 
 **Saved files:**
-- [`20260911_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260911_ps.png)
-- [`20260911_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260911_ps_2.png)
-- [`20260911_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260911_ps_3.png)
+- [`20260911_ps.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260911_ps.png)
+- [`20260911_ps_2.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260911_ps_2.png)
+- [`20260911_ps_3.png`](video_scan_20260915/ocr-20260915/ocr-20260915/screenshots/20260911_ps_3.png)
 
 ### 119. 20260914_6VD8H6twd2c.mp4
 
@@ -4263,9 +4263,9 @@
 | 2 | structured_whiteboard | 2 | 00:05:52 | 00:06:40 | 112.8 | · |
 
 **Saved files:**
-- [`20260914_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260914_ps.png)
-- [`20260914_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260914_ps_2.png)
-- [`20260914_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260914_ps_3.png)
+- [`20260914_ps.png`](video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260914_ps.png)
+- [`20260914_ps_2.png`](video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260914_ps_2.png)
+- [`20260914_ps_3.png`](video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260914_ps_3.png)
 
 ### 120. 20260915_NCp8mcHfsKc.mp4
 
@@ -4299,9 +4299,9 @@
 | 2 | structured_whiteboard | 2 | 00:13:00 | 00:14:00 | 92.9 | · |
 
 **Saved files:**
-- [`20260915_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260915_ps.png)
-- [`20260915_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260915_ps_2.png)
-- [`20260915_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260915_ps_3.png)
+- [`20260915_ps.png`](video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260915_ps.png)
+- [`20260915_ps_2.png`](video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260915_ps_2.png)
+- [`20260915_ps_3.png`](video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260915_ps_3.png)
 
 ### 121. 20260916_GOjwRa0EWBc.mp4
 
@@ -4335,9 +4335,9 @@
 | 2 | structured_whiteboard | 2 | 00:06:40 | 00:08:00 | 115.5 | · |
 
 **Saved files:**
-- [`20260916_ps.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260916_ps.png)
-- [`20260916_ps_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260916_ps_2.png)
-- [`20260916_ps_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260916_ps_3.png)
+- [`20260916_ps.png`](video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260916_ps.png)
+- [`20260916_ps_2.png`](video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260916_ps_2.png)
+- [`20260916_ps_3.png`](video_scan_20260917/ocr-20260917/ocr-20260917/screenshots/20260916_ps_3.png)
 
 ### 122. 20220218_Cd_IXyHwO3o.mp4
 
@@ -4368,7 +4368,7 @@
 | 1 | tale_of_the_tape | 1 | 00:35:56 | 00:35:56 | 14.4 | · |
 
 **Saved files:**
-- [`qmg_20220218.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220218.png)
+- [`qmg_20220218.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220218.png)
 
 ### 123. 20220222_X1Rp33_-R9E.mp4
 
@@ -4402,9 +4402,9 @@
 | 2 | chart | 1 | 00:19:36 | 00:19:36 | 4.5 | · |
 
 **Saved files:**
-- [`qmg_20220222.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220222.png)
-- [`qmg_20220222_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220222_2.png)
-- [`qmg_20220222_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220222_3.png)
+- [`qmg_20220222.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220222.png)
+- [`qmg_20220222_2.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220222_2.png)
+- [`qmg_20220222_3.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220222_3.png)
 
 ### 124. 20220228_uX2B8fAMuLE.mp4
 
@@ -4437,8 +4437,8 @@
 | 2 | chart | 1 | 00:46:40 | 00:46:40 | 12.9 | · |
 
 **Saved files:**
-- [`qmg_20220228.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220228.png)
-- [`qmg_20220228_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220228_2.png)
+- [`qmg_20220228.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220228.png)
+- [`qmg_20220228_2.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220228_2.png)
 
 ### 125. 20220301_BYPiofqBhvQ.mp4
 
@@ -4469,7 +4469,7 @@
 | 1 | chart | 1 | 00:13:12 | 00:13:12 | 12.8 | · |
 
 **Saved files:**
-- [`qmg_20220301.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220301.png)
+- [`qmg_20220301.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220301.png)
 
 ### 126. 20220302_BAlC_cRvESM.mp4
 
@@ -4504,9 +4504,9 @@
 | 3 | chart | 1 | 00:46:24 | 00:46:24 | 4.5 | · |
 
 **Saved files:**
-- [`qmg_20220302.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220302.png)
-- [`qmg_20220302_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220302_2.png)
-- [`qmg_20220302_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220302_3.png)
+- [`qmg_20220302.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220302.png)
+- [`qmg_20220302_2.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220302_2.png)
+- [`qmg_20220302_3.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220302_3.png)
 
 ### 127. 20220318_CRvSLzJs6i8.mp4
 
@@ -4539,9 +4539,9 @@
 | 2 | chart | 1 | 00:23:20 | 00:23:20 | 4.5 | · |
 
 **Saved files:**
-- [`qmg_20220318.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220318.png)
-- [`qmg_20220318_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220318_2.png)
-- [`qmg_20220318_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220318_3.png)
+- [`qmg_20220318.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220318.png)
+- [`qmg_20220318_2.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220318_2.png)
+- [`qmg_20220318_3.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220318_3.png)
 
 ### 128. 20220321_Fsh39kp9XPM.mp4
 
@@ -4575,9 +4575,9 @@
 | 3 | chart | 1 | 00:51:08 | 00:51:08 | 4.5 | · |
 
 **Saved files:**
-- [`qmg_20220321.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220321.png)
-- [`qmg_20220321_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220321_2.png)
-- [`qmg_20220321_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220321_3.png)
+- [`qmg_20220321.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220321.png)
+- [`qmg_20220321_2.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220321_2.png)
+- [`qmg_20220321_3.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220321_3.png)
 
 ### 129. 20220323_Xsk8dD6eoEA.mp4
 
@@ -4608,7 +4608,7 @@
 | 1 | tale_of_the_tape | 1 | 00:16:00 | 00:16:00 | 13.1 | · |
 
 **Saved files:**
-- [`qmg_20220323.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220323.png)
+- [`qmg_20220323.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220323.png)
 
 ### 130. 20220330_B2PcGc--FnM.mp4
 
@@ -4642,9 +4642,9 @@
 | 3 | chart | 1 | 00:30:48 | 00:30:48 | 4.6 | · |
 
 **Saved files:**
-- [`qmg_20220330.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220330.png)
-- [`qmg_20220330_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220330_2.png)
-- [`qmg_20220330_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220330_3.png)
+- [`qmg_20220330.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220330.png)
+- [`qmg_20220330_2.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220330_2.png)
+- [`qmg_20220330_3.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220330_3.png)
 
 ### 131. 20220331_CkJEeFvlDzc.mp4
 
@@ -4676,9 +4676,9 @@
 | 1 | chart | 3 | 00:15:20 | 00:17:00 | 4.5 | · |
 
 **Saved files:**
-- [`qmg_20220331.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220331.png)
-- [`qmg_20220331_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220331_2.png)
-- [`qmg_20220331_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220331_3.png)
+- [`qmg_20220331.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220331.png)
+- [`qmg_20220331_2.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220331_2.png)
+- [`qmg_20220331_3.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220331_3.png)
 
 ### 132. 20220405_fXN3uTL01f4.mp4
 
@@ -4713,9 +4713,9 @@
 | 3 | chart | 1 | 00:35:56 | 00:35:56 | 4.5 | · |
 
 **Saved files:**
-- [`qmg_20220405.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220405.png)
-- [`qmg_20220405_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220405_2.png)
-- [`qmg_20220405_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220405_3.png)
+- [`qmg_20220405.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220405.png)
+- [`qmg_20220405_2.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220405_2.png)
+- [`qmg_20220405_3.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220405_3.png)
 
 ### 133. 20220406_TeWiXhJTeyI.mp4
 
@@ -4749,9 +4749,9 @@
 | 2 | chart | 2 | 00:53:20 | 00:54:24 | 4.7 | · |
 
 **Saved files:**
-- [`qmg_20220406.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220406.png)
-- [`qmg_20220406_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220406_2.png)
-- [`qmg_20220406_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220406_3.png)
+- [`qmg_20220406.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220406.png)
+- [`qmg_20220406_2.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220406_2.png)
+- [`qmg_20220406_3.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220406_3.png)
 
 ### 134. 20220412_bnPcAPjdAz4.mp4
 
@@ -4782,7 +4782,7 @@
 | 1 | tale_of_the_tape | 1 | 00:26:00 | 00:26:00 | 12.5 | · |
 
 **Saved files:**
-- [`qmg_20220412.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220412.png)
+- [`qmg_20220412.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220412.png)
 
 ### 135. 20220413_n6Gm1mLN7T0.mp4
 
@@ -4813,9 +4813,9 @@
 | 3 | chart | 1 | 00:52:16 | 00:52:16 | 4.5 | · |
 
 **Saved files:**
-- [`qmg_20220413.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220413.png)
-- [`qmg_20220413_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220413_2.png)
-- [`qmg_20220413_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220413_3.png)
+- [`qmg_20220413.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220413.png)
+- [`qmg_20220413_2.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220413_2.png)
+- [`qmg_20220413_3.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220413_3.png)
 
 ### 136. 20220414_mKkOtiFjc_E.mp4
 
@@ -4848,9 +4848,9 @@
 | 3 | chart | 1 | 00:31:28 | 00:31:28 | 4.5 | · |
 
 **Saved files:**
-- [`qmg_20220414.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220414.png)
-- [`qmg_20220414_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220414_2.png)
-- [`qmg_20220414_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220414_3.png)
+- [`qmg_20220414.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220414.png)
+- [`qmg_20220414_2.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220414_2.png)
+- [`qmg_20220414_3.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220414_3.png)
 
 ### 137. 20220419_yn2pIMXdFg8.mp4
 
@@ -4885,9 +4885,9 @@
 | 3 | chart | 1 | 00:30:36 | 00:30:36 | 4.5 | · |
 
 **Saved files:**
-- [`qmg_20220419.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220419.png)
-- [`qmg_20220419_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220419_2.png)
-- [`qmg_20220419_3.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220419_3.png)
+- [`qmg_20220419.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220419.png)
+- [`qmg_20220419_2.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220419_2.png)
+- [`qmg_20220419_3.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220419_3.png)
 
 ### 138. 20220421_BMl5Ml24crg.mp4
 
@@ -4918,7 +4918,7 @@
 | 1 | tale_of_the_tape | 1 | 00:27:52 | 00:27:52 | 12.9 | · |
 
 **Saved files:**
-- [`qmg_20220421.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220421.png)
+- [`qmg_20220421.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220421.png)
 
 ### 139. 20220425_s6jdpRmrGck.mp4
 
@@ -4949,7 +4949,7 @@
 | 1 | tale_of_the_tape | 1 | 00:19:08 | 00:19:08 | 16.5 | · |
 
 **Saved files:**
-- [`qmg_20220425.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220425.png)
+- [`qmg_20220425.png`](video_scan_20260917/qmg-ocr-20260917-missing19/qmg-ocr-20260917-missing19/snapshots/qmg_20220425.png)
 
 ### 140. 20220222_X1Rp33_-R9E.mp4
 
@@ -4972,8 +4972,8 @@
 | 2 | chart_stream | 1 | 00:09:48 | 00:09:48 | 25.0 | · |
 
 **Saved files:**
-- [`qmg_20220222.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20261024/qmg-table-e2e/snapshots/qmg_20220222.png)
-- [`qmg_20220222_2.png`](C:/Users/admin/Projects/portfolio_analyzer_revere/data/video_scan_20261024/qmg-table-e2e/snapshots/qmg_20220222_2.png)
+- [`qmg_20220222.png`](video_scan_20261024/qmg-table-e2e/snapshots/qmg_20220222.png)
+- [`qmg_20220222_2.png`](video_scan_20261024/qmg-table-e2e/snapshots/qmg_20220222_2.png)
 
 ## Observations
 
