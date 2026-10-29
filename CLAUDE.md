@@ -426,6 +426,7 @@ Results: `data/qmg_alt_batch_results.json`.
 - `src/parse/parseChartStream.js` — Qullamaggie position-list ticker extraction
 - `src/parse/parseWhiteboardScreenshot.js` — GRO/TURBO/Revere whiteboard parser
 - `src/parse/parseWhiteboardScreenshotWithBoxes.js` — the Revere whiteboard's POSITIONAL parser (the one the scan tool runs)
+- `src/parse/parseScreenshot.js` — the LEGACY screenshot parser (`GRO`/`TURBO` rows + a `BOTTOM LINE:`), used by the screenshot pipeline in `src/index.js` and by the scan tool's non-whiteboard branch. It is **not** the whiteboard scan path. Its issue codes are `MISSING_*` / `LOW_OCR_CONFIDENCE` / `BOTTOM_LINE_CONFLICT` — the last one fires when the main-line `BOTTOM LINE:` and the `ocr.bottomText` fallback both produce a value and they disagree; the main line still wins, but the disagreement is no longer silent.
 - `src/video/positionTableScan.js` — positions-TABLE reader (source-resolution, lexicon-constrained)
 - `src/video/panelExtract.js` — source-resolution panel crops (shared ffmpeg/ffprobe resolver)
 - `src/video/imageHash.js` — full-frame pHash

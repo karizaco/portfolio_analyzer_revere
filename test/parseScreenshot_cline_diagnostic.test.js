@@ -216,12 +216,11 @@ test('cline_diagnostic: parseScreenshot — multiple issues pipe-separated', () 
   assert.equal(row.parse_status, 'review');
 });
 
-test('cline_diagnostic: parseScreenshot DISCOVERY — main-line vs bottomText disagreement (silent today)', () => {
-  // Documents the silent-bug that BOTTOM_LINE_CONFLICT would fix:
-  // when the main-line BOTTOM LINE value and the bottomText fallback
-  // disagree, the parser silently picks the main-line value with no
-  // issue_code emitted. This is the test Cline will use to verify the
-  // future fix.
+test('cline_diagnostic: parseScreenshot — main-line vs bottomText disagreement emits BOTTOM_LINE_CONFLICT', () => {
+  // When the main-line BOTTOM LINE value and the bottomText fallback
+  // disagree, the main line still wins — but the disagreement is now
+  // SURFACED, so a downstream reader can tell a clean parse from "two
+  // sources disagreed and one was chosen".
   const row = parseScreenshot({
     metadata: buildMetadata(),
     ocr: buildOcr({
@@ -236,9 +235,47 @@ test('cline_diagnostic: parseScreenshot DISCOVERY — main-line vs bottomText di
     })
   });
   assert.equal(row.bottom_line, 'MAIN_LINE_VALUE',
-    `expected main-line wins (current behavior), got "${row.bottom_line}"`);
-  assert.equal(row.issue_codes, '',
-    `expected no issue_codes (current behavior), got "${row.issue_codes}"`);
+    `expected main-line wins, got "${row.bottom_line}"`);
+  assert.ok(row.issue_codes.includes('BOTTOM_LINE_CONFLICT'),
+    `expected BOTTOM_LINE_CONFLICT, got "${row.issue_codes}"`);
+  assert.equal(row.parse_status, 'review');
+});
+
+test('cline_diagnostic: parseScreenshot — no conflict when only one source present', () => {
+  // One source alone is not a disagreement. The fallback-only case must
+  // not be reported as a conflict.
+  const row = parseScreenshot({
+    metadata: buildMetadata(),
+    ocr: buildOcr({
+      text: 'GRO HOLDINGS: AAPL\nGRO RVAB: NO CHANGES\nBOTTOM LIN: ???',
+      bottomText: 'REAL_VALUE'
+    })
+  });
+  assert.equal(row.bottom_line, 'REAL_VALUE');
+  assert.ok(!row.issue_codes.includes('BOTTOM_LINE_CONFLICT'),
+    `expected no BOTTOM_LINE_CONFLICT, got "${row.issue_codes}"`);
+});
+
+test('cline_diagnostic: parseScreenshot — no conflict when both sources agree', () => {
+  // Both sources present and saying the same thing is agreement, not a
+  // conflict. Case alone must not raise one either: the OCR is inconsistent
+  // about case, and `extractBottomLine` normalises whitespace.
+  const row = parseScreenshot({
+    metadata: buildMetadata(),
+    ocr: buildOcr({
+      text: [
+        'GRO HOLDINGS: AAPL',
+        'GRO RVAB: NO CHANGES',
+        'TURBO HOLDINGS: TSLA',
+        'TURBO RVAB: NO CHANGES',
+        'BOTTOM LINE: HEALTHY PULLBACK'
+      ].join('\n'),
+      bottomText: 'BOTTOM LINE: healthy pullback'
+    })
+  });
+  assert.equal(row.bottom_line, 'HEALTHY PULLBACK');
+  assert.ok(!row.issue_codes.includes('BOTTOM_LINE_CONFLICT'),
+    `expected no BOTTOM_LINE_CONFLICT, got "${row.issue_codes}"`);
 });
 
 test('cline_diagnostic: parseScreenshot — bottomText used when main-line is garbage', () => {
