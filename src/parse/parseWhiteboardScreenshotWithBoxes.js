@@ -11,12 +11,18 @@ const {
 } = require('../normalize/cleanFields');
 
 const {
-  loadSeedLexiconSync
+  loadSeedLexiconSync,
+  loadDecodeLexiconSync
 } = require('../normalize/tickerScan');
 
 const {
-  hasPriceNear,
-  findCloseTickerMatch
+  resolveTickerToken,
+  splitFusedTicker,
+  levenshtein,
+} = require('../normalize/tickerFuzzyResolve');
+
+const {
+  hasPriceNear
 } = require('../parse/parseChartStream');
 
 const { LOW_CONFIDENCE_THRESHOLD } = require('../config/schema');
@@ -232,10 +238,57 @@ function findKeywordWordsInRow(row, keywordPattern) {
 
 // ---------- Ticker Extraction from Row ----------
 
+// ---------- Portfolio labels ----------
+
+// The whiteboard labels the two portfolios "GRO" and "TURBO". Tesseract
+// misreads them ("TURBO" → "TURBG"), and a misread label costs the WHOLE
+// portfolio: the holdings row is never found, AND the section filter below
+// fails open, which lets the action line's tickers (DELL, SMTC, BITO) in.
+const PORTFOLIO_LABELS = ['GRO', 'TURBO'];
+
+/**
+ * Does this word name a portfolio label?
+ *
+ * One edit of tolerance, and only for a word long enough to BE the label.
+ * A two-letter word is not a label, so "GR" (what "GRO" becomes when the O
+ * is lost) is not accepted.
+ */
+function matchesPortfolioLabel(word, label) {
+  const cleaned = String(word || '').replace(/[^A-Z]/gi, '').toUpperCase();
+  if (!cleaned) return false;
+  if (cleaned === label) return true;
+  if (cleaned.length < 3) return false;
+  if (Math.abs(cleaned.length - label.length) > 1) return false;
+  return levenshtein(cleaned, label) === 1;
+}
+
+// The label of a section header, e.g. "GRO HOLDINGS:" or "TURBO RVAB/REBAR:".
+const SECTION_HOLDINGS_RE = /([A-Z]{2,6})\s+HOLDINGS\s*:/g;
+const SECTION_RVAB_RE = /([A-Z]{2,6})\s+RVAB\b[^:\n]{0,16}:/g;
+
+/**
+ * Find where a labelled section starts in the OCR text.
+ *
+ * Returns the index of the header, or -1 when the section is not there.
+ */
+function findSectionStart(upper, label, kind) {
+  const re = kind === 'rvab' ? SECTION_RVAB_RE : SECTION_HOLDINGS_RE;
+  re.lastIndex = 0;
+  let match = re.exec(upper);
+  while (match !== null) {
+    if (matchesPortfolioLabel(match[1], label)) return match.index;
+    match = re.exec(upper);
+  }
+  return -1;
+}
+
 /**
  * Check if a ticker appears in the correct section of the OCR text.
  * Used by Mode A to distinguish GRO tickers from TURBO/SECTORS tickers
  * when they are all on the same merged OCR line.
+ *
+ * The section is found by its LABEL, so a misread label ("TURBG HOLDINGS:")
+ * still delimits the section it should.
  */
 function tickerInSection(ocrText, ticker, portfolio) {
   if (!ocrText || !ticker) return true;  // no text to check, accept
@@ -243,20 +296,17 @@ function tickerInSection(ocrText, ticker, portfolio) {
   const t = ticker.toUpperCase();
 
   // Find section boundaries
-  const groMatch = upper.match(/\*?\s*GRO\s+HOLDINGS\s*:/i);
-  const turboMatch = upper.match(/\*?\s*TURBO\s+HOLDINGS\s*:/i);
+  const groPos = findSectionStart(upper, 'GRO', 'holdings');
+  const turboPos = findSectionStart(upper, 'TURBO', 'holdings');
 
   if (portfolio === 'GRO') {
     // GRO tickers must appear between GRO HOLDINGS and either:
     // 1. TURBO HOLDINGS section, OR
     // 2. GRO RVAB/REBAR action line (starts with "* GRO RVAB")
     // The action line text ("BUY NET ADD to BE PLTR SELL LITE, NCLD DOCN") must NOT be included.
-    const groPos = groMatch ? upper.indexOf(groMatch[0]) : -1;
     if (groPos < 0) return true;  // can't find section, accept
     // Find the action line start (* GRO RVAB or * GRO RVAB/REBAR)
-    const rvabMatch = upper.match(/\*\s*GRO\s+RVAB\/?REBAR\s*:/);
-    const rvabPos = rvabMatch ? upper.indexOf(rvabMatch[0]) : -1;
-    const turboPos = turboMatch ? upper.indexOf(turboMatch[0]) : -1;
+    const rvabPos = findSectionStart(upper, 'GRO', 'rvab');
     // Stop at whichever comes first: action line or TURBO HOLDINGS
     let sectionEnd = upper.length;
     if (rvabPos > groPos) sectionEnd = rvabPos;
@@ -265,11 +315,16 @@ function tickerInSection(ocrText, ticker, portfolio) {
     return section.includes(t);
   } else if (portfolio === 'TURBO') {
     // TURBO tickers must appear between TURBO HOLDINGS and next section
-    const turboPos = turboMatch ? upper.indexOf(turboMatch[0]) : -1;
     if (turboPos < 0) return true;  // can't find section, accept
-    // Find '* ' (asterisk + space = start of new line) from turbo position onward
+    // The section ends at the portfolio's own action line, or at the next
+    // '* ' line marker, whichever comes first. The action line does not
+    // always start with '* ' — the OCR often reads it as a quote — so the
+    // labelled header is the reliable end.
+    const rvabPos = findSectionStart(upper, 'TURBO', 'rvab');
     const nextSection = upper.indexOf('* ', turboPos + 10);
-    const sectionEnd = nextSection > turboPos ? nextSection : upper.length;
+    let sectionEnd = upper.length;
+    if (rvabPos > turboPos) sectionEnd = rvabPos;
+    if (nextSection > turboPos && nextSection < sectionEnd) sectionEnd = nextSection;
     const section = upper.slice(turboPos, sectionEnd);
     return section.includes(t);
   }
@@ -299,15 +354,19 @@ function isTickerShape(text) {
  * Tesseract merges comma-separated tickers into single words, e.g.
  * "SPYM,UPRO,TQQQ," or "PLTR,U,BE" or "HPE,AMD,SKHY,".
  *
- * Strategy: split on commas (ticker list separators), then validate
- * each token. For tokens containing slashes (UPRO/SPXL):
- *   - If BOTH slash-parts are real tickers → accept both
- *   - Otherwise → accept the first part only (slash is likely a misread comma)
+ * It also loses the comma between two holdings, and renders the loss as
+ * nothing at all ("TQQNCLD", "SPXLIBIT") or as a period ("LITE.OOCN").
  *
- * Tokens starting with non-alpha chars (|, etc.) are cleaned.
- * Single-char results are discarded.
+ * Every part is resolved against the MATCH lexicon (the seed plus the
+ * observed tickers) and is only reported when it is on the ALLOW list (the
+ * seed). A part with two equally close candidates is ambiguous, and is
+ * dropped rather than guessed.
+ *
+ * Each candidate carries the RAW text it came from (`source`), because the
+ * section filter has to run against the text as it was read: a corrected
+ * ticker ("TGQQ" → "TQQQ") is not in the OCR text at all.
  */
-function tokenizeMergedTickers(word, lexicon) {
+function tokenizeMergedTickers(word, ctx) {
   const raw = word.text;
   // Split on commas first — commas always separate tickers in the list
   const commaTokens = raw.split(',');
@@ -316,79 +375,212 @@ function tokenizeMergedTickers(word, lexicon) {
   for (const tok of commaTokens) {
     const cleaned = cleanTickerToken(tok.trim());
     if (!cleaned) continue;
-
-    if (cleaned.includes('/')) {
-      // Slash: could be ratio notation OR a misread comma.
-      // Accept BOTH slash-parts only if BOTH are valid tickers in the lexicon.
-      const slashParts = cleaned.split('/').map(p => cleanTickerToken(p.trim())).filter(Boolean);
-      if (slashParts.length === 2) {
-        const [first, second] = slashParts;
-        const firstValid = STRICT_TICKER_PATTERN.test(first) && first.length > 1;
-        const secondValid = STRICT_TICKER_PATTERN.test(second) && second.length > 1;
-        if (firstValid && secondValid && lexicon.has(first) && lexicon.has(second)) {
-          // Both are real tickers — accept both (rare case)
-          result.push(first, second);
-        } else {
-          // Treat slash as misread comma — accept first part only
-          if (firstValid && (lexicon.has(first) || first.length > 1)) {
-            result.push(first);
-          }
-        }
-      } else if (slashParts.length === 1 && slashParts[0]) {
-        result.push(slashParts[0]);
-      }
-    } else {
-      result.push(cleaned);
-    }
-  }
-
-  // --- Ticker-database-aware splitting for OCR merges ---
-  // When Tesseract merges two tickers without a comma (e.g. "TQQQNCLD"),
-  // the comma/slash splitting above doesn't catch them. Try to split
-  // remaining unrecognized tokens by trying all possible prefix partitions
-  // and picking the one where ALL parts are valid tickers.
-  if (result.some(t => !lexicon.has(t) && t.length > 4)) {
-    const remainingTokens = [];
-    for (const token of result) {
-      if (lexicon.has(token)) {
-        remainingTokens.push(token);
-        continue;
-      }
-      // Try to split: find all possible splits where every part is in lexicon
-      const splits = [];
-      // Enumerate all ways to partition token into 2+ parts (each 2-5 chars)
-      const maxParts = Math.floor(token.length / 2);
-      function trySplit(start, path) {
-        if (start === token.length) {
-          // All parts consumed — check if all are valid tickers
-          const allValid = path.every(p => lexicon.has(p));
-          if (allValid) splits.push([...path]);
-          return;
-        }
-        if (path.length >= maxParts) return;
-        for (let len = 2; len <= Math.min(5, token.length - start); len++) {
-          const part = token.slice(start, start + len);
-          if (lexicon.has(part)) {
-            trySplit(start + len, [...path, part]);
-          }
-        }
-      }
-      trySplit(0, []);
-      if (splits.length > 0) {
-        // Pick the split with the most parts (most granular = least leftover)
-        splits.sort((a, b) => b.length - a.length);
-        remainingTokens.push(...splits[0]);
-      }
-      // If no valid split found, keep original token (will be filtered downstream)
-      // or accept it if it passes basic ticker shape
-      if (splits.length === 0 && token.length <= 5 && STRICT_TICKER_PATTERN.test(token)) {
-        remainingTokens.push(token);
-      }
-    }
-    return remainingTokens;
+    result.push(...expandTickerToken(cleaned, ctx));
   }
 
   return result;
+}
+
+/**
+ * Expand one comma-separated token into its ticker candidates.
+ */
+function expandTickerToken(cleaned, ctx) {
+  const source = cleaned;
+
+  if (cleaned.includes('/')) {
+    // Slash: could be ratio notation OR a misread comma.
+    const slashParts = cleaned.split('/').map(p => cleanTickerToken(p.trim())).filter(Boolean);
+    if (slashParts.length === 2) {
+      const [first, second] = slashParts;
+      const firstResolution = resolveTickerToken(first, ctx);
+      const secondResolution = resolveTickerToken(second, ctx);
+      if (firstResolution.ticker && secondResolution.ticker) {
+        // Both are real tickers — accept both (ratio notation).
+        return [
+          candidate(first, firstResolution, source),
+          candidate(second, secondResolution, source),
+        ];
+      }
+      if (firstResolution.ticker) {
+        // Treat slash as a misread comma — keep the first part, and try to
+        // recover the second one, which may itself be two fused tickers.
+        const recovered = secondResolution.ticker
+          ? [candidate(second, secondResolution, source)]
+          : (splitFusedTicker(second, ctx) || []).map((p) => candidate(p.text, p.resolution, source));
+        return [candidate(first, firstResolution, source), ...recovered];
+      }
+      if (secondResolution.ticker) {
+        return [candidate(second, secondResolution, source)];
+      }
+      return [candidate(first, null, source), candidate(second, null, source)];
+    }
+    if (slashParts.length === 1 && slashParts[0]) {
+      const resolution = resolveTickerToken(slashParts[0], ctx);
+      return [candidate(slashParts[0], resolution, source)];
+    }
+    return [];
+  }
+
+  if (cleaned.includes('.')) {
+    // A period is either a legitimate "XXX.YY" ticker (BRK.B) or the comma
+    // between two holdings, read as a period ("LITE.OOCN").
+    const dotParts = cleaned.split('.').map(p => cleanTickerToken(p.trim())).filter(Boolean);
+    const legitimate = dotParts.length === 2 && dotParts[1].length <= 2;
+    if (!legitimate && dotParts.length >= 2) {
+      const out = [];
+      for (const part of dotParts) {
+        const resolution = resolveTickerToken(part, ctx);
+        if (resolution.ticker) {
+          out.push(candidate(part, resolution, source));
+        } else {
+          const split = splitFusedTicker(part, ctx);
+          if (split) out.push(...split.map((p) => candidate(p.text, p.resolution, source)));
+          else out.push(candidate(part, null, source));
+        }
+      }
+      return out;
+    }
+  }
+
+  const resolution = resolveTickerToken(cleaned, ctx);
+  if (resolution.ticker) return [candidate(cleaned, resolution, source)];
+
+  // The token may be several tickers fused together by the OCR.
+  const split = splitFusedTicker(cleaned, ctx);
+  if (split) return split.map((p) => candidate(p.text, p.resolution, source));
+
+  return [candidate(cleaned, resolution, source)];
+}
+
+function candidate(text, resolution, source) {
+  return { text, source, resolution };
+}
+
+/**
+ * Is this word written in capitals?
+ *
+ * The holdings list on the whiteboard is set in capitals. The chart drawn
+ * beside it is not: its annotations are read as "rang", "by", "wal". A
+ * standalone word that is not in capitals is chart ink, and a chart
+ * annotation one edit away from a real ticker ("rang" → FANG, "wal" → HAL,
+ * "by" → BE) is not a holding.
+ *
+ * This only gates the CORRECTION. A ticker the lexicon knows is accepted
+ * whatever case the OCR gave it.
+ */
+function isUpperCaseWord(text) {
+  return !/[a-z]/.test(String(text || ''));
+}
+
+/**
+ * Turn one OCR word into accepted tickers.
+ *
+ * A word carrying a comma or a slash is a merged group: it is split, and
+ * every part is resolved on its own. A standalone word is one ticker.
+ */
+function acceptWord({ word, portfolio, ocrText, ctx, accepted, rejected }) {
+  const raw = word.text;
+  const isMergedGroup = /[,\/]/.test(raw);
+
+  if (isMergedGroup) {
+    // For merged groups (e.g., "SPYM,UPRO,TQQQ,"), accept regardless of
+    // colonRight. The colonRight threshold is only for standalone words (to
+    // skip the GRO/HOLDINGS label). Merged ticker groups always start to the
+    // right of the label.
+    //
+    // A merged group is a LIST of holdings, so a part of it that is one
+    // edit away from a real ticker is that ticker — the list is the
+    // evidence. A standalone word has no such evidence, so its correction
+    // needs the capitals to stand in for it.
+    const candidates = tokenizeMergedTickers(word, ctx);
+    acceptCandidates({
+      candidates, word, raw, portfolio, ocrText, accepted, rejected,
+      allowCorrection: true,
+    });
+    return;
+  }
+
+  // Standalone ticker-shaped words on the label row — these are real tickers
+  // (e.g., DOCN on 20260922) that Tesseract didn't merge with a group.
+  // The section filter prevents SECTORS bleed (DASH, COPX, TAN, etc.).
+  const cleaned = cleanTickerToken(raw);
+  if (!cleaned) return;
+  const candidates = expandTickerToken(cleaned, ctx);
+  // A word that is not ticker-shaped is still worth expanding when it holds
+  // two holdings the OCR ran together: "LITE.OOCN" is LITE and DOCN, with
+  // the comma between them read as a period. Nothing else on the row splits
+  // into tickers, so the expansion stays empty for the chart's ink.
+  if (!isTickerShape(raw) && !candidates.some((c) => c.resolution && c.resolution.ticker)) return;
+  acceptCandidates({
+    candidates,
+    word, raw, portfolio, ocrText, accepted, rejected,
+    allowCorrection: isUpperCaseWord(raw),
+  });
+}
+
+/**
+ * Accept or reject resolved ticker candidates.
+ *
+ * The section filter runs on the RAW text the candidate came from, not on the
+ * resolved ticker: a corrected ticker ("TGQQ" → "TQQQ") is not in the OCR text
+ * at all, so the corrected form would be rejected by every section.
+ */
+function acceptCandidates({ candidates, word, raw, portfolio, ocrText, accepted, rejected, allowCorrection }) {
+  for (const { text, source, resolution } of candidates) {
+    // The portfolio label is on the holdings row too, and it is not a holding.
+    if (PORTFOLIO_LABELS.some((label) => matchesPortfolioLabel(text, label))) {
+      rejected.push({ text, reason: 'PORTFOLIO_LABEL', word });
+      continue;
+    }
+
+    if (resolution && resolution.status === 'corrected' && !allowCorrection) {
+      // Corrected, but this word is not part of a holdings list, so there is
+      // no evidence for the correction — only the chart's proximity.
+      rejected.push({
+        text,
+        reason: resolution.reportable ? 'NOT_IN_LEXICON' : 'NOT_IN_ALLOWLIST',
+        word,
+      });
+      continue;
+    }
+
+    if (!resolution || !resolution.ticker) {
+      // Unknown or ambiguous. A token with a price next to it is taken at
+      // face value; anything else is dropped — a wrong ticker in a portfolio
+      // report is worse than a missing one.
+      if (hasPriceNear(raw, text) && STRICT_TICKER_PATTERN.test(text)) {
+        accepted.push({ ticker: text, word, corrected: null });
+        continue;
+      }
+      rejected.push({
+        text,
+        reason: resolution && resolution.status === 'ambiguous' ? 'AMBIGUOUS_TICKER' : 'NOT_IN_LEXICON',
+        word,
+        candidates: resolution ? resolution.candidates : undefined,
+      });
+      continue;
+    }
+
+    // Filter by section — prevents action-row bleed (LITE, NCLD, DOCN in the
+    // GRO section) and SECTORS bleed (DASH, DELL, COPX, TAN, URNM, OIH).
+    if (!tickerInSection(ocrText, source, portfolio)) {
+      rejected.push({ text, reason: 'WRONG_SECTION', word });
+      continue;
+    }
+
+    if (!resolution.reportable) {
+      // A real ticker the allow list does not know. It is dropped rather
+      // than reported, and recorded so the loss is visible.
+      rejected.push({ text, reason: 'NOT_IN_ALLOWLIST', word });
+      continue;
+    }
+
+    accepted.push({
+      ticker: resolution.ticker,
+      word,
+      corrected: resolution.corrected ? text : null,
+    });
+  }
 }
 
 /**
@@ -408,7 +600,7 @@ function tokenizeMergedTickers(word, lexicon) {
  *    - ticker.left >= colonRight + 80 (must be to the right of the label)
  *    - ticker.left + ticker.width <= maxRight
  */
-function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon, portfolio, ocrText }) {
+function extractTickersNearLabel({ rows, labelRow, windowBounds, ctx, portfolio, ocrText }) {
   if (!rows || !rows.length || !labelRow) {
     return { tickers: [], rejected: [] };
   }
@@ -425,7 +617,7 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon, portfo
   if (colonRight < 0) {
     for (const word of labelRow.words) {
       const cleaned = word.text.replace(/[^A-Z0-9]/gi, '').toUpperCase();
-      if (/^(GRO|TURBO)$/.test(cleaned)) {
+      if (PORTFOLIO_LABELS.some((label) => matchesPortfolioLabel(cleaned, label))) {
         const wordRight = word.left + word.width;
         if (wordRight > colonRight) colonRight = wordRight;
       }
@@ -438,7 +630,7 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon, portfo
     let groRight = -1;
     for (const word of labelRow.words) {
       const cleaned = word.text.replace(/[^A-Z0-9]/gi, '').toUpperCase();
-      if (cleaned === 'GRO') {
+      if (matchesPortfolioLabel(cleaned, 'GRO')) {
         groRight = word.left + word.width;
         break;
       }
@@ -455,7 +647,7 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon, portfo
     let groRight = -1;
     for (const word of labelRow.words) {
       const cleaned = word.text.replace(/[^A-Z0-9]/gi, '').toUpperCase();
-      if (cleaned === 'GRO') { groRight = word.left + word.width; break; }
+      if (matchesPortfolioLabel(cleaned, 'GRO')) { groRight = word.left + word.width; break; }
     }
     maxRight = groRight > 0 ? groRight * 3 : colonRight + 800;
   }
@@ -469,7 +661,7 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon, portfo
     for (const row of rows) {
       for (const word of row.words) {
         const cleaned = word.text.replace(/[^A-Z0-9]/gi, '').toUpperCase();
-        if (cleaned === 'TURBO') {
+        if (matchesPortfolioLabel(cleaned, 'TURBO')) {
           turboLeft = Math.min(turboLeft, word.left);
         }
       }
@@ -492,14 +684,6 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon, portfo
   // Implementation: scan both the merged row AND the next row, accept tickers
   // from whichever row produces valid results. Mode A is tried first.
 
-  // Find the GRO/TURBO keyword word to get its Tesseract line number.
-  const labelKeywords = ['GRO', 'TURBO'];
-  const labelKeywordWord = labelRow.words.find(w => {
-    const cleaned = w.text.replace(/[^A-Z0-9]/gi, '').toUpperCase();
-    return labelKeywords.includes(cleaned);
-  });
-  const labelLine = labelKeywordWord ? labelKeywordWord.line : labelRow.lineNum;
-
   // Mode B: split row case — label on one row, tickers on the row below.
   // Mode A: merged row case — label and tickers on the same OCR line.
   // Mode B is tried first because it's cleaner and avoids SECTORS/Forex bleed.
@@ -515,49 +699,7 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon, portfo
     for (const word of nextRow.words) {
       if (word.left < colonRight) continue;
       if (word.left + word.width > maxRight) continue;
-
-      const raw = word.text;
-      const isMergedGroup = /[,\/]/.test(raw);
-
-      if (isMergedGroup) {
-        const tokens = tokenizeMergedTickers(word, lexicon);
-        for (const ticker of tokens) {
-          if (!STRICT_TICKER_PATTERN.test(ticker)) {
-            rejected.push({ text: ticker, reason: 'MERGED_TOKEN_NOT_TICKER', word });
-            continue;
-          }
-          // Filter by section — prevents action-row bleed (LITE, NCLD, DOCN in GRO section)
-          if (!tickerInSection(ocrText, ticker, portfolio)) {
-            rejected.push({ text: ticker, reason: 'WRONG_SECTION', word });
-            continue;
-          }
-          const inLexicon = lexicon.has(ticker);
-          if (!inLexicon && !hasPriceNear(raw, ticker)) {
-            const correction = findCloseTickerMatch(ticker, { tickerSet: lexicon, tickers: [...lexicon] });
-            if (correction && lexicon.has(correction)) {
-              accepted.push({ ticker: correction, word, corrected: ticker });
-            } else {
-              rejected.push({ text: ticker, reason: 'NOT_IN_LEXICON', word });
-            }
-            continue;
-          }
-          accepted.push({ ticker, word, corrected: null });
-        }
-      } else {
-        const cleaned = cleanTickerToken(word.text);
-        if (!isTickerShape(word.text)) continue;
-        // Filter by section — prevents action-row bleed in Mode B (LITE, NCLD, DOCN)
-        if (!tickerInSection(ocrText, cleaned, portfolio)) {
-          rejected.push({ text: cleaned, reason: 'WRONG_SECTION', word });
-          continue;
-        }
-        const inLexicon = lexicon.has(cleaned);
-        if (!inLexicon && !hasPriceNear(word.text, cleaned)) {
-          rejected.push({ text: cleaned, reason: 'NOT_IN_LEXICON', word });
-          continue;
-        }
-        accepted.push({ ticker: cleaned, word, corrected: null });
-      }
+      acceptWord({ word, portfolio, ocrText, ctx, accepted, rejected });
     }
   }
 
@@ -568,53 +710,7 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, lexicon, portfo
   if (accepted.length < 12) {
     for (const word of labelRow.words) {
       if (word.left + word.width > maxRight) continue;
-
-      const raw = word.text;
-      const isMergedGroup = /[,\/]/.test(raw);
-
-      if (isMergedGroup) {
-        // For merged groups (e.g., "SPYM,UPRO,TQQQ,"), accept regardless of colonRight.
-        // The colonRight threshold is only for standalone words (to skip the GRO/HOLDINGS
-        // label). Merged ticker groups always start to the right of the label.
-        const tokens = tokenizeMergedTickers(word, lexicon);
-        for (const ticker of tokens) {
-          if (!STRICT_TICKER_PATTERN.test(ticker)) {
-            rejected.push({ text: ticker, reason: 'MERGED_TOKEN_NOT_TICKER', word });
-            continue;
-          }
-          // Filter by section: GRO tickers must appear in GRO section of OCR text,
-          // TURBO tickers in TURBO section. This prevents SECTORS bleed (DASH, DELL,
-          // COPX, TAN, URNM, OIH) from leaking into the wrong portfolio.
-          if (!tickerInSection(ocrText, ticker, portfolio)) {
-            rejected.push({ text: ticker, reason: 'WRONG_SECTION', word });
-            continue;
-          }
-          const inLexicon = lexicon.has(ticker);
-          if (!inLexicon && !hasPriceNear(raw, ticker)) {
-            const correction = findCloseTickerMatch(ticker, { tickerSet: lexicon, tickers: [...lexicon] });
-            if (correction && lexicon.has(correction)) {
-              accepted.push({ ticker: correction, word, corrected: ticker });
-            } else {
-              rejected.push({ text: ticker, reason: 'NOT_IN_LEXICON', word });
-            }
-            continue;
-          }
-          accepted.push({ ticker, word, corrected: null });
-        }
-      } else {
-        // Standalone ticker-shaped words on the label row — these are real tickers
-        // (e.g., DOCN on 20260922) that Tesseract didn't merge with a group.
-        // The section filter prevents SECTORS bleed (DASH, COPX, TAN, etc.).
-        const cleaned = cleanTickerToken(word.text);
-        if (!isTickerShape(word.text)) continue;
-        if (!tickerInSection(ocrText, cleaned, portfolio)) continue;  // skip SECTORS bleed
-        const inLexicon = lexicon.has(cleaned);
-        if (!inLexicon && !hasPriceNear(word.text, cleaned)) {
-          rejected.push({ text: cleaned, reason: 'NOT_IN_LEXICON', word });
-          continue;
-        }
-        accepted.push({ ticker: cleaned, word, corrected: null });
-      }
+      acceptWord({ word, portfolio, ocrText, ctx, accepted, rejected });
     }
   }
 
@@ -729,9 +825,9 @@ async function parseWhiteboardScreenshotWithBoxes({ metadata, ocr, framePath }) 
   // Primary: look for rows with both GRO and HOLDINGS
   for (const row of rows) {
     const rowWords = row.words.map(w => w.text.replace(/[^A-Z]/gi, '').toUpperCase());
-    const hasGro = rowWords.some(w => w === 'GRO');
+    const hasGro = rowWords.some(w => matchesPortfolioLabel(w, 'GRO'));
     const hasHoldings = rowWords.some(w => holdingsKeywords.some(hk => w.includes(hk)));
-    const hasTurbo = rowWords.some(w => w === 'TURBO');
+    const hasTurbo = rowWords.some(w => matchesPortfolioLabel(w, 'TURBO'));
     if (hasGro && hasHoldings) { groHoldingsRow = row; continue; }
     if (hasTurbo && hasHoldings) { turboHoldingsRow = row; }
   }
@@ -769,8 +865,8 @@ async function parseWhiteboardScreenshotWithBoxes({ metadata, ocr, framePath }) 
     let groYRow = null, turboYRow = null, holdingsYRow = null;
     for (const r of yRows) {
       const rw = r.words.map(w => w.text.replace(/[^A-Z]/gi, '').toUpperCase());
-      if (rw.some(w => w === 'GRO')) groYRow = r;  // independent of TURBO
-      if (rw.some(w => w === 'TURBO')) turboYRow = r;  // independent of GRO
+      if (rw.some(w => matchesPortfolioLabel(w, 'GRO'))) groYRow = r;  // independent of TURBO
+      if (rw.some(w => matchesPortfolioLabel(w, 'TURBO'))) turboYRow = r;  // independent of GRO
       if (rw.some(w => holdingsKeywords.some(hk => w.includes(hk)))) holdingsYRow = r;
     }
 
@@ -803,7 +899,7 @@ async function parseWhiteboardScreenshotWithBoxes({ metadata, ocr, framePath }) 
     // First: check if TURBO+HOLDINGS is on the same row as GRO+HOLDINGS
     if (groIndex >= 0) {
       const rowWords = rows[groIndex].words.map(w => w.text.replace(/[^A-Z]/gi, '').toUpperCase());
-      const hasTurbo = rowWords.some(w => w === 'TURBO');
+      const hasTurbo = rowWords.some(w => matchesPortfolioLabel(w, 'TURBO'));
       const hasHoldings = rowWords.some(w => holdingsKeywords.some(hk => w.includes(hk)));
       if (hasTurbo && hasHoldings) {
         turboHoldingsRow = rows[groIndex];
@@ -813,7 +909,7 @@ async function parseWhiteboardScreenshotWithBoxes({ metadata, ocr, framePath }) 
     if (!turboHoldingsRow) {
       for (let i = groIndex + 1; i < rows.length; i++) {
         const rowWords = rows[i].words.map(w => w.text.replace(/[^A-Z]/gi, '').toUpperCase());
-        const hasTurbo = rowWords.some(w => w === 'TURBO');
+        const hasTurbo = rowWords.some(w => matchesPortfolioLabel(w, 'TURBO'));
         const hasHoldings = rowWords.some(w => holdingsKeywords.some(hk => w.includes(hk)));
         if (hasTurbo && hasHoldings) {
           turboHoldingsRow = rows[i];
@@ -823,21 +919,33 @@ async function parseWhiteboardScreenshotWithBoxes({ metadata, ocr, framePath }) 
     }
   }
 
-  // Step 5: Load lexicon for ticker validation
+  // Step 5: Load the lexicons for ticker validation
+  //
+  //   match — what a token MAY be: the seed plus the observed tickers. A real
+  //           ticker the seed does not know resolves to ITSELF here rather
+  //           than to a neighbouring seed ticker (SPXL must not become SOXL).
+  //   allow — what may be REPORTED: the seed.
   let lexicon = new Set();
+  let matchLexicon = { tickers: [], tickerSet: new Set() };
   try {
     const { tickers } = loadSeedLexiconSync();
     lexicon = new Set(tickers);
+    matchLexicon = loadDecodeLexiconSync();
   } catch (_) {}
+  const ctx = {
+    matchTickers: matchLexicon.tickers,
+    matchSet: matchLexicon.tickerSet,
+    allowSet: lexicon,
+  };
 
   // Step 6: Extract GRO tickers — scan all rows within ±30px of the label row
   const groTickers = groHoldingsRow
-    ? extractTickersNearLabel({ rows, labelRow: groHoldingsRow, windowBounds, lexicon, portfolio: 'GRO', ocrText: ocr.text }).tickers
+    ? extractTickersNearLabel({ rows, labelRow: groHoldingsRow, windowBounds, ctx, portfolio: 'GRO', ocrText: ocr.text }).tickers
     : [];
 
   // Step 7: Extract TURBO tickers
   const turboTickers = turboHoldingsRow
-    ? extractTickersNearLabel({ rows, labelRow: turboHoldingsRow, windowBounds, lexicon, portfolio: 'TURBO', ocrText: ocr.text }).tickers
+    ? extractTickersNearLabel({ rows, labelRow: turboHoldingsRow, windowBounds, ctx, portfolio: 'TURBO', ocrText: ocr.text }).tickers
     : [];
 
   // Step 8: Find BOTTOM LINE
