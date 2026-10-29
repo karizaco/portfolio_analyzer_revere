@@ -1,18 +1,22 @@
+import { execSync } from 'node:child_process'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 export const meta = {
   name: 'revere-scan',
   description: 'Resume Revere OCR scanning',
   phases: [{ title: 'Find' }, { title: 'Scan' }],
 }
 
-log('Phase 1: Finding next video to scan...')
+// The repository root, so a pointer stored relative to it can be opened.
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)))
 
-// Use Bash to find next video
-const { execSync } = require('child_process')
+log('Phase 1: Finding next video to scan...')
 
 const py = `
 import sqlite3, os, glob, json
 
-DB = 'data/video_pipeline/state.sqlite2'
+DB = 'data/video_pipeline/state.sqlite'
 LOG = 'data/video_ocr_probe/revere-ocr/ocr_probe/logs/'
 
 conn = sqlite3.connect(DB)
@@ -25,16 +29,19 @@ scanned = set(f[:8] for f in os.listdir(LOG) if f.startswith('202') and f.endswi
 next_videos = [(d,v,p) for d,v,p in rows if d not in scanned]
 print(f'NEXT_COUNT={len(next_videos)}')
 for d,v,p in next_videos[:20]:
-    exists = os.path.exists(p)
-    print(f'{d}|{v}|{1 if exists else 0}|{p}')
+    # The catalog stores paths relative to the repository root so they survive
+    # being checked out on another machine.
+    local = p if os.path.isabs(p) else os.path.join(os.getcwd(), p.replace('\\\\', '/'))
+    exists = os.path.exists(local)
+    print(f'{d}|{v}|{1 if exists else 0}|{local}')
 `
 
-const out = execSync(`python -c "${py.replace(/"/g, '\\"').replace(/\\n/g, ' ') \\"`, {encoding: 'utf8'})
+const out = execSync(`python -c "${py.replace(/"/g, '\\"').replace(/\\n/g, ' ') \\"`, {encoding: 'utf8', cwd: repoRoot})
 console.log(out)
 
-const lines = out.trim().split('\\n')
+const lines = out.trim().split('\n')
 const nextCount = lines.find(l => l.startsWith('NEXT_COUNT='))
-const videoLines = lines.filter(l => l.match(/^202\\d{6}\\|/))
+const videoLines = lines.filter(l => l.match(/^202\d{6}\|/))
 const firstExists = videoLines.find(l => l.split('|')[2] === '1')
 
 if (!firstExists) {
@@ -43,14 +50,14 @@ if (!firstExists) {
 }
 
 const [date, vid, , ...pathParts] = firstExists.split('|')
-const path = pathParts.join('|')
-const filename = path.split('\\\\').pop()
+const filePath = pathParts.join('|')
+const filename = filePath.split('\\').pop()
 
 log(`Phase 2: Scanning ${date} ${vid}...`)
 
 const scanOut = execSync(
   `node tools/scanVideoWithOcr.js --video-dir "data/video_pipeline/downloads_hires/" --file "${filename}" --date "${date}" --prefilter-profile whiteboard --basename revere --output-kind whiteboard --max-captures 3 --fps 0.2 --prefilter-max-frames 10 --run-tag revere-ocr`,
-  {encoding: 'utf8', maxBuffer: 50*1024*1024}
+  {encoding: 'utf8', maxBuffer: 50*1024*1024, cwd: repoRoot}
 )
 console.log(scanOut.slice(-500))
 
@@ -63,7 +70,7 @@ ml = d.get('merged_position_list', [])
 print('TICKERS', len(ml))
 print('SAMPLE', json.dumps(ml[:10]))
 `
-const checkOut = execSync(`python -c "${checkPy.replace(/"/g, '\\"').replace(/\\n/g, ' ') \\"`, {encoding: 'utf8'})
+const checkOut = execSync(`python -c "${checkPy.replace(/"/g, '\\"').replace(/\\n/g, ' ') \\"`, {encoding: 'utf8', cwd: repoRoot})
 console.log(checkOut)
 
 log('Done.')

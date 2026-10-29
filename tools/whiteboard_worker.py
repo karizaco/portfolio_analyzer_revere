@@ -102,6 +102,18 @@ def _apply_migrations(connection: sqlite3.Connection) -> None:
     # Version 1: backfill `channel` on `videos` and `catalog_runs` from
     # `source_url` so legacy rows get a channel label.
     if current < 1:
+        # The backfills below name `channel`, so the column has to exist
+        # first. A database written by an older worker may not have it --
+        # and an UPDATE against a missing column aborts the whole migration,
+        # which leaves the database unopenable rather than half-migrated.
+        for table in ('videos', 'catalog_runs'):
+            columns = {
+                row['name'] for row in connection.execute(f'PRAGMA table_info({table})')
+            }
+            if 'channel' not in columns:
+                connection.execute(
+                    f'ALTER TABLE {table} ADD COLUMN channel TEXT NOT NULL DEFAULT \'\''
+                )
         connection.execute(
             "UPDATE videos SET channel = 'revere' "
             "WHERE channel = '' AND source_url LIKE '%@revereasset%'"
@@ -171,6 +183,50 @@ def _apply_migrations(connection: sqlite3.Connection) -> None:
         )
         connection.commit()
 
+    # Version 3: make the stored paths portable.
+    #
+    # `videos.download_path` is the same defect version 2 fixed on a bigger
+    # column: 392 of its 716 pointers were absolute Windows paths, so they
+    # resolved on the machine that wrote them and nowhere else. The column is
+    # the catalog's record of where a download landed, and it is committed to
+    # git, so a path that only means something on one machine is a pointer
+    # that points at nothing for everyone else.
+    #
+    # `worker_settings` stores this machine's absolute paths the same way.
+    # Those rows are rewritten too. Nothing reads them yet, so the change
+    # cannot break a consumer -- but the next reader would have inherited the
+    # defect, and that is the moment to fix it.
+    if current < 3:
+        for row in connection.execute(
+            'SELECT video_id, download_path FROM videos'
+        ).fetchall():
+            stored = row['download_path'] or ''
+            if not stored:
+                continue
+            portable = portable_stored_path(stored)
+            if portable != stored:
+                connection.execute(
+                    'UPDATE videos SET download_path = ? WHERE video_id = ?',
+                    (portable, row['video_id']),
+                )
+        for row in connection.execute(
+            'SELECT setting_key, setting_value FROM worker_settings'
+        ).fetchall():
+            stored = row['setting_value'] or ''
+            if not stored:
+                continue
+            portable = portable_stored_path(stored)
+            if portable != stored:
+                connection.execute(
+                    'UPDATE worker_settings SET setting_value = ?, updated_at = ? '
+                    'WHERE setting_key = ?',
+                    (portable, utc_now_iso(), row['setting_key']),
+                )
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_version (version) VALUES (3)"
+        )
+        connection.commit()
+
 
 def initialize_schema(connection: sqlite3.Connection) -> None:
     """Load and execute data/db/schema.sql, then run any pending data migrations."""
@@ -196,6 +252,17 @@ def set_setting(connection: sqlite3.Connection, key: str, value: str) -> None:
         (key, value, utc_now_iso()),
     )
     connection.commit()
+
+
+def set_path_setting(connection: sqlite3.Connection, key: str, value: str | Path) -> None:
+    """Store a path setting so it survives being checked out elsewhere.
+
+    `worker_settings` held this machine's absolute paths, which made them
+    meaningless on any other machine. A path inside the repository is stored
+    relative to the repository root; one outside it keeps its absolute form,
+    because there is no honest relative form for it.
+    """
+    set_setting(connection, key, portable_stored_path(value))
 
 
 def summarize_status(connection: sqlite3.Connection) -> dict[str, int]:
@@ -389,7 +456,7 @@ def command_import_local(args: argparse.Namespace) -> int:
 
     with connect_database(db_path) as connection:
         initialize_schema(connection)
-        set_setting(connection, 'last_local_video_dir', str(video_directory))
+        set_setting(connection, 'last_local_video_dir', portable_stored_path(video_directory))
         inserted, updated, imported_rows = upsert_local_video_rows(
             connection,
             source_directory=video_directory,
@@ -416,9 +483,9 @@ def command_init(args: argparse.Namespace) -> int:
 
     with connect_database(db_path) as connection:
         initialize_schema(connection)
-        set_setting(connection, 'pipeline_root', str(pipeline_root))
+        set_path_setting(connection, 'pipeline_root', pipeline_root)
         for name, target in paths.items():
-            set_setting(connection, f'path_{name}', str(target))
+            set_path_setting(connection, f'path_{name}', target)
 
     print(json.dumps({
         'db_path': str(db_path),
@@ -583,6 +650,27 @@ def portable_path(path: Path) -> str:
         return str(path)
 
 
+def portable_stored_path(value: str | Path | None) -> str:
+    """Store a path so it still means something on another machine.
+
+    `portable_path` takes a `Path`; this takes whatever a caller happens to
+    have -- a string from a command line, a `Path` from the filesystem -- and
+    returns the form that should go in the database.
+
+    A path that is already relative is left alone: it is already portable, and
+    guessing at its base would only make it wrong.
+    """
+    if value is None:
+        return ''
+    text = str(value)
+    if not text:
+        return text
+    candidate = Path(text)
+    if not candidate.is_absolute():
+        return text
+    return portable_path(candidate)
+
+
 def resolve_portable_path(stored: str) -> str:
     """Turn a stored path back into one you can open.
 
@@ -670,7 +758,7 @@ def update_video_row(
 
     if download_path is not None:
         assignments.append('download_path = ?')
-        values.append(download_path)
+        values.append(portable_stored_path(download_path))
 
     if error is not None:
         assignments.append('error = ?')
@@ -678,7 +766,7 @@ def update_video_row(
 
     if output_path is not None:
         assignments.append('output_path = ?')
-        values.append(output_path)
+        values.append(portable_stored_path(output_path))
 
     if review_reason is not None:
         assignments.append('review_reason = ?')
@@ -1191,14 +1279,14 @@ def upsert_local_video_rows(
                 str(source_directory),
                 video_path.name,
                 upload_date,
-                str(video_path),
+                portable_stored_path(video_path),
                 timestamp,
                 timestamp,
             ),
         )
 
         imported_rows.append({
-            'download_path': str(video_path),
+            'download_path': portable_stored_path(video_path),
             'source_file': video_path.name,
             'upload_date': upload_date,
             'video_id': video_id,
@@ -1387,7 +1475,7 @@ def command_scan(args: argparse.Namespace) -> int:
 
     with connect_database(db_path) as connection:
         for row in selected_rows:
-            download_path = Path(row['download_path'])
+            download_path = Path(resolve_portable_path(row['download_path']))
             if not download_path.exists():
                 message = f'Download file is missing: {download_path}'
                 update_video_row(connection, video_id=row['video_id'], status='error', error=message)
@@ -1644,7 +1732,7 @@ def command_catalog(args: argparse.Namespace) -> int:
         initialize_schema(connection)
         set_setting(connection, 'source_url', args.source_url)
         set_setting(connection, 'channel', effective_channel)
-        set_setting(connection, 'last_catalog_output_path', str(snapshot_path))
+        set_path_setting(connection, 'last_catalog_output_path', snapshot_path)
         set_setting(connection, 'last_catalog_import_at', utc_now_iso())
         inserted, updated = upsert_catalog_rows(connection, args.source_url, rows, channel=effective_channel)
         record_catalog_run(

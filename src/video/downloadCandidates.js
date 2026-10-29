@@ -64,6 +64,30 @@ function resolveCatalogPath(downloadPath, cwd = process.cwd()) {
 }
 
 /**
+ * Turn a local path into one that still means something on another machine.
+ *
+ * The inverse of `resolveCatalogPath`. A path inside the repository is stored
+ * relative to the repository root, so the pointer survives being committed and
+ * checked out somewhere else. A path outside it — a test's temporary directory,
+ * say — has no such form and keeps its absolute one.
+ *
+ * This is the JavaScript twin of `portable_path()` in
+ * `tools/whiteboard_worker.py`; the two must agree, because the column is
+ * written from both languages.
+ *
+ * @param {string|null|undefined} p
+ * @param {string} [cwd] - repository root
+ * @returns {string|null}
+ */
+function toPortablePath(p, cwd = process.cwd()) {
+  if (!p) return p;
+  const absolute = path.resolve(cwd, p);
+  const relative = path.relative(cwd, absolute);
+  if (!relative || relative.startsWith('..') || path.isAbsolute(relative)) return absolute;
+  return relative.split(path.sep).join('/');
+}
+
+/**
  * Does this path point into the 1080p download directory?
  *
  * @param {string|null} p
@@ -114,4 +138,5 @@ module.exports = {
   findHiresOnDisk,
   isHiresPath,
   resolveCatalogPath,
+  toPortablePath,
 };
