@@ -625,6 +625,10 @@ function parseChartStreamPositionList({ ocr } = {}) {
   const panelGateActive = positionsLine != null
     && watchlistLine != null
     && watchlistLine > positionsLine;
+  // The same rule the column detector uses: the watchlist bound only counts
+  // when the watchlist header is BELOW the positions header.
+  const watchlistBelowPositions = watchlistLine != null
+    && (positionsLine == null || watchlistLine > positionsLine);
   // Partial boundary heuristic: when only one boundary is detected, use y-coordinates
   // to estimate the other. The position list is typically 10-15 rows tall; if we
   // detect positionsLine but not watchlistLine, reject rows far below it.
@@ -874,6 +878,85 @@ function parseChartStreamPositionList({ ocr } = {}) {
         y_max: yMax,
         rejected_count: acceptedBboxes.length - withinBbox.size
       };
+    }
+  }
+
+  // Curated-alias rescue.
+  //
+  // A recorded, human-verified misread of a position-list ticker that sits
+  // INSIDE the detected column IS that ticker. The column gate cannot see it
+  // on its own: `inListTickers` is the PRICE-ALIGNED subset of the column,
+  // and a row whose price is garbled is not price-aligned even when its
+  // ticker sits exactly where every other ticker sits. Such a token is
+  // rejected at the gate, so the holding is lost before the repair pass
+  // above ever sees it.
+  //
+  // It runs AFTER the repair pass so that a garble the repair pass already
+  // replaced in place is not joined by its canonical — the two spellings of
+  // one holding must never both appear in the reading. An earlier attempt
+  // did exactly that and paid for it twice: the raw survived as a duplicate
+  // false positive, and the extra entries shifted Filter B's median y and
+  // evicted real holdings that were already in the reading.
+  if (columnGateActive && hasWordPositions) {
+    const confusionMap = loadOcrConfusionMap();
+    for (const word of words) {
+      const raw = String(word.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
+      if (!raw) continue;
+      const canonical = confusionMap.get(raw);
+      if (!canonical) continue;
+      if (!lexicon.tickerSet.has(canonical)) continue;
+      // The panel test here is the panel's OWN bounds, not the parser's
+      // "implied bottom" heuristic. That heuristic GUESSES where the list
+      // ends — fifteen rows below the header — and the lists in this corpus
+      // are longer than that, so it cuts the rows off exactly where the
+      // recoverable ones are. The parser does not apply it to the accepted
+      // set either, so applying it here would hold the rescue to a rule
+      // the rest of the parser does not keep.
+      //
+      // The watchlist bound is the one that matters: the Personal WatchList
+      // panel sits at the SAME x as the position list, so a row below it is
+      // a watchlist row however well it lines up. And the watchlist bound
+      // only applies when the watchlist header is BELOW the positions
+      // header — a stray "Watch..." token above the panel would otherwise
+      // act as a lower bound and reject every real row.
+      if (positionsLine != null && word.line <= positionsLine) continue;
+      if (watchlistBelowPositions && word.line >= watchlistLine) continue;
+      const center = word.left + word.width / 2;
+      if (Math.abs(center - dominantColumnX) > columnWidth / 2) continue;
+      // The vertical span the other tickers established is NOT used as a
+      // gate here. The span is computed from the accepted rows, and the rows
+      // worth rescuing are exactly the ones that are NOT accepted — a
+      // garbled price is why they were left out — so the span is missing
+      // them by construction, and testing against it rejects the top and
+      // bottom rows of the list precisely because they are the rows whose
+      // price was garbled. Measured on the replay corpus, the check refused
+      // all eight rescuable holdings and no other candidate.
+      //
+      // The column x, the panel and the curated alias are the evidence here.
+      // The alias set is nineteen entries, each recorded against a real
+      // frame, so the blast radius is bounded by the file.
+      // The garble itself is in the reading: replace it, never join it.
+      const rawIndex = accepted.indexOf(raw);
+      if (rawIndex >= 0) {
+        if (accepted.includes(canonical)) {
+          // The canonical is already there; the garble is a second spelling
+          // of the same holding and is dropped, not published.
+          accepted.splice(rawIndex, 1);
+        } else {
+          accepted[rawIndex] = canonical;
+        }
+        const rejectedIndex = rejected.indexOf(raw);
+        if (rejectedIndex >= 0) rejected.splice(rejectedIndex, 1);
+        continue;
+      }
+      if (accepted.includes(canonical)) continue;
+      // The garble never reached the reading — the column gate rejected it,
+      // or the ticker-shape test rejected it for carrying a digit (QBT5,
+      // GSI1, GS11, which are not ticker-shaped and so are never candidates
+      // at all). The canonical takes its place.
+      accepted.push(canonical);
+      const rejectedIndex = rejected.indexOf(raw);
+      if (rejectedIndex >= 0) rejected.splice(rejectedIndex, 1);
     }
   }
 
