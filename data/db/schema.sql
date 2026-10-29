@@ -74,7 +74,12 @@ CREATE TABLE IF NOT EXISTS catalog_runs (
     -- truncated or a video failed -- in which case a row missing from the
     -- listing proves nothing. 0 is also the value for a run recorded before
     -- this column existed: the run made no such claim.
-    listing_complete INTEGER NOT NULL DEFAULT 0
+    listing_complete INTEGER NOT NULL DEFAULT 0,
+    -- What `row_count` counts: 'listing_rows' for a catalog run (the rows the
+    -- channel listing yielded), 'work_list_videos' for a fill-dates run (the
+    -- videos in the work list). The two are not comparable, so the column
+    -- says which is which. '' means the run made no such claim.
+    row_count_kind TEXT NOT NULL DEFAULT ''
 );
 
 -- Discord pipeline tables -------------------------------------------------

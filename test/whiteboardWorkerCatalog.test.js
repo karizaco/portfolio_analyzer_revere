@@ -972,6 +972,58 @@ test('the catalog worker', { skip: PY ? false : 'no python launcher available' }
     assert.ok(json.not_listed_count > 0, 'the rows it did not list are still reported');
   });
 
+  await t.test('the audit row says what its row_count counts', () => {
+    // `row_count` means two different things: for a `catalog` run it is the
+    // rows the channel listing yielded, for a `fill-dates` run it is the
+    // videos in the work list. The two are not comparable, so the audit row
+    // says which is which.
+    const fake = writeFakeYtDlp(tmp, [['aaa111', '20240101', 'First video']], 0);
+    const r = runWorker([
+      '--pipeline-root', pipelineRoot, 'catalog',
+      '--source-url', 'https://www.youtube.com/@test/videos',
+      '--channel', 'test',
+      '--yt-dlp-bin', fake,
+    ]);
+    assert.strictEqual(r.status, 0, r.stderr);
+
+    const fillRoot = path.join(tmp, 'fill-kind-pipeline');
+    const filling = writeFillingFake('fake_yt_dlp_kind.py');
+    const input = path.join(tmp, 'wanted_kind.tsv');
+    fs.writeFileSync(input, 'aaa111\tFirst\n', 'utf8');
+    assert.strictEqual(runWorker(['--pipeline-root', fillRoot, 'init']).status, 0);
+    const filled = runWorker([
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'test',
+      '--input', input,
+      '--jobs', '1',
+      '--yt-dlp-bin', filling,
+    ]);
+    assert.strictEqual(filled.status, 0, filled.stderr);
+
+    const script = path.join(pipelineRoot, 'read_row_count_kind.py');
+    fs.writeFileSync(script, [
+      'import sqlite3, json, sys',
+      'c = sqlite3.connect(sys.argv[1])',
+      'c.row_factory = sqlite3.Row',
+      'rows = [dict(r) for r in c.execute("select row_count, row_count_kind from catalog_runs")]',
+      'print(json.dumps(rows))',
+      '',
+    ].join('\n'), 'utf8');
+    const read = (db) => {
+      const out = spawnSync(PY.cmd, [...PY.args, script, db], { encoding: 'utf8' });
+      assert.strictEqual(out.status, 0, out.stderr);
+      return JSON.parse(out.stdout.trim());
+    };
+
+    const catalogRun = read(path.join(pipelineRoot, 'state.sqlite')).pop();
+    assert.strictEqual(catalogRun.row_count_kind, 'listing_rows',
+      'a catalog run counts the rows the listing yielded');
+
+    const fillRun = read(path.join(fillRoot, 'state.sqlite')).pop();
+    assert.strictEqual(fillRun.row_count_kind, 'work_list_videos',
+      'a fill-dates run counts the videos in the work list');
+  });
+
   await t.test('a listing with no title does not blank the title a row has', () => {
     // The upsert is non-destructive for the fields a listing may not carry.
     // An empty title from a partial listing must not erase a good one.
