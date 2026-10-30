@@ -791,8 +791,14 @@ def record_catalog_run(
     row_count_kind: str = '',
     source_url: str,
     updated: int,
-) -> None:
-    connection.execute(
+) -> int:
+    """Record a catalog run.
+
+    Returns the new row's `run_id`, so a caller that records the run BEFORE
+    the work starts can refresh the row's counters afterwards with
+    `update_catalog_run`.
+    """
+    cursor = connection.execute(
         '''
         INSERT INTO catalog_runs (
             source_url,
@@ -827,6 +833,50 @@ def record_catalog_run(
             1 if listing_complete else 0,
             row_count_kind,
         ),
+    )
+    connection.commit()
+    return int(cursor.lastrowid)
+
+
+def update_catalog_run(
+    connection: sqlite3.Connection,
+    *,
+    run_id: int,
+    inserted: int | None = None,
+    missing_upload_dates: int | None = None,
+    row_count: int | None = None,
+    updated: int | None = None,
+) -> None:
+    """Refresh the counters of a run that has already been recorded.
+
+    A run can be recorded before the work starts, so a run that is cut short
+    still leaves a row. This is what keeps that row honest: the counters
+    are refreshed as the work lands, so an interrupted run reports what it
+    managed to do rather than what it was asked to do.
+
+    Every counter is optional, so a caller can refresh one without
+    touching the others.
+    """
+    assignments: list[str] = []
+    values: list[object] = []
+    if inserted is not None:
+        assignments.append('inserted_count = ?')
+        values.append(inserted)
+    if missing_upload_dates is not None:
+        assignments.append('missing_upload_dates = ?')
+        values.append(missing_upload_dates)
+    if row_count is not None:
+        assignments.append('row_count = ?')
+        values.append(row_count)
+    if updated is not None:
+        assignments.append('updated_count = ?')
+        values.append(updated)
+    if not assignments:
+        return
+    values.append(run_id)
+    connection.execute(
+        'UPDATE catalog_runs SET ' + ', '.join(assignments) + ' WHERE run_id = ?',
+        values,
     )
     connection.commit()
 
@@ -2082,7 +2132,7 @@ def persist_missing_titles(
     entries: list[tuple[str, str]],
     source_url: str,
     channel: str,
-) -> int:
+) -> tuple[int, int]:
     """Store the title of a video whose date could not be fetched.
 
     A video the channel listing names but that yt-dlp will not resolve -- an
@@ -2094,8 +2144,14 @@ def persist_missing_titles(
     A title is only written where the database has none. The listing is a
     lossy copy of the titles -- the Windows console codepage drops emoji -- so
     a good title already in the database is never replaced by a worse one.
+
+    Returns `(titles_written, rows_inserted)`. The two are different counts:
+    a title written onto a row that already exists is a title written but not
+    a new catalog row, and only the second one belongs in a run's
+    `inserted_count`.
     """
     written = 0
+    inserted = 0
     timestamp = utc_now_iso()
     for video_id, title in entries:
         if not title:
@@ -2123,6 +2179,7 @@ def persist_missing_titles(
                 ),
             )
             written += 1
+            inserted += 1
             continue
         if (row['title'] or '').strip():
             continue
@@ -2132,7 +2189,7 @@ def persist_missing_titles(
         )
         written += 1
     connection.commit()
-    return written
+    return written, inserted
 
 
 def fetch_dates_for(entries: list[tuple[str, str]], args: argparse.Namespace) -> tuple[list[dict], list[str]]:
@@ -2305,11 +2362,56 @@ def command_fill_dates(args: argparse.Namespace) -> int:
     updated = 0
     attempted = 0
 
+    # The run is recorded BEFORE the work starts, and its counters are
+    # refreshed as the work lands.
+    #
+    # The data is saved per batch, so a run that is cut short keeps
+    # everything it managed to do. The RECORD of the run used to be written
+    # only at the very end, so a run that stopped in the middle left its
+    # rows in the catalog with no audit row at all -- the work survived and
+    # its provenance did not.
+    #
+    # That is not hypothetical. The 2026-10-26 gap-fill inserted 1,659
+    # Revere rows across 66 batches; the first batch is catalog_runs row 26,
+    # and the other 1,582 rows are accounted for by no audit row at all. The
+    # catalog's largest population event was invisible in the table that
+    # exists to record it.
+    #
+    # The artifact is the listing when the run fetched one -- that is what
+    # the run actually read -- and the work list otherwise. Both are known
+    # before the work starts, which is why the row can be written first.
+    slug = utc_timestamp_slug()
+    if listing_output:
+        snapshot_path = paths['catalog'] / f'listing_{slug}.tsv'
+        snapshot_path.write_text(listing_output, encoding='utf-8')
+    else:
+        snapshot_path = paths['catalog'] / f'fill_dates_{slug}.tsv'
+        snapshot_path.write_text(
+            ''.join(f'{video_id}\t{title}\n' for video_id, title in wanted),
+            encoding='utf-8',
+        )
+    run_command = listing_command or ['fill-dates', '--input', args.input or '']
+    if args.refresh and not listing_command:
+        run_command = run_command + ['--refresh']
+
     with connect_database(db_path) as connection:
         initialize_schema(connection)
         set_setting(connection, 'channel', effective_channel)
         if source_url:
             set_setting(connection, 'source_url', source_url)
+        run_id = record_catalog_run(
+            connection,
+            channel=effective_channel,
+            command=run_command,
+            inserted=0,
+            malformed_rows=0,
+            missing_upload_dates=0,
+            raw_output_path=snapshot_path,
+            row_count=requested,
+            row_count_kind='work_list_videos',
+            source_url=source_url,
+            updated=0,
+        )
 
         with ThreadPoolExecutor(max_workers=jobs) as pool:
             futures = {pool.submit(fetch_dates_for, batch, args): batch for batch in batches}
@@ -2330,6 +2432,17 @@ def command_fill_dates(args: argparse.Namespace) -> int:
                 rows.extend(batch_rows)
                 missing.extend(batch_missing)
                 attempted += len(batch)
+
+                # The audit row keeps step with the data, so a run that
+                # stops here reports what it DID, not what it was asked to
+                # do.
+                update_catalog_run(
+                    connection,
+                    run_id=run_id,
+                    inserted=inserted,
+                    missing_upload_dates=len(missing),
+                    updated=updated,
+                )
 
                 set_setting(connection, 'last_catalog_import_at', utc_now_iso())
                 print(
@@ -2359,45 +2472,25 @@ def command_fill_dates(args: argparse.Namespace) -> int:
         if video_id in set(missing)
     ]
     titles_written = 0
+    titles_inserted = 0
     if missing_entries:
         with connect_database(db_path) as connection:
             initialize_schema(connection)
-            titles_written = persist_missing_titles(
+            titles_written, titles_inserted = persist_missing_titles(
                 connection, missing_entries, source_url, effective_channel
             )
 
-    # The run is recorded, like every other catalog run. Without this the
-    # campaign that built the catalog left no trace of its command, its client
-    # set, or which videos it could not resolve.
-    #
-    # The artifact is the listing when the run fetched one -- that is what the
-    # run actually read -- and the work list otherwise.
-    slug = utc_timestamp_slug()
-    if listing_output:
-        snapshot_path = paths['catalog'] / f'listing_{slug}.tsv'
-        snapshot_path.write_text(listing_output, encoding='utf-8')
-    else:
-        snapshot_path = paths['catalog'] / f'fill_dates_{slug}.tsv'
-        snapshot_path.write_text(
-            ''.join(f'{video_id}\t{title}\n' for video_id, title in wanted),
-            encoding='utf-8',
-        )
-    run_command = listing_command or ['fill-dates', '--input', args.input or '']
-    if args.refresh and not listing_command:
-        run_command = run_command + ['--refresh']
+    # The final state of the run: the videos it could not resolve, and the
+    # rows it added on the way -- including the ones it added for the videos
+    # it could not date at all.
+    inserted += titles_inserted
     with connect_database(db_path) as connection:
         initialize_schema(connection)
-        record_catalog_run(
+        update_catalog_run(
             connection,
-            channel=effective_channel,
-            command=run_command,
+            run_id=run_id,
             inserted=inserted,
-            malformed_rows=0,
             missing_upload_dates=len(missing),
-            raw_output_path=snapshot_path,
-            row_count=requested,
-            row_count_kind='work_list_videos',
-            source_url=source_url,
             updated=updated,
         )
 
@@ -2415,6 +2508,7 @@ def command_fill_dates(args: argparse.Namespace) -> int:
         'still_missing_count': len(missing),
         'titles_only': len(rows) - dated,
         'titles_written': titles_written,
+        'titles_inserted': titles_inserted,
         'updated': updated,
     }, indent=2))
     return 0

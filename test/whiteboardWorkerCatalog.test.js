@@ -83,6 +83,53 @@ async function waitForPid(pidFile, timeoutMs = 30000) {
   throw new Error('the fake yt-dlp never reported its pid');
 }
 
+/**
+ * Kill the yt-dlp the worker left running.
+ *
+ * On Windows, killing the worker does NOT kill its grandchildren, so a
+ * hanging fake would outlive the test as an orphan. Nothing in a test
+ * should leave a process behind.
+ */
+async function killPidFile(pidFile, timeoutMs = 10000) {
+  let pid = null;
+  try {
+    pid = await waitForPid(pidFile, timeoutMs);
+  } catch {
+    return; // The fake never started, or it is already gone.
+  }
+  try {
+    process.kill(pid, 'SIGKILL');
+  } catch {
+    // Already dead.
+  }
+}
+
+/**
+ * The audit table's counters, read while another process holds the database
+ * open. The read retries on a lock, because the worker is mid-run.
+ */
+function readRunCounters(dbPath) {
+  const script = path.join(path.dirname(dbPath), 'read_run_counters.py');
+  fs.writeFileSync(script, [
+    'import sqlite3, json, sys, time',
+    'for _ in range(50):',
+    '    try:',
+    '        c = sqlite3.connect(sys.argv[1], timeout=1)',
+    '        c.row_factory = sqlite3.Row',
+    '        rows = [dict(r) for r in c.execute("select run_id, row_count, inserted_count, updated_count, missing_upload_dates from catalog_runs")]',
+    '        print(json.dumps(rows))',
+    '        break',
+    '    except sqlite3.OperationalError:',
+    '        time.sleep(0.1)',
+    'else:',
+    '    print("[]")',
+    '',
+  ].join('\n'), 'utf8');
+  const r = spawnSync(PY.cmd, [...PY.args, script, dbPath], { encoding: 'utf8' });
+  assert.strictEqual(r.status, 0, r.stderr);
+  return JSON.parse(r.stdout.trim());
+}
+
 function readVideos(dbPath) {
   // A script FILE, not `python -c`: Windows argv does not survive embedded
   // newlines in an argument.
@@ -918,6 +965,77 @@ test('the catalog worker', { skip: PY ? false : 'no python launcher available' }
     assert.strictEqual(runs[0][0], 'test');
     assert.strictEqual(runs[0][1], 1, 'one video was requested');
     assert.strictEqual(runs[0][4], 0, 'and none was left without a date');
+  });
+
+  await t.test('an interrupted fill-dates run still leaves an audit row', async () => {
+    // The data is saved per batch, so a run that is cut short keeps
+    // everything it managed to do. The RECORD of the run used to be written
+    // only at the very end, so such a run left its rows in the catalog with
+    // no audit row at all -- and the catalog's largest population event
+    // (1,659 Revere rows on 2026-10-26) is invisible in the table that
+    // exists to record it.
+    //
+    // The run must therefore be recorded BEFORE the work, and its counters
+    // must report what it DID, not what it was asked to do.
+    const fillRoot = path.join(tmp, 'fill-interrupt-pipeline');
+    const pidFile = path.join(tmp, 'hang_pid.txt');
+    const fake = path.join(tmp, 'fake_yt_dlp_hang.py');
+    fs.writeFileSync(fake, [
+      'import os, sys, time',
+      'args = sys.argv[1:]',
+      'path = args[args.index("--batch-file") + 1]',
+      `pid_file = ${JSON.stringify(pidFile)}`,
+      'for line in open(path, encoding="utf-8"):',
+      '    url = line.strip()',
+      '    if not url: continue',
+      '    vid = url.split("v=")[-1]',
+      '    if vid == "hang222":',
+      '        open(pid_file, "w").write(str(os.getpid()))',
+      '        time.sleep(3600)',
+      '    sys.stdout.write(vid + "\\t20241010\\tFilled " + vid + "\\n")',
+      '',
+    ].join('\n'), 'utf8');
+
+    assert.strictEqual(runWorker(['--pipeline-root', fillRoot, 'init']).status, 0);
+
+    const input = path.join(tmp, 'wanted_interrupt.tsv');
+    fs.writeFileSync(input, 'ok111\tFirst\nhang222\tSecond\nlast333\tThird\n', 'utf8');
+
+    const dbPath = path.join(fillRoot, 'state.sqlite');
+    const child = spawn(PY.cmd, [
+      ...PY.args, WORKER,
+      '--pipeline-root', fillRoot, 'fill-dates',
+      '--channel', 'test',
+      '--input', input,
+      '--jobs', '1',
+      '--batch-size', '1',
+      '--yt-dlp-bin', fake,
+    ], { cwd: ROOT, stdio: 'ignore' });
+
+    let runs = [];
+    try {
+      // One batch lands, then the next one hangs forever. The audit row must
+      // already exist, and must already say what the run did.
+      const deadline = Date.now() + 30000;
+      while (Date.now() < deadline) {
+        runs = readRunCounters(dbPath);
+        if (runs.length === 1 && runs[0].inserted_count === 1) break;
+        await new Promise((resolve) => setTimeout(resolve, 200));
+      }
+      assert.strictEqual(runs.length, 1, 'the interrupted run left an audit row');
+      assert.strictEqual(runs[0].inserted_count, 1, 'it reports the row it did insert');
+      assert.strictEqual(runs[0].row_count, 3, 'and the size of the work list it was given');
+      assert.strictEqual(runs[0].missing_upload_dates, 0, 'and nothing is claimed to be missing yet');
+    } finally {
+      child.kill();
+      await killPidFile(pidFile);
+    }
+
+    // The row survives the kill: it was committed, not held open by the
+    // process that is now gone.
+    const after = readRunCounters(dbPath);
+    assert.strictEqual(after.length, 1, 'the audit row outlived the run');
+    assert.strictEqual(after[0].inserted_count, 1);
   });
 
   // A fake yt-dlp that fills in every video it is given.
