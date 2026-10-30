@@ -2,7 +2,7 @@
 against data/qmg_ground_truth.json to compute per-video recall / FP counts.
 
 Usage:
-    py -3 data/_summarize_existing.py [base_dir] [prefix] [date1 date2 ...]
+    py -3 tools/summarize_existing.py [base_dir] [prefix] [date1 date2 ...]
 
 Defaults:
     base_dir = data/video_scan_test/_rerun
