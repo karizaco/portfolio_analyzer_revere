@@ -18,6 +18,7 @@ const {
 const {
   resolveTickerToken,
   splitFusedTicker,
+  splitFusedTickerExactPrefix,
   levenshtein,
 } = require('../normalize/tickerFuzzyResolve');
 
@@ -236,6 +237,59 @@ function findKeywordWordsInRow(row, keywordPattern) {
   return row.words.filter(w => fuzzyMatchKeyword(w.text, keywordPattern));
 }
 
+/**
+ * Find the portfolio's action line, and the words on it that are instructions
+ * rather than holdings.
+ *
+ * The action line ("* TURBO RVAB/REBAR: 1.51 ... ADD to SPXL SELL DELL
+ * SMTC") is an instruction, not a holdings list. The section filter usually
+ * keeps it out, but it asks whether a token's TEXT appears inside the
+ * section — and that test cannot tell the holdings line's "SPXL" from the
+ * action line's "SPXL". A token that appears in both places is admitted by
+ * the action line, even when the holdings line is the one that means it.
+ *
+ * So the action line's words are excluded by POSITION: from the RVAB keyword
+ * onwards, a word is action text. The holdings themselves sit to the LEFT of
+ * the keyword and survive.
+ */
+function findActionLine(rows, holdingsRow, options = {}) {
+  const { skipGroLabel = false } = options;
+  const empty = { row: null, actionWords: new Set() };
+  if (!holdingsRow) return empty;
+
+  // The search starts one row below the holdings row. When the holdings row
+  // is not one of `rows` — the Y-clustering fallback can build rows the
+  // row-clustering did not — its index is -1 and the search starts at the
+  // top, which is where the action line is in that layout.
+  const idx = rows.indexOf(holdingsRow);
+  for (let i = idx + 1; i < Math.min(idx + 4, rows.length); i += 1) {
+    const row = rows[i];
+    // Skip rows that contain the GRO label — the TURBO action row search can
+    // accidentally match the GRO action row (RVAB below GRO HOLDINGS) when
+    // Tesseract doesn't produce a distinct TURBO action row.
+    if (skipGroLabel && findKeywordWordsInRow(row, /\bGRO\b/i).length > 0) continue;
+    const keywords = findKeywordWordsInRow(row, /\b(RVAB|REBAR)\b/i);
+    if (!keywords.length) continue;
+
+    const cut = Math.min(...keywords.map((w) => w.left));
+    const actionWords = new Set();
+    for (const w of row.words) {
+      if (w.left >= cut) actionWords.add(wordKey(w));
+    }
+    return { row, actionWords };
+  }
+  return empty;
+}
+
+/**
+ * The key a word is identified by when it crosses between the row-clustering
+ * and the Y-clustering: two clusters can hold the same word as two different
+ * objects, so the position is what identifies it.
+ */
+function wordKey(word) {
+  return `${word.left}:${word.top}`;
+}
+
 // ---------- Ticker Extraction from Row ----------
 
 // ---------- Portfolio labels ----------
@@ -404,9 +458,14 @@ function expandTickerToken(cleaned, ctx) {
       if (firstResolution.ticker) {
         // Treat slash as a misread comma — keep the first part, and try to
         // recover the second one, which may itself be two fused tickers.
+        //
+        // The slash has already proved that the second part holds a holding
+        // of its own, so when it cannot be split any further its LEADING
+        // ticker is still real: "UPRO/SPXLIBT" is UPRO, SPXL, and a
+        // remainder the OCR lost the I off.
         const recovered = secondResolution.ticker
           ? [candidate(second, secondResolution, source)]
-          : (splitFusedTicker(second, ctx) || []).map((p) => candidate(p.text, p.resolution, source));
+          : recoverFusedHoldings(second, ctx).map((p) => candidate(p.text, p.resolution, source));
         return [candidate(first, firstResolution, source), ...recovered];
       }
       if (secondResolution.ticker) {
@@ -454,6 +513,18 @@ function expandTickerToken(cleaned, ctx) {
 
 function candidate(text, resolution, source) {
   return { text, source, resolution };
+}
+
+/**
+ * Recover the holdings a fused token holds.
+ *
+ * The full split comes first: every part of it resolves, so it is the
+ * reading with the most evidence. Only when there is no such split does the
+ * exact-prefix recovery run, and it recovers the leading ticker alone — the
+ * one the OCR did read.
+ */
+function recoverFusedHoldings(token, ctx) {
+  return splitFusedTicker(token, ctx) || splitFusedTickerExactPrefix(token, ctx) || [];
 }
 
 /**
@@ -603,7 +674,7 @@ function acceptCandidates({ candidates, word, raw, portfolio, ocrText, accepted,
  *    - ticker.left >= colonRight + 80 (must be to the right of the label)
  *    - ticker.left + ticker.width <= maxRight
  */
-function extractTickersNearLabel({ rows, labelRow, windowBounds, ctx, portfolio, ocrText }) {
+function extractTickersNearLabel({ rows, labelRow, windowBounds, ctx, portfolio, ocrText, actionWords }) {
   if (!rows || !rows.length || !labelRow) {
     return { tickers: [], rejected: [] };
   }
@@ -700,6 +771,7 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, ctx, portfolio,
   // avoiding SECTORS/Forex words that Mode A (merged) accidentally includes.
   if (nextRow) {
     for (const word of nextRow.words) {
+      if (actionWords && actionWords.has(wordKey(word))) continue;
       if (word.left < colonRight) continue;
       if (word.left + word.width > maxRight) continue;
       acceptWord({ word, portfolio, ocrText, ctx, accepted, rejected });
@@ -712,6 +784,7 @@ function extractTickersNearLabel({ rows, labelRow, windowBounds, ctx, portfolio,
   // run Mode A to catch merged groups (TNA, DOCN, LABU).
   if (accepted.length < 12) {
     for (const word of labelRow.words) {
+      if (actionWords && actionWords.has(wordKey(word))) continue;
       if (word.left + word.width > maxRight) continue;
       acceptWord({ word, portfolio, ocrText, ctx, accepted, rejected });
     }
@@ -926,7 +999,8 @@ async function parseWhiteboardScreenshotWithBoxes({ metadata, ocr, framePath }) 
   //
   //   match — what a token MAY be: the seed plus the observed tickers. A real
   //           ticker the seed does not know resolves to ITSELF here rather
-  //           than to a neighbouring seed ticker (SPXL must not become SOXL).
+  //           than to a neighbouring seed ticker (CRH must not become CRM,
+  //           which is a different instrument).
   //   allow — what may be REPORTED: the seed.
   let lexicon = new Set();
   let matchLexicon = { tickers: [], tickerSet: new Set() };
@@ -941,17 +1015,29 @@ async function parseWhiteboardScreenshotWithBoxes({ metadata, ocr, framePath }) 
     allowSet: lexicon,
   };
 
-  // Step 6: Extract GRO tickers — scan all rows within ±30px of the label row
+  // Step 6: Find the action lines. This has to happen BEFORE the holdings
+  // are extracted: the action line's words are excluded from the holdings
+  // scan, and that exclusion is by position.
+  const groAction = findActionLine(rows, groHoldingsRow);
+  const turboAction = findActionLine(rows, turboHoldingsRow, { skipGroLabel: true });
+
+  // Step 7: Extract GRO tickers — scan all rows within ±30px of the label row
   const groTickers = groHoldingsRow
-    ? extractTickersNearLabel({ rows, labelRow: groHoldingsRow, windowBounds, ctx, portfolio: 'GRO', ocrText: ocr.text }).tickers
+    ? extractTickersNearLabel({
+      rows, labelRow: groHoldingsRow, windowBounds, ctx,
+      portfolio: 'GRO', ocrText: ocr.text, actionWords: groAction.actionWords,
+    }).tickers
     : [];
 
-  // Step 7: Extract TURBO tickers
+  // Step 8: Extract TURBO tickers
   const turboTickers = turboHoldingsRow
-    ? extractTickersNearLabel({ rows, labelRow: turboHoldingsRow, windowBounds, ctx, portfolio: 'TURBO', ocrText: ocr.text }).tickers
+    ? extractTickersNearLabel({
+      rows, labelRow: turboHoldingsRow, windowBounds, ctx,
+      portfolio: 'TURBO', ocrText: ocr.text, actionWords: turboAction.actionWords,
+    }).tickers
     : [];
 
-  // Step 8: Find BOTTOM LINE
+  // Step 9: Find BOTTOM LINE
   const bottomLineRow = findRowByKeyword(rows, /\bBOTTOM\b.*\bLINE\b/i);
   let bottomLine = '';
   let bottomLineRaw = '';
@@ -962,38 +1048,11 @@ async function parseWhiteboardScreenshotWithBoxes({ metadata, ocr, framePath }) 
     bottomLine = match ? match[1].trim() : blText;
   }
 
-  // Step 9: Find action text (RVAB/REBAR row below GRO HOLDINGS)
-  let groActionRow = null;
-  let turboActionRow = null;
+  // Step 10: Action text (the RVAB/REBAR row below the holdings row)
+  const groActionText = groAction.row ? groAction.row.words.map(w => w.text).join(' ') : '';
+  const turboActionText = turboAction.row ? turboAction.row.words.map(w => w.text).join(' ') : '';
 
-  if (groHoldingsRow) {
-    const groIdx = rows.indexOf(groHoldingsRow);
-    for (let i = groIdx + 1; i < Math.min(groIdx + 4, rows.length); i++) {
-      if (findKeywordWordsInRow(rows[i], /\b(RVAB|REBAR)\b/i).length > 0) {
-        groActionRow = rows[i];
-        break;
-      }
-    }
-  }
-
-  if (turboHoldingsRow) {
-    const turboIdx = rows.indexOf(turboHoldingsRow);
-    for (let i = turboIdx + 1; i < Math.min(turboIdx + 4, rows.length); i++) {
-      // Skip rows that contain GRO label — the TURBO action row search can
-      // accidentally match the GRO action row (RVAB below GRO HOLDINGS) when
-      // Tesseract doesn't produce a distinct TURBO action row.
-      const hasGroLabel = findKeywordWordsInRow(rows[i], /\bGRO\b/i).length > 0;
-      if (!hasGroLabel && findKeywordWordsInRow(rows[i], /\b(RVAB|REBAR)\b/i).length > 0) {
-        turboActionRow = rows[i];
-        break;
-      }
-    }
-  }
-
-  const groActionText = groActionRow ? groActionRow.words.map(w => w.text).join(' ') : '';
-  const turboActionText = turboActionRow ? turboActionRow.words.map(w => w.text).join(' ') : '';
-
-  // Step 10: Build observation rows matching existing schema
+  // Step 11: Build observation rows matching existing schema
   const groIssues = [];
   if (!groTickers.length) groIssues.push('MISSING_GRO_HOLDINGS');
   if (!groActionText) groIssues.push('MISSING_GRO_ACTION_LINE');
