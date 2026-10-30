@@ -1613,12 +1613,13 @@ words nor a surviving snapshot.
 profile: 0 of 205 September logs carry `ocr_words`, 36 of 124 October ones do.
 Any statistic derived from it describes the later crop/tuning era only.
 
-The current figures:
+The current figures (re-measured 2026-10-30, after the curated-alias
+rescue and the SPXL seed fix):
 
 | root set | dates scored | recall | precision |
 |---|---|---|---|
-| default (8 probe roots) | 8 | **59.6 %** (53/89) | **93.0 %** (53/57) |
-| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **62.9 %** (107/170) | **80.5 %** (107/133) |
+| default (8 probe roots) | 8 | **66.3 %** (59/89) | **95.2 %** (59/62) |
+| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **64.7 %** (110/170) | **82.1 %** (110/134) |
 
 `test/evalParserReplay.test.js` pins the *methodology* on synthetic fixtures —
 the real corpus is untracked, so a test asserting the real numbers would fail
@@ -1807,13 +1808,20 @@ The single most important distinction in this parser:
 | lexicon | what it answers | source |
 |---|---|---|
 | **match** | what a token MAY **be** | seed + observed (249) |
-| **allow** | what may be **REPORTED** | seed only (223) |
+| **allow** | what may be **REPORTED** | seed only (224) |
 
 `loadSeedLexiconSync()` is the allow list. `loadDecodeLexiconSync()` (seed +
-observed) is the match lexicon. **SPXL is match-only**: the parser resolves it
-to *itself* rather than to a neighbouring seed ticker (SOXL), and then drops
-it because the allow list does not have it. That is the intended behaviour,
-not a bug — but see § 'SPXL' below.
+observed) is the match lexicon. A ticker in the match set but not the allow set
+is **resolved and then discarded** — the parser knows what it is and is forbidden
+from reporting it. That is the intended behaviour for a ticker the seed has not
+vouched for, and it is exactly how SPXL was being lost until 2026-10-30; see
+§ 'SPXL' below.
+
+**The chart-stream path uses the seed as its MATCH list**, not as an allow list
+(`parseChartStream.js:570` and `:1149`), so a ticker missing from the seed is
+unreachable there too — and worse than unreachable, it gets *repaired* to a
+neighbouring seed ticker. SPXL was one edit from `SOXL`, so the chart-stream
+parser published `SOXL` on the date Qullamaggie actually held SPXL.
 
 A correction must be the **unique** candidate at the minimum edit distance.
 `IBT` is one edit from both `IBIT` and `IOT`; `SPO` from both `SPOT` and
@@ -1948,8 +1956,34 @@ instead of after an 8–13 minute re-scan. The replayed readings replace the
 recorded ones for the captures it could replay; everything else is left as
 recorded, and the census says how many were replayed — so the number never
 mixes two eras silently. Measured over the four ground-truth dates:
-**94.4 % recall (135/143), 100 % precision**, against the recorded
+**94.0 % recall (140/149), 100 % precision**, against the recorded
 88.1 % / 98.4 %.
+
+The ground truth grew from 143 to 149 readings on 2026-10-30, because SPXL is
+now listed in every TURBO list (see § *SPXL* below). Six readings were added
+and five of them are read; the sixth was already being read, so the fix moved
+five readings from missed to hit.
+
+**The number went DOWN by one reading, and that is the fix working.** The
+pre-fix parser read a `P` in the 20260924 GRO holdings that it should not
+have: the word sits in the **action row** (the tail of `O-TRIM P`), not in the
+holdings list. Removing that one word from the OCR makes the pre-fix parser
+lose the `P` too — the holding list's own `MU,P` was OCRed as `AUP.` and
+cannot be recovered. The pre-fix score counted the action line's `P` against
+a ground truth that legitimately contains `P`, so it was flattered by a
+coincidence. The post-fix parser excludes the action line by position, and
+`P` is an honest OCR loss.
+
+**A/B over the whole replayable corpus.** The probe logs do not retain word
+geometry, so the re-parseable corpus is the OCR cache: 19 captures across
+four videos. Run over all of it, the two parsers differ on **two** captures:
+
+| capture | change |
+|---|---|
+| `fxi2xavpp-a@585` | TURBO **gains SPXL** — the fix |
+| `plsp0tefisg@320` | GRO **loses P** — the action line's `P`, above |
+
+The other 17 captures read identically. **No holding is lost anywhere else.**
 
 The replay extracts at the same width the scan tool does
 (`--ocr-frame-width`, default 1280), so it measures the pipeline and not a
@@ -1960,13 +1994,105 @@ between runs — that is what the OCR cache is for: two parser versions over
 the *same* cached OCR is the only comparison that can attribute a difference
 to the parser. The repeatable number is the fixture test's.
 
-### SPXL — a known gap, reported not fixed
+### SPXL — a holding the allow-list did not know (fixed 2026-10-30)
 
-`SPXL` is in the **match** lexicon but not in the **allow** list, so the
-parser resolves it and drops it. It is also missing from **every** TURBO
-holdings list in `data/revere_ground_truth.json`, although the screen shows
-it on all four dates and 20260924's own note reads "ADD to SPXL". Neither the
-ground truth nor `config/ticker_lexicon_seed.csv` was changed: the ground
-truth is a record of what the screen showed, and the allow list is the
-project's decision about what may be reported. **This needs the user's
-decision, not a silent fix.**
+`SPXL` is in the **match** lexicon but was not in the **allow** list, so the
+parser resolved it — it was an EXACT hit, not a misread — and then dropped it
+at the allow-list gate (`parseWhiteboardScreenshotWithBoxes.js`, reason
+`NOT_IN_ALLOWLIST`). It was also missing from **every** TURBO holdings list in
+`data/revere_ground_truth.json`, although the screen shows it on all four
+dates, second in the list, right after `UPRO`, and 20260924's own note reads
+"ADD to SPXL".
+
+The user confirmed the screen is right and the ground truth was wrong
+(2026-10-30): **SPXL was a TURBO position on every date.** Three changes:
+
+| change | where | why |
+|---|---|---|
+| `SPXL` added to the seed allow-list | `config/ticker_lexicon_seed.csv` | it is a real holding, so it may be REPORTED. The whiteboard MATCH set does not change — SPXL was already in it — so no new ambiguity is possible there |
+| the ground truth lists SPXL, second in every TURBO list | `data/revere_ground_truth.json` | the ground truth is a record of what the screen showed, and the screen showed SPXL |
+| the action line's words are excluded by POSITION | `findActionLine()` in the parser | see below |
+
+**The chart-stream path was NOT untouched — it was wrong, and the seed fixed it.**
+The two paths use the seed for opposite jobs: the whiteboard path uses it as the
+**allow** list, but `parseChartStream.js` uses it as the **match** list (lines 570
+and 1149), and SPXL was only in the *observed* lexicon (`config/ticker_lexicon_observed.csv:23`
+— "observed in QMG position list 20220331"). So on the chart-stream path SPXL was
+**not a match either**, and `findCloseTickerMatch('SPXL', seed)` repaired it to
+**`SOXL`** — one edit away (`O`→`P`) and in the seed. Qullamaggie held SPXL on
+20220331; the parser published **SOXL** instead, as a false positive on the very
+date the holding was real.
+
+Measured with `node tools/evalParserReplay.js` on the wide corpus
+(`data/video_ocr_probe` + `data/video_scan_test/_rerun`), SPXL in the seed vs out:
+
+| | hit / gt / pred | recall | precision |
+|---|---|---|---|
+| without SPXL | 109 / 170 / 134 | 64.1 % | 81.3 % |
+| with SPXL | **110 / 170 / 134** | **64.7 %** | **82.1 %** |
+
+Exactly **one** date changed, and it changed in both directions at once:
+20220331's `SPXL` false positive became a `SPXL` hit, and the `SOXL` false
+positive went away with it. The default 8-root replay is byte-identical
+(59/89/62, 66.3 % / 95.2 %) either way.
+
+**The seed change cannot create a new ambiguity on the whiteboard path.** The
+MATCH set there is `seed + observed`, and SPXL was already in the observed half,
+so the resolver's candidate set is unchanged. Enumerating every token within
+one edit of any of the 249 match-list tickers (20,801 tokens): **0** had their
+resolution change (status, canonical ticker, or candidate set) — 68 changed
+**reportability** only, all of them one-edit neighbours of SPXL (`APXL`, `SPAL`,
+`SPXA`, …) that the resolver had *already* decided was SPXL and that the allow
+gate had been discarding. The fix lets through readings the resolver had made,
+not readings it makes now.
+
+**The seed has three consumers, and the blast radius was measured on each.**
+
+| consumer | how it uses the seed | measured effect of adding SPXL |
+|---|---|---|
+| the whiteboard parser | the **allow** list — what may be reported | SPXL becomes reportable. 68 one-edit neighbours change reportability; **0** change resolution |
+| `parseChartStream.js` (`:570`, `:1149`) | the **match** list — what a token may be | 98 repair targets shift, all one-edit neighbours of SPXL that previously repaired elsewhere (`SPXL`→`SOXL`, `SPXI`→`SOXL`, …). Measured on the corpus: one date changed, and it changed in both directions at once (a false positive became a hit) |
+| `repairHoldings.js` (`src/index.js`'s legacy path) | correction candidates for the whole-panel repair | 2 corrections shift: `SPXL` itself (now exact, was `SOXL`) and `PXL` (now `SPXL`, was `PL` — both distance 1). 93 tokens that corrected to **nothing** now correct to SPXL |
+
+The legacy path's 93 new corrections are all one-edit neighbours of SPXL
+(`SPXI`, `SPXA`, `APXL`, …). A token that had **no** correction now has one,
+which is a *gain* in a repair whose job is to resolve an unreadable token into
+a known ticker — but it is the one place where the change creates readings
+rather than letting through readings the resolver had already made.
+
+**The action-line exclusion was the necessary second half.** The section filter
+asks whether a token's TEXT appears inside the section, and that test cannot
+tell the holdings line's `SPXL` from the action line's `SPXL` — a token that
+appears in both places is admitted by the action line. Once SPXL became
+reportable, 20260924's "ADD to SPXL" would have contributed a second one. The
+action line is therefore excluded **by position**: from the `RVAB` keyword
+onwards, a word is action text, and the holdings sit to the LEFT of it.
+
+**The fusion hid the loss.** The screen writes the pair as `UPRO/SPXL`, and
+on 20260924 the OCR read `UPRO/SPXLIBT` — SPXL fused with IBIT, the comma and
+the `I` lost. `splitFusedTicker('SPXLIBT')` returns null (the trailing "IBT"
+is ambiguous between IBIT and IOT and is never guessed), so both SPXL and
+IBIT were lost. `splitFusedTickerExactPrefix()` now recovers the LEADING
+ticker of such a token, because the leading part is an EXACT match — the
+lexicon is asserting that this string is a ticker, which is not a guess — while
+the unreadable remainder stays dropped.
+
+Pinned by `test/parseWhiteboardHoldings.test.js` ("a holding the allow-list
+did not know is reported, not dropped", "the action line's own SPXL never
+contributes a second holding").
+
+**The ground truth was verified from the pixels on all four dates.** The
+screen writes `SPYM,UPRO/SPXL,...` — SPXL second, right after UPRO, on every
+one of them, and GRO never held it (GRO shows `UPRO` alone). The three pinned
+fixtures say the same:
+
+| date | frame | TURBO holdings line |
+|---|---|---|
+| 20260922 | `test/fixtures/revere_whiteboard/20260922_ts700.png` | `SPYM,UPRO/SPXL,IBIT,ETHA,LABU,SPCX,PURR,MRNA,P,SMTC` |
+| 20260924 | `test/fixtures/revere_whiteboard/20260924_ts360.png` | `SPYM,UPRO/SPXL,IBIT,ETHA,SPCX,PURR,MRNA,P,HPE` |
+| 20260928 | `test/fixtures/revere_whiteboard/20260928_ts540.png` | `SPYM,UPRO/SPXL,IBIT,ETHA,SPCX,MRNA,P,HPE,SKHY` |
+
+20260923 has **no fixture frame**; it was read from the video
+(`data/video_pipeline/downloads_hires/20260923_U4dbSz0u11k.mp4`, 1918×1080 by
+ffprobe) at 800 s, where the line reads
+`SPYM,UPRO/SPXL,IBIT,ETHA,SPCX,PURR,MRNA,P,SMTC`.

@@ -30,6 +30,10 @@
 //   5. A token with two equally close candidates is dropped, not guessed.
 //      "IBT" is one edit from both IBIT and IOT, and the parser cannot know
 //      which instrument was meant.
+//   6. A holding the allow-list does not know is RESOLVED and then DROPPED.
+//      SPXL was in the observed lexicon but not in the seed allow-list, so it
+//      was found exactly and then thrown away — and because the screen writes
+//      it as "UPRO/SPXL", the slash hid it from the rejection log as well.
 
 const test = require('node:test');
 const assert = require('node:assert');
@@ -55,15 +59,15 @@ const FIXTURE_DIR = path.join(__dirname, 'fixtures', 'revere_whiteboard');
 const EXPECTED = {
   '20260922': {
     GRO: ['AMD', 'BE', 'DOCN', 'HPE', 'LITE', 'MU', 'NCLD', 'P', 'PLTR', 'SNOW', 'SKHY', 'SPYM', 'TNA', 'TQQQ', 'U', 'UPRO'],
-    TURBO: ['ETHA', 'IBIT', 'LABU', 'MRNA', 'P', 'PURR', 'SMTC', 'SPCX', 'SPYM', 'UPRO'],
+    TURBO: ['ETHA', 'IBIT', 'LABU', 'MRNA', 'P', 'PURR', 'SMTC', 'SPCX', 'SPXL', 'SPYM', 'UPRO'],
   },
   '20260924': {
     GRO: ['AMD', 'BE', 'DOCN', 'HPE', 'LITE', 'NCLD', 'PLTR', 'SKHY', 'SNOW', 'SPYM', 'TQQQ', 'UPRO'],
-    TURBO: ['ETHA', 'HPE', 'MRNA', 'PURR', 'SPYM', 'UPRO'],
+    TURBO: ['ETHA', 'HPE', 'MRNA', 'PURR', 'SPXL', 'SPYM', 'UPRO'],
   },
   '20260928': {
     GRO: ['AMD', 'BE', 'HPE', 'MU', 'NET', 'P', 'PLTR', 'SNOW', 'SPYM', 'TQQQ', 'UPRO'],
-    TURBO: ['ETHA', 'HPE', 'IBIT', 'MRNA', 'P', 'SKHY', 'SPCX', 'SPYM', 'UPRO'],
+    TURBO: ['ETHA', 'HPE', 'IBIT', 'MRNA', 'P', 'SKHY', 'SPCX', 'SPXL', 'SPYM', 'UPRO'],
   },
 };
 
@@ -233,6 +237,29 @@ test('a token with two close candidates is dropped rather than guessed', async (
   assert.ok(!readings.TURBO.includes('IOT'), `IOT is not guessed: ${JSON.stringify(readings.TURBO)}`);
   assert.ok(!readings.TURBO.includes('SPOT'), `SPOT is not guessed: ${JSON.stringify(readings.TURBO)}`);
   assert.ok(!readings.TURBO.includes('SSO'), `SSO is not guessed: ${JSON.stringify(readings.TURBO)}`);
+});
+
+test('a holding the allow-list did not know is reported, not dropped', async () => {
+  // SPXL is on every TURBO screen, written as "UPRO/SPXL". It was in the
+  // OBSERVED lexicon but not in the seed allow-list, so the resolver found it
+  // exactly and the allow-list gate threw it away again — a holding the
+  // parser could see and was forbidden to say.
+  for (const date of ['20260922', '20260924', '20260928']) {
+    const readings = await readFixture(CAPTURES.get(date));
+    assert.ok(readings.TURBO.includes('SPXL'), `${date} SPXL is a TURBO holding: ${JSON.stringify(readings.TURBO)}`);
+    // SPXL is a TURBO holding only — GRO never held it.
+    assert.ok(!readings.GRO.includes('SPXL'), `${date} SPXL is not a GRO holding: ${JSON.stringify(readings.GRO)}`);
+  }
+});
+
+test('the action line\'s own SPXL never contributes a second holding', async () => {
+  // The 20260924 TURBO action line reads "ADD to SPXL". The section filter is
+  // a SUBSTRING test, so an action-line token whose text also appears in the
+  // holdings line passes it — the action line has to be excluded by position,
+  // not by text.
+  const readings = await readFixture(CAPTURES.get('20260924'));
+  const turbo = readings.TURBO || [];
+  assert.equal(turbo.filter((t) => t === 'SPXL').length, 1, `SPXL appears once: ${JSON.stringify(turbo)}`);
 });
 
 test('the whiteboard window is detected from the real pixels', async () => {

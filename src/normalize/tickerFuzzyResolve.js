@@ -7,8 +7,8 @@
  *
  *   match — what a token MAY be. The seed lexicon plus the observed one.
  *           A real ticker the seed does not know resolves to ITSELF here
- *           rather than to a neighbouring seed ticker: SPXL must not become
- *           SOXL, which is a different instrument. (CLAUDE.md: "the clusterer
+ *           rather than to a neighbouring seed ticker: CRH must not become
+ *           CRM, which is a different instrument. (CLAUDE.md: "the clusterer
  *           repairs against the OBSERVED lexicon, not the seed lexicon".)
  *   allow — what may be REPORTED. The seed.
  *
@@ -98,6 +98,45 @@ function resolveTickerToken(token, options) {
 }
 
 /**
+ * Recover the LEADING ticker of a fused token whose remainder cannot be
+ * resolved.
+ *
+ * Tesseract sometimes fuses a holding with the one after it AND loses a
+ * character, so the remainder can be unreadable: "SPXLIBT" is SPXL and IBIT
+ * with the comma and the I gone. The trailing part is then ambiguous — "IBT"
+ * is one edit from both IBIT and IOT — and it is dropped rather than guessed,
+ * exactly as everywhere else.
+ *
+ * The LEADING part is not a guess. It is an EXACT match, so the lexicon is
+ * asserting that this string is a ticker; a correction would be a guess and
+ * is not accepted here. The one thing this cannot do is recover the holding
+ * it lost — the point is that the holding it DID read is not thrown away
+ * with the one it could not.
+ *
+ * This is only sound where a separator has already proved the token holds
+ * more than one holding — the slash in "UPRO/SPXLIBT" — so it is a separate
+ * function rather than a fallback inside splitFusedTicker.
+ *
+ * Returns null when no exact prefix exists.
+ */
+function splitFusedTickerExactPrefix(token, options) {
+  const upper = String(token || '').toUpperCase();
+  // Two holdings need at least four characters, and the leading one has to
+  // leave room for the holding that follows it.
+  if (upper.length < 5) return null;
+
+  // The longest exact prefix first: it is the one the separator put first.
+  for (let len = Math.min(5, upper.length - 2); len >= 3; len -= 1) {
+    const slice = upper.slice(0, len);
+    const resolution = resolveTickerToken(slice, options);
+    if (resolution.status === 'exact') {
+      return [{ text: slice, resolution }];
+    }
+  }
+  return null;
+}
+
+/**
  * Split a token that is several tickers fused together by the OCR.
  *
  * Tesseract loses the comma between two holdings and renders it as nothing
@@ -157,4 +196,5 @@ module.exports = {
   levenshtein,
   resolveTickerToken,
   splitFusedTicker,
+  splitFusedTickerExactPrefix,
 };

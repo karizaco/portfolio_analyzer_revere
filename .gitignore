@@ -78,3 +78,11 @@ data/qmg_position_corpus.json
 # upload_date of videos the catalog could not resolve. Both are regenerated
 # in a couple of minutes with one yt-dlp --flat-playlist call.
 data/catalog_flat/
+# The OCR of the frames tools/evalRevere.js replays. It is a cache, written by
+#   node tools/evalRevere.js --replay --ocr-cache data/revere_ocr_cache.json
+# and its only purpose is to let two parser versions be compared over the SAME
+# OCR -- Tesseract is not deterministic, so a re-OCR would mix parser change
+# with OCR noise. It cannot be rebuilt on a fresh clone (the media is not in
+# git), so commit it explicitly if it is ever worth sharing:
+#   git add -f data/revere_ocr_cache.json
+data/revere_ocr_cache.json
