@@ -17,7 +17,12 @@ has the commands that regenerate every figure here. Measured **2026-10-29**.
 | qullamaggie | 588 | 219 | 369 | 0 | 0 |
 | **total** | **2,402** | **1,905** | **385** | **95** | **17** |
 
-`catalog_runs` holds **30** audit rows — 26 `live`, 4 `fixture`.
+`catalog_runs` holds **30** audit rows — 26 `live`, 4 `fixture`. It is a log
+of **runs**, not of videos, so its size is not the catalog's size; the
+per-video counts live inside each row. The 2026-10-26 gap-fill's 1,582 rows
+are not in it — that run was interrupted, and the audit row was only written
+at the end. That is fixed (see CLAUDE.md § *The audit table is a log of RUNS,
+not of videos*), but the shipped database still carries the historical gap.
 
 **What `status` means** is documented in `src/video/videoStatus.js`. The one
 thing worth holding on to: `scanning` means *the media is on disk* — and it is

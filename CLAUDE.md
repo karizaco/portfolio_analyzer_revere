@@ -1002,6 +1002,58 @@ Three facts that decide how you run it:
   left no run row, so the audit table described a run that was not the one
   that did the work.
 
+### The audit table is a log of RUNS, not of videos
+
+`catalog_runs` holds **one row per command invocation**, not one row per
+video. The per-video counts live *inside* the row (`inserted_count`,
+`updated_count`), so the table's own size has nothing to do with the
+catalog's size — and a reader who sums `inserted_count` and compares it with
+`COUNT(*) FROM videos` is comparing two different quantities.
+
+Measured on the shipped catalog (2026-10-29): `sum(inserted_count)` = **303**,
+`sum(updated_count)` = **897**, against **2,402** video rows. The gap had
+three separate causes, and only one of them was a defect:
+
+| cause | rows it explains | a defect? |
+|---|---|---|
+| the table counts runs, not videos | the whole shape of it | no |
+| `tools/importQmgChannel.js` writes `videos` and **never** writes `catalog_runs` | 539 Qullamaggie rows (2026-09-19) | yes — a second writer with no audit |
+| `fill-dates` wrote its audit row only at the very end | 1,582 Revere rows (2026-10-26) | yes — the audit was lost with the run |
+
+**The third was the big one, and it is fixed.** `fill-dates` saved its data
+**per batch** (`upsert_catalog_rows` commits at every batch) but wrote its
+`catalog_runs` row **after the whole `ThreadPoolExecutor` block finished**. A
+run that was cut short therefore kept every row it had written and lost its
+record entirely — the work survived and its provenance did not. The 2026-10-26
+gap-fill is the visible symptom: the first batch (77 rows at
+`2026-10-26T09:40:58`) is `catalog_runs` row 26, and the other **1,582 rows
+across 65 batches are accounted for by no audit row at all**. The catalog's
+largest population event was invisible in the table that exists to record it.
+
+The fix moves the audit row to the **start** of the run and keeps its counters
+in step with the data:
+
+| what | where |
+|---|---|
+| `record_catalog_run()` returns the new `run_id` | `tools/whiteboard_worker.py` |
+| `update_catalog_run()` refreshes the counters of an already-recorded run | `tools/whiteboard_worker.py` |
+| the snapshot file and the audit row are written **before** the thread pool starts | `command_fill_dates` |
+| `update_catalog_run()` is called **after every batch** | `command_fill_dates` |
+| `persist_missing_titles()` returns `(written, inserted)` — the rows it INSERTs count toward `inserted_count` | `tools/whiteboard_worker.py` |
+
+The rule this encodes: **an interrupted run must still leave a row, and that
+row must report what it DID, not what it was asked to do.** `row_count` stays
+the size of the work list it was given; `inserted_count`/`updated_count` are
+what it actually managed. Pinned by
+`test/whiteboardWorkerCatalog.test.js` → *"an interrupted fill-dates run still
+leaves an audit row"*, which hangs the fake yt-dlp, kills the worker, and
+asserts the row is still there with `inserted_count` = the rows that landed.
+
+The second cause is still open: `tools/importQmgChannel.js` is a second writer
+of `videos` with no audit row at all. It is a one-off import script for the
+Qullamaggie channel, so the rows it wrote are real and the campaign is
+recoverable — but nothing records that it happened.
+
 ### `fill-dates` builds its own work list
 
 The work list used to be a file that only existed on the machine that made it
