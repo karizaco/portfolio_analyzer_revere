@@ -18,6 +18,20 @@ data/video_scan_*/fix-final/screenshots/
 data/video_scan_*/**/ocr_probe/frames/
 # Test runs and probes — temporary artifacts
 data/video_scan_test/
+# The same family, spelled out: a one-off crop/frame experiment. Nothing
+# outside the directory references it, and the frames it was cut from live
+# under the gitignored data/video_scan_test/ tree.
+data/video_scan_1080p_test/
+# Captured stdout of a one-off run. Every video id in these is already in
+# the catalog, and the tool that produced them is tools/fetchCaptions.js --
+# its real output goes to data/video_pipeline/transcripts/.
+data/fetch_captions_*.log
+# Scratch written at the root of data/ by one-off download campaigns: the
+# stdout of the parallel workers, and the id slices that split the work
+# between them. Every id in them is in the catalog.
+data/.download_logs/
+data/.download_slices.json
+data/_*.txt
 # Scratch output roots the e2e scan tests create under data/. They are removed
 # in a finally block, but an interrupted run leaves them behind.
 data/video_ocr_e2e_*/
