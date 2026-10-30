@@ -32,6 +32,8 @@ const path = require('node:path');
 
 const { loadDecodeLexiconSync, loadSeedLexiconSync } = require('../src/normalize/tickerScan');
 const { decodeCell } = require('../src/normalize/tickerDecode');
+const { buildTickerKnowledge } = require('../src/normalize/repairHoldings');
+const { loadTickerRepairConfig } = require('../src/io/loadTickerConfig');
 
 const ROOT = path.resolve(__dirname, '..');
 const SEED_CSV = path.join(ROOT, 'config', 'ticker_lexicon_seed.csv');
@@ -184,4 +186,52 @@ test('the seed lexicon still holds the real holdings', () => {
   for (const ticker of ['JNUG', 'NUGT', 'MNDY', 'GSIT', 'IOT', 'ARQQ', 'QBTS', 'PLTR', 'URNM']) {
     assert.ok(set.has(ticker), `${ticker} is missing from the seed lexicon`);
   }
+});
+
+test('no ticker appears on two seed rows', () => {
+  // The seed lexicon is a SET of tickers. A ticker may be seeded for more than
+  // one reason, and the file used to record those reasons on separate rows —
+  // 13 tickers had two rows each.
+  //
+  // That mattered because the legacy repair scores each seed ENTRY
+  // (`addScore(seedTokenScores, ..., 20)`), so a ticker listed twice carried
+  // DOUBLE the correction support of one listed once — and `findBestCorrection`
+  // multiplies the score by 10 while an edit costs 25, so the doubled score
+  // outweighed the edit distance outright. Measured: 71 correction targets
+  // flipped on the duplicate rows alone. `TEM` corrected to `TEAM` instead of
+  // to itself, `IBIS` to `NBIS` instead of `IBIT`.
+  //
+  // `loadSeedLexiconSync` de-duplicates the set it returns, so the defect was
+  // invisible there and only reached the legacy repair path.
+  const counts = new Map();
+  for (const row of seedRows()) {
+    counts.set(row.ticker, (counts.get(row.ticker) || 0) + 1);
+  }
+  const duplicated = [...counts.entries()].filter(([, n]) => n > 1).map(([t]) => t);
+  assert.deepEqual(duplicated, [],
+    `these tickers are on more than one seed row: ${duplicated.join(', ')}`);
+});
+
+test('every consumer of the seed sees the same set of tickers', () => {
+  // `loadSeedLexiconSync` and `loadTickerRepairConfig` read the same file for
+  // the same purpose, so they must agree on what the file contains.
+  const fromScan = loadSeedLexiconSync();
+  return loadTickerRepairConfig(ROOT + '/config').then((config) => {
+    assert.deepEqual(
+      [...config.tickerSeeds].sort(),
+      [...fromScan.tickers].sort(),
+      'the legacy repair and the scanner disagree about the seed lexicon'
+    );
+  });
+});
+
+test('no seed ticker carries more than one reference score', () => {
+  // The invariant behind the test above, measured on the repair's own score
+  // table rather than on the file: every seed ticker must score 20, once.
+  return loadTickerRepairConfig(ROOT + '/config').then((config) => {
+    const knowledge = buildTickerKnowledge({ seedTickers: config.tickerSeeds, rows: [] });
+    const doubled = [...knowledge.seedTokenScores.entries()].filter(([, score]) => score > 20);
+    assert.deepEqual(doubled.map(([ticker]) => ticker), [],
+      'these tickers carry a doubled seed score, so they win corrections they should not');
+  });
 });
