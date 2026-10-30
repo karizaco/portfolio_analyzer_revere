@@ -1745,6 +1745,29 @@ layouts exist and the legacy crop reader only ever saw the first:
     changes **0** existing decodes, loses **0**, and gains **38** correct repairs
     (`MNOY→MNDY@0.625`, `AMO→AMD@0.625`). `test/lexiconVariants.test.js` pins
     gained=38, changed=0, lost=0.
+- **13 tickers were on TWO seed rows, and the duplicate gave them DOUBLE
+  correction support** (fixed 2026-10-30). The seed lexicon is a **set** of
+  tickers, and a ticker may be seeded for more than one reason — `SPCX` was
+  both a "seeded recurring ETF" and a "seeded Discord recurring". The file
+  recorded the two reasons on two rows, and `loadSeedLexiconSync` de-duplicated
+  the set it returned — so the defect was invisible there. `loadTickerRepairConfig`
+  did **not** de-duplicate, and the legacy repair scores every seed **entry**
+  (`addScore(seedTokenScores, ..., 20)`), so a ticker listed twice scored 40.
+  `findBestCorrection` multiplies the score by 10 while an edit costs 25, so the
+  doubled score outweighed the edit distance outright: **71 correction targets
+  flipped** on the duplicate rows alone. `TEM` corrected to `TEAM` instead of to
+  itself; `IBIS` to `NBIS` instead of `IBIT`; `MRA` to `MRNA` instead of `URA`.
+
+  Fixed at both ends: the 13 duplicate rows were merged into one row per ticker
+  (both notes kept, joined with a semicolon), and `loadTickerRepairConfig` now
+  de-duplicates like the scanner does — so the two consumers cannot drift apart
+  again. The committed `data/portfolio_snapshots.csv` holdings are **unchanged**
+  (re-running the repair over its own rows: 0 holdings moved), and the chart-stream
+  replay numbers are unchanged (the seed was already de-duplicated there).
+
+  Pinned by `test/lexiconVariants.test.js` ("no ticker appears on two seed rows",
+  "every consumer of the seed sees the same set of tickers", "no seed ticker
+  carries more than one reference score").
 - **A frame's identity is its FILE, not its label.** Four **source-width** files are named
   `qmg_20230609.png` in four run directories and hold three distinct images (the tree also
   holds two 640×360 prefilter renders under that name), so two

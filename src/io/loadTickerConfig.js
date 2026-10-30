@@ -21,10 +21,23 @@ async function loadTickerRepairConfig(configDirectory) {
   const seedRows = await loadCsvRows(lexiconPath);
   const overrideRows = await loadCsvRows(overridesPath);
 
-  const tickerSeeds = seedRows
-    .filter((row) => normalizeBoolean(row.enabled, true) && row.ticker)
-    .map((row) => normalizeTicker(row.ticker))
-    .filter(Boolean);
+  // The seed lexicon is a SET of tickers, and it may carry the same ticker on
+  // more than one row (a ticker that was seeded for two different reasons).
+  // `loadSeedLexiconSync` de-duplicates it for the same reason.
+  //
+  // The duplicate mattered because the legacy repair scores each seed entry
+  // (`addScore(seedTokenScores, ..., 20)`), so a ticker listed twice carried
+  // DOUBLE the correction support of one listed once — and the score is
+  // multiplied by 10 in `findBestCorrection`, which is far more than an edit
+  // costs (25 per edit). 13 tickers had double support, and 71 correction
+  // targets flipped on that alone. `TEM` corrected to `TEAM` (a duplicated
+  // ticker) instead of to itself, `IBIS` to `NBIS` instead of `IBIT`.
+  const tickerSeeds = [...new Set(
+    seedRows
+      .filter((row) => normalizeBoolean(row.enabled, true) && row.ticker)
+      .map((row) => normalizeTicker(row.ticker))
+      .filter(Boolean)
+  )];
 
   const manualOverrides = overrideRows
     .filter((row) => normalizeBoolean(row.enabled, true) && row.raw_token)
