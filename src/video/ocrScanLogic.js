@@ -1002,6 +1002,64 @@ function selectFramesForOcr(prefilterRows, options = {}) {
   return [...selected.values()].sort((left, right) => left.frameIndex - right.frameIndex);
 }
 
+/**
+ * Swap the best-scoring prefilter frame into a selected frame set.
+ *
+ * WHY THIS EXISTS
+ *
+ * `selectFramesForOcr` reserves its budget for a uniform time-stride, and
+ * the stride-based reserve is sized to keep each stride under ~10 s of
+ * video. For a long video that reserve alone fills the whole budget, so
+ * the SEED branch never runs -- and the seed branch is the only part of
+ * the selector that consults the prefilter score. The frames that get
+ * OCR'd are therefore a blind stride, and `--prefilter-threshold` has no
+ * effect at all.
+ *
+ * Measured on 20220218 (689 frames sampled at 0.25 fps, chart_stream
+ * defaults): the 12 selected frames are a 228-second stride, and the
+ * best-scoring frame in the video -- t=132 s, score 22.27 -- is not one
+ * of them. Five of the twelve score below the profile's own absolute
+ * threshold of 8, and the last four score below zero.
+ *
+ * WHAT IT DOES
+ *
+ * The frame the profile scored highest takes the slot of the LEAST legible
+ * selected frame. The best frame is gated by the profile's threshold, with
+ * the same 60 % relaxation `selectFramesForOcr` applies, so a video whose
+ * frames all score low gets no swap.
+ *
+ * The eviction rule is "lowest score", NOT the table profile's "nearest
+ * frame". The table profile's budget is 3 frames taken seconds apart, so
+ * its nearest uniform frame is redundant with the best one; the
+ * chart-stream frames are MINUTES apart, so no selected frame is redundant
+ * with another, and the one that should give up its slot is the least
+ * legible one.
+ *
+ * `selectedRows` is mutated in place and returned, so the caller keeps
+ * its reference to the array it passes to the OCR stage.
+ *
+ * @returns {{swapped: boolean, evicted: object|null, index: number, threshold: number}}
+ */
+function swapInBestPrefilterFrame(selectedRows, bestRow, options = {}) {
+  const minScore = Number(options.minScore || 0);
+  const bestScore = Number(bestRow && bestRow.prefilterScore || 0);
+  const effectiveThreshold = bestScore >= minScore ? minScore : minScore * 0.6;
+  const noSwap = { swapped: false, evicted: null, index: -1, threshold: effectiveThreshold };
+  if (!Array.isArray(selectedRows) || !selectedRows.length || !bestRow) return noSwap;
+  if (selectedRows.some((row) => row.frameIndex === bestRow.frameIndex)) return noSwap;
+  if (!(bestScore >= effectiveThreshold)) return noSwap;
+
+  let evictIndex = 0;
+  for (let index = 1; index < selectedRows.length; index += 1) {
+    if (Number(selectedRows[index].prefilterScore || 0) < Number(selectedRows[evictIndex].prefilterScore || 0)) {
+      evictIndex = index;
+    }
+  }
+  const evicted = selectedRows[evictIndex];
+  selectedRows[evictIndex] = bestRow;
+  return { swapped: true, evicted, index: evictIndex, threshold: effectiveThreshold };
+}
+
 function inferDateKey(videoPath, explicitDateKey = '') {
   const normalizedExplicit = String(explicitDateKey || '').trim();
   if (/^20\d{6}$/.test(normalizedExplicit)) {
@@ -1076,6 +1134,7 @@ module.exports = {
   scoreChartLikeness,
   scoreFramePrefilter,
   scoreSnapshotCandidate,
+  swapInBestPrefilterFrame,
   scoreTextDensity,
   scoreWhiteboardCandidate,
   scoreWhiteboardCandidateBreakdown,

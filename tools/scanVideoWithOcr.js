@@ -28,6 +28,7 @@ const {
   scoreSnapshotCandidate,
   scoreWhiteboardCandidateBreakdown,
   selectFramesForOcr,
+  swapInBestPrefilterFrame,
   splitIssueCodes
 } = require('../src/video/ocrScanLogic');
 const { computePerceptualHash, hammingDistance } = require('../src/video/imageHash');
@@ -1545,6 +1546,47 @@ async function main() {
           `[scan:${options.outputKind}] table mode: the best prefilter frame `
           + `(${bestPrefilter.prefilterScore.toFixed(2)}) is below the threshold `
           + `(${effectiveThreshold.toFixed(2)}), so it does not take a slot`
+        );
+      }
+    }
+
+    // The chart-stream profile has the same starvation as the table profile,
+    // and the same reason for a local fix rather than a change to
+    // selectFramesForOcr: the stride-based uniform reserve swallows the
+    // whole budget for a long video, so the seed branch -- the only part of
+    // the selector that consults the prefilter score -- never runs, and
+    // --prefilter-threshold has no effect at all.
+    //
+    // Measured on 20220218 (689 frames sampled at 0.25 fps, chart_stream
+    // defaults): the 12 selected frames are a blind 228-second stride, and
+    // the best-scoring frame in the video -- t=132 s, score 22.27 -- is not
+    // among them. Five of the twelve score below the profile's own
+    // absolute threshold of 8; the last four score below zero.
+    //
+    // The swap evicts the LEAST legible selected frame rather than the
+    // nearest one, which is what the table profile does. The table budget
+    // is 3 frames taken seconds apart, so its nearest uniform frame is
+    // redundant with the best one; the chart-stream frames are MINUTES
+    // apart, so no selected frame is redundant with another.
+    //
+    // The eviction rule and the threshold gate both live in
+    // src/video/ocrScanLogic.js, so they are testable without a scan.
+    if (!batchMode && options.chartStreamParser && bestPrefilter && selectedFrameRows.length) {
+      const swap = swapInBestPrefilterFrame(selectedFrameRows, bestPrefilter, {
+        minScore: options.prefilterThreshold,
+      });
+      if (swap.swapped) {
+        console.log(
+          `[scan:${options.outputKind}] chart-stream mode: swapped in the best prefilter frame `
+          + `(${bestPrefilter.prefilterScore.toFixed(2)} at ${formatDuration(bestPrefilter.timestamp)})`
+          + ` in place of the least legible selected frame `
+          + `(${Number(swap.evicted.prefilterScore || 0).toFixed(2)} at ${formatDuration(swap.evicted.timestamp)})`
+        );
+      } else if (!selectedFrameRows.some((row) => row.frameIndex === bestPrefilter.frameIndex)) {
+        console.log(
+          `[scan:${options.outputKind}] chart-stream mode: the best prefilter frame `
+          + `(${bestPrefilter.prefilterScore.toFixed(2)}) is below the effective threshold `
+          + `(${swap.threshold.toFixed(2)}), so it does not take a slot`
         );
       }
     }

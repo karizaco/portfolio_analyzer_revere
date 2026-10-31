@@ -11,8 +11,18 @@
 //   node tools/evalParserReplay.js [globRoot...]
 //   node tools/evalParserReplay.js data/video_ocr_probe/qmg-easyocr-20261018
 //   node tools/evalParserReplay.js --json
+//   node tools/evalParserReplay.js --drop-aliases A,AL
+//   node tools/evalParserReplay.js --confusion-csv path/to/other.csv
 //
-// Exit code is always 0 — this is a report, not a gate.
+// Exit code is 0 on a completed run and 2 on a usage error — this is a
+// report, not a gate.
+//
+// The last two flags select the curated alias table by PATH. A before/after
+// measurement of that table used to mean editing
+// config/ticker_ocr_confusions.csv in place, which is shared: two
+// measurements in one tree raced each other, the table flipped between its
+// 20-line and 29-line forms mid-measurement twice, and a wrong "before"
+// column was reported once as a result.
 //
 // ---------------------------------------------------------------------------
 // WHAT THIS NUMBER IS, AND WHAT IT IS NOT
@@ -37,9 +47,13 @@
 // 2.17x and made "dates scored" a count of log rows rather than of dates.
 
 const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 
-const { parseChartStreamPositionList } = require('../src/parse/parseChartStream');
+const {
+  parseChartStreamPositionList,
+  setOcrConfusionCsvPath,
+} = require('../src/parse/parseChartStream');
 const { listGroundTruthCaptures } = require('../src/qmg/qmgGroundTruth');
 
 const GT_PATH = path.resolve(__dirname, '..', 'data', 'qmg_ground_truth.json');
@@ -243,10 +257,117 @@ function percent(part, whole) {
   return whole ? ((part / whole) * 100).toFixed(1) : '0.0';
 }
 
+// ---------------------------------------------------------------------------
+// The curated alias table override
+// ---------------------------------------------------------------------------
+//
+// `--confusion-csv PATH` parses under a DIFFERENT alias table, and
+// `--drop-aliases A,B` parses with those rows removed.
+//
+// Both exist because a before/after measurement of the alias table used to
+// mean editing config/ticker_ocr_confusions.csv in place. The map is cached
+// at module level and the file is shared, so two measurements in one tree
+// raced each other: the table flipped between its 20-line and 29-line forms
+// mid-measurement, twice, and a wrong "before" column was reported once as
+// a result. The table is now selected by PATH and the cache is keyed by the
+// resolved path, so both columns can be produced in one process, in either
+// order, with nothing on disk changed.
+
+const ALIAS_CSV = path.resolve(__dirname, '..', 'config', 'ticker_ocr_confusions.csv');
+
+function splitAliasList(value) {
+  return String(value || '')
+    .split(',')
+    .map((entry) => entry.trim().toUpperCase())
+    .filter(Boolean);
+}
+
+function countAliasRows(file) {
+  try {
+    return fs.readFileSync(file, 'utf8')
+      .split(/\r?\n/)
+      .slice(1)
+      .filter((line) => line.trim()).length;
+  } catch {
+    return 0;
+  }
+}
+
+function parseFlags(argv) {
+  const flags = { json: false, roots: [], confusionCsv: '', dropAliases: [] };
+  for (let i = 0; i < argv.length; i += 1) {
+    const arg = argv[i];
+    if (arg === '--json') {
+      flags.json = true;
+    } else if (arg === '--confusion-csv') {
+      flags.confusionCsv = argv[i + 1] || '';
+      i += 1;
+    } else if (arg.startsWith('--confusion-csv=')) {
+      flags.confusionCsv = arg.slice('--confusion-csv='.length);
+    } else if (arg === '--drop-aliases') {
+      flags.dropAliases = splitAliasList(argv[i + 1]);
+      i += 1;
+    } else if (arg.startsWith('--drop-aliases=')) {
+      flags.dropAliases = splitAliasList(arg.slice('--drop-aliases='.length));
+    } else if (arg.startsWith('--')) {
+      const error = new Error(`unknown flag: ${arg}`);
+      error.usage = true;
+      throw error;
+    } else {
+      flags.roots.push(arg);
+    }
+  }
+  return flags;
+}
+
+function applyAliasTableOverride(flags) {
+  const drop = flags.dropAliases;
+  const baseCsv = flags.confusionCsv ? path.resolve(flags.confusionCsv) : ALIAS_CSV;
+  const previous = setOcrConfusionCsvPath(baseCsv);
+  let tempDir = null;
+  let effective = baseCsv;
+
+  if (drop.length) {
+    const lines = fs.readFileSync(baseCsv, 'utf8').split(/\r?\n/);
+    const kept = lines.filter((line, index) => {
+      if (index === 0) return true;
+      const garbled = String(line.split(',')[0] || '').trim().toUpperCase();
+      if (!garbled) return true;
+      return !drop.includes(garbled);
+    });
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'replay-alias-'));
+    effective = path.join(tempDir, 'ticker_ocr_confusions.csv');
+    fs.writeFileSync(effective, kept.join('\n'));
+    setOcrConfusionCsvPath(effective);
+  }
+
+  return {
+    describe() {
+      return {
+        source: baseCsv,
+        dropped: drop,
+        rows: countAliasRows(effective),
+      };
+    },
+    restore() {
+      setOcrConfusionCsvPath(previous);
+      if (tempDir) {
+        try {
+          fs.rmSync(tempDir, { recursive: true, force: true });
+        } catch {
+          // A leftover temp directory is harmless; never fail a report over it.
+        }
+      }
+    },
+  };
+}
+
 function main(argv = process.argv.slice(2)) {
-  const asJson = argv.includes('--json');
-  const roots = argv.filter((arg) => arg !== '--json');
-  const effectiveRoots = roots.length ? roots : DEFAULT_ROOTS;
+  const flags = parseFlags(argv);
+  const asJson = flags.json;
+  const effectiveRoots = flags.roots.length ? flags.roots : DEFAULT_ROOTS;
+
+  const aliasOverride = applyAliasTableOverride(flags);
 
   const gt = JSON.parse(fs.readFileSync(GT_PATH, 'utf8'));
   const files = effectiveRoots.flatMap((root) => collectLogFiles(path.resolve(root)));
@@ -255,6 +376,7 @@ function main(argv = process.argv.slice(2)) {
   if (asJson) {
     console.log(JSON.stringify({
       roots: effectiveRoots,
+      alias_table: aliasOverride.describe(),
       census: report.census,
       totals: report.totals,
       micro_recall: Number(percent(report.totals.hit, report.totals.gt)),
@@ -270,6 +392,7 @@ function main(argv = process.argv.slice(2)) {
         fp: row.fp,
       })),
     }, null, 2));
+    aliasOverride.restore();
     return 0;
   }
 
@@ -325,6 +448,11 @@ function main(argv = process.argv.slice(2)) {
   console.log(`dates scored     : ${census.datesScored}`);
   console.log(`micro recall     : ${percent(totals.hit, totals.gt)}%  (${totals.hit}/${totals.gt})`);
   console.log(`micro precision  : ${percent(totals.hit, totals.pred)}%  (${totals.hit}/${totals.pred})`);
+  const alias = aliasOverride.describe();
+  console.log('');
+  console.log(`alias table      : ${alias.rows} rows from ${alias.source}`
+    + (alias.dropped.length ? `  (dropped: ${alias.dropped.join(' ')})` : ''));
+  aliasOverride.restore();
   return 0;
 }
 
@@ -335,8 +463,21 @@ module.exports = {
   cropWidthFor,
   groundTruthForDate,
   scoreLogs,
+  parseFlags,
+  applyAliasTableOverride,
 };
 
 if (require.main === module) {
-  main();
+  try {
+    process.exitCode = main();
+  } catch (error) {
+    if (error && error.usage) {
+      console.error(`evalParserReplay: ${error.message}`);
+      console.error('usage: node tools/evalParserReplay.js [--json] [--confusion-csv PATH]'
+        + ' [--drop-aliases A,B] [root ...]');
+      process.exitCode = 2;
+    } else {
+      throw error;
+    }
+  }
 }
