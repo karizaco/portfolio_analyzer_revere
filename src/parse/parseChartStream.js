@@ -256,7 +256,7 @@ function findPanelBoundaries(words) {
 
 function identifyPositionListColumn(words, cropWidth = null, engine = null) {
   if (!Array.isArray(words) || !words.length) {
-    return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
+    return { inListTickers: new Set(), dominantColumnX: null, dominantColumnLeft: null, columnWidth: 0 };
   }
 
   // Detect panel boundaries via keyword matching. If both headers found,
@@ -345,6 +345,7 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
     const center = w.left + w.width / 2;
     const entry = {
       center,
+      left: w.left,
       line: w.line,
       right: w.left + w.width,
       text: upper
@@ -386,7 +387,7 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
     const sortedBuckets = [...buckets.entries()].sort((a, b) => b[1] - a[1]);
     const topBucket = sortedBuckets[0];
     if (!topBucket || topBucket[1] < 2) {
-      return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
+      return { inListTickers: new Set(), dominantColumnX: null, dominantColumnLeft: null, columnWidth: 0 };
     }
     dominantX = topBucket[0] + bucketWidth / 2;
     dominantCount = topBucket[1];
@@ -418,6 +419,23 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
   const inListTickers = new Set(
     (priceAlignedMembers.length >= 3 ? priceAlignedMembers : columnMembers).map((tw) => tw.text)
   );
+
+  // The column's LEFT edge: the median left of the column's own members.
+  //
+  // A position list is a LEFT-aligned table, so every ticker in it starts at
+  // the same x no matter how many characters it has. The column's CENTRE
+  // therefore drifts with the ticker's length, and a short garbled ticker
+  // ("A" for "AI") sits far to the left of the column's median centre even
+  // though it starts in exactly the same place as every other ticker.
+  //
+  // Measured on the 20230609 capture: every ticker in the column starts at
+  // x 515-518 and the one-character "A" starts at x 518 too, but its centre
+  // is 545 against a median centre of 581.5 -- 36.5 px away, more than the
+  // 25 px the centre test allows.
+  const columnLefts = columnMembers.map((tw) => tw.left).sort((a, b) => a - b);
+  const dominantColumnLeft = columnLefts.length
+    ? columnLefts[Math.floor(columnLefts.length / 2)]
+    : null;
 
   // X-coordinate gate: the QMG position list occupies the rightmost portion of
   // the frame (crop x=0.86 → position list starts at ~86% of crop width).
@@ -465,10 +483,10 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
   const stackLines = new Set(stackMembers.map((tw) => tw.line));
   const stackIsReal = stackMembers.length >= 4 && stackLines.size >= 4;
   if (!stackIsReal && !(columnIsPriceAligned && priceAlignedTickers.length >= 2)) {
-    return { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
+    return { inListTickers: new Set(), dominantColumnX: null, dominantColumnLeft: null, columnWidth: 0 };
   }
 
-  return { columnWidth, dominantColumnX: dominantX, inListTickers, stackLines: stackLines.size };
+  return { columnWidth, dominantColumnX: dominantX, dominantColumnLeft, inListTickers, stackLines: stackLines.size };
 }
 
 // Extract ALL ticker-shaped tokens from OCR text (ignores lexicon).
@@ -580,9 +598,9 @@ function parseChartStreamPositionList({ ocr } = {}) {
   // price-nearby + lexicon + edit-distance behavior so existing callers
   // keep working.
   const hasWordPositions = words && words.length > 0;
-  const { inListTickers, dominantColumnX, columnWidth } = hasWordPositions
+  const { inListTickers, dominantColumnX, dominantColumnLeft, columnWidth } = hasWordPositions
     ? identifyPositionListColumn(words, ocr._cropWidth || null, ocr._engine || null)
-    : { inListTickers: new Set(), dominantColumnX: null, columnWidth: 0 };
+    : { inListTickers: new Set(), dominantColumnX: null, dominantColumnLeft: null, columnWidth: 0 };
 
   // Build per-ticker line + word lookups from raw OCR word positions.
   // - tickerLineMap: ticker → array of line indices (used by Filter G)
@@ -922,7 +940,25 @@ function parseChartStreamPositionList({ ocr } = {}) {
       if (positionsLine != null && word.line <= positionsLine) continue;
       if (watchlistBelowPositions && word.line >= watchlistLine) continue;
       const center = word.left + word.width / 2;
-      if (Math.abs(center - dominantColumnX) > columnWidth / 2) continue;
+      // The token's LEFT edge is compared with the column's LEFT edge, not
+      // its centre with the column's median centre. The position list is a
+      // left-aligned table, so a short garbled ticker starts where every
+      // other ticker starts even though its centre sits far to the left of
+      // theirs -- measured on 20230609: every ticker in the column starts at
+      // x 515-518 and the one-character "A" starts at x 518 too, but its
+      // centre is 545 against a median centre of 581.5, so the centre test
+      // rejected it before the alias was ever consulted.
+      //
+      // The centre test is kept as an ALTERNATIVE, not replaced: this
+      // corpus's tables are left-aligned, but a right-aligned or centred
+      // layout would be judged by its centres, and the union of the two
+      // tests cannot reject a token the old gate accepted.
+      const tokenLeft = word.left || 0;
+      const insideColumn = dominantColumnLeft != null
+        ? (Math.abs(tokenLeft - dominantColumnLeft) <= columnWidth / 2
+            || Math.abs(center - dominantColumnX) <= columnWidth / 2)
+        : Math.abs(center - dominantColumnX) <= columnWidth / 2;
+      if (!insideColumn) continue;
       // The vertical span the other tickers established is NOT used as a
       // gate here. The span is computed from the accepted rows, and the rows
       // worth rescuing are exactly the ones that are NOT accepted — a
@@ -933,8 +969,8 @@ function parseChartStreamPositionList({ ocr } = {}) {
       // all eight rescuable holdings and no other candidate.
       //
       // The column x, the panel and the curated alias are the evidence here.
-      // The alias set is nineteen entries, each recorded against a real
-      // frame, so the blast radius is bounded by the file.
+      // The alias set is a short, curated table and every row is a recorded
+      // misread against a real frame, so the blast radius is bounded by the file.
       // The garble itself is in the reading: replace it, never join it.
       const rawIndex = accepted.indexOf(raw);
       if (rawIndex >= 0) {
@@ -1025,6 +1061,7 @@ function parseChartStreamPositionList({ ocr } = {}) {
     column_filter: dominantColumnX != null ? {
       column_width: columnWidth,
       dominant_x: dominantColumnX,
+      dominant_left: dominantColumnLeft,
       in_list_token_count: inListTickers.size
     } : null,
     confidence,
