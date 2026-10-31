@@ -77,9 +77,36 @@ function safeReadJSON(p) {
 const parseLogFilename = (filename) => {
   const match = filename.match(/^(\d{8})_(\d{8})_([A-Za-z0-9_-]{6,15})_([a-f0-9]{8})_(whiteboard|snapshot)\.json$/);
   if (!match) return null;
-  const [, , uploadDate, videoId, outputKind] = match;
-  return { uploadDate, videoId, outputKind };
+  // `outputKind` keeps the value this tool has always written to
+  // per_video[].output_kind (the 4th capture group); `logKind` is the real
+  // whiteboard|snapshot suffix, used to identify one logical scan per video.
+  const [, , uploadDate, videoId, outputKind, logKind] = match;
+  return { uploadDate, videoId, outputKind, logKind };
 };
+
+// Ticker list for one capture, matching getCaptureTickers() in
+// tools/aggregateScanResults.js for whiteboard layouts: whiteboard captures
+// use the structured GRO/TURBO holdings from the bbox parser
+// (tickers_from_bbox), not the raw clusterer output in capture.tickers.
+// The scanner stores bbox tickers per parsed observation
+// (capture.parsed_observations[].tickers_from_bbox); a capture-level
+// tickers_from_bbox array is honoured too. Legacy logs written before the
+// bbox parser existed carry no tickers_from_bbox field at all, so they keep
+// falling back to capture.tickers. Other layouts are unchanged.
+function getTimelineCaptureTickers(cap) {
+  const layout = cap.screen_layout;
+  if (layout === 'whiteboard' || layout === 'structured_whiteboard') {
+    const observations = Array.isArray(cap.parsed_observations) ? cap.parsed_observations : [];
+    const hasCaptureBbox = Array.isArray(cap.tickers_from_bbox);
+    const obsWithBbox = observations.filter((o) => o && Array.isArray(o.tickers_from_bbox));
+    if (hasCaptureBbox || obsWithBbox.length) {
+      const bbox = new Set(hasCaptureBbox ? cap.tickers_from_bbox : []);
+      for (const o of obsWithBbox) for (const t of o.tickers_from_bbox) bbox.add(t);
+      return [...bbox];
+    }
+  }
+  return Array.isArray(cap.tickers) ? cap.tickers : [];
+}
 
 const isMockVideo = (videoId) => /^(abc123|def456)$/i.test(videoId);
 
@@ -97,98 +124,53 @@ const channelCounts = Object.create(null);
 const allChartStreamTickers = new Set();
 const untypedVideos = [];
 
+// Retry / re-scan handling: one logical scan is (video_id, whiteboard|snapshot).
+// Retries in this repo are separate run-tags merged on the command line after
+// the original (e.g. `ocr-20260915,ocr-20260915-p4`, `...-missing19`,
+// `...-backfill`), or a later-dated log in the same tag directory. Only
+// status=done logs are candidates; among them the LAST one wins, in
+// command-line tag order and then filename order (the filename starts with the
+// scan date, so a later-dated attempt sorts last). Earlier attempts are
+// counted in totals.superseded_attempts instead of being aggregated again.
 let processedFiles = 0;
+let supersededAttempts = 0;
+const attempts = new Map();
 for (const tag of tags) {
   const probeLogsBase = resolveProbeLogsBase(tag);
   if (!fs.existsSync(probeLogsBase)) continue;
-  const files = fs.readdirSync(probeLogsBase).filter((f) => f.endsWith('.json'));
+  const files = fs.readdirSync(probeLogsBase).filter((f) => f.endsWith('.json')).sort();
   console.log(`[aggregate-timeline] ${files.length} probe logs in ${probeLogsBase} (tag=${tag})`);
 
   for (const file of files) {
     const parsed = parseLogFilename(file);
     if (!parsed) continue;
-    const { uploadDate, videoId, outputKind } = parsed;
-    if (isMockVideo(videoId)) continue;
+    if (isMockVideo(parsed.videoId)) continue;
 
     const log = safeReadJSON(path.join(probeLogsBase, file));
     if (!log) continue;
     if (log.status !== 'done') continue;
 
     processedFiles += 1;
-    const captures = Array.isArray(log.captures) ? log.captures : [];
-    const segments = Array.isArray(log.whiteboard_segments) ? log.whiteboard_segments : [];
-    const videoType = log.video_type || 'untagged';
-    typeCounts[videoType] = (typeCounts[videoType] || 0) + 1;
-    const channel = log.channel || (log.basename && log.basename !== 'revere' ? log.basename : 'revere');
-    channelCounts[channel] = (channelCounts[channel] || 0) + 1;
-    if (videoType === 'untagged') untypedVideos.push({ video_id: videoId, upload_date: uploadDate, channel });
-
-    if (captures.length === 0) {
-      perVideo.push({
-        upload_date: uploadDate,
-        video_id: videoId,
-        video_type: videoType,
-        video_type_label: log.video_type_label || videoType,
-        channel,
-        output_kind: outputKind,
-        captures: 0,
-        max_score: 0,
-        mean_score: 0,
-        layouts: [],
-        has_dmi_intro: false,
-        ticker_union: [],
-        chart_stream_tickers: [],
-        segments: segments.length
-      });
-      totalVideos += 1; // count scanned videos with zero captures
-      upsertDay(uploadDate, 0, 0, 0, [], false, [], 0, segments.length, videoType);
-      continue;
+    const key = `${parsed.videoId}|${parsed.logKind}`;
+    if (attempts.has(key)) {
+      supersededAttempts += 1;
+      attempts.delete(key);
     }
+    attempts.set(key, { parsed, log });
+  }
+}
 
-    let maxScore = -Infinity;
-    let scoreSum = 0;
-    const perLayouts = new Map();
-    const dayTickers = new Set();
-    const dayChartStreamTickers = new Set();
-    const hasDMIIntro = segments.some((s) => s.layout === 'dmi' && s.is_intro_card);
-    segments.forEach((s) => { segCounts[s.layout || 'unknown'] = (segCounts[s.layout || 'unknown'] || 0) + 1; });
+for (const { parsed, log } of attempts.values()) {
+  const { uploadDate, videoId, outputKind } = parsed;
+  const captures = Array.isArray(log.captures) ? log.captures : [];
+  const segments = Array.isArray(log.whiteboard_segments) ? log.whiteboard_segments : [];
+  const videoType = log.video_type || 'untagged';
+  typeCounts[videoType] = (typeCounts[videoType] || 0) + 1;
+  const channel = log.channel || (log.basename && log.basename !== 'revere' ? log.basename : 'revere');
+  channelCounts[channel] = (channelCounts[channel] || 0) + 1;
+  if (videoType === 'untagged') untypedVideos.push({ video_id: videoId, upload_date: uploadDate, channel });
 
-    for (const cap of captures) {
-      if (typeof cap.score === 'number') {
-        if (cap.score > maxScore) maxScore = cap.score;
-        scoreSum += cap.score;
-      }
-      const layout = cap.screen_layout || 'unknown';
-      perLayouts.set(layout, (perLayouts.get(layout) || 0) + 1);
-      layoutCounts[layout] = (layoutCounts[layout] || 0) + 1;
-
-      for (const t of cap.tickers || []) {
-        if (!t) continue;
-        dayTickers.add(t);
-        allTickers.add(t);
-        tickerFrequency.set(t, (tickerFrequency.get(t) || 0) + 1);
-      }
-
-      const capChartStream = cap.chart_stream;
-      if (capChartStream && Array.isArray(capChartStream.position_list)) {
-        for (const t of capChartStream.position_list) {
-          if (!t) continue;
-          dayChartStreamTickers.add(t);
-          allChartStreamTickers.add(t);
-        }
-      }
-    }
-
-    const meanScore = scoreSum / captures.length;
-    const finalMax = captures.length === 0 ? 0 : maxScore;
-    const layouts = [...perLayouts.entries()].map(([k, v]) => ({ layout: k, count: v }));
-    const tickerUnion = [...dayTickers].sort();
-    const chartStreamTickers = [...dayChartStreamTickers].sort();
-
-    totalCaptures += captures.length;
-    totalVideos += 1;
-    totalVideosWithCaptures += 1;
-
+  if (captures.length === 0) {
     perVideo.push({
       upload_date: uploadDate,
       video_id: videoId,
@@ -196,21 +178,86 @@ for (const tag of tags) {
       video_type_label: log.video_type_label || videoType,
       channel,
       output_kind: outputKind,
-      captures: captures.length,
-      max_score: Number(finalMax.toFixed(2)),
-      mean_score: Number(meanScore.toFixed(2)),
-      layouts,
-      has_dmi_intro: hasDMIIntro,
-      ticker_union: tickerUnion,
-      chart_stream_tickers: chartStreamTickers,
+      captures: 0,
+      max_score: 0,
+      mean_score: 0,
+      layouts: [],
+      has_dmi_intro: false,
+      ticker_union: [],
+      chart_stream_tickers: [],
       segments: segments.length
     });
-
-    upsertDay(uploadDate, captures.length, captures.length, finalMax, layouts, hasDMIIntro, tickerUnion, meanScore, segments.length, videoType);
+    totalVideos += 1; // count scanned videos with zero captures
+    upsertDay(uploadDate, 0, 0, 0, [], false, [], 0, segments.length, videoType);
+    continue;
   }
+
+  let maxScore = -Infinity;
+  let scoreSum = 0;
+  const perLayouts = new Map();
+  const dayTickers = new Set();
+  const dayChartStreamTickers = new Set();
+  const hasDMIIntro = segments.some((s) => s.layout === 'dmi' && s.is_intro_card);
+  segments.forEach((s) => { segCounts[s.layout || 'unknown'] = (segCounts[s.layout || 'unknown'] || 0) + 1; });
+
+  for (const cap of captures) {
+    if (typeof cap.score === 'number') {
+      if (cap.score > maxScore) maxScore = cap.score;
+      scoreSum += cap.score;
+    }
+    const layout = cap.screen_layout || 'unknown';
+    perLayouts.set(layout, (perLayouts.get(layout) || 0) + 1);
+    layoutCounts[layout] = (layoutCounts[layout] || 0) + 1;
+
+    for (const t of getTimelineCaptureTickers(cap)) {
+      if (!t) continue;
+      dayTickers.add(t);
+      allTickers.add(t);
+      tickerFrequency.set(t, (tickerFrequency.get(t) || 0) + 1);
+    }
+
+    const capChartStream = cap.chart_stream;
+    if (capChartStream && Array.isArray(capChartStream.position_list)) {
+      for (const t of capChartStream.position_list) {
+        if (!t) continue;
+        dayChartStreamTickers.add(t);
+        allChartStreamTickers.add(t);
+      }
+    }
+  }
+
+  const meanScore = scoreSum / captures.length;
+  const finalMax = captures.length === 0 ? 0 : maxScore;
+  const layouts = [...perLayouts.entries()].map(([k, v]) => ({ layout: k, count: v }));
+  const tickerUnion = [...dayTickers].sort();
+  const chartStreamTickers = [...dayChartStreamTickers].sort();
+
+  totalCaptures += captures.length;
+  totalVideos += 1;
+  totalVideosWithCaptures += 1;
+
+  perVideo.push({
+    upload_date: uploadDate,
+    video_id: videoId,
+    video_type: videoType,
+    video_type_label: log.video_type_label || videoType,
+    channel,
+    output_kind: outputKind,
+    captures: captures.length,
+    max_score: Number(finalMax.toFixed(2)),
+    mean_score: Number(meanScore.toFixed(2)),
+    layouts,
+    has_dmi_intro: hasDMIIntro,
+    ticker_union: tickerUnion,
+    chart_stream_tickers: chartStreamTickers,
+    segments: segments.length
+  });
+
+  upsertDay(uploadDate, captures.length, captures.length, finalMax, layouts, hasDMIIntro, tickerUnion, meanScore, segments.length, videoType);
 }
 
 console.log(`[aggregate-timeline] merged ${processedFiles} done probe logs across ${tags.length} run-tag(s)`);
+if (supersededAttempts) console.log(`[aggregate-timeline] ${supersededAttempts} earlier attempt(s) superseded by a later retry of the same video`);
 
 perVideo.sort((a, b) => (a.upload_date || '').localeCompare(b.upload_date || '') || (a.video_id || '').localeCompare(b.video_id || ''));
 
@@ -246,7 +293,8 @@ const timeline = {
       .sort((a, b) => b[1] - a[1])
       .slice(0, 25)
       .map(([ticker, count]) => ({ ticker, count })),
-    untyped_videos: untypedVideos
+    untyped_videos: untypedVideos,
+    superseded_attempts: supersededAttempts
   },
   per_video: perVideo,
   per_day: perDay
