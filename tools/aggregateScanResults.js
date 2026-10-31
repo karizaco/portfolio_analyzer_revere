@@ -192,6 +192,7 @@ for (const logPath of logFiles) {
       ocr_text_snippet: capture.ocr_text_snippet,
       parsed_observations: capture.parsed_observations || [],
       tickers: capture.tickers || [],
+      tickers_from_bbox: capture.tickers_from_bbox || [],
       phash: capture.phash || null,
       phash_overlay: capture.phash_overlay || null,
       phash_region: capture.phash_region || null,
