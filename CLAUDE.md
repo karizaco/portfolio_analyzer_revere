@@ -251,12 +251,12 @@ Rules:
 ## Testing
 
 ```bash
-npm test              # everything except the OCR benchmark (471 tests, ~30 s)
+npm test              # everything except the OCR benchmark (497 tests, ~30 s)
 npm run test:benchmark  # test/qmgGroundTruth.test.js alone (~23 min, EasyOCR)
 npm run test:all        # everything, benchmark included -- FAILS under contention
 ```
 
-471 tests, all passing (as of 2026-10-29).
+497 tests, all passing (as of 2026-10-31).
 
 **The benchmark has to run on its own.** `test/qmgGroundTruth.test.js` is a
 23-minute EasyOCR benchmark, and `node --test` runs the test *files* in
@@ -1494,6 +1494,108 @@ positive.
 > the pattern. Escaping also makes a dotted ticker literal: `BRK.B` no longer matches
 > `BRKXB`.
 
+### Nine more curated aliases (added 2026-10-31)
+
+The 2026-10-29 rescue used aliases that were already recorded misreads of **2022-era**
+holdings. The **2023-era** captures had their own set, and the replay scored every one of
+them as a miss. Nine rows were added:
+
+| garbled | canonical | the misread |
+|---|---|---|
+| `INGN` | `IMGN` | G rendered as N |
+| `KOT` | `IOT` | leading I dropped, T rendered as O |
+| `AQQ` | `ARQQ` | R rendered as Q |
+| `GS0T` | `GSIT` | I rendered as 0 |
+| `RLI` | `RGTI` | G and T rendered as L and dropped |
+| `QBIS` | `QBTS` | T rendered as S |
+| `ATR` | `PLTR` | P and L rendered as A and dropped |
+| `A` | `AI` | single-letter read of the two-letter ticker |
+| `AL` | `AI` | I rendered as L |
+
+**Measured** with `node tools/evalParserReplay.js` (no OCR — it replays the captured probe
+logs through the current parser). The baseline was reproduced by swapping the pre-change
+file back in, so both columns come from the same corpus and the same command:
+
+| | before | after |
+|---|---|---|
+| default roots — hit / gt / pred | 59 / 89 / 62 | **66 / 89 / 69** |
+| default roots — micro recall | 66.3 % | **74.2 %** |
+| default roots — micro precision | 95.2 % | **95.7 %** |
+| wide corpus — hit / gt / pred | 110 / 170 / 134 | **113 / 170 / 136** |
+| wide corpus — micro recall | 64.7 % | **66.5 %** |
+| wide corpus — micro precision | 82.1 % | **83.1 %** |
+
+**The default corpus gained seven hits and NOT ONE new false positive** (3 FP before, 3
+after — the precision rise is the denominator growing, not the FP count falling). The wide
+corpus gained three hits and **lost** one false positive.
+
+**Per date, on the default roots** — the baseline was reproduced by swapping the pre-change
+file back in, so both columns come from the same corpus and the same command:
+
+| date | before | after | what the rows recovered |
+|---|---|---|---|
+| `20230609` | 9/13 | **11/13** | `IMGN`, `PLTR` |
+| `20230605` | 6/11 | **10/11** | `ARQQ`, `GSIT`, `IMGN`, `PLTR` |
+| `20230602` | 8/12 | **9/12** | `PLTR`, `QBTS` |
+| `20230608`, `20220218`, `20230522`, `20230523`, `20220301` | unchanged | unchanged | — |
+
+On the wide corpus the same rows take `20230609` from 10/13 to **12/13** and `20230602`
+from 9/12 to **10/12**, and they remove one false positive (`NBIS`, on `20230608`).
+
+**Two of the nine rows cannot fire, and the reason is the column test, not the table.**
+`A → AI` and `AL → AI` are recorded misreads — the captured frames show a one- and a
+two-character glyph in the ticker column where the `AI` row belongs — but the rescue
+never reaches them. The rescue asks whether a token is inside the column by comparing the
+token's **centre** with the column's median centre, within a hardcoded ±25 px
+(`columnWidth = 50`, `parseChartStream.js:401`). A position list is a **left-aligned**
+table, so a four-character ticker's centre sits ~64 px right of a one-character glyph's
+centre even though both start at the same x.
+
+Measured on `20230609`: every ticker in the column starts at x 515–518, and the `A` glyph
+starts at x 518 too — but its centre is 545 while the column's median centre is 581.5, so
+`|545 − 581.5| = 36.5 > 25` and the token is rejected before the alias is ever
+consulted. The same holds for `Al` on `20230608` (centre 87, median centre 125.5).
+
+So `AI` is a miss on every date before **and** after the change, and these two rows buy
+nothing measurable. They are kept because the misreads are real and recorded; the defect
+is in the column test, not in the table.
+
+**`ATR→PLTR` is the row that depends on the order of operations.** `ATR` is on
+`TICKER_BLOCKLIST` — it is the chart's own indicator label, and it is a real ticker symbol
+(Aptar Group) that is never a Qullamaggie position. On the 2023-era table the row that
+reads `ATR` **is** the `PLTR` row. The blocklist filter at `parseChartStream.js:1022` would
+have deleted it, but the alias pass runs **before** the blocklist, so the row is rescued
+instead of dropped. Removing `ATR` from the blocklist instead would publish `ATR` as a
+false positive on every 2022-era layout, where the label is genuinely the indicator.
+
+**`A` and `AL` are real-world tickers** (Agilent, Alcoa) that this project does not hold,
+and neither is in the seed or the decode lexicon. So the alias cannot shadow a legitimate
+reading *here* — but that is a property of the lexicons, not of the table, and it would
+have to be re-checked if either lexicon ever grew a one- or two-letter ticker.
+
+**The curated benchmark does not move.** A fresh EasyOCR run over the four md5-pinned
+fixtures reproduces the documented per-case numbers **exactly** — 8/9 (2 FP), 1/1 (3 FP),
+7/8 (3 FP), 7/13 (3 FP). The rows do not fire on those frames: `PLTR`, `GSIT` and `IOT`
+are still **misses** on the `dense_2023` fixture, because a fresh EasyOCR read of that
+frame produces different strings than the captured probe logs the rows were keyed to. The
+gain is on the **replay corpus**, which covers seventeen dates and 170 ground-truth
+holdings, not on four frames.
+
+**The table's invariants are now pinned** by `test/ocrConfusionAliases.test.js`, over
+**every** row and not only the new ones:
+
+| invariant | why |
+|---|---|
+| no garbled form is in the seed or the decode lexicon | an alias must not rewrite a real holding |
+| every canonical is in the seed lexicon | the seed is the ALLOW list — a canonical outside it is resolved and then discarded |
+| no duplicate key, no chain | the table must not resolve one read two ways, nor rescue a canonical again |
+
+The same file pins the **behaviour**: each of the nine is rescued into its canonical when
+it sits in the column, and is **not** rescued when it sits in the chart area or below the
+Personal WatchList header. The two boundary assertions carry a control alias (`DIA→DNA`,
+in the column in every frame) so that "the canonical is absent" cannot pass for the wrong
+reason.
+
 ### Diagnostic fields exposed
 
 - `chart_stream.column_filter` — `dominant_x`, `column_width`, `in_list_token_count` (diagnostic only, not gated)
@@ -1563,9 +1665,50 @@ seed lexicon (`ISYM`, `MEL`, `CON`), and one-letter tokens (`ON`, `X`).
 
 **Recall floor**: `20220606` now misses only `TNA` (GOVX and NFLX are found); `20230609`
 misses **6 of 13** — `IOT`, `AI`, `PLTR`, `GSIT`, `APLD`, `MNDY` — and is the case
-that holds the mean down. The
-`meanLumaFloor=30` penalty on historical dark streams (Dec 2021–Feb 2022) likely contributes
-to the prefilter missing frames entirely.
+that holds the mean down.
+
+**Two of those six are outside the crop — they are not OCR failures.** On the md5-pinned
+`dense_2023_20230609_c0.png` the 2023-era sidebar's ticker column (x 1690–1750) carries
+**13** data rows at y 715, 733, 751, 769, 787, 805, 823, 841, 859, 877, 895, **913, 931**.
+The chart-stream crop `0.86,0.62,0.14,0.22` covers y **670–907** at 1080p, so the last two
+rows — **`APLD` and `MNDY`** — are outside the pixels the OCR engine is ever shown. No
+amount of parser work recovers a ticker that was never in the image.
+
+**The `meanLumaFloor=30` hypothesis was tested and is NOT the cause.** Measured over the
+prefilter's own frames: on 20220218 the median frame luma is **12.8** and on 20220222 it
+is **12.9**, so **100 %** of frames sit below the floor and every one of them takes the
+same −6 penalty. The floor is a *constant*, not a filter — the profile comment ("chart
+frames have mean luma 50-90, so the floor is dropped to 30") is 3–5× off the measurement.
+The real cause of missed frames is the **starved seed branch** of `selectFramesForOcr`:
+`uniformReserve == maxFrames` for every real video, so `seedBudget == 0` and the only
+part of the selector that consults `--prefilter-threshold` never runs. Measured across 12
+videos: **12/12** selected frames below the profile's own dynamic threshold on 20220218,
+and the best-scoring frame was **never** selected on any of the twelve.
+
+### The crop A/B (2026-10-31) — one rectangle cannot serve both eras
+
+Three crop rectangles, run against the four md5-pinned fixtures with real EasyOCR:
+
+| case | current `0.86,0.62,0.14,0.22` | tall `0.86,0.60,0.14,0.32` | wide-x `0.83,0.60,0.17,0.32` |
+|---|---|---|---|
+| trade_ideas 20220218[1] | **8/9** fp2 | 7/9 fp3 | 5/9 fp3 |
+| sparse 20221104[0] | 1/1 fp3 | 1/1 fp3 | 1/1 fp3 |
+| normal_2022 20220606[1] | 7/8 fp3 | — | 7/8 fp2 |
+| dense_2023 20230609[0] | 7/13 fp3 | 7/13 **fp0** | **10/13** fp0 |
+
+Two facts:
+
+- **`wide-x` recovers `APLD` and `MNDY`** — the two rows the crop was clipping — taking
+  20230609 from 53.8 % to **76.9 %** with **zero** false positives.
+- **The same rectangle costs the 2022-era panel three holdings** (8/9 → 5/9).
+
+So the fix is **not** a wider default: it is an era-conditional crop, or routing 2023-era
+videos to the `position_table` reader, which measured **11/13 with 0 FP** on that same
+frame against the chart-stream path's 7/13 (see § 'Positions-TABLE reader').
+
+Note the `current` column reproduces the benchmark table above **exactly** — 8/9, 1/1,
+7/8, 7/13 with 2, 3, 3 and 3 false positives — which is the evidence that the nine
+2023-era curated aliases do not move the benchmark.
 
 
 **PaddleOCR PP-OCRv6**: the packages ARE installed — `tools/paddle311_env` (Python 3.11.9) has
@@ -1613,13 +1756,17 @@ words nor a surviving snapshot.
 profile: 0 of 205 September logs carry `ocr_words`, 36 of 124 October ones do.
 Any statistic derived from it describes the later crop/tuning era only.
 
-The current figures (re-measured 2026-10-30, after the curated-alias
-rescue and the SPXL seed fix):
+The current figures (re-measured 2026-10-31, after the curated-alias
+rescue, the SPXL seed fix and the nine 2023-era curated aliases):
 
 | root set | dates scored | recall | precision |
 |---|---|---|---|
-| default (8 probe roots) | 8 | **66.3 %** (59/89) | **95.2 %** (59/62) |
-| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **64.7 %** (110/170) | **82.1 %** (110/134) |
+| default (8 probe roots) | 8 | **74.2 %** (66/89) | **95.7 %** (66/69) |
+| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **66.5 %** (113/170) | **83.1 %** (113/136) |
+
+(Before the nine 2023-era aliases: 66.3 % (59/89) / 95.2 % (59/62) on the default roots,
+and 64.7 % (110/170) / 82.1 % (110/134) on the wide corpus. See § 'Nine more curated
+aliases'.)
 
 `test/evalParserReplay.test.js` pins the *methodology* on synthetic fixtures —
 the real corpus is untracked, so a test asserting the real numbers would fail
@@ -2057,7 +2204,10 @@ Measured with `node tools/evalParserReplay.js` on the wide corpus
 Exactly **one** date changed, and it changed in both directions at once:
 20220331's `SPXL` false positive became a `SPXL` hit, and the `SOXL` false
 positive went away with it. The default 8-root replay is byte-identical
-(59/89/62, 66.3 % / 95.2 %) either way.
+(59/89/62, 66.3 % / 95.2 %) either way. *(Those are the figures as of
+2026-10-30; the table has since grown by nine curated aliases, so the
+current default figures are 66/89, 74.2 % / 95.7 % — see § 'Nine more
+curated aliases'.)*
 
 **The seed change cannot create a new ambiguity on the whiteboard path.** The
 MATCH set there is `seed + observed`, and SPXL was already in the observed half,
