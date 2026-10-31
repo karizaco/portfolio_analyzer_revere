@@ -90,13 +90,34 @@ const PRICE_TOKEN_PATTERN = /\$\s*\d+(?:\.\d+)?|\d+\.\d+|\b(?:high|low|close|tar
 // coincidental match in chart text is never rewritten.
 //
 // Sourced from config/ticker_ocr_confusions.csv.
-const OCR_CONFUSION_CSV = path.resolve(__dirname, '..', '..', 'config', 'ticker_ocr_confusions.csv');
+const DEFAULT_OCR_CONFUSION_CSV = path.resolve(__dirname, '..', '..', 'config', 'ticker_ocr_confusions.csv');
+let activeConfusionCsv = DEFAULT_OCR_CONFUSION_CSV;
 let cachedConfusionMap = null;
+let cachedConfusionMapPath = null;
+
+// Point the alias reader at a different table and return the path it was
+// using before, so a caller can restore it.
+//
+// The reason this exists: the map is cached at module level, so a
+// before/after measurement of the alias table used to require editing
+// config/ticker_ocr_confusions.csv in place -- and the file is shared, so
+// two measurements in the same tree raced each other. That happened: the
+// table flipped between its 20-line and 29-line forms mid-measurement
+// twice, which is how a wrong "before" column got reported once.
+//
+// The cache is keyed by the resolved path, so two tables can be used in
+// ONE process, in either order.
+function setOcrConfusionCsvPath(nextPath) {
+  const previous = activeConfusionCsv;
+  activeConfusionCsv = nextPath ? String(nextPath) : DEFAULT_OCR_CONFUSION_CSV;
+  return previous;
+}
+
 function loadOcrConfusionMap() {
-  if (cachedConfusionMap) return cachedConfusionMap;
+  if (cachedConfusionMap && cachedConfusionMapPath === activeConfusionCsv) return cachedConfusionMap;
   const map = new Map();
   try {
-    const raw = fs.readFileSync(OCR_CONFUSION_CSV, 'utf8');
+    const raw = fs.readFileSync(activeConfusionCsv, 'utf8');
     let isHeader = true;
     for (const line of raw.split(/\r?\n/)) {
       if (isHeader) {
@@ -110,6 +131,7 @@ function loadOcrConfusionMap() {
     // Missing config is not fatal — the parser just loses alias repair.
   }
   cachedConfusionMap = map;
+  cachedConfusionMapPath = activeConfusionCsv;
   return map;
 }
 
@@ -1385,5 +1407,6 @@ module.exports = {
   extractZoomStripTickerCandidates,
   parseChartStreamPositionList,
   extractAllTickerCandidates,
+  setOcrConfusionCsvPath,
   TICKER_BLOCKLIST
 };

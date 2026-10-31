@@ -251,12 +251,12 @@ Rules:
 ## Testing
 
 ```bash
-npm test              # everything except the OCR benchmark (501 tests, ~30 s)
+npm test              # everything except the OCR benchmark (512 tests, ~30 s)
 npm run test:benchmark  # test/qmgGroundTruth.test.js alone (~23 min, EasyOCR)
 npm run test:all        # everything, benchmark included -- FAILS under contention
 ```
 
-501 tests, all passing (as of 2026-10-31).
+512 tests, all passing (as of 2026-10-31).
 
 **The benchmark has to run on its own.** `test/qmgGroundTruth.test.js` is a
 23-minute EasyOCR benchmark, and `node --test` runs the test *files* in
@@ -820,6 +820,11 @@ node tools/aggregateScanResults.js data/video_scan_YYYYMMDD/
 node tools/evalParserReplay.js
 node tools/evalParserReplay.js --json
 node tools/evalParserReplay.js data/video_ocr_probe data/video_scan_test/_rerun
+
+# Measure what the curated-alias rows are worth, WITHOUT editing the shared
+# config file -- the modified table is built in a temporary file.
+node tools/evalParserReplay.js --drop-aliases A,AL
+node tools/evalParserReplay.js --confusion-csv path/to/table.csv
 
 # Score the Revere whiteboard path against its ground truth.
 # This scores the RECORDED probe logs, not a re-parse.
@@ -1511,17 +1516,29 @@ holdings. The **2023-era** captures had their own set. Nine rows were added:
 | `A` | `AI` | single-letter read of the two-letter ticker |
 | `AL` | `AI` | I rendered as L |
 
-**Not all nine buy a hit, and this table says which do.** Measured per row over the
-replay corpus, **four** recover a holding the replay had scored as a miss — `INGN`,
-`AQQ`, `GS0T` and `ATR` — and one (`QBIS`) buys **precision** rather than recall: it
-rewrites the false positive `NBIS` into the real holding `QBTS`. The remaining four
-(`KOT`, `RLI`, `A`, `AL`) have **no measured effect** on either corpus *as the table
-stood on its own* — the canonicals of `KOT` and `RLI` were already hits on the dates
-where the garbled forms occur, and the two short rows could not fire at all, because
-the column test was comparing centres (see § 'The column test' below). The column fix
-gave `A` and `AL` their effect; the rows are kept because the misreads are real and
-recorded — a row that does not fire today can fire on the next frame that reads that
-way.
+**Not all nine buy a hit, and this table says which do — measured, per group.**
+`tools/evalParserReplay.js --drop-aliases A,B` re-scores the corpus with those rows
+removed (see § 'Measuring the alias table without editing it'), so every row's worth is a
+number rather than an argument. Baseline is **71/89/74** on the default roots and
+**117/170/140** on the wide corpus.
+
+| rows dropped | default roots | wide corpus | what the rows are worth |
+|---|---|---|---|
+| *(nothing — baseline)* | 71/89/74 | 117/170/140 | — |
+| `INGN`, `AQQ`, `GS0T`, `ATR` | 64/89/67 | 114/170/137 | **7 hits** / **3 hits** — four holdings recovered |
+| `A`, `AL` | 66/89/69 | 113/170/136 | **5 hits** / **4 hits** — the `AI` rows, and they fire only after the left-edge column fix (see § 'The column test' below) |
+| `QBIS` | 71/89/74 | 117/170/141 | **0 hits, 1 false positive** on the wide corpus — it rewrites the false positive `NBIS` into the real holding `QBTS` |
+| `TTOCQ` | 71/89/**75** | 117/170/**141** | **0 hits, 1 false positive** on both — it is the `TQQQ` misread |
+| `KOT`, `RLI` | 71/89/74 | 117/170/140 | **nothing at all** — the canonicals of `KOT` and `RLI` are already hits on the dates where the garbled forms occur |
+| all six of the above | **59/89/62** | — | the whole gain, and it reproduces the documented "before the nine rows" figure exactly |
+
+So **five** of the nine rows are worth a hit or a false positive today (`INGN`, `AQQ`,
+`GS0T`, `ATR`, `A`, `AL`, `QBIS`, `TTOCQ` — six that move the number, and `KOT`/`RLI`
+that do not). The two dead rows are kept because the misreads are real and recorded — a
+row that does not fire today can fire on the next frame that reads that way.
+
+**`A` and `AL` could not fire until the column fix, and the reason was the column test,
+not the table** — § 'The column test' below has the measurement.
 
 **Measured** with `node tools/evalParserReplay.js` (no OCR — it replays the captured probe
 logs through the current parser). The baseline was reproduced by swapping the pre-change
@@ -1623,6 +1640,48 @@ Personal WatchList header. The two boundary assertions carry a control alias (`D
 in the column in every frame) so that "the canonical is absent" cannot pass for the wrong
 reason.
 
+### Measuring the alias table without editing it (2026-10-31)
+
+`config/ticker_ocr_confusions.csv` is **shared** — every tool in the tree reads it — and
+it was measured by *editing it*: delete the row, run the replay, put the row back. Two
+measurements in the same working tree therefore raced each other, the table flipped
+between its 20-line and 29-line forms mid-measurement, and a wrong "before" column was
+reported once as a result. A reviewer working the same way reported that the `A → AI`
+and `AL → AI` rows "never fire" — a conclusion that was true of the parser as it was
+**before** the left-edge column fix and false of the parser as it is now.
+
+The alias table is now selected by **path** (`setOcrConfusionCsvPath()` in
+`src/parse/parseChartStream.js`), and the module-level cache is keyed by the **resolved
+path**, so two tables can be used in one process in either order.
+
+```bash
+# Score the corpus with the shipped table (the default).
+node tools/evalParserReplay.js
+
+# Score it with some rows removed -- nothing on disk is touched.
+node tools/evalParserReplay.js --drop-aliases A,AL
+node tools/evalParserReplay.js --drop-aliases INGN,AQQ,GS0T,ATR
+
+# Score it against a table of your own.
+node tools/evalParserReplay.js --confusion-csv path/to/table.csv
+```
+
+`--drop-aliases` builds the modified table in a **temporary file** and points the parser
+at it; `config/ticker_ocr_confusions.csv` is never edited, so two measurements cannot
+race each other any more. Every run prints the row count it used and what it dropped:
+
+```text
+alias table      : 28 rows from ...\config\ticker_ocr_confusions.csv
+alias table      : 26 rows from ...\config\ticker_ocr_confusions.csv  (dropped: A AL)
+```
+
+An unknown `--flag` is a **usage error** (exit code 2), not a silent root. Pinned by
+`test/aliasTableOverride.test.js` — the shipped table is what the parser uses by
+default, a dropped row stops rescuing, the shared config file is **byte-identical**
+after an override, restoring brings the rescue back, and an arbitrary table can be
+selected by path. The measured *effect* of the rows is not pinned there: the replay
+corpus is untracked, so a fresh clone has no probe logs to score.
+
 ### The column test
 
 The curated-alias rescue asks one question: **is this token inside the position-list
@@ -1717,7 +1776,7 @@ re-scan can score differently from a replay of the same video.
   The clusterer computes a per-cluster `frameCount` (`src/parse/parseChartStream.js:1230`) but the
   emitter does not write it (`tools/scanVideoWithOcr.js:1814-1818`), so it never appears in the logs.
 
-### Known limitations and next steps (as of 2026-10-29)
+### Known limitations and next steps (as of 2026-10-31)
 
 **Measured on the curated GT benchmark** (`test/qmgGroundTruth.test.js`, 4 captures,
 EasyOCR, single frame each — not a multi-frame consensus run), at commit `8070601`,
@@ -1785,8 +1844,8 @@ rows — **`APLD` and `MNDY`** — are outside the pixels the OCR engine is ever
 amount of parser work recovers a ticker that was never in the image.
 
 **The `meanLumaFloor=30` hypothesis was tested and is NOT the cause.** Measured over the
-prefilter's own frames: on 20220218 the median frame luma is **12.8** and on 20220222 it
-is **12.9**, so **100 %** of frames sit below the floor and every one of them takes the
+prefilter's own frames: on 20220218 the median frame luma is **15.1** and on 20220222 it
+is **15.3**, so **100 %** of frames sit below the floor and every one of them takes the
 same −6 penalty. The floor is a *constant*, not a filter — the profile comment ("chart
 frames have mean luma 50-90, so the floor is dropped to 30") is 3–5× off the measurement.
 The real cause of missed frames is the **starved seed branch** of `selectFramesForOcr`:
@@ -1794,6 +1853,123 @@ The real cause of missed frames is the **starved seed branch** of `selectFramesF
 part of the selector that consults `--prefilter-threshold` never runs. Measured across 12
 videos: **12/12** selected frames below the profile's own dynamic threshold on 20220218,
 and the best-scoring frame was **never** selected on any of the twelve.
+
+### The prefilter, measured the way the pipeline measures it (2026-10-31)
+
+The starvation finding above was re-measured independently, and the re-measurement turned
+up a **methodology trap that silently changes the numbers**.
+
+**The prefilter's frames are PNG at 640 px.** `src/video/ocrScanArgs.js:145` sets
+`sampleWidth: 640`, and `tools/scanVideoWithOcr.js:282` extracts with
+`fps=<fps>,scale=640:-2` into `frame_%06d.png`. A measurement that samples **JPEG at
+1280 px** does not reproduce the pipeline's scores: JPEG's artefacts move the pixel
+statistics the prefilter reads, and a wider sample changes the `midToneRatioTicker`
+measurement. The first version of this measurement was JPEG-at-1280 and reported the best
+frame on 20220218 as index 32 / t=128 s / score 22.24. Re-extracted as PNG at 640 px, the
+pipeline's own numbers come out — and the real scan confirms them:
+
+| | 20220218 | 20220222 |
+|---|---|---|
+| frames sampled (fps 0.25) | 689 | 452 |
+| best frame | **index 10, t=40 s, score 29.15** | **index 147, t=588 s, score 25.63** |
+| the scan's own log line | `best prefilter 29.15 at 00:00:40` | — |
+| dynamic threshold | 27.15 | 23.63 |
+| frames passing it | **16 of 689**, all in t = 40…200 s | **9 of 452**, all in t = 300…612 s |
+| the 12 frames the selector picks | 0 of 12 pass | 0 of 12 pass |
+| best selected frame | 20.62 (t=0) — **8.53 below the global best** | 23.26 (t=1184) — 2.37 below |
+
+**"0 of 12" is expected, not a finding.** The dynamic threshold is `bestScore − 2` — a
+**relative near-best** criterion, so on any video whose score rises steeply in one place
+almost nothing passes it. It says the spread frames are *not the best*, which is not the
+same as saying they are unreadable, and the recorded captures prove the difference: the
+20220218 frames at t=684 and t=912 are recorded with 10 and 12 tickers. What the
+measurement does show is the defect itself: **the prefilter score has no effect at all on
+which chart-stream frames get OCR'd**, and the best-scoring frame is never among them.
+
+**What the score is actually made of.** Decomposing the chart-stream score term by term:
+
+| term | best frame (20220218) | mean share of a positive score |
+|---|---|---|
+| **midTone** | **25.00** (weight 30, ratio 0.833) | dominant |
+| temporal | 5.87 | **18.7 %** (20220218), **27.8 %** (20220222) |
+| bright / edge / stdDev / snapshotEdge | 3.74 / 1.87 / 2.62 / 2.00 | minor |
+| rowDensity / stripes / chartLikeness | 0.20 / 0.00 / −0.14 | negligible |
+| meanLuma floor / darkRatio ceiling | −6.00 / −6.00 | constant |
+
+The temporal bonus is **not** what drives the score, and the score is **not** an
+early-frame bias: the mean time-rank of the score-ordered frames is **344 of 689**
+(20220218) and **226 of 452** (20220222) — the midpoint, not the front. What the top
+frames share is `midTone`, and they cluster in a **contiguous window** (t = 40…200 s and
+t = 300…612 s): the ticker rectangle is densest for a stretch of the video, and a uniform
+12-point stride across 2,756 s is very unlikely to land in it.
+
+**The position list changes WITHIN a video, so the uniform spread is a coverage
+mechanism, not a bug.** `data/qmg_ground_truth.json` is keyed by **capture index**, not by
+timestamp — 20220218's entry is `{"0": [...], "1": [...], "2": [...]}` with three different
+readings — because the list changes as the video goes on. A blind stride is a
+legitimate way to cover that. That is why the fix below **adds** a frame and does not
+**replace** one.
+
+### The chart-stream best-frame swap (2026-10-31)
+
+`swapInBestPrefilterFrame()` (`src/video/ocrScanLogic.js`), wired into
+`tools/scanVideoWithOcr.js` after the table profile's own swap:
+
+- the best-scoring prefilter frame **takes the slot of the LOWEST-scoring selected
+  frame**, so the swap is **cost-neutral** — 12 frames in, 12 out;
+- it is gated by the profile's threshold with the same **60 % relaxation**
+  `selectFramesForOcr` applies, so a dim video still swaps;
+- it is **skipped in batch mode**, where the selected rows are replaced wholesale
+  around the best frame's timestamp anyway.
+
+**The eviction rule is "lowest score", NOT the table profile's "nearest frame", and the
+difference is deliberate.** The table profile's budget is 3 frames taken *seconds* apart,
+so its nearest uniform frame is redundant with the best one; the chart-stream frames are
+*minutes* apart, so no selected frame is redundant with another and the nearest one may
+be a good frame. The lowest-scoring frame is the one that costs least to lose — on
+20220218 that is t=2280 (score −7.57), which the corpus records with **one** ticker,
+while the best-scoring frame (t=40) is recorded with **seven**.
+
+**But the best-scoring frame is NOT demonstrably the frame that reads the most
+holdings.** On 20220218 the best-scoring frame (t=40, score 29.15) is recorded with **7**
+tickers, while two *lower*-scoring frames — t=684 (score 15.45) and t=912 (score 11.75)
+— are recorded with **10** and **12**. Those readings come from different pipeline eras
+(`fix-verify-2022` vs `qmg-easyocr-20261018`), so it is not a controlled comparison — but
+the project's own code already says the same thing. `tools/scanVideoWithOcr.js:1440`:
+
+> `--batch-time` overrides the center timestamp. This is needed when the prefilter's
+> best-scoring frame is not where the position list is actually visible (e.g. user
+> navigated away from the chart platform — only the chart-area overlay remains).
+
+So the swap is justified as **removing a real defect** (the score has no effect on the
+selection) at **zero cost** (one frame in, one frame out), **not** as "OCR the best
+frame". **Its effect on holdings recovered is UNMEASURED** — a chart-stream re-scan costs
+8–13 minutes of EasyOCR per video, so the number only comes from a sweep, and no sweep
+has been run. Pinned by `test/prefilterBestFrameSwap.test.js` (the rule, not the recall).
+
+**The swap is far safer than it looks, because the final capture is NOT chosen by the
+prefilter.** The prefilter chooses the *candidate* set; the OCR score
+(`chartStream.position_list.length`) chooses the *capture* among the candidates. So
+widening the pool cannot displace a frame the OCR would have preferred — it only adds an
+option. A smoke scan of 20220218 (Tesseract, `--max-captures 1`) shows both halves:
+
+```text
+[scan:snapshot] chart-stream mode: swapped in the best prefilter frame (29.15 at 00:00:40)
+                in place of the least legible selected frame (-7.57 at 00:38:00)
+[scan:snapshot] prefilter kept 12/689 frame(s) for OCR; best prefilter 29.15 at 00:00:40
+[scan:snapshot] OCR 12/12 frames (100.0%) ... best score 26.85 at 00:15:12 (ocr 32.0)
+```
+
+The prefilter's best frame (t=40) went into the pool, and the capture was still
+**t=912** — the frame the OCR prefers. The swap lost nothing, which is the property that
+matters: the only way it can lose is if the **evicted** frame would have won the OCR
+score, and by construction that is the lowest-prefilter-scoring frame in the set.
+
+**What is still open.** The seed branch's starvation is fixed *locally*, in the scan
+tool, deliberately: `selectFramesForOcr` is shared with the whiteboard profile, and its
+comment says changing it would move already-measured chart_stream and whiteboard
+results. A change there — giving the seed branch a budget, or making the stride reserve
+leave room — would fix the defect at its source and would need its own measurement.
 
 ### The crop A/B (2026-10-31) — one rectangle cannot serve both eras
 
