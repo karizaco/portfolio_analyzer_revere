@@ -641,7 +641,7 @@ const CASES = [
     run: 'data/video_ocr_probe/qmg-1080p-batch2',
     panel_count: 16, panel_count_text: '16 of 16 Items in Personal WatchList',
     tickers: ['FCX', 'JNUG', 'NUGT', 'COPX', 'WEAT', 'VERU', 'URNM', 'URA', 'REGN', 'X', 'GUSH', 'LAC', 'UCO', 'FTNT', 'BOIL', 'TSLA'],
-    note: "Sixteen rows, UCO and FTNT included. The position list SHRANK during the session, so each capture has its own count.",
+    note: "Sixteen rows, UCO and FTNT included. The position list GREW during the session -- fourteen rows at 15:27, fifteen at 15:32, sixteen at 15:57 -- so each capture has its own count. The capture indices run BACKWARDS in wall-clock time for this date.",
   },
   {
     date: '20220421', capture_index: 1,
@@ -650,7 +650,7 @@ const CASES = [
     run: 'data/video_ocr_probe/qmg-1080p-batch2',
     panel_count: 15, panel_count_text: '15 Items in Personal WatchList',
     tickers: ['FCX', 'JNUG', 'NUGT', 'COPX', 'WEAT', 'VERU', 'URNM', 'URA', 'REGN', 'X', 'GUSH', 'LAC', 'FTNT', 'BOIL', 'TSLA'],
-    note: "Fifteen rows: UCO is gone, FTNT is not.",
+    note: "Fifteen rows at 15:32: FTNT has been added since 15:27, UCO has not yet arrived. The widget ABOVE the table reads \"3 Items in Personal WatchList\" -- the PERSONAL form, on a widget that is not the positions table.",
   },
   {
     date: '20220421', capture_index: 2,
@@ -659,7 +659,7 @@ const CASES = [
     run: 'data/video_ocr_probe/qmg-1080p-batch2',
     panel_count: 14, panel_count_text: '3 of 14 Items in Personal WatchList',
     tickers: ['FCX', 'NUGT', 'JNUG', 'VERU', 'WEAT', 'COPX', 'X', 'URNM', 'URA', 'REGN', 'GUSH', 'LAC', 'TSLA', 'BOIL'],
-    note: "Corrected 2026-11-01: the ground truth gave this capture fifteen rows -- the same fifteen it gave capture 1. The anchor frame (qmg-1080p-batch1, t=132 s, clock 15:27) reads fourteen, and its own footer says \"3 of 14\". FTNT was a misread carried over from capture 1.",
+    note: "Corrected 2026-11-01: the ground truth gave this capture fifteen rows -- the same fifteen it gave capture 1. The anchor frame (qmg-1080p-batch1, t=132 s, clock 15:27) reads fourteen, and its own footer says \"3 of 14\". FTNT had not been opened yet, so it was a carry-over from capture 1 rather than a reading of this frame.",
   },
   {
     date: '20220425', capture_index: 0,

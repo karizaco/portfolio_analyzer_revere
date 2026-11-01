@@ -2352,14 +2352,17 @@ separately. Measured in wave 2:
 
 | date | capture 0 | capture 1 | capture 2 |
 |---|---|---|---|
-| `20220421` | 16 rows | 15 rows | 14 rows |
+| `20220421` | 16 rows (15:57) | 15 rows (15:32) | 14 rows (15:27) |
 | `20220419` | 14 rows (15:33) | 13 rows (15:39) | 14 rows (15:55) |
 | `20220428` | 4 rows | 4 rows | 4 rows |
 | `20220608` | 9 rows | 11 rows | 11 rows |
 
-`20220421` is the clearest case: the list **shrank** during the session — `UCO`
-went, then `FTNT` went — so a fifteen-row frame is evidence about capture 1 and
-not about capture 2.
+`20220421` is the clearest case: the list **grew** during the session — fourteen
+rows at 15:27, fifteen at 15:32 (`FTNT` opened), sixteen at 15:57 (`UCO`
+opened) — so a fifteen-row frame is evidence about capture 1 and not about
+capture 2. And the capture **indices run backwards in wall-clock time** for
+this date: capture 0 is the latest frame and capture 2 the earliest, because
+the index counts the run's snapshot files, not the session.
 
 ### The table is sorted by % Change, so the ORDER is not the reading
 
