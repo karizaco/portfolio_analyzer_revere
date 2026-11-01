@@ -453,11 +453,17 @@ Results: `data/qmg_alt_batch_results.json`.
 
 - `tools/resolveUndatedDates.js` — dates the rows `fill-dates` could not, by reading the watch page and cross-checking it against the listing order (see below)
 
+### Ground truth
+
+- `tools/buildGroundTruthFixtures.js` — cuts the panel crops from the corpus and writes the fixture manifest (see below)
+- `tools/checkGroundTruthConsistency.js` — checks `data/qmg_ground_truth.json` against the pinned pixels, the panel counts and the footers (see below)
+
 ### Data
 
 - `data/video_pipeline/state.sqlite` — canonical SQLite database, **tracked in git** (the catalog)
 - `data/db/schema.sql` — schema source of truth
 - `config/ticker_lexicon_seed.csv` — ticker allowlist (Revere + Qullamaggie)
+- `data/qmg_ground_truth.json` — the Qullamaggie ground truth; **verified against its pixels**, and checked by `tools/checkGroundTruthConsistency.js` (see below)
 - `STATUS.md` — the measured current state (catalog counts, media on disk, the outstanding work) and the September 2026 OCR campaign history. Its numbers are a snapshot; § *Re-measuring* there has the commands that regenerate them.
 
 ---
@@ -825,6 +831,12 @@ node tools/evalParserReplay.js data/video_ocr_probe data/video_scan_test/_rerun
 # config file -- the modified table is built in a temporary file.
 node tools/evalParserReplay.js --drop-aliases A,AL
 node tools/evalParserReplay.js --confusion-csv path/to/table.csv
+
+# Check the Qullamaggie ground truth against the pixels it describes.
+# Run this BEFORE quoting any Qullamaggie recall number.
+node tools/checkGroundTruthConsistency.js
+node tools/checkGroundTruthConsistency.js --json
+node --test test/qmgGroundTruthProvenance.test.js
 
 # Score the Revere whiteboard path against its ground truth.
 # This scores the RECORDED probe logs, not a re-parse.
@@ -1776,25 +1788,28 @@ re-scan can score differently from a replay of the same video.
   The clusterer computes a per-cluster `frameCount` (`src/parse/parseChartStream.js:1230`) but the
   emitter does not write it (`tools/scanVideoWithOcr.js:1814-1818`), so it never appears in the logs.
 
-### Known limitations and next steps (as of 2026-10-31)
+### Known limitations and next steps (as of 2026-11-01)
 
 **Measured on the curated GT benchmark** (`test/qmgGroundTruth.test.js`, 4 captures,
 EasyOCR, single frame each — not a multi-frame consensus run), at commit `8070601`,
 **re-verified 2026-10-29 against the md5-pinned fixture frames** (864 s, all four cases
-passing, identical numbers), and **re-measured 2026-10-31 after the nine 2023-era
-curated aliases and the left-edge column fix**:
+passing, identical numbers), **re-measured 2026-10-31 after the nine 2023-era
+curated aliases and the left-edge column fix**, and **re-measured 2026-11-01 after the
+ground-truth audit** (305 s, all four cases passing):
 
 | case | date | recall | FP |
 |---|---|---|---|
-| trade_ideas | 20220218[1] | 88.9% (8/9) | 2 |
+| trade_ideas | 20220218[1] | **100% (9/9)** | 1 |
 | sparse | 20221104[0] | 100% (1/1) | 3 |
 | normal_2022 | 20220606[1] | 87.5% (7/8) | 3 |
 | dense_2023 | 20230609[0] | **69.2% (9/13)** | 3 |
 
-Overall mean recall **86.4%** (was **82.6%** after the 2026-10-29 curated-alias rescue,
-and **80.6%** before it). The path there was `dense_2023` 7/13 → 8/13 (the `ATR → PLTR`
-row) → 9/13 (the left-edge column fix, which brings in `AI`); the other three cases are
-unchanged. **No false positive was added at any step.** These numbers were previously
+Overall mean recall **89.2%** (was **86.4%** after the 2026-10-31 aliases and the column
+fix, **82.6%** after the 2026-10-29 curated-alias rescue, and **80.6%** before it). The
+path there was `dense_2023` 7/13 → 8/13 (the `ATR → PLTR` row) → 9/13 (the left-edge
+column fix, which brings in `AI`); `trade_ideas` then went 8/9 → 9/9 when the ground-truth
+audit found its capture 1 anchored to the wrong frame. **No false positive was added at any
+step** — `trade_ideas` actually *lost* one (2 → 1). These numbers were previously
 meaningless — the benchmark was resolving 640×360 prefilter frames, so every case scored
 0%.
 
@@ -1803,11 +1818,10 @@ meaningless — the benchmark was resolving 640×360 prefilter frames, so every 
 run against the pinned frames reproduced the table exactly. So a change in this table
 means the *code* or the *input frames* changed — not that the measurement drifted.
 
-**The wall clock is not the number.** The 82.6 % run took **134 s**, the 80.6 % run 864 s —
-the same frames, the same engine, no OCR cache (`ocrImage()` runs EasyOCR for real every
-time). EasyOCR swings by 2× on the same file between runs; the per-case numbers are
-what is stable. (The 86.4 % figure above was measured on the same pinned frames, but its
-wall clock was not recorded — quote the recall, not a duration.)
+**The wall clock is not the number.** The 82.6 % run took **134 s**, the 80.6 % run 864 s,
+the 89.2 % run 305 s — the same frames, the same engine, no OCR cache (`ocrImage()` runs
+EasyOCR for real every time). EasyOCR swings by 2× on the same file between runs; the
+per-case numbers are what is stable. **Quote the recall, not a duration.**
 
 **The input frames ARE pinned (since 2026-10-29).** `resolveSnapshotPath` now prefers the
 tracked fixture in `test/fixtures/qmg_benchmark/` and verifies its md5; only if there is no
@@ -2017,7 +2031,217 @@ paddleocr 2.7.3 + paddlepaddle 2.6.2, and `tools/paddle312_env` / `tools/paddle_
 `tools/_paddleocr_ocr.py` **does not exist yet** — it still has to be written, with the same
 schema as `_easyocr_ocr.py` — `{text, lines, words[{text,left,top,width,height,conf,line}],_engine,_image,_detection_count}`. Would run at ~7× EasyOCR speed (PP-OCRv6 on CPU with OpenVINO).
 
-**Ground truth accuracy**: The `data/qmg_ground_truth.json` must be verified per video — 20220510 GT was actually TSLA+VRM (not LABU/TNA as previously assumed). Always verify GT against the actual video content before trusting recall numbers.
+**Ground truth accuracy**: The `data/qmg_ground_truth.json` must be verified per video — 20220510 GT was actually TSLA+VRM (not LABU/TNA as previously assumed). Always verify GT against the actual video content before trusting recall numbers. **The 2026-11-01 audit did exactly that for 26 captures, and found three classes of defect — see § 'The Qullamaggie ground truth, verified against its pixels'. Run `node tools/checkGroundTruthConsistency.js` before quoting a Qullamaggie recall number.**
+
+---
+
+## The Qullamaggie ground truth, verified against its pixels (2026-11-01)
+
+`data/qmg_ground_truth.json` was a HAND-MADE reading of a TradingView positions
+panel. For months nothing compared it to the images it was read from, so five
+classes of defect survived:
+
+| class | what it is |
+|---|---|
+| a **misread ticker** | one ticker read as another while every sibling capture of the same video read it correctly |
+| a **missing capture** | the frame exists and was never recorded |
+| a **wrong anchor** | a capture index that names a different frame in a different run |
+| a **wrong widget** | a reading taken off the *watchlist* instead of the positions table |
+| a **duplicate top-level key** | a date present twice in the file, where `JSON.parse` silently keeps one copy |
+
+This section records the invariant that makes those detectable, the tooling that
+enforces it, and what the corrections did to the numbers.
+
+### The panel prints its own row count
+
+The positions panel's footer reads one of three forms:
+
+```text
+N Items in Personal WatchList          the whole list
+1 Item in Personal WatchList           singular when the total is one
+K of N Items in Personal WatchList     a row is selected; K is that row's
+                                       INDEX, not a scroll range
+```
+
+**N is the number of rows ON SCREEN.** The panel is not scrolled — all N rows
+are visible at once. The invariant is therefore:
+
+```text
+panel_count == number of visible rows == |tickers|
+```
+
+A capture listing more tickers than the panel counts is wrong; one listing
+fewer is missing a holding. The footer text is recorded verbatim in the
+manifest and the count is parsed back out of it, so a typo in either field is
+caught.
+
+**The plural follows the TOTAL, not the selected row.** `"1 of 1 Item in
+Personal WatchList"` is singular because the total is one.
+
+### "Personal WatchList" does NOT identify the positions table
+
+This is the trap, and it cost the ground truth two dates.
+
+The 2022-era frame carries **three** right-hand widgets, and **two** of them
+print "Personal WatchList":
+
+| widget | title | footer | rows (20220301 c0) |
+|---|---|---|---|
+| top | `1 - WL` | `8 Items in Personal WatchList` | LI, TSLA, SQ, DWAC, GOLD, SOXL, RSX, SBRCY |
+| middle | `S - A Scan` | `3 Items in WatchList` | OSH, LPSN, NVAX |
+| bottom | `A - Positions` | `5 of 7 Items in Personal WatchList` | GUSH, ERX, NUGT, COPX, FCX, X, MP |
+
+The plain `N Items in WatchList` form (no "Personal") belongs to the **middle**
+screener panel. The **upper** widget says "Personal WatchList" as well, with its
+own count — so the footer's wording cannot say which panel a reading came from.
+
+**The positions table is identified by its TITLE** (`A - Positions` — and the
+`position_table` reader's `POS` discriminator) **and by being the bottom
+widget.**
+
+**And the count invariant does not catch a wrong-widget reading.** The wrong
+widget prints its own count just as faithfully as the right one, so a reading
+taken off the watchlist satisfies `panel_count == |tickers|` perfectly. The
+panel has to be identified by eye — so every manifest case now records the
+widget it was read from (`panel: "positions"`), and the checker enforces it.
+
+### A capture index is RUN-RELATIVE
+
+`qmg_<date>_<n>.png` holds a **different image in every run directory** — the
+same file name in `qmg-easyocr-20261011` and in `qmg-1080p-batch2` is a
+different frame. A capture index identifies a frame only together with the run
+directory, so the manifest carries both (`run` and `source`).
+
+Three dates were anchored wrongly, in three different ways:
+
+- **20220218** — captures 0 and 1 were **swapped**. The ground truth had the
+  ROKU-first frame as capture 1 and the UPST-first frame as capture 0; the
+  pixels say the opposite.
+- **20220406** — the ground truth's capture order is the **reverse** of the
+  1011 run's file order: the eight-row frame that carries `LMT` is capture 0 in
+  that run and capture 2 in the ground truth. The ticker lists were right; only
+  the anchoring was ambiguous.
+- **20220429** — the three captures span **two runs**. Capture 2's five rows
+  exist only in the 1017 run (the batch2 run's capture 2 shows `SWN`, not `X`).
+
+### What the audit changed
+
+Eight dates moved. Every pinned capture was read off its crop and compared
+against the panel's own footer. The figures below are the date-level GT
+**unions** — the denominator the replay tool scores against:
+
+| date | before | after | what moved |
+|---|---|---|---|
+| `20220218` | 11 | 10 | `DCX` was a misread of `FCX`; captures 0 and 1 were swapped |
+| `20220222` | 8 | 7 | `NDGU` was a misread of `NRGU` |
+| `20220301` | 11 | 8 | the reading was **not the positions table** (below) |
+| `20220302` | 7 | 8 | ditto — `EDV` out, `GUSH` and `RSX` in |
+| `20220406` | 8 | 8 | re-anchored to the runs that hold the frames; the lists never changed |
+| `20220429` | 5 | 6 | `UCO` was missing from every capture |
+| `20220606` | 9 | 8 | `BOIL` was a misread of `GOVX` |
+| `20221104` | 1 | 1 | capture 1 was **absent**, though the snapshot exists |
+| `20230518` | 7 | 8 | `CVNA` was missing |
+
+**20220301 is the one that matters most**, because its old reading was not a
+miscount — it was **a different panel**. The old capture listed 11 tickers:
+`IBKR, CRH, XLV, KRE, MP, NUGT, EDV, RSX, FCX, VLO, COPX`. The positions table
+for that video holds `{GUSH, ERX, NUGT, COPX, FCX, X, MP, RSX}` — so six of the
+old tickers (`IBKR`, `CRH`, `XLV`, `KRE`, `EDV`, `VLO`) are in **no** positions
+reading, and three (`GUSH`, `ERX`, `X`) were missing from the ground truth.
+`IBKR`, `CRH`, `XLV`, `KRE`, `EDV` and `VLO` are index/ETF symbols — watchlist
+entries, not Qullamaggie positions.
+
+**No frame in the corpus holds an 11-row widget**, so the old capture cannot be
+re-examined here. That is why the fix anchored the date to the three verified
+positions frames rather than to the old one.
+
+### The tooling
+
+| file | what it does |
+|---|---|
+| `tools/buildGroundTruthFixtures.js` | cuts the fixture crops from the corpus and writes the manifest |
+| `tools/checkGroundTruthConsistency.js` | checks the ground truth against the manifest, the panel counts and the footers |
+| `test/qmgGroundTruthProvenance.test.js` | pins the checker, and proves it has teeth |
+
+The fixture set is **26 crops** of the panel — showing the ticker column AND
+the footer — md5-pinned in `test/fixtures/qmg_ground_truth/manifest.json`, with
+each source snapshot's own md5 recorded so a changed corpus frame is caught.
+
+```bash
+node tools/checkGroundTruthConsistency.js
+node tools/checkGroundTruthConsistency.js --json
+node --test test/qmgGroundTruthProvenance.test.js
+```
+
+**26 of 99 captures across 10 of 42 dates are pinned.** The other 73 are
+unpinned — the corpus they were cut from is not in git — so the audit covered
+every capture whose pixels were reachable.
+
+The checker has seven teeth, each tested by perturbing a copy of the inputs: a
+misread ticker in the ground truth (`gt-disagrees`), a wrong panel count
+(`footer-disagrees`), a replaced fixture (`fixture-md5`), a missing capture
+(`gt-missing`), a reading off the wrong widget (`wrong-panel`), a duplicate
+top-level key (`duplicate-key`), and a ground truth that is not valid JSON at
+all (`gt-unparsable` — the checker reports it rather than throwing).
+
+### The file shipped with 24 duplicate top-level keys
+
+The ground truth as committed had **69 top-level key lines for 45 distinct
+keys** (43 dates, `_notes` and `_meta`): **24 of those keys appeared twice**, in
+two blocks appended in different styles.
+
+**`JSON.parse` does not treat a duplicate key as an error.** It keeps the last
+occurrence and says nothing, so every reader of the file — the replay tool, the
+checker, any ad-hoc script — saw exactly one value, and the other copy was
+invisible to all of them.
+
+The two copies of each duplicated date **happened to carry identical parsed
+values** (verified by parsing each occurrence's raw block and comparing the
+results, not by comparing text — the two styles differ in formatting, so a
+text comparison reports 24 false differences). So nothing was ever silently
+overridden, and the before/after attribution in this section stands.
+
+**It was luck, not design.** The next append need not have agreed, and a
+quarter of the corpus being one append away from being silently replaced is
+not a state worth keeping. The current file has **45 key lines, 45 distinct
+keys and zero duplicates**, and the checker enforces it by reading the **raw
+text** — the duplicate-key rule is the one check `JSON.parse` cannot perform.
+
+### Two annotated duplicate keys
+
+The ground truth carries two keys that are **not dates**:
+
+```text
+"20220323 (batch t=1020s)"
+"20220428 (batch t=1300s)"
+```
+
+They are the same captures of the same video under a label. No probe log can
+match them — the log date keys are `YYYYMMDD` — so they are inert, and the
+replay tool's census filter (`/^\d{8}$/`) already excludes them. The checker
+counts and reports them separately rather than quietly dropping them.
+
+These are **not** duplicates in the JSON sense — they are two distinct keys,
+each of which occurs once. They are a *different* problem from the 24 real
+duplicates above, and the two are counted separately on purpose.
+
+### What the corrections did to the numbers
+
+| ground truth | default roots | wide corpus |
+|---|---|---|
+| before the audit | 79.8 % (71/89) / 95.9 % | 68.8 % (117/170) / 83.6 % |
+| after | **84.7 % (72/85) / 97.3 %** | **72.1 % (119/165) / 85.0 %** |
+
+**A corrected ground truth moves the denominator in both directions**, and the
+precision rise is the denominator growing, not the false-positive count
+falling: the audit removed phantom holdings (`BOIL`, `NDGU`, `DCX`, and six
+watchlist symbols) and added real ones (`CVNA`, `UCO`, `GUSH`, `ERX`, `X`,
+`RSX`, and the 20221104 capture).
+
+The last two fixes — `BOIL` → `GOVX` and the missing 20221104 capture — moved
+the wide corpus from **119/166 = 71.7 %** to **119/165 = 72.1 %** with the hit
+count unchanged: the phantom `BOIL` had been in the denominator, and could have
+been "hit" by a `BOIL` prediction. No prediction ever produced one.
 
 ---
 
@@ -2053,18 +2277,25 @@ words nor a surviving snapshot.
 profile: 0 of 205 September logs carry `ocr_words`, 36 of 124 October ones do.
 Any statistic derived from it describes the later crop/tuning era only.
 
-The current figures (re-measured 2026-10-31, after the curated-alias
-rescue, the SPXL seed fix, the nine 2023-era curated aliases and the left-edge
-column fix):
+The current figures (re-measured 2026-11-01, after the curated-alias
+rescue, the SPXL seed fix, the nine 2023-era curated aliases, the left-edge
+column fix **and the ground-truth audit**):
 
 | root set | dates scored | recall | precision |
 |---|---|---|---|
-| default (8 probe roots) | 8 | **79.8 %** (71/89) | **95.9 %** (71/74) |
-| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **68.8 %** (117/170) | **83.6 %** (117/140) |
+| default (8 probe roots) | 8 | **84.7 %** (72/85) | **97.3 %** (72/74) |
+| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **72.1 %** (119/165) | **85.0 %** (119/140) |
 
 (Before the nine 2023-era aliases: 66.3 % (59/89) / 95.2 % (59/62) on the default roots,
 and 64.7 % (110/170) / 82.1 % (110/134) on the wide corpus. See § 'Nine more curated
-aliases' and § 'The column test'.)
+aliases' and § 'The column test'. The jump from 79.8 % to 84.7 % is the ground-truth
+audit, not a parser change — see § 'The Qullamaggie ground truth, verified against its
+pixels'.)
+
+**A number measured against a wrong ground truth is a number about the ground
+truth.** The audit moved the default-roots denominator from 89 to 85 and the wide
+one from 170 to 165, so the recall figures before and after it are not
+comparable unless the ground truth is the same.
 
 `test/evalParserReplay.test.js` pins the *methodology* on synthetic fixtures —
 the real corpus is untracked, so a test asserting the real numbers would fail
