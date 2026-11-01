@@ -123,6 +123,27 @@
   },
   "20220318": {
     "0": [
+      "X",
+      "NUGT",
+      "FCX",
+      "REGN",
+      "URA",
+      "COPX",
+      "URNM",
+      "KWEB"
+    ],
+    "1": [
+      "X",
+      "NUGT",
+      "FCX",
+      "REGN",
+      "URA",
+      "COPX",
+      "URNM",
+      "KWEB"
+    ],
+    "2": [
+      "X",
       "NUGT",
       "FCX",
       "REGN",
@@ -134,14 +155,37 @@
   },
   "20220321": {
     "0": [
-      "DIDI",
-      "NUGT",
+      "KWEB",
+      "WEAT",
+      "NEM",
+      "JNUG",
       "COPX",
       "URNM",
+      "URA",
       "REGN",
       "FCX",
-      "NUZE",
+      "NUGT",
       "X"
+    ],
+    "1": [
+      "URNM",
+      "X",
+      "URA",
+      "NUGT",
+      "COPX",
+      "REGN",
+      "FCX",
+      "KWEB"
+    ],
+    "2": [
+      "URNM",
+      "X",
+      "URA",
+      "NUGT",
+      "COPX",
+      "REGN",
+      "FCX",
+      "KWEB"
     ]
   },
   "20220323": {
@@ -456,6 +500,9 @@
     },
     "8": {
       "tickers": [
+        "KOLD",
+        "WEAT",
+        "TSLA",
         "BOIL"
       ],
       "crop": [
@@ -467,7 +514,26 @@
     },
     "9": {
       "tickers": [
+        "TSLA",
+        "BOIL",
+        "WEAT",
         "KOLD"
+      ],
+      "crop": [
+        1776,
+        653,
+        1916,
+        1023
+      ]
+    },
+    "11": {
+      "tickers": [
+        "TSLA",
+        "BOIL",
+        "WEAT",
+        "KOLD",
+        "KWEB",
+        "CWEB"
       ],
       "crop": [
         1776,
@@ -647,7 +713,7 @@
       "NFLX"
     ],
     "4": [
-      "GOVX",
+      "BOIL",
       "LABU",
       "UCO",
       "ALB",
@@ -657,14 +723,13 @@
       "NFLX"
     ],
     "5": [
-      "GOVX",
       "LABU",
-      "UCO",
-      "ALB",
-      "CBIO",
-      "VLO",
       "TNA",
-      "NFLX"
+      "NFLX",
+      "VLO",
+      "CBIO",
+      "UCO",
+      "SIGA"
     ],
     "6": [
       "GOVX",
@@ -677,7 +742,7 @@
       "NFLX"
     ],
     "7": [
-      "GOVX",
+      "BOIL",
       "LABU",
       "UCO",
       "ALB",
@@ -687,14 +752,13 @@
       "NFLX"
     ],
     "8": [
-      "GOVX",
       "LABU",
-      "UCO",
-      "ALB",
-      "CBIO",
-      "VLO",
       "TNA",
-      "NFLX"
+      "NFLX",
+      "VLO",
+      "CBIO",
+      "UCO",
+      "SIGA"
     ],
     "9": [
       "GOVX",
@@ -707,7 +771,7 @@
       "NFLX"
     ],
     "10": [
-      "GOVX",
+      "BOIL",
       "LABU",
       "UCO",
       "ALB",
@@ -717,14 +781,13 @@
       "NFLX"
     ],
     "11": [
-      "GOVX",
       "LABU",
-      "UCO",
-      "ALB",
-      "CBIO",
-      "VLO",
       "TNA",
-      "NFLX"
+      "NFLX",
+      "VLO",
+      "CBIO",
+      "UCO",
+      "SIGA"
     ]
   },
   "20220607": {
@@ -803,6 +866,7 @@
       "UCO"
     ],
     "2": [
+      "UVXY",
       "VLO",
       "UCO"
     ]

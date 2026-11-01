@@ -77,6 +77,27 @@ the only copy of their download. `py -3 tools/reportPartialDownloads.py`
 reports them and **never deletes** — a partial file may be the only copy of
 something worth resuming.
 
+### The Qullamaggie ground truth
+
+`data/qmg_ground_truth.json` is a hand-made reading of a TradingView positions
+panel, and it is **verified against its pixels** — 48 of 104 captures across 14
+of the 42 dates are md5-pinned fixtures in `test/fixtures/qmg_ground_truth/`,
+each cut to show the ticker column AND the panel's own footer.
+
+The audit (2026-11-01) moved **13 dates** and found eight classes of defect,
+including a column copied across every capture of a date, a reading taken off
+the watchlist instead of the positions table, and a ticker read as another.
+**Run the checker before quoting any Qullamaggie recall number:**
+
+```bash
+node tools/checkGroundTruthConsistency.js
+```
+
+The corpus it was cut from is not in git, so the remaining 56 captures are
+unverified here — the audit covered every capture whose pixels were reachable.
+Details: CLAUDE.md § *The Qullamaggie ground truth, verified against its
+pixels*.
+
 ### The outstanding work
 
 | # | what | size | notes |
@@ -85,6 +106,7 @@ something worth resuming.
 | 2 | download the Qullamaggie 1080p corpus | 539 videos | 588 candidates, 49 already on disk. Use the `visios` client — see CLAUDE.md. |
 | 3 | the `position_table` sweep | the Qullamaggie videos whose positions list is a TradingView table | 10–16 h of EasyOCR at 162–257 s/frame. Layout analysis in `docs/qmg-positions-layout-findings.md`. |
 | 4 | re-OCR for the current parser | — | the recorded readings predate the parser fixes. `tools/evalParserReplay.js` scores the *current* parser over the recorded logs, so the parser is measurable without re-scanning. |
+| 5 | pin the remaining ground-truth captures | 56 of 104 captures | the corpus they were cut from is not in git, so they cannot be re-cut from a fresh clone. Only the 48 pinned ones are protected by an md5. |
 
 ## Re-measuring
 
@@ -109,6 +131,11 @@ PY
 
 # the lost media, as a re-download list
 py -3 tools/inventoryLostVideos.py
+
+# the ground truth against its pixels, and the parser against the ground truth
+node tools/checkGroundTruthConsistency.js
+node tools/evalParserReplay.js
+node tools/evalParserReplay.js data/video_ocr_probe data/video_scan_test/_rerun
 ```
 
 ## How we got here — the September 2026 campaign

@@ -2031,14 +2031,14 @@ paddleocr 2.7.3 + paddlepaddle 2.6.2, and `tools/paddle312_env` / `tools/paddle_
 `tools/_paddleocr_ocr.py` **does not exist yet** — it still has to be written, with the same
 schema as `_easyocr_ocr.py` — `{text, lines, words[{text,left,top,width,height,conf,line}],_engine,_image,_detection_count}`. Would run at ~7× EasyOCR speed (PP-OCRv6 on CPU with OpenVINO).
 
-**Ground truth accuracy**: The `data/qmg_ground_truth.json` must be verified per video — 20220510 GT was actually TSLA+VRM (not LABU/TNA as previously assumed). Always verify GT against the actual video content before trusting recall numbers. **The 2026-11-01 audit did exactly that for 26 captures, and found three classes of defect — see § 'The Qullamaggie ground truth, verified against its pixels'. Run `node tools/checkGroundTruthConsistency.js` before quoting a Qullamaggie recall number.**
+**Ground truth accuracy**: The `data/qmg_ground_truth.json` must be verified per video — 20220510 GT was actually TSLA+VRM (not LABU/TNA as previously assumed). Always verify GT against the actual video content before trusting recall numbers. **The 2026-11-01 audit did exactly that for 48 captures across 14 of the 42 dates, and found eight classes of defect — see § 'The Qullamaggie ground truth, verified against its pixels'. Run `node tools/checkGroundTruthConsistency.js` before quoting a Qullamaggie recall number.**
 
 ---
 
 ## The Qullamaggie ground truth, verified against its pixels (2026-11-01)
 
 `data/qmg_ground_truth.json` was a HAND-MADE reading of a TradingView positions
-panel. For months nothing compared it to the images it was read from, so five
+panel. For months nothing compared it to the images it was read from, so eight
 classes of defect survived:
 
 | class | what it is |
@@ -2048,9 +2048,20 @@ classes of defect survived:
 | a **wrong anchor** | a capture index that names a different frame in a different run |
 | a **wrong widget** | a reading taken off the *watchlist* instead of the positions table |
 | a **duplicate top-level key** | a date present twice in the file, where `JSON.parse` silently keeps one copy |
+| a **copied column** | one capture's reading copied across every capture of the date, so a list that really changed inside the video is invisible |
+| a **partial reading** | the OCR's output for a *crop*, recorded as if it were the panel's rows |
+| a **dropped row** | the panel's first ticker left out — the count invariant only sees it once the panel's own footer has been read independently |
 
 This section records the invariant that makes those detectable, the tooling that
 enforces it, and what the corrections did to the numbers.
+
+**The audit was done in two passes.** The first covered 26 captures across 10 of
+the 42 dates; the second widened it to **48 captures across 14 dates**. The
+second pass found three classes the first one could not, and overturned one of
+the first pass's conclusions, because the first pass had only read the captures
+whose panels were *consistent* — a copied column and a partial reading are both
+perfectly self-consistent, and only a sibling capture that says otherwise
+exposes them.
 
 ### The panel prints its own row count
 
@@ -2124,11 +2135,75 @@ Three dates were anchored wrongly, in three different ways:
 - **20220429** — the three captures span **two runs**. Capture 2's five rows
   exist only in the 1017 run (the batch2 run's capture 2 shows `SWN`, not `X`).
 
+### A date key can cover MORE THAN ONE VIDEO
+
+`20220606` is not one recording. The `qmg-1080p-batch1` run holds **three**
+probe logs for that date, under three different YouTube ids
+(`aaIlqb7HUJQ`, `Axs8VyUKFRk`, `ST8lvpOVjeM`), and the snapshot directory
+holds **twelve** files for it — of which the three logs reference nine, and
+three (`_4`, `_5`, `_6`) are in the directory with no log pointing at them.
+
+The twelve captures show **three different position lists**, not one:
+
+| panel | rows | captures | footer |
+|---|---|---|---|
+| `GOVX, LABU, UCO, ALB, CBIO, VLO, TNA, NFLX` | 8 | 0, 1, 2, 3, 6, 9 | "8 Items in Personal WatchList" |
+| `BOIL, LABU, UCO, ALB, CBIO, VLO, TNA, NFLX` | 8 | 4, 7, 10 | "4 of 8 Items in Personal WatchList" |
+| `LABU, TNA, NFLX, VLO, CBIO, UCO, SIGA` | 7 | 5, 8, 11 | "2 of 7 Items in Personal WatchList" |
+
+The ground truth had given **all twelve** the first list.
+
+**The panels repeat with period three**, so a capture index counted *flat over
+the file names* and one counted *per upload* name the same panel — they differ
+only in which FILE an index points at. The manifest asserts the flat mapping,
+because the GT's capture keys are flat.
+
+**A date's ground truth is the UNION over its captures**, and the union is what
+the replay tool scores against. So the union of 20220606 is ten holdings, not
+eight — and a date key that covers several videos still has one union.
+
+### The position list changes DURING the session
+
+`20220427` grows while the video runs. The timestamps are monotonic inside each
+upload, and the row count rises with them:
+
+| time | rows | holdings |
+|---|---|---|
+| 15:26–15:27 | 4 | `TSLA, BOIL, WEAT, KOLD` |
+| 15:32–15:35 | 4 | `TSLA, BOIL, WEAT, KOLD` (+ `KWEB` at 15:35) |
+| 15:36–15:37 | 5–6 | `TSLA, BOIL, WEAT, KOLD, KWEB, CWEB` |
+
+So the day's union is **six** holdings, and no single frame shows more than six.
+The same file name in two runs is also two different images here: the batch2
+run's `qmg_20220427.png` (md5 `95ad5b82`) and the 1011 run's file of the same
+name (md5 `b6951857`) are four-row panels from different moments.
+
+### Where the reading came from
+
+The ground truth was transcribed by hand from a **review page**, and the review
+page is where the defects entered:
+
+- `data/video_ocr_probe/crops-for-review/review.html` — the original hand
+  reading. **Untracked** (the whole `data/video_ocr_probe/` tree is gitignored),
+  so it is local-only evidence and cannot be re-read on a fresh clone.
+- `tools/qmg_snapshot_review.html` — **tracked**, and it carries a `gtTickers`
+  column. For 20220606 that column holds three *different* readings
+  (`GOVX…`, then `BOIL…SIGA`, then `BOIL…`) repeated once per upload — so the
+  **difference was already visible in the review page**, and the ground-truth
+  file flattened it into one list for all twelve captures.
+
+That distinction matters, because the review page's own `_2` reading for
+20220606 (`BOIL, LABU, UCO, ALB, CBIO, TNA, NFLX, SIGA`) is a **mixture** of two
+of the three real panels — a hand reading that mixed two moments. Reading the
+pixels is the only thing that settles it.
+
 ### What the audit changed
 
-Eight dates moved. Every pinned capture was read off its crop and compared
-against the panel's own footer. The figures below are the date-level GT
-**unions** — the denominator the replay tool scores against:
+Every pinned capture was read off its crop and compared against the panel's own
+footer. The figures below are the date-level GT **unions** — the denominator
+the replay tool scores against.
+
+**First pass — eight dates moved:**
 
 | date | before | after | what moved |
 |---|---|---|---|
@@ -2138,7 +2213,7 @@ against the panel's own footer. The figures below are the date-level GT
 | `20220302` | 7 | 8 | ditto — `EDV` out, `GUSH` and `RSX` in |
 | `20220406` | 8 | 8 | re-anchored to the runs that hold the frames; the lists never changed |
 | `20220429` | 5 | 6 | `UCO` was missing from every capture |
-| `20220606` | 9 | 8 | `BOIL` was a misread of `GOVX` |
+| `20220606` | 9 | 8 | `BOIL` was a misread of `GOVX` — **and this was wrong; see the second pass** |
 | `20221104` | 1 | 1 | capture 1 was **absent**, though the snapshot exists |
 | `20230518` | 7 | 8 | `CVNA` was missing |
 
@@ -2155,6 +2230,46 @@ entries, not Qullamaggie positions.
 re-examined here. That is why the fix anchored the date to the three verified
 positions frames rather than to the old one.
 
+**Second pass — five more dates, and one first-pass conclusion overturned:**
+
+| date | before | after | what moved |
+|---|---|---|---|
+| `20220318` | 7 | 8 | the panel's **first row, `X`, was dropped**; captures 1 and 2 were never recorded |
+| `20220321` | 8 | 11 | `DIDI` and `NUZE` are in **no** positions panel; `KWEB`, `WEAT`, `NEM`, `JNUG`, `URA` were missing |
+| `20220427` | 4 | 6 | the list **grew** during the session (`KWEB`, then `CWEB`) |
+| `20220606` | 9 | 10 | the first pass was **wrong**: `BOIL` and `SIGA` are real holdings on their own captures |
+| `20220614` | 3 | 3 | the union never moved — capture `2` had dropped its first row, `UVXY` |
+
+**The first pass's `20220606` conclusion was wrong, and the second pass is what
+shows it.** The first pass found one capture whose first ticker read `BOIL`
+where the other eleven read `GOVX`, and corrected it to `GOVX` — the
+substitution signature. But the substitution signature only means "a misread"
+when the differing capture is an **outlier**. The pixels show the readings are
+**six / three / three**, not eleven / one: so the odd ones out are a *panel*,
+not a mistake. Reading the frames settled it — the date shows three different
+position lists.
+
+**That is the general lesson, and it is the reason the audit was widened.** A
+ground truth checked only against itself proves nothing; it has to be checked
+against **a sibling capture that disagrees**. Widening the audit from 26 to 48
+captures is what turned "one capture looks odd" into "nine captures look odd,
+and they agree with each other in two groups".
+
+**A dropped row and a partial reading both hide behind a correct-looking
+count.** `20220318`'s capture 0 held 7 tickers against a panel that counts 8,
+and `20220427`'s captures 8 and 9 held ONE ticker each — because they recorded
+what the **OCR returned for a crop** ("Only BOIL in crop", "Only KOLD in crop"
+in the original review notes), not what the panel showed. The count invariant
+catches the first only because the panel's own footer was read independently;
+it catches the second not at all, because a one-ticker reading of an eight-row
+panel is a *consistent* misreading of the crop.
+
+**The phantom tickers have a provenance.** `DIDI` and `NUZE` are in **no**
+positions panel in the corpus — and `DIDI` *is* a real symbol in the corpus: it
+sits in the **upper watchlist** widget of the 20220318 capture (`27 of 30 Items
+in WatchList`), a watchlist entry rather than a position. So it is a reading of
+something real taken from the wrong widget; `NUZE` is not in any reading at all.
+
 ### The tooling
 
 | file | what it does |
@@ -2163,7 +2278,7 @@ positions frames rather than to the old one.
 | `tools/checkGroundTruthConsistency.js` | checks the ground truth against the manifest, the panel counts and the footers |
 | `test/qmgGroundTruthProvenance.test.js` | pins the checker, and proves it has teeth |
 
-The fixture set is **26 crops** of the panel — showing the ticker column AND
+The fixture set is **48 crops** of the panel — showing the ticker column AND
 the footer — md5-pinned in `test/fixtures/qmg_ground_truth/manifest.json`, with
 each source snapshot's own md5 recorded so a changed corpus frame is caught.
 
@@ -2173,7 +2288,7 @@ node tools/checkGroundTruthConsistency.js --json
 node --test test/qmgGroundTruthProvenance.test.js
 ```
 
-**26 of 99 captures across 10 of 42 dates are pinned.** The other 73 are
+**48 of 104 captures across 14 of 42 dates are pinned.** The other 56 are
 unpinned — the corpus they were cut from is not in git — so the audit covered
 every capture whose pixels were reachable.
 
@@ -2230,7 +2345,8 @@ duplicates above, and the two are counted separately on purpose.
 | ground truth | default roots | wide corpus |
 |---|---|---|
 | before the audit | 79.8 % (71/89) / 95.9 % | 68.8 % (117/170) / 83.6 % |
-| after | **84.7 % (72/85) / 97.3 %** | **72.1 % (119/165) / 85.0 %** |
+| after the first pass | 84.7 % (72/85) / 97.3 % | 72.1 % (119/165) / 85.0 % |
+| after the second pass | **84.7 % (72/85) / 97.3 %** | **71.3 % (119/167) / 85.0 %** |
 
 **A corrected ground truth moves the denominator in both directions**, and the
 precision rise is the denominator growing, not the false-positive count
@@ -2238,10 +2354,25 @@ falling: the audit removed phantom holdings (`BOIL`, `NDGU`, `DCX`, and six
 watchlist symbols) and added real ones (`CVNA`, `UCO`, `GUSH`, `ERX`, `X`,
 `RSX`, and the 20221104 capture).
 
-The last two fixes — `BOIL` → `GOVX` and the missing 20221104 capture — moved
-the wide corpus from **119/166 = 71.7 %** to **119/165 = 72.1 %** with the hit
-count unchanged: the phantom `BOIL` had been in the denominator, and could have
-been "hit" by a `BOIL` prediction. No prediction ever produced one.
+The last two first-pass fixes — `BOIL` → `GOVX` and the missing 20221104
+capture — moved the wide corpus from **119/166 = 71.7 %** to **119/165 =
+72.1 %** with the hit count unchanged: the phantom `BOIL` had been in the
+denominator, and could have been "hit" by a `BOIL` prediction. No prediction
+ever produced one.
+
+**The second pass moved the wide corpus's denominator UP by two and its hit
+count not at all** — 119/165 → 119/167. The two new denominator entries are
+`BOIL` and `SIGA` on 20220606, and 20220606's own logs score **0 of 10** on
+that date (a pre-existing weakness in those logs, not a regression). The
+second pass also added `DIDI`/`NUZE`'s replacement holdings — `KWEB`, `WEAT`,
+`NEM`, `JNUG`, `URA` on 20220321 and `KWEB`, `CWEB` on 20220427 — and those
+dates are not in the wide corpus's scored set either.
+
+**None of the five corrected dates is in the default 8-root set**, which is why
+that number did not move at all. A ground-truth correction that touches only
+dates outside the sample is invisible in the sample's score — which is exactly
+why the number must always be quoted with the ground truth it was measured
+against.
 
 ---
 
@@ -2284,7 +2415,7 @@ column fix **and the ground-truth audit**):
 | root set | dates scored | recall | precision |
 |---|---|---|---|
 | default (8 probe roots) | 8 | **84.7 %** (72/85) | **97.3 %** (72/74) |
-| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **72.1 %** (119/165) | **85.0 %** (119/140) |
+| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **71.3 %** (119/167) | **85.0 %** (119/140) |
 
 (Before the nine 2023-era aliases: 66.3 % (59/89) / 95.2 % (59/62) on the default roots,
 and 64.7 % (110/170) / 82.1 % (110/134) on the wide corpus. See § 'Nine more curated
@@ -2296,6 +2427,18 @@ pixels'.)
 truth.** The audit moved the default-roots denominator from 89 to 85 and the wide
 one from 170 to 165, so the recall figures before and after it are not
 comparable unless the ground truth is the same.
+
+**The second pass of the ground-truth audit moved the wide corpus the same
+way, and for the same reason** — 119/165 → 119/167, two more denominator
+entries (`BOIL` and `SIGA` on 20220606) and no new hits. The hit count did not
+move because 20220606's logs score 0 of 10 on that date, which is a weakness in
+those logs rather than in the parser. **The default 8-root number did not move
+at all**, because none of the five corrected dates is in that set.
+
+**So a score has TWO denominators, and both of them decay.** The first is the
+corpus the logs can reach; the second is the ground truth the score is measured
+against. Quoting a recall without both is quoting a number whose meaning
+changes every time either does.
 
 `test/evalParserReplay.test.js` pins the *methodology* on synthetic fixtures —
 the real corpus is untracked, so a test asserting the real numbers would fail

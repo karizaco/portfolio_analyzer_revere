@@ -268,6 +268,147 @@
       ]
     },
     {
+      "date": "20220318",
+      "capture_index": 0,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261011",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220318.png",
+      "source_md5": "58f812e0f487b989e1d5a96cc7f7d5cf",
+      "file": "20220318_c0.png",
+      "md5": "2ce3e037532ca74e1e13dbced71b8907",
+      "panel": "positions",
+      "panel_count": 8,
+      "panel_count_text": "8 of 8 Items in Personal WatchList",
+      "tickers": [
+        "X",
+        "NUGT",
+        "FCX",
+        "REGN",
+        "URA",
+        "COPX",
+        "URNM",
+        "KWEB"
+      ],
+      "note": "The ground truth listed seven tickers here and dropped the FIRST row, X. The panel counts eight; corrected 2026-11-01."
+    },
+    {
+      "date": "20220318",
+      "capture_index": 1,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261011",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220318_2.png",
+      "source_md5": "5d271573adb997e19d13bd4a89d33ad2",
+      "file": "20220318_c1.png",
+      "md5": "cd6b766b6b2de1542017ac1ffe4e3bac",
+      "panel": "positions",
+      "panel_count": 8,
+      "panel_count_text": "2 of 8 Items in Personal WatchList",
+      "tickers": [
+        "X",
+        "NUGT",
+        "FCX",
+        "REGN",
+        "URA",
+        "COPX",
+        "URNM",
+        "KWEB"
+      ],
+      "note": "Added 2026-11-01: the capture was absent from the ground truth, although the snapshot exists and reads the same eight rows."
+    },
+    {
+      "date": "20220318",
+      "capture_index": 2,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261011",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220318_3.png",
+      "source_md5": "0f66f909474037665a30d55dc1f0a8e7",
+      "file": "20220318_c2.png",
+      "md5": "94bbce3a836c3cd1344ab56335d13883",
+      "panel": "positions",
+      "panel_count": 8,
+      "panel_count_text": "8 Items in Personal WatchList",
+      "tickers": [
+        "X",
+        "NUGT",
+        "FCX",
+        "REGN",
+        "URA",
+        "COPX",
+        "URNM",
+        "KWEB"
+      ],
+      "note": "Added 2026-11-01. The upper widget on this frame reads \"27 of 30 Items in WatchList\" and holds DIDI -- a WATCHLIST entry, not a position."
+    },
+    {
+      "date": "20220321",
+      "capture_index": 0,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261011",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220321.png",
+      "source_md5": "80b22135179515c0501ccdc8fe7e28cf",
+      "file": "20220321_c0.png",
+      "md5": "ad9538005dee645bf6153978d8d2e4d1",
+      "panel": "positions",
+      "panel_count": 11,
+      "panel_count_text": "11 Items in Personal WatchList",
+      "tickers": [
+        "KWEB",
+        "WEAT",
+        "NEM",
+        "JNUG",
+        "COPX",
+        "URNM",
+        "URA",
+        "REGN",
+        "FCX",
+        "NUGT",
+        "X"
+      ],
+      "note": "The ground truth read DIDI and NUZE here and dropped URA, KWEB, WEAT, NEM and JNUG. The panel counts eleven. DIDI is a watchlist entry on this date and NUZE is in no panel; corrected 2026-11-01."
+    },
+    {
+      "date": "20220321",
+      "capture_index": 1,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261011",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220321_2.png",
+      "source_md5": "2d577115b2cd99d26d0124330af22a44",
+      "file": "20220321_c1.png",
+      "md5": "6115a8e550ca2bdeebe55e629076f125",
+      "panel": "positions",
+      "panel_count": 8,
+      "panel_count_text": "8 Items in Personal WatchList",
+      "tickers": [
+        "URNM",
+        "X",
+        "URA",
+        "NUGT",
+        "COPX",
+        "REGN",
+        "FCX",
+        "KWEB"
+      ],
+      "note": "Added 2026-11-01: the capture was absent from the ground truth. The same video was already holding more at capture 0."
+    },
+    {
+      "date": "20220321",
+      "capture_index": 2,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261011",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220321_3.png",
+      "source_md5": "f72bb6773802b9439922e9e88f4287a0",
+      "file": "20220321_c2.png",
+      "md5": "4ddb015dcfe9656d09023c780c23e989",
+      "panel": "positions",
+      "panel_count": 8,
+      "panel_count_text": "8 Items in Personal WatchList",
+      "tickers": [
+        "URNM",
+        "X",
+        "URA",
+        "NUGT",
+        "COPX",
+        "REGN",
+        "FCX",
+        "KWEB"
+      ],
+      "note": "Added 2026-11-01: the capture was absent from the ground truth, although the snapshot exists and reads the same eight rows."
+    },
+    {
       "date": "20220406",
       "capture_index": 0,
       "run": "data/video_ocr_probe/qmg-1080p-batch2",
@@ -395,6 +536,84 @@
       "note": "The batch2 run's capture 2 shows SWN, not X; only the 1017 frame carries X."
     },
     {
+      "date": "20220427",
+      "capture_index": 0,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261011",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220427.png",
+      "source_md5": "b6951857a07192b6aef314592fd53558",
+      "file": "20220427_c0.png",
+      "md5": "0641ceb81873ca93e22487c191ebc24f",
+      "panel": "positions",
+      "panel_count": 4,
+      "panel_count_text": "4 Items in Personal WatchList",
+      "tickers": [
+        "TSLA",
+        "BOIL",
+        "WEAT",
+        "KOLD"
+      ],
+      "note": "Anchored 2026-11-01: the reading was already right, but the frame it was read from was not recorded. The batch2 run's file of the same name is a six-row frame; this one is the 1011 run's."
+    },
+    {
+      "date": "20220427",
+      "capture_index": 8,
+      "run": "data/video_ocr_probe/qmg-1080p-batch2",
+      "source": "data/video_ocr_probe/qmg-1080p-batch2/snapshots/qmg_20220427_8.png",
+      "source_md5": "647a9ffa95e182e9d219591f227ba066",
+      "file": "20220427_c8.png",
+      "md5": "f4ab3fc83f4d8f04a625510e3b121c55",
+      "panel": "positions",
+      "panel_count": 4,
+      "panel_count_text": "4 Items in Personal WatchList",
+      "tickers": [
+        "KOLD",
+        "WEAT",
+        "TSLA",
+        "BOIL"
+      ],
+      "note": "The ground truth recorded one ticker here (BOIL) -- the OCR's reading of a crop, not the panel, which shows four rows. Corrected 2026-11-01."
+    },
+    {
+      "date": "20220427",
+      "capture_index": 9,
+      "run": "data/video_ocr_probe/qmg-1080p-batch2",
+      "source": "data/video_ocr_probe/qmg-1080p-batch2/snapshots/qmg_20220427_9.png",
+      "source_md5": "a61ff448d637d51cbc5eba8acc58de2c",
+      "file": "20220427_c9.png",
+      "md5": "19513564e3a81b7919d1fd98b409a443",
+      "panel": "positions",
+      "panel_count": 4,
+      "panel_count_text": "2 of 4 Items in Personal WatchList",
+      "tickers": [
+        "TSLA",
+        "BOIL",
+        "WEAT",
+        "KOLD"
+      ],
+      "note": "The ground truth recorded one ticker here (KOLD) -- the OCR's reading of a crop, not the panel, which shows four rows. Corrected 2026-11-01."
+    },
+    {
+      "date": "20220427",
+      "capture_index": 11,
+      "run": "data/video_ocr_probe/qmg-1080p-batch2",
+      "source": "data/video_ocr_probe/qmg-1080p-batch2/snapshots/qmg_20220427_11.png",
+      "source_md5": "b5db5ca86c74c766f95878ddaeeb55bb",
+      "file": "20220427_c11.png",
+      "md5": "9577f5acc0360848e2ee6166bceeb969",
+      "panel": "positions",
+      "panel_count": 6,
+      "panel_count_text": "6 Items in Personal WatchList",
+      "tickers": [
+        "TSLA",
+        "BOIL",
+        "WEAT",
+        "KOLD",
+        "KWEB",
+        "CWEB"
+      ],
+      "note": "Added 2026-11-01: the position list grew to six rows by 15:36, so the day's holdings include KWEB and CWEB, which the ground truth did not name at all."
+    },
+    {
       "date": "20220606",
       "capture_index": 0,
       "run": "data/video_ocr_probe/qmg-1080p-batch1",
@@ -441,6 +660,28 @@
     },
     {
       "date": "20220606",
+      "capture_index": 2,
+      "run": "data/video_ocr_probe/qmg-1080p-batch1",
+      "source": "data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606_3.png",
+      "source_md5": "d7dd7e947041e9f7df27e76c37003982",
+      "file": "20220606_c2.png",
+      "md5": "e33367f3ac7902914e8dbb5489360900",
+      "panel": "positions",
+      "panel_count": 8,
+      "panel_count_text": "8 Items in Personal WatchList",
+      "tickers": [
+        "GOVX",
+        "LABU",
+        "UCO",
+        "ALB",
+        "CBIO",
+        "VLO",
+        "TNA",
+        "NFLX"
+      ]
+    },
+    {
+      "date": "20220606",
       "capture_index": 3,
       "run": "data/video_ocr_probe/qmg-1080p-batch1",
       "source": "data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606_4.png",
@@ -460,7 +701,238 @@
         "TNA",
         "NFLX"
       ],
-      "note": "The ground truth read the first ticker as BOIL here. The panel reads GOVX; corrected 2026-11-01."
+      "note": "The ground truth read this frame's first ticker as BOIL while all eleven sibling captures read GOVX -- the substitution signature of a misread, not of a changed position list. The panel reads GOVX and counts eight items. Corrected 2026-11-01."
+    },
+    {
+      "date": "20220606",
+      "capture_index": 4,
+      "run": "data/video_ocr_probe/qmg-1080p-batch1",
+      "source": "data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606_5.png",
+      "source_md5": "a1f4503b31c8309be714fa34950db1b0",
+      "file": "20220606_c4.png",
+      "md5": "d131a98ff0e2acc8c0fdba2f9a6bc70c",
+      "panel": "positions",
+      "panel_count": 8,
+      "panel_count_text": "4 of 8 Items in Personal WatchList",
+      "tickers": [
+        "BOIL",
+        "LABU",
+        "UCO",
+        "ALB",
+        "CBIO",
+        "VLO",
+        "TNA",
+        "NFLX"
+      ],
+      "note": "The ground truth gave every 20220606 capture the same GOVX list. This panel reads BOIL; corrected 2026-11-01."
+    },
+    {
+      "date": "20220606",
+      "capture_index": 5,
+      "run": "data/video_ocr_probe/qmg-1080p-batch1",
+      "source": "data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606_6.png",
+      "source_md5": "a4de4240733c714e4ea188278f593d48",
+      "file": "20220606_c5.png",
+      "md5": "51f1e15d73a7096fe6c6e183e6b52fd2",
+      "panel": "positions",
+      "panel_count": 7,
+      "panel_count_text": "2 of 7 Items in Personal WatchList",
+      "tickers": [
+        "LABU",
+        "TNA",
+        "NFLX",
+        "VLO",
+        "CBIO",
+        "UCO",
+        "SIGA"
+      ],
+      "note": "The ground truth gave every 20220606 capture the same GOVX list. This panel reads SIGA; corrected 2026-11-01."
+    },
+    {
+      "date": "20220606",
+      "capture_index": 6,
+      "run": "data/video_ocr_probe/qmg-1080p-batch1",
+      "source": "data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606_7.png",
+      "source_md5": "17e4f3ff144ee646668f78e581411533",
+      "file": "20220606_c6.png",
+      "md5": "32af09a901e01eb65baf84b164a4ed2b",
+      "panel": "positions",
+      "panel_count": 8,
+      "panel_count_text": "8 Items in Personal WatchList",
+      "tickers": [
+        "GOVX",
+        "LABU",
+        "UCO",
+        "ALB",
+        "CBIO",
+        "VLO",
+        "TNA",
+        "NFLX"
+      ]
+    },
+    {
+      "date": "20220606",
+      "capture_index": 7,
+      "run": "data/video_ocr_probe/qmg-1080p-batch1",
+      "source": "data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606_8.png",
+      "source_md5": "a1f4503b31c8309be714fa34950db1b0",
+      "file": "20220606_c7.png",
+      "md5": "d131a98ff0e2acc8c0fdba2f9a6bc70c",
+      "panel": "positions",
+      "panel_count": 8,
+      "panel_count_text": "4 of 8 Items in Personal WatchList",
+      "tickers": [
+        "BOIL",
+        "LABU",
+        "UCO",
+        "ALB",
+        "CBIO",
+        "VLO",
+        "TNA",
+        "NFLX"
+      ],
+      "note": "The ground truth gave every 20220606 capture the same GOVX list. This panel reads BOIL; corrected 2026-11-01."
+    },
+    {
+      "date": "20220606",
+      "capture_index": 8,
+      "run": "data/video_ocr_probe/qmg-1080p-batch1",
+      "source": "data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606_9.png",
+      "source_md5": "a4de4240733c714e4ea188278f593d48",
+      "file": "20220606_c8.png",
+      "md5": "51f1e15d73a7096fe6c6e183e6b52fd2",
+      "panel": "positions",
+      "panel_count": 7,
+      "panel_count_text": "2 of 7 Items in Personal WatchList",
+      "tickers": [
+        "LABU",
+        "TNA",
+        "NFLX",
+        "VLO",
+        "CBIO",
+        "UCO",
+        "SIGA"
+      ],
+      "note": "The ground truth gave every 20220606 capture the same GOVX list. This panel reads SIGA; corrected 2026-11-01."
+    },
+    {
+      "date": "20220606",
+      "capture_index": 9,
+      "run": "data/video_ocr_probe/qmg-1080p-batch1",
+      "source": "data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606_10.png",
+      "source_md5": "17e4f3ff144ee646668f78e581411533",
+      "file": "20220606_c9.png",
+      "md5": "32af09a901e01eb65baf84b164a4ed2b",
+      "panel": "positions",
+      "panel_count": 8,
+      "panel_count_text": "8 Items in Personal WatchList",
+      "tickers": [
+        "GOVX",
+        "LABU",
+        "UCO",
+        "ALB",
+        "CBIO",
+        "VLO",
+        "TNA",
+        "NFLX"
+      ]
+    },
+    {
+      "date": "20220606",
+      "capture_index": 10,
+      "run": "data/video_ocr_probe/qmg-1080p-batch1",
+      "source": "data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606_11.png",
+      "source_md5": "a1f4503b31c8309be714fa34950db1b0",
+      "file": "20220606_c10.png",
+      "md5": "d131a98ff0e2acc8c0fdba2f9a6bc70c",
+      "panel": "positions",
+      "panel_count": 8,
+      "panel_count_text": "4 of 8 Items in Personal WatchList",
+      "tickers": [
+        "BOIL",
+        "LABU",
+        "UCO",
+        "ALB",
+        "CBIO",
+        "VLO",
+        "TNA",
+        "NFLX"
+      ],
+      "note": "The ground truth gave every 20220606 capture the same GOVX list. This panel reads BOIL; corrected 2026-11-01."
+    },
+    {
+      "date": "20220606",
+      "capture_index": 11,
+      "run": "data/video_ocr_probe/qmg-1080p-batch1",
+      "source": "data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220606_12.png",
+      "source_md5": "a4de4240733c714e4ea188278f593d48",
+      "file": "20220606_c11.png",
+      "md5": "51f1e15d73a7096fe6c6e183e6b52fd2",
+      "panel": "positions",
+      "panel_count": 7,
+      "panel_count_text": "2 of 7 Items in Personal WatchList",
+      "tickers": [
+        "LABU",
+        "TNA",
+        "NFLX",
+        "VLO",
+        "CBIO",
+        "UCO",
+        "SIGA"
+      ],
+      "note": "The ground truth gave every 20220606 capture the same GOVX list. This panel reads SIGA; corrected 2026-11-01."
+    },
+    {
+      "date": "20220614",
+      "capture_index": 0,
+      "run": "data/video_ocr_probe/qmg-1080p-batch1",
+      "source": "data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220614.png",
+      "source_md5": "ab268dcc565115b51a5d192feb9fcfa3",
+      "file": "20220614_c0.png",
+      "md5": "eaa9c0a55c3b0f8f1cee34985d3aedbc",
+      "panel": "positions",
+      "panel_count": 3,
+      "panel_count_text": "3 Items in Personal WatchList",
+      "tickers": [
+        "UVXY",
+        "VLO",
+        "UCO"
+      ]
+    },
+    {
+      "date": "20220614",
+      "capture_index": 1,
+      "run": "data/video_ocr_probe/qmg-1080p-batch1",
+      "source": "data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220614_2.png",
+      "source_md5": "fcee4ccbb15c4f62b4f8a2082dbb15de",
+      "file": "20220614_c1.png",
+      "md5": "19aa4371cf5ed72d99ab4a25be7960d0",
+      "panel": "positions",
+      "panel_count": 3,
+      "panel_count_text": "3 Items in Personal WatchList",
+      "tickers": [
+        "UVXY",
+        "VLO",
+        "UCO"
+      ]
+    },
+    {
+      "date": "20220614",
+      "capture_index": 2,
+      "run": "data/video_ocr_probe/qmg-1080p-batch1",
+      "source": "data/video_ocr_probe/qmg-1080p-batch1/snapshots/qmg_20220614_3.png",
+      "source_md5": "e258ab4ab001f0a3fb8433701c64055b",
+      "file": "20220614_c2.png",
+      "md5": "bf58fc974734bfb3c18beea5c6c62d88",
+      "panel": "positions",
+      "panel_count": 3,
+      "panel_count_text": "3 Items in Personal WatchList",
+      "tickers": [
+        "UVXY",
+        "VLO",
+        "UCO"
+      ],
+      "note": "The ground truth listed VLO and UCO here and dropped UVXY, the first row. The panel counts three; corrected 2026-11-01."
     },
     {
       "date": "20221104",
