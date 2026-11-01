@@ -251,12 +251,12 @@ Rules:
 ## Testing
 
 ```bash
-npm test              # everything except the OCR benchmark (512 tests, ~30 s)
+npm test              # everything except the OCR benchmark (529 tests, ~32 s)
 npm run test:benchmark  # test/qmgGroundTruth.test.js alone (~23 min, EasyOCR)
 npm run test:all        # everything, benchmark included -- FAILS under contention
 ```
 
-512 tests, all passing (as of 2026-10-31).
+529 tests, all passing (as of 2026-11-01).
 
 **The benchmark has to run on its own.** `test/qmgGroundTruth.test.js` is a
 23-minute EasyOCR benchmark, and `node --test` runs the test *files* in
@@ -2055,13 +2055,16 @@ classes of defect survived:
 This section records the invariant that makes those detectable, the tooling that
 enforces it, and what the corrections did to the numbers.
 
-**The audit was done in two passes.** The first covered 26 captures across 10 of
-the 42 dates; the second widened it to **48 captures across 14 dates**. The
-second pass found three classes the first one could not, and overturned one of
+**The audit was done in three passes.** The first covered 26 captures across 10 of
+the 42 dates; the second widened it to **48 captures across 14 dates**; the
+third (the *wave-2* pass) widened it again to **90 captures across 36 dates**.
+The second pass found three classes the first one could not, and overturned one of
 the first pass's conclusions, because the first pass had only read the captures
 whose panels were *consistent* — a copied column and a partial reading are both
 perfectly self-consistent, and only a sibling capture that says otherwise
-exposes them.
+exposes them. The third pass found two more — a copied column and a
+**mis-anchored capture** — and **reverted three of its own tentative
+corrections** once the anchoring rule below was applied to them.
 
 ### The panel prints its own row count
 
@@ -2270,6 +2273,108 @@ sits in the **upper watchlist** widget of the 20220318 capture (`27 of 30 Items
 in WatchList`), a watchlist entry rather than a position. So it is a reading of
 something real taken from the wrong widget; `NUZE` is not in any reading at all.
 
+**Third pass (the wave-2 pass) — 39 more captures, 21 more dates, three dates
+moved:**
+
+| date | union before | union after | what moved |
+|---|---|---|---|
+| `20220331` | 8 | **9** | `NEM` was dropped from the reading; the panel counts nine |
+| `20220517` | 7 | **8** | `AVGO` was dropped; three frames of the video read eight rows |
+| `20220608` | 9 | **12** | the date was a **copied column** — captures 1 and 2 really hold eleven rows |
+
+`20220421` moved too, but only its **capture 2**: the ground truth gave it
+capture 1's fifteen rows, and the anchor frame reads fourteen. The date's union
+did not move, because `FTNT` is still in capture 1.
+
+### The anchoring rule — where a capture's reading comes from
+
+A capture's ground truth is **anchored to the frame the hand reading was taken
+from**, and that frame is recorded in the tracked review page
+`tools/qmg_snapshot_review.html`, whose rows carry the run, the file, the
+capture's timestamp and the reading. Every wave-2 correction was checked
+against that anchor:
+
+```text
+the ground truth's value for capture N must equal the reading of the
+frame the review page names for capture N
+```
+
+A value that matches **exactly one** available frame is right. A value that
+matches **no** available frame is a misreading. A value that matches several
+frames is only as good as the anchor's run, because the list changes inside the
+session.
+
+**This rule reverted three of the audit's own tentative corrections.** Each was
+a real difference from the frame that happened to be nearest to hand, and each
+was wrong:
+
+| tentative correction | why it was reverted |
+|---|---|
+| add `GUSH` to `20220412` | the anchor is the `qmg-lowcpu-test` run's only frame (clock 15:19), which reads the ground truth's eleven rows exactly. A twelve-row frame carrying `GUSH` exists at t=936 s of the same video, but that is a **later** moment (15:34) |
+| remove `KOLD` from `20220419` | the anchor is `qmg-1080p-batch1` at t=288 s (clock 15:33), which reads fourteen rows **including** `KOLD`. The list changed twice during the session — thirteen rows without `KOLD` at 15:39, fourteen with it again at 15:55 |
+| drop `AERC` from `20220608` c0 | the anchor is `qmg-1080p-batch1`'s `.png` (clock 15:32), which reads nine rows including `AERC`; its `_2` and `_3` (16:04 and 16:14) read the eleven-row list |
+
+**The batch1 run is the anchor for the 2022-era dates**, and its frames are
+recoverable: the timestamps in the review page index the 1080p videos directly,
+so any anchor frame can be re-extracted with ffmpeg and read again. The
+corpus snapshots are a *corroboration* of the anchor, not the anchor itself —
+which is why a corpus snapshot that disagrees with the anchor loses.
+
+### The copied column, found a second time — `20220608`
+
+The wave-1 audit found a related class on `20220606` (three different panels under
+one list). The wave-2 pass found the **copied column proper** in `20220608`:
+the hand reading had given **all three captures the same nine rows**, and the
+panel's own footer says the second and third frames hold **eleven**.
+
+| capture | anchor | clock | rows |
+|---|---|---|---|
+| 0 | `qmg-1080p-batch1` `.png` | 15:32 | 9 — `SIGA, TNA, VLO, UCO, NFLX, ALB, BOIL, LTHM, AERC` |
+| 1 | `qmg-1080p-batch1` `_2` | 16:04 | 11 — `RBLX, COIN, BOIL, NFLX, LTHM, TQQQ, UCO, ALB, VLO, TNA, AERC` |
+| 2 | `qmg-1080p-batch1` `_3` | 16:14 | 11 — the same eleven |
+
+`SIGA` was closed and `RBLX`, `COIN` and `TQQQ` were opened during the
+session. Two frames of the same moment agree on the eleven rows, so capture 2
+is not a copy of capture 0 either — which is what makes a *copy* provable:
+one repeated column, three different readings.
+
+**The count invariant is what exposed it, and only the count invariant can.**
+Every one of the three readings is internally consistent and each one satisfies
+`panel_count == |tickers|` — but the hand reading satisfied it for the wrong
+frame. The footer is the only part of the panel that says how many rows there
+are, and it says it per frame.
+
+### The count invariant is PER-CAPTURE, not per-date
+
+The position list changes **during** the session, so a date's captures can hold
+different numbers of rows, and the count check applies to each capture
+separately. Measured in wave 2:
+
+| date | capture 0 | capture 1 | capture 2 |
+|---|---|---|---|
+| `20220421` | 16 rows | 15 rows | 14 rows |
+| `20220419` | 14 rows (15:33) | 13 rows (15:39) | 14 rows (15:55) |
+| `20220428` | 4 rows | 4 rows | 4 rows |
+| `20220608` | 9 rows | 11 rows | 11 rows |
+
+`20220421` is the clearest case: the list **shrank** during the session — `UCO`
+went, then `FTNT` went — so a fifteen-row frame is evidence about capture 1 and
+not about capture 2.
+
+### "Personal" in the footer does NOT identify the table (confirmed again)
+
+The wave-2 pass hit the same trap in a new place. The `20221117` capture 2
+frame carries an **upper** widget that reads `0 Items in Personal WatchList`
+while the positions table below it reads `2 of 6 Items in Personal WatchList`.
+Both widgets say "Personal WatchList"; the upper one is the watchlist.
+
+So the count invariant cannot say *which* widget a reading came from — the
+wrong widget prints its own count just as faithfully. The positions table is
+identified by its **title** (`A - Positions`, often clipped to `A - Positio`,
+`A - Posit` or `A -`) and by being the **bottom-most** table in the region.
+Every manifest case records the widget it was read from (`panel: "positions"`),
+and the checker enforces it.
+
 ### The tooling
 
 | file | what it does |
@@ -2278,7 +2383,7 @@ something real taken from the wrong widget; `NUZE` is not in any reading at all.
 | `tools/checkGroundTruthConsistency.js` | checks the ground truth against the manifest, the panel counts and the footers |
 | `test/qmgGroundTruthProvenance.test.js` | pins the checker, and proves it has teeth |
 
-The fixture set is **48 crops** of the panel — showing the ticker column AND
+The fixture set is **90 crops** of the panel — showing the ticker column AND
 the footer — md5-pinned in `test/fixtures/qmg_ground_truth/manifest.json`, with
 each source snapshot's own md5 recorded so a changed corpus frame is caught.
 
@@ -2288,9 +2393,14 @@ node tools/checkGroundTruthConsistency.js --json
 node --test test/qmgGroundTruthProvenance.test.js
 ```
 
-**48 of 104 captures across 14 of 42 dates are pinned.** The other 56 are
+**90 of 104 captures across 36 of 42 dates are pinned.** The other 14 are
 unpinned — the corpus they were cut from is not in git — so the audit covered
 every capture whose pixels were reachable.
+
+The wave-2 cases are **generated from a table** (`C:/tmp/spxl/gen_cases.js`
+during the session) rather than hand-written, so a reading, its panel count and
+its footer text cannot drift apart: the generator emits all three into
+`tools/buildGroundTruthFixtures.js` from one row.
 
 The checker has seven teeth, each tested by perturbing a copy of the inputs: a
 misread ticker in the ground truth (`gt-disagrees`), a wrong panel count
@@ -2346,7 +2456,8 @@ duplicates above, and the two are counted separately on purpose.
 |---|---|---|
 | before the audit | 79.8 % (71/89) / 95.9 % | 68.8 % (117/170) / 83.6 % |
 | after the first pass | 84.7 % (72/85) / 97.3 % | 72.1 % (119/165) / 85.0 % |
-| after the second pass | **84.7 % (72/85) / 97.3 %** | **71.3 % (119/167) / 85.0 %** |
+| after the second pass | 84.7 % (72/85) / 97.3 % | 71.3 % (119/167) / 85.0 % |
+| after the third pass (wave 2) | **84.7 % (72/85) / 97.3 %** | **71.4 % (120/168) / 85.7 %** |
 
 **A corrected ground truth moves the denominator in both directions**, and the
 precision rise is the denominator growing, not the false-positive count
@@ -2373,6 +2484,19 @@ that number did not move at all. A ground-truth correction that touches only
 dates outside the sample is invisible in the sample's score — which is exactly
 why the number must always be quoted with the ground truth it was measured
 against.
+
+**The third pass moved the wide corpus by exactly one hit, and it moved it
+because the ground truth was wrong in the parser's favour.** The only scored
+date wave 2 touched was `20220331`: the panel holds **nine** rows, the ground
+truth said eight (it had dropped `NEM`), and the parser was **already**
+predicting `NEM`. So the hit count went 5 → 6 and the denominator 8 → 9 — the
+old ground truth was counting a **correct reading as a false positive**.
+
+The other two changed dates (`20220517`, `20220608`) are `scored: false` — their
+logs carry no `ocr_words`, so they do not reach the scorer at all and cannot
+move the number however they are corrected. That is the surviving-sample
+problem in its sharpest form: **a correction to a date the sampler cannot
+reach changes the ground truth and not the score.**
 
 ---
 
@@ -2410,12 +2534,12 @@ Any statistic derived from it describes the later crop/tuning era only.
 
 The current figures (re-measured 2026-11-01, after the curated-alias
 rescue, the SPXL seed fix, the nine 2023-era curated aliases, the left-edge
-column fix **and the ground-truth audit**):
+column fix **and all three passes of the ground-truth audit**):
 
 | root set | dates scored | recall | precision |
 |---|---|---|---|
 | default (8 probe roots) | 8 | **84.7 %** (72/85) | **97.3 %** (72/74) |
-| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **71.3 %** (119/167) | **85.0 %** (119/140) |
+| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **71.4 %** (120/168) | **85.7 %** (120/140) |
 
 (Before the nine 2023-era aliases: 66.3 % (59/89) / 95.2 % (59/62) on the default roots,
 and 64.7 % (110/170) / 82.1 % (110/134) on the wide corpus. See § 'Nine more curated
@@ -2434,6 +2558,13 @@ entries (`BOIL` and `SIGA` on 20220606) and no new hits. The hit count did not
 move because 20220606's logs score 0 of 10 on that date, which is a weakness in
 those logs rather than in the parser. **The default 8-root number did not move
 at all**, because none of the five corrected dates is in that set.
+
+**The third pass moved it in the opposite direction, and by one hit** —
+119/167 → 120/168 on the wide corpus, the default roots unchanged. The single
+hit is `20220331`'s `NEM`: the panel holds nine rows, the old ground truth said
+eight, and the parser had been predicting `NEM` all along — so the ground truth
+was counting a correct reading as a false positive. The two other changed
+dates are not reachable by the sampler at all, so they cannot move the number.
 
 **So a score has TWO denominators, and both of them decay.** The first is the
 corpus the logs can reach; the second is the ground truth the score is measured
