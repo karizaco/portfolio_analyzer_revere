@@ -294,11 +294,16 @@ function countAliasRows(file) {
 }
 
 function parseFlags(argv) {
-  const flags = { json: false, roots: [], confusionCsv: '', dropAliases: [] };
+  const flags = { json: false, roots: [], confusionCsv: '', dropAliases: [], groundTruth: '' };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === '--json') {
       flags.json = true;
+    } else if (arg === '--ground-truth') {
+      flags.groundTruth = argv[i + 1] || '';
+      i += 1;
+    } else if (arg.startsWith('--ground-truth=')) {
+      flags.groundTruth = arg.slice('--ground-truth='.length);
     } else if (arg === '--confusion-csv') {
       flags.confusionCsv = argv[i + 1] || '';
       i += 1;
@@ -369,13 +374,15 @@ function main(argv = process.argv.slice(2)) {
 
   const aliasOverride = applyAliasTableOverride(flags);
 
-  const gt = JSON.parse(fs.readFileSync(GT_PATH, 'utf8'));
+  const gtPath = flags.groundTruth ? path.resolve(flags.groundTruth) : GT_PATH;
+  const gt = JSON.parse(fs.readFileSync(gtPath, 'utf8'));
   const files = effectiveRoots.flatMap((root) => collectLogFiles(path.resolve(root)));
   const report = scoreLogs({ gt, files });
 
   if (asJson) {
     console.log(JSON.stringify({
       roots: effectiveRoots,
+      ground_truth: gtPath,
       alias_table: aliasOverride.describe(),
       census: report.census,
       totals: report.totals,
@@ -450,6 +457,7 @@ function main(argv = process.argv.slice(2)) {
   console.log(`micro precision  : ${percent(totals.hit, totals.pred)}%  (${totals.hit}/${totals.pred})`);
   const alias = aliasOverride.describe();
   console.log('');
+  console.log(`ground truth     : ${gtPath}`);
   console.log(`alias table      : ${alias.rows} rows from ${alias.source}`
     + (alias.dropped.length ? `  (dropped: ${alias.dropped.join(' ')})` : ''));
   aliasOverride.restore();
@@ -474,7 +482,7 @@ if (require.main === module) {
     if (error && error.usage) {
       console.error(`evalParserReplay: ${error.message}`);
       console.error('usage: node tools/evalParserReplay.js [--json] [--confusion-csv PATH]'
-        + ' [--drop-aliases A,B] [root ...]');
+        + ' [--drop-aliases A,B] [--ground-truth PATH] [root ...]');
       process.exitCode = 2;
     } else {
       throw error;

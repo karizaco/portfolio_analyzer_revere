@@ -1,17 +1,6 @@
 {
   "20220218": {
     "0": [
-      "UPST",
-      "DVN",
-      "NRGU",
-      "MOS",
-      "TQQQ",
-      "TSLA",
-      "FCX",
-      "DWAC",
-      "COPX"
-    ],
-    "1": [
       "ROKU",
       "TQQQ",
       "TSLA",
@@ -22,6 +11,17 @@
       "DWAC",
       "DVN"
     ],
+    "1": [
+      "UPST",
+      "DVN",
+      "NRGU",
+      "MOS",
+      "TQQQ",
+      "TSLA",
+      "FCX",
+      "DWAC",
+      "COPX"
+    ],
     "2": [
       "UPST",
       "DVN",
@@ -29,6 +29,7 @@
       "MOS",
       "TQQQ",
       "TSLA",
+      "FCX",
       "DWAC",
       "COPX"
     ]
@@ -64,28 +65,60 @@
   },
   "20220301": {
     "0": [
-      "IBKR",
-      "CRH",
-      "XLV",
-      "KRE",
+      "GUSH",
+      "ERX",
+      "NUGT",
+      "COPX",
+      "FCX",
+      "X",
+      "MP"
+    ],
+    "1": [
+      "GUSH",
+      "ERX",
+      "FCX",
+      "X",
+      "COPX",
+      "MP"
+    ],
+    "2": [
+      "GUSH",
       "MP",
       "NUGT",
-      "EDV",
+      "ERX",
       "RSX",
+      "X",
       "FCX",
-      "VLO",
       "COPX"
     ]
   },
   "20220302": {
     "0": [
+      "GUSH",
+      "ERX",
+      "COPX",
+      "X",
+      "FCX",
+      "NUGT"
+    ],
+    "1": [
       "NUGT",
+      "GUSH",
       "FCX",
       "X",
       "ERX",
-      "EDV",
       "COPX",
       "AGQ"
+    ],
+    "2": [
+      "NUGT",
+      "GUSH",
+      "FCX",
+      "X",
+      "ERX",
+      "COPX",
+      "AGQ",
+      "RSX"
     ]
   },
   "20220318": {
@@ -342,10 +375,50 @@
       "FTNT",
       "BOIL",
       "TSLA"
+    ],
+    "1": [
+      "FCX",
+      "JNUG",
+      "NUGT",
+      "COPX",
+      "WEAT",
+      "VERU",
+      "URNM",
+      "URA",
+      "REGN",
+      "X",
+      "GUSH",
+      "LAC",
+      "FTNT",
+      "BOIL",
+      "TSLA"
+    ],
+    "2": [
+      "FCX",
+      "JNUG",
+      "NUGT",
+      "COPX",
+      "WEAT",
+      "VERU",
+      "URNM",
+      "URA",
+      "REGN",
+      "X",
+      "GUSH",
+      "LAC",
+      "FTNT",
+      "BOIL",
+      "TSLA"
     ]
   },
   "20220425": {
     "0": [
+      "KOLD",
+      "WEAT",
+      "VERU",
+      "BOIL"
+    ],
+    "1": [
       "KOLD",
       "WEAT",
       "VERU",
@@ -452,13 +525,33 @@
     "0": [
       "WEAT",
       "GUSH",
+      "UCO",
       "TSLA",
       "X",
       "SWN"
+    ],
+    "1": [
+      "WEAT",
+      "GUSH",
+      "UCO",
+      "TSLA"
+    ],
+    "2": [
+      "WEAT",
+      "TSLA",
+      "UCO",
+      "X",
+      "GUSH"
     ]
   },
   "20220506": {
     "0": [
+      "UCO",
+      "WEAT",
+      "TSLA",
+      "LTHM"
+    ],
+    "1": [
       "UCO",
       "WEAT",
       "TSLA",
@@ -544,7 +637,7 @@
       "NFLX"
     ],
     "3": [
-      "BOIL",
+      "GOVX",
       "LABU",
       "UCO",
       "ALB",
@@ -717,6 +810,12 @@
   "20221104": {
     "0": [
       "OIH"
+    ],
+    "1": [
+      "OIH"
+    ],
+    "2": [
+      "OIH"
     ]
   },
   "20221117": {
@@ -779,111 +878,140 @@
   },
   "20230518": {
     "0": [
-      "APLD",
-      "AI",
       "PLTR",
-      "CVNA",
-      "IMGN",
+      "LI",
+      "AI",
       "SHOP",
       "MNDY",
-      "LI"
+      "IMGN",
+      "APLD",
+      "CVNA"
     ]
   },
   "20230522": {
-    "0": ["LI","IMGN","SOUN","AI","CVNA","APLD","PLTR"]
+    "0": [
+      "LI",
+      "IMGN",
+      "SOUN",
+      "AI",
+      "CVNA",
+      "APLD",
+      "PLTR"
+    ]
   },
   "20220323 (batch t=1020s)": {
-    "0": ["BOIL","JNUG","NUGT","X","URA","FCX","WEAT","COPX","URNM","REGN","KWEB"],
-    "1": ["BOIL","JNUG","NUGT","X","URA","FCX","WEAT","COPX","URNM","REGN","KWEB"],
-    "2": ["BOIL","JNUG","NUGT","X","URA","FCX","WEAT","COPX","URNM","REGN","KWEB"],
-    "3": ["BOIL","JNUG","NUGT","X","URA","FCX","WEAT","COPX","URNM","REGN","KWEB"],
-    "4": ["BOIL","JNUG","NUGT","X","URA","FCX","WEAT","COPX","URNM","REGN","KWEB"]
+    "0": [
+      "BOIL",
+      "JNUG",
+      "NUGT",
+      "X",
+      "URA",
+      "FCX",
+      "WEAT",
+      "COPX",
+      "URNM",
+      "REGN",
+      "KWEB"
+    ],
+    "1": [
+      "BOIL",
+      "JNUG",
+      "NUGT",
+      "X",
+      "URA",
+      "FCX",
+      "WEAT",
+      "COPX",
+      "URNM",
+      "REGN",
+      "KWEB"
+    ],
+    "2": [
+      "BOIL",
+      "JNUG",
+      "NUGT",
+      "X",
+      "URA",
+      "FCX",
+      "WEAT",
+      "COPX",
+      "URNM",
+      "REGN",
+      "KWEB"
+    ],
+    "3": [
+      "BOIL",
+      "JNUG",
+      "NUGT",
+      "X",
+      "URA",
+      "FCX",
+      "WEAT",
+      "COPX",
+      "URNM",
+      "REGN",
+      "KWEB"
+    ],
+    "4": [
+      "BOIL",
+      "JNUG",
+      "NUGT",
+      "X",
+      "URA",
+      "FCX",
+      "WEAT",
+      "COPX",
+      "URNM",
+      "REGN",
+      "KWEB"
+    ]
   },
   "20220428 (batch t=1300s)": {
-    "0": ["CWEB","KWEB","TSLA","WEAT"],
-    "1": ["CWEB","KWEB","TSLA","WEAT"],
-    "2": ["CWEB","KWEB","TSLA","WEAT"],
-    "3": ["CWEB","KWEB","TSLA","WEAT"],
-    "4": ["CWEB","KWEB","TSLA","WEAT"]
-  },
-  "20220218": {
-    "0": ["UPST","DVN","NRGU","MOS","TQQQ","TSLA","FCX","DWAC","COPX"],
-    "1": ["ROKU","TQQQ","TSLA","FCX","COPX","MOS","NRGU","DWAC","DVN"],
-    "2": ["UPST","DVN","NRGU","MOS","TQQQ","TSLA","DCX","DWAC","COPX"]
-  },
-  "20220318": {
-    "0": ["NUGT","FCX","REGN","URA","COPX","URNM","KWEB"]
-  },
-  "20220413": {
-    "0": ["WEAT","LHX","REGN","LMT","X","FCX","COPX","NUGT","JNUG","URA","URNM"]
-  },
-  "20220517": {
-    "0": ["FNGU","TQQQ","OXY","COIN","ERX","AR","WEAT"]
+    "0": [
+      "CWEB",
+      "KWEB",
+      "TSLA",
+      "WEAT"
+    ],
+    "1": [
+      "CWEB",
+      "KWEB",
+      "TSLA",
+      "WEAT"
+    ],
+    "2": [
+      "CWEB",
+      "KWEB",
+      "TSLA",
+      "WEAT"
+    ],
+    "3": [
+      "CWEB",
+      "KWEB",
+      "TSLA",
+      "WEAT"
+    ],
+    "4": [
+      "CWEB",
+      "KWEB",
+      "TSLA",
+      "WEAT"
+    ]
   },
   "20230605": {
-    "0": ["IMGN","ARQQ","CVNA","IOT","PLTR","GSIT","MNDY","APLD","AI","QBTS","DNA"]
-  },
-  "20220222": {
-    "0": ["NRGU","DVN","MOS","COPX","TQQQ","FCX","TSLA"],
-    "1": ["NRGU","DVN","MOS","COPX","TQQQ","FCX","TSLA"],
-    "2": ["NDGU","DVN","MOS","COPX","TQQQ","FCX","TSLA"]
-  },
-  "20220301": {
-    "0": ["IBKR","CRH","XLV","KRE","MP","NUGT","EDV","RSX","FCX","VLO","COPX"]
-  },
-  "20220302": {
-    "0": ["NUGT","FCX","X","ERX","EDV","COPX","AGQ"]
-  },
-  "20220321": {
-    "0": ["DIDI","NUGT","COPX","URNM","REGN","FCX","NUZE","X"]
-  },
-  "20220331": {
-    "0": ["COPX","KWEB","SPXL","TQQQ","X","REGN","FCX","NUGT"]
-  },
-  "20220406": {
-    "0": ["X","FCX","REGN","COPX","NUGT","NEM","LHX"],
-    "1": ["X","FCX","REGN","COPX","NUGT","NEM","LHX"],
-    "2": ["FCX","COPX","X","LHX","NUGT","LMT","NEM","REGN"]
-  },
-  "20220414": {
-    "0": ["NUGT","JNUG","WEAT","GUSH","COPX","URA","URNM","X","REGN","FCX","LMT"]
-  },
-  "20220418": {
-    "0": ["VERU","WEAT","URA","URNM","FCX","LMT","COPX","REGN","GUSH","X","NUGT","JNUG"]
-  },
-  "20220419": {
-    "0": ["VERU","URNM","URA","REGN","JNUG","LMT","NUGT","X","COPX","WEAT","FCX","GUSH","BOIL","KOLD"]
-  },
-  "20220421": {
-    "0": ["FCX","JNUG","NUGT","COPX","WEAT","VERU","URNM","URA","REGN","X","GUSH","LAC","UCO","FTNT","BOIL","TSLA"],
-    "1": ["FCX","JNUG","NUGT","COPX","WEAT","VERU","URNM","URA","REGN","X","GUSH","LAC","FTNT","BOIL","TSLA"],
-    "2": ["FCX","JNUG","NUGT","COPX","WEAT","VERU","URNM","URA","REGN","X","GUSH","LAC","FTNT","BOIL","TSLA"]
-  },
-  "20220425": {
-    "0": ["KOLD","WEAT","VERU","BOIL"],
-    "1": ["KOLD","WEAT","VERU","BOIL"]
-  },
-  "20220429": {
-    "0": ["WEAT","GUSH","TSLA","X","SWN"]
-  },
-  "20220506": {
-    "0": ["UCO","WEAT","TSLA","LTHM"],
-    "1": ["UCO","WEAT","TSLA","LTHM"]
-  },
-  "20221104": {
-    "0": ["OIH"],
-    "2": ["OIH"]
-  },
-  "20230518": {
-    "0": ["PLTR","LI","AI","SHOP","MNDY","IMGN","APLD"]
-  },
-  "20220412": {
-    "0": ["LHX","LMT","URA","URNM","WEAT","X","COPX","FCX","REGN","NUGT","JNUG"]
-  },
-  "20220426": {
-    "0": ["BOIL","WEAT"],
-    "1": ["BOIL","WEAT"],
-    "2": ["BOIL","WEAT"]
+    "0": [
+      "IMGN",
+      "ARQQ",
+      "CVNA",
+      "IOT",
+      "PLTR",
+      "GSIT",
+      "MNDY",
+      "APLD",
+      "AI",
+      "QBTS",
+      "DNA"
+    ]
   },
   "20230523": {
     "0": [
@@ -929,21 +1057,6 @@
       "CVNA"
     ]
   },
-  "20230605": {
-    "0": [
-      "IMGN",
-      "ARQQ",
-      "CVNA",
-      "IOT",
-      "PLTR",
-      "GSIT",
-      "MNDY",
-      "APLD",
-      "AI",
-      "QBTS",
-      "DNA"
-    ]
-  },
   "20230608": {
     "0": [
       "CVNA",
@@ -962,108 +1075,23 @@
     ]
   },
   "20230609": {
-    "0": ["RGTI","QBTS","IMGN","CVNA","IOT","ARQQ","AI","PLTR","DNA","GTLB","GSIT","APLD","MNDY"]
-  },
-  "20220323 (batch t=1020s)": {
     "0": [
-      "BOIL",
-      "JNUG",
-      "NUGT",
-      "X",
-      "URA",
-      "FCX",
-      "WEAT",
-      "COPX",
-      "URNM",
-      "REGN",
-      "KWEB"
-    ],
-    "1": [
-      "BOIL",
-      "JNUG",
-      "NUGT",
-      "X",
-      "URA",
-      "FCX",
-      "WEAT",
-      "COPX",
-      "URNM",
-      "REGN",
-      "KWEB"
-    ],
-    "2": [
-      "BOIL",
-      "JNUG",
-      "NUGT",
-      "X",
-      "URA",
-      "FCX",
-      "WEAT",
-      "COPX",
-      "URNM",
-      "REGN",
-      "KWEB"
-    ],
-    "3": [
-      "BOIL",
-      "JNUG",
-      "NUGT",
-      "X",
-      "URA",
-      "FCX",
-      "WEAT",
-      "COPX",
-      "URNM",
-      "REGN",
-      "KWEB"
-    ],
-    "4": [
-      "BOIL",
-      "JNUG",
-      "NUGT",
-      "X",
-      "URA",
-      "FCX",
-      "WEAT",
-      "COPX",
-      "URNM",
-      "REGN",
-      "KWEB"
+      "RGTI",
+      "QBTS",
+      "IMGN",
+      "CVNA",
+      "IOT",
+      "ARQQ",
+      "AI",
+      "PLTR",
+      "DNA",
+      "GTLB",
+      "GSIT",
+      "APLD",
+      "MNDY"
     ]
   },
-  "20220428 (batch t=1300s)": {
-    "0": [
-      "CWEB",
-      "KWEB",
-      "TSLA",
-      "WEAT"
-    ],
-    "1": [
-      "CWEB",
-      "KWEB",
-      "TSLA",
-      "WEAT"
-    ],
-    "2": [
-      "CWEB",
-      "KWEB",
-      "TSLA",
-      "WEAT"
-    ],
-    "3": [
-      "CWEB",
-      "KWEB",
-      "TSLA",
-      "WEAT"
-    ],
-    "4": [
-      "CWEB",
-      "KWEB",
-      "TSLA",
-      "WEAT"
-    ]
-  },
-  "_meta": "Per-capture GT. Keys are dateKey (YYYYMMDD) → capture-index (0=qmg_*.png, 1=qmg_*_2.png, 2=qmg_*_3.png). crop: [x1,y1,x2,y2] in source-frame pixels. Note: 20230518+ videos use wider table layout — default crop (0.86,0.14) may cut off left edge; use 0.83,0.17 for newer videos. 20230519/20231201/20231215 are Revere earnings frames, not Quullamaggie position lists.",
+  "_meta": "Per-capture GT. Keys are dateKey (YYYYMMDD) → capture-index (0=qmg_*.png, 1=qmg_*_2.png, 2=qmg_*_3.png). THE CAPTURE INDEX IS RUN-RELATIVE: the file qmg_<date>_<n>.png holds a DIFFERENT image in every run directory, so a capture index means nothing on its own — it means nothing without the run directory it was read in. Where a date has been corrected, its _notes entry names the run the entry is anchored to. The positions panel prints its own row count in its footer ('N Items in Personal WatchList', or 'K of N' when scrolled), and that count is the cheapest audit of a hand-made ground truth: a capture listing more tickers than the panel counts is wrong, and one listing fewer is missing a holding. crop: [x1,y1,x2,y2] in source-frame pixels.  The 26 captures that have pinned pixels live in test/fixtures/qmg_ground_truth/ -- a crop of the panel showing the ticker column AND the footer count, md5-pinned in manifest.json -- and tools/checkGroundTruthConsistency.js checks this file against that manifest. Each manifest case also records WHICH panel it was read from ('panel'), because the 2022-era frame carries three right-hand widgets and the upper watchlist prints the same footer form as the positions table. This file must not carry a duplicate top-level key: JSON.parse keeps the last one silently, and this file shipped with 24 dates each appearing twice. Note: 20230518+ videos use wider table layout — default crop (0.86,0.14) may cut off left edge; use 0.83,0.17 for newer videos. 20230519/20231201/20231215 are Revere earnings frames, not Qullamaggie position lists.",
   "_source": "Verified by visual inspection of crop_comparison.html snapshots.",
   "_notes": {
     "20220421": "capture 0 includes UCO; captures 1/2 replace UCO with no extra ticker visible.",
@@ -1079,8 +1107,12 @@
     "20220614": "captures 0/1 have [UVXY, VLO, UCO]. capture 2 has only [VLO, UCO] — UVXY was dropped (likely closed before capture).",
     "20221104": "capture 2 (_3) confirms sparse single-name list with only OIH visible.",
     "20230609": "capture 2 (_3) matches capture 0 for the 13-name newer-UI list.",
-    "20220330": "8 GT tickers consistent",
-    "20220405": "11 GT tickers — GGPI/NEM rare tickers; OCR-difficult",
-    "20230522": "7 GT tickers (LI, IMGN, SOUN, AI, CVNA, APLD, PLTR) — AI/SOUN/IMGN newer tickers, OCR-difficult"
+    "20230522": "7 GT tickers (LI, IMGN, SOUN, AI, CVNA, APLD, PLTR) — AI/SOUN/IMGN newer tickers, OCR-difficult",
+    "20220301": "CORRECTED 2026-10-31. The old entry (IBKR, CRH, XLV, KRE, MP, NUGT, EDV, RSX, FCX, VLO, COPX) was read off the WRONG panel: IBKR/CRH/XLV/KRE/EDV/VLO are rows of the 'N Items in WatchList' panel ABOVE the positions table (CRH and VLO are visibly in it), and they appear in no probe log in the whole corpus. The 'A - Positions' panel holds 7/6/8 rows across the three captures, and its own footer says so ('5 of 7 Items in Personal WatchList', '6 Items in Personal WatchList', '8 Items in Personal WatchList'). Verified on the source frames data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220301{,_2,_3}.png.",
+    "20220302": "CORRECTED 2026-10-31. EDV was never in the positions panel: it is a row of the watchlist panel above it, and it appears in no probe log in the corpus. The panel holds 6/7/8 rows across the three captures (its own footer agrees: '6 Items', '7 Items', '8 Items in Personal WatchList'); AGQ and RSX enter later in the video and were missing from the old entry.",
+    "20220429": "CORRECTED 2026-11-01. The three captures are anchored to TWO DIFFERENT RUNS, and the pixels force it. Capture 0 is the batch2 frame (data/video_ocr_probe/qmg-1080p-batch2/snapshots/qmg_20220429.png): six rows - WEAT, GUSH, UCO, TSLA, X, SWN - and its footer reads '6 Items in Personal WatchList'. Capture 1 is batch2 qmg_20220429_2.png: four rows (WEAT, GUSH, UCO, TSLA), footer '4 Items in Personal WatchList'; the 1017 run's capture 1 shows the same four rows, so this reading is not run-specific. Capture 2 is the 1017 frame (data/video_scan_test/_rerun/qmg-easyocr-20261017/snapshots/qmg_20220429_3.png): five rows - WEAT, TSLA, UCO, X, GUSH - and its footer reads '2 of 5 Items in Personal WatchList'; batch2's capture 2 shows SWN instead of X, so it is not this capture. The previous note claimed all three captures came from the 1017 run's qmg_20220429{,_2,_3}.png - that was FALSE for capture 0, whose 1017 frame shows only four rows. Pinned by test/fixtures/qmg_ground_truth/ (crops of the panel with its own footer count) and checked by tools/checkGroundTruthConsistency.js.",
+    "20220218": "CORRECTED 2026-11-01. (a) The capture index is RUN-RELATIVE and these entries are now anchored to the run the benchmark pins: data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220218{,_2,_3}.png. In that run capture 0 shows the ROKU list and captures 1 and 2 the UPST list; the OLD entries had 0 and 1 the other way round, so the pinned benchmark frame (qmg_20220218_2.png, md5 d6a45e350aeacf16c704d324f0ed18a5) was being scored against the wrong capture. (b) 'DCX' in capture 2 was a misread of FCX — all six 20220218 frames in the corpus read FCX in that row, and the panel's own footer says '9 Items in Personal WatchList' (9 rows, no DCX). The panel prints its row count, so a ground truth that names a ticker the panel does not have is checkable.",
+    "20220222": "CORRECTED 2026-11-01. 'NDGU' in capture 2 was a misread of NRGU (the same misread the original reading recorded in its own note); the panel reads NRGU in that row in all three captures of data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220222{,_2,_3}.png, and its footer says '7 Items in Personal WatchList'.",
+    "20230518": "CORRECTED 2026-11-01. CVNA was missing. The 'A - Positions' panel on data/video_scan_test/_rerun/qmg-easyocr-20261017/snapshots/qmg_20230518.png holds 8 rows (APLD, AI, PLTR, CVNA, IMGN, SHOP, MNDY, LI) and its own footer says '8 Items in Personal WatchList' — the count matches the rows, and the old entry listed only 7. (The widget ABOVE the table is a different panel and reads '5 Items in WatchList'; the two counts must not be confused.)"
   }
 }
