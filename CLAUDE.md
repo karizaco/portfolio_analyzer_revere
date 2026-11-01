@@ -2057,7 +2057,7 @@ enforces it, and what the corrections did to the numbers.
 
 **The audit was done in three passes.** The first covered 26 captures across 10 of
 the 42 dates; the second widened it to **48 captures across 14 dates**; the
-third (the *wave-2* pass) widened it again to **90 captures across 36 dates**.
+third (the *wave-2* pass) widened it again to **94 captures across 40 dates**.
 The second pass found three classes the first one could not, and overturned one of
 the first pass's conclusions, because the first pass had only read the captures
 whose panels were *consistent* — a copied column and a partial reading are both
@@ -2361,6 +2361,27 @@ separately. Measured in wave 2:
 went, then `FTNT` went — so a fifteen-row frame is evidence about capture 1 and
 not about capture 2.
 
+### The table is sorted by % Change, so the ORDER is not the reading
+
+The 2023-era right-sidebar table sorts its rows by `% Change`, and the sort
+**re-orders as the day moves**. Measured on `20230523`: three of the six
+available frames carry the same eleven holdings in a different order, and the
+panel counts eleven in every one of them.
+
+```text
+frame 0   QBTS LI SOUN IMGN FTCH MNDY APLD PLTR DNA AI  CVNA
+frame 3   QBTS FTCH DNA AI  SOUN PLTR APLD IMGN MNDY LI  CVNA
+```
+
+The **set** is identical. So the check compares holdings as **sets**, and a
+hand reading that happens to preserve the panel's row order is not more
+correct than one that does not — the row order is a property of the sort, not
+of the portfolio.
+
+That is also why `20230608`'s ground truth was correct with its thirteen
+holdings in a different order than the frame's, and why the checker's
+`sameTickers()` compares sorted sets.
+
 ### "Personal" in the footer does NOT identify the table (confirmed again)
 
 The wave-2 pass hit the same trap in a new place. The `20221117` capture 2
@@ -2383,7 +2404,7 @@ and the checker enforces it.
 | `tools/checkGroundTruthConsistency.js` | checks the ground truth against the manifest, the panel counts and the footers |
 | `test/qmgGroundTruthProvenance.test.js` | pins the checker, and proves it has teeth |
 
-The fixture set is **90 crops** of the panel — showing the ticker column AND
+The fixture set is **94 crops** of the panel — showing the ticker column AND
 the footer — md5-pinned in `test/fixtures/qmg_ground_truth/manifest.json`, with
 each source snapshot's own md5 recorded so a changed corpus frame is caught.
 
@@ -2393,9 +2414,10 @@ node tools/checkGroundTruthConsistency.js --json
 node --test test/qmgGroundTruthProvenance.test.js
 ```
 
-**90 of 104 captures across 36 of 42 dates are pinned.** The other 14 are
-unpinned — the corpus they were cut from is not in git — so the audit covered
-every capture whose pixels were reachable.
+**94 of 104 captures across 40 of 42 dates are pinned.** Every date the replay
+tool can score is now pinned — the **10** captures still unpinned are the two
+*annotated duplicate* keys, which no probe log can match and which carry the
+same readings as the dates they are labelled with.
 
 The wave-2 cases are **generated from a table** (`C:/tmp/spxl/gen_cases.js`
 during the session) rather than hand-written, so a reading, its panel count and

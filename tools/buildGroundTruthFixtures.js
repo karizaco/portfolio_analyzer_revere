@@ -917,6 +917,44 @@ const CASES = [
     tickers: ['CVNA', 'FCX', 'TNA', 'CWEB', 'YINN', 'PDD', 'MDGL', 'GNS'],
     note: "Clock 15:57. The same eight rows; the widget above reads \"1 Item in WatchList\" (singular, because the total is one).",
   },
+
+  // --- 2023-era right sidebar -- wave 2 (the last four unpinned dates) ---
+  {
+    date: '20230523', capture_index: 0,
+    panel: 'positions',
+    source: 'data/video_scan_test/_rerun/qmg-easyocr-20261017/snapshots/qmg_20230523.png',
+    run: 'data/video_scan_test/_rerun/qmg-easyocr-20261017',
+    panel_count: 11, panel_count_text: '11 Items in Personal WatchList',
+    tickers: ['QBTS', 'LI', 'SOUN', 'IMGN', 'FTCH', 'MNDY', 'APLD', 'PLTR', 'DNA', 'AI', 'CVNA'],
+    note: "Verified 2026-11-01 against the pixels. All six available frames of this date read these same eleven holdings, and the panel counts eleven in every one of them. Three of the frames carry them in a DIFFERENT ORDER -- the table is sorted by % Change, and the sort re-orders as the day moves -- so the check compares holdings as SETS.",
+  },
+  {
+    date: '20230602', capture_index: 0,
+    panel: 'positions',
+    source: 'data/video_scan_test/_rerun/qmg-easyocr-20261017/snapshots/qmg_20230602.png',
+    run: 'data/video_scan_test/_rerun/qmg-easyocr-20261017',
+    panel_count: 12, panel_count_text: '12 Items in Personal WatchList',
+    tickers: ['QBTS', 'ARQQ', 'APLD', 'IMGN', 'RGTI', 'PLTR', 'MNDY', 'IONQ', 'AI', 'DNA', 'GSIT', 'CVNA'],
+    note: "Verified 2026-11-01 against the pixels. The list GREW during the session: two later frames hold thirteen rows, with IOT added. This capture is the twelve-row moment the hand reading was taken from.",
+  },
+  {
+    date: '20230605', capture_index: 0,
+    panel: 'positions',
+    source: 'data/video_scan_test/_rerun/qmg-easyocr-20261017/snapshots/qmg_20230605.png',
+    run: 'data/video_scan_test/_rerun/qmg-easyocr-20261017',
+    panel_count: 11, panel_count_text: '3 of 11 Items in Personal WatchList',
+    tickers: ['IMGN', 'ARQQ', 'CVNA', 'IOT', 'PLTR', 'GSIT', 'MNDY', 'APLD', 'AI', 'QBTS', 'DNA'],
+    note: "Verified 2026-11-01 against the pixels. All six available frames hold the same eleven holdings; the footers differ only in which row is selected.",
+  },
+  {
+    date: '20230608', capture_index: 0,
+    panel: 'positions',
+    source: 'data/video_scan_test/_rerun/qmg-easyocr-20261017/snapshots/qmg_20230608.png',
+    run: 'data/video_scan_test/_rerun/qmg-easyocr-20261017',
+    panel_count: 13, panel_count_text: '13 Items in Personal WatchList',
+    tickers: ['CVNA', 'QBTS', 'GSIT', 'RGTI', 'IMGN', 'MNDY', 'IOT', 'PLTR', 'AI', 'ARQQ', 'GTLB', 'DNA', 'APLD'],
+    note: "Verified 2026-11-01 against the pixels. The ground truth already read these thirteen holdings, in a different ORDER -- the table is sorted by % Change. All six available frames hold the same thirteen.",
+  },
 ];
 
 function ffmpegBin() {

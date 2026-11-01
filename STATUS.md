@@ -80,8 +80,8 @@ something worth resuming.
 ### The Qullamaggie ground truth
 
 `data/qmg_ground_truth.json` is a hand-made reading of a TradingView positions
-panel, and it is **verified against its pixels** — **90 of 104 captures across
-36 of the 42 dates** are md5-pinned fixtures in
+panel, and it is **verified against its pixels** — **94 of 104 captures across
+40 of the 42 dates** are md5-pinned fixtures in
 `test/fixtures/qmg_ground_truth/`, each cut to show the ticker column AND the
 panel's own footer.
 
@@ -97,8 +97,9 @@ three of its own tentative corrections when that rule was applied to them.
 node tools/checkGroundTruthConsistency.js
 ```
 
-The corpus it was cut from is not in git, so the remaining 14 captures are
-unverified here — the audit covered every capture whose pixels were reachable.
+Every date the replay tool can score is now pinned; the only unpinned captures
+are the ten under the two *annotated duplicate* keys, which no probe log can
+match.
 Details: CLAUDE.md § *The Qullamaggie ground truth, verified against its
 pixels*.
 
@@ -110,7 +111,7 @@ pixels*.
 | 2 | download the Qullamaggie 1080p corpus | 539 videos | 588 candidates, 49 already on disk. Use the `visios` client — see CLAUDE.md. |
 | 3 | the `position_table` sweep | the Qullamaggie videos whose positions list is a TradingView table | 10–16 h of EasyOCR at 162–257 s/frame. Layout analysis in `docs/qmg-positions-layout-findings.md`. |
 | 4 | re-OCR for the current parser | — | the recorded readings predate the parser fixes. `tools/evalParserReplay.js` scores the *current* parser over the recorded logs, so the parser is measurable without re-scanning. |
-| 5 | pin the remaining ground-truth captures | 14 of 104 captures | the corpus they were cut from is not in git, so they cannot be re-cut from a fresh clone. Only the 90 pinned ones are protected by an md5. |
+| 5 | pin the remaining ground-truth captures | 10 of 104 captures | the ten under the two *annotated duplicate* keys, which no probe log can match and which carry the same readings as the dates they are labelled with. Every date the replay tool can score is pinned. |
 
 ## Re-measuring
 
