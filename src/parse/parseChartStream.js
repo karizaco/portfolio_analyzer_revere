@@ -276,6 +276,118 @@ function findPanelBoundaries(words) {
   return { positionsLine, watchlistLine };
 }
 
+// The panel's OWN row count.
+//
+// The positions panel prints its row count in its footer:
+//
+//   N Items in Personal WatchList          the whole list
+//   1 Item in Personal WatchList           singular when the total is one
+//   K of N Items in Personal WatchList     a row is selected; K is that row's
+//                                          INDEX, not a scroll range
+//
+// N is the number of rows ON SCREEN. The panel is not scrolled — all N rows
+// are visible at once — which makes N an INDEPENDENT check on a reading: a
+// reading with a different number of tickers than the panel says has provably
+// dropped a row or invented one.
+//
+// That is exactly the invariant the 2026-11-01 ground-truth audit used to find
+// eight classes of defect in the hand-made ground truth (see CLAUDE.md § 'The
+// Qullamaggie ground truth, verified against its pixels'), and it had never
+// been applied to the PARSER's own output. The panel states its row count; the
+// parser has an opinion about that count; the two can be compared for free.
+//
+// This is a DIAGNOSTIC, and deliberately not a repair.
+//
+// The count comes from OCR like everything else, and the failure mode of
+// ACTING on a misread count is asymmetric in the worst way: a count read LOW
+// would truncate a correct reading, and that is precisely the case where
+// acting on it would do the most damage. Dropping rows is also the project's
+// own stated preference against — a wrong holding in a portfolio report is
+// worse than a missing one, and a truncated reading loses REAL holdings.
+//
+// So the count is REPORTED, and the disagreement is visible. Whether a
+// disagreement can be repaired safely is a separate question that needs its
+// own measurement, and it is measured on the replay corpus the same way every
+// other change in this file was measured.
+//
+// Which footer is the positions table's?
+//
+// "Personal WatchList" does NOT identify the panel: in the 2022-era layout the
+// frame carries THREE right-hand widgets and TWO of them print that wording.
+// The footer alone therefore cannot say which panel a count came from.
+//
+// The bound that does is the panel's own HEADER. Every row of the positions
+// table — and therefore its footer — is BELOW the "A - Positions" header, and
+// the other widgets' footers are ABOVE it. So a footer below that header is
+// the bottom-most widget's footer, which is the positions table by
+// construction. That is the same rule the ground-truth audit settled on.
+//
+// Returns `{ count, line, text }` or null.
+function readPanelRowCount(words, positionsLine, positionsHeaderY) {
+  if (!Array.isArray(words) || !words.length) return null;
+
+  // Group the words by their OCR line, keeping each line's words in reading
+  // order.
+  const lines = new Map();
+  for (const w of words) {
+    const line = w.line;
+    if (!Number.isFinite(line)) continue;
+    if (!lines.has(line)) lines.set(line, []);
+    lines.get(line).push(w);
+  }
+
+  let best = null;
+  for (const [line, lineWords] of lines) {
+    // The footer must be BELOW the positions header. When the header was not
+    // detected there is no bound to apply, and no count is reported — a count
+    // with no way to tell which panel it came from is worse than no count.
+    if (positionsLine == null && positionsHeaderY == null) return null;
+    if (positionsLine != null && line <= positionsLine) continue;
+    if (positionsHeaderY != null) {
+      const belowHeader = lineWords.some((w) => {
+        if (!Number.isFinite(w.top)) return false;
+        const y = w.top + (Number.isFinite(w.height) ? w.height : 0) / 2;
+        return y > positionsHeaderY;
+      });
+      if (!belowHeader) continue;
+    }
+
+    lineWords.sort((a, b) => (a.left || 0) - (b.left || 0));
+    const cleaned = lineWords.map((w) => String(w.text || '').replace(/[^A-Za-z0-9]/g, ''));
+
+    // The footer has to look like a watchlist footer. The plain
+    // "N Items in WatchList" form belongs to the middle screener panel, and it
+    // is above the positions header anyway; requiring a watch-shaped token
+    // keeps it out even when the line bound is unavailable.
+    if (!cleaned.some((t) => /WATCH|WATCHIST|WOTCH/i.test(t))) continue;
+
+    // The word that names the unit: "Item" / "Items". The count is the digit
+    // group IMMEDIATELY before it, so "5 of 7 Items" gives 7 (the total) and
+    // not 5 (the selected row's index).
+    const itemIndex = cleaned.findIndex((t) => /^[IL]?TEMS?$/i.test(t));
+    if (itemIndex < 0) continue;
+
+    let count = null;
+    for (let i = itemIndex - 1; i >= 0 && i >= itemIndex - 3; i -= 1) {
+      const digits = cleaned[i].replace(/[^0-9]/g, '');
+      if (digits) {
+        const parsed = parseInt(digits, 10);
+        if (Number.isFinite(parsed) && parsed <= 200) { count = parsed; break; }
+      }
+    }
+    if (count == null) continue;
+
+    // The BOTTOM-most matching footer is the positions table's, so the last
+    // one wins.
+    best = {
+      count,
+      line,
+      text: lineWords.map((w) => String(w.text || '').trim()).filter(Boolean).join(' '),
+    };
+  }
+  return best;
+}
+
 // How many row pitches a gap may span and still be "the row the OCR skipped"
 // rather than "a different widget".
 //
@@ -307,8 +419,23 @@ const POSITION_LIST_ROW_GAP_LIMIT = 3.5;
 // stays inside the run; anything wider starts a new run. The longest run is
 // the list; a tie is broken by the price-aligned rows, which certainly carry a
 // price to their right.
-function selectPositionListRun(members, splitLimit = POSITION_LIST_ROW_GAP_LIMIT) {
-  if (!Array.isArray(members) || members.length < 2) return null;
+// A "one-glyph cell" is a cell the OCR read as a SINGLE character.
+//
+// The token is the CLEANED text (both the column's members and the
+// candidates are upper-cased and stripped of everything but A-Z, 0-9 and "."
+// before they reach here, and STRICT_TICKER_PATTERN then rejects anything
+// carrying a digit). So the test is simply "exactly one letter and nothing
+// else" -- which is stricter than counting the letters in the token, and does
+// not depend on the cleaning rules of another module.
+//
+// This matters: a garbage cell like "~09r3" carries ONE letter, so a
+// letter-count would score it as a one-glyph cell and inflate the count that
+// decides a genuine one-letter holding's fate.
+function isOneGlyphToken(token) {
+  return typeof token === 'string' && /^[A-Z]$/.test(token);
+}
+
+function selectPositionListRun(members, splitLimit = POSITION_LIST_ROW_GAP_LIMIT) {  if (!Array.isArray(members) || members.length < 2) return null;
   // Group the column's words into ROWS first.
   //
   // Two words on the same OCR line are the SAME row of the table — a ticker
@@ -769,6 +896,71 @@ function parseChartStreamPositionList({ ocr } = {}) {
     ? identifyPositionListColumn(words, ocr._cropWidth || null, ocr._engine || null)
     : { inListTickers: new Set(), dominantColumnX: null, dominantColumnLeft: null, columnWidth: 0, listRun: null };
 
+  // Column membership for the GATE.
+  //
+  // `inListTickers` is the PRICE-ALIGNED subset of the column: a ticker is
+  // a member of it only when its row carries a readable price to the right.
+  // That conflates two independent facts -- where the ticker is, and whether
+  // the price cell beside it was read cleanly -- and the price cell is
+  // exactly the cell that gets garbled.
+  //
+  // Measured on the 20220330 capture: NFLX, REGN, COPX and NUGT are read
+  // perfectly (conf 0.92, 0.96, 0.51, 0.50) and sit at x 711-714, exactly
+  // where every other ticker in the column sits -- but their price cells read
+  // "0s63 ~0383", "C00 08re", "~00r ~0229" and "30.1933| ~0583", none of
+  // which passes the strict price-word filter. So the four left the
+  // price-aligned subset, the column gate rejected them, and the holding
+  // was lost before Filter B -- which tests row-stack membership and would
+  // have kept all four -- ever saw them.
+  //
+  // The row stack is the better evidence of column membership, and the
+  // parser already computes it: Filter B asks exactly this question of the
+  // accepted set. The gate asks it first, so the answer has to exist first.
+  //
+  // The gate's membership is therefore the UNION of the two: the
+  // price-aligned column members, plus the tickers on the list's own rows.
+  // The union is used for the GATE only. The accept-as-read branch below
+  // stays on the price-aligned set, because a run member can be a header
+  // word rather than a holding -- on the 20220330 capture the run contains
+  // the "Sym" header, which is not a position, and admitting it verbatim
+  // would publish a false positive.
+  const listRunMembers = new Set();
+  if (listRun && listRun.rows >= 3 && Array.isArray(listRun.entries)) {
+    for (const entry of listRun.entries) {
+      if (entry && entry.text) listRunMembers.add(entry.text);
+    }
+  }
+  const columnGateMembers = new Set(inListTickers);
+  for (const ticker of listRunMembers) columnGateMembers.add(ticker);
+
+  // How many of the column's own rows read as a SINGLE glyph.
+  //
+  // A one-glyph cell is ambiguous: it is either a genuine one-letter ticker
+  // or a multi-glyph cell the OCR collapsed into one glyph, and the shape
+  // cannot tell the two apart -- "X" (a real holding on 20220301, 20220323
+  // and 20220412) and "U" (the LI row collapsed on 20230522) are both one
+  // glyph about 42 px wide in the Sym column.
+  //
+  // The COLUMN settles it, by its own consistency. Only four US tickers have
+  // a single letter (F, T, V, X), so a position list holding TWO of them is
+  // far less likely than a panel that collapses two cells -- and a panel that
+  // collapses one cell is likely to collapse another.
+  //
+  // Measured on the replay corpus, the one-glyph run-only class is five
+  // readings: X on 20220301 (conf 0.980), X on 20220323 (0.963) and X on
+  // 20220412 (0.914) -- three hits, each the ONLY one-glyph member of its
+  // column -- and U on 20230522 (0.616 and 0.743, two captures of one date),
+  // the collapsed LI row, in a column that also holds the collapsed AI row.
+  //
+  // Confidence cannot do this job. U reads at 0.616 on one capture and
+  // 0.743 on the other, so any threshold low enough to catch it also catches
+  // the 0.534-confidence QBTS hit on 20230602 -- and the corpus mixes OCR
+  // engines, whose confidence scales are not comparable anyway.
+  let singleGlyphColumnMembers = 0;
+  for (const ticker of listRunMembers) {
+    if (isOneGlyphToken(ticker)) singleGlyphColumnMembers += 1;
+  }
+
   // Build per-ticker line + word lookups from raw OCR word positions.
   // - tickerLineMap: ticker → array of line indices (used by Filter G)
   // - tickerWordMap: ticker → first raw word record with bbox (used by Filter B)
@@ -943,13 +1135,65 @@ function parseChartStreamPositionList({ ocr } = {}) {
       // garbles were accepted verbatim (FX for FCX, TTOCQ for TQQQ) and never
       // reached the corrector below.
       const inListColumn = inListTickers.has(ticker);
-      if (columnGateActive && !inListColumn && !(inLexicon && inListTickers.size >= 6)) {
+      // The gate's membership test: the price-aligned column members PLUS
+      // the tickers on the list's own rows. A garbled PRICE cell must not
+      // decide whether a perfectly-read ticker belongs to the column.
+      const inColumnGate = columnGateMembers.has(ticker);
+      // A token the ROW STACK admitted but a readable price did not: it sits on
+      // a position-list row and the price cell beside it was garbled.
+      const runOnly = inColumnGate && !inListColumn;
+      if (columnGateActive && !inColumnGate && !(inLexicon && inListTickers.size >= 6)) {
         // Column detector is confident and this token is not a position-list row.
         // Reject it before the lexicon/price-nearby path can admit it.
         rejected.push(ticker);
         continue;
       }
       if (inLexicon || priceNearby) {
+      // A run-only member is a position-list row whose TICKER cell was read
+      // and whose PRICE cell was not -- 20220330's NFLX, REGN, COPX and NUGT
+      // all read at conf 0.50-0.96, with the price cells garbled ("0s63",
+      // "C00", "~0229"). The row stack says it is a position; `hasPriceNear`
+      // says nothing about it, because it scans the ENTIRE flattened text and
+      // happily matches a ticker at the end of one line against a price at
+      // the start of the next.
+      //
+      // So a run-only member has to be vouched for by the LEXICON. The
+      // price-nearby test alone published "OI" on 20220412: a 0.076-confidence
+      // garbage read of the LMT row, which the alias rescue cannot fix
+      // because "OI" is not a recorded misread of anything. The curated
+      // rescue still reaches the run-only members it should -- "WHX" on
+      // 20220412 and "A" on 20230522 are both run-only and both not in the
+      // lexicon, and both are rescued to LHX and AI from the words
+      // themselves, after this loop.
+      if (runOnly && !inLexicon) {
+        rejected.push(ticker);
+        continue;
+      }
+      // A one-glyph cell in a column that holds ANOTHER one-glyph cell is not
+      // taken at face value. The column has demonstrated that it collapses
+      // cells, so a one-glyph read in it is a collapse until proven
+      // otherwise.
+      //
+      // There is no price-aligned escape hatch, and it is worth saying why:
+      // the column detector measures a cell's CENTRE, and in a left-aligned
+      // table a one-glyph cell's centre sits ~44 px left of a four-glyph
+      // cell's -- outside the detector's +-25 px column window. So a
+      // one-glyph token can never be price-aligned, and the row stack is the
+      // ONLY evidence that admits it. This rule is therefore the only thing
+      // that decides a one-glyph read's fate.
+      //
+      // The curated rescue still reaches the cells this rejects: it works on
+      // the words themselves, so the collapsed AI row on 20230522 ("A") is
+      // still rescued to AI after this loop. What it cannot reach is the
+      // collapsed LI row ("U"), because "U" is a genuine ticker (a holding on
+      // 20221117) and the alias table's invariant forbids a row that would
+      // rewrite it. That row stays missed, which is the project's own
+      // preference: a wrong holding is worse than a missing one.
+      if (runOnly && singleGlyphColumnMembers >= 2
+          && isOneGlyphToken(ticker)) {
+        rejected.push(ticker);
+        continue;
+      }
       // Filter G: panel-line reject gate. If panel boundaries were
       // detected, reject any ticker whose ONLY occurrences have lines
       // outside the position-list panel (chart-area above the panel, or
@@ -1303,6 +1547,25 @@ function parseChartStreamPositionList({ ocr } = {}) {
   // returning so downstream merge/cluster steps never see them.
   const filteredAccepted = accepted.filter((t) => !TICKER_BLOCKLIST.has(t));
 
+  // The panel's own row count, and how the reading compares with it.
+  //
+  // This is a self-check, and it is the panel's own statement rather than the
+  // parser's: the footer says how many rows are on screen, and the reading
+  // says how many tickers it found. `count_delta` is the difference.
+  //
+  //   delta  0   the reading has the panel's row count
+  //   delta < 0   the reading is SHORT — a row was dropped
+  //   delta > 0   the reading is LONG — a row was invented
+  //
+  // A delta of 0 does NOT mean the reading is right: two tickers can be
+  // confused for one another and the count still matches. It means the reading
+  // is not *provably* wrong, which is a weaker and more honest claim.
+  //
+  // The count is reported, never acted on. See `readPanelRowCount`.
+  const panelCountInfo = readPanelRowCount(words, positionsLine, positionsHeaderY);
+  const panelCount = panelCountInfo ? panelCountInfo.count : null;
+  const panelCountDelta = panelCount != null ? filteredAccepted.length - panelCount : null;
+
   return {
     column_filter: dominantColumnX != null ? {
       column_width: columnWidth,
@@ -1333,6 +1596,15 @@ function parseChartStreamPositionList({ ocr } = {}) {
     // filter ran (at least 2 accepted tickers with bbox info available).
     bbox_filter: bboxFilterInfo
     ,
+    // Diagnostic: the panel's OWN row count, read from its footer, and the
+    // difference between it and the reading. `null` when the footer was not
+    // read (no header detected, or the footer line was not recognised).
+    //
+    // This is a self-check on the reading, not a filter: the count is never
+    // used to add or drop a ticker. See `readPanelRowCount` for why.
+    panel_count: panelCount,
+    panel_count_delta: panelCountDelta,
+    panel_count_footer: panelCountInfo ? panelCountInfo.text : null,
     zoom_ticker_strip: ocr && ocr.zoomTickerStrip ? {
       candidate_count: zoomStripCandidates.length,
       candidates: zoomStripCandidates.slice(0, 20).map((candidate) => candidate.ticker),
@@ -1631,6 +1903,7 @@ module.exports = {
   extractZoomStripTickerCandidates,
   parseChartStreamPositionList,
   extractAllTickerCandidates,
+  readPanelRowCount,
   setOcrConfusionCsvPath,
   TICKER_BLOCKLIST
 };

@@ -34,7 +34,8 @@ const {
 const { computePerceptualHash, hammingDistance } = require('../src/video/imageHash');
 const { computePerceptualHashOfRegion, computePerceptualHashOfFractionalRegion } = require('../src/video/imageHashRegion');
 const { extractTickersFromOcrText, loadDecodeLexiconSync, loadSeedLexiconSync } = require('../src/normalize/tickerScan');
-const { createProbeKey, parseArgs, printHelp } = require('../src/video/ocrScanArgs');
+const { createProbeKey, parseArgs, parseFractionalRegion, printHelp } = require('../src/video/ocrScanArgs');
+const { chartStreamCropFractionForDate, chartStreamPrefilterRegionForDate } = require('../src/video/chartStreamCrop');
 const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
 const { parseChartStreamPositionList, mergeMultiplePositionLists, clusterRawOcrTokens, TICKER_BLOCKLIST } = require('../src/parse/parseChartStream');
 const { runEasyOcr, adaptToParserSchema } = require('../src/ocr/easyocrAdapter');
@@ -484,15 +485,24 @@ function extractFinalFrame(videoPath, timestamp, outputPath, ffmpegBin) {
   runFfmpegCommand(command, 'ffmpeg final frame extraction failed.');
 }
 
-async function prefilterFrames({ fps, framePaths, outputKind, prefilterProfile, progressInterval, temporalDecay }) {
+async function prefilterFrames({ fps, framePaths, outputKind, prefilterProfile, progressInterval, temporalDecay, tickerRegionOverride }) {
   const prefilterRows = [];
   let bestRow = null;
   const startedAt = Date.now();
   // Some profiles watch a different rectangle for the position list: the
   // 2023-era sidebar puts the table higher up the frame than the 2022-era
   // bottom-right panel does.
+  //
+  // `tickerRegionOverride` is the ERA-CONDITIONAL rectangle the chart-stream
+  // profile uses, derived from the upload date in `main()`. It replaces the
+  // hard-coded fallback in `summarizeLumaBuffer` (left 0.85, top 0.55), which
+  // started to the RIGHT of the 2023-era sidebar's Sym column and so measured
+  // the price and %-Change columns of a panel whose tickers it could not see.
+  // The rectangle it replaces is the CROP's rectangle — the pixels the OCR
+  // engine will actually read.
   const profileTable = PREFILTER_PROFILES[prefilterProfile] || null;
-  const tickerRegion = profileTable && profileTable.tickerRegion ? profileTable.tickerRegion : null;
+  const tickerRegion = tickerRegionOverride
+    || (profileTable && profileTable.tickerRegion ? profileTable.tickerRegion : null);
 
   for (let index = 0; index < framePaths.length; index += 1) {
     const framePath = framePaths[index];
@@ -1159,6 +1169,20 @@ function summarizeCandidate(candidate, outputKind, allCandidates = null, confusi
         column_filter: candidate.chartStream.column_filter || null,
         bbox_filter: candidate.chartStream.bbox_filter || null,
         panel_gate: candidate.chartStream.panel_gate || null,
+        // The panel's OWN row count, read from its footer. It is an
+        // independent check on the reading: the footer says how many rows are
+        // on screen, so a reading with a different number has provably dropped
+        // a row or invented one. `panel_count_delta` is the difference, and it
+        // is REPORTED rather than acted on — a count misread low would truncate
+        // a correct reading, which is exactly the case where acting on it
+        // would do the most damage.
+        panel_count: Number.isFinite(candidate.chartStream.panel_count)
+          ? candidate.chartStream.panel_count
+          : null,
+        panel_count_delta: Number.isFinite(candidate.chartStream.panel_count_delta)
+          ? candidate.chartStream.panel_count_delta
+          : null,
+        panel_count_footer: candidate.chartStream.panel_count_footer || null,
         tickers_rejected_list: Array.isArray(candidate.chartStream.tickers_rejected_list)
           ? candidate.chartStream.tickers_rejected_list
           : [],
@@ -1337,6 +1361,25 @@ async function main() {
 
   const videoPath = options.videoPath;
   const dateKey = inferDateKey(videoPath, options.dateKey);
+  // The chart-stream crop is chosen by the layout era, which is read off the
+  // upload date — and the date is only known NOW, because it can come from
+  // the filename. The args module had to guess before this point, so the crop
+  // is re-derived here whenever it was NOT given explicitly.
+  if (options.chartStreamCropDefaulted) {
+    options.phashRegionFraction = parseFractionalRegion(chartStreamCropFractionForDate(dateKey));
+  }
+  options.chartStreamCropFraction = options.prefilterProfile === 'position_table'
+    ? parseFractionalRegion(chartStreamCropFractionForDate(dateKey))
+    : options.phashRegionFraction;
+  // The prefilter measures the rectangle it is going to OCR, and for the
+  // chart-stream profile that rectangle is ERA-CONDITIONAL too — the same
+  // upload-date rule the crop uses, one step earlier in the pipeline. The
+  // `position_table` profile carries its own `tickerRegion` in the profile
+  // table and the whiteboard profile needs none, so only chart_stream is
+  // threaded here.
+  const prefilterTickerRegion = options.prefilterProfile === 'chart_stream'
+    ? chartStreamPrefilterRegionForDate(dateKey)
+    : null;
   const baseOutputRoot = path.resolve(options.outputRoot);
   const outputRoot = options.runTag
     ? path.join(baseOutputRoot, options.runTag)
@@ -1376,6 +1419,11 @@ async function main() {
     position_table_parser: Boolean(options.positionTableParser),
     native_ocr_frame: Boolean(options.nativeOcrFrame),
     prefilter_profile: options.prefilterProfile,
+    // The rectangle the prefilter MEASURED. For chart_stream it is
+    // era-conditional (derived from the upload date), so it is recorded
+    // rather than assumed — a prefilter score is only interpretable
+    // against the rectangle that produced it.
+    prefilter_ticker_region: prefilterTickerRegion || null,
     temporal_decay: options.temporalDecay,
     video_path: videoPath
   };
@@ -1422,7 +1470,8 @@ async function main() {
       outputKind: options.outputKind,
       prefilterProfile: options.prefilterProfile,
       progressInterval: options.progressInterval,
-      temporalDecay: options.temporalDecay
+      temporalDecay: options.temporalDecay,
+      tickerRegionOverride: prefilterTickerRegion
     });
     const selectedFrameRows = selectFramesForOcr(prefilterResult.prefilterRows, {
       maxFrames: options.prefilterMaxFrames,

@@ -57,7 +57,7 @@ function printHelp() {
     '  --basename <name>          Snapshot PNG prefix + screenshot discovery stem, default "revere"',
     '  --phash-region <x,y,w,h>  Region in pixels for the overlay pHash (optional)',
     '  --phash-hamming-max <n>    Max Hamming distance for overlay pHash dedup, default 6',
-    '  --phash-region-fraction <xf,yf,wf,hf> Fractional overlay region (0..1); chart_stream default "0.86,0.62,0.14,0.22"',
+    '  --phash-region-fraction <xf,yf,wf,hf> Fractional overlay region (0..1); chart_stream default depends on the layout era (see src/video/chartStreamCrop.js)',
     '  --temporal-decay <secs>    Seconds over which early-frame boost decays to zero, default 1800',
     '  --chart-stream-parser      Replace the GRO/TURBO whiteboard parser with parseChartStream',
     '  --help                     Show this help text',
@@ -65,9 +65,20 @@ function printHelp() {
   ].join('\n'));
 }
 
-// Default fractional overlay region for chart-stream OCR. Qullamaggie's
-// position-list overlay sits in the bottom-right corner of a streamed chart frame.
-const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.86,0.62,0.14,0.22';
+// Default fractional overlay region for chart-stream OCR.
+//
+// It is NOT one rectangle: Qullamaggie changed the layout of his position
+// list between 2023-01-26 and 2023-05-18, and the two layouts put their
+// ticker column in different places. The rectangles, the measurement behind
+// them and the era boundary live in src/video/chartStreamCrop.js — this
+// module only chooses between them, so it stays free of the OCR stack.
+const {
+  CHART_STREAM_CROP_FLOATING_PANEL,
+  CHART_STREAM_CROP_RIGHT_SIDEBAR,
+  CHART_STREAM_RIGHT_SIDEBAR_FROM,
+  chartStreamCropFractionForDate,
+  isRightSidebarDate
+} = require('./chartStreamCrop');
 // Tale-of-the-Tape position list sits center-right in the frame (x≈50-95%, y≈55-98%)
 const TALE_OF_THE_TAPE_CROP_FRACTION = '0.50,0.55,0.45,0.43';
 // The positions-TABLE reader does not use a fixed crop at all — it LOCATES
@@ -428,7 +439,14 @@ function parseArgs(argv, overrides = {}) {
   }
 
   if (options.prefilterProfile === 'chart_stream' && !options.phashRegion && !options.phashRegionFraction) {
-    options.phashRegionFraction = parseFractionalRegion(CHART_STREAM_REGION_FRACTION_DEFAULT);
+    // The crop is chosen by the layout era, which is read off the upload
+    // date. `--date` may not have been given — the scan tool resolves it from
+    // the filename later and re-derives the crop then, so the region chosen
+    // here is only the fallback for a date that is not known yet.
+    options.chartStreamCropDefaulted = true;
+    options.phashRegionFraction = parseFractionalRegion(
+      chartStreamCropFractionForDate(options.dateKey)
+    );
   }
 
   // tale_of_the_tape uses the center-right crop for the Positions table.
@@ -455,7 +473,7 @@ function parseArgs(argv, overrides = {}) {
   // table mode `--phash-region` (a PIXEL region) leaves the fractional one
   // unset — which used to crash the fail-safe path with a TypeError.
   options.chartStreamCropFraction = options.prefilterProfile === 'position_table'
-    ? parseFractionalRegion(CHART_STREAM_REGION_FRACTION_DEFAULT)
+    ? parseFractionalRegion(chartStreamCropFractionForDate(options.dateKey))
     : options.phashRegionFraction;
 
   // chart_stream and tale_of_the_tape prefilters use the chart-stream parser.
@@ -570,7 +588,9 @@ function createProbeKey(videoPath, dateKey, outputKind) {
 }
 
 module.exports = {
-  CHART_STREAM_REGION_FRACTION_DEFAULT,
+  CHART_STREAM_CROP_FLOATING_PANEL,
+  CHART_STREAM_CROP_RIGHT_SIDEBAR,
+  CHART_STREAM_RIGHT_SIDEBAR_FROM,
   DEFAULT_OUTPUT_ROOT,
   PIPELINE_PROFILE_DEFAULT,
   POSITION_TABLE_REGION_FRACTION,
@@ -578,6 +598,8 @@ module.exports = {
   TABLE_FRAME_BUDGET_MS_DEFAULT,
   TALE_OF_THE_TAPE_CROP_FRACTION,
   createProbeKey,
+  chartStreamCropFractionForDate,
+  isRightSidebarDate,
   parseArgs,
   parseFractionalRegion,
   parsePixelRegion,

@@ -379,6 +379,25 @@ function summarizeLumaBuffer(buffer, width, height, region) {
   // background; a clean Google Drive frame has almost no mid-tone pixels.
   let midToneTicker = 0;
   let totalTickerPixels = 0;
+  // The ticker REGION's own area, and the mid-tone pixels inside it, counted
+  // independently of the bright-pixel branch below.
+  //
+  // The comment above and the name `midToneRatioTicker` both describe "the
+  // fraction of the ticker rectangle that is mid-tone" — but the counters in
+  // the branch below cannot supply that: they are nested inside
+  // `if (value >= 130)`, so `totalTickerPixels` counts only the region's
+  // BRIGHT pixels and `midToneTicker` counts only those that are merely
+  // bright (130-150). The ratio is therefore "of the bright pixels here, how
+  // many are just-bright" — a different quantity, and one whose denominator is
+  // 7 or 17 pixels at the prefilter's 160x90 scale.
+  //
+  // These two counters compute the quantity the name describes, WITHOUT
+  // changing any existing number. `midToneRatioTickerRegion` is a DIAGNOSTIC:
+  // nothing scores it yet, because doing so changes the scale of every tuned
+  // constant in scoreFramePrefilter. tools/measurePrefilterRegion.js measures
+  // what the corrected signal's ranking would be.
+  let tickerRegionPixels = 0;
+  let tickerMidTonePixels = 0;
   const rowTopsByCol = new Array(width).fill(0);
   let rowTransitions = 0;
   // Track leftmost & rightmost bright column for ticker-column detection.
@@ -427,6 +446,16 @@ function summarizeLumaBuffer(buffer, width, height, region) {
             rowTopsByCol[columnIndex] += 1;
           }
         }
+      }
+    }
+
+    // The region's own area and its mid-tone content — every pixel, not just
+    // the bright ones. See the comment on the counter declarations.
+    if (rowIndex >= tickerRowTop && rowIndex < tickerRowBottom &&
+        columnIndex >= tickerColLeft && columnIndex < tickerColRight) {
+      tickerRegionPixels += 1;
+      if (value >= 51 && value <= 150) {
+        tickerMidTonePixels += 1;
       }
     }
   }
@@ -487,6 +516,12 @@ function summarizeLumaBuffer(buffer, width, height, region) {
     brightColumnLeft: leftmostBright,
     brightColumnRight: rightmostBright,
     midToneRatioTicker: totalTickerPixels > 0 ? midToneTicker / totalTickerPixels : 0,
+    // The quantity `midToneRatioTicker` is NAMED for: the fraction of the
+    // ticker RECTANGLE that is mid-tone. It is a diagnostic until a wide
+    // measurement says it should be scored — scoring it changes the scale of
+    // every tuned constant in scoreFramePrefilter.
+    midToneRatioTickerRegion: tickerRegionPixels > 0 ? tickerMidTonePixels / tickerRegionPixels : 0,
+    tickerRegionPixels,
     stdDev: Math.sqrt(variance),
     verticalComparisons,
     verticalEdgeHits,
@@ -494,15 +529,27 @@ function summarizeLumaBuffer(buffer, width, height, region) {
   };
 }
 
-async function analyzeFrameBeforeOcr(framePath, region) {
+async function analyzeFrameBeforeOcr(framePath, region, options = {}) {
+  // The prefilter's working resolution. 160x90 is the pipeline's default and
+  // every tuned constant in scoreFramePrefilter was fitted at that scale.
+  //
+  // It is also the scale at which the sidebar era's signals stop meaning
+  // anything: the 2023-era ticker rectangle is 29x29 prefilter pixels, so
+  // `midToneRatioTicker`'s denominator is 7 or 17, and the row/stripe signals
+  // are inverted (measured 2026-11-02, CLAUDE.md § 'The prefilter's
+  // rectangle'). The override exists so that ALTERNATIVE resolutions can be
+  // MEASURED without changing what the pipeline does; the pipeline still
+  // calls this with no options.
+  const width = Number(options.width) > 0 ? Math.trunc(options.width) : PREFILTER_WIDTH;
+  const height = Number(options.height) > 0 ? Math.trunc(options.height) : PREFILTER_HEIGHT;
   const { data, info } = await sharp(framePath)
     .flatten({ background: '#ffffff' })
     .grayscale()
     .resize({
       background: '#ffffff',
       fit: 'contain',
-      height: PREFILTER_HEIGHT,
-      width: PREFILTER_WIDTH
+      height,
+      width
     })
     .raw()
     .toBuffer({ resolveWithObject: true });
@@ -1120,6 +1167,8 @@ function allocateOutputPath(outputRoot, outputKind, dateKey, suffix = null, base
 
 module.exports = {
   PREFILTER_PROFILES,
+  PREFILTER_WIDTH,
+  PREFILTER_HEIGHT,
   TEXT_DENSITY_KEYWORDS,
   allocateOutputPath,
   analyzeFrameBeforeOcr,

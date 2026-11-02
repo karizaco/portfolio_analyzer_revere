@@ -18,10 +18,11 @@ const { loadDecodeLexiconSync } = require('../normalize/tickerScan.js');
 // WHY THIS EXISTS
 // The position list is a TradingView GUI TABLE, not a chart overlay. The
 // legacy reader assumes it is an overlay: it crops a FIXED rectangle
-// (0.86,0.62,0.14,0.22 of the frame) and then guesses which OCR tokens in
+// of the frame — era-conditional now, since Qullamaggie moved the list
+// (src/video/chartStreamCrop.js) — and then guesses which OCR tokens in
 // that rectangle are tickers. Both halves of that assumption are wrong for
 // the 2023-era sidebar layout, where the table sits at x 1606-1648 of 1920
-// and y 444-708 of 1080 — entirely outside the crop
+// and y 444-708 of 1080 — outside the 2022-era crop's x window
 // (docs/qmg-positions-layout-findings.md, § 'Two layouts' and
 // § 'Measured geometry per corpus frame').
 //

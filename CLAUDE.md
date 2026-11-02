@@ -251,15 +251,35 @@ Rules:
 ## Testing
 
 ```bash
-npm test              # everything except the OCR benchmark (529 tests, ~32 s)
-npm run test:benchmark  # test/qmgGroundTruth.test.js alone (~23 min, EasyOCR)
+npm test              # everything except the OCR benchmark (565 tests, ~30 s)
+npm run test:benchmark  # test/qmgGroundTruth.test.js alone (EasyOCR; ~2-25 min, see below)
 npm run test:all        # everything, benchmark included -- FAILS under contention
 ```
 
-529 tests, all passing (as of 2026-11-01).
+565 tests, all passing (as of 2026-11-02).
 
-**The benchmark has to run on its own.** `test/qmgGroundTruth.test.js` is a
-23-minute EasyOCR benchmark, and `node --test` runs the test *files* in
+**A third suite exists, and it is MANUAL.** `test/manual/qmgEraPrefilterScan.test.js`
+is the era-conditional crop and the era-conditional prefilter rectangle, run
+through the **real production scanner** against the **real videos** — an EasyOCR
+scan, 12–18 minutes per video. It lives in `test/manual/`, which the suite's
+glob does not reach (`tools/runTests.js` reads the top level of `test/` only,
+and `npm run test:all` globs `test/*.test.js`), so it never runs by accident:
+
+```bash
+node --test test/manual/qmgEraPrefilterScan.test.js
+```
+
+Its configuration is `test/manual/qmgEraPrefilterScan.config.json` (the
+environment overrides it). It scores **two** readings per date — the merged
+video-level consensus and the best single capture — because CLAUDE.md records
+those two disagreeing, and a capture-level metric would never have caught it.
+Its assertions are **structural** (every date produced a log and a non-empty
+reading); the recall numbers are **reported**, not asserted, because EasyOCR is
+not deterministic and a test that fails on a bad OCR run is a test people learn
+to ignore.
+
+**The benchmark has to run on its own.** `test/qmgGroundTruth.test.js` is an
+EasyOCR benchmark, and `node --test` runs the test *files* in
 parallel — against the rest of the suite it fails, because four EasyOCR
 benchmarks plus a dozen other files do not fit in one machine's memory and CPU
 at once. On its own it reproduces the table below exactly (88.9% / 100% /
@@ -269,6 +289,10 @@ the first line of its output.
 **Re-verified 2026-10-29 against the pinned fixtures**: the same four numbers,
 all four cases passing, in 864 s. The frames are now md5-pinned, so this
 number is a property of (code, frame) and the two must be quoted together.
+
+**The wall clock is not the number.** The same four frames have been scored in
+864 s, 40,053 s, 305 s and 151 s — EasyOCR swings by orders of magnitude on
+the same file. Quote the per-case recall, not a duration.
 
 ### Ground-truth benchmark fixtures — read before trusting a recall number
 
@@ -422,7 +446,9 @@ Results: `data/qmg_alt_batch_results.json`.
 ### OCR pipeline
 - `src/ocr/ocrImage.js` — Tesseract wrapper; `chart-stream` profile crops overlay region
 - `src/video/ocrScanLogic.js` — prefilter scoring, candidate building, screenshot logic
-- `src/video/ocrScanArgs.js` — CLI argument parsing; `CHART_STREAM_REGION_FRACTION_DEFAULT`
+- `src/video/ocrScanArgs.js` — CLI argument parsing; the chart-stream crop is ERA-CONDITIONAL and lives in `src/video/chartStreamCrop.js`
+- `src/video/chartStreamCrop.js` — the era rule itself: the crop rectangle, the prefilter's measurement rectangle, and `chartStreamEraForDate()` — the single answer to "which layout era is this date"
+- `tools/measurePrefilterRegion.js` — NO-OCR instrument: scores a video's frames under the legacy and the era prefilter rectangles and reports the labelled frames' ranks
 - `src/parse/parseChartStream.js` — Qullamaggie position-list ticker extraction
 - `src/parse/parseWhiteboardScreenshot.js` — GRO/TURBO/Revere whiteboard parser
 - `src/parse/parseWhiteboardScreenshotWithBoxes.js` — the Revere whiteboard's POSITIONAL parser (the one the scan tool runs)
@@ -465,6 +491,17 @@ Results: `data/qmg_alt_batch_results.json`.
 - `config/ticker_lexicon_seed.csv` — ticker allowlist (Revere + Qullamaggie)
 - `data/qmg_ground_truth.json` — the Qullamaggie ground truth; **verified against its pixels**, and checked by `tools/checkGroundTruthConsistency.js` (see below)
 - `STATUS.md` — the measured current state (catalog counts, media on disk, the outstanding work) and the September 2026 OCR campaign history. Its numbers are a snapshot; § *Re-measuring* there has the commands that regenerate them.
+
+### Tests
+
+- `test/videoResolution.test.js` — the **mechanical ffprobe check**: every video the pipeline reads is at least 720p tall, and every file in `downloads_1080p` really is 1920×1080. It applies the rule CLAUDE.md states as a hand-applied rule, and it prints the census it found.
+- `test/chartStreamPanelCount.test.js` — the panel's own footer count, and the two traps in reading it
+- `test/chartStreamPrefilterRegion.test.js` — the prefilter measures the pixels the OCR will read
+- `test/chartStreamCropCoverage.test.js` — the era rule, against the measured panel geometry
+- `test/manual/qmgEraPrefilterScan.test.js` — the **manual** end-to-end suite: the real scanner, the real videos, the real EasyOCR pass (see § 'Testing')
+- `test/manual/prefilterResolutionScan.test.js` — the prefilter's ranking at three working resolutions, against frames whose holdings are known (no OCR)
+- `test/manual/productionCropRender.test.js` — renders **exactly** the image EasyOCR was shown, from the source video at a capture's timestamp
+- `test/manual/panelFooterInCrop.test.js` — the production crop against the panel's own footer, cut out of the tracked fixture
 
 ---
 
@@ -1287,19 +1324,28 @@ EasyOCR is a Python package; install via `pip install easyocr`. EasyOCR 1.7.2+ s
 
 ### Current crop and EasyOCR defaults
 
-The chart-stream pipeline uses a narrow crop targeting the position-list column in the bottom-right:
+**The chart-stream crop is ERA-CONDITIONAL.** It is not one rectangle, because Qullamaggie
+changed the layout of his position list between 2023-01-26 and 2023-05-18 — before the change it
+was a floating panel in the bottom-right corner, after it a table docked to the RIGHT edge of the
+screen. The two layouts do not share a column.
 
-```
-CHART_STREAM_REGION_FRACTION_DEFAULT = '0.86,0.62,0.14,0.22'   ← x,y,w,h (y = TOP edge)
+The rectangles live in **`src/video/chartStreamCrop.js`** (which holds NO dependency on the OCR
+stack, so `src/video/ocrScanArgs.js` can require it without pulling a subprocess-spawning module
+into every CLI parse):
+
+```js
+CHART_STREAM_CROP_FLOATING_PANEL = '0.86,0.60,0.14,0.28'   // ← x,y,w,h (y = TOP edge)
+CHART_STREAM_CROP_RIGHT_SIDEBAR  = '0.82,0.60,0.18,0.32'
+CHART_STREAM_RIGHT_SIDEBAR_FROM  = '20230518'
 ```
 
-This is defined in `src/video/ocrScanArgs.js` and is the default `phashRegionFraction` for the
-`chart_stream` prefilter profile. The crop covers x ∈ [86%, 100%] and y ∈ [62%, 84%] of the frame.
+`chartStreamCropFractionForDate(dateKey)` picks between them. The crop is the default
+`phashRegionFraction` for the `chart_stream` prefilter profile.
 
 **The crop region and the OCR crop width are different things.** The OCR engine receives a
 *further* crop of that region, upscaled:
 
-| Engine | Chart-stream region | Upscale | OCR input width (1080p source) |
+| Engine | Chart-stream region (2022 era) | Upscale | OCR input width (1080p source) |
 |---|---|---|---|
 | EasyOCR | x∈[0.86,1.0] of the frame | ×5 | round(0.14·1920)·5 = **1345px** |
 | Tesseract | 250px-wide chart region | ×3 | 250·3 = **750px** |
@@ -1308,9 +1354,8 @@ The 1345px width is **resolution-dependent** — a 720p source gives round(0.14�
 Note the same video IDs exist in BOTH `downloads_1080p` (1920×1080) and `downloads_hires`
 (1280×720), so a scan can legitimately run at either width.
 
-This matters because `parseChartStream.js` scales its `X_POSITION_LIST_MIN` threshold by the
-actual OCR crop width (see "Column detection" below). **Never hardcode the crop width** — it
-is measured from the OCR input image at runtime (`_cropWidth` on the OCR result).
+**Never hardcode the crop width** — it is measured from the OCR input image at runtime
+(`_cropWidth` on the OCR result). See "Column detection" below.
 
 Defaults for a full EasyOCR scan:
 ```
@@ -1890,11 +1935,17 @@ is legal.
 |---|---|---|
 | 34 rows (before) | 80/85/81 — 94.1 % / 98.8 % | 133/168/152 — 79.2 % / 87.5 % |
 | 36 rows (`V`, `NCH`) | 82/85/82 — 96.5 % / 100 % | 135/168/153 — 80.4 % / 88.2 % |
-| **37 rows (shipped)** | **83/85/83 — 97.6 % / 100 %** | **136/168/154 — 81.0 % / 88.3 %** |
+| **37 rows** | **83/85/83 — 97.6 % / 100 %** | **136/168/154 — 81.0 % / 88.3 %** |
 
 Only **20230523** and **20230605** move: 9 of 11 with one false positive becomes
 **11 of 11 with none**, and 10 of 11 becomes **11 of 11**. The default roots reach
 **100 % precision** for the first time. No false positive was added on either corpus.
+
+**The table is now 39 rows**, and the parser has changed since — the column gate
+now admits a row on the list's own row stack, not only on price-alignment. The
+current figures, and the attribution of both, are in § *The column gate —
+price-alignment was the wrong evidence*. The 39th row came out of a production
+scan rather than the replay corpus — see § *The 2023-era production smoke scan*.
 
 **The two LI readings that stay missed are OCR losses, and they are not reachable by
 any alias row.** 20230522 reads the LI row as a plain `U` (the invariant above), and
@@ -1904,6 +1955,355 @@ looks the table up, so it is the same forbidden row. Reaching either one would n
 **different mechanism** (a layout-scoped table, or a lexicon-constrained single-letter
 rule that can tell the 2022-era `U` holding from the 2023-era `LI`), not another row.
 A wrong holding in a portfolio report is worse than a missing one, so both stay missed.
+
+### The 2023-era production smoke scan (2026-11-02)
+
+Everything before this was a **crop A/B on pinned frames** (§ *The chart-stream crop
+— MEASURED off the pixels, and ERA-CONDITIONAL*) and a **no-OCR replay** (§ *The
+replay tool is a surviving sample*). This is the first time the era-conditional
+crop ran in the **real pipeline**, end to end.
+
+```bash
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 KMP_DUPLICATE_LIB_OK=TRUE \
+node tools/scanVideoWithOcr.js \
+  --video data/video_pipeline/downloads_1080p/20230609_VdQSDGZBLQE.mp4 \
+  --date 20230609 \
+  --prefilter-profile chart_stream --chart-stream-parser \
+  --basename qmg --output-kind snapshot \
+  --max-captures 1 --fps 0.25 --prefilter-max-frames 6 \
+  --ocr-engine easyocr --run-tag qmg-crop-20261102-smoke \
+  --output-root data/video_scan_test/_rerun
+```
+
+The source is **1920×1080** (by ffprobe, not by filesize). The log's
+`phash_region_fraction` is `{"x":0.82,"y":0.6,"w":0.18,"h":0.32}` — the 2023-era
+sidebar rectangle — **chosen from the upload date inside the scan tool**, with no
+crop flag on the command line. That is the crop rule working as designed.
+
+**The crop works, and the reading is exact.** The capture at t=1944 carries a
+`position_list` of **13** tickers, and the ground truth for `20230609` is **13**
+tickers — **the same set, with zero false positives**. The old fixed crop
+`0.86,0.62,0.14,0.22` read **zero** holdings on this date, because its x window
+(source x 1651) starts to the **right** of the sidebar's Sym column (source x
+1586–1712). The frame's own OCR shows the alias table firing **in production**:
+`INGN`→IMGN, `AROQ`→ARQQ, `A`→AI, `ATR`→PLTR, `GllB`→GTLB, `GSI`→GSIT,
+`Apld`→APLD, `MNDy`→MNDY.
+
+**And the scan found exactly one thing wrong.** The merged list carried **`REGN`**
+— a real ticker, and a genuine Qullamaggie holding on thirteen 2022-era dates —
+where the panel showed `RGTI`. `REGN` is in none of `20230609`'s ground truth.
+
+#### The root cause: a garble that happens to BE a valid ticker
+
+The panel's **first** row is `RGTI`, and EasyOCR read that row as `Rgn` / `RGn`
+in two of the six OCR'd frames. Normalised, that is `RGN` — **one edit away from
+`REGN`**, which is a **seed ticker** (`config/ticker_lexicon_seed.csv:125`).
+So the distance-1 repair pass did exactly what it is built to do: it corrected
+`RGN` to the nearest seed ticker, and published a **wrong holding** in a
+portfolio report. The same failure shape as `AROQ`→ARQQ and `IOI`→IOT, and the
+same class as the `OI`→`LMT` row added earlier the same day.
+
+**Pixel-verified.** The five panel frames the scan OCR'd (t = 0, 972, 1944, 2916,
+3888) all read **`RGTI` in the first row of the Sym column**. `RGN` is in neither
+lexicon, `RGTI` is in the seed, and the table has no row keyed `RGN` and no
+canonical `RGN` — so the row is legal on **every** invariant. A corpus-wide
+search of **283 probe logs** found **zero** `RGN` tokens, so the row shadows
+nothing that has already been measured.
+
+#### The fix, and what it is worth
+
+```csv
+RGN,RGTI,T rendered as N and I dropped (20230609)
+```
+
+Measured by **re-parsing the recorded `ocr_words`** of the production frames
+through the current parser — no OCR, so the numbers are the parser's, on the
+real frames:
+
+| frame | before the row | after the row |
+|---|---|---|
+| ts 1944 | 13 — the exact GT set | 13 — the exact GT set |
+| ts 972 | 12 (`GSIT` missing) | 12 (`GSIT` missing) |
+| ts 3888 | 12 + **`REGN`**, `RGTI` lost | 12 + **`RGTI`** |
+| ts 2916 | 12 | 12 |
+| ts 0 | 7 (a garbage frame) + **`REGN`** | 7 (the same garbage frame) + **`RGTI`** |
+| **merged** | **14 — the 13 holdings plus `REGN`** | **13 — exactly the GT set, 0 FP** |
+
+**On the replay corpora the row changes nothing, and that is the point.**
+`RGN` does not occur in either corpus:
+
+| corpus | with the row (39) | without it (`--drop-aliases RGN`) |
+|---|---|---|
+| default (8 roots) | 83/85 — 97.6 % / 100 % | **identical** |
+| wide (17 dates) | 148/168 — 88.1 % / 89.2 % | **identical** |
+
+**The corpus could not have found this row, and no corpus ever could.** The
+replay corpus is a *surviving sample* of the post-2026-10-18 crop profile; this
+misread is a property of the **new** 2023-era crop, and only a production scan
+of a 2023-era video exercises it. That is the second class of defect the
+surviving-sample caveat predicts: a change can be **correct** (the corpus
+numbers are unmoved) and still **not** be covered by it.
+
+#### The end-to-end confirmation — a fresh scan, not a replay
+
+The table above is a **re-parse of recorded words**. To confirm the fix in the
+real path, the video was **scanned again** with the new table — EasyOCR re-ran
+from the video, so this is an independent OCR pass, not the old one replayed:
+
+```bash
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 KMP_DUPLICATE_LIB_OK=TRUE \
+node tools/scanVideoWithOcr.js \
+  --video data/video_pipeline/downloads_1080p/20230609_VdQSDGZBLQE.mp4 \
+  --date 20230609 \
+  --prefilter-profile chart_stream --chart-stream-parser \
+  --basename qmg --output-kind snapshot \
+  --max-captures 1 --fps 0.25 --prefilter-max-frames 6 \
+  --ocr-engine easyocr --run-tag qmg-crop-20261102-smoke-v2
+```
+
+| | run 1 (`…-smoke`) | run 2 (`…-smoke-v2`) |
+|---|---|---|
+| `phash_region_fraction` | `0.82,0.60,0.18,0.32` | the same — the era rule, from the date |
+| capture | ts 1944, score **33.02** | ts 1944, score **33.02** |
+| `bbox_filter` | `list_rows`, 13 rows, pitch 90 | the same |
+| the capture's own `position_list` | 13 — the ground truth, 0 FP | 13 — the ground truth, 0 FP |
+| **`merged_position_list`** | **14** (13 + **`REGN`**) | **13 — the ground truth, 0 FP** |
+
+**The production path now reads `20230609` exactly.** Not "13 of 13" — the
+**same thirteen tickers**, in the ground truth's own set, with nothing else.
+
+**The capture was already right in run 1; the MERGE was not.** The selected
+frame (t=1944) read the 13 holdings cleanly in **both** runs — run 1's capture
+`position_list` is the exact ground-truth set, `REGN` and all. `REGN` came from
+the **other five frames** the scan OCR'd, two of which read the `RGTI` row as
+`Rgn`/`RGn` — and the **clusterer's consensus** over the six frames is what
+published the wrong holding.
+
+**So which artifact carried the defect matters.** The aggregator reads
+`capture.chart_stream.position_list` (`src/video/captureTickers.js:47-48`), and
+that reading was **clean in both runs**. The `merged_position_list` — the
+**video-level** consensus, which is what `tools/runQmgOcrBatch.js:143` and
+`tools/runQmgCuratedBenchmark.js:179` consume — carried the extra holding. **A
+capture-level metric would never have caught it**, and the two consumers of the
+same scan disagreed with each other. That is the argument for scoring the
+**merged** list and not only the capture.
+
+Note the **output root**: the tool's default is `data/video_ocr_probe/`
+(`src/video/ocrScanArgs.js:17`), so run 2 landed in
+`data/video_ocr_probe/qmg-crop-20261102-smoke-v2/`. Run 1 was launched with
+`--output-root data/video_scan_test/_rerun`. Both layouts are the **flat** one
+`src/video/probeLogDirs.js` knows, so the aggregators find either.
+
+#### What the scan validated besides the crop
+
+- The **era rule fires from the date**, with no flag — and the capture's own
+  `bbox_filter.rule` is `list_rows` with **13 rows** at pitch 90, so Filter B is
+  keeping the whole list on the 2023-era sidebar.
+- The **alias table fires in the real pipeline**, on eight separate garbles in
+  one frame — not only on the frames the replay corpus happens to hold.
+- The scan tool's **clusterer consensus** and the **per-frame reading** agree
+  once the alias row is in place.
+- **A fresh OCR pass reproduces the frame.** The capture landed on the same
+  timestamp (t=1944) with the same score (33.02) and the same `bbox_filter`
+  geometry — and the two runs' **snapshots are byte-identical**
+  (md5 `01a88225bf091391cfc0085201bc2391` in both). So the two runs are the same
+  frame read twice, and the difference between them is the table, not the luck of
+  the OCR.
+
+Pinned by `test/ocrConfusionAliases.test.js` (the row is in `NEW_ALIASES`, so
+the three behaviour tests cover it: rescued in the column, not rescued in the
+chart area, not rescued below the Personal WatchList header).
+
+### The 2023-era production scan, four more dates (2026-11-02)
+
+The 20230609 smoke scan above was one video, launched by hand. The **second**
+production run scanned six 2023-era dates through `tools/runQmgOcrBatch.js`
+itself:
+
+```bash
+node tools/runQmgOcrBatch.js --dates 20230522,20230523,20230602,20230605,20230608,20230609 \
+  --low-cpu --parallel 2 --run-tag qmg-easyocr-20261102-era-prefilter
+```
+
+All four logs that landed record `phash_region_fraction` =
+**`{"x":0.82,"y":0.60,"w":0.18,"h":0.32}`** — the 2023-era sidebar rectangle,
+chosen from the upload date inside the scan tool, with no crop flag on the
+command line — and every capture's `bbox_filter.rule` is **`list_rows`**, with
+10–14 rows. **The era rule and Filter B both fire in production.**
+
+Scored against the pixel-verified ground truth (`data/qmg_ground_truth.json`),
+on the **merged** list — the video-level consensus, which is what
+`tools/runQmgOcrBatch.js:143` consumes:
+
+| date | hits / ground truth | false positives |
+|---|---|---|
+| `20230522` | **6 / 7** | none |
+| `20230523` | **10 / 11** | `U` |
+| `20230602` | **12 / 12** | `IOT` |
+| `20230605` | **11 / 11** | `AAPL` |
+| **total** | **39 / 41** | **3** |
+
+Recall **95.1 %**, precision **92.9 %** — on four dates the replay corpus
+reaches only as a surviving sample, on the layout the era crop was written for.
+
+**The missed holding is `LI`, on every date, and it was lost in two different
+ways.** § 'The column gate' has already recorded that the collapsed LI cell
+stays missed: `U` is a **seed ticker** (a real holding on 20221117), so the
+alias table's invariant forbids a row that would rewrite it, and the one-glyph
+rule only drops a one-glyph read when the **column** holds *another* one-glyph
+read. On `20230522` the column had two — one per capture — so `U` was dropped.
+On `20230523` it had **one**, so `U` was published as a false positive
+instead (cluster frequency 4).
+
+**On `20230523` the OCR read `LI` correctly, and the clusterer threw it away.**
+The log's own cluster table says it:
+
+```jsonc
+{ "canonical": "AI", "members": ["AI", "LI"], "frequency": 7 }
+```
+
+`LI` and `AI` are **one edit apart**, so the clusterer merged them and the
+canonical was `AI`. The `LI` holding was in the raw tokens, and it was lost at
+the consensus step, not at the OCR step.
+
+#### The clusterer's canonical choice can invent a holding AND destroy one
+
+`AAPL` on `20230605` is the same failure in the other direction:
+
+```jsonc
+{ "canonical": "AAPL", "members": ["AACO", "ARCO"], "frequency": 2 }
+```
+
+`ARCO` **is** in a capture's own `position_list` — it is chart ink the
+per-frame parser admitted. `AAPL` is in **no** capture's reading at all: the
+whole log contains it three times, and all three are the merged list, the raw
+token list and the cluster's canonical. So the per-frame reading was garbage,
+the clusterer renamed it to a **seed ticker**, and the merged list published a
+holding **no frame of the video ever showed**. Filter A's threshold (2) let
+the cluster through at exactly its minimum.
+
+So the merged list has **two** distinct defects, in opposite directions, and
+both are invisible to a capture-level metric:
+
+| defect | example | what a capture-level metric sees |
+|---|---|---|
+| a real holding **absorbed** by a one-edit neighbour | `LI` → `AI` | `LI` absent, `AI` present — looks like a plain miss |
+| a garbage reading **promoted** to a seed ticker | `ARCO` → `AAPL` | `AAPL` absent — the false positive is invisible |
+
+**This is the third time the merged list and the capture list have disagreed**
+(the first was `REGN` above, the second `U`), and it is the reason the two
+consumers of the same scan — `tools/runQmgOcrBatch.js:143` and
+`tools/aggregateScanResults.js` — cannot both be right unless the merged list
+is scored too.
+
+**The three false positives are three different mechanisms**, and only one of
+them is the frame's own fault:
+
+| ticker | date | where it was born |
+|---|---|---|
+| `U` | `20230523` | a **capture** read the collapsed LI cell, and the column held only that one glyph |
+| `IOT` | `20230602` | a **capture** read it — it is in that capture's own `position_list`, not only in the consensus |
+| `AAPL` | `20230605` | **the clusterer only** — in no capture's reading |
+
+`IOT` is a **real** holding on `20230605` (the ground truth has it) and a
+false positive on `20230602` — the same token, the same glyph, two different
+answers, which is what a reading of the wrong cell looks like.
+
+### The panel's footer is BELOW the crop — the count check cannot fire (2026-11-02)
+
+`readPanelRowCount` reports the panel's own row count in every probe log, and
+that count is the project's only **independent** check on a reading: a reading
+with a different number of tickers has provably dropped a row or invented one.
+
+**In production it reports `null`.** Every capture of all four 2023-era logs
+above records `panel_count: null`, `panel_count_delta: null` and
+`panel_count_footer: null`.
+
+The reason is the pixels, not the reader. The panel's footer sits at source
+y ≈ **1020–1026**; the 2023-era crop's bottom edge is source y **994**
+(`0.82,0.60,0.18,0.32`) and the 2022-era crop's is **950**
+(`0.86,0.60,0.14,0.28`). **The OCR engine is never shown the line.**
+
+Two harnesses measure it, and neither needs OCR:
+
+```bash
+node --test test/manual/productionCropRender.test.js   # the exact image EasyOCR was shown
+node --test test/manual/panelFooterInCrop.test.js       # the production crop out of the fixture
+```
+
+The first renders the scan tool's own filter
+(`crop=in_w*0.18:in_h*0.32:in_w*0.82:in_h*0.60,scale=1728:-1`) from the **source
+video** at a capture's timestamp, so the PNG is the pixels the engine saw. On
+`20230523` at t=1800 it shows all eleven rows legibly — and **not** the footer.
+What IS at the top of that image is the **upper** widget's footer ("9 Items in
+WatchList"), which `readPanelRowCount`'s line-bound gate correctly rejects,
+because it sits above the positions header.
+
+**The fix is not a taller crop.** The crop is also the capture-dedup pHash
+rectangle, and a taller crop is downscaled more by EasyOCR — the measured
+mechanism behind the `trade_ideas` 9/9 → 7/9 regression. The cheap fix is a
+**dedicated footer strip**, read **once per video** on the selected capture:
+source y ≈ 1000–1040, upscaled, with the panel's own bound still applied (the
+count belongs to the positions table only if the footer is BELOW the "A -
+Positions" header). Until that exists the count stays **reported, never acted
+on** — a count misread low would truncate a correct reading.
+
+### The scan writes its log and does not exit (2026-11-02)
+
+**Every one of the four production scans above was reported as a TIMEOUT by the
+batch, and every one of them had already succeeded.** The probe log is written
+with `status: "done"` and the full `merged_position_list`, and then the process
+hangs until the batch's 2400 s kill timer fires:
+
+```text
+[20230522] Starting 20230522_8Pa6cllRZNw.mp4 (1080p)
+[20230523] Starting 20230523_2UgJ5CvVVK4.mp4 (1080p)
+[20230522] TIMEOUT after 2400s — killing
+[20230523] TIMEOUT after 2400s — killing
+```
+
+So **every video burns the full 40-minute budget**, and a results file in
+which successes are failures.
+
+**The mechanism is the batch's undrained stdout pipe.** The scan tool's last
+statement in the `try` is
+
+```js
+const logPath = await writeScanLog(logsDirectory, probeKey, result);
+result.log_path = logPath;
+console.log(JSON.stringify(result, null, 2));      // tools/scanVideoWithOcr.js:1913
+```
+
+— the **whole result object**, pretty-printed, to stdout. The batch spawns the
+child with `stdio: ['ignore', 'pipe', 'pipe']` and drains **stderr only**
+(`tools/runQmgOcrBatch.js:235`); **stdout is never read**
+(`tools/runQmgOcrBatch.js:221`). A Windows pipe holds about **64 KB**, and the
+dumped object is the same object the probe log holds — the four logs are
+**5 589, 7 102, 7 809 and 6 559 lines**, i.e. hundreds of kilobytes. The
+child's `console.log` therefore blocks **forever**, after the log is written
+and before the `finally` block.
+
+**Three independent pieces of evidence agree with that account, and they rule
+the alternative out:**
+
+1. **The log is complete.** `status: "done"`, the full `merged_position_list`,
+   every capture's summary — the object was serialized, so the write happened.
+2. **The `finally` block never ran.** `safeDeleteDirectory(frameRoot)`
+   (`tools/scanVideoWithOcr.js:1929`) is the first thing in it, and
+   `ocr_probe/frames/<probeKey>/` is **still on disk** — thousands of PNGs that
+   the cleanup would have removed (`frameRoot` is
+   `path.join(probeRoot, 'frames', probeKey)`, `tools/scanVideoWithOcr.js:1389`).
+   So the process is hung **before** the `finally`, which is exactly where a
+   blocked `console.log` sits — and which rules out a wedged `closeWorker()`,
+   because `closeWorker()` is *inside* the `finally`.
+3. **The batch's own code path.** `child.on('close')` never fires, so the
+   `killTimer` fires instead, and the result is recorded as `TIMEOUT`.
+
+**The fix is in the batch, not the scan tool:** drain the child's stdout (and
+log it, or write it to a file). The scan tool's behaviour — printing its
+result — is correct, and a tool that cannot be supervised is a tool that
+cannot be run in a batch. **Until this is fixed, a chart-stream batch's
+`TIMEOUT` says nothing about whether the video was read.**
 
 ### Two things that were measured and rejected (2026-11-02)
 
@@ -2158,6 +2558,7 @@ the same corpus; the configs differ only where the column says so:
 | **shipped** — plus the two 2026-11-02 alias rows | **80/85/81 — 94.1 % / 98.8 %** | **133/168/152 — 79.2 % / 87.5 %** |
 | **shipped** — plus the two 2026-11-02 `LI`/`FTCH` rows | **82/85/82 — 96.5 % / 100 %** | **135/168/153 — 80.4 % / 88.2 %** |
 | **shipped** — plus the 2026-11-02 `N → AI` row | **83/85/83 — 97.6 % / 100 %** | **136/168/154 — 81.0 % / 88.3 %** |
+| **shipped** — plus the column gate's row-stack evidence and the one-glyph rule | **83/85/83 — 97.6 % / 100 %** | **148/168/166 — 88.1 % / 89.2 %** |
 
 So the three changes are separable and each one earns its place:
 
@@ -2215,6 +2616,174 @@ the five fail against the legacy parser**, so the test has teeth. The corpus is
 untracked, so the replay numbers cannot be asserted there — only the parser's
 behaviour on the geometry can.
 
+### The column gate — price-alignment was the wrong evidence (2026-11-02)
+
+The gate that decides "is this token a position?" was using **price-alignment**
+as its membership test: a token belonged to the column if some row of the
+column had a **readable price** beside it. That is a **proxy** for column
+membership, and it is wrong whenever the price cell is garbled — which is
+exactly when the ticker cell is *most* likely to be read perfectly.
+
+Measured on the 20220330 capture: NFLX, REGN, COPX and NUGT are read
+perfectly (conf 0.92, 0.96, 0.51, 0.50) and sit at x 711-714, exactly where
+every other ticker in the column sits — but their price cells read `"0s63
+~0383"`, `"C00 08re"`, `"~00r ~0229"` and `"30.1933| ~0583"`, none of which
+passes the strict price-word filter. So the four left the price-aligned
+subset, the gate rejected them, and the holding was lost **before Filter B** —
+which tests row-stack membership and would have kept all four — ever saw them.
+
+**The row stack is the better evidence, and the parser already computes it.**
+Filter B asks exactly this question of the accepted set; the gate asks it
+first, so the answer has to exist first. The gate's membership is now the
+**union** of the two:
+
+| evidence | what it is | what it misses |
+|---|---|---|
+| price-aligned column members | the column's rows with a readable price | every row whose price cell was garbled |
+| the list's own rows | `listRun` — the position list's contiguous row stack | nothing; it is the list itself |
+
+**The union is used for the GATE only.** The accept-as-read branch stays on
+the price-aligned set, because a row-stack member can be a header word rather
+than a holding — the 20220330 run contains the "Sym" header, and admitting it
+verbatim would publish a false positive.
+
+**A run-only member has to be vouched for by the LEXICON.** `hasPriceNear`
+scans the **entire flattened OCR text**, so a ticker at the end of one line
+happily matches a price at the start of the next — it fires on nearly every
+token, and it says nothing at all about a row whose price cell was garbled.
+Left to itself it published `OI` on 20220412: a 0.076-confidence garbage read
+of the LMT row. The curated rescue cannot fix that one, because `OI` is not a
+recorded misread of anything. So a token the row stack admitted and
+price-alignment did not is accepted only if the **lexicon** knows it.
+
+**The curated rescue still reaches the cells the gate drops.** It works on the
+words themselves, so the run-only members it should reach — `WHX` on 20220412
+and `A` on 20230522, neither in the lexicon — are rescued after the loop.
+
+**`OI` is now a recorded misread.** The three-glyph LMT cell of 20220412 was
+read as two glyphs; the token sits exactly in the Sym column (`OI@719+100`,
+against `WHX@718`, `URA@720`, `URNM@720`, `WEAT@718`, `X@719`, `COPX@717`),
+the panel's second row is `LMT`, and `OI` occurs **exactly once** in the
+corpus. The table was **38 data rows** at that point; it is **39** now — see
+§ *The 2023-era production smoke scan*.
+
+#### The one-glyph column rule
+
+A one-glyph cell is ambiguous: it is either a genuine one-letter ticker or a
+multi-glyph cell the OCR collapsed into one glyph. **The shape cannot tell the
+two apart** — `X` (a real holding on 20220301, 20220323 and 20220412) and `U`
+(the LI row of 20230522) are both one glyph about 42 px wide, at the same left
+edge of the Sym column, and `X` reads at conf 0.98 while `U` reads at 0.62.
+
+**The column settles it, by its own consistency.** Only four US tickers have a
+single letter (F, T, V, X), so a position list holding **two** of them is far
+less likely than a panel that collapses two cells — and a panel that collapses
+one cell is likely to collapse another. **A column with a second one-glyph
+read has demonstrated that it collapses cells, and none of its one-glyph reads
+can be taken at face value.**
+
+Measured on the replay corpus, the one-glyph run-only class is **five**
+readings:
+
+| token | date | conf | one-glyph members of its column | verdict |
+|---|---|---|---|---|
+| `X` | 20220301 | 0.980 | 1 | hit |
+| `X` | 20220323 | 0.963 | 1 | hit |
+| `X` | 20220412 | 0.914 | 1 | hit |
+| `U` | 20230522 (two captures) | 0.616 / 0.743 | **2** | false positive |
+
+The rule keeps the three `X`s and drops the two `U`s. **Confidence cannot do
+this job**: `U` reads at 0.616 on one capture and 0.743 on the other, so any
+threshold low enough to catch it also catches the 0.534-confidence `QBTS` hit
+on 20230602 — and the corpus mixes OCR engines, whose confidence scales are
+not comparable anyway.
+
+**There is no price-aligned escape hatch, and it is worth saying why.** The
+column detector measures a cell's **centre**, and in a left-aligned table a
+one-glyph cell's centre sits ~44 px left of a four-glyph cell's — outside the
+detector's ±25 px column window. **A one-glyph token can never be
+price-aligned**, so the row stack is the *only* evidence that admits it, and
+this rule is the only thing that decides its fate.
+
+**The curated rescue still reaches the cells the rule rejects**, because it
+works on the words: the collapsed AI row of 20230522 (`A`) is still rescued to
+`AI` after the loop. What it cannot reach is the collapsed LI row (`U`),
+because `U` is a genuine ticker — a holding on 20221117 — and the alias
+table's invariant forbids a row that would rewrite it. **That row stays
+missed**, which is the project's own preference: a wrong holding in a
+portfolio report is worse than a missing one.
+
+#### Measured
+
+Same corpus, same command, the same configs on both sides — the difference is
+the parser and the one alias row. The three rows are cumulative.
+
+| | default roots | wide corpus |
+|---|---|---|
+| **before** — `HEAD` plus the alias rows | 83/85/83 — 97.6 % / 100 % | 136/168/154 — 81.0 % / 88.3 % |
+| **the gate's row-stack evidence** | 83/85/84 — 97.6 % / 98.8 % | 148/168/167 — 88.1 % / 88.6 % |
+| **after the one-glyph rule** | **83/85/83 — 97.6 % / 100 %** | **148/168/166 — 88.1 % / 89.2 %** |
+
+**+12 hits on the wide corpus, +1 net false positive, and not one date
+regressed.** The four dates that moved: `20220323` 4 → 9 hits, `20220330`
+3 → 7, `20220406` 4 → 6, `20220412` 10 → **11 of 11**.
+
+The gate change brought **two** false positives with its twelve hits: `OI` on
+20220412 and `U` on 20230522. `OI` was removed by the lexicon-vouching rule
+and the `OI → LMT` alias row; `U` by the one-glyph rule. The one-glyph rule
+moved **the whole corpus by exactly one row** — the `U` came off 20230522 and
+nothing else changed, on either corpus (a JSON diff of the two replays, not an
+estimate).
+
+Pinned by `test/chartStreamOneGlyphColumn.test.js` — five tests: a lone
+one-glyph holding is published; a one-glyph read is dropped when the column
+holds another one-glyph read; the curated rescue still reaches the cell the
+rule dropped; the rule is the column's **count** and not the token's
+**confidence** (a 0.05-confidence read in a one-one-glyph column is published,
+a 0.99-confidence read in a two-one-glyph column is not); and a one-glyph
+read is never price-aligned, so the rule is its only guard.
+
+### The panel counts its own rows
+
+The positions panel prints its **own row count** in its footer:
+
+```text
+N Items in Personal WatchList          the whole list
+1 Item in Personal WatchList           singular when the total is one
+K of N Items in Personal WatchList     a row is selected; K is that row's
+                                       INDEX, not a scroll range
+```
+
+**N is the number of rows ON SCREEN.** The panel is not scrolled, so all N rows
+are visible at once — which makes N an **independent check** on a reading: a
+reading with a different number of tickers has provably dropped a row or
+invented one. The ground-truth audit had to discover this by hand, reading
+every pinned crop and comparing it with its footer; as a parser diagnostic, it
+travels with every capture instead.
+
+Two rules keep the check honest, and both are traps the audit paid for:
+
+- **N is the digit immediately before "Item(s)"** — so "5 of 7 Items" gives
+  **7**, the total, and not 5, the selected row's index. The singular form
+  ("1 Item") is read too.
+- **The footer must be BELOW the positions header.** "Personal WatchList" does
+  **NOT** identify the panel: the 2022-era frame carries three right-hand
+  widgets and **two** of them print that wording, and the plain
+  "N Items in WatchList" form belongs to the middle screener. The "A - Positions"
+  header is the only thing that tells them apart — the wording cannot.
+
+**The count is REPORTED, never acted on.** `readPanelRowCount()`
+(`src/parse/parseChartStream.js`) returns it, the parser publishes
+`panel_count` / `panel_count_delta` / `panel_count_footer`, and the scan tool
+propagates them into the probe log. Nothing truncates a reading to fit it —
+because a count misread **low** would truncate a correct reading, and that is
+exactly the case where acting on it would do the most damage. A wrong holding
+in a portfolio report is worse than a missing one, and so is a missing holding
+caused by a bad count.
+
+Pinned by `test/chartStreamPanelCount.test.js` — ten tests on the rules above,
+including the two traps (the "K of N" form and the footer above the header).
+
 ### Diagnostic fields exposed
 
 - `chart_stream.column_filter` — `dominant_x`, `dominant_left`, `column_width`, `in_list_token_count` (diagnostic only, not gated)
@@ -2229,42 +2798,58 @@ behaviour on the geometry can.
 - `merged_raw_token_clusters` — per-cluster diagnostics: `{canonical, members, frequency}`.
   The clusterer computes a per-cluster `frameCount` (`src/parse/parseChartStream.js:1230`) but the
   emitter does not write it (`tools/scanVideoWithOcr.js:1814-1818`), so it never appears in the logs.
+- `chart_stream.panel_count` — the panel's OWN row count, read from its footer.
+  `panel_count_delta` is the difference against the reading's own length, and
+  `panel_count_footer` is the footer text verbatim. **Reported, never acted on** — see
+  § 'The panel counts its own rows'.
 
-### Known limitations and next steps (as of 2026-11-01)
+### Known limitations and next steps (as of 2026-11-02)
 
 **Measured on the curated GT benchmark** (`test/qmgGroundTruth.test.js`, 4 captures,
 EasyOCR, single frame each — not a multi-frame consensus run), at commit `8070601`,
 **re-verified 2026-10-29 against the md5-pinned fixture frames** (864 s, all four cases
 passing, identical numbers), **re-measured 2026-10-31 after the nine 2023-era
 curated aliases and the left-edge column fix**, **re-measured 2026-11-01 after the
-ground-truth audit** (305 s, all four cases passing), and **re-measured again after the
-Filter B rewrite** (all four cases passing):
+ground-truth audit** (305 s, all four cases passing), **re-measured again after the
+Filter B rewrite**, and **re-measured 2026-11-02 after the era-conditional crop**
+(151 s, all four cases passing):
 
 | case | date | recall | FP |
 |---|---|---|---|
-| trade_ideas | 20220218[1] | **100% (9/9)** | 1 |
+| trade_ideas | 20220218[1] | 77.8% (7/9) | 3 |
 | sparse | 20221104[0] | 100% (1/1) | 3 |
-| normal_2022 | 20220606[1] | 87.5% (7/8) | 3 |
-| dense_2023 | 20230609[0] | **76.9% (10/13)** | 3 |
+| normal_2022 | 20220606[1] | **100% (8/8)** | 2 |
+| dense_2023 | 20230609[0] | **100% (13/13)** | **0** |
 
-Overall mean recall **91.1%** (was **89.2%** after the ground-truth audit, **86.4%**
-after the 2026-10-31 aliases and the column
-fix, **82.6%** after the 2026-10-29 curated-alias rescue, and **80.6%** before it). The
-path there was `dense_2023` 7/13 → 8/13 (the `ATR → PLTR` row) → 9/13 (the left-edge
-column fix, which brings in `AI`) → **10/13 (the Filter B rewrite)**; `trade_ideas` then
-went 8/9 → 9/9 when the ground-truth
-audit found its capture 1 anchored to the wrong frame. **No false positive was added at any
-step** — `trade_ideas` actually *lost* one (2 → 1). These numbers were previously
-meaningless — the benchmark was resolving 640×360 prefilter frames, so every case scored
-0%.
+Overall mean recall **94.4%** (was **91.1%** before the crop change, **89.2%** after
+the ground-truth audit, **86.4%** after the 2026-10-31 aliases and the column
+fix, **82.6%** after the 2026-10-29 curated-alias rescue, and **80.6%** before it).
+
+**The crop change moved two cases in opposite directions, and the total rose.** The
+2023-era crop now reaches x 1586, so `dense_2023` went 10/13 → **13/13 with zero false
+positives** — the two rows CLAUDE.md had already recorded as "outside the crop" (`APLD`
+and `MNDY`) are inside it now. `normal_2022` recovered `TNA` (7/8 → 8/8) and **lost a
+false positive** (3 → 2). But `trade_ideas` **regressed 9/9 → 7/9**, and the two misses
+are `TQQQ` and `TSLA`.
+
+**That regression is real and it is recorded rather than hidden.** The 2022-era crop
+moved from `0.86,0.62,0.14,0.22` to `0.86,0.60,0.14,0.28`: the same x, a taller y. The
+extra height is what buys `20220421`'s bottom rows (11/16 → 14/16) — and it is also
+what costs `trade_ideas` its two tickers, because **a taller crop is downscaled more by
+EasyOCR** (which resizes the detection image to height 736 preserving aspect), so the
+glyphs get smaller and two faint rows stop being readable. The 2022-era crop trades a
+benchmark flagship for the corpus: over the nine pinned 2022-era frames it is
+**+4 hits at unchanged precision** (74/85 fp18 → 78/85 fp19), and `20220218` c1 is one
+frame of that nine.
+
+**No false positive was added at any step** in the 2023-era column — `dense_2023` went
+from 3 to **0**. These numbers were previously meaningless — the benchmark was
+resolving 640×360 prefilter frames, so every case scored 0%.
 
 **The last step is the same mechanism the replay measures.** The `dense_2023` frame's
-panel holds **13** rows, and the legacy y-window clipped the bottom of a list that long;
-the new rule brings back a row from there. On this frame the recovered ticker is
-`GSIT` (the misses are now `IOT`, `APLD`, `MNDY`), and in the replay corpus the same
-date gains `MNDY` — the two differ because EasyOCR's read of the frame differs between
-runs, not because the rule differs. The parser-level attribution is the replay's:
-`20230609` goes 12 → 13 hits with the rule changed and nothing else.
+panel holds **13** rows, and both the legacy y-window and the old crop clipped the
+bottom of a list that long; Filter B uses the list's own rows, so once the crop carries
+them the parser keeps them.
 
 **The benchmark is deterministic, not noisy.** Two consecutive runs (2026-10-25, 512 s and
 461 s) produced byte-identical per-case numbers, hits and FP counts, and the 2026-10-29
@@ -2272,7 +2857,8 @@ run against the pinned frames reproduced the table exactly. So a change in this 
 means the *code* or the *input frames* changed — not that the measurement drifted.
 
 **The wall clock is not the number.** The 82.6 % run took **134 s**, the 80.6 % run 864 s,
-the 89.2 % run 305 s, and the 91.1 % run **40,053 s** — the same frames, the same engine,
+the 89.2 % run 305 s, the 91.1 % run **40,053 s**, and the 94.4 % run 151 s — the same
+frames, the same engine,
 no OCR cache (`ocrImage()` runs
 EasyOCR for real every time). EasyOCR swings by 2× on the same file between runs, and by
 orders of magnitude when the machine is busy; the
@@ -2296,22 +2882,25 @@ The frames the 82.6% measurement above was taken on, all 1920 px — now tracked
 | normal_2022 | `test/fixtures/qmg_benchmark/normal_2022_20220606_c1.png` | `e34b828300318085b07166a87aa50f98` |
 | dense_2023 | `test/fixtures/qmg_benchmark/dense_2023_20230609_c0.png` | `d53cb5fab33eba46e73ba40a7477f91e` |
 
-**Precision floor**: 2–3 false positives per capture. Remaining FP sources:
+**Precision floor**: 0–3 false positives per capture. Remaining FP sources:
 `TQQQ`→`TOCA` (OCR misread of a real ticker), chart-area tokens that happen to be in the
 seed lexicon (`ISYM`, `MEL`, `CON`), and one-letter tokens (`ON`, `X`).
 
-**Recall floor**: `20220606` now misses only `TNA` (GOVX and NFLX are found); `20230609`
-misses **3 of 13** — `IOT`, `APLD`, `MNDY` — and is the case that holds the
-mean down. (`AI` and `PLTR` are no longer among them: the first came back with the
-left-edge column fix, the second with the `ATR → PLTR` alias row, and `GSIT` with the
-Filter B rewrite.)
+**Recall floor**: `20220606` and `20230609` now miss **nothing** (8/8 and 13/13). The
+remaining miss is `trade_ideas` 20220218[1], which lost `TQQQ` and `TSLA` when the
+2022-era crop grew taller — a taller crop is downscaled more by EasyOCR, so two faint
+rows stop being readable. (`AI` and `PLTR` are no longer among the misses: the first
+came back with the left-edge column fix, the second with the `ATR → PLTR` alias row,
+and `GSIT` with the Filter B rewrite.)
 
-**Two of those three are outside the crop — they are not OCR failures.** On the md5-pinned
+**The two rows that were "outside the crop" are inside it now.** On the md5-pinned
 `dense_2023_20230609_c0.png` the 2023-era sidebar's ticker column (x 1690–1750) carries
 **13** data rows at y 715, 733, 751, 769, 787, 805, 823, 841, 859, 877, 895, **913, 931**.
-The chart-stream crop `0.86,0.62,0.14,0.22` covers y **670–907** at 1080p, so the last two
-rows — **`APLD` and `MNDY`** — are outside the pixels the OCR engine is ever shown. No
-amount of parser work recovers a ticker that was never in the image.
+The old crop `0.86,0.62,0.14,0.22` covered y **670–907**, so the last two rows —
+**`APLD` and `MNDY`** — were outside the pixels the OCR engine was ever shown. The
+2023-era crop `0.82,0.60,0.18,0.32` covers y **648–994** and x **1574–1920**, so all
+thirteen rows are inside it, and `20230609` now reads **13/13 with zero false
+positives**.
 
 **The `meanLumaFloor=30` hypothesis was tested and is NOT the cause.** Measured over the
 prefilter's own frames: on 20220218 the median frame luma is **15.1** and on 20220222 it
@@ -2441,85 +3030,334 @@ comment says changing it would move already-measured chart_stream and whiteboard
 results. A change there — giving the seed branch a budget, or making the stride reserve
 leave room — would fix the defect at its source and would need its own measurement.
 
-### The crop A/B — re-measured 2026-11-02, and the conclusion REVERSED
+### The chart-stream crop — MEASURED off the pixels, and ERA-CONDITIONAL
 
-**The 2026-10-31 conclusion was wrong, and re-measuring it is what proved it.** The
-original table was taken with the **pre-Filter-B parser** and the **pre-audit ground
-truth**; it said the crop rectangles were within 0.4 points of each other and that no
-wider default was warranted. Against the **current** parser and the **current** ground
-truth, the same four pinned frames separate by **three holdings**, and the separation
-runs the other way.
+**The crop is not one rectangle, and the reason is a fact about Qullamaggie, not about
+the code.** He changed the layout of his position list between 2023-01-26 and 2023-05-18:
+before the change it was a **floating panel** in the bottom-right corner of the chart
+frame; after it, a table **docked to the RIGHT edge** of the screen. The two layouts do
+not share a column.
 
-**The four pinned fixtures, re-measured 2026-11-02** (real EasyOCR, shipped alias
-table, current parser, current ground truth):
+**The panel geometry, measured off the pixels of the pinned ground-truth frames.** The
+OCR word boxes in the crop cache carry `left/top/width/height` in the ×5-upscaled crop,
+so `source_x = region.x·1920 + left/5` and `source_y = region.y·1080 + top/5` recover the
+panel's true position **without any new OCR**:
 
-| case | current `0.86,0.62,0.14,0.22` | wide `0.86,0.60,0.14,0.32` | wide-x `0.83,0.60,0.17,0.32` |
+| layout | Sym column (source x of 1920) | rows (source y of 1080) | dates |
 |---|---|---|---|
-| trade_ideas 20220218[1] | **9/9** fp1 | 8/9 fp2 | 6/9 fp3 |
-| sparse 20221104[0] | 1/1 fp3 | 1/1 fp3 | 1/1 fp3 |
-| normal_2022 20220606[1] | 7/8 fp3 (miss `TNA`) | **8/8** fp2 | 7/8 fp2 (miss `TNA`) |
-| dense_2023 20230609[0] | 10/13 fp3 (miss `IOT`, `APLD`, `MNDY`) | **13/13** fp0 | 12/13 fp0 (miss `MNDY`) |
-| **total hits / FP** | **27/31**, FP 10 | **30/31**, FP 7 | **26/31**, FP 8 |
+| floating panel | 1795 – 1812 | 660 – 940 | 20220218 … 20230126 |
+| right sidebar B | 1706 – 1712 | 661 – 934 | 20230609, 20231201 |
+| right sidebar A | 1617 – 1628 | 661 – 934 | 20230518, 20230523, 20230605, 20230608 |
+| right sidebar A′ | 1585 – 1613 | 736 – 934 | 20231215 |
 
-`wide` takes the 2023-era case to **13/13 with zero false positives** and recovers
-`TNA` on 20220606. `wide-x` is clearly worse (6/9 on the 2022-era case) — the extra
-x-width pulls chart-area ink into the column.
+**The shipped default had TWO separate defects**, and both were measured:
 
-**Why the reversal: the crop was clipping rows, and Filter B made the difference visible.**
-The 2023-era sidebar's 13 data rows run down to y 931 of 1080; the current crop covers
-y 670–907, so the last two rows — **`APLD` and `MNDY`** — were outside the pixels the
-OCR engine was ever shown. CLAUDE.md had already recorded that those two were "not OCR
-failures" (§ 'Known limitations'). The pre-Filter-B parser could not exploit a taller
-crop because its `yMedian ± 8·lineHeight` window clipped the bottom of a long list
-anyway; Filter B uses the list's own rows, so once the crop carries them the parser
-keeps them. **A crop change and a parser change interact, and only measuring them
-together shows which one is doing the work.**
+- **x started to the RIGHT of the sidebar column** — `0.86` is source x 1651, and the
+  sidebar column runs 1585–1712. A sidebar-era frame therefore read **zero** holdings
+  under it, under *every* y variant of x=0.86 (0/13 on 20230608, 0/11 on 20230523).
+- **y clipped the first and last row of a long list in BOTH eras** — `0.62`–`0.84` is
+  source y 670–907, and 20220421's panel runs down to y 934: **11 of 16 rows**.
 
-**The default has NOT changed, and the reason is the entanglement, not the number.**
-`CHART_STREAM_REGION_FRACTION_DEFAULT` (`src/video/ocrScanArgs.js:70`) is not only the
-OCR crop:
+**The era boundary sits inside the catalog's own gap.** Qullamaggie published **nothing
+at all** between 2023-01-26 and 2023-05-18 (verified against `state.sqlite`), so no
+video can be mis-assigned by the threshold. Pinned by
+`test/chartStreamCropCoverage.test.js`.
 
-| consumer | what it reads | file |
+**The shipped rectangles** (`src/video/chartStreamCrop.js`):
+
+```js
+CHART_STREAM_CROP_FLOATING_PANEL = '0.86,0.60,0.14,0.28'   // source x 1651-1920, y 648-950
+CHART_STREAM_CROP_RIGHT_SIDEBAR  = '0.82,0.60,0.18,0.32'   // source x 1574-1920, y 648-994
+CHART_STREAM_RIGHT_SIDEBAR_FROM  = '20230518'
+```
+
+Both are the **tightest** rectangle that still covers the measured panel rows, so
+neither admits chart ink the panel does not need.
+
+**x = 0.82 is required, not a preference.** 20231215's ticker column begins at source x
+1586–1587, and a crop starting at 1594 (x=0.83) shaves the first glyph off *every*
+ticker: proved on the pixels, `0.83` reads `TX/MND/TLB/KNG/ME/INS/DD/KX/DOG/MCI/LT/IM`
+where `0.82` reads the correct `BITX/UND/GILB/DKNG/GME/MNS/PDD/VKIX/DDOG/SMCI/ALT`.
+
+**Measured with a fresh EasyOCR pass** over the pinned ground-truth frames (nine
+2022-era frames / 85 holdings; seven 2023-era frames / 75 holdings):
+
+| crop | era | hits/gt | recall | fp | precision |
+|---|---|---|---|---|---|
+| `0.86,0.62,0.14,0.22` (old default) | 2022 | 74/85 | 87.1 % | 18 | 80.4 % |
+| **`0.86,0.60,0.14,0.28`** (shipped) | 2022 | **78/85** | **91.8 %** | 19 | 80.4 % |
+| `0.86,0.60,0.14,0.32` | 2022 | 80/85 | 94.1 % | 24 | 76.9 % |
+| `0.86,0.55,0.14,0.45` | 2022 | 80/85 | 94.1 % | 26 | 75.5 % |
+| `0.83,0.60,0.17,0.32` | 2022 | 76/85 | 89.4 % | 23 | 76.8 % |
+| `0.86,0.62,0.14,0.22` (old default) | 2023 | 27/56 | 48.2 % | 10 | 73.0 % |
+| **`0.82,0.60,0.18,0.32`** (shipped) | 2023 | **69/75** | **92.0 %** | **8** | **89.6 %** |
+| `0.82,0.60,0.18,0.28` | 2023 | 69/75 | 92.0 % | 8 | 89.6 % |
+| `0.83,0.60,0.17,0.32` | 2023 | 70/75 | 93.3 % | 9 | 88.6 % |
+| `0.82,0.55,0.18,0.36` | 2023 | 62/68 | 91.2 % | 15 | 80.5 % |
+
+The 2022-era rectangle is the tightest crop that still covers the measured rows
+(660–940): it is the only candidate that **improves recall (+4) at unchanged precision**.
+`wide` and `wide45` buy two more hits for five to eight extra false positives. The
+2023-era rectangle is the one that has to reach x 1586, and its taller bottom (994)
+buys margin over the measured rows (661–934) at no measured cost — it also ties the
+best dedup of every candidate.
+
+**The crop is also the capture-DEDUP rectangle**, so a rectangle that is too generous
+makes two *different* position lists look alike and the second capture is thrown away.
+`pickTopDistinctCandidates` (`tools/scanVideoWithOcr.js:74`) skips a candidate whose
+overlay pHash is within Hamming 6 of an already-picked one, and
+`tools/runQmgOcrBatch.js`'s `DEFAULT_FLAGS` use `--max-captures 3`, so the dedup matters
+in production. Measured over the 70 distinct-ground-truth capture pairs in the pinned
+manifest:
+
+| crop | collapsed pairs | min Hamming |
 |---|---|---|
-| the chart-stream profile's `phashRegionFraction` | the **capture-dedup pHash rectangle** | `ocrScanArgs.js:430-431` |
-| `chartStreamCropFraction` | the crop the legacy reader OCRs | `ocrScanArgs.js:456-459` |
-| `runChartStreamOcr`'s `overlayRegion` | what EasyOCR is shown | `scanVideoWithOcr.js:621` |
-| `computeRegionHash` | the dedup hash, used by `pickTopDistinctCandidates` | `scanVideoWithOcr.js:818`, `:880-882` |
+| `0.86,0.62,0.14,0.22` (old default) | 0 | 14 |
+| `0.86,0.60,0.14,0.28` (2022-era, shipped) | 1 | 4 |
+| `0.86,0.60,0.14,0.32` | 4 | 4 |
+| `0.83,0.60,0.17,0.32` | 1 | 6 |
+| **`0.82,0.60,0.18,0.32` (2023-era, shipped)** | **0** | **8** |
 
-So moving the default moves the **dedup rectangle** with it, and the dedup decides which
-captures are kept (`pickTopDistinctCandidates`, Hamming ≤ 6 on the overlay hash). The
-prefilter's own scoring is **not** affected: its ticker rectangle is separate
-(`PREFILTER_PROFILES[...].tickerRegion`, and `summarizeLumaBuffer`'s defaults
-`tickerLeft = 0.85` / `tickerTop = 0.55`).
+**The corpus's own natural experiment corroborates the split.** The 2023-era
+production region `0.83,0.55,0.17,0.45` appears in **26** probe logs; the old shipped
+default appears in only **4** logs, covering one or two dates of 49. The default was
+essentially never used in production — every 2023-era scan had to override it by hand,
+which is exactly what `tools/runQmgOcrBatch.js`'s `WIDE_CROP_DATES` list was: 29 dates
+with the rectangle `0.83,0.55,0.17,0.45`. **That list missed 20231201 and 20231215**,
+whose column starts further left still. The override has been removed; the crop is now
+derived from the upload date inside the scan tool itself, so the era rule lives in one
+place and a date cannot be mis-classified by a stale list.
 
-**A four-frame benchmark cannot move a global default**, and this one now shows a
-three-holding difference — which is a reason to measure *wider*, not a reason to change
-the default on four frames. The wider measurement runs over the **94 pinned ground-truth
-captures** (`test/fixtures/qmg_ground_truth/manifest.json`, all 1920×1080, each with its
-own per-capture reading and its own panel footer).
+**An unknown date falls back to the SIDEBAR crop, and the reason is asymmetric.** The
+sidebar crop (x 1574–1920) still *contains* the 2022-era floating panel (x 1795–1812),
+so it reads that panel — just with more chart ink beside it. The floating-panel crop
+(x 1651–1920) does **not** contain the sidebar column at all, so it reads a sidebar
+frame as EMPTY. The safer fallback is the sidebar crop.
 
-**The 2026-10-31 table, for the record** (pre-Filter-B parser, pre-audit ground truth):
-
-| case | current `0.86,0.62,0.14,0.22` | tall `0.86,0.60,0.14,0.32` | wide-x `0.83,0.60,0.17,0.32` |
-|---|---|---|---|
-| trade_ideas 20220218[1] | **8/9** fp2 | 7/9 fp3 | 5/9 fp3 |
-| sparse 20221104[0] | 1/1 fp3 | 1/1 fp3 | 1/1 fp3 |
-| normal_2022 20220606[1] | 7/8 fp3 | **8/8** fp2 | 7/8 fp2 |
-| dense_2023 20230609[0] | 9/13 fp3 | 9/13 **fp0** | **11/13** fp0 |
-| **overall mean recall** | **86.4 %** | **86.8 %** | **81.9 %** |
-
-Its conclusion — "no wider default; an era-conditional crop or the `position_table`
-reader" — was correct **for that parser**, and the `position_table` reader still
-measures **11/13 with 0 FP** on the 2023-era frame. But the `wide` crop now reaches
-**13/13 with 0 FP** on the same frame, so the reader is no longer the only route to
-those rows.
+**The crop change and the parser change interact, and only measuring them together
+shows which one is doing the work.** The 2023-era sidebar's 13 data rows run down to
+y 931 of 1080; the old crop covered y 670–907, so the last two rows — **`APLD` and
+`MNDY`** — were outside the pixels the OCR engine was ever shown. CLAUDE.md had already
+recorded that those two were "not OCR failures" (§ 'Known limitations'). The pre-Filter-B
+parser could not exploit a taller crop because its `yMedian ± 8·lineHeight` window
+clipped the bottom of a long list anyway; Filter B uses the list's own rows, so once the
+crop carries them the parser keeps them.
 
 **The lesson: a measurement taken against a parser that has since changed is a
-measurement of that parser.** The four-frame table was not wrong when it was taken; it
-was read as a statement about the *crop* when it was a statement about the crop *and*
-the parser of the day. The 2026-10-31 crop section said "the default stays where it is
-until a wider measurement says otherwise" — that rule was right, and it is still the
-rule. What changed is that the wider measurement now exists.
+measurement of that parser.** The four-frame tables that drove this section (2026-10-31
+and 2026-11-02) were not wrong when they were taken; they were read as statements about
+the *crop* when they were statements about the crop **and** the parser of the day. The
+rule that governed the whole thing — *the default stays where it is until a wider
+measurement says otherwise* — was right, and it is what produced the 94-capture
+measurement this section is based on.
+
+### The prefilter's rectangle — the crop's rectangle, era-conditionally (2026-11-02)
+
+**The crop was fixed; the prefilter that DECIDES WHICH FRAMES GET OCR'D was still
+measuring the wrong rectangle.** The two are different questions, and only the first
+was answered.
+
+The prefilter measures a **bottom-right-anchored** rectangle (`summarizeLumaBuffer`,
+`src/video/ocrScanLogic.js:371-372`): `left` is the LEFT edge, `top` the TOP edge, and
+the rectangle runs to the frame's right and bottom edges. The `chart_stream` profile
+carried no `tickerRegion` of its own, so **every** chart-stream frame was measured
+against the hard-coded fallback `{left: 0.85, top: 0.55}` — source **x 1632, y 594**.
+
+**That rectangle excluded the ticker column of two of the three measured sidebar
+layouts**, because the sidebar's column starts to the LEFT of 1632:
+
+| layout | dates | Sym column (source x) | inside the fallback? |
+|---|---|---|---|
+| right sidebar B | 20230609, 20231201 | 1706 – 1712 | **yes** |
+| right sidebar A | 20230518, 20230523, 20230605, 20230608 | 1617 – 1628 | **no** |
+| right sidebar A′ | 20231215 | 1585 – 1613 | **no** |
+
+So the prefilter was scoring the **price and %-Change columns** of a panel whose
+tickers it could not see — for every date except 20230609, the one date that happened
+to be scanned first, and the one date whose layout the defect happened to spare.
+
+**What the production smoke scan recorded.** The 2026-11-02 scan of 20230609 OCR'd six
+candidates; the prefilter's ranking and the OCR's reading disagree completely:
+
+| ts | prefilter score | OCR score | holdings read |
+|---|---|---|---|
+| 1944 | **−3.36** | **33.02** | **13 — the exact ground truth** |
+| 972 | 0.68 | 31.77 | 12 |
+| 3888 | 2.32 | 31.52 | 12 |
+| 2916 | −3.51 | 31.02 | 12 |
+| 0 | 9.94 | 19.76 | 7 (a garbage frame) |
+| 3100 | **25.9** | **0.26** | **0** |
+
+**The prefilter's best frame read ZERO holdings.** Its score was 29 points above the
+frame that read the date exactly. The capture is still chosen by the OCR score, so this
+did not lose the frame on that scan — but it is the prefilter that decides the
+**candidate pool**, and a ranking that is inverted is a ranking that will lose frames
+as soon as the budget tightens.
+
+**The fix: the prefilter measures the CROP's rectangle.** The rectangle it scores is now
+the pixels the OCR engine will read, chosen by the same era rule as the crop:
+
+```js
+chartStreamPrefilterRegionForDate(dateKey) → { left: crop.x, top: crop.y }
+```
+
+threaded from `tools/scanVideoWithOcr.js` into `prefilterFrames` as a
+`tickerRegionOverride`, for the `chart_stream` profile only. The invariant — *the
+prefilter measures the pixels the OCR will read* — is pinned by
+`test/chartStreamPrefilterRegion.test.js`, together with the defect itself (the legacy
+fallback's x 1632 against the two columns at 1617 and 1585).
+
+**The era decision is now in ONE place.** `chartStreamEraForDate()` is the single answer
+to "which layout era is this date", and the crop, the prefilter rectangle and the
+per-date scan flags all derive from it. They used to disagree: the crop fell back to
+the **sidebar** rectangle for an unknown date while `isRightSidebarDate` said
+"not the sidebar era", so an unknown date could be scanned with the sidebar crop and the
+floating-panel flags at once. **An unknown date is the sidebar era for both**, because
+that fallback is asymmetric — the sidebar rectangle still contains the 2022-era floating
+panel, while the floating-panel rectangle does not contain the sidebar column at all.
+
+**The fix is NECESSARY but it is not SUFFICIENT, and the honest reason is the
+prefilter's resolution.** `PREFILTER_WIDTH`/`PREFILTER_HEIGHT` are **160×90**
+(`src/video/ocrScanLogic.js:7-8`), and the frame is resized into that with
+`fit: 'contain'` before the luma summary. At that scale:
+
+- **`midToneRatioTicker` is degenerate.** Its denominator is the number of mid-tone
+  pixels in the ticker rectangle, which at 160×90 is **7** on five of the six frames
+  above and **17** on the sixth — so the ratio is 2/7 on frames reading 13, 12, 12, 12
+  and **0** tickers, and 6/17 only on the frame that reads **zero**. The signal that is
+  supposed to say "there is text here" is noise.
+- **`rowDensity` and `multiColStripeCount` are INVERTED in the sidebar era.** The frame
+  that reads 13 holdings has `rowDensity 3` and `multiColStripeCount 0`; the frame that
+  reads **zero** has `rowDensity 12` and `multiColStripeCount 3` — the full 20-point
+  stripe term.
+
+Fixing the rectangle changes **which** pixels are averaged. It does not change the
+160×90 down-sample that averages the text away, and it does not re-tune
+`rowDensityTarget: 150` or `multiColStripeCountTarget: 3`. **So the expected effect of
+the rectangle fix alone is to make the prefilter measure the right region — not to make
+the ranking correct.** Raising the prefilter's resolution changes the scale of every
+tuned constant in `scoreFramePrefilter`, and therefore needs its own wide measurement
+before it is shipped.
+
+`tools/measurePrefilterRegion.js` is the instrument for that measurement, and it does
+**no OCR** — it extracts frames with the pipeline's exact ffmpeg filter, scores every
+frame under both the legacy fallback rectangle and the era rectangle, and reports the
+labelled frames' ranks and scores under each:
+
+```bash
+node tools/measurePrefilterRegion.js --video data/video_pipeline/downloads_1080p/20230609_VdQSDGZBLQE.mp4 \
+  --date 20230609 --labels "1944:13,972:12,3888:12,2916:12,0:7,3100:0"
+```
+
+### The prefilter's RESOLUTION — 640×360 is the first one that works (2026-11-02)
+
+**The rectangle fix is necessary but not sufficient, and the reason is the working
+resolution.** `PREFILTER_WIDTH`/`PREFILTER_HEIGHT` are **160×90**
+(`src/video/ocrScanLogic.js:7-8`): the whole frame is resized into 160×90 before
+`summarizeLumaBuffer` reads it. The 2023-era ticker rectangle is 18 % of the frame's
+width and 32 % of its height — **29×29 prefilter pixels**. Every tuned constant in
+`scoreFramePrefilter` was fitted at that scale, so raising it changes the scale of all
+of them, and CLAUDE.md's own rule applies: **the default stays where it is until a
+wider measurement says otherwise.**
+
+**The measurement.** `analyzeFrameBeforeOcr(framePath, region, options)` now takes an
+optional `{width, height}` override, and `tools/measurePrefilterRegion.js` takes
+`--resolutions "160x90,320x180,640x360"` and `--stride n`. **The pipeline calls it
+with no options**, so nothing in production changed. `test/ocrScanLogic.test.js` pins
+that the default is unchanged and that a nonsense override falls back to it.
+
+Measured on the 20230609 control video (the one with six labelled frames — the six
+candidates of the 2026-11-02 production scan, with the holdings each actually read),
+**stride 8 → 188 scored frames**. The verdict is reported **per resolution AND per
+region**: a resolution block holds two rankings (the legacy fallback rectangle and
+the era rectangle), and comparing one region's most-holding frame against the other
+region's zero-holding frame would report a verdict for a comparison that was never
+made.
+
+| resolution | region | the TOP pick reads | most-holding frame | zero-holding frame | verdict |
+|---|---|---|---|---|---|
+| 160×90 | fallback | **0** | ts=1944 (13) rank 104/188 | ts=3100 rank **1**/188 | INVERTED |
+| 160×90 | era | **0** | ts=1944 (13) rank 137/188 | ts=3100 rank **1**/188 | INVERTED |
+| 320×180 | fallback | **0** | ts=1944 (13) rank 151/188 | ts=3100 rank **17**/188 | INVERTED |
+| 320×180 | era | **0** | ts=1944 (13) rank 90/188 | ts=3100 rank **9**/188 | INVERTED |
+| **640×360** | fallback | **12** | ts=1944 (13) rank 104/188 | ts=3100 rank 115/188 | **OK** |
+| **640×360** | era | **12** | ts=1944 (13) rank 53/188 | ts=3100 rank 32/188 | INVERTED (4 of 5) |
+
+**"The TOP pick reads N holdings" is the decision-relevant column**, and it is the one
+that moved: at 160×90 and 320×180 the prefilter's **best-scoring frame reads ZERO
+holdings** in **both** rectangles; at 640×360 it reads **12** (ts=3888, which holds 12
+of the ground truth's 13) in **both**.
+
+**The strict pair test is not the whole story, and the difference is instructive.** At
+640×360 in the **era** rectangle the 13-holding frame (ts=1944, rank 53) still ranks
+below the zero-holding frame (ts=3100, rank 32) — but the 12-holding frame (ts=3888)
+is rank **12**, so the zero-holding frame now outranks **four of five** holding frames
+instead of five of five. The ranking is *nearly* right, not exactly right; and the
+one frame it loses to is the one frame whose reading is best-but-one, not the one that
+reads the date exactly.
+
+**The mechanism, term by term.** The stripe term is what does the damage at the low
+resolutions, and it is a **saturation** effect:
+
+| | ts=3888 (12 holdings) | ts=3100 (0 holdings) |
+|---|---|---|
+| 160×90 era — stripes | 1 → 1/3 of the 20 points (**6.67**) | 4 → **20.0** (saturated) |
+| 160×90 era — rowDensity | 8 → 8/150 of the 10 points (**0.53**) | 17 → 17/150 (**1.13**) |
+| 160×90 era — midTone | 0.5714 × 30 = **17.14** | 0.4783 × 30 = 14.35 |
+| 640×360 era — stripes | 24 → **20.0** (saturated) | 29 → **20.0** (saturated) |
+| 640×360 era — rowDensity | 112 → **7.47** | 110 → **7.33** |
+| 640×360 era — midTone | 0.3088 × 30 = **9.26** | 0.1571 × 30 = **4.71** |
+
+At 160×90 the junk frame's stripes **saturate the 20-point term** while the good
+frame's do not — a **13.3-point swing the wrong way** — and no other term can make it
+up. At 640×360 both saturate, so the stripe term stops discriminating and the
+**mid-tone term decides**, and at that resolution it decides correctly.
+
+**So the resolution change is not a tuning change — it changes which term wins.** That
+is also why `rowDensityTarget: 150` and `multiColStripeCountTarget: 3` are
+**scale-bound** and would have to be re-tuned: at 640×360 the measured rowDensity is
+**65–117** against a target of 150 and the measured stripe count is **10–29** against
+a target of 3. Both terms are then permanently saturated or permanently short, and the
+profile is measuring something other than what its constants say.
+
+**A second negative result, and it is about a signal this project already added.** The
+`midToneRatioTickerRegion` diagnostic — the region-wide mid-tone ratio, which is the
+quantity the field NAME describes — is **anti-correlated with holdings at 640×360**:
+
+| | ts=3888 (12 holdings) | ts=3100 (0 holdings) |
+|---|---|---|
+| 640×360 era — `midToneRatioTicker` (the one the score uses) | 0.3088, rank **4**/188 | 0.1571, rank **186**/188 |
+| 640×360 era — `midToneRatioTickerRegion` (the corrected one) | 0.1144, rank 56/188 | 0.2062, rank **3**/188 |
+
+**The corrected signal picks the zero-holding frame; the existing signal does not.**
+The existing `midToneRatioTicker` is "of the bright pixels in the ticker region, how
+many are merely bright" — a ratio whose denominator is *the region's bright pixels*,
+not the region's area — and at a resolution where the region has **16 704** pixels it
+is the **better** discriminator. **Do not promote `midToneRatioTickerRegion` to
+scoring.** It stays a diagnostic. The "fix the misleading name" hypothesis is
+**measured and rejected**.
+
+**Nothing is shipped.** The pipeline still runs the prefilter at 160×90, and the
+override exists so that the alternative can be measured. Shipping 640×360 requires:
+
+1. a **wide** measurement — one video, six labelled frames, is not enough, and the
+   2022-era floating panel has a different geometry from the 2023-era sidebar, so the
+   two eras have to be measured separately;
+2. a **re-tune** of `rowDensityTarget` and `multiColStripeCountTarget`, which are
+   scale-bound (65–117 vs 150; 10–29 vs 3) and whose current values are what makes
+   the stripe term saturate on the junk frame;
+3. a decision on the **stripe term itself** — the measurement says the term is
+   *actively harmful* in the sidebar era at any resolution where it can saturate on one
+   frame and not another.
+
+**The instrument** is `test/manual/prefilterResolutionScan.test.js` (manual: it needs
+the real video, and the media is not in git). It asserts **structurally** — the tool
+ran, every resolution reported, every labelled frame found — and **reports** the
+rankings, because a resolution that does not help is a finding, not a failure.
+
+```bash
+node --test test/manual/prefilterResolutionScan.test.js
+```
 
 **PaddleOCR PP-OCRv6**: the packages ARE installed — `tools/paddle311_env` (Python 3.11.9) has
 paddleocr 2.7.3 + paddlepaddle 2.6.2, and `tools/paddle312_env` / `tools/paddle_env`
@@ -3059,20 +3897,27 @@ Any statistic derived from it describes the later crop/tuning era only.
 The current figures (re-measured 2026-11-02, after the curated-alias
 rescue, the SPXL seed fix, the nine 2023-era curated aliases, the left-edge
 column fix, all three passes of the ground-truth audit, **the Filter B
-rewrite**, the four 2022-era alias rows, the 16 pixel-verified seed rows and
-**the five 2026-11-02 alias rows**):
+rewrite**, the four 2022-era alias rows, the 16 pixel-verified seed rows,
+**the five 2026-11-02 alias rows**, **the column gate's row-stack evidence**
+and **the one-glyph column rule** — and **unchanged by the sixth 2026-11-02
+alias row**, which came out of a production scan and not the corpus):
 
 | root set | dates scored | recall | precision |
 |---|---|---|---|
 | default (8 probe roots) | 8 | **97.6 %** (83/85) | **100 %** (83/83) |
-| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **81.0 %** (136/168) | **88.3 %** (136/154) |
+| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **88.1 %** (148/168) | **89.2 %** (148/166) |
 
 (The attribution of every step is in § 'Filter B — the position-aware vertical
 bound': the Filter B rewrite is +5 hits on each corpus, the four alias rows
 are +4 on the wide corpus, the 16 seed rows are +2 on each, and the two
 2026-11-02 rows are +1 on the wide corpus — see § 'Two more curated aliases'.
 The `LI`/`FTCH` rows are +2 on **each** corpus and the `N → AI` row is +1 on
-each — see § 'The LI row, and three more aliases'.)
+each — see § 'The LI row, and three more aliases'. The **column gate's row-stack
+evidence** is +12 hits on the wide corpus and +0 on the default roots, and the
+**one-glyph rule** is +0 hits and −1 false positive — see § 'The column gate —
+price-alignment was the wrong evidence'. The `RGN → RGTI` row is **+0 on both
+corpora**, because the corpus contains no `RGN` — see § *The 2023-era production
+smoke scan*.)
 
 (Before the nine 2023-era aliases: 66.3 % (59/89) / 95.2 % (59/62) on the default roots,
 and 64.7 % (110/170) / 82.1 % (110/134) on the wide corpus. See § 'Nine more curated

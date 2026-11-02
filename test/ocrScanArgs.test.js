@@ -283,14 +283,39 @@ test('the legacy reader is given the chart-stream crop, not the table region', (
   // whole right-hand strip. The LEGACY reader is the chart-stream reader,
   // so it must read the chart-stream crop — and the crop it gets must not
   // be null, because `runChartStreamOcr` destructures it.
+  //
+  // The chart-stream crop is ERA-CONDITIONAL (src/video/chartStreamCrop.js).
+  // No `--date` is given here, so the crop is the sidebar-era one — which is
+  // also the fallback for an unknown date.
   const options = parseArgs([
     '--video', '/tmp/a.mp4',
     '--prefilter-profile', 'position_table',
     '--output-kind', 'snapshot'
   ], { defaultOutputRoot: TEST_OUTPUT_ROOT });
 
-  assert.deepEqual(options.chartStreamCropFraction, { x: 0.86, y: 0.62, w: 0.14, h: 0.22 });
+  assert.deepEqual(options.chartStreamCropFraction, { x: 0.82, y: 0.6, w: 0.18, h: 0.32 });
   assert.notDeepEqual(options.chartStreamCropFraction, options.phashRegionFraction);
+});
+
+test('the legacy reader\'s chart-stream crop follows the upload date', () => {
+  // The 2022-era layout is a floating bottom-right panel; the 2023-era one
+  // is a table docked to the right edge, and its column starts further left.
+  const panel = parseArgs([
+    '--video', '/tmp/a.mp4',
+    '--prefilter-profile', 'position_table',
+    '--output-kind', 'snapshot',
+    '--date', '20220218'
+  ], { defaultOutputRoot: TEST_OUTPUT_ROOT });
+
+  const sidebar = parseArgs([
+    '--video', '/tmp/a.mp4',
+    '--prefilter-profile', 'position_table',
+    '--output-kind', 'snapshot',
+    '--date', '20230609'
+  ], { defaultOutputRoot: TEST_OUTPUT_ROOT });
+
+  assert.deepEqual(panel.chartStreamCropFraction, { x: 0.86, y: 0.6, w: 0.14, h: 0.28 });
+  assert.deepEqual(sidebar.chartStreamCropFraction, { x: 0.82, y: 0.6, w: 0.18, h: 0.32 });
 });
 
 test('a pixel --phash-region still leaves the legacy reader a crop', () => {
@@ -305,7 +330,7 @@ test('a pixel --phash-region still leaves the legacy reader a crop', () => {
   ], { defaultOutputRoot: TEST_OUTPUT_ROOT });
 
   assert.equal(options.phashRegionFraction, null);
-  assert.deepEqual(options.chartStreamCropFraction, { x: 0.86, y: 0.62, w: 0.14, h: 0.22 });
+  assert.deepEqual(options.chartStreamCropFraction, { x: 0.82, y: 0.6, w: 0.18, h: 0.32 });
 });
 
 test('the position_table profile refuses a non-snapshot output kind', () => {

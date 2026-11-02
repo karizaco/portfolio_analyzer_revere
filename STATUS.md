@@ -118,20 +118,107 @@ node tools/evalParserReplay.js data/video_ocr_probe data/video_scan_test/_rerun 
 | corpus | dates scored | recall | precision |
 |---|---|---|---|
 | default (8 probe roots) | 8 | **97.6 %** (83/85) | **100 %** (83/83) |
-| wide (`video_ocr_probe` + `_rerun`) | 17 | **81.0 %** (136/168) | **88.3 %** (136/154) |
+| wide (`video_ocr_probe` + `_rerun`) | 17 | **88.1 %** (148/168) | **89.2 %** (148/166) |
 
 Measured 2026-11-02, after the Filter B rewrite, the four 2022-era alias rows,
-the 16 pixel-verified seed rows and the five 2026-11-02 alias rows. The
-attribution of every step is in CLAUDE.md § *Filter B — the position-aware
-vertical bound*.
+the 16 pixel-verified seed rows, the five 2026-11-02 alias rows, the **column
+gate's row-stack evidence** and the **one-glyph column rule**. The attribution
+of every step is in CLAUDE.md § *Filter B — the position-aware vertical bound*
+and § *The column gate — price-alignment was the wrong evidence*. A **sixth**
+2026-11-02 alias row (`RGN → RGTI`) came out of a production scan and moves
+**nothing** on either corpus — the corpus holds no `RGN`.
 
 **This is a surviving sample, not a corpus-wide figure** — the tool prints a
 census on every run, and **read the number with the census**.
 
+**And the era-conditional crop has now run in the real pipeline.** A production
+smoke scan of `20230609` (`20230609_VdQSDGZBLQE.mp4`, 1920×1080) — the tool
+picked the 2023-era rectangle `0.82,0.60,0.18,0.32` **from the upload date**,
+with no crop flag — reads that date's **13 ground-truth holdings exactly, with
+zero false positives**. The old fixed crop read **zero** holdings on that date.
+The scan exposed one wrong holding (`REGN`, a real ticker, published in place
+of `RGTI` because the garble `RGN` is one edit away); the `RGN → RGTI` alias row
+fixes it, and a **second, fresh scan** confirms the fix end to end. CLAUDE.md
+§ *The 2023-era production smoke scan*.
+
+**Four more dates have now been through the batch**, and the era crop and
+Filter B both fire in production: all four logs record
+`phash_region_fraction = {"x":0.82,"y":0.6,"w":0.18,"h":0.32}` — chosen from
+the upload date, with no crop flag — and every capture's `bbox_filter.rule` is
+`list_rows`. Scored on the **merged** list against the pixel-verified ground
+truth: `20230522` **6/7**, `20230523` **10/11**, `20230602` **12/12**,
+`20230605` **11/11** — **39/41 (95.1 % recall), 3 false positives (92.9 %
+precision)**. Two defects the merged list hides from a capture-level metric:
+the clusterer **absorbed** a real holding (`LI` into `AI`, one edit apart) and
+**invented** one (`ARCO` → `AAPL`, a seed ticker no frame ever showed).
+CLAUDE.md § *The 2023-era production scan, four more dates*.
+
+**A batch's `TIMEOUT` currently says nothing about whether the video was
+read.** The scan tool prints its whole result object to stdout at the end, and
+the batch drains **stderr only** — so the child blocks forever on a full 64 KB
+Windows pipe *after* writing a complete probe log. Every EasyOCR chart-stream
+batch video burns the full 40-minute budget and is recorded as a failure even
+when it succeeded. The fix is in the batch (drain stdout), not the scan tool.
+CLAUDE.md § *The scan writes its log and does not exit*.
+
 The curated EasyOCR benchmark (`npm run test:benchmark`, the four md5-pinned
-frames) now reads **91.1 %** overall mean recall — `trade_ideas` 9/9,
-`sparse` 1/1, `normal_2022` 7/8, `dense_2023` 10/13, with no false positive
-added at any step.
+frames) now reads **94.4 %** overall mean recall — `trade_ideas` 7/9,
+`sparse` 1/1, `normal_2022` 8/8, `dense_2023` 13/13 (false positives 3 / 3 / 2
+/ 0). Measured 2026-11-02, after the **era-conditional crop** — Qullamaggie
+moved his position list from a floating bottom-right panel to a table docked
+to the right edge between 2023-01-26 and 2023-05-18, so the crop is now chosen
+by the upload date (`src/video/chartStreamCrop.js`). `dense_2023` went 10/13 →
+**13/13 with zero false positives** and `normal_2022` recovered `TNA`; the
+`trade_ideas` frame **regressed** 9/9 → 7/9, because a taller 2022-era crop is
+downscaled more by EasyOCR and two faint rows stop being readable. Over the
+nine pinned 2022-era frames the taller crop is **+4 hits at unchanged
+precision**. The full derivation is in CLAUDE.md § *The chart-stream crop —
+MEASURED off the pixels, and ERA-CONDITIONAL*.
+
+**The prefilter now measures the crop's rectangle, era-conditionally.** The crop
+was fixed on 2026-11-02; the prefilter that *decides which frames get OCR'd* was
+still measuring a hard-coded fallback (`left: 0.85, top: 0.55` → source x 1632)
+that started to the **right** of the 2023-era sidebar's ticker column for two of
+the three measured sidebar layouts. The rectangle is now the crop's rectangle,
+era-conditionally (`chartStreamPrefilterRegionForDate`), so the prefilter
+measures the pixels the OCR engine will read. The era question is answered in
+**one** place (`chartStreamEraForDate`), so the crop, the prefilter rectangle and
+the per-date flags cannot disagree.
+
+**This is necessary, not sufficient.** The prefilter down-samples to 160×90, so
+the mid-tone signal's denominator is 7–17 pixels and the row/stripe signals are
+*inverted* in the sidebar era. Fixing the rectangle changes which pixels are
+averaged; it does not re-tune `rowDensityTarget` / `multiColStripeCountTarget`.
+The instrument for that measurement is `tools/measurePrefilterRegion.js` (no
+OCR). CLAUDE.md § *The prefilter's rectangle — the crop's rectangle,
+era-conditionally*.
+
+**The panel's own row count is now a self-check on the reading.** The positions
+panel prints its row count in its footer ("N Items in Personal WatchList", or
+"K of N Items…" where N is the total). The parser now reads it and reports
+`panel_count` and `panel_count_delta` — the reading's length minus the panel's
+own count. A delta of 0 means the reading is not *provably* wrong; a non-zero
+delta means a row was dropped or invented. **The count is reported, never acted
+on**: a misread count read low would truncate a correct reading, which is
+precisely the case where acting on it would do the most damage. Pinned by
+`test/chartStreamPanelCount.test.js`.
+
+**But in production the count is always `null`, and the reason is the pixels.**
+The footer sits at source y ≈ 1020–1026, and the crops' bottom edges are 950
+(2022 era) and 994 (2023 era) — **the OCR engine is never shown the line**. A
+dedicated footer strip, read once per video, is the fix; a taller crop is not
+(the crop is also the capture-dedup pHash rectangle, and a taller crop is
+downscaled more by EasyOCR). CLAUDE.md § *The panel's footer is BELOW the
+crop*.
+
+**The media's resolution is now checked mechanically.** `test/videoResolution.test.js`
+ffprobes every video the pipeline reads and asserts CLAUDE.md's floor — no video
+below 720p — and checks that `downloads_1080p` really is 1920×1080, because the
+chart-stream crop's measured geometry is stated for that width. Measured
+2026-11-02 over 215 videos: `1280x720` ×91, `1112x720` ×53, `1920x1080` ×50,
+`1152x720` ×14, `1670x1080` ×2, `1114x720` ×1, `1278x720` ×1, `1728x1080` ×1,
+`1918x1080` ×1, `1280x718` ×1 — **none below 720p**, and **all 49 files in
+`downloads_1080p` are 1920×1080**.
 
 ### The outstanding work
 
@@ -140,7 +227,7 @@ added at any step.
 | 1 | re-download the lost media | 535 videos | 514 Qullamaggie + 21 Revere. `data/qmg_video_recovery_manifest.json` is the list; 219 are `pending` and 316 `scanning`, so both downloaders already list them. |
 | 2 | download the Qullamaggie 1080p corpus | 539 videos | 588 candidates, 49 already on disk. Use the `visios` client — see CLAUDE.md. |
 | 3 | the `position_table` sweep | the Qullamaggie videos whose positions list is a TradingView table | 10–16 h of EasyOCR at 162–257 s/frame. Layout analysis in `docs/qmg-positions-layout-findings.md`. |
-| 4 | re-OCR for the current parser | — | the recorded readings predate the parser fixes. `tools/evalParserReplay.js` scores the *current* parser over the recorded logs, so the parser is measurable without re-scanning. |
+| 4 | re-OCR for the current parser | — | the recorded readings predate the parser fixes **and** the era-conditional crop, so every captured frame was cropped with the old fixed rectangle. `tools/evalParserReplay.js` scores the *current* parser over the recorded logs, so the parser is measurable without re-scanning — but the CROP is not: a re-scan is the only way to get a sidebar-era frame read at all. **Five sidebar-era dates have been done** — `20230609` reads its 13 holdings exactly, 0 FP, and the four-date batch reads 39/41 (§ *The chart-stream parser* above). |
 | 5 | pin the remaining ground-truth captures | 10 of 104 captures | the ten under the two *annotated duplicate* keys, which no probe log can match and which carry the same readings as the dates they are labelled with. Every date the replay tool can score is pinned. |
 
 ## Re-measuring

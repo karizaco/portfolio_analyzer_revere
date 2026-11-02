@@ -1,6 +1,8 @@
 'use strict';
 // QMG Alt Batch Daemon — alternative settings for comparison
-// Settings: maxCaptures=3, fps=1, maxFrames=12, short-crop=0.86,0.62,0.14,0.22, minFrequency=3
+// Settings: maxCaptures=3, fps=1, maxFrames=12, minFrequency=3
+// (the crop is NOT set here — it is the shipped era-conditional default from
+// src/video/chartStreamCrop.js)
 // Usage: node tools/qmg_alt_batch_daemon.js
 
 const fs = require('fs');

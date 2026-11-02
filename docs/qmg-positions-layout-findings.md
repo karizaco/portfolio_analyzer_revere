@@ -471,7 +471,7 @@ node tools/scanVideoWithOcr.js \
 | `nativeOcrFrame` | `true` | the table's glyphs are ~6.8 source px tall; at 1280 they are ~4.5 px and unreadable |
 | `ocrEngine` | `easyocr` | the reader feeds an upscaled narrow strip — Tesseract's document-trained model cannot read it. Asking for another engine is **refused**, not silently ignored |
 | `phashRegionFraction` | `0.78,0.28,0.22,0.72` | capture-dedup only; the reader locates the table itself |
-| `chartStreamCropFraction` | `0.86,0.62,0.14,0.22` | the crop the **legacy** reader OCRs when the table reader falls back — see § 'Fail-safe' |
+| `chartStreamCropFraction` | era-conditional | the crop the **legacy** reader OCRs when the table reader falls back — see § 'Fail-safe'. It is `0.86,0.60,0.14,0.28` for the 2022-era floating panel and `0.82,0.60,0.18,0.32` for the 2023-era right sidebar, chosen by the upload date (`src/video/chartStreamCrop.js`) |
 | `tableFrameBudgetMs` | `900000` | wall-clock budget for one frame; the per-image OCR timeout is derived from it |
 | `prefilterThreshold` | `8` | matches the profile's own floor |
 | `prefilterMaxFrames` | `3` | each frame costs two OCR batches |

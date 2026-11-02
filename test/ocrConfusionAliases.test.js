@@ -153,6 +153,26 @@ const NEW_ALIASES = [
   // `AL -> AI`: the 2023-era sidebar's two-character tickers lose their first
   // glyph in three different ways.
   ['N', 'AI'],
+  // The row added 2026-11-02 (fourth batch). Found by the PRODUCTION SMOKE
+  // SCAN of 20230609 (`qmg-crop-20261102-smoke`), not by the replay corpus.
+  //
+  // The 20230609 panel's FIRST row is RGTI, and the EasyOCR read of that row
+  // came through as `Rgn` / `RGn` in two of the six OCR'd frames. Normalised,
+  // that is `RGN` — which is one edit away from `REGN`, a REAL ticker in the
+  // seed, so the distance-1 repair pass published REGN instead of RGTI: a
+  // wrong holding, in a portfolio report, on a date whose ground truth holds
+  // RGTI and not REGN.
+  //
+  // Pixel-verified: the panel crops of the same video at t=1944, 972, 3888,
+  // 2916 and 0 all read RGTI in the first row of the Sym column.
+  //
+  // `RGN` is in neither lexicon, `RGTI` is in the seed, and the table has no
+  // row keyed `RGN` and no canonical `RGN` — legal on every invariant.
+  //
+  // It is the fourth row whose canonical is RGTI, after `RGI`, `ROII` and
+  // `RLI`: that row is the most-misread holding on the 2023-era sidebar, and
+  // every one of its misreadings lands on a different ticker.
+  ['RGN', 'RGTI'],
 ];
 
 function confusionRows() {
