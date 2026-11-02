@@ -1744,6 +1744,100 @@ count fell from 38 to 33 — and the five it lost were exactly the wrong ones.
 lexicon; it asserts the property instead — that **every** gain the row adds is
 a read with one of its O's read as a D.
 
+### Two more curated aliases (added 2026-11-02)
+
+Two rows, both **pixel-verified** before they were measured, and both found by the
+same method: a garbled token in a captured frame is located on the source pixels
+**before** an alias is proposed for it. The table is **34 data rows**.
+
+| garbled | canonical | the misread | date | measured worth |
+|---|---|---|---|---|
+| `WHX` | `LHX` | W rendered as H | 20220412 | **+1 hit** (wide corpus), 0 FP |
+| `CBO` | `CBIO` | I dropped | 20220606 | **neutral** — see below |
+
+**`WHX → LHX` is worth a hit.** The marked token box sits precisely on the **LHX**
+glyphs in the Sym column's first row of the pinned crop
+`test/fixtures/qmg_ground_truth/20220412_c0.png` (panel rows LHX, LMT, URA, URNM,
+WEAT, X, COPX, FCX, REGN, NUGT, JNUG; footer "11 Items in Personal WatchList").
+It occurs **exactly once** in the corpus, and only `20220412` moves when it is
+dropped (hit 9 → 10, missed `["LHX","LMT"]` → `["LMT"]`, false positives `[]` →
+`[]`).
+
+**`CBO → CBIO` is pixel-verified but earns nothing today — and the reason is
+instructive.** The 20220606 diag capture's slot-4 token is a **genuine `I`-dropped
+`CBIO`**: its glyph profile has cosine similarity **0.9990** against batch1's `CBIO`
+row, against 0.73–0.81 for every other row of the same panel. It occurs exactly
+once in the corpus, in the Sym column, on a date whose pixel-verified ground truth
+holds `CBIO`.
+
+**It cannot fire, because the column detector latched onto the wrong column.** On
+that capture the detector reported
+
+```jsonc
+{ "column_width": 50, "dominant_x": 770, "dominant_left": 684, "in_list_token_count": 4 }
+```
+
+— the **`% Change`** column at x 684, not the Sym column at x 450 — so `CBO` was
+never inside the detected column, and the alias rescue's spatial test rejected it
+before the table was consulted. The capture's own reading was
+`position_list = ["AI","CF","COIN","CUSS"]`.
+
+**The row is kept anyway, on the 2026-10-31 precedent**: a recorded misread that does
+not fire today can fire on the next frame that reads that way, and the misread is
+real and verified. The alternative — a row that is only kept when it earns a hit —
+would have discarded `KOT` and `RLI` too (§ 'Nine more curated aliases'), which are
+also recorded misreads that earn nothing today.
+
+**Measured, with the same replay and the same corpus as everything else:**
+
+| alias table | default roots | wide corpus |
+|---|---|---|
+| 32 rows (before) | 80/85/81 — 94.1 % / 98.8 % | 132/168/151 — 78.6 % / 87.4 % |
+| **34 rows (shipped)** | **80/85/81 — 94.1 % / 98.8 %** | **133/168/152 — 79.2 % / 87.5 %** |
+
+The default roots do not move (neither date is in that set). The wide corpus gains
+the one `WHX` hit.
+
+**Three candidates were REJECTED, and pixel inspection is what rejected them.** Each
+looked like a plausible misread from the OCR text alone:
+
+| candidate | what it really was | how that was established |
+|---|---|---|
+| `CO → UCO` | a **% Change cell** read as `+0,43%` | the token sits at x 682, in the % Change column of the VLO row — not on `UCO` at all |
+| `REIGN → REGN` | **chart-area ink** | the box lands near the 24.00/23.00 price labels, far from the Sym column |
+| `IMG → IMGN` | the **Sym header band** | the box sits just under the "Sym" header, above the PLTR row; the IMGN row is far below in the 2023-era sidebar |
+
+**The general lesson: the crop geometry must come from the log, and it must be
+validated.** Two errors produced wrong verdicts before the geometry was right:
+
+- **The crop region is not always the default.** `log.phash_region_fraction` records
+  the region the run actually used; the 20220606 diag log used
+  `{"x":0.86,"y":0.55,"w":0.14,"h":0.45}`, **not** the `0.86,0.62,0.14,0.22`
+  chart-stream default. Rendering the default produced an 1187 px image against the
+  log's max word bottom of 2433 — a mismatch that says the geometry is wrong.
+- **The OCR image width is not `log.ocr_frame_width`.** The EasyOCR crop width is
+  **1345** (fixed), whatever the source frame's width. Using the log's
+  `ocr_frame_width` (1280) rendered 2314 px against a max bottom of 2419.
+
+Both are caught by one check: **the rendered height must equal the log's max word
+bottom.** With the right region and the right width the two agree to within ~1 %
+(2432 vs 2419, 2435 vs 2433). A wrong geometry does not merely mis-render — it
+**refutes a real misread**, which is the worst possible failure for a check whose
+whole purpose is to reject false candidates.
+
+**A 7.6 px glyph cannot be read by eye, so the `CBIO`/`CBO` question went to
+arithmetic.** The CBO cell is 15.9 × 7.6 source px; a 4-glyph `CBIO` and a 3-glyph
+`CBO` are indistinguishable by inspection. The **column-intensity cosine similarity**
+of the two glyph profiles settles it: 0.9990 for `CBIO` against 0.73–0.81 for every
+other row in the same panel. **A pixel-identity test beats a human reading of a
+7.6 px glyph** — and it is the only way that row could be verified at all.
+
+**The row-band detector needed its threshold lowered.** A first attempt at locating
+the `CBIO` row used `s/29 > 60` and found only 4 row bands, so it compared
+*different rows* in the two frames — batch1's `CBIO` at y 802–809 against the diag
+frame's `CBO` at y 783–791 — and produced spuriously similar profiles. Lowering the
+threshold to `mx*0.35` over x 1739–1769 found all 10 row bands in both frames, and
+the comparison at the correct y values gave 0.9990.
 ### Measuring the alias table without editing it (2026-10-31)
 
 `config/ticker_ocr_confusions.csv` is **shared** — every tool in the tree reads it — and
@@ -1955,7 +2049,8 @@ the same corpus; the configs differ only where the column says so:
 | HEAD parser + the new lexicons, alias rows **dropped** | 75/85/76 — 88.2 % / 98.7 % | 123/168/143 — 73.2 % / 86.0 % |
 | **new parser** + the new lexicons, alias rows dropped | **80/85/81 — 94.1 % / 98.8 %** | **128/168/149 — 76.2 % / 85.9 %** |
 | new parser + the **old** seed, new observed + alias rows | 78/85/80 — 91.8 % / 97.5 % | 130/168/149 — 77.4 % / 87.2 % |
-| **shipped** — new parser, new lexicons, new alias rows | **80/85/81 — 94.1 % / 98.8 %** | **132/168/151 — 78.6 % / 87.4 %** |
+| new parser, new lexicons, alias rows up to 2026-11-01 | 80/85/81 — 94.1 % / 98.8 % | 132/168/151 — 78.6 % / 87.4 % |
+| **shipped** — plus the two 2026-11-02 alias rows | **80/85/81 — 94.1 % / 98.8 %** | **133/168/152 — 79.2 % / 87.5 %** |
 
 So the three changes are separable and each one earns its place:
 
@@ -2237,10 +2332,64 @@ comment says changing it would move already-measured chart_stream and whiteboard
 results. A change there — giving the seed branch a budget, or making the stride reserve
 leave room — would fix the defect at its source and would need its own measurement.
 
-### The crop A/B (2026-10-31) — one rectangle cannot serve both eras
+### The crop A/B — re-measured 2026-11-02, and the conclusion REVERSED
 
-Three crop rectangles, run against the four md5-pinned fixtures with real EasyOCR, with
-the **current** parser (the nine 2023-era aliases and the left-edge column fix in place):
+**The 2026-10-31 conclusion was wrong, and re-measuring it is what proved it.** The
+original table was taken with the **pre-Filter-B parser** and the **pre-audit ground
+truth**; it said the crop rectangles were within 0.4 points of each other and that no
+wider default was warranted. Against the **current** parser and the **current** ground
+truth, the same four pinned frames separate by **three holdings**, and the separation
+runs the other way.
+
+**The four pinned fixtures, re-measured 2026-11-02** (real EasyOCR, shipped alias
+table, current parser, current ground truth):
+
+| case | current `0.86,0.62,0.14,0.22` | wide `0.86,0.60,0.14,0.32` | wide-x `0.83,0.60,0.17,0.32` |
+|---|---|---|---|
+| trade_ideas 20220218[1] | **9/9** fp1 | 8/9 fp2 | 6/9 fp3 |
+| sparse 20221104[0] | 1/1 fp3 | 1/1 fp3 | 1/1 fp3 |
+| normal_2022 20220606[1] | 7/8 fp3 (miss `TNA`) | **8/8** fp2 | 7/8 fp2 (miss `TNA`) |
+| dense_2023 20230609[0] | 10/13 fp3 (miss `IOT`, `APLD`, `MNDY`) | **13/13** fp0 | 12/13 fp0 (miss `MNDY`) |
+| **total hits / FP** | **27/31**, FP 10 | **30/31**, FP 7 | **26/31**, FP 8 |
+
+`wide` takes the 2023-era case to **13/13 with zero false positives** and recovers
+`TNA` on 20220606. `wide-x` is clearly worse (6/9 on the 2022-era case) — the extra
+x-width pulls chart-area ink into the column.
+
+**Why the reversal: the crop was clipping rows, and Filter B made the difference visible.**
+The 2023-era sidebar's 13 data rows run down to y 931 of 1080; the current crop covers
+y 670–907, so the last two rows — **`APLD` and `MNDY`** — were outside the pixels the
+OCR engine was ever shown. CLAUDE.md had already recorded that those two were "not OCR
+failures" (§ 'Known limitations'). The pre-Filter-B parser could not exploit a taller
+crop because its `yMedian ± 8·lineHeight` window clipped the bottom of a long list
+anyway; Filter B uses the list's own rows, so once the crop carries them the parser
+keeps them. **A crop change and a parser change interact, and only measuring them
+together shows which one is doing the work.**
+
+**The default has NOT changed, and the reason is the entanglement, not the number.**
+`CHART_STREAM_REGION_FRACTION_DEFAULT` (`src/video/ocrScanArgs.js:70`) is not only the
+OCR crop:
+
+| consumer | what it reads | file |
+|---|---|---|
+| the chart-stream profile's `phashRegionFraction` | the **capture-dedup pHash rectangle** | `ocrScanArgs.js:430-431` |
+| `chartStreamCropFraction` | the crop the legacy reader OCRs | `ocrScanArgs.js:456-459` |
+| `runChartStreamOcr`'s `overlayRegion` | what EasyOCR is shown | `scanVideoWithOcr.js:621` |
+| `computeRegionHash` | the dedup hash, used by `pickTopDistinctCandidates` | `scanVideoWithOcr.js:818`, `:880-882` |
+
+So moving the default moves the **dedup rectangle** with it, and the dedup decides which
+captures are kept (`pickTopDistinctCandidates`, Hamming ≤ 6 on the overlay hash). The
+prefilter's own scoring is **not** affected: its ticker rectangle is separate
+(`PREFILTER_PROFILES[...].tickerRegion`, and `summarizeLumaBuffer`'s defaults
+`tickerLeft = 0.85` / `tickerTop = 0.55`).
+
+**A four-frame benchmark cannot move a global default**, and this one now shows a
+three-holding difference — which is a reason to measure *wider*, not a reason to change
+the default on four frames. The wider measurement runs over the **94 pinned ground-truth
+captures** (`test/fixtures/qmg_ground_truth/manifest.json`, all 1920×1080, each with its
+own per-capture reading and its own panel footer).
+
+**The 2026-10-31 table, for the record** (pre-Filter-B parser, pre-audit ground truth):
 
 | case | current `0.86,0.62,0.14,0.22` | tall `0.86,0.60,0.14,0.32` | wide-x `0.83,0.60,0.17,0.32` |
 |---|---|---|---|
@@ -2250,41 +2399,18 @@ the **current** parser (the nine 2023-era aliases and the left-edge column fix i
 | dense_2023 20230609[0] | 9/13 fp3 | 9/13 **fp0** | **11/13** fp0 |
 | **overall mean recall** | **86.4 %** | **86.8 %** | **81.9 %** |
 
-Two facts:
+Its conclusion — "no wider default; an era-conditional crop or the `position_table`
+reader" — was correct **for that parser**, and the `position_table` reader still
+measures **11/13 with 0 FP** on the 2023-era frame. But the `wide` crop now reaches
+**13/13 with 0 FP** on the same frame, so the reader is no longer the only route to
+those rows.
 
-- **`wide-x` recovers `APLD` and `MNDY`** — the two rows the crop was clipping — taking
-  20230609 to **84.6 %** (11/13) with **zero** false positives.
-- **The same rectangle costs the 2022-era panel four holdings** (8/9 → 5/9).
-
-So the fix is **not** a wider default: it is an era-conditional crop, or routing 2023-era
-videos to the `position_table` reader, which measured **11/13 with 0 FP** on that same
-frame — the same 11/13 the wide-x crop reaches, and one better than the chart-stream
-path's current 9/13 (see § 'Positions-TABLE reader').
-
-**`tall` is the closest call, and it is still not a win.** It beats `current` on the
-overall mean by **0.4 points** (86.8 % vs 86.4 %) with **zero** false positives on
-20230609 and `TNA` recovered on 20220606 — but it **loses `TQQQ`** on the 2022-era
-`trade_ideas` case and adds a false positive there. A four-frame benchmark cannot
-separate a 0.4-point difference, and the crop is applied to **every** chart-stream scan,
-so the default stays where it is until a wider measurement says otherwise.
-
-The `current` column is the benchmark table above, reproduced — 8/9, 1/1, 7/8, 9/13 with
-2, 3, 3 and 3 false positives — which is the evidence that the measurement is being
-taken against the same code the benchmark reports. (Before the nine aliases and the
-column fix, this same column read 7/13 and 82.6 %.)
-
-**This table is a snapshot, and two things have moved since it was taken.** It was
-measured with the **pre-Filter-B parser** and against the **pre-audit ground truth**.
-The current parser and the current ground truth read **9/9, 1/1, 7/8, 10/13 —
-91.1 %** on the `current` crop (§ 'Known limitations and next steps'). The three
-crop rectangles have **not** been re-measured against the new parser and the new
-ground truth, so the *comparison between the rectangles* is still the 2026-10-31
-measurement — a different question from the current default's score. Re-running
-it costs three EasyOCR sweeps of the four pinned frames; it has not been done, and
-the conclusion it reached (no wider default; an era-conditional crop or the
-`position_table` reader) is unchanged by the Filter B work, which is a parser
-rule and not a crop change.
-
+**The lesson: a measurement taken against a parser that has since changed is a
+measurement of that parser.** The four-frame table was not wrong when it was taken; it
+was read as a statement about the *crop* when it was a statement about the crop *and*
+the parser of the day. The 2026-10-31 crop section said "the default stays where it is
+until a wider measurement says otherwise" — that rule was right, and it is still the
+rule. What changed is that the wider measurement now exists.
 
 **PaddleOCR PP-OCRv6**: the packages ARE installed — `tools/paddle311_env` (Python 3.11.9) has
 paddleocr 2.7.3 + paddlepaddle 2.6.2, and `tools/paddle312_env` / `tools/paddle_env`
@@ -2821,19 +2947,21 @@ words nor a surviving snapshot.
 profile: 0 of 205 September logs carry `ocr_words`, 36 of 124 October ones do.
 Any statistic derived from it describes the later crop/tuning era only.
 
-The current figures (re-measured 2026-11-01, after the curated-alias
+The current figures (re-measured 2026-11-02, after the curated-alias
 rescue, the SPXL seed fix, the nine 2023-era curated aliases, the left-edge
 column fix, all three passes of the ground-truth audit, **the Filter B
-rewrite**, the four 2022-era alias rows and the 16 pixel-verified seed rows):
+rewrite**, the four 2022-era alias rows, the 16 pixel-verified seed rows and
+**the two 2026-11-02 alias rows**):
 
 | root set | dates scored | recall | precision |
 |---|---|---|---|
 | default (8 probe roots) | 8 | **94.1 %** (80/85) | **98.8 %** (80/81) |
-| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **78.6 %** (132/168) | **87.4 %** (132/151) |
+| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **79.2 %** (133/168) | **87.5 %** (133/152) |
 
 (The attribution of every step is in § 'Filter B — the position-aware vertical
 bound': the Filter B rewrite is +5 hits on each corpus, the four alias rows
-are +4 on the wide corpus, and the 16 seed rows are +2 on each.)
+are +4 on the wide corpus, the 16 seed rows are +2 on each, and the two
+2026-11-02 rows are +1 on the wide corpus — see § 'Two more curated aliases'.)
 
 (Before the nine 2023-era aliases: 66.3 % (59/89) / 95.2 % (59/62) on the default roots,
 and 64.7 % (110/170) / 82.1 % (110/134) on the wide corpus. See § 'Nine more curated

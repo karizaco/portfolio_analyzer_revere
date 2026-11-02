@@ -118,11 +118,12 @@ node tools/evalParserReplay.js data/video_ocr_probe data/video_scan_test/_rerun 
 | corpus | dates scored | recall | precision |
 |---|---|---|---|
 | default (8 probe roots) | 8 | **94.1 %** (80/85) | **98.8 %** (80/81) |
-| wide (`video_ocr_probe` + `_rerun`) | 17 | **78.6 %** (132/168) | **87.4 %** (132/151) |
+| wide (`video_ocr_probe` + `_rerun`) | 17 | **79.2 %** (133/168) | **87.5 %** (133/152) |
 
-Measured 2026-11-01, after the Filter B rewrite, the four 2022-era alias rows
-and the 16 pixel-verified seed rows. The attribution of every step is in
-CLAUDE.md § *Filter B — the position-aware vertical bound*.
+Measured 2026-11-02, after the Filter B rewrite, the four 2022-era alias rows,
+the 16 pixel-verified seed rows and the two 2026-11-02 alias rows. The
+attribution of every step is in CLAUDE.md § *Filter B — the position-aware
+vertical bound*.
 
 **This is a surviving sample, not a corpus-wide figure** — the tool prints a
 census on every run, and **read the number with the census**.
