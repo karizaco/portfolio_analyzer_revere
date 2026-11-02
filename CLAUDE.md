@@ -1839,22 +1839,41 @@ frame's `CBO` at y 783–791 — and produced spuriously similar profiles. Lower
 threshold to `mx*0.35` over x 1739–1769 found all 10 row bands in both frames, and
 the comparison at the correct y values gave 0.9990.
 
-### The LI row, and two more aliases (added 2026-11-02)
+### The LI row, and three more aliases (added 2026-11-02)
 
 `LI` is the holding the corpus misreads most often. It is read as three different
 things on three 2023-era dates, and **two** of the three are recoverable. The table
-is **36 data rows**.
+is **37 data rows**.
 
 | garbled | canonical | the misread | date | measured worth |
 |---|---|---|---|---|
 | `V` | `LI` | L and I merged into one V glyph | 20230523 | **+1 hit** (both corpora), 1 FP removed |
 | `NCH` | `FTCH` | FT rendered as N and C | 20230523 | **+1 hit** (both corpora), 1 FP removed |
+| `N` | `AI` | L dropped and I read as N | 20230605 | **+1 hit** (both corpora) |
 
-**Both rows were pixel-verified before they were proposed.** The corpus frame
+**All three rows were pixel-verified before they were proposed.** The corpus frame
 `data/video_ocr_probe/batch15-v2/snapshots/revere_20230523.png` reads, in the
 ticker column, `QBTS, FTCH, DNA, AI, SOUN, PLTR, APLD, IMGN, MNDY, LI, CVNA`
 with the footer "11 Items in Personal WatchList". The OCR read the **LI** row as
 `V` (left 97, top 1537, conf 0.108) and the **FTCH** row as `Nch`.
+
+The third row comes from `data/video_ocr_probe/qmg-easyocr-20261017/snapshots/
+qmg_20230605.png`, whose "A - Positions" panel reads, top to bottom:
+
+```text
+IMGN, ARQQ, CVNA, IOT, PLTR, GSIT, MNDY, APLD, AI, QBTS, DNA
+```
+
+The OCR read that column as `INGN, AQQ, CVNA, IOT, ATR, GS0T, MNDY, APLD, N,
+OBTS, DNA` — the **AI** row came through as a bare `N`. The repair pass cannot
+reach it: it skips tokens shorter than two characters, and the single letters it
+does accept are the seed's own `U`, `X` and `P`. `N` is in neither lexicon, `AI`
+is in the seed, and the table has no row keyed `N` and no canonical `N` — so the
+row is legal on every invariant.
+
+**`AI` is now the canonical of three rows** — `A → AI`, `AL → AI` and `N → AI`.
+The 2023-era sidebar's two-character tickers lose their first glyph in three
+different ways, and each row is a recorded misread against a real frame.
 
 **`U → LI` was rejected, and the invariant is why.** The 20230522 capture reads the
 same LI row as a plain `U` — and `U` is a **seed ticker** (`config/ticker_lexicon_seed.csv`
@@ -1870,11 +1889,12 @@ is legal.
 | alias table | default roots | wide corpus |
 |---|---|---|
 | 34 rows (before) | 80/85/81 — 94.1 % / 98.8 % | 133/168/152 — 79.2 % / 87.5 % |
-| **36 rows (shipped)** | **82/85/82 — 96.5 % / 100 %** | **135/168/153 — 80.4 % / 88.2 %** |
+| 36 rows (`V`, `NCH`) | 82/85/82 — 96.5 % / 100 % | 135/168/153 — 80.4 % / 88.2 % |
+| **37 rows (shipped)** | **83/85/83 — 97.6 % / 100 %** | **136/168/154 — 81.0 % / 88.3 %** |
 
-Only **20230523** moves: 9 of 11 with one false positive becomes **11 of 11 with
-none**. The default roots reach **100 % precision** for the first time. No false
-positive was added on either corpus.
+Only **20230523** and **20230605** move: 9 of 11 with one false positive becomes
+**11 of 11 with none**, and 10 of 11 becomes **11 of 11**. The default roots reach
+**100 % precision** for the first time. No false positive was added on either corpus.
 
 **The two LI readings that stay missed are OCR losses, and they are not reachable by
 any alias row.** 20230522 reads the LI row as a plain `U` (the invariant above), and
@@ -2137,6 +2157,7 @@ the same corpus; the configs differ only where the column says so:
 | new parser, new lexicons, alias rows up to 2026-11-01 | 80/85/81 — 94.1 % / 98.8 % | 132/168/151 — 78.6 % / 87.4 % |
 | **shipped** — plus the two 2026-11-02 alias rows | **80/85/81 — 94.1 % / 98.8 %** | **133/168/152 — 79.2 % / 87.5 %** |
 | **shipped** — plus the two 2026-11-02 `LI`/`FTCH` rows | **82/85/82 — 96.5 % / 100 %** | **135/168/153 — 80.4 % / 88.2 %** |
+| **shipped** — plus the 2026-11-02 `N → AI` row | **83/85/83 — 97.6 % / 100 %** | **136/168/154 — 81.0 % / 88.3 %** |
 
 So the three changes are separable and each one earns its place:
 
@@ -2146,6 +2167,7 @@ So the three changes are separable and each one earns its place:
 | the **four alias rows** (row 2 vs row 3) | nothing | **+4 hits** |
 | the **16 seed rows** (shipped vs row 5) | **+2 hits** | **+2 hits** |
 | the two 2026-11-02 `LI`/`FTCH` rows | **+2 hits** | **+2 hits** |
+| the 2026-11-02 `N → AI` row | **+1 hit** | **+1 hit** |
 
 **Per date, with the rule in isolation** (the legacy window against the list's
 own rows, the same config files on both sides):
@@ -3038,19 +3060,19 @@ The current figures (re-measured 2026-11-02, after the curated-alias
 rescue, the SPXL seed fix, the nine 2023-era curated aliases, the left-edge
 column fix, all three passes of the ground-truth audit, **the Filter B
 rewrite**, the four 2022-era alias rows, the 16 pixel-verified seed rows and
-**the four 2026-11-02 alias rows**):
+**the five 2026-11-02 alias rows**):
 
 | root set | dates scored | recall | precision |
 |---|---|---|---|
-| default (8 probe roots) | 8 | **96.5 %** (82/85) | **100 %** (82/82) |
-| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **80.4 %** (135/168) | **88.2 %** (135/153) |
+| default (8 probe roots) | 8 | **97.6 %** (83/85) | **100 %** (83/83) |
+| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **81.0 %** (136/168) | **88.3 %** (136/154) |
 
 (The attribution of every step is in § 'Filter B — the position-aware vertical
 bound': the Filter B rewrite is +5 hits on each corpus, the four alias rows
 are +4 on the wide corpus, the 16 seed rows are +2 on each, and the two
 2026-11-02 rows are +1 on the wide corpus — see § 'Two more curated aliases'.
-The `LI`/`FTCH` rows are +2 on **each** corpus — see § 'The LI row, and two more
-aliases'.)
+The `LI`/`FTCH` rows are +2 on **each** corpus and the `N → AI` row is +1 on
+each — see § 'The LI row, and three more aliases'.)
 
 (Before the nine 2023-era aliases: 66.3 % (59/89) / 95.2 % (59/62) on the default roots,
 and 64.7 % (110/170) / 82.1 % (110/134) on the wide corpus. See § 'Nine more curated
