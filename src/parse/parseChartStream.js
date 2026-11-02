@@ -276,6 +276,115 @@ function findPanelBoundaries(words) {
   return { positionsLine, watchlistLine };
 }
 
+// How many row pitches a gap may span and still be "the row the OCR skipped"
+// rather than "a different widget".
+//
+// Measured on the corpus: a list row the OCR read as a bare digit (a row read
+// as "4") leaves a 272 px hole = three pitches, and a 2.5-pitch limit split
+// the run there and dropped the real holding PLTR above the hole. A 3.5-pitch
+// limit keeps the run whole. The limit is safe because the panel's
+// "A - Positions" header is an independent upper bound — a token every one of
+// whose occurrences is above that header is rejected whatever the run says —
+// and the measured corpus totals are identical at 2.5 and at 3.5.
+const POSITION_LIST_ROW_GAP_LIMIT = 3.5;
+
+// Select the position list's OWN rows out of the column's candidate words.
+//
+// The column detector finds the stack's x; this finds its vertical extent.
+// A position list is a CONTIGUOUS vertical stack of rows at a constant pitch
+// (~90 px in the 5x-scaled EasyOCR crop), and that stack — not a window
+// around a median — is what a position-aware filter has to be built on.
+//
+// The old Filter B window was `yMedian +/- 8 * lineHeight`, where lineHeight
+// is the median word HEIGHT (~54 px) where the intent was ROWS (~90 px
+// apart): the window spanned only ~4.8 rows either side of the median, so it
+// clipped the first and last row of any list longer than that. Measured
+// corpus-wide, that window dropped 50 ground-truth holdings.
+//
+// The run is found by splitting the column's words wherever the gap between
+// two consecutive ROWS is wider than a row pitch. A gap of up to
+// POSITION_LIST_ROW_GAP_LIMIT pitches is still "the row the OCR skipped" and
+// stays inside the run; anything wider starts a new run. The longest run is
+// the list; a tie is broken by the price-aligned rows, which certainly carry a
+// price to their right.
+function selectPositionListRun(members, splitLimit = POSITION_LIST_ROW_GAP_LIMIT) {
+  if (!Array.isArray(members) || members.length < 2) return null;
+  // Group the column's words into ROWS first.
+  //
+  // Two words on the same OCR line are the SAME row of the table — a ticker
+  // and its price, or a chart annotation sitting beside the ticker. Counting
+  // them as two rows halves the pitch estimate: on the 20220323 Tesseract
+  // capture the row pitch is ~48 px, but the same-row pairs (5-8 px apart)
+  // dragged it down to 8 px, and a run found at that pitch is two rows wide.
+  const byLine = new Map();
+  for (const m of members) {
+    const key = Number.isFinite(m.line) ? `L${m.line}` : `Y${Math.round(m.yCenter)}`;
+    if (!byLine.has(key)) byLine.set(key, []);
+    byLine.get(key).push(m);
+  }
+  const rows = [...byLine.values()].map((group) => {
+    const ys = group.map((g) => g.yCenter).sort((a, b) => a - b);
+    return {
+      members: group,
+      y: ys[Math.floor(ys.length / 2)],
+      priced: group.some((g) => g.priceAligned),
+    };
+  }).sort((a, b) => a.y - b.y);
+  if (rows.length < 2) return null;
+
+  const gaps = [];
+  for (let i = 1; i < rows.length; i += 1) {
+    const gap = rows[i].y - rows[i - 1].y;
+    if (gap > 0) gaps.push(gap);
+  }
+  if (!gaps.length) return null;
+  const sortedGaps = [...gaps].sort((a, b) => a - b);
+  // The row pitch is the QUARTILE of the gaps, not their median: a single
+  // wide separation (the gap between two panels) drags a short gap list's
+  // median into the space BETWEEN the two clusters, and the pitch has to
+  // land on the cluster that is actually the list.
+  const quartile = sortedGaps[Math.floor(sortedGaps.length * 0.25)];
+  const tight = gaps.filter((g) => g <= quartile * 2.5).sort((a, b) => a - b);
+  const pitch = tight.length ? tight[Math.floor(tight.length / 2)] : quartile;
+  if (!Number.isFinite(pitch) || pitch <= 0) return null;
+  const limit = pitch * splitLimit;
+  const runs = [];
+  let current = [rows[0]];
+  for (let i = 1; i < rows.length; i += 1) {
+    const gap = rows[i].y - rows[i - 1].y;
+    if (gap > limit) {
+      runs.push(current);
+      current = [rows[i]];
+    } else {
+      current.push(rows[i]);
+    }
+  }
+  runs.push(current);
+  // The longest run is the list. A tie is broken by the price-aligned rows,
+  // which are the rows that certainly carry a price to their right.
+  let best = null;
+  let bestPriced = -1;
+  for (const run of runs) {
+    const priced = run.filter((r) => r.priced).length;
+    if (!best || run.length > best.length || (run.length === best.length && priced > bestPriced)) {
+      best = run;
+      bestPriced = priced;
+    }
+  }
+  if (!best || best.length < 2) return null;
+  const entries = best.flatMap((r) => r.members);
+  return {
+    words: new Set(entries.map((m) => m.word)),
+    entries,
+    rows: best.length,
+    top: best[0].y,
+    bottom: best[best.length - 1].y,
+    pitch,
+    size: entries.length,
+    runs: runs.length,
+  };
+}
+
 function identifyPositionListColumn(words, cropWidth = null, engine = null) {
   if (!Array.isArray(words) || !words.length) {
     return { inListTickers: new Set(), dominantColumnX: null, dominantColumnLeft: null, columnWidth: 0 };
@@ -370,7 +479,14 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
       left: w.left,
       line: w.line,
       right: w.left + w.width,
-      text: upper
+      text: upper,
+      // The original word, so a filter can ask "is THIS occurrence in the
+      // list's row stack" and not merely "is some occurrence of this ticker
+      // somewhere near the list".
+      word: w,
+      yCenter: Number.isFinite(w.top)
+        ? w.top + (Number.isFinite(w.height) ? w.height : 0) / 2
+        : null,
     };
     tickerWords.push(entry);
     if (lineRightHasPrice.get(w.line)) {
@@ -505,10 +621,39 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null) {
   const stackLines = new Set(stackMembers.map((tw) => tw.line));
   const stackIsReal = stackMembers.length >= 4 && stackLines.size >= 4;
   if (!stackIsReal && !(columnIsPriceAligned && priceAlignedTickers.length >= 2)) {
-    return { inListTickers: new Set(), dominantColumnX: null, dominantColumnLeft: null, columnWidth: 0 };
+    return { inListTickers: new Set(), dominantColumnX: null, dominantColumnLeft: null, columnWidth: 0, listRun: null };
   }
 
-  return { columnWidth, dominantColumnX: dominantX, dominantColumnLeft, inListTickers, stackLines: stackLines.size };
+  // The list's OWN rows, for Filter B's vertical bound.
+  //
+  // The column's x is not a sufficient bound on its own: a scanner-panel or
+  // chart token can sit at exactly the position list's x and still be nothing
+  // of the kind. The rows of the list are a contiguous stack at a constant
+  // pitch, and that stack is what a position-aware filter must be built on.
+  //
+  // Membership uses the UNION of the left-edge and centre tests, for the same
+  // reason the curated-alias rescue uses it: the table is left-aligned, so a
+  // short garbled ticker starts where every other ticker starts even though
+  // its centre sits far to the left of theirs.
+  const unionColumnMembers = tickerWords.filter((tw) => {
+    if (!Number.isFinite(tw.yCenter)) return false;
+    if (dominantColumnLeft == null) return Math.abs(tw.center - dominantX) <= columnWidth / 2;
+    return Math.abs(tw.left - dominantColumnLeft) <= columnWidth / 2
+      || Math.abs(tw.center - dominantX) <= columnWidth / 2;
+  });
+  const priceAlignedLines = new Set(priceAlignedMembers.map((tw) => tw.line));
+  const listRun = selectPositionListRun(
+    unionColumnMembers.map((tw) => ({ ...tw, priceAligned: priceAlignedLines.has(tw.line) }))
+  );
+
+  return {
+    columnWidth,
+    dominantColumnX: dominantX,
+    dominantColumnLeft,
+    inListTickers,
+    stackLines: stackLines.size,
+    listRun,
+  };
 }
 
 // Extract ALL ticker-shaped tokens from OCR text (ignores lexicon).
@@ -620,16 +765,22 @@ function parseChartStreamPositionList({ ocr } = {}) {
   // price-nearby + lexicon + edit-distance behavior so existing callers
   // keep working.
   const hasWordPositions = words && words.length > 0;
-  const { inListTickers, dominantColumnX, dominantColumnLeft, columnWidth } = hasWordPositions
+  const { inListTickers, dominantColumnX, dominantColumnLeft, columnWidth, listRun } = hasWordPositions
     ? identifyPositionListColumn(words, ocr._cropWidth || null, ocr._engine || null)
-    : { inListTickers: new Set(), dominantColumnX: null, dominantColumnLeft: null, columnWidth: 0 };
+    : { inListTickers: new Set(), dominantColumnX: null, dominantColumnLeft: null, columnWidth: 0, listRun: null };
 
   // Build per-ticker line + word lookups from raw OCR word positions.
   // - tickerLineMap: ticker → array of line indices (used by Filter G)
   // - tickerWordMap: ticker → first raw word record with bbox (used by Filter B)
+  // - tickerWordsMap: ticker → EVERY raw word record with that text (used by
+  //   Filter B's row-stack test, which asks "does ANY occurrence of this
+  //   ticker sit on one of the list's own rows?"). A ticker can be read more
+  //   than once in a frame — on its own row, and again in a scanner panel
+  //   above it — and the first occurrence alone is not always the holding.
   // These are skipped when the OCR engine does not surface per-word positions.
   const tickerLineMap = new Map();
   const tickerWordMap = new Map();
+  const tickerWordsMap = new Map();
   if (hasWordPositions) {
     for (const w of words) {
       const upper = (w.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
@@ -639,6 +790,8 @@ function parseChartStreamPositionList({ ocr } = {}) {
         tickerLineMap.get(upper).push(w.line);
       }
       if (!tickerWordMap.has(upper)) tickerWordMap.set(upper, w);
+      if (!tickerWordsMap.has(upper)) tickerWordsMap.set(upper, []);
+      tickerWordsMap.get(upper).push(w);
     }
   }
 
@@ -665,6 +818,23 @@ function parseChartStreamPositionList({ ocr } = {}) {
   const panelGateActive = positionsLine != null
     && watchlistLine != null
     && watchlistLine > positionsLine;
+
+  // The y of the "A - Positions" header, when one was detected.
+  //
+  // The header is the panel's OWN upper bound, and it is independent of the
+  // row pitch: every row of the position list is BELOW it, and the scanner
+  // panel above it is not part of the list. The run's own extent cannot
+  // supply this bound — it is derived from the list's rows, so a panel above
+  // the list is separated from it by a gap the run has to guess at.
+  let positionsHeaderY = null;
+  if (hasWordPositions && positionsLine != null) {
+    for (const w of words) {
+      if (w.line !== positionsLine) continue;
+      if (!Number.isFinite(w.top)) continue;
+      const y = w.top + (Number.isFinite(w.height) ? w.height : 0) / 2;
+      if (positionsHeaderY == null || y > positionsHeaderY) positionsHeaderY = y;
+    }
+  }
   // The same rule the column detector uses: the watchlist bound only counts
   // when the watchlist header is BELOW the positions header.
   const watchlistBelowPositions = watchlistLine != null
@@ -852,19 +1022,46 @@ function parseChartStreamPositionList({ ocr } = {}) {
     }
   }
 
-  // Filter B: position-aware bounding-box y-range filter.
-  // Real position-list tickers share a consistent y-range (one row per
-  // ticker in the position-list column). Chart-area tokens (NVDA on a
-  // chart-axis label, AMD/INTC/MU in a sub-plot annotation, MSTR/COIN
-  // bleeding from chart overlay) have bboxes that fall outside this
-  // range. Compute the median y-center of accepted tickers' bboxes
-  // and reject any ticker whose y-center falls outside [yMedian - 2*lineHeight,
-  // yMedian + 2*lineHeight].
+  // Filter B: the position-aware vertical bound.
   //
-  // Requires at least 2 accepted tickers to compute median. Falls back
-  // to skipping the filter when fewer accepted tickers exist (rare —
-  // these are sparse single-ticker frames where position-aware filtering
-  // would be unreliable).
+  // A position list is one row per ticker in the position-list column, and
+  // the rows are a CONTIGUOUS vertical stack at a constant pitch. Chart-area
+  // tokens (NVDA on a chart-axis label, AMD/INTC/MU in a sub-plot annotation,
+  // MSTR/COIN bleeding from chart overlay) and scanner-panel tokens sit
+  // outside that stack. Filter B is what keeps them out of the reading.
+  //
+  // The rule this replaced was a window around the median of the accepted
+  // tickers' bbox centres: [yMedian - 8*lineHeight, yMedian + 8*lineHeight].
+  // `lineHeight` is the median word HEIGHT (~54 px) where the intent was ROWS
+  // (~90 px apart), so the window spanned only ~4.8 rows either side of the
+  // median and clipped the first and last row of any list longer than about
+  // nine rows. Measured corpus-wide, that window dropped 50 ground-truth
+  // holdings.
+  //
+  // The rule now is the list's OWN ROWS (`listRun`, above) plus the panel's
+  // own upper bound — nothing above the "A - Positions" header is a
+  // position. A ticker is a holding when ONE of its OCR occurrences sits on
+  // one of the stack's rows; "one of" matters, because a ticker read both on
+  // its own row and again in a widget above it is a holding, and the first
+  // occurrence alone would lose it.
+  //
+  // Measured with the no-OCR replay (`node tools/evalParserReplay.js`).
+  // Both columns below use the SAME config files (the 2026-11-01 seed and
+  // observed lexicons, and the alias table WITHOUT the four rows added the
+  // same day), so the difference is the rule and nothing else:
+  //
+  //   corpus          legacy window            this rule
+  //   default (8)     75/85/76  88.2 / 98.7%   80/85/81  94.1 / 98.8%
+  //   wide (17)      123/168/143 73.2 / 86.0%  128/168/149 76.2 / 85.9%
+  //
+  // (hit / ground-truth / predicted, then micro recall and precision.)
+  //
+  // With the four alias rows and the 16 new seed rows in place as well, the
+  // shipped figures are 80/85/81 (94.1 / 98.8%) on the default roots and
+  // 132/168/151 (78.6 / 87.4%) on the wide corpus.
+  //
+  // When the column could not be identified there are no rows to test
+  // against, and the legacy window is the only thing left to fall back on.
   let bboxFilterInfo = null;
   if (hasWordPositions && accepted.length >= 2) {
     const acceptedBboxes = [];
@@ -872,7 +1069,7 @@ function parseChartStreamPositionList({ ocr } = {}) {
       const rawTicker = canonicalToRawTicker.get(ticker) || ticker;
       const w = tickerWordMap.get(rawTicker);
       if (w && Number.isFinite(w.top) && Number.isFinite(w.height) && w.height > 0) {
-        acceptedBboxes.push({ ticker, yCenter: w.top + w.height / 2 });
+        acceptedBboxes.push({ ticker, yCenter: w.top + w.height / 2, xLeft: w.left });
       }
     }
     if (acceptedBboxes.length >= 2) {
@@ -885,24 +1082,38 @@ function parseChartStreamPositionList({ ocr } = {}) {
       const lineHeight = lineHeights.length
         ? lineHeights[Math.floor(lineHeights.length / 2)]
         : 20;  // fallback for sparse words
-      // Position lists are sorted by market cap (largest → smallest, top → bottom
-      // of the UI panel). The tickers form a contiguous vertical stack with
-      // roughly equal spacing. Use ±8×lineHeight (~448px for lineHeight=56)
-      // as the accept range around the median y-center. Calibrated on the 20230518
-      // case where position-list tickers span 744-1314px (PLTR at top, APLD at
-      // bottom) — ±8× gives yMin=665, yMax=1561, accepting all GT tickers.
-      // A tighter ±2× range (~112px) clipped the top and bottom rows of the
-      // position list, losing 15-25% of tickers. The wider range comfortably
-      // covers 10+ row position lists. Chart-area bleed FPs that land outside
-      // this range are handled by the lexicon filter and clusterer.
+      // The legacy window, kept only as the fallback for a frame whose column
+      // could not be identified.
       const yMin = yMedian - 8 * lineHeight;
       const yMax = yMedian + 8 * lineHeight;
       const withinBbox = new Set();
-      for (const { ticker, yCenter } of acceptedBboxes) {
-        if (yCenter >= yMin && yCenter <= yMax) {
-          withinBbox.add(ticker);
-        } else {
+      if (listRun && listRun.words.size >= 2) {
+        for (const { ticker } of acceptedBboxes) {
+          const raw = canonicalToRawTicker.get(ticker) || ticker;
+          const occurrences = tickerWordsMap.get(raw) || [];
+          // The panel's own upper bound: a token every one of whose
+          // occurrences is above the "A - Positions" header is not a
+          // position, whatever the run says. This is what separates a
+          // scanner panel above the list (TAN on 20230523, BABA and HAL on
+          // 20230602) from the list itself.
+          const allAboveHeader = positionsHeaderY != null
+            && occurrences.length > 0
+            && occurrences.every((w) => {
+              const y = w.top + (Number.isFinite(w.height) ? w.height : 0) / 2;
+              return Number.isFinite(w.top) && y < positionsHeaderY;
+            });
+          if (allAboveHeader) { rejected.push(ticker); continue; }
+          const inRun = occurrences.some((w) => listRun.words.has(w));
+          if (inRun) { withinBbox.add(ticker); continue; }
           rejected.push(ticker);
+        }
+      } else {
+        for (const { ticker, yCenter } of acceptedBboxes) {
+          if (yCenter >= yMin && yCenter <= yMax) {
+            withinBbox.add(ticker);
+          } else {
+            rejected.push(ticker);
+          }
         }
       }
       // Re-filter accepted in place, preserving order
@@ -912,11 +1123,24 @@ function parseChartStreamPositionList({ ocr } = {}) {
         }
       }
       bboxFilterInfo = {
+        rule: listRun && listRun.words.size >= 2 ? 'list_rows' : 'y_window',
+        list_rows: listRun
+          ? {
+            rows: listRun.rows,
+            members: listRun.size,
+            top: Math.round(listRun.top),
+            bottom: Math.round(listRun.bottom),
+            pitch: Math.round(listRun.pitch),
+            runs: listRun.runs,
+            positions_header_y: positionsHeaderY == null ? null : Math.round(positionsHeaderY),
+          }
+          : null,
         y_median: yMedian,
         line_height: lineHeight,
         y_min: yMin,
         y_max: yMax,
-        rejected_count: acceptedBboxes.length - withinBbox.size
+        rejected_count: acceptedBboxes.length - withinBbox.size,
+        rejected_tickers: acceptedBboxes.filter((b) => !withinBbox.has(b.ticker)).map((b) => b.ticker),
       };
     }
   }
