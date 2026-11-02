@@ -153,12 +153,15 @@ the clusterer **absorbed** a real holding (`LI` into `AI`, one edit apart) and
 **invented** one (`ARCO` → `AAPL`, a seed ticker no frame ever showed).
 CLAUDE.md § *The 2023-era production scan, four more dates*.
 
-**A batch's `TIMEOUT` currently says nothing about whether the video was
-read.** The scan tool prints its whole result object to stdout at the end, and
-the batch drains **stderr only** — so the child blocks forever on a full 64 KB
+**A batch's `TIMEOUT` used to say nothing about whether the video was read.**
+The scan tool prints its whole result object to stdout at the end, and the
+batch drained **stderr only** — so the child blocked forever on a full 64 KB
 Windows pipe *after* writing a complete probe log. Every EasyOCR chart-stream
-batch video burns the full 40-minute budget and is recorded as a failure even
-when it succeeded. The fix is in the batch (drain stdout), not the scan tool.
+batch video burned the full 40-minute budget and was recorded as a failure even
+when it succeeded. **Fixed**: `superviseChild()` in `tools/runQmgOcrBatch.js`
+drains stdout, and `test/qmgBatchStdout.test.js` pins it (two of its four
+tests fail against the pre-fix code). The scan tool was not at fault — printing
+its result is correct, and the fault was a tool that could not be supervised.
 CLAUDE.md § *The scan writes its log and does not exit*.
 
 The curated EasyOCR benchmark (`npm run test:benchmark`, the four md5-pinned
