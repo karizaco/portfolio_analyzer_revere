@@ -14,6 +14,8 @@ const {
   formatDuration,
   groupContiguousCandidates,
   inferDateKey,
+  PREFILTER_HEIGHT,
+  PREFILTER_WIDTH,
   scoreFramePrefilter,
   scoreSnapshotCandidate,
   scoreWhiteboardCandidate,
@@ -222,6 +224,55 @@ test('analyzeFrameBeforeOcr can score a generated bright frame', async () => {
 
   assert.ok(stats.brightRatio > 0.5);
   assert.ok(scoreFramePrefilter(stats, 'whiteboard') > 10);
+});
+
+test('analyzeFrameBeforeOcr honours a resolution override, and the default is unchanged', async () => {
+  const sharp = require('sharp');
+  const tempDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'ocr-prefilter-res-'));
+  const filePath = path.join(tempDirectory, 'frame.png');
+  const width = 640;
+  const height = 360;
+  const pixels = Buffer.alloc(width * height * 3, 30);
+
+  // A block of mid-tone text in the bottom-right corner — the shape the
+  // 2023-era sidebar's position list has.
+  for (let rowIndex = 200; rowIndex < 340; rowIndex += 6) {
+    for (let columnIndex = 520; columnIndex < 620; columnIndex += 4) {
+      const pixelIndex = ((rowIndex * width) + columnIndex) * 3;
+      pixels[pixelIndex] = 120;
+      pixels[pixelIndex + 1] = 120;
+      pixels[pixelIndex + 2] = 120;
+    }
+  }
+  await sharp(pixels, { raw: { width, height, channels: 3 } }).png().toFile(filePath);
+
+  const region = { left: 0.82, top: 0.6 };
+
+  // The default is the pipeline's own resolution, and passing it explicitly
+  // changes nothing.
+  const byDefault = await analyzeFrameBeforeOcr(filePath, region);
+  const byExplicit = await analyzeFrameBeforeOcr(filePath, region, {
+    width: PREFILTER_WIDTH,
+    height: PREFILTER_HEIGHT
+  });
+  assert.equal(byDefault.tickerRegionPixels, byExplicit.tickerRegionPixels);
+  assert.equal(byDefault.midToneRatioTickerRegion, byExplicit.midToneRatioTickerRegion);
+
+  // At the default 160x90 the sidebar's ticker rectangle is a handful of
+  // pixels, which is the whole reason the mid-tone signal is degenerate
+  // there (CLAUDE.md § 'The prefilter's rectangle'). A larger working
+  // resolution gives the same rectangle more pixels, and that is the point
+  // of the override: it lets the resolution be MEASURED.
+  const large = await analyzeFrameBeforeOcr(filePath, region, { width: 640, height: 360 });
+  assert.ok(
+    large.tickerRegionPixels > byDefault.tickerRegionPixels * 10,
+    `the larger resolution should give the region far more pixels `
+    + `(${large.tickerRegionPixels} vs ${byDefault.tickerRegionPixels})`
+  );
+
+  // A nonsense override falls back to the default rather than throwing.
+  const nonsense = await analyzeFrameBeforeOcr(filePath, region, { width: 0, height: -5 });
+  assert.equal(nonsense.tickerRegionPixels, byDefault.tickerRegionPixels);
 });
 
 test('groupContiguousCandidates and chooseBestWindow prefer longer later windows', () => {

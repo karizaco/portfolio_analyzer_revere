@@ -16,7 +16,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
-const { CHART_STREAM_REGION_FRACTION_DEFAULT, parseFractionalRegion } = require('../src/video/ocrScanArgs');
+const { parseFractionalRegion } = require('../src/video/ocrScanArgs');
+const { chartStreamCropFractionForDate } = require('../src/video/chartStreamCrop');
 const { resolveFfmpegBin } = require('../src/video/ffmpegBin');
 
 const WORKSPACE_ROOT = path.resolve(__dirname, '..');
@@ -24,11 +25,11 @@ const FIXTURE_VIDEO = path.join(WORKSPACE_ROOT, 'test', 'fixtures', 'local_20260
 
 // The fixture is 1080p so that the position list can sit in BOTH regions the
 // pipeline looks at:
-//   - the chart-stream OCR crop (src/video/ocrScanArgs.js) — x 0.86..1.0,
-//     y 0.62..0.84 of the frame
+//   - the chart-stream OCR crop (src/video/chartStreamCrop.js) — the
+//     right-sidebar era rectangle, x 0.82..1.0, y 0.60..0.92 of the frame
 //   - the prefilter's ticker rectangle (src/video/ocrScanLogic.js) — x
 //     0.85..1.0, y 0.55..1.0 of the frame
-// At 720p those two regions barely overlap (the OCR crop ends at y=0.84 and
+// At 720p those two regions barely overlap (the OCR crop ends at y=0.92 and
 // the prefilter rectangle starts at y=0.55 but the position list has to sit
 // in the bottom 18% to clear the watchlist panel), so the fixture could not
 // be seen by both stages at once.
@@ -84,8 +85,9 @@ function buildChartStreamVideo(ffmpegBin, outputPath, rows) {
 
   // Place the position list from the crop constant instead of hardcoded
   // pixels, so the fixture cannot silently drift away from the region the
-  // pipeline actually reads.
-  const crop = parseFractionalRegion(CHART_STREAM_REGION_FRACTION_DEFAULT);
+  // pipeline actually reads. The fixture is dated 20260104, which is in the
+  // right-sidebar era, so it follows the sidebar crop.
+  const crop = parseFractionalRegion(chartStreamCropFractionForDate('20260104'));
   const boxLeft = Math.round(crop.x * FRAME_WIDTH);
   const boxTop = Math.round(crop.y * FRAME_HEIGHT);
   const boxWidth = Math.round(crop.w * FRAME_WIDTH);

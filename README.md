@@ -99,10 +99,11 @@ Qullamaggie's live trading sessions show a **position-list overlay** in the bott
 ### Current Crop Region
 
 ```
-{x: 0.87, y: 0.58, w: 0.13, h: 0.40}   ← 13% width × 40% height, anchored bottom-right
+{x: 0.86, y: 0.60, w: 0.14, h: 0.28}   ← 2022-era layout — floating bottom-right panel
+{x: 0.82, y: 0.60, w: 0.18, h: 0.32}   ← 2023-era layout — table docked to the right edge
 ```
 
-The crop targets the position-list column specifically (not the chart area). This is the `CHART_STREAM_REGION_FRACTION_DEFAULT` in `src/video/ocrScanArgs.js`. EasyOCR is used with this crop for ~75% recall on 20220606 vs ~25% with Tesseract on the old wider crop.
+The crop targets the position-list column specifically (not the chart area). It is **era-conditional** — Qullamaggie moved the position list from a floating bottom-right panel to a right-docked table between 2023-01-26 and 2023-05-18 — and both rectangles live in `src/video/chartStreamCrop.js`, which is the single source of truth. EasyOCR is used with this crop for ~75% recall on 20220606 vs ~25% with Tesseract on the old wider crop.
 
 ### Resolution Requirements
 

@@ -7,10 +7,16 @@ const Tesseract = require('tesseract.js');
 
 const ROOT = path.join(__dirname, '..');
 
-// Crop region — matches CHART_STREAM_REGION_FRACTION_DEFAULT.
-// 269x238 px at 1080p: tuned to keep the position-list band while excluding
-// most chart y-axis bleed above and the Personal WatchList panel below.
-const CROP = { x: 0.86, y: 0.62, w: 0.14, h: 0.22 };
+// The crop is ERA-CONDITIONAL and comes from the SHIPPED module, so this
+// review page cannot drift away from what the pipeline actually reads. See
+// src/video/chartStreamCrop.js for the measured geometry behind the two
+// rectangles.
+const { chartStreamCropFractionForDate } = require('../src/video/chartStreamCrop');
+const { parseFractionalRegion } = require('../src/video/ocrScanArgs');
+
+function cropForDate(dateKey) {
+  return parseFractionalRegion(chartStreamCropFractionForDate(dateKey));
+}
 
 // Ground-truth tickers per video (loaded from data/qmg_ground_truth.json at runtime
 // so per-capture GT can vary — see notes in that file).
@@ -277,7 +283,6 @@ const VIDEOS = [
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20230518.png', 'qmg_20230518_2.png', 'qmg_20230518_3.png'],
     description: '7 GT (PLTR, LI, AI, SHOP, MNDY, IMGN, APLD) — wider table layout',
-    cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
   },
   {
     dateKey: '20230522',
@@ -290,53 +295,46 @@ const VIDEOS = [
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20230523.png', 'qmg_20230523_2.png', 'qmg_20230523_3.png'],
     description: '11 GT (QBTS, LI, SOUN, IMGN, FTCH, MNDY, APLD, PLTR, DNA, AI, CVNA)',
-    cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
   },
   {
     dateKey: '20230601',
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20230601.png', 'qmg_20230601_2.png', 'qmg_20230601_3.png'],
     description: '9 GT (QBTS, APLD, AI, DNA, CVNA, IONQ, PLTR, IMGN, MNDY)',
-    cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
   },
   {
     dateKey: '20230602',
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20230602.png', 'qmg_20230602_2.png', 'qmg_20230602_3.png'],
     description: '15 GT (IOT, TEAM, MTCH, QBTS, ARQQ, RGTI, IMGN, PLTR, CVNA, MNDY, APLD, DNA, IONQ, AI, GSIT) — largest yet',
-    cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
   },
   {
     dateKey: '20230605',
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20230605.png', 'qmg_20230605_2.png', 'qmg_20230605_3.png'],
     description: '11 GT tickers (IMGN, ARQQ, CVNA, IOT, PLTR, GSIT, MNDY, APLD, AI, QBTS, DNA) — wider table layout',
-    cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
   },
   {
     dateKey: '20230608',
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20230608.png', 'qmg_20230608_2.png', 'qmg_20230608_3.png'],
     description: '13 GT (CVNA, QBTS, APLD, ARQQ, IMGN, IOT, GTLB, RGTI, DNA, MNDY, AI, PLTR, GSIT)',
-    cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
   },
   {
     dateKey: '20230609',
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20230609.png', 'qmg_20230609_2.png', 'qmg_20230609_3.png'],
     description: '13 GT (RGTI, QBTS, IMGN, CVNA, IOT, ARQQ, AI, PLTR, DNA, GTLB, GSIT, APLD, MNDY)',
-    cropOverride: { x: 0.83, y: 0.55, w: 0.17, h: 0.45 },
   },
 ];
 
 
 const CROPS_OUT_DIR = path.join(ROOT, 'data', 'video_scan_test', '_review_crops');
 
-// Preprocess a snapshot like the OCR pipeline does. cropOverride lets callers
-// use a different region (e.g. wider for newer videos with shifted table).
-async function preprocessForOcr(snapshotPath, cropOverride = null) {
+// Preprocess a snapshot like the OCR pipeline does. The region comes from the
+// shipped era-conditional crop, so the page shows what the pipeline reads.
+async function preprocessForOcr(snapshotPath, region) {
   const meta = await sharp(snapshotPath).metadata();
-  const region = cropOverride || CROP;
   const left = Math.round(meta.width * region.x);
   const top = Math.round(meta.height * region.y);
   const cropW = Math.round(meta.width * region.w);
@@ -396,7 +394,7 @@ async function main() {
       const snapshotPath = path.join(ROOT, video.snapshotsDir, file);
       if (!fs.existsSync(snapshotPath)) continue;
 
-      const { left, top, cropW, cropH, ocrBuf } = await preprocessForOcr(snapshotPath, video.cropOverride);
+      const { left, top, cropW, cropH, ocrBuf } = await preprocessForOcr(snapshotPath, cropForDate(video.dateKey));
       const stem = `${video.dateKey}__${file.replace('.png', '')}`;
       const rawPath = path.join(CROPS_OUT_DIR, `${stem}__raw_crop.png`);
       const ocrPath = path.join(CROPS_OUT_DIR, `${stem}__ocr_crop.png`);

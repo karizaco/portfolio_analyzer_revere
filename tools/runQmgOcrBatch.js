@@ -17,6 +17,7 @@
 const fs = require('node:fs');
 const path = require('path');
 const { spawn, execSync } = require('node:child_process');
+const { isRightSidebarDate } = require('../src/video/chartStreamCrop');
 
 const ROOT = path.resolve(__dirname, '..');
 const VIDEO_DIR_1080 = path.join(ROOT, 'data', 'video_pipeline', 'downloads_1080p');
@@ -26,7 +27,7 @@ const OUT_ROOT = path.join(ROOT, 'data', 'video_scan_test', '_rerun');
 // Per-video timeout: EasyOCR at ~60-90s/frame × 6 frames = 360-540s; give 40 min for longer videos
 const PER_VIDEO_TIMEOUT_MS = 40 * 60 * 1000;
 
-const DEFAULT_FLAGS = [
+const BASE_FLAGS = [
   '--prefilter-profile', 'chart_stream',
   '--chart-stream-parser',
   '--basename', 'qmg',
@@ -35,38 +36,69 @@ const DEFAULT_FLAGS = [
   '--fps', '0.25',
   '--prefilter-max-frames', '12',
   '--max-captures', '3',
+];
+
+// Batch-snapshot mode extracts N frames within a window of the PREFILTER'S
+// BEST-SCORING FRAME and REPLACES the uniform selection with them. That is
+// only sound when the best-scoring frame is the frame the position list is
+// visible on — and MEASURED, it is not.
+//
+// On 20230609 (production scan, 2026-11-02) the prefilter's best frame was
+// ts=3100, score 25.9, and it read ZERO holdings. The frame that read the
+// date's 13 ground-truth holdings exactly was ts=1944, whose prefilter score
+// was -3.36 — near the bottom of the six candidates. Batch mode would have
+// centred on ts=3100 and OCR'd a window around it, and because it REPLACES
+// the selected rows, the good frame would never have been read at all.
+//
+// The 2022-era measurement says the same thing: on 20220218 the best-scoring
+// prefilter frame (t=40) read 7 tickers while t=912 read 12.
+//
+// So the uniform selection is what actually finds the list, and batch mode
+// is what would throw it away. Batch mode stays OFF for the 2023-era sidebar
+// dates, where the measurement above was taken.
+const BATCH_SNAPSHOT_FLAGS = [
   '--batch-snapshots',
   '--batch-count', '8',
   '--batch-window', '4',
-  '--temporal-decay', '1800', // Boost early frames — verified better on 20220218 (6/10 vs 4/7)
 ];
-
-// 2023-era videos use a wider position-list table that overflows the default crop
-// (x=0.86, w=0.14). The ticker column starts further left, so we widen the crop
-// to capture the full table. Dates confirmed to need wide crop: 20230518, 20230522,
-// 20230523, 20230602, 20230605, 20230608, 20230609. Additional nearby dates are
-// included based on layout era (mid-2023 onward). See qmg_ground_truth.json _meta.
-const WIDE_CROP_DATES = new Set([
-  '20230518', '20230521', '20230522', '20230523', '20230524',
-  '20230525', '20230526', '20230527', '20230531',
-  '20230601', '20230602', '20230605', '20230606', '20230607',
-  '20230608', '20230609', '20230613', '20230614',
-  '20230615', '20230616', '20230620', '20230621', '20230622',
-  '20230623', '20230626', '20230627', '20230628', '20230629', '20230630',
-]);
 
 // 2022-era (pre-mid-2023): position lists appear early in the stream (ts=40-390).
 // 2023-era (mid-2023+): position lists appear later (ts=1940-5627).
 // Use --temporal-decay 1800 for 2022-era (boost early frames) and
 // --temporal-decay 0 for 2023-era (no bias, let prefilter score decide).
+//
+// The CROP is no longer set here. It used to be, with a hand-listed set of
+// 29 dates and the rectangle `0.83,0.55,0.17,0.45` — but that list missed
+// 20231201 and 20231215, whose ticker column starts further LEFT still (source
+// x 1586-1613, so x=0.83 shaves the first glyph off every ticker). The crop is
+// now derived from the upload date inside the scan tool itself
+// (src/video/chartStreamCrop.js), so the era rule lives in ONE place and a
+// date cannot be mis-classified by a stale list.
+//
+// The era question here comes from the SAME function the crop uses, so a date
+// can never get the sidebar crop and the floating-panel flags. An unknown
+// date is the sidebar era for both — the safer of the two, because the
+// sidebar rectangle still contains the 2022-era floating panel.
 function getFlagsForDate(dateKey) {
   const extraFlags = [];
-  if (WIDE_CROP_DATES.has(dateKey)) {
-    extraFlags.push('--phash-region-fraction', '0.83,0.55,0.17,0.45');
+  if (isRightSidebarDate(dateKey)) {
     extraFlags.push('--temporal-decay', '0'); // 2023-era: position list appears late
   }
-  // 2022-era gets the default --temporal-decay 1800 from DEFAULT_FLAGS
+  // 2022-era gets the default --temporal-decay 1800, which is the tool's own
+  // default (src/video/ocrScanArgs.js) rather than something set here.
   return extraFlags;
+}
+
+// The full flag list for one date.
+function flagsForDate(dateKey) {
+  const flags = [...BASE_FLAGS, ...getFlagsForDate(dateKey)];
+  // Batch-snapshot mode is OFF for the 2023-era sidebar dates — see
+  // BATCH_SNAPSHOT_FLAGS above for the measurement that decided it. The
+  // 2022-era dates keep the behaviour they were scanned with.
+  if (!isRightSidebarDate(dateKey)) {
+    flags.push(...BATCH_SNAPSHOT_FLAGS);
+  }
+  return flags;
 }
 
 function parseArgs(argv) {
@@ -77,6 +109,7 @@ function parseArgs(argv) {
     allUnscanned: false,
     dryRun: false,
     lowCpu: false,
+    runTag: null,
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -86,6 +119,7 @@ function parseArgs(argv) {
     else if (a === '--all-unscanned') args.allUnscanned = true;
     else if (a === '--dry-run') args.dryRun = true;
     else if (a === '--low-cpu') args.lowCpu = true;
+    else if (a === '--run-tag') args.runTag = argv[++i] || null;
   }
   return args;
 }
@@ -162,7 +196,7 @@ function scoreResult(log, gtEntry) {
   };
 }
 
-async function runScan(dateKey, video, runTag, extraFlags = []) {
+async function runScan(dateKey, video, runTag) {
   const videoPath = path.join(video.dir, video.file);
   const env = {
     ...process.env,
@@ -178,8 +212,7 @@ async function runScan(dateKey, video, runTag, extraFlags = []) {
     '--date', dateKey,
     '--output-root', OUT_ROOT,
     '--run-tag', runTag,
-    ...DEFAULT_FLAGS,
-    ...extraFlags,
+    ...flagsForDate(dateKey),
   ];
 
   return new Promise((resolve) => {
@@ -271,6 +304,7 @@ async function main() {
     console.error('   or: node runQmgOcrBatch.js --all-unscanned [--parallel N]');
     console.error('   or: node runQmgOcrBatch.js --chunk N [--parallel N]');
     console.error('   or: node runQmgOcrBatch.js --low-cpu --chunk N [--parallel N]');
+    console.error('   --run-tag <tag>   names the output directory (default qmg-easyocr-<date>)');
     process.exit(1);
   }
 
@@ -279,7 +313,11 @@ async function main() {
     ? Math.min(args.parallel, 2)
     : args.parallel;
 
-  const runTag = `qmg-easyocr-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
+  // The run tag names the RUN, and a re-run with different parameters has to
+  // be distinguishable from the one it supersedes without opening the
+  // directory (CLAUDE.md, § 'Scan output directories'). The default is the
+  // date; `--run-tag` overrides it for a run whose parameters differ.
+  const runTag = args.runTag || `qmg-easyocr-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
   console.log(`\n=== QMG EasyOCR Batch ===`);
   console.log(`Run tag: ${runTag}`);
   console.log(`Dates: ${dates.join(', ')}`);
@@ -301,7 +339,7 @@ async function main() {
     .filter(j => j.video !== null);
 
   const results = await runPool(jobs, parallel, async ({ date, video }, idx) => {
-    return runScan(date, video, runTag, getFlagsForDate(date));
+    return runScan(date, video, runTag);
   });
 
   // Report

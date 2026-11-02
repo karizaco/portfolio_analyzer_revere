@@ -28,10 +28,8 @@ const {
   getGroundTruthForCapture,
   loadQmgGroundTruth,
 } = require('../src/qmg/qmgGroundTruth');
-const {
-  CHART_STREAM_REGION_FRACTION_DEFAULT,
-  parseFractionalRegion,
-} = require('../src/video/ocrScanArgs');
+const { parseFractionalRegion } = require('../src/video/ocrScanArgs');
+const { chartStreamCropFractionForDate } = require('../src/video/chartStreamCrop');
 
 const SNAPSHOT_ROOTS = [
   path.join('data', 'video_scan_20260923', 'qmg-1080p-ocr-v2', 'qmg-1080p-ocr-v2', 'snapshots'),
@@ -120,7 +118,15 @@ const REQUIRED_MODE_THRESHOLDS = Object.freeze({
 });
 
 const OVERALL_THRESHOLD = 0.30;
-const CHART_STREAM_REGION = parseFractionalRegion(CHART_STREAM_REGION_FRACTION_DEFAULT);
+
+// The OCR crop is ERA-CONDITIONAL (src/video/chartStreamCrop.js): the
+// position list moved from a floating bottom-right panel to a table docked
+// to the right edge of the screen between 2023-01-26 and 2023-05-18, and the
+// two layouts do not share a column. The crop for a case is therefore
+// derived from the case's own upload date, exactly as the scan tool does.
+function chartStreamRegionForDate(dateKey) {
+  return parseFractionalRegion(chartStreamCropFractionForDate(dateKey));
+}
 
 function snapshotFileName(dateKey, captureIndex) {
   const suffix = captureIndex === 0 ? '' : `_${captureIndex + 1}`;
@@ -233,7 +239,7 @@ async function runTests() {
       ocrResult = await ocrImage(snapshotPath, {
         chartStream: true,
         ocrEngine: 'easyocr',
-        overlayRegion: CHART_STREAM_REGION,
+        overlayRegion: chartStreamRegionForDate(dateKey),
       });
     } catch (error) {
       throw new Error(`OCR failed for ${dateKey}[${captureIndex}] at ${snapshotPath}: ${error.message}`);
