@@ -1838,6 +1838,91 @@ the `CBIO` row used `s/29 > 60` and found only 4 row bands, so it compared
 frame's `CBO` at y 783–791 — and produced spuriously similar profiles. Lowering the
 threshold to `mx*0.35` over x 1739–1769 found all 10 row bands in both frames, and
 the comparison at the correct y values gave 0.9990.
+
+### The LI row, and two more aliases (added 2026-11-02)
+
+`LI` is the holding the corpus misreads most often. It is read as three different
+things on three 2023-era dates, and **two** of the three are recoverable. The table
+is **36 data rows**.
+
+| garbled | canonical | the misread | date | measured worth |
+|---|---|---|---|---|
+| `V` | `LI` | L and I merged into one V glyph | 20230523 | **+1 hit** (both corpora), 1 FP removed |
+| `NCH` | `FTCH` | FT rendered as N and C | 20230523 | **+1 hit** (both corpora), 1 FP removed |
+
+**Both rows were pixel-verified before they were proposed.** The corpus frame
+`data/video_ocr_probe/batch15-v2/snapshots/revere_20230523.png` reads, in the
+ticker column, `QBTS, FTCH, DNA, AI, SOUN, PLTR, APLD, IMGN, MNDY, LI, CVNA`
+with the footer "11 Items in Personal WatchList". The OCR read the **LI** row as
+`V` (left 97, top 1537, conf 0.108) and the **FTCH** row as `Nch`.
+
+**`U → LI` was rejected, and the invariant is why.** The 20230522 capture reads the
+same LI row as a plain `U` — and `U` is a **seed ticker** (`config/ticker_lexicon_seed.csv`
+row 85) and a **genuine holding on 20221117**, in all three of that date's captures.
+An alias row whose garbled form is in the lexicon rewrites a real holding, which is
+exactly what the table's "no confusion row shadows a real ticker" invariant forbids.
+So the misread has two spellings in the corpus (`V` and `U`) and **only one of them
+may be rescued**. `NCH` is in neither lexicon and `FTCH` is in the seed, so that row
+is legal.
+
+**Measured, with the same replay and the same corpus as everything else:**
+
+| alias table | default roots | wide corpus |
+|---|---|---|
+| 34 rows (before) | 80/85/81 — 94.1 % / 98.8 % | 133/168/152 — 79.2 % / 87.5 % |
+| **36 rows (shipped)** | **82/85/82 — 96.5 % / 100 %** | **135/168/153 — 80.4 % / 88.2 %** |
+
+Only **20230523** moves: 9 of 11 with one false positive becomes **11 of 11 with
+none**. The default roots reach **100 % precision** for the first time. No false
+positive was added on either corpus.
+
+**The two LI readings that stay missed are OCR losses, and they are not reachable by
+any alias row.** 20230522 reads the LI row as a plain `U` (the invariant above), and
+20230518 — a garbage Tesseract read whose ticker column reads `PTR, ~u, ~~, SHOP,
+MNO, IMG, [TT]` — reads the LI row as `~u`, which the rescue strips to `U` before it
+looks the table up, so it is the same forbidden row. Reaching either one would need a
+**different mechanism** (a layout-scoped table, or a lexicon-constrained single-letter
+rule that can tell the 2022-era `U` holding from the 2023-era `LI`), not another row.
+A wrong holding in a portfolio report is worse than a missing one, so both stay missed.
+
+### Two things that were measured and rejected (2026-11-02)
+
+Both were plausible repairs to defects the replay exposed. Both were measured on both
+corpora and **both are negative results** — recorded here so they are not re-attempted.
+
+**1. A uniqueness rule in the edit-distance repair pass — REJECTED.** The repair
+pass picks the first distance-1 lexicon match it finds, preferring the longer
+candidate on a tie. A uniqueness rule would only correct a read whose distance-1
+candidate is **unique**.
+
+| | default roots | wide corpus |
+|---|---|---|
+| hits, shipped rule (34-row table) | 80 | 133 |
+| hits, uniqueness rule (same 34-row table) | **80 — unchanged** | **133 — unchanged** |
+| false positives | **+1** (`FX`, 20220218) | **+1** |
+
+The candidate sets explain the whole result. **`CA → CF` is unique** — nothing else in
+the seed is one edit away — so uniqueness cannot stop the 20220606 capture's
+invention of `CF` from the wrong (% Change) column. And **`FX → FCX`** and
+**`MO → MOS`** are *ambiguous*, so uniqueness **destroys two real corrections**. The
+rule converts the 20220606 inventions into raw garbles (`AI` → `AE`, `COIN` → `CON`)
+rather than preventing them. **Keep the shipped first-found/longest-wins rule.**
+
+**2. A column-selection change — REJECTED.** On the 20220606 capture the column
+detector latches onto the **`% Change`** column (`dominant_x 770`,
+`dominant_left 684`) instead of the Sym column at x 448–454, which is why that
+capture reads `["AI","CF","COIN","CUSS"]` instead of its eight holdings. Two
+variants were tried: requiring **three** price-aligned tickers before the
+price-aligned path wins, and adding **left-edge bucketing** to the fallback.
+
+Both change **nothing** on either corpus, because the capture has **12**
+price-aligned tickers spread over four columns — so the price-aligned path still
+wins, and it still picks the % Change column. The Sym column would need a left-edge
+rule to win, and that capture is a garbage Tesseract read whose Sym column reads
+`am, Cct, WEJ, U0, Cbo, Mo, T, Gn` — at most two or three recoverable holdings.
+A column change would affect every frame in the corpus to buy that. **Do not change
+column detection.**
+
 ### Measuring the alias table without editing it (2026-10-31)
 
 `config/ticker_ocr_confusions.csv` is **shared** — every tool in the tree reads it — and
@@ -2051,6 +2136,7 @@ the same corpus; the configs differ only where the column says so:
 | new parser + the **old** seed, new observed + alias rows | 78/85/80 — 91.8 % / 97.5 % | 130/168/149 — 77.4 % / 87.2 % |
 | new parser, new lexicons, alias rows up to 2026-11-01 | 80/85/81 — 94.1 % / 98.8 % | 132/168/151 — 78.6 % / 87.4 % |
 | **shipped** — plus the two 2026-11-02 alias rows | **80/85/81 — 94.1 % / 98.8 %** | **133/168/152 — 79.2 % / 87.5 %** |
+| **shipped** — plus the two 2026-11-02 `LI`/`FTCH` rows | **82/85/82 — 96.5 % / 100 %** | **135/168/153 — 80.4 % / 88.2 %** |
 
 So the three changes are separable and each one earns its place:
 
@@ -2059,6 +2145,7 @@ So the three changes are separable and each one earns its place:
 | **Filter B** (row 4 vs row 3) | **+5 hits** | **+5 hits** |
 | the **four alias rows** (row 2 vs row 3) | nothing | **+4 hits** |
 | the **16 seed rows** (shipped vs row 5) | **+2 hits** | **+2 hits** |
+| the two 2026-11-02 `LI`/`FTCH` rows | **+2 hits** | **+2 hits** |
 
 **Per date, with the rule in isolation** (the legacy window against the list's
 own rows, the same config files on both sides):
@@ -2951,17 +3038,19 @@ The current figures (re-measured 2026-11-02, after the curated-alias
 rescue, the SPXL seed fix, the nine 2023-era curated aliases, the left-edge
 column fix, all three passes of the ground-truth audit, **the Filter B
 rewrite**, the four 2022-era alias rows, the 16 pixel-verified seed rows and
-**the two 2026-11-02 alias rows**):
+**the four 2026-11-02 alias rows**):
 
 | root set | dates scored | recall | precision |
 |---|---|---|---|
-| default (8 probe roots) | 8 | **94.1 %** (80/85) | **98.8 %** (80/81) |
-| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **79.2 %** (133/168) | **87.5 %** (133/152) |
+| default (8 probe roots) | 8 | **96.5 %** (82/85) | **100 %** (82/82) |
+| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **80.4 %** (135/168) | **88.2 %** (135/153) |
 
 (The attribution of every step is in § 'Filter B — the position-aware vertical
 bound': the Filter B rewrite is +5 hits on each corpus, the four alias rows
 are +4 on the wide corpus, the 16 seed rows are +2 on each, and the two
-2026-11-02 rows are +1 on the wide corpus — see § 'Two more curated aliases'.)
+2026-11-02 rows are +1 on the wide corpus — see § 'Two more curated aliases'.
+The `LI`/`FTCH` rows are +2 on **each** corpus — see § 'The LI row, and two more
+aliases'.)
 
 (Before the nine 2023-era aliases: 66.3 % (59/89) / 95.2 % (59/62) on the default roots,
 and 64.7 % (110/170) / 82.1 % (110/134) on the wide corpus. See § 'Nine more curated
