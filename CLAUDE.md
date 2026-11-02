@@ -2305,6 +2305,20 @@ result — is correct, and a tool that cannot be supervised is a tool that
 cannot be run in a batch. **Until this is fixed, a chart-stream batch's
 `TIMEOUT` says nothing about whether the video was read.**
 
+**The fix is shipped (2026-11-02, second commit).** `superviseChild()` in
+`tools/runQmgOcrBatch.js` drains stdout and keeps a bounded rolling tail
+(`STDOUT_TAIL_CHARS = 16 KB`) for diagnostics; the probe log on disk remains
+the authoritative record. The function is exported and `main()` now runs only
+under `require.main === module`, so a test can drive it. Pinned by
+`test/qmgBatchStdout.test.js` — four tests, and **two of them fail against the
+pre-fix code**: a child that writes more than a pipe holds to stdout comes
+back `TIMEOUT` instead of `OK`, which is exactly the production failure.
+
+**A supervisor that reports TIMEOUT has to be distinguishable from one that
+reports OK.** The pre-fix code recorded the status but kept no stdout, so a
+failure report had nothing to show for it. The `stdoutTail` is now carried on
+the result, so a failed video can be diagnosed without re-running it.
+
 ### Two things that were measured and rejected (2026-11-02)
 
 Both were plausible repairs to defects the replay exposed. Both were measured on both

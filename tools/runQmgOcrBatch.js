@@ -27,6 +27,11 @@ const OUT_ROOT = path.join(ROOT, 'data', 'video_scan_test', '_rerun');
 // Per-video timeout: EasyOCR at ~60-90s/frame × 6 frames = 360-540s; give 40 min for longer videos
 const PER_VIDEO_TIMEOUT_MS = 40 * 60 * 1000;
 
+// How much of the child's stdout to keep for diagnostics. The child's stdout
+// is the whole result object, so it is large; the probe log on disk is the
+// authoritative record and this is only a tail for a failure report.
+const STDOUT_TAIL_CHARS = 16 * 1024;
+
 const BASE_FLAGS = [
   '--prefilter-profile', 'chart_stream',
   '--chart-stream-parser',
@@ -196,6 +201,59 @@ function scoreResult(log, gtEntry) {
   };
 }
 
+/**
+ * Spawn a child and supervise it until it exits or the timeout fires.
+ *
+ * The child's stdout MUST be drained here. A Windows pipe holds about 64 KB,
+ * and the scan tool prints its whole result object to stdout at the end --
+ * hundreds of kilobytes. An undrained stdout blocks the child AFTER it has
+ * written a complete probe log and BEFORE its `finally` block runs, so the
+ * child never exits, `close` never fires, the kill timer fires instead, and
+ * the batch records a TIMEOUT for a video that was read successfully.
+ *
+ * Returns { status, code, stdoutTail, stderr }.
+ *
+ * Exported so the behaviour can be pinned by a test with a fake child.
+ */
+function superviseChild(cmd, env, { timeoutMs = PER_VIDEO_TIMEOUT_MS, onTimeout } = {}) {
+  return new Promise((resolve) => {
+    const child = spawn(cmd[0], cmd.slice(1), { env, stdio: ['ignore', 'pipe', 'pipe'] });
+
+    let killed = false;
+    const killTimer = setTimeout(() => {
+      killed = true;
+      if (onTimeout) onTimeout();
+      // On Windows, kill the process tree
+      try {
+        execSync(`taskkill /PID ${child.pid} /T /F`, { stdio: 'ignore' });
+      } catch {}
+      child.kill('SIGTERM');
+    }, timeoutMs);
+
+    let stderr = '';
+    child.stderr.on('data', d => { stderr += d.toString(); });
+
+    // Keep only a rolling tail for diagnostics: the authoritative record is
+    // the probe log on disk, and the child's stdout is the whole result
+    // object, so it is large.
+    let stdoutTail = '';
+    child.stdout.on('data', d => {
+      stdoutTail = (stdoutTail + d.toString()).slice(-STDOUT_TAIL_CHARS);
+    });
+    child.stdout.on('error', () => {});
+
+    child.on('close', (code) => {
+      clearTimeout(killTimer);
+      resolve({ status: killed ? 'TIMEOUT' : code === 0 ? 'OK' : 'ERROR', code, stdoutTail, stderr });
+    });
+
+    child.on('error', (err) => {
+      clearTimeout(killTimer);
+      resolve({ status: 'ERROR', code: null, stdoutTail, stderr: String(err && err.message || err) });
+    });
+  });
+}
+
 async function runScan(dateKey, video, runTag) {
   const videoPath = path.join(video.dir, video.file);
   const env = {
@@ -215,56 +273,33 @@ async function runScan(dateKey, video, runTag) {
     ...flagsForDate(dateKey),
   ];
 
-  return new Promise((resolve) => {
-    console.log(`[${dateKey}] Starting ${video.file} (${video.resolution})`);
-    const start = Date.now();
-    const child = spawn(cmd[0], cmd.slice(1), { env, stdio: ['ignore', 'pipe', 'pipe'] });
+  console.log(`[${dateKey}] Starting ${video.file} (${video.resolution})`);
+  const start = Date.now();
 
-    let killed = false;
-    const killTimer = setTimeout(() => {
-      console.log(`[${dateKey}] TIMEOUT after ${PER_VIDEO_TIMEOUT_MS/1000}s — killing`);
-      killed = true;
-      // On Windows, kill process tree
-      try {
-        execSync(`taskkill /PID ${child.pid} /T /F`, { stdio: 'ignore' });
-      } catch {}
-      child.kill('SIGTERM');
-    }, PER_VIDEO_TIMEOUT_MS);
-
-    let stderr = '';
-    child.stderr.on('data', d => { stderr += d.toString(); });
-
-    child.on('close', (code) => {
-      clearTimeout(killTimer);
-      const elapsed = ((Date.now() - start) / 1000).toFixed(0);
-      const status = killed ? 'TIMEOUT' : code === 0 ? 'OK' : 'ERROR';
-
-      if (killed || code !== 0) {
-        console.log(`[${dateKey}] ${status} after ${elapsed}s (code=${code})`);
-        resolve({ dateKey, status, elapsed: parseInt(elapsed), error: stderr.slice(0, 200) });
-        return;
-      }
-
-      // Read result
-      const logFile = path.join(OUT_ROOT, runTag, 'ocr_probe', 'logs');
-      let log = null;
-      try {
-        const files = fs.readdirSync(logFile).filter(f => f.startsWith(dateKey + '_'));
-        if (files.length) {
-          log = JSON.parse(fs.readFileSync(path.join(logFile, files[0]), 'utf8'));
-        }
-      } catch {}
-
-      console.log(`[${dateKey}] OK after ${elapsed}s | captures=${log?.captured_count || '?'}`);
-      resolve({ dateKey, status: 'OK', elapsed: parseInt(elapsed), log });
-    });
-
-    child.on('error', (err) => {
-      clearTimeout(killTimer);
-      console.log(`[${dateKey}] SPAWN ERROR: ${err.message}`);
-      resolve({ dateKey, status: 'ERROR', error: err.message });
-    });
+  const { status, code, stdoutTail, stderr } = await superviseChild(cmd, env, {
+    timeoutMs: PER_VIDEO_TIMEOUT_MS,
+    onTimeout: () => console.log(`[${dateKey}] TIMEOUT after ${PER_VIDEO_TIMEOUT_MS/1000}s — killing`),
   });
+
+  const elapsed = ((Date.now() - start) / 1000).toFixed(0);
+
+  if (status !== 'OK') {
+    console.log(`[${dateKey}] ${status} after ${elapsed}s (code=${code})`);
+    return { dateKey, status, elapsed: parseInt(elapsed), error: stderr.slice(0, 200), stdoutTail: stdoutTail.slice(-2000) };
+  }
+
+  // Read result
+  const logFile = path.join(OUT_ROOT, runTag, 'ocr_probe', 'logs');
+  let log = null;
+  try {
+    const files = fs.readdirSync(logFile).filter(f => f.startsWith(dateKey + '_'));
+    if (files.length) {
+      log = JSON.parse(fs.readFileSync(path.join(logFile, files[0]), 'utf8'));
+    }
+  } catch {}
+
+  console.log(`[${dateKey}] OK after ${elapsed}s | captures=${log?.captured_count || '?'}`);
+  return { dateKey, status: 'OK', elapsed: parseInt(elapsed), log };
 }
 
 // Semaphore-based worker pool
@@ -361,4 +396,10 @@ async function main() {
   console.log(`\nOverall: ${totalHit}/${totalGt} = ${Math.round(100*totalHit/totalGt)}% recall, ${totalFp} FPs`);
 }
 
-main().catch(e => { console.error(e); process.exit(1); });
+// Only run the batch when this file is the entry point. A test that requires
+// the module to reach `superviseChild` must not start a scan.
+if (require.main === module) {
+  main().catch(e => { console.error(e); process.exit(1); });
+}
+
+module.exports = { superviseChild, STDOUT_TAIL_CHARS };
