@@ -120,6 +120,22 @@ const NEW_ALIASES = [
   //                reads that way.
   ['WHX', 'LHX'],
   ['CBO', 'CBIO'],
+  // The two rows added 2026-11-02 (second batch). Both were pixel-verified
+  // against the corpus frame `data/video_ocr_probe/batch15-v2/snapshots/
+  // revere_20230523.png`: the panel reads QBTS, FTCH, DNA, AI, SOUN, PLTR,
+  // APLD, IMGN, MNDY, LI, CVNA, and the OCR read the LI row as `V` and the
+  // FTCH row as `Nch`.
+  //
+  //   V   -> LI    L and I merged into one V glyph, 20230523.
+  //   NCH -> FTCH  FT rendered as N and C, 20230523.
+  //
+  // `U -> LI` was REJECTED for the same row: `U` is a seed ticker (row 85) and
+  // a genuine holding on 20221117, so aliasing it would rewrite a real
+  // holding and break the "a garbled form may not be in a lexicon" invariant.
+  // The 20230522 capture reads that same LI row as `U`, so the misread has two
+  // spellings in the corpus and only one of them may be rescued.
+  ['V', 'LI'],
+  ['NCH', 'FTCH'],
 ];
 
 function confusionRows() {
