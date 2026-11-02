@@ -1534,6 +1534,10 @@ removed (see § 'Measuring the alias table without editing it'), so every row's 
 number rather than an argument. Baseline is **71/89/74** on the default roots and
 **117/170/140** on the wide corpus.
 
+*(Every number in this section is a **2026-10-31 snapshot**, taken with that day's
+parser and that day's ground truth. The current figures — and the attribution of
+every change since — are in § 'Filter B — the position-aware vertical bound'.)*
+
 | rows dropped | default roots | wide corpus | what the rows are worth |
 |---|---|---|---|
 | *(nothing — baseline)* | 71/89/74 | 117/170/140 | — |
@@ -1651,6 +1655,94 @@ it sits in the column, and is **not** rescued when it sits in the chart area or 
 Personal WatchList header. The two boundary assertions carry a control alias (`DIA→DNA`,
 in the column in every frame) so that "the canonical is absent" cannot pass for the wrong
 reason.
+
+### Four more curated aliases, and the two lexicons (2026-11-01)
+
+**Four more alias rows**, all from the 2022-era captures the ground-truth audit
+pinned:
+
+| garbled | canonical | the misread | date |
+|---|---|---|---|
+| `TCOQ` | `TQQQ` | C rendered as Q | 20220331 |
+| `KVEB` | `KWEB` | W rendered as V | 20220331 |
+| `KLVEB` | `KWEB` | W rendered as LV | 20220405 |
+| `GGP1` | `GGPI` | I rendered as 1 | 20220405 |
+
+Each garbled form occurs **exactly once** in the corpus, **in the position-list
+column**, on a date whose pixel-verified ground truth holds the canonical and
+not the garbled form; and all three of the table's invariants hold (no garbled
+form is in the seed or the decode lexicon, every canonical is in the seed, no
+duplicate key and no chain). The table is **32 data rows**.
+
+**Measured, with the same replay and the same corpus as everything else:**
+
+| | default roots | wide corpus |
+|---|---|---|
+| without the four rows | 75/85/76 — 88.2 % / 98.7 % | 123/168/143 — 73.2 % / 86.0 % |
+| with them | 75/85/76 — 88.2 % / 98.7 % | **127/168/145 — 75.6 % / 87.6 %** |
+
+**Four hits on the wide corpus and nothing on the default roots** — the four
+garbled forms live on dates the default sample does not reach. The hit count
+rises by four and the prediction count by two, so two of the four rows publish
+a canonical that was already a hit on another capture of the same date.
+
+**The seed lexicon grew by 16 pixel-verified Qullamaggie holdings.** The seed
+is the **allow** list for the whiteboard path and the **match** list for the
+chart-stream path, so a holding the seed does not know is either dropped or
+repaired to a neighbour. The audit read 94 pinned panel crops off their
+pixels, and the tickers they show had to be added:
+
+```text
+AGQ  AR  DWAC  ERX  FNGU  GGPI  GUSH  KOLD
+LAC  LMT  MOS  NRGU  RSX  SWN  UPST  VERU
+```
+
+224 → 240 rows, each carrying the date it was read from and the note
+"position-list pixels verified 2026-11-01". `PSX` was **kept** deliberately —
+it is a real ticker (Phillips 66) and a real reading, and it is one of the
+readings the 20220323 capture publishes; that capture is a garbage Tesseract
+read whose false-positive set is a separate problem, recorded above.
+
+**Measured, in isolation** (new parser, new alias rows, the old seed):
+
+| | default roots | wide corpus |
+|---|---|---|
+| old seed | 78/85/80 — 91.8 % / 97.5 % | 130/168/149 — 77.4 % / 87.2 % |
+| new seed | **80/85/81 — 94.1 % / 98.8 %** | **132/168/151 — 78.6 % / 87.4 %** |
+
+**The observed list lost nine rows the audit discredited.**
+`config/ticker_lexicon_observed.csv` is the "seen in a position list" list, and
+it is the second half of the decode lexicon (seed + observed). Nine of its
+rows were wrong, and they were wrong in two different ways:
+
+| ticker | why it went |
+|---|---|
+| `CRH`, `IBKR`, `KRE`, `XLV`, `EDV` | read off the **upper watchlist widget**, not the positions table — index/ETF symbols that were never Qullamaggie positions |
+| `DIDI` | a **watchlist** entry in the upper widget of the 20220318 capture (`27 of 30 Items in WatchList`) |
+| `DCX` | a **misread** of `FCX` — every sibling capture of that video read `FCX` |
+| `NDGU` | a **misread** of `NRGU` |
+| `NUZE` | in **no** positions panel in the corpus at all |
+
+26 → 17 rows. **Every remaining observed ticker is now also in the seed**,
+which is the property the two lists exist to express: a ticker that was seen in
+a position list and is not allow-listed is resolved and then **discarded** —
+exactly how `SPXL` was lost for a week, and how a chart-stream reading is
+repaired to a neighbouring seed ticker instead of to itself.
+`test/tickerFuzzyResolve.test.js` now pins that property in place of the old
+`decode.length > seed.length` assertion, which the cleanup made false.
+
+**The blast radius was measured, and it is different for the two paths.** The
+chart-stream parser reads the **seed** only (`parseChartStream.js`), so the
+observed removals do not touch it at all. The whiteboard path reads seed +
+observed, and its replay is **unchanged**: `node tools/evalRevere.js --replay`
+still reports **94.0 % recall (140/149), 100 % precision**. The one place the
+removal *helps* is the decoder: five of the repairs the `O→D` confusion row
+used to make were repairs **into discredited tickers** (`DCX ← OCX`,
+`NDGU ← NOGU`, and three reads targeting `DIDI`/`EDV`), so the row's gain
+count fell from 38 to 33 — and the five it lost were exactly the wrong ones.
+`test/lexiconVariants.test.js` no longer asserts a count that moves with the
+lexicon; it asserts the property instead — that **every** gain the row adds is
+a read with one of its O's read as a D.
 
 ### Measuring the alias table without editing it (2026-10-31)
 
@@ -1773,6 +1865,152 @@ prefilter picks. The replay re-parses captured logs and never re-runs the prefil
 so that effect is invisible to it. It is a real effect, and it is the reason a
 re-scan can score differently from a replay of the same video.
 
+### Filter B — the position-aware vertical bound (2026-11-01)
+
+Filter B is the filter that decides **which of the accepted tickers are actually
+positions**, as opposed to chart ink that happens to be a lexicon ticker.
+
+**The defect it replaces was a unit error.** The old rule was a window around the
+median of the accepted tickers' bbox centres:
+
+```js
+yMin = yMedian - 8 * lineHeight;   // lineHeight = the median word HEIGHT
+yMax = yMedian + 8 * lineHeight;
+```
+
+The intent was **eight ROWS** either side of the median, but `lineHeight` is the
+median word **height** — ~54 px in the 5×-scaled EasyOCR crop — where a row is
+~90 px. So the window spanned only ~4.8 rows either side, and it **clipped the
+first and last row of any list longer than about nine rows**. Measured
+corpus-wide, that window dropped **50 ground-truth holdings**.
+
+**The rule now is the list's OWN ROWS.** A position list is a contiguous vertical
+stack of rows at a constant pitch, and that stack — not a window around a median
+— is what a position-aware filter has to be built on. `selectPositionListRun()`
+(`src/parse/parseChartStream.js`) finds it:
+
+1. group the column's candidate words into **rows** by their OCR `line` — two
+   words on one line are one row (a ticker and its price), and counting them
+   as two rows halves the pitch estimate;
+2. estimate the **pitch** as the *quartile* of the inter-row gaps, not their
+   median — one wide separation (the gap between two panels) drags a short gap
+   list's median into the space *between* the two clusters;
+3. split the rows into **runs** wherever the gap exceeds `pitch ×
+   POSITION_LIST_ROW_GAP_LIMIT`;
+4. take the **longest run** as the list, breaking a tie by the number of
+   price-aligned rows it contains.
+
+A ticker is then a holding when **one of its OCR occurrences** sits on one of
+the run's rows. "One of" matters: `tickerWordsMap` keeps **every** occurrence
+of a token, where `tickerWordMap` keeps only the **first**. A ticker read both
+on its own row and again in a widget above it is a holding — the first
+occurrence alone would lose it, and the "first occurrence" variant also
+resurrected the `TT` false positive on 20230518.
+
+**The panel's own upper bound is the second half of the rule.** Nothing above the
+"A - Positions" header is a position, whatever the run says. A token **every one
+of whose occurrences** is above the header is rejected — which is what separates
+a scanner panel sitting above the list (`TAN` on 20230523, `BABA` and `HAL` on
+20230602) from the list itself. The bound is applied to **every** token, not
+only to the ones the run rejected; the measured corpus totals are identical
+either way, and the stronger statement is the simpler one.
+
+**`POSITION_LIST_ROW_GAP_LIMIT = 3.5` and not 2.5.** Measured on the corpus: a
+list row the OCR read as a bare digit (a row read as "4") leaves a **272 px
+hole = three pitches**, and a 2.5-pitch limit split the run there and dropped
+the real holding `PLTR` above the hole. The 3.5-pitch limit keeps the run
+whole. The limit is safe because the Positions header is an **independent**
+upper bound — a token every one of whose occurrences is above that header is
+rejected whatever the run says — and the measured corpus totals are identical
+at 2.5 and at 3.5.
+
+**The legacy window survives only as the fallback.** A frame whose column could
+not be identified has no rows to test against, and the old `yMedian ±
+8·lineHeight` window is all that is left. The diagnostic says which rule
+applied: `bbox_filter.rule` is `list_rows` or `y_window`.
+
+**One alternative was measured and rejected.** Letting the filter fall back to
+the legacy window for a token that is *off* the column scored 130/168 (77.4 %)
+on the wide corpus, against 128/168 for the shipped rule — but at **85.0 %
+precision against 85.9 %**. It reintroduces the y-window's known defect and
+admits chart-area ink, so it was rejected on principle rather than on the
+totals.
+
+**Measured with the no-OCR replay** (`node tools/evalParserReplay.js`; hit /
+ground-truth / predicted, then micro recall and precision). **Both columns use
+the same config files**, so the difference is the rule and nothing else:
+
+| corpus | legacy window | the list's own rows |
+|---|---|---|
+| default (8 roots) | 75/85/76 — 88.2 % / 98.7 % | **80/85/81 — 94.1 % / 98.8 %** |
+| wide (17 dates) | 123/168/143 — 73.2 % / 86.0 % | **128/168/149 — 76.2 % / 85.9 %** |
+
+**The whole change set, attributed.** Every row below is a measured replay of
+the same corpus; the configs differ only where the column says so:
+
+| config | default roots | wide corpus |
+|---|---|---|
+| `HEAD` — everything as committed | 72/85/74 — 84.7 % / 97.3 % | 120/168/140 — 71.4 % / 85.7 % |
+| HEAD parser + the new lexicons and alias rows | 75/85/76 — 88.2 % / 98.7 % | 127/168/145 — 75.6 % / 87.6 % |
+| HEAD parser + the new lexicons, alias rows **dropped** | 75/85/76 — 88.2 % / 98.7 % | 123/168/143 — 73.2 % / 86.0 % |
+| **new parser** + the new lexicons, alias rows dropped | **80/85/81 — 94.1 % / 98.8 %** | **128/168/149 — 76.2 % / 85.9 %** |
+| new parser + the **old** seed, new observed + alias rows | 78/85/80 — 91.8 % / 97.5 % | 130/168/149 — 77.4 % / 87.2 % |
+| **shipped** — new parser, new lexicons, new alias rows | **80/85/81 — 94.1 % / 98.8 %** | **132/168/151 — 78.6 % / 87.4 %** |
+
+So the three changes are separable and each one earns its place:
+
+| change | default roots | wide corpus |
+|---|---|---|
+| **Filter B** (row 4 vs row 3) | **+5 hits** | **+5 hits** |
+| the **four alias rows** (row 2 vs row 3) | nothing | **+4 hits** |
+| the **16 seed rows** (shipped vs row 5) | **+2 hits** | **+2 hits** |
+
+**Per date, with the rule in isolation** (the legacy window against the list's
+own rows, the same config files on both sides):
+
+| corpus | date | before | after | what moved |
+|---|---|---|---|---|
+| default | 20230523 | 7 hits | **9 hits** | `CVNA`, `DNA` recovered |
+| default | 20230602 | 10 hits | **12 hits** | `CVNA`, `QBTS` recovered |
+| default | 20230609 | 12 hits | **13 hits** | `MNDY` recovered |
+| wide | 20230523 | 7 hits | **9 hits** | `CVNA`, `DNA` recovered |
+| wide | 20230602 | 11 hits | **12 hits** | `CVNA` recovered |
+| wide | 20220412 | 7 hits | **9 hits** | `URA`, `X` recovered |
+| wide | 20220330 | 2 hits | 3 hits | `FCX` recovered |
+| wide | 20220405 | 7 hits | 8 hits | `CWEB` recovered |
+| wide | **20220323** | 6 hits | **4 hits** | **loses `URNM` and `X`** — the column detector latched onto the **wrong column** in a garbage Tesseract capture, and swaps the false positives `BE`/`MN` for `PSX`/`THERA` |
+| wide | **20230518** | 7 hits | 7 hits | **gains the false positive `TT`** — a misread row of a real holding on a garbled capture |
+
+**Two regressions, both recorded rather than hidden.** `20220323` is the one
+date the rule costs: the capture is a garbage Tesseract read, the column
+detector latches onto the wrong column, and the run that is found is the
+wrong stack. `20230518` gains one false positive and no holding — the `TT` is
+a misread row of a real holding.
+
+**The diagnostic** is `bbox_filter`:
+
+```jsonc
+{ "rule": "list_rows",                       // or "y_window"
+  "list_rows": { "rows": 13, "members": 13, "top": 715, "bottom": 931,
+                 "pitch": 18, "runs": 1, "positions_header_y": 690 },
+  "y_median": 823, "line_height": 30, "y_min": 583, "y_max": 1063,
+  "rejected_count": 2, "rejected_tickers": ["NVDA"] }
+```
+
+**The env switches are gone.** `CHART_STREAM_FILTER_B` and
+`CHART_STREAM_RUN_SPLIT` existed only while the rule was being measured; both
+are removed, and the temporary `colx` branch with them. The rule is now the
+only behaviour.
+
+**Pinned by `test/chartStreamFilterB.test.js`** — five tests on the geometry: a
+twelve-row list keeps its first and last row; a chart-area token on the list's
+own lines is rejected; a ticker above the Positions header is rejected; the
+filter reports `rule: 'list_rows'` and the run's row count and pitch; and a
+frame with no identifiable column falls back to `rule: 'y_window'`. **Three of
+the five fail against the legacy parser**, so the test has teeth. The corpus is
+untracked, so the replay numbers cannot be asserted there — only the parser's
+behaviour on the geometry can.
+
 ### Diagnostic fields exposed
 
 - `chart_stream.column_filter` — `dominant_x`, `dominant_left`, `column_width`, `in_list_token_count` (diagnostic only, not gated)
@@ -1794,24 +2032,35 @@ re-scan can score differently from a replay of the same video.
 EasyOCR, single frame each — not a multi-frame consensus run), at commit `8070601`,
 **re-verified 2026-10-29 against the md5-pinned fixture frames** (864 s, all four cases
 passing, identical numbers), **re-measured 2026-10-31 after the nine 2023-era
-curated aliases and the left-edge column fix**, and **re-measured 2026-11-01 after the
-ground-truth audit** (305 s, all four cases passing):
+curated aliases and the left-edge column fix**, **re-measured 2026-11-01 after the
+ground-truth audit** (305 s, all four cases passing), and **re-measured again after the
+Filter B rewrite** (all four cases passing):
 
 | case | date | recall | FP |
 |---|---|---|---|
 | trade_ideas | 20220218[1] | **100% (9/9)** | 1 |
 | sparse | 20221104[0] | 100% (1/1) | 3 |
 | normal_2022 | 20220606[1] | 87.5% (7/8) | 3 |
-| dense_2023 | 20230609[0] | **69.2% (9/13)** | 3 |
+| dense_2023 | 20230609[0] | **76.9% (10/13)** | 3 |
 
-Overall mean recall **89.2%** (was **86.4%** after the 2026-10-31 aliases and the column
+Overall mean recall **91.1%** (was **89.2%** after the ground-truth audit, **86.4%**
+after the 2026-10-31 aliases and the column
 fix, **82.6%** after the 2026-10-29 curated-alias rescue, and **80.6%** before it). The
 path there was `dense_2023` 7/13 → 8/13 (the `ATR → PLTR` row) → 9/13 (the left-edge
-column fix, which brings in `AI`); `trade_ideas` then went 8/9 → 9/9 when the ground-truth
+column fix, which brings in `AI`) → **10/13 (the Filter B rewrite)**; `trade_ideas` then
+went 8/9 → 9/9 when the ground-truth
 audit found its capture 1 anchored to the wrong frame. **No false positive was added at any
 step** — `trade_ideas` actually *lost* one (2 → 1). These numbers were previously
 meaningless — the benchmark was resolving 640×360 prefilter frames, so every case scored
 0%.
+
+**The last step is the same mechanism the replay measures.** The `dense_2023` frame's
+panel holds **13** rows, and the legacy y-window clipped the bottom of a list that long;
+the new rule brings back a row from there. On this frame the recovered ticker is
+`GSIT` (the misses are now `IOT`, `APLD`, `MNDY`), and in the replay corpus the same
+date gains `MNDY` — the two differ because EasyOCR's read of the frame differs between
+runs, not because the rule differs. The parser-level attribution is the replay's:
+`20230609` goes 12 → 13 hits with the rule changed and nothing else.
 
 **The benchmark is deterministic, not noisy.** Two consecutive runs (2026-10-25, 512 s and
 461 s) produced byte-identical per-case numbers, hits and FP counts, and the 2026-10-29
@@ -1819,8 +2068,10 @@ run against the pinned frames reproduced the table exactly. So a change in this 
 means the *code* or the *input frames* changed — not that the measurement drifted.
 
 **The wall clock is not the number.** The 82.6 % run took **134 s**, the 80.6 % run 864 s,
-the 89.2 % run 305 s — the same frames, the same engine, no OCR cache (`ocrImage()` runs
-EasyOCR for real every time). EasyOCR swings by 2× on the same file between runs; the
+the 89.2 % run 305 s, and the 91.1 % run **40,053 s** — the same frames, the same engine,
+no OCR cache (`ocrImage()` runs
+EasyOCR for real every time). EasyOCR swings by 2× on the same file between runs, and by
+orders of magnitude when the machine is busy; the
 per-case numbers are what is stable. **Quote the recall, not a duration.**
 
 **The input frames ARE pinned (since 2026-10-29).** `resolveSnapshotPath` now prefers the
@@ -1846,11 +2097,12 @@ The frames the 82.6% measurement above was taken on, all 1920 px — now tracked
 seed lexicon (`ISYM`, `MEL`, `CON`), and one-letter tokens (`ON`, `X`).
 
 **Recall floor**: `20220606` now misses only `TNA` (GOVX and NFLX are found); `20230609`
-misses **4 of 13** — `IOT`, `GSIT`, `APLD`, `MNDY` — and is the case that holds the
+misses **3 of 13** — `IOT`, `APLD`, `MNDY` — and is the case that holds the
 mean down. (`AI` and `PLTR` are no longer among them: the first came back with the
-left-edge column fix, the second with the `ATR → PLTR` alias row.)
+left-edge column fix, the second with the `ATR → PLTR` alias row, and `GSIT` with the
+Filter B rewrite.)
 
-**Two of those four are outside the crop — they are not OCR failures.** On the md5-pinned
+**Two of those three are outside the crop — they are not OCR failures.** On the md5-pinned
 `dense_2023_20230609_c0.png` the 2023-era sidebar's ticker column (x 1690–1750) carries
 **13** data rows at y 715, 733, 751, 769, 787, 805, 823, 841, 859, 877, 895, **913, 931**.
 The chart-stream crop `0.86,0.62,0.14,0.22` covers y **670–907** at 1080p, so the last two
@@ -2020,6 +2272,18 @@ The `current` column is the benchmark table above, reproduced — 8/9, 1/1, 7/8,
 2, 3, 3 and 3 false positives — which is the evidence that the measurement is being
 taken against the same code the benchmark reports. (Before the nine aliases and the
 column fix, this same column read 7/13 and 82.6 %.)
+
+**This table is a snapshot, and two things have moved since it was taken.** It was
+measured with the **pre-Filter-B parser** and against the **pre-audit ground truth**.
+The current parser and the current ground truth read **9/9, 1/1, 7/8, 10/13 —
+91.1 %** on the `current` crop (§ 'Known limitations and next steps'). The three
+crop rectangles have **not** been re-measured against the new parser and the new
+ground truth, so the *comparison between the rectangles* is still the 2026-10-31
+measurement — a different question from the current default's score. Re-running
+it costs three EasyOCR sweeps of the four pinned frames; it has not been done, and
+the conclusion it reached (no wider default; an era-conditional crop or the
+`position_table` reader) is unchanged by the Filter B work, which is a parser
+rule and not a crop change.
 
 
 **PaddleOCR PP-OCRv6**: the packages ARE installed — `tools/paddle311_env` (Python 3.11.9) has
@@ -2559,12 +2823,17 @@ Any statistic derived from it describes the later crop/tuning era only.
 
 The current figures (re-measured 2026-11-01, after the curated-alias
 rescue, the SPXL seed fix, the nine 2023-era curated aliases, the left-edge
-column fix **and all three passes of the ground-truth audit**):
+column fix, all three passes of the ground-truth audit, **the Filter B
+rewrite**, the four 2022-era alias rows and the 16 pixel-verified seed rows):
 
 | root set | dates scored | recall | precision |
 |---|---|---|---|
-| default (8 probe roots) | 8 | **84.7 %** (72/85) | **97.3 %** (72/74) |
-| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **71.4 %** (120/168) | **85.7 %** (120/140) |
+| default (8 probe roots) | 8 | **94.1 %** (80/85) | **98.8 %** (80/81) |
+| `data/video_ocr_probe` + `data/video_scan_test/_rerun` | 17 | **78.6 %** (132/168) | **87.4 %** (132/151) |
+
+(The attribution of every step is in § 'Filter B — the position-aware vertical
+bound': the Filter B rewrite is +5 hits on each corpus, the four alias rows
+are +4 on the wide corpus, and the 16 seed rows are +2 on each.)
 
 (Before the nine 2023-era aliases: 66.3 % (59/89) / 95.2 % (59/62) on the default roots,
 and 64.7 % (110/170) / 82.1 % (110/134) on the wide corpus. See § 'Nine more curated

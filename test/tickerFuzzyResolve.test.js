@@ -162,13 +162,31 @@ test('the real lexicons keep their two jobs', () => {
   const seed = loadSeedLexiconSync();
   const decode = loadDecodeLexiconSync();
 
-  // The decode lexicon is the seed PLUS the observed tickers.
-  assert.ok(decode.tickers.length > seed.tickers.length);
+  // The decode lexicon is the seed PLUS the observed tickers, so every seed
+  // ticker is in the match list.
   for (const ticker of seed.tickers) {
     assert.ok(decode.tickerSet.has(ticker), `${ticker} is in the match list`);
   }
   // The allow list is the seed.
   assert.deepEqual([...seed.tickerSet].sort(), [...seed.tickers].sort());
+  // Every ticker ever observed in a Qullamaggie position list is ALLOW-listed.
+  //
+  // This is the property the two lists exist to express. A ticker that was
+  // seen in a position list and is not in the seed is resolved and then
+  // DISCARDED, which is how SPXL was lost for a week, and it is how a
+  // chart-stream reading is repaired to a neighbouring seed ticker instead
+  // of to itself. So every observed ticker has to be in the seed — and the
+  // nine rows the ground-truth audit discredited (they were read off the
+  // watchlist widget, not the positions table) are gone from the observed
+  // list rather than carried as holdings.
+  const observed = require('node:fs')
+    .readFileSync(require('node:path').join(__dirname, '..', 'config', 'ticker_lexicon_observed.csv'), 'utf8')
+    .split(/\r?\n/).slice(1).map((line) => line.split(',')[0].trim()).filter(Boolean);
+  assert.ok(observed.length > 0, 'the observed list must not be empty');
+  for (const ticker of observed) {
+    assert.ok(seed.tickerSet.has(ticker),
+      `${ticker} was observed in a position list and must be allow-listed`);
+  }
   // Every seed ticker is reportable.
   for (const ticker of seed.tickers) {
     const result = resolveTickerToken(ticker, {

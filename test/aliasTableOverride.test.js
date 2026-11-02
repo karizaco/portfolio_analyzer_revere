@@ -115,10 +115,15 @@ test('the shipped alias table rescues the row by default', () => {
 
 test('the override drops a row without touching the shared config file', () => {
   const before = fs.readFileSync(CONFIG_CSV, 'utf8');
+  // The shipped table's row count is read from the file rather than written
+  // down: the count changes every time a recorded misread is added, and a
+  // hard-coded number here would break the test on the next addition while
+  // saying nothing about the override's behaviour.
+  const shippedRows = before.split(/\r?\n/).slice(1).filter((line) => line.trim()).length;
 
   const override = applyAliasTableOverride({ confusionCsv: '', dropAliases: ['A'] });
   try {
-    assert.equal(override.describe().rows, 27,
+    assert.equal(override.describe().rows, shippedRows - 1,
       'the override table must have one row fewer than the shipped one');
     assert.ok(!rescued().includes('AI'),
       `a dropped row must not rescue: ${JSON.stringify(rescued())}`);
