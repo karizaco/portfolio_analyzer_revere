@@ -154,6 +154,7 @@ test('the O-for-D confusion row changes no existing decode', () => {
   let changed = 0;
   let gained = 0;
   let lost = 0;
+  const gains = [];
   for (const read of candidates) {
     const before = decodeCell([{ text: read }], { lexicon, confusion: withoutOD });
     const after = decodeCell([{ text: read }], { lexicon, confusion: base });
@@ -161,12 +162,25 @@ test('the O-for-D confusion row changes no existing decode', () => {
     const b = after ? after.ticker : null;
     if (a === b) continue;
     if (b === null) lost += 1;
-    else if (a === null) gained += 1;
+    else if (a === null) { gained += 1; gains.push([read, b]); }
     else changed += 1;
   }
   assert.equal(changed, 0, 'the O-for-D row must not change an existing decode');
   assert.equal(lost, 0, 'the O-for-D row must not lose a decode');
-  assert.equal(gained, 38, 'the O-for-D row should add exactly the measured repairs');
+  assert.ok(gained > 0, 'the O-for-D row must add repairs');
+
+  // Every repair it adds must be CORRECT: the decode it produces is the read
+  // with one of its O's read as a D. That is the row's whole claim, and it
+  // holds for every gain rather than for a measured number of them — the
+  // count moves with the lexicon (it was 38 when the seed held 224 tickers,
+  // and it is 33 now that the seed holds the 16 pixel-verified Qullamaggie
+  // holdings and the observed list has lost its nine discredited rows), while
+  // the property does not.
+  for (const [read, target] of gains) {
+    const corrected = [...read].some((c, i) => c === 'O' && read.slice(0, i) + 'D' + read.slice(i + 1) === target);
+    assert.ok(corrected,
+      `the repair ${read} -> ${target} must be the read with one O read as a D`);
+  }
 });
 
 test('the O-for-D row repairs MNOY to MNDY', () => {

@@ -2,7 +2,9 @@
 
 **The numbers in this file are a snapshot, and they decay.** The catalog
 (`data/video_pipeline/state.sqlite`) is the source of truth; § *Re-measuring*
-has the commands that regenerate every figure here. Measured **2026-10-29**.
+has the commands that regenerate every figure here. Measured **2026-10-29**,
+except the parser's figures (§ *The chart-stream parser*), which are from
+**2026-11-01**.
 
 ## Current state (measured 2026-10-29)
 
@@ -102,6 +104,33 @@ are the ten under the two *annotated duplicate* keys, which no probe log can
 match.
 Details: CLAUDE.md § *The Qullamaggie ground truth, verified against its
 pixels*.
+
+### The chart-stream parser
+
+The parser is measured **offline**, by replaying the captured probe logs through
+it — no OCR, seconds instead of ~12 min/video:
+
+```bash
+node tools/evalParserReplay.js --json
+node tools/evalParserReplay.js data/video_ocr_probe data/video_scan_test/_rerun --json
+```
+
+| corpus | dates scored | recall | precision |
+|---|---|---|---|
+| default (8 probe roots) | 8 | **94.1 %** (80/85) | **98.8 %** (80/81) |
+| wide (`video_ocr_probe` + `_rerun`) | 17 | **78.6 %** (132/168) | **87.4 %** (132/151) |
+
+Measured 2026-11-01, after the Filter B rewrite, the four 2022-era alias rows
+and the 16 pixel-verified seed rows. The attribution of every step is in
+CLAUDE.md § *Filter B — the position-aware vertical bound*.
+
+**This is a surviving sample, not a corpus-wide figure** — the tool prints a
+census on every run, and **read the number with the census**.
+
+The curated EasyOCR benchmark (`npm run test:benchmark`, the four md5-pinned
+frames) now reads **91.1 %** overall mean recall — `trade_ideas` 9/9,
+`sparse` 1/1, `normal_2022` 7/8, `dense_2023` 10/13, with no false positive
+added at any step.
 
 ### The outstanding work
 
