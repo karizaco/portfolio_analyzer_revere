@@ -101,6 +101,25 @@ const NEW_ALIASES = [
   ['ATR', 'PLTR'],
   ['A', 'AI'],
   ['AL', 'AI'],
+  // The two rows added 2026-11-02. Both were PIXEL-VERIFIED before they
+  // were proposed: the marked token box was located on the source pixels.
+  //
+  //   WHX -> LHX   W rendered as H, 20220412. The marked box sits on the
+  //                LHX glyphs in the Sym column's first row of the pinned
+  //                crop `20220412_c0.png`. Worth a hit on the wide corpus
+  //                (133/168 against 132/168) with no false positive.
+  //   CBO -> CBIO  I dropped, 20220606. Pixel-verified by COLUMN-INTENSITY
+  //                COSINE SIMILARITY against batch1's CBIO row: 0.9990,
+  //                against 0.73-0.81 for every other row of that panel.
+  //                It earns nothing today because the column detector
+  //                latched onto the % Change column (dominant_left 684)
+  //                instead of the Sym column (x 450), so the token was
+  //                never inside the detected column. It is kept on the
+  //                2026-10-31 precedent: a recorded, verified misread that
+  //                does not fire today can fire on the next frame that
+  //                reads that way.
+  ['WHX', 'LHX'],
+  ['CBO', 'CBIO'],
 ];
 
 function confusionRows() {
@@ -123,7 +142,7 @@ function confusionRows() {
 // THE TABLE
 // ---------------------------------------------------------------------------
 
-test('the nine 2026-10-31 aliases are present with the right canonical', () => {
+test('the curated aliases are present with the right canonical', () => {
   const rows = confusionRows();
   for (const [garbled, canonical] of NEW_ALIASES) {
     const found = rows.filter((r) => r.garbled === garbled);
