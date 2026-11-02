@@ -136,6 +136,23 @@ const NEW_ALIASES = [
   // spellings in the corpus and only one of them may be rescued.
   ['V', 'LI'],
   ['NCH', 'FTCH'],
+  // The row added 2026-11-02 (third batch). Pixel-verified against the corpus
+  // frame `data/video_ocr_probe/qmg-easyocr-20261017/snapshots/qmg_20230605.png`,
+  // whose "A - Positions" panel reads, top to bottom:
+  //
+  //   IMGN, ARQQ, CVNA, IOT, PLTR, GSIT, MNDY, APLD, AI, QBTS, DNA
+  //
+  // The OCR read that column as INGN, AQQ, CVNA, IOT, ATR, GS0T, MNDY, APLD,
+  // **N**, OBTS, DNA — so the AI row came through as a bare `N`.
+  //
+  // `N` is in neither lexicon (the seed's one-letter tickers are U, X and P),
+  // `AI` is in the seed, and the table has no row keyed `N` and no canonical
+  // `N` — so the row is legal on every one of the table's invariants.
+  //
+  // This is the third row whose canonical is `AI`, after `A -> AI` and
+  // `AL -> AI`: the 2023-era sidebar's two-character tickers lose their first
+  // glyph in three different ways.
+  ['N', 'AI'],
 ];
 
 function confusionRows() {
