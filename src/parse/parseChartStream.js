@@ -2115,22 +2115,75 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
       continue;
     }
     const totalFreq = members.reduce((s, m) => s + (frequency.get(m) || 0), 0);
+    // The SWALLOWED-HOLDING rule: a cluster can hold TWO distinct lexicon
+    // tickers that are one edit apart, and the second one is swallowed by
+    // the canonical.
+    //
+    // The recorded instance: on 20230522 and 20230523 the cluster table says
+    // { canonical: "AI", members: ["AI", "LI"] } -- and BOTH `AI` and `LI` are
+    // rows of that video's panel. They are one edit apart, so the clusterer
+    // merged two different cells and published one of them; the other was
+    // never published at all.
+    //
+    // The guard is what makes it safe. The swallowed ticker is published only
+    // when the video read IT -- in enough frames of its own. The count is the
+    // member's OWN frame count, not the cluster's: the canonical's frames
+    // must not be credited to the swallowed ticker, or every member of a
+    // well-attested cluster would look well-attested.
+    //
+    // The measured discriminator over the production cluster tables: a
+    // swallowed ticker read in >= 4 frames of its own is a holding, one read
+    // in <= 3 is a one-off garble (`NFU`, which is not a holding of its
+    // video). Publishing every lexicon ticker in a cluster, with no guard, is
+    // measured and REJECTED: it adds 24 false positives over the corpus.
+    const extraCanonicals = [];
+    if (options.publishSwallowedHoldings) {
+      for (const m of members) {
+        if (m === canonical) continue;
+        if (!lexicon.tickerSet.has(m)) continue;
+        const ownFrames = (tokenFrameIndices.get(m) || new Set()).size;
+        if (ownFrames < options.swallowedHoldingMinFrames) continue;
+        extraCanonicals.push(m);
+      }
+    }
     clusters.push({
       canonical,
       frameCount: clusterFrames.size,
       frequency: totalFreq,
-      members: members.sort()
+      members: members.sort(),
+      // The other lexicon tickers this cluster swallowed, and which of them
+      // the rule published anyway. The counts are the EVIDENCE for the
+      // decision, so they are recorded: without them a later reader cannot
+      // tell why one swallowed ticker was published and another was not.
+      extraCanonicals,
+      swallowedEvidence: members
+        .filter((m) => m !== canonical && lexicon.tickerSet.has(m))
+        .map((m) => ({
+          ticker: m,
+          ownFrames: (tokenFrameIndices.get(m) || new Set()).size,
+          published: extraCanonicals.includes(m),
+        })),
     });
   }
 
   // Step 6: build merged list. The Filter A pass above already filtered
   // clusters by minFrequency; this is just the canonical → merged list.
+  //
+  // A cluster's EXTRA canonicals are published too -- that is the whole point
+  // of the swallowed-holding rule: `LI` was a holding of that video, and
+  // naming only `AI` lost it.
   const seen = new Set();
   const merged = [];
   for (const c of clusters) {
-    if (seen.has(c.canonical)) continue;
-    seen.add(c.canonical);
-    merged.push(c.canonical);
+    if (!seen.has(c.canonical)) {
+      seen.add(c.canonical);
+      merged.push(c.canonical);
+    }
+    for (const extra of c.extraCanonicals || []) {
+      if (seen.has(extra)) continue;
+      seen.add(extra);
+      merged.push(extra);
+    }
   }
   merged.sort();
 
@@ -2188,6 +2241,10 @@ function clusterVideoLevelReadings(input, options = {}) {
     corroborationAllowsVideoSupport: options.corroborationAllowsVideoSupport !== false,
     preferSupportedCorrection: options.preferSupportedCorrection === true,
     preferVideoSupport: options.preferVideoSupport === true,
+    publishSwallowedHoldings: options.publishSwallowedHoldings === true,
+    swallowedHoldingMinFrames: Number.isFinite(options.swallowedHoldingMinFrames)
+      ? options.swallowedHoldingMinFrames
+      : 4,
     explainDropped: options.explainDropped === true
   });
   return {

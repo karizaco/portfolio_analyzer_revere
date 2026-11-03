@@ -73,10 +73,12 @@ test('the replay tool accepts every rule name', () => {
     Object.keys(CLUSTER_RULES).sort(),
     [
       'corroborated',
+      'corroborated+swallowed',
       'corroborated-strict',
       'shipped',
       'supported',
       'supported+corroborated',
+      'swallowed',
       'video-supported',
       'video-supported+corroborated',
     ],
@@ -112,6 +114,11 @@ test('the replay and the scan tool name a rule the SAME way', () => {
       preferVideoSupport: true,
       requireDistanceOneCorroboration: true,
     },
+    'swallowed': { publishSwallowedHoldings: true },
+    'corroborated+swallowed': {
+      publishSwallowedHoldings: true,
+      requireDistanceOneCorroboration: true,
+    },
   };
 
   for (const [name, switches] of Object.entries(SWITCHES)) {
@@ -127,6 +134,7 @@ test('the replay and the scan tool name a rule the SAME way', () => {
           ? 'corroborated-strict'
           : 'corroborated');
       }
+      if (switches.publishSwallowedHoldings === true) parts.push('swallowed');
       return parts.length ? parts.join('+') : 'shipped';
     })();
     assert.equal(scanName, name, `the scan tool names ${name} the same way`);
@@ -176,4 +184,20 @@ test('a log records the rule it was scanned under', () => {
     cluster_video_supported: true,
     cluster_strict_corroboration: false,
   }), 'video-supported+corroborated');
+
+  assert.equal(recordedClusterRuleOf({
+    cluster_corroboration: false,
+    cluster_supported: false,
+    cluster_video_supported: false,
+    cluster_strict_corroboration: false,
+    cluster_swallowed_holdings: true,
+  }), 'swallowed');
+
+  assert.equal(recordedClusterRuleOf({
+    cluster_corroboration: true,
+    cluster_supported: false,
+    cluster_video_supported: false,
+    cluster_strict_corroboration: false,
+    cluster_swallowed_holdings: true,
+  }), 'corroborated+swallowed');
 });

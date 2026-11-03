@@ -4361,6 +4361,51 @@ the lexicon, **not** "read without the canonical", but the frame count), and
 `test/manual/clusterPublishBothRule.test.js` pins the REJECTED blunt version,
 so it is not re-attempted.
 
+#### The log does NOT carry the clusterer's input
+
+**This is the measurement caveat that governs every number above, and it is
+easy to get wrong.**
+
+The clusterer is fed **every OCR'd candidate frame** (`scanResult.candidates`,
+not the selected captures). The probe log keeps the selected captures, the
+top candidates and the rejected ones — each a SUMMARY. Re-clustering the
+log's own frames does **not** reproduce the log's own cluster table:
+
+| | count |
+|---|---|
+| logs whose cluster table the log's frames REPRODUCE exactly | **0** |
+| logs whose cluster table the log's frames do NOT reproduce | 15 |
+| logs with no frames at all | 37 |
+
+One example: `20220607` — the log keeps **4** frames, and re-clustering them
+gives **6** clusters against the **34** production recorded.
+
+**So the log's frames are NOT the production input, and any measurement
+built on them is measuring a different clustering than production ran.** The
+cluster table is the only faithful record of what production formed.
+
+Two consequences:
+
+1. **The rule's numbers must come from the cluster tables**, not from
+   re-clustering the log's frames. The census and the threshold sweep do
+   that.
+2. **A rule that needs a per-token frame count cannot be measured from the
+   logs at all**, because the tables record a cluster's `frequency` — the
+   SUM over its members' counts — and not each member's own count.
+
+The second consequence is why the guard is implemented against the token's
+own frame count (`tokenFrameIndices`) rather than the cluster's, and why
+**the evidence now travels with the cluster**: the probe log records
+`extraCanonicals` and `swallowedEvidence` (the swallowed ticker, its own
+frame count, and whether it was published), so a later reader can tell
+*why* one swallowed ticker was published and another was not — which they
+could not do before, and could not do from the frames at all.
+
+Pinned by `test/manual/clusterLogInputFidelity.test.js` (the fidelity
+check itself) and `test/manual/clusterSwallowedOwnFrames.test.js` (the
+own-frame-count measurement, which reports **zero** usable logs — the
+finding that forced the evidence into the log).
+
 **The production audit is the decisive one.** Every recorded log carries the
 cluster table production actually formed, so the rule can be applied to it
 directly. Over **46 logs / 2 480 clusters**:

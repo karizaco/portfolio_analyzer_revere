@@ -60,6 +60,8 @@ const RULES = [
   'supported+corroborated',
   'video-supported',
   'video-supported+corroborated',
+  'swallowed',
+  'swallowed+corroborated',
 ];
 
 const CORPORA = [
