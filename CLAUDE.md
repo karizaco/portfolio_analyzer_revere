@@ -4212,17 +4212,20 @@ drift apart:
 
 | name | replay | scan tool | batch runner |
 |---|---|---|---|
-| `shipped` | `--cluster-rule shipped` | (the default) | `--cluster-rule shipped` |
-| `corroborated` | `--cluster-rule corroborated` | `--cluster-corroboration` | `--cluster-rule corroborated` |
-| `corroborated-strict` | `--cluster-rule corroborated-strict` | `--cluster-corroboration --cluster-strict-corroboration` | `--cluster-rule corroborated-strict` |
-| `supported` | `--cluster-rule supported` | `--cluster-supported` | `--cluster-rule supported` |
-| `supported+corroborated` | `--cluster-rule supported+corroborated` | both flags | `--cluster-rule supported+corroborated` |
-| `video-supported` | `--cluster-rule video-supported` | `--cluster-video-supported` | `--cluster-rule video-supported` |
-| `video-supported+corroborated` | `--cluster-rule video-supported+corroborated` | both flags | `--cluster-rule video-supported+corroborated` |
+| `shipped` | `--cluster-rule shipped` | `--no-cluster-corroboration` | `--cluster-rule shipped` |
+| `corroborated` | `--cluster-rule corroborated` | (the default) | `--cluster-rule corroborated` |
+| `corroborated-strict` | `--cluster-rule corroborated-strict` | `--cluster-strict-corroboration` | `--cluster-rule corroborated-strict` |
+| `supported` | `--cluster-rule supported` | `--cluster-supported --no-cluster-corroboration` | `--cluster-rule supported` |
+| `supported+corroborated` | `--cluster-rule supported+corroborated` | `--cluster-supported` | `--cluster-rule supported+corroborated` |
+| `video-supported` | `--cluster-rule video-supported` | `--cluster-video-supported --no-cluster-corroboration` | `--cluster-rule video-supported` |
+| `video-supported+corroborated` | `--cluster-rule video-supported+corroborated` | `--cluster-video-supported` | `--cluster-rule video-supported+corroborated` |
+| `swallowed` | `--cluster-rule swallowed` | `--cluster-swallowed-holdings --no-cluster-corroboration` | `--cluster-rule swallowed` |
+| `corroborated+swallowed` | `--cluster-rule corroborated+swallowed` | `--cluster-swallowed-holdings` | `--cluster-rule corroborated+swallowed` |
 
-**All of them are OFF by default**, because each one changes which holdings a
-scan publishes. The default stays where it is until a wider measurement says
-otherwise.
+**`corroborated` is the default** (changed 2026-11-03) — the only rule that
+survived every measurement. The others are OFF, because each one changes
+which holdings a scan publishes, and a wider measurement has to say otherwise
+first.
 
 ### What the supported rule actually changes
 
@@ -4489,98 +4492,72 @@ scan). So the rule's blast radius is the chart_stream branch only.
 
 ### The decision
 
-**`corroborated` is the rule worth shipping, and it is not shipped yet.** The
-measurement is a clear win — one false positive removed, no holding lost,
-over the corpus the production runs actually produced — but the corpus that
-produced it is **46 logs**, and the project rule is that the default stays
-where it is until a **wider** measurement says otherwise.
+**`corroborated` is the DEFAULT** (changed 2026-11-03). It is the one rule
+that survived every measurement: it removes false positives and loses no
+holding, in the corpus replay, in the production audit, and in a production
+scan.
 
-**The wider measurement has now been made: a PRODUCTION SCAN of all six
-2023-era dates under the rule** (`qmg-easyocr-20261103-corroborated`,
-the ordinary batch runner and the ordinary EasyOCR path, with the rule as
-the only difference), scored against the pixel-verified ground truth on
-the **merged** list, against the shipped rule's own logs for the same
-dates:
+**The measurement, on the dates the two scans SHARE** — two different scans of
+different date sets cannot be compared in aggregate, so this is the
+like-for-like comparison (`test/manual/corrobDefaultSafety.test.js`):
 
-| date | ruled | shipped | what changed |
+| date | shipped | corroborated | changed |
 |---|---|---|---|
 | `20230522` | 6/7, 0 FP | 6/7, 0 FP | — |
 | `20230523` | 10/11, 1 FP (`U`) | 10/11, 1 FP (`U`) | — |
 | `20230602` | 12/12, 1 FP (`IOT`) | 12/12, 1 FP (`IOT`) | — |
-| **`20230605`** | **11/11, 0 FP** | 11/11, 1 FP (`AAPL`) | **the false positive is gone** |
-| `20230608` | 13/13, 0 FP | — | — |
-| **`20230609`** | **13/13, 0 FP** | 13/13, 1 FP (`REGN`) | **the false positive is gone** |
-| **total** | **65/67 — 97.0 % recall, 2 FP** | 52/67 — 77.6 % recall, 4 FP | **2 false positives removed, 0 holdings lost** |
+| `20230605` | 11/11, **1 FP (`AAPL`)** | **11/11, 0 FP** | **the FP is gone** |
+| **total** | 39/41 hits, 3 FP | **39/41 hits, 2 FP** | **−1 FP, 0 holdings lost** |
 
-**Both false positives are gone and no holding was lost.** (The `REGN` on
-`20230609` was already fixed by the `RGN → RGTI` alias row in the shipped
-run; the ruled scan simply did not reintroduce it.)
+The six-date production scan (`qmg-easyocr-20261103-corroborated`, the
+ordinary batch runner and the ordinary EasyOCR path, with the rule as the only
+difference) scored **65/67 hits, 2 FP** against the shipped rule's **3 FP** on
+the dates they share, and removed the `AAPL` false positive with nothing
+lost.
 
-The two false positives that remain are **capture-level** readings — `U` on
-`20230523` and `IOT` on `20230602` are in those captures' own
-`position_list`, so no cluster rule can remove them. CLAUDE.md records both
-as such.
+**What it does NOT do, stated plainly:** it does **not** improve recall.
+Across the corpus replay the hit count **never moves** under any rule — the
+rule is a **precision** filter, not a recall one. It removes holdings the
+clusterer invented; it does not find holdings the parser missed. The
+recall gains in 2026 came from the **era-conditional crop** and the
+**parser**, not from this rule. The rule contributed the false-positive
+removal, and nothing else.
 
-**The two dates the scan did not finish change NOTHING under the rule.**
-`20230522` and `20230523` are the slowest videos, and the first attempt at
-them was competing with the test suite for the CPU (the run that produced
-the other four took 737–952 s per video on an idle machine; these two took
-1 833 s and 1 864 s). Applying the rule to the **shipped-rule logs for
-those two dates** — the same clusters, the same arithmetic — gives the same
-answer, and the re-scan confirms it: `20230522` 6/7 with 0 FP, `20230523`
-10/11 with 1 FP (`U`), both identical to the shipped rule.
+**The blast radius is the chart_stream branch only.** The whiteboard branch
+merges the structured GRO/TURBO holdings and never reads the clusterer's
+consensus (`legacyConsensus` is `null` for a non-snapshot scan), so the
+rule cannot touch it. Every one of the 137 logs in the corpus is a snapshot
+scan (`test/manual/clusterRuleBlastRadius.test.js`).
 
-**The clusters the rule dropped, and why nothing was lost.** The scan
-reports them per date:
+**How it is switched, and how it is switched back.** The rule is ON by
+default in `src/video/ocrScanArgs.js`:
 
-| date | dropped cluster | why the holding survived |
-|---|---|---|
-| `20230608` | `APLD` from `[APOQ, AXOQ]` (closest 2) | the video also read `APLD` directly |
-| `20230609` | `GTLB` from `[GULE]` (closest 2) | the video also read `GTLB` directly |
+```js
+clusterCorroboration: null,   // null = "not mentioned"; the rule is ON
+```
 
-A ticker survives the rule if **any** cluster carried it and was
-corroborated. Counting it otherwise is how the first version of the audit
-wrongly reported two lost holdings — the same accounting error twice,
-in two different tools, which is why it is now pinned by
-`test/manual/clusterRuleProductionScore.test.js`.
+`null` rather than `true`, so the flag can tell *not mentioned* from
+*explicitly off*: `--no-cluster-corroboration` turns it off, and the scan
+tool records which rule actually ran (`cluster_rule` in the probe log). The
+batch runner's `--cluster-rule shipped` passes that flag, so it still means
+the pre-2026-11-03 behaviour.
 
-`LI` is held by the video and missed by **both** rules on `20230522` and
-`20230523` — that is the *absorbed holding* defect, measured and cured
-below. `U` and `IOT` are capture-level readings. So the rule's whole
-effect over six dates is: **two false positives removed, no holding lost.**
-
-Pinned by `test/manual/clusterRuleScoreExisting.test.js` (the side-by-side
-scoring), `test/manual/clusterRuleApplyToLog.test.js` (the two dates the
-scan did not finish) and `test/manual/clusterRuleProductionScan.test.js`
-(the scan itself).
+**One implementation, three callers.** The rule's switches are resolved in
+`resolveClusterRuleOptions()` and named by `clusterRuleName()` — both in
+`src/parse/parseChartStream.js` — and the scan tool, the replay tool and
+the batch runner all use them. They had drifted **twice** before: the replay
+checked the strict flag before the supported one (so `supported+corroborated`
+under the strict flag was misnamed `corroborated-strict`), and the two named
+the swallowed rule differently (`swallowed+corroborated` against
+`corroborated+swallowed`), which killed a scan at startup with "unknown
+--cluster-rule". Pinned by `test/clusterRuleFlags.test.js`, which resolves
+the batch runner's flags through the **shared** resolver — so it cannot drift
+the way a copy of the logic did.
 
 **The three supported rules are measured and rejected.** They add false
 positives and recover no holdings. They stay available behind their flags,
 because a rule that is wrong on this corpus could be right on another —
 but nothing in the measurement argues for turning one on.
-
-**The corroboration gate's video-support escape makes no difference to any
-number.** `corroborated` and `corroborated-strict` score identically on
-both corpora, on the production output, and on the production scan. The
-escape is kept because it is the difference between "discard the cluster"
-and "keep the holding the video showed", and the production case for it
-(`ARQQ`) is real even though the corpus does not exercise it.
-
-Pinned by `test/chartStreamCluster.test.js` — the rules' behaviour, on a
-synthetic lexicon so the arithmetic is fixed, and on the REAL decode lexicon
-so a change to the seed cannot silently move the answer.
-
-Measured by three harnesses, all in `test/manual/` (the suite's glob does not
-reach them, and the corpus they need is untracked):
-
-| harness | what it measures |
-|---|---|
-| `clusterRuleMeasurement.test.js` | all seven rules on both corpora |
-| `clusterRuleDiff.test.js` | the per-date diff against the shipped rule |
-| `clusterRuleProductionAudit.test.js` | the recorded production cluster tables |
-| `clusterRuleProductionScore.test.js` | the rule applied to the production merged lists, scored |
-| `clusterRulePerDate.test.js` | three dates, cluster by cluster |
-
 ### The scan records which rule produced its merged list
 
 ```jsonc

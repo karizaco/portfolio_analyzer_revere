@@ -2256,6 +2256,60 @@ function clusterVideoLevelReadings(input, options = {}) {
   };
 }
 
+// The NAME of a cluster rule.
+//
+// One implementation, used by BOTH the scan tool and the replay tool: the
+// replay compares a log's recorded rule against the rule it is applying, so
+// the two have to name the same combination the same way.
+//
+// They DID drift, twice. The first time the strict flag was checked BEFORE
+// the supported one, so `supported+corroborated` under the strict flag was
+// misnamed `corroborated-strict`. The second time the two named the
+// swallowed rule differently (`swallowed+corroborated` against
+// `corroborated+swallowed`), and a scan naming one of them died at
+// startup.
+//
+// The switches are the RESOLVED booleans -- the caller resolves any
+// tri-state (the scan tool's `--no-cluster-corroboration` against its
+// on-by-default) before calling this.
+function clusterRuleName(options = {}) {
+  const parts = [];
+  if (options.preferVideoSupport === true) parts.push('video-supported');
+  else if (options.preferSupportedCorrection === true) parts.push('supported');
+  if (options.requireDistanceOneCorroboration === true) {
+    parts.push(options.corroborationAllowsVideoSupport === false ? 'corroborated-strict' : 'corroborated');
+  }
+  if (options.publishSwallowedHoldings === true) parts.push('swallowed');
+  return parts.length ? parts.join('+') : 'shipped';
+}
+
+// Resolve the cluster-rule OPTIONS into the switches the rule runs on.
+//
+// The scan tool's CLI option is a TRI-STATE for the corroboration rule:
+// `null` means "not mentioned", and the rule is ON by default, so
+// `--no-cluster-corroboration` has to be able to turn it off. The strict
+// flag is the VARIANT of that rule, so it implies corroboration.
+//
+// Resolving it in ONE place -- here -- means the clusterer, the rule name
+// and the batch runner's flag table cannot disagree about which rule a scan
+// ran. They have.
+function resolveClusterRuleOptions(options = {}) {
+  const strict = options.clusterStrictCorroboration === true;
+  const corroboration = options.clusterCorroboration === null
+    ? true
+    : options.clusterCorroboration === true;
+  return {
+    requireDistanceOneCorroboration: corroboration || strict,
+    corroborationAllowsVideoSupport: !strict,
+    preferSupportedCorrection: options.clusterSupported === true,
+    preferVideoSupport: options.clusterVideoSupported === true,
+    publishSwallowedHoldings: options.clusterSwallowedHoldings === true,
+    swallowedHoldingMinFrames: Number.isFinite(options.clusterSwallowedMinFrames)
+      ? options.clusterSwallowedMinFrames
+      : 4,
+  };
+}
+
 module.exports = {
   hasPriceNear,
   identifyPositionListColumn,
@@ -2263,6 +2317,8 @@ module.exports = {
   mergeMultiplePositionLists,
   clusterRawOcrTokens,
   clusterVideoLevelReadings,
+  clusterRuleName,
+  resolveClusterRuleOptions,
   extractZoomStripTickerCandidates,
   parseChartStreamPositionList,
   extractAllTickerCandidates,
