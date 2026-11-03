@@ -70,7 +70,7 @@ python tools/whiteboard_worker.py catalog \
 node tools/downloadQmg1080p.js --cookies youtube_cookies.txt --limit 200
 
 # Run OCR on downloaded videos (EasyOCR recommended)
-KMP_DUPLICATE_LIB_OK=TRUE node tools/scanVideoWithOcr.js \
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 KMP_DUPLICATE_LIB_OK=TRUE node tools/scanVideoWithOcr.js \
   --video-dir data/video_pipeline/downloads_1080p/ \
   --prefilter-profile chart_stream --chart-stream-parser \
   --basename qmg --output-kind snapshot \
@@ -92,9 +92,9 @@ Qullamaggie's live trading sessions show a **position-list overlay** in the bott
   1. **Lexicon membership** — ticker appears in `config/ticker_lexicon_seed.csv`
   2. **Price-nearby** — ticker appears within 12 characters of a price token (`$`, decimal number, `HIGH/LOW/CLOSE/TARGET/STOP/BID/ASK`, or `+/-value%`)
 
-- **OCR pipeline**: `src/ocr/easyocrAdapter.js` (EasyOCR, recommended) or `src/ocr/ocrImage.js` (Tesseract, legacy). EasyOCR crops from the original 1920px video at `{x:0.87, y:0.58, w:0.13, h:0.40}`, scales 5× to 1345px wide, then runs the CNN.
+- **OCR pipeline**: `src/ocr/easyocrAdapter.js` (EasyOCR, recommended) or `src/ocr/ocrImage.js` (Tesseract, legacy). EasyOCR crops from the original source video, scales the era-specific position-list region 5×, then runs the CNN. The crop width is measured at runtime; do not hardcode it.
 
-- **Scanner**: `tools/scanVideoWithOcr.js` uses `--prefilter-profile chart_stream` and `--chart-stream-parser`. Default crop is `{x:0.87, y:0.58, w:0.13, h:0.40}` (position-list column targeted).
+- **Scanner**: `tools/scanVideoWithOcr.js` uses `--prefilter-profile chart_stream` and `--chart-stream-parser`. The default chart-stream crop is selected from the upload date by `src/video/chartStreamCrop.js` (see below).
 
 ### Current Crop Region
 
@@ -104,6 +104,30 @@ Qullamaggie's live trading sessions show a **position-list overlay** in the bott
 ```
 
 The crop targets the position-list column specifically (not the chart area). It is **era-conditional** — Qullamaggie moved the position list from a floating bottom-right panel to a right-docked table between 2023-01-26 and 2023-05-18 — and both rectangles live in `src/video/chartStreamCrop.js`, which is the single source of truth. EasyOCR is used with this crop for ~75% recall on 20220606 vs ~25% with Tesseract on the old wider crop.
+
+### Cluster canonical rules
+
+The chart-stream scan produces two readings: each capture's `position_list`, and the video-level `merged_position_list` formed by clustering all OCR candidate frames. The options below affect the **video-level merge only**; they do not make EasyOCR read a missed ticker. The current default is **`corroborated`**, in both the scan tool and the QMG batch runner.
+
+A cluster may publish a lexicon ticker exactly read by the video, or a corrected canonical inferred from a garbled token. The `corroborated` rule rejects a corrected canonical unless it is within edit distance 1 of a cluster member (or is corroborated by the video's own reading under the non-strict rule). This prevents the clusterer from inventing a holding such as `AAPL` when no frame read it. It is a precision filter, not a recall mechanism.
+
+| Named rule | Meaning | Scan flags | Batch/replay selection |
+| --- | --- | --- | --- |
+| `corroborated` | **Default**; require distance-1 corroboration | no extra flag | `--cluster-rule corroborated` |
+| `shipped` | Pre-2026-11-03 behavior; corroboration off | `--no-cluster-corroboration` | `--cluster-rule shipped` |
+| `corroborated-strict` | Corroboration by proximity only; video support does not count | `--cluster-strict-corroboration` | `--cluster-rule corroborated-strict` |
+| `supported` | Prefer a canonical the video read when equally close; no corroboration gate | `--cluster-supported --no-cluster-corroboration` | `--cluster-rule supported` |
+| `supported+corroborated` | Supported tie-break plus corroboration | `--cluster-supported` | `--cluster-rule supported+corroborated` |
+| `video-supported` | Prefer video support regardless of edit distance; no gate | `--cluster-video-supported --no-cluster-corroboration` | `--cluster-rule video-supported` |
+| `video-supported+corroborated` | Video-supported selection plus corroboration | `--cluster-video-supported` | `--cluster-rule video-supported+corroborated` |
+| `swallowed` | Also publish another lexicon ticker in a cluster when independently read often enough; no gate | `--cluster-swallowed-holdings --no-cluster-corroboration` | `--cluster-rule swallowed` |
+| `corroborated+swallowed` | Swallowed-holding guard plus corroboration | `--cluster-swallowed-holdings` | `--cluster-rule corroborated+swallowed` |
+
+The swallowed-holding option uses `--cluster-swallowed-min-frames <n>`, default **4**. It publishes the additional ticker only when that ticker was read in at least `n` of its own frames. This option is **off by default**; the measured threshold 4–7 gained two holdings without adding a false positive, but it has not replaced the default in production. The supported and video-supported variants are also opt-in because corpus measurements added false positives.
+
+For direct scans, `--cluster-corroboration` explicitly enables the default gate and `--no-cluster-corroboration` explicitly disables it. The option is tri-state internally: omitted means the current default, while the negative flag means explicitly off. Probe logs record the resolved `cluster_rule` and component flags, so results remain auditable. The batch runner defaults to `corroborated`; pass `--cluster-rule shipped` only when reproducing historical output.
+
+The replay tool accepts the same nine names with `node tools/evalParserReplay.js --cluster-rule <name>`. Run `node tools/scanVideoWithOcr.js --help` for the complete scan-tool option list. Every EasyOCR command must include `--low-cpu` when using the batch runner or a low-CPU environment.
 
 ### Resolution Requirements
 
@@ -242,7 +266,7 @@ node tools/downloadQmg1080p.js --cookies youtube_cookies.txt --limit 200
 node tools/downloadHiresBatch.js --limit 30 --height 720
 
 # QMG chart-stream OCR (EasyOCR)
-KMP_DUPLICATE_LIB_OK=TRUE node tools/scanVideoWithOcr.js \
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 KMP_DUPLICATE_LIB_OK=TRUE node tools/scanVideoWithOcr.js \
   --video-dir data/video_pipeline/downloads_1080p/ \
   --prefilter-profile chart_stream --chart-stream-parser \
   --basename qmg --output-kind snapshot \

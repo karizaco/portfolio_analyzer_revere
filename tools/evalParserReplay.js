@@ -348,9 +348,9 @@ const CLUSTER_DEFAULT_MIN_FREQUENCY = 2;
 // distance, which can move a cluster off a correct one-glyph correction. The
 // corpus is what says which one is worth shipping.
 //
-// Every rule is OFF in production until it is measured -- the flag below is
-// how it gets measured, over the recorded logs, with no OCR and no change to
-// any shared config file.
+// The current production default is `corroborated`; the flag below is how
+// the named alternatives are measured over the recorded logs, with no OCR and
+// no change to any shared config file.
 // The cluster rules, each as the switches it turns on.
 //
 // `shipped` is the rule as it was BEFORE 2026-11-03 -- the corroboration

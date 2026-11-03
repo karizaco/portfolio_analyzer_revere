@@ -15,11 +15,13 @@
  *
  *   --cluster-rule shipped|corroborated|corroborated-strict|supported
  *                  |supported+corroborated|video-supported
- *                  |video-supported+corroborated
+ *                  |video-supported+corroborated|swallowed
+ *                  |corroborated+swallowed
  *     Which canonical-selection rule the clusterer runs. The names are the
  *     ones `tools/evalParserReplay.js --cluster-rule` uses, so a measurement
- *     and the scan that follows it are named the same way. Default `shipped`
- *     -- every other rule is OFF until it has been measured.
+ *     and the scan that follows it are named the same way. Default
+ *     `corroborated` (the current production default). Use `shipped` only
+ *     when reproducing pre-2026-11-03 output.
  */
 
 const fs = require('node:fs');
@@ -105,11 +107,10 @@ function getFlagsForDate(dateKey) {
 //
 // The NAMES are the ones `tools/evalParserReplay.js --cluster-rule` uses, so
 // the measurement and the production scan are named the same way and cannot
-// drift apart. Every rule is OFF in production until it is measured -- the
-// batch runner produces the corpus every other measurement is taken against,
-// so it changes only when a rule has been MEASURED and chosen.
+// drift apart. The default is the currently selected production rule;
+// experimental alternatives stay available by explicit name.
 //
-// The corroboration rule is the DEFAULT now, so `shipped` (the rule as it
+// The corroboration rule is the default now, so `shipped` (the rule as it
 // was before 2026-11-03) has to turn it OFF explicitly -- otherwise
 // `--cluster-rule shipped` would silently run the corroborated rule.
 const CLUSTER_RULE_FLAGS = {
@@ -125,7 +126,7 @@ const CLUSTER_RULE_FLAGS = {
 };
 
 // The full flag list for one date.
-function flagsForDate(dateKey, clusterRule = 'shipped') {
+function flagsForDate(dateKey, clusterRule = 'corroborated') {
   const flags = [...BASE_FLAGS, ...getFlagsForDate(dateKey)];
   // Batch-snapshot mode is OFF for the 2023-era sidebar dates — see
   // BATCH_SNAPSHOT_FLAGS above for the measurement that decided it. The
@@ -146,7 +147,7 @@ function parseArgs(argv) {
     dryRun: false,
     lowCpu: false,
     runTag: null,
-    clusterRule: 'shipped',
+    clusterRule: 'corroborated',
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -157,7 +158,7 @@ function parseArgs(argv) {
     else if (a === '--dry-run') args.dryRun = true;
     else if (a === '--low-cpu') args.lowCpu = true;
     else if (a === '--run-tag') args.runTag = argv[++i] || null;
-    else if (a === '--cluster-rule') args.clusterRule = argv[++i] || 'shipped';
+    else if (a === '--cluster-rule') args.clusterRule = argv[++i] || 'corroborated';
   }
   if (!Object.prototype.hasOwnProperty.call(CLUSTER_RULE_FLAGS, args.clusterRule)) {
     throw new Error(
@@ -256,7 +257,7 @@ function scoreResult(log, gtEntry) {
  * Returns { status, code, stdoutTail, stderr }.
  */
 
-async function runScan(dateKey, video, runTag, clusterRule = 'shipped') {
+async function runScan(dateKey, video, runTag, clusterRule = 'corroborated') {
   const videoPath = path.join(video.dir, video.file);
   const env = {
     ...process.env,

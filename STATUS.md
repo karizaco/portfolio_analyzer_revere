@@ -162,21 +162,25 @@ arm's reading is **unmeasured** in it, not scored as zero. The `AAPL` defect
 is invisible to a capture-level metric, so a capture-level number alone cannot
 answer "did the merge publish a holding the video never showed".
 
-**Seven cluster rules exist; `corroborated` is the DEFAULT** (changed
-2026-11-03). The clusterer names one canonical per cluster, and a canonical
-that is a *correction* rather than a *reading* is a name the clusterer
+**Nine named cluster-rule configurations exist; `corroborated` is the DEFAULT**
+(changed 2026-11-03). The clusterer names one canonical per cluster, and a
+canonical that is a *correction* rather than a *reading* is a name the clusterer
 invented. On 20230605 the cluster `{AACO, ARCO}` was published as `AAPL` — a
 holding no frame of that video showed. **Every candidate for it is two edits
 away**, so "closest" cannot discriminate; what discriminates is that the video
-read `ARQQ` in six frames and `AAPL` in none. The rules are `shipped` (the
-pre-2026-11-03 behaviour), `corroborated` (**the default** — a correction must
-be within edit distance 1 of a member or the cluster is dropped),
-`corroborated-strict` (the same, and the video's own reading of the ticker
-does not count as corroboration), `supported` (prefer the correction the video
-actually read, breaking ties), `video-supported` (the same, whatever the
-distance) and `swallowed` (publish a cluster's other lexicon tickers too, when
-the video read them in ≥ 4 frames of their own), each with and without the
-corroboration gate.
+read `ARQQ` in six frames and `AAPL` in none.
+
+The named configurations are `shipped` (the pre-2026-11-03 behaviour),
+`corroborated` (**the default** — a correction must be within edit distance 1 of
+a member or the cluster is dropped), `corroborated-strict` (the same, and the
+video's own reading of the ticker does not count as corroboration), `supported`
+(prefer the correction the video actually read, breaking ties),
+`video-supported` (the same, whatever the distance), and `swallowed` (publish a
+cluster's other lexicon tickers too, when the video read them in ≥ 4 frames of
+their own), plus the three explicit combinations
+`supported+corroborated`, `video-supported+corroborated`, and
+`corroborated+swallowed`. The combination names make the corroboration and
+swallowed settings explicit; all non-default alternatives are opt-in.
 
 **With every rule off, the shipped path is provably unchanged**: the
 pre-change clusterer and the current one produce identical cluster tables
