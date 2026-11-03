@@ -12,7 +12,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { spawn } = require('node:child_process');
+const { superviseChild } = require('./qmg_scan_daemon_support');
 const {
   getGroundTruthForCapture,
   getGroundTruthMode,
@@ -54,7 +54,7 @@ function findVideo(dateKey) {
   return files.find((f) => f.startsWith(dateKey));
 }
 
-function runScan(dateKey, videoFile, runTag, options) {
+async function runScan(dateKey, videoFile, runTag, options) {
   const cmd = [
     'node',
     path.join(ROOT, 'tools', 'scanVideoWithOcr.js'),
@@ -71,25 +71,31 @@ function runScan(dateKey, videoFile, runTag, options) {
     '--prefilter-max-frames', String(options.prefilterMaxFrames),
     '--ocr-engine', String(options.ocrEngine),
   ];
-  return new Promise((resolve) => {
-    const child = spawn(cmd[0], cmd.slice(1), { stdio: ['ignore', 'pipe', 'pipe'] });
-    let stdout = '';
-    let stderr = '';
-    child.stdout.on('data', (d) => { stdout += d.toString(); });
-    child.stderr.on('data', (d) => { stderr += d.toString(); });
-    const killTimer = setTimeout(() => {
-      child.kill('SIGTERM');
-      resolve({ stdout, stderr, status: -1, timedOut: true });
-    }, 300 * 1000);
-    child.on('close', (code) => {
-      clearTimeout(killTimer);
-      resolve({ stdout, stderr, status: code, timedOut: false });
-    });
-    child.on('error', (err) => {
-      clearTimeout(killTimer);
-      resolve({ stdout, stderr: stderr + (err.message || ''), status: -1, timedOut: false });
-    });
+  // superviseChild() DRAINS the child's stdout AND kills the whole process
+  // TREE on timeout. Both matter here:
+  //
+  //   - The drain: the scan tool prints its whole result object to stdout at
+  //     the very end -- hundreds of kilobytes -- and a Windows pipe holds
+  //     about 64 KB. An undrained stdout blocks the child AFTER it has
+  //     written a complete probe log, so it never exits.
+  //   - The tree kill: on Windows, killing the direct child does NOT kill
+  //     its ffmpeg and EasyOCR grandchildren. They become zombies, and the
+  //     NEXT video's frame extraction stalls behind their I/O -- which is
+  //     what looked like a frozen machine (CLAUDE.md, 'Scan orchestration
+  //     safety (Windows)').
+  const { status, code, stdoutTail, stderr } = await superviseChild(cmd, process.env, {
+    timeoutMs: 300 * 1000,
   });
+
+  return {
+    stdout: stdoutTail,
+    stderr,
+    // A timeout used to report status -1; keep that, so the caller's
+    // `status !== 0` test and the `timedOut` flag both still mean what they
+    // meant before.
+    status: status === 'TIMEOUT' ? -1 : (code === null ? -1 : code),
+    timedOut: status === 'TIMEOUT',
+  };
 }
 
 function loadSummary(runTag, dateKey) {

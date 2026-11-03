@@ -27,7 +27,22 @@ const path = require('node:path');
 const test = require('node:test');
 
 const ROOT = path.resolve(__dirname, '..');
-const { superviseChild, STDOUT_TAIL_CHARS } = require(path.join(ROOT, 'tools', 'runQmgOcrBatch.js'));
+const support = require(path.join(ROOT, 'tools', 'qmg_scan_daemon_support.js'));
+const { superviseChild, STDOUT_TAIL_CHARS } = support;
+// The batch re-exports the shared helper, so a test that reaches it through
+// the batch is exercising the SAME function the three sibling daemons use.
+const batch = require(path.join(ROOT, 'tools', 'runQmgOcrBatch.js'));
+
+/**
+ * Strip comments so a file that only NAMES the scan tool in prose is not
+ * mistaken for one that spawns it. Block comments go first; the `[^:]` guard
+ * keeps a `//` inside a URL from swallowing the rest of the line.
+ */
+function stripComments(src) {
+  return src
+    .replace(/\/\*[\s\S]*?\*\//g, ' ')
+    .replace(/(^|[^:])\/\/.*$/gm, '$1');
+}
 
 function writeFakeChild(dir, body) {
   const file = path.join(dir, 'fake-child.js');
@@ -94,4 +109,58 @@ test('a child that exits non-zero is reported as ERROR, with its stderr', async 
   assert.equal(result.status, 'ERROR');
   assert.equal(result.code, 3);
   assert.match(result.stderr, /boom: the scan failed/);
+});
+
+test('a command that cannot be spawned at all is an ERROR, not a crash', async () => {
+  // The `error` event path: spawn itself fails, so `close` never fires.
+  // scanAllGtVideos.js maps a null exit code to -1, so this has to be a
+  // resolvable ERROR rather than an unhandled rejection.
+  const result = await superviseChild(
+    [path.join(os.tmpdir(), 'definitely-not-a-real-binary-4f2a91')],
+    process.env,
+    { timeoutMs: 5000 }
+  );
+
+  assert.equal(result.status, 'ERROR');
+  assert.equal(result.code, null);
+  assert.ok(result.stderr.length > 0, 'the spawn failure should say why');
+});
+
+test('the batch re-exports the SHARED supervisor, so the two cannot drift apart', () => {
+  assert.equal(batch.superviseChild, support.superviseChild);
+  assert.equal(batch.STDOUT_TAIL_CHARS, support.STDOUT_TAIL_CHARS);
+});
+
+test('every tool that spawns the scan tool drains its stdout', () => {
+  // The deadlock is a property of the SCAN TOOL's stdout volume, not of any
+  // one consumer: the tool prints its whole result object at the end, and a
+  // Windows pipe holds about 64 KB. So every tool that spawns it must either
+  // drain the pipe (superviseChild does) or hand the child the parent's own
+  // stdout (stdio: 'inherit' — no pipe, so no deadlock).
+  //
+  // This is a STATIC check, so a tool added later with a piped, undrained
+  // stdout is caught before it burns a 40-minute budget per video.
+  const toolsDir = path.join(ROOT, 'tools');
+  const spawners = [];
+  const offenders = [];
+
+  for (const file of fs.readdirSync(toolsDir).filter((f) => f.endsWith('.js'))) {
+    const code = stripComments(fs.readFileSync(path.join(toolsDir, file), 'utf8'));
+    if (!code.includes('scanVideoWithOcr.js')) continue;
+
+    spawners.push(file);
+    const drains = /superviseChild\s*\(/.test(code);
+    const inherits = /stdio\s*:\s*'inherit'/.test(code);
+    if (!drains && !inherits) offenders.push(file);
+  }
+
+  assert.ok(
+    spawners.length >= 8,
+    `expected to survey the known spawners, found only ${spawners.length}: ${spawners.join(', ')}`
+  );
+  assert.deepEqual(
+    offenders,
+    [],
+    `these tools spawn the scan tool without draining its stdout: ${offenders.join(', ')}`
+  );
 });
