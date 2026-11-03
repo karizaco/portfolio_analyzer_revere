@@ -16,8 +16,12 @@
 
 const fs = require('node:fs');
 const path = require('path');
-const { spawn, execSync } = require('node:child_process');
 const { isRightSidebarDate } = require('../src/video/chartStreamCrop');
+// The child supervisor lives in the shared daemon-support module, so every
+// tool that spawns the scan tool drains its stdout the same way. It was
+// duplicated here first, and the three sibling daemons still had the
+// stderr-only drain that causes the deadlock.
+const { superviseChild, STDOUT_TAIL_CHARS } = require('./qmg_scan_daemon_support');
 
 const ROOT = path.resolve(__dirname, '..');
 const VIDEO_DIR_1080 = path.join(ROOT, 'data', 'video_pipeline', 'downloads_1080p');
@@ -26,11 +30,6 @@ const OUT_ROOT = path.join(ROOT, 'data', 'video_scan_test', '_rerun');
 
 // Per-video timeout: EasyOCR at ~60-90s/frame × 6 frames = 360-540s; give 40 min for longer videos
 const PER_VIDEO_TIMEOUT_MS = 40 * 60 * 1000;
-
-// How much of the child's stdout to keep for diagnostics. The child's stdout
-// is the whole result object, so it is large; the probe log on disk is the
-// authoritative record and this is only a tail for a failure report.
-const STDOUT_TAIL_CHARS = 16 * 1024;
 
 const BASE_FLAGS = [
   '--prefilter-profile', 'chart_stream',
@@ -211,48 +210,11 @@ function scoreResult(log, gtEntry) {
  * child never exits, `close` never fires, the kill timer fires instead, and
  * the batch records a TIMEOUT for a video that was read successfully.
  *
- * Returns { status, code, stdoutTail, stderr }.
+ * The implementation is shared with the other scan daemons -- see
+ * tools/qmg_scan_daemon_support.js.
  *
- * Exported so the behaviour can be pinned by a test with a fake child.
+ * Returns { status, code, stdoutTail, stderr }.
  */
-function superviseChild(cmd, env, { timeoutMs = PER_VIDEO_TIMEOUT_MS, onTimeout } = {}) {
-  return new Promise((resolve) => {
-    const child = spawn(cmd[0], cmd.slice(1), { env, stdio: ['ignore', 'pipe', 'pipe'] });
-
-    let killed = false;
-    const killTimer = setTimeout(() => {
-      killed = true;
-      if (onTimeout) onTimeout();
-      // On Windows, kill the process tree
-      try {
-        execSync(`taskkill /PID ${child.pid} /T /F`, { stdio: 'ignore' });
-      } catch {}
-      child.kill('SIGTERM');
-    }, timeoutMs);
-
-    let stderr = '';
-    child.stderr.on('data', d => { stderr += d.toString(); });
-
-    // Keep only a rolling tail for diagnostics: the authoritative record is
-    // the probe log on disk, and the child's stdout is the whole result
-    // object, so it is large.
-    let stdoutTail = '';
-    child.stdout.on('data', d => {
-      stdoutTail = (stdoutTail + d.toString()).slice(-STDOUT_TAIL_CHARS);
-    });
-    child.stdout.on('error', () => {});
-
-    child.on('close', (code) => {
-      clearTimeout(killTimer);
-      resolve({ status: killed ? 'TIMEOUT' : code === 0 ? 'OK' : 'ERROR', code, stdoutTail, stderr });
-    });
-
-    child.on('error', (err) => {
-      clearTimeout(killTimer);
-      resolve({ status: 'ERROR', code: null, stdoutTail, stderr: String(err && err.message || err) });
-    });
-  });
-}
 
 async function runScan(dateKey, video, runTag) {
   const videoPath = path.join(video.dir, video.file);

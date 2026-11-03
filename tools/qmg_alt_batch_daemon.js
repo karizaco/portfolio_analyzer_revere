@@ -7,8 +7,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
-const { checkFreeSpace, lowCpuEnv } = require('./qmg_scan_daemon_support');
+const { checkFreeSpace, lowCpuEnv, superviseChild } = require('./qmg_scan_daemon_support');
 
 const ROOT = path.resolve(__dirname, '..');
 const BATCH = process.argv[2] || 'alt';
@@ -91,41 +90,40 @@ async function runScan(video) {
   log(`Starting ${date} ${path.basename(file)}`);
   const start = Date.now();
 
-  return new Promise((resolve) => {
-    const child = spawn('node', [
-      path.join(ROOT, 'tools', 'scanVideoWithOcr.js'),
-      '--video', file,
-      '--date', date,
-      ...SCAN_FLAGS,
-    ], { stdio: ['ignore', 'pipe', 'pipe'], env: lowCpuEnv() });
+  // superviseChild() DRAINS the child's stdout. The scan tool prints its
+  // whole result object to stdout at the very end -- hundreds of kilobytes --
+  // and a Windows pipe holds about 64 KB. An undrained stdout blocks the
+  // child AFTER it has written a complete probe log and BEFORE its `finally`
+  // block runs, so the child never exits and this daemon records a TIMEOUT
+  // for a video that was read successfully. See tools/qmg_scan_daemon_support.js.
+  const { status, code, stdoutTail, stderr } = await superviseChild(
+    ['node', path.join(ROOT, 'tools', 'scanVideoWithOcr.js'), '--video', file, '--date', date, ...SCAN_FLAGS],
+    lowCpuEnv(),
+    {
+      timeoutMs: TIMEOUT_MS,
+      onTimeout: () => log(`TIMEOUT ${date} ${video_id} — exceeded ${TIMEOUT_MS}ms`),
+    }
+  );
 
-    let stderr = '';
-    child.stderr.on('data', (d) => { stderr += d.toString(); });
+  const elapsed = ((Date.now() - start) / 1000).toFixed(0);
 
-    const timer = setTimeout(() => {
-      child.kill('SIGTERM');
-      log(`TIMEOUT ${date} ${video_id} — exceeded ${TIMEOUT_MS}ms`);
-      resolve({ videoId: video_id, date, status: 'timeout' });
-    }, TIMEOUT_MS);
-
-    child.on('close', (code) => {
-      clearTimeout(timer);
-      const elapsed = ((Date.now() - start) / 1000).toFixed(0);
-      if (code === 0) {
-        log(`OK ${date} ${video_id} after ${elapsed}s`);
-        resolve({ videoId: video_id, date, status: 'ok', elapsed: Number(elapsed) });
-      } else {
-        log(`ERROR ${date} ${video_id} exit ${code}`);
-        resolve({ videoId: video_id, date, status: 'error', error: `exit ${code}`, stderr: stderr.slice(-500) });
-      }
-    });
-
-    child.on('error', (err) => {
-      clearTimeout(timer);
-      log(`ERROR ${date} ${video_id} ${err.message}`);
-      resolve({ videoId: video_id, date, status: 'error', error: err.message });
-    });
-  });
+  if (status === 'OK') {
+    log(`OK ${date} ${video_id} after ${elapsed}s`);
+    return { videoId: video_id, date, status: 'ok', elapsed: Number(elapsed) };
+  }
+  if (status === 'TIMEOUT') {
+    return { videoId: video_id, date, status: 'timeout', elapsed: Number(elapsed) };
+  }
+  log(`ERROR ${date} ${video_id} exit ${code}`);
+  return {
+    videoId: video_id,
+    date,
+    status: 'error',
+    elapsed: Number(elapsed),
+    error: `exit ${code}`,
+    stderr: stderr.slice(-500),
+    stdoutTail: stdoutTail.slice(-2000),
+  };
 }
 
 async function main() {

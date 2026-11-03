@@ -1,8 +1,8 @@
 'use strict';
 
-const { spawn } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
+const { superviseChild } = require('./qmg_scan_daemon_support');
 
 const {
   loadQmgGroundTruth,
@@ -49,58 +49,50 @@ function ensureDir(dirPath) {
 }
 
 // Run scanVideoWithOcr.js as a subprocess and wait for the JSON log file path.
+//
+// superviseChild() DRAINS the child's stdout and gives the child a timeout.
+// The drain matters because the scan tool prints its whole result object to
+// stdout at the very end -- hundreds of kilobytes -- and a Windows pipe holds
+// about 64 KB, so an undrained stdout blocks the child forever. The timeout
+// matters because a blocked child never exits, and this call site had NO
+// timeout at all: it waited indefinitely. See tools/qmg_scan_daemon_support.js.
 function runPipeline(videoPath, dateKey, engine, outputRoot) {
-  return new Promise((resolve, reject) => {
-    const args = [
-      'tools/scanVideoWithOcr.js',
-      '--video', videoPath,
-      '--date', dateKey,
-      '--prefilter-profile', 'chart_stream',
-      '--chart-stream-parser',
-      '--basename', 'qmg',
-      '--output-kind', 'snapshot',
-      '--max-captures', '3',
-      '--fps', '0.25',
-      '--prefilter-max-frames', '6',
-      '--ocr-engine', engine,
-      '--output-root', outputRoot,
-    ];
+  const args = [
+    'tools/scanVideoWithOcr.js',
+    '--video', videoPath,
+    '--date', dateKey,
+    '--prefilter-profile', 'chart_stream',
+    '--chart-stream-parser',
+    '--basename', 'qmg',
+    '--output-kind', 'snapshot',
+    '--max-captures', '3',
+    '--fps', '0.25',
+    '--prefilter-max-frames', '6',
+    '--ocr-engine', engine,
+    '--output-root', outputRoot,
+  ];
 
-    const child = spawn('node', args, {
-      cwd: path.resolve(__dirname, '..'),
-      stdio: ['ignore', 'pipe', 'pipe'],
-    });
-
-    let stdout = '';
-    let stderr = '';
-    child.stdout.on('data', (d) => { stdout += d; });
-    child.stderr.on('data', (d) => { stderr += d; });
-
-    child.on('close', (code) => {
-      if (code !== 0) {
-        reject(new Error(`scanVideoWithOcr.js exited ${code}\nSTDERR: ${stderr.slice(-500)}`));
-        return;
-      }
-      // Extract log_path from last line of stdout
-      const lines = stdout.trim().split('\n');
-      const lastLine = lines[lines.length - 1];
-      let logPath;
-      try {
-        const obj = JSON.parse(lastLine);
-        logPath = obj.log_path;
-      } catch {
-        // Try to find log_path anywhere in stdout
-        const match = stdout.match(/"log_path"\s*:\s*"([^"]+)"/);
-        if (match) logPath = match[1];
-      }
-      if (!logPath) {
-        reject(new Error(`Could not find log_path in output:\n${stdout.slice(-500)}`));
-        return;
-      }
-      resolve(logPath);
-    });
-
-    child.on('error', reject);
+  return superviseChild(
+    ['node', args[0], ...args.slice(1)],
+    process.env,
+    { timeoutMs: 40 * 60 * 1000, cwd: path.resolve(__dirname, '..') }
+  ).then(({ status, code, stdoutTail, stderr }) => {
+    if (status !== 'OK') {
+      throw new Error(
+        `scanVideoWithOcr.js ${status}${code === null ? '' : ` (exit ${code})`}\n`
+        + `STDERR: ${stderr.slice(-500)}\nSTDOUT: ${stdoutTail.slice(-500)}`
+      );
+    }
+    // The scan tool prints the result object pretty-printed, so `log_path` is
+    // on its own line near the END of the output -- it is assigned after the
+    // rest of the object is built. The stdout tail therefore carries it.
+    let logPath;
+    const match = stdoutTail.match(/"log_path"\s*:\s*"([^"]+)"/);
+    if (match) logPath = match[1];
+    if (!logPath) {
+      throw new Error(`Could not find log_path in output:\n${stdoutTail.slice(-500)}`);
+    }
+    return logPath;
   });
 }
 

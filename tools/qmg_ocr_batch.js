@@ -13,7 +13,7 @@
 
 const fs = require('node:fs');
 const path = require('path:posix');
-const { spawn } = require('node:child_process');
+const { superviseChild } = require('./qmg_scan_daemon_support');
 
 const ROOT = path.resolve(__dirname, '..');
 const VIDEO_DIR = path.join(ROOT, 'data', 'video_pipeline', 'downloads_1080p');
@@ -58,38 +58,33 @@ async function runScan(videoId, date) {
   const videoPath = path.join(VIDEO_DIR, videoFile);
   const started = Date.now();
 
-  return new Promise((resolve) => {
-    const child = spawn('node', [
-      path.join(ROOT, 'tools', 'scanVideoWithOcr.js'),
-      '--video', videoPath,
-      '--date', date,
-      ...SCAN_FLAGS,
-    ], { stdio: ['ignore', 'pipe', 'pipe'] });
+  // superviseChild() DRAINS the child's stdout and kills the whole process
+  // TREE on timeout. The drain matters because the scan tool prints its
+  // whole result object to stdout at the very end -- hundreds of kilobytes --
+  // and a Windows pipe holds about 64 KB; the tree kill matters because
+  // killing the direct child on Windows leaves its ffmpeg and EasyOCR
+  // grandchildren running as zombies. See tools/qmg_scan_daemon_support.js.
+  const { status, code, stdoutTail, stderr } = await superviseChild(
+    ['node', path.join(ROOT, 'tools', 'scanVideoWithOcr.js'), '--video', videoPath, '--date', date, ...SCAN_FLAGS],
+    process.env,
+    { timeoutMs: TIMEOUT_MS }
+  );
 
-    let stdout = '';
-    let stderr = '';
-    child.stdout.on('data', (d) => { stdout += d.toString(); });
-    child.stderr.on('data', (d) => { stderr += d.toString(); });
+  const elapsed = ((Date.now() - started) / 1000).toFixed(1);
 
-    const killTimer = setTimeout(() => {
-      child.kill('SIGTERM');
-      resolve({ videoId, date, status: 'timeout', elapsed: (Date.now() - started) / 1000 });
-    }, TIMEOUT_MS);
-
-    child.on('close', (code) => {
-      clearTimeout(killTimer);
-      const elapsed = ((Date.now() - started) / 1000).toFixed(1);
-      if (code !== 0) {
-        resolve({ videoId, date, status: `exit_${code}`, elapsed: Number(elapsed) });
-      } else {
-        resolve({ videoId, date, status: 'ok', elapsed: Number(elapsed) });
-      }
-    });
-    child.on('error', (err) => {
-      clearTimeout(killTimer);
-      resolve({ videoId, date, status: `error_${err.message}`, elapsed: (Date.now() - started) / 1000 });
-    });
-  });
+  if (status === 'OK') {
+    return { videoId, date, status: 'ok', elapsed: Number(elapsed) };
+  }
+  if (status === 'TIMEOUT') {
+    return { videoId, date, status: 'timeout', elapsed: Number(elapsed) };
+  }
+  return {
+    videoId,
+    date,
+    status: code === null ? `error_${stderr.slice(0, 80)}` : `exit_${code}`,
+    elapsed: Number(elapsed),
+    stdoutTail: stdoutTail.slice(-2000),
+  };
 }
 
 async function main() {
