@@ -116,6 +116,8 @@ const CLUSTER_RULE_FLAGS = {
   'supported+corroborated': ['--cluster-supported', '--cluster-corroboration'],
   'video-supported': ['--cluster-video-supported'],
   'video-supported+corroborated': ['--cluster-video-supported', '--cluster-corroboration'],
+  swallowed: ['--cluster-swallowed-holdings'],
+  'swallowed+corroborated': ['--cluster-swallowed-holdings', '--cluster-corroboration'],
 };
 
 // The full flag list for one date.

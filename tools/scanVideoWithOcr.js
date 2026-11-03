@@ -1420,6 +1420,7 @@ async function main() {
         ? 'corroborated-strict'
         : 'corroborated');
     }
+    if (options.clusterSwallowedHoldings === true) parts.push('swallowed');
     return parts.length ? parts.join('+') : 'shipped';
   })();
 
@@ -1885,6 +1886,20 @@ async function main() {
         // uses support to break a tie between equally-close candidates, which
         // is the conservative ordering.
         preferVideoSupport: options.clusterVideoSupported === true,
+        // The SWALLOWED-HOLDING rule: a cluster can hold TWO distinct
+        // lexicon tickers one edit apart, and the second is swallowed. On
+        // 20230522/20230523 that is `LI`, a real holding the clusterer
+        // published as `AI` and never published LI at all.
+        //
+        // The guard is what makes it safe: the swallowed ticker is published
+        // only when the video read it in enough frames to be a holding of
+        // its own. Measured over the recorded logs: publishing every lexicon
+        // ticker in a cluster adds 24 false positives; the guarded version
+        // gains 2 holdings and adds none.
+        //
+        // OFF unless `--cluster-swallowed-holdings` is passed.
+        publishSwallowedHoldings: options.clusterSwallowedHoldings === true,
+        swallowedHoldingMinFrames: options.clusterSwallowedMinFrames,
         // With a rule on, the drop is reported, so a scan that lost a
         // holding can say why.
         explainDropped: options.clusterCorroboration === true
@@ -1973,7 +1988,16 @@ async function main() {
       merged_raw_token_clusters: clusterResult.clusters.map((c) => ({
         canonical: c.canonical,
         members: c.members,
-        frequency: c.frequency
+        frequency: c.frequency,
+        // The tickers this cluster SWALLOWED -- the other lexicon tickers one
+        // edit away -- with the evidence for the decision: how many frames of
+        // their own the video read each one in. Without this a later reader
+        // cannot tell why one swallowed ticker was published and another was
+        // not, and the log carries no way to re-derive it: the clusterer's
+        // input (every OCR'd candidate frame) is NOT recorded, so the log's
+        // own frames cannot reproduce the clustering.
+        extraCanonicals: c.extraCanonicals || [],
+        swallowedEvidence: c.swallowedEvidence || []
       })),
       // Which cluster rule produced the merged list, and what the rule
       // dropped. Without this a log cannot say whether `merged_position_list`
@@ -1986,6 +2010,8 @@ async function main() {
       // corroboration. The replay reads it to work out which rule a log was
       // scanned under, so it has to be recorded.
       cluster_strict_corroboration: options.clusterStrictCorroboration === true,
+      cluster_swallowed_holdings: options.clusterSwallowedHoldings === true,
+      cluster_swallowed_min_frames: options.clusterSwallowedMinFrames,
       cluster_rule: clusterRuleName,
       cluster_dropped: (options.clusterCorroboration === true
         || options.clusterSupported === true

@@ -85,9 +85,19 @@ const { loadDecodeLexiconSync } = require('../src/normalize/tickerScan');
 // disagree about: it is TWO edits from TSUA, while TSLA is ONE. The
 // `supported` rule keeps TSLA (closer wins, support only breaks ties); the
 // `video-supported` rule takes TSLB (the video read it, TSLA it never did).
+//
+// AI and LI are here for the SWALLOWED-HOLDING rule: they are one edit
+// apart, so the clusterer merges them, and on 20230522/20230523 they are
+// BOTH rows of the panel. APLD is a bystander that must not be affected.
 const SYNTHETIC = {
-  tickers: ['AAPL', 'AAL', 'TSLA', 'TSLB', 'NFLX', 'FREY', 'ARQQ', 'ARKG'],
-  tickerSet: new Set(['AAPL', 'AAL', 'TSLA', 'TSLB', 'NFLX', 'FREY', 'ARQQ', 'ARKG']),
+  tickers: [
+    'AAPL', 'AAL', 'TSLA', 'TSLB', 'NFLX', 'FREY', 'ARQQ', 'ARKG',
+    'AI', 'LI', 'APLD',
+  ],
+  tickerSet: new Set([
+    'AAPL', 'AAL', 'TSLA', 'TSLB', 'NFLX', 'FREY', 'ARQQ', 'ARKG',
+    'AI', 'LI', 'APLD',
+  ]),
 };
 
 const SHIPPED = { lexicon: SYNTHETIC, minFrequency: 1 };
@@ -229,7 +239,7 @@ test('the video-supported rule keeps a member that IS a lexicon ticker', () => {
   assert.deepEqual(supported.merged_list, ['ARQQ']);
 });
 
-test('the supported rules are OFF unless they are asked for', () => {
+test('the shipped rules are OFF unless they are asked for', () => {
   const defaulted = clusterRawOcrTokens(['AACO ARCO', 'AACO ARCO'], {
     lexicon: SYNTHETIC,
     minFrequency: 1
@@ -243,6 +253,115 @@ test('the supported rules are OFF unless they are asked for', () => {
   });
   assert.deepEqual(viaHelper.merged_list, ['AAPL'],
     'the shared helper does not turn the rule on by itself');
+});
+
+// ---------------------------------------------------------------------------
+// The SWALLOWED-HOLDING rule
+// ---------------------------------------------------------------------------
+
+test('the swallowed-holding rule publishes a well-attested swallowed ticker', () => {
+  // AI and LI are one edit apart, so the clusterer merges them -- but both
+  // are rows of the panel, and LI was read in six frames of its own.
+  //
+  // The frames are what the rule counts, and the counts are the token's OWN
+  // frames: the canonical's frames must not be credited to the swallowed
+  // ticker, or every member of a well-attested cluster would look
+  // well-attested.
+  const frames = [];
+  for (let i = 0; i < 6; i++) frames.push('AI APLD LI');
+  frames.push('AI APLD');
+
+  const result = clusterRawOcrTokens(frames, {
+    lexicon: SYNTHETIC,
+    minFrequency: 1,
+    publishSwallowedHoldings: true,
+    swallowedHoldingMinFrames: 4
+  });
+  assert.ok(result.merged_list.includes('LI'),
+    'a swallowed ticker the video read in 6 frames of its own is published');
+  assert.ok(result.merged_list.includes('AI'),
+    'and the canonical is still published');
+});
+
+test('the swallowed-holding rule rejects a one-off garble', () => {
+  // The same cluster shape, but the swallowed ticker appears in ONE frame of
+  // its own: a garble, not a holding.
+  const frames = ['AI APLD LI', 'AI APLD', 'AI APLD', 'AI APLD', 'AI APLD'];
+
+  const result = clusterRawOcrTokens(frames, {
+    lexicon: SYNTHETIC,
+    minFrequency: 1,
+    publishSwallowedHoldings: true,
+    swallowedHoldingMinFrames: 4
+  });
+  assert.ok(!result.merged_list.includes('LI'),
+    'a swallowed ticker read in one frame is a garble, and is not published');
+});
+
+test('the swallowed-holding rule is OFF unless it is asked for', () => {
+  const frames = [];
+  for (let i = 0; i < 6; i++) frames.push('AI APLD LI');
+  frames.push('AI APLD');
+
+  const defaulted = clusterRawOcrTokens(frames, {
+    lexicon: SYNTHETIC,
+    minFrequency: 1
+  });
+  assert.ok(!defaulted.merged_list.includes('LI'),
+    'with the rule off, the swallowed ticker is not published');
+
+  const viaHelper = clusterVideoLevelReadings(frames, {
+    lexicon: SYNTHETIC,
+    minFrequency: 1
+  });
+  assert.ok(!viaHelper.merged_list.includes('LI'),
+    'the shared helper does not turn the rule on by itself');
+});
+
+test('the swallowed-holding rule records its evidence', () => {
+  // The clusterer's input is NOT recorded in the probe log, so the log's own
+  // frames cannot reproduce the clustering. The evidence for the decision has
+  // to travel WITH the cluster, or a later reader cannot tell why one
+  // swallowed ticker was published and another was not.
+  const frames = [];
+  for (let i = 0; i < 6; i++) frames.push('AI APLD LI');
+  frames.push('AI APLD');
+
+  const result = clusterRawOcrTokens(frames, {
+    lexicon: SYNTHETIC,
+    minFrequency: 1,
+    publishSwallowedHoldings: true,
+    swallowedHoldingMinFrames: 4
+  });
+  const cluster = result.clusters.find((c) => c.canonical === 'AI');
+  assert.ok(cluster, 'the AI cluster is there');
+  assert.deepEqual(cluster.extraCanonicals, ['LI'],
+    'the published swallowed ticker is recorded');
+  const evidence = cluster.swallowedEvidence.find((e) => e.ticker === 'LI');
+  assert.ok(evidence, 'the evidence is recorded');
+  assert.equal(evidence.ownFrames, 6, 'and it carries the frame count it was judged on');
+  assert.equal(evidence.published, true);
+});
+
+test('the swallowed-holding rule records a REJECTED swallowed ticker too', () => {
+  // The evidence has to record what was rejected as well -- otherwise a log
+  // cannot tell "the rule never saw it" from "the rule saw it and said no".
+  const frames = ['AI APLD LI', 'AI APLD', 'AI APLD', 'AI APLD', 'AI APLD'];
+
+  const result = clusterRawOcrTokens(frames, {
+    lexicon: SYNTHETIC,
+    minFrequency: 1,
+    publishSwallowedHoldings: true,
+    swallowedHoldingMinFrames: 4
+  });
+  const cluster = result.clusters.find((c) => c.canonical === 'AI');
+  assert.ok(cluster, 'the AI cluster is there');
+  assert.deepEqual(cluster.extraCanonicals, [],
+    'a rejected swallowed ticker is not published');
+  const evidence = cluster.swallowedEvidence.find((e) => e.ticker === 'LI');
+  assert.ok(evidence, 'the evidence is recorded even for a rejection');
+  assert.equal(evidence.ownFrames, 1, 'with the frame count it was judged on');
+  assert.equal(evidence.published, false);
 });
 
 test('the supported rule survives the corroboration rule when the video read it', () => {

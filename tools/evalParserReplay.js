@@ -358,7 +358,9 @@ const CLUSTER_RULES = {
   supported: { requireDistanceOneCorroboration: false, preferSupportedCorrection: true, preferVideoSupport: false },
   'supported+corroborated': { requireDistanceOneCorroboration: true, preferSupportedCorrection: true, preferVideoSupport: false },
   'video-supported': { requireDistanceOneCorroboration: false, preferSupportedCorrection: false, preferVideoSupport: true },
-  'video-supported+corroborated': { requireDistanceOneCorroboration: true, preferSupportedCorrection: false, preferVideoSupport: true }
+  'video-supported+corroborated': { requireDistanceOneCorroboration: true, preferSupportedCorrection: false, preferVideoSupport: true },
+  swallowed: { publishSwallowedHoldings: true },
+  'corroborated+swallowed': { publishSwallowedHoldings: true, requireDistanceOneCorroboration: true },
 };
 
 // What each rule does, in one line, for the report.
@@ -369,7 +371,9 @@ const CLUSTER_RULE_DESCRIPTIONS = {
   supported: 'the canonical is the correction the VIDEO actually read, breaking TIES between equally-close candidates',
   'supported+corroborated': 'the same, and the canonical must also be within edit distance 1',
   'video-supported': 'the canonical is the correction the VIDEO actually read, whatever its distance',
-  'video-supported+corroborated': 'the same, and the canonical must also be within edit distance 1'
+  'video-supported+corroborated': 'the same, and the canonical must also be within edit distance 1',
+  swallowed: 'a cluster\'s OTHER lexicon tickers are published too, when the video read them in >= 4 frames of their own',
+  'corroborated+swallowed': 'the same, and the canonical must also be within edit distance 1',
 };
 
 // The name of the rule a set of options represents, and the name of the rule
@@ -389,15 +393,16 @@ function clusterRuleName(options = {}) {
   if (options.requireDistanceOneCorroboration === true) {
     parts.push(options.corroborationAllowsVideoSupport === false ? 'corroborated-strict' : 'corroborated');
   }
+  if (options.publishSwallowedHoldings === true) parts.push('swallowed');
   return parts.length ? parts.join('+') : 'shipped';
 }
-
 function recordedClusterRuleOf(log) {
   return clusterRuleName({
     requireDistanceOneCorroboration: log && log.cluster_corroboration === true,
     preferSupportedCorrection: log && log.cluster_supported === true,
     preferVideoSupport: log && log.cluster_video_supported === true,
     corroborationAllowsVideoSupport: log && log.cluster_strict_corroboration !== true,
+    publishSwallowedHoldings: log && log.cluster_swallowed_holdings === true,
   });
 }
 
@@ -413,6 +418,8 @@ function clusterMerged(input, minFrequency, lexicon, clusterOptions = {}) {
     corroborationAllowsVideoSupport: clusterOptions.corroborationAllowsVideoSupport !== false,
     preferSupportedCorrection: clusterOptions.preferSupportedCorrection === true,
     preferVideoSupport: clusterOptions.preferVideoSupport === true,
+    publishSwallowedHoldings: clusterOptions.publishSwallowedHoldings === true,
+    swallowedHoldingMinFrames: clusterOptions.swallowedHoldingMinFrames,
     explainDropped: clusterOptions.explainDropped === true
   });
   return Array.isArray(result.merged_list) ? result.merged_list : [];
