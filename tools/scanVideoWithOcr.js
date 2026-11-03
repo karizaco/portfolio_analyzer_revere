@@ -37,7 +37,7 @@ const { extractTickersFromOcrText, loadDecodeLexiconSync, loadSeedLexiconSync } 
 const { createProbeKey, parseArgs, parseFractionalRegion, printHelp } = require('../src/video/ocrScanArgs');
 const { chartStreamCropFractionForDate, chartStreamPrefilterRegionForDate } = require('../src/video/chartStreamCrop');
 const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
-const { parseChartStreamPositionList, mergeMultiplePositionLists, clusterRawOcrTokens, TICKER_BLOCKLIST } = require('../src/parse/parseChartStream');
+const { parseChartStreamPositionList, mergeMultiplePositionLists, clusterVideoLevelReadings, TICKER_BLOCKLIST } = require('../src/parse/parseChartStream');
 const { runEasyOcr, adaptToParserSchema } = require('../src/ocr/easyocrAdapter');
 const { resolveFfmpegBin, resolveFfprobeBin } = require('../src/video/ffmpegBin');
 const { preprocessChartStreamToBuffer, preprocessChartStreamRawToBuffer } = require('../src/ocr/ocrImage');
@@ -1404,6 +1404,25 @@ async function main() {
     await ensureDirectoryExists(ocrCropDirectory);
   }
 
+  // Which cluster rule this scan runs. It is recorded in the probe log, so a
+  // later replay can tell which rule produced `merged_position_list`.
+  //
+  // The name is built from the switches in a FIXED ORDER, and it must match
+  // `clusterRuleName` in tools/evalParserReplay.js exactly -- the replay
+  // compares a log's recorded rule against the rule it is applying, and the
+  // two have to name the same combination the same way.
+  const clusterRuleName = (() => {
+    const parts = [];
+    if (options.clusterVideoSupported === true) parts.push('video-supported');
+    else if (options.clusterSupported === true) parts.push('supported');
+    if (options.clusterCorroboration === true) {
+      parts.push(options.clusterStrictCorroboration === true
+        ? 'corroborated-strict'
+        : 'corroborated');
+    }
+    return parts.length ? parts.join('+') : 'shipped';
+  })();
+
   const resultBase = {
     basename: options.basename,
     channel: options.basename === 'revere' ? 'revere' : options.basename,
@@ -1815,13 +1834,62 @@ async function main() {
     const clusterMinFrequency = options.outputKind === 'snapshot'
       ? Math.min(options.clusterMinFrequency || 2, Math.max(1, clusterInput.length))
       : (options.clusterMinFrequency || 2);
-    const clusterResult = clusterRawOcrTokens(
+    const clusterResult = clusterVideoLevelReadings(
       clusterInput,
       {
         maxDistance: 1,
         minTokenLength: 2,
         minFrequency: clusterMinFrequency,
-        lexicon: clusterLexicon
+        lexicon: clusterLexicon,
+        // The CORROBORATION rule: a canonical the clusterer INVENTED -- one
+        // that is a correction rather than a reading -- must be within edit
+        // distance 1 of at least one cluster member, or it is not published.
+        //
+        // The recorded instance: on 20230605 the cluster {AACO, ARCO} was
+        // published as `AAPL`, a holding that appears in NO capture's reading
+        // of that video. AACO is 2 edits from AAPL and 2 from AAL, and the
+        // longer-on-a-tie rule chose AAPL; neither member corroborates it.
+        //
+        // OFF unless `--cluster-corroboration` is passed. It changes which
+        // holdings a scan publishes, and a wrong holding is worse than a
+        // missing one -- so it is measured over the recorded logs first
+        // (`node tools/evalParserReplay.js --cluster-rule corroborated`).
+        requireDistanceOneCorroboration: options.clusterCorroboration === true,
+        // Whether the video's own reading of the canonical counts as
+        // corroboration. Off by default is not the choice here: the DEFAULT
+        // is that it does, and `--cluster-strict-corroboration` turns that
+        // off, so the proximity test alone decides. The two are measured
+        // apart, because they answer different questions.
+        corroborationAllowsVideoSupport: options.clusterStrictCorroboration !== true,
+        // The SUPPORTED rule: the canonical is the correction the VIDEO
+        // actually read, rather than the first member's.
+        //
+        // The shipped rule commits to the first member that yields a
+        // correction, and the tie-break inside `findCloseTickerMatch`
+        // ("prefer the longer ticker") picks between candidates that are
+        // EQUALLY close. On 20230605 the cluster {AACO, ARCO} was published
+        // as `AAPL` -- a holding that appears in NO capture's reading of that
+        // video. AACO is 2 edits from AAPL and 2 from AAL; ARCO is 2 edits
+        // from ARQQ, and ARQQ is what the video actually showed (read in six
+        // of its frames). All the candidates are the same distance, so
+        // "closest" cannot discriminate between them -- but the VIDEO's own
+        // reading can.
+        //
+        // OFF unless `--cluster-supported` is passed. It changes which
+        // holdings a scan publishes, so it is measured over the recorded logs
+        // first (`node tools/evalParserReplay.js --cluster-rule supported`).
+        preferSupportedCorrection: options.clusterSupported === true,
+        // The VIDEO-SUPPORTED rule: the video's support DOMINATES the edit
+        // distance, so a candidate the video demonstrably held beats a
+        // closer candidate it never read. The `supported` rule above only
+        // uses support to break a tie between equally-close candidates, which
+        // is the conservative ordering.
+        preferVideoSupport: options.clusterVideoSupported === true,
+        // With a rule on, the drop is reported, so a scan that lost a
+        // holding can say why.
+        explainDropped: options.clusterCorroboration === true
+          || options.clusterSupported === true
+          || options.clusterVideoSupported === true
       }
     );
     // The clusterer's consensus is the PUBLISHED list for a chart_stream
@@ -1906,7 +1974,43 @@ async function main() {
         canonical: c.canonical,
         members: c.members,
         frequency: c.frequency
-      }))
+      })),
+      // Which cluster rule produced the merged list, and what the rule
+      // dropped. Without this a log cannot say whether `merged_position_list`
+      // was made under the shipped rule or a measured alternative, and a
+      // later replay could not reproduce it.
+      cluster_corroboration: options.clusterCorroboration === true,
+      cluster_supported: options.clusterSupported === true,
+      cluster_video_supported: options.clusterVideoSupported === true,
+      // Whether the video's own reading of the canonical counted as
+      // corroboration. The replay reads it to work out which rule a log was
+      // scanned under, so it has to be recorded.
+      cluster_strict_corroboration: options.clusterStrictCorroboration === true,
+      cluster_rule: clusterRuleName,
+      cluster_dropped: (options.clusterCorroboration === true
+        || options.clusterSupported === true
+        || options.clusterVideoSupported === true)
+        ? clusterResult.dropped
+        : [],
+      // The clusterer's per-frame input, recorded verbatim, plus the Filter A
+      // threshold it ran with.
+      //
+      // merged_position_list is the VIDEO-level reading — the one the
+      // production consumers read — and until now it could not be rebuilt
+      // offline: the probe log kept the SELECTED captures, while the
+      // clusterer had seen EVERY OCR'd frame. So a change to the clusterer
+      // or to the per-frame parser could not be measured at the video level
+      // without a re-scan, which is 8-13 minutes of EasyOCR per video.
+      //
+      // These two fields close that gap for every scan from now on: the
+      // merged reading can be rebuilt offline, with a changed parser, from
+      // the exact input the clusterer ran on.
+      //
+      // Snapshot mode only. The whiteboard branch's clusterer input is the
+      // raw OCR TEXT of every candidate — hundreds of kilobytes — and the
+      // whiteboard path does not publish a merged list at all.
+      cluster_input: options.outputKind === 'snapshot' ? clusterInput : null,
+      cluster_min_frequency: options.outputKind === 'snapshot' ? clusterMinFrequency : null
     };
     const logPath = await writeScanLog(logsDirectory, probeKey, result);
     result.log_path = logPath;

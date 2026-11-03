@@ -45,6 +45,11 @@
 // logs cover it, and the predictions of every log for that date are pooled.
 // Counting the ground truth once per log file inflated the denominator by
 // 2.17x and made "dates scored" a count of log rows rather than of dates.
+//
+// The score above is a CAPTURE-level one — what ONE frame showed. The
+// artifact the production consumers read is the VIDEO-level consensus
+// (`merged_position_list`), and the two have disagreed three times on
+// record, so both are measured. See 'The VIDEO-level reading' below.
 
 const fs = require('node:fs');
 const os = require('node:os');
@@ -52,8 +57,10 @@ const path = require('node:path');
 
 const {
   parseChartStreamPositionList,
+  clusterVideoLevelReadings,
   setOcrConfusionCsvPath,
 } = require('../src/parse/parseChartStream');
+const { loadDecodeLexiconSync } = require('../src/normalize/tickerScan');
 const { listGroundTruthCaptures } = require('../src/qmg/qmgGroundTruth');
 
 const GT_PATH = path.resolve(__dirname, '..', 'data', 'qmg_ground_truth.json');
@@ -253,6 +260,366 @@ function defaultParse(capture, log) {
   return result.position_list || [];
 }
 
+// ---------------------------------------------------------------------------
+// The VIDEO-level reading — the number production actually publishes
+// ---------------------------------------------------------------------------
+//
+// The capture-level score says what ONE frame showed. The artifact the
+// production consumers read is `merged_position_list` — the multi-frame
+// clusterer's consensus — and the two have disagreed three times on record:
+//
+//   * `REGN` on 20230609. A capture read the panel's `RGTI` row as `Rgn`,
+//     and the distance-1 repair pass turned that into `REGN`, a SEED
+//     ticker. The selected capture was clean; the CONSENSUS was not.
+//   * `U` on 20230523. A capture read the collapsed `LI` cell as `U`, and
+//     the consensus published it as a holding.
+//   * `AAPL` on 20230605. `AAPL` is in NO capture's reading at all: the
+//     clusterer renamed a garbage read (`ARCO`) to a seed ticker and
+//     published a holding no frame of the video ever showed.
+//
+// A capture-level metric cannot see any of the three — CLAUDE.md records the
+// same conclusion twice — so it cannot be the only number. Three readings
+// are measured here, and each is EXACT about something different:
+//
+//   recorded          the log's own `merged_position_list`, verbatim: what
+//                     production published, from the parser of the day.
+//   rebuilt           the CURRENT clusterer over the log's recorded
+//                     per-frame input (`cluster_input`): the clusterer's own
+//                     behaviour, with the per-frame readings as recorded.
+//   rebuilt_current   the CURRENT parser end to end, over the captures the
+//                     log kept: the per-frame parser's behaviour at the
+//                     video level.
+//
+// The third is the one a per-frame parser change moves, and it is the least
+// faithful: the production clusterer saw EVERY OCR'd frame, while a log
+// keeps only the SELECTED captures. That gap is stated in the output rather
+// than hidden, and each arm carries its own denominator — a date that could
+// not be measured in one arm is reported as lost there, and does not enter
+// that arm's totals.
+
+// The scan tool's clusterer recipe.
+//
+// It is NOT reimplemented here: `clusterVideoLevelReadings` in
+// src/parse/parseChartStream.js is the single implementation, and the scan
+// tool (production) calls it too. A replay that clustered differently from
+// production would be measuring a parser that does not exist.
+//
+// The snapshot branch's rule: the clusterer is fed the per-frame
+// `position_list` readings, repairs against the DECODE lexicon (seed +
+// observed), and relaxes Filter A to 1 when only one frame contributes.
+const CLUSTER_MAX_DISTANCE = 1;
+const CLUSTER_MIN_TOKEN_LENGTH = 2;
+const CLUSTER_DEFAULT_MIN_FREQUENCY = 2;
+
+// The clusterer's canonical-selection rules.
+//
+//   shipped              the rule the scan tool runs: a member that IS a
+//                        lexicon ticker wins; otherwise the cluster is
+//                        corrected to the closest lexicon ticker of the
+//                        FIRST member that yields a correction, and the tie
+//                        inside that member is broken by "prefer the longer
+//                        ticker".
+//   corroborated         the same, PLUS the rule that a CORRECTED canonical
+//                        must be within edit distance 1 of at least one
+//                        cluster member. A cluster that fails it is DISCARDED.
+//   supported            the canonical is the correction the VIDEO actually
+//                        read, breaking ties between equally-close
+//                        candidates. Distance still comes first.
+//   supported+corroborated both.
+//   video-supported      the video's support DOMINATES the distance, so a
+//                        candidate the video demonstrably held beats a closer
+//                        candidate it never read.
+//   video-supported+corroborated both.
+//
+// The second exists because the first can publish a holding no frame of the
+// video showed: on 20230605 the cluster {AACO, ARCO} was published as
+// `AAPL`, which is in no capture's reading of that video.
+//
+// The third exists because the second throws the cluster away, and the
+// cluster's OTHER member had the right answer. **Every candidate for that
+// cluster is TWO edits away** -- AACO is 2 from AAPL and 2 from AAL, and
+// ARCO is 2 from ARQQ and 2 from ARKG -- so "closest" cannot discriminate
+// between them at all, and a rule that picks the closest correction picks a
+// tie and keeps the shipped answer. What discriminates is the video's own
+// reading: ARQQ was read in six frames of that video and AAPL in none.
+//
+// The `supported` rule uses that signal only to break a tie, which is the
+// conservative ordering. The `video-supported` rule lets it dominate the
+// distance, which can move a cluster off a correct one-glyph correction. The
+// corpus is what says which one is worth shipping.
+//
+// Every rule is OFF in production until it is measured -- the flag below is
+// how it gets measured, over the recorded logs, with no OCR and no change to
+// any shared config file.
+const CLUSTER_RULES = {
+  shipped: { requireDistanceOneCorroboration: false, preferSupportedCorrection: false, preferVideoSupport: false },
+  corroborated: { requireDistanceOneCorroboration: true, preferSupportedCorrection: false, preferVideoSupport: false },
+  'corroborated-strict': { requireDistanceOneCorroboration: true, corroborationAllowsVideoSupport: false, preferSupportedCorrection: false, preferVideoSupport: false },
+  supported: { requireDistanceOneCorroboration: false, preferSupportedCorrection: true, preferVideoSupport: false },
+  'supported+corroborated': { requireDistanceOneCorroboration: true, preferSupportedCorrection: true, preferVideoSupport: false },
+  'video-supported': { requireDistanceOneCorroboration: false, preferSupportedCorrection: false, preferVideoSupport: true },
+  'video-supported+corroborated': { requireDistanceOneCorroboration: true, preferSupportedCorrection: false, preferVideoSupport: true }
+};
+
+// What each rule does, in one line, for the report.
+const CLUSTER_RULE_DESCRIPTIONS = {
+  shipped: 'the rule the scan tool runs',
+  corroborated: 'a corrected canonical must be within edit distance 1 of a cluster member, or the cluster is DISCARDED',
+  'corroborated-strict': 'the same, and the video\'s own reading of the ticker does NOT count as corroboration',
+  supported: 'the canonical is the correction the VIDEO actually read, breaking TIES between equally-close candidates',
+  'supported+corroborated': 'the same, and the canonical must also be within edit distance 1',
+  'video-supported': 'the canonical is the correction the VIDEO actually read, whatever its distance',
+  'video-supported+corroborated': 'the same, and the canonical must also be within edit distance 1'
+};
+
+// The name of the rule a set of options represents, and the name of the rule
+// a log recorded. Both are compared so a reader can tell when a log's own
+// merged list was made under a different rule than the one being applied.
+//
+// The four switches are INDEPENDENT, so the name is built from them in a
+// fixed order rather than by nested conditionals -- a nested version gets
+// the combinations wrong the moment a fourth switch arrives (it did: the
+// strict flag was checked before the supported flag, so
+// `supported+corroborated` under the strict flag was misnamed
+// `corroborated-strict`).
+function clusterRuleName(options = {}) {
+  const parts = [];
+  if (options.preferVideoSupport === true) parts.push('video-supported');
+  else if (options.preferSupportedCorrection === true) parts.push('supported');
+  if (options.requireDistanceOneCorroboration === true) {
+    parts.push(options.corroborationAllowsVideoSupport === false ? 'corroborated-strict' : 'corroborated');
+  }
+  return parts.length ? parts.join('+') : 'shipped';
+}
+
+function recordedClusterRuleOf(log) {
+  return clusterRuleName({
+    requireDistanceOneCorroboration: log && log.cluster_corroboration === true,
+    preferSupportedCorrection: log && log.cluster_supported === true,
+    preferVideoSupport: log && log.cluster_video_supported === true,
+    corroborationAllowsVideoSupport: log && log.cluster_strict_corroboration !== true,
+  });
+}
+
+function clusterMerged(input, minFrequency, lexicon, clusterOptions = {}) {
+  if (!Array.isArray(input) || !input.length) return null;
+  const result = clusterVideoLevelReadings(input, {
+    maxDistance: CLUSTER_MAX_DISTANCE,
+    minTokenLength: CLUSTER_MIN_TOKEN_LENGTH,
+    defaultMinFrequency: CLUSTER_DEFAULT_MIN_FREQUENCY,
+    minFrequency: Number.isFinite(minFrequency) ? minFrequency : undefined,
+    lexicon,
+    requireDistanceOneCorroboration: clusterOptions.requireDistanceOneCorroboration === true,
+    corroborationAllowsVideoSupport: clusterOptions.corroborationAllowsVideoSupport !== false,
+    preferSupportedCorrection: clusterOptions.preferSupportedCorrection === true,
+    preferVideoSupport: clusterOptions.preferVideoSupport === true,
+    explainDropped: clusterOptions.explainDropped === true
+  });
+  return Array.isArray(result.merged_list) ? result.merged_list : [];
+}
+
+// The log's own per-frame readings -- the arrays the clusterer clustered.
+//
+// The scan tool built its clusterer input from every OCR'd CANDIDATE frame's
+// `chart_stream.position_list`. A probe log keeps the SELECTED captures, each
+// with that same array, so a log that predates `cluster_input` still carries
+// the readings the clusterer ran on -- for the frames it kept.
+//
+// This is the input the CLUSTER rule is measured over: the per-frame readings
+// are the parser's, so a difference between two cluster rules is a difference
+// between the rules and nothing else.
+function recordedFrameReadings(log) {
+  const captures = Array.isArray(log.captures) ? log.captures : [];
+  const frames = [];
+  for (const capture of captures) {
+    const list = capture && capture.chart_stream && capture.chart_stream.position_list;
+    if (!Array.isArray(list) || !list.length) continue;
+    frames.push(list.map((ticker) => String(ticker).toUpperCase()).join(' '));
+  }
+  return frames;
+}
+
+// The three ways to read a log at the video level. Each returns null when
+// the log cannot support that reading — and a null is not a zero: the date
+// is reported as unmeasured in that arm, and does not enter its totals.
+function mergedReaders(parseCapture, lexicon, clusterOptions = {}) {
+  return {
+    recorded(log) {
+      if (!Array.isArray(log.merged_position_list)) return null;
+      return log.merged_position_list;
+    },
+    rebuilt(log) {
+      // The exact frames and threshold the clusterer ran with, when the log
+      // recorded them.
+      if (Array.isArray(log.cluster_input) && log.cluster_input.length) {
+        return clusterMerged(log.cluster_input, log.cluster_min_frequency, lexicon, clusterOptions);
+      }
+      // Otherwise the log's own per-frame readings. This is what makes the
+      // arm measurable at all on the corpus that exists: `cluster_input`
+      // post-dates every captured log, so without this fallback the arm
+      // would be empty everywhere.
+      const frames = recordedFrameReadings(log);
+      if (!frames.length) return null;
+      return clusterMerged(frames, log.cluster_min_frequency, lexicon, clusterOptions);
+    },
+    rebuilt_current(log) {
+      const captures = Array.isArray(log.captures) ? log.captures : [];
+      const input = [];
+      for (const capture of captures) {
+        const words = Array.isArray(capture.ocr_words) ? capture.ocr_words : [];
+        if (!words.length) continue;
+        const reading = parseCapture(capture, log) || [];
+        if (reading.length) input.push(reading.map((t) => String(t).toUpperCase()).join(' '));
+      }
+      if (!input.length) return null;
+      return clusterMerged(input, null, lexicon, clusterOptions);
+    },
+  };
+}
+
+// Score the VIDEO-level readings of a set of probe logs.
+//
+// The ground truth is counted once per date, exactly as in scoreLogs: a date
+// whose readings could not be produced contributes to no arm's denominator.
+function scoreMergedLists({ gt, files, parseCapture = defaultParse, clusterOptions = {} }) {
+  const lexicon = loadDecodeLexiconSync();
+  const readers = mergedReaders(parseCapture, lexicon, clusterOptions);
+  const armNames = Object.keys(readers);
+
+  const byDate = new Map();
+  const census = {
+    files: 0,
+    logs: 0,
+    logsWithoutDateKey: 0,
+    logsOutsideGroundTruth: 0,
+    // How many of the logs RECORD their own cluster rule, and how many of
+    // those disagree with the rule this run is applying. The flag governs
+    // the rebuilt arms -- that is the whole point of measuring a rule over
+    // a corpus -- but a reader has to know when a log's own merged list was
+    // made under a different rule than the one being applied to it.
+    logsWithRecordedClusterRule: 0,
+    logsWithDifferentRecordedClusterRule: 0,
+    // Where the `rebuilt` arm's clusterer input came from: the log's own
+    // `cluster_input`, the log's recorded per-frame readings, or neither.
+    logsWithRecordedClusterInput: 0,
+    logsWithFrameReadingFallback: 0,
+    logsWithNoClusterInput: 0,
+  };
+  const ruleUnderTest = clusterRuleName(clusterOptions);
+
+  for (const file of files) {
+    census.files += 1;
+    let log;
+    try {
+      log = JSON.parse(fs.readFileSync(file, 'utf8'));
+    } catch {
+      continue;
+    }
+    census.logs += 1;
+
+    const dateKey = log.date_key;
+    if (!dateKey) {
+      census.logsWithoutDateKey += 1;
+      continue;
+    }
+    const expected = groundTruthForDate(gt, dateKey);
+    if (!expected) {
+      census.logsOutsideGroundTruth += 1;
+      continue;
+    }
+
+    let row = byDate.get(dateKey);
+    if (!row) {
+      row = { date: dateKey, expected, logs: 0, arms: {} };
+      for (const name of armNames) row.arms[name] = new Set();
+      byDate.set(dateKey, row);
+    }
+    row.logs += 1;
+
+    if (typeof log.cluster_corroboration === 'boolean'
+        || typeof log.cluster_supported === 'boolean'
+        || typeof log.cluster_video_supported === 'boolean') {
+      census.logsWithRecordedClusterRule += 1;
+      if (recordedClusterRuleOf(log) !== ruleUnderTest) {
+        census.logsWithDifferentRecordedClusterRule += 1;
+      }
+    }
+
+    if (Array.isArray(log.cluster_input) && log.cluster_input.length) {
+      census.logsWithRecordedClusterInput += 1;
+    } else if (recordedFrameReadings(log).length) {
+      census.logsWithFrameReadingFallback += 1;
+    } else {
+      census.logsWithNoClusterInput += 1;
+    }
+
+    for (const name of armNames) {
+      let reading = null;
+      try {
+        reading = readers[name](log, parseCapture);
+      } catch {
+        reading = null;
+      }
+      if (!Array.isArray(reading) || !reading.length) continue;
+      for (const ticker of reading) row.arms[name].add(String(ticker).toUpperCase());
+    }
+  }
+
+  const arms = {};
+  for (const name of armNames) {
+    const perDate = [];
+    let totalHit = 0;
+    let totalGt = 0;
+    let totalPred = 0;
+
+    for (const row of byDate.values()) {
+      const predicted = row.arms[name];
+      const hit = [...predicted].filter((ticker) => row.expected.has(ticker)).length;
+      // Same rule as the capture-level score: a date with no reading at all
+      // could not be MEASURED, so its ground truth must not enter the
+      // denominator. It is reported in the census instead.
+      const scored = predicted.size > 0;
+      if (scored) {
+        totalHit += hit;
+        totalGt += row.expected.size;
+        totalPred += predicted.size;
+      }
+      perDate.push({
+        date: row.date,
+        hit,
+        gt: row.expected.size,
+        pred: predicted.size,
+        logs: row.logs,
+        scored,
+        missed: [...row.expected].filter((ticker) => !predicted.has(ticker)).sort(),
+        fp: [...predicted].filter((ticker) => !row.expected.has(ticker)).sort(),
+      });
+    }
+
+    arms[name] = {
+      perDate,
+      census: {
+        datesWithALog: byDate.size,
+        datesScored: perDate.filter((entry) => entry.scored).length,
+        datesLostToMissingReading: perDate.filter((entry) => !entry.scored).length,
+      },
+      totals: { hit: totalHit, gt: totalGt, pred: totalPred },
+    };
+  }
+
+  return {
+    arms,
+    census: {
+      ...census,
+      groundTruthDates: new Set(
+        listGroundTruthCaptures(gt, {})
+          .map((capture) => capture.dateKey)
+          .filter((dateKey) => /^\d{8}$/.test(dateKey)),
+      ).size,
+    },
+  };
+}
+
 function percent(part, whole) {
   return whole ? ((part / whole) * 100).toFixed(1) : '0.0';
 }
@@ -294,7 +661,14 @@ function countAliasRows(file) {
 }
 
 function parseFlags(argv) {
-  const flags = { json: false, roots: [], confusionCsv: '', dropAliases: [], groundTruth: '' };
+  const flags = {
+    json: false,
+    roots: [],
+    confusionCsv: '',
+    dropAliases: [],
+    groundTruth: '',
+    clusterRule: 'shipped'
+  };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === '--json') {
@@ -310,10 +684,15 @@ function parseFlags(argv) {
     } else if (arg.startsWith('--confusion-csv=')) {
       flags.confusionCsv = arg.slice('--confusion-csv='.length);
     } else if (arg === '--drop-aliases') {
-      flags.dropAliases = splitAliasList(argv[i + 1]);
+      flags.dropAliases = splitAliasList(argv[i + 1] || '');
       i += 1;
     } else if (arg.startsWith('--drop-aliases=')) {
       flags.dropAliases = splitAliasList(arg.slice('--drop-aliases='.length));
+    } else if (arg === '--cluster-rule') {
+      flags.clusterRule = argv[i + 1] || '';
+      i += 1;
+    } else if (arg.startsWith('--cluster-rule=')) {
+      flags.clusterRule = arg.slice('--cluster-rule='.length);
     } else if (arg.startsWith('--')) {
       const error = new Error(`unknown flag: ${arg}`);
       error.usage = true;
@@ -321,6 +700,13 @@ function parseFlags(argv) {
     } else {
       flags.roots.push(arg);
     }
+  }
+  if (!Object.prototype.hasOwnProperty.call(CLUSTER_RULES, flags.clusterRule)) {
+    const error = new Error(
+      `unknown --cluster-rule: ${flags.clusterRule} (expected one of: ${Object.keys(CLUSTER_RULES).join(', ')})`
+    );
+    error.usage = true;
+    throw error;
   }
   return flags;
 }
@@ -378,13 +764,17 @@ function main(argv = process.argv.slice(2)) {
   const gt = JSON.parse(fs.readFileSync(gtPath, 'utf8'));
   const files = effectiveRoots.flatMap((root) => collectLogFiles(path.resolve(root)));
   const report = scoreLogs({ gt, files });
+  const clusterOptions = CLUSTER_RULES[flags.clusterRule];
+  const mergedReport = scoreMergedLists({ gt, files, clusterOptions });
 
   if (asJson) {
     console.log(JSON.stringify({
       roots: effectiveRoots,
       ground_truth: gtPath,
       alias_table: aliasOverride.describe(),
+      cluster_rule: flags.clusterRule,
       census: report.census,
+      merged_census: mergedReport.census,
       totals: report.totals,
       micro_recall: Number(percent(report.totals.hit, report.totals.gt)),
       micro_precision: Number(percent(report.totals.hit, report.totals.pred)),
@@ -398,6 +788,27 @@ function main(argv = process.argv.slice(2)) {
         missed: row.missed,
         fp: row.fp,
       })),
+      merged: Object.fromEntries(
+        Object.entries(mergedReport.arms).map(([name, arm]) => [
+          name,
+          {
+            census: arm.census,
+            totals: arm.totals,
+            micro_recall: Number(percent(arm.totals.hit, arm.totals.gt)),
+            micro_precision: Number(percent(arm.totals.hit, arm.totals.pred)),
+            per_date: arm.perDate.map((row) => ({
+              date: row.date,
+              hit: row.hit,
+              gt: row.gt,
+              pred: row.pred,
+              logs: row.logs,
+              scored: row.scored,
+              missed: row.missed,
+              fp: row.fp,
+            })),
+          },
+        ]),
+      ),
     }, null, 2));
     aliasOverride.restore();
     return 0;
@@ -427,6 +838,51 @@ function main(argv = process.argv.slice(2)) {
         + `  -- not scored, not counted in the totals`,
       );
     }
+  }
+
+  // The VIDEO-level readings: the artifact the production consumers read.
+  //
+  // The capture-level number above says what ONE frame showed. These say
+  // what the multi-frame consensus said, and the two have disagreed three
+  // times on record (REGN, U, AAPL) — a defect only the consensus shows is
+  // invisible to a capture-level metric.
+  console.log('');
+  console.log('--- the VIDEO-level reading (what production publishes) ---');
+  console.log(`cluster rule       : ${flags.clusterRule}`
+    + `   (${CLUSTER_RULE_DESCRIPTIONS[flags.clusterRule] || 'unknown rule'})`);
+  const mergedArms = mergedReport.arms;
+  const mergedDates = new Set();
+  for (const arm of Object.values(mergedArms)) {
+    for (const row of arm.perDate) mergedDates.add(row.date);
+  }
+  for (const date of [...mergedDates].sort()) {
+    const cells = ['recorded', 'rebuilt', 'rebuilt_current'].map((name) => {
+      const row = mergedArms[name].perDate.find((entry) => entry.date === date);
+      if (!row || !row.scored) return '--';
+      return `${String(row.hit).padStart(2)}/${String(row.gt).padEnd(2)}`;
+    });
+    console.log(`${date}  recorded=${cells[0]}  rebuilt=${cells[1]}  rebuilt_current=${cells[2]}`);
+  }
+  console.log('');
+  console.log('  recorded        : the log\'s own merged list — what production published');
+  console.log('                    (unaffected by the cluster rule: it is what the rule of the day produced)');
+  console.log('  rebuilt         : the current clusterer over the log\'s recorded per-frame readings');
+  console.log('                    (the frames production clustered, so this arm is where the CLUSTER');
+  console.log('                     rule is measured on its own — the per-frame parser is held fixed)');
+  console.log('  rebuilt_current : the current parser end to end, over the captures the log kept');
+  console.log('                    (the production clusterer saw EVERY ocr\'d frame; a log keeps');
+  console.log('                     only the selected captures, so this arm is the least faithful)');
+  if (mergedReport.census.logsWithRecordedClusterRule) {
+    console.log(`  logs recording their own cluster rule: ${mergedReport.census.logsWithRecordedClusterRule}`
+      + ` (${mergedReport.census.logsWithDifferentRecordedClusterRule} disagree with the rule under test)`);
+  }
+  for (const [name, arm] of Object.entries(mergedArms)) {
+    console.log(
+      `${name.padEnd(18)}: dates scored ${String(arm.census.datesScored).padStart(2)}`
+      + `  recall ${percent(arm.totals.hit, arm.totals.gt)}%  (${arm.totals.hit}/${arm.totals.gt})`
+      + `  precision ${percent(arm.totals.hit, arm.totals.pred)}%  (${arm.totals.hit}/${arm.totals.pred})`
+      + `  lost ${arm.census.datesLostToMissingReading}`,
+    );
   }
 
   const { census, totals } = report;
@@ -471,6 +927,12 @@ module.exports = {
   cropWidthFor,
   groundTruthForDate,
   scoreLogs,
+  scoreMergedLists,
+  mergedReaders,
+  clusterMerged,
+  CLUSTER_RULES,
+  clusterRuleName,
+  recordedClusterRuleOf,
   parseFlags,
   applyAliasTableOverride,
 };
@@ -482,7 +944,10 @@ if (require.main === module) {
     if (error && error.usage) {
       console.error(`evalParserReplay: ${error.message}`);
       console.error('usage: node tools/evalParserReplay.js [--json] [--confusion-csv PATH]'
-        + ' [--drop-aliases A,B] [--ground-truth PATH] [root ...]');
+        + ' [--drop-aliases A,B]'
+        + ' [--cluster-rule shipped|corroborated|supported|supported+corroborated'
+        + '|video-supported|video-supported+corroborated]'
+        + ' [--ground-truth PATH] [root ...]');
       process.exitCode = 2;
     } else {
       throw error;

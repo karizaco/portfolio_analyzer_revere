@@ -36,7 +36,12 @@
 // This deliberately does NOT reimplement the GRO/TURBO parser — chart-stream
 // videos don't have a portfolio summary, just ticker positions.
 
-const { extractTickersFromOcrText, loadSeedLexiconSync, clearTickerScanCache } = require('../normalize/tickerScan');
+const {
+  extractTickersFromOcrText,
+  loadSeedLexiconSync,
+  loadDecodeLexiconSync,
+  clearTickerScanCache
+} = require('../normalize/tickerScan');
 const { STRICT_TICKER_PATTERN } = require('../normalize/tickerExtraction');
 
 const fs = require('node:fs');
@@ -178,6 +183,148 @@ function findCloseTickerMatch(token, lexicon) {
     }
   }
   return best;
+}
+
+// The corrections a cluster's members ADMIT, and the evidence for each.
+//
+// The shipped rule has two strategies, tried in order over the whole cluster:
+// Strategy 2 (a 4+ character member whose closest lexicon ticker shares two
+// prefix characters) and Strategy 3 (a 3-character member whose closest
+// lexicon ticker is within edit distance 1). This helper collects the
+// candidates of BOTH -- and it collects ALL of them per member, not just the
+// one `findCloseTickerMatch` returns.
+//
+// That difference is the whole point. `findCloseTickerMatch` names ONE
+// ticker per member, and which one it names is decided by a tie-break
+// ("prefer the longer ticker") over tickers that are EQUALLY close. On
+// 20230605 the member `ARCO` is two edits from BOTH `ARQQ` and `ARKG`, and
+// the tie-break picked whichever the lexicon lists first -- so the
+// correction that the video actually corroborates never entered the
+// comparison at all.
+//
+// The admissibility rules are the shipped ones, per member:
+//
+//   - a 4+ character member needs two shared prefix characters;
+//   - a 3-character member needs distance <= 1.
+//
+// `videoFrequency` maps a token to the number of DISTINCT FRAMES it was read
+// in. It is the video's own evidence about a ticker: a candidate the video
+// read ITSELF, in some other frame, is a holding this video really has --
+// and a candidate the video never read, anywhere, is a name the clusterer
+// made up.
+//
+// The measured instance (20230605): the cluster {AACO, ARCO} was published as
+// `AAPL`, which appears in NO reading of that video. The two members' own
+// corrections are
+//
+//   AACO -> AAPL   (2 edits: C->P, O->L)   support 0 -- the video never read AAPL
+//   AACO -> AAL    (2 edits)                 support 0
+//   ARCO -> ARQQ   (2 edits: C->Q, O->Q)   support 6 -- the video read ARQQ
+//   ARCO -> ARKG   (2 edits)                 support 0
+//
+// so the corrections are all the SAME distance, and "closest" does not
+// discriminate between them at all. What discriminates is the SUPPORT.
+function clusterCorrectionCandidates(members, lexicon, videoFrequency) {
+  const candidates = [];
+  members.forEach((m, memberIndex) => {
+    // The shipped rule never corrects a member shorter than 3 characters:
+    // Strategy 2 needs 4+, Strategy 3 needs exactly 3.
+    if (m.length < 3) return;
+    // Strategy 2 allows a correction up to MAX_OCR_EDIT_DISTANCE away;
+    // Strategy 3 allows only distance 1.
+    const maxDistance = m.length >= 4 ? MAX_OCR_EDIT_DISTANCE : 1;
+
+    // The member's OWN minimum distance -- the distance the shipped rule's
+    // `findCloseTickerMatch` would have found. Candidates further away than
+    // this are not the member's correction, so they are not candidates at
+    // all.
+    let best = Infinity;
+    for (const ticker of lexicon.tickers) {
+      const distance = levenshtein(m, ticker);
+      // Distance 0 is a READING (the member IS the ticker), and Strategy 1
+      // has already handled it by the time this runs.
+      if (distance === 0 || distance > maxDistance) continue;
+      if (distance < best) best = distance;
+    }
+    if (best === Infinity) return;
+
+    // Every ticker AT that distance, subject to the same admissibility test
+    // the shipped rule applies to the one it picked.
+    //
+    // This is where the shipped rule's tie-break ("prefer the longer
+    // ticker") used to decide, among candidates that are EQUALLY close. The
+    // supported rule needs all of them, because the video's own reading --
+    // not the length of the ticker -- is what tells them apart.
+    for (const ticker of lexicon.tickers) {
+      if (levenshtein(m, ticker) !== best) continue;
+      if (m.length >= 4) {
+        let sharedPrefix = 0;
+        const limit = Math.min(3, m.length, ticker.length);
+        for (let i = 0; i < limit; i++) {
+          if (m[i] === ticker[i]) sharedPrefix += 1;
+        }
+        if (sharedPrefix < 2) continue;
+      }
+      candidates.push({
+        member: m,
+        memberIndex,
+        canonical: ticker,
+        distance: best,
+        // How many frames of THIS video read the candidate ticker as itself.
+        support: (videoFrequency && videoFrequency.get(ticker)) || 0,
+      });
+    }
+  });
+  return candidates;
+}
+
+// Choose the canonical for a cluster from its admissible corrections.
+//
+// The shipped choice is the FIRST member's correction, with Strategy 2 tried
+// over the whole cluster before Strategy 3. That is a member-order decision.
+//
+// The SUPPORTED choice asks the video instead. Two orderings, because the
+// two pieces of evidence can disagree and the corpus is what settles which
+// way to rank them:
+//
+//   distanceFirst (the `supported` rule)
+//     Closer first, and the video's support only breaks a TIE. This is the
+//     conservative one: it changes the published ticker only when two
+//     candidates are EQUALLY close, which is the measured 20230605
+//     situation. A one-glyph correction is strong evidence in its own right,
+//     so this never moves a cluster off one in order to reach a farther
+//     candidate.
+//
+//   supportFirst (the `video-supported` rule)
+//     The video's support dominates. A candidate the video demonstrably held
+//     beats a closer candidate it never read -- at the cost of being able to
+//     move a cluster off a correct one-glyph correction.
+//
+// The tie-break after that is the shipped one: the earlier member, then the
+// longer ticker.
+//
+// OFF by default. Both change which holdings a scan publishes, so they are
+// measured over the recorded logs before either replaces anything:
+// `node tools/evalParserReplay.js --cluster-rule supported` and
+// `--cluster-rule video-supported`.
+function selectSupportedCorrection(candidates, supportFirst) {
+  if (!candidates.length) return null;
+  const better = (a, b) => {
+    if (supportFirst && a.support !== b.support) return a.support > b.support;
+    if (a.distance !== b.distance) return a.distance < b.distance;
+    if (!supportFirst && a.support !== b.support) return a.support > b.support;
+    if (a.memberIndex !== b.memberIndex) return a.memberIndex < b.memberIndex;
+    // A tie between two tickers for the SAME member: mirror
+    // `findCloseTickerMatch`'s own tie-break and prefer the longer ticker,
+    // so the two agree wherever the shipped rule was already right.
+    return a.canonical.length > b.canonical.length;
+  };
+  let best = candidates[0];
+  for (const c of candidates) {
+    if (c === best) continue;
+    if (better(c, best)) best = c;
+  }
+  return best.canonical;
 }
 
 function countTickerOccurrences(ocrText) {
@@ -1750,7 +1897,7 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
     }
   }
   if (frequency.size === 0) {
-    return { clusters: [], merged_list: [] };
+    return { clusters: [], merged_list: [], dropped: [] };
   }
 
   // Step 3: Union-Find clustering — tokens within maxDistance of each
@@ -1813,6 +1960,10 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
   //   single-frame OCR garbles (VIO→VLO, NFU→NFLX, INA→TNA, BUCO→UCO)
   //   and chart-area tickers that bleed in briefly.
   const clusters = [];
+  // The clusters that were dropped, and why. Populated only when the caller
+  // asks for it (`explainDropped`), because it is a diagnostic and the probe
+  // log does not need it by default.
+  const droppedClusters = [];
   for (const [, members] of groups) {
     members.sort((a, b) => {
       const aLex = lexicon.tickerSet.has(a) ? 1 : 0;
@@ -1830,35 +1981,116 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
     for (const m of members) {
       if (lexicon.tickerSet.has(m)) { canonical = m; break; }
     }
-    // Strategy 2: 4+ char member with >= 2 shared prefix chars
     if (!canonical) {
-      for (const m of members) {
-        if (m.length < 4) continue;
-        const corr = findCloseTickerMatch(m, lexicon);
-        if (!corr) continue;
-        let sharedPrefix = 0;
-        const limit = Math.min(3, m.length, corr.length);
-        for (let i = 0; i < limit; i++) {
-          if (m[i] === corr[i]) sharedPrefix += 1;
+      if (options.preferSupportedCorrection || options.preferVideoSupport) {
+        // The SUPPORTED choice: among the cluster's admissible corrections,
+        // prefer the one the VIDEO actually read. See
+        // `selectSupportedCorrection` for the measured instance this exists
+        // for, and for the two orderings it can use.
+        canonical = selectSupportedCorrection(
+          clusterCorrectionCandidates(members, lexicon, frequency),
+          options.preferVideoSupport === true
+        );
+      } else {
+        for (const m of members) {
+          if (m.length < 4) continue;
+          const corr = findCloseTickerMatch(m, lexicon);
+          if (!corr) continue;
+          let sharedPrefix = 0;
+          const limit = Math.min(3, m.length, corr.length);
+          for (let i = 0; i < limit; i++) {
+            if (m[i] === corr[i]) sharedPrefix += 1;
+          }
+          if (sharedPrefix >= 2) { canonical = corr; break; }
         }
-        if (sharedPrefix >= 2) { canonical = corr; break; }
+        // Strategy 3: 3-char member with d=1 to the correction
+        if (!canonical) {
+          for (const m of members) {
+            if (m.length !== 3) continue;
+            const corr = findCloseTickerMatch(m, lexicon);
+            if (!corr) continue;
+            const d = levenshtein(m, corr);
+            if (d <= 1) { canonical = corr; break; }
+          }
+        }
       }
     }
-    // Strategy 3: 3-char member with d=1 to the correction
     if (!canonical) {
+      if (options.explainDropped) {
+        droppedClusters.push({ members: [...members].sort(), canonical: null, reason: 'no_canonical' });
+      }
+      continue;
+    }
+    // A CORRECTED canonical -- one that is NOT a member of this cluster --
+    // is the clusterer NAMING a ticker that no frame of the video read. That
+    // is the defect class that publishes a wrong holding, and it is not the
+    // same thing as a miss.
+    //
+    // The corroboration rule: a corrected canonical must be within edit
+    // distance 1 of AT LEAST ONE cluster member. A member at distance 1 is
+    // the ordinary case (INA -> TNA is distance 1). A correction that is only
+    // reachable at distance 2 from every member is a guess dressed as a
+    // repair, because at distance 2 there are usually SEVERAL plausible
+    // canonicals and which one is chosen is decided by a tie-break
+    // ("prefer the longer ticker") rather than by the pixels.
+    //
+    // The measured instance: on 20230605 the cluster {AACO, ARCO} was
+    // published as `AAPL`, a seed ticker that is in NO capture's reading of
+    // that video. AACO is 2 edits from AAPL and 2 from AAL; the longer-on-a-
+    // tie rule chose AAPL, and the merged list published a holding the video
+    // never showed. No member of that cluster is within distance 1 of AAPL.
+    //
+    // This rule DISCARDS such a cluster. `preferSupportedCorrection` RESOLVES
+    // it instead: the cluster's OTHER member, ARCO, is 2 edits from ARQQ --
+    // the holding the panel actually showed, and one the video read in six
+    // frames -- so asking which correction the VIDEO supports recovers the
+    // holding rather than throwing it away. The two rules answer the same
+    // question -- "is this canonical corroborated?" -- and the second one
+    // answers it with the right ticker when it can.
+    //
+    // OFF by default: the rule has to be MEASURED before it replaces the
+    // shipped behaviour -- tightening it also stops corrections that are
+    // real. `node tools/evalParserReplay.js --cluster-rule corroborated`
+    // measures it over the recorded logs, with no OCR and no change to the
+    // shared config files.
+    if (options.requireDistanceOneCorroboration && !members.includes(canonical)) {
+      let closest = Infinity;
       for (const m of members) {
-        if (m.length !== 3) continue;
-        const corr = findCloseTickerMatch(m, lexicon);
-        if (!corr) continue;
-        const d = levenshtein(m, corr);
-        if (d <= 1) { canonical = corr; break; }
+        const d = levenshtein(m, canonical);
+        if (d < closest) closest = d;
+      }
+      // A canonical the VIDEO read itself is corroborated by the video, even
+      // when it is two edits from every member of this cluster. That is the
+      // 20230605 case: ARQQ was read in six frames of that video, and the
+      // cluster's member ARCO is two edits from it.
+      //
+      // Whether that counts as corroboration is a SEPARATE question from
+      // whether the correction is close, and the two are measured apart:
+      // `corroborationAllowsVideoSupport: false` demands the proximity test
+      // alone.
+      const videoSupport = frequency.get(canonical) || 0;
+      const videoSupportCounts = options.corroborationAllowsVideoSupport !== false;
+      if (closest > 1 && !(videoSupportCounts && videoSupport > 0)) {
+        if (options.explainDropped) {
+          droppedClusters.push({
+            members: [...members].sort(),
+            canonical,
+            reason: 'uncorroborated_correction',
+            distance: closest
+          });
+        }
+        continue;
       }
     }
-    if (!canonical) continue;
     // Blocklist filter: never surface a blocklisted ticker as canonical even
     // if all other cluster signals pass. Applied after canonical selection so
     // we don't waste effort on blocklisted clusters, but before Filter A.
-    if (TICKER_BLOCKLIST.has(canonical)) continue;
+    if (TICKER_BLOCKLIST.has(canonical)) {
+      if (options.explainDropped) {
+        droppedClusters.push({ members: [...members].sort(), canonical, reason: 'blocklisted' });
+      }
+      continue;
+    }
     // Filter A: compute distinct-frame count for the cluster (union of
     // frame sets across all members). This catches single-frame OCR
     // garbles (e.g. VIO→VLO cluster only spans the 1 frame where VIO
@@ -1870,7 +2102,18 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
         for (const fi of frames) clusterFrames.add(fi);
       }
     }
-    if (clusterFrames.size < minFrequency) continue;
+    if (clusterFrames.size < minFrequency) {
+      if (options.explainDropped) {
+        droppedClusters.push({
+          members: [...members].sort(),
+          canonical,
+          reason: 'filter_a',
+          frames: clusterFrames.size,
+          minFrequency
+        });
+      }
+      continue;
+    }
     const totalFreq = members.reduce((s, m) => s + (frequency.get(m) || 0), 0);
     clusters.push({
       canonical,
@@ -1891,7 +2134,69 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
   }
   merged.sort();
 
-  return { clusters, merged_list: merged };
+  return { clusters, merged_list: merged, dropped: droppedClusters };
+}
+
+// The VIDEO-level reading: the multi-frame clusterer's consensus.
+//
+// `merged_position_list` is the artifact the production consumers read
+// (tools/runQmgOcrBatch.js and tools/aggregateScanResults.js), and it is the
+// only reading that is repaired across frames. It has also disagreed with
+// the per-capture reading three times on record -- `REGN`, `U` and `AAPL` --
+// so it has to be measurable on its own.
+//
+// The recipe lives here, not in either caller, because there are two callers
+// that must not drift apart:
+//
+//   * tools/scanVideoWithOcr.js -- production. It builds the per-frame input
+//     from every OCR'd frame's position list.
+//   * tools/evalParserReplay.js -- the offline replay, which rebuilds the
+//     merged reading from a recorded log so a parser change can be measured
+//     in seconds instead of 8-13 minutes of EasyOCR per video.
+//
+// A replay that clustered differently from production would be measuring a
+// parser that does not exist.
+//
+// `input` is one string per frame: that frame's readings, joined. The
+// snapshot branch of the scan tool joins a frame's `position_list` with
+// spaces; the whiteboard branch passes raw OCR text, which is why this
+// helper takes strings rather than token arrays.
+//
+// `minFrequency` is Filter A's threshold. When it is not given, the snapshot
+// branch's rule applies: two frames by default, relaxed to one when only a
+// single frame contributes -- the case where a filter that demands two
+// would throw the whole consensus away.
+function clusterVideoLevelReadings(input, options = {}) {
+  const frames = (Array.isArray(input) ? input : []).filter(
+    (text) => typeof text === 'string' && text.trim()
+  );
+  const minFrequency = Number.isFinite(options.minFrequency)
+    ? options.minFrequency
+    : Math.min(options.defaultMinFrequency || 2, Math.max(1, frames.length));
+  if (!frames.length) {
+    return { merged_list: [], clusters: [], dropped: [], minFrequency, frames: 0 };
+  }
+  const result = clusterRawOcrTokens(frames, {
+    maxDistance: options.maxDistance || 1,
+    minTokenLength: options.minTokenLength || 2,
+    minFrequency,
+    lexicon: options.lexicon || loadDecodeLexiconSync(),
+    // Both OFF unless the caller asks. The corroboration rule changes which
+    // holdings a scan publishes, so it has to be measured before it is
+    // switched on -- see `clusterRawOcrTokens`.
+    requireDistanceOneCorroboration: options.requireDistanceOneCorroboration === true,
+    corroborationAllowsVideoSupport: options.corroborationAllowsVideoSupport !== false,
+    preferSupportedCorrection: options.preferSupportedCorrection === true,
+    preferVideoSupport: options.preferVideoSupport === true,
+    explainDropped: options.explainDropped === true
+  });
+  return {
+    merged_list: result.merged_list,
+    clusters: result.clusters,
+    dropped: result.dropped || [],
+    minFrequency,
+    frames: frames.length
+  };
 }
 
 module.exports = {
@@ -1900,6 +2205,7 @@ module.exports = {
   findCloseTickerMatch,
   mergeMultiplePositionLists,
   clusterRawOcrTokens,
+  clusterVideoLevelReadings,
   extractZoomStripTickerCandidates,
   parseChartStreamPositionList,
   extractAllTickerCandidates,
