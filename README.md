@@ -123,6 +123,8 @@ A cluster may publish a lexicon ticker exactly read by the video, or a corrected
 | `swallowed` | Also publish another lexicon ticker in a cluster when independently read often enough; no gate | `--cluster-swallowed-holdings --no-cluster-corroboration` | `--cluster-rule swallowed` |
 | `corroborated+swallowed` | Swallowed-holding guard plus corroboration | `--cluster-swallowed-holdings` | `--cluster-rule corroborated+swallowed` |
 
+The scanner's `--cluster-min-frequency <n>` setting controls the minimum number of distinct OCR frames that must contribute a canonical to the merge; its default is **2**, while `1` permits single-frame garbles. This is separate from the corroboration rule: frequency controls voting, while corroboration checks whether an inferred correction has evidence.
+
 The swallowed-holding option uses `--cluster-swallowed-min-frames <n>`, default **4**. It publishes the additional ticker only when that ticker was read in at least `n` of its own frames. This option is **off by default**; the measured threshold 4–7 gained two holdings without adding a false positive, but it has not replaced the default in production. The supported and video-supported variants are also opt-in because corpus measurements added false positives.
 
 For direct scans, `--cluster-corroboration` explicitly enables the default gate and `--no-cluster-corroboration` explicitly disables it. The option is tri-state internally: omitted means the current default, while the negative flag means explicitly off. Probe logs record the resolved `cluster_rule` and component flags, so results remain auditable. The batch runner defaults to `corroborated`; pass `--cluster-rule shipped` only when reproducing historical output.

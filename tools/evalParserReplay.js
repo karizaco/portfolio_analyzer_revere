@@ -950,8 +950,10 @@ if (require.main === module) {
       console.error(`evalParserReplay: ${error.message}`);
       console.error('usage: node tools/evalParserReplay.js [--json] [--confusion-csv PATH]'
         + ' [--drop-aliases A,B]'
-        + ' [--cluster-rule shipped|corroborated|supported|supported+corroborated'
-        + '|video-supported|video-supported+corroborated]'
+        + ' [--cluster-rule shipped|corroborated|corroborated-strict'
+        + '|supported|supported+corroborated'
+        + '|video-supported|video-supported+corroborated'
+        + '|swallowed|corroborated+swallowed]'
         + ' [--ground-truth PATH] [root ...]');
       process.exitCode = 2;
     } else {
