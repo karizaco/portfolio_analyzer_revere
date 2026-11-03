@@ -40,7 +40,7 @@ function printHelp() {
     '  --table-frame-budget-ms <n>  Wall-clock budget for one frame of the positions-TABLE reader, default 900000 (15 min). The per-image OCR timeout is derived from it.',
     '  --review-threshold <n>     Review score threshold, default 4',
     '  --max-captures <n>         Maximum screenshots to save per video, default 3',
-    '  --cluster-min-frequency <n> Minimum per-canonical frame count for multi-frame OCR token voting, default 1 (set to 2 to filter single-frame garbles)',
+    '  --cluster-min-frequency <n> Minimum per-canonical frame count for multi-frame OCR token voting, default 2 (set to 1 to allow single-frame garbles)',
     '  --cluster-corroboration     Require a CORRECTED cluster canonical to be within edit distance 1 of at least one cluster member. ON by default: measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule corroborated) and over a production scan, it removes a false positive and loses no holding. Use --no-cluster-corroboration to turn it off.',
     '  --no-cluster-corroboration   Turn the corroboration rule OFF, reproducing the pre-2026-11-03 behaviour: a corrected canonical is published even when nothing corroborates it.',
     '  --cluster-supported          Prefer the cluster canonical the VIDEO actually read, breaking ties between equally-close candidates. Off by default: it changes which holdings a scan publishes, so it is measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule supported) before it is switched on.',
