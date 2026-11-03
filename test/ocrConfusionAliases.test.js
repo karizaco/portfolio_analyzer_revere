@@ -173,6 +173,62 @@ const NEW_ALIASES = [
   // `RLI`: that row is the most-misread holding on the 2023-era sidebar, and
   // every one of its misreadings lands on a different ticker.
   ['RGN', 'RGTI'],
+  // The five rows added 2026-11-03, from the 2022-ERA PRODUCTION SCAN
+  // (`qmg-easyocr-20261103-era2022`, twelve dates). Every one of them was
+  // located on the source pixels BEFORE it was proposed, and every occurrence
+  // of every garbled form in the whole corpus was inventoried.
+  //
+  //   RX   -> FCX   F rendered as R and the C dropped, 20220318. The panel
+  //                  reads KWEB, REGN, COPX, NUGT, FCX, X, URA, URNM and the
+  //                  OCR read the FCX row as `RX` at left 688 = the column's
+  //                  dominant_left. The log contains NEITHER `FCX` NOR `ERX`:
+  //                  the published ERX was INVENTED by the distance-1 repair
+  //                  (RX->ERX is one insertion; FCX is two edits away, so the
+  //                  repair could not reach it). The confusion map is
+  //                  consulted BEFORE that fallback, so the row turns a wrong
+  //                  holding into the right one. 20220323 read the same row as
+  //                  `RX` too (row 6 of 10).
+  //   FX   -> FCX   the C dropped, 20220321. Here the price cell is garbled
+  //                  (`~0zi`), so FX is NOT price-aligned: the post-pass
+  //                  repair skips it and the column gate rejects it. Only the
+  //                  curated-alias rescue can reach it.
+  //   UI   -> LMT   L and M merged into one U glyph and the T rendered as I,
+  //                  20220413. The panel reads WEAT, REGN, COPX, FCX, LHX,
+  //                  LMT, X, URA, URNM, JNUG, NUGT ("7 of 11 Items in
+  //                  Personal WatchList") and the OCR read that column as
+  //                  WEAT, REGN, COPX, FCX, WHX, UI, X, URA, URNM, JNUG,
+  //                  NUGI -- the same eleven rows in the same order. `UI` is
+  //                  in NEITHER lexicon; the distance-1 repair turned it into
+  //                  `AI`, a false positive on a date whose panel holds no
+  //                  AI at all.
+  //   NUGI -> NUGT  the T rendered as I, 20220413 (the same column, last
+  //                  row). `NUGI` is in neither lexicon, so a row whose
+  //                  price cell is garbled is rejected at the gate and only
+  //                  the rescue reaches it. On 20220405, 20220406 and
+  //                  20220412 the same misread is REPAIRED to NUGT by the
+  //                  distance-1 pass, so the row is inert there.
+  //   O    -> LMT   the three-glyph LMT cell collapsed into ONE glyph,
+  //                  20220412 -- captures 5 and 6 of that scan read it as
+  //                  `O` where captures 1-4 read it as `OI` (an existing row).
+  //                  The collapsed cell's price read cleanly ("30,18"), so
+  //                  the row IS price-aligned and the distance-1 repair
+  //                  turned it into `ON` -- a false positive, and a second
+  //                  spelling of a holding the reading already had. `O` is in
+  //                  neither lexicon (the seed's one-letter tickers are U, X
+  //                  and P), and the panel's own row 2 is LMT.
+  //
+  // The recorded production output is 95/112 with 4 false positives. A
+  // replay of the CURRENT parser over the twelve selected captures, with
+  // these five rows dropped, is 95/112 with 2 false positives; with the rows
+  // present it is 99/112 with 0 false positives. This is the replay's
+  // `rebuilt_current` arm, not a claim that the old recorded cluster table was
+  // rewritten: production's clusterer saw every OCR'd candidate frame, while
+  // the log retains only selected captures.
+  ['RX', 'FCX'],
+  ['FX', 'FCX'],
+  ['UI', 'LMT'],
+  ['NUGI', 'NUGT'],
+  ['O', 'LMT'],
 ];
 
 function confusionRows() {
