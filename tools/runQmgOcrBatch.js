@@ -12,6 +12,14 @@
  *   node tools/runQmgOcrBatch.js --dates 20220218,20220318,20220321,20220323,20220330 --parallel 4
  *   node tools/runQmgOcrBatch.js --chunk 1 --parallel 4
  *   node tools/runQmgOcrBatch.js --all-unscanned --parallel 4
+ *
+ *   --cluster-rule shipped|corroborated|corroborated-strict|supported
+ *                  |supported+corroborated|video-supported
+ *                  |video-supported+corroborated
+ *     Which canonical-selection rule the clusterer runs. The names are the
+ *     ones `tools/evalParserReplay.js --cluster-rule` uses, so a measurement
+ *     and the scan that follows it are named the same way. Default `shipped`
+ *     -- every other rule is OFF until it has been measured.
  */
 
 const fs = require('node:fs');
@@ -93,8 +101,25 @@ function getFlagsForDate(dateKey) {
   return extraFlags;
 }
 
+// The cluster rules the batch runner can ask the scan tool for.
+//
+// The NAMES are the ones `tools/evalParserReplay.js --cluster-rule` uses, so
+// the measurement and the production scan are named the same way and cannot
+// drift apart. Every rule is OFF by default: the batch runner produces the
+// corpus every other measurement is taken against, so it changes only when a
+// rule has been MEASURED and chosen.
+const CLUSTER_RULE_FLAGS = {
+  shipped: [],
+  corroborated: ['--cluster-corroboration'],
+  'corroborated-strict': ['--cluster-corroboration', '--cluster-strict-corroboration'],
+  supported: ['--cluster-supported'],
+  'supported+corroborated': ['--cluster-supported', '--cluster-corroboration'],
+  'video-supported': ['--cluster-video-supported'],
+  'video-supported+corroborated': ['--cluster-video-supported', '--cluster-corroboration'],
+};
+
 // The full flag list for one date.
-function flagsForDate(dateKey) {
+function flagsForDate(dateKey, clusterRule = 'shipped') {
   const flags = [...BASE_FLAGS, ...getFlagsForDate(dateKey)];
   // Batch-snapshot mode is OFF for the 2023-era sidebar dates — see
   // BATCH_SNAPSHOT_FLAGS above for the measurement that decided it. The
@@ -102,6 +127,7 @@ function flagsForDate(dateKey) {
   if (!isRightSidebarDate(dateKey)) {
     flags.push(...BATCH_SNAPSHOT_FLAGS);
   }
+  flags.push(...(CLUSTER_RULE_FLAGS[clusterRule] || []));
   return flags;
 }
 
@@ -114,6 +140,7 @@ function parseArgs(argv) {
     dryRun: false,
     lowCpu: false,
     runTag: null,
+    clusterRule: 'shipped',
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -124,6 +151,13 @@ function parseArgs(argv) {
     else if (a === '--dry-run') args.dryRun = true;
     else if (a === '--low-cpu') args.lowCpu = true;
     else if (a === '--run-tag') args.runTag = argv[++i] || null;
+    else if (a === '--cluster-rule') args.clusterRule = argv[++i] || 'shipped';
+  }
+  if (!Object.prototype.hasOwnProperty.call(CLUSTER_RULE_FLAGS, args.clusterRule)) {
+    throw new Error(
+      `unknown --cluster-rule: ${args.clusterRule} `
+      + `(expected one of: ${Object.keys(CLUSTER_RULE_FLAGS).join(', ')})`
+    );
   }
   return args;
 }
@@ -216,7 +250,7 @@ function scoreResult(log, gtEntry) {
  * Returns { status, code, stdoutTail, stderr }.
  */
 
-async function runScan(dateKey, video, runTag) {
+async function runScan(dateKey, video, runTag, clusterRule = 'shipped') {
   const videoPath = path.join(video.dir, video.file);
   const env = {
     ...process.env,
@@ -232,7 +266,7 @@ async function runScan(dateKey, video, runTag) {
     '--date', dateKey,
     '--output-root', OUT_ROOT,
     '--run-tag', runTag,
-    ...flagsForDate(dateKey),
+    ...flagsForDate(dateKey, clusterRule),
   ];
 
   console.log(`[${dateKey}] Starting ${video.file} (${video.resolution})`);
@@ -336,7 +370,7 @@ async function main() {
     .filter(j => j.video !== null);
 
   const results = await runPool(jobs, parallel, async ({ date, video }, idx) => {
-    return runScan(date, video, runTag);
+    return runScan(date, video, runTag, args.clusterRule);
   });
 
   // Report

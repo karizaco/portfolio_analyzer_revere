@@ -41,6 +41,10 @@ function printHelp() {
     '  --review-threshold <n>     Review score threshold, default 4',
     '  --max-captures <n>         Maximum screenshots to save per video, default 3',
     '  --cluster-min-frequency <n> Minimum per-canonical frame count for multi-frame OCR token voting, default 1 (set to 2 to filter single-frame garbles)',
+    '  --cluster-corroboration     Require a CORRECTED cluster canonical to be within edit distance 1 of at least one cluster member. Off by default: it changes which holdings a scan publishes, so it is measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule corroborated) before it is switched on.',
+    '  --cluster-supported          Prefer the cluster canonical the VIDEO actually read, breaking ties between equally-close candidates. Off by default: it changes which holdings a scan publishes, so it is measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule supported) before it is switched on.',
+    '  --cluster-video-supported    Prefer the cluster canonical the VIDEO actually read, whatever its edit distance. Off by default: it is measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule video-supported) before it is switched on.',
+    '  --cluster-strict-corroboration  With --cluster-corroboration, do NOT let the video\'s own reading of a ticker count as corroboration -- the proximity test alone decides. Off by default: it is measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule corroborated-strict).',
     '  --position-merge-min-occurrences <n>  Min capture count for position merge, default 1 (set to 2 for intersection mode)',
     '  --progress-interval <n>    Report OCR progress every N frames, default 10',
     '  --batch-snapshots          Extract a batch of N frames within ±W seconds of the best-scoring frame. All frames show the same position list state, so multi-frame merge is valid. Use with --batch-count and --batch-window.',
@@ -130,6 +134,10 @@ function buildDefaultOptions(defaultOutputRoot) {
     batchWindowSeconds: 4,
     chartStreamParser: false,
     clusterMinFrequency: 2,
+    clusterCorroboration: false,
+    clusterSupported: false,
+    clusterVideoSupported: false,
+    clusterStrictCorroboration: false,
     confusionRadius: 1,
     ffmpegBin: 'ffmpeg',
     fps: 0.25,
@@ -259,6 +267,18 @@ function parseArgs(argv, overrides = {}) {
       case '--cluster-min-frequency':
         options.clusterMinFrequency = Number(nextValue);
         index += 1;
+        break;
+      case '--cluster-corroboration':
+        options.clusterCorroboration = true;
+        break;
+      case '--cluster-supported':
+        options.clusterSupported = true;
+        break;
+      case '--cluster-video-supported':
+        options.clusterVideoSupported = true;
+        break;
+      case '--cluster-strict-corroboration':
+        options.clusterStrictCorroboration = true;
         break;
       case '--position-merge-min-occurrences':
         options.positionMergeMinOccurrences = Number(nextValue);
