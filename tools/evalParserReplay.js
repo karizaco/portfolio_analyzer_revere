@@ -351,6 +351,15 @@ const CLUSTER_DEFAULT_MIN_FREQUENCY = 2;
 // Every rule is OFF in production until it is measured -- the flag below is
 // how it gets measured, over the recorded logs, with no OCR and no change to
 // any shared config file.
+// The cluster rules, each as the switches it turns on.
+//
+// `shipped` is the rule as it was BEFORE 2026-11-03 -- the corroboration
+// gate off. The scan tool now runs `corroborated` by default, so `shipped`
+// is what reproduces the old behaviour, and the batch runner's
+// `--cluster-rule shipped` passes `--no-cluster-corroboration` to match.
+//
+// Every rule here is a fully-SPECIFIED set of switches, so it does not
+// depend on any default.
 const CLUSTER_RULES = {
   shipped: { requireDistanceOneCorroboration: false, preferSupportedCorrection: false, preferVideoSupport: false },
   corroborated: { requireDistanceOneCorroboration: true, preferSupportedCorrection: false, preferVideoSupport: false },
@@ -359,13 +368,13 @@ const CLUSTER_RULES = {
   'supported+corroborated': { requireDistanceOneCorroboration: true, preferSupportedCorrection: true, preferVideoSupport: false },
   'video-supported': { requireDistanceOneCorroboration: false, preferSupportedCorrection: false, preferVideoSupport: true },
   'video-supported+corroborated': { requireDistanceOneCorroboration: true, preferSupportedCorrection: false, preferVideoSupport: true },
-  swallowed: { publishSwallowedHoldings: true },
+  swallowed: { publishSwallowedHoldings: true, requireDistanceOneCorroboration: false },
   'corroborated+swallowed': { publishSwallowedHoldings: true, requireDistanceOneCorroboration: true },
 };
 
 // What each rule does, in one line, for the report.
 const CLUSTER_RULE_DESCRIPTIONS = {
-  shipped: 'the rule the scan tool runs',
+  shipped: 'the rule as it was before 2026-11-03: a corrected canonical is published even when nothing corroborates it',
   corroborated: 'a corrected canonical must be within edit distance 1 of a cluster member, or the cluster is DISCARDED',
   'corroborated-strict': 'the same, and the video\'s own reading of the ticker does NOT count as corroboration',
   supported: 'the canonical is the correction the VIDEO actually read, breaking TIES between equally-close candidates',
@@ -376,26 +385,12 @@ const CLUSTER_RULE_DESCRIPTIONS = {
   'corroborated+swallowed': 'the same, and the canonical must also be within edit distance 1',
 };
 
-// The name of the rule a set of options represents, and the name of the rule
-// a log recorded. Both are compared so a reader can tell when a log's own
-// merged list was made under a different rule than the one being applied.
-//
-// The four switches are INDEPENDENT, so the name is built from them in a
-// fixed order rather than by nested conditionals -- a nested version gets
-// the combinations wrong the moment a fourth switch arrives (it did: the
-// strict flag was checked before the supported flag, so
-// `supported+corroborated` under the strict flag was misnamed
-// `corroborated-strict`).
-function clusterRuleName(options = {}) {
-  const parts = [];
-  if (options.preferVideoSupport === true) parts.push('video-supported');
-  else if (options.preferSupportedCorrection === true) parts.push('supported');
-  if (options.requireDistanceOneCorroboration === true) {
-    parts.push(options.corroborationAllowsVideoSupport === false ? 'corroborated-strict' : 'corroborated');
-  }
-  if (options.publishSwallowedHoldings === true) parts.push('swallowed');
-  return parts.length ? parts.join('+') : 'shipped';
-}
+// The name of a cluster rule. ONE implementation, in
+// src/parse/parseChartStream.js, used by the scan tool too -- the replay
+// compares a log's recorded rule against the rule it is applying, so the two
+// have to name the same combination the same way. They have drifted twice.
+const { clusterRuleName } = require('../src/parse/parseChartStream');
+
 function recordedClusterRuleOf(log) {
   return clusterRuleName({
     requireDistanceOneCorroboration: log && log.cluster_corroboration === true,
@@ -674,7 +669,10 @@ function parseFlags(argv) {
     confusionCsv: '',
     dropAliases: [],
     groundTruth: '',
-    clusterRule: 'shipped'
+    // The default matches what the SCAN TOOL now does, so the `rebuilt` arm
+    // measures the pipeline that actually runs. `--cluster-rule shipped`
+    // measures the pre-2026-11-03 behaviour instead.
+    clusterRule: 'corroborated'
   };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];

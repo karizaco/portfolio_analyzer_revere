@@ -41,7 +41,8 @@ function printHelp() {
     '  --review-threshold <n>     Review score threshold, default 4',
     '  --max-captures <n>         Maximum screenshots to save per video, default 3',
     '  --cluster-min-frequency <n> Minimum per-canonical frame count for multi-frame OCR token voting, default 1 (set to 2 to filter single-frame garbles)',
-    '  --cluster-corroboration     Require a CORRECTED cluster canonical to be within edit distance 1 of at least one cluster member. Off by default: it changes which holdings a scan publishes, so it is measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule corroborated) before it is switched on.',
+    '  --cluster-corroboration     Require a CORRECTED cluster canonical to be within edit distance 1 of at least one cluster member. ON by default: measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule corroborated) and over a production scan, it removes a false positive and loses no holding. Use --no-cluster-corroboration to turn it off.',
+    '  --no-cluster-corroboration   Turn the corroboration rule OFF, reproducing the pre-2026-11-03 behaviour: a corrected canonical is published even when nothing corroborates it.',
     '  --cluster-supported          Prefer the cluster canonical the VIDEO actually read, breaking ties between equally-close candidates. Off by default: it changes which holdings a scan publishes, so it is measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule supported) before it is switched on.',
     '  --cluster-video-supported    Prefer the cluster canonical the VIDEO actually read, whatever its edit distance. Off by default: it is measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule video-supported) before it is switched on.',
     '  --cluster-strict-corroboration  With --cluster-corroboration, do NOT let the video\'s own reading of a ticker count as corroboration -- the proximity test alone decides. Off by default: it is measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule corroborated-strict).',
@@ -136,7 +137,14 @@ function buildDefaultOptions(defaultOutputRoot) {
     batchWindowSeconds: 4,
     chartStreamParser: false,
     clusterMinFrequency: 2,
-    clusterCorroboration: false,
+    // The corroboration rule is ON by default. It removes a false positive
+    // the clusterer invented (AAPL on 20230605) and loses no holding --
+    // measured over the recorded logs AND over a production scan.
+    //
+    // `null` means "not specified", so the flag can tell "explicitly off"
+    // from "not mentioned": `--no-cluster-corroboration` turns it off, and
+    // the scan tool records which rule actually ran.
+    clusterCorroboration: null,
     clusterSupported: false,
     clusterVideoSupported: false,
     clusterStrictCorroboration: false,
@@ -274,6 +282,9 @@ function parseArgs(argv, overrides = {}) {
         break;
       case '--cluster-corroboration':
         options.clusterCorroboration = true;
+        break;
+      case '--no-cluster-corroboration':
+        options.clusterCorroboration = false;
         break;
       case '--cluster-supported':
         options.clusterSupported = true;

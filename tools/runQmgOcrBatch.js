@@ -105,19 +105,23 @@ function getFlagsForDate(dateKey) {
 //
 // The NAMES are the ones `tools/evalParserReplay.js --cluster-rule` uses, so
 // the measurement and the production scan are named the same way and cannot
-// drift apart. Every rule is OFF by default: the batch runner produces the
-// corpus every other measurement is taken against, so it changes only when a
-// rule has been MEASURED and chosen.
+// drift apart. Every rule is OFF in production until it is measured -- the
+// batch runner produces the corpus every other measurement is taken against,
+// so it changes only when a rule has been MEASURED and chosen.
+//
+// The corroboration rule is the DEFAULT now, so `shipped` (the rule as it
+// was before 2026-11-03) has to turn it OFF explicitly -- otherwise
+// `--cluster-rule shipped` would silently run the corroborated rule.
 const CLUSTER_RULE_FLAGS = {
-  shipped: [],
-  corroborated: ['--cluster-corroboration'],
-  'corroborated-strict': ['--cluster-corroboration', '--cluster-strict-corroboration'],
-  supported: ['--cluster-supported'],
-  'supported+corroborated': ['--cluster-supported', '--cluster-corroboration'],
-  'video-supported': ['--cluster-video-supported'],
-  'video-supported+corroborated': ['--cluster-video-supported', '--cluster-corroboration'],
-  swallowed: ['--cluster-swallowed-holdings'],
-  'corroborated+swallowed': ['--cluster-swallowed-holdings', '--cluster-corroboration'],
+  shipped: ['--no-cluster-corroboration'],
+  corroborated: [],
+  'corroborated-strict': ['--cluster-strict-corroboration'],
+  supported: ['--cluster-supported', '--no-cluster-corroboration'],
+  'supported+corroborated': ['--cluster-supported'],
+  'video-supported': ['--cluster-video-supported', '--no-cluster-corroboration'],
+  'video-supported+corroborated': ['--cluster-video-supported'],
+  swallowed: ['--cluster-swallowed-holdings', '--no-cluster-corroboration'],
+  'corroborated+swallowed': ['--cluster-swallowed-holdings'],
 };
 
 // The full flag list for one date.

@@ -17,23 +17,33 @@ const { spawnSync } = require('node:child_process');
 const ROOT = path.resolve(__dirname, '..');
 
 const { parseArgs: parseScanArgs } = require(path.join(ROOT, 'src', 'video', 'ocrScanArgs'));
+const {
+  clusterRuleName,
+  resolveClusterRuleOptions,
+} = require(path.join(ROOT, 'src', 'parse', 'parseChartStream'));
 
 test('the scan tool parses the cluster-rule flags', () => {
   // `--video` is required, so every case carries it.
   const parse = (...extra) => parseScanArgs(['--video', 'x.mp4', '--date', '20230605', ...extra]);
 
+  // The corroboration rule is ON by default. The option is a TRI-STATE
+  // before the scan tool resolves it: null means "not mentioned", so the
+  // flag can tell "explicitly off" from "not mentioned".
   const base = parse();
-  assert.equal(base.clusterCorroboration, false, 'the corroboration rule is OFF by default');
+  assert.equal(base.clusterCorroboration, null,
+    'not mentioning the flag is not the same as turning the rule off');
   assert.equal(base.clusterSupported, false, 'the supported rule is OFF by default');
   assert.equal(base.clusterVideoSupported, false, 'the video-supported rule is OFF by default');
   assert.equal(base.clusterStrictCorroboration, false, 'the strict variant is OFF by default');
+  assert.equal(base.clusterSwallowedHoldings, false, 'the swallowed rule is OFF by default');
 
   assert.equal(parse('--cluster-corroboration').clusterCorroboration, true);
+  assert.equal(parse('--no-cluster-corroboration').clusterCorroboration, false);
   assert.equal(parse('--cluster-supported').clusterSupported, true);
   assert.equal(parse('--cluster-video-supported').clusterVideoSupported, true);
+  assert.equal(parse('--cluster-swallowed-holdings').clusterSwallowedHoldings, true);
 
-  const strict = parse('--cluster-corroboration', '--cluster-strict-corroboration');
-  assert.equal(strict.clusterCorroboration, true);
+  const strict = parse('--cluster-strict-corroboration');
   assert.equal(strict.clusterStrictCorroboration, true);
 });
 
@@ -90,61 +100,101 @@ test('the replay tool accepts every rule name', () => {
 test('the replay and the scan tool name a rule the SAME way', () => {
   // The replay compares a log's recorded rule against the rule it is
   // applying, so the two name the same combination the same way. This is
-  // the invariant that broke when the strict flag was added: the replay
-  // checked the strict flag BEFORE the supported one, so
-  // `supported+corroborated` under the strict flag was misnamed
-  // `corroborated-strict`, and the scan tool never recorded the strict flag
-  // at all.
+  // the invariant that broke twice: the replay checked the strict flag
+  // BEFORE the supported one, so `supported+corroborated` under the strict
+  // flag was misnamed `corroborated-strict`; and the two named the swallowed
+  // rule differently, and a scan naming one of them died at startup.
+  //
+  // Both now call the SAME implementation, in src/parse/parseChartStream.js.
+  // This test used to keep a COPY of the scan tool's naming code -- which is
+  // exactly how the two drifted in the first place.
   const { CLUSTER_RULES, clusterRuleName } = require(path.join(ROOT, 'tools', 'evalParserReplay'));
 
-  // Every named rule, mapped back to the switches it turns on.
+  // Every named rule, mapped back to the switches it turns on. Each is a
+  // FULLY-SPECIFIED set, so it does not depend on any default.
   const SWITCHES = {
-    'shipped': {},
+    'shipped': { requireDistanceOneCorroboration: false },
     'corroborated': { requireDistanceOneCorroboration: true },
     'corroborated-strict': {
       requireDistanceOneCorroboration: true,
       corroborationAllowsVideoSupport: false,
     },
-    'supported': { preferSupportedCorrection: true },
+    'supported': { requireDistanceOneCorroboration: false, preferSupportedCorrection: true },
     'supported+corroborated': {
+      requireDistanceOneCorroboration: true,
       preferSupportedCorrection: true,
-      requireDistanceOneCorroboration: true,
     },
-    'video-supported': { preferVideoSupport: true },
+    'video-supported': { requireDistanceOneCorroboration: false, preferVideoSupport: true },
     'video-supported+corroborated': {
+      requireDistanceOneCorroboration: true,
       preferVideoSupport: true,
-      requireDistanceOneCorroboration: true,
     },
-    'swallowed': { publishSwallowedHoldings: true },
+    'swallowed': { requireDistanceOneCorroboration: false, publishSwallowedHoldings: true },
     'corroborated+swallowed': {
-      publishSwallowedHoldings: true,
       requireDistanceOneCorroboration: true,
+      publishSwallowedHoldings: true,
     },
   };
 
   for (const [name, switches] of Object.entries(SWITCHES)) {
     assert.equal(clusterRuleName(switches), name,
       `the replay names ${name} correctly`);
-    // The scan tool's own naming, reproduced from the CLI options it sets.
-    const scanName = (() => {
-      const parts = [];
-      if (switches.preferVideoSupport === true) parts.push('video-supported');
-      else if (switches.preferSupportedCorrection === true) parts.push('supported');
-      if (switches.requireDistanceOneCorroboration === true) {
-        parts.push(switches.corroborationAllowsVideoSupport === false
-          ? 'corroborated-strict'
-          : 'corroborated');
-      }
-      if (switches.publishSwallowedHoldings === true) parts.push('swallowed');
-      return parts.length ? parts.join('+') : 'shipped';
-    })();
-    assert.equal(scanName, name, `the scan tool names ${name} the same way`);
   }
 
   // And every rule the table knows is named correctly by the builder.
   for (const [name, options] of Object.entries(CLUSTER_RULES)) {
     assert.equal(clusterRuleName(options), name,
       `the builder names the ${name} rule correctly`);
+  }
+});
+
+test('the batch runner\'s flags resolve to the rule they name', () => {
+  // The batch runner's table maps a rule NAME to the CLI flags that ask the
+  // scan tool for it. With the corroboration rule ON by default, the flags
+  // have to say so explicitly when they mean "without it" -- otherwise
+  // `--cluster-rule shipped` would silently run the corroborated rule.
+  //
+  // This resolves each rule's flags the way the scan tool does, and checks
+  // the name comes out right.
+  const { clusterRuleName } = require(path.join(ROOT, 'src', 'parse', 'parseChartStream'));
+
+  const source = fs.readFileSync(path.join(ROOT, 'tools', 'runQmgOcrBatch.js'), 'utf8');
+  const start = source.indexOf('const CLUSTER_RULE_FLAGS');
+  const table = source.slice(start, source.indexOf('};', start));
+
+  // The rule each set of flags must resolve to.
+  const EXPECTED = {
+    'shipped': 'shipped',
+    'corroborated': 'corroborated',
+    'corroborated-strict': 'corroborated-strict',
+    'supported': 'supported',
+    'supported+corroborated': 'supported+corroborated',
+    'video-supported': 'video-supported',
+    'video-supported+corroborated': 'video-supported+corroborated',
+    'swallowed': 'swallowed',
+    'corroborated+swallowed': 'corroborated+swallowed',
+  };
+
+  for (const [name, expected] of Object.entries(EXPECTED)) {
+    // The table writes a name with a '+' in it quoted, and a plain name
+    // unquoted. Find the entry by scanning for the name as a KEY.
+    const keyPattern = new RegExp(
+      `(^|\\n)\\s*'?${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}'?\\s*:`
+    );
+    const match = keyPattern.exec(table);
+    assert.ok(match, `the batch table has ${name}`);
+    const at = match.index + match[1].length;
+    const line = table.slice(at, table.indexOf('\n', at));
+    const flags = [...line.matchAll(/'(--[a-z-]+)'/g)].map((m) => m[1]);
+
+    // Parse the flags the way the scan tool does, then resolve the
+    // Parse the flags the way the scan tool does, then resolve them through
+    // the SHARED resolver -- so this test cannot drift from the scan tool the
+    // way a copy of the logic did.
+    const parsed = parseScanArgs(['--video', 'x.mp4', '--date', '20230605', ...flags]);
+    const resolved = clusterRuleName(resolveClusterRuleOptions(parsed));
+    assert.equal(resolved, expected,
+      `the batch's flags for ${name} resolve to ${expected} (they were ${resolved})`);
   }
 });
 

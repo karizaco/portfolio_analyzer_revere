@@ -162,18 +162,21 @@ arm's reading is **unmeasured** in it, not scored as zero. The `AAPL` defect
 is invisible to a capture-level metric, so a capture-level number alone cannot
 answer "did the merge publish a holding the video never showed".
 
-**Seven cluster rules exist, all OFF by default.** The clusterer names one
-canonical per cluster, and a canonical that is a *correction* rather than a
-*reading* is a name the clusterer invented. On 20230605 the cluster
-`{AACO, ARCO}` was published as `AAPL` — a holding no frame of that video
-showed. **Every candidate for it is two edits away**, so "closest" cannot
-discriminate; what discriminates is that the video read `ARQQ` in six frames
-and `AAPL` in none. The rules are `shipped` (the default), `corroborated` (a
-correction must be within edit distance 1 of a member or the cluster is
-dropped), `corroborated-strict` (the same, and the video's own reading of the
-ticker does not count as corroboration), `supported` (prefer the correction the
-video actually read, breaking ties) and `video-supported` (the same, whatever
-the distance), each with and without the corroboration gate.
+**Seven cluster rules exist; `corroborated` is the DEFAULT** (changed
+2026-11-03). The clusterer names one canonical per cluster, and a canonical
+that is a *correction* rather than a *reading* is a name the clusterer
+invented. On 20230605 the cluster `{AACO, ARCO}` was published as `AAPL` — a
+holding no frame of that video showed. **Every candidate for it is two edits
+away**, so "closest" cannot discriminate; what discriminates is that the video
+read `ARQQ` in six frames and `AAPL` in none. The rules are `shipped` (the
+pre-2026-11-03 behaviour), `corroborated` (**the default** — a correction must
+be within edit distance 1 of a member or the cluster is dropped),
+`corroborated-strict` (the same, and the video's own reading of the ticker
+does not count as corroboration), `supported` (prefer the correction the video
+actually read, breaking ties), `video-supported` (the same, whatever the
+distance) and `swallowed` (publish a cluster's other lexicon tickers too, when
+the video read them in ≥ 4 frames of their own), each with and without the
+corroboration gate.
 
 **With every rule off, the shipped path is provably unchanged**: the
 pre-change clusterer and the current one produce identical cluster tables
@@ -208,6 +211,19 @@ the pixel-verified ground truth, against the shipped rule's own logs):
 (`U` on 20230523, `IOT` on 20230602) are **capture-level** readings, so
 no cluster rule can remove them.
 
+**Stated plainly: `corroborated` is a PRECISION filter, not a recall one.**
+The hit count never moves under it. It removes holdings the clusterer
+*invented*; it does not find holdings the parser missed. The recall gains in
+2026 came from the era-conditional crop and the parser. On the dates the two
+scans **share** — the like-for-like comparison, since two scans of different
+date sets cannot be compared in aggregate — the rule is **−1 false positive,
+0 holdings lost** (`test/manual/corrobDefaultSafety.test.js`).
+
+The blast radius is the **chart_stream branch only** — the whiteboard branch
+merges the structured GRO/TURBO holdings and never reads the clusterer's
+consensus. `--no-cluster-corroboration` turns the rule off and reproduces the
+pre-2026-11-03 behaviour; the scan records which rule ran (`cluster_rule`).
+
 **And the LAST known defect is now measured: the swallowed holding.** The
 clusterer names one canonical per cluster, so when a cluster holds two
 *distinct* lexicon tickers one edit apart, the second is swallowed — and on
@@ -216,9 +232,10 @@ such clusters exist in the corpus; the discriminator is the **cluster
 frequency** (a swallowed ticker read in ≥ 4 frames is a holding, ≤ 3 is a
 one-off garble). Publishing every lexicon ticker in a cluster is measured
 and **rejected** (+5 holdings, **+24 false positives**); the guarded version
-— publish it only when the video read it in ≥ 4 frames — gains **2 holdings
-and adds ZERO false positives**. It is measured but **not yet shipped**, and
-not yet implemented in the clusterer.
+— publish it only when the video read it in ≥ 4 frames of its own — gains
+**2 holdings and adds ZERO false positives**, and a production scan confirms
+it (`LI` read in 4 frames → published; in 1 frame → rejected). It is
+implemented behind `--cluster-swallowed-holdings` and **off by default**.
 
 CLAUDE.md § *The clusterer's canonical selection*.
 
