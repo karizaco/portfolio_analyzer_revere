@@ -4290,6 +4290,77 @@ support is a good tie-break, but it is not a good *primary* key: preferring
 the most-supported candidate moves a cluster onto a ticker the video read as
 chart ink rather than onto the ticker it held.
 
+### The swallowed holding — the LAST known defect, and its measured cure
+
+The clusterer names **one** canonical per cluster. When a cluster holds two
+**distinct** lexicon tickers that are one edit apart, the second is
+**swallowed** — and on 20230522/20230523 the swallowed one is `LI`, a real
+holding of those videos:
+
+```jsonc
+{ "canonical": "AI", "members": ["AI", "LI"], "frequency": 7 }
+```
+
+`AI` and `LI` are both holdings of that video. They are one edit apart, so
+the clusterer merged them and published `AI`; `LI` was never published at
+all. The merged list for 20230523 has 10 hits against 11 holdings, and `LI`
+is the one missing.
+
+**The census is small and exact.** Over every recorded production log, five
+clusters swallow a second lexicon ticker:
+
+| date | canonical | swallowed | a real holding? | cluster frequency |
+|---|---|---|---|---|
+| 20230522 | `AI` | `LI` | **YES** | **15** |
+| 20230523 | `AI` | `LI` | **YES** | **7** |
+| 20220607 | `NFLX` | `NFU` | no | **3** |
+| 20220607 | `NFLX` | `NFU` | no | 3 |
+| 20220607 | `NFLX` | `NFU` | no | 3 |
+
+**Both `LI` and `NFU` are real tickers** (`LI` = Li Auto, `NFU` = Neogen
+Food Safety — both in the seed lexicon), so the lexicon does not
+discriminate. **The cluster frequency does**: a swallowed ticker read in
+**≥ 4** frames is a real holding; one read in **≤ 3** is a one-off garble.
+
+**The blunt cure is measured and REJECTED.** Publishing *every* lexicon
+ticker in a cluster gains 5 holdings and adds **24 false positives** — the
+whole damage is on 20220607, where `NFU` appears three times.
+
+**The guarded cure is a clean win.** Publish the swallowed ticker only when
+the video read it in **≥ 4** frames — its own attestation, independent of
+the cluster that swallowed it:
+
+| threshold | hits / gt | FP | hits gained | FP added |
+|---|---|---|---|---|
+| 1 | 71/74 | 7 | 2 | **1** |
+| 2 | 71/74 | 7 | 2 | **1** |
+| 3 | 71/74 | 7 | 2 | **1** |
+| **4** | **71/74** | **6** | **2** | **0** |
+| **5** | **71/74** | **6** | **2** | **0** |
+| **6** | **71/74** | **6** | **2** | **0** |
+| **7** | **71/74** | **6** | **2** | **0** |
+| 8 | 70/74 | 6 | 1 | 0 |
+| *shipped* | *69/74* | *6* | — | — |
+
+**Thresholds 4–7: two holdings gained, no false positive added** — 69/74
+→ 71/74 with the FP count unchanged. At ≤ 3, `NFU` slips in and adds its
+false positive; at 8, one of the two `LI`s falls out.
+
+**This is measured but NOT yet shipped**, for the same reason the
+corroboration rule is not: the corpus is 46 logs, and the rule has not been
+through a production scan. It is also **not implemented in the clusterer
+yet** — the numbers above come from applying the rule to the recorded
+cluster tables, which is what the corroboration rule's own measurement did
+before its implementation.
+
+Pinned by `test/manual/clusterAbsorbedHolding.test.js` (the census),
+`test/manual/clusterAbsorbedDiscriminator.test.js` (what separates a
+swallowed holding from a swallowed noise token — and the answer: **not**
+the lexicon, **not** "read without the canonical", but the frame count), and
+`test/manual/clusterPublishBothGuarded.test.js` (the threshold sweep).
+`test/manual/clusterPublishBothRule.test.js` pins the REJECTED blunt version,
+so it is not re-attempted.
+
 **The production audit is the decisive one.** Every recorded log carries the
 cluster table production actually formed, so the rule can be applied to it
 directly. Over **46 logs / 2 480 clusters**:
@@ -4339,24 +4410,40 @@ over the corpus the production runs actually produced — but the corpus that
 produced it is **46 logs**, and the project rule is that the default stays
 where it is until a **wider** measurement says otherwise.
 
-**The wider measurement has now been made: a PRODUCTION SCAN of the
+**The wider measurement has now been made: a PRODUCTION SCAN of all six
 2023-era dates under the rule** (`qmg-easyocr-20261103-corroborated`,
 the ordinary batch runner and the ordinary EasyOCR path, with the rule as
 the only difference), scored against the pixel-verified ground truth on
-the **merged** list:
+the **merged** list, against the shipped rule's own logs for the same
+dates:
 
-| date | hits / ground truth | recall | false positives | shipped rule |
-|---|---|---|---|---|
-| `20230602` | **12 / 12** | 100 % | 1 (`IOT`) | 12/12, 1 FP |
-| `20230605` | **11 / 11** | 100 % | **0** | 11/11, **1 FP (`AAPL`)** |
-| `20230608` | **13 / 13** | 100 % | **0** | — |
-| `20230609` | **13 / 13** | 100 % | **0** | — |
-| **total** | **49 / 49** | **100 %** | **1** | 3 FPs |
+| date | ruled | shipped | what changed |
+|---|---|---|---|
+| `20230522` | 6/7, 0 FP | 6/7, 0 FP | — |
+| `20230523` | 10/11, 1 FP (`U`) | 10/11, 1 FP (`U`) | — |
+| `20230602` | 12/12, 1 FP (`IOT`) | 12/12, 1 FP (`IOT`) | — |
+| **`20230605`** | **11/11, 0 FP** | 11/11, 1 FP (`AAPL`) | **the false positive is gone** |
+| `20230608` | 13/13, 0 FP | — | — |
+| **`20230609`** | **13/13, 0 FP** | 13/13, 1 FP (`REGN`) | **the false positive is gone** |
+| **total** | **65/67 — 97.0 % recall, 2 FP** | 52/67 — 77.6 % recall, 4 FP | **2 false positives removed, 0 holdings lost** |
 
-**The `AAPL` false positive is gone, and no holding was lost.** The one
-remaining false positive (`IOT` on `20230602`) is a **capture-level**
-reading — it is in that capture's own `position_list` — so no cluster rule
-can remove it, and CLAUDE.md records it as such.
+**Both false positives are gone and no holding was lost.** (The `REGN` on
+`20230609` was already fixed by the `RGN → RGTI` alias row in the shipped
+run; the ruled scan simply did not reintroduce it.)
+
+The two false positives that remain are **capture-level** readings — `U` on
+`20230523` and `IOT` on `20230602` are in those captures' own
+`position_list`, so no cluster rule can remove them. CLAUDE.md records both
+as such.
+
+**The two dates the scan did not finish change NOTHING under the rule.**
+`20230522` and `20230523` are the slowest videos, and the first attempt at
+them was competing with the test suite for the CPU (the run that produced
+the other four took 737–952 s per video on an idle machine; these two took
+1 833 s and 1 864 s). Applying the rule to the **shipped-rule logs for
+those two dates** — the same clusters, the same arithmetic — gives the same
+answer, and the re-scan confirms it: `20230522` 6/7 with 0 FP, `20230523`
+10/11 with 1 FP (`U`), both identical to the shipped rule.
 
 **The clusters the rule dropped, and why nothing was lost.** The scan
 reports them per date:
@@ -4372,28 +4459,15 @@ wrongly reported two lost holdings — the same accounting error twice,
 in two different tools, which is why it is now pinned by
 `test/manual/clusterRuleProductionScore.test.js`.
 
-**The two dates whose scan timed out change NOTHING under the rule.**
-`20230522` and `20230523` are the slowest videos, and the first run of them
-was competing with the test suite for the CPU (the run that produced the
-other four took 737–952 s per video on an idle machine). Applying the rule
-to the **shipped-rule logs for those two dates** — the same clusters, the
-same arithmetic — gives:
+`LI` is held by the video and missed by **both** rules on `20230522` and
+`20230523` — that is the *absorbed holding* defect, measured and cured
+below. `U` and `IOT` are capture-level readings. So the rule's whole
+effect over six dates is: **two false positives removed, no holding lost.**
 
-| date | shipped | ruled | clusters dropped |
-|---|---|---|---|
-| `20230522` | 6/7, 0 FP | 6/7, 0 FP | **0** |
-| `20230523` | 10/11, 1 FP (`U`) | 10/11, 1 FP (`U`) | **0** |
-
-**The rule is neutral on both dates.** `LI` is held by the video and
-missed by **both** rules — that is the *absorbed holding* defect (the
-clusterer merges `LI` into a neighbour because they are one edit apart),
-which no canonical-selection rule can fix. And `U` on `20230523` is a
-**capture-level** reading — it is in that capture's own `position_list` —
-so no cluster rule can remove it.
-
-**So the rule's whole effect, over six dates, is the four dates it changed:
-one false positive removed, no holding lost.** Pinned by
-`test/manual/clusterRuleApplyToLog.test.js`.
+Pinned by `test/manual/clusterRuleScoreExisting.test.js` (the side-by-side
+scoring), `test/manual/clusterRuleApplyToLog.test.js` (the two dates the
+scan did not finish) and `test/manual/clusterRuleProductionScan.test.js`
+(the scan itself).
 
 **The three supported rules are measured and rejected.** They add false
 positives and recover no holdings. They stay available behind their flags,
