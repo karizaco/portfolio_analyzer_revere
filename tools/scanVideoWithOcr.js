@@ -1847,10 +1847,12 @@ async function main() {
         // of that video. AACO is 2 edits from AAPL and 2 from AAL, and the
         // longer-on-a-tie rule chose AAPL; neither member corroborates it.
         //
-        // OFF unless `--cluster-corroboration` is passed. It changes which
-        // holdings a scan publishes, and a wrong holding is worse than a
-        // missing one -- so it is measured over the recorded logs first
-        // (`node tools/evalParserReplay.js --cluster-rule corroborated`).
+        // The rule is ON by default. `--no-cluster-corroboration` explicitly
+        // disables it; `--cluster-corroboration` is the explicit opt-in form
+        // for callers that want to make the default visible in a command.
+        // It changes which holdings a scan publishes, and a wrong holding is
+        // worse than a missing one -- so it is measured over the recorded logs
+        // first (`node tools/evalParserReplay.js --cluster-rule corroborated`).
         requireDistanceOneCorroboration: clusterRule.requireDistanceOneCorroboration,
         // Whether the video's own reading of the canonical counts as
         // corroboration. Off by default is not the choice here: the DEFAULT
@@ -1898,9 +1900,10 @@ async function main() {
         swallowedHoldingMinFrames: clusterRule.swallowedHoldingMinFrames,
         // With a rule on, the drop is reported, so a scan that lost a
         // holding can say why.
-        explainDropped: options.clusterCorroboration === true
-          || options.clusterSupported === true
-          || options.clusterVideoSupported === true
+        explainDropped: clusterRule.requireDistanceOneCorroboration
+          || clusterRule.preferSupportedCorrection
+          || clusterRule.preferVideoSupport
+          || clusterRule.publishSwallowedHoldings
       }
     );
     // The clusterer's consensus is the PUBLISHED list for a chart_stream
