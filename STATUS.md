@@ -190,12 +190,35 @@ production cluster tables, 46 logs / 2 480 clusters) agrees: **one** published
 ticker changes, it is the `AAPL` false positive, and **no** holding is lost.
 The whiteboard branch is unaffected — it never uses the clusterer's consensus.
 
-**And a PRODUCTION SCAN under the rule agrees** (`qmg-easyocr-20261103-corroborated`,
-scored on the merged list against the pixel-verified ground truth):
-`20230602` **12/12**, `20230605` **11/11** with **0** false positives (the
-shipped rule had 1 — `AAPL`), `20230608` **13/13**, `20230609` **13/13** —
-**49/49, 100 % recall**. Nothing was lost: the two dropped clusters (`APLD`
-from `[APOQ, AXOQ]`, `GTLB` from `[GULE]`) were each also read directly.
+**And a PRODUCTION SCAN of all six 2023-era dates under the rule agrees**
+(`qmg-easyocr-20261103-corroborated`, scored on the merged list against
+the pixel-verified ground truth, against the shipped rule's own logs):
+
+| date | ruled | shipped |
+|---|---|---|
+| `20230522` | 6/7, 0 FP | 6/7, 0 FP |
+| `20230523` | 10/11, 1 FP (`U`) | 10/11, 1 FP (`U`) |
+| `20230602` | 12/12, 1 FP (`IOT`) | 12/12, 1 FP (`IOT`) |
+| **`20230605`** | **11/11, 0 FP** | 11/11, **1 FP (`AAPL`)** |
+| `20230608` | 13/13, 0 FP | — |
+| **`20230609`** | **13/13, 0 FP** | 13/13, **1 FP (`REGN`)** |
+| **total** | **65/67 — 97.0 % recall, 2 FP** | 52/67 — 77.6 %, 4 FP |
+
+**Two false positives removed, no holding lost.** The two that remain
+(`U` on 20230523, `IOT` on 20230602) are **capture-level** readings, so
+no cluster rule can remove them.
+
+**And the LAST known defect is now measured: the swallowed holding.** The
+clusterer names one canonical per cluster, so when a cluster holds two
+*distinct* lexicon tickers one edit apart, the second is swallowed — and on
+20230522/20230523 that is `LI`, a real holding (69/74 hits → 71/74). Five
+such clusters exist in the corpus; the discriminator is the **cluster
+frequency** (a swallowed ticker read in ≥ 4 frames is a holding, ≤ 3 is a
+one-off garble). Publishing every lexicon ticker in a cluster is measured
+and **rejected** (+5 holdings, **+24 false positives**); the guarded version
+— publish it only when the video read it in ≥ 4 frames — gains **2 holdings
+and adds ZERO false positives**. It is measured but **not yet shipped**, and
+not yet implemented in the clusterer.
 
 CLAUDE.md § *The clusterer's canonical selection*.
 
