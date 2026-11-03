@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QMG merged results — 40 dates</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+    --text: #e6edf3; --text2: #8b949e; --accent: #58a6ff;
+    --green: #4ade80; --yellow: #fbbf24; --red: #f87171; --purple: #c084fc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 13px; }
+  .header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 14px 20px; }
+  .header h1 { font-size: 17px; font-weight: 600; }
+  .header p { color: var(--text2); font-size: 12px; margin-top: 6px; max-width: 1100px; line-height: 1.6; }
+  .header a { color: var(--accent); }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text2); padding: 22px 20px 8px; font-weight: 600; }
+  .table-wrap { overflow-x: auto; padding: 0 20px 20px; }
+  table { width: 100%; border-collapse: collapse; }
+  th { background: var(--bg2); position: sticky; top: 0; text-align: left; padding: 8px 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text2); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:hover td { background: rgba(88,166,255,0.04); }
+  .mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; white-space: nowrap; }
+  .num { font-family: 'JetBrains Mono', monospace; font-size: 12px; text-align: right; white-space: nowrap; }
+  .hits { color: var(--green); font-weight: 600; }
+  .tickers { display: flex; flex-wrap: wrap; gap: 4px; max-width: 420px; }
+  .t { padding: 1px 6px; border-radius: 3px; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+  .t.hit { background: rgba(74,222,128,0.14); color: var(--green); }
+  .t.fp { background: rgba(248,113,113,0.14); color: var(--red); }
+  .t.miss { background: rgba(251,191,36,0.14); color: var(--yellow); }
+  .t.dropped { background: rgba(192,132,252,0.14); color: var(--purple); }
+  .runs { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text2); line-height: 1.7; }
+  .runs em { color: var(--accent); font-style: normal; }
+  .failed { color: var(--red); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+  tr.failed-row td { opacity: 0.75; }
+  .note { color: var(--text2); font-size: 12px; padding: 0 20px 24px; max-width: 1100px; line-height: 1.7; }
+  .note b { color: var(--text); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>QMG merged results — the VIDEO-level reading</h1>
+  <p>
+    Production publishes <span class="mono">merged_position_list</span>, the clusterer's
+    reading repaired across every frame of the video — not any single frame's reading.
+    This page scores that list against the pixel-verified ground truth, per date.
+    The capture-level page is <a href="qmg_ocr_results.html">qmg_ocr_results.html</a>.
+  </p>
+  <p>
+    <b>Why the merged list and not the capture reading:</b> the two have disagreed
+    three times on record, and every disagreement is invisible to a capture-level
+    page — in each case the capture's own reading was right. The clusterer
+    published <span class="mono">REGN</span> where the panel showed
+    <span class="mono">RGTI</span>; absorbed the holding
+    <span class="mono">LI</span> into <span class="mono">AI</span>; and published
+    <span class="mono">AAPL</span>, a holding no frame of that video showed.
+  </p>
+</div>
+
+<h2>Per pipeline state</h2>
+<div class="table-wrap">
+<table>
+  <thead><tr>
+    <th>run</th><th class="num">dates</th><th class="num">hits / gt</th>
+    <th class="num">recall</th><th class="num">FP</th><th class="num">precision</th>
+    <th class="num">notes</th>
+  </tr></thead>
+  <tbody>
+<tr>
+      <td class="mono">qmg-easyocr-20261103-swallowed</td>
+      <td class="num">2</td>
+      <td class="num">17/18</td>
+      <td class="num">94.4 %</td>
+      <td class="num">1</td>
+      <td class="num">94.4 %</td>
+      <td class="num"></td>
+    </tr>
+<tr>
+      <td class="mono">qmg-easyocr-20261103-corroborated</td>
+      <td class="num">6</td>
+      <td class="num">65/67</td>
+      <td class="num">97.0 %</td>
+      <td class="num">2</td>
+      <td class="num">97.0 %</td>
+      <td class="num"></td>
+    </tr>
+<tr>
+      <td class="mono">qmg-easyocr-20261102-era-prefilter</td>
+      <td class="num">4</td>
+      <td class="num">39/41</td>
+      <td class="num">95.1 %</td>
+      <td class="num">3</td>
+      <td class="num">92.9 %</td>
+      <td class="num"></td>
+    </tr>
+<tr>
+      <td class="mono">qmg-crop-20261102-smoke</td>
+      <td class="num">1</td>
+      <td class="num">13/13</td>
+      <td class="num">100.0 %</td>
+      <td class="num">1</td>
+      <td class="num">92.9 %</td>
+      <td class="num"></td>
+    </tr>
+<tr class="failed-row">
+      <td class="mono">qmg-easyocr-20261020</td>
+      <td class="num">3</td>
+      <td class="num">0/27</td>
+      <td class="num">0.0 %</td>
+      <td class="num">0</td>
+      <td class="num">0.0 %</td>
+      <td class="num"><span class="failed" title="3 of 3 date(s) produced NO reading at all">3 failed</span></td>
+    </tr>
+<tr>
+      <td class="mono">qmg-easyocr-20261018</td>
+      <td class="num">8</td>
+      <td class="num">10/71</td>
+      <td class="num">14.1 %</td>
+      <td class="num">3</td>
+      <td class="num">76.9 %</td>
+      <td class="num"><span class="failed" title="6 of 8 date(s) produced NO reading at all">6 failed</span></td>
+    </tr>
+<tr>
+      <td class="mono">qmg-easyocr-20261017</td>
+      <td class="num">14</td>
+      <td class="num">57/126</td>
+      <td class="num">45.2 %</td>
+      <td class="num">54</td>
+      <td class="num">51.4 %</td>
+      <td class="num"></td>
+    </tr>
+<tr>
+      <td class="mono">qmg-easyocr-20261012</td>
+      <td class="num">8</td>
+      <td class="num">6/76</td>
+      <td class="num">7.9 %</td>
+      <td class="num">2</td>
+      <td class="num">75.0 %</td>
+      <td class="num"><span class="failed" title="5 of 8 date(s) produced NO reading at all">5 failed</span></td>
+    </tr>
+<tr>
+      <td class="mono">qmg-easyocr-20261011</td>
+      <td class="num">23</td>
+      <td class="num">41/193</td>
+      <td class="num">21.2 %</td>
+      <td class="num">1</td>
+      <td class="num">97.6 %</td>
+      <td class="num"><span class="failed" title="3 of 23 date(s) produced NO reading at all">3 failed</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Per date</h2>
+<div class="table-wrap">
+<table>
+  <thead><tr>
+    <th>date</th><th class="num">hits / gt</th><th class="num">recall</th>
+    <th class="num">precision</th><th>found</th><th>false positives</th>
+    <th>missed</th><th>runs</th><th>swallowed, published</th>
+  </tr></thead>
+  <tbody>
+<tr>
+    <td class="mono">20220218</td>
+    <td class="num"><span class="hits">6/10</span></td>
+    <td class="num">60.0 %</td>
+    <td class="num">85.7 %</td>
+    <td class="tickers"><span class="t hit">COPX</span><span class="t hit">DVN</span><span class="t hit">DWAC</span><span class="t hit">FCX</span><span class="t hit">MOS</span><span class="t hit">TSLA</span></td>
+    <td class="tickers"><span class="t fp">TTOCQ</span></td>
+    <td class="tickers"><span class="t miss">NRGU</span><span class="t miss">ROKU</span><span class="t miss">TQQQ</span><span class="t miss">UPST</span></td>
+    <td class="runs"><span class="run">20261020<em>shipped</em></span><br><span class="run">20261018<em>shipped</em></span><br><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220222</td>
+    <td class="num"><span class="hits">5/7</span></td>
+    <td class="num">71.4 %</td>
+    <td class="num">71.4 %</td>
+    <td class="tickers"><span class="t hit">COPX</span><span class="t hit">DVN</span><span class="t hit">FCX</span><span class="t hit">MOS</span><span class="t hit">TSLA</span></td>
+    <td class="tickers"><span class="t fp">I</span><span class="t fp">TOCQ</span></td>
+    <td class="tickers"><span class="t miss">NRGU</span><span class="t miss">TQQQ</span></td>
+    <td class="runs"><span class="run">20261018<em>shipped</em></span><br><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220301</td>
+    <td class="num"><span class="hits">3/8</span></td>
+    <td class="num">37.5 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">FCX</span><span class="t hit">MP</span><span class="t hit">X</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">COPX</span><span class="t miss">ERX</span><span class="t miss">GUSH</span><span class="t miss">NUGT</span><span class="t miss">RSX</span></td>
+    <td class="runs"><span class="run">20261018<em>shipped</em></span><br><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220302</td>
+    <td class="num"><span class="hits">1/8</span></td>
+    <td class="num">12.5 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">FCX</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">AGQ</span><span class="t miss">COPX</span><span class="t miss">ERX</span><span class="t miss">GUSH</span><span class="t miss">NUGT</span><span class="t miss">RSX</span><span class="t miss">X</span></td>
+    <td class="runs"><span class="run">20261018<em>shipped</em></span><br><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220318</td>
+    <td class="num"><span class="hits">3/8</span></td>
+    <td class="num">37.5 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">COPX</span><span class="t hit">REGN</span><span class="t hit">URA</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">FCX</span><span class="t miss">KWEB</span><span class="t miss">NUGT</span><span class="t miss">URNM</span><span class="t miss">X</span></td>
+    <td class="runs"><span class="run">20261018<em>shipped</em></span><br><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220321</td>
+    <td class="num"><span class="hits">2/11</span></td>
+    <td class="num">18.2 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">COPX</span><span class="t hit">NUGT</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">FCX</span><span class="t miss">JNUG</span><span class="t miss">KWEB</span><span class="t miss">NEM</span><span class="t miss">REGN</span><span class="t miss">URA</span><span class="t miss">URNM</span><span class="t miss">WEAT</span><span class="t miss">X</span></td>
+    <td class="runs"><span class="run">20261018<em>shipped</em></span><br><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220323</td>
+    <td class="num"><span class="hits">0/11</span></td>
+    <td class="num">0.0 %</td>
+    <td class="num">—</td>
+    <td class="tickers"></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">BOIL</span><span class="t miss">COPX</span><span class="t miss">FCX</span><span class="t miss">JNUG</span><span class="t miss">KWEB</span><span class="t miss">NUGT</span><span class="t miss">REGN</span><span class="t miss">URA</span><span class="t miss">URNM</span><span class="t miss">WEAT</span><span class="t miss">X</span></td>
+    <td class="runs"><span class="run">20261018<em>shipped</em></span><br><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220330</td>
+    <td class="num"><span class="hits">2/8</span></td>
+    <td class="num">25.0 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">COPX</span><span class="t hit">LABU</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">FCX</span><span class="t miss">KWEB</span><span class="t miss">NFLX</span><span class="t miss">NUGT</span><span class="t miss">REGN</span><span class="t miss">X</span></td>
+    <td class="runs"><span class="run">20261018<em>shipped</em></span><br><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220331</td>
+    <td class="num"><span class="hits">2/9</span></td>
+    <td class="num">22.2 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">COPX</span><span class="t hit">FCX</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">KWEB</span><span class="t miss">NEM</span><span class="t miss">NUGT</span><span class="t miss">REGN</span><span class="t miss">SPXL</span><span class="t miss">TQQQ</span><span class="t miss">X</span></td>
+    <td class="runs"><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220405</td>
+    <td class="num"><span class="hits">1/11</span></td>
+    <td class="num">9.1 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">JNUG</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">COPX</span><span class="t miss">CWEB</span><span class="t miss">FCX</span><span class="t miss">GGPI</span><span class="t miss">KWEB</span><span class="t miss">NEM</span><span class="t miss">NUGT</span><span class="t miss">REGN</span><span class="t miss">TAN</span><span class="t miss">X</span></td>
+    <td class="runs"><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220406</td>
+    <td class="num"><span class="hits">1/8</span></td>
+    <td class="num">12.5 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">NEM</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">COPX</span><span class="t miss">FCX</span><span class="t miss">LHX</span><span class="t miss">LMT</span><span class="t miss">NUGT</span><span class="t miss">REGN</span><span class="t miss">X</span></td>
+    <td class="runs"><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220412</td>
+    <td class="num"><span class="hits">3/11</span></td>
+    <td class="num">27.3 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">FCX</span><span class="t hit">URA</span><span class="t hit">URNM</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">COPX</span><span class="t miss">JNUG</span><span class="t miss">LHX</span><span class="t miss">LMT</span><span class="t miss">NUGT</span><span class="t miss">REGN</span><span class="t miss">WEAT</span><span class="t miss">X</span></td>
+    <td class="runs"><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220413</td>
+    <td class="num"><span class="hits">5/11</span></td>
+    <td class="num">45.5 %</td>
+    <td class="num">55.6 %</td>
+    <td class="tickers"><span class="t hit">COPX</span><span class="t hit">FCX</span><span class="t hit">JNUG</span><span class="t hit">URA</span><span class="t hit">URNM</span></td>
+    <td class="tickers"><span class="t fp">FLC</span><span class="t fp">NUGI</span><span class="t fp">UNUG</span><span class="t fp">UT</span></td>
+    <td class="tickers"><span class="t miss">LHX</span><span class="t miss">LMT</span><span class="t miss">NUGT</span><span class="t miss">REGN</span><span class="t miss">WEAT</span><span class="t miss">X</span></td>
+    <td class="runs"><span class="run">20261017<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220414</td>
+    <td class="num"><span class="hits">3/11</span></td>
+    <td class="num">27.3 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">COPX</span><span class="t hit">URA</span><span class="t hit">URNM</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">FCX</span><span class="t miss">GUSH</span><span class="t miss">JNUG</span><span class="t miss">LMT</span><span class="t miss">NUGT</span><span class="t miss">REGN</span><span class="t miss">WEAT</span><span class="t miss">X</span></td>
+    <td class="runs"><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220418</td>
+    <td class="num"><span class="hits">2/12</span></td>
+    <td class="num">16.7 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">COPX</span><span class="t hit">FCX</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">GUSH</span><span class="t miss">JNUG</span><span class="t miss">LMT</span><span class="t miss">NUGT</span><span class="t miss">REGN</span><span class="t miss">URA</span><span class="t miss">URNM</span><span class="t miss">VERU</span><span class="t miss">WEAT</span><span class="t miss">X</span></td>
+    <td class="runs"><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220419</td>
+    <td class="num"><span class="hits">2/14</span></td>
+    <td class="num">14.3 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">URA</span><span class="t hit">URNM</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">BOIL</span><span class="t miss">COPX</span><span class="t miss">FCX</span><span class="t miss">GUSH</span><span class="t miss">JNUG</span><span class="t miss">KOLD</span><span class="t miss">LMT</span><span class="t miss">NUGT</span><span class="t miss">REGN</span><span class="t miss">VERU</span><span class="t miss">WEAT</span><span class="t miss">X</span></td>
+    <td class="runs"><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220421</td>
+    <td class="num"><span class="hits">3/16</span></td>
+    <td class="num">18.8 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">REGN</span><span class="t hit">URA</span><span class="t hit">URNM</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">BOIL</span><span class="t miss">COPX</span><span class="t miss">FCX</span><span class="t miss">FTNT</span><span class="t miss">GUSH</span><span class="t miss">JNUG</span><span class="t miss">LAC</span><span class="t miss">NUGT</span><span class="t miss">TSLA</span><span class="t miss">UCO</span><span class="t miss">VERU</span><span class="t miss">WEAT</span><span class="t miss">X</span></td>
+    <td class="runs"><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220425</td>
+    <td class="num"><span class="hits">1/4</span></td>
+    <td class="num">25.0 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">BOIL</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">KOLD</span><span class="t miss">VERU</span><span class="t miss">WEAT</span></td>
+    <td class="runs"><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220426</td>
+    <td class="num"><span class="hits">0/2</span></td>
+    <td class="num">0.0 %</td>
+    <td class="num">—</td>
+    <td class="tickers"></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">BOIL</span><span class="t miss">WEAT</span></td>
+    <td class="runs"><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220427</td>
+    <td class="num"><span class="hits">4/6</span></td>
+    <td class="num">66.7 %</td>
+    <td class="num">66.7 %</td>
+    <td class="tickers"><span class="t hit">BOIL</span><span class="t hit">KOLD</span><span class="t hit">TSLA</span><span class="t hit">WEAT</span></td>
+    <td class="tickers"><span class="t fp">TSUA</span><span class="t fp">WIE</span></td>
+    <td class="tickers"><span class="t miss">CWEB</span><span class="t miss">KWEB</span></td>
+    <td class="runs"><span class="run">20261017<em>shipped</em></span><br><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220428</td>
+    <td class="num"><span class="hits">3/4</span></td>
+    <td class="num">75.0 %</td>
+    <td class="num">75.0 %</td>
+    <td class="tickers"><span class="t hit">CWEB</span><span class="t hit">KWEB</span><span class="t hit">WEAT</span></td>
+    <td class="tickers"><span class="t fp">DO</span></td>
+    <td class="tickers"><span class="t miss">TSLA</span></td>
+    <td class="runs"><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220429</td>
+    <td class="num"><span class="hits">3/6</span></td>
+    <td class="num">50.0 %</td>
+    <td class="num">60.0 %</td>
+    <td class="tickers"><span class="t hit">GUSH</span><span class="t hit">TSLA</span><span class="t hit">UCO</span></td>
+    <td class="tickers"><span class="t fp">H</span><span class="t fp">JSLA</span></td>
+    <td class="tickers"><span class="t miss">SWN</span><span class="t miss">WEAT</span><span class="t miss">X</span></td>
+    <td class="runs"><span class="run">20261017<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220506</td>
+    <td class="num"><span class="hits">3/4</span></td>
+    <td class="num">75.0 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">LTHM</span><span class="t hit">TSLA</span><span class="t hit">WEAT</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">UCO</span></td>
+    <td class="runs"><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220510</td>
+    <td class="num"><span class="hits">2/2</span></td>
+    <td class="num">100.0 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">TSLA</span><span class="t hit">VRM</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"></td>
+    <td class="runs"><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220517</td>
+    <td class="num"><span class="hits">0/8</span></td>
+    <td class="num">0.0 %</td>
+    <td class="num">—</td>
+    <td class="tickers"></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">AR</span><span class="t miss">AVGO</span><span class="t miss">COIN</span><span class="t miss">ERX</span><span class="t miss">FNGU</span><span class="t miss">OXY</span><span class="t miss">TQQQ</span><span class="t miss">WEAT</span></td>
+    <td class="runs"><span class="run">20261011<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220606</td>
+    <td class="num"><span class="hits">3/10</span></td>
+    <td class="num">30.0 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">CBIO</span><span class="t hit">UCO</span><span class="t hit">VLO</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">ALB</span><span class="t miss">BOIL</span><span class="t miss">GOVX</span><span class="t miss">LABU</span><span class="t miss">NFLX</span><span class="t miss">SIGA</span><span class="t miss">TNA</span></td>
+    <td class="runs"><span class="run">20261020<em>shipped</em></span><br><span class="run">20261012<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220607</td>
+    <td class="num"><span class="hits">4/7</span></td>
+    <td class="num">57.1 %</td>
+    <td class="num">36.4 %</td>
+    <td class="tickers"><span class="t hit">ALB</span><span class="t hit">BOIL</span><span class="t hit">UCO</span><span class="t hit">VLO</span></td>
+    <td class="tickers"><span class="t fp">FL</span><span class="t fp">JA</span><span class="t fp">JUC</span><span class="t fp">OSA</span><span class="t fp">OSAR</span><span class="t fp">SIK</span><span class="t fp">ZE</span></td>
+    <td class="tickers"><span class="t miss">LTHM</span><span class="t miss">NFLX</span><span class="t miss">TNA</span></td>
+    <td class="runs"><span class="run">20261017<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220608</td>
+    <td class="num"><span class="hits">5/12</span></td>
+    <td class="num">41.7 %</td>
+    <td class="num">50.0 %</td>
+    <td class="tickers"><span class="t hit">ALB</span><span class="t hit">BOIL</span><span class="t hit">COIN</span><span class="t hit">UCO</span><span class="t hit">VLO</span></td>
+    <td class="tickers"><span class="t fp">INA</span><span class="t fp">JEC</span><span class="t fp">LU</span><span class="t fp">NFU</span><span class="t fp">TS</span></td>
+    <td class="tickers"><span class="t miss">AERC</span><span class="t miss">LTHM</span><span class="t miss">NFLX</span><span class="t miss">RBLX</span><span class="t miss">SIGA</span><span class="t miss">TNA</span><span class="t miss">TQQQ</span></td>
+    <td class="runs"><span class="run">20261017<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20220614</td>
+    <td class="num"><span class="hits">0/3</span></td>
+    <td class="num">0.0 %</td>
+    <td class="num">—</td>
+    <td class="tickers"></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">UCO</span><span class="t miss">UVXY</span><span class="t miss">VLO</span></td>
+    <td class="runs"><span class="run">20261012<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20221104</td>
+    <td class="num"><span class="hits">1/1</span></td>
+    <td class="num">100.0 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">OIH</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"></td>
+    <td class="runs"><span class="run">20261017<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20221117</td>
+    <td class="num"><span class="hits">3/6</span></td>
+    <td class="num">50.0 %</td>
+    <td class="num">100.0 %</td>
+    <td class="tickers"><span class="t hit">ASML</span><span class="t hit">SI</span><span class="t hit">U</span></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">FREY</span><span class="t miss">OIH</span><span class="t miss">SOXL</span></td>
+    <td class="runs"><span class="run">20261012<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20230126</td>
+    <td class="num"><span class="hits">3/8</span></td>
+    <td class="num">37.5 %</td>
+    <td class="num">50.0 %</td>
+    <td class="tickers"><span class="t hit">CWEB</span><span class="t hit">PDD</span><span class="t hit">YINN</span></td>
+    <td class="tickers"><span class="t fp">MINN</span><span class="t fp">OM</span><span class="t fp">POD</span></td>
+    <td class="tickers"><span class="t miss">CVNA</span><span class="t miss">FCX</span><span class="t miss">GNS</span><span class="t miss">MDGL</span><span class="t miss">TNA</span></td>
+    <td class="runs"><span class="run">20261017<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20230518</td>
+    <td class="num"><span class="hits">5/8</span></td>
+    <td class="num">62.5 %</td>
+    <td class="num">62.5 %</td>
+    <td class="tickers"><span class="t hit">APLD</span><span class="t hit">IMGN</span><span class="t hit">MNDY</span><span class="t hit">PLTR</span><span class="t hit">SHOP</span></td>
+    <td class="tickers"><span class="t fp">HSL</span><span class="t fp">JAM</span><span class="t fp">ONA</span></td>
+    <td class="tickers"><span class="t miss">AI</span><span class="t miss">CVNA</span><span class="t miss">LI</span></td>
+    <td class="runs"><span class="run">20261017<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20230522</td>
+    <td class="num"><span class="hits">7/7</span></td>
+    <td class="num">100.0 %</td>
+    <td class="num">63.6 %</td>
+    <td class="tickers"><span class="t hit">AI</span><span class="t hit">APLD</span><span class="t hit">CVNA</span><span class="t hit">IMGN</span><span class="t hit">LI</span><span class="t hit">PLTR</span><span class="t hit">SOUN</span></td>
+    <td class="tickers"><span class="t fp">JOROS</span><span class="t fp">M</span><span class="t fp">U</span><span class="t fp">X</span></td>
+    <td class="tickers"></td>
+    <td class="runs"><span class="run">20261103-swallowed<em>corroborated+swallowed</em></span><br><span class="run">20261103-corroborated<em>corroborated</em></span><br><span class="run">20261102-era-prefilter<em>shipped</em></span><br><span class="run">20261020<em>shipped</em></span><br><span class="run">20261017<em>shipped</em></span></td>
+    <td class="tickers"><span class="t dropped">AI/LI(4f)</span></td>
+  </tr>
+<tr>
+    <td class="mono">20230523</td>
+    <td class="num"><span class="hits">10/11</span></td>
+    <td class="num">90.9 %</td>
+    <td class="num">62.5 %</td>
+    <td class="tickers"><span class="t hit">AI</span><span class="t hit">APLD</span><span class="t hit">CVNA</span><span class="t hit">DNA</span><span class="t hit">FTCH</span><span class="t hit">IMGN</span><span class="t hit">MNDY</span><span class="t hit">PLTR</span><span class="t hit">QBTS</span><span class="t hit">SOUN</span></td>
+    <td class="tickers"><span class="t fp">A</span><span class="t fp">IM</span><span class="t fp">LJM</span><span class="t fp">NCH</span><span class="t fp">OOTR</span><span class="t fp">U</span></td>
+    <td class="tickers"><span class="t miss">LI</span></td>
+    <td class="runs"><span class="run">20261103-swallowed<em>corroborated+swallowed</em></span><br><span class="run">20261103-corroborated<em>corroborated</em></span><br><span class="run">20261102-era-prefilter<em>shipped</em></span><br><span class="run">20261017<em>shipped</em></span><br><span class="run">20261012<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20230601</td>
+    <td class="num"><span class="hits">0/9</span></td>
+    <td class="num">0.0 %</td>
+    <td class="num">—</td>
+    <td class="tickers"></td>
+    <td class="tickers"></td>
+    <td class="tickers"><span class="t miss">AI</span><span class="t miss">APLD</span><span class="t miss">CVNA</span><span class="t miss">DNA</span><span class="t miss">IMGN</span><span class="t miss">IONQ</span><span class="t miss">MNDY</span><span class="t miss">PLTR</span><span class="t miss">QBTS</span></td>
+    <td class="runs"><span class="run">20261012<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20230602</td>
+    <td class="num"><span class="hits">12/12</span></td>
+    <td class="num">100.0 %</td>
+    <td class="num">70.6 %</td>
+    <td class="tickers"><span class="t hit">AI</span><span class="t hit">APLD</span><span class="t hit">ARQQ</span><span class="t hit">CVNA</span><span class="t hit">DNA</span><span class="t hit">GSIT</span><span class="t hit">IMGN</span><span class="t hit">IONQ</span><span class="t hit">MNDY</span><span class="t hit">PLTR</span><span class="t hit">QBTS</span><span class="t hit">RGTI</span></td>
+    <td class="tickers"><span class="t fp">AROQ</span><span class="t fp">ATR</span><span class="t fp">INGN</span><span class="t fp">IOT</span><span class="t fp">LM</span></td>
+    <td class="tickers"></td>
+    <td class="runs"><span class="run">20261103-corroborated<em>corroborated</em></span><br><span class="run">20261102-era-prefilter<em>shipped</em></span><br><span class="run">20261017<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20230605</td>
+    <td class="num"><span class="hits">11/11</span></td>
+    <td class="num">100.0 %</td>
+    <td class="num">78.6 %</td>
+    <td class="tickers"><span class="t hit">AI</span><span class="t hit">APLD</span><span class="t hit">ARQQ</span><span class="t hit">CVNA</span><span class="t hit">DNA</span><span class="t hit">GSIT</span><span class="t hit">IMGN</span><span class="t hit">IOT</span><span class="t hit">MNDY</span><span class="t hit">PLTR</span><span class="t hit">QBTS</span></td>
+    <td class="tickers"><span class="t fp">AAPL</span><span class="t fp">ARCQ</span><span class="t fp">OBTS</span></td>
+    <td class="tickers"></td>
+    <td class="runs"><span class="run">20261103-corroborated<em>corroborated</em></span><br><span class="run">20261102-era-prefilter<em>shipped</em></span><br><span class="run">20261017<em>shipped</em></span><br><span class="run">20261012<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20230608</td>
+    <td class="num"><span class="hits">13/13</span></td>
+    <td class="num">100.0 %</td>
+    <td class="num">59.1 %</td>
+    <td class="tickers"><span class="t hit">AI</span><span class="t hit">APLD</span><span class="t hit">ARQQ</span><span class="t hit">CVNA</span><span class="t hit">DNA</span><span class="t hit">GSIT</span><span class="t hit">GTLB</span><span class="t hit">IMGN</span><span class="t hit">IOT</span><span class="t hit">MNDY</span><span class="t hit">PLTR</span><span class="t hit">QBTS</span><span class="t hit">RGTI</span></td>
+    <td class="tickers"><span class="t fp">AL</span><span class="t fp">AROQ</span><span class="t fp">EDIT</span><span class="t fp">GSII</span><span class="t fp">IOI</span><span class="t fp">JAM</span><span class="t fp">JZ.M</span><span class="t fp">PLIR</span><span class="t fp">TAN</span></td>
+    <td class="tickers"></td>
+    <td class="runs"><span class="run">20261103-corroborated<em>corroborated</em></span><br><span class="run">20261017<em>shipped</em></span><br><span class="run">20261012<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+<tr>
+    <td class="mono">20230609</td>
+    <td class="num"><span class="hits">13/13</span></td>
+    <td class="num">100.0 %</td>
+    <td class="num">65.0 %</td>
+    <td class="tickers"><span class="t hit">AI</span><span class="t hit">APLD</span><span class="t hit">ARQQ</span><span class="t hit">CVNA</span><span class="t hit">DNA</span><span class="t hit">GSIT</span><span class="t hit">GTLB</span><span class="t hit">IMGN</span><span class="t hit">IOT</span><span class="t hit">MNDY</span><span class="t hit">PLTR</span><span class="t hit">QBTS</span><span class="t hit">RGTI</span></td>
+    <td class="tickers"><span class="t fp">AROQ</span><span class="t fp">ATR</span><span class="t fp">LM</span><span class="t fp">REGN</span><span class="t fp">RGI</span><span class="t fp">ZOM</span><span class="t fp">ZZM</span></td>
+    <td class="tickers"></td>
+    <td class="runs"><span class="run">20261103-corroborated<em>corroborated</em></span><br><span class="run">qmg-crop-20261102-smoke<em>shipped</em></span><br><span class="run">20261017<em>shipped</em></span><br><span class="run">20261012<em>shipped</em></span></td>
+    <td class="tickers"></td>
+  </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="note">
+  <b>How to read this.</b> A date's row pools every log that date has in a run,
+  exactly as the replay tool does, and scores against the ground truth's union
+  over that date's captures. The <span class="t fp">red</span> tickers are
+  holdings the video never had; the <span class="t miss">amber</span> ones are
+  holdings it did have and the scan missed. The
+  <span class="t dropped">purple</span> column names the tickers the
+  swallowed-holding rule published alongside a cluster's canonical.
+  <br><br>
+  <b>This is a surviving sample.</b> Only dates a probe log exists for appear
+  here, and only the runs listed are counted. Every number here is a
+  measurement of the scans on disk — not of the pipeline as a whole.
+</div>
+</body>
+</html>
