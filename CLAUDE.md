@@ -4372,6 +4372,29 @@ wrongly reported two lost holdings — the same accounting error twice,
 in two different tools, which is why it is now pinned by
 `test/manual/clusterRuleProductionScore.test.js`.
 
+**The two dates whose scan timed out change NOTHING under the rule.**
+`20230522` and `20230523` are the slowest videos, and the first run of them
+was competing with the test suite for the CPU (the run that produced the
+other four took 737–952 s per video on an idle machine). Applying the rule
+to the **shipped-rule logs for those two dates** — the same clusters, the
+same arithmetic — gives:
+
+| date | shipped | ruled | clusters dropped |
+|---|---|---|---|
+| `20230522` | 6/7, 0 FP | 6/7, 0 FP | **0** |
+| `20230523` | 10/11, 1 FP (`U`) | 10/11, 1 FP (`U`) | **0** |
+
+**The rule is neutral on both dates.** `LI` is held by the video and
+missed by **both** rules — that is the *absorbed holding* defect (the
+clusterer merges `LI` into a neighbour because they are one edit apart),
+which no canonical-selection rule can fix. And `U` on `20230523` is a
+**capture-level** reading — it is in that capture's own `position_list` —
+so no cluster rule can remove it.
+
+**So the rule's whole effect, over six dates, is the four dates it changed:
+one false positive removed, no holding lost.** Pinned by
+`test/manual/clusterRuleApplyToLog.test.js`.
+
 **The three supported rules are measured and rejected.** They add false
 positives and recover no holdings. They stay available behind their flags,
 because a rule that is wrong on this corpus could be right on another —
