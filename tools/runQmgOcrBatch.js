@@ -224,7 +224,18 @@ function walkDir(dir, out) {
 }
 
 function scoreResult(log, gtEntry) {
-  const gtSet = new Set(Object.values(gtEntry).flat());
+  const gtTickers = [];
+  if (Array.isArray(gtEntry)) {
+    gtTickers.push(...gtEntry);
+  } else if (gtEntry && typeof gtEntry === 'object') {
+    // Ground truth has both legacy capture arrays and the newer capture
+    // objects ({ tickers, crop }). Never include crop coordinates as tickers.
+    for (const capture of Object.values(gtEntry)) {
+      if (Array.isArray(capture)) gtTickers.push(...capture);
+      else if (capture && Array.isArray(capture.tickers)) gtTickers.push(...capture.tickers);
+    }
+  }
+  const gtSet = new Set(gtTickers);
   const merged = new Set(log.merged_position_list || []);
   const hit = [...merged].filter(t => gtSet.has(t));
   const miss = [...gtSet].filter(t => !merged.has(t));
@@ -405,4 +416,4 @@ if (require.main === module) {
   main().catch(e => { console.error(e); process.exit(1); });
 }
 
-module.exports = { superviseChild, STDOUT_TAIL_CHARS };
+module.exports = { superviseChild, STDOUT_TAIL_CHARS, scoreResult };

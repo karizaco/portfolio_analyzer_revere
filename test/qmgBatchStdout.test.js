@@ -145,6 +145,22 @@ test('the batch report uses the result dateKey when scoring completed logs', () 
 });
 
 
+test('batch scoring handles object-form capture ground truth without counting crop coordinates', () => {
+  const scoreResult = batch.scoreResult;
+  const result = scoreResult(
+    { merged_position_list: ['BOIL', 'X', 'JNUG'] },
+    {
+      '0': { tickers: ['BOIL', 'JNUG'], crop: [1766, 705, 1911, 906] },
+      '1': { tickers: ['X'], crop: [1766, 705, 1911, 906] },
+    }
+  );
+  assert.equal(result.hit, 3);
+  assert.equal(result.miss, 0);
+  assert.equal(result.fp, 0);
+  assert.equal(result.recall, '3/3');
+});
+
+
 test('every tool that spawns the scan tool drains its stdout', () => {
   // The deadlock is a property of the SCAN TOOL's stdout volume, not of any
   // one consumer: the tool prints its whole result object at the end, and a
