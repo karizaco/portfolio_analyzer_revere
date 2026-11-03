@@ -10,6 +10,7 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
@@ -144,6 +145,48 @@ test('the replay and the scan tool name a rule the SAME way', () => {
   for (const [name, options] of Object.entries(CLUSTER_RULES)) {
     assert.equal(clusterRuleName(options), name,
       `the builder names the ${name} rule correctly`);
+  }
+});
+
+test('the batch runner and the replay tool know the SAME rule names', () => {
+  // The batch runner's table and the replay tool's table are two copies of
+  // the same list, and they HAVE drifted: the batch said
+  // `swallowed+corroborated` where the replay said `corroborated+swallowed`,
+  // and a scan naming one of them died with "unknown --cluster-rule".
+  //
+  // The naming has to be the same everywhere, so this pins the two tables
+  // together.
+  const { CLUSTER_RULES } = require(path.join(ROOT, 'tools', 'evalParserReplay'));
+  const batch = require(path.join(ROOT, 'tools', 'runQmgOcrBatch.js'));
+
+  // The batch runner does not export its table, so it is read from the
+  // source -- which is the point: the table is DATA in the source, and two
+  // copies of it have to agree.
+  const source = fs.readFileSync(
+    path.join(ROOT, 'tools', 'runQmgOcrBatch.js'),
+    'utf8'
+  );
+  const table = source.slice(
+    source.indexOf('const CLUSTER_RULE_FLAGS'),
+    source.indexOf('};', source.indexOf('const CLUSTER_RULE_FLAGS'))
+  );
+  const names = [...table.matchAll(/^\s*'?([a-z][a-z+|-]*)'?:/gm)].map((m) => m[1]);
+
+  assert.deepEqual(
+    names.filter((n) => n !== 'const'),
+    Object.keys(CLUSTER_RULES),
+    'the batch runner and the replay tool name the same rules'
+  );
+
+  // And every rule the batch names must actually reach the scan tool.
+  for (const name of names) {
+    const flags = table.slice(table.indexOf(`${name}:`));
+    const line = flags.slice(0, flags.indexOf('\n'));
+    const scanFlags = [...line.matchAll(/'(--[a-z-]+)'/g)].map((m) => m[1]);
+    for (const flag of scanFlags) {
+      const accepted = parseScanArgs(['--video', 'x.mp4', '--date', '20230605', flag]);
+      assert.ok(accepted, `${name} passes ${flag}, which the scan tool accepts`);
+    }
   }
 });
 
