@@ -385,16 +385,16 @@ async function main() {
   let totalHit = 0, totalGt = 0, totalFp = 0;
   for (const r of results) {
     if (r.status !== 'OK' || !r.log) {
-      console.log(`  ${r.date}: ${r.status}`);
+      console.log(`  ${r.dateKey}: ${r.status}`);
       continue;
     }
-    const gtEntry = gt[r.date];
+    const gtEntry = gt[r.dateKey];
     if (!gtEntry) continue;
     const s = scoreResult(r.log, gtEntry);
     totalHit += s.hit;
     totalGt += s.hit + s.miss;
     totalFp += s.fp;
-    console.log(`  ${r.date}: recall=${s.recall} (${s.recallPct}%) | FP=${s.fpTickers.join(',') || 'none'} | time=${r.elapsed}s`);
+    console.log(`  ${r.dateKey}: recall=${s.recall} (${s.recallPct}%) | FP=${s.fpTickers.join(',') || 'none'} | time=${r.elapsed}s`);
   }
   console.log(`\nOverall: ${totalHit}/${totalGt} = ${Math.round(100*totalHit/totalGt)}% recall, ${totalFp} FPs`);
 }

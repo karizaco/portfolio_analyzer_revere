@@ -131,6 +131,20 @@ test('the batch re-exports the SHARED supervisor, so the two cannot drift apart'
   assert.equal(batch.STDOUT_TAIL_CHARS, support.STDOUT_TAIL_CHARS);
 });
 
+test('the batch report uses the result dateKey when scoring completed logs', () => {
+  // runScan returns { dateKey, status, log }. Using r.date in the report
+  // silently skipped every successful result and printed Overall 0/0, even
+  // though all probe logs had completed successfully.
+  const source = fs.readFileSync(
+    path.join(ROOT, 'tools', 'runQmgOcrBatch.js'),
+    'utf8'
+  );
+  assert.match(source, /const gtEntry = gt\[r\.dateKey\]/);
+  assert.match(source, /\$\{r\.dateKey\}: recall=/);
+  assert.doesNotMatch(source, /gt\[r\.date\]/);
+});
+
+
 test('every tool that spawns the scan tool drains its stdout', () => {
   // The deadlock is a property of the SCAN TOOL's stdout volume, not of any
   // one consumer: the tool prints its whole result object at the end, and a
