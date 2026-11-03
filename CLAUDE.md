@@ -4353,6 +4353,46 @@ yet** — the numbers above come from applying the rule to the recorded
 cluster tables, which is what the corroboration rule's own measurement did
 before its implementation.
 
+#### And the production scan says the guard is exactly right
+
+A production scan of the 2023-era dates under `corroborated+swallowed`
+(`qmg-easyocr-20261103-swallowed`) — and the guard separates the two
+`LI` cases on its own:
+
+| date | `LI`'s own frames | the rule's decision | outcome |
+|---|---|---|---|
+| `20230522` | **4** | **PUBLISHED** | **7/7, 100 % recall, 0 FP** (the shipped rule: 6/7) |
+| `20230523` | **1** | **rejected** | 10/11, 1 FP (`U`) — unchanged |
+
+**`LI` was read in four frames of its own on 20230522 and in one on
+20230523**, and the rule publishes it in exactly the first case. The
+threshold of 4 is not a tuned constant — it is where the two measured
+instances fall, and the clusterer records the count it judged on
+(`swallowedEvidence`), so the decision is auditable.
+
+The scan's four completed dates, scored on the **merged** list against the
+pixel-verified ground truth:
+
+| date | hits / gt | recall | FP | the shipped rule |
+|---|---|---|---|---|
+| `20230522` | **7 / 7** | 100 % | **0** | 6/7, 0 FP |
+| `20230523` | 10 / 11 | 90.9 % | 1 (`U`) | 10/11, 1 FP (`U`) |
+| `20230602` | 12 / 12 | 100 % | 1 (`IOT`) | 12/12, 1 FP (`IOT`) |
+| `20230605` | 11 / 11 | 100 % | **0** | 11/11, 1 FP (`AAPL`) |
+| **total** | **40 / 41** | **97.6 %** | **2** | 39/41, 3 FP |
+
+**One more false positive removed and one more holding found, and nothing
+lost.** The two FPs that remain (`U` on 20230523, `IOT` on 20230602) are
+**capture-level** readings — they are in those captures' own
+`position_list` — so no cluster rule can remove them.
+
+The two dates the scan did not reach (`20230608`, `20230609`) are covered by
+the `corroborated` scan, which has all six.
+
+This is why the evidence had to travel with the cluster: the frame count
+is the whole basis of the decision, and the log does not otherwise carry
+the clusterer's input.
+
 Pinned by `test/manual/clusterAbsorbedHolding.test.js` (the census),
 `test/manual/clusterAbsorbedDiscriminator.test.js` (what separates a
 swallowed holding from a swallowed noise token — and the answer: **not**
