@@ -153,16 +153,85 @@ the clusterer **absorbed** a real holding (`LI` into `AI`, one edit apart) and
 **invented** one (`ARCO` → `AAPL`, a seed ticker no frame ever showed).
 CLAUDE.md § *The 2023-era production scan, four more dates*.
 
+**And the merged list is now measured in its own right.** The replay tool
+reports three **video-level** arms beside the capture-level number — `recorded`
+(what production published), `rebuilt` (the current clusterer over the log's
+recorded readings) and `rebuilt_current` (the current parser end to end) — and
+the census says where each arm's input came from. A log that cannot support an
+arm's reading is **unmeasured** in it, not scored as zero. The `AAPL` defect
+is invisible to a capture-level metric, so a capture-level number alone cannot
+answer "did the merge publish a holding the video never showed".
+
+**Seven cluster rules exist, all OFF by default.** The clusterer names one
+canonical per cluster, and a canonical that is a *correction* rather than a
+*reading* is a name the clusterer invented. On 20230605 the cluster
+`{AACO, ARCO}` was published as `AAPL` — a holding no frame of that video
+showed. **Every candidate for it is two edits away**, so "closest" cannot
+discriminate; what discriminates is that the video read `ARQQ` in six frames
+and `AAPL` in none. The rules are `shipped` (the default), `corroborated` (a
+correction must be within edit distance 1 of a member or the cluster is
+dropped), `corroborated-strict` (the same, and the video's own reading of the
+ticker does not count as corroboration), `supported` (prefer the correction the
+video actually read, breaking ties) and `video-supported` (the same, whatever
+the distance), each with and without the corroboration gate.
+
+**With every rule off, the shipped path is provably unchanged**: the
+pre-change clusterer and the current one produce identical cluster tables
+over the recorded corpus — 177 logs, 1 025 clusters, zero differences
+(`test/manual/clusterShippedPath.test.js`).
+
+**And the measurement has been run — it decides against three of them.** Over
+the corpus replay, the hit count **never moves** under any rule; only the
+prediction count does. `corroborated` **removes** false positives (−2 default,
+−6 wide) and loses nothing. `supported` and `video-supported` **add** false
+positives (+2 default, +4 wide) and gain nothing — on 20230605 the supported
+rule turns one false positive into three. The production audit (the recorded
+production cluster tables, 46 logs / 2 480 clusters) agrees: **one** published
+ticker changes, it is the `AAPL` false positive, and **no** holding is lost.
+The whiteboard branch is unaffected — it never uses the clusterer's consensus.
+
+**And a PRODUCTION SCAN under the rule agrees** (`qmg-easyocr-20261103-corroborated`,
+scored on the merged list against the pixel-verified ground truth):
+`20230602` **12/12**, `20230605` **11/11** with **0** false positives (the
+shipped rule had 1 — `AAPL`), `20230608` **13/13**, `20230609` **13/13** —
+**49/49, 100 % recall**. Nothing was lost: the two dropped clusters (`APLD`
+from `[APOQ, AXOQ]`, `GTLB` from `[GULE]`) were each also read directly.
+
+CLAUDE.md § *The clusterer's canonical selection*.
+
 **A batch's `TIMEOUT` used to say nothing about whether the video was read.**
 The scan tool prints its whole result object to stdout at the end, and the
 batch drained **stderr only** — so the child blocked forever on a full 64 KB
 Windows pipe *after* writing a complete probe log. Every EasyOCR chart-stream
 batch video burned the full 40-minute budget and was recorded as a failure even
-when it succeeded. **Fixed**: `superviseChild()` in `tools/runQmgOcrBatch.js`
-drains stdout, and `test/qmgBatchStdout.test.js` pins it (two of its four
-tests fail against the pre-fix code). The scan tool was not at fault — printing
-its result is correct, and the fault was a tool that could not be supervised.
-CLAUDE.md § *The scan writes its log and does not exit*.
+when it succeeded. **Fixed**: `superviseChild()` drains stdout, and
+`test/qmgBatchStdout.test.js` pins it (two of its tests fail against the
+pre-fix code). The scan tool was not at fault — printing its result is correct,
+and the fault was a tool that could not be supervised. CLAUDE.md § *The scan
+writes its log and does not exit*.
+
+**And the deadlock belonged to every consumer of the scan tool, not to the
+batch.** It is a property of the *scan tool's stdout volume*, so every tool
+that spawns it with a piped stdout inherits it — and **three** sibling daemons
+did. The supervisor has moved into `tools/qmg_scan_daemon_support.js` (the
+project's designated shared-guard module, where it is now the **fourth**
+guard), and **nine** tools use it: the batch, the comparison daemon, the alt
+daemon, the batch daemon, `qmg_ocr_batch.js`, `scanAllGtVideos.js`,
+`_revere_scan.js`, `runQmgCuratedBenchmark.js` — and the module itself. Two
+things came with the consolidation: the timeout now kills the whole **process
+tree** (`taskkill /T /F`), which is the orphan-ffmpeg zombie mechanism
+CLAUDE.md names as the cause of the perceived machine freeze; and
+`runQmgCuratedBenchmark.js`, which had **no timeout at all**, now has a
+40-minute one. Each tool's result-status vocabulary was preserved exactly
+(`ok`/`timeout`/`error`, `exit_N`/`error_…`, and `scanAllGtVideos.js`'s `-1`),
+because those values are written into results files compared across runs.
+`_revere_scan.js` could not use the bounded stdout tail to decide success —
+`status` serializes *after* the huge `captures` array — so it now reads the
+**probe log on disk**, which is the authoritative record and is written before
+the tool's final `console.log`. The invariant is now **statically pinned**:
+every file in `tools/` that spawns the scan tool must either drain its stdout
+or use `stdio: 'inherit'`. CLAUDE.md § *The deadlock belongs to every consumer
+of the scan tool, not to the batch*.
 
 The curated EasyOCR benchmark (`npm run test:benchmark`, the four md5-pinned
 frames) now reads **94.4 %** overall mean recall — `trade_ideas` 7/9,

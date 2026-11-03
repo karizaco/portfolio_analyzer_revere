@@ -251,12 +251,12 @@ Rules:
 ## Testing
 
 ```bash
-npm test              # everything except the OCR benchmark (565 tests, ~30 s)
+npm test              # everything except the OCR benchmark (599 tests, ~50 s)
 npm run test:benchmark  # test/qmgGroundTruth.test.js alone (EasyOCR; ~2-25 min, see below)
 npm run test:all        # everything, benchmark included -- FAILS under contention
 ```
 
-565 tests, all passing (as of 2026-11-02).
+599 tests, all passing (as of 2026-11-03).
 
 **A third suite exists, and it is MANUAL.** `test/manual/qmgEraPrefilterScan.test.js`
 is the era-conditional crop and the era-conditional prefilter rectangle, run
@@ -2306,18 +2306,99 @@ cannot be run in a batch. **Until this is fixed, a chart-stream batch's
 `TIMEOUT` says nothing about whether the video was read.**
 
 **The fix is shipped (2026-11-02, second commit).** `superviseChild()` in
-`tools/runQmgOcrBatch.js` drains stdout and keeps a bounded rolling tail
-(`STDOUT_TAIL_CHARS = 16 KB`) for diagnostics; the probe log on disk remains
-the authoritative record. The function is exported and `main()` now runs only
-under `require.main === module`, so a test can drive it. Pinned by
-`test/qmgBatchStdout.test.js` — four tests, and **two of them fail against the
-pre-fix code**: a child that writes more than a pipe holds to stdout comes
+`tools/qmg_scan_daemon_support.js` drains stdout and keeps a bounded rolling
+tail (`STDOUT_TAIL_CHARS = 16 KB`) for diagnostics; the probe log on disk
+remains the authoritative record. The function is exported and `main()` now
+runs only under `require.main === module`, so a test can drive it. Pinned by
+`test/qmgBatchStdout.test.js` — seven tests, and **two of them fail against
+the pre-fix code**: a child that writes more than a pipe holds to stdout comes
 back `TIMEOUT` instead of `OK`, which is exactly the production failure.
 
 **A supervisor that reports TIMEOUT has to be distinguishable from one that
 reports OK.** The pre-fix code recorded the status but kept no stdout, so a
 failure report had nothing to show for it. The `stdoutTail` is now carried on
 the result, so a failed video can be diagnosed without re-running it.
+
+### The deadlock belongs to every consumer of the scan tool, not to the batch (2026-11-02)
+
+**The batch fix was correct but LOCAL, and the same defect was sitting in three
+sibling daemons.** The deadlock is a property of the **scan tool's stdout
+volume** — it prints its whole result object, hundreds of kilobytes, at the
+very end — so **every** consumer that spawns it with a piped stdout inherits
+it, whether or not that consumer drains stderr.
+
+The fix therefore moved into **`tools/qmg_scan_daemon_support.js`**, the module
+CLAUDE.md already designates as the shared-guard home, and it is now the
+module's **fourth** guard:
+
+| # | the daemon bug | the guard |
+|---|---|---|
+| 1 | a full disk killed videos mid-run with a bare ffmpeg error | `checkFreeSpace()` |
+| 2 | a daemon overwrote a good results file with a mostly-failed run | `writeResults()` |
+| 3 | a daemon spawned EasyOCR without the low-CPU thread caps | `lowCpuEnv()` |
+| 4 | **a daemon piped the scan tool's stdout and drained stderr only** | **`superviseChild()`** |
+
+**Nine tools now share the one supervisor**, so they cannot drift apart:
+
+| tool | before | after |
+|---|---|---|
+| `tools/runQmgOcrBatch.js` | local `superviseChild` | imports the shared one, re-exports it |
+| `tools/qmg_comparison_daemon.js` | **piped, stderr-only** | shared `superviseChild` |
+| `tools/qmg_alt_batch_daemon.js` | **piped, stderr-only** | shared `superviseChild` |
+| `tools/qmg_ocr_batch_daemon.js` | **piped, stderr-only** | shared `superviseChild` |
+| `tools/qmg_ocr_batch.js` | drained, but killed only the direct child | shared `superviseChild` |
+| `tools/scanAllGtVideos.js` | drained, but killed only the direct child | shared `superviseChild` |
+| `tools/_revere_scan.js` | drained, but killed only the direct child | shared `superviseChild` |
+| `tools/runQmgCuratedBenchmark.js` | **no timeout at all** | shared `superviseChild` |
+| `tools/qmg_scan_daemon_support.js` | — | **the implementation** |
+
+**Two things came with the consolidation that were not in the batch's fix.**
+
+1. **The timeout now kills the PROCESS TREE** (`taskkill /PID <pid> /T /F` on
+   Windows). Killing the direct child leaves the scan tool's **ffmpeg and
+   EasyOCR grandchildren** running as zombies — CLAUDE.md's *Scan
+   orchestration safety (Windows)* names exactly that mechanism as the cause of
+   the perceived "freeze": the next video's frame extraction stalls behind
+   their I/O. Six tools that killed only the direct child now do not.
+2. **`runQmgCuratedBenchmark.js` had no timeout at all.** With the deadlock it
+   would have waited forever. It now has a 40-minute one, which required
+   adding a `cwd` option to the shared helper (that tool's original spawn ran
+   the child with `cwd: path.resolve(__dirname, '..')`).
+
+**Each tool's public contract was preserved, deliberately.** The result-status
+vocabularies are written into results files that are compared across runs, so
+they were kept **identical**: `ok` / `timeout` / `error` in the comparison and
+alt daemons, `ok` / `timeout` / `exit_<code>` / `error_<msg>` in the batch
+daemon, and `status: -1` for a timeout in `scanAllGtVideos.js` (its caller
+tests `r.status !== 0`, so a timeout must not report the child's exit code).
+
+**One tool could not use the stdout tail to decide success, and that is worth
+knowing.** `tools/_revere_scan.js` decided a scan had worked by grepping the
+child's stdout for `"status": "done"`. In the result object **`status` sits
+AFTER the huge `captures` array** (`tools/scanVideoWithOcr.js:1849-1871`), so a
+bounded 16 KB tail can truncate it — the check would have started reporting
+false failures. It now reads the **probe log on disk**, which is the
+authoritative record anyway and is written *before* the tool's final
+`console.log`, so it exists even on the run that used to hang.
+
+**The five tools that spawn the scan tool and were NOT converted are safe for a
+different reason: they hand the child the parent's own stdout**
+(`stdio: 'inherit'`), so there is no pipe to fill.
+
+| tool | how it spawns |
+|---|---|
+| `tools/rerunScanForCompare.js` | `spawnSync(..., { stdio: 'inherit' })` |
+| `tools/rescanAllVideos.js` | `spawnSync(..., { stdio: 'inherit' })` |
+| `tools/reocrAtResolution.js` | `spawnSync(..., { stdio: 'inherit' })` |
+| `tools/runAllOcr.js` | `spawnSync(..., { stdio: 'inherit' })` |
+| `tools/runOcrProfiles.js` | `spawnSync(..., { stdio: 'inherit' })` |
+
+**The invariant is now pinned statically**, so a tool added later with a piped,
+undrained stdout is caught before it burns a 40-minute budget per video.
+`test/qmgBatchStdout.test.js` surveys every file in `tools/` (comments
+stripped, so a file that only *names* the scan tool in prose is not counted) and
+asserts that each one that spawns it either calls `superviseChild(` or uses
+`stdio: 'inherit'`.
 
 ### Two things that were measured and rejected (2026-11-02)
 
@@ -3969,6 +4050,372 @@ on a fresh clone.
 
 **Do not quote the replay number without its census.** `node
 tools/evalParserReplay.js --json` prints it in machine-readable form.
+
+---
+
+## The video-level reading — `merged_position_list`, and the three arms that measure it
+
+`merged_position_list` is the **video-level** consensus: the multi-frame
+clusterer's reading of a whole video. It is what the production consumers read
+(`tools/runQmgOcrBatch.js:143` and `tools/aggregateScanResults.js`), and it is
+a **different artifact** from the per-capture reading
+(`capture.chart_stream.position_list`) that the aggregator reads for a single
+frame.
+
+**The two have disagreed three times on record**, and every disagreement is
+invisible to a capture-level metric:
+
+| date | the merged list had | the capture list had | what it was |
+|---|---|---|---|
+| 20230609 | `REGN` | `RGTI` | a garble (`Rgn`) repaired to the WRONG seed ticker |
+| 20230523 | `AI` | `LI` | a real holding **absorbed** by a one-edit neighbour |
+| 20230605 | `AAPL` | — | a garbage reading **promoted** to a seed ticker |
+
+The third is the worst kind: `AAPL` appears in **no** capture's reading of that
+video at all. § *The clusterer's canonical selection* below is about it.
+
+**So the merged list has to be scored, not just the captures.** The number
+§ *The replay tool is a surviving sample* reports is a **capture-level**
+number — it scores what a single frame's parser read. `tools/evalParserReplay.js`
+therefore reports three **video-level** arms beside it:
+
+| arm | what it reads |
+|---|---|
+| `recorded` | the log's own `merged_position_list`, verbatim — what production published |
+| `rebuilt` | the **current** clusterer over the log's recorded per-frame readings |
+| `rebuilt_current` | the **current** parser end to end over the captures the log kept |
+
+`rebuilt` and `rebuilt_current` differ in one thing: **the clusterer's input**.
+`rebuilt` clusters the **readings** the log recorded; `rebuilt_current` re-parses
+the log's `ocr_words` with the current parser and clusters **those**. So
+`rebuilt` isolates the **cluster rule**, and `rebuilt_current` measures the
+whole pipeline.
+
+**A null is not a zero.** A log that cannot support an arm's reading — no
+`merged_position_list`, no per-frame readings, no `ocr_words` — is reported as
+**unmeasured** in that arm and does not enter its denominator. An arm that
+reported zero for a date it could not read would look like a total failure
+rather than an absence.
+
+**The census says where the arms' inputs came from**, because the corpus is
+untracked and a reader cannot otherwise tell: `logsWithRecordedClusterInput`,
+`logsWithFrameReadingFallback`, `logsWithNoClusterInput`.
+
+**`cluster_input` post-dates every captured log**, so the `rebuilt` arm runs on
+the **fallback** — the log's own per-frame readings — over the whole corpus.
+That fallback is the readings of the **selected** captures, not of every
+candidate frame the clusterer originally ran on, so `rebuilt` measures the
+cluster rule over a slightly different input than production used. It is the
+best available, and the census labels it.
+
+---
+
+## The clusterer's canonical selection — and the three ways it can be wrong
+
+`clusterRawOcrTokens` (`src/parse/parseChartStream.js`) names **one canonical
+per cluster** of garbled tokens, and that name is what the merged list
+publishes. A canonical that is **a member** of the cluster is a *reading*. A
+canonical that is **not** a member is a *correction* — the clusterer naming a
+ticker that no frame of the video read.
+
+**The shipped rule, in order:**
+
+1. **Strategy 1** — a member that IS a lexicon ticker is the canonical.
+2. **Strategy 2** — otherwise, the FIRST member of 4+ characters whose closest
+   lexicon ticker shares **two prefix characters**.
+3. **Strategy 3** — otherwise, the FIRST member of exactly 3 characters whose
+   closest lexicon ticker is within **edit distance 1**.
+4. The blocklist, then **Filter A** (the cluster must span N distinct frames).
+
+Strategies 2 and 3 walk the members **in order** and commit to the **first**
+correction they find. That is a **member-order** decision, not a similarity
+decision.
+
+### The measured instance: `{AACO, ARCO}` → `AAPL`
+
+On 20230605 the merged list had **12** entries against a ground truth of 11.
+`AAPL` was the only false positive, and it came from this cluster:
+
+```jsonc
+{ "canonical": "AAPL", "members": ["AACO", "ARCO"], "frequency": 2 }
+```
+
+`AAPL` is in **no** capture's reading of that video. The arithmetic — **measured,
+not assumed**:
+
+| member | candidate | distance | the video read it? |
+|---|---|---|---|
+| `AACO` | `AAPL` (C→P, O→L) | **2** | **no** — 0 frames |
+| `AACO` | `AAL` | **2** | **no** — 0 frames |
+| `ARCO` | `ARQQ` (C→Q, O→Q) | **2** | **yes — 6 frames** |
+| `ARCO` | `ARKG` | **2** | **no** — 0 frames |
+
+**Every candidate is TWO edits away.** So "closest" does not discriminate
+between them at all: `AACO` sorts first, `findCloseTickerMatch` names
+`AAPL` for it (the tie between `AAPL` and `AAL` is broken by "prefer the
+longer ticker"), and the merged list publishes a holding the video never
+showed.
+
+> **The arithmetic is the whole story, and it is easy to get wrong.**
+> `ARCO → ARQQ` is **two** substitutions (`C→Q` and `O→Q`), not one. A
+> "prefer the closest correction" rule therefore **ties** on this instance
+> and changes nothing — it keeps the earlier member's answer. An earlier
+> draft of this work was built on the one-edit reading and measured a tie,
+> not a win.
+
+**What DOES discriminate is the video's own reading.** `ARQQ` was read in six
+of that video's frames; `AAPL` in none. And `ARQQ` has its **own cluster** in
+the same log (`{canonical: "ARQQ", members: ["ARQQ"], frequency: 6}`) — so
+dropping the garbled cluster does **not** lose the holding, and resolving the
+garbled cluster *to* `ARQQ` does not double-count it either.
+
+### Two cures, and they are not the same cure
+
+| rule | what it does to the instance |
+|---|---|
+| `corroborated` | a corrected canonical must be within edit distance 1 of some member, or the cluster is **DISCARDED**. `AAPL` is 2 edits from every member → the cluster is dropped, `AAPL` never reaches the merged list, and `ARQQ` still comes from its own cluster. |
+| `supported` | the canonical is the correction the **video actually read**, breaking ties between equally-close candidates. The tie between `AAPL` and `ARQQ` is broken by support → `ARQQ`. |
+
+`supported` is strictly more general: where the garbled cluster is the
+**only** carrier of a holding, `corroborated` loses the holding and
+`supported` recovers it.
+
+**The two SUPPORTED rules differ in how they rank support against distance**,
+and the corpus measurement is what decides between them:
+
+| rule | ordering | what it changes |
+|---|---|---|
+| `supported` | **distance first**, support breaks a tie | only moves a cluster when two candidates are *equally* close — the conservative ordering |
+| `video-supported` | **support first**, whatever the distance | can move a cluster off a correct one-glyph correction onto a farther candidate the video did read |
+
+**Both SUPPORTED rules compete ACROSS the cluster's members, not within one.**
+The shipped rule commits to the **first** member that yields a correction and
+never looks at the others. Both supported rules consider **every** member's
+corrections, so a later member's candidate can win — which is the whole point
+on the measured instance, because `ARCO` is the member the shipped rule skipped.
+
+**The candidate set is per-member minimum distance.** A member's candidates are
+the tickers at **its own** minimum distance (the distance `findCloseTickerMatch`
+would have found), subject to the same admissibility test the shipped rule
+applies. A candidate further away than that is not that member's correction at
+all.
+
+**So the supported rule needs ALL of a member's candidates, not the one
+`findCloseTickerMatch` returns.** That helper names **one** ticker per member,
+and which one it names is decided by a tie-break ("prefer the longer ticker")
+over candidates that are *equally* close — so `ARCO`'s two-edit candidates
+`ARQQ` and `ARKG` are reduced to whichever the lexicon lists first, and the
+one the video corroborates never enters the comparison at all.
+
+**The names are the same in the measurement and in production**, so they cannot
+drift apart:
+
+| name | replay | scan tool | batch runner |
+|---|---|---|---|
+| `shipped` | `--cluster-rule shipped` | (the default) | `--cluster-rule shipped` |
+| `corroborated` | `--cluster-rule corroborated` | `--cluster-corroboration` | `--cluster-rule corroborated` |
+| `corroborated-strict` | `--cluster-rule corroborated-strict` | `--cluster-corroboration --cluster-strict-corroboration` | `--cluster-rule corroborated-strict` |
+| `supported` | `--cluster-rule supported` | `--cluster-supported` | `--cluster-rule supported` |
+| `supported+corroborated` | `--cluster-rule supported+corroborated` | both flags | `--cluster-rule supported+corroborated` |
+| `video-supported` | `--cluster-rule video-supported` | `--cluster-video-supported` | `--cluster-rule video-supported` |
+| `video-supported+corroborated` | `--cluster-rule video-supported+corroborated` | both flags | `--cluster-rule video-supported+corroborated` |
+
+**All of them are OFF by default**, because each one changes which holdings a
+scan publishes. The default stays where it is until a wider measurement says
+otherwise.
+
+### What the supported rule actually changes
+
+**The corroboration gate also accepts a canonical the video read.** A
+correction two edits from every member of its cluster fails the distance-1
+test, but a ticker the video read in six other frames is corroborated by the
+video, which is stronger evidence than proximity. `ARQQ` is exactly that case.
+Whether that counts is measured apart: `corroborated-strict` demands the
+proximity test alone.
+
+### The measurement — and it decides against three of the four rules
+
+**The corpus replay and the production output measure different things, and
+the production output is the one that decides.** The replay's `rebuilt` arm
+clusters the log's **selected** captures; production clusters **every** OCR'd
+candidate frame. The 20230605 log's own cluster table says its tokens
+appeared in **12** frames, and the log carries **3** distinct readings — so
+the replay cannot reproduce production's clusters. The production audit works
+on the recorded cluster tables instead, which is what production actually
+formed.
+
+**The corpus replay** (`node tools/evalParserReplay.js --cluster-rule X`,
+both corpora, `rebuilt` arm — hit / ground-truth / predicted):
+
+| rule | default corpus | wide corpus |
+|---|---|---|
+| `shipped` | 69/281/114 — 24.6 % / 60.5 % | 197/332/300 — 59.3 % / 65.7 % |
+| `corroborated` | **69/281/112** — 24.6 % / **61.6 %** | **197/332/294** — 59.3 % / **67.0 %** |
+| `corroborated-strict` | 69/281/112 — 24.6 % / 61.6 % | 197/332/294 — 59.3 % / 67.0 % |
+| `supported` | 69/281/**116** — 24.6 % / 59.5 % | 197/332/**304** — 59.3 % / 64.8 % |
+| `supported+corroborated` | 69/281/112 — 24.6 % / 61.6 % | 197/332/295 — 59.3 % / 66.8 % |
+| `video-supported` | 69/281/116 — 24.6 % / 59.5 % | 197/332/304 — 59.3 % / 64.8 % |
+| `video-supported+corroborated` | 69/281/112 — 24.6 % / 61.6 % | 197/332/295 — 59.3 % / 66.8 % |
+
+**The `rebuilt` arm's denominator is NOT the capture-level one, and the
+absolute recall figures above are not comparable to the capture-level
+numbers.** The `rebuilt` arm reaches **33 dates** on the default corpus and
+**39** on the wide one, against the capture level's **8** and **17** — it
+reads the log's per-frame readings, which exist for logs the capture level
+cannot use. Its ground truth is therefore 281 and 332, not 85 and 168. The
+numbers are comparable **across the rules** (same dates, same denominator)
+and that is what the table is for.
+
+**The hit count NEVER moves.** Every rule finds the same holdings; only the
+number of predictions changes. So the question is purely about false
+positives, and:
+
+- `corroborated` **removes** false positives (−2 default, −6 wide) and loses
+  nothing.
+- `supported` and `video-supported` **ADD** false positives (+2 default,
+  +4 wide) and gain nothing. On 20230605 the `supported` rule turns one
+  false positive (`AR`) into **three** (`AR`, `DASH`, `IONQ`).
+
+**The per-date diff says where**, and it is the same story in every case —
+the supported rules *swap one wrong ticker for another*:
+
+| date | shipped | `supported` |
+|---|---|---|
+| 20230523 | fp `[]` | fp `[OKTA]` |
+| 20220607 | fp `[… FANG …]` | fp `[… RIOT …]` |
+| 20230605 | fp `[AR]` | fp `[AR, DASH, IONQ]` |
+
+**So the supported rules are a measured NEGATIVE result.** The video's
+support is a good tie-break, but it is not a good *primary* key: preferring
+the most-supported candidate moves a cluster onto a ticker the video read as
+chart ink rather than onto the ticker it held.
+
+**The production audit is the decisive one.** Every recorded log carries the
+cluster table production actually formed, so the rule can be applied to it
+directly. Over **46 logs / 2 480 clusters**:
+
+| | snapshot (chart_stream) | whiteboard |
+|---|---|---|
+| clusters | 480 | 2 000 |
+| readings (canonical is a member) | 153 | 364 |
+| corrections | 327 | 1 636 |
+| corroborated (d ≤ 1) | 143 | 792 |
+| **uncorroborated (the rule would discard)** | **184** | **844** |
+| …of those, false positives | 39 | 0 |
+| …of those, **real holdings** | **8** | 0 |
+| …of those, unknown (no ground truth) | 137 | 844 |
+
+**And scored against the ground truth, at the level production publishes:**
+
+| | count |
+|---|---|
+| published tickers the rule would drop | **1** |
+| …real holdings lost | **0** |
+| …false positives removed | **1** (`AAPL`, 20230605) |
+
+**One published ticker changes, and it is the false positive the whole
+exercise was for.** The 8 "real holdings" in the cluster table are each
+carried by a **second, corroborated cluster** as well — `GTLB` is carried by
+`[GTLB]` (a reading) *and* by `[GULE]` (the correction); `BOIL` by `[BOIL]`
+and by `[MOL]`. A ticker survives the rule if **any** cluster carried it and
+survived, and counting it otherwise is how the first version of this audit
+wrongly reported two lost holdings.
+
+**And that is the same conclusion the corpus replay reached** — so the two
+measurements do not disagree once the accounting is right. They measure
+different clusters, and both say the same thing: the rule removes a false
+positive and loses no holding.
+
+**The whiteboard branch is unaffected** — its `merged_position_list` merges
+the structured GRO/TURBO holdings and never touches the clusterer
+(`tools/scanVideoWithOcr.js`, `legacyConsensus` is `null` for a non-snapshot
+scan). So the rule's blast radius is the chart_stream branch only.
+
+### The decision
+
+**`corroborated` is the rule worth shipping, and it is not shipped yet.** The
+measurement is a clear win — one false positive removed, no holding lost,
+over the corpus the production runs actually produced — but the corpus that
+produced it is **46 logs**, and the project rule is that the default stays
+where it is until a **wider** measurement says otherwise.
+
+**The wider measurement has now been made: a PRODUCTION SCAN of the
+2023-era dates under the rule** (`qmg-easyocr-20261103-corroborated`,
+the ordinary batch runner and the ordinary EasyOCR path, with the rule as
+the only difference), scored against the pixel-verified ground truth on
+the **merged** list:
+
+| date | hits / ground truth | recall | false positives | shipped rule |
+|---|---|---|---|---|
+| `20230602` | **12 / 12** | 100 % | 1 (`IOT`) | 12/12, 1 FP |
+| `20230605` | **11 / 11** | 100 % | **0** | 11/11, **1 FP (`AAPL`)** |
+| `20230608` | **13 / 13** | 100 % | **0** | — |
+| `20230609` | **13 / 13** | 100 % | **0** | — |
+| **total** | **49 / 49** | **100 %** | **1** | 3 FPs |
+
+**The `AAPL` false positive is gone, and no holding was lost.** The one
+remaining false positive (`IOT` on `20230602`) is a **capture-level**
+reading — it is in that capture's own `position_list` — so no cluster rule
+can remove it, and CLAUDE.md records it as such.
+
+**The clusters the rule dropped, and why nothing was lost.** The scan
+reports them per date:
+
+| date | dropped cluster | why the holding survived |
+|---|---|---|
+| `20230608` | `APLD` from `[APOQ, AXOQ]` (closest 2) | the video also read `APLD` directly |
+| `20230609` | `GTLB` from `[GULE]` (closest 2) | the video also read `GTLB` directly |
+
+A ticker survives the rule if **any** cluster carried it and was
+corroborated. Counting it otherwise is how the first version of the audit
+wrongly reported two lost holdings — the same accounting error twice,
+in two different tools, which is why it is now pinned by
+`test/manual/clusterRuleProductionScore.test.js`.
+
+**The three supported rules are measured and rejected.** They add false
+positives and recover no holdings. They stay available behind their flags,
+because a rule that is wrong on this corpus could be right on another —
+but nothing in the measurement argues for turning one on.
+
+**The corroboration gate's video-support escape makes no difference to any
+number.** `corroborated` and `corroborated-strict` score identically on
+both corpora, on the production output, and on the production scan. The
+escape is kept because it is the difference between "discard the cluster"
+and "keep the holding the video showed", and the production case for it
+(`ARQQ`) is real even though the corpus does not exercise it.
+
+Pinned by `test/chartStreamCluster.test.js` — the rules' behaviour, on a
+synthetic lexicon so the arithmetic is fixed, and on the REAL decode lexicon
+so a change to the seed cannot silently move the answer.
+
+Measured by three harnesses, all in `test/manual/` (the suite's glob does not
+reach them, and the corpus they need is untracked):
+
+| harness | what it measures |
+|---|---|
+| `clusterRuleMeasurement.test.js` | all seven rules on both corpora |
+| `clusterRuleDiff.test.js` | the per-date diff against the shipped rule |
+| `clusterRuleProductionAudit.test.js` | the recorded production cluster tables |
+| `clusterRuleProductionScore.test.js` | the rule applied to the production merged lists, scored |
+| `clusterRulePerDate.test.js` | three dates, cluster by cluster |
+
+### The scan records which rule produced its merged list
+
+```jsonc
+{ "cluster_rule": "shipped", "cluster_corroboration": false,
+  "cluster_supported": false, "cluster_video_supported": false }
+```
+
+so a replay can tell when a log's own merged list was made under a different
+rule than the one being applied to it. The replay's census counts that
+(`logsWithRecordedClusterRule`, `logsWithDifferentRecordedClusterRule`).
+
+With a rule on, the scan also records **why a cluster was dropped**
+(`cluster_dropped`), so a scan that lost a holding can say why.
+
+Pinned by `test/chartStreamCluster.test.js` — the rules' behaviour, on a
+synthetic lexicon so the arithmetic is fixed, and on the REAL decode lexicon
+so a change to the seed cannot silently move the answer.
 
 ---
 
