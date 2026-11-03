@@ -44,6 +44,7 @@ const GT_FILE = path.join(ROOT, 'data', 'qmg_ground_truth.json');
 // The runs to report, newest first. Each is a pipeline state; the page
 // compares them date by date.
 const RUN_TAGS = [
+  'qmg-easyocr-20261103-era2022',
   'qmg-easyocr-20261103-swallowed',
   'qmg-easyocr-20261103-corroborated',
   'qmg-easyocr-20261102-era-prefilter',
@@ -213,7 +214,10 @@ const runRows = [...runTotals.values()]
 
 const dateRows = scored.map((r) => {
   const runs = r.runs
-    .map((run) => `<span class="run">${esc(run.runTag.replace(/^qmg-easyocr-/, ''))}<em>${esc(run.rule)}</em></span>`)
+    .map((run) => {
+      const crop = run.crop ? ` <span class="crop">${esc(run.crop)}</span>` : '';
+      return `<span class="run">${esc(run.runTag.replace(/^qmg-easyocr-/, ''))}<em>${esc(run.rule)}</em>${crop}</span>`;
+    })
     .join('<br>');
   const dropped = r.runs.flatMap((run) => run.dropped).filter(Boolean);
   return `<tr>
@@ -266,6 +270,7 @@ const html = `<!DOCTYPE html>
   .t.dropped { background: rgba(192,132,252,0.14); color: var(--purple); }
   .runs { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text2); line-height: 1.7; }
   .runs em { color: var(--accent); font-style: normal; }
+  .runs .crop { color: var(--text2); opacity: 0.75; }
   .failed { color: var(--red); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
   tr.failed-row td { opacity: 0.75; }
   .note { color: var(--text2); font-size: 12px; padding: 0 20px 24px; max-width: 1100px; line-height: 1.7; }
