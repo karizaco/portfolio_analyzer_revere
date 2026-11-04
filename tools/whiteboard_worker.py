@@ -2524,6 +2524,11 @@ def infer_channel_from_url(source_url: str) -> str:
         return 'revere'
     if '@qullamaggie' in lowered or '/qullamaggie' in lowered:
         return 'qullamaggie'
+    # The Sevcik channel is a TRANSCRIPT source, not an OCR one: its videos
+    # carry spoken commentary and no on-screen position list. It is catalogued
+    # by the same worker, so it needs the same channel label.
+    if '@davidsevcik-sved4697' in lowered or '/davidsevcik-sved4697' in lowered:
+        return 'davidsevcik'
     return ''
 
 
@@ -2532,9 +2537,14 @@ def infer_channel_from_url(source_url: str) -> str:
 # unrelated channel, and the two return completely disjoint video IDs. So a
 # channel URL is never built by interpolating the slug; it is looked up here,
 # or taken from --source-url, or read back from the database.
+#
+# The Sevcik source reads the STREAMS tab, not the videos tab: its daily
+# prediction videos are livestreams, and the streams listing is the one
+# that carries them.
 CHANNEL_SOURCE_URLS = {
     'revere': 'https://www.youtube.com/@revereasset/videos',
     'qullamaggie': 'https://www.youtube.com/@Qullamaggie/videos',
+    'davidsevcik': 'https://www.youtube.com/@davidsevcik-sved4697/streams',
 }
 
 

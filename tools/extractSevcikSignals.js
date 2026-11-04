@@ -1,0 +1,247 @@
+'use strict';
+
+// Read the transcripts and write the trade signals.
+//
+// WHAT IT DOES
+//
+// For every video that has a transcript, this runs the deterministic signal
+// extractor over the transcript's segments and writes what it found into
+// `trade_signals`.
+//
+// The evidence text is stored with every signal, so a claim can always be
+// checked against the words it came from. That is the point of the whole
+// table: a signal without its evidence is not checkable, and a portfolio
+// report of unchecked claims is worth nothing.
+//
+// RE-RUNS
+//
+// A re-run replaces the signals of the videos it processed, and only those.
+// It does not delete the signals of videos it did not reach -- so a partial
+// run never loses work.
+//
+// The `parser_version` column records which extractor produced a row, so a
+// signal from an older parser can be told apart from a current one.
+//
+// Usage:
+//   node tools/extractSevcikSignals.js
+//   node tools/extractSevcikSignals.js --limit 3
+//   node tools/extractSevcikSignals.js --video-id abc123
+//   node tools/extractSevcikSignals.js --json
+//   node tools/extractSevcikSignals.js --dry-run
+
+const fs = require('node:fs');
+const path = require('node:path');
+
+// node:sqlite is still flagged experimental; its warning is noise here.
+process.removeAllListeners('warning');
+process.on('warning', () => {});
+
+const { DatabaseSync } = require('node:sqlite');
+
+const { loadSeedLexiconSync } = require('../src/normalize/tickerScan');
+const { extractSignals, PARSER_VERSION } = require('../src/sevcik/signalExtractor');
+const { SEVCIK_CHANNEL } = require('../src/sevcik/channel');
+
+const ROOT = path.resolve(__dirname, '..');
+const DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
+const TRANSCRIPTS_DIR = path.join(ROOT, 'data', 'video_pipeline', 'transcripts');
+
+const argv = process.argv.slice(2);
+const options = {
+  limit: Number(readFlag(argv, '--limit')) || 0,
+  videoId: readFlag(argv, '--video-id') || '',
+  channel: readFlag(argv, '--channel') || SEVCIK_CHANNEL,
+  json: argv.includes('--json'),
+  dryRun: argv.includes('--dry-run'),
+};
+
+function main() {
+  if (!fs.existsSync(DB_PATH)) {
+    console.error(`No SQLite at ${DB_PATH}. Run 'npm run video:init' first.`);
+    process.exit(1);
+  }
+
+  const lexicon = new Set(loadSeedLexiconSync().tickers);
+  const db = new DatabaseSync(DB_PATH);
+  db.exec(fs.readFileSync(path.join(ROOT, 'data', 'db', 'schema.sql'), 'utf8'));
+
+  const videos = selectVideos(db);
+  console.log(`[sevcik-signals] videos=${videos.length} channel=${options.channel}`
+    + ` lexicon=${lexicon.size} parser=${PARSER_VERSION}${options.dryRun ? ' DRY-RUN' : ''}`);
+
+  const perVideo = [];
+  let totalSignals = 0;
+
+  for (const video of videos) {
+    const segments = loadSegments(video.transcript_id, video.video_id, db);
+    const signals = extractSignals({
+      segments,
+      lexicon,
+      videoId: video.video_id,
+      transcriptId: video.transcript_id,
+    });
+
+    if (!options.dryRun && signals.length) {
+      replaceSignals(db, video.video_id, video.transcript_id, signals);
+    }
+
+    totalSignals += signals.length;
+    perVideo.push({
+      video_id: video.video_id,
+      upload_date: video.upload_date,
+      provider: video.provider,
+      segments: segments.length,
+      signals: signals.length,
+      tickers: [...new Set(signals.map((signal) => signal.ticker))].sort(),
+      with_entry: signals.filter((signal) => signal.entry_price !== null).length,
+      with_target: signals.filter((signal) => signal.target_price_low !== null).length,
+    });
+
+    console.log(`[sevcik-signals] ${video.video_id} ${video.upload_date} `
+      + `${segments.length} segments -> ${signals.length} signals`
+      + `${signals.length ? ` (${[...new Set(signals.map((s) => s.ticker))].join(' ')})` : ''}`);
+  }
+
+  db.close();
+
+  const summary = {
+    videos: videos.length,
+    signals: totalSignals,
+    parser_version: PARSER_VERSION,
+    dry_run: options.dryRun,
+    per_video: perVideo,
+  };
+
+  if (options.json) {
+    console.log(JSON.stringify(summary, null, 2));
+  } else {
+    console.log(`[sevcik-signals] done: ${totalSignals} signal(s) from ${videos.length} video(s)`);
+  }
+}
+
+/**
+ * The videos whose transcripts have been read.
+ *
+ * @param {DatabaseSync} db
+ * @returns {Array<object>}
+ */
+function selectVideos(db) {
+  const filters = ['t.video_id IS NOT NULL'];
+  const params = [];
+  let sql = `SELECT v.video_id, v.upload_date, v.title, t.id AS transcript_id, t.provider,
+                    t.transcript_path, t.segment_count
+             FROM video_transcripts t
+             JOIN videos v ON v.video_id = t.video_id
+             WHERE ${filters.join(' AND ')}`;
+  if (options.channel) {
+    sql += ' AND v.channel = ?';
+    params.push(options.channel);
+  }
+  if (options.videoId) {
+    sql += ' AND v.video_id = ?';
+    params.push(options.videoId);
+  }
+  sql += ' ORDER BY v.upload_date DESC, v.video_id ASC';
+
+  const rows = db.prepare(sql).all(...params);
+  return options.limit ? rows.slice(0, options.limit) : rows;
+}
+
+/**
+ * The transcript's segments.
+ *
+ * The segments come from the DATABASE when they are there, and from the
+ * transcript FILE when they are not. The file is the fallback because a
+ * transcript can exist on disk before its segments have been written -- and
+ * a transcript that is on disk but unreadable would silently produce no
+ * signals.
+ *
+ * @param {number} transcriptId
+ * @param {string} videoId
+ * @param {DatabaseSync} db
+ * @returns {Array<{start_sec:number,end_sec:number,text:string,confidence:number|null}>}
+ */
+function loadSegments(transcriptId, videoId, db) {
+  const rows = db.prepare(
+    'SELECT start_sec, end_sec, text, confidence FROM transcript_segments '
+    + 'WHERE transcript_id = ? ORDER BY segment_index ASC',
+  ).all(transcriptId);
+  if (rows.length) {
+    return rows.map((row) => ({
+      start_sec: Number(row.start_sec),
+      end_sec: Number(row.end_sec),
+      text: String(row.text || ''),
+      confidence: row.confidence === null ? null : Number(row.confidence),
+    }));
+  }
+
+  const filePath = path.join(TRANSCRIPTS_DIR, `${videoId}.json`);
+  if (!fs.existsSync(filePath)) return [];
+  try {
+    const body = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    const { normalizeTranscript } = require('../src/transcript/transcriptNormalize');
+    return normalizeTranscript(body, body.provider);
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Replace the signals of one video.
+ *
+ * The signals of the video are deleted and the new ones inserted, so a
+ * re-run with a changed parser does not leave the old rows behind next to
+ * the new ones. Only THIS video's signals are touched -- the signals of
+ * other videos are none of this run's business.
+ *
+ * @param {DatabaseSync} db
+ * @param {string} videoId
+ * @param {number} transcriptId
+ * @param {Array<object>} signals
+ */
+function replaceSignals(db, videoId, transcriptId, signals) {
+  db.prepare('DELETE FROM trade_signals WHERE video_id = ?').run(videoId);
+
+  const insert = db.prepare(
+    'INSERT INTO trade_signals (video_id, transcript_id, segment_start_index, segment_end_index, '
+    + 'event_time_sec, ticker, action, bias, confidence_label, confidence_score, entry_price, '
+    + 'target_price_low, target_price_high, stop_price, horizon_text, rationale, evidence_text, '
+    + 'parser_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+  );
+
+  for (const signal of signals) {
+    insert.run(
+      signal.video_id,
+      signal.transcript_id === null ? transcriptId : signal.transcript_id,
+      signal.segment_start_index,
+      signal.segment_end_index,
+      signal.event_time_sec,
+      signal.ticker,
+      signal.action,
+      signal.bias,
+      signal.confidence_label,
+      signal.confidence_score,
+      signal.entry_price,
+      signal.target_price_low,
+      signal.target_price_high,
+      signal.stop_price,
+      signal.horizon_text,
+      signal.rationale,
+      signal.evidence_text,
+      signal.parser_version,
+    );
+  }
+}
+
+function readFlag(arr, flag) {
+  const index = arr.indexOf(flag);
+  if (index === -1) return null;
+  return arr[index + 1] || '';
+}
+
+try {
+  main();
+} catch (error) {
+  console.error(`[sevcik-signals] failed: ${error && error.stack ? error.stack : error}`);
+  process.exit(1);
+}
