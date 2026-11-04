@@ -382,3 +382,12 @@ test('an explicit horizon beats a mention of when the speaker is speaking', () =
   assert.equal(signals.length, 1);
   assert.equal(signals[0].horizon_text, 'swing');
 });
+
+
+const { claimKindFor, isRetrospective } = require('../src/sevcik/signalExtractor');
+
+test('Czech retrospective language is tagged retrospective', () => {
+  assert.equal(claimKindFor('Minule predikce vyšla přesně na Tesla.'), 'retrospective');
+  assert.equal(isRetrospective('už jsme říkali, predikce vyšla'), true);
+  assert.equal(claimKindFor('Jdu do longu na TSLA teď.'), 'forward');
+});

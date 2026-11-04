@@ -37,7 +37,7 @@
     "video:fetch-captions": "node tools/fetchCaptions.js",
     "video:fetch-captions:qmg": "CHANNEL=qullamaggie node tools/fetchCaptions.js",
     "video:fetch-captions:revere": "CHANNEL=revere node tools/fetchCaptions.js",
-    "sevcik:catalog": "node tools/runWhiteboardWorker.js catalog --channel davidsevcik --source-url https://www.youtube.com/@davidsevcik-sved4697/streams",
+    "sevcik:catalog": "node tools/runWhiteboardWorker.js catalog --channel davidsevcik --source-url https://www.youtube.com/@davidsevcik-sved4697/streams --extractor-args youtube:player_client=visios --cookies-file data/video_pipeline/downloads_1080p/youtubeCookies.txt --sleep-requests 1",
     "sevcik:transcripts": "node tools/fetchSevcikTranscripts.js",
     "sevcik:signals": "node tools/extractSevcikSignals.js",
     "sevcik:setups": "node tools/extractSevcikSetups.js",
@@ -67,7 +67,8 @@
     "discord:ingest:jsonl": "node tools/runDiscordIngest.js ingest-jsonl",
     "discord:ingest:browser": "node tools/runDiscordIngest.js ingest-browser",
     "discord:signals": "python tools/build_discord_status.py",
-    "video:signals": "python tools/build_video_status.py"
+    "video:signals": "python tools/build_video_status.py",
+    "sevcik:outcomes": "node tools/analyzeSevcikOutcomes.js"
   },
   "dependencies": {
     "sharp": "^0.34.3",

@@ -63,7 +63,7 @@ const TRANSCRIPTS_DIR = path.join(ROOT, 'data', 'video_pipeline', 'transcripts')
  * The version of the segmenter. It is written onto every setup row, so a
  * re-run with a changed segmenter can be told apart from the previous one.
  */
-const PARSER_VERSION = 'sevcik-setups-1';
+const PARSER_VERSION = 'sevcik-setups-2';
 
 const argv = process.argv.slice(2);
 const options = {
@@ -216,15 +216,73 @@ function loadSegments(transcriptId, videoId, db) {
  * @param {Array<object>} setups
  * @param {Array<object>} segments
  */
+
+function ensureSevcikSetupsSchema(db) {
+  try { db.exec('ALTER TABLE sevcik_setups ADD COLUMN claim_kind TEXT'); } catch (_) {}
+  const master = db.prepare("SELECT sql FROM sqlite_master WHERE type='table' AND name='sevcik_setups'").get();
+  const sql = String((master && master.sql) || '');
+  if (!/UNIQUE\s*\(\s*video_id\s*,\s*ticker\s*\)/i.test(sql)) return;
+
+  db.exec('BEGIN');
+  try {
+    db.exec(`CREATE TABLE sevcik_setups_v2 (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      video_id TEXT NOT NULL,
+      transcript_id INTEGER,
+      ticker TEXT NOT NULL,
+      spoken_name TEXT,
+      state TEXT,
+      states TEXT,
+      mentions INTEGER,
+      segment_start_index INTEGER,
+      segment_end_index INTEGER,
+      event_time_sec REAL,
+      certainty_level TEXT,
+      certainty_confidence REAL,
+      certainty_marker TEXT,
+      probability REAL,
+      direction_uncertain INTEGER,
+      still_running INTEGER,
+      invalidated INTEGER,
+      worked INTEGER,
+      failed INTEGER,
+      claim_kind TEXT,
+      evidence_text TEXT,
+      parser_version TEXT
+    )`);
+    db.exec(`INSERT INTO sevcik_setups_v2 (
+      video_id, transcript_id, ticker, spoken_name, state, states, mentions,
+      segment_start_index, segment_end_index, event_time_sec, certainty_level,
+      certainty_confidence, certainty_marker, probability, direction_uncertain,
+      still_running, invalidated, worked, failed, claim_kind, evidence_text, parser_version
+    ) SELECT
+      video_id, transcript_id, ticker, spoken_name, state, states, mentions,
+      segment_start_index, segment_end_index, event_time_sec, certainty_level,
+      certainty_confidence, certainty_marker, probability, direction_uncertain,
+      still_running, invalidated, worked, failed, claim_kind, evidence_text, parser_version
+    FROM sevcik_setups`);
+    db.exec('DROP TABLE sevcik_setups');
+    db.exec('ALTER TABLE sevcik_setups_v2 RENAME TO sevcik_setups');
+    db.exec('CREATE INDEX IF NOT EXISTS idx_sevcik_setups_video ON sevcik_setups(video_id)');
+    db.exec('CREATE INDEX IF NOT EXISTS idx_sevcik_setups_ticker ON sevcik_setups(ticker)');
+    db.exec('COMMIT');
+  } catch (error) {
+    db.exec('ROLLBACK');
+    throw error;
+  }
+}
+
 function replaceSetups(db, videoId, transcriptId, setups, segments) {
+  ensureSevcikSetupsSchema(db);
+
   db.prepare('DELETE FROM sevcik_setups WHERE video_id = ?').run(videoId);
 
   const insert = db.prepare(
     'INSERT INTO sevcik_setups (video_id, transcript_id, ticker, spoken_name, state, states, '
     + 'mentions, segment_start_index, segment_end_index, event_time_sec, certainty_level, '
     + 'certainty_confidence, certainty_marker, probability, direction_uncertain, still_running, '
-    + 'invalidated, worked, failed, evidence_text, parser_version) '
-    + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    + 'invalidated, worked, failed, claim_kind, evidence_text, parser_version) '
+    + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
   );
 
   for (const setup of setups) {
@@ -234,7 +292,7 @@ function replaceSetups(db, videoId, transcriptId, setups, segments) {
       setup.ticker,
       setup.spoken_name || '',
       setup.state,
-      (setup.states || []).join(','),
+      JSON.stringify(Array.isArray(setup.states) ? setup.states : []),
       setup.mentions,
       setup.first_index,
       setup.last_index,
@@ -248,6 +306,7 @@ function replaceSetups(db, videoId, transcriptId, setups, segments) {
       setup.invalidated ? 1 : 0,
       setup.worked ? 1 : 0,
       setup.failed ? 1 : 0,
+      setup.claim_kind || '',
       (setup.evidence || []).join('\n'),
       PARSER_VERSION,
     );

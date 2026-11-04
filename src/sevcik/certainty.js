@@ -320,13 +320,16 @@ function readCertainty(text, options = {}) {
  * @returns {number}
  */
 function certaintyConfidence(level) {
+  // Spread the scale so "unknown" is not near "conditional", and a
+  // conditional call (stated trigger) ranks above a coin-flip.
   switch (level) {
-    case 'certain': return 1.0;
-    case 'high': return 0.8;
-    case 'even': return 0.55;
-    case 'conditional': return 0.5;
-    case 'low': return 0.25;
-    default: return 0.4;
+    case 'certain': return 0.95;
+    case 'high': return 0.85;
+    case 'conditional': return 0.72;
+    case 'even': return 0.50;
+    case 'low': return 0.28;
+    case 'unknown': return 0.12;
+    default: return 0.12;
   }
 }
 

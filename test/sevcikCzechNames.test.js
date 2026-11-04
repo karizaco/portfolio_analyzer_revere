@@ -22,7 +22,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const { findCzechCompanyNames, startsSentence } = require('../src/sevcik/czechNames');
-const { matchCompanyName, stemName } = require('../src/sevcik/companyNames');
+const { matchCompanyName, stemName, isDeniedSpokenStem } = require('../src/sevcik/companyNames');
 const { loadSevcikLexicon } = require('../src/sevcik/lexicon');
 const { loadSeedLexiconSync } = require('../src/normalize/tickerScan');
 
@@ -170,3 +170,11 @@ test('the stem keeps the consonants that carry the identity', () => {
 });
 
 module.exports = { names };
+
+
+test('gap jargon does not resolve to ticker GAB', () => {
+  assert.equal(isDeniedSpokenStem('gab'), true);
+  assert.equal(isDeniedSpokenStem('gapy'), true);
+  const hit = matchCompanyName('gab', { lexicon: new Set(['GAB', 'TSLA']) });
+  assert.ok(!hit.ticker, 'gab must not become GAB');
+});
