@@ -31,7 +31,11 @@ const { isRightSidebarDate } = require('../src/video/chartStreamCrop');
 // tool that spawns the scan tool drains its stdout the same way. It was
 // duplicated here first, and the three sibling daemons still had the
 // stderr-only drain that causes the deadlock.
-const { superviseChild, STDOUT_TAIL_CHARS } = require('./qmg_scan_daemon_support');
+const {
+  checkFreeSpace,
+  superviseChild,
+  STDOUT_TAIL_CHARS,
+} = require('./qmg_scan_daemon_support');
 
 const ROOT = path.resolve(__dirname, '..');
 const VIDEO_DIR_1080 = path.join(ROOT, 'data', 'video_pipeline', 'downloads_1080p');
@@ -383,6 +387,12 @@ async function main() {
 
   // Ensure output dir exists
   fs.mkdirSync(path.join(OUT_ROOT, runTag), { recursive: true });
+
+  // Preflight the disk. A volume that fills mid-run kills ffmpeg with
+  // "No space left on device", which surfaces as a misleading per-video
+  // failure rather than as a disk problem. This is the shared guard
+  // (`tools/qmg_scan_daemon_support.js`) every scan daemon must use.
+  checkFreeSpace(path.join(OUT_ROOT, runTag));
 
   const jobs = dates.map(d => ({ date: d, video: findVideo(d) }))
     .filter(j => j.video !== null);
