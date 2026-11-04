@@ -2209,6 +2209,94 @@ them is the frame's own fault:
 false positive on `20230602` — the same token, the same glyph, two different
 answers, which is what a reading of the wrong cell looks like.
 
+### The 2022-era production scan, four more dates (2026-11-03)
+
+The 2023-era production scan above is the first end-to-end run of the
+era-conditional crop on the **sidebar**. This is the same thing for the
+**2022-era floating panel** — four dates, low-CPU, `--cluster-rule
+corroborated`:
+
+```bash
+node tools/runQmgOcrBatch.js --dates 20220414,20220418,20220419,20220421 \
+  --low-cpu --parallel 4 --run-tag qmg-easyocr-20261103-era2022-next \
+  --cluster-rule corroborated
+```
+
+| date | merged list vs the GT union | FP | the panel's own count | the reading |
+|---|---|---|---|---|
+| `20220414` | **11/11 (100 %)** | none | 11 | **exact** |
+| `20220418` | 11/12 (92 %) | none | 11 | **exact for the moment** |
+| `20220419` | **14/14 (100 %)** | none | 14 | **exact** |
+| `20220421` | 14/16 (88 %) | none | 14 | **one ticker is wrong** |
+| **total** | **50/53 (94 %)** | **0** | | |
+
+Two of the four are exact 1:1 with the panel's rows. The third is exact for
+the moment it captured. **The fourth is the interesting one, and the score
+hides it.**
+
+#### The union score and the panel's rows answer different questions
+
+The ground truth's denominator is the **union over a date's captures** — the
+anchor frame's rows plus every other capture's rows. The panel's rows are
+what the screen showed at the **captured instant**. A reading is scored
+against the first and checked against the second, and the two disagree on
+these two dates.
+
+**`20220418` — the one "miss" is a TEMPORAL difference, not a defect.** The
+ground truth's anchor (15:57) holds twelve rows including `VERU`; the tracked
+fixture crop `test/fixtures/qmg_ground_truth/20220418_c0.png` shows them and
+its footer reads "12 Items in Personal WatchList". Today's capture is at
+**15:28**, and the panel holds **eleven**: `VERU` had been closed and sits in
+the upper watchlist widget ("US Common Stk…"), which the crop never sees. The
+reading has all eleven. **A score against the union penalises a reading that
+is exact for the moment it captured** — and the union's denominator is the
+right one for the replay tool, whose input is a set of moments.
+
+**`20220421` — the score says 0 false positives, and one of the fourteen
+published tickers is wrong.** The panel holds fourteen rows; the reading
+publishes fourteen tickers; and they are not the same fourteen:
+
+```text
+panel : FCX NUGT JNUG VERU WEAT COPX X URNM URA REGN GUSH LAC TSLA BOIL
+reading: FCX NUGT JNUG VERU WEAT COPX X URNM URA REGN GUSH UCO TSLA BOIL
+                                                   ^^^
+```
+
+EasyOCR read the `LAC` cell as **`UC`**, and the distance-1 repair pass turned
+`UC` into **`UCO`** — one insertion, and `UCO` is a seed ticker. So the
+reading published a holding the panel does not show.
+
+#### A garble that collides with a holding from another moment is invisible to the union score
+
+`UCO` **is** in the date's ground-truth union: at 15:57, thirty minutes after
+the captured frame, `UCO` was *also* a position — the anchor fixture
+`test/fixtures/qmg_ground_truth/20220421_c0.png` shows **sixteen** rows with
+both `LAC` and `UCO` among them ("16 of 16 Items in Personal WatchList"), and
+`UCO` is opened later in the session.
+
+So the wrong holding scored as a **hit**, and the two holdings the panel
+really held at 15:26 (`LAC`) and 15:57 (`UCO`, `FTNT`) counted as misses. The
+union score cannot see this class at all: **it can only see a wrong holding
+that the video never held, at any moment.**
+
+**Neither count catches it either.** The panel's own row count is 14 and the
+reading has 14, so a row-count check passes. The only check that catches it is
+the panel's **identity**, and the project's identity check is the curated
+alias table.
+
+#### The row: `UC → LAC`
+
+| | |
+|---|---|
+| the garbled token | `UC`, EasyOCR conf 0.839, at the Sym column's left edge (left 736 against the column's `dominant_left` 734) |
+| where it is | row 11 of 14 — the OCR read **fourteen** column words and they map **1:1** onto the panel's fourteen rows, in order |
+| the width says so | the box is **94** crop px against **96** for `FCX` (three glyphs) and **135** for `NUGT` (four) — the read spans the whole three-glyph cell |
+| the misread | `LA` merged into one `U` glyph, `C` read alone — the same merge the 2023-era `LI` → `V` row records |
+| the invariants | `UC` is in **neither** the seed nor the decode lexicon; `LAC` **is** in the seed; no duplicate key, no chain |
+| the corpus | `UC` occurs **nowhere else**: `"text": "UC"` over every probe log finds it in the 20220421 logs and nowhere else |
+
+**The row was shipped on 2026-11-04 (table is now 45 data rows).** The default-roots replay is unchanged at 97.6 % / 100.0 % (83/85), because 20220421 is not in the default 8-root set. The wide corpus effect is a per-frame `LAC` hit on the capture that reads `UC` — a holding the union score could not see, because `UCO` was already in the GT union and masked the garble. Pinned by `test/ocrConfusionAliases.test.js`.
+
 ### The panel's footer is BELOW the crop — the count check cannot fire (2026-11-02)
 
 `readPanelRowCount` reports the panel's own row count in every probe log, and

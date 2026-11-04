@@ -229,6 +229,26 @@ const NEW_ALIASES = [
   ['UI', 'LMT'],
   ['NUGI', 'NUGT'],
   ['O', 'LMT'],
+  // The row added 2026-11-03 (sixth batch). Pixel-verified against the
+  // 20220421 production scan log (`qmg-easyocr-20261103-era2022-next`):
+  // row 11 of 14 in the Sym column reads `UC` (left=736, width=94,
+  // height=52, conf=0.839), while the panel at that moment holds LAC as
+  // its 12th row. Every other Sym-column member sits at left 731-736, and
+  // the box width (94 px) matches the three-glyph cells above and below —
+  // so the whole three-glyph LAC cell was read as UC: the `LA` glyphs
+  // collapsed into a single `U` (the same mechanism as `LI→V` on
+  // 20230523) and the `C` was read alone.
+  //
+  // `UC` ∉ seed, `UC` ∉ decode lexicon, `LAC` ∈ seed (pixel-verified
+  // 2026-11-01), no duplicate key, no chain. Occurs exactly once in the
+  // corpus (two run-tags of the same 20220421 video).
+  //
+  // The union score masked it: `UCO` is also in the GT union (it was
+  // opened 30 minutes later in the session), so the WRONG reading scored
+  // as a hit while the CORRECT reading at that instant (`LAC`) counted as
+  // a miss. Neither recall nor row-count check can see this — only the
+  // alias table catches it.
+  ['UC', 'LAC'],
 ];
 
 function confusionRows() {
