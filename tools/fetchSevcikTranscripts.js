@@ -46,9 +46,14 @@ process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
 
+const { loadEnv } = require('../src/transcript/loadEnv');
 const { normalizeTranscript, transcriptChecksum } = require('../src/transcript/transcriptNormalize');
 const { extractAudio, hasDeepgramKey, transcribeAudio } = require('../src/transcript/deepgramClient');
 const { SEVCIK_CHANNEL, SEVCIK_SOURCE_URL } = require('../src/sevcik/channel');
+
+// The credentials live in .env, which is gitignored. An environment
+// variable that is already set wins over the file.
+loadEnv();
 
 const ROOT = path.resolve(__dirname, '..');
 const DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
@@ -173,12 +178,15 @@ function selectCandidates() {
   const params = [options.channel];
 
   let sql = `SELECT video_id, upload_date, title, video_url, channel FROM videos
-             WHERE ${filters.join(' AND ')}
-             ORDER BY upload_date DESC, video_id ASC`;
+             WHERE ${filters.join(' AND ')}`;
   if (options.videoId) {
+    // The filter has to go BEFORE the ORDER BY. Appending it after the
+    // ORDER BY produced "near AND: syntax error" -- which is how the
+    // --video-id flag was broken for every run that used it.
     sql += ' AND video_id = ?';
     params.push(options.videoId);
   }
+  sql += ' ORDER BY upload_date DESC, video_id ASC';
   const rows = db.prepare(sql).all(...params);
   db.close();
 

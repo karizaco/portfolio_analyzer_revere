@@ -38,7 +38,8 @@ process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
 
-const { loadSeedLexiconSync } = require('../src/normalize/tickerScan');
+const { loadSevcikLexicon } = require('../src/sevcik/lexicon');
+const { loadConfirmedNames } = require('../src/sevcik/companyNames');
 const { extractSignals, PARSER_VERSION } = require('../src/sevcik/signalExtractor');
 const { SEVCIK_CHANNEL } = require('../src/sevcik/channel');
 
@@ -61,7 +62,22 @@ function main() {
     process.exit(1);
   }
 
-  const lexicon = new Set(loadSeedLexiconSync().tickers);
+  // The Sevcik allow list, NOT the shared seed.
+  //
+  // The seed is the allow list for the OCR channels and it is built
+  // around two boards this source has nothing to do with. This speaker
+  // names large caps the seed does not carry -- and with the seed, the
+  // extractor found NOTHING in the whole corpus, because the names he
+  // says ("Tesla", "Apple", "Amazon") are not in it.
+  const lexicon = loadSevcikLexicon();
+
+  // The tickers that may be read as a SPOKEN SYMBOL.
+  //
+  // The Sevcik lexicon has 10,485 tickers, and the SEC's list carries
+  // one- and two-letter registrants that ordinary Czech speech is full
+  // of: M, E, A, V, SE, EL, P, TAK. So a symbol token has to be one that
+  // was CONFIRMED as a symbol before it counts.
+  const confirmedSymbols = new Set(Object.values(loadConfirmedNames()));
   const db = new DatabaseSync(DB_PATH);
   db.exec(fs.readFileSync(path.join(ROOT, 'data', 'db', 'schema.sql'), 'utf8'));
 
@@ -77,6 +93,7 @@ function main() {
     const signals = extractSignals({
       segments,
       lexicon,
+      confirmedSymbols,
       videoId: video.video_id,
       transcriptId: video.transcript_id,
     });

@@ -186,6 +186,89 @@ CREATE INDEX IF NOT EXISTS idx_trade_signals_ticker_time
 CREATE INDEX IF NOT EXISTS idx_trade_signals_bias ON trade_signals(bias);
 CREATE INDEX IF NOT EXISTS idx_trade_signals_parser ON trade_signals(parser_version);
 
+-- The SETUPS the speaker described -------------------------------------
+--
+-- A setup is NOT a signal. The speaker does not disclose positions; he
+-- describes setups and ideas -- "if it holds this level, long". A signal
+-- is a trade-shaped sentence with a direction and a price; a setup is
+-- the THING he is talking about, which may be talked about for ten
+-- minutes, may be revisited, and may end up worked, failed, or
+-- invalidated.
+--
+-- So this table is one row per (video, ticker), and the columns are the
+-- lifecycle of that setup:
+--
+--   state          the state it is IN at the end of the video
+--   states         every state it went through, in order
+--   mentions       how many times he talked about it
+--
+-- The STATES are read off the words he uses:
+--
+--   new           "mam tady novou predikci"
+--   running       "predikce bezi" -- still live
+--   worked        "predikce vysla"
+--   failed        "predikce nevisla"
+--   invalidated   "predikce zneplatnena"
+--   old           "byla stara" -- being reviewed
+--
+-- The CERTAINTY is how strongly he said it, and it is a separate scale
+-- from the signal's confidence, because it is a different question:
+--
+--   certain / high / even / conditional / low / unknown
+--
+-- "conditional" is its own level and not a point between "high" and
+-- "low". He says "podmineny long" as his DEFAULT form for a live
+-- setup, so a scale that forced it onto that line would have to call it
+-- either better or worse than a coin flip, and the corpus does not
+-- support either.
+CREATE TABLE IF NOT EXISTS sevcik_setups (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id TEXT NOT NULL,
+    transcript_id INTEGER NOT NULL REFERENCES video_transcripts(id),
+    ticker TEXT NOT NULL,
+    -- The name he SAID, which is not the ticker: "Tesla" for TSLA.
+    spoken_name TEXT NOT NULL DEFAULT '',
+    -- The state the setup is IN at the end of the video.
+    state TEXT NOT NULL DEFAULT 'running'
+        CHECK (state IN ('new', 'running', 'worked', 'failed',
+                         'invalidated', 'old')),
+    -- Every state it went through, in order, comma-separated.
+    states TEXT NOT NULL DEFAULT '',
+    -- How many times he talked about the setup.
+    mentions INTEGER NOT NULL DEFAULT 0,
+    -- The span of transcript segments the setup covers.
+    segment_start_index INTEGER NOT NULL DEFAULT 0,
+    segment_end_index INTEGER NOT NULL DEFAULT 0,
+    event_time_sec REAL,
+    -- The certainty scale.
+    certainty_level TEXT NOT NULL DEFAULT 'unknown'
+        CHECK (certainty_level IN ('certain', 'high', 'even',
+                                    'conditional', 'low', 'unknown')),
+    certainty_confidence REAL,
+    -- The word that carried the certainty, verbatim.
+    certainty_marker TEXT NOT NULL DEFAULT '',
+    -- A probability the speaker stated, when he stated one.
+    probability REAL,
+    -- He said he does not know the direction.
+    direction_uncertain INTEGER NOT NULL DEFAULT 0,
+    -- The setup was still live at the end of the video.
+    still_running INTEGER NOT NULL DEFAULT 0,
+    invalidated INTEGER NOT NULL DEFAULT 0,
+    worked INTEGER NOT NULL DEFAULT 0,
+    failed INTEGER NOT NULL DEFAULT 0,
+    -- The exact transcript sentences that mention the setup.
+    evidence_text TEXT NOT NULL,
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(video_id, ticker)
+);
+
+CREATE INDEX IF NOT EXISTS idx_sevcik_setups_video ON sevcik_setups(video_id);
+CREATE INDEX IF NOT EXISTS idx_sevcik_setups_ticker ON sevcik_setups(ticker);
+CREATE INDEX IF NOT EXISTS idx_sevcik_setups_state ON sevcik_setups(state);
+CREATE INDEX IF NOT EXISTS idx_sevcik_setups_certainty
+    ON sevcik_setups(certainty_level);
+
 -- Discord pipeline tables -------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS discord_sources (
