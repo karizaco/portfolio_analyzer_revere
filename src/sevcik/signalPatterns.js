@@ -78,9 +78,16 @@ const ACTION_PATTERNS = [
   { action: 'add', pattern: /\b(?:scaling|scaling in|adding more)\b/gi, weight: 0.8 },
   { action: 'sell', pattern: /\b(?:i'?m|i am|we'?re|we are)\s+(?:going to|gonna|about to)\s+sell\b/gi, weight: 0.9 },
   { action: 'sell', pattern: /\b(?:i'?ll|i will|i want to|we'?ll|we will)\s+sell\b/gi, weight: 0.9 },
+  { action: 'sell', pattern: /\b(?:going to|gonna)\s+sell\b/gi, weight: 0.8 },
   { action: 'sell', pattern: /\b(?:selling|sold)\s+(?:it|this|some|my|all|out)\b/gi, weight: 0.7 },
   { action: 'trim', pattern: /\b(?:trimming|trimmed|trim\s+it|trim\s+some)\b/gi, weight: 0.8 },
   { action: 'short', pattern: /\b(?:shorting|short it|going short|want to short)\b/gi, weight: 0.9 },
+  // "I am going to short NVDA" -- the same construction as "going to buy",
+  // and without it the single most direct way of saying a bearish call
+  // reads as no call at all.
+  { action: 'short', pattern: /\b(?:i'?m|i am|we'?re|we are)\s+(?:going to|gonna|about to)\s+short\b/gi, weight: 0.9 },
+  { action: 'short', pattern: /\b(?:i'?ll|i will|i want to|we'?ll|we will)\s+short\b/gi, weight: 0.9 },
+  { action: 'short', pattern: /\b(?:going to|gonna)\s+short\b/gi, weight: 0.8 },
   { action: 'cover', pattern: /\b(?:covering|cover it|covered)\b/gi, weight: 0.8 },
   { action: 'hold', pattern: /\b(?:holding|keeping|keeping it|not selling)\b/gi, weight: 0.6 },
   { action: 'watch', pattern: /\b(?:watching|watch for|watching for|keeping an eye)\b/gi, weight: 0.5 },
@@ -103,11 +110,28 @@ const CONFIDENCE_PATTERNS = [
 
 /**
  * The horizon of a call, when one is stated.
+ *
+ * `specificity` breaks the tie when two horizons are both stated. It is
+ * NOT the order the patterns are declared in, because that order is not
+ * the order the words appear in:
+ *
+ *   "Let's talk about Tesla today. ... Over the next few days, this is a
+ *    swing trade."
+ *
+ * A first-match-wins search read "today" and called it intraday, while
+ * the call was explicitly a swing. "swing trade" and "long term" name a
+ * horizon; "today" only says when the speaker is speaking, and a stream
+ * is always spoken today.
  */
 const HORIZON_PATTERNS = [
-  { horizon: 'intraday', pattern: /\b(?:intraday|in\s+the\s+day|today|by\s+the\s+close|before\s+the\s+close|this\s+session|this\s+week)\b/gi },
-  { horizon: 'swing', pattern: /\b(?:swing|swing\s+trade|over\s+the\s+next\s+(?:few\s+)?(?:days|week|weeks))\b/gi },
-  { horizon: 'position', pattern: /\b(?:for\s+the\s+long\s+term|long[- ]term|position|hold\s+this|over\s+the\s+next\s+months?)\b/gi },
+  // Explicit horizons -- the speaker named the horizon.
+  { horizon: 'position', specificity: 0.9, pattern: /\b(?:long[- ]term|for\s+the\s+long\s+term|hold\s+this|over\s+the\s+next\s+months?|position\s+trade)\b/gi },
+  { horizon: 'swing', specificity: 0.9, pattern: /\b(?:swing\s+trade|swing\s+setup|over\s+the\s+next\s+(?:few\s+)?(?:days|week|weeks))\b/gi },
+  { horizon: 'intraday', specificity: 0.9, pattern: /\b(?:intraday|by\s+the\s+close|before\s+the\s+close|this\s+session|today'?s\s+trade)\b/gi },
+
+  // Weaker horizons -- the speaker said when, not how long.
+  { horizon: 'intraday', specificity: 0.5, pattern: /\b(?:today|in\s+the\s+day|this\s+week)\b/gi },
+  { horizon: 'swing', specificity: 0.5, pattern: /\b(?:swing|next\s+day|tomorrow)\b/gi },
 ];
 
 /**

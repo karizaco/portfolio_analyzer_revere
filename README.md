@@ -228,6 +228,153 @@ Revere videos show structured **whiteboard slides** (GRO/TURBO portfolios, DMI, 
 
 ---
 
+## Sevcik Prediction Streams (transcript source)
+
+A third data source, and the **first one that is not an OCR source**: the
+**Sevcik** channel (`https://www.youtube.com/@davidsevcik-sved4697/streams`),
+whose daily stream videos carry **spoken** trade commentary rather than an
+on-screen position list.
+
+The QMG and Revere paths read **pixels**. This one reads **words**. It reuses
+the catalog, the YouTube downloader and the same SQLite database, and adds a
+transcript acquisition step, a signal extraction layer and a report.
+
+### The channel is CZECH — this matters
+
+Sevcik streams in Czech. YouTube publishes two subtitle tracks for the
+videos:
+
+| track | what it is | why it is used |
+|---|---|---|
+| `en` | YouTube's **machine translation** | **tried first** |
+| `cs-orig` | the original Czech | the fallback |
+
+The English track is tried first on purpose. The signal extractor reads
+English trading vocabulary — *bullish*, *target*, *stop loss* — and a machine
+translation preserves the **tickers and the numbers**, which are what the
+signal is about, while putting them into words the extractor understands.
+The Czech original would need a Czech vocabulary, and the ticker symbols
+would still be the part that matters.
+
+The language that was actually used is recorded in
+`video_transcripts.language`, so a reader always knows.
+
+### The provider order
+
+| # | provider | cost | when it is used |
+|---|---|---|---|
+| 1 | **YouTube auto-captions** | free, no key, no upload | always tried first |
+| 2 | **Deepgram** | needs `DEEPGRAM_API_KEY`, uploads the audio | the fallback |
+
+Captions are tried first **even when a Deepgram key is configured** — they
+are free and instant. Deepgram is the only way to reach videos that carry no
+captions at all, and it is the only part of this pipeline that needs a
+credential.
+
+The provider that produced a transcript is recorded in
+`video_transcripts.provider`, because the two are not equally trustworthy.
+
+### The extraction is deterministic
+
+Every rule is a claim about English trading language, and they all live in
+one file — [`src/sevcik/signalPatterns.js`](src/sevcik/signalPatterns.js).
+The same transcript always produces the same signals.
+
+The rules are deliberately **conservative**:
+
+- a signal needs a **ticker** — *"I am bullish"* is a mood, not a call
+- a price needs a **role** — a bare number is not an entry level unless
+  something said *entry*, *buy at* or *target*
+- a common English word is not a ticker unless it is written in **CAPS**
+  (`ON`, `BE`, `ARM` and `NET` are real tickers *and* everyday words)
+- a **negation reverses** the direction — *"not bullish"* is bearish
+- a **history** is not a call, and a **disclaimer** is not a call
+
+Every signal carries the **exact transcript text** it was read from. A
+signal without its evidence cannot be checked against its source, and an
+unchecked claim in a portfolio report is worth nothing.
+
+### The transcript is cut into runs, one per ticker
+
+A name owns the speech that **follows** it, until the next name:
+
+```text
+"Let's talk about Tesla, TSLA. I am going to buy TSLA at 240, my target
+ is 280. The stop loss is 225. Now for Nvidia, NVDA. I am bearish on it.
+ The target is 120."
+
+TSLA  "Let's talk about Tesla, TSLA. I am going to buy TSLA at 240,
+       my target is 280. The stop loss is 225."
+NVDA  "Now for Nvidia, NVDA. I am bearish on it. The target is 120."
+```
+
+A fixed window around each mention was tried first and it was **wrong**: a
+window spans the move from one name to the next, so the TSLA row carried
+NVDA's price, the TSLA *stop* was labelled a *target*, and `short` bled onto
+a ticker that was only being watched. A wrong price on a real holding is
+worse than a missing one, so the run model replaced it.
+
+A run is also **split where the speaker changed his mind**, so "I am
+bullish on TSLA" followed by "actually I am going to short TSLA" is two
+calls at two moments rather than one "mixed" row.
+
+### Running it
+
+```bash
+# 1. Catalog the channel (the streams tab, not the videos tab)
+npm run sevcik:catalog
+
+# 2. Fetch transcripts (captions first, Deepgram as the fallback)
+npm run sevcik:transcripts -- --limit 5
+
+# 3. Extract the trade signals
+npm run sevcik:signals
+
+# 4. Aggregate and build the dashboard
+npm run sevcik:aggregate
+```
+
+Outputs land in `data/`:
+
+| file | what it is |
+|---|---|
+| `sevcik_signals.csv` | every signal, with its evidence |
+| `sevcik_daily_summary.csv` | one row per stream |
+| `sevcik_ticker_summary.csv` | one row per ticker |
+| `sevcik_signals.json` | the same, for the dashboard |
+| `sevcik_report.html` | the dashboard — open it in a browser |
+
+The dashboard is **one self-contained file**: no CDN, no network, no build
+step. Every signal row expands to the transcript text it came from.
+
+### Configuration
+
+| variable | what it does |
+|---|---|
+| `DEEPGRAM_API_KEY` | enables the Deepgram fallback |
+| `DEEPGRAM_MODEL` | the model to use (default `nova-2`) |
+| `DEEPGRAM_LANGUAGE` | the language hint (default `en`) |
+| `YOUTUBE_COOKIES` | a cookie file, for the audio download |
+
+The API key is read from the environment only. It is never written to a
+file, never logged, and never included in an error message — the error text
+goes into a log that gets committed.
+
+> **The audio upload leaves the machine.** Deepgram is a hosted service, so
+> a stream's audio is uploaded to be transcribed. That is a deliberate
+> consequence of using one, and it is worth being explicit about.
+
+### Known friction: the subtitle endpoint throttles hard
+
+The subtitle endpoint answers `HTTP Error 429: Too Many Requests` far more
+readily than the video endpoint does — it is a lighter endpoint and yt-dlp
+hits it once per language. The fetcher **retries with a growing wait**
+(`--rate-limit-attempts`, `--rate-limit-wait`), but a persistent 429 means
+the IP is throttled and the honest answer is to wait 30–60 minutes, as the
+project's YouTube rules say.
+
+---
+
 ## Troubleshooting
 
 ### FFmpeg path missing (`ffmpeg.exe ENOENT`)
@@ -277,6 +424,12 @@ OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 KMP_DUPLICATE_LIB_OK=TRUE node tools/scanVid
 # Aggregate scan results
 node tools/aggregateScanResults.js data/video_scan_YYYYMMDD/
 
+# Sevcik: catalog, transcribe, extract signals, aggregate
+npm run sevcik:catalog
+npm run sevcik:transcripts -- --limit 5
+npm run sevcik:signals
+npm run sevcik:aggregate
+
 # Prune old probe directories
 node tools/prune_old_probes.js           # dry-run
 node tools/prune_old_probes.js --execute # actually delete
@@ -292,6 +445,8 @@ data/
     state.sqlite          # SQLite catalog
     downloads_1080p/      # QMG 1080p videos
     downloads_hires/      # Revere 720p videos
+    transcripts/          # Fetched transcripts (one JSON per video)
+    audio_sevcik/         # Temporary Sevcik audio, for the Deepgram fallback
   video_scan_YYYYMMDD/    # OCR scan outputs
   video_ocr_probe/       # Temporary probe directories (prune if >10 MB)
   price_cache/yahoo/      # Historical price data
@@ -309,3 +464,7 @@ data/
 - `data/position_events.csv` — entry/exit events by portfolio and day
 - `data/portfolio_performance_summary.csv` — per-portfolio summary
 - `data/portfolio_performance_timeseries.csv` — portfolio timeline
+- `data/sevcik_signals.csv` — extracted trade signals, with their evidence
+- `data/sevcik_daily_summary.csv` — one row per Sevcik stream
+- `data/sevcik_ticker_summary.csv` — one row per ticker
+- `data/sevcik_report.html` — the Sevcik dashboard

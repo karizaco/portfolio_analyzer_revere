@@ -85,11 +85,12 @@ function confidencePill(label) {
  * @returns {string}
  */
 function renderHeadline(payload) {
-  const bullish = payload.signals.filter((signal) => signal.bias === 'bullish').length;
-  const bearish = payload.signals.filter((signal) => signal.bias === 'bearish').length;
-  const withPrice = payload.signals.filter((signal) => signal.entry_price !== '' || signal.target_price_low !== '').length;
+  const signals = payload.signals || [];
+  const bullish = signals.filter((signal) => signal.bias === 'bullish').length;
+  const bearish = signals.filter((signal) => signal.bias === 'bearish').length;
+  const withPrice = signals.filter((signal) => signal.entry_price !== '' || signal.target_price_low !== '').length;
   const providers = {};
-  for (const signal of payload.signals) {
+  for (const signal of signals) {
     if (signal.provider) providers[signal.provider] = (providers[signal.provider] || 0) + 1;
   }
   const providerText = Object.entries(providers)
@@ -98,15 +99,15 @@ function renderHeadline(payload) {
 
   return `
     <div class="cards">
-      <div class="card"><div class="card-value">${payload.signal_count}</div><div class="card-label">signals</div></div>
-      <div class="card"><div class="card-value">${payload.video_count}</div><div class="card-label">streams</div></div>
-      <div class="card"><div class="card-value">${payload.unique_tickers}</div><div class="card-label">tickers</div></div>
+      <div class="card"><div class="card-value">${payload.signal_count || 0}</div><div class="card-label">signals</div></div>
+      <div class="card"><div class="card-value">${payload.video_count || 0}</div><div class="card-label">streams</div></div>
+      <div class="card"><div class="card-value">${payload.unique_tickers || 0}</div><div class="card-label">tickers</div></div>
       <div class="card"><div class="card-value">${bullish}</div><div class="card-label">bullish</div></div>
       <div class="card"><div class="card-value">${bearish}</div><div class="card-label">bearish</div></div>
       <div class="card"><div class="card-value">${withPrice}</div><div class="card-label">with a price</div></div>
     </div>
     <p class="note">Transcript providers in use: ${escapeHtml(providerText)}.
-      Generated ${escapeHtml(payload.generated_at)}.</p>`;
+      Generated ${escapeHtml(payload.generated_at || '')}.</p>`;
 }
 
 /**
