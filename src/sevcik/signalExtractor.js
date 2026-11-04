@@ -66,6 +66,8 @@ const {
 } = require('./signalPatterns');
 
 const { STRICT_TICKER_PATTERN } = require('../normalize/tickerExtraction');
+const { findCzechCompanyNames } = require('./czechNames');
+const { loadConfirmedNames, stemName } = require('./companyNames');
 
 /**
  * The version of the extractor. It is written onto every signal row, so a
@@ -129,29 +131,83 @@ function isAmbiguousTokenAccepted(token) {
 /**
  * The tickers in a piece of text, with their positions.
  *
- * The tokenization is done here rather than delegated to
- * `src/normalize/tickerExtraction.js`, for one reason that matters:
+ * TWO PATHS, AND BOTH ARE NEEDED
  *
- * That module's `STRICT_TICKER_PATTERN` accepts a dotted suffix
- * (`BRK.B`), so a token keeps its trailing period and then fails the
- * pattern -- "TQQQ." is not a ticker to it, and neither is "SPY.". A
- * transcript is full of sentences that END in a period, so every ticker at
- * the end of a sentence would be lost.
+ * The channel is Czech and the speaker says company NAMES -- "Tesla",
+ * "Apple", "Amazon" -- not symbols. The symbol path below finds a symbol,
+ * which works for the handful of times he says one out loud ("SPCX",
+ * "NVDA", "PSX"). The NAME path finds the rest.
  *
- * So the period is stripped here, and only the trailing one: "BRK.B" keeps
- * its dot, because that is part of the symbol.
+ * Measured on the 12-stream corpus: the symbol path matched 25,136
+ * tokens and produced ZERO signals, because the direction and price
+ * vocabulary was English and the Czech speech matched none of it. The
+ * name path matched 269 names across the same corpus.
+ *
+ * So the names come first, and the symbols are added for the tokens the
+ * names did not already cover.
+ *
+ * WHY THE SYMBOL TOKENIZATION IS NOT DELEGATED
+ *
+ * `src/normalize/tickerExtraction.js`'s `STRICT_TICKER_PATTERN` accepts a
+ * dotted suffix (`BRK.B`), so a token keeps its trailing period and then
+ * fails the pattern -- "TQQQ." is not a ticker to it, and neither is
+ * "SPY.". A transcript is full of sentences that END in a period, so
+ * every ticker at the end of a sentence would be lost. So the period is
+ * stripped here, and only the trailing one: "BRK.B" keeps its dot,
+ * because that is part of the symbol.
  *
  * @param {string} text
  * @param {Set<string>} lexicon - the allowed ticker set
+ * @param {object} [options]
+ * @param {Set<string>|null} [options.confirmedSymbols] - the tickers that
+ *   may be read as a SPOKEN SYMBOL. When given, a symbol token has to be
+ *   in this set to count. The Sevcik source passes the confirmed table,
+ *   because its lexicon has 10,485 tickers and one-letter SEC registrants
+ *   match ordinary Czech words. When it is NOT given, every symbol in the
+ *   lexicon counts -- which is the right behaviour for a small, curated
+ *   lexicon.
  * @returns {Array<{ticker: string, index: number}>}
  */
-function findTickers(text, lexicon) {
+function findTickers(text, lexicon, options = {}) {
   const str = String(text || '');
   if (!str.trim()) return [];
 
   const found = [];
   const seen = new Set();
 
+  // -- THE NAMES -----------------------------------------------------
+  //
+  // The Czech name matcher is position-based: a capitalised word that is
+  // NOT the first word of its sentence is a candidate, because Czech
+  // capitalises every sentence-initial word. A symbol needs no such
+  // test -- it is written in CAPS wherever it appears.
+  for (const name of findCzechCompanyNames(str, { lexicon })) {
+    if (!name.ticker) continue;
+    if (seen.has(name.ticker)) continue;
+    seen.add(name.ticker);
+    found.push({ ticker: name.ticker, index: name.index });
+  }
+
+  // -- THE SYMBOLS ---------------------------------------------------
+  //
+  // A symbol has to be CONFIRMED as one, by the same curated table that
+  // confirms a name. An unconfirmed symbol is not a symbol.
+  //
+  // This gate is not a nicety. The Sevcik lexicon has 10,485 tickers, and
+  // without the gate the symbol path matched the SEC's one-letter and
+  // two-letter registrants in ordinary Czech speech:
+  //
+  //   P   "předtím"   A   "a"    SE  "se"   EL  "el"   TAK  "tak"
+  //
+  // Measured on the corpus, 187 distinct symbols matched in three
+  // videos, and the top of the list was M:906, E:778, A:629, V:558 --
+  // every one of them a Czech letter or word, not a company.
+  //
+  // So the symbol path is restricted to the confirmed table, which is
+  // the record of what was actually heard said as a symbol.
+  const confirmedSymbols = options.confirmedSymbols instanceof Set
+    ? options.confirmedSymbols
+    : null;
   const tokenPattern = /[A-Za-z][A-Za-z0-9.]*/g;
   let match;
   while ((match = tokenPattern.exec(str)) !== null) {
@@ -166,12 +222,15 @@ function findTickers(text, lexicon) {
     if (!lexicon.has(upper)) continue;
     if (seen.has(upper)) continue;
     if (!isAmbiguousTokenAccepted(token)) continue;
+    // The symbol itself has to be a CONFIRMED symbol, when the caller
+    // has a confirmed set.
+    if (confirmedSymbols && !confirmedSymbols.has(upper)) continue;
 
     seen.add(upper);
     found.push({ ticker: upper, index: match.index });
   }
 
-  return found;
+  return found.sort((a, b) => a.index - b.index);
 }
 
 /**
@@ -696,7 +755,7 @@ function targetImpliesBias(target, prices) {
  * @param {Set<string>} lexicon
  * @returns {Array<{ticker: string, pieces: Array<{index: number, text: string}>, segmentStart: number, segmentEnd: number}>}
  */
-function buildTickerRuns(segments, lexicon) {
+function buildTickerRuns(segments, lexicon, options = {}) {
   const runs = [];
   let open = null;
 
@@ -709,7 +768,7 @@ function buildTickerRuns(segments, lexicon) {
 
   for (let index = 0; index < segments.length; index += 1) {
     const text = String(segments[index].text || '');
-    const tickers = findTickers(text, lexicon);
+    const tickers = findTickers(text, lexicon, options);
 
     if (!tickers.length) {
       // A segment with no name continues the run that is open.
@@ -974,7 +1033,7 @@ function extractSignals(options) {
   const lexicon = options.lexicon instanceof Set ? options.lexicon : new Set(options.lexicon || []);
   if (!segments.length || !lexicon.size) return [];
 
-  const runs = buildTickerRuns(segments, lexicon);
+  const runs = buildTickerRuns(segments, lexicon, options);
   const signals = [];
 
   for (const rawRun of runs) {

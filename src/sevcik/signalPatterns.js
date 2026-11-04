@@ -19,6 +19,55 @@
 // The one rule that is absolute: a pattern never fires without a TICKER in
 // the same window. "I am bullish" says nothing about what to buy, so it is
 // not a signal.
+//
+// THE CZECH VOCABULARY
+//
+// The channel is Czech, and the first version of this file was English
+// only. Measured on the 12-stream corpus (10,847 segments), the English
+// patterns fired on NOTHING:
+//
+//   bias      0 segments
+//   action    2 segments ("hold")
+//   horizon   0 segments
+//
+// So the extractor was reading Czech and understanding none of it. The
+// Czech patterns below were built from the corpus, and every count is the
+// number of segments the pattern fires on:
+//
+//   "do Longu" / "do Long"      89   the direction, and it is the DOMINANT
+//                                   construction -- "půjde do Longu" is how
+//                                   he states a bullish call
+//   "do shortu" / "do Short"    49   the bearish construction
+//   "poklesový"                  62   a falling channel -- the DIRECTION
+//                                   is in the channel's slope
+//   "rostoucí"                    4   a rising channel
+//   "kanál"                     384   the LEVEL, and the thing he calls
+//                                   a setup
+//   "odraz"                             the bounce off a level
+//   "zóna"                      33   the zone
+//   "podmíněný"                  14   the conditional call
+//
+// THE TRANSCRIPTION WRITES "LONG" TWO WAYS
+//
+// The Czech audio renders "long" as "Long" and as "Lon" -- "to je 50 do
+// Lon, 50 do shortu" -- and the transcript carries both spellings. So
+// every direction pattern accepts "Lon" as well as "Long", because a
+// pattern that only accepted one spelling would miss half the calls.
+//
+// WHAT HE DOES NOT SAY
+//
+// There is no "target" in this corpus. The word "cíl" (target) appears
+// TWICE, and both are about a GOAL ("aby se to uměli sami bez země" --
+// "so that they can learn it themselves without going to the ground"), not
+// a price. And there is no "stop loss": "stop" appears 15 times, and 13
+// of them are inside "stoprocentně" (one hundred percent) or in a
+// metaphor about a red button.
+//
+// So the price roles are LEVELS, not entry/target/stop, and the role
+// table below says so. That is the SPEAKER'S vocabulary, not a
+// limitation of the parser: he says "if it holds this level", and
+// inventing a target price he never stated would put a number into a
+// portfolio report that the video does not support.
 
 /**
  * Directional language, and the bias it implies.
@@ -29,32 +78,67 @@
  * with weight 0.5 ("I like X").
  */
 const BULLISH_PATTERNS = [
-  { pattern: /\b(?:i'?m|i am|we'?re|we are)\s+(?:very\s+|extremely\s+|really\s+)?(?:bullish|long|optimistic)\b/gi, weight: 1.0 },
-  { pattern: /\bvery\s+bullish\b/gi, weight: 1.0 },
-  { pattern: /\bbullish\b/gi, weight: 0.8 },
-  { pattern: /\b(?:i\s+like|i\s+love|love)\s+(?:this|it)?\s*\b/gi, weight: 0.5 },
-  { pattern: /\b(?:strong|high)\s+conviction\b/gi, weight: 1.0 },
-  { pattern: /\b(?:going|going to go|gonna go)\s+long\b/gi, weight: 0.9 },
-  { pattern: /\b(?:want to|plan to|looking to)\s+(?:be\s+)?long\b/gi, weight: 0.8 },
-  { pattern: /\b(?:adding|added|add)\s+(?:to|more)\b/gi, weight: 0.8 },
-  { pattern: /\b(?:buy|buying|picking up|accumulating)\s+(?:it|this|some|up)\b/gi, weight: 0.7 },
-  { pattern: /\b(?:upside|upside potential|room to run)\b/gi, weight: 0.7 },
-  { pattern: /\b(?:breakout|breaking out|bounce|rebound)\s+(?:is\s+)?(?:here|now|about to)\b/gi, weight: 0.6 },
-  { pattern: /\bi\s+(?:think|believe|feel)\s+(?:this|it|that)\s+(?:is\s+)?(?:going to|will)\s+(?:go|run|higher)\b/gi, weight: 0.7 },
+  { pattern: /(?<![\p{L}\p{N}])(?:i'?m|i am|we'?re|we are)\s+(?:very\s+|extremely\s+|really\s+)?(?:bullish|long|optimistic)(?![\p{L}\p{N}])/giu, weight: 1.0 },
+  { pattern: /(?<![\p{L}\p{N}])very\s+bullish(?![\p{L}\p{N}])/giu, weight: 1.0 },
+  { pattern: /(?<![\p{L}\p{N}])bullish(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { pattern: /(?<![\p{L}\p{N}])(?:i\s+like|i\s+love|love)\s+(?:this|it)?\s*(?![\p{L}\p{N}])/giu, weight: 0.5 },
+  { pattern: /(?<![\p{L}\p{N}])(?:strong|high)\s+conviction(?![\p{L}\p{N}])/giu, weight: 1.0 },
+  { pattern: /(?<![\p{L}\p{N}])(?:going|going to go|gonna go)\s+long(?![\p{L}\p{N}])/giu, weight: 0.9 },
+  { pattern: /(?<![\p{L}\p{N}])(?:want to|plan to|looking to)\s+(?:be\s+)?long(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { pattern: /(?<![\p{L}\p{N}])(?:adding|added|add)\s+(?:to|more)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { pattern: /(?<![\p{L}\p{N}])(?:buy|buying|picking up|accumulating)\s+(?:it|this|some|up)(?![\p{L}\p{N}])/giu, weight: 0.7 },
+  { pattern: /(?<![\p{L}\p{N}])(?:upside|upside potential|room to run)(?![\p{L}\p{N}])/giu, weight: 0.7 },
+  { pattern: /(?<![\p{L}\p{N}])(?:breakout|breaking out|bounce|rebound)\s+(?:is\s+)?(?:here|now|about to)(?![\p{L}\p{N}])/giu, weight: 0.6 },
+  { pattern: /(?<![\p{L}\p{N}])i\s+(?:think|believe|feel)\s+(?:this|it|that)\s+(?:is\s+)?(?:going to|will)\s+(?:go|run|higher)(?![\p{L}\p{N}])/giu, weight: 0.7 },
+
+  // -- THE CZECH DIRECTION ------------------------------------------
+  //
+  // "do Longu" is the construction, and it is the dominant one: 89
+  // segments. The bare "Long" is much weaker, because he says "Long" as
+  // a noun all the time -- "longový kanál" (a rising channel) is a
+  // description of the CHART, not a call.
+  { pattern: /(?<![\p{L}\p{N}])do\s+lon(?:g|gu|ů|em)(?![\p{L}\p{N}])/giu, weight: 0.9 },
+  { pattern: /(?<![\p{L}\p{N}])(?:půjde|pujde|půjdem|půjdu|jde|jdem|jdeme|jdou|pojde|pojdem)\s+do\s+lon(?:g|gu|ů|em)?(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { pattern: /(?<![\p{L}\p{N}])lo(?:ng|ngu|ngů)\s+(?:směr|strana|variant)(?![\p{L}\p{N}])/giu, weight: 0.7 },
+  // The channel's slope states the direction without the word "long":
+  // "mám poklesový kanál" (a falling channel) is bearish, and it is 62
+  // segments.
+  { pattern: /(?<![\p{L}\p{N}])poklesov\w*\s+kan[aá]l\w*/giu, weight: 0.7 },
+  { pattern: /(?<![\p{L}\p{N}])klesajíc\w*\s+kan[aá]l\w*/giu, weight: 0.7 },
+  { pattern: /(?<![\p{L}\p{N}])rostouc\w*\s+kan[aá]l\w*/giu, weight: 0.7 },
+  { pattern: /(?<![\p{L}\p{N}])rostouc\w*\s+trh\w*/giu, weight: 0.7 },
+  { pattern: /(?<![\p{L}\p{N}])(?:půjde|pujde|pojde)\s+n[ií]ž\w*/giu, weight: 0.7 },
+  { pattern: /(?<![\p{L}\p{N}])(?:prorazí|prorazi|průraz|prolom)\w*\s+n[ií]ž\w*/giu, weight: 0.7 },
 ];
 
 const BEARISH_PATTERNS = [
-  { pattern: /\b(?:i'?m|i am|we'?re|we are)\s+(?:very\s+|extremely\s+|really\s+)?(?:bearish|short|bearish)\b/gi, weight: 1.0 },
-  { pattern: /\bvery\s+bearish\b/gi, weight: 1.0 },
-  { pattern: /\bbearish\b/gi, weight: 0.8 },
-  { pattern: /\b(?:i\s+hate|i\s+dislike|don'?t\s+like|do not like)\s+(?:this|it)\b/gi, weight: 0.6 },
-  { pattern: /\bgoing\s+short\b/gi, weight: 0.9 },
-  { pattern: /\b(?:want to|plan to|looking to)\s+(?:be\s+)?short\b/gi, weight: 0.8 },
-  { pattern: /\b(?:selling|sold|trimming|trimmed|exiting|exit)\s+(?:it|this|some|out|my|all)\b/gi, weight: 0.8 },
-  { pattern: /\bdownside\b/gi, weight: 0.6 },
-  { pattern: /\b(?:breakdown|breaking down|lower)\s+(?:is\s+)?(?:here|now|about to)\b/gi, weight: 0.6 },
-  { pattern: /\bi\s+(?:think|believe|feel)\s+(?:this|it|that)\s+(?:is\s+)?(?:going to|will)\s+(?:go|run|lower|drop)\b/gi, weight: 0.7 },
-  { pattern: /\bshort\s+it\b/gi, weight: 0.8 },
+  { pattern: /(?<![\p{L}\p{N}])(?:i'?m|i am|we'?re|we are)\s+(?:very\s+|extremely\s+|really\s+)?(?:bearish|short|bearish)(?![\p{L}\p{N}])/giu, weight: 1.0 },
+  { pattern: /(?<![\p{L}\p{N}])very\s+bearish(?![\p{L}\p{N}])/giu, weight: 1.0 },
+  { pattern: /(?<![\p{L}\p{N}])bearish(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { pattern: /(?<![\p{L}\p{N}])(?:i\s+hate|i\s+dislike|don'?t\s+like|do not like)\s+(?:this|it)(?![\p{L}\p{N}])/giu, weight: 0.6 },
+  { pattern: /(?<![\p{L}\p{N}])going\s+short(?![\p{L}\p{N}])/giu, weight: 0.9 },
+  { pattern: /(?<![\p{L}\p{N}])(?:want to|plan to|looking to)\s+(?:be\s+)?short(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { pattern: /(?<![\p{L}\p{N}])(?:selling|sold|trimming|trimmed|exiting|exit)\s+(?:it|this|some|out|my|all)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { pattern: /(?<![\p{L}\p{N}])downside(?![\p{L}\p{N}])/giu, weight: 0.6 },
+  { pattern: /(?<![\p{L}\p{N}])(?:breakdown|breaking down|lower)\s+(?:is\s+)?(?:here|now|about to)(?![\p{L}\p{N}])/giu, weight: 0.6 },
+  { pattern: /(?<![\p{L}\p{N}])i\s+(?:think|believe|feel)\s+(?:this|it|that)\s+(?:is\s+)?(?:going to|will)\s+(?:go|run|lower|drop)(?![\p{L}\p{N}])/giu, weight: 0.7 },
+  { pattern: /(?<![\p{L}\p{N}])short\s+it(?![\p{L}\p{N}])/giu, weight: 0.8 },
+
+  // -- THE CZECH DIRECTION ------------------------------------------
+  //
+  // "do shortu" is 49 segments, and the transcription writes it both
+  // "shortu" and "short".
+  { pattern: /(?<![\p{L}\p{N}])do\s+short(?:u|ů)?(?![\p{L}\p{N}])/giu, weight: 0.9 },
+  { pattern: /(?<![\p{L}\p{N}])(?:půjde|pujde|půjdem|půjdu|jde|jdem|jdeme|jdou|pojde|pojdem)\s+do\s+short(?:u|ů)?(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { pattern: /(?<![\p{L}\p{N}])shortov\w*\s+(?:směr|strana|variant|kan[aá]l\w*)(?![\p{L}\p{N}])/giu, weight: 0.7 },
+  // "do shortu" and the falling channel are the same statement, and the
+  // channel carries it on its own: "máme poklesový kanál, že pokud
+  // neudrží" -- "we have a falling channel, that if it does not hold".
+  { pattern: /(?<![\p{L}\p{N}])do\s+short(?:u|ů)?\s+pokud(?![\p{L}\p{N}])/giu, weight: 0.9 },
+  { pattern: /(?<![\p{L}\p{N}])(?:short\w*|short)\s+(?:variant|scénář\w*|scenar\w*)(?![\p{L}\p{N}])/giu, weight: 0.7 },
+  // A rejection of a level is bearish: "bylo odmítnuto" (it was
+  // rejected).
+  { pattern: /(?<![\p{L}\p{N}])(?:bylo\s+odmítnut\w*|odmítnut\w*\s+tahl\w*\s+z[oó]na)(?![\p{L}\p{N}])/giu, weight: 0.6 },
 ];
 
 /**
@@ -69,28 +153,49 @@ const ACTION_PATTERNS = [
   // The "I am going to buy" form needs its own pattern: the general
   // "going to" form below does not cover the "I am" prefix, and "I am going
   // to buy" is the single most common way a trade intent is spoken.
-  { action: 'buy', pattern: /\b(?:i'?m|i am|we'?re|we are)\s+(?:going to|gonna|about to)\s+buy\b/gi, weight: 0.9 },
-  { action: 'buy', pattern: /\b(?:i'?ll|i will|i want to|we'?ll|we will|we want to)\s+buy\b/gi, weight: 0.9 },
-  { action: 'buy', pattern: /\b(?:going to|gonna)\s+buy\b/gi, weight: 0.8 },
-  { action: 'buy', pattern: /\b(?:buying|purchasing|picking up|accumulating)\b/gi, weight: 0.7 },
-  { action: 'buy', pattern: /\b(?:long|going long)\s+(?:it|this|that|here)\b/gi, weight: 0.7 },
-  { action: 'add', pattern: /\b(?:i'?m|i am|we'?re|we are)?\s*(?:adding|added|add)\s+(?:to|more)\b/gi, weight: 0.8 },
-  { action: 'add', pattern: /\b(?:scaling|scaling in|adding more)\b/gi, weight: 0.8 },
-  { action: 'sell', pattern: /\b(?:i'?m|i am|we'?re|we are)\s+(?:going to|gonna|about to)\s+sell\b/gi, weight: 0.9 },
-  { action: 'sell', pattern: /\b(?:i'?ll|i will|i want to|we'?ll|we will)\s+sell\b/gi, weight: 0.9 },
-  { action: 'sell', pattern: /\b(?:going to|gonna)\s+sell\b/gi, weight: 0.8 },
-  { action: 'sell', pattern: /\b(?:selling|sold)\s+(?:it|this|some|my|all|out)\b/gi, weight: 0.7 },
-  { action: 'trim', pattern: /\b(?:trimming|trimmed|trim\s+it|trim\s+some)\b/gi, weight: 0.8 },
-  { action: 'short', pattern: /\b(?:shorting|short it|going short|want to short)\b/gi, weight: 0.9 },
+  { action: 'buy', pattern: /(?<![\p{L}\p{N}])(?:i'?m|i am|we'?re|we are)\s+(?:going to|gonna|about to)\s+buy(?![\p{L}\p{N}])/giu, weight: 0.9 },
+  { action: 'buy', pattern: /(?<![\p{L}\p{N}])(?:i'?ll|i will|i want to|we'?ll|we will|we want to)\s+buy(?![\p{L}\p{N}])/giu, weight: 0.9 },
+  { action: 'buy', pattern: /(?<![\p{L}\p{N}])(?:going to|gonna)\s+buy(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'buy', pattern: /(?<![\p{L}\p{N}])(?:buying|purchasing|picking up|accumulating)(?![\p{L}\p{N}])/giu, weight: 0.7 },
+  { action: 'buy', pattern: /(?<![\p{L}\p{N}])(?:long|going long)\s+(?:it|this|that|here)(?![\p{L}\p{N}])/giu, weight: 0.7 },
+  { action: 'add', pattern: /(?<![\p{L}\p{N}])(?:i'?m|i am|we'?re|we are)?\s*(?:adding|added|add)\s+(?:to|more)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'add', pattern: /(?<![\p{L}\p{N}])(?:scaling|scaling in|adding more)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'sell', pattern: /(?<![\p{L}\p{N}])(?:i'?m|i am|we'?re|we are)\s+(?:going to|gonna|about to)\s+sell(?![\p{L}\p{N}])/giu, weight: 0.9 },
+  { action: 'sell', pattern: /(?<![\p{L}\p{N}])(?:i'?ll|i will|i want to|we'?ll|we will)\s+sell(?![\p{L}\p{N}])/giu, weight: 0.9 },
+  { action: 'sell', pattern: /(?<![\p{L}\p{N}])(?:going to|gonna)\s+sell(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'sell', pattern: /(?<![\p{L}\p{N}])(?:selling|sold)\s+(?:it|this|some|my|all|out)(?![\p{L}\p{N}])/giu, weight: 0.7 },
+  { action: 'trim', pattern: /(?<![\p{L}\p{N}])(?:trimming|trimmed|trim\s+it|trim\s+some)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'short', pattern: /(?<![\p{L}\p{N}])(?:shorting|short it|going short|want to short)(?![\p{L}\p{N}])/giu, weight: 0.9 },
   // "I am going to short NVDA" -- the same construction as "going to buy",
   // and without it the single most direct way of saying a bearish call
   // reads as no call at all.
-  { action: 'short', pattern: /\b(?:i'?m|i am|we'?re|we are)\s+(?:going to|gonna|about to)\s+short\b/gi, weight: 0.9 },
-  { action: 'short', pattern: /\b(?:i'?ll|i will|i want to|we'?ll|we will)\s+short\b/gi, weight: 0.9 },
-  { action: 'short', pattern: /\b(?:going to|gonna)\s+short\b/gi, weight: 0.8 },
-  { action: 'cover', pattern: /\b(?:covering|cover it|covered)\b/gi, weight: 0.8 },
-  { action: 'hold', pattern: /\b(?:holding|keeping|keeping it|not selling)\b/gi, weight: 0.6 },
-  { action: 'watch', pattern: /\b(?:watching|watch for|watching for|keeping an eye)\b/gi, weight: 0.5 },
+  { action: 'short', pattern: /(?<![\p{L}\p{N}])(?:i'?m|i am|we'?re|we are)\s+(?:going to|gonna|about to)\s+short(?![\p{L}\p{N}])/giu, weight: 0.9 },
+  { action: 'short', pattern: /(?<![\p{L}\p{N}])(?:i'?ll|i will|i want to|we'?ll|we will)\s+short(?![\p{L}\p{N}])/giu, weight: 0.9 },
+  { action: 'short', pattern: /(?<![\p{L}\p{N}])(?:going to|gonna)\s+short(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'cover', pattern: /(?<![\p{L}\p{N}])(?:covering|cover it|covered)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'hold', pattern: /(?<![\p{L}\p{N}])(?:holding|keeping|keeping it|not selling)(?![\p{L}\p{N}])/giu, weight: 0.6 },
+  { action: 'watch', pattern: /(?<![\p{L}\p{N}])(?:watching|watch for|watching for|keeping an eye)(?![\p{L}\p{N}])/giu, weight: 0.5 },
+
+  // -- THE CZECH ACTIONS --------------------------------------------
+  //
+  // He does not say "I am going to buy". He says what the setup IS, and
+  // the setup IS a direction: "do Longu", "do shortu". So the Czech
+  // actions are the setup verbs:
+  //
+  //   "mám tady predikci"     I have a prediction here   -> new
+  //   "budeme čekat"          we will wait               -> watch
+  //   "přidám"                I will add                 -> add
+  //   "prodat"                to sell                    -> sell
+  //   "odebrat"               to take off                -> trim
+  //
+  // The DIRECTION is not an action here -- it is the bias, and the two
+  // are recorded separately, exactly as in English.
+  { action: 'watch', pattern: /(?<![\p{L}\p{N}])budeme\s+čekat(?![\p{L}\p{N}])/giu, weight: 0.5 },
+  { action: 'watch', pattern: /(?<![\p{L}\p{N}])(?:počkám|pockam|počkáme|pockame|čekám|cekám|čekáme|cekame)(?![\p{L}\p{N}])/giu, weight: 0.5 },
+  { action: 'add', pattern: /(?<![\p{L}\p{N}])(?:přidám|pridam|přidáme|pridame|dokupím|dokupim)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'sell', pattern: /(?<![\p{L}\p{N}])(?:prodat|prodám|prodame|prodej|prodat)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'trim', pattern: /(?<![\p{L}\p{N}])(?:odebrat|odberu|ubrat|uberu|částečně\s+prodat)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'hold', pattern: /(?<![\p{L}\p{N}])(?:držím|drzim|mám\s+držen\w*|nechám\s+držet)(?![\p{L}\p{N}])/giu, weight: 0.6 },
 ];
 
 /**
@@ -102,10 +207,25 @@ const ACTION_PATTERNS = [
  * tell those apart.
  */
 const CONFIDENCE_PATTERNS = [
-  { level: 'high', weight: 1.0, pattern: /\b(?:very\s+confident|high\s+conviction|strong\s+conviction|very\s+bullish|very\s+bearish|absolutely|definitely|certainly)\b/gi },
-  { level: 'high', weight: 0.9, pattern: /\b(?:i\s+am\s+confident|i'?m\s+confident|confident\s+that)\b/gi },
-  { level: 'medium', weight: 0.6, pattern: /\b(?:fairly\s+confident|pretty\s+confident|moderately)\b/gi },
-  { level: 'low', weight: 0.3, pattern: /\b(?:maybe|perhaps|possibly|might|not\s+sure|unsure|i\s+think|i\s+guess|if\s+i\s+had\s+to\s+guess)\b/gi },
+  { level: 'high', weight: 1.0, pattern: /(?<![\p{L}\p{N}])(?:very\s+confident|high\s+conviction|strong\s+conviction|very\s+bullish|very\s+bearish|absolutely|definitely|certainly)(?![\p{L}\p{N}])/gi },
+  { level: 'high', weight: 0.9, pattern: /(?<![\p{L}\p{N}])(?:i\s+am\s+confident|i'?m\s+confident|confident\s+that)(?![\p{L}\p{N}])/gi },
+  { level: 'medium', weight: 0.6, pattern: /(?<![\p{L}\p{N}])(?:fairly\s+confident|pretty\s+confident|moderately)(?![\p{L}\p{N}])/gi },
+  { level: 'low', weight: 0.3, pattern: /(?<![\p{L}\p{N}])(?:maybe|perhaps|possibly|might|not\s+sure|unsure|i\s+think|i\s+guess|if\s+i\s+had\s+to\s+guess)(?![\p{L}\p{N}])/gi },
+
+  // -- THE CZECH CONFIDENCE -----------------------------------------
+  //
+  // The stated confidence is the CZECH certainty scale, which is measured
+  // in `certainty.js`. The patterns here are the ones that map onto the
+  // extractor's three-level label.
+  //
+  //   high    "velmi silny signal", "silnejsi" -- a stronger signal
+  //   medium  "pravdepodobne", "50 na 50" -- probable, or even odds
+  //   low     "nevim" -- I do not know
+  { level: 'high', weight: 1.0, pattern: /(?<![\p{L}\p{N}])(?:velmi\s+siln\w*\s+sign[aá]l|silnější\s+sign[aá]l|silnější)(?![\p{L}\p{N}])/gi },
+  { level: 'high', weight: 0.8, pattern: /(?<![\p{L}\p{N}])jasn\w*\s+sign[aá]l(?![\p{L}\p{N}])/gi },
+  { level: 'medium', weight: 0.6, pattern: /(?<![\p{L}\p{N}])pravděpodobn\w*(?![\p{L}\p{N}])/gi },
+  { level: 'medium', weight: 0.6, pattern: /(?<![\p{L}\p{N}])50\s*(?:na|to)\s*50(?![\p{L}\p{N}])/gi },
+  { level: 'low', weight: 0.3, pattern: /(?<![\p{L}\p{N}])nevím(?![\p{L}\p{N}])/gi },
 ];
 
 /**
@@ -125,13 +245,36 @@ const CONFIDENCE_PATTERNS = [
  */
 const HORIZON_PATTERNS = [
   // Explicit horizons -- the speaker named the horizon.
-  { horizon: 'position', specificity: 0.9, pattern: /\b(?:long[- ]term|for\s+the\s+long\s+term|hold\s+this|over\s+the\s+next\s+months?|position\s+trade)\b/gi },
-  { horizon: 'swing', specificity: 0.9, pattern: /\b(?:swing\s+trade|swing\s+setup|over\s+the\s+next\s+(?:few\s+)?(?:days|week|weeks))\b/gi },
-  { horizon: 'intraday', specificity: 0.9, pattern: /\b(?:intraday|by\s+the\s+close|before\s+the\s+close|this\s+session|today'?s\s+trade)\b/gi },
+  { horizon: 'position', specificity: 0.9, pattern: /(?<![\p{L}\p{N}])(?:long[- ]term|for\s+the\s+long\s+term|hold\s+this|over\s+the\s+next\s+months?|position\s+trade)(?![\p{L}\p{N}])/gi },
+  { horizon: 'swing', specificity: 0.9, pattern: /(?<![\p{L}\p{N}])(?:swing\s+trade|swing\s+setup|over\s+the\s+next\s+(?:few\s+)?(?:days|week|weeks))(?![\p{L}\p{N}])/gi },
+  { horizon: 'intraday', specificity: 0.9, pattern: /(?<![\p{L}\p{N}])(?:intraday|by\s+the\s+close|before\s+the\s+close|this\s+session|today'?s\s+trade)(?![\p{L}\p{N}])/gi },
 
   // Weaker horizons -- the speaker said when, not how long.
-  { horizon: 'intraday', specificity: 0.5, pattern: /\b(?:today|in\s+the\s+day|this\s+week)\b/gi },
-  { horizon: 'swing', specificity: 0.5, pattern: /\b(?:swing|next\s+day|tomorrow)\b/gi },
+  { horizon: 'intraday', specificity: 0.5, pattern: /(?<![\p{L}\p{N}])(?:today|in\s+the\s+day|this\s+week)(?![\p{L}\p{N}])/gi },
+  { horizon: 'swing', specificity: 0.5, pattern: /(?<![\p{L}\p{N}])(?:swing|next\s+day|tomorrow)(?![\p{L}\p{N}])/gi },
+
+  // -- THE CZECH HORIZONS --------------------------------------------
+  //
+  // He states a horizon in Czech:
+  //
+  //   "do týdne"     within a week
+  //   "do dvou týdnů" within two weeks
+  //   "do měsíce"   within a month
+  //   "do týdnů"     over weeks
+  //   "na příští týden" next week
+  //   "dneska"      today
+  //
+  // The week count is parsed by a separate pattern, because "do týdne"
+  // (one week) and "do tří týdnů" (three weeks) are the same phrase with
+  // a number in it, and a pattern that only matched one of them would
+  // report every horizon as a week.
+  { horizon: 'intraday', specificity: 0.9, pattern: /(?<![\p{L}\p{N}])(?:dneska|dnes|dnem\s+do\s+konce)(?![\p{L}\p{N}])/gi },
+  { horizon: 'swing', specificity: 0.9, pattern: /(?<![\p{L}\p{N}])(?:na\s+příští\s+týden|na\s+pristi\s+tyden|příští\s+týden|pristi\s+tyden)(?![\p{L}\p{N}])/gi },
+  { horizon: 'swing', specificity: 0.8, pattern: /(?<![\p{L}\p{N}])do\s+(?:jednoho|dvou|tří|čtyř|pěti|šesti|sedmi|osmi|devíti|desíti)\s+(?:týdn\w*|dn\w*|měsíc\w*)(?![\p{L}\p{N}])/gi },
+  { horizon: 'swing', specificity: 0.7, pattern: /(?<![\p{L}\p{N}])do\s+týdn\w*(?![\p{L}\p{N}])/gi },
+  { horizon: 'position', specificity: 0.9, pattern: /(?<![\p{L}\p{N}])do\s+(?:jednoho|dvou|tří|čtyř|pěti|šesti|sedmi|osmi|devíti|desíti)\s+měsíc\w*/gi },
+  { horizon: 'position', specificity: 0.7, pattern: /(?<![\p{L}\p{N}])do\s+měsíc\w*(?![\p{L}\p{N}])/gi },
+  { horizon: 'position', specificity: 0.6, pattern: /(?<![\p{L}\p{N}])(?:dlouhodob\w*|investičn\w*\s+horizont\w*)(?![\p{L}\p{N}])/gi },
 ];
 
 /**
@@ -142,13 +285,58 @@ const HORIZON_PATTERNS = [
  * with no role, and it is NOT recorded as an entry -- guessing a role would
  * put a wrong number in a portfolio report, and a wrong number in a
  * portfolio report is worse than a missing one.
+ *
+ * THE CZECH CHANNEL HAS NO TARGETS
+//
+// Measured on the corpus: "cíl" (target) appears TWICE and both are about
+// a GOAL, not a price. "stop" appears 15 times and 13 of them are inside
+// "stoprocentně" (one hundred percent) or in a metaphor about a red
+// button. There is no "vstup" (entry) price either -- the 6 occurrences
+// are about "investiční vstup" (an investment entry) and "vstupní částky"
+// (an entry amount), never a price to buy at.
+//
+// What he DOES say is a LEVEL, and it is said constantly:
+//
+//   "kanál"        384   the channel -- and its edges are the levels
+//   "úroveň"              the level
+//   "odraz"               the bounce off it
+//   "zóna"          33   the zone
+//   "hranice"             the edge
+//   "podmíněná, pokud se dostane nad tuhletu horní hranu kanálu"
+//     ("conditional, if it gets above this upper edge of the channel")
+//
+// So the role is LEVEL, and the level's ROLE is its own kind: an UPPER
+// edge is a breakout level, a LOWER edge is a support level, and the
+// direction the level implies is the call.
+//
+// The user said it directly: "levels, not targets -- yes, that is his
+// problem, not yours". A target price he never stated must not appear in
+// a portfolio report.
  */
 const PRICE_ROLES = [
-  { role: 'entry', pattern: /\b(?:entry|entry\s+point|buy\s+point|buying\s+point|buy\s+at|buy\s+around|buy\s+below|buy\s+under|entering\s+at|get\s+in\s+at)\b/gi },
-  { role: 'target', pattern: /\b(?:target|price\s+target|tp\b|take\s+profit|taking\s+profit|goal\s+is|aiming\s+for|looking\s+for|upside\s+target)\b/gi },
-  { role: 'stop', pattern: /\b(?:stop|stop\s+loss|stop\s+at|invalidation|invalidat\w*|breakdown\s+below|below\s+which)\b/gi },
-  { role: 'support', pattern: /\b(?:support|support\s+level|holding\s+above|bounce\s+off)\b/gi },
-  { role: 'resistance', pattern: /\b(?:resistance|resistance\s+level|breaking\s+above|through\s+the\s+level)\b/gi },
+  { role: 'entry', pattern: /(?<![\p{L}\p{N}])(?:entry|entry\s+point|buy\s+point|buying\s+point|buy\s+at|buy\s+around|buy\s+below|buy\s+under|entering\s+at|get\s+in\s+at)(?![\p{L}\p{N}])/gi },
+  { role: 'target', pattern: /(?<![\p{L}\p{N}])(?:target|price\s+target|tp(?![\p{L}\p{N}])|take\s+profit|taking\s+profit|goal\s+is|aiming\s+for|looking\s+for|upside\s+target)(?![\p{L}\p{N}])/gi },
+  { role: 'stop', pattern: /(?<![\p{L}\p{N}])(?:stop|stop\s+loss|stop\s+at|invalidation|invalidat\w*|breakdown\s+below|below\s+which)(?![\p{L}\p{N}])/gi },
+  { role: 'support', pattern: /(?<![\p{L}\p{N}])(?:support|support\s+level|holding\s+above|bounce\s+off)(?![\p{L}\p{N}])/gi },
+  { role: 'resistance', pattern: /(?<![\p{L}\p{N}])(?:resistance|resistance\s+level|breaking\s+above|through\s+the\s+level)(?![\p{L}\p{N}])/gi },
+
+  // -- THE CZECH LEVELS ---------------------------------------------
+  //
+  // The UPPER edge of a channel is where a breakout is confirmed, and
+  // the LOWER edge is where a support holds. He says which one he means
+  // with "horní" (upper) and "dolní" (lower).
+  { role: 'resistance', pattern: /(?<![\p{L}\p{N}])horní\s+(?:hran\w*\s+)?(?:kan[aá]l\w*|úrov[ěe]n\w*|hran\w*)/gi },
+  { role: 'support', pattern: /(?<![\p{L}\p{N}])dolní\s+(?:hran\w*\s+)?(?:kan[aá]l\w*|úrov[ěe]n\w*|hran\w*)/gi },
+  { role: 'support', pattern: /(?<![\p{L}\p{N}])(?:podp[oě]r\w*\s+)?(?:úrov[ěe]n\w*|úrovn\w*|hran\w*|zona\w*|z[oó]na)\s+(?:zespod\w*|níž\w*|dole)(?![\p{L}\p{N}])/gi },
+  { role: 'resistance', pattern: /(?<![\p{L}\p{N}])(?:úrov[ěe]n\w*|úrovn\w*|hran\w*|zona\w*|z[oó]na)\s+(?:naho[oř]\w*|vyš\w*|vzh[oů]ru)(?![\p{L}\p{N}])/gi },
+  { role: 'support', pattern: /(?<![\p{L}\p{N}])(?:nákupní\s+z[oó]na|z[oó]na\s+pro\s+n[aá]kup\w*)(?![\p{L}\p{N}])/gi },
+  { role: 'resistance', pattern: /(?<![\p{L}\p{N}])(?:prodejní\s+z[oó]na)(?![\p{L}\p{N}])/gi },
+  // The bounce itself: "odraz o této úrovni" (a bounce off this level).
+  { role: 'support', pattern: /(?<![\p{L}\p{N}])odraz\w*\s+(?:o|od|na|z)\s+(?:t[ée]hle?\s*|t[ée]hl\w*\s+)?(?:[a-zěščřžýáíé]*\s+)?(?:úrov[ěe]n\w*|úrovn\w*|hran\w*|kan[aá]l\w*)/gi },
+  { role: 'resistance', pattern: /(?<![\p{L}\p{N}])prolom\w*\s+(?:přes|skrz|za)\s+(?:t[ée]hle?\s*)?(?:úrov[ěe]n\w*|úrovn\w*|hran\w*)/gi },
+  // A LEVEL, unqualified -- the generic case, and the one that fires
+  // most. "odraz od úrovně 1334" (a bounce from the level of 1334).
+  { role: 'level', pattern: /(?<![\p{L}\p{N}])(?:úrov[ěe]n\w*|úrovn\w*|hran\w*|z[oó]na\w*|kan[aá]l\w*|cena\w*)(?<![\p{L}\p{N}])(?:\s+(?:a\s+|pro\s+)?(?:t[ée]hle?\s*)?(?:úrov[ěe]n\w*|úrovn\w*|hran\w*|kan[aá]l\w*))*?/gi },
 ];
 
 /**
@@ -162,7 +350,7 @@ const PRICE_ROLES = [
  * short run of words, then "at", then the number. The run of words is
  * bounded so that the verb has to be the one that introduces THIS price.
  */
-const BUY_AT_PRICE_PATTERN = /\b(?:buy|buying|purchas\w+|accumulating|picking\s+up|get|getting|long|entering|entry)\b[^.!?]{0,30}?\bat\b\s*$/i;
+const BUY_AT_PRICE_PATTERN = /(?<![\p{L}\p{N}])(?:buy|buying|purchas\w+|accumulating|picking\s+up|get|getting|long|entering|entry)\b[^.!?]{0,30}?(?<![\p{L}\p{N}])at\b\s*$/i;
 
 /**
  * The construction "it is trading at 45".
@@ -175,7 +363,7 @@ const BUY_AT_PRICE_PATTERN = /\b(?:buy|buying|purchas\w+|accumulating|picking\s+
  * buy construction is an entry; a trading construction is where the price
  * is now.
  */
-const CURRENT_PRICE_PATTERN = /\b(?:trading\s+at|sitting\s+at|is\s+at|are\s+at|at\s+now|right\s+now|price\s+is|price\s+of)\b[^.!?]{0,20}?$/i;
+const CURRENT_PRICE_PATTERN = /(?<![\p{L}\p{N}])(?:trading\s+at|sitting\s+at|is\s+at|are\s+at|at\s+now|right\s+now|price\s+is|price\s+of)\b[^.!?]{0,20}?$/i;
 
 /**
  * A price, as it is written in speech.
@@ -192,7 +380,7 @@ const CURRENT_PRICE_PATTERN = /\b(?:trading\s+at|sitting\s+at|is\s+at|are\s+at|a
  * PRICE ROLE introduces it, and a price with a decimal or a dollar sign
  * counts on its own.
  */
-const PRICE_TOKEN_PATTERN = /\$\s?\d{1,3}(?:,\d{3})*(?:\.\d{1,4})?|\d{1,3}(?:,\d{3})*\.\d{1,4}|\b\d{1,5}\b/g;
+const PRICE_TOKEN_PATTERN = /\$\s?\d{1,3}(?:,\d{3})*(?:\.\d{1,4})?|\d{1,3}(?:,\d{3})*\.\d{1,4}|\b\d{1,5}(?![\p{L}\p{N}])/g;
 
 /**
  * Words that mean a number is NOT a price.
@@ -206,7 +394,18 @@ const PRICE_TOKEN_PATTERN = /\$\s?\d{1,3}(?:,\d{3})*(?:\.\d{1,4})?|\d{1,3}(?:,\d
  * speech: "I am going to buy at 75" contains "am", and "am" is in this
  * list because "10 am" is a time -- but "I am" is not.
  */
-const NON_PRICE_CONTEXT = /\b(?:percent|pct|per\s+cent|am|pm|ocf|ytd|day|days|week|weeks|month|months|year|years|hour|hours|minute|minutes|second|seconds|cpm|apm|volume|shares?|oz|ounce)\b/i;
+const NON_PRICE_CONTEXT = /(?<![\p{L}\p{N}])(?:percent|pct|per\s+cent|am|pm|ocf|ytd|day|days|week|weeks|month|months|year|years|hour|hours|minute|minutes|second|seconds|cpm|apm|volume|shares?|oz|ounce)(?![\p{L}\p{N}])/i
+  // The Czech words that sit in front of a number and mean it is not a
+  // price. Measured on the corpus:
+  //
+  //   "50 na 50"        an even-odds statement
+  //   "40%"             a probability
+  //   "do týdne"        a horizon ("within a week")
+  //   "5 procent"       a probability
+  //
+  // A number after "do týdne" is a WEEK COUNT, and recording it as a
+  // price would put 5 into a portfolio report as an entry level.
+  || /(?<![\p{L}\p{N}])(?:procent\w*|na\s+50|týdn\w*|měsíc\w*|let(?![\p{L}\p{N}])|letem|lety|hodin\w*|minut\w*|sekund\w*|bod\w*|bodů|čas\w*)\s*$/i;
 
 /**
  * A range of prices, as it is written: "45 to 48", "45-48", "$45 - $48".

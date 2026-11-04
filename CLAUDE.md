@@ -523,6 +523,13 @@ Results: `data/qmg_alt_batch_results.json`.
 
 ## The Sevcik source — a TRANSCRIPT source, not an OCR source (2026-11-04)
 
+> **The 2026-11-05 update below supersedes two claims in this section.** The
+> channel is read as **Czech**, not as a machine-translated English track, and
+> the vocabulary is Czech rather than English. Read the section that follows
+> this one first.
+
+## The Sevcik source — a TRANSCRIPT source, not an OCR source (2026-11-04)
+
 `https://www.youtube.com/@davidsevcik-sved4697/streams` — daily ~1 h streams of
 spoken trade commentary. This is the project's **fourth** data source and the
 **first** one that is not an OCR source: there is no whiteboard and no chart
@@ -4676,20 +4683,22 @@ drift apart:
 
 | name | replay | scan tool | batch runner |
 |---|---|---|---|
-| `shipped` | `--cluster-rule shipped` | `--no-cluster-corroboration` | `--cluster-rule shipped` |
-| `corroborated` | `--cluster-rule corroborated` | (the default) | `--cluster-rule corroborated` |
-| `corroborated-strict` | `--cluster-rule corroborated-strict` | `--cluster-strict-corroboration` | `--cluster-rule corroborated-strict` |
-| `supported` | `--cluster-rule supported` | `--cluster-supported --no-cluster-corroboration` | `--cluster-rule supported` |
-| `supported+corroborated` | `--cluster-rule supported+corroborated` | `--cluster-supported` | `--cluster-rule supported+corroborated` |
-| `video-supported` | `--cluster-rule video-supported` | `--cluster-video-supported --no-cluster-corroboration` | `--cluster-rule video-supported` |
-| `video-supported+corroborated` | `--cluster-rule video-supported+corroborated` | `--cluster-video-supported` | `--cluster-rule video-supported+corroborated` |
+| `shipped` | `--cluster-rule shipped` | `--no-cluster-corroboration --no-cluster-swallowed-holdings` | `--cluster-rule shipped` |
+| `corroborated` | `--cluster-rule corroborated` | `--no-cluster-swallowed-holdings` | `--cluster-rule corroborated` |
+| `corroborated-strict` | `--cluster-rule corroborated-strict` | `--cluster-strict-corroboration --no-cluster-swallowed-holdings` | `--cluster-rule corroborated-strict` |
+| `supported` | `--cluster-rule supported` | `--cluster-supported --no-cluster-corroboration --no-cluster-swallowed-holdings` | `--cluster-rule supported` |
+| `supported+corroborated` | `--cluster-rule supported+corroborated` | `--cluster-supported --no-cluster-swallowed-holdings` | `--cluster-rule supported+corroborated` |
+| `video-supported` | `--cluster-rule video-supported` | `--cluster-video-supported --no-cluster-corroboration --no-cluster-swallowed-holdings` | `--cluster-rule video-supported` |
+| `video-supported+corroborated` | `--cluster-rule video-supported+corroborated` | `--cluster-video-supported --no-cluster-swallowed-holdings` | `--cluster-rule video-supported+corroborated` |
 | `swallowed` | `--cluster-rule swallowed` | `--cluster-swallowed-holdings --no-cluster-corroboration` | `--cluster-rule swallowed` |
 | `corroborated+swallowed` | `--cluster-rule corroborated+swallowed` | `--cluster-swallowed-holdings` | `--cluster-rule corroborated+swallowed` |
 
-**`corroborated` is the default** (changed 2026-11-03) — the only rule that
-survived every measurement. The others are OFF, because each one changes
-which holdings a scan publishes, and a wider measurement has to say otherwise
-first.
+**`corroborated+swallowed` is the default** (changed 2026-11-04) — it is the
+corroboration rule plus the measured threshold-4 recovery for a second lexicon
+ticker swallowed by a cluster. The other rules are OFF, because each one
+changes which holdings a scan publishes, and a wider measurement has to say
+otherwise first. Use `--no-cluster-swallowed-holdings` / `--cluster-rule
+corroborated` to reproduce corroborated-only output.
 
 ### What the supported rule actually changes
 
@@ -4813,12 +4822,13 @@ the cluster that swallowed it:
 → 71/74 with the FP count unchanged. At ≤ 3, `NFU` slips in and adds its
 false positive; at 8, one of the two `LI`s falls out.
 
-**This is measured but NOT yet shipped**, for the same reason the
-corroboration rule is not: the corpus is 46 logs, and the rule has not been
-through a production scan. It is also **not implemented in the clusterer
-yet** — the numbers above come from applying the rule to the recorded
-cluster tables, which is what the corroboration rule's own measurement did
-before its implementation.
+**This is measured and shipped** (changed 2026-11-04). The corpus measurement
+found thresholds 4–7 clean, and the production scan confirmed the threshold-4
+guard: it recovered `LI` on 20230522 without adding a false positive, while
+rejecting the one-frame `LI` noise case on 20230523. The implementation records
+the swallowed ticker, its own frame count and publication decision in
+`swallowedEvidence`, so the default decision is auditable. Use
+`--no-cluster-swallowed-holdings` to disable it for a corroborated-only run.
 
 #### And the production scan says the guard is exactly right
 
@@ -4956,28 +4966,29 @@ scan). So the rule's blast radius is the chart_stream branch only.
 
 ### The decision
 
-**`corroborated` is the DEFAULT** (changed 2026-11-03). It is the one rule
-that survived every measurement: it removes false positives and loses no
-holding, in the corpus replay, in the production audit, and in a production
-scan.
+**`corroborated+swallowed` is the DEFAULT** (changed 2026-11-04). It is the
+corroboration rule plus the threshold-4 swallowed-holding recovery: it removes
+false positives and recovers the measured `LI` holding without adding a false
+positive. The corroborated-only rule remains available explicitly and loses
+that recovered holding.
 
 **The measurement, on the dates the two scans SHARE** — two different scans of
 different date sets cannot be compared in aggregate, so this is the
 like-for-like comparison (`test/manual/corrobDefaultSafety.test.js`):
 
-| date | shipped | corroborated | changed |
-|---|---|---|---|
-| `20230522` | 6/7, 0 FP | 6/7, 0 FP | — |
-| `20230523` | 10/11, 1 FP (`U`) | 10/11, 1 FP (`U`) | — |
-| `20230602` | 12/12, 1 FP (`IOT`) | 12/12, 1 FP (`IOT`) | — |
-| `20230605` | 11/11, **1 FP (`AAPL`)** | **11/11, 0 FP** | **the FP is gone** |
-| **total** | 39/41 hits, 3 FP | **39/41 hits, 2 FP** | **−1 FP, 0 holdings lost** |
+| date | shipped | corroborated | corroborated+swallowed | changed |
+|---|---|---|---|---|
+| `20230522` | 6/7, 0 FP | 6/7, 0 FP | **7/7, 0 FP** | `LI` recovered |
+| `20230523` | 10/11, 1 FP (`U`) | 10/11, 1 FP (`U`) | 10/11, 1 FP (`U`) | — |
+| `20230602` | 12/12, 1 FP (`IOT`) | 12/12, 1 FP (`IOT`) | 12/12, 1 FP (`IOT`) | — |
+| `20230605` | 11/11, **1 FP (`AAPL`)** | **11/11, 0 FP** | **11/11, 0 FP** | `AAPL` removed |
+| **total** | 39/41 hits, 3 FP | 39/41 hits, 2 FP | **40/41 hits, 2 FP** | **+1 hit, 0 FP added** |
 
-The six-date production scan (`qmg-easyocr-20261103-corroborated`, the
-ordinary batch runner and the ordinary EasyOCR path, with the rule as the only
-difference) scored **65/67 hits, 2 FP** against the shipped rule's **3 FP** on
-the dates they share, and removed the `AAPL` false positive with nothing
-lost.
+The four-date production scan (`qmg-easyocr-20261103-swallowed`) measured the
+same default rule's decisive change: **40/41 hits, 2 FP**, versus 39/41 and 3
+FP under the pre-swallowed rule on those dates. The six-date
+`qmg-easyocr-20261103-corroborated` scan remains the corroborated-only
+comparison and removed the `AAPL` false positive with nothing lost.
 
 **What it does NOT do, stated plainly:** it does **not** improve recall.
 Across the corpus replay the hit count **never moves** under any rule — the
@@ -4993,18 +5004,20 @@ consensus (`legacyConsensus` is `null` for a non-snapshot scan), so the
 rule cannot touch it. Every one of the 137 logs in the corpus is a snapshot
 scan (`test/manual/clusterRuleBlastRadius.test.js`).
 
-**How it is switched, and how it is switched back.** The rule is ON by
-default in `src/video/ocrScanArgs.js`:
+**How it is switched, and how it is switched back.** The corroboration and
+swallowed-holdings rules are ON by default in `src/video/ocrScanArgs.js`:
 
 ```js
-clusterCorroboration: null,   // null = "not mentioned"; the rule is ON
+clusterCorroboration: null,       // null = "not mentioned"; corroboration ON
+clusterSwallowedHoldings: true,   // threshold-4 recovery ON
 ```
 
-`null` rather than `true`, so the flag can tell *not mentioned* from
-*explicitly off*: `--no-cluster-corroboration` turns it off, and the scan
-tool records which rule actually ran (`cluster_rule` in the probe log). The
-batch runner's `--cluster-rule shipped` passes that flag, so it still means
-the pre-2026-11-03 behaviour.
+`null` rather than `true` is used for corroboration so the flag can tell *not
+mentioned* from *explicitly off*: `--no-cluster-corroboration` turns it off.
+`--no-cluster-swallowed-holdings` turns off the swallowed-holdings recovery.
+The scan tool records which combined rule actually ran (`cluster_rule` in the
+probe log). The batch runner's `--cluster-rule shipped` passes both negative
+flags, so it still means the pre-2026-11-03 behaviour.
 
 **One implementation, three callers.** The rule's switches are resolved in
 `resolveClusterRuleOptions()` and named by `clusterRuleName()` — both in
@@ -5535,3 +5548,238 @@ fixtures say the same:
 (`data/video_pipeline/downloads_hires/20260923_U4dbSz0u11k.mp4`, 1918×1080 by
 ffprobe) at 800 s, where the line reads
 `SPYM,UPRO/SPXL,IBIT,ETHA,SPCX,PURR,MRNA,P,SMTC`.
+
+## The Sevcik channel is read in CZECH (2026-11-05)
+
+Everything the section above says about reading an English machine
+translation is **superseded**. The channel is read as **Czech**, and the
+vocabulary, the price roles and the certainty scale are all Czech.
+
+### Why the English track was wrong
+
+The extractor was built for English trading vocabulary and the corpus is
+Czech. Measured on the 12-stream corpus (10,847 segments), the English
+patterns fired on **nothing**:
+
+| what | segments matched (English patterns) |
+|---|---|
+| bias | **0** |
+| action | 2 ("hold") |
+| horizon | **0** |
+| segments with a price | 10 (of 10,847) |
+
+And the extractor produced **2 signals from 12 videos**. It was reading
+Czech and understanding none of it.
+
+Two things caused it, and both had to be fixed:
+
+1. **The ticker was found as a SYMBOL.** The channel's speaker says company
+   **NAMES** — "Tesla", "Apple", "Amazon" — not symbols. The symbol path
+   matched 25,136 tokens in the corpus and the name path matched 269.
+2. **The vocabulary was English.** "bullish", "target", "stop loss",
+   "going to buy" do not appear in Czech speech.
+
+### The Czech vocabulary (measured, not guessed)
+
+| pattern | segments | what it states |
+|---|---|---|
+| `do Longu` / `do Long` | 89 | **the direction** — the dominant construction |
+| `do shortu` / `do Short` | 49 | the bearish construction |
+| `poklesový` / `klesající` + `kanál` | 62 | a falling channel — the direction is in the slope |
+| `rostoucí` + `kanál` | 4 | a rising channel |
+| `kanál` | 384 | **the LEVEL** — and the thing he calls a setup |
+| `odraz` | 125 | the bounce off a level |
+| `zóna` | 33 | the zone |
+| `podmíněný` | 14 | the conditional call |
+| `úroveň` | — | the level |
+
+**"Long" is written two ways.** The Czech audio renders it as "Long" and as
+"Lon" — "to je 50 do Lon, 50 do shortu" — and the transcript carries both.
+Every direction pattern accepts both spellings.
+
+### There are NO targets and NO stops in this channel
+
+This is the most important finding, and it is the user's own instruction
+("levels, not targets — yes, that is his problem, not yours"):
+
+| word | occurrences | what they actually are |
+|---|---|---|
+| `cíl` (target) | **2** | a GOAL ("aby se to uměli sami bez země"), not a price |
+| `stop` | 15 | 13 are inside `stoprocentně` (one hundred percent) or a metaphor about a red button |
+| `vstup` (entry) | 6 | "investiční vstup", "vstupní částky" — never a price to buy at |
+
+So the price roles are **LEVELS**, and the role table says so. The user said
+it directly: a target price he never stated must not appear in a portfolio
+report.
+
+### THE `\b` BUG — every Czech pattern was DEAD
+
+**JS's `\b` is ASCII-based even under the `/u` flag.** It is a boundary
+between a WORD character and a NON-WORD one, and "word" means
+`[A-Za-z0-9_]`. So the `\b` **after** a Czech word fails, because the last
+character of "není" is "í", which is not an ASCII word character.
+
+The measurement: **`/\b(?:není)\b/iu` does not match the string "není".**
+
+Every Czech pattern in this project had that shape, so **every one of them
+was dead** — the certainty scale, the setup states, and the direction
+patterns. The fix is a Unicode lookaround:
+
+```js
+// WRONG -- the trailing \b fails after "í"
+/\b(?:není)\b/iu
+
+// RIGHT
+/(?<![\p{L}\p{N}])(?:není)(?![\p{L}\p{N}])/iu
+```
+
+The same applies to `\w`, which is also ASCII-only: `\w*` does not match
+the diacritics, so `zneplatn\w*` stopped at "zneplatn" and never reached
+"zneplatněna". The fix is `[\p{L}\p{N}]*`.
+
+**This is worth remembering for every non-English pattern in this project.**
+
+### The name matcher, not the symbol matcher
+
+`findTickers` now has **two** paths:
+
+1. the **name** path — `findCzechCompanyNames`, which is position-based
+   (a capitalised word that is NOT the first word of its sentence), and
+2. the **symbol** path — for the handful of times he says one out loud
+   ("SPCX", "NVDA", "PSX").
+
+**The symbol path is gated to the CONFIRMED table.** The Sevcik lexicon has
+10,485 tickers, and the SEC's list carries one- and two-letter registrants
+that ordinary Czech speech is full of. Measured on three videos, the
+ungated symbol path matched **187 distinct symbols**, and the top of the
+list was **M:906, E:778, A:629, V:558, TAK:446, SE:383, P:363** — every
+one of them a Czech letter or a word, not a company. "Předtím", "a", "se",
+"tak", "el" are not tickers.
+
+So a symbol token has to be one that was confirmed as a symbol before it
+counts. The gate is a **parameter** (`confirmedSymbols`), not a constant,
+so the generic English tests still exercise the ungated path.
+
+### The SETUPS — what the speaker is talking about (2026-11-05)
+
+A **setup** is not a signal. The speaker does not disclose positions; he
+describes setups and ideas. A signal is a trade-shaped sentence; a setup is
+the THING he is talking about, which may run for ten minutes, be revisited,
+and end up worked, failed, or invalidated.
+
+`src/sevcik/setupSegmenter.js` and the `sevcik_setups` table hold them.
+The lifecycle is read off his own words:
+
+| state | the words | measured |
+|---|---|---|
+| `new` | "mám tady novou predikci" | |
+| `running` | "predikce běží" — still live | |
+| `worked` | "predikce vyšla" | |
+| `failed` | "predikce nevyšla" | |
+| `invalidated` | "predikce zneplatněna" | |
+| `old` | "byla stará" | |
+
+**The setup segmenter uses the RUN model, not the nearest-ticker rule.**
+
+The first version attached each "predikce" sentence to the ticker nearest to
+it, within three segments. Measured on the corpus it attached setups to the
+**wrong ticker** and dropped them **entirely**:
+
+| video | "predikce" sentences | setups found (nearest-ticker) | setups found (run model) |
+|---|---|---|---|
+| `zRiyF6dDekA` (2026-10-23) | 14 | **0** | 4 |
+| corpus total | 297 | 24 | **68** |
+
+And it attached "MONETA" the evidence "byl by důkaz, že predikce vyšla.
+Zatím běží predikce na **Airbag**." — the Airbag setup, on the Moneta row.
+
+A run is ONE subject, so every "predikce" sentence in it belongs to that
+run's ticker. There is no search for the nearest ticker — the run already
+knows.
+
+**The outcome words are markers too.** He very often reports an outcome
+WITHOUT naming the thing — "A tady prodejce do Long byla zneplatněná" —
+so a marker set of "predikce" alone would miss every one of those, and the
+setup would stay "running" after he had killed it.
+
+### The CERTAINTY scale (`src/sevcik/certainty.js`)
+
+The user asked for a scale: "when he uses some words, that means higher
+certainty. When he uses others, that is less certainty." The corpus shows
+he never says "high conviction" — so the scale is built from what he
+**does** say, and every count is measured over the 12-stream corpus.
+
+| level | the words | count | why it is where it is |
+|---|---|---|---|
+| `certain` | "stoprocentně", "jistota" | 10 + 3 | see the negation rule below |
+| `high` | "velmi silný signál", "silnější" | 26 + 6 | a stronger signal |
+| `conditional` | "podmíněný" | 14 | **its own level** — see below |
+| `even` | "50 na 50", "patová" | 14 + 2 | he says it is a coin flip |
+| `low` | "nevím", "pravděpodobně", "asi" | 95 + 45 + 49 | a hedge |
+| `unknown` | — | — | nothing said |
+
+**"Jasný" is NOT a certainty marker on its own.** It appears 68 times, and
+**66 of the 68 are the filler "Jasně!"** — "Of course!" — in chat replies
+and acknowledgements. Only two are about a signal. So it counts only next
+to the trading vocabulary: "jasný signál", "jasný long".
+
+**A NEGATED "stoprocentně" is not certainty.** He says "stoprocentně" 10
+times, and NINE of them are in a sentence that DISCLAIMS it:
+
+> "Není to žádná stoprocentní jistota, nikdy to nebyla. Je to jenom
+> počítání pravděpodobnosti."
+
+("It is not a 100% certainty, never was. It is only counting probability.")
+
+So the negation check is what stops that sentence reading as the strongest
+confidence in the corpus. And the negation window has to stop at a
+**SENTENCE** boundary, not a comma — the comma in that sentence separates
+the negation from the word it negates, and splitting on it made the
+negation invisible.
+
+**"Conditional" is NOT a point between "high" and "low".** "podmíněný" is his
+DEFAULT form for a live setup, not an apology for a weak one:
+
+> "Takže to 10 Amazon nevypadá špatně, pokud se dostane nad tuto úroveň,
+> Long. Prvikce je Long, podmíněná, pokud se dostane nad tuhletu horní
+> hranu kanálu."
+
+A scale that forced it onto the high-to-low line would have to call it either
+better or worse than a coin flip, and the corpus supports neither. So it is
+its own level.
+
+**"Nevím" is about the DIRECTION.** 95 occurrences, and most are about
+where the price goes ("nevím, kam půjdou akcie"), not about the strength of
+the call. So it is reported as `direction_uncertain` — a separate flag from
+the setup's own certainty.
+
+### The Deepgram fallback, tested on a caption-less video
+
+The channel's 808 streams go back to **August 2020**, and the older ones
+carry **no captions at all**. Six were confirmed caption-less
+(`A0iREjBJr38`, `RHEBWpdIOKM`, `elDgW4j9qHA`, `0oNmAlVVhcE`,
+`qyRGpavYGCY`, `_ZvGYjhGEdc`) and three have their audio downloaded to
+`data/video_pipeline/audio_sevcik/`.
+
+`A0iREjBJr38` (2020-08-13) was transcribed end to end:
+
+| | |
+|---|---|
+| provider | `deepgram`, language `cs` |
+| segments | **417** |
+| "do longu" segments | 14 |
+| "do shortu" segments | 1 |
+| signals extracted | 8 (AAPL, NVDA, TSLA, GAB) |
+| setups extracted | 2 (AAPL, TSLA) |
+
+**`language=en` on Czech audio produced 15 useless segments; `cs` produced
+881.** The `language` parameter is a hard ACOUSTIC filter, not a
+translation request, so the wrong language does not translate — it
+mis-hears. The default is `cs`.
+
+### The `--video-id` flag was broken
+
+`tools/fetchSevcikTranscripts.js` appended `AND video_id = ?` **after** the
+`ORDER BY`, so every run that used the flag died with "near AND: syntax
+error". The filter has to go before the ORDER BY.
+
