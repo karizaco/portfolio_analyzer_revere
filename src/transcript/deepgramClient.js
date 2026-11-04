@@ -55,12 +55,44 @@ const DEEPGRAM_API_URL = 'https://api.deepgram.com/v1/listen';
  * `model=nova-2` is Deepgram's current general model. It is overridable
  * because the model names change and a hard-coded one will eventually stop
  * working.
+ *
+ * THE LANGUAGE IS NOT A HINT -- IT IS A HARD FILTER
+ *
+ * The default is `cs` (Czech), because the Sevcik channel is Czech. That
+ * is not a formality: the language selects the ACOUSTIC MODEL, and
+ * pointing the wrong one at Czech audio does not produce a worse
+ * transcript, it produces NO transcript.
+ *
+ * Measured on one real 50-minute stream (2026-11-04, UX1IRkmxIUo):
+ *
+ *   language=en   ->  15 segments, isolated words ("Earnings", "Netflix")
+ *   language=cs   -> 881 segments, full sentences
+ *
+ * The English run was not "less accurate Czech" -- it was the English
+ * acoustic model failing to find any speech in the audio, so it emitted
+ * the handful of words it could recognise as English. Every downstream
+ * measurement would have been made on that.
  */
 const DEFAULT_MODEL = 'nova-2';
+const DEFAULT_LANGUAGE = 'cs';
+
+/**
+ * How many times a failed request is retried, and how long to wait.
+ *
+ * "fetch failed" is Node's message for a transport failure, and it is the
+ * commonest failure by far: the connection dropped, DNS failed, or the
+ * socket was reset. It is ALWAYS worth retrying, and it is not a sign of
+ * a bad key -- a bad key comes back as HTTP 401, which is not retried.
+ *
+ * Measured on the first corpus fetch (2026-11-04): 4 of 12 videos failed
+ * with "fetch failed" on the first attempt.
+ */
+const DEFAULT_RETRIES = 3;
+const RETRY_WAIT_MS = 5000;
 
 const REQUEST_PARAMS = {
   model: process.env.DEEPGRAM_MODEL || DEFAULT_MODEL,
-  language: process.env.DEEPGRAM_LANGUAGE || 'en',
+  language: process.env.DEEPGRAM_LANGUAGE || DEFAULT_LANGUAGE,
   smart_format: 'true',
   punctuate: 'true',
   utterances: 'true',
@@ -125,6 +157,7 @@ function extractAudio(videoPath, audioPath, options = {}) {
  * @param {object} [options]
  * @param {string} [options.apiKey] - defaults to DEEPGRAM_API_KEY
  * @param {number} [options.timeoutMs]
+ * @param {number} [options.retries] - how many times to retry a transport failure
  * @param {(progress: string) => void} [options.onProgress]
  * @returns {Promise<{ok: boolean, payload?: object, error?: string}>}
  */
@@ -143,38 +176,77 @@ async function transcribeAudio(audioPath, options = {}) {
   }
 
   const audio = fs.readFileSync(audioPath);
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), options.timeoutMs || 30 * 60 * 1000);
+  const retries = Number.isInteger(options.retries) ? options.retries : DEFAULT_RETRIES;
 
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        Authorization: `Token ${apiKey}`,
-        'Content-Type': 'audio/mpeg',
-      },
-      body: audio,
-      signal: controller.signal,
-    });
+  let lastError = '';
 
-    if (!response.ok) {
-      // The body can carry the key back in an error, so it is NOT included
-      // verbatim in the message. The status is enough to act on.
-      const body = await response.text().catch(() => '');
-      const detail = sanitizeErrorBody(body);
-      return { ok: false, error: `Deepgram HTTP ${response.status}: ${detail}` };
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), options.timeoutMs || 30 * 60 * 1000);
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Token ${apiKey}`,
+          'Content-Type': 'audio/mpeg',
+        },
+        body: audio,
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        // The body can carry the key back in an error, so it is NOT
+        // included verbatim in the message. The status is enough to act
+        // on.
+        const body = await response.text().catch(() => '');
+        const detail = sanitizeErrorBody(body);
+
+        // A 5xx or a 429 is the SERVICE's problem, and the same request
+        // will usually succeed a moment later. A 4xx is the request's
+        // problem -- a bad key, a bad model -- and retrying it just
+        // wastes the audio upload.
+        const retriable = response.status === 429 || response.status >= 500;
+        if (retriable && attempt < retries) {
+          lastError = `Deepgram HTTP ${response.status}: ${detail}`;
+          await sleep(RETRY_WAIT_MS * (attempt + 1));
+          continue;
+        }
+        return { ok: false, error: `Deepgram HTTP ${response.status}: ${detail}` };
+      }
+
+      const payload = await response.json();
+      return { ok: true, payload };
+    } catch (error) {
+      if (error && error.name === 'AbortError') {
+        lastError = 'Deepgram request timed out';
+      } else {
+        // "fetch failed" is Node's message for a transport failure: the
+        // connection dropped, DNS failed, or the socket was reset. It is
+        // the commonest failure by far and it is ALWAYS worth retrying.
+        lastError = `Deepgram request failed: ${error && error.message ? error.message : String(error)}`;
+      }
+      if (attempt < retries) {
+        await sleep(RETRY_WAIT_MS * (attempt + 1));
+        continue;
+      }
+      return { ok: false, error: lastError };
+    } finally {
+      clearTimeout(timeout);
     }
-
-    const payload = await response.json();
-    return { ok: true, payload };
-  } catch (error) {
-    if (error && error.name === 'AbortError') {
-      return { ok: false, error: 'Deepgram request timed out' };
-    }
-    return { ok: false, error: `Deepgram request failed: ${error && error.message ? error.message : String(error)}` };
-  } finally {
-    clearTimeout(timeout);
   }
+
+  return { ok: false, error: lastError || 'Deepgram request failed' };
+}
+
+/**
+ * Wait, asynchronously.
+ *
+ * @param {number} ms
+ * @returns {Promise<void>}
+ */
+function sleep(ms) {
+  return new Promise((resolve) => { setTimeout(resolve, ms); });
 }
 
 /**
@@ -194,9 +266,12 @@ function sanitizeErrorBody(body) {
 }
 
 module.exports = {
+  DEFAULT_LANGUAGE,
   DEFAULT_MODEL,
+  DEFAULT_RETRIES,
   DEEPGRAM_API_URL,
   REQUEST_PARAMS,
+  RETRY_WAIT_MS,
   extractAudio,
   hasDeepgramKey,
   sanitizeErrorBody,

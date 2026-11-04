@@ -96,13 +96,34 @@ const DISCLAIMER_PATTERNS = [
  * The token is only accepted if it was written in CAPS. "ON" in a
  * transcript is a ticker; "on" is a preposition.
  *
+ * THE COMPARISON IS AGAINST THE ORIGINAL TOKEN
+ *
+ * The earlier version compared the UPPERCASED token with itself, which is
+ * always true -- so the CAPS rule never fired, and every ambiguous token
+ * was accepted in any casing.
+ *
+ * That was invisible in English and glaring in Czech. Measured on one
+ * real 50-minute Czech stream (2026-11-04): 123 of 881 segments matched a
+ * lexicon "ticker", and almost every one was a Czech word fragment:
+ *
+ *   SE   from "se"      (it)
+ *   U    from "u"       (at/in)
+ *   P    from "případně" (if)
+ *   TER  from "úterý"   (Tuesday)
+ *   SI   from "si"      (yourself)
+ *
+ * So the rule compares the uppercased form against the ORIGINAL, trimmed
+ * token: "SE" is accepted, "se" is not.
+ *
  * @param {string} token - the raw token, with its original casing
  * @returns {boolean}
  */
 function isAmbiguousTokenAccepted(token) {
-  const upper = String(token || '').toUpperCase();
+  const raw = String(token || '').trim();
+  const upper = raw.toUpperCase();
   if (!AMBIGUOUS_TICKER_WORDS.has(upper)) return true;
-  return upper === String(token || '').trim();
+  // CAPS in the source text, and nothing else.
+  return raw === upper;
 }
 
 /**

@@ -1,5 +1,10 @@
 node_modules/
 eng.traineddata
+# Local credentials. The values live here and are never committed.
+# .env.example is tracked and holds no secrets.
+.env
+.env.local
+.env.*.local
 data/extract_run.log
 data/video_pipeline/
 !data/video_pipeline/state.sqlite
