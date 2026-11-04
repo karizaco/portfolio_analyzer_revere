@@ -48,7 +48,7 @@ const { DatabaseSync } = require('node:sqlite');
 
 const { loadEnv } = require('../src/transcript/loadEnv');
 const { normalizeTranscript, transcriptChecksum } = require('../src/transcript/transcriptNormalize');
-const { extractAudio, hasDeepgramKey, transcribeAudio } = require('../src/transcript/deepgramClient');
+const { extractAudio, hasDeepgramKey, transcribeAudio, deepgramLanguage } = require('../src/transcript/deepgramClient');
 const { SEVCIK_CHANNEL, SEVCIK_SOURCE_URL } = require('../src/sevcik/channel');
 
 // The credentials live in .env, which is gitignored. An environment
@@ -91,17 +91,24 @@ const options = {
   // publishes two tracks for it: `cs-orig` (the original Czech) and `en`
   // (YouTube's machine translation).
   //
-  // `en` is tried FIRST on purpose. The signal extractor reads English
-  // trading vocabulary -- "bullish", "target", "stop loss" -- and a
-  // machine translation preserves the TICKERS and the NUMBERS (which are
-  // what the signal is about) while putting them into the words the
-  // extractor understands. Reading the Czech original would need a Czech
-  // vocabulary, and the ticker symbols would still be the part that
-  // matters.
+  // `cs-orig` is tried FIRST. It used to be the other way round, on the
+  // reasoning that the signal extractor read English trading vocabulary
+  // -- "bullish", "target", "stop loss" -- and a machine translation
+  // would put the speech into words the extractor understood. That
+  // reasoning expired when the extractor was taught Czech, and the
+  // measured effect of the Czech vocabulary is what settled it: over
+  // the same 12 videos the English patterns matched NOTHING (0 bias
+  // segments, 0 horizon segments) and the Czech patterns matched 160
+  // and 147.
   //
-  // `cs-orig` is the fallback: it is what the speaker actually said, so
-  // it is the better record when there is no translation.
-  subLangs: (readFlag(argv, '--sub-lang') || 'en,cs-orig').split(',').map((s) => s.trim()).filter(Boolean),
+  // The machine translation is also the worse record of what was said.
+  // It preserves the tickers and the numbers -- which are the signal --
+  // but it re-writes the certainty words, which are the other half of
+  // the signal: his hedging and his conviction live in the wording.
+  //
+  // `en` stays in the list as a fallback for a video whose Czech track
+  // is missing.
+  subLangs: (readFlag(argv, '--sub-lang') || 'cs-orig,en').split(',').map((s) => s.trim()).filter(Boolean),
 };
 
 async function main() {
@@ -429,7 +436,11 @@ async function fetchDeepgramTranscript(row, transcriptPath) {
     if (downloaded !== mp3Path) safeUnlink(downloaded);
   }
 
-  return { ok: true, segments };
+  // The language is reported, not assumed. It selects the acoustic model,
+  // so it is a fact about the request -- and the transcript row used to
+  // record `en` for every Deepgram transcript, whatever language the
+  // request actually used.
+  return { ok: true, segments, language: deepgramLanguage() };
 }
 
 /**
@@ -516,7 +527,11 @@ function persistTranscript(row, provider, transcriptPath, segments, language) {
 function upsertTranscript(db, row, provider, transcriptPath, segments, checksum, fetchedAt, language) {
   const existing = db.prepare('SELECT id, checksum FROM video_transcripts WHERE video_id = ?')
     .get(row.video_id);
-  const lang = language || (provider === 'deepgram' ? 'en' : '');
+  // No language is claimed unless the provider reported one. The old
+  // default of `en` for Deepgram was wrong twice over: the channel is
+  // Czech, and `language` selects the acoustic model, so the value says
+  // which model read the audio -- not which language the speaker used.
+  const lang = language || '';
 
   let transcriptId;
   if (existing) {
