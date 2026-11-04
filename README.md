@@ -230,7 +230,7 @@ Revere videos show structured **whiteboard slides** (GRO/TURBO portfolios, DMI, 
 
 ## Sevcik Prediction Streams (transcript source)
 
-A third data source, and the **first one that is not an OCR source**: the
+A fourth data source, and the **first one that is not an OCR source**: the
 **Sevcik** channel (`https://www.youtube.com/@davidsevcik-sved4697/streams`),
 whose daily stream videos carry **spoken** trade commentary rather than an
 on-screen position list.
@@ -290,7 +290,16 @@ captions at all, and it is the only part of this pipeline that needs a
 credential.
 
 The provider that produced a transcript is recorded in
-`video_transcripts.provider`, because the two are not equally trustworthy.
+`video_transcripts.provider`, because the two are not equally trustworthy,
+and the language is recorded in `video_transcripts.language`, so a reader
+always knows what they are looking at.
+
+**The Deepgram `language` is an ACOUSTIC MODEL, not a hint.** Pointing the
+wrong one at Czech audio does not produce a worse transcript — it produces
+**no transcript**: on one real 50-minute stream, `language=en` returned 15
+segments of isolated words and `language=cs` returned 881 segments of full
+sentences. The default is `cs`, and the parameter is read at call time so a
+`DEEPGRAM_LANGUAGE` in `.env` actually reaches the request.
 
 ### The extraction is deterministic
 
@@ -330,6 +339,11 @@ The lifecycle is read off his own words:
 | `failed` | "predikce nevyšla" |
 | `invalidated` | "predikce zneplatněna" |
 | `old` | "byla stará" |
+
+**"Still running" means still live at the END of the video**, not "ran at
+some point". A setup that ran and was then finished — *"predikce běží"*
+followed by *"predikce vyšla"* — is not live any more, and the
+setup's final state is the one the speaker last asserted about it.
 
 The **certainty** is a separate scale, and it is built from what he
 **actually says** — he never says "high conviction":
