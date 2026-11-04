@@ -4,7 +4,7 @@ const path = require('node:path');
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const { createYahooPriceProvider, selectPricePoint } = require('../src/analysis/priceProvider');
+const { createYahooPriceProvider, normalizeTickerSymbol, selectPricePoint } = require('../src/analysis/priceProvider');
 
 test('selectPricePoint chooses the previous trading day when the target date has no quote', () => {
   const point = selectPricePoint([
@@ -244,3 +244,14 @@ test('createYahooPriceProvider prefetches multiple tickers with shared ranges', 
   assert.equal(msft.priceStatus, 'ok');
   assert.equal(requestCount, 2);
 });
+test('normalizeTickerSymbol keeps exchange suffixes and rewrites share classes', () => {
+  assert.equal(normalizeTickerSymbol('CEZ.PR'), 'CEZ.PR');
+  assert.equal(normalizeTickerSymbol('MONET.PR'), 'MONET.PR');
+  assert.equal(normalizeTickerSymbol('RHM.DE'), 'RHM.DE');
+  assert.equal(normalizeTickerSymbol('VOD.L'), 'VOD.L');
+  assert.equal(normalizeTickerSymbol('BRK.B'), 'BRK-B');
+  assert.equal(normalizeTickerSymbol('brk-b'), 'BRK-B');
+  assert.equal(normalizeTickerSymbol('AAPL'), 'AAPL');
+  assert.equal(normalizeTickerSymbol('BTC-USD'), 'BTC-USD');
+});
+

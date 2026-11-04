@@ -189,8 +189,7 @@ const TRADE_SIGNAL_COLUMNS = [
   'event_time_sec',
   'ticker',
   'action',
-  'bias',
-  'confidence_label',
+  'bias', 'claim_kind', 'confidence_label',
   'confidence_score',
   'entry_price',
   'target_price_low',
@@ -262,9 +261,7 @@ const SEVCIK_SETUP_COLUMNS = [
   'direction_uncertain',
   'still_running',
   'invalidated',
-  'worked',
-  'failed',
-  'evidence_text',
+  'worked', 'failed', 'claim_kind', 'evidence_text',
   'parser_version'
 ];
 

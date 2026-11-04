@@ -59,12 +59,51 @@ const ROOT = path.resolve(__dirname, '..');
 const DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
 const TRANSCRIPTS_DIR = path.join(ROOT, 'data', 'video_pipeline', 'transcripts');
 const AUDIO_DIR = path.join(ROOT, 'data', 'video_pipeline', 'audio_sevcik');
+const DEFAULT_COOKIES = path.join(ROOT, 'data', 'video_pipeline', 'downloads_1080p', 'youtubeCookies.txt');
 
 // yt-dlp is installed as a Python module; use 'py -3 -m yt_dlp' so the tool
 // is found on every install method.
 const PY = process.platform === 'win32' ? 'py' : 'python3';
 
+// Same anti-bot path the QMG/Revere downloaders use. Caption fetch used to
+// omit this and hit the blocked default client; audio already had visios.
+const YT_EXTRACTOR_ARGS = 'youtube:player_client=visios';
+
 const argv = process.argv.slice(2);
+
+/**
+ * Cookie file for yt-dlp, if one exists.
+ *
+ * Order: --cookies flag, YOUTUBE_COOKIES env, then the project's known
+ * cookie export path. Missing file => no cookies flag (anonymous still works
+ * with visios on many streams).
+ *
+ * @returns {string}
+ */
+function resolveCookiesPath() {
+  const fromFlag = readFlag(argv, '--cookies') || '';
+  const fromEnv = String(process.env.YOUTUBE_COOKIES || process.env.YOUTUBE_COOKIE || '').trim();
+  for (const candidate of [fromFlag, fromEnv, DEFAULT_COOKIES]) {
+    if (candidate && fs.existsSync(candidate)) return candidate;
+  }
+  return '';
+}
+
+/**
+ * Shared yt-dlp flags for YouTube player extraction.
+ *
+ * @returns {string[]}
+ */
+function youtubeClientArgs() {
+  const args = [
+    '--js-runtimes', 'node',
+    '--extractor-args', YT_EXTRACTOR_ARGS,
+    '--no-warnings',
+  ];
+  const cookies = resolveCookiesPath();
+  if (cookies) args.push('--cookies', cookies);
+  return args;
+}
 
 // The subtitle endpoint throttles the IP, and the project's own rule is
 // that a rate-limited YouTube session needs 30-60 minutes of quiet --
@@ -118,9 +157,11 @@ async function main() {
   }
   fs.mkdirSync(TRANSCRIPTS_DIR, { recursive: true });
 
+  const cookiesPath = resolveCookiesPath();
   const rows = selectCandidates();
   console.log(`[sevcik-transcripts] candidates=${rows.length} channel=${options.channel}`
-    + ` provider=${options.provider} deepgram-fallback=${options.deepgramFallback}`);
+    + ` provider=${options.provider} deepgram-fallback=${options.deepgramFallback}`
+    + ` client=visios cookies=${cookiesPath || 'none'}`);
 
   const results = [];
   for (const row of rows) {
@@ -313,8 +354,7 @@ function fetchYoutubeCaptions(row) {
         '--skip-download',
         '--sub-lang', lang,
         '--convert-subs', 'vtt',
-        '--js-runtimes', 'node',
-        '--no-warnings',
+        ...youtubeClientArgs(),
         '-o', `${baseOut}.%(ext)s`,
         row.video_url,
       ], { encoding: 'utf8' });
@@ -397,10 +437,7 @@ async function fetchDeepgramTranscript(row, transcriptPath) {
     '-3', '-m', 'yt_dlp',
     '--no-playlist',
     '-f', 'bestaudio/best',
-    '--js-runtimes', 'node',
-    '--extractor-args', 'youtube:player_client=visios',
-    '--no-warnings',
-    ...(process.env.YOUTUBE_COOKIES ? ['--cookies', process.env.YOUTUBE_COOKIES] : []),
+    ...youtubeClientArgs(),
     '-o', `${audioStem}.%(ext)s`,
     row.video_url,
   ], { encoding: 'utf8' });

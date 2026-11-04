@@ -100,7 +100,7 @@ function renderHeadline(payload) {
   return `
     <div class="cards">
       <div class="card"><div class="card-value">${payload.signal_count || 0}</div><div class="card-label">signals</div></div>
-      <div class="card"><div class="card-value">${payload.video_count || 0}</div><div class="card-label">streams</div></div>
+      <div class="card"><div class="card-value">${payload.transcript_video_count || payload.video_count || 0}</div><div class="card-label">transcribed</div></div>
       <div class="card"><div class="card-value">${payload.unique_tickers || 0}</div><div class="card-label">tickers</div></div>
       <div class="card"><div class="card-value">${bullish}</div><div class="card-label">bullish</div></div>
       <div class="card"><div class="card-value">${bearish}</div><div class="card-label">bearish</div></div>
@@ -118,6 +118,200 @@ function renderHeadline(payload) {
  * @param {Array<object>} tickers
  * @returns {string}
  */
+function formatPct(value, digits = 1) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return '—';
+  const pct = parsed <= 1 && parsed >= -1 ? parsed * 100 : parsed;
+  const sign = pct > 0 ? '+' : '';
+  return `${sign}${pct.toFixed(digits)}%`;
+}
+
+/**
+ * Visual overview: bias split, top names, stream activity, setup lifecycle.
+ *
+ * Pure inline SVG -- no CDN, no fetched chart library.
+ *
+ * @param {object} payload
+ * @returns {string}
+ */
+function renderOverviewCharts(payload) {
+  const signals = payload.signals || [];
+  const tickers = payload.tickers || [];
+  const daily = (payload.daily || []).filter((row) => Number(row.signal_count) > 0)
+    .sort((a, b) => String(a.upload_date).localeCompare(String(b.upload_date)));
+  const setups = payload.setups || [];
+  if (!signals.length && !setups.length) return '';
+
+  const bullish = signals.filter((s) => s.bias === 'bullish').length;
+  const bearish = signals.filter((s) => s.bias === 'bearish').length;
+  const mixed = signals.filter((s) => s.bias === 'mixed').length;
+  const totalBias = Math.max(1, bullish + bearish + mixed);
+
+  const top = tickers.slice(0, 10);
+  const maxSignals = Math.max(1, ...top.map((row) => Number(row.signal_count) || 0));
+  const topBars = top.map((row, index) => {
+    const count = Number(row.signal_count) || 0;
+    const width = Math.max(4, Math.round((count / maxSignals) * 100));
+    const total = Number(row.bullish_count) + Number(row.bearish_count);
+    const bullShare = total ? Math.round((Number(row.bullish_count) / total) * 100) : 50;
+    return `<div class="hbar-row">
+      <div class="hbar-label">${escapeHtml(row.ticker)}</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:${width}%">
+        <span class="hbar-split" style="width:${bullShare}%"></span>
+      </div></div>
+      <div class="hbar-val">${count}</div>
+    </div>`;
+  }).join('\n');
+
+  const maxDaily = Math.max(1, ...daily.map((row) => Number(row.signal_count) || 0));
+  const timeline = daily.map((row) => {
+    const count = Number(row.signal_count) || 0;
+    const height = Math.max(4, Math.round((count / maxDaily) * 72));
+    const label = String(row.upload_date || '').slice(4);
+    return `<div class="vbar" title="${escapeHtml(row.upload_date)}: ${count} signals">
+      <div class="vbar-fill" style="height:${height}px"></div>
+      <div class="vbar-label">${escapeHtml(label)}</div>
+    </div>`;
+  }).join('\n');
+
+  const stateCounts = {};
+  for (const setup of setups) {
+    const state = setup.state || 'unknown';
+    stateCounts[state] = (stateCounts[state] || 0) + 1;
+  }
+  const stateOrder = ['new', 'running', 'worked', 'failed', 'invalidated', 'old'];
+  const stateRows = stateOrder
+    .filter((state) => stateCounts[state])
+    .map((state) => {
+      const count = stateCounts[state];
+      const width = Math.max(6, Math.round((count / Math.max(1, setups.length)) * 100));
+      return `<div class="hbar-row">
+        <div class="hbar-label">${escapeHtml(state)}</div>
+        <div class="hbar-track"><div class="hbar-fill state-${escapeHtml(state)}" style="width:${width}%"></div></div>
+        <div class="hbar-val">${count}</div>
+      </div>`;
+    }).join('\n');
+
+  const bullPct = Math.round((bullish / totalBias) * 100);
+  const bearPct = Math.round((bearish / totalBias) * 100);
+  const mixPct = Math.max(0, 100 - bullPct - bearPct);
+
+  return `
+  <section class="overview">
+    <div class="panel">
+      <h3>Bias mix</h3>
+      <div class="donut-wrap">
+        <div class="donut" style="background: conic-gradient(var(--bull) 0 ${bullPct}%, var(--bear) ${bullPct}% ${bullPct + bearPct}%, var(--mix) ${bullPct + bearPct}% 100%)"></div>
+        <div class="donut-legend">
+          <div><span class="swatch bull"></span>bullish ${bullish} (${bullPct}%)</div>
+          <div><span class="swatch bear"></span>bearish ${bearish} (${bearPct}%)</div>
+          <div><span class="swatch mix"></span>mixed ${mixed} (${mixPct}%)</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Most discussed names</h3>
+      <div class="hbars">${topBars || '<p class="note">No tickers yet.</p>'}</div>
+    </div>
+    <div class="panel">
+      <h3>Signals per stream</h3>
+      <div class="vbars">${timeline || '<p class="note">No streams yet.</p>'}</div>
+    </div>
+    <div class="panel">
+      <h3>Setup lifecycle now</h3>
+      <div class="hbars">${stateRows || '<p class="note">No setups yet.</p>'}</div>
+    </div>
+  </section>`;
+}
+
+/**
+ * Market outcome panel, when analyzeSevcikOutcomes has been run.
+ *
+ * @param {object} payload
+ * @returns {string}
+ */
+function renderOutcomeSection(payload) {
+  const summary = payload.outcome_summary;
+  const outcomes = payload.outcomes || [];
+  if (!summary || !outcomes.length) {
+    return `
+  <h2>Market check</h2>
+  <p class="note">Not scored yet. Run <code>npm run sevcik:outcomes</code> to compare each
+    directional signal with the Yahoo close 1 week and 1 month later.</p>`;
+  }
+
+  const cards = `
+    <div class="cards">
+      <div class="card"><div class="card-value">${summary.scored_1w || 0}</div><div class="card-label">scored 1w</div></div>
+      <div class="card"><div class="card-value">${summary.hit_rate_1w == null ? '—' : formatPct(summary.hit_rate_1w, 0)}</div><div class="card-label">1w hit rate</div></div>
+      <div class="card"><div class="card-value">${summary.avg_return_1w == null ? '—' : formatPct(summary.avg_return_1w, 1)}</div><div class="card-label">avg 1w return</div></div>
+      <div class="card"><div class="card-value">${summary.scored_1m || 0}</div><div class="card-label">scored 1m</div></div>
+      <div class="card"><div class="card-value">${summary.hit_rate_1m == null ? '—' : formatPct(summary.hit_rate_1m, 0)}</div><div class="card-label">1m hit rate</div></div>
+      <div class="card"><div class="card-value">${summary.avg_return_1m == null ? '—' : formatPct(summary.avg_return_1m, 1)}</div><div class="card-label">avg 1m return</div></div>
+    </div>
+    <p class="note">Market check scores <strong>forward</strong> claims only (retrospective reviews like "predikce vyšla" are excluded). A hit means the price moved the same way as the bias (bullish &gt; 0, bearish &lt; 0).
+      Horizons are calendar 7 / 30 days from the stream date, using the nearest Yahoo daily close.
+      Horizons that have not elapsed yet are left blank. Missing prices: ${summary.missing_prices || 0}.</p>`;
+
+  const retClass = (value) => {
+    if (!Number.isFinite(Number(value))) return 'num';
+    return Number(value) >= 0 ? 'num ret-pos' : 'num ret-neg';
+  };
+  const tickerRows = (summary.tickers || []).slice(0, 15).map((row) => `<tr>
+    <td class="ticker">${escapeHtml(row.ticker)}</td>
+    <td>${row.signals}</td>
+    <td>${row.scored_1w || 0}</td>
+    <td>${row.hit_rate_1w == null ? '—' : formatPct(row.hit_rate_1w, 0)}</td>
+    <td class="${retClass(row.avg_return_1w)}">${row.avg_return_1w == null ? '—' : formatPct(row.avg_return_1w, 1)}</td>
+    <td>${row.scored_1m || 0}</td>
+    <td>${row.hit_rate_1m == null ? '—' : formatPct(row.hit_rate_1m, 0)}</td>
+    <td class="${retClass(row.avg_return_1m)}">${row.avg_return_1m == null ? '—' : formatPct(row.avg_return_1m, 1)}</td>
+  </tr>`).join('\n');
+
+  const recent = outcomes
+    .filter((row) => row.hit_1w === true || row.hit_1w === false || row.hit_1m === true || row.hit_1m === false)
+    .slice(0, 25)
+    .map((row) => {
+      const hit = (value) => {
+        if (value === true) return '<span class="hit">hit</span>';
+        if (value === false) return '<span class="miss">miss</span>';
+        return '—';
+      };
+      const retClass = (value) => {
+        if (!Number.isFinite(Number(value))) return 'num';
+        return Number(value) >= 0 ? 'num ret-pos' : 'num ret-neg';
+      };
+      return `<tr>
+        <td class="dim">${escapeHtml(row.upload_date || '')}</td>
+        <td class="ticker">${escapeHtml(row.ticker)}</td>
+        <td>${biasPill(row.bias)}</td>
+        <td class="${retClass(row.return_1w)}">${row.return_1w == null ? '—' : formatPct(row.return_1w, 1)}</td>
+        <td>${hit(row.hit_1w)}</td>
+        <td class="${retClass(row.return_1m)}">${row.return_1m == null ? '—' : formatPct(row.return_1m, 1)}</td>
+        <td>${hit(row.hit_1m)}</td>
+      </tr>`;
+    }).join('\n');
+
+  return `
+  <h2>Market check</h2>
+  ${cards}
+  <h3 class="subhead">Outcomes by ticker</h3>
+  <table class="grid">
+    <thead><tr>
+      <th>ticker</th><th>signals</th><th>n 1w</th><th>hit 1w</th><th>avg 1w</th>
+      <th>n 1m</th><th>hit 1m</th><th>avg 1m</th>
+    </tr></thead>
+    <tbody>${tickerRows || '<tr><td colspan="8" class="note">No scored tickers.</td></tr>'}</tbody>
+  </table>
+  <h3 class="subhead">Recent scored signals</h3>
+  <table class="grid">
+    <thead><tr>
+      <th>date</th><th>ticker</th><th>bias</th><th>1w</th><th>hit</th><th>1m</th><th>hit</th>
+    </tr></thead>
+    <tbody>${recent || '<tr><td colspan="7" class="note">No scored rows yet.</td></tr>'}</tbody>
+  </table>`;
+}
+
 function renderTickerTable(tickers) {
   if (!tickers.length) {
     return '<p class="note">No signals yet.</p>';
@@ -277,6 +471,10 @@ function formatTime(seconds) {
  * @param {string} state
  * @returns {string}
  */
+function claimKindPill(kind) {
+  const label = escapeHtml(kind || 'forward');
+  return `<span class="pill pill-kind-${label}">${label}</span>`;
+}
 function setupStatePill(state) {
   const map = {
     new: 'pill-setup-new',
@@ -335,7 +533,7 @@ function renderSetupTable(setups) {
       <td class="dim">${escapeHtml(setup.upload_date || '')}</td>
       <td class="ticker">${escapeHtml(setup.ticker)}</td>
       <td class="dim">${escapeHtml(setup.spoken_name || '')}</td>
-      <td>${setupStatePill(setup.state)}</td>
+      <td>${setupStatePill(setup.state)} ${claimKindPill(setup.claim_kind)}</td>
       <td>${certaintyPill(setup.certainty_level)}</td>
       <td class="dim">${escapeHtml(states.join(' → '))}</td>
       <td class="dim">${escapeHtml(flags.join(' · '))}</td>
@@ -461,18 +659,55 @@ function buildSevcikReportHtml(payload) {
   tr.sig { cursor: pointer; }
   tr.sig:hover td { background: #1b1f28; }
   .warn { border-left: 3px solid var(--bear); padding: 10px 14px; background: rgba(209,72,63,.08); color: #ffb4ab; border-radius: 6px; margin: 14px 0; }
+  .overview { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 18px 0 8px; }
+  @media (max-width: 980px) { .overview { grid-template-columns: 1fr; } }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
+  .panel h3 { margin: 0 0 12px; font-size: 12px; text-transform: uppercase; letter-spacing: .7px; color: var(--dim); }
+  .subhead { margin: 18px 0 8px; font-size: 13px; color: var(--dim); text-transform: uppercase; letter-spacing: .6px; }
+  .donut-wrap { display: flex; gap: 18px; align-items: center; }
+  .donut { width: 120px; height: 120px; border-radius: 50%; position: relative; flex: 0 0 auto; }
+  .donut::after { content: ""; position: absolute; inset: 28px; background: var(--panel); border-radius: 50%; }
+  .donut-legend { font-size: 13px; line-height: 1.8; }
+  .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 8px; }
+  .swatch.bull { background: var(--bull); }
+  .swatch.bear { background: var(--bear); }
+  .swatch.mix { background: var(--mix); }
+  .hbars { display: flex; flex-direction: column; gap: 8px; }
+  .hbar-row { display: grid; grid-template-columns: 64px 1fr 36px; gap: 8px; align-items: center; }
+  .hbar-label { font-weight: 600; font-size: 12px; }
+  .hbar-track { height: 10px; background: #10131a; border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
+  .hbar-fill { height: 100%; background: linear-gradient(90deg, #3d6fd4, #6ea0ff); position: relative; }
+  .hbar-fill .hbar-split { display: block; height: 100%; background: var(--bull); }
+  .hbar-fill.state-running { background: var(--mix); }
+  .hbar-fill.state-worked, .hbar-fill.state-new { background: var(--bull); }
+  .hbar-fill.state-failed, .hbar-fill.state-invalidated { background: var(--bear); }
+  .hbar-fill.state-old { background: #6b7286; }
+  .hbar-val { text-align: right; font-variant-numeric: tabular-nums; color: var(--dim); font-size: 12px; }
+  .vbars { display: flex; align-items: flex-end; gap: 6px; min-height: 110px; overflow-x: auto; padding-bottom: 4px; }
+  .vbar { flex: 0 0 28px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; }
+  .vbar-fill { width: 16px; border-radius: 4px 4px 2px 2px; background: linear-gradient(180deg, #7fb0ff, #3d6fd4); }
+  .vbar-label { font-size: 10px; color: var(--dim); writing-mode: horizontal-tb; }
+  code { background: #10131a; padding: 1px 5px; border-radius: 4px; border: 1px solid var(--line); }
+  .pill-kind-forward { background: rgba(76,141,255,.18); color: #7fb0ff; }
+  .pill-kind-retrospective { background: rgba(139,147,167,.16); color: var(--dim); }
+  .hit { color: #4fd694; font-weight: 600; }
+  .miss { color: #ff8a80; font-weight: 600; }
+  .ret-pos { color: #4fd694; }
+  .ret-neg { color: #ff8a80; }
 </style>
 </head>
 <body>
 <header>
   <h1>Sevcik prediction signals</h1>
-  <div class="sub">Extracted from stream transcripts. Every signal carries the transcript text it was read from.</div>
+  <div class="sub">Transcript calls, setup lifecycle, and optional market cross-check. Click a row for the source wording.</div>
 </header>
 <main>
   ${renderHeadline(payload)}
   ${payload.signal_count === 0
     ? '<div class="warn">No signals have been extracted yet. Run the transcript fetcher and the signal extractor first.</div>'
     : ''}
+  ${renderOverviewCharts(payload)}
+  ${renderOutcomeSection(payload)}
   <h2>Setups by ticker</h2>
   ${renderSetupTickerTable(payload.setup_tickers || [])}
   <h2>Setups</h2>
@@ -502,3 +737,4 @@ module.exports = {
   escapeHtml,
   formatTime,
 };
+

@@ -283,3 +283,15 @@ test('a timestamp is formatted as a time', () => {
   assert.equal(formatTime(65), '1:05');
   assert.equal(formatTime(3725), '1:02:05');
 });
+
+test('the dashboard renders overview charts when signals exist', () => {
+  const html = buildSevcikReportHtml(PAYLOAD);
+  assert.ok(html.includes('Bias mix'), 'overview bias chart must render');
+  assert.ok(html.includes('Most discussed names'), 'top tickers chart must render');
+});
+
+test('the dashboard explains how to run the market check when unscored', () => {
+  const html = buildSevcikReportHtml(PAYLOAD);
+  assert.ok(html.includes('Market check'), 'market section must exist');
+  assert.ok(html.includes('sevcik:outcomes'), 'it must name the outcomes command');
+});

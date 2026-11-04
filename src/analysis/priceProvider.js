@@ -57,11 +57,27 @@ function toUnixSeconds(value, addOneDay = false) {
   return Math.floor(parsed.getTime() / 1000);
 }
 
+// Yahoo share classes use a dash (BRK.B -> BRK-B). Exchange suffixes
+// must keep the dot (CEZ.PR, RHM.DE, VOD.L). Blindly swapping every dot
+// for a dash breaks non-US listings.
+const YAHOO_EXCHANGE_SUFFIXES = new Set([
+  'PR', 'DE', 'L', 'TO', 'HK', 'PA', 'AS', 'SW', 'MI', 'MC', 'VI', 'ST',
+  'CO', 'HE', 'OL', 'T', 'AX', 'NZ', 'JO', 'SA', 'MX', 'KS', 'KQ', 'TW',
+  'SS', 'SZ', 'BO', 'NS', 'JK', 'SI', 'BR', 'LS', 'AT', 'IR', 'IC', 'F',
+]);
+
 function normalizeTickerSymbol(ticker) {
-  return String(ticker || '')
-    .trim()
-    .toUpperCase()
-    .replace(/\./g, '-');
+  const raw = String(ticker || '').trim().toUpperCase();
+  if (!raw) return '';
+  const match = raw.match(/^([A-Z0-9]+)[\.\-]([A-Z]{1,4})$/);
+  if (!match) return raw.replace(/\./g, '-');
+  const base = match[1];
+  const suffix = match[2];
+  if (YAHOO_EXCHANGE_SUFFIXES.has(suffix)) {
+    return base + '.' + suffix;
+  }
+  // Share class: BRK.B / BRK-B -> BRK-B
+  return base + '-' + suffix;
 }
 
 function buildCacheFilePath(cacheDirectory, symbol) {

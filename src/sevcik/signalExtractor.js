@@ -73,7 +73,7 @@ const { loadConfirmedNames, stemName } = require('./companyNames');
  * The version of the extractor. It is written onto every signal row, so a
  * re-run with a changed parser can be told apart from the previous one.
  */
-const PARSER_VERSION = 'sevcik-signals-1';
+const PARSER_VERSION = 'sevcik-signals-2';
 
 // A phrase that reverses a direction. "Not bullish" is bearish, and the
 // naive pattern match would read "bullish" and call it bullish.
@@ -85,6 +85,21 @@ const NEGATION_PATTERNS = [
 // bullish on X" is history, not a call.
 const HISTORICAL_PATTERNS = [
   /\b(?:i\s+was|i\s+had\s+been|we\s+were|used\s+to|previously|yesterday|last\s+week|i\s+closed\s+my\s+position\s+in)\b/gi,
+  // Czech retrospective / review language -- a past call being graded, not a new one.
+  /(?<![\p{L}\p{N}])(?:minule|minul[aáéý]|včera|předtím|dříve|před\s+týdnem|před\s+týdny)(?![\p{L}\p{N}])/giu,
+  /(?<![\p{L}\p{N}])(?:už\s+jsme\s+(?:to\s+)?říkal[ai]?|už\s+jsme\s+říkali|jak\s+jsme\s+říkali|říkali\s+jsme)(?![\p{L}\p{N}])/giu,
+  /(?<![\p{L}\p{N}])(?:predikce\s+(?:vyšl[aáo]|nevyšl[aáo]|byla\s+přesn[aá]|byla\s+velmi\s+přesn[aá]))(?![\p{L}\p{N}])/giu,
+  /(?<![\p{L}\p{N}])(?:predikce\s+byla|tahle\s+ta\s+predikce\s+byla|byla\s+to\s+přesná\s+predikce)(?![\p{L}\p{N}])/giu,
+  /(?<![\p{L}\p{N}])(?:vyšla\s+(?:přesně|velmi\s+přesně|s\s+chlupama))(?![\p{L}\p{N}])/giu,
+];
+
+/**
+ * Patterns that mark a claim as a RETROSPECTIVE review of an old prediction,
+ * even when some forward language is also present.
+ */
+const RETROSPECTIVE_PATTERNS = [
+  /(?<![\p{L}\p{N}])(?:predikce\s+(?:vyšl|nevyšl|zneplatn|byla\s+stará)|vyšla\s+přesně|nevyšla|zneplatněn)(?![\p{L}\p{N}])/giu,
+  /(?<![\p{L}\p{N}])(?:minule|už\s+jsme\s+(?:to\s+)?říkal)(?![\p{L}\p{N}])/giu,
 ];
 
 // A sentence that explicitly disclaims a call.
@@ -296,6 +311,26 @@ function hasNegation(text) {
  */
 function isHistorical(text) {
   return HISTORICAL_PATTERNS.some((pattern) => new RegExp(pattern.source, pattern.flags).test(String(text || '')));
+}
+
+/**
+ * Is this window reviewing a past prediction rather than making a live call?
+ *
+ * @param {string} text
+ * @returns {boolean}
+ */
+function isRetrospective(text) {
+  const str = String(text || '');
+  if (isHistorical(str)) return true;
+  return RETROSPECTIVE_PATTERNS.some((pattern) => new RegExp(pattern.source, pattern.flags).test(str));
+}
+
+/**
+ * @param {string} text
+ * @returns {'forward'|'retrospective'}
+ */
+function claimKindFor(text) {
+  return isRetrospective(text) ? 'retrospective' : 'forward';
 }
 
 /**
@@ -755,15 +790,23 @@ function targetImpliesBias(target, prices) {
  * @param {Set<string>} lexicon
  * @returns {Array<{ticker: string, pieces: Array<{index: number, text: string}>, segmentStart: number, segmentEnd: number}>}
  */
+// How many ticker-less segments may trail a run before it is closed.
+// Unbounded continuation produced multi-minute evidence blobs that mixed names.
+const MAX_RUN_GAP_SEGMENTS = 6;
+// Hard cap on segments owned by one run before a forced split.
+const MAX_RUN_SEGMENTS = 14;
+
 function buildTickerRuns(segments, lexicon, options = {}) {
   const runs = [];
   let open = null;
+  let gap = 0;
 
   const closeRun = () => {
     if (!open) return;
     open.text = open.pieces.map((piece) => piece.text).join(' ');
     runs.push(open);
     open = null;
+    gap = 0;
   };
 
   for (let index = 0; index < segments.length; index += 1) {
@@ -771,13 +814,19 @@ function buildTickerRuns(segments, lexicon, options = {}) {
     const tickers = findTickers(text, lexicon, options);
 
     if (!tickers.length) {
-      // A segment with no name continues the run that is open.
+      // A short ticker-less tail may continue the open run; beyond that, close.
       if (open && text.trim()) {
-        open.pieces.push({ index, text });
-        open.segmentEnd = index;
+        gap += 1;
+        if (gap > MAX_RUN_GAP_SEGMENTS || open.pieces.length >= MAX_RUN_SEGMENTS) {
+          closeRun();
+        } else {
+          open.pieces.push({ index, text });
+          open.segmentEnd = index;
+        }
       }
       continue;
     }
+    gap = 0;
 
     for (let k = 0; k < tickers.length; k += 1) {
       // The first ticker of a segment owns the run-up to it; every other
@@ -787,7 +836,7 @@ function buildTickerRuns(segments, lexicon, options = {}) {
       const piece = text.slice(pieceStart, pieceEnd);
       if (!piece.trim()) continue;
 
-      if (!open || open.ticker !== tickers[k].ticker) {
+      if (!open || open.ticker !== tickers[k].ticker || open.pieces.length >= MAX_RUN_SEGMENTS) {
         closeRun();
         open = {
           ticker: tickers[k].ticker,
@@ -1095,8 +1144,10 @@ function extractSignals(options) {
       // the price to move, so they carry their own bias.
       if (bias === 'neutral' && !actionImpliesDirection(actionResult.action)) continue;
 
-      // History is not a call, and a disclaimer is not a call.
-      if (isHistorical(windowText) && !actionResult.action) continue;
+      // English history with no action is not a call. Czech retrospective
+      // language is TAGGED via claim_kind rather than dropped -- otherwise
+      // a single "minule" in the window deletes a live setup description.
+      if (isHistorical(windowText) && !actionResult.action && !actionImpliesDirection(actionResult.action)) continue;
       if (isDisclaimer(windowText)) continue;
 
       const { score, label } = scoreConfidence({
@@ -1108,6 +1159,10 @@ function extractSignals(options) {
 
       const evidenceText = windowText.replace(/\s+/g, ' ').trim();
 
+      const kind = claimKindFor(windowText);
+
+      // Pure retrospective reviews are kept for speech-ledger analysis, but
+      // tagged so market outcomes can ignore them.
       signals.push({
         video_id: options.videoId || '',
         transcript_id: options.transcriptId || null,
@@ -1118,6 +1173,7 @@ function extractSignals(options) {
         action: actionResult.action,
         bias,
         strength,
+        claim_kind: kind,
         confidence_label: label,
         confidence_score: score,
         entry_price: entry ? entry.value : null,
@@ -1147,7 +1203,9 @@ module.exports = {
   findTickers,
   isAmbiguousTokenAccepted,
   isDisclaimer,
+  claimKindFor,
   isHistorical,
+  isRetrospective,
   mergeOverlappingSignals,
   parsePrice,
   scoreConfidence,

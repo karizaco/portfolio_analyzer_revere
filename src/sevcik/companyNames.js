@@ -113,6 +113,23 @@ const NON_US_TABLE_PATH = path.resolve(__dirname, '..', '..', 'config', 'ticker_
  */
 const CONFIRMED_TABLE_PATH = path.resolve(__dirname, '..', '..', 'config', 'ticker_names_confirmed.csv');
 
+// Spoken stems that must NEVER resolve to a ticker.
+//
+// "gab" / "gapy" is Czech trading jargon for a price GAP (ASR often writes
+// "gab"). Mapping it to the closed-end fund GAB produced the noisiest
+// ticker in the corpus. Keep this list small and measured.
+const DENIED_SPOKEN_STEMS = new Set([
+  'gab',
+  'gap',
+  'gapy',
+  'gabu',
+  'gapu',
+  'gapem',
+  'gape',
+  'gaps',
+]);
+
+
 /**
  * The words that carry no information about a company, and so are never
  * a company name on their own.
@@ -254,6 +271,15 @@ let cachedConfirmed = null;
  *
  * @returns {Object<string, string>}
  */
+function isDeniedSpokenStem(value) {
+  const key = foldDiacritics(stemName(String(value || '')));
+  if (!key) return false;
+  if (DENIED_SPOKEN_STEMS.has(key)) return true;
+  // Also deny exact folded forms without stemming edge cases.
+  const folded = foldDiacritics(String(value || '').toLowerCase().trim());
+  return DENIED_SPOKEN_STEMS.has(folded);
+}
+
 function loadConfirmedNames() {
   if (cachedConfirmed) return cachedConfirmed;
 
@@ -530,6 +556,10 @@ function matchCompanyName(spoken, options = {}) {
   const confirmed = loadConfirmedNames();
   const confirmedTicker = confirmed[stem] || confirmed[raw.toLowerCase()];
 
+  if (isDeniedSpokenStem(raw) || isDeniedSpokenStem(stem)) {
+    return result;
+  }
+
   if (confirmedTicker) {
     if (!lexicon || lexicon.has(confirmedTicker)) {
       result.ticker = confirmedTicker;
@@ -682,6 +712,7 @@ module.exports = {
   NON_US_TABLE_PATH,
   STOP_WORDS,
   loadCompanyNames,
+  isDeniedSpokenStem,
   loadConfirmedNames,
   loadNonUsNames,
   matchCompanyName,

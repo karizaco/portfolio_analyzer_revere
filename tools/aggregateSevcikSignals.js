@@ -72,14 +72,25 @@ async function main() {
   await writeCsv(path.join(OUTPUT_DIR, 'sevcik_signals.csv'), TRADE_SIGNAL_COLUMNS, signals);
   await writeCsv(path.join(OUTPUT_DIR, 'sevcik_daily_summary.csv'), TRADE_SIGNAL_DAILY_COLUMNS, daily);
   await writeCsv(path.join(OUTPUT_DIR, 'sevcik_ticker_summary.csv'), TRADE_SIGNAL_TICKER_COLUMNS, tickers);
-  await writeCsv(path.join(OUTPUT_DIR, 'sevcik_setups.csv'), SEVCIK_SETUP_COLUMNS, setups);
+  await writeCsv(path.join(OUTPUT_DIR, 'sevcik_setups.csv'), SEVCIK_SETUP_COLUMNS, setups.map(serializeSetupRow));
   await writeCsv(path.join(OUTPUT_DIR, 'sevcik_setup_daily_summary.csv'), SEVCIK_SETUP_DAILY_COLUMNS, setupDaily);
   await writeCsv(path.join(OUTPUT_DIR, 'sevcik_setup_ticker_summary.csv'), SEVCIK_SETUP_TICKER_COLUMNS, setupTickers);
+
+  const transcribedVideoIds = new Set([
+    ...signals.map((row) => row.video_id),
+    ...setups.map((row) => row.video_id),
+  ].filter(Boolean));
+  // Prefer the videos that actually contributed transcripts/signals. The
+  // catalog can be hundreds of rows while only a few dozen are transcribed.
+  const transcriptVideoCount = transcribedVideoIds.size
+    || videos.filter((video) => video.provider).length
+    || videos.length;
 
   const payload = {
     generated_at: new Date().toISOString(),
     signal_count: signals.length,
     video_count: videos.length,
+    transcript_video_count: transcriptVideoCount,
     unique_tickers: tickers.length,
     setup_count: setups.length,
     signals,
@@ -89,6 +100,20 @@ async function main() {
     setup_daily: setupDaily,
     setup_tickers: setupTickers,
   };
+
+  // Keep a previously computed market cross-check on the dashboard when the
+  // aggregate is re-run without re-scoring prices.
+  const outcomesPath = path.join(OUTPUT_DIR, 'sevcik_outcomes.json');
+  if (fs.existsSync(outcomesPath)) {
+    try {
+      const prior = JSON.parse(fs.readFileSync(outcomesPath, 'utf8'));
+      if (Array.isArray(prior.outcomes)) payload.outcomes = prior.outcomes;
+      if (prior.summary) payload.outcome_summary = prior.summary;
+    } catch {
+      // A corrupt outcomes file must not block the main report.
+    }
+  }
+
   fs.writeFileSync(
     path.join(OUTPUT_DIR, 'sevcik_signals.json'),
     JSON.stringify(payload, null, 2),
@@ -105,6 +130,7 @@ async function main() {
     console.log(JSON.stringify({
       signal_count: payload.signal_count,
       video_count: payload.video_count,
+      transcript_video_count: payload.transcript_video_count,
       unique_tickers: payload.unique_tickers,
       setup_count: payload.setup_count,
       top_tickers: tickers.slice(0, 10).map((row) => row.ticker),
@@ -129,11 +155,12 @@ async function main() {
 function loadSignals(db) {
   const rows = db.prepare(
     'SELECT s.video_id, v.upload_date, t.provider, s.event_time_sec, s.ticker, s.action, s.bias, '
-    + 's.confidence_label, s.confidence_score, s.entry_price, s.target_price_low, s.target_price_high, '
+    + 's.claim_kind, s.confidence_label, s.confidence_score, s.entry_price, s.target_price_low, s.target_price_high, '
     + 's.stop_price, s.horizon_text, s.rationale, s.evidence_text, s.parser_version '
     + 'FROM trade_signals s '
     + 'LEFT JOIN videos v ON v.video_id = s.video_id '
     + 'LEFT JOIN video_transcripts t ON t.video_id = s.video_id '
+    + "WHERE v.channel = 'davidsevcik' "
     + 'ORDER BY v.upload_date DESC, s.event_time_sec ASC, s.ticker ASC',
   ).all();
 
@@ -145,6 +172,7 @@ function loadSignals(db) {
     ticker: row.ticker,
     action: row.action || '',
     bias: row.bias,
+    claim_kind: row.claim_kind || 'forward',
     confidence_label: row.confidence_label || '',
     confidence_score: row.confidence_score === null ? '' : row.confidence_score,
     entry_price: row.entry_price === null ? '' : row.entry_price,
@@ -158,12 +186,6 @@ function loadSignals(db) {
   }));
 }
 
-/**
- * The videos the signals came from.
- *
- * @param {DatabaseSync} db
- * @returns {Array<{video_id: string, upload_date: string, title: string, provider: string}>}
- */
 function loadVideos(db) {
   return db.prepare(
     'SELECT v.video_id, v.upload_date, v.title, t.provider FROM videos v '
@@ -299,12 +321,39 @@ function buildTickerSummary(signals) {
  * @param {DatabaseSync} db
  * @returns {Array<object>}
  */
+
+function serializeSetupRow(row) {
+  return {
+    ...row,
+    states: Array.isArray(row.states) ? JSON.stringify(row.states) : (row.states || '[]'),
+  };
+}
+
+function parseStatesJson(value) {
+  if (Array.isArray(value)) return value;
+  const raw = String(value || '').trim();
+  if (!raw) return [];
+  if (raw.startsWith('[')) {
+    try { const parsed = JSON.parse(raw); return Array.isArray(parsed) ? parsed : []; } catch (_) { return []; }
+  }
+  // legacy CSV
+  return raw.split(',').map((part) => part.trim()).filter(Boolean);
+}
+
+function inferClaimKind(row) {
+  const state = String(row.state || '');
+  if (state === 'worked' || state === 'failed' || state === 'invalidated' || state === 'old') {
+    return 'retrospective';
+  }
+  return 'forward';
+}
+
 function loadSetups(db) {
   const rows = db.prepare(
     'SELECT u.video_id, v.upload_date, t.provider, u.event_time_sec, u.ticker, u.spoken_name, '
     + 'u.state, u.states, u.mentions, u.certainty_level, u.certainty_confidence, '
     + 'u.certainty_marker, u.probability, u.direction_uncertain, u.still_running, '
-    + 'u.invalidated, u.worked, u.failed, u.evidence_text, u.parser_version '
+    + 'u.invalidated, u.worked, u.failed, u.claim_kind, u.evidence_text, u.parser_version '
     + 'FROM sevcik_setups u '
     + 'LEFT JOIN videos v ON v.video_id = u.video_id '
     + 'LEFT JOIN video_transcripts t ON t.video_id = u.video_id '
@@ -319,7 +368,8 @@ function loadSetups(db) {
     ticker: row.ticker,
     spoken_name: row.spoken_name || '',
     state: row.state,
-    states: row.states || '',
+    states: parseStatesJson(row.states),
+    claim_kind: row.claim_kind || inferClaimKind(row),
     mentions: row.mentions === null ? 0 : row.mentions,
     certainty_level: row.certainty_level || 'unknown',
     certainty_confidence: row.certainty_confidence === null ? '' : row.certainty_confidence,

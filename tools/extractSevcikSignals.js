@@ -217,13 +217,15 @@ function loadSegments(transcriptId, videoId, db) {
  * @param {Array<object>} signals
  */
 function replaceSignals(db, videoId, transcriptId, signals) {
+  try { db.exec('ALTER TABLE trade_signals ADD COLUMN claim_kind TEXT'); } catch (_) {}
+
   db.prepare('DELETE FROM trade_signals WHERE video_id = ?').run(videoId);
 
   const insert = db.prepare(
     'INSERT INTO trade_signals (video_id, transcript_id, segment_start_index, segment_end_index, '
-    + 'event_time_sec, ticker, action, bias, confidence_label, confidence_score, entry_price, '
+    + 'event_time_sec, ticker, action, bias, claim_kind, confidence_label, confidence_score, entry_price, '
     + 'target_price_low, target_price_high, stop_price, horizon_text, rationale, evidence_text, '
-    + 'parser_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    + 'parser_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
   );
 
   for (const signal of signals) {
@@ -236,6 +238,7 @@ function replaceSignals(db, videoId, transcriptId, signals) {
       signal.ticker,
       signal.action,
       signal.bias,
+      signal.claim_kind || 'forward',
       signal.confidence_label,
       signal.confidence_score,
       signal.entry_price,

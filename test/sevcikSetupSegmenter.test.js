@@ -95,21 +95,26 @@ test('a setup is found even when the ticker is named further away', () => {
   assert.equal(setups[0].ticker, 'INTC');
 });
 
-test('the LAST state is the state the setup is in', () => {
+test('a worked prediction and a later reopen are separate episodes', () => {
   const segments = [
     seg('Takže to 10 Tesla. Tahle ta predikce vyšla.'),
     seg('A ale jinak. Predikce na Tesla běží dál.'),
   ];
   const setups = findSetups({ segments, lexicon: LEXICON });
-  assert.equal(setups[0].state, 'running');
-  assert.ok(setups[0].worked, 'the setup did work at one point');
-  assert.ok(setups[0].still_running, 'and it is still running');
+  assert.equal(setups.length, 2);
+  assert.equal(setups[0].state, 'worked');
+  assert.equal(setups[0].claim_kind, 'retrospective');
+  assert.equal(setups[0].still_running, false);
+  assert.equal(setups[1].state, 'running');
+  assert.equal(setups[1].claim_kind, 'forward');
+  assert.equal(setups[1].still_running, true);
+  assert.equal(setups[1].worked, false);
 });
 
 test('an invalidated setup is marked as invalidated', () => {
   const segments = [
     seg('Takže to 10 Tesla. Tahle ta predikce běží.'),
-    seg('A tady prodejce do Long byla zneplatněná.'),
+    seg('A tady predikce do Long byla zneplatněná.'),
   ];
   const setups = findSetups({ segments, lexicon: LEXICON });
   assert.equal(setups[0].state, 'invalidated');
@@ -137,7 +142,7 @@ test('an invalidated setup is marked as invalidated', () => {
 test('a setup that ran and then FAILED is not still running', () => {
   const segments = [
     seg('Takže to 10 Tesla. Tahle ta predikce běží.'),
-    seg('A tady prodejce do Long nevyšla.'),
+    seg('A tady predikce do Long nevyšla.'),
   ];
   const setups = findSetups({ segments, lexicon: LEXICON });
   assert.equal(setups[0].state, 'failed');
@@ -148,7 +153,7 @@ test('a setup that ran and then FAILED is not still running', () => {
 test('a setup that ran and then was INVALIDATED is not still running', () => {
   const segments = [
     seg('Takže to 10 Tesla. Tahle ta predikce běží.'),
-    seg('A tady prodejce do Long byla zneplatněná.'),
+    seg('A tady predikce do Long byla zneplatněná.'),
   ];
   const setups = findSetups({ segments, lexicon: LEXICON });
   assert.equal(setups[0].state, 'invalidated');
@@ -165,27 +170,30 @@ test('a setup that WORKED and was not reopened is not still running', () => {
 });
 
 test('a setup that worked and was then reopened IS still running', () => {
-  // The last word on it is what counts, in both directions.
+  // Reopen after a terminal state starts a NEW forward episode.
   const segments = [
     seg('Takže to 10 Tesla. Tahle ta predikce vyšla.'),
     seg('A ale jinak. Predikce na Tesla běží dál.'),
   ];
   const setups = findSetups({ segments, lexicon: LEXICON });
-  assert.equal(setups[0].state, 'running');
-  assert.equal(setups[0].still_running, true);
+  const live = setups[setups.length - 1];
+  assert.equal(live.state, 'running');
+  assert.equal(live.still_running, true);
+  assert.equal(live.claim_kind, 'forward');
 });
 
-test('the states keep their order, so the final state is knowable', () => {
+test('the states keep their order inside an episode, and a reopen is a new episode', () => {
   const segments = [
     seg('Takže to 10 Tesla. Tahle ta predikce běží.'),
-    seg('A tady prodejce do Long nevyšla.'),
+    seg('A tady predikce do Long nevyšla.'),
     seg('Ale jinak. Predikce na Tesla běží znovu.'),
   ];
   const setups = findSetups({ segments, lexicon: LEXICON });
-  // The middle state is kept. Deduping would have thrown it away and the
-  // setup's history would be unreadable.
-  assert.deepEqual(setups[0].states, ['running', 'failed', 'running']);
-  assert.equal(setups[0].state, 'running');
+  assert.equal(setups.length, 2);
+  assert.deepEqual(setups[0].states, ['running', 'failed']);
+  assert.equal(setups[0].state, 'failed');
+  assert.deepEqual(setups[1].states, ['running']);
+  assert.equal(setups[1].state, 'running');
 });
 
 test('a live state is one the speaker has not closed out', () => {
@@ -279,9 +287,10 @@ test('a stated probability is recorded', () => {
 
 test('the scale is ordered', () => {
   assert.ok(certaintyConfidence('certain') > certaintyConfidence('high'));
-  assert.ok(certaintyConfidence('high') > certaintyConfidence('even'));
-  assert.ok(certaintyConfidence('even') > certaintyConfidence('conditional'));
-  assert.ok(certaintyConfidence('conditional') > certaintyConfidence('low'));
+  assert.ok(certaintyConfidence('high') > certaintyConfidence('conditional'));
+  assert.ok(certaintyConfidence('conditional') > certaintyConfidence('even'));
+  assert.ok(certaintyConfidence('even') > certaintyConfidence('low'));
+  assert.ok(certaintyConfidence('low') > certaintyConfidence('unknown'));
 });
 
 test('a setup keeps its hedge visible when it states a strong signal', () => {
@@ -299,4 +308,36 @@ test('a setup keeps its hedge visible when it states a strong signal', () => {
 test('a setup with no certainty language is UNKNOWN', () => {
   const result = readSetupCertainty('Takže to 10 Tesla. Nová predikce na Tesla.');
   assert.equal(result.level, 'unknown');
+});
+
+
+test('earnings language does not mark a setup as worked', () => {
+  assert.equal(readSetupState('výsledky vyšly dobře, ale výhled je špatný'), '');
+  assert.equal(readSetupState('predikce vyšla'), 'worked');
+});
+
+test('multiple predictions on one ticker become separate episodes', () => {
+  const segments = [
+    seg('Takže Tesla. Nová predikce na Tesla je Long.'),
+    seg('Predikce na Tesla vyšla.'),
+    seg('Nová predikce na Tesla je Short.'),
+    seg('Predikce běží.'),
+  ];
+  const setups = findSetups({ segments, lexicon: LEXICON });
+  assert.equal(setups.length, 2);
+  assert.equal(setups[0].state, 'worked');
+  assert.equal(setups[0].claim_kind, 'retrospective');
+  assert.equal(setups[1].state, 'running');
+  assert.equal(setups[1].claim_kind, 'forward');
+  assert.equal(setups[1].worked, false);
+});
+
+test('states are a real array on the setup object', () => {
+  const setups = findSetups({
+    segments: [seg('Takže Tesla. Nová predikce na Tesla. Predikce běží.')],
+    lexicon: LEXICON,
+  });
+  assert.ok(setups.length >= 1);
+  assert.ok(Array.isArray(setups[0].states));
+  assert.ok(setups[0].states.length >= 1);
 });
