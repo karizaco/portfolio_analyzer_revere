@@ -46,6 +46,8 @@ const { DatabaseSync } = require('node:sqlite');
 
 const { loadSeedLexiconSync } = require('../src/normalize/tickerScan');
 const { matchCompanyName } = require('../src/sevcik/companyNames');
+const { findCzechCompanyNames } = require('../src/sevcik/czechNames');
+const { loadSevcikLexicon } = require('../src/sevcik/lexicon');
 const { SEVCIK_CHANNEL } = require('../src/sevcik/channel');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -167,7 +169,11 @@ function main() {
     process.exit(1);
   }
 
-  const lexicon = new Set(loadSeedLexiconSync().tickers);
+  // The Sevcik allow list, not the shared seed: the seed is built
+  // around the OCR channels, and 10,170 of the 10,410 SEC tickers are
+  // not in it. Gating this survey on the seed would report every large
+  // cap as an unresolved name.
+  const lexicon = loadSevcikLexicon();
   const db = new DatabaseSync(DB_PATH, { readOnly: true });
 
   const sql = 'SELECT t.video_id AS video_id, v.upload_date AS upload_date, t.transcript_path AS transcript_path '
@@ -221,16 +227,17 @@ function main() {
         }
       }
 
-      // The spoken names. A capitalised word, not a noise token.
-      const nameRegex = /\b[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ][a-záčďéěíňóřšťúůýž]{2,}\b/g;
-      let nameMatch;
-      while ((nameMatch = nameRegex.exec(text)) !== null) {
-        const spoken = nameMatch[0];
+      // The spoken names. In Czech a capitalised word is only a name
+      // when it is NOT the first word of its sentence -- Czech
+      // capitalises every sentence start. So the survey uses the
+      // position-aware finder, not a naive capitalisation.
+      const candidates = findCzechCompanyNames(text, { lexicon });
+      for (const candidate of candidates) {
+        const spoken = candidate.spoken;
         if (NOISE_WORDS.has(spoken.toUpperCase())) continue;
 
-        const match = matchCompanyName(spoken, { lexicon });
-        if (match.ticker) {
-          if (!knownNames.has(spoken)) knownNames.set(spoken, { ticker: match.ticker, count: 0, video_id: row.video_id });
+        if (candidate.ticker) {
+          if (!knownNames.has(spoken)) knownNames.set(spoken, { ticker: candidate.ticker, count: 0, video_id: row.video_id });
           knownNames.get(spoken).count += 1;
         } else {
           if (!unknownNames.has(spoken)) unknownNames.set(spoken, { count: 0, videos: new Set(), sample: segment.text });
