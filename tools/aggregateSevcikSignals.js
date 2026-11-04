@@ -353,7 +353,7 @@ function loadSetups(db) {
     'SELECT u.video_id, v.upload_date, t.provider, u.event_time_sec, u.ticker, u.spoken_name, '
     + 'u.state, u.states, u.mentions, u.certainty_level, u.certainty_confidence, '
     + 'u.certainty_marker, u.probability, u.direction_uncertain, u.still_running, '
-    + 'u.invalidated, u.worked, u.failed, u.claim_kind, u.evidence_text, u.parser_version '
+    + 'u.invalidated, u.worked, u.failed, u.claim_kind, u.bias, u.is_prediction, u.evidence_text, u.parser_version '
     + 'FROM sevcik_setups u '
     + 'LEFT JOIN videos v ON v.video_id = u.video_id '
     + 'LEFT JOIN video_transcripts t ON t.video_id = u.video_id '
@@ -370,6 +370,8 @@ function loadSetups(db) {
     state: row.state,
     states: parseStatesJson(row.states),
     claim_kind: row.claim_kind || inferClaimKind(row),
+    bias: row.bias || '',
+    is_prediction: row.is_prediction ? 1 : 0,
     mentions: row.mentions === null ? 0 : row.mentions,
     certainty_level: row.certainty_level || 'unknown',
     certainty_confidence: row.certainty_confidence === null ? '' : row.certainty_confidence,

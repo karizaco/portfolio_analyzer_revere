@@ -196,6 +196,43 @@ const CERTAINTY_MARKERS = [
     pattern: /(?<![\p{L}\p{N}])myslím si(?![\p{L}\p{N}])/iu,
     note: '"myslim si" -- I think.',
   },
+  // Structural / ASR-friendly strength near a setup sentence.
+  {
+    level: 'high',
+    specificity: 0.82,
+    kind: 'assertion',
+    pattern: /(?<![\p{L}\p{N}])(?:velmi\s+siln[\p{L}\p{N}]*|siln[eě]j[sš][\p{L}\p{N}]*\s+sign[\p{L}\p{N}]*|siln[\p{L}\p{N}]*\s+sign[\p{L}\p{N}]*)(?![\p{L}\p{N}])/iu,
+    note: 'strong / stronger signal language without requiring perfect diacritics',
+  },
+  {
+    level: 'high',
+    specificity: 0.8,
+    kind: 'assertion',
+    pattern: /(?<![\p{L}\p{N}])(?:obrovsk[\p{L}\p{N}]*\s+pravd[\p{L}\p{N}]*|vysok[\p{L}\p{N}]*\s+pravd[\p{L}\p{N}]*)(?![\p{L}\p{N}])/iu,
+    note: 'high probability wording',
+  },
+  {
+    level: 'conditional',
+    specificity: 0.7,
+    kind: 'condition',
+    pattern: /(?<![\p{L}\p{N}])(?:pokud\s+(?:se\s+)?(?:dostane|udr[zž]|proraz|p[uů]jde|neproraz)|jestli\s+(?:se\s+)?(?:dostane|udr[zž]|proraz))(?![\p{L}\p{N}])/iu,
+    note: 'explicit if/then gate on the call',
+  },
+  {
+    level: 'even',
+    specificity: 0.65,
+    kind: 'hedge',
+    pattern: /(?<![\p{L}\p{N}])(?:p[uů]l\s+na\s+p[uů]l|fifty\s*fifty)(?![\p{L}\p{N}])/iu,
+    note: 'even-odds variants',
+  },
+  {
+    level: 'low',
+    specificity: 0.4,
+    kind: 'hedge',
+    pattern: /(?<![\p{L}\p{N}])(?:asi|mo[zž]n[\p{L}\p{N}]*|snad|tipuju|tipuji)(?![\p{L}\p{N}])/iu,
+    note: 'soft hedges common in Czech speech',
+  },
+
 ];
 
 /**
@@ -213,7 +250,7 @@ const NEGATION_PATTERNS = [
 /**
  * The certainty levels, in descending order of how much they claim.
  */
-const CERTAINTY_LEVELS = ['certain', 'high', 'conditional', 'even', 'low', 'unknown'];
+const CERTAINTY_LEVELS = ['certain', 'high', 'conditional', 'even', 'stated', 'low', 'unknown'];
 
 /**
  * A number that states a probability, with the number itself.
@@ -320,17 +357,57 @@ function readCertainty(text, options = {}) {
  * @returns {number}
  */
 function certaintyConfidence(level) {
-  // Spread the scale so "unknown" is not near "conditional", and a
-  // conditional call (stated trigger) ranks above a coin-flip.
+  // Spread the scale so "unknown" is not near actionable bands.
+  // conditional (stated trigger) ranks above a coin-flip.
   switch (level) {
     case 'certain': return 0.95;
-    case 'high': return 0.85;
-    case 'conditional': return 0.72;
+    case 'high': return 0.82;
+    case 'conditional': return 0.68;
     case 'even': return 0.50;
+    case 'stated': return 0.42; // direction stated, no strength language
     case 'low': return 0.28;
-    case 'unknown': return 0.12;
-    default: return 0.12;
+    case 'unknown': return 0.08;
+    default: return 0.08;
   }
+}
+
+/**
+ * Map an explicit probability percent onto a certainty level.
+ * @param {number|null} probability
+ * @returns {string}
+ */
+function levelFromProbability(probability) {
+  if (!Number.isFinite(probability)) return '';
+  if (probability >= 85) return 'certain';
+  if (probability >= 70) return 'high';
+  if (probability >= 55) return 'conditional';
+  if (probability >= 45 && probability <= 55) return 'even';
+  if (probability > 0 && probability < 45) return 'low';
+  return '';
+}
+
+/**
+ * Structural baseline when the speaker stated a direction on a setup but
+ * used no explicit certainty vocabulary. This stops ~80%+ of rows landing
+ * on "unknown" while still ranking below real strength language.
+ *
+ * @param {object} [options]
+ * @param {boolean} [options.hasDirection]
+ * @param {boolean} [options.isPrediction]
+ * @param {boolean} [options.directionUncertain]
+ * @returns {{level: string, confidence: number, marker: string}}
+ */
+function structuralCertainty(options = {}) {
+  if (options.directionUncertain) {
+    return { level: 'low', confidence: certaintyConfidence('low'), marker: 'direction_uncertain' };
+  }
+  if (options.hasDirection && options.isPrediction) {
+    return { level: 'stated', confidence: certaintyConfidence('stated'), marker: 'direction_stated' };
+  }
+  if (options.hasDirection) {
+    return { level: 'stated', confidence: certaintyConfidence('stated'), marker: 'direction_stated' };
+  }
+  return { level: 'unknown', confidence: certaintyConfidence('unknown'), marker: '' };
 }
 
 /**
@@ -382,28 +459,60 @@ function isNegated(text, index) {
  * @param {string} text
  * @returns {object} the same shape as `readCertainty`
  */
-function readSetupCertainty(text) {
+function readSetupCertainty(text, options = {}) {
   const single = readCertainty(text);
-  if (single.markers.length <= 1) return single;
+  const hedges = single.markers.filter((marker) => marker.kind === 'hedge' || marker.kind === 'disclaimer');
 
-  // Take the strongest, but keep the hedges visible.
-  const best = single.markers.reduce((acc, marker) => {
-    if (!acc) return marker;
-    const ai = CERTAINTY_LEVELS.indexOf(marker.level);
-    const bi = CERTAINTY_LEVELS.indexOf(acc.level);
-    if (ai < bi) return marker;
-    if (ai > bi) return acc;
-    return (marker.specificity || 0) > (acc.specificity || 0) ? marker : acc;
-  }, null);
+  let best = null;
+  if (single.markers.length) {
+    best = single.markers.reduce((acc, marker) => {
+      if (!acc) return marker;
+      const ai = CERTAINTY_LEVELS.indexOf(marker.level);
+      const bi = CERTAINTY_LEVELS.indexOf(acc.level);
+      if (ai < 0) return acc;
+      if (bi < 0) return marker;
+      if (ai < bi) return marker;
+      if (ai > bi) return acc;
+      return (marker.specificity || 0) > (acc.specificity || 0) ? marker : acc;
+    }, null);
+  }
 
-  const hedges = single.markers.filter((marker) => marker.kind === 'hedge');
+  let level = best ? best.level : 'unknown';
+  let marker = best ? best.marker : '';
+  let confidence = certaintyConfidence(level);
+
+  // Explicit percent overrides weaker language when present.
+  const fromProb = levelFromProbability(single.probability);
+  if (fromProb) {
+    const pi = CERTAINTY_LEVELS.indexOf(fromProb);
+    const li = CERTAINTY_LEVELS.indexOf(level);
+    if (li < 0 || (pi >= 0 && pi < li)) {
+      level = fromProb;
+      confidence = certaintyConfidence(level);
+      marker = marker || `${single.probability}%`;
+    }
+  }
+
+  // Structural baseline when vocabulary is silent but the call has a direction.
+  if (level === 'unknown') {
+    const structural = structuralCertainty(options);
+    level = structural.level;
+    confidence = structural.confidence;
+    marker = structural.marker;
+  }
+
+  // Direction uncertainty is a hedge on the CALL, not a free pass to "high".
+  if (options.directionUncertain && (level === 'certain' || level === 'high')) {
+    level = 'conditional';
+    confidence = certaintyConfidence(level);
+  }
 
   return {
     ...single,
-    level: best.level,
-    confidence: certaintyConfidence(best.level),
-    marker: best.marker,
-    negated: Boolean(best.negated),
+    level,
+    confidence,
+    marker,
+    negated: Boolean(best && best.negated),
     hedged: hedges.length > 0,
     hedges: hedges.map((hedge) => hedge.marker),
   };
@@ -415,6 +524,8 @@ module.exports = {
   PROBABILITY_PATTERN,
   certaintyConfidence,
   isNegated,
+  levelFromProbability,
   readCertainty,
   readSetupCertainty,
+  structuralCertainty,
 };

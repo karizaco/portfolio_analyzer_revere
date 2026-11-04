@@ -64,6 +64,9 @@ const {
   PRICE_TOKEN_PATTERN,
   WINDOW_SEGMENTS,
 } = require('./signalPatterns');
+const { sanitizePricesForTicker } = require('./priceSanity');
+const { readCertainty, certaintyConfidence } = require('./certainty');
+
 
 const { STRICT_TICKER_PATTERN } = require('../normalize/tickerExtraction');
 const { findCzechCompanyNames } = require('./czechNames');
@@ -73,7 +76,7 @@ const { loadConfirmedNames, stemName } = require('./companyNames');
  * The version of the extractor. It is written onto every signal row, so a
  * re-run with a changed parser can be told apart from the previous one.
  */
-const PARSER_VERSION = 'sevcik-signals-2';
+const PARSER_VERSION = 'sevcik-signals-3';
 
 // A phrase that reverses a direction. "Not bullish" is bearish, and the
 // naive pattern match would read "bullish" and call it bullish.
@@ -703,21 +706,42 @@ function scoreConfidence(parts) {
   // How strongly the speaker believes the call.
   const conviction = Math.max(parts.strength || 0, parts.actionStrength || 0);
 
-  let score = conviction * 0.8;
-  if (parts.hasPrice) score += 0.1;
+  let score = conviction * 0.55;
+  if (parts.hasPrice) score += 0.08;
 
-  // A stated confidence CAPS the score. "Maybe I am bullish" is a weaker
-  // claim than "I am bullish", even though both contain the word -- and
-  // adding the two together would make the hedged sentence score HIGHER.
+  // Czech certainty vocabulary (same scale as setups) spreads the mass that
+  // used to collapse almost everything into "medium".
+  const czech = parts.czechCertainty || null;
+  if (czech && czech.level && czech.level !== 'unknown') {
+    const mapped = Number(czech.confidence);
+    if (Number.isFinite(mapped)) {
+      score = Math.max(score, mapped * 0.9);
+      score = (score * 0.45) + (mapped * 0.55);
+    }
+  }
+
+  // A stated English confidence CAPS/boosts the score.
   const statedLevel = parts.confidenceLevel || '';
-  if (statedLevel === 'low') score = Math.min(score, 0.45);
-  if (statedLevel === 'high') score = Math.min(1, score + 0.15);
+  if (statedLevel === 'low') score = Math.min(score, 0.40);
+  if (statedLevel === 'high') score = Math.min(1, Math.max(score, 0.78) + 0.05);
+  if (statedLevel === 'medium') score = Math.max(score, 0.48);
+
+  // Structural floor/ceiling when only a bare direction word is present.
+  if (!statedLevel && !(czech && czech.level && czech.level !== 'unknown' && czech.level !== 'stated')) {
+    score = Math.min(score, 0.58);
+  }
+  if (czech && czech.level === 'stated') {
+    score = Math.max(0.34, Math.min(score, 0.50));
+  }
+  if (czech && czech.direction_uncertain) {
+    score = Math.min(score, 0.36);
+  }
 
   score = Math.max(0, Math.min(1, Number(score.toFixed(3))));
 
   let label = 'low';
-  if (score >= 0.75) label = 'high';
-  else if (score >= 0.45) label = 'medium';
+  if (score >= 0.70) label = 'high';
+  else if (score >= 0.42) label = 'medium';
 
   return { score, label };
 }
@@ -1096,10 +1120,14 @@ function extractSignals(options) {
       const actionResult = determineAction(windowText);
       const confidenceResult = determineConfidence(windowText);
       const horizon = determineHorizon(windowText);
-      const prices = findPrices(windowText);
+      const prices = sanitizePricesForTicker(run.ticker, findPrices(windowText));
 
       const entry = prices.find((price) => price.role === 'entry');
-      const target = prices.find((price) => price.role === 'target');
+      // Prefer explicit target; Czech streams often only mark generic levels.
+      const target = prices.find((price) => price.role === 'target')
+        || prices.find((price) => price.role === 'level')
+        || prices.find((price) => price.role === 'resistance')
+        || prices.find((price) => price.role === 'support');
       const stop = prices.find((price) => price.role === 'stop');
 
       // The bias is the stronger of the readings: an explicit direction
@@ -1143,6 +1171,8 @@ function extractSignals(options) {
       // "going long" and "selling" all state which way the speaker expects
       // the price to move, so they carry their own bias.
       if (bias === 'neutral' && !actionImpliesDirection(actionResult.action)) continue;
+      // Mixed / unknown direction is speech, not a scorable prediction.
+      if (bias === 'mixed') continue;
 
       // English history with no action is not a call. Czech retrospective
       // language is TAGGED via claim_kind rather than dropped -- otherwise
@@ -1150,11 +1180,13 @@ function extractSignals(options) {
       if (isHistorical(windowText) && !actionResult.action && !actionImpliesDirection(actionResult.action)) continue;
       if (isDisclaimer(windowText)) continue;
 
+      const czechCertainty = readCertainty(windowText);
       const { score, label } = scoreConfidence({
         strength,
         actionStrength: actionResult.strength,
         confidenceLevel: confidenceResult.level,
         hasPrice: Boolean(entry || target || stop),
+        czechCertainty,
       });
 
       const evidenceText = windowText.replace(/\s+/g, ' ').trim();

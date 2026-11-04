@@ -42,6 +42,7 @@ const { loadSevcikLexicon } = require('../src/sevcik/lexicon');
 const { loadConfirmedNames } = require('../src/sevcik/companyNames');
 const { extractSignals, PARSER_VERSION } = require('../src/sevcik/signalExtractor');
 const { SEVCIK_CHANNEL } = require('../src/sevcik/channel');
+const { sevcikVideoQuarantine } = require('../src/sevcik/contentFilter');
 
 const ROOT = path.resolve(__dirname, '..');
 const DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
@@ -53,6 +54,7 @@ const options = {
   videoId: readFlag(argv, '--video-id') || '',
   channel: readFlag(argv, '--channel') || SEVCIK_CHANNEL,
   json: argv.includes('--json'),
+  includeQuarantine: argv.includes('--include-quarantine'),
   dryRun: argv.includes('--dry-run'),
 };
 
@@ -160,7 +162,10 @@ function selectVideos(db) {
   }
   sql += ' ORDER BY v.upload_date DESC, v.video_id ASC';
 
-  const rows = db.prepare(sql).all(...params);
+  let rows = db.prepare(sql).all(...params);
+  if (!options.includeQuarantine) {
+    rows = rows.filter((row) => !sevcikVideoQuarantine(row).quarantined);
+  }
   return options.limit ? rows.slice(0, options.limit) : rows;
 }
 
