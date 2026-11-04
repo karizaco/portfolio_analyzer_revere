@@ -277,3 +277,108 @@ test('a signal records the segment span it was read from', () => {
   assert.ok(signals[0].segment_start_index <= 1 && signals[0].segment_end_index >= 1);
 });
 
+
+// ---------------------------------------------------------------------------
+// The price's role is the CLOSEST one, not the first one declared
+// ---------------------------------------------------------------------------
+
+test('the role keyword CLOSEST to the price wins', () => {
+  // "target" is declared before "stop", so a first-match-wins search
+  // labelled the STOP price 225 a target -- and the stop was lost, and a
+  // later ticker inherited it.
+  const signals = extract([
+    seg('I am going to buy TSLA at 240, my target is 280. The stop loss is 225.', 0),
+  ]);
+  assert.equal(signals.length, 1);
+  assert.equal(signals[0].ticker, 'TSLA');
+  assert.equal(signals[0].entry_price, 240);
+  assert.equal(signals[0].target_price_low, 280);
+  assert.equal(signals[0].stop_price, 225);
+});
+
+// ---------------------------------------------------------------------------
+// A window does not span a move to another ticker
+// ---------------------------------------------------------------------------
+
+test('a price belonging to one ticker is not given to another', () => {
+  // The TSLA entry and the NVDA target are in the same breath, and the
+  // window used to cover both -- so NVDA carried the TSLA entry price.
+  const signals = extract([
+    seg('I am going to buy TSLA at 240.', 0),
+    seg('On NVDA my target is 500.', 10),
+  ]);
+  const tsla = signals.find((signal) => signal.ticker === 'TSLA');
+  const nvda = signals.find((signal) => signal.ticker === 'NVDA');
+  assert.ok(tsla, 'TSLA is a signal');
+  assert.ok(nvda, 'NVDA is a signal');
+  assert.equal(tsla.entry_price, 240);
+  assert.equal(nvda.entry_price, null, 'NVDA has no entry price of its own');
+  assert.equal(nvda.target_price_low, 500);
+});
+
+test('a direction does not bleed from one ticker to the next', () => {
+  // "short" belonged to NVDA; AAPL was only being watched.
+  const signals = extract([
+    seg('I am going to short NVDA here.', 0),
+    seg('AAPL I am just watching for now.', 10),
+  ]);
+  const nvda = signals.find((signal) => signal.ticker === 'NVDA');
+  const aapl = signals.find((signal) => signal.ticker === 'AAPL');
+  assert.ok(nvda);
+  assert.equal(nvda.bias, 'bearish');
+  assert.equal(nvda.action, 'short');
+  if (aapl) {
+    assert.notEqual(aapl.action, 'short', 'AAPL was not a short');
+    assert.notEqual(aapl.bias, 'bearish', 'AAPL was not a bearish call');
+  }
+});
+
+// ---------------------------------------------------------------------------
+// One call, one row
+// ---------------------------------------------------------------------------
+
+test('a ticker named repeatedly is ONE signal, not one per mention', () => {
+  const signals = extract([
+    seg('I am bullish on TSLA here.', 0),
+    seg('I think TSLA is still the best one.', 10),
+    seg('TSLA is my top pick for the week.', 20),
+  ]);
+  const tsla = signals.filter((signal) => signal.ticker === 'TSLA');
+  assert.equal(tsla.length, 1, 'the same call is published once');
+});
+
+test('a change of mind about one ticker is TWO signals', () => {
+  // The merge must not swallow a reversal: the speaker changed his mind,
+  // and both statements are calls.
+  const signals = extract([
+    seg('I am bullish on TSLA right now.', 0),
+    seg('Actually I am going to short TSLA, I changed my mind.', 20),
+  ]);
+  const tsla = signals.filter((signal) => signal.ticker === 'TSLA');
+  assert.equal(tsla.length, 2, 'a reversal is a second call');
+});
+
+test('the merged signal keeps the prices of the richer reading', () => {
+  const signals = extract([
+    seg('I am bullish on TSLA.', 0),
+    seg('I am bullish on TSLA, my target is 280.', 10),
+  ]);
+  const tsla = signals.filter((signal) => signal.ticker === 'TSLA');
+  assert.equal(tsla.length, 1);
+  assert.equal(tsla[0].target_price_low, 280, 'the price from the richer window survives');
+});
+
+// ---------------------------------------------------------------------------
+// The horizon is the MOST SPECIFIC one, not the first one stated
+// ---------------------------------------------------------------------------
+
+test('an explicit horizon beats a mention of when the speaker is speaking', () => {
+  // "today" appears first, but the call is explicitly a swing.
+  const signals = extract([
+    seg("Let's talk about Tesla today, ticker TSLA.", 0),
+    seg('I am bullish on TSLA, it is a swing trade.', 10),
+    seg('Over the next few days, this is a swing trade.', 20),
+  ]);
+  assert.equal(signals.length, 1);
+  assert.equal(signals[0].horizon_text, 'swing');
+});

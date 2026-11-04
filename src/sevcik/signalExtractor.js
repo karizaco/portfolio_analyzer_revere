@@ -338,12 +338,27 @@ function determineConfidence(text) {
  * @param {string} text
  * @returns {string}
  */
+/**
+ * The horizon of a call, when one is stated.
+ *
+ * The MOST SPECIFIC horizon wins, not the first one that matches. The
+ * two are different: "Let's talk about Tesla today ... this is a swing
+ * trade" states "today" first and means a swing, and a first-match-wins
+ * search called it intraday.
+ *
+ * @param {string} text
+ * @returns {string}
+ */
 function determineHorizon(text) {
+  let best = { horizon: '', specificity: 0 };
   for (const entry of HORIZON_PATTERNS) {
     const regex = new RegExp(entry.pattern.source, entry.pattern.flags);
-    if (regex.test(String(text || ''))) return entry.horizon;
+    if (!regex.test(String(text || ''))) continue;
+    if (entry.specificity > best.specificity) {
+      best = { horizon: entry.horizon, specificity: entry.specificity };
+    }
   }
-  return '';
+  return best.horizon;
 }
 
 /**
@@ -479,6 +494,15 @@ function isNonPriceContext(text, index) {
  * evidence: "target is 78" after "buy at 75" is two different prices, and
  * the one the verb introduces is the entry.
  *
+ * AND THE ROLE MUST BE THE CLOSEST ONE. The keywords are tried in the
+ * order they are declared, but that order is NOT the order they appear in
+ * the text: "I am going to buy TSLA at 240, my target is 280. The stop
+ * loss is 225" has "target" before "stop", so a first-match-wins search
+ * labelled the STOP price 225 a target -- and the stop was lost.
+ *
+ * So every role's match position is compared, and the one whose keyword
+ * is CLOSEST to the price wins.
+ *
  * @param {string} text
  * @param {number} index
  * @returns {string} the role, or '' when the price has none
@@ -498,12 +522,25 @@ function roleBefore(text, index) {
 
   // The window is short on purpose: a role belongs to the price it
   // introduces, not to the price three clauses later.
-  const window = before.slice(Math.max(0, before.length - 60));
+  const windowStart = Math.max(0, before.length - 60);
+  const window = before.slice(windowStart);
+
+  let best = { role: '', distance: Infinity };
   for (const entry of PRICE_ROLES) {
     const regex = new RegExp(entry.pattern.source, entry.pattern.flags);
-    if (regex.test(window)) return entry.role;
+    let match;
+    while ((match = regex.exec(window)) !== null) {
+      // The distance from the role's keyword to the price. The keyword
+      // that sits closest to the price is the one that introduced it.
+      const distance = window.length - match.index;
+      if (distance < best.distance) {
+        best = { role: entry.role, distance };
+      }
+      if (!regex.global) break;
+    }
   }
-  return '';
+
+  return best.role;
 }
 
 /**
@@ -603,6 +640,305 @@ function targetImpliesBias(target, prices) {
 }
 
 /**
+ * The runs of text a ticker owns.
+ *
+ * THE MODEL
+ *
+ * A transcript is a linear sequence, and a name belongs to the speech that
+ * FOLLOWS it until the next name. So the transcript is scanned once, and
+ * the text is cut into runs, each owned by one ticker.
+ *
+ *   "Let's talk about Tesla, TSLA. I am going to buy TSLA at 240,
+ *    my target is 280. The stop loss is 225. Now for Nvidia, NVDA.
+ *    I am bearish on it. The target is 120."
+ *
+ * is cut as:
+ *
+ *   TSLA  "Let's talk about Tesla, TSLA. I am going to buy TSLA at 240,
+ *          my target is 280. The stop loss is 225."
+ *   NVDA  "Now for Nvidia, NVDA. I am bearish on it. The target is 120."
+ *
+ * WHY NOT A WINDOW
+ *
+ * A window around each mention was tried first, and it blended two calls
+ * into one: the TSLA entry price and the NVDA target ended up on the
+ * same row, and the TSLA row carried NVDA's price. A wrong price on a
+ * real holding is worse than a missing one, so the window was replaced.
+ *
+ * WHY THE CARRY-BACK IS OWNED BY THE NEW NAME
+ *
+ * The text BEFORE a ticker in its own segment belongs to that ticker:
+ * "I am going to buy TSLA at 240" -- "I am going to buy" introduces TSLA.
+ * So the first ticker of a segment owns the run-up to it.
+ *
+ * @param {Array<{text: string}>} segments
+ * @param {Set<string>} lexicon
+ * @returns {Array<{ticker: string, pieces: Array<{index: number, text: string}>, segmentStart: number, segmentEnd: number}>}
+ */
+function buildTickerRuns(segments, lexicon) {
+  const runs = [];
+  let open = null;
+
+  const closeRun = () => {
+    if (!open) return;
+    open.text = open.pieces.map((piece) => piece.text).join(' ');
+    runs.push(open);
+    open = null;
+  };
+
+  for (let index = 0; index < segments.length; index += 1) {
+    const text = String(segments[index].text || '');
+    const tickers = findTickers(text, lexicon);
+
+    if (!tickers.length) {
+      // A segment with no name continues the run that is open.
+      if (open && text.trim()) {
+        open.pieces.push({ index, text });
+        open.segmentEnd = index;
+      }
+      continue;
+    }
+
+    for (let k = 0; k < tickers.length; k += 1) {
+      // The first ticker of a segment owns the run-up to it; every other
+      // ticker owns the text from itself to the next one.
+      const pieceStart = k === 0 ? 0 : tickers[k].index;
+      const pieceEnd = k + 1 < tickers.length ? tickers[k + 1].index : text.length;
+      const piece = text.slice(pieceStart, pieceEnd);
+      if (!piece.trim()) continue;
+
+      if (!open || open.ticker !== tickers[k].ticker) {
+        closeRun();
+        open = {
+          ticker: tickers[k].ticker,
+          pieces: [],
+          segmentStart: index,
+          segmentEnd: index,
+          text: '',
+        };
+      }
+      open.pieces.push({ index, text: piece });
+      open.segmentEnd = index;
+    }
+  }
+
+  closeRun();
+  return runs;
+}
+
+/**
+ * Split a run where the speaker CHANGED HIS MIND.
+ *
+ * A run can hold two calls about one name: "I am bullish on TSLA" and
+ * "actually I am going to short TSLA". Those are two calls at two
+ * moments, and publishing them as one "mixed" row loses the timeline.
+ *
+ * So the run is split at a segment where the direction CONFLICTS with
+ * the direction already established. A segment that adds no direction of
+ * its own ("the stop loss is 225") does NOT split the run -- it belongs
+ * to the call before it.
+ *
+ * @param {object} run
+ * @returns {Array<object>} the runs, split where the direction changed
+ */
+function splitRunOnDirectionChange(run) {
+  if (run.pieces.length < 2) return [run];
+
+  const parts = [];
+  let current = null;
+  let established = '';
+
+  for (const piece of run.pieces) {
+    const candidate = pieceDirection(piece.text);
+
+    if (candidate && established && candidate !== established) {
+      parts.push(current);
+      current = null;
+    }
+    if (candidate) established = candidate;
+
+    if (!current) {
+      current = {
+        ticker: run.ticker,
+        pieces: [],
+        segmentStart: piece.index,
+        segmentEnd: piece.index,
+        text: '',
+      };
+    }
+    current.pieces.push(piece);
+    current.segmentEnd = piece.index;
+  }
+
+  if (current) parts.push(current);
+  return parts.map((part) => ({
+    ...part,
+    text: part.pieces.map((piece) => piece.text).join(' '),
+  }));
+}
+
+/**
+ * The direction a piece of text states, if any.
+ *
+ * An explicit direction word wins; an action that states a direction
+ * ("going short") is the fallback.
+ *
+ * @param {string} text
+ * @returns {string} 'bullish' | 'bearish' | ''
+ */
+function pieceDirection(text) {
+  const bias = determineBias(text);
+  if (bias.bias === 'bullish' || bias.bias === 'bearish') return bias.bias;
+  if (bias.bias === 'mixed') return '';
+  return actionBias(determineAction(text).action);
+}
+
+/**
+ * Merge signals that are the SAME call seen through overlapping windows.
+ *
+ * A stream names a ticker, then keeps talking about it. Every mention
+ * opens a window, and two mentions three segments apart produce two
+ * windows that overlap -- and therefore two rows for one call. The
+ * earlier version published three rows for one TSLA call, each with a
+ * slightly different score, which made the aggregate report say TSLA
+ * was called three times.
+ *
+ * Two signals are the SAME call when:
+ *
+ *   they are about the SAME ticker, and
+ *   their segment windows OVERLAP, and
+ *   they say the SAME thing -- the same bias and the same action
+ *
+ * The last condition matters: a speaker can change their mind about one
+ * name inside a video, and "I am bullish NVDA" followed by "actually I am
+ * shorting NVDA" is two calls, not one. Those must survive.
+ *
+ * The surviving row is the one with the MOST information -- the most
+ * prices, then the highest confidence -- because that is the reading that
+ * carries the most of the call. The evidence text of the merged row is
+ * the union of the evidence, so nothing that was said is lost.
+ *
+ * @param {Array<object>} signals
+ * @returns {Array<object>}
+ */
+function mergeOverlappingSignals(signals) {
+  if (!Array.isArray(signals) || signals.length < 2) return signals || [];
+
+  const byTicker = new Map();
+  for (const signal of signals) {
+    if (!byTicker.has(signal.ticker)) byTicker.set(signal.ticker, []);
+    byTicker.get(signal.ticker).push(signal);
+  }
+
+  const merged = [];
+
+  for (const group of byTicker.values()) {
+    // The groups are in the order the signals were produced, which is the
+    // order they were spoken in. Sorting by start index keeps that true
+    // after a group is reordered by the merge below.
+    const ordered = [...group].sort((a, b) => a.segment_start_index - b.segment_start_index);
+
+    const kept = [];
+    for (const signal of ordered) {
+      const twin = kept.find((other) => isSameCall(other, signal));
+      if (!twin) {
+        kept.push({ ...signal });
+        continue;
+      }
+      mergeInto(twin, signal);
+    }
+    merged.push(...kept);
+  }
+
+  // The signals come back out in the order they were spoken.
+  return merged.sort((a, b) => a.event_time_sec - b.event_time_sec
+    || a.segment_start_index - b.segment_start_index
+    || a.ticker.localeCompare(b.ticker));
+}
+
+/**
+ * Are these two signals the same call, seen through overlapping windows?
+ *
+ * @param {object} a
+ * @param {object} b
+ * @returns {boolean}
+ */
+function isSameCall(a, b) {
+  if (a.ticker !== b.ticker) return false;
+  if (a.bias !== b.bias) return false;
+  if (a.action !== b.action) return false;
+  const overlap = Math.min(a.segment_end_index, b.segment_end_index)
+    - Math.max(a.segment_start_index, b.segment_start_index);
+  return overlap >= 0;
+}
+
+/**
+ * Fold one signal into another, keeping the richer information.
+ *
+ * @param {object} target - the signal being kept
+ * @param {object} extra - the signal being folded in
+ * @returns {void}
+ */
+function mergeInto(target, extra) {
+  const targetPrices = priceCount(target);
+  const extraPrices = priceCount(extra);
+
+  if (extraPrices > targetPrices) {
+    target.entry_price = extra.entry_price;
+    target.target_price_low = extra.target_price_low;
+    target.target_price_high = extra.target_price_high;
+    target.stop_price = extra.stop_price;
+  }
+
+  // The stronger reading wins the score, whichever row it came from.
+  if (extra.confidence_score > target.confidence_score) {
+    target.confidence_score = extra.confidence_score;
+    target.confidence_label = extra.confidence_label;
+  }
+  if (!target.horizon_text && extra.horizon_text) {
+    target.horizon_text = extra.horizon_text;
+  }
+
+  // The window grows to cover both, and the evidence is the union -- so
+  // nothing that was said is lost by the merge.
+  target.segment_start_index = Math.min(target.segment_start_index, extra.segment_start_index);
+  target.segment_end_index = Math.max(target.segment_end_index, extra.segment_end_index);
+  target.evidence_text = mergeEvidence(target.evidence_text, extra.evidence_text);
+}
+
+/**
+ * How many prices does a signal carry?
+ *
+ * @param {object} signal
+ * @returns {number}
+ */
+function priceCount(signal) {
+  let count = 0;
+  if (signal.entry_price !== null && signal.entry_price !== undefined) count += 1;
+  if (signal.target_price_low !== null && signal.target_price_low !== undefined) count += 1;
+  if (signal.stop_price !== null && signal.stop_price !== undefined) count += 1;
+  return count;
+}
+
+/**
+ * Two evidence texts, joined without repeating the shared part.
+ *
+ * @param {string} a
+ * @param {string} b
+ * @returns {string}
+ */
+function mergeEvidence(a, b) {
+  const left = String(a || '').trim();
+  const right = String(b || '').trim();
+  if (!left) return right;
+  if (!right) return left;
+  if (left === right) return left;
+  if (right.includes(left)) return right;
+  if (left.includes(right)) return left;
+  return `${left} ${right}`;
+}
+
+/**
  * Extract the trade signals from a transcript.
  *
  * @param {object} options
@@ -617,28 +953,15 @@ function extractSignals(options) {
   const lexicon = options.lexicon instanceof Set ? options.lexicon : new Set(options.lexicon || []);
   if (!segments.length || !lexicon.size) return [];
 
+  const runs = buildTickerRuns(segments, lexicon);
   const signals = [];
-  const seen = new Set();
 
-  for (let index = 0; index < segments.length; index += 1) {
-    const segment = segments[index];
-    const tickers = findTickers(segment.text, lexicon);
-    if (!tickers.length) continue;
-
-    // The window is the segment the ticker was mentioned in, plus a couple
-    // either side: a single spoken idea spans more than one cue.
-    const startIndex = Math.max(0, index - WINDOW_SEGMENTS);
-    const endIndex = Math.min(segments.length - 1, index + WINDOW_SEGMENTS);
-
-    const windowSegments = segments.slice(startIndex, endIndex + 1);
-    const windowText = windowSegments.map((entry) => entry.text).join(' ');
-
-    for (const ticker of tickers) {
-      // The window is per-ticker, so a segment naming three tickers does not
-      // blend three different ideas into one signal.
-      const key = `${ticker.ticker}|${startIndex}|${endIndex}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
+  for (const rawRun of runs) {
+    // A run can hold two calls about one name, if the speaker changed his
+    // mind inside it. Those are two calls at two moments.
+    for (const run of splitRunOnDirectionChange(rawRun)) {
+      const windowText = run.text;
+      if (!windowText.trim()) continue;
 
       const biasResult = determineBias(windowText);
       const actionResult = determineAction(windowText);
@@ -703,21 +1026,18 @@ function extractSignals(options) {
         hasPrice: Boolean(entry || target || stop),
       });
 
-      const evidenceText = windowSegments
-        .map((entry2) => entry2.text)
-        .join(' ')
-        .replace(/\s+/g, ' ')
-        .trim();
+      const evidenceText = windowText.replace(/\s+/g, ' ').trim();
 
       signals.push({
         video_id: options.videoId || '',
         transcript_id: options.transcriptId || null,
-        segment_start_index: startIndex,
-        segment_end_index: endIndex,
-        event_time_sec: Number(segment.start_sec) || 0,
-        ticker: ticker.ticker,
+        segment_start_index: run.segmentStart,
+        segment_end_index: run.segmentEnd,
+        event_time_sec: Number(segments[run.segmentStart] ? segments[run.segmentStart].start_sec : 0) || 0,
+        ticker: run.ticker,
         action: actionResult.action,
         bias,
+        strength,
         confidence_label: label,
         confidence_score: score,
         entry_price: entry ? entry.value : null,
@@ -725,18 +1045,19 @@ function extractSignals(options) {
         target_price_high: target ? target.high : null,
         stop_price: stop ? stop.value : null,
         horizon_text: horizon,
-        rationale: summarizeRationale(windowText, ticker.ticker),
+        rationale: summarizeRationale(windowText, run.ticker),
         evidence_text: evidenceText,
         parser_version: PARSER_VERSION,
       });
     }
   }
 
-  return signals;
+  return mergeOverlappingSignals(signals);
 }
 
 module.exports = {
   PARSER_VERSION,
+  buildTickerRuns,
   determineAction,
   determineBias,
   determineConfidence,
@@ -747,6 +1068,8 @@ module.exports = {
   isAmbiguousTokenAccepted,
   isDisclaimer,
   isHistorical,
+  mergeOverlappingSignals,
   parsePrice,
   scoreConfidence,
+  splitRunOnDirectionChange,
 };

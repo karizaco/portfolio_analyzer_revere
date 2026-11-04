@@ -60,6 +60,17 @@ const AUDIO_DIR = path.join(ROOT, 'data', 'video_pipeline', 'audio_sevcik');
 const PY = process.platform === 'win32' ? 'py' : 'python3';
 
 const argv = process.argv.slice(2);
+
+// The subtitle endpoint throttles the IP, and the project's own rule is
+// that a rate-limited YouTube session needs 30-60 minutes of quiet --
+// hammering it makes the throttle worse, not better.
+//
+// These are the DEFAULTS; `--rate-limit-attempts` and
+// `--rate-limit-wait` override them, so a quick run can be asked not to
+// wait at all.
+const RATE_LIMIT_ATTEMPTS = Number(readFlag(argv, '--rate-limit-attempts')) || 3;
+const RATE_LIMIT_WAIT_SECONDS = Number(readFlag(argv, '--rate-limit-wait')) || 90;
+
 const options = {
   limit: Number(readFlag(argv, '--limit')) || 0,
   videoId: readFlag(argv, '--video-id') || '',
@@ -69,6 +80,23 @@ const options = {
   force: argv.includes('--force'),
   json: argv.includes('--json'),
   keepAudio: argv.includes('--keep-audio'),
+  // The subtitle languages to try, in order.
+  //
+  // The Sevcik channel is CZECH, so this is not a formality. YouTube
+  // publishes two tracks for it: `cs-orig` (the original Czech) and `en`
+  // (YouTube's machine translation).
+  //
+  // `en` is tried FIRST on purpose. The signal extractor reads English
+  // trading vocabulary -- "bullish", "target", "stop loss" -- and a
+  // machine translation preserves the TICKERS and the NUMBERS (which are
+  // what the signal is about) while putting them into the words the
+  // extractor understands. Reading the Czech original would need a Czech
+  // vocabulary, and the ticker symbols would still be the part that
+  // matters.
+  //
+  // `cs-orig` is the fallback: it is what the speaker actually said, so
+  // it is the better record when there is no translation.
+  subLangs: (readFlag(argv, '--sub-lang') || 'en,cs-orig').split(',').map((s) => s.trim()).filter(Boolean),
 };
 
 async function main() {
@@ -107,6 +135,25 @@ async function main() {
     console.log(`[sevcik-transcripts] done: fetched=${summary.fetched} skipped=${summary.skipped}`
       + ` failed=${summary.failed} providers=${JSON.stringify(summary.providers)}`);
   }
+
+  // The two blockers are SEPARATE and each needs a different response, so
+  // they are named separately rather than left inside a stack of provider
+  // errors.
+  if (summary.failed) {
+    const rateLimited = results.some((r) => r.error && /rate limited/i.test(r.error));
+    const noKey = results.some((r) => r.error && /DEEPGRAM_API_KEY is not set/.test(r.error));
+    console.error('');
+    if (rateLimited) {
+      console.error('[sevcik-transcripts] The YouTube SUBTITLE endpoint is rate limiting this IP (HTTP 429).');
+      console.error('[sevcik-transcripts] The video endpoint still works -- only the caption download is refused.');
+      console.error('[sevcik-transcripts] The project rule is 30-60 minutes of quiet before retrying.');
+    }
+    if (noKey) {
+      console.error('[sevcik-transcripts] DEEPGRAM_API_KEY is not set, so the caption-less videos cannot be transcribed.');
+      console.error('[sevcik-transcripts] The audio download itself WORKS -- only the Deepgram call needs the key.');
+    }
+  }
+
   process.exit(summary.failed ? 1 : 0);
 }
 
@@ -180,7 +227,7 @@ async function processVideo(row) {
 
     let outcome;
     if (provider === 'youtube_auto') {
-      outcome = fetchYoutubeCaptions(row, transcriptPath);
+      outcome = fetchYoutubeCaptions(row);
     } else if (provider === 'deepgram') {
       outcome = await fetchDeepgramTranscript(row, transcriptPath);
     } else {
@@ -193,11 +240,12 @@ async function processVideo(row) {
       continue;
     }
 
-    persistTranscript(row, provider, transcriptPath, outcome.segments);
+    persistTranscript(row, provider, transcriptPath, outcome.segments, outcome.language);
     return {
       video_id: row.video_id,
       ok: true,
       provider,
+      language: outcome.language || '',
       segments: outcome.segments.length,
       transcript_path: transcriptPath,
     };
@@ -213,40 +261,104 @@ async function processVideo(row) {
 /**
  * Fetch the video's own auto-captions.
  *
+ * Each requested language is tried in turn, and the first one that
+ * produces a usable transcript wins.
+ *
+ * Two things this has to handle that the Revere/QMG path does not:
+ *
+ *   RATE LIMITING. The subtitle endpoint answers "HTTP Error 429: Too
+ *   Many Requests" far more readily than the video endpoint does, because
+ *   it is a different, lighter endpoint and yt-dlp hits it once per
+ *   language. A 429 is transient, so it is retried with a wait -- but only
+ *   a few times, because a persistent 429 means the IP is throttled and
+ *   hammering it makes it worse.
+ *
+ *   THE JS RUNTIME. `--js-runtimes node` is required. Without it yt-dlp
+ *   cannot extract the player and falls back to storyboard-only, which has
+ *   no subtitles at all.
+ *
  * @param {object} row
- * @param {string} transcriptPath
- * @returns {{ok: boolean, segments?: Array, error?: string}}
+ * @returns {{ok: boolean, segments?: Array, error?: string, language?: string}}
  */
-function fetchYoutubeCaptions(row, transcriptPath) {
+function fetchYoutubeCaptions(row) {
   const baseOut = path.join(TRANSCRIPTS_DIR, `${row.video_id}.captions`);
-  const result = spawnSync(PY, [
-    '-3', '-m', 'yt_dlp',
-    '--write-auto-subs',
-    '--skip-download',
-    '--sub-lang', 'en',
-    '--convert-subs', 'vtt',
-    '-o', `${baseOut}.%(ext)s`,
-    row.video_url,
-  ], { encoding: 'utf8' });
+  const errors = [];
 
-  if (result.error) {
-    return { ok: false, error: result.error.message };
+  for (const lang of options.subLangs) {
+    let result = null;
+    // Whether the LAST attempt was refused by the network rather than
+    // simply finding no captions. The two are different facts and the
+    // report has to keep them apart.
+    let rateLimited = false;
+
+    for (let attempt = 0; attempt < RATE_LIMIT_ATTEMPTS; attempt += 1) {
+      result = spawnSync(PY, [
+        '-3', '-m', 'yt_dlp',
+        '--write-auto-subs',
+        '--skip-download',
+        '--sub-lang', lang,
+        '--convert-subs', 'vtt',
+        '--js-runtimes', 'node',
+        '--no-warnings',
+        '-o', `${baseOut}.%(ext)s`,
+        row.video_url,
+      ], { encoding: 'utf8' });
+
+      if (result.error) {
+        errors.push(`${lang}: ${result.error.message}`);
+        break;
+      }
+      const stderr = String(result.stderr || '');
+      // A 429 is transient, but the wait is LONG. The subtitle endpoint
+      // throttles the IP, and hammering it makes the throttle worse -- the
+      // project's own rule is that a rate-limited YouTube session needs
+      // 30-60 minutes of quiet.
+      if (/HTTP Error 429|Too Many Requests/i.test(stderr)) {
+        rateLimited = true;
+        if (attempt === RATE_LIMIT_ATTEMPTS - 1) break;
+        const waitSeconds = RATE_LIMIT_WAIT_SECONDS * (attempt + 1);
+        console.log(`[sevcik-transcripts] ${row.video_id}: rate limited on "${lang}", waiting ${waitSeconds}s`);
+        sleep(waitSeconds * 1000);
+        continue;
+      }
+      break;
+    }
+
+    if (!result || result.error) continue;
+
+    const vttPath = `${baseOut}.${lang}.vtt`;
+    if (!fs.existsSync(vttPath)) {
+      // The distinction matters and is easy to lose. A language the
+      // video does not HAVE is a fact about the video; a language that
+      // was refused is a fact about the network. Reporting both as "no
+      // captions" hides which one happened, and the two need different
+      // responses -- one waits, the other gives up on that language.
+      errors.push(rateLimited
+        ? `${lang}: rate limited (HTTP 429) -- the subtitle endpoint is throttling this IP`
+        : `${lang}: no captions`);
+      continue;
+    }
+
+    const vtt = fs.readFileSync(vttPath, 'utf8');
+    const segments = normalizeTranscript({ segments: vttToSegments(vtt) }, 'youtube_auto');
+    if (!segments.length) {
+      errors.push(`${lang}: captions were empty`);
+      continue;
+    }
+
+    return { ok: true, segments, language: lang };
   }
 
-  const vttPath = `${baseOut}.en.vtt`;
-  if (!fs.existsSync(vttPath)) {
-    // yt-dlp exits 0 when it simply has no subtitles, so the file's absence
-    // -- not the exit code -- is the signal.
-    return { ok: false, error: 'no auto-captions' };
-  }
+  return { ok: false, error: errors.join(' | ') || 'no auto-captions' };
+}
 
-  const vtt = fs.readFileSync(vttPath, 'utf8');
-  const segments = normalizeTranscript({ segments: vttToSegments(vtt) }, 'youtube_auto');
-  if (!segments.length) {
-    return { ok: false, error: 'auto-captions were empty' };
-  }
-
-  return { ok: true, segments };
+/**
+ * Wait, synchronously.
+ *
+ * @param {number} ms
+ */
+function sleep(ms) {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 }
 
 /**
@@ -272,6 +384,7 @@ async function fetchDeepgramTranscript(row, transcriptPath) {
     '-f', 'bestaudio/best',
     '--js-runtimes', 'node',
     '--extractor-args', 'youtube:player_client=visios',
+    '--no-warnings',
     ...(process.env.YOUTUBE_COOKIES ? ['--cookies', process.env.YOUTUBE_COOKIES] : []),
     '-o', `${audioStem}.%(ext)s`,
     row.video_url,
@@ -331,15 +444,17 @@ function findAudioFile(stem) {
  * Write the transcript file and the database rows.
  *
  * The file has the same shape `tools/fetchCaptions.js` writes, so the two
- * tools agree on what a transcript file looks like, and the `provider` field
- * records which provider produced it.
+ * tools agree on what a transcript file looks like, and the `provider` and
+ * `language` fields record which provider produced it and in what
+ * language.
  *
  * @param {object} row
  * @param {string} provider
  * @param {string} transcriptPath
  * @param {Array} segments
+ * @param {string} [language]
  */
-function persistTranscript(row, provider, transcriptPath, segments) {
+function persistTranscript(row, provider, transcriptPath, segments, language) {
   const checksum = transcriptChecksum(segments);
   const fetchedAt = new Date().toISOString();
 
@@ -348,6 +463,7 @@ function persistTranscript(row, provider, transcriptPath, segments) {
     channel: row.channel,
     title: row.title,
     provider,
+    language: language || '',
     fetched_at: fetchedAt,
     segment_count: segments.length,
     checksum,
@@ -362,7 +478,7 @@ function persistTranscript(row, provider, transcriptPath, segments) {
   const db = new DatabaseSync(DB_PATH);
   db.exec(fs.readFileSync(path.join(ROOT, 'data', 'db', 'schema.sql'), 'utf8'));
 
-  upsertTranscript(db, row, provider, transcriptPath, segments, checksum, fetchedAt);
+  upsertTranscript(db, row, provider, transcriptPath, segments, checksum, fetchedAt, language);
   db.prepare(
     'UPDATE videos SET transcript_path = ?, transcript_segment_count = ?, transcript_fetched_at = ?, updated_at = ? '
     + 'WHERE video_id = ?',
@@ -386,11 +502,13 @@ function persistTranscript(row, provider, transcriptPath, segments) {
  * @param {Array} segments
  * @param {string} checksum
  * @param {string} fetchedAt
+ * @param {string} [language]
  * @returns {number} the transcript id
  */
-function upsertTranscript(db, row, provider, transcriptPath, segments, checksum, fetchedAt) {
+function upsertTranscript(db, row, provider, transcriptPath, segments, checksum, fetchedAt, language) {
   const existing = db.prepare('SELECT id, checksum FROM video_transcripts WHERE video_id = ?')
     .get(row.video_id);
+  const lang = language || (provider === 'deepgram' ? 'en' : '');
 
   let transcriptId;
   if (existing) {
@@ -398,13 +516,13 @@ function upsertTranscript(db, row, provider, transcriptPath, segments, checksum,
     db.prepare(
       'UPDATE video_transcripts SET provider = ?, language = ?, transcript_path = ?, segment_count = ?, '
       + 'checksum = ?, fetched_at = ?, updated_at = datetime(\'now\') WHERE id = ?',
-    ).run(provider, provider === 'deepgram' ? 'en' : '', transcriptPath, segments.length, checksum, fetchedAt, transcriptId);
+    ).run(provider, lang, transcriptPath, segments.length, checksum, fetchedAt, transcriptId);
     db.prepare('DELETE FROM transcript_segments WHERE transcript_id = ?').run(transcriptId);
   } else {
     const result = db.prepare(
       'INSERT INTO video_transcripts (video_id, provider, language, transcript_path, segment_count, '
       + 'checksum, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
-    ).run(row.video_id, provider, provider === 'deepgram' ? 'en' : '', transcriptPath, segments.length, checksum, fetchedAt);
+    ).run(row.video_id, provider, lang, transcriptPath, segments.length, checksum, fetchedAt);
     transcriptId = Number(result.lastInsertRowid);
   }
 

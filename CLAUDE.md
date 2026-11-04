@@ -442,6 +442,9 @@ Results: `data/qmg_alt_batch_results.json`.
 - `tools/aggregateScanResults.js` — merge scan output into `analysis.json`
 - `tools/aggregateOcrTimeline.js` — merge into `timeline.json`
 - `tools/viewTimeline.html` — interactive timeline viewer
+- `tools/fetchSevcikTranscripts.js` — fetch Sevcik transcripts (captions → Deepgram) (see below)
+- `tools/extractSevcikSignals.js` — run the signal extractor over the stored transcripts (see below)
+- `tools/aggregateSevcikSignals.js` — write the Sevcik CSVs, JSON and dashboard (see below)
 
 ### OCR pipeline
 - `src/ocr/ocrImage.js` — Tesseract wrapper; `chart-stream` profile crops overlay region
@@ -463,6 +466,14 @@ Results: `data/qmg_alt_batch_results.json`.
 - `src/normalize/tickerFuzzyResolve.js` — the resolver: match lexicon vs allow list, ambiguity-aware correction, fused-token splitting (see below)
 - `src/normalize/videoTypeClassifier.js` — whiteboard / chart_stream / DMI / tale_of_the_tape
 - `src/normalize/repairHoldings.js` — Revere-only position repair
+
+### Sevcik (transcript source)
+- `src/sevcik/channel.js` — the channel's identity: logical name `davidsevcik`, handle `@davidsevcik-sved4697`, streams URL
+- `src/sevcik/signalPatterns.js` — the whole vocabulary: directions, actions, confidence, horizons, price roles (see below)
+- `src/sevcik/signalExtractor.js` — the deterministic extractor (see below)
+- `src/transcript/transcriptNormalize.js` — provider-agnostic segment shape, provider inference, timing-independent checksum
+- `src/transcript/deepgramClient.js` — ffmpeg audio extraction + Deepgram `nova-2` upload
+- `src/report/sevcikReport.js` — the self-contained HTML dashboard
 
 ### Aggregation
 - `src/video/captureTickers.js` — which field of a capture holds its holdings (see below)
@@ -502,6 +513,242 @@ Results: `data/qmg_alt_batch_results.json`.
 - `test/manual/prefilterResolutionScan.test.js` — the prefilter's ranking at three working resolutions, against frames whose holdings are known (no OCR)
 - `test/manual/productionCropRender.test.js` — renders **exactly** the image EasyOCR was shown, from the source video at a capture's timestamp
 - `test/manual/panelFooterInCrop.test.js` — the production crop against the panel's own footer, cut out of the tracked fixture
+- `test/sevcikSignalExtractor.test.js` — the Sevcik extractor's rules, each worded as the claim it makes
+- `test/sevcikTranscriptNormalize.test.js` — provider-agnostic normalization, provider inference, the timing-independent checksum
+- `test/sevcikPipeline.test.js` — the three Sevcik tools against a scratch database
+- `test/sevcikReport.test.js` — the dashboard's HTML and its numbers
+
+---
+
+## The Sevcik source — a TRANSCRIPT source, not an OCR source (2026-11-04)
+
+`https://www.youtube.com/@davidsevcik-sved4697/streams` — daily ~1 h streams of
+spoken trade commentary. This is the project's **fourth** data source and the
+**first** one that is not an OCR source: there is no whiteboard and no chart
+overlay, only a person talking about tickers and prices.
+
+**It reuses the catalog, `state.sqlite` and the `videos` table, and it touches
+none of the OCR code.** The pipeline is four stages, and each is a separate
+tool so a stage can be re-run without re-doing the ones before it:
+
+```text
+catalog (existing)  →  transcripts  →  signals  →  aggregation
+                       (fetch)        (extract)     (CSV + JSON + HTML)
+```
+
+| stage | tool | writes |
+|---|---|---|
+| transcripts | `tools/fetchSevcikTranscripts.js` | `data/video_pipeline/transcripts/<video_id>.json`, `video_transcripts`, `transcript_segments` |
+| signals | `tools/extractSevcikSignals.js` | `trade_signals` |
+| aggregation | `tools/aggregateSevcikSignals.js` | `data/sevcik_signals.csv`, `data/sevcik_daily_summary.csv`, `data/sevcik_ticker_summary.csv`, `data/sevcik_signals.json`, `data/sevcik_report.html` |
+
+```bash
+node tools/runWhiteboardWorker.js catalog --channel davidsevcik \
+  --source-url https://www.youtube.com/@davidsevcik-sved4697/streams
+
+node tools/fetchSevcikTranscripts.js --limit 3
+node tools/extractSevcikSignals.js
+node tools/aggregateSevcikSignals.js
+```
+
+### The channel is CZECH — and that changes the strategy
+
+This is the first thing to know about the source, and it is not visible from
+the URL. The channel is in **Czech**, and YouTube publishes **two** caption
+tracks for it:
+
+| track | what it is |
+|---|---|
+| `cs-orig` | the original Czech audio |
+| `en` | YouTube's **machine translation** of it |
+
+**`en` is tried FIRST**, and the reason is that the signal extractor reads
+**English trading vocabulary** — "bullish", "target", "stop loss", "going to
+buy". A machine translation preserves the **TICKERS and the NUMBERS** (which
+is what a signal is about) while putting them into the words the extractor
+understands. Reading `cs-orig` would need a Czech vocabulary, and the ticker
+symbols would still be the part that matters. `cs-orig` is the fallback: it is
+what the speaker actually said, so it is the better record when there is no
+translation.
+
+The order is `--sub-lang en,cs-orig` and it is a flag, not a constant —
+`--sub-lang cs-orig` reads the original.
+
+### The transcript providers, in order
+
+1. **YouTube auto-captions** — free, no key, no upload, and the audio never
+   leaves the machine.
+2. **Deepgram** (`nova-2`) — needs `DEEPGRAM_API_KEY`, uploads audio, costs
+   money, and is the **only** way to reach the older videos, which carry no
+   captions at all.
+
+Captions are tried first **even when a Deepgram key is configured**, because
+they are free and instant. Deepgram is the fallback, not the default. The
+provider is recorded in `video_transcripts.provider`, because the two are not
+equally trustworthy and a later reader has to know which one a signal came
+from.
+
+**The Deepgram key is never logged.** Error bodies are redacted before they
+are printed, because an error body can echo the request headers.
+
+### The extraction model — a RUN, not a window
+
+The extractor is **rule-based on purpose**. Every rule is a claim about
+English trading language that can be read, argued with, and measured, and the
+same transcript always produces the same signals. A model-based extractor
+would be better at some sentences and worse at others and nothing in the
+output would say which — so a reading could not be checked against its
+evidence. The evidence text is stored with every signal precisely so that a
+human can disagree with a rule and see exactly what the rule saw.
+
+**The transcript is cut into RUNS, one per ticker, and a run owns the speech
+that follows the name until the next name.**
+
+```text
+"Let's talk about Tesla, TSLA. I am going to buy TSLA at 240, my target
+ is 280. The stop loss is 225. Now for Nvidia, NVDA. I am bearish on it.
+ The target is 120."
+
+TSLA  "Let's talk about Tesla, TSLA. I am going to buy TSLA at 240,
+       my target is 280. The stop loss is 225."
+NVDA  "Now for Nvidia, NVDA. I am bearish on it. The target is 120."
+```
+
+**A window around each mention was tried first, and it was WRONG.** A window
+of ±2 segments spans the move from one name to the next, and it blended two
+calls into one. The measured damage on a 10-segment synthetic transcript:
+
+| defect | what the window produced |
+|---|---|
+| the TSLA row carried NVDA's price | `stop_price` 225 on TSLA, and NVDA got TSLA's stop |
+| the TSLA **stop** was labelled a **target** | `target_price_low` 280 AND 225 — one of them wrong |
+| `short` (NVDA's) bled onto AAPL | AAPL published as `action=short, bias=bearish` when the text said "I am watching it" |
+| one call produced three rows | TSLA emitted 3× with growing evidence, so the aggregate said TSLA was called three times |
+
+**A wrong price on a real holding is worse than a missing one**, so the
+window was replaced by the run model. A run is built by a single linear scan:
+the first ticker of a segment owns the run-up to it ("I am going to buy TSLA
+at 240" — the verb introduces TSLA), and every other ticker owns the text
+from itself to the next one.
+
+### A run is SPLIT where the speaker changed his mind
+
+A run can hold two calls about one name: "I am bullish on TSLA" and "actually
+I am going to short TSLA". Those are two calls at two moments, and publishing
+them as one "mixed" row loses the timeline.
+
+So the run is split at a segment whose **direction conflicts** with the
+direction already established. A segment that adds no direction of its own
+("the stop loss is 225") does **not** split the run — it belongs to the call
+before it. A reversal therefore produces two rows, and a run that keeps
+talking about one name produces one.
+
+### The rules the extractor makes
+
+All of them live in `src/sevcik/signalPatterns.js`, so they can be read and
+argued with in one place.
+
+- **A signal needs a TICKER.** "I am bullish" says nothing about what to
+  buy, so it is not a signal.
+- **A price needs a ROLE.** "$45" next to a ticker is not an entry level
+  unless something said "entry", "buy at" or "target". A price with no role
+  is **not recorded** — guessing a role puts a wrong number in a report.
+- **The role keyword CLOSEST to the price wins.** The roles are tried in the
+  order they are declared, but that order is **not** the order they appear in
+  the text: "I am going to buy TSLA at 240, my target is 280. The stop loss
+  is 225" has "target" before "stop", so a first-match-wins search labelled
+  the STOP price 225 a target. Every role's match position is compared and
+  the nearest one wins.
+- **A common English word is not a ticker unless it is written in CAPS.** ON,
+  BE, ARM, NET and TAN are real tickers AND words a speaker uses constantly.
+- **A negation reverses the direction.** "Not bullish" is bearish.
+- **A target implies bullish when no current price is known.** "The first
+  target is around 78" is an upside claim, because a target is by definition
+  a price the price is expected to move *toward*, and nobody states a
+  downside level as "my target".
+- **History and disclaimers are not calls.** "I was bullish on X" is history.
+- **The horizon is the MOST SPECIFIC one, not the first one.** "Let's talk
+  about Tesla today … this is a swing trade" states "today" first and means a
+  swing; the patterns carry a `specificity` weight for exactly this.
+
+### The confidence score
+
+The score is the **strength of the language**, not a model's opinion:
+
+```text
+conviction = max(direction_strength, action_strength)
+score      = conviction * 0.8 + 0.1 (has a price)
+```
+
+and a **stated confidence CAPS** the score (low → ≤ 0.45, high → +0.15).
+
+**Adding the direction and the stated confidence together was rejected.** They
+are both statements of how strong the speaker believes the call is, so they
+are combined by taking the **stronger** of them. Adding them would let "maybe
+I am bullish" score higher than "I am bullish", because "maybe" is both a
+low-confidence marker and a direction word.
+
+### The three tables
+
+| table | holds |
+|---|---|
+| `video_transcripts` | one row per video: provider, language, path, segment count, checksum |
+| `transcript_segments` | the normalized segments: `start_sec`, `end_sec`, `text`, `confidence` |
+| `trade_signals` | the signals: ticker, action, bias, confidence, entry/target/stop, **evidence_text** |
+
+**`evidence_text` is NOT NULL, and that is the point.** A signal without its
+evidence is not checkable, and a portfolio report of unchecked claims is worth
+nothing. Every row can be read against the words it came from.
+
+The checksum (`transcriptChecksum`) **ignores timing**, so the same audio
+produces the same checksum even when the caption timings shift — which is
+what makes "has this transcript changed?" a meaningful question.
+
+### The extractor writes a `parser_version` on every row
+
+`sevcik-signals-1` is on every signal row, so a re-run with a changed parser
+can be told apart from the previous one. A re-run **replaces** the signals of
+the videos it processed and only those — it never deletes the signals of
+videos it did not reach, so a partial run cannot lose work.
+
+### The current state, and what is NOT done
+
+| | |
+|---|---|
+| catalog | **12 real Sevcik streams** cataloged (2026-11-04) |
+| schema + code | complete, **714 tests passing** |
+| end-to-end | verified on a **synthetic** transcript — see below |
+| real transcripts | **BLOCKED** — the YouTube *subtitle* endpoint returns `HTTP 429` for this IP |
+| Deepgram | **not configured** — `DEEPGRAM_API_KEY` is not set |
+| older caption-less videos | unreachable until a Deepgram key exists |
+
+**The real-video smoke test the user asked for is still outstanding**, and it
+is blocked on two things:
+
+1. **The subtitle endpoint throttles the IP** with `HTTP 429: Too Many
+   Requests`. This is the *subtitle* endpoint, which throttles separately from
+   the video endpoint — a video can be downloaded and its subtitles still
+   cannot be fetched. The project's own rule applies: **30–60 minutes of
+   quiet** before retrying. The backoff is `--rate-limit-attempts` (default
+   3) / `--rate-limit-wait` (default 90 s).
+2. **`DEEPGRAM_API_KEY` is not set**, so the caption-less older videos cannot
+   be transcribed at all. This needs the user.
+
+**What was verified instead, and what it does and does not prove.**
+`verify_sevcik_pipeline.js` runs the whole chain — transcript file → segments
+→ signals → CSV → dashboard — on a **synthetic** transcript written to look
+like what YouTube's machine translation of a Czech trading stream produces.
+It exercises the chain and the output shape, and it is what found the four
+defects listed above. **It does not prove the extractor reads real Czech
+stream commentary**, because no real transcript has been fetched yet.
+
+### The extractor is deterministic, so a change to it is a change to the numbers
+
+Every rule is in `signalPatterns.js`, and `parser_version` records which
+version produced each row. A signal that changes without anyone noticing is a
+wrong holding in a portfolio report, so the rules that matter are pinned by
+`test/sevcikSignalExtractor.test.js` — **39 tests**, each worded as the claim
+it makes, not as an implementation detail.
 
 ---
 
@@ -3541,6 +3788,65 @@ rankings, because a resolution that does not help is a finding, not a failure.
 ```bash
 node --test test/manual/prefilterResolutionScan.test.js
 ```
+
+#### MID-MEASUREMENT — the wide sweep is in flight (2026-11-04)
+
+**This section is a resume point. If you are reading it, the wide measurement is
+still running and the numbers below are not final.**
+
+The instrument for the wide measurement is `tools/sweepPrefilterResolution.js`,
+driven by `test/manual/prefilterResolutionSweep.test.js`, with the labels from
+`tools/extractPrefilterLabels.js`. **The label set is the retained OCR CANDIDATE
+POOL** — `captures` + `top_candidates` + `top_rejected_candidates` — and NOT the
+selected captures alone. A selected-captures-only label set is **biased**: those
+are the frames the scanner chose *after* OCR, so they are disproportionately
+frames that read holdings, and every date reported `NO_ZERO_FRAME`.
+
+Two rules the tools enforce, both of which changed the numbers:
+
+- **The label set is keyed by MEDIA, not by date.** 20220606 covers three
+  uploads, so a date alone cannot address a frame. The extractor resolves the
+  media by the log's exact recorded basename first, then by the recorded video
+  id against the downloader's own-name convention, and only then by a date-only
+  match **when exactly one** `.mp4` matches. The sweep then filters the labels
+  to the media it scored.
+- **Spearman ranks BOTH series** (`rankValues()` + `spearman()` in
+  `src/video/ocrScanLogic.js`, imported by `tools/measurePrefilterRegion.js`
+  too). A rank-difference formula fed raw holding counts produces impossible
+  values such as `-21.5`.
+
+**Status:** the 2022-era sweep (32 dates) is running; the 2023-era sweep (9 dates)
+has not been run yet. The sweep writes its JSON after **every** date, so the JSON
+file's `dates` array is the progress indicator — the background task's own stdout
+stays empty until the process exits.
+
+**The candidate pool is ALSO pre-filtered, and that bounds the whole
+measurement.** The pool is the frames the prefilter KEPT, so the frames it
+DISCARDED are exactly the ones with no label. Over the first 7 measured 2022-era
+dates, **6 had no zero-holding frame in their pool at all** — the verdict for
+those dates is `NO_ZERO_FRAME`, and no resolution can be said to have fixed
+them. The pool therefore answers **one** question:
+
+> does the prefilter's score ORDER the frames it kept, consistently with what
+> those frames actually read?
+
+It cannot answer "does the prefilter keep the RIGHT frames" — that question needs
+a fresh OCR pass over the frames it discarded, because the corpus has no
+readings for them. A frame that read exactly ONE ticker counts as a holding
+frame under the `>0` rule, so the census also counts `holdings <= 1` frames as
+the pool's near-junk.
+
+**And the zero-frame count is a LOWER BOUND.** When two runs of the same date
+read the same frame differently, the LARGER reading wins ("the frame DID hold
+positions"), so a frame read as zero by one run and as holding by another is
+counted as holding. 20220218 has **7 such conflicts** among 13 pool frames. The
+verdict axis is therefore weaker than its counts look — which is a reason to
+trust the **Spearman** and the **best-labelled** columns, and not the verdict
+counts, until the pool contains more junk frames.
+
+**Nothing has shipped.** Production still calls `analyzeFrameBeforeOcr` with no
+resolution override, and `rowDensityTarget` / `multiColStripeCountTarget` are
+still the 160×90-scale values.
 
 **PaddleOCR PP-OCRv6**: the packages ARE installed — `tools/paddle311_env` (Python 3.11.9) has
 paddleocr 2.7.3 + paddlepaddle 2.6.2, and `tools/paddle312_env` / `tools/paddle_env`
