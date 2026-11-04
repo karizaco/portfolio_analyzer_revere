@@ -102,3 +102,18 @@ data/sevcik_daily_summary.csv
 data/sevcik_ticker_summary.csv
 data/sevcik_signals.json
 data/sevcik_report.html
+
+# The prefilter-resolution sweep's output. The TWO canonical result files are
+# committed explicitly (git add -f), because they are the measurement record
+# behind the numbers CLAUDE.md quotes, and they cannot be rebuilt on a fresh
+# clone -- the probe logs and the media they measure are both untracked.
+# Every OTHER sweep file is an intermediate run (a partial pass, a single-date
+# probe, a print check) and stays out.
+data/prefilter_resolution_sweep.json
+data/prefilter_resolution_sweep_*.json
+!data/prefilter_resolution_sweep_2022.json
+!data/prefilter_resolution_sweep_2023.json
+
+# The stdout of a one-off Sevcik transcript fetch. The transcripts themselves
+# live under the ignored data/video_pipeline/ tree.
+data/sevcik_fetch_log.txt
