@@ -514,6 +514,7 @@ Results: `data/qmg_alt_batch_results.json`.
 - `test/manual/productionCropRender.test.js` — renders **exactly** the image EasyOCR was shown, from the source video at a capture's timestamp
 - `test/manual/panelFooterInCrop.test.js` — the production crop against the panel's own footer, cut out of the tracked fixture
 - `test/sevcikSignalExtractor.test.js` — the Sevcik extractor's rules, each worded as the claim it makes
+- `test/sevcikEndToEnd.test.js` — the Sevcik **chain** (transcript → segments → signals → database → dashboard) on a synthetic Czech-stream transcript
 - `test/sevcikTranscriptNormalize.test.js` — provider-agnostic normalization, provider inference, the timing-independent checksum
 - `test/sevcikPipeline.test.js` — the three Sevcik tools against a scratch database
 - `test/sevcikReport.test.js` — the dashboard's HTML and its numbers
@@ -716,31 +717,69 @@ videos it did not reach, so a partial run cannot lose work.
 | | |
 |---|---|
 | catalog | **12 real Sevcik streams** cataloged (2026-11-04) |
-| schema + code | complete, **714 tests passing** |
+| schema + code | complete, **719 tests passing** |
 | end-to-end | verified on a **synthetic** transcript — see below |
 | real transcripts | **BLOCKED** — the YouTube *subtitle* endpoint returns `HTTP 429` for this IP |
 | Deepgram | **not configured** — `DEEPGRAM_API_KEY` is not set |
 | older caption-less videos | unreachable until a Deepgram key exists |
 
 **The real-video smoke test the user asked for is still outstanding**, and it
-is blocked on two things:
+is blocked on two things that were measured separately:
 
-1. **The subtitle endpoint throttles the IP** with `HTTP 429: Too Many
-   Requests`. This is the *subtitle* endpoint, which throttles separately from
-   the video endpoint — a video can be downloaded and its subtitles still
-   cannot be fetched. The project's own rule applies: **30–60 minutes of
-   quiet** before retrying. The backoff is `--rate-limit-attempts` (default
-   3) / `--rate-limit-wait` (default 90 s).
-2. **`DEEPGRAM_API_KEY` is not set**, so the caption-less older videos cannot
-   be transcribed at all. This needs the user.
+#### 1. The subtitle endpoint is throttled; the video endpoint is NOT
 
-**What was verified instead, and what it does and does not prove.**
-`verify_sevcik_pipeline.js` runs the whole chain — transcript file → segments
-→ signals → CSV → dashboard — on a **synthetic** transcript written to look
-like what YouTube's machine translation of a Czech trading stream produces.
-It exercises the chain and the output shape, and it is what found the four
-defects listed above. **It does not prove the extractor reads real Czech
-stream commentary**, because no real transcript has been fetched yet.
+This is the important distinction, and it is easy to get wrong because
+yt-dlp reports both as one failed command.
+
+| operation | endpoint | measured 2026-11-04 |
+|---|---|---|
+| video metadata (`--print`) | the watch page | **works** — 2998 s, title, dates all read |
+| caption LIST (`--list-subs`) | the watch page | **works** — `cs-orig`, `cs` and `en` all listed |
+| the caption **URL** | `api/timedtext` | **HTTP 429**, with any user-agent |
+| the caption download | `api/timedtext` | **HTTP 429** |
+| the **AUDIO** download | the video endpoint | **works** — 42.4 MiB in 13 s at 3.1 MiB/s |
+
+So the channel's captions **exist** (`cs-orig` is the original and `en` is
+YouTube's machine translation), the metadata endpoint reads them fine, and
+only the `timedtext` fetch is refused. The refusal is an IP-level Google
+throttle: the response body is *"your computer or network may be sending
+automated queries"*, and a browser user-agent does not change it.
+
+**Cookies would probably fix it** — the project's own rule is that a
+throttled YouTube session is fixed with fresh cookies from Firefox
+Cookie-Editor. There is **no `youtube_cookies.txt`** on this machine and
+no `YOUTUBE_COOKIES` in the environment, and the fetch tool passes
+`--cookies` when `YOUTUBE_COOKIES` is set.
+
+The project's rate-limit rule applies: **30–60 minutes of quiet** before
+retrying. The backoff is `--rate-limit-attempts` (default 3) /
+`--rate-limit-wait` (default 90 s).
+
+#### 2. `DEEPGRAM_API_KEY` is not set
+
+This needs the user. And the good news is that **only the API call is
+missing** — the rest of the Deepgram path was measured end to end:
+
+```text
+yt-dlp -f bestaudio/best        →  42.4 MiB webm      ✓ works
+ffmpeg -vn -ac 1 -ar 16000      →  18.0 MB mp3       ✓ works
+POST api.deepgram.com/v1/listen →                     ✗ needs the key
+```
+
+So the moment a key exists, the older caption-less videos are reachable
+without any further code work.
+
+### What was verified instead, and what it does and does not prove
+
+`test/sevcikEndToEnd.test.js` runs the whole chain — transcript file →
+segments → signals → database → dashboard — on a **synthetic** transcript
+written to look like what YouTube's machine translation of a Czech trading
+stream produces. It exercises the chain and the output shape, and **it is
+what found the four defects** the run model fixed (see § *The extraction
+model*).
+
+**It does not prove the extractor reads real Czech stream commentary**,
+because no real transcript has been fetched yet.
 
 ### The extractor is deterministic, so a change to it is a change to the numbers
 
@@ -749,6 +788,11 @@ version produced each row. A signal that changes without anyone noticing is a
 wrong holding in a portfolio report, so the rules that matter are pinned by
 `test/sevcikSignalExtractor.test.js` — **39 tests**, each worded as the claim
 it makes, not as an implementation detail.
+
+**And the CHAIN is pinned too**, by `test/sevcikEndToEnd.test.js` — **5
+tests**. The chain is worth pinning separately because the individual stages
+can each be right and the chain still wrong: all four defects above were
+found by the chain and by **none** of the stage-level tests.
 
 ---
 
