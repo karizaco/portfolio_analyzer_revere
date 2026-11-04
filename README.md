@@ -239,22 +239,40 @@ The QMG and Revere paths read **pixels**. This one reads **words**. It reuses
 the catalog, the YouTube downloader and the same SQLite database, and adds a
 transcript acquisition step, a signal extraction layer and a report.
 
-### The channel is CZECH — this matters
+### The channel is CZECH — and it is read in Czech
 
-Sevcik streams in Czech. YouTube publishes two subtitle tracks for the
-videos:
+Sevcik streams in Czech, and the pipeline reads it **in Czech**. YouTube
+publishes two subtitle tracks for the videos:
 
 | track | what it is | why it is used |
 |---|---|---|
-| `en` | YouTube's **machine translation** | **tried first** |
-| `cs-orig` | the original Czech | the fallback |
+| `cs-orig` | the original Czech | **the one that is read** |
+| `en` | YouTube's **machine translation** | not used |
 
-The English track is tried first on purpose. The signal extractor reads
-English trading vocabulary — *bullish*, *target*, *stop loss* — and a machine
-translation preserves the **tickers and the numbers**, which are what the
-signal is about, while putting them into words the extractor understands.
-The Czech original would need a Czech vocabulary, and the ticker symbols
-would still be the part that matters.
+An earlier version read the English machine translation, on the reasoning
+that the extractor understood English trading vocabulary. Measured on the
+corpus, that was wrong: the English patterns fired on **nothing** — 0 bias
+segments, 0 horizon segments, and 2 signals from 12 videos — because the
+speaker says company **names** ("Tesla", "Apple", "Amazon") rather than
+symbols, and because *bullish*, *target* and *stop loss* do not appear in
+Czech speech.
+
+So the vocabulary is Czech, and it is measured rather than guessed:
+
+| what he says | segments | what it states |
+|---|---|---|
+| *do Longu* / *do Long* | 89 | **the direction** — the dominant construction |
+| *do shortu* / *do Short* | 49 | the bearish construction |
+| *poklesový kanál* | 62 | a falling channel — the direction is in the slope |
+| *kanál* | 384 | **the level** — and the thing he calls a setup |
+| *odraz* | 125 | the bounce off a level |
+| *podmíněný* | 14 | the conditional call |
+
+**There are no targets and no stops in this channel.** *cíl* (target)
+appears twice and both are a goal, not a price; *stop* appears 15 times and
+13 of them are inside *stoprocentně* ("one hundred percent"). The price
+roles are therefore **levels** — which is what he actually says, and what
+his setups are built on.
 
 The language that was actually used is recorded in
 `video_transcripts.language`, so a reader always knows.
@@ -293,6 +311,48 @@ The rules are deliberately **conservative**:
 Every signal carries the **exact transcript text** it was read from. A
 signal without its evidence cannot be checked against its source, and an
 unchecked claim in a portfolio report is worth nothing.
+
+### SETUPS — what he is talking about, and how sure he is
+
+A **setup** is not a signal. The speaker does not disclose positions; he
+describes **setups** and **ideas** — *"if it holds this level, long"*. A
+signal is a trade-shaped sentence; a setup is the **thing** he is talking
+about, which may run for ten minutes, be revisited, and end up worked,
+failed, or invalidated.
+
+The lifecycle is read off his own words:
+
+| state | the words |
+|---|---|
+| `new` | "mám tady novou predikci" |
+| `running` | "predikce běží" — still live |
+| `worked` | "predikce vyšla" |
+| `failed` | "predikce nevyšla" |
+| `invalidated` | "predikce zneplatněna" |
+| `old` | "byla stará" |
+
+The **certainty** is a separate scale, and it is built from what he
+**actually says** — he never says "high conviction":
+
+| level | the words | count |
+|---|---|---|
+| `certain` | "stoprocentně", "jistota" | 10 + 3 |
+| `high` | "velmi silný signál", "silnější" | 26 + 6 |
+| `conditional` | "podmíněný" | 14 |
+| `even` | "50 na 50", "patová" | 14 + 2 |
+| `low` | "nevím", "pravděpodobně", "asi" | 95 + 45 + 49 |
+| `unknown` | — | — |
+
+Three findings, all measured over the corpus:
+
+- **"Jasný" alone is not certainty.** It appears 68 times and **66 of them
+  are the filler "Jasně!"** — "Of course!" — in chat replies. It counts
+  only next to the trading vocabulary: "jasný signál".
+- **A negated "stoprocentně" is not certainty.** He says it 10 times, and 9
+  are in a sentence that *denies* it: *"Není to žádná stoprocentní jistota,
+  nikdy to nebyla. Je to jenom počítání pravděpodobnosti."*
+- **"Podmíněný" is its own level**, not a point between "high" and "low". It
+  is his **default** form for a live setup, not an apology for a weak one.
 
 ### The transcript is cut into runs, one per ticker
 
@@ -341,6 +401,9 @@ Outputs land in `data/`:
 | `sevcik_signals.csv` | every signal, with its evidence |
 | `sevcik_daily_summary.csv` | one row per stream |
 | `sevcik_ticker_summary.csv` | one row per ticker |
+| `sevcik_setups.csv` | every setup, with its lifecycle and its evidence |
+| `sevcik_setup_daily_summary.csv` | one row per stream — how many setups, and what became of them |
+| `sevcik_setup_ticker_summary.csv` | one row per ticker — how this source has talked about this name |
 | `sevcik_signals.json` | the same, for the dashboard |
 | `sevcik_report.html` | the dashboard — open it in a browser |
 
@@ -428,6 +491,7 @@ node tools/aggregateScanResults.js data/video_scan_YYYYMMDD/
 npm run sevcik:catalog
 npm run sevcik:transcripts -- --limit 5
 npm run sevcik:signals
+npm run sevcik:setups
 npm run sevcik:aggregate
 
 # Prune old probe directories

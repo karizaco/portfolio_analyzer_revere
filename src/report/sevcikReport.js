@@ -105,6 +105,8 @@ function renderHeadline(payload) {
       <div class="card"><div class="card-value">${bullish}</div><div class="card-label">bullish</div></div>
       <div class="card"><div class="card-value">${bearish}</div><div class="card-label">bearish</div></div>
       <div class="card"><div class="card-value">${withPrice}</div><div class="card-label">with a price</div></div>
+      <div class="card"><div class="card-value">${payload.setup_count || 0}</div><div class="card-label">setups</div></div>
+      <div class="card"><div class="card-value">${(payload.setups || []).filter((setup) => setup.still_running).length}</div><div class="card-label">still running</div></div>
     </div>
     <p class="note">Transcript providers in use: ${escapeHtml(providerText)}.
       Generated ${escapeHtml(payload.generated_at || '')}.</p>`;
@@ -265,6 +267,130 @@ function formatTime(seconds) {
  * @param {object} payload
  * @returns {string}
  */
+/**
+ * The pill for a setup's STATE.
+ *
+ * The states are the LIFECYCLE of a setup, and they are not the same
+ * thing as a direction: "worked" and "failed" are outcomes, and
+ * "running" and "new" mean it is still live.
+ *
+ * @param {string} state
+ * @returns {string}
+ */
+function setupStatePill(state) {
+  const map = {
+    new: 'pill-setup-new',
+    running: 'pill-setup-running',
+    worked: 'pill-setup-worked',
+    failed: 'pill-setup-failed',
+    invalidated: 'pill-setup-invalidated',
+    old: 'pill-setup-old',
+  };
+  const css = map[state] || 'pill-neutral';
+  return `<span class="pill ${css}">${escapeHtml(state || '')}</span>`;
+}
+
+/**
+ * The pill for a certainty LEVEL.
+ *
+ * @param {string} level
+ * @returns {string}
+ */
+function certaintyPill(level) {
+  const map = {
+    certain: 'pill-cert-certain',
+    high: 'pill-cert-high',
+    conditional: 'pill-cert-conditional',
+    even: 'pill-cert-even',
+    low: 'pill-cert-low',
+    unknown: 'pill-neutral',
+  };
+  const css = map[level] || 'pill-neutral';
+  return `<span class="pill ${css}">${escapeHtml(level || '')}</span>`;
+}
+
+/**
+ * The SETUPS table -- what the speaker was talking about.
+ *
+ * A setup is not a signal. The speaker does not disclose positions; he
+ * describes setups and ideas, and this table is the record of which
+ * ones he described, how certain he was, and what became of them.
+ *
+ * @param {Array<object>} setups
+ * @returns {string}
+ */
+function renderSetupTable(setups) {
+  if (!setups.length) {
+    return '<p class="note">No setups yet.</p>';
+  }
+  const rows = setups.map((setup) => {
+    const id = `setup-${Math.abs(hashCode(setup.video_id + setup.ticker + setup.evidence_text))}`;
+    const states = String(setup.states || '').split(',').filter(Boolean);
+    const flags = [];
+    if (setup.direction_uncertain) flags.push('direction unknown');
+    if (setup.probability !== '' && setup.probability !== null) flags.push(`${setup.probability}%`);
+    if (setup.mentions > 1) flags.push(`${setup.mentions} mentions`);
+
+    return `<tr class="sig" data-target="${id}">
+      <td class="dim">${escapeHtml(setup.upload_date || '')}</td>
+      <td class="ticker">${escapeHtml(setup.ticker)}</td>
+      <td class="dim">${escapeHtml(setup.spoken_name || '')}</td>
+      <td>${setupStatePill(setup.state)}</td>
+      <td>${certaintyPill(setup.certainty_level)}</td>
+      <td class="dim">${escapeHtml(states.join(' → '))}</td>
+      <td class="dim">${escapeHtml(flags.join(' · '))}</td>
+    </tr>
+    <tr class="evidence-row" id="${id}">
+      <td colspan="7">${String(setup.evidence_text || '').split('\n').map((line) => `<blockquote>${escapeHtml(line)}</blockquote>`).join('')}</td>
+    </tr>`;
+  }).join('\n');
+
+  return `<table class="grid">
+    <thead><tr>
+      <th>date</th><th>ticker</th><th>said as</th><th>state</th><th>certainty</th>
+      <th>history</th><th>notes</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+/**
+ * The per-ticker SETUP table -- how this source has talked about each
+ * name.
+ *
+ * @param {Array<object>} tickers
+ * @returns {string}
+ */
+function renderSetupTickerTable(tickers) {
+  if (!tickers.length) {
+    return '<p class="note">No setups yet.</p>';
+  }
+  const rows = tickers.map((row) => `<tr>
+    <td class="ticker">${escapeHtml(row.ticker)}</td>
+    <td class="dim">${escapeHtml(row.spoken_name || '')}</td>
+    <td>${row.setup_count}</td>
+    <td>${row.video_count}</td>
+    <td>${row.worked_count}</td>
+    <td>${row.failed_count}</td>
+    <td>${row.invalidated_count}</td>
+    <td>${row.still_running_count}</td>
+    <td>${num(row.avg_certainty)}</td>
+    <td>${row.high_certainty_count}</td>
+    <td>${row.conditional_count}</td>
+    <td>${row.direction_uncertain_count}</td>
+    <td class="dim">${escapeHtml(row.first_date || '')} → ${escapeHtml(row.last_date || '')}</td>
+  </tr>`).join('\n');
+
+  return `<table class="grid">
+    <thead><tr>
+      <th>ticker</th><th>said as</th><th>setups</th><th>videos</th><th>worked</th>
+      <th>failed</th><th>invalid</th><th>running</th><th>avg cert</th><th>high</th>
+      <th>cond</th><th>dir unk</th><th>dates</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
 function buildSevcikReportHtml(payload) {
   const signals = payload.signals || [];
   const tickers = payload.tickers || [];
@@ -313,6 +439,17 @@ function buildSevcikReportHtml(payload) {
   .pill-conf-high { background: rgba(76,141,255,.18); color: #7fb0ff; }
   .pill-conf-medium { background: rgba(139,147,167,.16); color: var(--dim); }
   .pill-conf-low { background: rgba(139,147,167,.1); color: #6b7286; }
+  .pill-setup-new { background: rgba(76,141,255,.18); color: #7fb0ff; }
+  .pill-setup-running { background: rgba(185,138,46,.18); color: #e6bb5c; }
+  .pill-setup-worked { background: rgba(46,163,106,.18); color: #4fd694; }
+  .pill-setup-failed { background: rgba(209,72,63,.18); color: #ff8a80; }
+  .pill-setup-invalidated { background: rgba(140,90,200,.2); color: #c4a2f0; }
+  .pill-setup-old { background: rgba(139,147,167,.16); color: var(--dim); }
+  .pill-cert-certain { background: rgba(46,163,106,.22); color: #4fd694; }
+  .pill-cert-high { background: rgba(76,141,255,.18); color: #7fb0ff; }
+  .pill-cert-conditional { background: rgba(185,138,46,.18); color: #e6bb5c; }
+  .pill-cert-even { background: rgba(140,90,200,.16); color: #c4a2f0; }
+  .pill-cert-low { background: rgba(139,147,167,.16); color: var(--dim); }
   .bar { display: inline-block; width: 110px; height: 7px; border-radius: 4px; overflow: hidden; background: var(--bear); vertical-align: middle; }
   .bar-bull { display: inline-block; height: 100%; background: var(--bull); }
   .bar-bear { display: inline-block; height: 100%; background: var(--bear); }
@@ -336,7 +473,11 @@ function buildSevcikReportHtml(payload) {
   ${payload.signal_count === 0
     ? '<div class="warn">No signals have been extracted yet. Run the transcript fetcher and the signal extractor first.</div>'
     : ''}
-  <h2>Tickers</h2>
+  <h2>Setups by ticker</h2>
+  ${renderSetupTickerTable(payload.setup_tickers || [])}
+  <h2>Setups</h2>
+  ${renderSetupTable(payload.setups || [])}
+  <h2>Signals by ticker</h2>
   ${renderTickerTable(tickers)}
   <h2>Streams</h2>
   ${renderDailyTable(daily)}

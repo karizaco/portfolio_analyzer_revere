@@ -35,6 +35,9 @@ process.on('warning', () => {});
 const { DatabaseSync } = require('node:sqlite');
 
 const {
+  SEVCIK_SETUP_COLUMNS,
+  SEVCIK_SETUP_DAILY_COLUMNS,
+  SEVCIK_SETUP_TICKER_COLUMNS,
   TRADE_SIGNAL_COLUMNS,
   TRADE_SIGNAL_DAILY_COLUMNS,
   TRADE_SIGNAL_TICKER_COLUMNS,
@@ -58,23 +61,33 @@ async function main() {
   const db = new DatabaseSync(DB_PATH, { readOnly: true });
   const signals = loadSignals(db);
   const videos = loadVideos(db);
+  const setups = loadSetups(db);
   db.close();
 
   const daily = buildDailySummary(signals, videos);
   const tickers = buildTickerSummary(signals);
+  const setupDaily = buildSetupDailySummary(setups, videos);
+  const setupTickers = buildSetupTickerSummary(setups);
 
   await writeCsv(path.join(OUTPUT_DIR, 'sevcik_signals.csv'), TRADE_SIGNAL_COLUMNS, signals);
   await writeCsv(path.join(OUTPUT_DIR, 'sevcik_daily_summary.csv'), TRADE_SIGNAL_DAILY_COLUMNS, daily);
   await writeCsv(path.join(OUTPUT_DIR, 'sevcik_ticker_summary.csv'), TRADE_SIGNAL_TICKER_COLUMNS, tickers);
+  await writeCsv(path.join(OUTPUT_DIR, 'sevcik_setups.csv'), SEVCIK_SETUP_COLUMNS, setups);
+  await writeCsv(path.join(OUTPUT_DIR, 'sevcik_setup_daily_summary.csv'), SEVCIK_SETUP_DAILY_COLUMNS, setupDaily);
+  await writeCsv(path.join(OUTPUT_DIR, 'sevcik_setup_ticker_summary.csv'), SEVCIK_SETUP_TICKER_COLUMNS, setupTickers);
 
   const payload = {
     generated_at: new Date().toISOString(),
     signal_count: signals.length,
     video_count: videos.length,
     unique_tickers: tickers.length,
+    setup_count: setups.length,
     signals,
     daily,
     tickers,
+    setups,
+    setup_daily: setupDaily,
+    setup_tickers: setupTickers,
   };
   fs.writeFileSync(
     path.join(OUTPUT_DIR, 'sevcik_signals.json'),
@@ -93,13 +106,17 @@ async function main() {
       signal_count: payload.signal_count,
       video_count: payload.video_count,
       unique_tickers: payload.unique_tickers,
+      setup_count: payload.setup_count,
       top_tickers: tickers.slice(0, 10).map((row) => row.ticker),
+      top_setup_tickers: setupTickers.slice(0, 10).map((row) => row.ticker),
     }, null, 2));
   } else {
     console.log(`[sevcik-aggregate] ${signals.length} signal(s) across ${videos.length} video(s),`
       + ` ${tickers.length} ticker(s)`);
+    console.log(`[sevcik-aggregate] ${setups.length} setup(s) across ${setupTickers.length} setup ticker(s)`);
     console.log('[sevcik-aggregate] wrote data/sevcik_signals.csv, data/sevcik_daily_summary.csv,'
-      + ' data/sevcik_ticker_summary.csv, data/sevcik_signals.json, data/sevcik_report.html');
+      + ' data/sevcik_ticker_summary.csv, data/sevcik_setups.csv, data/sevcik_setup_daily_summary.csv,'
+      + ' data/sevcik_setup_ticker_summary.csv, data/sevcik_signals.json, data/sevcik_report.html');
   }
 }
 
@@ -272,6 +289,155 @@ function buildTickerSummary(signals) {
 
   // The most-mentioned names first: that is the order a reader wants.
   rows.sort((a, b) => b.signal_count - a.signal_count
+    || String(a.ticker).localeCompare(String(b.ticker)));
+  return rows;
+}
+
+/**
+ * Every setup, with the video's date and the transcript's provider.
+ *
+ * @param {DatabaseSync} db
+ * @returns {Array<object>}
+ */
+function loadSetups(db) {
+  const rows = db.prepare(
+    'SELECT u.video_id, v.upload_date, t.provider, u.event_time_sec, u.ticker, u.spoken_name, '
+    + 'u.state, u.states, u.mentions, u.certainty_level, u.certainty_confidence, '
+    + 'u.certainty_marker, u.probability, u.direction_uncertain, u.still_running, '
+    + 'u.invalidated, u.worked, u.failed, u.evidence_text, u.parser_version '
+    + 'FROM sevcik_setups u '
+    + 'LEFT JOIN videos v ON v.video_id = u.video_id '
+    + 'LEFT JOIN video_transcripts t ON t.video_id = u.video_id '
+    + 'ORDER BY v.upload_date DESC, u.event_time_sec ASC, u.ticker ASC',
+  ).all();
+
+  return rows.map((row) => ({
+    video_id: row.video_id,
+    upload_date: row.upload_date || '',
+    provider: row.provider || '',
+    event_time_sec: row.event_time_sec === null ? '' : row.event_time_sec,
+    ticker: row.ticker,
+    spoken_name: row.spoken_name || '',
+    state: row.state,
+    states: row.states || '',
+    mentions: row.mentions === null ? 0 : row.mentions,
+    certainty_level: row.certainty_level || 'unknown',
+    certainty_confidence: row.certainty_confidence === null ? '' : row.certainty_confidence,
+    certainty_marker: row.certainty_marker || '',
+    probability: row.probability === null ? '' : row.probability,
+    direction_uncertain: row.direction_uncertain ? 1 : 0,
+    still_running: row.still_running ? 1 : 0,
+    invalidated: row.invalidated ? 1 : 0,
+    worked: row.worked ? 1 : 0,
+    failed: row.failed ? 1 : 0,
+    evidence_text: row.evidence_text || '',
+    parser_version: row.parser_version || '',
+  }));
+}
+
+/**
+ * One row per stream -- how many setups it carried, and what became of
+ * them.
+ *
+ * @param {Array<object>} setups
+ * @param {Array<object>} videos
+ * @returns {Array<object>}
+ */
+function buildSetupDailySummary(setups, videos) {
+  const byVideo = new Map();
+  for (const video of videos) {
+    byVideo.set(video.video_id, { ...video, setups: [] });
+  }
+  for (const setup of setups) {
+    if (!byVideo.has(setup.video_id)) {
+      byVideo.set(setup.video_id, {
+        video_id: setup.video_id,
+        upload_date: setup.upload_date,
+        title: '',
+        provider: setup.provider,
+        setups: [],
+      });
+    }
+    byVideo.get(setup.video_id).setups.push(setup);
+  }
+
+  return [...byVideo.values()].map((entry) => {
+    const rows = entry.setups;
+    const confidences = rows
+      .map((row) => Number(row.certainty_confidence))
+      .filter((value) => Number.isFinite(value));
+    const tickers = [...new Set(rows.map((row) => row.ticker))].sort();
+    return {
+      upload_date: entry.upload_date,
+      video_id: entry.video_id,
+      title: entry.title,
+      provider: entry.provider,
+      setup_count: rows.length,
+      tickers: tickers.join(' '),
+      new_count: rows.filter((row) => row.state === 'new').length,
+      running_count: rows.filter((row) => row.state === 'running').length,
+      worked_count: rows.filter((row) => row.worked).length,
+      failed_count: rows.filter((row) => row.failed).length,
+      invalidated_count: rows.filter((row) => row.invalidated).length,
+      still_running_count: rows.filter((row) => row.still_running).length,
+      avg_certainty: confidences.length
+        ? Number((confidences.reduce((sum, value) => sum + value, 0) / confidences.length).toFixed(3))
+        : '',
+      high_certainty_count: rows.filter((row) => row.certainty_level === 'high'
+        || row.certainty_level === 'certain').length,
+      conditional_count: rows.filter((row) => row.certainty_level === 'conditional').length,
+      direction_uncertain_count: rows.filter((row) => row.direction_uncertain).length,
+    };
+  });
+}
+
+/**
+ * One row per ticker -- how this source has talked about this name.
+ *
+ * @param {Array<object>} setups
+ * @returns {Array<object>}
+ */
+function buildSetupTickerSummary(setups) {
+  const byTicker = new Map();
+  for (const setup of setups) {
+    if (!byTicker.has(setup.ticker)) byTicker.set(setup.ticker, []);
+    byTicker.get(setup.ticker).push(setup);
+  }
+
+  const rows = [];
+  for (const [ticker, group] of byTicker) {
+    const confidences = group
+      .map((row) => Number(row.certainty_confidence))
+      .filter((value) => Number.isFinite(value));
+    const dates = group.map((row) => row.upload_date).filter(Boolean).sort();
+    const spoken = group.find((row) => row.spoken_name);
+
+    rows.push({
+      ticker,
+      spoken_name: spoken ? spoken.spoken_name : '',
+      setup_count: group.length,
+      video_count: new Set(group.map((row) => row.video_id)).size,
+      first_date: dates[0] || '',
+      last_date: dates[dates.length - 1] || '',
+      worked_count: group.filter((row) => row.worked).length,
+      failed_count: group.filter((row) => row.failed).length,
+      invalidated_count: group.filter((row) => row.invalidated).length,
+      still_running_count: group.filter((row) => row.still_running).length,
+      avg_certainty: confidences.length
+        ? Number((confidences.reduce((sum, value) => sum + value, 0) / confidences.length).toFixed(3))
+        : '',
+      high_certainty_count: group.filter((row) => row.certainty_level === 'high'
+        || row.certainty_level === 'certain').length,
+      conditional_count: group.filter((row) => row.certainty_level === 'conditional').length,
+      even_count: group.filter((row) => row.certainty_level === 'even').length,
+      low_certainty_count: group.filter((row) => row.certainty_level === 'low').length,
+      direction_uncertain_count: group.filter((row) => row.direction_uncertain).length,
+      mentions: group.reduce((sum, row) => sum + Number(row.mentions || 0), 0),
+    });
+  }
+
+  // The most-mentioned names first: that is the order a reader wants.
+  rows.sort((a, b) => b.setup_count - a.setup_count
     || String(a.ticker).localeCompare(String(b.ticker)));
   return rows;
 }
