@@ -20,7 +20,8 @@
  *     Which canonical-selection rule the clusterer runs. The names are the
  *     ones `tools/evalParserReplay.js --cluster-rule` uses, so a measurement
  *     and the scan that follows it are named the same way. Default
- *     `corroborated` (the current production default). Use `shipped` only
+ *     `corroborated+swallowed` (the current production default). Use `corroborated`
+ *     to omit the swallowed-holdings recovery, or `shipped` only
  *     when reproducing pre-2026-11-03 output.
  */
 
@@ -114,23 +115,24 @@ function getFlagsForDate(dateKey) {
 // drift apart. The default is the currently selected production rule;
 // experimental alternatives stay available by explicit name.
 //
-// The corroboration rule is the default now, so `shipped` (the rule as it
-// was before 2026-11-03) has to turn it OFF explicitly -- otherwise
-// `--cluster-rule shipped` would silently run the corroborated rule.
+// The corroboration rule and threshold-4 swallowed-holdings recovery are the
+// production default now. The older named rules turn both features OFF
+// explicitly where needed, so a named measurement cannot silently inherit a
+// newer default.
 const CLUSTER_RULE_FLAGS = {
-  shipped: ['--no-cluster-corroboration'],
-  corroborated: [],
-  'corroborated-strict': ['--cluster-strict-corroboration'],
-  supported: ['--cluster-supported', '--no-cluster-corroboration'],
-  'supported+corroborated': ['--cluster-supported'],
-  'video-supported': ['--cluster-video-supported', '--no-cluster-corroboration'],
-  'video-supported+corroborated': ['--cluster-video-supported'],
+  shipped: ['--no-cluster-corroboration', '--no-cluster-swallowed-holdings'],
+  corroborated: ['--no-cluster-swallowed-holdings'],
+  'corroborated-strict': ['--cluster-strict-corroboration', '--no-cluster-swallowed-holdings'],
+  supported: ['--cluster-supported', '--no-cluster-corroboration', '--no-cluster-swallowed-holdings'],
+  'supported+corroborated': ['--cluster-supported', '--no-cluster-swallowed-holdings'],
+  'video-supported': ['--cluster-video-supported', '--no-cluster-corroboration', '--no-cluster-swallowed-holdings'],
+  'video-supported+corroborated': ['--cluster-video-supported', '--no-cluster-swallowed-holdings'],
   swallowed: ['--cluster-swallowed-holdings', '--no-cluster-corroboration'],
   'corroborated+swallowed': ['--cluster-swallowed-holdings'],
 };
 
 // The full flag list for one date.
-function flagsForDate(dateKey, clusterRule = 'corroborated') {
+function flagsForDate(dateKey, clusterRule = 'corroborated+swallowed') {
   const flags = [...BASE_FLAGS, ...getFlagsForDate(dateKey)];
   // Batch-snapshot mode is OFF for the 2023-era sidebar dates — see
   // BATCH_SNAPSHOT_FLAGS above for the measurement that decided it. The
@@ -151,7 +153,7 @@ function parseArgs(argv) {
     dryRun: false,
     lowCpu: false,
     runTag: null,
-    clusterRule: 'corroborated',
+    clusterRule: 'corroborated+swallowed',
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -162,7 +164,7 @@ function parseArgs(argv) {
     else if (a === '--dry-run') args.dryRun = true;
     else if (a === '--low-cpu') args.lowCpu = true;
     else if (a === '--run-tag') args.runTag = argv[++i] || null;
-    else if (a === '--cluster-rule') args.clusterRule = argv[++i] || 'corroborated';
+    else if (a === '--cluster-rule') args.clusterRule = argv[++i] || 'corroborated+swallowed';
   }
   if (!Object.prototype.hasOwnProperty.call(CLUSTER_RULE_FLAGS, args.clusterRule)) {
     throw new Error(
@@ -272,7 +274,7 @@ function scoreResult(log, gtEntry) {
  * Returns { status, code, stdoutTail, stderr }.
  */
 
-async function runScan(dateKey, video, runTag, clusterRule = 'corroborated') {
+async function runScan(dateKey, video, runTag, clusterRule = 'corroborated+swallowed') {
   const videoPath = path.join(video.dir, video.file);
   const env = {
     ...process.env,

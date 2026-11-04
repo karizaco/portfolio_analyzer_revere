@@ -46,7 +46,8 @@ function printHelp() {
     '  --cluster-supported          Prefer the cluster canonical the VIDEO actually read, breaking ties between equally-close candidates. Off by default: it changes which holdings a scan publishes, so it is measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule supported) before it is switched on.',
     '  --cluster-video-supported    Prefer the cluster canonical the VIDEO actually read, whatever its edit distance. Off by default: it is measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule video-supported) before it is switched on.',
     '  --cluster-strict-corroboration  Enable corroboration and require the proximity test alone; the video\'s own reading of a ticker does NOT count. Off by default: measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule corroborated-strict).',
-    '  --cluster-swallowed-holdings  Publish a cluster\'s OTHER lexicon tickers as well as its canonical, when the video read them in enough frames to be holdings of their own. Off by default: it is measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule swallowed) before it is switched on.',
+    '  --cluster-swallowed-holdings  Publish a cluster\'s OTHER lexicon tickers as well as its canonical, when the video read them in enough frames to be holdings of their own. ON by default: the measured threshold-4 rule recovered LI with no false positive in a production scan. Use --no-cluster-swallowed-holdings for the corroborated-only rule.',
+    '  --no-cluster-swallowed-holdings  Turn the swallowed-holdings recovery OFF, reproducing the corroborated-only rule.',
     '  --cluster-swallowed-min-frames <n>  How many frames the video must read a swallowed ticker for it to be published. Default 4. Measured over the recorded logs; see the docs.',
     '  --position-merge-min-occurrences <n>  Min capture count for position merge, default 1 (set to 2 for intersection mode)',
     '  --progress-interval <n>    Report OCR progress every N frames, default 10',
@@ -148,7 +149,9 @@ function buildDefaultOptions(defaultOutputRoot) {
     clusterSupported: false,
     clusterVideoSupported: false,
     clusterStrictCorroboration: false,
-    clusterSwallowedHoldings: false,
+    // The threshold-4 swallowed-holdings recovery is ON by default: its
+    // production measurement recovered LI without adding a false positive.
+    clusterSwallowedHoldings: true,
     clusterSwallowedMinFrames: 4,
     confusionRadius: 1,
     ffmpegBin: 'ffmpeg',
@@ -297,6 +300,9 @@ function parseArgs(argv, overrides = {}) {
         break;
       case '--cluster-swallowed-holdings':
         options.clusterSwallowedHoldings = true;
+        break;
+      case '--no-cluster-swallowed-holdings':
+        options.clusterSwallowedHoldings = false;
         break;
       case '--cluster-swallowed-min-frames':
         options.clusterSwallowedMinFrames = Number(nextValue);
