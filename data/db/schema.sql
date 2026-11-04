@@ -82,6 +82,110 @@ CREATE TABLE IF NOT EXISTS catalog_runs (
     row_count_kind TEXT NOT NULL DEFAULT ''
 );
 
+-- Transcript / trade-signal tables (Sevcik prediction streams) ----------
+--
+-- These tables are for the TRANSCRIPT-first source: a YouTube channel whose
+-- videos carry spoken trade commentary rather than an on-screen position
+-- list. The OCR pipeline reads pixels; this one reads words.
+--
+-- The design keeps three things apart that the earlier pipeline conflates:
+--
+--   video_transcripts   one canonical transcript artifact per video, and
+--                        WHICH PROVIDER produced it (YouTube auto-captions,
+--                        Deepgram, or a human). The provider matters because
+--                        the two are not equally trustworthy, and a later
+--                        reader has to know which one a signal came from.
+--   transcript_segments the normalized (start, end, text) triples. Both
+--                        providers are normalized into this ONE shape, so
+--                        everything downstream is provider-agnostic.
+--   trade_signals       the extracted structured trade ideas. Every row
+--                        carries the EXACT transcript text it came from, so a
+--                        claim is always checkable against its evidence.
+--
+-- Nothing here overwrites `videos.transcript_path` -- that column is the
+-- existing project's own single-transcript pointer, and this pipeline writes
+-- it too so the two views of a transcript agree.
+
+CREATE TABLE IF NOT EXISTS video_transcripts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id TEXT NOT NULL,
+    provider TEXT NOT NULL CHECK (provider IN ('youtube_auto', 'deepgram', 'manual')),
+    language TEXT NOT NULL DEFAULT '',
+    transcript_path TEXT NOT NULL DEFAULT '',
+    segment_count INTEGER NOT NULL DEFAULT 0,
+    -- Provider-reported quality, when there is one. Deepgram returns a
+    -- per-word confidence; the YouTube auto-captions carry none, so this
+    -- stays NULL for them rather than being invented.
+    quality_score REAL,
+    -- md5 of the transcript text. Two runs of the same provider over the
+    -- same video produce the same text, so this is what makes a re-run
+    -- idempotent instead of a second row.
+    checksum TEXT NOT NULL DEFAULT '',
+    fetched_at TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(video_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_video_transcripts_provider ON video_transcripts(provider);
+
+CREATE TABLE IF NOT EXISTS transcript_segments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    transcript_id INTEGER NOT NULL REFERENCES video_transcripts(id),
+    video_id TEXT NOT NULL,
+    segment_index INTEGER NOT NULL,
+    start_sec REAL NOT NULL,
+    end_sec REAL NOT NULL,
+    text TEXT NOT NULL,
+    -- Provider confidence for this segment, when the provider reports one.
+    confidence REAL,
+    UNIQUE(transcript_id, segment_index)
+);
+
+CREATE INDEX IF NOT EXISTS idx_transcript_segments_video_time
+    ON transcript_segments(video_id, start_sec);
+
+CREATE TABLE IF NOT EXISTS trade_signals (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id TEXT NOT NULL,
+    transcript_id INTEGER NOT NULL REFERENCES video_transcripts(id),
+    -- The transcript segments this signal was read from. A signal can span
+    -- more than one segment, so the span is recorded rather than a single
+    -- index.
+    segment_start_index INTEGER NOT NULL,
+    segment_end_index INTEGER NOT NULL,
+    event_time_sec REAL,
+    ticker TEXT NOT NULL,
+    -- buy / add / sell / trim / short / cover / hold / watch
+    action TEXT NOT NULL DEFAULT '',
+    -- bullish / bearish / neutral / mixed
+    bias TEXT NOT NULL DEFAULT 'neutral'
+        CHECK (bias IN ('bullish', 'bearish', 'neutral', 'mixed')),
+    confidence_label TEXT NOT NULL DEFAULT '',
+    confidence_score REAL,
+    entry_price REAL,
+    target_price_low REAL,
+    target_price_high REAL,
+    stop_price REAL,
+    -- "today", "swing", "a few weeks" -- the horizon, when it was said.
+    horizon_text TEXT NOT NULL DEFAULT '',
+    -- A one-line summary of the reason, when one could be extracted.
+    rationale TEXT NOT NULL DEFAULT '',
+    -- The EXACT transcript text this signal was read from. A signal without
+    -- its evidence is not checkable, so this is NOT NULL.
+    evidence_text TEXT NOT NULL,
+    -- Which extractor version produced this row, so a re-run with a changed
+    -- parser can be told apart from the previous one.
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_trade_signals_video ON trade_signals(video_id);
+CREATE INDEX IF NOT EXISTS idx_trade_signals_ticker_time
+    ON trade_signals(ticker, event_time_sec);
+CREATE INDEX IF NOT EXISTS idx_trade_signals_bias ON trade_signals(bias);
+CREATE INDEX IF NOT EXISTS idx_trade_signals_parser ON trade_signals(parser_version);
+
 -- Discord pipeline tables -------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS discord_sources (

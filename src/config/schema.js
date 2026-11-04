@@ -176,6 +176,70 @@ const LOW_CONFIDENCE_THRESHOLD = 60;
 
 const PREFILTER_PROFILE_DEFAULT = 'whiteboard';
 
+// Sevcik trade-signal columns ---------------------------------------------
+//
+// The signal table's own shape. `evidence_text` is in it, and that is not
+// decoration: a signal without the words it was read from cannot be
+// checked, and an unchecked claim in a portfolio report is worth nothing.
+
+const TRADE_SIGNAL_COLUMNS = [
+  'video_id',
+  'upload_date',
+  'provider',
+  'event_time_sec',
+  'ticker',
+  'action',
+  'bias',
+  'confidence_label',
+  'confidence_score',
+  'entry_price',
+  'target_price_low',
+  'target_price_high',
+  'stop_price',
+  'horizon_text',
+  'rationale',
+  'evidence_text',
+  'parser_version'
+];
+
+const TRADE_SIGNAL_DAILY_COLUMNS = [
+  'upload_date',
+  'video_id',
+  'title',
+  'provider',
+  'signal_count',
+  'bullish_count',
+  'bearish_count',
+  'neutral_count',
+  'mixed_count',
+  'unique_tickers',
+  'avg_confidence',
+  'high_confidence_count',
+  'signals_with_entry',
+  'signals_with_target',
+  'tickers'
+];
+
+const TRADE_SIGNAL_TICKER_COLUMNS = [
+  'ticker',
+  'signal_count',
+  'bullish_count',
+  'bearish_count',
+  'neutral_count',
+  'mixed_count',
+  'video_count',
+  'first_date',
+  'last_date',
+  'avg_confidence',
+  'max_confidence',
+  'high_confidence_count',
+  'signals_with_entry',
+  'signals_with_target',
+  'avg_entry_price',
+  'avg_target_price',
+  'bullish_ratio'
+];
+
 module.exports = {
   LOW_CONFIDENCE_THRESHOLD,
   PREFILTER_PROFILE_DEFAULT,
@@ -186,5 +250,8 @@ module.exports = {
   POSITION_PERFORMANCE_COLUMNS,
   POSITION_PERFORMANCE_SUMMARY_COLUMNS,
   SNAPSHOT_COLUMNS,
+  TRADE_SIGNAL_COLUMNS,
+  TRADE_SIGNAL_DAILY_COLUMNS,
+  TRADE_SIGNAL_TICKER_COLUMNS,
   WHITEBOARD_OBSERVATION_COLUMNS
 };
