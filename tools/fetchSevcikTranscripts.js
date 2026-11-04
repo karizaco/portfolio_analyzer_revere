@@ -50,6 +50,7 @@ const { loadEnv } = require('../src/transcript/loadEnv');
 const { normalizeTranscript, transcriptChecksum } = require('../src/transcript/transcriptNormalize');
 const { extractAudio, hasDeepgramKey, transcribeAudio, deepgramLanguage } = require('../src/transcript/deepgramClient');
 const { SEVCIK_CHANNEL, SEVCIK_SOURCE_URL } = require('../src/sevcik/channel');
+const { sevcikVideoQuarantine } = require('../src/sevcik/contentFilter');
 
 // The credentials live in .env, which is gitignored. An environment
 // variable that is already set wins over the file.
@@ -121,6 +122,7 @@ const options = {
   channel: readFlag(argv, '--channel') || SEVCIK_CHANNEL,
   provider: readFlag(argv, '--provider') || 'auto',
   deepgramFallback: !argv.includes('--no-deepgram-fallback'),
+  includeQuarantine: argv.includes('--include-quarantine'),
   force: argv.includes('--force'),
   json: argv.includes('--json'),
   keepAudio: argv.includes('--keep-audio'),
@@ -238,11 +240,18 @@ function selectCandidates() {
   const rows = db.prepare(sql).all(...params);
   db.close();
 
-  const candidates = rows.filter((row) => {
+  let candidates = rows.filter((row) => {
     if (options.force) return true;
     return !fs.existsSync(transcriptPathFor(row.video_id));
   });
 
+  if (!options.includeQuarantine) {
+    const before = candidates.length;
+    candidates = candidates.filter((row) => !sevcikVideoQuarantine(row).quarantined);
+    if (before !== candidates.length) {
+      console.log(`[sevcik-transcripts] quarantined_non_market=${before - candidates.length}`);
+    }
+  }
   return options.limit ? candidates.slice(0, options.limit) : candidates;
 }
 

@@ -54,6 +54,7 @@ const { DatabaseSync } = require('node:sqlite');
 const { loadSevcikLexicon } = require('../src/sevcik/lexicon');
 const { findSetups } = require('../src/sevcik/setupSegmenter');
 const { SEVCIK_CHANNEL } = require('../src/sevcik/channel');
+const { sevcikVideoQuarantine } = require('../src/sevcik/contentFilter');
 
 const ROOT = path.resolve(__dirname, '..');
 const DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
@@ -63,7 +64,7 @@ const TRANSCRIPTS_DIR = path.join(ROOT, 'data', 'video_pipeline', 'transcripts')
  * The version of the segmenter. It is written onto every setup row, so a
  * re-run with a changed segmenter can be told apart from the previous one.
  */
-const PARSER_VERSION = 'sevcik-setups-2';
+const PARSER_VERSION = 'sevcik-setups-3';
 
 const argv = process.argv.slice(2);
 const options = {
@@ -72,6 +73,7 @@ const options = {
   channel: readFlag(argv, '--channel') || SEVCIK_CHANNEL,
   json: argv.includes('--json'),
   dryRun: argv.includes('--dry-run'),
+  includeQuarantine: argv.includes('--include-quarantine'),
 };
 
 function main() {
@@ -163,7 +165,10 @@ function selectVideos(db) {
   }
   sql += ' ORDER BY v.upload_date DESC, v.video_id ASC';
 
-  const rows = db.prepare(sql).all(...params);
+  let rows = db.prepare(sql).all(...params);
+  if (!options.includeQuarantine) {
+    rows = rows.filter((row) => !sevcikVideoQuarantine(row).quarantined);
+  }
   return options.limit ? rows.slice(0, options.limit) : rows;
 }
 
@@ -219,6 +224,8 @@ function loadSegments(transcriptId, videoId, db) {
 
 function ensureSevcikSetupsSchema(db) {
   try { db.exec('ALTER TABLE sevcik_setups ADD COLUMN claim_kind TEXT'); } catch (_) {}
+  try { db.exec('ALTER TABLE sevcik_setups ADD COLUMN bias TEXT'); } catch (_) {}
+  try { db.exec('ALTER TABLE sevcik_setups ADD COLUMN is_prediction INTEGER'); } catch (_) {}
   const master = db.prepare("SELECT sql FROM sqlite_master WHERE type='table' AND name='sevcik_setups'").get();
   const sql = String((master && master.sql) || '');
   if (!/UNIQUE\s*\(\s*video_id\s*,\s*ticker\s*\)/i.test(sql)) return;
@@ -281,8 +288,8 @@ function replaceSetups(db, videoId, transcriptId, setups, segments) {
     'INSERT INTO sevcik_setups (video_id, transcript_id, ticker, spoken_name, state, states, '
     + 'mentions, segment_start_index, segment_end_index, event_time_sec, certainty_level, '
     + 'certainty_confidence, certainty_marker, probability, direction_uncertain, still_running, '
-    + 'invalidated, worked, failed, claim_kind, evidence_text, parser_version) '
-    + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    + 'invalidated, worked, failed, claim_kind, bias, is_prediction, evidence_text, parser_version) '
+    + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
   );
 
   for (const setup of setups) {
@@ -307,6 +314,8 @@ function replaceSetups(db, videoId, transcriptId, setups, segments) {
       setup.worked ? 1 : 0,
       setup.failed ? 1 : 0,
       setup.claim_kind || '',
+      setup.bias || '',
+      setup.is_prediction ? 1 : 0,
       (setup.evidence || []).join('\n'),
       PARSER_VERSION,
     );

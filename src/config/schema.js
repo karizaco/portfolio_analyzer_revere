@@ -261,7 +261,7 @@ const SEVCIK_SETUP_COLUMNS = [
   'direction_uncertain',
   'still_running',
   'invalidated',
-  'worked', 'failed', 'claim_kind', 'evidence_text',
+  'worked', 'failed', 'claim_kind', 'bias', 'is_prediction', 'evidence_text',
   'parser_version'
 ];
 

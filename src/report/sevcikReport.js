@@ -244,12 +244,14 @@ function renderOutcomeSection(payload) {
     <div class="cards">
       <div class="card"><div class="card-value">${summary.scored_1w || 0}</div><div class="card-label">scored 1w</div></div>
       <div class="card"><div class="card-value">${summary.hit_rate_1w == null ? '—' : formatPct(summary.hit_rate_1w, 0)}</div><div class="card-label">1w hit rate</div></div>
+      <div class="card"><div class="card-value">${summary.baseline_hit_rate_1w == null ? '—' : formatPct(summary.baseline_hit_rate_1w, 0)}</div><div class="card-label">SPY 1w up-rate</div></div>
+      <div class="card"><div class="card-value">${escapeHtml(summary.assessment_1w || '—')}</div><div class="card-label">1w assessment</div></div>
       <div class="card"><div class="card-value">${summary.avg_return_1w == null ? '—' : formatPct(summary.avg_return_1w, 1)}</div><div class="card-label">avg 1w return</div></div>
       <div class="card"><div class="card-value">${summary.scored_1m || 0}</div><div class="card-label">scored 1m</div></div>
       <div class="card"><div class="card-value">${summary.hit_rate_1m == null ? '—' : formatPct(summary.hit_rate_1m, 0)}</div><div class="card-label">1m hit rate</div></div>
       <div class="card"><div class="card-value">${summary.avg_return_1m == null ? '—' : formatPct(summary.avg_return_1m, 1)}</div><div class="card-label">avg 1m return</div></div>
     </div>
-    <p class="note">Market check scores <strong>forward</strong> claims only (retrospective reviews like "predikce vyšla" are excluded). A hit means the price moved the same way as the bias (bullish &gt; 0, bearish &lt; 0).
+    <p class="note">Market check scores <strong>forward directional</strong> signals and setup predictions only (retrospective reviews like "predikce vyšla" are excluded). A hit means the price moved the same way as the bias (bullish &gt; 0, bearish &lt; 0).
       Horizons are calendar 7 / 30 days from the stream date, using the nearest Yahoo daily close.
       Horizons that have not elapsed yet are left blank. Missing prices: ${summary.missing_prices || 0}.</p>`;
 
@@ -268,6 +270,12 @@ function renderOutcomeSection(payload) {
     <td class="${retClass(row.avg_return_1m)}">${row.avg_return_1m == null ? '—' : formatPct(row.avg_return_1m, 1)}</td>
   </tr>`).join('\n');
 
+  const assessNote = summary.note
+    ? `<p class="note">${escapeHtml(summary.note)}</p>`
+    : '';
+  const sourceLine = summary.by_source
+    ? `<p class="note">sources: ${escapeHtml(JSON.stringify(summary.by_source))}</p>`
+    : '';
   const recent = outcomes
     .filter((row) => row.hit_1w === true || row.hit_1w === false || row.hit_1m === true || row.hit_1m === false)
     .slice(0, 25)
@@ -294,6 +302,8 @@ function renderOutcomeSection(payload) {
 
   return `
   <h2>Market check</h2>
+  ${assessNote}
+  ${sourceLine}
   ${cards}
   <h3 class="subhead">Outcomes by ticker</h3>
   <table class="grid">
@@ -303,7 +313,7 @@ function renderOutcomeSection(payload) {
     </tr></thead>
     <tbody>${tickerRows || '<tr><td colspan="8" class="note">No scored tickers.</td></tr>'}</tbody>
   </table>
-  <h3 class="subhead">Recent scored signals</h3>
+  <h3 class="subhead">Recent scored claims</h3>
   <table class="grid">
     <thead><tr>
       <th>date</th><th>ticker</th><th>bias</th><th>1w</th><th>hit</th><th>1m</th><th>hit</th>

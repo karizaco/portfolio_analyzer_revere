@@ -13,6 +13,10 @@
 
 const { findCzechCompanyNames } = require('./czechNames');
 const { readSetupCertainty } = require('./certainty');
+const { determineBias } = require('./signalExtractor');
+
+/** Max segment gap before same-ticker markers become a new episode. */
+const EPISODE_MERGE_GAP = 45;
 
 /**
  * Lifecycle phrases. Terminal verbs require setup context nearby.
@@ -36,7 +40,7 @@ const SETUP_MARKER = /(?<![\p{L}\p{N}])(?:predikc[\p{L}\p{N}]*|setup[\p{L}\p{N}]
 const STILL_RUNNING = /(?<![\p{L}\p{N}])(?:běží|bězí|platí|neustále)(?![\p{L}\p{N}])/iu;
 
 function isLiveState(state) {
-  return state === 'running' || state === 'new';
+  return state === 'running' || state === 'new' || state === 'open';
 }
 
 function isTerminalState(state) {
@@ -81,7 +85,13 @@ function readSetupState(text) {
   }
 
   if (best.state) return best.state;
-  if (hasSetupContext(str)) return 'running';
+  // Soft still-running language inside a setup sentence counts as running.
+  if (STILL_RUNNING.test(str) && (hasSetupContext(str) || SETUP_MARKER.test(str))) {
+    return 'running';
+  }
+  // Bare setup vocabulary without a lifecycle verb is an OPEN claim, not
+  // proof that he said the old prediction is still running.
+  if (hasSetupContext(str) || SETUP_MARKER.test(str)) return 'open';
   return '';
 }
 
@@ -171,7 +181,7 @@ function findSetups(options) {
   const markers = [];
   for (const run of runs) {
     for (const piece of run.pieces) {
-      if (!SETUP_MARKER.test(piece.text)) continue;
+      if (!SETUP_MARKER.test(piece.text) && !hasSetupContext(piece.text)) continue;
       const state = readSetupState(piece.text);
       if (!state) continue;
       markers.push({
@@ -180,6 +190,7 @@ function findSetups(options) {
         index: piece.index,
         text: piece.text,
         state,
+        explicit_still_running: STILL_RUNNING.test(piece.text) || state === 'running',
       });
     }
   }
@@ -202,6 +213,7 @@ function findSetups(options) {
       states: [],
       first_index: marker.index,
       last_index: marker.index,
+      explicit_still_running: false,
     };
     openByTicker.set(marker.ticker, episode);
     return episode;
@@ -212,10 +224,15 @@ function findSetups(options) {
     if (!episode) {
       episode = openEpisode(marker);
     } else {
+      const gap = marker.index - episode.last_index;
       const finalState = episode.states[episode.states.length - 1] || '';
       const startsFresh = marker.state === 'new' && episode.states.length > 0;
-      const afterTerminal = isTerminalState(finalState);
-      if (startsFresh || afterTerminal) {
+      const farAway = gap > EPISODE_MERGE_GAP;
+      // A live claim after a terminal outcome is a new episode (reopen).
+      // Another terminal soon after stays the same retrospective episode.
+      const reopenAfterTerminal = isTerminalState(finalState) && isLiveState(marker.state);
+      const splitFarForward = farAway && isLiveState(finalState) && isLiveState(marker.state);
+      if (startsFresh || reopenAfterTerminal || splitFarForward) {
         closeEpisode(marker.ticker);
         episode = openEpisode(marker);
       }
@@ -226,17 +243,57 @@ function findSetups(options) {
     episode.first_index = Math.min(episode.first_index, marker.index);
     episode.last_index = Math.max(episode.last_index, marker.index);
     if (marker.spoken_name) episode.spoken_name = marker.spoken_name;
+    if (marker.explicit_still_running) episode.explicit_still_running = true;
   }
 
   for (const ticker of [...openByTicker.keys()]) closeEpisode(ticker);
 
-  return episodes
+  // Second pass: merge adjacent same-ticker near-duplicates.
+  // Third pass: at most one forward + one retrospective episode per ticker
+  // in a single video (the ledger unit the user wants).
+  const merged = collapsePerTickerClaimFamily(mergeNearDuplicateEpisodes(episodes));
+
+  return merged
     .map((episode) => {
-      const evidenceParts = episode.markers.map((marker) => marker.text.trim()).filter(Boolean);
+      // Marker snippets keep the lifecycle verbs; the full segment span is
+      // what carries direction (do Longu / short) spoken around the claim.
+      const markerParts = episode.markers.map((marker) => marker.text.trim()).filter(Boolean);
+      const spanParts = [];
+      const start = Math.max(0, episode.first_index);
+      const end = Math.min(segments.length - 1, episode.last_index);
+      for (let i = start; i <= end; i += 1) {
+        const t = String(segments[i] && segments[i].text || '').trim();
+        if (t) spanParts.push(t);
+      }
+      const evidenceParts = spanParts.length ? spanParts : markerParts;
       const evidenceText = evidenceParts.join(' ');
-      const certainty = readSetupCertainty(evidenceText);
-      const finalState = episode.states[episode.states.length - 1] || '';
-      const claimKind = isTerminalState(finalState) ? 'retrospective' : 'forward';
+      const finalState = pickFinalState(episode.states);
+      const terminal = episode.states.some((state) => isTerminalState(state));
+      const claimKind = terminal && !isLiveState(finalState) ? 'retrospective' : 'forward';
+
+      const biasInfo = determineBias(evidenceText);
+      let bias = biasInfo.bias || '';
+      if (bias === 'neutral') bias = '';
+      const directionUncertain = /(?<![\p{L}\p{N}])nev[ií]m(?![\p{L}\p{N}])/iu.test(evidenceText)
+        || bias === 'mixed';
+
+      const isPrediction = Boolean(
+        claimKind === 'forward'
+        && !directionUncertain
+        && (bias === 'bullish' || bias === 'bearish')
+      );
+
+      const certainty = readSetupCertainty(evidenceText, {
+        hasDirection: bias === 'bullish' || bias === 'bearish',
+        isPrediction,
+        directionUncertain,
+      });
+
+      const stillRunning = Boolean(
+        episode.explicit_still_running
+        || episode.states.includes('running')
+      ) && !terminal;
+
       return {
         ticker: episode.ticker,
         spoken_name: episode.spoken_name,
@@ -245,12 +302,14 @@ function findSetups(options) {
         mentions: episode.markers.length,
         first_index: episode.first_index,
         last_index: episode.last_index,
+        bias: bias === 'mixed' ? 'mixed' : bias,
+        is_prediction: Boolean(isPrediction),
         certainty_level: certainty.level,
         certainty_confidence: certainty.confidence,
         certainty_marker: certainty.marker,
         probability: certainty.probability == null ? null : certainty.probability,
-        direction_uncertain: certainty.direction_uncertain ? 1 : 0,
-        still_running: isLiveState(finalState),
+        direction_uncertain: Boolean(directionUncertain),
+        still_running: Boolean(stillRunning),
         invalidated: episode.states.includes('invalidated'),
         worked: episode.states.includes('worked'),
         failed: episode.states.includes('failed'),
@@ -262,7 +321,90 @@ function findSetups(options) {
     .sort((a, b) => a.first_index - b.first_index || String(a.ticker).localeCompare(String(b.ticker)));
 }
 
+/**
+ * Prefer terminal lifecycle when present; otherwise the last state.
+ * @param {string[]} states
+ * @returns {string}
+ */
+function pickFinalState(states) {
+  const list = Array.isArray(states) ? states : [];
+  for (let i = list.length - 1; i >= 0; i -= 1) {
+    if (isTerminalState(list[i])) return list[i];
+  }
+  return list[list.length - 1] || '';
+}
+
+/**
+ * Collapse near-duplicate same-ticker episodes inside one video.
+ * @param {Array<object>} episodes
+ * @returns {Array<object>}
+ */
+function mergeNearDuplicateEpisodes(episodes) {
+  if (!Array.isArray(episodes) || episodes.length < 2) return episodes || [];
+  const ordered = [...episodes].sort((a, b) => a.first_index - b.first_index || String(a.ticker).localeCompare(String(b.ticker)));
+  const kept = [];
+  for (const episode of ordered) {
+    const prev = kept.filter((row) => row.ticker === episode.ticker).pop();
+    if (!prev) {
+      kept.push(episode);
+      continue;
+    }
+    const gap = episode.first_index - prev.last_index;
+    const prevTerminal = prev.states.some((s) => isTerminalState(s));
+    const nextTerminal = episode.states.some((s) => isTerminalState(s));
+    const bothRetro = prevTerminal && nextTerminal;
+    const bothForward = !prevTerminal && !nextTerminal;
+    const hasNew = episode.states.includes('new');
+    // Merge crowded same-ticker chatter; keep a genuine "nova predikce" split.
+    if (gap <= EPISODE_MERGE_GAP && (bothRetro || (bothForward && !hasNew))) {
+      prev.markers.push(...episode.markers);
+      prev.states.push(...episode.states);
+      prev.last_index = Math.max(prev.last_index, episode.last_index);
+      prev.first_index = Math.min(prev.first_index, episode.first_index);
+      if (episode.spoken_name) prev.spoken_name = episode.spoken_name;
+      if (episode.explicit_still_running) prev.explicit_still_running = true;
+      continue;
+    }
+    kept.push(episode);
+  }
+  return kept;
+}
+
+/**
+ * Keep at most one forward and one retrospective episode per ticker.
+ * @param {Array<object>} episodes
+ * @returns {Array<object>}
+ */
+function collapsePerTickerClaimFamily(episodes) {
+  if (!Array.isArray(episodes) || episodes.length < 2) return episodes || [];
+  const buckets = new Map();
+  const order = [];
+  for (const episode of episodes) {
+    const terminal = (episode.states || []).some((state) => isTerminalState(state));
+    const key = `${episode.ticker}:${terminal ? 'R' : 'F'}`;
+    if (!buckets.has(key)) {
+      buckets.set(key, {
+        ...episode,
+        markers: [...(episode.markers || [])],
+        states: [...(episode.states || [])],
+      });
+      order.push(key);
+      continue;
+    }
+    const prev = buckets.get(key);
+    prev.markers.push(...(episode.markers || []));
+    prev.states.push(...(episode.states || []));
+    prev.first_index = Math.min(prev.first_index, episode.first_index);
+    prev.last_index = Math.max(prev.last_index, episode.last_index);
+    if (episode.spoken_name) prev.spoken_name = episode.spoken_name;
+    if (episode.explicit_still_running) prev.explicit_still_running = true;
+  }
+  return order.map((key) => buckets.get(key));
+}
+
+
 module.exports = {
+  EPISODE_MERGE_GAP,
   SETUP_MARKER,
   SETUP_STATES,
   buildSetupRuns,
@@ -270,5 +412,8 @@ module.exports = {
   hasSetupContext,
   isLiveState,
   isTerminalState,
+  collapsePerTickerClaimFamily,
+  mergeNearDuplicateEpisodes,
+  pickFinalState,
   readSetupState,
 };
