@@ -17,6 +17,8 @@ const { findSetups } = require('../src/sevcik/setupSegmenter');
 
 test('quarantines 14-day challenge titles', () => {
   assert.equal(isNonMarketSevcikTitle('DEN 5 ze 14 | Co je paka'), true);
+  assert.equal(isNonMarketSevcikTitle('14 dní, po kterých budete znát strategie'), true);
+  assert.equal(isNonMarketSevcikTitle('14 dnů naživo'), true);
   assert.equal(sevcikVideoQuarantine({ title: 'Startujeme 14 dní naživo | DEN 1' }).quarantined, true);
   assert.equal(isNonMarketSevcikTitle('Apple: rekordni trzby, predikce na MSFT'), false);
 });
