@@ -90,15 +90,28 @@ const DEFAULT_LANGUAGE = 'cs';
 const DEFAULT_RETRIES = 3;
 const RETRY_WAIT_MS = 5000;
 
-const REQUEST_PARAMS = {
-  model: process.env.DEEPGRAM_MODEL || DEFAULT_MODEL,
-  language: process.env.DEEPGRAM_LANGUAGE || DEFAULT_LANGUAGE,
-  smart_format: 'true',
-  punctuate: 'true',
-  utterances: 'true',
-  paragraphs: 'false',
-  diarize: 'false',
-};
+/**
+ * The request parameters, built AT CALL TIME.
+ *
+ * These were a module-level const, which froze them at require time -- and
+ * the caller requires this module BEFORE it loads `.env`. So a
+ * `DEEPGRAM_LANGUAGE` in `.env` was read too late and silently ignored,
+ * and the request always went out with the built-in default. Building the
+ * parameters per call is what makes the `.env` setting real.
+ *
+ * @returns {Record<string, string>}
+ */
+function requestParams() {
+  return {
+    model: process.env.DEEPGRAM_MODEL || DEFAULT_MODEL,
+    language: deepgramLanguage(),
+    smart_format: 'true',
+    punctuate: 'true',
+    utterances: 'true',
+    paragraphs: 'false',
+    diarize: 'false',
+  };
+}
 
 /**
  * Is a Deepgram key configured?
@@ -107,6 +120,22 @@ const REQUEST_PARAMS = {
  */
 function hasDeepgramKey() {
   return Boolean(String(process.env.DEEPGRAM_API_KEY || '').trim());
+}
+
+/**
+ * The language the last request actually USED.
+ *
+ * The caller records the language alongside the transcript, and a hard-coded
+ * default there recorded `en` for a Czech transcript -- which is not a
+ * cosmetic error. `language` selects the ACOUSTIC MODEL, so a transcript
+ * written as `en` claims to be an English transcript of Czech audio, and
+ * every consumer that filters or reports on language is then wrong about
+ * the corpus it is looking at.
+ *
+ * @returns {string}
+ */
+function deepgramLanguage() {
+  return process.env.DEEPGRAM_LANGUAGE || DEFAULT_LANGUAGE;
 }
 
 /**
@@ -171,7 +200,7 @@ async function transcribeAudio(audioPath, options = {}) {
   }
 
   const url = new URL(DEEPGRAM_API_URL);
-  for (const [key, value] of Object.entries(REQUEST_PARAMS)) {
+  for (const [key, value] of Object.entries(requestParams())) {
     url.searchParams.set(key, value);
   }
 
@@ -270,10 +299,11 @@ module.exports = {
   DEFAULT_MODEL,
   DEFAULT_RETRIES,
   DEEPGRAM_API_URL,
-  REQUEST_PARAMS,
   RETRY_WAIT_MS,
+  deepgramLanguage,
   extractAudio,
   hasDeepgramKey,
+  requestParams,
   sanitizeErrorBody,
   transcribeAudio,
 };
