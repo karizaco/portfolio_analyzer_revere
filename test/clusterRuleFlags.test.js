@@ -35,13 +35,14 @@ test('the scan tool parses the cluster-rule flags', () => {
   assert.equal(base.clusterSupported, false, 'the supported rule is OFF by default');
   assert.equal(base.clusterVideoSupported, false, 'the video-supported rule is OFF by default');
   assert.equal(base.clusterStrictCorroboration, false, 'the strict variant is OFF by default');
-  assert.equal(base.clusterSwallowedHoldings, false, 'the swallowed rule is OFF by default');
+  assert.equal(base.clusterSwallowedHoldings, true, 'the swallowed rule is ON by default (measured and shipped 2026-11-04)');
 
   assert.equal(parse('--cluster-corroboration').clusterCorroboration, true);
   assert.equal(parse('--no-cluster-corroboration').clusterCorroboration, false);
   assert.equal(parse('--cluster-supported').clusterSupported, true);
   assert.equal(parse('--cluster-video-supported').clusterVideoSupported, true);
   assert.equal(parse('--cluster-swallowed-holdings').clusterSwallowedHoldings, true);
+  assert.equal(parse('--no-cluster-swallowed-holdings').clusterSwallowedHoldings, false);
 
   const strict = parse('--cluster-strict-corroboration');
   assert.equal(strict.clusterStrictCorroboration, true);
