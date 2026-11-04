@@ -159,6 +159,118 @@ test('the dashboard does not break on an empty payload', () => {
   assert.ok(html.includes('<!DOCTYPE html>'));
 });
 
+// -- THE SETUPS --------------------------------------------------------
+
+const SETUP_PAYLOAD = {
+  generated_at: '2026-11-05T00:00:00.000Z',
+  signal_count: 0,
+  video_count: 1,
+  unique_tickers: 0,
+  setup_count: 2,
+  signals: [],
+  daily: [],
+  tickers: [],
+  setups: [
+    {
+      video_id: 'vid1',
+      upload_date: '20261104',
+      provider: 'youtube_auto',
+      event_time_sec: 125,
+      ticker: 'TSLA',
+      spoken_name: 'Tesla',
+      state: 'failed',
+      states: 'worked,new,running,failed',
+      mentions: 5,
+      certainty_level: 'even',
+      certainty_confidence: 0.55,
+      certainty_marker: '50 na 50',
+      probability: 50,
+      direction_uncertain: 1,
+      still_running: 0,
+      invalidated: 0,
+      worked: 1,
+      failed: 1,
+      evidence_text: 'Tesla predikce vyšla.\nAle pak nevyšla.',
+      parser_version: 'sevcik-setups-1',
+    },
+    {
+      video_id: 'vid1',
+      upload_date: '20261104',
+      provider: 'youtube_auto',
+      event_time_sec: 400,
+      ticker: 'AAPL',
+      spoken_name: 'Apple',
+      state: 'running',
+      states: 'running',
+      mentions: 2,
+      certainty_level: 'conditional',
+      certainty_confidence: 0.5,
+      certainty_marker: 'podmíněná',
+      probability: '',
+      direction_uncertain: 0,
+      still_running: 1,
+      invalidated: 0,
+      worked: 0,
+      failed: 0,
+      evidence_text: 'Apple predikce běží.',
+      parser_version: 'sevcik-setups-1',
+    },
+  ],
+  setup_daily: [],
+  setup_tickers: [
+    {
+      ticker: 'TSLA',
+      spoken_name: 'Tesla',
+      setup_count: 1,
+      video_count: 1,
+      first_date: '20261104',
+      last_date: '20261104',
+      worked_count: 1,
+      failed_count: 1,
+      invalidated_count: 0,
+      still_running_count: 0,
+      avg_certainty: 0.55,
+      high_certainty_count: 0,
+      conditional_count: 0,
+      even_count: 1,
+      low_certainty_count: 0,
+      direction_uncertain_count: 1,
+      mentions: 5,
+    },
+  ],
+};
+
+test('the dashboard shows the SETUPS and their states', () => {
+  const html = buildSevcikReportHtml(SETUP_PAYLOAD);
+  assert.ok(html.includes('TSLA'), 'the setup ticker must be in the dashboard');
+  assert.ok(html.includes('Tesla'), 'the name he SAID must be in the dashboard');
+  assert.ok(html.includes('failed'), 'the state must be in the dashboard');
+  assert.ok(html.includes('conditional'), 'the certainty must be in the dashboard');
+});
+
+test('the dashboard carries the setup evidence', () => {
+  const html = buildSevcikReportHtml(SETUP_PAYLOAD);
+  assert.ok(html.includes('Tesla predikce vyšla.'),
+    'the setup evidence must be in the dashboard');
+});
+
+test('the dashboard shows the setup lifecycle in order', () => {
+  const html = buildSevcikReportHtml(SETUP_PAYLOAD);
+  assert.ok(html.includes('worked → new → running → failed'),
+    'the states must be shown in the order they happened');
+});
+
+test('the dashboard counts the setups', () => {
+  const html = buildSevcikReportHtml(SETUP_PAYLOAD);
+  assert.ok(html.includes('setups'), 'the headline must count the setups');
+});
+
+test('the dashboard does not break with setups but no signals', () => {
+  const html = buildSevcikReportHtml(SETUP_PAYLOAD);
+  assert.ok(html.includes('<!DOCTYPE html>'));
+  assert.ok(html.includes('TSLA'));
+});
+
 test('HTML is escaped', () => {
   assert.equal(escapeHtml('<script>'), '&lt;script&gt;');
   assert.equal(escapeHtml('a & b'), 'a &amp; b');

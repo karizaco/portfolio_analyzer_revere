@@ -240,6 +240,76 @@ const TRADE_SIGNAL_TICKER_COLUMNS = [
   'bullish_ratio'
 ];
 
+// The SETUPS -- what the speaker is talking about.
+//
+// A setup is not a signal. The speaker does not disclose positions; he
+// describes setups and ideas. So the columns are the LIFECYCLE of a
+// setup, not a trade's entry and target.
+const SEVCIK_SETUP_COLUMNS = [
+  'video_id',
+  'upload_date',
+  'provider',
+  'ticker',
+  'spoken_name',
+  'state',
+  'states',
+  'mentions',
+  'event_time_sec',
+  'certainty_level',
+  'certainty_confidence',
+  'certainty_marker',
+  'probability',
+  'direction_uncertain',
+  'still_running',
+  'invalidated',
+  'worked',
+  'failed',
+  'evidence_text',
+  'parser_version'
+];
+
+// One row per stream -- how many setups it carried, and what became of
+// them.
+const SEVCIK_SETUP_DAILY_COLUMNS = [
+  'upload_date',
+  'video_id',
+  'title',
+  'provider',
+  'setup_count',
+  'tickers',
+  'new_count',
+  'running_count',
+  'worked_count',
+  'failed_count',
+  'invalidated_count',
+  'still_running_count',
+  'avg_certainty',
+  'high_certainty_count',
+  'conditional_count',
+  'direction_uncertain_count'
+];
+
+// One row per ticker -- how this source has talked about this name.
+const SEVCIK_SETUP_TICKER_COLUMNS = [
+  'ticker',
+  'spoken_name',
+  'setup_count',
+  'video_count',
+  'first_date',
+  'last_date',
+  'worked_count',
+  'failed_count',
+  'invalidated_count',
+  'still_running_count',
+  'avg_certainty',
+  'high_certainty_count',
+  'conditional_count',
+  'even_count',
+  'low_certainty_count',
+  'direction_uncertain_count',
+  'mentions'
+];
+
 module.exports = {
   LOW_CONFIDENCE_THRESHOLD,
   PREFILTER_PROFILE_DEFAULT,
@@ -249,6 +319,9 @@ module.exports = {
   POSITION_EVENT_COLUMNS,
   POSITION_PERFORMANCE_COLUMNS,
   POSITION_PERFORMANCE_SUMMARY_COLUMNS,
+  SEVCIK_SETUP_COLUMNS,
+  SEVCIK_SETUP_DAILY_COLUMNS,
+  SEVCIK_SETUP_TICKER_COLUMNS,
   SNAPSHOT_COLUMNS,
   TRADE_SIGNAL_COLUMNS,
   TRADE_SIGNAL_DAILY_COLUMNS,

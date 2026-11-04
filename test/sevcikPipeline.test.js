@@ -130,13 +130,34 @@ function insertVideo(db, videoId, channel = 'davidsevcik') {
 // The schema
 // ---------------------------------------------------------------------------
 
-test('a fresh database gets the three new tables', (t) => {
+test('a fresh database gets the new tables', (t) => {
   const db = fixtureDb(t);
   const names = db.prepare(
     "SELECT name FROM sqlite_master WHERE type = 'table' AND name IN "
-    + "('video_transcripts','transcript_segments','trade_signals')",
+    + "('video_transcripts','transcript_segments','trade_signals','sevcik_setups')",
   ).all().map((row) => row.name).sort();
-  assert.deepEqual(names, ['trade_signals', 'transcript_segments', 'video_transcripts']);
+  assert.deepEqual(names, ['sevcik_setups', 'trade_signals', 'transcript_segments', 'video_transcripts']);
+  db.close();
+});
+
+test('the evidence text of a setup is NOT NULL', (t) => {
+  const db = fixtureDb(t);
+  const sql = fs.readFileSync(SCHEMA, 'utf8');
+  const start = sql.indexOf('CREATE TABLE IF NOT EXISTS sevcik_setups (');
+  assert.ok(start !== -1, 'schema.sql has no sevcik_setups table');
+  const body = sql.slice(start, sql.indexOf(');', start));
+  assert.match(body, /evidence_text\s+TEXT\s+NOT NULL/,
+    'a setup without its evidence cannot be checked, so the column must be NOT NULL');
+  db.close();
+});
+
+test('a setup is unique per video and ticker', (t) => {
+  const db = fixtureDb(t);
+  const sql = fs.readFileSync(SCHEMA, 'utf8');
+  const start = sql.indexOf('CREATE TABLE IF NOT EXISTS sevcik_setups (');
+  const body = sql.slice(start, sql.indexOf(');', start));
+  assert.match(body, /UNIQUE\(video_id,\s*ticker\)/,
+    'the same setup must not be written twice for one video');
   db.close();
 });
 
