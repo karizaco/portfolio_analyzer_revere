@@ -12,7 +12,7 @@
  */
 const NON_MARKET_TITLE_PATTERNS = [
   /\bden\s*\d+\s*(ze|z)\s*\d+\b/i, // "DEN 5 ze 14"
-  /\b\d+\s*dn[uůy]\s*(na[zž]ivo|challenge|v[yý]zva)?\b/i, // "14 dní naživo"
+  /\b\d+\s*dn[iíuůy]\w*\b/i, // "14 dní naživo"
   /\bstartujeme\s+\d+\s*dn/i,
   /\bpunt[ií]ky,?\s*platformy\b/i,
   /\bsvat[yý]\s+gr[aá]l\s+obchod/i,
@@ -44,7 +44,7 @@ function isNonMarketSevcikTitle(title) {
   const folded = foldText(raw);
   // folded variants without diacritics
   if (/\bden\s*\d+\s*(ze|z)\s*\d+\b/.test(folded)) return true;
-  if (/\b\d+\s*dni\b/.test(folded) && /\b(nazivo|challenge|vyzva|startujeme)\b/.test(folded)) return true;
+  if (/\b\d+\s*dn[iuy]\w*\b/.test(folded)) return true; // 14 dni / 14 dnu series
   if (/\bpuntiky/.test(folded) && /\bplatformy/.test(folded)) return true;
   return false;
 }
