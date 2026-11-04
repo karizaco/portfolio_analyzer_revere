@@ -1,0 +1,51 @@
+# Company names for tickers OUTSIDE the US listings.
+#
+# The generated table (config/ticker_company_names.csv) comes from the
+# SEC's company_tickers.json, which covers US listings only. The Sevcik
+# speaker trades European names as well, and said one out loud:
+#
+#   "Takže RHM, neboli Rheinmetall v eurech máme kolem 1000 euro na
+#    akcii"
+#
+# -- a German company, priced in euros. The SEC list cannot reach it.
+#
+# These rows are CURATED rather than generated, because there is no free
+# API that returns "every ticker on every exchange" with a clean
+# registrant name. Every row here is a name that was HEARD in the corpus
+# (2026-11-04, 12 transcripts, 10,847 segments), and the count is how
+# often it was heard.
+#
+# source: measured from the fetched transcripts
+# ticker,name,normalized,exchange,count
+ČEZ,ČEZ Group,cez,Prague,9
+IPR,IPN International,ipr,Prague,11
+MONETA,Moneta Money Bank,moneta,Prague,5
+RHM,Rheinmetall,rheinmetall,XETRA,1
+SAP,SAP SE,sap,ETR,0
+SIE,Siemens AG,siemens,ETR,0
+ASML,ASML Holding,asml holding,Euronext,0
+NOK,Nokia Oyj,nokia,Helsinki,0
+MC, LVMH Moet Hennessy,lvmh,Euronext,0
+TTE,TotalEnergies,totalenergies,Euronext,0
+AIR,Airbus SE,airbus,Euronext,0
+SU,Schneider Electric,schneider electric,Euronext,0
+RMS,Hermes International,hermes international,Euronext,0
+OR,Pepsico,pepsico,Euronext,0
+MCX,Michelin,michelin,Euronext,0
+CS,AXA,axa,Euronext,0
+BNP,BNP Paribas,bnp paribas,Euronext,0
+SAN,Banco Santander,banco santander,Euronext,0
+IBE,Iberdrola,iberdrola,Euronext,0
+REP,Repsol,repsol,Euronext,0
+PHIA,Philips,philips,Euronext,0
+VIE,Vinci,vinci,Euronext,0
+ENEL,Enel,enel,Euronext,0
+ENI,Eni,eni,Euronext,0
+INGA,ING Groep,ing groep,Euronext,0
+AD.AS,Adidas,adidas,Euronext,0
+DBK,Deutsche Bank,deutsche bank,ETR,0
+BASF,Basf,basf,ETR,0
+ALV,Allianz,allianz,ETR,0
+MBG,Mercedes-Benz Group,mercedes benz group,ETR,0
+VOW3,Volkswagen,volkswagen,ETR,0
+BMW,BMW,bmw,ETR,0

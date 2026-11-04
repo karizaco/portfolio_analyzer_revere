@@ -23,9 +23,13 @@ const assert = require('node:assert/strict');
 
 const { findCzechCompanyNames, startsSentence } = require('../src/sevcik/czechNames');
 const { matchCompanyName, stemName } = require('../src/sevcik/companyNames');
+const { loadSevcikLexicon } = require('../src/sevcik/lexicon');
 const { loadSeedLexiconSync } = require('../src/normalize/tickerScan');
 
-const LEXICON = new Set(loadSeedLexiconSync().tickers);
+// The Sevcik allow list, not the shared seed: the seed is built around
+// the OCR channels, and 10,170 of the 10,410 SEC tickers are not in it.
+const LEXICON = loadSevcikLexicon();
+const SEED = new Set(loadSeedLexiconSync().tickers);
 
 /**
  * Find the names in a text.
@@ -112,16 +116,21 @@ test('a name that matches two DIFFERENT companies is not a ticker', () => {
   }
 });
 
-test('a share class pair resolves to the class A ticker', () => {
-  // GOOG and GOOGL are both Alphabet. A speaker who says "Alphabet" means
-  // the company, and the class A share is the one every feed leads with.
+test('a share class pair resolves only when it is CONFIRMED', () => {
+  // GOOG and GOOGL are both Alphabet, and a speaker who says "Alphabet"
+  // means the company.
   //
-  // "Alphabet" reaches the share-class rule through the spoken-name
-  // alias, so the rule is pinned on a name that has to go through the
-  // generated table instead -- "Meta Platforms", which is the
-  // registrant's own wording.
-  const result = matchCompanyName('Meta Platforms', { lexicon: LEXICON });
-  assert.equal(result.ticker, 'META');
+  // But the SAME pattern also produces wrong answers: three tickers
+  // share the name "starlink ai acquisition", and the SEC's registrant
+  // names are full of near-duplicates. So the share-class rule only
+  // applies when the confirmed table agrees -- the same gate every
+  // other path goes through.
+  const confirmed = matchCompanyName('Alphabet', { lexicon: LEXICON });
+  assert.equal(confirmed.ticker, 'GOOG');
+
+  const unconfirmed = matchCompanyName('Starlink', { lexicon: LEXICON });
+  assert.equal(unconfirmed.ticker, null,
+    'an unconfirmed share-class group is a candidate, not a ticker');
 });
 
 test('the spoken name beats the registrant name', () => {

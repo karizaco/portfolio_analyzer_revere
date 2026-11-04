@@ -85,6 +85,35 @@ const path = require('node:path');
 const DEFAULT_TABLE_PATH = path.resolve(__dirname, '..', '..', 'config', 'ticker_company_names.csv');
 
 /**
+ * The curated table of NON-US tickers.
+ *
+ * The generated table comes from the SEC's company_tickers.json, which
+ * covers US listings only -- and the speaker trades European names as
+ * well. He said one out loud: "Takže RHM, neboli Rheinmetall v eurech
+ * máme kolem 1000 euro na akcii".
+ *
+ * So the non-US names are a SEPARATE, CURATED table. There is no free
+ * API that returns every ticker on every exchange with a clean registrant
+ * name, and a curated table is auditable in a way a scraped one is not.
+ */
+const NON_US_TABLE_PATH = path.resolve(__dirname, '..', '..', 'config', 'ticker_names_non_us.csv');
+
+/**
+ * The curated table of CONFIRMED spoken names.
+ *
+ * The generated SEC table has 10,410 rows, and the SEC's registrant
+ * names include a lot of small companies whose names are ordinary
+ * English words -- "Apple Hospitality REIT", "Market", "Energy",
+ * "Trader". So the generated table PROPOSES a ticker and this table
+ * CONFIRMS it.
+ *
+ * A name that resolves through the generated table and is not confirmed
+ * here is reported as an unresolved name, so the table grows from
+ * measurement rather than from assumption.
+ */
+const CONFIRMED_TABLE_PATH = path.resolve(__dirname, '..', '..', 'config', 'ticker_names_confirmed.csv');
+
+/**
  * The words that carry no information about a company, and so are never
  * a company name on their own.
  *
@@ -198,8 +227,81 @@ const SPOKEN_NAME_ALIASES = {
   "berkshire hathaway inc": 'BRK.B',
 };
 
+/**
+ * The vowels, in ASCII and in the Czech and other Latin diacritics.
+ *
+ * The class is built from a list rather than written inline, because a
+ * character class with 30 accented letters is unreadable and because a
+ * shell rewrite of the file once mangled it.
+ *
+ * It is used ANCHORED at the end of a word. The stem drops the Czech
+ * case ending, which is a SUFFIX, so only TRAILING vowels go -- an
+ * unanchored replace takes the vowels out of the middle too, and turns
+ * "apple" into "ppl".
+ */
+const VOWELS = /[aeiouyAEIOUYáéíóúýÁÉÍÓÚÝàèìòùÀÈÌÒÙäöüÄÖÜ]+$/u;
+
 let cachedTable = null;
 let cachedPath = null;
+let cachedNonUs = null;
+let cachedConfirmed = null;
+
+/**
+ * The confirmed spoken names, keyed by the name as it was said.
+ *
+ * The key is the STEM of the spoken name, so "Applu" and "Apple" reach
+ * the same row.
+ *
+ * @returns {Object<string, string>}
+ */
+function loadConfirmedNames() {
+  if (cachedConfirmed) return cachedConfirmed;
+
+  const confirmed = {};
+  if (fs.existsSync(CONFIRMED_TABLE_PATH)) {
+    const content = fs.readFileSync(CONFIRMED_TABLE_PATH, 'utf8');
+    for (const line of content.split(/\r?\n/)) {
+      if (!line || line.startsWith('#')) continue;
+      const parts = splitCsvLine(line);
+      if (parts.length < 2) continue;
+      const [spoken, ticker] = parts;
+      if (!spoken || !ticker) continue;
+      const key = foldDiacritics(stemName(spoken));
+      if (key) confirmed[key] = ticker.toUpperCase();
+    }
+  }
+
+  cachedConfirmed = confirmed;
+  return confirmed;
+}
+
+/**
+ * The curated non-US table.
+ *
+ * @returns {Array<{ticker: string, name: string, normalized: string}>}
+ */
+function loadNonUsNames() {
+  if (cachedNonUs) return cachedNonUs;
+
+  const rows = [];
+  if (fs.existsSync(NON_US_TABLE_PATH)) {
+    const content = fs.readFileSync(NON_US_TABLE_PATH, 'utf8');
+    for (const line of content.split(/\r?\n/)) {
+      if (!line || line.startsWith('#')) continue;
+      const parts = splitCsvLine(line);
+      if (parts.length < 3) continue;
+      const [ticker, name, normalized] = parts;
+      if (!ticker || !normalized) continue;
+      // Every row in this table was written by hand after being heard,
+      // so the table IS the confirmation -- it does not need a second
+      // one from the confirmed-names table.
+      rows.push({ ticker, name, normalized, curated: true });
+    }
+  }
+
+  cachedNonUs = rows;
+  return rows;
+}
 
 /**
  * The generated company-name table.
@@ -301,9 +403,33 @@ function stemName(name) {
   if (!words.length) return '';
 
   return words.map((word) => {
-    const stemmed = word.replace(/[aeiouyÃƒÂ¡ÃƒÂ©ÃƒÂ­ÃƒÂ³ÃƒÂºÃƒÂ½ÃƒÂ ÃƒÂ¨ÃƒÂ¬ÃƒÂ²ÃƒÂ¹ÃƒÂ¤ÃƒÂ¶ÃƒÂ¼AEIOUYÃƒÂÃƒâ€°ÃƒÂÃƒâ€œÃƒÅ¡ÃƒÂ]+$/u, '');
+    // A SHORT WORD IS NOT STEMMED. The stem exists to bridge a Czech
+    // case ending -- "Applu" for "Apple" -- and a case ending is a
+    // suffix, so the word has to be long enough to have one.
+    //
+    // Stemming "NVDA" gave "nvd", which matches nothing: it is a
+    // symbol, not a name, and a symbol has no case ending.
+    if (word.length < 4) return word;
+    const stemmed = word.replace(VOWELS, '');
     return stemmed.length >= 2 ? stemmed : word;
   }).join(' ');
+}
+
+/**
+ * The stem with the diacritics folded away.
+ *
+ * A spoken name loses its diacritics in the transcription and the
+ * transcription sometimes ADDS them, so "CEZ" and "ČEZ" have to be the
+ * same name. Folding NFD and dropping the combining marks does that,
+ * and it does it without a table of substitutions.
+ *
+ * @param {string} name
+ * @returns {string}
+ */
+function foldDiacritics(name) {
+  return String(name || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
 }
 
 /**
@@ -352,37 +478,94 @@ function matchCompanyName(spoken, options = {}) {
 
   if (!raw || raw.length < MIN_NAME_LENGTH) return result;
 
-  const stem = stemName(raw);
+  const stem = foldDiacritics(stemName(raw));
   if (!stem || stem.length < MIN_NAME_LENGTH) return result;
   if (STOP_WORDS.has(stem)) return result;
 
   const table = loadCompanyNames(options);
   const lexicon = options.lexicon;
 
-  // The SPOKEN-NAME ALIASES are checked FIRST, because they are the
-  // measured cases: a name the speaker actually used that the SEC's
-  // registrant names cannot reach. "Alphabet" is the registrant and
-  // "Google" is what is said, and only the alias table knows that.
-  const aliasKey = stem;
-  const aliasTicker = SPOKEN_NAME_ALIASES[aliasKey]
-    || SPOKEN_NAME_ALIASES[raw.toLowerCase()]
-    || SPOKEN_NAME_ALIASES[raw.toLowerCase().trim()];
-  if (aliasTicker) {
-    if (!lexicon || lexicon.has(aliasTicker)) {
-      result.ticker = aliasTicker;
-      result.matched = raw.toLowerCase();
-      result.viaAlias = true;
+  // A SPOKEN TICKER SYMBOL is also a name. "NVDA", "SPCX" and "PSX" are
+  // said out loud as symbols, and the SEC's table carries no entry for
+  // them -- a registrant is a COMPANY, and a symbol is not.
+  //
+  // So the symbol itself is checked FIRST, against the allow list. This
+  // is the "ticker as a name" case, and it is what the corpus shows:
+  // "SPCX" (7), "NVDA" (5), "PSX" (3) all occur as spoken symbols.
+  //
+  // The symbol is matched EXACTLY and IN CAPS. A lowercase word is never
+  // a symbol -- "nvidia" is a name, and the name path below handles it.
+  //
+  // BUT NOT EVERY UPPERCASE TOKEN IS A SYMBOL. The lexicon holds "USA",
+  // "USB" and "RNA" -- a country, a bus, and an acronym -- and the
+  // corpus contains all three as ordinary words: "USA" in "co by to
+  // mohlo na USA", "USB" in "Xal USB", "RNA" in "podle mRNA".
+  //
+  // So a symbol has to be CONFIRMED as one, by the same curated table
+  // that confirms a name. An unconfirmed symbol is not a symbol.
+  if (lexicon && lexicon.has(raw.toUpperCase()) && raw === raw.toUpperCase()) {
+    const confirmedSymbol = loadConfirmedNames()[raw.toUpperCase()];
+    if (confirmedSymbol) {
+      result.ticker = confirmedSymbol;
+      result.matched = raw.toUpperCase();
+      result.viaAlias = false;
+      result.viaSymbol = true;
       return result;
     }
   }
 
+  // The SPOKEN-NAME ALIASES are the CANDIDATES for a name the SEC's
+  // registrant names cannot reach: "Alphabet" is the registrant and
+  // "Google" is what is said.
+  //
+  // The alias is only PUBLISHED when the confirmed table agrees. The
+  // alias table is a proposal list -- it was written partly from
+  // expectation, and "Meta" resolving to META is wrong when the speaker
+  // said "Meta Trader", which is trading SOFTWARE. The confirmed table
+  // is the record of what was actually heard.
+  const aliasKey = stem;
+  const aliasTicker = SPOKEN_NAME_ALIASES[aliasKey]
+    || SPOKEN_NAME_ALIASES[raw.toLowerCase()]
+    || SPOKEN_NAME_ALIASES[raw.toLowerCase().trim()];
+  const confirmed = loadConfirmedNames();
+  const confirmedTicker = confirmed[stem] || confirmed[raw.toLowerCase()];
+
+  if (confirmedTicker) {
+    if (!lexicon || lexicon.has(confirmedTicker)) {
+      result.ticker = confirmedTicker;
+      result.matched = raw.toLowerCase();
+      result.viaConfirmed = true;
+      return result;
+    }
+    return result;
+  }
+
+  if (aliasTicker) {
+    // The alias proposes a ticker that nothing has confirmed. It is
+    // reported as a CANDIDATE, so the confirmed table can record it.
+    result.candidate = aliasTicker;
+    result.candidateName = aliasTicker;
+    return result;
+  }
+
   const matches = [];
 
-  for (const row of table) {
+  // The generated US table and the curated non-US table are searched
+  // together. They cannot be searched separately and then merged: the
+  // "longest name wins" rule has to see both, or a US company whose
+  // name is longer would shadow a non-US one.
+  //
+  // The NON-US rows are marked `curated`, because the table they come
+  // from IS curated -- every row in it was written by hand after being
+  // heard. So a non-US name needs no second confirmation: the curated
+  // table is the confirmation.
+  //
+  // The GENERATED rows are not marked, and they need one.
+  for (const row of [...table, ...loadNonUsNames()]) {
     // The ticker has to be one the caller is allowed to report.
     if (lexicon && !lexicon.has(row.ticker)) continue;
 
-    const nameStem = stemName(row.normalized);
+    const nameStem = foldDiacritics(stemName(row.normalized));
     if (!nameStem) continue;
 
     // The spoken name is the needle, the company name is the haystack:
@@ -419,8 +602,30 @@ function matchCompanyName(spoken, options = {}) {
     // that is quoted by default and the one every price feed leads with.
     const distinctCompanies = new Set(tied.map((row) => row.normalized));
     if (distinctCompanies.size === 1) {
-      result.ticker = tied[0].ticker;
-      result.matched = best.normalized;
+      // Share classes of one company: GOOG and GOOGL are both Alphabet,
+      // and a speaker who says "Alphabet" means the company.
+      //
+      // BUT THE SAME PATTERN ALSO PRODUCES WRONG ANSWERS. Three tickers
+      // share the name "starlink ai acquisition" and six share a
+      // "blackrock ..." name, and the SEC's registrant names are full
+      // of near-duplicates. So the share-class rule only applies when
+      // the confirmed table agrees -- the same gate every other path
+      // goes through.
+      const shareTicker = confirmed[stem] || confirmed[raw.toLowerCase()];
+      if (shareTicker) {
+        if (!lexicon || lexicon.has(shareTicker)) {
+          result.ticker = shareTicker;
+          result.matched = best.normalized;
+          result.viaConfirmed = true;
+          result.shareClasses = tied.map((row) => row.ticker).sort();
+          return result;
+        }
+        return result;
+      }
+
+      // Nothing confirms it, so it is a CANDIDATE, not a ticker.
+      result.candidate = tied[0].ticker;
+      result.candidateName = best.name;
       result.shareClasses = tied.map((row) => row.ticker).sort();
       return result;
     }
@@ -430,16 +635,55 @@ function matchCompanyName(spoken, options = {}) {
     return result;
   }
 
-  result.ticker = best.ticker;
-  result.matched = best.normalized;
+  // A CURATED row needs no second confirmation. The non-US table is
+  // hand-written and every row in it was written after being HEARD, so
+  // the curated table IS the confirmation.
+  if (best.curated) {
+    result.ticker = best.ticker;
+    result.matched = best.normalized;
+    result.viaCurated = true;
+    return result;
+  }
+
+  // THE GENERATED TABLE PROPOSES; A CURATED LIST CONFIRMS.
+  //
+  // The SEC's list has 10,410 rows, and a name that is common in
+  // English matches several of them:
+  //
+  //   "Apple"    -> AAPL ("apple") and APLE ("apple hospitality reit")
+  //   "Market"   -> BAGZ
+  //   "Energy"   -> KTH
+  //   "Trader"   -> ATDRF
+  //   "Monte"    -> BMDPF
+  //   "HIV"      -> HIVE
+  //
+  // The longest-name rule picks the longest, which is not always the
+  // company that was meant. So a name that resolves through the
+  // GENERATED table is only published when a curated table CONFIRMS it.
+  //
+  // The curated table is the record of what was actually heard, and it
+  // is small -- it holds the names this speaker uses. A name that is not
+  // in it is reported as an UNRESOLVED name instead, which is what lets
+  // the table grow from measurement rather than from assumption.
+  //
+  // A name that resolved through the SPOKEN-NAME ALIASES or as a spoken
+  // SYMBOL is not gated this way: those two paths are curated already.
+  // The name resolved through the generated table but nothing confirms
+  // it. It is reported as a CANDIDATE, not as a ticker.
+  result.candidate = best.ticker;
+  result.candidateName = best.name;
   return result;
 }
 
 module.exports = {
+  CONFIRMED_TABLE_PATH,
   DEFAULT_TABLE_PATH,
   MIN_NAME_LENGTH,
+  NON_US_TABLE_PATH,
   STOP_WORDS,
   loadCompanyNames,
+  loadConfirmedNames,
+  loadNonUsNames,
   matchCompanyName,
   stemName,
 };

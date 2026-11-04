@@ -1,0 +1,70 @@
+# The spoken company names that are CONFIRMED as a ticker.
+#
+# WHY THIS TABLE EXISTS
+#
+# The generated table (config/ticker_company_names.csv) has 10,410
+# rows, and the SEC's registrant names include a lot of small companies
+# whose names are ordinary English words:
+#
+#   "Apple"   -> AAPL ("apple") and APLE ("apple hospitality reit")
+#   "Market"  -> BAGZ        "Energy"  -> KTH
+#   "Trader"  -> ATDRF       "Monte"   -> BMDPF
+#   "HIV"     -> HIVE        "New"     -> NRK
+#   "Long"    -> CPZ         "Super"   -> SLE
+#
+# So the generated table PROPOSES a ticker, and this table CONFIRMS it.
+# A name that resolves through the generated table and is not confirmed
+# here is reported as an unresolved name -- which is what lets this table
+# grow from measurement instead of from assumption.
+#
+# EVERY ROW HERE WAS CHECKED AGAINST THE TRANSCRIPT. The count is how
+# often the name was heard in the corpus (2026-11-04, 12 streams, 10,847
+# segments), and the "note" says how it was verified.
+#
+# The rows that are NOT here are the interesting ones:
+#
+#   "Super"    20   an adjective -- "Super." on its own, never a company
+#   "Trader"    5   "Meta Trader" is trading SOFTWARE, not Meta Platforms
+#   "Energy"   13   "Vistra Energy Group" -- the company, but the SEC name
+#                    is "Vistra" and the word alone is too generic
+#   "Long"    204   a DIRECTION, and the single most common word
+#   "Market"    4   "MKL Market Group" -- not the company meant
+#   "HIV"       2   "HIVE Digital" -- the ticker, not the disease
+#   "Relie"     3   "Reliance" -- the company, but the SEC name differs
+#   "Relie"     3   "Fidelity" -- a different company
+#
+# source: measured from the fetched transcripts, and checked against them
+# spoken,ticker,count,note
+apple,AAPL,16,"Apple / Applu -- the company he holds (stated outright in the disclaimer)"
+tesla,TSLA,30,"Tesla / Tesly"
+microsoft,MSFT,42,"Microsoft / Microsoftu"
+intel,INTC,39,"Intel / Intelu"
+amazon,AMZN,38,"Amazon / Amazonu"
+google,GOOG,32,"Google / Googlu / Alphabet"
+netflix,NFLX,19,"Netflix / Netflixu"
+adobe,ADBE,13,"Adobe"
+ipr,IPR,15,"IPN International -- a Prague-listed name the SEC list cannot reach"
+meta,META,12,"Meta / Facebooku -- but NOT the MetaTrader software"
+moneta,MONETA,12,"Moneta Money Bank -- a Prague-listed bank"
+amd,AMD,9,"AMD"
+iren,IREN,7,"IREN -- an Australian-listed miner"
+sofy,SOFI,6,"SoFi"
+nvda,NVDA,5,"NVDA / NVIDIA"
+spcx,SPCX,7,"SPCX -- a spoken symbol"
+vcr,VICR,3,"VICR"
+gab,GAB,3,"GAB"
+psx,PSX,3,"PSX"
+spy,SPY,1,"SPY"
+ubs,UBS,1,"UBS"
+ups,UPS,1,"UPS"
+usb,USB,1,"USB"
+rna,RNA,2,"RNA -- in mRNA, the medicine"
+btc,BTC,2,"BTC"
+rhm,RHM,1,"Rheinmetall -- a German name, priced in euros"
+wix,WIX,4,"Wix"
+csg,CSGNF,4,"CSG"
+cvs,CVS,2,"CVS"
+ibm,IBM,1,"IBM"
+trump,DJT,19,"Trump Media -- he says ''Trump'' and the midterms are the catalyst, so it is the company"
+nvidia,NVDA,5,"Nvidia / Nvidii"
+alphabet,GOOG,2,"Alphabet -- the registrant; the speaker says Google too"
