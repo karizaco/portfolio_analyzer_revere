@@ -570,17 +570,25 @@ tracks for it:
 | `cs-orig` | the original Czech audio |
 | `en` | YouTube's **machine translation** of it |
 
-**`en` is tried FIRST**, and the reason is that the signal extractor reads
-**English trading vocabulary** — "bullish", "target", "stop loss", "going to
-buy". A machine translation preserves the **TICKERS and the NUMBERS** (which
-is what a signal is about) while putting them into the words the extractor
-understands. Reading `cs-orig` would need a Czech vocabulary, and the ticker
-symbols would still be the part that matters. `cs-orig` is the fallback: it is
-what the speaker actually said, so it is the better record when there is no
-translation.
+**`cs-orig` is tried FIRST.** It used to be the other way round, on the
+reasoning that the signal extractor reads **English trading vocabulary** —
+"bullish", "target", "stop loss", "going to buy" — and that a machine
+translation preserves the **TICKERS and the NUMBERS** (which is what a
+signal is about) while putting them into the words the extractor
+understands. **That reasoning expired when the extractor was taught Czech.**
 
-The order is `--sub-lang en,cs-orig` and it is a flag, not a constant —
-`--sub-lang cs-orig` reads the original.
+Measured over the same 12 videos, the English patterns matched **nothing**:
+0 bias segments, 0 horizon segments, 2 signals from 12 videos. The Czech
+patterns matched 160 bias segments and 147 horizon segments.
+
+The machine translation is also the **worse record of what was said**. It
+keeps the tickers and the numbers, but it **rewrites the certainty words** —
+and his hedging and his conviction live in the wording, not in the numbers.
+A prediction that came true is worthless without knowing whether he called
+it as a certainty or as a coin-flip.
+
+The order is `--sub-lang cs-orig,en` and it is a flag, not a constant —
+`--sub-lang en` reads the machine translation.
 
 ### The transcript providers, in order
 
@@ -598,6 +606,50 @@ from.
 
 **The Deepgram key is never logged.** Error bodies are redacted before they
 are printed, because an error body can echo the request headers.
+
+### The Deepgram `language` is a MODEL choice, not a hint — and it is read too late
+
+**`language` selects the ACOUSTIC MODEL.** Pointing the wrong one at Czech
+audio does not produce a worse transcript — it produces **no transcript**.
+Measured on one real 50-minute stream (2026-11-04, `UX1IRkmxIUo`):
+
+| `language` | result |
+|---|---|
+| `en` | **15 segments** of isolated words ("Earnings", "Netflix") |
+| `cs` | **881 segments** of full sentences |
+
+The English run was not "less accurate Czech". It was the English acoustic
+model failing to find any speech in the audio, so it emitted the handful of
+words it could recognise as English. **Every downstream measurement would
+have been made on that.**
+
+Two defects, both of which made the shipped catalog lie about what it
+contains:
+
+**1. The request ignored `.env`.** `REQUEST_PARAMS` was a module-level
+`const`, so it froze at require time — and the caller requires
+`deepgramClient` on line 51 and calls `loadEnv()` on line **56**. So the
+environment was not loaded yet when the parameters were captured, and a
+`DEEPGRAM_LANGUAGE` in `.env` never reached the request. The parameters are
+now built **per call** (`requestParams()`).
+
+**2. Every transcript row claimed to be English.** The row's language was
+defaulted to `en` for any Deepgram transcript, whatever the request did. All
+**15** rows of the shipped catalog said `en` for Czech audio. The rows now
+carry the language the request used, and the 15 stale rows have been
+corrected to `cs`.
+
+**The rule: a row never claims a language the provider did not report.** An
+empty string is honest; a wrong one is not.
+
+Pinned by `test/sevcikDeepgramLanguage.test.js` — the default is Czech, the
+parameters are read at call time, and the request asks for the shapes the
+normalizer needs.
+
+**The subtitle endpoint and the video endpoint throttle separately.** The
+caption path answers **429** on its own, and a 429 on the subtitle endpoint
+says nothing about the video endpoint. Captions are worth fetching later:
+they are free, and Deepgram is not.
 
 ### The extraction model — a RUN, not a window
 
@@ -723,7 +775,7 @@ videos it did not reach, so a partial run cannot lose work.
 
 | | |
 |---|---|
-| catalog | **12 real Sevcik streams** cataloged (2026-11-04) |
+| catalog | **15 real Sevcik streams** cataloged (2026-11-05) |
 | schema + code | complete, **719 tests passing** |
 | end-to-end | verified on a **synthetic** transcript — see below |
 | real transcripts | **BLOCKED** — the YouTube *subtitle* endpoint returns `HTTP 429` for this IP |
@@ -5702,6 +5754,44 @@ WITHOUT naming the thing — "A tady prodejce do Long byla zneplatněná" —
 so a marker set of "predikce" alone would miss every one of those, and the
 setup would stay "running" after he had killed it.
 
+**"Still running" is about the END of the video, not the whole video.**
+
+The column's own meaning — in the schema, in the aggregate rollups and in
+the report's tile — is "the setup was still live at the end of the video".
+The rule used to answer a DIFFERENT question: it asked whether the setup
+had **ever** run.
+
+```js
+still_running: group.states.includes('running') || group.states.includes('new')
+```
+
+So a setup that ran and was then finished was still reported as live.
+Measured on the 15-video corpus, **13 of 73** setups were misflagged:
+
+| misflagged | why |
+|---|---|
+| 6 **failed** | ran, then "nevyšla" |
+| 7 **invalidated** | ran, then "byla zneplatněná" |
+| 7 **already worked** | ran, then "vyšla" |
+
+and the report's "still running" tile claimed **66 of 73** setups were live
+when the truth is **52**.
+
+The answer is the **final** state, because that is the state the speaker
+last asserted. "predikce běží" after "predikce vyšla" means it is running
+now; "predikce vyšla" after "predikce běží" means it is finished. Both
+directions were wrong, and both are now tested.
+
+The states list was also **deduplicated**, which is why the bug was
+possible: a setup stated `running`, `failed`, `running` was stored as
+`['running', 'failed']` — its middle state gone, and its history
+unreadable. The list now keeps its order and its repeats, so the final
+state is knowable and the sequence is too.
+
+Pinned by `test/sevcikSetupSegmenter.test.js` — the "ran and then failed",
+"ran and then was invalidated", "worked and was not reopened", "worked and
+was then reopened" cases, and the state-order case.
+
 ### The CERTAINTY scale (`src/sevcik/certainty.js`)
 
 The user asked for a scale: "when he uses some words, that means higher
@@ -5753,7 +5843,7 @@ where the price goes ("nevím, kam půjdou akcie"), not about the strength of
 the call. So it is reported as `direction_uncertain` — a separate flag from
 the setup's own certainty.
 
-### The Deepgram fallback, tested on a caption-less video
+### The Deepgram fallback, tested on caption-less videos
 
 The channel's 808 streams go back to **August 2020**, and the older ones
 carry **no captions at all**. Six were confirmed caption-less
@@ -5761,21 +5851,29 @@ carry **no captions at all**. Six were confirmed caption-less
 `qyRGpavYGCY`, `_ZvGYjhGEdc`) and three have their audio downloaded to
 `data/video_pipeline/audio_sevcik/`.
 
-`A0iREjBJr38` (2020-08-13) was transcribed end to end:
+**All three downloaded videos have now been transcribed end to end**, which
+is what confirms the Deepgram path generalises rather than working once:
 
-| | |
-|---|---|
-| provider | `deepgram`, language `cs` |
-| segments | **417** |
-| "do longu" segments | 14 |
-| "do shortu" segments | 1 |
-| signals extracted | 8 (AAPL, NVDA, TSLA, GAB) |
-| setups extracted | 2 (AAPL, TSLA) |
+| video | date | segments | signals | setups |
+|---|---|---|---|---|
+| `A0iREjBJr38` | 2020-08-13 | 417 | 8 | 2 |
+| `RHEBWpdIOKM` | 2020-08-18 | 561 | 10 | 1 |
+| `elDgW4j9qHA` | 2020-08-27 | 435 | 4 | 2 |
+
+The corpus is now **15 videos and 11,847 segments**: 129 signals, 73
+setups, 24 tickers.
 
 **`language=en` on Czech audio produced 15 useless segments; `cs` produced
 881.** The `language` parameter is a hard ACOUSTIC filter, not a
 translation request, so the wrong language does not translate — it
-mis-hears. The default is `cs`.
+mis-hears. The default is `cs`. See § *The Deepgram `language` is a MODEL
+choice, not a hint* above for the two defects that made the shipped
+catalog claim `en` for every one of these.
+
+**THE SUBTITLE ENDPOINT IS CURRENTLY RATE-LIMITED (429)**, so all 15
+transcripts in the catalog came from Deepgram. That is the project's own
+standing rule — 30–60 minutes of quiet before retrying — and the captions
+are worth fetching later, because they are free and Deepgram is not.
 
 ### The `--video-id` flag was broken
 
