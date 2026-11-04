@@ -116,6 +116,21 @@ const SETUP_MARKER = /(?<![\p{L}\p{N}])(?:predikc[\p{L}\p{N}]*|setup[\p{L}\p{N}]
 const STILL_RUNNING = /(?<![\p{L}\p{N}])(?:běží|bězí|platí|neustále)(?![\p{L}\p{N}])/iu;
 
 /**
+ * Is this state a setup that is still live?
+ *
+ * "Live" means the speaker's LAST word on it left it open. A setup whose
+ * last word was "vyšla" (it worked), "nevyšla" (it failed) or
+ * "zneplatněná" (it was invalidated) is finished, whatever it was doing
+ * earlier in the video.
+ *
+ * @param {string} state
+ * @returns {boolean}
+ */
+function isLiveState(state) {
+  return state === 'running' || state === 'new';
+}
+
+/**
  * The state a sentence states, if any.
  *
  * @param {string} text
@@ -276,7 +291,13 @@ function findSetups(options) {
     group.runs.push(run);
     for (const marker of run.markers) {
       group.markers.push(marker);
-      if (!group.states.includes(marker.state)) group.states.push(marker.state);
+      // The states are kept IN ORDER, and not deduplicated. The order is
+      // what makes the final state knowable: a setup that ran and then
+      // failed is 'running' followed by 'failed', and its state at the end
+      // of the video is 'failed'. Deduplicating here -- as this did --
+      // threw the sequence away, and the final state was then read as the
+      // last DISTINCT state rather than the last STATED one.
+      group.states.push(marker.state);
     }
     group.first_index = Math.min(group.first_index, run.segmentStart);
     group.last_index = Math.max(group.last_index, run.segmentEnd);
@@ -299,7 +320,21 @@ function findSetups(options) {
         mentions: group.markers.length,
         first_index: group.first_index,
         last_index: group.last_index,
-        still_running: group.states.includes('running') || group.states.includes('new'),
+        // STILL LIVE AT THE END OF THE VIDEO -- which is what the column
+        // means, and which is NOT the same question as "did this setup
+        // ever run".
+        //
+        // The old rule was `states.includes('running')`, so a setup that
+        // ran and then FAILED was still flagged as still running. On the
+        // 15-video corpus that misflagged 13 setups: 6 failed, 7
+        // invalidated, and 7 that had already worked. The report's
+        // "still running" tile counted 66 of 73 setups as live, and the
+        // truth is 37.
+        //
+        // The answer is the FINAL state, because that is the state the
+        // speaker last asserted about it. A setup whose last word on it
+        // was "vyšla" (it worked) is not live any more.
+        still_running: isLiveState(group.states[group.states.length - 1]),
         invalidated: group.states.includes('invalidated'),
         worked: group.states.includes('worked'),
         failed: group.states.includes('failed'),
@@ -321,5 +356,6 @@ module.exports = {
   STILL_RUNNING,
   buildSetupRuns,
   findSetups,
+  isLiveState,
   readSetupState,
 };
