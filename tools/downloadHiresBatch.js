@@ -84,8 +84,15 @@ if (!fs.existsSync(dbPath)) {
 fs.mkdirSync(dlDir, { recursive: true });
 
 const checkpoint = (() => {
-  try { return JSON.parse(fs.readFileSync(checkpointPath, 'utf8')); }
-  catch { return { height, done: [], errored: {} }; }
+  if (!fs.existsSync(checkpointPath)) return { height, done: [], errored: {} };
+  try {
+    return JSON.parse(fs.readFileSync(checkpointPath, 'utf8'));
+  } catch (error) {
+    console.error(`[hires] checkpoint exists but is not valid JSON: ${checkpointPath}`);
+    console.error(`[hires] ${error.message}`);
+    console.error('[hires] refusing to continue — an empty checkpoint would forget completed downloads and then overwrite this file.');
+    process.exit(1);
+  }
 })();
 if (Number(checkpoint.height) !== height) checkpoint.height = height;
 checkpoint.done = Array.isArray(checkpoint.done) ? checkpoint.done : [];

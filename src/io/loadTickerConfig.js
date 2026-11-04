@@ -1,3 +1,4 @@
+const fs = require('node:fs');
 const path = require('node:path');
 
 const { loadCsvRows } = require('./readCsv');
@@ -17,6 +18,14 @@ function normalizeTicker(value) {
 async function loadTickerRepairConfig(configDirectory) {
   const lexiconPath = path.join(configDirectory, 'ticker_lexicon_seed.csv');
   const overridesPath = path.join(configDirectory, 'manual_ticker_overrides.csv');
+
+  // loadCsvRows treats a missing file as an empty table. That is right for
+  // the optional overrides file and wrong for the seed: an empty seed makes
+  // the repair publish nothing, and the report looks like a portfolio with
+  // no holdings.
+  if (!fs.existsSync(lexiconPath)) {
+    throw new Error(`ticker seed lexicon is missing: ${lexiconPath}`);
+  }
 
   const seedRows = await loadCsvRows(lexiconPath);
   const overrideRows = await loadCsvRows(overridesPath);

@@ -32,6 +32,15 @@
 // The 2026-11-02 production run is what proved guard 4: four sidebar-era
 // videos, all four reported TIMEOUT, all four with `"status": "done"` in a
 // complete probe log. Every one of them burned the full 40-minute budget.
+//
+//   5. A resume that cannot parse the results file used to treat that as
+//      "nothing done yet" and then write over the file. A truncated write
+//      (the process was killed mid-save) is exactly the file that fails to
+//      parse, and it is the only copy of the previous run.
+//      -> readExistingJson() returns null when the file is absent and throws
+//      when it exists but is not valid JSON. writeResults() in merge mode
+//      does the same, and deletes its temp file instead of renaming it over
+//      the unreadable one.
 
 const fs = require('node:fs');
 const path = require('node:path');
@@ -176,6 +185,25 @@ function superviseChild(cmd, env, { timeoutMs = 40 * 60 * 1000, onTimeout, onExi
  * This means a re-run that fails on a video the previous run succeeded on
  * keeps the previous success instead of downgrading it.
  */
+/**
+ * Read a JSON file that a later step may overwrite.
+ *
+ * A missing file is a fresh run (null). A file that exists but cannot be
+ * parsed is not a fresh run: treating it as empty and then writing over it
+ * destroys the only copy of the previous results.
+ */
+function readExistingJson(filePath) {
+  if (!fs.existsSync(filePath)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch (error) {
+    throw new Error(
+      `Refusing to continue: ${filePath} exists but is not valid JSON (${error.message}). `
+      + 'A corrupt file is not an empty one; continuing would overwrite it.'
+    );
+  }
+}
+
 function writeResults(resultsFile, payload, { keyOf, scored, mode = 'w' }) {
   const tmpFile = `${resultsFile}.tmp`;
   fs.writeFileSync(tmpFile, JSON.stringify(payload, null, 2));
@@ -185,10 +213,13 @@ function writeResults(resultsFile, payload, { keyOf, scored, mode = 'w' }) {
     return payload;
   }
 
-  let existing = null;
+  let existing;
   try {
-    existing = JSON.parse(fs.readFileSync(resultsFile, 'utf8'));
-  } catch (_) { /* unreadable prior file — overwrite with the new payload */ }
+    existing = readExistingJson(resultsFile);
+  } catch (error) {
+    try { fs.unlinkSync(tmpFile); } catch { /* the new payload was not committed */ }
+    throw error;
+  }
 
   if (!existing || typeof existing !== 'object') {
     fs.renameSync(tmpFile, resultsFile);
@@ -220,6 +251,7 @@ module.exports = {
   checkFreeSpace,
   freeSpaceGb,
   lowCpuEnv,
+  readExistingJson,
   superviseChild,
   writeResults
 };

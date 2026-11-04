@@ -7,7 +7,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { checkFreeSpace, lowCpuEnv, superviseChild } = require('./qmg_scan_daemon_support');
+const { checkFreeSpace, lowCpuEnv, readExistingJson, superviseChild } = require('./qmg_scan_daemon_support');
 
 const ROOT = path.resolve(__dirname, '..');
 const BATCH = process.argv[2] || 'alt';
@@ -23,13 +23,11 @@ console.log('Settings: maxCaptures=2, fps=0.25, maxFrames=6, parallel=2 (vs base
 
 let done = new Set();
 let results = [];
-if (fs.existsSync(RESULTS_FILE)) {
-  try {
-    const prior = JSON.parse(fs.readFileSync(RESULTS_FILE, 'utf-8'));
-    results = prior.results || [];
-    done = new Set(results.filter((r) => r.status === 'ok').map((r) => r.videoId));
-    console.log(`Resuming: ${done.size}/${total} already done`);
-  } catch (_) {}
+const prior = readExistingJson(RESULTS_FILE);
+if (prior) {
+  results = prior.results || [];
+  done = new Set(results.filter((r) => r.status === 'ok').map((r) => r.videoId));
+  console.log(`Resuming: ${done.size}/${total} already done`);
 }
 
 const remaining = videos.filter((v) => !done.has(v.video_id));

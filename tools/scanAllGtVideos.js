@@ -1,6 +1,6 @@
 'use strict';
 
-// Run the chart-stream scan on every Quullamaggie video that has
+// Run the chart-stream scan on every Qullamaggie video that has
 // ground-truth annotations in data/qmg_ground_truth.json. Each video's
 // output is written to a unique run-tag directory under
 // data/video_scan_test/_rerun/<runTag>/.
@@ -54,6 +54,15 @@ function findVideo(dateKey) {
   return files.find((f) => f.startsWith(dateKey));
 }
 
+// EasyOCR is about 60s a frame, and this tool's default budget is 12 frames,
+// so a 300s kill fires mid-OCR on every video. On Windows that leaves ffmpeg
+// and EasyOCR grandchildren running, and the next video's frame extraction
+// stalls behind them — the freeze CLAUDE.md documents. The batch runner's
+// budget is 40 minutes. Tesseract at these flags fits the old 300s budget.
+function timeoutMsForEngine(ocrEngine) {
+  return String(ocrEngine || '').toLowerCase() === 'easyocr' ? 40 * 60 * 1000 : 300 * 1000;
+}
+
 async function runScan(dateKey, videoFile, runTag, options) {
   const cmd = [
     'node',
@@ -84,7 +93,7 @@ async function runScan(dateKey, videoFile, runTag, options) {
   //     what looked like a frozen machine (CLAUDE.md, 'Scan orchestration
   //     safety (Windows)').
   const { status, code, stdoutTail, stderr } = await superviseChild(cmd, process.env, {
-    timeoutMs: 300 * 1000,
+    timeoutMs: timeoutMsForEngine(options.ocrEngine),
   });
 
   return {
@@ -159,8 +168,8 @@ async function main() {
   let dates = Object.keys(gt).filter((k) => !k.startsWith('_') && !k.includes('(batch'));
   if (opts.dates) dates = dates.filter((d) => opts.dates.includes(d));
   if (opts.modes) dates = dates.filter((d) => opts.modes.includes(getGroundTruthMode(d)));
-  console.log(`Re-running scan on ${dates.length} Quullamaggie videos with new chart_stream prefilter`);
-  console.log(`Parallelism: ${opts.parallel} workers; fps=${opts.fps}; max-captures=${opts.maxCaptures}; prefilter-max-frames=${opts.prefilterMaxFrames}; ocr-engine=${opts.ocrEngine}`);
+  console.log(`Re-running scan on ${dates.length} Qullamaggie videos with new chart_stream prefilter`);
+  console.log(`Parallelism: ${opts.parallel} workers; fps=${opts.fps}; max-captures=${opts.maxCaptures}; prefilter-max-frames=${opts.prefilterMaxFrames}; ocr-engine=${opts.ocrEngine}; timeout=${timeoutMsForEngine(opts.ocrEngine) / 1000}s`);
   console.log(`Output: ${OUT_ROOT}`);
   console.log('');
 
@@ -252,7 +261,12 @@ async function main() {
   }
 }
 
-main().catch((e) => {
-  console.error('FATAL:', e && e.stack || e);
-  process.exit(1);
-});
+module.exports = { timeoutMsForEngine };
+
+// Requiring this file (a test of the timeout rule) must not start a sweep.
+if (require.main === module) {
+  main().catch((e) => {
+    console.error('FATAL:', e && e.stack || e);
+    process.exit(1);
+  });
+}

@@ -71,7 +71,9 @@ for (const src of SOURCES) {
       caps.forEach((c, ci) => {
         allCaptures.push({ dk, tag: src.tag, ci, c, log });
       });
-    } catch (_) {}
+    } catch (error) {
+      console.warn(`[compile] skipping unreadable log ${path.join(src.logDir, lf)}: ${error.message}`);
+    }
   }
 }
 
