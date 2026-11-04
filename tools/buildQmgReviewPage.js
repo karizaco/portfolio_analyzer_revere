@@ -166,7 +166,9 @@ function readBatchLogs(batchLabel, logDir) {
           _batch: batchLabel,
         });
       }
-    } catch(e) {}
+    } catch (e) {
+      console.warn(`[review] skipping unreadable log ${path.join(logDir, lf)}: ${e.message}`);
+    }
   }
 }
 readBatchLogs('batch2', BATCH2_LOG_DIR);

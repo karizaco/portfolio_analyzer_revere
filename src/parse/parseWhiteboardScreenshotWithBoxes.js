@@ -881,7 +881,11 @@ async function parseWhiteboardScreenshotWithBoxes({ metadata, ocr, framePath }) 
     try {
       windowBounds = await detectWhiteboardWindow(framePath);
     } catch (err) {
-      // Window detection failed — proceed without window bounds
+      // The window is a bound, not the reading. A frame whose pixels cannot
+      // be measured still has its OCR words, so the parse continues. The
+      // failure used to be silent, which made a missing frame look identical
+      // to "no window on this frame".
+      console.warn(`[whiteboard] window detection failed for ${framePath}: ${err && err.message ? err.message : err}`);
     }
   }
 
@@ -1008,7 +1012,12 @@ async function parseWhiteboardScreenshotWithBoxes({ metadata, ocr, framePath }) 
     const { tickers } = loadSeedLexiconSync();
     lexicon = new Set(tickers);
     matchLexicon = loadDecodeLexiconSync();
-  } catch (_) {}
+  } catch (error) {
+    // An empty allow-list does not mean "no holdings". It means every ticker
+    // is dropped at the allow gate, and the report looks like an empty
+    // portfolio. A missing or unreadable lexicon is a broken run, not a reading.
+    throw new Error(`whiteboard parser could not load the ticker lexicon: ${error.message}`);
+  }
   const ctx = {
     matchTickers: matchLexicon.tickers,
     matchSet: matchLexicon.tickerSet,

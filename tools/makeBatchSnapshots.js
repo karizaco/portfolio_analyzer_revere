@@ -2,7 +2,7 @@
 
 // Make a batch of N snapshots within M seconds of a chosen timestamp.
 // These are useful for multi-frame merge: all snapshots will show the
-// same Quullamaggie position list (which changes slowly through the stream).
+// same Qullamaggie position list (which changes slowly through the stream).
 //
 // Usage:
 //   node tools/makeBatchSnapshots.js \

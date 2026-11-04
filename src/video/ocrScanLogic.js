@@ -358,7 +358,7 @@ function summarizeLumaBuffer(buffer, width, height, region) {
   let verticalEdgeHits = 0;
   let horizontalComparisons = 0;
   let verticalComparisons = 0;
-  // Quullamaggie position list sits in the bottom-right of the frame
+  // Qullamaggie position list sits in the bottom-right of the frame
   // (roughly x=1700-1920, y=600-1080 at 1080p, which is the right ~10%
   // and bottom ~45% of the frame). Count row density AND mid-tone density
   // (chart candle highlights) ONLY in that region to avoid the high-contrast
@@ -480,7 +480,7 @@ function summarizeLumaBuffer(buffer, width, height, region) {
     }
   }
 
-  // Sum row tops across columns. Quullamaggie position list has ~10-15 rows
+  // Sum row tops across columns. Qullamaggie position list has ~10-15 rows
   // of white text on dark background, so totalRowTops should be high.
   let totalRowTops = 0;
   // multiColStripeCount: how many columns have ≥2 row-top transitions.
@@ -818,7 +818,7 @@ const PREFILTER_PROFILES = Object.freeze({
     stdDevWeight: 3,
     stdDevTarget: 55,
     stdDevSlope: 12,
-    // Row density: Quullamaggie position list has 10-15 rows of white text on
+    // Row density: Qullamaggie position list has 10-15 rows of white text on
     // dark background. The total row-density score counts dark-to-bright
     // transitions across all columns. Linear reward: rowD / target. (The
     // previous |rowD-target|/slope formula was dead because target=150 was

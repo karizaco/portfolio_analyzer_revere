@@ -428,7 +428,7 @@ async function shutdown() {
 
 main()
   .catch((error) => {
-    console.error(error.message);
+    console.error(error && error.stack ? error.stack : error);
     process.exitCode = 1;
   })
   .finally(async () => {

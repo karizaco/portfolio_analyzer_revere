@@ -5,7 +5,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { checkFreeSpace, lowCpuEnv, superviseChild, writeResults } = require('./qmg_scan_daemon_support');
+const { checkFreeSpace, lowCpuEnv, readExistingJson, superviseChild, writeResults } = require('./qmg_scan_daemon_support');
 
 const ROOT = path.resolve(__dirname, '..');
 const BATCH_FILE = path.join(ROOT, 'data', 'qmg_comparison_batch.json');
@@ -107,10 +107,12 @@ async function runScan(video, flags, label) {
 }
 
 async function getMergedList(logPath) {
+  if (!fs.existsSync(logPath)) return null;
   try {
     const d = JSON.parse(fs.readFileSync(logPath, 'utf8'));
     return d.merged_position_list || [];
-  } catch {
+  } catch (error) {
+    console.warn(`[comparison] unreadable probe log ${logPath}: ${error.message}`);
     return null;
   }
 }
@@ -122,9 +124,7 @@ async function main() {
   // Resume support: a leg that already succeeded for a video is not re-run.
   // (The 2026-10-19 run produced 10/10 baseline logs before dying on the alt
   // leg, and re-running the baseline wasted ~45 minutes of OCR.)
-  const prior = fs.existsSync(RESULTS_FILE)
-    ? (() => { try { return JSON.parse(fs.readFileSync(RESULTS_FILE, 'utf8')); } catch (_) { return null; } })()
-    : null;
+  const prior = readExistingJson(RESULTS_FILE);
   const priorBaseline = new Map((prior?.baseline || []).filter(r => r.status === 'ok').map(r => [r.videoId, r]));
   const priorAlt = new Map((prior?.alt || []).filter(r => r.status === 'ok').map(r => [r.videoId, r]));
 

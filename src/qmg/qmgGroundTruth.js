@@ -86,6 +86,13 @@ function listGroundTruthCaptures(gt, options = {}) {
   return captures;
 }
 
+// Benchmark buckets, not layout eras. A date that is not in one of the named
+// sets — including later sidebar-era dates such as 20230605, 20231201 and
+// 20231215 — falls through to `normal_2022`. That label is the residual
+// bucket, not a claim that the video uses the 2022 floating panel. The crop
+// is chosen from the upload date (chartStreamCrop.js), not from this mode, so
+// `--modes normal_2022` on tools/scanAllGtVideos.js includes those unlisted
+// dates and `--modes dense_2023` does not.
 function getGroundTruthMode(dateKey) {
   for (const [mode, dateSet] of Object.entries(MODE_DATE_SETS)) {
     if (dateSet.has(dateKey)) return mode;

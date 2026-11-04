@@ -249,3 +249,14 @@ test('no seed ticker carries more than one reference score', () => {
       'these tickers carry a doubled seed score, so they win corrections they should not');
   });
 });
+
+test('a missing seed lexicon is an error, not an empty allow-list', async () => {
+  // loadCsvRows turns a missing file into []. The repair must not inherit
+  // that: an empty seed publishes nothing and looks like a portfolio with
+  // no holdings.
+  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'lexicon-missing-'));
+  await assert.rejects(
+    () => loadTickerRepairConfig(dir),
+    /ticker seed lexicon is missing/
+  );
+});

@@ -63,7 +63,7 @@ const VIDEOS = [
     dateKey: '20220218',
     snapshotsDir: 'data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2/snapshots',
     files: ['qmg_20220218.png', 'qmg_20220218_2.png', 'qmg_20220218_3.png'],
-    description: '9 GT tickers per capture — first Quullamaggie video, Trade-Ideas UI',
+    description: '9 GT tickers per capture — first Qullamaggie video, Trade-Ideas UI',
   },
   {
     dateKey: '20220222',
@@ -544,7 +544,7 @@ async function main() {
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Quullamaggie Position-List OCR — Crop & Detection Review</title>
+<title>Qullamaggie Position-List OCR — Crop & Detection Review</title>
 <style>
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', monospace; background: #0d0d0d; color: #e0e0e0; padding: 20px; }
   h1 { color: #fff; margin-bottom: 5px; }
@@ -576,7 +576,7 @@ async function main() {
 </style>
 </head>
 <body>
-<h1>Quullamaggie Position-List OCR — Crop & Detection Review</h1>
+<h1>Qullamaggie Position-List OCR — Crop & Detection Review</h1>
 <p style="color:#888">For each capture: <b>Raw crop</b> = 250×434px region from snapshot (parser input). <b>OCR crop</b> = 3× upscaled, inverted, contrast-boosted image fed to Tesseract. <b>Detection box</b> = both parsers' results side-by-side, color-coded.</p>
 <p style="color:#888"><b>OCR is re-run for every capture</b> so legacy and column-aware parsers are compared on identical Tesseract output (Tesseract is non-deterministic across runs).</p>
 

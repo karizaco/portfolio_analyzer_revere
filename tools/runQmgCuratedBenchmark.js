@@ -226,7 +226,7 @@ async function main() {
 
 if (require.main === module) {
   main().catch((err) => {
-    console.error(err.message);
+    console.error(err && err.stack ? err.stack : err);
     process.exit(1);
   });
 }

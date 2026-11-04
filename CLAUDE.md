@@ -150,7 +150,7 @@ QMG video IDs can start with `_` (e.g. `_9o5_4iZ0zjI`). yt-dlp may truncate thes
 Running `tools/scanAllGtVideos.js` or `tools/scanVideoWithOcr.js` against Qullamaggie chart-stream content without preparation has historically caused multi-hour freezes. The mechanism (root cause analysis in `enchanted-giggling-toucan.md` plan file):
 
 1. `chart_stream` OCR pipeline does **24 Tesseract calls per video** (12 candidates × scale 3× + scale 4× in parallel), single shared worker → **8–15 min/video** on CPU.
-2. The orchestrator's per-video kill timer is **300 s** — every video hits SIGTERM mid-OCR.
+2. The orchestrator's per-video kill timer **was 300 s** — every video hit SIGTERM mid-OCR. `scanAllGtVideos.js` now gives EasyOCR 40 minutes (the batch runner's budget) and keeps 300 s only for Tesseract. `superviseChild` kills the process tree, which is what stops the grandchildren; a timer that is shorter than the OCR still turns a sweep into a string of timeouts.
 3. On Windows, `child.kill('SIGTERM')` does NOT reliably terminate the child's grandchildren (ffmpeg.exe + Tesseract WASM heap). They become **zombies**.
 4. Parent moves to next video immediately; the new video's ffmpeg sample extraction stalls behind the zombie I/O. **No stdout appears for minutes → user-perceived "freeze" → user restarts their computer.**
 
@@ -158,8 +158,8 @@ Running `tools/scanAllGtVideos.js` or `tools/scanVideoWithOcr.js` against Qullam
 
 - **Time ONE video first** with the exact flags the sweep will use. Confirm the log file appears at `data/video_scan_test/_rerun/<runTag>/ocr_probe/logs/<dateKey>_*.json` with non-empty captures. Only scale up after that.
 - **Run in chunks of 5–10 videos**, never 40 in one shot. The user can monitor each chunk and abort if one hangs.
-- **Pass `--parallel 4`** to the orchestrator. Worker pool is already implemented at `scanAllGtVideos.js:134-148` (`runWithConcurrency`). Default `--parallel 1` is ~6.7 h wall for a 40-video sweep.
-- **Flag budget vs timeout**: for the default 300 s timeout, use `--fps 0.25 --prefilter-max-frames 12 --max-captures 1`. `--fps 1` is 4× denser than default; `--max-captures 3` will NOT finish in 300 s on the chart-stream profile (Tesseract alone is ~6 min lower bound).
+- **Pass `--parallel 4`** to the orchestrator. The worker pool is `runWithConcurrency` in `tools/scanAllGtVideos.js`. Default `--parallel 1` is ~6.7 h wall for a 40-video sweep.
+- **Flag budget vs timeout**: EasyOCR at the default 12-frame budget does not fit 300 s (~60 s/frame). `scanAllGtVideos.js` gives EasyOCR 40 minutes and Tesseract 300 s. `--fps 1` is 4× denser than the tool's default 0.25; `--max-captures 3` will not finish in the Tesseract budget (Tesseract alone is ~6 min lower bound on the old dual-scale path).
 - **After any timeout**, check for orphans: `tasklist | findstr ffmpeg.exe` and `tasklist | findstr node.exe`. Kill them before continuing. Clean up half-written `frames/` dirs (often 100s of MB each).
 - **Do NOT `ls` or `Read` `data/video_scan_test/_rerun/` directly** — those directories hold hundreds-to-thousands of PNGs each. Use `Glob` with a pattern or delegate to an Explore agent. Listing them bloats context.
 - **Do NOT run `tools/retry_age_restricted.py` without explicit user confirmation** — 138 sequential `yt-dlp` subprocesses, ~3.5 h worst case.

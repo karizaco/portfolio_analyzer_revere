@@ -16,7 +16,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { superviseChild } = require('./qmg_scan_daemon_support');
+const { readExistingJson, superviseChild } = require('./qmg_scan_daemon_support');
 
 const ROOT = path.resolve(__dirname, '..');
 const BATCH = process.argv[2] || 'a';
@@ -32,13 +32,11 @@ console.log(`Daemon batch ${BATCH}: ${total} videos — PID ${process.pid}`);
 // Load prior results to resume
 let done = new Set();
 let results = [];
-if (fs.existsSync(RESULTS_FILE)) {
-  try {
-    const prior = JSON.parse(fs.readFileSync(RESULTS_FILE, 'utf-8'));
-    results = prior.results || [];
-    done = new Set(results.filter((r) => r.status === 'ok').map((r) => r.videoId));
-    console.log(`Resuming: ${done.size}/${total} already done`);
-  } catch (_) {}
+const prior = readExistingJson(RESULTS_FILE);
+if (prior) {
+  results = prior.results || [];
+  done = new Set(results.filter((r) => r.status === 'ok').map((r) => r.videoId));
+  console.log(`Resuming: ${done.size}/${total} already done`);
 }
 
 const remaining = videos.filter((v) => !done.has(v.video_id));
@@ -81,7 +79,12 @@ function findVideoFile(videoId) {
         return m && m[1] === videoId;
       });
       if (found) return found;
-    } catch (_) {}
+    } catch (error) {
+      // A missing download directory is "not here". Anything else (permissions,
+      // a path that is not a directory) is a real failure and must not look
+      // like "this video is not on disk".
+      if (!error || error.code !== 'ENOENT') throw error;
+    }
   }
   return null;
 }
