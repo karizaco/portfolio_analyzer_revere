@@ -141,6 +141,7 @@ test('the batch report uses the result dateKey when scoring completed logs', () 
   );
   assert.match(source, /const gtEntry = gt\[r\.dateKey\]/);
   assert.match(source, /\$\{r\.dateKey\}: recall=/);
+  assert.match(source, /miss=\$\{s\.missTickers/);
   assert.doesNotMatch(source, /gt\[r\.date\]/);
 });
 

@@ -13,6 +13,10 @@
  *   node tools/runQmgOcrBatch.js --chunk 1 --parallel 4
  *   node tools/runQmgOcrBatch.js --all-unscanned --parallel 4
  *
+ *   --max-frames <n>    EasyOCR frames per video (default 12). Lower it to retry
+ *                       a video that hit the 40-minute timer.
+ *   --max-captures <n>  captures kept per video (default 3).
+ *
  *   --cluster-rule shipped|corroborated|corroborated-strict|supported
  *                  |supported+corroborated|video-supported
  *                  |video-supported+corroborated|swallowed
@@ -73,8 +77,9 @@ const BASE_FLAGS = [
 // prefilter frame (t=40) read 7 tickers while t=912 read 12.
 //
 // So the uniform selection is what actually finds the list, and batch mode
-// is what would throw it away. Batch mode stays OFF for the 2023-era sidebar
-// dates, where the measurement above was taken.
+// is what would throw it away. It stays OFF for every era. The 2023 measurement
+// is above; the 2022 confirmation is 20220421 (2026-11-04), where the window
+// OCR'd 8 frames and kept 1 capture of a list that changes during the video.
 const BATCH_SNAPSHOT_FLAGS = [
   '--batch-snapshots',
   '--batch-count', '8',
@@ -131,17 +136,41 @@ const CLUSTER_RULE_FLAGS = {
   'corroborated+swallowed': ['--cluster-swallowed-holdings'],
 };
 
+// Replace the value that follows `flag` in a flag list.
+function setFlagValue(flags, flag, value) {
+  const i = flags.indexOf(flag);
+  if (i === -1 || i + 1 >= flags.length) throw new Error(`${flag} is not in the base flag list`);
+  flags[i + 1] = String(value);
+}
+
 // The full flag list for one date.
-function flagsForDate(dateKey, clusterRule = 'corroborated+swallowed') {
-  const flags = [...BASE_FLAGS, ...getFlagsForDate(dateKey)];
-  // Batch-snapshot mode is OFF for the 2023-era sidebar dates — see
-  // BATCH_SNAPSHOT_FLAGS above for the measurement that decided it. The
-  // 2022-era dates keep the behaviour they were scanned with.
-  if (!isRightSidebarDate(dateKey)) {
-    flags.push(...BATCH_SNAPSHOT_FLAGS);
-  }
+//
+// `budget` lowers the per-video OCR budget: `maxFrames` is
+// `--prefilter-max-frames` (EasyOCR frames per video) and `maxCaptures` is
+// `--max-captures`. The defaults (12 / 3) take ~25-40 min per video on the
+// low-CPU path and can hit the 40-minute kill timer: 20230601 did, on
+// 2026-11-04, and wrote no probe log. A smaller budget is a retry that fits.
+function flagsForDate(dateKey, clusterRule = 'corroborated+swallowed', budget = {}) {
+  const base = [...BASE_FLAGS];
+  if (budget.maxFrames != null) setFlagValue(base, '--prefilter-max-frames', budget.maxFrames);
+  if (budget.maxCaptures != null) setFlagValue(base, '--max-captures', budget.maxCaptures);
+  const flags = [...base, ...getFlagsForDate(dateKey)];
+  // Batch-snapshot mode is OFF for every era. It replaces the uniform
+  // frame spread with a window around the prefilter's best frame, and that
+  // frame is not where the list is. Measured: on 20230609 the best frame
+  // read zero holdings, and on 20220421 the window OCR'd 8 frames and kept
+  // 1 capture, so a list that changes during the video was read at one
+  // moment. BATCH_SNAPSHOT_FLAGS remains for a deliberate one-off.
   flags.push(...(CLUSTER_RULE_FLAGS[clusterRule] || []));
   return flags;
+}
+
+function parsePositiveInt(flag, raw) {
+  const n = Number(raw);
+  if (!Number.isInteger(n) || n < 1) {
+    throw new Error(`${flag} needs a positive integer, got: ${raw === undefined ? '(nothing)' : raw}`);
+  }
+  return n;
 }
 
 function parseArgs(argv) {
@@ -154,6 +183,8 @@ function parseArgs(argv) {
     lowCpu: false,
     runTag: null,
     clusterRule: 'corroborated+swallowed',
+    maxFrames: null,
+    maxCaptures: null,
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -165,6 +196,8 @@ function parseArgs(argv) {
     else if (a === '--low-cpu') args.lowCpu = true;
     else if (a === '--run-tag') args.runTag = argv[++i] || null;
     else if (a === '--cluster-rule') args.clusterRule = argv[++i] || 'corroborated+swallowed';
+    else if (a === '--max-frames') args.maxFrames = parsePositiveInt(a, argv[++i]);
+    else if (a === '--max-captures') args.maxCaptures = parsePositiveInt(a, argv[++i]);
   }
   if (!Object.prototype.hasOwnProperty.call(CLUSTER_RULE_FLAGS, args.clusterRule)) {
     throw new Error(
@@ -274,7 +307,7 @@ function scoreResult(log, gtEntry) {
  * Returns { status, code, stdoutTail, stderr }.
  */
 
-async function runScan(dateKey, video, runTag, clusterRule = 'corroborated+swallowed') {
+async function runScan(dateKey, video, runTag, clusterRule = 'corroborated+swallowed', budget = {}) {
   const videoPath = path.join(video.dir, video.file);
   const env = {
     ...process.env,
@@ -290,7 +323,7 @@ async function runScan(dateKey, video, runTag, clusterRule = 'corroborated+swall
     '--date', dateKey,
     '--output-root', OUT_ROOT,
     '--run-tag', runTag,
-    ...flagsForDate(dateKey, clusterRule),
+    ...flagsForDate(dateKey, clusterRule, budget),
   ];
 
   console.log(`[${dateKey}] Starting ${video.file} (${video.resolution})`);
@@ -377,6 +410,10 @@ async function main() {
   console.log(`Run tag: ${runTag}`);
   console.log(`Dates: ${dates.join(', ')}`);
   console.log(`Parallelism: ${parallel}${args.lowCpu ? ' (low-cpu mode)' : ''}`);
+  const budget = { maxFrames: args.maxFrames, maxCaptures: args.maxCaptures };
+  if (budget.maxFrames != null || budget.maxCaptures != null) {
+    console.log(`Budget: ${budget.maxFrames ?? 'default'} frames, ${budget.maxCaptures ?? 'default'} captures`);
+  }
   console.log(`Output: ${OUT_ROOT}/${runTag}/\n`);
 
   if (args.dryRun) {
@@ -400,7 +437,7 @@ async function main() {
     .filter(j => j.video !== null);
 
   const results = await runPool(jobs, parallel, async ({ date, video }, idx) => {
-    return runScan(date, video, runTag, args.clusterRule);
+    return runScan(date, video, runTag, args.clusterRule, budget);
   });
 
   // Report
@@ -417,7 +454,7 @@ async function main() {
     totalHit += s.hit;
     totalGt += s.hit + s.miss;
     totalFp += s.fp;
-    console.log(`  ${r.dateKey}: recall=${s.recall} (${s.recallPct}%) | FP=${s.fpTickers.join(',') || 'none'} | time=${r.elapsed}s`);
+    console.log(`  ${r.dateKey}: recall=${s.recall} (${s.recallPct}%) | miss=${s.missTickers.join(',') || 'none'} | FP=${s.fpTickers.join(',') || 'none'} | time=${r.elapsed}s`);
   }
   console.log(`\nOverall: ${totalHit}/${totalGt} = ${Math.round(100*totalHit/totalGt)}% recall, ${totalFp} FPs`);
 }
@@ -428,4 +465,4 @@ if (require.main === module) {
   main().catch(e => { console.error(e); process.exit(1); });
 }
 
-module.exports = { superviseChild, STDOUT_TAIL_CHARS, scoreResult };
+module.exports = { superviseChild, STDOUT_TAIL_CHARS, scoreResult, flagsForDate, parseArgs };

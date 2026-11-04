@@ -64,6 +64,54 @@ const path = require('node:path');
 // never a position on Qullamaggie's list.
 const TICKER_BLOCKLIST = new Set(['FREY', 'ATR']);
 
+// Tickers that are ALSO a word of the positions table's own column header.
+//
+// The table's header row reads "Flag  Sym  % Change  ADR % 20  Dol Vol  Vol
+// Buzz", and its "Sym" sits at the left edge of the ticker column, exactly
+// where every holding sits. SYM (Symbotic) is also a real Qullamaggie
+// holding -- pixel-verified on 20231201 and 20231215 -- so it cannot be
+// blocklisted, and it cannot be told from the header by case either: the
+// OCR read the header as "Sym" and the real row as "SyM" on the same frame.
+//
+// What separates them is the ROW. A holding's row carries its % Change and
+// price cells to the right; the header row carries the other header words
+// and no number at all. So a header-collision ticker is a holding only when
+// one of its occurrences sits below the Positions title, on a line with a
+// price to its right, and on a line that is not the header row.
+const HEADER_COLLISION_TICKERS = new Set(['SYM']);
+
+// The other words of the column header, as the OCR reads them. A data row
+// never carries one: its cells are numbers.
+const HEADER_ROW_WORD = /^(FLAG|FBO|FLG|DOL|VOL|BUZZ?|BRZZ|ADR|PRE|PRC|CHANGE|SYMS)$/;
+// A data cell: a percent, a dollar, a decimal ("8,57", "16.3M") or a
+// multi-digit number. A lone digit is not one -- the header row of 20220222
+// carries a stray "0" that would otherwise pass for a price.
+const ROW_PRICE_CELL = /[%$]|\d[.,]\d|^[+-]?\d{2,}[MK]?$/;
+
+// The OCR merges header words into one token ("Nol Buzz", "[Pre Buz" on
+// 20220222), so a header word is tested part by part, not as a whole token.
+function isHeaderRowToken(text) {
+  return String(text || '').split(/\s+/).some((part) => HEADER_ROW_WORD.test(
+    part.toUpperCase().replace(/[^A-Z]/g, '')
+  ));
+}
+
+function isHeaderCollisionHolding(ticker, { hasWordPositions, tickerWordsMap, words, positionsLine }) {
+  // Without word positions there is no row to judge, and a wrong holding is
+  // worse than a missing one.
+  if (!hasWordPositions) return false;
+  const occurrences = tickerWordsMap.get(ticker) || [];
+  return occurrences.some((w) => {
+    if (!Number.isFinite(w.line)) return false;
+    if (positionsLine != null && w.line <= positionsLine) return false;
+    const sameLine = words.filter((o) => o !== w && o.line === w.line);
+    const isHeaderRow = sameLine.some((o) => isHeaderRowToken(o.text));
+    if (isHeaderRow) return false;
+    const right = (w.left || 0) + (w.width || 0);
+    return sameLine.some((o) => (o.left || 0) >= right - 1 && ROW_PRICE_CELL.test(String(o.text || '').trim()));
+  });
+}
+
 // Maximum edit distance for OCR character correction. Tested 3 on 2026-09-29
 // (might catch GOVX→"BGO" which needs 3 edits) — added FPs to non-peak frames
 // without helping peak recall. Reverted to 2.
@@ -116,6 +164,59 @@ function setOcrConfusionCsvPath(nextPath) {
   const previous = activeConfusionCsv;
   activeConfusionCsv = nextPath ? String(nextPath) : DEFAULT_OCR_CONFUSION_CSV;
   return previous;
+}
+
+// The LAYOUT-SCOPED alias table: misreads that are only a misread in one
+// layout era, because in another era the garbled form is a real holding.
+//
+// The shared table's first invariant is that no garbled form is a lexicon
+// ticker, because such a row would rewrite a real holding. That is the right
+// rule for a table that applies everywhere -- and it is exactly what kept
+// `U -> LI` out of it: `U` is a seed ticker and a genuine Qullamaggie holding
+// on 20221117. But 20221117 is the 2022 FLOATING-PANEL layout. In the 2023
+// RIGHT-SIDEBAR layout every `U` the OCR has published is the collapsed `LI`
+// cell (20230518, 20230522, 20230523 -- each holds LI and never U). A table
+// keyed by layout era can say that without saying it for 2022.
+//
+// Keyed by the era name `chartStreamEraForDate()` returns, so the era rule
+// stays in one place.
+const LAYOUT_CONFUSION_CSVS = {
+  right_sidebar: path.resolve(__dirname, '..', '..', 'config', 'ticker_ocr_confusions_right_sidebar.csv'),
+};
+const layoutConfusionCache = new Map();
+
+function readConfusionCsv(csvPath) {
+  const map = new Map();
+  try {
+    const raw = fs.readFileSync(csvPath, 'utf8');
+    let isHeader = true;
+    for (const line of raw.split(/\r?\n/)) {
+      if (isHeader) {
+        isHeader = false;
+        if (/^garbled\s*,/i.test(line)) continue;
+      }
+      const [garbled, canonical] = line.split(',').map((v) => String(v || '').trim().toUpperCase());
+      if (garbled && canonical && garbled !== canonical) map.set(garbled, canonical);
+    }
+  } catch {
+    // Missing config is not fatal — the parser just loses alias repair.
+  }
+  return map;
+}
+
+// The alias map a parse should use: the shared table, plus the layout's own
+// rows when the caller says which layout it is reading. A parse that does not
+// name a layout gets the shared table only, exactly as before.
+function aliasMapForLayout(layoutEra) {
+  const shared = loadOcrConfusionMap();
+  const layoutPath = layoutEra ? LAYOUT_CONFUSION_CSVS[layoutEra] : null;
+  if (!layoutPath) return shared;
+  const cacheKey = `${activeConfusionCsv}|${layoutPath}`;
+  if (layoutConfusionCache.has(cacheKey)) return layoutConfusionCache.get(cacheKey);
+  const merged = new Map(shared);
+  for (const [garbled, canonical] of readConfusionCsv(layoutPath)) merged.set(garbled, canonical);
+  layoutConfusionCache.set(cacheKey, merged);
+  return merged;
 }
 
 function loadOcrConfusionMap() {
@@ -1009,7 +1110,10 @@ function extractZoomStripTickerCandidates(zoomOcr, lexicon) {
   return accepted;
 }
 
-function parseChartStreamPositionList({ ocr } = {}) {
+// `layoutEra` is the chart-stream layout the frame was taken from
+// (`chartStreamEraForDate()`: 'floating_panel' or 'right_sidebar'). It is
+// optional: without it the parse uses the shared alias table only.
+function parseChartStreamPositionList({ ocr, layoutEra = null } = {}) {
   const text = normalizeWhitespace(ocr && ocr.text ? ocr.text : '');
   const lines = Array.isArray(ocr && ocr.lines) ? ocr.lines : [];
   const words = Array.isArray(ocr && ocr.words) ? ocr.words : [];
@@ -1383,7 +1487,7 @@ function parseChartStreamPositionList({ ocr } = {}) {
   // starts inventing tickers (UPST→KLAC, DWAC→SPOT), which costs more recall
   // than the repair gains.
   if (columnGateActive) {
-    const confusionMap = loadOcrConfusionMap();
+    const confusionMap = aliasMapForLayout(layoutEra);
     for (let i = accepted.length - 1; i >= 0; i -= 1) {
       const raw = accepted[i];
       if (!inListTickers.has(raw)) continue;
@@ -1553,7 +1657,7 @@ function parseChartStreamPositionList({ ocr } = {}) {
   // false positive, and the extra entries shifted Filter B's median y and
   // evicted real holdings that were already in the reading.
   if (columnGateActive && hasWordPositions) {
-    const confusionMap = loadOcrConfusionMap();
+    const confusionMap = aliasMapForLayout(layoutEra);
     for (const word of words) {
       const raw = String(word.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
       if (!raw) continue;
@@ -1692,7 +1796,10 @@ function parseChartStreamPositionList({ ocr } = {}) {
   // Blocklist filter: remove known non-QMG tickers that keep appearing in
   // OCR output with zero GT hits (P, SPYM, FREY, BKR, BOIL). Applied before
   // returning so downstream merge/cluster steps never see them.
-  const filteredAccepted = accepted.filter((t) => !TICKER_BLOCKLIST.has(t));
+  const filteredAccepted = accepted
+    .filter((t) => !TICKER_BLOCKLIST.has(t))
+    .filter((t) => !HEADER_COLLISION_TICKERS.has(t)
+      || isHeaderCollisionHolding(t, { hasWordPositions, tickerWordsMap, words, positionsLine }));
 
   // The panel's own row count, and how the reading compares with it.
   //
@@ -2293,6 +2400,49 @@ function clusterRuleName(options = {}) {
 // Resolving it in ONE place -- here -- means the clusterer, the rule name
 // and the batch runner's flag table cannot disagree about which rule a scan
 // ran. They have.
+// A consensus ticker no selected capture touched is chart ink that happens
+// to be a seed ticker, unless a capture read a member of its cluster.
+//
+// The blunt rule — drop anything absent from every capture — loses GTLB on
+// 20230609: the captures read GULE, and the clusterer recovered GTLB from
+// the other frames. Keeping a canonical whose cluster has a member the
+// captures did read removes that loss. Measured on the latest log of 39
+// ground-truth dates: X, ON, AR and ALB come off, and no holding is lost.
+function attestConsensusToCaptures(consensus, captureLists, clusters) {
+  const attested = new Set();
+  for (const list of captureLists || []) {
+    for (const ticker of list || []) {
+      const text = String(ticker || '').toUpperCase();
+      if (text) attested.add(text);
+    }
+  }
+  const membersByCanonical = new Map();
+  for (const cluster of clusters || []) {
+    const canonical = String(cluster && cluster.canonical || '').toUpperCase();
+    if (!canonical) continue;
+    let members = membersByCanonical.get(canonical);
+    if (!members) {
+      members = new Set();
+      membersByCanonical.set(canonical, members);
+    }
+    for (const member of cluster.members || []) {
+      const text = String(member || '').toUpperCase();
+      if (text) members.add(text);
+    }
+  }
+  return (consensus || []).filter((ticker) => {
+    const text = String(ticker || '').toUpperCase();
+    if (!text) return false;
+    if (attested.has(text)) return true;
+    const members = membersByCanonical.get(text);
+    if (!members) return false;
+    for (const member of members) {
+      if (attested.has(member)) return true;
+    }
+    return false;
+  });
+}
+
 function resolveClusterRuleOptions(options = {}) {
   const strict = options.clusterStrictCorroboration === true;
   const corroboration = options.clusterCorroboration === null
@@ -2319,10 +2469,13 @@ module.exports = {
   clusterVideoLevelReadings,
   clusterRuleName,
   resolveClusterRuleOptions,
+  attestConsensusToCaptures,
   extractZoomStripTickerCandidates,
   parseChartStreamPositionList,
   extractAllTickerCandidates,
   readPanelRowCount,
   setOcrConfusionCsvPath,
+  aliasMapForLayout,
+  LAYOUT_CONFUSION_CSVS,
   TICKER_BLOCKLIST
 };

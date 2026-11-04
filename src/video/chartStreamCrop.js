@@ -179,12 +179,47 @@ function chartStreamPrefilterRegionForDate(dateKey) {
   return { left: x, top: y };
 }
 
+// The last upload of the right-sidebar layout the catalog knows about.
+// Qullamaggie's channel has been dormant since 2023-12-15 (`state.sqlite`:
+// max upload_date for channel='qullamaggie').
+const CHART_STREAM_RIGHT_SIDEBAR_LAST = '20231215';
+
+/**
+ * The layout era whose LAYOUT-SCOPED alias rows a parse may apply, or null.
+ *
+ * Narrower than `chartStreamEraForDate()` on purpose. That function answers
+ * "which crop should this frame get", and for an unknown or out-of-range date
+ * the sidebar crop is the safe answer, because it still contains the 2022
+ * floating panel. An alias that REWRITES a ticker has the opposite safety: a
+ * wrong rewrite publishes a wrong holding. So it applies only to a date that
+ * is a KNOWN sidebar upload -- inside [20230518, 20231215].
+ *
+ * The case that makes this necessary: `qmg-fixed-20260921c` scanned nine
+ * Qullamaggie videos whose filenames carry no upload date, so the run dated
+ * them by the RUN date, 20260921. `chartStreamEraForDate('20260921')` says
+ * 'right_sidebar', but those videos may be 2022 uploads -- where `U` is a
+ * real holding and must not become `LI`.
+ *
+ * @param {string} dateKey an `YYYYMMDD` upload date
+ * @returns {'right_sidebar'|null}
+ */
+function layoutAliasEraForDate(dateKey) {
+  const key = String(dateKey || '').trim();
+  if (!/^20\d{6}$/.test(key)) return null;
+  if (key >= CHART_STREAM_RIGHT_SIDEBAR_FROM && key <= CHART_STREAM_RIGHT_SIDEBAR_LAST) {
+    return 'right_sidebar';
+  }
+  return null;
+}
+
 module.exports = {
   CHART_STREAM_CROP_FLOATING_PANEL,
   CHART_STREAM_CROP_RIGHT_SIDEBAR,
   CHART_STREAM_RIGHT_SIDEBAR_FROM,
+  CHART_STREAM_RIGHT_SIDEBAR_LAST,
   chartStreamCropFractionForDate,
   chartStreamEraForDate,
   chartStreamPrefilterRegionForDate,
   isRightSidebarDate,
+  layoutAliasEraForDate,
 };
