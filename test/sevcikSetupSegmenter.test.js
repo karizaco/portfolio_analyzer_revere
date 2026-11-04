@@ -23,6 +23,7 @@ const assert = require('node:assert/strict');
 const {
   buildSetupRuns,
   findSetups,
+  isLiveState,
   readSetupState,
 } = require('../src/sevcik/setupSegmenter');
 
@@ -113,6 +114,87 @@ test('an invalidated setup is marked as invalidated', () => {
   const setups = findSetups({ segments, lexicon: LEXICON });
   assert.equal(setups[0].state, 'invalidated');
   assert.ok(setups[0].invalidated);
+});
+
+// -- "STILL RUNNING" IS ABOUT THE END OF THE VIDEO, NOT THE WHOLE VIDEO ----
+//
+// The column's own meaning is "the setup was still live at the end of the
+// video", and the rule used to answer a DIFFERENT question: it asked
+// whether the setup had EVER run.
+//
+// That misflags every setup that ran and was then finished. Measured on the
+// 15-video corpus: 13 of 73 setups were misflagged -- 6 that had failed,
+// 7 that had been invalidated, and 7 that had already worked -- and the
+// report's "still running" tile claimed 66 of 73 setups were live when
+// 37 were.
+//
+// The states were also DEDUPLICATED, which is why the bug was possible:
+// the sequence 'running' then 'failed' was stored as ['running', 'failed']
+// and the final state was read as the last one, but a setup stated
+// 'running', 'failed', 'running' lost its middle state and could not be
+// reasoned about.
+
+test('a setup that ran and then FAILED is not still running', () => {
+  const segments = [
+    seg('Takže to 10 Tesla. Tahle ta predikce běží.'),
+    seg('A tady prodejce do Long nevyšla.'),
+  ];
+  const setups = findSetups({ segments, lexicon: LEXICON });
+  assert.equal(setups[0].state, 'failed');
+  assert.ok(setups[0].failed, 'it failed');
+  assert.equal(setups[0].still_running, false, 'and it is not still running');
+});
+
+test('a setup that ran and then was INVALIDATED is not still running', () => {
+  const segments = [
+    seg('Takže to 10 Tesla. Tahle ta predikce běží.'),
+    seg('A tady prodejce do Long byla zneplatněná.'),
+  ];
+  const setups = findSetups({ segments, lexicon: LEXICON });
+  assert.equal(setups[0].state, 'invalidated');
+  assert.equal(setups[0].still_running, false);
+});
+
+test('a setup that WORKED and was not reopened is not still running', () => {
+  const segments = [
+    seg('Takže to 10 Tesla. Tahle ta predikce vyšla.'),
+  ];
+  const setups = findSetups({ segments, lexicon: LEXICON });
+  assert.equal(setups[0].state, 'worked');
+  assert.equal(setups[0].still_running, false);
+});
+
+test('a setup that worked and was then reopened IS still running', () => {
+  // The last word on it is what counts, in both directions.
+  const segments = [
+    seg('Takže to 10 Tesla. Tahle ta predikce vyšla.'),
+    seg('A ale jinak. Predikce na Tesla běží dál.'),
+  ];
+  const setups = findSetups({ segments, lexicon: LEXICON });
+  assert.equal(setups[0].state, 'running');
+  assert.equal(setups[0].still_running, true);
+});
+
+test('the states keep their order, so the final state is knowable', () => {
+  const segments = [
+    seg('Takže to 10 Tesla. Tahle ta predikce běží.'),
+    seg('A tady prodejce do Long nevyšla.'),
+    seg('Ale jinak. Predikce na Tesla běží znovu.'),
+  ];
+  const setups = findSetups({ segments, lexicon: LEXICON });
+  // The middle state is kept. Deduping would have thrown it away and the
+  // setup's history would be unreadable.
+  assert.deepEqual(setups[0].states, ['running', 'failed', 'running']);
+  assert.equal(setups[0].state, 'running');
+});
+
+test('a live state is one the speaker has not closed out', () => {
+  assert.equal(isLiveState('running'), true);
+  assert.equal(isLiveState('new'), true);
+  assert.equal(isLiveState('worked'), false);
+  assert.equal(isLiveState('failed'), false);
+  assert.equal(isLiveState('invalidated'), false);
+  assert.equal(isLiveState('old'), false);
 });
 
 test('the run owns the speech that follows the name', () => {
