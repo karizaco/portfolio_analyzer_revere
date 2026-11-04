@@ -51,7 +51,8 @@ const { spawnSync } = require('node:child_process');
 
 const {
   analyzeFrameBeforeOcr,
-  scoreFramePrefilter
+  scoreFramePrefilter,
+  spearman
 } = require('../src/video/ocrScanLogic');
 const { resolveFfmpegBin } = require('../src/video/ffmpegBin');
 const { chartStreamPrefilterRegionForDate } = require('../src/video/chartStreamCrop');
@@ -147,15 +148,11 @@ function rankOf(rows, frameIndex) {
   return index < 0 ? null : index + 1;
 }
 
-function spearman(pairs) {
-  // pairs: [[rankA, rankB], ...] — 1-based ranks, no ties expected because
-  // every frame index is unique.
-  const n = pairs.length;
-  if (n < 2) return null;
-  let sumD2 = 0;
-  for (const [a, b] of pairs) sumD2 += (a - b) ** 2;
-  return 1 - (6 * sumD2) / (n * (n * n - 1));
-}
+// Spearman's rho comes from src/video/ocrScanLogic.js, so this tool and
+// tools/sweepPrefilterResolution.js report the SAME number for the same
+// ranking. It ranks BOTH series before correlating them: the formula
+// `1 - 6·Σd²/(n(n²-1))` is a statement about ranks, so a raw holding count
+// has to be ranked first.
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));

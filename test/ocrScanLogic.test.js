@@ -17,6 +17,7 @@ const {
   PREFILTER_HEIGHT,
   PREFILTER_WIDTH,
   scoreFramePrefilter,
+  scoreFramePrefilterBreakdown,
   scoreSnapshotCandidate,
   scoreWhiteboardCandidate,
   scoreWhiteboardCandidateBreakdown,
@@ -427,6 +428,71 @@ test('scoreWhiteboardCandidateBreakdown exposes additive components and matches 
   assert.equal(breakdown.components.keyword_guard, 0);
   // ocrConfidence 80 / 20 = 4
   assert.equal(breakdown.components.ocr_confidence_bonus, 4);
+});
+
+test('scoreFramePrefilterBreakdown matches the wrapper total, term for term', () => {
+  // The breakdown is what tells the resolution sweep WHICH term moves a
+  // ranking, so it has to be the SAME score — not a close one. The two
+  // scale-bound terms (`rowDensityTarget` 150 and
+  // `multiColStripeCountTarget` 3) are raw counts, so their contribution
+  // changes with the working resolution, and that is exactly what the
+  // measurement has to see.
+  const stats = {
+    brightRatio: 0.031,
+    darkRatio: 0.72,
+    edgeRatio: 0.104,
+    stdDev: 48,
+    meanLuma: 41,
+    rowDensity: 112,
+    multiColStripeCount: 27,
+    midToneRatioTicker: 0.31,
+    horizontalEdgeRatio: 0.07,
+    verticalEdgeRatio: 0.13
+  };
+
+  for (const profile of ['whiteboard', 'chart_stream', 'position_table', 'tale_of_the_tape']) {
+    for (const decay of [0, 1800]) {
+      const breakdown = scoreFramePrefilterBreakdown(stats, 'snapshot', profile, decay, 400);
+      assert.equal(
+        breakdown.total,
+        scoreFramePrefilter(stats, 'snapshot', profile, decay, 400),
+        `the breakdown and the wrapper disagree for ${profile} at decay ${decay}`
+      );
+      const componentSum = Object.values(breakdown.components).reduce((sum, value) => sum + value, 0);
+      assert.ok(
+        Math.abs(componentSum - breakdown.total) < 0.05,
+        `components ${componentSum} should match total ${breakdown.total}`
+      );
+    }
+  }
+
+  // The two terms the resolution question is about are reported separately,
+  // and they are the two that are SCALE-BOUND rather than scale-invariant.
+  const breakdown = scoreFramePrefilterBreakdown(stats, 'snapshot', 'chart_stream', 0, 400);
+  assert.ok(breakdown.components.rowDensity > 0, 'the row-density term is missing');
+  assert.ok(breakdown.components.stripes > 0, 'the stripe term is missing');
+  // 27 stripes against a target of 3 saturates the term.
+  assert.equal(breakdown.components.stripes, 20);
+  // 112 row transitions against a target of 150 does not.
+  assert.ok(breakdown.components.rowDensity < 10);
+  // The temporal boost is off when the decay is 0.
+  assert.equal(breakdown.components.temporal, 0);
+  // …and on when it is not.
+  const withDecay = scoreFramePrefilterBreakdown(stats, 'snapshot', 'chart_stream', 1800, 400);
+  assert.ok(withDecay.components.temporal > 0, 'the temporal boost is missing');
+});
+
+test('scoreFramePrefilterBreakdown leaves the shipped score unchanged', () => {
+  // The shipped score is pinned by the numbers the whole project quotes, so
+  // the refactor that produced the breakdown must not have moved it.
+  const bright = Buffer.alloc(160 * 90, 235);
+  for (let rowIndex = 20; rowIndex < 70; rowIndex += 8) {
+    for (let columnIndex = 10; columnIndex < 150; columnIndex += 3) {
+      bright[(rowIndex * 160) + columnIndex] = 20;
+    }
+  }
+  const stats = summarizeLumaBuffer(bright, 160, 90);
+  assert.equal(scoreFramePrefilter(stats, 'whiteboard'), scoreFramePrefilterBreakdown(stats, 'whiteboard').total);
 });
 
 test('extractTickersFromOcrText returns the seed-lexicon tickers present in OCR text', () => {
