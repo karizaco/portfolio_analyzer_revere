@@ -557,14 +557,52 @@ async function analyzeFrameBeforeOcr(framePath, region, options = {}) {
   return summarizeLumaBuffer(data, info.width, info.height, region);
 }
 
-function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporalDecay = Infinity, timestamp = undefined) {
+/**
+ * The prefilter's score, broken into its additive components.
+ *
+ * WHY A BREAKDOWN
+ *
+ * The prefilter's score is a sum of independently-tuned terms, and two of them
+ * are SCALE-BOUND rather than scale-invariant: `rowDensityTarget` (150) and
+ * `multiColStripeCountTarget` (3) are raw counts, so they mean different
+ * things at every working resolution. A ranking can therefore be right or
+ * wrong for reasons that only a per-term view exposes — a term that saturates
+ * on one frame and not another moves the ranking by more than every other
+ * term combined.
+ *
+ * `tools/sweepPrefilterResolution.js` measures the ranking at several
+ * resolutions and has to say WHICH term does the damage, which a single
+ * number cannot.
+ *
+ * The total is bit-identical to `scoreFramePrefilter`: the components are
+ * summed in the same order the original function added them, so the floating
+ * point result is the same value, not merely a close one.
+ *
+ * @returns {{components: object, total: number}}
+ */
+function scoreFramePrefilterBreakdown(stats, outputKind, profile = 'whiteboard', temporalDecay = Infinity, timestamp = undefined) {
   const table = PREFILTER_PROFILES[profile] || PREFILTER_PROFILES.whiteboard;
-  let score = 0;
+  const components = {
+    bright: 0,
+    dark: 0,
+    edge: 0,
+    stdDev: 0,
+    rowDensity: 0,
+    stripes: 0,
+    midTone: 0,
+    meanLumaFloor: 0,
+    brightRatioFloor: 0,
+    darkRatioFloor: 0,
+    darkRatioCeil: 0,
+    snapshotEdge: 0,
+    chartLikeness: 0,
+    temporal: 0
+  };
 
-  score += Math.max(0, table.brightWeight - (Math.abs(stats.brightRatio - table.brightTarget) * table.brightSlope));
-  score += Math.max(0, table.darkWeight - (Math.abs(stats.darkRatio - table.darkTarget) * table.darkSlope));
-  score += Math.max(0, table.edgeWeight - (Math.abs(stats.edgeRatio - table.edgeTarget) * table.edgeSlope));
-  score += Math.max(0, table.stdDevWeight - (Math.abs(stats.stdDev - table.stdDevTarget) / table.stdDevSlope));
+  components.bright = Math.max(0, table.brightWeight - (Math.abs(stats.brightRatio - table.brightTarget) * table.brightSlope));
+  components.dark = Math.max(0, table.darkWeight - (Math.abs(stats.darkRatio - table.darkTarget) * table.darkSlope));
+  components.edge = Math.max(0, table.edgeWeight - (Math.abs(stats.edgeRatio - table.edgeTarget) * table.edgeSlope));
+  components.stdDev = Math.max(0, table.stdDevWeight - (Math.abs(stats.stdDev - table.stdDevTarget) / table.stdDevSlope));
 
   // Row density: for chart_stream, the position list has many horizontal
   // text bands. Higher row density → better candidate. Linear-reward
@@ -575,7 +613,7 @@ function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporal
     const rowD = Number(stats.rowDensity || 0);
     const target = Number(table.rowDensityTarget || 1);
     const fraction = target > 0 ? Math.min(1.0, rowD / target) : 0;
-    score += table.rowDensityWeight * fraction;
+    components.rowDensity = table.rowDensityWeight * fraction;
   }
 
   // Multi-column stripe count: how many columns have ≥2 row-top transitions.
@@ -586,7 +624,7 @@ function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporal
     const stripes = Number(stats.multiColStripeCount || 0);
     const target = Number(table.multiColStripeCountTarget || 3);
     const fraction = target > 0 ? Math.min(1.0, stripes / target) : 0;
-    score += table.multiColStripeCountWeight * fraction;
+    components.stripes = table.multiColStripeCountWeight * fraction;
   }
 
   // Mid-tone ratio in the ticker region: the position list has ticker text
@@ -599,27 +637,27 @@ function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporal
     // Linear reward: 0 mid-tone = 0 contribution, 1.0 mid-tone = full
     // weight. The position list reliably scores 0.5-0.85; Google Drive
     // and other distractions score < 0.05.
-    score += table.midToneWeight * Math.min(1.0, mtr);
+    components.midTone = table.midToneWeight * Math.min(1.0, mtr);
   }
 
   if (stats.meanLuma < table.meanLumaFloor) {
-    score -= table.meanLumaPenalty;
+    components.meanLumaFloor = -table.meanLumaPenalty;
   }
 
   if (stats.brightRatio < table.brightRatioFloor) {
-    score -= table.brightRatioPenalty;
+    components.brightRatioFloor = -table.brightRatioPenalty;
   }
 
   if (stats.darkRatio < table.darkRatioFloor) {
-    score -= table.darkRatioFloorPenalty;
+    components.darkRatioFloor = -table.darkRatioFloorPenalty;
   }
 
   if (stats.darkRatio > table.darkRatioCeil) {
-    score -= table.darkRatioCeilPenalty;
+    components.darkRatioCeil = -table.darkRatioCeilPenalty;
   }
 
   if (outputKind === 'snapshot') {
-    score += Math.min(stats.edgeRatio * table.snapshotEdgeBoost, table.snapshotEdgeBoostCap);
+    components.snapshotEdge = Math.min(stats.edgeRatio * table.snapshotEdgeBoost, table.snapshotEdgeBoostCap);
   }
 
   // Defense-in-depth chart rejection: subtract a small chart-likeness
@@ -634,9 +672,9 @@ function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporal
   // because the content we want to OCR IS a candlestick frame. Boost instead
   // of penalize, but keep it bounded so wildly off-profile frames still drop.
   if (table.chartLikenessBoost > 0) {
-    score += scoreChartLikeness(stats) * (table.chartLikenessBoost / 6);
+    components.chartLikeness = scoreChartLikeness(stats) * (table.chartLikenessBoost / 6);
   } else {
-    score += scoreChartLikeness(stats);
+    components.chartLikeness = scoreChartLikeness(stats);
   }
 
   // Temporal boost: frames near the start of the stream get a bonus that
@@ -653,11 +691,72 @@ function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporal
     const ts = Number(tsCandidate);
     if (Number.isFinite(ts)) {
       const temporalBoost = Math.max(0, 1 - ts / temporalDecay) * 6;
-      score += temporalBoost;
+      components.temporal = temporalBoost;
     }
   }
 
-  return Number(score.toFixed(2));
+  const total = Object.values(components).reduce((sum, value) => sum + value, 0);
+  return { components, total: Number(total.toFixed(2)) };
+}
+
+/**
+ * Rank a series of values, "1224" style.
+ *
+ * Equal values share the AVERAGE of the ranks they span, and the ranks are
+ * 1-based.
+ *
+ * @param {number[]} values
+ * @returns {number[]} the rank of each value, in the input order
+ */
+function rankValues(values) {
+  const indexed = values.map((value, index) => ({ value, index }));
+  indexed.sort((a, b) => (a.value - b.value) || (a.index - b.index));
+  const ranks = new Array(values.length).fill(0);
+  let cursor = 0;
+  while (cursor < indexed.length) {
+    let end = cursor;
+    while (end + 1 < indexed.length && indexed[end + 1].value === indexed[cursor].value) {
+      end += 1;
+    }
+    const rank = ((cursor + end) / 2) + 1;
+    for (let index = cursor; index <= end; index += 1) {
+      ranks[indexed[index].index] = rank;
+    }
+    cursor = end + 1;
+  }
+  return ranks;
+}
+
+/**
+ * Spearman's rho between two series.
+ *
+ * BOTH series are ranked first, which is the whole point of the statistic:
+ * the formula `1 - 6·Σd²/(n(n²-1))` is a statement about RANKS, so feeding
+ * it a raw measurement (a holding count, say) instead of that measurement's
+ * rank is not an approximation — it is a different statistic, and it can
+ * leave the [-1, 1] range entirely.
+ *
+ * Used here to ask whether the prefilter's ranking agrees with the number of
+ * holdings each frame actually read. A NEGATIVE rho is GOOD: a low rank (a
+ * frame the prefilter likes) should carry a high holding count.
+ *
+ * @param {Array<[number, number]>} pairs  [first, second] pairs
+ * @returns {number|null} the correlation, or null for fewer than two pairs
+ */
+function spearman(pairs) {
+  const n = pairs.length;
+  if (n < 2) return null;
+  const rankA = rankValues(pairs.map((pair) => pair[0]));
+  const rankB = rankValues(pairs.map((pair) => pair[1]));
+  let sumD2 = 0;
+  for (let index = 0; index < n; index += 1) {
+    sumD2 += (rankA[index] - rankB[index]) ** 2;
+  }
+  return 1 - (6 * sumD2) / (n * (n * n - 1));
+}
+
+function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporalDecay = Infinity, timestamp = undefined) {
+  return scoreFramePrefilterBreakdown(stats, outputKind, profile, temporalDecay, timestamp).total;
 }
 
 // Prefilter score profiles. Each profile is a flat table of weights
@@ -1182,6 +1281,7 @@ module.exports = {
   inferDateKey,
   scoreChartLikeness,
   scoreFramePrefilter,
+  scoreFramePrefilterBreakdown,
   scoreSnapshotCandidate,
   swapInBestPrefilterFrame,
   scoreTextDensity,
@@ -1189,5 +1289,7 @@ module.exports = {
   scoreWhiteboardCandidateBreakdown,
   selectFramesForOcr,
   splitIssueCodes,
+  rankValues,
+  spearman,
   summarizeLumaBuffer
 };

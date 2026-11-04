@@ -3833,64 +3833,90 @@ rankings, because a resolution that does not help is a finding, not a failure.
 node --test test/manual/prefilterResolutionScan.test.js
 ```
 
-#### MID-MEASUREMENT — the wide sweep is in flight (2026-11-04)
+#### Final candidate-pool sweep (2026-11-04)
 
-**This section is a resume point. If you are reading it, the wide measurement is
-still running and the numbers below are not final.**
+The wide measurement is complete. The instrument was
+`tools/sweepPrefilterResolution.js`, driven by
+`test/manual/prefilterResolutionSweep.test.js`, with labels from
+`tools/extractPrefilterLabels.js`. It compared 160×90 (production), 320×180 and
+640×360, under both the era rectangle and the legacy fallback rectangle, with
+both the era's production temporal decay and no temporal decay.
 
-The instrument for the wide measurement is `tools/sweepPrefilterResolution.js`,
-driven by `test/manual/prefilterResolutionSweep.test.js`, with the labels from
-`tools/extractPrefilterLabels.js`. **The label set is the retained OCR CANDIDATE
-POOL** — `captures` + `top_candidates` + `top_rejected_candidates` — and NOT the
-selected captures alone. A selected-captures-only label set is **biased**: those
-are the frames the scanner chose *after* OCR, so they are disproportionately
-frames that read holdings, and every date reported `NO_ZERO_FRAME`.
+**The label set is the retained OCR CANDIDATE POOL** — `captures` +
+`top_candidates` + `top_rejected_candidates` — not the selected captures alone.
+Selected captures are frames the scanner already chose after OCR and are therefore
+biased toward frames that read holdings. The sweep used production extraction
+(`fps=0.25`, sample width 640) and `stride=100000`: every labelled candidate was
+scored, plus frame 0. This measures how the prefilter orders the retained pool;
+it is **not** a full-video recall measurement, because discarded frames have no
+OCR labels.
 
-Two rules the tools enforce, both of which changed the numbers:
+Two rules changed the measurement and are part of the result:
 
-- **The label set is keyed by MEDIA, not by date.** 20220606 covers three
-  uploads, so a date alone cannot address a frame. The extractor resolves the
-  media by the log's exact recorded basename first, then by the recorded video
-  id against the downloader's own-name convention, and only then by a date-only
-  match **when exactly one** `.mp4` matches. The sweep then filters the labels
-  to the media it scored.
+- **Labels are keyed by MEDIA, not by date.** 20220606 covers three uploads, so a
+  date alone cannot address a frame. The extractor resolves the media by the
+  log's exact recorded basename first, then by the recorded video id against the
+  downloader's own-name convention, and only then by a date-only match **when
+  exactly one** `.mp4` matches. The sweep filters labels to the media it scores.
 - **Spearman ranks BOTH series** (`rankValues()` + `spearman()` in
-  `src/video/ocrScanLogic.js`, imported by `tools/measurePrefilterRegion.js`
-  too). A rank-difference formula fed raw holding counts produces impossible
-  values such as `-21.5`.
+  `src/video/ocrScanLogic.js`, also imported by
+  `tools/measurePrefilterRegion.js`). Feeding raw holding counts to a
+  rank-difference formula produced impossible values such as `-21.5`.
 
-**Status:** the 2022-era sweep (32 dates) is running; the 2023-era sweep (9 dates)
-has not been run yet. The sweep writes its JSON after **every** date, so the JSON
-file's `dates` array is the progress indicator — the background task's own stdout
-stays empty until the process exits.
+The result files are `data/prefilter_resolution_sweep_2022.json` (32 dates) and
+`data/prefilter_resolution_sweep_2023.json` (9 dates). The 2023 set is the
+measurable sidebar-era set requested; 20230601 had no usable aligned label/media
+pair and was not silently treated as a zero.
 
-**The candidate pool is ALSO pre-filtered, and that bounds the whole
-measurement.** The pool is the frames the prefilter KEPT, so the frames it
-DISCARDED are exactly the ones with no label. Over the first 7 measured 2022-era
-dates, **6 had no zero-holding frame in their pool at all** — the verdict for
-those dates is `NO_ZERO_FRAME`, and no resolution can be said to have fixed
-them. The pool therefore answers **one** question:
+### 2022 floating-panel era — production temporal decay
 
-> does the prefilter's score ORDER the frames it kept, consistently with what
-> those frames actually read?
+| region | resolution | PARTIAL | INVERTED | NO_ZERO_FRAME | mean Spearman | mean best-labelled |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| era | 160×90 | 9 | 5 | 18 | -0.073 | 5.53 |
+| era | 320×180 | 10 | 4 | 18 | -0.058 | 3.44 |
+| era | 640×360 | 10 | 4 | 18 | **-0.088** | 4.19 |
+| fallback | 160×90 | 9 | 5 | 18 | -0.063 | 5.31 |
+| fallback | 320×180 | 10 | 4 | 18 | -0.044 | 3.34 |
+| fallback | 640×360 | 10 | 4 | 18 | -0.044 | 4.13 |
 
-It cannot answer "does the prefilter keep the RIGHT frames" — that question needs
-a fresh OCR pass over the frames it discarded, because the corpus has no
-readings for them. A frame that read exactly ONE ticker counts as a holding
-frame under the `>0` rule, so the census also counts `holdings <= 1` frames as
-the pool's near-junk.
+The 32-date candidate pool had 582 labelled frames: 516 read holdings, 66 read
+nothing, and 146 read at most one ticker. Fourteen dates contained at least one
+zero-holding label. The 640×360 era rectangle has the most negative mean
+Spearman, but it does not reduce the inverted-date count and selects fewer
+holdings on average than 160×90. That is not evidence to change production.
 
-**And the zero-frame count is a LOWER BOUND.** When two runs of the same date
-read the same frame differently, the LARGER reading wins ("the frame DID hold
-positions"), so a frame read as zero by one run and as holding by another is
-counted as holding. 20220218 has **7 such conflicts** among 13 pool frames. The
-verdict axis is therefore weaker than its counts look — which is a reason to
-trust the **Spearman** and the **best-labelled** columns, and not the verdict
-counts, until the pool contains more junk frames.
+### 2023 right-sidebar era — production temporal decay is 0
 
-**Nothing has shipped.** Production still calls `analyzeFrameBeforeOcr` with no
-resolution override, and `rowDensityTarget` / `multiColStripeCountTarget` are
-still the 160×90-scale values.
+| region | resolution | PARTIAL | INVERTED | NO_ZERO_FRAME | mean Spearman | mean best-labelled |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| era | 160×90 | 0 | 3 | 6 | **+0.221** | 6.00 |
+| era | 320×180 | 0 | 3 | 6 | +0.046 | 4.78 |
+| era | 640×360 | 2 | 1 | 6 | +0.135 | **6.11** |
+| fallback | 160×90 | 0 | 3 | 6 | +0.275 | 5.33 |
+| fallback | 320×180 | 1 | 2 | 6 | +0.152 | 6.44 |
+| fallback | 640×360 | 2 | 1 | 6 | +0.177 | 6.11 |
+
+The nine-date candidate pool had 110 labelled frames: 97 read holdings, 13 read
+nothing, and 18 read at most one ticker. Only three dates contained a
+zero-holding label, so most sidebar-era verdicts are `NO_ZERO_FRAME` and cannot
+test whether the prefilter avoided junk. At 640×360 the era rectangle improves
+the verdict mix from three inverted dates to two partial plus one inverted, but
+it still has no `OK` dates and its positive Spearman remains the wrong direction.
+This is a useful signal for further tuning, not a production-resolution decision.
+
+**The zero-frame count is a LOWER BOUND.** When two runs read the same frame
+differently, the larger reading wins ("the frame DID hold positions"), so a frame
+read as zero by one run and as holding by another is counted as holding. The
+conflict counts are retained in both result files. A date with no zero-holding
+frame cannot say that a resolution avoided junk; the pool the prefilter kept is,
+by construction, biased toward frames that read something.
+
+**Decision: nothing has shipped.** No tested resolution is cleanly superior in
+both layout eras. The pipeline still calls `analyzeFrameBeforeOcr` with no
+resolution override, and `rowDensityTarget` / `multiColStripeCountTarget` remain
+the 160×90-scale values. Shipping 320×180 or 640×360 would require a separate
+re-tuning of those scale-bound constants and a measurement of the stripe term,
+plus OCR validation on frames currently discarded by the prefilter.
 
 **PaddleOCR PP-OCRv6**: the packages ARE installed — `tools/paddle311_env` (Python 3.11.9) has
 paddleocr 2.7.3 + paddlepaddle 2.6.2, and `tools/paddle312_env` / `tools/paddle_env`
