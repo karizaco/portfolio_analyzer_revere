@@ -35,9 +35,13 @@ const { computePerceptualHash, hammingDistance } = require('../src/video/imageHa
 const { computePerceptualHashOfRegion, computePerceptualHashOfFractionalRegion } = require('../src/video/imageHashRegion');
 const { extractTickersFromOcrText, loadDecodeLexiconSync, loadSeedLexiconSync } = require('../src/normalize/tickerScan');
 const { createProbeKey, parseArgs, parseFractionalRegion, printHelp } = require('../src/video/ocrScanArgs');
-const { chartStreamCropFractionForDate, chartStreamPrefilterRegionForDate } = require('../src/video/chartStreamCrop');
+const {
+  chartStreamCropFractionForDate,
+  chartStreamPrefilterRegionForDate,
+  layoutAliasEraForDate,
+} = require('../src/video/chartStreamCrop');
 const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
-const { parseChartStreamPositionList, mergeMultiplePositionLists, clusterVideoLevelReadings, clusterRuleName: clusterRuleNameFor, resolveClusterRuleOptions, TICKER_BLOCKLIST } = require('../src/parse/parseChartStream');
+const { parseChartStreamPositionList, mergeMultiplePositionLists, clusterVideoLevelReadings, clusterRuleName: clusterRuleNameFor, resolveClusterRuleOptions, attestConsensusToCaptures, TICKER_BLOCKLIST } = require('../src/parse/parseChartStream');
 const { runEasyOcr, adaptToParserSchema } = require('../src/ocr/easyocrAdapter');
 const { resolveFfmpegBin, resolveFfprobeBin } = require('../src/video/ffmpegBin');
 const { preprocessChartStreamToBuffer, preprocessChartStreamRawToBuffer } = require('../src/ocr/ocrImage');
@@ -635,7 +639,10 @@ async function runChartStreamOcr(framePath, phashRegionFraction, scale, ocrEngin
     // 3x or 4x scale; use 750 as the canonical Tesseract crop width.
     ocr._cropWidth = 750;
   }
-  const chartStream = parseChartStreamPositionList({ ocr });
+  // The layout era decides which LAYOUT-SCOPED alias rows apply
+  // (config/ticker_ocr_confusions_right_sidebar.csv). It is null outside a
+  // known sidebar upload, so a mis-dated file never gets them.
+  const chartStream = parseChartStreamPositionList({ ocr, layoutEra: easyOcrOptions.layoutEra || null });
   const tickerCount = (chartStream && chartStream.position_list && chartStream.position_list.length)
     ? chartStream.position_list.length
     : 0;
@@ -783,7 +790,11 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     // captured frames and worse recall on 20220606 (12.5% vs 25%). The
     // OCR's frame selection is sensitive to scale; sticking with 3x+4x
     // until we understand the scoring interaction.
-    const easyOcrOpts = { videoPath, timestamp: explicitTimestamp != null ? explicitTimestamp : stats.timestamp };
+    const easyOcrOpts = {
+      videoPath,
+      timestamp: explicitTimestamp != null ? explicitTimestamp : stats.timestamp,
+      layoutEra: layoutAliasEraForDate(dateKey),
+    };
     // Retain the exact panel crop the engine reads, so OCR settings can be
     // re-benchmarked without re-scanning. Name it by timestamp so the crop is
     // traceable back to the capture it produced.
@@ -1429,6 +1440,10 @@ async function main() {
     pipeline_profile: options.pipelineProfile,
     phash_region: options.phashRegion || null,
     phash_region_fraction: options.phashRegionFraction || null,
+    // The layout whose LAYOUT-SCOPED alias rows the chart-stream parse
+    // applied (null: none). Recorded so a reading can be traced to the rows
+    // that produced it -- a U published as LI is a decision, not an OCR read.
+    layout_alias_era: options.chartStreamParser ? layoutAliasEraForDate(dateKey) : null,
     // The positions-TABLE reader and whether the OCR frames were kept at
     // the source resolution (they must be: the table's glyphs are ~6.8
     // source px tall and unreadable at 1280).
@@ -1831,6 +1846,14 @@ async function main() {
     const clusterMinFrequency = options.outputKind === 'snapshot'
       ? Math.min(options.clusterMinFrequency || 2, Math.max(1, clusterInput.length))
       : (options.clusterMinFrequency || 2);
+    // Resolved once. The call asks for the drop report, and the log writes
+    // it, under the same condition. Gating the write on the raw CLI flag
+    // recorded an empty drop list for every default run, because the
+    // default is "not mentioned" rather than an explicit true.
+    const explainDropped = clusterRule.requireDistanceOneCorroboration
+      || clusterRule.preferSupportedCorrection
+      || clusterRule.preferVideoSupport
+      || clusterRule.publishSwallowedHoldings;
     const clusterResult = clusterVideoLevelReadings(
       clusterInput,
       {
@@ -1899,11 +1922,11 @@ async function main() {
         publishSwallowedHoldings: clusterRule.publishSwallowedHoldings,
         swallowedHoldingMinFrames: clusterRule.swallowedHoldingMinFrames,
         // With a rule on, the drop is reported, so a scan that lost a
-        // holding can say why.
-        explainDropped: clusterRule.requireDistanceOneCorroboration
-          || clusterRule.preferSupportedCorrection
-          || clusterRule.preferVideoSupport
-          || clusterRule.publishSwallowedHoldings
+        // holding can say why. The same flag decides whether the log keeps
+        // that report. The default corroboration rule is on while
+        // options.clusterCorroboration is null ("not mentioned"), so the
+        // write gate has to use this resolved value, not the raw flag.
+        explainDropped
       }
     );
     // The clusterer's consensus is the PUBLISHED list for a chart_stream
@@ -1928,6 +1951,18 @@ async function main() {
     const legacyConsensus = (options.outputKind === 'snapshot' && clusterResult.merged_list.length > 0)
       ? clusterResult.merged_list
       : null;
+    // A ticker in the consensus that no selected capture touched, and that
+    // no capture read a member of, is chart ink. AR on 20231201 and ALB on
+    // 20231215 were that case: exact captures, and a false positive only in
+    // the merge. An empty result falls back to the captures' own lists.
+    const attestedConsensus = legacyConsensus
+      ? attestConsensusToCaptures(
+        legacyConsensus,
+        captureSummaries.filter(Boolean).map((c) => (c.chart_stream && c.chart_stream.position_list) || []),
+        clusterResult.clusters
+      )
+      : null;
+    const consensusForMerge = attestedConsensus && attestedConsensus.length ? attestedConsensus : null;
     const result = {
       ...resultBase,
       captured_count: captureOutputs.length,
@@ -1965,7 +2000,7 @@ async function main() {
         // the holdings the table reader decoded against the lexicon.
         const lists = captureSummaries.map((c) => {
           if (c.ticker_source === 'position_table') return c.tickers || [];
-          return legacyConsensus || (c.tickers || []);
+          return consensusForMerge || (c.tickers || []);
         });
         const raw = mergeMultiplePositionLists(
           lists,
@@ -2012,11 +2047,7 @@ async function main() {
       cluster_swallowed_holdings: options.clusterSwallowedHoldings === true,
       cluster_swallowed_min_frames: options.clusterSwallowedMinFrames,
       cluster_rule: clusterRuleName,
-      cluster_dropped: (options.clusterCorroboration === true
-        || options.clusterSupported === true
-        || options.clusterVideoSupported === true)
-        ? clusterResult.dropped
-        : [],
+      cluster_dropped: explainDropped ? (clusterResult.dropped || []) : [],
       // The clusterer's per-frame input, recorded verbatim, plus the Filter A
       // threshold it ran with.
       //
@@ -2063,6 +2094,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error(error.message);
+  console.error(error && error.stack ? error.stack : error);
   process.exitCode = 1;
 });

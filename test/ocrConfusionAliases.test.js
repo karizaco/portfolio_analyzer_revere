@@ -249,6 +249,21 @@ const NEW_ALIASES = [
   // a miss. Neither recall nor row-count check can see this — only the
   // alias table catches it.
   ['UC', 'LAC'],
+  // The four rows added 2026-11-04, from the first scans of 20231201 and
+  // 20231215. Each garbled form was located in the OCR words of a frame whose
+  // panel was then read by eye (ground truth added the same day): the
+  // garbled token sits in the Sym column, on the row of the canonical.
+  //
+  //   MNS  -> PINS  PI merged into an M glyph. 20231201 and 20231215.
+  //                 MNS is ONE edit from GNS, so before the row the repair
+  //                 pass published GNS -- a seed ticker no panel held.
+  //   AIR  -> PLTR  PL merged into an A glyph, T read as I. 20231201.
+  //   UXND -> LMND  L read as U, M as X. 20231215.
+  //   BUIX -> BITX  I read as U, T as I. 20231201.
+  ['MNS', 'PINS'],
+  ['AIR', 'PLTR'],
+  ['UXND', 'LMND'],
+  ['BUIX', 'BITX'],
 ];
 
 function confusionRows() {
