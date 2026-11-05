@@ -439,6 +439,8 @@ Results: `data/qmg_alt_batch_results.json`.
 - `tools/scanVideoWithOcr.js` — per-video OCR + capture (Node.js CLI)
 - `tools/evalParserReplay.js` — replay the captured logs through the current parser and score it (see below)
 - `tools/evalRevere.js` — score the Revere whiteboard path against `data/revere_ground_truth.json` (see below)
+- `tools/scoreCurrentParser.js` — score the CURRENT parser against the Qullamaggie ground truth using the recorded OCR words of the newest log per date (no OCR runs)
+- `tools/reparseCaptures.js` — re-parse a run’s recorded captures with the current parser and print each capture’s own reading (the per-capture view under the per-date one)
 - `tools/aggregateScanResults.js` — merge scan output into `analysis.json`
 - `tools/aggregateOcrTimeline.js` — merge into `timeline.json`
 - `tools/viewTimeline.html` — interactive timeline viewer
@@ -588,6 +590,22 @@ invariant forbids it. But the pixel-verified floating-panel captures on
 table, `config/ticker_ocr_confusions_floating_panel_nfu.csv`, and applies
 **only to those three upload dates**, selected by
 `layoutAliasEraForDate()` returning `floating_panel_nfu_20220606_08`.
+
+**A false positive is not always a false positive: the ground truth is pinned
+to October's frames.** The rescan captured *different moments* than the
+October run the ground truth is pinned to. `20220607` was captured at
+ts 0 / 296 / 2368 s in November and at ts 672 / 2744 / 2660 s in October, and
+the positions panel changed between them. Where the two runs disagree, a
+"false positive" can be a real holding the ground truth never saw. The panel
+footer is what settles it: the November `20220607` frame counts **9** items
+and the ground truth's frame counts **7**, and the pixels show both lists —
+`WEAT` and `TQQQ` are the two rows the ground truth does not carry. Measured
+over the twelve ground-truth dates whose newest log carries a footer count,
+**six have a different row count than the ground truth's frame**:
+`20220330` +2, `20220412` +1, `20220418` −1, `20220606` −1,
+`20220607` +2, `20220608` −1. So the false-positive count is an upper
+bound on wrong holdings, not a precision measurement, and it is not evidence
+of a defect until the two runs capture the same frame.
 
 **The dates that are still not exact, and why.** Fourteen dates remain, and
 the errors are now almost entirely *capture-level* — a frame that read a real
