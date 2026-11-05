@@ -35,6 +35,7 @@ const {
   wilsonInterval,
 } = require('../src/sevcik/edgeMatrix');
 const {
+  confidenceBand,
   dedupePrimaryClaims,
   evaluateClaimsWithTa,
   summarizeTaRows,
@@ -318,7 +319,7 @@ test('evaluateClaimsWithTa integrates provider series and new fields', async () 
   assert.equal(summary.claim_count, 2);
   assert.ok(summary.scorecards.deduped_primary.claim_count === 1);
   assert.ok(summary.edge_matrix);
-  assert.equal(summary.feature_version, 'sevcik-ta-2');
+  assert.equal(summary.feature_version, 'sevcik-ta-3');
   const s2 = summarizeTaRows(rows);
   assert.equal(s2.claim_count, 2);
 });
@@ -359,7 +360,7 @@ test('feature store writes into sqlite including new columns', (t) => {
     r_multiple_clipped: 1.2,
     stop_mode: 'atr|floor',
     confidence_band: 'high',
-  }], 'sevcik-ta-2');
+  }], 'sevcik-ta-3');
   const n = db.prepare('SELECT COUNT(*) AS n FROM sevcik_ta_features').get().n;
   assert.equal(n, 1);
   const row = db.prepare('SELECT venue, real_gap, r_multiple_clipped, confidence_band FROM sevcik_ta_features').get();
@@ -421,7 +422,59 @@ test('dashboard renders TA section when summary present', () => {
   assert.ok(html.includes('Edge matrix'));
 });
 
+
+
+test('confidence_label maps into confidence_band', () => {
+  assert.equal(confidenceBand({ confidence_label: 'high', confidence_score: 0.9 }), 'high');
+  assert.equal(confidenceBand({ confidence_label: 'medium', confidence_score: 0.5 }), 'medium');
+  assert.equal(confidenceBand({ confidence_label: 'low', confidence_score: 0.2 }), 'low');
+  assert.equal(confidenceBand({ confidence_score: 0.8 }), 'high');
+  assert.equal(confidenceBand({}), 'unknown');
+});
+
+test('zero-close bar must not produce absurd R', () => {
+  const bars = makeBars(25, 100, 0.2);
+  // Poison a late bar the way Yahoo sometimes does for CEZ.PR stubs.
+  bars[20] = { ...bars[20], open: 0, high: 0, low: 0, close: 0, volume: 0 };
+  bars[21] = { ...bars[21], open: 0, high: 0, low: 0, close: 0, volume: 0 };
+  const sim = simulateRTrade({
+    bars,
+    entryDate: bars[5].date,
+    bias: 'bullish',
+    atr: 2,
+    atrMult: 1.5,
+    targetR: 2,
+    maxBars: 20,
+    useStructureStop: false,
+  });
+  assert.equal(sim.status, 'ok');
+  assert.ok(sim.exit_price > 0);
+  assert.ok(Math.abs(sim.r_multiple) < 20);
+  assert.notEqual(sim.exit_price, 0);
+});
+
+test('edge matrix exposes hierarchical rollups', () => {
+  const rows = [];
+  for (let i = 0; i < 20; i += 1) {
+    rows.push({
+      source: 'signal',
+      hit_1w: i % 2 === 0,
+      r_multiple: i % 2 === 0 ? 1 : -1,
+      exit_reason: 'stop',
+      vol_regime: 'normal',
+      mtf_label: i < 10 ? 'strong' : 'weak',
+      archetype: i < 10 ? 'breakout' : 'pullback',
+      confidence_band: 'high',
+    });
+  }
+  const matrix = buildEdgeMatrix(rows, { minN: 8, rollupMinN: 5 });
+  assert.ok(matrix.rollups);
+  assert.ok(matrix.rollups.by_archetype.length >= 2);
+  assert.ok(matrix.rollups.by_mtf_label.length >= 2);
+});
+
 test('dashboard explains how to run TA when missing', () => {
   const html = buildSevcikReportHtml({ signal_count: 0, signals: [], daily: [], tickers: [] });
   assert.ok(html.includes('sevcik:ta'));
 });
+

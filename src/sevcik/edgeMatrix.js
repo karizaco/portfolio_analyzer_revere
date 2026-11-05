@@ -3,10 +3,12 @@
 // Conditional edge matrix over scored TA rows.
 // Descriptive only: buckets with min-N and Wilson CI; no in-sample fitting.
 // Walk-forward policy uses the same frozen rules on OOS folds.
+// Also emits hierarchical 1-D rollups so small samples still surface structure.
 
 const { summarizeRStats } = require('./rMultipleSim');
 
 const DEFAULT_MIN_N = 8;
+const DEFAULT_ROLLUP_MIN_N = 5;
 const DEFAULT_BASELINE = 0.5;
 
 /**
@@ -67,10 +69,10 @@ function scoreEdgeBucket(key, rows, opts = {}) {
   }
   return {
     key,
-    vol_regime: parts[0] || 'unknown',
-    mtf_label: parts[1] || 'unknown',
-    archetype: parts[2] || 'unknown',
-    confidence_band: parts[3] || 'unknown',
+    vol_regime: parts[0] || '',
+    mtf_label: parts[1] || '',
+    archetype: parts[2] || '',
+    confidence_band: parts[3] || '',
     n: list.length,
     scored_1w: scored.length,
     hits_1w: hits,
@@ -87,6 +89,34 @@ function scoreEdgeBucket(key, rows, opts = {}) {
 }
 
 /**
+ * Group rows by a single field and score.
+ * @param {Array<object>} rows
+ * @param {string} field
+ * @param {object} [opts]
+ * @returns {Array<object>}
+ */
+function rollupByField(rows, field, opts = {}) {
+  const minN = Number(opts.rollupMinN) || DEFAULT_ROLLUP_MIN_N;
+  const baseline = Number.isFinite(Number(opts.baseline)) ? Number(opts.baseline) : DEFAULT_BASELINE;
+  const map = new Map();
+  for (const row of rows || []) {
+    const key = String(row[field] || 'unknown');
+    if (!map.has(key)) map.set(key, []);
+    map.get(key).push(row);
+  }
+  return [...map.entries()]
+    .map(([key, group]) => {
+      const scored = scoreEdgeBucket(key, group, { minN, baseline });
+      return {
+        ...scored,
+        field,
+        key,
+      };
+    })
+    .sort((a, b) => b.scored_1w - a.scored_1w || b.n - a.n);
+}
+
+/**
  * Conditional edge matrix across vol × mtf × archetype × confidence.
  * @param {Array<object>} rows
  * @param {object} [opts]
@@ -94,6 +124,7 @@ function scoreEdgeBucket(key, rows, opts = {}) {
  */
 function buildEdgeMatrix(rows, opts = {}) {
   const minN = Number(opts.minN) || DEFAULT_MIN_N;
+  const rollupMinN = Number(opts.rollupMinN) || DEFAULT_ROLLUP_MIN_N;
   const baseline = Number.isFinite(Number(opts.baseline)) ? Number(opts.baseline) : DEFAULT_BASELINE;
   const map = new Map();
   for (const row of rows || []) {
@@ -110,8 +141,17 @@ function buildEdgeMatrix(rows, opts = {}) {
   const neutral = buckets.filter((b) => b.policy === 'neutral');
   const thin = buckets.filter((b) => b.policy === 'thin');
 
+  const rollups = {
+    by_archetype: rollupByField(rows, 'archetype', { rollupMinN, baseline }),
+    by_mtf_label: rollupByField(rows, 'mtf_label', { rollupMinN, baseline }),
+    by_vol_regime: rollupByField(rows, 'vol_regime', { rollupMinN, baseline }),
+    by_confidence_band: rollupByField(rows, 'confidence_band', { rollupMinN, baseline }),
+    by_source: rollupByField(rows, 'source', { rollupMinN, baseline }),
+  };
+
   return {
     min_n: minN,
+    rollup_min_n: rollupMinN,
     baseline,
     bucket_count: buckets.length,
     allow_count: allow.length,
@@ -123,12 +163,14 @@ function buildEdgeMatrix(rows, opts = {}) {
     neutral: neutral.slice(0, 25),
     thin: thin.slice(0, 15),
     buckets,
-    note: 'Edge matrix is descriptive with Wilson CI and min-N. Policy is frozen; validate only out-of-sample via walk-forward.',
+    rollups,
+    note: 'Full matrix is vol|mtf|archetype|confidence with Wilson CI. Hierarchical rollups expose 1-D structure at lower min-N. Policy is frozen; validate only out-of-sample via walk-forward.',
   };
 }
 
 /**
  * Apply a frozen edge policy to rows (for walk-forward OOS checks).
+ * Uses full-matrix allow buckets only (not 1-D rollups).
  * @param {Array<object>} trainRows used only to build the policy table
  * @param {Array<object>} testRows
  * @param {object} [opts]
@@ -165,9 +207,11 @@ function applyEdgePolicyWalkForward(trainRows, testRows, opts = {}) {
 module.exports = {
   DEFAULT_BASELINE,
   DEFAULT_MIN_N,
+  DEFAULT_ROLLUP_MIN_N,
   applyEdgePolicyWalkForward,
   buildEdgeMatrix,
   edgeBucketKey,
+  rollupByField,
   scoreEdgeBucket,
   wilsonInterval,
 };

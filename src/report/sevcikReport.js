@@ -695,7 +695,35 @@ function renderTaSection(payload) {
       </table>`;
   }
 
-  const wf = summary.walk_forward || {};
+  
+  function rollupTable() {
+    const em = summary.edge_matrix || {};
+    const rollups = em.rollups || {};
+    const sections = [
+      ['By archetype (edge rollup)', rollups.by_archetype],
+      ['By MTF (edge rollup)', rollups.by_mtf_label],
+      ['By vol regime (edge rollup)', rollups.by_vol_regime],
+    ];
+    return sections.map(([title, list]) => {
+      const rows = Array.isArray(list) ? list.filter((g) => g.scored_1w >= (em.rollup_min_n || 5)).slice(0, 8) : [];
+      if (!rows.length) return `<h3 class="subhead">${escapeHtml(title)}</h3><p class="note">No rollup rows above min N.</p>`;
+      const body = rows.map((g) => `<tr>
+        <td>${escapeHtml(g.key)}</td>
+        <td>${escapeHtml(g.policy)}</td>
+        <td>${g.scored_1w}</td>
+        <td>${g.hit_rate_1w == null ? '—' : formatPct(g.hit_rate_1w, 0)}</td>
+        <td>${g.wilson_lo == null ? '—' : formatPct(g.wilson_lo, 0)}–${g.wilson_hi == null ? '—' : formatPct(g.wilson_hi, 0)}</td>
+        <td>${g.median_r == null ? '—' : Number(g.median_r).toFixed(2)}</td>
+      </tr>`).join('');
+      return `<h3 class="subhead">${escapeHtml(title)}</h3>
+        <table class="grid">
+          <thead><tr><th>bucket</th><th>policy</th><th>n 1w</th><th>hit</th><th>Wilson</th><th>median R</th></tr></thead>
+          <tbody>${body}</tbody>
+        </table>`;
+    }).join('');
+  }
+
+const wf = summary.walk_forward || {};
   const edgePol = wf.edge_policy || {};
   const wfNote = `<p class="note">Walk-forward: folds=${wf.fold_count || 0}, avg test 1w hit=${wf.avg_test_hit_rate_1w == null ? '—' : formatPct(wf.avg_test_hit_rate_1w, 0)}, edge-selected OOS hit=${edgePol.avg_selected_hit_rate_1w == null ? '—' : formatPct(edgePol.avg_selected_hit_rate_1w, 0)}. ${escapeHtml(wf.note || '')}</p>`;
   const exit = summary.exit_mix || {};
@@ -713,6 +741,7 @@ function renderTaSection(payload) {
     ${tableFromGroups('By MTF confirmation', summary.by_mtf_label)}
     ${tableFromGroups('By source', summary.by_source)}
     ${edgeTable()}
+    ${rollupTable()}
     ${wfNote}`;
 }
 

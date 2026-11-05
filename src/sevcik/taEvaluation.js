@@ -8,7 +8,7 @@ const { barsThrough, computeIndicatorSnapshot } = require('./taIndicators');
 const { classifyTrendRegime, classifyVolRegime, multiTimeframeScore } = require('./taRegimes');
 const { evaluateGapAroundDate, looksLikeGapTalk } = require('./gapEvaluator');
 const { classifySetupArchetype } = require('./setupArchetypes');
-const { simulateRTrade, summarizeRStats } = require('./rMultipleSim');
+const { simulateRTrade, summarizeRStats, sanitizeBars } = require('./rMultipleSim');
 const { evaluateWalkForward, buildWalkForwardFolds } = require('./walkForward');
 const { buildEdgeMatrix, applyEdgePolicyWalkForward } = require('./edgeMatrix');
 const {
@@ -19,7 +19,7 @@ const {
   yahooSymbolFor,
 } = require('./outcomeAnalysis');
 
-const FEATURE_VERSION = 'sevcik-ta-2';
+const FEATURE_VERSION = 'sevcik-ta-3';
 
 /**
  * Confidence band for edge matrix / scorecards.
@@ -27,29 +27,41 @@ const FEATURE_VERSION = 'sevcik-ta-2';
  * @returns {string}
  */
 function confidenceBand(claim) {
+  if (!claim) return 'unknown';
   if (claim.confidence_band) return String(claim.confidence_band);
   if (claim.certainty_band) return String(claim.certainty_band);
-  const c = Number(claim.confidence);
-  if (Number.isFinite(c)) {
-    if (c >= 0.75) return 'high';
-    if (c >= 0.45) return 'medium';
-    return 'low';
+
+  const label = String(claim.confidence_label || claim.certainty_label || claim.certainty_level || '').toLowerCase();
+  if (label) {
+    if (/(certain|high|strong|very)/.test(label)) return 'high';
+    if (label === 'conditional' || label === 'stated') return 'medium';
+    if (/(stated|medium|moderate|mid)/.test(label)) return 'medium';
+    if (/(low|weak|uncertain|hedged)/.test(label)) return 'low';
+    if (label === 'unknown' || label === 'none') {
+      // fall through to numeric
+    } else {
+      return label;
+    }
   }
-  const cert = Number(claim.certainty);
-  if (Number.isFinite(cert)) {
-    if (cert >= 0.75) return 'high';
-    if (cert >= 0.45) return 'medium';
-    return 'low';
+
+  const numericCandidates = [
+    claim.confidence,
+    claim.certainty,
+    claim.confidence_score,
+    claim.certainty_score,
+  ];
+  for (const raw of numericCandidates) {
+    const c = Number(raw);
+    if (!Number.isFinite(c)) continue;
+    // Scores may be 0-1 or 0-100.
+    const n = c > 1.5 ? c / 100 : c;
+    if (n >= 0.75) return 'high';
+    if (n >= 0.45) return 'medium';
+    if (n > 0) return 'low';
   }
   return 'unknown';
 }
 
-/**
- * Prefer signals over setups; then higher confidence / certainty.
- * @param {object} a
- * @param {object} b
- * @returns {number} negative if a wins
- */
 function claimRank(a, b) {
   const srcScore = (row) => (String(row.source) === 'signal' ? 2 : String(row.source) === 'setup' ? 1 : 0);
   const dSrc = srcScore(b) - srcScore(a);
@@ -142,7 +154,7 @@ async function evaluateClaimsWithTa(claims, provider, opts = {}) {
   const rows = [];
   for (const claim of aligned) {
     const series = seriesBySymbol.get(claim.yahoo_symbol) || { bars: [], status: 'missing' };
-    const bars = Array.isArray(series.bars) ? series.bars : [];
+    const bars = sanitizeBars(Array.isArray(series.bars) ? series.bars : []);
     const hist = barsThrough(bars, claim.executable_date || claim.claim_date);
     // Features use bars strictly before executable day to avoid leakage.
     const featureBars = claim.executable_date
@@ -168,16 +180,22 @@ async function evaluateClaimsWithTa(claims, provider, opts = {}) {
     let priceStatus = series.status || 'ok';
     if (claim.executable_date) {
       const entryBar = bars.find((b) => b.date >= claim.executable_date);
-      entryPx = entryBar ? Number(entryBar.open ?? entryBar.close) : null;
+      entryPx = null;
+      if (entryBar) {
+        const o = Number(entryBar.open);
+        const c = Number(entryBar.close);
+        if (Number.isFinite(o) && o > 0) entryPx = o;
+        else if (Number.isFinite(c) && c > 0) entryPx = c;
+      }
       const weekDate = shiftIsoDate(claim.executable_date, weekDays);
       const monthDate = shiftIsoDate(claim.executable_date, monthDays);
       if (weekDate && weekDate <= asOfDate) {
         const wb = [...bars].reverse().find((b) => b.date <= weekDate) || null;
-        weekPx = wb ? Number(wb.close) : null;
+        weekPx = (() => { const n = wb ? Number(wb.close) : NaN; return Number.isFinite(n) && n > 0 ? n : null; })();
       }
       if (monthDate && monthDate <= asOfDate) {
         const mb = [...bars].reverse().find((b) => b.date <= monthDate) || null;
-        monthPx = mb ? Number(mb.close) : null;
+        monthPx = (() => { const n = mb ? Number(mb.close) : NaN; return Number.isFinite(n) && n > 0 ? n : null; })();
       }
       if (!Number.isFinite(entryPx)) priceStatus = 'missing_entry';
     } else {
@@ -248,6 +266,7 @@ async function evaluateClaimsWithTa(claims, provider, opts = {}) {
       gap_kind: gap.gap_kind,
       gap_filled_5d: gap.filled_5d,
       gap_date: gap.gap_date,
+      sim_status: sim.status || '',
       r_multiple: sim.r_multiple,
       r_multiple_clipped: sim.r_multiple_clipped,
       mfe_r: sim.mfe_r,
