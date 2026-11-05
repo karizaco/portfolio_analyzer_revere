@@ -550,15 +550,18 @@ dates that are not exact, every false positive is in a capture's own
 chart ink: `ERX`, `GUSH`, `LI`, `LMT`, `DNA`, `NFU` recur. `NFLX` and `TNA`
 are missed together on `20220606`, `20220607` and `20220608`.
 
-**The campaign finished at 96.4 % on what production published.** Every
-ground-truth date has now been rescanned with the current parser, and the
-logs' own merged lists — the artifact the portfolio report reads — score
-**347/360 (96.4 %) with 21 false positives** over 40 dates.
+**The campaign finished at 96.2 % on what production published, against the
+extended ground truth.** Every ground-truth date has been rescanned with the
+current parser. The logs' own merged lists — the artifact the portfolio
+report reads — score **352/366 (96.2 %) with 16 false positives** over 40
+dates. Before the four missing moments were added to the union, the same
+logs scored 347/360 (96.4 %) with 21 false positives: five of those "false
+positives" were the holdings the union did not yet carry.
 
 | level | hit / ground truth | recall | false positives |
-|---|---|---|---|
-| the logs' own merged list (what production published) | 347/360 | **96.4 %** | 21 |
-| the current parser rebuilt over the same captures | 337/360 | 93.6 % | 11 |
+| --- | --- | --- | --- |
+| the logs' own merged list (what production published) | 352/366 | **96.2 %** | 16 |
+| the current parser rebuilt over the same captures | 339/366 | 92.6 % | 9 |
 
 The two levels differ because production clusters **every** OCR'd candidate
 frame while a rebuild has only the selected captures. Both are reported by
@@ -567,12 +570,12 @@ one CLAUDE.md records in § *The log does NOT carry the clusterer's input*.
 
 **Six more alias rows, all pixel-verified, and the alias tables are worth
 +7 hits and −8 false positives.** Measured over the 40-date corpus with the
-same parser on both sides:
+same parser on both sides, after the union extension:
 
 | | hit / gt | recall | false positives |
-|---|---|---|---|
-| without the alias tables | 330/360 | 91.7 % | 19 |
-| **with them** | **337/360** | **93.6 %** | **11** |
+| --- | --- | --- | --- |
+| without the alias tables | 332/366 | 90.7 % | 17 |
+| **with them** | **339/366** | **92.6 %** | **9** |
 
 | garbled | canonical | the misread | dates |
 |---|---|---|---|
@@ -645,7 +648,7 @@ does not cover. Verified against the pixels:
 |---|---|---|---|
 | `20220412` | `GUSH` is a false positive | **12 rows**, footer "12 of 12 Items" | the panel reads REGN, LMT, X, LHX, COPX, URA, URNM, FCX, NUGT, WEAT, JNUG, **GUSH**. GUSH is a real holding at that moment |
 | `20220330` | `JNUG`, `MU` are false positives | **10 rows**, footer "10 Items" | the panel reads NFLX, REGN, KWEB, LABU, COPX, X, FCX, NUGT, **MU**, **JNUG**. Both are real holdings at that moment |
-| `20220606` | `COIN` is a false positive | **8 rows**, footer "8 Items" | the panel reads GOVX, LABU, **COIN**, UCO, ALB, CBIO, VLO, TNA, NFLX. COIN is real |
+| `20220606` | `COIN` is a false positive | **9 rows**, footer "9 Items" | the panel reads GOVX, LABU, **COIN**, UCO, ALB, CBIO, VLO, TNA, NFLX. COIN is real |
 | `20220607` | `TQQQ`, `WEAT` are false positives | **9 rows**, footer "9 Items" | the panel reads BOIL, LTHM, **WEAT**, ALB, VLO, TNA, NFLX, UCO, **TQQQ**. Both are real |
 | `20220413` | `GUSH`, `LI` are false positives | **11 rows**, footer "11 Items" | the panel reads WEAT, LHX, REGN, LMT, X, FCX, COPX, NUGT, JNUG, URA, URNM. Neither GUSH nor LI is there — **these two ARE errors** |
 
@@ -658,13 +661,20 @@ the UNION is over a date's captures, so a later moment is a MISSING CAPTURE,
 not a wrong reading. The wave-2 audit added captures 1 and 2 to `20220608`
 for exactly this reason.
 
-**The fix is to add the new moments as their own captures**, each pinned to
-its own frame with its own footer count. That means extending
-`tools/buildGroundTruthFixtures.js`'s case table and regenerating the
-md5-pinned crops — which is NOT done yet, because the rebuild's idempotency
-has not been verified on this machine (`--check` could not be run). Until it
-is, the union stays as it is and the scores below carry the known
-incompleteness.
+**The new moments are now their own captures.** The fixture rebuild was
+idempotent (`--check` matched the committed manifest byte for byte), so the
+case table was extended and the crops regenerated:
+
+| date | new capture | rows | what the union gained |
+| --- | --- | --- | --- |
+| `20220330` | 1 | 10, "10 Items" | `MU`, `JNUG` |
+| `20220412` | 1 | 12, "1 of 12 Items" | `GUSH` |
+| `20220606` | 12 | 9, "9 Items" | `COIN` |
+| `20220607` | 3 | 9, "3 of 9 Items" | `WEAT`, `TQQQ` |
+
+Each crop is md5-pinned under `test/fixtures/qmg_ground_truth/`, and the
+checker agrees. `20220413`'s `GUSH` and `LI` stay false positives: that
+panel's eleven rows do not contain them.
 
 **The scan tool now publishes the per-frame check.** `panel_row_count_matches`
 is true when the FIRST capture's reading has as many tickers as the panel says

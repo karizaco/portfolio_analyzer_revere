@@ -457,6 +457,15 @@ const CASES = [
     tickers: ['LABU', 'TNA', 'NFLX', 'VLO', 'CBIO', 'UCO', 'SIGA'],
     note: 'The ground truth gave every 20220606 capture the same GOVX list. This panel reads SIGA; corrected 2026-11-01.',
   },
+  {
+    date: '20220606', capture_index: 12,
+    panel: 'positions',
+    source: 'data/video_scan_test/_rerun/qmg-easyocr-20261105-stale/snapshots/qmg_20220606.png',
+    run: 'data/video_scan_test/_rerun/qmg-easyocr-20261105-stale',
+    panel_count: 9, panel_count_text: '9 Items in Personal WatchList',
+    tickers: ['GOVX', 'LABU', 'COIN', 'UCO', 'ALB', 'CBIO', 'VLO', 'TNA', 'NFLX'],
+    note: 'A later moment than the batch1 anchors (taskbar 16:04, 2026-11-05 rescan). COIN is open; the batch1 union did not carry it. The left watchlist\'s own "8 Items" footer is a different widget.',
+  },
   // 20220614's three captures are the same three holdings. The ground truth
   // gave capture 2 two of them, dropping UVXY -- the row the panel shows and
   // the row the panel's own count of three says is there.
@@ -572,6 +581,15 @@ const CASES = [
     note: "Verified 2026-11-01 against the pixels; the ground truth already read these eight rows.",
   },
   {
+    date: '20220330', capture_index: 1,
+    panel: 'positions',
+    source: 'data/video_scan_test/_rerun/qmg-easyocr-20261105-long/snapshots/qmg_20220330.png',
+    run: 'data/video_scan_test/_rerun/qmg-easyocr-20261105-long',
+    panel_count: 10, panel_count_text: '10 Items in Personal WatchList',
+    tickers: ['NFLX', 'REGN', 'KWEB', 'LABU', 'COPX', 'X', 'FCX', 'NUGT', 'MU', 'JNUG'],
+    note: 'A later moment than the lowcpu-test anchor (taskbar 16:17, chart 10:17, 2026-11-05 rescan). MU and JNUG are open. ERX sits in the left watchlist, not in this table.',
+  },
+  {
     date: '20220331', capture_index: 0,
     panel: 'positions',
     source: 'data/video_ocr_probe/qmg-lowcpu-test/snapshots/qmg_20220331.png',
@@ -597,6 +615,15 @@ const CASES = [
     panel_count: 11, panel_count_text: '11 Items in Personal WatchList',
     tickers: ['LHX', 'LMT', 'URA', 'URNM', 'WEAT', 'X', 'COPX', 'FCX', 'REGN', 'NUGT', 'JNUG'],
     note: "Verified 2026-11-01 against the pixels, and NOT changed. The only run holding this date has a single frame. A twelve-row frame carrying GUSH exists at t=936 s of the same video, but it is a later moment and not the frame this capture was read from.",
+  },
+  {
+    date: '20220412', capture_index: 1,
+    panel: 'positions',
+    source: 'data/video_scan_test/_rerun/qmg-easyocr-20261105-long/snapshots/qmg_20220412.png',
+    run: 'data/video_scan_test/_rerun/qmg-easyocr-20261105-long',
+    panel_count: 12, panel_count_text: '1 of 12 Items in Personal WatchList',
+    tickers: ['REGN', 'LMT', 'X', 'LHX', 'COPX', 'URA', 'URNM', 'FCX', 'NUGT', 'WEAT', 'JNUG', 'GUSH'],
+    note: 'The later moment the 2026-11-01 note already named (taskbar 15:36, 2026-11-05 rescan). GUSH is the twelfth row. The "1 of 12" marks the selected row, not a scroll range.',
   },
   {
     date: '20220413', capture_index: 0,
@@ -813,6 +840,15 @@ const CASES = [
     panel_count: 7, panel_count_text: '7 Items in Personal WatchList',
     tickers: ['UCO', 'VLO', 'ALB', 'BOIL', 'NFLX', 'TNA', 'LTHM'],
     note: "Clock 16:12. The widget ABOVE the table reads \"9 Items in WatchList\" -- a different panel with its own count.",
+  },
+  {
+    date: '20220607', capture_index: 3,
+    panel: 'positions',
+    source: 'data/video_scan_test/_rerun/qmg-easyocr-20261105-stale2/snapshots/qmg_20220607.png',
+    run: 'data/video_scan_test/_rerun/qmg-easyocr-20261105-stale2',
+    panel_count: 9, panel_count_text: '3 of 9 Items in Personal WatchList',
+    tickers: ['BOIL', 'LTHM', 'WEAT', 'ALB', 'VLO', 'TNA', 'NFLX', 'UCO', 'TQQQ'],
+    note: 'A later moment than the batch1 anchors (taskbar 15:32, 2026-11-05 rescan). WEAT and TQQQ are open; the batch1 union did not carry them. The "3 of 9" marks the selected row.',
   },
   {
     date: '20220608', capture_index: 0,
