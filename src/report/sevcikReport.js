@@ -599,6 +599,67 @@ function renderSetupTickerTable(tickers) {
   </table>`;
 }
 
+
+/**
+ * Technical-analysis evaluation section (regimes, archetypes, R, walk-forward).
+ * @param {object} payload
+ * @returns {string}
+ */
+function renderTaSection(payload) {
+  const summary = payload.ta_summary || null;
+  if (!summary) {
+    return `
+    <h2>Technical analysis check</h2>
+    <p class="note">No TA evaluation yet. Run <code>npm run sevcik:ta</code> after aggregate/outcomes to score
+      event alignment, regimes, gap setups, archetypes, R-multiples and walk-forward folds.</p>`;
+  }
+
+  const row = (label, value) => `<div class="card"><div class="card-value">${value}</div><div class="card-label">${label}</div></div>`;
+  const cards = `
+    <div class="cards">
+      ${row('TA claims', summary.claim_count || 0)}
+      ${row('1w hit', summary.hit_rate_1w == null ? '—' : formatPct(summary.hit_rate_1w, 0))}
+      ${row('avg R', summary.avg_r == null ? '—' : Number(summary.avg_r).toFixed(2))}
+      ${row('avg MFE R', summary.avg_mfe_r == null ? '—' : Number(summary.avg_mfe_r).toFixed(2))}
+      ${row('avg MAE R', summary.avg_mae_r == null ? '—' : Number(summary.avg_mae_r).toFixed(2))}
+      ${row('gap talk', summary.gap_talk_n || 0)}
+      ${row('gap fill 5d', summary.gap_fill_rate_5d == null ? '—' : formatPct(summary.gap_fill_rate_5d, 0))}
+      ${row('MTF mono', summary.mtf_monotonic_hit_rate == null ? '—' : (summary.mtf_monotonic_hit_rate ? 'yes' : 'no'))}
+    </div>`;
+
+  function tableFromGroups(title, groups) {
+    const list = Array.isArray(groups) ? groups : [];
+    if (!list.length) return `<h3 class="subhead">${escapeHtml(title)}</h3><p class="note">No rows.</p>`;
+    const body = list.slice(0, 12).map((g) => `<tr>
+      <td>${escapeHtml(g.key)}</td>
+      <td>${g.n}</td>
+      <td>${g.scored_1w}</td>
+      <td>${g.hit_rate_1w == null ? '—' : formatPct(g.hit_rate_1w, 0)}</td>
+      <td>${g.avg_r == null ? '—' : Number(g.avg_r).toFixed(2)}</td>
+      <td>${g.avg_aligned_return_1w == null ? '—' : formatPct(g.avg_aligned_return_1w, 1)}</td>
+    </tr>`).join('');
+    return `<h3 class="subhead">${escapeHtml(title)}</h3>
+      <table class="grid">
+        <thead><tr><th>bucket</th><th>n</th><th>n 1w</th><th>hit 1w</th><th>avg R</th><th>avg aligned 1w</th></tr></thead>
+        <tbody>${body}</tbody>
+      </table>`;
+  }
+
+  const wf = summary.walk_forward || {};
+  const wfNote = `<p class="note">Walk-forward: folds=${wf.fold_count || 0}, avg test 1w hit=${wf.avg_test_hit_rate_1w == null ? '—' : formatPct(wf.avg_test_hit_rate_1w, 0)}. ${escapeHtml(wf.note || '')}</p>`;
+
+  return `
+    <h2>Technical analysis check</h2>
+    ${cards}
+    <p class="note">Executable date is the first calendar day after the stream (daily bars). Features use bars through the prior close to avoid same-day leakage. R-sim uses next open entry, 1.5×ATR stop, 2R target, max 20 bars.</p>
+    ${tableFromGroups('By trend regime', summary.by_trend_regime)}
+    ${tableFromGroups('By volatility regime', summary.by_vol_regime)}
+    ${tableFromGroups('By archetype', summary.by_archetype)}
+    ${tableFromGroups('By MTF confirmation', summary.by_mtf_label)}
+    ${wfNote}`;
+}
+
+
 function buildSevcikReportHtml(payload) {
   const signals = payload.signals || [];
   const tickers = payload.tickers || [];
@@ -718,6 +779,7 @@ function buildSevcikReportHtml(payload) {
     : ''}
   ${renderOverviewCharts(payload)}
   ${renderOutcomeSection(payload)}
+  ${renderTaSection(payload)}
   <h2>Setups by ticker</h2>
   ${renderSetupTickerTable(payload.setup_tickers || [])}
   <h2>Setups</h2>
