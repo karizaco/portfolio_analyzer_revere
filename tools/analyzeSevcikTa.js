@@ -3,11 +3,12 @@
 // Technical-analysis evaluation of Sevcik signals & setups.
 //
 // Builds:
-//   - event alignment (claim_date -> executable_date)
+//   - event alignment (claim_date -> next session executable_date)
 //   - indicator snapshot / regimes / MTF score
-//   - gap + archetype labels
-//   - R-multiple path simulation
-//   - walk-forward descriptive folds
+//   - gap + archetype labels (real-gap gate)
+//   - R-multiple path simulation (floor/cap + clipped stats)
+//   - dual scorecards + claim dedupe
+//   - conditional edge matrix + walk-forward policy check
 //
 // Writes:
 //   data/sevcik_ta_features.json
@@ -43,12 +44,12 @@ const SCHEMA_PATH = path.join(ROOT, 'data', 'db', 'schema.sql');
 
 const FEATURE_COLUMNS = [
   'source', 'video_id', 'upload_date', 'ticker', 'yahoo_symbol', 'bias', 'claim_kind',
-  'claim_date', 'executable_date', 'alignment_confidence', 'asof_date',
-  'trend_regime', 'vol_regime', 'mtf_label', 'mtf_score', 'archetype',
-  'gap_talk', 'has_gap', 'gap_pct', 'gap_filled_5d',
+  'claim_date', 'executable_date', 'venue', 'alignment_confidence', 'asof_date',
+  'trend_regime', 'vol_regime', 'mtf_label', 'mtf_score', 'archetype', 'confidence_band',
+  'gap_talk', 'linguistic_gap_setup', 'market_gap_observed', 'real_gap', 'has_gap', 'gap_pct', 'gap_filled_5d',
   'rsi14', 'macd_hist', 'sma50', 'sma200', 'atr_pct', 'bb_bandwidth', 'volume_z20', 'adx14',
   'entry_price', 'return_1w', 'return_1m', 'aligned_return_1w', 'hit_1w', 'hit_1m',
-  'r_multiple', 'mfe_r', 'mae_r', 'exit_reason', 'price_status',
+  'r_multiple', 'r_multiple_clipped', 'mfe_r', 'mae_r', 'exit_reason', 'stop_mode', 'price_status',
 ];
 
 const argv = process.argv.slice(2);
@@ -116,7 +117,6 @@ async function main() {
     asOfDate: new Date().toISOString().slice(0, 10),
   });
 
-  // Persist JSON/CSV
   const featuresPath = path.join(OUTPUT_DIR, 'sevcik_ta_features.json');
   const summaryPath = path.join(OUTPUT_DIR, 'sevcik_ta_summary.json');
   fs.writeFileSync(featuresPath, JSON.stringify({ summary, rows }, null, 2), 'utf8');
@@ -127,7 +127,6 @@ async function main() {
     rows.map(serializeFeatureRow),
   );
 
-  // Persist SQLite feature store
   if (fs.existsSync(DB_PATH)) {
     const db = new DatabaseSync(DB_PATH);
     if (fs.existsSync(SCHEMA_PATH)) {
@@ -138,7 +137,6 @@ async function main() {
     db.close();
   }
 
-  // Attach onto the main payload + refresh dashboard
   try {
     const mainPayload = JSON.parse(fs.readFileSync(INPUT_JSON, 'utf8'));
     mainPayload.ta_summary = summary;
@@ -153,10 +151,19 @@ async function main() {
   if (options.json) {
     console.log(JSON.stringify(summary, null, 2));
   } else {
+    const sc = summary.scorecards || {};
     console.log(`[sevcik-ta] claims=${summary.claim_count} scored_1w=${summary.scored_1w}`
-      + ` hit_1w=${summary.hit_rate_1w} avg_r=${summary.avg_r}`
-      + ` archetypes=${(summary.by_archetype || []).length}`
+      + ` hit_1w=${summary.hit_rate_1w}`
+      + ` median_r=${summary.median_r} avg_r_clip=${summary.avg_r_clipped} avg_r=${summary.avg_r}`
+      + ` gap_real=${summary.gap_real_n} gap_ling=${summary.gap_linguistic_n}`
+      + ` deduped=${summary.dedupe && summary.dedupe.primary_n}`
+      + ` edge_allow=${summary.edge_matrix && summary.edge_matrix.allow_count}`
       + ` walk_folds=${summary.walk_forward && summary.walk_forward.fold_count}`);
+    if (sc.signals_only) {
+      console.log(`[sevcik-ta] signals hit_1w=${sc.signals_only.hit_rate_1w} median_r=${sc.signals_only.median_r}`
+        + ` | setups hit_1w=${sc.setups_only && sc.setups_only.hit_rate_1w} median_r=${sc.setups_only && sc.setups_only.median_r}`
+        + ` | primary hit_1w=${sc.deduped_primary && sc.deduped_primary.hit_rate_1w}`);
+    }
     console.log('[sevcik-ta] wrote data/sevcik_ta_features.json, data/sevcik_ta_features.csv,'
       + ' data/sevcik_ta_summary.json and refreshed report/sqlite feature store');
   }
@@ -173,6 +180,7 @@ function serializeFeatureRow(row) {
     claim_kind: row.claim_kind || '',
     claim_date: row.claim_date || '',
     executable_date: row.executable_date || '',
+    venue: row.venue || '',
     alignment_confidence: row.alignment_confidence || '',
     asof_date: row.asof_date || '',
     trend_regime: row.trend_regime || '',
@@ -180,7 +188,11 @@ function serializeFeatureRow(row) {
     mtf_label: row.mtf_label || '',
     mtf_score: row.mtf_score == null ? '' : row.mtf_score,
     archetype: row.archetype || '',
+    confidence_band: row.confidence_band || '',
     gap_talk: row.gap_talk ? 1 : 0,
+    linguistic_gap_setup: row.linguistic_gap_setup === true ? 1 : row.linguistic_gap_setup === false ? 0 : '',
+    market_gap_observed: row.market_gap_observed === true ? 1 : row.market_gap_observed === false ? 0 : '',
+    real_gap: row.real_gap === true ? 1 : row.real_gap === false ? 0 : '',
     has_gap: row.has_gap === true ? 1 : row.has_gap === false ? 0 : '',
     gap_pct: row.gap_pct == null ? '' : row.gap_pct,
     gap_filled_5d: row.gap_filled_5d === true ? 1 : row.gap_filled_5d === false ? 0 : '',
@@ -199,9 +211,11 @@ function serializeFeatureRow(row) {
     hit_1w: row.hit_1w === true ? 1 : row.hit_1w === false ? 0 : '',
     hit_1m: row.hit_1m === true ? 1 : row.hit_1m === false ? 0 : '',
     r_multiple: row.r_multiple == null ? '' : row.r_multiple,
+    r_multiple_clipped: row.r_multiple_clipped == null ? '' : row.r_multiple_clipped,
     mfe_r: row.mfe_r == null ? '' : row.mfe_r,
     mae_r: row.mae_r == null ? '' : row.mae_r,
     exit_reason: row.exit_reason || '',
+    stop_mode: row.stop_mode || '',
     price_status: row.price_status || '',
   };
 }
