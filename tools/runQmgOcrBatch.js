@@ -185,6 +185,7 @@ function parseArgs(argv) {
     clusterRule: 'corroborated+swallowed',
     maxFrames: null,
     maxCaptures: null,
+    timeoutMinutes: null,
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -198,6 +199,7 @@ function parseArgs(argv) {
     else if (a === '--cluster-rule') args.clusterRule = argv[++i] || 'corroborated+swallowed';
     else if (a === '--max-frames') args.maxFrames = parsePositiveInt(a, argv[++i]);
     else if (a === '--max-captures') args.maxCaptures = parsePositiveInt(a, argv[++i]);
+    else if (a === '--timeout-minutes') args.timeoutMinutes = parsePositiveInt(a, argv[++i]);
   }
   if (!Object.prototype.hasOwnProperty.call(CLUSTER_RULE_FLAGS, args.clusterRule)) {
     throw new Error(
@@ -329,9 +331,10 @@ async function runScan(dateKey, video, runTag, clusterRule = 'corroborated+swall
   console.log(`[${dateKey}] Starting ${video.file} (${video.resolution})`);
   const start = Date.now();
 
+  const timeoutMs = budget.timeoutMs || PER_VIDEO_TIMEOUT_MS;
   const { status, code, stdoutTail, stderr } = await superviseChild(cmd, env, {
-    timeoutMs: PER_VIDEO_TIMEOUT_MS,
-    onTimeout: () => console.log(`[${dateKey}] TIMEOUT after ${PER_VIDEO_TIMEOUT_MS/1000}s — killing`),
+    timeoutMs,
+    onTimeout: () => console.log(`[${dateKey}] TIMEOUT after ${timeoutMs/1000}s — killing`),
   });
 
   const elapsed = ((Date.now() - start) / 1000).toFixed(0);
@@ -410,7 +413,11 @@ async function main() {
   console.log(`Run tag: ${runTag}`);
   console.log(`Dates: ${dates.join(', ')}`);
   console.log(`Parallelism: ${parallel}${args.lowCpu ? ' (low-cpu mode)' : ''}`);
-  const budget = { maxFrames: args.maxFrames, maxCaptures: args.maxCaptures };
+  const budget = {
+    maxFrames: args.maxFrames,
+    maxCaptures: args.maxCaptures,
+    timeoutMs: args.timeoutMinutes ? args.timeoutMinutes * 60 * 1000 : null,
+  };
   if (budget.maxFrames != null || budget.maxCaptures != null) {
     console.log(`Budget: ${budget.maxFrames ?? 'default'} frames, ${budget.maxCaptures ?? 'default'} captures`);
   }
