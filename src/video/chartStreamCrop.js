@@ -184,6 +184,13 @@ function chartStreamPrefilterRegionForDate(dateKey) {
 // max upload_date for channel='qullamaggie').
 const CHART_STREAM_RIGHT_SIDEBAR_LAST = '20231215';
 
+// NFU is a real seed ticker, so it cannot be a shared alias key. Pixel-verified
+// floating-panel captures on these three upload dates show NFLX in the cell
+// EasyOCR reads as NFU, and none of the dates' ground truth holds NFU. Scope the
+// rescue to the exact known date window rather than rewriting NFU everywhere.
+const FLOATING_PANEL_NFU_ALIAS_FROM = '20220606';
+const FLOATING_PANEL_NFU_ALIAS_TO = '20220608';
+
 /**
  * The layout era whose LAYOUT-SCOPED alias rows a parse may apply, or null.
  *
@@ -201,11 +208,14 @@ const CHART_STREAM_RIGHT_SIDEBAR_LAST = '20231215';
  * real holding and must not become `LI`.
  *
  * @param {string} dateKey an `YYYYMMDD` upload date
- * @returns {'right_sidebar'|null}
+ * @returns {'right_sidebar'|'floating_panel_nfu_20220606_08'|null}
  */
 function layoutAliasEraForDate(dateKey) {
   const key = String(dateKey || '').trim();
   if (!/^20\d{6}$/.test(key)) return null;
+  if (key >= FLOATING_PANEL_NFU_ALIAS_FROM && key <= FLOATING_PANEL_NFU_ALIAS_TO) {
+    return 'floating_panel_nfu_20220606_08';
+  }
   if (key >= CHART_STREAM_RIGHT_SIDEBAR_FROM && key <= CHART_STREAM_RIGHT_SIDEBAR_LAST) {
     return 'right_sidebar';
   }
@@ -217,6 +227,8 @@ module.exports = {
   CHART_STREAM_CROP_RIGHT_SIDEBAR,
   CHART_STREAM_RIGHT_SIDEBAR_FROM,
   CHART_STREAM_RIGHT_SIDEBAR_LAST,
+  FLOATING_PANEL_NFU_ALIAS_FROM,
+  FLOATING_PANEL_NFU_ALIAS_TO,
   chartStreamCropFractionForDate,
   chartStreamEraForDate,
   chartStreamPrefilterRegionForDate,

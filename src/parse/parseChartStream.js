@@ -182,6 +182,7 @@ function setOcrConfusionCsvPath(nextPath) {
 // stays in one place.
 const LAYOUT_CONFUSION_CSVS = {
   right_sidebar: path.resolve(__dirname, '..', '..', 'config', 'ticker_ocr_confusions_right_sidebar.csv'),
+  floating_panel_nfu_20220606_08: path.resolve(__dirname, '..', '..', 'config', 'ticker_ocr_confusions_floating_panel_nfu.csv'),
 };
 const layoutConfusionCache = new Map();
 

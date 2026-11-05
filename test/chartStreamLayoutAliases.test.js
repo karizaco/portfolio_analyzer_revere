@@ -52,6 +52,8 @@ const {
   layoutAliasEraForDate,
   CHART_STREAM_RIGHT_SIDEBAR_FROM,
   CHART_STREAM_RIGHT_SIDEBAR_LAST,
+  FLOATING_PANEL_NFU_ALIAS_FROM,
+  FLOATING_PANEL_NFU_ALIAS_TO,
 } = require('../src/video/chartStreamCrop');
 const { loadQmgGroundTruth, listGroundTruthCaptures } = require('../src/qmg/qmgGroundTruth');
 
@@ -80,9 +82,15 @@ test('layout aliases apply only to a known right-sidebar upload', () => {
   for (const d of ['20230518', '20230522', '20230523', '20230609', '20231201', '20231215']) {
     assert.equal(layoutAliasEraForDate(d), 'right_sidebar', `${d} is a sidebar upload`);
   }
-  // The 2022 floating panel, where U is a real holding.
-  for (const d of ['20221117', '20230126', '20220218']) {
-    assert.equal(layoutAliasEraForDate(d), null, `${d} is the floating panel`);
+  // The floating-panel NFU rescue is date-scoped: NFU is a real seed ticker,
+  // so the row must not apply to the rest of the 2022 era.
+  assert.equal(FLOATING_PANEL_NFU_ALIAS_FROM, '20220606');
+  assert.equal(FLOATING_PANEL_NFU_ALIAS_TO, '20220608');
+  for (const d of ['20220606', '20220607', '20220608']) {
+    assert.equal(layoutAliasEraForDate(d), 'floating_panel_nfu_20220606_08', `${d} is in the verified NFU window`);
+  }
+  for (const d of ['20220605', '20220609', '20221117', '20230126']) {
+    assert.equal(layoutAliasEraForDate(d), null, `${d} must not receive the NFU rewrite`);
   }
   // After the channel's last upload: a mis-dated file, not a sidebar video.
   for (const d of ['20231216', '20260921']) {
@@ -109,6 +117,26 @@ test('the right-sidebar table exists and every canonical is allow-listed', () =>
       `${canonical} is not in the seed lexicon, so a rescue into it would be discarded`);
   }
 });
+
+test('the floating-panel NFU table is date-scoped and pixel-backed', () => {
+  const file = LAYOUT_CONFUSION_CSVS.floating_panel_nfu_20220606_08;
+  assert.ok(fs.existsSync(file), `${file} must exist`);
+  const rows = readRows(file);
+  assert.deepEqual(rows, [
+    { garbled: 'NFU', canonical: 'NFLX' },
+    { garbled: 'NF', canonical: 'NFLX' },
+  ]);
+  const seed = loadSeedLexiconSync().tickerSet;
+  assert.ok(seed.has('NFU'), 'NFU remains a real seed ticker');
+  assert.ok(seed.has('NFLX'), 'NFLX is reportable');
+  for (const date of ['20220606', '20220607', '20220608']) {
+    const held = listGroundTruthCaptures(loadQmgGroundTruth(), { dates: [date] })
+      .flatMap((c) => c.tickers || []).map((t) => String(t).toUpperCase());
+    assert.ok(held.includes('NFLX'), `${date} ground truth holds NFLX`);
+    assert.ok(!held.includes('NFU'), `${date} ground truth does not hold NFU`);
+  }
+});
+
 
 test('the right-sidebar table does not fight the shared table', () => {
   const layoutRows = readRows(LAYOUT_CONFUSION_CSVS.right_sidebar);
@@ -205,6 +233,64 @@ test('without a layout -- and in the 2022 layout -- U stays U', () => {
     assert.ok(list.includes('U'), `U must survive with layoutEra=${String(layoutEra)}: ${JSON.stringify(list)}`);
     assert.ok(!list.includes('LI'), `LI must not appear with layoutEra=${String(layoutEra)}: ${JSON.stringify(list)}`);
   }
+});
+
+test('the verified floating-panel NFU cell is rewritten only in its date window', () => {
+  // The column gate needs three PRICE-ALIGNED rows before it engages, and the
+  // alias rescue only runs when the gate is active -- so the frame carries
+  // four list rows with readable prices, the shape the June captures have.
+  const rows = [
+    ['POSITIONS', 700, 1],
+    ['NFU', LIST_X, 2], ['$12.00', PRICE_X, 2],
+    ['PLTR', LIST_X, 3], ['$31.20', PRICE_X, 3],
+    ['ALB', LIST_X, 4], ['$5.29', PRICE_X, 4],
+    ['UCO', LIST_X, 5], ['$4.36', PRICE_X, 5],
+    ['WATCHLIST', 700, 6],
+  ];
+  const words = rows.map(([text, left, line]) => ({
+    text, left, top: 100 + line * 60, width: 40, height: 30, line,
+  }));
+  const ocr = { text: rows.map((r) => r[0]).join('\n'), lines: [], words };
+  const scoped = listOf(parseChartStreamPositionList({
+    ocr,
+    layoutEra: 'floating_panel_nfu_20220606_08',
+  }));
+  assert.ok(scoped.includes('NFLX'), `NFU should become NFLX: ${JSON.stringify(scoped)}`);
+  assert.ok(!scoped.includes('NFU'), `NFU should not survive the verified scoped rescue: ${JSON.stringify(scoped)}`);
+
+  const ordinary = listOf(parseChartStreamPositionList({ ocr, layoutEra: 'floating_panel' }));
+  assert.ok(ordinary.includes('NFU'), `NFU must remain real outside the date scope: ${JSON.stringify(ordinary)}`);
+  assert.ok(!ordinary.includes('NFLX'), `NFLX must not be guessed outside the date scope: ${JSON.stringify(ordinary)}`);
+});
+
+
+test('the two-glyph read of the same cell is rescued, and NFU is not invented', () => {
+  // 20220607's panel reads NFLX; EasyOCR dropped the L and the X on one
+  // frame and read "NF". NF is one edit from NFU, which IS a seed ticker, so
+  // the distance-1 repair would otherwise publish a real-but-wrong holding.
+  const rows = [
+    ['POSITIONS', 700, 1],
+    ['NF', LIST_X, 2], ['$12.00', PRICE_X, 2],
+    ['PLTR', LIST_X, 3], ['$31.20', PRICE_X, 3],
+    ['ALB', LIST_X, 4], ['$5.29', PRICE_X, 4],
+    ['UCO', LIST_X, 5], ['$4.36', PRICE_X, 5],
+    ['WATCHLIST', 700, 6],
+  ];
+  const words = rows.map(([text, left, line]) => ({
+    text, left, top: 100 + line * 60, width: 40, height: 30, line,
+  }));
+  const ocr = { text: rows.map((r) => r[0]).join('\n'), lines: [], words };
+  const scoped = listOf(parseChartStreamPositionList({
+    ocr,
+    layoutEra: 'floating_panel_nfu_20220606_08',
+  }));
+  assert.ok(scoped.includes('NFLX'), `NF should become NFLX: ${JSON.stringify(scoped)}`);
+  assert.ok(!scoped.includes('NFU'), `the repair must not invent NFU: ${JSON.stringify(scoped)}`);
+
+  // Outside the window the same read is left alone: NF is not a holding, and
+  // the scoped rescue is the only thing that may claim it is NFLX.
+  const ordinary = listOf(parseChartStreamPositionList({ ocr, layoutEra: 'floating_panel' }));
+  assert.ok(!ordinary.includes('NFLX'), `NFLX must not be guessed outside the date scope: ${JSON.stringify(ordinary)}`);
 });
 
 test('a sidebar-layout U outside the column or below the watchlist is not rewritten', () => {
