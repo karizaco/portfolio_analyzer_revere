@@ -14,6 +14,33 @@ const MAX_STOP_PCT = 0.08;
 const AGG_R_CLIP = 5;
 
 /**
+ * OHLC must be finite and strictly positive. Yahoo occasionally emits close=0 stubs.
+ * @param {object|null|undefined} bar
+ * @returns {boolean}
+ */
+function isValidBar(bar) {
+  if (!bar) return false;
+  const open = Number(bar.open);
+  const high = Number(bar.high);
+  const low = Number(bar.low);
+  const close = Number(bar.close);
+  if (![open, high, low, close].every((n) => Number.isFinite(n) && n > 0)) return false;
+  // Soft sanity: high should be the top, low the bottom (allow minor feed noise).
+  if (high < low) return false;
+  if (high < Math.min(open, close) * 0.5) return false;
+  return true;
+}
+
+/**
+ * Drop invalid OHLC rows; keep order.
+ * @param {Array<object>} bars
+ * @returns {Array<object>}
+ */
+function sanitizeBars(bars) {
+  return (Array.isArray(bars) ? bars : []).filter(isValidBar);
+}
+
+/**
  * @param {object} opts
  * @param {Array<object>} opts.bars ascending OHLCV including pre-entry history
  * @param {string} opts.entryDate executable date
@@ -26,7 +53,7 @@ const AGG_R_CLIP = 5;
  * @returns {object}
  */
 function simulateRTrade(opts) {
-  const bars = Array.isArray(opts.bars) ? opts.bars : [];
+  const bars = sanitizeBars(opts.bars);
   const bias = opts.bias === 'bearish' ? 'bearish' : opts.bias === 'bullish' ? 'bullish' : '';
   const entryDate = opts.entryDate || '';
   const atrMult = Number.isFinite(Number(opts.atrMult)) ? Number(opts.atrMult) : DEFAULT_ATR_MULT;
@@ -80,16 +107,17 @@ function simulateRTrade(opts) {
   let stopMode = 'atr';
   if (useStructureStop && entryIdx > 0) {
     const prev = bars[entryIdx - 1];
-    const structural = bias === 'bullish'
-      ? entry - Number(prev.low)
-      : Number(prev.high) - entry;
-    if (Number.isFinite(structural) && structural > 0) {
-      // Wider of ATR stop and structural stop (more conservative).
-      if (structural > stopDist) {
-        stopDist = structural;
-        stopMode = 'structure';
-      } else {
-        stopMode = 'atr_ge_structure';
+    if (isValidBar(prev)) {
+      const structural = bias === 'bullish'
+        ? entry - Number(prev.low)
+        : Number(prev.high) - entry;
+      if (Number.isFinite(structural) && structural > 0) {
+        if (structural > stopDist) {
+          stopDist = structural;
+          stopMode = 'structure';
+        } else {
+          stopMode = 'atr_ge_structure';
+        }
       }
     }
   }
@@ -118,15 +146,21 @@ function simulateRTrade(opts) {
   let barsHeld = 0;
   let hitTarget = false;
   let hitStop = false;
+  let lastValidClose = null;
+  let lastValidDate = '';
+  let validBarsSeen = 0;
 
   const lastIdx = Math.min(bars.length - 1, entryIdx + maxBars);
   for (let i = entryIdx; i <= lastIdx; i += 1) {
     const bar = bars[i];
+    if (!isValidBar(bar)) continue;
     const high = Number(bar.high);
     const low = Number(bar.low);
     const close = Number(bar.close);
-    if (!Number.isFinite(high) || !Number.isFinite(low) || !Number.isFinite(close)) continue;
+    validBarsSeen += 1;
     barsHeld = i - entryIdx + 1;
+    lastValidClose = close;
+    lastValidDate = bar.date || '';
 
     if (bias === 'bullish') {
       mfe = Math.max(mfe, high - entry);
@@ -181,18 +215,20 @@ function simulateRTrade(opts) {
         break;
       }
     }
+  }
 
-    if (i === lastIdx) {
-      exitPrice = close;
-      exitDate = bar.date;
+  if (!hitStop && !hitTarget) {
+    if (Number.isFinite(lastValidClose) && lastValidClose > 0) {
+      exitPrice = lastValidClose;
+      exitDate = lastValidDate;
       exitReason = 'time';
     }
   }
 
-  if (!Number.isFinite(exitPrice)) {
+  if (!Number.isFinite(exitPrice) || exitPrice <= 0) {
     return {
       ...empty,
-      status: 'no_exit',
+      status: validBarsSeen ? 'no_exit' : 'no_valid_bars',
       side: bias,
       entry_date: entryBar.date,
       entry_price: round(entry),
@@ -228,6 +264,7 @@ function simulateRTrade(opts) {
     stop_mode: stopMode,
     min_stop_pct: minStopPct,
     max_stop_pct: maxStopPct,
+    valid_bars_seen: validBarsSeen,
   };
 }
 
@@ -244,7 +281,14 @@ function clipR(value, limit = AGG_R_CLIP) {
  * @returns {object}
  */
 function summarizeRStats(rows) {
-  const raw = (rows || []).map((r) => Number(r.r_multiple)).filter((n) => Number.isFinite(n));
+  const usable = (rows || []).filter((r) => {
+    const status = r.sim_status || r.status;
+    if (status && status !== 'ok') return false;
+    const exit = Number(r.exit_price);
+    if (Number.isFinite(exit) && exit <= 0) return false;
+    return Number.isFinite(Number(r.r_multiple));
+  });
+  const raw = usable.map((r) => Number(r.r_multiple));
   const clipped = raw.map((n) => clipR(n));
   const exits = { stop: 0, target: 0, time: 0, other: 0, missing: 0 };
   for (const row of rows || []) {
@@ -260,8 +304,8 @@ function summarizeRStats(rows) {
     avg_r: mean(raw),
     avg_r_clipped: mean(clipped),
     median_r: median(raw),
-    avg_mfe_r: mean((rows || []).map((r) => Number(r.mfe_r)).filter((n) => Number.isFinite(n))),
-    avg_mae_r: mean((rows || []).map((r) => Number(r.mae_r)).filter((n) => Number.isFinite(n))),
+    avg_mfe_r: mean(usable.map((r) => Number(r.mfe_r)).filter((n) => Number.isFinite(n))),
+    avg_mae_r: mean(usable.map((r) => Number(r.mae_r)).filter((n) => Number.isFinite(n))),
     exit_mix: exits,
     r_clip: AGG_R_CLIP,
   };
@@ -291,6 +335,8 @@ module.exports = {
   MAX_STOP_PCT,
   MIN_STOP_PCT,
   clipR,
+  isValidBar,
+  sanitizeBars,
   simulateRTrade,
   summarizeRStats,
 };

@@ -83,6 +83,10 @@ function main() {
   const db = new DatabaseSync(DB_PATH);
   db.exec(fs.readFileSync(path.join(ROOT, 'data', 'db', 'schema.sql'), 'utf8'));
 
+  const registered = registerDiskTranscripts(db);
+  if (registered) {
+    console.log(`[sevcik-signals] registered ${registered} disk transcript(s) into video_transcripts`);
+  }
   const videos = selectVideos(db);
   console.log(`[sevcik-signals] videos=${videos.length} channel=${options.channel}`
     + ` lexicon=${lexicon.size} parser=${PARSER_VERSION}${options.dryRun ? ' DRY-RUN' : ''}`);
@@ -144,6 +148,105 @@ function main() {
  * @param {DatabaseSync} db
  * @returns {Array<object>}
  */
+/**
+ * Register Sevcik transcript JSON files that exist on disk but are missing
+ * from video_transcripts. Without this, extract only sees the subset that
+ * fetch already wrote to SQLite, and hundreds of on-disk transcripts stay idle.
+ *
+ * @param {DatabaseSync} db
+ * @returns {number} newly registered rows
+ */
+function registerDiskTranscripts(db) {
+  if (!fs.existsSync(TRANSCRIPTS_DIR)) return 0;
+  const channel = options.channel || SEVCIK_CHANNEL;
+  const existing = new Set(
+    db.prepare('SELECT video_id FROM video_transcripts').all().map((r) => r.video_id),
+  );
+  const catalog = new Map(
+    db.prepare('SELECT video_id, upload_date, title FROM videos WHERE channel = ?').all(channel)
+      .map((r) => [r.video_id, r]),
+  );
+
+  let registered = 0;
+  const files = fs.readdirSync(TRANSCRIPTS_DIR).filter((name) => /^[\w-]{6,}\.json$/i.test(name));
+  const { normalizeTranscript } = require('../src/transcript/transcriptNormalize');
+  const crypto = require('node:crypto');
+
+  const insertTranscript = db.prepare(
+    'INSERT INTO video_transcripts (video_id, provider, language, transcript_path, segment_count, '
+    + 'checksum, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+  );
+  const insertSegment = db.prepare(
+    'INSERT INTO transcript_segments (transcript_id, video_id, segment_index, start_sec, end_sec, text, confidence) '
+    + 'VALUES (?, ?, ?, ?, ?, ?, ?)',
+  );
+
+  for (const name of files) {
+    const videoId = name.slice(0, -5);
+    if (existing.has(videoId)) continue;
+    if (!catalog.has(videoId)) continue;
+    if (options.videoId && options.videoId !== videoId) continue;
+
+    const filePath = require('node:path').join(TRANSCRIPTS_DIR, name);
+    let body;
+    try {
+      body = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    } catch {
+      continue;
+    }
+    let segments;
+    try {
+      segments = normalizeTranscript(body, body.provider || 'manual');
+    } catch {
+      continue;
+    }
+    if (!segments.length) continue;
+
+    const providerRaw = String(body.provider || '').toLowerCase();
+    const provider = providerRaw === 'deepgram' || providerRaw === 'youtube_auto' || providerRaw === 'manual'
+      ? providerRaw
+      : (segments.some((seg) => Number.isFinite(seg.confidence)) ? 'deepgram' : 'youtube_auto');
+    const language = String(body.language || body.lang || '');
+    const textBlob = segments.map((seg) => seg.text || '').join('\n');
+    const checksum = crypto.createHash('md5').update(textBlob).digest('hex');
+    const fetchedAt = body.fetched_at || new Date().toISOString();
+    const relPath = require('node:path').relative(ROOT, filePath).replace(/\\/g, '/');
+
+    try {
+      db.exec('BEGIN');
+      const result = insertTranscript.run(
+        videoId,
+        provider,
+        language,
+        relPath,
+        segments.length,
+        checksum,
+        fetchedAt,
+      );
+      const transcriptId = Number(result.lastInsertRowid);
+      segments.forEach((segment, index) => {
+        insertSegment.run(
+          transcriptId,
+          videoId,
+          index,
+          segment.start_sec,
+          segment.end_sec,
+          segment.text,
+          segment.confidence == null ? null : segment.confidence,
+        );
+      });
+      db.exec('COMMIT');
+      existing.add(videoId);
+      registered += 1;
+    } catch (error) {
+      try { db.exec('ROLLBACK'); } catch (_) {}
+      console.error(`[sevcik-signals] register failed ${videoId}: ${error.message}`);
+    }
+  }
+  return registered;
+}
+
+
 function selectVideos(db) {
   const filters = ['t.video_id IS NOT NULL'];
   const params = [];
