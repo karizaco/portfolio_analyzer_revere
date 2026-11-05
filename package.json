@@ -68,7 +68,8 @@
     "discord:ingest:browser": "node tools/runDiscordIngest.js ingest-browser",
     "discord:signals": "python tools/build_discord_status.py",
     "video:signals": "python tools/build_video_status.py",
-    "sevcik:outcomes": "node tools/analyzeSevcikOutcomes.js"
+    "sevcik:outcomes": "node tools/analyzeSevcikOutcomes.js",
+    "sevcik:ta": "node tools/analyzeSevcikTa.js"
   },
   "dependencies": {
     "sharp": "^0.34.3",

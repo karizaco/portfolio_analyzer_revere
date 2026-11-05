@@ -269,6 +269,74 @@ CREATE INDEX IF NOT EXISTS idx_sevcik_setups_state ON sevcik_setups(state);
 CREATE INDEX IF NOT EXISTS idx_sevcik_setups_certainty
     ON sevcik_setups(certainty_level);
 
+-- Sevcik TA evaluation feature store ------------------------------------
+--
+-- One row per scored claim (signal or setup) with event alignment, indicator
+-- snapshot at claim time, regime labels, archetype, gap context, and optional
+-- R-multiple simulation fields. Rebuilt by tools/analyzeSevcikTa.js.
+
+CREATE TABLE IF NOT EXISTS sevcik_ta_features (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    source TEXT NOT NULL,
+    source_row_id INTEGER,
+    video_id TEXT NOT NULL,
+    ticker TEXT NOT NULL,
+    yahoo_symbol TEXT NOT NULL DEFAULT '',
+    bias TEXT NOT NULL DEFAULT '',
+    claim_kind TEXT NOT NULL DEFAULT '',
+    claim_date TEXT NOT NULL DEFAULT '',
+    executable_date TEXT NOT NULL DEFAULT '',
+    alignment_confidence TEXT NOT NULL DEFAULT '',
+    alignment_rule TEXT NOT NULL DEFAULT '',
+    asof_date TEXT NOT NULL DEFAULT '',
+    close REAL,
+    rsi14 REAL,
+    macd REAL,
+    macd_signal REAL,
+    macd_hist REAL,
+    sma20 REAL,
+    sma50 REAL,
+    sma200 REAL,
+    ema21 REAL,
+    atr14 REAL,
+    atr_pct REAL,
+    bb_mid REAL,
+    bb_upper REAL,
+    bb_lower REAL,
+    bb_bandwidth REAL,
+    volume_z20 REAL,
+    adx14 REAL,
+    bar_count INTEGER NOT NULL DEFAULT 0,
+    trend_regime TEXT NOT NULL DEFAULT '',
+    vol_regime TEXT NOT NULL DEFAULT '',
+    mtf_score REAL,
+    mtf_label TEXT NOT NULL DEFAULT '',
+    archetype TEXT NOT NULL DEFAULT '',
+    gap_talk INTEGER NOT NULL DEFAULT 0,
+    has_gap INTEGER,
+    gap_pct REAL,
+    gap_direction TEXT NOT NULL DEFAULT '',
+    gap_filled_5d INTEGER,
+    r_multiple REAL,
+    mfe_r REAL,
+    mae_r REAL,
+    exit_reason TEXT NOT NULL DEFAULT '',
+    hit_1w INTEGER,
+    hit_1m INTEGER,
+    return_1w REAL,
+    return_1m REAL,
+    aligned_return_1w REAL,
+    aligned_return_1m REAL,
+    feature_version TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(source, video_id, ticker, claim_date, executable_date, bias, source_row_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_sevcik_ta_features_ticker ON sevcik_ta_features(ticker);
+CREATE INDEX IF NOT EXISTS idx_sevcik_ta_features_exec ON sevcik_ta_features(executable_date);
+CREATE INDEX IF NOT EXISTS idx_sevcik_ta_features_arch ON sevcik_ta_features(archetype);
+CREATE INDEX IF NOT EXISTS idx_sevcik_ta_features_trend ON sevcik_ta_features(trend_regime);
+
 -- Discord pipeline tables -------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS discord_sources (

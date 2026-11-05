@@ -194,12 +194,16 @@ function buildPricePoints(responsePayload) {
   }
 
   const timestamps = result.timestamp;
-  const closeSeries = result.indicators
+  const quote = result.indicators
     && Array.isArray(result.indicators.quote)
     && result.indicators.quote[0]
-    && Array.isArray(result.indicators.quote[0].close)
-    ? result.indicators.quote[0].close
-    : [];
+    ? result.indicators.quote[0]
+    : {};
+  const closeSeries = Array.isArray(quote.close) ? quote.close : [];
+  const openSeries = Array.isArray(quote.open) ? quote.open : [];
+  const highSeries = Array.isArray(quote.high) ? quote.high : [];
+  const lowSeries = Array.isArray(quote.low) ? quote.low : [];
+  const volumeSeries = Array.isArray(quote.volume) ? quote.volume : [];
   const adjustedSeries = result.indicators
     && Array.isArray(result.indicators.adjclose)
     && result.indicators.adjclose[0]
@@ -212,6 +216,10 @@ function buildPricePoints(responsePayload) {
     const timestamp = timestamps[index];
     const adjustedClose = Number(adjustedSeries[index]);
     const close = Number(closeSeries[index]);
+    const open = Number(openSeries[index]);
+    const high = Number(highSeries[index]);
+    const low = Number(lowSeries[index]);
+    const volume = Number(volumeSeries[index]);
     const price = Number.isFinite(adjustedClose)
       ? adjustedClose
       : close;
@@ -222,6 +230,11 @@ function buildPricePoints(responsePayload) {
     points.push({
       date: formatDateKey(new Date(timestamp * 1000)),
       price: Number(price.toFixed(6)),
+      open: Number.isFinite(open) ? Number(open.toFixed(6)) : null,
+      high: Number.isFinite(high) ? Number(high.toFixed(6)) : null,
+      low: Number.isFinite(low) ? Number(low.toFixed(6)) : null,
+      close: Number.isFinite(close) ? Number(close.toFixed(6)) : Number(price.toFixed(6)),
+      volume: Number.isFinite(volume) ? volume : null,
       source: Number.isFinite(adjustedClose) ? 'adjclose' : 'close'
     });
   }
@@ -523,10 +536,33 @@ function createYahooPriceProvider(options = {}) {
     await Promise.all(Array.from({ length: workerCount }, () => worker()));
   }
 
+  async function getOhlcvSeries(ticker, fromDate, toDate) {
+    const series = await loadTickerSeries(ticker, fromDate, toDate);
+    const prices = Array.isArray(series.prices) ? series.prices : [];
+    return {
+      symbol: series.symbol || normalizeTickerSymbol(ticker),
+      status: series.status || (prices.length ? 'ok' : 'no_market_data'),
+      from_date: series.from_date || fromDate || '',
+      to_date: series.to_date || toDate || '',
+      bars: prices.map((point) => ({
+        date: point.date,
+        open: Number.isFinite(point.open) ? point.open : (Number.isFinite(point.price) ? point.price : null),
+        high: Number.isFinite(point.high) ? point.high : (Number.isFinite(point.price) ? point.price : null),
+        low: Number.isFinite(point.low) ? point.low : (Number.isFinite(point.price) ? point.price : null),
+        close: Number.isFinite(point.close) ? point.close : (Number.isFinite(point.price) ? point.price : null),
+        price: Number.isFinite(point.price) ? point.price : null,
+        volume: Number.isFinite(point.volume) ? point.volume : null,
+        source: point.source || 'close',
+      })),
+    };
+  }
+
   return {
     prefetchTickers,
     getPositionPrices,
-    getPricePoint
+    getPricePoint,
+    getOhlcvSeries,
+    loadTickerSeries,
   };
 }
 

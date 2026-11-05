@@ -126,3 +126,8 @@ data/prefilter_resolution_sweep_*.json
 # One-off Sevcik fetch stdout (scratch). Transcripts are tracked under
 # data/video_pipeline/transcripts/.
 data/sevcik_fetch_log.txt
+
+# Sevcik TA evaluation rollups (regenerable)
+data/sevcik_ta_features.json
+data/sevcik_ta_features.csv
+data/sevcik_ta_summary.json
