@@ -1108,6 +1108,18 @@
       "PLTR",
       "IMGN",
       "MNDY"
+    ],
+    "1": [
+      "AI",
+      "SOUN",
+      "IONQ",
+      "PLTR",
+      "APLD",
+      "MNDY",
+      "IMGN",
+      "QBTS",
+      "DNA",
+      "CVNA"
     ]
   },
   "20230602": {
@@ -1124,6 +1136,36 @@
       "DNA",
       "GSIT",
       "CVNA"
+    ],
+    "1": [
+      "IOT",
+      "QBTS",
+      "ARQQ",
+      "RGTI",
+      "IMGN",
+      "PLTR",
+      "CVNA",
+      "MNDY",
+      "APLD",
+      "DNA",
+      "IONQ",
+      "AI",
+      "GSIT"
+    ],
+    "2": [
+      "IOT",
+      "QBTS",
+      "ARQQ",
+      "RGTI",
+      "IMGN",
+      "PLTR",
+      "CVNA",
+      "MNDY",
+      "APLD",
+      "DNA",
+      "IONQ",
+      "AI",
+      "GSIT"
     ]
   },
   "20230608": {
@@ -1160,9 +1202,88 @@
       "MNDY"
     ]
   },
-  "_meta": "Per-capture GT. Keys are dateKey (YYYYMMDD) → capture-index (0=qmg_*.png, 1=qmg_*_2.png, 2=qmg_*_3.png). THE CAPTURE INDEX IS RUN-RELATIVE: the file qmg_<date>_<n>.png holds a DIFFERENT image in every run directory, so a capture index means nothing on its own — it means nothing without the run directory it was read in. Where a date has been corrected, its _notes entry names the run the entry is anchored to. The positions panel prints its own row count in its footer ('N Items in Personal WatchList', or 'K of N' when scrolled), and that count is the cheapest audit of a hand-made ground truth: a capture listing more tickers than the panel counts is wrong, and one listing fewer is missing a holding. crop: [x1,y1,x2,y2] in source-frame pixels.  The 94 captures that have pinned pixels live in test/fixtures/qmg_ground_truth/ -- a crop of the panel showing the ticker column AND the footer count, md5-pinned in manifest.json -- and tools/checkGroundTruthConsistency.js checks this file against that manifest. Each manifest case also records WHICH panel it was read from ('panel'), because the 2022-era frame carries three right-hand widgets and the upper watchlist prints the same footer form as the positions table. This file must not carry a duplicate top-level key: JSON.parse keeps the last one silently, and this file shipped with 24 dates each appearing twice. Note: 20230518+ videos use wider table layout — default crop (0.86,0.14) may cut off left edge; use 0.83,0.17 for newer videos. 20230519/20231201/20231215 are Revere earnings frames, not Qullamaggie position lists.",
+  "20231201": {
+    "0": [
+      "SYM",
+      "PDD",
+      "PLTR",
+      "PINS",
+      "DKNG",
+      "DDOG",
+      "BITX",
+      "PATH"
+    ],
+    "1": [
+      "SYM",
+      "PDD",
+      "PLTR",
+      "PINS",
+      "DKNG",
+      "DDOG",
+      "BITX",
+      "PATH"
+    ],
+    "2": [
+      "PDD",
+      "SYM",
+      "PLTR",
+      "DKNG",
+      "DDOG",
+      "PINS",
+      "BITX"
+    ]
+  },
+  "20231215": {
+    "0": [
+      "DDOG",
+      "LMND",
+      "VKTX",
+      "GME",
+      "PDD",
+      "PINS",
+      "SMCI",
+      "DKNG",
+      "GTLB",
+      "ALT",
+      "SYM",
+      "BITX"
+    ],
+    "1": [
+      "BITX",
+      "LMND",
+      "GTLB",
+      "DKNG",
+      "GME",
+      "PINS",
+      "PDD",
+      "VKTX",
+      "DDOG",
+      "SMCI",
+      "ALT",
+      "SYM"
+    ],
+    "2": [
+      "BITX",
+      "LMND",
+      "GTLB",
+      "DKNG",
+      "GME",
+      "PINS",
+      "PDD",
+      "VKTX",
+      "DDOG",
+      "SMCI",
+      "ALT",
+      "SYM"
+    ]
+  },
+  "_meta": "Per-capture GT. Keys are dateKey (YYYYMMDD) → capture-index (0=qmg_*.png, 1=qmg_*_2.png, 2=qmg_*_3.png). THE CAPTURE INDEX IS RUN-RELATIVE: the file qmg_<date>_<n>.png holds a DIFFERENT image in every run directory, so a capture index means nothing on its own — it means nothing without the run directory it was read in. Where a date has been corrected, its _notes entry names the run the entry is anchored to. The positions panel prints its own row count in its footer ('N Items in Personal WatchList', or 'K of N' when scrolled), and that count is the cheapest audit of a hand-made ground truth: a capture listing more tickers than the panel counts is wrong, and one listing fewer is missing a holding. crop: [x1,y1,x2,y2] in source-frame pixels.  The 94 captures that have pinned pixels live in test/fixtures/qmg_ground_truth/ -- a crop of the panel showing the ticker column AND the footer count, md5-pinned in manifest.json -- and tools/checkGroundTruthConsistency.js checks this file against that manifest. Each manifest case also records WHICH panel it was read from ('panel'), because the 2022-era frame carries three right-hand widgets and the upper watchlist prints the same footer form as the positions table. This file must not carry a duplicate top-level key: JSON.parse keeps the last one silently, and this file shipped with 24 dates each appearing twice. Note: 20230518+ videos use wider table layout — default crop (0.86,0.14) may cut off left edge; use 0.83,0.17 for newer videos. 20231201 and 20231215 are NOT Revere earnings frames, as an earlier note here claimed: every capture of both dates shows Qullamaggie's TC2000 'A - Positions' panel (verified against the pixels 2026-11-04, see their _notes). 20230519 has not been checked.",
   "_source": "Verified by visual inspection of crop_comparison.html snapshots.",
   "_notes": {
+    "20230602": "Captures 1 and 2 ADDED 2026-11-04, read off the pixels of data/video_scan_test/_rerun/qmg-easyocr-20261103-swallowed/snapshots/qmg_20230602_2.png (clock 15:56) and qmg_20230602_3.png (clock 15:52); the same run's qmg_20230602.png (15:59) reads the same rows. Thirteen rows - IOT, QBTS, ARQQ, RGTI, IMGN, PLTR, CVNA, MNDY, APLD, DNA, IONQ, AI, GSIT - footer '13 Items in Personal WatchList'. IOT is a REAL holding on this date, opened after the twelve-row moment that capture 0 (pinned, 12 rows) was read from; the parser's IOT was scored as a false positive only because the ground truth stopped at the earlier list. The list grew during the session.",
+    "20230601": "Capture 1 ADDED 2026-11-04, read off the pixels of data/video_scan_test/_rerun/qmg-easyocr-20261104-prod-6frames/snapshots/qmg_20230601.png: ten rows - AI, SOUN, IONQ, PLTR, APLD, MNDY, IMGN, QBTS, DNA, CVNA - footer '10 Items in Personal WatchList'. Capture 0's nine-row reading predates the pixel audit and lacks SOUN; its anchor frame is not known, so it was left unchanged rather than overwritten.",
+    "20231201": "ADDED 2026-11-04, read off the pixels of data/video_scan_test/_rerun/qmg-easyocr-20261104-prod/snapshots/qmg_20231201{,_2,_3}.png. Capture 0 (t=2360 s, clock 15:55) and capture 1 (t=2124 s, clock 15:51) read eight rows - SYM, PDD, PLTR, PINS, DKNG, DDOG, BITX, PATH - footer '8 Items in Personal WatchList'. Capture 2 (t=708 s, clock 15:28) reads seven - PATH was opened later - footer '7 Items in Personal WatchList'. The first row SYM is a real holding (Symbotic), not the column header, which reads 'Sym' in mixed case one row above.",
+    "20231215": "ADDED 2026-11-04, read off the pixels of data/video_scan_test/_rerun/qmg-easyocr-20261104-prod/snapshots/qmg_20231215{,_2,_3}.png (clocks 15:35, 15:38, 15:44). All three read the same twelve holdings - BITX, LMND, GTLB, DKNG, GME, PINS, PDD, VKTX, DDOG, SMCI, ALT, SYM - in a % Change sort order that moves between frames; footers '#10 of 12' and '#1 of 12 Items in Personal WatchList'. The ticker in the panel title bar (ALT, BITX) is the SELECTED row, not an extra holding.",
     "20220421": "CORRECTED 2026-11-01. capture 0 includes UCO; captures 1/2 replace UCO with no extra ticker visible. Capture 2 additionally lacked FTNT: the anchor frame (data/video_ocr_probe/qmg-1080p-batch1, t=132 s, clock 15:27) reads fourteen rows and its own footer says '3 of 14 Items in Personal WatchList'. The hand reading had fifteen rows for it -- the same fifteen it recorded for capture 1 -- which is the copied-column signature. Capture 0 is sixteen rows (UCO present), capture 1 is fifteen (FTNT present), capture 2 is fourteen (FTNT not yet opened). The list GREW during the session -- fourteen rows at 15:27, fifteen at 15:32 when FTNT was opened, sixteen at 15:57 when UCO was opened -- so the panel's row count is a per-capture check, not a per-date one. The capture indices run BACKWARDS in wall-clock time here: capture 0 is the latest frame and capture 2 the earliest, because the index counts the run's snapshot files rather than the session.",
     "20220425": "capture 1 (_2) has the same 4 GT tickers as capture 0.",
     "20220506": "capture 1 (_2) matches capture 0 (UCO, WEAT, TSLA, LTHM).",

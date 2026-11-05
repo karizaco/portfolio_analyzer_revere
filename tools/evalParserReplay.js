@@ -61,6 +61,18 @@ const {
   setOcrConfusionCsvPath,
 } = require('../src/parse/parseChartStream');
 const { loadDecodeLexiconSync } = require('../src/normalize/tickerScan');
+const { layoutAliasEraForDate } = require('../src/video/chartStreamCrop');
+
+// Whether the parse applies the LAYOUT-SCOPED alias rows
+// (config/ticker_ocr_confusions_right_sidebar.csv). On by default, because
+// the scan tool applies them; `--no-layout-aliases` turns them off, so the
+// rows' worth is a measured difference rather than an argument.
+let useLayoutAliases = true;
+function setUseLayoutAliases(value) {
+  const previous = useLayoutAliases;
+  useLayoutAliases = Boolean(value);
+  return previous;
+}
 const { listGroundTruthCaptures } = require('../src/qmg/qmgGroundTruth');
 
 const GT_PATH = path.resolve(__dirname, '..', 'data', 'qmg_ground_truth.json');
@@ -250,6 +262,7 @@ function scoreLogs({ gt, files, parseCapture = defaultParse }) {
 function defaultParse(capture, log) {
   const words = Array.isArray(capture.ocr_words) ? capture.ocr_words : [];
   const result = parseChartStreamPositionList({
+    layoutEra: useLayoutAliases ? layoutAliasEraForDate(log && log.date_key) : null,
     ocr: {
       text: capture.ocr_text || '',
       words,
@@ -669,10 +682,11 @@ function parseFlags(argv) {
     confusionCsv: '',
     dropAliases: [],
     groundTruth: '',
+    layoutAliases: true,
     // The default matches what the SCAN TOOL now does, so the `rebuilt` arm
     // measures the pipeline that actually runs. `--cluster-rule shipped`
     // measures the pre-2026-11-03 behaviour instead.
-    clusterRule: 'corroborated'
+    clusterRule: 'corroborated+swallowed'
   };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
@@ -693,6 +707,8 @@ function parseFlags(argv) {
       i += 1;
     } else if (arg.startsWith('--drop-aliases=')) {
       flags.dropAliases = splitAliasList(arg.slice('--drop-aliases='.length));
+    } else if (arg === '--no-layout-aliases') {
+      flags.layoutAliases = false;
     } else if (arg === '--cluster-rule') {
       flags.clusterRule = argv[i + 1] || '';
       i += 1;
@@ -764,6 +780,7 @@ function main(argv = process.argv.slice(2)) {
   const effectiveRoots = flags.roots.length ? flags.roots : DEFAULT_ROOTS;
 
   const aliasOverride = applyAliasTableOverride(flags);
+  setUseLayoutAliases(flags.layoutAliases);
 
   const gtPath = flags.groundTruth ? path.resolve(flags.groundTruth) : GT_PATH;
   const gt = JSON.parse(fs.readFileSync(gtPath, 'utf8'));
@@ -921,6 +938,7 @@ function main(argv = process.argv.slice(2)) {
   console.log(`ground truth     : ${gtPath}`);
   console.log(`alias table      : ${alias.rows} rows from ${alias.source}`
     + (alias.dropped.length ? `  (dropped: ${alias.dropped.join(' ')})` : ''));
+  console.log(`layout aliases   : ${flags.layoutAliases ? 'ON (right_sidebar rows, dates 20230518-20231215)' : 'OFF (--no-layout-aliases)'}`);
   aliasOverride.restore();
   return 0;
 }
@@ -940,6 +958,7 @@ module.exports = {
   recordedClusterRuleOf,
   parseFlags,
   applyAliasTableOverride,
+  setUseLayoutAliases,
 };
 
 if (require.main === module) {
@@ -949,7 +968,7 @@ if (require.main === module) {
     if (error && error.usage) {
       console.error(`evalParserReplay: ${error.message}`);
       console.error('usage: node tools/evalParserReplay.js [--json] [--confusion-csv PATH]'
-        + ' [--drop-aliases A,B]'
+        + ' [--drop-aliases A,B] [--no-layout-aliases]'
         + ' [--cluster-rule shipped|corroborated|corroborated-strict'
         + '|supported|supported+corroborated'
         + '|video-supported|video-supported+corroborated'

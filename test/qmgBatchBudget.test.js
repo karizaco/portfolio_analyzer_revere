@@ -73,6 +73,22 @@ test('the budget does not disturb the era flags or the cluster rule', () => {
   assert.ok(!small.includes('--batch-snapshots'), 'batch snapshots stay off for the sidebar era');
 });
 
+test('the per-video timeout can be raised, and the default is unchanged', () => {
+  // Several 2022-era videos exceed the 40-minute kill timer at the full frame
+  // budget, and a smaller budget reads worse. The timeout is a flag so those
+  // videos can be given the time they need without moving the default.
+  const none = parseArgs(['--dates', '20220330']);
+  assert.equal(none.timeoutMinutes, null, 'not mentioned keeps the 40-minute default');
+
+  const raised = parseArgs(['--dates', '20220330', '--timeout-minutes', '90']);
+  assert.equal(raised.timeoutMinutes, 90);
+
+  assert.throws(
+    () => parseArgs(['--dates', '20220330', '--timeout-minutes', '0']),
+    /--timeout-minutes needs a positive integer/
+  );
+});
+
 test('the CLI parses --max-frames and --max-captures', () => {
   const args = parseArgs(['--dates', '20230601', '--max-frames', '6', '--max-captures', '1']);
   assert.equal(args.maxFrames, 6);

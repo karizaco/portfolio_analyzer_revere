@@ -44,6 +44,7 @@ const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
 const { parseChartStreamPositionList, mergeMultiplePositionLists, clusterVideoLevelReadings, clusterRuleName: clusterRuleNameFor, resolveClusterRuleOptions, attestConsensusToCaptures, TICKER_BLOCKLIST } = require('../src/parse/parseChartStream');
 const { runEasyOcr, adaptToParserSchema } = require('../src/ocr/easyocrAdapter');
 const { resolveFfmpegBin, resolveFfprobeBin } = require('../src/video/ffmpegBin');
+const { readPanelFooterFromFrame } = require('../src/video/panelFooterReader');
 const { preprocessChartStreamToBuffer, preprocessChartStreamRawToBuffer } = require('../src/ocr/ocrImage');
 const { readPositionTable } = require('../src/video/positionTableScan');
 const { publishTableHoldings, readerForFrame } = require('../src/video/positionTablePublish');
@@ -1774,6 +1775,30 @@ async function main() {
       captureOutputs.push({ candidate, outputPath });
     }
 
+    // The panel prints its own row count, and that count is the only
+    // INDEPENDENT check on a reading -- but it sits BELOW the crop the OCR
+    // engine is shown, so `readPanelRowCount` sees nothing in production and
+    // every capture records `panel_count: null`.
+    //
+    // It is read here, once per video, from the FIRST capture's
+    // full-resolution frame. The count is REPORTED and never acted on: a count
+    // misread low would truncate a correct reading, which is exactly the case
+    // where acting on it does the most damage.
+    //
+    // The engine is Tesseract, not EasyOCR, and that is measured rather than
+    // arbitrary -- see src/video/panelFooter.js. The footer is a line of
+    // printed prose, which Tesseract is trained on; the ticker column is
+    // short isolated tokens on a dark panel, which EasyOCR is trained on.
+    let panelFooter = null;
+    if (options.outputKind === 'snapshot' && captureOutputs.length) {
+      try {
+        panelFooter = await readPanelFooterFromFrame(captureOutputs[0].outputPath, dateKey);
+      } catch (error) {
+        // A footer read failure is a missing diagnostic, not a failed scan.
+        console.log(`[scan:snapshot] panel footer read failed: ${error && error.message ? error.message : error}`);
+      }
+    }
+
     const status = strongCandidates.length ? 'done' : 'review';
     const captureSummaries = captureOutputs.map(({ candidate, outputPath }) => summarizeCapture(
       candidate,
@@ -1994,6 +2019,12 @@ async function main() {
       // table scan the table captures contribute their own holdings and the
       // legacy captures the consensus; for whiteboard it merges the
       // structured GRO/TURBO holdings, which the clusterer must not touch.
+      // The panel's own row count, read from the source pixels. REPORTED,
+      // never acted on -- see the comment above the read.
+      panel_row_count: panelFooter ? panelFooter.count : null,
+      panel_row_count_votes: panelFooter ? panelFooter.votes : null,
+      panel_row_count_text: panelFooter ? panelFooter.text : null,
+      panel_row_count_rejected: panelFooter ? panelFooter.rejected : [],
       merged_position_list: (() => {
         // A legacy capture contributes the clusterer's consensus (the only
         // repaired reading of the whole video); a table capture contributes

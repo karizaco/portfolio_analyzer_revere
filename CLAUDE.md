@@ -521,6 +521,42 @@ Results: `data/qmg_alt_batch_results.json`.
 
 ---
 
+## The 2026-11-05 production rescan
+
+Every ground-truth date that still had only an October reading was rescanned
+with the current parser, the era crop, and `--timeout-minutes 90`. Several
+2022-era videos exceed the batch runner's 40-minute default at the full
+12-frame budget; a smaller budget reads worse, so the timeout is a flag and
+the default is unchanged.
+
+Scored only on logs that used the shipped era crop:
+
+| era | dates | hit / ground truth | recall | false positives |
+|---|---|---|---|---|
+| floating panel (2022) | 30 | 239/254 | 94.1% | 24 |
+| right sidebar (2023) | 10 | 104/106 | 98.1% | 1 |
+| **total** | **40** | **343/360** | **95.3%** | **25** |
+
+The dates that moved the 2022 number were the ones whose only reading was an
+October log on the old crop: `20220517` 0/8 to 8/8, `20220331` 2/9 to 9/9,
+`20220614` 0/3 to 3/3.
+
+**The remaining errors are capture-level, not merge-level.** The attestation
+gate already drops a consensus ticker no selected capture touched. On all 17
+dates that are not exact, every false positive is in a capture's own
+`position_list`. They are real seed tickers read off the wrong cell or off
+chart ink: `ERX`, `GUSH`, `LI`, `LMT`, `DNA`, `NFU` recur. `NFLX` and `TNA`
+are missed together on `20220606`, `20220607` and `20220608`.
+
+**The panel footer is now readable, and it is reported, never acted on.**
+The footer sits below the crop, so `panel_count` was null in every production
+log. A dedicated strip, read by Tesseract (EasyOCR collapses "3 of 9" into
+"30" on the same pixels), scanned in five tight bands, reports a count only
+when two bands agree. Measured on 40 fixture dates: 31/40 correct, zero wrong.
+`20230126` read 2 for an eight-row panel in one band and was rejected.
+`tools/measurePanelFooter.js` is the instrument. The scan tool writes
+`panel_row_count` on the selected capture.
+
 ## The Sevcik source — a TRANSCRIPT source, not an OCR source (2026-11-04)
 
 > **The 2026-11-05 update below supersedes two claims in this section.** The
