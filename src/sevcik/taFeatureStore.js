@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS sevcik_ta_features (
   executable_date TEXT NOT NULL DEFAULT '',
   alignment_confidence TEXT NOT NULL DEFAULT '',
   alignment_rule TEXT NOT NULL DEFAULT '',
+  venue TEXT NOT NULL DEFAULT '',
   asof_date TEXT NOT NULL DEFAULT '',
   close REAL,
   rsi14 REAL,
@@ -41,14 +42,20 @@ CREATE TABLE IF NOT EXISTS sevcik_ta_features (
   mtf_label TEXT NOT NULL DEFAULT '',
   archetype TEXT NOT NULL DEFAULT '',
   gap_talk INTEGER NOT NULL DEFAULT 0,
+  linguistic_gap_setup INTEGER,
+  market_gap_observed INTEGER,
+  real_gap INTEGER,
   has_gap INTEGER,
   gap_pct REAL,
   gap_direction TEXT NOT NULL DEFAULT '',
   gap_filled_5d INTEGER,
   r_multiple REAL,
+  r_multiple_clipped REAL,
   mfe_r REAL,
   mae_r REAL,
   exit_reason TEXT NOT NULL DEFAULT '',
+  stop_mode TEXT NOT NULL DEFAULT '',
+  confidence_band TEXT NOT NULL DEFAULT '',
   hit_1w INTEGER,
   hit_1m INTEGER,
   return_1w REAL,
@@ -65,11 +72,28 @@ CREATE INDEX IF NOT EXISTS idx_sevcik_ta_features_arch ON sevcik_ta_features(arc
 CREATE INDEX IF NOT EXISTS idx_sevcik_ta_features_trend ON sevcik_ta_features(trend_regime);
 `;
 
+const ALTER_COLUMNS = [
+  ['venue', "TEXT NOT NULL DEFAULT ''"],
+  ['linguistic_gap_setup', 'INTEGER'],
+  ['market_gap_observed', 'INTEGER'],
+  ['real_gap', 'INTEGER'],
+  ['r_multiple_clipped', 'REAL'],
+  ['stop_mode', "TEXT NOT NULL DEFAULT ''"],
+  ['confidence_band', "TEXT NOT NULL DEFAULT ''"],
+];
+
 /**
  * @param {import('node:sqlite').DatabaseSync} db
  */
 function ensureTaFeatureSchema(db) {
   db.exec(FEATURE_TABLE_SQL);
+  for (const [name, type] of ALTER_COLUMNS) {
+    try {
+      db.exec(`ALTER TABLE sevcik_ta_features ADD COLUMN ${name} ${type}`);
+    } catch (_) {
+      // column already exists
+    }
+  }
 }
 
 /**
@@ -86,21 +110,21 @@ function replaceTaFeatures(db, rows, featureVersion) {
     const insert = db.prepare(
       `INSERT INTO sevcik_ta_features (
         source, source_row_id, video_id, ticker, yahoo_symbol, bias, claim_kind,
-        claim_date, executable_date, alignment_confidence, alignment_rule, asof_date,
+        claim_date, executable_date, alignment_confidence, alignment_rule, venue, asof_date,
         close, rsi14, macd, macd_signal, macd_hist, sma20, sma50, sma200, ema21,
         atr14, atr_pct, bb_mid, bb_upper, bb_lower, bb_bandwidth, volume_z20, adx14,
         bar_count, trend_regime, vol_regime, mtf_score, mtf_label, archetype,
-        gap_talk, has_gap, gap_pct, gap_direction, gap_filled_5d,
-        r_multiple, mfe_r, mae_r, exit_reason,
+        gap_talk, linguistic_gap_setup, market_gap_observed, real_gap, has_gap, gap_pct, gap_direction, gap_filled_5d,
+        r_multiple, r_multiple_clipped, mfe_r, mae_r, exit_reason, stop_mode, confidence_band,
         hit_1w, hit_1m, return_1w, return_1m, aligned_return_1w, aligned_return_1m,
         feature_version
       ) VALUES (
-        ?,?,?,?,?,?,?,?,?,?,?,?,
+        ?,?,?,?,?,?,?,?,?,?,?,?,?,
         ?,?,?,?,?,?,?,?,?,?,
         ?,?,?,?,?,?,?,?,
         ?,?,?,?,?,?,
-        ?,?,?,?,
-        ?,?,?,?,
+        ?,?,?,?,?,?,?,?,
+        ?,?,?,?,?,?,
         ?,?,?,?,?,?,
         ?
       )`,
@@ -118,6 +142,7 @@ function replaceTaFeatures(db, rows, featureVersion) {
         row.executable_date || '',
         row.alignment_confidence || '',
         row.alignment_rule || '',
+        row.venue || '',
         row.asof_date || '',
         numOrNull(row.close),
         numOrNull(row.rsi14),
@@ -143,14 +168,20 @@ function replaceTaFeatures(db, rows, featureVersion) {
         row.mtf_label || '',
         row.archetype || '',
         row.gap_talk ? 1 : 0,
+        boolToInt(row.linguistic_gap_setup),
+        boolToInt(row.market_gap_observed),
+        boolToInt(row.real_gap),
         boolToInt(row.has_gap),
         numOrNull(row.gap_pct),
         row.gap_direction || '',
         boolToInt(row.gap_filled_5d),
         numOrNull(row.r_multiple),
+        numOrNull(row.r_multiple_clipped),
         numOrNull(row.mfe_r),
         numOrNull(row.mae_r),
         row.exit_reason || '',
+        row.stop_mode || '',
+        row.confidence_band || '',
         boolToInt(row.hit_1w),
         boolToInt(row.hit_1m),
         numOrNull(row.return_1w),

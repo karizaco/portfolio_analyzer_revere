@@ -606,8 +606,8 @@ function renderSetupTickerTable(tickers) {
  * @returns {string}
  */
 function renderTaSection(payload) {
-  const summary = payload.ta_summary || null;
-  if (!summary) {
+  const summary = payload && (payload.ta_summary || payload);
+  if (!summary || !summary.claim_count) {
     return `
     <h2>Technical analysis check</h2>
     <p class="note">No TA evaluation yet. Run <code>npm run sevcik:ta</code> after aggregate/outcomes to score
@@ -615,15 +615,18 @@ function renderTaSection(payload) {
   }
 
   const row = (label, value) => `<div class="card"><div class="card-value">${value}</div><div class="card-label">${label}</div></div>`;
+  const sc = summary.scorecards || {};
+  const all = sc.all || summary;
   const cards = `
     <div class="cards">
       ${row('TA claims', summary.claim_count || 0)}
       ${row('1w hit', summary.hit_rate_1w == null ? '—' : formatPct(summary.hit_rate_1w, 0))}
-      ${row('avg R', summary.avg_r == null ? '—' : Number(summary.avg_r).toFixed(2))}
-      ${row('avg MFE R', summary.avg_mfe_r == null ? '—' : Number(summary.avg_mfe_r).toFixed(2))}
-      ${row('avg MAE R', summary.avg_mae_r == null ? '—' : Number(summary.avg_mae_r).toFixed(2))}
-      ${row('gap talk', summary.gap_talk_n || 0)}
+      ${row('median R', summary.median_r == null ? '—' : Number(summary.median_r).toFixed(2))}
+      ${row('avg R clip', summary.avg_r_clipped == null ? '—' : Number(summary.avg_r_clipped).toFixed(2))}
+      ${row('avg R raw', summary.avg_r == null ? '—' : Number(summary.avg_r).toFixed(2))}
+      ${row('gap real', summary.gap_real_n || 0)}
       ${row('gap fill 5d', summary.gap_fill_rate_5d == null ? '—' : formatPct(summary.gap_fill_rate_5d, 0))}
+      ${row('deduped', summary.dedupe && summary.dedupe.primary_n != null ? summary.dedupe.primary_n : '—')}
       ${row('MTF mono', summary.mtf_monotonic_hit_rate == null ? '—' : (summary.mtf_monotonic_hit_rate ? 'yes' : 'no'))}
     </div>`;
 
@@ -635,30 +638,83 @@ function renderTaSection(payload) {
       <td>${g.n}</td>
       <td>${g.scored_1w}</td>
       <td>${g.hit_rate_1w == null ? '—' : formatPct(g.hit_rate_1w, 0)}</td>
-      <td>${g.avg_r == null ? '—' : Number(g.avg_r).toFixed(2)}</td>
+      <td>${g.median_r == null ? '—' : Number(g.median_r).toFixed(2)}</td>
+      <td>${g.avg_r_clipped == null ? (g.avg_r == null ? '—' : Number(g.avg_r).toFixed(2)) : Number(g.avg_r_clipped).toFixed(2)}</td>
       <td>${g.avg_aligned_return_1w == null ? '—' : formatPct(g.avg_aligned_return_1w, 1)}</td>
     </tr>`).join('');
     return `<h3 class="subhead">${escapeHtml(title)}</h3>
       <table class="grid">
-        <thead><tr><th>bucket</th><th>n</th><th>n 1w</th><th>hit 1w</th><th>avg R</th><th>avg aligned 1w</th></tr></thead>
+        <thead><tr><th>bucket</th><th>n</th><th>n 1w</th><th>hit 1w</th><th>median R</th><th>avg R clip</th><th>avg aligned 1w</th></tr></thead>
+        <tbody>${body}</tbody>
+      </table>`;
+  }
+
+  function scorecardTable() {
+    const entries = [
+      ['all', sc.all || all],
+      ['signals_only', sc.signals_only],
+      ['setups_only', sc.setups_only],
+      ['deduped_primary', sc.deduped_primary],
+    ].filter(([, v]) => v);
+    if (!entries.length) return '';
+    const body = entries.map(([name, g]) => `<tr>
+      <td>${escapeHtml(name)}</td>
+      <td>${g.claim_count || 0}</td>
+      <td>${g.scored_1w || 0}</td>
+      <td>${g.hit_rate_1w == null ? '—' : formatPct(g.hit_rate_1w, 0)}</td>
+      <td>${g.median_r == null ? '—' : Number(g.median_r).toFixed(2)}</td>
+      <td>${g.avg_r_clipped == null ? '—' : Number(g.avg_r_clipped).toFixed(2)}</td>
+      <td>${g.avg_r == null ? '—' : Number(g.avg_r).toFixed(2)}</td>
+    </tr>`).join('');
+    return `<h3 class="subhead">Scorecards</h3>
+      <table class="grid">
+        <thead><tr><th>card</th><th>n</th><th>n 1w</th><th>hit 1w</th><th>median R</th><th>avg R clip</th><th>avg R raw</th></tr></thead>
+        <tbody>${body}</tbody>
+      </table>`;
+  }
+
+  function edgeTable() {
+    const em = summary.edge_matrix || {};
+    const rows = [...(em.allow || []), ...(em.avoid || [])].slice(0, 12);
+    if (!rows.length) {
+      return `<h3 class="subhead">Edge matrix</h3><p class="note">No allow/avoid buckets yet (min N=${em.min_n || 8}). Thin buckets=${em.thin_count || 0}.</p>`;
+    }
+    const body = rows.map((g) => `<tr>
+      <td>${escapeHtml(g.policy)}</td>
+      <td>${escapeHtml(g.key)}</td>
+      <td>${g.scored_1w}</td>
+      <td>${g.hit_rate_1w == null ? '—' : formatPct(g.hit_rate_1w, 0)}</td>
+      <td>${g.wilson_lo == null ? '—' : formatPct(g.wilson_lo, 0)}–${g.wilson_hi == null ? '—' : formatPct(g.wilson_hi, 0)}</td>
+      <td>${g.median_r == null ? '—' : Number(g.median_r).toFixed(2)}</td>
+    </tr>`).join('');
+    return `<h3 class="subhead">Edge matrix (allow/avoid)</h3>
+      <p class="note">${escapeHtml(em.note || '')} allow=${em.allow_count || 0}, avoid=${em.avoid_count || 0}, neutral=${em.neutral_count || 0}, thin=${em.thin_count || 0}.</p>
+      <table class="grid">
+        <thead><tr><th>policy</th><th>bucket</th><th>n 1w</th><th>hit</th><th>Wilson</th><th>median R</th></tr></thead>
         <tbody>${body}</tbody>
       </table>`;
   }
 
   const wf = summary.walk_forward || {};
-  const wfNote = `<p class="note">Walk-forward: folds=${wf.fold_count || 0}, avg test 1w hit=${wf.avg_test_hit_rate_1w == null ? '—' : formatPct(wf.avg_test_hit_rate_1w, 0)}. ${escapeHtml(wf.note || '')}</p>`;
+  const edgePol = wf.edge_policy || {};
+  const wfNote = `<p class="note">Walk-forward: folds=${wf.fold_count || 0}, avg test 1w hit=${wf.avg_test_hit_rate_1w == null ? '—' : formatPct(wf.avg_test_hit_rate_1w, 0)}, edge-selected OOS hit=${edgePol.avg_selected_hit_rate_1w == null ? '—' : formatPct(edgePol.avg_selected_hit_rate_1w, 0)}. ${escapeHtml(wf.note || '')}</p>`;
+  const exit = summary.exit_mix || {};
+  const exitNote = `<p class="note">Exit mix: stop=${exit.stop || 0}, target=${exit.target || 0}, time=${exit.time || 0}. Gap talk=${summary.gap_talk_n || 0}, real gaps=${summary.gap_real_n || 0}, linguistic gap setups=${summary.gap_linguistic_n || summary.gap_confirmed_n || 0}.</p>`;
 
   return `
     <h2>Technical analysis check</h2>
     ${cards}
-    <p class="note">Executable date is the first calendar day after the stream (daily bars). Features use bars through the prior close to avoid same-day leakage. R-sim uses next open entry, 1.5×ATR stop, 2R target, max 20 bars.</p>
+    <p class="note">Executable date is the next regular session after the stream (venue calendar; weekends/holidays skipped). Features use bars through the prior close. R-sim uses next open, ATR×1.5 stop with structure widen + 1–8% floor/cap, 2R target, max 20 bars. Primary scorecards use median/clipped R.</p>
+    ${exitNote}
+    ${scorecardTable()}
     ${tableFromGroups('By trend regime', summary.by_trend_regime)}
     ${tableFromGroups('By volatility regime', summary.by_vol_regime)}
     ${tableFromGroups('By archetype', summary.by_archetype)}
     ${tableFromGroups('By MTF confirmation', summary.by_mtf_label)}
+    ${tableFromGroups('By source', summary.by_source)}
+    ${edgeTable()}
     ${wfNote}`;
 }
-
 
 function buildSevcikReportHtml(payload) {
   const signals = payload.signals || [];
