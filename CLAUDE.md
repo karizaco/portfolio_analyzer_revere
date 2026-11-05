@@ -629,6 +629,49 @@ when two bands agree. Measured on 40 fixture dates: 31/40 correct, zero wrong.
 `tools/measurePanelFooter.js` is the instrument. The scan tool writes
 `panel_row_count` on the selected capture.
 
+**THE FOOTER IS THE ONLY INDEPENDENT CHECK THERE IS, and it settles what the
+union score cannot.** The ground truth's denominator is the UNION over a
+date's captures, and the list CHANGES inside the session — so the union score
+cannot say whether a reading is right, only whether it matches every moment
+ever seen. The panel's own count can: it says how many rows are on screen
+RIGHT NOW.
+
+Measured on the 2026-11-05 rescan, **10 of the 12 first captures whose
+footer was read agree with it exactly.** And the disagreements with the union
+score are mostly NOT errors — they are exact readings of a moment the union
+does not cover. Verified against the pixels:
+
+| date | the union score says | the panel says | what is true |
+|---|---|---|---|
+| `20220412` | `GUSH` is a false positive | **12 rows**, footer "12 of 12 Items" | the panel reads REGN, LMT, X, LHX, COPX, URA, URNM, FCX, NUGT, WEAT, JNUG, **GUSH**. GUSH is a real holding at that moment |
+| `20220330` | `JNUG`, `MU` are false positives | **10 rows**, footer "10 Items" | the panel reads NFLX, REGN, KWEB, LABU, COPX, X, FCX, NUGT, **MU**, **JNUG**. Both are real holdings at that moment |
+| `20220606` | `COIN` is a false positive | **8 rows**, footer "8 Items" | the panel reads GOVX, LABU, **COIN**, UCO, ALB, CBIO, VLO, TNA, NFLX. COIN is real |
+| `20220607` | `TQQQ`, `WEAT` are false positives | **9 rows**, footer "9 Items" | the panel reads BOIL, LTHM, **WEAT**, ALB, VLO, TNA, NFLX, UCO, **TQQQ**. Both are real |
+| `20220413` | `GUSH`, `LI` are false positives | **11 rows**, footer "11 Items" | the panel reads WEAT, LHX, REGN, LMT, X, FCX, COPX, NUGT, JNUG, URA, URNM. Neither GUSH nor LI is there — **these two ARE errors** |
+
+**So the ground truth's union is INCOMPLETE for four dates**, and the
+2026-11-04 note on `20220412` already suspected it: *"A twelve-row frame
+carrying GUSH exists at t=936 s of the same video, but it is a later moment
+and is not the frame this capture was read from."* That reasoning holds for
+the ANCHOR — a capture's reading must be the frame it was read from — but
+the UNION is over a date's captures, so a later moment is a MISSING CAPTURE,
+not a wrong reading. The wave-2 audit added captures 1 and 2 to `20220608`
+for exactly this reason.
+
+**The fix is to add the new moments as their own captures**, each pinned to
+its own frame with its own footer count. That means extending
+`tools/buildGroundTruthFixtures.js`'s case table and regenerating the
+md5-pinned crops — which is NOT done yet, because the rebuild's idempotency
+has not been verified on this machine (`--check` could not be run). Until it
+is, the union stays as it is and the scores below carry the known
+incompleteness.
+
+**The scan tool now publishes the per-frame check.** `panel_row_count_matches`
+is true when the FIRST capture's reading has as many tickers as the panel says
+are on screen. It is a DIAGNOSTIC and is never acted on: a count misread low
+would truncate a correct reading, and a count read from a different frame
+would judge the wrong reading.
+
 ## The Sevcik source — a TRANSCRIPT source, not an OCR source (2026-11-04)
 
 > **The 2026-11-05 update below supersedes two claims in this section.** The
