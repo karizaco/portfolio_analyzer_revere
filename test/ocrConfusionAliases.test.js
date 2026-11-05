@@ -264,6 +264,10 @@ const NEW_ALIASES = [
   ['AIR', 'PLTR'],
   ['UXND', 'LMND'],
   ['BUIX', 'BITX'],
+  // Pixel-verified production scans 20220606/07/08 and 20230126 read the
+  // TNA row as INA. The source panels show TNA in that row; the same token
+  // occurs eleven times in the current logs, always in the Sym column.
+  ['INA', 'TNA'],
 ];
 
 function confusionRows() {
