@@ -548,6 +548,15 @@ dates that are not exact, every false positive is in a capture's own
 chart ink: `ERX`, `GUSH`, `LI`, `LMT`, `DNA`, `NFU` recur. `NFLX` and `TNA`
 are missed together on `20220606`, `20220607` and `20220608`.
 
+**`INA → TNA` is now pixel-verified and shipped.** The source panels for
+`20220606`, `20220607`, `20220608` and `20230126` show `TNA` in the row that
+EasyOCR reads as `INA`; the current logs contain eleven `INA` tokens and every
+one is in the Sym column. `INA` is not in either lexicon, so the curated alias
+is safe and repairs the same OCR loss across four videos. `NFU → NFLX` is
+**not** shipped: `NFU` is a real seed ticker, and rewriting a seed ticker would
+violate the alias invariant and could replace a genuine holding. The panel
+count remains a diagnostic for that collision rather than a license to guess.
+
 **The panel footer is now readable, and it is reported, never acted on.**
 The footer sits below the crop, so `panel_count` was null in every production
 log. A dedicated strip, read by Tesseract (EasyOCR collapses "3 of 9" into
