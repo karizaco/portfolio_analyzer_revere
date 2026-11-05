@@ -548,14 +548,59 @@ dates that are not exact, every false positive is in a capture's own
 chart ink: `ERX`, `GUSH`, `LI`, `LMT`, `DNA`, `NFU` recur. `NFLX` and `TNA`
 are missed together on `20220606`, `20220607` and `20220608`.
 
-**`INA → TNA` is now pixel-verified and shipped.** The source panels for
-`20220606`, `20220607`, `20220608` and `20230126` show `TNA` in the row that
-EasyOCR reads as `INA`; the current logs contain eleven `INA` tokens and every
-one is in the Sym column. `INA` is not in either lexicon, so the curated alias
-is safe and repairs the same OCR loss across four videos. `NFU → NFLX` is
-**not** shipped: `NFU` is a real seed ticker, and rewriting a seed ticker would
-violate the alias invariant and could replace a genuine holding. The panel
-count remains a diagnostic for that collision rather than a license to guess.
+**The campaign finished at 96.4 % on what production published.** Every
+ground-truth date has now been rescanned with the current parser, and the
+logs' own merged lists — the artifact the portfolio report reads — score
+**347/360 (96.4 %) with 21 false positives** over 40 dates.
+
+| level | hit / ground truth | recall | false positives |
+|---|---|---|---|
+| the logs' own merged list (what production published) | 347/360 | **96.4 %** | 21 |
+| the current parser rebuilt over the same captures | 337/360 | 93.6 % | 11 |
+
+The two levels differ because production clusters **every** OCR'd candidate
+frame while a rebuild has only the selected captures. Both are reported by
+`test/manual/qmgCurrentParserScore.test.js`, and the difference is the same
+one CLAUDE.md records in § *The log does NOT carry the clusterer's input*.
+
+**Six more alias rows, all pixel-verified, and the alias tables are worth
++7 hits and −8 false positives.** Measured over the 40-date corpus with the
+same parser on both sides:
+
+| | hit / gt | recall | false positives |
+|---|---|---|---|
+| without the alias tables | 330/360 | 91.7 % | 19 |
+| **with them** | **337/360** | **93.6 %** | **11** |
+
+| garbled | canonical | the misread | dates |
+|---|---|---|---|
+| `INA` | `TNA` | T rendered as I | 20220606/07/08, 20230126 |
+| `TQ` | `TQQQ` | the three-glyph cell read as two | 20220608 |
+| `UNA` | `TNA` | T rendered as U | 20220608 |
+| `NF` | `NFLX` | the cell read as two glyphs | 20220607 |
+
+**`NFU` and `NF` are date-scoped, not shared.** `NFU` is a real seed ticker,
+so a shared row would rewrite a genuine holding — the alias table's own
+invariant forbids it. But the pixel-verified floating-panel captures on
+`20220606`–`20220608` all show `NFLX` in the cell EasyOCR reads as `NFU`, and
+`NF` is one edit from `NFU`, so the distance-1 repair would otherwise publish
+`NFU` — a real ticker, and the wrong holding. So the rescue lives in its own
+table, `config/ticker_ocr_confusions_floating_panel_nfu.csv`, and applies
+**only to those three upload dates**, selected by
+`layoutAliasEraForDate()` returning `floating_panel_nfu_20220606_08`.
+
+**The dates that are still not exact, and why.** Fourteen dates remain, and
+the errors are now almost entirely *capture-level* — a frame that read a real
+ticker off the wrong cell, or a holding the OCR never produced often enough:
+
+| class | dates | what it is |
+|---|---|---|
+| a holding read in too few frames | `20230522`, `20230518`, `20230523` (`LI`); `20230608` (`TQQQ`); `20220405` (`CWEB`, `KWEB`, `X`) | the collapsed-glyph cases the one-glyph rule and the alias table cover only in the layout where the misread was recorded |
+| a wrong cell read as a real ticker | `20220405` (`ERX`, `LHX`, `LMT`, `URA`, `URNM`), `20220330` (`ERX`), `20220412`/`20220413` (`GUSH`), `20231215` (`AI`), `20220218` (`UVXY`) | chart ink that happens to be a seed ticker |
+| the list changed inside the session | `20220418`, `20220429`, `20220406`, `20220427`, `20220428`, `20220331`, `20221117` (`FREY`), `20220606` (`BOIL`, `SIGA`) | the union denominator counts a moment the capture did not show |
+
+The panel count remains a diagnostic for all of these — never a licence to
+guess, because a count misread low would truncate a correct reading.
 
 **The panel footer is now readable, and it is reported, never acted on.**
 The footer sits below the crop, so `panel_count` was null in every production

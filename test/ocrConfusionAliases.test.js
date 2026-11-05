@@ -268,6 +268,14 @@ const NEW_ALIASES = [
   // TNA row as INA. The source panels show TNA in that row; the same token
   // occurs eleven times in the current logs, always in the Sym column.
   ['INA', 'TNA'],
+  // The 20220608 source panel shows TQQQ in the row EasyOCR reads as TQ.
+  // TQ is in neither lexicon, so this is safe as a shared curated alias.
+  ['TQ', 'TQQQ'],
+  // The 20220608 source panel shows TNA in the row EasyOCR reads as UNA.
+  // DNA is one edit away and is a real ticker, so the distance-1 repair
+  // published DNA at random -- and DNA really IS held on the 2023 dates,
+  // so the collision is a wrong holding, not a missing one.
+  ['UNA', 'TNA'],
 ];
 
 function confusionRows() {
