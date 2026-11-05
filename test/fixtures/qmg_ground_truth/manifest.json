@@ -883,6 +883,30 @@
       "note": "The ground truth gave every 20220606 capture the same GOVX list. This panel reads SIGA; corrected 2026-11-01."
     },
     {
+      "date": "20220606",
+      "capture_index": 12,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261105-stale",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261105-stale/snapshots/qmg_20220606.png",
+      "source_md5": "108a1997ec510ddd00041f24bf02562f",
+      "file": "20220606_c12.png",
+      "md5": "b41f98e442343e4d071dca35223c00e1",
+      "panel": "positions",
+      "panel_count": 9,
+      "panel_count_text": "9 Items in Personal WatchList",
+      "tickers": [
+        "GOVX",
+        "LABU",
+        "COIN",
+        "UCO",
+        "ALB",
+        "CBIO",
+        "VLO",
+        "TNA",
+        "NFLX"
+      ],
+      "note": "A later moment than the batch1 anchors (taskbar 16:04, 2026-11-05 rescan). COIN is open; the batch1 union did not carry it. The left watchlist's own \"8 Items\" footer is a different widget."
+    },
+    {
       "date": "20220614",
       "capture_index": 0,
       "run": "data/video_ocr_probe/qmg-1080p-batch1",
@@ -1134,6 +1158,31 @@
       "note": "Verified 2026-11-01 against the pixels; the ground truth already read these eight rows."
     },
     {
+      "date": "20220330",
+      "capture_index": 1,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261105-long",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261105-long/snapshots/qmg_20220330.png",
+      "source_md5": "51ea41320fbd3080475579decac05367",
+      "file": "20220330_c1.png",
+      "md5": "65a2838d553650d517ef61bab6f61007",
+      "panel": "positions",
+      "panel_count": 10,
+      "panel_count_text": "10 Items in Personal WatchList",
+      "tickers": [
+        "NFLX",
+        "REGN",
+        "KWEB",
+        "LABU",
+        "COPX",
+        "X",
+        "FCX",
+        "NUGT",
+        "MU",
+        "JNUG"
+      ],
+      "note": "A later moment than the lowcpu-test anchor (taskbar 16:17, chart 10:17, 2026-11-05 rescan). MU and JNUG are open. ERX sits in the left watchlist, not in this table."
+    },
+    {
       "date": "20220331",
       "capture_index": 0,
       "run": "data/video_ocr_probe/qmg-lowcpu-test",
@@ -1208,6 +1257,33 @@
         "JNUG"
       ],
       "note": "Verified 2026-11-01 against the pixels, and NOT changed. The only run holding this date has a single frame. A twelve-row frame carrying GUSH exists at t=936 s of the same video, but it is a later moment and not the frame this capture was read from."
+    },
+    {
+      "date": "20220412",
+      "capture_index": 1,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261105-long",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261105-long/snapshots/qmg_20220412.png",
+      "source_md5": "292e4ee99b78d7fc92a2b84ffe50b919",
+      "file": "20220412_c1.png",
+      "md5": "0c01486f2b02d752714b464a3b133ae9",
+      "panel": "positions",
+      "panel_count": 12,
+      "panel_count_text": "1 of 12 Items in Personal WatchList",
+      "tickers": [
+        "REGN",
+        "LMT",
+        "X",
+        "LHX",
+        "COPX",
+        "URA",
+        "URNM",
+        "FCX",
+        "NUGT",
+        "WEAT",
+        "JNUG",
+        "GUSH"
+      ],
+      "note": "The later moment the 2026-11-01 note already named (taskbar 15:36, 2026-11-05 rescan). GUSH is the twelfth row. The \"1 of 12\" marks the selected row, not a scroll range."
     },
     {
       "date": "20220413",
@@ -1728,6 +1804,30 @@
         "LTHM"
       ],
       "note": "Clock 16:12. The widget ABOVE the table reads \"9 Items in WatchList\" -- a different panel with its own count."
+    },
+    {
+      "date": "20220607",
+      "capture_index": 3,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261105-stale2",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261105-stale2/snapshots/qmg_20220607.png",
+      "source_md5": "4c7c09b802de4e3cb4d2e9f5e76db55b",
+      "file": "20220607_c3.png",
+      "md5": "7c6eb8c6bd9d015371fb36d2f158fc66",
+      "panel": "positions",
+      "panel_count": 9,
+      "panel_count_text": "3 of 9 Items in Personal WatchList",
+      "tickers": [
+        "BOIL",
+        "LTHM",
+        "WEAT",
+        "ALB",
+        "VLO",
+        "TNA",
+        "NFLX",
+        "UCO",
+        "TQQQ"
+      ],
+      "note": "A later moment than the batch1 anchors (taskbar 15:32, 2026-11-05 rescan). WEAT and TQQQ are open; the batch1 union did not carry them. The \"3 of 9\" marks the selected row."
     },
     {
       "date": "20220608",

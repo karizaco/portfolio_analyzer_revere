@@ -263,6 +263,18 @@
       "X",
       "NUGT",
       "FCX"
+    ],
+    "1": [
+      "NFLX",
+      "REGN",
+      "KWEB",
+      "LABU",
+      "COPX",
+      "X",
+      "FCX",
+      "NUGT",
+      "MU",
+      "JNUG"
     ]
   },
   "20220331": {
@@ -336,6 +348,20 @@
       "REGN",
       "NUGT",
       "JNUG"
+    ],
+    "1": [
+      "REGN",
+      "LMT",
+      "X",
+      "LHX",
+      "COPX",
+      "URA",
+      "URNM",
+      "FCX",
+      "NUGT",
+      "WEAT",
+      "JNUG",
+      "GUSH"
     ]
   },
   "20220413": {
@@ -789,6 +815,17 @@
       "CBIO",
       "UCO",
       "SIGA"
+    ],
+    "12": [
+      "GOVX",
+      "LABU",
+      "COIN",
+      "UCO",
+      "ALB",
+      "CBIO",
+      "VLO",
+      "TNA",
+      "NFLX"
     ]
   },
   "20220607": {
@@ -818,6 +855,17 @@
       "NFLX",
       "TNA",
       "LTHM"
+    ],
+    "3": [
+      "BOIL",
+      "LTHM",
+      "WEAT",
+      "ALB",
+      "VLO",
+      "TNA",
+      "NFLX",
+      "UCO",
+      "TQQQ"
     ]
   },
   "20220608": {
@@ -1288,12 +1336,12 @@
     "20220425": "capture 1 (_2) has the same 4 GT tickers as capture 0.",
     "20220506": "capture 1 (_2) matches capture 0 (UCO, WEAT, TSLA, LTHM).",
     "20220323": "11 GT tickers consistent across captures. VERIFIED 2026-11-01 against the pixels: the three distinct frames of the batch2 run (its files 4/5/6 are byte-identical copies of 1/2/3) all read the same eleven rows, and the panel's own footer says '11 Items in Personal WatchList'. A repeated column here is a genuine steady list, not a copied one.",
-    "20220330": "8 GT tickers consistent. VERIFIED 2026-11-01 against the pixels (data/video_ocr_probe/qmg-lowcpu-test/snapshots/qmg_20220330.png, clock 15:25): KWEB, LABU, NFLX, REGN, COPX, NUGT, FCX, X, footer '8 Items in Personal WatchList'.",
+    "20220330": "8 GT tickers consistent. VERIFIED 2026-11-01 against the pixels (data/video_ocr_probe/qmg-lowcpu-test/snapshots/qmg_20220330.png, clock 15:25): KWEB, LABU, NFLX, REGN, COPX, NUGT, FCX, X, footer '8 Items in Personal WatchList'. EXTENDED 2026-11-05: capture 1 is a later moment (qmg-easyocr-20261105-long, taskbar 16:17, chart 10:17) with ten rows — the same eight plus MU and JNUG, footer '10 Items in Personal WatchList'. ERX is in the left watchlist, not the positions table.",
     "20220405": "11 GT tickers — GGPI/NEM rare tickers; OCR-difficult. VERIFIED 2026-11-01 against the pixels (data/video_ocr_probe/qmg-lowcpu-test/snapshots/qmg_20220405.png, clock 15:29): the eleven rows are CWEB, REGN, KWEB, JNUG, GGPI, TAN, NEM, COPX, FCX, NUGT, X, footer '11 Items in Personal WatchList'. The last glyph of GGPI is a plain stem, not the flagged digit '1' that the same frame's own '1 Item in WatchList' footer uses.",
     "20220427": "qmg_20220427.png has [TSLA, BOIL, WEAT, KOLD]. Earlier captures (frames 7/8/9 from different scan) had different positions.",
     "20220428": "4 GT tickers (CWEB, KWEB, TSLA, WEAT) — same across all 3 captures shown",
     "20220510": "captures 0/1 (qmg_20220510_3.png at 15:28 and qmg_20220510.png at 15:30) only have TSLA. capture 2 (qmg_20220510_2.png at 15:36) has [VRM, TSLA]. VRM is transient — only briefly visible. The file names in the original note were wrong: it named qmg_20220510.png/_2.png for captures 0/1 and _3.png for capture 2, but the panel that shows VRM is _2.png. The capture index is flat over the file names, so the note was pointing the wrong way round.",
-    "20220606": "capture 0 shows GOVX...VLO; capture 1 (_2) shows BOIL instead of GOVX/VLO; capture 2 (_3) keeps BOIL and restores VLO.",
+    "20220606": "capture 0 shows GOVX...VLO; capture 1 (_2) shows BOIL instead of GOVX/VLO; capture 2 (_3) keeps BOIL and restores VLO. EXTENDED 2026-11-05: capture 12 is a later moment (qmg-easyocr-20261105-stale, taskbar 16:04) with nine rows — GOVX, LABU, COIN, UCO, ALB, CBIO, VLO, TNA, NFLX, footer '9 Items in Personal WatchList'. COIN is a real holding at that moment. The left watchlist's own '8 Items' footer is a different widget.",
     "20220614": "captures 0/1 have [UVXY, VLO, UCO]. capture 2 has only [VLO, UCO] — UVXY was dropped (likely closed before capture).",
     "20221104": "capture 2 (_3) confirms sparse single-name list with only OIH visible.",
     "20230609": "capture 2 (_3) matches capture 0 for the 13-name newer-UI list.",
@@ -1305,10 +1353,10 @@
     "20220222": "CORRECTED 2026-11-01. 'NDGU' in capture 2 was a misread of NRGU (the same misread the original reading recorded in its own note); the panel reads NRGU in that row in all three captures of data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220222{,_2,_3}.png, and its footer says '7 Items in Personal WatchList'.",
     "20230518": "CORRECTED 2026-11-01. CVNA was missing. The 'A - Positions' panel on data/video_scan_test/_rerun/qmg-easyocr-20261017/snapshots/qmg_20230518.png holds 8 rows (APLD, AI, PLTR, CVNA, IMGN, SHOP, MNDY, LI) and its own footer says '8 Items in Personal WatchList' — the count matches the rows, and the old entry listed only 7. (The widget ABOVE the table is a different panel and reads '5 Items in WatchList'; the two counts must not be confused.)",
     "20220331": "CORRECTED 2026-11-01. NEM was missing. The 'A - Positions' panel on data/video_ocr_probe/qmg-lowcpu-test/snapshots/qmg_20220331.png (clock 15:33) and on data/video_scan_test/_rerun/qmg-easyocr-20261011/snapshots/qmg_20220331.png (clock 15:40) both read nine rows — TQQQ, KWEB, SPXL, REGN, NEM, COPX, FCX, X, NUGT — and the panel's own footer says '9 Items in Personal WatchList'. The old entry listed eight.",
-    "20220412": "VERIFIED 2026-11-01 against the pixels, and NOT changed. The only run holding this date has a single frame, data/video_ocr_probe/qmg-lowcpu-test/snapshots/qmg_20220412.png (clock 15:19), and it reads exactly the eleven rows recorded here with the footer '11 Items in Personal WatchList'. A twelve-row frame carrying GUSH exists at t=936 s of the same video, but it is a later moment (clock 15:34) and is not the frame this capture was read from — the capture index is run-relative, so a plausible reading from the wrong frame is not a correction.",
+    "20220412": "VERIFIED 2026-11-01 against the pixels, and NOT changed. The only run holding this date has a single frame, data/video_ocr_probe/qmg-lowcpu-test/snapshots/qmg_20220412.png (clock 15:19), and it reads exactly the eleven rows recorded here with the footer '11 Items in Personal WatchList'. A twelve-row frame carrying GUSH exists at t=936 s of the same video, but it is a later moment (clock 15:34) and is not the frame this capture was read from — the capture index is run-relative, so a plausible reading from the wrong frame is not a correction. EXTENDED 2026-11-05: that later moment is now capture 1 (qmg-easyocr-20261105-long, taskbar 15:36): REGN, LMT, X, LHX, COPX, URA, URNM, FCX, NUGT, WEAT, JNUG, GUSH, footer '1 of 12 Items in Personal WatchList'. GUSH is a real holding at that moment, so the union includes it.",
     "20220419": "VERIFIED 2026-11-01 against the pixels, and NOT changed. The anchor frame — data/video_ocr_probe/qmg-1080p-batch1, t=288 s, clock 15:33 — reads fourteen rows including KOLD and its footer says '13 of 14 Items in Personal WatchList'. The list changed twice during the session (thirteen rows without KOLD at 15:39, fourteen with it again at 15:55), so a thirteen-row frame of the same video is not evidence against the fourteen here.",
     "20220517": "CORRECTED 2026-11-01. AVGO was missing. Three frames of the video read the same eight rows — OXY, ERX, AR, WEAT, AVGO, TQQQ, FNGU, COIN — with the footer '8 Items in Personal WatchList' (t=420 s clock 15:35, t=480 s clock 15:36, t=600 s clock 15:38 of data/video_pipeline/downloads_1080p/20220517_eX7XDCdoa0c.mp4, and the batch2 snapshot of the same day). The old entry listed seven.",
-    "20220607": "VERIFIED 2026-11-01 against the pixels, and NOT changed. All three anchor frames of the qmg-1080p-batch1 run (t=672 s clock 15:39, t=2660 s clock 16:12, t=2744 s clock 16:13) read the same seven rows — UCO, VLO, ALB, BOIL, NFLX, TNA, LTHM — with the footer '7 Items in Personal WatchList'. A repeated column here is a genuine steady list, not a copied one.",
+    "20220607": "VERIFIED 2026-11-01 against the pixels, and NOT changed. All three anchor frames of the qmg-1080p-batch1 run (t=672 s clock 15:39, t=2660 s clock 16:12, t=2744 s clock 16:13) read the same seven rows — UCO, VLO, ALB, BOIL, NFLX, TNA, LTHM — with the footer '7 Items in Personal WatchList'. A repeated column here is a genuine steady list, not a copied one. EXTENDED 2026-11-05: capture 3 is a later moment (qmg-easyocr-20261105-stale2, taskbar 15:32) with nine rows — BOIL, LTHM, WEAT, ALB, VLO, TNA, NFLX, UCO, TQQQ, footer '3 of 9 Items in Personal WatchList'. WEAT and TQQQ are real holdings at that moment.",
     "20220608": "CORRECTED 2026-11-01. This date was a COPIED COLUMN: the hand reading gave all three captures the same nine rows, and the panel's own count contradicts that. Capture 0 (qmg-1080p-batch1, t=780 s, clock 15:32) really is nine rows — SIGA, TNA, VLO, UCO, NFLX, ALB, BOIL, LTHM, AERC, '9 Items in Personal WatchList'. But captures 1 and 2 (t=2700 s clock 16:04 and t=3330 s clock 16:14) are ELEVEN rows each — RBLX, COIN, BOIL, NFLX, LTHM, TQQQ, UCO, ALB, VLO, TNA, AERC, '11 Items in Personal WatchList'. SIGA was closed and RBLX, COIN and TQQQ were opened during the session. The day's union therefore has twelve tickers, not nine.",
     "20230126": "VERIFIED 2026-11-01 against the pixels, and NOT changed. All three anchor frames of the qmg-1080p-batch1 run (t=3052 s clock 16:14, t=1120 s clock 15:41, t=2044 s clock 15:57) read the same eight rows — CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS — with the footer '8 Items in Personal WatchList'. The 'K of N' form marks the SELECTED row (GNS, CVNA and TNA respectively), not a scroll range."
   }
