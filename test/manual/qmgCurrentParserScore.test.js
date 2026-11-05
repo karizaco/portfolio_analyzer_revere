@@ -252,6 +252,58 @@ test('the current parser re-parses the recorded captures and is scored', () => {
   console.log(`\nthe logs' own merged list (what production published): `
     + `${after.rh}/${after.g} = ${(after.rh / after.g * 100).toFixed(1)}%  fp ${after.rf}`);
 
+  // DO THE REMAINING "FALSE POSITIVES" DISAGREE WITH THE PANEL'S OWN COUNT?
+  //
+  // The ground truth's notes record that a twelve-row frame carrying `GUSH`
+  // exists on 20220412 at a LATER moment than the anchor frame the ground
+  // truth was read from. So a reading that publishes GUSH may be exact for
+  // the moment it captured, and the union score calls it a false positive.
+  //
+  // The panel's own footer is the tie-break: it says how many rows are on
+  // screen. It is read from the FIRST capture's frame, so the apples-to-
+  // apples comparison is against that CAPTURE's own list -- not against the
+  // merged list, which spans several moments of a list that changes.
+  const panelRows = [];
+  for (const entry of files) {
+    const j = typeof entry === 'string'
+      ? JSON.parse(fs.readFileSync(entry, 'utf8'))
+      : entry.j;
+    const date = String(j.date_key || '');
+    if (!/^\d{8}$/.test(date)) continue;
+    if (!RUN_TAG && !ERA_CROPS.has(regionKey(j))) continue;
+    const panel = j.panel_row_count;
+    if (panel == null) continue;
+    const cap0 = (j.captures || [])[0];
+    if (!cap0) continue;
+    const gtSet = gtByDate.get(date);
+    if (!gtSet || !gtSet.size) continue;
+    // The REBUILT list, not the one the scan recorded: the recorded one may
+    // predate the current parser, and the panel count was read from this very
+    // frame.
+    const rebuilt = parseChartStreamPositionList({
+      ocr: { text: cap0.ocr_text || '', words: cap0.ocr_words || [], _cropWidth: 1345, _engine: 'easyocr' },
+      layoutEra: layoutAliasEraForDate(date),
+    });
+    const capList = new Set((rebuilt.position_list || []).map((t) => String(t).toUpperCase()));
+    const extras = [...capList].filter((t) => !gtSet.has(t));
+    const missing = [...gtSet].filter((t) => !capList.has(t));
+    panelRows.push({
+      date, panel, size: capList.size, gt: gtSet.size, extras, missing,
+      agrees: panel === capList.size,
+      footer: j.panel_row_count_text || '',
+    });
+  }
+  if (panelRows.length) {
+    console.log('\ndoes the FIRST CAPTURE\'s list match the panel\'s own row count?');
+    for (const r of panelRows.sort((a, b) => a.date.localeCompare(b.date))) {
+      console.log(`  ${r.date}  panel=${String(r.panel).padStart(3)}  capture=${String(r.size).padStart(3)}`
+        + `  gt=${String(r.gt).padStart(3)}  ${r.agrees ? 'MATCHES' : 'differs by ' + (r.size - r.panel)}`
+        + `  extras=${r.extras.join(',') || '-'} missing=${r.missing.join(',') || '-'}`);
+    }
+    const matching = panelRows.filter((r) => r.agrees).length;
+    console.log(`  ${matching}/${panelRows.length} first captures match the panel's own count`);
+  }
+
   const moved = after.detail.filter((r) => {
     const b = before.detail.find((x) => x.date === r.date);
     return b && (b.hits !== r.hits || b.fp.length !== r.fp.length);

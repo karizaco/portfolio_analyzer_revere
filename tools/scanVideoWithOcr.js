@@ -1807,6 +1807,33 @@ async function main() {
       candidates,
       options.confusionRadius
     ));
+
+    // THE PER-FRAME CHECK, and it is the only one that is independent.
+    //
+    // The panel's footer says how many rows are on screen, and the capture's
+    // own reading says how many it found. When they agree, the reading is a
+    // complete reading of THAT panel -- a stronger statement than any
+    // ground-truth score, because the ground truth is the UNION over a date's
+    // captures and the list CHANGES inside the session.
+    //
+    // Measured on the 2026-11-05 rescan: 10 of the 12 first captures whose
+    // footer was read agree with it exactly. Several readings the union score
+    // called wrong are exact readings of a moment the union does not cover --
+    // 20220412 reads twelve rows ending in GUSH, and 20220330 reads ten rows
+    // including MU and JNUG, both verified against the pixels.
+    //
+    // So this is published as a DIAGNOSTIC and never acted on. A count read
+    // low would truncate a correct reading, and a count read from a different
+    // frame would judge the wrong reading.
+    let panelRowCountMatches = null;
+    if (panelFooter && captureSummaries.length) {
+      const firstList = captureSummaries[0].chart_stream
+        ? captureSummaries[0].chart_stream.position_list
+        : null;
+      if (Array.isArray(firstList)) {
+        panelRowCountMatches = firstList.length === panelFooter.count;
+      }
+    }
     // Multi-frame RAW-OCR token voting (run once, expose both fields).
     // See src/parse/parseChartStream.js clusterRawOcrTokens for details.
     //
@@ -2025,6 +2052,9 @@ async function main() {
       panel_row_count_votes: panelFooter ? panelFooter.votes : null,
       panel_row_count_text: panelFooter ? panelFooter.text : null,
       panel_row_count_rejected: panelFooter ? panelFooter.rejected : [],
+      // Whether the FIRST capture's reading has as many tickers as the panel
+      // says are on screen. Diagnostic only -- see the comment above.
+      panel_row_count_matches: panelRowCountMatches,
       merged_position_list: (() => {
         // A legacy capture contributes the clusterer's consensus (the only
         // repaired reading of the whole video); a table capture contributes
