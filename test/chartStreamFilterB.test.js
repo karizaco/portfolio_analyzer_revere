@@ -32,7 +32,10 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const { parseChartStreamPositionList } = require('../src/parse/parseChartStream');
+const {
+  parseChartStreamPositionList,
+  findPanelBoundaries,
+} = require('../src/parse/parseChartStream');
 
 // The geometry is the one measured on a real frame: a 1345 px EasyOCR crop of
 // the 2023-era sidebar, whose tickers are ~130 px wide, ~30 px tall and start
@@ -65,13 +68,15 @@ function word(text, { left, top, width = TICKER_W, height = TICKER_H, line }) {
  * `aboveHeaderToken` puts a ticker in the column's x but ABOVE the
  * "POSITIONS" header — a scanner panel sitting above the list.
  */
-function frame({ chartToken = 'NVDA', aboveHeaderToken = null, rows = LIST } = {}) {
+function frame({
+  chartToken = 'NVDA', aboveHeaderToken = null, rows = LIST, headerText = 'POSITIONS',
+} = {}) {
   const words = [];
   const lines = [];
 
   // The "A - Positions" header.
-  words.push(word('POSITIONS', { left: 700, top: 100, width: 90, line: 1 }));
-  lines.push('POSITIONS');
+  words.push(word(headerText, { left: 700, top: 100, width: 90, line: 1 }));
+  lines.push(headerText);
 
   if (aboveHeaderToken) {
     words.push(word(aboveHeaderToken, { left: LIST_X, top: 40, width: TICKER_W, line: 1 }));
@@ -124,6 +129,63 @@ test('a ticker above the Positions header is rejected', () => {
 
   assert.ok(!list.includes('COIN'),
     `nothing above the Positions header is a position: ${JSON.stringify(list)}`);
+});
+
+// ---------------------------------------------------------------------------
+// THE HEADER THE BOUND DEPENDS ON
+// ---------------------------------------------------------------------------
+
+// The upper bound is only as good as the parser's ability to RECOGNISE the
+// header. The panel is narrower than its own title, so the widget clips
+// "A - Positions" and the engine then misreads the last glyph. These are the
+// sixteen forms the corpus actually contains; twelve of them were not matched,
+// and an unmatched title means NO upper bound at all -- on 20220209 that
+// published `U` and `TSLA` out of the watchlist widget above the table.
+const OBSERVED_TITLE_READS = [
+  'Positions', 'Positi', 'Positit', 'Positio', 'Positic', 'Posit',
+  'Positic_', 'Positior', 'A - Positions', 'Positiol', 'Position:',
+  'Positi r', 'Positit_', 'Positic _', 'Positie', 'Positin',
+];
+
+// The bound is tested on `findPanelBoundaries` directly rather than through a
+// synthetic frame, because a frame cannot tell the two rejection paths apart:
+// a token above the header is ALSO outside the list's row run, so it is
+// rejected either way and the assertion would pass for the wrong reason.
+// Whether the header was RECOGNISED is the claim, so that is what is asserted.
+test('every clipped read of the title in the corpus is recognised as the header', () => {
+  for (const headerText of OBSERVED_TITLE_READS) {
+    const { positionsLine } = findPanelBoundaries([
+      { text: headerText, left: 700, top: 100, width: 90, height: 30, line: 1 },
+      { text: 'AAPL', left: LIST_X, top: 200, width: TICKER_W, height: TICKER_H, line: 2 },
+    ]);
+    assert.equal(positionsLine, 1,
+      `${JSON.stringify(headerText)} is a real read of "A - Positions" and must bound the panel`);
+  }
+});
+
+test('a title the parser does not recognise leaves the panel UNBOUNDED', () => {
+  // This is the defect itself, stated as a property: no header, no upper
+  // bound. It is why twelve unmatched reads mattered at all.
+  const { positionsLine } = findPanelBoundaries([
+    { text: 'Hodings', left: 700, top: 100, width: 90, height: 30, line: 1 },
+    { text: 'AAPL', left: LIST_X, top: 200, width: TICKER_W, height: TICKER_H, line: 2 },
+  ]);
+  assert.equal(positionsLine, null,
+    'an unrecognised title must report no bound rather than a wrong one');
+});
+
+test('COMPOSITE is chart ink, not a panel title', () => {
+  // The reason the test is ANCHORED on POSIT rather than matching it anywhere:
+  // "NASDAQ Composite" contains the same five letters. Taken for the header it
+  // would put the panel's upper bound on a chart label.
+  for (const text of ['Composite', 'NASDAQ Composite', 'COMPOSITE', 'Deposit']) {
+    const { positionsLine } = findPanelBoundaries([
+      { text, left: 300, top: 100, width: 90, height: 30, line: 1 },
+      { text: 'AAPL', left: LIST_X, top: 200, width: TICKER_W, height: TICKER_H, line: 2 },
+    ]);
+    assert.equal(positionsLine, null,
+      `${JSON.stringify(text)} must not be mistaken for the Positions header`);
+  }
 });
 
 test('the filter reports the rule it applied and the rows it found', () => {
