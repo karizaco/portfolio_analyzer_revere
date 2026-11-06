@@ -554,15 +554,15 @@ are missed together on `20220606`, `20220607` and `20220608`.
 **The campaign finished at 96.7 % on what production published, against the
 extended ground truth.** Every ground-truth date has been rescanned with the
 current parser. The logs' own merged lists — the artifact the portfolio
-report reads — score **354/366 (96.7 %) with 14 false positives** over 40
-dates. Before the four missing moments were added to the union, the same
-logs scored 347/360 (96.4 %) with 21 false positives: five of those "false
-positives" were the holdings the union did not yet carry.
+report reads — score **359/371 (96.8 %) with 9 false positives** over 40
+dates. Before the five missing moments were added to the union, the same
+logs scored 347/360 (96.4 %) with 21 false positives: more than half of
+those "false positives" were the holdings the union did not yet carry.
 
 | level | hit / ground truth | recall | false positives |
 | --- | --- | --- | --- |
-| the logs' own merged list (what production published) | 354/366 | **96.7 %** | 14 |
-| the current parser rebuilt over the same captures | 339/366 | 92.6 % | 9 |
+| the logs' own merged list (what production published) | 359/371 | **96.8 %** | 9 |
+| the current parser rebuilt over the same captures | 344/371 | 92.7 % | 4 |
 
 The two levels differ because production clusters **every** OCR'd candidate
 frame while a rebuild has only the selected captures. Both are reported by
@@ -575,8 +575,8 @@ same parser on both sides, after the union extension:
 
 | | hit / gt | recall | false positives |
 | --- | --- | --- | --- |
-| without the alias tables | 332/366 | 90.7 % | 17 |
-| **with them** | **339/366** | **92.6 %** | **9** |
+| without the alias tables | 337/371 | 90.8 % | 12 |
+| **with them** | **344/371** | **92.7 %** | **4** |
 
 | garbled | canonical | the misread | dates |
 |---|---|---|---|
@@ -617,8 +617,8 @@ ticker off the wrong cell, or a holding the OCR never produced often enough:
 
 | class | dates | what it is |
 | --- | --- | --- |
-| a holding read in too few frames | `20230522`, `20230518`, `20230523` (`LI`); `20230608` (`TQQQ`); `20220405` (`CWEB`, `KWEB`, `X`) | the collapsed-glyph cases the one-glyph rule and the alias table cover only in the layout where the misread was recorded |
-| a wrong cell read as a real ticker | `20220405` (`ERX`, `LHX`, `LMT`, `URA`, `URNM`), `20220330` (`ERX`), `20220412`/`20220413` (`GUSH`), `20231215` (`AI`), `20220218` (`UVXY`) | chart ink that happens to be a seed ticker |
+| a holding read in too few frames | `20230522`, `20230518` (`LI`); `20230608` (`TQQQ`); `20220405` (`CWEB`, `KWEB`, `X`) | the collapsed-glyph cases the one-glyph rule and the alias table cover only in the layout where the misread was recorded |
+| a wrong cell read as a real ticker | `20220330` (`ERX`), `20220412`/`20220413` (`GUSH`), `20231215` (`AI`), `20220218` (`UVXY`) | chart ink that happens to be a seed ticker |
 | the list changed inside the session | `20220418`, `20220429`, `20220406`, `20220427`, `20220428`, `20220331`, `20221117` (`FREY`), `20220606` (`BOIL`, `SIGA`), `20220607` (`TQQQ`) | the union denominator counts a moment the capture did not show |
 
 **`20220606`'s two misses are the union's, not the parser's.** The panel at
@@ -662,6 +662,13 @@ panel's own count:
 other date. The published lists for those dates went from **6/11, 6/9 and
 9/12 with three false positives each** to **8/11, 8/9 and 11/12 with none**.
 
+**`20230523`'s collapsed `LI` is recovered too.** The sidebar alias table
+turns the collapsed `U` cell into `LI`, and the 2026-11-06 rescan publishes
+the ground truth's **eleven** tickers exactly — `AI, APLD, CVNA, DNA, FTCH,
+IMGN, LI, MNDY, PLTR, QBTS, SOUN` — with no false positive, where the
+earlier scan scored 10/11. The panel's own count says eleven, and the
+reading has eleven.
+
 **A SCAN IS NOT SLOW BECAUSE OF THE SCAN.** The 2026-11-06 batch took
 **2834 s** on `20220606`; the identical scan had taken **642 s** hours
 earlier on the same machine, with the same flags. The difference was that
@@ -677,7 +684,8 @@ admitted).
 **The union score's disagreements are mostly NOT errors — they are exact
 readings of a moment the union does not cover.** Measured on the 2026-11-05
 rescan, **10 of the 12 first captures whose footer was read agree with it
-exactly.** Verified against the pixels:
+exactly**, and the five dates whose unions were extended for it gained **+13
+hits and −12 false positives** between them. Verified against the pixels:
 
 | date | the union score says | the panel says | what is true |
 | --- | --- | --- | --- |
@@ -706,10 +714,27 @@ case table was extended and the crops regenerated:
 | `20220412` | 1 | 12, "1 of 12 Items" | `GUSH` |
 | `20220606` | 12 | 9, "9 Items" | `COIN` |
 | `20220607` | 3 | 9, "3 of 9 Items" | `WEAT`, `TQQQ` |
+| `20220405` | 1 | 14, "14 of 14 Items" | `ERX`, `LHX`, `LMT`, `URA`, `URNM` |
 
 Each crop is md5-pinned under `test/fixtures/qmg_ground_truth/`, and the
 checker agrees. `20220413`'s `GUSH` and `LI` stay false positives: that
 panel's eleven rows do not contain them.
+
+**`20220405` is the fifth, and its five "false positives" are all real.** The
+scan's three frames — clock 15:45, 16:04 and 16:08 — all show the SAME
+fourteen-row panel: `GGPI, REGN, COPX, FCX, TAN, NEM, LMT, X, LHX, JNUG,
+NUGT, ERX, URNM, URA`, footer "14 of 14 Items in Personal WatchList". The
+ground truth's union is the eleven rows of an EARLIER moment (clock 15:29:
+`CWEB, REGN, KWEB, JNUG, GGPI, TAN, NEM, COPX, FCX, NUGT, X`), so `ERX`,
+`LHX`, `LMT`, `URA` and `URNM` are real holdings the union never saw. The
+reading published **13 of the panel's 14** — it dropped `X`, the one-glyph
+row — and scored 8/11 with five false positives that were all true.
+
+So the pattern is now five dates, and the diagnosis is one thing: **the
+union is a union over the captures the ground truth was ANCHORED to, and the
+rescan captured other moments.** The panel's own count is what proves it —
+a reading whose length matches the panel is a complete reading of THAT panel,
+whatever the union says.
 
 **The scan tool now publishes the per-frame check.** `panel_row_count_matches`
 is true when the FIRST capture's reading has as many tickers as the panel says
@@ -794,6 +819,32 @@ same 1279 claims at 53.3 % (primary bucket 54.0 %), and its 48 walk-forward
 folds select an allow-bucket in only 4 of them. **The honest reading is that
 this source is not yet shown to beat the index**, and the corpus is now large
 enough (491 transcripts, 2020–2026) to say so rather than to hope for it.
+
+### The confirmed spoken-names table grew on 2026-11-06
+
+The matcher drops trailing vowels so "Applu" reaches "apple", but the
+Czech endings that end in a **consonant** do not: "Amazonem" (instrumental),
+"Trumpovi" (locative), "Teslech" (genitive plural), "AMDcko" (the Czech
+shortening). The survey of the full corpus found 14 such forms, each checked
+against the segment it came from, and each was added to
+`config/ticker_names_confirmed.csv`.
+
+Measured after the re-extract of the 66 affected videos:
+
+| | before | after |
+|---|---|---|
+| signals | 1012 | **1015** (+3: DJT, SOFI, AMZN) |
+| setups | 2009 | **2013** (+4 net) |
+
+The gain is small because the extractor needs a DIRECTION next to the name,
+and most of the new forms appear in descriptive contexts ("s Amazonem, ktery
+investuje do Antropicu") rather than in trade-shaped sentences. The table is
+still the right place for them: a future setup/signal that *does* name them
+will now resolve.
+
+Pinned by `test/sevcikCzechNames.test.js` -- "the case endings the first
+stemmer missed also resolve".
+
 
 
 ### The channel is CZECH — and that changes the strategy

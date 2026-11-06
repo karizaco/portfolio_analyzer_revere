@@ -819,6 +819,32 @@ folds select an allow-bucket in only 4 of them. **The honest reading is that
 this source is not yet shown to beat the index**, and the corpus is now large
 enough (491 transcripts, 2020–2026) to say so rather than to hope for it.
 
+### The confirmed spoken-names table grew on 2026-11-06
+
+The matcher drops trailing vowels so "Applu" reaches "apple", but the
+Czech endings that end in a **consonant** do not: "Amazonem" (instrumental),
+"Trumpovi" (locative), "Teslech" (genitive plural), "AMDcko" (the Czech
+shortening). The survey of the full corpus found 14 such forms, each checked
+against the segment it came from, and each was added to
+`config/ticker_names_confirmed.csv`.
+
+Measured after the re-extract of the 66 affected videos:
+
+| | before | after |
+|---|---|---|
+| signals | 1012 | **1015** (+3: DJT, SOFI, AMZN) |
+| setups | 2009 | **2013** (+4 net) |
+
+The gain is small because the extractor needs a DIRECTION next to the name,
+and most of the new forms appear in descriptive contexts ("s Amazonem, ktery
+investuje do Antropicu") rather than in trade-shaped sentences. The table is
+still the right place for them: a future setup/signal that *does* name them
+will now resolve.
+
+Pinned by `test/sevcikCzechNames.test.js` -- "the case endings the first
+stemmer missed also resolve".
+
+
 
 ### The channel is CZECH — and that changes the strategy
 

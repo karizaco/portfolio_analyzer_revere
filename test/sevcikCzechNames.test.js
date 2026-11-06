@@ -98,6 +98,40 @@ test('a Czech inflection still resolves', () => {
   assert.equal(matchCompanyName('Applu', { lexicon: LEXICON }).ticker, 'AAPL');
   assert.equal(matchCompanyName('Tesly', { lexicon: LEXICON }).ticker, 'TSLA');
 });
+test('the case endings the first stemmer missed also resolve', () => {
+  // The stem drops TRAILING VOWELS, so "Applu" reaches "apple" but the
+  // endings that end in a consonant do not: "Amazonem" (instrumental),
+  // "Trumpovi" (locative), "Teslech" (genitive plural), "AMDcko" (the
+  // Czech shortening). Each of these was checked against the segment it
+  // came from on 2026-11-06.
+  const cases = [
+    ['Amazonem', 'AMZN'],
+    ['Googlem', 'GOOG'],
+    ['Microsoftnu', 'MSFT'],
+    ['Trumpovi', 'DJT'],
+    ['Trumpovu', 'DJT'],
+    ['Trumpovou', 'DJT'],
+    ['Teslech', 'TSLA'],
+    ['Teslulu', 'TSLA'],
+    ['Sofij', 'SOFI'],
+    ['Sofit', 'SOFI'],
+    ['AMDčko', 'AMD'],
+    ['AMDčka', 'AMD'],
+    ['AMDčku', 'AMD'],
+    ['CSGčko', 'CSGNF'],
+    ['NVIDám', 'NVDA'],
+    ['NVIDjá', 'NVDA'],
+  ];
+  for (const [spoken, expected] of cases) {
+    assert.equal(
+      matchCompanyName(spoken, { lexicon: LEXICON }).ticker,
+      expected,
+      spoken + ' -> ' + expected,
+    );
+  }
+});
+
+
 
 test('a name that is a prefix of another name does not match it', () => {
   // "Apple" must not match "Applied Materials". The word-boundary test
