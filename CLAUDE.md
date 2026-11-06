@@ -4581,9 +4581,11 @@ and the checker enforces it.
 | `tools/checkGroundTruthConsistency.js` | checks the ground truth against the manifest, the panel counts and the footers |
 | `test/qmgGroundTruthProvenance.test.js` | pins the checker, and proves it has teeth |
 
-The fixture set is **94 crops** of the panel — showing the ticker column AND
+The fixture set is **135 crops** of the panel — showing the ticker column AND
 the footer — md5-pinned in `test/fixtures/qmg_ground_truth/manifest.json`, with
 each source snapshot's own md5 recorded so a changed corpus frame is caught.
+(It was 94 when this section was written; the count below is the wave-2
+figure, and the current one is whatever the checker prints.)
 
 ```bash
 node tools/checkGroundTruthConsistency.js
@@ -4600,6 +4602,91 @@ The wave-2 cases are **generated from a table** (`C:/tmp/spxl/gen_cases.js`
 during the session) rather than hand-written, so a reading, its panel count and
 its footer text cannot drift apart: the generator emits all three into
 `tools/buildGroundTruthFixtures.js` from one row.
+
+**The set is now 135 crops across 52 of 56 dates (2026-11-06).** Twelve
+dates were added that had never been scanned at all — the January and
+February 2022 uploads, downloaded and scanned the same day. The numbers
+in this section's tables are the wave-2 figures; the current count is
+whatever `node tools/checkGroundTruthConsistency.js` prints.
+
+#### A date whose panel is EMPTY is a reading, not a gap (2026-11-06)
+
+`20220128` is the corpus's first date with **no holdings at all**: the
+"A - Positions" panel shows its header row — Flag, Sym, % Change, Pre
+Buzz — and no data rows, in all three captures, with the footer
+**"0 Items in Personal WatchList"**. `20220131` is the next smallest, one
+row (`TQQQ`) with **"1 Item in Personal WatchList"** — the singular
+follows the total — and its earliest frame is empty too.
+
+**These are worth pinning precisely because they are empty.** A date with
+no holdings is the only kind of date on which **every** published ticker
+is provably a false positive, so it is the sharpest possible test of the
+chart-ink filters. The scan published `SYM` and `X` on `20220128` and
+`MDB`, `U` and `X` on `20220131`; all of them are chart ink or rows of
+the watchlist widget above the table.
+
+**But the replay cannot score such a date.** Its ground truth is the
+empty union, so its denominator is zero and `tools/evalParserReplay.js`
+omits it from the per-date table entirely — a date that contributes
+nothing to the numerator *or* the denominator cannot move a micro
+average. Its value is therefore in the **pinned fixture and the
+checker**, not in the recall number, and a reader who expects an empty
+date to show up as `0/0` in the replay output will not find it.
+
+#### Reading the PUBLISHED list names the wrong mechanism — read the OCR WORDS
+
+`20220211` published `TSM`, a seed ticker Qullamaggie has never held, at
+the row the panel shows as `TSLA`. The obvious reading of that is the one
+§ *The LI row* already records: a garbled form that is **itself a real
+ticker** cannot go in the shared table, so this needs a **date-scoped**
+table like `U -> LI` or `NFU -> NFLX`.
+
+**That reading is wrong, and the log says so.** The raw OCR token is not
+`TSM` — it is **`TSU`**, the `LA` of `TSLA` merged into one `U` glyph, at
+left 714 against the column's `dominant_left` 715, conf 0.988 and 0.960
+on the two captures. `TSM` is what the **distance-1 repair** made of it:
+
+| | |
+|---|---|
+| `d(TSU, TSM)` | **1** — and `TSM` is in the seed, so the repair took it |
+| `d(TSU, TSLA)` | **2** — so the repair could never have reached the truth |
+
+`TSU` is in **neither** lexicon, so `TSU -> TSLA` is a legal **shared**
+row: no new era key, no new CSV, no new date window. The scoped-table
+reasoning was about `TSM`, which is not the key.
+
+**The general rule: a false positive names the REPAIR's output, not the
+read.** Before proposing an alias row for a wrong holding, find the token
+in `ocr_words` — the row that must be keyed is the one the engine
+actually produced. `NOS -> MOS` came out of the same inspection: `"NOs"`
+sits dead on the column (left 713–716 against `dominant_left` 713–716) on
+**eight** dates, and `MOS` is a ground-truth holding on every one of
+them; its price cell did not parse, so it fell out of the price-aligned
+subset and the column gate rejected it **before** the repair pass could
+see it. The curated rescue is the only path that reaches that cell.
+
+#### A missing lexicon row publishes a WRONG holding, not a miss
+
+Three holdings on these dates were in no lexicon, and only one of them
+cost anything — which is the measurement, not an argument:
+
+| ticker | what it is | what its absence cost |
+|---|---|---|
+| `XOP` | SPDR oil & gas exploration ETF | **a wrong holding**: `XOP` is one edit from `XOM`, which IS a seed ticker, so the repair published `XOM` on `20220204`, `20220207` and `20220208`. `XOM` is in **no** ground-truth capture anywhere in the corpus |
+| `KRBN` | KraneShares Global Carbon ETF | **nothing** — it is price-aligned inside the column, so the accept path already took it verbatim |
+| `DCFC` | Tritium DCFC Ltd (NASDAQ 2022-01-14 → the 2024 delisting, then OTC as `DCFCQ`) | **nothing**, same reason |
+
+`DCFC` is worth a note of its own: **no provider returns an exact `DCFC`
+today**, because the company was delisted and moved to `DCFCQ`. Yahoo,
+TradingView and Stocktwits all return only `DCFCQ`/`DCFBS`. A ticker that
+cannot be resolved against a present-day provider is **not** evidence
+that the panel is misread — the corpus is 2022, and the panel is the
+primary source.
+
+All three were seeded anyway, because the seed is the **ALLOW** list: an
+unseeded holding is one repair away from being published as a neighbour,
+which is exactly what `XOP` was. Measured over the wide corpus the three
+rows are **+3 hits and −3 false positives**, all of them `XOM → XOP`.
 
 The checker has seven teeth, each tested by perturbing a copy of the inputs: a
 misread ticker in the ground truth (`gt-disagrees`), a wrong panel count
