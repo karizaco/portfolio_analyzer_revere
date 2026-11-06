@@ -93,20 +93,30 @@ const BULLISH_PATTERNS = [
 
   // -- THE CZECH DIRECTION ------------------------------------------
   //
+  // IMPORTANT: Czech word tails use \p{L}, never \w.
+  // \w is ASCII-only even under the /u flag, so "poklesov\w*"
+  // stops before the "ý" in "poklesový" and the whole pattern
+  // fails. Measured 2026-11-06 on "máme poklesový kanál".
+  //
   // "do Longu" is the construction, and it is the dominant one: 89
   // segments. The bare "Long" is much weaker, because he says "Long" as
   // a noun all the time -- "longový kanál" (a rising channel) is a
   // description of the CHART, not a call.
-  { pattern: /(?<![\p{L}\p{N}])do\s+lon(?:g|gu|ů|em)(?![\p{L}\p{N}])/giu, weight: 0.9 },
-  { pattern: /(?<![\p{L}\p{N}])(?:půjde|pujde|půjdem|půjdu|jde|jdem|jdeme|jdou|pojde|pojdem)\s+do\s+lon(?:g|gu|ů|em)?(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { pattern: /(?<![\p{L}\p{N}])do\s+lon(?:gu|ů|em|g)?(?![\p{L}\p{N}])/giu, weight: 0.9 },
+  // Chart-state / setup language that IS a direction (measured 2026-11-06).
+  // "nachystaný do Lon", "tlačen do Longu", "v Longu", "longový kanál".
+  { pattern: /(?<![\p{L}\p{N}])(?:nachystan\p{L}*|tlačen\p{L}*|tlačí)\s+do\s+lon(?:gu|ů|em|g)?(?![\p{L}\p{N}])/giu, weight: 0.85 },
+  { pattern: /(?<![\p{L}\p{N}])(?:longov|lonov)\p{L}*\s+kan[aá]l\p{L}*/giu, weight: 0.65 },
+  { pattern: /(?<![\p{L}\p{N}])(?:v|ve)\s+longu(?![\p{L}\p{N}])/giu, weight: 0.55 },
+  { pattern: /(?<![\p{L}\p{N}])stoupajíc\p{L}*\s+kan[aá]l\p{L}*/giu, weight: 0.65 },
+
+  { pattern: /(?<![\p{L}\p{N}])(?:půjde|pujde|půjdem|půjdu|jde|jdem|jdeme|jdou|pojde|pojdem)\s+do\s+lon(?:gu|ů|em|g)?(?![\p{L}\p{N}])/giu, weight: 0.8 },
   { pattern: /(?<![\p{L}\p{N}])lo(?:ng|ngu|ngů)\s+(?:směr|strana|variant)(?![\p{L}\p{N}])/giu, weight: 0.7 },
   // The channel's slope states the direction without the word "long":
   // "mám poklesový kanál" (a falling channel) is bearish, and it is 62
   // segments.
-  { pattern: /(?<![\p{L}\p{N}])poklesov\w*\s+kan[aá]l\w*/giu, weight: 0.7 },
-  { pattern: /(?<![\p{L}\p{N}])klesajíc\w*\s+kan[aá]l\w*/giu, weight: 0.7 },
-  { pattern: /(?<![\p{L}\p{N}])rostouc\w*\s+kan[aá]l\w*/giu, weight: 0.7 },
-  { pattern: /(?<![\p{L}\p{N}])rostouc\w*\s+trh\w*/giu, weight: 0.7 },
+  { pattern: /(?<![\p{L}\p{N}])rostouc\p{L}*\s+kan[aá]l\p{L}*/giu, weight: 0.7 },
+  { pattern: /(?<![\p{L}\p{N}])rostouc\p{L}*\s+trh\p{L}*/giu, weight: 0.7 },
   { pattern: /(?<![\p{L}\p{N}])(?:půjde|pujde|pojde)\s+n[ií]ž\w*/giu, weight: 0.7 },
   { pattern: /(?<![\p{L}\p{N}])(?:prorazí|prorazi|průraz|prolom)\w*\s+n[ií]ž\w*/giu, weight: 0.7 },
 ];
@@ -129,8 +139,12 @@ const BEARISH_PATTERNS = [
   // "do shortu" is 49 segments, and the transcription writes it both
   // "shortu" and "short".
   { pattern: /(?<![\p{L}\p{N}])do\s+short(?:u|ů)?(?![\p{L}\p{N}])/giu, weight: 0.9 },
+  // Falling channel = bearish (was wrongly in BULLISH_PATTERNS before 2026-11-06).
+  { pattern: /(?<![\p{L}\p{N}])poklesov\p{L}*\s+kan[aá]l\p{L}*/giu, weight: 0.7 },
+  { pattern: /(?<![\p{L}\p{N}])klesajíc\p{L}*\s+kan[aá]l\p{L}*/giu, weight: 0.7 },
+
   { pattern: /(?<![\p{L}\p{N}])(?:půjde|pujde|půjdem|půjdu|jde|jdem|jdeme|jdou|pojde|pojdem)\s+do\s+short(?:u|ů)?(?![\p{L}\p{N}])/giu, weight: 0.8 },
-  { pattern: /(?<![\p{L}\p{N}])shortov\w*\s+(?:směr|strana|variant|kan[aá]l\w*)(?![\p{L}\p{N}])/giu, weight: 0.7 },
+  { pattern: /(?<![\p{L}\p{N}])shortov\p{L}*\s+(?:směr|strana|variant|kan[aá]l\p{L}*)(?![\p{L}\p{N}])/giu, weight: 0.7 },
   // "do shortu" and the falling channel are the same statement, and the
   // channel carries it on its own: "máme poklesový kanál, že pokud
   // neudrží" -- "we have a falling channel, that if it does not hold".
@@ -138,7 +152,7 @@ const BEARISH_PATTERNS = [
   { pattern: /(?<![\p{L}\p{N}])(?:short\w*|short)\s+(?:variant|scénář\w*|scenar\w*)(?![\p{L}\p{N}])/giu, weight: 0.7 },
   // A rejection of a level is bearish: "bylo odmítnuto" (it was
   // rejected).
-  { pattern: /(?<![\p{L}\p{N}])(?:bylo\s+odmítnut\w*|odmítnut\w*\s+tahl\w*\s+z[oó]na)(?![\p{L}\p{N}])/giu, weight: 0.6 },
+  { pattern: /(?<![\p{L}\p{N}])(?:bylo\s+odmítnut\p{L}*|odmítnut\p{L}*\s+tahl\w*\s+z[oó]na)(?![\p{L}\p{N}])/giu, weight: 0.6 },
 ];
 
 /**
@@ -190,6 +204,17 @@ const ACTION_PATTERNS = [
   //
   // The DIRECTION is not an action here -- it is the bias, and the two
   // are recorded separately, exactly as in English.
+  // Measured 2026-11-06: he states a buy as "kupuje"/"dokupuje"/"kupovat"/
+  // "sázím na" far more often than as "do Longu". Without these, a video
+  // full of "Berkshire dokupuje Alphabet" and "jestli kupovat Google"
+  // produced ZERO signals.
+  { action: 'buy', pattern: /(?<![\p{L}\p{N}])(?:dokupuje|dokoupil|dokoupím|dokoupit|přikupuje|přikoupil)(?![\p{L}\p{N}])/giu, weight: 0.85 },
+  { action: 'buy', pattern: /(?<![\p{L}\p{N}])(?:kupuje|koupil|koupím|koupit|kupovat|nakupuje|nakoupil|nakoupit)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'buy', pattern: /(?<![\p{L}\p{N}])(?:sázím|sází|vsadil|vsadím)\s+na(?![\p{L}\p{N}])/giu, weight: 0.75 },
+  { action: 'buy', pattern: /(?<![\p{L}\p{N}])(?:budu\s+obchodovat|obchoduji|otevírám\s+(?:long|lon)|otevřel\s+(?:long|lon))(?![\p{L}\p{N}])/giu, weight: 0.7 },
+  { action: 'sell', pattern: /(?<![\p{L}\p{N}])(?:prodává|prodal|prodám|prodat|prodávat|vyprodává|vyprodal)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'sell', pattern: /(?<![\p{L}\p{N}])(?:uzavírám|uzavřel|zavírám\s+pozici)(?![\p{L}\p{N}])/giu, weight: 0.75 },
+  { action: 'short', pattern: /(?<![\p{L}\p{N}])(?:shortuje|shortnul|shortovat)(?![\p{L}\p{N}])/giu, weight: 0.85 },
   { action: 'watch', pattern: /(?<![\p{L}\p{N}])budeme\s+čekat(?![\p{L}\p{N}])/giu, weight: 0.5 },
   { action: 'watch', pattern: /(?<![\p{L}\p{N}])(?:počkám|pockam|počkáme|pockame|čekám|cekám|čekáme|cekame)(?![\p{L}\p{N}])/giu, weight: 0.5 },
   { action: 'add', pattern: /(?<![\p{L}\p{N}])(?:přidám|pridam|přidáme|pridame|dokupím|dokupim)(?![\p{L}\p{N}])/giu, weight: 0.8 },

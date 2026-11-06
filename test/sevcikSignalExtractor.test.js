@@ -391,3 +391,43 @@ test('Czech retrospective language is tagged retrospective', () => {
   assert.equal(isRetrospective('už jsme říkali, predikce vyšla'), true);
   assert.equal(claimKindFor('Jdu do longu na TSLA teď.'), 'forward');
 });
+
+test('Czech channel-slope tails use \\p{L}, so poklesový kanál is bearish', () => {
+  // \\w is ASCII-only even under /u; "poklesov\\w*" used to stop before ý.
+  assert.equal(determineBias('máme poklesový kanál na TSLA').bias, 'bearish');
+  assert.equal(determineBias('máme rostoucí kanál na TSLA').bias, 'bullish');
+  assert.equal(determineBias('shortový kanál na NVDA').bias, 'bearish');
+});
+
+test('ASR "do Lon" (g dropped) is still a long call', () => {
+  assert.equal(determineBias('trh je nachystaný do Lon na TSLA').bias, 'bullish');
+  assert.equal(determineBias('je tlačen do Longu na AAPL').bias, 'bullish');
+});
+
+test('Czech buy verbs produce a buy action', () => {
+  assert.equal(determineAction('Berkshire dokupuje Alphabet a Google').action, 'buy');
+  assert.equal(determineAction('jestli kupovat Google teď').action, 'buy');
+  assert.equal(determineAction('sázím na TSLA odraz').action, 'buy');
+  assert.equal(determineAction('prodává Microsoft z portfolia').action, 'sell');
+});
+
+test('kupuje + ticker name yields a signal on a Czech stream', () => {
+  const segments = [
+    seg('Takže se podíváme na Google.'),
+    seg('Berkshire dokupuje Alphabet, kupuje Google z jedné strany.'),
+    seg('To je hlavní důvod, proč jít do Longu na Google.'),
+  ];
+  // Expand lexicon with GOOG / BRK-B for this case.
+  const lex = new Set([...LEXICON, 'GOOG', 'BRK-B', 'AMZN', 'MSFT']);
+  const signals = extractSignals({
+    segments,
+    lexicon: lex,
+    confirmedSymbols: new Set(['GOOG', 'BRK-B', 'TSLA', 'AAPL', 'NVDA', 'SPY', 'TQQQ', 'QQQ']),
+    videoId: 'test-cz-buy',
+    transcriptId: 1,
+  });
+  assert.ok(signals.length >= 1, 'expected at least one signal, got ' + signals.length + ' ' + JSON.stringify(signals));
+  assert.ok(signals.some((s) => s.ticker === 'GOOG' && (s.bias === 'bullish' || s.action === 'buy')),
+    'expected a bullish/buy GOOG signal: ' + JSON.stringify(signals));
+});
+

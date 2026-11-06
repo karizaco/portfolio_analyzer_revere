@@ -76,7 +76,7 @@ const { loadConfirmedNames, stemName } = require('./companyNames');
  * The version of the extractor. It is written onto every signal row, so a
  * re-run with a changed parser can be told apart from the previous one.
  */
-const PARSER_VERSION = 'sevcik-signals-3';
+const PARSER_VERSION = 'sevcik-signals-4';
 
 // A phrase that reverses a direction. "Not bullish" is bearish, and the
 // naive pattern match would read "bullish" and call it bullish.

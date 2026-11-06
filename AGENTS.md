@@ -845,6 +845,75 @@ will now resolve.
 Pinned by `test/sevcikCzechNames.test.js` -- "the case endings the first
 stemmer missed also resolve".
 
+### The vocabulary bugs, and what they cost (2026-11-06)
+
+The vocabulary was built on a 12-stream corpus. On the full 491-transcript
+corpus **150 of 491 videos produced ZERO signals**, and that was not because
+the videos were quiet -- they are 30-60 minutes of chart commentary each.
+Four defects explained it:
+
+1. **`\w` does not match Czech diacritics.** `\w` is ASCII-only even under
+   the `/u` flag, so `poklesov\w*` stopped before the `ý` in "poklesový" and
+   **the whole pattern never fired**. "máme poklesový kanál" -- the way the
+   speaker states a bearish call -- matched nothing. Every Czech word tail
+   that ends in a diacritic was dead: `poklesov`, `klesajíc`, `rostouc`,
+   `stoupajíc`, `shortov`, `longov`, `odmítnut`.
+2. **The falling channel was in the BULLISH list.** "poklesový kanál" is a
+   falling channel, and it was sitting in `BULLISH_PATTERNS`. So even once
+   the `\w` bug was fixed, a falling channel read as a BULLISH call.
+3. **The ASR drops the `g`.** "do Longu" is written "do Lon" in the
+   transcript, and the pattern required the `g`. The single most common
+   construction in the corpus did not match.
+4. **There were no Czech BUY verbs.** The action table had the setup verbs
+   ("do Longu" as an action) but not "kupuje" / "dokupuje" / "kupovat" /
+   "sázím na", which is how he actually states a buy. "Berkshire masivně
+   dokupuje Alphabet" and "jestli kupovat Google" produced nothing.
+
+The fix, and the measured result over the whole corpus:
+
+| | before | after |
+|---|---|---|
+| signals | 1012 | **1487** (+475) |
+| tickers | 26 | **32** |
+| videos with signals | 340 | **387** |
+| videos with ZERO signals | **150** | **104** (-46) |
+| TA claims scored | 1279 | **1734** |
+
+**The hit rate went DOWN, and that is the honest result.** 1w 52.2 % ->
+50.8 % (CI 48.4-53.1 %), 1m 54.6 % -> 53.8 %, against a SPY baseline of
+57.9 %. The recovered claims are the descriptive ones -- "Berkshire dokupuje
+Alphabet" is a statement about what Berkshire did, not a call on Alphabet --
+so recovering them dilutes the average. A larger corpus that scores lower is
+a more honest corpus than a small one that scored well by missing half the
+channel.
+
+The parser version moved `sevcik-signals-3` -> `sevcik-signals-4`, so every
+row says which vocabulary produced it. Pinned by `test/sevcikSignalExtractor.test.js`
+-- four new tests: the `\p{L}` tails, "do Lon", the Czech buy verbs, and a
+Czech stream end to end.
+
+### The transcripts are versioned; the interpretations are not
+
+The transcript TEXT is static: the same video always yields the same words.
+So it is in git, and it is the only thing in this pipeline that is:
+
+| in git | not in git |
+|---|---|
+| `data/video_pipeline/transcripts/*.json` (646 files) -- the normalised transcript | `data/sevcik_signals.csv`, `data/sevcik_setups.csv`, the daily/ticker summaries |
+| `data/video_pipeline/transcripts/*.vtt` (503 files) -- the raw YouTube caption tracks | `data/sevcik_signals.json`, `data/sevcik_ta_features.*`, `data/sevcik_outcomes.*` |
+| `data/video_pipeline/state.sqlite` -- the catalog | `data/sevcik_report.html` |
+
+The split is the point. The VTTs are YouTube's own captions, so the Czech
+source text is recoverable from the repository alone, and a re-parse is
+reproducible on any machine. The signals, the setups, the TA evaluation and
+the dashboard are **interpretations**: they change when the vocabulary
+changes, and this file records that they changed (a parser version per row,
+a table of numbers per change). Committing them would put every
+interpreter's output in the history as if it were a fact about the video.
+The videos themselves are never committed -- they are large and always
+available on YouTube.
+
+
 
 
 ### The channel is CZECH — and that changes the strategy

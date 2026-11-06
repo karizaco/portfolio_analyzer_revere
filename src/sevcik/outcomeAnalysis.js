@@ -50,6 +50,10 @@ function yahooSymbolFor(ticker) {
     MONETA: 'MONET.PR',
     BTC: 'BTC-USD',
     RHM: 'RHM.DE',
+    // German listings need the exchange suffix, or Yahoo has no symbol.
+    VOW3: 'VOW3.DE',
+    BMW: 'BMW.DE',
+    ASML: 'ASML.AS',
     // IPR is residual noise in this corpus; leave unmapped.
   };
   if (aliases[raw]) return aliases[raw];

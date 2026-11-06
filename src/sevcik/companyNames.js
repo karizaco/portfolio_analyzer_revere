@@ -184,8 +184,8 @@ const SPOKEN_NAME_ALIASES = {
   coinbase: 'COIN',
   microstrategy: 'MSTR',
   broadcom: 'AVGO',
-  berkshire: 'BRK.B',
-  "berkshire hathaway": 'BRK.B',
+  berkshire: 'BRK-B',
+  "berkshire hathaway": 'BRK-B',
   jpmorgan: 'JPM',
   "jpmorgan chase": 'JPM',
   walmart: 'WMT',
@@ -241,7 +241,7 @@ const SPOKEN_NAME_ALIASES = {
   mcdonalds: 'MCD',
   "nvidia corp": 'NVDA',
   "advanced micro devices": 'AMD',
-  "berkshire hathaway inc": 'BRK.B',
+  "berkshire hathaway inc": 'BRK-B',
 };
 
 /**
