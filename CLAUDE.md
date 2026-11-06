@@ -616,8 +616,8 @@ ticker off the wrong cell, or a holding the OCR never produced often enough:
 
 | class | dates | what it is |
 | --- | --- | --- |
-| a holding read in too few frames | `20230522`, `20230518`, `20230523` (`LI`); `20230608` (`TQQQ`); `20220405` (`CWEB`, `KWEB`, `X`) | the collapsed-glyph cases the one-glyph rule and the alias table cover only in the layout where the misread was recorded |
-| a wrong cell read as a real ticker | `20220405` (`ERX`, `LHX`, `LMT`, `URA`, `URNM`), `20220330` (`ERX`), `20220412`/`20220413` (`GUSH`), `20231215` (`AI`), `20220218` (`UVXY`) | chart ink that happens to be a seed ticker |
+| a holding read in too few frames | `20230522`, `20230518` (`LI`); `20230608` (`TQQQ`); `20220405` (`CWEB`, `KWEB`, `X`) | the collapsed-glyph cases the one-glyph rule and the alias table cover only in the layout where the misread was recorded |
+| a wrong cell read as a real ticker | `20220330` (`ERX`), `20220412`/`20220413` (`GUSH`), `20231215` (`AI`), `20220218` (`UVXY`) | chart ink that happens to be a seed ticker |
 | the list changed inside the session | `20220418`, `20220429`, `20220406`, `20220427`, `20220428`, `20220331`, `20221117` (`FREY`), `20220606` (`BOIL`, `SIGA`), `20220607` (`TQQQ`) | the union denominator counts a moment the capture did not show |
 
 **`20220606`'s two misses are the union's, not the parser's.** The panel at
@@ -660,6 +660,13 @@ panel's own count:
 `NFLX`, and `NFU` is a real seed ticker that must not be rewritten on any
 other date. The published lists for those dates went from **6/11, 6/9 and
 9/12 with three false positives each** to **8/11, 8/9 and 11/12 with none**.
+
+**`20230523`'s collapsed `LI` is recovered too.** The sidebar alias table
+turns the collapsed `U` cell into `LI`, and the 2026-11-06 rescan publishes
+the ground truth's **eleven** tickers exactly — `AI, APLD, CVNA, DNA, FTCH,
+IMGN, LI, MNDY, PLTR, QBTS, SOUN` — with no false positive, where the
+earlier scan scored 10/11. The panel's own count says eleven, and the
+reading has eleven.
 
 **A SCAN IS NOT SLOW BECAUSE OF THE SCAN.** The 2026-11-06 batch took
 **2834 s** on `20220606`; the identical scan had taken **642 s** hours
