@@ -142,6 +142,69 @@
       ]
     },
     {
+      "date": "20220228",
+      "capture_index": 0,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261106-nogt",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261106-nogt/snapshots/qmg_20220228.png",
+      "source_md5": "ddf9b581ad76a140e1aee0db978161a3",
+      "file": "20220228_c0.png",
+      "md5": "c94cbfb9adff5cf67f62ab456b1f7280",
+      "panel": "positions",
+      "panel_count": 6,
+      "panel_count_text": "6 Items in Personal WatchList",
+      "tickers": [
+        "X",
+        "MP",
+        "FCX",
+        "ERX",
+        "GUSH",
+        "COPX"
+      ],
+      "note": "Read 2026-11-06 off the pixels (chart clock 10:35:49). The widget ABOVE the table is the WatchList and shows SOFI, a different panel."
+    },
+    {
+      "date": "20220228",
+      "capture_index": 1,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261106-nogt",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261106-nogt/snapshots/qmg_20220228_2.png",
+      "source_md5": "d09d543c86a533c4496a99e24eeb6b92",
+      "file": "20220228_c1.png",
+      "md5": "c324caae74c172b46710787558c2f983",
+      "panel": "positions",
+      "panel_count": 6,
+      "panel_count_text": "3 of 6 Items in Personal WatchList",
+      "tickers": [
+        "X",
+        "MP",
+        "FCX",
+        "ERX",
+        "GUSH",
+        "COPX"
+      ],
+      "note": "Read 2026-11-06 (chart clock 10:19:01). FCX is the selected row, so the footer reads \"3 of 6\" -- the total is 6. The WatchList above shows ENPH."
+    },
+    {
+      "date": "20220228",
+      "capture_index": 2,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261106-nogt",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261106-nogt/snapshots/qmg_20220228_3.png",
+      "source_md5": "f7b4f41a119874fd1fa6052f36b13e09",
+      "file": "20220228_c2.png",
+      "md5": "3d64d5229ff09b9b60594ddfb081d025",
+      "panel": "positions",
+      "panel_count": 6,
+      "panel_count_text": "6 Items in Personal WatchList",
+      "tickers": [
+        "X",
+        "MP",
+        "FCX",
+        "ERX",
+        "GUSH",
+        "COPX"
+      ],
+      "note": "Read 2026-11-06 (chart clock 10:27:25). The WatchList above shows MTTR, which the scan read as MTIR."
+    },
+    {
       "date": "20220301",
       "capture_index": 0,
       "run": "data/video_scan_test/_rerun/qmg-easyocr-20261011",
@@ -1027,6 +1090,77 @@
         "MNDY",
         "LI"
       ]
+    },
+    {
+      "date": "20230519",
+      "capture_index": 0,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261106-nogt",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261106-nogt/snapshots/qmg_20230519.png",
+      "source_md5": "e1f919e206786b97135b1f63cbec91ad",
+      "file": "20230519_c0.png",
+      "md5": "1bb597b4c95f7fd74605ef102b644ea0",
+      "panel": "positions",
+      "panel_count": 9,
+      "panel_count_text": "9 Items in Personal WatchList",
+      "tickers": [
+        "CVNA",
+        "APLD",
+        "SOUN",
+        "IMGN",
+        "AI",
+        "FTCH",
+        "PLTR",
+        "SHOP",
+        "LI"
+      ],
+      "note": "Read 2026-11-06 off the pixels. The widget above the table reads \"12 Items in Personal WatchList\" -- a different panel; the positions table is the one titled \"A - Positions\"."
+    },
+    {
+      "date": "20230519",
+      "capture_index": 1,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261106-nogt",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261106-nogt/snapshots/qmg_20230519_2.png",
+      "source_md5": "513260891e36b6570321fc7932968c91",
+      "file": "20230519_c1.png",
+      "md5": "3726a9b49b49ea5d278150f01d12f5ec",
+      "panel": "positions",
+      "panel_count": 9,
+      "panel_count_text": "9 Items in Personal WatchList",
+      "tickers": [
+        "CVNA",
+        "APLD",
+        "SOUN",
+        "IMGN",
+        "AI",
+        "FTCH",
+        "PLTR",
+        "SHOP",
+        "LI"
+      ],
+      "note": "Read 2026-11-06. The same nine rows as capture 0, at an earlier moment."
+    },
+    {
+      "date": "20230519",
+      "capture_index": 2,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261106-nogt",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261106-nogt/snapshots/qmg_20230519_3.png",
+      "source_md5": "ed399c3e078ffdb159655aa4b9e997ea",
+      "file": "20230519_c2.png",
+      "md5": "8cafe366e44d9a6965a024765cd66f4a",
+      "panel": "positions",
+      "panel_count": 8,
+      "panel_count_text": "8 Items in Personal WatchList",
+      "tickers": [
+        "CVNA",
+        "APLD",
+        "SOUN",
+        "IMGN",
+        "AI",
+        "PLTR",
+        "SHOP",
+        "LI"
+      ],
+      "note": "Read 2026-11-06. FTCH is not a row yet at this moment (the earliest of the three frames); the footer counts eight."
     },
     {
       "date": "20230609",
