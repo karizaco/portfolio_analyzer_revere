@@ -551,15 +551,18 @@ dates that are not exact, every false positive is in a capture's own
 chart ink: `ERX`, `GUSH`, `LI`, `LMT`, `DNA`, `NFU` recur. `NFLX` and `TNA`
 are missed together on `20220606`, `20220607` and `20220608`.
 
-**The campaign finished at 96.4 % on what production published.** Every
-ground-truth date has now been rescanned with the current parser, and the
-logs' own merged lists — the artifact the portfolio report reads — score
-**347/360 (96.4 %) with 21 false positives** over 40 dates.
+**The campaign finished at 96.7 % on what production published, against the
+extended ground truth.** Every ground-truth date has been rescanned with the
+current parser. The logs' own merged lists — the artifact the portfolio
+report reads — score **354/366 (96.7 %) with 14 false positives** over 40
+dates. Before the four missing moments were added to the union, the same
+logs scored 347/360 (96.4 %) with 21 false positives: five of those "false
+positives" were the holdings the union did not yet carry.
 
 | level | hit / ground truth | recall | false positives |
-|---|---|---|---|
-| the logs' own merged list (what production published) | 347/360 | **96.4 %** | 21 |
-| the current parser rebuilt over the same captures | 337/360 | 93.6 % | 11 |
+| --- | --- | --- | --- |
+| the logs' own merged list (what production published) | 354/366 | **96.7 %** | 14 |
+| the current parser rebuilt over the same captures | 339/366 | 92.6 % | 9 |
 
 The two levels differ because production clusters **every** OCR'd candidate
 frame while a rebuild has only the selected captures. Both are reported by
@@ -568,12 +571,12 @@ one CLAUDE.md records in § *The log does NOT carry the clusterer's input*.
 
 **Six more alias rows, all pixel-verified, and the alias tables are worth
 +7 hits and −8 false positives.** Measured over the 40-date corpus with the
-same parser on both sides:
+same parser on both sides, after the union extension:
 
 | | hit / gt | recall | false positives |
-|---|---|---|---|
-| without the alias tables | 330/360 | 91.7 % | 19 |
-| **with them** | **337/360** | **93.6 %** | **11** |
+| --- | --- | --- | --- |
+| without the alias tables | 332/366 | 90.7 % | 17 |
+| **with them** | **339/366** | **92.6 %** | **9** |
 
 | garbled | canonical | the misread | dates |
 |---|---|---|---|
@@ -613,10 +616,16 @@ the errors are now almost entirely *capture-level* — a frame that read a real
 ticker off the wrong cell, or a holding the OCR never produced often enough:
 
 | class | dates | what it is |
-|---|---|---|
+| --- | --- | --- |
 | a holding read in too few frames | `20230522`, `20230518`, `20230523` (`LI`); `20230608` (`TQQQ`); `20220405` (`CWEB`, `KWEB`, `X`) | the collapsed-glyph cases the one-glyph rule and the alias table cover only in the layout where the misread was recorded |
 | a wrong cell read as a real ticker | `20220405` (`ERX`, `LHX`, `LMT`, `URA`, `URNM`), `20220330` (`ERX`), `20220412`/`20220413` (`GUSH`), `20231215` (`AI`), `20220218` (`UVXY`) | chart ink that happens to be a seed ticker |
-| the list changed inside the session | `20220418`, `20220429`, `20220406`, `20220427`, `20220428`, `20220331`, `20221117` (`FREY`), `20220606` (`BOIL`, `SIGA`) | the union denominator counts a moment the capture did not show |
+| the list changed inside the session | `20220418`, `20220429`, `20220406`, `20220427`, `20220428`, `20220331`, `20221117` (`FREY`), `20220606` (`BOIL`, `SIGA`), `20220607` (`TQQQ`) | the union denominator counts a moment the capture did not show |
+
+**`20220606`'s two misses are the union's, not the parser's.** The panel at
+the captured moment holds nine rows and the reading has nine — `BOIL` and
+`SIGA` are real holdings at *other* moments of that video, which the union
+denominator counts but that frame never showed. `20220607`'s `TQQQ` is the
+same shape: the panel shows it, the captured frame did not.
 
 The panel count remains a diagnostic for all of these — never a licence to
 guess, because a count misread low would truncate a correct reading.
@@ -629,6 +638,84 @@ when two bands agree. Measured on 40 fixture dates: 31/40 correct, zero wrong.
 `20230126` read 2 for an eight-row panel in one band and was rejected.
 `tools/measurePanelFooter.js` is the instrument. The scan tool writes
 `panel_row_count` on the selected capture.
+
+**THE FOOTER IS THE ONLY INDEPENDENT CHECK THERE IS, and it settles what the
+union score cannot.** The ground truth's denominator is the UNION over a
+date's captures, and the list CHANGES inside the session — so the union score
+cannot say whether a reading is right, only whether it matches every moment
+ever seen. The panel's own count can: it says how many rows are on screen
+RIGHT NOW.
+
+**THE PER-FRAME CHECK IS NOW VALIDATED IN PRODUCTION.** The 2026-11-06
+rescan of the three June dates is the first run that carries the date-scoped
+`NFU`/`NF` alias table, and every one of its first captures agrees with the
+panel's own count:
+
+| date | panel | the first capture's reading | agrees |
+| --- | --- | --- | --- |
+| `20220606` | 9 | ALB, CBIO, COIN, GOVX, LABU, NFLX, TNA, UCO, VLO | yes |
+| `20220607` | 9 | ALB, BOIL, LTHM, NFLX, TNA, TQQQ, UCO, VLO, WEAT | yes |
+| `20220608` | 11 | AERC, ALB, BOIL, COIN, LTHM, NFLX, RBLX, SIGA, TNA, UCO, VLO | yes |
+
+`NFU` appears in NONE of them — the date-scoped rescue replaced it with
+`NFLX`, and `NFU` is a real seed ticker that must not be rewritten on any
+other date. The published lists for those dates went from **6/11, 6/9 and
+9/12 with three false positives each** to **8/11, 8/9 and 11/12 with none**.
+
+**A SCAN IS NOT SLOW BECAUSE OF THE SCAN.** The 2026-11-06 batch took
+**2834 s** on `20220606`; the identical scan had taken **642 s** hours
+earlier on the same machine, with the same flags. The difference was that
+another agent's Sevcik transcript backfill was running at the same time
+(`data/video_pipeline/transcripts/` gaining a file every 1-2 minutes), and
+the two competed for cores. So a 4.4x slowdown in a scan is a signal to
+LOOK AT THE MACHINE, not to shorten the scan's budget. **Do not react to a
+slow scan by reducing `--max-frames`** — that reads worse (the 2026-11-05
+reduced-budget retry of `20220405` scored 8/11 against the full budget's
+9/11, and its five false positives were the chart ink a smaller sample
+admitted).
+
+**The union score's disagreements are mostly NOT errors — they are exact
+readings of a moment the union does not cover.** Measured on the 2026-11-05
+rescan, **10 of the 12 first captures whose footer was read agree with it
+exactly.** Verified against the pixels:
+
+| date | the union score says | the panel says | what is true |
+| --- | --- | --- | --- |
+| `20220412` | `GUSH` is a false positive | **12 rows**, footer "12 of 12 Items" | the panel reads REGN, LMT, X, LHX, COPX, URA, URNM, FCX, NUGT, WEAT, JNUG, **GUSH**. GUSH is a real holding at that moment |
+| `20220330` | `JNUG`, `MU` are false positives | **10 rows**, footer "10 Items" | the panel reads NFLX, REGN, KWEB, LABU, COPX, X, FCX, NUGT, **MU**, **JNUG**. Both are real holdings at that moment |
+| `20220606` | `COIN` is a false positive | **9 rows**, footer "9 Items" | the panel reads GOVX, LABU, **COIN**, UCO, ALB, CBIO, VLO, TNA, NFLX. COIN is real |
+| `20220607` | `TQQQ`, `WEAT` are false positives | **9 rows**, footer "9 Items" | the panel reads BOIL, LTHM, **WEAT**, ALB, VLO, TNA, NFLX, UCO, **TQQQ**. Both are real |
+| `20220413` | `GUSH`, `LI` are false positives | **11 rows**, footer "11 Items" | the panel reads WEAT, LHX, REGN, LMT, X, FCX, COPX, NUGT, JNUG, URA, URNM. Neither GUSH nor LI is there — **these two ARE errors** |
+
+**So the ground truth's union is INCOMPLETE for four dates**, and the
+2026-11-04 note on `20220412` already suspected it: *"A twelve-row frame
+carrying GUSH exists at t=936 s of the same video, but it is a later moment
+and is not the frame this capture was read from."* That reasoning holds for
+the ANCHOR — a capture's reading must be the frame it was read from — but
+the UNION is over a date's captures, so a later moment is a MISSING CAPTURE,
+not a wrong reading. The wave-2 audit added captures 1 and 2 to `20220608`
+for exactly this reason.
+
+**The new moments are now their own captures.** The fixture rebuild was
+idempotent (`--check` matched the committed manifest byte for byte), so the
+case table was extended and the crops regenerated:
+
+| date | new capture | rows | what the union gained |
+| --- | --- | --- | --- |
+| `20220330` | 1 | 10, "10 Items" | `MU`, `JNUG` |
+| `20220412` | 1 | 12, "1 of 12 Items" | `GUSH` |
+| `20220606` | 12 | 9, "9 Items" | `COIN` |
+| `20220607` | 3 | 9, "3 of 9 Items" | `WEAT`, `TQQQ` |
+
+Each crop is md5-pinned under `test/fixtures/qmg_ground_truth/`, and the
+checker agrees. `20220413`'s `GUSH` and `LI` stay false positives: that
+panel's eleven rows do not contain them.
+
+**The scan tool now publishes the per-frame check.** `panel_row_count_matches`
+is true when the FIRST capture's reading has as many tickers as the panel says
+are on screen. It is a DIAGNOSTIC and is never acted on: a count misread low
+would truncate a correct reading, and a count read from a different frame
+would judge the wrong reading.
 
 ## The Sevcik source — a TRANSCRIPT source, not an OCR source (2026-11-04)
 
@@ -667,6 +754,47 @@ node tools/fetchSevcikTranscripts.js --limit 3
 node tools/extractSevcikSignals.js
 node tools/aggregateSevcikSignals.js
 ```
+### The corpus, as of 2026-11-06 — the channel is FULLY READ
+
+Every catalogued stream has a transcript, and every transcript has been through
+the extractor. Measured, not estimated:
+
+| stage | count |
+|---|---|
+| catalogued `davidsevcik` videos | 497 (2020-08-13 → 2026-11-04) |
+| transcripts on disk | 491 |
+| transcripts ingested (`video_transcripts`) | 491 (698,450 segments) |
+| signals (`trade_signals`) | 1012 across 340 videos, 26 tickers |
+| setups (`sevcik_setups`) | 2009 across 406 videos, 32 setup tickers |
+| TA claims scored | 1279 |
+
+The six streams with no transcript are the **quarantined non-market series**
+(the "14 dní" challenge streams and similar). `src/sevcik/contentFilter.js`
+drops them on purpose, and the fetch, the extractor and the aggregator all
+apply the same filter, so they never enter the corpus.
+
+**The stage order is outcomes → aggregate → ta, not aggregate → ta.**
+The aggregate reads `data/sevcik_outcomes.json` and embeds it in the payload,
+and the TA tool then re-embeds its summary and rebuilds the report. Run in the
+wrong order the report keeps the PREVIOUS run's outcomes — which is what
+happened on 2026-11-05: the panel said "Not scored yet" while the database held
+68 outcome rows from an older, smaller corpus.
+
+```bash
+node tools/analyzeSevcikOutcomes.js    # prices, cached under data/price_cache/yahoo
+node tools/aggregateSevcikSignals.js
+node tools/analyzeSevcikTa.js
+```
+
+**What the claims actually score.** Over the 1,279 claims: **hit rate 1w 52.2 %**
+(95 % CI 49.5–54.9 %), **hit rate 1m 54.6 %**, against a **SPY baseline of
+58.4 %** on the same window — so the tool's own verdict is
+`assess: no_clear_edge`, with 3 claims missing prices. The TA pass scores the
+same 1279 claims at 53.3 % (primary bucket 54.0 %), and its 48 walk-forward
+folds select an allow-bucket in only 4 of them. **The honest reading is that
+this source is not yet shown to beat the index**, and the corpus is now large
+enough (491 transcripts, 2020–2026) to say so rather than to hope for it.
+
 
 ### The channel is CZECH — and that changes the strategy
 

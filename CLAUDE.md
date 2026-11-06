@@ -753,6 +753,47 @@ node tools/fetchSevcikTranscripts.js --limit 3
 node tools/extractSevcikSignals.js
 node tools/aggregateSevcikSignals.js
 ```
+### The corpus, as of 2026-11-06 — the channel is FULLY READ
+
+Every catalogued stream has a transcript, and every transcript has been through
+the extractor. Measured, not estimated:
+
+| stage | count |
+|---|---|
+| catalogued `davidsevcik` videos | 497 (2020-08-13 → 2026-11-04) |
+| transcripts on disk | 491 |
+| transcripts ingested (`video_transcripts`) | 491 (698,450 segments) |
+| signals (`trade_signals`) | 1012 across 340 videos, 26 tickers |
+| setups (`sevcik_setups`) | 2009 across 406 videos, 32 setup tickers |
+| TA claims scored | 1279 |
+
+The six streams with no transcript are the **quarantined non-market series**
+(the "14 dní" challenge streams and similar). `src/sevcik/contentFilter.js`
+drops them on purpose, and the fetch, the extractor and the aggregator all
+apply the same filter, so they never enter the corpus.
+
+**The stage order is outcomes → aggregate → ta, not aggregate → ta.**
+The aggregate reads `data/sevcik_outcomes.json` and embeds it in the payload,
+and the TA tool then re-embeds its summary and rebuilds the report. Run in the
+wrong order the report keeps the PREVIOUS run's outcomes — which is what
+happened on 2026-11-05: the panel said "Not scored yet" while the database held
+68 outcome rows from an older, smaller corpus.
+
+```bash
+node tools/analyzeSevcikOutcomes.js    # prices, cached under data/price_cache/yahoo
+node tools/aggregateSevcikSignals.js
+node tools/analyzeSevcikTa.js
+```
+
+**What the claims actually score.** Over the 1,279 claims: **hit rate 1w 52.2 %**
+(95 % CI 49.5–54.9 %), **hit rate 1m 54.6 %**, against a **SPY baseline of
+58.4 %** on the same window — so the tool's own verdict is
+`assess: no_clear_edge`, with 3 claims missing prices. The TA pass scores the
+same 1279 claims at 53.3 % (primary bucket 54.0 %), and its 48 walk-forward
+folds select an allow-bucket in only 4 of them. **The honest reading is that
+this source is not yet shown to beat the index**, and the corpus is now large
+enough (491 transcripts, 2020–2026) to say so rather than to hope for it.
+
 
 ### The channel is CZECH — and that changes the strategy
 
