@@ -1,12 +1,12 @@
 {
   "note": "Videos whose media is not on disk, according to state.sqlite and the filesystem of the machine that ran this tool, as of the generation date below. The catalog's download_path is a pointer that goes stale: a file can be deleted, or the pointer can name a file under an older naming scheme (<video_id>.mp4 instead of <upload_date>_<video_id>.mp4). Both are recorded as missing here. The videos still on disk are listed under present_videos, with their count, so the two sets can be told apart \u2014 and so the claim can be checked rather than believed. Each present entry records whether it was found by its pointer (found_by: pointer) or by the name the downloader writes (found_by: own_name) \u2014 a file can be on disk with no pointer naming it. Regenerate after moving media between machines. Re-download with the visios client; see CLAUDE.md for the 39 hardcoded 720p-only IDs and the rate-limit rules. tools/reconcileCatalogStatus.js reports the media that has no pointer naming it and reconciles the status column against the filesystem.",
-  "generated_at": "2026-10-29T10:37:41.916767+00:00",
-  "total": 535,
+  "generated_at": "2026-11-06T10:54:11.050759+00:00",
+  "total": 525,
   "pointer_rows": 716,
-  "present_count": 181,
+  "present_count": 191,
   "present_by_own_name_count": 2,
-  "qullamaggie_count": 514,
-  "qullamaggie_present_count": 53,
+  "qullamaggie_count": 504,
+  "qullamaggie_present_count": 63,
   "videos": [
     {
       "video_id": "-pfJ5dndbwE",
@@ -240,28 +240,6 @@
       "pointer_uses_legacy_name": false
     },
     {
-      "video_id": "9uhm2AUgiOs",
-      "channel": "qullamaggie",
-      "date": "20220217",
-      "dir": "downloads_1080p",
-      "filename": "9uhm2AUgiOs.mp4",
-      "expected_filename": "20220217_9uhm2AUgiOs.mp4",
-      "title": "What does $UPST do? It goes UP! (for now)",
-      "present": false,
-      "pointer_uses_legacy_name": true
-    },
-    {
-      "video_id": "rffHnm23pKo",
-      "channel": "qullamaggie",
-      "date": "20220211",
-      "dir": "downloads_1080p",
-      "filename": "rffHnm23pKo.mp4",
-      "expected_filename": "20220211_rffHnm23pKo.mp4",
-      "title": "Earnings season!",
-      "present": false,
-      "pointer_uses_legacy_name": true
-    },
-    {
       "video_id": "0_inu2Isf4k",
       "channel": "qullamaggie",
       "date": "20220210",
@@ -273,72 +251,6 @@
       "pointer_uses_legacy_name": true
     },
     {
-      "video_id": "Arr_nkWPTxw",
-      "channel": "qullamaggie",
-      "date": "20220209",
-      "dir": "downloads_1080p",
-      "filename": "Arr_nkWPTxw.mp4",
-      "expected_filename": "20220209_Arr_nkWPTxw.mp4",
-      "title": "Copper looks nice",
-      "present": false,
-      "pointer_uses_legacy_name": true
-    },
-    {
-      "video_id": "3wddoD1e4M0",
-      "channel": "qullamaggie",
-      "date": "20220208",
-      "dir": "downloads_1080p",
-      "filename": "3wddoD1e4M0.mp4",
-      "expected_filename": "20220208_3wddoD1e4M0.mp4",
-      "title": "Tax advice",
-      "present": false,
-      "pointer_uses_legacy_name": true
-    },
-    {
-      "video_id": "HpTbfp7GE-o",
-      "channel": "qullamaggie",
-      "date": "20220207",
-      "dir": "downloads_1080p",
-      "filename": "HpTbfp7GE-o.mp4",
-      "expected_filename": "20220207_HpTbfp7GE-o.mp4",
-      "title": "Pro tip: Don't go nuts",
-      "present": false,
-      "pointer_uses_legacy_name": true
-    },
-    {
-      "video_id": "_QYrM9zyziM",
-      "channel": "qullamaggie",
-      "date": "20220204",
-      "dir": "downloads_1080p",
-      "filename": "_QYrM9zyziM.mp4",
-      "expected_filename": "20220204__QYrM9zyziM.mp4",
-      "title": "Risk ON type of day",
-      "present": false,
-      "pointer_uses_legacy_name": true
-    },
-    {
-      "video_id": "fF6Qn6PVgOo",
-      "channel": "qullamaggie",
-      "date": "20220203",
-      "dir": "downloads_1080p",
-      "filename": "fF6Qn6PVgOo.mp4",
-      "expected_filename": "20220203_fF6Qn6PVgOo.mp4",
-      "title": "Bounce already failing?",
-      "present": false,
-      "pointer_uses_legacy_name": true
-    },
-    {
-      "video_id": "M0sdNhPWSaQ",
-      "channel": "qullamaggie",
-      "date": "20220202",
-      "dir": "downloads_1080p",
-      "filename": "M0sdNhPWSaQ.mp4",
-      "expected_filename": "20220202_M0sdNhPWSaQ.mp4",
-      "title": "Will this bounce stick or fail?",
-      "present": false,
-      "pointer_uses_legacy_name": true
-    },
-    {
       "video_id": "Gt8Xdva-ZfU",
       "channel": "qullamaggie",
       "date": "20220201",
@@ -346,28 +258,6 @@
       "filename": "Gt8Xdva-ZfU.mp4",
       "expected_filename": "20220201_Gt8Xdva-ZfU.mp4",
       "title": "New week, new opportunities",
-      "present": false,
-      "pointer_uses_legacy_name": true
-    },
-    {
-      "video_id": "v-7Af6D6xug",
-      "channel": "qullamaggie",
-      "date": "20220131",
-      "dir": "downloads_1080p",
-      "filename": "v-7Af6D6xug.mp4",
-      "expected_filename": "20220131_v-7Af6D6xug.mp4",
-      "title": "Rally attempt",
-      "present": false,
-      "pointer_uses_legacy_name": true
-    },
-    {
-      "video_id": "ebdkz40-Qtw",
-      "channel": "qullamaggie",
-      "date": "20220128",
-      "dir": "downloads_1080p",
-      "filename": "ebdkz40-Qtw.mp4",
-      "expected_filename": "20220128_ebdkz40-Qtw.mp4",
-      "title": "Patience leads to big rewards",
       "present": false,
       "pointer_uses_legacy_name": true
     },
@@ -7423,13 +7313,13 @@
       "video_id": "aaIlqb7HUJQ",
       "channel": "qullamaggie",
       "date": "20220606",
-      "dir": "downloads_hires",
+      "dir": "downloads_1080p",
       "filename": "20220606_aaIlqb7HUJQ.mp4",
       "expected_filename": "20220606_aaIlqb7HUJQ.mp4",
       "title": "Some things setting up",
       "present": true,
       "found_by": "pointer",
-      "media_path": "data/video_pipeline/downloads_hires/20220606_aaIlqb7HUJQ.mp4"
+      "media_path": "data/video_pipeline/downloads_1080p/20220606_aaIlqb7HUJQ.mp4"
     },
     {
       "video_id": "Axs8VyUKFRk",
@@ -7814,6 +7704,126 @@
       "present": true,
       "found_by": "pointer",
       "media_path": "data/video_pipeline/downloads_1080p/20220218_Cd_IXyHwO3o.mp4"
+    },
+    {
+      "video_id": "9uhm2AUgiOs",
+      "channel": "qullamaggie",
+      "date": "20220217",
+      "dir": "downloads_1080p",
+      "filename": "20220217_9uhm2AUgiOs.mp4",
+      "expected_filename": "20220217_9uhm2AUgiOs.mp4",
+      "title": "What does $UPST do? It goes UP! (for now)",
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220217_9uhm2AUgiOs.mp4"
+    },
+    {
+      "video_id": "rffHnm23pKo",
+      "channel": "qullamaggie",
+      "date": "20220211",
+      "dir": "downloads_1080p",
+      "filename": "20220211_rffHnm23pKo.mp4",
+      "expected_filename": "20220211_rffHnm23pKo.mp4",
+      "title": "Earnings season!",
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220211_rffHnm23pKo.mp4"
+    },
+    {
+      "video_id": "Arr_nkWPTxw",
+      "channel": "qullamaggie",
+      "date": "20220209",
+      "dir": "downloads_1080p",
+      "filename": "20220209_Arr_nkWPTxw.mp4",
+      "expected_filename": "20220209_Arr_nkWPTxw.mp4",
+      "title": "Copper looks nice",
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220209_Arr_nkWPTxw.mp4"
+    },
+    {
+      "video_id": "3wddoD1e4M0",
+      "channel": "qullamaggie",
+      "date": "20220208",
+      "dir": "downloads_1080p",
+      "filename": "20220208_3wddoD1e4M0.mp4",
+      "expected_filename": "20220208_3wddoD1e4M0.mp4",
+      "title": "Tax advice",
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220208_3wddoD1e4M0.mp4"
+    },
+    {
+      "video_id": "HpTbfp7GE-o",
+      "channel": "qullamaggie",
+      "date": "20220207",
+      "dir": "downloads_1080p",
+      "filename": "20220207_HpTbfp7GE-o.mp4",
+      "expected_filename": "20220207_HpTbfp7GE-o.mp4",
+      "title": "Pro tip: Don't go nuts",
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220207_HpTbfp7GE-o.mp4"
+    },
+    {
+      "video_id": "_QYrM9zyziM",
+      "channel": "qullamaggie",
+      "date": "20220204",
+      "dir": "downloads_1080p",
+      "filename": "20220204__QYrM9zyziM.mp4",
+      "expected_filename": "20220204__QYrM9zyziM.mp4",
+      "title": "Risk ON type of day",
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220204__QYrM9zyziM.mp4"
+    },
+    {
+      "video_id": "fF6Qn6PVgOo",
+      "channel": "qullamaggie",
+      "date": "20220203",
+      "dir": "downloads_1080p",
+      "filename": "20220203_fF6Qn6PVgOo.mp4",
+      "expected_filename": "20220203_fF6Qn6PVgOo.mp4",
+      "title": "Bounce already failing?",
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220203_fF6Qn6PVgOo.mp4"
+    },
+    {
+      "video_id": "M0sdNhPWSaQ",
+      "channel": "qullamaggie",
+      "date": "20220202",
+      "dir": "downloads_1080p",
+      "filename": "20220202_M0sdNhPWSaQ.mp4",
+      "expected_filename": "20220202_M0sdNhPWSaQ.mp4",
+      "title": "Will this bounce stick or fail?",
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220202_M0sdNhPWSaQ.mp4"
+    },
+    {
+      "video_id": "v-7Af6D6xug",
+      "channel": "qullamaggie",
+      "date": "20220131",
+      "dir": "downloads_1080p",
+      "filename": "20220131_v-7Af6D6xug.mp4",
+      "expected_filename": "20220131_v-7Af6D6xug.mp4",
+      "title": "Rally attempt",
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220131_v-7Af6D6xug.mp4"
+    },
+    {
+      "video_id": "ebdkz40-Qtw",
+      "channel": "qullamaggie",
+      "date": "20220128",
+      "dir": "downloads_1080p",
+      "filename": "20220128_ebdkz40-Qtw.mp4",
+      "expected_filename": "20220128_ebdkz40-Qtw.mp4",
+      "title": "Patience leads to big rewards",
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220128_ebdkz40-Qtw.mp4"
     },
     {
       "video_id": "-3qtA_s7g9c",
