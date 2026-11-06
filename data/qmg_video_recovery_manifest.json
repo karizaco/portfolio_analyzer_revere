@@ -1,12 +1,12 @@
 {
   "note": "Videos whose media is not on disk, according to state.sqlite and the filesystem of the machine that ran this tool, as of the generation date below. The catalog's download_path is a pointer that goes stale: a file can be deleted, or the pointer can name a file under an older naming scheme (<video_id>.mp4 instead of <upload_date>_<video_id>.mp4). Both are recorded as missing here. The videos still on disk are listed under present_videos, with their count, so the two sets can be told apart \u2014 and so the claim can be checked rather than believed. Each present entry records whether it was found by its pointer (found_by: pointer) or by the name the downloader writes (found_by: own_name) \u2014 a file can be on disk with no pointer naming it. Regenerate after moving media between machines. Re-download with the visios client; see CLAUDE.md for the 39 hardcoded 720p-only IDs and the rate-limit rules. tools/reconcileCatalogStatus.js reports the media that has no pointer naming it and reconciles the status column against the filesystem.",
-  "generated_at": "2026-11-06T10:54:11.050759+00:00",
-  "total": 525,
+  "generated_at": "2026-11-06T11:47:56.414874+00:00",
+  "total": 524,
   "pointer_rows": 716,
-  "present_count": 191,
+  "present_count": 192,
   "present_by_own_name_count": 2,
-  "qullamaggie_count": 504,
-  "qullamaggie_present_count": 63,
+  "qullamaggie_count": 503,
+  "qullamaggie_present_count": 64,
   "videos": [
     {
       "video_id": "-pfJ5dndbwE",
@@ -258,17 +258,6 @@
       "filename": "Gt8Xdva-ZfU.mp4",
       "expected_filename": "20220201_Gt8Xdva-ZfU.mp4",
       "title": "New week, new opportunities",
-      "present": false,
-      "pointer_uses_legacy_name": true
-    },
-    {
-      "video_id": "SEDkqyqb47I",
-      "channel": "qullamaggie",
-      "date": "20220126",
-      "dir": "downloads_1080p",
-      "filename": "SEDkqyqb47I.mp4",
-      "expected_filename": "20220126_SEDkqyqb47I.mp4",
-      "title": "Got my trading addiction out of the way for today",
       "present": false,
       "pointer_uses_legacy_name": true
     },
@@ -7829,13 +7818,25 @@
       "video_id": "-3qtA_s7g9c",
       "channel": "qullamaggie",
       "date": "20220127",
-      "dir": "downloads_hires",
-      "filename": "_-3qtA_s7g9c.mp4",
+      "dir": "downloads_1080p",
+      "filename": "20220127_-3qtA_s7g9c.mp4",
       "expected_filename": "20220127_-3qtA_s7g9c.mp4",
       "title": "Patience is King",
       "present": true,
       "found_by": "pointer",
-      "media_path": "data/video_pipeline/downloads_hires/_-3qtA_s7g9c.mp4"
+      "media_path": "data/video_pipeline/downloads_1080p/20220127_-3qtA_s7g9c.mp4"
+    },
+    {
+      "video_id": "SEDkqyqb47I",
+      "channel": "qullamaggie",
+      "date": "20220126",
+      "dir": "downloads_1080p",
+      "filename": "20220126_SEDkqyqb47I.mp4",
+      "expected_filename": "20220126_SEDkqyqb47I.mp4",
+      "title": "Got my trading addiction out of the way for today",
+      "present": true,
+      "found_by": "pointer",
+      "media_path": "data/video_pipeline/downloads_1080p/20220126_SEDkqyqb47I.mp4"
     },
     {
       "video_id": "-XbMHMO9sxo",
