@@ -501,6 +501,33 @@ function hasPriceNear(ocrText, ticker) {
 // so the column filter alone cannot distinguish them.
 //
 // Returns { inListTickers: Set<string>, dominantColumnX, columnWidth }
+// The panel's title, as the OCR actually renders it.
+//
+// The title is "A - Positions", and the panel is NARROWER THAN THE TITLE, so
+// the widget clips it — the engine sees a word that stops wherever the panel
+// stops, and then misreads its last glyph. Surveyed over every capture in the
+// corpus, the title comes back SIXTEEN different ways:
+//
+//   Positions 131   Positi 24   Positit 17   Positio 8   Positic 8
+//   Posit 7   Positic_ 6   Positior 6   A - Positions 4   Positiol 4
+//   Position: 3   Positi r 1   Positit_ 1   Positic _ 1   Positie 1
+//   Positin 1
+//
+// The previous alternation (POSITIONS|POSTNS|POSITON|POSITN|PSTNS|POSITIO)
+// matched only six of them, missing 67 occurrences across a dozen dates --
+// and a title the parser does not recognise means `positionsLine` is null,
+// which means THE PANEL HAS NO UPPER BOUND. On 20220209 that let the run
+// start at y=12 and swallow `U` and `TSLA` out of the WATCHLIST WIDGET ABOVE
+// the table, publishing two holdings the positions panel never showed.
+//
+// Every one of the sixteen begins with `POSIT`, so that is the test. It is
+// ANCHORED, with an optional leading `A` for the unclipped "A - Positions"
+// (which normalises to APOSITIONS), because an unanchored /POSIT/ would also
+// match **COMPOSITE** -- "NASDAQ Composite" is chart ink, not a panel title.
+// POSTNS and PSTNS are kept: they are heavier garbles from the Tesseract era
+// that do not carry the POSIT prefix at all.
+const POSITIONS_HEADER_RE = /^A?(?:POSIT|POSTNS|PSTNS)/;
+
 function findPanelBoundaries(words) {
   // Returns { positionsLine, watchlistLine, topBoundary, bottomBoundary }.
   // `topBoundary` is the line number of the "A-Positions" header (only
@@ -513,7 +540,7 @@ function findPanelBoundaries(words) {
   for (const w of words) {
     const upper = (w.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
     if (!upper) continue;
-    if (positionsLine == null && /POSITIONS|POSTNS|POSITON|POSITN|PSTNS|POSITIO/.test(upper)) {
+    if (positionsLine == null && POSITIONS_HEADER_RE.test(upper)) {
       positionsLine = w.line;
     }
     // Expanded watchlist variants: WATCHLIST garbles into many shapes on dark/bright frames.
