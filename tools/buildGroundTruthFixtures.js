@@ -608,6 +608,15 @@ const CASES = [
     note: "Verified 2026-11-01 against the pixels. The last glyph of GGPI is a plain stem, not the flagged digit 1 that this frame's own \"1 Item in WatchList\" footer uses.",
   },
   {
+    date: '20220405', capture_index: 1,
+    panel: 'positions',
+    source: 'data/video_scan_test/_rerun/qmg-easyocr-20261105-long/snapshots/qmg_20220405.png',
+    run: 'data/video_scan_test/_rerun/qmg-easyocr-20261105-long',
+    panel_count: 14, panel_count_text: '14 of 14 Items in Personal WatchList',
+    tickers: ['GGPI', 'REGN', 'COPX', 'FCX', 'TAN', 'NEM', 'LMT', 'X', 'LHX', 'JNUG', 'NUGT', 'ERX', 'URNM', 'URA'],
+    note: 'A later moment than the lowcpu-test anchor (taskbar 16:04, 2026-11-05 rescan). The same fourteen rows show in all three of that run\'s frames (15:45, 16:04, 16:08). ERX, LHX, LMT, URA and URNM are real holdings here; the union of the earlier moment did not carry them.',
+  },
+  {
     date: '20220412', capture_index: 0,
     panel: 'positions',
     source: 'data/video_ocr_probe/qmg-lowcpu-test/snapshots/qmg_20220412.png',
@@ -1133,4 +1142,4 @@ if (require.main === module) {
   process.exitCode = build({ check });
 }
 
-module.exports = { CASES, CROP, MANIFEST, OUT_DIR, fixtureName, md5File, pngSize };
+module.exports = { CASES, CROP, MANIFEST, OUT_DIR, build, fixtureName, md5File, pngSize };

@@ -303,6 +303,22 @@
       "FCX",
       "NUGT",
       "X"
+    ],
+    "1": [
+      "GGPI",
+      "REGN",
+      "COPX",
+      "FCX",
+      "TAN",
+      "NEM",
+      "LMT",
+      "X",
+      "LHX",
+      "JNUG",
+      "NUGT",
+      "ERX",
+      "URNM",
+      "URA"
     ]
   },
   "20220406": {
@@ -1337,7 +1353,7 @@
     "20220506": "capture 1 (_2) matches capture 0 (UCO, WEAT, TSLA, LTHM).",
     "20220323": "11 GT tickers consistent across captures. VERIFIED 2026-11-01 against the pixels: the three distinct frames of the batch2 run (its files 4/5/6 are byte-identical copies of 1/2/3) all read the same eleven rows, and the panel's own footer says '11 Items in Personal WatchList'. A repeated column here is a genuine steady list, not a copied one.",
     "20220330": "8 GT tickers consistent. VERIFIED 2026-11-01 against the pixels (data/video_ocr_probe/qmg-lowcpu-test/snapshots/qmg_20220330.png, clock 15:25): KWEB, LABU, NFLX, REGN, COPX, NUGT, FCX, X, footer '8 Items in Personal WatchList'. EXTENDED 2026-11-05: capture 1 is a later moment (qmg-easyocr-20261105-long, taskbar 16:17, chart 10:17) with ten rows — the same eight plus MU and JNUG, footer '10 Items in Personal WatchList'. ERX is in the left watchlist, not the positions table.",
-    "20220405": "11 GT tickers — GGPI/NEM rare tickers; OCR-difficult. VERIFIED 2026-11-01 against the pixels (data/video_ocr_probe/qmg-lowcpu-test/snapshots/qmg_20220405.png, clock 15:29): the eleven rows are CWEB, REGN, KWEB, JNUG, GGPI, TAN, NEM, COPX, FCX, NUGT, X, footer '11 Items in Personal WatchList'. The last glyph of GGPI is a plain stem, not the flagged digit '1' that the same frame's own '1 Item in WatchList' footer uses.",
+    "20220405": "11 GT tickers — GGPI/NEM rare tickers; OCR-difficult. VERIFIED 2026-11-01 against the pixels (data/video_ocr_probe/qmg-lowcpu-test/snapshots/qmg_20220405.png, clock 15:29): the eleven rows are CWEB, REGN, KWEB, JNUG, GGPI, TAN, NEM, COPX, FCX, NUGT, X, footer '11 Items in Personal WatchList'. The last glyph of GGPI is a plain stem, not the flagged digit '1' that the same frame's own '1 Item in WatchList' footer uses. EXTENDED 2026-11-06: capture 1 is a later moment (qmg-easyocr-20261105-long, taskbar 16:04) with fourteen rows — GGPI, REGN, COPX, FCX, TAN, NEM, LMT, X, LHX, JNUG, NUGT, ERX, URNM, URA, footer '14 of 14 Items in Personal WatchList'. All three frames of that run show the same fourteen rows. ERX, LHX, LMT, URA and URNM are real holdings at that moment.",
     "20220427": "qmg_20220427.png has [TSLA, BOIL, WEAT, KOLD]. Earlier captures (frames 7/8/9 from different scan) had different positions.",
     "20220428": "4 GT tickers (CWEB, KWEB, TSLA, WEAT) — same across all 3 captures shown",
     "20220510": "captures 0/1 (qmg_20220510_3.png at 15:28 and qmg_20220510.png at 15:30) only have TSLA. capture 2 (qmg_20220510_2.png at 15:36) has [VRM, TSLA]. VRM is transient — only briefly visible. The file names in the original note were wrong: it named qmg_20220510.png/_2.png for captures 0/1 and _3.png for capture 2, but the panel that shows VRM is _2.png. The capture index is flat over the file names, so the note was pointing the wrong way round.",
