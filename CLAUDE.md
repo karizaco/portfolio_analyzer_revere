@@ -553,15 +553,15 @@ are missed together on `20220606`, `20220607` and `20220608`.
 **The campaign finished at 96.7 % on what production published, against the
 extended ground truth.** Every ground-truth date has been rescanned with the
 current parser. The logs' own merged lists — the artifact the portfolio
-report reads — score **354/366 (96.7 %) with 14 false positives** over 40
-dates. Before the four missing moments were added to the union, the same
-logs scored 347/360 (96.4 %) with 21 false positives: five of those "false
-positives" were the holdings the union did not yet carry.
+report reads — score **359/371 (96.8 %) with 9 false positives** over 40
+dates. Before the five missing moments were added to the union, the same
+logs scored 347/360 (96.4 %) with 21 false positives: more than half of
+those "false positives" were the holdings the union did not yet carry.
 
 | level | hit / ground truth | recall | false positives |
 | --- | --- | --- | --- |
-| the logs' own merged list (what production published) | 354/366 | **96.7 %** | 14 |
-| the current parser rebuilt over the same captures | 339/366 | 92.6 % | 9 |
+| the logs' own merged list (what production published) | 359/371 | **96.8 %** | 9 |
+| the current parser rebuilt over the same captures | 344/371 | 92.7 % | 4 |
 
 The two levels differ because production clusters **every** OCR'd candidate
 frame while a rebuild has only the selected captures. Both are reported by
@@ -574,8 +574,8 @@ same parser on both sides, after the union extension:
 
 | | hit / gt | recall | false positives |
 | --- | --- | --- | --- |
-| without the alias tables | 332/366 | 90.7 % | 17 |
-| **with them** | **339/366** | **92.6 %** | **9** |
+| without the alias tables | 337/371 | 90.8 % | 12 |
+| **with them** | **344/371** | **92.7 %** | **4** |
 
 | garbled | canonical | the misread | dates |
 |---|---|---|---|
@@ -676,7 +676,8 @@ admitted).
 **The union score's disagreements are mostly NOT errors — they are exact
 readings of a moment the union does not cover.** Measured on the 2026-11-05
 rescan, **10 of the 12 first captures whose footer was read agree with it
-exactly.** Verified against the pixels:
+exactly**, and the five dates whose unions were extended for it gained **+13
+hits and −12 false positives** between them. Verified against the pixels:
 
 | date | the union score says | the panel says | what is true |
 | --- | --- | --- | --- |
@@ -705,10 +706,27 @@ case table was extended and the crops regenerated:
 | `20220412` | 1 | 12, "1 of 12 Items" | `GUSH` |
 | `20220606` | 12 | 9, "9 Items" | `COIN` |
 | `20220607` | 3 | 9, "3 of 9 Items" | `WEAT`, `TQQQ` |
+| `20220405` | 1 | 14, "14 of 14 Items" | `ERX`, `LHX`, `LMT`, `URA`, `URNM` |
 
 Each crop is md5-pinned under `test/fixtures/qmg_ground_truth/`, and the
 checker agrees. `20220413`'s `GUSH` and `LI` stay false positives: that
 panel's eleven rows do not contain them.
+
+**`20220405` is the fifth, and its five "false positives" are all real.** The
+scan's three frames — clock 15:45, 16:04 and 16:08 — all show the SAME
+fourteen-row panel: `GGPI, REGN, COPX, FCX, TAN, NEM, LMT, X, LHX, JNUG,
+NUGT, ERX, URNM, URA`, footer "14 of 14 Items in Personal WatchList". The
+ground truth's union is the eleven rows of an EARLIER moment (clock 15:29:
+`CWEB, REGN, KWEB, JNUG, GGPI, TAN, NEM, COPX, FCX, NUGT, X`), so `ERX`,
+`LHX`, `LMT`, `URA` and `URNM` are real holdings the union never saw. The
+reading published **13 of the panel's 14** — it dropped `X`, the one-glyph
+row — and scored 8/11 with five false positives that were all true.
+
+So the pattern is now five dates, and the diagnosis is one thing: **the
+union is a union over the captures the ground truth was ANCHORED to, and the
+rescan captured other moments.** The panel's own count is what proves it —
+a reading whose length matches the panel is a complete reading of THAT panel,
+whatever the union says.
 
 **The scan tool now publishes the per-frame check.** `panel_row_count_matches`
 is true when the FIRST capture's reading has as many tickers as the panel says
