@@ -9,6 +9,95 @@
   },
   "cases": [
     {
+      "date": "20220126",
+      "capture_index": 0,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261106-jan3",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261106-jan3/snapshots/qmg_20220126.png",
+      "source_md5": "bed011ef0a2309a75fc45b8d3d893a17",
+      "file": "20220126_c0.png",
+      "md5": "5357406e02b72f5e688beb18aca54081",
+      "panel": "positions",
+      "panel_count": 0,
+      "panel_count_text": "0 Items in Personal WatchList",
+      "tickers": [],
+      "note": "Read 2026-11-06 (chart clock 09:35:33). The panel shows its header row and no data rows. The scan published END and X; both are chart ink."
+    },
+    {
+      "date": "20220126",
+      "capture_index": 1,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261106-jan3",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261106-jan3/snapshots/qmg_20220126_2.png",
+      "source_md5": "00bdd88e766590cc43c8bab4545c5c35",
+      "file": "20220126_c1.png",
+      "md5": "1f8ee5191a5a820fae3126f1f2ef12f6",
+      "panel": "positions",
+      "panel_count": 2,
+      "panel_count_text": "2 Items in Personal WatchList",
+      "tickers": [
+        "TQQQ",
+        "SOXL"
+      ],
+      "note": "Read 2026-11-06 (chart clock 10:06:43). Two rows: TQQQ and SOXL, with SOXL the selected row."
+    },
+    {
+      "date": "20220126",
+      "capture_index": 2,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261106-jan3",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261106-jan3/snapshots/qmg_20220126_3.png",
+      "source_md5": "b206fe26e7e65af0f27eef2c2043dc29",
+      "file": "20220126_c2.png",
+      "md5": "9bb07fca150458320f3cbd499ea3f67d",
+      "panel": "positions",
+      "panel_count": 1,
+      "panel_count_text": "1 Item in Personal WatchList",
+      "tickers": [
+        "SOXL"
+      ],
+      "note": "Read 2026-11-06 (chart clock 10:02:21). One row: SOXL. The singular \"1 Item\" follows the total. DNA, FCEL and RIOT are the widget above (\"2 of 19 Items in Personal WatchList\")."
+    },
+    {
+      "date": "20220127",
+      "capture_index": 0,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261106-jan3",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261106-jan3/snapshots/qmg_20220127.png",
+      "source_md5": "240a7184c5606bb81f22712ea818bb53",
+      "file": "20220127_c0.png",
+      "md5": "b4b2c7c26726469fc4d7f25199d47329",
+      "panel": "positions",
+      "panel_count": 0,
+      "panel_count_text": "0 Items in Personal WatchList",
+      "tickers": [],
+      "note": "Read 2026-11-06 (chart clock 09:25:00). Empty: the panel shows its header row and no data rows. The scan published SYIN and X."
+    },
+    {
+      "date": "20220127",
+      "capture_index": 1,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261106-jan3",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261106-jan3/snapshots/qmg_20220127_2.png",
+      "source_md5": "aa637f7a8f0bdc3b6f77d1f117746546",
+      "file": "20220127_c1.png",
+      "md5": "dd499a5f83c9aef96bbe20d7b9c73a7f",
+      "panel": "positions",
+      "panel_count": 0,
+      "panel_count_text": "0 Items in Personal WatchList",
+      "tickers": [],
+      "note": "Read 2026-11-06 (chart clock 09:55:15). Empty."
+    },
+    {
+      "date": "20220127",
+      "capture_index": 2,
+      "run": "data/video_scan_test/_rerun/qmg-easyocr-20261106-jan3",
+      "source": "data/video_scan_test/_rerun/qmg-easyocr-20261106-jan3/snapshots/qmg_20220127_3.png",
+      "source_md5": "68f54ea59e76c288fae49cf311d8b33d",
+      "file": "20220127_c2.png",
+      "md5": "a2e0aeb2a81c169a237d743c8bd2f38e",
+      "panel": "positions",
+      "panel_count": 0,
+      "panel_count_text": "0 Items in Personal WatchList",
+      "tickers": [],
+      "note": "Read 2026-11-06 (chart clock 09:44:03, the earliest frame). Empty."
+    },
+    {
       "date": "20220128",
       "capture_index": 0,
       "run": "data/video_scan_test/_rerun/qmg-easyocr-20261106-jan2",
