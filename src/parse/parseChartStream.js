@@ -2474,6 +2474,7 @@ module.exports = {
   extractZoomStripTickerCandidates,
   parseChartStreamPositionList,
   extractAllTickerCandidates,
+  findPanelBoundaries,
   readPanelRowCount,
   setOcrConfusionCsvPath,
   aliasMapForLayout,
