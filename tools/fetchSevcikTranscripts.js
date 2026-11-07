@@ -51,6 +51,7 @@ const { normalizeTranscript, transcriptChecksum } = require('../src/transcript/t
 const { extractAudio, hasDeepgramKey, transcribeAudio, deepgramLanguage } = require('../src/transcript/deepgramClient');
 const { SEVCIK_CHANNEL, SEVCIK_SOURCE_URL } = require('../src/sevcik/channel');
 const { sevcikVideoQuarantine } = require('../src/sevcik/contentFilter');
+const { attachSegments } = require('../src/transcript/segmentStore');
 
 // The credentials live in .env, which is gitignored. An environment
 // variable that is already set wins over the file.
@@ -542,6 +543,10 @@ function persistTranscript(row, provider, transcriptPath, segments, language) {
 
   const db = new DatabaseSync(DB_PATH);
   db.exec(fs.readFileSync(path.join(ROOT, 'data', 'db', 'schema.sql'), 'utf8'));
+  // `transcript_segments` is not in the catalog -- it is a cache in its own
+  // untracked file, and attaching it is what makes the unqualified SQL below
+  // resolve to that file. See src/transcript/segmentStore.js.
+  attachSegments(db);
 
   upsertTranscript(db, row, provider, transcriptPath, segments, checksum, fetchedAt, language);
   db.prepare(

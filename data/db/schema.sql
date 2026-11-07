@@ -97,7 +97,9 @@ CREATE TABLE IF NOT EXISTS catalog_runs (
 --                        reader has to know which one a signal came from.
 --   transcript_segments the normalized (start, end, text) triples. Both
 --                        providers are normalized into this ONE shape, so
---                        everything downstream is provider-agnostic.
+--                        everything downstream is provider-agnostic. THIS
+--                        TABLE IS NOT IN THIS FILE -- it lives in its own
+--                        untracked database (see schema_transcript_segments.sql).
 --   trade_signals       the extracted structured trade ideas. Every row
 --                        carries the EXACT transcript text it came from, so a
 --                        claim is always checkable against its evidence.
@@ -129,21 +131,12 @@ CREATE TABLE IF NOT EXISTS video_transcripts (
 
 CREATE INDEX IF NOT EXISTS idx_video_transcripts_provider ON video_transcripts(provider);
 
-CREATE TABLE IF NOT EXISTS transcript_segments (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    transcript_id INTEGER NOT NULL REFERENCES video_transcripts(id),
-    video_id TEXT NOT NULL,
-    segment_index INTEGER NOT NULL,
-    start_sec REAL NOT NULL,
-    end_sec REAL NOT NULL,
-    text TEXT NOT NULL,
-    -- Provider confidence for this segment, when the provider reports one.
-    confidence REAL,
-    UNIQUE(transcript_id, segment_index)
-);
-
-CREATE INDEX IF NOT EXISTS idx_transcript_segments_video_time
-    ON transcript_segments(video_id, start_sec);
+-- `transcript_segments` used to be declared here. It is the largest table in
+-- the pipeline (698,450 rows, about 98 MB) and it is a CACHE of the transcript
+-- JSON under data/video_pipeline/transcripts/ -- so it lives in its own,
+-- untracked database file. See data/db/schema_transcript_segments.sql and
+-- src/transcript/segmentStore.js: the tools ATTACH that file and their SQL is
+-- unchanged, because an unqualified `transcript_segments` resolves to it.
 
 CREATE TABLE IF NOT EXISTS trade_signals (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

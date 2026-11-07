@@ -9,6 +9,11 @@ const { extractTickers } = require('../src/normalize/tickerExtraction');
 const { tickers } = loadSeedLexiconSync();
 const lexicon = new Set(tickers);
 const transcriptsDir = path.resolve('data/video_pipeline/transcripts');
+// This tool deliberately does NOT call `attachSegments()`. It queries only
+// `videos` (below) and reads the transcript TEXT from the JSON files in
+// `transcriptsDir` -- it never touches the `transcript_segments` table. Its
+// own `transcript_segments` field is just a count in its output. Wiring the
+// attach here would open a second database for nothing.
 const dbPath = path.resolve('data/video_pipeline/state.sqlite');
 
 const py = process.platform === 'win32' ? 'py' : 'python3';

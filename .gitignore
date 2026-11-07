@@ -8,6 +8,12 @@ eng.traineddata
 data/extract_run.log
 # Ignore video_pipeline contents, but keep state DB + transcripts trackable.
 # (Must use trailing /* so git can re-include children; ignoring the dir itself blocks negation.)
+#
+# state.sqlite is the CATALOG and stays tracked; transcript_segments.sqlite is
+# the transcript-segment CACHE and deliberately does NOT -- it is 98 MB of rows
+# derived from the tracked transcript JSON below, and keeping it in the tracked
+# file pushed that file past GitHub's 100 MB limit. See
+# tools/migrateTranscriptSegments.js.
 data/video_pipeline/*
 !data/video_pipeline/state.sqlite
 !data/video_pipeline/transcripts/

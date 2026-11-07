@@ -40,6 +40,7 @@ const { DatabaseSync } = require('node:sqlite');
 
 const { extractSignals } = require('../src/sevcik/signalExtractor');
 const { normalizeTranscript, transcriptChecksum } = require('../src/transcript/transcriptNormalize');
+const { attachSegments } = require('../src/transcript/segmentStore');
 
 const ROOT = path.resolve(__dirname, '..');
 const SCHEMA = path.join(ROOT, 'data', 'db', 'schema.sql');
@@ -104,6 +105,10 @@ function fixtureDb(t) {
   t.after(() => fs.rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 }));
   const db = new DatabaseSync(path.join(dir, 'state.sqlite'));
   db.exec(fs.readFileSync(SCHEMA, 'utf8'));
+  // `transcript_segments` is NOT in the catalog -- it is a cache in its own
+  // untracked file. The fixture attaches a TEMP one, so the test exercises the
+  // real mechanism without touching production data.
+  attachSegments(db, { segmentsPath: path.join(dir, 'transcript_segments.sqlite') });
   return db;
 }
 
@@ -130,13 +135,43 @@ function insertVideo(db, videoId, channel = 'davidsevcik') {
 // The schema
 // ---------------------------------------------------------------------------
 
-test('a fresh database gets the new tables', (t) => {
+test('the catalog holds its own tables, and the segments table is reachable through the attach', (t) => {
   const db = fixtureDb(t);
   const names = db.prepare(
     "SELECT name FROM sqlite_master WHERE type = 'table' AND name IN "
-    + "('video_transcripts','transcript_segments','trade_signals','sevcik_setups')",
+    + "('video_transcripts','trade_signals','sevcik_setups')",
   ).all().map((row) => row.name).sort();
-  assert.deepEqual(names, ['sevcik_setups', 'trade_signals', 'transcript_segments', 'video_transcripts']);
+  assert.deepEqual(names, ['sevcik_setups', 'trade_signals', 'video_transcripts']);
+
+  // `transcript_segments` deliberately does NOT live in the catalog. It is
+  // the largest table in the pipeline (698,450 rows, about 98 MB) and a cache
+  // of the tracked transcript JSON, so keeping it in the tracked file pushed
+  // that file past GitHub's 100 MB limit. This assertion is the guard: if
+  // someone puts the table back in schema.sql, the repo becomes unpushable
+  // again and this test says so before it happens.
+  const inCatalog = db.prepare(
+    "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'transcript_segments'",
+  ).all();
+  assert.deepEqual(inCatalog, [],
+    'transcript_segments must NOT be created in the tracked catalog -- that is what made it unpushable');
+
+  const segTables = db.prepare(
+    "SELECT name FROM seg.sqlite_master WHERE type = 'table'",
+  ).all().map((row) => row.name);
+  assert.ok(segTables.includes('transcript_segments'),
+    `the segments table must live in the attached file: ${JSON.stringify(segTables)}`);
+
+  // And the whole mechanism: an UNQUALIFIED name resolves to that file, so
+  // the tools' SQL does not change.
+  db.prepare(
+    'INSERT INTO transcript_segments (transcript_id, video_id, segment_index, start_sec, end_sec, text) '
+    + 'VALUES (?, ?, ?, ?, ?, ?)',
+  ).run(1, 'vid1', 0, 0, 1, 'hello');
+  assert.deepEqual(
+    db.prepare('SELECT text FROM transcript_segments').all().map((r) => r.text),
+    ['hello'],
+    'an unqualified transcript_segments must resolve to the attached file',
+  );
   db.close();
 });
 
