@@ -55,6 +55,7 @@ const { loadSevcikLexicon } = require('../src/sevcik/lexicon');
 const { findSetups } = require('../src/sevcik/setupSegmenter');
 const { SEVCIK_CHANNEL } = require('../src/sevcik/channel');
 const { sevcikVideoQuarantine } = require('../src/sevcik/contentFilter');
+const { attachSegments } = require('../src/transcript/segmentStore');
 
 const ROOT = path.resolve(__dirname, '..');
 const DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
@@ -85,6 +86,10 @@ function main() {
   const lexicon = loadSevcikLexicon();
   const db = new DatabaseSync(DB_PATH);
   db.exec(fs.readFileSync(path.join(ROOT, 'data', 'db', 'schema.sql'), 'utf8'));
+  // `transcript_segments` is not in the catalog -- it is a cache in its own
+  // untracked file, and attaching it is what makes the unqualified SQL below
+  // resolve to that file. See src/transcript/segmentStore.js.
+  attachSegments(db);
 
   const videos = selectVideos(db);
   console.log(`[sevcik-setups] videos=${videos.length} channel=${options.channel}`
