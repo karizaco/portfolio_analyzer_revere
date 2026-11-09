@@ -14,6 +14,7 @@
 const { findCzechCompanyNames } = require('./czechNames');
 const { readSetupCertainty } = require('./certainty');
 const { determineBias } = require('./signalExtractor');
+const { collapseRollingCues, sourceIndexOf } = require('../transcript/transcriptNormalize');
 
 /** Max segment gap before same-ticker markers become a new episode. */
 const EPISODE_MERGE_GAP = 45;
@@ -172,9 +173,14 @@ function buildSetupRuns(segments, lexicon) {
  * @returns {Array<object>}
  */
 function findSetups(options) {
-  const segments = Array.isArray(options.segments) ? options.segments : [];
+  const rawSegments = Array.isArray(options.segments) ? options.segments : [];
   const lexicon = options.lexicon instanceof Set ? options.lexicon : new Set(options.lexicon || []);
-  if (!segments.length) return [];
+  if (!rawSegments.length) return [];
+
+  // Caption transcripts show every line twice (see collapseRollingCues),
+  // which doubled `mentions` and the evidence. Indices are reported in the
+  // stored numbering via source_index.
+  const segments = collapseRollingCues(rawSegments);
 
   const runs = buildSetupRuns(segments, lexicon);
 
@@ -300,8 +306,8 @@ function findSetups(options) {
         state: finalState,
         states: episode.states.slice(),
         mentions: episode.markers.length,
-        first_index: episode.first_index,
-        last_index: episode.last_index,
+        first_index: sourceIndexOf(segments, episode.first_index),
+        last_index: sourceIndexOf(segments, episode.last_index),
         bias: bias === 'mixed' ? 'mixed' : bias,
         is_prediction: Boolean(isPrediction),
         certainty_level: certainty.level,

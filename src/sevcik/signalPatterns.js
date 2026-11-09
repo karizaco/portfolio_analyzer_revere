@@ -81,11 +81,15 @@ const BULLISH_PATTERNS = [
   { pattern: /(?<![\p{L}\p{N}])(?:i'?m|i am|we'?re|we are)\s+(?:very\s+|extremely\s+|really\s+)?(?:bullish|long|optimistic)(?![\p{L}\p{N}])/giu, weight: 1.0 },
   { pattern: /(?<![\p{L}\p{N}])very\s+bullish(?![\p{L}\p{N}])/giu, weight: 1.0 },
   { pattern: /(?<![\p{L}\p{N}])bullish(?![\p{L}\p{N}])/giu, weight: 0.8 },
-  { pattern: /(?<![\p{L}\p{N}])(?:i\s+like|i\s+love|love)\s+(?:this|it)?\s*(?![\p{L}\p{N}])/giu, weight: 0.5 },
+  // "I like it" is a WEAK bullish reading. Measured on the T3Live swing
+  // corpus (1,021 occurrences) it is said about short setups as often as
+  // long ones -- it rates the setup, not the direction -- so it must not be
+  // able to cancel a stated trigger ("looking lower ... stop above").
+  { pattern: /(?<![\p{L}\p{N}])(?:i\s+like|i\s+love|love)\s+(?:this|it)?\s*(?![\p{L}\p{N}])/giu, weight: 0.3 },
   { pattern: /(?<![\p{L}\p{N}])(?:strong|high)\s+conviction(?![\p{L}\p{N}])/giu, weight: 1.0 },
   { pattern: /(?<![\p{L}\p{N}])(?:going|going to go|gonna go)\s+long(?![\p{L}\p{N}])/giu, weight: 0.9 },
   { pattern: /(?<![\p{L}\p{N}])(?:want to|plan to|looking to)\s+(?:be\s+)?long(?![\p{L}\p{N}])/giu, weight: 0.8 },
-  { pattern: /(?<![\p{L}\p{N}])(?:adding|added|add)\s+(?:to|more)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { pattern: /(?<![\p{L}\p{N}])(?:adding|add)\s+(?:to|more)(?![\p{L}\p{N}])/giu, weight: 0.8 },
   { pattern: /(?<![\p{L}\p{N}])(?:buy|buying|picking up|accumulating)\s+(?:it|this|some|up)(?![\p{L}\p{N}])/giu, weight: 0.7 },
   { pattern: /(?<![\p{L}\p{N}])(?:upside|upside potential|room to run)(?![\p{L}\p{N}])/giu, weight: 0.7 },
   { pattern: /(?<![\p{L}\p{N}])(?:breakout|breaking out|bounce|rebound)\s+(?:is\s+)?(?:here|now|about to)(?![\p{L}\p{N}])/giu, weight: 0.6 },
@@ -119,7 +123,80 @@ const BULLISH_PATTERNS = [
   { pattern: /(?<![\p{L}\p{N}])rostouc\p{L}*\s+trh\p{L}*/giu, weight: 0.7 },
   { pattern: /(?<![\p{L}\p{N}])(?:půjde|pujde|pojde)\s+n[ií]ž\w*/giu, weight: 0.7 },
   { pattern: /(?<![\p{L}\p{N}])(?:prorazí|prorazi|průraz|prolom)\w*\s+n[ií]ž\w*/giu, weight: 0.7 },
+
+  // -- THE ENGLISH SWING-TRADE STRUCTURE (T3Live) ---------------------
+  //
+  // A swing idea is stated as a TRIGGER and a STOP, and the direction is in
+  // which side each is on: "long over 52, stop under this bar's low" or
+  // "short under 158, stop over 178". Counted over 208 Actionable Swing
+  // transcripts (2026-11-09, rolling cues collapsed):
+  //
+  //   long over / long above      445     short under / short below   490
+  //   stop under / stop below    1620     stop over / stop above       832
+  //   over that bar's high        150     under that bar's low         103
+  //   higher lows                 108     lower highs / lower lows      94
+  //   double bottom                70     double top                    69
+  //   looking higher               28     looking lower                 31
+  //
+  // "I like it" (1,021) is NOT a direction here: he says it about short
+  // setups as often as long ones, so the trigger and the stop decide.
+  //
+  // A bar trigger is only a trigger when it is not the stop: "stop under
+  // this bar's low" belongs to a LONG.
+  { pattern: /(?<![\p{L}\p{N}])long\s+(?:over|above)(?![\p{L}\p{N}])/giu, weight: 0.9 },
+  { pattern: /(?<![\p{L}\p{N}])(?:over\s+here\s+long|long\s+here)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { pattern: /(?<![\p{L}\p{N}])stop\s+(?:under|below)(?![\p{L}\p{N}])/giu, weight: 0.6 },
+  { pattern: /(?<!stop\s)(?<![\p{L}\p{N}])(?:over|above)\s+(?:that|this|the)\s+bar'?s\s+high(?![\p{L}\p{N}])/giu, weight: 0.6 },
+  { pattern: /(?<![\p{L}\p{N}])looking\s+higher(?![\p{L}\p{N}])/giu, weight: 0.7 },
+  { pattern: /(?<![\p{L}\p{N}])higher\s+lows?(?![\p{L}\p{N}])/giu, weight: 0.5 },
+  { pattern: /(?<![\p{L}\p{N}])double\s+bottom(?![\p{L}\p{N}])/giu, weight: 0.6 },
 ];
+
+/**
+ * A COMPLETED trade, in the past tense.
+ *
+ * WHY THIS IS SEPARATE FROM THE ACTION PATTERNS
+ *
+ * "I sold some" and "I'm selling some" are different claims. The first is a
+ * trade that is DONE; the second is one being made now. The action patterns
+ * deliberately match both -- the action itself is real either way, and the
+ * report wants to know what the speaker did with the name.
+ *
+ * But the DIRECTION is different. "I sold some" says nothing about where the
+ * price goes next; the trade is over. "I'm selling some" says the speaker
+ * expects it down.
+ *
+ * Measured on the T3Live corpus (2026-11-09, 3,190 signals), 258 signals had
+ * a completed sale as their ONLY direction evidence -- no live statement and
+ * no forward-looking word -- and 144 of those were published as FORWARD claims
+ * and scored as if they were predictions. The clearest one:
+ *
+ *   "I'm still in Tesla. Tesla did not give me a reason to get out of it.
+ *    Tesla was a great trade. ... I used my tier system. I sold some."
+ *
+ * which was published as a bearish TSLA. The speaker was long, bullish about
+ * the name, and describing a tiered exit.
+ *
+ * So a completed trade is a HISTORICAL marker: it does not establish a
+ * direction, and it makes the window retrospective rather than forward.
+ */
+const COMPLETED_TRADE_PATTERNS = [
+  // "I sold it", "I sold some", "they sold out"
+  /(?<![\p{L}\p{N}])(?:i|we|he|she|they)\s+(?:sold|sold\s+out|sold\s+some|sold\s+all|sold\s+my|sold\s+it|sold\s+this)(?![\p{L}\p{N}])/giu,
+  // "I trimmed it", "I exited", "I covered", "I bought it"
+  /(?<![\p{L}\p{N}])(?:i|we|he|she|they)\s+(?:trimmed|trimmed\s+it|trimmed\s+some|exited|exited\s+it|covered|covered\s+it|bought|bought\s+it|bought\s+some|added|added\s+to)(?![\p{L}\p{N}])/giu,
+];
+
+/**
+ * A trade that was DONE, stated in the past tense.
+ *
+ * @param {string} text
+ * @returns {boolean}
+ */
+function isCompletedTrade(text) {
+  const str = String(text || '');
+  return COMPLETED_TRADE_PATTERNS.some((pattern) => new RegExp(pattern.source, pattern.flags).test(str));
+}
 
 const BEARISH_PATTERNS = [
   { pattern: /(?<![\p{L}\p{N}])(?:i'?m|i am|we'?re|we are)\s+(?:very\s+|extremely\s+|really\s+)?(?:bearish|short|bearish)(?![\p{L}\p{N}])/giu, weight: 1.0 },
@@ -128,7 +205,11 @@ const BEARISH_PATTERNS = [
   { pattern: /(?<![\p{L}\p{N}])(?:i\s+hate|i\s+dislike|don'?t\s+like|do not like)\s+(?:this|it)(?![\p{L}\p{N}])/giu, weight: 0.6 },
   { pattern: /(?<![\p{L}\p{N}])going\s+short(?![\p{L}\p{N}])/giu, weight: 0.9 },
   { pattern: /(?<![\p{L}\p{N}])(?:want to|plan to|looking to)\s+(?:be\s+)?short(?![\p{L}\p{N}])/giu, weight: 0.8 },
-  { pattern: /(?<![\p{L}\p{N}])(?:selling|sold|trimming|trimmed|exiting|exit)\s+(?:it|this|some|out|my|all)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  // The past-tense forms ("sold", "trimmed") are NOT here: a completed
+  // trade is history, and it does not state where the price goes next.
+  // See COMPLETED_TRADE_PATTERNS. "exit" stays, because it is not reliably
+  // past tense -- "I'm going to exit it" is a live statement.
+  { pattern: /(?<![\p{L}\p{N}])(?:selling|trimming|exiting|exit)\s+(?:it|this|some|out|my|all)(?![\p{L}\p{N}])/giu, weight: 0.8 },
   { pattern: /(?<![\p{L}\p{N}])downside(?![\p{L}\p{N}])/giu, weight: 0.6 },
   { pattern: /(?<![\p{L}\p{N}])(?:breakdown|breaking down|lower)\s+(?:is\s+)?(?:here|now|about to)(?![\p{L}\p{N}])/giu, weight: 0.6 },
   { pattern: /(?<![\p{L}\p{N}])i\s+(?:think|believe|feel)\s+(?:this|it|that)\s+(?:is\s+)?(?:going to|will)\s+(?:go|run|lower|drop)(?![\p{L}\p{N}])/giu, weight: 0.7 },
@@ -153,6 +234,21 @@ const BEARISH_PATTERNS = [
   // A rejection of a level is bearish: "bylo odmítnuto" (it was
   // rejected).
   { pattern: /(?<![\p{L}\p{N}])(?:bylo\s+odmítnut\p{L}*|odmítnut\p{L}*\s+tahl\w*\s+z[oó]na)(?![\p{L}\p{N}])/giu, weight: 0.6 },
+
+  // -- THE ENGLISH SWING-TRADE STRUCTURE (T3Live) ---------------------
+  //
+  // The mirror of the bullish block; the counts are listed there.
+  // "a broken chart ... lower highs and lower lows" is how a bearish chart
+  // is described on the shows (42 x "broken" in the swing corpus).
+  { pattern: /(?<![\p{L}\p{N}])short\s+(?:under|below)(?![\p{L}\p{N}])/giu, weight: 0.9 },
+  { pattern: /(?<![\p{L}\p{N}])(?:under\s+here\s+short|short\s+here)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { pattern: /(?<![\p{L}\p{N}])stop\s+(?:over|above)(?![\p{L}\p{N}])/giu, weight: 0.6 },
+  { pattern: /(?<!stop\s)(?<![\p{L}\p{N}])(?:under|below)\s+(?:that|this|the)\s+bar'?s\s+low(?![\p{L}\p{N}])/giu, weight: 0.6 },
+  { pattern: /(?<![\p{L}\p{N}])looking\s+lower(?![\p{L}\p{N}])/giu, weight: 0.7 },
+  { pattern: /(?<![\p{L}\p{N}])lower\s+(?:highs?|lows)(?![\p{L}\p{N}])/giu, weight: 0.5 },
+  { pattern: /(?<![\p{L}\p{N}])double\s+top(?![\p{L}\p{N}])/giu, weight: 0.6 },
+  { pattern: /(?<![\p{L}\p{N}])(?:broken\s+chart|chart\s+is\s+broken|it'?s\s+broken|broken\s+as\s+hell)(?![\p{L}\p{N}])/giu, weight: 0.6 },
+  { pattern: /(?<![\p{L}\p{N}])break(?:ing)?\s*down\s+(?:under|below)(?![\p{L}\p{N}])/giu, weight: 0.7 },
 ];
 
 /**
@@ -172,13 +268,19 @@ const ACTION_PATTERNS = [
   { action: 'buy', pattern: /(?<![\p{L}\p{N}])(?:going to|gonna)\s+buy(?![\p{L}\p{N}])/giu, weight: 0.8 },
   { action: 'buy', pattern: /(?<![\p{L}\p{N}])(?:buying|purchasing|picking up|accumulating)(?![\p{L}\p{N}])/giu, weight: 0.7 },
   { action: 'buy', pattern: /(?<![\p{L}\p{N}])(?:long|going long)\s+(?:it|this|that|here)(?![\p{L}\p{N}])/giu, weight: 0.7 },
-  { action: 'add', pattern: /(?<![\p{L}\p{N}])(?:i'?m|i am|we'?re|we are)?\s*(?:adding|added|add)\s+(?:to|more)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'add', pattern: /(?<![\p{L}\p{N}])(?:i'?m|i am|we'?re|we are)?\s*(?:adding|add)\s+(?:to|more)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'add', pattern: /(?<![\p{L}\p{N}])added\s+(?:to|more)(?![\p{L}\p{N}])/giu, weight: 0.8, completed: true },
   { action: 'add', pattern: /(?<![\p{L}\p{N}])(?:scaling|scaling in|adding more)(?![\p{L}\p{N}])/giu, weight: 0.8 },
   { action: 'sell', pattern: /(?<![\p{L}\p{N}])(?:i'?m|i am|we'?re|we are)\s+(?:going to|gonna|about to)\s+sell(?![\p{L}\p{N}])/giu, weight: 0.9 },
   { action: 'sell', pattern: /(?<![\p{L}\p{N}])(?:i'?ll|i will|i want to|we'?ll|we will)\s+sell(?![\p{L}\p{N}])/giu, weight: 0.9 },
   { action: 'sell', pattern: /(?<![\p{L}\p{N}])(?:going to|gonna)\s+sell(?![\p{L}\p{N}])/giu, weight: 0.8 },
-  { action: 'sell', pattern: /(?<![\p{L}\p{N}])(?:selling|sold)\s+(?:it|this|some|my|all|out)(?![\p{L}\p{N}])/giu, weight: 0.7 },
-  { action: 'trim', pattern: /(?<![\p{L}\p{N}])(?:trimming|trimmed|trim\s+it|trim\s+some)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'sell', pattern: /(?<![\p{L}\p{N}])(?:selling)\s+(?:it|this|some|my|all|out)(?![\p{L}\p{N}])/giu, weight: 0.7 },
+  // "I sold it" is a COMPLETED trade. The action is still recorded -- the
+  // report wants to know what the speaker did with the name -- but it is
+  // history, so it does not imply a direction. See COMPLETED_TRADE_PATTERNS.
+  { action: 'sell', pattern: /(?<![\p{L}\p{N}])(?:sold)\s+(?:it|this|some|my|all|out)(?![\p{L}\p{N}])/giu, weight: 0.7, completed: true },
+  { action: 'trim', pattern: /(?<![\p{L}\p{N}])(?:trimming|trim\s+it|trim\s+some)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'trim', pattern: /(?<![\p{L}\p{N}])(?:trimmed)(?![\p{L}\p{N}])/giu, weight: 0.8, completed: true },
   { action: 'short', pattern: /(?<![\p{L}\p{N}])(?:shorting|short it|going short|want to short)(?![\p{L}\p{N}])/giu, weight: 0.9 },
   // "I am going to short NVDA" -- the same construction as "going to buy",
   // and without it the single most direct way of saying a bearish call
@@ -186,7 +288,8 @@ const ACTION_PATTERNS = [
   { action: 'short', pattern: /(?<![\p{L}\p{N}])(?:i'?m|i am|we'?re|we are)\s+(?:going to|gonna|about to)\s+short(?![\p{L}\p{N}])/giu, weight: 0.9 },
   { action: 'short', pattern: /(?<![\p{L}\p{N}])(?:i'?ll|i will|i want to|we'?ll|we will)\s+short(?![\p{L}\p{N}])/giu, weight: 0.9 },
   { action: 'short', pattern: /(?<![\p{L}\p{N}])(?:going to|gonna)\s+short(?![\p{L}\p{N}])/giu, weight: 0.8 },
-  { action: 'cover', pattern: /(?<![\p{L}\p{N}])(?:covering|cover it|covered)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'cover', pattern: /(?<![\p{L}\p{N}])(?:covering|cover it)(?![\p{L}\p{N}])/giu, weight: 0.8 },
+  { action: 'cover', pattern: /(?<![\p{L}\p{N}])covered(?![\\p{L}\\p{N}])/giu, weight: 0.8, completed: true },
   { action: 'hold', pattern: /(?<![\p{L}\p{N}])(?:holding|keeping|keeping it|not selling)(?![\p{L}\p{N}])/giu, weight: 0.6 },
   { action: 'watch', pattern: /(?<![\p{L}\p{N}])(?:watching|watch for|watching for|keeping an eye)(?![\p{L}\p{N}])/giu, weight: 0.5 },
 
@@ -344,6 +447,24 @@ const PRICE_ROLES = [
   { role: 'stop', pattern: /(?<![\p{L}\p{N}])(?:stop|stop\s+loss|stop\s+at|invalidation|invalidat\w*|breakdown\s+below|below\s+which)(?![\p{L}\p{N}])/gi },
   { role: 'support', pattern: /(?<![\p{L}\p{N}])(?:support|support\s+level|holding\s+above|bounce\s+off)(?![\p{L}\p{N}])/gi },
   { role: 'resistance', pattern: /(?<![\p{L}\p{N}])(?:resistance|resistance\s+level|breaking\s+above|through\s+the\s+level)(?![\p{L}\p{N}])/gi },
+
+  // -- THE SWING-TRADE TRIGGER AND STOP (English) -----------------------
+  //
+  // The swing shows state a trade as "long over 525, stop under 478": the
+  // number after "over" is the TRIGGER the price has to clear, and the number
+  // after "under" is where the idea is dead. They never say "entry" or "buy
+  // at", so without these rows every one of those prices was dropped -- a
+  // price with no role is not recorded.
+  //
+  // The trigger is recorded as an ENTRY, because that is what it is: the
+  // price the position is taken at. The stop is a stop.
+  //
+  // The lookbehind keeps the two apart. "stop under 478" must be a stop, not
+  // a short trigger, and "stop over 178" (the stop on a short) must be a stop
+  // too. The trigger rows therefore refuse a price that "stop" introduced.
+  { role: 'entry', pattern: /(?<!stop\s)(?<![\p{L}\p{N}])(?:long|buy|buying)\s+over(?![\p{L}\p{N}])/gi },
+  { role: 'entry', pattern: /(?<!stop\s)(?<![\p{L}\p{N}])(?:short|sell|selling)\s+under(?![\p{L}\p{N}])/gi },
+  { role: 'stop', pattern: /(?<![\p{L}\p{N}])stop\s+(?:under|below|over|above)(?![\p{L}\p{N}])/gi },
 
   // -- THE CZECH LEVELS ---------------------------------------------
   //

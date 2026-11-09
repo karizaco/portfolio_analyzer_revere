@@ -82,6 +82,9 @@ function main() {
   // was CONFIRMED as a symbol before it counts.
   const confirmedSymbols = new Set(Object.values(loadConfirmedNames()));
   const db = new DatabaseSync(DB_PATH);
+  // Another tool (the caption fetcher) may be writing the catalog at the
+  // same time; wait for its lock instead of failing the run.
+  db.exec('PRAGMA busy_timeout = 30000');
   db.exec(fs.readFileSync(path.join(ROOT, 'data', 'db', 'schema.sql'), 'utf8'));
   // `transcript_segments` is not in the catalog -- it is a cache in its own
   // untracked file, and attaching it is what makes the unqualified SQL below

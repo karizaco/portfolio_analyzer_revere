@@ -47,6 +47,8 @@ const TICKER_PRICE_BANDS = {
 
 const DEFAULT_BAND = { min: 0.5, max: 20000 };
 const RELATIVE_MAX_RATIO = 25;
+// A price more than this many times its own stop has lost its decimal point.
+const DECIMAL_LOSS_RATIO = 10;
 
 /**
  * @param {string} ticker
@@ -89,13 +91,29 @@ function sanitizePricesForTicker(ticker, prices) {
       && isPlausiblePrice(ticker, low)
       && isPlausiblePrice(ticker, high);
   });
-  if (bandOk.length <= 1) return bandOk;
 
-  const values = bandOk.map((p) => Number(p.value)).sort((a, b) => a - b);
+  // A caption that drops the decimal point turns "22.80" into "2280", and no
+  // per-ticker band catches it for a ticker that has none. The stop does: a
+  // stop and the price it protects are the same order of magnitude, so a price
+  // ten times its own stop is a missing decimal, not a price. This runs BEFORE
+  // the median filter, because the dropped decimal is what makes the price the
+  // outlier -- filtering on the median first would throw the stop away instead.
+  const stops = bandOk.filter((p) => p.role === 'stop').map((p) => Number(p.value))
+    .filter((v) => Number.isFinite(v) && v > 0).sort((a, b) => a - b);
+  const stopMid = stops.length ? stops[Math.floor(stops.length / 2)] : null;
+  const coherent = stopMid === null ? bandOk : bandOk.filter((p) => {
+    if (p.role === 'stop') return true;
+    const ratio = Number(p.value) / stopMid;
+    return ratio >= 1 / DECIMAL_LOSS_RATIO && ratio <= DECIMAL_LOSS_RATIO;
+  });
+
+  if (coherent.length <= 1) return coherent;
+
+  const values = coherent.map((p) => Number(p.value)).sort((a, b) => a - b);
   const mid = values[Math.floor(values.length / 2)];
-  if (!Number.isFinite(mid) || mid <= 0) return bandOk;
+  if (!Number.isFinite(mid) || mid <= 0) return coherent;
 
-  return bandOk.filter((p) => {
+  return coherent.filter((p) => {
     const v = Number(p.value);
     const ratio = v > mid ? v / mid : mid / v;
     return ratio <= RELATIVE_MAX_RATIO;
@@ -103,6 +121,7 @@ function sanitizePricesForTicker(ticker, prices) {
 }
 
 module.exports = {
+  DECIMAL_LOSS_RATIO,
   DEFAULT_BAND,
   RELATIVE_MAX_RATIO,
   TICKER_PRICE_BANDS,

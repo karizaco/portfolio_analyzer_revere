@@ -101,10 +101,15 @@ const RETRY_WAIT_MS = 5000;
  *
  * @returns {Record<string, string>}
  */
-function requestParams() {
+function requestParams(overrides = {}) {
   return {
     model: process.env.DEEPGRAM_MODEL || DEFAULT_MODEL,
-    language: deepgramLanguage(),
+    // A per-call language wins over the environment. The environment is one
+    // value for the whole process, and this process transcribes two channels
+    // that are not the same language: Sevcik is Czech, T3Live is English.
+    // The wrong acoustic model does not produce a worse transcript. It
+    // produces almost no transcript at all.
+    language: overrides.language || deepgramLanguage(),
     smart_format: 'true',
     punctuate: 'true',
     utterances: 'true',
@@ -200,7 +205,8 @@ async function transcribeAudio(audioPath, options = {}) {
   }
 
   const url = new URL(DEEPGRAM_API_URL);
-  for (const [key, value] of Object.entries(requestParams())) {
+  const params = requestParams({ language: options.language });
+  for (const [key, value] of Object.entries(params)) {
     url.searchParams.set(key, value);
   }
 
@@ -245,7 +251,7 @@ async function transcribeAudio(audioPath, options = {}) {
       }
 
       const payload = await response.json();
-      return { ok: true, payload };
+      return { ok: true, payload, language: params.language };
     } catch (error) {
       if (error && error.name === 'AbortError') {
         lastError = 'Deepgram request timed out';

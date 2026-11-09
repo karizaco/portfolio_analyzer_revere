@@ -2529,6 +2529,11 @@ def infer_channel_from_url(source_url: str) -> str:
     # by the same worker, so it needs the same channel label.
     if '@davidsevcik-sved4697' in lowered or '/davidsevcik-sved4697' in lowered:
         return 'davidsevcik'
+    # T3Live is a TRANSCRIPT source, not an OCR one: its videos carry spoken
+    # trade commentary and no on-screen position list. It is catalogued by the
+    # same worker, so it needs the same channel label.
+    if '@t3live' in lowered or '/t3live/' in lowered or lowered.endswith('/t3live'):
+        return 't3live'
     return ''
 
 
@@ -2545,6 +2550,9 @@ CHANNEL_SOURCE_URLS = {
     'revere': 'https://www.youtube.com/@revereasset/videos',
     'qullamaggie': 'https://www.youtube.com/@Qullamaggie/videos',
     'davidsevcik': 'https://www.youtube.com/@davidsevcik-sved4697/streams',
+    # T3Live's most important content (Actionable Swing Trade Ideas, 630 Club)
+    # is in the streams listing. The /videos tab is catalogued separately.
+    't3live': 'https://www.youtube.com/@t3live/streams',
 }
 
 

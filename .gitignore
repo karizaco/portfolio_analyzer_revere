@@ -137,3 +137,32 @@ data/sevcik_fetch_log.txt
 data/sevcik_ta_features.json
 data/sevcik_ta_features.csv
 data/sevcik_ta_summary.json
+
+# T3Live derived rollups (regenerated from DB + transcripts), same rule as the
+# Sevcik ones above: signals live in tracked state.sqlite, and the CSV/JSON/HTML
+# rollups stay local.
+data/t3live_signals*.csv
+data/t3live_signals*.json
+data/t3live_daily_summary.csv
+data/t3live_ticker_summary.csv
+data/t3live_outcomes.csv
+data/t3live_outcomes*.json
+data/t3live_outcome_summary.json
+data/t3live_outcome_ticker_summary.csv
+data/t3live_report.html
+
+# T3Live and Sevcik run logs (scratch -- one-off fetch/extract stdout).
+data/sevcik_*_log*.txt
+data/t3live_*_log*.txt
+data/t3live_dryrun_new.txt
+data/t3live_names_survey.txt
+data/t3live_filldates_misc.txt
+
+# The name survey's candidates file. It is a measurement input, regenerable
+# with `npm run t3live:names`, and not the record of a decision -- the
+# confirmed names themselves are in config/ticker_names_confirmed.csv.
+data/t3live_name_candidates.csv
+
+# Per-run id lists for the caption/Deepgram fetches (work lists, regenerable).
+data/catalog_flat/t3live_ids_sample_*.txt
+data/catalog_flat/t3live_misc_needs_date.tsv

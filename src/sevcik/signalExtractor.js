@@ -69,6 +69,7 @@ const { readCertainty, certaintyConfidence } = require('./certainty');
 
 
 const { STRICT_TICKER_PATTERN } = require('../normalize/tickerExtraction');
+const { collapseRollingCues, sourceIndexOf } = require('../transcript/transcriptNormalize');
 const { findCzechCompanyNames } = require('./czechNames');
 const { loadConfirmedNames, stemName } = require('./companyNames');
 
@@ -76,7 +77,11 @@ const { loadConfirmedNames, stemName } = require('./companyNames');
  * The version of the extractor. It is written onto every signal row, so a
  * re-run with a changed parser can be told apart from the previous one.
  */
-const PARSER_VERSION = 'sevcik-signals-4';
+// 5 (2026-11-09): rolling YouTube caption cues are collapsed before the run
+// model sees them; negation is scoped to its phrase; "I like it" weight
+// reduced to 0.3; English swing-trade trigger/stop patterns added;
+// pieceDirection has a minimum-strength gate.
+const PARSER_VERSION = 'sevcik-signals-5';
 
 // A phrase that reverses a direction. "Not bullish" is bearish, and the
 // naive pattern match would read "bullish" and call it bullish.
@@ -184,6 +189,12 @@ function isAmbiguousTokenAccepted(token) {
  *   match ordinary Czech words. When it is NOT given, every symbol in the
  *   lexicon counts -- which is the right behaviour for a small, curated
  *   lexicon.
+ * @param {Function} [options.nameFinderFn] - optional replacement for the
+ *   default Czech name finder. Receives `(text, { lexicon })` and returns
+ *   an array of `{ ticker, index, ... }` objects in the same shape as
+ *   `findCzechCompanyNames`. Use this to inject an English name finder for
+ *   English-language sources (e.g. T3Live) where the Czech sentence-start
+ *   exclusion rule would incorrectly drop names at sentence starts.
  * @returns {Array<{ticker: string, index: number}>}
  */
 function findTickers(text, lexicon, options = {}) {
@@ -195,11 +206,14 @@ function findTickers(text, lexicon, options = {}) {
 
   // -- THE NAMES -----------------------------------------------------
   //
-  // The Czech name matcher is position-based: a capitalised word that is
-  // NOT the first word of its sentence is a candidate, because Czech
-  // capitalises every sentence-initial word. A symbol needs no such
-  // test -- it is written in CAPS wherever it appears.
-  for (const name of findCzechCompanyNames(str, { lexicon })) {
+  // By default, use the Czech name matcher (position-based: a capitalised
+  // word that is NOT the first word of its sentence is a candidate). An
+  // alternative finder can be supplied via options.nameFinderFn for English
+  // sources where the sentence-start exclusion is wrong (e.g. T3Live).
+  const nameFinder = typeof options.nameFinderFn === 'function'
+    ? options.nameFinderFn
+    : findCzechCompanyNames;
+  for (const name of nameFinder(str, { lexicon })) {
     if (!name.ticker) continue;
     if (seen.has(name.ticker)) continue;
     seen.add(name.ticker);
@@ -243,6 +257,19 @@ function findTickers(text, lexicon, options = {}) {
     // The symbol itself has to be a CONFIRMED symbol, when the caller
     // has a confirmed set.
     if (confirmedSymbols && !confirmedSymbols.has(upper)) continue;
+    // English auto-captions write a spoken ticker in capitals ("IWM",
+    // "BHC") and ordinary words in sentence case. With a 10k lexicon and
+    // no confirmed-symbol gate, "for" becomes FOR. A caller that sets
+    // requireCapsSymbols keeps only tokens the transcript itself wrote
+    // in capitals, and drops one-letter tokens (A, I, Q) that are words.
+    if (options.requireCapsSymbols) {
+      if (token.length < 2 || token !== token.toUpperCase()) continue;
+    }
+    // Acronyms the speech-to-text always writes in capitals and that are
+    // ALSO tickers: "AI" (the theme, not C3.ai), "ATR" (the indicator, not
+    // AptarGroup). The caller passes the list, because it is a property of
+    // the language, not of the engine.
+    if (options.symbolStoplist instanceof Set && options.symbolStoplist.has(upper)) continue;
 
     seen.add(upper);
     found.push({ ticker: upper, index: match.index });
@@ -307,6 +334,49 @@ function hasNegation(text) {
 }
 
 /**
+ * The weight of a negated direction. "Not bullish" counts as bearish, but
+ * weaker than the word "bearish" (0.8): it denies one direction more than
+ * it asserts the other. So "not bullish ... very bullish" stays bullish.
+ */
+const NEGATED_DIRECTION_WEIGHT = 0.6;
+
+/**
+ * The negated direction phrases in a text, with their spans.
+ *
+ * @param {string} text
+ * @returns {Array<{start: number, end: number, negates: 'bullish'|'bearish'}>}
+ */
+function findNegatedDirections(text) {
+  const str = String(text || '');
+  const found = [];
+  for (const pattern of NEGATION_PATTERNS) {
+    const regex = new RegExp(pattern.source, pattern.flags.includes('g') ? pattern.flags : `${pattern.flags}g`);
+    let match;
+    while ((match = regex.exec(str)) !== null) {
+      const word = String(match[1] || '').toLowerCase();
+      const negates = ['bullish', 'optimistic', 'long'].includes(word) ? 'bullish' : 'bearish';
+      found.push({ start: match.index, end: match.index + match[0].length, negates });
+    }
+  }
+  return found;
+}
+
+/**
+ * The text with the given spans replaced by spaces (positions preserved).
+ *
+ * @param {string} text
+ * @param {Array<{start: number, end: number}>} spans
+ * @returns {string}
+ */
+function blankSpans(text, spans) {
+  const chars = String(text || '').split('');
+  for (const span of spans) {
+    for (let i = span.start; i < span.end && i < chars.length; i += 1) chars[i] = ' ';
+  }
+  return chars.join('');
+}
+
+/**
  * Is the text about something that already happened?
  *
  * @param {string} text
@@ -353,24 +423,28 @@ function isDisclaimer(text) {
  * @returns {{bias: string, strength: number}}
  */
 function determineBias(text) {
-  const bullish = scoreBullish(text);
-  const bearish = scoreBearish(text);
+  // A negated direction counts for the OTHER side, and ONLY the negated
+  // words do. The earlier rule flipped the whole window whenever a negation
+  // appeared anywhere in it, so "the picture is not bullish ... BHC is very
+  // very very bullish" -- two statements about two names -- read as BEARISH
+  // on BHC. Now "not bullish" is taken out of the text and scored as one
+  // bearish phrase, and "very bullish" is still scored as bullish.
+  const str = String(text || '');
+  const negated = findNegatedDirections(str);
+  const remaining = negated.length ? blankSpans(str, negated) : str;
 
-  if (!bullish.matches && !bearish.matches) {
-    return { bias: 'neutral', strength: 0 };
-  }
+  const bullish = scoreBullish(remaining);
+  const bearish = scoreBearish(remaining);
 
-  // A negated direction flips: "not bullish" is bearish.
   let bullScore = bullish.score;
   let bearScore = bearish.score;
-  if (hasNegation(text)) {
-    if (bullScore > 0 && bearScore === 0) {
-      bearScore = bullScore;
-      bullScore = 0;
-    } else if (bearScore > 0 && bullScore === 0) {
-      bullScore = bearScore;
-      bearScore = 0;
-    }
+  for (const phrase of negated) {
+    if (phrase.negates === 'bullish') bearScore = Math.max(bearScore, NEGATED_DIRECTION_WEIGHT);
+    else bullScore = Math.max(bullScore, NEGATED_DIRECTION_WEIGHT);
+  }
+
+  if (!bullish.matches && !bearish.matches && !negated.length) {
+    return { bias: 'neutral', strength: 0 };
   }
 
   const diff = bullScore - bearScore;
@@ -390,15 +464,41 @@ function determineBias(text) {
  * @returns {{action: string, strength: number}}
  */
 function determineAction(text) {
-  let best = { action: '', strength: 0 };
+  const str = String(text || '');
+  let best = { action: '', strength: 0, completed: false };
   for (const entry of ACTION_PATTERNS) {
-    const regex = new RegExp(entry.pattern.source, entry.pattern.flags);
-    if (!regex.test(String(text || ''))) continue;
+    const flags = entry.pattern.flags.includes('g') ? entry.pattern.flags : `${entry.pattern.flags}g`;
+    const regex = new RegExp(entry.pattern.source, flags);
+    let match;
+    let affirmed = false;
+    while ((match = regex.exec(str)) !== null) {
+      if (match[0] === '') { regex.lastIndex += 1; continue; }
+      // "I wouldn't be buying", "not selling" -- the action is denied.
+      if (isNegatedAction(str, match.index)) continue;
+      affirmed = true;
+      break;
+    }
+    if (!affirmed) continue;
     if (entry.weight > best.strength) {
-      best = { action: entry.action, strength: entry.weight };
+      best = { action: entry.action, strength: entry.weight, completed: Boolean(entry.completed) };
     }
   }
   return best;
+}
+
+/**
+ * Is the action that starts at `index` negated by the words just before it?
+ *
+ * English only: Czech negates with a prefix ("nekupuje"), which the action
+ * patterns' own boundaries already refuse.
+ *
+ * @param {string} text
+ * @param {number} index
+ * @returns {boolean}
+ */
+function isNegatedAction(text, index) {
+  const before = text.slice(Math.max(0, index - 40), index);
+  return /(?:\b(?:not|never|no\s+longer)|n't)\s+(?:\w+\s+){0,2}$/i.test(before);
 }
 
 /**
@@ -412,10 +512,16 @@ function determineAction(text) {
  * This is what lets "I am going to short TQQQ" be a signal without the
  * word "bearish" appearing anywhere in the sentence.
  *
+ * A COMPLETED trade does not. "I sold it" is a trade that is over, and it
+ * says nothing about where the price goes next -- the action is still
+ * recorded, but it carries no direction.
+ *
  * @param {string} action
+ * @param {boolean} [completed] - the action was stated in the past tense
  * @returns {boolean}
  */
-function actionImpliesDirection(action) {
+function actionImpliesDirection(action, completed = false) {
+  if (completed) return false;
   return ['buy', 'add', 'sell', 'trim', 'short', 'cover'].includes(String(action || ''));
 }
 
@@ -423,9 +529,11 @@ function actionImpliesDirection(action) {
  * The bias an action implies on its own.
  *
  * @param {string} action
+ * @param {boolean} [completed] - the action was stated in the past tense
  * @returns {string} 'bullish' | 'bearish' | ''
  */
-function actionBias(action) {
+function actionBias(action, completed = false) {
+  if (completed) return '';
   if (['buy', 'add'].includes(action)) return 'bullish';
   if (['sell', 'trim', 'short'].includes(action)) return 'bearish';
   if (action === 'cover') return 'bullish';
@@ -940,11 +1048,19 @@ function splitRunOnDirectionChange(run) {
  * @returns {string} 'bullish' | 'bearish' | ''
  */
 function pieceDirection(text) {
+  // A change of mind is stated firmly. A WEAK reading -- "I like it" (0.3)
+  // inside a short setup -- is not one; with one caption line per piece
+  // (rolling cues collapsed) such readings split a single T3Live idea into
+  // three fragments that then conflicted with each other.
   const bias = determineBias(text);
-  if (bias.bias === 'bullish' || bias.bias === 'bearish') return bias.bias;
+  if ((bias.bias === 'bullish' || bias.bias === 'bearish') && bias.strength >= SPLIT_MIN_STRENGTH) return bias.bias;
   if (bias.bias === 'mixed') return '';
-  return actionBias(determineAction(text).action);
+  const action = determineAction(text);
+  return action.strength >= SPLIT_MIN_STRENGTH ? actionBias(action.action, action.completed) : '';
 }
+
+/** The weakest direction reading that can split a run (see pieceDirection). */
+const SPLIT_MIN_STRENGTH = 0.5;
 
 /**
  * Merge signals that are the SAME call seen through overlapping windows.
@@ -1102,9 +1218,15 @@ function mergeEvidence(a, b) {
  * @returns {Array<object>} the signals
  */
 function extractSignals(options) {
-  const segments = Array.isArray(options.segments) ? options.segments : [];
+  const rawSegments = Array.isArray(options.segments) ? options.segments : [];
   const lexicon = options.lexicon instanceof Set ? options.lexicon : new Set(options.lexicon || []);
-  if (!segments.length || !lexicon.size) return [];
+  if (!rawSegments.length || !lexicon.size) return [];
+
+  // YouTube auto-captions repeat every line (see collapseRollingCues). Undo
+  // that here, where every source reads its segments, and report segment
+  // indices in the STORED numbering via source_index. A clean transcript
+  // (Deepgram, manual) passes through unchanged.
+  const segments = collapseRollingCues(rawSegments);
 
   const runs = buildTickerRuns(segments, lexicon, options);
   const signals = [];
@@ -1134,13 +1256,17 @@ function extractSignals(options) {
       // word, or the direction the action implies. "I am bullish and I am
       // trimming" is bullish; "I am going to short it" is bearish without
       // the word ever appearing.
+      //
+      // A COMPLETED action implies no direction at all: "I sold it" is a
+      // trade that is over, so it cannot be the evidence for where the price
+      // goes next.
+      const actionDirection = actionBias(actionResult.action, actionResult.completed);
       let bias = biasResult.bias;
       let strength = biasResult.strength;
       if (bias === 'neutral') {
-        bias = actionBias(actionResult.action) || 'neutral';
+        bias = actionDirection || 'neutral';
         strength = actionResult.strength;
-      } else if (bias !== 'mixed' && actionBias(actionResult.action)
-        && actionBias(actionResult.action) !== bias) {
+      } else if (bias !== 'mixed' && actionDirection && actionDirection !== bias) {
         // The word and the action disagree: "bullish, so I sold". That is a
         // mixed signal, not a bullish one.
         bias = 'mixed';
@@ -1170,14 +1296,15 @@ function extractSignals(options) {
       // The one exception is an action that IS a direction: "going short",
       // "going long" and "selling" all state which way the speaker expects
       // the price to move, so they carry their own bias.
-      if (bias === 'neutral' && !actionImpliesDirection(actionResult.action)) continue;
+      if (bias === 'neutral' && !actionImpliesDirection(actionResult.action, actionResult.completed)) continue;
       // Mixed / unknown direction is speech, not a scorable prediction.
       if (bias === 'mixed') continue;
 
       // English history with no action is not a call. Czech retrospective
       // language is TAGGED via claim_kind rather than dropped -- otherwise
       // a single "minule" in the window deletes a live setup description.
-      if (isHistorical(windowText) && !actionResult.action && !actionImpliesDirection(actionResult.action)) continue;
+      if (isHistorical(windowText) && !actionResult.action
+        && !actionImpliesDirection(actionResult.action, actionResult.completed)) continue;
       if (isDisclaimer(windowText)) continue;
 
       const czechCertainty = readCertainty(windowText);
@@ -1198,8 +1325,8 @@ function extractSignals(options) {
       signals.push({
         video_id: options.videoId || '',
         transcript_id: options.transcriptId || null,
-        segment_start_index: run.segmentStart,
-        segment_end_index: run.segmentEnd,
+        segment_start_index: sourceIndexOf(segments, run.segmentStart),
+        segment_end_index: sourceIndexOf(segments, run.segmentEnd),
         event_time_sec: Number(segments[run.segmentStart] ? segments[run.segmentStart].start_sec : 0) || 0,
         ticker: run.ticker,
         action: actionResult.action,

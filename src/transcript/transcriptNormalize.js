@@ -345,15 +345,156 @@ function safeParseJson(text) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// YouTube's rolling caption cues
+// ---------------------------------------------------------------------------
+//
+// YouTube auto-captions are not a list of sentences. They are a two-line
+// display that scrolls, and the VTT records every state of the display:
+//
+//   "but the picture right now is not bullish"                      (old line alone)
+//   "but the picture right now is not bullish BHC is very very very bullish probably"
+//   "BHC is very very very bullish probably"                        (new line alone)
+//   "BHC is very very very bullish probably reported earnings gapped up I like it"
+//
+// Read as separate segments, every line is said TWICE, and the line before a
+// ticker lands in the same segment as the ticker. Two measured consequences:
+//
+//   * T3Live, Actionable Swing Trade Ideas (AQEvPMs2jXw): the BHC signal was
+//     published as both bullish and bearish, because "not bullish" -- said
+//     about MSTR -- shared a segment with "BHC is very very very bullish".
+//   * Every evidence_text carried each line two or three times.
+//
+// It is not a T3Live problem. Sevcik's 378 caption transcripts have the same
+// shape (consecutive-cue overlap 0.96-0.99); its 113 Deepgram transcripts do
+// not (0.00). So the transcript is DETECTED as rolling before it is touched,
+// and a clean transcript passes through unchanged.
+//
+// The stored transcripts are left exactly as fetched. This runs where the
+// segments are USED, and every collapsed segment remembers the index it came
+// from, so a signal's segment span still points at the stored segments.
+
+/** Consecutive-cue overlap above which a transcript is read as rolling. */
+const ROLLING_CUE_MIN_RATIO = 0.5;
+
+/** Fewer cues than this is too little evidence to call a transcript rolling. */
+const ROLLING_CUE_MIN_SEGMENTS = 6;
+
+function cueWords(text) {
+  return String(text || '').trim().split(/\s+/).filter(Boolean);
+}
+
+function cueWordKey(word) {
+  return String(word || '').toLowerCase().replace(/[^\p{L}\p{N}']+/gu, '');
+}
+
+/**
+ * How many leading words of `words` repeat the tail of `previousWords`.
+ *
+ * The LONGEST tail that is also a prefix wins, so a cue that is entirely a
+ * repeat of the previous cue's last line overlaps by its whole length.
+ *
+ * @param {string[]} previousWords
+ * @param {string[]} words
+ * @returns {number}
+ */
+function cueOverlap(previousWords, words) {
+  const max = Math.min(previousWords.length, words.length);
+  for (let size = max; size > 0; size -= 1) {
+    let matched = true;
+    for (let k = 0; k < size; k += 1) {
+      if (cueWordKey(previousWords[previousWords.length - size + k]) !== cueWordKey(words[k])) {
+        matched = false;
+        break;
+      }
+    }
+    if (matched) return size;
+  }
+  return 0;
+}
+
+/**
+ * Is this transcript YouTube's rolling-cue shape?
+ *
+ * A pair of consecutive cues counts as rolling when the second starts with
+ * at least two words of the first's tail, or repeats a one-word tail in
+ * full.
+ *
+ * @param {Array<{text: string}>} segments
+ * @returns {boolean}
+ */
+function isRollingCaptionTranscript(segments) {
+  const texts = (Array.isArray(segments) ? segments : [])
+    .map((segment) => cueWords(segment && segment.text))
+    .filter((words) => words.length);
+  if (texts.length < ROLLING_CUE_MIN_SEGMENTS) return false;
+  let rolling = 0;
+  for (let i = 1; i < texts.length; i += 1) {
+    const overlap = cueOverlap(texts[i - 1], texts[i]);
+    if (overlap >= 2 || (overlap >= 1 && overlap === texts[i].length)) rolling += 1;
+  }
+  return rolling / (texts.length - 1) >= ROLLING_CUE_MIN_RATIO;
+}
+
+/**
+ * Undo the rolling cues: each line once, in order.
+ *
+ * A cue is cut to the words the previous cue did not already show; a cue
+ * that shows nothing new is dropped. Every returned segment carries
+ * `source_index`, the index of the cue it came from.
+ *
+ * A transcript that is not rolling is returned with its text untouched
+ * (each segment still gets its `source_index`).
+ *
+ * @param {Array<{text: string}>} segments
+ * @param {{force?: boolean}} [options] - `force` skips the detection
+ * @returns {Array<object>}
+ */
+function collapseRollingCues(segments, options = {}) {
+  const list = Array.isArray(segments) ? segments : [];
+  const rolling = options.force === true || isRollingCaptionTranscript(list);
+  if (!rolling) return list.map((segment, index) => ({ ...segment, source_index: index }));
+
+  const out = [];
+  let previousWords = [];
+  list.forEach((segment, index) => {
+    const words = cueWords(segment && segment.text);
+    if (!words.length) return;
+    const overlap = cueOverlap(previousWords, words);
+    previousWords = words;
+    const fresh = words.slice(overlap);
+    if (!fresh.length) return;
+    out.push({ ...segment, text: fresh.join(' '), source_index: index });
+  });
+  return out;
+}
+
+/**
+ * The source index of a (possibly collapsed) segment, or the index itself.
+ *
+ * @param {Array<object>} segments
+ * @param {number} index
+ * @returns {number}
+ */
+function sourceIndexOf(segments, index) {
+  const segment = segments[index];
+  return segment && Number.isInteger(segment.source_index) ? segment.source_index : index;
+}
+
 module.exports = {
+  ROLLING_CUE_MIN_RATIO,
   SEGMENT_MAX_SECONDS,
   SEGMENT_MIN_SECONDS,
+  collapseRollingCues,
+  cueOverlap,
   groupWordsIntoSegments,
+  isRollingCaptionTranscript,
   normalizeDeepgram,
   normalizeTranscript,
   normalizeTranscriptJson,
   normalizeVtt,
   parseVttTimestamp,
+  sourceIndexOf,
   stripVttTags,
   transcriptChecksum,
   transcriptText,

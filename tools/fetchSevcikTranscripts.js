@@ -51,6 +51,15 @@ const { normalizeTranscript, transcriptChecksum } = require('../src/transcript/t
 const { extractAudio, hasDeepgramKey, transcribeAudio, deepgramLanguage } = require('../src/transcript/deepgramClient');
 const { SEVCIK_CHANNEL, SEVCIK_SOURCE_URL } = require('../src/sevcik/channel');
 const { sevcikVideoQuarantine } = require('../src/sevcik/contentFilter');
+const { T3LIVE_CHANNEL } = require('../src/t3live/channel');
+const { t3liveVideoQuarantine } = require('../src/t3live/contentFilter');
+
+// What differs per channel. Sevcik is Czech (`cs-orig` first) and has its
+// own non-market title filter; T3Live is English and has its own.
+const CHANNEL_DEFAULTS = {
+  [SEVCIK_CHANNEL]: { subLangs: 'cs-orig,en', deepgramLanguage: 'cs', quarantine: sevcikVideoQuarantine },
+  [T3LIVE_CHANNEL]: { subLangs: 'en', deepgramLanguage: 'en', quarantine: t3liveVideoQuarantine },
+};
 const { attachSegments } = require('../src/transcript/segmentStore');
 
 // The credentials live in .env, which is gitignored. An environment
@@ -149,9 +158,21 @@ const options = {
   // the signal: his hedging and his conviction live in the wording.
   //
   // `en` stays in the list as a fallback for a video whose Czech track
-  // is missing.
-  subLangs: (readFlag(argv, '--sub-lang') || 'cs-orig,en').split(',').map((s) => s.trim()).filter(Boolean),
+  // is missing. Other channels take their own default (T3Live: `en`).
+  subLangs: (readFlag(argv, '--sub-lang') || channelDefaults(readFlag(argv, '--channel') || SEVCIK_CHANNEL).subLangs)
+    .split(',').map((s) => s.trim()).filter(Boolean),
+  // Restrict the run to the ids in this file (one per line; anything after
+  // a tab is ignored). This is how a run is limited to one T3Live show.
+  idsFile: readFlag(argv, '--ids-file') || '',
+  // Stop the run after this many videos IN A ROW were refused with a 429.
+  // Carrying on only hammers a throttled IP; the project rule is 30-60
+  // minutes of quiet.
+  maxRateLimited: Number(readFlag(argv, '--max-rate-limited')) || 3,
 };
+
+function channelDefaults(channel) {
+  return CHANNEL_DEFAULTS[channel] || CHANNEL_DEFAULTS[SEVCIK_CHANNEL];
+}
 
 async function main() {
   if (!fs.existsSync(DB_PATH)) {
@@ -167,6 +188,7 @@ async function main() {
     + ` client=visios cookies=${cookiesPath || 'none'}`);
 
   const results = [];
+  let rateLimitedInARow = 0;
   for (const row of rows) {
     const result = await processVideo(row);
     results.push(result);
@@ -174,6 +196,12 @@ async function main() {
       ? `${result.provider} (${result.segments} segments)`
       : `FAILED: ${result.error}`;
     console.log(`[sevcik-transcripts] ${row.video_id} ${row.upload_date} ${detail}`);
+
+    rateLimitedInARow = result.error && /rate limited/i.test(result.error) ? rateLimitedInARow + 1 : 0;
+    if (rateLimitedInARow >= options.maxRateLimited) {
+      console.error(`[sevcik-transcripts] stopping: ${rateLimitedInARow} videos in a row were rate limited (HTTP 429).`);
+      break;
+    }
   }
 
   const summary = {
@@ -246,9 +274,18 @@ function selectCandidates() {
     return !fs.existsSync(transcriptPathFor(row.video_id));
   });
 
+  if (options.idsFile) {
+    const wanted = new Set(fs.readFileSync(options.idsFile, 'utf8')
+      .split(/\r?\n/)
+      .map((line) => line.split('\t')[0].trim())
+      .filter(Boolean));
+    candidates = candidates.filter((row) => wanted.has(row.video_id));
+  }
+
   if (!options.includeQuarantine) {
     const before = candidates.length;
-    candidates = candidates.filter((row) => !sevcikVideoQuarantine(row).quarantined);
+    const quarantine = channelDefaults(options.channel).quarantine;
+    candidates = candidates.filter((row) => !quarantine(row).quarantined);
     if (before !== candidates.length) {
       console.log(`[sevcik-transcripts] quarantined_non_market=${before - candidates.length}`);
     }
@@ -468,7 +505,9 @@ async function fetchDeepgramTranscript(row, transcriptPath) {
     return { ok: false, error: `audio extraction failed: ${extracted.error}` };
   }
 
-  const transcribed = await transcribeAudio(mp3Path);
+  const transcribed = await transcribeAudio(mp3Path, {
+    language: channelDefaults(options.channel).deepgramLanguage,
+  });
   if (!transcribed.ok) {
     return { ok: false, error: transcribed.error };
   }
@@ -487,7 +526,7 @@ async function fetchDeepgramTranscript(row, transcriptPath) {
   // so it is a fact about the request -- and the transcript row used to
   // record `en` for every Deepgram transcript, whatever language the
   // request actually used.
-  return { ok: true, segments, language: deepgramLanguage() };
+  return { ok: true, segments, language: transcribed.language || deepgramLanguage() };
 }
 
 /**
@@ -542,17 +581,31 @@ function persistTranscript(row, provider, transcriptPath, segments, language) {
   }, null, 2), 'utf8');
 
   const db = new DatabaseSync(DB_PATH);
+  // Another tool (an extractor) may be writing the same catalog. Wait for
+  // its lock instead of failing the video.
+  db.exec('PRAGMA busy_timeout = 30000');
   db.exec(fs.readFileSync(path.join(ROOT, 'data', 'db', 'schema.sql'), 'utf8'));
   // `transcript_segments` is not in the catalog -- it is a cache in its own
   // untracked file, and attaching it is what makes the unqualified SQL below
   // resolve to that file. See src/transcript/segmentStore.js.
   attachSegments(db);
 
-  upsertTranscript(db, row, provider, transcriptPath, segments, checksum, fetchedAt, language);
-  db.prepare(
-    'UPDATE videos SET transcript_path = ?, transcript_segment_count = ?, transcript_fetched_at = ?, updated_at = ? '
-    + 'WHERE video_id = ?',
-  ).run(transcriptPath, segments.length, fetchedAt, fetchedAt, row.video_id);
+  // One transaction: the transcript row, its ~1,000 segments and the catalog
+  // pointer land together or not at all. Row-by-row autocommit left a
+  // half-written segment cache when another writer held the lock.
+  db.exec('BEGIN IMMEDIATE');
+  try {
+    upsertTranscript(db, row, provider, transcriptPath, segments, checksum, fetchedAt, language);
+    db.prepare(
+      'UPDATE videos SET transcript_path = ?, transcript_segment_count = ?, transcript_fetched_at = ?, updated_at = ? '
+      + 'WHERE video_id = ?',
+    ).run(transcriptPath, segments.length, fetchedAt, fetchedAt, row.video_id);
+    db.exec('COMMIT');
+  } catch (error) {
+    try { db.exec('ROLLBACK'); } catch (_) {}
+    db.close();
+    throw error;
+  }
   db.close();
 }
 

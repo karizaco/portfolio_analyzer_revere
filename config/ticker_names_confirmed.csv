@@ -65,11 +65,14 @@ wix,WIX,4,"Wix"
 csg,CSGNF,4,"CSG"
 cvs,CVS,2,"CVS"
 ibm,IBM,1,"IBM"
-trump,DJT,19,"Trump Media -- he says ''Trump'' and the midterms are the catalyst, so it is the company"
+# trump / trumpovi / trumpovým -> DJT were REMOVED on 2026-11-09. All 40
+# Sevcik signals they produced were about the PERSON ("prezident Trump",
+# "Trumpův daňový balíček" -- the tax package); 0 of the 40 evidence texts
+# mention Trump Media, Truth Social or DJT. The symbol itself stays
+# confirmed, so a spoken or written "DJT" still counts.
+djt,DJT,0,"DJT -- the symbol; the person's name is not the stock"
 nvidia,NVDA,5,"Nvidia / Nvidii"
 alphabet,GOOG,2,"Alphabet -- the registrant; the speaker says Google too"
-trumpovi,DJT,15,"Trumpovi / Trumpovu / Trumpovou -- the locative and accusative of Trump Media; his accounts bought 5 million dollars"
-trumpovým,DJT,3,"Trumpovým -- suspicious trades in front of Trump's company, the company and not the person"
 amdčko,AMD,9,"AMDčko / AMDčka / AMDčku / AMDčkou -- the Czech shortening of AMD"
 teslech,TSLA,3,"Teslech -- the genitive plural; replaced it in Teslas"
 teslulu,TSLA,1,"Teslulu -- the accusative; here we have Teslas"
@@ -85,3 +88,45 @@ sofit,SOFI,1,"Sofit -- I have SoFit; the same name as Sofij"
 berkshire,BRK-B,12,"Berkshire / Berkshir / Berchsir -- ASR variants of Berkshire Hathaway; the speaker says Buffett's firm buys Alphabet"
 buffett,BRK-B,4,"Buffett / Buffet -- he names the firm by its founder"
 buffet,BRK-B,3,"Buffet -- ASR spelling without the double t"
+# -- THE ENGLISH NAMES (T3Live, 2026-11-09) ------------------------------
+#
+# The table above was grown from the CZECH corpus, so an English stream
+# resolved almost nothing: over 811 T3Live transcripts only 19 tickers came
+# back, and 1,357 spoken names were reported as candidates and dropped.
+#
+# The Options In Play series produced almost no signals for exactly this
+# reason -- the names were being FOUND and then thrown away, not missed.
+#
+# EVERY ROW HERE WAS CHECKED AGAINST ITS TRANSCRIPT CONTEXT. The count is how
+# many times the corpus says it.
+#
+# The rows that resolve to the RIGHT ticker but were unconfirmed are the
+# plain ones; the rows that resolve to the WRONG ticker through the SEC list
+# are the multi-word names, where a single word matches several registrants
+# and the longest match is not the company meant ("morgan stanley" -> EDD,
+# "chase" -> WHLT, "baba" -> BABB).
+sandisk,SNDK,86,"SanDisk -- the storage company, said as a name"
+micron,MU,51,"Micron -- the memory company"
+dell,DELL,48,"Dell -- the computer company"
+oracle,ORCL,47,"Oracle -- the software company"
+uber,UBER,43,"Uber -- the company, said as a name"
+boeing,BA,41,"Boeing -- the aircraft company"
+reddit,RDDT,76,"Reddit -- the company, said as a name"
+robinhood,HOOD,36,"Robinhood -- the broker, said as a name"
+mara,MARA,58,"Mara -- the crypto miner, said as a name"
+iron,IRHO,46,"Iron -- the ore miner; Iron Mountain is IRM, so this is the miner"
+rocket,RCKT,39,"Rocket -- Rocket Labs, the space company; the corpus says Rocket Labs"
+goldman sachs,GJS,65,"Goldman Sachs -- the bank; the single words match several registrants"
+goldman,GJS,80,"Goldman -- the bank, said as a name"
+sachs,GJS,65,"Sachs -- Goldman Sachs, said as a name"
+wells fargo,WFC,60,"Wells Fargo -- the bank"
+wells,WFC,60,"Wells -- Wells Fargo, said as a name"
+fargo,WFC,60,"Fargo -- Wells Fargo, said as a name"
+morgan stanley,MS,105,"Morgan Stanley -- the bank; the single word matches several registrants"
+morgan,MS,105,"Morgan -- Morgan Stanley, said as a name"
+stanley,MS,105,"Stanley -- Morgan Stanley, said as a name"
+jpmorgan chase,JPM,60,"JPMorgan Chase -- the bank"
+jpmorgan,JPM,60,"JPMorgan -- the bank, said as a name"
+baba,BABA,92,"Baba -- Alibaba, said as a name"
+facebook,META,203,"Facebook -- the company; the speaker says Meta and Facebook for the same one"
+iron mountain,IRM,20,"Iron Mountain -- the REIT, said as a name"

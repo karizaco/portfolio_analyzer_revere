@@ -60,6 +60,21 @@ test('the language is read at CALL time, so .env is honoured', () => {
   }
 });
 
+test('a per-call language wins over the environment', () => {
+  // One process transcribes two channels. DEEPGRAM_LANGUAGE is one value,
+  // and it must not force Czech onto an English T3Live upload: the wrong
+  // acoustic model returns a handful of isolated words, not a transcript.
+  const saved = process.env.DEEPGRAM_LANGUAGE;
+  try {
+    process.env.DEEPGRAM_LANGUAGE = 'cs';
+    assert.equal(requestParams({ language: 'en' }).language, 'en');
+    assert.equal(requestParams().language, 'cs');
+  } finally {
+    if (saved === undefined) delete process.env.DEEPGRAM_LANGUAGE;
+    else process.env.DEEPGRAM_LANGUAGE = saved;
+  }
+});
+
 test('the request parameters are built fresh on every call', () => {
   // If they were cached at module load, this could never change.
   const saved = process.env.DEEPGRAM_MODEL;

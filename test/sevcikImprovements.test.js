@@ -35,6 +35,17 @@ test('rejects absurd prices for a ticker', () => {
   assert.equal(cleaned[0].value, 35);
 });
 
+test('drops a price that lost its decimal point against its own stop', () => {
+  // A caption that drops the decimal reads "short under 22.80" as "2280".
+  // The stop beside it is the check: a price ten times its own stop is not a
+  // price, and the stop itself is kept.
+  const cleaned = sanitizePricesForTicker('LVS', [
+    { role: 'entry', value: 2280, low: 2280, high: 2280 },
+    { role: 'stop', value: 23.1, low: 23.1, high: 23.1 },
+  ]);
+  assert.deepEqual(cleaned.map((price) => price.role), ['stop']);
+});
+
 test('certainty structural baseline beats unknown when direction exists', () => {
   const bare = readSetupCertainty('nova predikce na Tesla je do Longu', {
     hasDirection: true,

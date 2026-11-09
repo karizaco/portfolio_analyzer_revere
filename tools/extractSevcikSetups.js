@@ -65,7 +65,9 @@ const TRANSCRIPTS_DIR = path.join(ROOT, 'data', 'video_pipeline', 'transcripts')
  * The version of the segmenter. It is written onto every setup row, so a
  * re-run with a changed segmenter can be told apart from the previous one.
  */
-const PARSER_VERSION = 'sevcik-setups-3';
+// 4 (2026-11-09): rolling YouTube caption cues are collapsed first, so a
+// setup's mentions and evidence no longer count every line twice.
+const PARSER_VERSION = 'sevcik-setups-4';
 
 const argv = process.argv.slice(2);
 const options = {
@@ -85,6 +87,7 @@ function main() {
 
   const lexicon = loadSevcikLexicon();
   const db = new DatabaseSync(DB_PATH);
+  db.exec('PRAGMA busy_timeout = 30000');
   db.exec(fs.readFileSync(path.join(ROOT, 'data', 'db', 'schema.sql'), 'utf8'));
   // `transcript_segments` is not in the catalog -- it is a cache in its own
   // untracked file, and attaching it is what makes the unqualified SQL below

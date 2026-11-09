@@ -93,9 +93,11 @@ function attachSegments(db, options = {}) {
 function openCatalogWithSegments(options = {}) {
   // eslint-disable-next-line global-require
   const { DatabaseSync } = require('node:sqlite');
+  // Node 24 rejects `undefined` here ("options must be an object"), so the
+  // writable form passes an empty object.
   const db = new DatabaseSync(CATALOG_DB_PATH, options.readOnly
     ? { readOnly: true }
-    : undefined);
+    : {});
   attachSegments(db, {
     segmentsPath: options.segmentsPath,
     // A read-only connection must not go and create a schema.

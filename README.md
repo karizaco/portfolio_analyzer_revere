@@ -452,6 +452,123 @@ project's YouTube rules say.
 
 ---
 
+## T3Live (transcript source, English)
+
+`https://www.youtube.com/@t3live` — the fifth source and the second transcript
+source. It reuses the Sevcik pipeline (catalog → captions → signal extractor →
+aggregate → outcome scoring); what differs is in `src/t3live/`.
+
+| show (from the title) | host | what it is |
+|---|---|---|
+| Actionable Swing Trade Ideas | Sami Abusaad | weekly swing calls, 2019-06 → today |
+| 630 Club, including the older "6:30 Club" spelling | Scott Redler | daily pre-market |
+| Options In Play | unnamed | a 2020 options series, including the weekly "Earnings On The Radar" |
+| Morning Call | Scott when the title names him | morning commentary, a different show from the 630 Club |
+| Daily Recap | whoever the title names | the house end-of-day format, several hosts, 2011 → today |
+| everything else that names a host | Sami, Scott, Derrick, Adam, Michael… | not one of the series above |
+
+Older formats are categories too, even though the shows have ended: Market Wrap,
+How-to, Watch List, Pro Desk, Half-Time Report, Mid-Day Update, Red Dog,
+Black Room, Marketcast, Situation Report, Core FX, Conversations With A Pro
+Trader, Morning Game Plan, Wall Report, and Weekly Market Update. A one-off
+title stays `other`.
+
+**Both tabs are needed.** The `/videos` tab (3,629 rows) and the `/streams` tab
+(3,720 rows) share only 7 ids. The catalog holds both: **7,349** `t3live` rows.
+
+**Dates.** A flat channel listing carries no upload date, so the bulk import
+leaves `upload_date` empty and dating a video is one watch-page request. The
+two structured shows and the hosts' other named shows are dated (Actionable
+Swings 334, the 630 Club 629 of 630, Scott's other shows 394, Sami's other
+shows 158). The remaining ~5,800 rows are recaps and interviews and are not
+dated yet.
+
+### Running the T3Live pipeline
+
+```bash
+# captions only, one fetch at a time, 40 per chunk, stops on a 429
+npm run t3live:transcripts:swings
+npm run t3live:transcripts:630club
+
+npm run t3live:signals     # parser t3live-signals-3
+npm run t3live:aggregate   # data/t3live_signals*.csv, t3live_signals.json, t3live_report.html
+npm run t3live:outcomes    # data/t3live_outcomes.csv, t3live_outcome_summary.json
+```
+
+### What is different from Sevcik
+
+- **English names.** `src/t3live/englishNames.js` does not drop a capitalised
+  word at a sentence start (the Czech rule). People are not companies
+  ("Trump" is not DJT), caption acronyms are not tickers (`AI`, `ATR`, `RSI`,
+  `PM`…), and index phrases resolve to their ETF ("the Qs"/"the cues" → QQQ,
+  "the S&P" → SPY, "the Russell" → IWM, "the Dow" → DIA).
+- **Symbols must be written in capitals.** The auto-captions write a spoken
+  ticker in capitals (`IWM`, `BHC`) and words in sentence case, so `for` is
+  never FOR.
+- **The swing format.** Sami states a trigger and a stop ("long over 525, stop
+  under 478"; "short under 158, stop over 178"). The direction is read from
+  those, and the prices are recorded: "long over" / "short under" is the
+  trigger (`entry_price`) and "stop under" / "stop over" is the stop
+  (`stop_price`). "I like it" is only a weak bullish reading because he says
+  it about shorts too. A caption that drops the decimal point ("22.80" read as
+  "2280") is caught by the stop beside it: a price ten times its own stop is
+  not a price.
+
+**Two defects the test runs found, both fixed (2026-11-09).**
+
+*A completed trade is not a live call.* "I'm still in Tesla. Tesla did not
+give me a reason to get out of it. ... I used my tier system. I sold some."
+was published as a bearish TSLA. The speaker was long and bullish, describing
+a tiered exit. 258 signals rested on a past-tense sale as their only
+direction evidence, and 144 of those were scored as predictions. Past-tense
+forms ("sold", "trimmed") are now recorded as the action but carry no
+direction. T3Live's signal count went 3,190 → 2,912; Sevcik is unchanged at
+1,444, because the change is English-only.
+
+*The confirmed-names table had no English names.* It was grown from the Czech
+corpus, so an English stream resolved almost nothing: across 811 T3Live
+transcripts only 19 tickers came back, and 1,357 spoken names were reported
+as candidates and dropped. Options In Play produced almost no signals for
+exactly this reason. The names are now confirmed from their transcript
+context (`surveyT3liveNames` writes the candidates; each row was read before
+it was added), and the two-word names — "Goldman Sachs", "Morgan Stanley" —
+are matched as pairs rather than as two unrelated words. The sample went from
+12 resolved names to 23.
+
+**What the new shows actually say.** Options In Play is educational — it
+teaches stops and targets generically rather than calling trades ("upside
+targets or downside targets if it's a bearish trade"). Over ten videos it
+said "bullish" 24 times and "bearish" 18, mostly describing hypotheticals. It
+produces few signals because it contains few calls, and that is the show's
+nature rather than a parser gap.
+
+**The measured result (2026-11-09).** 3,405 signals, 2,205 claims after merging
+a video's mentions of one ticker. One-week hit rate **49.1%** against **53.3%**
+for the same call made on SPY on the same dates; the excess return is +0.08%
+with a 95% interval of [−0.26%, +0.41%], so it is not distinguishable from
+zero. The honest reading is the same as Sevcik's: the source has not been
+shown to beat the index, and the sample is now large enough to say so.
+
+**Deepgram reaches the videos YouTube will not caption.** 237 of the 630 Club
+streams have no auto-captions at all. 32 of them have now been transcribed
+through Deepgram, in four batches of two, ten, ten and ten, with 7,048 segments
+across the thirty-two and 74 scored claims. Every one came back `deepgram / en`
+with zero failures. The audio is uploaded to Deepgram for those videos only —
+captions are always tried first, because they are free and the audio stays on
+the machine.
+
+### Rolling caption cues (fixed for every source)
+
+YouTube auto-captions record each state of a scrolling two-line display, so
+every line appears twice and the line before a ticker shares its segment.
+`collapseRollingCues()` (`src/transcript/transcriptNormalize.js`) undoes this
+inside the signal and setup extractors — for T3Live **and** Sevcik's caption
+transcripts — and leaves Deepgram transcripts untouched (detected, not
+assumed). Stored transcripts are not rewritten; reported segment indices still
+point at them.
+
+---
+
 ## Troubleshooting
 
 ### FFmpeg path missing (`ffmpeg.exe ENOENT`)

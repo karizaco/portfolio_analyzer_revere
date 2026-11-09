@@ -477,6 +477,16 @@ Results: `data/qmg_alt_batch_results.json`.
 - `src/transcript/deepgramClient.js` — ffmpeg audio extraction + Deepgram `nova-2` upload
 - `src/report/sevcikReport.js` — the self-contained HTML dashboard
 
+### T3Live (English transcript source — see § 'The T3Live source')
+- `src/t3live/channel.js` — logical name `t3live`, handle `@t3live`, both listing URLs (`/streams`, `/videos`)
+- `src/t3live/contentFilter.js` — show/host classification from the title. Current series: `actionable_swings`, `630club` (including the older `6:30 Club` spelling), `options_in_play`, `morning_call`, `daily_recap`. Older formats are series too: `market_wrap`, `how_to`, `watch_list`, `pro_desk`, `half_time`, `mid_day`, `red_dog`, `black_room`, `marketcast`, `situation_report`, `core_fx`, `conversations`, `morning_game_plan`, `wall_report`, `weekly_update`. A one-off title stays `other`.
+- `src/t3live/englishNames.js` — English name finder, people/acronym stoplists, index phrases → ETF. Adjacent pairs are matched as ONE name, so "Goldman Sachs" is the company and not two unrelated words.
+- `tools/extractT3liveSignals.js` / `tools/aggregateT3liveSignals.js` / `tools/analyzeT3liveOutcomes.js` — extract (parser `t3live-signals-3`), aggregate per show, score vs SPY
+- `src/report/t3liveReport.js` — the dashboard (`data/t3live_report.html`), written by the aggregator; reads `t3live_outcome_summary.json` when it exists
+- `tools/fetchTranscriptChunks.js` — serial, chunked, captions-only fetch over an id list; stops on a 429
+- `tools/importFlatListing.js` — imports a flat `id<TAB>title` listing (no dates) into `videos`
+- `tools/surveyT3liveNames.js` — reports which spoken names resolve and which do not; writes `data/t3live_name_candidates.csv`. The rows the confirmed table has to grow.
+
 ### Aggregation
 - `src/video/captureTickers.js` — which field of a capture holds its holdings (see below)
 - `src/video/probeLogDirs.js` — the three probe-log directory layouts (see below)
@@ -818,6 +828,69 @@ same 1279 claims at 53.3 % (primary bucket 54.0 %), and its 48 walk-forward
 folds select an allow-bucket in only 4 of them. **The honest reading is that
 this source is not yet shown to beat the index**, and the corpus is now large
 enough (491 transcripts, 2020–2026) to say so rather than to hope for it.
+
+### A completed trade is not a live call (2026-11-09)
+
+The T3Live test runs published this as a **bearish TSLA**:
+
+> "I'm still in Tesla. Tesla did not give me a reason to get out of it. Tesla
+> was a great trade. ... I used my tier system. I sold some."
+
+The speaker was long, bullish about the name, and describing a tiered exit.
+The direction came from "sold some" — a trade that was already over.
+
+**"I sold some" and "I'm selling some" are different claims.** The first is
+history and says nothing about where the price goes next. The second is a
+call. The action patterns deliberately match both, because the report wants
+to know what the speaker did with the name; but a completed trade cannot
+carry a direction.
+
+Measured on the T3Live corpus (3,190 signals): **258** had a past-tense sale
+as their only direction evidence, and **144** of those were published as
+forward claims and scored as predictions.
+
+The fix splits the English action patterns on tense and marks the past ones
+`completed: true`. `actionBias(action, completed)` and
+`actionImpliesDirection(action, completed)` return `''` and `false` for a
+completed action, so the window needs a live statement to be a call.
+
+T3Live's signal count went **3,190 → 2,912**. **Sevcik is unchanged at 1,444**:
+the change is English-only, and the Czech action patterns are a separate list
+that was not touched. That asymmetry is the point — a fix to the shared
+engine that moved one corpus and not the other has to say which one and why.
+
+Pinned by `test/sevcikSignalExtractor.test.js` — four tests: a completed sale
+is not a call, the action is still recorded, a live sale still is, and a
+completed trade does not override a live direction.
+
+### The confirmed spoken-names table had no English names (2026-11-09)
+
+The table was grown from the **Czech** corpus, so an English stream resolved
+almost nothing. Measured across **811 T3Live transcripts**: only **19**
+tickers came back, and **1,357** spoken names were reported as candidates and
+dropped. The Options In Play series produced almost no signals for exactly
+this reason — the names were being **found and thrown away**, not missed.
+
+Two defects, both fixed:
+
+1. **Two words are one name.** "Goldman Sachs" read as two words matches
+   several registrants and neither word identifies the company. Adjacent
+   pairs are now tried first and the pair wins only when it resolves and the
+   single words do not, so a pair never shadows a name that already works.
+2. **The candidates were not confirmed.** The table now carries the English
+   names, each row checked against its transcript context. Two of them
+   resolved to the WRONG ticker through the SEC list — "morgan stanley" →
+   EDD, "chase" → WHLT, "baba" → BABB — and the confirmed row is what
+   overrides that.
+
+`tools/surveyT3liveNames.js` writes `data/t3live_name_candidates.csv` with
+the frequency and the sentences each name was said in, so the table is grown
+from what the corpus says rather than from what someone assumed. The noise
+words — Red, Dog, Trader, China, Team, Well, Good, Make, Take — are
+deliberately NOT confirmed; each one is a real ticker in some registrant's
+name and none of them is a company here.
+
+The 25-video sample went from **12** resolved names to **23**.
 
 ### The confirmed spoken-names table grew on 2026-11-06
 

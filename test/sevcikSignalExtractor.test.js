@@ -126,6 +126,36 @@ test('a negated direction is reversed', () => {
   assert.equal(determineBias('I am not bullish on this at all').bias, 'bearish');
 });
 
+test('a negation counts against its own phrase, not the whole window', () => {
+  // The earlier rule flipped the whole window when "not" appeared anywhere,
+  // so a negation about one name turned a different name's call bearish.
+  assert.equal(determineBias('but the picture right now is not bullish BHC is very very very bullish probably').bias, 'bullish');
+  assert.equal(determineBias('I am not bearish, I am very bullish').bias, 'bullish');
+});
+
+test('a swing idea\'s direction is in the trigger and the stop, not in "I like it"', () => {
+  // Real T3Live phrasing (Actionable Swing Trade Ideas, AQEvPMs2jXw).
+  assert.equal(determineBias('the ABR looking lower under the lows right here, stop above. Looks great. I like it').bias, 'bearish');
+  assert.equal(determineBias('short under 158 stop over 178 I like it').bias, 'bearish');
+  assert.equal(determineBias('you got the AEM over here long. I like it. Stop under this bar\'s low').bias, 'bullish');
+  assert.equal(determineBias('long over 52 stop under 48').bias, 'bullish');
+});
+
+test('"stop under this bar\'s low" is the stop of a LONG, not a short trigger', () => {
+  assert.equal(determineBias('NEM over that bar\'s high, stop under this bar\'s low').bias, 'bullish');
+  assert.equal(determineBias('ABR under that bar\'s low, stop over this bar\'s high').bias, 'bearish');
+});
+
+test('a broken chart with lower highs is bearish', () => {
+  assert.equal(determineBias('This is a broken chart. We are in a pattern of lower highs and lower lows').bias, 'bearish');
+});
+
+test('a denied action is not the action', () => {
+  assert.equal(determineAction('That too, I would I wouldn\'t be buying').action, '');
+  assert.equal(determineAction('I am not selling it').action, 'hold');
+  assert.equal(determineAction('I am buying it into earnings').action, 'buy');
+});
+
 test('a sentence with both directions is mixed', () => {
   assert.equal(determineBias('I am bullish on the setup but bearish on the valuation').bias, 'mixed');
 });
@@ -223,6 +253,32 @@ test('a percentage is not a price', () => {
   assert.deepEqual(prices, [], 'a percentage is not a price level');
 });
 
+test('a swing trigger and its stop are recorded, and the stop is not the trigger', () => {
+  // The swing shows state a trade as "long over N, stop under M" and never
+  // say "entry" or "buy at". Both prices have to be recorded, and each with
+  // the role the words gave it: "stop under" is a stop even though "under"
+  // on its own would be a short trigger.
+  const prices = findPrices('I like it long over 525, stop under 478');
+  const entry = prices.find((price) => price.role === 'entry');
+  const stop = prices.find((price) => price.role === 'stop');
+  assert.ok(entry, 'the trigger price must be recorded as an entry');
+  assert.equal(entry.value, 525);
+  assert.ok(stop, 'the stop must be recorded');
+  assert.equal(stop.value, 478);
+  assert.equal(prices.filter((price) => price.value === 478 && price.role === 'entry').length, 0,
+    '"stop under" must not also be read as a short trigger');
+});
+
+test('the stop on a short sits OVER the trigger, and is still a stop', () => {
+  const prices = findPrices('short under 158, stop over 178');
+  const entry = prices.find((price) => price.role === 'entry');
+  const stop = prices.find((price) => price.role === 'stop');
+  assert.ok(entry);
+  assert.equal(entry.value, 158);
+  assert.ok(stop);
+  assert.equal(stop.value, 178);
+});
+
 test('an implausible price is not a price', () => {
   assert.equal(parsePrice('0.01'), null, 'a penny stock is outside the plausible range');
   assert.equal(parsePrice('999999'), null);
@@ -248,6 +304,44 @@ test('a past-tense statement with no action is not a signal', () => {
 test('a disclaimer is not a signal', () => {
   const signals = extract([seg('This is not financial advice, but I am bullish on TQQQ.')]);
   assert.equal(signals.length, 0);
+});
+
+test('a COMPLETED trade is not a live directional call', () => {
+  // "I sold some" is a trade that is over. It says nothing about where the
+  // price goes next, so it cannot be the evidence for a bearish call.
+  //
+  // This is the real T3Live case: "I'm still in Tesla. Tesla did not give
+  // me a reason to get out of it. ... I used my tier system. I sold some."
+  // was published as a bearish TSLA.
+  const signals = extract([seg('I sold some TSLA this morning.')]);
+  assert.equal(signals.length, 0,
+    'a completed sale is history, not a prediction');
+});
+
+test('a completed trade is still recorded as an action', () => {
+  // The ACTION is real -- the report wants to know what the speaker did
+  // with the name. It is the DIRECTION that a completed trade cannot carry.
+  const action = determineAction('I sold some TSLA this morning.');
+  assert.equal(action.action, 'sell');
+  assert.equal(action.completed, true,
+    'the action was stated in the past tense, so it carries no direction');
+});
+
+test('a LIVE sale still is a bearish call', () => {
+  // The corpus says "selling it" (727 occurrences) far more often than
+  // "selling <TICKER>" (25), and the ticker is named elsewhere in the run.
+  const signals = extract([seg('TSLA, I am selling it here.')]);
+  assert.equal(signals.length, 1);
+  assert.equal(signals[0].bias, 'bearish');
+  assert.equal(signals[0].action, 'sell');
+});
+
+test('a completed trade does not override a live direction', () => {
+  // "I sold some, but I am still bullish here" is bullish. The completed
+  // sale must not drag it down.
+  const signals = extract([seg('I sold some TSLA, but I am still bullish on it.')]);
+  assert.equal(signals.length, 1);
+  assert.equal(signals[0].bias, 'bullish');
 });
 
 // ---------------------------------------------------------------------------

@@ -101,16 +101,12 @@ test('a Czech inflection still resolves', () => {
 test('the case endings the first stemmer missed also resolve', () => {
   // The stem drops TRAILING VOWELS, so "Applu" reaches "apple" but the
   // endings that end in a consonant do not: "Amazonem" (instrumental),
-  // "Trumpovi" (locative), "Teslech" (genitive plural), "AMDcko" (the
-  // Czech shortening). Each of these was checked against the segment it
-  // came from on 2026-11-06.
+  // "Teslech" (genitive plural), "AMDcko" (the Czech shortening). Each of
+  // these was checked against the segment it came from on 2026-11-06.
   const cases = [
     ['Amazonem', 'AMZN'],
     ['Googlem', 'GOOG'],
     ['Microsoftnu', 'MSFT'],
-    ['Trumpovi', 'DJT'],
-    ['Trumpovu', 'DJT'],
-    ['Trumpovou', 'DJT'],
     ['Teslech', 'TSLA'],
     ['Teslulu', 'TSLA'],
     ['Sofij', 'SOFI'],
@@ -132,6 +128,16 @@ test('the case endings the first stemmer missed also resolve', () => {
 });
 
 
+
+test('the PERSON Trump is not the stock DJT, but the symbol DJT is', () => {
+  // Measured 2026-11-09: all 40 Sevcik signals that "Trump"/"Trumpovi"
+  // produced were about the president ("prezident Trump", the tax
+  // package); none mentioned Trump Media, Truth Social or DJT.
+  for (const spoken of ['Trump', 'Trumpovi', 'Trumpovu', 'Trumpovou', 'Trumpovým']) {
+    assert.equal(matchCompanyName(spoken, { lexicon: LEXICON }).ticker, null, spoken);
+  }
+  assert.equal(matchCompanyName('DJT', { lexicon: LEXICON }).ticker, 'DJT');
+});
 
 test('a name that is a prefix of another name does not match it', () => {
   // "Apple" must not match "Applied Materials". The word-boundary test
