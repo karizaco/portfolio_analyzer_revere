@@ -302,6 +302,7 @@ const timeline = {
 
 const outRoot = path.resolve('data', `video_scan_${dateKey}`, tags[0]);
 const outPath = path.join(outRoot, 'timeline.json');
+fs.mkdirSync(outRoot, { recursive: true });
 fs.writeFileSync(outPath, JSON.stringify(timeline, null, 2));
 console.log(`[aggregate-timeline] wrote ${outPath}`);
 const typeSummary = Object.entries(typeCounts).map(([k, v]) => `${k}=${v}`).join(' ');
