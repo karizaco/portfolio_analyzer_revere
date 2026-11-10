@@ -542,20 +542,45 @@ said "bullish" 24 times and "bearish" 18, mostly describing hypotheticals. It
 produces few signals because it contains few calls, and that is the show's
 nature rather than a parser gap.
 
-**The measured result (2026-11-09).** 3,405 signals, 2,205 claims after merging
-a video's mentions of one ticker. One-week hit rate **49.1%** against **53.3%**
-for the same call made on SPY on the same dates; the excess return is +0.08%
-with a 95% interval of [−0.26%, +0.41%], so it is not distinguishable from
-zero. The honest reading is the same as Sevcik's: the source has not been
-shown to beat the index, and the sample is now large enough to say so.
+**The measured result (2026-11-10).** 5,588 signals from 1,518 videos, 3,524
+claims after merging a video's mentions of one ticker. One-week hit rate
+**50.0%** against **56.0%** for the same call made on SPY on the same dates;
+the excess return is +0.13% with a 95% interval of [−0.12%, +0.38%], so it is
+not distinguishable from zero. One month is 51.7% against 61.0%, excess
++0.39% [−0.12%, +0.90%] — also not distinguishable from zero. The honest
+reading is the same as Sevcik's: the source has not been shown to beat the
+index, and the sample is now large enough to say so. Per show, Actionable
+Swings and the 630 Club are the two series with enough claims to measure, and
+both land the same way (1w excess +0.29% and +0.12%, neither significant).
+The newly scored shows do not change the reading: Morning Call is +0.31% at
+one week and Daily Recap is −0.42%, and both intervals cross zero.
 
 **Deepgram reaches the videos YouTube will not caption.** 237 of the 630 Club
-streams have no auto-captions at all. 32 of them have now been transcribed
-through Deepgram, in four batches of two, ten, ten and ten, with 7,048 segments
-across the thirty-two and 74 scored claims. Every one came back `deepgram / en`
-with zero failures. The audio is uploaded to Deepgram for those videos only —
+streams have no auto-captions at all. 113 of them have now been transcribed
+through Deepgram — 32 in four small batches, 73 in a chunked run, and 8 more
+in the 2026-11-10 caption sweep — with 23,127 segments, every one of them
+`deepgram / en`. The audio is uploaded to Deepgram for those videos only:
 captions are always tried first, because they are free and the audio stays on
-the machine.
+the machine. The audio is deleted after each transcript, so only the transcript
+is kept.
+
+Two videos came back with no utterances, and both are genuinely silent. One is
+a 10-second clip; the other is a 4-minute live stream whose only audio is a
+short intro, the rest digital silence. Deepgram's empty answer is the right
+one.
+
+The chunked runner's "transcribed" count is **not** the Deepgram count, and
+reading it as one overstates the corpus. It counts every video that ended with
+a transcript on disk, and a video on the caption-less list can still come back
+with captions once YouTube's throttle has lifted — 89 of the 164 in the first
+chunked run did. The provider field is the record, and it says 73 for that run.
+
+**A chunk that fetched nothing is not always a throttle.** On 2026-11-10 the
+caption runner stopped and reported a possible rate limit on a chunk of 11
+videos. They were educational "how to" titles the content filter had already
+quarantined, so the fetch tool had no candidates and fetched nothing. The
+fetch tool now names the quarantined ids, and the runner sets them aside
+instead of reporting a throttle. Pinned by `test/fetchTranscriptChunks.test.js`.
 
 ### Rolling caption cues (fixed for every source)
 

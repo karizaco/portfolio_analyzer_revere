@@ -483,7 +483,8 @@ Results: `data/qmg_alt_batch_results.json`.
 - `src/t3live/englishNames.js` — English name finder, people/acronym stoplists, index phrases → ETF. Adjacent pairs are matched as ONE name, so "Goldman Sachs" is the company and not two unrelated words.
 - `tools/extractT3liveSignals.js` / `tools/aggregateT3liveSignals.js` / `tools/analyzeT3liveOutcomes.js` — extract (parser `t3live-signals-3`), aggregate per show, score vs SPY
 - `src/report/t3liveReport.js` — the dashboard (`data/t3live_report.html`), written by the aggregator; reads `t3live_outcome_summary.json` when it exists
-- `tools/fetchTranscriptChunks.js` — serial, chunked, captions-only fetch over an id list; stops on a 429
+- `tools/fetchTranscriptChunks.js` — serial, chunked, captions-only fetch over an id list; stops on a 429, and does not mistake a chunk of quarantined videos for one
+- `tools/fetchDeepgramBatch.js` — chunked Deepgram runner over an id list, for the videos with no captions; resumable (skips ids with a transcript on disk), deletes the audio after each transcript, stops when a whole chunk lands nothing
 - `tools/importFlatListing.js` — imports a flat `id<TAB>title` listing (no dates) into `videos`
 - `tools/surveyT3liveNames.js` — reports which spoken names resolve and which do not; writes `data/t3live_name_candidates.csv`. The rows the confirmed table has to grow.
 

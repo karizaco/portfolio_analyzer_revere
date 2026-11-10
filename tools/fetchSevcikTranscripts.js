@@ -285,10 +285,17 @@ function selectCandidates() {
   if (!options.includeQuarantine) {
     const before = candidates.length;
     const quarantine = channelDefaults(options.channel).quarantine;
-    candidates = candidates.filter((row) => !quarantine(row).quarantined);
-    if (before !== candidates.length) {
-      console.log(`[sevcik-transcripts] quarantined_non_market=${before - candidates.length}`);
+    const kept = candidates.filter((row) => !quarantine(row).quarantined);
+    if (before !== kept.length) {
+      const dropped = candidates.filter((row) => quarantine(row).quarantined).map((row) => row.video_id);
+      // The COUNT alone was not enough for a caller to act on: a chunk of
+      // ids that are ALL quarantined leaves the fetch tool with no
+      // candidates, which a chunked runner reads as "nothing landed" and
+      // reports as a possible throttle. The ids are named so the runner can
+      // set them aside instead of asking for them again.
+      console.log(`[sevcik-transcripts] quarantined_non_market=${before - kept.length} ids=${dropped.join(',')}`);
     }
+    candidates = kept;
   }
   return options.limit ? candidates.slice(0, options.limit) : candidates;
 }
@@ -502,6 +509,10 @@ async function fetchDeepgramTranscript(row, transcriptPath) {
   const mp3Path = `${audioStem}.mp3`;
   const extracted = extractAudio(downloaded, mp3Path);
   if (!extracted.ok) {
+    if (!options.keepAudio) {
+      safeUnlink(mp3Path);
+      if (downloaded !== mp3Path) safeUnlink(downloaded);
+    }
     return { ok: false, error: `audio extraction failed: ${extracted.error}` };
   }
 
@@ -509,11 +520,19 @@ async function fetchDeepgramTranscript(row, transcriptPath) {
     language: channelDefaults(options.channel).deepgramLanguage,
   });
   if (!transcribed.ok) {
+    if (!options.keepAudio) {
+      safeUnlink(mp3Path);
+      if (downloaded !== mp3Path) safeUnlink(downloaded);
+    }
     return { ok: false, error: transcribed.error };
   }
 
   const segments = normalizeTranscript(transcribed.payload, 'deepgram');
   if (!segments.length) {
+    if (!options.keepAudio) {
+      safeUnlink(mp3Path);
+      if (downloaded !== mp3Path) safeUnlink(downloaded);
+    }
     return { ok: false, error: 'Deepgram returned no utterances' };
   }
 

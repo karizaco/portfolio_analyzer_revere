@@ -289,7 +289,7 @@ const ACTION_PATTERNS = [
   { action: 'short', pattern: /(?<![\p{L}\p{N}])(?:i'?ll|i will|i want to|we'?ll|we will)\s+short(?![\p{L}\p{N}])/giu, weight: 0.9 },
   { action: 'short', pattern: /(?<![\p{L}\p{N}])(?:going to|gonna)\s+short(?![\p{L}\p{N}])/giu, weight: 0.8 },
   { action: 'cover', pattern: /(?<![\p{L}\p{N}])(?:covering|cover it)(?![\p{L}\p{N}])/giu, weight: 0.8 },
-  { action: 'cover', pattern: /(?<![\p{L}\p{N}])covered(?![\\p{L}\\p{N}])/giu, weight: 0.8, completed: true },
+  { action: 'cover', pattern: /(?<![\p{L}\p{N}])covered(?![\p{L}\p{N}])/giu, weight: 0.8, completed: true },
   { action: 'hold', pattern: /(?<![\p{L}\p{N}])(?:holding|keeping|keeping it|not selling)(?![\p{L}\p{N}])/giu, weight: 0.6 },
   { action: 'watch', pattern: /(?<![\p{L}\p{N}])(?:watching|watch for|watching for|keeping an eye)(?![\p{L}\p{N}])/giu, weight: 0.5 },
 
