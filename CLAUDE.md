@@ -494,6 +494,14 @@ Results: `data/qmg_alt_batch_results.json`.
 - `src/asym/substackClient.js` — the API client. The pagination is a CURSOR, not an offset (`?offset=20` is HTTP 400), and the two list endpoints differ: `/api/v1/archive` returns an empty body for every post while `/api/v1/posts` returns the real body for free ones.
 - `src/asym/articleParse.js` — parses the Market Pulse report. It switches on the LABELS, not on a date, because the format changed three times between 2024 and 2026.
 - `tools/catalogAsymSubstack.js` — walks the archive, records EVERY post (free and paid) in `asym_posts`, parses the free ones into `asym_articles`, and records a `catalog_runs` row.
+- `src/asym/mediaStore.js` — the media layer: where a post's video lives on disk, the ffprobe resolution gate (at least 1280x720), the free-space check, and the `asym_media` download state.
+- `src/asym/claims.js` — one claim per (post, ticker). A post that is bullish AND bearish on the same name is NOT scored; it is reported as conflicting.
+- `tools/downloadAsymVideos.js` — downloads the MP4 from Substack's Mux CDN. The signed URL is resolved at download time and never stored, because it expires in about 24 hours.
+- `tools/fetchAsymTranscripts.js` — Deepgram (`language: en`) -> transcript JSON + `video_transcripts` rows + segments. Deepgram is mandatory here, not a fallback: Mux assets carry `CLOSED-CAPTIONS=NONE`.
+- `tools/extractAsymSignals.js` — transcript -> `trade_signals`, using the shared engine with the ENGLISH name finder (Sevcik's drops sentence-initial capitals, which English needs).
+- `tools/aggregateAsymSignals.js` — the signals AND the parsed written readings -> CSV / JSON / HTML.
+- `tools/analyzeAsymOutcomes.js` — scores the calls against what the price did, against SPY, reusing `src/sevcik/outcomeAnalysis.js`.
+- `src/report/asymReport.js` — the self-contained HTML dashboard. It leads with the WRITTEN readings and shows the coverage, because the publication is mostly paywalled.
 
 ### Aggregation
 - `src/video/captureTickers.js` — which field of a capture holds its holdings (see below)
@@ -6610,3 +6618,85 @@ npm run asym:catalog:dry   # the same walk, writing nothing
 The catalog is **idempotent**: a second run updates the rows in place
 (measured: 476 inserted on the first run, 0 inserted / 476 updated on the
 second), and it records a `catalog_runs` row like every other catalog run.
+
+### The MEDIA, the TRANSCRIPTS, the SIGNALS and the OUTCOMES (2026-11-12)
+
+The catalog reads the WRITTEN report. The video attached to the same post
+says much of it out loud, and that is a second reading of the same view --
+so the media is downloaded, transcribed, and run through the same signal
+engine the other spoken sources use.
+
+```bash
+npm run asym:media        # download the MP4 of every free post that has one
+npm run asym:transcripts  # Deepgram -> transcript JSON + catalog rows
+npm run asym:signals      # transcript -> trade_signals
+npm run asym:aggregate    # signals + readings -> CSV/JSON/HTML
+npm run asym:outcomes     # score the calls against what the price did
+```
+
+**THE MEDIA COMES FROM SUBSTACK'S MUX ACCOUNT, NOT FROM YOUTUBE.**
+There is no yt-dlp extractor for it, so it has its own downloader. The
+`/api/v1/video/upload/<id>` endpoint describes the video (duration,
+dimensions, the primary file's size) and the same endpoint with `/src`
+redirects to a signed Mux URL.
+
+**THE SIGNED URL EXPIRES IN ABOUT 24 HOURS, SO IT IS NEVER STORED.** The
+catalog holds the PERMANENT identifier -- the media-upload id -- and the
+URL is resolved fresh at download time. A stored URL would be a promise
+that expires, and a re-run weeks later would fail against a dead token.
+
+**THE RESOLUTION GATE IS FFPROBE, NOT FILESIZE.** A download is accepted
+only when ffprobe reports at least 1280x720. Filesize says nothing about
+resolution (a 10-minute FullHD video can be under 1 GB and a 2-hour 720p
+video can be 2 GB), and a file that fails the gate is DELETED rather than
+kept -- keeping it would leave the pipeline reading a video it cannot use.
+
+**THE COST OF THE WHOLE CORPUS, MEASURED.** 24 posts carry a video:
+**8.51 GB and 16.8 hours of audio**, every one 1920x1080. The downloads
+go to `data/video_pipeline/downloads_asym/` -- its own directory, because
+the three historical download directories are described by RESOLUTION and
+are known to hold mixed content.
+
+**DEEPGRAM IS MANDATORY, NOT A FALLBACK.** Every other transcript source
+here can fall back on YouTube's own auto-captions. This one cannot: the
+video is served from Mux, and Mux's assets carry `CLOSED-CAPTIONS=NONE`.
+There is exactly one path to a transcript and it costs money (nova-2 is
+about $0.0043/min, so the full corpus is on the order of $4.30).
+
+**THE LANGUAGE IS `en` AND IT IS A HARD FILTER.** The shared client
+defaults to `cs` because the Sevcik channel is Czech. The language selects
+the ACOUSTIC MODEL, so pointing the Czech model at English audio produces
+no transcript rather than a bad one. The default is overridden per call.
+
+**THE SIGNALS GO INTO THE SHARED `trade_signals` TABLE**, keyed on
+`asym_<post_id>` -- and the other sources' aggregators are NOT
+contaminated by that, because both of them filter with
+`WHERE v.channel = '...'` over a LEFT JOIN on `videos`, and an
+AsymTrading signal has no `videos` row, so `v.channel` is NULL and the
+row is excluded. Measured, not assumed -- `test/asymPipeline.test.js`
+runs the REAL query text out of both aggregators' own source.
+
+**THE EXTRACTOR IS THE ENGLISH ONE, not the Czech one.** Sevcik's name
+finder drops sentence-initial capitals (Czech capitalises every
+sentence-initial word); English does not, so "Apple is breaking out" has
+to keep its "Apple". `src/t3live/englishNames.js` is reused as-is, with
+the CAPS-symbol gate that English traders need.
+
+**THE OUTCOME ENTRY IS THE CLOSE ON THE POST'S OWN DATE**, or the
+previous trading day's close when the post is dated on a weekend -- a
+Saturday Market Pulse is a preview of the week ahead, so its entry is
+Friday's close. A mid-week post's entry leaves that day's own move OUT of
+the measured return. That is conservative, and it is stated rather than
+hidden.
+
+**ONE CLAIM PER (POST, TICKER).** The author can come back to the same
+ticker twice in one post; scoring each mention would count one call as
+two correlated wins. A post that is bullish AND bearish on the same name
+is NOT scored -- it is reported as conflicting. See `src/asym/claims.js`.
+
+**THE REPORT LEADS WITH THE WRITTEN READINGS.** The dashboard shows the
+market backdrop, the index trend, the breadth and momentum readings, the
+sectors and the Bottom Line per post, because those are why the source is
+worth reading -- and it shows the COVERAGE beside them, because the
+publication is mostly paywalled and a dashboard showing only the free
+posts without saying so would read as the whole publication.

@@ -696,6 +696,44 @@ npm run asym:catalog:dry   # the same walk, writing nothing
 The catalog is **idempotent**: a second run updates the rows in place. It
 records a `catalog_runs` row like every other catalog run.
 
+
+### The video half: media, transcripts, signals, outcomes
+
+The written report is only half the source. Each free Market Pulse post
+also carries a commentary video, and the pipeline reads that too.
+
+```bash
+npm run asym:media        # download the MP4 of every free post that has one
+npm run asym:transcripts  # Deepgram -> transcript JSON + catalog rows
+npm run asym:signals      # transcript -> trade_signals
+npm run asym:aggregate    # signals + readings -> CSV/JSON/HTML
+npm run asym:outcomes     # score the calls against what the price did
+```
+
+Four things about this path are worth knowing before running it:
+
+- **The media is served from Substack's own Mux CDN, not from YouTube**, so
+  it has its own downloader. The signed URL carries a token that expires in
+  about 24 hours, so it is resolved at download time and never stored -- the
+  catalog holds the permanent media-upload id instead.
+- **A download is accepted only when ffprobe says it is at least
+  1280x720.** Filesize says nothing about resolution, and a file that
+  fails the gate is deleted rather than kept.
+- **Deepgram is mandatory, not a fallback.** Every other source here can
+  fall back on YouTube's own auto-captions; Mux assets carry
+  `CLOSED-CAPTIONS=NONE`, so there is exactly one path to a transcript and
+  it costs money (nova-2 is about $0.0043/min).
+- **The whole corpus is 8.51 GB and 16.8 hours of audio** across 24 posts,
+  every one 1920x1080. Use `--limit` while you are finding your feet.
+
+The spoken calls go into the shared `trade_signals` table under
+`asym_<post_id>`. That does **not** contaminate the other sources: both
+their aggregators filter with `WHERE v.channel = '...'` over a LEFT JOIN
+on `videos`, and an AsymTrading signal has no `videos` row, so it is
+excluded. The dashboard (`data/asym_report.html`) leads with the WRITTEN
+readings and shows the coverage beside them, because the publication is
+mostly paywalled.
+
 ### The API's two quirks
 
 Both are measured, and both cost real time to discover:
@@ -775,6 +813,13 @@ npm run sevcik:aggregate
 npm run asym:catalog
 npm run asym:catalog:dry   # the same walk, writing nothing
 
+# AsymTrading: the video half -- download, transcribe, score
+npm run asym:media -- --limit 1    # one video; the whole corpus is 8.51 GB
+npm run asym:transcripts -- --limit 1
+npm run asym:signals
+npm run asym:aggregate
+npm run asym:outcomes
+
 # Prune old probe directories
 node tools/prune_old_probes.js           # dry-run
 node tools/prune_old_probes.js --execute # actually delete
@@ -792,9 +837,12 @@ data/
     downloads_hires/      # Revere 720p videos
     transcripts/          # Fetched transcripts (one JSON per video)
     audio_sevcik/         # Temporary Sevcik audio, for the Deepgram fallback
+    downloads_asym/       # AsymTrading videos (Substack's Mux CDN, not YouTube)
+    audio_asym/           # Temporary AsymTrading audio, for Deepgram
   # AsymTrading's own tables live in the same catalog:
   #   asym_posts     every Substack post, free and paid
   #   asym_articles  the parsed report of every free post
+  #   asym_media     the download state of each post's video
   video_scan_YYYYMMDD/    # OCR scan outputs
   video_ocr_probe/       # Temporary probe directories (prune if >10 MB)
   price_cache/yahoo/      # Historical price data
@@ -816,4 +864,8 @@ data/
 - `data/sevcik_daily_summary.csv` — one row per Sevcik stream
 - `data/sevcik_ticker_summary.csv` — one row per ticker
 - `data/sevcik_report.html`
-- `asym_posts` / `asym_articles` (in `state.sqlite`) -- the AsymTrading corpus and its parsed reports — the Sevcik dashboard
+- `asym_posts` / `asym_articles` / `asym_media` (in `state.sqlite`) -- the AsymTrading corpus, its parsed reports and its media state
+- `data/asym_articles.csv` -- the written market readings, one row per free post
+- `data/asym_signals.csv` -- the ticker calls, with their evidence
+- `data/asym_outcomes.csv` -- the calls scored against the price
+- `data/asym_report.html` — the Sevcik dashboard

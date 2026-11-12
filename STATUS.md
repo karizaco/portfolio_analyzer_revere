@@ -381,14 +381,39 @@ trend, breadth, momentum). The parser switches on the report's LABELS, not
 on a date, because the report format changed three times between 2024 and
 2026 — see CLAUDE.md § *The AsymTrading source*.
 
-**The video path is not built yet.** The 24 free posts with an embedded
-video are catalogued with their Mux media-upload id, and the media can be
-fetched from the signed Mux MP4 URL, but nothing downloads or transcribes
-them yet. The article path is complete.
+**The video path is BUILT (2026-11-12) and one post has been run end to
+end through it.** The 24 free posts with an embedded video are catalogued
+with their Mux media-upload id; `npm run asym:media` downloads the MP4
+(the signed URL is resolved at download time and never stored, because it
+expires in about 24 hours), `npm run asym:transcripts` sends the audio to
+Deepgram, and `npm run asym:signals` runs the shared extraction engine
+over the transcript with the ENGLISH name finder.
+
+| | measured |
+|---|---|
+| posts with a video | 24 |
+| the whole corpus of media | 8.51 GB, 16.8 hours of audio, all 1920x1080 |
+| media downloaded so far | 1 (the 5-minute post, 30.5 MB) |
+| transcripts so far | 1 (61 segments, English) |
+| signals so far | 0 -- that post is general market commentary with no ticker in it |
+
+A transcript with no ticker produces no signal, and that is the rule, not a
+fault: the extractor only emits a signal when a TICKER is present, because
+"I am bullish" names nothing to buy.
+
+**Deepgram is MANDATORY here, not a fallback.** Mux assets carry
+`CLOSED-CAPTIONS=NONE`, so there is no YouTube auto-caption path, and the
+language has to be `en` -- the shared client defaults to `cs` for the
+Czech channel, and the language selects the ACOUSTIC MODEL.
 
 ```bash
 npm run asym:catalog        # walk the archive and parse the free posts
 npm run asym:catalog:dry    # the same walk, writing nothing
+npm run asym:media -- --limit 1    # download the video
+npm run asym:transcripts -- --limit 1
+npm run asym:signals
+npm run asym:aggregate
+npm run asym:outcomes
 ```
 
 ## Re-measuring

@@ -170,7 +170,22 @@ CREATE TABLE IF NOT EXISTS trade_signals (
     -- Which extractor version produced this row, so a re-run with a changed
     -- parser can be told apart from the previous one.
     parser_version TEXT NOT NULL,
-    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    -- forward | retrospective. A retrospective row is a call being GRADED
+    -- ("I was bullish on X last week"), not a call being made, and the
+    -- outcome scoring excludes it.
+    --
+    -- It is declared here AND added at runtime by the extractors
+    -- ("ALTER TABLE trade_signals ADD COLUMN claim_kind TEXT"). The
+    -- runtime ALTER is what migrated the existing catalogs; declaring it
+    -- is what makes a FRESH clone correct -- without this, a fresh
+    -- database has no such column until an extractor runs, and every
+    -- aggregator query that reads it fails on the first run.
+    --
+    -- It sits AFTER created_at because that is where the ALTER put it in
+    -- the tracked catalog, so a table created from this file has the same
+    -- column order as the tracked one.
+    claim_kind TEXT NOT NULL DEFAULT 'forward'
 );
 
 CREATE INDEX IF NOT EXISTS idx_trade_signals_video ON trade_signals(video_id);
@@ -400,8 +415,10 @@ CREATE TABLE IF NOT EXISTS asym_posts (
     upload_date TEXT NOT NULL DEFAULT '',
     -- 'everyone' or 'only_paid', as Substack reports it.
     audience TEXT NOT NULL DEFAULT '',
-    -- 'free' | 'paid' | 'teaser' | 'empty'. What the pipeline could
-    -- actually read, which is not the same as what the publication says.
+    -- 'free' | 'paywalled' | 'teaser_only' | 'empty_body'. What the
+    -- pipeline could actually read, which is not the same as what the
+    -- publication says. These are the REASNS asymAccess() returns, and
+    -- they are what is stored -- so a query for 'paid' finds nothing.
     access TEXT NOT NULL DEFAULT '',
     -- The series: market_pulse, swing_trading_course, and so on.
     series TEXT NOT NULL DEFAULT '',
@@ -470,6 +487,47 @@ CREATE TABLE IF NOT EXISTS asym_articles (
 
 CREATE INDEX IF NOT EXISTS idx_asym_articles_backdrop ON asym_articles(backdrop);
 CREATE INDEX IF NOT EXISTS idx_asym_articles_trend ON asym_articles(trend);
+
+-- The MEDIA of a post: what was downloaded, and what is known about it.
+--
+-- This is a separate table from asym_posts rather than more columns there,
+-- because asym_posts is the CORPUS -- what the publication published -- and
+-- this is the state of the PIPELINE over that corpus. A paid post has a
+-- corpus row and no media row, and a post whose media failed to download
+-- has both, with the failure recorded here.
+--
+-- The signed Mux URL is deliberately NOT stored. It carries a token that
+-- expires (measured: about 24 hours), so a stored URL would be a stale
+-- promise. The URL is resolved at download time from media_upload_id, which
+-- is permanent.
+CREATE TABLE IF NOT EXISTS asym_media (
+    video_id TEXT PRIMARY KEY REFERENCES asym_posts(video_id),
+    -- The Mux media-upload id. The same one asym_posts carries; kept here so
+    -- this table can be read on its own.
+    media_upload_id TEXT NOT NULL DEFAULT '',
+    -- Where the MP4 is, relative to the repository root.
+    file_path TEXT NOT NULL DEFAULT '',
+    file_bytes INTEGER NOT NULL DEFAULT 0,
+    width INTEGER NOT NULL DEFAULT 0,
+    height INTEGER NOT NULL DEFAULT 0,
+    duration_sec REAL NOT NULL DEFAULT 0,
+    -- pending | downloaded | error | missing
+    status TEXT NOT NULL DEFAULT 'pending',
+    error TEXT NOT NULL DEFAULT '',
+    -- The transcript that was made from this media, and how much of it
+    -- there is. The authoritative transcript row is in video_transcripts;
+    -- these two columns exist so the report can join one table instead of
+    -- two.
+    transcript_path TEXT NOT NULL DEFAULT '',
+    segment_count INTEGER NOT NULL DEFAULT 0,
+    transcribed_at TEXT NOT NULL DEFAULT '',
+    attempts INTEGER NOT NULL DEFAULT 0,
+    downloaded_at TEXT NOT NULL DEFAULT '',
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_asym_media_status ON asym_media(status);
+
 -- Discord pipeline tables -------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS discord_sources (

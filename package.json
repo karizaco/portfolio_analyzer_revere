@@ -80,7 +80,13 @@
     "discord:signals": "python tools/build_discord_status.py",
     "video:signals": "python tools/build_video_status.py",
     "sevcik:outcomes": "node tools/analyzeSevcikOutcomes.js",
-    "sevcik:ta": "node tools/analyzeSevcikTa.js"
+    "sevcik:ta": "node tools/analyzeSevcikTa.js",
+    "asym:media": "node tools/downloadAsymVideos.js",
+    "asym:transcripts": "node tools/fetchAsymTranscripts.js",
+    "asym:signals": "node tools/extractAsymSignals.js",
+    "asym:aggregate": "node tools/aggregateAsymSignals.js",
+    "asym:outcomes": "node tools/analyzeAsymOutcomes.js",
+    "asym:report": "node tools/aggregateAsymSignals.js"
   },
   "dependencies": {
     "sharp": "^0.34.3",

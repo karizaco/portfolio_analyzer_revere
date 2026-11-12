@@ -484,6 +484,14 @@ Results: `data/qmg_alt_batch_results.json`.
 - `src/asym/substackClient.js` — the API client. The pagination is a CURSOR, not an offset (`?offset=20` is HTTP 400), and the two list endpoints differ: `/api/v1/archive` returns an empty body for every post while `/api/v1/posts` returns the real body for free ones.
 - `src/asym/articleParse.js` — parses the Market Pulse report. It switches on the LABELS, not on a date, because the format changed three times between 2024 and 2026.
 - `tools/catalogAsymSubstack.js` — walks the archive, records EVERY post (free and paid) in `asym_posts`, parses the free ones into `asym_articles`, and records a `catalog_runs` row.
+- `src/asym/mediaStore.js` — the media layer: where a post's video lives on disk, the ffprobe resolution gate (at least 1280x720), the free-space check, and the `asym_media` download state.
+- `src/asym/claims.js` — one claim per (post, ticker). A post that is bullish AND bearish on the same name is NOT scored; it is reported as conflicting.
+- `tools/downloadAsymVideos.js` — downloads the MP4 from Substack's Mux CDN. The signed URL is resolved at download time and never stored, because it expires in about 24 hours.
+- `tools/fetchAsymTranscripts.js` — Deepgram (`language: en`) -> transcript JSON + `video_transcripts` rows + segments. Deepgram is mandatory here, not a fallback: Mux assets carry `CLOSED-CAPTIONS=NONE`.
+- `tools/extractAsymSignals.js` — transcript -> `trade_signals`, using the shared engine with the ENGLISH name finder (Sevcik's drops sentence-initial capitals, which English needs).
+- `tools/aggregateAsymSignals.js` — the signals AND the parsed written readings -> CSV / JSON / HTML.
+- `tools/analyzeAsymOutcomes.js` — scores the calls against what the price did, against SPY, reusing `src/sevcik/outcomeAnalysis.js`.
+- `src/report/asymReport.js` — the self-contained HTML dashboard. It leads with the WRITTEN readings and shows the coverage, because the publication is mostly paywalled.
 
 ### Aggregation
 - `src/video/captureTickers.js` — which field of a capture holds its holdings (see below)

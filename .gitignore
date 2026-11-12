@@ -166,3 +166,20 @@ data/t3live_name_candidates.csv
 # Per-run id lists for the caption/Deepgram fetches (work lists, regenerable).
 data/catalog_flat/t3live_ids_sample_*.txt
 data/catalog_flat/t3live_misc_needs_date.tsv
+
+# AsymTrading derived rollups (regenerated from DB + transcripts), same rule
+# as the Sevcik and T3Live ones above: the catalog and the transcript JSON
+# are tracked, and the CSV/JSON/HTML rollups stay local.
+data/asym_articles.csv
+data/asym_signals.csv
+data/asym_daily_summary.csv
+data/asym_ticker_summary.csv
+data/asym_signals.json
+data/asym_outcomes.csv
+data/asym_outcomes*.json
+data/asym_outcome_summary.json
+data/asym_outcome_ticker_summary.csv
+data/asym_report.html
+
+# AsymTrading run logs (scratch -- one-off download/extract stdout).
+data/asym_*_log*.txt
