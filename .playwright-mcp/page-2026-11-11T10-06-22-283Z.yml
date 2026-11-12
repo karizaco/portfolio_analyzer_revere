@@ -1,0 +1,428 @@
+- generic [ref=e2]:
+  - iframe
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - link [ref=e9] [cursor=pointer]:
+        - /url: /
+        - img "AsymTrading Newsletter" [ref=e13]
+      - heading [level=1] [ref=e15]:
+        - link [ref=e16] [cursor=pointer]:
+          - /url: /
+          - img "AsymTrading Newsletter" [ref=e17]
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - button [ref=e23] [cursor=pointer]
+          - button "Share Publication" [ref=e27] [cursor=pointer]
+        - button "Subscribe" [ref=e31] [cursor=pointer]
+        - button "Sign in" [ref=e32] [cursor=pointer]
+    - main "Post" [ref=e35]:
+      - article [ref=e39]:
+        - dialog "Subscribe modal" [ref=e41]:
+          - generic [ref=e42]:
+            - button "close" [ref=e43] [cursor=pointer]
+            - generic "User" [ref=e49]:
+              - img "User's avatar" [ref=e51]
+            - generic [ref=e52]:
+              - generic [ref=e53]: Discover more from AsymTrading Newsletter
+              - generic [ref=e54]: 20+ year student of the Markets. Using my experience, education, and proprietary tools and techniques, I share my thoughts on the market, trading, and psychology.
+              - generic [ref=e55]: Over 3,000 subscribers
+            - generic [ref=e57]:
+              - textbox "Email" [ref=e59]:
+                - /placeholder: Enter your email...
+              - button "Subscribe" [ref=e60] [cursor=pointer]
+              - generic [ref=e63]:
+                - text: By subscribing, you agree to Substack's
+                - link "Terms of Use" [ref=e64] [cursor=pointer]:
+                  - /url: https://substack.com/tos
+                - text: ", and acknowledge its"
+                - link "Information Collection Notice" [ref=e65] [cursor=pointer]:
+                  - /url: https://substack.com/ccpa#personal-data-collected
+                - text: and
+                - link "Privacy Policy" [ref=e66] [cursor=pointer]:
+                  - /url: https://substack.com/privacy
+                - text: .
+          - generic [ref=e67]: Already have an account? Sign in
+        - region "Post header" [ref=e69]:
+          - heading "Market Pulse" [level=1] [ref=e70]
+          - heading "10/28/2026" [level=3] [ref=e71]
+          - region "Post UFI" [ref=e72]:
+            - time [ref=e78]: Oct 28, 2026
+            - generic [ref=e79]:
+              - generic [ref=e80]:
+                - button "Like (2)" [ref=e82] [cursor=pointer]:
+                  - generic [ref=e87]: "2"
+                - button "View comments (0)" [ref=e88] [cursor=pointer]
+                - button [ref=e93] [cursor=pointer]
+              - button "Share" [ref=e98] [cursor=pointer]
+        - generic [ref=e100]:
+          - button "Table of Contents" [ref=e101] [cursor=pointer]
+          - generic [ref=e120]:
+            - paragraph [ref=e121]: This post reflects my current views on the market, sectors, and internal breadth/momentum. Expect candid, data-driven analysis, peppered with personal insights drawn from years of trading experience. I aim to provide value in every edition, helping you to see the market through a clearer, more informed lens.
+            - paragraph [ref=e122]:
+              - strong [ref=e123]: What You Can Expect
+            - list [ref=e124]:
+              - listitem [ref=e125]:
+                - paragraph [ref=e126]:
+                  - strong [ref=e127]: In-Depth Market Analysis
+                  - text: ": A thorough examination of market trends, key indices, and pivotal turning points."
+              - listitem [ref=e128]:
+                - paragraph [ref=e129]:
+                  - strong [ref=e130]: Sector Spotlights
+                  - text: ": A closer look at the hottest (and not-so-hot) sectors, highlighting opportunities and risks."
+              - listitem [ref=e131]:
+                - paragraph [ref=e132]:
+                  - strong [ref=e133]: Breadth and Momentum Insights
+                  - text: ": Understanding the underlying strength of the market through breadth indicators and momentum metrics."
+              - listitem [ref=e134]:
+                - paragraph [ref=e135]:
+                  - strong [ref=e136]: Themes and Setups
+                  - text: ": A look at the top stocks in terms of relative strength, momentum, trend, volatility, and liquidity to spot themes, setups, and opportunities."
+            - paragraph [ref=e137]:
+              - strong [ref=e138]: Exclusive Features
+            - list [ref=e139]:
+              - listitem [ref=e140]:
+                - paragraph [ref=e141]:
+                  - strong [ref=e142]: Interactive Spreadsheet
+                  - text: ": Alongside each post, I’ll link a detailed spreadsheet that tracks breadth and momentum metrics. This will allow you to follow along with the data and see the trends I’m analyzing day-by-day."
+              - listitem [ref=e143]:
+                - paragraph [ref=e144]:
+                  - strong [ref=e145]: Quick Video Commentary
+                  - text: ": To complement the metrics, I’ll also be posting a quick video commentary several days a week. This will provide a more dynamic overview of the market, offering you additional context and clarity."
+            - heading "Market Metrics" [level=1] [ref=e146]:
+              - text: Market Metrics
+              - button [ref=e149] [cursor=pointer]
+            - paragraph [ref=e153]:
+              - strong [ref=e154]: "Market Backdrop: Mixed"
+            - paragraph [ref=e155]: Major indices showed improving price action Monday and Tuesday. SPY, MDY, and IWM reclaimed their 10-day and 20-day moving averages, while QQQ closed above its 10-day but remains below its 20-day. This is a constructive first step, but the indices still need to establish higher highs and higher lows while holding their reclaimed moving averages to confirm a more durable improvement in trend.
+            - paragraph [ref=e156]: Sector leadership remains concentrated in defensive and select cyclical groups. Energy, Defensives, Healthcare, Utilities, and Consumer Cyclicals continue to show the strongest combination of relative strength and constructive technical action. Meanwhile, Technology, Industrials, and Materials continue to lag, with weaker price structures and poor relative strength. Although pockets of strength are emerging, ongoing rotation and narrow leadership continue to limit broader market participation.
+            - paragraph [ref=e157]: Breadth and momentum have improved modestly but remain short of the levels typically associated with a healthy, sustained advance. Stock scans still produce few actionable setups, with many names below key moving averages and well off recent highs. For conditions to improve meaningfully, new highs need to expand, upside momentum must strengthen, and more stocks need to demonstrate sustained participation. Until then, the tape continues to favor patience, selectivity, and capital preservation.
+            - 'heading "Overall Trend: Mixed" [level=4] [ref=e158]':
+              - text: "Overall Trend: Mixed"
+              - button [ref=e161] [cursor=pointer]
+            - list [ref=e165]:
+              - listitem [ref=e166]:
+                - paragraph [ref=e167]: "Large Cap: Mixed"
+              - listitem [ref=e168]:
+                - paragraph [ref=e169]: "Mid Cap: Positive"
+              - listitem [ref=e170]:
+                - paragraph [ref=e171]: "Small Cap: Positive"
+            - 'heading "Overall NH/NL Breadth: Positive" [level=4] [ref=e172]':
+              - text: "Overall NH/NL Breadth: Positive"
+              - button [ref=e175] [cursor=pointer]
+            - list [ref=e179]:
+              - listitem [ref=e180]:
+                - paragraph [ref=e181]: "Large Cap: Positive"
+              - listitem [ref=e182]:
+                - paragraph [ref=e183]: "Mid Cap: Positive"
+              - listitem [ref=e184]:
+                - paragraph [ref=e185]: "Small Cap: Positive"
+            - 'heading "Overall Up/Down Momentum: Mixed" [level=4] [ref=e186]':
+              - text: "Overall Up/Down Momentum: Mixed"
+              - button [ref=e189] [cursor=pointer]
+            - list [ref=e193]:
+              - listitem [ref=e194]:
+                - paragraph [ref=e195]: "Large Cap: Positive"
+              - listitem [ref=e196]:
+                - paragraph [ref=e197]: "Mid Cap: Positive"
+              - listitem [ref=e198]:
+                - paragraph [ref=e199]: "Small Cap: Negative"
+            - heading "Market Recap" [level=1] [ref=e200]:
+              - text: Market Recap
+              - button [ref=e203] [cursor=pointer]
+            - paragraph [ref=e207]:
+              - link "Market Monitor (Click Here)" [ref=e208] [cursor=pointer]:
+                - /url: https://docs.google.com/spreadsheets/d/1vfSktAuZMvODVbZ6BK7DyzeO4e009yPYxzGLQko2YNo/edit?usp=sharing
+            - paragraph [ref=e209]:
+              - emphasis [ref=e210]:
+                - strong [ref=e211]: TC2000 Stock list
+              - text: ": https://www.tc2000.com/~Vpw8M9"
+            - region "Video player" [ref=e214]:
+              - button "r" [ref=e218] [cursor=pointer]
+            - heading "Tactical Plan of Action" [level=1] [ref=e222]:
+              - text: Tactical Plan of Action
+              - button [ref=e225] [cursor=pointer]
+            - heading "Tactical Plan of Action" [level=3] [ref=e229]:
+              - text: Tactical Plan of Action
+              - button [ref=e232] [cursor=pointer]
+            - heading "1) Market Posture — Cautiously Constructive" [level=3] [ref=e236]:
+              - text: 1) Market Posture — Cautiously Constructive
+              - button [ref=e239] [cursor=pointer]
+            - paragraph [ref=e243]: The technical picture is improving, with SPY, MDY, and IWM reclaiming their 10/20-day moving averages. QQQ has reclaimed its 10-day but continues to lag below the 20-day. While encouraging, breadth remains weak and actionable setups are limited.
+            - list [ref=e244]:
+              - listitem [ref=e245]:
+                - paragraph [ref=e246]: Gradually increase activity as conditions improve, but remain selective.
+              - listitem [ref=e247]:
+                - paragraph [ref=e248]: Watch for higher highs, higher lows, and sustained support above key moving averages.
+              - listitem [ref=e249]:
+                - paragraph [ref=e250]: Let improving breadth and successful trades justify additional risk rather than anticipating a sustained rally.
+            - heading "2) Leadership — Follow Proven Strength" [level=3] [ref=e251]:
+              - text: 2) Leadership — Follow Proven Strength
+              - button [ref=e254] [cursor=pointer]
+            - paragraph [ref=e258]:
+              - strong [ref=e259]: "Primary focus:"
+              - text: Energy, Defensives, Healthcare, Utilities, and Consumer Cyclicals.
+            - paragraph [ref=e260]:
+              - strong [ref=e261]: "Lower priority:"
+              - text: Technology, Industrials, and Materials until technical structures improve.
+            - paragraph [ref=e262]: Favor stocks showing strong relative strength, constructive price action, and tight consolidations near highs. Distinguish genuine emerging leadership from temporary rebounds in damaged sectors. Avoid chasing rotation or bottom-fishing laggards.
+            - heading "3) Entry Criteria — Quality and Confirmation" [level=3] [ref=e263]:
+              - text: 3) Entry Criteria — Quality and Confirmation
+              - button [ref=e266] [cursor=pointer]
+            - paragraph [ref=e270]: "Focus on repeatable momentum setups:"
+            - list [ref=e271]:
+              - listitem [ref=e272]:
+                - paragraph [ref=e273]: VCPs and volatility contractions with tightening price action and declining volume.
+              - listitem [ref=e274]:
+                - paragraph [ref=e275]: 2–5 day tight patterns and short flags following strong momentum.
+              - listitem [ref=e276]:
+                - paragraph [ref=e277]: Controlled pullbacks to rising 10/20-day moving averages.
+              - listitem [ref=e278]:
+                - paragraph [ref=e279]: Catalyst-driven momentum setups with exceptional volume and price strength.
+            - paragraph [ref=e280]: Enter on clean breaks of well-defined pivots or 15/30-minute ORBs aligned with strong daily setups, relative strength, and expanding volume. Keep entries close to the trigger with clear invalidation levels. Avoid chasing extended moves, loose bases, and premature entries.
+            - heading "4) Position Size & Risk — Gradually Earn Exposure" [level=3] [ref=e281]:
+              - text: 4) Position Size & Risk — Gradually Earn Exposure
+              - button [ref=e284] [cursor=pointer]
+            - paragraph [ref=e288]: The improving technical picture supports selective participation, but weak breadth still warrants controlled risk.
+            - list [ref=e289]:
+              - listitem [ref=e290]:
+                - paragraph [ref=e291]: Risk approximately 0.15%–0.35% of account equity per trade.
+              - listitem [ref=e292]:
+                - paragraph [ref=e293]: Start with ¼ to ½ normal position size, adjusted for stop distance.
+              - listitem [ref=e294]:
+                - paragraph [ref=e295]: Increase toward 0.50% risk per trade only as breadth improves and breakouts consistently work.
+              - listitem [ref=e296]:
+                - paragraph [ref=e297]: Keep aggregate open portfolio risk around 1%–2% until broader participation confirms.
+              - listitem [ref=e298]:
+                - paragraph [ref=e299]: Add only to winning positions; never average down.
+            - paragraph [ref=e300]: Let market conditions and actual trading results determine how aggressively to deploy capital.
+            - heading "5) Trade Management — Demand Follow-Through" [level=3] [ref=e301]:
+              - text: 5) Trade Management — Demand Follow-Through
+              - button [ref=e304] [cursor=pointer]
+            - paragraph [ref=e308]: Momentum trades should demonstrate progress relatively quickly.
+            - list [ref=e309]:
+              - listitem [ref=e310]:
+                - paragraph [ref=e311]:
+                  - text: Breakout falls back into its base →
+                  - strong [ref=e312]: cut or reduce
+                  - text: .
+              - listitem [ref=e313]:
+                - paragraph [ref=e314]:
+                  - text: Price violates the predefined breakout/ORB stop →
+                  - strong [ref=e315]: exit
+                  - text: .
+              - listitem [ref=e316]:
+                - paragraph [ref=e317]:
+                  - text: Loss of the 10/20-day with deteriorating relative strength →
+                  - strong [ref=e318]: reduce or exit
+                  - text: .
+              - listitem [ref=e319]:
+                - paragraph [ref=e320]:
+                  - text: No meaningful progress after several sessions →
+                  - strong [ref=e321]: reassess
+                  - text: .
+              - listitem [ref=e322]:
+                - paragraph [ref=e323]: Strong winners → trail using the 10/20-day moving averages as appropriate.
+            - paragraph [ref=e324]: Protect capital when setups fail, but give exceptional leaders room to develop.
+            - heading "6) What Changes the Posture" [level=3] [ref=e325]:
+              - text: 6) What Changes the Posture
+              - button [ref=e328] [cursor=pointer]
+            - paragraph [ref=e332]:
+              - strong [ref=e333]: "Become more aggressive if:"
+            - list [ref=e334]:
+              - listitem [ref=e335]:
+                - paragraph [ref=e336]: SPY, MDY, and IWM hold their reclaimed moving averages and establish higher highs and higher lows.
+              - listitem [ref=e337]:
+                - paragraph [ref=e338]: QQQ reclaims its 20-day moving average and resumes leadership.
+              - listitem [ref=e339]:
+                - paragraph [ref=e340]: New highs expand and upside momentum consistently exceeds downside momentum.
+              - listitem [ref=e341]:
+                - paragraph [ref=e342]: More sectors transition from technical repair into sustained uptrends.
+              - listitem [ref=e343]:
+                - paragraph [ref=e344]: Stock scans expand and breakouts consistently produce follow-through.
+            - paragraph [ref=e345]:
+              - strong [ref=e346]: "Become more defensive if:"
+            - list [ref=e347]:
+              - listitem [ref=e348]:
+                - paragraph [ref=e349]: Major indices lose their recently reclaimed 10/20-day moving averages.
+              - listitem [ref=e350]:
+                - paragraph [ref=e351]: Recent pivot lows fail and lower lows resume.
+              - listitem [ref=e352]:
+                - paragraph [ref=e353]: New lows and downside momentum begin expanding again.
+              - listitem [ref=e354]:
+                - paragraph [ref=e355]: Emerging leaders weaken and breakout failures increase.
+              - listitem [ref=e356]:
+                - paragraph [ref=e357]: Actionable setups remain scarce despite index strength.
+            - heading "7) Daily Execution Checklist" [level=3] [ref=e358]:
+              - text: 7) Daily Execution Checklist
+              - button [ref=e361] [cursor=pointer]
+            - paragraph [ref=e365]:
+              - strong [ref=e366]: "Before the open:"
+              - text: Review index trends, key moving averages, breadth, and sector leadership. Identify A+ setups with predefined entries, stops, and position sizes.
+            - paragraph [ref=e367]:
+              - strong [ref=e368]: "During the session:"
+              - text: Execute only confirmed setups. Monitor volume, relative strength, and market participation. Avoid chasing and cut failed trades quickly.
+            - paragraph [ref=e369]:
+              - strong [ref=e370]: "After the close:"
+              - text: Evaluate breakout success, breadth improvement, sector rotation, and open-position risk. Adjust the watchlist and trading posture accordingly.
+            - separator [ref=e372]
+            - heading "Bottom Line" [level=2] [ref=e373]:
+              - text: Bottom Line
+              - button [ref=e376] [cursor=pointer]
+            - paragraph [ref=e380]: The market is showing early signs of technical repair, with broader index participation improving but breadth and momentum still lagging. The environment is becoming more constructive, but the limited number of quality setups argues against aggressive positioning.
+            - paragraph [ref=e381]: "The playbook remains straightforward: follow genuine leadership, buy tight setups through precise pivots, start small, cut failures quickly, and add only when trades work. Stay prepared for improving conditions, but let expanding breadth, stronger momentum, and successful breakouts earn greater aggression."
+            - paragraph
+          - separator [ref=e382]
+          - generic [ref=e383]:
+            - generic [ref=e384]:
+              - heading "Subscribe to AsymTrading Newsletter" [level=4] [ref=e385]
+              - generic [ref=e386]: Launched 4 years ago
+              - generic [ref=e387]: 20+ year student of the Markets. Using my experience, education, and proprietary tools and techniques, I share my thoughts on the market, trading, and psychology.
+            - generic [ref=e388]:
+              - generic [ref=e393]:
+                - textbox "Email" [ref=e396]:
+                  - /placeholder: Type your email...
+                - button "Subscribe" [disabled] [ref=e397]
+              - generic [ref=e400]:
+                - text: By subscribing, you agree to Substack's
+                - link "Terms of Use" [ref=e401] [cursor=pointer]:
+                  - /url: https://substack.com/tos
+                - text: ", and acknowledge its"
+                - link "Information Collection Notice" [ref=e402] [cursor=pointer]:
+                  - /url: https://substack.com/ccpa#personal-data-collected
+                - text: and
+                - link "Privacy Policy" [ref=e403] [cursor=pointer]:
+                  - /url: https://substack.com/privacy
+                - text: .
+          - generic [ref=e405]:
+            - generic [ref=e407]:
+              - link "View Ricardo Muniz's profile" [ref=e409] [cursor=pointer]:
+                - /url: https://substack.com/profile/51074511-ricardo-muniz
+                - generic "Ricardo Muniz" [ref=e411]:
+                  - img "Ricardo Muniz's avatar" [ref=e413]
+              - link "View AlgoTradeAlert.com's profile" [ref=e415] [cursor=pointer]:
+                - /url: https://substack.com/profile/143679803-algotradealertcom
+                - generic "AlgoTradeAlert.com" [ref=e417]:
+                  - img "AlgoTradeAlert.com's avatar" [ref=e419]
+            - generic [ref=e421]:
+              - generic [ref=e422] [cursor=pointer]: 2 Likes
+              - generic:
+                - link:
+                  - /url: https://substack.com/note/p-222466781/restacks?utm_source=substack&utm_content=facepile-restacks
+          - generic [ref=e424]:
+            - generic [ref=e425]:
+              - button "Like (2)" [ref=e427] [cursor=pointer]:
+                - generic [ref=e432]: "2"
+              - button "View comments (0)" [ref=e433] [cursor=pointer]
+              - button [ref=e438] [cursor=pointer]
+            - button "Share" [ref=e443] [cursor=pointer]
+      - generic [ref=e445]:
+        - generic [ref=e446]:
+          - generic [ref=e447]:
+            - heading "Discussion about this post" [level=4] [ref=e448]
+            - tablist "Select discussion type" [ref=e452]:
+              - tab "Comments" [selected] [ref=e453] [cursor=pointer]
+              - tab "Restacks" [ref=e454] [cursor=pointer]
+          - generic [ref=e459]:
+            - generic "User" [ref=e461]:
+              - img "User's avatar" [ref=e463]
+            - textbox "Write a comment..." [ref=e466]
+        - region "Top Posts Footer" [ref=e469]:
+          - generic [ref=e470]:
+            - navigation "Archive sort tabs" [ref=e471]:
+              - tablist "Tabs" [ref=e474]:
+                - tab "Top" [selected] [ref=e475] [cursor=pointer]
+                - tab "Latest" [ref=e476] [cursor=pointer]
+                - tab "Discussions" [ref=e477] [cursor=pointer]
+              - button [ref=e479] [cursor=pointer]
+            - generic [ref=e483]:
+              - generic [ref=e485]:
+                - article "Post preview for Market Monitor" [ref=e486] [cursor=pointer]:
+                  - generic [ref=e488]:
+                    - link "Market Monitor" [ref=e490]:
+                      - /url: https://asymtrading.substack.com/p/market-breadth-monitor
+                    - link "Know Your Odds" [ref=e492]:
+                      - /url: https://asymtrading.substack.com/p/market-breadth-monitor
+                    - generic [ref=e493]:
+                      - time [ref=e494]: Mar 31, 2023
+                      - text: •
+                      - link "AsymTrading" [ref=e497]:
+                        - /url: https://substack.com/@asymtrading
+                    - generic [ref=e499]:
+                      - button "Like (61)" [ref=e501]:
+                        - generic [ref=e506]: "61"
+                      - button "View comments (9)" [ref=e507]:
+                        - generic [ref=e512]: "9"
+                      - button "2" [ref=e513]
+                      - button [ref=e518]
+                - article "Post preview for 6 Steps to Profitable Swing Trading" [ref=e525] [cursor=pointer]:
+                  - generic [ref=e527]:
+                    - link "6 Steps to Profitable Swing Trading" [ref=e529]:
+                      - /url: https://asymtrading.substack.com/p/6-steps-to-profitable-swing-trading
+                    - 'link "Part 1: Expectancy" [ref=e531]':
+                      - /url: https://asymtrading.substack.com/p/6-steps-to-profitable-swing-trading
+                    - generic [ref=e532]:
+                      - time [ref=e533]: Apr 1, 2023
+                      - text: •
+                      - link "AsymTrading" [ref=e536]:
+                        - /url: https://substack.com/@asymtrading
+                    - generic [ref=e538]:
+                      - button "Like (71)" [ref=e540]:
+                        - generic [ref=e545]: "71"
+                      - button "View comments (4)" [ref=e546]:
+                        - generic [ref=e551]: "4"
+                      - button "4" [ref=e552]
+                      - button [ref=e557]
+                - article "Post preview for Focus List" [ref=e564] [cursor=pointer]:
+                  - generic [ref=e566]:
+                    - link "Focus List" [ref=e568]:
+                      - /url: https://asymtrading.substack.com/p/focus-list-64b
+                    - link "06/28/2024" [ref=e570]:
+                      - /url: https://asymtrading.substack.com/p/focus-list-64b
+                    - generic [ref=e571]:
+                      - time [ref=e576]: Jun 28, 2024
+                      - text: •
+                      - link "AsymTrading" [ref=e579]:
+                        - /url: https://substack.com/@asymtrading
+                    - generic [ref=e581]:
+                      - button "Like (13)" [ref=e583]:
+                        - generic [ref=e588]: "13"
+                      - button "View comments (1)" [ref=e589]:
+                        - generic [ref=e594]: "1"
+                      - button "1" [ref=e595]
+                      - button [ref=e600]
+              - button "See all" [ref=e607] [cursor=pointer]
+        - generic [ref=e612]:
+          - heading "Ready for more?" [level=3] [ref=e613]
+          - generic [ref=e616]:
+            - textbox "Email" [ref=e619]:
+              - /placeholder: Type your email...
+            - button "Subscribe" [disabled] [ref=e620]
+    - generic [ref=e623]:
+      - generic [ref=e624]:
+        - generic [ref=e625]: © 2026 AsymTrading
+        - text: ·
+        - link "Privacy" [ref=e626] [cursor=pointer]:
+          - /url: https://substack.com/privacy
+        - text: ∙
+        - link "Terms" [ref=e627] [cursor=pointer]:
+          - /url: https://substack.com/tos
+        - text: ∙
+        - link "Collection notice" [ref=e628] [cursor=pointer]:
+          - /url: https://substack.com/ccpa#personal-data-collected
+      - generic [ref=e629]:
+        - link "Start your Substack" [ref=e630] [cursor=pointer]:
+          - /url: https://substack.com/signup?utm_source=substack&utm_medium=web&utm_content=footer
+        - link "Get the app" [ref=e636] [cursor=pointer]:
+          - /url: https://substack.com/app/app-store-redirect?utm_campaign=app-marketing&utm_content=web-footer-button
+      - generic [ref=e637]:
+        - link "Substack" [ref=e638] [cursor=pointer]:
+          - /url: https://substack.com
+        - text: is the home for
+        - link "writing," [ref=e639] [cursor=pointer]:
+          - /url: https://substack.com/get-started
+        - link "podcasting," [ref=e640] [cursor=pointer]:
+          - /url: https://substack.com/podcasts
+        - text: and
+        - link "media founders." [ref=e641] [cursor=pointer]:
+          - /url: https://substack.com/startups
+  - region "Notifications"

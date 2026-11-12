@@ -187,9 +187,34 @@ function requiresMedia(status) {
   return REQUIRES_MEDIA_STATUSES.includes(status);
 }
 
+/**
+ * The channels whose MEDIA the OCR pipeline downloads.
+ *
+ * Every other channel in the catalog is a TRANSCRIPT source (davidsevcik,
+ * t3live, benzinga): its rows stay 'pending' because that pipeline never
+ * downloads the video. A downloader that does not filter on this list takes
+ * those rows first -- measured 2026-11-11, 16 of the 720p batcher's first 30
+ * picks were T3Live and Sevcik rows. Mirrored by OCR_CHANNELS in
+ * tools/whiteboard_worker.py; test/ocrDownloaderChannelScope.test.js pins
+ * the two together.
+ */
+const OCR_CHANNELS = Object.freeze(['revere', 'qullamaggie']);
+
+/**
+ * The SQL condition that keeps a query to the OCR channels. A row with an
+ * empty channel is a legacy OCR row.
+ *
+ * @returns {string}
+ */
+function sqlOcrChannelCondition() {
+  return `(channel IN (${sqlStatusList(OCR_CHANNELS)}) OR channel = '')`;
+}
+
 module.exports = {
   DOWNLOAD_CANDIDATE_STATUSES,
   HIRES_CANDIDATE_STATUSES,
+  OCR_CHANNELS,
+  sqlOcrChannelCondition,
   REQUIRES_MEDIA_STATUSES,
   STATUS,
   STATUS_MEANING,

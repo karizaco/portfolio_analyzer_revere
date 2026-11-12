@@ -53,12 +53,22 @@ const { SEVCIK_CHANNEL, SEVCIK_SOURCE_URL } = require('../src/sevcik/channel');
 const { sevcikVideoQuarantine } = require('../src/sevcik/contentFilter');
 const { T3LIVE_CHANNEL } = require('../src/t3live/channel');
 const { t3liveVideoQuarantine } = require('../src/t3live/contentFilter');
+const { BENZINGA_CHANNEL } = require('../src/benzinga/channel');
+const { benzingaVideoQuarantine } = require('../src/benzinga/contentFilter');
 
 // What differs per channel. Sevcik is Czech (`cs-orig` first) and has its
-// own non-market title filter; T3Live is English and has its own.
+// own non-market title filter; T3Live and Benzinga are English and have
+// their own.
+//
+// The Deepgram LANGUAGE is a MODEL choice, not a hint: it selects the
+// acoustic model. Pointing the Czech model at English audio does not
+// produce a worse transcript -- it produces no transcript. So a channel
+// that is not registered here MUST NOT fall back to Sevcik's settings: it
+// would be transcribed by the wrong model, and the result would be kept.
 const CHANNEL_DEFAULTS = {
   [SEVCIK_CHANNEL]: { subLangs: 'cs-orig,en', deepgramLanguage: 'cs', quarantine: sevcikVideoQuarantine },
   [T3LIVE_CHANNEL]: { subLangs: 'en', deepgramLanguage: 'en', quarantine: t3liveVideoQuarantine },
+  [BENZINGA_CHANNEL]: { subLangs: 'en', deepgramLanguage: 'en', quarantine: benzingaVideoQuarantine },
 };
 const { attachSegments } = require('../src/transcript/segmentStore');
 
@@ -126,6 +136,25 @@ function youtubeClientArgs() {
 const RATE_LIMIT_ATTEMPTS = Number(readFlag(argv, '--rate-limit-attempts')) || 3;
 const RATE_LIMIT_WAIT_SECONDS = Number(readFlag(argv, '--rate-limit-wait')) || 90;
 
+/**
+ * Did YouTube refuse us, or did the video simply have no captions?
+ *
+ * THE HYPHEN IS THE WHOLE DEFECT. yt-dlp's own wording is
+ *
+ *   "This content isn't available, try again later. The current session has
+ *    been rate-limited by YouTube for up to an hour."
+ *
+ * -- "rate-LIMITED", with a hyphen. A pattern for "rate limited", with a
+ * space, does not match it, and the tool then reads a throttled endpoint as
+ * a video with no captions: it does not wait, it does not stop, and it
+ * blacklists the video. On 2026-11-11 that burned 76 fetches against an
+ * already-throttled IP before the run gave up.
+ *
+ * Both spellings are accepted, and so are the HTTP forms, because different
+ * yt-dlp versions and different endpoints word it differently.
+ */
+const RATE_LIMITED_PATTERN = /rate[-\s]?limited|HTTP Error 429|Too Many Requests/i;
+
 const options = {
   limit: Number(readFlag(argv, '--limit')) || 0,
   videoId: readFlag(argv, '--video-id') || '',
@@ -158,9 +187,13 @@ const options = {
   // the signal: his hedging and his conviction live in the wording.
   //
   // `en` stays in the list as a fallback for a video whose Czech track
-  // is missing. Other channels take their own default (T3Live: `en`).
-  subLangs: (readFlag(argv, '--sub-lang') || channelDefaults(readFlag(argv, '--channel') || SEVCIK_CHANNEL).subLangs)
-    .split(',').map((s) => s.trim()).filter(Boolean),
+  // is missing. Other channels take their own default (T3Live and
+  // Benzinga: `en`).
+  //
+  // The channel's default is read when the run starts, not when this
+  // module loads, so an unknown channel is reported as an error with the
+  // list of known channels rather than as a crash at load time.
+  subLangs: (readFlag(argv, '--sub-lang') || '').split(',').map((s) => s.trim()).filter(Boolean),
   // Restrict the run to the ids in this file (one per line; anything after
   // a tab is ignored). This is how a run is limited to one T3Live show.
   idsFile: readFlag(argv, '--ids-file') || '',
@@ -171,13 +204,32 @@ const options = {
 };
 
 function channelDefaults(channel) {
-  return CHANNEL_DEFAULTS[channel] || CHANNEL_DEFAULTS[SEVCIK_CHANNEL];
+  const defaults = CHANNEL_DEFAULTS[channel];
+  if (!defaults) {
+    // Falling back to another channel's settings would use the wrong
+    // Deepgram model and the wrong caption languages, and the wrong
+    // quarantine. Every one of those is a silent wrong answer, so an
+    // unknown channel is an error.
+    throw new Error(
+      `unknown channel "${channel}"; known channels: ${Object.keys(CHANNEL_DEFAULTS).join(', ')}`,
+    );
+  }
+  return defaults;
 }
 
 async function main() {
   if (!fs.existsSync(DB_PATH)) {
     console.error(`No SQLite at ${DB_PATH}. Run 'npm run video:init' first.`);
     process.exit(1);
+  }
+  // The channel's defaults are read here, so an unknown channel is an error
+  // the operator sees, with the known channels named.
+  const defaults = channelDefaults(options.channel);
+  // The default is a STRING ("en", "cs-orig,en"). It has to become a LIST
+  // here: assigning the string directly made the caption loop walk its
+  // characters -- 'e' and 'n' -- and every video came back "no captions".
+  if (!options.subLangs.length) {
+    options.subLangs = String(defaults.subLangs).split(',').map((s) => s.trim()).filter(Boolean);
   }
   fs.mkdirSync(TRANSCRIPTS_DIR, { recursive: true });
 
@@ -197,7 +249,7 @@ async function main() {
       : `FAILED: ${result.error}`;
     console.log(`[sevcik-transcripts] ${row.video_id} ${row.upload_date} ${detail}`);
 
-    rateLimitedInARow = result.error && /rate limited/i.test(result.error) ? rateLimitedInARow + 1 : 0;
+    rateLimitedInARow = result.error && RATE_LIMITED_PATTERN.test(result.error) ? rateLimitedInARow + 1 : 0;
     if (rateLimitedInARow >= options.maxRateLimited) {
       console.error(`[sevcik-transcripts] stopping: ${rateLimitedInARow} videos in a row were rate limited (HTTP 429).`);
       break;
@@ -224,7 +276,7 @@ async function main() {
   // they are named separately rather than left inside a stack of provider
   // errors.
   if (summary.failed) {
-    const rateLimited = results.some((r) => r.error && /rate limited/i.test(r.error));
+    const rateLimited = results.some((r) => r.error && RATE_LIMITED_PATTERN.test(r.error));
     const noKey = results.some((r) => r.error && /DEEPGRAM_API_KEY is not set/.test(r.error));
     console.error('');
     if (rateLimited) {
@@ -269,6 +321,13 @@ function selectCandidates() {
   const rows = db.prepare(sql).all(...params);
   db.close();
 
+  // The listing facts -- the length and the live status -- decide whether a
+  // video is a call worth transcribing, so the quarantine needs them. They
+  // live in `video_listing_entries`, and a channel with no listing entries
+  // (Sevcik, T3Live) simply has none to add.
+  const facts = listingFacts(rows.map((row) => row.video_id));
+  for (const row of rows) Object.assign(row, facts.get(row.video_id) || {});
+
   let candidates = rows.filter((row) => {
     if (options.force) return true;
     return !fs.existsSync(transcriptPathFor(row.video_id));
@@ -298,6 +357,56 @@ function selectCandidates() {
     candidates = kept;
   }
   return options.limit ? candidates.slice(0, options.limit) : candidates;
+}
+
+/**
+ * The listing facts of the given videos, by video id.
+ *
+ * A video can be in several listings, so the facts are merged: the LONGEST
+ * duration wins (the live episode, not the clip), and the live status is
+ * the one that says the video has been streamed.
+ *
+ * @param {string[]} videoIds
+ * @returns {Map<string, {duration_sec: number|null, live_status: string, listing_kind: string}>}
+ */
+function listingFacts(videoIds) {
+  const facts = new Map();
+  if (!videoIds.length) return facts;
+  const db = new DatabaseSync(DB_PATH, { readOnly: true });
+  const table = db.prepare(
+    "SELECT name FROM sqlite_master WHERE type='table' AND name='video_listing_entries'",
+  ).get();
+  if (!table) {
+    db.close();
+    return facts;
+  }
+  const rows = db.prepare(
+    `SELECT video_id, duration_sec, live_status, listing_kind FROM video_listing_entries
+     WHERE video_id IN (${videoIds.map(() => '?').join(',')})`,
+  ).all(...videoIds);
+  db.close();
+
+  for (const row of rows) {
+    // yt-dlp prints "NA" for a video that is not a stream at all. It is not
+    // a live status, and it must not read as one.
+    const liveStatus = !row.live_status || row.live_status === 'NA' ? '' : row.live_status;
+    const existing = facts.get(row.video_id);
+    const duration = row.duration_sec === null ? null : Number(row.duration_sec);
+    if (!existing) {
+      facts.set(row.video_id, {
+        duration_sec: duration,
+        live_status: liveStatus,
+        listing_kind: row.listing_kind || '',
+      });
+      continue;
+    }
+    existing.live_status = existing.live_status === 'was_live' ? 'was_live' : (liveStatus || existing.live_status);
+    existing.listing_kind = existing.listing_kind || row.listing_kind;
+    if (duration !== null && (existing.duration_sec === null || duration > existing.duration_sec)) {
+      existing.duration_sec = duration;
+    }
+  }
+  return facts;
 }
 
 /**
@@ -390,6 +499,62 @@ async function processVideo(row) {
  * @param {object} row
  * @returns {{ok: boolean, segments?: Array, error?: string, language?: string}}
  */
+/**
+ * Say WHY no caption file appeared -- and do not guess.
+ *
+ * A video that HAS no caption track is a fact about the video. A fetch that
+ * FAILED -- a bot check, a cookie error, a network blip, a client that could
+ * not extract the player -- is a fact about the RUN, and it says nothing
+ * about the video.
+ *
+ * Reporting every failure as "no captions" put 119 wrong entries in the
+ * channel's caption-less list: videos that do have captions, were fetched
+ * once during a bad window, and were then never asked for again. That list
+ * is a BLACKLIST -- the runner skips everything in it -- so a wrong entry is
+ * permanent, and it sends a video with free captions to a PAID
+ * transcription API instead.
+ *
+ * yt-dlp says which one it was. "There are no subtitles for the requested
+ * languages" is the video's own answer; anything else is a failed request.
+ * THE MESSAGE IS ON STDOUT -- yt-dlp puts its [info] lines there and only
+ * its warnings on stderr, so reading stderr alone classifies every genuinely
+ * absent caption track as a failed fetch.
+ *
+ * The three verdicts need three different responses: "no captions" is a
+ * blacklist entry, "rate limited" is a wait, and "caption fetch failed" is
+ * a retry. Only the first one is permanent.
+ *
+ * @param {string} lang
+ * @param {string} stdout
+ * @param {string} stderr
+ * @param {boolean} rateLimited
+ * @returns {string} the error to report
+ */
+function classifyMissingCaptions(lang, stdout, stderr, rateLimited) {
+  const both = `${stdout || ''}\n${stderr || ''}`;
+
+  // The rate limit is detected from the OUTPUT, not only from the flag the
+  // caller passes. The flag is set by a check that runs before this call,
+  // and a caller that forgets it -- or a second code path that never sets
+  // it -- would report a throttled endpoint as a plain failure. The output
+  // says it plainly, so the output is what is read.
+  if (rateLimited || RATE_LIMITED_PATTERN.test(both)) {
+    return `${lang}: rate limited (HTTP 429) -- the subtitle endpoint is throttling this IP`;
+  }
+
+  const genuinelyAbsent = /there are no subtitles|no subtitles for the requested|aren't any subtitles/i.test(both);
+  if (genuinelyAbsent) return `${lang}: no captions`;
+
+  // The detail is the last MEANINGFUL line -- a Python
+  // RequestsDependencyWarning ends every run and says nothing about the
+  // video or the request.
+  const detail = (both.split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter((l) => l && !/^warnings?\.warn/i.test(l))
+    .slice(-1)[0] || 'unknown error');
+  return `${lang}: caption fetch failed (${detail})`;
+}
+
 function fetchYoutubeCaptions(row) {
   const baseOut = path.join(TRANSCRIPTS_DIR, `${row.video_id}.captions`);
   const errors = [];
@@ -404,7 +569,13 @@ function fetchYoutubeCaptions(row) {
     for (let attempt = 0; attempt < RATE_LIMIT_ATTEMPTS; attempt += 1) {
       result = spawnSync(PY, [
         '-3', '-m', 'yt_dlp',
+        // AUTO AND MANUAL. `--write-auto-subs` alone leaves a video with
+        // manually-uploaded captions looking caption-less, because
+        // yt-dlp only offers the tracks it was asked for. Both is
+        // correct for a channel where some videos carry hand-made
+        // subtitles and the rest have YouTube's automatic ones.
         '--write-auto-subs',
+        '--write-subs',
         '--skip-download',
         '--sub-lang', lang,
         '--convert-subs', 'vtt',
@@ -422,7 +593,7 @@ function fetchYoutubeCaptions(row) {
       // throttles the IP, and hammering it makes the throttle worse -- the
       // project's own rule is that a rate-limited YouTube session needs
       // 30-60 minutes of quiet.
-      if (/HTTP Error 429|Too Many Requests/i.test(stderr)) {
+      if (RATE_LIMITED_PATTERN.test(stderr)) {
         rateLimited = true;
         if (attempt === RATE_LIMIT_ATTEMPTS - 1) break;
         const waitSeconds = RATE_LIMIT_WAIT_SECONDS * (attempt + 1);
@@ -442,9 +613,7 @@ function fetchYoutubeCaptions(row) {
       // was refused is a fact about the network. Reporting both as "no
       // captions" hides which one happened, and the two need different
       // responses -- one waits, the other gives up on that language.
-      errors.push(rateLimited
-        ? `${lang}: rate limited (HTTP 429) -- the subtitle endpoint is throttling this IP`
-        : `${lang}: no captions`);
+      errors.push(classifyMissingCaptions(lang, result.stdout, result.stderr, rateLimited));
       continue;
     }
 
@@ -726,7 +895,11 @@ function readFlag(arr, flag) {
   return arr[index + 1] || '';
 }
 
-main().catch((error) => {
-  console.error(`[sevcik-transcripts] failed: ${error && error.stack ? error.stack : error}`);
-  process.exit(1);
-});
+module.exports = { classifyMissingCaptions };
+
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(`[sevcik-transcripts] failed: ${error && error.stack ? error.stack : error}`);
+    process.exit(1);
+  });
+}

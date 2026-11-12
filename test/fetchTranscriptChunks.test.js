@@ -35,6 +35,31 @@ test('a caption-less video is separated from a failure', () => {
   assert.deepEqual(parsed.otherFailures, []);
 });
 
+test('a blacklist entry carries the verdict that justified it', () => {
+  // A blacklist entry is permanent -- the runner never asks for the video
+  // again. So the entry has to say WHY, or a reader cannot tell a video
+  // YouTube said has no captions from one a run merely failed to fetch.
+  const output = [
+    '[sevcik-transcripts] candidates=1 channel=t3live provider=auto',
+    '[sevcik-transcripts] abc123 20240101 FAILED: youtube_auto: en: no captions | deepgram: off',
+  ].join('\n');
+  const parsed = parseChunkOutput(output);
+  assert.equal(parsed.noCaptionsByReason.abc123, 'en: no captions | deepgram: off');
+});
+
+test('a FAILED FETCH is never blacklisted, whatever its detail says', () => {
+  // The detail text of a failed fetch can contain the phrase "no captions"
+  // itself -- e.g. a yt-dlp error quoting the request. The failure must
+  // still be a retry and not a permanent blacklist entry.
+  const output = [
+    '[sevcik-transcripts] candidates=1 channel=t3live provider=auto',
+    '[sevcik-transcripts] abc123 20240101 FAILED: youtube_auto: en: caption fetch failed (ERROR: no captions in response)',
+  ].join('\n');
+  const parsed = parseChunkOutput(output);
+  assert.deepEqual(parsed.noCaptions, []);
+  assert.deepEqual(parsed.otherFailures, ['abc123']);
+});
+
 test('a genuine failure is neither a fetch nor a caption-less video', () => {
   const output = [
     '[sevcik-transcripts] candidates=1 channel=t3live provider=auto',
@@ -71,6 +96,21 @@ test('a rate-limited video is flagged and NOT blacklisted', () => {
   assert.deepEqual(parsed.noCaptions, []);
   assert.deepEqual(parsed.otherFailures, []);
   assert.deepEqual(parsed.quarantined, []);
+});
+
+test('a rate limit is recognised in yt-dlp\'s own hyphenated wording', () => {
+  // "rate-limited", with a hyphen. A pattern for "rate limited", with a
+  // space, does not match it -- so a throttled endpoint reads as a plain
+  // failure and the runner keeps hammering it.
+  const output = [
+    '[sevcik-transcripts] candidates=1 channel=t3live provider=auto',
+    '[sevcik-transcripts] abc123 20240101 FAILED: youtube_auto: en: caption fetch failed (ERROR: The current session has been rate-limited by YouTube for up to an hour.)',
+  ].join('\n');
+  const parsed = parseChunkOutput(output);
+  assert.equal(parsed.rateLimited, true);
+  // And it must not be blacklisted, and not be a generic failure either.
+  assert.deepEqual(parsed.noCaptions, []);
+  assert.deepEqual(parsed.otherFailures, []);
 });
 
 test('an all-quarantined chunk is not a throttle', () => {

@@ -3,7 +3,12 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const { DOWNLOAD_CANDIDATE_STATUSES, HIRES_CANDIDATE_STATUSES, sqlStatusList } = require('./videoStatus');
+const {
+  DOWNLOAD_CANDIDATE_STATUSES,
+  HIRES_CANDIDATE_STATUSES,
+  sqlOcrChannelCondition,
+  sqlStatusList,
+} = require('./videoStatus');
 
 // Which videos still need downloading.
 //
@@ -160,6 +165,7 @@ function buildDownloadCandidateSql(options = {}) {
   return `
 SELECT video_id, upload_date, title, download_path, status FROM videos
 WHERE status IN (${sqlStatusList(DOWNLOAD_CANDIDATE_STATUSES)}) AND ${pathCondition}
+AND ${sqlOcrChannelCondition()}
 AND upload_date IS NOT NULL AND upload_date != 'NA'
 ORDER BY upload_date DESC, video_id ASC
 `;

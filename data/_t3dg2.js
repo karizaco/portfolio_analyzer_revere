@@ -1,0 +1,16 @@
+const fs=require('fs');
+const { DatabaseSync } = require('node:sqlite');
+const db = new DatabaseSync('data/video_pipeline/state.sqlite', { readOnly: true });
+const r1 = db.prepare(`SELECT COUNT(*) c, SUM(segment_count) s FROM video_transcripts WHERE provider='deepgram'`).get();
+console.log('deepgram rows(all channels):', r1);
+const r2 = db.prepare(`SELECT v.channel, COUNT(*) c FROM video_transcripts t JOIN videos v ON v.video_id=t.video_id WHERE t.provider='deepgram' GROUP BY v.channel`).all();
+console.table(r2);
+const files = fs.readdirSync('data/video_pipeline/transcripts').filter(f=>f.endsWith('.json'));
+console.log('transcript json on disk:', files.length);
+const ids = new Set(files.map(f=>f.replace(/\.json$/,'')));
+const dgRows = db.prepare(`SELECT video_id FROM video_transcripts WHERE provider='deepgram'`).all().map(r=>r.video_id);
+const missing = dgRows.filter(id=>!ids.has(id));
+console.log('deepgram rows without a json on disk:', missing.length, missing.slice(0,5));
+const inDb = new Set(db.prepare(`SELECT video_id FROM video_transcripts`).all().map(r=>r.video_id));
+const onDiskOnly = files.map(f=>f.replace(/\.json$/,'')).filter(id=>!inDb.has(id));
+console.log('json on disk without a db row:', onDiskOnly.length, onDiskOnly.slice(0,5));

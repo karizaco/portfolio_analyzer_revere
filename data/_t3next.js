@@ -1,0 +1,10 @@
+const fs=require('fs');
+const { DatabaseSync } = require('node:sqlite');
+const { classifyT3liveVideo } = require('../src/t3live/contentFilter');
+const db = new DatabaseSync('data/video_pipeline/state.sqlite', { readOnly: true });
+const rows = db.prepare(`SELECT v.video_id, v.title, v.upload_date FROM videos v LEFT JOIN video_transcripts t ON t.video_id=v.video_id WHERE v.channel='t3live' AND t.video_id IS NULL ORDER BY v.upload_date DESC`).all();
+const want = new Set(['630club','sami_misc','scott_misc','morning_call','red_dog','pro_desk']);
+const noSpeech = new Set(['gSlQSHu_JSM','_7Q00w6bWg8']);
+const out = rows.filter(r=>want.has(classifyT3liveVideo(r.title).show) && r.upload_date && !noSpeech.has(r.video_id) && !fs.existsSync(`data/video_pipeline/transcripts/${r.video_id}.json`));
+fs.writeFileSync('data/catalog_flat/t3live_ids_batch_dated.txt', out.map(r=>r.video_id).join('\n')+'\n');
+const c={}; for(const r of out){const s=classifyT3liveVideo(r.title).show; c[s]=(c[s]||0)+1;} console.log(out.length, c, out[0]?.upload_date, out.at(-1)?.upload_date);

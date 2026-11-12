@@ -140,11 +140,17 @@ test('the gap-fill runs from a fresh clone', { skip: PY ? false : 'no python lau
     assert.match(r.stderr, /Listed 2 videos/, 'the listing was fetched inside the clone');
 
     const check = path.join(tmp, 'check_db.py');
+    // ONLY the two rows this test is about. Dumping the whole catalog grows
+    // with every source that is added, and spawnSync kills a child that
+    // writes more than its 1 MB default buffer -- which is how a catalog
+    // that got 12,000 rows bigger started failing a test about two rows.
     fs.writeFileSync(check, [
       'import sqlite3, json, sys',
       'c = sqlite3.connect(sys.argv[1])',
       'c.row_factory = sqlite3.Row',
-      'rows = {r["video_id"]: dict(r) for r in c.execute("select video_id, upload_date, title from videos")}',
+      'rows = {r["video_id"]: dict(r) for r in c.execute(',
+      '    "select video_id, upload_date, title from videos where video_id in (?, ?)",',
+      '    ("known111", "new222"))}',
       'runs = [dict(r) for r in c.execute("select raw_output_path, kind from catalog_runs order by run_id")]',
       'print(json.dumps({"videos": rows, "runs": runs}))',
       '',

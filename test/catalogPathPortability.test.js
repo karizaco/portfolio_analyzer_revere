@@ -132,7 +132,14 @@ test('the Python helper agrees with the JavaScript one', { skip: PY ? false : 'n
   assert.equal(out.outside, toPortablePath(outside, ROOT),
     'both languages keep the absolute form for a path outside it');
   assert.equal(out.relative, 'data/video_pipeline/x.mp4');
-  assert.equal(path.resolve(out.resolved), path.resolve(inRepo),
+  // The drive letter's CASE is not a difference: Windows paths are
+  // case-insensitive, and Python's `Path.resolve()` and Node's
+  // `path.resolve()` do not agree on it ('c:' against 'C:'). What matters
+  // is that the stored path resolves to the same FILE.
+  const sameFile = (a, b) => (process.platform === 'win32'
+    ? String(a).toLowerCase() === String(b).toLowerCase()
+    : a === b);
+  assert.ok(sameFile(path.resolve(out.resolved), path.resolve(inRepo)),
     'resolving the stored path gives back the file it came from');
 });
 

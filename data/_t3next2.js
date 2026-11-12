@@ -1,0 +1,11 @@
+const fs=require('fs');
+const { DatabaseSync } = require('node:sqlite');
+const { classifyT3liveVideo } = require('../src/t3live/contentFilter');
+const db = new DatabaseSync('data/video_pipeline/state.sqlite', { readOnly: true });
+const rows = db.prepare(`SELECT v.video_id, v.title, v.upload_date FROM videos v LEFT JOIN video_transcripts t ON t.video_id=v.video_id WHERE v.channel='t3live' AND t.video_id IS NULL AND v.upload_date IS NOT NULL AND v.upload_date<>'' ORDER BY v.upload_date DESC`).all();
+const noCap = new Set(fs.readFileSync('data/catalog_flat/t3live_no_captions_batch_dated.txt','utf8').split(/\r?\n/).map(s=>s.trim()).filter(Boolean));
+const out = rows.filter(r=>!noCap.has(r.video_id) && !fs.existsSync(`data/video_pipeline/transcripts/${r.video_id}.json`));
+fs.writeFileSync('data/catalog_flat/t3live_ids_batch2.txt', out.map(r=>r.video_id).join('\n')+'\n');
+const c={}; for(const r of out){const s=classifyT3liveVideo(r.title).show; c[s]=(c[s]||0)+1;} console.log('next captions batch:', out.length, c);
+console.log('deepgram pending:', rows.filter(r=>noCap.has(r.video_id)).length);
+fs.writeFileSync('data/catalog_flat/t3live_ids_deepgram_batch2.txt', rows.filter(r=>noCap.has(r.video_id)).map(r=>r.video_id).join('\n')+'\n');

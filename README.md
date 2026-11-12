@@ -605,6 +605,101 @@ point at them.
 
 ---
 
+## Benzinga (transcript source, English, a NEWS channel)
+
+`https://www.youtube.com/@Benzinga` — the seventh source and the third
+transcript source. It reuses the Sevcik/T3Live pipeline (catalog → captions →
+signal extractor → aggregate → outcome scoring → dashboard); what differs is in
+`src/benzinga/`.
+
+**It is mostly NOT a trade-call channel, and the pipeline is built around
+that.** Measured on the full listing (2026-11-12, 12,786 catalogued videos):
+
+| show | count | what it is |
+|---|---|---|
+| PreMarket Playbook / PreMarket Prep | ~2,400 | the daily live show — the source's reason to exist |
+| The Drift (Adam Mesh & Tom Sosnoff) | 21 | weekly, options |
+| earnings-call rebroadcasts | ~460 | management speech — quarantined |
+| Fed press conferences | ~68 | Fed speech — quarantined |
+| long-form commentary | ~3,600 | Benzinga's own market pieces |
+| futures/market-update clips | ~770 | news-anchor recaps — read for the market only |
+| setup clips ("VIVS Stock in Play…") | ~2,100 | one ticker, a level |
+| CEO interviews, education, product pieces, Shorts | ~4,000 | quarantined |
+
+So the content filter is an **allow-list** (`src/benzinga/contentFilter.js`),
+not T3Live's deny-list: a show that is not on the list is not transcribed and
+not read.
+
+### The three rules this source needs
+
+1. **Attribution.** A news channel reports other people's opinions.
+   "Wedbush's Dan Ives remains very bullish on Tesla" is not Benzinga's call,
+   and the shared extractor published it as a bullish TSLA at confidence 0.83
+   (measured). Such a claim is tagged `reported`, kept with its evidence, and
+   left out of the scoring.
+2. **Options direction.** "I'm going to sell some puts" is a **bullish**
+   position — the seller is paid to buy the stock at the strike. The shared
+   extractor reads the verb and calls it bearish. The Drift is an options
+   show, so this is its normal vocabulary.
+3. **Sections.** A recap of yesterday is history, a preview is a prediction,
+   and a sponsor's segment is neither. The section is read off the transcript
+   around the claim.
+
+### Market and sector readings
+
+`trade_signals` is a ticker table, so "the Nasdaq is going to gap up" and
+"semis are the leadership" have no home in it. They go into
+`market_readings` (`src/benzinga/marketReadings.js`), one row per (video,
+subject, stance), each carrying the sentence it was read from. The subjects
+are the market, the eleven GICS sectors and the macro events, each with the
+ETF it is scored against (SPY, QQQ, SMH, XLK, …).
+
+### The pilot (2026-11-12)
+
+35 videos across the shows and the eras (2014 → 2026), dated and transcribed:
+
+| | |
+|---|---|
+| transcripts fetched from YouTube captions | **34 of 35** (one caption-less) |
+| captions that carried a ticker | 2–5 % of segments |
+| signals | 81 from 29 videos, 32 tickers |
+| market and sector readings | 135 from 36 videos |
+| scored claims | 42 (1 week: 50.0 % hit, 58.3 % for the same call on SPY, excess −0.27 % [−2.51 %, +1.98 %]) |
+
+**The ceiling is the spoken tickers.** A Drift episode has ~4,000 segments
+and only ~2.5 % of them name a ticker: the host says "I'm buying here" and
+the ticker is on the screen, not in the words. A spoken-ticker extractor
+cannot recover that, and no amount of vocabulary work will. `npm run
+benzinga:survey` prints the measurement.
+
+The 2014–2020 PreMarket Prep era is worse still: those hosts name companies
+in words ("Neri", "Apple"), so the tickers come from the confirmed-names
+table and the older episodes read very sparsely.
+
+### Running it
+
+```bash
+npm run benzinga:catalog:streams    # the daily show and The Drift
+npm run benzinga:catalog:videos      # the prerecorded tab
+npm run benzinga:transcripts:chunks  # captions, 40 per chunk, stops on a 429
+npm run benzinga:transcripts:deepgram # only for the caption-less ones
+npm run benzinga:signals             # parser benzinga-signals-1
+npm run benzinga:readings            # parser benzinga-readings-1
+npm run benzinga:aggregate           # CSVs, JSON and the dashboard
+npm run benzinga:outcomes            # scored against SPY
+npm run benzinga:survey              # how much of each show is spoken tickers
+```
+
+**Do not catalog it per video.** The channel has 12,786 rows and a per-video
+catalog is one request each; the flat listings are free.
+
+**The OCR downloaders must never see these rows.** They are catalogued in the
+same `videos` table as Revere and Qullamaggie, so both downloaders filter on
+the channel (`src/video/videoStatus.js`, `OCR_CHANNELS`) — measured before the
+fix: 30 of the worker's first 30 picks were T3Live rows.
+
+---
+
 ## AsymTrading (Substack source, article text)
 
 `https://asymtrading.substack.com` -- the sixth source, and the first one

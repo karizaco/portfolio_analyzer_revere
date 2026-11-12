@@ -1,0 +1,42 @@
+# Codex-migrated Claude project memory
+
+Copied from Claude Code project memory. Review for currency; prefer `AGENTS.md` / `CLAUDE.md` and live repo docs when they conflict.
+
+- [`always-catalog-first.md`](./always-catalog-first.md) — 5627 bytes
+- [`catalog-tracking-what-is-in-git.md`](./catalog-tracking-what-is-in-git.md) — 3883 bytes
+- [`cluster-canonical-arithmetic.md`](./cluster-canonical-arithmetic.md) — 1646 bytes
+- [`clusterer-measurement-by-log-replay.md`](./clusterer-measurement-by-log-replay.md) — 2263 bytes
+- [`discord-poc-plan.md`](./discord-poc-plan.md) — 3149 bytes
+- [`download-dir-analysis.md`](./download-dir-analysis.md) — 1820 bytes
+- [`download-findings-20260921.md`](./download-findings-20260921.md) — 2837 bytes
+- [`download-verification-rules.md`](./download-verification-rules.md) — 3540 bytes
+- [`easyocr-low-cpu-mandate.md`](./easyocr-low-cpu-mandate.md) — 1887 bytes
+- [`MEMORY.md`](./MEMORY.md) — 10224 bytes
+- [`next-steps-assessment-2026-10-28.md`](./next-steps-assessment-2026-10-28.md) — 43224 bytes
+- [`ocr-stop-and-env-config.md`](./ocr-stop-and-env-config.md) — 2264 bytes
+- [`parallel-ocr-worker-count.md`](./parallel-ocr-worker-count.md) — 1425 bytes
+- [`prefilter-resolution-sweep-resume.md`](./prefilter-resolution-sweep-resume.md) — 6780 bytes
+- [`probe-log-lacks-clusterer-input.md`](./probe-log-lacks-clusterer-input.md) — 1809 bytes
+- [`project-understanding.md`](./project-understanding.md) — 5361 bytes
+- [`qmg-2022-era-alias-rows.md`](./qmg-2022-era-alias-rows.md) — 5388 bytes
+- [`qmg-crop-alb-reversal.md`](./qmg-crop-alb-reversal.md) — 2645 bytes
+- [`qmg-fcx-misread.md`](./qmg-fcx-misread.md) — 2448 bytes
+- [`qmg-layout-scoped-aliases.md`](./qmg-layout-scoped-aliases.md) — 1873 bytes
+- [`qmg-ocr-2023-improvements.md`](./qmg-ocr-2023-improvements.md) — 2247 bytes
+- [`qmg-pixel-verified-aliases.md`](./qmg-pixel-verified-aliases.md) — 3929 bytes
+- [`qmg-production-ocr-20261104.md`](./qmg-production-ocr-20261104.md) — 5462 bytes
+- [`qullamaggie-chunk1-2-results.md`](./qullamaggie-chunk1-2-results.md) — 4425 bytes
+- [`qullamaggie-chunk1-5-results.md`](./qullamaggie-chunk1-5-results.md) — 5340 bytes
+- [`qullamaggie-easyocr-breakthrough.md`](./qullamaggie-easyocr-breakthrough.md) — 9625 bytes
+- [`qullamaggie-ground-truth.md`](./qullamaggie-ground-truth.md) — 3210 bytes
+- [`qullamaggie-ocr-crop-analysis.md`](./qullamaggie-ocr-crop-analysis.md) — 7109 bytes
+- [`qullamaggie-position-table-profile.md`](./qullamaggie-position-table-profile.md) — 10405 bytes
+- [`qullamaggie-prefilter-improvement.md`](./qullamaggie-prefilter-improvement.md) — 2639 bytes
+- [`qullamaggie-scan-freeze-guidelines.md`](./qullamaggie-scan-freeze-guidelines.md) — 3980 bytes
+- [`revere-ground-truth.md`](./revere-ground-truth.md) — 1711 bytes
+- [`revere-ocr-progress.md`](./revere-ocr-progress.md) — 4736 bytes
+- [`spelling-qullamaggie.md`](./spelling-qullamaggie.md) — 1340 bytes
+- [`tale-of-the-tape-ocr-fix.md`](./tale-of-the-tape-ocr-fix.md) — 3220 bytes
+- [`youtube-download-issues.md`](./youtube-download-issues.md) — 3480 bytes
+- [`youtube-sabr-restriction.md`](./youtube-sabr-restriction.md) — 2878 bytes
+- [`yt-dlp-client-set-speed.md`](./yt-dlp-client-set-speed.md) — 2146 bytes

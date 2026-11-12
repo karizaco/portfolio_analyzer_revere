@@ -43,7 +43,7 @@ const { loadConfirmedNames } = require('../src/sevcik/companyNames');
 const { extractSignals, PARSER_VERSION } = require('../src/sevcik/signalExtractor');
 const { SEVCIK_CHANNEL } = require('../src/sevcik/channel');
 const { sevcikVideoQuarantine } = require('../src/sevcik/contentFilter');
-const { attachSegments } = require('../src/transcript/segmentStore');
+const { attachSegments, runExtraction } = require('../src/transcript/extractRunner');
 
 const ROOT = path.resolve(__dirname, '..');
 const DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
@@ -91,53 +91,45 @@ function main() {
   // resolve to that file. See src/transcript/segmentStore.js.
   attachSegments(db);
 
-  const registered = registerDiskTranscripts(db);
-  if (registered) {
-    console.log(`[sevcik-signals] registered ${registered} disk transcript(s) into video_transcripts`);
-  }
-  const videos = selectVideos(db);
-  console.log(`[sevcik-signals] videos=${videos.length} channel=${options.channel}`
-    + ` lexicon=${lexicon.size} parser=${PARSER_VERSION}${options.dryRun ? ' DRY-RUN' : ''}`);
-
   const perVideo = [];
-  let totalSignals = 0;
 
-  for (const video of videos) {
-    const segments = loadSegments(video.transcript_id, video.video_id, db);
-    const signals = extractSignals({
+  const result = runExtraction(db, {
+    channel: options.channel,
+    videoId: options.videoId,
+    limit: options.limit,
+    quarantine: sevcikVideoQuarantine,
+    includeQuarantine: options.includeQuarantine,
+    dryRun: options.dryRun,
+    label: 'sevcik-signals',
+    extract: (segments, video) => extractSignals({
       segments,
       lexicon,
       confirmedSymbols,
       videoId: video.video_id,
       transcriptId: video.transcript_id,
-    });
-
-    if (!options.dryRun && signals.length) {
-      replaceSignals(db, video.video_id, video.transcript_id, signals);
-    }
-
-    totalSignals += signals.length;
-    perVideo.push({
-      video_id: video.video_id,
-      upload_date: video.upload_date,
-      provider: video.provider,
-      segments: segments.length,
-      signals: signals.length,
-      tickers: [...new Set(signals.map((signal) => signal.ticker))].sort(),
-      with_entry: signals.filter((signal) => signal.entry_price !== null).length,
-      with_target: signals.filter((signal) => signal.target_price_low !== null).length,
-    });
-
-    console.log(`[sevcik-signals] ${video.video_id} ${video.upload_date} `
-      + `${segments.length} segments -> ${signals.length} signals`
-      + `${signals.length ? ` (${[...new Set(signals.map((s) => s.ticker))].join(' ')})` : ''}`);
-  }
+    }),
+    onVideo: (video, signals, segments) => {
+      perVideo.push({
+        video_id: video.video_id,
+        upload_date: video.upload_date,
+        provider: video.provider,
+        segments: segments.length,
+        signals: signals.length,
+        tickers: [...new Set(signals.map((signal) => signal.ticker))].sort(),
+        with_entry: signals.filter((signal) => signal.entry_price !== null).length,
+        with_target: signals.filter((signal) => signal.target_price_low !== null).length,
+      });
+      console.log(`[sevcik-signals] ${video.video_id} ${video.upload_date} `
+        + `${segments.length} segments -> ${signals.length} signals`
+        + `${signals.length ? ` (${[...new Set(signals.map((s) => s.ticker))].join(' ')})` : ''}`);
+    },
+  });
 
   db.close();
 
   const summary = {
-    videos: videos.length,
-    signals: totalSignals,
+    videos: result.videos,
+    signals: result.signals,
     parser_version: PARSER_VERSION,
     dry_run: options.dryRun,
     per_video: perVideo,
@@ -146,226 +138,7 @@ function main() {
   if (options.json) {
     console.log(JSON.stringify(summary, null, 2));
   } else {
-    console.log(`[sevcik-signals] done: ${totalSignals} signal(s) from ${videos.length} video(s)`);
-  }
-}
-
-/**
- * The videos whose transcripts have been read.
- *
- * @param {DatabaseSync} db
- * @returns {Array<object>}
- */
-/**
- * Register Sevcik transcript JSON files that exist on disk but are missing
- * from video_transcripts. Without this, extract only sees the subset that
- * fetch already wrote to SQLite, and hundreds of on-disk transcripts stay idle.
- *
- * @param {DatabaseSync} db
- * @returns {number} newly registered rows
- */
-function registerDiskTranscripts(db) {
-  if (!fs.existsSync(TRANSCRIPTS_DIR)) return 0;
-  const channel = options.channel || SEVCIK_CHANNEL;
-  const existing = new Set(
-    db.prepare('SELECT video_id FROM video_transcripts').all().map((r) => r.video_id),
-  );
-  const catalog = new Map(
-    db.prepare('SELECT video_id, upload_date, title FROM videos WHERE channel = ?').all(channel)
-      .map((r) => [r.video_id, r]),
-  );
-
-  let registered = 0;
-  const files = fs.readdirSync(TRANSCRIPTS_DIR).filter((name) => /^[\w-]{6,}\.json$/i.test(name));
-  const { normalizeTranscript } = require('../src/transcript/transcriptNormalize');
-  const crypto = require('node:crypto');
-
-  const insertTranscript = db.prepare(
-    'INSERT INTO video_transcripts (video_id, provider, language, transcript_path, segment_count, '
-    + 'checksum, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
-  );
-  const insertSegment = db.prepare(
-    'INSERT INTO transcript_segments (transcript_id, video_id, segment_index, start_sec, end_sec, text, confidence) '
-    + 'VALUES (?, ?, ?, ?, ?, ?, ?)',
-  );
-
-  for (const name of files) {
-    const videoId = name.slice(0, -5);
-    if (existing.has(videoId)) continue;
-    if (!catalog.has(videoId)) continue;
-    if (options.videoId && options.videoId !== videoId) continue;
-
-    const filePath = require('node:path').join(TRANSCRIPTS_DIR, name);
-    let body;
-    try {
-      body = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    } catch {
-      continue;
-    }
-    let segments;
-    try {
-      segments = normalizeTranscript(body, body.provider || 'manual');
-    } catch {
-      continue;
-    }
-    if (!segments.length) continue;
-
-    const providerRaw = String(body.provider || '').toLowerCase();
-    const provider = providerRaw === 'deepgram' || providerRaw === 'youtube_auto' || providerRaw === 'manual'
-      ? providerRaw
-      : (segments.some((seg) => Number.isFinite(seg.confidence)) ? 'deepgram' : 'youtube_auto');
-    const language = String(body.language || body.lang || '');
-    const textBlob = segments.map((seg) => seg.text || '').join('\n');
-    const checksum = crypto.createHash('md5').update(textBlob).digest('hex');
-    const fetchedAt = body.fetched_at || new Date().toISOString();
-    const relPath = require('node:path').relative(ROOT, filePath).replace(/\\/g, '/');
-
-    try {
-      db.exec('BEGIN');
-      const result = insertTranscript.run(
-        videoId,
-        provider,
-        language,
-        relPath,
-        segments.length,
-        checksum,
-        fetchedAt,
-      );
-      const transcriptId = Number(result.lastInsertRowid);
-      segments.forEach((segment, index) => {
-        insertSegment.run(
-          transcriptId,
-          videoId,
-          index,
-          segment.start_sec,
-          segment.end_sec,
-          segment.text,
-          segment.confidence == null ? null : segment.confidence,
-        );
-      });
-      db.exec('COMMIT');
-      existing.add(videoId);
-      registered += 1;
-    } catch (error) {
-      try { db.exec('ROLLBACK'); } catch (_) {}
-      console.error(`[sevcik-signals] register failed ${videoId}: ${error.message}`);
-    }
-  }
-  return registered;
-}
-
-
-function selectVideos(db) {
-  const filters = ['t.video_id IS NOT NULL'];
-  const params = [];
-  let sql = `SELECT v.video_id, v.upload_date, v.title, t.id AS transcript_id, t.provider,
-                    t.transcript_path, t.segment_count
-             FROM video_transcripts t
-             JOIN videos v ON v.video_id = t.video_id
-             WHERE ${filters.join(' AND ')}`;
-  if (options.channel) {
-    sql += ' AND v.channel = ?';
-    params.push(options.channel);
-  }
-  if (options.videoId) {
-    sql += ' AND v.video_id = ?';
-    params.push(options.videoId);
-  }
-  sql += ' ORDER BY v.upload_date DESC, v.video_id ASC';
-
-  let rows = db.prepare(sql).all(...params);
-  if (!options.includeQuarantine) {
-    rows = rows.filter((row) => !sevcikVideoQuarantine(row).quarantined);
-  }
-  return options.limit ? rows.slice(0, options.limit) : rows;
-}
-
-/**
- * The transcript's segments.
- *
- * The segments come from the DATABASE when they are there, and from the
- * transcript FILE when they are not. The file is the fallback because a
- * transcript can exist on disk before its segments have been written -- and
- * a transcript that is on disk but unreadable would silently produce no
- * signals.
- *
- * @param {number} transcriptId
- * @param {string} videoId
- * @param {DatabaseSync} db
- * @returns {Array<{start_sec:number,end_sec:number,text:string,confidence:number|null}>}
- */
-function loadSegments(transcriptId, videoId, db) {
-  const rows = db.prepare(
-    'SELECT start_sec, end_sec, text, confidence FROM transcript_segments '
-    + 'WHERE transcript_id = ? ORDER BY segment_index ASC',
-  ).all(transcriptId);
-  if (rows.length) {
-    return rows.map((row) => ({
-      start_sec: Number(row.start_sec),
-      end_sec: Number(row.end_sec),
-      text: String(row.text || ''),
-      confidence: row.confidence === null ? null : Number(row.confidence),
-    }));
-  }
-
-  const filePath = path.join(TRANSCRIPTS_DIR, `${videoId}.json`);
-  if (!fs.existsSync(filePath)) return [];
-  try {
-    const body = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    const { normalizeTranscript } = require('../src/transcript/transcriptNormalize');
-    return normalizeTranscript(body, body.provider);
-  } catch {
-    return [];
-  }
-}
-
-/**
- * Replace the signals of one video.
- *
- * The signals of the video are deleted and the new ones inserted, so a
- * re-run with a changed parser does not leave the old rows behind next to
- * the new ones. Only THIS video's signals are touched -- the signals of
- * other videos are none of this run's business.
- *
- * @param {DatabaseSync} db
- * @param {string} videoId
- * @param {number} transcriptId
- * @param {Array<object>} signals
- */
-function replaceSignals(db, videoId, transcriptId, signals) {
-  try { db.exec('ALTER TABLE trade_signals ADD COLUMN claim_kind TEXT'); } catch (_) {}
-
-  db.prepare('DELETE FROM trade_signals WHERE video_id = ?').run(videoId);
-
-  const insert = db.prepare(
-    'INSERT INTO trade_signals (video_id, transcript_id, segment_start_index, segment_end_index, '
-    + 'event_time_sec, ticker, action, bias, claim_kind, confidence_label, confidence_score, entry_price, '
-    + 'target_price_low, target_price_high, stop_price, horizon_text, rationale, evidence_text, '
-    + 'parser_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-  );
-
-  for (const signal of signals) {
-    insert.run(
-      signal.video_id,
-      signal.transcript_id === null ? transcriptId : signal.transcript_id,
-      signal.segment_start_index,
-      signal.segment_end_index,
-      signal.event_time_sec,
-      signal.ticker,
-      signal.action,
-      signal.bias,
-      signal.claim_kind || 'forward',
-      signal.confidence_label,
-      signal.confidence_score,
-      signal.entry_price,
-      signal.target_price_low,
-      signal.target_price_high,
-      signal.stop_price,
-      signal.horizon_text,
-      signal.rationale,
-      signal.evidence_text,
-      signal.parser_version,
-    );
+    console.log(`[sevcik-signals] done: ${result.signals} signal(s) from ${result.videos} video(s)`);
   }
 }
 

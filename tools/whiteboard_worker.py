@@ -945,15 +945,22 @@ def select_videos_for_download(
         ).fetchone()
         return [row] if row else []
 
+    # Only the OCR channels' media is downloaded. The transcript sources
+    # (davidsevcik, t3live, benzinga) share the catalog and leave their rows
+    # 'pending' forever, because their pipeline never downloads the video --
+    # so an unscoped query took them first: on 2026-11-11 all 30 of the first
+    # 30 picks were T3Live rows. A row with no channel is a legacy OCR row.
+    placeholders = ', '.join('?' for _ in OCR_CHANNELS)
     return connection.execute(
-        '''
+        f'''
         SELECT video_id, upload_date, video_url, title, status, download_path
         FROM videos
         WHERE status IN ('pending', 'error', 'downloading')
+          AND (channel IN ({placeholders}) OR channel = '')
         ORDER BY upload_date ASC, video_id ASC
         LIMIT ?
         ''',
-        (limit,),
+        (*OCR_CHANNELS, limit),
     ).fetchall()
 
 
@@ -1873,6 +1880,7 @@ def command_catalog(args: argparse.Namespace) -> int:
     # Resolve the effective channel. If `--channel` was omitted, infer from
     # the source URL (handle-based channels only — playlist URLs default to
     # 'revere' for backward compat with existing scripts).
+    require_known_youtube_channel(args.source_url, args.channel)
     effective_channel = args.channel or infer_channel_from_url(args.source_url) or 'revere'
 
     command = build_catalog_command(args)
@@ -2534,7 +2542,37 @@ def infer_channel_from_url(source_url: str) -> str:
     # same worker, so it needs the same channel label.
     if '@t3live' in lowered or '/t3live/' in lowered or lowered.endswith('/t3live'):
         return 't3live'
+    # Benzinga is a TRANSCRIPT source too (src/benzinga/channel.js).
+    if '@benzinga' in lowered:
+        return 'benzinga'
     return ''
+
+
+# The channels whose MEDIA the OCR pipeline downloads. Every other channel in
+# the catalog is a transcript source: its rows stay 'pending' and its video is
+# never fetched. Mirrored by OCR_CHANNELS in src/video/videoStatus.js, and the
+# two are pinned to agree by test/ocrDownloaderChannelScope.test.js.
+OCR_CHANNELS = ('revere', 'qullamaggie')
+
+
+def require_known_youtube_channel(source_url: str, channel: str) -> None:
+    """Refuse to label an unrecognised YouTube URL as 'revere'.
+
+    `catalog` defaults an unknown URL to 'revere' for the old playlist
+    scripts and the mock fixtures. For a YouTube URL that default is a
+    mislabelling waiting to happen: a playlist URL carries no handle, so a
+    Benzinga playlist would be catalogued as Revere -- and then downloaded
+    by the OCR pipeline. So a youtube.com URL must either name a known
+    handle or come with --channel.
+    """
+    if channel:
+        return
+    lowered = (source_url or '').lower()
+    if 'youtube.com' in lowered or 'youtu.be' in lowered:
+        if not infer_channel_from_url(source_url):
+            raise SystemExit(
+                f'catalog: cannot tell which channel {source_url} belongs to; pass --channel explicitly.'
+            )
 
 
 # The logical channel name is NOT the YouTube handle, and the two do not
@@ -2553,6 +2591,9 @@ CHANNEL_SOURCE_URLS = {
     # T3Live's most important content (Actionable Swing Trade Ideas, 630 Club)
     # is in the streams listing. The /videos tab is catalogued separately.
     't3live': 'https://www.youtube.com/@t3live/streams',
+    # Benzinga's daily PreMarket Playbook and The Drift are live streams. The
+    # /videos tab is catalogued separately (see src/benzinga/channel.js).
+    'benzinga': 'https://www.youtube.com/@Benzinga/streams',
 }
 
 

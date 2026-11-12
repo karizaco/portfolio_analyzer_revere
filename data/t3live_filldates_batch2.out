@@ -1,0 +1,91 @@
+Read 7349 videos from data/catalog_flat/t3live_all.tsv.
+Filling 1399 videos for t3live in 70 batches of up to 20, 2 at a time (client set: youtube:player_client=mweb); 0 already have a date.
+  20/1399 attempted, 20 dated, 0 still missing
+  40/1399 attempted, 39 dated, 1 still missing
+  60/1399 attempted, 59 dated, 1 still missing
+  80/1399 attempted, 79 dated, 1 still missing
+  100/1399 attempted, 99 dated, 1 still missing
+  120/1399 attempted, 119 dated, 1 still missing
+  140/1399 attempted, 139 dated, 1 still missing
+  160/1399 attempted, 159 dated, 1 still missing
+  180/1399 attempted, 179 dated, 1 still missing
+  200/1399 attempted, 199 dated, 1 still missing
+  220/1399 attempted, 219 dated, 1 still missing
+  240/1399 attempted, 239 dated, 1 still missing
+  260/1399 attempted, 259 dated, 1 still missing
+  280/1399 attempted, 279 dated, 1 still missing
+  300/1399 attempted, 299 dated, 1 still missing
+  320/1399 attempted, 319 dated, 1 still missing
+  340/1399 attempted, 339 dated, 1 still missing
+  360/1399 attempted, 359 dated, 1 still missing
+  380/1399 attempted, 379 dated, 1 still missing
+  400/1399 attempted, 399 dated, 1 still missing
+  420/1399 attempted, 419 dated, 1 still missing
+  440/1399 attempted, 439 dated, 1 still missing
+  460/1399 attempted, 459 dated, 1 still missing
+  480/1399 attempted, 479 dated, 1 still missing
+  500/1399 attempted, 499 dated, 1 still missing
+  520/1399 attempted, 519 dated, 1 still missing
+  540/1399 attempted, 539 dated, 1 still missing
+  560/1399 attempted, 559 dated, 1 still missing
+  580/1399 attempted, 579 dated, 1 still missing
+  600/1399 attempted, 599 dated, 1 still missing
+  620/1399 attempted, 619 dated, 1 still missing
+  640/1399 attempted, 639 dated, 1 still missing
+  660/1399 attempted, 659 dated, 1 still missing
+  680/1399 attempted, 679 dated, 1 still missing
+  700/1399 attempted, 699 dated, 1 still missing
+  720/1399 attempted, 719 dated, 1 still missing
+  740/1399 attempted, 739 dated, 1 still missing
+  760/1399 attempted, 759 dated, 1 still missing
+  780/1399 attempted, 779 dated, 1 still missing
+  800/1399 attempted, 799 dated, 1 still missing
+  820/1399 attempted, 819 dated, 1 still missing
+  840/1399 attempted, 839 dated, 1 still missing
+  860/1399 attempted, 859 dated, 1 still missing
+  880/1399 attempted, 879 dated, 1 still missing
+  900/1399 attempted, 899 dated, 1 still missing
+  920/1399 attempted, 919 dated, 1 still missing
+  940/1399 attempted, 939 dated, 1 still missing
+  960/1399 attempted, 959 dated, 1 still missing
+  980/1399 attempted, 979 dated, 1 still missing
+  1000/1399 attempted, 999 dated, 1 still missing
+  1020/1399 attempted, 1019 dated, 1 still missing
+  1040/1399 attempted, 1039 dated, 1 still missing
+  1060/1399 attempted, 1059 dated, 1 still missing
+  1080/1399 attempted, 1079 dated, 1 still missing
+  1100/1399 attempted, 1099 dated, 1 still missing
+  1120/1399 attempted, 1119 dated, 1 still missing
+  1140/1399 attempted, 1139 dated, 1 still missing
+  1160/1399 attempted, 1159 dated, 1 still missing
+  1180/1399 attempted, 1179 dated, 1 still missing
+  1200/1399 attempted, 1199 dated, 1 still missing
+  1220/1399 attempted, 1219 dated, 1 still missing
+  1240/1399 attempted, 1239 dated, 1 still missing
+  1260/1399 attempted, 1259 dated, 1 still missing
+  1280/1399 attempted, 1279 dated, 1 still missing
+  1300/1399 attempted, 1299 dated, 1 still missing
+  1320/1399 attempted, 1319 dated, 1 still missing
+  1340/1399 attempted, 1339 dated, 1 still missing
+  1360/1399 attempted, 1359 dated, 1 still missing
+  1380/1399 attempted, 1379 dated, 1 still missing
+  1399/1399 attempted, 1398 dated, 1 still missing
+{
+  "channel": "t3live",
+  "dated": 1398,
+  "inserted": 0,
+  "jobs": 2,
+  "refresh": false,
+  "dates_changed": 0,
+  "requested": 1399,
+  "attempted": 1399,
+  "skipped": 0,
+  "still_missing": [
+    "un5abWCxjTg"
+  ],
+  "still_missing_count": 1,
+  "titles_only": 0,
+  "titles_written": 0,
+  "titles_inserted": 0,
+  "updated": 1398
+}

@@ -79,6 +79,7 @@ function parseChunkOutput(output) {
 
   const fetched = [];
   const noCaptions = [];
+  const noCaptionsByReason = {};
   const quarantined = [];
   const otherFailures = [];
   let rateLimited = false;
@@ -99,12 +100,25 @@ function parseChunkOutput(output) {
     }
     const failed = /^\[sevcik-transcripts\] (\S+) \S* FAILED: (.*)$/.exec(line);
     if (!failed) continue;
-    if (/rate limited/i.test(failed[2])) { rateLimited = true; continue; }
-    if (/no captions|captions were empty|no auto-captions/i.test(failed[2])) { noCaptions.push(failed[1]); continue; }
+    // The HYPHEN matters: yt-dlp says "rate-limited", and a pattern for
+    // "rate limited" does not match it. A throttled endpoint then reads as
+    // a plain failure, and the runner keeps hammering it.
+    if (/rate[-\s]?limited|HTTP Error 429|Too Many Requests/i.test(failed[2])) { rateLimited = true; continue; }
+    // A FAILED FETCH is never blacklisted. It says the request did not
+    // succeed, not that the video has no captions -- and the list is a
+    // blacklist, so a wrong entry is permanent. The check comes first
+    // because the failure's detail text can contain the phrase "no
+    // captions" itself.
+    if (/caption fetch failed/i.test(failed[2])) { otherFailures.push(failed[1]); continue; }
+    if (/no captions|captions were empty|no auto-captions/i.test(failed[2])) {
+      noCaptions.push(failed[1]);
+      noCaptionsByReason[failed[1]] = failed[2].replace(/^\s*\S+\s+/, '');
+      continue;
+    }
     otherFailures.push(failed[1]);
   }
 
-  return { fetched, noCaptions, quarantined, otherFailures, rateLimited };
+  return { fetched, noCaptions, noCaptionsByReason, quarantined, otherFailures, rateLimited };
 }
 
 function readFlag(argv, flag, fallback = '') {
@@ -130,6 +144,14 @@ function main() {
   const chunk = Math.max(1, Number(readFlag(argv, '--chunk', '40')) || 40);
   const pauseSeconds = Math.max(0, Number(readFlag(argv, '--pause', '45')) || 0);
   const maxChunks = Math.max(1, Number(readFlag(argv, '--max-chunks', '1000')) || 1000);
+  // The retry budget for a throttled endpoint. It is a FLAG because a
+  // hard throttle and a transient one need different budgets: retrying a
+  // 429 after two minutes just burns the run, and on 2026-11-11 it cost
+  // 76 videos at over two minutes each. The fetch tool stops by itself
+  // after three consecutive rate-limited videos, so a low attempt count
+  // means "notice, wait a while, come back" rather than "spin here".
+  const rateLimitAttempts = Math.max(1, Number(readFlag(argv, '--rate-limit-attempts', '2')) || 2);
+  const rateLimitWait = Math.max(0, Number(readFlag(argv, '--rate-limit-wait', '120')) || 0);
   const logPath = readFlag(argv, '--log');
   const noCaptionsFile = readFlag(argv, '--no-captions-file',
     path.join(ROOT, 'data', 'catalog_flat', `${channel}_no_captions.txt`));
@@ -168,17 +190,27 @@ function main() {
       '--channel', channel,
       '--ids-file', chunkFile,
       '--no-deepgram-fallback',
-      '--rate-limit-attempts', '2',
-      '--rate-limit-wait', '120',
+      '--rate-limit-attempts', String(rateLimitAttempts),
+      '--rate-limit-wait', String(rateLimitWait),
     ], { cwd: ROOT, encoding: 'utf8' });
 
     const output = `${result.stdout || ''}${result.stderr || ''}`;
     if (logPath) fs.appendFileSync(logPath, output);
 
     const parsed = parseChunkOutput(output);
+    // A BLACKLIST ENTRY IS PERMANENT, and that is the risk. The runner
+    // never asks for a video in the no-captions file again, so one wrong
+    // verdict writes a video with FREE captions out of the corpus -- and a
+    // later pass sends it to a PAID transcription API instead.
+    //
+    // So the file is written ONCE per video, and it is written with the
+    // verdict that justified it. A reader can then tell a video YouTube
+    // said has no captions from one a run merely failed to fetch, and a
+    // re-check has something to re-check.
+    const verdict = parsed.noCaptionsByReason;
     for (const id of parsed.noCaptions) {
       noCaptions.add(id);
-      fs.appendFileSync(noCaptionsFile, `${id}\n`);
+      fs.appendFileSync(noCaptionsFile, `${id}\t${verdict[id] || 'no captions'}\n`);
     }
     for (const id of parsed.quarantined) quarantinedIds.add(id);
     totals.fetched += parsed.fetched.length;
