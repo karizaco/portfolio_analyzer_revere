@@ -1,0 +1,71 @@
+{
+  "description": "Captured AsymTrading (Substack) posts, for the offline tests in test/asymSource.test.js.",
+  "captured_at": "2026-11-11",
+  "source": {
+    "publication": "https://asymtrading.substack.com",
+    "publication_id": 1534424,
+    "endpoint": "/api/v1/posts?limit=25&cursor=<base64 post_date>",
+    "note": "The cursor walk is what produced every file here. The endpoint returns body_html for FREE posts and an empty body for paid ones."
+  },
+  "why_fixtures": "The publication is rate-limited -- a full catalog walk is 20 requests -- so a test suite that hit the network would be slow, flaky and would eventually fail for reasons that have nothing to do with the code. The corpus is captured once and read from disk.",
+  "files": {
+    "corpus_index.json": {
+      "what": "Every post in the publication: id, slug, date and audience.",
+      "count": 476,
+      "md5": "e4aeed70b4239689a7e75ff7afb7b37f"
+    },
+    "post_224076892_paid.json": {
+      "what": "One PAID post, whole. The body is the shared boilerplate every post starts with; the report itself is absent.",
+      "md5": "9454f40d2975fca5aa8cfb69fb2d3c68"
+    },
+    "free/*.json": {
+      "what": "The whole FREE corpus, one file per post, named by slug.",
+      "count": 42,
+      "note": "These are the posts the pipeline may read: 27 Market Pulse reports and 15 from the educational and feature-announcement series.",
+      "md5": {
+        "6-steps-to-profitable-swing-trading-123.json": "56236134bfda5698cbd5cb7bab2bd580",
+        "6-steps-to-profitable-swing-trading-156.json": "fe35498cbc4a0faac66c038dddbbd977",
+        "6-steps-to-profitable-swing-trading-2d6.json": "457315993a9be7ab488b37d1e1112db4",
+        "6-steps-to-profitable-swing-trading-329.json": "0a318a984e1a8889e1b38779e353d851",
+        "6-steps-to-profitable-swing-trading-718.json": "346c8a1ba1b854091db9e989037d3540",
+        "6-steps-to-profitable-swing-trading-7c7.json": "a186787bd8fcc80708046917136197ec",
+        "6-steps-to-profitable-swing-trading-8d9.json": "0dab752e8f55db770d1c9912087ff497",
+        "6-steps-to-profitable-swing-trading.json": "bedba15eeb1a23d9add0edcca29155a8",
+        "coming-soon.json": "b865da5b97e9b19b7d120e9d907145ae",
+        "gotta-get-started-somewhere.json": "a37a171c2ee59ce4461c2fb0e4ce4eec",
+        "learning-together.json": "11fb38006e03995f4d9a69c3fcc68f6e",
+        "market-breadth-monitor.json": "c48912d0fc8cb034d6d8ee61e168e65d",
+        "market-pulse-199.json": "ed0df7cfe84f0619efaf38c52db6381c",
+        "market-pulse-2d2.json": "27e5dbb8cdb6e5f1195c232ba832f226",
+        "market-pulse-302.json": "fb219bc9a7634f7a3aabee5c32dedde9",
+        "market-pulse-384.json": "057f12c96e3e35f4c6a03ef5aff74c8d",
+        "market-pulse-5a2.json": "ba10cf38b018cbfacb61a91bd990c981",
+        "market-pulse-5be.json": "36086c0aae87829dba60fe5fd3b989a0",
+        "market-pulse-64d.json": "aaba6a61580af327f35c4a9b2c2a8c29",
+        "market-pulse-6f8.json": "aacfeeebceed523b03faf83d383adf4d",
+        "market-pulse-773.json": "1eb989c2fb600c02d2cbde8998f458ac",
+        "market-pulse-78c.json": "323568abcc1c09ed5c3451586b944f71",
+        "market-pulse-82b.json": "2c7f4c6c35e71a95c9073b9f16d9f394",
+        "market-pulse-875.json": "76d366f1692f6d89ef1d092c9cd379c5",
+        "market-pulse-8e0.json": "35bd57e45913501ec45a9178b7412640",
+        "market-pulse-a12.json": "56c7f3ed8e046cd1c5608e0a5ccd5a4a",
+        "market-pulse-a7e.json": "fe39027bb5524c4776b8f25798b9b38d",
+        "market-pulse-ac9.json": "a9a33d6f47f40c1336cfdda334253678",
+        "market-pulse-acd.json": "7c8b53c51a28c47da9626ed3ad010f6a",
+        "market-pulse-b5c.json": "f9189350a78f1c301a2bfc73b75bdf97",
+        "market-pulse-b65.json": "3bc32ba519074d5d79b11d0965a3d592",
+        "market-pulse-cc4.json": "c5113a3dbf97a4e0fbb8952fc5f1508b",
+        "market-pulse-dd4.json": "66c7fab80fbff5e58f89bb23146b5a73",
+        "market-pulse-ef7.json": "bdcc0fb8586e41cb4a1aa03dd0d3bf0f",
+        "market-pulse-f25.json": "a1807b2090d15fbc3a90cb1d1aa5d30d",
+        "market-pulse-f49.json": "0d1354c54e5c8b6e1f7914aede83e7cb",
+        "market-pulse-fa6.json": "9889e4d8155596a0aaa1568ba1b9518b",
+        "market-pulse-open-access-bf1.json": "83d532451292df149253684adb54315a",
+        "market-pulse-open-access.json": "96c7b69eb02917ede3ed522572261a36",
+        "momentum-movers.json": "419940b95c9a685dbf8fef4fa9500ef6",
+        "top-trader-profile-dan-zanger.json": "95acedba96a7b39835625da2767abc86",
+        "top-trader-profile-nicolas-darvas.json": "13f6fa5315f7f0aa857d3a9a80499b9f"
+      }
+    }
+  }
+}

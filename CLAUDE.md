@@ -488,6 +488,13 @@ Results: `data/qmg_alt_batch_results.json`.
 - `tools/importFlatListing.js` — imports a flat `id<TAB>title` listing (no dates) into `videos`
 - `tools/surveyT3liveNames.js` — reports which spoken names resolve and which do not; writes `data/t3live_name_candidates.csv`. The rows the confirmed table has to grow.
 
+### AsymTrading (Substack source, article text — see § 'The AsymTrading source')
+- `src/asym/channel.js` — the publication's identity: logical name `asymtrading`, host `asymtrading.substack.com`, numeric publication id `1534424`, and the `asym_<post_id>` catalog id. The post id is NUMERIC, not the slug: every post is titled "Market Pulse", and the slug suffix repeats across series.
+- `src/asym/contentFilter.js` — the access gate (free / paywalled / teaser / empty) and the series taxonomy: `market_pulse`, `momentum_movers`, `market_monitor`, `focus_list`, `post_mortem`, `market_dashboard`, `swing_trading_course`, `trader_profile`, `essay`, `prelaunch`, `copy`.
+- `src/asym/substackClient.js` — the API client. The pagination is a CURSOR, not an offset (`?offset=20` is HTTP 400), and the two list endpoints differ: `/api/v1/archive` returns an empty body for every post while `/api/v1/posts` returns the real body for free ones.
+- `src/asym/articleParse.js` — parses the Market Pulse report. It switches on the LABELS, not on a date, because the format changed three times between 2024 and 2026.
+- `tools/catalogAsymSubstack.js` — walks the archive, records EVERY post (free and paid) in `asym_posts`, parses the free ones into `asym_articles`, and records a `catalog_runs` row.
+
 ### Aggregation
 - `src/video/captureTickers.js` — which field of a capture holds its holdings (see below)
 - `src/video/probeLogDirs.js` — the three probe-log directory layouts (see below)
@@ -751,6 +758,72 @@ is true when the FIRST capture's reading has as many tickers as the panel says
 are on screen. It is a DIAGNOSTIC and is never acted on: a count misread low
 would truncate a correct reading, and a count read from a different frame
 would judge the wrong reading.
+
+## A failed caption fetch is NOT a video with no captions (2026-11-10)
+
+The pipeline keeps a **caption-less list** per channel
+(`data/catalog_flat/<channel>_no_captions.txt`) so a video with no caption
+track is not re-requested on every pass. That list is a **BLACKLIST**: the
+chunk runner filters it out of its pending set and never asks for the video
+again.
+
+**A wrong entry is therefore permanent, and it is expensive.** A video the
+list wrongly excludes is not merely delayed — a later Deepgram pass sends it
+to a PAID transcription API for audio that YouTube will transcribe for free.
+
+That is what happened to T3Live. Of **237** entries in
+`data/catalog_flat/t3live_no_captions.txt`, **119 were wrong** — those
+videos do have auto-captions and were fetched once during a bad window.
+The tool reported every failure as "no captions", so the run's bad luck
+became a permanent fact about the video.
+
+**Two defects made it happen, and both are fixed:**
+
+1. **The verdict was read from the wrong stream.** yt-dlp prints
+   `[info] There are no subtitles for the requested languages` on
+   **stdout**, and only its warnings on stderr. Reading stderr alone
+   therefore classifies *every* genuinely absent caption track as a failed
+   fetch — and, once the two were collapsed into one message, every failed
+   fetch as an absent track.
+2. **`--write-auto-subs` alone misses manual captions.** A video with
+   hand-uploaded subtitles looks caption-less to a run that only asks for
+   the automatic ones. Both flags are now passed.
+
+**The rule, and it is the one that matters:** a video may be blacklisted
+only on YouTube's own answer. `classifyMissingCaptions()`
+(`tools/fetchSevcikTranscripts.js`) reports three things, and only the
+first one is permanent:
+
+| verdict | what it means | what to do |
+|---|---|---|
+| `no captions` | yt-dlp said the track is absent | blacklist it |
+| `caption fetch failed (…)` | the REQUEST failed — bot check, cookie, network | retry, never blacklist |
+| `rate limited (HTTP 429)` | the endpoint is throttling this IP | wait 30–60 min |
+
+The blacklist entry now carries **the verdict that justified it**
+(`id<TAB>reason`), so a reader can tell a video YouTube said has none from
+one a run merely failed to fetch.
+
+Pinned by `test/fetchCaptionClassification.test.js` — the verdicts, the
+**stdout** reading (the case the first fix would have got backwards again),
+and the fact that a failure's detail text can itself contain the phrase
+"no captions" and must still not blacklist. `test/fetchTranscriptChunks.test.js`
+pins the runner side: a failed fetch is never blacklisted, and an entry
+carries its reason.
+
+**Before trusting any caption-less list again, audit it.** The check is
+cheap and it is the whole fix:
+
+```bash
+node -e "const fs=require('fs');const ids=[...new Set(fs.readFileSync('data/catalog_flat/t3live_no_captions.txt','utf8').split(/?
+/).map(s=>s.split('	')[0].trim()).filter(Boolean))];
+let cap=0,dg=0,none=0;for(const id of ids){const f='data/video_pipeline/transcripts/'+id+'.json';
+if(!fs.existsSync(f)){none++;continue;}try{const d=JSON.parse(fs.readFileSync(f,'utf8'));d.provider==='deepgram'?dg++:cap++;}catch(e){none++;}}
+console.log({unique:ids.length,nowHaveCaptions:cap,deepgram:dg,nothing:none});"
+```
+
+`nowHaveCaptions` above zero means the list holds entries the tool got
+wrong.
 
 ## The Sevcik source — a TRANSCRIPT source, not an OCR source (2026-11-04)
 
@@ -6398,3 +6471,142 @@ are worth fetching later, because they are free and Deepgram is not.
 `ORDER BY`, so every run that used the flag died with "near AND: syntax
 error". The filter has to go before the ORDER BY.
 
+
+## The AsymTrading source — a SUBSTACK source, and the first one with a PAYWALL (2026-11-11)
+
+`https://asymtrading.substack.com` — the project's **sixth** data source and
+the first one that is **not a video channel at all**. It is a Substack
+newsletter: a weekly "Market Pulse" written report, an embedded commentary
+video, a breadth spreadsheet and a stock list.
+
+**The thing that makes it different from every other source here is the
+paywall.** Over the full corpus — 476 posts, 2023-03-29 to 2026-11-11 —
+**42 are free and 434 are not.**
+
+| | |
+|---|---|
+| posts | 476 |
+| free | 42 (27 of them Market Pulse reports) |
+| paid | 434 |
+| free posts with an embedded video | 24 |
+| series | `market_pulse`, `momentum_movers`, `market_monitor`, `focus_list`, `post_mortem`, `market_dashboard`, `swing_trading_course`, `trader_profile`, `essay`, `prelaunch`, `copy` |
+
+**THE ACCESS GATE HAS TWO PARTS, and both are needed.**
+
+1. `audience !== 'only_paid'` — the publication's own statement.
+2. The body is actually there — the receipt.
+
+Part 2 is not redundant. Part 1 is a claim; part 2 is the evidence that the
+request was not served a teaser where a body was expected. Measured: the
+`/api/v1/posts` LIST endpoint returns an empty body for a paid post, while
+`/api/v1/posts/by-id/<id>` returns the **shared boilerplate every post
+starts with** (the "What You Can Expect" block, 1,560 chars) and nothing
+else — no report, no headings. So a reader cannot tell a paywalled post
+from a free one by looking at the body; only the `audience` field says so.
+
+**Nothing here reaches past the paywall.** There is no subscriber mode, no
+cookie handling, and no scraping of a logged-in session. If that is ever
+wanted it has to be built on the user's own credentials, explicitly.
+
+**THE PAID POSTS ARE CATALOGUED ANYWAY.** `asym_posts` holds every post,
+free and paid, with an `access` column recording which of `free` /
+`paywalled` / `teaser_only` / `empty_body` applied. A paid post is a post
+that exists; recording it keeps the corpus honest — "42 of 476 posts were
+read" is a fact about the source, and "42 posts" would be a fact about the
+pipeline pretending to be a fact about the source.
+
+### Why the posts have their own tables
+
+They do NOT go into `videos`. Two reasons:
+
+1. `videos` is keyed on a YouTube video id, and its `status` column carries
+   the OCR pipeline's lifecycle (pending → scanning → done). A Substack
+   post's lifecycle is different — catalogued, body read, media
+   transcribed — and overloading the OCR vocabulary would make both harder
+   to read.
+2. A paid post has no media and no body. It cannot be a "video" in any
+   sense the rest of the pipeline means.
+
+So:
+
+| table | what it holds |
+|---|---|
+| `asym_posts` | every post, free and paid, with its access state, series and media id |
+| `asym_articles` | the parsed report of every free post |
+
+**The parsed readings are NOT `trade_signals`.** That table is a TICKER
+table: one row per (video, ticker) with a direction and the sentence it
+came from. "Breadth is Positive" is a statement about the market and
+applies to no ticker at all, so putting it in `trade_signals` would mean
+inventing a ticker for it. The article's index mentions (SPY/QQQ/MDY/IWM)
+are kept in `asym_articles.index_tickers` as context, for the same reason.
+
+### The report is a FIXED FORMAT — and it changed three times
+
+This is the part worth reading before touching the parser. The report is
+machine-readable, and the format evolved:
+
+| reading | 2026 (current) | 2025-09 → 2025-12 | 2025-02 → 2025-06 |
+|---|---|---|---|
+| backdrop | `Market Backdrop:` (a paragraph) | — | `Overall:` (a heading) |
+| trend | `Overall Trend:` | `Overall Trend:` | `Index Trends:` |
+| breadth | `Overall NH/NL Breadth:` | same | same |
+| momentum | `Overall Up/Down Momentum:` | same | same |
+| plan sections | `1) Title -- State` | `1. Title` | unnumbered headings |
+
+**So the parser switches on the LABELS, not on a date.** A date-based
+switch breaks the moment the author changes the layout again, and it has to
+be updated every time. All 27 free Market Pulse posts parse all four
+readings, and every extracted value keeps the sentence it came from — a
+breadth reading of "Positive" is a claim, and a claim you cannot point at
+cannot be checked.
+
+The sectors in focus are read the same way: the author names them in prose
+("Primary focus: Energy, Defensives, Healthcare, …"), as a sub-heading
+followed by a bullet per sector, or in a plain sentence. All three are
+read, and the tier (primary / secondary / avoid) is recorded with its
+evidence.
+
+### The API's two quirks — both measured
+
+- **The pagination is a CURSOR, not an offset.** `?offset=20` returns HTTP
+  400 (`{"errors":[{"param":"offset","msg":"Invalid value"}]}`). The
+  endpoint takes `cursor=<base64 of {"post_date":"..."}>` and returns
+  `nextCursor`.
+- **The two list endpoints return different amounts of the post.**
+  `/api/v1/archive` returns `body_html: ""` for **every** post; `/api/v1/posts`
+  returns the real body for free ones. The catalog uses the posts endpoint,
+  because the body is the whole point of the source.
+
+The endpoint is **undocumented** and the publication is **rate-limited** — a
+full walk is 20 requests and asking repeatedly gets the IP throttled (HTTP
+429, measured). So the tool walks once, and the **whole free corpus is
+captured as fixtures** under `test/fixtures/asym/` (with a `manifest.json`
+recording each file's md5), which is what lets the tests run offline.
+
+### The catalog id is the NUMERIC post id, never the slug
+
+Every post in this publication is titled "Market Pulse". The slug is
+`market-pulse-<suffix>` and the suffix REPEATS across series —
+`market-pulse-open-access` and `market-pulse-open-access-bf1` are different
+posts, and `6-steps-to-profitable-swing-trading` appears with six different
+suffixes. So a slug is a display name, not an identifier. The catalog id is
+`asym_<post_id>`, namespaced so it can never collide with a YouTube video
+id.
+
+### The date is the date the post is ABOUT
+
+The author's own label ("10/28/2026") is used, not the publication
+timestamp. 86 of the corpus's posts are published after midnight UTC and
+so carry a UTC date one day later than the label; for a market recap, the
+day the report covers is the day that matters. The label is stored in
+`asym_posts.post_label` and the derived `YYYYMMDD` in `upload_date`.
+
+```bash
+npm run asym:catalog       # walk the archive, record every post, parse the free ones
+npm run asym:catalog:dry   # the same walk, writing nothing
+```
+
+The catalog is **idempotent**: a second run updates the rows in place
+(measured: 476 inserted on the first run, 0 inserted / 476 updated on the
+second), and it records a `catalog_runs` row like every other catalog run.

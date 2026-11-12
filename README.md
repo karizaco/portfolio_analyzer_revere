@@ -575,6 +575,17 @@ a transcript on disk, and a video on the caption-less list can still come back
 with captions once YouTube's throttle has lifted — 89 of the 164 in the first
 chunked run did. The provider field is the record, and it says 73 for that run.
 
+**A failed caption fetch is not a video with no captions.** The caption-less
+list is a blacklist — the runner never asks for those videos again — so one
+wrong entry is permanent, and it sends a video with free captions to a paid
+transcription API. Of the 237 entries in T3Live's list, **119 were wrong**:
+videos that do have captions, fetched once during a bad window. Two defects
+caused it. The "no subtitles" verdict is on yt-dlp's **stdout**, and the tool
+was reading stderr; and `--write-auto-subs` alone sees no manual captions.
+The classifier now reports three things and only blacklists on YouTube's own
+answer — `no captions`, `caption fetch failed` (a retry), and `rate limited`
+(a wait). Pinned by `test/fetchCaptionClassification.test.js`.
+
 **A chunk that fetched nothing is not always a throttle.** On 2026-11-10 the
 caption runner stopped and reported a possible rate limit on a chunk of 11
 videos. They were educational "how to" titles the content filter had already
@@ -594,6 +605,116 @@ point at them.
 
 ---
 
+## AsymTrading (Substack source, article text)
+
+`https://asymtrading.substack.com` -- the sixth source, and the first one
+that is **not a video channel at all**. It is a Substack newsletter whose
+weekly "Market Pulse" posts carry a written market report, an embedded
+commentary video, a breadth spreadsheet and a stock list.
+
+**What makes it different from every other source here:** most of the
+publication is behind a paywall. Over the full corpus (476 posts,
+2023-03-29 to 2026-11-11) **42 posts are free and 434 are not.** The
+pipeline reads the free ones and records the rest, so the catalog says what
+was published as well as what could be read.
+
+| | |
+|---|---|
+| posts | 476 (27 of the free ones are Market Pulse reports) |
+| free | 42 -- of which **24 carry an embedded video** |
+| paid | 434 -- the body is not served, only a 309-character teaser |
+| series | market_pulse, momentum_movers, market_monitor, focus_list, post_mortem, swing_trading_course, trader_profile, essay, prelaunch |
+
+### The access gate has two parts
+
+A post is readable only if **both** hold:
+
+1. `audience !== 'only_paid'` -- the publication's own statement, and
+2. the body is actually there -- the receipt.
+
+Part 2 is not redundant. Part 1 is a claim; part 2 is the evidence that the
+request was not served a teaser where a body was expected. The free corpus
+is catalogued in `asym_posts` with an `access` column recording which of
+`free` / `paywalled` / `teaser_only` / `empty_body` applied.
+
+**Nothing here reaches past the paywall.** There is no subscriber mode, no
+cookie handling, and no scraping of a logged-in session.
+
+### The report is a fixed format, and it changed
+
+A Market Pulse post is not prose. It is a report, and it is machine-readable:
+
+```
+Market Metrics
+  Market Backdrop: Mixed
+  Overall Trend: Mixed            + Large / Mid / Small Cap
+  Overall NH/NL Breadth: Positive + Large / Mid / Small Cap
+  Overall Up/Down Momentum: Mixed + Large / Mid / Small Cap
+Market Recap
+  Market Monitor (link)           -> the breadth spreadsheet
+  TC2000 Stock list (link)        -> the day's stock list
+Tactical Plan of Action
+  1) Market Posture -- Cautiously Constructive
+  2) Leadership -- Follow Proven Strength
+  ...
+Bottom Line
+```
+
+**The format changed three times between 2024 and 2026**, so the parser
+switches on the LABELS rather than on a date:
+
+| reading | today | before |
+|---|---|---|
+| backdrop | `Market Backdrop:` (a paragraph) | `Overall:` (a heading) |
+| trend | `Overall Trend:` | `Index Trends:` |
+| plan sections | `1) Title -- State` | `1. Title` or unnumbered |
+
+A date-based switch would break the moment the author changes the layout
+again. All 27 free Market Pulse posts parse all four readings, and every
+extracted value keeps the sentence it came from -- a breadth reading of
+"Positive" is a claim, and a claim you cannot point at cannot be checked.
+
+### Where the readings live
+
+They are **not** `trade_signals`. That table is a TICKER table: one row per
+(video, ticker) with a direction and the sentence it came from. "Breadth is
+Positive" is a statement about the market and applies to no ticker at all,
+so forcing it into `trade_signals` would mean inventing a ticker for it.
+
+| table | what it holds |
+|---|---|
+| `asym_posts` | every post, free and paid, with its access state and media id |
+| `asym_articles` | the parsed report of every free post |
+
+### Running it
+
+```bash
+npm run asym:catalog       # walk the archive, record every post, parse the free ones
+npm run asym:catalog:dry   # the same walk, writing nothing
+```
+
+The catalog is **idempotent**: a second run updates the rows in place. It
+records a `catalog_runs` row like every other catalog run.
+
+### The API's two quirks
+
+Both are measured, and both cost real time to discover:
+
+- **The pagination is a cursor, not an offset.** `?offset=20` returns HTTP
+  400 (`"Invalid value"`); the endpoint takes `cursor=<base64 of
+  {"post_date":"..."}>` and returns `nextCursor`.
+- **The two list endpoints return different amounts of the post.**
+  `/api/v1/archive` returns `body_html: ""` for *every* post; `/api/v1/posts`
+  returns the real body for free ones. The catalog uses the posts endpoint,
+  because the body is the whole point of the source.
+
+The endpoint is **undocumented** and the publication is **rate-limited** --
+a full walk is 20 requests, and asking repeatedly gets the IP throttled
+(HTTP 429). So the tool walks once, and the **whole free corpus is captured
+as fixtures** under `test/fixtures/asym/`, which is what lets the tests run
+offline.
+
+---
 ## Troubleshooting
 
 ### FFmpeg path missing (`ffmpeg.exe ENOENT`)
@@ -650,6 +771,10 @@ npm run sevcik:signals
 npm run sevcik:setups
 npm run sevcik:aggregate
 
+# AsymTrading: catalog the publication and parse the free posts
+npm run asym:catalog
+npm run asym:catalog:dry   # the same walk, writing nothing
+
 # Prune old probe directories
 node tools/prune_old_probes.js           # dry-run
 node tools/prune_old_probes.js --execute # actually delete
@@ -667,6 +792,9 @@ data/
     downloads_hires/      # Revere 720p videos
     transcripts/          # Fetched transcripts (one JSON per video)
     audio_sevcik/         # Temporary Sevcik audio, for the Deepgram fallback
+  # AsymTrading's own tables live in the same catalog:
+  #   asym_posts     every Substack post, free and paid
+  #   asym_articles  the parsed report of every free post
   video_scan_YYYYMMDD/    # OCR scan outputs
   video_ocr_probe/       # Temporary probe directories (prune if >10 MB)
   price_cache/yahoo/      # Historical price data
@@ -687,4 +815,5 @@ data/
 - `data/sevcik_signals.csv` — extracted trade signals, with their evidence
 - `data/sevcik_daily_summary.csv` — one row per Sevcik stream
 - `data/sevcik_ticker_summary.csv` — one row per ticker
-- `data/sevcik_report.html` — the Sevcik dashboard
+- `data/sevcik_report.html`
+- `asym_posts` / `asym_articles` (in `state.sqlite`) -- the AsymTrading corpus and its parsed reports — the Sevcik dashboard

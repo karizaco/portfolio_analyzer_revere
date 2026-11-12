@@ -52,6 +52,8 @@
     "t3live:aggregate": "node tools/aggregateT3liveSignals.js",
     "t3live:outcomes": "node tools/analyzeT3liveOutcomes.js",
     "t3live:names": "node tools/surveyT3liveNames.js --write-candidates data/t3live_name_candidates.csv",
+    "asym:catalog": "node tools/catalogAsymSubstack.js",
+    "asym:catalog:dry": "node tools/catalogAsymSubstack.js --dry-run",
     "qmg:benchmark:curated": "node tools/runQmgCuratedBenchmark.js",
     "qmg:ocr:batch": "node tools/runQmgOcrBatch.js",
     "qmg:ocr:batch:dry": "node tools/runQmgOcrBatch.js --dry-run",

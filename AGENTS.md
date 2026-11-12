@@ -478,6 +478,13 @@ Results: `data/qmg_alt_batch_results.json`.
 - `src/transcript/deepgramClient.js` — ffmpeg audio extraction + Deepgram `nova-2` upload
 - `src/report/sevcikReport.js` — the self-contained HTML dashboard
 
+### AsymTrading (Substack source, article text)
+- `src/asym/channel.js` — the publication's identity: logical name `asymtrading`, host `asymtrading.substack.com`, numeric publication id `1534424`, and the `asym_<post_id>` catalog id. The post id is NUMERIC, not the slug: every post is titled "Market Pulse", and the slug suffix repeats across series.
+- `src/asym/contentFilter.js` — the access gate (free / paywalled / teaser / empty) and the series taxonomy: `market_pulse`, `momentum_movers`, `market_monitor`, `focus_list`, `post_mortem`, `market_dashboard`, `swing_trading_course`, `trader_profile`, `essay`, `prelaunch`, `copy`.
+- `src/asym/substackClient.js` — the API client. The pagination is a CURSOR, not an offset (`?offset=20` is HTTP 400), and the two list endpoints differ: `/api/v1/archive` returns an empty body for every post while `/api/v1/posts` returns the real body for free ones.
+- `src/asym/articleParse.js` — parses the Market Pulse report. It switches on the LABELS, not on a date, because the format changed three times between 2024 and 2026.
+- `tools/catalogAsymSubstack.js` — walks the archive, records EVERY post (free and paid) in `asym_posts`, parses the free ones into `asym_articles`, and records a `catalog_runs` row.
+
 ### Aggregation
 - `src/video/captureTickers.js` — which field of a capture holds its holdings (see below)
 - `src/video/probeLogDirs.js` — the three probe-log directory layouts (see below)

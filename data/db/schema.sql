@@ -337,6 +337,139 @@ CREATE INDEX IF NOT EXISTS idx_sevcik_ta_features_exec ON sevcik_ta_features(exe
 CREATE INDEX IF NOT EXISTS idx_sevcik_ta_features_arch ON sevcik_ta_features(archetype);
 CREATE INDEX IF NOT EXISTS idx_sevcik_ta_features_trend ON sevcik_ta_features(trend_regime);
 
+-- AsymTrading Substack tables ---------------------------------------------
+--
+-- The AsymTrading source is a Substack publication, not a YouTube channel,
+-- so its catalog has things a YouTube channel does not: a PAYWALL, a
+-- post SLUG, and a body that is TEXT rather than pixels.
+--
+-- So the publication's posts get their OWN table rather than going into
+-- the videos table. Two reasons:
+--
+--   1. The videos table is keyed on a YouTube video id and its status
+--      column carries the OCR pipeline's lifecycle (pending -> scanning ->
+--      done). A Substack post's lifecycle is different -- catalogued, body
+--      read, media transcribed -- and overloading the OCR vocabulary would
+--      make both harder to read.
+--   2. A paid post has NO media and NO body. It cannot be a "video" in any
+--      sense the rest of the pipeline means, but it IS a post that exists
+--      and that a subscriber would be able to read. Recording it keeps the
+--      corpus honest: the catalog says what was published and what the
+--      pipeline was allowed to read.
+--
+-- The two tables are:
+--
+--   asym_posts      one row per Substack post, for EVERY post -- free and
+--                    paid. The access column records which. This is the
+--                    corpus.
+--   asym_articles   one row per FREE post whose body was read and parsed.
+--                    The parsed market readings live here rather than in
+--                    the transcript tables, because they are the author's
+--                    own spreadsheet readings and not speech.
+--
+-- WHY THE PARSED READINGS ARE NOT trade_signals
+--
+-- trade_signals is a TICKER table: one row per (video, ticker) with a
+-- direction, a confidence and the sentence it came from. The market
+-- readings here are not calls on a ticker -- "breadth is Positive" is a
+-- statement about the market, and it applies to no ticker at all. Putting
+-- it in trade_signals would either force a fake ticker onto it or lose
+-- the readings that carry no ticker.
+--
+-- The article's TICKER mentions (the indices SPY/QQQ/MDY/IWM) are kept in
+-- asym_articles.index_tickers as a list, for the same reason: they are
+-- context in a market reading, not calls.
+
+CREATE TABLE IF NOT EXISTS asym_posts (
+    -- The catalog id. The Substack post id, namespaced so it can never
+    -- collide with a YouTube video id. See src/asym/channel.js.
+    video_id TEXT PRIMARY KEY,
+    -- Substack's own numeric post id. What the API keys media by.
+    post_id TEXT NOT NULL DEFAULT '',
+    slug TEXT NOT NULL DEFAULT '',
+    title TEXT NOT NULL DEFAULT '',
+    -- The author's own date label, e.g. "10/28/2026". It is the date the
+    -- POST is about, which is not always the date it was published: 86 of
+    -- the corpus's posts are published after midnight UTC and so carry a
+    -- UTC date one day later than the label.
+    post_label TEXT NOT NULL DEFAULT '',
+    -- The publication timestamp, ISO-8601.
+    post_date TEXT NOT NULL DEFAULT '',
+    -- The calendar date the post is ABOUT, as YYYYMMDD -- the same shape
+    -- videos.upload_date uses, so the two catalogs sort together.
+    upload_date TEXT NOT NULL DEFAULT '',
+    -- 'everyone' or 'only_paid', as Substack reports it.
+    audience TEXT NOT NULL DEFAULT '',
+    -- 'free' | 'paid' | 'teaser' | 'empty'. What the pipeline could
+    -- actually read, which is not the same as what the publication says.
+    access TEXT NOT NULL DEFAULT '',
+    -- The series: market_pulse, swing_trading_course, and so on.
+    series TEXT NOT NULL DEFAULT '',
+    -- 1 when the post carries an embedded video.
+    has_media INTEGER NOT NULL DEFAULT 0,
+    -- The Mux media-upload id of that video.
+    media_upload_id TEXT NOT NULL DEFAULT '',
+    -- The video's length in seconds, when the API reports it.
+    media_duration REAL,
+    -- The breadth/momentum spreadsheet the post links to.
+    spreadsheet_url TEXT NOT NULL DEFAULT '',
+    -- The day's TC2000 stock list the post links to.
+    tc2000_url TEXT NOT NULL DEFAULT '',
+    -- The word count Substack reports for the body.
+    word_count INTEGER NOT NULL DEFAULT 0,
+    -- Whether the extraction pipeline skips this post.
+    quarantined INTEGER NOT NULL DEFAULT 0,
+    -- Why it was skipped.
+    quarantine_reason TEXT NOT NULL DEFAULT '',
+    -- When the body was read, if it was.
+    body_fetched_at TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(post_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_asym_posts_date ON asym_posts(upload_date);
+CREATE INDEX IF NOT EXISTS idx_asym_posts_access ON asym_posts(access);
+CREATE INDEX IF NOT EXISTS idx_asym_posts_series ON asym_posts(series);
+CREATE INDEX IF NOT EXISTS idx_asym_posts_media ON asym_posts(has_media);
+
+CREATE TABLE IF NOT EXISTS asym_articles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id TEXT NOT NULL UNIQUE REFERENCES asym_posts(video_id),
+    -- The overall market assessment. The author calls this "Market
+    -- Backdrop" in the current format and "Overall" in the older one.
+    backdrop TEXT NOT NULL DEFAULT '',
+    -- The index trend. "Overall Trend" now, "Index Trends" before.
+    trend TEXT NOT NULL DEFAULT '',
+    -- The new-highs/new-lows breadth reading.
+    breadth TEXT NOT NULL DEFAULT '',
+    -- The up/down momentum reading.
+    momentum TEXT NOT NULL DEFAULT '',
+    -- The per-cap-size breakdown, as JSON:
+    --   {"trend":[{"cap":"Large Cap","state":"mixed"}], ...}
+    cap_sizes TEXT NOT NULL DEFAULT '',
+    -- The sectors in focus and the ones to avoid, as JSON:
+    --   [{"sector":"Technology","tier":"primary","evidence":"..."}]
+    sectors TEXT NOT NULL DEFAULT '',
+    -- The plan sections, as JSON:
+    --   [{"number":1,"title":"Market Posture","state":"...","body":[...]}]
+    plan_sections TEXT NOT NULL DEFAULT '',
+    -- The conditional scenarios, as JSON.
+    scenarios TEXT NOT NULL DEFAULT '',
+    -- The Bottom Line paragraph.
+    bottom_line TEXT NOT NULL DEFAULT '',
+    -- The indices the prose mentions. Context, not calls.
+    index_tickers TEXT NOT NULL DEFAULT '',
+    -- The parsed narrative paragraphs.
+    paragraphs TEXT NOT NULL DEFAULT '',
+    -- Which parser version produced this row, so a re-run with a changed
+    -- parser can be told apart from the previous one.
+    parser_version TEXT NOT NULL DEFAULT '',
+    parsed_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_asym_articles_backdrop ON asym_articles(backdrop);
+CREATE INDEX IF NOT EXISTS idx_asym_articles_trend ON asym_articles(trend);
 -- Discord pipeline tables -------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS discord_sources (

@@ -346,6 +346,51 @@ chart-stream crop's measured geometry is stated for that width. Measured
 | 4 | re-OCR for the current parser | — | the recorded readings predate the parser fixes **and** the era-conditional crop, so every captured frame was cropped with the old fixed rectangle. `tools/evalParserReplay.js` scores the *current* parser over the recorded logs, so the parser is measurable without re-scanning — but the CROP is not: a re-scan is the only way to get a sidebar-era frame read at all. **Five sidebar-era dates have been done** — `20230609` reads its 13 holdings exactly, 0 FP, and the four-date batch reads 39/41 (§ *The chart-stream parser* above). |
 | 5 | pin the remaining ground-truth captures | 10 of 104 captures | the ten under the two *annotated duplicate* keys, which no probe log can match and which carry the same readings as the dates they are labelled with. Every date the replay tool can score is pinned. |
 
+## The AsymTrading source (measured 2026-11-11)
+
+A **Substack** source, and the first one in the project with a paywall. It
+is catalogued in its own tables rather than in `videos`, because a Substack
+post is not a YouTube video and a paywalled post has no media and no body.
+
+| | count |
+|---|---|
+| posts in the publication | 476 (2023-03-29 → 2026-11-11) |
+| free, and therefore read | 42 |
+| of those, Market Pulse reports | 27 |
+| of those, carrying an embedded video | 24 |
+| paywalled, and catalogued but not read | 434 |
+
+| series | posts | free |
+|---|---|---|
+| `market_pulse` | 276 | 27 |
+| `momentum_movers` | 94 | 1 |
+| `market_monitor` | 46 | 0 |
+| `focus_list` | 28 | 0 |
+| `swing_trading_course` | 8 | 8 |
+| `essay` | 6 | 0 |
+| `post_mortem` | 6 | 0 |
+| `copy` | 5 | 0 |
+| `prelaunch` | 2 | 2 |
+| `trader_profile` | 2 | 2 |
+| `learning_together` | 1 | 1 |
+| `market_breadth_monitor` | 1 | 1 |
+| `market_dashboard` | 1 | 0 |
+
+All 27 free Market Pulse posts parse all four market readings (backdrop,
+trend, breadth, momentum). The parser switches on the report's LABELS, not
+on a date, because the report format changed three times between 2024 and
+2026 — see CLAUDE.md § *The AsymTrading source*.
+
+**The video path is not built yet.** The 24 free posts with an embedded
+video are catalogued with their Mux media-upload id, and the media can be
+fetched from the signed Mux MP4 URL, but nothing downloads or transcribes
+them yet. The article path is complete.
+
+```bash
+npm run asym:catalog        # walk the archive and parse the free posts
+npm run asym:catalog:dry    # the same walk, writing nothing
+```
+
 ## Re-measuring
 
 Everything in § *Current state* comes from four commands:
