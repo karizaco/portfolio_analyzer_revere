@@ -488,6 +488,21 @@ Results: `data/qmg_alt_batch_results.json`.
 - `tools/importFlatListing.js` — imports a flat `id<TAB>title` listing (no dates) into `videos`
 - `tools/surveyT3liveNames.js` — reports which spoken names resolve and which do not; writes `data/t3live_name_candidates.csv`. The rows the confirmed table has to grow.
 
+### Benzinga (English transcript source — see § 'The Benzinga source')
+- `src/benzinga/channel.js` — logical name `benzinga`, handle `@Benzinga`, both listing URLs (`/streams`, `/videos`)
+- `src/benzinga/contentFilter.js` — the show taxonomy and the **allow-list**. The shows: `premarket_playbook`, `the_drift`, `stock_in_play`, `explainer`, `market_update` (readings only), and the quarantined `earnings_call`, `fed_presser`, `interview`, `partner_content`, `education`, `product_tutorial`, `short_clip`, `upcoming`, `other`. It also reads the air date out of a title, the partner out of "PreMarket Playbook + <partner>", and the tickers a title names.
+- `src/benzinga/attribution.js` — is this claim somebody ELSE's opinion? A reported claim is tagged, not dropped.
+- `src/benzinga/options.js` — the direction an options position implies (selling puts is BULLISH)
+- `src/benzinga/sections.js` — which part of the show a claim was made in (recap / preview / setup / interview / sponsor)
+- `src/benzinga/symbols.js` — the indicators ("20 DMA") and the index futures (ES, NQ) that are not holdings
+- `src/benzinga/marketReadings.js` — what a show says about the MARKET, a SECTOR or a MACRO EVENT; the stance is the direction word near the subject
+- `tools/extractBenzingaSignals.js` (parser `benzinga-signals-1`) / `tools/extractBenzingaReadings.js` (`benzinga-readings-1`) / `tools/aggregateBenzingaSignals.js` / `tools/analyzeBenzingaOutcomes.js`
+- `src/report/benzingaReport.js` — the dashboard (`data/benzinga_report.html`)
+- `tools/measureBenzingaSpeech.js` — how much of each show is SPOKEN tickers (the ceiling on recall)
+
+### The shared transcript runner
+- `src/transcript/extractRunner.js` — the ONE runner behind every source's extractor: register the transcripts on disk, select the videos, read the segments, extract, and **always** replace a video's rows. Two defects came from the copies it replaced: a video whose calls went to zero kept its old rows, and a quarantined video's rows were never cleared at all.
+
 ### AsymTrading (Substack source, article text — see § 'The AsymTrading source')
 - `src/asym/channel.js` — the publication's identity: logical name `asymtrading`, host `asymtrading.substack.com`, numeric publication id `1534424`, and the `asym_<post_id>` catalog id. The post id is NUMERIC, not the slug: every post is titled "Market Pulse", and the slug suffix repeats across series.
 - `src/asym/contentFilter.js` — the access gate (free / paywalled / teaser / empty) and the series taxonomy: `market_pulse`, `momentum_movers`, `market_monitor`, `focus_list`, `post_mortem`, `market_dashboard`, `swing_trading_course`, `trader_profile`, `essay`, `prelaunch`, `copy`.
@@ -6843,3 +6858,96 @@ sectors and the Bottom Line per post, because those are why the source is
 worth reading -- and it shows the COVERAGE beside them, because the
 publication is mostly paywalled and a dashboard showing only the free
 posts without saying so would read as the whole publication.
+
+---
+
+## The Benzinga source — a NEWS channel, and mostly not trade calls (2026-11-12)
+
+`https://www.youtube.com/@Benzinga` — the project's **seventh** source and
+the third transcript source. English, like T3Live; a YouTube channel, like
+T3Live and Sevcik. It reuses that pipeline end to end.
+
+**THE CHANNEL IS A NEWS CHANNEL, AND THAT IS THE WHOLE PROBLEM.** Measured
+on the full listing (12,786 catalogued videos, 2026-11-12):
+
+| show | count | handled as |
+|---|---|---|
+| PreMarket Playbook / PreMarket Prep | ~2,400 | extract (the reason the source was added) |
+| The Drift (Adam Mesh & Tom Sosnoff) | 21 | extract (options) |
+| long-form commentary | ~3,600 | extract, scored at one month |
+| setup clips | ~2,100 | extract |
+| futures / market-update clips | ~770 | **readings only** — no ticker signals |
+| earnings-call rebroadcasts | ~460 | quarantined (an event calendar, not calls) |
+| Fed press conferences | ~68 | quarantined |
+| CEO interviews, education, product pieces, Shorts | ~4,000 | quarantined |
+
+So the content filter is an **ALLOW-LIST** (`src/benzinga/contentFilter.js`).
+T3Live's deny-list would let the earnings calls through, and an earnings
+call is management saying what THEIR business will do.
+
+**THE THREE RULES THIS SOURCE NEEDS, and all three were measured.**
+
+1. **ATTRIBUTION.** "Wedbush's Dan Ives remains very bullish on Tesla" is not
+   Benzinga's call. The shared extractor published it as a bullish TSLA at
+   confidence 0.83 (2026-11-11). Such a claim is now tagged `reported`
+   (`src/benzinga/attribution.js`), kept with its evidence, and left out of
+   the scoring — the same treatment a retrospective claim gets.
+2. **OPTIONS DIRECTION.** "I'm going to sell some puts" is a **bullish**
+   position. The shared extractor reads the verb, so it published a bearish
+   CRWV. The Drift is an options show, so this is its normal vocabulary
+   (`src/benzinga/options.js`).
+3. **SECTIONS.** A recap is history, a preview is a prediction, and a
+   sponsor's segment is neither (`src/benzinga/sections.js`).
+
+**THE CEILING IS THE SPOKEN TICKERS, and no vocabulary work will raise it.**
+Measured over the pilot corpus: a Drift episode has ~4,000 segments and only
+**2.5 %** of them name a ticker. The host says "I'm buying here" and the
+ticker is on the screen, not in the words. The 2014–2020 PreMarket Prep era
+is worse: those hosts name companies in words ("Neri", "Apple"), so the
+tickers come from the confirmed-names table and the older episodes read very
+sparsely. `npm run benzinga:survey` prints the measurement per show.
+
+**THE PILOT (35 videos, 2014 → 2026, dated and transcribed).**
+
+| | |
+|---|---|
+| transcripts from YouTube captions | **34 of 35** (one caption-less) |
+| signals | 81 from 29 videos, 32 tickers |
+| market and sector readings | 135 from 36 videos |
+| scored claims | 42 — 1w hit 50.0 %, same-call-on-SPY 58.3 %, excess −0.27 % [−2.51 %, +1.98 %] |
+
+**THE READINGS HAVE THEIR OWN TABLE.** `trade_signals` is a ticker table, so
+"the Nasdaq is going to gap up" and "semis are the leadership" have no
+home in it. `market_readings` holds them, one row per (video, subject,
+stance), each with the sentence it was read from. A reading's stance is the
+direction word **near** the subject, because a caption is a rolling fragment
+and a direction word anywhere in it does not belong to a subject anywhere in
+it (`STANCE_WINDOW_CHARS`).
+
+**FOUR DEFECTS FIXED ALONG THE WAY, and each one was a live defect.**
+
+- **The OCR downloaders were not channel-scoped.** The worker's queue took
+  30 of 30 T3Live rows, and the 720p batcher took 16 of 30 T3Live/Sevcik
+  rows. Both now filter on `OCR_CHANNELS` (`src/video/videoStatus.js`,
+  mirrored in `tools/whiteboard_worker.py`).
+- **An unregistered channel got SEVCIK's settings** — the Czech caption
+  order and the Czech Deepgram model. The wrong model on English audio does
+  not produce a worse transcript; it produces no transcript. An unknown
+  channel is now an error.
+- **`catalog` labelled an unrecognised YouTube URL `revere`.** A playlist
+  URL carries no handle, so a Benzinga playlist would have been catalogued
+  as Revere — and then downloaded by the OCR pipeline.
+- **The extractors were copies, and the copies drifted.** The Sevcik copy
+  replaced a video's rows only when the new run found signals, so a video
+  whose calls went to zero kept its OLD rows from an OLD parser version:
+  **8 rows from parser versions 3 and 4 survived on 4 videos**, and they
+  were still aggregated and scored. There is now ONE runner
+  (`src/transcript/extractRunner.js`) and it always replaces — including
+  with zero rows.
+
+**ONE BUG OF MY OWN, recorded because it is a trap.** The channel's default
+subtitle languages are a STRING ("en", "cs-orig,en"). Assigning it to the
+list without splitting made the caption loop walk its CHARACTERS — 'e' and
+'n' — so every video came back "no captions", and ten videos were written to
+the caption-less blacklist, which is permanent. The blacklist was deleted
+and the videos refetched. Pinned by `test/fetchChannelDefaults.test.js`.

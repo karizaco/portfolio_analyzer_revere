@@ -101,6 +101,7 @@ function main() {
     quarantine: t3liveVideoQuarantine,
     includeQuarantine: options.includeQuarantine,
     dryRun: options.dryRun,
+    parserVersion: PARSER_VERSION,
     label: 't3live-signals',
     extract: (segments, video) => extractSignals({
       segments,

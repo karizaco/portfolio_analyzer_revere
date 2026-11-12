@@ -183,6 +183,7 @@ function main() {
     quarantine: benzingaVideoQuarantine,
     includeQuarantine: options.includeQuarantine,
     dryRun: options.dryRun,
+    parserVersion: PARSER_VERSION,
     label: 'benzinga-signals',
     extract: (segments, video) => {
       const signals = extractSignals({

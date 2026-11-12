@@ -270,6 +270,39 @@ function ensureSegmentsAttached(db, segmentsPath) {
 }
 
 /**
+ * Delete the rows a SUPERSEDED parser wrote.
+ *
+ * The always-replace rule cannot reach a QUARANTINED video: the runner
+ * does not select it, so its rows are never cleared. And a row from an
+ * older parser version is not comparable with the current rows -- it was
+ * read by a different set of rules -- but it is still aggregated and
+ * scored.
+ *
+ * Measured on the shipped Sevcik catalog (2026-11-12): 8 rows from
+ * parser versions 3 and 4 survived on 4 videos; after the always-replace
+ * fix, 3 rows on ONE video remained, and that video was the quarantined
+ * "14 dní" challenge stream.
+ *
+ * So a full run clears them: every row of the channel whose parser
+ * version is not the one running now is deleted. A PARTIAL run -- one
+ * video, or a limit -- must not do this, because it would clear rows the
+ * run is not going to replace.
+ *
+ * @param {DatabaseSync} db
+ * @param {{channel: string, version: string, table?: string}} options
+ * @returns {number} the number of rows deleted
+ */
+function purgeSupersededRows(db, options) {
+  const table = options.table || 'trade_signals';
+  const result = db.prepare(
+    `DELETE FROM ${table}
+     WHERE parser_version <> ?
+       AND video_id IN (SELECT video_id FROM videos WHERE channel = ?)`,
+  ).run(options.version, options.channel);
+  return Number(result.changes || 0);
+}
+
+/**
  * Run the extractor over every selected video.
  *
  * @param {object} options
@@ -281,6 +314,8 @@ function ensureSegmentsAttached(db, segmentsPath) {
  * @param {boolean} [options.includeQuarantine]
  * @param {boolean} [options.dryRun]
  * @param {string} [options.segmentsPath] - overrides the segments file (tests)
+ * @param {string} [options.parserVersion] - the version this run writes;
+ *   a FULL run clears the rows an older version wrote
  * @param {Function} options.extract - (segments, video) => Array<object>
  * @param {Function} [options.replace] - (db, videoId, transcriptId, rows) => void
  *   writes the rows; defaults to replaceSignals (trade_signals)
@@ -291,6 +326,20 @@ function ensureSegmentsAttached(db, segmentsPath) {
 function runExtraction(db, options) {
   const label = options.label || 'extract';
   ensureSegmentsAttached(db, options.segmentsPath);
+
+  // A FULL run clears what an older parser wrote. A partial run does not:
+  // it would clear rows it is not going to replace.
+  if (options.parserVersion && !options.dryRun && !options.videoId && !options.limit) {
+    const purged = purgeSupersededRows(db, {
+      channel: options.channel,
+      version: options.parserVersion,
+      table: options.table || 'trade_signals',
+    });
+    if (purged) {
+      console.log(`[${label}] cleared ${purged} row(s) written by a superseded parser version`);
+    }
+  }
+
   const registered = registerDiskTranscripts(db, options);
   if (registered) {
     console.log(`[${label}] registered ${registered} disk transcript(s) into video_transcripts`);
@@ -340,6 +389,7 @@ module.exports = {
   attachSegments,
   ensureSegmentsAttached,
   loadSegments,
+  purgeSupersededRows,
   registerDiskTranscripts,
   replaceSignals,
   runExtraction,

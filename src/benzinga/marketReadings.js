@@ -42,14 +42,19 @@
 
 const DIRECTION_WORDS = {
   bullish: [
-    /\b(?:bullish|rally|ralling|strength|strong|leading|leadership|breakout|outperform(?:ing)?|beat(?:ing)?|bid(?:ding)?|green|soaring|surging|popping|ripp?ing|bounce|rebound|recovery|constructive|favor(?:s|ed|able)|opportunit(?:y|ies)|advanc(?:e|es|ed|ing))\b/i,
+    /\b(?:bullish|rall(?:y|ied|ies|ying)|rall(?:y|ies)\b|strength|strong|leading|breakout|outperform(?:ing|s|ed)?|beat(?:ing)?|soar(?:ing|s|ed)|surg(?:e|es|ed|ing)|pop(?:ping|ped)?|ripp(?:ing|ped)?|bounc(?:e|es|ed|ing)|rebound|recover(?:y|ed|ing)?|constructive|advanc(?:e|es|ed|ing)|rally(?:ing)?)\b/i,
+    /\bgap(?:s|ping)?\s+up\b/i,
+    /\b(?:rose|rising|gained|gaining)\b/i,
   ],
   bearish: [
-    /\b(?:bearish|weak(?:ness)?|underperform(?:ing)?|laggard(?:s)?|selloff|selling|sell\s+off|crash(?:ing|ed)?|tumble|drop(?:ping|ped)?|fall(?:ing|en)?|sinking|correction|breakdown|avoid(?:s|ed|ing)?|cautious|caution|hedge(?:d|ing)?|warning|overvalu(?:ed|ation)|bubble|unwind(?:ing)?|retreat(?:ing)?|slump(?:ping)?)\b/i,
+    /\b(?:bearish|weak(?:ness|er)?|underperform(?:ing|s|ed)?|laggard(?:s)?|sell(?:ing)?\s+off|selloff|crash(?:ing|ed|es)?|tumble(?:d|ing)?|drop(?:ping|ped|s)?|fall(?:ing|en|s)?|sinking|sank|correction|breakdown|avoid(?:s|ed|ing)?|cautious|caution|hedge(?:d|ing)?|warning|overvalu(?:ed|ation)|bubble|unwind(?:ing)?|retreat(?:ing)?|slump(?:ping|ed)?|tanked|plunge(?:d|ing)?)\b/i,
+    /\bgap(?:s|ping)?\s+down\b/i,
+    /\bsold\s+off\b/i,
+    /\b(?:fell|falling|declin(?:e|ed|ing)|slid(?:e|ing)?)\b/i,
   ],
 };
 
-const NEGATION = /\b(?:not|isn'?t|is\s+not|aren'?t|no\s+longer|don'?t|do\s+not|never|without)\s+(?:\w+\s+){0,2}?(?:bullish|bearish|higher|lower|up|down|rally|drop|strength|weakness)\b/i;
+const NEGATION = /\b(?:not|isn'?t|is\s+not|aren'?t|no\s+longer|don'?t|do\s+not|didn'?t|did\s+not|never|can'?t|cannot|wouldn'?t|would\s+not|won'?t|will\s+not|haven'?t|have\s+not|hasn'?t|has\s+not|without)\s+(?:\w+\s+){0,3}?(?:bullish|bearish|rally|drop|strength|weakness|bull|bear|up|down)\b/i;
 
 /**
  * The subjects a reading can be about, and the ETF it is scored with.
@@ -59,7 +64,10 @@ const NEGATION = /\b(?:not|isn'?t|is\s+not|aren'?t|no\s+longer|don'?t|do\s+not|n
  */
 const SUBJECTS = [
   // -- the market as a whole ------------------------------------------
-  { scope: 'market', subject: 'the market', proxy: 'SPY', pattern: /\b(?:the\s+)?(?:market|markets|tape|stocks|the\s+market|equities)\b/i },
+  // "below-market puts" is not a market reading, and "those stocks are
+  // getting the beating" is three stocks, not the market. So the hyphen
+  // and the plural are excluded.
+  { scope: 'market', subject: 'the market', proxy: 'SPY', pattern: /(?<!-)\b(?:market|markets|tape|equities)\b/i },
   { scope: 'market', subject: 'the Nasdaq', proxy: 'QQQ', pattern: /\b(?:the\s+)?(?:nasdaq|nasdaq\s+100|ndx|the\s+q'?s|q'?qq|qqq)\b/i },
   { scope: 'market', subject: 'the S&P 500', proxy: 'SPY', pattern: /\b(?:the\s+)?(?:s\s*&\s*p\s*500|s\s+and\s+p|sp\b|spx|spy)\b/i },
   { scope: 'market', subject: 'the Russell', proxy: 'IWM', pattern: /\b(?:the\s+)?(?:russell(?:\s+2000)?|small\s+caps?|the\s+rut)\b/i },
@@ -105,7 +113,7 @@ const SUBJECTS = [
  * So the stance is the direction word NEAREST the subject, and only one
  * within this distance counts.
  */
-const STANCE_WINDOW_CHARS = 60;
+const STANCE_WINDOW_CHARS = 45;
 
 /**
  * The words that are too weak to carry a stance.
@@ -142,6 +150,12 @@ function directionWords(text) {
 /**
  * The stance the words near a subject state, or null when they state none.
  *
+ * The NEAREST direction word wins. "the financials are strong but the
+ * semiconductors are very weak" is two claims about two subjects, and
+ * each subject's stance is the word next to it. Taking every direction
+ * word in the window instead makes both subjects 'mixed', which is a
+ * reading about nothing.
+ *
  * @param {string} text
  * @param {number} [subjectAt] - where the subject is in the text
  * @returns {string|null}
@@ -150,25 +164,32 @@ function stanceNear(text, subjectAt) {
   const window = String(text || '');
   const at = subjectAt === undefined ? 0 : subjectAt;
   const near = directionWords(window)
-    .filter((entry) => Math.abs(entry.at - at) <= STANCE_WINDOW_CHARS);
+    .map((entry) => ({ ...entry, distance: Math.abs(entry.at - at) }))
+    .filter((entry) => entry.distance <= STANCE_WINDOW_CHARS);
   if (!near.length) return null;
 
-  const bullish = near.filter((entry) => entry.stance === 'bullish');
-  const bearish = near.filter((entry) => entry.stance === 'bearish');
+  // The predicate FOLLOWS its subject in English: "the financials are
+  // strong", "the semiconductors look weak". So a direction word AFTER
+  // the subject belongs to it, and one before it belongs to the PREVIOUS
+  // subject. Taking the nearest word by character distance gets this
+  // wrong -- in "the financials are strong but the semiconductors are
+  // very weak", 'strong' is nearer to 'semiconductors' than 'weak' is --
+  // so the words after the subject are preferred, and the words before
+  // are the fallback.
+  const after = near.filter((entry) => entry.at >= at);
+  const pool = after.length ? after : near.filter((entry) => entry.at < at);
+  if (!pool.length) return null;
+
+  const closest = Math.min(...pool.map((entry) => entry.distance));
+  const at_ = pool.filter((entry) => entry.distance === closest);
+  const stances = new Set(at_.map((entry) => entry.stance));
 
   // A negation reverses the direction it applies to.
   const negated = NEGATION.test(window);
-  let isBullish = bullish.length > 0;
-  let isBearish = bearish.length > 0;
-  if (negated) {
-    if (isBullish && !isBearish) { isBullish = false; isBearish = true; }
-    else if (isBearish && !isBullish) { isBearish = false; isBullish = true; }
-  }
-
-  if (isBullish && isBearish) return 'mixed';
-  if (isBullish) return 'bullish';
-  if (isBearish) return 'bearish';
-  return null;
+  if (stances.size > 1) return 'mixed';
+  const stance = [...stances][0];
+  if (!negated) return stance;
+  return stance === 'bullish' ? 'bearish' : 'bullish';
 }
 
 /**
@@ -205,9 +226,14 @@ const MIN_EVIDENCE_CHARS = 40;
 function isQuoted(text, at) {
   const window = String(text || '');
   const before = window.slice(0, at);
-  const openQuotes = (before.match(/["“]/g) || []).length;
-  const closeQuotes = (before.match(/["”]/g) || []).length;
-  return openQuotes > closeQuotes;
+  // The two quote styles are counted SEPARATELY. A character class with
+  // both the straight quote and the closing curly quote counts a straight
+  // quote as an opening AND a closing one, so every straight-quoted
+  // sentence looked closed.
+  const straight = (before.match(/"/g) || []).length;
+  const openCurly = (before.match(/“/g) || []).length;
+  const closeCurly = (before.match(/”/g) || []).length;
+  return (straight % 2 === 1) || (openCurly > closeCurly);
 }
 
 /**

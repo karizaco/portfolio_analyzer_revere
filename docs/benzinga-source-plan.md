@@ -1,8 +1,13 @@
 # Adding Benzinga (`@Benzinga`) as a source: analysis and implementation plan
 
-*Status: proposal, 2026-11-11. Nothing here is implemented yet. Every number marked
-"measured" was taken on 2026-11-11 from the catalog (opened read-only), the code,
-or a small sample of the channel. Appendix A has the commands, so each number can be reproduced.*
+*Status: IMPLEMENTED through the pilot, 2026-11-12. Phase 0 (hardening), the
+catalog, the classification, the transcripts, the extractor, the readings and the
+aggregation are all in place and measured. The SCALE decision (Phase 3 beyond
+the pilot) is still open — see § "What the pilot measured".*
+
+*Every number marked "measured" was taken on 2026-11-11/12 from the catalog
+(opened read-only), the code, or a sample of the channel. Appendix A has the
+commands.*
 
 ---
 
@@ -503,7 +508,61 @@ Deepgram budget.
 
 ---
 
-## Part 5: Risks
+## Part 5: What the pilot measured (2026-11-12)
+
+The pilot was 35 videos, spread across the shows and the eras (2014 → 2026),
+dated with `fill-dates` and transcribed through the chunk runner.
+
+| | |
+|---|---|
+| transcripts fetched from YouTube captions | **34 of 35** (one caption-less) |
+| transcript size | 2,000–7,600 segments per hour-long episode |
+| signals | 81 from 29 videos, 32 tickers |
+| market and sector readings | 130 from 36 videos |
+| scored claims | 42 — 1w hit 50.0 %, same-call-on-SPY 58.3 %, excess −0.27 % [−2.51 %, +1.98 %] |
+
+**THE CEILING IS THE SPOKEN TICKERS.** Measured per show (`npm run
+benzinga:survey`):
+
+| show | segments | segments naming a ticker | share |
+|---|---|---|---|
+| The Drift | 73,222 | 1,805 | **2.5 %** |
+| PreMarket Playbook | 19,496 | 682 | **3.5 %** |
+| long-form commentary | 12,343 | 567 | 4.6 % |
+| a market-update clip | 121 | 23 | 19.0 % |
+
+A Drift episode has ~4,000 segments and only ~2.5 % of them name a ticker:
+the host says "I'm buying here" and the ticker is on the screen, not in the
+words. **No vocabulary work raises that ceiling** — it is a property of a
+chart-driven live show.
+
+The 2014–2020 PreMarket Prep era is worse: those hosts name companies in
+words ("Neri", "Apple"), so the tickers come from the confirmed-names table.
+One pilot episode ("Merger Monday Is Back", 4,100 segments) has **zero**
+ticker segments and yields nothing.
+
+**WHAT WAS FIXED AS A RESULT OF THE PILOT**, each one measured:
+
+| defect | how it showed | the fix |
+|---|---|---|
+| an analyst's opinion was published as the host's call | "Wedbush's Dan Ives remains very bullish on Tesla" → bullish TSLA at confidence 0.83 | the attribution tag (`reported`), with the first-person check so the host's own "I remain bullish" is untouched |
+| selling puts was published as bearish | "I'm going to sell some puts" → bearish CRWV | the options direction table, with the option word required to be NEXT to the verb ("I sold calls on NVDA to finance the put" is a call sale) |
+| the indicator was published as a holding | "DMA. Held it on a bounce and is running." → DMA | `src/benzinga/symbols.js`: the indicators, and the index futures (ES, NQ, …) which are market positions and not holdings |
+| a broker's own name was a call on the broker | "Morgan Stanley raised its price target…" → MS | the broker check; the row is tagged `reported` |
+| a reading's stance came from the wrong clause | "We'll see what happens on General Electric today… Let's get to some other stocks" → bearish Consumer Staples | the stance is the direction word NEAR the subject, and the words AFTER the subject are preferred (English puts the predicate after its subject) |
+| a question was a claim | "What's the most overvalued stock in the S&P 500?" → bearish S&P | a caption with a `?` produces no reading |
+| a quoted opinion was the host's | "all the headlines say, 'Oh, rates crashed the market'" → the host's bearish call | the quote check — and the straight quote is counted separately from the curly one, or every straight-quoted sentence looks closed |
+| a recap was a prediction | yesterday's review → a forward call | the section tagger; a recap is `retrospective` |
+
+**THE READINGS' PRECISION IS ~65 %, NOT T3Live's.** Hand-labelled on two
+random samples of 20: 12/20 and 13/20. The residual errors are the rolling
+caption itself — a caption holds the tail of one thought and the head of the
+next, so the subject and the stance are often in different clauses ("The
+Nasdaq is definitely not as weak as the S&P" reads as bearish). It is reported
+with its evidence on every row, and it is a NEW artifact with nothing to
+compare it against, so the bar for it is the user's call.
+
+## Part 6: Risks
 
 | risk | mitigation |
 |---|---|
@@ -520,14 +579,35 @@ Deepgram budget.
 | other agents writing the shared `state.sqlite` | commit catalog changes promptly; never run alongside another writer; schema edits after Asym lands |
 | shared English rule changes move T3Live's numbers | measure and record the blast radius of each change (project rule) |
 
-## Part 6: Decisions needed from you
+## Part 7: Decisions taken, and decisions still open
 
-1. **The allow-list.** Default: PreMarket Playbook/Prep, The Drift, setup clips and
-   explainers; market-update clips feed readings only.
-2. **The Deepgram budget** for caption-less allow-listed videos.
-3. **Transcript storage** for Benzinga: track JSON only, or also compress.
-4. **Refactor first** (recommended) or copy the T3Live pattern.
-5. **The precision bar** for Phase 4.
+**TAKEN (2026-11-11, by the user).**
+
+| decision | answer | what it means in the code |
+|---|---|---|
+| the allow-list | **agreed** | PreMarket Playbook/Prep, The Drift, setup clips and explainers; market-update clips feed the readings only; everything else is quarantined (`src/benzinga/contentFilter.js`) |
+| the Deepgram budget | **consider unlimited** | the budget is not a gate in the code; what IS a gate is the caption-less list, which only ever grows by YouTube's own answer |
+| transcript storage | **track JSON only** | the VTTs of the Benzinga corpus are NOT committed; the normalised JSON is. The VTTs are re-fetchable, the JSON is the artifact |
+| refactor first? | **no need — the T3Live pattern is fine** | so the shared runner was NOT a big rewrite of the two extractors. It was, however, needed for correctness: the two copies had drifted (the Sevcik one never replaced a video's rows when the new run found none, so 8 rows from a superseded parser survived on 4 videos), and both now share `src/transcript/extractRunner.js` |
+| the precision bar | **comparable to T3Live, to be seen** | the pilot's measured numbers are in Part 5. The SIGNALS are close; the READINGS are ~65 % and are a new artifact with nothing to compare against |
+
+**STILL OPEN.**
+
+1. **The scale.** The catalog holds 12,786 Benzinga videos, 9,302 of them on
+   the allow-list. Transcribing all of them is ~9,000 hours of video, and the
+   transcripts alone would add ~1 GB to a repository whose tracked transcripts
+   are already 970 MB. The pilot's 34 transcripts covered 2014–2026 and showed
+   97 % caption coverage, so the cost is bandwidth and Deepgram budget rather
+   than captions. **Recommendation: the two shows (PreMarket Playbook, The
+   Drift) plus the setup clips, and the long-form commentary only back to
+   2024.** That is ~3,000 videos and ~2,500 hours.
+2. **The precision bar for the READINGS** (currently ~65 % hand-labelled).
+   Options: publish them as they are, with the evidence on every row; publish
+   only the ones from the two talk shows; or publish only the ones whose
+   subject and stance are in the same clause.
+3. **The confirmed-names table.** The 2014–2020 era speaks tickers as company
+   names ("Neri", "Apple"), and those names have to be confirmed one at a
+   time — the same work `npm run t3live:names` did for T3Live.
 
 ---
 

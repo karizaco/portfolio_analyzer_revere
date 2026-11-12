@@ -100,6 +100,7 @@ function main() {
     quarantine: sevcikVideoQuarantine,
     includeQuarantine: options.includeQuarantine,
     dryRun: options.dryRun,
+    parserVersion: PARSER_VERSION,
     label: 'sevcik-signals',
     extract: (segments, video) => extractSignals({
       segments,
