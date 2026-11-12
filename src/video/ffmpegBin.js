@@ -79,6 +79,19 @@ function findOnPath(binaryName) {
 }
 
 /**
+ * The executable's file name on this platform.
+ *
+ * Windows needs the .exe suffix; POSIX does not. The caller passes the bare
+ * name ('ffmpeg'), and this is where it becomes a path that exists.
+ *
+ * @param {string} binaryName
+ * @returns {string}
+ */
+function executableName(binaryName) {
+  return process.platform === 'win32' ? `${binaryName}.exe` : binaryName;
+}
+
+/**
  * The ffmpeg.exe / ffprobe.exe inside a winget Gyan.FFmpeg package.
  *
  * The winget package nests the binaries one level down:
@@ -105,7 +118,12 @@ function wingetCandidates(binaryName) {
           return fs
             .readdirSync(vendorRoot, { withFileTypes: true })
             .filter((child) => child.isDirectory())
-            .map((child) => path.join(vendorRoot, child.name, 'bin', binaryName));
+            // The binaries on disk are ffmpeg.exe and ffprobe.exe, so the
+            // candidate name needs the EXE suffix on Windows. Without it
+            // every candidate fails the existence check below, the winget
+            // package is never found, and the resolver falls through to the
+            // bare name -- which is the state this machine was in.
+            .map((child) => path.join(vendorRoot, child.name, 'bin', executableName(binaryName)));
         } catch {
           return [];
         }
