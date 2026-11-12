@@ -75,6 +75,22 @@ const OUTCOME_TICKER_COLUMNS = [
   'scored_1m', 'hit_rate_1m', 'avg_return_1m',
 ];
 
+/**
+ * The readings' outcome columns.
+ *
+ * A reading has no ticker of its own -- it has a SUBJECT (the market, a
+ * sector, a macro event) and the ETF it is scored against.
+ */
+const READING_OUTCOME_COLUMNS = [
+  'show', 'partner', 'scope', 'subject', 'video_id', 'upload_date', 'event_date',
+  'ticker', 'yahoo_symbol', 'bias', 'section',
+  'entry_price', 'price_1w', 'price_1m',
+  'return_1w', 'return_1m', 'aligned_return_1w', 'aligned_return_1m',
+  'spy_return_1w', 'spy_same_call_hit_1w', 'excess_aligned_1w',
+  'spy_return_1m', 'spy_same_call_hit_1m', 'excess_aligned_1m',
+  'hit_1w', 'hit_1m', 'price_status', 'evidence_text',
+];
+
 /** Index calls: scored on their own, because "beat SPY" is meaningless for SPY. */
 const MARKET_TICKERS = new Set(['SPY', 'QQQ', 'IWM', 'DIA']);
 
@@ -129,7 +145,27 @@ async function main() {
   });
   const { claims, conflicting } = toClaims(forward);
 
-  const dates = claims.map((claim) => toIsoDate(claim.upload_date)).filter(Boolean).sort();
+  // THE READINGS. A reading says what the show thinks about the MARKET, a
+  // SECTOR or a MACRO EVENT -- "the Nasdaq is going to gap up", "semis are
+  // the leadership". It has no ticker of its own, so it cannot live in
+  // `trade_signals`, and it was therefore extracted and never scored.
+  //
+  // It is scored here against its ETF proxy (SPY, QQQ, SMH, XLK, ...) and
+  // against the SAME call on SPY, which is the same baseline the signals
+  // use. A macro-event reading has no proxy and is therefore reported but
+  // not scored.
+  const readings = (payload.readings || []).filter((reading) => {
+    if (reading.stance !== 'bullish' && reading.stance !== 'bearish') return false;
+    if (!reading.proxy_ticker) return false;
+    if (String(reading.claim_kind || 'forward') !== 'forward') return false;
+    if (options.show && reading.show !== options.show) return false;
+    return true;
+  });
+
+  const dates = [...new Set([
+    ...claims.map((claim) => toIsoDate(claim.upload_date)),
+    ...readings.map((reading) => toIsoDate(reading.upload_date)),
+  ].filter(Boolean))].sort();
   const asOfDate = new Date().toISOString().slice(0, 10);
   const provider = createYahooPriceProvider({
     cacheDirectory: CACHE_DIR,
@@ -138,9 +174,13 @@ async function main() {
     prefetchConcurrency: 2,
   });
 
-  const symbols = [...new Set([...claims.map((claim) => yahooSymbolFor(claim.ticker)), 'SPY'].filter(Boolean))];
+  const symbols = [...new Set([
+    ...claims.map((claim) => yahooSymbolFor(claim.ticker)),
+    ...readings.map((reading) => yahooSymbolFor(reading.proxy_ticker)),
+    'SPY',
+  ].filter(Boolean))];
   console.log(`[benzinga-outcomes] signals=${forward.length} claims=${claims.length}`
-    + ` conflicting=${conflicting.length} symbols=${symbols.length}`);
+    + ` conflicting=${conflicting.length} readings=${readings.length} symbols=${symbols.length}`);
   await provider.prefetchTickers(symbols);
 
   const outcomes = [];
@@ -177,6 +217,54 @@ async function main() {
     outcomes.push(row);
   }
 
+  // THE READINGS, SCORED. A reading is a claim about a subject that has an
+  // ETF proxy, so it is scored the same way a signal is -- against its
+  // proxy, and against the same call made on SPY.
+  const readingOutcomes = [];
+  for (const reading of readings) {
+    const eventDate = toIsoDate(reading.upload_date || reading.event_date);
+    let prices;
+    if (!eventDate) {
+      prices = { entry: null, week: null, month: null, meta: { status: 'missing_event_date' } };
+    } else {
+      const symbol = yahooSymbolFor(reading.proxy_ticker);
+      const weekDate = shiftIsoDate(eventDate, HORIZON_1W_DAYS);
+      const monthDate = shiftIsoDate(eventDate, HORIZON_1M_DAYS);
+      const entry = await provider.getPricePoint(symbol, eventDate);
+      const week = weekDate <= asOfDate
+        ? await provider.getPricePoint(symbol, weekDate)
+        : { price: '', priceStatus: 'horizon_not_elapsed' };
+      const month = monthDate <= asOfDate
+        ? await provider.getPricePoint(symbol, monthDate)
+        : { price: '', priceStatus: 'horizon_not_elapsed' };
+      const status = [entry.priceStatus, week.priceStatus, month.priceStatus]
+        .filter((value) => value && !String(value).startsWith('ok'))
+        .join('|') || 'ok';
+      prices = { entry: finitePrice(entry.price), week: finitePrice(week.price), month: finitePrice(month.price), meta: { status } };
+    }
+    const scored = scoreSignalOutcome({
+      source: 'reading',
+      video_id: reading.video_id,
+      upload_date: reading.upload_date,
+      ticker: reading.proxy_ticker,
+      bias: reading.stance,
+      claim_kind: reading.claim_kind,
+      confidence_label: '',
+      confidence_score: null,
+      evidence_text: reading.evidence_text,
+    }, prices);
+    const row = {
+      ...scored,
+      show: reading.show || '',
+      partner: reading.partner || '',
+      scope: reading.scope || '',
+      subject: reading.subject || '',
+      section: reading.section || '',
+    };
+    await attachSameCallOnSpy(row, provider, asOfDate);
+    readingOutcomes.push(row);
+  }
+
   const horizons = { weekDays: HORIZON_1W_DAYS, monthDays: HORIZON_1M_DAYS, asOfDate };
   const summarize = async (rows) => {
     const baseline = await buildSpyBaseline(rows.filter((row) => row.event_date), provider, horizons);
@@ -211,6 +299,19 @@ async function main() {
   }
   overall.same_call_on_spy = { '1w': sameCallStats(outcomes, '1w'), '1m': sameCallStats(outcomes, '1m') };
 
+  // THE READINGS' OWN SUMMARY, by scope and by subject.
+  const readingsOverall = readingOutcomes.length ? await summarize(readingOutcomes) : null;
+  const readingsByScope = {};
+  for (const scope of [...new Set(readingOutcomes.map((row) => row.scope).filter(Boolean))]) {
+    const subset = readingOutcomes.filter((row) => row.scope === scope);
+    if (subset.length) readingsByScope[scope] = await summarize(subset);
+  }
+  const readingsBySubject = {};
+  for (const subject of [...new Set(readingOutcomes.map((row) => row.subject).filter(Boolean))]) {
+    const subset = readingOutcomes.filter((row) => row.subject === subject);
+    if (subset.length) readingsBySubject[subject] = await summarize(subset);
+  }
+
   const summary = {
     generated_at: new Date().toISOString(),
     horizons: { '1w_days': HORIZON_1W_DAYS, '1m_days': HORIZON_1M_DAYS },
@@ -224,9 +325,21 @@ async function main() {
     by_bias: byBias,
     by_category: byCategory,
     conflicting,
+    // The READINGS, scored against their ETF proxies.
+    readings: {
+      scored: readingOutcomes.length,
+      unscored_macro_events: (payload.readings || [])
+        .filter((r) => String(r.claim_kind || 'forward') === 'forward'
+          && (r.stance === 'bullish' || r.stance === 'bearish') && !r.proxy_ticker).length,
+      overall: readingsOverall,
+      by_scope: readingsByScope,
+      by_subject: readingsBySubject,
+    },
   };
 
   await writeCsv(path.join(OUTPUT_DIR, 'benzinga_outcomes.csv'), OUTCOME_COLUMNS, outcomes.map(serializeOutcome));
+  await writeCsv(path.join(OUTPUT_DIR, 'benzinga_reading_outcomes.csv'), READING_OUTCOME_COLUMNS,
+    readingOutcomes.map(serializeOutcome));
   await writeCsv(path.join(OUTPUT_DIR, 'benzinga_outcome_ticker_summary.csv'), OUTCOME_TICKER_COLUMNS,
     (overall.tickers || []).map((row) => ({
       ticker: row.ticker,
@@ -257,7 +370,13 @@ async function main() {
   for (const [partner, s] of Object.entries(byPartner)) line(`partner:${partner}`, s);
   for (const [bias, s] of Object.entries(byBias)) line(`bias:${bias}`, s);
   for (const [category, s] of Object.entries(byCategory)) line(`category:${category}`, s);
-  console.log('[benzinga-outcomes] wrote data/benzinga_outcomes.csv, data/benzinga_outcome_ticker_summary.csv, data/benzinga_outcome_summary.json');
+  if (readingsOverall) {
+    console.log('[benzinga-outcomes] --- the READINGS, scored against their ETF proxies ---');
+    line('readings', readingsOverall);
+    for (const [scope, s] of Object.entries(readingsByScope)) line(`reading:${scope}`, s);
+  }
+  console.log('[benzinga-outcomes] wrote data/benzinga_outcomes.csv, data/benzinga_reading_outcomes.csv,'
+    + ' data/benzinga_outcome_ticker_summary.csv, data/benzinga_outcome_summary.json');
 }
 
 function finitePrice(value) {
