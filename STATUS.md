@@ -393,10 +393,13 @@ over the transcript with the ENGLISH name finder.
 |---|---|
 | posts with a video | 24 |
 | the whole corpus of media | 8.51 GB, 16.8 hours of audio, all 1920x1080 |
-| media downloaded so far | 2 videos (30.5 MB + 271.7 MB) and 3 audio files (44.4 MB) |
-| transcripts so far | 4 posts, 2,062 segments |
-| signals so far | 4 -- DELL (bullish), SPY (bearish), MDY (bearish) |
-| outcomes scored so far | 3 claims (the two SPY mentions in one post are merged into one) |
+| media downloaded so far | 1 video + **24 audio files (345 MB)** |
+| frames grabbed so far | **192 frames (243 MB)** across all 24 posts |
+| transcripts so far | **24 posts, 11,282 segments** |
+| signals so far | **35** across 23 tickers |
+| outcomes scored so far | **30 claims** (1w hit rate 46.7% vs same-call-on-SPY 60%) |
+| sector rows so far | **254** (9-11 of 11 GICS sectors per post) |
+| article-vs-table consistency | **primary picks consistent 72%, avoid picks 86%** |
 
 A transcript with no ticker produces no signal, and that is the rule, not a
 fault: the extractor only emits a signal when a TICKER is present, because

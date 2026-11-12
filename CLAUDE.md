@@ -494,6 +494,9 @@ Results: `data/qmg_alt_batch_results.json`.
 - `src/asym/substackClient.js` — the API client. The pagination is a CURSOR, not an offset (`?offset=20` is HTTP 400), and the two list endpoints differ: `/api/v1/archive` returns an empty body for every post while `/api/v1/posts` returns the real body for free ones.
 - `src/asym/articleParse.js` — parses the Market Pulse report. It switches on the LABELS, not on a date, because the format changed three times between 2024 and 2026.
 - `tools/catalogAsymSubstack.js` — walks the archive, records EVERY post (free and paid) in `asym_posts`, parses the free ones into `asym_articles`, and records a `catalog_runs` row.
+- `src/asym/sectorTable.js` — the sector-table OCR: the fixed crop, the name matcher, the number repair, and the colour-based sign.
+- `tools/extractAsymFrames.js` — grab 1080p frames from the remote MP4 with an HTTP Range request (~6 s each).
+- `tools/parseAsymSectors.js` — OCR the table, merge the frames, and check the article against the numbers.
 - `src/asym/mediaStore.js` — the media layer: where a post's video lives on disk, the ffprobe resolution gate (at least 1280x720), the free-space check, and the `asym_media` download state.
 - `src/asym/claims.js` — one claim per (post, ticker). A post that is bullish AND bearish on the same name is NOT scored; it is reported as conflicting.
 - `tools/downloadAsymVideos.js` — downloads the MP4 from Substack's Mux CDN. The signed URL is resolved at download time and never stored, because it expires in about 24 hours.
@@ -6744,6 +6747,55 @@ for 36 minutes is indistinguishable from a freeze. So it:
   second died with "fetch failed: terminated" and the first left a
   half-written carrier behind;
 - **sweeps its leftovers** -- an abandoned carrier is removed at startup.
+
+**THE SECTOR TABLE, AND HOW IT IS READ WITHOUT THE VIDEO.** The Market
+Pulse video is a TradeStation SCREENcast, and its left-hand panel is a live
+table of the eleven GICS sectors with their numbers:
+
+```
+Company | 1 Mo ROC | (Avg 10 mo) D | (Avg 20) D | target(M) D | % Change
+Financial Services |  7.28 |  v |  v |  v |  +0.91%
+Energy             |  3.05 |  v |  v |  v |  -1.04%
+```
+
+That table is the one piece of QUANTITATIVE market data in this source that
+the written report does not carry -- the article gives the author's picks
+("Primary focus: Energy, Healthcare"), and this gives the measurements
+behind them.
+
+The table is STATIC in its geometry and SCROLLS in its content, so the
+pipeline does not need the video. It needs a handful of 1080p frames:
+
+  npm run asym:frames        # 8 frames per post, pulled from the remote
+                             # MP4 with an HTTP Range request (~6 s each)
+  npm run asym:sectors       # OCR the table, merge the frames, and check
+                             # the article against the numbers
+
+Three things make the naive OCR wrong, and each has its own fix:
+
+1. The rows are not lines -- Tesseract's sparse mode returns the three
+   cells of a row as three separate lines, so the row is rebuilt from the
+   WORD POSITIONS (the TSV's x and y).
+2. The small numerals lose their decimal point ("1.47" comes back as
+   "147"), so a CONSTRAINT repairs it: the column holds rate-of-change
+   figures in the range -15..+15, so a three-digit token cannot be 147.
+3. The SIGN is lost, and it does not have to be read at all -- the table
+   renders positives GREEN and negatives RED, so the sign is read from the
+   PIXELS. That recovered three rows in the sample frame whose OCR had
+   lost the sign entirely ("124%" was really -1.24%).
+
+The article uses short GICS names (Financials, Materials, Consumer
+Discretionary, Consumer Staples) while the table uses the long ones
+(Financial Services, Basic Materials, Consumer Cyclical, Consumer
+Defensive). `articleSector()` is the mapping that lets the two be
+compared.
+
+Measured over the free corpus (24 posts, 108 article-named sectors):
+
+  primary picks consistent with the table's ranking     72%
+  avoid picks consistent with the table's ranking       86%
+
+So the author is, on the whole, reading the table.
 
 **THE REPORT LEADS WITH THE WRITTEN READINGS.** The dashboard shows the
 market backdrop, the index trend, the breadth and momentum readings, the

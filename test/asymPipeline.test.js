@@ -479,3 +479,30 @@ test('the sweep removes an abandoned carrier and keeps a resumable part file', (
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('the sector name matcher recovers the OCR truncations', () => {
+  const { matchSector, articleSector } = require('../src/asym/sectorTable');
+  assert.equal(matchSector('Basic Matenals').sector, 'Basic Materials');
+  assert.equal(matchSector('Communication Ser').sector, 'Communication Services');
+  assert.equal(matchSector('Consumer Defensiv').sector, 'Consumer Defensive');
+  assert.equal(matchSector('Financial Services').sector, 'Financial Services');
+  assert.equal(matchSector('Total Energy').matched, false);
+  assert.equal(articleSector('Financials'), 'Financial Services');
+  assert.equal(articleSector('Materials'), 'Basic Materials');
+  assert.equal(articleSector('Consumer Discretionary'), 'Consumer Cyclical');
+  assert.equal(articleSector('Consumer Staples'), 'Consumer Defensive');
+  assert.equal(articleSector('Defensives'), 'Consumer Defensive');
+  assert.equal(articleSector('XYZ Corp'), '');
+});
+
+test('the number repair puts the missing decimal point back', () => {
+  const { repairNumber } = require('../src/asym/sectorTable');
+  assert.equal(repairNumber('11.27').value, 11.27);
+  assert.equal(repairNumber('11.27').repaired, false);
+  assert.equal(repairNumber('147').value, 1.47);
+  assert.equal(repairNumber('147').repaired, true);
+  assert.equal(repairNumber('039').value, 0.39);
+  assert.equal(repairNumber('-0.02').value, -0.02);
+  assert.equal(repairNumber('“132%').value, 1.32);
+  assert.equal(repairNumber('').value, null);
+});

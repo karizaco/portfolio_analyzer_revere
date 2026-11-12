@@ -532,6 +532,72 @@ CREATE TABLE IF NOT EXISTS asym_media (
 
 CREATE INDEX IF NOT EXISTS idx_asym_media_status ON asym_media(status);
 
+-- The FRAMES of a post, and the sector table read out of them.
+--
+-- The Market Pulse video is a TradeStation SCREENCAST, and its
+-- left-hand panel is a live table of the eleven GICS sectors with their
+-- numbers. That table is the one piece of QUANTITATIVE market data in
+-- this source that the written report does not carry -- the article
+-- gives the author's picks, and this gives the measurements behind
+-- them.
+--
+-- A frame is cheap to get: ffmpeg seeks into the remote MP4 with an
+-- HTTP Range request, so one 1080p frame costs about six seconds and a
+-- few megabytes instead of the 271 MB the whole video would.
+--
+-- The table SCROLLS, so one frame shows only part of the eleven rows.
+-- Several frames are read per post and merged on the sector name,
+-- which is why there is one row per (post, sector) and not per frame.
+CREATE TABLE IF NOT EXISTS asym_frames (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id TEXT NOT NULL REFERENCES asym_posts(video_id),
+    -- Which frame of the post this is, 0-based.
+    frame_index INTEGER NOT NULL,
+    -- Where in the video it was taken, in seconds.
+    timestamp_sec REAL NOT NULL DEFAULT 0,
+    -- The PNG, relative to the repository root.
+    file_path TEXT NOT NULL DEFAULT '',
+    file_bytes INTEGER NOT NULL DEFAULT 0,
+    width INTEGER NOT NULL DEFAULT 0,
+    height INTEGER NOT NULL DEFAULT 0,
+    -- remote | local. Whether the frame came off the CDN or off a video
+    -- that was already on disk.
+    source TEXT NOT NULL DEFAULT '',
+    captured_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(video_id, frame_index)
+);
+
+CREATE INDEX IF NOT EXISTS idx_asym_frames_video ON asym_frames(video_id);
+
+-- The sector table, one row per (post, sector).
+--
+-- The values are the ones ON SCREEN: the 1-month rate of change and the
+-- % Change column. The SIGN of the % Change is taken from the GLYPH
+-- COLOUR rather than from the OCR, because the table renders positives
+-- green and negatives red and the OCR loses the sign.
+CREATE TABLE IF NOT EXISTS asym_sectors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id TEXT NOT NULL REFERENCES asym_posts(video_id),
+    -- One of the eleven GICS sectors.
+    sector TEXT NOT NULL,
+    -- The "1 Mo ROC" column.
+    roc_1mo REAL,
+    -- The "% Change" column, signed.
+    pct_change REAL,
+    -- colour | ocr. Where the sign came from.
+    sign_source TEXT NOT NULL DEFAULT '',
+    -- The frame the row was read from.
+    frame_path TEXT NOT NULL DEFAULT '',
+    frame_timestamp_sec REAL NOT NULL DEFAULT 0,
+    confidence REAL,
+    parser_version TEXT NOT NULL DEFAULT '',
+    parsed_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(video_id, sector)
+);
+
+CREATE INDEX IF NOT EXISTS idx_asym_sectors_video ON asym_sectors(video_id);
+CREATE INDEX IF NOT EXISTS idx_asym_sectors_sector ON asym_sectors(sector);
+
 -- Discord pipeline tables -------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS discord_sources (

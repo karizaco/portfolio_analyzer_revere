@@ -322,6 +322,24 @@ async function downloadTo(url, destination, options = {}) {
   return { bytes, expected, resumed };
 }
 
+/**
+ * The progress line.
+ *
+ * It says how many bytes have arrived, how many are expected, and the
+ * rate -- because "nothing has been printed for twenty minutes" is the
+ * one thing that makes a slow download look like a hang.
+ *
+ * @param {string} label
+ * @param {object} info
+ * @returns {string}
+ */
+function progressLine(label, info) {
+  const mb = (value) => (value / 1e6).toFixed(1);
+  const pct = info.expected ? ` (${((info.written / info.expected) * 100).toFixed(0)}%)` : '';
+  return `[asym-media] ${label} ${mb(info.written)}/${mb(info.expected)} MB${pct}`
+    + ` at ${(info.rate / 1e6).toFixed(2)} MB/s`;
+}
+
 async function main() {
   if (!fs.existsSync(DB_PATH)) {
     console.error(`No SQLite at ${DB_PATH}. Run 'npm run video:init' first.`);

@@ -183,3 +183,11 @@ data/asym_report.html
 
 # AsymTrading run logs (scratch -- one-off download/extract stdout).
 data/asym_*_log*.txt
+
+# AsymTrading frames (regenerable from the remote MP4 in ~10 minutes).
+data/video_pipeline/frames_asym/
+
+# AsymTrading sector rollups (regenerable from the frames + the article).
+data/asym_sector_consistency.csv
+data/asym_sectors.json
+data/asym_sectors.csv

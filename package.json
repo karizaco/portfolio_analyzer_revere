@@ -86,7 +86,9 @@
     "asym:signals": "node tools/extractAsymSignals.js",
     "asym:aggregate": "node tools/aggregateAsymSignals.js",
     "asym:outcomes": "node tools/analyzeAsymOutcomes.js",
-    "asym:report": "node tools/aggregateAsymSignals.js"
+    "asym:report": "node tools/aggregateAsymSignals.js",
+    "asym:frames": "node tools/extractAsymFrames.js",
+    "asym:sectors": "node tools/parseAsymSectors.js"
   },
   "dependencies": {
     "sharp": "^0.34.3",
