@@ -710,6 +710,20 @@ npm run asym:aggregate    # signals + readings -> CSV/JSON/HTML
 npm run asym:outcomes     # score the calls against what the price did
 ```
 
+**The downloader has two modes, and the difference is worth 4.25x of
+bandwidth.** The default keeps the 1920x1080 MP4; `--audio` downloads the
+480x270 rendition, extracts the audio and deletes the video. It is the same
+recording -- Mux serves one master audio track muxed into every rendition
+-- and the transcripts of the two agree on **98.4% of their words**
+(measured on one post). The whole corpus is about **360 MB of audio**
+against **8.51 GB of video**.
+
+But keep the video if you want the FRAMES: the video is a TradeStation
+screencast whose left-hand panel is a **sector table** with 1 Mo / 3 Mo /
+6 Mo / YTD / % Change figures for eleven sectors and RS values for the
+industries under them. That quantitative table is not in the written
+report, and it is legible at 1080p and not at 270p.
+
 Four things about this path are worth knowing before running it:
 
 - **The media is served from Substack's own Mux CDN, not from YouTube**, so

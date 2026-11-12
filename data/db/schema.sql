@@ -505,6 +505,10 @@ CREATE TABLE IF NOT EXISTS asym_media (
     -- The Mux media-upload id. The same one asym_posts carries; kept here so
     -- this table can be read on its own.
     media_upload_id TEXT NOT NULL DEFAULT '',
+    -- video | audio. The AUDIO-only path keeps a 16 kHz mono MP3 instead
+    -- of the 1920x1080 MP4, and the two are different files, so the row
+    -- has to say which one it is holding.
+    kind TEXT NOT NULL DEFAULT 'video',
     -- Where the MP4 is, relative to the repository root.
     file_path TEXT NOT NULL DEFAULT '',
     file_bytes INTEGER NOT NULL DEFAULT 0,
@@ -571,3 +575,94 @@ CREATE TABLE IF NOT EXISTS discord_pipeline_runs (
     new_count INTEGER NOT NULL DEFAULT 0,
     error TEXT
 );
+
+-- Benzinga source tables ---------------------------------------------------
+--
+-- Benzinga is a TRANSCRIPT source, so its catalog rows live in the same
+-- `videos` table as every other channel. What it needs beyond that is the
+-- listing membership and the length, because the channel's content is
+-- decided by three facts a video id does not carry: which listing it came
+-- from, how long it is, and whether it had been streamed yet.
+--
+--   video_listing_entries   one row per (video, listing). The `videos` table
+--                            cannot hold this: a video can be in the
+--                            streams tab AND the videos tab AND a show
+--                            playlist, and `videos.source_url` holds only the
+--                            last listing that was fetched.
+--   market_readings         what a video says about the MARKET, a SECTOR or
+--                            a MACRO EVENT, as opposed to a ticker.
+--
+-- WHY market_readings IS NOT trade_signals
+--
+-- `trade_signals` is a TICKER table: one row per (video, ticker) with a
+-- direction, a confidence and the sentence it came from. "Breadth is
+-- positive" and "we like semiconductors" are market readings, not calls on
+-- a ticker -- they apply to no single name. Putting them in trade_signals
+-- would either force a fake ticker onto them or lose them.
+--
+-- The same reasoning is why the AsymTrading source keeps its own readings
+-- in its own table rather than in trade_signals.
+
+CREATE TABLE IF NOT EXISTS video_listing_entries (
+    video_id TEXT NOT NULL,
+    channel TEXT NOT NULL DEFAULT '',
+    -- streams | videos | shorts | playlist
+    listing_kind TEXT NOT NULL DEFAULT '',
+    -- The listing URL this row was taken from.
+    listing_url TEXT NOT NULL DEFAULT '',
+    -- The YouTube playlist id, when the listing is a playlist.
+    playlist_id TEXT NOT NULL DEFAULT '',
+    playlist_title TEXT NOT NULL DEFAULT '',
+    -- The video's length in seconds, as the listing reported it.
+    duration_sec REAL,
+    -- was_live | is_live | is_upcoming | post_live | '' (not a stream)
+    live_status TEXT NOT NULL DEFAULT '',
+    first_seen_at TEXT NOT NULL DEFAULT (datetime('now')),
+    last_seen_at TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (video_id, listing_kind, playlist_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_video_listing_entries_channel
+    ON video_listing_entries(channel, listing_kind);
+
+CREATE TABLE IF NOT EXISTS market_readings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id TEXT NOT NULL,
+    transcript_id INTEGER NOT NULL REFERENCES video_transcripts(id),
+    -- What the reading is about.
+    --   market      the index / the tape as a whole
+    --   sector      a GICS sector ("Semiconductors")
+    --   macro_event an event ("CPI", "the Fed")
+    --   earnings_event an earnings event ("Nvidia", a date)
+    scope TEXT NOT NULL DEFAULT 'market'
+        CHECK (scope IN ('market', 'sector', 'macro_event', 'earnings_event')),
+    -- The subject as it was said: "the Qs", "semis", "the 10-year".
+    subject TEXT NOT NULL DEFAULT '',
+    -- The tradeable proxy the reading is scored with: QQQ for "the Qs",
+    -- SMH for "semis", '' when there is none.
+    proxy_ticker TEXT NOT NULL DEFAULT '',
+    -- bullish | bearish | neutral | mixed | watch
+    stance TEXT NOT NULL DEFAULT 'neutral'
+        CHECK (stance IN ('bullish', 'bearish', 'neutral', 'mixed', 'watch')),
+    -- forward | retrospective | reported
+    claim_kind TEXT NOT NULL DEFAULT 'forward',
+    -- recap | preview | setup | interview | sponsor
+    section TEXT NOT NULL DEFAULT '',
+    -- The horizon, when one was stated.
+    horizon_text TEXT NOT NULL DEFAULT '',
+    -- The event the reading is about, when it has one (YYYYMMDD).
+    event_date TEXT NOT NULL DEFAULT '',
+    event_time_sec REAL,
+    -- The EXACT transcript text this reading was read from. NOT NULL, for
+    -- the same reason trade_signals.evidence_text is: a reading you cannot
+    -- point at is a reading you cannot check.
+    evidence_text TEXT NOT NULL,
+    -- Which extractor version produced this row.
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(video_id, scope, subject, event_date, parser_version)
+);
+
+CREATE INDEX IF NOT EXISTS idx_market_readings_video ON market_readings(video_id);
+CREATE INDEX IF NOT EXISTS idx_market_readings_scope ON market_readings(scope, stance);
+CREATE INDEX IF NOT EXISTS idx_market_readings_subject ON market_readings(subject);

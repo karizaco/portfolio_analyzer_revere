@@ -25,6 +25,15 @@
 // $4.30. The audio is uploaded to Deepgram, which is a deliberate
 // consequence of using a hosted transcription service.
 //
+// THE AUDIO-ONLY PATH
+//
+// The downloader has a mode that keeps only the audio -- a 16 kHz mono MP3
+// of the whole free corpus is about 360 MB, against 8.51 GB of video --
+// and the source's audio is then ALREADY in the shape Deepgram wants. So
+// when the media row says the file is an MP3, it is sent as it is, with no
+// extraction step at all. When it says MP4, the audio is extracted first,
+// and the extraction is temporary.
+//
 // WHAT IT WRITES
 //
 //   data/video_pipeline/transcripts/asym_<post_id>.json   the transcript
@@ -60,7 +69,7 @@ const {
 } = require('../src/transcript/deepgramClient');
 const { normalizeTranscript } = require('../src/transcript/transcriptNormalize');
 const { attachSegments } = require('../src/transcript/segmentStore');
-const { ASYM_MEDIA_STATUS } = require('../src/asym/mediaStore');
+const { ASYM_MEDIA_STATUS, ensureAsymMediaSchema } = require('../src/asym/mediaStore');
 
 // The credentials live in .env, which is gitignored. An environment
 // variable that is already set wins over the file.
@@ -131,7 +140,8 @@ function workList(db) {
   try {
     rows = db.prepare(`
       SELECT p.video_id, p.post_id, p.slug, p.title, p.upload_date, p.series,
-             m.file_path, m.file_bytes, m.duration_sec, m.status AS media_status,
+             m.kind AS media_kind, m.file_path, m.file_bytes, m.duration_sec,
+             m.status AS media_status,
              m.transcript_path AS already_transcribed,
              (SELECT COUNT(*) FROM video_transcripts t WHERE t.video_id = p.video_id) AS transcript_rows
         FROM asym_posts p
@@ -257,6 +267,7 @@ async function main() {
   }
 
   const db = openCatalog();
+  ensureAsymMediaSchema(db);
   let work = workList(db);
   if (options.limit) work = work.slice(0, options.limit);
 
@@ -300,13 +311,19 @@ async function main() {
       continue;
     }
 
-    const audioPath = path.join(AUDIO_DIR, `${post.video_id}.mp3`);
+    // An audio-only download IS the Deepgram input already, so there is
+    // nothing to extract. A video download has to be extracted first.
+    const isAudio = String(post.media_kind || '') === 'audio';
+    const audioPath = isAudio ? videoPath : path.join(AUDIO_DIR, `${post.video_id}.mp3`);
     try {
-      const audio = extractAudio(videoPath, audioPath);
-      if (!audio.ok) {
-        summary.failed += 1;
-        console.error(`[asym-transcripts] ${label} audio extraction failed: ${audio.error}`);
-        continue;
+      let audio = { ok: true, path: audioPath };
+      if (!isAudio) {
+        audio = extractAudio(videoPath, audioPath);
+        if (!audio.ok) {
+          summary.failed += 1;
+          console.error(`[asym-transcripts] ${label} audio extraction failed: ${audio.error}`);
+          continue;
+        }
       }
 
       const result = await transcribeAudio(audio.path, { language: ASYM_LANGUAGE });
@@ -326,7 +343,10 @@ async function main() {
       const filePath = writeTranscriptJson(post, segments);
       registerTranscript(db, post, segments, filePath);
 
-      if (!options.keepAudio) {
+      // Only the EXTRACTED audio is temporary. An audio-only download is
+      // the artifact, and deleting it would mean re-downloading to
+      // re-transcribe.
+      if (!isAudio && !options.keepAudio) {
         try { fs.unlinkSync(audio.path); } catch { /* ignore */ }
       }
 

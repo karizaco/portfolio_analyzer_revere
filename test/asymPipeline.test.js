@@ -33,13 +33,19 @@ const { DatabaseSync } = require('node:sqlite');
 
 const {
   ASYM_MEDIA_DIR,
+  ASYM_MEDIA_KIND,
   ASYM_MEDIA_STATUS,
   asymMediaFileName,
+  checkAudio,
   checkResolution,
+  checkVideo,
   ensureFreeSpace,
   mediaWorkList,
   portablePath,
+  sweepStalePartials,
+  takeDownloadLock,
 } = require('../src/asym/mediaStore');
+const { withRendition } = require('../src/asym/substackClient');
 const { toAsymClaims } = require('../src/asym/claims');
 const { loadSevcikLexicon } = require('../src/sevcik/lexicon');
 const { extractSignals } = require('../src/sevcik/signalExtractor');
@@ -378,4 +384,98 @@ test('the media directory is inside the repository and is not the YouTube one', 
     portablePath(ASYM_MEDIA_DIR).startsWith('data/video_pipeline/'),
     `the media path must be repository-relative, got ${portablePath(ASYM_MEDIA_DIR)}`,
   );
+});
+
+test('a truncated video is rejected even though its resolution is right', () => {
+  // A resolution check alone would accept this: the header is intact and
+  // the picture is 1920x1080. The file is just missing its last ten
+  // minutes.
+  const truncated = { width: 1920, height: 1080, duration: 2000 };
+  const whole = { width: 1920, height: 1080, duration: 2750.13 };
+
+  assert.equal(checkVideo(truncated, 2750.18).ok, false);
+  assert.match(checkVideo(truncated, 2750.18).reason, /duration_mismatch/);
+  assert.equal(checkVideo(whole, 2750.18).ok, true);
+
+  // And the resolution still fails on its own.
+  assert.equal(checkVideo({ width: 854, height: 480, duration: 2750 }, 2750).ok, false);
+  assert.equal(checkVideo(null, 2750).ok, false);
+});
+
+test('a truncated audio is rejected, and so is one with no stream', () => {
+  assert.equal(checkAudio({ duration: 200, channels: 1 }, 3509).ok, false);
+  assert.match(checkAudio({ duration: 200, channels: 1 }, 3509).reason, /duration_mismatch/);
+  assert.equal(checkAudio({ duration: 3509, channels: 1 }, 3509).ok, true);
+  assert.equal(checkAudio({ duration: 3509, channels: 0 }, 3509).ok, false);
+  assert.equal(checkAudio(null, 3509).ok, false);
+});
+
+test('the Mux rendition can be swapped without losing the token', () => {
+  const url = 'https://stream.mux.com/PLAYBACK/high.mp4?token=TOK';
+  assert.equal(withRendition(url, 'low'), 'https://stream.mux.com/PLAYBACK/low.mp4?token=TOK');
+  assert.equal(withRendition(url, 'medium'), 'https://stream.mux.com/PLAYBACK/medium.mp4?token=TOK');
+  assert.equal(withRendition(url, 'high'), url);
+  assert.equal(withRendition(url, ''), url);
+  assert.throws(() => withRendition(url, 'enormous'), /Unknown Mux rendition/);
+});
+
+test('the media work list is kind-aware', () => {
+  const { db, dir } = scratchDb();
+  try {
+    db.prepare(
+      'INSERT INTO asym_posts (video_id, post_id, upload_date, access, series, has_media, media_upload_id) '
+      + 'VALUES (?, ?, ?, ?, ?, ?, ?)',
+    ).run('asym_1', '1', '20260101', 'free', 'market_pulse', 1, 'mid-1');
+    db.prepare(
+      'INSERT INTO asym_media (video_id, media_upload_id, kind, status, file_path) VALUES (?, ?, ?, ?, ?)',
+    ).run('asym_1', 'mid-1', ASYM_MEDIA_KIND.VIDEO, ASYM_MEDIA_STATUS.DOWNLOADED, 'x.mp4');
+
+    // The audio path still wants this post: what is on disk is an MP4,
+    // and the audio path wants an MP3.
+    assert.equal(mediaWorkList(db, { kind: ASYM_MEDIA_KIND.AUDIO }).length, 1);
+    // The video path does not.
+    assert.equal(mediaWorkList(db, { kind: ASYM_MEDIA_KIND.VIDEO }).length, 0);
+  } finally {
+    db.close();
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('a second downloader is refused, and a dead lock is taken over', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'asym-lock-'));
+  try {
+    const first = takeDownloadLock(dir);
+    assert.ok(fs.existsSync(first.path));
+    // The lock is held: a second downloader must be refused.
+    assert.throws(() => takeDownloadLock(dir), /already running/);
+    first.release();
+    assert.equal(fs.existsSync(first.path), false);
+
+    // A lock left by a dead process is taken over rather than blocking
+    // forever. A pid that cannot be signalled is a dead process.
+    fs.writeFileSync(path.join(dir, '.download.lock'), '999999');
+    const second = takeDownloadLock(dir);
+    assert.ok(fs.existsSync(second.path));
+    second.release();
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('the sweep removes an abandoned carrier and keeps a resumable part file', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'asym-sweep-'));
+  try {
+    fs.writeFileSync(path.join(dir, '218082067.carrier.mp4'), 'x');
+    fs.writeFileSync(path.join(dir, '20261028_asym_1.mp4.part'), 'x');
+    const removed = sweepStalePartials(dir);
+    assert.equal(removed, 1);
+    assert.equal(fs.existsSync(path.join(dir, '218082067.carrier.mp4')), false);
+    assert.equal(
+      fs.existsSync(path.join(dir, '20261028_asym_1.mp4.part')),
+      true,
+      'a partial file is kept, because the next run resumes it',
+    );
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
 });

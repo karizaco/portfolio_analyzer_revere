@@ -6694,6 +6694,57 @@ ticker twice in one post; scoring each mention would count one call as
 two correlated wins. A post that is bullish AND bearish on the same name
 is NOT scored -- it is reported as conflicting. See `src/asym/claims.js`.
 
+**THE AUDIO-ONLY PATH, AND WHY IT EXISTS.** The downloader has a
+second mode. Instead of keeping the 1920x1080 MP4 it downloads the 480x270
+rendition, extracts the audio from it, and deletes the video: the whole free
+corpus is about **360 MB of audio** against **8.51 GB of video**.
+
+It is not a different recording. Mux serves ONE master audio track muxed
+into every rendition, so the audio is the same audio in a smaller file.
+**Measured on one post: the transcripts of the 1920x1080 and the 480x270
+renditions agree on 98.4% of their words (982 of 998).** The video's audio
+is 192 kbps stereo and the low rendition's is 96 kbps, so the difference
+is real but small.
+
+There is **no audio-only rendition** -- `audio.m4a` is HTTP 404 on every
+asset measured -- so the cheapest audio path is still a video file.
+
+**THE VIDEO IS A SCREENCAST, AND ITS SECTOR TABLE IS READABLE.** This
+matters more than the size. The video is a TradeStation screencast whose
+left-hand panel is a **sector table**: eleven sectors with their 1 Mo,
+3 Mo, 6 Mo, YTD and % Change figures, and an industry table with RS
+values beneath it. That is QUANTITATIVE data the written report does not
+carry -- the article gives the author's qualitative picks ("Primary focus:
+Energy, Healthcare"), and the table gives the numbers behind them.
+
+So the audio path is a **transcript-only fast path**, not a substitute for
+the video. The table is legible at 1920x1080 and not at 480x270, so a
+corpus-wide OCR pass needs the full-resolution video.
+
+**THE DOWNLOADER CANNOT BE MADE TO LOOK LIKE A HANG.** A 271 MB file
+measured at 126 KB/s takes 36 minutes, and a download that prints nothing
+for 36 minutes is indistinguishable from a freeze. So it:
+
+- reports **progress** -- bytes, expected bytes, and the rate, every 5 s;
+- **detects a stall** -- no bytes for 90 s aborts the request, because a
+  slow link and a dead one are otherwise the same thing;
+- **resumes** -- a partial file is continued with an HTTP Range request
+  rather than started again;
+- **checks the length** -- the body has to end up as long as the
+  Content-Length says, because a truncated video still has a valid header
+  and the resolution gate would accept it;
+- **checks the duration** -- the file has to last as long as the source
+  says. This is the gate that catches a truncated download, and the
+  metadata's `primary_file_size` cannot be used for it: that number is
+  the size of the ORIGINAL UPLOADED asset, and the served rendition is
+  Mux's own re-encode, which is smaller. The DURATION is the same for
+  both, because they are the same recording;
+- **takes a lock** -- a second downloader is refused with the owning pid
+  rather than allowed to compete. Two at once is a measured failure: the
+  second died with "fetch failed: terminated" and the first left a
+  half-written carrier behind;
+- **sweeps its leftovers** -- an abandoned carrier is removed at startup.
+
 **THE REPORT LEADS WITH THE WRITTEN READINGS.** The dashboard shows the
 market backdrop, the index trend, the breadth and momentum readings, the
 sectors and the Bottom Line per post, because those are why the source is

@@ -393,13 +393,29 @@ over the transcript with the ENGLISH name finder.
 |---|---|
 | posts with a video | 24 |
 | the whole corpus of media | 8.51 GB, 16.8 hours of audio, all 1920x1080 |
-| media downloaded so far | 1 (the 5-minute post, 30.5 MB) |
-| transcripts so far | 1 (61 segments, English) |
-| signals so far | 0 -- that post is general market commentary with no ticker in it |
+| media downloaded so far | 2 videos (30.5 MB + 271.7 MB) and 3 audio files (44.4 MB) |
+| transcripts so far | 4 posts, 2,062 segments |
+| signals so far | 4 -- DELL (bullish), SPY (bearish), MDY (bearish) |
+| outcomes scored so far | 3 claims (the two SPY mentions in one post are merged into one) |
 
 A transcript with no ticker produces no signal, and that is the rule, not a
 fault: the extractor only emits a signal when a TICKER is present, because
 "I am bullish" names nothing to buy.
+
+**THE AUDIO-ONLY PATH EXISTS, AND IT IS 4.25x CHEAPER.** The downloader
+can fetch the 480x270 rendition, extract the audio and delete the video: the
+whole free corpus is about 360 MB of audio against 8.51 GB of video. It is
+the same recording -- Mux serves one master audio track muxed into every
+rendition -- and the transcripts of the two agree on **98.4% of their
+words** (measured on one post: 982 of 998).
+
+**BUT THE VIDEO IS A SCREENCAST WITH A READABLE SECTOR TABLE.** The
+left-hand panel of the TradeStation window shows eleven sectors with their
+1 Mo / 3 Mo / 6 Mo / YTD / % Change figures, and an industry table with RS
+values under it. That quantitative data is not in the written report. It is
+legible at 1920x1080 and not at 480x270, so a corpus-wide OCR pass needs
+the full-resolution video -- the audio path is a transcript-only fast path,
+not a substitute.
 
 **Deepgram is MANDATORY here, not a fallback.** Mux assets carry
 `CLOSED-CAPTIONS=NONE`, so there is no YouTube auto-caption path, and the
@@ -410,6 +426,7 @@ Czech channel, and the language selects the ACOUSTIC MODEL.
 npm run asym:catalog        # walk the archive and parse the free posts
 npm run asym:catalog:dry    # the same walk, writing nothing
 npm run asym:media -- --limit 1    # download the video
+npm run asym:media -- --audio --limit 1   # download the AUDIO only (4.25x cheaper)
 npm run asym:transcripts -- --limit 1
 npm run asym:signals
 npm run asym:aggregate

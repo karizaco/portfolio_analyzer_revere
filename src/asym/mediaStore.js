@@ -52,6 +52,29 @@ const ROOT = path.resolve(__dirname, '..', '..');
 const ASYM_MEDIA_DIR = path.join(ROOT, 'data', 'video_pipeline', 'downloads_asym');
 
 /**
+ * Where the AUDIO lives.
+ *
+ * The audio is what the transcription actually reads, and it is small: a
+ * 16 kHz mono MP3 of the whole free corpus is about 360 MB, against
+ * 8.51 GB of video. So the audio-only path keeps the corpus on disk
+ * comfortably.
+ */
+const ASYM_AUDIO_DIR = path.join(ROOT, 'data', 'video_pipeline', 'audio_asym');
+
+/**
+ * What kind of file a media row holds.
+ *
+ * @readonly
+ * @enum {string}
+ */
+const ASYM_MEDIA_KIND = {
+  /** The 1920x1080 MP4, which the frames are read from. */
+  VIDEO: 'video',
+  /** A 16 kHz mono MP3, which is what Deepgram is sent. */
+  AUDIO: 'audio',
+};
+
+/**
  * The minimum height a downloaded video must have.
  *
  * 720p. The project's rule for every media file the pipeline reads, and
@@ -106,6 +129,18 @@ function asymMediaFileName(post) {
  */
 function asymMediaPath(post) {
   return path.join(ASYM_MEDIA_DIR, asymMediaFileName(post));
+}
+
+/**
+ * The absolute path of one post's AUDIO.
+ *
+ * @param {object} post - a row from asym_posts
+ * @returns {string}
+ */
+function asymAudioPath(post) {
+  const row = post || {};
+  const id = String(row.post_id || row.video_id || '').trim().replace(/^asym_/, '') || 'unknown';
+  return path.join(ASYM_AUDIO_DIR, `${id}.mp3`);
 }
 
 /**
@@ -171,6 +206,110 @@ function probeMedia(filePath) {
     height: Number(video.height) || 0,
     duration: duration,
   };
+}
+
+/**
+ * Read an audio file's duration and shape with ffprobe.
+ *
+ * @param {string} filePath
+ * @returns {{duration: number, channels: number, sample_rate: number, bit_rate: number}|null}
+ */
+function probeAudio(filePath) {
+  const ffprobe = resolveFfprobeBin();
+  if (!ffprobe) return null;
+  if (!fs.existsSync(filePath)) return null;
+
+  const result = spawnSync(
+    ffprobe,
+    ['-v', 'quiet', '-print_format', 'json', '-show_streams', '-show_format', filePath],
+    { encoding: 'utf8', timeout: 120000, maxBuffer: 8 * 1024 * 1024 },
+  );
+  if (result.status !== 0 || !result.stdout) return null;
+
+  let payload;
+  try {
+    payload = JSON.parse(result.stdout);
+  } catch {
+    return null;
+  }
+  const streams = Array.isArray(payload.streams) ? payload.streams : [];
+  const audio = streams.find((stream) => stream && stream.codec_type === 'audio');
+  if (!audio) return null;
+
+  const format = payload.format || {};
+  return {
+    duration: Number(audio.duration ?? format.duration ?? 0) || 0,
+    channels: Number(audio.channels) || 0,
+    sample_rate: Number(audio.sample_rate) || 0,
+    bit_rate: Number(audio.bit_rate ?? format.bit_rate ?? 0) || 0,
+  };
+}
+
+/**
+ * Is this video whole AND usable?
+ *
+ * TWO CHECKS, AND THE SECOND ONE IS THE ONE THAT MATTERS
+ *
+ * The resolution check answers "can this be read?". It does NOT
+ * answer "is this all of it?" -- and a TRUNCATED video passes the
+ * resolution check, because the header is intact and the resolution is
+ * right. A truncated download of a 46-minute video yields a file that
+ * ffprobe happily describes as 1920x1080.
+ *
+ * That is not a hypothetical: the size the Mux metadata reports
+ * (`primary_file_size`) is the size of the ORIGINAL UPLOADED asset,
+ * not of the rendition that is served. The 1080p rendition is Mux's own
+ * re-encode, and it is smaller. So the byte count cannot be compared
+ * with the metadata -- but the DURATION can, and it is the same number
+ * for both, because they are the same recording.
+ *
+ * @param {object} probe - the result of probeMedia
+ * @param {number} [expectedDurationSec] - the duration the source reports
+ * @returns {{ok: boolean, reason: string}}
+ */
+function checkVideo(probe, expectedDurationSec) {
+  const resolution = checkResolution(probe);
+  if (!resolution.ok) return resolution;
+  const expected = Number(expectedDurationSec) || 0;
+  if (expected > 0 && probe.duration) {
+    // Two per cent, the same tolerance the audio gate uses.
+    const ratio = probe.duration / expected;
+    if (ratio < 0.98 || ratio > 1.02) {
+      return { ok: false, reason: `duration_mismatch:${probe.duration.toFixed(1)}s_vs_${expected.toFixed(1)}s` };
+    }
+  }
+  return { ok: true, reason: '' };
+}
+
+/**
+ * Is this audio usable?
+ *
+ * The video's gate is a RESOLUTION check, because a video too small to
+ * read cannot be read. The audio's gate is a LENGTH check, because the
+ * failure mode is different: a truncated download still has an audio
+ * stream, and it still decodes, and Deepgram would transcribe it without
+ * complaining. So the only thing that catches a truncated file is
+ * comparing its length with the length the source says it should have.
+ *
+ * @param {object} probe - the result of probeAudio
+ * @param {number} [expectedDurationSec] - the duration the source reports
+ * @returns {{ok: boolean, reason: string}}
+ */
+function checkAudio(probe, expectedDurationSec) {
+  if (!probe) return { ok: false, reason: 'unmeasurable' };
+  if (!probe.duration) return { ok: false, reason: 'no_duration' };
+  if (!probe.channels) return { ok: false, reason: 'no_audio_stream' };
+  const expected = Number(expectedDurationSec) || 0;
+  if (expected > 0) {
+    // Two per cent. A file that is more than 2% short is truncated, and
+    // a transcript of a truncated file looks like a short video rather
+    // than like a failure.
+    const ratio = probe.duration / expected;
+    if (ratio < 0.98 || ratio > 1.02) {
+      return { ok: false, reason: `duration_mismatch:${probe.duration.toFixed(1)}s_vs_${expected.toFixed(1)}s` };
+    }
+  }
+  return { ok: true, reason: '' };
 }
 
 /**
@@ -249,7 +388,8 @@ function mediaWorkList(db, options = {}) {
     rows = db.prepare(`
       SELECT p.video_id, p.post_id, p.slug, p.title, p.upload_date, p.series,
              p.has_media, p.media_upload_id, p.media_duration,
-             m.status AS media_status, m.file_path, m.file_bytes, m.error AS media_error
+             m.status AS media_status, m.kind AS media_kind,
+             m.file_path, m.file_bytes, m.error AS media_error
         FROM asym_posts p
         LEFT JOIN asym_media m ON m.video_id = p.video_id
        WHERE p.has_media = 1
@@ -260,7 +400,7 @@ function mediaWorkList(db, options = {}) {
     rows = db.prepare(`
       SELECT p.video_id, p.post_id, p.slug, p.title, p.upload_date, p.series,
              p.has_media, p.media_upload_id, p.media_duration,
-             '' AS media_status, '' AS file_path, 0 AS file_bytes, '' AS media_error
+             '' AS media_status, '' AS media_kind, '' AS file_path, 0 AS file_bytes, '' AS media_error
         FROM asym_posts p
        WHERE p.has_media = 1
          AND p.media_upload_id <> ''
@@ -268,10 +408,43 @@ function mediaWorkList(db, options = {}) {
     `).all();
   }
 
+  const wantedKind = options.kind || ASYM_MEDIA_KIND.VIDEO;
   return rows.filter((row) => {
+    // A row of the wrong KIND is not a row that satisfies the request.
+    // The audio path wants an MP3 and the video path wants an MP4, and
+    // one does not stand in for the other.
+    if (row.media_kind && row.media_kind !== wantedKind) return true;
     if (options.includeDone) return true;
     return row.media_status !== ASYM_MEDIA_STATUS.DOWNLOADED;
   });
+}
+
+/**
+ * Make sure the media table has the columns this code writes.
+ *
+ * WHY THIS IS NEEDED
+ *
+ * `CREATE TABLE IF NOT EXISTS` does not ADD a column to a table that
+ * already exists, and the media table was created by an earlier run of
+ * the downloader -- before the `kind` column existed. So a catalog
+ * written by that run has the table without the column, and every
+ * INSERT that names it fails.
+ *
+ * This is the project's own idiom for the same problem -- the
+ * extractors do `ALTER TABLE trade_signals ADD COLUMN claim_kind`
+ * inside a try/catch -- and it is the right one here: the ALTER is
+ * idempotent (it fails, harmlessly, when the column is already there)
+ * and it needs no version bookkeeping for a table this young.
+ *
+ * @param {import('node:sqlite').DatabaseSync} db
+ * @returns {void}
+ */
+function ensureAsymMediaSchema(db) {
+  try {
+    db.exec("ALTER TABLE asym_media ADD COLUMN kind TEXT NOT NULL DEFAULT 'video'");
+  } catch {
+    // The column is already there. That is the expected case.
+  }
 }
 
 /**
@@ -285,11 +458,12 @@ function recordMedia(db, row) {
   const record = row || {};
   db.prepare(`
     INSERT INTO asym_media (
-      video_id, media_upload_id, file_path, file_bytes, width, height,
+      video_id, media_upload_id, kind, file_path, file_bytes, width, height,
       duration_sec, status, error, attempts, downloaded_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
     ON CONFLICT(video_id) DO UPDATE SET
       media_upload_id = excluded.media_upload_id,
+      kind = excluded.kind,
       file_path = excluded.file_path,
       file_bytes = excluded.file_bytes,
       width = excluded.width,
@@ -306,6 +480,7 @@ function recordMedia(db, row) {
   `).run(
     record.video_id,
     record.media_upload_id || '',
+    record.kind || ASYM_MEDIA_KIND.VIDEO,
     record.file_path || '',
     Number(record.file_bytes) || 0,
     Number(record.width) || 0,
@@ -318,18 +493,122 @@ function recordMedia(db, row) {
   );
 }
 
+/**
+ * Remove the leftovers of an interrupted run.
+ *
+ * A carrier file (the temporary video the audio path downloads) is never
+ * resumable, so a leftover one is pure waste -- and a 55 MB one is
+ * enough to look like the run is still going.
+ *
+ * @param {string} [dir] - the media directory
+ * @returns {number} the files removed
+ */
+function sweepStalePartials(dir) {
+  const target = dir || ASYM_MEDIA_DIR;
+  let removed = 0;
+  let names = [];
+  try {
+    names = fs.readdirSync(target);
+  } catch {
+    return 0;
+  }
+  for (const name of names) {
+    if (!name.endsWith('.carrier.mp4')) continue;
+    try {
+      fs.unlinkSync(path.join(target, name));
+      removed += 1;
+    } catch { /* ignore */ }
+  }
+  return removed;
+}
+
+/**
+ * Take the download lock, or refuse to run.
+ *
+ * TWO DOWNLOADERS AT ONCE IS A REAL FAILURE, and it was measured: a second
+ * run started while a 271 MB download was in flight died with "fetch
+ * failed: terminated", and the first one left a half-written carrier
+ * behind.
+ *
+ * So the second one is refused, loudly, rather than allowed to compete.
+ * A lock whose owner is dead is taken over, because the process that made
+ * it may have been killed.
+ *
+ * @param {string} [dir] - the media directory
+ * @returns {{release: () => void, path: string}}
+ */
+function takeDownloadLock(dir) {
+  const target = dir || ASYM_MEDIA_DIR;
+  const lockPath = path.join(target, '.download.lock');
+  fs.mkdirSync(target, { recursive: true });
+
+  const tryTake = () => {
+    try {
+      const fd = fs.openSync(lockPath, 'wx');
+      fs.writeSync(fd, String(process.pid));
+      fs.closeSync(fd);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  if (!tryTake()) {
+    let owner = 0;
+    try {
+      owner = Number(fs.readFileSync(lockPath, 'utf8').trim()) || 0;
+    } catch { /* ignore */ }
+    let alive = false;
+    if (owner > 0) {
+      try {
+        process.kill(owner, 0);
+        alive = true;
+      } catch { /* the owner is gone */ }
+    }
+    if (alive) {
+      throw new Error(
+        `Another download is already running (pid ${owner}). `
+        + 'Wait for it to finish, or delete '
+        + lockPath
+        + ' if you are sure it is dead.',
+      );
+    }
+    // The owner is dead: take the lock over.
+    try { fs.unlinkSync(lockPath); } catch { /* ignore */ }
+    if (!tryTake()) {
+      throw new Error(`Could not take the download lock at ${lockPath}`);
+    }
+  }
+
+  return {
+    path: lockPath,
+    release: () => {
+      try { fs.unlinkSync(lockPath); } catch { /* ignore */ }
+    },
+  };
+}
+
 module.exports = {
+  ASYM_AUDIO_DIR,
   ASYM_MEDIA_DIR,
+  ASYM_MEDIA_KIND,
   ASYM_MEDIA_STATUS,
   MIN_VIDEO_HEIGHT,
   MIN_VIDEO_WIDTH,
+  asymAudioPath,
   asymMediaFileName,
   asymMediaPath,
+  checkAudio,
   checkResolution,
+  checkVideo,
+  ensureAsymMediaSchema,
   ensureFreeSpace,
   freeSpaceBytes,
   mediaWorkList,
   portablePath,
+  probeAudio,
   probeMedia,
   recordMedia,
+  sweepStalePartials,
+  takeDownloadLock,
 };

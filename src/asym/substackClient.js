@@ -93,6 +93,46 @@ function sleep(ms) {
  * @param {Function} [options.log] - called with progress lines
  * @returns {object} the client
  */
+/**
+ * A different Mux STATIC RENDITION of the same playback.
+ *
+ * Mux serves one asset at several resolutions: `high.mp4` (the source),
+ * `medium.mp4`, `low.mp4`, and the same set in HLS. The signed token is
+ * scoped to the PLAYBACK, not to the rendition, so the token that came
+ * with the source URL works on the others -- measured: the token from a
+ * `high.mp4` URL returns HTTP 200 for `low.mp4`.
+ *
+ * WHY THIS MATTERS
+ *
+ * The source is 1920x1080 and 8.51 GB across the free corpus; `low.mp4`
+ * (480x270) is 4-6x smaller. Measured on one post: the transcripts of the
+ * two renditions agree on 98.4% of their words, so a transcript-only run
+ * does not need the source resolution.
+ *
+ * It DOES need it for the frames: the sector table on screen is legible
+ * at 1920x1080 and not at 480x270.
+ *
+ * There is no audio-only rendition (`audio.m4a` is HTTP 404 on every
+ * asset measured), so the cheapest AUDIO path is still a video file.
+ *
+ * @param {string} resolvedUrl - the signed URL the API returned
+ * @param {string} [rendition] - 'high' | 'medium' | 'low'
+ * @returns {string}
+ */
+function withRendition(resolvedUrl, rendition) {
+  const name = String(rendition || '').trim().toLowerCase();
+  if (!name || name === 'high') return resolvedUrl;
+  if (!['medium', 'low'].includes(name)) {
+    throw new AsymApiError(`Unknown Mux rendition "${rendition}"`, { url: resolvedUrl });
+  }
+  // The URL is stream.mux.com/<playback id>/<rendition>.mp4?token=...
+  const replaced = String(resolvedUrl).replace(/\/(high|medium|low)\.mp4(?=\?|$)/, `/${name}.mp4`);
+  if (replaced === resolvedUrl) {
+    throw new AsymApiError(`Could not swap the rendition in ${resolvedUrl}`, { url: resolvedUrl });
+  }
+  return replaced;
+}
+
 function createAsymClient(options = {}) {
   const fetchImpl = options.fetchImpl || globalThis.fetch;
   const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
@@ -278,7 +318,7 @@ function createAsymClient(options = {}) {
         url,
       });
     }
-    return response.url;
+    return withRendition(response.url, resolveOptions.rendition);
   }
 
   return {
@@ -293,6 +333,7 @@ function createAsymClient(options = {}) {
 
 module.exports = {
   AsymApiError,
+  withRendition,
   DEFAULT_PAGE_SIZE,
   DEFAULT_RETRIES,
   DEFAULT_TIMEOUT_MS,
