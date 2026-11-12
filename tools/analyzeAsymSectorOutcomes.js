@@ -75,7 +75,7 @@ const SECTOR_ETFS = {
 
 const OUTCOME_COLUMNS = [
   'upload_date', 'video_id', 'article_sector', 'gics_sector', 'tier', 'bias',
-  'etf', 'rank_by_roc', 'of_sectors', 'roc_1mo', 'pct_change',
+  'etf', 'rank_by_roc', 'of_sectors', 'roc_1mo', 'pct_change', 'roc_1yr',
   'event_date', 'entry_price', 'price_1w', 'price_1m',
   'return_1w', 'return_1m', 'aligned_return_1w', 'aligned_return_1m',
   'spy_return_1w', 'spy_same_call_hit_1w', 'excess_aligned_1w',
@@ -189,6 +189,7 @@ function loadClaims(db) {
         of_sectors: ranked.length,
         roc_1mo: tableRow ? tableRow.roc_1mo : '',
         pct_change: tableRow ? tableRow.pct_change : '',
+        roc_1yr: tableRow ? tableRow.roc_1yr : '',
         confidence_label: tier === 'primary' ? 'high' : 'medium',
         confidence_score: tier === 'primary' ? 0.8 : (tier === 'avoid' ? 0.7 : 0.5),
         evidence_text: entry.evidence || '',
@@ -262,6 +263,7 @@ async function main() {
       of_sectors: claim.of_sectors,
       roc_1mo: claim.roc_1mo,
       pct_change: claim.pct_change,
+      roc_1yr: claim.roc_1yr,
     };
     await attachSameCallOnSpy(row, provider, asOfDate);
     outcomes.push(row);
@@ -297,6 +299,7 @@ async function main() {
     of_sectors: blank(row.of_sectors),
     roc_1mo: blank(row.roc_1mo),
     pct_change: blank(row.pct_change),
+    roc_1yr: blank(row.roc_1yr),
     event_date: row.event_date,
     entry_price: blank(row.entry_price),
     price_1w: blank(row.price_1w),

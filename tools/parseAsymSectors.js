@@ -24,15 +24,20 @@
 // platform on screen, and the market moves while the author talks. So
 // the same sector can read differently in different frames.
 //
-// The FIRST frame wins, because it is deterministic and reproducible, and
-// the spread across the frames is reported so that a value that moves a
-// lot is visible rather than silently averaged away.
+// The MEDIAN wins, because the OCR of a small number is fragile and the
+// market moves while the author talks. The spread across the frames is
+// reported so that a value that moves a lot is visible rather than
+// silently averaged away.
+//
+// The OCR of each frame is CACHED, keyed by the frame's path, so a
+// second run does not re-read 192 frames.
 //
 // Usage:
 //   node tools/parseAsymSectors.js
 //   node tools/parseAsymSectors.js --limit 2
 //   node tools/parseAsymSectors.js --video-id asym_208954832
 //   node tools/parseAsymSectors.js --json
+//   node tools/parseAsymSectors.js --no-cache   // force every frame to be read again
 
 const fs = require('node:fs');
 const path = require('node:path');
@@ -51,6 +56,12 @@ const {
   reduceReadings,
 } = require('../src/asym/sectorTable');
 const { writeCsv } = require('../src/write/writeCsv');
+const {
+  cachedFrameOcr,
+  ensureFrameOcrTable,
+  frameOcrStats,
+  storeFrameOcr,
+} = require('../src/asym/frameOcrCache');
 
 const ROOT = path.resolve(__dirname, '..');
 const DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
@@ -59,7 +70,7 @@ const OUTPUT_DIR = path.join(ROOT, 'data');
 
 const CONSISTENCY_COLUMNS = [
   'upload_date', 'video_id', 'article_sector', 'gics_sector', 'tier',
-  'rank_by_roc', 'of_sectors', 'roc_1mo', 'pct_change',
+  'rank_by_roc', 'of_sectors', 'roc_1mo', 'pct_change', 'roc_1yr',
   'article_rank_check', 'consistency',
 ];
 
@@ -68,6 +79,10 @@ const options = {
   limit: Number(readFlag(argv, '--limit')) || 0,
   videoId: readFlag(argv, '--video-id') || '',
   json: argv.includes('--json'),
+  // --no-cache forces every frame to be read again, which is what a
+  // parser change needs; the cache invalidates itself when the parser
+  // version moves, but this is the manual way to be sure.
+  noCache: argv.includes('--no-cache'),
 };
 
 /**
@@ -83,6 +98,35 @@ function readFlag(args, name) {
   return args[index + 1] || '';
 }
 
+/**
+ * Make sure the sector table has the columns this tool writes.
+ *
+ * `CREATE TABLE IF NOT EXISTS` does not add a column to a table that
+ * already exists, so a catalog written before a column was added does
+ * not have it. The ALTER is idempotent -- it fails, harmlessly, when
+ * the column is already there -- which is the project's own idiom.
+ *
+ * @param {DatabaseSync} db
+ * @returns {void}
+ */
+function ensureAsymSectorsSchema(db) {
+  const columns = [
+    ["readings", "INTEGER NOT NULL DEFAULT 0"],
+    ["complete_readings", "INTEGER NOT NULL DEFAULT 0"],
+    ["approximate", "INTEGER NOT NULL DEFAULT 0"],
+    ["change_spread", "REAL NOT NULL DEFAULT 0"],
+    ["roc_1yr", "REAL"],
+    ["roc1yr_spread", "REAL NOT NULL DEFAULT 0"],
+  ];
+  for (const [name, type] of columns) {
+    try {
+      db.exec(`ALTER TABLE asym_sectors ADD COLUMN ${name} ${type}`);
+    } catch {
+      // The column is already there.
+    }
+  }
+}
+
 async function main() {
   if (!fs.existsSync(DB_PATH)) {
     console.error(`No SQLite at ${DB_PATH}. Run 'npm run video:init' first.`);
@@ -90,6 +134,8 @@ async function main() {
   }
   const db = new DatabaseSync(DB_PATH);
   db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8'));
+  ensureFrameOcrTable(db);
+  ensureAsymSectorsSchema(db);
 
   const frames = selectFrames(db);
   if (!frames.length) {
@@ -100,14 +146,42 @@ async function main() {
   console.log(`[asym-sectors] frames=${frames.length}`);
 
   // The parsed rows, per post.
+  //
+  // The OCR of a frame is the slow part, and a frame does not change, so
+  // the reading is cached: the cache is keyed by the frame's path and is
+  // only used when the file is the same file (same size, same mtime) and
+  // the parser is the same version.
   const byPost = new Map();
+  let readFromCache = 0;
+  let readFromDisk = 0;
+  let fallbackFrames = 0;
+  let clippedYearCells = 0;
   for (const frame of frames) {
-    let parsed = { rows: [], confidence: 0 };
-    try {
-      parsed = await parseSectorPanel(path.join(ROOT, frame.file_path));
-    } catch (error) {
-      console.error(`[asym-sectors] ${frame.video_id} frame ${frame.frame_index} failed: ${error.message}`);
-      continue;
+    let parsed = null;
+    if (!options.noCache) {
+      parsed = cachedFrameOcr(db, frame.file_path, PARSER_VERSION);
+    }
+    if (parsed) {
+      readFromCache += 1;
+    } else {
+      try {
+        parsed = await parseSectorPanel(path.join(ROOT, frame.file_path));
+      } catch (error) {
+        console.error(`[asym-sectors] ${frame.video_id} frame ${frame.frame_index} failed: ${error.message}`);
+        continue;
+      }
+      readFromDisk += 1;
+      try {
+        storeFrameOcr(db, frame.file_path, PARSER_VERSION, parsed);
+      } catch (error) {
+        console.error(`[asym-sectors] ${frame.file_path} not cached: ${error.message}`);
+      }
+    }
+    if (parsed.warnings && parsed.warnings.includes('geometry_fallback')) {
+      fallbackFrames += 1;
+    }
+    for (const row of parsed.rows) {
+      if (row.roc1yr_clipped) clippedYearCells += 1;
     }
     if (!byPost.has(frame.video_id)) {
       byPost.set(frame.video_id, { frames: [], rows: new Map() });
@@ -126,15 +200,22 @@ async function main() {
   }
 
   const insert = db.prepare(`
-    INSERT INTO asym_sectors (video_id, sector, roc_1mo, pct_change, sign_source,
-      frame_path, frame_timestamp_sec, confidence, parser_version)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO asym_sectors (video_id, sector, roc_1mo, pct_change, roc_1yr,
+      sign_source, frame_path, frame_timestamp_sec, readings, complete_readings,
+      approximate, change_spread, roc1yr_spread, confidence, parser_version)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(video_id, sector) DO UPDATE SET
       roc_1mo = excluded.roc_1mo,
       pct_change = excluded.pct_change,
+      roc_1yr = excluded.roc_1yr,
       sign_source = excluded.sign_source,
       frame_path = excluded.frame_path,
       frame_timestamp_sec = excluded.frame_timestamp_sec,
+      readings = excluded.readings,
+      complete_readings = excluded.complete_readings,
+      approximate = excluded.approximate,
+      change_spread = excluded.change_spread,
+      roc1yr_spread = excluded.roc1yr_spread,
       confidence = excluded.confidence,
       parser_version = excluded.parser_version,
       parsed_at = datetime('now')
@@ -146,14 +227,24 @@ async function main() {
     for (const row of post.rows.values()) {
       const reduced = reduceReadings(row.readings);
       if (!reduced) continue;
+      // The frame the value is ATTRIBUTED to is the frame that supplied
+      // it -- the % Change's frame when there is one, because the sign
+      // comes from that frame's glyph colour.
+      const source = reduced.change_frame || reduced.roc_frame || {};
       insert.run(
         videoId,
         reduced.sector,
         reduced.roc_1mo,
         reduced.pct_change,
+        reduced.roc_1yr,
         reduced.sign_source,
-        (reduced.roc_frame || reduced.change_frame || {}).file_path || '',
-        (reduced.roc_frame || reduced.change_frame || {}).timestamp_sec || 0,
+        source.file_path || '',
+        source.timestamp_sec || 0,
+        reduced.readings || 0,
+        reduced.complete_readings || 0,
+        reduced.approximate ? 1 : 0,
+        reduced.change_spread || 0,
+        reduced.roc1yr_spread || 0,
         reduced.confidence,
         PARSER_VERSION,
       );
@@ -182,6 +273,8 @@ async function main() {
     console.log(JSON.stringify(payload, null, 2));
     return;
   }
+  console.log(`[asym-sectors] frames read: ${readFromDisk} from disk, ${readFromCache} from the cache`);
+  console.log(`[asym-sectors] geometry: fallback frames=${fallbackFrames}, clipped 1yr cells=${clippedYearCells}`);
   console.log(`[asym-sectors] posts=${byPost.size} sector rows=${written}`
     + ` consistency rows=${consistency.length}`);
   console.log('[asym-sectors] wrote data/asym_sector_consistency.csv and data/asym_sectors.json');
@@ -280,6 +373,7 @@ function buildConsistency(db, byPost) {
         of_sectors: total,
         roc_1mo: row && row.roc_1mo !== null ? row.roc_1mo : '',
         pct_change: row && row.pct_change !== null ? row.pct_change : '',
+        roc_1yr: row && row.roc_1yr !== null ? row.roc_1yr : '',
         article_rank_check: check,
         consistency: check,
       });

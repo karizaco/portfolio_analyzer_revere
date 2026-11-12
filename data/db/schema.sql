@@ -426,6 +426,10 @@ CREATE TABLE IF NOT EXISTS asym_posts (
     has_media INTEGER NOT NULL DEFAULT 0,
     -- The Mux media-upload id of that video.
     media_upload_id TEXT NOT NULL DEFAULT '',
+    -- EVERY media-upload id on the post, as a JSON array. A post can carry
+    -- more than one embedded video, and `media_upload_id` above is only the
+    -- first one -- the one the pipeline scores. This keeps the rest.
+    media_upload_ids TEXT NOT NULL DEFAULT '',
     -- The video's length in seconds, when the API reports it.
     media_duration REAL,
     -- The breadth/momentum spreadsheet the post links to.
@@ -501,7 +505,10 @@ CREATE INDEX IF NOT EXISTS idx_asym_articles_trend ON asym_articles(trend);
 -- promise. The URL is resolved at download time from media_upload_id, which
 -- is permanent.
 CREATE TABLE IF NOT EXISTS asym_media (
-    video_id TEXT PRIMARY KEY REFERENCES asym_posts(video_id),
+    -- The key is (video_id, kind), NOT video_id alone: a post can have BOTH a
+    -- 1080p video and a 16 kHz MP3 of its audio, and with video_id alone
+    -- the audio download OVERWROTE the video row and orphaned the MP4.
+    video_id TEXT NOT NULL REFERENCES asym_posts(video_id),
     -- The Mux media-upload id. The same one asym_posts carries; kept here so
     -- this table can be read on its own.
     media_upload_id TEXT NOT NULL DEFAULT '',
@@ -527,7 +534,8 @@ CREATE TABLE IF NOT EXISTS asym_media (
     transcribed_at TEXT NOT NULL DEFAULT '',
     attempts INTEGER NOT NULL DEFAULT 0,
     downloaded_at TEXT NOT NULL DEFAULT '',
-    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (video_id, kind)
 );
 
 CREATE INDEX IF NOT EXISTS idx_asym_media_status ON asym_media(status);
@@ -575,6 +583,21 @@ CREATE INDEX IF NOT EXISTS idx_asym_frames_video ON asym_frames(video_id);
 -- % Change column. The SIGN of the % Change is taken from the GLYPH
 -- COLOUR rather than from the OCR, because the table renders positives
 -- green and negatives red and the OCR loses the sign.
+-- The OCR of a sector frame, cached.
+--
+-- Reading the table out of a frame is the slowest thing in this pipeline
+-- and a frame does not change, so the reading is kept: keyed by the frame's
+-- path, and valid only while the file is the same file (same size, same
+-- mtime) and the parser is the same version.
+CREATE TABLE IF NOT EXISTS asym_frame_ocr (
+    frame_path TEXT PRIMARY KEY,
+    file_bytes INTEGER NOT NULL DEFAULT 0,
+    file_mtime INTEGER NOT NULL DEFAULT 0,
+    parser_version TEXT NOT NULL DEFAULT '',
+    rows_json TEXT NOT NULL DEFAULT '[]',
+    confidence REAL NOT NULL DEFAULT 0,
+    parsed_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
 CREATE TABLE IF NOT EXISTS asym_sectors (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     video_id TEXT NOT NULL REFERENCES asym_posts(video_id),
@@ -584,10 +607,29 @@ CREATE TABLE IF NOT EXISTS asym_sectors (
     roc_1mo REAL,
     -- The "% Change" column, signed.
     pct_change REAL,
+    -- The "Rate of Change (1yr)" column, signed. The table carries
+    -- three numbers per sector: 1-month ROC, day % Change, and 1-year
+    -- ROC. The 1-year column is white text, so its sign comes from the
+    -- glyph itself and is NOT taken from a colour band.
+    roc_1yr REAL,
+    -- The spread of the readings that produced the 1-year value.
+    roc1yr_spread REAL NOT NULL DEFAULT 0,
     -- colour | ocr. Where the sign came from.
     sign_source TEXT NOT NULL DEFAULT '',
     -- The frame the row was read from.
     frame_path TEXT NOT NULL DEFAULT '',
+    -- How many frames read this row.
+    readings INTEGER NOT NULL DEFAULT 0,
+    -- How many of those readings were COMPLETE -- the cell was read
+    -- whole, last digit included. An incomplete reading cannot be
+    -- compared with a complete one, so the complete ones are the
+    -- canonical reading.
+    complete_readings INTEGER NOT NULL DEFAULT 0,
+    -- 1 when the value came from an incomplete reading, so it is a
+    -- lower bound rather than a reading of the cell.
+    approximate INTEGER NOT NULL DEFAULT 0,
+    -- The spread of the readings that produced the value.
+    change_spread REAL NOT NULL DEFAULT 0,
     frame_timestamp_sec REAL NOT NULL DEFAULT 0,
     confidence REAL,
     parser_version TEXT NOT NULL DEFAULT '',

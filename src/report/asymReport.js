@@ -308,13 +308,14 @@ function renderSectors(payload, sectorOutcomes) {
     + '<td class="num">' + escapeHtml(row.rank_by_roc || '') + (row.of_sectors ? '/' + escapeHtml(row.of_sectors) : '') + '</td>'
     + '<td class="num">' + escapeHtml(row.roc_1mo === '' || row.roc_1mo == null ? '—' : row.roc_1mo) + '</td>'
     + '<td class="num">' + escapeHtml(row.pct_change === '' || row.pct_change == null ? '—' : row.pct_change) + '</td>'
+    + '<td class="num">' + escapeHtml(row.roc_1yr === '' || row.roc_1yr == null ? '—' : row.roc_1yr) + '</td>'
     + '<td>' + escapeHtml(row.consistency || '') + '</td>'
     + '</tr>').join('');
 
   const sampleTable = consistency.length ? (
     '<h3>Recent named sectors</h3>'
     + '<table><thead><tr><th>date</th><th>sector</th><th>tier</th><th class="num">rank</th>'
-    + '<th class="num">1mo ROC</th><th class="num">% chg</th><th>vs table</th></tr></thead><tbody>'
+    + '<th class="num">1mo ROC</th><th class="num">% chg</th><th class="num">1yr ROC</th><th>vs table</th></tr></thead><tbody>'
     + sample + '</tbody></table>'
   ) : '';
 

@@ -488,10 +488,15 @@ Results: `data/qmg_alt_batch_results.json`.
 - `tools/fetchAsymSheets.js` — fetches the public Market Monitor sheets and stores their day rows.
 - `tools/analyzeAsymSectorOutcomes.js` — scores the report’s sector picks against their SPDR sector ETFs.
 - `src/asym/sectorTable.js` — the sector-table OCR: the fixed crop, the name matcher, the number repair, and the colour-based sign.
-- `tools/extractAsymFrames.js` — grab 1080p frames from the remote MP4 with an HTTP Range request (~6 s each).
+
+- `src/asym/frameOcrCache.js` - the cache of the OCR'd sector frames: keyed by the frame's path, and valid only while the file is the same file (same size, same mtime) and the parser version is unchanged. A parser change invalidates the cache by itself.
+
 - `tools/parseAsymSectors.js` — OCR the table, merge the frames, and check the article against the numbers.
 - `src/asym/mediaStore.js` — the media layer: where a post's video and audio live on disk, the ffprobe gates (resolution AND duration, so a truncated file is caught), the free-space check, the download lock, and the `asym_media` download state.
+
 - `src/asym/claims.js` — one claim per (post, ticker). A post that is bullish AND bearish on the same name is NOT scored; it is reported as conflicting.
+- `tools/reconcileAsymMedia.js` - writes back the media rows the catalog is missing, by reading the disk. The media table is keyed by (video_id, kind), and the rows that were overwritten while the key was `video_id` alone are gone from the catalog even though the files are still on disk.
+
 - `tools/downloadAsymVideos.js` — downloads the MP4 from Substack's Mux CDN. The signed URL is resolved at download time and never stored, because it expires in about 24 hours.
 - `tools/fetchAsymTranscripts.js` — Deepgram (`language: en`) -> transcript JSON + `video_transcripts` rows + segments. Deepgram is mandatory here, not a fallback: Mux assets carry `CLOSED-CAPTIONS=NONE`.
 - `tools/extractAsymSignals.js` — transcript -> `trade_signals`, using the shared engine with the ENGLISH name finder (Sevcik's drops sentence-initial capitals, which English needs).
@@ -499,6 +504,75 @@ Results: `data/qmg_alt_batch_results.json`.
 - `tools/analyzeAsymOutcomes.js` — scores the calls against what the price did, against SPY, reusing `src/sevcik/outcomeAnalysis.js`.
 - `src/report/asymReport.js` — the self-contained HTML dashboard. It leads with the WRITTEN readings and shows the coverage, because the publication is mostly paywalled.
 
+
+#### AsymTrading rules (the six that are easy to get wrong)
+
+**1. The media table is keyed by (video_id, kind).** A post can hold its video AND its
+   audio, so the key is both columns. It used to be `video_id` alone, which meant that
+   recording the audio erased the video row -- and the rows that were lost are still
+   missing even though the FILES are still on disk. `node tools/reconcileAsymMedia.js`
+   reads the disk and writes those rows back; run it after any change to the downloader,
+   and before a download run, or the files are downloaded again.
+
+**2. A cell that lost its LAST DIGIT is not a cell that lost its DECIMAL POINT.**
+   "15.6" read back as "15." means 15.something, NOT 0.15. The old repair assumed the
+   point was missing, read the digits "15" as 0.15 -- a hundred times too small -- and
+   the reducer then averaged 0.15 with the true 15.6 into 7.875, a number that never
+   appeared on screen. The corpus proves it: 12 rows carry both a truncated and a
+   complete reading of the same cell, and in 11 of them the truncated token is the
+   integer part. Such a reading is now INCOMPLETE: the integer part is kept, the
+   fraction is left unknown, and the complete readings are the canonical ones. A row
+   that falls back to an incomplete reading is flagged `approximate`.
+
+**3. The canonical reading is the median of the COMPLETE readings.** Not the first
+   frame (which is whichever frame happened to be read best) and not an average of an
+   even set (which invents a number that never appeared). The row is attributed to the
+   frame that SUPPLIED the value, because the % Change SIGN comes from that frame's
+   glyph colour -- the colour is the authority, not the OCR's minus sign.
+
+**4. The OCR of a frame is cached.** `asym_frame_ocr` holds the reading of each frame,
+   keyed by the frame's path, and an entry is only used while the file is the same file
+   (same size, same mtime) AND the parser version is unchanged. A parser change
+   invalidates the cache by itself -- that is why `PARSER_VERSION` is bumped with every
+   change to the reading. Measured: 192 frames took about seven minutes to read and
+   0.3 seconds to read again.
+
+**5. THE SECTOR TABLE'S COLUMNS ARE FOUND IN EVERY FRAME, NOT ASSUMED.**
+   The table is a screen share, so it is NOT laid out the same way in every post.
+   Measured over the twenty four posts of the corpus: the Company column is a
+   different width in every post (the sector names are truncated to fit it --
+   "Communication Se" in one post, "Communication Services" in the next); the number of
+   checkmark columns between the 1 Mo ROC and the % Change changes (two of them in the
+   2024 posts, four of them in the 2025 posts); and in ELEVEN of the twenty four posts
+   another widget of the screen share covers the right hand side of the table, so the
+   one-year column is partly or wholly hidden.
+
+   So the columns are FOUND in every frame. The vertical rules of the grid are
+   detected (`src/asym/sectorGeometry.js`): a column of pixels that a quarter of the
+   table's rows cross is a rule, and the rules cut the panel into CELLS. The cells are
+   then matched to the columns by what is IN them -- the first cell that holds sector
+   names is the name column, the cell right after it is the 1 Mo ROC, the first cell to
+   the right that holds a percent sign is the % Change, and the cell right after THAT
+   is the one-year column. A post with two checkmark columns and a post with four are
+   read the same way, and so is a post whose table sits 35 pixels further right.
+
+   This matters because the old, hard-coded bounds did not merely MISS the columns
+   there: they read the WRONG COLUMN. On one post the % Change sat at x 289..328 while
+   the parser was looking at 240..300, so it read the left half of the day figure and
+   the right half of the one-year figure and stored them together. The hard-coded
+   bounds (`COLUMN_BOUNDS`, `COLUMN_STRIPS`) are now only the FALLBACK, used when
+   the rules cannot be found.
+
+**6. A ONE-YEAR READING THAT IS A SHORT BARE INTEGER IS A FRAGMENT, NOT A VALUE.**
+   Where the widget covers the right hand side of the table, what is left of "34.71" is
+   "34". The column always shows two decimals, so a bare integer of one or two digits
+   there is the left-hand part of a number, not a reading -- and read as a number it
+   would be stored as 0.34. Such a reading is refused.
+
+   A LOST decimal point is a different thing: it leaves three or four digits ("197"
+   for -1.97) and those are still read. But a digit string whose integer part has a
+   LEADING ZERO ("03571", from "-0.51%" misread) is not a number that lost its point at
+   all -- it is not a number either, and the repair now refuses it.
 ### Aggregation
 - `src/video/captureTickers.js` — which field of a capture holds its holdings (see below)
 - `src/video/probeLogDirs.js` — the three probe-log directory layouts (see below)

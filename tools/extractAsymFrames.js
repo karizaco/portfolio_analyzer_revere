@@ -281,7 +281,7 @@ function selectPosts(db) {
   let sql = `SELECT p.video_id, p.post_id, p.upload_date, p.media_upload_id,
                     m.file_path AS media_path, m.kind AS media_kind
                FROM asym_posts p
-               LEFT JOIN asym_media m ON m.video_id = p.video_id
+               LEFT JOIN asym_media m ON m.video_id = p.video_id AND m.kind = 'video'
               WHERE p.has_media = 1 AND p.media_upload_id <> ''`;
   if (options.videoId) {
     sql += ' AND p.video_id = ?';

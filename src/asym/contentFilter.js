@@ -219,41 +219,62 @@ function asymPostQuarantine(post) {
 }
 
 /**
- * Does this post carry an embedded video?
+ * Does this post carry an embedded video, and WHICH one?
  *
  * The video is not in the API's `body_html` as markup: Substack stores it as
  * a `native-video-embed` div whose `data-attrs` attribute holds
  * `{"mediaUploadId":"<uuid>","duration":null}` with the JSON HTML-escaped.
  * The rendered page carries the same id as `data-media-upload-id`.
  *
+ * A post can carry MORE THAN ONE `data-attrs` block, and only some of them
+ * are videos -- the others are images and tweet embeds, which have a `src`
+ * instead of a `mediaUploadId`. So every `data-attrs` block is read, and
+ * the ones that carry a media-upload id are collected.
+ *
  * 24 of the 42 free posts have one; the 18 that do not are the 2023-2024
  * text-only series plus two `market-pulse-open-access` posts.
  *
+ * `mediaUploadId` stays the FIRST id, because that is what the rest of the
+ * pipeline has always used and changing it would change which video a
+ * post is scored on. `mediaUploadIds` is the whole list, for the case where
+ * a post genuinely carries more than one video.
+ *
  * @param {object} post - a post object from the Substack API
- * @returns {{ hasMedia: boolean, mediaUploadId: string }}
+ * @returns {{ hasMedia: boolean, mediaUploadId: string, mediaUploadIds: string[] }}
  */
 function asymMedia(post) {
   const body = typeof (post || {}).body_html === 'string' ? post.body_html : '';
-  const match = /data-attrs="([^"]*)"/.exec(body);
-  if (!match) return { hasMedia: false, mediaUploadId: '' };
+  const ids = [];
+  const seen = new Set();
 
-  // The attribute is HTML-escaped JSON, so it has to be unescaped before it
-  // can be parsed. `&quot;` is the escape that actually occurs here.
-  const decoded = match[1]
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>');
+  // Every `data-attrs` block, double-quoted or single-quoted.
+  for (const match of body.matchAll(/data-attrs=(?:"([^"]*)"|'([^']*)')/g)) {
+    const raw = match[1] !== undefined ? match[1] : match[2];
+    if (typeof raw !== 'string' || !raw) continue;
 
-  let attrs = null;
-  try {
-    attrs = JSON.parse(decoded);
-  } catch {
-    return { hasMedia: false, mediaUploadId: '' };
+    // The attribute is HTML-escaped JSON, so it has to be unescaped before
+    // it can be parsed. `&quot;` is the escape that actually occurs here.
+    const decoded = raw
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>');
+
+    let attrs = null;
+    try {
+      attrs = JSON.parse(decoded);
+    } catch {
+      // A block that is not JSON is not a video block.
+      continue;
+    }
+    const id = attrs && typeof attrs.mediaUploadId === 'string' ? attrs.mediaUploadId.trim() : '';
+    if (!id || seen.has(id)) continue;
+    seen.add(id);
+    ids.push(id);
   }
-  const id = attrs && typeof attrs.mediaUploadId === 'string' ? attrs.mediaUploadId : '';
-  return { hasMedia: Boolean(id), mediaUploadId: id };
+
+  return { hasMedia: ids.length > 0, mediaUploadId: ids[0] || '', mediaUploadIds: ids };
 }
 
 module.exports = {

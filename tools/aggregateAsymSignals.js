@@ -108,7 +108,7 @@ function loadSectors() {
   try {
     const db = new DatabaseSync(DB_PATH, { readOnly: true });
     try {
-      return db.prepare('SELECT video_id, sector, roc_1mo, pct_change, sign_source FROM asym_sectors ORDER BY video_id, roc_1mo DESC').all();
+      return db.prepare('SELECT video_id, sector, roc_1mo, pct_change, roc_1yr, sign_source FROM asym_sectors ORDER BY video_id, roc_1mo DESC').all();
     } finally {
       db.close();
     }
@@ -246,7 +246,10 @@ function loadPosts(db) {
            m.status AS media_status, m.duration_sec, m.segment_count AS media_segment_count,
            (SELECT COUNT(*) FROM video_transcripts t WHERE t.video_id = p.video_id) AS transcript_rows
       FROM asym_posts p
-      LEFT JOIN asym_media m ON m.video_id = p.video_id
+      LEFT JOIN asym_media m ON m.rowid = (SELECT m2.rowid FROM asym_media m2
+                                         WHERE m2.video_id = p.video_id
+                                         ORDER BY CASE m2.kind WHEN 'audio' THEN 0 ELSE 1 END
+                                         LIMIT 1)
      ORDER BY p.upload_date DESC, p.video_id ASC
   `).all();
 
@@ -322,7 +325,7 @@ function loadCoverage() {
     // asymAccess() returns, not the access column's own vocabulary.
     const paid = db.prepare("SELECT COUNT(*) c FROM asym_posts WHERE access = 'paywalled'").get().c;
     const withMedia = db.prepare('SELECT COUNT(*) c FROM asym_posts WHERE has_media = 1').get().c;
-    const downloaded = db.prepare("SELECT COUNT(*) c FROM asym_media WHERE status = 'downloaded'").get().c;
+    const downloaded = db.prepare("SELECT COUNT(DISTINCT video_id) c FROM asym_media WHERE status = 'downloaded'").get().c;
     const transcribed = db.prepare(
       "SELECT COUNT(*) c FROM video_transcripts WHERE video_id LIKE 'asym\\_%' ESCAPE '\\'",
     ).get().c;

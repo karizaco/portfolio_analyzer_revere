@@ -92,6 +92,35 @@ const MIN_VIDEO_HEIGHT = 720;
 const MIN_VIDEO_WIDTH = 1280;
 
 /**
+ * The canonical DDL of the media table.
+ *
+ * It is duplicated in data/db/schema.sql, and a test asserts that the two
+ * agree -- a migration that rebuilds the table from a DIFFERENT shape than
+ * the schema file would silently change the column order.
+ *
+ * @type {string}
+ */
+const ASYM_MEDIA_DDL = `CREATE TABLE IF NOT EXISTS asym_media (
+    video_id TEXT NOT NULL REFERENCES asym_posts(video_id),
+    media_upload_id TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT 'video',
+    file_path TEXT NOT NULL DEFAULT '',
+    file_bytes INTEGER NOT NULL DEFAULT 0,
+    width INTEGER NOT NULL DEFAULT 0,
+    height INTEGER NOT NULL DEFAULT 0,
+    duration_sec REAL NOT NULL DEFAULT 0,
+    status TEXT NOT NULL DEFAULT 'pending',
+    error TEXT NOT NULL DEFAULT '',
+    transcript_path TEXT NOT NULL DEFAULT '',
+    segment_count INTEGER NOT NULL DEFAULT 0,
+    transcribed_at TEXT NOT NULL DEFAULT '',
+    attempts INTEGER NOT NULL DEFAULT 0,
+    downloaded_at TEXT NOT NULL DEFAULT '',
+    updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (video_id, kind)
+);`;
+
+/**
  * The media state values.
  *
  * @readonly
@@ -375,9 +404,12 @@ function ensureFreeSpace(dir, neededBytes, marginFactor = 1.25) {
  * @param {import('node:sqlite').DatabaseSync} db
  * @param {object} [options]
  * @param {boolean} [options.includeDone] - include posts already downloaded
+ * @param {string} [options.kind] - which media kind to look for (default video)
  * @returns {Array<object>} rows from asym_posts, oldest first
  */
 function mediaWorkList(db, options = {}) {
+  const wantedKind = options.kind || ASYM_MEDIA_KIND.VIDEO;
+
   // The join is against a table that may not exist yet -- a fresh clone
   // has not run the schema that creates it, and a dry run opens the
   // catalog read-only precisely so it cannot create it. So the joined
@@ -391,11 +423,12 @@ function mediaWorkList(db, options = {}) {
              m.status AS media_status, m.kind AS media_kind,
              m.file_path, m.file_bytes, m.error AS media_error
         FROM asym_posts p
-        LEFT JOIN asym_media m ON m.video_id = p.video_id
+        LEFT JOIN asym_media m
+               ON m.video_id = p.video_id AND m.kind = ?
        WHERE p.has_media = 1
          AND p.media_upload_id <> ''
        ORDER BY p.upload_date ASC, p.video_id ASC
-    `).all();
+    `).all(wantedKind);
   } catch {
     rows = db.prepare(`
       SELECT p.video_id, p.post_id, p.slug, p.title, p.upload_date, p.series,
@@ -408,7 +441,6 @@ function mediaWorkList(db, options = {}) {
     `).all();
   }
 
-  const wantedKind = options.kind || ASYM_MEDIA_KIND.VIDEO;
   return rows.filter((row) => {
     // A row of the wrong KIND is not a row that satisfies the request.
     // The audio path wants an MP3 and the video path wants an MP4, and
@@ -440,10 +472,54 @@ function mediaWorkList(db, options = {}) {
  * @returns {void}
  */
 function ensureAsymMediaSchema(db) {
+  // The posts table carries the column that holds EVERY media id, and it
+  // needs the same treatment.
+  ensureAsymPostsMediaColumn(db);
+  // The table may not exist yet -- a fresh clone has not run the schema
+  // that creates it, and schema.sql will.
+  let columns = [];
+  try { columns = db.prepare('PRAGMA table_info(asym_media)').all(); } catch { columns = []; }
+  if (!columns.length) return;
+
+  // The key used to be video_id alone. It is now (video_id, kind), so a
+  // post can hold BOTH its video and its audio. A table with the old key
+  // has to be REBUILT -- SQLite cannot change a primary key in place.
+  const kindColumn = columns.find((column) => column.name === 'kind');
+  if (kindColumn && Number(kindColumn.pk) > 0) return;
+
+  db.exec('PRAGMA foreign_keys = OFF');
   try {
-    db.exec("ALTER TABLE asym_media ADD COLUMN kind TEXT NOT NULL DEFAULT 'video'");
-  } catch {
-    // The column is already there. That is the expected case.
+    db.exec(ASYM_MEDIA_DDL.replace('CREATE TABLE IF NOT EXISTS asym_media', 'CREATE TABLE asym_media_new'));
+    // A row whose kind is missing or unknown becomes a video row, which is
+    // what it was before the key changed.
+    // The copy is built from the columns the table REALLY HAS. A table
+    // written by an older schema may be missing `kind`, or any of the
+    // columns added later, and naming a column that is not there is a
+    // SQL error -- so a missing column becomes its default instead.
+    const has = (name) => columns.some((column) => column.name === name);
+    const pick = (name, fallback) => (has(name) ? name : fallback);
+    const kindExpression = has('kind')
+      ? "CASE WHEN kind IN ('video', 'audio') THEN kind ELSE 'video' END"
+      : "'video'";
+    const column = (name, fallback) => pick(name, fallback);
+    db.exec(`INSERT OR REPLACE INTO asym_media_new (video_id, media_upload_id, kind, file_path, file_bytes,
+      width, height, duration_sec, status, error, transcript_path, segment_count,
+      transcribed_at, attempts, downloaded_at, updated_at)
+      SELECT video_id, media_upload_id,
+      ${kindExpression},
+      ${column('file_path', "''")}, ${column('file_bytes', '0')},
+      ${column('width', '0')}, ${column('height', '0')},
+      ${column('duration_sec', '0')}, ${column('status', "'pending'")},
+      ${column('error', "''")}, ${column('transcript_path', "''")},
+      ${column('segment_count', '0')}, ${column('transcribed_at', "''")},
+      ${column('attempts', '0')}, ${column('downloaded_at', "''")},
+      ${column('updated_at', "datetime('now')")}
+      FROM asym_media`);
+    db.exec('DROP TABLE asym_media');
+    db.exec('ALTER TABLE asym_media_new RENAME TO asym_media');
+    db.exec('CREATE INDEX IF NOT EXISTS idx_asym_media_status ON asym_media(status)');
+  } finally {
+    db.exec('PRAGMA foreign_keys = ON');
   }
 }
 
@@ -461,7 +537,7 @@ function recordMedia(db, row) {
       video_id, media_upload_id, kind, file_path, file_bytes, width, height,
       duration_sec, status, error, attempts, downloaded_at, updated_at
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
-    ON CONFLICT(video_id) DO UPDATE SET
+    ON CONFLICT(video_id, kind) DO UPDATE SET
       media_upload_id = excluded.media_upload_id,
       kind = excluded.kind,
       file_path = excluded.file_path,
@@ -491,6 +567,125 @@ function recordMedia(db, row) {
     Number(record.attempts) || 0,
     record.downloaded_at || '',
   );
+}
+
+/**
+ * Make sure the posts table carries the column that holds EVERY media id.
+ *
+ * `CREATE TABLE IF NOT EXISTS` does not add a column to a table that already
+ * exists, so a catalog written before this column existed does not have it,
+ * and every INSERT that names it fails. The ALTER is idempotent -- it fails,
+ * harmlessly, when the column is already there -- which is the project's own
+ * idiom for this.
+ *
+ * @param {import('node:sqlite').DatabaseSync} db
+ * @returns {void}
+ */
+function ensureAsymPostsMediaColumn(db) {
+  try {
+    db.exec("ALTER TABLE asym_posts ADD COLUMN media_upload_ids TEXT NOT NULL DEFAULT ''");
+  } catch {
+    // The column is already there, or the table does not exist yet.
+  }
+}
+
+/**
+ * Record the media that is ALREADY on disk.
+ *
+ * WHY THIS IS NEEDED
+ *
+ * The media table used to be keyed by `video_id` alone, so a post could hold
+ * only ONE row: recording the audio erased the video row, and recording the
+ * video erased the audio row. The key is now (video_id, kind), so both can
+ * exist -- but the rows that were overwritten while the old key was in place
+ * are gone from the catalog, even though the FILES are still on disk.
+ *
+ * This reads the disk and writes back the rows the catalog is missing, so a
+ * file that was downloaded is not downloaded again. It is safe to run at any
+ * time: a file that fails its gate is reported, not recorded.
+ *
+ * @param {import('node:sqlite').DatabaseSync} db
+ * @param {object} [options]
+ * @param {boolean} [options.dryRun] - report what would be recorded, write nothing
+ * @returns {{checked: number, video: number, audio: number, rejected: Array<object>}}
+ */
+function reconcileLocalMedia(db, options = {}) {
+  const dryRun = Boolean(options.dryRun);
+  const posts = db.prepare(
+    "SELECT video_id, post_id, upload_date, media_upload_id, media_duration FROM asym_posts WHERE has_media = 1"
+  ).all();
+
+  const summary = { checked: posts.length, video: 0, audio: 0, rejected: [] };
+  const existing = db.prepare('SELECT status FROM asym_media WHERE video_id = ? AND kind = ?');
+  const stamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+  for (const post of posts) {
+    // -- the video -------------------------------------------------------
+    const videoPath = asymMediaPath(post);
+    if (fs.existsSync(videoPath)) {
+      const row = existing.get(post.video_id, ASYM_MEDIA_KIND.VIDEO);
+      if (!row || row.status !== ASYM_MEDIA_STATUS.DOWNLOADED) {
+        const probe = probeMedia(videoPath);
+        const check = checkVideo(probe, post.media_duration);
+        if (check.ok) {
+          if (!dryRun) recordMedia(db, {
+            video_id: post.video_id,
+            media_upload_id: post.media_upload_id || '',
+            kind: ASYM_MEDIA_KIND.VIDEO,
+            file_path: portablePath(videoPath),
+            file_bytes: fs.statSync(videoPath).size,
+            width: probe.width,
+            height: probe.height,
+            duration_sec: probe.duration,
+            status: ASYM_MEDIA_STATUS.DOWNLOADED,
+            attempts: 1,
+            downloaded_at: stamp,
+          });
+          summary.video += 1;
+        } else {
+          summary.rejected.push({
+            video_id: post.video_id,
+            kind: ASYM_MEDIA_KIND.VIDEO,
+            path: portablePath(videoPath),
+            reason: check.reason,
+          });
+        }
+      }
+    }
+
+    // -- the audio -------------------------------------------------------
+    const audioPath = asymAudioPath(post);
+    if (fs.existsSync(audioPath)) {
+      const row = existing.get(post.video_id, ASYM_MEDIA_KIND.AUDIO);
+      if (!row || row.status !== ASYM_MEDIA_STATUS.DOWNLOADED) {
+        const probe = probeAudio(audioPath);
+        const check = checkAudio(probe, post.media_duration);
+        if (check.ok) {
+          if (!dryRun) recordMedia(db, {
+            video_id: post.video_id,
+            media_upload_id: post.media_upload_id || '',
+            kind: ASYM_MEDIA_KIND.AUDIO,
+            file_path: portablePath(audioPath),
+            file_bytes: fs.statSync(audioPath).size,
+            duration_sec: probe.duration,
+            status: ASYM_MEDIA_STATUS.DOWNLOADED,
+            attempts: 1,
+            downloaded_at: stamp,
+          });
+          summary.audio += 1;
+        } else {
+          summary.rejected.push({
+            video_id: post.video_id,
+            kind: ASYM_MEDIA_KIND.AUDIO,
+            path: portablePath(audioPath),
+            reason: check.reason,
+          });
+        }
+      }
+    }
+  }
+
+  return summary;
 }
 
 /**
@@ -590,6 +785,7 @@ function takeDownloadLock(dir) {
 
 module.exports = {
   ASYM_AUDIO_DIR,
+  ASYM_MEDIA_DDL,
   ASYM_MEDIA_DIR,
   ASYM_MEDIA_KIND,
   ASYM_MEDIA_STATUS,
@@ -606,8 +802,10 @@ module.exports = {
   freeSpaceBytes,
   mediaWorkList,
   portablePath,
+  ensureAsymPostsMediaColumn,
   probeAudio,
   probeMedia,
+  reconcileLocalMedia,
   recordMedia,
   sweepStalePartials,
   takeDownloadLock,

@@ -184,6 +184,7 @@ function upsertPost(db, post) {
     series,
     has_media: media.hasMedia ? 1 : 0,
     media_upload_id: media.mediaUploadId,
+    media_upload_ids: JSON.stringify(media.mediaUploadIds || []),
     media_duration: null,
     spreadsheet_url: '',
     tc2000_url: '',
@@ -196,10 +197,11 @@ function upsertPost(db, post) {
   db.prepare(`
     INSERT INTO asym_posts (
       video_id, post_id, slug, title, post_label, post_date, upload_date,
-      audience, access, series, has_media, media_upload_id, media_duration,
+      audience, access, series, has_media, media_upload_id, media_upload_ids,
+      media_duration,
       spreadsheet_url, tc2000_url, word_count, quarantined, quarantine_reason,
       body_fetched_at, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
     ON CONFLICT(video_id) DO UPDATE SET
       post_id = excluded.post_id,
       slug = excluded.slug,
@@ -214,6 +216,10 @@ function upsertPost(db, post) {
       media_upload_id = CASE
         WHEN excluded.media_upload_id <> '' THEN excluded.media_upload_id
         ELSE asym_posts.media_upload_id
+      END,
+      media_upload_ids = CASE
+        WHEN excluded.media_upload_ids <> '' THEN excluded.media_upload_ids
+        ELSE asym_posts.media_upload_ids
       END,
       media_duration = CASE
         WHEN excluded.media_duration IS NOT NULL THEN excluded.media_duration
@@ -238,7 +244,8 @@ function upsertPost(db, post) {
   `).run(
     row.video_id, row.post_id, row.slug, row.title, row.post_label, row.post_date,
     row.upload_date, row.audience, row.access, row.series, row.has_media,
-    row.media_upload_id, row.media_duration, row.spreadsheet_url, row.tc2000_url,
+    row.media_upload_id, row.media_upload_ids, row.media_duration,
+    row.spreadsheet_url, row.tc2000_url,
     row.word_count, row.quarantined, row.quarantine_reason, row.body_fetched_at,
   );
 

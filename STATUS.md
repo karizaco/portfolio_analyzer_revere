@@ -398,15 +398,36 @@ over the transcript with the ENGLISH name finder.
 | transcripts so far | **24 posts, 11,282 segments** |
 | signals so far | **35** across 23 tickers |
 | outcomes scored so far | **30 claims** (1w hit rate 46.7% vs same-call-on-SPY 60%) |
-| sector rows so far | **254** (9-11 of 11 GICS sectors per post) |
-| article-vs-table consistency | **primary picks consistent 79%, avoid picks 89%** |
+| sector rows so far | **262** (9-11 of 11 GICS sectors per post) |
+| article-vs-table consistency | **primary picks consistent 82%, avoid picks 93%** (secondary 59%) |
 | Market Monitor sheets | **30 sheets, 8,947 day rows** |
 | sector ETF claims scored | **101** (1w hit 51.5% vs same-call-on-SPY 62.4%) |
+| sector table geometry | **192/192 frames detected, 0 fallbacks**; the 1-year column is readable in 13 of 24 posts |
 
 A transcript with no ticker produces no signal, and that is the rule, not a
 fault: the extractor only emits a signal when a TICKER is present, because
 "I am bullish" names nothing to buy.
 
+**THE SECTOR TABLE'S COLUMNS ARE FOUND IN EVERY FRAME, NOT ASSUMED.**
+The table is a screen share, and it is not laid out the same way in every
+post: the Company column is a different width, the number of checkmark
+columns changes between the series, and in eleven of the twenty-four posts
+another widget covers the right-hand side of the table, hiding the one-year
+column. The parser used to assume one fixed geometry, which meant that in
+the shifted posts it read the wrong column -- half of the day figure and
+half of the year figure, stored together as one number.
+
+The geometry is now DETECTED in every frame: the vertical rules cut the
+panel into cells, and the cells are matched to the columns by what is in
+them (the name cell holds the sector names, the change cell holds the `%`
+signs). Measured over all 192 frames: **192 detected, 0 fallbacks**. The
+one-year reading is present in **13 of 24 posts**; in the other eleven it
+is genuinely covered, and a one-year reading that is a short bare integer
+is now treated as a covered FRAGMENT and stored as null rather than as a
+value. `pct_change` is now the true single-day % Change (range -3.06 to
++2.47, mean +0.10) and `roc_1yr` the one-year rate of change (-10.24 to
++57.47, mean +13.68); before the fix `pct_change` held the one-year
+figure. See CLAUDE.md rules 5 and 6.
 **THE AUDIO-ONLY PATH EXISTS, AND IT IS 4.25x CHEAPER.** The downloader
 can fetch the 480x270 rendition, extract the audio and delete the video: the
 whole free corpus is about 360 MB of audio against 8.51 GB of video. It is

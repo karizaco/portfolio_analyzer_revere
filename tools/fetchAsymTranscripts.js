@@ -146,9 +146,12 @@ function workList(db) {
              (SELECT COUNT(*) FROM video_transcripts t WHERE t.video_id = p.video_id) AS transcript_rows
         FROM asym_posts p
         JOIN asym_media m ON m.video_id = p.video_id
+             AND m.kind = (SELECT k.kind FROM asym_media k
+                            WHERE k.video_id = p.video_id AND k.status = ?
+                            ORDER BY CASE k.kind WHEN 'audio' THEN 0 ELSE 1 END LIMIT 1)
        WHERE m.status = ?
        ORDER BY p.upload_date ASC, p.video_id ASC
-    `).all(ASYM_MEDIA_STATUS.DOWNLOADED);
+    `).all(ASYM_MEDIA_STATUS.DOWNLOADED, ASYM_MEDIA_STATUS.DOWNLOADED);
   } catch {
     return [];
   }
@@ -245,8 +248,8 @@ function registerTranscript(db, post, segments, filePath) {
     db.prepare(`
       UPDATE asym_media
          SET transcript_path = ?, segment_count = ?, transcribed_at = ?, updated_at = datetime('now')
-       WHERE video_id = ?
-    `).run(relPath, segments.length, fetchedAt, post.video_id);
+       WHERE video_id = ? AND kind = ?
+    `).run(relPath, segments.length, fetchedAt, post.video_id, post.media_kind || 'video');
 
     db.exec('COMMIT');
     return transcriptId;
