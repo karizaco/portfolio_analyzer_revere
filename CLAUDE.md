@@ -6996,3 +6996,39 @@ list without splitting made the caption loop walk its CHARACTERS — 'e' and
 'n' — so every video came back "no captions", and ten videos were written to
 the caption-less blacklist, which is permanent. The blacklist was deleted
 and the videos refetched. Pinned by `test/fetchChannelDefaults.test.js`.
+
+**THE RAW CAPTION VTT IS AN INTERMEDIATE, AND ONLY BENZINGA'S ARE
+UNTRACKED.** yt-dlp writes the VTT, the tool reads it once, the normaliser
+turns it into the JSON, and nothing downstream ever opens it. The JSON is
+the artifact.
+
+The VTTs are tracked for Sevcik and T3Live, and that is deliberate: they are
+YouTube's OWN caption tracks, so the source text is recoverable from the
+repository alone (§ *The transcripts are versioned*). Benzinga's corpus is
+large enough that tracking its VTTs would add ~360 MB of dead weight, so
+**its VTTs carry the channel in the name** —
+`data/video_pipeline/transcripts/<id>.captions.benzinga.en.vtt` — and the
+`.gitignore` rule names that one channel:
+
+```
+data/video_pipeline/transcripts/*.captions.benzinga.*.vtt
+```
+
+A rule that matched EVERY VTT would have changed the other two channels'
+policy too, and the channel has to be in the NAME for the rule to be narrow.
+The JSON's name is unchanged (`<id>.json`) — every tool looks it up that
+way. Pinned by `test/fetchChannelDefaults.test.js`.
+
+**A RE-FETCH IS NOT THE SAME FILE.** Measured 2026-11-12, the same T3Live
+video fetched twice: the caption track changed from 404 to 458 segments and
+the text changed with it ("I am Sammy Abasad" became "I am Sami Abu Sa'd").
+YouTube regenerates its auto-captions, so the VTT a re-fetch produces is
+**not** the VTT the tracked JSON was built from.
+
+So the tracked JSON is the authoritative record of what the pipeline read —
+not a convenience copy of something reproducible. That is why the VTTs are
+tracked for Sevcik and T3Live (§ *The transcripts are versioned*: the
+source text is recoverable from the repository alone), and why Benzinga's
+are not: a second copy of a caption track that no longer exists in that
+form, and that could differ from the JSON's source later, is dead weight
+rather than provenance.

@@ -66,6 +66,53 @@ test('an unknown channel is an error, and the known ones are named', () => {
     'the defaults still fall back to another channel');
 });
 
+// ─── The VTT suffix ────────────────────────────────────────────────────────
+//
+// The raw caption VTT is an intermediate: yt-dlp writes it, the tool reads
+// it once, and the normalised JSON is the artifact. Benzinga's corpus is
+// large enough that tracking its VTTs would add ~360 MB of dead weight,
+// so its VTTs carry the channel in the name and are NOT tracked.
+//
+// The channel has to be IN THE NAME for that: a rule that matched every
+// VTT would have changed T3Live's and Sevcik's policy too, and their VTTs
+// ARE tracked.
+
+test('only Benzinga\'s raw VTTs carry a channel suffix', () => {
+  const defaults = {
+    SEVCIK_CHANNEL: '',
+    T3LIVE_CHANNEL: '',
+    BENZINGA_CHANNEL: 'benzinga',
+  };
+  for (const [channel, suffix] of Object.entries(defaults)) {
+    const block = new RegExp(`\\[${channel}\\]:\\s*\\{[^}]*\\}`, 'm').exec(SOURCE);
+    assert.ok(block, `channel ${channel} is not registered`);
+    assert.match(block[0], new RegExp(`vttSuffix:\\s*'${suffix}'`),
+      `${channel} should carry the VTT suffix "${suffix}"`);
+  }
+});
+
+test('the VTT is written with the channel suffix, and the JSON is not', () => {
+  assert.ok(SOURCE.includes('${row.video_id}.captions${suffix ? `.${suffix}` : \'\'}'),
+    'the VTT name carries the suffix');
+  // The JSON's name is the plain one -- every tool looks it up that way.
+  assert.ok(SOURCE.includes('path.join(TRANSCRIPTS_DIR, `${videoId}.json`)'),
+    'the JSON keeps its plain name');
+});
+
+test('the ignore rule names Benzinga, and not the other channels', () => {
+  const ignore = fs.readFileSync(path.join(ROOT, '.gitignore'), 'utf8');
+  const rules = ignore.split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.startsWith('data/video_pipeline/transcripts/') && line.endsWith('.vtt'));
+  assert.ok(rules.length >= 1, 'no VTT rule in .gitignore');
+  for (const rule of rules) {
+    assert.ok(rule.includes('benzinga'),
+      `the VTT rule must name Benzinga, found: ${rule}`);
+    assert.ok(!rule.endsWith('/*.vtt'),
+      `a rule that matched every VTT would change the other channels too: ${rule}`);
+  }
+});
+
 // ─── The caption-less verdict ──────────────────────────────────────────────
 
 test('a genuinely absent caption track is "no captions"', () => {

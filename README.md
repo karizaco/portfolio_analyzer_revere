@@ -698,6 +698,13 @@ same `videos` table as Revere and Qullamaggie, so both downloaders filter on
 the channel (`src/video/videoStatus.js`, `OCR_CHANNELS`) — measured before the
 fix: 30 of the worker's first 30 picks were T3Live rows.
 
+**Only the JSON is tracked for this source.** The raw caption VTT is an
+intermediate — yt-dlp writes it, the fetch tool reads it once, and the
+normalised JSON is the artifact. Benzinga's VTTs carry the channel in the
+name (`<id>.captions.benzinga.en.vtt`) so the `.gitignore` rule can name one
+channel; at ~144 KB each the corpus would add ~360 MB. Sevcik's and T3Live's
+VTTs stay tracked, as before.
+
 ---
 
 ## AsymTrading (Substack source, article text)

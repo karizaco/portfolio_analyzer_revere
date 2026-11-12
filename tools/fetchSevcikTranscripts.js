@@ -65,10 +65,23 @@ const { benzingaVideoQuarantine } = require('../src/benzinga/contentFilter');
 // produce a worse transcript -- it produces no transcript. So a channel
 // that is not registered here MUST NOT fall back to Sevcik's settings: it
 // would be transcribed by the wrong model, and the result would be kept.
+//
+// THE VTT SUFFIX
+//
+// The raw caption VTT is an INTERMEDIATE: yt-dlp writes it, the tool
+// reads it once, the normaliser turns it into the JSON, and nothing
+// downstream ever opens it. The JSON is the artifact.
+//
+// Benzinga's corpus is large enough that tracking its VTTs would add
+// ~360 MB of dead weight, so its VTTs carry the channel in the name and
+// are NOT tracked (the user's decision, 2026-11-11: "track json only").
+// The other channels keep their VTTs tracked, exactly as before -- which
+// is why the name has to carry the channel at all: a rule that matched
+// every VTT would have changed their policy too.
 const CHANNEL_DEFAULTS = {
-  [SEVCIK_CHANNEL]: { subLangs: 'cs-orig,en', deepgramLanguage: 'cs', quarantine: sevcikVideoQuarantine },
-  [T3LIVE_CHANNEL]: { subLangs: 'en', deepgramLanguage: 'en', quarantine: t3liveVideoQuarantine },
-  [BENZINGA_CHANNEL]: { subLangs: 'en', deepgramLanguage: 'en', quarantine: benzingaVideoQuarantine },
+  [SEVCIK_CHANNEL]: { subLangs: 'cs-orig,en', deepgramLanguage: 'cs', quarantine: sevcikVideoQuarantine, vttSuffix: '' },
+  [T3LIVE_CHANNEL]: { subLangs: 'en', deepgramLanguage: 'en', quarantine: t3liveVideoQuarantine, vttSuffix: '' },
+  [BENZINGA_CHANNEL]: { subLangs: 'en', deepgramLanguage: 'en', quarantine: benzingaVideoQuarantine, vttSuffix: 'benzinga' },
 };
 const { attachSegments } = require('../src/transcript/segmentStore');
 
@@ -556,7 +569,12 @@ function classifyMissingCaptions(lang, stdout, stderr, rateLimited) {
 }
 
 function fetchYoutubeCaptions(row) {
-  const baseOut = path.join(TRANSCRIPTS_DIR, `${row.video_id}.captions`);
+  // The channel's suffix goes in the name of the raw VTT, so a channel
+  // whose VTTs are not tracked can be told apart from one whose are.
+  // The JSON's name is unchanged -- every tool looks it up as
+  // `<video_id>.json`.
+  const suffix = channelDefaults(options.channel).vttSuffix;
+  const baseOut = path.join(TRANSCRIPTS_DIR, `${row.video_id}.captions${suffix ? `.${suffix}` : ''}`);
   const errors = [];
 
   for (const lang of options.subLangs) {

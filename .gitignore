@@ -18,16 +18,16 @@ data/video_pipeline/*
 !data/video_pipeline/state.sqlite
 !data/video_pipeline/transcripts/
 !data/video_pipeline/transcripts/**
-# The raw caption VTT is an INTERMEDIATE: the fetch tool writes it and the
+# The raw caption VTT is an INTERMEDIATE: the fetch tool writes it, the
 # normaliser reads it, and nothing downstream ever opens it. The normalised
-# JSON beside it is the artifact, and the VTT can be re-fetched. So a NEW
-# VTT is not tracked -- the user's decision for the Benzinga corpus
-# (2026-11-11) was "track json only", and the VTTs are ~144 KB each.
+# JSON beside it is the artifact, and the VTT can be re-fetched.
 #
-# The VTTs already in git stay tracked: git keeps tracking a file it knows
-# about even when an ignore rule matches it, so this rule changes what is
-# ADDED and not the history.
-data/video_pipeline/transcripts/*.captions.*.vtt
+# Benzinga's VTTs carry the channel in the name and are NOT tracked: the
+# decision for that corpus (2026-11-11) was "track json only", and its
+# VTTs are ~144 KB each -- ~360 MB at the corpus's full size. The other
+# channels keep their VTTs tracked, so the rule names one channel rather
+# than every VTT.
+data/video_pipeline/transcripts/*.captions.benzinga.*.vtt
 data/video_pipeline_*/
 data/video_ocr_probe/
 data/my_videos/
