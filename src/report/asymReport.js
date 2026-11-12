@@ -121,6 +121,9 @@ function renderHeadline(payload) {
       <div class="card"><div class="card-value">${coverage.with_media || 0}</div><div class="card-label">with a video</div></div>
       <div class="card"><div class="card-value">${coverage.downloaded || 0}</div><div class="card-label">media downloaded</div></div>
       <div class="card"><div class="card-value">${coverage.transcribed || 0}</div><div class="card-label">transcribed</div></div>
+      <div class="card"><div class="card-value">${coverage.frames || 0}</div><div class="card-label">frames</div></div>
+      <div class="card"><div class="card-value">${coverage.sectors || 0}</div><div class="card-label">sector rows</div></div>
+      <div class="card"><div class="card-value">${coverage.monitor_days || 0}</div><div class="card-label">monitor days</div></div>
       <div class="card"><div class="card-value">${payload.article_count || 0}</div><div class="card-label">readings parsed</div></div>
       <div class="card"><div class="card-value">${payload.signal_count || 0}</div><div class="card-label">signals</div></div>
       <div class="card"><div class="card-value">${bullish}</div><div class="card-label">bullish</div></div>
@@ -234,6 +237,90 @@ function renderOutcomes(outcomes) {
  * @param {Array<object>} tickers
  * @returns {string}
  */
+
+/**
+ * The article-vs-table consistency, and the sector-ETF outcomes.
+ *
+ * @param {object} payload
+ * @param {object|null} sectorOutcomes
+ * @returns {string}
+ */
+function renderSectors(payload, sectorOutcomes) {
+  const consistency = payload.sector_consistency || [];
+  if (!consistency.length && !(sectorOutcomes && sectorOutcomes.overall)) {
+    return '<p class="note">No sector table yet. Run <code>npm run asym:frames</code> then <code>npm run asym:sectors</code>.</p>';
+  }
+
+  const byTier = {};
+  for (const row of consistency) {
+    const tier = row.tier || 'other';
+    if (!byTier[tier]) byTier[tier] = { consistent: 0, contradicts: 0, unknown: 0, total: 0 };
+    byTier[tier].total += 1;
+    const key = row.consistency || row.article_rank_check || 'unknown';
+    if (byTier[tier][key] == null) byTier[tier][key] = 0;
+    byTier[tier][key] += 1;
+  }
+  const tierRows = Object.entries(byTier).map(([tier, v]) => {
+    const rate = v.total ? (v.consistent || 0) / v.total : null;
+    return '<tr>'
+      + '<td>' + escapeHtml(tier) + '</td>'
+      + '<td class="num">' + v.total + '</td>'
+      + '<td class="num">' + (v.consistent || 0) + '</td>'
+      + '<td class="num">' + (v.contradicts || 0) + '</td>'
+      + '<td class="num">' + pct(rate) + '</td>'
+      + '</tr>';
+  }).join('');
+
+  const consistencyTable = consistency.length ? (
+    '<h3>Does the author pick from the top of the table?</h3>'
+    + '<p class="note">For every sector the written report names, this is where that sector '
+    + 'RANKED among the eleven by the on-screen 1-month rate of change. A primary pick in the '
+    + 'top half is consistent with the table; one in the bottom half is not. An avoid pick is '
+    + 'the mirror image.</p>'
+    + '<table><thead><tr><th>tier</th><th class="num">named</th><th class="num">consistent</th>'
+    + '<th class="num">contradicts</th><th class="num">rate</th></tr></thead><tbody>'
+    + tierRows + '</tbody></table>'
+  ) : '';
+
+  let outcomeBlock = '';
+  if (sectorOutcomes && sectorOutcomes.overall) {
+    const rows = [
+      outcomeRow('overall', sectorOutcomes.overall),
+      ...Object.entries(sectorOutcomes.by_tier || {}).map(([tier, summary]) => outcomeRow(tier, summary)),
+    ].join('');
+    outcomeBlock = '<h3>Do the sector picks beat the index?</h3>'
+      + '<p class="note">A primary/secondary pick is scored as a bullish call on its SPDR sector ETF '
+      + '(XLK, XLV, XLE…). An avoid pick is scored as a bearish call. Entry is the close on the post '
+      + 'date; horizons are +7 and +30 calendar days. "Same call on SPY" is the fair baseline.</p>'
+      + '<table><thead><tr><th></th><th class="num">claims</th><th class="num">hit 1w</th>'
+      + '<th class="num">same call on SPY</th><th class="num">excess 1w</th>'
+      + '<th class="num">95% interval</th><th>significant</th></tr></thead><tbody>'
+      + rows + '</tbody></table>';
+  } else {
+    outcomeBlock = '<p class="note">Sector ETF outcomes not scored yet. Run <code>node tools/analyzeAsymSectorOutcomes.js</code>.</p>';
+  }
+
+  // A few concrete recent rows so the numbers are inspectable.
+  const sample = consistency.slice(0, 12).map((row) => '<tr>'
+    + '<td>' + escapeHtml(row.upload_date || '') + '</td>'
+    + '<td>' + escapeHtml(row.article_sector || '') + '</td>'
+    + '<td>' + escapeHtml(row.tier || '') + '</td>'
+    + '<td class="num">' + escapeHtml(row.rank_by_roc || '') + (row.of_sectors ? '/' + escapeHtml(row.of_sectors) : '') + '</td>'
+    + '<td class="num">' + escapeHtml(row.roc_1mo === '' || row.roc_1mo == null ? '—' : row.roc_1mo) + '</td>'
+    + '<td class="num">' + escapeHtml(row.pct_change === '' || row.pct_change == null ? '—' : row.pct_change) + '</td>'
+    + '<td>' + escapeHtml(row.consistency || '') + '</td>'
+    + '</tr>').join('');
+
+  const sampleTable = consistency.length ? (
+    '<h3>Recent named sectors</h3>'
+    + '<table><thead><tr><th>date</th><th>sector</th><th>tier</th><th class="num">rank</th>'
+    + '<th class="num">1mo ROC</th><th class="num">% chg</th><th>vs table</th></tr></thead><tbody>'
+    + sample + '</tbody></table>'
+  ) : '';
+
+  return consistencyTable + outcomeBlock + sampleTable;
+}
+
 function renderTickers(tickers) {
   const rows = (tickers || []).slice(0, 40).map((ticker) => `<tr>
     <td>${escapeHtml(ticker.ticker)}</td>
@@ -304,7 +391,7 @@ const CSS = `
  * @param {object|null} [outcomes] - the outcome summary, when it has been scored
  * @returns {string}
  */
-function renderAsymReport(payload, outcomes = null) {
+function renderAsymReport(payload, outcomes = null, sectorOutcomes = null) {
   return `<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><title>AsymTrading Market Pulse</title>
 <style>${CSS}</style></head><body>
@@ -312,7 +399,9 @@ function renderAsymReport(payload, outcomes = null) {
 ${renderHeadline(payload)}
 <h2>The written readings</h2>
 ${renderArticles(payload.articles)}
-<h2>Do the calls beat the index?</h2>
+<h2>The sector table</h2>
+${renderSectors(payload, sectorOutcomes)}
+<h2>Do the ticker calls beat the index?</h2>
 ${renderOutcomes(outcomes)}
 <h2>Most-mentioned names</h2>
 ${renderTickers(payload.tickers)}

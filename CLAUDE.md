@@ -6797,6 +6797,46 @@ Measured over the free corpus (24 posts, 108 article-named sectors):
 
 So the author is, on the whole, reading the table.
 
+**THE MARKET MONITOR SHEET, AND THE SECTOR CALLS AGAINST ETFs.**
+Two more datasets hang off the free posts.
+
+*The Market Monitor sheet.* Every free Market Pulse links a Google Sheet
+whose first tab is a daily breadth / momentum tape: for each date, and for
+each index and each of the eleven sectors, the author records 10-day new
+highs, 10-day new lows, and names up / down. That is the MEASUREMENT
+behind the written "Breadth: Positive" reading, the way the TradeStation
+table is the measurement behind the sector picks.
+
+The sheet is PUBLIC -- Google's CSV export needs no login -- so the fetch is
+one GET and a parse. What is hard is the layout: three header rows, groups
+of four columns starting at different offsets, and a date that is "M/D"
+with no year. The year comes from the post, and a December-to-January
+wrap decrements it.
+
+  npm run asym:sheets      # 30 sheets, 8,947 day rows
+
+*The sector calls against ETFs.* The report names sectors to focus on and
+sectors to avoid. That is a CALL, and it can be scored:
+
+  npm run asym:sectors:outcomes
+
+A primary or secondary pick is a bullish call on its SPDR sector ETF
+(XLK, XLV, XLE, ...); an avoid pick is a bearish call. Entry is the close
+on the post date, horizons +7 and +30 days, and the baseline is the same
+call on SPY.
+
+Measured over 101 sector claims:
+
+  overall    1w hit 51.5%   same-call-on-SPY 62.4%   excess -0.4pp
+  primary    1w hit 59.0%   same-call-on-SPY 71.8%   excess +0.1pp
+  secondary  1w hit 52.9%   same-call-on-SPY 73.5%   excess -1.0pp
+  avoid      1w hit 39.3%   same-call-on-SPY 35.7%   excess -0.3pp
+
+So the sector picks do NOT beat the index either: the excess is negative
+or indistinguishable from zero at every tier. The author picks sectors
+that are ALREADY strong (72% consistent with the table's ranking), and
+that is not the same as picking sectors that then go up.
+
 **THE REPORT LEADS WITH THE WRITTEN READINGS.** The dashboard shows the
 market backdrop, the index trend, the breadth and momentum readings, the
 sectors and the Bottom Line per post, because those are why the source is

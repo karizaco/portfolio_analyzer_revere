@@ -506,3 +506,31 @@ test('the number repair puts the missing decimal point back', () => {
   assert.equal(repairNumber('“132%').value, 1.32);
   assert.equal(repairNumber('').value, null);
 });
+test('the Market Monitor CSV parser reads the breadth tape', () => {
+  const { parseMarketMonitorCsv, spreadsheetIdFromUrl } = require('../src/asym/marketMonitor');
+  const csv = [
+    '"legend",,,,,',
+    ',Primary,,,,',
+    ',Indices vs MAs,,,,Small +,,,,Large Cap,,,,',
+    'Date,QQQ,SPY,MDY,IWM,10NH,10NL,5U,5D,10NH,10NL,5U,5D',
+    ',,,,,,',
+    '10/29,,,,,2160,1047,301,259,392,125,37,14',
+    '10/28,,,,,2000,1500,250,300,300,200,20,25',
+    '1/3,,,,,100,200,10,20,50,60,5,6',
+    '12/30,,,,,110,210,11,21,51,61,5,6',
+  ].join('\n');
+  const parsed = parseMarketMonitorCsv(csv, { yearHint: '20261028' });
+  assert.equal(parsed.rows.length, 4);
+  assert.equal(parsed.rows[0].date, '20261029');
+  assert.equal(parsed.rows[0].breadth_nh, 2160);
+  assert.equal(parsed.rows[0].breadth_nl, 1047);
+  assert.equal(parsed.rows[0].breadth_net, 1113);
+  assert.equal(parsed.rows[0].groups.large_cap.nh, 392);
+  // Year wraps when the month runs backwards across the year boundary.
+  assert.equal(parsed.rows[2].date, '20260103');
+  assert.equal(parsed.rows[3].date, '20251230');
+  assert.equal(
+    spreadsheetIdFromUrl('https://docs.google.com/spreadsheets/d/1vfSktAuZMvODVbZ6BK7DyzeO4e009yPYxzGLQko2YNo/edit?usp=sharing'),
+    '1vfSktAuZMvODVbZ6BK7DyzeO4e009yPYxzGLQko2YNo',
+  );
+});

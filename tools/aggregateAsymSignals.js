@@ -79,6 +79,44 @@ const ARTICLE_COLUMNS = [
 const argv = process.argv.slice(2);
 const asJson = argv.includes('--json');
 
+
+/**
+ * The article-vs-table consistency rows, when they have been computed.
+ *
+ * @returns {Array<object>}
+ */
+function loadSectorConsistency() {
+  const file = path.join(OUTPUT_DIR, 'asym_sector_consistency.csv');
+  if (!fs.existsSync(file)) return [];
+  // Prefer the JSON companion when present -- it carries typed numbers.
+  const jsonPath = path.join(OUTPUT_DIR, 'asym_sectors.json');
+  if (fs.existsSync(jsonPath)) {
+    try {
+      const body = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+      return Array.isArray(body.consistency) ? body.consistency : [];
+    } catch { /* fall through */ }
+  }
+  return [];
+}
+
+/**
+ * The on-screen sector rows, when they have been parsed.
+ *
+ * @returns {Array<object>}
+ */
+function loadSectors() {
+  try {
+    const db = new DatabaseSync(DB_PATH, { readOnly: true });
+    try {
+      return db.prepare('SELECT video_id, sector, roc_1mo, pct_change, sign_source FROM asym_sectors ORDER BY video_id, roc_1mo DESC').all();
+    } finally {
+      db.close();
+    }
+  } catch {
+    return [];
+  }
+}
+
 async function main() {
   if (!fs.existsSync(DB_PATH)) {
     console.error(`No SQLite at ${DB_PATH}. Run 'npm run video:init' first.`);
@@ -111,6 +149,8 @@ async function main() {
     daily,
     tickers,
     articles,
+    sector_consistency: loadSectorConsistency(),
+    sectors: loadSectors(),
   };
 
   fs.writeFileSync(
@@ -128,9 +168,14 @@ async function main() {
   if (fs.existsSync(outcomesPath)) {
     try { outcomes = JSON.parse(fs.readFileSync(outcomesPath, 'utf8')); } catch { outcomes = null; }
   }
+  const sectorOutcomesPath = path.join(OUTPUT_DIR, 'asym_sector_outcome_summary.json');
+  let sectorOutcomes = null;
+  if (fs.existsSync(sectorOutcomesPath)) {
+    try { sectorOutcomes = JSON.parse(fs.readFileSync(sectorOutcomesPath, 'utf8')); } catch { sectorOutcomes = null; }
+  }
   fs.writeFileSync(
     path.join(OUTPUT_DIR, 'asym_report.html'),
-    renderAsymReport(payload, outcomes),
+    renderAsymReport(payload, outcomes, sectorOutcomes),
     'utf8',
   );
 
@@ -282,7 +327,18 @@ function loadCoverage() {
       "SELECT COUNT(*) c FROM video_transcripts WHERE video_id LIKE 'asym\\_%' ESCAPE '\\'",
     ).get().c;
     const articles = db.prepare('SELECT COUNT(*) c FROM asym_articles').get().c;
-    return { posts, free, paid, with_media: withMedia, downloaded, transcribed, articles };
+    let frames = 0;
+    let sectors = 0;
+    let monitorDays = 0;
+    let monitorSheets = 0;
+    try { frames = db.prepare('SELECT COUNT(*) c FROM asym_frames').get().c; } catch { /* optional */ }
+    try { sectors = db.prepare('SELECT COUNT(*) c FROM asym_sectors').get().c; } catch { /* optional */ }
+    try { monitorDays = db.prepare('SELECT COUNT(*) c FROM asym_monitor_days').get().c; } catch { /* optional */ }
+    try { monitorSheets = db.prepare('SELECT COUNT(*) c FROM asym_monitor_sheets').get().c; } catch { /* optional */ }
+    return {
+      posts, free, paid, with_media: withMedia, downloaded, transcribed, articles,
+      frames, sectors, monitor_days: monitorDays, monitor_sheets: monitorSheets,
+    };
   } finally {
     db.close();
   }

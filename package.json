@@ -52,6 +52,16 @@
     "t3live:aggregate": "node tools/aggregateT3liveSignals.js",
     "t3live:outcomes": "node tools/analyzeT3liveOutcomes.js",
     "t3live:names": "node tools/surveyT3liveNames.js --write-candidates data/t3live_name_candidates.csv",
+    "benzinga:catalog:streams": "node tools/runWhiteboardWorker.js catalog --channel benzinga --source-url https://www.youtube.com/@Benzinga/streams --extractor-args youtube:player_client=visios --sleep-requests 1",
+    "benzinga:catalog:videos": "node tools/runWhiteboardWorker.js catalog --channel benzinga --source-url https://www.youtube.com/@Benzinga/videos --extractor-args youtube:player_client=visios --sleep-requests 1",
+    "benzinga:transcripts": "node tools/fetchSevcikTranscripts.js --channel benzinga",
+    "benzinga:transcripts:chunks": "node tools/fetchTranscriptChunks.js --channel benzinga --ids-file data/catalog_flat/benzinga_ids.txt --chunk 40 --pause 45 --log data/benzinga_fetch_log.txt",
+    "benzinga:transcripts:deepgram": "node tools/fetchDeepgramBatch.js --channel benzinga --ids-file data/catalog_flat/benzinga_no_captions.txt --chunk 8 --log data/benzinga_fetch_log_deepgram.txt",
+    "benzinga:signals": "node tools/extractBenzingaSignals.js",
+    "benzinga:readings": "node tools/extractBenzingaReadings.js",
+    "benzinga:aggregate": "node tools/aggregateBenzingaSignals.js",
+    "benzinga:outcomes": "node tools/analyzeBenzingaOutcomes.js",
+    "benzinga:survey": "node tools/measureBenzingaSpeech.js",
     "asym:catalog": "node tools/catalogAsymSubstack.js",
     "asym:catalog:dry": "node tools/catalogAsymSubstack.js --dry-run",
     "qmg:benchmark:curated": "node tools/runQmgCuratedBenchmark.js",
@@ -88,7 +98,9 @@
     "asym:outcomes": "node tools/analyzeAsymOutcomes.js",
     "asym:report": "node tools/aggregateAsymSignals.js",
     "asym:frames": "node tools/extractAsymFrames.js",
-    "asym:sectors": "node tools/parseAsymSectors.js"
+    "asym:sectors": "node tools/parseAsymSectors.js",
+    "asym:sheets": "node tools/fetchAsymSheets.js",
+    "asym:sectors:outcomes": "node tools/analyzeAsymSectorOutcomes.js"
   },
   "dependencies": {
     "sharp": "^0.34.3",

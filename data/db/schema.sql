@@ -598,6 +598,52 @@ CREATE TABLE IF NOT EXISTS asym_sectors (
 CREATE INDEX IF NOT EXISTS idx_asym_sectors_video ON asym_sectors(video_id);
 CREATE INDEX IF NOT EXISTS idx_asym_sectors_sector ON asym_sectors(sector);
 
+
+-- The Market Monitor sheet behind each free post.
+--
+-- Every free Market Pulse links a Google Sheet whose first tab is a daily
+-- breadth / momentum tape. The sheet is PUBLIC (CSV export needs no login),
+-- and it is the measurement behind the written "Breadth: Positive" reading
+-- the same way the TradeStation sector table is the measurement behind the
+-- sector picks.
+--
+-- asym_monitor_sheets   one row per post that has a spreadsheet URL
+-- asym_monitor_days     one row per (post, date) from that sheet
+CREATE TABLE IF NOT EXISTS asym_monitor_sheets (
+    video_id TEXT PRIMARY KEY REFERENCES asym_posts(video_id),
+    spreadsheet_id TEXT NOT NULL DEFAULT '',
+    spreadsheet_url TEXT NOT NULL DEFAULT '',
+    file_path TEXT NOT NULL DEFAULT '',
+    file_bytes INTEGER NOT NULL DEFAULT 0,
+    row_count INTEGER NOT NULL DEFAULT 0,
+    first_date TEXT NOT NULL DEFAULT '',
+    last_date TEXT NOT NULL DEFAULT '',
+    fetched_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS asym_monitor_days (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id TEXT NOT NULL REFERENCES asym_posts(video_id),
+    -- The calendar day the row is about, YYYYMMDD.
+    day TEXT NOT NULL,
+    -- Small+ market-wide breadth / momentum.
+    breadth_nh REAL,
+    breadth_nl REAL,
+    breadth_net REAL,
+    momentum_up REAL,
+    momentum_down REAL,
+    momentum_net REAL,
+    -- Per-group JSON: { tech: {nh,nl,up,down}, ... }.
+    groups_json TEXT NOT NULL DEFAULT '',
+    -- The MA colour cells for QQQ/SPY/MDY/IWM, as free text.
+    indices_json TEXT NOT NULL DEFAULT '',
+    source_row INTEGER NOT NULL DEFAULT 0,
+    UNIQUE(video_id, day)
+);
+
+CREATE INDEX IF NOT EXISTS idx_asym_monitor_days_video ON asym_monitor_days(video_id);
+CREATE INDEX IF NOT EXISTS idx_asym_monitor_days_day ON asym_monitor_days(day);
+
 -- Discord pipeline tables -------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS discord_sources (
@@ -726,7 +772,10 @@ CREATE TABLE IF NOT EXISTS market_readings (
     -- Which extractor version produced this row.
     parser_version TEXT NOT NULL,
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
-    UNIQUE(video_id, scope, subject, event_date, parser_version)
+    -- One row per (video, subject, stance): a show that says "semis are
+    -- the leadership" three times says it once, and the reader wants the
+    -- stance, not the repetition.
+    UNIQUE(video_id, scope, subject, stance, event_date, parser_version)
 );
 
 CREATE INDEX IF NOT EXISTS idx_market_readings_video ON market_readings(video_id);
