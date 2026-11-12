@@ -168,6 +168,83 @@ function articleSector(spoken) {
  */
 const PARSER_VERSION = 'asym-sector-1';
 
+/**
+ * Reduce a sector's readings across the frames to ONE row.
+ *
+ * WHY THE MEDIAN AND NOT THE FIRST READING
+ *
+ * The table is on screen while the market moves, so the same row reads
+ * slightly differently in different frames -- and the OCR of a
+ * twelve-pixel number is fragile on its own. Measured on one post: the
+ * same Healthcare row reads "11.27" in one frame and "\u00a2127)" in
+ * another, which the decimal-point repair turns into 1.27. Taking the
+ * FIRST reading would take whichever frame happened to be read best;
+ * taking the MEDIAN across the frames that show the sector takes the
+ * value the frames agree on.
+ *
+ * The % Change SIGN comes from the frame that supplied the median
+ * magnitude, because the colour of that frame's glyph is the authority.
+ *
+ * @param {Array<object>} readings
+ * @returns {object|null}
+ */
+function reduceReadings(readings) {
+  const list = (readings || []).filter(Boolean);
+  if (!list.length) return null;
+
+  const rocReadings = list.filter((r) => r.roc_1mo !== null && r.roc_1mo !== undefined)
+    .map((r) => ({ value: Number(r.roc_1mo), frame: r.frame, raw: r.roc_raw }));
+  const changeReadings = list.filter((r) => r.pct_change !== null && r.pct_change !== undefined)
+    .map((r) => ({ value: Number(r.pct_change), frame: r.frame, raw: r.change_raw, sign: r.sign_source, green: r.colour_green, red: r.colour_red }));
+
+  const median = (rows) => {
+    if (!rows.length) return null;
+    const sorted = rows.slice().sort((a, b) => a.value - b.value);
+    const middle = Math.floor(sorted.length / 2);
+    const value = sorted.length % 2
+      ? sorted[middle].value
+      : (sorted[middle - 1].value + sorted[middle].value) / 2;
+    return { value, rows: sorted };
+  };
+
+  const roc = median(rocReadings);
+  const change = median(changeReadings);
+
+  // The sign of the % Change comes from the frame whose magnitude is the
+  // median -- that frame's glyph colour is the authority.
+  let signSource = '';
+  let changeValue = null;
+  let changeFrame = null;
+  let changeRaw = '';
+  if (change) {
+    const nearest = change.rows.reduce((best, row) => (
+      Math.abs(row.value - change.value) < Math.abs(best.value - change.value) ? row : best
+    ));
+    changeValue = change.value;
+    changeFrame = nearest.frame;
+    changeRaw = nearest.raw || '';
+    signSource = nearest.sign || '';
+  }
+
+  const spread = roc && rocReadings.length > 1
+    ? Math.max(...rocReadings.map((r) => r.value)) - Math.min(...rocReadings.map((r) => r.value))
+    : 0;
+
+  return {
+    sector: list[0].sector,
+    roc_1mo: roc ? Number(roc.value.toFixed(4)) : null,
+    roc_raw: roc ? rocReadings[0].raw : '',
+    roc_frame: roc ? roc.rows[0].frame : null,
+    pct_change: changeValue === null ? null : Number(changeValue.toFixed(4)),
+    change_raw: changeRaw,
+    change_frame: changeFrame,
+    sign_source: signSource,
+    spread,
+    readings: list.length,
+    confidence: list[0].confidence,
+  };
+}
+
 module.exports = {
   COLUMN_BOUNDS,
   ARTICLE_SECTOR_ALIASES,
@@ -270,12 +347,9 @@ function matchSector(spoken) {
  * believed.
  *
  * @param {string} token - the OCR'd text
- * @param {object} [options]
- * @param {number} [options.minDigits] - the digit count that implies a
- *   missing decimal point (default 3)
  * @returns {{value: number|null, repaired: boolean, raw: string}}
  */
-function repairNumber(token, options = {}) {
+function repairNumber(token) {
   const raw = String(token || '').trim();
   if (!raw) return { value: null, repaired: false, raw };
 
@@ -290,18 +364,25 @@ function repairNumber(token, options = {}) {
   const digits = raw.replace(/[^0-9]/g, '');
   if (!digits.length) return { value: null, repaired: false, raw };
 
-  const minDigits = options.minDigits || 3;
-  let text = digits;
-  if (digits.length === minDigits) {
-    text = digits[0] + '.' + digits.slice(1);
-  } else if (digits.length === minDigits - 1) {
+  // THE COLUMN SHOWS TWO DECIMALS, and that is what makes the repair
+  // unambiguous: the point goes TWO DIGITS FROM THE RIGHT.
+  //
+  //   147  ->  1.47     039  ->  0.39     1127  ->  11.27
+  //
+  // The previous rule only handled three digits, so a value of 10.00 or
+  // more whose decimal point was lost came back as NULL and the row was
+  // DROPPED -- and the sample frame has a 11.27 in it.
+  let text;
+  if (digits.length >= 3) {
+    text = digits.slice(0, -2) + '.' + digits.slice(-2);
+  } else if (digits.length === 2) {
     text = '0.' + digits;
-  } else if (digits.length === 1) {
-    text = '0.' + digits + '0';
   } else {
-    // Too many digits to be a percentage: not this column.
-    return { value: null, repaired: false, raw };
+    text = '0.' + digits + '0';
   }
+  // The SIGN survives the repair. A token like "-369" is -3.69, not 3.69,
+  // and the sign is the one thing the OCR cannot be relied on to keep.
+  if (raw.includes('-') && !text.startsWith('-')) text = '-' + text;
   const value = Number(text);
   return { value: Number.isFinite(value) ? value : null, repaired: true, raw };
 }
@@ -525,6 +606,7 @@ module.exports = {
   matchSector,
   normaliseName,
   parseSectorPanel,
+  reduceReadings,
   repairNumber,
   signFromColour,
 };

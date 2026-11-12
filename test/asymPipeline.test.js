@@ -534,3 +534,51 @@ test('the Market Monitor CSV parser reads the breadth tape', () => {
     '1vfSktAuZMvODVbZ6BK7DyzeO4e009yPYxzGLQko2YNo',
   );
 });
+test('the number repair handles four digits and keeps the sign', () => {
+  const { repairNumber } = require('../src/asym/sectorTable');
+  // The column shows TWO decimals, so the point goes two from the right.
+  assert.equal(repairNumber('1127').value, 11.27);
+  assert.equal(repairNumber('1050').value, 10.5);
+  assert.equal(repairNumber('147').value, 1.47);
+  assert.equal(repairNumber('039').value, 0.39);
+  // The sign survives the repair: a lost decimal point does not lose a minus.
+  assert.equal(repairNumber('-369').value, -3.69);
+  assert.equal(repairNumber('-3.69').value, -3.69);
+  assert.equal(repairNumber('11.27').value, 11.27);
+  assert.equal(repairNumber('11.27').repaired, false);
+});
+
+test('the sheet date decrements the year whenever the month goes up', () => {
+  const { parseSheetDate } = require('../src/asym/marketMonitor');
+  const walk = (months) => {
+    const state = { year: 2026, lastMonth: 0 };
+    return months.map((m) => {
+      const d = parseSheetDate(m + '/15', 2026, state);
+      return d ? d.compact : null;
+    });
+  };
+  // The common case: October back to January, then across into December.
+  assert.deepEqual(walk([10, 9, 1, 12]), ['20261015', '20260915', '20260115', '20251215']);
+  // A sheet whose oldest data is in December without passing January.
+  assert.deepEqual(walk([3, 12]), ['20260315', '20251215']);
+  // December back into January of the same year.
+  assert.deepEqual(walk([12, 1]), ['20261215', '20260115']);
+});
+
+test('the sector readings reduce to the MEDIAN across the frames', () => {
+  const { reduceReadings } = require('../src/asym/sectorTable');
+  const frame = (n) => ({ file_path: 'f' + n, timestamp_sec: n, frame_index: n });
+  const readings = [
+    { sector: 'Healthcare', roc_1mo: 11.27, pct_change: -1.08, sign_source: 'colour', frame: frame(0), confidence: 70 },
+    { sector: 'Healthcare', roc_1mo: 1.27, pct_change: null, sign_source: '', frame: frame(1), confidence: 70 },
+    { sector: 'Healthcare', roc_1mo: 11.27, pct_change: -1.08, sign_source: 'colour', frame: frame(2), confidence: 70 },
+  ];
+  const reduced = reduceReadings(readings);
+  // The one bad reading ("1.27") must not move the value.
+  assert.equal(reduced.roc_1mo, 11.27);
+  assert.equal(reduced.pct_change, -1.08);
+  assert.equal(reduced.sign_source, 'colour');
+  assert.equal(reduced.readings, 3);
+  // A sector with no readings reduces to nothing.
+  assert.equal(reduceReadings([]), null);
+});

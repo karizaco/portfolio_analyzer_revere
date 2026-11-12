@@ -1,4 +1,11 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "Bash(py -3 -c ' *)",
+      "Bash(node --check tools/extractBenzingaSignals.js)"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {

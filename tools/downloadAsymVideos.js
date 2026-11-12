@@ -295,25 +295,33 @@ async function downloadTo(url, destination, options = {}) {
     }
   });
 
-  // The stall detector: a timer that is reset by every chunk, and aborts
-  // the request when it fires.
+  // The stall detector.
+  //
+  // It used to be a timeout that each chunk "refreshed", which does not
+  // work: refresh() on a timer that has been cleared does not restart it,
+  // so the timer was dead after the first chunk and the detector could
+  // never fire. It is now a CLOCK: the time of the last chunk is
+  // remembered, and a periodic tick aborts the request when no chunk has
+  // arrived for stallMs.
   const controller = new AbortController();
-  const stallTimer = setTimeout(() => controller.abort(), stallMs);
+  let lastChunkAt = Date.now();
   reader.on('data', () => {
-    clearTimeout(stallTimer);
-    stallTimer.refresh();
+    lastChunkAt = Date.now();
   });
+  const stallTimer = setInterval(() => {
+    if (Date.now() - lastChunkAt > stallMs) controller.abort();
+  }, Math.min(5000, stallMs));
 
   try {
     await pipeline(reader, sink, { signal: controller.signal });
   } catch (error) {
-    clearTimeout(stallTimer);
+    clearInterval(stallTimer);
     if (error && error.name === 'AbortError') {
       throw new Error(`download stalled: no bytes for ${Math.round(stallMs / 1000)}s`);
     }
     throw error;
   }
-  clearTimeout(stallTimer);
+  clearInterval(stallTimer);
 
   const bytes = fs.existsSync(destination) ? fs.statSync(destination).size : 0;
   if (expected > 0 && bytes !== expected) {

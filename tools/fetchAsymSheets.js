@@ -126,10 +126,6 @@ async function main() {
       continue;
     }
     const dest = path.join(SHEETS_DIR, post.video_id + '.csv');
-    if (!options.force && fs.existsSync(dest) && fs.statSync(dest).size > 0) {
-      // Still re-parse into the DB so a schema change is picked up.
-    }
-
     try {
       const url = spreadsheetCsvUrl(spreadsheetId);
       const res = await fetch(url, { redirect: 'follow' });

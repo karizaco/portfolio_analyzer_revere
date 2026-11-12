@@ -399,7 +399,7 @@ over the transcript with the ENGLISH name finder.
 | signals so far | **35** across 23 tickers |
 | outcomes scored so far | **30 claims** (1w hit rate 46.7% vs same-call-on-SPY 60%) |
 | sector rows so far | **254** (9-11 of 11 GICS sectors per post) |
-| article-vs-table consistency | **primary picks consistent 72%, avoid picks 86%** |
+| article-vs-table consistency | **primary picks consistent 79%, avoid picks 89%** |
 | Market Monitor sheets | **30 sheets, 8,947 day rows** |
 | sector ETF claims scored | **101** (1w hit 51.5% vs same-call-on-SPY 62.4%) |
 

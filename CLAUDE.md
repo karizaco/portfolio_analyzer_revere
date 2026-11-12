@@ -6807,8 +6807,8 @@ compared.
 
 Measured over the free corpus (24 posts, 108 article-named sectors):
 
-  primary picks consistent with the table's ranking     72%
-  avoid picks consistent with the table's ranking       86%
+  primary picks consistent with the table's ranking     79%   (31 of 39)
+  avoid picks consistent with the table's ranking       89%   (25 of 28)
 
 So the author is, on the whole, reading the table.
 
@@ -6851,6 +6851,51 @@ So the sector picks do NOT beat the index either: the excess is negative
 or indistinguishable from zero at every tier. The author picks sectors
 that are ALREADY strong (72% consistent with the table's ranking), and
 that is not the same as picking sectors that then go up.
+
+### What the code review found (2026-11-12)
+
+A second pass over the whole AsymTrading path found three real bugs and
+one precision problem. All four are fixed.
+
+1. **THE STALL DETECTOR NEVER FIRED.** `tools/downloadAsymVideos.js`
+   armed a timeout and then "refreshed" it on every chunk -- but
+   `refresh()` on a timer that has been cleared does not restart it, so
+   the timer was dead after the first chunk and a hung connection could
+   not be detected at all. It is now a CLOCK: the time of the last chunk
+   is remembered, and a periodic tick aborts the request when nothing has
+   arrived for 90 s.
+
+2. **A FOUR-DIGIT NUMBER WAS DROPPED INSTEAD OF REPAIRED.** The columns
+   show TWO decimals, so a lost decimal point means the point goes two
+   digits from the right: "1127" is 11.27. The old rule only handled three
+   digits, so any value of 10.00 or more whose point was lost came back
+   as NULL and the ROW WAS DROPPED -- and the sample frame has an 11.27 in
+   it. The repair also keeps the SIGN now, because a lost decimal point
+   is not the only thing the OCR loses.
+
+3. **THE YEAR WRAP ONLY FIRED FOR JANUARY-TO-DECEMBER.** The Market
+   Monitor sheet is newest-first, so walking it walks backwards in time
+   and a month that goes UP means a year boundary. The old condition
+   ("the previous month was January or February and this one is
+   November or December") covers the common case but misses a sheet
+   whose oldest data is in December without passing January. Measured on
+   the 30 fetched sheets: 34 year-boundary crossings, 0 mis-dated either
+   way -- so this one was LATENT, not corrupting.
+
+4. **THE SECTOR TABLE WAS READ FROM WHICHEVER FRAME CAME FIRST, AND
+   THAT IS FRAGILE.** The table is on screen while the market moves, and
+   the OCR of a twelve-pixel number is fragile: measured, the same
+   Healthcare row reads "11.27" in one frame and "\u00a2127)" in another,
+   which the repair turned into 1.27. The readings of a sector are now
+   reduced by MEDIAN across the frames that show it, so one bad frame
+   cannot move the value. Measured effect on the corpus: the Healthcare
+   reading is 11.27 rather than 1.27, the rows with no rate of change
+   fell from 6 to 4, and the article-vs-table consistency rose from
+   72%/86% to 79%/89%.
+
+Also fixed: an empty `if` block in the sheet fetcher, and the reduction
+logic moved out of the tool into `src/asym/sectorTable.js`, where it can
+be tested.
 
 **THE REPORT LEADS WITH THE WRITTEN READINGS.** The dashboard shows the
 market backdrop, the index trend, the breadth and momentum readings, the

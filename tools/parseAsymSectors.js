@@ -48,6 +48,7 @@ const {
   articleSector,
   closeSectorOcr,
   parseSectorPanel,
+  reduceReadings,
 } = require('../src/asym/sectorTable');
 const { writeCsv } = require('../src/write/writeCsv');
 
@@ -116,37 +117,11 @@ async function main() {
 
     for (const row of parsed.rows) {
       if (!post.rows.has(row.sector)) {
-        post.rows.set(row.sector, {
-          ...row,
-          frame,
-          roc_frame: row.roc_1mo === null ? null : frame,
-          change_frame: row.pct_change === null ? null : frame,
-          spread: 0,
-        });
+        post.rows.set(row.sector, { sector: row.sector, readings: [], spoken: row.spoken_name });
+        post.rows.get(row.sector).readings.push({ ...row, frame });
         continue;
       }
-      // Each FIELD takes the value from the EARLIEST frame that has one.
-      //
-      // A single frame can miss a cell -- the OCR does not always read
-      // the % Change of every row -- and a later frame of the same video
-      // usually does. Filling each field from the earliest frame that
-      // HAS it keeps the result deterministic and stops a missed cell
-      // from becoming a missing value.
-      const existing = post.rows.get(row.sector);
-      if (existing.roc_1mo === null && row.roc_1mo !== null) {
-        existing.roc_1mo = row.roc_1mo;
-        existing.roc_raw = row.roc_raw;
-        existing.roc_frame = frame;
-      }
-      if (existing.pct_change === null && row.pct_change !== null) {
-        existing.pct_change = row.pct_change;
-        existing.change_raw = row.change_raw;
-        existing.change_frame = frame;
-      }
-      // The spread: how much the value moved across the frames.
-      if (row.roc_1mo !== null && existing.roc_1mo !== null) {
-        existing.spread = Math.max(existing.spread, Math.abs(row.roc_1mo - existing.roc_1mo));
-      }
+      post.rows.get(row.sector).readings.push({ ...row, frame });
     }
   }
 
@@ -169,15 +144,17 @@ async function main() {
   db.exec('BEGIN');
   for (const [videoId, post] of byPost.entries()) {
     for (const row of post.rows.values()) {
+      const reduced = reduceReadings(row.readings);
+      if (!reduced) continue;
       insert.run(
         videoId,
-        row.sector,
-        row.roc_1mo,
-        row.pct_change,
-        row.sign_source,
-        row.frame.file_path,
-        row.frame.timestamp_sec,
-        row.confidence,
+        reduced.sector,
+        reduced.roc_1mo,
+        reduced.pct_change,
+        reduced.sign_source,
+        (reduced.roc_frame || reduced.change_frame || {}).file_path || '',
+        (reduced.roc_frame || reduced.change_frame || {}).timestamp_sec || 0,
+        reduced.confidence,
         PARSER_VERSION,
       );
       written += 1;
@@ -264,15 +241,19 @@ function buildConsistency(db, byPost) {
     if (!post) continue;
 
     // The ranking, by the 1-month rate of change.
-    const ranked = [...post.rows.values()]
+    const flat = [...post.rows.values()]
+      .map((entry) => reduceReadings(entry.readings))
+      .filter(Boolean);
+    const ranked = flat
       .filter((row) => row.roc_1mo !== null)
       .sort((a, b) => b.roc_1mo - a.roc_1mo);
     const rankOf = new Map(ranked.map((row, index) => [row.sector, index + 1]));
+    const bySector = new Map(flat.map((row) => [row.sector, row]));
 
     for (const entry of named) {
       const gics = articleSector(entry.sector);
       if (!gics) continue;
-      const row = post.rows.get(gics);
+      const row = bySector.get(gics);
       const rank = rankOf.get(gics) || '';
       const total = ranked.length;
       const tier = entry.tier || '';

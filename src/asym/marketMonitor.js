@@ -121,8 +121,14 @@ function parseSheetDate(token, yearHint, state) {
   let year = match[3]
     ? (Number(match[3]) < 100 ? 2000 + Number(match[3]) : Number(match[3]))
     : (state.year || yearHint);
-  if (!match[3] && state.lastMonth && month > state.lastMonth + 1 && state.lastMonth <= 2 && month >= 11) {
-    // Went from Jan/Feb back into Nov/Dec: previous year.
+  if (!match[3] && state.lastMonth && month > state.lastMonth) {
+    // The sheet is newest-first, so walking it walks BACKWARDS in time.
+    // A month that goes UP therefore means we crossed a year boundary.
+    //
+    // The rule used to be narrower -- "the previous month was January
+    // or February and this one is November or December" -- which covers
+    // the common case but misses a sheet whose oldest data is in
+    // December without passing through January.
     year -= 1;
   }
   state.lastMonth = month;
