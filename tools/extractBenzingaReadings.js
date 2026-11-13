@@ -43,6 +43,26 @@ const DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
 /** The parser version written onto every reading row. */
 const PARSER_VERSION = 'benzinga-readings-1';
 
+/**
+ * THE STANCE RULES, by name. Measured against a hand-labelled sample of
+ * 40 readings on 2026-11-13 (29 correct, 11 wrong):
+ *
+ *   shipped               40 readings survive, 29 right = 72.5 % precision
+ *   same-clause           33 survive, 26 right = 78.8 %
+ *   after-only            21 survive, 19 right = 90.5 %
+ *   same-clause+after     20 survive, 19 right = 95.0 %
+ *
+ * The choice is not "which rule is best" but how many readings to keep
+ * against how clean they are. `same-clause` drops 3 correct readings to
+ * remove 4 wrong ones; `after-only` drops 10 correct to remove 9.
+ */
+const STANCE_RULES = {
+  shipped: {},
+  'same-clause': { sameClause: true },
+  'after-only': { afterOnly: true },
+  'same-clause+after': { sameClause: true, afterOnly: true },
+};
+
 const argv = process.argv.slice(2);
 
 function readFlag(arr, flag) {
@@ -57,8 +77,12 @@ const options = {
   channel: readFlag(argv, '--channel') || BENZINGA_CHANNEL,
   json: argv.includes('--json'),
   dryRun: argv.includes('--dry-run'),
+  stanceRule: readFlag(argv, '--stance-rule') || 'shipped',
 };
 
+
+// The stance rule, resolved once the options exist.
+const stanceOptions = STANCE_RULES[options.stanceRule] || STANCE_RULES.shipped;
 /**
  * Replace the readings of one video.
  *
@@ -126,6 +150,9 @@ function main() {
       // is history while one in the preview is a prediction.
       sectionAt: (index) => sectionAt(segments, index),
       parserVersion: PARSER_VERSION,
+      // THE STANCE RULE, so it can be measured rather than argued.
+      // `--stance-rule shipped` is the behaviour that shipped.
+      stanceOptions: stanceOptions,
     }),
     onVideo: (video, signals, segments) => {
       perVideo.push({

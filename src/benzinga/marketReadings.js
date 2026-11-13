@@ -45,12 +45,17 @@ const DIRECTION_WORDS = {
     /\b(?:bullish|rall(?:y|ied|ies|ying)|rall(?:y|ies)\b|strength|strong|leading|breakout|outperform(?:ing|s|ed)?|beat(?:ing)?|soar(?:ing|s|ed)|surg(?:e|es|ed|ing)|pop(?:ping|ped)?|ripp(?:ing|ped)?|bounc(?:e|es|ed|ing)|rebound|recover(?:y|ed|ing)?|constructive|advanc(?:e|es|ed|ing)|rally(?:ing)?)\b/i,
     /\bgap(?:s|ping)?\s+up\b/i,
     /\b(?:rose|rising|gained|gaining)\b/i,
+    // "up 40 points", "up 550 points" -- how a show states an index's
+    // move, and the most common form of the claim there is. The NUMBER
+    // is what makes it unambiguous: a bare "up" is "pick up".
+    /\bup\s+[\d.,]+\s*(?:points?|pts?)\b/i,
   ],
   bearish: [
     /\b(?:bearish|weak(?:ness|er)?|underperform(?:ing|s|ed)?|laggard(?:s)?|sell(?:ing)?\s+off|selloff|crash(?:ing|ed|es)?|tumble(?:d|ing)?|drop(?:ping|ped|s)?|fall(?:ing|en|s)?|sinking|sank|correction|breakdown|avoid(?:s|ed|ing)?|cautious|caution|hedge(?:d|ing)?|warning|overvalu(?:ed|ation)|bubble|unwind(?:ing)?|retreat(?:ing)?|slump(?:ping|ed)?|tanked|plunge(?:d|ing)?)\b/i,
     /\bgap(?:s|ping)?\s+down\b/i,
     /\bsold\s+off\b/i,
     /\b(?:fell|falling|declin(?:e|ed|ing)|slid(?:e|ing)?)\b/i,
+    /\bdown\s+[\d.,]+\s*(?:points?|pts?)\b/i,
   ],
 };
 
@@ -160,13 +165,42 @@ function directionWords(text) {
  * @param {number} [subjectAt] - where the subject is in the text
  * @returns {string|null}
  */
-function stanceNear(text, subjectAt) {
+function stanceNear(text, subjectAt, options = {}) {
   const window = String(text || '');
   const at = subjectAt === undefined ? 0 : subjectAt;
   const near = directionWords(window)
     .map((entry) => ({ ...entry, distance: Math.abs(entry.at - at) }))
     .filter((entry) => entry.distance <= STANCE_WINDOW_CHARS);
   if (!near.length) return null;
+
+  const after = near.filter((entry) => entry.at >= at);
+
+  // THE CLAUSE TEST. The direction word and the subject must be in the
+  // SAME SENTENCE. "After the subject" is not the same rule, and it is
+  // not the right one: the subject is often the OBJECT of the verb
+  // ("rates crashed the market", "Treasury rising"), and then its
+  // predicate comes BEFORE it. What separates a claim from a stray
+  // direction word is not the order but the CLAUSE.
+  // THE CLAUSE TEST. The direction word and the subject must be in the
+  // same CLAUSE. "After the subject" is not the same rule, and it is not
+  // the right one: the subject is often the OBJECT of the verb ("rates
+  // crashed the market", "Treasury rising"), and then its predicate
+  // comes BEFORE it. What separates a claim from a stray direction word
+  // is the clause, not the order.
+  //
+  // A clause boundary is a full stop, or a comma followed by a
+  // conjunction -- ", and yet the S&P 500 was up 40 points" is two
+  // clauses, and the "weak" in the first one says nothing about the
+  // second.
+  const CLAUSE_BREAK = /(?:[.?!]|[,;]\s+(?:and|but|so|yet|then|while|although|though|because|which|that)\b)/i;
+  const sameSentence = options.sameClause
+    ? near.filter((entry) => {
+      const from = Math.min(entry.at, at);
+      const to = Math.max(entry.at, at);
+      return !CLAUSE_BREAK.test(window.slice(from, to));
+    })
+    : near;
+  if (!sameSentence.length) return null;
 
   // The predicate FOLLOWS its subject in English: "the financials are
   // strong", "the semiconductors look weak". So a direction word AFTER
@@ -176,8 +210,21 @@ function stanceNear(text, subjectAt) {
   // very weak", 'strong' is nearer to 'semiconductors' than 'weak' is --
   // so the words after the subject are preferred, and the words before
   // are the fallback.
-  const after = near.filter((entry) => entry.at >= at);
-  const pool = after.length ? after : near.filter((entry) => entry.at < at);
+  //
+  // THE `afterOnly` OPTION TURNS THE FALLBACK OFF. The fallback is
+  // measured to be the largest single source of wrong readings: a
+  // direction word before the subject belongs to the PREVIOUS subject,
+  // so "were weak, and yet the S&P 500 was up 40 points" reads as a
+  // BEARISH reading on the S&P when the segment says it was up 40
+  // points. The cost is a lost reading whenever the speaker's predicate
+  // is truncated -- which the caption format does constantly.
+  const afterSame = sameSentence.filter((entry) => entry.at >= at);
+  let pool;
+  if (options.afterOnly) {
+    pool = afterSame;
+  } else {
+    pool = afterSame.length ? afterSame : sameSentence;
+  }
   if (!pool.length) return null;
 
   const closest = Math.min(...pool.map((entry) => entry.distance));
@@ -277,7 +324,7 @@ function extractReadings(segments, options = {}) {
         if (text.includes('?')) { match = regex.exec(text); continue; }
         // The stance is the direction word NEAR the subject, so a rolling
         // caption's two halves do not become one mixed reading.
-        const stance = stanceNear(text, match.index);
+        const stance = stanceNear(text, match.index, options.stanceOptions || {});
         if (stance === 'bullish' || stance === 'bearish') {
           // The section is read for the segment the reading is in, not
           // once for the whole video: a show moves from the recap to the

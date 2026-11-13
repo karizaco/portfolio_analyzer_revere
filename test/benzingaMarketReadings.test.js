@@ -113,3 +113,79 @@ test('a macro event is a reading of its own scope', () => {
   assert.ok(cpi, 'the CPI reading is there');
   assert.equal(cpi.scope, 'macro_event');
 });
+
+// THE STANCE RULES, and the measurement behind them.
+//
+// On 2026-11-13 a hand-labelled sample of 40 published readings was
+// scored: 29 correct, 11 wrong -- a precision of 72.5 %. The wrong ones
+// fall into two classes:
+//
+//   * the direction word is in ANOTHER CLAUSE ("were weak, and yet the
+//     S&P 500 was up 40 points" read as a bearish reading on the S&P);
+//   * the direction word is the subject's OBJECTIVE predicate ("rates
+//     crashed the market", "Treasury rising"), so it comes BEFORE the
+//     subject.
+//
+// The second class is why the rule is NOT "the direction word must come
+// after the subject": in English the subject is often the object of the
+// verb, and then its predicate precedes it. What separates a claim from
+// a stray direction word is the CLAUSE, not the order.
+//
+// The rules are SELECTABLE, and the default is unchanged until the
+// decision is made. Measured on the sample:
+//
+//   shipped              40 survive, 29 right = 72.5 %  (215 corpus readings)
+//   same-clause          33 survive, 26 right = 78.8 %  (195)
+//   after-only           21 survive, 19 right = 90.5 %  (161)
+//   same-clause+after    20 survive, 19 right = 95.0 %  (149)
+
+test('the shipped rule still reads a stance from either side of the subject', () => {
+  // The predicate FOLLOWS the subject: "the financials are strong".
+  const text = 'the financials are very strong here today';
+  assert.equal(stanceNear(text, text.indexOf('financials')), 'bullish');
+  // And the FALLBACK still works: the subject is the object of the verb.
+  const before = 'rates crashed the market and it was ugly';
+  assert.equal(stanceNear(before, before.indexOf('the market')), 'bearish');
+});
+
+test('the same-clause rule ignores a direction word from another clause', () => {
+  // "were weak" belongs to the small caps, and the S&P "held its own" --
+  // which is not a direction word. The shipped rule has no word after
+  // the subject, so it FALLS BACK to the one before it, across a clause
+  // boundary, and reads the index as bearish. The same-clause rule
+  // refuses the word from the previous clause and publishes nothing.
+  const text = 'markets were weak, and yet the S&P 500 held its own';
+  const at = text.indexOf('S&P 500');
+  assert.equal(stanceNear(text, at), 'bearish', 'the shipped rule takes the stray word');
+  assert.equal(stanceNear(text, at, { sameClause: true }), null,
+    'the same-clause rule finds no direction word in its own clause');
+});
+
+test('an index move stated in points is a direction', () => {
+  // "up 40 points" is how a show states an index's move, and it is the
+  // most common form of the claim there is. Before the vocabulary
+  // carried it, this segment had NO direction word after the subject
+  // and the reading was taken from the "weak" of a previous clause.
+  const text = 'the small caps were weak, and yet the S&P 500 was up 40 points';
+  const at = text.indexOf('S&P 500');
+  assert.equal(stanceNear(text, at), 'bullish');
+});
+
+test('the after-only rule refuses a direction word before the subject', () => {
+  // The subject is the object of the verb, so its predicate comes first.
+  const text = 'rates crashed the market and it was ugly';
+  const at = text.indexOf('the market');
+  assert.equal(stanceNear(text, at, { afterOnly: true }), null,
+    'no direction word follows the subject, so there is no reading');
+});
+
+test('the extractor takes the stance rule from its options', () => {
+  const text = 'markets were weak, and yet the S&P 500 held its own on the day';
+  const loose = extractReadings(segments(text), { stanceOptions: {} });
+  const strict = extractReadings(segments(text), { stanceOptions: { sameClause: true } });
+  const spx = (rows) => rows.find((r) => r.subject === 'the S&P 500');
+  assert.ok(spx(loose), 'the shipped rule publishes a reading on the index');
+  assert.equal(spx(loose).stance, 'bearish', 'and it is the wrong one');
+  assert.equal(spx(strict), undefined,
+    'the strict rule publishes nothing, because there is no direction word in its clause');
+});
