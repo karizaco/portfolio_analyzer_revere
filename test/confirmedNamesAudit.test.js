@@ -131,3 +131,72 @@ test('every confirmed row points at a ticker the SEC list knows', () => {
   }
   assert.deepEqual(unknown, [], 'every confirmed ticker is in the SEC list');
 });
+
+// THE BENZINGA ROWS, added 2026-11-13.
+//
+// 64 rows, each read against the sentence it was said in -- because a
+// name table cannot be audited by reading it. The corpus uses three of
+// these words in an ORDINARY sense, and the rows are keyed on the PAIR
+// the corpus capitalises:
+//
+//   "bloom"     "when the BLOOM could potentially fall" -- the word
+//   "travelers" "the record of most TRAVELERS ever screened" -- the word
+//   "lam"       the corpus never says "Lam" alone
+//
+// so the rows are "bloom energy", "travelers group" and "lam research".
+
+const fs2 = require('node:fs');
+const path2 = require('node:path');
+
+/** The rows added on 2026-11-13, read from the table itself. */
+function benzingaRows() {
+  const text = fs2.readFileSync(path2.join(ROOT, 'config', 'ticker_names_confirmed.csv'), 'utf8');
+  const marker = text.indexOf('# The Benzinga corpus, added 2026-11-13');
+  assert.notEqual(marker, -1, 'the Benzinga block is in the table');
+  return text.slice(marker).split(/\r?\n/)
+    .filter((line) => line.trim() && !line.startsWith('#'))
+    .map((line) => {
+      const parts = line.split(',');
+      return { spoken: parts[0].trim(), ticker: parts[1].trim().toUpperCase(), count: Number(parts[2]) || 0 };
+    })
+    .filter((row) => row.spoken && row.ticker);
+}
+
+test('every Benzinga row resolves to its own ticker', () => {
+  const rows = benzingaRows();
+  assert.ok(rows.length >= 60, `the Benzinga block has ${rows.length} rows`);
+  for (const row of rows) {
+    assert.equal(matchCompanyName(row.spoken).ticker, row.ticker,
+      `"${row.spoken}" must resolve to ${row.ticker}`);
+  }
+});
+
+test('the three ordinary-word rows are keyed on the PAIR the corpus capitalises', () => {
+  // The bare word has an ordinary sense in this corpus, so a row keyed on
+  // it would publish a holding on "when the BLOOM could potentially
+  // fall" and on "the record of most TRAVELERS ever screened".
+  const rows = new Map(benzingaRows().map((row) => [row.spoken.toLowerCase(), row]));
+  assert.ok(rows.has('bloom energy'), 'the row is keyed on the pair');
+  assert.ok(rows.has('travelers group'));
+  assert.ok(rows.has('lam research'));
+  assert.equal(rows.has('bloom'), false, 'the bare word is not keyed');
+  assert.equal(rows.has('travelers'), false);
+  assert.equal(rows.has('lam'), false);
+});
+
+test('no two rows in the table share a stem', () => {
+  // The key is the STEM, so two rows with one stem are one row, and
+  // the second silently replaces the first.
+  const text = fs2.readFileSync(path2.join(ROOT, 'config', 'ticker_names_confirmed.csv'), 'utf8');
+  const keys = new Map();
+  const clashes = [];
+  for (const line of text.split(/\r?\n/)) {
+    if (!line.trim() || line.startsWith('#')) continue;
+    const spoken = line.split(',')[0].trim();
+    if (!spoken) continue;
+    const key = stemName(spoken);
+    if (keys.has(key)) clashes.push(`${spoken} and ${keys.get(key)} share the key "${key}"`);
+    keys.set(key, spoken);
+  }
+  assert.deepEqual(clashes, []);
+});
