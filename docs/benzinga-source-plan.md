@@ -605,6 +605,30 @@ compare it against, so the bar for it is the user's call.
    Options: publish them as they are, with the evidence on every row; publish
    only the ones from the two talk shows; or publish only the ones whose
    subject and stance are in the same clause.
+   **MEASURED (2026-11-13), and the options are now measurable.** A
+   hand-labelled sample of 40 published readings gives **30 correct / 10
+   wrong = 75 % precision**, and the three options measure out very
+   differently:
+
+   | option | what it does | measured |
+   |---|---|---|
+   | publish as they are | the shipped rule | 75.0 %, 1,678 readings |
+   | only the two talk shows | restrict by show | **71.4 % / 80.0 %** by show against 66.7 % for the rest — **no real gain**, so this option is not worth the loss of the other shows |
+   | subject and stance in the same clause | `--stance-rule same-clause` | **81.8 %**, 1,626 readings (−3 %) |
+   | …and the word after the subject | `--stance-rule same-clause+after` | **95.2 %**, 1,123 readings (−33 %) |
+
+   **The rule is now selectable and the default is unchanged**, so the
+   decision can be made with the numbers in hand rather than by argument:
+   `node tools/extractBenzingaReadings.js --stance-rule same-clause`.
+
+   **Why the same clause and not "after the subject"**: the subject is
+   often the **object** of the verb ("rates crashed *the market*",
+   "*Treasury* rising"), so its predicate comes before it. What separates
+   a claim from a stray direction word is the clause, not the order.
+
+   **The vocabulary also lost "up 40 points"** — how a show states an
+   index's move, and the most common form of the claim there is. One
+   hand-labelled reading was wrong because of it.
 3. **The confirmed-names table.** The 2014–2020 era speaks tickers as company
    names ("Neri", "Apple"), and those names have to be confirmed one at a
    time — the same work `npm run t3live:names` did for T3Live.
