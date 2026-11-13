@@ -3,7 +3,39 @@
     "allow": [
       "Bash(node -e ' *)",
       "Bash(py -3 -c ' *)",
-      "Bash(node --check tools/extractBenzingaSignals.js)"
+      "Bash(node --check tools/extractBenzingaSignals.js)",
+      "Bash(xargs -a /tmp/bz_vtts.txt git rm --cached --quiet)",
+      "Bash(xargs -a \"C:/tmp/bz_vtts.txt\" git rm --cached --quiet)",
+      "Bash(git show *)",
+      "Bash(mv *.captions.benzinga.en.vtt data/video_pipeline/transcripts/ && echo \"moved back\"; ls data/video_pipeline/transcripts/ | grep -c \"captions.benzinga\"; ls data/video_pipeline/transcripts/ | grep -c \"\\\\.captions\\\\.en\\\\.vtt\"; ls data/video_pipeline/transcripts/0JAfPwMOfKw*)",
+      "Bash(grep -n \"captions\\\\${suffix\\\\|transcriptPathFor\" tools/fetchSevcikTranscripts.js)",
+      "Bash(node tools/fetchSevcikTranscripts.js --channel t3live --video-id AQEvPMs2jXw --force --no-deepgram-fallback)",
+      "Bash(grep -n \"Pinned by \\\\`test/fetchChannelDefaults.test.js\\\\`\" CLAUDE.md)",
+      "Bash(powershell -NoProfile -Command 'if \\($env:DEEPGRAM_API_KEY\\) { '\\\\''DEEPGRAM_API_KEY is set in the environment'\\\\'' } else { '\\\\''not in the environment'\\\\'' }')",
+      "Bash(node tools/measureCaptionStability.js --video-id 0JAfPwMOfKw --channel benzinga --rounds 3 --gap-minutes 3)",
+      "WebFetch(domain:support.google.com)",
+      "WebFetch(domain:duckduckgo.com)",
+      "WebFetch(domain:html.duckduckgo.com)",
+      "WebFetch(domain:www.bing.com)",
+      "Bash(node tools/measureCaptionStability.js --compare-stored --channel t3live --ids-file C:/tmp/stability_ids.txt)",
+      "Bash(node --check tools/measureCaptionStability.js)",
+      "Bash(node tools/probeCaptionCoverage.js --ids-file C:/tmp/benzinga_probe_ids.txt --limit 24 --out data/catalog_flat/benzinga_no_captions.txt)",
+      "Bash(gh search *)",
+      "Bash(py -c ' *)",
+      "Bash(node tools/measureCaptionStability.js)",
+      "Bash(grep -n \"^const rounds_\\\\|^if \\(videoId\\) {\\\\|^}$\\\\|^console.log\\\\|compare-stored\\\\|^function \\\\|^if \\(readFlag\" tools/measureCaptionStability.js)",
+      "Bash(curl -s -A \"Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\)\" \"https://support.google.com/youtube/answer/6373554?hl=en\")",
+      "Bash(node tools/probeCaptionCoverage.js --ids-file C:/tmp/benzinga_old_ids.txt --limit 30 --out data/catalog_flat/benzinga_no_captions.txt)",
+      "Bash(node tools/fetchDeepgramBatch.js --channel benzinga --ids-file C:/tmp/benzinga_deepgram_ids.txt --chunk 2 --log data/benzinga_deepgram_log.txt)",
+      "Bash(node tools/probeCaptionCoverage.js --ids-file C:/tmp/benzinga_oldest_ids.txt --limit 30 --out data/catalog_flat/benzinga_no_captions.txt)",
+      "Bash(node tools/probeCaptionCoverage.js --ids-file C:/tmp/benzinga_spread_ids.txt --limit 40 --out data/catalog_flat/benzinga_no_captions.txt)",
+      "Bash(printf '0YIZtDklaOM\\\\t\\\\n2apJDmi-Brg\\\\t\\\\n')",
+      "Bash(node tools/fetchDeepgramBatch.js --channel benzinga --ids-file C:/tmp/benzinga_deepgram_ids.txt --chunk 3 --log data/benzinga_deepgram_log.txt)",
+      "Bash(node tools/fetchSevcikTranscripts.js --channel benzinga --video-id 0YIZtDklaOM --force --keep-audio --provider deepgram)",
+      "Bash(node tools/probeCaptionCoverage.js --ids-file C:/tmp/benzinga_spread2.txt --limit 45 --out data/catalog_flat/benzinga_no_captions.txt)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\admin\\Projects\\portfolio_analyzer_revere"
     ]
   },
   "hooks": {
@@ -13,7 +45,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -NoProfile -Command \"$inc='portfolio_analyzer_revere|node -e|\bnpm\b|\bnpx\b|easyocr|tools[\\/]|test[\\/]|_rerun|qmg|scanVideo|whiteboard_worker'; $exc='mcp|vscode|playwright|uv.cache|site-packages|extensions'; $a=Get-CimInstance Win32_Process | Where-Object { $_.Name -match '^(node|python|pythonw)' }; $p=@($a | Where-Object { $_.CommandLine -and ($_.CommandLine -match $inc) -and ($_.CommandLine -notmatch $exc) }); $t=[Console]::In.ReadToEnd(); if ($t -match 'npm (run )?test') { [Console]::Error.WriteLine('BLOCKED: npm test launches ~40 node processes at once. Ask the user to run it themselves.'); exit 2 }; $n=@($p | Where-Object { $_.Name -match '^node' }).Count; $y=@($p | Where-Object { $_.Name -match '^python' }).Count; if (($n -ge 6) -or ($y -ge 4)) { [Console]::Error.WriteLine('BLOCKED process-count hook: project node=' + $n + ' project python=' + $y + ' already running (caps: node 6, python 4). The ~30 harness MCP/VSCode processes are NOT counted. Let one finish first.'); exit 2 }\""
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/limit-processes.ps1"
           }
         ]
       }

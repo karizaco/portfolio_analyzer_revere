@@ -145,6 +145,58 @@ cd tools && mklink ffmpeg.exe "C:/Users/admin/AppData/Local/Microsoft/WinGet/Pac
 
 QMG video IDs can start with `_` (e.g. `_9o5_4iZ0zjI`). yt-dlp may truncate these. The download script handles this by using the full ID directly. If you see files named `_9o5_4iZ0zj` (truncated), rename with the full ID and update SQLite.
 
+### Process budget (Windows) — the guard, and the bug that made it a no-op
+
+**THE RULE: an agent must not fan out to many processes.** The machine is
+24 cores and the user's own apps (Firefox, a trading terminal) hold most
+of its memory. A run that starts ~100 node processes on top of that is
+what "the machine is frozen" means.
+
+**THE GUARD IS A HOOK**, `.claude/hooks/limit-processes.ps1`, wired into
+`.claude/settings.json` as a PreToolUse check on Bash. It:
+
+1. **refuses `npm test`** — the test runner starts **one process per test
+   file**, and this repository has 98 of them, so the suite is ~97
+   processes at once. (The runner now passes `--test-concurrency=8`; see
+   § *Testing*.) `npm run test:benchmark` is allowed — it is ONE file.
+2. **refuses any command while the project already has too many of its
+   own processes running**: node ≥ 6, python ≥ 4. The harness's ~30 MCP
+   and VSCode processes are not counted.
+3. **always allows the cleanup commands** — `taskkill`, `Stop-Process`,
+   `tasklist` — because a guard that blocks the command that fixes the
+   situation it complains about is a deadlock.
+
+**THE FIRST VERSION OF THIS HOOK DID NOTHING, for a week.** It was one
+long `powershell -NoProfile -Command "..."` string in `settings.json`.
+The harness runs a hook command **through the shell**, so bash expanded
+`$inc`, `$_`, `$a`, `$p` and `$t` to empty strings before PowerShell saw
+them; the script failed to parse, exited **1** instead of **2**, and a
+hook that exits with anything other than 2 is a **non-blocking** error in
+Claude Code. The file version had a second bug of its own: **`$input` is
+a reserved PowerShell automatic variable**, so reading the hook's input
+into it silently produced nothing.
+
+So the rule was in the repository the whole time and nothing enforced it.
+On 2026-11-13 a suite run was observed with 50+ `node.exe` alive while
+the machine was reported as frozen.
+
+**Three lessons, and they are the general ones:**
+
+- **A hook's exit code IS its behaviour.** 2 blocks; 0 allows; anything
+  else is a non-blocking error, and a script that fails to parse fails
+  in exactly the way that looks like "the rule is off".
+- **Never put a script in a shell-quoted string.** A file cannot be
+  mangled by `$` expansion.
+- **A rule that is not tested is a rule that is not there.** The guard is
+  pinned by `test/processGuardHook.test.js` — eight tests that drive the
+  script the way the harness does and assert the exit codes, including
+  the branch that fires while other work is running.
+
+**The hook cannot see what it is not told.** It counts node/python
+processes whose command line names the repository, one of its tools, a
+test path or one of its run trees — so a bare `node data/probe.js` is
+not counted. The caps are a backstop, not a proof.
+
 ### Scan orchestration safety (Windows) — NEVER freeze the user's machine
 
 Running `tools/scanAllGtVideos.js` or `tools/scanVideoWithOcr.js` against Qullamaggie chart-stream content without preparation has historically caused multi-hour freezes. The mechanism (root cause analysis in `enchanted-giggling-toucan.md` plan file):
@@ -251,12 +303,27 @@ Rules:
 ## Testing
 
 ```bash
-npm test              # everything except the OCR benchmark (599 tests, ~50 s)
+npm test              # everything except the OCR benchmark (1194 tests, ~55 s)
 npm run test:benchmark  # test/qmgGroundTruth.test.js alone (EasyOCR; ~2-25 min, see below)
 npm run test:all        # everything, benchmark included -- FAILS under contention
 ```
 
-599 tests, all passing (as of 2026-11-03).
+**THE SUITE RUNS 8 TEST FILES AT A TIME, NOT 98.** Node's test runner
+starts **one process per test file**, and this repository has 98 of them
+— so `node --test <all the files>` is ~97 node processes at once, a 4×
+oversubscription of a 24-core machine. `tools/runTests.js` now passes
+`--test-concurrency=8`: a third of the cores, so the suite leaves room
+for the rest of the work instead of starving it. Override with
+`TEST_CONCURRENCY`. Measured: 97 files, 8 at a time, 1186/1186 in 53 s.
+
+**An AGENT MUST NOT RUN `npm test` ITSELF.** The process guard refuses
+it — see § *Process budget*. Run the files you need instead:
+
+```bash
+node --test --test-concurrency=8 test/<file>.test.js
+```
+
+1194 tests, all passing (as of 2026-11-13).
 
 **A third suite exists, and it is MANUAL.** `test/manual/qmgEraPrefilterScan.test.js`
 is the era-conditional crop and the era-conditional prefilter rectangle, run
