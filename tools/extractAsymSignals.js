@@ -123,6 +123,7 @@ function main() {
 
     const signals = extractSignals({
       segments,
+        parserVersion: PARSER_VERSION,
       lexicon,
       // The CAPS rule is the gate. The English name finder and the CAPS
       // symbol path are the same ones T3Live uses, because the language

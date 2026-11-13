@@ -608,6 +608,69 @@ compare it against, so the bar for it is the user's call.
 3. **The confirmed-names table.** The 2014–2020 era speaks tickers as company
    names ("Neri", "Apple"), and those names have to be confirmed one at a
    time — the same work `npm run t3live:names` did for T3Live.
+   **Decided by the user (2026-11-13): the 2014–2020 era waits until the
+   names table exists.** The survey that grows it is built
+   (`tools/surveyBenzingaNames.js`); what is left is reading its rows and
+   confirming them one at a time.
+
+---
+
+## Part 8: What the corpus was NOT ready for (2026-11-13)
+
+The scale decision above was the obvious one, and the measurements turned up
+two things that were **not** about scale.
+
+### 1. THE CORPUS WAS NOT PLACED IN TIME
+
+`upload_date` is the **event date**, so an undated video cannot be scored.
+The flat listing carries no dates, and **12,751 of the 12,786 rows had
+none** — so the outcome analysis had 42 claims to work with.
+
+`tools/surveyBenzingaDates.js` measured what can be dated for free: **2,170
+rows carry the air date in the TITLE**, and where a title date and a fetched
+date both exist they agree (3 of 3). `tools/buildBenzingaDateList.js` builds
+the work list **in the order that matters** — the shows that carry calls
+first (4,206 rows), then the long-form commentary, and never the quarantine,
+because a metadata request on an earnings call the pipeline will not read is
+waste. Wave 1 (the two shows and the setup clips) is dated: **4,200 of
+4,206**, one still missing.
+
+### 2. FOUR CONFIRMED NAME ROWS WERE WRONG, AND EACH PUBLISHED A WRONG HOLDING
+
+This is the more serious one, and it was **not** in the Benzinga corpus at
+all — it was in the shared table, corrupting three sources. The Benzinga
+names survey exposed it, and the fix touches T3Live and Sevcik too.
+
+| spoken | was | the registrant it pointed at | is |
+|---|---|---|---|
+| `goldman sachs` / `goldman` / `sachs` | `GJS` | *STRATS(SM) Trust for Goldman Sachs Group Securities* | **`GS`** |
+| `iron` | `IRHO` | *Iron Horse Acquisition II Corp.* — a $10 SPAC | **`IREN`** |
+| `rocket` | `RCKT` | *Rocket Pharmaceuticals* | **`RKLB`** |
+| `maria` / `mario` / `mary` / `marie` | `MARA` | *MARA Holdings* — via the **Czech stemmer** | **nothing** |
+
+**143 published signals** carried a wrong ticker before the fix. The full
+analysis — the three different mechanisms, the evidence that "Iron" is
+IREN, and the phrase-collision rule that "iron condor" needs — is in
+CLAUDE.md § *FOUR CONFIRMED ROWS WERE WRONG*.
+
+**The lesson is about the TABLE, not the rows.** A confirmed row is a
+claim, and a claim cannot be audited by reading it: two of the four had
+notes that looked checked, and the fourth corrupts a *different* spoken
+form through a row that is itself correct. So there are now two tools —
+`tools/auditConfirmedNames.js` (the registrant-level heuristics) and
+`tools/surveyBenzingaNames.js` (what the corpus actually resolved) — and
+the survey is the one that found the damage.
+
+### 3. THE EXTRACTOR WROTE EVERY ROW UNDER THE WRONG VERSION
+
+The shared engine stamped its own `sevcik-signals-N` constant on every row,
+so the T3Live and Benzinga rows were labelled as Sevcik's. That is not
+cosmetic: the shared runner's purge deletes the rows of a superseded
+version, so **a mislabelled row is a row the purge cannot see**. 6,953 T3Live
+rows were labelled `sevcik-signals-6`.
+
+The engine now takes the version from its caller. Pinned by
+`test/signalParserVersion.test.js`.
 
 ---
 

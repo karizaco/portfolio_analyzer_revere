@@ -188,6 +188,7 @@ function main() {
     extract: (segments, video) => {
       const signals = extractSignals({
         segments,
+        parserVersion: PARSER_VERSION,
         lexicon,
         // The CAPS rule is the gate, exactly as for T3Live: YouTube's
         // auto-captions write a spoken ticker in capitals and an ordinary

@@ -1342,7 +1342,13 @@ function extractSignals(options) {
         horizon_text: horizon,
         rationale: summarizeRationale(windowText, run.ticker),
         evidence_text: evidenceText,
-        parser_version: PARSER_VERSION,
+        // THE VERSION IS THE CALLER'S TO STATE. The engine is shared by
+        // every source, so the engine's own constant named only what the
+        // SEVCIK vocabulary produced -- and the T3Live and Benzinga
+        // extractors wrote their rows under it. That is not cosmetic: the
+        // shared runner's purge deletes the rows of a superseded version,
+        // so a mislabelled row is a row the purge cannot see.
+        parser_version: options.parserVersion || PARSER_VERSION,
       });
     }
   }

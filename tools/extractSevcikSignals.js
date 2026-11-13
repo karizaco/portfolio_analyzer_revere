@@ -104,6 +104,7 @@ function main() {
     label: 'sevcik-signals',
     extract: (segments, video) => extractSignals({
       segments,
+      parserVersion: PARSER_VERSION,
       lexicon,
       confirmedSymbols,
       videoId: video.video_id,

@@ -105,6 +105,7 @@ function main() {
     label: 't3live-signals',
     extract: (segments, video) => extractSignals({
       segments,
+      parserVersion: PARSER_VERSION,
       lexicon,
       // confirmedSymbols stays null: the CAPS rule below is the gate.
       // YouTube auto-captions write spoken tickers in capitals (IWM, BHC)
@@ -151,7 +152,7 @@ function main() {
   if (options.json) {
     console.log(JSON.stringify(summary, null, 2));
   } else {
-    console.log(`[t3live-signals] done: ${totalSignals} signal(s) from ${videos.length} video(s)`);
+    console.log(`[t3live-signals] done: ${result.signals} signal(s) from ${result.videos} video(s)`);
   }
 }
 
