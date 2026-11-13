@@ -68,7 +68,7 @@ const DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
  * 1 (2026-11-12): the shared English engine, plus the attribution tag, the
  * options direction, and the section tag.
  */
-const PARSER_VERSION = 'benzinga-signals-1';
+const PARSER_VERSION = 'benzinga-signals-2';
 
 const argv = process.argv.slice(2);
 

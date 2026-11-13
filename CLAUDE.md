@@ -1029,6 +1029,110 @@ name and none of them is a company here.
 
 The 25-video sample went from **12** resolved names to **23**.
 
+### FOUR CONFIRMED ROWS WERE WRONG, and each one published a wrong holding (2026-11-13)
+
+A confirmed row is a **claim**: "when the host says X, the ticker is Y." A
+wrong claim is not a missed holding — it is a **wrong** holding, on every
+mention, and the row's own note made it look checked. The Benzinga names
+survey exposed four, and they were corrupting **143 published signals**
+across three channels:
+
+| spoken | was | the registrant it pointed at | is | signals affected |
+|---|---|---|---|---|
+| `goldman sachs`, `goldman`, `sachs` | `GJS` | *STRATS(SM) Trust for Goldman Sachs Group Securities, Series 2006-2* | **`GS`** (GOLDMAN SACHS GROUP INC) | 56 t3live, 1 benzinga, 1 sevcik |
+| `iron` | `IRHO` | *Iron Horse Acquisition II Corp.* — a blank-check shell | **`IREN`** (IREN Ltd) | 17 t3live |
+| `rocket` | `RCKT` | *ROCKET PHARMACEUTICALS, INC.* | **`RKLB`** (Rocket Lab Corp) | 18 t3live |
+| `maria`, `mario`, `mary`, `marie` | `MARA` | *MARA Holdings* — via the Czech **stem** | **nothing** | 41 t3live, 9 sevcik |
+
+**The four have three DIFFERENT mechanisms, and that is the lesson —
+a name table cannot be audited by reading it.**
+
+**1. A registrant that merely CONTAINS the company's name.** `GJS` is a
+structured product whose registrant contains "Goldman Sachs", so the
+longest-match search found it. **The SEC list offers `GS` for the same
+spoken name** and the row chose the trust. `tools/auditConfirmedNames.js`
+finds this class by asking whether the registrant is a trust / series /
+ABS / fund / acquisition shell — no trading show means any of those when
+it says a company's name.
+
+**2. A row whose own NOTE contradicts its ticker.** `rocket,RCKT` carried
+the note *"Rocket Labs, the space company"* — and `RCKT` is Rocket
+**Pharmaceuticals**, which this corpus never mentions. The note was right
+and the ticker was wrong, and nothing compared them.
+
+**3. THE CZECH STEM COLLAPSES ENGLISH GIVEN NAMES ONTO A REAL ROW.** This
+is the subtle one. `stemName` drops trailing vowels to bridge a Czech case
+ending ("Applu" → "apple"), so:
+
+```text
+mara  -> "mar"      maria -> "mar"      mario -> "mar"
+mary  -> "mar"      marie -> "mar"
+```
+
+The real `mara -> MARA` row is keyed on that stem, so **every one of those
+given names resolved to the crypto miner.** The T3Live hosts greet each
+other constantly — "Mario how you doing", "he works with Rob and Maria" —
+197 "Mario" and 23 "Maria" in those transcripts.
+
+**The denial has to be by EXACT FORM, not by stem**, and that distinction
+*is* the fix: `isDeniedSpokenStem()` tests the stem **and** the folded
+exact form, so denying `maria` leaves `mara` resolving as before. Denying
+the stem `mar` would have taken the real holding with it.
+
+#### "Iron" is IREN, and the corpus is what proves it
+
+The row said "the ore miner" and pointed at a SPAC. Three independent
+pieces of evidence settle what the hosts mean:
+
+- **The peer group.** "NBIS, CIFR, Iron are three names that I would
+  watch" — Nebius and Cipher Mining, which is exactly IREN's cohort.
+- **The price.** The corpus trades `$50`/`$54` calls on it; IREN closed
+  **46.03** on 2026-01-09 and **56.85–61.20** on 2026-05-07/08. `IRHO` is
+  pinned at **9.85–10.07** on near-zero volume — nobody trades $50 calls
+  on it.
+- **The trades.** "Iron was my best trade this week… it was on my go-to
+  list."
+
+**A company word inside a FIXED PHRASE is not the company.** Once `iron`
+resolves to a tradeable stock, the options vocabulary collides with it:
+**"iron condor"**, "iron butterfly", "Iron Man", "iron it out". Measured:
+**30 of Benzinga's 39** `iron` mentions are one of those phrases, and
+**222 of T3Live's 1,164**.
+
+So the rejection is on the words that **FOLLOW** the token, never on the
+token itself — a rule keyed on the word alone would reject the company
+too. `ENGLISH_PHRASE_COLLISIONS` in `src/t3live/englishNames.js` holds
+`name -> the words that may not follow it`, and it is shared by every
+English source (T3Live, Benzinga, AsymTrading).
+
+#### The audit tool, and the one check that is not automatable
+
+```bash
+node tools/auditConfirmedNames.js          # the heuristics, with the SEC list's own candidates
+node tools/surveyBenzingaNames.js          # what resolves, what is only a candidate
+```
+
+The audit **reports, it does not decide** — it prints the registrant and
+the alternatives the SEC list offers, because a row it flags is a row to
+**read** before changing. Two of its six flags (`btc`, `spy`) are correct
+rows whose registrants genuinely are trusts.
+
+**What no heuristic catches is mechanism 3**, because the row it corrupts
+(`mara -> MARA`) is *correct*: the damage is in a DIFFERENT spoken form
+reaching it through the stemmer. That only shows up in a survey of what
+the corpus actually resolved — which is why
+`tools/surveyBenzingaNames.js` reports the spoken forms beside the
+ticker, and why the survey's `MARA spoken as "Maria | Mary | Mario"` line
+is what found it.
+
+**Every parser version moved**, because the names table is an extractor
+input exactly as the vocabulary is: `sevcik-signals-5` → `-6`,
+`t3live-signals-3` → `-4`, `benzinga-signals-1` → `-2`,
+`asym-signals-1` → `-2`. Pinned by `test/confirmedNamesAudit.test.js` —
+seven tests, one per mechanism, including that the phrase test reads the
+text *after* the token and that every confirmed ticker is one the SEC
+list knows.
+
 ### The confirmed spoken-names table grew on 2026-11-06
 
 The matcher drops trailing vowels so "Applu" reaches "apple", but the

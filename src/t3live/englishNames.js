@@ -133,6 +133,42 @@ const ENGLISH_INDEX_ALIASES = [
  * @param {string} token
  * @returns {boolean}
  */
+/**
+ * The phrases in which a company's word is NOT the company.
+ *
+ * A company whose name is also a piece of trading vocabulary cannot be
+ * rejected on the word alone -- the word IS the company most of the time.
+ * It has to be rejected on what FOLLOWS it.
+ *
+ * "Iron" is how traders say IREN (it is named beside NBIS and CIFR in the
+ * corpus, and the hosts trade its options), so the word has to resolve.
+ * But "iron condor" and "iron butterfly" are OPTIONS STRATEGIES and "Iron
+ * Man" is a triathlon. Measured over the corpus: of 39 "iron" mentions in
+ * the Benzinga transcripts, 30 are one of those phrases; of 1,164 in the
+ * T3Live transcripts, 222 are.
+ *
+ * Each entry is `name -> the words that may not follow it`. The test is on
+ * the text AFTER the token, so a phrase is rejected and a bare mention of
+ * the company is not.
+ */
+const ENGLISH_PHRASE_COLLISIONS = new Map([
+  ['iron', /^\s+(?:condors?|butterfl(?:y|ies)|fl(?:y|ies)|man|out|it\s+out)\b/i],
+]);
+
+/**
+ * Is this token the first word of a phrase in which it is not a company?
+ *
+ * @param {string} spoken
+ * @param {string} text the whole text the token came from
+ * @param {number} index where the token starts in that text
+ * @returns {boolean}
+ */
+function isPhraseCollision(spoken, text, index) {
+  const rule = ENGLISH_PHRASE_COLLISIONS.get(spoken.toLowerCase());
+  if (!rule) return false;
+  return rule.test(text.slice(index + spoken.length));
+}
+
 function isEnglishNameCandidate(token) {
   if (!token || token.length < 3) return false;
   // Must start with a capital letter
@@ -232,6 +268,12 @@ function findEnglishCompanyNames(text, options = {}) {
     const { spoken, index } = tokens[i];
     if (!isEnglishNameCandidate(spoken)) continue;
 
+    // A name inside a FIXED PHRASE is not that name. "Iron" is how traders
+    // say IREN, and "iron condor" is an options strategy -- so a company
+    // that shares its word with a piece of trading vocabulary has to be
+    // rejected on the words that FOLLOW it, not on the word itself.
+    if (isPhraseCollision(spoken, str, index)) continue;
+
     const next = tokens[i + 1];
     const adjacent = next
       && /^\s/.test(str.slice(index + spoken.length, next.index))
@@ -268,6 +310,14 @@ function findEnglishCompanyNames(text, options = {}) {
       viaAlias: resolved.viaAlias,
       ambiguous: resolved.ambiguous,
       matched: resolved.matched,
+      // THE PROPOSED TICKER OF AN UNCONFIRMED NAME. `matchCompanyName`
+      // reports it so the confirmed table can be GROWN from what the
+      // corpus says; dropping it here left every survey reporting
+      // thousands of capitalised words with no way to tell a company
+      // from a filler word. A candidate with no proposal is just a
+      // capitalised word; one WITH a proposal is a row worth reading.
+      candidate: resolved.candidate || '',
+      candidateName: resolved.candidateName || '',
     });
   }
 
@@ -276,7 +326,9 @@ function findEnglishCompanyNames(text, options = {}) {
 
 module.exports = {
   ENGLISH_INDEX_ALIASES,
+  ENGLISH_PHRASE_COLLISIONS,
   ENGLISH_STOP_WORDS,
+  isPhraseCollision,
   ENGLISH_SYMBOL_STOPLIST,
   findEnglishCompanyNames,
   isEnglishNameCandidate,

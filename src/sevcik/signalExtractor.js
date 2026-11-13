@@ -81,7 +81,7 @@ const { loadConfirmedNames, stemName } = require('./companyNames');
 // model sees them; negation is scoped to its phrase; "I like it" weight
 // reduced to 0.3; English swing-trade trigger/stop patterns added;
 // pieceDirection has a minimum-strength gate.
-const PARSER_VERSION = 'sevcik-signals-5';
+const PARSER_VERSION = 'sevcik-signals-6';
 
 // A phrase that reverses a direction. "Not bullish" is bearish, and the
 // naive pattern match would read "bullish" and call it bullish.

@@ -64,7 +64,7 @@ const TRANSCRIPTS_DIR = path.join(ROOT, 'data', 'video_pipeline', 'transcripts')
  * ("the Qs", "the S&P") resolve to their ETF, "I like it" is weak (0.3),
  * MA added to stoplist, pieceDirection has a minimum-strength gate.
  */
-const PARSER_VERSION = 't3live-signals-3';
+const PARSER_VERSION = 't3live-signals-4';
 
 const argv = process.argv.slice(2);
 const options = {

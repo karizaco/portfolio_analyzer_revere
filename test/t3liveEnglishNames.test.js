@@ -121,9 +121,16 @@ test('an ordinary word that happens to read "cues" without "the" is not an index
 test('a two-word name is one name, not two', () => {
   // "Goldman Sachs" is one company. Read as two words, "Goldman" matches
   // several registrants and neither word identifies the company.
-  const lexicon = new Set(['GJS']);
+  //
+  // THE TICKER HERE USED TO BE `GJS`, and that was a defect this test
+  // pinned rather than caught: GJS is a STRATS trust whose registrant
+  // merely contains the bank's name. The claim this test makes is about
+  // the PAIR being one name, so the ticker is incidental to it -- but a
+  // synthetic lexicon has to carry the right one. See
+  // test/confirmedNamesAudit.test.js.
+  const lexicon = new Set(['GS']);
   const found = findEnglishCompanyNames('Goldman Sachs is where the money is', { lexicon });
-  assert.deepEqual(found.map((r) => r.ticker), ['GJS']);
+  assert.deepEqual(found.map((r) => r.ticker), ['GS']);
   assert.equal(found[0].spoken, 'Goldman Sachs',
     'the pair is the name; the second word is not also a candidate');
 });

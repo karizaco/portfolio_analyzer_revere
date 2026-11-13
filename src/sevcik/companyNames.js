@@ -113,11 +113,25 @@ const NON_US_TABLE_PATH = path.resolve(__dirname, '..', '..', 'config', 'ticker_
  */
 const CONFIRMED_TABLE_PATH = path.resolve(__dirname, '..', '..', 'config', 'ticker_names_confirmed.csv');
 
-// Spoken stems that must NEVER resolve to a ticker.
+// Spoken stems and spoken FORMS that must NEVER resolve to a ticker.
 //
 // "gab" / "gapy" is Czech trading jargon for a price GAP (ASR often writes
 // "gab"). Mapping it to the closed-end fund GAB produced the noisiest
 // ticker in the corpus. Keep this list small and measured.
+//
+// THE GIVEN NAMES ARE HERE BECAUSE THE STEM CONFLATES THEM WITH A REAL ROW.
+// The stem exists to bridge a CZECH case ending, so it drops the trailing
+// vowels -- and "mara", "maria", "mario", "mary" and "marie" all stem to
+// "mar". The confirmed table's `mara -> MARA` row is keyed on that stem, so
+// every one of those given names reached the crypto miner MARA. Measured
+// over the corpus: 23 "Maria" and 197 "Mario" in the T3Live transcripts
+// alone, and the hosts greet each other by name constantly ("Mario how you
+// doing", "he works with Rob and Maria").
+//
+// THE DENIAL IS BY EXACT FORM, NOT BY STEM, and that distinction is the
+// whole fix: `isDeniedSpokenStem` tests the stem AND the folded exact form,
+// so denying "maria" leaves "mara" resolving as before. Denying the STEM
+// "mar" would take the real holding with it.
 const DENIED_SPOKEN_STEMS = new Set([
   'gab',
   'gap',
@@ -127,6 +141,11 @@ const DENIED_SPOKEN_STEMS = new Set([
   'gapem',
   'gape',
   'gaps',
+  // English given names the Czech stem collapses onto "mar" -> MARA.
+  'maria',
+  'mario',
+  'mary',
+  'marie',
 ]);
 
 

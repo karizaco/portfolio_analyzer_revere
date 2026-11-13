@@ -74,7 +74,7 @@ const TRANSCRIPTS_DIR = path.join(ROOT, 'data', 'video_pipeline', 'transcripts')
  * engine with the English name finder and the English CAPS-symbol rule,
  * exactly as the T3Live extractor does.
  */
-const PARSER_VERSION = 'asym-signals-1';
+const PARSER_VERSION = 'asym-signals-2';
 
 const argv = process.argv.slice(2);
 const options = {
