@@ -48,6 +48,32 @@ function runHook(command) {
   return { status: result.status, stderr: result.stderr || '' };
 }
 
+/**
+ * Was the command refused BY THE npm RULE?
+ *
+ * The two rules are separate and only one of them is about the command.
+ * The npm rule is checked FIRST, so its message is what appears when it
+ * fires -- but the COUNT rule depends on the machine's state, and it
+ * legitimately fires while this very suite is running (the suite is 8
+ * node processes at a time, and the cap is 6).
+ *
+ * So a test about the npm rule must ask about the npm rule, and a test
+ * about the count rule must ask about the count rule. Asserting a bare
+ * exit code would make every test in this file depend on what else the
+ * machine happens to be doing.
+ *
+ * @param {string} command
+ * @returns {{status: number, stderr: string}}
+ */
+function runHookForNpmRule(command) {
+  const result = runHook(command);
+  return {
+    ...result,
+    blockedByNpmRule: result.status === 2 && /BLOCKED: `npm test`/.test(result.stderr),
+    blockedByCount: result.status === 2 && /process-count guard/.test(result.stderr),
+  };
+}
+
 test('the hook script exists and is wired into the settings', () => {
   assert.ok(fs.existsSync(HOOK), '.claude/hooks/limit-processes.ps1 exists');
   const settings = JSON.parse(fs.readFileSync(path.join(ROOT, '.claude', 'settings.json'), 'utf8'));
@@ -66,26 +92,27 @@ test('`npm test` is BLOCKED, because it starts a process per test file', () => {
     'npm run test',
     'npm run test:all',
   ]) {
-    const { status, stderr } = runHook(command);
-    assert.equal(status, 2, `"${command}" must be blocked (exit 2)`);
-    assert.match(stderr, /BLOCKED/);
+    const result = runHookForNpmRule(command);
+    assert.equal(result.status, 2, `"${command}" must be blocked (exit 2)`);
+    assert.ok(result.blockedByNpmRule, `"${command}" must be blocked BY THE npm RULE`);
   }
 });
 
 test('the benchmark is ALLOWED -- it is one file, so one process', () => {
-  const { status } = runHook('npm run test:benchmark');
-  assert.equal(status, 0, 'the benchmark is slow, not wide');
+  const result = runHookForNpmRule('npm run test:benchmark');
+  assert.ok(!result.blockedByNpmRule,
+    'the benchmark is slow, not wide -- the npm rule must not touch it');
 });
 
-test('an ordinary command is allowed', () => {
+test('an ordinary command is not blocked by the npm rule', () => {
   for (const command of [
     'node tools/runTests.js',
     'git status --short',
     'py -3 tools/whiteboard_worker.py catalog --channel benzinga',
     'npm run asym:catalog:dry',
   ]) {
-    const { status } = runHook(command);
-    assert.equal(status, 0, `"${command}" must be allowed`);
+    const result = runHookForNpmRule(command);
+    assert.ok(!result.blockedByNpmRule, `"${command}" must not be blocked by the npm rule`);
   }
 });
 
