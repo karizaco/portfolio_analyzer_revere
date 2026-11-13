@@ -1133,6 +1133,41 @@ seven tests, one per mechanism, including that the phrase test reads the
 text *after* the token and that every confirmed ticker is one the SEC
 list knows.
 
+#### What the fix was worth, measured on the published signals
+
+| | before | after |
+|---|---|---|
+| `GJS` (the trust) | 56 t3live + 1 sevcik + 1 benzinga | **0** |
+| `IRHO` (the SPAC) | 17 t3live | **0** |
+| `RCKT` (the pharma) | 18 t3live | **0** |
+| `MARA` (from a given name) | 41 t3live + 9 sevcik | 30 t3live + 7 sevcik |
+| `GS` — the bank, recovered | 3 t3live | **98** t3live + 3 sevcik + 1 benzinga |
+| `IREN` — recovered | — | **17** t3live |
+| `RKLB` — recovered | 1 t3live | **20** t3live + 3 sevcik |
+
+**106 wrong holdings removed, 138 real ones recovered.** The corpus
+totals barely move, and that is the honest shape of this fix: it changed
+*which* holdings are published, not how many.
+
+**The recovered holdings score like real holdings, which is the point.**
+Against the T3Live corpus average of **49.7 %** at one week:
+
+| ticker | scored | 1w hit | avg return 1w |
+|---|---|---|---|
+| `GS` | 76 | 47.4 % | −0.08 % |
+| `RKLB` | 15 | 40.0 % | +1.05 % |
+| `IREN` | 12 | 33.3 % | **−8.92 %** |
+
+`IREN` is the interesting one: the host's IREN calls **lost 8.9 % on
+average**. Before the fix that was invisible — the published ticker was a
+SPAC pinned at $9.85, so the calls scored a coin flip on a stock that
+never moves. **A wrong ticker does not merely add noise; it converts a
+measurable loss into an unmeasurable one.**
+
+Sevcik's own numbers barely move (1w **50.6 %** [48.3–53.0] against a SPY
+baseline of 57.4 %, `assess: no_clear_edge`), which is what a fix worth
+2 false positives and 3 recovered holdings should look like.
+
 ### The confirmed spoken-names table grew on 2026-11-06
 
 The matcher drops trailing vowels so "Applu" reaches "apple", but the
