@@ -7285,6 +7285,14 @@ posts without saying so would read as the whole publication.
 
 ## The Benzinga source — a NEWS channel, and mostly not trade calls (2026-11-12)
 
+> **The 2026-11-13 update below supersedes two claims in this section.** The
+> pilot's 35 transcripts and the 12,786-row catalog are a **surviving
+> sample**: the transcript campaign has since taken the corpus to **845
+> transcripts**, and the scale exposed two defect classes the pilot could
+> not see — **the people the hosts address** and **the fragments of
+> longer words**. See § *The corpus is 24× bigger, and the false
+> positives were in the people*.
+
 `https://www.youtube.com/@Benzinga` — the project's **seventh** source and
 the third transcript source. English, like T3Live; a YouTube channel, like
 T3Live and Sevcik. It reuses that pipeline end to end.
@@ -7346,8 +7354,121 @@ direction word **near** the subject, because a caption is a rolling fragment
 and a direction word anywhere in it does not belong to a subject anywhere in
 it (`STANCE_WINDOW_CHARS`).
 
-**FOUR DEFECTS FIXED ALONG THE WAY, and each one was a live defect.**
+### The corpus is 24× bigger, and the false positives were in the people
 
+**THE PILOT'S 35 TRANSCRIPTS WERE A SURVIVING SAMPLE.** The transcript
+campaign of 2026-11-13 took the Benzinga corpus to **845 transcripts**
+(1,080 videos fetched, 99 % of them with captions), and the scale exposed
+two defect classes the pilot could not see at all.
+
+**THE PEOPLE THE HOSTS ADDRESS.** Benzinga's show brings its analysts on
+by name, and **the names arrive as INITIALS** — and the symbol path
+publishes on capitals alone, so every two-letter ticker in the lexicon is
+a candidate for them:
+
+| token | what the corpus says | signals |
+|---|---|---|
+| `AB` | "bring AB in here", "AB you're looking sharp" | 64 |
+| `CC` | "we've had CC legator on this show a lot of times" | 16 |
+| `SE` | "sure we're gonna I fine SE on here later too" | 7 |
+| `BL` | "of my bearish BL process for the market as a whole" | 4 |
+| `AG` | "resistance right now for our AG" | 3 |
+| `BR` | "we're gonna BR Kenny on here too" — which is "**bring** Kenny" | 3 |
+| `RC` | "RC the AL Royal Caribbean" — the ticker is RCL | 2 |
+| `TP` | "TP and I sat down sometime in 2003 and decided that we would write a book" | 1 |
+
+**100 published holdings that are PEOPLE.** `CC` and `AG` are also real
+tickers, which is exactly why the list belongs to the **source** and not
+to the lexicon: `BENZINGA_PEOPLE_AND_FRAGMENTS` in
+`src/benzinga/symbols.js`.
+
+**THE FRAGMENTS OF LONGER WORDS.** An auto-caption cuts a word, and the
+cut lands on a ticker:
+
+| token | what the corpus says | signals |
+|---|---|---|
+| `PS` | "the S PS in to the upside" — that is "**the S&P**" | 38 |
+| `SM` | "it SM it for you, it Smooths it for you too" | 2 |
+| `MF` | "morphic ticker MF which is skyrocketing" | 2 |
+| `GD` | "if GD real simple, if GDP growth is 3 %" | 1 |
+| `ET` | "good liquid ET uh uh ETF for AI" — "ETF", split | 1 |
+| `OR` | "you go into the iwm OR into value stocks" — the word "or" | 1 |
+| `VC` | "sometimes they were the VC money" — "venture capital" | 1 |
+
+**47 more.** `DT`, `GL` and `CV` were left alone: one signal each, and
+their evidence is too thin to call — "GL" reads as a real ticker the host
+bought, and "DT" may be Dynatrace.
+
+**THE LESSON IS ABOUT SCALE, NOT ABOUT THE RULE.** Every one of these
+was invisible in the pilot, because the pilot's 35 transcripts did not
+contain enough of the show to see a name addressed thirty times. **A
+stoplist built from a small sample is a list of the false positives that
+sample happened to contain.** The list is per-source and measured, and it
+grows with the corpus.
+
+**THE BROKER'S OWN TICKER WAS ALREADY HANDLED — BUT TWO THINGS WERE NOT.**
+
+"Citigroup upgrading Pinterest to buy" publishes `C` — the broker's
+ticker, not the subject's — and the attribution rule tags it `reported`,
+so it is excluded from the scoring (`src/benzinga/attribution.js`).
+That part was right.
+
+**1. "JP MORGAN" IS JPMORGAN, NOT MORGAN STANLEY.** The name finder
+cannot form the pair, because its token pattern starts with a capital
+followed by a lower-case letter and **"JP" is all capitals** — so
+"Morgan" alone reaches the confirmed row `morgan -> MS`. Measured:
+**42 of the 106 MS signals name "JP Morgan"**, and 20 of them were
+published as calls on Morgan Stanley. The fix remaps by the **name in
+the window**, not by the token, so it is right even when the ticker was
+mis-resolved.
+
+**2. THE BROKER ACTION VERBS CAME IN EVERY TENSE BUT ONE.** The cue
+matched "raised", "cut", "downgraded" — and the corpus writes the
+present: "**raises** price Target", "**maintains** equal weight on
+FedEx". Measured: 26 `forward` MS signals became 3.
+
+**THE BROKER'S NAME IS SPELLED THE WAY THE ASR HEARD IT.** "Morgan
+St Ley", "Morgan Stan", "a wild Fargo" — so the broker check is a list
+of renderings per broker, not one spelling (`BROKER_SPELLINGS`).
+
+Pinned by `test/benzingaSignalRules.test.js` — the broker check, the
+verb tenses, and the fact that the host's own call is still the host's
+own call.
+
+### AND THE CORPUS, SCORED AT LAST (2026-11-13)
+
+The pilot's numbers were 42 claims and 94 readings, because the pilot
+had 35 transcripts. At **845 transcripts**:
+
+| | claims | 1w hit | same call on SPY | excess |
+|---|---|---|---|---|
+| the signals | **1,228** | 52.5 % | 56.8 % | **+0.37 %** [−0.28 %, +1.02 %] |
+| the readings | **2,612** | 50.5 % | 52.8 % | **−0.06 %** [−0.15 %, +0.03 %] |
+
+**Neither is distinguishable from zero.** The source does not beat the
+index, and the readings — the "market recap / sector analysis" the
+channel exists for — are the *flatter* of the two. That is the honest
+result, and it is the same result Sevcik and T3Live give.
+
+**THE READINGS' PRECISION BAR, MEASURED.** A hand-labelled sample of 40
+published readings (30 correct, 10 wrong) gives **75 %**, and the four
+candidate stance rules measure out as:
+
+| rule | sample precision | corpus readings |
+|---|---|---|
+| the shipped rule | 75.0 % | 1,678 |
+| `--stance-rule same-clause` | 81.8 % | 1,626 (−3 %) |
+| `--stance-rule after-only` | 90.9 % | 1,151 (−31 %) |
+| `--stance-rule same-clause+after` | 95.2 % | 1,123 (−33 %) |
+
+The **default is unchanged** — the decision is the user's, and the
+numbers are in `docs/benzinga-source-plan.md`.
+
+Pinned by `test/benzingaSignalRules.test.js` — the people, the
+fragments, and the fact that the list does not take a real holding with
+it.
+
+**FOUR DEFECTS FIXED ALONG THE WAY, and each one was a live defect.**
 - **The OCR downloaders were not channel-scoped.** The worker's queue took
   30 of 30 T3Live rows, and the 720p batcher took 16 of 30 T3Live/Sevcik
   rows. Both now filter on `OCR_CHANNELS` (`src/video/videoStatus.js`,

@@ -137,6 +137,21 @@ function applyBenzingaRules(signals, segments) {
       out.confidence_score = null;
     }
 
+    // "JP MORGAN" IS JPMORGAN, NOT MORGAN STANLEY.
+    //
+    // The name finder cannot form the pair, because its token pattern
+    // starts with a capital followed by a lower-case letter and "JP" is
+    // all capitals -- so "Morgan" alone reaches the confirmed row
+    // `morgan -> MS`. Measured over this corpus: 42 of the 106 MS
+    // signals name "JP Morgan", and 20 of them were published as calls
+    // on Morgan Stanley.
+    //
+    // The remap is by the NAME in the window, not by the token, so it
+    // is right even when the ticker was mis-resolved.
+    if (out.ticker === 'MS' && /\b(?:jp\s*morgan|jpmorgan)\b/i.test(text)) {
+      out.ticker = 'JPM';
+    }
+
     // A BROKER's own name is never a call on the broker.
     if (isBrokerMention(text, out.ticker)) {
       out.claim_kind = 'reported';

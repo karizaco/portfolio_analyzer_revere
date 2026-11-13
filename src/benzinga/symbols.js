@@ -59,6 +59,52 @@ const BENZINGA_INDICATOR_STOPLIST = new Set([
 ]);
 
 /**
+ * The PEOPLE the hosts address, and the FRAGMENTS of longer words.
+ *
+ * THE PEOPLE. Benzinga's show brings its analysts on by name, and the
+ * names arrive as INITIALS -- and the symbol path publishes on capitals
+ * alone, so every two-letter ticker in the lexicon is a candidate for
+ * them:
+ *
+ *   AB  "bring AB in here", "AB you're looking sharp"        (64 signals)
+ *   CC  "we've had CC legator on this show a lot of times"   (16)
+ *   SE  "sure we're gonna I fine SE on here later too"        (7)
+ *   BL  "of my bearish BL process for the market as a whole"  (4)
+ *   AG  "resistance right now for our AG"                     (3)
+ *   BR  "we're gonna BR Kenny on here too" -- which is "BRING
+ *        Kenny"; and "in the BR scheme of things"              (3)
+ *   RC  "RC the AL Royal Caribbean" -- the ticker is RCL       (2)
+ *   TP  "TP and I sat down sometime in 2003 and decided that
+ *        we would write a book"                                (1)
+ *
+ * Measured over the 725-transcript corpus: **100 published holdings
+ * that are people.** "CC" and "AG" are also real tickers, which is
+ * exactly why the list is here and not in the lexicon.
+ *
+ * THE FRAGMENTS. Auto-captions cut a word, and the cut lands on a
+ * ticker:
+ *
+ *   PS  "the S PS in to the upside", "the S PS but gotta hold 85"
+ *       -- that is "the S&P", and 38 signals were published on it
+ *   GD  "if GD real simple, if GDP growth is 3%"               (1)
+ *   ET  "good liquid ET uh uh ETF for AI" -- "ETF", split      (1)
+ *   SM  "it SM it for you, it Smooths it for you too"         (2)
+ *   MF  "morphic ticker MF which is skyrocketing" -- "Morphic" (2)
+ *   OR  "you go into the iwm OR into value stocks" -- "or"    (1)
+ *   VC  "sometimes they were the VC money" -- "venture capital" (1)
+ *
+ * "DT", "GL" and "CV" were left alone: one signal each, and their
+ * evidence is too thin to call -- "GL" reads as a real ticker the host
+ * bought, and "DT" may be Dynatrace.
+ */
+const BENZINGA_PEOPLE_AND_FRAGMENTS = new Set([
+  // The people the hosts address by their initials.
+  'AB', 'AG', 'BL', 'BR', 'CC', 'RC', 'SE', 'TP',
+  // Fragments of longer words.
+  'PS', 'GD', 'ET', 'SM', 'MF', 'OR', 'VC',
+]);
+
+/**
  * The futures and index symbols.
  *
  * They are market positions. Carried as readings, not holdings.
@@ -79,6 +125,7 @@ function benzingaSymbolStoplist(base) {
   const merged = new Set(base || []);
   for (const token of BENZINGA_INDICATOR_STOPLIST) merged.add(token);
   for (const token of BENZINGA_FUTURES_SYMBOLS) merged.add(token);
+  for (const token of BENZINGA_PEOPLE_AND_FRAGMENTS) merged.add(token);
   return merged;
 }
 
@@ -95,6 +142,7 @@ function isFuturesSymbol(ticker) {
 module.exports = {
   BENZINGA_FUTURES_SYMBOLS,
   BENZINGA_INDICATOR_STOPLIST,
+  BENZINGA_PEOPLE_AND_FRAGMENTS,
   benzingaSymbolStoplist,
   isFuturesSymbol,
 };

@@ -54,8 +54,15 @@ const REPORTED_CUES = [
   /\banalysts?\b/i,
   /\b(?:wall\s+street|the\s+street)\s+(?:is|are|expect|expects)\b/i,
   /\bprice\s+target\b/i,
-  /\b(?:raised|cut|lowered|upgraded|downgraded|reiterated|initiated|set)\b[^.!?]{0,40}\b(?:target|rating|price)\b/i,
+  // The verb's THIRD-PERSON form is the one a caption carries: "Morgan
+  // RAISES price Target", "Bank of America CUTS its target". Only the
+  // past tense was matched, and the corpus writes the present.
+  /\b(?:raises?|raised|cuts?|cut|lowers?|lowered|upgrades?|upgraded|downgrades?|downgraded|reiterates?|reiterated|initiates?|initiated|maintains?|maintained|sets?|setting)\b[^.!?]{0,40}\b(?:target|rating|price|weight)\b/i,
   /\b(?:ratings?|consensus|price\s+targets?)\b/i,
+  // A RATING SPELLED OUT. "Morgan maintains EQUAL WEIGHT on FedEx" is
+  // an analyst's rating, and it is the most common way the corpus
+  // reports one that is not a price target.
+  /\b(?:equal[- ]weight|overweight|underweight|market[- ]perform|top\s+pick|top\s+rating)\b/i,
   /\breported\b/i,
   /\b(?:expects?|expecting|projects?|projecting|forecast(?:s|ed)?|predicts?|predicted)\b/i,
   /\b(?:said|says|stated|states)\b/i,
@@ -119,6 +126,38 @@ const BROKER_NAMES = [
 ];
 
 /**
+ * How the corpus SPELLS each broker, which is not how the broker
+ * spells it.
+ *
+ * "JP Morgan" is **JPMorgan**, not Morgan Stanley -- and the name
+ * finder cannot form the pair, because its token pattern starts with a
+ * capital followed by a lower-case letter, and "JP" is all capitals.
+ * So "Morgan" alone reaches the confirmed row `morgan -> MS`.
+ * Measured over the corpus: **42 of the 106 MS signals name "JP
+ * Morgan"**, and 20 of them were published as calls on Morgan Stanley.
+ *
+ * The other renderings are the ASR's: "Morgan St Ley", "Morgan Stan",
+ * "Wild Fargo" for Wells Fargo.
+ */
+const BROKER_SPELLINGS = {
+  GS: ['goldman'],
+  MS: ['morgan stanley', 'morgan stan', 'morgan st', 'jp morgan', 'jpmorgan'],
+  JPM: ['jp morgan', 'jpmorgan', 'jp morgan'],
+  BAC: ['bank of america', 'bofa'],
+  C: ['citigroup'],
+  WFC: ['wells fargo', 'wild fargo'],
+  UBS: ['ubs'],
+  BofA: ['bank of america', 'bofa'],
+  BLK: ['blackrock'],
+  SCHW: ['schwab'],
+  JEF: ['jefferies'],
+  HSBC: ['hsbc'],
+  DB: ['deutsche bank'],
+  CS: ['credit suisse'],
+  NFS: ['northfield'],
+};
+
+/**
  * Is this ticker the name of a BROKER in the window?
  *
  * @param {string} text
@@ -131,13 +170,10 @@ function isBrokerMention(text, ticker) {
   const window = String(text || '');
   // The broker's own name, spelled out, is the evidence that the sentence
   // is about the broker rather than about a stock.
-  const spelled = {
-    GS: 'goldman', MS: 'morgan stanley', JPM: 'jpmorgan', BAC: 'bank of america',
-    C: 'citigroup', WFC: 'wells fargo', UBS: 'ubs', BofA: 'bank of america', BLK: 'blackrock',
-    SCHW: 'schwab', JEF: 'jefferies', HSBC: 'hsbc', DB: 'deutsche bank', CS: 'credit suisse', NFS: 'northfield',
-  };
-  const name = spelled[token];
-  if (name && new RegExp(name, 'i').test(window)) return true;
+  const names = BROKER_SPELLINGS[token] || [];
+  for (const name of names) {
+    if (new RegExp(name, 'i').test(window)) return true;
+  }
   return new RegExp(`\\b${token}\\b`).test(window) && /\b(?:analyst|desk|note|research|bank)\b/i.test(window);
 }
 

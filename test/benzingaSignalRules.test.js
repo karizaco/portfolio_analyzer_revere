@@ -187,3 +187,101 @@ test('the broker check needs the broker\'s own name in the window', () => {
   assert.equal(isBrokerMention('Morgan Stanley raised its price target on Nvidia.', 'MS'), true);
   assert.equal(isBrokerMention('Nvidia is running today.', 'MS'), false);
 });
+
+// THE PEOPLE, AND THE FRAGMENTS OF LONGER WORDS.
+//
+// The 725-transcript corpus published 100 holdings that are PEOPLE --
+// the hosts bring their analysts on by name, and the names arrive as
+// INITIALS, and the symbol path publishes on capitals alone:
+//
+//   "bring AB in here"                        (64 signals)
+//   "we've had CC legator on this show"       (16)
+//   "of my bearish BL process"                (4)
+//   "we're gonna BR Kenny on here too"        (3)  -- "bring Kenny"
+//   "RC the AL Royal Caribbean"                (2)  -- the ticker is RCL
+//
+// And 47 that are a caption's cut of a longer word:
+//
+//   "the S PS in to the upside"               (38)  -- "the S&P"
+//   "if GD real simple, if GDP growth is 3%"  (1)
+//   "good liquid ET uh uh ETF for AI"          (1)
+//   "it SM it for you, it Smooths it"         (2)
+//   "morphic ticker MF which is skyrocketing"  (2)
+//   "you go into the iwm OR into value"       (1)
+//   "sometimes they were the VC money"        (1)
+
+const {
+  BENZINGA_PEOPLE_AND_FRAGMENTS, benzingaSymbolStoplist,
+} = require('../src/benzinga/symbols');
+
+test('the people the hosts address are not holdings', () => {
+  const stoplist = benzingaSymbolStoplist();
+  for (const token of ['AB', 'AG', 'BL', 'BR', 'CC', 'RC', 'SE', 'TP']) {
+    assert.ok(BENZINGA_PEOPLE_AND_FRAGMENTS.has(token), `${token} is on the list`);
+    assert.ok(stoplist.has(token), `${token} reaches the extractor's stoplist`);
+  }
+});
+
+test('a caption\'s cut of a longer word is not a holding', () => {
+  const stoplist = benzingaSymbolStoplist();
+  for (const token of ['PS', 'GD', 'ET', 'SM', 'MF', 'OR', 'VC']) {
+    assert.ok(stoplist.has(token), `${token} reaches the extractor's stoplist`);
+  }
+});
+
+test('the stoplist does not take a real holding with it', () => {
+  const stoplist = benzingaSymbolStoplist();
+  // "CC" and "AG" are real tickers, which is why the list is a
+  // SOURCE's stoplist and not the lexicon's. But the holdings this
+  // corpus actually trades are not on it.
+  for (const ticker of ['NVDA', 'TSLA', 'AAPL', 'MSFT', 'MARA', 'GS', 'IREN', 'RKLB']) {
+    assert.ok(!stoplist.has(ticker), `${ticker} must still be publishable`);
+  }
+});
+
+// "JP MORGAN" IS JPMORGAN, NOT MORGAN STANLEY.
+//
+// The name finder cannot form the pair, because its token pattern
+// starts with a capital followed by a lower-case letter, and "JP" is all
+// capitals -- so "Morgan" alone reaches the confirmed row
+// `morgan -> MS`. Measured over the corpus: 42 of the 106 MS signals
+// name "JP Morgan", and 20 of them were published as calls on Morgan
+// Stanley.
+//
+// The fix is by the NAME IN THE WINDOW, not by the token, so it is
+// right even when the ticker was mis-resolved.
+
+test('a broker named in the window is never a call on the broker', () => {
+  for (const text of [
+    'JP Morgan up seven and a half bought the SPXs are down a buck 75',
+    'Morgan Stanley came out and he is always bullish',
+    'a wild Fargo up 3% you do not make money buying wild Fargo',
+    'Goldman come in with a lot of volume',
+  ]) {
+    assert.ok(isBrokerMention(text, 'MS') || isBrokerMention(text, 'WFC')
+      || isBrokerMention(text, 'GS'), `"${text.slice(0, 30)}" names a broker`);
+  }
+  assert.equal(isBrokerMention('I bought NVDA today', 'NVDA'), false);
+});
+
+test('the broker action verbs come in every tense the captions use', () => {
+  // Only the past tense was matched, and the corpus writes the present.
+  for (const text of [
+    'Morgan raises price Target on FedEx',
+    'Morgan maintains equal weight on FedEx',
+    'Bank of America cut its target to 28',
+    'Morgan upgrades Lockheed Martin to overweight raise their price Target to 518',
+  ]) {
+    assert.equal(reportedClaim(text).reported, true, `"${text.slice(0, 34)}" is reported`);
+  }
+});
+
+test("the host's own call is still the host's own call", () => {
+  for (const text of [
+    'I am buying Nvidia here, I think it is going higher',
+    'I remain bullish on Tesla',
+    'my price target for NVDA is 250',
+  ]) {
+    assert.equal(reportedClaim(text).reported, false, `"${text.slice(0, 30)}" is the host's`);
+  }
+});
