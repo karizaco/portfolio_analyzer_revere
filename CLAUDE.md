@@ -145,6 +145,70 @@ cd tools && mklink ffmpeg.exe "C:/Users/admin/AppData/Local/Microsoft/WinGet/Pac
 
 QMG video IDs can start with `_` (e.g. `_9o5_4iZ0zjI`). yt-dlp may truncate these. The download script handles this by using the full ID directly. If you see files named `_9o5_4iZ0zj` (truncated), rename with the full ID and update SQLite.
 
+### Killing processes — "the node processes" means node.exe AND NOTHING ELSE
+
+**THE RULE, and it is not negotiable by implication:** when the user says
+"kill the node processes", that means **`node.exe` and nothing else**.
+**Python is a different program** — it runs the MCP servers this
+session's tools depend on (Deepgram, Finviz, FinanceKit, TradingView),
+and it runs **yt-dlp**, which is what every download and metadata job
+here is made of. Killing python by accident is not a recoverable
+nuisance.
+
+**USE THE HELPER, NOT AN AD-HOC `taskkill`:**
+
+```bash
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/killNodeProcesses.ps1
+```
+
+It is built so the mistake cannot be made:
+
+| | |
+|---|---|
+| the target is a **closed set** | `ValidateSet('node')` — a typo cannot widen it |
+| it kills **only** `node.exe` | the name is the literal string; nothing else is ever passed to `taskkill` |
+| it **never kills its own process tree** | the caller, its shell and everything above are *protected* — a helper that kills the caller kills the session |
+| it does **not** use `/T` | a node worker owns python children (yt-dlp), and a tree kill would take them too. The orphans are **reported**, and whether they die is the user's call |
+| it **prints what it killed** | every PID with its command line, before and after |
+
+**To kill python, the user has to say so.** Not "kill the leftovers",
+not "clean up" — **python**, by name. Until then it is off limits.
+
+### A MEASUREMENT MUST NOT BE ABLE TO COUNT ITSELF
+
+On 2026-11-13 a measurement reported **"5 yt-dlp processes"**. There
+were **none**. The command that counted them matched **its own command
+line** — the pattern `yt_dlp` was inside the measurement command — so it
+counted itself, its bash wrapper and its powershell wrapper, and the
+number was then reported as a fact about the machine.
+
+**The rule: every claim about the machine's state comes from
+`tools/processCensus.ps1`, which excludes its own process tree before
+it counts anything.**
+
+```bash
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/processCensus.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/processCensus.ps1 -Filter 'yt.dlp'
+```
+
+It prints how many processes it excluded and why, so the number it
+reports is a number about the machine rather than about the measurement.
+
+**And the reporting discipline that goes with it: quote what the tool
+printed.** A count that was not read out of a tool's output is a guess,
+and a guess presented as a measurement is the thing this section exists
+to prevent.
+
+Pinned by `test/processTools.test.js` — four tests, and the first one
+starts a **real node process and a real python process**, runs the
+helper, and asserts that the node died and **the python survived**.
+
+**For the record, what this machine's memory actually is** (census,
+2026-11-13): **Firefox 54 processes / 19.2 GB**, TradingView 25 / 5.9 GB,
+Code 20 / 1.9 GB, chromium 34 / 928 MB — and the agent harness is
+**"MiniMax Code.exe"**, not node.exe, which is why killing node processes
+never ends the session.
+
 ### Process budget (Windows) — the guard, and the bug that made it a no-op
 
 **THE RULE: an agent must not fan out to many processes.** The machine is
