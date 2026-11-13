@@ -7438,17 +7438,25 @@ own call.
 ### AND THE CORPUS, SCORED AT LAST (2026-11-13)
 
 The pilot's numbers were 42 claims and 94 readings, because the pilot
-had 35 transcripts. At **845 transcripts**:
+had 35 transcripts. The transcript campaign finished at **1,056 of 1,080
+videos transcribed** (2 with no captions, 0 failures, and it stopped on a
+rate limit, which is the rule), and the corpus is now **1,104
+transcripts**:
 
 | | claims | 1w hit | same call on SPY | excess |
 |---|---|---|---|---|
-| the signals | **1,228** | 52.5 % | 56.8 % | **+0.37 %** [−0.28 %, +1.02 %] |
-| the readings | **2,612** | 50.5 % | 52.8 % | **−0.06 %** [−0.15 %, +0.03 %] |
+| the signals | **1,426** | 51.9 % | 55.3 % | **+0.12 %** [−0.52 %, +0.76 %] |
+| the readings | **2,779** | 50.6 % | 52.9 % | **−0.04 %** [−0.12 %, +0.05 %] |
 
 **Neither is distinguishable from zero.** The source does not beat the
 index, and the readings — the "market recap / sector analysis" the
 channel exists for — are the *flatter* of the two. That is the honest
 result, and it is the same result Sevcik and T3Live give.
+
+**AND THAT IS AFTER THE FALSE POSITIVES WERE REMOVED.** The numbers
+above are on the corpus with the 147 people-and-fragments removed and
+the broker's tickers tagged, so they are the score of what the source
+*actually* says — not of the noise it said around it.
 
 **THE READINGS' PRECISION BAR, MEASURED.** A hand-labelled sample of 40
 published readings (30 correct, 10 wrong) gives **75 %**, and the four
