@@ -153,7 +153,13 @@ function benzingaRows() {
   const text = fs2.readFileSync(path2.join(ROOT, 'config', 'ticker_names_confirmed.csv'), 'utf8');
   const marker = text.indexOf('# The Benzinga corpus, added 2026-11-13');
   assert.notEqual(marker, -1, 'the Benzinga block is in the table');
-  return text.slice(marker).split(/\r?\n/)
+  // THE BLOCK BOUNDS ITSELF at the next section header, so a later
+  // block (the 2014-2020 era's rows, added after) is not counted as
+  // Benzinga's. A test that reads to the end of the file asserts
+  // something about whatever the last block happens to be.
+  const nextSection = text.indexOf('# The 2014-2020 era', marker);
+  const end = nextSection === -1 ? text.length : nextSection;
+  return text.slice(marker, end).split(/\r?\n/)
     .filter((line) => line.trim() && !line.startsWith('#'))
     .map((line) => {
       const parts = line.split(',');

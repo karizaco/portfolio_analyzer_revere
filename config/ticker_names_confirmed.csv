@@ -207,3 +207,32 @@ seagate,STX,2,"Seagate -- Seagate Technology, the storage company, said as a nam
 crocs,CROX,2,"Crocs -- the footwear company, said as a name"
 broadcom,AVGO,2,"Broadcom -- the chip company, said as a name"
 cipher,CIFR,6,"Cipher -- Cipher Mining, the crypto miner, said as a name"
+
+# The 2014-2020 era, added 2026-11-14.
+#
+# These are the guest-interview era's names: the old PreMarket Prep
+# shows with "Brian Sozzi of Belus Capital", "Rick Ackerman" and
+# the rest. Each row was read against the sentence it was said in,
+# and checked against EVERY corpus before it was added -- the rule
+# from the Sevcik bug: a name row whose word the Czech corpus also
+# says captures that word. The three words the Czech corpus also says
+# (Microsoft, Adobe, Salesforce) are the same company in both, so they
+# were already there and are not re-added.
+
+chipotle,CMG,5,"Chipotle -- the restaurant chain, said as a name"
+pepsi,PEP,3,"Pepsi -- PepsiCo, said as a name"
+ford,F,3,"Ford -- Ford Motor Co, said as a name"
+macys,M,3,"Macy's -- the retailer, said as a name"
+costco,COST,2,"Costco -- the wholesale club, said as a name"
+autodesk,ADSK,2,"Autodesk -- the design-software company, said as a name"
+hasbro,HAS,2,"Hasbro -- the toy company, said as a name"
+archer,ACHR,2,"Archer -- Archer Aviation, the air-taxi company; the context is 'more bullish Archer'"
+johnson johnson,JNJ,2,"Johnson & Johnson -- the pharma company, said in full"
+costco wholesale,COST,2,"Costco Wholesale -- the company, said in full"
+fortinet,FTNT,1,"Fortinet -- the security company"
+disney,DIS,2,"Disney -- the entertainment company"
+starbucks,SBUX,1,"Starbucks -- the coffee chain"
+chipotle mexican grill,CMG,2,"Chipotle Mexican Grill -- the company, said in full"
+travelers,TRV,1,"Travelers -- the insurer, in a Dow-components list"
+harley davidson,HOG,1,"Harley-Davidson -- the motorcycle company"
+steel dynamics,STX,1,"Steel Dynamics -- the steelmaker, said in full"
