@@ -689,6 +689,89 @@ Results: `data/qmg_alt_batch_results.json`.
    change to the reading. Measured: 192 frames took about seven minutes to read and
    0.3 seconds to read again.
 
+### O'Connell (newsletter document source - see 'The O'Connell source')
+
+Andrew O'Connell, CFA, FRM publishes a **paid newsletter** on Substack. The
+corpus is **302 PDFs** — "Microsoft Print to PDF" renders of those posts — plus
+**144 position-log screenshots** beside them, in
+`D:\trading_books\andrew_oconnell_Pristine_capital`.
+
+It is the **second** non-video source, and it is shaped by two facts.
+
+**THE BODY TEXT IS NOT TEXT.** These renders draw their body copy as **vector
+outlines**, so the PDF's text layer is a free and exact index of the
+STRUCTURE and is useless for the CONTENT. Measured on `20261112.pdf` page 21:
+6 `BT`/`ET`/`TJ` text blocks (the headings and the browser chrome), 2,221
+`l` (lineto) and 2,336 `c` (curveto) operators (the prose, as outlines). Two
+independent engines agree: `pypdf` returns exactly what `pymupdf` returns.
+**So the headings come from the text layer and the prose has to be OCR'd.**
+
+**THE CORPUS CANNOT BE RE-FETCHED.** The posts are paid, the PDFs live outside
+the repository, and the 20240108 issue was printed on **29 March 2025** — a
+year after it was published. So the **derived records are committed** (they are
+the only recoverable copy) and **the PDFs never are**.
+
+A **SETUP** is what he SAID he was watching — a ticker, a kind of setup, a
+direction where he states one, and his thesis. A **POSITION** is what he HELD
+— a **lot**, with its entry date, size, stop, risk and R-multiple target. The
+same ticker is several lots when it was bought several times (MSOS is on four
+rows of the 20250910 equities table), so a position row is keyed by the lot
+and **not** by the ticker.
+
+- `src/oconnell/channel.js` — the source's identity, and the namespaced catalog id
+- `src/oconnell/issueKinds.js` — the newsletter taxonomy, read from the masthead by font size
+- `src/oconnell/setupLayout.js` — the setup headings, and the setup vocabulary
+- `src/oconnell/positionLayout.js` — the position log's columns, and what a value in them means
+- `src/oconnell/aggregate.js` — the payload, the coverage funnel and the conversion rate
+- `src/oconnell/schema.js` — the tables, and the one column an existing database has to grow
+- `src/newsletter/documentCatalog.js` — the filename grammar of a document corpus
+- `src/newsletter/pdfReader.js` — the PyMuPDF side, spoken to over JSON
+- `src/newsletter/proseOcr.js` — the prose, filtered by LINE height
+- `src/table/tableGrid.js` — grid rules, cells and ink components (a NEW shared module; `src/asym/sectorGeometry.js` is deliberately **not** touched)
+- `src/table/tableReader.js` — per-cell OCR, the colour of the ink, and the star count
+- `src/report/oconnellReport.js` — the dashboard
+- `tools/_oconnell_pdf.py` — the PyMuPDF side: `meta`, `meta-many`, `render`, `extract-image`
+- `tools/catalogOconnell.js` — inventories the folder and classifies every document
+- `tools/extractOconnellSetups.js` — the setups and their theses
+- `tools/extractOconnellPositions.js` — the lots
+- `tools/aggregateOconnellSignals.js` — the CSVs, the JSON and the HTML
+- `tools/analyzeOconnellOutcomes.js` — the setups scored against prices
+
+```bash
+npm run oconnell:catalog
+npm run oconnell:positions
+npm run oconnell:setups
+npm run oconnell:outcomes
+npm run oconnell:aggregate
+```
+
+The stage order is **outcomes → aggregate**, because the aggregate embeds the
+outcome summary and the report is rebuilt from the payload.
+
+**The reading rules are measured, and each one was found by reading a real
+capture against the sheet.** They are worth knowing before changing any of
+this code:
+
+| what | what happens | the fix |
+|---|---|---|
+| "BELOW" is white on solid red | reads as `prow` | normalise the **FILLED** cells only |
+| "-4.41%" is red on white | reads as `4.41%`, confidence 35 | take the sign from the ink's **COLOUR** |
+| "$2.20" | reads as `$220` in a row, `$2.20` on its own | read the cells **one at a time**, at five times |
+| the grid's rules | read as `\|` characters | filter them out of the text; **do not erase them** — they are what segments the words, and erasing them made the reading *worse* |
+| "★★" | reads as `w WK` and `R223` | count the stars as **connected components** |
+| "50D SMA" | reads as `30D SMA` | match the headers **globally**, by name |
+
+And for the prose: the words of a line come out in the wrong order unless they
+are grouped by the vertical **centre** with a **fixed** anchor; the short words
+of English ("a", "we", "to") disappear unless the filter is on the **line's**
+height rather than the word's; and the chart ink is read as prose unless a line
+is at least 24 pixels tall at 200 DPI.
+
+**A setup without readable prose is still a setup.** The heading is the claim,
+the prose is the evidence, and a setup whose prose could not be read is stored
+with `evidence_quality: 'heading_only'` — never dropped, never guessed.
+
+`docs/oconnell-source-plan.md` is the full plan and the full measurements.
 ### Aggregation
 - `src/video/captureTickers.js` — which field of a capture holds its holdings (see below)
 - `src/video/probeLogDirs.js` — the three probe-log directory layouts (see below)
@@ -728,6 +811,11 @@ Results: `data/qmg_alt_batch_results.json`.
 - `test/manual/productionCropRender.test.js` — renders **exactly** the image EasyOCR was shown, from the source video at a capture's timestamp
 - `test/manual/panelFooterInCrop.test.js` — the production crop against the panel's own footer, cut out of the tracked fixture
 - `test/sevcikSignalExtractor.test.js` — the Sevcik extractor's rules, each worded as the claim it makes
+- `test/oconnellChannel.test.js` — the O'Connell source's identity and its namespaced catalog id, including the two documents on one date that must not share one
+- `test/oconnellIssueKinds.test.js` — the newsletter taxonomy, read from the masthead by font size
+- `test/oconnellSetupLayout.test.js` — the setup headings, the direction, and the setup vocabulary
+- `test/oconnellPositionLayout.test.js` — the position log's columns, the sign taken from the colour, the date, and the lot key
+- `test/oconnellTableGrid.test.js` — the grid geometry on a synthetic table: the rules, the filled cells that are NOT rules, and the star count
 - `test/sevcikEndToEnd.test.js` — the Sevcik **chain** (transcript → segments → signals → database → dashboard) on a synthetic Czech-stream transcript
 - `test/sevcikTranscriptNormalize.test.js` — provider-agnostic normalization, provider inference, the timing-independent checksum
 - `test/sevcikPipeline.test.js` — the three Sevcik tools against a scratch database
