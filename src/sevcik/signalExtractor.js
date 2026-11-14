@@ -71,7 +71,7 @@ const { readCertainty, certaintyConfidence } = require('./certainty');
 const { STRICT_TICKER_PATTERN } = require('../normalize/tickerExtraction');
 const { collapseRollingCues, sourceIndexOf } = require('../transcript/transcriptNormalize');
 const { findCzechCompanyNames } = require('./czechNames');
-const { loadConfirmedNames, stemName } = require('./companyNames');
+const { loadConfirmedNames, stemName, isDeniedSpokenStem } = require('./companyNames');
 
 /**
  * The version of the extractor. It is written onto every signal row, so a
@@ -220,6 +220,34 @@ function findTickers(text, lexicon, options = {}) {
     found.push({ ticker: name.ticker, index: name.index });
   }
 
+  // -- "JP MORGAN" IS JPMORGAN, NOT MORGAN STANLEY --------------------
+  //
+  // The name finder cannot form the pair, because its token pattern
+  // starts with a capital followed by a lower-case letter and "JP" is
+  // all capitals -- so "Morgan" alone reaches the confirmed row
+  // `morgan -> MS`. Measured over the corpora: **82 of T3Live's 113 MS
+  // signals** and 2 of Sevcik's 3 name "JP Morgan" (the Czech ASR
+  // writes "GP Morgan").
+  //
+  // THE REMAP IS BY THE NAME IN THE TEXT, so it is right even when the
+  // ticker was mis-resolved, and it belongs HERE -- in the shared
+  // layer -- because the name resolution is a property of the NAME and
+  // not of the source: a swing-trading show says "JP Morgan" too.
+  //
+  // It is NOT the broker's-attribution rule, and it must not be
+  // confused with it. "Goldman Sachs looks like it could take off" is
+  // the host's own call on the stock in a trading show, and 88 of
+  // T3Live's GS signals are exactly that. Only the RESOLUTION is
+  // wrong here, not the claim.
+  if (/\b(?:jp\s*morgan|jpmorgan|gp\s*morgan)\b/i.test(str)) {
+    for (const entry of found) {
+      if (entry.ticker !== 'MS') continue;
+      entry.ticker = 'JPM';
+      seen.delete('MS');
+      seen.add('JPM');
+    }
+  }
+
   // -- THE SYMBOLS ---------------------------------------------------
   //
   // A symbol has to be CONFIRMED as one, by the same curated table that
@@ -254,6 +282,12 @@ function findTickers(text, lexicon, options = {}) {
     if (!lexicon.has(upper)) continue;
     if (seen.has(upper)) continue;
     if (!isAmbiguousTokenAccepted(token)) continue;
+    // THE SYMBOL PATH ALSO RESPECTS THE DENIED STEMS. A confirmed row
+    // whose SPOKEN FORM is a Czech word -- "roku" -> ROKU, "eli" -> LLY
+    // -- is in the confirmed-symbol set by its own spelling, and the
+    // symbol path would otherwise publish it on every use of the word.
+    if (isDeniedSpokenStem(token)) continue;
+    if (isDeniedSpokenStem(upper)) continue;
     // The symbol itself has to be a CONFIRMED symbol, when the caller
     // has a confirmed set.
     if (confirmedSymbols && !confirmedSymbols.has(upper)) continue;

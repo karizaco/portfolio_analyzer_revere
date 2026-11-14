@@ -163,9 +163,23 @@ function benzingaRows() {
 }
 
 test('every Benzinga row resolves to its own ticker', () => {
+  // Two rows are the exceptions, and they are the exceptions on purpose:
+  // the Czech corpus says "roku" 2,969 times (the genitive of "rok", a
+  // year -- "od roku 1930", since the year 1930) and "eli" 266 times
+  // (a past-tense verb suffix -- "zavřeli", they closed). Both rows
+  // published a holding on every use of the word. They are in the table
+  // because the ENGLISH corpus says "Roku" (the streaming device) and
+  // "Eli" (Eli Lilly), and the denial is by exact form -- so the row
+  // stands and the Czech word is refused.
+  const denied = new Set(['eli', 'roku']);
   const rows = benzingaRows();
   assert.ok(rows.length >= 60, `the Benzinga block has ${rows.length} rows`);
   for (const row of rows) {
+    if (denied.has(row.spoken)) {
+      assert.equal(matchCompanyName(row.spoken).ticker, null,
+        `"${row.spoken}" must resolve to nothing -- it is a Czech word`);
+      continue;
+    }
     assert.equal(matchCompanyName(row.spoken).ticker, row.ticker,
       `"${row.spoken}" must resolve to ${row.ticker}`);
   }

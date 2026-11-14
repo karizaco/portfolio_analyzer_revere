@@ -39,7 +39,7 @@ process.on('warning', () => {});
 const { DatabaseSync } = require('node:sqlite');
 
 const { loadSevcikLexicon } = require('../src/sevcik/lexicon');
-const { loadConfirmedNames } = require('../src/sevcik/companyNames');
+const { CONFIRMED_TABLE_PATH } = require('../src/sevcik/companyNames');
 const { extractSignals, PARSER_VERSION } = require('../src/sevcik/signalExtractor');
 const { SEVCIK_CHANNEL } = require('../src/sevcik/channel');
 const { sevcikVideoQuarantine } = require('../src/sevcik/contentFilter');
@@ -80,7 +80,31 @@ function main() {
   // one- and two-letter registrants that ordinary Czech speech is full
   // of: M, E, A, V, SE, EL, P, TAK. So a symbol token has to be one that
   // was CONFIRMED as a symbol before it counts.
-  const confirmedSymbols = new Set(Object.values(loadConfirmedNames()));
+  //
+  // THE CONFIRMED TABLE IS A NAME TABLE, NOT A SYMBOL TABLE. A row whose
+  // SPOKEN FORM IS THE TICKER ITSELF ("nvda" -> NVDA) is a symbol
+  // confirmation: the speaker said "NVDA" out loud. Every other row is a
+  // NAME row ("visa" -> V, "kroger" -> KR, "roku" -> ROKU), and its
+  // ticker must not become a confirmed symbol.
+  //
+  // The old code took `Object.values(loadConfirmedNames())`, i.e. EVERY
+  // confirmed ticker. When the Benzinga batch added 64 name rows, the
+  // tickers V, C, Z, KR entered the Czech symbol set -- and the Czech
+  // corpus exploded from 1,508 to 9,386 signals, 4,562 on "V" alone
+  // (a capital "V" at the start of a Czech sentence).
+  //
+  // The key is the STEM of the spoken name, so the test is on the
+  // spoken form as the table wrote it -- not on the stem, which drops
+  // the trailing vowels ("nvda" -> "nvd").
+  const confirmedSymbols = new Set();
+  for (const line of fs.readFileSync(CONFIRMED_TABLE_PATH, 'utf8').split(/\r?\n/)) {
+    if (!line || line.startsWith('#')) continue;
+    const parts = line.split(',');
+    if (parts.length < 2) continue;
+    const spoken = parts[0].trim().toUpperCase();
+    const ticker = parts[1].trim().toUpperCase();
+    if (spoken && ticker && spoken === ticker) confirmedSymbols.add(ticker);
+  }
   const db = new DatabaseSync(DB_PATH);
   // Another tool (the caption fetcher) may be writing the catalog at the
   // same time; wait for its lock instead of failing the run.

@@ -87,6 +87,14 @@ const CZECH_STOP_WORDS = new Set([
   'všechno', 'něco', 'nějaký', 'který', 'která', 'které', 'aby', 'abych',
   'proto', 'takže', 'jenže', 'prostě', 'opravdu', 'samozřejm', 'samozřejme',
   'super', 'perfektní', 'skvělé', 'lepší', 'horší', 'větší', 'menší',
+  // The inflected forms of "rok" (a year), and the verb suffixes that
+  // collide with a confirmed row. "roku" is the genitive ("od roku 1930"
+  // -- since the year 1930) and "eli" is the past-tense suffix
+  // ("zavřeli" -- they closed, "zkoušeli" -- they tried). Both hit a
+  // confirmed row the Benzinga batch added (roku -> ROKU, eli -> LLY),
+  // and the Czech corpus published 2,969 and 266 holdings on them.
+  'roku', 'let', 'letech', 'letech', 'roků', 'rokem', 'rokům',
+  'eli', 'eli', 'zavřeli', 'zkoušeli', 'měli', 'byli', 'stali',
 ]);
 
 /**

@@ -146,6 +146,25 @@ const DENIED_SPOKEN_STEMS = new Set([
   'mario',
   'mary',
   'marie',
+  // The Czech words that collide with a confirmed row. "roku" is the
+  // genitive of "rok" (a year) -- "od roku 1930", since the year 1930
+  // -- and "eli" is the past-tense verb suffix -- "zavřeli", they
+  // closed; "zkoušeli", they tried. The Benzinga batch confirmed
+  // "roku" -> ROKU (the streaming device) and "eli" -> LLY (Eli Lilly),
+  // and the Czech corpus published 2,969 and 266 holdings on them.
+  //
+  // The denial is by EXACT FORM, so "rok" alone is not taken with it.
+  'rok',
+  'roku',
+  'roky',
+  'roce',
+  'rocech',
+  'rokem',
+  'roků',
+  'rokům',
+  'rokem',
+  'eli',
+  'elie',
 ]);
 
 
