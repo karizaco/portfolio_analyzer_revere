@@ -1,4 +1,4 @@
-﻿> **Codex note:** This file was migrated from `CLAUDE.md`. Extended Claude project memory is in `docs/codex-migrated-memory/` and `.codex/MEMORY.md`. Migration details: `docs/CODEX_MIGRATION.md`. Keep this file and `CLAUDE.md` in sync when editing instructions.
+> **Codex note:** This file was migrated from `CLAUDE.md`. Extended Claude project memory is in `docs/codex-migrated-memory/` and `.codex/MEMORY.md`. Migration details: `docs/CODEX_MIGRATION.md`. Keep this file and `CLAUDE.md` in sync when editing instructions.
 # CLAUDE.md — portfolio_analyzer_revere
 
 ## Project overview
@@ -146,6 +146,122 @@ cd tools && mklink ffmpeg.exe "C:/Users/admin/AppData/Local/Microsoft/WinGet/Pac
 
 QMG video IDs can start with `_` (e.g. `_9o5_4iZ0zjI`). yt-dlp may truncate these. The download script handles this by using the full ID directly. If you see files named `_9o5_4iZ0zj` (truncated), rename with the full ID and update SQLite.
 
+### Killing processes — "the node processes" means node.exe AND NOTHING ELSE
+
+**THE RULE, and it is not negotiable by implication:** when the user says
+"kill the node processes", that means **`node.exe` and nothing else**.
+**Python is a different program** — it runs the MCP servers this
+session's tools depend on (Deepgram, Finviz, FinanceKit, TradingView),
+and it runs **yt-dlp**, which is what every download and metadata job
+here is made of. Killing python by accident is not a recoverable
+nuisance.
+
+**USE THE HELPER, NOT AN AD-HOC `taskkill`:**
+
+```bash
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/killNodeProcesses.ps1
+```
+
+It is built so the mistake cannot be made:
+
+| | |
+|---|---|
+| the target is a **closed set** | `ValidateSet('node')` — a typo cannot widen it |
+| it kills **only** `node.exe` | the name is the literal string; nothing else is ever passed to `taskkill` |
+| it **never kills its own process tree** | the caller, its shell and everything above are *protected* — a helper that kills the caller kills the session |
+| it does **not** use `/T` | a node worker owns python children (yt-dlp), and a tree kill would take them too. The orphans are **reported**, and whether they die is the user's call |
+| it **prints what it killed** | every PID with its command line, before and after |
+
+**To kill python, the user has to say so.** Not "kill the leftovers",
+not "clean up" — **python**, by name. Until then it is off limits.
+
+### A MEASUREMENT MUST NOT BE ABLE TO COUNT ITSELF
+
+On 2026-11-13 a measurement reported **"5 yt-dlp processes"**. There
+were **none**. The command that counted them matched **its own command
+line** — the pattern `yt_dlp` was inside the measurement command — so it
+counted itself, its bash wrapper and its powershell wrapper, and the
+number was then reported as a fact about the machine.
+
+**The rule: every claim about the machine's state comes from
+`tools/processCensus.ps1`, which excludes its own process tree before
+it counts anything.**
+
+```bash
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/processCensus.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/processCensus.ps1 -Filter 'yt.dlp'
+```
+
+It prints how many processes it excluded and why, so the number it
+reports is a number about the machine rather than about the measurement.
+
+**And the reporting discipline that goes with it: quote what the tool
+printed.** A count that was not read out of a tool's output is a guess,
+and a guess presented as a measurement is the thing this section exists
+to prevent.
+
+Pinned by `test/processTools.test.js` — four tests, and the first one
+starts a **real node process and a real python process**, runs the
+helper, and asserts that the node died and **the python survived**.
+
+**For the record, what this machine's memory actually is** (census,
+2026-11-13): **Firefox 54 processes / 19.2 GB**, TradingView 25 / 5.9 GB,
+Code 20 / 1.9 GB, chromium 34 / 928 MB — and the agent harness is
+**"MiniMax Code.exe"**, not node.exe, which is why killing node processes
+never ends the session.
+
+### Process budget (Windows) — the guard, and the bug that made it a no-op
+
+**THE RULE: an agent must not fan out to many processes.** The machine is
+24 cores and the user's own apps (Firefox, a trading terminal) hold most
+of its memory. A run that starts ~100 node processes on top of that is
+what "the machine is frozen" means.
+
+**THE GUARD IS A HOOK**, `.claude/hooks/limit-processes.ps1`, wired into
+`.claude/settings.json` as a PreToolUse check on Bash. It:
+
+1. **refuses `npm test`** — the test runner starts **one process per test
+   file**, and this repository has 98 of them, so the suite is ~97
+   processes at once. (The runner now passes `--test-concurrency=8`; see
+   § *Testing*.) `npm run test:benchmark` is allowed — it is ONE file.
+2. **refuses any command while the project already has too many of its
+   own processes running**: node ≥ 6, python ≥ 4. The harness's ~30 MCP
+   and VSCode processes are not counted.
+3. **always allows the cleanup commands** — `taskkill`, `Stop-Process`,
+   `tasklist` — because a guard that blocks the command that fixes the
+   situation it complains about is a deadlock.
+
+**THE FIRST VERSION OF THIS HOOK DID NOTHING, for a week.** It was one
+long `powershell -NoProfile -Command "..."` string in `settings.json`.
+The harness runs a hook command **through the shell**, so bash expanded
+`$inc`, `$_`, `$a`, `$p` and `$t` to empty strings before PowerShell saw
+them; the script failed to parse, exited **1** instead of **2**, and a
+hook that exits with anything other than 2 is a **non-blocking** error in
+Claude Code. The file version had a second bug of its own: **`$input` is
+a reserved PowerShell automatic variable**, so reading the hook's input
+into it silently produced nothing.
+
+So the rule was in the repository the whole time and nothing enforced it.
+On 2026-11-13 a suite run was observed with 50+ `node.exe` alive while
+the machine was reported as frozen.
+
+**Three lessons, and they are the general ones:**
+
+- **A hook's exit code IS its behaviour.** 2 blocks; 0 allows; anything
+  else is a non-blocking error, and a script that fails to parse fails
+  in exactly the way that looks like "the rule is off".
+- **Never put a script in a shell-quoted string.** A file cannot be
+  mangled by `$` expansion.
+- **A rule that is not tested is a rule that is not there.** The guard is
+  pinned by `test/processGuardHook.test.js` — eight tests that drive the
+  script the way the harness does and assert the exit codes, including
+  the branch that fires while other work is running.
+
+**The hook cannot see what it is not told.** It counts node/python
+processes whose command line names the repository, one of its tools, a
+test path or one of its run trees — so a bare `node data/probe.js` is
+not counted. The caps are a backstop, not a proof.
+
 ### Scan orchestration safety (Windows) — NEVER freeze the user's machine
 
 Running `tools/scanAllGtVideos.js` or `tools/scanVideoWithOcr.js` against Qullamaggie chart-stream content without preparation has historically caused multi-hour freezes. The mechanism (root cause analysis in `enchanted-giggling-toucan.md` plan file):
@@ -252,12 +368,27 @@ Rules:
 ## Testing
 
 ```bash
-npm test              # everything except the OCR benchmark (599 tests, ~50 s)
+npm test              # everything except the OCR benchmark (1194 tests, ~55 s)
 npm run test:benchmark  # test/qmgGroundTruth.test.js alone (EasyOCR; ~2-25 min, see below)
 npm run test:all        # everything, benchmark included -- FAILS under contention
 ```
 
-599 tests, all passing (as of 2026-11-03).
+**THE SUITE RUNS 8 TEST FILES AT A TIME, NOT 98.** Node's test runner
+starts **one process per test file**, and this repository has 98 of them
+— so `node --test <all the files>` is ~97 node processes at once, a 4×
+oversubscription of a 24-core machine. `tools/runTests.js` now passes
+`--test-concurrency=8`: a third of the cores, so the suite leaves room
+for the rest of the work instead of starving it. Override with
+`TEST_CONCURRENCY`. Measured: 97 files, 8 at a time, 1186/1186 in 53 s.
+
+**An AGENT MUST NOT RUN `npm test` ITSELF.** The process guard refuses
+it — see § *Process budget*. Run the files you need instead:
+
+```bash
+node --test --test-concurrency=8 test/<file>.test.js
+```
+
+1194 tests, all passing (as of 2026-11-13).
 
 **A third suite exists, and it is MANUAL.** `test/manual/qmgEraPrefilterScan.test.js`
 is the era-conditional crop and the era-conditional prefilter rectangle, run
@@ -478,23 +609,45 @@ Results: `data/qmg_alt_batch_results.json`.
 - `src/transcript/deepgramClient.js` — ffmpeg audio extraction + Deepgram `nova-2` upload
 - `src/report/sevcikReport.js` — the self-contained HTML dashboard
 
-### AsymTrading (Substack source, article text)
+### T3Live (English transcript source — see § 'The T3Live source')
+- `src/t3live/channel.js` — logical name `t3live`, handle `@t3live`, both listing URLs (`/streams`, `/videos`)
+- `src/t3live/contentFilter.js` — show/host classification from the title. Current series: `actionable_swings`, `630club` (including the older `6:30 Club` spelling), `options_in_play`, `morning_call`, `daily_recap`. Older formats are series too: `market_wrap`, `how_to`, `watch_list`, `pro_desk`, `half_time`, `mid_day`, `red_dog`, `black_room`, `marketcast`, `situation_report`, `core_fx`, `conversations`, `morning_game_plan`, `wall_report`, `weekly_update`. A one-off title stays `other`.
+- `src/t3live/englishNames.js` — English name finder, people/acronym stoplists, index phrases → ETF. Adjacent pairs are matched as ONE name, so "Goldman Sachs" is the company and not two unrelated words.
+- `tools/extractT3liveSignals.js` / `tools/aggregateT3liveSignals.js` / `tools/analyzeT3liveOutcomes.js` — extract (parser `t3live-signals-3`), aggregate per show, score vs SPY
+- `src/report/t3liveReport.js` — the dashboard (`data/t3live_report.html`), written by the aggregator; reads `t3live_outcome_summary.json` when it exists
+- `tools/fetchTranscriptChunks.js` — serial, chunked, captions-only fetch over an id list; stops on a 429, and does not mistake a chunk of quarantined videos for one
+- `tools/fetchDeepgramBatch.js` — chunked Deepgram runner over an id list, for the videos with no captions; resumable (skips ids with a transcript on disk), deletes the audio after each transcript, stops when a whole chunk lands nothing
+- `tools/importFlatListing.js` — imports a flat `id<TAB>title` listing (no dates) into `videos`
+- `tools/surveyT3liveNames.js` — reports which spoken names resolve and which do not; writes `data/t3live_name_candidates.csv`. The rows the confirmed table has to grow.
+
+### Benzinga (English transcript source — see § 'The Benzinga source')
+- `src/benzinga/channel.js` — logical name `benzinga`, handle `@Benzinga`, both listing URLs (`/streams`, `/videos`)
+- `src/benzinga/contentFilter.js` — the show taxonomy and the **allow-list**. The shows: `premarket_playbook`, `the_drift`, `stock_in_play`, `explainer`, `market_update` (readings only), and the quarantined `earnings_call`, `fed_presser`, `interview`, `partner_content`, `education`, `product_tutorial`, `short_clip`, `upcoming`, `other`. It also reads the air date out of a title, the partner out of "PreMarket Playbook + <partner>", and the tickers a title names.
+- `src/benzinga/attribution.js` — is this claim somebody ELSE's opinion? A reported claim is tagged, not dropped.
+- `src/benzinga/options.js` — the direction an options position implies (selling puts is BULLISH)
+- `src/benzinga/sections.js` — which part of the show a claim was made in (recap / preview / setup / interview / sponsor)
+- `src/benzinga/symbols.js` — the indicators ("20 DMA") and the index futures (ES, NQ) that are not holdings
+- `src/benzinga/marketReadings.js` — what a show says about the MARKET, a SECTOR or a MACRO EVENT; the stance is the direction word near the subject
+- `tools/extractBenzingaSignals.js` (parser `benzinga-signals-1`) / `tools/extractBenzingaReadings.js` (`benzinga-readings-1`) / `tools/aggregateBenzingaSignals.js` / `tools/analyzeBenzingaOutcomes.js`
+- `src/report/benzingaReport.js` — the dashboard (`data/benzinga_report.html`)
+- `tools/measureBenzingaSpeech.js` — how much of each show is SPOKEN tickers (the ceiling on recall)
+
+### The shared transcript runner
+- `src/transcript/extractRunner.js` — the ONE runner behind every source's extractor: register the transcripts on disk, select the videos, read the segments, extract, and **always** replace a video's rows. Two defects came from the copies it replaced: a video whose calls went to zero kept its old rows, and a quarantined video's rows were never cleared at all.
+
+### AsymTrading (Substack source, article text — see § 'The AsymTrading source')
 - `src/asym/channel.js` — the publication's identity: logical name `asymtrading`, host `asymtrading.substack.com`, numeric publication id `1534424`, and the `asym_<post_id>` catalog id. The post id is NUMERIC, not the slug: every post is titled "Market Pulse", and the slug suffix repeats across series.
 - `src/asym/contentFilter.js` — the access gate (free / paywalled / teaser / empty) and the series taxonomy: `market_pulse`, `momentum_movers`, `market_monitor`, `focus_list`, `post_mortem`, `market_dashboard`, `swing_trading_course`, `trader_profile`, `essay`, `prelaunch`, `copy`.
 - `src/asym/substackClient.js` — the API client. The pagination is a CURSOR, not an offset (`?offset=20` is HTTP 400), and the two list endpoints differ: `/api/v1/archive` returns an empty body for every post while `/api/v1/posts` returns the real body for free ones.
 - `src/asym/articleParse.js` — parses the Market Pulse report. It switches on the LABELS, not on a date, because the format changed three times between 2024 and 2026.
 - `tools/catalogAsymSubstack.js` — walks the archive, records EVERY post (free and paid) in `asym_posts`, parses the free ones into `asym_articles`, and records a `catalog_runs` row.
-- `src/asym/marketMonitor.js` — parses the public Market Monitor Google Sheet: the breadth / momentum tape behind the written reading.
-- `tools/fetchAsymSheets.js` — fetches the public Market Monitor sheets and stores their day rows.
-- `tools/analyzeAsymSectorOutcomes.js` — scores the report’s sector picks against their SPDR sector ETFs.
 - `src/asym/sectorTable.js` — the sector-table OCR: the fixed crop, the name matcher, the number repair, and the colour-based sign.
 
 - `src/asym/frameOcrCache.js` - the cache of the OCR'd sector frames: keyed by the frame's path, and valid only while the file is the same file (same size, same mtime) and the parser version is unchanged. A parser change invalidates the cache by itself.
 
 - `tools/parseAsymSectors.js` — OCR the table, merge the frames, and check the article against the numbers.
-- `src/asym/mediaStore.js` — the media layer: where a post's video and audio live on disk, the ffprobe gates (resolution AND duration, so a truncated file is caught), the free-space check, the download lock, and the `asym_media` download state.
+- `src/asym/mediaStore.js` — the media layer: where a post's video lives on disk, the ffprobe resolution gate (at least 1280x720), the free-space check, and the `asym_media` download state.
 
-- `src/asym/claims.js` — one claim per (post, ticker). A post that is bullish AND bearish on the same name is NOT scored; it is reported as conflicting.
 - `tools/reconcileAsymMedia.js` - writes back the media rows the catalog is missing, by reading the disk. The media table is keyed by (video_id, kind), and the rows that were overwritten while the key was `video_id` alone are gone from the catalog even though the files are still on disk.
 
 - `tools/downloadAsymVideos.js` — downloads the MP4 from Substack's Mux CDN. The signed URL is resolved at download time and never stored, because it expires in about 24 hours.
@@ -505,7 +658,7 @@ Results: `data/qmg_alt_batch_results.json`.
 - `src/report/asymReport.js` — the self-contained HTML dashboard. It leads with the WRITTEN readings and shows the coverage, because the publication is mostly paywalled.
 
 
-#### AsymTrading rules (the six that are easy to get wrong)
+#### AsymTrading rules (the four that are easy to get wrong)
 
 **1. The media table is keyed by (video_id, kind).** A post can hold its video AND its
    audio, so the key is both columns. It used to be `video_id` alone, which meant that
@@ -537,42 +690,89 @@ Results: `data/qmg_alt_batch_results.json`.
    change to the reading. Measured: 192 frames took about seven minutes to read and
    0.3 seconds to read again.
 
-**5. THE SECTOR TABLE'S COLUMNS ARE FOUND IN EVERY FRAME, NOT ASSUMED.**
-   The table is a screen share, so it is NOT laid out the same way in every post.
-   Measured over the twenty four posts of the corpus: the Company column is a
-   different width in every post (the sector names are truncated to fit it --
-   "Communication Se" in one post, "Communication Services" in the next); the number of
-   checkmark columns between the 1 Mo ROC and the % Change changes (two of them in the
-   2024 posts, four of them in the 2025 posts); and in ELEVEN of the twenty four posts
-   another widget of the screen share covers the right hand side of the table, so the
-   one-year column is partly or wholly hidden.
+### O'Connell (newsletter document source - see 'The O'Connell source')
 
-   So the columns are FOUND in every frame. The vertical rules of the grid are
-   detected (`src/asym/sectorGeometry.js`): a column of pixels that a quarter of the
-   table's rows cross is a rule, and the rules cut the panel into CELLS. The cells are
-   then matched to the columns by what is IN them -- the first cell that holds sector
-   names is the name column, the cell right after it is the 1 Mo ROC, the first cell to
-   the right that holds a percent sign is the % Change, and the cell right after THAT
-   is the one-year column. A post with two checkmark columns and a post with four are
-   read the same way, and so is a post whose table sits 35 pixels further right.
+Andrew O'Connell, CFA, FRM publishes a **paid newsletter** on Substack. The
+corpus is **302 PDFs** — "Microsoft Print to PDF" renders of those posts — plus
+**144 position-log screenshots** beside them, in
+`D:\trading_books\andrew_oconnell_Pristine_capital`.
 
-   This matters because the old, hard-coded bounds did not merely MISS the columns
-   there: they read the WRONG COLUMN. On one post the % Change sat at x 289..328 while
-   the parser was looking at 240..300, so it read the left half of the day figure and
-   the right half of the one-year figure and stored them together. The hard-coded
-   bounds (`COLUMN_BOUNDS`, `COLUMN_STRIPS`) are now only the FALLBACK, used when
-   the rules cannot be found.
+It is the **second** non-video source, and it is shaped by two facts.
 
-**6. A ONE-YEAR READING THAT IS A SHORT BARE INTEGER IS A FRAGMENT, NOT A VALUE.**
-   Where the widget covers the right hand side of the table, what is left of "34.71" is
-   "34". The column always shows two decimals, so a bare integer of one or two digits
-   there is the left-hand part of a number, not a reading -- and read as a number it
-   would be stored as 0.34. Such a reading is refused.
+**THE BODY TEXT IS NOT TEXT.** These renders draw their body copy as **vector
+outlines**, so the PDF's text layer is a free and exact index of the
+STRUCTURE and is useless for the CONTENT. Measured on `20261112.pdf` page 21:
+6 `BT`/`ET`/`TJ` text blocks (the headings and the browser chrome), 2,221
+`l` (lineto) and 2,336 `c` (curveto) operators (the prose, as outlines). Two
+independent engines agree: `pypdf` returns exactly what `pymupdf` returns.
+**So the headings come from the text layer and the prose has to be OCR'd.**
 
-   A LOST decimal point is a different thing: it leaves three or four digits ("197"
-   for -1.97) and those are still read. But a digit string whose integer part has a
-   LEADING ZERO ("03571", from "-0.51%" misread) is not a number that lost its point at
-   all -- it is not a number either, and the repair now refuses it.
+**THE CORPUS CANNOT BE RE-FETCHED.** The posts are paid, the PDFs live outside
+the repository, and the 20240108 issue was printed on **29 March 2025** — a
+year after it was published. So the **derived records are committed** (they are
+the only recoverable copy) and **the PDFs never are**.
+
+A **SETUP** is what he SAID he was watching — a ticker, a kind of setup, a
+direction where he states one, and his thesis. A **POSITION** is what he HELD
+— a **lot**, with its entry date, size, stop, risk and R-multiple target. The
+same ticker is several lots when it was bought several times (MSOS is on four
+rows of the 20250910 equities table), so a position row is keyed by the lot
+and **not** by the ticker.
+
+- `src/oconnell/channel.js` — the source's identity, and the namespaced catalog id
+- `src/oconnell/issueKinds.js` — the newsletter taxonomy, read from the masthead by font size
+- `src/oconnell/setupLayout.js` — the setup headings, and the setup vocabulary
+- `src/oconnell/positionLayout.js` — the position log's columns, and what a value in them means
+- `src/oconnell/aggregate.js` — the payload, the coverage funnel and the conversion rate
+- `src/oconnell/schema.js` — the tables, and the one column an existing database has to grow
+- `src/newsletter/documentCatalog.js` — the filename grammar of a document corpus
+- `src/newsletter/pdfReader.js` — the PyMuPDF side, spoken to over JSON
+- `src/newsletter/proseOcr.js` — the prose, filtered by LINE height
+- `src/table/tableGrid.js` — grid rules, cells and ink components (a NEW shared module; `src/asym/sectorGeometry.js` is deliberately **not** touched)
+- `src/table/tableReader.js` — per-cell OCR, the colour of the ink, and the star count
+- `src/report/oconnellReport.js` — the dashboard
+- `tools/_oconnell_pdf.py` — the PyMuPDF side: `meta`, `meta-many`, `render`, `extract-image`
+- `tools/catalogOconnell.js` — inventories the folder and classifies every document
+- `tools/extractOconnellSetups.js` — the setups and their theses
+- `tools/extractOconnellPositions.js` — the lots
+- `tools/aggregateOconnellSignals.js` — the CSVs, the JSON and the HTML
+- `tools/analyzeOconnellOutcomes.js` — the setups scored against prices
+
+```bash
+npm run oconnell:catalog
+npm run oconnell:positions
+npm run oconnell:setups
+npm run oconnell:outcomes
+npm run oconnell:aggregate
+```
+
+The stage order is **outcomes → aggregate**, because the aggregate embeds the
+outcome summary and the report is rebuilt from the payload.
+
+**The reading rules are measured, and each one was found by reading a real
+capture against the sheet.** They are worth knowing before changing any of
+this code:
+
+| what | what happens | the fix |
+|---|---|---|
+| "BELOW" is white on solid red | reads as `prow` | normalise the **FILLED** cells only |
+| "-4.41%" is red on white | reads as `4.41%`, confidence 35 | take the sign from the ink's **COLOUR** |
+| "$2.20" | reads as `$220` in a row, `$2.20` on its own | read the cells **one at a time**, at five times |
+| the grid's rules | read as `\|` characters | filter them out of the text; **do not erase them** — they are what segments the words, and erasing them made the reading *worse* |
+| "★★" | reads as `w WK` and `R223` | count the stars as **connected components** |
+| "50D SMA" | reads as `30D SMA` | match the headers **globally**, by name |
+
+And for the prose: the words of a line come out in the wrong order unless they
+are grouped by the vertical **centre** with a **fixed** anchor; the short words
+of English ("a", "we", "to") disappear unless the filter is on the **line's**
+height rather than the word's; and the chart ink is read as prose unless a line
+is at least 24 pixels tall at 200 DPI.
+
+**A setup without readable prose is still a setup.** The heading is the claim,
+the prose is the evidence, and a setup whose prose could not be read is stored
+with `evidence_quality: 'heading_only'` — never dropped, never guessed.
+
+`docs/oconnell-source-plan.md` is the full plan and the full measurements.
 ### Aggregation
 - `src/video/captureTickers.js` — which field of a capture holds its holdings (see below)
 - `src/video/probeLogDirs.js` — the three probe-log directory layouts (see below)
@@ -612,6 +812,11 @@ Results: `data/qmg_alt_batch_results.json`.
 - `test/manual/productionCropRender.test.js` — renders **exactly** the image EasyOCR was shown, from the source video at a capture's timestamp
 - `test/manual/panelFooterInCrop.test.js` — the production crop against the panel's own footer, cut out of the tracked fixture
 - `test/sevcikSignalExtractor.test.js` — the Sevcik extractor's rules, each worded as the claim it makes
+- `test/oconnellChannel.test.js` — the O'Connell source's identity and its namespaced catalog id, including the two documents on one date that must not share one
+- `test/oconnellIssueKinds.test.js` — the newsletter taxonomy, read from the masthead by font size
+- `test/oconnellSetupLayout.test.js` — the setup headings, the direction, and the setup vocabulary
+- `test/oconnellPositionLayout.test.js` — the position log's columns, the sign taken from the colour, the date, and the lot key
+- `test/oconnellTableGrid.test.js` — the grid geometry on a synthetic table: the rules, the filled cells that are NOT rules, and the star count
 - `test/sevcikEndToEnd.test.js` — the Sevcik **chain** (transcript → segments → signals → database → dashboard) on a synthetic Czech-stream transcript
 - `test/sevcikTranscriptNormalize.test.js` — provider-agnostic normalization, provider inference, the timing-independent checksum
 - `test/sevcikPipeline.test.js` — the three Sevcik tools against a scratch database
@@ -837,6 +1042,72 @@ are on screen. It is a DIAGNOSTIC and is never acted on: a count misread low
 would truncate a correct reading, and a count read from a different frame
 would judge the wrong reading.
 
+## A failed caption fetch is NOT a video with no captions (2026-11-10)
+
+The pipeline keeps a **caption-less list** per channel
+(`data/catalog_flat/<channel>_no_captions.txt`) so a video with no caption
+track is not re-requested on every pass. That list is a **BLACKLIST**: the
+chunk runner filters it out of its pending set and never asks for the video
+again.
+
+**A wrong entry is therefore permanent, and it is expensive.** A video the
+list wrongly excludes is not merely delayed — a later Deepgram pass sends it
+to a PAID transcription API for audio that YouTube will transcribe for free.
+
+That is what happened to T3Live. Of **237** entries in
+`data/catalog_flat/t3live_no_captions.txt`, **119 were wrong** — those
+videos do have auto-captions and were fetched once during a bad window.
+The tool reported every failure as "no captions", so the run's bad luck
+became a permanent fact about the video.
+
+**Two defects made it happen, and both are fixed:**
+
+1. **The verdict was read from the wrong stream.** yt-dlp prints
+   `[info] There are no subtitles for the requested languages` on
+   **stdout**, and only its warnings on stderr. Reading stderr alone
+   therefore classifies *every* genuinely absent caption track as a failed
+   fetch — and, once the two were collapsed into one message, every failed
+   fetch as an absent track.
+2. **`--write-auto-subs` alone misses manual captions.** A video with
+   hand-uploaded subtitles looks caption-less to a run that only asks for
+   the automatic ones. Both flags are now passed.
+
+**The rule, and it is the one that matters:** a video may be blacklisted
+only on YouTube's own answer. `classifyMissingCaptions()`
+(`tools/fetchSevcikTranscripts.js`) reports three things, and only the
+first one is permanent:
+
+| verdict | what it means | what to do |
+|---|---|---|
+| `no captions` | yt-dlp said the track is absent | blacklist it |
+| `caption fetch failed (…)` | the REQUEST failed — bot check, cookie, network | retry, never blacklist |
+| `rate limited (HTTP 429)` | the endpoint is throttling this IP | wait 30–60 min |
+
+The blacklist entry now carries **the verdict that justified it**
+(`id<TAB>reason`), so a reader can tell a video YouTube said has none from
+one a run merely failed to fetch.
+
+Pinned by `test/fetchCaptionClassification.test.js` — the verdicts, the
+**stdout** reading (the case the first fix would have got backwards again),
+and the fact that a failure's detail text can itself contain the phrase
+"no captions" and must still not blacklist. `test/fetchTranscriptChunks.test.js`
+pins the runner side: a failed fetch is never blacklisted, and an entry
+carries its reason.
+
+**Before trusting any caption-less list again, audit it.** The check is
+cheap and it is the whole fix:
+
+```bash
+node -e "const fs=require('fs');const ids=[...new Set(fs.readFileSync('data/catalog_flat/t3live_no_captions.txt','utf8').split(/?
+/).map(s=>s.split('	')[0].trim()).filter(Boolean))];
+let cap=0,dg=0,none=0;for(const id of ids){const f='data/video_pipeline/transcripts/'+id+'.json';
+if(!fs.existsSync(f)){none++;continue;}try{const d=JSON.parse(fs.readFileSync(f,'utf8'));d.provider==='deepgram'?dg++:cap++;}catch(e){none++;}}
+console.log({unique:ids.length,nowHaveCaptions:cap,deepgram:dg,nothing:none});"
+```
+
+`nowHaveCaptions` above zero means the list holds entries the tool got
+wrong.
+
 ## The Sevcik source — a TRANSCRIPT source, not an OCR source (2026-11-04)
 
 > **The 2026-11-05 update below supersedes two claims in this section.** The
@@ -845,6 +1116,13 @@ would judge the wrong reading.
 > this one first.
 
 ## The Sevcik source — a TRANSCRIPT source, not an OCR source (2026-11-04)
+
+> **The 2026-11-14 bug, and the rule it is a case of.** The
+> confirmed-symbol set was built from the confirmed-**name** table, so
+> every name row's ticker became a confirmed symbol. The Benzinga
+> batch added 64 name rows and the Czech corpus exploded from **1,508
+> to 9,386 signals**. See § *The confirmed-symbol gate was the name
+> table*.
 
 `https://www.youtube.com/@davidsevcik-sved4697/streams` — daily ~1 h streams of
 spoken trade commentary. This is the project's **fourth** data source and the
@@ -865,6 +1143,61 @@ catalog (existing)  →  transcripts  →  signals  →  aggregation
 | transcripts | `tools/fetchSevcikTranscripts.js` | `data/video_pipeline/transcripts/<video_id>.json`, `video_transcripts`, `transcript_segments` |
 | signals | `tools/extractSevcikSignals.js` | `trade_signals` |
 | aggregation | `tools/aggregateSevcikSignals.js` | `data/sevcik_signals.csv`, `data/sevcik_daily_summary.csv`, `data/sevcik_ticker_summary.csv`, `data/sevcik_signals.json`, `data/sevcik_report.html` |
+
+### The confirmed-symbol gate WAS the name table (2026-11-14)
+
+**THE CZECH CORPUS WAS WRECKED BY THE BENZINGA NAME ROWS, and the
+mechanism is a rule worth writing down.**
+
+The confirmed-symbol set was built from the confirmed-**name** table:
+
+```js
+const confirmedSymbols = new Set(Object.values(loadConfirmedNames()));
+```
+
+A name row's **ticker** became a confirmed symbol. The Benzinga batch
+added 64 name rows — `visa -> V`, `zillow -> Z`, `kroger -> KR`,
+`citigroup -> C` — and the Czech corpus exploded from **1,508 to 9,386
+signals**: a capital `V` at the start of a Czech sentence
+("**V** kanálech Disscoredu přesně jedna alergity") published a holding
+**4,562 times**.
+
+**The confirmed table is a NAME table, not a symbol table.** A row whose
+**spoken form is the ticker itself** (`nvda -> NVDA`) is a symbol
+confirmation — the speaker said the ticker out loud. A row whose spoken
+form is a company name is a **name** row, and its ticker must never
+become a symbol.
+
+| row | what it confirms | may its ticker be a symbol? |
+|---|---|---|
+| `nvda -> NVDA` | the speaker said "NVDA" | **yes** |
+| `visa -> V` | the speaker said "Visa" | **no** — V is a Czech letter |
+| `zillow -> Z` | the speaker said "Zillow" | **no** |
+| `roku -> ROKU` | the speaker said "Roku" | **no** — `roku` is the Czech genitive of *rok* (a year) |
+
+**TWO CZECH WORDS COLLIDE WITH NAME ROWS, and both are denied by exact
+form** (the row stands; the Czech word is refused):
+
+| word | what it is in Czech | uses | what it published |
+|---|---|---|---|
+| `roku` | the genitive of `rok` (a year) — "od roku 1930", since the year 1930 | 2,969 | `ROKU` |
+| `eli` | a past-tense verb suffix — "zavřeli" (they closed), "zkoušeli" (they tried) | 266 | `LLY` |
+
+**THE SYMBOL PATH ALSO RESPECTS THE DENIED STEMS**, so a confirmed row
+whose spoken form is a Czech word cannot publish on the symbol path
+either.
+
+**Measured after the fix: 1,551 signals** (the pre-bug state was 1,508),
+with `NVDA:164, AMZN:162, AMD:153` at the top. The 9,386-signal
+explosion is gone, and the one remaining `V` is a legitimate holding
+("Visa Visa máme předpoklad že Budeme obchodovat do longu" — Visa, we
+have an assumption we'll trade long).
+
+**The rule, and it is the general one:** *before adding a name row,
+check the word against EVERY corpus, not just the one you are adding it
+for.* The table is shared across three corpora and three languages.
+
+Pinned by `test/confirmedNamesAudit.test.js`.
 
 ```bash
 node tools/runWhiteboardWorker.js catalog --channel davidsevcik \
@@ -914,6 +1247,208 @@ same 1279 claims at 53.3 % (primary bucket 54.0 %), and its 48 walk-forward
 folds select an allow-bucket in only 4 of them. **The honest reading is that
 this source is not yet shown to beat the index**, and the corpus is now large
 enough (491 transcripts, 2020–2026) to say so rather than to hope for it.
+
+### A completed trade is not a live call (2026-11-09)
+
+The T3Live test runs published this as a **bearish TSLA**:
+
+> "I'm still in Tesla. Tesla did not give me a reason to get out of it. Tesla
+> was a great trade. ... I used my tier system. I sold some."
+
+The speaker was long, bullish about the name, and describing a tiered exit.
+The direction came from "sold some" — a trade that was already over.
+
+**"I sold some" and "I'm selling some" are different claims.** The first is
+history and says nothing about where the price goes next. The second is a
+call. The action patterns deliberately match both, because the report wants
+to know what the speaker did with the name; but a completed trade cannot
+carry a direction.
+
+Measured on the T3Live corpus (3,190 signals): **258** had a past-tense sale
+as their only direction evidence, and **144** of those were published as
+forward claims and scored as predictions.
+
+The fix splits the English action patterns on tense and marks the past ones
+`completed: true`. `actionBias(action, completed)` and
+`actionImpliesDirection(action, completed)` return `''` and `false` for a
+completed action, so the window needs a live statement to be a call.
+
+T3Live's signal count went **3,190 → 2,912**. **Sevcik is unchanged at 1,444**:
+the change is English-only, and the Czech action patterns are a separate list
+that was not touched. That asymmetry is the point — a fix to the shared
+engine that moved one corpus and not the other has to say which one and why.
+
+Pinned by `test/sevcikSignalExtractor.test.js` — four tests: a completed sale
+is not a call, the action is still recorded, a live sale still is, and a
+completed trade does not override a live direction.
+
+### The confirmed spoken-names table had no English names (2026-11-09)
+
+The table was grown from the **Czech** corpus, so an English stream resolved
+almost nothing. Measured across **811 T3Live transcripts**: only **19**
+tickers came back, and **1,357** spoken names were reported as candidates and
+dropped. The Options In Play series produced almost no signals for exactly
+this reason — the names were being **found and thrown away**, not missed.
+
+Two defects, both fixed:
+
+1. **Two words are one name.** "Goldman Sachs" read as two words matches
+   several registrants and neither word identifies the company. Adjacent
+   pairs are now tried first and the pair wins only when it resolves and the
+   single words do not, so a pair never shadows a name that already works.
+2. **The candidates were not confirmed.** The table now carries the English
+   names, each row checked against its transcript context. Two of them
+   resolved to the WRONG ticker through the SEC list — "morgan stanley" →
+   EDD, "chase" → WHLT, "baba" → BABB — and the confirmed row is what
+   overrides that.
+
+`tools/surveyT3liveNames.js` writes `data/t3live_name_candidates.csv` with
+the frequency and the sentences each name was said in, so the table is grown
+from what the corpus says rather than from what someone assumed. The noise
+words — Red, Dog, Trader, China, Team, Well, Good, Make, Take — are
+deliberately NOT confirmed; each one is a real ticker in some registrant's
+name and none of them is a company here.
+
+The 25-video sample went from **12** resolved names to **23**.
+
+### FOUR CONFIRMED ROWS WERE WRONG, and each one published a wrong holding (2026-11-13)
+
+A confirmed row is a **claim**: "when the host says X, the ticker is Y." A
+wrong claim is not a missed holding — it is a **wrong** holding, on every
+mention, and the row's own note made it look checked. The Benzinga names
+survey exposed four, and they were corrupting **143 published signals**
+across three channels:
+
+| spoken | was | the registrant it pointed at | is | signals affected |
+|---|---|---|---|---|
+| `goldman sachs`, `goldman`, `sachs` | `GJS` | *STRATS(SM) Trust for Goldman Sachs Group Securities, Series 2006-2* | **`GS`** (GOLDMAN SACHS GROUP INC) | 56 t3live, 1 benzinga, 1 sevcik |
+| `iron` | `IRHO` | *Iron Horse Acquisition II Corp.* — a blank-check shell | **`IREN`** (IREN Ltd) | 17 t3live |
+| `rocket` | `RCKT` | *ROCKET PHARMACEUTICALS, INC.* | **`RKLB`** (Rocket Lab Corp) | 18 t3live |
+| `maria`, `mario`, `mary`, `marie` | `MARA` | *MARA Holdings* — via the Czech **stem** | **nothing** | 41 t3live, 9 sevcik |
+
+**The four have three DIFFERENT mechanisms, and that is the lesson —
+a name table cannot be audited by reading it.**
+
+**1. A registrant that merely CONTAINS the company's name.** `GJS` is a
+structured product whose registrant contains "Goldman Sachs", so the
+longest-match search found it. **The SEC list offers `GS` for the same
+spoken name** and the row chose the trust. `tools/auditConfirmedNames.js`
+finds this class by asking whether the registrant is a trust / series /
+ABS / fund / acquisition shell — no trading show means any of those when
+it says a company's name.
+
+**2. A row whose own NOTE contradicts its ticker.** `rocket,RCKT` carried
+the note *"Rocket Labs, the space company"* — and `RCKT` is Rocket
+**Pharmaceuticals**, which this corpus never mentions. The note was right
+and the ticker was wrong, and nothing compared them.
+
+**3. THE CZECH STEM COLLAPSES ENGLISH GIVEN NAMES ONTO A REAL ROW.** This
+is the subtle one. `stemName` drops trailing vowels to bridge a Czech case
+ending ("Applu" → "apple"), so:
+
+```text
+mara  -> "mar"      maria -> "mar"      mario -> "mar"
+mary  -> "mar"      marie -> "mar"
+```
+
+The real `mara -> MARA` row is keyed on that stem, so **every one of those
+given names resolved to the crypto miner.** The T3Live hosts greet each
+other constantly — "Mario how you doing", "he works with Rob and Maria" —
+197 "Mario" and 23 "Maria" in those transcripts.
+
+**The denial has to be by EXACT FORM, not by stem**, and that distinction
+*is* the fix: `isDeniedSpokenStem()` tests the stem **and** the folded
+exact form, so denying `maria` leaves `mara` resolving as before. Denying
+the stem `mar` would have taken the real holding with it.
+
+#### "Iron" is IREN, and the corpus is what proves it
+
+The row said "the ore miner" and pointed at a SPAC. Three independent
+pieces of evidence settle what the hosts mean:
+
+- **The peer group.** "NBIS, CIFR, Iron are three names that I would
+  watch" — Nebius and Cipher Mining, which is exactly IREN's cohort.
+- **The price.** The corpus trades `$50`/`$54` calls on it; IREN closed
+  **46.03** on 2026-01-09 and **56.85–61.20** on 2026-05-07/08. `IRHO` is
+  pinned at **9.85–10.07** on near-zero volume — nobody trades $50 calls
+  on it.
+- **The trades.** "Iron was my best trade this week… it was on my go-to
+  list."
+
+**A company word inside a FIXED PHRASE is not the company.** Once `iron`
+resolves to a tradeable stock, the options vocabulary collides with it:
+**"iron condor"**, "iron butterfly", "Iron Man", "iron it out". Measured:
+**30 of Benzinga's 39** `iron` mentions are one of those phrases, and
+**222 of T3Live's 1,164**.
+
+So the rejection is on the words that **FOLLOW** the token, never on the
+token itself — a rule keyed on the word alone would reject the company
+too. `ENGLISH_PHRASE_COLLISIONS` in `src/t3live/englishNames.js` holds
+`name -> the words that may not follow it`, and it is shared by every
+English source (T3Live, Benzinga, AsymTrading).
+
+#### The audit tool, and the one check that is not automatable
+
+```bash
+node tools/auditConfirmedNames.js          # the heuristics, with the SEC list's own candidates
+node tools/surveyBenzingaNames.js          # what resolves, what is only a candidate
+```
+
+The audit **reports, it does not decide** — it prints the registrant and
+the alternatives the SEC list offers, because a row it flags is a row to
+**read** before changing. Two of its six flags (`btc`, `spy`) are correct
+rows whose registrants genuinely are trusts.
+
+**What no heuristic catches is mechanism 3**, because the row it corrupts
+(`mara -> MARA`) is *correct*: the damage is in a DIFFERENT spoken form
+reaching it through the stemmer. That only shows up in a survey of what
+the corpus actually resolved — which is why
+`tools/surveyBenzingaNames.js` reports the spoken forms beside the
+ticker, and why the survey's `MARA spoken as "Maria | Mary | Mario"` line
+is what found it.
+
+**Every parser version moved**, because the names table is an extractor
+input exactly as the vocabulary is: `sevcik-signals-5` → `-6`,
+`t3live-signals-3` → `-4`, `benzinga-signals-1` → `-2`,
+`asym-signals-1` → `-2`. Pinned by `test/confirmedNamesAudit.test.js` —
+seven tests, one per mechanism, including that the phrase test reads the
+text *after* the token and that every confirmed ticker is one the SEC
+list knows.
+
+#### What the fix was worth, measured on the published signals
+
+| | before | after |
+|---|---|---|
+| `GJS` (the trust) | 56 t3live + 1 sevcik + 1 benzinga | **0** |
+| `IRHO` (the SPAC) | 17 t3live | **0** |
+| `RCKT` (the pharma) | 18 t3live | **0** |
+| `MARA` (from a given name) | 41 t3live + 9 sevcik | 30 t3live + 7 sevcik |
+| `GS` — the bank, recovered | 3 t3live | **98** t3live + 3 sevcik + 1 benzinga |
+| `IREN` — recovered | — | **17** t3live |
+| `RKLB` — recovered | 1 t3live | **20** t3live + 3 sevcik |
+
+**106 wrong holdings removed, 138 real ones recovered.** The corpus
+totals barely move, and that is the honest shape of this fix: it changed
+*which* holdings are published, not how many.
+
+**The recovered holdings score like real holdings, which is the point.**
+Against the T3Live corpus average of **49.7 %** at one week:
+
+| ticker | scored | 1w hit | avg return 1w |
+|---|---|---|---|
+| `GS` | 76 | 47.4 % | −0.08 % |
+| `RKLB` | 15 | 40.0 % | +1.05 % |
+| `IREN` | 12 | 33.3 % | **−8.92 %** |
+
+`IREN` is the interesting one: the host's IREN calls **lost 8.9 % on
+average**. Before the fix that was invisible — the published ticker was a
+SPAC pinned at $9.85, so the calls scored a coin flip on a stock that
+never moves. **A wrong ticker does not merely add noise; it converts a
+measurable loss into an unmeasurable one.**
+
+Sevcik's own numbers barely move (1w **50.6 %** [48.3–53.0] against a SPY
+baseline of 57.4 %, `assess: no_clear_edge`), which is what a fix worth
+2 false positives and 3 recovered holdings should look like.
 
 ### The confirmed spoken-names table grew on 2026-11-06
 
@@ -4814,9 +5349,11 @@ and the checker enforces it.
 | `tools/checkGroundTruthConsistency.js` | checks the ground truth against the manifest, the panel counts and the footers |
 | `test/qmgGroundTruthProvenance.test.js` | pins the checker, and proves it has teeth |
 
-The fixture set is **94 crops** of the panel — showing the ticker column AND
+The fixture set is **135 crops** of the panel — showing the ticker column AND
 the footer — md5-pinned in `test/fixtures/qmg_ground_truth/manifest.json`, with
 each source snapshot's own md5 recorded so a changed corpus frame is caught.
+(It was 94 when this section was written; the count below is the wave-2
+figure, and the current one is whatever the checker prints.)
 
 ```bash
 node tools/checkGroundTruthConsistency.js
@@ -4833,6 +5370,91 @@ The wave-2 cases are **generated from a table** (`C:/tmp/spxl/gen_cases.js`
 during the session) rather than hand-written, so a reading, its panel count and
 its footer text cannot drift apart: the generator emits all three into
 `tools/buildGroundTruthFixtures.js` from one row.
+
+**The set is now 135 crops across 52 of 56 dates (2026-11-06).** Twelve
+dates were added that had never been scanned at all — the January and
+February 2022 uploads, downloaded and scanned the same day. The numbers
+in this section's tables are the wave-2 figures; the current count is
+whatever `node tools/checkGroundTruthConsistency.js` prints.
+
+#### A date whose panel is EMPTY is a reading, not a gap (2026-11-06)
+
+`20220128` is the corpus's first date with **no holdings at all**: the
+"A - Positions" panel shows its header row — Flag, Sym, % Change, Pre
+Buzz — and no data rows, in all three captures, with the footer
+**"0 Items in Personal WatchList"**. `20220131` is the next smallest, one
+row (`TQQQ`) with **"1 Item in Personal WatchList"** — the singular
+follows the total — and its earliest frame is empty too.
+
+**These are worth pinning precisely because they are empty.** A date with
+no holdings is the only kind of date on which **every** published ticker
+is provably a false positive, so it is the sharpest possible test of the
+chart-ink filters. The scan published `SYM` and `X` on `20220128` and
+`MDB`, `U` and `X` on `20220131`; all of them are chart ink or rows of
+the watchlist widget above the table.
+
+**But the replay cannot score such a date.** Its ground truth is the
+empty union, so its denominator is zero and `tools/evalParserReplay.js`
+omits it from the per-date table entirely — a date that contributes
+nothing to the numerator *or* the denominator cannot move a micro
+average. Its value is therefore in the **pinned fixture and the
+checker**, not in the recall number, and a reader who expects an empty
+date to show up as `0/0` in the replay output will not find it.
+
+#### Reading the PUBLISHED list names the wrong mechanism — read the OCR WORDS
+
+`20220211` published `TSM`, a seed ticker Qullamaggie has never held, at
+the row the panel shows as `TSLA`. The obvious reading of that is the one
+§ *The LI row* already records: a garbled form that is **itself a real
+ticker** cannot go in the shared table, so this needs a **date-scoped**
+table like `U -> LI` or `NFU -> NFLX`.
+
+**That reading is wrong, and the log says so.** The raw OCR token is not
+`TSM` — it is **`TSU`**, the `LA` of `TSLA` merged into one `U` glyph, at
+left 714 against the column's `dominant_left` 715, conf 0.988 and 0.960
+on the two captures. `TSM` is what the **distance-1 repair** made of it:
+
+| | |
+|---|---|
+| `d(TSU, TSM)` | **1** — and `TSM` is in the seed, so the repair took it |
+| `d(TSU, TSLA)` | **2** — so the repair could never have reached the truth |
+
+`TSU` is in **neither** lexicon, so `TSU -> TSLA` is a legal **shared**
+row: no new era key, no new CSV, no new date window. The scoped-table
+reasoning was about `TSM`, which is not the key.
+
+**The general rule: a false positive names the REPAIR's output, not the
+read.** Before proposing an alias row for a wrong holding, find the token
+in `ocr_words` — the row that must be keyed is the one the engine
+actually produced. `NOS -> MOS` came out of the same inspection: `"NOs"`
+sits dead on the column (left 713–716 against `dominant_left` 713–716) on
+**eight** dates, and `MOS` is a ground-truth holding on every one of
+them; its price cell did not parse, so it fell out of the price-aligned
+subset and the column gate rejected it **before** the repair pass could
+see it. The curated rescue is the only path that reaches that cell.
+
+#### A missing lexicon row publishes a WRONG holding, not a miss
+
+Three holdings on these dates were in no lexicon, and only one of them
+cost anything — which is the measurement, not an argument:
+
+| ticker | what it is | what its absence cost |
+|---|---|---|
+| `XOP` | SPDR oil & gas exploration ETF | **a wrong holding**: `XOP` is one edit from `XOM`, which IS a seed ticker, so the repair published `XOM` on `20220204`, `20220207` and `20220208`. `XOM` is in **no** ground-truth capture anywhere in the corpus |
+| `KRBN` | KraneShares Global Carbon ETF | **nothing** — it is price-aligned inside the column, so the accept path already took it verbatim |
+| `DCFC` | Tritium DCFC Ltd (NASDAQ 2022-01-14 → the 2024 delisting, then OTC as `DCFCQ`) | **nothing**, same reason |
+
+`DCFC` is worth a note of its own: **no provider returns an exact `DCFC`
+today**, because the company was delisted and moved to `DCFCQ`. Yahoo,
+TradingView and Stocktwits all return only `DCFCQ`/`DCFBS`. A ticker that
+cannot be resolved against a present-day provider is **not** evidence
+that the panel is misread — the corpus is 2022, and the panel is the
+primary source.
+
+All three were seeded anyway, because the seed is the **ALLOW** list: an
+unseeded holding is one repair away from being published as a neighbour,
+which is exactly what `XOP` was. Measured over the wide corpus the three
+rows are **+3 hits and −3 false positives**, all of them `XOM → XOP`.
 
 The checker has seven teeth, each tested by perturbing a copy of the inputs: a
 misread ticker in the ground truth (`gt-disagrees`), a wrong panel count
@@ -6333,3 +6955,744 @@ are worth fetching later, because they are free and Deepgram is not.
 `ORDER BY`, so every run that used the flag died with "near AND: syntax
 error". The filter has to go before the ORDER BY.
 
+
+## The AsymTrading source — a SUBSTACK source, and the first one with a PAYWALL (2026-11-11)
+
+`https://asymtrading.substack.com` — the project's **sixth** data source and
+the first one that is **not a video channel at all**. It is a Substack
+newsletter: a weekly "Market Pulse" written report, an embedded commentary
+video, a breadth spreadsheet and a stock list.
+
+**The thing that makes it different from every other source here is the
+paywall.** Over the full corpus — 476 posts, 2023-03-29 to 2026-11-11 —
+**42 are free and 434 are not.**
+
+| | |
+|---|---|
+| posts | 476 |
+| free | 42 (27 of them Market Pulse reports) |
+| paid | 434 |
+| free posts with an embedded video | 24 |
+| series | `market_pulse`, `momentum_movers`, `market_monitor`, `focus_list`, `post_mortem`, `market_dashboard`, `swing_trading_course`, `trader_profile`, `essay`, `prelaunch`, `copy` |
+
+**THE ACCESS GATE HAS TWO PARTS, and both are needed.**
+
+1. `audience !== 'only_paid'` — the publication's own statement.
+2. The body is actually there — the receipt.
+
+Part 2 is not redundant. Part 1 is a claim; part 2 is the evidence that the
+request was not served a teaser where a body was expected. Measured: the
+`/api/v1/posts` LIST endpoint returns an empty body for a paid post, while
+`/api/v1/posts/by-id/<id>` returns the **shared boilerplate every post
+starts with** (the "What You Can Expect" block, 1,560 chars) and nothing
+else — no report, no headings. So a reader cannot tell a paywalled post
+from a free one by looking at the body; only the `audience` field says so.
+
+**Nothing here reaches past the paywall.** There is no subscriber mode, no
+cookie handling, and no scraping of a logged-in session. If that is ever
+wanted it has to be built on the user's own credentials, explicitly.
+
+**THE PAID POSTS ARE CATALOGUED ANYWAY.** `asym_posts` holds every post,
+free and paid, with an `access` column recording which of `free` /
+`paywalled` / `teaser_only` / `empty_body` applied. A paid post is a post
+that exists; recording it keeps the corpus honest — "42 of 476 posts were
+read" is a fact about the source, and "42 posts" would be a fact about the
+pipeline pretending to be a fact about the source.
+
+### Why the posts have their own tables
+
+They do NOT go into `videos`. Two reasons:
+
+1. `videos` is keyed on a YouTube video id, and its `status` column carries
+   the OCR pipeline's lifecycle (pending → scanning → done). A Substack
+   post's lifecycle is different — catalogued, body read, media
+   transcribed — and overloading the OCR vocabulary would make both harder
+   to read.
+2. A paid post has no media and no body. It cannot be a "video" in any
+   sense the rest of the pipeline means.
+
+So:
+
+| table | what it holds |
+|---|---|
+| `asym_posts` | every post, free and paid, with its access state, series and media id |
+| `asym_articles` | the parsed report of every free post |
+
+**The parsed readings are NOT `trade_signals`.** That table is a TICKER
+table: one row per (video, ticker) with a direction and the sentence it
+came from. "Breadth is Positive" is a statement about the market and
+applies to no ticker at all, so putting it in `trade_signals` would mean
+inventing a ticker for it. The article's index mentions (SPY/QQQ/MDY/IWM)
+are kept in `asym_articles.index_tickers` as context, for the same reason.
+
+### The report is a FIXED FORMAT — and it changed three times
+
+This is the part worth reading before touching the parser. The report is
+machine-readable, and the format evolved:
+
+| reading | 2026 (current) | 2025-09 → 2025-12 | 2025-02 → 2025-06 |
+|---|---|---|---|
+| backdrop | `Market Backdrop:` (a paragraph) | — | `Overall:` (a heading) |
+| trend | `Overall Trend:` | `Overall Trend:` | `Index Trends:` |
+| breadth | `Overall NH/NL Breadth:` | same | same |
+| momentum | `Overall Up/Down Momentum:` | same | same |
+| plan sections | `1) Title -- State` | `1. Title` | unnumbered headings |
+
+**So the parser switches on the LABELS, not on a date.** A date-based
+switch breaks the moment the author changes the layout again, and it has to
+be updated every time. All 27 free Market Pulse posts parse all four
+readings, and every extracted value keeps the sentence it came from — a
+breadth reading of "Positive" is a claim, and a claim you cannot point at
+cannot be checked.
+
+The sectors in focus are read the same way: the author names them in prose
+("Primary focus: Energy, Defensives, Healthcare, …"), as a sub-heading
+followed by a bullet per sector, or in a plain sentence. All three are
+read, and the tier (primary / secondary / avoid) is recorded with its
+evidence.
+
+### The API's two quirks — both measured
+
+- **The pagination is a CURSOR, not an offset.** `?offset=20` returns HTTP
+  400 (`{"errors":[{"param":"offset","msg":"Invalid value"}]}`). The
+  endpoint takes `cursor=<base64 of {"post_date":"..."}>` and returns
+  `nextCursor`.
+- **The two list endpoints return different amounts of the post.**
+  `/api/v1/archive` returns `body_html: ""` for **every** post; `/api/v1/posts`
+  returns the real body for free ones. The catalog uses the posts endpoint,
+  because the body is the whole point of the source.
+
+The endpoint is **undocumented** and the publication is **rate-limited** — a
+full walk is 20 requests and asking repeatedly gets the IP throttled (HTTP
+429, measured). So the tool walks once, and the **whole free corpus is
+captured as fixtures** under `test/fixtures/asym/` (with a `manifest.json`
+recording each file's md5), which is what lets the tests run offline.
+
+### The catalog id is the NUMERIC post id, never the slug
+
+Every post in this publication is titled "Market Pulse". The slug is
+`market-pulse-<suffix>` and the suffix REPEATS across series —
+`market-pulse-open-access` and `market-pulse-open-access-bf1` are different
+posts, and `6-steps-to-profitable-swing-trading` appears with six different
+suffixes. So a slug is a display name, not an identifier. The catalog id is
+`asym_<post_id>`, namespaced so it can never collide with a YouTube video
+id.
+
+### The date is the date the post is ABOUT
+
+The author's own label ("10/28/2026") is used, not the publication
+timestamp. 86 of the corpus's posts are published after midnight UTC and
+so carry a UTC date one day later than the label; for a market recap, the
+day the report covers is the day that matters. The label is stored in
+`asym_posts.post_label` and the derived `YYYYMMDD` in `upload_date`.
+
+```bash
+npm run asym:catalog       # walk the archive, record every post, parse the free ones
+npm run asym:catalog:dry   # the same walk, writing nothing
+```
+
+The catalog is **idempotent**: a second run updates the rows in place
+(measured: 476 inserted on the first run, 0 inserted / 476 updated on the
+second), and it records a `catalog_runs` row like every other catalog run.
+
+### The MEDIA, the TRANSCRIPTS, the SIGNALS and the OUTCOMES (2026-11-12)
+
+The catalog reads the WRITTEN report. The video attached to the same post
+says much of it out loud, and that is a second reading of the same view --
+so the media is downloaded, transcribed, and run through the same signal
+engine the other spoken sources use.
+
+```bash
+npm run asym:media        # download the MP4 of every free post that has one
+npm run asym:transcripts  # Deepgram -> transcript JSON + catalog rows
+npm run asym:signals      # transcript -> trade_signals
+npm run asym:aggregate    # signals + readings -> CSV/JSON/HTML
+npm run asym:outcomes     # score the calls against what the price did
+```
+
+**THE MEDIA COMES FROM SUBSTACK'S MUX ACCOUNT, NOT FROM YOUTUBE.**
+There is no yt-dlp extractor for it, so it has its own downloader. The
+`/api/v1/video/upload/<id>` endpoint describes the video (duration,
+dimensions, the primary file's size) and the same endpoint with `/src`
+redirects to a signed Mux URL.
+
+**THE SIGNED URL EXPIRES IN ABOUT 24 HOURS, SO IT IS NEVER STORED.** The
+catalog holds the PERMANENT identifier -- the media-upload id -- and the
+URL is resolved fresh at download time. A stored URL would be a promise
+that expires, and a re-run weeks later would fail against a dead token.
+
+**THE RESOLUTION GATE IS FFPROBE, NOT FILESIZE.** A download is accepted
+only when ffprobe reports at least 1280x720. Filesize says nothing about
+resolution (a 10-minute FullHD video can be under 1 GB and a 2-hour 720p
+video can be 2 GB), and a file that fails the gate is DELETED rather than
+kept -- keeping it would leave the pipeline reading a video it cannot use.
+
+**THE COST OF THE WHOLE CORPUS, MEASURED.** 24 posts carry a video:
+**8.51 GB and 16.8 hours of audio**, every one 1920x1080. The downloads
+go to `data/video_pipeline/downloads_asym/` -- its own directory, because
+the three historical download directories are described by RESOLUTION and
+are known to hold mixed content.
+
+**DEEPGRAM IS MANDATORY, NOT A FALLBACK.** Every other transcript source
+here can fall back on YouTube's own auto-captions. This one cannot: the
+video is served from Mux, and Mux's assets carry `CLOSED-CAPTIONS=NONE`.
+There is exactly one path to a transcript and it costs money (nova-2 is
+about $0.0043/min, so the full corpus is on the order of $4.30).
+
+**THE LANGUAGE IS `en` AND IT IS A HARD FILTER.** The shared client
+defaults to `cs` because the Sevcik channel is Czech. The language selects
+the ACOUSTIC MODEL, so pointing the Czech model at English audio produces
+no transcript rather than a bad one. The default is overridden per call.
+
+**THE SIGNALS GO INTO THE SHARED `trade_signals` TABLE**, keyed on
+`asym_<post_id>` -- and the other sources' aggregators are NOT
+contaminated by that, because both of them filter with
+`WHERE v.channel = '...'` over a LEFT JOIN on `videos`, and an
+AsymTrading signal has no `videos` row, so `v.channel` is NULL and the
+row is excluded. Measured, not assumed -- `test/asymPipeline.test.js`
+runs the REAL query text out of both aggregators' own source.
+
+**THE EXTRACTOR IS THE ENGLISH ONE, not the Czech one.** Sevcik's name
+finder drops sentence-initial capitals (Czech capitalises every
+sentence-initial word); English does not, so "Apple is breaking out" has
+to keep its "Apple". `src/t3live/englishNames.js` is reused as-is, with
+the CAPS-symbol gate that English traders need.
+
+**THE OUTCOME ENTRY IS THE CLOSE ON THE POST'S OWN DATE**, or the
+previous trading day's close when the post is dated on a weekend -- a
+Saturday Market Pulse is a preview of the week ahead, so its entry is
+Friday's close. A mid-week post's entry leaves that day's own move OUT of
+the measured return. That is conservative, and it is stated rather than
+hidden.
+
+**ONE CLAIM PER (POST, TICKER).** The author can come back to the same
+ticker twice in one post; scoring each mention would count one call as
+two correlated wins. A post that is bullish AND bearish on the same name
+is NOT scored -- it is reported as conflicting. See `src/asym/claims.js`.
+
+**THE AUDIO-ONLY PATH, AND WHY IT EXISTS.** The downloader has a
+second mode. Instead of keeping the 1920x1080 MP4 it downloads the 480x270
+rendition, extracts the audio from it, and deletes the video: the whole free
+corpus is about **360 MB of audio** against **8.51 GB of video**.
+
+It is not a different recording. Mux serves ONE master audio track muxed
+into every rendition, so the audio is the same audio in a smaller file.
+**Measured on one post: the transcripts of the 1920x1080 and the 480x270
+renditions agree on 98.4% of their words (982 of 998).** The video's audio
+is 192 kbps stereo and the low rendition's is 96 kbps, so the difference
+is real but small.
+
+There is **no audio-only rendition** -- `audio.m4a` is HTTP 404 on every
+asset measured -- so the cheapest audio path is still a video file.
+
+**THE VIDEO IS A SCREENCAST, AND ITS SECTOR TABLE IS READABLE.** This
+matters more than the size. The video is a TradeStation screencast whose
+left-hand panel is a **sector table**: eleven sectors with their 1 Mo,
+3 Mo, 6 Mo, YTD and % Change figures, and an industry table with RS
+values beneath it. That is QUANTITATIVE data the written report does not
+carry -- the article gives the author's qualitative picks ("Primary focus:
+Energy, Healthcare"), and the table gives the numbers behind them.
+
+So the audio path is a **transcript-only fast path**, not a substitute for
+the video. The table is legible at 1920x1080 and not at 480x270, so a
+corpus-wide OCR pass needs the full-resolution video.
+
+**THE DOWNLOADER CANNOT BE MADE TO LOOK LIKE A HANG.** A 271 MB file
+measured at 126 KB/s takes 36 minutes, and a download that prints nothing
+for 36 minutes is indistinguishable from a freeze. So it:
+
+- reports **progress** -- bytes, expected bytes, and the rate, every 5 s;
+- **detects a stall** -- no bytes for 90 s aborts the request, because a
+  slow link and a dead one are otherwise the same thing;
+- **resumes** -- a partial file is continued with an HTTP Range request
+  rather than started again;
+- **checks the length** -- the body has to end up as long as the
+  Content-Length says, because a truncated video still has a valid header
+  and the resolution gate would accept it;
+- **checks the duration** -- the file has to last as long as the source
+  says. This is the gate that catches a truncated download, and the
+  metadata's `primary_file_size` cannot be used for it: that number is
+  the size of the ORIGINAL UPLOADED asset, and the served rendition is
+  Mux's own re-encode, which is smaller. The DURATION is the same for
+  both, because they are the same recording;
+- **takes a lock** -- a second downloader is refused with the owning pid
+  rather than allowed to compete. Two at once is a measured failure: the
+  second died with "fetch failed: terminated" and the first left a
+  half-written carrier behind;
+- **sweeps its leftovers** -- an abandoned carrier is removed at startup.
+
+**THE SECTOR TABLE, AND HOW IT IS READ WITHOUT THE VIDEO.** The Market
+Pulse video is a TradeStation SCREENcast, and its left-hand panel is a live
+table of the eleven GICS sectors with their numbers:
+
+```
+Company | 1 Mo ROC | (Avg 10 mo) D | (Avg 20) D | target(M) D | % Change
+Financial Services |  7.28 |  v |  v |  v |  +0.91%
+Energy             |  3.05 |  v |  v |  v |  -1.04%
+```
+
+That table is the one piece of QUANTITATIVE market data in this source that
+the written report does not carry -- the article gives the author's picks
+("Primary focus: Energy, Healthcare"), and this gives the measurements
+behind them.
+
+The table is STATIC in its geometry and SCROLLS in its content, so the
+pipeline does not need the video. It needs a handful of 1080p frames:
+
+  npm run asym:frames        # 8 frames per post, pulled from the remote
+                             # MP4 with an HTTP Range request (~6 s each)
+  npm run asym:sectors       # OCR the table, merge the frames, and check
+                             # the article against the numbers
+
+Eight things make the naive OCR wrong, and each has its own fix:
+
+1. The rows are not lines -- Tesseract's sparse mode returns the three
+   cells of a row as three separate lines, so the row is rebuilt from the
+   WORD POSITIONS (the TSV's x and y).
+2. The small numerals lose their decimal point ("1.47" comes back as
+   "147"), so a CONSTRAINT repairs it: the column holds rate-of-change
+   figures in the range -15..+15, so a three-digit token cannot be 147.
+3. The SIGN is lost, and it does not have to be read at all -- the table
+   renders positives GREEN and negatives RED, so the sign is read from the
+   PIXELS. That recovered three rows in the sample frame whose OCR had
+   lost the sign entirely ("124%" was really -1.24%).
+4. THE THREE NUMERIC COLUMNS SIT NEXT TO EACH OTHER, and reading one
+   band as a whole column read the WRONG one. Measured off a 1920x1080
+   frame, the columns are:
+
+     x   4.. 21  flag icons
+     x  28..124  the sector NAME
+     x 148..175  "1 Mo ROC"
+     x 254..294  "% Change"            (red / green, ends with a %)
+     x 326..355  "Rate of Change (1yr)" (white, two decimals)
+     x 370..395  "Price % Change (3mo)"
+
+   The "% Change" band used to start at x=280, which is INSIDE the
+   text (254..294), so the day figure was thrown away and the ONE YEAR
+   figure was read in its place -- stored under the name `pct_change`,
+   which made the corpus's headline number the wrong column. The three
+   columns are now read as three separate STRIPS, so they cannot be
+   confused, and the one-year rate of change has its own column,
+   `roc_1yr`. The one-year glyph is WHITE, so its sign is read from the
+   strip's own text (the minus is a one-pixel dash the wide panel read
+   loses), not from a colour band.
+5. The company words come out in TESSERACT'S ORDER, which is the
+   vertical centre, not the reading order. "Communication Services"
+   arrived as "Se Communication", matched nothing, and the row was
+   DROPPED from whole posts. The words are now sorted by their x
+   position before the name is matched.
+6. The crop was too NARROW. The panel was 345 px wide and the one-year
+   column ends at x=355, so the last digit of every one-year value was
+   cut off ("10.30" read back as "10."). The panel is now 370 px.
+
+   The table is also ZOOMED differently from post to post -- one post
+   writes its "% Change" to x=297 -- so a fixed narrow strip can still
+   lose a digit. That is why the strip reading is MERGED with the panel
+   reading: the complete one wins (`mergeReadings`).
+7. THE TABLE IS A SCREEN SHARE, SO IT IS NOT LAID OUT THE SAME WAY IN EVERY
+   POST, and the columns cannot be hard-coded. Measured over the twenty four
+   posts of the corpus: the Company column is a different width in every post
+   (the sector names are truncated to fit it -- "Communication Se" in one post,
+   "Communication Services" in the next); the number of checkmark columns
+   between the 1 Mo ROC and the % Change changes (two of them in the 2024 posts,
+   four of them in the 2025 posts); and in ELEVEN of the twenty four posts
+   another widget of the screen share covers the right hand side of the table,
+   so the one-year column is partly or wholly hidden.
+
+   So the columns are FOUND in every frame. The vertical RULES of the grid are
+   detected (`src/asym/sectorGeometry.js`): a column of pixels that a quarter of
+   the table's rows cross is a rule, and the rules cut the panel into CELLS. The
+   cells are then matched to the columns by what is IN them -- the first cell
+   that holds sector names is the name column, the cell right after it is the
+   1 Mo ROC, the first cell to the right that holds a percent sign is the
+   % Change, and the cell right after THAT is the one-year column. A post with
+   two checkmark columns and a post with four are read the same way.
+
+   The hard-coded bounds did not merely MISS the columns on those posts: they
+   read the WRONG COLUMN. On one post the % Change sat at x 289..328 while the
+   parser was looking at 240..300, so it read the left half of the day figure
+   and the right half of the one-year figure and stored them together. The
+   hard-coded bounds (`COLUMN_BOUNDS`, `COLUMN_STRIPS`) are now only the
+   FALLBACK, used when the rules cannot be found.
+8. WHERE THE WIDGET COVERS THE TABLE, WHAT IS LEFT OF A NUMBER IS A FRAGMENT.
+   "34.71" covered on the right reads "34", and read as a number that is 0.34.
+   The column always shows two decimals, so a bare integer of one or two digits
+   there is the left-hand part of a number, not a reading, and it is refused.
+
+   A LOST decimal point is a different thing: it leaves three or four digits
+   ("197" for -1.97) and those are still read. But a digit string whose integer
+   part has a LEADING ZERO ("03571", from "-0.51%" misread) is not a number that
+   lost its point at all, and the repair now refuses it too.
+
+The article uses short GICS names (Financials, Materials, Consumer
+Discretionary, Consumer Staples) while the table uses the long ones
+(Financial Services, Basic Materials, Consumer Cyclical, Consumer
+Defensive). `articleSector()` is the mapping that lets the two be
+compared.
+
+Measured over the free corpus (24 posts, 108 article-named sectors):
+
+  primary picks consistent with the table's ranking     82%   (32 of 39)
+  secondary picks consistent with the table's ranking   59%   (20 of 34)
+  avoid picks consistent with the table's ranking       93%   (26 of 28)
+  turnaround picks                                     --    (7, not classified)
+
+So the author is, on the whole, reading the table.
+
+**THE MARKET MONITOR SHEET, AND THE SECTOR CALLS AGAINST ETFs.**
+Two more datasets hang off the free posts.
+
+*The Market Monitor sheet.* Every free Market Pulse links a Google Sheet
+whose first tab is a daily breadth / momentum tape: for each date, and for
+each index and each of the eleven sectors, the author records 10-day new
+highs, 10-day new lows, and names up / down. That is the MEASUREMENT
+behind the written "Breadth: Positive" reading, the way the TradeStation
+table is the measurement behind the sector picks.
+
+The sheet is PUBLIC -- Google's CSV export needs no login -- so the fetch is
+one GET and a parse. What is hard is the layout: three header rows, groups
+of four columns starting at different offsets, and a date that is "M/D"
+with no year. The year comes from the post, and a December-to-January
+wrap decrements it.
+
+  npm run asym:sheets      # 30 sheets, 8,947 day rows
+
+*The sector calls against ETFs.* The report names sectors to focus on and
+sectors to avoid. That is a CALL, and it can be scored:
+
+  npm run asym:sectors:outcomes
+
+A primary or secondary pick is a bullish call on its SPDR sector ETF
+(XLK, XLV, XLE, ...); an avoid pick is a bearish call. Entry is the close
+on the post date, horizons +7 and +30 days, and the baseline is the same
+call on SPY.
+
+Measured over 101 sector claims:
+
+  overall    1w hit 51.5%   same-call-on-SPY 62.4%   excess -0.4pp
+  primary    1w hit 59.0%   same-call-on-SPY 71.8%   excess +0.1pp
+  secondary  1w hit 52.9%   same-call-on-SPY 73.5%   excess -1.0pp
+  avoid      1w hit 39.3%   same-call-on-SPY 35.7%   excess -0.3pp
+
+So the sector picks do NOT beat the index either: the excess is negative
+or indistinguishable from zero at every tier. The author picks sectors
+that are ALREADY strong (72% consistent with the table's ranking), and
+that is not the same as picking sectors that then go up.
+
+### What the code review found (2026-11-12)
+
+A second pass over the whole AsymTrading path found three real bugs and
+one precision problem. All four are fixed.
+
+1. **THE STALL DETECTOR NEVER FIRED.** `tools/downloadAsymVideos.js`
+   armed a timeout and then "refreshed" it on every chunk -- but
+   `refresh()` on a timer that has been cleared does not restart it, so
+   the timer was dead after the first chunk and a hung connection could
+   not be detected at all. It is now a CLOCK: the time of the last chunk
+   is remembered, and a periodic tick aborts the request when nothing has
+   arrived for 90 s.
+
+2. **A FOUR-DIGIT NUMBER WAS DROPPED INSTEAD OF REPAIRED.** The columns
+   show TWO decimals, so a lost decimal point means the point goes two
+   digits from the right: "1127" is 11.27. The old rule only handled three
+   digits, so any value of 10.00 or more whose point was lost came back
+   as NULL and the ROW WAS DROPPED -- and the sample frame has an 11.27 in
+   it. The repair also keeps the SIGN now, because a lost decimal point
+   is not the only thing the OCR loses.
+
+3. **THE YEAR WRAP ONLY FIRED FOR JANUARY-TO-DECEMBER.** The Market
+   Monitor sheet is newest-first, so walking it walks backwards in time
+   and a month that goes UP means a year boundary. The old condition
+   ("the previous month was January or February and this one is
+   November or December") covers the common case but misses a sheet
+   whose oldest data is in December without passing January. Measured on
+   the 30 fetched sheets: 34 year-boundary crossings, 0 mis-dated either
+   way -- so this one was LATENT, not corrupting.
+
+4. **THE SECTOR TABLE WAS READ FROM WHICHEVER FRAME CAME FIRST, AND
+   THAT IS FRAGILE.** The table is on screen while the market moves, and
+   the OCR of a twelve-pixel number is fragile: measured, the same
+   Healthcare row reads "11.27" in one frame and "\u00a2127)" in another,
+   which the repair turned into 1.27. The readings of a sector are now
+   reduced by MEDIAN across the frames that show it, so one bad frame
+   cannot move the value. Measured effect on the corpus: the Healthcare
+   reading is 11.27 rather than 1.27, the rows with no rate of change
+   fell from 6 to 4, and the article-vs-table consistency rose from
+   72%/86% to 79%/89%. (Those figures were measured before the column
+   geometry was fixed; the CURRENT figures are 82%/93% -- see item 7 above.)
+
+Also fixed: an empty `if` block in the sheet fetcher, and the reduction
+logic moved out of the tool into `src/asym/sectorTable.js`, where it can
+be tested.
+
+**THE REPORT LEADS WITH THE WRITTEN READINGS.** The dashboard shows the
+market backdrop, the index trend, the breadth and momentum readings, the
+sectors and the Bottom Line per post, because those are why the source is
+worth reading -- and it shows the COVERAGE beside them, because the
+publication is mostly paywalled and a dashboard showing only the free
+posts without saying so would read as the whole publication.
+
+---
+
+## The Benzinga source — a NEWS channel, and mostly not trade calls (2026-11-12)
+
+> **The 2026-11-13 update below supersedes two claims in this section.** The
+> pilot's 35 transcripts and the 12,786-row catalog are a **surviving
+> sample**: the transcript campaign has since taken the corpus to **845
+> transcripts**, and the scale exposed two defect classes the pilot could
+> not see — **the people the hosts address** and **the fragments of
+> longer words**. See § *The corpus is 24× bigger, and the false
+> positives were in the people*.
+
+`https://www.youtube.com/@Benzinga` — the project's **seventh** source and
+the third transcript source. English, like T3Live; a YouTube channel, like
+T3Live and Sevcik. It reuses that pipeline end to end.
+
+**THE CHANNEL IS A NEWS CHANNEL, AND THAT IS THE WHOLE PROBLEM.** Measured
+on the full listing (12,786 catalogued videos, 2026-11-12):
+
+| show | count | handled as |
+|---|---|---|
+| PreMarket Playbook / PreMarket Prep | ~2,400 | extract (the reason the source was added) |
+| The Drift (Adam Mesh & Tom Sosnoff) | 21 | extract (options) |
+| long-form commentary | ~3,600 | extract, scored at one month |
+| setup clips | ~2,100 | extract |
+| futures / market-update clips | ~770 | **readings only** — no ticker signals |
+| earnings-call rebroadcasts | ~460 | quarantined (an event calendar, not calls) |
+| Fed press conferences | ~68 | quarantined |
+| CEO interviews, education, product pieces, Shorts | ~4,000 | quarantined |
+
+So the content filter is an **ALLOW-LIST** (`src/benzinga/contentFilter.js`).
+T3Live's deny-list would let the earnings calls through, and an earnings
+call is management saying what THEIR business will do.
+
+**THE THREE RULES THIS SOURCE NEEDS, and all three were measured.**
+
+1. **ATTRIBUTION.** "Wedbush's Dan Ives remains very bullish on Tesla" is not
+   Benzinga's call. The shared extractor published it as a bullish TSLA at
+   confidence 0.83 (2026-11-11). Such a claim is now tagged `reported`
+   (`src/benzinga/attribution.js`), kept with its evidence, and left out of
+   the scoring — the same treatment a retrospective claim gets.
+2. **OPTIONS DIRECTION.** "I'm going to sell some puts" is a **bullish**
+   position. The shared extractor reads the verb, so it published a bearish
+   CRWV. The Drift is an options show, so this is its normal vocabulary
+   (`src/benzinga/options.js`).
+3. **SECTIONS.** A recap is history, a preview is a prediction, and a
+   sponsor's segment is neither (`src/benzinga/sections.js`).
+
+**THE CEILING IS THE SPOKEN TICKERS, and no vocabulary work will raise it.**
+Measured over the pilot corpus: a Drift episode has ~4,000 segments and only
+**2.5 %** of them name a ticker. The host says "I'm buying here" and the
+ticker is on the screen, not in the words. The 2014–2020 PreMarket Prep era
+is worse: those hosts name companies in words ("Neri", "Apple"), so the
+tickers come from the confirmed-names table and the older episodes read very
+sparsely. `npm run benzinga:survey` prints the measurement per show.
+
+**THE PILOT (35 videos, 2014 → 2026, dated and transcribed).**
+
+| | |
+|---|---|
+| transcripts from YouTube captions | **34 of 35** (one caption-less) |
+| signals | 81 from 29 videos, 32 tickers |
+| market and sector readings | 135 from 36 videos |
+| scored claims | 42 — 1w hit 50.0 %, same-call-on-SPY 58.3 %, excess −0.27 % [−2.51 %, +1.98 %] |
+
+**THE READINGS HAVE THEIR OWN TABLE.** `trade_signals` is a ticker table, so
+"the Nasdaq is going to gap up" and "semis are the leadership" have no
+home in it. `market_readings` holds them, one row per (video, subject,
+stance), each with the sentence it was read from. A reading's stance is the
+direction word **near** the subject, because a caption is a rolling fragment
+and a direction word anywhere in it does not belong to a subject anywhere in
+it (`STANCE_WINDOW_CHARS`).
+
+### The corpus is 24× bigger, and the false positives were in the people
+
+**THE PILOT'S 35 TRANSCRIPTS WERE A SURVIVING SAMPLE.** The transcript
+campaign of 2026-11-13 took the Benzinga corpus to **845 transcripts**
+(1,080 videos fetched, 99 % of them with captions), and the scale exposed
+two defect classes the pilot could not see at all.
+
+**THE PEOPLE THE HOSTS ADDRESS.** Benzinga's show brings its analysts on
+by name, and **the names arrive as INITIALS** — and the symbol path
+publishes on capitals alone, so every two-letter ticker in the lexicon is
+a candidate for them:
+
+| token | what the corpus says | signals |
+|---|---|---|
+| `AB` | "bring AB in here", "AB you're looking sharp" | 64 |
+| `CC` | "we've had CC legator on this show a lot of times" | 16 |
+| `SE` | "sure we're gonna I fine SE on here later too" | 7 |
+| `BL` | "of my bearish BL process for the market as a whole" | 4 |
+| `AG` | "resistance right now for our AG" | 3 |
+| `BR` | "we're gonna BR Kenny on here too" — which is "**bring** Kenny" | 3 |
+| `RC` | "RC the AL Royal Caribbean" — the ticker is RCL | 2 |
+| `TP` | "TP and I sat down sometime in 2003 and decided that we would write a book" | 1 |
+
+**100 published holdings that are PEOPLE.** `CC` and `AG` are also real
+tickers, which is exactly why the list belongs to the **source** and not
+to the lexicon: `BENZINGA_PEOPLE_AND_FRAGMENTS` in
+`src/benzinga/symbols.js`.
+
+**THE FRAGMENTS OF LONGER WORDS.** An auto-caption cuts a word, and the
+cut lands on a ticker:
+
+| token | what the corpus says | signals |
+|---|---|---|
+| `PS` | "the S PS in to the upside" — that is "**the S&P**" | 38 |
+| `SM` | "it SM it for you, it Smooths it for you too" | 2 |
+| `MF` | "morphic ticker MF which is skyrocketing" | 2 |
+| `GD` | "if GD real simple, if GDP growth is 3 %" | 1 |
+| `ET` | "good liquid ET uh uh ETF for AI" — "ETF", split | 1 |
+| `OR` | "you go into the iwm OR into value stocks" — the word "or" | 1 |
+| `VC` | "sometimes they were the VC money" — "venture capital" | 1 |
+
+**47 more.** `DT`, `GL` and `CV` were left alone: one signal each, and
+their evidence is too thin to call — "GL" reads as a real ticker the host
+bought, and "DT" may be Dynatrace.
+
+**THE LESSON IS ABOUT SCALE, NOT ABOUT THE RULE.** Every one of these
+was invisible in the pilot, because the pilot's 35 transcripts did not
+contain enough of the show to see a name addressed thirty times. **A
+stoplist built from a small sample is a list of the false positives that
+sample happened to contain.** The list is per-source and measured, and it
+grows with the corpus.
+
+**THE BROKER'S OWN TICKER WAS ALREADY HANDLED — BUT TWO THINGS WERE NOT.**
+
+"Citigroup upgrading Pinterest to buy" publishes `C` — the broker's
+ticker, not the subject's — and the attribution rule tags it `reported`,
+so it is excluded from the scoring (`src/benzinga/attribution.js`).
+That part was right.
+
+**1. "JP MORGAN" IS JPMORGAN, NOT MORGAN STANLEY.** The name finder
+cannot form the pair, because its token pattern starts with a capital
+followed by a lower-case letter and **"JP" is all capitals** — so
+"Morgan" alone reaches the confirmed row `morgan -> MS`. Measured:
+**42 of the 106 MS signals name "JP Morgan"**, and 20 of them were
+published as calls on Morgan Stanley. The fix remaps by the **name in
+the window**, not by the token, so it is right even when the ticker was
+mis-resolved.
+
+**2. THE BROKER ACTION VERBS CAME IN EVERY TENSE BUT ONE.** The cue
+matched "raised", "cut", "downgraded" — and the corpus writes the
+present: "**raises** price Target", "**maintains** equal weight on
+FedEx". Measured: 26 `forward` MS signals became 3.
+
+**THE BROKER'S NAME IS SPELLED THE WAY THE ASR HEARD IT.** "Morgan
+St Ley", "Morgan Stan", "a wild Fargo" — so the broker check is a list
+of renderings per broker, not one spelling (`BROKER_SPELLINGS`).
+
+Pinned by `test/benzingaSignalRules.test.js` — the broker check, the
+verb tenses, and the fact that the host's own call is still the host's
+own call.
+
+### AND THE CORPUS, SCORED AT LAST (2026-11-13)
+
+The pilot's numbers were 42 claims and 94 readings, because the pilot
+had 35 transcripts. The transcript campaign finished at **1,056 of 1,080
+videos transcribed** (2 with no captions, 0 failures, and it stopped on a
+rate limit, which is the rule), and the corpus is now **1,104
+transcripts**:
+
+| | claims | 1w hit | same call on SPY | excess |
+|---|---|---|---|---|
+| the signals | **1,426** | 51.9 % | 55.3 % | **+0.12 %** [−0.52 %, +0.76 %] |
+| the readings | **2,779** | 50.6 % | 52.9 % | **−0.04 %** [−0.12 %, +0.05 %] |
+
+**Neither is distinguishable from zero.** The source does not beat the
+index, and the readings — the "market recap / sector analysis" the
+channel exists for — are the *flatter* of the two. That is the honest
+result, and it is the same result Sevcik and T3Live give.
+
+**AND THAT IS AFTER THE FALSE POSITIVES WERE REMOVED.** The numbers
+above are on the corpus with the 147 people-and-fragments removed and
+the broker's tickers tagged, so they are the score of what the source
+*actually* says — not of the noise it said around it.
+
+**THE READINGS' PRECISION BAR, MEASURED.** A hand-labelled sample of 40
+published readings (30 correct, 10 wrong) gives **75 %**, and the four
+candidate stance rules measure out as:
+
+| rule | sample precision | corpus readings |
+|---|---|---|
+| the shipped rule | 75.0 % | 4,371 |
+| **`same-clause`** ← the default | **81.8 %** | **4,229** (−3 %) |
+| `after-only` | 90.9 % | 2,985 (−32 %) |
+| `same-clause+after` | 95.2 % | 2,908 (−33 %) |
+
+**THE DEFAULT IS `same-clause`** (the user's decision, 2026-11-14): the
+rule that publishes 81.8 % clean readings for a 3 % loss. The
+aggressive rules stay available and measured, and `shipped` stays
+available for comparison. `--stance-rule` selects one.
+
+**Why not "after the subject":** the subject is often the **object** of
+the verb ("rates crashed *the market*", "*Treasury* rising"), so its
+predicate comes before it. What separates a claim from a stray direction
+word is the clause, not the order.
+
+Pinned by `test/benzingaSignalRules.test.js` — the people, the
+fragments, and the fact that the list does not take a real holding with
+it.
+
+**FOUR DEFECTS FIXED ALONG THE WAY, and each one was a live defect.**
+- **The OCR downloaders were not channel-scoped.** The worker's queue took
+  30 of 30 T3Live rows, and the 720p batcher took 16 of 30 T3Live/Sevcik
+  rows. Both now filter on `OCR_CHANNELS` (`src/video/videoStatus.js`,
+  mirrored in `tools/whiteboard_worker.py`).
+- **An unregistered channel got SEVCIK's settings** — the Czech caption
+  order and the Czech Deepgram model. The wrong model on English audio does
+  not produce a worse transcript; it produces no transcript. An unknown
+  channel is now an error.
+- **`catalog` labelled an unrecognised YouTube URL `revere`.** A playlist
+  URL carries no handle, so a Benzinga playlist would have been catalogued
+  as Revere — and then downloaded by the OCR pipeline.
+- **The extractors were copies, and the copies drifted.** The Sevcik copy
+  replaced a video's rows only when the new run found signals, so a video
+  whose calls went to zero kept its OLD rows from an OLD parser version:
+  **8 rows from parser versions 3 and 4 survived on 4 videos**, and they
+  were still aggregated and scored. There is now ONE runner
+  (`src/transcript/extractRunner.js`) and it always replaces — including
+  with zero rows.
+
+**ONE BUG OF MY OWN, recorded because it is a trap.** The channel's default
+subtitle languages are a STRING ("en", "cs-orig,en"). Assigning it to the
+list without splitting made the caption loop walk its CHARACTERS — 'e' and
+'n' — so every video came back "no captions", and ten videos were written to
+the caption-less blacklist, which is permanent. The blacklist was deleted
+and the videos refetched. Pinned by `test/fetchChannelDefaults.test.js`.
+
+**THE RAW CAPTION VTT IS AN INTERMEDIATE, AND ONLY BENZINGA'S ARE
+UNTRACKED.** yt-dlp writes the VTT, the tool reads it once, the normaliser
+turns it into the JSON, and nothing downstream ever opens it. The JSON is
+the artifact.
+
+The VTTs are tracked for Sevcik and T3Live, and that is deliberate: they are
+YouTube's OWN caption tracks, so the source text is recoverable from the
+repository alone (§ *The transcripts are versioned*). Benzinga's corpus is
+large enough that tracking its VTTs would add ~360 MB of dead weight, so
+**its VTTs carry the channel in the name** —
+`data/video_pipeline/transcripts/<id>.captions.benzinga.en.vtt` — and the
+`.gitignore` rule names that one channel:
+
+```
+data/video_pipeline/transcripts/*.captions.benzinga.*.vtt
+```
+
+A rule that matched EVERY VTT would have changed the other two channels'
+policy too, and the channel has to be in the NAME for the rule to be narrow.
+The JSON's name is unchanged (`<id>.json`) — every tool looks it up that
+way. Pinned by `test/fetchChannelDefaults.test.js`.
+
+**A RE-FETCH IS NOT THE SAME FILE.** Measured 2026-11-12, the same T3Live
+video fetched twice: the caption track changed from 404 to 458 segments and
+the text changed with it ("I am Sammy Abasad" became "I am Sami Abu Sa'd").
+YouTube regenerates its auto-captions, so the VTT a re-fetch produces is
+**not** the VTT the tracked JSON was built from.
+
+So the tracked JSON is the authoritative record of what the pipeline read —
+not a convenience copy of something reproducible. That is why the VTTs are
+tracked for Sevcik and T3Live (§ *The transcripts are versioned*: the
+source text is recoverable from the repository alone), and why Benzinga's
+are not: a second copy of a caption track that no longer exists in that
+form, and that could differ from the JSON's source later, is dead weight
+rather than provenance.
