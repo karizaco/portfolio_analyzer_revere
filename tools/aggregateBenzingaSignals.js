@@ -108,6 +108,14 @@ async function main() {
   const payload = {
     generated_at: new Date().toISOString(),
     channel: BENZINGA_CHANNEL,
+    source: {
+      id: 'benzinga',
+      label: 'Benzinga',
+      updatedAt: new Date().toISOString(),
+      description: 'Video coverage, spoken market commentary, ticker calls, and source evidence.',
+      capabilities: ['video', 'captions', 'transcripts', 'signals', 'market readings'],
+      accent: '#a6492d',
+    },
     signal_count: signals.length,
     video_count: videos.length,
     reading_count: readings.length,
@@ -117,6 +125,7 @@ async function main() {
     daily,
     tickers,
     readings,
+    coverage: buildSourceCoverage(videos, signals, readings),
   };
 
   fs.writeFileSync(
@@ -153,6 +162,20 @@ async function main() {
       + `${videos.length} video(s), ${tickers.length} ticker(s)`);
     console.log(`[benzinga-aggregate] by show: ${Object.entries(byShow).map(([show, n]) => `${show}=${n}`).join(' ')}`);
   }
+}
+
+function buildSourceCoverage(videos, signals, readings) {
+  const eligibleShows = new Set(['premarket_playbook', 'the_drift', 'stock_in_play', 'explainer']);
+  const eligible = videos.filter((video) => eligibleShows.has(video.show));
+  const transcribed = eligible.filter((video) => Boolean(video.provider)).length;
+  return [
+    { stage: 'catalogued', count: videos.length, denominator: videos.length, status: 'complete' },
+    { stage: 'call-bearing shows', count: eligible.length, denominator: videos.length, status: 'complete', reason: 'Show taxonomy applied' },
+    { stage: 'transcribed', count: transcribed, denominator: eligible.length, status: transcribed ? 'partial' : 'not_started' },
+    { stage: 'signals extracted', count: signals.length, denominator: transcribed, status: signals.length ? 'partial' : 'not_started' },
+    { stage: 'market readings', count: readings.length, denominator: transcribed, status: readings.length ? 'partial' : 'not_started' },
+    { stage: 'outcomes scored', count: null, denominator: signals.length, status: 'unknown', reason: 'Outcome scoring is an optional separate run' },
+  ];
 }
 
 /**

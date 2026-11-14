@@ -100,6 +100,8 @@ const SIGNAL_SHOWS = [
   'explainer',
 ];
 
+const { SOURCE_SHELL_CSS, renderCoverage, renderSourceHeader } = require('./sourceDashboardShell');
+
 /**
  * @param {string} show
  * @returns {string}
@@ -339,19 +341,29 @@ const FILTER_SCRIPT = `
  * @returns {string}
  */
 function renderBenzingaReport(payload, outcomes = null) {
+  const source = payload.source || {
+    id: 'benzinga', label: 'Benzinga', updatedAt: payload.generated_at,
+    description: 'Video coverage, spoken market commentary, ticker calls, and source evidence.',
+    capabilities: ['video', 'captions', 'transcripts', 'signals', 'market readings'],
+    accent: '#a6492d',
+  };
   return `<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><title>Benzinga signals</title>
-<style>${CSS}</style></head><body>
-<h1>Benzinga — spoken calls, market readings and reported opinions</h1>
+<style>${CSS}\n${SOURCE_SHELL_CSS}</style></head><body style="--source-accent:#a6492d">
+${renderSourceHeader(source)}
+<nav class="source-nav" aria-label="Source dashboard views"><a href="#activity">Activity</a><a href="#signals">Signals</a><a href="#readings">Readings</a><a href="#coverage">Coverage</a></nav>
+<div id="activity" class="source-section">
 ${renderHeadline(payload)}
 <h2>Do the calls beat the index?</h2>
 ${renderOutcomes(outcomes)}
 <h2>Most-mentioned names</h2>
 ${renderTickers(payload.tickers)}
-<h2>What the shows said about the market and the sectors</h2>
+<h2 id="readings">What the shows said about the market and the sectors</h2>
 ${renderReadings(payload.readings)}
-<h2>Every signal</h2>
+<h2 id="signals">Every signal</h2>
 ${renderSignals(payload.signals)}
+${renderCoverage(payload.coverage || [])}
+</div>
 <script>${FILTER_SCRIPT}</script>
 </body></html>`;
 }

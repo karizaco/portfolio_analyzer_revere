@@ -41,21 +41,32 @@ const ROOT = path.resolve(__dirname, '..');
 const DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
 
 /** The parser version written onto every reading row. */
-const PARSER_VERSION = 'benzinga-readings-1';
+// The rule changed, so the rows the old rule wrote are not comparable
+// with the rows this one writes.
+const PARSER_VERSION = 'benzinga-readings-2';
 
 /**
  * THE STANCE RULES, by name. Measured against a hand-labelled sample of
- * 40 readings on 2026-11-13 (29 correct, 11 wrong):
+ * 40 readings on 2026-11-13 (30 correct, 10 wrong after the vocabulary
+ * gained "up 40 points"):
  *
- *   shipped               40 readings survive, 29 right = 72.5 % precision
- *   same-clause           33 survive, 26 right = 78.8 %
- *   after-only            21 survive, 19 right = 90.5 %
- *   same-clause+after     20 survive, 19 right = 95.0 %
+ *   shipped               40 readings survive, 30 right = 75.0 % precision
+ *   same-clause           33 survive, 27 right = 81.8 %
+ *   after-only            22 survive, 20 right = 90.9 %
+ *   same-clause+after     21 survive, 20 right = 95.2 %
  *
  * The choice is not "which rule is best" but how many readings to keep
  * against how clean they are. `same-clause` drops 3 correct readings to
- * remove 4 wrong ones; `after-only` drops 10 correct to remove 9.
+ * remove 4 wrong ones; `after-only` drops 10 correct to remove 8.
+ *
+ * THE DEFAULT IS `same-clause` (the user's decision, 2026-11-14): the
+ * rule that publishes 81.8 % clean readings for a 3 % loss. The
+ * aggressive rules stay available -- they are measured, so they can be
+ * re-measured -- and `shipped` stays available so the old behaviour
+ * can be compared.
  */
+const DEFAULT_STANCE_RULE = 'same-clause';
+
 const STANCE_RULES = {
   shipped: {},
   'same-clause': { sameClause: true },
@@ -77,12 +88,17 @@ const options = {
   channel: readFlag(argv, '--channel') || BENZINGA_CHANNEL,
   json: argv.includes('--json'),
   dryRun: argv.includes('--dry-run'),
-  stanceRule: readFlag(argv, '--stance-rule') || 'shipped',
+  stanceRule: readFlag(argv, '--stance-rule') || DEFAULT_STANCE_RULE,
 };
 
 
 // The stance rule, resolved once the options exist.
-const stanceOptions = STANCE_RULES[options.stanceRule] || STANCE_RULES.shipped;
+if (!STANCE_RULES[options.stanceRule]) {
+  console.error(`[benzinga-readings] unknown --stance-rule "${options.stanceRule}". `
+    + `The rules are: ${Object.keys(STANCE_RULES).join(', ')}.`);
+  process.exit(2);
+}
+const stanceOptions = STANCE_RULES[options.stanceRule];
 /**
  * Replace the readings of one video.
  *

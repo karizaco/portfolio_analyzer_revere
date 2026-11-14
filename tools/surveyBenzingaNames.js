@@ -58,6 +58,11 @@ const argv = process.argv.slice(2);
 const options = {
   json: argv.includes('--json'),
   candidatesOnly: argv.includes('--candidates-only'),
+  // The shortlist: the candidates a human should READ, each with the
+  // sentence it was said in.
+  review: argv.includes('--review'),
+  // Only the candidates a proposed ticker was found for.
+  proposedOnly: argv.includes('--proposed-only'),
   limit: Number(readFlag(argv, '--limit')) || 0,
   writeCandidates: readFlag(argv, '--write-candidates') || '',
   // Only the era, when the era is what is being surveyed.
@@ -90,6 +95,28 @@ function contextsFor(text, word, limit = 2) {
   }
   return out;
 }
+
+/**
+ * The SEC list's registrant for a ticker, so a candidate can be judged
+ * against the company it would name.
+ *
+ * @param {string} ticker
+ * @returns {string}
+ */
+function registrantFor(ticker) {
+  const file = path.join(ROOT, 'config', 'ticker_company_names.csv');
+  for (const line of fs.readFileSync(file, 'utf8').split(/\r?\n/)) {
+    const match = /^([^,]+),("(?:[^"]*)"|[^,]*),(.*)$/.exec(line);
+    if (match && match[1].trim() === ticker) return match[2].replace(/^"|"$/g, '').trim();
+  }
+  return '';
+}
+
+/**
+ * A registrant that is a shell or a structured product is never the
+ * company a trading show means when it says a name.
+ */
+const SHELL_REGISTRANT = /trust|series|abs |backed|physical|bdc|fund|etf|preferred|notes|debenture|structured|certificate|depositary|acquisition|group securities/i;
 
 function main() {
   if (!fs.existsSync(DB_PATH)) {
@@ -203,6 +230,36 @@ function main() {
     resolved: resolvedRows,
     candidates: candidateRows,
   };
+
+  if (options.review) {
+    // THE SHORTLIST A HUMAN READS. A candidate is worth reading when it
+    // PROPOSES a ticker -- a capitalised word with no proposal is just a
+    // word -- and when the proposed registrant's name STARTS with the
+    // spoken word, which is what separates a company from a coincidence
+    // ("Coreweave" -> CoreWeave, Inc. from "Well" -> American Well Corp).
+    const shortlist = candidateRows
+      .filter((row) => row.candidate)
+      .map((row) => {
+        const registrant = registrantFor(row.candidate);
+        const head = registrant.toLowerCase().replace(/^the\s+/, '')
+          .startsWith(row.spoken.toLowerCase());
+        return { ...row, registrant, head, shell: SHELL_REGISTRANT.test(registrant) };
+      })
+      .filter((row) => row.head && !row.shell && row.videos >= 2)
+      .sort((a, b) => b.videos - a.videos);
+
+    console.log(`[benzinga-names] ${shortlist.length} candidate(s) worth reading `
+      + `(a proposed ticker, the registrant's name starts with the spoken word, `
+      + `the registrant is not a shell, said in 2+ videos)`);
+    for (const row of shortlist) {
+      console.log(`\n  "${row.spoken}" -> ${row.candidate}   (${row.count}x in ${row.videos} videos)`);
+      console.log(`    registrant: ${row.registrant}`);
+      for (const context of String(row.contexts).split(' || ').filter(Boolean).slice(0, 2)) {
+        console.log(`    said:       ${context.slice(0, 150)}`);
+      }
+    }
+    return;
+  }
 
   if (options.json) {
     console.log(JSON.stringify(payload, null, 2));
