@@ -459,6 +459,61 @@ npm run asym:aggregate
 npm run asym:outcomes
 ```
 
+## The O'Connell source (measured 2026-11-14)
+
+Andrew O'Connell's **paid Substack newsletter**, read as **documents**. It
+is the project's second non-video source, and the first whose corpus is
+neither re-fetchable nor inside the repository.
+
+| | count |
+|---|---|
+| documents in the corpus | **302** (2024-01-08 → 2026-11-12) |
+| position-log screenshots beside them | **144** (137 dates) |
+| documents with a screenshot | 131 |
+| newsletter kinds | 222 trading-day, 56 weekend, 18 special, 3 Knowledge Hub, 2 training, 1 research note |
+| setup headings (across the corpus) | **743**, in 171 tickers, on 253 of the 302 documents |
+
+**The two facts that shaped the design.**
+
+1. **The body text is vector outlines.** These renders draw their prose as
+   filled paths, so the PDF's text layer is an exact index of the
+   STRUCTURE and is silent about the CONTENT. The headings come from the
+   text layer; the theses have to be OCR'd.
+2. **The corpus cannot be re-fetched.** The posts are paid, the PDFs live in
+   `D:\trading_books\andrew_oconnell_Pristine_capital`, and the 20240108
+   issue was printed on **29 March 2025** — a year after it was published.
+
+Point 2 inverts the project's usual rule. For every other source the
+*source text* is in git and the *interpretations* are not. Here the source
+text is on a paid site and the interpretations are the only recoverable
+copy, so **`data/oconnell_records/` and `data/oconnell_manifest.json` are
+tracked** and the PDFs never are.
+
+**What a document yields.** A **SETUP** is what he said he was watching —
+a ticker, a kind of setup, a direction where he states one, and his thesis.
+A **POSITION** is what he held — a **lot**, with its entry date, size, stop,
+risk and R-multiple target. The same ticker is several lots when it was
+bought several times, so a position row is keyed by the lot and not by the
+ticker.
+
+```bash
+npm run oconnell:catalog      # inventory the folder, classify every document
+npm run oconnell:positions    # the lots, out of the position log
+npm run oconnell:setups       # the setups and their theses
+npm run oconnell:outcomes     # the setups that state a direction, scored
+npm run oconnell:aggregate    # the CSVs, the JSON and the dashboard
+```
+
+The stage order is **outcomes → aggregate**, because the aggregate embeds
+the outcome summary.
+
+`docs/oconnell-source-plan.md` has the full plan and the full
+measurements — including the six reading rules that were each found by
+reading a real capture against the sheet (the sign comes from the ink's
+COLOUR, the stars are counted as SHAPES, the columns are matched GLOBALLY
+by name, and the grid's rules are filtered out of the text rather than
+erased, because they are what segments the words).
+
 ## Re-measuring
 
 Everything in § *Current state* comes from four commands:

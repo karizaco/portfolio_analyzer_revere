@@ -307,8 +307,87 @@ const SEVCIK_SETUP_TICKER_COLUMNS = [
   'mentions'
 ];
 
+// The O'Connell source: a paid newsletter read as documents.
+//
+// A SETUP is what the author said he was watching -- a ticker, a kind of
+// setup, a direction where he states one, and his thesis. A POSITION is
+// what he HELD -- a lot, with its entry date, size, stop, risk and
+// R-multiple target. They are different record types and they are
+// written to different files.
+const OCONNELL_SETUP_COLUMNS = [
+  'doc_id',
+  'source_date',
+  'ticker',
+  'setup_label',
+  'setup_kind',
+  'direction',
+  'section',
+  'evidence_page',
+  'evidence_quality',
+  'thesis',
+  'evidence_text'
+];
+
+const OCONNELL_POSITION_COLUMNS = [
+  'doc_id',
+  'source_date',
+  'instrument',
+  'ticker',
+  'contract',
+  'setup_label',
+  'entry_date',
+  'trade_length_days',
+  'cost_basis',
+  'price',
+  'gain_loss_pct',
+  'size_stars',
+  'stop_price',
+  'risk_pct',
+  'r2_price',
+  'sma20',
+  'sma50',
+  'beta',
+  'delta',
+  'change_pct',
+  'underlying_change_pct',
+  'option_change_pct',
+  'exits',
+  'exit_price'
+];
+
+const OCONNELL_DAILY_COLUMNS = [
+  'source_date',
+  'setups',
+  'equity_positions',
+  'option_positions',
+  'distinct_tickers',
+  'cash_pct',
+  'invested_pct',
+  'trend_model',
+  'win_rate_stock_pct',
+  'win_rate_options_pct'
+];
+
+const OCONNELL_TICKER_COLUMNS = [
+  'ticker',
+  'setups',
+  'long_setups',
+  'short_setups',
+  'position_rows',
+  'equity_lots',
+  'option_lots',
+  'first_seen',
+  'last_seen',
+  'average_gain_loss_pct',
+  'average_risk_pct'
+];
+
 module.exports = {
   LOW_CONFIDENCE_THRESHOLD,
+  OCONNELL_DAILY_COLUMNS,
+  OCONNELL_POSITION_COLUMNS,
+  OCONNELL_SETUP_COLUMNS,
+  OCONNELL_TICKER_COLUMNS,
   PREFILTER_PROFILE_DEFAULT,
   PORTFOLIO_ACTION_COLUMNS,
   PERFORMANCE_REVIEW_COLUMNS,

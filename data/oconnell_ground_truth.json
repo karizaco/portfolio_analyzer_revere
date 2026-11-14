@@ -1,0 +1,280 @@
+{
+  "_notes": [
+    "The O'Connell ground truth: the position log read BY HAND off the pixels.",
+    "",
+    "It exists because the reader is right about the STRUCTURE and has to be",
+    "MEASURED about the values. The corpus's position logs are screenshots at",
+    "five different resolutions (1342x437, 1378x527, 1844x578, 1973x765 and",
+    "2085x729), and the same cell is 60 pixels wide in one capture and 90 in",
+    "another. A reader that is right on one resolution can be wrong on another,",
+    "and a number that is not measured is a number nobody can argue with.",
+    "",
+    "Every entry below was read off the image by eye, field by field, and the",
+    "test asserts the reader reproduces it. Where the reader cannot, the",
+    "difference is recorded here rather than hidden.",
+    "",
+    "A LOT is one row of the position log. The same ticker is on several rows",
+    "when it was bought several times, so a lot is keyed by its ticker, its",
+    "contract, its entry date and its cost basis."
+  ],
+  "documents": {
+    "20261112": {
+      "image": "20261112_positions.png",
+      "image_size": [2085, 729],
+      "equities": [
+        {
+          "ticker": "MSOS",
+          "change_pct": -4.41,
+          "cost_basis": 5.0,
+          "price": 3.9,
+          "gain_loss_pct": -22.0,
+          "size_stars": 3,
+          "stop_price": 2.2,
+          "risk_pct": -56.0,
+          "r2_price": 10.6,
+          "sma20": "BELOW",
+          "sma50": "BELOW",
+          "entry_date": "20251201",
+          "trade_length_days": 346
+        },
+        {
+          "ticker": "GTBIF",
+          "change_pct": -5.45,
+          "cost_basis": 8.5,
+          "price": 6.22,
+          "gain_loss_pct": -26.82,
+          "size_stars": 1,
+          "stop_price": 6.99,
+          "risk_pct": -17.76,
+          "r2_price": 11.52,
+          "sma20": "BELOW",
+          "sma50": "BELOW",
+          "entry_date": "20260115",
+          "trade_length_days": 301
+        },
+        {
+          "ticker": "TRLV",
+          "change_pct": -1.16,
+          "cost_basis": 10.26,
+          "price": 11.1,
+          "gain_loss_pct": 8.19,
+          "size_stars": 1,
+          "stop_price": 9.5,
+          "risk_pct": -7.41,
+          "r2_price": 11.78,
+          "sma20": "ABOVE",
+          "sma50": "BELOW",
+          "entry_date": "20261019",
+          "trade_length_days": 24
+        },
+        {
+          "ticker": "GLAS",
+          "change_pct": -32.09,
+          "cost_basis": 1.24,
+          "price": 1.27,
+          "gain_loss_pct": 2.42,
+          "size_stars": 1,
+          "stop_price": 0.0,
+          "risk_pct": -100.0,
+          "r2_price": 3.72,
+          "sma20": "BELOW",
+          "sma50": "BELOW",
+          "entry_date": "20261112",
+          "trade_length_days": 0
+        }
+      ],
+      "options": [
+        {
+          "ticker": "MSOS",
+          "contract": "01/15/27 5 Call (BTO)",
+          "cost_basis": 0.99,
+          "price": 0.17,
+          "gain_loss_pct": -82.83,
+          "size_stars": 3,
+          "beta": 1.63,
+          "delta": 0.27,
+          "setup_label": "Rescheduling",
+          "entry_date": "20251223",
+          "trade_length_days": 324
+        },
+        {
+          "ticker": "MSOS",
+          "contract": "03/19/27 5 Call (BTO)",
+          "cost_basis": 0.95,
+          "price": 0.38,
+          "gain_loss_pct": -60.53,
+          "size_stars": 3,
+          "beta": 1.63,
+          "delta": 0.38,
+          "setup_label": "Rescheduling",
+          "entry_date": "20260916",
+          "trade_length_days": 57
+        },
+        {
+          "ticker": "MSOS",
+          "contract": "03/19/27 4 Call (BTO)",
+          "cost_basis": 0.79,
+          "price": 0.77,
+          "gain_loss_pct": -3.16,
+          "size_stars": 1,
+          "beta": 1.63,
+          "delta": 0.59,
+          "setup_label": "Rescheduling",
+          "entry_date": "20261023",
+          "trade_length_days": 20
+        }
+      ],
+      "snapshot": {
+        "cash_pct": 0,
+        "invested_pct": 100,
+        "max_loss_stock_pct": 8,
+        "max_loss_options_pct": 100,
+        "trend_model": 1,
+        "win_rate_stock_pct": 50,
+        "win_rate_options_pct": 0
+      }
+    },
+    "20250910": {
+      "image": "20250910_positions.webp",
+      "image_size": [1378, 527],
+      "equities": [
+        {
+          "ticker": "MSOS",
+          "change_pct": -1.17,
+          "cost_basis": 3.82,
+          "price": 5.05,
+          "gain_loss_pct": 32.2,
+          "size_stars": 3,
+          "stop_price": 2.2,
+          "risk_pct": -42.41,
+          "r2_price": 7.06,
+          "sma20": "ABOVE",
+          "sma50": "ABOVE",
+          "entry_date": "20251201",
+          "trade_length_days": 282
+        },
+        {
+          "ticker": "MSOS",
+          "change_pct": -1.17,
+          "cost_basis": 3.77,
+          "price": 5.05,
+          "gain_loss_pct": 33.95,
+          "size_stars": 3,
+          "stop_price": 2.2,
+          "risk_pct": -41.64,
+          "r2_price": 6.91,
+          "sma20": "ABOVE",
+          "sma50": "ABOVE",
+          "entry_date": "20251201",
+          "trade_length_days": 282
+        },
+        {
+          "ticker": "MSOS",
+          "change_pct": -1.17,
+          "cost_basis": 5.54,
+          "price": 5.05,
+          "gain_loss_pct": -8.84,
+          "size_stars": 3,
+          "stop_price": 2.2,
+          "risk_pct": -60.29,
+          "r2_price": 12.22,
+          "sma20": "ABOVE",
+          "sma50": "ABOVE",
+          "entry_date": "20251215",
+          "trade_length_days": 268
+        },
+        {
+          "ticker": "GTBIF",
+          "change_pct": 0.64,
+          "cost_basis": 8.5,
+          "price": 7.83,
+          "gain_loss_pct": -7.88,
+          "size_stars": 1,
+          "stop_price": 6.99,
+          "risk_pct": -17.76,
+          "r2_price": 11.52,
+          "sma20": "ABOVE",
+          "sma50": "ABOVE",
+          "entry_date": "20260115",
+          "trade_length_days": 237
+        }
+      ],
+      "options": [
+        {
+          "ticker": "MSOS",
+          "contract": "01/15/27 5 Call (BTO)",
+          "cost_basis": 1.58,
+          "price": 0.93,
+          "gain_loss_pct": -41.46,
+          "size_stars": 1,
+          "beta": 1.49,
+          "delta": 0.61,
+          "setup_label": "Rescheduling",
+          "entry_date": "20251223",
+          "trade_length_days": 260
+        },
+        {
+          "ticker": "MSOS",
+          "contract": "01/15/27 5 Call (BTO)",
+          "cost_basis": 1.12,
+          "price": 0.93,
+          "gain_loss_pct": -17.41,
+          "size_stars": 2,
+          "beta": 1.49,
+          "delta": 0.61,
+          "setup_label": "Rescheduling",
+          "entry_date": "20260527",
+          "trade_length_days": 105
+        },
+        {
+          "ticker": "MSOS",
+          "contract": "01/15/27 5 Call (BTO)",
+          "cost_basis": 0.95,
+          "price": 0.93,
+          "gain_loss_pct": -2.63,
+          "size_stars": 1,
+          "beta": 1.49,
+          "delta": 0.61,
+          "setup_label": "Rescheduling",
+          "entry_date": "20260624",
+          "trade_length_days": 77
+        },
+        {
+          "ticker": "MSOS",
+          "contract": "01/15/27 5 Call (BTO)",
+          "cost_basis": 0.68,
+          "price": 0.93,
+          "gain_loss_pct": 36.03,
+          "size_stars": 1,
+          "beta": 1.49,
+          "delta": 0.61,
+          "setup_label": "Rescheduling",
+          "entry_date": "20260806",
+          "trade_length_days": 34
+        },
+        {
+          "ticker": "MSOS",
+          "contract": "01/15/27 5 Call (BTO)",
+          "cost_basis": 0.82,
+          "price": 0.93,
+          "gain_loss_pct": 12.8,
+          "size_stars": 1,
+          "beta": 1.49,
+          "delta": 0.61,
+          "setup_label": "Rescheduling",
+          "entry_date": "20260814",
+          "trade_length_days": 26
+        }
+      ],
+      "snapshot": {
+        "cash_pct": 0,
+        "invested_pct": 100,
+        "max_loss_stock_pct": 8,
+        "max_loss_options_pct": 100,
+        "trend_model": -3,
+        "win_rate_stock_pct": 50,
+        "win_rate_options_pct": 40
+      }
+    }
+  }
+}

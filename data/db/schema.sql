@@ -823,3 +823,232 @@ CREATE TABLE IF NOT EXISTS market_readings (
 CREATE INDEX IF NOT EXISTS idx_market_readings_video ON market_readings(video_id);
 CREATE INDEX IF NOT EXISTS idx_market_readings_scope ON market_readings(scope, stance);
 CREATE INDEX IF NOT EXISTS idx_market_readings_subject ON market_readings(subject);
+
+-- =====================================================================
+-- The O'Connell source ("Pristine Capital"), read as DOCUMENTS.
+--
+-- WHY IT HAS ITS OWN TABLES AND NOT `videos` / `trade_signals`
+--
+-- `videos` is named for YouTube, and its `status` column is an OCR
+-- pipeline's lifecycle. A newsletter PDF has neither. `trade_signals`
+-- and `market_readings` both carry a NOT NULL `transcript_id` that
+-- REFERENCES video_transcripts(id): they are transcript-shaped, and this
+-- source has no transcript, so reusing them would mean either a foreign
+-- key to nothing or a change to tables four other sources depend on.
+--
+-- So this source gets its own tables, the way AsymTrading does. The id
+-- is namespaced (`oconnell_<source_date>`), so it can never collide.
+--
+-- WHY THE SOURCE DATE AND THE PUBLISH DATE ARE SEPARATE
+--
+-- The filename is the SESSION the issue covers; the newsletter goes out
+-- the morning after. The 20261112 issue was published 2026-11-13 10:20.
+-- The id is the session date, because that is what the corpus is read
+-- by, and the publish timestamp is a separate column.
+-- =====================================================================
+
+-- One row per document in the corpus.
+CREATE TABLE IF NOT EXISTS oconnell_issues (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    -- The namespaced catalog id: `oconnell_20261112`, `oconnell_20260303_2`.
+    doc_id TEXT NOT NULL UNIQUE,
+    -- The session the issue covers, from the filename. YYYYMMDD.
+    source_date TEXT NOT NULL,
+    -- The publish timestamp, from the document's own print footer.
+    publish_date TEXT NOT NULL DEFAULT '',
+    publish_time TEXT NOT NULL DEFAULT '',
+    -- Disambiguates a second document on the same date (`_2` in the name).
+    sequence TEXT NOT NULL DEFAULT '',
+    title TEXT NOT NULL DEFAULT '',
+    series TEXT NOT NULL DEFAULT '',
+    -- market_analysis_watchlist | weekend_watchlist | research_note |
+    -- knowledge_hub | special
+    kind TEXT NOT NULL DEFAULT 'special',
+    -- paid | free | unknown
+    access TEXT NOT NULL DEFAULT 'unknown',
+    page_count INTEGER NOT NULL DEFAULT 0,
+    source_url TEXT NOT NULL DEFAULT '',
+    -- The path RELATIVE to the corpus folder. The corpus lives outside
+    -- this repository, so an absolute path would name one machine's home
+    -- directory in a tracked artifact.
+    pdf_path TEXT NOT NULL DEFAULT '',
+    pdf_bytes INTEGER NOT NULL DEFAULT 0,
+    pdf_checksum TEXT NOT NULL DEFAULT '',
+    -- The standalone position-log screenshot beside the PDF, if there is
+    -- one. It is a higher-resolution copy of the table the PDF embeds.
+    positions_path TEXT NOT NULL DEFAULT '',
+    positions_checksum TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_oconnell_issues_date ON oconnell_issues(source_date);
+CREATE INDEX IF NOT EXISTS idx_oconnell_issues_kind ON oconnell_issues(kind);
+
+-- A SETUP is the author's stated intent: a ticker, a kind of setup, a
+-- direction, and a thesis. It is NOT a position -- it is what he said he
+-- was looking at, whether or not he ever took it.
+--
+-- The evidence rule is the project's standing one: a setup whose prose
+-- could not be read is still a setup, and its `evidence_quality` says
+-- so. A missing holding is better than a wrong one.
+CREATE TABLE IF NOT EXISTS oconnell_setups (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    doc_id TEXT NOT NULL REFERENCES oconnell_issues(doc_id) ON DELETE CASCADE,
+    ticker TEXT NOT NULL,
+    -- The company name he wrote beside the ticker, when he wrote one.
+    company_name TEXT NOT NULL DEFAULT '',
+    -- His own words for the setup: "200D SMA Reclaim", "PEG Continuation".
+    setup_label TEXT NOT NULL DEFAULT '',
+    -- The normalised vocabulary term: peg | relative_strength | breakout |
+    -- base | earnings | russell | cannabis | ...
+    setup_kind TEXT NOT NULL DEFAULT '',
+    -- '' when he did not say a direction.
+    direction TEXT NOT NULL DEFAULT ''
+        CHECK (direction IN ('', 'long', 'short', 'neutral')),
+    -- The thesis, as read from the page.
+    thesis TEXT NOT NULL DEFAULT '',
+    -- The exact text the thesis was read from. NOT NULL, for the same
+    -- reason trade_signals.evidence_text is: a reading you cannot point
+    -- at is a reading you cannot check.
+    evidence_text TEXT NOT NULL DEFAULT '',
+    evidence_page INTEGER NOT NULL DEFAULT 0,
+    -- heading_only | prose
+    evidence_quality TEXT NOT NULL DEFAULT 'heading_only'
+        CHECK (evidence_quality IN ('heading_only', 'prose')),
+    -- The section the setup was found under: "Technical Trading",
+    -- "Watchlist", ...
+    section TEXT NOT NULL DEFAULT '',
+    horizon_text TEXT NOT NULL DEFAULT '',
+    -- forward | retrospective | reported
+    claim_kind TEXT NOT NULL DEFAULT 'forward'
+        CHECK (claim_kind IN ('forward', 'retrospective', 'reported')),
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    -- One row per setup per document. The same setup running across
+    -- documents is a different row on each -- that IS the timeline.
+    UNIQUE(doc_id, ticker, setup_label)
+);
+
+CREATE INDEX IF NOT EXISTS idx_oconnell_setups_doc ON oconnell_setups(doc_id);
+CREATE INDEX IF NOT EXISTS idx_oconnell_setups_ticker ON oconnell_setups(ticker);
+CREATE INDEX IF NOT EXISTS idx_oconnell_setups_kind ON oconnell_setups(setup_kind);
+
+-- A POSITION is what he actually held. It is a LOT, not a ticker: the
+-- same ticker appears on several rows of the position log with different
+-- cost basis and entry date, and those are different lots. Measured on
+-- 20250910: MSOS is on four rows of the equities table.
+--
+-- So the key carries the lot, not the ticker.
+CREATE TABLE IF NOT EXISTS oconnell_positions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    doc_id TEXT NOT NULL REFERENCES oconnell_issues(doc_id) ON DELETE CASCADE,
+    -- equity | option
+    instrument TEXT NOT NULL DEFAULT 'equity'
+        CHECK (instrument IN ('equity', 'option')),
+    ticker TEXT NOT NULL,
+    -- The option contract, for the options table: "01/15/27 5 Call (BTO)".
+    contract TEXT NOT NULL DEFAULT '',
+    -- The options table's own "Setup" column: "Rescheduling".
+    setup_label TEXT NOT NULL DEFAULT '',
+    change_pct REAL,
+    underlying_change_pct REAL,
+    option_change_pct REAL,
+    cost_basis REAL,
+    price REAL,
+    gain_loss_pct REAL,
+    -- The position-sizing stars: 1 small, 2 medium, 3 large.
+    size_stars INTEGER NOT NULL DEFAULT 0,
+    stop_price REAL,
+    risk_pct REAL,
+    r2_price REAL,
+    -- ABOVE | BELOW
+    sma20 TEXT NOT NULL DEFAULT '',
+    sma50 TEXT NOT NULL DEFAULT '',
+    beta REAL,
+    delta REAL,
+    -- YYYYMMDD
+    entry_date TEXT NOT NULL DEFAULT '',
+    trade_length_days INTEGER,
+    -- The "Exits" column: the exits he has already taken on this lot.
+    exits TEXT NOT NULL DEFAULT '',
+    exit_date TEXT NOT NULL DEFAULT '',
+    exit_price REAL,
+    -- The identity of the lot, and the uniqueness key. It is a string
+    -- rather than the columns themselves because a NULL cost basis
+    -- never equals another NULL cost basis in a UNIQUE constraint.
+    lot_key TEXT NOT NULL DEFAULT '',
+    -- Which image the row was read from: the standalone screenshot, or
+    -- the copy embedded in the PDF.
+    source_image TEXT NOT NULL DEFAULT '',
+    source_row INTEGER NOT NULL DEFAULT 0,
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(doc_id, lot_key)
+);
+
+CREATE INDEX IF NOT EXISTS idx_oconnell_positions_doc ON oconnell_positions(doc_id);
+CREATE INDEX IF NOT EXISTS idx_oconnell_positions_ticker ON oconnell_positions(ticker);
+CREATE INDEX IF NOT EXISTS idx_oconnell_positions_entry ON oconnell_positions(entry_date);
+
+-- The position log's own summary blocks: the cash split, the trend model
+-- and the running win rates. These are per DOCUMENT, not per position.
+CREATE TABLE IF NOT EXISTS oconnell_snapshots (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    doc_id TEXT NOT NULL UNIQUE REFERENCES oconnell_issues(doc_id) ON DELETE CASCADE,
+    equity_count INTEGER NOT NULL DEFAULT 0,
+    option_count INTEGER NOT NULL DEFAULT 0,
+    cash_pct REAL,
+    invested_pct REAL,
+    -- The trend model reading: -3 .. +3.
+    trend_model INTEGER,
+    max_loss_stock_pct REAL,
+    max_loss_options_pct REAL,
+    win_rate_stock_pct REAL,
+    win_rate_options_pct REAL,
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+-- The readings that are not about a ticker: the market, a sector, an
+-- event. The same shape as `market_readings`, but its own table, because
+-- that one carries a transcript foreign key.
+CREATE TABLE IF NOT EXISTS oconnell_readings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    doc_id TEXT NOT NULL REFERENCES oconnell_issues(doc_id) ON DELETE CASCADE,
+    -- market | sector | macro_event | earnings_event
+    scope TEXT NOT NULL DEFAULT 'market'
+        CHECK (scope IN ('market', 'sector', 'macro_event', 'earnings_event')),
+    subject TEXT NOT NULL DEFAULT '',
+    proxy_ticker TEXT NOT NULL DEFAULT '',
+    -- bullish | bearish | neutral | mixed | watch
+    stance TEXT NOT NULL DEFAULT 'neutral'
+        CHECK (stance IN ('bullish', 'bearish', 'neutral', 'mixed', 'watch')),
+    claim_kind TEXT NOT NULL DEFAULT 'forward'
+        CHECK (claim_kind IN ('forward', 'retrospective', 'reported')),
+    section TEXT NOT NULL DEFAULT '',
+    horizon_text TEXT NOT NULL DEFAULT '',
+    event_date TEXT NOT NULL DEFAULT '',
+    evidence_text TEXT NOT NULL,
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(doc_id, scope, subject, stance, section)
+);
+
+CREATE INDEX IF NOT EXISTS idx_oconnell_readings_doc ON oconnell_readings(doc_id);
+CREATE INDEX IF NOT EXISTS idx_oconnell_readings_scope ON oconnell_readings(scope, stance);
+
+-- The OCR cache. An entry is used only while the file is the same file
+-- (same size, same mtime) AND the parser version is unchanged -- so a
+-- parser change invalidates the cache by itself, and a re-run over an
+-- unchanged corpus costs seconds.
+CREATE TABLE IF NOT EXISTS oconnell_ocr_cache (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    source_key TEXT NOT NULL,
+    source_size INTEGER NOT NULL DEFAULT 0,
+    source_mtime INTEGER NOT NULL DEFAULT 0,
+    parser_version TEXT NOT NULL,
+    payload TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(source_key, source_size, source_mtime, parser_version)
+);

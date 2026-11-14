@@ -229,3 +229,28 @@ data/video_pipeline/sheets_asym/
 # AsymTrading sector ETF outcomes (regenerated from the DB + prices).
 data/asym_sector_outcomes.csv
 data/asym_sector_outcome_summary.json
+
+# The O'Connell source. The rule is the OPPOSITE of the other sources, and
+# the reason is the corpus: the newsletter is PAID and its PDFs live OUTSIDE
+# this repository, so a fresh clone cannot re-derive a single record from
+# it. The extracted records are therefore the only recoverable copy, and
+# they are TRACKED:
+#
+#   data/oconnell_records/        the setups and the positions, per issue
+#   data/oconnell_manifest.json   what was read: every document, its
+#                                 checksum, its kind and its publish time
+#
+# What stays out is the working material and the derived rollups. The
+# working PNGs are the rasterised pages, and the rollups are the
+# interpretations the aggregate builds from the tracked records.
+data/oconnell_work/
+data/oconnell_signals.json
+data/oconnell_setups.csv
+data/oconnell_positions.csv
+data/oconnell_daily_summary.csv
+data/oconnell_ticker_summary.csv
+data/oconnell_outcomes.csv
+data/oconnell_outcomes.json
+data/oconnell_outcome_summary.json
+data/oconnell_outcome_ticker_summary.csv
+data/oconnell_report.html

@@ -100,7 +100,13 @@
     "asym:frames": "node tools/extractAsymFrames.js",
     "asym:sectors": "node tools/parseAsymSectors.js",
     "asym:sheets": "node tools/fetchAsymSheets.js",
-    "asym:sectors:outcomes": "node tools/analyzeAsymSectorOutcomes.js"
+    "asym:sectors:outcomes": "node tools/analyzeAsymSectorOutcomes.js",
+    "oconnell:catalog": "node tools/catalogOconnell.js",
+    "oconnell:positions": "node tools/extractOconnellPositions.js",
+    "oconnell:setups": "node tools/extractOconnellSetups.js",
+    "oconnell:outcomes": "node tools/analyzeOconnellOutcomes.js",
+    "oconnell:aggregate": "node tools/aggregateOconnellSignals.js",
+    "oconnell:report": "node tools/aggregateOconnellSignals.js"
   },
   "dependencies": {
     "sharp": "^0.34.3",

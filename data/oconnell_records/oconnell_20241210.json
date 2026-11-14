@@ -1,0 +1,43 @@
+{
+  "doc_id": "oconnell_20241210",
+  "generated_at": "2026-11-14T11:36:25.204Z",
+  "notes": [],
+  "parser_version": "oconnell-positions-1",
+  "positions": [
+    {
+      "beta": null,
+      "change_pct": null,
+      "contract": "",
+      "cost_basis": 6.05,
+      "delta": 0.72,
+      "entry_date": "20241106",
+      "exit_price": 7.2,
+      "exits": "",
+      "gain_loss_pct": null,
+      "instrument": "option",
+      "option_change_pct": -6.75,
+      "price": null,
+      "r2_price": null,
+      "risk_pct": null,
+      "setup_label": "",
+      "size_stars": 0,
+      "sma20": "",
+      "sma50": "",
+      "stop_price": null,
+      "ticker": "TLT",
+      "trade_length_days": null,
+      "underlying_change_pct": null,
+      "lot_key": "option|TLT||20241106|6.05"
+    }
+  ],
+  "source_date": "20241210",
+  "source_image": "oconnell_20241210_embedded.png",
+  "source_kind": "pdf_embedded",
+  "snapshot": {
+    "cash_pct": 11,
+    "invested_pct": 89,
+    "win_rate_stock_pct": 0,
+    "win_rate_options_pct": 100
+  },
+  "title": "Risk Happens Fast"
+}
