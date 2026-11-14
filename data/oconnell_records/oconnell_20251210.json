@@ -1,8 +1,10 @@
 {
   "doc_id": "oconnell_20251210",
-  "generated_at": "2026-11-14T11:36:44.048Z",
-  "notes": [],
-  "parser_version": "oconnell-positions-1",
+  "generated_at": "2026-11-14T13:38:26.040Z",
+  "notes": [
+    "no options table found"
+  ],
+  "parser_version": "oconnell-positions-2",
   "positions": [
     {
       "beta": null,
@@ -37,7 +39,7 @@
       "delta": null,
       "entry_date": "20251118",
       "exit_price": 3.97,
-      "exits": "50%",
+      "exits": "50",
       "gain_loss_pct": -3.42,
       "instrument": "equity",
       "option_change_pct": null,
@@ -155,29 +157,29 @@
       "lot_key": "equity|WRBY||20251209|21.62"
     },
     {
-      "beta": 1.41,
-      "change_pct": null,
-      "contract": "03/20/26 3 Call (BTO)",
-      "cost_basis": 1,
-      "delta": 0.69,
+      "beta": null,
+      "change_pct": 4.98,
+      "contract": "",
+      "cost_basis": 428.79,
+      "delta": null,
       "entry_date": "20251121",
       "exit_price": null,
       "exits": "",
       "gain_loss_pct": -10,
-      "instrument": "option",
-      "option_change_pct": 28.79,
-      "price": 0.9,
-      "r2_price": null,
-      "risk_pct": null,
-      "setup_label": "20D SMA Retest",
+      "instrument": "equity",
+      "option_change_pct": null,
+      "price": 3720726380,
+      "r2_price": 200,
+      "risk_pct": 0.69,
+      "setup_label": "",
       "size_stars": 1,
-      "sma20": "",
-      "sma50": "",
-      "stop_price": null,
+      "sma20": "$1.00",
+      "sma50": "O",
+      "stop_price": 1.41,
       "ticker": "VFF",
       "trade_length_days": 18,
-      "underlying_change_pct": 4.98,
-      "lot_key": "option|VFF|03/20/26 3 Call (BTO)|20251121|1"
+      "underlying_change_pct": null,
+      "lot_key": "equity|VFF||20251121|428.79"
     }
   ],
   "source_date": "20251210",

@@ -50,6 +50,11 @@ const LATE_COLUMNS = [
  * @returns {number} how many columns were added
  */
 function ensureOconnellSchema(db) {
+  // `state.sqlite` is shared: other sessions' transcript and catalog tools
+  // write to it too, and SQLite's default is to fail IMMEDIATELY with
+  // "database is locked". A position run is hours long, so a lock that
+  // would clear in seconds must not kill it. Wait up to a minute instead.
+  db.exec('PRAGMA busy_timeout = 60000');
   db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8'));
   let added = 0;
   for (const entry of LATE_COLUMNS) {
