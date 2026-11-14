@@ -43,7 +43,10 @@ const DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
 /** The parser version written onto every reading row. */
 // The rule changed, so the rows the old rule wrote are not comparable
 // with the rows this one writes.
-const PARSER_VERSION = 'benzinga-readings-2';
+// -3: the direction vocabulary accepts a move stated as a PERCENT
+//     ("The SPY was up 0.69%"), which is the same claim as "up 40
+//     points" in a different unit and the form a per-name move takes.
+const PARSER_VERSION = 'benzinga-readings-3';
 
 /**
  * THE STANCE RULES, by name. Measured against a hand-labelled sample of

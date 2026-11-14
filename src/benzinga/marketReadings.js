@@ -45,17 +45,27 @@ const DIRECTION_WORDS = {
     /\b(?:bullish|rall(?:y|ied|ies|ying)|rall(?:y|ies)\b|strength|strong|leading|breakout|outperform(?:ing|s|ed)?|beat(?:ing)?|soar(?:ing|s|ed)|surg(?:e|es|ed|ing)|pop(?:ping|ped)?|ripp(?:ing|ped)?|bounc(?:e|es|ed|ing)|rebound|recover(?:y|ed|ing)?|constructive|advanc(?:e|es|ed|ing)|rally(?:ing)?)\b/i,
     /\bgap(?:s|ping)?\s+up\b/i,
     /\b(?:rose|rising|gained|gaining)\b/i,
-    // "up 40 points", "up 550 points" -- how a show states an index's
-    // move, and the most common form of the claim there is. The NUMBER
-    // is what makes it unambiguous: a bare "up" is "pick up".
-    /\bup\s+[\d.,]+\s*(?:points?|pts?)\b/i,
+    // "up 40 points", "up 550 points", "up 0.69%" -- how a show states
+    // an index's move, and the most common form of the claim there is.
+    // The NUMBER is what makes it unambiguous: a bare "up" is "pick up".
+    // A PERCENT is the same claim in a different unit, and it is the
+    // form a per-name move takes ("The SPY was up 0.69%"), where a
+    // points count is an index's.
+    //
+    // THE END IS `(?![\w%])`, NOT `\b`. `%` is not a word character, so
+    // `\b` after it never matches and the pattern was DEAD for the
+    // percent form it was written for. Same shape as the Czech `\b` bug
+    // in the Sevcik vocabulary: `\b` is an ASCII-word boundary and
+    // silently fails at anything that is not a letter, digit or `_`.
+    /\bup\s+[\d.,]+\s*(?:points?|pts?|%|percent(?:age)?)(?![\w%])/i,
   ],
   bearish: [
     /\b(?:bearish|weak(?:ness|er)?|underperform(?:ing|s|ed)?|laggard(?:s)?|sell(?:ing)?\s+off|selloff|crash(?:ing|ed|es)?|tumble(?:d|ing)?|drop(?:ping|ped|s)?|fall(?:ing|en|s)?|sinking|sank|correction|breakdown|avoid(?:s|ed|ing)?|cautious|caution|hedge(?:d|ing)?|warning|overvalu(?:ed|ation)|bubble|unwind(?:ing)?|retreat(?:ing)?|slump(?:ping|ed)?|tanked|plunge(?:d|ing)?)\b/i,
     /\bgap(?:s|ping)?\s+down\b/i,
     /\bsold\s+off\b/i,
     /\b(?:fell|falling|declin(?:e|ed|ing)|slid(?:e|ing)?)\b/i,
-    /\bdown\s+[\d.,]+\s*(?:points?|pts?)\b/i,
+    // `(?![\w%])` and not `\b` -- see the note on the "up" form above.
+    /\bdown\s+[\d.,]+\s*(?:points?|pts?|%|percent(?:age)?)(?![\w%])/i,
   ],
 };
 

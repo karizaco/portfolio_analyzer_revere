@@ -189,3 +189,33 @@ test('the extractor takes the stance rule from its options', () => {
   assert.equal(spx(strict), undefined,
     'the strict rule publishes nothing, because there is no direction word in its clause');
 });
+
+test('a move stated as a PERCENT is a move, in either direction', () => {
+  // "The SPY was up 0.69%" is the same claim as "up 40 points" in a
+  // different unit -- and it is the form a PER-NAME move takes, where a
+  // points count is an index's. The number is what makes it a move: a
+  // bare "up" is "pick up", and a bare "down" is "back down".
+  const up = extractReadings(segments('The SPY was up 0.69% at the open on Wednesday morning.'));
+  const spx = up.find((r) => r.subject === 'the S&P 500');
+  assert.ok(spx, 'the ETF name reaches the S&P subject');
+  assert.equal(spx.stance, 'bullish');
+
+  const down = extractReadings(segments('QQQ down 1.4% into the close after that weak tape.'));
+  const ndx = down.find((r) => r.subject === 'the Nasdaq');
+  assert.ok(ndx);
+  assert.equal(ndx.stance, 'bearish');
+
+  // And a bare word is still not a move.
+  assert.equal(stanceNear('we will pick up the pieces on that name', 20), null);
+});
+
+test('a percentage move is a move and a data print is not', () => {
+  // "PPI was higher than expected" describes a RELEASE, not a market
+  // direction -- so the comparatives stay out of the vocabulary. The
+  // measurement over 6,000 subject-naming caption lines found exactly
+  // this: the one form the vocabulary was missing by more than five
+  // readings was "were higher", and four of its five samples were data
+  // prints rather than market calls.
+  assert.equal(stanceNear('the PPI numbers were higher than expected', 24), null,
+    'a higher data print is not a bullish market reading');
+});
