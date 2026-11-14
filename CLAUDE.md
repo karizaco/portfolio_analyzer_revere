@@ -1028,6 +1028,13 @@ wrong.
 
 ## The Sevcik source — a TRANSCRIPT source, not an OCR source (2026-11-04)
 
+> **The 2026-11-14 bug, and the rule it is a case of.** The
+> confirmed-symbol set was built from the confirmed-**name** table, so
+> every name row's ticker became a confirmed symbol. The Benzinga
+> batch added 64 name rows and the Czech corpus exploded from **1,508
+> to 9,386 signals**. See § *The confirmed-symbol gate was the name
+> table*.
+
 `https://www.youtube.com/@davidsevcik-sved4697/streams` — daily ~1 h streams of
 spoken trade commentary. This is the project's **fourth** data source and the
 **first** one that is not an OCR source: there is no whiteboard and no chart
@@ -1047,6 +1054,61 @@ catalog (existing)  →  transcripts  →  signals  →  aggregation
 | transcripts | `tools/fetchSevcikTranscripts.js` | `data/video_pipeline/transcripts/<video_id>.json`, `video_transcripts`, `transcript_segments` |
 | signals | `tools/extractSevcikSignals.js` | `trade_signals` |
 | aggregation | `tools/aggregateSevcikSignals.js` | `data/sevcik_signals.csv`, `data/sevcik_daily_summary.csv`, `data/sevcik_ticker_summary.csv`, `data/sevcik_signals.json`, `data/sevcik_report.html` |
+
+### The confirmed-symbol gate WAS the name table (2026-11-14)
+
+**THE CZECH CORPUS WAS WRECKED BY THE BENZINGA NAME ROWS, and the
+mechanism is a rule worth writing down.**
+
+The confirmed-symbol set was built from the confirmed-**name** table:
+
+```js
+const confirmedSymbols = new Set(Object.values(loadConfirmedNames()));
+```
+
+A name row's **ticker** became a confirmed symbol. The Benzinga batch
+added 64 name rows — `visa -> V`, `zillow -> Z`, `kroger -> KR`,
+`citigroup -> C` — and the Czech corpus exploded from **1,508 to 9,386
+signals**: a capital `V` at the start of a Czech sentence
+("**V** kanálech Disscoredu přesně jedna alergity") published a holding
+**4,562 times**.
+
+**The confirmed table is a NAME table, not a symbol table.** A row whose
+**spoken form is the ticker itself** (`nvda -> NVDA`) is a symbol
+confirmation — the speaker said the ticker out loud. A row whose spoken
+form is a company name is a **name** row, and its ticker must never
+become a symbol.
+
+| row | what it confirms | may its ticker be a symbol? |
+|---|---|---|
+| `nvda -> NVDA` | the speaker said "NVDA" | **yes** |
+| `visa -> V` | the speaker said "Visa" | **no** — V is a Czech letter |
+| `zillow -> Z` | the speaker said "Zillow" | **no** |
+| `roku -> ROKU` | the speaker said "Roku" | **no** — `roku` is the Czech genitive of *rok* (a year) |
+
+**TWO CZECH WORDS COLLIDE WITH NAME ROWS, and both are denied by exact
+form** (the row stands; the Czech word is refused):
+
+| word | what it is in Czech | uses | what it published |
+|---|---|---|---|
+| `roku` | the genitive of `rok` (a year) — "od roku 1930", since the year 1930 | 2,969 | `ROKU` |
+| `eli` | a past-tense verb suffix — "zavřeli" (they closed), "zkoušeli" (they tried) | 266 | `LLY` |
+
+**THE SYMBOL PATH ALSO RESPECTS THE DENIED STEMS**, so a confirmed row
+whose spoken form is a Czech word cannot publish on the symbol path
+either.
+
+**Measured after the fix: 1,551 signals** (the pre-bug state was 1,508),
+with `NVDA:164, AMZN:162, AMD:153` at the top. The 9,386-signal
+explosion is gone, and the one remaining `V` is a legitimate holding
+("Visa Visa máme předpoklad že Budeme obchodovat do longu" — Visa, we
+have an assumption we'll trade long).
+
+**The rule, and it is the general one:** *before adding a name row,
+check the word against EVERY corpus, not just the one you are adding it
+for.* The table is shared across three corpora and three languages.
+
+Pinned by `test/confirmedNamesAudit.test.js`.
 
 ```bash
 node tools/runWhiteboardWorker.js catalog --channel davidsevcik \
@@ -7464,13 +7526,20 @@ candidate stance rules measure out as:
 
 | rule | sample precision | corpus readings |
 |---|---|---|
-| the shipped rule | 75.0 % | 1,678 |
-| `--stance-rule same-clause` | 81.8 % | 1,626 (−3 %) |
-| `--stance-rule after-only` | 90.9 % | 1,151 (−31 %) |
-| `--stance-rule same-clause+after` | 95.2 % | 1,123 (−33 %) |
+| the shipped rule | 75.0 % | 4,371 |
+| **`same-clause`** ← the default | **81.8 %** | **4,229** (−3 %) |
+| `after-only` | 90.9 % | 2,985 (−32 %) |
+| `same-clause+after` | 95.2 % | 2,908 (−33 %) |
 
-The **default is unchanged** — the decision is the user's, and the
-numbers are in `docs/benzinga-source-plan.md`.
+**THE DEFAULT IS `same-clause`** (the user's decision, 2026-11-14): the
+rule that publishes 81.8 % clean readings for a 3 % loss. The
+aggressive rules stay available and measured, and `shipped` stays
+available for comparison. `--stance-rule` selects one.
+
+**Why not "after the subject":** the subject is often the **object** of
+the verb ("rates crashed *the market*", "*Treasury* rising"), so its
+predicate comes before it. What separates a claim from a stray direction
+word is the clause, not the order.
 
 Pinned by `test/benzingaSignalRules.test.js` — the people, the
 fragments, and the fact that the list does not take a real holding with
