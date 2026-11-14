@@ -236,3 +236,20 @@ chipotle mexican grill,CMG,2,"Chipotle Mexican Grill -- the company, said in ful
 travelers,TRV,1,"Travelers -- the insurer, in a Dow-components list"
 harley davidson,HOG,1,"Harley-Davidson -- the motorcycle company"
 steel dynamics,STX,1,"Steel Dynamics -- the steelmaker, said in full"
+
+# The T3Live corpus, added 2026-11-14.
+#
+# T3Live's hosts bring their analysts on by name and trade by name,
+# so the names are how the corpus is read at all. Each row was read
+# against the sentence it was said in and checked against EVERY
+# corpus -- the rule from the Sevcik bug. The words the Czech corpus
+# also says (Micron, Dell, Oracle, Uber, Boeing, Palantir, PayPal,
+# Nike, Ford) are the same company in both, so those rows are safe.
+#
+# Two rows were DROPPED and are recorded here rather than silently
+# omitted: "sandisk corp" is never said as a pair (the corpus says
+# "Sandisk" and "Sandisk Corp" but never the pair), and "roku" is the
+# Czech genitive of "rok" (a year) -- "od roku 1930", since the year
+# 1930 -- which the denial already covers.
+
+cadence,CDNS,24,"Cadence -- the design-software company, said as a name"
