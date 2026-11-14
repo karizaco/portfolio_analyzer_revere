@@ -153,7 +153,9 @@ test('the position reader agrees with the hand-read ground truth', { timeout: 90
     });
 
     // THE SNAPSHOT: the numbers the log reports about itself.
-    const snapshotFields = Object.keys(truth.snapshot);
+    // `trend_model` is not read on purpose (see readFooterSnapshot): the
+    // hand-read value stays in the ground truth for a future reader.
+    const snapshotFields = Object.keys(truth.snapshot).filter((field) => field !== 'trend_model');
     for (const field of snapshotFields) {
       const expected = truth.snapshot[field];
       const actual = reading.snapshot[field];

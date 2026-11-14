@@ -80,7 +80,7 @@ const OPTION_COLUMNS = [
   { field: 'ticker', names: ['ticker'], whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ.-' },
   { field: 'underlying_change_pct', names: ['underlying change'], whitelist: '0123456789.%+-' },
   { field: 'option_change_pct', names: ['options change'], whitelist: '0123456789.%+-' },
-  { field: 'contract', names: ['position'], whitelist: '0123456789 ()CallPutABCDEFGHIJKLMNOPQRSTUVWXYZ' },
+  { field: 'contract', names: ['position'], whitelist: '0123456789/ ()CallPutABCDEFGHIJKLMNOPQRSTUVWXYZ' },
   { field: 'cost_basis', names: ['cost basis'], whitelist: '0123456789.$' },
   { field: 'price', names: ['price'], whitelist: '0123456789.$' },
   { field: 'gain_loss_pct', names: ['gain loss %', 'gainloss%'], whitelist: '0123456789.%+-' },
@@ -280,6 +280,31 @@ function numberFromCell(cell) {
 }
 
 /**
+ * A dollar amount, from a cell.
+ *
+ * EVERY money cell in the sheet is printed with a leading "$", and the OCR
+ * sometimes reads that "$" as a "5" (or an "S"): the 20261112 log's
+ * "$6.22" comes back "56.22" and "$0.79" comes back "50.79" -- a price
+ * ten times too large. Since the dollar sign is always there, a money
+ * cell that does NOT start with one has lost it, and a leading 5 or S in
+ * front of a well-formed amount IS the dollar sign.
+ *
+ * The guard is that what is left must still be a complete amount with at
+ * least one digit before the point -- so a bare "5.00" is left alone.
+ *
+ * @param {object} cell
+ * @returns {number|null}
+ */
+function moneyFromCell(cell) {
+  if (!cell || !cell.text) return null;
+  const text = String(cell.text).trim();
+  if (!text.startsWith('$')) {
+    const match = /^[5S](\d+\.\d\d)$/.exec(text);
+    if (match) return numberFromCell({ ...cell, text: match[1] });
+  }
+  return numberFromCell(cell);
+}
+/**
  * A date, from a cell.
  *
  * The sheet prints US dates -- "12/1/25" is 1 December 2025 -- and the
@@ -443,28 +468,30 @@ async function readTableRows(options) {
 
     const tickerCell = values.ticker;
     const ticker = tickerCell ? String(tickerCell.text).replace(/[^A-Za-z0-9.\-]/g, '').toUpperCase() : '';
-    if (!ticker) continue;
+    // A ticker is a short run of capitals. The footer's cells ("Winning
+    // Stock", "Trades") have a text in the ticker column too, and without\n    // this check they were read as a sixth option lot.
+    if (!/^[A-Z][A-Z.\-]{0,5}$/.test(ticker)) continue;
 
     const position = {
       beta: values.beta ? numberFromCell(values.beta) : null,
       change_pct: values.change_pct ? numberFromCell(values.change_pct) : null,
       contract: values.contract ? String(values.contract.text).replace(/\s+/g, ' ').trim() : '',
-      cost_basis: values.cost_basis ? numberFromCell(values.cost_basis) : null,
+      cost_basis: values.cost_basis ? moneyFromCell(values.cost_basis) : null,
       delta: values.delta ? numberFromCell(values.delta) : null,
       entry_date: dateFromCell(values.entry_date, sourceYear),
-      exit_price: values.exit_price ? numberFromCell(values.exit_price) : null,
+      exit_price: values.exit_price ? moneyFromCell(values.exit_price) : null,
       exits: values.exits ? String(values.exits.text).trim() : '',
       gain_loss_pct: values.gain_loss_pct ? numberFromCell(values.gain_loss_pct) : null,
       instrument,
       option_change_pct: values.option_change_pct ? numberFromCell(values.option_change_pct) : null,
-      price: values.price ? numberFromCell(values.price) : null,
-      r2_price: values.r2_price ? numberFromCell(values.r2_price) : null,
+      price: values.price ? moneyFromCell(values.price) : null,
+      r2_price: values.r2_price ? moneyFromCell(values.r2_price) : null,
       risk_pct: values.risk_pct ? numberFromCell(values.risk_pct) : null,
       setup_label: values.setup_label ? String(values.setup_label.text).trim() : '',
       size_stars: values.size_stars ? sizeFromCell(raw, info, values.size_stars) : 0,
       sma20: values.sma20 ? String(values.sma20.text).trim().toUpperCase() : '',
       sma50: values.sma50 ? String(values.sma50.text).trim().toUpperCase() : '',
-      stop_price: values.stop_price ? numberFromCell(values.stop_price) : null,
+      stop_price: values.stop_price ? moneyFromCell(values.stop_price) : null,
       ticker,
       trade_length_days: values.trade_length_days
         ? parseCount(values.trade_length_days.text)
@@ -572,31 +599,23 @@ async function readFooterSnapshot(raw, info, grid) {
       left: 0,
       top: above + 1,
       width: Math.floor(info.width * 0.4),
-    });
+    }, 4);
     const percentages = (values.match(/(\d+(?:\.\d+)?)\s*%/g) || [])
       .map((text) => Number.parseFloat(text));
     if (percentages.length >= 1) snapshot.win_rate_stock_pct = percentages[0];
     if (percentages.length >= 2) snapshot.win_rate_options_pct = percentages[1];
   }
 
-  // The trend model is at the bottom RIGHT, above its value.
-  const sidebarRules = findHorizontalRules(raw, info, {
-    xEnd: info.width - 1,
-    xStart: Math.floor(info.width * 0.78),
-  });
-  if (sidebarRules.length >= 2) {
-    const last = sidebarRules[sidebarRules.length - 1];
-    const start = Math.max(0, sidebarRules[Math.max(0, sidebarRules.length - 3)] || 0);
-    const text = await readRegionText(raw, info, {
-      height: Math.max(1, info.height - start),
-      left: Math.floor(info.width * 0.78),
-      top: start,
-      width: Math.ceil(info.width * 0.22),
-    });
-    const trend = /trend\s*\S{0,5}\s*[Mm]odel\D{0,15}(-?\d+)/i.exec(text);
-    if (trend) snapshot.trend_model = Number.parseInt(trend[1], 10);
-  }
-
+  // THE TREND MODEL IS DELIBERATELY NOT READ.
+  //
+  // It is a small label over a small signed digit in the bottom right
+  // corner, and the reading is not trustworthy: on the two hand-checked
+  // logs it came back as 1 where the truth is -3, and as nothing at all
+  // on the other. A trend model that reads +1 when it is -3 turns a bear
+  // market into a bull one, and a missing value is better than that. The
+  // column stays in the schema (NULL) so a later reader can fill it, and
+  // data/oconnell_ground_truth.json keeps the hand-read values to measure
+  // that reader against.
   return snapshot;
 }
 
@@ -613,6 +632,7 @@ module.exports = {
   lotKey,
   matchColumn,
   normaliseHeader,
+  moneyFromCell,
   numberFromCell,
   parseCount,
   readFooterSnapshot,

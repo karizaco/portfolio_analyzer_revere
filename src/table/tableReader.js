@@ -566,7 +566,10 @@ async function readTableGrid(imagePath, options = {}) {
  * @returns {Promise<object>} the bands, their cells, and the cell colours
  */
 async function readGridFromRaw(raw, info, options = {}) {
-  const scale = options.scale || OCR_SCALE;
+  // The scale follows the capture's size. A wide capture (the 2026 logs are
+  // 2085 px) reads as well at 5x as at 8x, and 8x costs ~40 s an image
+  // against ~25 s; the small captures (1342-1378 px) need the 8x.
+  const scale = options.scale || (info.width >= 1900 ? 5 : OCR_SCALE);
 
   const region = options.region || { height: info.height, left: 0, top: 0, width: info.width };
   const xStart = Math.max(0, Math.floor(region.left));
@@ -876,7 +879,12 @@ async function readCell(raw, info, rect, options = {}) {
     tessedit_pageseg_mode: OCR_PSM,
     user_defined_dpi: '300',
   };
-  if (options.whitelist) parameters.tessedit_char_whitelist = options.whitelist;
+  // ALWAYS set it, even to the empty string. The worker is shared, and a
+  // Tesseract parameter STAYS SET until it is set again: a repair read that
+  // left its whitelist behind made every later read in the process come
+  // back as garbage -- the same log read 7 positions alone and 0 after
+  // another log's repair pass had run.
+  parameters.tessedit_char_whitelist = options.whitelist || '';
   if (typeof worker.setParameters === 'function') await worker.setParameters(parameters);
 
   const image = await sharp(raw, {
@@ -887,6 +895,10 @@ async function readCell(raw, info, rect, options = {}) {
     .png()
     .toBuffer();
   const result = await worker.recognize(image, {}, { tsv: true });
+  // Hand the worker back as it was found: no whitelist for the next reader.
+  if (options.whitelist && typeof worker.setParameters === 'function') {
+    await worker.setParameters({ tessedit_char_whitelist: '' });
+  }
   const words = parseTsvWords(result.data.tsv);
   const text = words.map((word) => word.text).join(' ').replace(/\s+/g, ' ').trim();
   const confidence = words.length

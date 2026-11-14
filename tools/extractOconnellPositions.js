@@ -60,7 +60,7 @@ const WORK_DIR = path.join(ROOT, 'data', 'oconnell_work');
  * colour of the ink, and counts the position-sizing stars as connected
  * components.
  */
-const PARSER_VERSION = 'oconnell-positions-1';
+const PARSER_VERSION = 'oconnell-positions-2';
 
 const argv = process.argv.slice(2);
 
@@ -132,6 +132,37 @@ async function resolvePositionImage(issue) {
 }
 
 /**
+ * Does a band's text match a pattern?
+ *
+ * The cells are tried first, joined left to right: it is free, and on
+ * the 2026 logs the title is intact in its cells. If that fails the
+ * band is read as a STRIP, because the sheet's rules can cut a title
+ * into pieces (the 2025 options title reads cell by cell as "oP | TONS
+ * - | WING TI").
+ *
+ * The strip is read at scale 4, NOT the table reader's default of 8. A
+ * full-width band at 8x is ~16,700 pixels wide, which Tesseract returns
+ * nothing for -- that made the 2026 log find no tables at all.
+ *
+ * @param {object} band
+ * @param {RegExp} pattern
+ * @param {Buffer} raw
+ * @param {object} info
+ * @returns {Promise<boolean>}
+ */
+async function bandMatches(band, pattern, raw, info) {
+  const joined = band.cells.map((cell) => cell.text).filter(Boolean).join(' ');
+  if (pattern.test(joined) || pattern.test(band.text || '')) return true;
+  const strip = await readBandStrip(raw, info, {
+    bottom: band.bottom,
+    left: 0,
+    right: info.width - 1,
+    top: band.top,
+  }, 4);
+  return pattern.test(strip);
+}
+
+/**
  * The bands whose header row starts with "Ticker".
  *
  * A position log has two tables, and both start with a Ticker column. The
@@ -173,6 +204,7 @@ function findHeaderBands(grid) {
  * @returns {Promise<{header: object, rows: object[], title: object}|null>}
  */
 async function findTable(options) {
+  // (see bandMatches below for how a title is recognised)
   const { grid, info, pattern, raw } = options;
   const bands = grid.bands || [];
   const headers = findHeaderBands(grid);
@@ -192,13 +224,7 @@ async function findTable(options) {
     if (titleIndex < 0) continue;
 
     const titleBand = bands[titleIndex];
-    const strip = await readBandStrip(raw, info, {
-      bottom: titleBand.bottom,
-      left: 0,
-      right: info.width - 1,
-      top: titleBand.top,
-    });
-    if (!pattern.test(strip)) continue;
+    if (!(await bandMatches(titleBand, pattern, raw, info))) continue;
 
     const rows = [];
     for (let index = headerIndex + 1; index < bands.length; index += 1) {
@@ -206,15 +232,11 @@ async function findTable(options) {
       if (!band.text.trim()) continue;
       // The next table's title ends this one's rows -- whichever table it
       // is, so the equities table stops at the options title and not at
-      // another equities title.
-      if (index > headerIndex + 1) {
-        const candidate = await readBandStrip(raw, info, {
-          bottom: band.bottom,
-          left: 0,
-          right: info.width - 1,
-          top: band.top,
-        });
-        if (/SWING\s*TRADES/i.test(candidate)) break;
+      // another equities title. A DATA ROW always has a percentage cell,
+      // so only a band without one can be a title, and only those are
+      // worth the cost of a strip read.
+      if (index > headerIndex + 1 && !band.cells.some((cell) => /%/.test(cell.text))) {
+        if (await bandMatches(band, /SWING\s*TRADES/i, raw, info)) break;
       }
       rows.push(band);
     }
