@@ -47,6 +47,7 @@ process.on('warning', () => {});
 const { DatabaseSync } = require('node:sqlite');
 
 const { loadEnv } = require('../src/transcript/loadEnv');
+const { classifyCaptionFetch } = require('../src/transcript/captionVerdicts');
 const { normalizeTranscript, transcriptChecksum } = require('../src/transcript/transcriptNormalize');
 const { extractAudio, hasDeepgramKey, transcribeAudio, deepgramLanguage } = require('../src/transcript/deepgramClient');
 const { SEVCIK_CHANNEL, SEVCIK_SOURCE_URL } = require('../src/sevcik/channel');
@@ -544,28 +545,22 @@ async function processVideo(row) {
  * @returns {string} the error to report
  */
 function classifyMissingCaptions(lang, stdout, stderr, rateLimited) {
-  const both = `${stdout || ''}\n${stderr || ''}`;
-
-  // The rate limit is detected from the OUTPUT, not only from the flag the
-  // caller passes. The flag is set by a check that runs before this call,
-  // and a caller that forgets it -- or a second code path that never sets
-  // it -- would report a throttled endpoint as a plain failure. The output
-  // says it plainly, so the output is what is read.
-  if (rateLimited || RATE_LIMITED_PATTERN.test(both)) {
-    return `${lang}: rate limited (HTTP 429) -- the subtitle endpoint is throttling this IP`;
+  // ONE IMPLEMENTATION, shared with tools/auditNoCaptions.js, which
+  // re-verifies the blacklist this function writes. If the two
+  // disagreed, the audit would measure a different thing than the fetch
+  // wrote. The shared classifier returns a verdict object; this wraps it
+  // in the string form the runner's report carries, which the tests pin
+  // exactly -- so the wording is this function's, and the verdict is the
+  // shared one's.
+  const result = classifyCaptionFetch(stdout, stderr, rateLimited);
+  switch (result.verdict) {
+    case 'no captions':
+      return `${lang}: no captions`;
+    case 'rate limited (HTTP 429)':
+      return `${lang}: rate limited (HTTP 429) -- the subtitle endpoint is throttling this IP`;
+    default:
+      return `${lang}: caption fetch failed (${result.detail})`;
   }
-
-  const genuinelyAbsent = /there are no subtitles|no subtitles for the requested|aren't any subtitles/i.test(both);
-  if (genuinelyAbsent) return `${lang}: no captions`;
-
-  // The detail is the last MEANINGFUL line -- a Python
-  // RequestsDependencyWarning ends every run and says nothing about the
-  // video or the request.
-  const detail = (both.split(/\r?\n/)
-    .map((l) => l.trim())
-    .filter((l) => l && !/^warnings?\.warn/i.test(l))
-    .slice(-1)[0] || 'unknown error');
-  return `${lang}: caption fetch failed (${detail})`;
 }
 
 function fetchYoutubeCaptions(row) {
