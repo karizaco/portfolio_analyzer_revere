@@ -1050,6 +1050,9 @@ function selectFramesForOcr(prefilterRows, options = {}) {
     Number.isFinite(Number(row.frameIndex))
     && Number.isFinite(Number(row.prefilterScore))
   );
+  if (!validRows.length) {
+    return [];
+  }
   const rowsByIndex = new Map(validRows.map((row) => [row.frameIndex, row]));
   const sortedByScore = validRows
     .slice()
