@@ -356,6 +356,26 @@ async function writeScanLog(logsDirectory, probeKey, payload) {
   return logPath;
 }
 
+/**
+ * Cache whether this video's original file is still needed.
+ *
+ * Best-effort, and it must not fail the scan: the probe log is the
+ * record, and the column is a cache of it. A missing column, a locked
+ * database or a video the catalog does not know are all reported and
+ * then ignored.
+ */
+function recordAnalysisFlag(videoPath, dateKey) {
+  try {
+    const { flagScannedVideo } = require('../src/video/analysisStateStore');
+    const result = flagScannedVideo(videoPath, dateKey);
+    if (result.state) {
+      console.log(`[scan] analysis_state=${result.state} for ${result.videoId} (${result.written} row)`);
+    }
+  } catch (error) {
+    console.error(`[scan] analysis_state not recorded: ${error.message}`);
+  }
+}
+
 async function safeDeleteFile(filePath) {
   await fs.rm(filePath, { force: true });
 }
@@ -2131,6 +2151,7 @@ async function main() {
     };
     const logPath = await writeScanLog(logsDirectory, probeKey, result);
     result.log_path = logPath;
+    if (status === 'done') recordAnalysisFlag(videoPath, dateKey);
     console.log(JSON.stringify(result, null, 2));
   } catch (error) {
     const errorResult = {

@@ -104,7 +104,8 @@ const STATUS_MEANING = Object.freeze({
   },
   done: {
     meaning: 'An OCR pass finished -- or a scan wrote an artifact (which also fills output_path). '
-      + 'It says NOTHING about whether the media is still on disk.',
+      + 'It says NOTHING about whether the media is still on disk, and it is NOT the deletion flag. '
+      + 'Whether the original file is still needed is videos.analysis_state (src/video/analysisState.js).',
     writtenBy: ['tools/runAllOcr.js', 'tools/whiteboard_worker.py command_scan'],
   },
   no_match: {
