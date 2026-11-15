@@ -676,7 +676,7 @@ function scoreFramePrefilterBreakdown(stats, outputKind, profile = 'whiteboard',
   // because the content we want to OCR IS a candlestick frame. Boost instead
   // of penalize, but keep it bounded so wildly off-profile frames still drop.
   if (table.chartLikenessBoost > 0) {
-    components.chartLikeness = scoreChartLikeness(stats) * (table.chartLikenessBoost / 6);
+    components.chartLikeness = -scoreChartLikeness(stats) * (table.chartLikenessBoost / 6);
   } else {
     components.chartLikeness = scoreChartLikeness(stats);
   }
