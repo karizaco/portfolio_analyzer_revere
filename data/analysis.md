@@ -3,7 +3,7 @@
 **Output root:** [data](.)  
 **Probe directory:** `data`  
 **Saved screenshots:** `data/screenshots` (0 PNGs)  
-**Generated at:** 2026-10-29T10:26:06.310Z  
+**Generated at:** 2026-11-15T13:58:57.821Z  
 
 ## Totals
 

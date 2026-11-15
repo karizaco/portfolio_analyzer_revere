@@ -195,7 +195,14 @@ function buildWhiteboardSummary(timeseriesRows) {
 
 function buildPortfolioSection(summaryRow, timeseriesRows) {
   const color = PORTFOLIO_COLORS[summaryRow.portfolio] || '#455a64';
-  const dates = timeseriesRows.map((row) => row.as_of_date);
+  const sortedTimeseriesRows = timeseriesRows
+    .map((row, index) => ({ row, index }))
+    .sort((left, right) => {
+      const dateComparison = String(left.row.as_of_date || '').localeCompare(String(right.row.as_of_date || ''));
+      return dateComparison || left.index - right.index;
+    })
+    .map((entry) => entry.row);
+  const dates = sortedTimeseriesRows.map((row) => row.as_of_date);
 
   return `
     <section class="portfolio-panel">
@@ -219,7 +226,7 @@ function buildPortfolioSection(summaryRow, timeseriesRows) {
         <article><span>Unpriced Positions</span><strong>${escapeHtml(formatCount(summaryRow.unpriced_positions))}</strong></article>
         <article><span>Fallback Entries</span><strong>${escapeHtml(formatCount(summaryRow.assumed_equal_weight_entries))}</strong></article>
       </div>
-      ${buildWhiteboardSummary(timeseriesRows)}
+      ${buildWhiteboardSummary(sortedTimeseriesRows)}
       <div class="chart-grid">
         ${buildChart({
           dates,
@@ -228,7 +235,7 @@ function buildPortfolioSection(summaryRow, timeseriesRows) {
             {
               color,
               label: 'Equity Index',
-              values: timeseriesRows.map((row) => row.estimated_equity_index)
+              values: sortedTimeseriesRows.map((row) => row.estimated_equity_index)
             }
           ],
           title: `${summaryRow.portfolio} Estimated Equity Index`
@@ -240,12 +247,12 @@ function buildPortfolioSection(summaryRow, timeseriesRows) {
             {
               color,
               label: 'Invested',
-              values: timeseriesRows.map((row) => row.weighted_exposure)
+              values: sortedTimeseriesRows.map((row) => row.weighted_exposure)
             },
             {
               color: '#d7ccc8',
               label: 'Cash',
-              values: timeseriesRows.map((row) => row.cash_weight)
+              values: sortedTimeseriesRows.map((row) => row.cash_weight)
             }
           ],
           title: `${summaryRow.portfolio} Capital Mix`

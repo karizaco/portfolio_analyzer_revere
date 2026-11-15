@@ -1996,14 +1996,16 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
     const tokens = new Set();
     for (const raw of String(text).split(/[\s,;:()\[\]{}<>\/\\|]+/)) {
       const cleaned = raw.replace(/^\|+|\|+$/g, '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
-      // Length filter: tokens must be at least minTokenLength, EXCEPT single-
-      // letter tokens that are explicitly in SINGLE_LETTER_TICKERS (e.g. "U").
-      if (cleaned.length > 5) continue;
+      if (!regex.test(cleaned)) continue;
+      // Allowlisted single-letter tickers survive at the default and the
+      // production setting (minTokenLength: 2, tools/scanVideoWithOcr.js);
+      // only an explicit stricter minimum (>= 3) drops them.
       if (cleaned.length < minTokenLength
-          && !(cleaned.length === 1 && SINGLE_LETTER_TICKERS.has(cleaned))) {
+          && !(minTokenLength <= 2
+            && cleaned.length === 1
+            && SINGLE_LETTER_TICKERS.has(cleaned))) {
         continue;
       }
-      if (!regex.test(cleaned)) continue;
       tokens.add(cleaned);
     }
     return tokens;
@@ -2136,7 +2138,10 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
           for (let i = 0; i < limit; i++) {
             if (m[i] === corr[i]) sharedPrefix += 1;
           }
-          if (sharedPrefix >= 2) { canonical = corr; break; }
+          if (sharedPrefix >= 2 && levenshtein(m, corr) <= maxDistance) {
+            canonical = corr;
+            break;
+          }
         }
         // Strategy 3: 3-char member with d=1 to the correction
         if (!canonical) {
@@ -2145,7 +2150,7 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
             const corr = findCloseTickerMatch(m, lexicon);
             if (!corr) continue;
             const d = levenshtein(m, corr);
-            if (d <= 1) { canonical = corr; break; }
+            if (d <= Math.min(1, maxDistance)) { canonical = corr; break; }
           }
         }
       }

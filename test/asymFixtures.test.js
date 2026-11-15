@@ -25,7 +25,10 @@ const FREE_DIR = path.join(FIXTURES, 'free');
 const MANIFEST = path.join(FIXTURES, 'manifest.json');
 
 function md5(filePath) {
-  return crypto.createHash('md5').update(fs.readFileSync(filePath)).digest('hex');
+  // Git may check JSON fixtures out with CRLF on Windows. Hash the content
+  // with normalized newlines so the manifest is stable across platforms.
+  const normalized = fs.readFileSync(filePath, 'utf8').replace(/\r\n/g, '\n');
+  return crypto.createHash('md5').update(normalized, 'utf8').digest('hex');
 }
 
 function manifest() {

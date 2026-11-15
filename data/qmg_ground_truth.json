@@ -1334,6 +1334,21 @@
       "GSIT",
       "APLD",
       "MNDY"
+    ],
+    "2": [
+      "RGTI",
+      "QBTS",
+      "IMGN",
+      "CVNA",
+      "IOT",
+      "ARQQ",
+      "AI",
+      "PLTR",
+      "DNA",
+      "GTLB",
+      "GSIT",
+      "APLD",
+      "MNDY"
     ]
   },
   "20231201": {
@@ -1458,6 +1473,8 @@
     "20220517": "CORRECTED 2026-11-01. AVGO was missing. Three frames of the video read the same eight rows — OXY, ERX, AR, WEAT, AVGO, TQQQ, FNGU, COIN — with the footer '8 Items in Personal WatchList' (t=420 s clock 15:35, t=480 s clock 15:36, t=600 s clock 15:38 of data/video_pipeline/downloads_1080p/20220517_eX7XDCdoa0c.mp4, and the batch2 snapshot of the same day). The old entry listed seven.",
     "20220607": "VERIFIED 2026-11-01 against the pixels, and NOT changed. All three anchor frames of the qmg-1080p-batch1 run (t=672 s clock 15:39, t=2660 s clock 16:12, t=2744 s clock 16:13) read the same seven rows — UCO, VLO, ALB, BOIL, NFLX, TNA, LTHM — with the footer '7 Items in Personal WatchList'. A repeated column here is a genuine steady list, not a copied one. EXTENDED 2026-11-05: capture 3 is a later moment (qmg-easyocr-20261105-stale2, taskbar 15:32) with nine rows — BOIL, LTHM, WEAT, ALB, VLO, TNA, NFLX, UCO, TQQQ, footer '3 of 9 Items in Personal WatchList'. WEAT and TQQQ are real holdings at that moment.",
     "20220608": "CORRECTED 2026-11-01. This date was a COPIED COLUMN: the hand reading gave all three captures the same nine rows, and the panel's own count contradicts that. Capture 0 (qmg-1080p-batch1, t=780 s, clock 15:32) really is nine rows — SIGA, TNA, VLO, UCO, NFLX, ALB, BOIL, LTHM, AERC, '9 Items in Personal WatchList'. But captures 1 and 2 (t=2700 s clock 16:04 and t=3330 s clock 16:14) are ELEVEN rows each — RBLX, COIN, BOIL, NFLX, LTHM, TQQQ, UCO, ALB, VLO, TNA, AERC, '11 Items in Personal WatchList'. SIGA was closed and RBLX, COIN and TQQQ were opened during the session. The day's union therefore has twelve tickers, not nine.",
-    "20230126": "VERIFIED 2026-11-01 against the pixels, and NOT changed. All three anchor frames of the qmg-1080p-batch1 run (t=3052 s clock 16:14, t=1120 s clock 15:41, t=2044 s clock 15:57) read the same eight rows — CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS — with the footer '8 Items in Personal WatchList'. The 'K of N' form marks the SELECTED row (GNS, CVNA and TNA respectively), not a scroll range."
-  }
+    "20230126": "VERIFIED 2026-11-01 against the pixels, and NOT changed. All three anchor frames of the qmg-1080p-batch1 run (t=3052 s clock 16:14, t=1120 s clock 15:41, t=2044 s clock 15:57) read the same eight rows — CVNA, FCX, TNA, CWEB, YINN, PDD, MDGL, GNS — with the footer '8 Items in Personal WatchList'. The 'K of N' form marks the SELECTED row (GNS, CVNA and TNA respectively), not a scroll range.",
+    "20230608": "13 GT tickers — CVNA/QBTS/RGTI/GTLB/GSIT newer tickers, OCR-difficult"
+  },
+  "_gt_corrections": "2024-10-17: Removed phantom DCX from 20220218[2]. Fixed NDGU→NRGU in 20220222[2]. Removed hallucination FAULL from 20220427[7] (capture 7 is not a valid QMG position list frame)."
 }
