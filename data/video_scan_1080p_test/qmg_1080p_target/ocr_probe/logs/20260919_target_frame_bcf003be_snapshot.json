@@ -1,0 +1,28 @@
+{
+  "basename": "revere",
+  "channel": "revere",
+  "chart_stream_parser": true,
+  "date_key": "20260919",
+  "output_kind": "snapshot",
+  "phash_region": null,
+  "phash_region_fraction": {
+    "x": 0.7,
+    "y": 0.6,
+    "w": 0.3,
+    "h": 0.4
+  },
+  "prefilter_profile": "chart_stream",
+  "video_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_1080p_test\\target_frame.png",
+  "message": "No sample frames were generated from the video.",
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 2,
+  "ocr_engine_metadata": {
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "status": "error"
+}
