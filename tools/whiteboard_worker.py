@@ -9,8 +9,9 @@ import sqlite3
 import subprocess
 import sys
 import tempfile
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import shutil
 
@@ -305,6 +306,83 @@ def _apply_migrations(connection: sqlite3.Connection) -> None:
             )
         connection.execute(
             "INSERT OR IGNORE INTO schema_version (version) VALUES (6)"
+        )
+        connection.commit()
+
+    # Version 7: keep caption availability separate from transcript success.
+    # A caption probe can say that a track exists before any transcript has
+    # been fetched; a failed probe is not evidence that no track exists.
+    if current < 7:
+        connection.execute(
+            '''
+            CREATE TABLE IF NOT EXISTS video_caption_availability (
+                video_id TEXT PRIMARY KEY,
+                status TEXT NOT NULL DEFAULT 'unknown'
+                    CHECK (status IN ('unknown', 'available', 'unavailable', 'refused', 'error')),
+                track_count INTEGER NOT NULL DEFAULT 0,
+                auto_track_count INTEGER NOT NULL DEFAULT 0,
+                manual_track_count INTEGER NOT NULL DEFAULT 0,
+                languages_json TEXT NOT NULL DEFAULT '[]',
+                checked_at TEXT NOT NULL DEFAULT '',
+                detail TEXT NOT NULL DEFAULT '',
+                source TEXT NOT NULL DEFAULT 'youtube_list_subs',
+                FOREIGN KEY (video_id) REFERENCES videos(video_id) ON DELETE CASCADE
+            )
+            '''
+        )
+        connection.execute(
+            'CREATE INDEX IF NOT EXISTS idx_video_caption_availability_status '
+            'ON video_caption_availability(status)'
+        )
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_version (version) VALUES (7)"
+        )
+        connection.commit()
+
+    # Version 8: retain each video's date lookup result and retry eligibility.
+    if current < 8:
+        connection.execute(
+            '''
+            CREATE TABLE IF NOT EXISTS video_date_resolution (
+                video_id TEXT PRIMARY KEY REFERENCES videos(video_id) ON DELETE CASCADE,
+                status TEXT NOT NULL DEFAULT 'pending'
+                    CHECK (status IN ('pending', 'resolved', 'future_event', 'age_gated',
+                                      'rate_limited', 'network_error', 'unavailable', 'error')),
+                attempt_count INTEGER NOT NULL DEFAULT 0,
+                upload_date TEXT NOT NULL DEFAULT '',
+                last_attempt_at TEXT NOT NULL DEFAULT '',
+                retry_after TEXT NOT NULL DEFAULT '',
+                last_error TEXT NOT NULL DEFAULT '',
+                last_run_id INTEGER,
+                updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+            )
+            '''
+        )
+        connection.execute(
+            'CREATE INDEX IF NOT EXISTS idx_video_date_resolution_status_retry '
+            'ON video_date_resolution(status, retry_after)'
+        )
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_version (version) VALUES (8)"
+        )
+        connection.commit()
+
+    # Version 9: analysis_state -- whether the original file is still needed.
+    # Not `status`: `done` already means two things and the downloaders
+    # exclude it, so a deletion flag living there would hide a deleted
+    # file from every re-fetch. The column is a cache of the probe logs
+    # and the ground-truth pin; tools/reportDeletableVideos.js is what
+    # fills it, and it never deletes.
+    if current < 9:
+        columns = {
+            row['name'] for row in connection.execute('PRAGMA table_info(videos)')
+        }
+        if 'analysis_state' not in columns:
+            connection.execute(
+                "ALTER TABLE videos ADD COLUMN analysis_state TEXT NOT NULL DEFAULT ''"
+            )
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_version (version) VALUES (9)"
         )
         connection.commit()
 
@@ -1828,6 +1906,39 @@ def upsert_catalog_rows(connection: sqlite3.Connection, source_url: str, rows: l
     return inserted, updated
 
 
+def record_date_resolution_outcomes(
+    connection: sqlite3.Connection,
+    outcomes: list[dict],
+    run_id: int,
+) -> None:
+    """Persist one latest outcome per video while accumulating attempts."""
+    for outcome in outcomes:
+        connection.execute(
+            '''
+            INSERT INTO video_date_resolution (
+                video_id, status, attempt_count, upload_date, last_attempt_at,
+                retry_after, last_error, last_run_id, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(video_id) DO UPDATE SET
+                status=excluded.status,
+                attempt_count=video_date_resolution.attempt_count + excluded.attempt_count,
+                upload_date=CASE WHEN excluded.upload_date <> '' THEN excluded.upload_date
+                                 ELSE video_date_resolution.upload_date END,
+                last_attempt_at=excluded.last_attempt_at,
+                retry_after=excluded.retry_after,
+                last_error=excluded.last_error,
+                last_run_id=excluded.last_run_id,
+                updated_at=excluded.updated_at
+            ''',
+            (
+                outcome['video_id'], outcome['status'], outcome['attempts'],
+                outcome['upload_date'], utc_now_iso(), outcome['retry_after'],
+                outcome['last_error'], run_id, utc_now_iso(),
+            ),
+        )
+    connection.commit()
+
+
 def find_not_listed(
     connection: sqlite3.Connection,
     *,
@@ -2200,7 +2311,7 @@ def persist_missing_titles(
     return written, inserted
 
 
-def fetch_dates_for(entries: list[tuple[str, str]], args: argparse.Namespace) -> tuple[list[dict], list[str]]:
+def fetch_dates_for(entries: list[tuple[str, str]], args: argparse.Namespace) -> tuple[list[dict], list[str], dict]:
     """Fetch upload_date for a batch of videos.
 
     One yt-dlp invocation over a batch file of `watch?v=` URLs. The client set
@@ -2226,21 +2337,49 @@ def fetch_dates_for(entries: list[tuple[str, str]], args: argparse.Namespace) ->
             '--extractor-args', args.extractor_args,
             '--print', '%(id)s\t%(upload_date)s\t%(title)s',
         ]
+        if args.sleep_requests > 0:
+            command.extend(['--sleep-requests', str(args.sleep_requests)])
 
         # yt-dlp's stdout is UTF-8, but on Windows Python encodes it with the
         # console codepage, which mangles any title outside ASCII. Pin the
         # child's encoding and decode the parent side the same way.
         env = dict(os.environ)
         env['PYTHONIOENCODING'] = 'utf-8'
-        result = subprocess.run(
-            command,
-            capture_output=True,
-            text=True,
-            encoding='utf-8',
-            errors='replace',
-            check=False,
-            env=env,
-        )
+        retries = max(0, int(args.network_retries))
+        retry_delays = [10, 30, 60]
+        result = None
+        retry_count = 0
+        for attempt in range(retries + 1):
+            result = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                encoding='utf-8',
+                errors='replace',
+                check=False,
+                env=env,
+            )
+            output = f"{result.stderr or ''}\n{result.stdout or ''}"
+            network_failure = bool(re.search(
+                r'unable to download api page|failed to establish a new connection|'
+                r'connection reset|timed out|temporary failure|name resolution|'
+                r'failed to resolve|network is unreachable|transporterror|http error 5\d\d|service unavailable',
+                output, re.IGNORECASE,
+            ))
+            throttle = bool(re.search(
+                r'rate.limit|too many requests|http error 429|\b429\b|captcha|bot.?check|'
+                r'page needs to be reloaded|content isn.t available, try again later',
+                output, re.IGNORECASE,
+            ))
+            # A single age-gate response can be video-specific. The user
+            # explicitly asked that other videos continue; true rate-limit,
+            # bot-check and network signatures still stop the queue.
+            if not network_failure or throttle or attempt >= retries:
+                break
+            retry_count += 1
+            delay = retry_delays[min(attempt, len(retry_delays) - 1)]
+            print(f'  transient network failure; retry {attempt + 1}/{retries} in {delay}s', file=sys.stderr)
+            time.sleep(delay)
     finally:
         try:
             os.unlink(handle.name)
@@ -2260,7 +2399,75 @@ def fetch_dates_for(entries: list[tuple[str, str]], args: argparse.Namespace) ->
         rows.append(parsed)
 
     missing = [video_id for video_id, _ in entries if video_id not in resolved]
-    return rows, missing
+    diagnostics_text = f'{result.stderr or ""}\n{result.stdout or ""}'
+    rate_limit_or_bot = bool(re.search(
+        r'rate.limit|too many requests|http error 429|\b429\b|captcha|bot.?check|'
+        r'page needs to be reloaded|video unavailable|content isn.t available, try again later',
+        diagnostics_text, re.IGNORECASE,
+    ))
+    network_error = bool(re.search(
+        r'unable to download api page|failed to establish a new connection|'
+        r'connection reset|timed out|temporary failure|name resolution|'
+        r'failed to resolve|network is unreachable|transporterror|http error 5\d\d|service unavailable',
+        diagnostics_text, re.IGNORECASE,
+    ))
+    future_event = bool(re.search(r'this live event will begin in', diagnostics_text, re.IGNORECASE))
+    age_gate_only = bool(re.search(r'sign in to confirm your age|age.restricted', diagnostics_text, re.IGNORECASE)) and not rate_limit_or_bot
+    stop_class = ('suspected_rate_limit_or_bot_protection' if rate_limit_or_bot else
+                  'network_error' if network_error else
+                  'item_level_future_event' if future_event else
+                  'item_level_age_gate' if age_gate_only else
+                  'batch_failed_or_empty' if result.returncode != 0 or not rows else '')
+    per_video_errors: dict[str, str] = {}
+    for line in diagnostics_text.splitlines():
+        match = re.search(r'(?:ERROR|WARNING): \[youtube\] ([^: ]+):\s*(.*)', line)
+        if match:
+            per_video_errors[match.group(1)] = match.group(2).strip()[:500]
+    now = datetime.now(timezone.utc)
+    item_outcomes = []
+    upload_by_id = {row['video_id']: row['upload_date'] for row in rows}
+    for video_id, _title in entries:
+        if video_id in resolved:
+            status, retry_after, error = 'resolved', '', ''
+        else:
+            error = per_video_errors.get(video_id, '')
+            item_text = error or diagnostics_text
+            if rate_limit_or_bot:
+                status, delay = 'rate_limited', 3600
+            elif network_error:
+                status, delay = 'network_error', 300
+            elif re.search(r'this live event will begin in', item_text, re.IGNORECASE):
+                status = 'future_event'
+                days = re.search(r'begin in (\d+) days?', item_text, re.IGNORECASE)
+                delay = max(3600, int(days.group(1)) * 86400) if days else 86400
+            elif re.search(r'sign in to confirm your age|age.restricted', item_text, re.IGNORECASE):
+                status, delay = 'age_gated', 1800
+            elif re.search(r'video unavailable|private video|has been removed', item_text, re.IGNORECASE):
+                status, delay = 'unavailable', 21600
+            else:
+                status, delay = 'error', 3600
+            retry_after = (now + timedelta(seconds=delay)).replace(microsecond=0).isoformat()
+        item_outcomes.append({
+            'video_id': video_id,
+            'status': status,
+            'upload_date': upload_by_id.get(video_id, ''),
+            'attempts': retry_count + 1,
+            'retry_after': retry_after,
+            'last_error': error,
+        })
+    diagnostic = {
+        'video_ids': [video_id for video_id, _ in entries],
+        'returncode': result.returncode,
+        'resolved_count': len(rows),
+        'missing_ids': missing,
+        'suspected_throttle': bool(stop_class and not stop_class.startswith('item_level_')),
+        'stop_class': stop_class,
+        'retry_count': retry_count,
+        'item_level_error': stop_class.startswith('item_level_'),
+        'item_outcomes': item_outcomes,
+        'stderr': (result.stderr or '')[-6000:],
+    }
+    return rows, missing, diagnostic
 
 
 def command_fill_dates(args: argparse.Namespace) -> int:
@@ -2352,6 +2559,21 @@ def command_fill_dates(args: argparse.Namespace) -> int:
         skipped = [video_id for video_id, _ in wanted if video_id in already_dated]
         wanted = [(video_id, title) for video_id, title in wanted if video_id not in already_dated]
 
+    retry_deferred: set[str] = set()
+    with connect_database(db_path) as connection:
+        tables = {row['name'] for row in connection.execute(
+            "SELECT name FROM sqlite_master WHERE type='table'"
+        )}
+        if 'video_date_resolution' in tables and not args.refresh:
+            now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+            retry_deferred = {
+                row['video_id'] for row in connection.execute(
+                    'SELECT video_id FROM video_date_resolution '
+                    'WHERE retry_after <> ? AND retry_after > ?', ('', now)
+                )
+            }
+            wanted = [(video_id, title) for video_id, title in wanted if video_id not in retry_deferred]
+
     jobs = max(1, args.jobs)
     batch_size = max(1, args.batch_size)
     batches = [wanted[i:i + batch_size] for i in range(0, len(wanted), batch_size)]
@@ -2360,12 +2582,14 @@ def command_fill_dates(args: argparse.Namespace) -> int:
         f'in {len(batches)} batches of up to {batch_size}, {jobs} at a time '
         f'(client set: {args.extractor_args}); '
         + ('refreshing, so rows that already have a date are re-read.'
-           if args.refresh else f'{len(skipped)} already have a date.'),
+           if args.refresh else f'{len(skipped)} already have a date; '
+           f'{len(retry_deferred)} deferred until their retry time.'),
         file=sys.stderr,
     )
 
     rows: list[dict] = []
     missing: list[str] = []
+    diagnostics: list[dict] = []
     inserted = 0
     updated = 0
     attempted = 0
@@ -2422,19 +2646,36 @@ def command_fill_dates(args: argparse.Namespace) -> int:
         )
 
         with ThreadPoolExecutor(max_workers=jobs) as pool:
-            futures = {pool.submit(fetch_dates_for, batch, args): batch for batch in batches}
-            for future in as_completed(futures):
-                batch = futures[future]
+            futures = {}
+            next_batch = 0
+            while next_batch < len(batches) and len(futures) < jobs:
+                batch = batches[next_batch]
+                futures[pool.submit(fetch_dates_for, batch, args)] = batch
+                next_batch += 1
+            stop_reason = ''
+            while futures:
+                future = next(as_completed(tuple(futures)))
+                batch = futures.pop(future)
                 try:
-                    batch_rows, batch_missing = future.result()
+                    batch_rows, batch_missing, diagnostic = future.result()
                 except Exception as error:  # noqa: BLE001 - one bad batch must not sink the run
                     batch_rows, batch_missing = [], [video_id for video_id, _ in batch]
-                    print(f'  batch failed: {error}', file=sys.stderr)
+                    diagnostic = {'video_ids': [v for v, _ in batch], 'returncode': None,
+                                  'resolved_count': 0, 'missing_ids': batch_missing,
+                                  'suspected_throttle': True, 'stderr': str(error)}
+                diagnostics.append(diagnostic)
+                print(f"  batch diagnostic: resolved={diagnostic['resolved_count']} "
+                      f"missing={len(batch_missing)} returncode={diagnostic['returncode']} "
+                      f"stop_class={diagnostic['stop_class'] or 'none'}", file=sys.stderr)
+                if diagnostic['stderr']:
+                    print(f"  yt-dlp stderr: {diagnostic['stderr'][-1200:]}", file=sys.stderr)
 
                 # Saved as each batch lands, so the work survives a stop.
                 batch_inserted, batch_updated = upsert_catalog_rows(
                     connection, source_url, batch_rows, channel=effective_channel
                 )
+                if diagnostic.get('item_outcomes'):
+                    record_date_resolution_outcomes(connection, diagnostic['item_outcomes'], run_id)
                 inserted += batch_inserted
                 updated += batch_updated
                 rows.extend(batch_rows)
@@ -2458,6 +2699,24 @@ def command_fill_dates(args: argparse.Namespace) -> int:
                     f'{len(missing)} still missing',
                     file=sys.stderr,
                 )
+                snapshot_path.with_suffix('.diagnostics.json').write_text(
+                    json.dumps({'run_id': run_id, 'diagnostics': diagnostics}, indent=2),
+                    encoding='utf-8',
+                )
+                if diagnostic['suspected_throttle']:
+                    stop_reason = f"{diagnostic['stop_class']}; stopped before the next batch"
+                    for pending in futures:
+                        pending.cancel()
+                    futures.clear()
+                    break
+                if args.pause_between_batches > 0 and next_batch < len(batches):
+                    time.sleep(args.pause_between_batches)
+                if next_batch < len(batches):
+                    batch = batches[next_batch]
+                    futures[pool.submit(fetch_dates_for, batch, args)] = batch
+                    next_batch += 1
+            if stop_reason:
+                print(f'  STOPPED: {stop_reason}', file=sys.stderr)
 
     dated = sum(1 for row in rows if row['upload_date'])
 
@@ -2514,6 +2773,10 @@ def command_fill_dates(args: argparse.Namespace) -> int:
         'skipped': len(skipped),
         'still_missing': missing,
         'still_missing_count': len(missing),
+        'unattempted_count': max(0, requested - attempted),
+        'stopped_for_suspected_throttle': any(d['suspected_throttle'] for d in diagnostics),
+        'stop_class': next((d['stop_class'] for d in reversed(diagnostics) if d['stop_class']), ''),
+        'diagnostics_path': str(snapshot_path.with_suffix('.diagnostics.json')),
         'titles_only': len(rows) - dated,
         'titles_written': titles_written,
         'titles_inserted': titles_inserted,
@@ -2746,6 +3009,18 @@ def build_parser() -> argparse.ArgumentParser:
         help='How many videos one yt-dlp invocation covers. Small batches save '
              'their rows as they finish, so a long run shows progress and can '
              'be interrupted without losing the work already done.',
+    )
+    fill_dates_parser.add_argument(
+        '--sleep-requests', type=float, default=0.0,
+        help='Seconds yt-dlp waits between metadata requests inside each batch.',
+    )
+    fill_dates_parser.add_argument(
+        '--pause-between-batches', type=float, default=0.0,
+        help='Seconds to pause before starting the next batch.',
+    )
+    fill_dates_parser.add_argument(
+        '--network-retries', type=int, default=3,
+        help='Retries for transient network failures with increasing backoff.',
     )
     fill_dates_parser.add_argument(
         '--refresh',
