@@ -7695,3 +7695,45 @@ source text is recoverable from the repository alone), and why Benzinga's
 are not: a second copy of a caption track that no longer exists in that
 form, and that could differ from the JSON's source later, is dead weight
 rather than provenance.
+
+## The Discord traders - drendel, ariel-long, ariel-short (2026-11-15)
+
+Two private trading-server channels, ingested with a Discord **user token**
+and parsed into position histories. They are the only source here that
+states a position with a **size**, and the only one that names its
+accounts. The full write-up is `docs/discord-traders.md`; the short version:
+
+- **Drendel has TWO accounts**: one trading account (longs and shorts) and
+  one he calls **"Vibe"**. A position NOT listed under "Vibe Account" is in
+  the trading account. The Vibe list carries no weights, so it is read as
+  an equal-weighted basket.
+- **Drendel's trading-account "Shorts" are inverse products he BUYS**
+  ("Bought AVS (AVGO inverse)", "Short AVGO (Long AVS)"), so they are
+  signed LONG. Only a short of a real stock is signed negative.
+- `ariel-long` and `ariel-short` are her LONG and SHORT books as trade
+  actions. `drendel` is both a daily "Portfolio" snapshot (a state, with
+  weights) and his trade messages (events) - they are kept apart by
+  `basis`, never merged.
+- **The returns are MODELLED from daily closes.** Neither trader publishes
+  fills, so none of it is his or her P&L. A same-day trade is invisible to
+  that model and is counted apart.
+
+```bash
+npm run discord:positions   # messages -> discord_positions / _trade_actions / _episodes
+npm run discord:analyze     # price the episodes and score them
+npm run discord:report      # data/discord_traders.html
+```
+
+Measured (closes from Yahoo, 2025-04-10 to 2026-11-13): Drendel's episodes
+hit 34.5 % with +1.80 % average; Ariel's long book 58.9 % and her short
+book 36.2 %. His **trading account curve is -21.6 %** and his **Vibe
+account +26.3 %** over the same window - the Vibe account won, and it is
+the weaker of the two claims (it rests on the equal-weight assumption).
+
+The parsing rules and the traps behind them (the earliest verb is the
+action; an intent is not a trade; the subject of "Bought 4% AAOZ (AAOI
+failed)" is AAOZ; the corpus's own stocks are not in the lexicon; "BE" is
+both Bloom Energy and break-even; a number is a price only where a price
+can stand) are in `docs/discord-traders.md`, and they are pinned by
+`test/discordPortfolio.test.js`, `test/discordTradeActions.test.js` and
+`test/discordEpisodes.test.js`.
