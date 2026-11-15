@@ -43,6 +43,8 @@ function readFlag(flag, fallback = '') {
 const idsFile = readFlag('--ids-file');
 const limit = Number(readFlag('--limit', '0')) || 0;
 const outPath = readFlag('--out');
+const persist = argv.includes('--persist');
+const dbPath = path.resolve(readFlag('--db', path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite')));
 const asJson = argv.includes('--json');
 
 if (!idsFile || !fs.existsSync(idsFile)) {
@@ -78,12 +80,16 @@ function probe(videoId) {
   // not a video with no captions, and the two must never be collapsed:
   // the first is a fact about the video, the second about the network.
   const refused = /rate[-\s]?limited|HTTP Error 429|Too Many Requests|Sign in to confirm|bot/i.test(both);
+  const error = !refused && !/has no subtitles|there are no subtitles|no subtitles for the requested|aren't any subtitles/i.test(both)
+    && (Boolean(result.error) || result.status !== 0);
   const saysNone = /has no subtitles|there are no subtitles|no subtitles for the requested|aren't any subtitles/i.test(both);
 
   // Count the track rows: a row is "lang  language-name  formats...".
   const trackRows = (result.stdout || '').split(/\r?\n/)
     .filter((line) => /^[a-z]{2}(?:[-_][A-Za-z0-9]+)?\s{2,}/i.test(line));
   const languages = [...new Set(trackRows.map((line) => line.split(/\s{2,}/)[0].trim()))];
+  const auto = trackRows.filter((line) => /\bASR\b|auto[- ]generated/i.test(line)).length;
+  const manual = Math.max(0, trackRows.length - auto);
 
   const detail = both.split(/\r?\n/)
     .map((l) => l.trim())
@@ -93,17 +99,53 @@ function probe(videoId) {
   return {
     video_id: videoId,
     tracks: trackRows.length,
+    auto,
+    manual,
     languages,
     no_captions: saysNone && trackRows.length === 0,
     refused,
-    detail: refused ? detail.slice(0, 120) : '',
+    error,
+    detail: refused || error ? detail.slice(0, 240) : '',
   };
 }
 
 const results = [];
+let db = null;
+if (persist) {
+  const { DatabaseSync } = require('node:sqlite');
+  if (!fs.existsSync(dbPath)) {
+    console.error(`Catalog database does not exist: ${dbPath}`);
+    process.exit(2);
+  }
+  db = new DatabaseSync(dbPath);
+  const hasTable = db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name='video_caption_availability'").get();
+  if (!hasTable) {
+    db.close();
+    console.error('Caption availability catalog schema is missing; run `npm run video:init` first.');
+    process.exit(2);
+  }
+}
 for (let i = 0; i < work.length; i += 1) {
   const result = probe(work[i]);
   results.push(result);
+  if (db) {
+    const status = result.refused ? 'refused'
+      : result.no_captions ? 'unavailable'
+      : result.tracks > 0 ? 'available' : 'error';
+    db.prepare(`
+      INSERT INTO video_caption_availability
+        (video_id, status, track_count, auto_track_count, manual_track_count,
+         languages_json, checked_at, detail, source)
+      VALUES (?, ?, ?, ?, ?, ?, datetime('now'), ?, 'youtube_list_subs')
+      ON CONFLICT(video_id) DO UPDATE SET
+        status=excluded.status, track_count=excluded.track_count,
+        auto_track_count=excluded.auto_track_count,
+        manual_track_count=excluded.manual_track_count,
+        languages_json=excluded.languages_json, checked_at=excluded.checked_at,
+        detail=excluded.detail, source=excluded.source
+    `).run(result.video_id, status, result.tracks, result.auto, result.manual,
+      JSON.stringify(result.languages), result.detail || '');
+  }
   if (!asJson) {
     const verdict = result.refused ? 'REFUSED'
       : result.no_captions ? 'NO CAPTIONS'
@@ -111,10 +153,12 @@ for (let i = 0; i < work.length; i += 1) {
     console.log(`  ${String(i + 1).padStart(3)}/${work.length}  ${result.video_id}  ${verdict}`);
   }
 }
+if (db) db.close();
 
 const noCaptions = results.filter((r) => r.no_captions);
 const refused = results.filter((r) => r.refused);
-const withCaptions = results.filter((r) => !r.no_captions && !r.refused);
+const errors = results.filter((r) => r.error);
+const withCaptions = results.filter((r) => r.tracks > 0 && !r.refused);
 
 if (outPath && noCaptions.length) {
   fs.mkdirSync(path.dirname(path.resolve(outPath)), { recursive: true });
@@ -128,6 +172,7 @@ const summary = {
   with_captions: withCaptions.length,
   no_captions: noCaptions.length,
   refused: refused.length,
+  errors: errors.length,
   refused_ids: refused.map((r) => r.video_id),
   no_caption_ids: noCaptions.map((r) => r.video_id),
   out: outPath || '',

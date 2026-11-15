@@ -1,5 +1,7 @@
 'use strict';
 
+const { SOURCE_SHELL_CSS, renderCoverage, renderSourceHeader } = require('./sourceDashboardShell');
+
 // The AsymTrading dashboard.
 //
 // One self-contained HTML file, no CDN and no fetched script, for the same
@@ -393,12 +395,32 @@ const CSS = `
  * @returns {string}
  */
 function renderAsymReport(payload, outcomes = null, sectorOutcomes = null) {
+  const c = payload.coverage || {};
+  const source = payload.source || {
+    id: 'asymtrading', label: 'AsymTrading', updatedAt: payload.generated_at,
+    description: 'Written market analysis, sector data, and video-backed trade commentary.',
+    capabilities: ['articles', 'access state', 'video', 'transcripts', 'sector data'],
+    accent: '#43635b',
+  };
+  const coverageStages = [
+    { stage: 'catalogued', count: c.posts, denominator: c.posts, status: c.posts ? 'complete' : 'unknown' },
+    { stage: 'readable', count: c.free, denominator: c.posts, status: c.posts ? 'partial' : 'unknown', reason: 'Paywalled posts remain visible in the catalog' },
+    { stage: 'media available', count: c.with_media, denominator: c.free, status: c.with_media ? 'partial' : 'not_started' },
+    { stage: 'transcribed', count: c.transcribed, denominator: c.with_media, status: c.transcribed ? 'partial' : 'not_started' },
+    { stage: 'articles parsed', count: c.articles, denominator: c.free, status: c.articles ? 'partial' : 'not_started' },
+    { stage: 'sector rows', count: c.sectors, denominator: c.articles, status: c.sectors ? 'partial' : 'not_started' },
+    { stage: 'outcomes scored', count: outcomes && outcomes.overall ? (outcomes.overall.claim_count || outcomes.overall.signal_count || 0) : null, denominator: payload.signal_count || 0, status: outcomes && outcomes.overall ? 'partial' : 'not_started', reason: outcomes && outcomes.overall ? '' : 'Outcome scoring has not been run' },
+  ];
   return `<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><title>AsymTrading Market Pulse</title>
-<style>${CSS}</style></head><body>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AsymTrading Market Pulse</title>
+<style>${CSS}\n${SOURCE_SHELL_CSS}</style></head><body style="--source-accent:#43635b">
+${renderSourceHeader(source)}
+<nav class="source-nav" aria-label="Source dashboard views"><a href="#activity">Activity</a><a href="#signals">Signals</a><a href="#readings">Readings</a><a href="#coverage">Coverage</a></nav>
+<main>
+<section id="activity" class="source-section">
 <h1>AsymTrading — the Market Pulse</h1>
 ${renderHeadline(payload)}
-<h2>The written readings</h2>
+<h2 id="readings">The written readings</h2>
 ${renderArticles(payload.articles)}
 <h2>The sector table</h2>
 ${renderSectors(payload, sectorOutcomes)}
@@ -406,8 +428,12 @@ ${renderSectors(payload, sectorOutcomes)}
 ${renderOutcomes(outcomes)}
 <h2>Most-mentioned names</h2>
 ${renderTickers(payload.tickers)}
-<h2>Every signal</h2>
+ </section>
+<section id="signals" class="source-section"><h2>Every signal</h2>
 ${renderSignals(payload.signals)}
+</section>
+${renderCoverage(coverageStages)}
+</main>
 </body></html>`;
 }
 
