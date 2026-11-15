@@ -1,15 +1,17 @@
 {
   "doc_id": "oconnell_20251125",
-  "generated_at": "2026-11-14T13:37:32.280Z",
-  "notes": [
-    "no equities table found",
-    "no options table found"
-  ],
+  "generated_at": "2026-11-14T15:22:10.577Z",
+  "notes": [],
   "parser_version": "oconnell-positions-2",
   "positions": [],
+  "rejected": [],
   "source_date": "20251125",
   "source_image": "oconnell_20251125_embedded.png",
   "source_kind": "pdf_embedded",
-  "snapshot": {},
+  "snapshot": {
+    "cash_pct": 1,
+    "invested_pct": 99,
+    "win_rate_stock_pct": 67
+  },
   "title": "NVDA Top Leads to Nasdaq RelativeWeakness!"
 }

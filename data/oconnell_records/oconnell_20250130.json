@@ -1,15 +1,74 @@
 {
   "doc_id": "oconnell_20250130",
-  "generated_at": "2026-11-14T13:36:43.402Z",
+  "generated_at": "2026-11-14T14:57:49.666Z",
   "notes": [
-    "no equities table found",
-    "no options table found"
+    " lot(s) refused: their cost, price and gain disagree"
   ],
   "parser_version": "oconnell-positions-2",
-  "positions": [],
+  "positions": [
+    {
+      "beta": null,
+      "change_pct": -1.47,
+      "contract": "",
+      "cost_basis": 3.38,
+      "delta": null,
+      "entry_date": "20250124",
+      "exit_price": null,
+      "exits": "",
+      "gain_loss_pct": -0.89,
+      "instrument": "equity",
+      "option_change_pct": null,
+      "price": 3.35,
+      "r2_price": 4.16,
+      "risk_pct": null,
+      "setup_label": "",
+      "size_stars": 0,
+      "sma20": "",
+      "sma50": "",
+      "stop_price": 2.9911,
+      "ticker": "MSOS",
+      "trade_length_days": null,
+      "underlying_change_pct": null,
+      "lot_key": "equity|MSOS||20250124|3.38",
+      "reading_check": ""
+    }
+  ],
+  "rejected": [
+    {
+      "beta": 0.28,
+      "change_pct": null,
+      "contract": "12/19/25 85 Call (BTO)",
+      "cost_basis": 11.9021,
+      "delta": null,
+      "entry_date": "20250117",
+      "exit_price": null,
+      "exits": "",
+      "gain_loss_pct": 80.46,
+      "instrument": "option",
+      "option_change_pct": 5.91,
+      "price": null,
+      "r2_price": null,
+      "risk_pct": null,
+      "setup_label": "Trend/Sentiment Reversal",
+      "size_stars": 0,
+      "sma20": "",
+      "sma50": "",
+      "stop_price": null,
+      "ticker": "BABA",
+      "trade_length_days": null,
+      "underlying_change_pct": 0.72,
+      "lot_key": "option|BABA|12/19/25 85 Call (BTO)|20250117|11.9021",
+      "reading_check": "no usable price"
+    }
+  ],
   "source_date": "20250130",
   "source_image": "oconnell_20250130_embedded.png",
   "source_kind": "pdf_embedded",
-  "snapshot": {},
+  "snapshot": {
+    "cash_pct": 11,
+    "invested_pct": 89,
+    "win_rate_stock_pct": 0,
+    "win_rate_options_pct": 100
+  },
   "title": "Powell'ing though Earnings Season"
 }

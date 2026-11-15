@@ -305,6 +305,42 @@ function moneyFromCell(cell) {
   return numberFromCell(cell);
 }
 /**
+ * Do a lot's own numbers agree with each other?
+ *
+ * Every lot carries a cost basis, a price and a gain, and the third is
+ * DERIVED from the other two: gain% = (price / cost - 1) * 100. A reading
+ * in which they disagree has misread at least one of them, and there is
+ * no way to tell which -- so the whole lot is refused rather than
+ * published. This is the check that catches what the OCR cannot: on the
+ * small PDF-embedded copies, a "TLY" lot read cost -0.2 and price
+ * 6,720,725,880, and a "JBTC" lot read a gain of 597 %.
+ *
+ * The tolerance allows for rounding. The prices are printed to the cent,
+ * so on a 17-cent option an error of half a cent is three percentage
+ * points; the tolerance is therefore wider for low prices.
+ *
+ * A lot with no cost or no price cannot be checked, and is refused too:
+ * a lot whose basis cannot be verified is not one to publish.
+ *
+ * @param {object} position
+ * @returns {string} '' when the lot is consistent, otherwise the reason
+ */
+function checkLot(position) {
+  const cost = position.cost_basis;
+  const price = position.price;
+  const gain = position.gain_loss_pct;
+  if (typeof cost !== 'number' || !(cost > 0)) return 'no usable cost basis';
+  if (typeof price !== 'number' || !(price >= 0)) return 'no usable price';
+  if (typeof gain !== 'number') return 'no gain to check against';
+  const expected = (price / cost - 1) * 100;
+  const rounding = 100 * 0.005 * (1 / cost + 1 / Math.max(price, 0.005)) * 2;
+  const tolerance = 1.5 + rounding;
+  if (Math.abs(expected - gain) > tolerance) {
+    return `gain ${gain}% disagrees with price/cost (${expected.toFixed(2)}%)`;
+  }
+  return '';
+}
+/**
  * A date, from a cell.
  *
  * The sheet prints US dates -- "12/1/25" is 1 December 2025 -- and the
@@ -501,6 +537,7 @@ async function readTableRows(options) {
         : null,
     };
     position.lot_key = lotKey(position);
+    position.reading_check = checkLot(position);
 
     // A row is a position only if it carries NUMBERS. The band below the
     // last row holds the position-colour legend -- "Bullish", "Neutral",
@@ -626,6 +663,7 @@ module.exports = {
   OPTION_TITLE,
   SIDEBAR_LABELS,
   assignColumns,
+  checkLot,
   columnDistance,
   dateFromCell,
   levenshtein,

@@ -1,6 +1,6 @@
 {
   "doc_id": "oconnell_20260108",
-  "generated_at": "2026-11-14T13:39:12.606Z",
+  "generated_at": "2026-11-14T15:32:19.824Z",
   "notes": [],
   "parser_version": "oconnell-positions-2",
   "positions": [
@@ -153,7 +153,9 @@
       "trade_length_days": 20,
       "underlying_change_pct": 4.15,
       "lot_key": "option|MSOS|06/18/26 5 Call (BTO)|20251219|1.55"
-    },
+    }
+  ],
+  "rejected": [
     {
       "beta": 1.23,
       "change_pct": null,
@@ -177,7 +179,8 @@
       "ticker": "MSOS",
       "trade_length_days": 16,
       "underlying_change_pct": 4.15,
-      "lot_key": "option|MSOS|01/15/27 5 Call (BTO)|20251223|1.58"
+      "lot_key": "option|MSOS|01/15/27 5 Call (BTO)|20251223|1.58",
+      "reading_check": "gain 16.46% disagrees with price/cost (3181.01%)"
     },
     {
       "beta": null,
@@ -202,7 +205,8 @@
       "ticker": "WSTS",
       "trade_length_days": null,
       "underlying_change_pct": null,
-      "lot_key": "option|WSTS|||9"
+      "lot_key": "option|WSTS|||9",
+      "reading_check": "no usable price"
     }
   ],
   "source_date": "20260108",

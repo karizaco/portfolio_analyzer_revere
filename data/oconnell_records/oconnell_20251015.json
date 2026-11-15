@@ -1,15 +1,19 @@
 {
   "doc_id": "oconnell_20251015",
-  "generated_at": "2026-11-14T13:37:05.551Z",
+  "generated_at": "2026-11-14T15:08:03.006Z",
   "notes": [
-    "no equities table found",
     "no options table found"
   ],
   "parser_version": "oconnell-positions-2",
   "positions": [],
+  "rejected": [],
   "source_date": "20251015",
   "source_image": "oconnell_20251015_embedded.png",
   "source_kind": "pdf_embedded",
-  "snapshot": {},
+  "snapshot": {
+    "cash_pct": 1,
+    "invested_pct": 99,
+    "win_rate_stock_pct": 100
+  },
   "title": "Powell Signals the End of QT"
 }

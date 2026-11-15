@@ -1,15 +1,21 @@
 {
   "doc_id": "oconnell_20261102",
-  "generated_at": "2026-11-14T11:49:07.407Z",
+  "generated_at": "2026-11-14T15:51:55.124Z",
   "notes": [
     "no equities table found",
     "no options table found"
   ],
-  "parser_version": "oconnell-positions-1",
+  "parser_version": "oconnell-positions-2",
   "positions": [],
+  "rejected": [],
   "source_date": "20261102",
   "source_image": "oconnell_20261102_embedded.png",
   "source_kind": "pdf_embedded",
-  "snapshot": {},
+  "snapshot": {
+    "cash_pct": 0,
+    "invested_pct": 100,
+    "win_rate_stock_pct": 33,
+    "win_rate_options_pct": 33
+  },
   "title": "US Midterm Elections Tomorrow! The Markeis Pricing in a Blue Wave!"
 }

@@ -1,15 +1,20 @@
 {
   "doc_id": "oconnell_20251016",
-  "generated_at": "2026-11-14T13:37:07.082Z",
+  "generated_at": "2026-11-14T15:08:35.664Z",
   "notes": [
     "no equities table found",
     "no options table found"
   ],
   "parser_version": "oconnell-positions-2",
   "positions": [],
+  "rejected": [],
   "source_date": "20251016",
   "source_image": "oconnell_20251016_embedded.png",
   "source_kind": "pdf_embedded",
-  "snapshot": {},
+  "snapshot": {
+    "cash_pct": 1,
+    "invested_pct": 99,
+    "win_rate_stock_pct": 100
+  },
   "title": "Retail Steamroller!"
 }

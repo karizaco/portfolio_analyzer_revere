@@ -1,8 +1,8 @@
 {
   "doc_id": "oconnell_20261015",
-  "generated_at": "2026-11-14T11:47:22.453Z",
+  "generated_at": "2026-11-14T15:50:57.012Z",
   "notes": [],
-  "parser_version": "oconnell-positions-1",
+  "parser_version": "oconnell-positions-2",
   "positions": [
     {
       "beta": null,
@@ -41,7 +41,7 @@
       "gain_loss_pct": -25.18,
       "instrument": "equity",
       "option_change_pct": null,
-      "price": 56.36,
+      "price": 6.36,
       "r2_price": 11.52,
       "risk_pct": -17.76,
       "setup_label": "",
@@ -130,6 +130,7 @@
       "lot_key": "option|TLT|12/18/26 79 Call (BTO)|20260925|2.28"
     }
   ],
+  "rejected": [],
   "source_date": "20261015",
   "source_image": "20261015_positions.png",
   "source_kind": "screenshot",

@@ -1,15 +1,47 @@
 {
   "doc_id": "oconnell_20241204",
-  "generated_at": "2026-11-14T13:36:32.932Z",
+  "generated_at": "2026-11-14T14:49:44.293Z",
   "notes": [
-    "no equities table found",
-    "no options table found"
+    " lot(s) refused: their cost, price and gain disagree"
   ],
   "parser_version": "oconnell-positions-2",
   "positions": [],
+  "rejected": [
+    {
+      "beta": null,
+      "change_pct": null,
+      "contract": "Cost Basis",
+      "cost_basis": null,
+      "delta": null,
+      "entry_date": "",
+      "exit_price": null,
+      "exits": "Entry Date",
+      "gain_loss_pct": null,
+      "instrument": "option",
+      "option_change_pct": null,
+      "price": 5,
+      "r2_price": null,
+      "risk_pct": null,
+      "setup_label": "Targets",
+      "size_stars": 0,
+      "sma20": "",
+      "sma50": "",
+      "stop_price": null,
+      "ticker": "IT",
+      "trade_length_days": null,
+      "underlying_change_pct": null,
+      "lot_key": "option|IT|Cost Basis||",
+      "reading_check": "no usable cost basis"
+    }
+  ],
   "source_date": "20241204",
   "source_image": "oconnell_20241204_embedded.png",
   "source_kind": "pdf_embedded",
-  "snapshot": {},
+  "snapshot": {
+    "cash_pct": 11,
+    "invested_pct": 89,
+    "win_rate_stock_pct": 100,
+    "win_rate_options_pct": 100
+  },
   "title": "The Finish Line is in Sight!"
 }

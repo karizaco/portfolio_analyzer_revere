@@ -1,9 +1,39 @@
 {
   "doc_id": "oconnell_20250128",
-  "generated_at": "2026-11-14T13:36:43.397Z",
-  "notes": [],
+  "generated_at": "2026-11-14T14:57:03.385Z",
+  "notes": [
+    " lot(s) refused: their cost, price and gain disagree"
+  ],
   "parser_version": "oconnell-positions-2",
   "positions": [
+    {
+      "beta": 0.27,
+      "change_pct": null,
+      "contract": "",
+      "cost_basis": 11.9,
+      "delta": 0.69,
+      "entry_date": "20250117",
+      "exit_price": null,
+      "exits": "",
+      "gain_loss_pct": 36.34,
+      "instrument": "option",
+      "option_change_pct": 12197258538,
+      "price": 16.23,
+      "r2_price": null,
+      "risk_pct": null,
+      "setup_label": "",
+      "size_stars": 2,
+      "sma20": "",
+      "sma50": "",
+      "stop_price": null,
+      "ticker": "BA.",
+      "trade_length_days": null,
+      "underlying_change_pct": null,
+      "lot_key": "option|BA.||20250117|11.9",
+      "reading_check": ""
+    }
+  ],
+  "rejected": [
     {
       "beta": null,
       "change_pct": null,
@@ -27,7 +57,8 @@
       "ticker": "SS-.",
       "trade_length_days": null,
       "underlying_change_pct": null,
-      "lot_key": "equity|SS-.||20250124|3.383"
+      "lot_key": "equity|SS-.||20250124|3.383",
+      "reading_check": "no usable price"
     },
     {
       "beta": null,
@@ -52,32 +83,8 @@
       "ticker": "RKT.",
       "trade_length_days": null,
       "underlying_change_pct": null,
-      "lot_key": "equity|RKT.||20250127|12.5312"
-    },
-    {
-      "beta": 0.27,
-      "change_pct": null,
-      "contract": "",
-      "cost_basis": 11.9,
-      "delta": 0.69,
-      "entry_date": "20250117",
-      "exit_price": null,
-      "exits": "",
-      "gain_loss_pct": 36.34,
-      "instrument": "option",
-      "option_change_pct": 12197258538,
-      "price": 16.23,
-      "r2_price": null,
-      "risk_pct": null,
-      "setup_label": "",
-      "size_stars": 2,
-      "sma20": "",
-      "sma50": "",
-      "stop_price": null,
-      "ticker": "BA.",
-      "trade_length_days": null,
-      "underlying_change_pct": null,
-      "lot_key": "option|BA.||20250117|11.9"
+      "lot_key": "equity|RKT.||20250127|12.5312",
+      "reading_check": "no usable price"
     }
   ],
   "source_date": "20250128",

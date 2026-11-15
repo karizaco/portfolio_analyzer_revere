@@ -1,11 +1,13 @@
 {
   "doc_id": "oconnell_20250103",
-  "generated_at": "2026-11-14T13:36:38.654Z",
+  "generated_at": "2026-11-14T14:53:03.910Z",
   "notes": [
-    "no options table found"
+    "no options table found",
+    " lot(s) refused: their cost, price and gain disagree"
   ],
   "parser_version": "oconnell-positions-2",
-  "positions": [
+  "positions": [],
+  "rejected": [
     {
       "beta": null,
       "change_pct": 7.09,
@@ -29,7 +31,8 @@
       "ticker": "MSOS",
       "trade_length_days": null,
       "underlying_change_pct": null,
-      "lot_key": "equity|MSOS||20250102|"
+      "lot_key": "equity|MSOS||20250102|",
+      "reading_check": "no usable cost basis"
     },
     {
       "beta": null,
@@ -54,7 +57,8 @@
       "ticker": "TLTTLT",
       "trade_length_days": null,
       "underlying_change_pct": null,
-      "lot_key": "equity|TLTTLT||20241219|"
+      "lot_key": "equity|TLTTLT||20241219|",
+      "reading_check": "no usable cost basis"
     },
     {
       "beta": null,
@@ -79,7 +83,8 @@
       "ticker": "BABA",
       "trade_length_days": null,
       "underlying_change_pct": null,
-      "lot_key": "equity|BABA||20241223|"
+      "lot_key": "equity|BABA||20241223|",
+      "reading_check": "no usable cost basis"
     }
   ],
   "source_date": "20250103",

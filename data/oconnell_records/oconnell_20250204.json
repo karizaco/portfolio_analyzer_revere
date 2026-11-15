@@ -1,15 +1,73 @@
 {
   "doc_id": "oconnell_20250204",
-  "generated_at": "2026-11-14T13:36:44.232Z",
+  "generated_at": "2026-11-14T14:58:21.853Z",
   "notes": [
-    "no equities table found",
-    "no options table found"
+    "no equities table found"
   ],
   "parser_version": "oconnell-positions-2",
-  "positions": [],
+  "positions": [
+    {
+      "beta": 0.31,
+      "change_pct": null,
+      "contract": "12/19/25 85 Call (BTO)",
+      "cost_basis": 11.9,
+      "delta": 0.76,
+      "entry_date": "",
+      "exit_price": 117725,
+      "exits": "",
+      "gain_loss_pct": 94.33,
+      "instrument": "option",
+      "option_change_pct": 0.52,
+      "price": 23.13,
+      "r2_price": null,
+      "risk_pct": null,
+      "setup_label": "",
+      "size_stars": 3,
+      "sma20": "",
+      "sma50": "",
+      "stop_price": null,
+      "ticker": "BABA",
+      "trade_length_days": null,
+      "underlying_change_pct": -0.23,
+      "lot_key": "option|BABA|12/19/25 85 Call (BTO)||11.9",
+      "reading_check": ""
+    },
+    {
+      "beta": 1,
+      "change_pct": null,
+      "contract": "06/20/25 12 Call (TC)",
+      "cost_basis": 1.9,
+      "delta": 0.61,
+      "entry_date": "",
+      "exit_price": 2325,
+      "exits": "",
+      "gain_loss_pct": -9.21,
+      "instrument": "option",
+      "option_change_pct": -17.27,
+      "price": 1.73,
+      "r2_price": null,
+      "risk_pct": null,
+      "setup_label": "",
+      "size_stars": 2,
+      "sma20": "",
+      "sma50": "",
+      "stop_price": null,
+      "ticker": "RKT",
+      "trade_length_days": null,
+      "underlying_change_pct": -3.25,
+      "lot_key": "option|RKT|06/20/25 12 Call (TC)||1.9",
+      "reading_check": ""
+    }
+  ],
+  "rejected": [],
   "source_date": "20250204",
   "source_image": "oconnell_20250204_embedded.png",
   "source_kind": "pdf_embedded",
-  "snapshot": {},
+  "snapshot": {
+    "cash_pct": 2,
+    "invested_pct": 98,
+    "win_rate_stock_pct": 100,
+    "win_rate_options_pct": 50
+  },
   "title": "Trade Talks are Going Well!"
 }

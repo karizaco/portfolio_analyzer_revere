@@ -1,15 +1,21 @@
 {
   "doc_id": "oconnell_20250107",
-  "generated_at": "2026-11-14T13:36:39.521Z",
+  "generated_at": "2026-11-14T14:53:20.177Z",
   "notes": [
     "no equities table found",
     "no options table found"
   ],
   "parser_version": "oconnell-positions-2",
   "positions": [],
+  "rejected": [],
   "source_date": "20250107",
   "source_image": "oconnell_20250107_embedded.png",
   "source_kind": "pdf_embedded",
-  "snapshot": {},
+  "snapshot": {
+    "cash_pct": 21,
+    "invested_pct": 79,
+    "win_rate_stock_pct": 100,
+    "win_rate_options_pct": 0
+  },
   "title": "Semiconductor Strength"
 }

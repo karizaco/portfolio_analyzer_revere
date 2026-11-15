@@ -1,6 +1,6 @@
 {
   "doc_id": "oconnell_20250325",
-  "generated_at": "2026-11-14T13:36:46.204Z",
+  "generated_at": "2026-11-14T15:01:50.121Z",
   "notes": [
     "no options table found"
   ],
@@ -55,7 +55,9 @@
       "trade_length_days": null,
       "underlying_change_pct": null,
       "lot_key": "equity|VIPS||20250304|15.78"
-    },
+    }
+  ],
+  "rejected": [
     {
       "beta": null,
       "change_pct": -1.03,
@@ -79,7 +81,8 @@
       "ticker": "TLT",
       "trade_length_days": null,
       "underlying_change_pct": null,
-      "lot_key": "equity|TLT||20250213|-500"
+      "lot_key": "equity|TLT||20250213|-500",
+      "reading_check": "no usable cost basis"
     },
     {
       "beta": null,
@@ -104,7 +107,8 @@
       "ticker": "UBER",
       "trade_length_days": null,
       "underlying_change_pct": null,
-      "lot_key": "equity|UBER||20250304|0"
+      "lot_key": "equity|UBER||20250304|0",
+      "reading_check": "no usable cost basis"
     },
     {
       "beta": null,
@@ -129,7 +133,8 @@
       "ticker": "UBER",
       "trade_length_days": null,
       "underlying_change_pct": null,
-      "lot_key": "equity|UBER||20250306|0"
+      "lot_key": "equity|UBER||20250306|0",
+      "reading_check": "no usable cost basis"
     },
     {
       "beta": null,
@@ -154,7 +159,8 @@
       "ticker": "UBER",
       "trade_length_days": null,
       "underlying_change_pct": null,
-      "lot_key": "equity|UBER||20250307|0"
+      "lot_key": "equity|UBER||20250307|0",
+      "reading_check": "no usable cost basis"
     },
     {
       "beta": null,
@@ -179,7 +185,8 @@
       "ticker": "UBER",
       "trade_length_days": null,
       "underlying_change_pct": null,
-      "lot_key": "equity|UBER||20250319|3.63"
+      "lot_key": "equity|UBER||20250319|3.63",
+      "reading_check": "gain 17.54% disagrees with price/cost (3358834610.74%)"
     }
   ],
   "source_date": "20250325",

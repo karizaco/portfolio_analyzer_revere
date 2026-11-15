@@ -1,15 +1,16 @@
 {
   "doc_id": "oconnell_20250122",
-  "generated_at": "2026-11-14T13:36:41.702Z",
-  "notes": [
-    "no equities table found",
-    "no options table found"
-  ],
+  "generated_at": "2026-11-14T14:56:01.818Z",
+  "notes": [],
   "parser_version": "oconnell-positions-2",
   "positions": [],
+  "rejected": [],
   "source_date": "20250122",
   "source_image": "oconnell_20250122_embedded.png",
   "source_kind": "pdf_embedded",
-  "snapshot": {},
+  "snapshot": {
+    "cash_pct": 23,
+    "invested_pct": 77
+  },
   "title": "Netflix Beats!"
 }

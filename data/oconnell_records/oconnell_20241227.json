@@ -1,15 +1,74 @@
 {
   "doc_id": "oconnell_20241227",
-  "generated_at": "2026-11-14T13:36:36.999Z",
+  "generated_at": "2026-11-14T14:52:28.809Z",
   "notes": [
-    "no equities table found",
-    "no options table found"
+    " lot(s) refused: their cost, price and gain disagree"
   ],
   "parser_version": "oconnell-positions-2",
-  "positions": [],
+  "positions": [
+    {
+      "beta": 1.08,
+      "change_pct": null,
+      "contract": "02/21/25 180 Call (BTO)",
+      "cost_basis": 11.55,
+      "delta": null,
+      "entry_date": "20241223",
+      "exit_price": null,
+      "exits": "",
+      "gain_loss_pct": 16.88,
+      "instrument": "option",
+      "option_change_pct": 1.19,
+      "price": 13.5,
+      "r2_price": null,
+      "risk_pct": null,
+      "setup_label": "",
+      "size_stars": 0,
+      "sma20": "",
+      "sma50": "",
+      "stop_price": null,
+      "ticker": "GOOGL",
+      "trade_length_days": null,
+      "underlying_change_pct": -0.26,
+      "lot_key": "option|GOOGL|02/21/25 180 Call (BTO)|20241223|11.55",
+      "reading_check": ""
+    }
+  ],
+  "rejected": [
+    {
+      "beta": 0.29,
+      "change_pct": null,
+      "contract": "06/20/25 83 Call (BTO)",
+      "cost_basis": 6.05,
+      "delta": null,
+      "entry_date": "20241106",
+      "exit_price": null,
+      "exits": "",
+      "gain_loss_pct": -12.73,
+      "instrument": "option",
+      "option_change_pct": 2.78,
+      "price": 4,
+      "r2_price": null,
+      "risk_pct": null,
+      "setup_label": "",
+      "size_stars": 0,
+      "sma20": "",
+      "sma50": "",
+      "stop_price": null,
+      "ticker": "TLT",
+      "trade_length_days": null,
+      "underlying_change_pct": -0.06,
+      "lot_key": "option|TLT|06/20/25 83 Call (BTO)|20241106|6.05",
+      "reading_check": "gain -12.73% disagrees with price/cost (-33.88%)"
+    }
+  ],
   "source_date": "20241227",
   "source_image": "oconnell_20241227_embedded.png",
   "source_kind": "pdf_embedded",
-  "snapshot": {},
+  "snapshot": {
+    "cash_pct": 70,
+    "invested_pct": 30,
+    "win_rate_stock_pct": 0,
+    "win_rate_options_pct": 50
+  },
   "title": "Top Ideas for 2025"
 }

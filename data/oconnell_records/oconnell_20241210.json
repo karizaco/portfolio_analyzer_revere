@@ -1,7 +1,9 @@
 {
   "doc_id": "oconnell_20241210",
-  "generated_at": "2026-11-14T13:36:34.561Z",
-  "notes": [],
+  "generated_at": "2026-11-14T14:50:33.388Z",
+  "notes": [
+    " lot(s) refused: their cost, price and gain disagree"
+  ],
   "parser_version": "oconnell-positions-2",
   "positions": [
     {
@@ -27,7 +29,8 @@
       "ticker": "MSOS",
       "trade_length_days": null,
       "underlying_change_pct": null,
-      "lot_key": "equity|MSOS||20241112|4.24"
+      "lot_key": "equity|MSOS||20241112|4.24",
+      "reading_check": ""
     },
     {
       "beta": null,
@@ -52,8 +55,11 @@
       "ticker": "RKT",
       "trade_length_days": null,
       "underlying_change_pct": null,
-      "lot_key": "equity|RKT||20241115|13.62"
-    },
+      "lot_key": "equity|RKT||20241115|13.62",
+      "reading_check": ""
+    }
+  ],
+  "rejected": [
     {
       "beta": 0.29,
       "change_pct": null,
@@ -77,7 +83,8 @@
       "ticker": "TLT",
       "trade_length_days": null,
       "underlying_change_pct": -0.92,
-      "lot_key": "option|TLT|06/20/25 88 Call (BTO)|20241106|6.05"
+      "lot_key": "option|TLT|06/20/25 88 Call (BTO)|20241106|6.05",
+      "reading_check": "gain 24.21% disagrees with price/cost (27.77%)"
     }
   ],
   "source_date": "20241210",

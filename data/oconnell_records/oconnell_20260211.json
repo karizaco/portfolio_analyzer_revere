@@ -1,6 +1,6 @@
 {
   "doc_id": "oconnell_20260211",
-  "generated_at": "2026-11-14T13:39:47.125Z",
+  "generated_at": "2026-11-14T15:32:20.648Z",
   "notes": [],
   "parser_version": "oconnell-positions-2",
   "positions": [
@@ -158,31 +158,6 @@
       "beta": 1.19,
       "change_pct": null,
       "contract": "06/18/26 5 Call (BTO)",
-      "cost_basis": 1.55,
-      "delta": 0.5,
-      "entry_date": "20251219",
-      "exit_price": null,
-      "exits": "",
-      "gain_loss_pct": -35.16,
-      "instrument": "option",
-      "option_change_pct": -5.71,
-      "price": 0.7,
-      "r2_price": null,
-      "risk_pct": null,
-      "setup_label": "Rescheduling",
-      "size_stars": 1,
-      "sma20": "",
-      "sma50": "",
-      "stop_price": null,
-      "ticker": "MSOS",
-      "trade_length_days": 52,
-      "underlying_change_pct": 1.2,
-      "lot_key": "option|MSOS|06/18/26 5 Call (BTO)|20251219|1.55"
-    },
-    {
-      "beta": 1.19,
-      "change_pct": null,
-      "contract": "06/18/26 5 Call (BTO)",
       "cost_basis": 1.06,
       "delta": 0.62,
       "entry_date": "20260120",
@@ -228,6 +203,34 @@
       "trade_length_days": 48,
       "underlying_change_pct": 1.2,
       "lot_key": "option|MSOS|01/15/27 5 Call (BTO)|20251223|1.58"
+    }
+  ],
+  "rejected": [
+    {
+      "beta": 1.19,
+      "change_pct": null,
+      "contract": "06/18/26 5 Call (BTO)",
+      "cost_basis": 1.55,
+      "delta": 0.5,
+      "entry_date": "20251219",
+      "exit_price": null,
+      "exits": "",
+      "gain_loss_pct": -35.16,
+      "instrument": "option",
+      "option_change_pct": -5.71,
+      "price": 0.7,
+      "r2_price": null,
+      "risk_pct": null,
+      "setup_label": "Rescheduling",
+      "size_stars": 1,
+      "sma20": "",
+      "sma50": "",
+      "stop_price": null,
+      "ticker": "MSOS",
+      "trade_length_days": 52,
+      "underlying_change_pct": 1.2,
+      "lot_key": "option|MSOS|06/18/26 5 Call (BTO)|20251219|1.55",
+      "reading_check": "gain -35.16% disagrees with price/cost (-54.84%)"
     },
     {
       "beta": null,
@@ -252,7 +255,8 @@
       "ticker": "WSTS",
       "trade_length_days": null,
       "underlying_change_pct": null,
-      "lot_key": "option|WSTS|||9"
+      "lot_key": "option|WSTS|||9",
+      "reading_check": "no usable price"
     }
   ],
   "source_date": "20260211",

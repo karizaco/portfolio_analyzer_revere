@@ -1,8 +1,8 @@
 {
   "doc_id": "oconnell_20261019",
-  "generated_at": "2026-11-14T11:47:39.198Z",
+  "generated_at": "2026-11-14T15:50:57.858Z",
   "notes": [],
-  "parser_version": "oconnell-positions-1",
+  "parser_version": "oconnell-positions-2",
   "positions": [
     {
       "beta": null,
@@ -46,8 +46,8 @@
       "risk_pct": -17.76,
       "setup_label": "",
       "size_stars": 1,
-      "sma20": "Y BELOW",
-      "sma50": "Y BELOW",
+      "sma20": "BELOW",
+      "sma50": "BELOW",
       "stop_price": 6.99,
       "ticker": "GTBIF",
       "trade_length_days": 277,
@@ -130,6 +130,7 @@
       "lot_key": "option|MSOS|03/19/27 5 Call (BTO)|20260916|0.95"
     }
   ],
+  "rejected": [],
   "source_date": "20261019",
   "source_image": "20261019_positions.png",
   "source_kind": "screenshot",
@@ -139,8 +140,7 @@
     "max_loss_stock_pct": 8,
     "max_loss_options_pct": 100,
     "win_rate_stock_pct": 0,
-    "win_rate_options_pct": 0,
-    "trend_model": 3
+    "win_rate_options_pct": 0
   },
   "title": "CRWV Failed Bounce Attempt!"
 }

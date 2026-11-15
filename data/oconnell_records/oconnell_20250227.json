@@ -1,9 +1,12 @@
 {
   "doc_id": "oconnell_20250227",
-  "generated_at": "2026-11-14T13:36:44.247Z",
-  "notes": [],
+  "generated_at": "2026-11-14T15:00:39.372Z",
+  "notes": [
+    " lot(s) refused: their cost, price and gain disagree"
+  ],
   "parser_version": "oconnell-positions-2",
-  "positions": [
+  "positions": [],
+  "rejected": [
     {
       "beta": null,
       "change_pct": null,
@@ -27,7 +30,8 @@
       "ticker": "MS.S.",
       "trade_length_days": null,
       "underlying_change_pct": null,
-      "lot_key": "equity|MS.S.|||"
+      "lot_key": "equity|MS.S.|||",
+      "reading_check": "no usable cost basis"
     }
   ],
   "source_date": "20250227",

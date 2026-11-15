@@ -1,15 +1,23 @@
 {
   "doc_id": "oconnell_20261109",
-  "generated_at": "2026-11-14T11:49:32.668Z",
+  "generated_at": "2026-11-14T15:52:25.087Z",
   "notes": [
     "no equities table found",
     "no options table found"
   ],
-  "parser_version": "oconnell-positions-1",
+  "parser_version": "oconnell-positions-2",
   "positions": [],
+  "rejected": [],
   "source_date": "20261109",
   "source_image": "oconnell_20261109_embedded.png",
   "source_kind": "pdf_embedded",
-  "snapshot": {},
+  "snapshot": {
+    "cash_pct": 0,
+    "invested_pct": 100,
+    "max_loss_stock_pct": 8,
+    "max_loss_options_pct": 100,
+    "win_rate_stock_pct": 33,
+    "win_rate_options_pct": 33
+  },
   "title": "The Jensen Huang Affair Leaked Last Week!Time to Buy NVDA?"
 }

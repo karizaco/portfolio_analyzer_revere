@@ -1,15 +1,18 @@
 {
   "doc_id": "oconnell_20250326",
-  "generated_at": "2026-11-14T13:36:46.205Z",
-  "notes": [
-    "no equities table found",
-    "no options table found"
-  ],
+  "generated_at": "2026-11-14T15:02:28.296Z",
+  "notes": [],
   "parser_version": "oconnell-positions-2",
   "positions": [],
+  "rejected": [],
   "source_date": "20250326",
   "source_image": "oconnell_20250326_embedded.png",
   "source_kind": "pdf_embedded",
-  "snapshot": {},
+  "snapshot": {
+    "cash_pct": 30,
+    "invested_pct": 70,
+    "win_rate_stock_pct": 100,
+    "win_rate_options_pct": 60
+  },
   "title": "Quarter-End Performance Chase"
 }

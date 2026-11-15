@@ -1,15 +1,73 @@
 {
   "doc_id": "oconnell_20250124",
-  "generated_at": "2026-11-14T13:36:42.501Z",
+  "generated_at": "2026-11-14T14:56:34.554Z",
   "notes": [
-    "no equities table found",
-    "no options table found"
+    " lot(s) refused: their cost, price and gain disagree"
   ],
   "parser_version": "oconnell-positions-2",
-  "positions": [],
+  "positions": [
+    {
+      "beta": 0.27,
+      "change_pct": null,
+      "contract": "12/19/25 85 Call (BTO)",
+      "cost_basis": 11.9,
+      "delta": 63,
+      "entry_date": "",
+      "exit_price": null,
+      "exits": "",
+      "gain_loss_pct": 18.7,
+      "instrument": "option",
+      "option_change_pct": -0.29,
+      "price": 14.13,
+      "r2_price": null,
+      "risk_pct": null,
+      "setup_label": "",
+      "size_stars": 2,
+      "sma20": "",
+      "sma50": "",
+      "stop_price": null,
+      "ticker": "BABA",
+      "trade_length_days": null,
+      "underlying_change_pct": -0.35,
+      "lot_key": "option|BABA|12/19/25 85 Call (BTO)||11.9",
+      "reading_check": ""
+    }
+  ],
+  "rejected": [
+    {
+      "beta": 2.77,
+      "change_pct": null,
+      "contract": "04/17/25 40 Put (8TO)",
+      "cost_basis": -8.75,
+      "delta": 0.35,
+      "entry_date": "",
+      "exit_price": 12225,
+      "exits": "",
+      "gain_loss_pct": 10.57,
+      "instrument": "option",
+      "option_change_pct": 2.65,
+      "price": 5.68,
+      "r2_price": null,
+      "risk_pct": null,
+      "setup_label": "",
+      "size_stars": 2,
+      "sma20": "",
+      "sma50": "",
+      "stop_price": null,
+      "ticker": "IONQ",
+      "trade_length_days": null,
+      "underlying_change_pct": -1.64,
+      "lot_key": "option|IONQ|04/17/25 40 Put (8TO)||-8.75",
+      "reading_check": "no usable cost basis"
+    }
+  ],
   "source_date": "20250124",
   "source_image": "oconnell_20250124_embedded.png",
   "source_kind": "pdf_embedded",
-  "snapshot": {},
+  "snapshot": {
+    "cash_pct": 79,
+    "invested_pct": 21,
+    "win_rate_stock_pct": 100
+  },
   "title": "China Rally!"
 }

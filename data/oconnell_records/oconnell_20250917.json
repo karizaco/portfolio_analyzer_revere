@@ -1,15 +1,20 @@
 {
   "doc_id": "oconnell_20250917",
-  "generated_at": "2026-11-14T13:37:00.236Z",
+  "generated_at": "2026-11-14T15:07:02.060Z",
   "notes": [
     "no equities table found",
     "no options table found"
   ],
   "parser_version": "oconnell-positions-2",
   "positions": [],
+  "rejected": [],
   "source_date": "20250917",
   "source_image": "oconnell_20250917_embedded.png",
   "source_kind": "pdf_embedded",
-  "snapshot": {},
+  "snapshot": {
+    "cash_pct": 1,
+    "invested_pct": 99,
+    "win_rate_stock_pct": 83
+  },
   "title": "Fed Wednesday Incoming!"
 }

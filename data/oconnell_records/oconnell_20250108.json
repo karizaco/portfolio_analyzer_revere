@@ -1,15 +1,74 @@
 {
   "doc_id": "oconnell_20250108",
-  "generated_at": "2026-11-14T13:36:39.523Z",
+  "generated_at": "2026-11-14T14:53:44.232Z",
   "notes": [
     "no equities table found",
-    "no options table found"
+    " lot(s) refused: their cost, price and gain disagree"
   ],
   "parser_version": "oconnell-positions-2",
   "positions": [],
+  "rejected": [
+    {
+      "beta": 0.27,
+      "change_pct": null,
+      "contract": "06/20/25 85 Call (BTO)",
+      "cost_basis": 5.7,
+      "delta": null,
+      "entry_date": "20241223",
+      "exit_price": null,
+      "exits": "",
+      "gain_loss_pct": -10.05,
+      "instrument": "option",
+      "option_change_pct": -9.52,
+      "price": 8.73,
+      "r2_price": null,
+      "risk_pct": null,
+      "setup_label": "",
+      "size_stars": 0,
+      "sma20": "",
+      "sma50": "",
+      "stop_price": null,
+      "ticker": "BABA",
+      "trade_length_days": null,
+      "underlying_change_pct": -1.22,
+      "lot_key": "option|BABA|06/20/25 85 Call (BTO)|20241223|5.7",
+      "reading_check": "gain -10.05% disagrees with price/cost (53.16%)"
+    },
+    {
+      "beta": 1,
+      "change_pct": null,
+      "contract": "04/17/25 555 Put (BTO)",
+      "cost_basis": -15.68,
+      "delta": null,
+      "entry_date": "20250107",
+      "exit_price": null,
+      "exits": "",
+      "gain_loss_pct": 1437,
+      "instrument": "option",
+      "option_change_pct": null,
+      "price": 17.95,
+      "r2_price": null,
+      "risk_pct": null,
+      "setup_label": "",
+      "size_stars": 0,
+      "sma20": "",
+      "sma50": "",
+      "stop_price": null,
+      "ticker": "SPY",
+      "trade_length_days": null,
+      "underlying_change_pct": -1.13,
+      "lot_key": "option|SPY|04/17/25 555 Put (BTO)|20250107|-15.68",
+      "reading_check": "no usable cost basis"
+    }
+  ],
   "source_date": "20250108",
   "source_image": "oconnell_20250108_embedded.png",
   "source_kind": "pdf_embedded",
-  "snapshot": {},
+  "snapshot": {
+    "cash_pct": 17,
+    "invested_pct": 83,
+    "win_rate_stock_pct": 100,
+    "win_rate_options_pct": 50
+  },
   "title": "Bond Yield Breakout"
 }

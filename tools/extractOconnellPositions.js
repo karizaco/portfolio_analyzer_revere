@@ -39,6 +39,7 @@ const {
   EQUITY_TITLE,
   OPTION_COLUMNS,
   OPTION_TITLE,
+  checkLot,
   readFooterSnapshot,
   readSidebarSnapshot,
   readTableRows,
@@ -77,6 +78,8 @@ const options = {
   json: argv.includes('--json'),
   limit: Number(readFlag(argv, '--limit')) || 0,
   refresh: argv.includes('--refresh'),
+  // Re-read only the issues that have no screenshot (the PDF-embedded ones).
+  refreshEmbedded: argv.includes('--refresh-embedded'),
   sourceDir: oconnellSourceDir({ sourceDir: readFlag(argv, '--source-dir') }),
 };
 
@@ -114,21 +117,44 @@ async function resolvePositionImage(issue) {
   const meta = readMeta(pdfPath);
   if (meta.error) return null;
 
-  for (const page of meta.pages || []) {
+  // The position log is the LARGEST image under the "Position Log" heading,
+  // on that page or the next one -- not the smallest. The smallest image
+  // under the heading is the pointing-finger emoji the author puts after
+  // it ("Position Log" + a 64x64 hand), and picking it made 90 issues read
+  // as having no tables at all. A position log is a spreadsheet and is at
+  // least several hundred pixels wide; anything narrower is an icon.
+  const MIN_WIDTH = 700;
+  const MIN_HEIGHT = 200;
+  const pages = meta.pages || [];
+  for (let index = 0; index < pages.length; index += 1) {
+    const page = pages[index];
     const heading = (page.text_blocks || []).find((block) => /position\s*log/i.test(block.text || ''));
     if (!heading) continue;
-    const below = (page.images || [])
-      .filter((image) => image.bbox[1] >= heading.bbox[1] - 12)
-      .sort((a, b) => (a.bbox[2] - a.bbox[0]) * (a.bbox[3] - a.bbox[1])
-        - (b.bbox[2] - b.bbox[0]) * (b.bbox[3] - b.bbox[1]));
-    if (!below.length) continue;
-    const target = below[0];
+
+    const candidates = [];
+    const consider = (pageNumber, list, minTop) => {
+      for (const image of list || []) {
+        if (image.width < MIN_WIDTH || image.height < MIN_HEIGHT) continue;
+        if (image.bbox[1] < minTop) continue;
+        candidates.push({ area: image.width * image.height, image, page: pageNumber });
+      }
+    };
+    // The heading's OWN page first. The next page is only a fallback for a log
+    // that starts at the very bottom of one page: letting it compete by area
+    // picked the comment box (1927x324) over the log (1272x393) on 20241122.
+    consider(page.page, page.images, heading.bbox[1] - 12);
+    if (!candidates.length && pages[index + 1]) {
+      consider(pages[index + 1].page, pages[index + 1].images, -Infinity);
+    }
+    if (!candidates.length) continue;
+
+    candidates.sort((a, b) => b.area - a.area);
+    const target = candidates[0];
     fs.mkdirSync(WORK_DIR, { recursive: true });
     const out = path.join(WORK_DIR, `${issue.doc_id}_embedded.png`);
-    extractEmbeddedImage(pdfPath, page.page, target.xref, out);
+    extractEmbeddedImage(pdfPath, target.page, target.image.xref, out);
     return { path: out, source: 'pdf_embedded' };
-  }
-  return null;
+  }  return null;
 }
 
 /**
@@ -305,7 +331,13 @@ async function readPositionLog(imagePath, sourceYear) {
     ...(await readFooterSnapshot(source.data, source.info, grid)),
   };
 
-  return { notes, positions, snapshot };
+  // Refuse the lots whose own numbers disagree (see checkLot). They are kept
+  // in the record, with the reason, but are not published as positions.
+  const rejected = positions.filter((position) => position.reading_check);
+  const accepted = positions.filter((position) => !position.reading_check);
+  if (rejected.length) notes.push(` lot(s) refused: their cost, price and gain disagree`);
+
+  return { notes, positions: accepted, rejected, snapshot };
 }
 
 /**
@@ -447,6 +479,7 @@ function writeRecord(issue, reading) {
     notes: reading.notes || [],
     parser_version: PARSER_VERSION,
     positions: reading.positions,
+    rejected: reading.rejected || [],
     source_date: issue.source_date,
     source_image: reading.source_image || '',
     source_kind: reading.source_kind || '',
@@ -477,7 +510,8 @@ async function main() {
 
   for (const issue of candidates) {
     const checksum = issue.positions_checksum || `pdf:${issue.pdf_path}`;
-    let reading = options.refresh ? null : cachedReading(db, checksum);
+    const forceRefresh = options.refresh || (options.refreshEmbedded && !issue.positions_path);
+    let reading = forceRefresh ? null : cachedReading(db, checksum);
 
     if (!reading) {
       const image = await resolvePositionImage(issue);
@@ -499,6 +533,16 @@ async function main() {
     } else {
       cached += 1;
     }
+
+    // Apply the consistency check to EVERY reading, cached or fresh: the cache
+    // holds readings made before the check existed, and re-reading them all
+    // would cost hours. The check is idempotent.
+    const checked = reading.positions.map((position) => ({ position, reason: checkLot(position) }));
+    reading.rejected = (reading.rejected || []).concat(
+      checked.filter((entry) => entry.reason)
+        .map((entry) => ({ ...entry.position, reading_check: entry.reason }))
+    );
+    reading.positions = checked.filter((entry) => !entry.reason).map((entry) => entry.position);
 
     writeReading(db, issue, reading);
     writeRecord(issue, reading);

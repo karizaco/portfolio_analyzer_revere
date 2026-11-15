@@ -1,15 +1,48 @@
 {
   "doc_id": "oconnell_20251008",
-  "generated_at": "2026-11-14T13:37:04.021Z",
+  "generated_at": "2026-11-14T15:07:29.941Z",
   "notes": [
-    "no equities table found",
-    "no options table found"
+    "no options table found",
+    " lot(s) refused: their cost, price and gain disagree"
   ],
   "parser_version": "oconnell-positions-2",
   "positions": [],
+  "rejected": [
+    {
+      "beta": null,
+      "change_pct": null,
+      "contract": "",
+      "cost_basis": null,
+      "delta": null,
+      "entry_date": "",
+      "exit_price": null,
+      "exits": "",
+      "gain_loss_pct": null,
+      "instrument": "equity",
+      "option_change_pct": null,
+      "price": 5.47,
+      "r2_price": null,
+      "risk_pct": null,
+      "setup_label": "",
+      "size_stars": 13,
+      "sma20": "",
+      "sma50": "",
+      "stop_price": null,
+      "ticker": "MSOS",
+      "trade_length_days": null,
+      "underlying_change_pct": null,
+      "lot_key": "equity|MSOS|||",
+      "reading_check": "no usable cost basis"
+    }
+  ],
   "source_date": "20251008",
   "source_image": "oconnell_20251008_embedded.png",
   "source_kind": "pdf_embedded",
-  "snapshot": {},
+  "snapshot": {
+    "cash_pct": 1,
+    "invested_pct": 99,
+    "win_rate_stock_pct": 100,
+    "win_rate_options_pct": 100
+  },
   "title": "Oracle Loses $100MM on GPU Rentals!"
 }
