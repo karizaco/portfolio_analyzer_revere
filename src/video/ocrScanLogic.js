@@ -584,7 +584,7 @@ function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporal
   // because the content we want to OCR IS a candlestick frame. Boost instead
   // of penalize, but keep it bounded so wildly off-profile frames still drop.
   if (table.chartLikenessBoost > 0) {
-    score += scoreChartLikeness(stats) * (table.chartLikenessBoost / 6);
+    score -= scoreChartLikeness(stats) * (table.chartLikenessBoost / 6);
   } else {
     score += scoreChartLikeness(stats);
   }
@@ -838,6 +838,9 @@ function selectFramesForOcr(prefilterRows, options = {}) {
     Number.isFinite(Number(row.frameIndex))
     && Number.isFinite(Number(row.prefilterScore))
   );
+  if (!validRows.length) {
+    return [];
+  }
   const rowsByIndex = new Map(validRows.map((row) => [row.frameIndex, row]));
   const sortedByScore = validRows
     .slice()
