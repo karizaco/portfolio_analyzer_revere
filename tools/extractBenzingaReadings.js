@@ -31,6 +31,7 @@ process.removeAllListeners('warning');
 process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const { extractReadings } = require('../src/benzinga/marketReadings');
 const { sectionAt } = require('../src/benzinga/sections');
@@ -142,6 +143,7 @@ function main() {
     process.exit(1);
   }
   const db = new DatabaseSync(DB_PATH);
+  attachDerived(db);
   db.exec('PRAGMA busy_timeout = 30000');
   db.exec(fs.readFileSync(path.join(ROOT, 'data', 'db', 'schema.sql'), 'utf8'));
   attachSegments(db);

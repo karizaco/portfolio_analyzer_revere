@@ -53,6 +53,7 @@ const { findEnglishCompanyNames, ENGLISH_SYMBOL_STOPLIST } = require('../src/t3l
 
 const ROOT = path.resolve(__dirname, '..');
 const SCHEMA_PATH = path.join(ROOT, 'data', 'db', 'schema.sql');
+const { attachDerived } = require('../src/db/derivedStore');
 
 /**
  * A scratch catalog with the real schema.
@@ -63,6 +64,7 @@ function scratchDb() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'asym-pipeline-'));
   const db = new DatabaseSync(path.join(dir, 'state.sqlite'));
   db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8'));
+  attachDerived(db);
   return { db, dir };
 }
 

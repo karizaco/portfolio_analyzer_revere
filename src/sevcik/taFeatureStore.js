@@ -2,6 +2,8 @@
 
 // SQLite feature store for Sevcik TA evaluation rows.
 
+const { ensureDerivedTable } = require('../db/derivedStore');
+
 const FEATURE_TABLE_SQL = `
 CREATE TABLE IF NOT EXISTS sevcik_ta_features (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -86,7 +88,10 @@ const ALTER_COLUMNS = [
  * @param {import('node:sqlite').DatabaseSync} db
  */
 function ensureTaFeatureSchema(db) {
-  db.exec(FEATURE_TABLE_SQL);
+  // Unqualified CREATE would shadow the attached table with an empty one
+  // in the catalog. ensureDerivedTable qualifies the DDL when `derived`
+  // is attached, and still creates the table in main for a scratch test.
+  ensureDerivedTable(db, 'sevcik_ta_features', FEATURE_TABLE_SQL);
   for (const [name, type] of ALTER_COLUMNS) {
     try {
       db.exec(`ALTER TABLE sevcik_ta_features ADD COLUMN ${name} ${type}`);

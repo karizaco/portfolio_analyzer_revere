@@ -225,10 +225,10 @@ test('the media-id column is added to a table that has no such column', () => {
 // ---------------------------------------------------------------------------
 
 test('the media table and the schema file agree on the DDL', () => {
-  // The DDL is duplicated in data/db/schema.sql, and a migration that
+  // The DDL is duplicated in data/db/schema_derived.sql, and a migration that
   // rebuilds the table from a DIFFERENT shape than the schema file would
   // silently change the column order.
-  const schema = fs.readFileSync(path.join(ROOT, 'data', 'db', 'schema.sql'), 'utf8');
+  const schema = fs.readFileSync(path.join(ROOT, 'data', 'db', 'schema_derived.sql'), 'utf8');
   const ddl = require('../src/asym/mediaStore').ASYM_MEDIA_DDL;
   const columns = (ddl.match(/^\s{4}(\w+)\s/gm) || []).map((line) => line.trim());
   for (const column of columns) {

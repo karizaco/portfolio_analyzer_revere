@@ -33,6 +33,7 @@ process.removeAllListeners('warning');
 process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const {
   SEVCIK_SETUP_COLUMNS,
@@ -59,6 +60,7 @@ async function main() {
   }
 
   const db = new DatabaseSync(DB_PATH, { readOnly: true });
+  attachDerived(db);
   const signals = loadSignals(db);
   const videos = loadVideos(db);
   const setups = loadSetups(db);

@@ -60,6 +60,7 @@ process.removeAllListeners('warning');
 process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const { loadEnv } = require('../src/transcript/loadEnv');
 const {
@@ -123,6 +124,7 @@ function openCatalog() {
     throw new Error(`No SQLite at ${DB_PATH}. Run 'npm run video:init' first.`);
   }
   const db = new DatabaseSync(DB_PATH);
+  attachDerived(db);
   db.exec('PRAGMA busy_timeout = 30000');
   db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8'));
   attachSegments(db);

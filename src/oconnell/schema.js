@@ -28,6 +28,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { attachDerived } = require('../db/derivedStore');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const SCHEMA_PATH = path.join(ROOT, 'data', 'db', 'schema.sql');
@@ -56,6 +57,9 @@ function ensureOconnellSchema(db) {
   // would clear in seconds must not kill it. Wait up to a minute instead.
   db.exec('PRAGMA busy_timeout = 60000');
   db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8'));
+  // The lots live in the derived file. The ALTER has to see that table,
+  // not create a second one in the catalog.
+  attachDerived(db);
   let added = 0;
   for (const entry of LATE_COLUMNS) {
     try {

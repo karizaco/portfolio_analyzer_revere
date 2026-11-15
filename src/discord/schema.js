@@ -22,6 +22,8 @@
  * `trade_signals.parser_version` has.
  */
 
+const { attachDerived } = require('../db/derivedStore');
+
 const PARSER_VERSION = 'discord-traders-1';
 
 const DDL = `
@@ -122,10 +124,11 @@ CREATE INDEX IF NOT EXISTS idx_discord_episodes_ticker
  * @returns {number} how many statements were executed
  */
 function ensureDiscordSchema(db) {
-  // `state.sqlite` is shared with the catalog, download and transcript tools,
-  // and SQLite's default is to fail IMMEDIATELY with "database is locked".
+  // The parsed tables live in derived.sqlite. Executing DDL on this
+  // connection would create them in the catalog, which is the file the
+  // split exists to keep small.
   db.exec('PRAGMA busy_timeout = 60000');
-  db.exec(DDL);
+  attachDerived(db);
   return 3;
 }
 

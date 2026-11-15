@@ -37,6 +37,7 @@ process.removeAllListeners('warning');
 process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const {
   TRADE_SIGNAL_COLUMNS,
@@ -67,6 +68,7 @@ async function main() {
   }
 
   const db = new DatabaseSync(DB_PATH, { readOnly: true });
+  attachDerived(db);
   const signals = loadSignals(db);
   const videos = loadVideos(db);
   db.close();

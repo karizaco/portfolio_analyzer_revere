@@ -75,6 +75,7 @@ process.removeAllListeners('warning');
 process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const { createAsymClient } = require('../src/asym/substackClient');
 const { extractAudio } = require('../src/transcript/deepgramClient');
@@ -180,6 +181,7 @@ function openCatalog(readOnly) {
     throw new Error(`No SQLite at ${DB_PATH}. Run 'npm run video:init' first.`);
   }
   const db = new DatabaseSync(DB_PATH, readOnly ? { readOnly: true } : {});
+  attachDerived(db);
   if (!readOnly) {
     db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8'));
   }

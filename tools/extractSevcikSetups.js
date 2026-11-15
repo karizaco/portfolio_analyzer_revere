@@ -50,6 +50,7 @@ process.removeAllListeners('warning');
 process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const { loadSevcikLexicon } = require('../src/sevcik/lexicon');
 const { findSetups } = require('../src/sevcik/setupSegmenter');
@@ -87,6 +88,7 @@ function main() {
 
   const lexicon = loadSevcikLexicon();
   const db = new DatabaseSync(DB_PATH);
+  attachDerived(db);
   db.exec('PRAGMA busy_timeout = 30000');
   db.exec(fs.readFileSync(path.join(ROOT, 'data', 'db', 'schema.sql'), 'utf8'));
   // `transcript_segments` is not in the catalog -- it is a cache in its own

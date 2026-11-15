@@ -16,6 +16,9 @@ data/extract_run.log
 # tools/migrateTranscriptSegments.js.
 data/video_pipeline/*
 !data/video_pipeline/state.sqlite
+# The interpretation tables, split out of state.sqlite so neither tracked
+# file approaches GitHub's 100 MB limit. It is tracked, not a cache.
+!data/video_pipeline/derived.sqlite
 !data/video_pipeline/transcripts/
 !data/video_pipeline/transcripts/**
 # The raw caption VTT is an INTERMEDIATE: the fetch tool writes it, the

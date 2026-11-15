@@ -19,6 +19,7 @@ process.removeAllListeners('warning');
 process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const {
   parseMarketMonitorCsv,
@@ -50,6 +51,7 @@ function openCatalog() {
     throw new Error('No SQLite at ' + DB_PATH);
   }
   const db = new DatabaseSync(DB_PATH);
+  attachDerived(db);
   db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8'));
   return db;
 }

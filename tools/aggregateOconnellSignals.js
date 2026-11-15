@@ -22,6 +22,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const {
   DAILY_COLUMNS,
@@ -49,6 +50,7 @@ function openDatabase() {
   // Opened WRITABLE, because the schema migration has to run before the
   // columns this tool reads exist. It only reads afterwards.
   const db = new DatabaseSync(DB_PATH);
+  attachDerived(db);
   ensureOconnellSchema(db);
   return db;
 }

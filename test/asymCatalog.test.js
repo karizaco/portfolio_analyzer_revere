@@ -178,6 +178,10 @@ function query(dbPath, sql) {
   const { DatabaseSync } = require('node:sqlite');
   const db = new DatabaseSync(dbPath, { readOnly: true });
   try {
+    // Articles live in the sibling derived file the tool attached. Posts
+    // stay in the catalog, so attaching does not hide them.
+    const { attachDerived } = require('../src/db/derivedStore');
+    attachDerived(db, { createSchema: false });
     return db.prepare(sql).all();
   } finally {
     db.close();

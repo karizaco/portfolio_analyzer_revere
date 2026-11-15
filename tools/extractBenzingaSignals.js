@@ -47,6 +47,7 @@ process.removeAllListeners('warning');
 process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const { loadSevcikLexicon } = require('../src/sevcik/lexicon');
 const { extractSignals } = require('../src/sevcik/signalExtractor');
@@ -176,6 +177,7 @@ function main() {
 
   const lexicon = loadSevcikLexicon();
   const db = new DatabaseSync(DB_PATH);
+  attachDerived(db);
   db.exec('PRAGMA busy_timeout = 30000');
   db.exec(fs.readFileSync(path.join(ROOT, 'data', 'db', 'schema.sql'), 'utf8'));
   attachSegments(db);

@@ -41,6 +41,7 @@ const { execFileSync } = require('node:child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const CATALOG = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
+const DERIVED = path.join(ROOT, 'data', 'video_pipeline', 'derived.sqlite');
 const SEGMENTS_CACHE = path.join(ROOT, 'data', 'video_pipeline', 'transcript_segments.sqlite');
 
 const MB = 1024 * 1024;
@@ -56,8 +57,46 @@ test('the tracked catalog stays inside its budget', () => {
     + 'GitHub refuses a file over 100 MB, so this would make the branch unpushable. '
     + 'Almost always this means a CACHE is in the catalog -- a table derived from '
     + 'data already in git. It belongs in its own untracked file, the way '
-    + 'transcript_segments does; see src/transcript/segmentStore.js.',
+    + 'transcript_segments does; see src/transcript/segmentStore.js. '
+    + 'Interpretations (signals, setups, readings) belong in derived.sqlite, '
+    + 'which is tracked but is a separate file.',
   );
+});
+
+test('the tracked derived database stays inside the same budget', () => {
+  // The interpretations were split out of state.sqlite so neither tracked
+  // file approaches GitHub's 100 MB limit. The file is tracked on purpose:
+  // it is not a cache. It still has to stay under the same budget.
+  assert.ok(fs.existsSync(DERIVED), `the derived database is missing: ${DERIVED}`);
+  const size = fs.statSync(DERIVED).size;
+  assert.ok(
+    size < CATALOG_BUDGET_BYTES,
+    `derived.sqlite is ${(size / MB).toFixed(1)} MB, over its ${(CATALOG_BUDGET_BYTES / MB).toFixed(0)} MB budget. `
+    + 'Split another group of tables out rather than letting this file become the next unpushable blob.',
+  );
+
+  const gitignore = fs.readFileSync(path.join(ROOT, '.gitignore'), 'utf8');
+  assert.match(gitignore, /!data\/video_pipeline\/derived\.sqlite/,
+    '.gitignore must re-include derived.sqlite -- the interpretations are tracked, not a cache');
+
+  let ignored = false;
+  try {
+    execFileSync('git', ['check-ignore', '-q', 'data/video_pipeline/derived.sqlite'], {
+      cwd: ROOT, stdio: 'ignore',
+    });
+    ignored = true;
+  } catch (error) {
+    // exit 1 means "not ignored", which is what we want. Any other failure
+    // (no git) skips the index check below.
+    if (error.status !== 1) return;
+  }
+  assert.equal(ignored, false, 'derived.sqlite is gitignored. It must stay tracked.');
+
+  const tracked = execFileSync('git', ['ls-files', '--', 'data/video_pipeline/derived.sqlite'], {
+    cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'],
+  }).trim();
+  assert.equal(tracked, 'data/video_pipeline/derived.sqlite',
+    'derived.sqlite is not in the index. Add it -- the split is worthless if the file is not committed.');
 });
 
 test('the transcript-segment cache is NOT tracked', () => {

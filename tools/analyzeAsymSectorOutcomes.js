@@ -39,6 +39,7 @@ process.removeAllListeners('warning');
 process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 const { createYahooPriceProvider } = require('../src/analysis/priceProvider');
 const {
   scoreSignalOutcome,
@@ -206,6 +207,7 @@ async function main() {
     process.exit(1);
   }
   const db = new DatabaseSync(DB_PATH, { readOnly: true });
+  attachDerived(db);
   const claims = loadClaims(db);
   db.close();
 

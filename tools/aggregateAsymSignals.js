@@ -53,6 +53,7 @@ process.removeAllListeners('warning');
 process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const {
   TRADE_SIGNAL_COLUMNS,
@@ -107,6 +108,7 @@ function loadSectorConsistency() {
 function loadSectors() {
   try {
     const db = new DatabaseSync(DB_PATH, { readOnly: true });
+  attachDerived(db);
     try {
       return db.prepare('SELECT video_id, sector, roc_1mo, pct_change, roc_1yr, sign_source FROM asym_sectors ORDER BY video_id, roc_1mo DESC').all();
     } finally {
@@ -124,6 +126,7 @@ async function main() {
   }
 
   const db = new DatabaseSync(DB_PATH, { readOnly: true });
+  attachDerived(db);
   const signals = loadSignals(db);
   const posts = loadPosts(db);
   const articles = loadArticles(db);
@@ -318,6 +321,7 @@ function loadArticles(db) {
  */
 function loadCoverage() {
   const db = new DatabaseSync(DB_PATH, { readOnly: true });
+  attachDerived(db);
   try {
     const posts = db.prepare('SELECT COUNT(*) c FROM asym_posts').get().c;
     const free = db.prepare("SELECT COUNT(*) c FROM asym_posts WHERE access = 'free'").get().c;

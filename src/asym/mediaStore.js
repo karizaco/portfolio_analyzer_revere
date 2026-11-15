@@ -475,8 +475,15 @@ function ensureAsymMediaSchema(db) {
   // The posts table carries the column that holds EVERY media id, and it
   // needs the same treatment.
   ensureAsymPostsMediaColumn(db);
-  // The table may not exist yet -- a fresh clone has not run the schema
-  // that creates it, and schema.sql will.
+  // The table lives in derived.sqlite. Rebuilding it with unqualified DDL
+  // would CREATE the new table in the catalog and DROP the derived one —
+  // measured, `DROP TABLE asym_media` follows the name into the attached
+  // file. A table that is not in main is left alone; schema_derived.sql
+  // already has the (video_id, kind) key.
+  const inMain = db.prepare(
+    "SELECT 1 FROM sqlite_master WHERE type='table' AND name='asym_media'",
+  ).get();
+  if (!inMain) return;
   let columns = [];
   try { columns = db.prepare('PRAGMA table_info(asym_media)').all(); } catch { columns = []; }
   if (!columns.length) return;

@@ -36,6 +36,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 
+const { attachDerived } = require('../db/derivedStore');
 const { attachSegments } = require('./segmentStore');
 const { normalizeTranscript } = require('./transcriptNormalize');
 
@@ -216,6 +217,7 @@ function loadSegments(transcriptId, videoId, db) {
  * @param {Array<object>} signals
  */
 function replaceSignals(db, videoId, transcriptId, signals) {
+  attachDerived(db);
   try { db.exec('ALTER TABLE trade_signals ADD COLUMN claim_kind TEXT'); } catch (_) {}
 
   db.prepare('DELETE FROM trade_signals WHERE video_id = ?').run(videoId);
@@ -325,6 +327,7 @@ function purgeSupersededRows(db, options) {
  */
 function runExtraction(db, options) {
   const label = options.label || 'extract';
+  attachDerived(db, options.derivedPath ? { derivedPath: options.derivedPath } : {});
   ensureSegmentsAttached(db, options.segmentsPath);
 
   // A FULL run clears what an older parser wrote. A partial run does not:

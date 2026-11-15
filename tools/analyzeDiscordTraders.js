@@ -29,6 +29,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const { createYahooPriceProvider } = require('../src/analysis/priceProvider');
 const { ACCOUNT_TRADING, ACCOUNT_VIBE, INVERSE_INSTRUMENTS } = require('../src/discord/sources');
@@ -96,6 +97,7 @@ function firstOnOrAfter(bars, date) {
 
 async function main() {
   const db = new DatabaseSync(DB_PATH);
+  attachDerived(db);
   const episodes = db.prepare('SELECT * FROM discord_episodes').all();
   const actions = db.prepare('SELECT * FROM discord_trade_actions').all();
   const positions = db.prepare('SELECT * FROM discord_positions').all();

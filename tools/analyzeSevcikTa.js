@@ -28,6 +28,7 @@ process.removeAllListeners('warning');
 process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 const { createYahooPriceProvider } = require('../src/analysis/priceProvider');
 const { evaluateClaimsWithTa } = require('../src/sevcik/taEvaluation');
 const { ensureTaFeatureSchema, replaceTaFeatures } = require('../src/sevcik/taFeatureStore');
@@ -129,6 +130,7 @@ async function main() {
 
   if (fs.existsSync(DB_PATH)) {
     const db = new DatabaseSync(DB_PATH);
+  attachDerived(db);
     if (fs.existsSync(SCHEMA_PATH)) {
       try { db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8')); } catch (_) {}
     }

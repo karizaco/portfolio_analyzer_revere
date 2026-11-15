@@ -38,6 +38,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const { oconnellSourceDir } = require('../src/oconnell/channel');
 const { ensureOconnellSchema } = require('../src/oconnell/schema');
@@ -90,6 +91,7 @@ function openDatabase() {
     process.exit(1);
   }
   const db = new DatabaseSync(DB_PATH);
+  attachDerived(db);
   ensureOconnellSchema(db);
   return db;
 }

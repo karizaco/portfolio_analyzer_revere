@@ -37,6 +37,7 @@ process.removeAllListeners('warning');
 process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const { loadSevcikLexicon } = require('../src/sevcik/lexicon');
 const { CONFIRMED_TABLE_PATH } = require('../src/sevcik/companyNames');
@@ -106,6 +107,7 @@ function main() {
     if (spoken && ticker && spoken === ticker) confirmedSymbols.add(ticker);
   }
   const db = new DatabaseSync(DB_PATH);
+  attachDerived(db);
   // Another tool (the caption fetcher) may be writing the catalog at the
   // same time; wait for its lock instead of failing the run.
   db.exec('PRAGMA busy_timeout = 30000');

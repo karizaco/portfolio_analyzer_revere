@@ -40,6 +40,7 @@ process.removeAllListeners('warning');
 process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const {
   TRADE_SIGNAL_COLUMNS,
@@ -74,6 +75,7 @@ async function main() {
   }
 
   const db = new DatabaseSync(DB_PATH, { readOnly: true });
+  attachDerived(db);
   const videos = loadVideos(db);
   const signals = loadSignals(db);
   const readings = loadReadings(db);
@@ -287,7 +289,7 @@ function loadSignals(db) {
  */
 function loadReadings(db) {
   const hasTable = db.prepare(
-    "SELECT name FROM sqlite_master WHERE type='table' AND name='market_readings'",
+    "SELECT name FROM derived.sqlite_master WHERE type='table' AND name='market_readings'",
   ).get();
   if (!hasTable) return [];
   const rows = db.prepare(

@@ -20,6 +20,7 @@
  * with a mix of two parsers' readings and no way to tell which is which.
  */
 const fs = require('node:fs');
+const { ensureDerivedTable } = require('../db/derivedStore');
 
 /**
  * The cache table.
@@ -43,11 +44,11 @@ const FRAME_OCR_DDL = `CREATE TABLE IF NOT EXISTS asym_frame_ocr (
  * @returns {void}
  */
 function ensureFrameOcrTable(db) {
-  try {
-    db.exec(FRAME_OCR_DDL);
-  } catch {
-    // The table is already there.
-  }
+  // A bare CREATE on a catalog connection that has the derived file
+  // attached would create a second, empty table in the catalog. The
+  // helper puts the table in derived when that file is attached, and in
+  // main when this is a scratch database that has no attach.
+  ensureDerivedTable(db, 'asym_frame_ocr', FRAME_OCR_DDL);
 }
 
 /**

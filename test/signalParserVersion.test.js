@@ -65,6 +65,8 @@ test('the shipped catalog has no rows labelled with another source\'s version', 
   if (!fs.existsSync(dbPath)) return; // a fresh clone has the catalog, but skip if absent
   const { DatabaseSync } = require('node:sqlite');
   const db = new DatabaseSync(dbPath, { readOnly: true });
+  const { attachDerived } = require('../src/db/derivedStore');
+  attachDerived(db, { createSchema: false });
   try {
     const rows = db.prepare(
       `SELECT v.channel, s.parser_version, COUNT(*) n FROM trade_signals s

@@ -15,6 +15,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 process.removeAllListeners('warning');
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const { ensureAsymMediaSchema, reconcileLocalMedia } = require('../src/asym/mediaStore');
 
@@ -37,6 +38,7 @@ function main() {
     process.exit(1);
   }
   const db = new DatabaseSync(DB_PATH, options.dryRun ? { readOnly: true } : {});
+  attachDerived(db);
   if (!options.dryRun) {
     db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8'));
     ensureAsymMediaSchema(db);

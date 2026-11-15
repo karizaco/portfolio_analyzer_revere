@@ -30,6 +30,7 @@ const { DatabaseSync } = require('node:sqlite');
 
 const ROOT = path.resolve(__dirname, '..');
 const { runExtraction } = require('../src/transcript/extractRunner');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const SCHEMA = fs.readFileSync(path.join(ROOT, 'data', 'db', 'schema.sql'), 'utf8');
 
@@ -39,6 +40,9 @@ function makeDb(rows) {
   const segmentsPath = path.join(dir, 'transcript_segments.sqlite');
   const db = new DatabaseSync(dbPath);
   db.exec(SCHEMA);
+  // trade_signals lives in the derived file. A scratch catalog attaches a
+  // sibling, never the production derived.sqlite.
+  attachDerived(db);
   const insertVideo = db.prepare(
     "INSERT INTO videos (video_id, video_url, upload_date, channel, title, status, created_at, updated_at) "
     + "VALUES (?, ?, ?, ?, ?, 'pending', 'x', 'x')",

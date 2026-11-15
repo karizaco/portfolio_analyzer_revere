@@ -18,6 +18,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { DatabaseSync } = require('node:sqlite');
+const { attachDerived } = require('../src/db/derivedStore');
 
 const {
   ACCOUNT_TRADING, ACCOUNT_VIBE, PARSER_VERSION, SOURCES, SUB_ACCOUNT_SMALL,
@@ -62,6 +63,7 @@ function loadCachedCloses(symbols) {
 
 function main() {
   const db = new DatabaseSync(DB_PATH);
+  attachDerived(db);
   ensureDiscordSchema(db);
   const known = loadLexicon();
 

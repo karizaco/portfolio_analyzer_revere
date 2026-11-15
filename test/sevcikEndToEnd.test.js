@@ -56,6 +56,7 @@ const { buildSevcikReportHtml } = require('../src/report/sevcikReport');
 const ROOT = path.resolve(__dirname, '..');
 const SCHEMA = path.join(ROOT, 'data', 'db', 'schema.sql');
 const { attachSegments } = require('../src/transcript/segmentStore');
+const { attachDerived } = require('../src/db/derivedStore');
 
 // A small, explicit lexicon. The extractor is lexicon-constrained, and a
 // test that used the real seed lexicon would move whenever the seed does.
@@ -86,6 +87,7 @@ function runChain() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sevcik-e2e-'));
   const db = new DatabaseSync(path.join(dir, 'state.sqlite'));
   db.exec(fs.readFileSync(SCHEMA, 'utf8'));
+  attachDerived(db);
   // `transcript_segments` is not in the catalog -- it is a cache in its own
   // untracked file. Attaching a TEMP copy here exercises the real mechanism
   // without touching production data.
