@@ -40,6 +40,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
+const { getDownloadDir, ensureDownloadDirs } = require('../src/video/mediaRoots');
 
 const { buildDownloadCandidateSql, toPortablePath } = require('../src/video/downloadCandidates');
 
@@ -70,7 +71,8 @@ if (![360, 480, 720, 1080].includes(height)) {
 const formatCode = String({ 360: 134, 480: 135, 720: 136, 1080: 137 }[height]);
 
 const dbPath = path.resolve('data/video_pipeline/state.sqlite');
-const dlDir = path.resolve('data/video_pipeline/downloads_hires');
+const dlDir = getDownloadDir('hires');
+ensureDownloadDirs();
 const checkpointPath = path.join(dlDir, '_download_checkpoint.json');
 // The repository root, derived from the database's own location
 // (`<root>/data/video_pipeline/state.sqlite`). Stored paths are relative to

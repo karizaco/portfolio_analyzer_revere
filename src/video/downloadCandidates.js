@@ -2,6 +2,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { getDownloadDir, resolveMediaPath } = require('./mediaRoots');
 
 const {
   DOWNLOAD_CANDIDATE_STATUSES,
@@ -71,10 +72,8 @@ ORDER BY upload_date DESC, video_id ASC
  */
 function resolveCatalogPath(downloadPath, cwd = process.cwd()) {
   if (!downloadPath) return null;
-  const normalised = String(downloadPath).replace(/\\/g, '/');
-  const marker = normalised.indexOf(REPO_DATA_MARKER);
-  if (marker !== -1) return path.resolve(cwd, normalised.slice(marker));
-  return path.resolve(cwd, downloadPath);
+  // Absolute other-drive paths (D:\\...) and repo-relative data/... paths.
+  return resolveMediaPath(downloadPath, { cwd });
 }
 
 /**
@@ -132,7 +131,7 @@ function isHiresPath(p) {
  */
 function findHiresOnDisk(row, options = {}) {
   if (!row) return null;
-  const dir = options.dir || path.resolve('data', 'video_pipeline', 'downloads_1080p');
+  const dir = options.dir || getDownloadDir('1080p');
   const exists = options.exists || fs.existsSync;
   const sizeOf = options.sizeOf || ((p) => fs.statSync(p).size);
 

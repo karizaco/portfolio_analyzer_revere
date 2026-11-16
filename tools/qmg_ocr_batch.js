@@ -16,7 +16,7 @@ const path = require('path:posix');
 const { superviseChild } = require('./qmg_scan_daemon_support');
 
 const ROOT = path.resolve(__dirname, '..');
-const VIDEO_DIR = path.join(ROOT, 'data', 'video_pipeline', 'downloads_1080p');
+const VIDEO_DIR = getDownloadDir('1080p');
 const OUT_ROOT = path.join(ROOT, 'data', 'video_scan_test', '_rerun');
 
 const BATCH = process.argv[2] || 'a';
@@ -44,18 +44,16 @@ const SCAN_FLAGS = [
 const TIMEOUT_MS = 5 * 60 * 1000;
 
 function findVideoFile(videoId) {
-  const files = fs.readdirSync(VIDEO_DIR);
-  return files.find((f) => {
-    const m = f.match(/^([\w-]+)_([\w-]+)\.mp4$/);
-    return m && m[2] === videoId;
-  });
+  const hit = findMediaForVideoId(videoId);
+  return hit ? hit.file : null;
 }
 
 async function runScan(videoId, date) {
   const videoFile = findVideoFile(videoId);
   if (!videoFile) return { videoId, date, status: 'not_found', elapsed: 0 };
 
-  const videoPath = path.join(VIDEO_DIR, videoFile);
+  const hit = findMediaForVideoId(videoId);
+  const videoPath = hit ? hit.path : path.join(VIDEO_DIR, videoFile);
   const started = Date.now();
 
   // superviseChild() DRAINS the child's stdout and kills the whole process

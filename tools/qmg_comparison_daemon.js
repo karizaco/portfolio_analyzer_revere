@@ -43,8 +43,9 @@ const ALT_FLAGS = [
   '--ocr-engine', 'easyocr',
 ];
 
-const VIDEO_DIR_1080 = path.join(ROOT, 'data/video_pipeline/downloads_1080p');
-const VIDEO_DIR_HIRES = path.join(ROOT, 'data/video_pipeline/downloads_hires');
+const MEDIA = getMediaRoots();
+const VIDEO_DIR_1080 = MEDIA.downloads_1080p;
+const VIDEO_DIR_HIRES = MEDIA.downloads_hires;
 
 function findVideoFile(videoId) {
   for (const dir of [VIDEO_DIR_1080, VIDEO_DIR_HIRES]) {

@@ -42,6 +42,7 @@ const {
   resolveOutcomeVideoId,
 } = require('../src/video/ocrScanOutcomeStore');
 const { videoIdFromMediaPath } = require('../src/video/analysisState');
+const { findMediaForDate, getMediaRoots } = require('../src/video/mediaRoots');
 // The child supervisor lives in the shared daemon-support module, so every
 // tool that spawns the scan tool drains its stdout the same way. It was
 // duplicated here first, and the three sibling daemons still had the
@@ -53,8 +54,11 @@ const {
 } = require('./qmg_scan_daemon_support');
 
 const ROOT = path.resolve(__dirname, '..');
-const VIDEO_DIR_1080 = path.join(ROOT, 'data', 'video_pipeline', 'downloads_1080p');
-const VIDEO_DIR_HIRES = path.join(ROOT, 'data', 'video_pipeline', 'downloads_hires');
+// Media dirs come from src/video/mediaRoots.js (repo default, or
+// PORTFOLIO_* env / data/video_pipeline/media_roots.json for another drive).
+const MEDIA = getMediaRoots();
+const VIDEO_DIR_1080 = MEDIA.downloads_1080p;
+const VIDEO_DIR_HIRES = MEDIA.downloads_hires;
 const OUT_ROOT = path.join(ROOT, 'data', 'video_scan_test', '_rerun');
 
 // Per-video timeout: EasyOCR at ~60-90s/frame × 6 frames = 360-540s; give 40 min for longer videos
@@ -219,16 +223,9 @@ function parseArgs(argv) {
 }
 
 function findVideo(dateKey) {
-  // Prefer 1080p
-  const files1080 = fs.readdirSync(VIDEO_DIR_1080);
-  const match1080 = files1080.find(f => f.startsWith(dateKey + '_') && f.endsWith('.mp4'));
-  if (match1080) return { file: match1080, dir: VIDEO_DIR_1080, resolution: '1080p' };
-
-  const filesHires = fs.readdirSync(VIDEO_DIR_HIRES);
-  const matchHires = filesHires.find(f => f.startsWith(dateKey + '_') && f.endsWith('.mp4'));
-  if (matchHires) return { file: matchHires, dir: VIDEO_DIR_HIRES, resolution: '720p' };
-
-  return null;
+  const hit = findMediaForDate(dateKey);
+  if (!hit) return null;
+  return { file: hit.file, dir: hit.dir, resolution: hit.resolution, path: hit.path, videoId: hit.videoId };
 }
 
 function loadGT() {
@@ -455,6 +452,8 @@ async function main() {
   const runTag = args.runTag || `qmg-easyocr-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
   console.log(`\n=== QMG EasyOCR Batch ===`);
   console.log(`Production profile: ${DEFAULT_PROFILE_ID}`);
+  console.log(`Media 1080p: ${VIDEO_DIR_1080}`);
+  console.log(`Media hires: ${VIDEO_DIR_HIRES}`);
   console.log(`Run tag: ${runTag}`);
   console.log(`Dates: ${dates.join(', ')}`);
   console.log(`Parallelism: ${parallel}${args.lowCpu ? ' (low-cpu mode)' : ''}`);
@@ -517,4 +516,4 @@ if (require.main === module) {
   main().catch(e => { console.error(e); process.exit(1); });
 }
 
-module.exports = { superviseChild, STDOUT_TAIL_CHARS, scoreResult, flagsForDate, parseArgs, BASE_FLAGS, DEFAULT_PROFILE_ID, DEFAULT_MAX_CAPTURES };
+module.exports = { superviseChild, STDOUT_TAIL_CHARS, scoreResult, flagsForDate, parseArgs, BASE_FLAGS, DEFAULT_PROFILE_ID, DEFAULT_MAX_CAPTURES, findVideo, VIDEO_DIR_1080, VIDEO_DIR_HIRES };

@@ -17,6 +17,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { readExistingJson, superviseChild } = require('./qmg_scan_daemon_support');
+const { findMediaForVideoId, getDownloadDir } = require('../src/video/mediaRoots');
 
 const ROOT = path.resolve(__dirname, '..');
 const BATCH = process.argv[2] || 'a';
@@ -67,26 +68,8 @@ const SCAN_FLAGS = [
 // Search downloads_1080p first, then downloads_hires as fallback.
 // Returns just the filename (for scanVideoWithOcr.js to join with VIDEO_DIR).
 function findVideoFile(videoId) {
-  const dirs = [
-    path.join(ROOT, 'data/video_pipeline/downloads_1080p'),
-    path.join(ROOT, 'data/video_pipeline/downloads_hires'),
-  ];
-  for (const dir of dirs) {
-    try {
-      const files = fs.readdirSync(dir);
-      const found = files.find((f) => {
-        const m = f.match(/^(?:\d{8}|NA)_(.+)\.mp4$/);
-        return m && m[1] === videoId;
-      });
-      if (found) return found;
-    } catch (error) {
-      // A missing download directory is "not here". Anything else (permissions,
-      // a path that is not a directory) is a real failure and must not look
-      // like "this video is not on disk".
-      if (!error || error.code !== 'ENOENT') throw error;
-    }
-  }
-  return null;
+  const hit = findMediaForVideoId(videoId);
+  return hit ? hit.file : null;
 }
 
 function log(msg) {
@@ -100,7 +83,8 @@ async function runScan(videoId, date) {
   const videoFile = findVideoFile(videoId);
   if (!videoFile) return { videoId, date, status: 'not_found', elapsed: 0 };
 
-  const videoPath = path.join(ROOT, 'data/video_pipeline/downloads_1080p', videoFile);
+  const hit = findMediaForVideoId(videoId);
+  const videoPath = hit ? hit.path : path.join(getDownloadDir('1080p'), videoFile);
   const started = Date.now();
 
   // superviseChild() DRAINS the child's stdout. The scan tool prints its

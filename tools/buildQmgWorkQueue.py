@@ -19,6 +19,10 @@ from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from media_roots import get_media_roots, media_search_dirs, resolve_media_path
+
 ROOT = Path(__file__).resolve().parents[1]
 DATE_RE = re.compile(r"(20\d{6})")
 YT_ID_RE = re.compile(r"([A-Za-z0-9_-]{11})$")
@@ -97,10 +101,13 @@ def main() -> None:
         if not vid:
             return
         avail.add(vid)
-        media_paths[vid].append(str(f.relative_to(ROOT)).replace("\\", "/"))
+        try:
+            _rel = str(f.resolve().relative_to(ROOT)).replace("\\", "/")
+        except ValueError:
+            _rel = str(f.resolve()).replace("\\", "/")
+        media_paths[vid].append(_rel)
 
-    for dname in ["downloads_1080p", "downloads_hires", "downloads"]:
-        d = ROOT / "data" / "video_pipeline" / dname
+    for d in media_search_dirs():
         if not d.exists():
             continue
         for f in d.glob("*.mp4"):
@@ -114,9 +121,7 @@ def main() -> None:
         if not dp or not str(dp).strip():
             no_path.add(r["video_id"])
             continue
-        p = Path(dp)
-        if not p.is_absolute():
-            p = ROOT / p
+        p = resolve_media_path(dp) or Path(dp)
         if p.exists():
             path_ok.add(r["video_id"])
             avail.add(r["video_id"])
@@ -127,7 +132,7 @@ def main() -> None:
     # Partials: unique paths only
     partials = []
     seen_parts: set[str] = set()
-    part_dir = ROOT / "data" / "video_pipeline" / "downloads_1080p"
+    part_dir = get_media_roots()["downloads_1080p"]
     if part_dir.exists():
         part_files = {f.resolve() for f in part_dir.glob("*.part")}
         part_files |= {f.resolve() for f in part_dir.glob("*.mp4.part")}
@@ -144,7 +149,10 @@ def main() -> None:
             vid = match_vid(stem)
             if not vid:
                 continue
-            rel = str(f.relative_to(ROOT)).replace("\\", "/")
+            try:
+                rel = str(f.resolve().relative_to(ROOT)).replace("\\", "/")
+            except ValueError:
+                rel = str(f.resolve()).replace("\\", "/")
             partials.append(
                 {
                     "video_id": vid,

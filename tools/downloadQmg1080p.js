@@ -38,6 +38,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
+const { getDownloadDir, ensureDownloadDirs } = require('../src/video/mediaRoots');
 
 const { CANDIDATE_SQL, findHiresOnDisk, toPortablePath } = require('../src/video/downloadCandidates');
 // The candidate query's status list lives in src/video/videoStatus.js, which
@@ -71,7 +72,8 @@ if (![720, 1080].includes(height)) {
 const formatCode = String(height === 720 ? '136' : '137');
 
 const dbPath = path.resolve('data/video_pipeline/state.sqlite');
-const dlDir = path.resolve('data/video_pipeline/downloads_1080p');
+const dlDir = getDownloadDir('1080p');
+ensureDownloadDirs();
 const checkpointPath = path.join(dlDir, '_qmg_1080p_checkpoint.json');
 // The repository root, derived from the database's own location
 // (`<root>/data/video_pipeline/state.sqlite`). Stored paths are relative to
@@ -126,6 +128,7 @@ checkpoint.done = checkpoint.done.map(stampMachine);
 checkpoint.blocked = checkpoint.blocked.map(stampMachine);
 
 console.log(`[qmg1080] height=${height}p format=${formatCode} limit=${limit} retry-errored=${retryErrored}`);
+console.log(`[qmg1080] media dir: ${dlDir}`);
 console.log(`[qmg1080] checkpoint: ${checkpoint.done.length} done, ${Object.keys(checkpoint.errored).length} errored`);
 
 const py = process.platform === 'win32' ? 'py' : 'python3';

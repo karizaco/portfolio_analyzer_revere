@@ -53,6 +53,7 @@ process.on('warning', () => {});
 
 const { DatabaseSync } = require('node:sqlite');
 const { resolveCatalogPath } = require('../src/video/downloadCandidates');
+const { getMediaRoots } = require('../src/video/mediaRoots');
 const { STATUS } = require('../src/video/videoStatus');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -63,7 +64,16 @@ const DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
 // batch lands; the third is the 1080p directory. A file can be in any of them.
 const DOWNLOAD_DIRS = ['downloads', 'downloads_hires', 'downloads_1080p'];
 
-// Where those directories live, relative to the repository root.
+// Absolute media roots (repo default or PORTFOLIO_* / media_roots.json).
+function mediaDirAbs(dirName) {
+  const roots = getMediaRoots();
+  if (dirName === 'downloads_1080p') return roots.downloads_1080p;
+  if (dirName === 'downloads_hires') return roots.downloads_hires;
+  if (dirName === 'downloads') return roots.downloads;
+  return path.join(roots.pipelineRoot, dirName);
+}
+
+// Legacy relative root kept for exports/tests that still join path pieces.
 const MEDIA_ROOT = path.join('data', 'video_pipeline');
 
 // A download smaller than this is a truncated file, not a video.
@@ -136,7 +146,7 @@ function locateMedia(row, options = {}) {
 
   let own = null;
   for (const dir of dirs) {
-    const candidate = path.resolve(cwd, MEDIA_ROOT, dir, downloaderFileName(row));
+    const candidate = path.join(mediaDirAbs(dir), downloaderFileName(row));
     if (isRealFile(candidate, exists, sizeOf)) { own = candidate; break; }
   }
   const ownPresent = own !== null;
@@ -216,7 +226,7 @@ function unclaimedFiles(rows, options = {}) {
 
   const out = [];
   for (const dir of dirs) {
-    const full = path.resolve(cwd, MEDIA_ROOT, dir);
+    const full = mediaDirAbs(dir);
     for (const name of listDir(full)) {
       if (!name.toLowerCase().endsWith('.mp4')) continue;
       const abs = path.resolve(full, name);

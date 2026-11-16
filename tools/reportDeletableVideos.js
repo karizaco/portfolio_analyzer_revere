@@ -30,6 +30,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { getMediaRoots } = require('../src/video/mediaRoots');
 
 process.removeAllListeners('warning');
 process.on('warning', () => {});
@@ -63,8 +64,8 @@ function scanRoots(dataDir) {
 }
 
 const LOG_ROOTS = scanRoots(path.join(ROOT, 'data'));
-const DOWNLOAD_DIRS = ['downloads', 'downloads_hires', 'downloads_1080p']
-  .map((name) => path.join(ROOT, 'data', 'video_pipeline', name));
+const _media = getMediaRoots();
+const DOWNLOAD_DIRS = [_media.downloads, _media.downloads_hires, _media.downloads_1080p];
 
 const SKIP_DIRS = new Set(['frames', 'snapshots', 'crops', 'node_modules']);
 
