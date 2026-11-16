@@ -42,7 +42,12 @@ const {
   resolveOutcomeVideoId,
 } = require('../src/video/ocrScanOutcomeStore');
 const { videoIdFromMediaPath } = require('../src/video/analysisState');
-const { findMediaForDate, getMediaRoots } = require('../src/video/mediaRoots');
+const {
+  findMedia,
+  findMediaForDate,
+  getMediaRoots,
+  resolveMediaPath,
+} = require('../src/video/mediaRoots');
 // The child supervisor lives in the shared daemon-support module, so every
 // tool that spawns the scan tool drains its stdout the same way. It was
 // duplicated here first, and the three sibling daemons still had the
@@ -61,7 +66,7 @@ const VIDEO_DIR_1080 = MEDIA.downloads_1080p;
 const VIDEO_DIR_HIRES = MEDIA.downloads_hires;
 const OUT_ROOT = path.join(ROOT, 'data', 'video_scan_test', '_rerun');
 
-// Per-video timeout: EasyOCR at ~60-90s/frame × 6 frames = 360-540s; give 40 min for longer videos
+// Per-video timeout: EasyOCR at ~60-90s/frame Ã— 6 frames = 360-540s; give 40 min for longer videos
 const PER_VIDEO_TIMEOUT_MS = 40 * 60 * 1000;
 
 // Locked production defaults. Overrides still work via --max-frames /
@@ -74,12 +79,12 @@ const DEFAULT_PROFILE_ID = PROFILE_ID;
 // Batch-snapshot mode extracts N frames within a window of the PREFILTER'S
 // BEST-SCORING FRAME and REPLACES the uniform selection with them. That is
 // only sound when the best-scoring frame is the frame the position list is
-// visible on — and MEASURED, it is not.
+// visible on â€” and MEASURED, it is not.
 //
 // On 20230609 (production scan, 2026-11-02) the prefilter's best frame was
 // ts=3100, score 25.9, and it read ZERO holdings. The frame that read the
 // date's 13 ground-truth holdings exactly was ts=1944, whose prefilter score
-// was -3.36 — near the bottom of the six candidates. Batch mode would have
+// was -3.36 â€” near the bottom of the six candidates. Batch mode would have
 // centred on ts=3100 and OCR'd a window around it, and because it REPLACES
 // the selected rows, the good frame would never have been read at all.
 //
@@ -102,7 +107,7 @@ const BATCH_SNAPSHOT_FLAGS = [
 // --temporal-decay 0 for 2023-era (no bias, let prefilter score decide).
 //
 // The CROP is no longer set here. It used to be, with a hand-listed set of
-// 29 dates and the rectangle `0.83,0.55,0.17,0.45` — but that list missed
+// 29 dates and the rectangle `0.83,0.55,0.17,0.45` â€” but that list missed
 // 20231201 and 20231215, whose ticker column starts further LEFT still (source
 // x 1586-1613, so x=0.83 shaves the first glyph off every ticker). The crop is
 // now derived from the upload date inside the scan tool itself
@@ -111,7 +116,7 @@ const BATCH_SNAPSHOT_FLAGS = [
 //
 // The era question here comes from the SAME function the crop uses, so a date
 // can never get the sidebar crop and the floating-panel flags. An unknown
-// date is the sidebar era for both — the safer of the two, because the
+// date is the sidebar era for both â€” the safer of the two, because the
 // sidebar rectangle still contains the 2022-era floating panel.
 function getFlagsForDate(dateKey) {
   const extraFlags = [];
@@ -222,11 +227,67 @@ function parseArgs(argv) {
   return args;
 }
 
-function findVideo(dateKey) {
-  const hit = findMediaForDate(dateKey);
-  if (!hit) return null;
-  return { file: hit.file, dir: hit.dir, resolution: hit.resolution, path: hit.path, videoId: hit.videoId };
+/**
+ * Catalog map dateKey -> { video_id, download_path } for QMG (and any channel).
+ * Lets findVideo resolve files that live only on an extra drive via download_path.
+ */
+let _catalogByDate = null;
+function loadCatalogByDate() {
+  if (_catalogByDate) return _catalogByDate;
+  _catalogByDate = new Map();
+  const dbPath = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
+  if (!fs.existsSync(dbPath)) return _catalogByDate;
+  try {
+    process.removeAllListeners('warning');
+    // eslint-disable-next-line global-require
+    const { DatabaseSync } = require('node:sqlite');
+    const db = new DatabaseSync(dbPath, { readOnly: true });
+    const rows = db.prepare(
+      `SELECT video_id, upload_date, download_path FROM videos
+       WHERE upload_date IS NOT NULL AND upload_date != '' AND upload_date != 'NA'`
+    ).all();
+    db.close();
+    for (const row of rows) {
+      const key = String(row.upload_date).trim();
+      if (!key) continue;
+      // Prefer a row whose download_path resolves on disk; otherwise keep first.
+      const prev = _catalogByDate.get(key);
+      const resolved = row.download_path ? resolveMediaPath(row.download_path) : null;
+      const onDisk = resolved && fs.existsSync(resolved);
+      if (!prev) {
+        _catalogByDate.set(key, row);
+      } else if (onDisk) {
+        const prevResolved = prev.download_path ? resolveMediaPath(prev.download_path) : null;
+        if (!(prevResolved && fs.existsSync(prevResolved))) {
+          _catalogByDate.set(key, row);
+        }
+      }
+    }
+  } catch (err) {
+    console.warn(`[runQmgOcrBatch] catalog load failed: ${err.message}`);
+  }
+  return _catalogByDate;
 }
+
+function findVideo(dateKey) {
+  const catalog = loadCatalogByDate().get(String(dateKey));
+  const hit = findMedia({
+    dateKey,
+    videoId: catalog && catalog.video_id,
+    downloadPath: catalog && catalog.download_path,
+  }) || findMediaForDate(dateKey, {
+    downloadPath: catalog && catalog.download_path,
+  });
+  if (!hit) return null;
+  return {
+    file: hit.file,
+    dir: hit.dir,
+    resolution: hit.resolution,
+    path: hit.path,
+    videoId: hit.videoId || (catalog && catalog.video_id) || null,
+  };
+}
+
 
 function loadGT() {
   return JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'qmg_ground_truth.json'), 'utf8'));
@@ -339,7 +400,7 @@ async function runScan(dateKey, video, runTag, clusterRule = DEFAULT_CLUSTER_RUL
   const timeoutMs = budget.timeoutMs || PER_VIDEO_TIMEOUT_MS;
   const { status, code, stdoutTail, stderr } = await superviseChild(cmd, env, {
     timeoutMs,
-    onTimeout: () => console.log(`[${dateKey}] TIMEOUT after ${timeoutMs/1000}s — killing`),
+    onTimeout: () => console.log(`[${dateKey}] TIMEOUT after ${timeoutMs/1000}s â€” killing`),
   });
 
   const elapsed = ((Date.now() - start) / 1000).toFixed(0);
@@ -447,13 +508,16 @@ async function main() {
 
   // The run tag names the RUN, and a re-run with different parameters has to
   // be distinguishable from the one it supersedes without opening the
-  // directory (CLAUDE.md, § 'Scan output directories'). The default is the
+  // directory (CLAUDE.md, Â§ 'Scan output directories'). The default is the
   // date; `--run-tag` overrides it for a run whose parameters differ.
   const runTag = args.runTag || `qmg-easyocr-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
   console.log(`\n=== QMG EasyOCR Batch ===`);
   console.log(`Production profile: ${DEFAULT_PROFILE_ID}`);
   console.log(`Media 1080p: ${VIDEO_DIR_1080}`);
   console.log(`Media hires: ${VIDEO_DIR_HIRES}`);
+  if (MEDIA.extra_dirs && MEDIA.extra_dirs.length) {
+    console.log(`Media extra: ${MEDIA.extra_dirs.join('; ')}`);
+  }
   console.log(`Run tag: ${runTag}`);
   console.log(`Dates: ${dates.join(', ')}`);
   console.log(`Parallelism: ${parallel}${args.lowCpu ? ' (low-cpu mode)' : ''}`);
@@ -517,3 +581,4 @@ if (require.main === module) {
 }
 
 module.exports = { superviseChild, STDOUT_TAIL_CHARS, scoreResult, flagsForDate, parseArgs, BASE_FLAGS, DEFAULT_PROFILE_ID, DEFAULT_MAX_CAPTURES, findVideo, VIDEO_DIR_1080, VIDEO_DIR_HIRES };
+

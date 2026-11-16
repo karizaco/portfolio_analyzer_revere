@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 /**
  * Where video media lives.
@@ -11,20 +11,20 @@
  *      PORTFOLIO_DOWNLOADS_1080P
  *      PORTFOLIO_DOWNLOADS_HIRES
  *      PORTFOLIO_DOWNLOADS
+ *      PORTFOLIO_MEDIA_EXTRA_DIRS   (comma/semicolon-separated extra search folders)
  *   2. Config file data/video_pipeline/media_roots.json
  *      {
- *        "pipeline_root": "D:/portfolio_media/video_pipeline",
+ *        "pipeline_root": null,
  *        "downloads_1080p": null,
  *        "downloads_hires": null,
- *        "downloads": null
+ *        "downloads": null,
+ *        "extra_dirs": ["D:/data/portfolio_analyzer_revere/videos"]
  *      }
- *      null/omitted keys fall back to <pipeline_root>/<name> or the repo default.
  *
- * Catalog download_path values may be:
- *   - repo-relative (data/video_pipeline/...)
- *   - absolute on this machine (D:\\... or C:\\...)
- * resolveMediaPath() handles both. Tools that used to hardcode the C: repo
- * folders should call getDownloadDir() / findMediaForDate() instead.
+ * New downloads still go to downloads_1080p / downloads_hires (the primary
+ * dirs). extra_dirs are searched for existing media so a library can span
+ * C: and D: at the same time. Catalog download_path may be repo-relative or
+ * an absolute path on any drive; resolveMediaPath() handles both.
  */
 
 const fs = require('node:fs');
@@ -45,6 +45,7 @@ const ENV_KEYS = Object.freeze({
   downloads_1080p: 'PORTFOLIO_DOWNLOADS_1080P',
   downloads_hires: 'PORTFOLIO_DOWNLOADS_HIRES',
   downloads: 'PORTFOLIO_DOWNLOADS',
+  extra_dirs: 'PORTFOLIO_MEDIA_EXTRA_DIRS',
 });
 
 let _cached = null;
@@ -52,7 +53,7 @@ let _cached = null;
 function readConfigFile() {
   try {
     if (!fs.existsSync(CONFIG_PATH)) return {};
-    const raw = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+    const raw = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8').replace(/^\uFEFF/, ''));
     return raw && typeof raw === 'object' ? raw : {};
   } catch {
     return {};
@@ -63,7 +64,6 @@ function expandPath(value) {
   if (value == null || value === '') return null;
   let s = String(value).trim();
   if (!s) return null;
-  // Allow forward slashes in config on Windows.
   s = s.replace(/\//g, path.sep);
   if (s.startsWith('~')) {
     const home = process.env.USERPROFILE || process.env.HOME || '';
@@ -73,6 +73,40 @@ function expandPath(value) {
     return path.resolve(s);
   }
   return path.resolve(ROOT, s);
+}
+
+function splitPathList(value) {
+  if (value == null || value === '') return [];
+  if (Array.isArray(value)) {
+    return value.flatMap((v) => splitPathList(v));
+  }
+  return String(value)
+    .split(/[;,]/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+function uniqueResolvedDirs(dirs) {
+  const out = [];
+  const seen = new Set();
+  for (const d of dirs) {
+    if (!d) continue;
+    const resolved = path.resolve(String(d));
+    const key = resolved.replace(/\\/g, '/').toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(resolved);
+  }
+  return out;
+}
+
+function parseExtraDirs(fileCfg, env) {
+  const parts = [
+    ...splitPathList(env[ENV_KEYS.extra_dirs]),
+    ...splitPathList(fileCfg.extra_dirs),
+    ...splitPathList(fileCfg.search_dirs),
+  ];
+  return uniqueResolvedDirs(parts.map(expandPath).filter(Boolean));
 }
 
 /**
@@ -97,22 +131,28 @@ function getMediaRoots(options = {}) {
     return path.join(pipelineRoot, key);
   }
 
+  const extra_dirs = parseExtraDirs(fileCfg, env);
+
   _cached = Object.freeze({
     repoRoot: ROOT,
     configPath: CONFIG_PATH,
-    pipelineRoot,
+    pipelineRoot: path.resolve(pipelineRoot),
     downloads_1080p: resolveDir('downloads_1080p'),
     downloads_hires: resolveDir('downloads_hires'),
     downloads: resolveDir('downloads'),
+    extra_dirs,
     usingDefaults:
-      pipelineRoot === DEFAULT_PIPELINE
+      path.resolve(pipelineRoot) === path.resolve(DEFAULT_PIPELINE)
       && !env[ENV_KEYS.downloads_1080p]
       && !env[ENV_KEYS.downloads_hires]
       && !env[ENV_KEYS.downloads]
+      && !env[ENV_KEYS.extra_dirs]
       && !fileCfg.downloads_1080p
       && !fileCfg.downloads_hires
       && !fileCfg.downloads
       && !fileCfg.pipeline_root
+      && !(Array.isArray(fileCfg.extra_dirs) && fileCfg.extra_dirs.length)
+      && !(Array.isArray(fileCfg.search_dirs) && fileCfg.search_dirs.length)
       && !env[ENV_KEYS.pipeline_root],
   });
   return _cached;
@@ -130,10 +170,30 @@ function getDownloadDir(kind = '1080p') {
   throw new Error(`unknown download kind: ${kind}`);
 }
 
-function mediaSearchDirs() {
-  const roots = getMediaRoots();
-  // Prefer higher resolution first.
-  return [roots.downloads_1080p, roots.downloads_hires, roots.downloads];
+/**
+ * Directories to scan for existing media (primary 1080p, extras, then
+ * lower-res fallbacks). New downloads still write only to getDownloadDir().
+ */
+function mediaSearchDirs(options = {}) {
+  const roots = options.roots || getMediaRoots();
+  return uniqueResolvedDirs([
+    roots.downloads_1080p,
+    ...(roots.extra_dirs || []),
+    roots.downloads_hires,
+    roots.downloads,
+  ]);
+}
+
+/**
+ * Dirs that may hold a finished 1080p (or equivalent) copy — used by the
+ * 1080p downloader's "already on disk?" check. Excludes downloads_hires.
+ */
+function media1080SearchDirs(options = {}) {
+  const roots = options.roots || getMediaRoots();
+  return uniqueResolvedDirs([
+    roots.downloads_1080p,
+    ...(roots.extra_dirs || []),
+  ]);
 }
 
 /**
@@ -166,7 +226,7 @@ function resolveMediaPath(downloadPath, options = {}) {
   }
 
   // Absolute Windows / POSIX / UNC (foreign media drives, etc.)
-  if (/^[A-Za-z]:[\/]/.test(raw) || normalised.startsWith('/') || normalised.startsWith('//')) {
+  if (/^[A-Za-z]:[\\/]/.test(raw) || normalised.startsWith('/') || normalised.startsWith('//')) {
     return path.resolve(raw);
   }
 
@@ -185,9 +245,30 @@ function dateFromStem(stem) {
   return m ? m[1] : null;
 }
 
+function resolutionLabelForDir(dir) {
+  const n = String(dir || '').replace(/\\/g, '/').toLowerCase();
+  if (n.includes('downloads_1080p')) return '1080p';
+  if (n.includes('downloads_hires')) return '720p';
+  if (n.includes('/downloads') && !n.includes('downloads_')) return 'legacy';
+  return 'extra';
+}
+
+function hitFromFile(dir, file, overrides = {}) {
+  const stem = path.parse(file).name;
+  return {
+    file,
+    dir,
+    path: path.join(dir, file),
+    resolution: overrides.resolution || resolutionLabelForDir(dir),
+    videoId: overrides.videoId || videoIdFromStem(stem),
+    date: overrides.date || dateFromStem(stem),
+  };
+}
+
 /**
- * Find a media file for a catalog date (YYYYMMDD). Prefers 1080p dir.
- * @returns {{ file: string, dir: string, path: string, resolution: string, videoId: string }|null}
+ * Find a media file for a catalog date (YYYYMMDD). Prefers 1080p dir, then
+ * extra_dirs, then lower-res fallbacks. Optional downloadPath is a catalog
+ * pointer used when the date is not found by directory scan.
  */
 function findMediaForDate(dateKey, options = {}) {
   const date = String(dateKey || '').replace(/-/g, '').slice(0, 8);
@@ -206,17 +287,21 @@ function findMediaForDate(dateKey, options = {}) {
     }
     const match = files.find((f) => f.startsWith(`${date}_`) && f.endsWith('.mp4'));
     if (!match) continue;
-    const resolution = dir.replace(/\\/g, '/').includes('downloads_1080p')
-      ? '1080p'
-      : (dir.replace(/\\/g, '/').includes('downloads_hires') ? '720p' : 'unknown');
-    return {
-      file: match,
-      dir,
-      path: path.join(dir, match),
-      resolution,
-      videoId: videoIdFromStem(path.parse(match).name),
-      date,
-    };
+    return hitFromFile(dir, match, { date });
+  }
+
+  if (options.downloadPath) {
+    const p = resolveMediaPath(options.downloadPath, options);
+    if (p && exists(p)) {
+      return {
+        file: path.basename(p),
+        dir: path.dirname(p),
+        path: p,
+        resolution: resolutionLabelForDir(path.dirname(p)),
+        videoId: videoIdFromStem(path.parse(p).name),
+        date,
+      };
+    }
   }
   return null;
 }
@@ -245,17 +330,7 @@ function findMediaForVideoId(videoId, options = {}) {
       return videoIdFromStem(stem) === id || stem.endsWith(`_${id}`) || stem === id;
     });
     if (!match) continue;
-    const resolution = dir.replace(/\\/g, '/').includes('downloads_1080p')
-      ? '1080p'
-      : (dir.replace(/\\/g, '/').includes('downloads_hires') ? '720p' : 'unknown');
-    return {
-      file: match,
-      dir,
-      path: path.join(dir, match),
-      resolution,
-      videoId: id,
-      date: dateFromStem(path.parse(match).name),
-    };
+    return hitFromFile(dir, match, { videoId: id });
   }
 
   if (options.downloadPath) {
@@ -265,7 +340,7 @@ function findMediaForVideoId(videoId, options = {}) {
         file: path.basename(p),
         dir: path.dirname(p),
         path: p,
-        resolution: p.replace(/\\/g, '/').includes('downloads_1080p') ? '1080p' : 'unknown',
+        resolution: resolutionLabelForDir(path.dirname(p)),
         videoId: id,
         date: dateFromStem(path.parse(p).name),
       };
@@ -275,7 +350,47 @@ function findMediaForVideoId(videoId, options = {}) {
 }
 
 /**
- * Ensure download directories exist (for downloaders).
+ * Unified lookup: directory scan by date and/or id, then catalog pointer.
+ */
+function findMedia(options = {}) {
+  const {
+    dateKey,
+    videoId,
+    downloadPath,
+    dirs,
+    exists,
+    readdir,
+    cwd,
+  } = options;
+  const common = { dirs, exists, readdir, cwd, downloadPath };
+
+  if (dateKey) {
+    const byDate = findMediaForDate(dateKey, common);
+    if (byDate) return byDate;
+  }
+  if (videoId) {
+    const byId = findMediaForVideoId(videoId, common);
+    if (byId) return byId;
+  }
+  if (downloadPath) {
+    const p = resolveMediaPath(downloadPath, { cwd });
+    const existsFn = exists || fs.existsSync;
+    if (p && existsFn(p)) {
+      return {
+        file: path.basename(p),
+        dir: path.dirname(p),
+        path: p,
+        resolution: resolutionLabelForDir(path.dirname(p)),
+        videoId: videoId || videoIdFromStem(path.parse(p).name),
+        date: dateKey || dateFromStem(path.parse(p).name),
+      };
+    }
+  }
+  return null;
+}
+
+/**
+ * Ensure primary download directories exist (for downloaders).
  */
 function ensureDownloadDirs() {
   const roots = getMediaRoots();
@@ -292,12 +407,15 @@ module.exports = {
   ENV_KEYS,
   ROOT,
   ensureDownloadDirs,
+  findMedia,
   findMediaForDate,
   findMediaForVideoId,
   getDownloadDir,
   getMediaRoots,
+  media1080SearchDirs,
   mediaSearchDirs,
   resetMediaRootsCache,
   resolveMediaPath,
+  uniqueResolvedDirs,
   videoIdFromStem,
 };

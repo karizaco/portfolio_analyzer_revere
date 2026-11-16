@@ -195,6 +195,54 @@ test('only the 1080p directory counts as a hires path', () => {
   assert.ok(!isHiresPath(null));
 });
 
+
+
+test('extra-drive catalog path counts as on-disk hires without downloads_1080p substring', () => {
+  // Split library: file only on D:, catalog points at absolute path.
+  // Must NOT re-download just because the path lacks downloads_1080p.
+  const target = path.resolve('D:/data/portfolio_analyzer_revere/videos/20230602_30ksgwzWboo.mp4');
+  const fsMock = fakeFs([{ path: target }]);
+  const row = {
+    video_id: '30ksgwzWboo',
+    upload_date: '20230602',
+    download_path: 'D:\\data\\portfolio_analyzer_revere\\videos\\20230602_30ksgwzWboo.mp4',
+  };
+  assert.equal(
+    findHiresOnDisk(row, { dir: path.resolve('/dl'), cwd: path.resolve('/repo'), exists: fsMock.exists, sizeOf: fsMock.sizeOf }),
+    target,
+  );
+});
+
+test('findHiresOnDisk searches extra dirs for expected filename', () => {
+  const extra = path.resolve('/extra/videos');
+  const target = path.join(extra, '20230605_C7ZZhSxYYLk.mp4');
+  const fsMock = fakeFs([{ path: target }]);
+  const row = { video_id: 'C7ZZhSxYYLk', upload_date: '20230605', download_path: '' };
+  assert.equal(
+    findHiresOnDisk(row, {
+      dir: path.resolve('/dl'),
+      dirs: [path.resolve('/dl'), extra],
+      exists: fsMock.exists,
+      sizeOf: fsMock.sizeOf,
+    }),
+    target,
+  );
+});
+
+test('downloads_hires catalog path still does not count even if file exists', () => {
+  const target = path.resolve('/repo/data/video_pipeline/downloads_hires/20230601_abc123.mp4');
+  const fsMock = fakeFs([{ path: target }]);
+  const row = {
+    video_id: 'abc123',
+    upload_date: '20230601',
+    download_path: 'data/video_pipeline/downloads_hires/20230601_abc123.mp4',
+  };
+  assert.equal(
+    findHiresOnDisk(row, { dir: path.resolve('/dl'), cwd: path.resolve('/repo'), exists: fsMock.exists, sizeOf: fsMock.sizeOf }),
+    null,
+  );
+});
+
 // ---------------------------------------------------------------------------
 // The real catalog
 // ---------------------------------------------------------------------------
