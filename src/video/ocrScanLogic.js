@@ -672,7 +672,9 @@ function scoreFramePrefilterBreakdown(stats, outputKind, profile = 'whiteboard',
   // because the content we want to OCR IS a candlestick frame. Boost instead
   // of penalize, but keep it bounded so wildly off-profile frames still drop.
   if (table.chartLikenessBoost > 0) {
-    components.chartLikeness = scoreChartLikeness(stats) * (table.chartLikenessBoost / 6);
+    // scoreChartLikeness is negative for chart-like geometry. For chart_stream
+    // (boost > 0) invert so chart-like frames contribute positively.
+    components.chartLikeness = -scoreChartLikeness(stats) * (table.chartLikenessBoost / 6);
   } else {
     components.chartLikeness = scoreChartLikeness(stats);
   }
@@ -1039,8 +1041,16 @@ function selectFramesForOcr(prefilterRows, options = {}) {
     return [];
   }
 
-  const rowsByIndex = new Map(prefilterRows.map((row) => [row.frameIndex, row]));
-  const sortedByScore = prefilterRows
+  const validRows = prefilterRows.filter((row) =>
+    Number.isFinite(Number(row.frameIndex))
+    && Number.isFinite(Number(row.prefilterScore))
+  );
+  if (!validRows.length) {
+    return [];
+  }
+
+  const rowsByIndex = new Map(validRows.map((row) => [row.frameIndex, row]));
+  const sortedByScore = validRows
     .slice()
     .sort((left, right) => {
       if (right.prefilterScore !== left.prefilterScore) {
@@ -1079,14 +1089,14 @@ function selectFramesForOcr(prefilterRows, options = {}) {
     // ~10 s of video. Trade-line slides are typically visible for 30-90 s
     // so a stride wider than ~20 s risks missing them entirely.
     let strideBasedReserve = baseline;
-    if (prefilterRows.length > 0) {
-      const sample = prefilterRows[Math.min(1, prefilterRows.length - 1)];
+    if (validRows.length > 0) {
+      const sample = validRows[Math.min(1, validRows.length - 1)];
       const secondsPerStep = sample.frameIndex > 0
         ? sample.timestamp / sample.frameIndex
         : 4;
-      const secondsPerStrideAtBaseline = (prefilterRows.length / baseline) * secondsPerStep;
+      const secondsPerStrideAtBaseline = (validRows.length / baseline) * secondsPerStep;
       if (secondsPerStrideAtBaseline > 10) {
-        strideBasedReserve = Math.ceil(prefilterRows.length / Math.max(1, Math.floor(10 / secondsPerStep)));
+        strideBasedReserve = Math.ceil(validRows.length / Math.max(1, Math.floor(10 / secondsPerStep)));
       }
     }
     if (thresholdRelaxed) {
@@ -1135,10 +1145,10 @@ function selectFramesForOcr(prefilterRows, options = {}) {
   // The uniform sample is budgeted BEFORE the seed loop so it cannot be
   // starved by an early burst of high-scoring chart frames.
   if (uniformReserve > 0) {
-    const totalRows = prefilterRows.length;
+    const totalRows = validRows.length;
     const stride = Math.max(1, Math.floor(totalRows / uniformReserve));
     for (let offset = 0; offset < totalRows && selected.size < maxFrames; offset += stride) {
-      const row = prefilterRows[offset];
+      const row = validRows[offset];
       if (!selected.has(row.frameIndex)) {
         selected.set(row.frameIndex, row);
       }

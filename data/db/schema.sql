@@ -400,6 +400,41 @@ CREATE TABLE IF NOT EXISTS video_date_resolution (
 CREATE INDEX IF NOT EXISTS idx_video_date_resolution_status_retry
     ON video_date_resolution(status, retry_after);
 
+-- OCR scan outcomes. NOT analysis_state: that column only answers whether
+-- the original media file is still needed. This table records whether a
+-- video was scanned with a named production profile, and what came out.
+CREATE TABLE IF NOT EXISTS ocr_scan_outcomes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id TEXT NOT NULL,
+    upload_date TEXT NOT NULL DEFAULT '',
+    run_tag TEXT NOT NULL DEFAULT '',
+    profile_id TEXT NOT NULL DEFAULT '',
+    engine TEXT NOT NULL DEFAULT '',
+    cluster_rule TEXT NOT NULL DEFAULT '',
+    max_captures INTEGER,
+    status TEXT NOT NULL DEFAULT 'error'
+        CHECK (status IN ('ok', 'timeout', 'error', 'missing_media', 'partial')),
+    ticker_count INTEGER NOT NULL DEFAULT 0,
+    tickers_json TEXT NOT NULL DEFAULT '[]',
+    log_path TEXT NOT NULL DEFAULT '',
+    elapsed_ms INTEGER,
+    finished_at TEXT NOT NULL DEFAULT (datetime('now')),
+    detail TEXT NOT NULL DEFAULT '',
+    UNIQUE (video_id, run_tag)
+);
+
+
+CREATE INDEX IF NOT EXISTS idx_ocr_scan_outcomes_video_status
+    ON ocr_scan_outcomes(video_id, status);
+
+CREATE INDEX IF NOT EXISTS idx_ocr_scan_outcomes_date_status
+    ON ocr_scan_outcomes(upload_date, status);
+
+CREATE INDEX IF NOT EXISTS idx_ocr_scan_outcomes_profile_status
+    ON ocr_scan_outcomes(profile_id, status);
+
+
+
 
 -- =====================================================================
 -- The O'Connell source ("Pristine Capital"), read as DOCUMENTS.

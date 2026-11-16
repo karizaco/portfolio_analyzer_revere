@@ -387,6 +387,51 @@ def _apply_migrations(connection: sqlite3.Connection) -> None:
         connection.commit()
 
 
+    # Version 10: ocr_scan_outcomes -- finished OCR runs by profile.
+    # Separate from analysis_state (file retention) and from log-filename
+    # archaeology. The production profile id is qmg-production-v1.
+    if current < 10:
+        connection.execute(
+            '''
+            CREATE TABLE IF NOT EXISTS ocr_scan_outcomes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                video_id TEXT NOT NULL,
+                upload_date TEXT NOT NULL DEFAULT '',
+                run_tag TEXT NOT NULL DEFAULT '',
+                profile_id TEXT NOT NULL DEFAULT '',
+                engine TEXT NOT NULL DEFAULT '',
+                cluster_rule TEXT NOT NULL DEFAULT '',
+                max_captures INTEGER,
+                status TEXT NOT NULL DEFAULT 'error'
+                    CHECK (status IN ('ok', 'timeout', 'error', 'missing_media', 'partial')),
+                ticker_count INTEGER NOT NULL DEFAULT 0,
+                tickers_json TEXT NOT NULL DEFAULT '[]',
+                log_path TEXT NOT NULL DEFAULT '',
+                elapsed_ms INTEGER,
+                finished_at TEXT NOT NULL DEFAULT (datetime('now')),
+                detail TEXT NOT NULL DEFAULT '',
+                UNIQUE (video_id, run_tag)
+            )
+            '''
+        )
+        connection.execute(
+            'CREATE INDEX IF NOT EXISTS idx_ocr_scan_outcomes_video_status '
+            'ON ocr_scan_outcomes(video_id, status)'
+        )
+        connection.execute(
+            'CREATE INDEX IF NOT EXISTS idx_ocr_scan_outcomes_date_status '
+            'ON ocr_scan_outcomes(upload_date, status)'
+        )
+        connection.execute(
+            'CREATE INDEX IF NOT EXISTS idx_ocr_scan_outcomes_profile_status '
+            'ON ocr_scan_outcomes(profile_id, status)'
+        )
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_version (version) VALUES (10)"
+        )
+        connection.commit()
+
+
 def initialize_schema(connection: sqlite3.Connection) -> None:
     """Load and execute data/db/schema.sql, then run any pending data migrations."""
     connection.execute("PRAGMA foreign_keys = ON")
