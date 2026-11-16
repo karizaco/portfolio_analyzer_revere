@@ -48,7 +48,9 @@ const argv = process.argv.slice(2);
 const limit = Number(readFlag(argv, '--limit')) || 30;
 const height = Number(readFlag(argv, '--height')) || 1080;
 const retryErrored = argv.includes('--retry-errored');
-const cookiesFile = readFlag(argv, '--cookies') || null;
+const defaultCookies = path.resolve('data/video_pipeline/downloads_1080p/youtubeCookies.txt');
+const cookiesFile = readFlag(argv, '--cookies')
+  || (fs.existsSync(defaultCookies) ? defaultCookies : null);
 // Optional explicit allow-list of video_ids (used by the parallel download
 // wrapper to fan out N workers across disjoint slices of the catalog).
 // When set, the candidate query filters to this list (case-insensitive).
@@ -214,6 +216,8 @@ for (const row of todo) {
     '--js-runtimes', 'node',
     '--extractor-args', 'youtube:player_client=visios',
     ...(cookiesFile ? ['--cookies', cookiesFile] : []),
+    '--sleep-requests', '2',
+    '--sleep-interval', '1',
     '-o', outTemplate,
     `https://www.youtube.com/watch?v=${videoId}`
   ], { encoding: 'utf8', stdio: 'inherit' });
