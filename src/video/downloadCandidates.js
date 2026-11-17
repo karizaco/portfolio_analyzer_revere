@@ -221,6 +221,127 @@ ORDER BY upload_date DESC, video_id ASC
 `;
 }
 
+/**
+ * Decide what still needs downloading, given the checkpoint.
+ *
+ * WHY THIS EXISTS
+ *
+ * The 1080p downloader used to ask the CHECKPOINT first:
+ *
+ *     if (checkpoint.done.some(...)) { skippedCheckpoint += 1; continue; }
+ *     const onDisk = findHiresOnDisk(row, { dir: dlDir });
+ *
+ * That ordering is the bug. `checkpoint.done` records "a download run
+ * finished this id" -- it says nothing about whether the file is still on
+ * disk. Measured on 2026-11-17: of 457 ids in the QMG 1080p checkpoint, 181
+ * had NO file anywhere on disk (D:, downloads_1080p, downloads_hires,
+ * downloads, or the Recycle Bin). All 181 came from the 2026-11-06 run.
+ * Because the checkpoint was consulted first, those 181 were skipped forever:
+ * never re-fetched, never reported as missing, and the catalog said
+ * `status='scanning'` with a `download_path` pointing into a directory that
+ * no longer held the file.
+ *
+ * The fix is the ORDER: the FILESYSTEM answers "is it already downloaded?",
+ * and the checkpoint only answers "did we already try?".
+ *
+ * THE ORDER, AND WHY
+ *
+ *   1. excluded        -- a known 720p-only video; the 1080p pass cannot
+ *                          satisfy it and must not keep re-trying it.
+ *   2. on disk        -- the work is DONE, whatever the checkpoint says.
+ *   3. errored        -- a recent attempt failed; do not retry silently.
+ *   4. blocked        -- a previous run decided this one must not proceed.
+ *   5. otherwise      -- download it. This includes the STRANDED ids: the
+ *                          checkpoint says done, the filesystem says gone.
+ *
+ * Step 2 before step 3 matters too: a video whose file is on disk is
+ * satisfied even if an earlier attempt errored, so a good file is never
+ * re-fetched because of a stale error entry.
+ *
+ * @param {object[]} rows - catalog rows (the candidate query's output)
+ * @param {object} [checkpoint] - { done, errored, blocked }
+ * @param {object} [options]
+ * @param {string} [options.dir] - preferred first search directory
+ * @param {string[]} [options.dirs] - override the full search list
+ * @param {string} [options.cwd] - repository root for relative paths
+ * @param {boolean} [options.retryErrored] - retry the errored bucket
+ * @param {string[]} [options.excludeIds] - ids this pass must not download
+ * @param {(p: string) => boolean} [options.exists]
+ * @param {(p: string) => number} [options.sizeOf]
+ * @returns {{
+ *   todo: object[],
+ *   satisfied: {row: object, path: string, alreadyInCheckpoint: boolean}[],
+ *   stranded: object[],
+ *   skippedErrored: number,
+ *   skippedBlocked: number,
+ *   skippedExcluded: number,
+ * }}
+ */
+function selectDownloadCandidates(rows, checkpoint = {}, options = {}) {
+  const {
+    dir,
+    dirs,
+    cwd,
+    exists,
+    sizeOf,
+    retryErrored = false,
+    excludeIds = [],
+    findOnDisk = findHiresOnDisk,
+  } = options;
+
+  const doneIds = new Set(
+    (Array.isArray(checkpoint.done) ? checkpoint.done : [])
+      .map((e) => (typeof e === 'string' ? e : e && e.id))
+      .filter(Boolean)
+      .map((id) => String(id))
+  );
+  const errored = (checkpoint.errored && typeof checkpoint.errored === 'object') ? checkpoint.errored : {};
+  const blocked = new Set(
+    (Array.isArray(checkpoint.blocked) ? checkpoint.blocked : []).map((id) => String(id))
+  );
+  const excluded = new Set(
+    (Array.isArray(excludeIds) ? excludeIds : []).map((id) => String(id).trim().toLowerCase())
+  );
+
+  const todo = [];
+  const satisfied = [];
+  const stranded = [];
+  let skippedErrored = 0;
+  let skippedBlocked = 0;
+  let skippedExcluded = 0;
+
+  for (const row of Array.isArray(rows) ? rows : []) {
+    const videoId = row && row.video_id;
+    if (!videoId) continue;
+    const id = String(videoId);
+
+    if (excluded.has(id.trim().toLowerCase())) { skippedExcluded += 1; continue; }
+
+    const onDisk = findOnDisk(row, { dir, dirs, cwd, exists, sizeOf });
+    if (onDisk) {
+      satisfied.push({ row, path: onDisk, alreadyInCheckpoint: doneIds.has(id) });
+      continue;
+    }
+
+    // The file is NOT on disk. A checkpoint entry claiming success is stale.
+    if (doneIds.has(id)) stranded.push(row);
+
+    if (!retryErrored && errored[id]) { skippedErrored += 1; continue; }
+    if (blocked.has(id)) { skippedBlocked += 1; continue; }
+
+    todo.push(row);
+  }
+
+  return {
+    todo,
+    satisfied,
+    stranded,
+    skippedErrored,
+    skippedBlocked,
+    skippedExcluded,
+  };
+}
+
 module.exports = {
   CANDIDATE_SQL,
   DOWNLOAD_CANDIDATE_STATUSES,
@@ -232,5 +353,6 @@ module.exports = {
   isHiresPath,
   is720HiresLibraryPath,
   resolveCatalogPath,
+  selectDownloadCandidates,
   toPortablePath,
 };

@@ -40,7 +40,12 @@ const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const { getDownloadDir, ensureDownloadDirs } = require('../src/video/mediaRoots');
 
-const { CANDIDATE_SQL, findHiresOnDisk, toPortablePath } = require('../src/video/downloadCandidates');
+const {
+  CANDIDATE_SQL,
+  selectDownloadCandidates,
+  toPortablePath,
+} = require('../src/video/downloadCandidates');
+const { KNOWN_720P_ONLY_IDS } = require('../src/video/known720pOnly');
 // The candidate query's status list lives in src/video/videoStatus.js, which
 // is where each status's meaning is written down.
 
@@ -48,6 +53,8 @@ const argv = process.argv.slice(2);
 const limit = Number(readFlag(argv, '--limit')) || 30;
 const height = Number(readFlag(argv, '--height')) || 1080;
 const retryErrored = argv.includes('--retry-errored');
+// Print what WOULD be downloaded and exit. No download, no SQLite write.
+const dryRun = argv.includes('--dry-run');
 const defaultCookies = path.resolve('data/video_pipeline/downloads_1080p/youtubeCookies.txt');
 const cookiesFile = readFlag(argv, '--cookies')
   || (fs.existsSync(defaultCookies) ? defaultCookies : null);
@@ -74,9 +81,20 @@ if (![720, 1080].includes(height)) {
 const formatCode = String(height === 720 ? '136' : '137');
 
 const dbPath = path.resolve('data/video_pipeline/state.sqlite');
-const dlDir = getDownloadDir('1080p');
+// Where new files land. The default is the 1080p library; a 720p pass wants
+// the 720p library instead, and putting a 720p file in the 1080p library would
+// make findHiresOnDisk() report it as a finished 1080p download.
+const outDirArg = readFlag(argv, '--out-dir');
+const dlDir = outDirArg ? path.resolve(outDirArg) : getDownloadDir('1080p');
 ensureDownloadDirs();
-const checkpointPath = path.join(dlDir, '_qmg_1080p_checkpoint.json');
+// The checkpoint name is per-height, not fixed. A 720p pass and a 1080p pass
+// share this file otherwise, and one pass's successes would silently become
+// the other pass's successes -- which is how a 720p file ends up recorded as
+// a completed 1080p download.
+const checkpointFileArg = readFlag(argv, '--checkpoint-file');
+const checkpointPath = checkpointFileArg
+  ? path.resolve(checkpointFileArg)
+  : path.join(dlDir, `_qmg_${height}p_checkpoint.json`);
 // The repository root, derived from the database's own location
 // (`<root>/data/video_pipeline/state.sqlite`). Stored paths are relative to
 // it, so it is what they have to be resolved against.
@@ -139,13 +157,16 @@ import json, sqlite3, sys
 c = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
 c.row_factory = sqlite3.Row
 rows = c.execute(${JSON.stringify(CANDIDATE_SQL)}).fetchall()
-out = [dict(r) for r in rows]
-json.dump(out, sys.stdout)
+done_rows = c.execute("SELECT COUNT(*) FROM videos WHERE channel='qullamaggie' AND status='done'").fetchone()[0]
+json.dump({"rows": [dict(r) for r in rows], "status_done": done_rows}, sys.stdout)
 `;
 const qRes = spawnSync(py, ['-3', '-c', script], { encoding: 'utf8' });
 if (qRes.status !== 0) { console.error(qRes.stderr); process.exit(1); }
-const allRows = JSON.parse(qRes.stdout);
+const qData = JSON.parse(qRes.stdout);
+const allRows = Array.isArray(qData) ? qData : qData.rows;
+const statusDoneRows = Array.isArray(qData) ? 0 : (qData.status_done || 0);
 console.log(`[qmg1080] ${allRows.length} candidate rows in SQLite${onlyIds.size ? ` (after --only-ids filter: ${onlyIds.size} requested)` : ''}`);
+console.log(`[qmg1080] ${statusDoneRows} row(s) excluded because the catalog says the OCR pass already ran`);
 
 if (onlyIds.size) {
   const filtered = allRows.filter((r) => onlyIds.has(String(r.video_id || '').toLowerCase()));
@@ -171,27 +192,51 @@ if (onlyIds.size) {
 //
 // The selection logic lives in src/video/downloadCandidates.js so it can be
 // tested without running a download.
-const todo = [];
-let skippedDone = 0;
-let skippedDisk = 0;
-let skippedCheckpoint = 0;
-let skippedErrored = 0;
-for (const row of allRows) {
-  const { video_id: videoId } = row;
-  if (checkpoint.done.some((e) => (typeof e === 'string' ? e : e.id) === videoId)) { skippedCheckpoint += 1; continue; }
-  if (!retryErrored && checkpoint.errored[videoId]) { skippedErrored += 1; continue; }
-  if (checkpoint.blocked.includes(videoId)) { skippedErrored += 1; continue; }
-  const onDisk = findHiresOnDisk(row, { dir: dlDir });
-  if (onDisk) {
-    skippedDisk += 1;
-    finalizeRow(videoId, onDisk);
-    checkpoint.done.push(stampMachine(videoId));
-    continue;
+// THE ORDER IS THE FIX.
+//
+// The checkpoint used to be consulted BEFORE the filesystem, so any id the
+// checkpoint had recorded as done was skipped without ever asking whether
+// the file was still there. Measured on 2026-11-17: 181 of the checkpoint's
+// 457 done ids had no file anywhere on disk, and all 181 were skipped
+// forever -- never re-fetched, never reported missing.
+//
+// Now the FILESYSTEM answers "is it already downloaded?" and the checkpoint
+// only answers "did we already try?". selectDownloadCandidates() holds that
+// order, and it lives in src/video/downloadCandidates.js so it can be tested
+// without running a download.
+//
+// The known 720p-only videos are excluded from the 1080p pass: they have no
+// 1080p upload, so every run would spend a request proving that again and
+// bury the real failures in noise. They are fetched by a separate 720p pass.
+const excludeIds = height === 1080 ? KNOWN_720P_ONLY_IDS : [];
+const selection = selectDownloadCandidates(allRows, checkpoint, {
+  dir: dlDir,
+  retryErrored,
+  excludeIds,
+});
+const todo = selection.todo.slice(0, limit > 0 ? limit : undefined);
+
+if (dryRun) {
+  console.log(`[qmg1080] DRY RUN -- ${todo.length} video(s) would be downloaded:`);
+  for (const row of todo.slice(0, 60)) {
+    console.log(`  ${row.upload_date || '???????'} ${row.video_id} ${String(row.title || '').slice(0, 60)}`);
   }
-  todo.push(row);
-  if (limit > 0 && todo.length >= limit) break;
+  if (todo.length > 60) console.log(`  ... and ${todo.length - 60} more`);
+  process.exit(0);
 }
-console.log(`[qmg1080] skipped: done=${skippedDone} disk=${skippedDisk} checkpoint=${skippedCheckpoint} errored=${skippedErrored}`);
+
+// A file on disk satisfies the work whatever the checkpoint says. Record the
+// ids the checkpoint had not seen, so the checkpoint converges on the truth.
+for (const s of selection.satisfied) {
+  if (!s.alreadyInCheckpoint) checkpoint.done.push(stampMachine(s.row.video_id));
+  finalizeRow(s.row.video_id, s.path);
+}
+
+console.log(`[qmg1080] skipped: disk=${selection.satisfied.length} errored=${selection.skippedErrored} blocked=${selection.skippedBlocked} excluded=${selection.skippedExcluded}`);
+if (selection.stranded.length) {
+  console.log(`[qmg1080] RE-DOWNLOADING ${selection.stranded.length} id(s) the checkpoint called done but whose file is gone`);
+  console.log(`[qmg1080]   (the checkpoint records that a run finished, not that the file survived)`);
+}
 console.log(`[qmg1080] to download: ${todo.length}`);
 
 if (!todo.length) {
@@ -251,10 +296,12 @@ const summary = {
   format_code: formatCode,
   downloaded,
   errored,
-  skipped_done: skippedDone,
-  skipped_disk: skippedDisk,
-  skipped_checkpoint: skippedCheckpoint,
-  skipped_errored: skippedErrored,
+  skipped_done: statusDoneRows,
+  skipped_disk: selection.satisfied.length,
+  skipped_errored: selection.skippedErrored,
+  skipped_blocked: selection.skippedBlocked,
+  skipped_excluded: selection.skippedExcluded,
+  stranded_redownloaded: selection.stranded.length,
   total_elapsed_s: Number(totalElapsed),
   ended_at: new Date().toISOString()
 };
@@ -281,9 +328,20 @@ c.commit()
 
 function saveCheckpoint() {
   try {
+    // Dedupe BY ID. The entries are objects ({ id, downloaded_by }), so
+    // `new Set(done)` compares them by reference and lets duplicate ids
+    // through -- the file grew a little on every run.
+    const seenIds = new Set();
+    const doneEntries = [];
+    for (const entry of checkpoint.done) {
+      const id = typeof entry === 'string' ? entry : (entry && entry.id);
+      if (!id || seenIds.has(id)) continue;
+      seenIds.add(id);
+      doneEntries.push(stampMachine(entry));
+    }
     fs.writeFileSync(checkpointPath, JSON.stringify({
       height: checkpoint.height,
-      done: [...new Set(checkpoint.done)],
+      done: doneEntries,
       errored: checkpoint.errored,
       blocked: checkpoint.blocked || []
     }, null, 2));
