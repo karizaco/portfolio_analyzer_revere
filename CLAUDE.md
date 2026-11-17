@@ -853,6 +853,52 @@ dates are day-first ("08.07.25" and "29.07.2025" both occur), and a
 number that wraps inside its cell comes back space-joined ("17,10 15"
 is 17,1015).
 
+**THE TRANSCRIPTS ARE THE CORPUS'S PRIMARY TEXT, AND THE LANGUAGE IS
+PER CALL.** The 116 videos are 65.9 hours of spoken commentary and
+there are no captions for them (they are local files), so Deepgram is
+the only route: `language='en'` is passed **per call** and the row
+records the language the request actually used. `language` selects the
+ACOUSTIC MODEL -- the wrong model produces almost no transcript, not a
+worse one -- and the module's default is `cs` (Sevcik is Czech). The
+transcripts are written as the canonical JSON under
+`data/video_pipeline/transcripts/komar_<id>.json` (TRACKED: they are the
+record), the row in `komar_transcripts` is their INDEX, and a file with
+no row is re-registered rather than transcribed again. The audio is
+deleted after every request. nova-2 at the standard rate is $0.0077 a
+minute, so the corpus is about $30 -- `--dry-run` prints the plan and
+the price before a cent is spent.
+
+**THE WEEKEND-REPORT SUMMARY IS A DERIVED ARTIFACT, AND ITS SQUARE IS
+A LETTER.** The two Summary PDFs are machine-written summaries OF a
+video -- they must be labelled as one and never merged with the primary
+record -- but they carry a dated, curated, per-ticker WATCHLIST with the
+author's VERDICT on each name, which nothing else in the corpus does.
+They are TEXT-NATIVE (no OCR). **The two files are in different
+formats**: 16 August prints `VFF (Village Farms) -- commentary. [square]
+Needs more consolidation.` and 24 August prints `DFDV: commentary.
+[square]`. **The square is a ZapfDingbats filled square that the text
+layer renders as the literal letter "I", glued to what follows it** --
+so every entry of the 24 August file but the first reads as "ISBET"
+where the ticker is SBET, and "IBMNR" where it is BMNR (the corpus's
+own trade log carries BMNR). A leading "I" on an entry that is not the
+first of its section is the square; the raw form is kept beside the
+reading (`raw_subject`). And **the extraction drops the spaces at line
+breaks**, so a verdict arrives as "Needs moreconsolidation" and the
+stance is matched with the spaces ignored.
+
+**THE SEED LEXICON DOES NOT KNOW THIS CORPUS, AND THE TRANSCRIPTS ARE
+A CHART LESSON AS MUCH AS A TRADING CALL.** The corpus names **105**
+tickers -- the trade log's 26, the cards' 55 theme leaders and the
+Summary's 30 holdings -- and only **32** of them are in the shared seed
+lexicon, so the other 73 live in `config/ticker_lexicon_komar.csv`
+(with the note saying which artifact names each). And the transcripts
+are a lesson: "EMA:797, US:255, EPS:232, IPO:97, ETF:65, MMTS:19" are
+words, not holdings. Every stopped token was checked against the SEC's
+own registrant list first, because a token that IS a registrant might
+be a holding -- "CCG is another sister stock", "NB Bancorp" -- and those
+are left alone. "EMI" is the EMA INDICATOR misheard, and "MMTS" is the
+author's own score.
+
 - `src/komar/channel.js` - the source's identity, the namespaced ids, and the slug rule
 - `src/komar/corpusCatalog.js` - the folder walk and the filename grammar
 - `src/komar/documentLayout.js` - what a PDF IS, and what its own chrome says
@@ -860,11 +906,15 @@ is 17,1015).
 - `src/komar/cardDiscs.js` - the trend arrows, read from pixels
 - `src/komar/cardThemes.js` - the theme names, read from the card's accent ink
 - `src/komar/documentExtract.js` - the PDF readers
+- `src/komar/summaryLayout.js` - the Weekend-Report Summary: its sections, its entries and its verdicts
+- `src/komar/lexicon.js` - the corpus's own tickers, and the capitalised tokens that are the lesson rather than a holding
 - `src/komar/tradeLogLayout.js` - the trade-log sheet's geometry, its 18 columns and its values
 - `src/komar/schema.js` - the tables, and the columns an existing database has to grow
 - `tools/catalogKomar.js` - inventories both folders, reads the documents, probes the videos
 - `tools/extractKomarDocuments.js` - the market cards, the theme leaders and the deck notes
 - `tools/extractKomarTradeLog.js` - the trade-log sheet: 32 trades over 26 tickers
+- `tools/fetchKomarTranscripts.js` - the corpus's primary text: 65.9 hours of Deepgram, priced before it is bought
+- `tools/extractKomarSignals.js` - the setups: the transcripts read with the shared engine and the corpus's own lexicon
 - `data/komar_manifest.json` - the catalog's committed record of what was read
 
 ```bash
@@ -872,6 +922,10 @@ npm run komar:catalog
 npm run komar:catalog:dry
 npm run komar:documents
 npm run komar:tradelog
+npm run komar:transcripts
+npm run komar:transcripts:dry
+npm run komar:signals
+npm run komar:signals:dry
 ```
 
 The videos are checksummed by SIZE and MTIME, not by md5: 48 GB read on every
@@ -923,6 +977,9 @@ catalog run is not affordable, and the media is never committed anyway.
 - `test/komarTradeLogLayout.test.js` — the trade-log sheet's grey grid, its 18 columns and its values
 - `test/komarTradeLogSchema.test.js` — the trade-log table's shape, and the rule that a table with rows is never dropped
 - `test/komarTradeLogTool.test.js` — the trade-log writer: rows are replaced, and every row carries its check
+- `test/komarSummaryLayout.test.js` — the Weekend-Report Summary: the two formats, the square that reads as a letter, and the verdicts
+- `test/komarTranscripts.test.js` — the transcript writer: the row records the language the request used, and a file with no row is re-registered rather than transcribed again
+- `test/komarLexicon.test.js` — the corpus's own tickers, and the capitalised tokens that are the lesson rather than a holding
 - `test/manual/komarTradeLogRead.test.js` — the **manual** full read of the sheet (a Tesseract pass over every cell, 20 s)
 - `test/oconnellIssueKinds.test.js` — the newsletter taxonomy, read from the masthead by font size
 - `test/oconnellSetupLayout.test.js` — the setup headings, the direction, and the setup vocabulary

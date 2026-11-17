@@ -1079,3 +1079,124 @@ CREATE TABLE IF NOT EXISTS komar_trade_log (
 CREATE INDEX IF NOT EXISTS idx_komar_trade_log_doc ON komar_trade_log(doc_id);
 
 CREATE INDEX IF NOT EXISTS idx_komar_trade_log_ticker ON komar_trade_log(ticker);
+
+-- One row per transcribed Komar video.
+--
+-- The Komar corpus has no YouTube identity -- the files have no video
+-- id -- so it gets its own table rather than going into the
+-- `video_transcripts` table, which is the YouTube pipeline's. The
+-- transcript TEXT is the record, and it is the committed JSON under
+-- data/video_pipeline/transcripts/komar_<id>.json; this table is its
+-- index: which provider, which language, how many segments, and the
+-- checksum that makes a re-run idempotent.
+--
+-- The language is recorded because `language` selects the ACOUSTIC
+-- MODEL: the same request pointed at the wrong model produces almost
+-- no transcript at all, and a hard-coded language in the row hid that
+-- for a whole corpus once.
+CREATE TABLE IF NOT EXISTS komar_transcripts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id TEXT NOT NULL UNIQUE,
+    provider TEXT NOT NULL DEFAULT 'deepgram',
+    language TEXT NOT NULL DEFAULT '',
+    model TEXT NOT NULL DEFAULT '',
+    transcript_path TEXT NOT NULL DEFAULT '',
+    segment_count INTEGER NOT NULL DEFAULT 0,
+    duration_sec REAL NOT NULL DEFAULT 0,
+    -- The provider's own quality score, when it reports one.
+    quality_score REAL,
+    -- md5 of the transcript text, timing-independent. Two runs of the
+    -- same provider over the same audio produce the same text.
+    checksum TEXT NOT NULL DEFAULT '',
+    fetched_at TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_transcripts_language ON komar_transcripts(language);
+
+-- The WEEKEND-REPORT SUMMARY readings.
+--
+-- The two Summary PDFs are MACHINE-WRITTEN summaries of a video -- a
+-- derived artifact, and the plan is explicit that they must be
+-- labelled as one and never merged with the primary record. What they
+-- carry that nothing else in the corpus does is a dated, curated,
+-- per-ticker WATCHLIST with the author's verdict on each name.
+--
+-- `raw_subject` is the subject as the TEXT LAYER gave it: the
+-- summary prints a filled square that renders as the letter "I" and
+-- glues itself to the entry that follows, so "SBET" is read as
+-- "ISBET". The reading is beside the raw form so it can be checked.
+CREATE TABLE IF NOT EXISTS komar_summary_readings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    doc_id TEXT NOT NULL,
+    page INTEGER NOT NULL DEFAULT 1,
+    reading_index INTEGER NOT NULL DEFAULT 0,
+    -- 'holding' for a ticker, 'market' for a commodity or a prose section
+    kind TEXT NOT NULL DEFAULT '',
+    section TEXT NOT NULL DEFAULT '',
+    subject TEXT NOT NULL DEFAULT '',
+    raw_subject TEXT NOT NULL DEFAULT '',
+    name TEXT NOT NULL DEFAULT '',
+    text TEXT NOT NULL DEFAULT '',
+    verdict TEXT NOT NULL DEFAULT '',
+    stance TEXT NOT NULL DEFAULT '',
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(doc_id, page, reading_index)
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_summary_readings_doc ON komar_summary_readings(doc_id);
+
+CREATE INDEX IF NOT EXISTS idx_komar_summary_readings_subject ON komar_summary_readings(subject);
+
+-- The SETUPS: what the author SAID he was watching.
+--
+-- These are the calls, and they come from the transcripts (the corpus's
+-- primary text) through the SHARED engine
+-- (`src/sevcik/signalExtractor.js`, the same one the Sevcik, T3Live and
+-- Benzinga extractors use) with the English name finder and the Komar
+-- lexicon.
+--
+-- The table is the source's own because `trade_signals` is a YouTube
+-- table whose rows carry a NOT NULL `transcript_id` that REFERENCES
+-- `video_transcripts(id)`, and this corpus has no YouTube identity at
+-- all: the files have no video id.
+--
+-- `evidence_text` is the rule the whole project follows: a signal
+-- without the words it was read from cannot be checked.
+CREATE TABLE IF NOT EXISTS komar_setups (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id TEXT NOT NULL,
+    -- The row of `komar_transcripts` this came from.
+    transcript_id INTEGER NOT NULL DEFAULT 0,
+    ticker TEXT NOT NULL,
+    -- The name he SAID, which is not the ticker.
+    spoken_name TEXT NOT NULL DEFAULT '',
+    action TEXT NOT NULL DEFAULT '',
+    bias TEXT NOT NULL DEFAULT '',
+    strength REAL NOT NULL DEFAULT 0,
+    -- 'forward' for a call, 'retrospective' for a review of a call that
+    -- is already over.
+    claim_kind TEXT NOT NULL DEFAULT '',
+    confidence_label TEXT NOT NULL DEFAULT '',
+    confidence_score REAL NOT NULL DEFAULT 0,
+    entry_price REAL,
+    target_price_low REAL,
+    target_price_high REAL,
+    stop_price REAL,
+    horizon_text TEXT NOT NULL DEFAULT '',
+    rationale TEXT NOT NULL DEFAULT '',
+    evidence_text TEXT NOT NULL DEFAULT '',
+    segment_start_index INTEGER NOT NULL DEFAULT 0,
+    segment_end_index INTEGER NOT NULL DEFAULT 0,
+    event_time_sec REAL NOT NULL DEFAULT 0,
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(video_id, segment_start_index, ticker)
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_setups_ticker ON komar_setups(ticker);
+
+CREATE INDEX IF NOT EXISTS idx_komar_setups_video ON komar_setups(video_id);
+

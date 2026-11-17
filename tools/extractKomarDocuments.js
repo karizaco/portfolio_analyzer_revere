@@ -87,7 +87,7 @@ function listDocuments(db) {
   let sql = `
     SELECT doc_id, kind, pdf_path, session_date, title, pdf_checksum
     FROM komar_documents
-    WHERE kind IN ('report', 'post', 'deck')
+    WHERE kind IN ('report', 'post', 'deck', 'summary')
   `;
   const params = [];
   if (options.docId) {
@@ -106,7 +106,7 @@ function listDocuments(db) {
  *
  * @param {object} db
  * @param {object} doc
- * @param {{cards:object[],leaders:object[],notes:object[]}} parsed
+ * @param {{cards:object[],leaders:object[],notes:object[],summaries:object[]}} parsed
  */
 function writeDocumentRows(db, doc, parsed) {
   db.exec('BEGIN');
@@ -114,6 +114,7 @@ function writeDocumentRows(db, doc, parsed) {
     db.prepare('DELETE FROM komar_market_cards WHERE doc_id = ?').run(doc.doc_id);
     db.prepare('DELETE FROM komar_theme_leaders WHERE doc_id = ?').run(doc.doc_id);
     db.prepare('DELETE FROM komar_deck_notes WHERE doc_id = ?').run(doc.doc_id);
+    db.prepare('DELETE FROM komar_summary_readings WHERE doc_id = ?').run(doc.doc_id);
 
     const cardStmt = db.prepare(`
       INSERT INTO komar_market_cards (
@@ -184,6 +185,29 @@ function writeDocumentRows(db, doc, parsed) {
       );
     }
 
+    const summaryStmt = db.prepare(`
+      INSERT INTO komar_summary_readings (
+        doc_id, page, reading_index, kind, section, subject, raw_subject,
+        name, text, verdict, stance, parser_version
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+    for (const row of parsed.summaries || []) {
+      summaryStmt.run(
+        row.doc_id,
+        row.page,
+        row.reading_index,
+        row.kind,
+        row.section,
+        row.subject,
+        row.raw_subject,
+        row.name,
+        row.text,
+        row.verdict,
+        row.stance,
+        row.parser_version
+      );
+    }
+
     db.exec('COMMIT');
   } catch (error) {
     db.exec('ROLLBACK');
@@ -195,7 +219,7 @@ function writeDocumentRows(db, doc, parsed) {
  * The JSON sidecar for one document.
  *
  * @param {object} doc
- * @param {{cards:object[],leaders:object[],notes:object[]}} parsed
+ * @param {{cards:object[],leaders:object[],notes:object[],summaries:object[]}} parsed
  */
 function writeRecord(doc, parsed) {
   fs.mkdirSync(RECORDS_DIR, { recursive: true });
@@ -211,6 +235,7 @@ function writeRecord(doc, parsed) {
     cards: parsed.cards,
     leaders: parsed.leaders,
     notes: parsed.notes,
+    summaries: parsed.summaries || [],
   };
   fs.writeFileSync(
     path.join(RECORDS_DIR, `${doc.doc_id}.json`),
@@ -235,6 +260,7 @@ async function main() {
     docs: docs.length,
     leaders: 0,
     notes: 0,
+    readings: 0,
     parser_version: PARSER_VERSION,
   };
 
@@ -249,7 +275,8 @@ async function main() {
       summary.cards += parsed.cards.length;
       summary.leaders += parsed.leaders.length;
       summary.notes += parsed.notes.length;
-      console.log(`[komar-docs] ${doc.doc_id}: cards=${parsed.cards.length}, leaders=${parsed.leaders.length}, notes=${parsed.notes.length}`);
+      summary.readings += (parsed.summaries || []).length;
+      console.log(`[komar-docs] ${doc.doc_id}: cards=${parsed.cards.length}, leaders=${parsed.leaders.length}, notes=${parsed.notes.length}, readings=${(parsed.summaries || []).length}`);
     }
   } finally {
     await closeKomarDocumentWorkers();
@@ -259,7 +286,7 @@ async function main() {
   if (options.json) {
     console.log(JSON.stringify(summary, null, 2));
   } else {
-    console.log(`processed ${summary.docs} document(s): cards=${summary.cards}, leaders=${summary.leaders}, notes=${summary.notes}`);
+    console.log(`processed ${summary.docs} document(s): cards=${summary.cards}, leaders=${summary.leaders}, notes=${summary.notes}, readings=${summary.readings}`);
   }
 }
 

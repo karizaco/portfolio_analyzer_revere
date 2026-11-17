@@ -32,6 +32,7 @@ const { closeWorker: closeTableWorker, readRegionText } = require('../table/tabl
 const { INDEX_ROWS, parseExposure, parseLeaders } = require('./cardLayout');
 const { findArrowDiscs, readTrendFromDiscs } = require('./cardDiscs');
 const { readAccentTitles } = require('./cardThemes');
+const { parseSummaryDocument } = require('./summaryLayout');
 
 /** The parser version written onto every Phase-2 row. */
 const PARSER_VERSION = 'komar-docs-2';
@@ -561,22 +562,38 @@ function parseDeckPageNotes(page) {
  *
  * @param {{doc_id:string,pdf_path:string,kind:string}} doc
  * @param {{sourceDir:string, workDir:string}} options
- * @returns {Promise<{cards:object[],leaders:object[],notes:object[]}>}
+ * @returns {Promise<{cards:object[],leaders:object[],notes:object[],summaries:object[]}>}
  */
 async function parseKomarDocument(doc, options) {
   const pdfPath = path.join(options.sourceDir, doc.pdf_path);
   if (!fs.existsSync(pdfPath)) {
-    return { cards: [], leaders: [], notes: [] };
+    return { cards: [], leaders: [], notes: [], summaries: [] };
   }
 
   const meta = readMeta(pdfPath);
   if (meta.error) {
-    return { cards: [], leaders: [], notes: [] };
+    return { cards: [], leaders: [], notes: [], summaries: [] };
   }
 
   const cards = [];
   const leaders = [];
   const notes = [];
+  const summaries = [];
+
+  // THE WEEKEND-REPORT SUMMARY is TEXT-NATIVE, so it is read straight
+  // from the text layer -- no OCR, and no card images.
+  if (doc.kind === 'summary') {
+    const parsed = parseSummaryDocument(pdfPath);
+    parsed.readings.forEach((reading, index) => {
+      summaries.push({
+        ...reading,
+        doc_id: doc.doc_id,
+        page: 1,
+        parser_version: PARSER_VERSION,
+        reading_index: index,
+      });
+    });
+  }
 
   for (const page of meta.pages || []) {
     if (doc.kind === 'report' || doc.kind === 'post') {
@@ -619,7 +636,7 @@ async function parseKomarDocument(doc, options) {
     }
   }
 
-  return { cards, leaders, notes };
+  return { cards, leaders, notes, summaries };
 }
 
 /**
@@ -627,21 +644,23 @@ async function parseKomarDocument(doc, options) {
  *
  * @param {object[]} docs
  * @param {{sourceDir:string, workDir:string}} options
- * @returns {Promise<{cards:object[],leaders:object[],notes:object[]}>}
+ * @returns {Promise<{cards:object[],leaders:object[],notes:object[],summaries:object[]}>}
  */
 async function parseKomarDocuments(docs, options) {
   const cards = [];
   const leaders = [];
   const notes = [];
+  const summaries = [];
 
   for (const doc of docs) {
     const parsed = await parseKomarDocument(doc, options);
     cards.push(...parsed.cards);
     leaders.push(...parsed.leaders);
     notes.push(...parsed.notes);
+    summaries.push(...parsed.summaries);
   }
 
-  return { cards, leaders, notes };
+  return { cards, leaders, notes, summaries };
 }
 
 /**

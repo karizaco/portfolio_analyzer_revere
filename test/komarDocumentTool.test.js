@@ -39,7 +39,7 @@ function isolatedDb() {
   };
 }
 
-test('listDocuments selects only report/post/deck rows', () => {
+test('listDocuments selects only report/post/deck/summary rows', () => {
   const ctx = isolatedDb();
   try {
     const ins = ctx.db.prepare(`
@@ -54,13 +54,14 @@ test('listDocuments selects only report/post/deck rows', () => {
     ins.run('komar_doc_post_20260415', 'post');
     ins.run('komar_doc_deck_trades-august-2025', 'deck');
     ins.run('komar_doc_rule_core_strategy_v2', 'rule');
-    ins.run('komar_doc_summary_20250824', 'summary');
+    ins.run('komar_doc_summary_20250816', 'summary');
 
     const docs = listDocuments(ctx.db);
     assert.deepEqual(docs.map((d) => d.doc_id).sort(), [
       'komar_doc_deck_trades-august-2025',
       'komar_doc_post_20260415',
       'komar_doc_report_20260509',
+      'komar_doc_summary_20250816',
     ]);
   } finally {
     ctx.cleanup();
@@ -137,6 +138,51 @@ test('writeDocumentRows replaces this document\'s rows', () => {
     assert.equal(card.trend_sp500_dir, 'up');
     const leader = ctx.db.prepare('SELECT ticker FROM komar_theme_leaders').get();
     assert.equal(leader.ticker, 'MU');
+  } finally {
+    ctx.cleanup();
+  }
+});
+
+test('writeDocumentRows writes the summary readings, and replaces them', () => {
+  const ctx = isolatedDb();
+  try {
+    const doc = { doc_id: 'komar_doc_summary_20250824' };
+    const first = {
+      cards: [],
+      leaders: [],
+      notes: [],
+      summaries: [
+        {
+          doc_id: doc.doc_id,
+          kind: 'holding',
+          name: '',
+          page: 1,
+          parser_version: 'komar-docs-2',
+          raw_subject: 'IBMNR',
+          reading_index: 2,
+          section: 'Stocks Holding Up / Under Watch',
+          stance: '',
+          subject: 'BMNR',
+          text: 'Showing relative strength, needs consolidation.',
+          verdict: '',
+        },
+      ],
+    };
+    writeDocumentRows(ctx.db, doc, first);
+    let rows = ctx.db.prepare('SELECT * FROM komar_summary_readings').all();
+    assert.equal(rows.length, 1);
+    assert.equal(rows[0].subject, 'BMNR');
+    assert.equal(rows[0].raw_subject, 'IBMNR');
+
+    // A re-read replaces the document's readings rather than adding to
+    // them.
+    writeDocumentRows(ctx.db, doc, {
+      ...first,
+      summaries: [{ ...first.summaries[0], reading_index: 0, subject: 'DFDV' }],
+    });
+    rows = ctx.db.prepare('SELECT * FROM komar_summary_readings').all();
+    assert.equal(rows.length, 1);
+    assert.equal(rows[0].subject, 'DFDV');
   } finally {
     ctx.cleanup();
   }

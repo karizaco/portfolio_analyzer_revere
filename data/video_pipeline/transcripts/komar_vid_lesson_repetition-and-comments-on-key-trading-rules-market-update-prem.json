@@ -1,0 +1,5386 @@
+{
+  "channel": "komar",
+  "checksum": "0425433f03d5f3f8df197c3c21e938ec",
+  "duration_sec": 4582.570667,
+  "fetched_at": "2026-11-17T12:29:46.230Z",
+  "language": "en",
+  "model": "nova-2",
+  "provider": "deepgram",
+  "quality_score": 0.955490317117318,
+  "segment_count": 895,
+  "segments": [
+    {
+      "start_sec": 1.52,
+      "end_sec": 7.7,
+      "text": "Hi, guys. So I updated today the post, a simpler rule set for position trading.",
+      "confidence": 0.98211265
+    },
+    {
+      "start_sec": 8.24,
+      "end_sec": 11.28,
+      "text": "I added a little bit the momentum view on,",
+      "confidence": 0.98361546
+    },
+    {
+      "start_sec": 11.84,
+      "end_sec": 12.98,
+      "text": "or in this post,",
+      "confidence": 0.8319702
+    },
+    {
+      "start_sec": 13.465,
+      "end_sec": 21.325,
+      "text": "And I thought it would be a good idea to go with you through this post and talk a little bit about that just for repetition,",
+      "confidence": 0.97898513
+    },
+    {
+      "start_sec": 21.625,
+      "end_sec": 27.565,
+      "text": "just for repeating the rules. I think it's very important to repeat the rules over and over again.",
+      "confidence": 0.99953884
+    },
+    {
+      "start_sec": 27.95,
+      "end_sec": 36.45,
+      "text": "Every day, I go through my rules. So I have a mental preparation slide deck where I go through every day to remember the rules and also,",
+      "confidence": 0.9641204
+    },
+    {
+      "start_sec": 37.15,
+      "end_sec": 39.41,
+      "text": "yeah, to repeat them. Repetition makes...",
+      "confidence": 0.99645996
+    },
+    {
+      "start_sec": 40.465,
+      "end_sec": 43.685,
+      "text": "A repetition is king for me. That's very important. Repetition",
+      "confidence": 0.9557861
+    },
+    {
+      "start_sec": 44.145,
+      "end_sec": 51.985,
+      "text": "of charts, repetition of chart patterns, and, of course, repetition of the rules. So maybe let's dive in. I will also,",
+      "confidence": 0.9823754
+    },
+    {
+      "start_sec": 52.385,
+      "end_sec": 55.92,
+      "text": "zoom in so that you can see that a little bit bigger.",
+      "confidence": 0.9836833
+    },
+    {
+      "start_sec": 56.62,
+      "end_sec": 62,
+      "text": "And maybe we will switch from time to time to trading view, to to have a look at a chart.",
+      "confidence": 0.9822632
+    },
+    {
+      "start_sec": 62.54,
+      "end_sec": 63.04,
+      "text": "So",
+      "confidence": 0.9970703
+    },
+    {
+      "start_sec": 63.58,
+      "end_sec": 71.225,
+      "text": "first of all, tips. Create a checklist. This is something which is very important. I had a checklist all the time in the beginning of my career",
+      "confidence": 0.9811198
+    },
+    {
+      "start_sec": 71.525,
+      "end_sec": 78.585,
+      "text": "to learn the rules, but also to check the trades against the rules, especially for buying and selling. I also have printed out,",
+      "confidence": 0.98062795
+    },
+    {
+      "start_sec": 79.205,
+      "end_sec": 84.63,
+      "text": "my rules here on my, desk so that I can always go back to them and have a look at them.",
+      "confidence": 0.99248976
+    },
+    {
+      "start_sec": 85.19,
+      "end_sec": 86.17,
+      "text": "Then precalculate",
+      "confidence": 0.986084
+    },
+    {
+      "start_sec": 86.63,
+      "end_sec": 88.57,
+      "text": "all the entries and exits daily.",
+      "confidence": 0.9991048
+    },
+    {
+      "start_sec": 88.95,
+      "end_sec": 93.29,
+      "text": "Don't be a lazy trader. I cannot emphasize it enough",
+      "confidence": 0.99086916
+    },
+    {
+      "start_sec": 93.59,
+      "end_sec": 96.25,
+      "text": "how important it is to plan your trades.",
+      "confidence": 0.9793701
+    },
+    {
+      "start_sec": 96.63,
+      "end_sec": 102.865,
+      "text": "I do that every day. I do every day the calculations. I make screenshots of the entries",
+      "confidence": 0.9858686
+    },
+    {
+      "start_sec": 103.725,
+      "end_sec": 105.265,
+      "text": "or of the, setups.",
+      "confidence": 0.85668945
+    },
+    {
+      "start_sec": 105.645,
+      "end_sec": 111.345,
+      "text": "I put them into my file. I calculate the entries, and that means multiple entries.",
+      "confidence": 0.992334
+    },
+    {
+      "start_sec": 112.34,
+      "end_sec": 120.84,
+      "text": "I will come to that also later. And, also, if I have to exit anything, you know, stop losses or take profits or anything like that, I calculate that,",
+      "confidence": 0.9843666
+    },
+    {
+      "start_sec": 121.46,
+      "end_sec": 124.36,
+      "text": "before the market opens. This is the best time",
+      "confidence": 0.9995117
+    },
+    {
+      "start_sec": 124.755,
+      "end_sec": 129.255,
+      "text": "to avoid any spontaneous trades or emotional reactions. So precalculation",
+      "confidence": 0.9823486
+    },
+    {
+      "start_sec": 129.635,
+      "end_sec": 135.735,
+      "text": "and planning is key. Do that every day. Make it a habit. Have a routine for that. This is very important.",
+      "confidence": 0.99604726
+    },
+    {
+      "start_sec": 136.035,
+      "end_sec": 144.19,
+      "text": "Use alerts. I use alerts all the time to get notified at at very important chart levels, so it's very easy to place an alert. We can also",
+      "confidence": 0.964774
+    },
+    {
+      "start_sec": 144.49,
+      "end_sec": 147.37,
+      "text": "have a look at that in trading view. So if we look at,",
+      "confidence": 0.9678673
+    },
+    {
+      "start_sec": 147.77,
+      "end_sec": 150.91,
+      "text": "ATMAA, for example, and say, okay. I want to get notified.",
+      "confidence": 0.9024399
+    },
+    {
+      "start_sec": 151.45,
+      "end_sec": 153.95,
+      "text": "If the price rises here above,",
+      "confidence": 0.9956868
+    },
+    {
+      "start_sec": 154.49,
+      "end_sec": 156.03,
+      "text": "the high point from today,",
+      "confidence": 0.9981445
+    },
+    {
+      "start_sec": 157.025,
+      "end_sec": 159.125,
+      "text": "I can just click into the chart",
+      "confidence": 0.999442
+    },
+    {
+      "start_sec": 159.425,
+      "end_sec": 164.405,
+      "text": "and say add add alert on Atma, and that's it. And then I get notified",
+      "confidence": 0.9192057
+    },
+    {
+      "start_sec": 164.705,
+      "end_sec": 166.005,
+      "text": "if the price crosses",
+      "confidence": 0.9995117
+    },
+    {
+      "start_sec": 166.385,
+      "end_sec": 167.285,
+      "text": "the high point.",
+      "confidence": 0.9932454
+    },
+    {
+      "start_sec": 167.745,
+      "end_sec": 175.42,
+      "text": "And, you know, I I I do not use that for all my entries, to be honest. I use that especially when I want to get notified",
+      "confidence": 0.9830458
+    },
+    {
+      "start_sec": 175.8,
+      "end_sec": 179.74,
+      "text": "to have a look at a chart or maybe take action when, for example,",
+      "confidence": 0.9537179
+    },
+    {
+      "start_sec": 180.6,
+      "end_sec": 184.94,
+      "text": "a certain moving average is crossed or the price drops back into the,",
+      "confidence": 0.970797
+    },
+    {
+      "start_sec": 185.605,
+      "end_sec": 191.865,
+      "text": "into the chart pattern, then I want to get notified. So these are very important important tips. Right? Have a checklist.",
+      "confidence": 0.984933
+    },
+    {
+      "start_sec": 192.245,
+      "end_sec": 195.145,
+      "text": "Do all the preplanning work. This is very important.",
+      "confidence": 0.9668421
+    },
+    {
+      "start_sec": 195.445,
+      "end_sec": 206.27,
+      "text": "And use, alerts. Alerts are a great tool, and you get them free in a lot of software packages. Your broker maybe offers you free alerts, so have a look into them. Use that.",
+      "confidence": 0.9784941
+    },
+    {
+      "start_sec": 206.57,
+      "end_sec": 209.63,
+      "text": "And, you know, I I think I've said that in another video.",
+      "confidence": 0.96573895
+    },
+    {
+      "start_sec": 210.57,
+      "end_sec": 211.95,
+      "text": "The alerts from TradingView",
+      "confidence": 0.9700928
+    },
+    {
+      "start_sec": 212.595,
+      "end_sec": 217.415,
+      "text": "plus some alerts from my brokerage software, these are the only push notifications",
+      "confidence": 0.98065656
+    },
+    {
+      "start_sec": 218.115,
+      "end_sec": 218.935,
+      "text": "I allow",
+      "confidence": 0.99902344
+    },
+    {
+      "start_sec": 219.395,
+      "end_sec": 220.115,
+      "text": "on my,",
+      "confidence": 0.92529297
+    },
+    {
+      "start_sec": 220.515,
+      "end_sec": 221.015,
+      "text": "phone.",
+      "confidence": 0.9663086
+    },
+    {
+      "start_sec": 222.675,
+      "end_sec": 230.51,
+      "text": "All the other net... Notifications, doesn't matter if it's WhatsApp or messages or whatever, They are all in silent mode. Only",
+      "confidence": 0.96999395
+    },
+    {
+      "start_sec": 231.21,
+      "end_sec": 233.23,
+      "text": "the brokerage and the alerts,",
+      "confidence": 0.98833007
+    },
+    {
+      "start_sec": 233.93,
+      "end_sec": 234.43,
+      "text": "notifications",
+      "confidence": 0.99902344
+    },
+    {
+      "start_sec": 234.73,
+      "end_sec": 237.29,
+      "text": "are the only one who give,",
+      "confidence": 0.9835205
+    },
+    {
+      "start_sec": 237.93,
+      "end_sec": 246.145,
+      "text": "yeah, give or or or makes a phone ring. Let's say it that way. And everybody knows that. So then I have to take action. Everything else is on silent.",
+      "confidence": 0.95304364
+    },
+    {
+      "start_sec": 246.765,
+      "end_sec": 251.025,
+      "text": "Alright. So do all this preplanning work. That's very important and use alerts.",
+      "confidence": 0.8853072
+    },
+    {
+      "start_sec": 251.485,
+      "end_sec": 257.585,
+      "text": "So then important, right, develop your own trading strategy. I know that not all of you have an own trading strategy,",
+      "confidence": 0.94623095
+    },
+    {
+      "start_sec": 258.26,
+      "end_sec": 269.08,
+      "text": "and that's okay. You can use everything what I offer here in the community. You can use them to to build your own strategy. But I think it's important to to, over time, fit the strategy,",
+      "confidence": 0.98206246
+    },
+    {
+      "start_sec": 270.1,
+      "end_sec": 280.165,
+      "text": "my strategy or whichever strategy to your own personality. Because maybe you are incompatible with one or two rules, and then you have to adjust it. Maybe you are more a pullback trader.",
+      "confidence": 0.9694935
+    },
+    {
+      "start_sec": 280.465,
+      "end_sec": 284.805,
+      "text": "Maybe you are, I don't know, or or you you like to buy inside consolidations.",
+      "confidence": 0.9781792
+    },
+    {
+      "start_sec": 285.585,
+      "end_sec": 299.17,
+      "text": "I don't know. You develop some experience with that over time. And, you know, these are the things you have to build into a trading strategy because otherwise, you do not use your strength as a trader. And I think every trader has strength.",
+      "confidence": 0.9716908
+    },
+    {
+      "start_sec": 299.47,
+      "end_sec": 303.97,
+      "text": "This is very important. I have strengths, and I use them in this approach. Right?",
+      "confidence": 0.9851888
+    },
+    {
+      "start_sec": 304.985,
+      "end_sec": 336.005,
+      "text": "This is very important. Don't blindly copy my my rules or mimic me. This is... This will not lead to success, to be honest. Right? Because I take some trades and you maybe take not, the same trades or maybe you are incompatible with one or two rules, and then you you you start to sabotage your own trading. It's okay to follow me. Use everything as inspiration. Build your approach on that. You know, this is this is, something you can do. But over time and with more experience, you need to develop your own strategy.",
+      "confidence": 0.9655686
+    },
+    {
+      "start_sec": 336.385,
+      "end_sec": 343.045,
+      "text": "This is very, very important. And, yes, it's hard work. It's hard work, but at the end, you will be rewarded.",
+      "confidence": 0.9712844
+    },
+    {
+      "start_sec": 343.77,
+      "end_sec": 345.39,
+      "text": "So what is position trading?",
+      "confidence": 0.99746096
+    },
+    {
+      "start_sec": 346.81,
+      "end_sec": 351.39,
+      "text": "Position trading, this is my main style, to be honest. I'm not a swing trader,",
+      "confidence": 0.9627767
+    },
+    {
+      "start_sec": 351.85,
+      "end_sec": 353.95,
+      "text": "which, or a swing trader",
+      "confidence": 0.90898436
+    },
+    {
+      "start_sec": 354.49,
+      "end_sec": 355.23,
+      "text": "who hold",
+      "confidence": 0.71533203
+    },
+    {
+      "start_sec": 355.61,
+      "end_sec": 362.205,
+      "text": "positions for, yeah, just a few hours or maybe a few days, I always try to hold positions for weeks and months,",
+      "confidence": 0.96201396
+    },
+    {
+      "start_sec": 362.585,
+      "end_sec": 366.605,
+      "text": "and I'm following them. I'm following the trend. This is very important.",
+      "confidence": 0.998759
+    },
+    {
+      "start_sec": 367.145,
+      "end_sec": 384.47,
+      "text": "I personally don't like to, yeah, sell everything into the strands for a small profit, and that's me. Right? This is type of my personality because when I'm... When I have conviction in a stock, I want to hold that as long as possible because I can benefit from that. This is the reason why I'm doing more position trading.",
+      "confidence": 0.9736206
+    },
+    {
+      "start_sec": 385.145,
+      "end_sec": 403.58,
+      "text": "You can also call it swing trading. It doesn't matter if it's position trading or swing trading, but my my my horizon is weeks to months and pure trend following. I'm not trading against the trend. I'm not, trading mean reversion or anything like that. I want to be in the trade as long as possible and to maximize",
+      "confidence": 0.98488396
+    },
+    {
+      "start_sec": 403.96,
+      "end_sec": 404.46,
+      "text": "profits.",
+      "confidence": 0.9975586
+    },
+    {
+      "start_sec": 404.76,
+      "end_sec": 409.1,
+      "text": "So which types of stocks I'm trading? And I updated this, a little bit.",
+      "confidence": 0.98357284
+    },
+    {
+      "start_sec": 409.8,
+      "end_sec": 412.835,
+      "text": "So I came very much from from from the canceling,",
+      "confidence": 0.9788737
+    },
+    {
+      "start_sec": 413.375,
+      "end_sec": 418.675,
+      "text": "from from the canceling method. So many years ago, I traded more and more canceling stocks.",
+      "confidence": 0.96889496
+    },
+    {
+      "start_sec": 419.055,
+      "end_sec": 421.635,
+      "text": "And, I think, especially in the last,",
+      "confidence": 0.94688195
+    },
+    {
+      "start_sec": 422.015,
+      "end_sec": 431.24,
+      "text": "let's say, I don't know, three, five years, something like that, I focused more and more on canceling stocks. And, you know, I focus on on quality... Qualitative stocks, and that's okay.",
+      "confidence": 0.94382477
+    },
+    {
+      "start_sec": 431.86,
+      "end_sec": 437.64,
+      "text": "In the last couple of weeks and months, I also included more and more momentum stocks into,",
+      "confidence": 0.9979607
+    },
+    {
+      "start_sec": 438.26,
+      "end_sec": 439.3,
+      "text": "into my my,",
+      "confidence": 0.99104816
+    },
+    {
+      "start_sec": 439.86,
+      "end_sec": 454.885,
+      "text": "universe of stocks. But that has to do with the market because the market seems to prefer momentum stocks. So... And I'm usually trading three types of stocks, and all of them have to do with, with with, you know, EPS and sales and stories.",
+      "confidence": 0.98235136
+    },
+    {
+      "start_sec": 455.21,
+      "end_sec": 458.83,
+      "text": "You know? This is what... This is the basis for my stock selection.",
+      "confidence": 0.9800931
+    },
+    {
+      "start_sec": 459.69,
+      "end_sec": 465.31,
+      "text": "So I focus mostly on on growth and momentum stock. What's... What is a growth stock?",
+      "confidence": 0.9473572
+    },
+    {
+      "start_sec": 465.93,
+      "end_sec": 474.545,
+      "text": "A growth stock is a stock from a company that is growing very fast. And when I speak about fast, I mean, you know, EPS,",
+      "confidence": 0.99253905
+    },
+    {
+      "start_sec": 474.925,
+      "end_sec": 477.245,
+      "text": "for example, growing with 50%",
+      "confidence": 0.99833983
+    },
+    {
+      "start_sec": 477.245,
+      "end_sec": 478.305,
+      "text": "year over year.",
+      "confidence": 0.98909503
+    },
+    {
+      "start_sec": 478.925,
+      "end_sec": 482.065,
+      "text": "So not 10%, not 5%, 50,",
+      "confidence": 0.9794515
+    },
+    {
+      "start_sec": 482.49,
+      "end_sec": 483.23,
+      "text": "100,",
+      "confidence": 0.9995117
+    },
+    {
+      "start_sec": 483.29,
+      "end_sec": 486.91,
+      "text": "200, thousand percent, something like that. You know, the company",
+      "confidence": 0.9686157
+    },
+    {
+      "start_sec": 487.37,
+      "end_sec": 491.15,
+      "text": "is really, really making money, and, usually, the money comes from",
+      "confidence": 0.953014
+    },
+    {
+      "start_sec": 491.53,
+      "end_sec": 503.105,
+      "text": "new and innovative products. That is the driver of the EPS, and it's the same thing with the sales. You know? I mean, 20% is is already a little bit conservative. This is the number from,",
+      "confidence": 0.98620605
+    },
+    {
+      "start_sec": 503.565,
+      "end_sec": 509.18,
+      "text": "from William O'Neil and canceling. And, yes, sometimes you have stocks with, let's say, 18%",
+      "confidence": 0.9497287
+    },
+    {
+      "start_sec": 509.18,
+      "end_sec": 510.32,
+      "text": "or 15%.",
+      "confidence": 0.94140625
+    },
+    {
+      "start_sec": 510.94,
+      "end_sec": 523.605,
+      "text": "And, you know, sometimes you have stocks with 40, 50, or a 100% sales growth or more. Right? The higher, the better. This is important. Of course, you you will get a little bit more experience over time with that. There are also",
+      "confidence": 0.9852153
+    },
+    {
+      "start_sec": 524.225,
+      "end_sec": 529.125,
+      "text": "some, yeah, I I would say some some limits when it comes to to sales and also EPS.",
+      "confidence": 0.95928276
+    },
+    {
+      "start_sec": 529.505,
+      "end_sec": 537.285,
+      "text": "You know, sometimes the numbers are so high that that the company is not able to maintain these extreme numbers over a couple of quarters.",
+      "confidence": 0.98640627
+    },
+    {
+      "start_sec": 537.63,
+      "end_sec": 545.57,
+      "text": "But, you know, I'm always looking for companies that are growing very fast in sales, and I repeat that in all the videos in the weekend report.",
+      "confidence": 0.98400426
+    },
+    {
+      "start_sec": 545.95,
+      "end_sec": 547.01,
+      "text": "And, you know,",
+      "confidence": 0.9963379
+    },
+    {
+      "start_sec": 547.39,
+      "end_sec": 550.21,
+      "text": "these typical typical canceled stocks that I'm trading,",
+      "confidence": 0.7633972
+    },
+    {
+      "start_sec": 550.905,
+      "end_sec": 561.725,
+      "text": "they have everything. Right? They have sales. They have EPS. They have a story. They have good EPS estimates, all the stuff, and also the IBD ratings. Then I'm also trading these,",
+      "confidence": 0.96907806
+    },
+    {
+      "start_sec": 562.345,
+      "end_sec": 563.565,
+      "text": "top sales growers.",
+      "confidence": 0.94523114
+    },
+    {
+      "start_sec": 563.99,
+      "end_sec": 565.69,
+      "text": "And top sales growers usually,",
+      "confidence": 0.97509766
+    },
+    {
+      "start_sec": 566.23,
+      "end_sec": 568.97,
+      "text": "are stocks that are growing extremely fast on sales,",
+      "confidence": 0.92890084
+    },
+    {
+      "start_sec": 569.35,
+      "end_sec": 571.43,
+      "text": "30%, 40, 50%,",
+      "confidence": 0.9362386
+    },
+    {
+      "start_sec": 571.43,
+      "end_sec": 572.01,
+      "text": "or more",
+      "confidence": 1
+    },
+    {
+      "start_sec": 572.31,
+      "end_sec": 573.37,
+      "text": "year over year.",
+      "confidence": 0.86344403
+    },
+    {
+      "start_sec": 573.75,
+      "end_sec": 590.515,
+      "text": "And the the growth is coming from new and innovative products. So this is why you wanna do story research. Very important. Right? You want to have a look at the company and say, what the hell is the company doing? Why are these sales are growing so fast? And the the higher the sales numbers,",
+      "confidence": 0.99103653
+    },
+    {
+      "start_sec": 590.95,
+      "end_sec": 598.49,
+      "text": "the more you can also make a trade off when it comes to EPS. You can say, for example, okay. The sales are growing 60%",
+      "confidence": 0.96712893
+    },
+    {
+      "start_sec": 598.63,
+      "end_sec": 608.645,
+      "text": "over the last three, four quarters, but they have no EPS. That's okay for for for the moment. Right? Because a lot of fair... A lot of companies are reinvesting their EPS",
+      "confidence": 0.9847107
+    },
+    {
+      "start_sec": 609.105,
+      "end_sec": 612.885,
+      "text": "into, sales growth and into marketing and research, etcetera.",
+      "confidence": 0.9723985
+    },
+    {
+      "start_sec": 613.425,
+      "end_sec": 618.005,
+      "text": "And, they do not have EPS at all. Especially with young companies, that's totally fine.",
+      "confidence": 0.9436849
+    },
+    {
+      "start_sec": 618.63,
+      "end_sec": 619.93,
+      "text": "So... And then I'm trading",
+      "confidence": 0.9935547
+    },
+    {
+      "start_sec": 620.31,
+      "end_sec": 625.77,
+      "text": "top, or I'm trading momentum stocks. And what does it mean? So I think for a lot of people,",
+      "confidence": 0.98306435
+    },
+    {
+      "start_sec": 626.39,
+      "end_sec": 627.45,
+      "text": "it's a little bit,",
+      "confidence": 0.9984131
+    },
+    {
+      "start_sec": 627.99,
+      "end_sec": 632.97,
+      "text": "yeah, it's a little bit strange when when I say, you know, momentum stock. What is a momentum stock?",
+      "confidence": 0.9336708
+    },
+    {
+      "start_sec": 633.295,
+      "end_sec": 638.435,
+      "text": "It it also has to do with story, and very often, it also has to do with sales and EPS",
+      "confidence": 0.9661499
+    },
+    {
+      "start_sec": 638.815,
+      "end_sec": 639.315,
+      "text": "because",
+      "confidence": 0.4970703
+    },
+    {
+      "start_sec": 639.855,
+      "end_sec": 642.515,
+      "text": "a stock that is, showing a high momentum",
+      "confidence": 0.993042
+    },
+    {
+      "start_sec": 643.375,
+      "end_sec": 644.915,
+      "text": "means a stock that is",
+      "confidence": 0.98769534
+    },
+    {
+      "start_sec": 645.49,
+      "end_sec": 645.99,
+      "text": "is,",
+      "confidence": 0.9926758
+    },
+    {
+      "start_sec": 646.85,
+      "end_sec": 656.55,
+      "text": "is heavily in demand in the market and the prices are rising very fast. So may... Maybe let's look at one or two examples, from from the current watch list.",
+      "confidence": 0.95277506
+    },
+    {
+      "start_sec": 656.85,
+      "end_sec": 666.315,
+      "text": "So, let's go, to the current watch list. Is Atma... Is that a pure momentum stock? No. It's definitely no momentum stock. You can see a lot of pullbacks are,",
+      "confidence": 0.9768799
+    },
+    {
+      "start_sec": 666.935,
+      "end_sec": 668.555,
+      "text": "here in in this, big,",
+      "confidence": 0.9612793
+    },
+    {
+      "start_sec": 669.575,
+      "end_sec": 672.555,
+      "text": "cup and handle pattern. So this here is the handle.",
+      "confidence": 0.97270507
+    },
+    {
+      "start_sec": 673.11,
+      "end_sec": 688.845,
+      "text": "So this is this is not, this is not a pure momentum stock for me. This is more, I would say, it's more a canceling stock because it shows all the characteristics, EPS growth, sales growth, good estimates, etcetera. So it has all the characteristics from a canceling stock, and you could also call that,",
+      "confidence": 0.9709273
+    },
+    {
+      "start_sec": 689.645,
+      "end_sec": 695.665,
+      "text": "a sales grower because the sales are also growing very fast. But if we look, for example, at Aeva here,",
+      "confidence": 0.96489257
+    },
+    {
+      "start_sec": 696.285,
+      "end_sec": 702.145,
+      "text": "Aeva Technologies, this is a momentum stock. You see this extreme fast momentum here.",
+      "confidence": 0.981114
+    },
+    {
+      "start_sec": 702.86,
+      "end_sec": 705.5,
+      "text": "The stock, is up 200%",
+      "confidence": 0.9960124
+    },
+    {
+      "start_sec": 705.5,
+      "end_sec": 715.42,
+      "text": "in just a couple of days here, then it's pulling back, and now it's getting tight. That is a momentum stock. And, yes, it also has high sales growth, 69%",
+      "confidence": 0.9640815
+    },
+    {
+      "start_sec": 715.42,
+      "end_sec": 720.975,
+      "text": "sales growth in the last, quarter, and it has a great story in the background. And this is, you know, this is something",
+      "confidence": 0.98569125
+    },
+    {
+      "start_sec": 722.235,
+      "end_sec": 730.815,
+      "text": "you you need to get experience with. You know, what type of stock do you have? And this is also important when it comes to what type of tactic or strategy,",
+      "confidence": 0.95620036
+    },
+    {
+      "start_sec": 731.56,
+      "end_sec": 732.7,
+      "text": "you want to apply.",
+      "confidence": 0.9991455
+    },
+    {
+      "start_sec": 733.16,
+      "end_sec": 736.78,
+      "text": "So when it comes, for example, to ATMAA, you know, this is a stock,",
+      "confidence": 0.9471232
+    },
+    {
+      "start_sec": 737.16,
+      "end_sec": 740.54,
+      "text": "a canceling stock. This is not moving extremely fast.",
+      "confidence": 0.9658203
+    },
+    {
+      "start_sec": 740.92,
+      "end_sec": 743.26,
+      "text": "This, is a company with great estimates,",
+      "confidence": 0.9958496
+    },
+    {
+      "start_sec": 743.635,
+      "end_sec": 749.335,
+      "text": "etcetera. So this is a company where where you rather want to hold the stock as long as possible.",
+      "confidence": 0.99286854
+    },
+    {
+      "start_sec": 749.715,
+      "end_sec": 755.015,
+      "text": "Palantir is another one, and this one is very liquid, by the way. So it's also an institutional darling.",
+      "confidence": 0.97407836
+    },
+    {
+      "start_sec": 755.475,
+      "end_sec": 777.715,
+      "text": "So it has all the all the characteristics of a CANCEM stock, great ratings, sales, EPS, EPS estimates, story, everything like that. You know? And it's an institutional darling, and that means institutions will ramp up exposure over many, many weeks and months. So this is something you want to hold for a bigger move over many weeks and many months. You don't wanna sell the most into the strength.",
+      "confidence": 0.9666905
+    },
+    {
+      "start_sec": 778.095,
+      "end_sec": 783.315,
+      "text": "But when it comes to, momentum stocks like Aiba, you wanna be more aggressive because",
+      "confidence": 0.9780165
+    },
+    {
+      "start_sec": 783.935,
+      "end_sec": 784.755,
+      "text": "they are more...",
+      "confidence": 0.99934894
+    },
+    {
+      "start_sec": 785.375,
+      "end_sec": 791.77,
+      "text": "How to say that? Technically driven. Right? They are driven by demand because, you know, people expect something,",
+      "confidence": 0.9856364
+    },
+    {
+      "start_sec": 792.47,
+      "end_sec": 797.93,
+      "text": "which will happen in the company. Maybe they they will, grow faster in sales or get some some good,",
+      "confidence": 0.9892835
+    },
+    {
+      "start_sec": 798.63,
+      "end_sec": 799.45,
+      "text": "I don't know,",
+      "confidence": 0.9978841
+    },
+    {
+      "start_sec": 800.39,
+      "end_sec": 806.185,
+      "text": "good orders or anything like that. News driven, you know, news driven stocks like biotech stocks are very often,",
+      "confidence": 0.91598994
+    },
+    {
+      "start_sec": 806.725,
+      "end_sec": 809.065,
+      "text": "momentum stocks. And with these stocks,",
+      "confidence": 0.9971517
+    },
+    {
+      "start_sec": 809.845,
+      "end_sec": 811.785,
+      "text": "you want to be a little bit more",
+      "confidence": 0.9992676
+    },
+    {
+      "start_sec": 812.165,
+      "end_sec": 818.39,
+      "text": "aggressive when it comes to profit taking. So that means if this thing moves higher very quickly and then,",
+      "confidence": 0.98441356
+    },
+    {
+      "start_sec": 819.57,
+      "end_sec": 847.49,
+      "text": "I don't know what is it here. Let's say, you know, 30, 40, 50% in just a couple of days, then you want to take some profits off the table Because these momentum stocks, they can have very fast rallies and then very deep pullbacks, and then maybe they are setting up again and and moving higher. That's one of the reasons why you also want to have a trailing stop like an EMA eight or EMA 21 here. So... But, you know, with these momentum stocks, you wanna be a little bit more aggressive when it comes to,",
+      "confidence": 0.9815456
+    },
+    {
+      "start_sec": 848.03,
+      "end_sec": 853.89,
+      "text": "to profit taking. You know, CRVO is another one here. Pure momentum and and also,",
+      "confidence": 0.9671875
+    },
+    {
+      "start_sec": 856.35,
+      "end_sec": 861.105,
+      "text": "a story stock. Right? This is... I think they do not have any sales at all. So,",
+      "confidence": 0.9294721
+    },
+    {
+      "start_sec": 861.885,
+      "end_sec": 864.545,
+      "text": "EOS is another one. You know? This is not an institutional",
+      "confidence": 0.9321511
+    },
+    {
+      "start_sec": 864.845,
+      "end_sec": 865.345,
+      "text": "darling.",
+      "confidence": 0.9831543
+    },
+    {
+      "start_sec": 865.805,
+      "end_sec": 866.705,
+      "text": "This is more,",
+      "confidence": 0.9698079
+    },
+    {
+      "start_sec": 867.325,
+      "end_sec": 879.17,
+      "text": "story stock, but they have sales or they... Or the sales will grow very fast in the upcoming months, you know, but but that does not mean that this is the stock you wanna hold for for a long time, but rather, you know, trade the momentum,",
+      "confidence": 0.957504
+    },
+    {
+      "start_sec": 879.63,
+      "end_sec": 885.65,
+      "text": "trade it as more as a swing trade, take some profits into the strength, and then let the rest, run.",
+      "confidence": 0.9539429
+    },
+    {
+      "start_sec": 886.035,
+      "end_sec": 889.335,
+      "text": "And same is true for stocks like MicroStrategy because, you know,",
+      "confidence": 0.93580574
+    },
+    {
+      "start_sec": 889.635,
+      "end_sec": 891.415,
+      "text": "these are not canceling stocks,",
+      "confidence": 0.9440918
+    },
+    {
+      "start_sec": 891.875,
+      "end_sec": 898.295,
+      "text": "where you want to hold that for a long move. You only want to hold them if Bitcoin is rising. You know, this is a replacement for Bitcoin.",
+      "confidence": 0.965489
+    },
+    {
+      "start_sec": 898.89,
+      "end_sec": 900.27,
+      "text": "Same is true for SLNO.",
+      "confidence": 0.9624675
+    },
+    {
+      "start_sec": 900.65,
+      "end_sec": 902.67,
+      "text": "This is more a biotech stock.",
+      "confidence": 0.986084
+    },
+    {
+      "start_sec": 905.45,
+      "end_sec": 908.59,
+      "text": "Yeah. So in some of them, you know, some of them are more",
+      "confidence": 0.97915417
+    },
+    {
+      "start_sec": 909.13,
+      "end_sec": 910.51,
+      "text": "heavy sales growers.",
+      "confidence": 0.98128253
+    },
+    {
+      "start_sec": 910.995,
+      "end_sec": 914.695,
+      "text": "I'm not sure if we have a good example here of a pure sales grower.",
+      "confidence": 0.996951
+    },
+    {
+      "start_sec": 915.875,
+      "end_sec": 921.815,
+      "text": "I'm not sure if MUC is one, but that's more, I would say, more momentum and a story stock for me.",
+      "confidence": 0.93264043
+    },
+    {
+      "start_sec": 923.34,
+      "end_sec": 928.4,
+      "text": "Nio is maybe a sales grower, so growing sales very fast, but they also have EPS",
+      "confidence": 0.9588369
+    },
+    {
+      "start_sec": 928.94,
+      "end_sec": 931.04,
+      "text": "as an example, but they have accelerating,",
+      "confidence": 0.95570594
+    },
+    {
+      "start_sec": 932.22,
+      "end_sec": 942.585,
+      "text": "revenue, etcetera. So this is also a stock you probably want to to take some profits into the strength because that that stock is holding... That stock is showing a strong momentum.",
+      "confidence": 0.9552765
+    },
+    {
+      "start_sec": 943.285,
+      "end_sec": 953.545,
+      "text": "So... And, you know, this is this is something you must have in your mind. So what type of stock do I have? And with these three different type of stocks, I'm also very flexible",
+      "confidence": 0.9788644
+    },
+    {
+      "start_sec": 954.21,
+      "end_sec": 954.65,
+      "text": "to,",
+      "confidence": 0.98291016
+    },
+    {
+      "start_sec": 955.09,
+      "end_sec": 970.535,
+      "text": "to adapt to to a current market cycle. Because in some market cycles, canceling stocks are working very good. Then you have other market cycles where sales growth are are very good. And then you have other markets, especially the beginning and the end of big bull markets,",
+      "confidence": 0.95803326
+    },
+    {
+      "start_sec": 971.395,
+      "end_sec": 973.575,
+      "text": "where momentum stocks are working great.",
+      "confidence": 0.99934894
+    },
+    {
+      "start_sec": 973.955,
+      "end_sec": 977.255,
+      "text": "So... And one of the things which I do not do",
+      "confidence": 0.9941406
+    },
+    {
+      "start_sec": 977.635,
+      "end_sec": 983.37,
+      "text": "is I do not trade value stocks, and I do not trade conservative stocks.",
+      "confidence": 0.9824742
+    },
+    {
+      "start_sec": 983.85,
+      "end_sec": 995.63,
+      "text": "And, you know, when when we look at, you know, Philip Morris is something which comes always in my mind. Philip Morris is is a pure conservative stock. Right? It's a it's a cigarette stock and",
+      "confidence": 0.9730903
+    },
+    {
+      "start_sec": 996.135,
+      "end_sec": 1002.635,
+      "text": "tobacco stock and, you know, it looks great. The chart looks great, but the but the chart is not everything. That's very important.",
+      "confidence": 0.9493461
+    },
+    {
+      "start_sec": 1002.935,
+      "end_sec": 1008.315,
+      "text": "You want to have a high potential in a stock, and high potential means a stock that can rally",
+      "confidence": 0.96855724
+    },
+    {
+      "start_sec": 1008.73,
+      "end_sec": 1018.35,
+      "text": "out of nowhere 50 to a 100% in a couple of weeks to a couple of months. So maybe let's look at this move here. What is it? A 20% move. You know? This is",
+      "confidence": 0.94601005
+    },
+    {
+      "start_sec": 1018.89,
+      "end_sec": 1023.95,
+      "text": "a 20% move in, what is it, year? July, August, September in three months.",
+      "confidence": 0.83645195
+    },
+    {
+      "start_sec": 1024.375,
+      "end_sec": 1031.515,
+      "text": "Right? This is not the type of move that I'm looking for. When we compare that, I don't know, with HIMSS, for example, which is a company,",
+      "confidence": 0.98892325
+    },
+    {
+      "start_sec": 1032.615,
+      "end_sec": 1035.195,
+      "text": "more a sales grower... Definitely a sales grower,",
+      "confidence": 0.91397095
+    },
+    {
+      "start_sec": 1035.495,
+      "end_sec": 1039.99,
+      "text": "and also a STORY stock where you can have, you know, moves like 130%",
+      "confidence": 0.85799736
+    },
+    {
+      "start_sec": 1039.99,
+      "end_sec": 1042.01,
+      "text": "in in in in just a couple of,",
+      "confidence": 0.9619751
+    },
+    {
+      "start_sec": 1042.47,
+      "end_sec": 1047.37,
+      "text": "weeks or or maybe... Let's look at here. You know, this is... What is it here?",
+      "confidence": 0.94918823
+    },
+    {
+      "start_sec": 1048.31,
+      "end_sec": 1049.77,
+      "text": "You know, 90%",
+      "confidence": 0.99886066
+    },
+    {
+      "start_sec": 1049.91,
+      "end_sec": 1059.675,
+      "text": "or here's another move of of 80%. These are not the the moves that you usually find with very conservative stocks like, for example,",
+      "confidence": 0.9749095
+    },
+    {
+      "start_sec": 1060.615,
+      "end_sec": 1066.075,
+      "text": "Philip Morris or the or the most bank stocks. I mean, we can have a look at Goldman Sachs, for example.",
+      "confidence": 0.97431874
+    },
+    {
+      "start_sec": 1067.24,
+      "end_sec": 1069.66,
+      "text": "You know, this is extreme choppy.",
+      "confidence": 0.94634336
+    },
+    {
+      "start_sec": 1070.36,
+      "end_sec": 1073.26,
+      "text": "And, I mean, what is it here for? Remove 10%.",
+      "confidence": 0.89575195
+    },
+    {
+      "start_sec": 1073.8,
+      "end_sec": 1076.14,
+      "text": "Here, with a gap up, it's 20%.",
+      "confidence": 0.96163505
+    },
+    {
+      "start_sec": 1076.76,
+      "end_sec": 1079.42,
+      "text": "Here, is it, you know, 11, 10%.",
+      "confidence": 0.95083183
+    },
+    {
+      "start_sec": 1079.995,
+      "end_sec": 1085.695,
+      "text": "So... Or 11, 12%. And then you are sitting in these stocks and they are just moving higher, and then you miss",
+      "confidence": 0.9499845
+    },
+    {
+      "start_sec": 1086.235,
+      "end_sec": 1096.21,
+      "text": "all the great momentum moves in a bull market. That's why I usually do not trade these stocks at all. There are some exceptions, but in 99%",
+      "confidence": 0.9956838
+    },
+    {
+      "start_sec": 1096.21,
+      "end_sec": 1101.03,
+      "text": "of the cases, I do not trade these conservative stocks even if they have great setups.",
+      "confidence": 0.9737396
+    },
+    {
+      "start_sec": 1101.33,
+      "end_sec": 1105.19,
+      "text": "The setups... So the chart setup is not everything. You want to make sure",
+      "confidence": 0.9665876
+    },
+    {
+      "start_sec": 1105.535,
+      "end_sec": 1109.875,
+      "text": "that, the stock has a high potential too. That's very important.",
+      "confidence": 0.99440694
+    },
+    {
+      "start_sec": 1110.335,
+      "end_sec": 1120.275,
+      "text": "Alright. So you will find, you know, a lot of examples always in the top post... In the top stocks, top sales growers, top momentum stocks that I post every week.",
+      "confidence": 0.96674174
+    },
+    {
+      "start_sec": 1121.31,
+      "end_sec": 1121.81,
+      "text": "Alright.",
+      "confidence": 0.986084
+    },
+    {
+      "start_sec": 1122.59,
+      "end_sec": 1125.89,
+      "text": "One of the most important criterias when it comes to,",
+      "confidence": 0.97993165
+    },
+    {
+      "start_sec": 1126.43,
+      "end_sec": 1130.13,
+      "text": "to stocks is a high relative strength to the S and P 500.",
+      "confidence": 0.9870136
+    },
+    {
+      "start_sec": 1130.43,
+      "end_sec": 1139.945,
+      "text": "You know, maybe I do not emphasize that enough in the videos in the weekend report because it's so basic for me, But I think this is very, very crucial to understand.",
+      "confidence": 0.9511261
+    },
+    {
+      "start_sec": 1140.805,
+      "end_sec": 1147.625,
+      "text": "A leading stock for me is mostly a technical leader, and then you also have fundamental and and story leadership.",
+      "confidence": 0.9685669
+    },
+    {
+      "start_sec": 1149.14,
+      "end_sec": 1154.28,
+      "text": "But it's mostly a technical leadership. And that means you have a stock that is really outperforming",
+      "confidence": 0.9907514
+    },
+    {
+      "start_sec": 1154.66,
+      "end_sec": 1158.2,
+      "text": "the S and P five hundred or the Nasdaq. It really doesn't matter,",
+      "confidence": 0.97830904
+    },
+    {
+      "start_sec": 1158.5,
+      "end_sec": 1163,
+      "text": "if it's the S and P five hundred or Nasdaq. So it needs a lot of momentum,",
+      "confidence": 0.98365223
+    },
+    {
+      "start_sec": 1163.985,
+      "end_sec": 1176.485,
+      "text": "and very often, the stock already doubled before I get into the stock. And this is important. You know? A lot of people always think, you know, oh my god. This is extended, etcetera, etcetera. No. No. No. This is this is confirmation.",
+      "confidence": 0.96536326
+    },
+    {
+      "start_sec": 1176.93,
+      "end_sec": 1179.27,
+      "text": "If a stock doubled before, it's confirming",
+      "confidence": 0.95110214
+    },
+    {
+      "start_sec": 1179.89,
+      "end_sec": 1188.23,
+      "text": "that people are paying more and more and more for the stock. You know, it's so easy. If you if you go to... I don't know. Let's let's have a look at App last year. You know, AppLovin.",
+      "confidence": 0.95459497
+    },
+    {
+      "start_sec": 1189.625,
+      "end_sec": 1199.165,
+      "text": "What does the stock need to do if it wants to have a 500 or thousand percent rally? It's very simple. It doubled and doubles again. Here, it doubled.",
+      "confidence": 0.96806806
+    },
+    {
+      "start_sec": 1199.705,
+      "end_sec": 1203.325,
+      "text": "Here, it doubled in price. Here, it doubled",
+      "confidence": 0.9987793
+    },
+    {
+      "start_sec": 1203.85,
+      "end_sec": 1205.87,
+      "text": "in price. The same is true for",
+      "confidence": 0.9878627
+    },
+    {
+      "start_sec": 1206.25,
+      "end_sec": 1210.17,
+      "text": "here and here. It even, you know, moved 600%",
+      "confidence": 0.91011554
+    },
+    {
+      "start_sec": 1210.17,
+      "end_sec": 1210.91,
+      "text": "in price.",
+      "confidence": 0.9852295
+    },
+    {
+      "start_sec": 1211.21,
+      "end_sec": 1214.51,
+      "text": "Right? So it doubled and doubled and doubled and doubled again. So now",
+      "confidence": 0.92495495
+    },
+    {
+      "start_sec": 1215.13,
+      "end_sec": 1246.62,
+      "text": "you can see all the bases here on the way up. And this is what I look for. You know? I'm not interested to trade the stock here. I'm not interested to trade the stock here. I mean, the trend is clearly down. I'm not interested in in bargain hunting and and, you know, and and calling a bottom or something like that. But I'm getting interested in the stock if it made a big momentum move like this and then build a new base and then starts to break out of the base. You know? And then you also want to have relative strength. And, let's have a look at the relative strength line, which is very important.",
+      "confidence": 0.97227466
+    },
+    {
+      "start_sec": 1246.955,
+      "end_sec": 1258.975,
+      "text": "I mean, at the moment, you could see the relative strength line is down. I'm not interested in the stock. You know, this is this is not showing the strength that I want to see. But if you look at a stock like, Atmar, for example,",
+      "confidence": 0.9682812
+    },
+    {
+      "start_sec": 1259.275,
+      "end_sec": 1261.775,
+      "text": "here you can see a rising RS line.",
+      "confidence": 0.9680481
+    },
+    {
+      "start_sec": 1262.11,
+      "end_sec": 1263.81,
+      "text": "It's stronger than the market.",
+      "confidence": 0.9688965
+    },
+    {
+      "start_sec": 1264.11,
+      "end_sec": 1265.73,
+      "text": "And sometimes you can see,",
+      "confidence": 0.9080078
+    },
+    {
+      "start_sec": 1266.99,
+      "end_sec": 1268.77,
+      "text": "you can see that here, for example,",
+      "confidence": 0.9529506
+    },
+    {
+      "start_sec": 1269.07,
+      "end_sec": 1276.85,
+      "text": "you can see that the RS line is on a new high while the price is still in the consolidation. And that's... That is really, really showing",
+      "confidence": 0.98489946
+    },
+    {
+      "start_sec": 1277.585,
+      "end_sec": 1278.725,
+      "text": "extreme leadership,",
+      "confidence": 0.91955566
+    },
+    {
+      "start_sec": 1279.025,
+      "end_sec": 1280.005,
+      "text": "technical leadership.",
+      "confidence": 0.91467285
+    },
+    {
+      "start_sec": 1280.625,
+      "end_sec": 1282.625,
+      "text": "Because in that moment, the the,",
+      "confidence": 0.9906006
+    },
+    {
+      "start_sec": 1282.945,
+      "end_sec": 1287.525,
+      "text": "Nasdaq or the S and P five hundred is down and the stock is up, and that shows",
+      "confidence": 0.97087944
+    },
+    {
+      "start_sec": 1288.465,
+      "end_sec": 1290.725,
+      "text": "an extreme leadership and and strength.",
+      "confidence": 0.9009196
+    },
+    {
+      "start_sec": 1291.15,
+      "end_sec": 1295.33,
+      "text": "Right? And this is what I'm looking for. I'm looking for these kind of stocks",
+      "confidence": 0.9949544
+    },
+    {
+      "start_sec": 1295.71,
+      "end_sec": 1303.97,
+      "text": "that have a very strong RS line and are able to move higher, and this is very, very important. And, I mean, look at Palantir as an example.",
+      "confidence": 0.98999894
+    },
+    {
+      "start_sec": 1304.905,
+      "end_sec": 1314.845,
+      "text": "It's another another good example. So you can see the stock breaks out and the RS line is almost on a new high while the price is still in the base. You know, this is leadership,",
+      "confidence": 0.97094727
+    },
+    {
+      "start_sec": 1315.225,
+      "end_sec": 1328.15,
+      "text": "and this is what I'm looking for. And that's also one of the reasons why I trade stocks that are on the on the way up and not on the way down, like, for example, EP or a lot of other stocks. You know, Amerix, I'm very sure, is another great,",
+      "confidence": 0.9614928
+    },
+    {
+      "start_sec": 1328.61,
+      "end_sec": 1335.965,
+      "text": "or a stock with a with a very strong RS line. You can see that here. Right? I mean, here... I mean, compare that. Right? Here,",
+      "confidence": 0.98280686
+    },
+    {
+      "start_sec": 1336.745,
+      "end_sec": 1340.045,
+      "text": "is the price, and look at the RS line, and you could see",
+      "confidence": 0.93455154
+    },
+    {
+      "start_sec": 1340.425,
+      "end_sec": 1340.925,
+      "text": "that",
+      "confidence": 0.9980469
+    },
+    {
+      "start_sec": 1341.385,
+      "end_sec": 1347.085,
+      "text": "here, the RS line is on a new high, but the price is not on a new high. So extreme leadership.",
+      "confidence": 0.9606004
+    },
+    {
+      "start_sec": 1347.69,
+      "end_sec": 1355.79,
+      "text": "And these are the stocks that are breaking up first and start to rally and then very often take lead... Take over or become true market leaders,",
+      "confidence": 0.95241064
+    },
+    {
+      "start_sec": 1356.73,
+      "end_sec": 1357.95,
+      "text": "in the stock market.",
+      "confidence": 1
+    },
+    {
+      "start_sec": 1358.33,
+      "end_sec": 1361.95,
+      "text": "So relative strength is one of the key things,",
+      "confidence": 0.9692383
+    },
+    {
+      "start_sec": 1362.465,
+      "end_sec": 1362.965,
+      "text": "and",
+      "confidence": 0.9980469
+    },
+    {
+      "start_sec": 1363.345,
+      "end_sec": 1365.825,
+      "text": "it it it also brings me to one of the other,",
+      "confidence": 0.92990947
+    },
+    {
+      "start_sec": 1366.385,
+      "end_sec": 1370.965,
+      "text": "key aspects I want to show you. And this is, you know, what is the basic",
+      "confidence": 0.9740143
+    },
+    {
+      "start_sec": 1371.425,
+      "end_sec": 1376.165,
+      "text": "thing that we are doing in trading, in in in this type of trading",
+      "confidence": 0.9227208
+    },
+    {
+      "start_sec": 1376.89,
+      "end_sec": 1378.43,
+      "text": "when you want to trade leaders.",
+      "confidence": 0.98531085
+    },
+    {
+      "start_sec": 1378.97,
+      "end_sec": 1383.63,
+      "text": "And maybe maybe let's, let's bring the S and P 500 here also on the,",
+      "confidence": 0.9438531
+    },
+    {
+      "start_sec": 1384.25,
+      "end_sec": 1384.75,
+      "text": "screen.",
+      "confidence": 0.99902344
+    },
+    {
+      "start_sec": 1386.01,
+      "end_sec": 1388.43,
+      "text": "One of the most important principles",
+      "confidence": 0.9983724
+    },
+    {
+      "start_sec": 1389.065,
+      "end_sec": 1389.725,
+      "text": "of trading",
+      "confidence": 1
+    },
+    {
+      "start_sec": 1390.185,
+      "end_sec": 1391.885,
+      "text": "leaders is leaders",
+      "confidence": 0.9920247
+    },
+    {
+      "start_sec": 1392.345,
+      "end_sec": 1392.845,
+      "text": "break",
+      "confidence": 0.78759766
+    },
+    {
+      "start_sec": 1393.145,
+      "end_sec": 1393.885,
+      "text": "out first.",
+      "confidence": 0.9362793
+    },
+    {
+      "start_sec": 1394.825,
+      "end_sec": 1402.045,
+      "text": "And that means you have a correction in the market, like, we had here in the last couple of months. You can see that.",
+      "confidence": 0.9761658
+    },
+    {
+      "start_sec": 1402.51,
+      "end_sec": 1403.97,
+      "text": "Mares is going sideways.",
+      "confidence": 0.806427
+    },
+    {
+      "start_sec": 1404.27,
+      "end_sec": 1406.77,
+      "text": "And then as soon as the market",
+      "confidence": 0.9935826
+    },
+    {
+      "start_sec": 1407.47,
+      "end_sec": 1413.33,
+      "text": "turns around and moves higher and it has not to be on a new high or anything like that, the stock",
+      "confidence": 0.9817592
+    },
+    {
+      "start_sec": 1413.71,
+      "end_sec": 1420.105,
+      "text": "is breaking out of the pattern or makes a new high or anything like that. That is the type of leadership.",
+      "confidence": 0.9709008
+    },
+    {
+      "start_sec": 1420.485,
+      "end_sec": 1422.985,
+      "text": "You know? You have a you have a sound pattern.",
+      "confidence": 0.9644531
+    },
+    {
+      "start_sec": 1423.365,
+      "end_sec": 1431.705,
+      "text": "You have, a stock close to the highs here, and then you wait until the market starts to move higher and the stock breaks out.",
+      "confidence": 0.9847559
+    },
+    {
+      "start_sec": 1432.03,
+      "end_sec": 1440.45,
+      "text": "And that is the key. Right? It's not the key that you want to trade the indices or anything like that. The key is really to watch the leaders",
+      "confidence": 0.99776065
+    },
+    {
+      "start_sec": 1440.83,
+      "end_sec": 1446.61,
+      "text": "and wait until the market is turning around. And it's the same thing, you know, it's the same thing",
+      "confidence": 0.98492754
+    },
+    {
+      "start_sec": 1447.115,
+      "end_sec": 1462.99,
+      "text": "here and maybe here and here and so on. You identify a leader. The market makes a pullback, and then when the market breaks out, you buy into the lead... Into this leader. It's the same thing here. The market starts to move higher. You buy into the pullback.",
+      "confidence": 0.96824014
+    },
+    {
+      "start_sec": 1463.53,
+      "end_sec": 1465.63,
+      "text": "You you buy into a breakout here.",
+      "confidence": 0.9124581
+    },
+    {
+      "start_sec": 1466.41,
+      "end_sec": 1468.75,
+      "text": "Same thing here. Right? So the market",
+      "confidence": 0.9964425
+    },
+    {
+      "start_sec": 1469.05,
+      "end_sec": 1471.23,
+      "text": "comes out of this small pullback here.",
+      "confidence": 0.95738
+    },
+    {
+      "start_sec": 1471.69,
+      "end_sec": 1479.155,
+      "text": "The stock starts to move. You buy into this leader. And the same is true here. The market comes out of the pullback,",
+      "confidence": 0.92041016
+    },
+    {
+      "start_sec": 1479.535,
+      "end_sec": 1485.635,
+      "text": "and then you buy into the leader. And if you follow this principle over long series of trades,",
+      "confidence": 0.9736328
+    },
+    {
+      "start_sec": 1486.415,
+      "end_sec": 1487.715,
+      "text": "then you will",
+      "confidence": 0.9983724
+    },
+    {
+      "start_sec": 1488.175,
+      "end_sec": 1489.075,
+      "text": "you will notice",
+      "confidence": 0.8288574
+    },
+    {
+      "start_sec": 1489.65,
+      "end_sec": 1490.09,
+      "text": "that,",
+      "confidence": 0.982666
+    },
+    {
+      "start_sec": 1490.53,
+      "end_sec": 1491.01,
+      "text": "that,",
+      "confidence": 0.9626465
+    },
+    {
+      "start_sec": 1491.41,
+      "end_sec": 1500.79,
+      "text": "the most of these trades are successful because you're trading... In in that case, you're trading with the market. You want to make sure that the market",
+      "confidence": 0.9703957
+    },
+    {
+      "start_sec": 1501.25,
+      "end_sec": 1504.87,
+      "text": "moves higher. That is important. And it really doesn't matter",
+      "confidence": 0.9917725
+    },
+    {
+      "start_sec": 1505.305,
+      "end_sec": 1510.125,
+      "text": "if the market is coming out of a bear market or or larger correction or a small pullback.",
+      "confidence": 0.97785556
+    },
+    {
+      "start_sec": 1510.665,
+      "end_sec": 1513.565,
+      "text": "If you want to time your buys correctly,",
+      "confidence": 0.98968506
+    },
+    {
+      "start_sec": 1514.185,
+      "end_sec": 1521.55,
+      "text": "you wait for a pullback, you buy into a leader which is moving higher. This is the basic principle of trading leading stocks",
+      "confidence": 0.9910906
+    },
+    {
+      "start_sec": 1522.41,
+      "end_sec": 1524.75,
+      "text": "because leaders are usually consolidating",
+      "confidence": 0.9327148
+    },
+    {
+      "start_sec": 1525.05,
+      "end_sec": 1537.385,
+      "text": "around the high points, and the market is pulling back. And when the market is coming out of this pullback, then the leaders break out and start to rally and move higher. So this is really a very, very basic principle",
+      "confidence": 0.97870415
+    },
+    {
+      "start_sec": 1537.685,
+      "end_sec": 1542.425,
+      "text": "of trading relative strength and trading leaders. I hope that this is clear.",
+      "confidence": 0.9865347
+    },
+    {
+      "start_sec": 1543.7,
+      "end_sec": 1545.88,
+      "text": "So what to look for? You know,",
+      "confidence": 0.95315987
+    },
+    {
+      "start_sec": 1546.74,
+      "end_sec": 1555.64,
+      "text": "you you have to do your homework. That's important. Even if you get a lot of inspiration here from this community, you have to do your own homework. You know, have your own training",
+      "confidence": 0.963343
+    },
+    {
+      "start_sec": 1556.26,
+      "end_sec": 1556.76,
+      "text": "routine,",
+      "confidence": 0.7668457
+    },
+    {
+      "start_sec": 1557.275,
+      "end_sec": 1569.855,
+      "text": "have your own approaches, how you find good trades. Because, you know, not all of the stocks that I find are maybe the the right stocks for you, and maybe you are also finding a lot of stocks that I do not trade or that maybe,",
+      "confidence": 0.96242887
+    },
+    {
+      "start_sec": 1570.555,
+      "end_sec": 1572.97,
+      "text": "that I I I do not see. Right?",
+      "confidence": 0.9840698
+    },
+    {
+      "start_sec": 1573.43,
+      "end_sec": 1579.53,
+      "text": "And, that's totally fine. Develop your own approach. This is the only way how to become successful",
+      "confidence": 0.99857825
+    },
+    {
+      "start_sec": 1580.07,
+      "end_sec": 1580.81,
+      "text": "in the long,",
+      "confidence": 0.96940106
+    },
+    {
+      "start_sec": 1581.43,
+      "end_sec": 1584.65,
+      "text": "term. So... And I usually, you know, I usually,",
+      "confidence": 0.9914551
+    },
+    {
+      "start_sec": 1585.27,
+      "end_sec": 1601.725,
+      "text": "focus on weekly charts, and you can see that in every weekend report, I only go through weekend charts. And the most consolidations that I'm trading are five to weeks or twelve weeks or longer. You know, when when we look at, let's look at what I'm holding here right now.",
+      "confidence": 0.96313477
+    },
+    {
+      "start_sec": 1602.88,
+      "end_sec": 1604.42,
+      "text": "Palantir is a good example.",
+      "confidence": 0.99179685
+    },
+    {
+      "start_sec": 1605.04,
+      "end_sec": 1607.62,
+      "text": "You can see here a multiple weeks consolidation.",
+      "confidence": 0.97869873
+    },
+    {
+      "start_sec": 1608,
+      "end_sec": 1613.46,
+      "text": "I think EOS is showing the same thing here. Multiple weeks consolidation, double bottom pattern.",
+      "confidence": 0.9330404
+    },
+    {
+      "start_sec": 1614.56,
+      "end_sec": 1618.455,
+      "text": "Rhythm here, multiple months consolidation, it's breaking out.",
+      "confidence": 0.85961914
+    },
+    {
+      "start_sec": 1619.015,
+      "end_sec": 1621.115,
+      "text": "Solenoid, multiple weeks consolidations.",
+      "confidence": 0.876709
+    },
+    {
+      "start_sec": 1621.655,
+      "end_sec": 1624.955,
+      "text": "You know, all these patterns are visible in weekly charts,",
+      "confidence": 0.9459473
+    },
+    {
+      "start_sec": 1625.335,
+      "end_sec": 1626.635,
+      "text": "multiple weeks consolidations.",
+      "confidence": 0.9916449
+    },
+    {
+      "start_sec": 1627.335,
+      "end_sec": 1629.435,
+      "text": "You know? When it comes to fine tuning",
+      "confidence": 0.9320679
+    },
+    {
+      "start_sec": 1630.375,
+      "end_sec": 1631.435,
+      "text": "of my entry,",
+      "confidence": 0.9967448
+    },
+    {
+      "start_sec": 1632.01,
+      "end_sec": 1650.635,
+      "text": "then, of course, I'm going down to the daily chart or maybe an intraday chart. But to be honest, I do not look at intraday charts a lot. I look maybe sometimes into the thirty minute chart to get a clue about the volume here or get some hints from the volume indicator. That's it. You know? That's it. I do not look at five minute charts",
+      "confidence": 0.9863985
+    },
+    {
+      "start_sec": 1651.255,
+      "end_sec": 1654.475,
+      "text": "or use sixty minute charts or anything to to",
+      "confidence": 0.9814453
+    },
+    {
+      "start_sec": 1654.775,
+      "end_sec": 1661,
+      "text": "fine tune my entry or something like that. No. I look at weekly charts and I look at daily charts. And, you know, to be honest,",
+      "confidence": 0.9686279
+    },
+    {
+      "start_sec": 1661.38,
+      "end_sec": 1664.12,
+      "text": "and this is so important, I see that over and over again,",
+      "confidence": 0.96103925
+    },
+    {
+      "start_sec": 1664.42,
+      "end_sec": 1666.04,
+      "text": "this year is not",
+      "confidence": 0.9692383
+    },
+    {
+      "start_sec": 1666.5,
+      "end_sec": 1671,
+      "text": "the consolidation I'm looking for. This is, you know, this is the entry point,",
+      "confidence": 0.99269325
+    },
+    {
+      "start_sec": 1671.3,
+      "end_sec": 1672.84,
+      "text": "but this is the consolidation",
+      "confidence": 0.99921876
+    },
+    {
+      "start_sec": 1673.22,
+      "end_sec": 1674.2,
+      "text": "I'm looking for.",
+      "confidence": 0.9998372
+    },
+    {
+      "start_sec": 1674.935,
+      "end_sec": 1683.755,
+      "text": "I'm looking for these larger consolidations, or maybe this year is the consolidation I'm looking for if I trade a momentum stock and I I I want to get later",
+      "confidence": 0.951492
+    },
+    {
+      "start_sec": 1684.215,
+      "end_sec": 1688.075,
+      "text": "or I want to get into the stock at a later stage or something like that.",
+      "confidence": 0.9628906
+    },
+    {
+      "start_sec": 1688.47,
+      "end_sec": 1702.975,
+      "text": "But I'm looking at the overall pattern. You know, it's not important what is happening here. It's important if I look into the weekly chart, what is happening here? Something like a cup with a high handle or a pullback here to an important,",
+      "confidence": 0.96024114
+    },
+    {
+      "start_sec": 1703.355,
+      "end_sec": 1707.695,
+      "text": "chart level. This is important for me. This is the pattern I'm trading.",
+      "confidence": 0.9612943
+    },
+    {
+      "start_sec": 1708.075,
+      "end_sec": 1714.095,
+      "text": "And then I'm, looking into the daily chart for the right entry. And then, of course, I'm looking here,",
+      "confidence": 0.9798006
+    },
+    {
+      "start_sec": 1715.16,
+      "end_sec": 1720.46,
+      "text": "around this consolidation, around the EMA 65, and then I'm looking at this entry. You know? But,",
+      "confidence": 0.9603343
+    },
+    {
+      "start_sec": 1720.92,
+      "end_sec": 1722.86,
+      "text": "really, really, I I mean it seriously.",
+      "confidence": 0.8048968
+    },
+    {
+      "start_sec": 1723.64,
+      "end_sec": 1728.54,
+      "text": "Don't look at daily charts alone. This is this is something for the lazy guys.",
+      "confidence": 0.99860024
+    },
+    {
+      "start_sec": 1728.955,
+      "end_sec": 1734.975,
+      "text": "You want to have the overall picture. That's very important. And when you do not see a consolidation",
+      "confidence": 0.99380153
+    },
+    {
+      "start_sec": 1736.315,
+      "end_sec": 1737.135,
+      "text": "or a pattern",
+      "confidence": 0.991862
+    },
+    {
+      "start_sec": 1737.435,
+      "end_sec": 1741.85,
+      "text": "in the weekly chart, it's very often not there in the daily chart. I give",
+      "confidence": 0.98541665
+    },
+    {
+      "start_sec": 1742.39,
+      "end_sec": 1743.61,
+      "text": "you one example,",
+      "confidence": 0.91426593
+    },
+    {
+      "start_sec": 1744.07,
+      "end_sec": 1744.57,
+      "text": "QBTS,",
+      "confidence": 0.93408203
+    },
+    {
+      "start_sec": 1745.19,
+      "end_sec": 1750.89,
+      "text": "for example. I'm not sure if if this is the best one. Right? But is this here a valid pattern?",
+      "confidence": 0.9934448
+    },
+    {
+      "start_sec": 1751.75,
+      "end_sec": 1752.33,
+      "text": "You know,",
+      "confidence": 0.920166
+    },
+    {
+      "start_sec": 1753.555,
+      "end_sec": 1758.055,
+      "text": "chart analysis is an art, and you have to learn that, and everybody has different interpretations.",
+      "confidence": 0.98069763
+    },
+    {
+      "start_sec": 1758.915,
+      "end_sec": 1781.42,
+      "text": "Of course, you know, there is some pattern here, but is it really ready? I'm not sure about that. But if you only look at the daily chart, and sometimes I make this mistake too, you see a consolidation here and say, okay. There is a consolidation. I can trade that. You know? But overall, this is very wide and loose base. It's going nowhere. The moving averages are not in the right alignment at the moment, etcetera.",
+      "confidence": 0.97786456
+    },
+    {
+      "start_sec": 1781.88,
+      "end_sec": 1782.555,
+      "text": "So... But",
+      "confidence": 0.99365234
+    },
+    {
+      "start_sec": 1782.955,
+      "end_sec": 1785.935,
+      "text": "when you look into the weekly chart, you very often",
+      "confidence": 0.99482423
+    },
+    {
+      "start_sec": 1786.555,
+      "end_sec": 1787.055,
+      "text": "hide",
+      "confidence": 1
+    },
+    {
+      "start_sec": 1787.355,
+      "end_sec": 1788.255,
+      "text": "all these",
+      "confidence": 0.94628906
+    },
+    {
+      "start_sec": 1788.875,
+      "end_sec": 1795.455,
+      "text": "distracting stuff from the daily charts, and that's very important. It's same true here if I look at Bitcoin, for example,",
+      "confidence": 0.9234503
+    },
+    {
+      "start_sec": 1795.83,
+      "end_sec": 1812.405,
+      "text": "and I look into the weekly chart, I can see this thing is broke... Or broke out here of this double bottom or triple bottom pattern, and now it's moving higher. And then I'm getting interested. I zoom in, and then I look for an entry. That's it. But very often, you know, very often when you just",
+      "confidence": 0.9618636
+    },
+    {
+      "start_sec": 1813.425,
+      "end_sec": 1815.685,
+      "text": "make trades based on daily charts,",
+      "confidence": 0.99560547
+    },
+    {
+      "start_sec": 1816.065,
+      "end_sec": 1824.82,
+      "text": "very often, they are not so successful because, you know, the pattern... The overall pattern is not there. You you are looking at mini patterns or you're looking",
+      "confidence": 0.98216903
+    },
+    {
+      "start_sec": 1825.2,
+      "end_sec": 1830.5,
+      "text": "at chart structures in the daily chart, but the weekly chart is much, much more important for me.",
+      "confidence": 0.9843479
+    },
+    {
+      "start_sec": 1830.8,
+      "end_sec": 1833.54,
+      "text": "So that's why I'm also focusing more on these larger,",
+      "confidence": 0.9929199
+    },
+    {
+      "start_sec": 1834.175,
+      "end_sec": 1842.675,
+      "text": "patterns. For momentum stocks, you can go down to two or three weeks. I wrote that down here new into the article and watch consolidations in the daily chart.",
+      "confidence": 0.96651065
+    },
+    {
+      "start_sec": 1843.055,
+      "end_sec": 1845.875,
+      "text": "But, you know, when it comes to these momentum stocks,",
+      "confidence": 0.9979248
+    },
+    {
+      "start_sec": 1846.42,
+      "end_sec": 1855.08,
+      "text": "what you want to do... And maybe let's have a look at the story stock list here. What you want to do is you want to find a stock which is showing extreme",
+      "confidence": 0.94134706
+    },
+    {
+      "start_sec": 1855.46,
+      "end_sec": 1856.36,
+      "text": "strong momentum.",
+      "confidence": 0.8227539
+    },
+    {
+      "start_sec": 1857.86,
+      "end_sec": 1860.76,
+      "text": "Maybe... I'm not sure exactly which one",
+      "confidence": 0.9795619
+    },
+    {
+      "start_sec": 1861.105,
+      "end_sec": 1862.165,
+      "text": "is a good example.",
+      "confidence": 0.97546387
+    },
+    {
+      "start_sec": 1862.785,
+      "end_sec": 1871.845,
+      "text": "Is it... Yeah. Maybe let's take Rheinmetall as an example. I know it's a German stock, but it doesn't matter. You can also use Indian stocks or China stocks or whatever.",
+      "confidence": 0.9502339
+    },
+    {
+      "start_sec": 1872.225,
+      "end_sec": 1875.445,
+      "text": "So if you have a stock with an extreme strong momentum,",
+      "confidence": 0.903964
+    },
+    {
+      "start_sec": 1876.38,
+      "end_sec": 1880.86,
+      "text": "and that means, you know, you have a stock here which is moving up, 40%",
+      "confidence": 0.96212566
+    },
+    {
+      "start_sec": 1880.86,
+      "end_sec": 1882.72,
+      "text": "here and here, another,",
+      "confidence": 0.8777466
+    },
+    {
+      "start_sec": 1883.58,
+      "end_sec": 1884.62,
+      "text": "37%,",
+      "confidence": 0.92439777
+    },
+    {
+      "start_sec": 1884.62,
+      "end_sec": 1885.12,
+      "text": "etcetera.",
+      "confidence": 0.8980713
+    },
+    {
+      "start_sec": 1885.5,
+      "end_sec": 1886.8,
+      "text": "In that situation,",
+      "confidence": 0.9871419
+    },
+    {
+      "start_sec": 1887.66,
+      "end_sec": 1889.2,
+      "text": "you can also buy",
+      "confidence": 0.9995117
+    },
+    {
+      "start_sec": 1889.745,
+      "end_sec": 1893.925,
+      "text": "smaller consolidations like here, like here, or like here,",
+      "confidence": 0.91419816
+    },
+    {
+      "start_sec": 1894.705,
+      "end_sec": 1896.965,
+      "text": "because the momentum is so strong",
+      "confidence": 0.9998372
+    },
+    {
+      "start_sec": 1897.425,
+      "end_sec": 1901.285,
+      "text": "and the demand for the stock is so strong that it will not consolidate",
+      "confidence": 0.9674247
+    },
+    {
+      "start_sec": 1901.905,
+      "end_sec": 1904.725,
+      "text": "long enough to give you these longer patterns.",
+      "confidence": 0.9944763
+    },
+    {
+      "start_sec": 1905.59,
+      "end_sec": 1907.85,
+      "text": "And we can also look at at other stocks.",
+      "confidence": 0.96139866
+    },
+    {
+      "start_sec": 1909.75,
+      "end_sec": 1910.99,
+      "text": "Which one is... Here,",
+      "confidence": 0.92163086
+    },
+    {
+      "start_sec": 1911.43,
+      "end_sec": 1921.615,
+      "text": "ThreadUp is a good example here. ThreadUp is a very good example. I I missed the stock. Right? It's a very strong up move here. You have a larger pattern. It's already broken out.",
+      "confidence": 0.939647
+    },
+    {
+      "start_sec": 1921.995,
+      "end_sec": 1931.61,
+      "text": "Then you have a strong momentum move here that's 50% in just a couple of days. Now it's pulling back into the direction of the EMA eight or EMA 21.",
+      "confidence": 0.9891703
+    },
+    {
+      "start_sec": 1931.69,
+      "end_sec": 1936.99,
+      "text": "And then you have just the pattern over a couple of days and then you can try to buy into this.",
+      "confidence": 0.94599843
+    },
+    {
+      "start_sec": 1937.69,
+      "end_sec": 1940.11,
+      "text": "The same is true if you look at, I don't know,",
+      "confidence": 0.97887075
+    },
+    {
+      "start_sec": 1940.65,
+      "end_sec": 1945.79,
+      "text": "strong momentum stocks, Yalla as an example here. I would not buy three days consolidations.",
+      "confidence": 0.90088975
+    },
+    {
+      "start_sec": 1946.345,
+      "end_sec": 1950.925,
+      "text": "I would also prefer two or three weeks, but very often you do not get them.",
+      "confidence": 0.9305725
+    },
+    {
+      "start_sec": 1951.465,
+      "end_sec": 1953.245,
+      "text": "Maybe let's have a look at ARKUR.",
+      "confidence": 0.9254412
+    },
+    {
+      "start_sec": 1954.265,
+      "end_sec": 1954.765,
+      "text": "Here",
+      "confidence": 0.9980469
+    },
+    {
+      "start_sec": 1955.385,
+      "end_sec": 1969.72,
+      "text": "here is a very strong momentum move, and here you have an an orderly pullback to the EMA eight, or here, you have a pattern over just a couple of weeks. So... And then you can also buy into them. But you you only want to buy these short term consolidations",
+      "confidence": 0.9480699
+    },
+    {
+      "start_sec": 1970.5,
+      "end_sec": 1984.595,
+      "text": "in momentum stocks, in stocks that are moving extremely fast, you know, 60 or 100% in just a couple of days or weeks, and then you want to buy into that. This is very, very important. You don't want to buy a short term consolidation,",
+      "confidence": 0.9793077
+    },
+    {
+      "start_sec": 1985.135,
+      "end_sec": 1991,
+      "text": "I don't know, in a stock like Apple or something like that, which is a very, very conservative stock",
+      "confidence": 0.9948345
+    },
+    {
+      "start_sec": 1991.54,
+      "end_sec": 1992.04,
+      "text": "and,",
+      "confidence": 0.6685791
+    },
+    {
+      "start_sec": 1993.14,
+      "end_sec": 2004.015,
+      "text": "usually do not move a lot. Right? And, then you wanna buy here and then you trade a 7% move or something like that. Or you buy a short consolidation here and it moves for",
+      "confidence": 0.96240234
+    },
+    {
+      "start_sec": 2004.395,
+      "end_sec": 2013.695,
+      "text": "3% and then it's pulling back and going nowhere. This is not what you want to do. You want to buy these short term consolidations only in very, very strong",
+      "confidence": 0.9612793
+    },
+    {
+      "start_sec": 2014.05,
+      "end_sec": 2023.59,
+      "text": "stocks. So typical patterns, and you can Google them or you can find them also here in the community, cup and handle, flat basis, double bottoms, volatility contraction patterns, wedges, consolidations,",
+      "confidence": 0.92617106
+    },
+    {
+      "start_sec": 2024.45,
+      "end_sec": 2025.67,
+      "text": "cups, whatever.",
+      "confidence": 0.8092041
+    },
+    {
+      "start_sec": 2026.05,
+      "end_sec": 2028.47,
+      "text": "At the end, and this is very important,",
+      "confidence": 0.95062256
+    },
+    {
+      "start_sec": 2028.995,
+      "end_sec": 2033.095,
+      "text": "at the end, they follow all the same principle. And let me repeat that again.",
+      "confidence": 0.9722493
+    },
+    {
+      "start_sec": 2033.795,
+      "end_sec": 2035.495,
+      "text": "This is this is true,",
+      "confidence": 0.93237305
+    },
+    {
+      "start_sec": 2036.115,
+      "end_sec": 2039.655,
+      "text": "this is very important. Maybe maybe let's let's grab Atma again.",
+      "confidence": 0.941151
+    },
+    {
+      "start_sec": 2040.755,
+      "end_sec": 2041.415,
+      "text": "You know,",
+      "confidence": 0.963501
+    },
+    {
+      "start_sec": 2041.87,
+      "end_sec": 2044.53,
+      "text": "every every trader who invents a pattern",
+      "confidence": 0.9953962
+    },
+    {
+      "start_sec": 2044.91,
+      "end_sec": 2056.185,
+      "text": "is always very proud on the pattern. And they always say, yeah, this is, you know, this is the VCP or this is a cup and handle with, I don't know, a shakeout or whatever.",
+      "confidence": 0.9329171
+    },
+    {
+      "start_sec": 2056.565,
+      "end_sec": 2060.905,
+      "text": "They they all always think they have found something very unique.",
+      "confidence": 0.9745872
+    },
+    {
+      "start_sec": 2061.285,
+      "end_sec": 2064.665,
+      "text": "But the truth is that all of these patterns,",
+      "confidence": 0.9827474
+    },
+    {
+      "start_sec": 2065.685,
+      "end_sec": 2073.2,
+      "text": "it doesn't matter if it's a big cup and handle like here or, I don't know, a double bottom like in Palantir. Let's have a look at that.",
+      "confidence": 0.9741516
+    },
+    {
+      "start_sec": 2074.62,
+      "end_sec": 2078.32,
+      "text": "Like here in Palantir, a double bottom, they all have the same principle.",
+      "confidence": 0.91070086
+    },
+    {
+      "start_sec": 2078.94,
+      "end_sec": 2082.4,
+      "text": "And this is this is, you know, you have a momentum move",
+      "confidence": 0.9807332
+    },
+    {
+      "start_sec": 2083.625,
+      "end_sec": 2085.245,
+      "text": "and then you have a consolidation",
+      "confidence": 0.99690753
+    },
+    {
+      "start_sec": 2085.625,
+      "end_sec": 2088.285,
+      "text": "like a flat pattern, and then you have a continuation.",
+      "confidence": 0.92019045
+    },
+    {
+      "start_sec": 2089.145,
+      "end_sec": 2094.845,
+      "text": "And you can see that here. This is the momentum move. You have the flat pattern, and then you have the continuation.",
+      "confidence": 0.9893799
+    },
+    {
+      "start_sec": 2095.625,
+      "end_sec": 2098.35,
+      "text": "So this is the basic principle of",
+      "confidence": 0.9988839
+    },
+    {
+      "start_sec": 2098.67,
+      "end_sec": 2100.53,
+      "text": "all patterns, to be honest.",
+      "confidence": 0.97929686
+    },
+    {
+      "start_sec": 2100.91,
+      "end_sec": 2109.33,
+      "text": "Right? It's... It it really doesn't matter. Maybe this one here is just... This is more pullback, to be honest. But if you look into the, weekly chart,",
+      "confidence": 0.96473616
+    },
+    {
+      "start_sec": 2109.79,
+      "end_sec": 2113.81,
+      "text": "it's the same thing here. You have a momentum move, you have a flag pattern or",
+      "confidence": 0.92352295
+    },
+    {
+      "start_sec": 2114.165,
+      "end_sec": 2118.665,
+      "text": "a consolidation, and then, hopefully, it will con... It will continue with the same momentum.",
+      "confidence": 0.9763021
+    },
+    {
+      "start_sec": 2119.125,
+      "end_sec": 2123.865,
+      "text": "It's the same true here. If you look at MVST, you have the momentum move. You have the consolidation.",
+      "confidence": 0.9454966
+    },
+    {
+      "start_sec": 2124.325,
+      "end_sec": 2125.225,
+      "text": "You have the continuation.",
+      "confidence": 0.99121094
+    },
+    {
+      "start_sec": 2125.925,
+      "end_sec": 2126.645,
+      "text": "If you look at,",
+      "confidence": 0.99432373
+    },
+    {
+      "start_sec": 2128.005,
+      "end_sec": 2130.8,
+      "text": "Solano here, same thing here. Momentum move, consolidation,",
+      "confidence": 0.9553528
+    },
+    {
+      "start_sec": 2131.66,
+      "end_sec": 2132.16,
+      "text": "hopefully,",
+      "confidence": 0.9916992
+    },
+    {
+      "start_sec": 2132.78,
+      "end_sec": 2133.28,
+      "text": "continuation,",
+      "confidence": 0.8725586
+    },
+    {
+      "start_sec": 2133.66,
+      "end_sec": 2138.54,
+      "text": "and so on. It really, really doesn't matter. And it's the same same thing if you look at,",
+      "confidence": 0.98536515
+    },
+    {
+      "start_sec": 2139.66,
+      "end_sec": 2141.2,
+      "text": "a cup and handle pattern.",
+      "confidence": 0.93652344
+    },
+    {
+      "start_sec": 2142.46,
+      "end_sec": 2145.52,
+      "text": "Let's look at Atma again. A cup and handle pattern.",
+      "confidence": 0.9416748
+    },
+    {
+      "start_sec": 2146.035,
+      "end_sec": 2149.655,
+      "text": "Here, you have the momentum move, you have the flag, and then you have a continuation.",
+      "confidence": 0.95692444
+    },
+    {
+      "start_sec": 2150.355,
+      "end_sec": 2158.535,
+      "text": "But now now ask yourself, okay, why aren't... Why I am not trading only these momentum move consolidation patterns?",
+      "confidence": 0.92931485
+    },
+    {
+      "start_sec": 2158.835,
+      "end_sec": 2159.82,
+      "text": "I could do that.",
+      "confidence": 0.98327637
+    },
+    {
+      "start_sec": 2160.3,
+      "end_sec": 2164.08,
+      "text": "But, you know, what I'm what I'm reading out of the base here",
+      "confidence": 0.9719896
+    },
+    {
+      "start_sec": 2164.38,
+      "end_sec": 2166.16,
+      "text": "on the left side of the base",
+      "confidence": 0.9461495
+    },
+    {
+      "start_sec": 2166.54,
+      "end_sec": 2167.04,
+      "text": "is",
+      "confidence": 0.96533203
+    },
+    {
+      "start_sec": 2167.58,
+      "end_sec": 2168.72,
+      "text": "what is the accumulation",
+      "confidence": 0.9680176
+    },
+    {
+      "start_sec": 2169.02,
+      "end_sec": 2169.76,
+      "text": "and distribution",
+      "confidence": 0.9875488
+    },
+    {
+      "start_sec": 2170.3,
+      "end_sec": 2175.685,
+      "text": "doing. You know? How how is it going on in the stock? And this is why these rounded characteristics,",
+      "confidence": 0.9609632
+    },
+    {
+      "start_sec": 2175.985,
+      "end_sec": 2186.325,
+      "text": "as an example, are very important because you can see that, you know, the the distribution is getting slower and slower and slower and slower, and then the the sellers can take over.",
+      "confidence": 0.9647106
+    },
+    {
+      "start_sec": 2186.85,
+      "end_sec": 2192.85,
+      "text": "And, you know, what I'm looking for is how long is a consolidation? Is it long enough to get rid out of,",
+      "confidence": 0.94805354
+    },
+    {
+      "start_sec": 2193.57,
+      "end_sec": 2195.19,
+      "text": "get rid of all the sellers?",
+      "confidence": 0.90234375
+    },
+    {
+      "start_sec": 2195.65,
+      "end_sec": 2198.47,
+      "text": "I'm looking at, when we come back to double bottoms,",
+      "confidence": 0.9885661
+    },
+    {
+      "start_sec": 2198.85,
+      "end_sec": 2201.35,
+      "text": "I'm looking for a shakeout because then",
+      "confidence": 0.970738
+    },
+    {
+      "start_sec": 2201.765,
+      "end_sec": 2206.745,
+      "text": "sellers are shaken out of the stock and it can move faster again, etcetera.",
+      "confidence": 0.95260185
+    },
+    {
+      "start_sec": 2207.285,
+      "end_sec": 2211.225,
+      "text": "But the basic principle is always the same. Momentum move, consolidation,",
+      "confidence": 0.91095525
+    },
+    {
+      "start_sec": 2211.605,
+      "end_sec": 2212.105,
+      "text": "continuation.",
+      "confidence": 0.98413086
+    },
+    {
+      "start_sec": 2213.045,
+      "end_sec": 2230.165,
+      "text": "That is nothing else or this is this is what all the patterns have in common. And, you know, when it comes to VCP patterns and all this stuff, it's it's always the same. You know? VCP pattern, which is getting tight here, is very often nothing else than you have a big momentum move, you have a contraction",
+      "confidence": 0.94894975
+    },
+    {
+      "start_sec": 2230.625,
+      "end_sec": 2233.045,
+      "text": "or consolidation, a contraction, and volatility,",
+      "confidence": 0.8636882
+    },
+    {
+      "start_sec": 2233.505,
+      "end_sec": 2236.805,
+      "text": "and then you have a continuation. This is the basic principle",
+      "confidence": 0.9962269
+    },
+    {
+      "start_sec": 2237.265,
+      "end_sec": 2241.445,
+      "text": "behind all momentum strategies like canceling, Mark Milovini, Danzanger.",
+      "confidence": 0.862221
+    },
+    {
+      "start_sec": 2242.47,
+      "end_sec": 2246.17,
+      "text": "It really doesn't matter who that is. Right? This is always a basic principle.",
+      "confidence": 0.96353585
+    },
+    {
+      "start_sec": 2246.71,
+      "end_sec": 2257.45,
+      "text": "And this is important to understand. It's not about the pattern. This is so important. Only because you see a cup and handle in a chart, it doesn't matter that's a good stock or it",
+      "confidence": 0.97573245
+    },
+    {
+      "start_sec": 2257.855,
+      "end_sec": 2258.355,
+      "text": "or",
+      "confidence": 0.8520508
+    },
+    {
+      "start_sec": 2258.655,
+      "end_sec": 2267.235,
+      "text": "or it does not mean that it's a good stock or that the stock... Or or the pattern will automatically to, lead to to to some profits.",
+      "confidence": 0.95046204
+    },
+    {
+      "start_sec": 2267.695,
+      "end_sec": 2268.195,
+      "text": "No.",
+      "confidence": 0.9995117
+    },
+    {
+      "start_sec": 2269.375,
+      "end_sec": 2272.595,
+      "text": "What you want to make sure is that you increase",
+      "confidence": 0.9994141
+    },
+    {
+      "start_sec": 2273.64,
+      "end_sec": 2274.38,
+      "text": "the probabilities",
+      "confidence": 0.99853516
+    },
+    {
+      "start_sec": 2274.76,
+      "end_sec": 2276.86,
+      "text": "of making a successful trade,",
+      "confidence": 0.95302737
+    },
+    {
+      "start_sec": 2277.4,
+      "end_sec": 2281.18,
+      "text": "and the pattern is only one one part",
+      "confidence": 0.98339844
+    },
+    {
+      "start_sec": 2281.72,
+      "end_sec": 2282.62,
+      "text": "of the setup.",
+      "confidence": 0.9929199
+    },
+    {
+      "start_sec": 2283.4,
+      "end_sec": 2285.02,
+      "text": "The other parts are",
+      "confidence": 0.9995117
+    },
+    {
+      "start_sec": 2285.635,
+      "end_sec": 2286.375,
+      "text": "the fundamentals,",
+      "confidence": 0.9890137
+    },
+    {
+      "start_sec": 2287.075,
+      "end_sec": 2289.495,
+      "text": "the story, what I already spoke about,",
+      "confidence": 0.9809919
+    },
+    {
+      "start_sec": 2289.795,
+      "end_sec": 2293.015,
+      "text": "and, of course, the market is also a part.",
+      "confidence": 0.9810655
+    },
+    {
+      "start_sec": 2293.315,
+      "end_sec": 2294.615,
+      "text": "And when you increase",
+      "confidence": 0.9951172
+    },
+    {
+      "start_sec": 2294.915,
+      "end_sec": 2301.5,
+      "text": "or when you when you want to increase the probabilities of making a successful trade, you want to have the full package.",
+      "confidence": 0.9621138
+    },
+    {
+      "start_sec": 2301.88,
+      "end_sec": 2303.02,
+      "text": "You wanna make sure",
+      "confidence": 0.99902344
+    },
+    {
+      "start_sec": 2303.4,
+      "end_sec": 2308.86,
+      "text": "that, you have a pattern in place, that the market is in a position which helps you.",
+      "confidence": 0.9765338
+    },
+    {
+      "start_sec": 2309.48,
+      "end_sec": 2310.46,
+      "text": "So that means,",
+      "confidence": 0.99902344
+    },
+    {
+      "start_sec": 2310.76,
+      "end_sec": 2316.295,
+      "text": "you know, the market is coming out of a correction or a pullback, and then you have the pattern, and then you enter the stock.",
+      "confidence": 0.9360742
+    },
+    {
+      "start_sec": 2316.595,
+      "end_sec": 2318.135,
+      "text": "Then you have maybe a catalyst,",
+      "confidence": 0.95739746
+    },
+    {
+      "start_sec": 2318.515,
+      "end_sec": 2325.495,
+      "text": "like great numbers or, like, a story or anything like that. And this package together, this increases the probabilities",
+      "confidence": 0.9522384
+    },
+    {
+      "start_sec": 2326.275,
+      "end_sec": 2339.07,
+      "text": "of making a successful trade. I know that so many traders are only thinking, yeah. I I just have to trade VCPs or something like that. And over long series of trades, I will make money with that. That's not true because,",
+      "confidence": 0.9696414
+    },
+    {
+      "start_sec": 2339.37,
+      "end_sec": 2340.27,
+      "text": "you know, VCPs,",
+      "confidence": 0.95666504
+    },
+    {
+      "start_sec": 2341.925,
+      "end_sec": 2361.94,
+      "text": "appear in so many stocks but that does not mean that all the stocks have the same potential. It's not true. If you trade a VCP as an example in Philip Morris or Johnson and Johnson, it leads to a very small profit. But if you trade a VCP in a stock like Nvidia, SMCI, Palantir, or whatever, it leads to a big profit",
+      "confidence": 0.9569995
+    },
+    {
+      "start_sec": 2362.48,
+      "end_sec": 2366.18,
+      "text": "very often. So... And this is what you wanna make sure. Alright.",
+      "confidence": 0.91715497
+    },
+    {
+      "start_sec": 2367.12,
+      "end_sec": 2372.175,
+      "text": "So market conditions are the key. I already spoke a little bit about that. 95%",
+      "confidence": 0.9861111
+    },
+    {
+      "start_sec": 2372.175,
+      "end_sec": 2374.915,
+      "text": "of all the setups that I'm trading appears",
+      "confidence": 0.9229126
+    },
+    {
+      "start_sec": 2375.295,
+      "end_sec": 2378.755,
+      "text": "when the... Or appear when the market trend model is green.",
+      "confidence": 0.9838867
+    },
+    {
+      "start_sec": 2379.135,
+      "end_sec": 2386.755,
+      "text": "I I do not wanna give an introduction here into the market trend model. I have videos here in the community about that. But 95%,",
+      "confidence": 0.9880729
+    },
+    {
+      "start_sec": 2387.03,
+      "end_sec": 2392.65,
+      "text": "I I did some studies also in the last couple of months about that, they appear when the market trend model is green.",
+      "confidence": 0.97766644
+    },
+    {
+      "start_sec": 2393.03,
+      "end_sec": 2395.21,
+      "text": "So... But there is one exception,",
+      "confidence": 0.9646403
+    },
+    {
+      "start_sec": 2395.91,
+      "end_sec": 2404.555,
+      "text": "and this is, you know, I can trade also when the market has a rally day. So that means when the market is in a correction, but we have a rally day.",
+      "confidence": 0.98298645
+    },
+    {
+      "start_sec": 2404.855,
+      "end_sec": 2408.235,
+      "text": "That means the market is up on the day and,",
+      "confidence": 0.98950195
+    },
+    {
+      "start_sec": 2408.775,
+      "end_sec": 2411.595,
+      "text": "closes in the upper half of the trading session.",
+      "confidence": 0.99956596
+    },
+    {
+      "start_sec": 2412.935,
+      "end_sec": 2413.435,
+      "text": "Why?",
+      "confidence": 0.99902344
+    },
+    {
+      "start_sec": 2414.3,
+      "end_sec": 2414.8,
+      "text": "Very",
+      "confidence": 0.9941406
+    },
+    {
+      "start_sec": 2415.34,
+      "end_sec": 2416.7,
+      "text": "simple. 2030%",
+      "confidence": 0.7745768
+    },
+    {
+      "start_sec": 2416.7,
+      "end_sec": 2418.24,
+      "text": "of the true market leaders,",
+      "confidence": 0.9770996
+    },
+    {
+      "start_sec": 2418.62,
+      "end_sec": 2420.08,
+      "text": "they break out earlier.",
+      "confidence": 0.93743896
+    },
+    {
+      "start_sec": 2420.54,
+      "end_sec": 2424.4,
+      "text": "And as I already explained to you, you know, the basic principle",
+      "confidence": 0.97749835
+    },
+    {
+      "start_sec": 2424.78,
+      "end_sec": 2429.68,
+      "text": "of trading leading stocks is to buy them when the market is coming out of a correction.",
+      "confidence": 0.96711284
+    },
+    {
+      "start_sec": 2430.115,
+      "end_sec": 2436.695,
+      "text": "So this is one of the reasons why I could also trade on rally days. I do not do that very often to be honest,",
+      "confidence": 0.96713865
+    },
+    {
+      "start_sec": 2437.075,
+      "end_sec": 2441.735,
+      "text": "but sometimes, especially when I have a good opportunity, I will do that. And MVST",
+      "confidence": 0.9439372
+    },
+    {
+      "start_sec": 2442.035,
+      "end_sec": 2447.48,
+      "text": "is one of the, examples here because that year broke out on April",
+      "confidence": 0.9756798
+    },
+    {
+      "start_sec": 2447.48,
+      "end_sec": 2448.72,
+      "text": "17.",
+      "confidence": 0.9243164
+    },
+    {
+      "start_sec": 2448.72,
+      "end_sec": 2452.26,
+      "text": "And let's have a look at the market trend model. What what was the",
+      "confidence": 0.9891881
+    },
+    {
+      "start_sec": 2452.96,
+      "end_sec": 2462.955,
+      "text": "market trend model doing on that day? It was red, but we had a rally day before. A couple of days before, we had a rally day. So that means I can take a position",
+      "confidence": 0.9809849
+    },
+    {
+      "start_sec": 2463.415,
+      "end_sec": 2463.915,
+      "text": "because",
+      "confidence": 0.9140625
+    },
+    {
+      "start_sec": 2464.215,
+      "end_sec": 2465.755,
+      "text": "when you look at the left table,",
+      "confidence": 0.94321984
+    },
+    {
+      "start_sec": 2466.535,
+      "end_sec": 2467.575,
+      "text": "75%",
+      "confidence": 0.99869794
+    },
+    {
+      "start_sec": 2467.575,
+      "end_sec": 2479,
+      "text": "of the green signals, of the buy signals appear within eight day... Eight days of a new rally attempt. The last year, the last rally to green was nine days. A little bit more than the statistics,",
+      "confidence": 0.9440456
+    },
+    {
+      "start_sec": 2479.54,
+      "end_sec": 2483.64,
+      "text": "but it's okay. So this is one of the reasons why I can take,",
+      "confidence": 0.99428016
+    },
+    {
+      "start_sec": 2485.14,
+      "end_sec": 2499.415,
+      "text": "can take a position. And there are some other examples. You know? NVIDIA last year broke also out when the market was in a correction, and I think SMCI was was also breaking out. So Palantir was also a good example. They... Palantir gave so many buy, buy signals",
+      "confidence": 0.9461578
+    },
+    {
+      "start_sec": 2500.195,
+      "end_sec": 2504.99,
+      "text": "when the market trend model was red. You know? These are the exceptions, and over time,",
+      "confidence": 0.96092224
+    },
+    {
+      "start_sec": 2505.29,
+      "end_sec": 2508.43,
+      "text": "you will get a feeling for that. What is an exception?",
+      "confidence": 0.96812856
+    },
+    {
+      "start_sec": 2509.05,
+      "end_sec": 2517.87,
+      "text": "So... But, you know, if you're not so experienced as a trader, I would definitely wait for a green signal. Or if you say, no. I don't wanna trade on rally days. I really want to have more confirmation,",
+      "confidence": 0.96777344
+    },
+    {
+      "start_sec": 2518.325,
+      "end_sec": 2520.665,
+      "text": "then you can wait also for the market trend model,",
+      "confidence": 0.9867188
+    },
+    {
+      "start_sec": 2521.205,
+      "end_sec": 2522.425,
+      "text": "turn to be green.",
+      "confidence": 0.93829346
+    },
+    {
+      "start_sec": 2522.805,
+      "end_sec": 2530.985,
+      "text": "And the same is true when it comes to to the quality of the market trend. This is important. Let me quickly repeat that. So you have here the rally types.",
+      "confidence": 0.9949439
+    },
+    {
+      "start_sec": 2531.65,
+      "end_sec": 2537.27,
+      "text": "You know, we always have a look at the market after fifteen days fifteen days after a buy signal.",
+      "confidence": 0.9647924
+    },
+    {
+      "start_sec": 2537.57,
+      "end_sec": 2539.81,
+      "text": "And if the if the if the,",
+      "confidence": 0.9039132
+    },
+    {
+      "start_sec": 2540.29,
+      "end_sec": 2541.19,
+      "text": "green signal",
+      "confidence": 0.99902344
+    },
+    {
+      "start_sec": 2541.49,
+      "end_sec": 2545.67,
+      "text": "turns into a red signal within fifteen days, then it's a whipsaw market.",
+      "confidence": 0.99594975
+    },
+    {
+      "start_sec": 2546.075,
+      "end_sec": 2551.215,
+      "text": "If we have very small gains, like, you know, less or equal 3%",
+      "confidence": 0.9691068
+    },
+    {
+      "start_sec": 2551.835,
+      "end_sec": 2556.255,
+      "text": "measured by the first day here, so at the moment, it's 2%,",
+      "confidence": 0.95895386
+    },
+    {
+      "start_sec": 2556.715,
+      "end_sec": 2558.255,
+      "text": "then it's a slock market.",
+      "confidence": 0.87624514
+    },
+    {
+      "start_sec": 2558.87,
+      "end_sec": 2559.53,
+      "text": "If the,",
+      "confidence": 0.9732666
+    },
+    {
+      "start_sec": 2559.91,
+      "end_sec": 2562.07,
+      "text": "if it's between 315%,",
+      "confidence": 0.99490356
+    },
+    {
+      "start_sec": 2562.07,
+      "end_sec": 2565.53,
+      "text": "it's a moneymaker market, and that means you want to hold on to",
+      "confidence": 0.9726938
+    },
+    {
+      "start_sec": 2565.91,
+      "end_sec": 2572.73,
+      "text": "winners longer. And life changer markets, they are extremely rare, to be honest, usually happening after bear markets.",
+      "confidence": 0.9654677
+    },
+    {
+      "start_sec": 2574.405,
+      "end_sec": 2578.665,
+      "text": "And and the market is up 15% or more within 15,",
+      "confidence": 0.9802468
+    },
+    {
+      "start_sec": 2579.285,
+      "end_sec": 2585.545,
+      "text": "these are life changing markets. Life changing markets means you have stocks going up 100, 200, 300%",
+      "confidence": 0.95273244
+    },
+    {
+      "start_sec": 2585.845,
+      "end_sec": 2597.41,
+      "text": "very, very quickly in just a couple of weeks or months. And in that case, you really, really want to push it. That was... So that means you want to take a lot of trades and you want to go on margin.",
+      "confidence": 0.97459775
+    },
+    {
+      "start_sec": 2597.87,
+      "end_sec": 2601.09,
+      "text": "And in moneymaker markets, you know, you you should do",
+      "confidence": 0.9582764
+    },
+    {
+      "start_sec": 2601.395,
+      "end_sec": 2605.175,
+      "text": "a good trading. Let's say it that way. You wanna be on margin too, but,",
+      "confidence": 0.9431478
+    },
+    {
+      "start_sec": 2605.715,
+      "end_sec": 2609.335,
+      "text": "you you want to also be aware that that sooner or later, the moneymaker",
+      "confidence": 0.9826835
+    },
+    {
+      "start_sec": 2609.795,
+      "end_sec": 2613.735,
+      "text": "moneymaker market ends and the market goes back into a correction.",
+      "confidence": 0.9451571
+    },
+    {
+      "start_sec": 2614.06,
+      "end_sec": 2619.92,
+      "text": "So that's also one of the reasons here. 80% of of all trends end in fifty days or less.",
+      "confidence": 0.9722579
+    },
+    {
+      "start_sec": 2621.1,
+      "end_sec": 2625.52,
+      "text": "So that is very true if you go back here. You know, thirty five, thirty seven.",
+      "confidence": 0.93455505
+    },
+    {
+      "start_sec": 2626.345,
+      "end_sec": 2629.565,
+      "text": "Twelve days, that was a very short one, fifty two days,",
+      "confidence": 0.96286845
+    },
+    {
+      "start_sec": 2630.185,
+      "end_sec": 2631.805,
+      "text": "fifty nine days, etcetera.",
+      "confidence": 0.9984741
+    },
+    {
+      "start_sec": 2632.265,
+      "end_sec": 2638.445,
+      "text": "So nothing goes to the moon. This is very important. And if you get a buy... If you get a sign... A sell signal,",
+      "confidence": 0.9685771
+    },
+    {
+      "start_sec": 2638.93,
+      "end_sec": 2645.75,
+      "text": "the first thing is what you wanna do is stop buying new trades and maybe taking some profits off the table. So that's very important.",
+      "confidence": 0.97106445
+    },
+    {
+      "start_sec": 2646.21,
+      "end_sec": 2655.725,
+      "text": "But, you know, the most money you can make in moneymaker markets or life changing markets. And as soon as you see that moneymaker market or life changing market,",
+      "confidence": 0.96638435
+    },
+    {
+      "start_sec": 2657.305,
+      "end_sec": 2662.045,
+      "text": "appears, so that means after fifteen days, then you can also trade bigger, then you can,",
+      "confidence": 0.9716797
+    },
+    {
+      "start_sec": 2662.585,
+      "end_sec": 2668.32,
+      "text": "take more trades, and then you want to also become a little bit more aggressive. That's very important.",
+      "confidence": 0.987481
+    },
+    {
+      "start_sec": 2671.34,
+      "end_sec": 2673.28,
+      "text": "Yeah. So key buy rules,",
+      "confidence": 0.9116211
+    },
+    {
+      "start_sec": 2673.9,
+      "end_sec": 2694.82,
+      "text": "buy only if a market trend model is clearly green. Alright. We already spoke about that. Buy as close as possible to the ideal bear... Breakout point. To be honest, I see that so often that traders buy too late. They are chasing trades, and chasing trades is a problem of your mindset. It's not a problem of the technicals.",
+      "confidence": 0.9722873
+    },
+    {
+      "start_sec": 2695.52,
+      "end_sec": 2699.7,
+      "text": "You are just seeing dollar signs. That's it. And that's",
+      "confidence": 0.9431397
+    },
+    {
+      "start_sec": 2701.12,
+      "end_sec": 2703.38,
+      "text": "why planning your trades is so important.",
+      "confidence": 0.94527763
+    },
+    {
+      "start_sec": 2703.76,
+      "end_sec": 2705.7,
+      "text": "You don't want to buy spontaneously.",
+      "confidence": 0.9873454
+    },
+    {
+      "start_sec": 2706.16,
+      "end_sec": 2710.915,
+      "text": "That's very important. I make the mistake also sometimes that I buy a trade spontaneously,",
+      "confidence": 0.9760417
+    },
+    {
+      "start_sec": 2711.535,
+      "end_sec": 2714.355,
+      "text": "but every time, you know, every time I have regrets",
+      "confidence": 0.98361814
+    },
+    {
+      "start_sec": 2714.735,
+      "end_sec": 2719.155,
+      "text": "and, you know, every time or very often it leads to losses, to be honest.",
+      "confidence": 0.94007164
+    },
+    {
+      "start_sec": 2719.61,
+      "end_sec": 2733.95,
+      "text": "So you want to buy as close as possible to the ideal breakup point. And let's let's have a look at what is the ideal breakup point. The ideal breakup point is a point where the where the probabilities are very high that",
+      "confidence": 0.9734341
+    },
+    {
+      "start_sec": 2734.315,
+      "end_sec": 2737.055,
+      "text": "the trade will go into your direction.",
+      "confidence": 0.9964774
+    },
+    {
+      "start_sec": 2738.235,
+      "end_sec": 2744.655,
+      "text": "Not easy, especially for inexperienced traders. But if you look here at, MicroVas as an example,",
+      "confidence": 0.9669749
+    },
+    {
+      "start_sec": 2744.955,
+      "end_sec": 2746.175,
+      "text": "you can see here,",
+      "confidence": 0.9805908
+    },
+    {
+      "start_sec": 2747.24,
+      "end_sec": 2748.38,
+      "text": "you can see here",
+      "confidence": 0.9793701
+    },
+    {
+      "start_sec": 2748.68,
+      "end_sec": 2750.06,
+      "text": "multiple high points.",
+      "confidence": 0.9551595
+    },
+    {
+      "start_sec": 2750.44,
+      "end_sec": 2755.34,
+      "text": "So if the trade breaks out above these multiple high points,",
+      "confidence": 0.9082253
+    },
+    {
+      "start_sec": 2755.72,
+      "end_sec": 2757.42,
+      "text": "then it's out of this consolidation,",
+      "confidence": 0.95906574
+    },
+    {
+      "start_sec": 2758.2,
+      "end_sec": 2759.9,
+      "text": "then probably the trend",
+      "confidence": 0.9703369
+    },
+    {
+      "start_sec": 2760.425,
+      "end_sec": 2762.605,
+      "text": "changed again or the trend will resume,",
+      "confidence": 0.9454171
+    },
+    {
+      "start_sec": 2763.305,
+      "end_sec": 2766.605,
+      "text": "on the upside again. That's why, you know, I put,",
+      "confidence": 0.9751465
+    },
+    {
+      "start_sec": 2767.465,
+      "end_sec": 2774.95,
+      "text": "or I I started to buy a little bit earlier, but, you know, I think in the daily preparation post, I said $180.83.",
+      "confidence": 0.9729464
+    },
+    {
+      "start_sec": 2774.95,
+      "end_sec": 2775.77,
+      "text": "That's here.",
+      "confidence": 0.9995117
+    },
+    {
+      "start_sec": 2776.07,
+      "end_sec": 2777.93,
+      "text": "So when it when it comes to Solano,",
+      "confidence": 0.90027875
+    },
+    {
+      "start_sec": 2779.19,
+      "end_sec": 2780.89,
+      "text": "we have the same thing here.",
+      "confidence": 0.9986165
+    },
+    {
+      "start_sec": 2781.19,
+      "end_sec": 2781.69,
+      "text": "Right?",
+      "confidence": 0.99609375
+    },
+    {
+      "start_sec": 2782.15,
+      "end_sec": 2802.385,
+      "text": "If if the stock breaks out above this point, then you want to enter it because then it's broken out of the pattern. The same is true for for Palantir, which had a very clear breakout line here with this high point and all the price action below this high point, and then you have this flat pattern here. So that's why you want to buy here as soon as possible.",
+      "confidence": 0.97619283
+    },
+    {
+      "start_sec": 2802.71,
+      "end_sec": 2805.53,
+      "text": "And you don't want to wait a lot for confirmation",
+      "confidence": 0.99785155
+    },
+    {
+      "start_sec": 2805.83,
+      "end_sec": 2806.81,
+      "text": "because the price",
+      "confidence": 0.9431966
+    },
+    {
+      "start_sec": 2807.35,
+      "end_sec": 2809.45,
+      "text": "sometimes runs very fast.",
+      "confidence": 0.95166016
+    },
+    {
+      "start_sec": 2810.07,
+      "end_sec": 2820.325,
+      "text": "And, what you want to do is you want to buy as soon as possible. You can use stop buy orders and place a stop buy order here, and then you get stopped into the trade,",
+      "confidence": 0.979933
+    },
+    {
+      "start_sec": 2821.025,
+      "end_sec": 2824.325,
+      "text": "automatically with your broker, and then you can place a stop loss",
+      "confidence": 0.9777629
+    },
+    {
+      "start_sec": 2825.185,
+      "end_sec": 2830.325,
+      "text": "together with your stop stop buy order so that you have a protection against the downside.",
+      "confidence": 0.9454498
+    },
+    {
+      "start_sec": 2831.02,
+      "end_sec": 2834.8,
+      "text": "So... But you want to buy here. You don't wanna buy here. That's important.",
+      "confidence": 0.9871303
+    },
+    {
+      "start_sec": 2835.18,
+      "end_sec": 2838.48,
+      "text": "And the same is true... I mean, let's let's look at Nio.",
+      "confidence": 0.93464494
+    },
+    {
+      "start_sec": 2840.62,
+      "end_sec": 2842.8,
+      "text": "That means, you know, you wanna buy here",
+      "confidence": 0.9981079
+    },
+    {
+      "start_sec": 2843.215,
+      "end_sec": 2849.395,
+      "text": "because in that moment, it's broken out of this pattern, and you don't wanna buy here because your trade is underwater",
+      "confidence": 0.9707206
+    },
+    {
+      "start_sec": 2849.855,
+      "end_sec": 2850.595,
+      "text": "very quickly",
+      "confidence": 0.99853516
+    },
+    {
+      "start_sec": 2850.895,
+      "end_sec": 2852.995,
+      "text": "if this thing has a natural reaction",
+      "confidence": 0.9959542
+    },
+    {
+      "start_sec": 2853.295,
+      "end_sec": 2858.195,
+      "text": "or just a small pullback. So as close as possible, just $12.03,",
+      "confidence": 0.9612867
+    },
+    {
+      "start_sec": 2858.58,
+      "end_sec": 2861.16,
+      "text": "maybe 10¢ if it's more expensive stock",
+      "confidence": 0.9541713
+    },
+    {
+      "start_sec": 2861.46,
+      "end_sec": 2861.96,
+      "text": "above",
+      "confidence": 0.8144531
+    },
+    {
+      "start_sec": 2862.34,
+      "end_sec": 2870.6,
+      "text": "the ideal breaker point. That's important. You can also look into the thirty minute charts for volume, but this is more for experienced traders.",
+      "confidence": 0.95425415
+    },
+    {
+      "start_sec": 2872.065,
+      "end_sec": 2874.645,
+      "text": "Ideal position size, 10 to 15%.",
+      "confidence": 0.9535726
+    },
+    {
+      "start_sec": 2874.705,
+      "end_sec": 2877.765,
+      "text": "That's me, you know, depending, of course, on your risk appetite.",
+      "confidence": 0.9831321
+    },
+    {
+      "start_sec": 2878.145,
+      "end_sec": 2878.885,
+      "text": "So in...",
+      "confidence": 0.704834
+    },
+    {
+      "start_sec": 2879.505,
+      "end_sec": 2884.145,
+      "text": "Sometimes, I I trade a little bit bigger, so that means I also go up to 20%",
+      "confidence": 0.9574621
+    },
+    {
+      "start_sec": 2884.145,
+      "end_sec": 2894.06,
+      "text": "if I have a very high conviction in a stock or the market is very good. In bad markets, I trade a little bit smaller, but usually my positions are between 10 to 15%.",
+      "confidence": 0.94603413
+    },
+    {
+      "start_sec": 2894.28,
+      "end_sec": 2896.12,
+      "text": "And why 10 to 15%?",
+      "confidence": 0.9786377
+    },
+    {
+      "start_sec": 2896.12,
+      "end_sec": 2901.9,
+      "text": "Because in that, you know, in... With this size, I can hold a couple of positions in my portfolio,",
+      "confidence": 0.9365748
+    },
+    {
+      "start_sec": 2902.36,
+      "end_sec": 2905.325,
+      "text": "and every position also has some impact",
+      "confidence": 0.9986049
+    },
+    {
+      "start_sec": 2905.865,
+      "end_sec": 2907.885,
+      "text": "on my, on my account.",
+      "confidence": 0.9861816
+    },
+    {
+      "start_sec": 2908.585,
+      "end_sec": 2918.59,
+      "text": "You know, I don't wanna have a 3% position and then sitting in stock, which is going up 100%. That doesn't make sense. I want to have a serious return on my capital",
+      "confidence": 0.93317944
+    },
+    {
+      "start_sec": 2918.97,
+      "end_sec": 2923.13,
+      "text": "if I take a risk, and that means I have also... Or I have to to have,",
+      "confidence": 0.9858686
+    },
+    {
+      "start_sec": 2923.85,
+      "end_sec": 2930.385,
+      "text": "a good position size where I also have a serious return on my capital, and that's 10 to 15%.",
+      "confidence": 0.98208135
+    },
+    {
+      "start_sec": 2930.445,
+      "end_sec": 2935.905,
+      "text": "And why not more? Why not 30% or something like that? Very simple. Because of risk management,",
+      "confidence": 0.97025794
+    },
+    {
+      "start_sec": 2936.285,
+      "end_sec": 2936.785,
+      "text": "reasons.",
+      "confidence": 1
+    },
+    {
+      "start_sec": 2937.085,
+      "end_sec": 2942.305,
+      "text": "So if you have a stock which is gapping down 20% against you and you have a 30% possession,",
+      "confidence": 0.9593827
+    },
+    {
+      "start_sec": 2943.02,
+      "end_sec": 2944.8,
+      "text": "you lose 6% of your capital.",
+      "confidence": 0.9890137
+    },
+    {
+      "start_sec": 2945.18,
+      "end_sec": 2948.62,
+      "text": "This is too much. But if you have a 10 or 15%",
+      "confidence": 0.977478
+    },
+    {
+      "start_sec": 2948.62,
+      "end_sec": 2953.12,
+      "text": "position and it's getting 20% against you out of nowhere for whatever reason,",
+      "confidence": 0.9408992
+    },
+    {
+      "start_sec": 2953.42,
+      "end_sec": 2956.96,
+      "text": "then you lose only, you know, two or 3% of your capital.",
+      "confidence": 0.9852498
+    },
+    {
+      "start_sec": 2957.26,
+      "end_sec": 2963.705,
+      "text": "And that's okay. But it's it's it's big, but that's okay. Right? This is one of the reasons why 10 to 15%.",
+      "confidence": 0.9627907
+    },
+    {
+      "start_sec": 2964.485,
+      "end_sec": 2966.345,
+      "text": "So... And then this is important.",
+      "confidence": 0.9091797
+    },
+    {
+      "start_sec": 2967.045,
+      "end_sec": 2967.785,
+      "text": "You know?",
+      "confidence": 0.9049072
+    },
+    {
+      "start_sec": 2968.725,
+      "end_sec": 2969.765,
+      "text": "Buy 50%",
+      "confidence": 0.9199219
+    },
+    {
+      "start_sec": 2969.765,
+      "end_sec": 2970.985,
+      "text": "direct at the entry,",
+      "confidence": 0.9447632
+    },
+    {
+      "start_sec": 2971.36,
+      "end_sec": 2972.72,
+      "text": "by another 30%,",
+      "confidence": 0.96118164
+    },
+    {
+      "start_sec": 2972.72,
+      "end_sec": 2974.98,
+      "text": "one or 2% higher, and by the remaining,",
+      "confidence": 0.988678
+    },
+    {
+      "start_sec": 2975.6,
+      "end_sec": 2977.06,
+      "text": "one or 2%,",
+      "confidence": 0.9975586
+    },
+    {
+      "start_sec": 2977.52,
+      "end_sec": 2984.58,
+      "text": "another one or 2% higher. That's not true. It it means, it must it must be by the remaining 20%,",
+      "confidence": 0.971814
+    },
+    {
+      "start_sec": 2984.72,
+      "end_sec": 2988.075,
+      "text": "another one or 2% higher. I will correct that lie... Later.",
+      "confidence": 0.9569425
+    },
+    {
+      "start_sec": 2989.335,
+      "end_sec": 2992.055,
+      "text": "So... And let me explain that and how I'm doing that.",
+      "confidence": 0.9814453
+    },
+    {
+      "start_sec": 2992.535,
+      "end_sec": 2995.835,
+      "text": "Let's take, I don't know, Palantir as a good example.",
+      "confidence": 0.982316
+    },
+    {
+      "start_sec": 2997.175,
+      "end_sec": 2998.955,
+      "text": "So when I buy into Palantir,",
+      "confidence": 0.99487305
+    },
+    {
+      "start_sec": 2999.575,
+      "end_sec": 3002.635,
+      "text": "and I have a stop buy order here",
+      "confidence": 0.9844971
+    },
+    {
+      "start_sec": 3002.96,
+      "end_sec": 3004.66,
+      "text": "at $99.85,",
+      "confidence": 0.98703
+    },
+    {
+      "start_sec": 3005.52,
+      "end_sec": 3007.22,
+      "text": "I buy 50%",
+      "confidence": 0.9978841
+    },
+    {
+      "start_sec": 3007.44,
+      "end_sec": 3008.66,
+      "text": "of the planned position",
+      "confidence": 0.9000244
+    },
+    {
+      "start_sec": 3009.2,
+      "end_sec": 3013.54,
+      "text": "here. So that means when I buy a 10 per... Or I want to buy a 10% position,",
+      "confidence": 0.95944554
+    },
+    {
+      "start_sec": 3014.24,
+      "end_sec": 3015.7,
+      "text": "I buy 5%",
+      "confidence": 0.9929199
+    },
+    {
+      "start_sec": 3016.265,
+      "end_sec": 3020.125,
+      "text": "here. 5% of my overall trading capital, I buy here.",
+      "confidence": 0.9540771
+    },
+    {
+      "start_sec": 3020.665,
+      "end_sec": 3028.445,
+      "text": "So... And then I'm looking at, you know, I'm I'm I'm placing another order one or one and a half percent higher",
+      "confidence": 0.96414465
+    },
+    {
+      "start_sec": 3028.85,
+      "end_sec": 3036.15,
+      "text": "to buy another 30%, and then I buy the rest another one or one and a half percent, maybe 2%",
+      "confidence": 0.9888428
+    },
+    {
+      "start_sec": 3036.29,
+      "end_sec": 3036.79,
+      "text": "higher.",
+      "confidence": 0.79418945
+    },
+    {
+      "start_sec": 3037.17,
+      "end_sec": 3037.67,
+      "text": "And",
+      "confidence": 0.9892578
+    },
+    {
+      "start_sec": 3038.45,
+      "end_sec": 3038.77,
+      "text": "where,",
+      "confidence": 0.56359863
+    },
+    {
+      "start_sec": 3039.25,
+      "end_sec": 3043.35,
+      "text": "when is the time when I use 1%? When is the time when I use 2%?",
+      "confidence": 0.9614029
+    },
+    {
+      "start_sec": 3044.705,
+      "end_sec": 3048.405,
+      "text": "On a story stock like MVST, which is moving very fast,",
+      "confidence": 0.9591472
+    },
+    {
+      "start_sec": 3048.785,
+      "end_sec": 3051.285,
+      "text": "I use a distance of maybe 2%.",
+      "confidence": 0.9850202
+    },
+    {
+      "start_sec": 3051.665,
+      "end_sec": 3056.485,
+      "text": "On a stock like Palantir, which is a normal stock, I use maybe 1.5%.",
+      "confidence": 0.9863194
+    },
+    {
+      "start_sec": 3056.84,
+      "end_sec": 3059.82,
+      "text": "And on stocks that are moving a little bit slower,",
+      "confidence": 0.9491455
+    },
+    {
+      "start_sec": 3060.28,
+      "end_sec": 3061.5,
+      "text": "like Rhythm Pharmaceuticals",
+      "confidence": 0.9463704
+    },
+    {
+      "start_sec": 3061.8,
+      "end_sec": 3064.38,
+      "text": "as an example, I use 1%.",
+      "confidence": 0.9681193
+    },
+    {
+      "start_sec": 3065.08,
+      "end_sec": 3069.1,
+      "text": "So it really depends on the stock how fast is the stock moving.",
+      "confidence": 0.9385329
+    },
+    {
+      "start_sec": 3069.595,
+      "end_sec": 3072.655,
+      "text": "But what is the reason why I'm using this entry technique?",
+      "confidence": 0.9864391
+    },
+    {
+      "start_sec": 3072.955,
+      "end_sec": 3073.935,
+      "text": "It's very simple.",
+      "confidence": 0.98380536
+    },
+    {
+      "start_sec": 3074.795,
+      "end_sec": 3076.175,
+      "text": "Aeva is a good example.",
+      "confidence": 0.9398438
+    },
+    {
+      "start_sec": 3077.515,
+      "end_sec": 3085.055,
+      "text": "So if you have a stock like Aeva, which is just breaking out a little bit here, you can see that, you know, it's going higher to 2%,",
+      "confidence": 0.9411316
+    },
+    {
+      "start_sec": 3086.21,
+      "end_sec": 3089.43,
+      "text": "than you maybe have not a full position on if it reverses",
+      "confidence": 0.95377606
+    },
+    {
+      "start_sec": 3089.81,
+      "end_sec": 3098.55,
+      "text": "and you will get stopped out. That's very simple. Right? So if you if you buy here, for example, and Iva has a momentum stock, that means 2%",
+      "confidence": 0.9216265
+    },
+    {
+      "start_sec": 3099.025,
+      "end_sec": 3102.565,
+      "text": "at distance between the buys. So you you make the first buy here",
+      "confidence": 0.95130336
+    },
+    {
+      "start_sec": 3103.025,
+      "end_sec": 3106.485,
+      "text": "by 50% of the plan position, then you say, okay. Let's buy another,",
+      "confidence": 0.9003906
+    },
+    {
+      "start_sec": 3107.425,
+      "end_sec": 3107.925,
+      "text": "another,",
+      "confidence": 0.9802246
+    },
+    {
+      "start_sec": 3109.425,
+      "end_sec": 3111.605,
+      "text": "another 30% when it goes higher,",
+      "confidence": 0.977946
+    },
+    {
+      "start_sec": 3112.12,
+      "end_sec": 3112.86,
+      "text": "2%.",
+      "confidence": 0.9859619
+    },
+    {
+      "start_sec": 3112.92,
+      "end_sec": 3118.62,
+      "text": "So in that case, I'm not sure if, you know, it's exactly around the high. So maybe you will get,",
+      "confidence": 0.9421509
+    },
+    {
+      "start_sec": 3119.16,
+      "end_sec": 3134.975,
+      "text": "stopped into the the second part of your position. Maybe not. Right? So and this is the this is the reason why I'm using this entry techniques because you have a lot of failed breakouts. That's part of the game. You cannot change that. But you can you you can,",
+      "confidence": 0.9305338
+    },
+    {
+      "start_sec": 3135.915,
+      "end_sec": 3138.735,
+      "text": "apply risk management tactics or buying tactics",
+      "confidence": 0.98646766
+    },
+    {
+      "start_sec": 3139.06,
+      "end_sec": 3139.8,
+      "text": "to avoid",
+      "confidence": 0.9995117
+    },
+    {
+      "start_sec": 3140.1,
+      "end_sec": 3145.16,
+      "text": "to have too big losses. And that's one of the reasons why I'm buying into a stock like that.",
+      "confidence": 0.9683131
+    },
+    {
+      "start_sec": 3146.34,
+      "end_sec": 3146.66,
+      "text": "So,",
+      "confidence": 0.9885254
+    },
+    {
+      "start_sec": 3147.86,
+      "end_sec": 3154.12,
+      "text": "yeah, follow-up orders, you can do that. I can do that with my broker. I can also place automatically a stop loss,",
+      "confidence": 0.96387464
+    },
+    {
+      "start_sec": 3154.465,
+      "end_sec": 3155.665,
+      "text": "and, I'm using,",
+      "confidence": 0.9715169
+    },
+    {
+      "start_sec": 3156.065,
+      "end_sec": 3159.365,
+      "text": "7% stop losses in the most stocks,",
+      "confidence": 0.9633789
+    },
+    {
+      "start_sec": 3159.985,
+      "end_sec": 3160.305,
+      "text": "but,",
+      "confidence": 0.9790039
+    },
+    {
+      "start_sec": 3160.785,
+      "end_sec": 3163.685,
+      "text": "some story stocks are placed at 10% stop loss.",
+      "confidence": 0.9186198
+    },
+    {
+      "start_sec": 3163.985,
+      "end_sec": 3167.5,
+      "text": "And, you know, I try always to have the smallest",
+      "confidence": 0.9984375
+    },
+    {
+      "start_sec": 3167.88,
+      "end_sec": 3172.7,
+      "text": "stop loss. But one thing is so important. A lot of traders are not understanding",
+      "confidence": 0.9304199
+    },
+    {
+      "start_sec": 3173.16,
+      "end_sec": 3174.86,
+      "text": "that for whatever reason.",
+      "confidence": 0.95751953
+    },
+    {
+      "start_sec": 3176.2,
+      "end_sec": 3179.02,
+      "text": "You don't want... Or you want to have a feeling",
+      "confidence": 0.9628662
+    },
+    {
+      "start_sec": 3179.645,
+      "end_sec": 3184.705,
+      "text": "for the normal move of a stock. So if you buy into Palantir here as an example",
+      "confidence": 0.91848576
+    },
+    {
+      "start_sec": 3185.085,
+      "end_sec": 3200.06,
+      "text": "and you say, yeah, you know, I I wanna have a 1% stop loss here. This is too small, you know, you will get stopped out if the stock is just moving a little bit against you and that's that's it. So what you want to do is you wanna place a stop loss here inside the base.",
+      "confidence": 0.94272375
+    },
+    {
+      "start_sec": 3200.36,
+      "end_sec": 3201.98,
+      "text": "So that means in that case,",
+      "confidence": 0.95454913
+    },
+    {
+      "start_sec": 3202.52,
+      "end_sec": 3218.595,
+      "text": "you look at that and you say, okay, if the stock is moving 5% against me, I'm out. So... And when I buy more with my buying tactic, of course, my stop loss will also be a little bit higher in that case. I will adjust my stop loss so that still my,",
+      "confidence": 0.97552603
+    },
+    {
+      "start_sec": 3219.455,
+      "end_sec": 3222.195,
+      "text": "my my risk or the risk is still the same.",
+      "confidence": 0.9707031
+    },
+    {
+      "start_sec": 3223.2,
+      "end_sec": 3232.1,
+      "text": "So... Because when I buy multiple times on the way up, of course, my average entry price will will rise a little bit. And, you know, when when I buy into MVST, as an example,",
+      "confidence": 0.9870536
+    },
+    {
+      "start_sec": 3232.48,
+      "end_sec": 3234.02,
+      "text": "and I started buying here,",
+      "confidence": 0.9640137
+    },
+    {
+      "start_sec": 3234.32,
+      "end_sec": 3249.53,
+      "text": "in that case, you know, I have to place probably a 6% or maybe a 7% stop loss to not get stopped out very quickly if the stock just moves a little bit against me. So that's why I'm using, you know, on most trades five to 10%",
+      "confidence": 0.9742076
+    },
+    {
+      "start_sec": 3250.07,
+      "end_sec": 3250.57,
+      "text": "depends",
+      "confidence": 0.3125
+    },
+    {
+      "start_sec": 3250.95,
+      "end_sec": 3256.41,
+      "text": "on. But the problem is if you use a higher stop loss, like 15 or 20%,",
+      "confidence": 0.956131
+    },
+    {
+      "start_sec": 3256.63,
+      "end_sec": 3258.89,
+      "text": "then your risk reward ratio is getting",
+      "confidence": 0.9421038
+    },
+    {
+      "start_sec": 3259.27,
+      "end_sec": 3261.45,
+      "text": "getting not very attractive anymore.",
+      "confidence": 0.91381836
+    },
+    {
+      "start_sec": 3261.915,
+      "end_sec": 3269.695,
+      "text": "Right? And that's one of the reasons, especially when it comes to story stocks. I mean, let... Let's have a look here at, I don't know, NAK or something like that.",
+      "confidence": 0.9830677
+    },
+    {
+      "start_sec": 3269.995,
+      "end_sec": 3276.075,
+      "text": "So... And if I look here at this pattern and I look at, where where should I place my stop loss, maybe 15%",
+      "confidence": 0.9840884
+    },
+    {
+      "start_sec": 3276.075,
+      "end_sec": 3276.575,
+      "text": "away,",
+      "confidence": 0.9399414
+    },
+    {
+      "start_sec": 3276.98,
+      "end_sec": 3279.8,
+      "text": "that's that's not not attractive. Right? The stock",
+      "confidence": 0.99557495
+    },
+    {
+      "start_sec": 3280.26,
+      "end_sec": 3282.52,
+      "text": "the stock needs to to move a lot",
+      "confidence": 0.9937134
+    },
+    {
+      "start_sec": 3282.9,
+      "end_sec": 3284.44,
+      "text": "to offer me an attractive",
+      "confidence": 0.9986328
+    },
+    {
+      "start_sec": 3284.82,
+      "end_sec": 3289.08,
+      "text": "risk reward ratio. That's one of the reasons why I I limit myself",
+      "confidence": 0.99459136
+    },
+    {
+      "start_sec": 3289.445,
+      "end_sec": 3299.225,
+      "text": "to five to 10% so that I do not trade these type of stocks where I have to place a wide stop loss and I do not get an attractive risk reward ratio.",
+      "confidence": 0.96861684
+    },
+    {
+      "start_sec": 3300.725,
+      "end_sec": 3307.73,
+      "text": "So don't buy the stock if it's more if it's up more than 5% above the breakup point. So don't chase stocks. That's important.",
+      "confidence": 0.9623718
+    },
+    {
+      "start_sec": 3308.03,
+      "end_sec": 3330.395,
+      "text": "Let's have a look at Palantir again. So if this year is a breakup point, this is the ideal buy point. If the stock is up 5% or more, then you don't wanna buy that. What is the reason? Very simple. You cannot place a good stop loss in that case. You have to place a 10% stop loss. And that means, you know, as soon as the position is moving against you a little bit, your position is underwater.",
+      "confidence": 0.97746074
+    },
+    {
+      "start_sec": 3331.08,
+      "end_sec": 3334.54,
+      "text": "And positions underwater does not feel very good. Right?",
+      "confidence": 0.9671767
+    },
+    {
+      "start_sec": 3335,
+      "end_sec": 3337.08,
+      "text": "So that's one of the reasons. So and then,",
+      "confidence": 0.91642255
+    },
+    {
+      "start_sec": 3337.56,
+      "end_sec": 3343.34,
+      "text": "you know, add only to existing positions if the if if the position is at least 20% in profit.",
+      "confidence": 0.9523412
+    },
+    {
+      "start_sec": 3343.655,
+      "end_sec": 3347.435,
+      "text": "This is also important. And do that only after three weeks' consolidation.",
+      "confidence": 0.9112854
+    },
+    {
+      "start_sec": 3349.415,
+      "end_sec": 3351.515,
+      "text": "I see that too often",
+      "confidence": 0.91875
+    },
+    {
+      "start_sec": 3352.055,
+      "end_sec": 3355.515,
+      "text": "that traders are adding too fast to their positions",
+      "confidence": 0.94504124
+    },
+    {
+      "start_sec": 3355.91,
+      "end_sec": 3365.61,
+      "text": "and then they increase the average entry price too much, and then they get stopped out. So maybe maybe let's look at CLS as an example, Celestica, because it was a position I was holding",
+      "confidence": 0.9497164
+    },
+    {
+      "start_sec": 3365.91,
+      "end_sec": 3367.29,
+      "text": "for a little bit longer,",
+      "confidence": 0.9911133
+    },
+    {
+      "start_sec": 3367.59,
+      "end_sec": 3368.73,
+      "text": "here in this uptrend.",
+      "confidence": 0.9934082
+    },
+    {
+      "start_sec": 3369.75,
+      "end_sec": 3370.89,
+      "text": "So, I mean,",
+      "confidence": 0.92578125
+    },
+    {
+      "start_sec": 3371.735,
+      "end_sec": 3375.835,
+      "text": "you can see that here. Here is a first pullback, and maybe maybe",
+      "confidence": 0.8953388
+    },
+    {
+      "start_sec": 3376.375,
+      "end_sec": 3377.195,
+      "text": "this wasn't,",
+      "confidence": 0.9020996
+    },
+    {
+      "start_sec": 3377.575,
+      "end_sec": 3385.26,
+      "text": "a good idea to to add, to your position, but very small very small. Right? So because in that moment, the stock was only up,",
+      "confidence": 0.9375
+    },
+    {
+      "start_sec": 3385.98,
+      "end_sec": 3386.8,
+      "text": "10%.",
+      "confidence": 0.99560547
+    },
+    {
+      "start_sec": 3387.34,
+      "end_sec": 3391.44,
+      "text": "So in in in... What you want to make sure is that you only add two positions",
+      "confidence": 0.932531
+    },
+    {
+      "start_sec": 3391.74,
+      "end_sec": 3393.6,
+      "text": "which are making big moves.",
+      "confidence": 0.9481934
+    },
+    {
+      "start_sec": 3394.3,
+      "end_sec": 3395.44,
+      "text": "So that means",
+      "confidence": 0.9954427
+    },
+    {
+      "start_sec": 3395.74,
+      "end_sec": 3397.52,
+      "text": "you want to wait until",
+      "confidence": 0.9748047
+    },
+    {
+      "start_sec": 3397.9,
+      "end_sec": 3399.2,
+      "text": "a serious move",
+      "confidence": 0.99365234
+    },
+    {
+      "start_sec": 3399.765,
+      "end_sec": 3410.025,
+      "text": "is, in the stock. So... And this is a threshold of 20% for me, and I I I use the the same rule here from William O'Neil. So in in that case, you can see,",
+      "confidence": 0.9486468
+    },
+    {
+      "start_sec": 3410.965,
+      "end_sec": 3413.045,
+      "text": "Celestica was up 35%",
+      "confidence": 0.9941203
+    },
+    {
+      "start_sec": 3413.045,
+      "end_sec": 3422.96,
+      "text": "in just a couple of weeks. In that moment, you wanna hold on to stock a little bit longer. It's a position trade. It's a canceling stock, etcetera. And then you have the first pullback, and then you can buy,",
+      "confidence": 0.9614024
+    },
+    {
+      "start_sec": 3423.66,
+      "end_sec": 3431.175,
+      "text": "then you can add to your position. And in that in that case, it doesn't matter so much if you add here as an example or if you add here,",
+      "confidence": 0.97600913
+    },
+    {
+      "start_sec": 3432.515,
+      "end_sec": 3436.355,
+      "text": "but you can add to your position because now it's up 20%",
+      "confidence": 0.97959393
+    },
+    {
+      "start_sec": 3436.355,
+      "end_sec": 3438.855,
+      "text": "in just a couple of weeks and then you want to,",
+      "confidence": 0.9467995
+    },
+    {
+      "start_sec": 3439.235,
+      "end_sec": 3447.56,
+      "text": "add to your position all the way up. But, you know, you don't want to buy or you don't wanna add to a position which is up only 8%",
+      "confidence": 0.96868265
+    },
+    {
+      "start_sec": 3448.18,
+      "end_sec": 3451.7,
+      "text": "and then it's maybe going against you and and and,",
+      "confidence": 0.95388186
+    },
+    {
+      "start_sec": 3452.18,
+      "end_sec": 3453.96,
+      "text": "you will get stopped out. Right?",
+      "confidence": 0.9637044
+    },
+    {
+      "start_sec": 3454.42,
+      "end_sec": 3461.765,
+      "text": "Let's have a look at this here. Right? If you if you add here to your position and then it turns around, you will get stopped out too fast.",
+      "confidence": 0.96548355
+    },
+    {
+      "start_sec": 3462.465,
+      "end_sec": 3465.445,
+      "text": "So, that's one of the reasons why you only want",
+      "confidence": 0.9994141
+    },
+    {
+      "start_sec": 3465.745,
+      "end_sec": 3468.805,
+      "text": "to add to your positions when the stock is is really,",
+      "confidence": 0.96732956
+    },
+    {
+      "start_sec": 3469.185,
+      "end_sec": 3474.165,
+      "text": "is is really, running. Right? It's it's... It shows you a big profit like 20%,",
+      "confidence": 0.9522217
+    },
+    {
+      "start_sec": 3474.38,
+      "end_sec": 3476.38,
+      "text": "and you wanna hold it for 100%",
+      "confidence": 0.9642625
+    },
+    {
+      "start_sec": 3476.38,
+      "end_sec": 3476.88,
+      "text": "profit",
+      "confidence": 0.9921875
+    },
+    {
+      "start_sec": 3477.34,
+      "end_sec": 3478,
+      "text": "or maybe",
+      "confidence": 0.9248047
+    },
+    {
+      "start_sec": 3478.3,
+      "end_sec": 3482.24,
+      "text": "longer. And only add 10 or 20% of the existing position.",
+      "confidence": 0.94586736
+    },
+    {
+      "start_sec": 3482.7,
+      "end_sec": 3490.525,
+      "text": "Another big mistake. I see that traders are doing that over and over again. They they they buy 500 shares and add another 250",
+      "confidence": 0.9771118
+    },
+    {
+      "start_sec": 3490.525,
+      "end_sec": 3492.145,
+      "text": "or add another 500.",
+      "confidence": 0.9595032
+    },
+    {
+      "start_sec": 3492.365,
+      "end_sec": 3503.16,
+      "text": "That is increasing your average enterprise too much. If you buy 500 shares, you should only, add another 50 or maybe add another 100. And one of the things, and this is very important,",
+      "confidence": 0.9705308
+    },
+    {
+      "start_sec": 3503.94,
+      "end_sec": 3528.02,
+      "text": "you don't want to add to your position if the stock is up a couple of months. No. You want to you you want to do that in the in the in the first couple of weeks after the breakout or maybe in the first, you know, eight, twelve weeks after the breakout. That's important. You don't wanna buy or you don't wanna do that here as an example or, you know, when when the stock is is up too much. I think I added here a little bit, but in hindsight, it was a mistake.",
+      "confidence": 0.9757436
+    },
+    {
+      "start_sec": 3528.48,
+      "end_sec": 3534.98,
+      "text": "So you you you want to really add the most here in the in the early stages of the uptrend.",
+      "confidence": 0.98842776
+    },
+    {
+      "start_sec": 3535.28,
+      "end_sec": 3536.1,
+      "text": "That's important.",
+      "confidence": 0.99975586
+    },
+    {
+      "start_sec": 3537.52,
+      "end_sec": 3544.315,
+      "text": "Alright. Key sell rules, and I don't want to go through all of them, but just repeat some of them. You know? Stop loss selling rule,",
+      "confidence": 0.94320446
+    },
+    {
+      "start_sec": 3544.775,
+      "end_sec": 3547.515,
+      "text": "sell every stock that is 7% or more",
+      "confidence": 0.99279785
+    },
+    {
+      "start_sec": 3548.215,
+      "end_sec": 3556.555,
+      "text": "below your buy point. Have a hard stop in the market. It takes you out. I have been in situations where the stock was 20 or 30% down.",
+      "confidence": 0.94481117
+    },
+    {
+      "start_sec": 3557,
+      "end_sec": 3560.54,
+      "text": "Out of nowhere. Right? Summit comes into my mind here, SMMT,",
+      "confidence": 0.9549598
+    },
+    {
+      "start_sec": 3561.72,
+      "end_sec": 3562.2,
+      "text": "which,",
+      "confidence": 0.95996094
+    },
+    {
+      "start_sec": 3562.6,
+      "end_sec": 3564.2,
+      "text": "broke down 20%",
+      "confidence": 0.9750163
+    },
+    {
+      "start_sec": 3564.2,
+      "end_sec": 3570.2,
+      "text": "or 30, I think, in one day here as an example. You know? It was down 36%,",
+      "confidence": 0.93779916
+    },
+    {
+      "start_sec": 3570.2,
+      "end_sec": 3582.645,
+      "text": "and it was it it was on hold. So that means you want to have a stop stop in the market if this thing would go down 50% in one day. Right? You always wanna have a hard stop. That's important.",
+      "confidence": 0.970191
+    },
+    {
+      "start_sec": 3583.2,
+      "end_sec": 3588.1,
+      "text": "Move your stop loss to breakeven if your position shows you a two time initial profit.",
+      "confidence": 0.92240393
+    },
+    {
+      "start_sec": 3588.64,
+      "end_sec": 3589.62,
+      "text": "Very good example,",
+      "confidence": 0.95060223
+    },
+    {
+      "start_sec": 3589.92,
+      "end_sec": 3590.42,
+      "text": "MVST.",
+      "confidence": 0.9353841
+    },
+    {
+      "start_sec": 3592.4,
+      "end_sec": 3593.28,
+      "text": "So I had,",
+      "confidence": 0.8380534
+    },
+    {
+      "start_sec": 3593.76,
+      "end_sec": 3596.82,
+      "text": "I think a 6% stop loss, something like that here,",
+      "confidence": 0.92731935
+    },
+    {
+      "start_sec": 3597.525,
+      "end_sec": 3601.705,
+      "text": "six or 7% stop loss. If the stock is up 12%",
+      "confidence": 0.9485529
+    },
+    {
+      "start_sec": 3601.845,
+      "end_sec": 3604.505,
+      "text": "and in that case it was up more 20%,",
+      "confidence": 0.9085422
+    },
+    {
+      "start_sec": 3604.725,
+      "end_sec": 3610.405,
+      "text": "you want to move your stop loss to break even. In that case, I think it's 183",
+      "confidence": 0.93158317
+    },
+    {
+      "start_sec": 3610.405,
+      "end_sec": 3611.545,
+      "text": "in my case because",
+      "confidence": 0.9053955
+    },
+    {
+      "start_sec": 3612.98,
+      "end_sec": 3615.4,
+      "text": "I bought multiple times in the stock here.",
+      "confidence": 0.8904724
+    },
+    {
+      "start_sec": 3615.86,
+      "end_sec": 3626.76,
+      "text": "So I have my stop now on break even. And you want to do the same thing with Palantir and I already did that and I will do the same thing with Solenu etcetera. So you know, you want to",
+      "confidence": 0.9087244
+    },
+    {
+      "start_sec": 3627.425,
+      "end_sec": 3629.045,
+      "text": "stick to the rules. That's important.",
+      "confidence": 0.9752197
+    },
+    {
+      "start_sec": 3629.345,
+      "end_sec": 3634.165,
+      "text": "You move your stop loss to minus 5%. So that means from 7% to 5%",
+      "confidence": 0.9354411
+    },
+    {
+      "start_sec": 3634.385,
+      "end_sec": 3636.005,
+      "text": "if the stock is showing you",
+      "confidence": 0.9267578
+    },
+    {
+      "start_sec": 3636.385,
+      "end_sec": 3640.885,
+      "text": "a profit of two times your initial risk. So that's very important.",
+      "confidence": 0.9532878
+    },
+    {
+      "start_sec": 3643.49,
+      "end_sec": 3646.71,
+      "text": "I think it's it's wrong here, right? It should be one.",
+      "confidence": 0.94640005
+    },
+    {
+      "start_sec": 3647.01,
+      "end_sec": 3650.15,
+      "text": "Move your stop loss if the stock shows you a profit of,",
+      "confidence": 0.9819946
+    },
+    {
+      "start_sec": 3650.61,
+      "end_sec": 3659.285,
+      "text": "two times your initial risk. Shows you a profit of two times your initial risk. Yeah. Normally 7%, right? Yeah. It must be one. I will correct that afterwards.",
+      "confidence": 0.92693037
+    },
+    {
+      "start_sec": 3660.625,
+      "end_sec": 3661.125,
+      "text": "So,",
+      "confidence": 0.86450195
+    },
+    {
+      "start_sec": 3661.745,
+      "end_sec": 3664.885,
+      "text": "one time. So if the stock is up seven percent,",
+      "confidence": 0.84367675
+    },
+    {
+      "start_sec": 3665.345,
+      "end_sec": 3674.46,
+      "text": "move your stop loss a little bit higher. So in this volume, number four is very important for me. If a stock reenters the base for three or 4%, sell 50%",
+      "confidence": 0.9243007
+    },
+    {
+      "start_sec": 3674.76,
+      "end_sec": 3676.7,
+      "text": "and buy back as the stock,",
+      "confidence": 0.78312176
+    },
+    {
+      "start_sec": 3677.32,
+      "end_sec": 3681.02,
+      "text": "has another re breakout. Give weak stocks. No room.",
+      "confidence": 0.89716256
+    },
+    {
+      "start_sec": 3681.4,
+      "end_sec": 3688.055,
+      "text": "Oh my god. I should really correct this article. Sorry for that. So what what does it mean? So let... Let's assume Palantir",
+      "confidence": 0.9295088
+    },
+    {
+      "start_sec": 3688.355,
+      "end_sec": 3688.755,
+      "text": "will,",
+      "confidence": 0.94555664
+    },
+    {
+      "start_sec": 3689.155,
+      "end_sec": 3689.475,
+      "text": "will,",
+      "confidence": 0.96313477
+    },
+    {
+      "start_sec": 3690.115,
+      "end_sec": 3692.055,
+      "text": "not following through here on the upside,",
+      "confidence": 0.9624372
+    },
+    {
+      "start_sec": 3692.595,
+      "end_sec": 3695.895,
+      "text": "but reenters the base. So that means you you bought here",
+      "confidence": 0.96647877
+    },
+    {
+      "start_sec": 3696.355,
+      "end_sec": 3699.495,
+      "text": "and you have your average enterprise maybe at 120,",
+      "confidence": 0.9583876
+    },
+    {
+      "start_sec": 3700.08,
+      "end_sec": 3701.2,
+      "text": "120¢,",
+      "confidence": 0.82836914
+    },
+    {
+      "start_sec": 3701.2,
+      "end_sec": 3706.58,
+      "text": "and then the stock is coming back three or 4% into the base, then you wanna sell 50%.",
+      "confidence": 0.9732802
+    },
+    {
+      "start_sec": 3706.8,
+      "end_sec": 3709.86,
+      "text": "And, yes, that's hurting or that hurts because",
+      "confidence": 0.9107666
+    },
+    {
+      "start_sec": 3710.24,
+      "end_sec": 3719.635,
+      "text": "very often these stocks reverse a little bit. But what you want to avoid is you want to avoid to be in a trade which is going really against you",
+      "confidence": 0.9336263
+    },
+    {
+      "start_sec": 3719.935,
+      "end_sec": 3723.475,
+      "text": "and then you have a full stop out. That's one of the reasons why I sell",
+      "confidence": 0.95843506
+    },
+    {
+      "start_sec": 3724.335,
+      "end_sec": 3725.155,
+      "text": "50%",
+      "confidence": 0.99560547
+    },
+    {
+      "start_sec": 3725.455,
+      "end_sec": 3730.73,
+      "text": "if the stock is coming back into the base very quickly. I do not have a good example here.",
+      "confidence": 0.9842337
+    },
+    {
+      "start_sec": 3731.35,
+      "end_sec": 3732.73,
+      "text": "Maybe we... WGS,",
+      "confidence": 0.8439128
+    },
+    {
+      "start_sec": 3733.43,
+      "end_sec": 3733.93,
+      "text": "GNDX.",
+      "confidence": 0.78790283
+    },
+    {
+      "start_sec": 3736.07,
+      "end_sec": 3736.97,
+      "text": "Was it here?",
+      "confidence": 0.9732259
+    },
+    {
+      "start_sec": 3737.99,
+      "end_sec": 3740.33,
+      "text": "Was it here? I'm not sure exactly,",
+      "confidence": 0.9643206
+    },
+    {
+      "start_sec": 3741.155,
+      "end_sec": 3747.495,
+      "text": "where it was. I think maybe it was here or something like that. But you can see that, you know. If the stock breaks out,",
+      "confidence": 0.94708985
+    },
+    {
+      "start_sec": 3747.875,
+      "end_sec": 3753.575,
+      "text": "let's say this one here was a breakout point. If it breaks out and it comes back here into the range,",
+      "confidence": 0.96422756
+    },
+    {
+      "start_sec": 3754.04,
+      "end_sec": 3757.66,
+      "text": "and maybe you have your buy point here and it comes back... What is",
+      "confidence": 0.97865516
+    },
+    {
+      "start_sec": 3757.96,
+      "end_sec": 3759.5,
+      "text": "it? Here, 3%,",
+      "confidence": 0.75008136
+    },
+    {
+      "start_sec": 3759.88,
+      "end_sec": 3763.58,
+      "text": "4% into the range, you can already cut 50%",
+      "confidence": 0.9869792
+    },
+    {
+      "start_sec": 3763.88,
+      "end_sec": 3764.7,
+      "text": "off the position",
+      "confidence": 0.8746745
+    },
+    {
+      "start_sec": 3765.16,
+      "end_sec": 3767.18,
+      "text": "before it reaches your initial,",
+      "confidence": 0.97441405
+    },
+    {
+      "start_sec": 3767.885,
+      "end_sec": 3771.745,
+      "text": "stop loss point which is 7% or 10% or something like that.",
+      "confidence": 0.94435626
+    },
+    {
+      "start_sec": 3772.285,
+      "end_sec": 3775.505,
+      "text": "So you want to cut your losers as fast as possible.",
+      "confidence": 0.98743784
+    },
+    {
+      "start_sec": 3777.005,
+      "end_sec": 3779.025,
+      "text": "So then, this is a rule,",
+      "confidence": 0.93534344
+    },
+    {
+      "start_sec": 3779.325,
+      "end_sec": 3780.305,
+      "text": "which you can",
+      "confidence": 0.9980469
+    },
+    {
+      "start_sec": 3780.765,
+      "end_sec": 3785.7,
+      "text": "use. I'm using that not so often to be honest. Sell your profits 25%,",
+      "confidence": 0.9429466
+    },
+    {
+      "start_sec": 3786.34,
+      "end_sec": 3789.94,
+      "text": "from from the base. No. Sell your stocks at 25%",
+      "confidence": 0.9727214
+    },
+    {
+      "start_sec": 3789.94,
+      "end_sec": 3793.32,
+      "text": "profits from the base. So this is a tip... Typical cancel,",
+      "confidence": 0.86518997
+    },
+    {
+      "start_sec": 3793.78,
+      "end_sec": 3799.805,
+      "text": "rule. But to be honest, I'm not using that too often. I'm using that only for for slow movers.",
+      "confidence": 0.9713327
+    },
+    {
+      "start_sec": 3800.265,
+      "end_sec": 3807.545,
+      "text": "If I discover that, for example, Palantir will be a slow mover and the slow mover means the stock is not up 20%",
+      "confidence": 0.9605306
+    },
+    {
+      "start_sec": 3807.545,
+      "end_sec": 3813.41,
+      "text": "or more in two or three weeks, then I will probably sell the most into the strength and take profits.",
+      "confidence": 0.97506106
+    },
+    {
+      "start_sec": 3813.79,
+      "end_sec": 3815.01,
+      "text": "Because, you know, remember,",
+      "confidence": 0.9589844
+    },
+    {
+      "start_sec": 3815.39,
+      "end_sec": 3817.33,
+      "text": "when the market is up fifty days,",
+      "confidence": 0.9941755
+    },
+    {
+      "start_sec": 3817.79,
+      "end_sec": 3824.85,
+      "text": "usually the trend ends. And that means, you know, stocks will have larger pullbacks or go into correction or anything like that.",
+      "confidence": 0.95986104
+    },
+    {
+      "start_sec": 3825.255,
+      "end_sec": 3828.955,
+      "text": "So in in that case, it's maybe a good idea to take profits",
+      "confidence": 0.98270357
+    },
+    {
+      "start_sec": 3829.335,
+      "end_sec": 3831.275,
+      "text": "in a couple of stocks and sell,",
+      "confidence": 0.99455917
+    },
+    {
+      "start_sec": 3831.655,
+      "end_sec": 3840.075,
+      "text": "some stocks. And when you have a slow mover, I don't know, like FT and T, like, forty net or maybe Crowdstrike is also an example.",
+      "confidence": 0.8859769
+    },
+    {
+      "start_sec": 3840.56,
+      "end_sec": 3845.3,
+      "text": "And, you you buy, for example, here, and you can see the stock is up,",
+      "confidence": 0.9702474
+    },
+    {
+      "start_sec": 3846,
+      "end_sec": 3853.68,
+      "text": "you know, just 30 percent in in, a couple couple of days here. I'm not sure what is it here. 30%",
+      "confidence": 0.9651344
+    },
+    {
+      "start_sec": 3853.68,
+      "end_sec": 3854.9,
+      "text": "in in three weeks.",
+      "confidence": 0.99243164
+    },
+    {
+      "start_sec": 3855.205,
+      "end_sec": 3858.105,
+      "text": "So this is not meeting the 20% threshold",
+      "confidence": 0.9875488
+    },
+    {
+      "start_sec": 3858.405,
+      "end_sec": 3860.265,
+      "text": "to hold the stock a little bit longer.",
+      "confidence": 0.973999
+    },
+    {
+      "start_sec": 3860.645,
+      "end_sec": 3868.505,
+      "text": "So that means you want to probably take the profits here. And very often, a lot of stocks move 20% or 25%",
+      "confidence": 0.9661162
+    },
+    {
+      "start_sec": 3868.565,
+      "end_sec": 3870.265,
+      "text": "and you wanna sell the stock.",
+      "confidence": 0.873291
+    },
+    {
+      "start_sec": 3870.65,
+      "end_sec": 3880.99,
+      "text": "So... And here is the exception. If a stock is up 20% in less than three weeks, hold it for a bigger move. You want to use the EMA 21 as a selling guide. So... And this is also one of the main",
+      "confidence": 0.96595657
+    },
+    {
+      "start_sec": 3881.69,
+      "end_sec": 3887.305,
+      "text": "one of the main, rules I'm using. Sell a stock that breaks below the EMA 21",
+      "confidence": 0.9842529
+    },
+    {
+      "start_sec": 3887.365,
+      "end_sec": 3889.945,
+      "text": "after it held for seven weeks and three pullbacks.",
+      "confidence": 0.98220485
+    },
+    {
+      "start_sec": 3890.645,
+      "end_sec": 3895.865,
+      "text": "Wait for the close or a break of the low of the first day that closed below the EMA 21.",
+      "confidence": 0.97474366
+    },
+    {
+      "start_sec": 3896.085,
+      "end_sec": 3897.385,
+      "text": "So I think, you know,",
+      "confidence": 0.9843262
+    },
+    {
+      "start_sec": 3897.87,
+      "end_sec": 3909.57,
+      "text": "you can have a look at a lot of stocks. Maybe let's let's have a look at forty net here. I did not trade the stock, but I... It it shows a good example here. So may... Maybe, assume you bought the stock here,",
+      "confidence": 0.9748757
+    },
+    {
+      "start_sec": 3910.565,
+      "end_sec": 3911.005,
+      "text": "and,",
+      "confidence": 0.9916992
+    },
+    {
+      "start_sec": 3911.445,
+      "end_sec": 3915.385,
+      "text": "you can you can see the green line here, which is the EMA 21.",
+      "confidence": 0.9871041
+    },
+    {
+      "start_sec": 3915.445,
+      "end_sec": 3919.305,
+      "text": "You don't wanna buy... You don't wanna sell the stock here. Definitely not.",
+      "confidence": 0.97830904
+    },
+    {
+      "start_sec": 3919.605,
+      "end_sec": 3924.025,
+      "text": "So you want to either wait for a close below the EMA 21,",
+      "confidence": 0.9858258
+    },
+    {
+      "start_sec": 3924.33,
+      "end_sec": 3928.99,
+      "text": "or on the other side, if you have a violation of the EMA 21,",
+      "confidence": 0.9538487
+    },
+    {
+      "start_sec": 3929.05,
+      "end_sec": 3937.55,
+      "text": "you want to put your stop loss below of... Below the low of the day so that you will stay in the stock as it advance in price.",
+      "confidence": 0.9673375
+    },
+    {
+      "start_sec": 3937.85,
+      "end_sec": 3939.07,
+      "text": "And, here",
+      "confidence": 0.9802246
+    },
+    {
+      "start_sec": 3940.175,
+      "end_sec": 3951.635,
+      "text": "it... Here, you can do the same. Right? You can also place a stop loss here, and then you get stopped out three days later. This is how you want to apply a trailing stop like the EMA, 21.",
+      "confidence": 0.9727794
+    },
+    {
+      "start_sec": 3951.85,
+      "end_sec": 3963.55,
+      "text": "In some cases, especially with story stocks, I also use the EMA eight. So when you have a stock that really reacts good to the EMA eight... I don't know. Maybe let's have a look at MEST.",
+      "confidence": 0.97401553
+    },
+    {
+      "start_sec": 3964.175,
+      "end_sec": 3981.71,
+      "text": "You can see MEST is holding the EMA eight for for many weeks, and then it starts to break or starts to trade below the EMA eight or, you know, violates the EMA eight. In that case, you want to use EMA eight. But that's only for story stocks or for momentum stocks. For the most stocks,",
+      "confidence": 0.9692254
+    },
+    {
+      "start_sec": 3982.17,
+      "end_sec": 3985.71,
+      "text": "use the EMA 21. I mean, look at Palantir here.",
+      "confidence": 0.9958496
+    },
+    {
+      "start_sec": 3986.97,
+      "end_sec": 3990.75,
+      "text": "It held the EMA 21 for many, many, many weeks.",
+      "confidence": 0.96171874
+    },
+    {
+      "start_sec": 3991.165,
+      "end_sec": 4000.065,
+      "text": "And then here, you can get stopped out of the trade. So... And that's okay. Then you will maybe miss the last part, but you catch or you caught a very big,",
+      "confidence": 0.976738
+    },
+    {
+      "start_sec": 4000.525,
+      "end_sec": 4003.585,
+      "text": "part of the move. So this is the EMA 21,",
+      "confidence": 0.9946289
+    },
+    {
+      "start_sec": 4005.15,
+      "end_sec": 4006.53,
+      "text": "rule. So then sell",
+      "confidence": 0.8913574
+    },
+    {
+      "start_sec": 4006.91,
+      "end_sec": 4025.255,
+      "text": "before earnings if you have less than 10% profit cushion. That's also very important. Or if the stock acts too choppy. You don't want to hold all the stocks through earnings. Only if you have a big profit cushion. If the stock gaps down 20% against you, you want to protect yourself. And, for me, one important thing is to really",
+      "confidence": 0.9552208
+    },
+    {
+      "start_sec": 4025.715,
+      "end_sec": 4033.015,
+      "text": "have a, or really think about, okay, what what will happen to my portfolio and to my account if the stock gaps down 20%?",
+      "confidence": 0.9464366
+    },
+    {
+      "start_sec": 4034.17,
+      "end_sec": 4036.43,
+      "text": "And then I decide about the position size.",
+      "confidence": 0.9946289
+    },
+    {
+      "start_sec": 4036.73,
+      "end_sec": 4037.23,
+      "text": "So",
+      "confidence": 0.9980469
+    },
+    {
+      "start_sec": 4037.93,
+      "end_sec": 4049.015,
+      "text": "so when when when... Or maybe I cut the position size in that case. So when I have a big position, like, 25 or 30% of my capital in one stock and the same gaps down 20%,",
+      "confidence": 0.94502217
+    },
+    {
+      "start_sec": 4049.075,
+      "end_sec": 4056.855,
+      "text": "I lose 6% of my trading capital. If that's too much for me, then I reduce the size maybe to 20% or 15%",
+      "confidence": 0.98978853
+    },
+    {
+      "start_sec": 4056.995,
+      "end_sec": 4061.095,
+      "text": "so that can... That I can easily hold the position to earnings.",
+      "confidence": 0.9116618
+    },
+    {
+      "start_sec": 4062.66,
+      "end_sec": 4065.08,
+      "text": "So then I have a couple of more sales rules.",
+      "confidence": 0.91403806
+    },
+    {
+      "start_sec": 4066.5,
+      "end_sec": 4068.6,
+      "text": "This is, you know, this is, something",
+      "confidence": 0.91231865
+    },
+    {
+      "start_sec": 4069.3,
+      "end_sec": 4071.48,
+      "text": "you you can you can apply,",
+      "confidence": 0.96280926
+    },
+    {
+      "start_sec": 4072.26,
+      "end_sec": 4077.24,
+      "text": "and I will maybe sort that a little bit different. You can pick them if they,",
+      "confidence": 0.9556122
+    },
+    {
+      "start_sec": 4078.105,
+      "end_sec": 4081.165,
+      "text": "yeah, if they fit to your own trading style or to your personality.",
+      "confidence": 0.99201846
+    },
+    {
+      "start_sec": 4081.545,
+      "end_sec": 4088.745,
+      "text": "So, for example, this one here, that... That's something I'm... That I... That is something I'm using for momentum stocks. You can sell 25%",
+      "confidence": 0.9656474
+    },
+    {
+      "start_sec": 4088.745,
+      "end_sec": 4090.125,
+      "text": "or more into the strength",
+      "confidence": 0.9984375
+    },
+    {
+      "start_sec": 4090.45,
+      "end_sec": 4093.51,
+      "text": "after the stock shows you a two times your initial,",
+      "confidence": 0.95720214
+    },
+    {
+      "start_sec": 4094.45,
+      "end_sec": 4101.59,
+      "text": "risk profit. So in in that case, I used that for MVST. I sold a little bit into the strength. It was more 20%,",
+      "confidence": 0.9608307
+    },
+    {
+      "start_sec": 4102.93,
+      "end_sec": 4110.465,
+      "text": "when the stock was was up for for, I think, 30% or something like that. And then, you know, I let the rest,",
+      "confidence": 0.9850756
+    },
+    {
+      "start_sec": 4111.085,
+      "end_sec": 4111.965,
+      "text": "I let the rest,",
+      "confidence": 0.9851074
+    },
+    {
+      "start_sec": 4112.525,
+      "end_sec": 4113.425,
+      "text": "run and",
+      "confidence": 0.97265625
+    },
+    {
+      "start_sec": 4114.285,
+      "end_sec": 4131.06,
+      "text": "use the EMA eight. So... And then you have some more selling routes, and these are more more guidance. Right? You you want to you want to apply them if these things appear and you want to notice this. Okay. This is a potential sell signal. Like, the break of the weekly EMA 13 on very high volume,",
+      "confidence": 0.9452199
+    },
+    {
+      "start_sec": 4132.08,
+      "end_sec": 4134.5,
+      "text": "a huge gap down on heavy high volume",
+      "confidence": 0.9752197
+    },
+    {
+      "start_sec": 4134.975,
+      "end_sec": 4138.035,
+      "text": "after earnings, a climax top, which is important,",
+      "confidence": 0.9291992
+    },
+    {
+      "start_sec": 4138.655,
+      "end_sec": 4141.155,
+      "text": "we had that multiple times last year.",
+      "confidence": 0.9537179
+    },
+    {
+      "start_sec": 4141.775,
+      "end_sec": 4142.275,
+      "text": "MicroStrategy,",
+      "confidence": 0.9658203
+    },
+    {
+      "start_sec": 4142.735,
+      "end_sec": 4149.155,
+      "text": "for example, showed a climax top. This is something you want to notice and then you want to sell that into this trend.",
+      "confidence": 0.96749747
+    },
+    {
+      "start_sec": 4149.9,
+      "end_sec": 4153.12,
+      "text": "Sell off, sell on a break of a trend line,",
+      "confidence": 0.9416016
+    },
+    {
+      "start_sec": 4153.82,
+      "end_sec": 4154.72,
+      "text": "up or down,",
+      "confidence": 0.9418132
+    },
+    {
+      "start_sec": 4156.3,
+      "end_sec": 4158.56,
+      "text": "after a multiple month's rally.",
+      "confidence": 0.93666995
+    },
+    {
+      "start_sec": 4159.02,
+      "end_sec": 4161.6,
+      "text": "So this is another selling rule you can use.",
+      "confidence": 0.9971788
+    },
+    {
+      "start_sec": 4162.055,
+      "end_sec": 4166.075,
+      "text": "Sell partially if the stock is up 70 or a 100% above the weekly",
+      "confidence": 0.96655273
+    },
+    {
+      "start_sec": 4166.455,
+      "end_sec": 4167.035,
+      "text": "EMA 40.",
+      "confidence": 0.9433594
+    },
+    {
+      "start_sec": 4167.495,
+      "end_sec": 4170.235,
+      "text": "So this is something I'm not using very often, but,",
+      "confidence": 0.9724243
+    },
+    {
+      "start_sec": 4171.015,
+      "end_sec": 4180.87,
+      "text": "if if you if you have a look at a stock and you see a reversal bar and then you go into the weekly chart and you and then you can see, okay, it's up, I don't know, 160",
+      "confidence": 0.9741461
+    },
+    {
+      "start_sec": 4180.87,
+      "end_sec": 4185.37,
+      "text": "or something like that above the weekly EMA 40, so this indicator here,",
+      "confidence": 0.942965
+    },
+    {
+      "start_sec": 4185.91,
+      "end_sec": 4195.645,
+      "text": "then you can then you can say, okay. This is this is probably a little bit too extended. I wanna take some profits off the table. Maybe let's have a look at Palantir if it ever reached that.",
+      "confidence": 0.9593549
+    },
+    {
+      "start_sec": 4196.025,
+      "end_sec": 4205.245,
+      "text": "Yeah. Here you can see that, you know, it reached that multiple times here around the high. So for normal stocks, normal growth stocks, it's 70 to a 100%.",
+      "confidence": 0.9465416
+    },
+    {
+      "start_sec": 4205.63,
+      "end_sec": 4207.97,
+      "text": "That's what I, found in my studies.",
+      "confidence": 0.9918038
+    },
+    {
+      "start_sec": 4208.43,
+      "end_sec": 4216.61,
+      "text": "For momentum stocks, it can be a 100 to 200%, to be honest. And for the most conservative stocks, it's more 35 to 50%.",
+      "confidence": 0.98352224
+    },
+    {
+      "start_sec": 4216.83,
+      "end_sec": 4217.89,
+      "text": "But this is another,",
+      "confidence": 0.99591064
+    },
+    {
+      "start_sec": 4218.27,
+      "end_sec": 4219.41,
+      "text": "rule you can,",
+      "confidence": 0.9546712
+    },
+    {
+      "start_sec": 4219.825,
+      "end_sec": 4223.845,
+      "text": "use. Sell if sales or growth decreases for multiple quarters.",
+      "confidence": 0.9637451
+    },
+    {
+      "start_sec": 4224.305,
+      "end_sec": 4230.545,
+      "text": "Sell if a stock breaks out of the base on huge volume but goes down on heavy volume in the next day. Think about,",
+      "confidence": 0.94940186
+    },
+    {
+      "start_sec": 4231.425,
+      "end_sec": 4233.525,
+      "text": "think about ATM for example today.",
+      "confidence": 0.75549316
+    },
+    {
+      "start_sec": 4234.18,
+      "end_sec": 4240.04,
+      "text": "So these are more rules you can pick, what fits to you, and you can use them. And you know,",
+      "confidence": 0.8851074
+    },
+    {
+      "start_sec": 4240.5,
+      "end_sec": 4241.32,
+      "text": "it's about,",
+      "confidence": 0.6351929
+    },
+    {
+      "start_sec": 4241.86,
+      "end_sec": 4245.4,
+      "text": "or the key is to have multiple selling rules",
+      "confidence": 0.89746094
+    },
+    {
+      "start_sec": 4245.78,
+      "end_sec": 4248.44,
+      "text": "that you can apply depending on the situation.",
+      "confidence": 0.98095703
+    },
+    {
+      "start_sec": 4248.985,
+      "end_sec": 4268.7,
+      "text": "That is the key. It's not about having the one sell rule. It's about having multiple sell rules and then applying them when the situation appears. And then you can say, oh my god. Okay. The stock is breaking down on heavy volume here. What should I do? Okay, I have a sell rule here. So if the stock breaks down on heavy volume to the EMA 13,",
+      "confidence": 0.94628906
+    },
+    {
+      "start_sec": 4269.16,
+      "end_sec": 4271.26,
+      "text": "okay, I should probably sell the stock.",
+      "confidence": 0.92445594
+    },
+    {
+      "start_sec": 4271.88,
+      "end_sec": 4278.165,
+      "text": "This is how you want to apply that, right? So then, portfolio management rules hold a maximum of 10%",
+      "confidence": 0.9547569
+    },
+    {
+      "start_sec": 4278.245,
+      "end_sec": 4279.145,
+      "text": "at 10 positions.",
+      "confidence": 0.8285319
+    },
+    {
+      "start_sec": 4279.685,
+      "end_sec": 4281.305,
+      "text": "This is something you can also,",
+      "confidence": 0.94750977
+    },
+    {
+      "start_sec": 4282.165,
+      "end_sec": 4285.465,
+      "text": "vary a little bit. If you want to hold five positions,",
+      "confidence": 0.9683061
+    },
+    {
+      "start_sec": 4287.205,
+      "end_sec": 4292.825,
+      "text": "it's also okay. If you are in a very good bull market, you can also hold 12%...",
+      "confidence": 0.9634938
+    },
+    {
+      "start_sec": 4293.285,
+      "end_sec": 4293.945,
+      "text": "12 position",
+      "confidence": 0.6140137
+    },
+    {
+      "start_sec": 4294.37,
+      "end_sec": 4297.43,
+      "text": "positions, not 12% positions, 12 positions.",
+      "confidence": 0.8985596
+    },
+    {
+      "start_sec": 4298.13,
+      "end_sec": 4305.03,
+      "text": "But, you know, what you want to do is, and this is more important, limit yourself. You don't want to hold 25%...",
+      "confidence": 0.98498535
+    },
+    {
+      "start_sec": 4305.33,
+      "end_sec": 4306.31,
+      "text": "25",
+      "confidence": 0.8051758
+    },
+    {
+      "start_sec": 4306.695,
+      "end_sec": 4307.195,
+      "text": "positions",
+      "confidence": 0.99902344
+    },
+    {
+      "start_sec": 4307.655,
+      "end_sec": 4311.035,
+      "text": "or 30 positions in your portfolio. That's important.",
+      "confidence": 0.9974365
+    },
+    {
+      "start_sec": 4311.495,
+      "end_sec": 4315.835,
+      "text": "Right? You want to limit yourself because otherwise, you are on margin too quick.",
+      "confidence": 0.9516253
+    },
+    {
+      "start_sec": 4316.295,
+      "end_sec": 4319.515,
+      "text": "And, that's one of the reasons why I have this limit of 10",
+      "confidence": 0.9983098
+    },
+    {
+      "start_sec": 4320.24,
+      "end_sec": 4326.74,
+      "text": "positions or maybe sometimes a little bit more, sometimes a little bit less, but I I do not want to hold 25",
+      "confidence": 0.9684282
+    },
+    {
+      "start_sec": 4326.88,
+      "end_sec": 4327.38,
+      "text": "positions.",
+      "confidence": 0.99365234
+    },
+    {
+      "start_sec": 4329.44,
+      "end_sec": 4334.34,
+      "text": "Rarely use margin and only if you're experienced with that. Very important. I only use margin",
+      "confidence": 0.94088745
+    },
+    {
+      "start_sec": 4334.955,
+      "end_sec": 4340.735,
+      "text": "when, when my trading is were... Working very good and we are in a clear uptrend. That's important.",
+      "confidence": 0.9529442
+    },
+    {
+      "start_sec": 4341.355,
+      "end_sec": 4348.895,
+      "text": "If you come from cash, buy three test positions and add only new positions if your previous buys shows you a profit.",
+      "confidence": 0.9738104
+    },
+    {
+      "start_sec": 4349.84,
+      "end_sec": 4350.34,
+      "text": "Important,",
+      "confidence": 0.68273926
+    },
+    {
+      "start_sec": 4350.88,
+      "end_sec": 4355.06,
+      "text": "you don't want to come from a cash position and buy 15 positions",
+      "confidence": 0.9862906
+    },
+    {
+      "start_sec": 4355.68,
+      "end_sec": 4362.1,
+      "text": "and all of them get stopped out on the same day. That's not what you want to do. You want to buy slowly back into the market.",
+      "confidence": 0.9785247
+    },
+    {
+      "start_sec": 4362.525,
+      "end_sec": 4369.025,
+      "text": "Avoid cluster risk. Hold only three positions from one sector, industry, or theme. I added this rule because",
+      "confidence": 0.9542033
+    },
+    {
+      "start_sec": 4369.405,
+      "end_sec": 4371.265,
+      "text": "of this data center sell off.",
+      "confidence": 0.8871663
+    },
+    {
+      "start_sec": 4371.965,
+      "end_sec": 4372.465,
+      "text": "This",
+      "confidence": 0.7475586
+    },
+    {
+      "start_sec": 4373.405,
+      "end_sec": 4375.425,
+      "text": "hurt me very much this year and",
+      "confidence": 0.88277763
+    },
+    {
+      "start_sec": 4375.95,
+      "end_sec": 4378.61,
+      "text": "I I already had a limit for three positions",
+      "confidence": 0.95166016
+    },
+    {
+      "start_sec": 4379.15,
+      "end_sec": 4381.09,
+      "text": "from one sector or industry, but,",
+      "confidence": 0.9523926
+    },
+    {
+      "start_sec": 4381.55,
+      "end_sec": 4387.09,
+      "text": "I added this theme also to that. If you have more than five losses in a row, stop taking new positions.",
+      "confidence": 0.9952102
+    },
+    {
+      "start_sec": 4387.55,
+      "end_sec": 4399.045,
+      "text": "You also want to limit yourself here and wait one or two weeks or maybe just a couple of days and then try again. But if you have five losses in a row, something is wrong. Very often, the market is not in the right",
+      "confidence": 0.9717502
+    },
+    {
+      "start_sec": 4399.665,
+      "end_sec": 4401.365,
+      "text": "mood to give you some winners.",
+      "confidence": 0.9001465
+    },
+    {
+      "start_sec": 4401.745,
+      "end_sec": 4407.83,
+      "text": "If your equity curve drops sharply, more than 4% in one day or drops below the MA 20,",
+      "confidence": 0.96034074
+    },
+    {
+      "start_sec": 4408.77,
+      "end_sec": 4411.11,
+      "text": "I have a spreadsheet available for you,",
+      "confidence": 0.99016464
+    },
+    {
+      "start_sec": 4411.81,
+      "end_sec": 4415.59,
+      "text": "in the trading rules section for tracking your equity curve.",
+      "confidence": 0.97138673
+    },
+    {
+      "start_sec": 4416.13,
+      "end_sec": 4425.365,
+      "text": "So then you wanna sell weak stocks and losing stocks of your portfolio. You want to size down. You want to decrease your risk and maybe sell 25%",
+      "confidence": 0.94236535
+    },
+    {
+      "start_sec": 4425.365,
+      "end_sec": 4428.905,
+      "text": "of more or more of all of your holdings. So because",
+      "confidence": 0.88259053
+    },
+    {
+      "start_sec": 4429.285,
+      "end_sec": 4430.665,
+      "text": "very often my drawdowns",
+      "confidence": 0.80233765
+    },
+    {
+      "start_sec": 4431.125,
+      "end_sec": 4436.63,
+      "text": "starts when I have a more than 4% down day. So then my drawdowns starts,",
+      "confidence": 0.9212728
+    },
+    {
+      "start_sec": 4436.93,
+      "end_sec": 4438.95,
+      "text": "and then then I have to take action.",
+      "confidence": 0.98864746
+    },
+    {
+      "start_sec": 4439.41,
+      "end_sec": 4443.43,
+      "text": "I have some more rules about that, but, this is one of my key rules.",
+      "confidence": 0.96993816
+    },
+    {
+      "start_sec": 4443.81,
+      "end_sec": 4453.905,
+      "text": "Sell losing positions or weak stocks if the market trend model switches from from yellow or green to red. I already spoke about that. Maybe you want to sell also 25%",
+      "confidence": 0.9541488
+    },
+    {
+      "start_sec": 4453.905,
+      "end_sec": 4454.965,
+      "text": "of your current holdings.",
+      "confidence": 0.9890747
+    },
+    {
+      "start_sec": 4455.425,
+      "end_sec": 4459.765,
+      "text": "An additional rule, I like that very much but I do not apply that very often to be honest.",
+      "confidence": 0.9139597
+    },
+    {
+      "start_sec": 4460.945,
+      "end_sec": 4463.925,
+      "text": "Think about to sell losing positions on a Friday.",
+      "confidence": 0.9777832
+    },
+    {
+      "start_sec": 4464.33,
+      "end_sec": 4473.31,
+      "text": "So if you, for example, bought something on Monday and it's not showing you a profit within five days, you probably should sell the stock because it's not moving in your direction.",
+      "confidence": 0.9818115
+    },
+    {
+      "start_sec": 4473.93,
+      "end_sec": 4474.65,
+      "text": "So... And,",
+      "confidence": 0.85253906
+    },
+    {
+      "start_sec": 4475.29,
+      "end_sec": 4478.43,
+      "text": "you... I I personally... I I often get stopped out before.",
+      "confidence": 0.8838778
+    },
+    {
+      "start_sec": 4478.895,
+      "end_sec": 4479.395,
+      "text": "So,",
+      "confidence": 0.8222656
+    },
+    {
+      "start_sec": 4479.855,
+      "end_sec": 4492.995,
+      "text": "because I use tighter stop losses or I decrease the size or the stock is falling back. But I like this rule very much and I try to apply that more and more so that I'm also selling positions proactively if they do not show",
+      "confidence": 0.9369683
+    },
+    {
+      "start_sec": 4493.535,
+      "end_sec": 4494.195,
+      "text": "a profit.",
+      "confidence": 0.9152832
+    },
+    {
+      "start_sec": 4494.75,
+      "end_sec": 4500.45,
+      "text": "So I will also rework the article a little bit, but I hope that it helped you a little bit,",
+      "confidence": 0.9682129
+    },
+    {
+      "start_sec": 4501.15,
+      "end_sec": 4502.53,
+      "text": "to to, yeah,",
+      "confidence": 0.9192708
+    },
+    {
+      "start_sec": 4503.39,
+      "end_sec": 4504.93,
+      "text": "to repeat these rules",
+      "confidence": 0.9642334
+    },
+    {
+      "start_sec": 4505.31,
+      "end_sec": 4509.25,
+      "text": "and also that you can remember the rules, get some context to the rules.",
+      "confidence": 0.9658203
+    },
+    {
+      "start_sec": 4509.605,
+      "end_sec": 4521.225,
+      "text": "And again, you know, it's not about my rules or your rules. It's about... It's about, that you develop your own trading approach and that you can pick rules from from this, from this rule set here,",
+      "confidence": 0.9670344
+    },
+    {
+      "start_sec": 4521.78,
+      "end_sec": 4526.92,
+      "text": "Make it your own. Adjust them a little bit so that they fit also to your own,",
+      "confidence": 0.9734605
+    },
+    {
+      "start_sec": 4527.86,
+      "end_sec": 4528.76,
+      "text": "own personality.",
+      "confidence": 0.9921875
+    },
+    {
+      "start_sec": 4529.46,
+      "end_sec": 4538.835,
+      "text": "So... And again, so I have also some other rules that are maybe not contained here, but it's not it's not matching or special or I want I I don't want to hide anything",
+      "confidence": 0.9331773
+    },
+    {
+      "start_sec": 4539.295,
+      "end_sec": 4544.595,
+      "text": "here. But these are rules that, you know, fit to my personality, especially when it comes to,",
+      "confidence": 0.9557962
+    },
+    {
+      "start_sec": 4545.215,
+      "end_sec": 4546.515,
+      "text": "to portfolio management.",
+      "confidence": 0.98046875
+    },
+    {
+      "start_sec": 4546.975,
+      "end_sec": 4551.19,
+      "text": "So, so so that means, you know, managing my own equity curve, noticing",
+      "confidence": 0.96369815
+    },
+    {
+      "start_sec": 4551.49,
+      "end_sec": 4552.31,
+      "text": "when I'm",
+      "confidence": 0.9958496
+    },
+    {
+      "start_sec": 4552.69,
+      "end_sec": 4556.95,
+      "text": "when I'm I'm I'm too much on margin and and the stocks are coming down, etcetera.",
+      "confidence": 0.968132
+    },
+    {
+      "start_sec": 4557.41,
+      "end_sec": 4570.365,
+      "text": "So this is something I have in my own rule correct... Collection, and this is exactly what you want to do. Right? You want to develop your own approach and your own ruleset. So if you have any questions, if you have any feedback or comments,",
+      "confidence": 0.9468755
+    },
+    {
+      "start_sec": 4572.365,
+      "end_sec": 4574.705,
+      "text": "if you have any questions or feedback,",
+      "confidence": 0.9199219
+    },
+    {
+      "start_sec": 4576.261,
+      "end_sec": 4579.881,
+      "text": "use the comment function, write a comment here, and I will answer",
+      "confidence": 0.89015704
+    },
+    {
+      "start_sec": 4580.261,
+      "end_sec": 4581.241,
+      "text": "you very quickly.",
+      "confidence": 0.96346027
+    }
+  ],
+  "title": "Repetition and Comments on Key Trading Rules MARKET UPDATE Prem",
+  "transcript_path": "data/video_pipeline/transcripts/komar_vid_lesson_repetition-and-comments-on-key-trading-rules-market-update-prem.json",
+  "video_id": "komar_vid_lesson_repetition-and-comments-on-key-trading-rules-market-update-prem"
+}

@@ -1,0 +1,2350 @@
+{
+  "channel": "komar",
+  "checksum": "861be639d7a38ca782469d97f149f8c9",
+  "duration_sec": 1743.018667,
+  "fetched_at": "2026-11-17T12:16:20.937Z",
+  "language": "en",
+  "model": "nova-2",
+  "provider": "deepgram",
+  "quality_score": 0.9608935045501283,
+  "segment_count": 389,
+  "segments": [
+    {
+      "start_sec": 1.2,
+      "end_sec": 7.38,
+      "text": "Hi, guys, and welcome to this video. So I think it's time again for making a video about statistics",
+      "confidence": 0.9834755
+    },
+    {
+      "start_sec": 7.68,
+      "end_sec": 14.26,
+      "text": "because this is one of the most important thing when it comes to understanding edge and when it comes to understanding,",
+      "confidence": 0.93818593
+    },
+    {
+      "start_sec": 14.995,
+      "end_sec": 17.815,
+      "text": "trading systems. I already made a webinar about,",
+      "confidence": 0.99157715
+    },
+    {
+      "start_sec": 18.595,
+      "end_sec": 25.655,
+      "text": "how to tell how to get an action in trading. And I already talked about statistics there. You know, I'm I'm reviewing,",
+      "confidence": 0.942971
+    },
+    {
+      "start_sec": 26.515,
+      "end_sec": 27.335,
+      "text": "I would say,",
+      "confidence": 0.96313477
+    },
+    {
+      "start_sec": 28.595,
+      "end_sec": 29.655,
+      "text": "two to three",
+      "confidence": 0.9983724
+    },
+    {
+      "start_sec": 30.32,
+      "end_sec": 31.38,
+      "text": "trading systems",
+      "confidence": 0.9995117
+    },
+    {
+      "start_sec": 32.4,
+      "end_sec": 46.395,
+      "text": "almost every month from other traders, you know, and one on one mentoring and, you know, and and other trading logs that were sent to me. And, you know, I have a very good idea about how the how the average successful trader trades.",
+      "confidence": 0.96056575
+    },
+    {
+      "start_sec": 46.855,
+      "end_sec": 50.155,
+      "text": "You know? And I know all the, all the difficulties",
+      "confidence": 0.98657227
+    },
+    {
+      "start_sec": 50.455,
+      "end_sec": 52.475,
+      "text": "in their trading systems, and I know,",
+      "confidence": 0.9782715
+    },
+    {
+      "start_sec": 53.015,
+      "end_sec": 56.94,
+      "text": "how to optimize them, etcetera. So I have a very good feeling about that.",
+      "confidence": 0.99590194
+    },
+    {
+      "start_sec": 57.42,
+      "end_sec": 68.88,
+      "text": "So... And this year, this equity curve simulator is one of the tools that I use the most to test different statistics because it's a random series of trades or it's a random series of numbers",
+      "confidence": 0.97633195
+    },
+    {
+      "start_sec": 69.18,
+      "end_sec": 72.08,
+      "text": "at the end, and it gives you a very good feeling about,",
+      "confidence": 0.96376544
+    },
+    {
+      "start_sec": 72.555,
+      "end_sec": 75.455,
+      "text": "a trading system if it will be successful or not.",
+      "confidence": 0.97041017
+    },
+    {
+      "start_sec": 75.915,
+      "end_sec": 77.695,
+      "text": "So I I started here",
+      "confidence": 0.9958984
+    },
+    {
+      "start_sec": 78.075,
+      "end_sec": 81.295,
+      "text": "by, typing in my own data. Right? So for example,",
+      "confidence": 0.92297363
+    },
+    {
+      "start_sec": 81.595,
+      "end_sec": 89.26,
+      "text": "my hit rate is around 30 to 40%. It depends a little bit on the year. My, win loss ratio is five to seven.",
+      "confidence": 0.9760793
+    },
+    {
+      "start_sec": 89.88,
+      "end_sec": 95.26,
+      "text": "So depending on the year, sometimes it's, you know, six, sometimes it's, seven.",
+      "confidence": 0.9773888
+    },
+    {
+      "start_sec": 96.04,
+      "end_sec": 113.58,
+      "text": "And short term, of course, you know, short term, it can be also two or three or whatever. But it really doesn't matter, what is happening short term. Long term is important. Right? What happens over long series of trades? 400 trades, 500 trades, or maybe even 200 trades. That would be also a good series of trades.",
+      "confidence": 0.9799594
+    },
+    {
+      "start_sec": 113.98,
+      "end_sec": 116.54,
+      "text": "So then my average risk is 0.6%",
+      "confidence": 0.98643273
+    },
+    {
+      "start_sec": 116.54,
+      "end_sec": 120,
+      "text": "from my trading capital, and then I can run the simulation of the curves.",
+      "confidence": 0.9549212
+    },
+    {
+      "start_sec": 120.38,
+      "end_sec": 135.575,
+      "text": "So you can see that here. And one of the goals in my, or one of the analysis that I'm always doing is I'm not looking much at the black line here. The black line is, you know, the average of all the different trading curves here. But what I'm looking for is,",
+      "confidence": 0.9932193
+    },
+    {
+      "start_sec": 136.515,
+      "end_sec": 138.055,
+      "text": "I'm looking that almost",
+      "confidence": 0.9942627
+    },
+    {
+      "start_sec": 138.435,
+      "end_sec": 140.295,
+      "text": "all all of these,",
+      "confidence": 0.9511719
+    },
+    {
+      "start_sec": 141.155,
+      "end_sec": 142.055,
+      "text": "all of these",
+      "confidence": 0.9996745
+    },
+    {
+      "start_sec": 142.8,
+      "end_sec": 143.7,
+      "text": "random simulations,",
+      "confidence": 0.95080566
+    },
+    {
+      "start_sec": 144.16,
+      "end_sec": 145.38,
+      "text": "random trading simulations",
+      "confidence": 0.9970703
+    },
+    {
+      "start_sec": 146.32,
+      "end_sec": 146.8,
+      "text": "are,",
+      "confidence": 0.92089844
+    },
+    {
+      "start_sec": 147.36,
+      "end_sec": 151.14,
+      "text": "upward sloping. All of the curves should be upward sloping.",
+      "confidence": 0.9910156
+    },
+    {
+      "start_sec": 151.68,
+      "end_sec": 163.935,
+      "text": "And, again, you know, it's not so important what the numbers are saying here. So, for example, the average performance, that really doesn't matter. It's it's it's not so important because usually as a trader, you're not able to,",
+      "confidence": 0.94431716
+    },
+    {
+      "start_sec": 164.395,
+      "end_sec": 165.935,
+      "text": "to achieve this simulated,",
+      "confidence": 0.97802734
+    },
+    {
+      "start_sec": 166.795,
+      "end_sec": 167.695,
+      "text": "average performance.",
+      "confidence": 0.947876
+    },
+    {
+      "start_sec": 168.075,
+      "end_sec": 172.255,
+      "text": "But it gives you a very good feeling about, you know, what is your average maximum drawdown,",
+      "confidence": 0.99024874
+    },
+    {
+      "start_sec": 173.01,
+      "end_sec": 180.31,
+      "text": "and what is your biggest drawdown. And again, you know, my biggest drawdown is around 20%. So the simulation says, you know, 15.6%.",
+      "confidence": 0.96937096
+    },
+    {
+      "start_sec": 180.93,
+      "end_sec": 184.71,
+      "text": "Right? So... But it gives you some good, feeling about that.",
+      "confidence": 0.9677956
+    },
+    {
+      "start_sec": 185.855,
+      "end_sec": 195.555,
+      "text": "And, you can also see here a maximum consecutive losers in a row are set 27. You know, I can have a lot of losers with a low hit rate here.",
+      "confidence": 0.9639105
+    },
+    {
+      "start_sec": 196.015,
+      "end_sec": 200.115,
+      "text": "That looks totally different, for example, if I have a win rate,",
+      "confidence": 0.96348065
+    },
+    {
+      "start_sec": 200.77,
+      "end_sec": 216.225,
+      "text": "a win loss ratio of seven to one. Look at that you know the equity curves look totally different and when we now look at the simulation of let's say 400 trades so I took I think three fifty last year then let's take three fifty for example.",
+      "confidence": 0.9513092
+    },
+    {
+      "start_sec": 216.785,
+      "end_sec": 217.825,
+      "text": "350,",
+      "confidence": 0.9881999
+    },
+    {
+      "start_sec": 218.225,
+      "end_sec": 223.685,
+      "text": "last year and, you know, I'm not sure. I think I had a win loss ratio of last year",
+      "confidence": 0.97330517
+    },
+    {
+      "start_sec": 224.225,
+      "end_sec": 224.965,
+      "text": "four point",
+      "confidence": 0.7408447
+    },
+    {
+      "start_sec": 225.505,
+      "end_sec": 226.165,
+      "text": "five point",
+      "confidence": 0.71398926
+    },
+    {
+      "start_sec": 226.625,
+      "end_sec": 230.965,
+      "text": "seven and a hit rate of, 31 something like this year. Right?",
+      "confidence": 0.93310547
+    },
+    {
+      "start_sec": 231.39,
+      "end_sec": 237.39,
+      "text": "You can see that the average performance... So the the theoretical performance from last year would be 870.",
+      "confidence": 0.9897778
+    },
+    {
+      "start_sec": 237.39,
+      "end_sec": 239.25,
+      "text": "That's that's way too much. Right?",
+      "confidence": 0.9939372
+    },
+    {
+      "start_sec": 239.63,
+      "end_sec": 242.61,
+      "text": "So, that's way too much. That's very theoretical.",
+      "confidence": 0.9755554
+    },
+    {
+      "start_sec": 243.15,
+      "end_sec": 246.37,
+      "text": "But important again, you know, important is what happens",
+      "confidence": 0.97406685
+    },
+    {
+      "start_sec": 246.745,
+      "end_sec": 249.725,
+      "text": "to all the equity curves here if they are",
+      "confidence": 0.9729275
+    },
+    {
+      "start_sec": 250.105,
+      "end_sec": 251.805,
+      "text": "clearly moving higher",
+      "confidence": 1
+    },
+    {
+      "start_sec": 252.265,
+      "end_sec": 256.365,
+      "text": "and, you know, you don't have so much randomness in your trading.",
+      "confidence": 0.9816081
+    },
+    {
+      "start_sec": 256.905,
+      "end_sec": 260.045,
+      "text": "And that is very important. When when I see",
+      "confidence": 0.9908583
+    },
+    {
+      "start_sec": 260.38,
+      "end_sec": 270.4,
+      "text": "the average trader in my one on one, mentoring, the most of them are profitable. Right? They make money, but they come to me because they say, you know, I'm not so sure about my trading system.",
+      "confidence": 0.9825319
+    },
+    {
+      "start_sec": 270.78,
+      "end_sec": 272.96,
+      "text": "I don't have so much confidence in it.",
+      "confidence": 0.9993286
+    },
+    {
+      "start_sec": 273.815,
+      "end_sec": 277.735,
+      "text": "I'm not sure if I can really trade big size with with,",
+      "confidence": 0.9980469
+    },
+    {
+      "start_sec": 278.535,
+      "end_sec": 280.075,
+      "text": "with my trading system, etcetera.",
+      "confidence": 0.9904297
+    },
+    {
+      "start_sec": 280.775,
+      "end_sec": 282.155,
+      "text": "So the average trader",
+      "confidence": 0.9835205
+    },
+    {
+      "start_sec": 282.615,
+      "end_sec": 286.155,
+      "text": "in my one on one mentoring has a win probability",
+      "confidence": 0.8990234
+    },
+    {
+      "start_sec": 286.535,
+      "end_sec": 290.28,
+      "text": "or a win rate of around 38, 39%.",
+      "confidence": 0.98813885
+    },
+    {
+      "start_sec": 290.28,
+      "end_sec": 293.98,
+      "text": "So they have a higher win rate for me. But their win loss ratio",
+      "confidence": 0.9738944
+    },
+    {
+      "start_sec": 294.44,
+      "end_sec": 301.96,
+      "text": "is very often low. It's around two. So let... Let's put in a two here. You know, some of them has 1.9,",
+      "confidence": 0.9788301
+    },
+    {
+      "start_sec": 301.96,
+      "end_sec": 303.735,
+      "text": "some of them have have,",
+      "confidence": 0.9936035
+    },
+    {
+      "start_sec": 304.195,
+      "end_sec": 304.995,
+      "text": "2.2.",
+      "confidence": 0.96940106
+    },
+    {
+      "start_sec": 304.995,
+      "end_sec": 311.975,
+      "text": "So, you know, the average win through loss, that means, you know, your average winner over long series of trades",
+      "confidence": 0.98823243
+    },
+    {
+      "start_sec": 312.355,
+      "end_sec": 314.695,
+      "text": "has, you know, a two times,",
+      "confidence": 0.97635907
+    },
+    {
+      "start_sec": 315.36,
+      "end_sec": 317.54,
+      "text": "or a return of two times",
+      "confidence": 0.9335124
+    },
+    {
+      "start_sec": 318,
+      "end_sec": 321.06,
+      "text": "your loss. So if you just for example, right,",
+      "confidence": 0.90700954
+    },
+    {
+      "start_sec": 321.44,
+      "end_sec": 322.56,
+      "text": "so a very,",
+      "confidence": 0.8307292
+    },
+    {
+      "start_sec": 323.12,
+      "end_sec": 326.34,
+      "text": "very often I see the average winner is something like,",
+      "confidence": 0.982251
+    },
+    {
+      "start_sec": 327.04,
+      "end_sec": 329.06,
+      "text": "you know, seven or 8%,",
+      "confidence": 0.9468506
+    },
+    {
+      "start_sec": 329.225,
+      "end_sec": 331.325,
+      "text": "seven or 8% on the average winner,",
+      "confidence": 0.9681222
+    },
+    {
+      "start_sec": 332.185,
+      "end_sec": 335.485,
+      "text": "and the loss is very often something like three to four.",
+      "confidence": 0.9854847
+    },
+    {
+      "start_sec": 335.785,
+      "end_sec": 336.285,
+      "text": "Right?",
+      "confidence": 0.9453125
+    },
+    {
+      "start_sec": 336.665,
+      "end_sec": 341.645,
+      "text": "And that's a very, very low number. So my average winner is around 20,",
+      "confidence": 0.9832502
+    },
+    {
+      "start_sec": 341.785,
+      "end_sec": 344.95,
+      "text": "you know, and my my average loser is is,",
+      "confidence": 0.9888238
+    },
+    {
+      "start_sec": 345.49,
+      "end_sec": 347.33,
+      "text": "I think around 4%",
+      "confidence": 0.9842529
+    },
+    {
+      "start_sec": 347.33,
+      "end_sec": 348.55,
+      "text": "or something like that.",
+      "confidence": 0.99450684
+    },
+    {
+      "start_sec": 348.85,
+      "end_sec": 349.35,
+      "text": "So...",
+      "confidence": 0.9951172
+    },
+    {
+      "start_sec": 350.13,
+      "end_sec": 351.89,
+      "text": "And of course, these numbers are also,",
+      "confidence": 0.91891044
+    },
+    {
+      "start_sec": 352.37,
+      "end_sec": 353.97,
+      "text": "you know, going up and down,",
+      "confidence": 0.9685872
+    },
+    {
+      "start_sec": 354.61,
+      "end_sec": 364.365,
+      "text": "with a year. Right? So... But, you know, I'm striving for a very high win loss ratio. And very often I see that, you know, traders are taking profits very early.",
+      "confidence": 0.96985257
+    },
+    {
+      "start_sec": 364.745,
+      "end_sec": 374.3,
+      "text": "That means they have a higher win rate, and then they are, you know, taking some profits into the strength, and then they reduce the win loss ratio with that. And now let's start a simulation.",
+      "confidence": 0.984375
+    },
+    {
+      "start_sec": 374.84,
+      "end_sec": 383.82,
+      "text": "And now you can see, you know, a trading system which feels relatively good. Let's say it that way. Relatively good because you have a high win probability,",
+      "confidence": 0.9481376
+    },
+    {
+      "start_sec": 384.36,
+      "end_sec": 391.435,
+      "text": "and you take a lot of small gains. Right? You take a lot of small gains out of the system. You're selling a stock for 10%.",
+      "confidence": 0.9820228
+    },
+    {
+      "start_sec": 391.735,
+      "end_sec": 400.075,
+      "text": "You know, you're selling a stock for 15% gain. You're selling a stock, I don't know, for 8% gain. You take all these little profits and it feels really good,",
+      "confidence": 0.96500653
+    },
+    {
+      "start_sec": 400.41,
+      "end_sec": 404.25,
+      "text": "But that does not mean that the trading system is very profit... Profitable to,",
+      "confidence": 0.97706825
+    },
+    {
+      "start_sec": 404.81,
+      "end_sec": 405.31,
+      "text": "overall.",
+      "confidence": 0.99658203
+    },
+    {
+      "start_sec": 405.77,
+      "end_sec": 414.27,
+      "text": "Right? You can see here that more... That the most equity curves in the simulation are more or less very choppy, very random,",
+      "confidence": 0.98893934
+    },
+    {
+      "start_sec": 415.635,
+      "end_sec": 418.135,
+      "text": "and they are going more or less sideways.",
+      "confidence": 0.9913635
+    },
+    {
+      "start_sec": 418.675,
+      "end_sec": 423.015,
+      "text": "So there are not so many of the equity curves above the average,",
+      "confidence": 0.98046875
+    },
+    {
+      "start_sec": 423.875,
+      "end_sec": 430.055,
+      "text": "and, I would say a lot of them are or there are a lot of them going sideways here",
+      "confidence": 0.94125205
+    },
+    {
+      "start_sec": 430.63,
+      "end_sec": 431.59,
+      "text": "around the 100,",
+      "confidence": 0.9781901
+    },
+    {
+      "start_sec": 431.99,
+      "end_sec": 437.85,
+      "text": "dollar... 100 level. So around the 100 level. So that means there is a lot of randomness",
+      "confidence": 0.97073185
+    },
+    {
+      "start_sec": 438.47,
+      "end_sec": 439.85,
+      "text": "in this trading systems,",
+      "confidence": 0.94189453
+    },
+    {
+      "start_sec": 440.39,
+      "end_sec": 442.89,
+      "text": "in this trading system with these statistics.",
+      "confidence": 0.9845843
+    },
+    {
+      "start_sec": 443.925,
+      "end_sec": 447.625,
+      "text": "And that is why, you know, sometimes you have a great year",
+      "confidence": 0.99161786
+    },
+    {
+      "start_sec": 447.925,
+      "end_sec": 451.465,
+      "text": "when the market is is in a good shape. You have a great year. And sometimes,",
+      "confidence": 0.9571762
+    },
+    {
+      "start_sec": 452.005,
+      "end_sec": 454.745,
+      "text": "you know, you give back all the gains. Or, you know, sometimes...",
+      "confidence": 0.9719238
+    },
+    {
+      "start_sec": 455.125,
+      "end_sec": 456.825,
+      "text": "Or or in another year,",
+      "confidence": 0.9400879
+    },
+    {
+      "start_sec": 457.35,
+      "end_sec": 459.13,
+      "text": "you are you are totally underperforming.",
+      "confidence": 0.9238824
+    },
+    {
+      "start_sec": 459.59,
+      "end_sec": 461.37,
+      "text": "You have too much randomness",
+      "confidence": 0.9994141
+    },
+    {
+      "start_sec": 461.91,
+      "end_sec": 463.21,
+      "text": "in this trading system.",
+      "confidence": 0.946167
+    },
+    {
+      "start_sec": 464.07,
+      "end_sec": 469.69,
+      "text": "And you know that looks a little bit different when you when you strive for a higher win loss ratio.",
+      "confidence": 0.96918947
+    },
+    {
+      "start_sec": 470.005,
+      "end_sec": 479.945,
+      "text": "You know, when you, for example, say, okay. You know, let... Let's say we we increase this win loss ratio to two and a half. You can now see how this trading system turns around",
+      "confidence": 0.97199357
+    },
+    {
+      "start_sec": 480.325,
+      "end_sec": 484.585,
+      "text": "and becomes more profitable with the same hit rate. Right? With the same hit rate.",
+      "confidence": 0.9803385
+    },
+    {
+      "start_sec": 485.87,
+      "end_sec": 490.05,
+      "text": "If I would have a hit rate around 39, I would strive at least",
+      "confidence": 0.99739295
+    },
+    {
+      "start_sec": 490.59,
+      "end_sec": 493.17,
+      "text": "for a win loss ratio of three.",
+      "confidence": 0.9968262
+    },
+    {
+      "start_sec": 494.19,
+      "end_sec": 502.215,
+      "text": "So because now you can see that that there is not so much randomness anymore in this trading system. A lot of these curves are around the average.",
+      "confidence": 0.97990197
+    },
+    {
+      "start_sec": 502.755,
+      "end_sec": 509.255,
+      "text": "Some are very steep, and there are only two two curves, I would say, yeah, moving moving more or less sideways.",
+      "confidence": 0.9597284
+    },
+    {
+      "start_sec": 509.715,
+      "end_sec": 513.735,
+      "text": "Right? And what does, what does a win loss ratio of three means?",
+      "confidence": 0.99282604
+    },
+    {
+      "start_sec": 515.18,
+      "end_sec": 526.64,
+      "text": "That does not mean that you... That every winners or let's say let's say a different... That does not mean that you have to cut every winner at three. That would be totally stupid if you do that.",
+      "confidence": 0.9703819
+    },
+    {
+      "start_sec": 526.995,
+      "end_sec": 531.095,
+      "text": "Why? Because not every winner will reach a three to one,",
+      "confidence": 0.9954945
+    },
+    {
+      "start_sec": 531.555,
+      "end_sec": 535.415,
+      "text": "risk reward ratio. So that means you need some bigger winners,",
+      "confidence": 0.97314453
+    },
+    {
+      "start_sec": 535.875,
+      "end_sec": 538.695,
+      "text": "and you also can accept some smaller winners.",
+      "confidence": 0.9717407
+    },
+    {
+      "start_sec": 539.06,
+      "end_sec": 547.48,
+      "text": "But you must achieve over long series of trades a win loss ratio of three. That means you have a lot of, let's say, five and six,",
+      "confidence": 0.9755588
+    },
+    {
+      "start_sec": 548.1,
+      "end_sec": 553,
+      "text": "win loss ratio winners. You have a lot of, let's say, two,",
+      "confidence": 0.9784546
+    },
+    {
+      "start_sec": 553.645,
+      "end_sec": 556.305,
+      "text": "two r winners, two two times your risk multiples,",
+      "confidence": 0.9640842
+    },
+    {
+      "start_sec": 556.845,
+      "end_sec": 563.105,
+      "text": "you have sometimes a 10 r winner, etcetera. But you're probably having not these extreme big winners,",
+      "confidence": 0.9837503
+    },
+    {
+      "start_sec": 563.485,
+      "end_sec": 569.025,
+      "text": "you know, where you have 20, 30, 40 times your risk reward ratio in that case.",
+      "confidence": 0.9869385
+    },
+    {
+      "start_sec": 570.02,
+      "end_sec": 577.4,
+      "text": "So... And, you know, this is this is so important to understand that, you know, and and I I also want to show you,",
+      "confidence": 0.94233197
+    },
+    {
+      "start_sec": 578.26,
+      "end_sec": 587.095,
+      "text": "you know, I also want to show you a downside of, let's say, this type of trading system. And let... Let's go back here to this to this two,",
+      "confidence": 0.984013
+    },
+    {
+      "start_sec": 587.475,
+      "end_sec": 588.775,
+      "text": "two win loss ratio.",
+      "confidence": 0.87805176
+    },
+    {
+      "start_sec": 589.395,
+      "end_sec": 592.375,
+      "text": "And now now think about, okay, what would happen",
+      "confidence": 0.9705132
+    },
+    {
+      "start_sec": 592.915,
+      "end_sec": 608.97,
+      "text": "if I trade this system with a lower hit rate because, you know, the market is in a bad shape. Let's say my hit rate goes down to, let's say, 30%. And that's not a big drop in the hit rate to 30%. This trading system is becoming unprofitable.",
+      "confidence": 0.9696269
+    },
+    {
+      "start_sec": 609.995,
+      "end_sec": 612.095,
+      "text": "Let's let's say, you know, be realistic.",
+      "confidence": 0.95901924
+    },
+    {
+      "start_sec": 612.555,
+      "end_sec": 617.775,
+      "text": "In a very bad market situation, your hit rate goes from 40, let's say, to 20%,",
+      "confidence": 0.9893036
+    },
+    {
+      "start_sec": 618.235,
+      "end_sec": 622.655,
+      "text": "you know, and your and your your trading becomes totally unprofitable.",
+      "confidence": 0.94358134
+    },
+    {
+      "start_sec": 623.52,
+      "end_sec": 628.18,
+      "text": "And let's come back to my statistics, you know, with a 30% hit rate and let's say,",
+      "confidence": 0.96291935
+    },
+    {
+      "start_sec": 628.64,
+      "end_sec": 630.64,
+      "text": "let's take this, 5.7",
+      "confidence": 0.99328613
+    },
+    {
+      "start_sec": 630.64,
+      "end_sec": 631.14,
+      "text": "here.",
+      "confidence": 0.96191406
+    },
+    {
+      "start_sec": 632.24,
+      "end_sec": 645.675,
+      "text": "So 5.7. And I mean, look look at the expectation here and look at the average performance. You know, it's so so much bigger than the higher hit rate system. So now let's say, you know, the win loss ratio will not change so dramatically",
+      "confidence": 0.9567726
+    },
+    {
+      "start_sec": 646.455,
+      "end_sec": 647.915,
+      "text": "in a bad market situation.",
+      "confidence": 0.98227537
+    },
+    {
+      "start_sec": 648.375,
+      "end_sec": 657.95,
+      "text": "You can also see that in my own trading this year. You know, I had some very big winners with bit... Bitcoin short. I had a very big winner, with gold in in January,",
+      "confidence": 0.972685
+    },
+    {
+      "start_sec": 658.33,
+      "end_sec": 660.65,
+      "text": "for example. You know, they they had a,",
+      "confidence": 0.9854431
+    },
+    {
+      "start_sec": 661.45,
+      "end_sec": 663.29,
+      "text": "they had a a win loss or,",
+      "confidence": 0.9355469
+    },
+    {
+      "start_sec": 664.01,
+      "end_sec": 673.205,
+      "text": "a risk multiples returns of 10 and more. You know? My my win loss ratio this year did not change much. It's around four,",
+      "confidence": 0.96118164
+    },
+    {
+      "start_sec": 673.585,
+      "end_sec": 675.105,
+      "text": "and, the the,",
+      "confidence": 0.97664386
+    },
+    {
+      "start_sec": 675.905,
+      "end_sec": 683.43,
+      "text": "dollar win loss ratio, so not in risk multiples, but in US dollar, is much higher. It's six point, 6.5,",
+      "confidence": 0.9370605
+    },
+    {
+      "start_sec": 683.43,
+      "end_sec": 686.73,
+      "text": "you know because I did also a very good job when it comes to risk management,",
+      "confidence": 0.9675293
+    },
+    {
+      "start_sec": 687.19,
+      "end_sec": 696.57,
+      "text": "but my win probability went down a lot. So and let's let's say now in a bad market low hit rate system the win probability goes down let's say to 20%",
+      "confidence": 0.9613155
+    },
+    {
+      "start_sec": 697.275,
+      "end_sec": 703.695,
+      "text": "and it can go down much more. You can see that the trading system is more or less random and break even.",
+      "confidence": 0.9756969
+    },
+    {
+      "start_sec": 704.235,
+      "end_sec": 711.295,
+      "text": "So, you know, that that there is not the effect that you can see that your trading becomes totally unprofitable in that moment.",
+      "confidence": 0.9654382
+    },
+    {
+      "start_sec": 711.69,
+      "end_sec": 714.59,
+      "text": "So let... Let's see, you know, let's go down to 15%.",
+      "confidence": 0.9734774
+    },
+    {
+      "start_sec": 715.29,
+      "end_sec": 717.71,
+      "text": "So now you can see that the trading",
+      "confidence": 0.99890137
+    },
+    {
+      "start_sec": 718.17,
+      "end_sec": 720.51,
+      "text": "systems more or less break even with a tendency",
+      "confidence": 0.97596574
+    },
+    {
+      "start_sec": 721.21,
+      "end_sec": 730.525,
+      "text": "to, with a tendency to start losing. But, you know, when you do a good job, when it comes to risk management, etcetera, even with a win probability of 15%,",
+      "confidence": 0.98195803
+    },
+    {
+      "start_sec": 730.745,
+      "end_sec": 737.565,
+      "text": "you can probably be breakeven. That's that's what I can see right now in the last couple of months in 2026.",
+      "confidence": 0.9957178
+    },
+    {
+      "start_sec": 737.625,
+      "end_sec": 738.125,
+      "text": "Right?",
+      "confidence": 0.9770508
+    },
+    {
+      "start_sec": 738.49,
+      "end_sec": 743.55,
+      "text": "And let's see with a 10 with a 10 probably... Yeah. With a 10 now it starts to get,",
+      "confidence": 0.91944647
+    },
+    {
+      "start_sec": 744.17,
+      "end_sec": 747.69,
+      "text": "get negative here. So that means my my, you know, my,",
+      "confidence": 0.9461337
+    },
+    {
+      "start_sec": 749.37,
+      "end_sec": 752.27,
+      "text": "or let... Let's go go back here to 15, you know.",
+      "confidence": 0.9457564
+    },
+    {
+      "start_sec": 752.785,
+      "end_sec": 755.185,
+      "text": "You can see that, with a 15",
+      "confidence": 0.99009484
+    },
+    {
+      "start_sec": 755.185,
+      "end_sec": 757.665,
+      "text": "hit rate, so that means, you know, a 50%",
+      "confidence": 0.9643419
+    },
+    {
+      "start_sec": 757.665,
+      "end_sec": 758.165,
+      "text": "reduction",
+      "confidence": 0.99902344
+    },
+    {
+      "start_sec": 758.705,
+      "end_sec": 761.525,
+      "text": "in my hit rate, I can still trade,",
+      "confidence": 0.9932251
+    },
+    {
+      "start_sec": 762.145,
+      "end_sec": 768.325,
+      "text": "I can still trade, break even. And that's a totally different thing if we come back here to, let's say,",
+      "confidence": 0.9456787
+    },
+    {
+      "start_sec": 768.76,
+      "end_sec": 770.78,
+      "text": "to this win loss ratio, system",
+      "confidence": 0.96565753
+    },
+    {
+      "start_sec": 771.24,
+      "end_sec": 775.82,
+      "text": "and say, okay. You know, maybe you hit right, goes down here to 20%.",
+      "confidence": 0.94253105
+    },
+    {
+      "start_sec": 776.36,
+      "end_sec": 777.58,
+      "text": "You can see how",
+      "confidence": 0.99975586
+    },
+    {
+      "start_sec": 777.88,
+      "end_sec": 780.38,
+      "text": "how this trading system will be unprofitable.",
+      "confidence": 0.9968087
+    },
+    {
+      "start_sec": 781.215,
+      "end_sec": 790.835,
+      "text": "And it's the same, you know, it doesn't matter if you if you have 39 and if you go to a win loss ratio of one, it really doesn't matter. Right? Because these statistics create the expectancy together.",
+      "confidence": 0.9809378
+    },
+    {
+      "start_sec": 791.455,
+      "end_sec": 792.755,
+      "text": "And it's more dramatical,",
+      "confidence": 0.96850586
+    },
+    {
+      "start_sec": 793.295,
+      "end_sec": 796.355,
+      "text": "because, you know, sometimes, especially with inexperienced traders,",
+      "confidence": 0.98153687
+    },
+    {
+      "start_sec": 796.73,
+      "end_sec": 797.69,
+      "text": "I see this,",
+      "confidence": 0.9965007
+    },
+    {
+      "start_sec": 798.33,
+      "end_sec": 812.405,
+      "text": "need to to strive for a high hit rate. You know? They they come to me sometimes and say, yeah, but I want a 60% hit rate. And then I always ask you to, why do you want a 60% hit rate? Right? Yeah. Because, you know, I like, to feel,",
+      "confidence": 0.96913296
+    },
+    {
+      "start_sec": 813.585,
+      "end_sec": 817.445,
+      "text": "winning. You know? I I need this cash register ringing all the time, etcetera.",
+      "confidence": 0.98575264
+    },
+    {
+      "start_sec": 818.145,
+      "end_sec": 818.645,
+      "text": "Okay.",
+      "confidence": 0.9975586
+    },
+    {
+      "start_sec": 819.185,
+      "end_sec": 828.16,
+      "text": "I totally understand that. Winning feels good. Right? So and now you can see let's say you know you have a you have a win probability of 60%",
+      "confidence": 0.945888
+    },
+    {
+      "start_sec": 828.54,
+      "end_sec": 834.72,
+      "text": "you know and if you achieve and that's that would be really good if you achieve a win loss ratio of two that would be awesome.",
+      "confidence": 0.8874606
+    },
+    {
+      "start_sec": 835.265,
+      "end_sec": 839.285,
+      "text": "But that's that's not what the most people are achieving when it comes to,",
+      "confidence": 0.9947335
+    },
+    {
+      "start_sec": 839.665,
+      "end_sec": 843.205,
+      "text": "win loss ratio. So very professional traders. I also know them.",
+      "confidence": 0.9264471
+    },
+    {
+      "start_sec": 843.745,
+      "end_sec": 857.33,
+      "text": "So very professional traders. They sometimes achieve, you know, 60 to 70 percentage rate with a lot... Win loss ratio. I mean, let's let's simulate that, very quickly with a win loss ratio of this year. So they are very, very profitable.",
+      "confidence": 0.94361514
+    },
+    {
+      "start_sec": 857.63,
+      "end_sec": 858.61,
+      "text": "So that's achievable.",
+      "confidence": 0.9724121
+    },
+    {
+      "start_sec": 859.31,
+      "end_sec": 866.475,
+      "text": "But, you know, this is... These these guys, they are sitting around the the, computer the whole day. They are hitting",
+      "confidence": 0.9674247
+    },
+    {
+      "start_sec": 866.775,
+      "end_sec": 870.535,
+      "text": "very small singles, you know, stop loss of 0.25",
+      "confidence": 0.98250324
+    },
+    {
+      "start_sec": 870.535,
+      "end_sec": 878.39,
+      "text": "and, you know, getting, I don't know, two or 3% moves in the market, and that's a totally different game. Right? That's not my game.",
+      "confidence": 0.9599951
+    },
+    {
+      "start_sec": 879.17,
+      "end_sec": 889.67,
+      "text": "So... But let's come back to to a trader, that wants a 60% hit rate, and let's say, you know, if you can achieve a win loss ratio of of two, you will be very profitable.",
+      "confidence": 0.9893358
+    },
+    {
+      "start_sec": 890.075,
+      "end_sec": 894.415,
+      "text": "That's that's awesome. Right? Especially because your drawdowns will be very very,",
+      "confidence": 0.93324786
+    },
+    {
+      "start_sec": 894.795,
+      "end_sec": 895.535,
+      "text": "very low.",
+      "confidence": 0.9880371
+    },
+    {
+      "start_sec": 895.915,
+      "end_sec": 896.655,
+      "text": "So... And",
+      "confidence": 0.99658203
+    },
+    {
+      "start_sec": 896.955,
+      "end_sec": 901.515,
+      "text": "you know, but the problem is the most people are not achieving this win,",
+      "confidence": 0.93182373
+    },
+    {
+      "start_sec": 902.395,
+      "end_sec": 905.055,
+      "text": "this win loss ratio with a 60%.",
+      "confidence": 0.9361747
+    },
+    {
+      "start_sec": 905.73,
+      "end_sec": 908.93,
+      "text": "So, you need to you need need to be a very, very,",
+      "confidence": 0.9228719
+    },
+    {
+      "start_sec": 909.33,
+      "end_sec": 911.91,
+      "text": "yeah, or let's say you need a very clear strategy",
+      "confidence": 0.9462158
+    },
+    {
+      "start_sec": 912.37,
+      "end_sec": 913.83,
+      "text": "to achieve that. And,",
+      "confidence": 0.8838196
+    },
+    {
+      "start_sec": 914.85,
+      "end_sec": 920.71,
+      "text": "it's it's the same thing with low hit rate systems. You must be extremely patient and know what you're doing. So... And",
+      "confidence": 0.98205566
+    },
+    {
+      "start_sec": 921.485,
+      "end_sec": 926.445,
+      "text": "you know, very often they achieving rather a win loss ratio of 1.5",
+      "confidence": 0.9289363
+    },
+    {
+      "start_sec": 926.445,
+      "end_sec": 930.445,
+      "text": "or 1.3 or something like that. And even, you know, 1.5,",
+      "confidence": 0.97764266
+    },
+    {
+      "start_sec": 930.445,
+      "end_sec": 933.105,
+      "text": "you can see that, is relatively profitable.",
+      "confidence": 0.94308037
+    },
+    {
+      "start_sec": 933.53,
+      "end_sec": 936.99,
+      "text": "But now there is one problem in this trading,",
+      "confidence": 0.9791938
+    },
+    {
+      "start_sec": 937.45,
+      "end_sec": 939.23,
+      "text": "with high win probabilities.",
+      "confidence": 0.96813965
+    },
+    {
+      "start_sec": 940.89,
+      "end_sec": 942.91,
+      "text": "When it comes to high win probabilities",
+      "confidence": 0.98716515
+    },
+    {
+      "start_sec": 943.77,
+      "end_sec": 944.75,
+      "text": "in your trading,",
+      "confidence": 0.98779297
+    },
+    {
+      "start_sec": 945.53,
+      "end_sec": 947.71,
+      "text": "you need a very, very",
+      "confidence": 0.9868652
+    },
+    {
+      "start_sec": 948.305,
+      "end_sec": 950.165,
+      "text": "stable market environment,",
+      "confidence": 0.94295245
+    },
+    {
+      "start_sec": 950.705,
+      "end_sec": 954.885,
+      "text": "and you need to be able to be, yeah, how to say that,",
+      "confidence": 0.95986706
+    },
+    {
+      "start_sec": 955.345,
+      "end_sec": 955.845,
+      "text": "extreme",
+      "confidence": 0.9790039
+    },
+    {
+      "start_sec": 956.225,
+      "end_sec": 959.205,
+      "text": "consistent in your execution of your trading system.",
+      "confidence": 0.99645996
+    },
+    {
+      "start_sec": 959.665,
+      "end_sec": 963.045,
+      "text": "You know, you you you must be all all already a robot",
+      "confidence": 0.90529376
+    },
+    {
+      "start_sec": 963.55,
+      "end_sec": 967.17,
+      "text": "because you have a very thin, let's say, a very thin edge",
+      "confidence": 0.9822998
+    },
+    {
+      "start_sec": 967.63,
+      "end_sec": 969.97,
+      "text": "when it comes to the change of the statistics.",
+      "confidence": 0.9977214
+    },
+    {
+      "start_sec": 970.59,
+      "end_sec": 971.57,
+      "text": "So that means...",
+      "confidence": 0.9996745
+    },
+    {
+      "start_sec": 971.95,
+      "end_sec": 976.53,
+      "text": "Let's have a look at what will happen if your win rate goes down, let's say, to 40%.",
+      "confidence": 0.9930013
+    },
+    {
+      "start_sec": 977.355,
+      "end_sec": 982.015,
+      "text": "So you can see your trading is totally random and that's just a reduction",
+      "confidence": 0.967913
+    },
+    {
+      "start_sec": 982.635,
+      "end_sec": 983.915,
+      "text": "of 25%",
+      "confidence": 0.9935709
+    },
+    {
+      "start_sec": 983.915,
+      "end_sec": 985.135,
+      "text": "of your win probability",
+      "confidence": 0.99975586
+    },
+    {
+      "start_sec": 985.835,
+      "end_sec": 991.375,
+      "text": "right. If you now if now your your hit rate or your win probability goes down to 30%",
+      "confidence": 0.9232381
+    },
+    {
+      "start_sec": 991.41,
+      "end_sec": 992.79,
+      "text": "you're totally unprofitable.",
+      "confidence": 0.99397784
+    },
+    {
+      "start_sec": 994.37,
+      "end_sec": 996.55,
+      "text": "So that means you need extreme",
+      "confidence": 0.99625653
+    },
+    {
+      "start_sec": 997.09,
+      "end_sec": 997.59,
+      "text": "extreme",
+      "confidence": 0.64501953
+    },
+    {
+      "start_sec": 997.97,
+      "end_sec": 1005.91,
+      "text": "consistent conditions, extreme consistent application or or execution of the trading system. Otherwise, you will not be able",
+      "confidence": 0.9135471
+    },
+    {
+      "start_sec": 1006.365,
+      "end_sec": 1009.825,
+      "text": "or you you will not be profitable with a high hit rate system.",
+      "confidence": 0.9793607
+    },
+    {
+      "start_sec": 1010.765,
+      "end_sec": 1011.885,
+      "text": "And and the most most,",
+      "confidence": 0.9550293
+    },
+    {
+      "start_sec": 1012.845,
+      "end_sec": 1013.745,
+      "text": "or or",
+      "confidence": 0.95288086
+    },
+    {
+      "start_sec": 1014.845,
+      "end_sec": 1016.785,
+      "text": "or or or or the most brutal,",
+      "confidence": 0.72324914
+    },
+    {
+      "start_sec": 1017.645,
+      "end_sec": 1019.345,
+      "text": "brutal systems in my opinion",
+      "confidence": 0.9595703
+    },
+    {
+      "start_sec": 1020.17,
+      "end_sec": 1026.43,
+      "text": "are trading systems like that. You have a 90% hit rate and then you have, you know, something like this here. That always looks totally,",
+      "confidence": 0.96371096
+    },
+    {
+      "start_sec": 1027.05,
+      "end_sec": 1028.11,
+      "text": "totally nice,",
+      "confidence": 0.9157715
+    },
+    {
+      "start_sec": 1028.49,
+      "end_sec": 1031.15,
+      "text": "but, you know, just one winner, one bad trade",
+      "confidence": 0.9852973
+    },
+    {
+      "start_sec": 1031.53,
+      "end_sec": 1042.005,
+      "text": "can can wipe out the total edge of that. And the most brutal is if that is, if this is happening, you know, if your win rate goes down, you can see that it becomes totally,",
+      "confidence": 0.9782579
+    },
+    {
+      "start_sec": 1042.865,
+      "end_sec": 1043.685,
+      "text": "yeah, totally,",
+      "confidence": 0.91137695
+    },
+    {
+      "start_sec": 1044.545,
+      "end_sec": 1045.045,
+      "text": "unprofitable",
+      "confidence": 1
+    },
+    {
+      "start_sec": 1045.505,
+      "end_sec": 1046.325,
+      "text": "and totally,",
+      "confidence": 0.81933594
+    },
+    {
+      "start_sec": 1047.105,
+      "end_sec": 1048.565,
+      "text": "or you lose your edge completely.",
+      "confidence": 0.96533203
+    },
+    {
+      "start_sec": 1048.945,
+      "end_sec": 1049.445,
+      "text": "Right?",
+      "confidence": 0.96875
+    },
+    {
+      "start_sec": 1049.98,
+      "end_sec": 1052.64,
+      "text": "So this is this is where you have to make a decision.",
+      "confidence": 0.9409383
+    },
+    {
+      "start_sec": 1053.1,
+      "end_sec": 1056.48,
+      "text": "You know, what feels good for you also as a trader.",
+      "confidence": 0.9539462
+    },
+    {
+      "start_sec": 1057.18,
+      "end_sec": 1062.16,
+      "text": "I found out over over many years, I found out that a low win rate system",
+      "confidence": 0.97242737
+    },
+    {
+      "start_sec": 1062.62,
+      "end_sec": 1064.8,
+      "text": "with a high loss to win ratio",
+      "confidence": 0.9944894
+    },
+    {
+      "start_sec": 1065.315,
+      "end_sec": 1067.015,
+      "text": "is the right thing for me.",
+      "confidence": 0.98079425
+    },
+    {
+      "start_sec": 1067.475,
+      "end_sec": 1071.175,
+      "text": "And I accept fully the downside of, you know,",
+      "confidence": 0.9977756
+    },
+    {
+      "start_sec": 1071.715,
+      "end_sec": 1074.135,
+      "text": "bigger drawdowns as other trading systems.",
+      "confidence": 0.95442706
+    },
+    {
+      "start_sec": 1075.155,
+      "end_sec": 1080.695,
+      "text": "I accept also the fact that I can have easily 20, losses also in a row.",
+      "confidence": 0.9870453
+    },
+    {
+      "start_sec": 1081.45,
+      "end_sec": 1082.49,
+      "text": "I have to effect,",
+      "confidence": 0.8887329
+    },
+    {
+      "start_sec": 1082.81,
+      "end_sec": 1087.47,
+      "text": "accept the fact that I have to sit very long and, you know, wait for,",
+      "confidence": 0.9959961
+    },
+    {
+      "start_sec": 1088.17,
+      "end_sec": 1090.75,
+      "text": "the really, really good trades to come,",
+      "confidence": 0.99288505
+    },
+    {
+      "start_sec": 1091.13,
+      "end_sec": 1096.19,
+      "text": "etcetera. You know? And that must not be the right thing for you. You can also say, no. You know?",
+      "confidence": 0.96535647
+    },
+    {
+      "start_sec": 1096.795,
+      "end_sec": 1102.895,
+      "text": "I I I'm not able to trade a, you know, a system like that. I'm I'm not... I cannot I cannot,",
+      "confidence": 0.94374883
+    },
+    {
+      "start_sec": 1103.595,
+      "end_sec": 1111.58,
+      "text": "withstand that emotionally to have 20 losers in a row or something like that, and I'm striving for a higher hit rate. I don't know, 45%",
+      "confidence": 0.9619407
+    },
+    {
+      "start_sec": 1111.58,
+      "end_sec": 1116.48,
+      "text": "or something like that. And then, you know, I'm I'm accepting it that I have a lower,",
+      "confidence": 0.95750517
+    },
+    {
+      "start_sec": 1116.94,
+      "end_sec": 1118,
+      "text": "you know, a lower,",
+      "confidence": 0.9741211
+    },
+    {
+      "start_sec": 1118.54,
+      "end_sec": 1125.68,
+      "text": "win loss ratio or something like that. And that's totally fine. You could see that that you you will be probably not so profitable",
+      "confidence": 0.97491455
+    },
+    {
+      "start_sec": 1126.195,
+      "end_sec": 1128.615,
+      "text": "with this trading system like that, and that's okay.",
+      "confidence": 0.9677192
+    },
+    {
+      "start_sec": 1128.915,
+      "end_sec": 1129.575,
+      "text": "You know?",
+      "confidence": 0.9519043
+    },
+    {
+      "start_sec": 1130.675,
+      "end_sec": 1132.755,
+      "text": "But on on, you know, instead of,",
+      "confidence": 0.971017
+    },
+    {
+      "start_sec": 1133.235,
+      "end_sec": 1134.695,
+      "text": "you know, feeling emotionally",
+      "confidence": 0.9980469
+    },
+    {
+      "start_sec": 1135.075,
+      "end_sec": 1141.895,
+      "text": "a lot of pain, you will get what you want. Right? You get a trading system where you don't feel so much emotional pain,",
+      "confidence": 0.9888509
+    },
+    {
+      "start_sec": 1142.33,
+      "end_sec": 1151.23,
+      "text": "and you can be profitable with that. But the big question that you have to answer as a trader is how to achieve that. You know, how to achieve",
+      "confidence": 0.9735402
+    },
+    {
+      "start_sec": 1152.01,
+      "end_sec": 1154.33,
+      "text": "a win probability of 45%",
+      "confidence": 0.9982422
+    },
+    {
+      "start_sec": 1154.33,
+      "end_sec": 1157.63,
+      "text": "that's only possible if you take smaller profits",
+      "confidence": 0.97091675
+    },
+    {
+      "start_sec": 1158.515,
+      "end_sec": 1161.895,
+      "text": "and how to achieve a win loss ratio of 2.5,",
+      "confidence": 0.9899089
+    },
+    {
+      "start_sec": 1162.355,
+      "end_sec": 1163.575,
+      "text": "you know, and again,",
+      "confidence": 0.87612915
+    },
+    {
+      "start_sec": 1163.955,
+      "end_sec": 1166.695,
+      "text": "these are average or this is an average,",
+      "confidence": 0.9696655
+    },
+    {
+      "start_sec": 1166.995,
+      "end_sec": 1169.175,
+      "text": "you know, over long series of trades.",
+      "confidence": 0.94639367
+    },
+    {
+      "start_sec": 1169.555,
+      "end_sec": 1172.295,
+      "text": "That means you need bigger winners",
+      "confidence": 0.9983724
+    },
+    {
+      "start_sec": 1173.02,
+      "end_sec": 1174.32,
+      "text": "as 2.5,",
+      "confidence": 0.95666504
+    },
+    {
+      "start_sec": 1175.26,
+      "end_sec": 1182.24,
+      "text": "because otherwise your average will be lower. So I can guarantee you if you will have a fixed target",
+      "confidence": 0.9511205
+    },
+    {
+      "start_sec": 1182.7,
+      "end_sec": 1186.56,
+      "text": "of a win loss ratio of 2.5 and you take every trade,",
+      "confidence": 0.97751874
+    },
+    {
+      "start_sec": 1187.225,
+      "end_sec": 1189.325,
+      "text": "every winner at 2.5",
+      "confidence": 0.88309735
+    },
+    {
+      "start_sec": 1189.465,
+      "end_sec": 1192.285,
+      "text": "and you trade the game over long series of trades,",
+      "confidence": 0.9324463
+    },
+    {
+      "start_sec": 1192.985,
+      "end_sec": 1196.285,
+      "text": "your your win loss ratio will not be 2.5.",
+      "confidence": 0.99679905
+    },
+    {
+      "start_sec": 1196.585,
+      "end_sec": 1202.63,
+      "text": "Your win loss ratio will be rather two or something like that because you will always have some winners",
+      "confidence": 0.9834755
+    },
+    {
+      "start_sec": 1203.01,
+      "end_sec": 1204.23,
+      "text": "that never reach,",
+      "confidence": 0.9956868
+    },
+    {
+      "start_sec": 1204.85,
+      "end_sec": 1205.99,
+      "text": "your profit target.",
+      "confidence": 0.99690753
+    },
+    {
+      "start_sec": 1206.45,
+      "end_sec": 1214.71,
+      "text": "So... And when they never reach your profit target, you you now can say, yeah. Okay. Then I get stopped out of these trades. That's totally fine. Right? Of course you can do that.",
+      "confidence": 0.94531965
+    },
+    {
+      "start_sec": 1215.425,
+      "end_sec": 1218.485,
+      "text": "But, in that case, your your win probability",
+      "confidence": 0.97875977
+    },
+    {
+      "start_sec": 1219.025,
+      "end_sec": 1223.025,
+      "text": "will move down and, you will not be able to achieve 45%",
+      "confidence": 0.96320254
+    },
+    {
+      "start_sec": 1223.025,
+      "end_sec": 1224.245,
+      "text": "prop... Probably.",
+      "confidence": 0.4970703
+    },
+    {
+      "start_sec": 1224.625,
+      "end_sec": 1230.94,
+      "text": "So... And then you have the same effect on on, with the win probability. Right? So you need to find an approach",
+      "confidence": 0.982777
+    },
+    {
+      "start_sec": 1231.48,
+      "end_sec": 1234.94,
+      "text": "if you want to strive for these statistics. You need a fine approach",
+      "confidence": 0.895921
+    },
+    {
+      "start_sec": 1235.72,
+      "end_sec": 1236.62,
+      "text": "where you",
+      "confidence": 0.98706055
+    },
+    {
+      "start_sec": 1237.24,
+      "end_sec": 1238.86,
+      "text": "achieve this higher win probability",
+      "confidence": 0.9980469
+    },
+    {
+      "start_sec": 1239.24,
+      "end_sec": 1241.02,
+      "text": "through taking profits earlier",
+      "confidence": 0.9987793
+    },
+    {
+      "start_sec": 1241.715,
+      "end_sec": 1246.855,
+      "text": "and then using, I don't know, a selling tactic where you say, okay. I sell 50% into the strength.",
+      "confidence": 0.9568257
+    },
+    {
+      "start_sec": 1247.155,
+      "end_sec": 1262.03,
+      "text": "I use a trading stop for the rest or I don't know. I third... I sell a third into the strength and then, you know, I'm I'm striving for a win loss ratio of, let's say, three and a half. And you know as soon as I have some some stocks that move higher three and a half",
+      "confidence": 0.9395289
+    },
+    {
+      "start_sec": 1262.33,
+      "end_sec": 1269.79,
+      "text": "times my my stop loss then I take the profits and you need also the tactics to move your stop loss to break even",
+      "confidence": 0.98268634
+    },
+    {
+      "start_sec": 1270.105,
+      "end_sec": 1278.525,
+      "text": "where where you can also protect profits. So for example, if a stock goes up to a win loss ratio of let's say three times your,",
+      "confidence": 0.93398815
+    },
+    {
+      "start_sec": 1279.145,
+      "end_sec": 1280.285,
+      "text": "your stop loss,",
+      "confidence": 0.9720866
+    },
+    {
+      "start_sec": 1281.225,
+      "end_sec": 1284.925,
+      "text": "what are you doing in that case? Do you accept a fully drawdown",
+      "confidence": 0.95173526
+    },
+    {
+      "start_sec": 1285.41,
+      "end_sec": 1297.99,
+      "text": "in that situation or if you say no then I will you know move my stop loss higher with a trailing stop or whatever and get stopped out when the stock is turning around etcetera you must all think about these exit techniques",
+      "confidence": 0.97465295
+    },
+    {
+      "start_sec": 1298.29,
+      "end_sec": 1300.23,
+      "text": "to achieve this win loss ratio",
+      "confidence": 0.99226886
+    },
+    {
+      "start_sec": 1300.575,
+      "end_sec": 1304.035,
+      "text": "And let let's come back quickly to to my statistics again. Right?",
+      "confidence": 0.9611003
+    },
+    {
+      "start_sec": 1305.375,
+      "end_sec": 1307.475,
+      "text": "If if if, or,",
+      "confidence": 0.9614258
+    },
+    {
+      "start_sec": 1307.935,
+      "end_sec": 1310.115,
+      "text": "you know, when I look at my own trading,",
+      "confidence": 0.99560547
+    },
+    {
+      "start_sec": 1311.775,
+      "end_sec": 1312.675,
+      "text": "I personally",
+      "confidence": 0.99609375
+    },
+    {
+      "start_sec": 1313.65,
+      "end_sec": 1315.27,
+      "text": "does not have to make",
+      "confidence": 0.9970703
+    },
+    {
+      "start_sec": 1316.13,
+      "end_sec": 1317.35,
+      "text": "these thoughts",
+      "confidence": 0.99658203
+    },
+    {
+      "start_sec": 1317.81,
+      "end_sec": 1322.39,
+      "text": "about, you know, how can I achieve this win loss ratio?",
+      "confidence": 0.9744984
+    },
+    {
+      "start_sec": 1322.77,
+      "end_sec": 1327.99,
+      "text": "Don't get me wrong. Of course, I'm thinking a lot a lot about that, you know, but the question is answered",
+      "confidence": 0.9625419
+    },
+    {
+      "start_sec": 1329.095,
+      "end_sec": 1330.555,
+      "text": "by the system itself",
+      "confidence": 1
+    },
+    {
+      "start_sec": 1331.975,
+      "end_sec": 1335.675,
+      "text": "because, you know, I'm not taking any profits into...",
+      "confidence": 0.9312608
+    },
+    {
+      "start_sec": 1336.055,
+      "end_sec": 1342.98,
+      "text": "Or I'm not taking the profits at a fixed target. I'm I'm taking some profits into the strength, but I'm not doing that with a fixed target.",
+      "confidence": 0.9890046
+    },
+    {
+      "start_sec": 1343.36,
+      "end_sec": 1347.38,
+      "text": "So that means I let the market decide how big the winners are,",
+      "confidence": 0.98405576
+    },
+    {
+      "start_sec": 1347.92,
+      "end_sec": 1352.895,
+      "text": "you know, and and by by training them with the EMA eight and EMA 21.",
+      "confidence": 0.9173421
+    },
+    {
+      "start_sec": 1353.455,
+      "end_sec": 1361.715,
+      "text": "And, you know, over over a long series of trades, I have some extreme big winners as we saw that, yeah, last year, you know, 100%,",
+      "confidence": 0.9505694
+    },
+    {
+      "start_sec": 1361.775,
+      "end_sec": 1363.235,
+      "text": "250%",
+      "confidence": 0.98254395
+    },
+    {
+      "start_sec": 1363.535,
+      "end_sec": 1364.835,
+      "text": "with open, for example.",
+      "confidence": 0.8765869
+    },
+    {
+      "start_sec": 1366.16,
+      "end_sec": 1369.3,
+      "text": "And, you know, these winners, they take care about",
+      "confidence": 0.9927029
+    },
+    {
+      "start_sec": 1369.6,
+      "end_sec": 1373.46,
+      "text": "the win loss ratio at the end. So it's a very passive approach.",
+      "confidence": 0.98916394
+    },
+    {
+      "start_sec": 1374,
+      "end_sec": 1376.74,
+      "text": "And the only thing that I need to do",
+      "confidence": 0.999783
+    },
+    {
+      "start_sec": 1377.2,
+      "end_sec": 1379.54,
+      "text": "as a trader trading the system is",
+      "confidence": 0.98472375
+    },
+    {
+      "start_sec": 1380.385,
+      "end_sec": 1381.765,
+      "text": "I must take care about",
+      "confidence": 0.9988281
+    },
+    {
+      "start_sec": 1382.225,
+      "end_sec": 1385.525,
+      "text": "finding stocks that offer me the opportunity",
+      "confidence": 0.999721
+    },
+    {
+      "start_sec": 1386.065,
+      "end_sec": 1386.805,
+      "text": "to create",
+      "confidence": 1
+    },
+    {
+      "start_sec": 1387.905,
+      "end_sec": 1388.405,
+      "text": "extreme",
+      "confidence": 0.9873047
+    },
+    {
+      "start_sec": 1388.945,
+      "end_sec": 1390.645,
+      "text": "high risk reward ratios,",
+      "confidence": 0.932312
+    },
+    {
+      "start_sec": 1391.105,
+      "end_sec": 1391.605,
+      "text": "extreme",
+      "confidence": 0.9941406
+    },
+    {
+      "start_sec": 1391.985,
+      "end_sec": 1393.445,
+      "text": "high risk reward ratios.",
+      "confidence": 0.991272
+    },
+    {
+      "start_sec": 1393.89,
+      "end_sec": 1404.87,
+      "text": "That's the only job that I have to take care about, and the same... And the second thing I have to take care about is that I I do not totally mess it up with the win rate.",
+      "confidence": 0.97238964
+    },
+    {
+      "start_sec": 1405.57,
+      "end_sec": 1410.525,
+      "text": "So that means... And this is, this is exactly what what I'm, you know, what I'm also",
+      "confidence": 0.95099956
+    },
+    {
+      "start_sec": 1411.225,
+      "end_sec": 1411.725,
+      "text": "experiencing",
+      "confidence": 0.51708984
+    },
+    {
+      "start_sec": 1412.025,
+      "end_sec": 1412.845,
+      "text": "right now.",
+      "confidence": 0.8748779
+    },
+    {
+      "start_sec": 1413.385,
+      "end_sec": 1413.965,
+      "text": "I must",
+      "confidence": 0.99853516
+    },
+    {
+      "start_sec": 1414.345,
+      "end_sec": 1418.365,
+      "text": "I must make sure that I do not trade too much",
+      "confidence": 0.99715906
+    },
+    {
+      "start_sec": 1418.905,
+      "end_sec": 1420.525,
+      "text": "in bad market environments",
+      "confidence": 0.99560547
+    },
+    {
+      "start_sec": 1421.58,
+      "end_sec": 1422.48,
+      "text": "because otherwise",
+      "confidence": 0.99609375
+    },
+    {
+      "start_sec": 1422.78,
+      "end_sec": 1427.28,
+      "text": "it's very hard for me to or to hold this win probability of 30%",
+      "confidence": 0.9639369
+    },
+    {
+      "start_sec": 1427.58,
+      "end_sec": 1428.96,
+      "text": "or a little bit more.",
+      "confidence": 0.9728516
+    },
+    {
+      "start_sec": 1429.66,
+      "end_sec": 1430.16,
+      "text": "Right?",
+      "confidence": 0.8413086
+    },
+    {
+      "start_sec": 1430.62,
+      "end_sec": 1435.84,
+      "text": "And I also want to to share one additional thought, what I'm thinking also about and",
+      "confidence": 0.9338989
+    },
+    {
+      "start_sec": 1436.345,
+      "end_sec": 1439.805,
+      "text": "I'm not sure if I want to to make the change in my trading system or not.",
+      "confidence": 0.97646195
+    },
+    {
+      "start_sec": 1440.825,
+      "end_sec": 1442.685,
+      "text": "I'm also thinking about even",
+      "confidence": 0.9962891
+    },
+    {
+      "start_sec": 1443.225,
+      "end_sec": 1447.805,
+      "text": "to accept a lower win rate to go down even to 25%",
+      "confidence": 0.9677463
+    },
+    {
+      "start_sec": 1448.185,
+      "end_sec": 1449.005,
+      "text": "to increase",
+      "confidence": 0.94433594
+    },
+    {
+      "start_sec": 1449.545,
+      "end_sec": 1451.885,
+      "text": "my win loss ratio a little bit more",
+      "confidence": 0.9986572
+    },
+    {
+      "start_sec": 1452.99,
+      "end_sec": 1456.99,
+      "text": "on average. So let's say from 5.7",
+      "confidence": 0.97236556
+    },
+    {
+      "start_sec": 1456.99,
+      "end_sec": 1460.45,
+      "text": "to, let's say, something like seven, even 10",
+      "confidence": 0.95648193
+    },
+    {
+      "start_sec": 1460.83,
+      "end_sec": 1465.33,
+      "text": "probably is. This is what I'm rather striving for. You know, something like 10.",
+      "confidence": 0.93819755
+    },
+    {
+      "start_sec": 1465.855,
+      "end_sec": 1468.435,
+      "text": "I mean, even, you know, even seven would be good,",
+      "confidence": 0.99523926
+    },
+    {
+      "start_sec": 1468.815,
+      "end_sec": 1483.23,
+      "text": "to see an increase, but you can see it's not really changing so much about the expectancy. So I need probably a higher win rate, you know, something like, win loss ratio. Sorry. Something like eight or 10. So... And you know how to achieve that very, very,",
+      "confidence": 0.9648234
+    },
+    {
+      "start_sec": 1483.53,
+      "end_sec": 1484.35,
+      "text": "very easy,",
+      "confidence": 0.8833008
+    },
+    {
+      "start_sec": 1485.21,
+      "end_sec": 1485.71,
+      "text": "through",
+      "confidence": 0.99902344
+    },
+    {
+      "start_sec": 1486.73,
+      "end_sec": 1487.79,
+      "text": "tighter stop losses,",
+      "confidence": 0.93969727
+    },
+    {
+      "start_sec": 1488.17,
+      "end_sec": 1489.79,
+      "text": "even tighter stop losses.",
+      "confidence": 0.9761963
+    },
+    {
+      "start_sec": 1490.33,
+      "end_sec": 1495.225,
+      "text": "You know, this is what I'm thinking about, you know, having stop losses of let's say 1%, 2%,",
+      "confidence": 0.9518907
+    },
+    {
+      "start_sec": 1495.525,
+      "end_sec": 1498.505,
+      "text": "something like that, and accepting to lose more often,",
+      "confidence": 0.95632595
+    },
+    {
+      "start_sec": 1498.885,
+      "end_sec": 1501.705,
+      "text": "but at the end having a higher win loss ratio,",
+      "confidence": 0.96325684
+    },
+    {
+      "start_sec": 1502.405,
+      "end_sec": 1503.545,
+      "text": "over the long term.",
+      "confidence": 0.998291
+    },
+    {
+      "start_sec": 1504.34,
+      "end_sec": 1518.68,
+      "text": "So you know this is how I think about my trading system you know I'm always thinking in these statistics and I'm always thinking in a long series of trades you know what what will happen if I take you know 400 trades with this trading system and you know",
+      "confidence": 0.9253662
+    },
+    {
+      "start_sec": 1518.985,
+      "end_sec": 1520.525,
+      "text": "even and this is so important",
+      "confidence": 0.91052246
+    },
+    {
+      "start_sec": 1521.945,
+      "end_sec": 1523.645,
+      "text": "even if this is a total unrealistic",
+      "confidence": 0.92578125
+    },
+    {
+      "start_sec": 1523.945,
+      "end_sec": 1528.605,
+      "text": "number that's my expect... This is this is my experience right? These numbers are totally unrealistic.",
+      "confidence": 0.89408875
+    },
+    {
+      "start_sec": 1529.065,
+      "end_sec": 1533.725,
+      "text": "You you will never make 5405500%",
+      "confidence": 0.8612738
+    },
+    {
+      "start_sec": 1533.75,
+      "end_sec": 1537.85,
+      "text": "with a trading system in a year. So, this is totally unrealistic.",
+      "confidence": 0.98551434
+    },
+    {
+      "start_sec": 1538.71,
+      "end_sec": 1539.11,
+      "text": "And,",
+      "confidence": 0.9946289
+    },
+    {
+      "start_sec": 1539.67,
+      "end_sec": 1542.41,
+      "text": "but, you know, what I have found out",
+      "confidence": 0.9242859
+    },
+    {
+      "start_sec": 1542.79,
+      "end_sec": 1544.09,
+      "text": "is that,",
+      "confidence": 0.9498291
+    },
+    {
+      "start_sec": 1545.35,
+      "end_sec": 1546.01,
+      "text": "you know,",
+      "confidence": 0.9875488
+    },
+    {
+      "start_sec": 1546.315,
+      "end_sec": 1551.535,
+      "text": "I I don't I don't wanna say that that's too optimistic, you know, but I found out that",
+      "confidence": 0.95962185
+    },
+    {
+      "start_sec": 1552.315,
+      "end_sec": 1555.855,
+      "text": "around 50% of the edge is destroyed by the trader.",
+      "confidence": 0.98999023
+    },
+    {
+      "start_sec": 1556.475,
+      "end_sec": 1563.53,
+      "text": "So that's at least, you know, what I found out from my own trading. So when when I have a potential of, let's say, making a 300%",
+      "confidence": 0.96762574
+    },
+    {
+      "start_sec": 1563.53,
+      "end_sec": 1566.49,
+      "text": "return in a year, I will probably make a 150%",
+      "confidence": 0.93165696
+    },
+    {
+      "start_sec": 1566.49,
+      "end_sec": 1570.35,
+      "text": "return because, you know, I make mistakes, you know, I'm I'm motley, etcetera.",
+      "confidence": 0.9315655
+    },
+    {
+      "start_sec": 1571.05,
+      "end_sec": 1571.79,
+      "text": "So... And",
+      "confidence": 0.99853516
+    },
+    {
+      "start_sec": 1572.49,
+      "end_sec": 1574.91,
+      "text": "it's the same thing here, you know, probably",
+      "confidence": 0.9546509
+    },
+    {
+      "start_sec": 1575.37,
+      "end_sec": 1583.665,
+      "text": "I will never achieve 5000% in a year. I will probably even not and not, be able to have, 2500%",
+      "confidence": 0.9187891
+    },
+    {
+      "start_sec": 1583.665,
+      "end_sec": 1585.045,
+      "text": "in a year. Right?",
+      "confidence": 0.9534912
+    },
+    {
+      "start_sec": 1585.425,
+      "end_sec": 1589.505,
+      "text": "But is it is it possible, let's say, in a very good year like 2020,",
+      "confidence": 0.95773923
+    },
+    {
+      "start_sec": 1589.505,
+      "end_sec": 1591.925,
+      "text": "is it possible to make a thousand percent return,",
+      "confidence": 0.9618056
+    },
+    {
+      "start_sec": 1592.54,
+      "end_sec": 1593.92,
+      "text": "with with these statistics?",
+      "confidence": 0.9466553
+    },
+    {
+      "start_sec": 1594.38,
+      "end_sec": 1594.88,
+      "text": "Probably",
+      "confidence": 0.99902344
+    },
+    {
+      "start_sec": 1595.5,
+      "end_sec": 1597.52,
+      "text": "yes. Right? Probably yes.",
+      "confidence": 0.88171387
+    },
+    {
+      "start_sec": 1598.06,
+      "end_sec": 1610.785,
+      "text": "And not... Sorry. That's that's not not with account size that I trade. Definitely not. So because, you know, I get not so many opportunities. Probably it will rather be not 400 but I don't know 200 trades or something like that.",
+      "confidence": 0.9475127
+    },
+    {
+      "start_sec": 1611.245,
+      "end_sec": 1614.945,
+      "text": "You know and then you can see that the compounding effect is much much lower.",
+      "confidence": 0.9816732
+    },
+    {
+      "start_sec": 1615.405,
+      "end_sec": 1620.865,
+      "text": "So but you know this is this is this is what I'm always thinking about you know how",
+      "confidence": 0.9409451
+    },
+    {
+      "start_sec": 1621.51,
+      "end_sec": 1631.53,
+      "text": "you know, what what what is the type of trading system that I want to, trade? Where is improvement? How can I achieve that? And what's win loss ratio? And it's all about these statistics.",
+      "confidence": 0.9495187
+    },
+    {
+      "start_sec": 1632.15,
+      "end_sec": 1642.265,
+      "text": "And when you understand that that this is this is it all about, and when you understand that, you know, higher hit rate systems again, you know, higher hit rate systems",
+      "confidence": 0.9574053
+    },
+    {
+      "start_sec": 1642.965,
+      "end_sec": 1643.945,
+      "text": "feel good,",
+      "confidence": 0.9454346
+    },
+    {
+      "start_sec": 1644.245,
+      "end_sec": 1646.105,
+      "text": "but they are not automatically",
+      "confidence": 0.9998047
+    },
+    {
+      "start_sec": 1646.565,
+      "end_sec": 1647.465,
+      "text": "more profitable,",
+      "confidence": 0.9215088
+    },
+    {
+      "start_sec": 1648.82,
+      "end_sec": 1650.2,
+      "text": "then you really understand",
+      "confidence": 0.99731445
+    },
+    {
+      "start_sec": 1650.66,
+      "end_sec": 1653.24,
+      "text": "what is trading all about. Trading is a mathematical,",
+      "confidence": 0.97873265
+    },
+    {
+      "start_sec": 1654.34,
+      "end_sec": 1668.735,
+      "text": "numbers game with pattern recognition, and that's all. You know? And this is also the reason when I see, you know, so many traders are always taking these very little gains, you you know, or I took this one year 10%, or I took this 115%.",
+      "confidence": 0.9608535
+    },
+    {
+      "start_sec": 1668.955,
+      "end_sec": 1672.735,
+      "text": "Oh, now I take this one with a 8% gain or whatever. You know?",
+      "confidence": 0.93226844
+    },
+    {
+      "start_sec": 1673.115,
+      "end_sec": 1681.59,
+      "text": "I personally can only say, yeah. You can do that, you know, but I know that you are not very profitable in your trading if you always take these very little gains you need bigger gains",
+      "confidence": 0.9572754
+    },
+    {
+      "start_sec": 1682.21,
+      "end_sec": 1687.75,
+      "text": "even if you have a higher hit rate you know it's a total different thing if you have a hit hit rate of 60%",
+      "confidence": 0.9553121
+    },
+    {
+      "start_sec": 1688.61,
+      "end_sec": 1695.015,
+      "text": "but again you know this is elite performance you know this is elite win probability if you can achieve that",
+      "confidence": 0.97993165
+    },
+    {
+      "start_sec": 1695.635,
+      "end_sec": 1700.055,
+      "text": "that type of statistics over a long long series of trades",
+      "confidence": 0.99578303
+    },
+    {
+      "start_sec": 1700.435,
+      "end_sec": 1703.255,
+      "text": "you know you can have one year with these statistics",
+      "confidence": 0.9482422
+    },
+    {
+      "start_sec": 1703.715,
+      "end_sec": 1707.495,
+      "text": "but then if you have a next year and it goes down to 40%",
+      "confidence": 0.93104774
+    },
+    {
+      "start_sec": 1707.9,
+      "end_sec": 1710.24,
+      "text": "you know, you are back in this, choppy,",
+      "confidence": 0.9802348
+    },
+    {
+      "start_sec": 1711.18,
+      "end_sec": 1712.24,
+      "text": "in this choppy,",
+      "confidence": 0.8568251
+    },
+    {
+      "start_sec": 1712.78,
+      "end_sec": 1716.4,
+      "text": "equity curves. And again, you know, average performance here is 60%.",
+      "confidence": 0.95454544
+    },
+    {
+      "start_sec": 1716.46,
+      "end_sec": 1721.76,
+      "text": "So you you can you can assume that your performance is probably rather 30% or 25",
+      "confidence": 0.9941864
+    },
+    {
+      "start_sec": 1722.025,
+      "end_sec": 1723.805,
+      "text": "because of human errors and mistakes.",
+      "confidence": 0.99161786
+    },
+    {
+      "start_sec": 1724.425,
+      "end_sec": 1726.365,
+      "text": "So I know that this video was",
+      "confidence": 0.99762833
+    },
+    {
+      "start_sec": 1726.665,
+      "end_sec": 1730.205,
+      "text": "very abstract, but I think it is one of the most important,",
+      "confidence": 0.91813153
+    },
+    {
+      "start_sec": 1730.585,
+      "end_sec": 1732.125,
+      "text": "things to understand this,",
+      "confidence": 0.92926025
+    },
+    {
+      "start_sec": 1732.585,
+      "end_sec": 1734.365,
+      "text": "when it comes to professional trading.",
+      "confidence": 0.9970296
+    },
+    {
+      "start_sec": 1735.075,
+      "end_sec": 1742.615,
+      "text": "If you have any questions, if you have any feedback, you can write that in the article in the comment section of course, and I wish you a great day.",
+      "confidence": 0.95569664
+    }
+  ],
+  "title": "Trading Edge Statistics and Curve Simulation",
+  "transcript_path": "data/video_pipeline/transcripts/komar_vid_lesson_trading-edge-statistics-and-curve-simulation.json",
+  "video_id": "komar_vid_lesson_trading-edge-statistics-and-curve-simulation"
+}

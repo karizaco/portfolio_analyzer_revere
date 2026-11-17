@@ -1,0 +1,934 @@
+{
+  "channel": "komar",
+  "checksum": "59482b5b91789b3996e74087f3199119",
+  "duration_sec": 754.282667,
+  "fetched_at": "2026-11-17T12:03:37.716Z",
+  "language": "en",
+  "model": "nova-2",
+  "provider": "deepgram",
+  "quality_score": 0.9609863475816995,
+  "segment_count": 153,
+  "segments": [
+    {
+      "start_sec": 1.44,
+      "end_sec": 7.6,
+      "text": "Let's look quickly at my own portfolio and especially at the trades that I got stopped out,",
+      "confidence": 0.98558134
+    },
+    {
+      "start_sec": 8,
+      "end_sec": 8.9,
+      "text": "last week.",
+      "confidence": 0.9995117
+    },
+    {
+      "start_sec": 9.76,
+      "end_sec": 20.115,
+      "text": "So I was short in the Nasdaq 100, and I think I shorted it at the right time. You can see that here. So I shorted that around 19,480.",
+      "confidence": 0.99081105
+    },
+    {
+      "start_sec": 20.815,
+      "end_sec": 27.315,
+      "text": "So... And then the trade went into the right direction here, but I got stopped out here on,",
+      "confidence": 0.9975179
+    },
+    {
+      "start_sec": 28.015,
+      "end_sec": 28.755,
+      "text": "on Wednesday,",
+      "confidence": 0.9699707
+    },
+    {
+      "start_sec": 29.215,
+      "end_sec": 30.435,
+      "text": "with the tariff news.",
+      "confidence": 0.8918457
+    },
+    {
+      "start_sec": 31.07,
+      "end_sec": 44.45,
+      "text": "And in hindsight, it looks a little bit like, okay, it was foolish to get stopped out here, but that's with the benefit of hindsight. And I want to speak quickly about a very, very important concept, and this is hindsight bias.",
+      "confidence": 0.9771205
+    },
+    {
+      "start_sec": 44.975,
+      "end_sec": 47.795,
+      "text": "Right? A lot of traders and even sometimes",
+      "confidence": 0.9605713
+    },
+    {
+      "start_sec": 48.335,
+      "end_sec": 48.835,
+      "text": "myself",
+      "confidence": 0.9873047
+    },
+    {
+      "start_sec": 49.615,
+      "end_sec": 50.435,
+      "text": "are are,",
+      "confidence": 0.9141846
+    },
+    {
+      "start_sec": 51.215,
+      "end_sec": 55.715,
+      "text": "are in in in... Are are experiencing this hindsight bias.",
+      "confidence": 0.867041
+    },
+    {
+      "start_sec": 56.015,
+      "end_sec": 59.22,
+      "text": "Hindsight bias means you look at information",
+      "confidence": 0.98479354
+    },
+    {
+      "start_sec": 59.92,
+      "end_sec": 61.7,
+      "text": "with a benefit of hindsight",
+      "confidence": 0.98642576
+    },
+    {
+      "start_sec": 62.16,
+      "end_sec": 63.86,
+      "text": "and you see things differently.",
+      "confidence": 0.90541995
+    },
+    {
+      "start_sec": 64.64,
+      "end_sec": 67.86,
+      "text": "Right? And one of the things which is very, very helpful,",
+      "confidence": 0.97234553
+    },
+    {
+      "start_sec": 68.24,
+      "end_sec": 76.175,
+      "text": "which I discovered for myself over the last couple of years is to really go through this... Go through a trade bar by bar by bar.",
+      "confidence": 0.93688023
+    },
+    {
+      "start_sec": 76.955,
+      "end_sec": 84.815,
+      "text": "So when you... Because then you do not see the price information. Right? And you can do you can do that here in trading view. There's a feature...",
+      "confidence": 0.96510535
+    },
+    {
+      "start_sec": 85.72,
+      "end_sec": 91.34,
+      "text": "This replay feature you can use, or you can scroll the chart at the right time, and then you can use your keyboard,",
+      "confidence": 0.9744926
+    },
+    {
+      "start_sec": 91.96,
+      "end_sec": 100.38,
+      "text": "with the arrows to the left and to the right to go to this, chart bar by bar. So here everything looks fine. Right? It looks really good. Then we have this,",
+      "confidence": 0.95786285
+    },
+    {
+      "start_sec": 101.105,
+      "end_sec": 104.405,
+      "text": "then we have this reversal bar here, and then, of course,",
+      "confidence": 0.96770686
+    },
+    {
+      "start_sec": 104.785,
+      "end_sec": 109.205,
+      "text": "you feel some emotions coming up and say, oh, this thing is now moving against me.",
+      "confidence": 0.97094727
+    },
+    {
+      "start_sec": 110.225,
+      "end_sec": 115.365,
+      "text": "Should I cover my position? Should I cover my position? No. Don't cover your position. Right? Because",
+      "confidence": 0.9862276
+    },
+    {
+      "start_sec": 115.76,
+      "end_sec": 119.94,
+      "text": "this this thing could pull back into the direction of the EMA eight.",
+      "confidence": 0.97671276
+    },
+    {
+      "start_sec": 120.32,
+      "end_sec": 122.34,
+      "text": "You know, the trend is clearly down,",
+      "confidence": 0.94487655
+    },
+    {
+      "start_sec": 122.88,
+      "end_sec": 123.54,
+      "text": "and then,",
+      "confidence": 0.9946289
+    },
+    {
+      "start_sec": 124.96,
+      "end_sec": 130.26,
+      "text": "then then maybe the price will turn around. Right? So give it some room. So... And then you can see",
+      "confidence": 0.9887207
+    },
+    {
+      "start_sec": 131.075,
+      "end_sec": 132.215,
+      "text": "on the next day,",
+      "confidence": 0.99890137
+    },
+    {
+      "start_sec": 132.675,
+      "end_sec": 139.575,
+      "text": "the price is pulling back into the direction of the EMA eight. Maybe you you you get more nervous now and say, ah,",
+      "confidence": 0.9529233
+    },
+    {
+      "start_sec": 140.195,
+      "end_sec": 146.73,
+      "text": "but now it's back at break even or maybe slightly... No. No. It's back at break break even. You're almost break even.",
+      "confidence": 0.83213115
+    },
+    {
+      "start_sec": 147.77,
+      "end_sec": 153.07,
+      "text": "Oh, my gosh, should I cover my my position? I don't wanna lose any money. And then you say to yourself, no,",
+      "confidence": 0.93219185
+    },
+    {
+      "start_sec": 153.37,
+      "end_sec": 154.35,
+      "text": "because, you know,",
+      "confidence": 0.9275716
+    },
+    {
+      "start_sec": 154.73,
+      "end_sec": 162.705,
+      "text": "you already accepted the risk, right? You you planned your trade, you accepted to lose some money off your account just a little bit,",
+      "confidence": 0.9020589
+    },
+    {
+      "start_sec": 163.345,
+      "end_sec": 172.165,
+      "text": "to make money on the downside. And what will what will happen to you if tomorrow tomorrow the price will get down and follow through on the upside... On the downside.",
+      "confidence": 0.95328254
+    },
+    {
+      "start_sec": 172.945,
+      "end_sec": 173.445,
+      "text": "Right?",
+      "confidence": 0.93652344
+    },
+    {
+      "start_sec": 174.625,
+      "end_sec": 190.275,
+      "text": "In that case, you are out of the trade and you cannot make money. So you have to follow your plan. So... And then, boom, you will get stopped out. And now you see the trade differently. Right? Now you say, yeah. But but here, that that was a sign already that the price will turn around.",
+      "confidence": 0.95183146
+    },
+    {
+      "start_sec": 190.835,
+      "end_sec": 198.215,
+      "text": "Let's go one one one one bar, back. Now you see the price, or now now you see the things differently again. Right?",
+      "confidence": 0.9501741
+    },
+    {
+      "start_sec": 198.835,
+      "end_sec": 199.495,
+      "text": "So... And",
+      "confidence": 0.9975586
+    },
+    {
+      "start_sec": 199.955,
+      "end_sec": 202.615,
+      "text": "this is this is very important to understand.",
+      "confidence": 0.98757935
+    },
+    {
+      "start_sec": 203.08,
+      "end_sec": 207.58,
+      "text": "You never ever have a really objective view at the price. It's always",
+      "confidence": 0.98527646
+    },
+    {
+      "start_sec": 208.2,
+      "end_sec": 217.18,
+      "text": "impacted by emotions, impacted by something like high... Hindsight bias. And this is why post analysis is important and also reflection is very important.",
+      "confidence": 0.93466187
+    },
+    {
+      "start_sec": 218.375,
+      "end_sec": 226.075,
+      "text": "One thing, what I'm always doing if if I have the feeling of, oh my god, why why did I get stopped out of a trade, etcetera, is",
+      "confidence": 0.93114364
+    },
+    {
+      "start_sec": 227.415,
+      "end_sec": 231.035,
+      "text": "every trade is a fifty fifty thing. You know,",
+      "confidence": 0.92833114
+    },
+    {
+      "start_sec": 231.335,
+      "end_sec": 235.33,
+      "text": "you never know the future. If If you do not really understand that,",
+      "confidence": 0.9927509
+    },
+    {
+      "start_sec": 235.63,
+      "end_sec": 237.49,
+      "text": "then you are emotionally impacted.",
+      "confidence": 0.9635254
+    },
+    {
+      "start_sec": 237.87,
+      "end_sec": 243.65,
+      "text": "If you always think, yeah, but it was so clear that the price will turn around again. I mean, we are in a bear market, etcetera.",
+      "confidence": 0.9644306
+    },
+    {
+      "start_sec": 244.35,
+      "end_sec": 249.285,
+      "text": "Yeah. It's not true. It's not true. Everything can happen in the market. Right?",
+      "confidence": 0.9908447
+    },
+    {
+      "start_sec": 249.845,
+      "end_sec": 255.305,
+      "text": "I mean, think about that. That here was the tariff news. And how would you think about the trade",
+      "confidence": 0.95453846
+    },
+    {
+      "start_sec": 255.685,
+      "end_sec": 256.905,
+      "text": "if the,",
+      "confidence": 0.9337158
+    },
+    {
+      "start_sec": 257.605,
+      "end_sec": 258.505,
+      "text": "if the index,",
+      "confidence": 0.9251302
+    },
+    {
+      "start_sec": 259.445,
+      "end_sec": 259.945,
+      "text": "would,",
+      "confidence": 0.9680176
+    },
+    {
+      "start_sec": 260.325,
+      "end_sec": 261.705,
+      "text": "would move higher here?",
+      "confidence": 0.93792725
+    },
+    {
+      "start_sec": 262.16,
+      "end_sec": 266.66,
+      "text": "You would you would have a different view at the trade. And that... In in that situation,",
+      "confidence": 0.93100876
+    },
+    {
+      "start_sec": 266.96,
+      "end_sec": 272.58,
+      "text": "you are happy to be out of the trade. And then you say, oh, good that I have my stop loss in place.",
+      "confidence": 0.9800229
+    },
+    {
+      "start_sec": 273.04,
+      "end_sec": 275.86,
+      "text": "And it took me out of the trade. I saved some money.",
+      "confidence": 0.99812824
+    },
+    {
+      "start_sec": 276.605,
+      "end_sec": 290.945,
+      "text": "So... And for me, you know, for me, it's okay to miss that move here on the downside and to to get stopped out here because I did not make any mistake with the trade. I followed the plan. I was... I got stopped out at the price I was putting in",
+      "confidence": 0.9653203
+    },
+    {
+      "start_sec": 291.72,
+      "end_sec": 294.46,
+      "text": "or I put in, you know, even even the,",
+      "confidence": 0.99403214
+    },
+    {
+      "start_sec": 295.88,
+      "end_sec": 296.86,
+      "text": "the price moved",
+      "confidence": 0.992513
+    },
+    {
+      "start_sec": 297.16,
+      "end_sec": 298.14,
+      "text": "above my",
+      "confidence": 0.9995117
+    },
+    {
+      "start_sec": 298.68,
+      "end_sec": 306.725,
+      "text": "stop loss point, which was probably a little bit too low, but that's okay. Right? It moved higher than my stop loss point. I, you know,",
+      "confidence": 0.95708287
+    },
+    {
+      "start_sec": 308.545,
+      "end_sec": 314.245,
+      "text": "I definitely would would, get stopped out of the trades. So there there was no alternative to that.",
+      "confidence": 0.89919704
+    },
+    {
+      "start_sec": 314.865,
+      "end_sec": 322.75,
+      "text": "So... And then after that, the same moved down, but, I was sleeping at night, so I missed the opportunity to re short",
+      "confidence": 0.9237644
+    },
+    {
+      "start_sec": 323.37,
+      "end_sec": 328.43,
+      "text": "again. And, to be honest, you know, that is not an attractive risk reward ratio,",
+      "confidence": 0.9777832
+    },
+    {
+      "start_sec": 328.81,
+      "end_sec": 329.71,
+      "text": "putting in",
+      "confidence": 0.99853516
+    },
+    {
+      "start_sec": 330.09,
+      "end_sec": 333.07,
+      "text": "a 5% stop loss in the Nasdaq 100.",
+      "confidence": 0.9325714
+    },
+    {
+      "start_sec": 333.29,
+      "end_sec": 334.43,
+      "text": "That's too much.",
+      "confidence": 0.9991862
+    },
+    {
+      "start_sec": 334.97,
+      "end_sec": 335.47,
+      "text": "So",
+      "confidence": 1
+    },
+    {
+      "start_sec": 335.775,
+      "end_sec": 343.395,
+      "text": "I would say everything was fine with the trade. And let's maybe look at the Bitcoin trade. I I also got stopped out of my Bitcoin trade.",
+      "confidence": 0.9642198
+    },
+    {
+      "start_sec": 344.575,
+      "end_sec": 348.915,
+      "text": "Same thing here. Everything looks good. I shorted at the right time here.",
+      "confidence": 0.98529524
+    },
+    {
+      "start_sec": 349.34,
+      "end_sec": 354.08,
+      "text": "On the next day, I felt good. This thing was following through. On the downside,",
+      "confidence": 0.9690267
+    },
+    {
+      "start_sec": 354.62,
+      "end_sec": 358.08,
+      "text": "I was making money, then it stalled for one day.",
+      "confidence": 0.9723877
+    },
+    {
+      "start_sec": 358.46,
+      "end_sec": 363.28,
+      "text": "Everything was fine. It's below the EMA eight. It looks like it will follow through on the downside.",
+      "confidence": 0.9920383
+    },
+    {
+      "start_sec": 363.755,
+      "end_sec": 366.415,
+      "text": "One day later, everything still looks okay.",
+      "confidence": 0.9981166
+    },
+    {
+      "start_sec": 367.035,
+      "end_sec": 370.335,
+      "text": "It's, it retested the EMA eight here.",
+      "confidence": 0.99009484
+    },
+    {
+      "start_sec": 370.795,
+      "end_sec": 376.415,
+      "text": "It closed three days at the same level. So there there were, you know, three days tight.",
+      "confidence": 0.94692093
+    },
+    {
+      "start_sec": 377.15,
+      "end_sec": 379.57,
+      "text": "And then it followed through on the upside here.",
+      "confidence": 0.9410536
+    },
+    {
+      "start_sec": 380.51,
+      "end_sec": 382.61,
+      "text": "And this, you know, that situation",
+      "confidence": 0.96028644
+    },
+    {
+      "start_sec": 382.99,
+      "end_sec": 384.61,
+      "text": "was maybe something where,",
+      "confidence": 0.9560547
+    },
+    {
+      "start_sec": 384.99,
+      "end_sec": 391.33,
+      "text": "in hindsight, I would say, okay, I could cover a part of my short position already. Right?",
+      "confidence": 0.96885055
+    },
+    {
+      "start_sec": 391.695,
+      "end_sec": 401.235,
+      "text": "That was maybe the only mistake, but overall, it was still okay. It was, you know, moving back into all the resistance here, and it could turn around on the next day.",
+      "confidence": 0.98057556
+    },
+    {
+      "start_sec": 401.615,
+      "end_sec": 404.355,
+      "text": "Maybe it sounds a little bit like hoping and wishing,",
+      "confidence": 0.99306643
+    },
+    {
+      "start_sec": 404.895,
+      "end_sec": 405.375,
+      "text": "but,",
+      "confidence": 0.98706055
+    },
+    {
+      "start_sec": 405.775,
+      "end_sec": 407.315,
+      "text": "this trade was still okay.",
+      "confidence": 0.9800781
+    },
+    {
+      "start_sec": 407.67,
+      "end_sec": 410.09,
+      "text": "And then you can see I got stopped out here.",
+      "confidence": 0.99296874
+    },
+    {
+      "start_sec": 411.67,
+      "end_sec": 412.65,
+      "text": "I think here",
+      "confidence": 0.9399414
+    },
+    {
+      "start_sec": 413.03,
+      "end_sec": 416.41,
+      "text": "a little bit lower, a little bit lower. And then",
+      "confidence": 0.94697267
+    },
+    {
+      "start_sec": 417.19,
+      "end_sec": 420.97,
+      "text": "this thing reversed again, but you can see after that it went sideways.",
+      "confidence": 0.94865537
+    },
+    {
+      "start_sec": 421.83,
+      "end_sec": 422.33,
+      "text": "Right?",
+      "confidence": 0.8913574
+    },
+    {
+      "start_sec": 423.655,
+      "end_sec": 424.555,
+      "text": "So, I mean,",
+      "confidence": 0.943278
+    },
+    {
+      "start_sec": 425.655,
+      "end_sec": 426.395,
+      "text": "if you",
+      "confidence": 0.9975586
+    },
+    {
+      "start_sec": 426.695,
+      "end_sec": 447.3,
+      "text": "I mean, that's always something you need to reflect for yourself, you know, how do you feel about a trade, but the most important thing, and that's also why I showed you the review of my trades in March was, you know, was it a good trade? Right? Was it an a, b, or a c trade? Did I executed everything right? How was I feeling about the trade?",
+      "confidence": 0.974643
+    },
+    {
+      "start_sec": 448,
+      "end_sec": 454.235,
+      "text": "And when I look back to the to the Nasdaq trade and to the Bitcoin short trade, I would say",
+      "confidence": 0.96434325
+    },
+    {
+      "start_sec": 454.695,
+      "end_sec": 469.035,
+      "text": "it was maybe not an a trade because I was a little bit emotionally attached, but it was definitely a b trade. Everything was fine. It just did not work out. I was stopped out. That is the volatility of the market, and that's okay. Right?",
+      "confidence": 0.98478365
+    },
+    {
+      "start_sec": 469.7,
+      "end_sec": 475.24,
+      "text": "So and, yeah, the only trade I still have open, I already spoke about that is oil.",
+      "confidence": 0.97443706
+    },
+    {
+      "start_sec": 476.58,
+      "end_sec": 477.08,
+      "text": "So,",
+      "confidence": 0.6784668
+    },
+    {
+      "start_sec": 477.94,
+      "end_sec": 481.64,
+      "text": "I don't want to repeat everything here. So I shorted this thing here,",
+      "confidence": 0.93922776
+    },
+    {
+      "start_sec": 482.065,
+      "end_sec": 485.605,
+      "text": "You can see what's really breaking down and following through here on the downside.",
+      "confidence": 0.9122489
+    },
+    {
+      "start_sec": 485.985,
+      "end_sec": 494.885,
+      "text": "I prepare myself for for a rally here. And maybe maybe one question I think Philip asked that in the community, would you would you add to a short position?",
+      "confidence": 0.91846925
+    },
+    {
+      "start_sec": 497.12,
+      "end_sec": 497.78,
+      "text": "You know,",
+      "confidence": 0.97473145
+    },
+    {
+      "start_sec": 498.4,
+      "end_sec": 502.26,
+      "text": "you must understand that short and long is working differently",
+      "confidence": 0.99833983
+    },
+    {
+      "start_sec": 502.8,
+      "end_sec": 503.78,
+      "text": "because of these",
+      "confidence": 0.94189453
+    },
+    {
+      "start_sec": 504.64,
+      "end_sec": 511.06,
+      "text": "extreme snapback rallies that can happen. Right? If I would short, if I would add to my short position here",
+      "confidence": 0.98321533
+    },
+    {
+      "start_sec": 511.845,
+      "end_sec": 513.865,
+      "text": "and this thing would move against me,",
+      "confidence": 0.9704241
+    },
+    {
+      "start_sec": 514.245,
+      "end_sec": 516.025,
+      "text": "I don't know, seven or 8%,",
+      "confidence": 0.9807332
+    },
+    {
+      "start_sec": 516.565,
+      "end_sec": 518.345,
+      "text": "I would give back a lot of profits.",
+      "confidence": 0.9929199
+    },
+    {
+      "start_sec": 519.045,
+      "end_sec": 522.105,
+      "text": "Right? And then maybe I get stopped out for whatever reason.",
+      "confidence": 0.9638228
+    },
+    {
+      "start_sec": 522.725,
+      "end_sec": 527.59,
+      "text": "And then I I added to my position and increased my my potential loss.",
+      "confidence": 0.9158412
+    },
+    {
+      "start_sec": 527.97,
+      "end_sec": 531.75,
+      "text": "In a short position, I'm only adding to my position",
+      "confidence": 0.99550784
+    },
+    {
+      "start_sec": 532.69,
+      "end_sec": 533.19,
+      "text": "after",
+      "confidence": 0.96972656
+    },
+    {
+      "start_sec": 533.89,
+      "end_sec": 536.63,
+      "text": "our... A rally. So after a pullback here,",
+      "confidence": 0.9198303
+    },
+    {
+      "start_sec": 537.425,
+      "end_sec": 542.645,
+      "text": "at a certain moving or at a moving average or support level or anything like that,",
+      "confidence": 0.94322205
+    },
+    {
+      "start_sec": 543.585,
+      "end_sec": 547.525,
+      "text": "it's better to add when the prices are starting to break down again,",
+      "confidence": 0.97598034
+    },
+    {
+      "start_sec": 548.465,
+      "end_sec": 550.245,
+      "text": "or maybe if you have a consolidation.",
+      "confidence": 0.9898507
+    },
+    {
+      "start_sec": 550.625,
+      "end_sec": 564.52,
+      "text": "So if the stock is going sideways, or in that case, oil goes sideways, and then you can add maybe, to your short position, but then you also have to move your stop loss down to protect your money. So these are the only",
+      "confidence": 0.9691606
+    },
+    {
+      "start_sec": 564.82,
+      "end_sec": 566.6,
+      "text": "situations where I would add",
+      "confidence": 0.99921876
+    },
+    {
+      "start_sec": 567.115,
+      "end_sec": 569.615,
+      "text": "to a short position. And on the other side,",
+      "confidence": 0.97732204
+    },
+    {
+      "start_sec": 569.995,
+      "end_sec": 573.695,
+      "text": "I only do that if I want to hold on to a short position",
+      "confidence": 0.9768764
+    },
+    {
+      "start_sec": 574.075,
+      "end_sec": 575.855,
+      "text": "for a couple of weeks,",
+      "confidence": 0.9538086
+    },
+    {
+      "start_sec": 576.555,
+      "end_sec": 580.975,
+      "text": "not if I want to make a 10 or 15% profit on the downside.",
+      "confidence": 0.97255164
+    },
+    {
+      "start_sec": 581.435,
+      "end_sec": 582.575,
+      "text": "Definitely not.",
+      "confidence": 0.90478516
+    },
+    {
+      "start_sec": 582.88,
+      "end_sec": 588.98,
+      "text": "Because, you know, in in that situation, you are more in a swing trade mode. You want to cover everything into the weakness.",
+      "confidence": 0.9622962
+    },
+    {
+      "start_sec": 589.52,
+      "end_sec": 591.78,
+      "text": "And one of the things, and this is also important,",
+      "confidence": 0.96345216
+    },
+    {
+      "start_sec": 592.72,
+      "end_sec": 594.02,
+      "text": "you must ask yourself,",
+      "confidence": 0.9836426
+    },
+    {
+      "start_sec": 594.56,
+      "end_sec": 595.78,
+      "text": "where is...",
+      "confidence": 0.99194336
+    },
+    {
+      "start_sec": 596.465,
+      "end_sec": 605.445,
+      "text": "You know, where where is where is this need coming from to add to a short or to add to any position? Right. It doesn't matter if it's short or long.",
+      "confidence": 0.92814785
+    },
+    {
+      "start_sec": 605.825,
+      "end_sec": 608.005,
+      "text": "Because very, very often what I discovered",
+      "confidence": 0.95887977
+    },
+    {
+      "start_sec": 608.385,
+      "end_sec": 612.085,
+      "text": "for myself is that the need to add to a position quickly",
+      "confidence": 0.97562665
+    },
+    {
+      "start_sec": 612.44,
+      "end_sec": 613.74,
+      "text": "is coming from emotions.",
+      "confidence": 0.9902344
+    },
+    {
+      "start_sec": 614.36,
+      "end_sec": 618.7,
+      "text": "Right? You want to make more money. You are greedy.",
+      "confidence": 0.9553467
+    },
+    {
+      "start_sec": 619.48,
+      "end_sec": 622.22,
+      "text": "But that is a very, very bad,",
+      "confidence": 0.96623886
+    },
+    {
+      "start_sec": 622.84,
+      "end_sec": 624.94,
+      "text": "way to add to a position.",
+      "confidence": 0.99886066
+    },
+    {
+      "start_sec": 625.625,
+      "end_sec": 628.685,
+      "text": "You want to add to position because you see a setup,",
+      "confidence": 0.9321955
+    },
+    {
+      "start_sec": 629.065,
+      "end_sec": 630.525,
+      "text": "because you see an opportunity,",
+      "confidence": 0.94873047
+    },
+    {
+      "start_sec": 631.625,
+      "end_sec": 632.105,
+      "text": "and,",
+      "confidence": 0.97436523
+    },
+    {
+      "start_sec": 632.585,
+      "end_sec": 640.285,
+      "text": "not because you see more dollar signs in your mind or in your eyes. Right? You want to add to your short because",
+      "confidence": 0.9939708
+    },
+    {
+      "start_sec": 640.67,
+      "end_sec": 642.53,
+      "text": "you see now a new setup",
+      "confidence": 0.96240234
+    },
+    {
+      "start_sec": 642.99,
+      "end_sec": 646.13,
+      "text": "like a new trade. Right? Like a new trade.",
+      "confidence": 0.9399143
+    },
+    {
+      "start_sec": 646.75,
+      "end_sec": 653.41,
+      "text": "And then you want to add to it because in that moment, you can bring down your stop loss and protect your money again.",
+      "confidence": 0.9861145
+    },
+    {
+      "start_sec": 654.015,
+      "end_sec": 666.195,
+      "text": "And that's not happen... Or that's not possible if if you have this big breakdown here. I mean, where do you wanna put your stop loss? Here at 65, and then you get shaken out with a one day overshoot of the support level?",
+      "confidence": 0.96543604
+    },
+    {
+      "start_sec": 666.87,
+      "end_sec": 671.93,
+      "text": "I would not do that. So be very patient. Be very disciplined at only",
+      "confidence": 0.9403076
+    },
+    {
+      "start_sec": 672.55,
+      "end_sec": 676.97,
+      "text": "if you really see a good opportunity, especially on the short side because,",
+      "confidence": 0.95488095
+    },
+    {
+      "start_sec": 677.43,
+      "end_sec": 684.835,
+      "text": "you know, on the long side, it's a it's a different thing, to be honest. Because if a stock is in a clear uptrend, you have so many supporters.",
+      "confidence": 0.97587216
+    },
+    {
+      "start_sec": 685.855,
+      "end_sec": 696.595,
+      "text": "You know, the stock is is moving with a lower volatility on the upside. You have a calm and slow uptrend, and that's not the case on the short side. This can be very wild and very volatile,",
+      "confidence": 0.9839253
+    },
+    {
+      "start_sec": 697.28,
+      "end_sec": 701.7,
+      "text": "And that's why you want to be much more precise with your entries, with your add ons,",
+      "confidence": 0.98807067
+    },
+    {
+      "start_sec": 702.08,
+      "end_sec": 704.64,
+      "text": "etcetera. So, yeah, that,",
+      "confidence": 0.9451294
+    },
+    {
+      "start_sec": 705.04,
+      "end_sec": 707.78,
+      "text": "quickly to how I would add to my,",
+      "confidence": 0.97924805
+    },
+    {
+      "start_sec": 708.24,
+      "end_sec": 712.98,
+      "text": "short position. You can see I have an alert here in the market. I can also bring it down now,",
+      "confidence": 0.985376
+    },
+    {
+      "start_sec": 713.655,
+      "end_sec": 715.835,
+      "text": "an alert to get get",
+      "confidence": 0.9957031
+    },
+    {
+      "start_sec": 716.135,
+      "end_sec": 716.635,
+      "text": "alerted,",
+      "confidence": 0.9343262
+    },
+    {
+      "start_sec": 717.095,
+      "end_sec": 723.195,
+      "text": "by about the price if I have to look at the price not to cover anything of my short position.",
+      "confidence": 0.93566895
+    },
+    {
+      "start_sec": 723.655,
+      "end_sec": 728.475,
+      "text": "So... And, again, you know, my strategy or tactic for the next week is to wait.",
+      "confidence": 0.9798889
+    },
+    {
+      "start_sec": 728.94,
+      "end_sec": 743.2,
+      "text": "Just patiently wait until a new opportunity is there. This is not a market to force anything. This is not a market where you can come with a money, mindset and say, you know, I want money now. I want money now. If there is no money to pick up,",
+      "confidence": 0.98163086
+    },
+    {
+      "start_sec": 744.025,
+      "end_sec": 747.965,
+      "text": "then you have to wait patiently until it's it's there to pick it up again. Right?",
+      "confidence": 0.9858856
+    },
+    {
+      "start_sec": 748.425,
+      "end_sec": 752.845,
+      "text": "And otherwise, you will will make mediocre and bad, trades.",
+      "confidence": 0.8886719
+    }
+  ],
+  "title": "Weekend-Report 169",
+  "transcript_path": "data/video_pipeline/transcripts/komar_vid_weekend_169_part_01.json",
+  "video_id": "komar_vid_weekend_169_part_01"
+}

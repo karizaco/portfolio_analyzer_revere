@@ -654,7 +654,6 @@ async function readTradeLogRows(options) {
   // columns were unmatched when the left-edge order was used.
   const headerCells = headerBand.cells.map((cell) => ({ ...cell, text: cellText(cell) }));
   const mapping = assignColumns(headerCells, TRADE_LOG_COLUMNS);
-  const HYphen = new Set(['entry_type', 'exit_type', 'review']);
 
   const aligned = [];
   for (const [index, column] of mapping) {

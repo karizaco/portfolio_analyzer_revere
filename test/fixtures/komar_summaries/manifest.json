@@ -1,0 +1,19 @@
+{
+  "files": [
+    {
+      "file": "20250816.txt",
+      "source_pdf": "20250816_Julian_Komar_Weekend_Report_Summary_NoTable.pdf",
+      "md5": "47fdcde4b67c671afac8832ce6f91cd8",
+      "bytes": 2778,
+      "chars": 2752
+    },
+    {
+      "file": "20250824.txt",
+      "source_pdf": "Weekend_Report_Summary_Corrected.pdf",
+      "md5": "a993a9e49decf59fb5433a83382239ef",
+      "bytes": 2149,
+      "chars": 2149
+    }
+  ],
+  "note": "The text layer of the two Weekend-Report Summary PDFs, as tools/_oconnell_pdf.py meta reads it. The PDFs are paid and outside the repository, so their text is captured here (the same rule as test/fixtures/asym/)."
+}

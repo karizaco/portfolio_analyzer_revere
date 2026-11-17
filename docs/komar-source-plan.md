@@ -1,8 +1,10 @@
 # Adding Komar (`julian_komar`) as a source: analysis and implementation plan
 
-**Status:** Phase 1 (the catalog) **implemented** 2026-11-17. Phases 2-7 are
-not started. Every number below was measured on 2026-11-17 against the corpus
-in `D:\courses_nosync\julian_komar` and
+**Status:** Phases 1 (the catalog), 2 (the document readers), 2b (the
+Summary), 3a (the trade-log sheet), 4 (the transcripts) and 5a (the
+setups) **implemented** 2026-11-17. The video panel, the outcomes and
+the dashboard are not started. Every number below was measured on 2026-11-17 against the
+corpus in `D:\courses_nosync\julian_komar` and
 `D:\courses_nosync\julian_komar\_finished`.
 
 ---
@@ -237,9 +239,8 @@ a name that is off by one is worse than no name.
 ### WHAT IS STILL NOT READ
 
 * **The trade-log sheet** (`Trades-August-2025.pdf` page 2, a 2048x1715
-  spreadsheet screenshot with 18 columns). It wants the full `src/table/`
-  reader path with its own measured column mapping, and it is left for
-  Phase 3.
+  spreadsheet screenshot with 18 columns). **READ in Phase 3** -- see
+  "Phase 3 as built" above.
 * **The card's per-horizon mapping.** The 2026-05-09 card's leader
   groups are read in a different order from its theme names, so some
   leaders carry the wrong theme. The leaders themselves are right.
@@ -248,6 +249,399 @@ a name that is off by one is worse than no name.
 * **The daily posts** (`20250625`, `20250820`, `komar_20260505`,
   `komar_20260506`) carry no market card -- their images are chart
   screenshots, and the card check says so.
+---
+
+## Phase 2b as built (2026-11-17): the WEEKEND-REPORT SUMMARY
+
+```
+src/komar/       summaryLayout.js   the sections, the entries, the verdicts
+test/            komarSummaryLayout
+test/fixtures/   komar_summaries/   the two summaries' TEXT, pinned (md5)
+```
+
+`npm run komar:documents` now also reads the two Summary PDFs, and
+writes `komar_summary_readings`: **43 readings** -- 32 holdings, 7
+commodities and 4 prose sections, over **30 distinct subjects**.
+
+**THEY ARE A DERIVED ARTIFACT.** They are machine-written summaries OF
+a video, and the plan says they must be labelled as one and never
+merged with the primary record. What they carry that nothing else in
+the corpus does is a dated, curated, per-ticker WATCHLIST with the
+author's VERDICT on each name -- so they are worth reading, and they
+are stored in their own table.
+
+**They are TEXT-NATIVE** (a ReportLab PDF: 2,778 and 2,149 characters
+of text layer), so no OCR is involved at all.
+
+**THE TWO FILES ARE IN DIFFERENT FORMATS, and that is the difficulty.**
+
+| | 16 August | 24 August |
+|---|---|---|
+| a holding reads | `VFF (Village Farms) -- commentary. [square] Needs more consolidation.` | `DFDV: commentary. [square]` |
+| the company's name | printed | not printed |
+| the verdict | printed | absent |
+
+**THE SQUARE IS A LETTER.** The summary prints a ZapfDingbats filled
+square, and the TEXT LAYER renders it as the literal letter "I" --
+and it is GLUED to whatever follows it. So every entry of the 24
+August file but the first reads as "ISBET" where the ticker is SBET,
+and "IBMNR" where it is BMNR. The corpus's own trade log settles it:
+it carries BMNR for the entry the text layer reads as "IBMNR" (measured
+2026-11-17).
+
+So a leading "I" on an entry that is not the first of its section is
+the square and not the ticker's first letter. **The raw form is kept
+beside the reading** (`raw_subject`), so the decision is checkable.
+
+**THE EXTRACTION DROPS THE SPACES AT LINE BREAKS**, inside a word as
+well as between words: the verdict comes back as "Needs
+moreconsolidation" and the 24 August file's as "Needsmore
+consolidation". So the verdict's stance is matched with the spaces
+IGNORED, and the verdict text is stored exactly as it was read.
+
+**THE TITLE'S OWN WORD "Summary" WOULD SPLIT THE DOCUMENT.** The
+document is called "Julian Komar Weekend-Report Summary" and its last
+section is called "Summary", so the title and the date are cut out
+before the sections are found.
+
+### WHAT IS STILL NOT READ
+
+* **The with-table variant of the Summary.** The file is named
+  `..._Summary_NoTable.pdf`, which implies a with-table version exists
+  and is not in this folder. It would carry per-ticker RATINGS
+  directly, replacing the inference from the verdict. Worth asking the
+  user for (the plan's open question 1).
+
+---
+
+## Phase 3 as built (2026-11-17)
+
+```
+src/komar/       tradeLogLayout.js   the sheet's geometry, its 18 columns, its values
+tools/           extractKomarTradeLog.js
+test/            komarTradeLogLayout  komarTradeLogTool  komarTradeLogSchema
+test/manual/     komarTradeLogRead    the full OCR pass (20 s, so it is manual)
+test/fixtures/   komar_tradelog/      the pinned sheet (md5 31bea590299439d3bd03a872e0c9e0a0)
+```
+
+`npm run komar:tradelog` reads the trade-log sheet -- `Trades-August-2025.pdf`
+page 2, a 2048x1715 screenshot of a spreadsheet -- and writes
+`komar_trade_log`: **32 trades**, **26 distinct tickers**, every one of
+the sheet's 18 columns.
+
+### The sheet's own content is JULY 2025
+
+The file is named `Trades-August-2025.pdf` and its first slide says
+"July 2025 Trades" -- the same lie the catalog already records as
+`date_conflict`. The trades themselves say so too: every entry date is
+between **2025-07-02 and 2025-07-29**.
+
+### THE GRID IS GREY, AND THE SHARED READER CANNOT SEE IT
+
+`src/table/tableReader.js` finds a grid by NEAR-BLACK rules (luma <= 40)
+on a white spreadsheet. This sheet's gridlines are **neutral grey**:
+measured, the row separators run luma 169..248 and the column
+separators 165..195. So `findHorizontalRules` finds **zero** rules on
+the raw pixels and the whole image reads as ONE cell.
+
+The fix is a Komar-specific PREPROCESS -- the shared module is not
+touched (the project's standing rule) -- in `src/komar/tradeLogLayout.js`:
+
+1. locate the grey lines (a coverage profile, plus a both-sides test so
+   that a FILL BLOCK's interior is not a line);
+2. paint them near-black in a COPY of the pixels;
+3. hand that copy to the shared reader, which then sees the grid it
+   expects.
+
+**THREE THINGS THE GREY GRID DOES THAT THE BLACK ONE DOES NOT**
+
+- **The header is a fill block, not a rule.** The grey header band runs
+  y=33..123 (91px) and its interior rows are >=85% grey exactly like a
+  rule would be. A thick island therefore contributes its two EDGE rows
+  (33 and 123) and no interior row, and the header TEXT -- which breaks
+  the island into 33..47 / 56..123 -- is bridged by a gap merge of
+  <=12 rows.
+- **The filled cells hide their own column rules.** The W/L columns are
+  conditionally filled (green rgb(85,221,49), red rgb(232,39,6)), and a
+  fill starts exactly ON the boundary at x=960 and ends on the boundary
+  at x=1030 -- so grey coverage over the data rows never reaches 85%
+  there and BOTH boundaries vanish. They are recovered from the FILLS'
+  OWN EDGES, which is why the detector has a third source.
+- **The date column is filled too.** `Date opened` carries a grey fill
+  (rgb 220) down the whole table, and the date glyphs inside it break
+  its column into fragments (gaps of 10/30/8px). Vertical islands are
+  merged across gaps of <=40px; real column rules are never closer than
+  50px (the narrowest measured gap is 538..588).
+
+The 19 boundaries that come out: 10, 121, 225, 350, 418, 482, 538, 588,
+639, 721, 802, 886, 964, 1029, 1100, 1195, 1290, 1384, 2030.
+
+### A CELL IS READ IN LINE ORDER, NOT IN LEFT-EDGE ORDER
+
+The shared reader sorts a cell's words by their LEFT EDGE. That is
+right for a single-line cell and wrong for a wrapped one, and this
+sheet wraps a lot: "Breakout short-" / "term", "Risk" / "Capital",
+"MMTS" / "Opening", and numbers ("18,63" with a "3" under it).
+
+The second line's first character sits a pixel to the LEFT of the first
+line's, so the left-edge order read:
+
+| the sheet says | the reading was |
+|---|---|
+| Breakout short-term | `term Breakout short-` |
+| Risk Capital | `Capital Risk` |
+| MMTS Opening | `Opening MMTS` |
+| 10,312 | `2 10,31` |
+| 18,633 | `3 18,63` |
+
+**It cost four of the eighteen columns their mapping.** The header is
+matched fuzzily and globally, and "Capital Risk" is six edits from
+"Risk Capital" -- past the tolerance -- so `risk_capital_pct`,
+`mmts_opening`, `mmts_close` and `after_close_rating` were never
+matched, and every row lost four values. The text is now rebuilt from
+the words' own boxes: words grouped into LINES by their vertical
+position, lines top to bottom, words within a line left to right.
+
+### THE WHITELIST MUST CARRY THE DOT
+
+The repair pass re-reads a cell whose text holds a character its column
+cannot hold. The sheet prints decimals with a COMMA and the OCR
+sometimes returns a dot for the same comma ("-1.39" for "-1,39"), and a
+whitelist without the dot makes that reading look like a stray
+character -- so the repair re-reads the cell with a whitelist that CANNOT
+hold the dot, and the value comes back a hundred times too large
+(measured: QSI's W/L R "-1.39" became -139 and fell outside its bounds).
+
+**And a filled cell is never repaired.** The shared reader rewrites a
+filled cell as black-on-white before it reads it; a repair would have to
+do the same, and reading the original white-on-red pixels gives a worse
+reading than no repair at all (measured: the red W/L cells came back as
+fragments).
+
+### THE SHEET'S OWN ARITHMETIC: W/L % IS THE RETURN ON THE AVERAGE PRICE
+
+```
+W/L % = (avg close price - avg opening price) / avg opening price * 100
+```
+
+Measured on 30 of the 32 rows, to the digit the sheet prints: QS
+(9,91 - 7,18) / 7,18 = 38,0223 -> "38,02 %"; BMNR (40,779 - 45,526) /
+45,526 = -10,4295 -> "-10,43 %". The two exceptions are the two rows
+where a number could not be read.
+
+So the column is DERIVED from two other columns, and the sheet's own
+print of it is a CHECK on the reading rather than a fourth fact. That
+is worth having twice over:
+
+- it **catches a misread price**: GOGO's avg close reads "15,57" where
+  the sheet prints "15,576", and the check sees 1,63 % against the
+  sheet's "1,67 %". The row is FLAGGED (`reading_check`), not silently
+  published;
+- it **recovers a W/L that could not be read**: PDYN's "-11,33 %" comes
+  back as "-1 1 33 :" -- the comma and the per cent sign lost -- and the
+  prices give -11,33. The row records `derived_fields = 'wl_pct'`.
+
+The tolerance is 0,02: the sheet prints two decimals, so its own
+rounding is +-0,005.
+
+### THE NUMBERS ARE EUROPEAN
+
+The decimal separator is a comma ("7,18", "0,56 %"), the dates are
+day-first and come in two forms ("08.07.25" and "29.07.2025"), and a
+number that WRAPS inside its cell comes back with its fragments
+space-joined ("17,10 15" is 17,1015) -- so whitespace is stripped
+before a numeric cell is parsed. Every value is bounded by its
+column's measured range, so a lost decimal point (a hundred times too
+large) is refused rather than published.
+
+### WHAT IS STILL NOT READ
+
+* **The two Summary PDFs' prose.** They are text-native (2,839 and
+  2,228 chars) and are a *machine-written summary of a video* -- a
+  derived artifact, which the plan says must be labelled as one and
+  never merged with the primary record.
+* **The video panel** (the plan's Phase 3 in the phasing table -- the
+  era-dependent TradingView panel). That is the heavy one: 116 videos,
+  ffmpeg frames, and a pinned fixture per era.
+* **The Deepgram transcripts** (the plan's Phase 4). The key is
+  configured; 65.9 h at nova-2 is about $30.
+
+---
+
+## Phase 4 as built (2026-11-17)
+
+```
+tools/           fetchKomarTranscripts.js
+test/            komarTranscripts
+data/            video_pipeline/transcripts/komar_<id>.json   (tracked -- the record)
+```
+
+`npm run komar:transcripts` transcribes the corpus with Deepgram.
+`npm run komar:transcripts:dry` prints the plan and the PRICE before a
+cent is spent.
+
+### The corpus's primary text
+
+| | |
+|---|---|
+| videos | **116** |
+| audio | **3,952 minutes** (65.9 hours) |
+| the price at nova-2's standard rate | **$30.43** ($0.0077 a minute) |
+| captions available | **none** -- these are local files, so Deepgram is the only route |
+| the language | **`en`, per call** |
+
+**THE LANGUAGE IS A MODEL CHOICE, NOT A HINT.** `src/transcript/deepgramClient.js`
+documents the measurement: pointed at the wrong acoustic model,
+Deepgram emits a handful of isolated words instead of a transcript
+(measured: 15 segments of isolated words on Czech audio with
+`language=en`, against 881 segments of full sentences with `language=cs`).
+The module's default is `cs` -- Sevcik is Czech -- and the repo's `.env`
+sets no language, so this tool passes `language: 'en'` PER CALL and
+records the language the request actually used. A transcript with no
+segments is treated as a FAILURE, not a result: that is exactly what the
+wrong model produces.
+
+### The JSON is the RECORD and the row is its INDEX
+
+The transcript is written as the canonical JSON under
+`data/video_pipeline/transcripts/komar_<id>.json`, and it is TRACKED --
+the corpus cannot be re-fetched, so the derived records are committed
+and the media never is. `komar_transcripts` (in the derived file) is
+its index: provider, language, model, path, segment count, duration,
+the provider's quality score, and the checksum.
+
+**A file with no row is re-registered, not transcribed again.** The
+first run of this tool wrote a transcript and then failed on the row
+(the quality score was `undefined`, which SQLite will not bind), and a
+resume that only looked at the FILE would have skipped that video for
+ever with no row to show for it. So the resume check is the ROW, and a
+file with no row has its row written from the file -- no Deepgram call.
+
+**The audio is deleted after every request.** It is a byproduct; only
+the transcript is the corpus.
+
+**The order is by DURATION**, so a bounded run buys the most transcripts
+per dollar, and the cheapest ones are the ones that fail first.
+
+### WHAT THE TRANSCRIPTS CONTAIN (measured over the corpus)
+
+A census of the ticker-shaped tokens in the transcripts, which is what
+sizes the next stage:
+
+| | |
+|---|---|
+| segments | **20,451** over 81 transcripts |
+| words | ~290,000 |
+| distinct ticker-shaped tokens | **456**, of which **261 appear once** |
+
+The frequent ones are a MIX of the corpus's own holdings and the words
+of a chart lesson:
+
+```
+EMA:539  US:116  AI:91  ARC:55  EPS:49  MA:39  IPO:38  AMD:33
+MU:25  PL:22  ETF:22  OTC:19  SMCI:17  APLD:17  ADR:17  ARK:16
+IOND:14  NBIS:13  SNDK:13  USAR:12  CRDO:12  NVIDIA:12  QS:12  CRML:11
+```
+
+So the setup extraction has to tell a HOLDING from a CHART TERM (EMA,
+VCP, ARC, FOMO), a MARKET WORD (US, ETF, OTC, ADR, IPO) and an OCR
+fragment ("I...", "ARC.") -- and the corpus speaks some names
+("NVIDIA", 12 times) as well as symbols, so the confirmed-names table
+needs a Komar pass. The plan already says so:
+`config/ticker_lexicon_observed.csv` and `config/ticker_names_confirmed.csv`
+will need a Komar pass.
+
+### A PROVIDER ARTIFACT, MEASURED
+
+Deepgram's utterance boundary can fall **inside a word**: the first
+transcript reads "...Here you can see, I" and then "ONS. I sold that
+here when it dropped below the EMA eight." -- the ticker "IONS" split
+across two segments. Measured over 308 boundaries of three transcripts,
+the shape (a segment that does not end on sentence punctuation followed
+by one that starts with a capital) occurs about 1 % of the time, and
+most of those are ordinary clause boundaries.
+
+It is a PROVIDER artifact, and it is not fixed here: the fix belongs
+where the words are read -- the extractor, which is Phase 5 -- and the
+shared normaliser is not changed under a source that depends on it
+without its own measurement.
+
+## Phase 5a as built (2026-11-17): the SETUPS
+
+```
+src/komar/       lexicon.js          the corpus's own tickers, and the words that are not
+tools/           extractKomarSignals.js
+config/          ticker_lexicon_komar.csv   the 73 tickers the seed lexicon does not have
+test/            komarLexicon
+```
+
+`npm run komar:signals` reads the transcripts through the SHARED engine
+(`src/sevcik/signalExtractor.js` -- the same one the Sevcik, T3Live and
+Benzinga extractors use) with the English name finder, and writes
+`komar_setups`.
+
+### THE SEED LEXICON DOES NOT KNOW THIS CORPUS
+
+Measured on 2026-11-17: the corpus names **105** tickers -- the trade
+log's 26, the market cards' 55 theme leaders and the Summary's 30
+holdings -- and only **32 of the 105** are in the shared seed lexicon.
+So 73 of the corpus's own names would not have been recognised at all.
+Those 73 live in `config/ticker_lexicon_komar.csv`, one row each, with
+the note saying WHICH artifact names it.
+
+### THE TRANSCRIPTS ARE A CHART LESSON AS MUCH AS A TRADING CALL
+
+786 distinct ticker-shaped tokens, and the frequent ones are a mix of
+holdings and words:
+
+```
+EMA:797  US:255  EPS:232  IPO:97  ARC:71  ETF:65  ADR:46  VCP:30
+OTC:25  NASDAQ:18  IBD:21  FOMO:15  MMTS:19  COVID:12  EMI:11
+```
+
+Every one was checked against the SEC's own registrant list before
+being stopped, because a token that IS a listed registrant might be a
+holding:
+
+* **"EMI" is the EMA INDICATOR.** The corpus says "the EMI 21" and "the
+  EMI 65", and EMI is a listed registrant (a music company), so it has
+  to be stopped or every chart reference becomes a holding.
+* **"MMTS" is the author's own score**, not a ticker -- he says "from
+  looking at the MMTS" nineteen times.
+* **"ARC" is "ARK Innovation Fund"** (Cathie Wood's ARKK), so it is an
+  ALIAS and not a stop. But the alias needs the WHOLE NAME: a looser
+  one ("the ARC") fired on sentences that are ABOUT Cathie Wood --
+  "Kathy Woods from the ARC, you know, she would do 1,000,000 times
+  better if she would look at charts" -- and turned a remark about a
+  fund manager into **57 setups on ARKK**. A missing setup is better
+  than a false one.
+* **"CCG", "ALAP", "NB" and "KC" LOOK like words and are not** -- the
+  contexts say so ("CCG is another sister stock", "I'm thinking about
+  ALAP, CRDO", "NB Bancorp", "the same is true for KC, VNET"), so
+  they are left alone.
+
+### WHAT IT FOUND
+
+| | |
+|---|---|
+| setups | **212** over 116 transcripts |
+| the corpus's own tickers among them | PLTR:19, RKLB:9, GDS, CRDO, VST, GLBE, BTCS, ... |
+
+### THE TWO THINGS THAT ARE STILL WRONG
+
+1. **A RUN MIXES A TICKER MENTION WITH UNRELATED COMMENTARY.** The
+   shared engine's RUN model takes the text from a ticker mention to
+   the next one, so a mention inside a general remark ("the bases are
+   looking always the same") produces a call whose direction comes
+   from the surrounding talk. This is the SHARED engine's behaviour and
+   it is the same for T3Live and Benzinga; it is measured there, not
+   fixed here.
+2. **"CRISPR" is the company (CRSP), not the technology** -- and the
+   confirmed-names table has no row for it, so it is stopped rather
+   than published as a ticker. That is a gap in
+   `config/ticker_names_confirmed.csv`, which the plan says needs a
+   Komar pass.
+
 ---
 
 ## Part 1: How the app is structured today
@@ -832,10 +1226,12 @@ Nothing existing is modified except the three files above.
 |---|---|---|
 | 0 | this document | reviewed |
 | 1 | the catalog | **DONE (2026-11-17)** -- `komar_documents` + `komar_videos` hold all 143 files, each classified by kind and dated from content where the filename lies |
-| 2 | the PDF readers | **DONE (2026-11-17)** -- the card images yield market trends, exposure and theme leaders; the decks parse to notes. The trade-log SHEET and the Summary PDFs are not yet read. |
-| 3 | the panel | a pinned frame from each era reads its tickers correctly; the ground-truth fixture is md5-pinned like the QMG one |
-| 4 | the transcripts | every video has a transcript in the canonical shape; `language=en` is asserted, not assumed |
-| 5 | the signals and the positions | setups carry evidence text; the panel series produces position events |
+| 2 | the PDF readers | **DONE (2026-11-17)** -- the card images yield market trends, exposure and theme leaders; the decks parse to notes. The Summary PDFs are not yet read. |
+| 3a | the trade-log sheet | **DONE (2026-11-17)** -- 32 trades over 26 tickers, every one of the sheet's 18 columns, checked against the sheet's own arithmetic. |
+| 3b | the video panel | a pinned frame from each era reads its tickers correctly; the ground-truth fixture is md5-pinned like the QMG one |
+| 4 | the transcripts | **DONE (2026-11-17)** -- 116 videos, 3,952 minutes, ~$30 of Deepgram at `language=en`; the canonical JSON is tracked and `komar_transcripts` indexes it. |
+| 5a | the setups | **DONE (2026-11-17)** -- 212 setups over 74 transcripts, read with the shared engine and the corpus's own lexicon (73 tickers the seed lexicon does not have) |
+| 5b | the positions | the panel series produces position events (needs 3b) |
 | 6 | the outcomes and the dashboard | the funnel, the conversion rates, the coverage |
 | 7 | the tests and the documentation | `AGENTS.md` / `CLAUDE.md` updated; the `komar:*` scripts documented |
 
