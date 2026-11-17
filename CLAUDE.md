@@ -780,9 +780,9 @@ Julian Komar publishes a paid membership, MARKET UPDATE Premium, on
 and its `_finished` sub-folder.
 
 It is the **first HYBRID** source: a video source, a document source and a
-spreadsheet source in one corpus. Phase 1 (the catalog) and Phase 2 (the
-document readers) are done; the panel OCR, the Deepgram transcripts, the
-signal extraction and the dashboard are not.
+spreadsheet source in one corpus. Phase 1 (the catalog), Phase 2 (the
+document readers) and the trade-log sheet are done; the panel OCR, the
+Deepgram transcripts, the signal extraction and the dashboard are not.
 
 **THE FILENAME IS NOT THE DATE.** Two files in the corpus are wrong about
 their own date, and in both cases the document's own chrome is right:
@@ -818,6 +818,41 @@ or the older `Premium` / `Premium-01` / `Premium-02` naming. Only the
 document carries the date, so the video is LINKED to the document by report
 number.
 
+**THE TRADE LOG IS A SPREADSHEET SCREENSHOT, AND ITS GRID IS GREY.**
+`Trades-August-2025.pdf` page 2 carries a 2048x1715 image of a Google
+Sheets table: 18 columns, 32 rows, one per trade. The shared table
+reader finds a grid by NEAR-BLACK rules (luma <= 40) and this sheet's
+gridlines are **neutral grey** (measured luma 165..248), so it finds
+ZERO of them and the whole image reads as one cell. So the source has
+its own rule detection, in `src/komar/tradeLogLayout.js`: locate the
+grey lines, paint them near-black in a COPY of the pixels, and hand that
+copy to the shared reader. The shared module is not touched.
+
+Three things the grey grid does that the black one does not: the header
+is a FILL BLOCK (91px of grey) and contributes its two edge rows and no
+interior row; the W/L columns are conditionally FILLED, and a fill
+starts and ends exactly on the column rules, so both of those
+boundaries have to be recovered from the fills' own edges; and the
+`Date opened` column is filled too, which breaks its column into
+fragments that are merged across gaps of <=40px.
+
+**A CELL IS READ IN LINE ORDER, NOT LEFT-EDGE ORDER.** The sheet wraps
+"Breakout short-" / "term" and "Risk" / "Capital", and the second
+line's first character sits a pixel to the LEFT of the first line's --
+so the left-edge order read "term Breakout short-" and "Capital Risk",
+which cost four of the eighteen columns their mapping.
+
+**THE SHEET'S OWN ARITHMETIC CHECKS THE READING.** `W/L % = (avg close
+- avg opening) / avg opening * 100`, to the digit the sheet prints
+(measured on 30 of the 32 rows). So a row can be checked against itself:
+a misread price is flagged in `reading_check`, and a W/L that could not
+be read is recovered from the prices (`derived_fields`).
+
+**THE NUMBERS ARE EUROPEAN.** The decimal separator is a comma, the
+dates are day-first ("08.07.25" and "29.07.2025" both occur), and a
+number that wraps inside its cell comes back space-joined ("17,10 15"
+is 17,1015).
+
 - `src/komar/channel.js` - the source's identity, the namespaced ids, and the slug rule
 - `src/komar/corpusCatalog.js` - the folder walk and the filename grammar
 - `src/komar/documentLayout.js` - what a PDF IS, and what its own chrome says
@@ -825,15 +860,18 @@ number.
 - `src/komar/cardDiscs.js` - the trend arrows, read from pixels
 - `src/komar/cardThemes.js` - the theme names, read from the card's accent ink
 - `src/komar/documentExtract.js` - the PDF readers
+- `src/komar/tradeLogLayout.js` - the trade-log sheet's geometry, its 18 columns and its values
 - `src/komar/schema.js` - the tables, and the columns an existing database has to grow
 - `tools/catalogKomar.js` - inventories both folders, reads the documents, probes the videos
 - `tools/extractKomarDocuments.js` - the market cards, the theme leaders and the deck notes
+- `tools/extractKomarTradeLog.js` - the trade-log sheet: 32 trades over 26 tickers
 - `data/komar_manifest.json` - the catalog's committed record of what was read
 
 ```bash
 npm run komar:catalog
 npm run komar:catalog:dry
 npm run komar:documents
+npm run komar:tradelog
 ```
 
 The videos are checksummed by SIZE and MTIME, not by md5: 48 GB read on every
@@ -879,6 +917,13 @@ catalog run is not affordable, and the media is never committed anyway.
 - `test/manual/panelFooterInCrop.test.js` — the production crop against the panel's own footer, cut out of the tracked fixture
 - `test/sevcikSignalExtractor.test.js` — the Sevcik extractor's rules, each worded as the claim it makes
 - `test/oconnellChannel.test.js` — the O'Connell source's identity and its namespaced catalog id, including the two documents on one date that must not share one
+- `test/komarChannel.test.js` — the Komar source's identity, its namespaced ids and the slug rule
+- `test/komarCorpusCatalog.test.js` — the Komar folder walk and the filename grammar
+- `test/komarDocumentLayout.test.js` — what a Komar PDF *is*, and the date it says about itself
+- `test/komarTradeLogLayout.test.js` — the trade-log sheet's grey grid, its 18 columns and its values
+- `test/komarTradeLogSchema.test.js` — the trade-log table's shape, and the rule that a table with rows is never dropped
+- `test/komarTradeLogTool.test.js` — the trade-log writer: rows are replaced, and every row carries its check
+- `test/manual/komarTradeLogRead.test.js` — the **manual** full read of the sheet (a Tesseract pass over every cell, 20 s)
 - `test/oconnellIssueKinds.test.js` — the newsletter taxonomy, read from the masthead by font size
 - `test/oconnellSetupLayout.test.js` — the setup headings, the direction, and the setup vocabulary
 - `test/oconnellPositionLayout.test.js` — the position log's columns, the sign taken from the colour, the date, and the lot key

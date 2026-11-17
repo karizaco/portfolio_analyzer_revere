@@ -113,7 +113,9 @@
     "komar:catalog": "node tools/catalogKomar.js",
     "komar:catalog:dry": "node tools/catalogKomar.js --dry-run",
     "komar:documents": "node tools/extractKomarDocuments.js",
-    "komar:documents:dry": "node tools/extractKomarDocuments.js --limit 1"
+    "komar:documents:dry": "node tools/extractKomarDocuments.js --limit 1",
+    "komar:tradelog": "node tools/extractKomarTradeLog.js",
+    "komar:tradelog:dry": "node tools/extractKomarTradeLog.js --limit 1 --json"
   },
   "dependencies": {
     "sharp": "^0.34.3",

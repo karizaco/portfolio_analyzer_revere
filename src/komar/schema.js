@@ -21,7 +21,12 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { attachDerived } = require('../db/derivedStore');
+const {
+  attachDerived,
+  derivedPathFor,
+  ensureDerivedSchema,
+  tableHome,
+} = require('../db/derivedStore');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const SCHEMA_PATH = path.join(ROOT, 'data', 'db', 'schema_derived.sql');
@@ -43,7 +48,53 @@ const LATE_COLUMNS = [
   { column: 'session_date_precision', table: 'komar_documents', type: "TEXT NOT NULL DEFAULT ''" },
   { column: 'session_date_precision', table: 'komar_videos', type: "TEXT NOT NULL DEFAULT ''" },
   { column: 'trend_by_horizon_json', table: 'komar_market_cards', type: "TEXT NOT NULL DEFAULT '{}'" },
+  // The trade log's columns were re-shaped to the sheet's own 18
+  // headers (see schema_derived.sql). These are the columns the NEW
+  // shape adds; on an old-shape table that could not be dropped (it
+  // has rows), they are added so the writer still works.
+  { column: 'avg_open_price', table: 'komar_trade_log', type: 'REAL' },
+  { column: 'avg_close_price', table: 'komar_trade_log', type: 'REAL' },
+  { column: 'risk_capital_pct', table: 'komar_trade_log', type: 'REAL' },
+  { column: 'mmts_opening', table: 'komar_trade_log', type: "TEXT NOT NULL DEFAULT ''" },
+  { column: 'mmts_close', table: 'komar_trade_log', type: "TEXT NOT NULL DEFAULT ''" },
+  { column: 'wl_r', table: 'komar_trade_log', type: 'REAL' },
+  { column: 'reading_check', table: 'komar_trade_log', type: "TEXT NOT NULL DEFAULT ''" },
+  { column: 'derived_fields', table: 'komar_trade_log', type: "TEXT NOT NULL DEFAULT ''" },
 ];
+
+/**
+ * Reshape an old `komar_trade_log` to the sheet's own columns.
+ *
+ * The first shape was written from the plan's column list, which
+ * guessed at the sheet's headers; the measured header (18 columns,
+ * read off the pixels on 2026-11-17) has Avg. OPENING and Avg. CLOSE
+ * price as two columns, one Risk Capital, MMTS Opening/close as words,
+ * and W/L % beside W/L R. `avg_price` marks the old shape.
+ *
+ * A table with ROWS is never dropped -- there is no honest automatic
+ * rewrite from one shape to the other -- so the old-shape-with-rows
+ * case falls through to the additive LATE_COLUMNS above instead.
+ *
+ * @param {object} db - a connection with the derived file attached
+ * @param {object} [options] - passed through to `derivedPathFor`
+ * @returns {boolean} whether the reshape happened
+ */
+function reshapeTradeLogTable(db, options = {}) {
+  const home = tableHome(db, 'komar_trade_log');
+  if (!home) return false;
+  const columns = db
+    .prepare(`SELECT name FROM ${home}.pragma_table_info('komar_trade_log')`)
+    .all()
+    .map((row) => row.name);
+  if (!columns.includes('avg_price')) return false; // already the new shape
+  const { n } = db.prepare(`SELECT COUNT(*) AS n FROM ${home}.komar_trade_log`).get();
+  if (n > 0) return false; // never drop a table that holds rows
+  db.exec(`DROP TABLE ${home}.komar_trade_log`);
+  // Re-run the schema file: every statement is IF NOT EXISTS, so only
+  // the dropped table (and its two indexes) come back.
+  ensureDerivedSchema(derivedPathFor(db, options.derivedPath));
+  return true;
+}
 
 /**
  * Make sure the Komar tables exist and carry every column.
@@ -63,6 +114,7 @@ function ensureKomarSchema(db, options = {}) {
   // table, not create a second one in the catalog -- and that is exactly
   // why the attach happens BEFORE the ALTERs and not after them.
   attachDerived(db, options);
+  reshapeTradeLogTable(db, options);
   let added = 0;
   for (const entry of LATE_COLUMNS) {
     try {
@@ -76,7 +128,7 @@ function ensureKomarSchema(db, options = {}) {
   return added;
 }
 
-module.exports = { LATE_COLUMNS, SCHEMA_PATH, ensureKomarSchema };
+module.exports = { LATE_COLUMNS, SCHEMA_PATH, ensureKomarSchema, reshapeTradeLogTable };
 
 
 

@@ -1031,6 +1031,15 @@ CREATE TABLE IF NOT EXISTS komar_deck_notes (
 CREATE INDEX IF NOT EXISTS idx_komar_deck_notes_doc ON komar_deck_notes(doc_id);
 
 -- The row-level trade log table from Trades-August-2025 page 2.
+--
+-- The columns are the SHEET'S OWN 18 headers, measured off the pixels
+-- on 2026-11-17 (the first shape was written from the plan's column
+-- list, which guessed: the sheet has Avg. OPENING and Avg. CLOSE price
+-- as two columns, one Risk Capital, MMTS Opening/close as words, and
+-- W/L % beside W/L R -- no MARS column, no W%L flag). The table was
+-- empty when the shape was corrected, so the old columns were dropped
+-- rather than left as dead names; src/komar/schema.js performs that
+-- reshape on an existing database only while the table has no rows.
 CREATE TABLE IF NOT EXISTS komar_trade_log (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     doc_id TEXT NOT NULL,
@@ -1040,20 +1049,27 @@ CREATE TABLE IF NOT EXISTS komar_trade_log (
     date_closed TEXT NOT NULL DEFAULT '',
     entry_type TEXT NOT NULL DEFAULT '',
     ticker TEXT NOT NULL DEFAULT '',
-    avg_price REAL,
-    stop_loss_pct REAL,
-    risk_size_pct REAL,
+    avg_open_price REAL,
+    avg_close_price REAL,
     stop_loss_price REAL,
-    risk_vs_capital_pct REAL,
+    stop_loss_pct REAL,
+    risk_capital_pct REAL,
     exit_type TEXT NOT NULL DEFAULT '',
-    mars_open_close REAL,
-    mmts_open_close REAL,
-    wl_flag TEXT NOT NULL DEFAULT '',
+    mmts_opening TEXT NOT NULL DEFAULT '',
+    mmts_close TEXT NOT NULL DEFAULT '',
     wl_pct REAL,
+    wl_r REAL,
     initial_rating REAL,
     after_close_rating REAL,
     review TEXT NOT NULL DEFAULT '',
     comment TEXT NOT NULL DEFAULT '',
+    -- The sheet's own arithmetic: W/L % IS the return on the average
+    -- price, so a row can be checked against itself. A non-empty check
+    -- means the row's own numbers disagree (measured: a misread avg
+    -- close price), and `derived_fields` names the fields that were
+    -- derived from that arithmetic rather than read off the sheet.
+    reading_check TEXT NOT NULL DEFAULT '',
+    derived_fields TEXT NOT NULL DEFAULT '',
     confidence REAL NOT NULL DEFAULT 0,
     parser_version TEXT NOT NULL,
     created_at TEXT NOT NULL DEFAULT (datetime('now')),

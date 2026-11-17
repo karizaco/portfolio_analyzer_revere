@@ -1,0 +1,33 @@
+{
+  "source": {
+    "document": "Trades-August-2025.pdf",
+    "corpus": "D:\\courses_nosync\\julian_komar",
+    "page": 2,
+    "image_xref": 14,
+    "extracted_with": "tools/_oconnell_pdf.py extract-image --page 2 --xref 14",
+    "note": "The trade-log sheet is an EMBEDDED IMAGE, not a page. The document's own content date is July 2025 (its first slide says so) while the FILE is named August -- the same date_conflict the catalog records."
+  },
+  "image": {
+    "file": "trade_log_sheet.png",
+    "width": 2048,
+    "height": 1715,
+    "md5": "31bea590299439d3bd03a872e0c9e0a0",
+    "bytes": 1178505
+  },
+  "measured_geometry": {
+    "note": "Measured off these pixels on 2026-11-17 by src/komar/tradeLogLayout.js. The gridlines are NEUTRAL GREY (luma 165-248), so the shared near-black rule detector finds none of them.",
+    "title_band": [0, 33],
+    "header_band": [33, 123],
+    "header_fill": "rgb(190,192,191)",
+    "date_column_fill": "rgb(220,220,220)",
+    "data_rows": [124, 1695],
+    "row_count": 32,
+    "column_count": 18,
+    "horizontal_rules": [33, 123, 173, 223, 273, 323, 374, 424, 475, 525, 575, 625, 675, 726, 777, 827, 877, 924, 933, 978, 1028, 1079, 1129, 1179, 1211, 1261, 1292, 1342, 1393, 1444, 1494, 1544, 1594, 1645, 1695],
+    "vertical_rules": [10, 121, 225, 350, 418, 482, 538, 588, 639, 721, 802, 886, 964, 1029, 1100, 1195, 1290, 1384, 2030],
+    "fill_colours": {
+      "wl_green": "rgb(85,221,49)",
+      "wl_red": "rgb(232,39,6)"
+    }
+  }
+}
