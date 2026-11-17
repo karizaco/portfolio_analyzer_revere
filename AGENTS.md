@@ -773,6 +773,73 @@ the prose is the evidence, and a setup whose prose could not be read is stored
 with `evidence_quality: 'heading_only'` — never dropped, never guessed.
 
 `docs/oconnell-source-plan.md` is the full plan and the full measurements.
+### Komar (paid membership: video + documents + a trade log - see 'docs/komar-source-plan.md')
+
+Julian Komar publishes a paid membership, MARKET UPDATE Premium, on
+`members.julian-komar.com`. The corpus is **116 MP4** screen recordings
+(**65.9 h**, 48.3 GB) and **27 PDFs** (225 pages), in `D:\courses_nosync\julian_komar`
+and its `_finished` sub-folder.
+
+It is the **first HYBRID** source: a video source, a document source and a
+spreadsheet source in one corpus. Phase 1 (the catalog) and Phase 2 (the
+document readers) are done; the panel OCR, the Deepgram transcripts, the
+signal extraction and the dashboard are not.
+
+**THE FILENAME IS NOT THE DATE.** Two files in the corpus are wrong about
+their own date, and in both cases the document's own chrome is right:
+`komar_20260408.pdf` is named 2026-04-08 and its title AND its URL say
+2025-04-08; `Trades-August-2025.pdf` is named August and its first slide
+says "July 2025 Trades". So the catalog reads the document, prefers what the
+document says, keeps the filename's date beside it, and marks the rows where
+the two disagree (`date_conflict`). A date also carries its PRECISION: a
+document that names only its month is not dated to a day.
+
+**THE PDF IS A PRINT OF A WEB PAGE.** The text layer of a session print is
+the browser furniture only -- the title, the URL, the page number and the
+print timestamp -- and the body prose is vector outlines. Measured on
+`komar_20260509.pdf` page 2: 4 text spans against 1,295 `l` and 1,930 `c`
+operators. But the furniture is exactly what the catalog needs: it carries
+the session date, the report number, the site section (and so the document's
+kind) and the **chapter list**.
+
+**THE TREND ARROWS ARE IMAGES, AND NO OCR READS THEM.** The market card's
+arrows are coloured discs with a white glyph, and the whole-card OCR comes
+back with `"NASDAQ @ @& 2 enim"`. So the direction is read from the DISC'S
+COLOUR -- green up, amber flat, red down -- and the disc is found by its
+CENTRE, because the arrow glyph cuts it into pieces and a flood fill finds
+fragments. **The disc reading has to WIN over the text reading**: the card's
+narrative sits in the same OCR line as the index names, and one card reads
+"Market still going sideways", which made the text parser report every
+index as flat when the discs said up, up and down.
+
+**A WEEKLY SESSION IS NAMED AFTER ITS REPORT NUMBER**, not its date, and the
+number is not chronological either (50 is January 2023, 51 is January 2022).
+Its three parts are `Market Overview`, `My Portfolio` and `Stocks Analysis`,
+or the older `Premium` / `Premium-01` / `Premium-02` naming. Only the
+document carries the date, so the video is LINKED to the document by report
+number.
+
+- `src/komar/channel.js` - the source's identity, the namespaced ids, and the slug rule
+- `src/komar/corpusCatalog.js` - the folder walk and the filename grammar
+- `src/komar/documentLayout.js` - what a PDF IS, and what its own chrome says
+- `src/komar/cardLayout.js` - the market card's vocabulary and its colour windows
+- `src/komar/cardDiscs.js` - the trend arrows, read from pixels
+- `src/komar/cardThemes.js` - the theme names, read from the card's accent ink
+- `src/komar/documentExtract.js` - the PDF readers
+- `src/komar/schema.js` - the tables, and the columns an existing database has to grow
+- `tools/catalogKomar.js` - inventories both folders, reads the documents, probes the videos
+- `tools/extractKomarDocuments.js` - the market cards, the theme leaders and the deck notes
+- `data/komar_manifest.json` - the catalog's committed record of what was read
+
+```bash
+npm run komar:catalog
+npm run komar:catalog:dry
+npm run komar:documents
+```
+
+The videos are checksummed by SIZE and MTIME, not by md5: 48 GB read on every
+catalog run is not affordable, and the media is never committed anyway.
+
 ### Aggregation
 - `src/video/captureTickers.js` — which field of a capture holds its holdings (see below)
 - `src/video/probeLogDirs.js` — the three probe-log directory layouts (see below)
@@ -1098,7 +1165,8 @@ carries its reason.
 cheap and it is the whole fix:
 
 ```bash
-node -e "const fs=require('fs');const ids=[...new Set(fs.readFileSync('data/catalog_flat/t3live_no_captions.txt','utf8').split(/?
+node -e "const fs=require('fs');const ids=[...new Set(fs.readFileSync('data/catalog_flat/t3live_no_captions.txt','utf8').split(/
+?
 /).map(s=>s.split('	')[0].trim()).filter(Boolean))];
 let cap=0,dg=0,none=0;for(const id of ids){const f='data/video_pipeline/transcripts/'+id+'.json';
 if(!fs.existsSync(f)){none++;continue;}try{const d=JSON.parse(fs.readFileSync(f,'utf8'));d.provider==='deepgram'?dg++:cap++;}catch(e){none++;}}

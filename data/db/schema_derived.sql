@@ -819,3 +819,247 @@ CREATE TABLE IF NOT EXISTS discord_episodes (
 
 CREATE INDEX IF NOT EXISTS idx_discord_episodes_ticker
     ON discord_episodes(source_name, ticker, entry_date);
+
+-- =====================================================================
+-- The Komar source ("MARKET UPDATE Premium"), read as DOCUMENTS and as
+-- MEDIA.
+--
+-- WHY IT HAS ITS OWN TABLES
+--
+-- `videos` is named for YouTube and its `status` column is an OCR
+-- pipeline's lifecycle; these files have no video id at all -- they are
+-- local files on a disk. And `trade_signals` / `market_readings` both
+-- carry a NOT NULL `transcript_id` that REFERENCES video_transcripts(id),
+-- which a local file has no way of having.
+--
+-- So this source gets its own tables, the way O'Connell and
+-- AsymTrading do, with namespaced ids (`komar_doc_*`, `komar_vid_*`).
+--
+-- WHY THE FILENAME DATE IS NOT THE SESSION DATE
+--
+-- `komar_20260408.pdf` is named 2026-04-08 and its own chrome says
+-- 2025-04-08 -- in the title AND in the URL, two independent places.
+-- The chrome wins, the filename is kept as a hint, and the
+-- disagreement is recorded rather than silently resolved.
+-- =====================================================================
+
+-- One row per document in the corpus.
+CREATE TABLE IF NOT EXISTS komar_documents (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    -- The namespaced catalog id: `komar_doc_report_20260509`.
+    doc_id TEXT NOT NULL UNIQUE,
+    -- report | post | rule | lesson | summary | deck | unknown
+    kind TEXT NOT NULL DEFAULT 'unknown',
+    title TEXT NOT NULL DEFAULT '',
+    series TEXT NOT NULL DEFAULT '',
+    -- The session the document is about. YYYYMMDD.
+    session_date TEXT NOT NULL DEFAULT '',
+    -- How exact that date is: 'day' | 'month' | ''. A document that
+    -- names only its month carries a month, and a consumer that
+    -- wants only exact dates asks for precision 'day'.
+    session_date_precision TEXT NOT NULL DEFAULT '',
+    -- filename | chrome_title | chrome_url | content | unknown
+    session_date_source TEXT NOT NULL DEFAULT '',
+    -- The date in the filename, kept when it disagrees with the chrome.
+    filename_date TEXT NOT NULL DEFAULT '',
+    -- 1 when the filename date and the document's own date disagree.
+    date_conflict INTEGER NOT NULL DEFAULT 0,
+    -- The report number a weekly session carries: "226".
+    report_number TEXT NOT NULL DEFAULT '',
+    page_count INTEGER NOT NULL DEFAULT 0,
+    source_url TEXT NOT NULL DEFAULT '',
+    print_stamp TEXT NOT NULL DEFAULT '',
+    -- The site's own chapter list, as JSON: ["12:35","41:04"].
+    chapters_json TEXT NOT NULL DEFAULT '[]',
+    -- The path RELATIVE to the corpus root. The corpus lives outside
+    -- this repository, so an absolute path would name one machine's
+    -- home directory in a tracked artifact.
+    pdf_path TEXT NOT NULL DEFAULT '',
+    pdf_bytes INTEGER NOT NULL DEFAULT 0,
+    pdf_checksum TEXT NOT NULL DEFAULT '',
+    -- 'primary' | 'machine_written'. The two summary PDFs are written
+    -- BY A MACHINE ABOUT a video; they are a derived artifact and are
+    -- never merged with the primary record.
+    provenance TEXT NOT NULL DEFAULT 'primary',
+    -- 'root' | '_finished'
+    folder TEXT NOT NULL DEFAULT '',
+    catalog_version TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_documents_date ON komar_documents(session_date);
+
+CREATE INDEX IF NOT EXISTS idx_komar_documents_kind ON komar_documents(kind);
+
+CREATE INDEX IF NOT EXISTS idx_komar_documents_report ON komar_documents(report_number);
+
+-- One row per video in the corpus.
+CREATE TABLE IF NOT EXISTS komar_videos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    -- The namespaced catalog id: `komar_vid_weekend_226_stocks_analysis`.
+    video_id TEXT NOT NULL UNIQUE,
+    -- weekend | midweek | daily | webinar | lesson | unknown
+    kind TEXT NOT NULL DEFAULT 'unknown',
+    series TEXT NOT NULL DEFAULT '',
+    title TEXT NOT NULL DEFAULT '',
+    -- The part of a weekly session: market_overview | my_portfolio |
+    -- stocks_analysis | main | part_01 | part_02.
+    part TEXT NOT NULL DEFAULT '',
+    -- 1..3, the session order of the part.
+    part_index INTEGER NOT NULL DEFAULT 0,
+    -- The report number a weekly session carries: "226".
+    report_number TEXT NOT NULL DEFAULT '',
+    -- The session the video belongs to. YYYYMMDD.
+    session_date TEXT NOT NULL DEFAULT '',
+    -- How exact that date is: 'day' | 'month' | ''. A document that
+    -- names only its month carries a month, and a consumer that
+    -- wants only exact dates asks for precision 'day'.
+    session_date_precision TEXT NOT NULL DEFAULT '',
+    -- filename | pdf_chrome | unknown
+    session_date_source TEXT NOT NULL DEFAULT '',
+    -- The doc_id of the document that describes this session, when one
+    -- does. This is the link that gives a video its date: a weekly
+    -- session's videos are named after its report number, and only the
+    -- document carries the date.
+    session_doc_id TEXT NOT NULL DEFAULT '',
+    has_video INTEGER NOT NULL DEFAULT 1,
+    width INTEGER NOT NULL DEFAULT 0,
+    height INTEGER NOT NULL DEFAULT 0,
+    duration_sec REAL NOT NULL DEFAULT 0,
+    audio_codec TEXT NOT NULL DEFAULT '',
+    audio_channels INTEGER NOT NULL DEFAULT 0,
+    size_bytes INTEGER NOT NULL DEFAULT 0,
+    -- The change detector: "<bytes>:<mtime>". The media is 48 GB and is
+    -- never committed, so a full checksum on every run is not
+    -- affordable -- and the frame cache already uses size and mtime.
+    content_key TEXT NOT NULL DEFAULT '',
+    -- The path RELATIVE to the corpus root.
+    media_path TEXT NOT NULL DEFAULT '',
+    -- 'root' | '_finished'
+    folder TEXT NOT NULL DEFAULT '',
+    catalog_version TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_videos_date ON komar_videos(session_date);
+
+CREATE INDEX IF NOT EXISTS idx_komar_videos_kind ON komar_videos(kind);
+
+CREATE INDEX IF NOT EXISTS idx_komar_videos_report ON komar_videos(report_number);
+
+
+-- =====================================================================
+-- Komar Phase 2: document-level extraction outputs.
+--
+-- The catalog says what files exist. These tables hold what the files
+-- SAY: market card readings, deck notes and trade-log rows.
+-- =====================================================================
+
+-- The market card extracted from a report/post PDF.
+CREATE TABLE IF NOT EXISTS komar_market_cards (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    doc_id TEXT NOT NULL,
+    page INTEGER NOT NULL DEFAULT 0,
+    -- the embedded image's own xref on that page
+    image_xref INTEGER NOT NULL DEFAULT 0,
+    image_width INTEGER NOT NULL DEFAULT 0,
+    image_height INTEGER NOT NULL DEFAULT 0,
+    market_text TEXT NOT NULL DEFAULT '',
+    market_trend_nasdaq TEXT NOT NULL DEFAULT '',
+    market_trend_sp500 TEXT NOT NULL DEFAULT '',
+    market_trend_russell2000 TEXT NOT NULL DEFAULT '',
+    -- up | flat | down | unknown
+    trend_nasdaq_dir TEXT NOT NULL DEFAULT 'unknown',
+    trend_sp500_dir TEXT NOT NULL DEFAULT 'unknown',
+    trend_russell2000_dir TEXT NOT NULL DEFAULT 'unknown',
+    -- The direction per horizon, as JSON: {"Mid":"up","Short":"down"}.
+    -- The card prints two or three horizons and they can disagree,
+    -- so the per-horizon reading is kept and the *_dir columns
+    -- carry the LONGEST horizon shown.
+    trend_by_horizon_json TEXT NOT NULL DEFAULT '{}',
+    exposure_pct REAL,
+    confidence REAL NOT NULL DEFAULT 0,
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(doc_id, page, image_xref)
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_market_cards_doc ON komar_market_cards(doc_id);
+
+-- The theme leaders read from the card's "High-potential themes" list.
+CREATE TABLE IF NOT EXISTS komar_theme_leaders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    doc_id TEXT NOT NULL,
+    page INTEGER NOT NULL DEFAULT 0,
+    image_xref INTEGER NOT NULL DEFAULT 0,
+    -- e.g. Semis, Data center, Software
+    theme TEXT NOT NULL DEFAULT '',
+    ticker TEXT NOT NULL DEFAULT '',
+    -- position of ticker in that theme's list
+    leader_index INTEGER NOT NULL DEFAULT 0,
+    confidence REAL NOT NULL DEFAULT 0,
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(doc_id, page, image_xref, theme, ticker)
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_theme_leaders_doc ON komar_theme_leaders(doc_id);
+
+CREATE INDEX IF NOT EXISTS idx_komar_theme_leaders_ticker ON komar_theme_leaders(ticker);
+
+-- Notes extracted from deck pages (e.g. Trades-August-2025 per-trade slides).
+CREATE TABLE IF NOT EXISTS komar_deck_notes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    doc_id TEXT NOT NULL,
+    page INTEGER NOT NULL DEFAULT 0,
+    heading TEXT NOT NULL DEFAULT '',
+    body_text TEXT NOT NULL DEFAULT '',
+    -- Open | Closed | Journaled (where present)
+    trade_state TEXT NOT NULL DEFAULT '',
+    -- parsed from "4.5 stars"
+    stars REAL,
+    -- A/B/C trade where present
+    trade_grade TEXT NOT NULL DEFAULT '',
+    quick_checklist_json TEXT NOT NULL DEFAULT '[]',
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(doc_id, page)
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_deck_notes_doc ON komar_deck_notes(doc_id);
+
+-- The row-level trade log table from Trades-August-2025 page 2.
+CREATE TABLE IF NOT EXISTS komar_trade_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    doc_id TEXT NOT NULL,
+    page INTEGER NOT NULL DEFAULT 0,
+    row_index INTEGER NOT NULL DEFAULT 0,
+    date_opened TEXT NOT NULL DEFAULT '',
+    date_closed TEXT NOT NULL DEFAULT '',
+    entry_type TEXT NOT NULL DEFAULT '',
+    ticker TEXT NOT NULL DEFAULT '',
+    avg_price REAL,
+    stop_loss_pct REAL,
+    risk_size_pct REAL,
+    stop_loss_price REAL,
+    risk_vs_capital_pct REAL,
+    exit_type TEXT NOT NULL DEFAULT '',
+    mars_open_close REAL,
+    mmts_open_close REAL,
+    wl_flag TEXT NOT NULL DEFAULT '',
+    wl_pct REAL,
+    initial_rating REAL,
+    after_close_rating REAL,
+    review TEXT NOT NULL DEFAULT '',
+    comment TEXT NOT NULL DEFAULT '',
+    confidence REAL NOT NULL DEFAULT 0,
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(doc_id, page, row_index)
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_trade_log_doc ON komar_trade_log(doc_id);
+
+CREATE INDEX IF NOT EXISTS idx_komar_trade_log_ticker ON komar_trade_log(ticker);

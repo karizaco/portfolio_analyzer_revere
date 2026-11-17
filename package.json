@@ -109,7 +109,11 @@
     "oconnell:setups": "node tools/extractOconnellSetups.js",
     "oconnell:outcomes": "node tools/analyzeOconnellOutcomes.js",
     "oconnell:aggregate": "node tools/aggregateOconnellSignals.js",
-    "oconnell:report": "node tools/aggregateOconnellSignals.js"
+    "oconnell:report": "node tools/aggregateOconnellSignals.js",
+    "komar:catalog": "node tools/catalogKomar.js",
+    "komar:catalog:dry": "node tools/catalogKomar.js --dry-run",
+    "komar:documents": "node tools/extractKomarDocuments.js",
+    "komar:documents:dry": "node tools/extractKomarDocuments.js --limit 1"
   },
   "dependencies": {
     "sharp": "^0.34.3",

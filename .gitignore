@@ -247,6 +247,10 @@ data/asym_sector_outcome_summary.json
 # working PNGs are the rasterised pages, and the rollups are the
 # interpretations the aggregate builds from the tracked records.
 data/oconnell_work/
+
+# The Komar source's working material: the card images extracted from
+# the PDFs, which are regenerable from the corpus at any time.
+data/komar_work/
 data/oconnell_signals.json
 data/oconnell_setups.csv
 data/oconnell_positions.csv
