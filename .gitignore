@@ -262,3 +262,6 @@ data/oconnell_report.html
 data/discord_traders.json
 data/discord_episodes.csv
 data/discord_traders.html
+# QMG background-job runtime state (rewritten on every chunk).
+data/qmg_ocr_queue_progress.json
+data/qmg_download_stages.json
