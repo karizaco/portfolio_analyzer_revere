@@ -41,6 +41,11 @@
   .up { color:#1f7a4d; } .down { color:#a8322d; }
   .evidence { color:var(--muted); max-width:32rem; }
   .empty { color:var(--muted); font-style:italic; }
+  .funnel-stages { list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; padding:0; margin:1rem 0 2rem; }
+  .funnel-stage { background:var(--panel); border:1px solid var(--rule); padding:1rem 1.1rem; display:flex; flex-direction:column; gap:.3rem; }
+  .funnel-label { font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .funnel-stage strong { font-size:1.7rem; line-height:1; }
+  .funnel-stage small { font-size:.78rem; color:var(--muted); }
   .section-heading { margin:2.5rem 0 .5rem; }
   .section-heading h2 { margin:.2rem 0 0; font-size:1.35rem; }
   .source-kicker { margin:0; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
@@ -50,7 +55,7 @@
     <div><p class="source-kicker">SOURCE RESEARCH / komar</p>
       <h1>Komar (MARKET UPDATE Premium)</h1>
       <p class="source-description">A paid membership read from the corpus on disk: what he said he was watching, what he did, and what the prices did.</p></div>
-    <aside class="source-meta"><span>Updated</span><strong>2026-11-18T05:18:02.514Z</strong>
+    <aside class="source-meta"><span>Updated</span><strong>2026-11-18T05:32:45.688Z</strong>
       <div class="source-capabilities"><span class="source-capability">trade log</span><span class="source-capability">setups</span><span class="source-capability">market cards</span><span class="source-capability">summary watchlists</span></div></aside>
   </header>
 <section id="overview"><div class="stat-grid"><div class="stat-tile">
@@ -78,6 +83,29 @@
     <strong class="stat-value">43</strong>
     <span class="stat-note">from the weekend summaries</span>
   </div></div></section>
+<section id="funnel"><div class="section-heading">
+    <p class="source-kicker">THE FUNNEL</p><h2>From a call to a closed trade</h2></div>
+  <ol class="funnel-stages"><li class="funnel-stage">
+    <span class="funnel-label">Setups said</span>
+    <strong>212</strong>
+    <small>calls, with their evidence</small>
+  </li><li class="funnel-stage">
+    <span class="funnel-label">Dated and scored</span>
+    <strong>163</strong>
+    <small>against the prices, and SPY</small>
+  </li><li class="funnel-stage">
+    <span class="funnel-label">On the watchlist</span>
+    <strong>85</strong>
+    <small>tickers named in the summaries and the cards</small>
+  </li><li class="funnel-stage">
+    <span class="funnel-label">Held as a position</span>
+    <strong>Unknown</strong>
+    <small>the on-screen panel is not read yet</small>
+  </li><li class="funnel-stage">
+    <span class="funnel-label">Closed as a trade</span>
+    <strong>32</strong>
+    <small>the trade log, with prices and outcomes</small>
+  </li></ol></section>
 <section id="coverage" class="source-coverage" aria-labelledby="coverage-heading">
     <div class="section-heading"><p class="source-kicker">DATA PROVENANCE</p><h2 id="coverage-heading">Coverage at a glance</h2></div>
     <ol class="coverage-stages"><li class="coverage-stage status-complete">

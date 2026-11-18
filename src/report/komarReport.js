@@ -75,6 +75,55 @@ function buildCoverage(payload) {
 }
 
 /**
+ * The CONVERSION FUNNEL: setups -> watchlist -> positions -> closed
+ * trades.
+ *
+ * It is the question only Komar can answer, because it is the only
+ * source with all four ends. The positions rung is NOT read yet (the
+ * on-screen panel is measured but its reader is not trustworthy), and
+ * an unread rung is **unknown**, never zero.
+ */
+function renderFunnel(payload) {
+  const stages = [
+    {
+      label: 'Setups said',
+      count: payload.setups_total || 0,
+      note: 'calls, with their evidence',
+    },
+    {
+      label: 'Dated and scored',
+      count: (payload.outcomes || []).length,
+      note: 'against the prices, and SPY',
+    },
+    {
+      label: 'On the watchlist',
+      count: payload.watchlist_tickers === undefined || payload.watchlist_tickers === null
+        ? null
+        : payload.watchlist_tickers,
+      note: 'tickers named in the summaries and the cards',
+    },
+    {
+      label: 'Held as a position',
+      count: null,
+      note: 'the on-screen panel is not read yet',
+    },
+    {
+      label: 'Closed as a trade',
+      count: payload.trades_total || 0,
+      note: 'the trade log, with prices and outcomes',
+    },
+  ];
+  const rows = stages.map((stage) => `<li class="funnel-stage">
+    <span class="funnel-label">${escapeHtml(stage.label)}</span>
+    <strong>${stage.count === null || stage.count === undefined ? 'Unknown' : Number(stage.count).toLocaleString('en-US')}</strong>
+    <small>${escapeHtml(stage.note)}</small>
+  </li>`).join('');
+  return `<section id="funnel"><div class="section-heading">
+    <p class="source-kicker">THE FUNNEL</p><h2>From a call to a closed trade</h2></div>
+  <ol class="funnel-stages">${rows}</ol></section>`;
+}
+
+/**
  * A table of the scored setups.
  */
 function renderSetups(outcomes) {
@@ -210,6 +259,11 @@ function buildKomarReportHtml(payload = {}) {
   .up { color:#1f7a4d; } .down { color:#a8322d; }
   .evidence { color:var(--muted); max-width:32rem; }
   .empty { color:var(--muted); font-style:italic; }
+  .funnel-stages { list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; padding:0; margin:1rem 0 2rem; }
+  .funnel-stage { background:var(--panel); border:1px solid var(--rule); padding:1rem 1.1rem; display:flex; flex-direction:column; gap:.3rem; }
+  .funnel-label { font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .funnel-stage strong { font-size:1.7rem; line-height:1; }
+  .funnel-stage small { font-size:.78rem; color:var(--muted); }
   .section-heading { margin:2.5rem 0 .5rem; }
   .section-heading h2 { margin:.2rem 0 0; font-size:1.35rem; }
   .source-kicker { margin:0; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
@@ -217,6 +271,7 @@ function buildKomarReportHtml(payload = {}) {
 <body>
 ${renderSourceHeader(source)}
 <section id="overview"><div class="stat-grid">${cards}</div></section>
+${renderFunnel(payload)}
 ${renderCoverage(buildCoverage(payload))}
 <section id="setups"><div class="section-heading"><p class="source-kicker">THE CALLS</p><h2>Setups and what the prices did</h2></div>
 ${renderSetups(payload.outcomes || [])}</section>

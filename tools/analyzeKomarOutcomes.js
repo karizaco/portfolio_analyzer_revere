@@ -257,6 +257,12 @@ async function main() {
     undated_setups: undated,
     videos_total: videosTotal,
     videos_transcribed: videosTranscribed,
+    // The watchlist rung of the funnel: the tickers the corpus NAMES,
+    // in its summaries and its cards.
+    watchlist_tickers: new Set([
+      ...readings.filter((row) => row.kind === 'holding').map((row) => row.subject),
+      ...db.prepare('SELECT DISTINCT ticker FROM komar_theme_leaders').all().map((row) => row.ticker),
+    ]).size,
   });
   fs.writeFileSync(path.join(OUTPUT_DIR, 'komar_report.html'), html, 'utf8');
 
