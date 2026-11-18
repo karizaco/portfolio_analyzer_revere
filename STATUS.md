@@ -532,9 +532,9 @@ source, a document source and a spreadsheet source in one corpus.
 | trade-log rows | **32** trades, 26 distinct tickers |
 | summary readings | **43** (32 holdings, 7 commodities, 4 prose sections) |
 | transcripts | **116** of 116 videos, ~$30 of Deepgram |
-| setups (calls) | **212**, over 74 of the transcripts |
-| setups scored against the prices | **152** — every setup from a session (the 60 from the lessons and webinars are excluded on purpose: evergreen teaching content is not a call with a window) |
-| the calls' hit rate | **59.6 %** at 1 week, against **SPY at 69.7 %** — an edge of **-10.1 pp** |
+| setups (calls) | **213**, over 75 of the transcripts |
+| setups scored against the prices | **153** — every setup from a session (the 60 from the lessons and webinars are excluded on purpose: evergreen teaching content is not a call with a window) |
+| the calls' hit rate | **59.2 %** at 1 week, against **SPY at 69.7 %** — an edge of **-10.5 pp** |
 
 The corpus lives in `D:\courses_nosync\julian_komar` (and its
 `_finished` sub-folder) and **cannot be re-fetched**, so the derived

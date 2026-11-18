@@ -767,12 +767,12 @@ writes the dashboard.
 
 | | |
 |---|---|
-| setups, from the sessions | **152** |
+| setups, from the sessions | **153** |
 | setups from the lessons and the webinars, left out on purpose | **60** |
-| of the session's setups, with a session date | **152 — every one** |
-| hit rate, 1 week | **59.6 %** |
+| of the session's setups, with a session date | **153 — every one** |
+| hit rate, 1 week | **59.2 %** |
 | SPY over the same windows | **69.7 %** (1w) |
-| the edge | **-10.1 pp (1w)** |
+| the edge | **-10.5 pp (1w)** |
 | the verdict | `possible_negative_edge` |
 
 **So the calls DO NOT BEAT THE INDEX** -- the same honest result the
@@ -1385,7 +1385,7 @@ Nothing existing is modified except the three files above.
 | 3a | the trade-log sheet | **DONE (2026-11-17)** -- 32 trades over 26 tickers, every one of the sheet's 18 columns, checked against the sheet's own arithmetic. |
 | 3b | the video panel | the GEOMETRY is measured and pinned (2026-11-17): the region, the row pitch, the era column counts, the occlusion. The reader, the schema and the frame sampling are not built. |
 | 4 | the transcripts | **DONE (2026-11-17)** -- 116 videos, 3,952 minutes, ~$30 of Deepgram at `language=en`; the canonical JSON is tracked and `komar_transcripts` indexes it. |
-| 5a | the setups | **DONE (2026-11-17)** -- 212 setups over 74 transcripts, read with the shared engine and the corpus's own lexicon (73 tickers the seed lexicon does not have) |
+| 5a | the setups | **DONE (2026-11-17)** -- 213 setups over 75 transcripts, read with the shared engine and the corpus's own lexicon (73 tickers the seed lexicon does not have). One ticker the provider split across a boundary is rejoined by `src/komar/transcriptRepair.js` (2026-11-18) |
 | 5b | the positions | the panel series produces position events (needs 3b) |
 | 6 | the outcomes and the dashboard | the funnel, the conversion rates, the coverage |
 | 7 | the tests and the documentation | `AGENTS.md` / `CLAUDE.md` updated; the `komar:*` scripts documented |

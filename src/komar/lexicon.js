@@ -104,6 +104,39 @@ function loadKomarLexicon() {
 }
 
 /**
+ * The TERMS the transcription request should favour.
+ *
+ * This is the corpus's OWN vocabulary, and it is the corpus's own
+ * decision: the seed lexicon belongs to the other sources and the
+ * Komar corpus does not trade half of it. The list is the corpus's 73
+ * tickers -- the names it actually says out loud.
+ *
+ * WHY IT EXISTS. A ticker is the hardest thing in the corpus for a
+ * speech model: "DFDV" is four letters that sound like a word. The
+ * provider's own tokenisation split a holding across a boundary --
+ * "I bought into DF," | "DV. I see a lot of positive momentum" -- and
+ * the holding was then invisible to the extractor. Measured on the
+ * 116-transcript corpus, with the lexicon as the judge, ONE real
+ * holding was broken this way in 50,884 segment boundaries (the other
+ * two candidates were the phrase "go go" and a clean sentence
+ * boundary), and the provider's own word list shows the boundary
+ * falling BETWEEN two provider tokens -- so the split is the
+ * provider's tokenisation, not its endpointing.
+ *
+ * @returns {string[]}
+ */
+function loadKomarKeyterms() {
+  if (!fs.existsSync(KOMAR_LEXICON_PATH)) return [];
+  const lines = fs.readFileSync(KOMAR_LEXICON_PATH, 'utf8').split(/\r?\n/);
+  const terms = [];
+  for (const line of lines.slice(1)) {
+    const ticker = line.split(',')[0].trim().toUpperCase();
+    if (ticker) terms.push(ticker);
+  }
+  return terms;
+}
+
+/**
  * The English name finder, with the corpus's own index alias.
  *
  * The shared finder already maps "the Nasdaq" to QQQ and "the S&P" to
@@ -135,5 +168,6 @@ module.exports = {
   KOMAR_LEXICON_PATH,
   KOMAR_SYMBOL_STOPLIST,
   findKomarCompanyNames,
+  loadKomarKeyterms,
   loadKomarLexicon,
 };

@@ -44,13 +44,14 @@ const {
   findKomarCompanyNames,
   loadKomarLexicon,
 } = require('../src/komar/lexicon');
+const { rejoinBrokenTickers } = require('../src/komar/transcriptRepair');
 const { ensureKomarSchema } = require('../src/komar/schema');
 
 const ROOT = path.resolve(__dirname, '..');
 const CATALOG_DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
 
 /** The parser version written onto every row. */
-const PARSER_VERSION = 'komar-signals-1';
+const PARSER_VERSION = 'komar-signals-2';
 
 const argv = process.argv.slice(2);
 
@@ -67,6 +68,10 @@ const options = {
   json: argv.includes('--json'),
   limit: Number(readFlag(argv, '--limit')) || 0,
   videoId: readFlag(argv, '--video-id') || '',
+  // The repair joins a ticker the provider split across a boundary.
+  // It is ON by default and can be turned OFF, so the before and after
+  // can be measured with the same command.
+  rejoin: !argv.includes('--no-rejoin'),
 };
 
 /**
@@ -189,6 +194,7 @@ function main() {
   const summary = {
     lexicon: lexicon.size,
     parser_version: PARSER_VERSION,
+    repairs: [],
     setups: 0,
     transcripts: transcripts.length,
     tickers: {},
@@ -196,8 +202,20 @@ function main() {
   };
 
   for (const transcript of transcripts) {
-    const segments = loadSegments(transcript);
-    if (!segments.length) continue;
+    const stored = loadSegments(transcript);
+    if (!stored.length) continue;
+    // THE REPAIR. The provider's tokenisation split a holding across a
+    // boundary ("I bought into DF," | "DV. I see..."), and the split
+    // halves are two words the provider wrote, so no join in the
+    // segmenter could have repaired it. The rule is the Komar's own
+    // (it needs the corpus's tickers to decide) and it cannot invent
+    // anything: the joined form has to BE a ticker the corpus knows.
+    const { repairs, segments } = options.rejoin
+      ? rejoinBrokenTickers(stored, { lexicon })
+      : { repairs: [], segments: stored };
+    for (const repair of repairs) {
+      summary.repairs.push({ ...repair, video_id: transcript.video_id });
+    }
     const setups = extractSignals({
       segments,
       parserVersion: PARSER_VERSION,
@@ -233,8 +251,11 @@ function main() {
     .join(' ');
   console.log(
     `${summary.setups} setups over ${summary.videos_with_setups} of ${summary.transcripts} transcripts `
-    + `(lexicon ${summary.lexicon} tickers)\n  ${top}`
+    + `(lexicon ${summary.lexicon} tickers, ${summary.repairs.length} ticker(s) rejoined)\n  ${top}`
   );
+  for (const repair of summary.repairs) {
+    console.log(`  rejoined ${repair.was} -> ${repair.joined} in ${repair.video_id}`);
+  }
 }
 
 if (require.main === module) {

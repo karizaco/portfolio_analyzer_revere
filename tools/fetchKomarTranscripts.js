@@ -54,6 +54,7 @@ const {
 } = require('../src/transcript/deepgramClient');
 const { normalizeTranscript, transcriptChecksum } = require('../src/transcript/transcriptNormalize');
 const { komarSourceDir } = require('../src/komar/channel');
+const { loadKomarKeyterms } = require('../src/komar/lexicon');
 const { ensureKomarSchema } = require('../src/komar/schema');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -68,6 +69,7 @@ const TRANSCRIPTS_DIR = process.env.KOMAR_TRANSCRIPTS_DIR
 const AUDIO_DIR = process.env.KOMAR_AUDIO_DIR
   ? path.resolve(process.env.KOMAR_AUDIO_DIR)
   : path.join(ROOT, 'data', 'komar_work', 'audio');
+const WORK_DIR = path.join(ROOT, 'data', 'komar_work');
 
 /** nova-2 at the standard rate, per minute of audio. */
 const COST_PER_MINUTE = 0.0077;
@@ -86,6 +88,42 @@ const options = {
   dryRun: argv.includes('--dry-run'),
   json: argv.includes('--json'),
   keepAudio: argv.includes('--keep-audio'),
+  // Keep Deepgram's WORD LIST beside the transcript, in the working
+  // folder and NOT in the tracked transcript.
+  //
+  // The word list is the only thing that says where the provider's word
+  // boundaries really fell, and it is what separates the two possible
+  // causes of a broken word: an endpointing that cuts inside a word
+  // (the payload still carries the whole word) and a tokenisation that
+  // split it (the payload carries two words). The transcripts keep the
+  // segment TEXTS, so the artifact cannot be measured against the
+  // stored corpus at all -- measured over the corpus's 5.9 million
+  // boundaries, "the previous segment ends with a letter, the next
+  // begins with a letter, and the previous's last word is two
+  // characters or fewer" matches 21 % of them, and every example is
+  // an ordinary sentence.
+  keepWords: argv.includes('--keep-words'),
+  // Rebuild the index rows from the transcript files on disk, without
+  // transcribing anything. The row is the index of the file, so a row
+  // that disagrees with the file is wrong -- and the disagreement shows
+  // up as a checksum that does not match.
+  reindex: argv.includes('--reindex'),
+  // Send the corpus's OWN tickers to the model as terms it should
+  // expect. Off by default: it changes the transcription, so it is
+  // measured before it is used.
+  //
+  // The measured reason: the provider's tokenisation split a holding
+  // across a boundary ("I bought into DF," | "DV. I see a lot of
+  // positive momentum"), and the holding was then invisible to the
+  // extractor. With the provider's own word list kept, the boundary
+  // is shown to fall BETWEEN two provider tokens -- so the split is
+  // the provider's TOKENISATION, not its endpointing, and a join in
+  // the segmenter could not have fixed it.
+  keyterms: argv.includes('--keyterms'),
+  // Re-transcribe a video that already has a transcript. Used to
+  // re-fetch the word list for a sample, so the artifact can be
+  // measured against the provider's own words.
+  force: argv.includes('--force'),
   limit: Number(readFlag(argv, '--limit')) || 0,
   onlyIds: String(readFlag(argv, '--only-ids') || '').split(',').map((id) => id.trim()).filter(Boolean),
   sourceDir: komarSourceDir({ sourceDir: readFlag(argv, '--source-dir') }),
@@ -247,7 +285,10 @@ async function transcribeVideo(db, video) {
   }
 
   try {
-    const result = await transcribeAudio(audioPath, { language: 'en' });
+    const result = await transcribeAudio(audioPath, {
+      keyterms: options.keyterms ? loadKomarKeyterms() : [],
+      language: 'en',
+    });
     if (!result.ok) {
       return { ok: false, video_id: video.video_id, error: result.error };
     }
@@ -287,6 +328,38 @@ async function transcribeVideo(db, video) {
     };
     fs.mkdirSync(TRANSCRIPTS_DIR, { recursive: true });
     fs.writeFileSync(transcriptPath, `${JSON.stringify(record, null, 2)}\n`, 'utf8');
+
+    // THE WORD LIST, kept beside the transcript and NOT in it: it is
+    // the evidence for where the provider's word boundaries fell, and
+    // it is far too big to track in the transcript (about 6,000 words
+    // for a 40-minute video).
+    if (options.keepWords) {
+      const wordsDir = path.join(WORK_DIR, 'words');
+      fs.mkdirSync(wordsDir, { recursive: true });
+      const alternatives = result.payload
+        && result.payload.results
+        && result.payload.results.channels
+        && result.payload.results.channels[0]
+        && result.payload.results.channels[0].alternatives;
+      const words = (alternatives && alternatives[0] && alternatives[0].words) || [];
+      const utterances = (result.payload
+        && result.payload.results
+        && result.payload.results.utterances) || [];
+      fs.writeFileSync(path.join(wordsDir, `${video.video_id}.json`), `${JSON.stringify({
+        utterances: utterances.map((utterance) => ({
+          end: utterance.end,
+          start: utterance.start,
+          transcript: utterance.transcript,
+        })),
+        video_id: video.video_id,
+        words: words.map((word) => ({
+          end: word.end,
+          punctuated: word.punctuated_word,
+          start: word.start,
+          word: word.word,
+        })),
+      }, null, 1)}\n`, 'utf8');
+    }
     writeTranscriptRow(db, video, record);
 
     return {
@@ -315,6 +388,19 @@ async function main() {
   );
 
   for (const video of videos) {
+    if (options.force) {
+      pending.push(video);
+      pendingMinutes += Number(video.duration_sec || 0) / 60;
+      continue;
+    }
+    // REINDEX: rebuild the index from the files on disk. The JSON file
+    // is the RECORD and the row is its index, so a row that disagrees
+    // with the file it indexes is wrong -- and the disagreement is
+    // invisible until something reads the checksum. This pays nothing.
+    if (options.reindex && registerExistingTranscript(db, video)) {
+      skipped += 1;
+      continue;
+    }
     if (hasRow(video.video_id)) {
       skipped += 1;
       continue;

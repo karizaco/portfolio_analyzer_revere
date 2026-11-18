@@ -95,10 +95,11 @@ at all still fails, and reports yt-dlp's own error. Regression-tested in
 
 | Situation | Cause | Action |
 |---|---|---|
-| On the 39 known 720p-only videos | Video genuinely has no 1080p upload | Download 720p (format 136) — these IDs are hardcoded |
+| On the known 720p-only videos (54 ids in `src/video/known720pOnly.js`) | Video genuinely has no 1080p upload | Download 720p (format 136) — these IDs are hardcoded |
 | On any other video | YouTube THROTTLING — lying to block you | Do NOT download 720p. Leave in errored. Retry later with fresh cookies. |
 
-**The 39 known 720p-only video IDs (NEVER add to this list dynamically):**
+**The known 720p-only video IDs live in `src/video/known720pOnly.js` (54). Do not add to that list from an error.** Fifteen were added on 2026-11-18 only after `--list-formats` showed no video format above 720p, and only with explicit approval. The original 39:
+
 ```
 0Ew3DImAZlw, 1QtMVbPrKUw, 1X0J9XbF7I4, 3328puCDrks, 3w5BmkbsJpo,
 4UWLcS4-lbI, 6XgAT5LW9Ks, 8uyENUhiW1c, AAs9-ZO33eA, A_0Sj3Hi9Jw,
@@ -110,7 +111,7 @@ jtyYLDlgdbE, l2olCkDuHGo, n8SWEpUNylE, o3IoaGLCxz4, oRX7YeTLdRg,
 pomzmadhQV0, sUU3mXKLgok, ttKgeB-cZbY, u84s3-ehrw4
 ```
 
-**Rule: NEVER add new IDs to the 39 list based on "format unavailable" errors.** That error on a new video = throttling, not a signal to download 720p.
+**Rule: NEVER add new IDs to that list based on "format unavailable" errors.** That error on a new video = throttling, not a signal to download 720p. A `--list-formats` check after a network change, plus explicit approval, is what justified the 2026-11-18 additions.
 
 **480p/360p = never, under any circumstance.**
 
@@ -298,6 +299,37 @@ OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 KMP_DUPLICATE_LIB_OK=TRUE \
 `--low-cpu` in `runQmgOcrBatch.js` enforces `OMP_NUM_THREADS=1`, `MKL_NUM_THREADS=1`, `KMP_DUPLICATE_LIB_OK=TRUE` and caps parallelism at `--parallel 2` max. There is no acceptable reason to omit it — the machine will freeze.
 
 ---
+
+### The shared modules stay shared, and a source's quirks stay in the source
+
+`src/table/`, `src/video/`, `src/transcript/` and `src/normalize/` hold
+the code and the parameters EVERY source uses. A source's own
+peculiarity — its lexicon, its column names, its chart layout, its
+vocabulary — lives in that source's own module (`src/komar/…`) and
+reaches the shared code through a PARAMETER: the engine takes a
+`lexicon`, a `nameFinderFn`, a `confirmedSymbols`, a `symbolStoplist`,
+a `parserVersion`.
+
+So when a behaviour is shared but only ONE source needs it, the switch
+is a parameter in the shared module and the DECISION is the source's.
+And the rule that governs both: **a change to a shared module needs a
+measurement; a change to a source's own module needs that source's own
+measurement.** What is forbidden is a source quietly changing what the
+other sources get.
+
+Two examples from the Komar source, which is where the distinction
+earned its keep:
+
+* The trade-log sheet's gridlines are **grey**, so the shared reader
+  (which looks for near-black) finds none of them and the whole
+  2048x1715 image reads as one cell. The fix is Komar's own
+  `tradeLogLayout.js`: locate the grey lines, paint them near-black in
+  a COPY of the pixels, and hand that copy to the shared reader, which
+  is untouched.
+* The corpus needs the **report number** to date a session that its own
+  name leaves undated. That is `corpusCatalog.js`'s own rule and the
+  corpus's own evidence — seven days a number, measured — and it is
+  not a shared one.
 
 ## Data folder policy
 
@@ -933,14 +965,46 @@ the dashboard's coverage funnel says the panel stage is **unknown**,
 not zero.
 
 **THE CALLS DO NOT BEAT THE INDEX.** Every setup from a
-SESSION can be scored -- 152 of them, once the report number dated the
+SESSION can be scored — 153 of them, once the report number dated the
 sessions. The 60 that come from the lessons and the webinars are left
 out on purpose: evergreen teaching content is not a call with a
-window. The 152 hit **59.6 % at one week**, against **SPY at 69.7 %**
-over the same window -- an edge of **-10.1 pp** -- and the verdict is
+window. The 153 hit **59.2 % at one week**, against **SPY at 69.7 %**
+over the same window — an edge of **-10.5 pp** — and the verdict is
 `possible_negative_edge`. That is the same honest result the other
 sources give. The source's real signal is the TRADE LOG: what he
 actually did, with the prices and the outcomes.
+
+**THE PROVIDER SPLITS A TICKER ACROSS A BOUNDARY, AND IT IS NOT THE
+ENDPOINTING.** "I bought into DF," | "DV. I see a lot of positive
+momentum" — the holding was invisible to the extractor, because
+neither half is a ticker. Measured, with the provider's own WORD LIST
+kept (20 videos re-transcribed, $1.94): the provider carries "df" and
+"dv" as **two words**, so this is its **TOKENISATION**, and its
+endpointing cut no word in 2,863 boundaries — which is why a join in
+the shared segmenter could never have repaired it. The corpus was then
+checked boundary by boundary against its own lexicon: over 50,884
+boundaries, **3 candidates and 1 real** (the others are the phrase "go
+go" and a sentence boundary after "QS"). The fix is
+`src/komar/transcriptRepair.js` — the source's OWN module, because
+the join needs the corpus's tickers to decide: the joined form has to
+BE a ticker the corpus knows, and neither half may be one. Measured:
+**212 → 213 setups, nothing lost, nothing invented.** The shared
+normaliser is untouched and the stored transcript is untouched.
+
+**THE PROVIDER'S TERMS PARAMETER IS MEASURED AND REJECTED.** Deepgram
+can be told the terms to expect (`keywords` on nova-2, `keyterm` on
+nova-3 — its own error says which), and it works: with the corpus's
+tickers sent, the provider wrote "dfdv" as one word. It is rejected
+because **a terms list made of TICKERS is a hallucination machine** —
+tickers ARE ordinary words. Measured on the same video: "I got stopped
+**out**" came back as "I got stopped **OUST**", "right now **in** the"
+as "right now **INVZ** the", "this explosive **verb**" as "this
+explosive **VERB**", "a new source of **into**" as "a new source of
+**INTA**". Every one of those is a ticker the corpus really trades,
+so the error is invisible — and a wrong holding is worse than a
+missing one. The mechanism is in the shared client
+(`requestKeyterms()`), additive and OFF by default, so a source that
+wants it can have it.
 
 - `src/komar/channel.js` - the source's identity, the namespaced ids, and the slug rule
 - `src/komar/corpusCatalog.js` - the folder walk and the filename grammar
@@ -953,6 +1017,7 @@ actually did, with the prices and the outcomes.
 - `src/komar/lexicon.js` - the corpus's own tickers, and the capitalised tokens that are the lesson rather than a holding
 - `src/komar/panelLayout.js` - the panel's eras, its region, its row pitch and its occlusion
 - `src/komar/panelReader.js` - the panel reader: the region, the header, the rows and the cells (not yet trustworthy)
+- `src/komar/transcriptRepair.js` - the ticker the provider split across a boundary, rejoined by the corpus's own lexicon
 - `src/komar/tradeLogLayout.js` - the trade-log sheet's geometry, its 18 columns and its values
 - `src/komar/schema.js` - the tables, and the columns an existing database has to grow
 - `tools/catalogKomar.js` - inventories both folders, reads the documents, probes the videos

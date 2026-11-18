@@ -9,7 +9,7 @@
     "avg_return_1m": 0.0249,
     "method": "long_only_spy_on_claim_event_dates"
   },
-  "generated_at": "2026-11-18T06:01:15.046Z",
+  "generated_at": "2026-11-18T07:57:18.178Z",
   "horizons": {
     "1w_days": 7,
     "1m_days": 30
@@ -1834,6 +1834,32 @@
       "hit_1m": true,
       "price_status": "ok",
       "evidence_text": "yeah. So ionQ is maybe the only stock which is really interesting. QBTS going nowhere, since a while. So could set up definitely. It could set up and this is also the difference right here here is a good example I bought into QBTS here but it was a very young bull market at the time it was a leading stock which came out first when the markets was turning around and it has this big momentum up move here on huge volume coming out of this base, and then it built this tight consolidation here. It was tricky to buy into it, but you can see after that, it was also not able to develop any strong momentum on the upside, but it was a great trade right it was a tradable pattern big up move tight consolidation big up move on the upside. So and this is what I would like to see from I and Q right now otherwise I will not buy into that. So in QBQUBT I can show you exactly the same thing here big up move tight consolidation"
+    },
+    {
+      "source": "setup",
+      "video_id": "komar_vid_weekend_192_part_02",
+      "upload_date": "2025-09-14",
+      "event_date": "2025-09-14",
+      "ticker": "DFDV",
+      "yahoo_symbol": "DFDV",
+      "bias": "bullish",
+      "claim_kind": "forward",
+      "is_prediction": 0,
+      "action": "",
+      "state": "",
+      "confidence_label": "low",
+      "confidence_score": 0.275,
+      "entry_price": 17.59,
+      "price_1w": 16.93,
+      "price_1m": 15.76,
+      "return_1w": -0.037521,
+      "return_1m": -0.104036,
+      "aligned_return_1w": -0.037521,
+      "aligned_return_1m": -0.104036,
+      "hit_1w": false,
+      "hit_1m": false,
+      "price_status": "ok",
+      "evidence_text": "I bought into DFDV. I see a lot of positive momentum right now in in the not not so much momentum, but great patterns. Let's say it that way. Great patterns in, crypto treasury stocks. So this one here is coming out of a big, consolidation. It's not perfect because the moving average alignment here is not in the right way, but we we are seeing, you know, we're seeing, higher higher higher lows here in place, and it tries to break out. And look into the weekly chart. Right? So the weekly chart looks extremely good. We have a base of a couple of weeks after a huge up move here, 10000%. And, maybe it can, you know, move higher. Maybe it can double again. But this is, you know, a big, big volatility contraction"
     },
     {
       "source": "setup",
@@ -3969,44 +3995,44 @@
     }
   ],
   "summary": {
-    "signal_count": 152,
-    "claim_count": 152,
-    "scored_1w": 151,
-    "scored_1m": 151,
-    "hit_rate_1w": 0.596,
-    "hit_rate_1m": 0.57,
+    "signal_count": 153,
+    "claim_count": 153,
+    "scored_1w": 152,
+    "scored_1m": 152,
+    "hit_rate_1w": 0.592,
+    "hit_rate_1m": 0.566,
     "hit_rate_1w_ci": {
-      "low": 0.5163,
-      "high": 0.671
+      "low": 0.5126,
+      "high": 0.667
     },
     "hit_rate_1m_ci": {
-      "low": 0.4898,
-      "high": 0.6458
+      "low": 0.4863,
+      "high": 0.642
     },
-    "avg_return_1w": 0.0332,
-    "avg_return_1m": 0.0736,
-    "avg_aligned_return_1w": 0.0287,
-    "avg_aligned_return_1m": 0.0417,
+    "avg_return_1w": 0.0328,
+    "avg_return_1m": 0.0724,
+    "avg_aligned_return_1w": 0.0282,
+    "avg_aligned_return_1m": 0.0408,
     "missing_prices": 1,
     "baseline_symbol": "SPY",
     "baseline_hit_rate_1w": 0.697,
     "baseline_hit_rate_1m": 0.727,
     "baseline_avg_return_1w": 0.0103,
     "baseline_avg_return_1m": 0.0249,
-    "edge_vs_baseline_1w": -0.101,
-    "edge_vs_baseline_1m": -0.157,
+    "edge_vs_baseline_1w": -0.105,
+    "edge_vs_baseline_1m": -0.161,
     "assessment_1w": "possible_negative_edge",
     "assessment_1m": "possible_negative_edge",
     "min_n_for_edge": 30,
     "note": "Sample large enough for a rough read; still not a live trading mandate.",
     "by_source": {
       "setup": {
-        "count": 152,
-        "scored_1w": 151,
-        "hit_rate_1w": 0.596,
-        "scored_1m": 151,
-        "hit_rate_1m": 0.57,
-        "avg_aligned_return_1w": 0.0287,
+        "count": 153,
+        "scored_1w": 152,
+        "hit_rate_1w": 0.592,
+        "scored_1m": 152,
+        "hit_rate_1m": 0.566,
+        "avg_aligned_return_1w": 0.0282,
         "assessment_1w": "possible_negative_edge"
       }
     },
@@ -4474,6 +4500,17 @@
         "scored_1m": 1
       },
       {
+        "ticker": "DFDV",
+        "signals": 1,
+        "hit_rate_1w": 0,
+        "hit_rate_1m": 0,
+        "avg_return_1w": -0.0375,
+        "avg_return_1m": -0.104,
+        "avg_aligned_return_1w": -0.0375,
+        "scored_1w": 1,
+        "scored_1m": 1
+      },
+      {
         "ticker": "DKNG",
         "signals": 1,
         "hit_rate_1w": 1,
@@ -4694,7 +4731,7 @@
         "scored_1m": 1
       }
     ],
-    "generated_at": "2026-11-18T06:01:15.046Z",
+    "generated_at": "2026-11-18T07:57:18.178Z",
     "horizons": {
       "1w_days": 7,
       "1m_days": 30
@@ -4709,7 +4746,7 @@
       "avg_return_1m": 0.0249,
       "method": "long_only_spy_on_claim_event_dates"
     },
-    "input_setups": 152,
+    "input_setups": 153,
     "undated_setups": 0,
     "excluded_evergreen_setups": 60
   }
