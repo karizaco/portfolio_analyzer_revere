@@ -532,6 +532,8 @@ source, a document source and a spreadsheet source in one corpus.
 | summary readings | **43** (32 holdings, 7 commodities, 4 prose sections) |
 | transcripts | **116** of 116 videos, ~$30 of Deepgram |
 | setups (calls) | **212**, over 74 of the transcripts |
+| setups scored against the prices | **69** (the other 143 come from sessions the catalog never dated) |
+| the calls' hit rate | **60.9 %** at 1 week and 1 month, against **SPY at 83.3 % / 77.8 %** — an edge of **-22.4 pp / -16.9 pp** |
 
 The corpus lives in `D:\courses_nosync\julian_komar` (and its
 `_finished` sub-folder) and **cannot be re-fetched**, so the derived

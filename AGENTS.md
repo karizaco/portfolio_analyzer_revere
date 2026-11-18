@@ -915,6 +915,24 @@ rule would drop the position. The webcam circle overlaps the panel's
 lower right, so a row behind it is recorded as **occluded**, not
 absent.
 
+**THE PANEL READER IS NOT YET TRUSTWORTHY, AND IT IS NOT WIRED TO A
+WRITER.** `src/komar/panelReader.js` finds the region, the header, the
+columns and the rows, and it reads the prices mostly right -- but the
+**symbol column carries the row's icon** (the POWL row reads "VPOWLE",
+so half the symbols are wrong) and the **W/L sign from the fill** is
+sampled unreliably ("-7.41 %" comes back "+7.41 %"). A wrong holding
+is worse than a missing one, so no tool writes the panel tables, and
+the dashboard's coverage funnel says the panel stage is **unknown**,
+not zero.
+
+**THE CALLS DO NOT BEAT THE INDEX.** The 69 setups that can be scored
+(the other 143 come from sessions the catalog never dated) hit **60.9 %
+at one week and 60.9 % at one month**, against **SPY at 83.3 % and
+77.8 %** over the same windows -- an edge of **-22.4 pp** and **-16.9
+pp**, and the verdict is `possible_negative_edge`. That is the same
+honest result the other sources give. The source's real signal is the
+TRADE LOG: what he actually did, with the prices and the outcomes.
+
 - `src/komar/channel.js` - the source's identity, the namespaced ids, and the slug rule
 - `src/komar/corpusCatalog.js` - the folder walk and the filename grammar
 - `src/komar/documentLayout.js` - what a PDF IS, and what its own chrome says
@@ -925,6 +943,7 @@ absent.
 - `src/komar/summaryLayout.js` - the Weekend-Report Summary: its sections, its entries and its verdicts
 - `src/komar/lexicon.js` - the corpus's own tickers, and the capitalised tokens that are the lesson rather than a holding
 - `src/komar/panelLayout.js` - the panel's eras, its region, its row pitch and its occlusion
+- `src/komar/panelReader.js` - the panel reader: the region, the header, the rows and the cells (not yet trustworthy)
 - `src/komar/tradeLogLayout.js` - the trade-log sheet's geometry, its 18 columns and its values
 - `src/komar/schema.js` - the tables, and the columns an existing database has to grow
 - `tools/catalogKomar.js` - inventories both folders, reads the documents, probes the videos
@@ -932,6 +951,7 @@ absent.
 - `tools/extractKomarTradeLog.js` - the trade-log sheet: 32 trades over 26 tickers
 - `tools/fetchKomarTranscripts.js` - the corpus's primary text: 65.9 hours of Deepgram, priced before it is bought
 - `tools/extractKomarSignals.js` - the setups: the transcripts read with the shared engine and the corpus's own lexicon
+- `tools/analyzeKomarOutcomes.js` - the setups scored against the prices, against SPY, and the dashboard
 - `data/komar_manifest.json` - the catalog's committed record of what was read
 
 ```bash
@@ -943,6 +963,8 @@ npm run komar:transcripts
 npm run komar:transcripts:dry
 npm run komar:signals
 npm run komar:signals:dry
+npm run komar:outcomes
+npm run komar:outcomes:dry
 ```
 
 The videos are checksummed by SIZE and MTIME, not by md5: 48 GB read on every

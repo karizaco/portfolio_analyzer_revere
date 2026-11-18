@@ -1,0 +1,1444 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Komar — MARKET UPDATE Premium</title>
+<style>
+  :root { --paper:#f4f1e9; --ink:#1e2829; --muted:#69716f; --rule:#d8d4c9; --panel:#fbfaf6; }
+  body { margin:0 auto; max-width:1440px; padding:2rem clamp(1rem,4vw,4rem) 5rem; background:var(--paper); color:var(--ink); font-family:Georgia,'Iowan Old Style',serif; }
+  .source-hero { display:grid; grid-template-columns:minmax(0,1fr) minmax(13rem,20rem); gap:2rem; align-items:end; padding:1.4rem 0 1.8rem; border-top:5px solid var(--source-accent); border-bottom:1px solid var(--rule); }
+  .source-kicker { margin:0 0 .5rem; color:var(--source-accent,#b34e2d); font:700 .68rem/1.2 ui-monospace,Consolas,monospace; letter-spacing:.16em; }
+  .source-hero h1 { margin:.2rem 0 .45rem; font-size:clamp(2rem,4vw,3.8rem); letter-spacing:-.045em; }
+  .source-description { max-width:54rem; color:var(--muted); font:1rem/1.5 Georgia,serif; }
+  .source-meta { border-left:1px solid var(--rule); padding-left:1rem; color:var(--muted); font: .8rem/1.5 ui-monospace,Consolas,monospace; }
+  .source-meta strong { display:block; color:var(--ink); font-size:.9rem; }
+  .source-capabilities { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.7rem; }
+  .source-capability { border:1px solid var(--rule); padding:.18rem .4rem; font-size:.68rem; }
+  .source-nav { display:flex; gap:1.2rem; border-bottom:1px solid var(--rule); margin:1.2rem 0 2rem; }
+  .source-nav a { padding:.7rem .1rem; color:var(--muted); text-decoration:none; font:700 .78rem ui-monospace,Consolas,monospace; text-transform:uppercase; letter-spacing:.08em; border-bottom:2px solid transparent; }
+  .source-nav a:hover,.source-nav a:focus { color:var(--ink); border-color:var(--source-accent,#b34e2d); }
+  .source-section { padding:1rem 0 2rem; border-bottom:1px solid var(--rule); scroll-margin-top:1rem; }
+  .source-section h2,.source-coverage h2 { font-size:1.35rem; letter-spacing:-.02em; }
+  .source-coverage { padding:1.5rem; margin:1.5rem 0; background:var(--panel); border:1px solid var(--rule); }
+  .coverage-stages { list-style:none; padding:0; margin:1rem 0 0; display:grid; grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr)); border:1px solid var(--rule); }
+  .coverage-stage { min-height:6.3rem; padding:.8rem; border-right:1px solid var(--rule); border-bottom:1px solid var(--rule); display:flex; flex-direction:column; gap:.3rem; }
+  .coverage-stage-name,.coverage-status { color:var(--muted); font: .68rem ui-monospace,Consolas,monospace; text-transform:uppercase; letter-spacing:.06em; }
+  .coverage-stage strong { font-size:1.5rem; font-variant-numeric:tabular-nums; }
+  .coverage-stage strong small { color:var(--muted); font-size:.8rem; font-weight:400; }
+  .coverage-reason { color:var(--muted); font: .72rem/1.35 ui-monospace,Consolas,monospace; }
+  .status-unknown .coverage-status,.status-not_started .coverage-status { color:#8c6c31; }
+  .status-blocked .coverage-status { color:#a84234; }
+  @media(max-width:700px) { .source-hero { grid-template-columns:1fr; } .source-meta { border-left:0; border-top:1px solid var(--rule); padding:1rem 0 0; } }
+
+  .stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:1rem; margin:2rem 0; }
+  .stat-tile { background:var(--panel); border:1px solid var(--rule); padding:1rem 1.1rem; display:flex; flex-direction:column; gap:.35rem; }
+  .stat-label { font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .stat-value { font-size:1.9rem; line-height:1; }
+  .stat-note { font-size:.78rem; color:var(--muted); }
+  .data-table { width:100%; border-collapse:collapse; margin:1rem 0 2.5rem; font-size:.88rem; }
+  .data-table th { text-align:left; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--rule); padding:.5rem .6rem; }
+  .data-table td { border-bottom:1px solid var(--rule); padding:.45rem .6rem; vertical-align:top; }
+  .mono { font-family:ui-monospace,'SFMono-Regular',Menlo,monospace; }
+  .up { color:#1f7a4d; } .down { color:#a8322d; }
+  .evidence { color:var(--muted); max-width:32rem; }
+  .empty { color:var(--muted); font-style:italic; }
+  .section-heading { margin:2.5rem 0 .5rem; }
+  .section-heading h2 { margin:.2rem 0 0; font-size:1.35rem; }
+  .source-kicker { margin:0; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+</style></head>
+<body>
+<header class="source-hero" style="--source-accent:#1f7a4d">
+    <div><p class="source-kicker">SOURCE RESEARCH / komar</p>
+      <h1>Komar (MARKET UPDATE Premium)</h1>
+      <p class="source-description">A paid membership read from the corpus on disk: what he said he was watching, what he did, and what the prices did.</p></div>
+    <aside class="source-meta"><span>Updated</span><strong>2026-11-18T04:01:33.970Z</strong>
+      <div class="source-capabilities"><span class="source-capability">trade log</span><span class="source-capability">setups</span><span class="source-capability">market cards</span><span class="source-capability">summary watchlists</span></div></aside>
+  </header>
+<section id="overview"><div class="stat-grid"><div class="stat-tile">
+    <span class="stat-label">Setups extracted</span>
+    <strong class="stat-value">212</strong>
+    <span class="stat-note">calls with their evidence</span>
+  </div><div class="stat-tile">
+    <span class="stat-label">Setups scored</span>
+    <strong class="stat-value">69</strong>
+    <span class="stat-note">against the prices</span>
+  </div><div class="stat-tile">
+    <span class="stat-label">Hit rate, 1 week</span>
+    <strong class="stat-value">60.9 %</strong>
+    <span class="stat-note">the calls that worked</span>
+  </div><div class="stat-tile">
+    <span class="stat-label">SPY baseline, 1 week</span>
+    <strong class="stat-value">—</strong>
+    <span class="stat-note">the same window</span>
+  </div><div class="stat-tile">
+    <span class="stat-label">Trades in the log</span>
+    <strong class="stat-value">32</strong>
+    <span class="stat-note">what he actually did</span>
+  </div><div class="stat-tile">
+    <span class="stat-label">Watchlist readings</span>
+    <strong class="stat-value">43</strong>
+    <span class="stat-note">from the weekend summaries</span>
+  </div></div></section>
+<section id="coverage" class="source-coverage" aria-labelledby="coverage-heading">
+    <div class="section-heading"><p class="source-kicker">DATA PROVENANCE</p><h2 id="coverage-heading">Coverage at a glance</h2></div>
+    <ol class="coverage-stages"><li class="coverage-stage status-complete">
+      <span class="coverage-stage-name">Videos catalogued</span>
+      <strong>116<small></small></strong>
+      <span class="coverage-status">complete</span>
+      
+    </li><li class="coverage-stage status-complete">
+      <span class="coverage-stage-name">Videos transcribed</span>
+      <strong>116<small> / 116</small></strong>
+      <span class="coverage-status">complete</span>
+      
+    </li><li class="coverage-stage status-complete">
+      <span class="coverage-stage-name">Setups extracted</span>
+      <strong>212<small></small></strong>
+      <span class="coverage-status">complete</span>
+      
+    </li><li class="coverage-stage status-partial">
+      <span class="coverage-stage-name">Setups with a session date</span>
+      <strong>69<small> / 212</small></strong>
+      <span class="coverage-status">partial</span>
+      <small class="coverage-reason">143 setup(s) come from sessions with no date in the catalog</small>
+    </li><li class="coverage-stage status-partial">
+      <span class="coverage-stage-name">Setups scored against prices</span>
+      <strong>69<small> / 69</small></strong>
+      <span class="coverage-status">partial</span>
+      
+    </li><li class="coverage-stage status-unknown">
+      <span class="coverage-stage-name">Panel (watchlist and positions)</span>
+      <strong>Unknown<small></small></strong>
+      <span class="coverage-status">unknown</span>
+      <small class="coverage-reason">the on-screen panel is measured but not yet read</small>
+    </li><li class="coverage-stage status-complete">
+      <span class="coverage-stage-name">Trade log</span>
+      <strong>32<small></small></strong>
+      <span class="coverage-status">complete</span>
+      
+    </li><li class="coverage-stage status-complete">
+      <span class="coverage-stage-name">Summary watchlists</span>
+      <strong>43<small></small></strong>
+      <span class="coverage-status">complete</span>
+      
+    </li></ol>
+  </section>
+<section id="setups"><div class="section-heading"><p class="source-kicker">THE CALLS</p><h2>Setups and what the prices did</h2></div>
+<table class="data-table">
+    <thead><tr><th>Ticker</th><th>Date</th><th>Call</th><th>Entry</th><th>1 week</th><th>1 month</th><th>1w</th><th>Evidence</th></tr></thead>
+    <tbody><tr>
+      <td class="mono">GOOG</td>
+      <td>2022-01-14</td>
+      <td class="up">bullish</td>
+      <td class="mono">138.474915</td>
+      <td class="mono">-6.9 %</td>
+      <td class="mono">-4.0 %</td>
+      <td>miss</td>
+      <td class="evidence">Google or whatever will now have strong rallies to the upside because money is rushing into them. If you look here at the at the volume, it speaks to me the opposite message. So big red bars. So that means maybe institut</td>
+    </tr><tr>
+      <td class="mono">XBI</td>
+      <td>2022-01-14</td>
+      <td class="up">bullish</td>
+      <td class="mono">99.855659</td>
+      <td class="mono">-10.4 %</td>
+      <td class="mono">-7.1 %</td>
+      <td>miss</td>
+      <td class="evidence">So... But XBI looks very good especially, if you wanna trade more on the ETF level. XHB is another market with called my extension Home Builders right now. So very clear bottom established here in homebuilders. Here you </td>
+    </tr><tr>
+      <td class="mono">TPL</td>
+      <td>2022-11-19</td>
+      <td class="up">bullish</td>
+      <td class="mono">288.752991</td>
+      <td class="mono">-3.7 %</td>
+      <td class="mono">-8.4 %</td>
+      <td>miss</td>
+      <td class="evidence">Let&#39;s look at TPL. TPL is one of the strongest oil names right now. Very short consolidation here. This is not the type of consolidation I&#39;m interested in to buy. This is too short term for me. Let&#39;s look at the weekly c</td>
+    </tr><tr>
+      <td class="mono">TPL</td>
+      <td>2022-11-19</td>
+      <td class="up">bullish</td>
+      <td class="mono">288.752991</td>
+      <td class="mono">-3.7 %</td>
+      <td class="mono">-8.4 %</td>
+      <td>miss</td>
+      <td class="evidence">So this is important. And TPL is another example from the current watch list. Is this in a clear uptrend? Yes. Was that here in a clear uptrend? A little bit difficult to say, but I would say yes. And why? Look at that. </td>
+    </tr><tr>
+      <td class="mono">SMCI</td>
+      <td>2023-01-08</td>
+      <td class="up">bullish</td>
+      <td class="mono">8.439</td>
+      <td class="mono">-4.5 %</td>
+      <td class="mono">-2.9 %</td>
+      <td>miss</td>
+      <td class="evidence">And then 5% stop loss. SMCI, this is something I&#39;m looking forward to buy into, above $88.40 so above this high from this red bar on January 4. So if the stock is falling through here, something like this here</td>
+    </tr><tr>
+      <td class="mono">RIOT</td>
+      <td>2023-05-29</td>
+      <td class="up">bullish</td>
+      <td class="mono">10.92</td>
+      <td class="mono">-2.2 %</td>
+      <td class="mono">5.7 %</td>
+      <td>miss</td>
+      <td class="evidence">And the second one is Riot. Riot does not look very good. I think Bitcoin looks better, but if Bitcoin follows through to the upside, I&#39;m very sure that Riot also will move higher. If you look into the weekly chart, you </td>
+    </tr><tr>
+      <td class="mono">YSS</td>
+      <td>2025-04-08</td>
+      <td class="up">bullish</td>
+      <td class="mono">33.610001</td>
+      <td class="mono">0.0 %</td>
+      <td class="mono">0.0 %</td>
+      <td>miss</td>
+      <td class="evidence">YSS is working on a bottom here, on a on a big double bottom. You could see that here. Big double bottom. Just... It just needs a couple of days more, and then hopefully, we&#39;ll follow through on the upside. GSAT is alrea</td>
+    </tr><tr>
+      <td class="mono">CRML</td>
+      <td>2025-07-01</td>
+      <td class="up">bullish</td>
+      <td class="mono">3.27</td>
+      <td class="mono">-6.4 %</td>
+      <td class="mono">15.3 %</td>
+      <td>miss</td>
+      <td class="evidence">So then I had CRML, CRML a five star four star setup, probably a little bit entry I wrote down here small position just a 5% position here. Yeah I chased that here a little bit too much. No sorry it was this breakout her</td>
+    </tr><tr>
+      <td class="mono">GME</td>
+      <td>2025-07-01</td>
+      <td class="up">bullish</td>
+      <td class="mono">23.68</td>
+      <td class="mono">-3.9 %</td>
+      <td class="mono">-5.2 %</td>
+      <td>miss</td>
+      <td class="evidence">In hindsight I said it was a three stars base because there were there were no higher lows there were no clear breakout line horizontal breakout line so it was a see trade because it was too emotional driven you I though</td>
+    </tr><tr>
+      <td class="mono">AMD</td>
+      <td>2025-09-01</td>
+      <td class="up">bullish</td>
+      <td class="mono">162.630005</td>
+      <td class="mono">-6.9 %</td>
+      <td class="mono">0.8 %</td>
+      <td>miss</td>
+      <td class="evidence">not a very good news. And there was a time when when when the news for AMD came out, and then it failed also, quickly. Yeah, sold it on the strong reversal here. Weak market stock came back to my entry price. Slow mover </td>
+    </tr><tr>
+      <td class="mono">TSLA</td>
+      <td>2025-10-01</td>
+      <td class="up">bullish</td>
+      <td class="mono">459.459991</td>
+      <td class="mono">-4.5 %</td>
+      <td class="mono">-0.6 %</td>
+      <td>miss</td>
+      <td class="evidence">Now it had, three days more of consolidation. That&#39;s good and could give a buy signal within the next couple of days. Tesla breaks out here today, so this looks very good. It&#39;s also not the fastest mover. ADR is only a 3</td>
+    </tr><tr>
+      <td class="mono">CRML</td>
+      <td>2026-01-25</td>
+      <td class="up">bullish</td>
+      <td class="mono">20.620001</td>
+      <td class="mono">-36.1 %</td>
+      <td class="mono">-48.0 %</td>
+      <td>miss</td>
+      <td class="evidence">it can follow through here on the upside. So TII looks very good and then CRML looks also very good but this one here had an up or is in an upward consolidation, so a rising consolidation, and, that&#39;s too tricky to trade</td>
+    </tr><tr>
+      <td class="mono">APLD</td>
+      <td>2026-01-25</td>
+      <td class="up">bullish</td>
+      <td class="mono">37.689999</td>
+      <td class="mono">-10.1 %</td>
+      <td class="mono">-18.7 %</td>
+      <td>miss</td>
+      <td class="evidence">or on the other side maybe getting tighter over time and then starting a rally on the upside. The same is true with APLD. This looks really really good. Right? The pattern looks not bad. If you look into the weekly chart</td>
+    </tr><tr>
+      <td class="mono">PLTR</td>
+      <td>2026-02-21</td>
+      <td class="down">bearish</td>
+      <td class="mono">135.240005</td>
+      <td class="mono">1.4 %</td>
+      <td class="mono">18.9 %</td>
+      <td>miss</td>
+      <td class="evidence">the last two days. So let&#39;s start with Palantir. I shot at that here. I covered, my position breakeven. So when it had this rally, this is, you know, this is, I mean, I reflected that already in the community. So listen </td>
+    </tr><tr>
+      <td class="mono">PLTR</td>
+      <td>2026-02-21</td>
+      <td class="down">bearish</td>
+      <td class="mono">135.240005</td>
+      <td class="mono">1.4 %</td>
+      <td class="mono">18.9 %</td>
+      <td>miss</td>
+      <td class="evidence">You know, you have these big rallies against you, and it&#39;s always the same thing, and it shakes you out. You know, it it always looks so easy if you look at a chart and say, oh, this is always going down. You know, If I </td>
+    </tr><tr>
+      <td class="mono">MU</td>
+      <td>2026-02-21</td>
+      <td class="up">bullish</td>
+      <td class="mono">427.857056</td>
+      <td class="mono">-3.7 %</td>
+      <td class="mono">-5.6 %</td>
+      <td>miss</td>
+      <td class="evidence">MU, following through here on the upside. Maybe it will go to thousand. So let&#39;s see. So it&#39;s one of the strongest stocks in the market right now. Yeah. And, let&#39;s see what will happen next week. So I&#39;m really open to ad</td>
+    </tr><tr>
+      <td class="mono">SNDK</td>
+      <td>2026-02-21</td>
+      <td class="up">bullish</td>
+      <td class="mono">649.969971</td>
+      <td class="mono">-2.2 %</td>
+      <td class="mono">8.1 %</td>
+      <td>miss</td>
+      <td class="evidence">Yeah, so this looks really really good, it&#39;s one of the leaders and I wanna keep that here as long as possible, and if if if now next week, the market will follow through on the upside, I&#39;m very sure I will buy more posi</td>
+    </tr><tr>
+      <td class="mono">STX</td>
+      <td>2026-02-21</td>
+      <td class="up">bullish</td>
+      <td class="mono">409.773224</td>
+      <td class="mono">-0.8 %</td>
+      <td class="mono">-1.7 %</td>
+      <td>miss</td>
+      <td class="evidence">Then STX, so the memory stocks are still looking good. I could imagine that they will have sooner or later their their their big, their big runs on the upside... Their last big runs on the upside. STX is getting tight he</td>
+    </tr><tr>
+      <td class="mono">NBIS</td>
+      <td>2026-03-14</td>
+      <td class="down">bearish</td>
+      <td class="mono">112.949997</td>
+      <td class="mono">4.1 %</td>
+      <td class="mono">36.8 %</td>
+      <td>miss</td>
+      <td class="evidence">And, you know, that&#39;s also the reason when when you look at these stocks, you know, nobody is selling them right now. Like wool, for example, like NBIS, like, I don&#39;t know, Hutt, and all this you know it&#39;s not that they </td>
+    </tr><tr>
+      <td class="mono">DELL</td>
+      <td>2026-04-25</td>
+      <td class="up">bullish</td>
+      <td class="mono">215.435074</td>
+      <td class="mono">-2.7 %</td>
+      <td class="mono">36.6 %</td>
+      <td>miss</td>
+      <td class="evidence">because who knows? Maybe I will be surprised with Dell and this thing goes up to, I don&#39;t know, 300 or something like that. And then, it turns into a little bit bigger winner. And the thing is, you know, one thing... And</td>
+    </tr><tr>
+      <td class="mono">APLD</td>
+      <td>2026-04-25</td>
+      <td class="up">bullish</td>
+      <td class="mono">34.98</td>
+      <td class="mono">-4.1 %</td>
+      <td class="mono">31.1 %</td>
+      <td>miss</td>
+      <td class="evidence">So let&#39;s see. I would definitely keep that as long as possible. And then APLD, was it a good idea to buy that in the base? You know, that&#39;s that&#39;s the reason why I hate I hate to buy gaps within the base. But I wanted to</td>
+    </tr><tr>
+      <td class="mono">ARM</td>
+      <td>2026-04-25</td>
+      <td class="up">bullish</td>
+      <td class="mono">234.809998</td>
+      <td class="mono">-10.1 %</td>
+      <td class="mono">30.5 %</td>
+      <td>miss</td>
+      <td class="evidence">It&#39;s the same for ARM. Where is ARM? Here. So it&#39;s the same for ARM. Right? All these stocks that went nowhere for years, they made the explosive moves in the last days. You know, it... It&#39;s really like money is rushing </td>
+    </tr><tr>
+      <td class="mono">ALM</td>
+      <td>2026-04-25</td>
+      <td class="up">bullish</td>
+      <td class="mono">21.92</td>
+      <td class="mono">-6.0 %</td>
+      <td class="mono">-14.9 %</td>
+      <td>miss</td>
+      <td class="evidence">So they they rose here in the last, months, and ALM is one of the stocks. And Tungsten, I think there are no Tungsten futures. No. There are no Tungsten futures. So... And then the other one is Nexa, which is a zinc prod</td>
+    </tr><tr>
+      <td class="mono">TSLA</td>
+      <td>2026-04-29</td>
+      <td class="down">bearish</td>
+      <td class="mono">372.799988</td>
+      <td class="mono">7.0 %</td>
+      <td class="mono">16.9 %</td>
+      <td>miss</td>
+      <td class="evidence">Tesla, and that is true. Right? But the ARK stands for high growth names for me. You know, if the ARK has a has a move like this year, you know, I will have a great year because a lot of these stocks that I trade will ha</td>
+    </tr><tr>
+      <td class="mono">MU</td>
+      <td>2026-05-09</td>
+      <td class="up">bullish</td>
+      <td class="mono">746.577637</td>
+      <td class="mono">-3.0 %</td>
+      <td class="mono">27.1 %</td>
+      <td>miss</td>
+      <td class="evidence">MU. These are super liquid stocks. Right? And this is where the money is flowing right now. It&#39;s not so much anymore into the small caps and especially not broadly into small caps and mid caps. It&#39;s more that it&#39;s concen</td>
+    </tr><tr>
+      <td class="mono">CRM</td>
+      <td>2026-05-09</td>
+      <td class="up">bullish</td>
+      <td class="mono">181.033463</td>
+      <td class="mono">-4.6 %</td>
+      <td class="mono">0.4 %</td>
+      <td>miss</td>
+      <td class="evidence">CRM, UMAY. So I bought it here on this... On on the gap up. You can see that here in this chart, but there was a gap up setup here. So that was my previous analysis. I bought I bought that as a gap up. I I I thought it w</td>
+    </tr><tr>
+      <td class="mono">TWLO</td>
+      <td>2026-05-09</td>
+      <td class="up">bullish</td>
+      <td class="mono">201.699997</td>
+      <td class="mono">-1.7 %</td>
+      <td class="mono">5.4 %</td>
+      <td>miss</td>
+      <td class="evidence">This... I mean, it looks very much like Twilio. Right? Twilio looks a little bit better because it&#39;s already trending higher, but where bandwidth looks awesome here. You know? I missed the, the gap up here. I saw that, b</td>
+    </tr><tr>
+      <td class="mono">META</td>
+      <td>2022-01-14</td>
+      <td class="down">bearish</td>
+      <td class="mono">328.751343</td>
+      <td class="mono">-8.7 %</td>
+      <td class="mono">-33.9 %</td>
+      <td>hit</td>
+      <td class="evidence">Facebook is something here. Friday &#39;26, was a bounce from the email &#39;21 that was here, when the MMTS is... Was green and also it, red and it was breaking down here. Then that&#39;s maybe an opportunity to short into Facebook</td>
+    </tr><tr>
+      <td class="mono">SMCI</td>
+      <td>2022-11-19</td>
+      <td class="up">bullish</td>
+      <td class="mono">8.649</td>
+      <td class="mono">8.5 %</td>
+      <td class="mono">-9.5 %</td>
+      <td>hit</td>
+      <td class="evidence">So just one word maybe about SMCI. Supermicro, you know, it shows the right fundamentals, but technicals are more important because otherwise you get always stopped out of the best fundamental stock. Why... That&#39;s why it</td>
+    </tr><tr>
+      <td class="mono">ORCL</td>
+      <td>2023-05-29</td>
+      <td class="up">bullish</td>
+      <td class="mono">99.749397</td>
+      <td class="mono">2.7 %</td>
+      <td class="mono">12.0 %</td>
+      <td>hit</td>
+      <td class="evidence">are better than expected. This is why you see, you know, stocks like Oracle are exploding to the upside even if they are very slow growing or not growing at all companies. And, also that stocks with negative sales and EP</td>
+    </tr><tr>
+      <td class="mono">NVDA</td>
+      <td>2023-05-29</td>
+      <td class="up">bullish</td>
+      <td class="mono">38.822815</td>
+      <td class="mono">0.6 %</td>
+      <td class="mono">5.6 %</td>
+      <td>hit</td>
+      <td class="evidence">So, you know, buying an Nvidia, when it was up 25% is maybe not rewarded because it will be tracked down by the indices on the next opportunity because it&#39;s a high beta stock, to the Nasdaq Composite. So that would be on</td>
+    </tr><tr>
+      <td class="mono">PLTR</td>
+      <td>2023-05-29</td>
+      <td class="up">bullish</td>
+      <td class="mono">13.65</td>
+      <td class="mono">11.6 %</td>
+      <td class="mono">11.9 %</td>
+      <td>hit</td>
+      <td class="evidence">Next one, Palantir. I added it to the watch list. Do I have a very high conviction in the stock? No. This is a software enterprise, company. You know, they they they are doing big, big, big size business. They are... The</td>
+    </tr><tr>
+      <td class="mono">TSLA</td>
+      <td>2023-05-29</td>
+      <td class="up">bullish</td>
+      <td class="mono">193.169998</td>
+      <td class="mono">12.7 %</td>
+      <td class="mono">32.6 %</td>
+      <td>hit</td>
+      <td class="evidence">So... And I try to get better at that because in a bull market, again, in a bull market, it&#39;s really not a big problem. You know, you buy Tesla here, for example. The market is already in an uptrend. Everything is in an </td>
+    </tr><tr>
+      <td class="mono">STX</td>
+      <td>2025-04-08</td>
+      <td class="up">bullish</td>
+      <td class="mono">65.593918</td>
+      <td class="mono">8.2 %</td>
+      <td class="mono">44.7 %</td>
+      <td>hit</td>
+      <td class="evidence">STX kept higher. It&#39;s now the second up gap year in a row. I did not buy into that here because, I mean, where where do you wanna place your stop loss? Right? This is not a catalyst event. This is not an event where, yea</td>
+    </tr><tr>
+      <td class="mono">AAOI</td>
+      <td>2025-04-08</td>
+      <td class="up">bullish</td>
+      <td class="mono">10.7</td>
+      <td class="mono">7.0 %</td>
+      <td class="mono">37.9 %</td>
+      <td>hit</td>
+      <td class="evidence">So, you know, give them time. That&#39;s very important. And it&#39;s also the same with, you know, these super stocks like AAOI, for example. You know, it makes no sense to buy a stock here and place a 17% stop loss. You must e</td>
+    </tr><tr>
+      <td class="mono">PL</td>
+      <td>2025-04-08</td>
+      <td class="up">bullish</td>
+      <td class="mono">3.04</td>
+      <td class="mono">7.9 %</td>
+      <td class="mono">18.8 %</td>
+      <td>hit</td>
+      <td class="evidence">You know, where do you wanna place a stop loss? You know, 13% away does not make any sense. But PL, for example, got tired today. It&#39;s now... Or pulled back here to the support level. It&#39;s now coming back a little bit. Y</td>
+    </tr><tr>
+      <td class="mono">NBIS</td>
+      <td>2025-04-08</td>
+      <td class="up">bullish</td>
+      <td class="mono">20.059999</td>
+      <td class="mono">6.3 %</td>
+      <td class="mono">40.7 %</td>
+      <td>hit</td>
+      <td class="evidence">And also NBIS, these data center stocks, AI data center stocks, they are looking very good. I mean, look at this here. You know? NBIS works on a huge base. It has monster sales growth here, and, you could see that here, </td>
+    </tr><tr>
+      <td class="mono">CRML</td>
+      <td>2025-07-01</td>
+      <td class="down">bearish</td>
+      <td class="mono">3.27</td>
+      <td class="mono">-6.4 %</td>
+      <td class="mono">15.3 %</td>
+      <td>hit</td>
+      <td class="evidence">So it broke out here. It was also not a long consolidation here,</td>
+    </tr><tr>
+      <td class="mono">ARQQ</td>
+      <td>2025-07-01</td>
+      <td class="up">bullish</td>
+      <td class="mono">34.68</td>
+      <td class="mono">2.8 %</td>
+      <td class="mono">-4.1 %</td>
+      <td>hit</td>
+      <td class="evidence">ARQQ, yeah great setup it was really tight before it broke out here I bought that on a breakout here, it kept higher a little bit but there were no news, they moved sideways for a while intraday and then it started to ra</td>
+    </tr><tr>
+      <td class="mono">PL</td>
+      <td>2025-07-01</td>
+      <td class="up">bullish</td>
+      <td class="mono">6.16</td>
+      <td class="mono">12.5 %</td>
+      <td class="mono">1.5 %</td>
+      <td>hit</td>
+      <td class="evidence">So PL oh my god I tried it again. Four stars. Yeah it was better it was definitely better at that time because it was closer to this breakout line here we had this pullback here and I bought it on this breakout here. You</td>
+    </tr><tr>
+      <td class="mono">PL</td>
+      <td>2025-07-01</td>
+      <td class="up">bullish</td>
+      <td class="mono">6.16</td>
+      <td class="mono">12.5 %</td>
+      <td class="mono">1.5 %</td>
+      <td>hit</td>
+      <td class="evidence">PL really took some time until it broke out and it was probably trading rather laggard here, but it wasn&#39;t a trade so a bit choppy setup it wasn&#39;t a trade because I exactly followed my rules. So then I ran five star, yea</td>
+    </tr><tr>
+      <td class="mono">APLD</td>
+      <td>2025-08-20</td>
+      <td class="up">bullish</td>
+      <td class="mono">15.72</td>
+      <td class="mono">6.2 %</td>
+      <td class="mono">30.3 %</td>
+      <td>hit</td>
+      <td class="evidence">So... And the other stock, Wolf, you know, have no reason to sell the thing. This thing is holding up like a champ. Right? And APLD and Iran, they pulled back very deeply, but this one here is holding up like a champ. An</td>
+    </tr><tr>
+      <td class="mono">BTCS</td>
+      <td>2025-09-01</td>
+      <td class="up">bullish</td>
+      <td class="mono">4.133761</td>
+      <td class="mono">0.5 %</td>
+      <td class="mono">23.1 %</td>
+      <td>hit</td>
+      <td class="evidence">So then BTCS, this this was the only stock what... Which was really able to follow through also after afterwards. And the difference I think between, DFTV and BTCS, you can see that this one made a big move here on the u</td>
+    </tr><tr>
+      <td class="mono">MP</td>
+      <td>2025-09-01</td>
+      <td class="down">bearish</td>
+      <td class="mono">71.139999</td>
+      <td class="mono">-11.8 %</td>
+      <td class="mono">-4.9 %</td>
+      <td>hit</td>
+      <td class="evidence">And, you know, this behavior here is very good. You have this breakout and then the stock consolidates around the high points here. So it shows you very clearly that it wants to make an explosive move and compare that wi</td>
+    </tr><tr>
+      <td class="mono">LAC</td>
+      <td>2025-09-24</td>
+      <td class="up">bullish</td>
+      <td class="mono">6.01</td>
+      <td class="mono">17.1 %</td>
+      <td class="mono">11.8 %</td>
+      <td>hit</td>
+      <td class="evidence">so battery recycling, but they also have this lithium project in the background. And today, we got very positive news from LAC so that, the US government wants to take, a position in, LAC, so lithium americanas, and ABAT</td>
+    </tr><tr>
+      <td class="mono">TSLA</td>
+      <td>2026-01-25</td>
+      <td class="down">bearish</td>
+      <td class="mono">449.059998</td>
+      <td class="mono">-4.2 %</td>
+      <td class="mono">-8.8 %</td>
+      <td>hit</td>
+      <td class="evidence">because, a lot of the stocks that are in the arc are very choppy as well. Right? And I think Tesla is one of the biggest holdings, and Tesla is very choppy right now. So I think it&#39;s more likely that we will see a contin</td>
+    </tr><tr>
+      <td class="mono">BE</td>
+      <td>2026-01-25</td>
+      <td class="up">bullish</td>
+      <td class="mono">144.889999</td>
+      <td class="mono">4.5 %</td>
+      <td class="mono">14.7 %</td>
+      <td>hit</td>
+      <td class="evidence">Alright so then some selected other stocks BE I&#39;m waiting for a good consolidation this looks really good to be honest it looks really good because it can find support here around the high points you could see that it&#39;s </td>
+    </tr><tr>
+      <td class="mono">PLTR</td>
+      <td>2026-02-21</td>
+      <td class="up">bullish</td>
+      <td class="mono">135.240005</td>
+      <td class="mono">1.4 %</td>
+      <td class="mono">18.9 %</td>
+      <td>hit</td>
+      <td class="evidence">I mean, you short a pullback here and then boom, you have this rally against you, and it stops you out breakeven. This is totally something different than than going long. Right? So, because on the short side, you always</td>
+    </tr><tr>
+      <td class="mono">TGB</td>
+      <td>2026-02-21</td>
+      <td class="up">bullish</td>
+      <td class="mono">7.95</td>
+      <td class="mono">11.7 %</td>
+      <td class="mono">-25.3 %</td>
+      <td>hit</td>
+      <td class="evidence">move higher. So precious metals is definitely something I keep an eye on and also the copper miners are looking very good to be honest. TGB, Taziko mines, you can see that here it&#39;s getting really really tight. I&#39;m not t</td>
+    </tr><tr>
+      <td class="mono">COPX</td>
+      <td>2026-02-21</td>
+      <td class="up">bullish</td>
+      <td class="mono">88.788269</td>
+      <td class="mono">7.4 %</td>
+      <td class="mono">-17.4 %</td>
+      <td>hit</td>
+      <td class="evidence">sales. So this is really, you know, there is something going on in these copper miners. And if you look at a copper miners ETF, COPX, that&#39;s also an alternative if you want if you wanna trade that. Right? So you can see </td>
+    </tr><tr>
+      <td class="mono">TGB</td>
+      <td>2026-02-21</td>
+      <td class="up">bullish</td>
+      <td class="mono">7.95</td>
+      <td class="mono">11.7 %</td>
+      <td class="mono">-25.3 %</td>
+      <td>hit</td>
+      <td class="evidence">So TGB looks looks really good. ADR is 6.88. So this can make a bigger move on the upside. And let&#39;s see, you know, if this thing breaks out strongly here on Monday or Tuesday, then I will maybe buy a position. So HBM, a</td>
+    </tr><tr>
+      <td class="mono">TGB</td>
+      <td>2026-02-21</td>
+      <td class="up">bullish</td>
+      <td class="mono">7.95</td>
+      <td class="mono">11.7 %</td>
+      <td class="mono">-25.3 %</td>
+      <td>hit</td>
+      <td class="evidence">Right? My favorite is probably TGB because, you know, this is also, yeah, I would say a stock that can make bigger moves on the upside. So you can see it moved here 80% while the other stocks moved something like 30, 40%</td>
+    </tr><tr>
+      <td class="mono">VRT</td>
+      <td>2026-02-21</td>
+      <td class="up">bullish</td>
+      <td class="mono">243.581604</td>
+      <td class="mono">4.6 %</td>
+      <td class="mono">5.1 %</td>
+      <td>hit</td>
+      <td class="evidence">so but let&#39;s see what will happen so I mean for VRT they are doing liquid cooling for the data centers which you need in AI data centers and high performance computing I I would like to see this thing going sideways a li</td>
+    </tr><tr>
+      <td class="mono">HOOD</td>
+      <td>2026-03-14</td>
+      <td class="down">bearish</td>
+      <td class="mono">73.389999</td>
+      <td class="mono">-3.4 %</td>
+      <td class="mono">-2.3 %</td>
+      <td>hit</td>
+      <td class="evidence">So in everything what is crypto related is weak at the moment. There are some exceptions, but the most stocks are very weak, and Hood is one of the weakest leaders, I would say. And it looks like it wants to follow throu</td>
+    </tr><tr>
+      <td class="mono">QBTS</td>
+      <td>2026-03-14</td>
+      <td class="down">bearish</td>
+      <td class="mono">17.549999</td>
+      <td class="mono">-10.4 %</td>
+      <td class="mono">-16.5 %</td>
+      <td>hit</td>
+      <td class="evidence">that could break down and follow through on the downside, maybe retest this 10 US dollar level here in the upcoming days. QBTS very clear break... Breakout level here to the downside. It&#39;s already a little bit beaten dow</td>
+    </tr><tr>
+      <td class="mono">QBTS</td>
+      <td>2026-03-14</td>
+      <td class="down">bearish</td>
+      <td class="mono">17.549999</td>
+      <td class="mono">-10.4 %</td>
+      <td class="mono">-16.5 %</td>
+      <td>hit</td>
+      <td class="evidence">but these are more ETFs because I like to trade ETFs on the short side. I don&#39;t have the single trade risk in that case. So for example, if QUBT or QBTS will have a good news and then it gets 20% against you. And, you kn</td>
+    </tr><tr>
+      <td class="mono">HOOD</td>
+      <td>2026-03-14</td>
+      <td class="down">bearish</td>
+      <td class="mono">73.389999</td>
+      <td class="mono">-3.4 %</td>
+      <td class="mono">-2.3 %</td>
+      <td>hit</td>
+      <td class="evidence">HOOD is also part of this ETF then IGV so the software sector this is one of the leading sectors on the downside and I know that everybody was very euphoric about this up move here but when you look back into into bear m</td>
+    </tr><tr>
+      <td class="mono">SNDK</td>
+      <td>2026-03-14</td>
+      <td class="up">bullish</td>
+      <td class="mono">661.619995</td>
+      <td class="mono">7.3 %</td>
+      <td class="mono">44.0 %</td>
+      <td>hit</td>
+      <td class="evidence">SNDK here only because it&#39;s up, one day here and breaks out above this this point here. When you look into the weekly chart, you can see that they are right now forming extreme nice bases. Right? So this looks really lik</td>
+    </tr><tr>
+      <td class="mono">AMD</td>
+      <td>2026-03-14</td>
+      <td class="up">bullish</td>
+      <td class="mono">193.389999</td>
+      <td class="mono">4.1 %</td>
+      <td class="mono">27.6 %</td>
+      <td>hit</td>
+      <td class="evidence">AMD is, they are investing into, AI data center companies to, at the end, protect their market share. Right? So NVIDIA put an investment into them so that they are buying at the end, NVIDIA chips. So... And not AMD chips</td>
+    </tr><tr>
+      <td class="mono">GEV</td>
+      <td>2026-03-14</td>
+      <td class="up">bullish</td>
+      <td class="mono">803.652405</td>
+      <td class="mono">5.8 %</td>
+      <td class="mono">23.2 %</td>
+      <td>hit</td>
+      <td class="evidence">GEV had the same thing, double bottom here, choppy and then started to break out and made a rally, and this is what you need to wait for. Right you need to wait until these stocks that are attracting money from instituti</td>
+    </tr><tr>
+      <td class="mono">SOXL</td>
+      <td>2026-04-01</td>
+      <td class="up">bullish</td>
+      <td class="mono">52.225758</td>
+      <td class="mono">29.2 %</td>
+      <td class="mono">149.5 %</td>
+      <td>hit</td>
+      <td class="evidence">So I think the best trade in semiconductors was SOXL to be honest. That was the best trade. I mean look at that here. Right and this is that&#39;s also the difference I think between the the stocks and the ETF as an example.</td>
+    </tr><tr>
+      <td class="mono">APLD</td>
+      <td>2026-04-01</td>
+      <td class="up">bullish</td>
+      <td class="mono">24.49</td>
+      <td class="mono">13.5 %</td>
+      <td class="mono">37.0 %</td>
+      <td>hit</td>
+      <td class="evidence">APLD, fake breakout here. You know, this is the reason why I personally don&#39;t like to trade stocks that are in a big base. You know, if they have breakouts, it can work, within a big base, but very often they have overhe</td>
+    </tr><tr>
+      <td class="mono">STX</td>
+      <td>2026-04-11</td>
+      <td class="up">bullish</td>
+      <td class="mono">502.368835</td>
+      <td class="mono">8.9 %</td>
+      <td class="mono">65.8 %</td>
+      <td>hit</td>
+      <td class="evidence">instead of buying into, I don&#39;t know, STX or</td>
+    </tr><tr>
+      <td class="mono">PL</td>
+      <td>2026-04-25</td>
+      <td class="up">bullish</td>
+      <td class="mono">35.439999</td>
+      <td class="mono">4.1 %</td>
+      <td class="mono">25.1 %</td>
+      <td>hit</td>
+      <td class="evidence">PL. I gave back profits of, BW. And this is this is this is what hurts. Right? It&#39;s not so much about the small losses here. It&#39;s, you know, you have small losses, and then you have a couple of breakeven trades where you</td>
+    </tr><tr>
+      <td class="mono">SNDK</td>
+      <td>2026-04-25</td>
+      <td class="up">bullish</td>
+      <td class="mono">989.900024</td>
+      <td class="mono">19.9 %</td>
+      <td class="mono">49.4 %</td>
+      <td>hit</td>
+      <td class="evidence">in SNDK. So... And we are approaching now the thousand US dollar level. So above above 1,000, it could also accelerate on the upside. I mean, it consolidated now nicely be... Below the 1,000 level here. Right?</td>
+    </tr><tr>
+      <td class="mono">DELL</td>
+      <td>2026-04-25</td>
+      <td class="down">bearish</td>
+      <td class="mono">215.435074</td>
+      <td class="mono">-2.7 %</td>
+      <td class="mono">36.6 %</td>
+      <td>hit</td>
+      <td class="evidence">Dell, that is more data center related stock. And and Powell is also data center related. Yeah. But but, really, there there is not much working right now for me. So these are very little gains, and I hope that they will</td>
+    </tr><tr>
+      <td class="mono">MRVL</td>
+      <td>2026-04-25</td>
+      <td class="up">bullish</td>
+      <td class="mono">164.233582</td>
+      <td class="mono">0.4 %</td>
+      <td class="mono">19.5 %</td>
+      <td>hit</td>
+      <td class="evidence">not in favor of the market for many years, and now they are exploding on the upside. It&#39;s the same for Marvell.</td>
+    </tr><tr>
+      <td class="mono">SNDK</td>
+      <td>2026-05-09</td>
+      <td class="down">bearish</td>
+      <td class="mono">1562.339966</td>
+      <td class="mono">-9.9 %</td>
+      <td class="mono">5.1 %</td>
+      <td>hit</td>
+      <td class="evidence">SNDK because they are really extended. Right? So you can see that here. And, you know, what is the tactic for for selling them? Of course. You know, look into the trading rules. Look into the mini video course. I treat a</td>
+    </tr><tr>
+      <td class="mono">TWLO</td>
+      <td>2026-05-09</td>
+      <td class="down">bearish</td>
+      <td class="mono">201.699997</td>
+      <td class="mono">-1.7 %</td>
+      <td class="mono">5.4 %</td>
+      <td>hit</td>
+      <td class="evidence">So, let&#39;s see. I will I will sell the stock if it&#39;s close below the EMA eight or if it comes too close to my break even point, then I will maybe close out the trade because it&#39;s already lagging behind a little bit. So th</td>
+    </tr></tbody>
+  </table></section>
+<section id="trades"><div class="section-heading"><p class="source-kicker">WHAT HE DID</p><h2>The trade log</h2></div>
+<table class="data-table">
+    <thead><tr><th>Ticker</th><th>Opened</th><th>Closed</th><th>Entry</th><th>Avg open</th><th>Avg close</th><th>Stop</th><th>W/L</th><th>Exit</th><th>Grade</th><th>Stars</th></tr></thead>
+    <tbody><tr>
+    <td class="mono">GOGO</td>
+    <td>20250702</td>
+    <td>20250716</td>
+    <td>Breakout short-term</td>
+    <td class="mono">15.32</td>
+    <td class="mono">15.57</td>
+    <td class="mono">14.43</td>
+    <td class="mono">1.67 %</td>
+    <td>Manual</td>
+    <td>B-trade</td>
+    <td>4.5</td>
+  </tr><tr>
+    <td class="mono">CRML</td>
+    <td>20250702</td>
+    <td>20250707</td>
+    <td>Breakout short-term</td>
+    <td class="mono">3.727</td>
+    <td class="mono">3.355</td>
+    <td class="mono">3.35</td>
+    <td class="mono">-9.98 %</td>
+    <td>Stop loss</td>
+    <td>B-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">UMAC</td>
+    <td>20250703</td>
+    <td>20250707</td>
+    <td>Breakout short-term</td>
+    <td class="mono">8.7258</td>
+    <td class="mono">7.905</td>
+    <td class="mono">7.77</td>
+    <td class="mono">-9.41 %</td>
+    <td>Stop loss</td>
+    <td>A-trade</td>
+    <td>4.5</td>
+  </tr><tr>
+    <td class="mono">QSI</td>
+    <td>20250703</td>
+    <td>20250707</td>
+    <td>Breakout short-term</td>
+    <td class="mono">2.0719</td>
+    <td class="mono">1.85</td>
+    <td class="mono">1.87</td>
+    <td class="mono">-10.71 %</td>
+    <td>Stop loss</td>
+    <td>A-trade</td>
+    <td>5</td>
+  </tr><tr>
+    <td class="mono">PCT</td>
+    <td>20250707</td>
+    <td>20250729</td>
+    <td>Breakout short-term</td>
+    <td class="mono">14.5</td>
+    <td class="mono">14.58</td>
+    <td class="mono">13.42</td>
+    <td class="mono">0.55 %</td>
+    <td>Break-even</td>
+    <td>B-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">CRCL</td>
+    <td>20250707</td>
+    <td>20250711</td>
+    <td>Breakout short-term</td>
+    <td class="mono">202.93</td>
+    <td class="mono">191.58</td>
+    <td class="mono">185.7</td>
+    <td class="mono">-5.61 %</td>
+    <td>Stop loss</td>
+    <td>A-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">LEU</td>
+    <td>20250707</td>
+    <td>20250708</td>
+    <td>Breakout short-term</td>
+    <td class="mono">185.8</td>
+    <td class="mono">172.71</td>
+    <td class="mono">172.8</td>
+    <td class="mono">-7.05 %</td>
+    <td>Stop loss</td>
+    <td>A-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">QS</td>
+    <td>20250708</td>
+    <td>20250729</td>
+    <td>Breakout short-term</td>
+    <td class="mono">7.18</td>
+    <td class="mono">9.91</td>
+    <td class="mono">6.7</td>
+    <td class="mono">38.02 %</td>
+    <td>Break-even</td>
+    <td>B-trade</td>
+    <td>4.5</td>
+  </tr><tr>
+    <td class="mono">CDTX</td>
+    <td>20250708</td>
+    <td>20250716</td>
+    <td>Breakout short-term</td>
+    <td class="mono">50.35</td>
+    <td class="mono">50.91</td>
+    <td class="mono">46.12</td>
+    <td class="mono">1.11 %</td>
+    <td>Manual</td>
+    <td>B-trade</td>
+    <td>5</td>
+  </tr><tr>
+    <td class="mono">SOUN</td>
+    <td>20250708</td>
+    <td>20250710</td>
+    <td>Gap Up</td>
+    <td class="mono">12.766</td>
+    <td class="mono">11.86</td>
+    <td class="mono">11.88</td>
+    <td class="mono">-7.10 %</td>
+    <td>Stop loss</td>
+    <td>A-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">GRYP</td>
+    <td>20250708</td>
+    <td>20250709</td>
+    <td>Breakout short-term</td>
+    <td class="mono">1.465</td>
+    <td class="mono">1.355</td>
+    <td class="mono">1.3</td>
+    <td class="mono">-7.51 %</td>
+    <td>Stop loss</td>
+    <td>A-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">UMAC</td>
+    <td>20250710</td>
+    <td>20250729</td>
+    <td>Breakout short-term</td>
+    <td class="mono">8.7</td>
+    <td class="mono">9.78</td>
+    <td class="mono">7.93</td>
+    <td class="mono">12.41 %</td>
+    <td>Manual</td>
+    <td>A-trade</td>
+    <td>4.5</td>
+  </tr><tr>
+    <td class="mono">ONDS</td>
+    <td>20250710</td>
+    <td>20250722</td>
+    <td>Breakout short-term</td>
+    <td class="mono">2.0167</td>
+    <td class="mono">2.1295</td>
+    <td class="mono">1.83</td>
+    <td class="mono">5.59 %</td>
+    <td>Stop loss</td>
+    <td>B-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">GRYP</td>
+    <td>20250710</td>
+    <td>20250714</td>
+    <td>Breakout short-term</td>
+    <td class="mono">1.444</td>
+    <td class="mono">1.315</td>
+    <td class="mono">1.31</td>
+    <td class="mono">-8.93 %</td>
+    <td>Stop loss</td>
+    <td>A-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">RDW</td>
+    <td>20250711</td>
+    <td>20250722</td>
+    <td>Breakout short-term</td>
+    <td class="mono">17.134</td>
+    <td class="mono">17.1015</td>
+    <td class="mono">15.65</td>
+    <td class="mono">-0.19 %</td>
+    <td>Stop loss</td>
+    <td>B-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">AVAV</td>
+    <td>20250711</td>
+    <td>20250801</td>
+    <td>Breakout short-term</td>
+    <td class="mono">255.57</td>
+    <td class="mono">255.01</td>
+    <td class="mono">245.7</td>
+    <td class="mono">-0.22 %</td>
+    <td>Break-even</td>
+    <td>A-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">AIRO</td>
+    <td>20250711</td>
+    <td>20250716</td>
+    <td>Gap Up</td>
+    <td class="mono">27.187</td>
+    <td class="mono">25.15</td>
+    <td class="mono">24.15</td>
+    <td class="mono">-7.49 %</td>
+    <td>Stop loss</td>
+    <td>B-trade</td>
+    <td>5</td>
+  </tr><tr>
+    <td class="mono">AAOI</td>
+    <td>20250714</td>
+    <td>20250716</td>
+    <td>Breakout short-term</td>
+    <td class="mono">30.348</td>
+    <td class="mono">27.81</td>
+    <td class="mono">27.8</td>
+    <td class="mono">-8.36 %</td>
+    <td>Stop loss</td>
+    <td>A-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">CRCL</td>
+    <td>20250716</td>
+    <td>20250722</td>
+    <td>Breakout short-term</td>
+    <td class="mono">213.294</td>
+    <td class="mono"></td>
+    <td class="mono">200.9</td>
+    <td class="mono">0.42 %</td>
+    <td>Stop loss</td>
+    <td>A-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">RGTI</td>
+    <td>20250716</td>
+    <td>20250729</td>
+    <td>Gap Up</td>
+    <td class="mono">15.4</td>
+    <td class="mono">14.87</td>
+    <td class="mono">13.77</td>
+    <td class="mono">-3.44 %</td>
+    <td>Break-even</td>
+    <td>B-trade</td>
+    <td>4.5</td>
+  </tr><tr>
+    <td class="mono">ARQQ</td>
+    <td>20250716</td>
+    <td>20250722</td>
+    <td>Breakout short-term</td>
+    <td class="mono">41.47</td>
+    <td class="mono">39.252</td>
+    <td class="mono">37.5</td>
+    <td class="mono">-5.35 %</td>
+    <td>Stop loss</td>
+    <td>A-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">JMIA</td>
+    <td>20250717</td>
+    <td>20250729</td>
+    <td>Breakout short-term</td>
+    <td class="mono">4.65</td>
+    <td class="mono">4.62</td>
+    <td class="mono">4.35</td>
+    <td class="mono">-0.65 %</td>
+    <td>Break-even</td>
+    <td>A-trade</td>
+    <td>4.5</td>
+  </tr><tr>
+    <td class="mono">PL</td>
+    <td>20250717</td>
+    <td>20250718</td>
+    <td>Breakout short-term</td>
+    <td class="mono">6.846</td>
+    <td class="mono">6.55</td>
+    <td class="mono">6.58</td>
+    <td class="mono">-4.32 %</td>
+    <td>Stop loss</td>
+    <td>A-trade</td>
+    <td>3.5</td>
+  </tr><tr>
+    <td class="mono">SOUN</td>
+    <td>20250717</td>
+    <td>20250721</td>
+    <td>Gap Up</td>
+    <td class="mono">12.861</td>
+    <td class="mono">11.941</td>
+    <td class="mono">11.94</td>
+    <td class="mono">-7.15 %</td>
+    <td>Stop loss</td>
+    <td>C-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">PDYN</td>
+    <td>20250717</td>
+    <td>20250722</td>
+    <td>Gap Up</td>
+    <td class="mono">11.629</td>
+    <td class="mono">10.312</td>
+    <td class="mono">10.32</td>
+    <td class="mono">-11.33 %</td>
+    <td>Stop loss</td>
+    <td>A-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">IREN</td>
+    <td>20250718</td>
+    <td>20250718</td>
+    <td>Breakout short-term</td>
+    <td class="mono">18.75</td>
+    <td class="mono">17.83</td>
+    <td class="mono">17.81</td>
+    <td class="mono">-4.91 %</td>
+    <td>Stop loss</td>
+    <td>A-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">CIFR</td>
+    <td>20250718</td>
+    <td>20250718</td>
+    <td>Breakout short-term</td>
+    <td class="mono">6.6357</td>
+    <td class="mono">6.27</td>
+    <td class="mono">6.27</td>
+    <td class="mono">-5.51 %</td>
+    <td>Stop loss</td>
+    <td>A-trade</td>
+    <td>5</td>
+  </tr><tr>
+    <td class="mono">IREN</td>
+    <td>20250721</td>
+    <td>20250721</td>
+    <td>Breakout short-term</td>
+    <td class="mono">19.503</td>
+    <td class="mono">18.633</td>
+    <td class="mono">18.35</td>
+    <td class="mono">-4.46 %</td>
+    <td>Stop loss</td>
+    <td>A-trade</td>
+    <td>5</td>
+  </tr><tr>
+    <td class="mono">PL</td>
+    <td>20250721</td>
+    <td>20250722</td>
+    <td>Breakout short-term</td>
+    <td class="mono">7.12</td>
+    <td class="mono">6.702</td>
+    <td class="mono">6.7</td>
+    <td class="mono">-5.87 %</td>
+    <td>Stop loss</td>
+    <td>C-trade</td>
+    <td>4</td>
+  </tr><tr>
+    <td class="mono">BMNR</td>
+    <td>20250724</td>
+    <td>20250725</td>
+    <td>Breakout short-term</td>
+    <td class="mono">45.526</td>
+    <td class="mono">40.779</td>
+    <td class="mono">40.8</td>
+    <td class="mono">-10.43 %</td>
+    <td>Stop loss</td>
+    <td>C-trade</td>
+    <td></td>
+  </tr><tr>
+    <td class="mono">GDS</td>
+    <td>20250729</td>
+    <td>20250729</td>
+    <td>Breakout short-term</td>
+    <td class="mono">38.08</td>
+    <td class="mono">37.16</td>
+    <td class="mono">36.1</td>
+    <td class="mono">-2.42 %</td>
+    <td>Manual</td>
+    <td>A-trade</td>
+    <td>5</td>
+  </tr><tr>
+    <td class="mono">VNET</td>
+    <td>20250729</td>
+    <td>20250729</td>
+    <td>Breakout short-term</td>
+    <td class="mono">8.65</td>
+    <td class="mono">8.33</td>
+    <td class="mono">8.24</td>
+    <td class="mono">-3.70 %</td>
+    <td>Manual</td>
+    <td>A-trade</td>
+    <td>5</td>
+  </tr></tbody>
+  </table></section>
+<section id="watchlists"><div class="section-heading"><p class="source-kicker">THE WATCHLIST</p><h2>The weekend summaries</h2></div>
+<table class="data-table">
+    <thead><tr><th>Report</th><th>Ticker</th><th>Name</th><th>Commentary</th><th>Verdict</th><th>Stance</th></tr></thead>
+    <tbody><tr>
+    <td>20250816</td>
+    <td class="mono">VFF</td>
+    <td>Village Farms</td>
+    <td>Leading cannabis stock, improved liquidity, character change after spinoff.</td>
+    <td>Needs moreconsolidation.</td>
+    <td class="">neutral</td>
+  </tr><tr>
+    <td>20250816</td>
+    <td class="mono">TLRY</td>
+    <td>Tilray</td>
+    <td>Strong volume surge but no real sales growth, more speculative.</td>
+    <td>Too choppy.</td>
+    <td class="down">bearish</td>
+  </tr><tr>
+    <td>20250816</td>
+    <td class="mono">HIPO</td>
+    <td>Hippo</td>
+    <td>Base forming, strong sales/EPS growth, low liquidity.</td>
+    <td>Needs more consolidation.</td>
+    <td class="">neutral</td>
+  </tr><tr>
+    <td>20250816</td>
+    <td class="mono">LMND</td>
+    <td>Lemonade</td>
+    <td>Steady sales growth, strong accumulation, viable after short consolidation.</td>
+    <td>Needs moreconsolidation.</td>
+    <td class="">neutral</td>
+  </tr><tr>
+    <td>20250816</td>
+    <td class="mono">AFRM</td>
+    <td>Affirm</td>
+    <td>Strong sales/EPS growth, very liquid, tight consolidation at EMA8.</td>
+    <td>Setting up and ready.</td>
+    <td class="up">bullish</td>
+  </tr><tr>
+    <td>20250816</td>
+    <td class="mono">TREE</td>
+    <td>LendingTree</td>
+    <td>Extended after rally, needs further consolidation.</td>
+    <td>Needs more consolidation.</td>
+    <td class="">neutral</td>
+  </tr><tr>
+    <td>20250816</td>
+    <td class="mono">SOFI</td>
+    <td>SoFi</td>
+    <td>Strong fundamentals, leader among FinTech, but volatile.</td>
+    <td>Setting up and ready.</td>
+    <td class="up">bullish</td>
+  </tr><tr>
+    <td>20250816</td>
+    <td class="mono">LC</td>
+    <td>LendingClub</td>
+    <td>Tight consolidation after earnings, strong fundamentals.</td>
+    <td>Setting up and ready.</td>
+    <td class="up">bullish</td>
+  </tr><tr>
+    <td>20250816</td>
+    <td class="mono">TEM</td>
+    <td>Tempus</td>
+    <td>AI-medical story stock, long consolidation, showing momentum.</td>
+    <td>Needs more consolidation.</td>
+    <td class="">neutral</td>
+  </tr><tr>
+    <td>20250816</td>
+    <td class="mono">HNGE</td>
+    <td>Hinge Health</td>
+    <td>Strong post-earnings move, leader in health space, needs short consolidation.</td>
+    <td>Needsmore consolidation.</td>
+    <td class="">neutral</td>
+  </tr><tr>
+    <td>20250816</td>
+    <td class="mono">LQDA</td>
+    <td>Liquidia</td>
+    <td>Breakaway gap with volume, strong fundamentals, but extended.</td>
+    <td>Needs moreconsolidation.</td>
+    <td class="">neutral</td>
+  </tr><tr>
+    <td>20250816</td>
+    <td class="mono">RSI</td>
+    <td>Rush Street Interactive</td>
+    <td>Good growth but lacks strong momentum character, slower mover.</td>
+    <td>Toochoppy.</td>
+    <td class="down">bearish</td>
+  </tr><tr>
+    <td>20250816</td>
+    <td class="mono">U</td>
+    <td>Unity Software</td>
+    <td>Turnaround story with takeover potential, positive estimates, accumulation visible.</td>
+    <td>Needs more consolidation.</td>
+    <td class="">neutral</td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">DFDV</td>
+    <td></td>
+    <td>Crypto treasury stock, strong but volatile.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">SBET</td>
+    <td></td>
+    <td>Unstable crypto-related stock.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">BMNR</td>
+    <td></td>
+    <td>Showing relative strength, needs consolidation.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">UPXI</td>
+    <td></td>
+    <td>Speculative crypto treasury, weak structure.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">BTCM</td>
+    <td></td>
+    <td>Crypto mining/treasury, volatile.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">VERB</td>
+    <td></td>
+    <td>Crypto treasury, choppy.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">BTCS</td>
+    <td></td>
+    <td>Signs of accumulation, still developing.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">INVZ</td>
+    <td></td>
+    <td>LiDAR stock, consolidating.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">LIDR</td>
+    <td></td>
+    <td>Some relative strength, still building base.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">OUST</td>
+    <td></td>
+    <td>Choppy action, not favorable.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">NIO</td>
+    <td></td>
+    <td>Some rebound but inconsistent.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">XPEV</td>
+    <td></td>
+    <td>Needs further consolidation.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">NIU</td>
+    <td></td>
+    <td>Weak structure.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">LI</td>
+    <td></td>
+    <td>Weak, no relative strength.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">VSAT</td>
+    <td></td>
+    <td>Showing a strong base, worth watching.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">LASR</td>
+    <td></td>
+    <td>Consolidating, needs more time.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">U</td>
+    <td>Unity</td>
+    <td>Choppy action, but not weak.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">LMND</td>
+    <td></td>
+    <td>Still volatile, no structure.</td>
+    <td></td>
+    <td class=""></td>
+  </tr><tr>
+    <td>20250824</td>
+    <td class="mono">PGY</td>
+    <td></td>
+    <td>Some relative strength, not yet clean.</td>
+    <td></td>
+    <td class=""></td>
+  </tr></tbody>
+  </table></section>
+<section id="cards"><div class="section-heading"><p class="source-kicker">THE MARKET</p><h2>The market cards</h2></div>
+<table class="data-table">
+    <thead><tr><th>Session</th><th>NASDAQ</th><th>S&amp;P 500</th><th>Russell 2000</th><th>Exposure</th><th>Read</th></tr></thead>
+    <tbody><tr>
+    <td>20250125</td>
+    <td class="up">up</td>
+    <td class="up">up</td>
+    <td class="down">up</td>
+    <td class="mono">100</td>
+    <td>Russell2000 The stock market is in a clear - and -term uptrend. Keep your stocks longer! Try to get back to 100 investment as soon as possible to benefit from t</td>
+  </tr><tr>
+    <td>20250408</td>
+    <td class="up">flat</td>
+    <td class="up">flat</td>
+    <td class="down">flat</td>
+    <td class="mono">20</td>
+    <td>Buy signal in the stock market! Don’t chase anything but wait for proper setups to buy into leading stocks. Switch your mind to the side again.</td>
+  </tr><tr>
+    <td>20260125</td>
+    <td class="up">up</td>
+    <td class="up">up</td>
+    <td class="down">up</td>
+    <td class="mono">50</td>
+    <td>® Market still going sideways. Stay cautious! Most stocks are acting very choppy and the market could move lower from here. Be selective and wait for confirmed </td>
+  </tr><tr>
+    <td>20260221</td>
+    <td class="up">up</td>
+    <td class="up">up</td>
+    <td class="down">up</td>
+    <td class="mono">25</td>
+    <td>The stock market is still sideways but see improvement. Next week will show us if we can start a new rally or not. Be prepared to buy back into leaders.</td>
+  </tr><tr>
+    <td>20260314</td>
+    <td class="up">flat</td>
+    <td class="up">up</td>
+    <td class="down">up</td>
+    <td class="mono">0</td>
+    <td>Market is still in a downtrend and it could correct more. Welcome that! The next big opportunities on the side will shape up during the last correction.</td>
+  </tr><tr>
+    <td>20260411</td>
+    <td class="up">flat</td>
+    <td class="up">flat</td>
+    <td class="down">flat</td>
+    <td class="mono">20</td>
+    <td>® New buy signal in the stock market. Focus on getting to the leaders, but stay selective and wait for great setups.</td>
+  </tr><tr>
+    <td>20260415</td>
+    <td class="up">flat</td>
+    <td class="up">flat</td>
+    <td class="down">flat</td>
+    <td class="mono">20</td>
+    <td>Stock market moved higher in a straight line and showed a lot of strength. Now it&#39;s time to wait patiently for setups and avoid to chase anything.</td>
+  </tr><tr>
+    <td>20260425</td>
+    <td class="up">up</td>
+    <td class="up">up</td>
+    <td class="down">up</td>
+    <td class="mono">75</td>
+    <td>Strong uptrend in the market, but leadership got thin! Not everything is working. Be cautious with new buys until you see great setups.</td>
+  </tr><tr>
+    <td>20260429</td>
+    <td class="up">up</td>
+    <td class="up">up</td>
+    <td class="down">up</td>
+    <td class="mono">9</td>
+    <td>Money Maker Market! is up 9 in 15 days. Now it consolidates. You want to be highly selective and patient right now. Wait for great setups in the leaders.</td>
+  </tr><tr>
+    <td>20260509</td>
+    <td class="up">up</td>
+    <td class="up">up</td>
+    <td class="down">up</td>
+    <td class="mono">100</td>
+    <td>Money Maker Market! You want to take new opportunities and keep maximum . Hold on to winners and stick to your rules.</td>
+  </tr></tbody>
+  </table></section>
+</body></html>

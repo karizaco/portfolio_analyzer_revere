@@ -1,5 +1,5 @@
 {
-  "note": "The panel crops of one frame per era, cut with the region in src/komar/panelLayout.js. The frames come from the corpus (outside the repository), so the crops are pinned here -- the same rule as test/fixtures/komar_tradelog/.",
+  "note": "One FRAME per era, from the corpus (outside the repository). The panel is read from the frame by cropping the measured region, so the fixture is the frame and not a crop of it. The crops the reader takes are recorded per frame.",
   "region": {
     "left": 0.84,
     "top": 0.1,
@@ -12,6 +12,7 @@
       "era": "A",
       "source_video": "January 14 2022 Weekend-Report 51 MARKET UPDATE Premium.mp4",
       "at_sec": 1800,
+      "session_date": "20220114",
       "frame_size": "1920x1080",
       "crop": {
         "left": 1612,
@@ -19,14 +20,15 @@
         "width": 307,
         "height": 972
       },
-      "md5": "449761ebb42b5582a44ab744df208e38",
-      "bytes": 187335
+      "md5": "0bb6e1dd29f8151a5066081bc5ceb272",
+      "bytes": 678735
     },
     {
       "file": "eraB_193.png",
       "era": "B",
       "source_video": "Weekend-Report 193 MARKET UPDATE Premium.mp4",
       "at_sec": 900,
+      "session_date": "",
       "frame_size": "1280x720",
       "crop": {
         "left": 1075,
@@ -34,14 +36,15 @@
         "width": 204,
         "height": 648
       },
-      "md5": "b9e2bb83b68614bb0efa30f835ad7b04",
-      "bytes": 105642
+      "md5": "61fee10707d8291e4f440bea26bb984b",
+      "bytes": 301003
     },
     {
       "file": "eraC_224.png",
       "era": "C",
       "source_video": "Weekend-Report 224 - My Portfolio.mp4",
       "at_sec": 600,
+      "session_date": "20260425",
       "frame_size": "1920x1080",
       "crop": {
         "left": 1612,
@@ -49,8 +52,8 @@
         "width": 307,
         "height": 972
       },
-      "md5": "9a006b2112a2dd8687bec1c7fc002fd8",
-      "bytes": 187471
+      "md5": "6d93abaafcecdf728cd1c88e46ecab19",
+      "bytes": 549806
     }
   ]
 }

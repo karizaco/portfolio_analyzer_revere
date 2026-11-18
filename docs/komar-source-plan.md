@@ -710,6 +710,91 @@ the frame sampling (the panel is static for long stretches, so hash
 the crop and read it only when the hash changes -- the same idea as
 `src/video/imageHash.js`).
 
+## The PANEL READER: where it stands (2026-11-17)
+
+`src/komar/panelReader.js` reads the panel out of a frame, and it is
+**not yet good enough to publish**. This is the honest state of it:
+
+| | |
+|---|---|
+| the region, the header and the columns | found ✓ |
+| the rows | found ✓ |
+| the prices | mostly read ✓ ("252.76", "76.64", "418.08" all come out right) |
+| the SYMBOLS | **not reliable** -- the row's icon is read as a letter, so the POWL row reads "VPOWLE" and half the rows are wrong |
+| the W/L sign from the fill | **not reliable** -- the fill is not always sampled where the sign is, so "-7.41 %" comes back "+7.41 %" |
+| the detail card under the table | still read as rows on some frames |
+
+**A wrong holding is worse than a missing one**, so the reader is NOT
+wired to a writer: no tool writes `komar_panel_snapshots`, and the
+dashboard's coverage funnel says the panel stage is **unknown** rather
+than zero.
+
+What the next iteration needs, in the order the defects bite:
+
+1. **THE SYMBOL COLUMN IS CONTAMINATED BY THE ROW ICONS.** The panel
+   draws a small coloured icon before every symbol and Tesseract reads
+   some of them as letters. The reader already prefers the token the
+   LEXICON knows, which fixes half of them; the rest needs the icon's
+   own pixels excluded from the crop -- the icon is a COLOURED blob,
+   so the symbol strip can be masked where the pixels are saturated.
+2. **THE W/L SIGN.** The fill is the authority, but the cell's middle
+   can be over the text. The fix is to sample the fill at the cell's
+   RIGHT edge (where the number is not) or to count the coloured
+   pixels in the cell instead of sampling one.
+3. **THE DETAIL CARD.** The card under the table is a different
+   widget with its own layout; the gap test catches it on some frames
+   and not on others.
+
+The QMG project took many rounds on its equivalent
+(`src/video/positionTableScan.js` and the whole "column gate" work
+in AGENTS.md), so this is the expected cost of the work, not a sign
+that the approach is wrong.
+
+---
+
+## Phase 6 as built (2026-11-17): the OUTCOMES and the DASHBOARD
+
+```
+tools/           analyzeKomarOutcomes.js
+src/report/      komarReport.js
+data/            komar_outcomes.json  komar_outcomes.csv  komar_report.html
+```
+
+`npm run komar:outcomes` scores the setups against the prices and
+writes the dashboard.
+
+### WHAT IT FOUND
+
+| | |
+|---|---|
+| setups | **212** |
+| of those, with a session date | **69** |
+| hit rate, 1 week | **60.9 %** (42 of 69) |
+| hit rate, 1 month | **60.9 %** |
+| SPY over the same windows | **83.3 %** (1w), **77.8 %** (1m) |
+| the edge | **-22.4 pp (1w)**, **-16.9 pp (1m)** |
+| the verdict | `possible_negative_edge` |
+
+**So the calls DO NOT BEAT THE INDEX** -- the same honest result the
+other sources give (Sevcik, T3Live and Benzinga are all flat or
+negative against the same baseline). The corpus's own trade log is
+where the source's real signal is: what he actually did, with the
+prices and the outcomes.
+
+**143 of the 212 setups could not be scored at all**, because their
+session has no date in the catalog: the 2023-2024 reports were never
+dated. That is a gap in the CATALOG, not in the scoring, and the
+coverage funnel says so rather than counting those setups as losses.
+
+### THE DASHBOARD
+
+`data/komar_report.html`, on the shared source shell
+(`src/report/sourceDashboardShell.js`), with the tabs the source's
+question needs: the CALLS (with the outcomes and the evidence), the
+TRADE LOG, the WATCHLIST (the weekend summaries) and the MARKET (the
+cards) -- and the COVERAGE FUNNEL, which is where the panel says
+**unknown** rather than zero.
+
 ---
 
 ## Part 1: How the app is structured today

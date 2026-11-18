@@ -119,7 +119,9 @@
     "komar:transcripts": "node tools/fetchKomarTranscripts.js",
     "komar:transcripts:dry": "node tools/fetchKomarTranscripts.js --dry-run",
     "komar:signals": "node tools/extractKomarSignals.js",
-    "komar:signals:dry": "node tools/extractKomarSignals.js --dry-run --json"
+    "komar:signals:dry": "node tools/extractKomarSignals.js --dry-run --json",
+    "komar:outcomes": "node tools/analyzeKomarOutcomes.js",
+    "komar:outcomes:dry": "node tools/analyzeKomarOutcomes.js --dry-run"
   },
   "dependencies": {
     "sharp": "^0.34.3",
