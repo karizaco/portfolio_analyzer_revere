@@ -1007,6 +1007,8 @@ catalog run is not affordable, and the media is never committed anyway.
 
 ### Tests
 
+The open items that are not blocked on an answer are in `docs/TODO.md` -- the panel reader's remaining defects, the day a Komar report was published, the lessons that carry no date, and the Deepgram word-split.
+
 - `test/videoResolution.test.js` — the **mechanical ffprobe check**: every video the pipeline reads is at least 720p tall, and every file in `downloads_1080p` really is 1920×1080. It applies the rule CLAUDE.md states as a hand-applied rule, and it prints the census it found.
 - `test/chartStreamPanelCount.test.js` — the panel's own footer count, and the two traps in reading it
 - `test/chartStreamPrefilterRegion.test.js` — the prefilter measures the pixels the OCR will read

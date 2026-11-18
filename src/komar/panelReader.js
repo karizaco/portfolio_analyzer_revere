@@ -50,7 +50,7 @@
 
 const sharp = require('sharp');
 
-const { readCell } = require('../table/tableReader');
+const { readCell, SATURATION_MIN } = require('../table/tableReader');
 const {
   isGroupHeader,
   isOccluded,
@@ -70,6 +70,80 @@ const HEADER_COLUMNS = [
   { field: 'chg', label: 'chg' },
   { field: 'chg_pct', label: 'chg%' },
 ];
+
+/**
+ * A copy of the pixels with the SATURATED ones whitened.
+ *
+ * THE ROW ICON. The panel draws a small coloured blob before every
+ * symbol, and Tesseract reads some of them as letters -- the POWL row
+ * reads "VPOWLE". But the icon is COLOURED and the text is not, so the
+ * icon can simply be taken out of the picture: every saturated pixel
+ * in the region becomes white, and the OCR never sees it.
+ *
+ * The region matters: the W/L column's numbers are coloured too, so
+ * only the SYMBOL column is masked.
+ *
+ * @param {Buffer} raw
+ * @param {{width: number, height: number, channels: number}} info
+ * @param {{left: number, top: number, right: number, bottom: number}} rect
+ * @returns {Buffer}
+ */
+function whitenSaturated(raw, info, rect) {
+  const out = Buffer.from(raw);
+  const left = Math.max(0, Math.floor(rect.left));
+  const right = Math.min(info.width - 1, Math.floor(rect.right));
+  const top = Math.max(0, Math.floor(rect.top));
+  const bottom = Math.min(info.height - 1, Math.floor(rect.bottom));
+  for (let y = top; y <= bottom; y += 1) {
+    for (let x = left; x <= right; x += 1) {
+      const offset = (y * info.width + x) * info.channels;
+      const r = out[offset];
+      const g = out[offset + 1];
+      const b = out[offset + 2];
+      if (Math.max(r, g, b) - Math.min(r, g, b) <= SATURATION_MIN) continue;
+      out[offset] = 255;
+      out[offset + 1] = 255;
+      out[offset + 2] = 255;
+    }
+  }
+  return out;
+}
+
+/**
+ * The sign a cell's FILL states, by COUNTING the coloured pixels.
+ *
+ * Sampling one pixel in the middle of the cell is unreliable: the
+ * middle can be over the text, or over the white between two digits,
+ * and "-7.41 %" comes back "+7.41 %". The fill covers the cell, so the
+ * majority of its COLOURED pixels is the answer.
+ *
+ * @param {Buffer} raw
+ * @param {{width: number, height: number, channels: number}} info
+ * @param {{left: number, top: number, right: number, bottom: number}} rect
+ * @returns {number} -1, 0 or 1
+ */
+function signFromCellFill(raw, info, rect) {
+  let green = 0;
+  let red = 0;
+  const left = Math.max(0, Math.floor(rect.left));
+  const right = Math.min(info.width - 1, Math.floor(rect.right));
+  const top = Math.max(0, Math.floor(rect.top));
+  const bottom = Math.min(info.height - 1, Math.floor(rect.bottom));
+  for (let y = top; y <= bottom; y += 1) {
+    for (let x = left; x <= right; x += 1) {
+      const offset = (y * info.width + x) * info.channels;
+      const r = raw[offset];
+      const g = raw[offset + 1];
+      const b = raw[offset + 2];
+      const sat = Math.max(r, g, b) - Math.min(r, g, b);
+      if (sat <= SATURATION_MIN) continue;
+      if (g > r + 25 && g > b + 25) green += 1;
+      else if (r > g + 25 && r > b + 25) red += 1;
+    }
+  }
+  if (green === 0 && red === 0) return 0;
+  return green > red ? 1 : -1;
+}
 
 /**
  * The pixel colour of a cell, sampled in its middle.
@@ -248,14 +322,25 @@ async function readKomarPanel(framePath, options = {}) {
     rowBands.push(cluster);
   }
 
-  // 2. EACH CELL, on its own.
+  // 2. EACH CELL, on its own -- and the SYMBOL COLUMN WITH ITS ICONS
+  //    TAKEN OUT (see `whitenSaturated`).
+  const symbolColumn = boundaries.find((column) => column.field === 'symbol');
+  const masked = symbolColumn
+    ? whitenSaturated(raw, info, {
+      bottom: region.top + region.height,
+      left: symbolColumn.left,
+      right: symbolColumn.right,
+      top: region.top,
+    })
+    : raw;
+
   const rows = [];
   const groups = [];
   let group = '';
   for (const band of rowBands) {
     const cells = {};
     for (const column of boundaries) {
-      const read = await readCell(raw, info, {
+      const read = await readCell(masked, info, {
         bottom: Math.round(region.top + band.bottom),
         left: Math.round(column.left),
         right: Math.round(column.right),
@@ -291,14 +376,14 @@ async function readKomarPanel(framePath, options = {}) {
     let chgPct = parseNumber(cells.chg_pct);
     if (chgPct !== null && !/[-−]/.test(cells.chg_pct)) {
       const last = boundaries[boundaries.length - 1];
-      const rect = {
+      const sign = signFromCellFill(raw, info, {
         bottom: Math.round(region.top + band.bottom),
         left: Math.round(last.left),
         right: Math.round(last.right),
         top: Math.round(region.top + band.top),
-      };
-      const sign = signFromFill(cellColour(raw, info, rect));
+      });
       if (sign < 0 && chgPct > 0) chgPct = -chgPct;
+      if (sign > 0 && chgPct < 0) chgPct = -chgPct;
     }
 
     rows.push({
