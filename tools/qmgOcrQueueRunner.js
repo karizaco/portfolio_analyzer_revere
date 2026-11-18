@@ -56,6 +56,14 @@ const chunkSize = Number(flag('--chunk-size', 5)) || 5;
 const maxChunks = Number(flag('--max-chunks', 0)) || 0;
 const parallel = Number(flag('--parallel', 2)) || 2;
 const dryRun = argv.includes('--dry-run');
+// Earliest date worth scanning. The positions panel is first pinned in the
+// ground truth on 20220128. 2020 uploads show a Twitter window or a
+// watchlist (measured 2026-11-17: 20200428 is a browser tab; 20201109 reads a
+// watchlist), and the 2021 docked panel has no measured crop. Scanning them
+// costs ~90 min of EasyOCR per video for readings nobody can score.
+// Override with --from-date YYYYMMDD once a crop exists for that layout.
+const fromDate = String(flag('--from-date', '20220128'));
+const timeoutMinutes = flag('--timeout-minutes', null);
 const runTag = flag('--run-tag', `qmg-ocr-queue-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`);
 
 /**
@@ -107,6 +115,7 @@ function pendingDates() {
   const scanned = scannedDates();
   const out = [];
   for (const date of catalogDates()) {
+    if (date < fromDate) continue;           // before the readable-panel era
     if (scanned.has(date)) continue;
     if (!findMediaForDate(date)) continue;   // no media yet -- nothing to scan
     out.push(date);
@@ -161,8 +170,16 @@ for (let i = 0; i < plan.length; i++) {
     '--parallel', String(parallel),
     '--low-cpu',
     '--run-tag', runTag,
+    ...(timeoutMinutes ? ['--timeout-minutes', String(timeoutMinutes)] : []),
   ], { encoding: 'utf8', stdio: 'inherit' });
   const elapsed = ((Date.now() - started) / 1000).toFixed(0);
+  // A chunk that dies in seconds did not fail a scan -- the environment is
+  // broken (2026-11-17: exit 0xC000026B, DLL init failure, 38 chunks "failed"
+  // in 0 s each). Stop instead of burning the queue and recording false failures.
+  if (r.status !== 0 && Number(elapsed) < 30) {
+    console.log(`[ocrqueue] chunk died in ${elapsed}s (exit ${r.status}) -- environment problem, aborting the queue without recording it as a failure`);
+    process.exit(2);
+  }
   if (r.status === 0) {
     progress.dates_done = [...new Set([...progress.dates_done, ...dates])];
   } else {
