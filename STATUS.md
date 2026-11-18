@@ -560,6 +560,12 @@ O'Connell source.
    OCR of a market card comes back as `"NASDAQ @ @& 2 enim"`. The
    direction is read from the disc's colour, and the disc is found by
    its centre, because the white arrow glyph cuts it into pieces.
+5. **The panel is the right ~15 % of the screen, in every era**, and
+   its row pitch is a *fraction* of the height (25px at 1080, 17px at
+   720 — 0.023 of the height in both), so one crop works at every
+   resolution the corpus holds. Measured on one frame per era; the
+   crops are pinned under `test/fixtures/komar_panel/`. The reader is
+   not built yet.
 
 ```bash
 npm run komar:catalog       # inventory both folders, classify every file
