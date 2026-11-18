@@ -124,6 +124,60 @@ function renderFunnel(payload) {
 }
 
 /**
+ * The CONVERSION: what he described, what he traded, and what either
+ * returned.
+ *
+ * The deck's own census is the funnel's middle rung: it describes
+ * every setup he rated, and says what became of it -- 23 never
+ * triggered, 32 are open, 3 closed and 7 journaled.
+ *
+ * The star calibration is the corpus's only calibration set for his
+ * own judgement: the deck rates each setup out of five stars and the
+ * trade log says what the trade returned.
+ */
+function renderConversion(conversion) {
+  if (!conversion || !conversion.deck) return '';
+  const deck = conversion.deck;
+  const stars = conversion.stars || [];
+  const checklist = conversion.checklist || [];
+  const starRows = stars.map((row) => `<tr>
+    <td class="mono">${escapeHtml(row.stars)}</td>
+    <td>${escapeHtml(row.trades)}</td>
+    <td class="mono">${row.win_rate === null ? '—' : `${(Number(row.win_rate) * 100).toFixed(0)} %`}</td>
+    <td class="mono">${row.avg_return_pct === null ? '—' : `${Number(row.avg_return_pct).toFixed(2)} %`}</td>
+  </tr>`).join('');
+  const checklistRows = checklist.map((row) => `<tr>
+    <td>${escapeHtml(row.item)}</td>
+    <td class="mono">${escapeHtml(row.checked)}</td>
+    <td class="mono">${row.checked_win_rate === null ? '—' : `${(Number(row.checked_win_rate) * 100).toFixed(0)} %`}</td>
+    <td class="mono">${row.checked_avg_return_pct === null ? '—' : `${Number(row.checked_avg_return_pct).toFixed(2)} %`}</td>
+    <td class="mono">${escapeHtml(row.unchecked)}</td>
+    <td class="mono">${row.unchecked_win_rate === null ? '—' : `${(Number(row.unchecked_win_rate) * 100).toFixed(0)} %`}</td>
+  </tr>`).join('');
+  const trades = conversion.trades || {};
+  return `<section id="conversion"><div class="section-heading">
+    <p class="source-kicker">WHAT BECAME OF IT</p><h2>Conversion: the setups, the trades, the ratings</h2></div>
+  <div class="stat-grid">
+    <div class="stat-tile"><span class="stat-label">Setups described</span><strong class="stat-value">${escapeHtml(deck.setups_described)}</strong><span class="stat-note">in the deck</span></div>
+    <div class="stat-tile"><span class="stat-label">Never triggered</span><strong class="stat-value">${escapeHtml(deck.never_triggered)}</strong><span class="stat-note">${escapeHtml(`${(deck.never_triggered_share * 100).toFixed(0)} % of the deck`)}</span></div>
+    <div class="stat-tile"><span class="stat-label">Trades returned</span><strong class="stat-value">${trades.avg_return_pct === null || trades.avg_return_pct === undefined ? '—' : `${Number(trades.avg_return_pct).toFixed(2)} %`}</strong><span class="stat-note">SPY ${trades.index_avg_return_pct === null || trades.index_avg_return_pct === undefined ? '—' : `${Number(trades.index_avg_return_pct).toFixed(2)} %`} over the same windows</span></div>
+    <div class="stat-tile"><span class="stat-label">Beat the index</span><strong class="stat-value">${escapeHtml(trades.beaten_the_index)}</strong><span class="stat-note">of ${escapeHtml(trades.scored)} trades</span></div>
+  </div>
+  <h3>His own star rating, against his own outcome</h3>
+  <table class="data-table">
+    <thead><tr><th>Stars</th><th>Trades</th><th>Win rate</th><th>Average return</th></tr></thead>
+    <tbody>${starRows}</tbody>
+  </table>
+  <h3>The Quick checklist, ticked and not ticked</h3>
+  <table class="data-table">
+    <thead><tr><th>Item</th><th>Ticked</th><th>Win rate</th><th>Average</th><th>Not ticked</th><th>Win rate</th></tr></thead>
+    <tbody>${checklistRows}</tbody>
+  </table>
+  <p class="empty">The groups are small: 29 of the 32 trades carry a note, so an item's unticked group is often a handful of trades.</p>
+  </section>`;
+}
+
+/**
  * A table of the scored setups.
  */
 function renderSetups(outcomes) {
@@ -272,6 +326,7 @@ function buildKomarReportHtml(payload = {}) {
 ${renderSourceHeader(source)}
 <section id="overview"><div class="stat-grid">${cards}</div></section>
 ${renderFunnel(payload)}
+${renderConversion(payload.conversion)}
 ${renderCoverage(buildCoverage(payload))}
 <section id="setups"><div class="section-heading"><p class="source-kicker">THE CALLS</p><h2>Setups and what the prices did</h2></div>
 ${renderSetups(payload.outcomes || [])}</section>

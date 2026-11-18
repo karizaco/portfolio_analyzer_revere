@@ -121,7 +121,9 @@
     "komar:signals": "node tools/extractKomarSignals.js",
     "komar:signals:dry": "node tools/extractKomarSignals.js --dry-run --json",
     "komar:outcomes": "node tools/analyzeKomarOutcomes.js",
-    "komar:outcomes:dry": "node tools/analyzeKomarOutcomes.js --dry-run"
+    "komar:outcomes:dry": "node tools/analyzeKomarOutcomes.js --dry-run",
+    "komar:conversion": "node tools/analyzeKomarConversion.js",
+    "komar:conversion:dry": "node tools/analyzeKomarConversion.js --dry-run"
   },
   "dependencies": {
     "sharp": "^0.34.3",

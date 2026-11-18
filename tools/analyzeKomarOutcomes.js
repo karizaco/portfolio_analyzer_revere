@@ -129,6 +129,24 @@ async function komarSpyBaseline(outcomes, provider, settings) {
   return buildSpyBaseline(outcomes, provider, settings);
 }
 
+/**
+ * The conversion analysis, if it has been run.
+ *
+ * The two stages are separate runs (the conversion fetches its own
+ * prices), so the dashboard reads what the other one wrote.
+ *
+ * @returns {object|null}
+ */
+function loadConversion() {
+  const file = path.join(OUTPUT_DIR, 'komar_conversion.json');
+  if (!fs.existsSync(file)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
 async function main() {
   const db = new DatabaseSync(DB_PATH);
   attachDerived(db);
@@ -259,6 +277,7 @@ async function main() {
   const html = buildKomarReportHtml({
     baseline,
     cards,
+    conversion: loadConversion(),
     generated_at: summary.generated_at,
     outcomes,
     readings,

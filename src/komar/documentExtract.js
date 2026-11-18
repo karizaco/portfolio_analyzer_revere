@@ -35,7 +35,7 @@ const { readAccentTitles } = require('./cardThemes');
 const { parseSummaryDocument } = require('./summaryLayout');
 
 /** The parser version written onto every Phase-2 row. */
-const PARSER_VERSION = 'komar-docs-2';
+const PARSER_VERSION = 'komar-docs-3';
 
 /**
  * The OCR scale for card regions.
@@ -541,7 +541,23 @@ function parseDeckPageNotes(page) {
   const text = spans.map((span) => span.text).join('\n');
   const stars = /([0-5](?:\.5)?)\s*stars?/i.exec(text);
   const grade = /\b([ABC])[- ]?trade\b/i.exec(text);
-  const state = /\b(Open|Closed|Journaled)\b/i.exec(text);
+  // THE STATE IS A LABEL OF ITS OWN, not a word in the commentary.
+  //
+  // The deck prints the state in its own text span, and the PDF's
+  // extraction sometimes concatenates two of them ("Did not triggerOpen",
+  // "ClosedJournaled"). A first-hit regex over the whole note read the
+  // COMMENTARY instead -- "Closed the trade. One of my worst
+  // performers." came back as an Open setup -- and "Did not trigger" was
+  // not in the pattern at all, so the setups that never fired were
+  // invisible. So the state is taken from the span that BEGINS with a
+  // state label, and the label is read off the front of it.
+  let state = '';
+  for (const span of spans) {
+    const match = /^(Did not trigger|Closed|Open|Journaled)/i.exec(String(span.text || '').trim());
+    if (!match) continue;
+    state = match[1] === 'Did not trigger' ? 'Did not trigger' : match[1];
+    break;
+  }
 
   const checklist = extractChecklist(text);
 
@@ -553,7 +569,7 @@ function parseDeckPageNotes(page) {
     quick_checklist: checklist,
     stars: stars ? Number(stars[1]) : null,
     trade_grade: grade ? grade[1].toUpperCase() : '',
-    trade_state: state ? state[1] : '',
+    trade_state: state,
   };
 }
 
