@@ -1034,7 +1034,7 @@ Two occlusions to design around:
 | observation | consequence |
 |---|---|
 | `Trades-August-2025.pdf` contains **July 2025** trades | the filename date is **not** the content date; content must be read from the page |
-| Weekend-Report numbering is **not chronological** (50 = Jan 2023, 51 = Jan 2022) | never derive a date from the report number |
+| Weekend-Report numbering IS chronological -- 43 = 19 Nov 2022, 50 = 8 Jan 2023, 211 = 25 Jan 2026, seven days a number (only `January 14 2022 Weekend-Report 51` disagrees, and its year is a typo) | the number DATES a session whose own name carries no date; an anchor that contradicts its neighbours by more than a fortnight is not trusted |
 | "Weekend-Report 43" / "Weekend Report 129" use inconsistent spacing | the filename grammar must be tolerant |
 | `65 gap down in XNDU...mp4` has **no video stream** | audio-only; must not be dropped as "corrupt" |
 | `960x540` files (8) have ~7 px panel text | below reliable OCR -> report as `unreadable`, never as "no positions" |

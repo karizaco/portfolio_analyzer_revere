@@ -525,6 +525,7 @@ source, a document source and a spreadsheet source in one corpus.
 | MP4 screen recordings | **116** (65.9 hours) |
 | PDFs | **27** (225 pages) |
 | catalogued documents / videos | 27 / 116 |
+| videos with a session date | **76** (44 of them dated by the report number, which is chronological: seven days a number) |
 | market cards read | **10** |
 | theme-leader rows | **83**, over 55 tickers |
 | deck notes | **65** (63 with a star rating, 65 with the author's Quick checklist) |
@@ -532,8 +533,8 @@ source, a document source and a spreadsheet source in one corpus.
 | summary readings | **43** (32 holdings, 7 commodities, 4 prose sections) |
 | transcripts | **116** of 116 videos, ~$30 of Deepgram |
 | setups (calls) | **212**, over 74 of the transcripts |
-| setups scored against the prices | **69** (the other 143 come from sessions the catalog never dated) |
-| the calls' hit rate | **60.9 %** at 1 week and 1 month, against **SPY at 83.3 % / 77.8 %** — an edge of **-22.4 pp / -16.9 pp** |
+| setups scored against the prices | **163** (the other 49 come from the lessons, which carry no report number) |
+| the calls' hit rate | **60.5 %** at 1 week and **58 %** at 1 month, against **SPY at 72.2 % / 75 %** — an edge of **-11.7 pp / -17 pp** |
 
 The corpus lives in `D:\courses_nosync\julian_komar` (and its
 `_finished` sub-folder) and **cannot be re-fetched**, so the derived

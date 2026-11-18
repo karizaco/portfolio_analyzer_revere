@@ -41,10 +41,13 @@
  * WHY THE DATE IS NOT ALWAYS IN THE FILENAME
  *
  * A weekly session's videos are named after its REPORT NUMBER, not its
- * date: "Weekend-Report 226 - Stocks Analysis". The number is not
- * chronological either -- 50 is January 2023 and 51 is January 2022 --
- * so the number can never be turned into a date. Only the document that
- * describes the session carries the date.
+ * date: "Weekend-Report 226 - Stocks Analysis". The number IS
+ * chronological -- it is a WEEKLY report, seven days a number (43 is 19
+ * November 2022, 50 is 8 January 2023, 211 is 25 January 2026) -- so it
+ * dates a session whose own name carries none. Only one name in the
+ * corpus disagrees with the sequence, "January 14 2022 Weekend-Report
+ * 51", and its YEAR is a typo: 50 is 8 January 2023 and 51 is the
+ * weekend after it.
  */
 
 /**
@@ -403,7 +406,76 @@ function listCorpus(sourceDir) {
   return { documents, skipped, videos };
 }
 
+/**
+ * The session date implied by the REPORT NUMBER.
+ *
+ * THE NUMBER IS CHRONOLOGICAL, and the corpus measures it:
+ *
+ *   report 43   2022-11-19
+ *   report 50   2023-01-08    (+50 days over 7 reports = 7.1 a report)
+ *   report 70   2023-05-29    (+500 over 19 = 7.1)
+ *   report 211  2026-01-25    (+972 over 141 = 6.9)
+ *   report 226  2026-05-09    (+14 over 2 = 7.0)
+ *
+ * so the cadence is a WEEKLY report, and the number can date a
+ * session whose own name carries no date. The 2025 series says so
+ * independently: the FILES' OWN TIMESTAMPS run 188 (23 Aug) -> 199
+ * (2 Nov) in exact 7-day steps, and 199 -> 211 is 84 days over 12
+ * reports.
+ *
+ * THE ONE FILE THAT DISAGREES IS MISDATED, and the corpus says which:
+ * `January 14 2022 Weekend-Report 51` is the only name whose date
+ * contradicts the sequence -- 50 is 8 January 2023 and 51 is the
+ * weekend after it, so the YEAR in that name is a typo. So an anchor
+ * that disagrees with its neighbours by more than a fortnight is not
+ * trusted: `dateFromReportNumber` checks each pair it uses, and the
+ * caller drops the anchors that fail the same check.
+ *
+ * The dates it returns are the session's WEEK, not its day: the
+ * reports are published on a weekend and the exact day is not
+ * recoverable from the number. A week of slack is inside the noise of
+ * a one-week price horizon, and the source is recorded as
+ * `report_number` so a reader knows how it was dated.
+ *
+ * @param {number|string} reportNumber
+ * @param {Array<{number: number, date: string}>} anchors - the DATED
+ *   reports, as YYYYMMDD
+ * @returns {{date: string, days_per_report: number, precision: string}|null}
+ */
+function dateFromReportNumber(reportNumber, anchors) {
+  const target = Number(reportNumber);
+  if (!Number.isFinite(target) || !Array.isArray(anchors) || anchors.length < 2) return null;
+  const sorted = anchors
+    .filter((anchor) => Number.isFinite(Number(anchor.number)) && /^\d{8}$/.test(String(anchor.date || '')))
+    .map((anchor) => ({ number: Number(anchor.number), date: String(anchor.date) }))
+    .sort((a, b) => a.number - b.number);
+  if (sorted.length < 2) return null;
+
+  const toMs = (date) => Date.parse(`${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)}T00:00:00Z`);
+  const toKey = (ms) => new Date(ms).toISOString().slice(0, 10).replace(/-/g, '');
+
+  for (let index = 0; index < sorted.length - 1; index += 1) {
+    const before = sorted[index];
+    const after = sorted[index + 1];
+    if (target < before.number || target > after.number) continue;
+    const span = after.number - before.number;
+    if (span <= 0) continue;
+    const days = Math.round((toMs(after.date) - toMs(before.date)) / 86400000) / span;
+    // The cadence is a weekly report. A pair that says otherwise is
+    // not a pair of reports, and nothing is dated from it.
+    if (!(days >= 4 && days <= 12)) continue;
+    const offset = Math.round((target - before.number) * days);
+    return {
+      date: toKey(toMs(before.date) + offset * 86400000),
+      days_per_report: Number(days.toFixed(2)),
+      precision: 'day',
+    };
+  }
+  return null;
+}
+
 module.exports = {
+  dateFromReportNumber,
   DOCUMENT_NAME,
   MONTH_NAMES,
   VIDEO_PART_LABELS,

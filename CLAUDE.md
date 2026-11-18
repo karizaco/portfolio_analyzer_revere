@@ -811,8 +811,16 @@ narrative sits in the same OCR line as the index names, and one card reads
 "Market still going sideways", which made the text parser report every
 index as flat when the discs said up, up and down.
 
-**A WEEKLY SESSION IS NAMED AFTER ITS REPORT NUMBER**, not its date, and the
-number is not chronological either (50 is January 2023, 51 is January 2022).
+**A WEEKLY SESSION IS NAMED AFTER ITS REPORT NUMBER**, and the number
+**IS** chronological: 43 = 19 Nov 2022, 50 = 8 Jan 2023, 70 = 29 May 2023,
+211 = 25 Jan 2026, 226 = 9 May 2026 -- seven days a number, and the 2025
+series agrees independently through its files' own timestamps (188 → 199
+in exact 7-day steps). The ONE name that disagrees is
+`January 14 2022 Weekend-Report 51`, whose **year is a typo**: 50 is
+8 January 2023 and 51 is the weekend after it. So the number dates the
+sessions whose own name carries no date -- **76 of the 116 videos now
+carry one** (44 from the number alone), and the source says how each
+was dated (`report_number`).
 Its three parts are `Market Overview`, `My Portfolio` and `Stocks Analysis`,
 or the older `Premium` / `Premium-01` / `Premium-02` naming. Only the
 document carries the date, so the video is LINKED to the document by report

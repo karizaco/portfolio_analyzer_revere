@@ -47,7 +47,7 @@ const { attachDerived } = require('../src/db/derivedStore');
 const { KOMAR_SOURCE, komarDocId, komarSourceDir, komarVideoId } = require('../src/komar/channel');
 const { ensureKomarSchema } = require('../src/komar/schema');
 const { classifyDocument } = require('../src/komar/documentLayout');
-const { listCorpus, parseVideoName } = require('../src/komar/corpusCatalog');
+const { dateFromReportNumber, listCorpus, parseVideoName } = require('../src/komar/corpusCatalog');
 const { checksumFile } = require('../src/newsletter/documentCatalog');
 const { readMetaMany } = require('../src/newsletter/pdfReader');
 const { resolveFfprobeBin } = require('../src/video/ffmpegBin');
@@ -289,6 +289,40 @@ function buildVideoRows(videos, documentRows, sourceDir) {
     if (row.session_date && row.session_date_precision === 'day') byDate.set(row.session_date, row);
   }
 
+  // THE REPORT NUMBER IS CHRONOLOGICAL, and it dates the sessions whose
+  // own name carries no date.
+  //
+  // The corpus measures it: 43 -> 2022-11-19, 50 -> 2023-01-08 (+50
+  // days over 7 reports), 70 -> 2023-05-29 (+500 over 19), 211 ->
+  // 2026-01-25 (+972 over 141), 226 -> 2026-05-09 (+14 over 2) -- a
+  // weekly report, and the 2025 series agrees independently through its
+  // files' own timestamps (188 -> 199 in exact 7-day steps).
+  //
+  // ONE NAME DISAGREES, and it is the one the corpus calls out:
+  // "January 14 2022 Weekend-Report 51" -- 50 is 8 January 2023 and
+  // 51 is the weekend after it, so the YEAR in that name is a typo.
+  // So an anchor that contradicts its neighbours by more than a
+  // fortnight is not trusted, and the rest date what is left.
+  const anchors = [];
+  for (const row of documentRows) {
+    if (row.report_number && row.session_date && row.session_date_precision === 'day') {
+      anchors.push({ date: row.session_date, number: Number(row.report_number) });
+    }
+  }
+  for (const video of videos) {
+    if (video.reportNumber && video.sessionDate) {
+      anchors.push({ date: video.sessionDate, number: Number(video.reportNumber) });
+    }
+  }
+  const trustedAnchors = anchors.filter((anchor) => {
+    const others = anchors.filter((other) => other.number !== anchor.number);
+    const implied = dateFromReportNumber(anchor.number, others);
+    if (!implied) return true; // nothing to check it against
+    const own = Date.parse(`${anchor.date.slice(0, 4)}-${anchor.date.slice(4, 6)}-${anchor.date.slice(6, 8)}T00:00:00Z`);
+    const said = Date.parse(`${implied.date.slice(0, 4)}-${implied.date.slice(4, 6)}-${implied.date.slice(6, 8)}T00:00:00Z`);
+    return Math.abs(own - said) <= 14 * 86400000;
+  });
+
   const rows = [];
   for (const video of videos) {
     const absolute = path.join(sourceDir, video.folder, video.fileName);
@@ -311,6 +345,28 @@ function buildVideoRows(videos, documentRows, sourceDir) {
         sessionDate = linked.session_date;
         sessionDatePrecision = linked.session_date_precision || 'day';
         sessionDateSource = 'pdf_chrome';
+      }
+    }
+
+    // A session whose own name carries no date is dated by the report
+    // number -- and a session whose own date CONTRADICTS the sequence
+    // is dated by it too, because the sequence is the better record
+    // (the corpus's own misdated name is a year typo).
+    if (video.reportNumber) {
+      const implied = dateFromReportNumber(Number(video.reportNumber), trustedAnchors);
+      if (implied) {
+        const ownMs = sessionDate
+          ? Date.parse(`${sessionDate.slice(0, 4)}-${sessionDate.slice(4, 6)}-${sessionDate.slice(6, 8)}T00:00:00Z`)
+          : null;
+        const saidMs = Date.parse(`${implied.date.slice(0, 4)}-${implied.date.slice(4, 6)}-${implied.date.slice(6, 8)}T00:00:00Z`);
+        const disagrees = ownMs !== null && Math.abs(ownMs - saidMs) > 14 * 86400000;
+        if (!sessionDate || disagrees) {
+          sessionDate = implied.date;
+          sessionDatePrecision = implied.precision;
+          // A name that contradicts the sequence is a typo, and the
+          // source says how the date was arrived at either way.
+          sessionDateSource = disagrees ? 'report_number_over_filename' : 'report_number';
+        }
       }
     }
 
