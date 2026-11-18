@@ -97,16 +97,25 @@ function shiftIsoDate(iso, days) {
 /**
  * The setups, with the date of the report they were made in.
  *
+ * THE LESSONS AND THE WEBINARS ARE NOT SETUPS. They are evergreen
+ * teaching content -- "here is how I screen for momentum" is a method,
+ * not a call, and there is no session and no date to score it
+ * against. So they are left out ON PURPOSE, and the count of what was
+ * left out is reported rather than left as a silent gap.
+ *
  * @param {object} db
- * @returns {object[]}
+ * @returns {{setups: object[], excluded: number}}
  */
 function listSetups(db) {
-  return db.prepare(`
-    SELECT s.*, v.session_date AS video_session_date, v.title AS video_title
+  const rows = db.prepare(`
+    SELECT s.*, v.session_date AS video_session_date, v.title AS video_title, v.kind AS video_kind
     FROM komar_setups s
     LEFT JOIN komar_videos v ON v.video_id = s.video_id
     ORDER BY v.session_date, s.video_id, s.segment_start_index
   `).all();
+  const evergreen = new Set(['lesson', 'webinar']);
+  const setups = rows.filter((row) => !evergreen.has(String(row.video_kind || '')));
+  return { excluded: rows.length - setups.length, setups };
 }
 
 /**
@@ -123,11 +132,14 @@ async function komarSpyBaseline(outcomes, provider, settings) {
 async function main() {
   const db = new DatabaseSync(DB_PATH);
   attachDerived(db);
-  const setups = listSetups(db);
+  const { excluded: evergreenSetups, setups } = listSetups(db);
   const dated = setups.filter((setup) => toIsoDate(setup.video_session_date));
   const undated = setups.length - dated.length;
 
-  console.log(`[komar-outcomes] ${setups.length} setups, ${dated.length} with a session date, ${undated} without`);
+  console.log(`[komar-outcomes] ${setups.length} setups from sessions`
+    + ` (${evergreenSetups} from the lessons and webinars left out: evergreen teaching content,`
+    + ' not calls with a window), '
+    + `${dated.length} with a session date, ${undated} without`);
   if (options.dryRun) {
     console.log('dry run: no prices fetched');
     db.close();
@@ -195,6 +207,7 @@ async function main() {
   summary.baseline = baseline;
   summary.input_setups = setups.length;
   summary.undated_setups = undated;
+  summary.excluded_evergreen_setups = evergreenSetups;
 
   const payload = {
     baseline,

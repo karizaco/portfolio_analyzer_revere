@@ -767,12 +767,12 @@ writes the dashboard.
 
 | | |
 |---|---|
-| setups | **212** |
-| of those, with a session date | **69** |
-| hit rate, 1 week | **60.9 %** (42 of 69) |
-| hit rate, 1 month | **60.9 %** |
-| SPY over the same windows | **83.3 %** (1w), **77.8 %** (1m) |
-| the edge | **-22.4 pp (1w)**, **-16.9 pp (1m)** |
+| setups, from the sessions | **152** |
+| setups from the lessons and the webinars, left out on purpose | **60** |
+| of the session's setups, with a session date | **152 — every one** |
+| hit rate, 1 week | **59.6 %** |
+| SPY over the same windows | **69.7 %** (1w) |
+| the edge | **-10.1 pp (1w)** |
 | the verdict | `possible_negative_edge` |
 
 **So the calls DO NOT BEAT THE INDEX** -- the same honest result the
@@ -781,10 +781,12 @@ negative against the same baseline). The corpus's own trade log is
 where the source's real signal is: what he actually did, with the
 prices and the outcomes.
 
-**143 of the 212 setups could not be scored at all**, because their
-session has no date in the catalog: the 2023-2024 reports were never
-dated. That is a gap in the CATALOG, not in the scoring, and the
-coverage funnel says so rather than counting those setups as losses.
+**Every setup from a session is scored.** The report number dates the
+sessions (it is chronological -- seven days a number), so what is left
+undated is the 60 setups in the LESSONS and the WEBINARS: evergreen
+teaching content, which carries no timely call and has no window to
+score it against. They are excluded on purpose, and the exclusion is
+reported rather than left as a silent gap.
 
 ### THE DASHBOARD
 

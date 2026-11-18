@@ -932,13 +932,15 @@ is worse than a missing one, so no tool writes the panel tables, and
 the dashboard's coverage funnel says the panel stage is **unknown**,
 not zero.
 
-**THE CALLS DO NOT BEAT THE INDEX.** The 69 setups that can be scored
-(the other 143 come from sessions the catalog never dated) hit **60.9 %
-at one week and 60.9 % at one month**, against **SPY at 83.3 % and
-77.8 %** over the same windows -- an edge of **-22.4 pp** and **-16.9
-pp**, and the verdict is `possible_negative_edge`. That is the same
-honest result the other sources give. The source's real signal is the
-TRADE LOG: what he actually did, with the prices and the outcomes.
+**THE CALLS DO NOT BEAT THE INDEX.** Every setup from a
+SESSION can be scored -- 152 of them, once the report number dated the
+sessions. The 60 that come from the lessons and the webinars are left
+out on purpose: evergreen teaching content is not a call with a
+window. The 152 hit **59.6 % at one week**, against **SPY at 69.7 %**
+over the same window -- an edge of **-10.1 pp** -- and the verdict is
+`possible_negative_edge`. That is the same honest result the other
+sources give. The source's real signal is the TRADE LOG: what he
+actually did, with the prices and the outcomes.
 
 - `src/komar/channel.js` - the source's identity, the namespaced ids, and the slug rule
 - `src/komar/corpusCatalog.js` - the folder walk and the filename grammar

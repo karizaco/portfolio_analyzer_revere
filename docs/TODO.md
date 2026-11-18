@@ -29,19 +29,6 @@ older files were copied in bulk and their timestamps carry nothing).
 price horizon, so the scoring is not wrong -- but a day-accurate date
 would make the one-week horizon exact.
 
-### The 37 lessons and the 3 webinars carry no session date
-
-**What is known.** They are evergreen teaching content, not sessions:
-there is no report number and no date in the name. **What is not
-known.** Whether a setup in a lesson is a CLAIM at all -- "here is how I
-screen for momentum" is a method, not a call.
-
-**Why it matters.** They are the 49 setups that cannot be scored
-(163 of 212 can). **A decision** is needed: either they are dated
-somewhere (the corpus has no such date), or they are excluded from
-the outcome scoring on purpose, and the exclusion is recorded rather
-than left as a silent gap.
-
 ### The panel reader, iteration 3
 
 **What is known.** The reader finds the region, the header, the columns

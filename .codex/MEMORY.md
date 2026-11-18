@@ -1,6 +1,6 @@
 # Memory index
 
-- [Project TODO list](docs/TODO.md) — the open items that are not blocked on an answer: the Komar panel reader's remaining defects (the row icons, the W/L sign, the detail card), the exact day a Komar report was published, the Komar lessons that carry no date, and the Deepgram utterance boundary that can split a word
+- [Project TODO list](docs/TODO.md) — the open items that are not blocked on an answer: the Komar panel reader's remaining defects (the row icons, the W/L sign, the detail card), the exact day a Komar report was published, and the Deepgram utterance boundary that can split a word
 
 - [Project understanding](project-understanding.md) — full project overview: two channels (Qullamaggie/Revere), two OCR modes (chart_stream/whiteboard), YouTube download rules (visios client, rate-limiting, 39 known 720p-only IDs), data folder layout, canonical outputs, key entry points
 - [Parallel OCR worker count](parallel-ocr-worker-count.md) — default to 4 workers for OCR batches >5 videos; serial `--workers 1` is only for memory/contention reasons
