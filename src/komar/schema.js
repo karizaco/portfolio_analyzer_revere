@@ -58,6 +58,8 @@ const LATE_COLUMNS = [
   { column: 'mmts_opening', table: 'komar_trade_log', type: "TEXT NOT NULL DEFAULT ''" },
   { column: 'mmts_close', table: 'komar_trade_log', type: "TEXT NOT NULL DEFAULT ''" },
   { column: 'wl_r', table: 'komar_trade_log', type: 'REAL' },
+  { column: 'filename_date', table: 'komar_videos', type: "TEXT NOT NULL DEFAULT ''" },
+  { column: 'date_conflict', table: 'komar_videos', type: 'INTEGER NOT NULL DEFAULT 0' },
   { column: 'reading_check', table: 'komar_trade_log', type: "TEXT NOT NULL DEFAULT ''" },
   { column: 'derived_fields', table: 'komar_trade_log', type: "TEXT NOT NULL DEFAULT ''" },
 ];

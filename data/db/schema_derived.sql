@@ -916,8 +916,17 @@ CREATE TABLE IF NOT EXISTS komar_videos (
     -- names only its month carries a month, and a consumer that
     -- wants only exact dates asks for precision 'day'.
     session_date_precision TEXT NOT NULL DEFAULT '',
-    -- filename | pdf_chrome | unknown
+    -- filename | pdf_chrome | report_number | report_number_over_filename | unknown
     session_date_source TEXT NOT NULL DEFAULT '',
+    -- The date the video's OWN NAME carries, beside the date the
+    -- session was given. They differ exactly once in the corpus:
+    -- "January 14 2022 Weekend-Report 51" is the weekend after report
+    -- 50 (8 January 2023), so the name's YEAR is a typo and the
+    -- sequence's date is the one that is kept.
+    filename_date TEXT NOT NULL DEFAULT '',
+    -- 1 when the name's date and the session's date disagree by more
+    -- than a fortnight.
+    date_conflict INTEGER NOT NULL DEFAULT 0,
     -- The doc_id of the document that describes this session, when one
     -- does. This is the link that gives a video its date: a weekly
     -- session's videos are named after its report number, and only the

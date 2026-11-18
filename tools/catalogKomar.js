@@ -387,6 +387,8 @@ function buildVideoRows(videos, documentRows, sourceDir) {
       session_date: sessionDate,
       session_date_precision: sessionDatePrecision,
       session_date_source: sessionDateSource,
+      filename_date: video.sessionDate || '',
+      date_conflict: sessionDateSource === 'report_number_over_filename' ? 1 : 0,
       session_doc_id: sessionDocId,
       size_bytes: stat ? stat.size : 0,
       title: video.title,
@@ -540,11 +542,12 @@ function writeVideoRows(db, rows) {
     INSERT INTO komar_videos (
       video_id, kind, series, title, part, part_index, report_number,
       session_date, session_date_precision, session_date_source,
-      session_doc_id, has_video, width, height, duration_sec, audio_codec,
+      filename_date, date_conflict, session_doc_id, has_video, width,
+      height, duration_sec, audio_codec,
       audio_channels, size_bytes, content_key, media_path, folder,
       catalog_version, created_at, updated_at
     ) VALUES (
-      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
       datetime('now'), datetime('now')
     )
     ON CONFLICT(video_id) DO UPDATE SET
@@ -557,6 +560,8 @@ function writeVideoRows(db, rows) {
       session_date = excluded.session_date,
       session_date_precision = excluded.session_date_precision,
       session_date_source = excluded.session_date_source,
+      filename_date = excluded.filename_date,
+      date_conflict = excluded.date_conflict,
       session_doc_id = excluded.session_doc_id,
       has_video = excluded.has_video,
       width = excluded.width,
@@ -583,6 +588,8 @@ function writeVideoRows(db, rows) {
       row.session_date,
       row.session_date_precision,
       row.session_date_source,
+      row.filename_date || '',
+      row.date_conflict ? 1 : 0,
       row.session_doc_id,
       row.has_video,
       row.width,
