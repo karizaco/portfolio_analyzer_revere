@@ -2853,6 +2853,10 @@ def infer_channel_from_url(source_url: str) -> str:
     # Benzinga is a TRANSCRIPT source too (src/benzinga/channel.js).
     if '@benzinga' in lowered:
         return 'benzinga'
+    # martinlukkt is a TRANSCRIPT source (src/martinlukkt/channel.js).
+    # A playlist URL carries no handle, so it must be catalogued with --channel.
+    if '@martinlukkt' in lowered:
+        return 'martinlukkt'
     return ''
 
 
@@ -2902,6 +2906,8 @@ CHANNEL_SOURCE_URLS = {
     # Benzinga's daily PreMarket Playbook and The Drift are live streams. The
     # /videos tab is catalogued separately (see src/benzinga/channel.js).
     'benzinga': 'https://www.youtube.com/@Benzinga/streams',
+    # The /videos tab is catalogued separately.
+    'martinlukkt': 'https://www.youtube.com/@martinlukkt/streams',
 }
 
 

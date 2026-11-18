@@ -1,30 +1,25 @@
 'use strict';
 
-// The 39 qullamaggie videos that have NO 1080p upload on YouTube.
+// The qullamaggie videos that have NO 1080p upload on YouTube.
 //
 // WHY THEY NEED THEIR OWN LIST
 //
-// AGENTS.md records the rule: on these 39, yt-dlp's "Requested format is not
-// available" is REAL -- the channel never published a 1080p copy of these
-// videos. On any OTHER video that error means YouTube is throttling us, and
-// the fix is to wait, not to download 720p.
+// On these ids, yt-dlp's "Requested format is not available" is REAL -- the
+// channel never published a 1080p copy. On any OTHER video that error means
+// YouTube is throttling us, and the fix is to wait, not to download 720p.
 //
-// The list is therefore STATIC and HAND-MAINTAINED. It is never grown from a
-// run's errors: "Requested format is not available" on a new id is a
-// throttling signal, not evidence that the video has no 1080p, and treating it
-// as evidence would permanently downgrade real 1080p videos to 720p.
+// The list is STATIC and HAND-MAINTAINED. It is never grown from a run's
+// errors alone: "Requested format is not available" on a new id is a
+// throttling signal, not evidence that the video has no 1080p.
 //
-// WHY THE DOWNLOADER CARES
+// The original 39 were known before this file existed. Fifteen more were
+// added on 2026-11-18, and only after a --list-formats check (visios client,
+// after a network change, so it was not the throttled reading) showed no
+// video format above 720p on each of them. The user approved extending the
+// list. A later id is not added without that same check and that approval.
 //
-// The 1080p downloader used to try all 39 every single run, fail every one
-// with "Requested format is not available", and file them under `errored` --
-// spending 39 YouTube requests per run to learn something that is already
-// known, and burying real failures in noise. The 1080p pass now skips them
-// outright, and a separate 720p pass (--height 720) fetches them at format
-// 136 into the 720p library.
-//
-// The file also records WHY each of them is 720p-only where that is known,
-// so the next person does not have to re-derive it.
+// The 1080p pass skips them, and a separate 720p pass (--height 720) fetches
+// them at format 136 into the 720p library.
 
 const KNOWN_720P_ONLY_IDS = Object.freeze([
   '0Ew3DImAZlw', '1QtMVbPrKUw', '1X0J9XbF7I4', '3328puCDrks', '3w5BmkbsJpo',
@@ -35,6 +30,10 @@ const KNOWN_720P_ONLY_IDS = Object.freeze([
   'SrIGW4fvzFE', 'UG1vfP9hCH0', 'UmAdr1cM3RY', 'V5ETDZgbnOs', 'gqzntxo4DdI',
   'jtyYLDlgdbE', 'l2olCkDuHGo', 'n8SWEpUNylE', 'o3IoaGLCxz4', 'oRX7YeTLdRg',
   'pomzmadhQV0', 'sUU3mXKLgok', 'ttKgeB-cZbY', 'u84s3-ehrw4',
+  // Verified 2026-11-18 by --list-formats: highest video format is 720p.
+  'Z1ywOzX05uA', 'Zp2aN0ZYcz4', '_3LVGLEAlKQ', '_esqrDEJJdg', 'a4Al3E-Voxg',
+  'arUI0OLD0u8', 'cEryzoN5WNw', 'cKfK0F3ENvM', 'diApIcC5i-s', 'e49j7sjdMFE',
+  'ebiE01a6XiM', 'vLuChJ0B6mU', 'Wb_R-YqKoR0', 'y090kik4xFA', 'yGdp9C0n6DM',
 ]);
 
 const KNOWN_720P_ONLY_SET = new Set(KNOWN_720P_ONLY_IDS.map((id) => id.toLowerCase()));
@@ -55,7 +54,7 @@ function isKnown720pOnly(videoId) {
 }
 
 /**
- * How many videos the list covers. A test pins this at 39, so that adding or
+ * How many videos the list covers. A test pins the count, so that adding or
  * dropping an id is a deliberate act rather than an accident.
  *
  * @returns {number}

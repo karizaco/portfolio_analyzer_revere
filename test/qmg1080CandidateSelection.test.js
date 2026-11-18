@@ -161,9 +161,10 @@ test('checkpoint entries may be objects or strings', () => {
 // The known 720p-only list
 // ---------------------------------------------------------------------------
 
-test('the 720p-only list has 39 unique ids', () => {
-  assert.equal(known720pOnlyCount(), 39);
-  assert.equal(new Set(KNOWN_720P_ONLY_IDS).size, 39, 'no duplicates');
+test('the 720p-only list has 54 unique ids', () => {
+  assert.equal(known720pOnlyCount(), 54);
+  assert.equal(new Set(KNOWN_720P_ONLY_IDS).size, 54, 'no duplicates');
+  assert.equal(isKnown720pOnly('a4Al3E-Voxg'), true);
 });
 
 test('isKnown720pOnly is case-insensitive and rejects unknown ids', () => {
@@ -175,13 +176,13 @@ test('isKnown720pOnly is case-insensitive and rejects unknown ids', () => {
   assert.equal(isKnown720pOnly(''), false);
 });
 
-test('the 39 720p-only ids are never attempted by the 1080p pass', () => {
+test('every known 720p-only id is skipped by the 1080p pass', () => {
   const disk = fakeDisk([]);
   const r = selectDownloadCandidates(KNOWN_720P_ONLY_IDS.map((id) => row(id)), { done: [] },
     { dir: 'D:/lib', ...disk, excludeIds: KNOWN_720P_ONLY_IDS });
 
   assert.equal(r.todo.length, 0, 'none of them may be in the 1080p todo list');
-  assert.equal(r.skippedExcluded, 39);
+  assert.equal(r.skippedExcluded, KNOWN_720P_ONLY_IDS.length);
 });
 
 // ---------------------------------------------------------------------------

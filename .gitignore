@@ -31,6 +31,7 @@ data/video_pipeline/*
 # channels keep their VTTs tracked, so the rule names one channel rather
 # than every VTT.
 data/video_pipeline/transcripts/*.captions.benzinga.*.vtt
+data/video_pipeline/transcripts/*.captions.martinlukkt.*.vtt
 data/video_pipeline_*/
 data/video_ocr_probe/
 data/my_videos/

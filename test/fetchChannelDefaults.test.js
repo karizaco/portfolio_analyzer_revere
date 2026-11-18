@@ -49,6 +49,7 @@ test('every registered channel has its own caption languages and model', () => {
     SEVCIK_CHANNEL: { subLangs: 'cs-orig,en', deepgramLanguage: 'cs' },
     T3LIVE_CHANNEL: { subLangs: 'en', deepgramLanguage: 'en' },
     BENZINGA_CHANNEL: { subLangs: 'en', deepgramLanguage: 'en' },
+    MARTINLUKKT_CHANNEL: { subLangs: 'en', deepgramLanguage: 'en' },
   };
   for (const [channel, expected] of Object.entries(defaults)) {
     const block = new RegExp(`\\[${channel}\\]:\\s*\\{[^}]*\\}`, 'm').exec(SOURCE);
@@ -77,11 +78,12 @@ test('an unknown channel is an error, and the known ones are named', () => {
 // VTT would have changed T3Live's and Sevcik's policy too, and their VTTs
 // ARE tracked.
 
-test('only Benzinga\'s raw VTTs carry a channel suffix', () => {
+test('suffixed channels keep channel name in the raw VTT', () => {
   const defaults = {
     SEVCIK_CHANNEL: '',
     T3LIVE_CHANNEL: '',
     BENZINGA_CHANNEL: 'benzinga',
+    MARTINLUKKT_CHANNEL: 'martinlukkt',
   };
   for (const [channel, suffix] of Object.entries(defaults)) {
     const block = new RegExp(`\\[${channel}\\]:\\s*\\{[^}]*\\}`, 'm').exec(SOURCE);
@@ -99,17 +101,17 @@ test('the VTT is written with the channel suffix, and the JSON is not', () => {
     'the JSON keeps its plain name');
 });
 
-test('the ignore rule names Benzinga, and not the other channels', () => {
+test('a VTT ignore rule names one channel, and never every VTT', () => {
   const ignore = fs.readFileSync(path.join(ROOT, '.gitignore'), 'utf8');
   const rules = ignore.split(/\r?\n/)
     .map((line) => line.trim())
     .filter((line) => line.startsWith('data/video_pipeline/transcripts/') && line.endsWith('.vtt'));
-  assert.ok(rules.length >= 1, 'no VTT rule in .gitignore');
+  assert.ok(rules.some((rule) => rule.includes('benzinga')), 'Benzinga has no VTT rule');
   for (const rule of rules) {
-    assert.ok(rule.includes('benzinga'),
-      `the VTT rule must name Benzinga, found: ${rule}`);
     assert.ok(!rule.endsWith('/*.vtt'),
-      `a rule that matched every VTT would change the other channels too: ${rule}`);
+      `a rule that matched every VTT would change the tracked channels too: ${rule}`);
+    assert.match(rule, /captions\.[a-z0-9]+\.\*\.vtt/,
+      `the rule must name one channel: ${rule}`);
   }
 });
 

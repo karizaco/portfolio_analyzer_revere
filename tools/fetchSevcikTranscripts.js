@@ -56,6 +56,8 @@ const { T3LIVE_CHANNEL } = require('../src/t3live/channel');
 const { t3liveVideoQuarantine } = require('../src/t3live/contentFilter');
 const { BENZINGA_CHANNEL } = require('../src/benzinga/channel');
 const { benzingaVideoQuarantine } = require('../src/benzinga/contentFilter');
+const { MARTINLUKKT_CHANNEL } = require('../src/martinlukkt/channel');
+const { martinlukktVideoQuarantine } = require('../src/martinlukkt/contentFilter');
 
 // What differs per channel. Sevcik is Czech (`cs-orig` first) and has its
 // own non-market title filter; T3Live and Benzinga are English and have
@@ -83,6 +85,7 @@ const CHANNEL_DEFAULTS = {
   [SEVCIK_CHANNEL]: { subLangs: 'cs-orig,en', deepgramLanguage: 'cs', quarantine: sevcikVideoQuarantine, vttSuffix: '' },
   [T3LIVE_CHANNEL]: { subLangs: 'en', deepgramLanguage: 'en', quarantine: t3liveVideoQuarantine, vttSuffix: '' },
   [BENZINGA_CHANNEL]: { subLangs: 'en', deepgramLanguage: 'en', quarantine: benzingaVideoQuarantine, vttSuffix: 'benzinga' },
+  [MARTINLUKKT_CHANNEL]: { subLangs: 'en', deepgramLanguage: 'en', quarantine: martinlukktVideoQuarantine, vttSuffix: 'martinlukkt' },
 };
 const { attachSegments } = require('../src/transcript/segmentStore');
 
