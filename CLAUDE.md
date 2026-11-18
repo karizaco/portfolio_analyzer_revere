@@ -899,6 +899,21 @@ be a holding -- "CCG is another sister stock", "NB Bancorp" -- and those
 are left alone. "EMI" is the EMA INDICATOR misheard, and "MMTS" is the
 author's own score.
 
+**THE PANEL IS THE RIGHT ~15 % OF THE SCREEN, IN EVERY ERA.** The
+on-screen table at the right edge of every Komar session: measured on
+one frame per era, its left edge is at 0.865 / 0.881 / 0.854 of the
+width, its header row at 0.13 of the height, and its **row pitch is
+25px at 1080 and 17px at 720 -- 0.023 of the height in both**, so one
+crop works at every resolution the corpus holds. The eras differ in
+one thing that matters: era A and B print **four** columns
+(`Symbol | Last | Chg | Chg%`) and era C prints three, and the header
+says **"Symbol", not "Sym"**. A group header is one of the era's OWN
+labels ("CLOSED", "DATA CENTER") and deliberately not a shape test: a
+row whose prices could not be read leaves a lone symbol, and a shape
+rule would drop the position. The webcam circle overlaps the panel's
+lower right, so a row behind it is recorded as **occluded**, not
+absent.
+
 - `src/komar/channel.js` - the source's identity, the namespaced ids, and the slug rule
 - `src/komar/corpusCatalog.js` - the folder walk and the filename grammar
 - `src/komar/documentLayout.js` - what a PDF IS, and what its own chrome says
@@ -908,6 +923,7 @@ author's own score.
 - `src/komar/documentExtract.js` - the PDF readers
 - `src/komar/summaryLayout.js` - the Weekend-Report Summary: its sections, its entries and its verdicts
 - `src/komar/lexicon.js` - the corpus's own tickers, and the capitalised tokens that are the lesson rather than a holding
+- `src/komar/panelLayout.js` - the panel's eras, its region, its row pitch and its occlusion
 - `src/komar/tradeLogLayout.js` - the trade-log sheet's geometry, its 18 columns and its values
 - `src/komar/schema.js` - the tables, and the columns an existing database has to grow
 - `tools/catalogKomar.js` - inventories both folders, reads the documents, probes the videos
@@ -980,6 +996,7 @@ catalog run is not affordable, and the media is never committed anyway.
 - `test/komarSummaryLayout.test.js` — the Weekend-Report Summary: the two formats, the square that reads as a letter, and the verdicts
 - `test/komarTranscripts.test.js` — the transcript writer: the row records the language the request used, and a file with no row is re-registered rather than transcribed again
 - `test/komarLexicon.test.js` — the corpus's own tickers, and the capitalised tokens that are the lesson rather than a holding
+- `test/komarPanelLayout.test.js` — the panel's eras, its region as a fraction of every resolution, and the group headers
 - `test/manual/komarTradeLogRead.test.js` — the **manual** full read of the sheet (a Tesseract pass over every cell, 20 s)
 - `test/oconnellIssueKinds.test.js` — the newsletter taxonomy, read from the masthead by font size
 - `test/oconnellSetupLayout.test.js` — the setup headings, the direction, and the setup vocabulary

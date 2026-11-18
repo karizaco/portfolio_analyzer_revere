@@ -2,7 +2,7 @@
 
 **Status:** Phases 1 (the catalog), 2 (the document readers), 2b (the
 Summary), 3a (the trade-log sheet), 4 (the transcripts) and 5a (the
-setups) **implemented** 2026-11-17. The video panel, the outcomes and
+setups) **implemented** 2026-11-17. The panel reader, the outcomes and
 the dashboard are not started. Every number below was measured on 2026-11-17 against the
 corpus in `D:\courses_nosync\julian_komar` and
 `D:\courses_nosync\julian_komar\_finished`.
@@ -642,6 +642,74 @@ holding:
    `config/ticker_names_confirmed.csv`, which the plan says needs a
    Komar pass.
 
+## Phase 3b as built (2026-11-17): the PANEL, measured
+
+```
+src/komar/       panelLayout.js    the eras, the region, the pitch, the occlusion
+test/            komarPanelLayout
+test/fixtures/   komar_panel/       one panel crop per era, pinned (md5)
+```
+
+The panel is the on-screen table at the right edge of every session,
+and it is the last unmeasured thing in the corpus. **This phase
+MEASURED it; the reader that consumes the measurement is the next
+step**, and the measurements below are what that reader needs.
+
+### THE GEOMETRY, MEASURED OFF THE PIXELS
+
+Three frames, one per era, at their native resolutions:
+
+| | frame | size |
+|---|---|---|
+| era A | Weekend-Report 51 (2022-01-14) | 1920x1080 |
+| era B | Weekend-Report 193 (2025) | 1280x720 |
+| era C | Weekend-Report 224 (2026-04-25) | 1920x1080 |
+
+* **the table is the RIGHT ~15 % of the screen in every era**: its
+  left edge measured at x=1660/1920 (0.865) in era A, 1640/1920 (0.854)
+  in era C and 1128/1280 (0.881) in era B;
+* **the header row** sits at y=0.132 of the height in era A and 0.128 in
+  era C;
+* **the row pitch is 25px at 1080 and 17px at 720 -- which is 0.023 of
+  the height in both.** So the pitch is a FRACTION and not a pixel
+  count, and that is what makes one crop work at every resolution the
+  corpus holds (960x540, 1280x720, 1920x1080, 2560x1440);
+* **the WEBCAM CIRCLE overlaps the panel's lower right**, and its top
+  edge moves with the frame (measured at 0.57 of the height in era C
+  and 0.80 in another). A row behind it is recorded as OCCLUDED, not
+  as absent -- the plan's rule, and the difference between a short
+  list and a wrong one.
+
+### THE ERAS DIFFER IN ONE THING THAT MATTERS: THE COLUMN COUNT
+
+| era | header | groups |
+|---|---|---|
+| A | `Symbol \| Last \| Chg \| Chg%` | `STOCKS`, `NASDAQ.COM/W` |
+| B | `Symbol \| Last \| Chg \| Chg%` | `COMMODITIES & BONDS`, `STOCKS` |
+| C | `Symbol \| Last \| Chg%` | the THEME names, and `CLOSED` |
+
+and the header says **"Symbol", not "Sym"** -- so a reader that
+expects the QMG header would pick the wrong columns.
+
+### A GROUP HEADER IS ONE OF THE ERA'S OWN LABELS
+
+"CLOSED", "STOCKS", "DATA CENTER" -- and the era carries the list.
+It is deliberately NOT a shape test: a row whose prices could not be
+read leaves a lone symbol in the column, and a shape rule ("no digits")
+would call that a group header and DROP THE POSITION. That is a rule
+the test now pins.
+
+### WHAT IS STILL TO BE BUILT
+
+The reader itself: the crop from the source frame (never from a
+downscaled OCR frame -- that is `src/video/panelExtract.js`'s measured
+rule), the header anchor, the per-cell read, the `CLOSED` group as a
+section rather than a holding, the occlusion, the schema
+(`komar_panel_snapshots`, `komar_positions`, `komar_watchlist`) and
+the frame sampling (the panel is static for long stretches, so hash
+the crop and read it only when the hash changes -- the same idea as
+`src/video/imageHash.js`).
+
 ---
 
 ## Part 1: How the app is structured today
@@ -1228,7 +1296,7 @@ Nothing existing is modified except the three files above.
 | 1 | the catalog | **DONE (2026-11-17)** -- `komar_documents` + `komar_videos` hold all 143 files, each classified by kind and dated from content where the filename lies |
 | 2 | the PDF readers | **DONE (2026-11-17)** -- the card images yield market trends, exposure and theme leaders; the decks parse to notes. The Summary PDFs are not yet read. |
 | 3a | the trade-log sheet | **DONE (2026-11-17)** -- 32 trades over 26 tickers, every one of the sheet's 18 columns, checked against the sheet's own arithmetic. |
-| 3b | the video panel | a pinned frame from each era reads its tickers correctly; the ground-truth fixture is md5-pinned like the QMG one |
+| 3b | the video panel | the GEOMETRY is measured and pinned (2026-11-17): the region, the row pitch, the era column counts, the occlusion. The reader, the schema and the frame sampling are not built. |
 | 4 | the transcripts | **DONE (2026-11-17)** -- 116 videos, 3,952 minutes, ~$30 of Deepgram at `language=en`; the canonical JSON is tracked and `komar_transcripts` indexes it. |
 | 5a | the setups | **DONE (2026-11-17)** -- 212 setups over 74 transcripts, read with the shared engine and the corpus's own lexicon (73 tickers the seed lexicon does not have) |
 | 5b | the positions | the panel series produces position events (needs 3b) |
