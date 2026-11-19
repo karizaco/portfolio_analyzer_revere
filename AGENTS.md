@@ -955,15 +955,36 @@ rule would drop the position. The webcam circle overlaps the panel's
 lower right, so a row behind it is recorded as **occluded**, not
 absent.
 
-**THE PANEL READER IS NOT YET TRUSTWORTHY, AND IT IS NOT WIRED TO A
+**THE PANEL READER IS MEASURED NOW, AND IT IS STILL NOT WIRED TO A
 WRITER.** `src/komar/panelReader.js` finds the region, the header, the
-columns and the rows, and it reads the prices mostly right -- but the
-**symbol column carries the row's icon** (the POWL row reads "VPOWLE",
-so half the symbols are wrong) and the **W/L sign from the fill** is
-sampled unreliably ("-7.41 %" comes back "+7.41 %"). A wrong holding
-is worse than a missing one, so no tool writes the panel tables, and
-the dashboard's coverage funnel says the panel stage is **unknown**,
-not zero.
+columns and the rows, and `tools/measureKomarPanel.js` scores it
+against a PINNED expectation -- `test/fixtures/komar_panel/expectations.json`
+holds the rows read off the three frames' own pixels, one frame per
+era. The before was **7 of 52 symbols in the right order (13.5 %)**;
+it is now **14 / 52 in order and 42 / 52 found**, and the **portfolio
+frame (2026) reads 14 of 14 EXACTLY**. The watchlist frames are not
+there yet (16/20 and 12/18 found), and one pinned frame is not a
+measurement of a reader, so no tool writes the panel tables and the
+dashboard's coverage funnel says the panel stage is **unknown**, not
+zero.
+
+**WHAT THE MEASUREMENT TAUGHT, and it is the interesting part.**
+(a) **The icon must be REMOVED, not cut away.** A cut lands on the
+icon's antialiased edge, and one pixel of pale blue is enough for
+Tesseract to read a letter out of it: the MU row reads "CMU" when the
+cell starts at the last saturated pixel and "MU" when it starts one
+pixel later. The icon is painted white in the OCR's own box for it.
+(b) **The CHART'S PRICE AXIS was bridging the gap** to the detail
+card, so the card was read as rows; only the panel's own columns are
+read now. (c) **A GROUP HEADER IS A ROW WITH NO NUMBERS** -- the theme
+names are the author's own (MEDICAL, DRONES, OIL / GAS / COAL) and are
+not an enumerable set, so no list of them can work. (d) **The panel's
+trailing dot is read as a final "e"** ("DIAe" -> DIA), so it is
+stripped. (e) **The icons are taller than the text**, so a cluster of
+everything chains two rows into one. And (f) **Tesseract's reading of
+the SAME pixels depends on what the shared worker read before it** --
+the same region read twice in one process gave "nue" and "MU" for the
+same ticker -- so the score is REPORTED and not asserted.
 
 **THE CALLS DO NOT BEAT THE INDEX.** Every setup from a
 SESSION can be scored -- 153 of them, once the report number dated the
@@ -1027,6 +1048,8 @@ wants it can have it.
 - `tools/fetchKomarTranscripts.js` - the corpus's primary text: 65.9 hours of Deepgram, priced before it is bought
 - `tools/extractKomarSignals.js` - the setups: the transcripts read with the shared engine and the corpus's own lexicon
 - `tools/analyzeKomarOutcomes.js` - the setups scored against the prices, against SPY, and the dashboard
+- `tools/analyzeKomarConversion.js` - the conversion: the deck's census, his own star rating against his own outcomes, and his trades against the index
+- `tools/measureKomarPanel.js` - the panel reader, scored against the pinned expectation (`node tools/measureKomarPanel.js`)
 - `data/komar_manifest.json` - the catalog's committed record of what was read
 
 ```bash

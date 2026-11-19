@@ -48,23 +48,92 @@ as a letter (DELL, TER, POWL, MU, RKLB, AMLX). And the W/L sign is
 now the MAJORITY of the cell's coloured pixels, counted over the whole
 cell, instead of one sampled pixel in the middle.
 
+**IT IS NOW MEASURED, which it never was.** `tools/measureKomarPanel.js`
+scores the reader against a PINNED expectation --
+`test/fixtures/komar_panel/expectations.json` holds the rows read off
+the three frames' own pixels, one frame per era, so every reading of
+the reader can be compared with the panel itself instead of with a
+report by hand.
+
+| | before | now |
+|---|---|---|
+| the symbols, in order | 7 / 52 (13.5 %) | **14 / 52 (26.9 %)** |
+| the symbols, FOUND (as a set) | — | **42 / 52 (80.8 %)** |
+| the prices | — | 59 / 98 (60.2 %) |
+| the **portfolio** frame (2026) | 4 / 14 | **14 / 14 in order, exactly** |
+| the 2022 watchlist frame | 2 / 20 | 16 / 20 found |
+| the 2025 watchlist frame | 9 / 18 | 12 / 18 found |
+
+**The in-order score is 0 on the two watchlist frames for ONE reason:
+their first row is lost to a merged band, and a missing first row
+shifts every row after it.** The set score is the honest one for them
+(16/20 and 12/18).
+
 **The fixes, in the order the defects bite.**
 
-1. **MASK THE ICON BY ITS GEOMETRY.** The colour mask only takes out
-   the saturated part of the blob; a partly-saturated edge still reads
-   as a letter. The blob's own extent is measurable -- it is a
-   contiguous run of coloured pixels at the row's left -- so the strip
-   can be cut at the blob's right edge instead.
-2. **COUNT THE FILL OVER THE WHOLE CELL.** Done in iteration 2.
-3. **BOUND THE DETAIL CARD.** The card is a different widget under the
-   table; the gap test catches it on some frames and not on others, so
-   it needs its own rule -- most likely "the table ends where the
-   prices stop".
-4. **MEASURE THE READER, DO NOT ASSUME IT.** Every frame the reader
-   has been tried on so far has been reported by hand. A reading that
-   is not measured against the sheet's own rows is a guess, and the
-   project's rule is that a wrong holding is worse than a missing one:
-   the reader stays unwired until it is measured.
+1. **REMOVE THE ICON, DON'T CUT THE CELL.** The colour mask only takes
+   out the saturated part of the blob; a partly-saturated edge still
+   reads as a letter, and the US flag in front of "US02" reads as "C",
+   the "S" logo in front of DIA as "S", the "i" in front of IWN as "I".
+   A CUT is worse: the cut lands on the icon's antialiased edge, and
+   one pixel of pale blue is enough for Tesseract to read a letter out
+   of it -- the MU row reads "CMU" when the cell starts at the last
+   saturated pixel and "MU" when it starts one pixel later. So the icon
+   is PAINTED WHITE in the OCR's own box for it.
+2. **THE CHART'S PRICE AXIS WAS BRIDGING THE GAP.** The detail card
+   under the table was read as rows, and the gap test never saw it,
+   because the chart's price-axis labels sit at the crop's left edge,
+   spaced about a pitch apart, and they fill the gap between the table
+   and the card. Only the panel's own columns are read now.
+3. **A GROUP HEADER IS A ROW WITH NO NUMBERS.** The group headers are
+   the author's OWN theme names -- MEDICAL, DRONES, SEMICONDUCTORS,
+   OIL / GAS / COAL -- and they are not an enumerable set, so a list of
+   them cannot work. And a row whose numbers could not be read is still
+   a POSITION when the lexicon knows its symbol.
+4. **THE PANEL'S TRAILING DOT IS NOT PART OF THE TICKER.** The panel
+   draws a small dot after every symbol and Tesseract reads it as a
+   final "e" -- "DIAe", "HYGe", "UVXYe" -- so it is stripped. A ticker
+   that really ends in "e" is kept when the lexicon knows it ("LITE").
+5. **MEASURE THE READER, DO NOT ASSUME IT.** Done: the expectation is
+   pinned, the tool scores it, and the score is reported here rather
+   than quoted from memory.
+
+**AND TWO THINGS THE MEASUREMENT FOUND, which are not the reader's
+fault.**
+
+* **TESSERACT'S READING OF THE SAME PIXELS DEPENDS ON WHAT THE
+  SHARED WORKER READ BEFORE IT.** Measured on the 2026-04-25 frame: the
+  same region read twice in one process gave "nue" and "MU" for the
+  same ticker. The project's own Revere notes say the same about that
+  path. So a panel reading is a measurement of the pixels AND of the
+  order they were read in, and a run that scores differently from the
+  one recorded here is not necessarily a worse reader. **This is also
+  why the score is REPORTED and not ASSERTED** in
+  `test/manual/komarPanelReader.test.js`.
+* **THE ICONS ARE TALLER THAN THE TEXT**, so a cluster of everything
+  chains a row to the row below it (a 16 px logo against a 10 px
+  ticker), and two rows read as one.
+
+**Why it is still UNWIRED.** A wrong holding is worse than a missing
+one. The reader is now **exact on the portfolio frame** -- the "My
+Portfolio" table, which is what the position series (5b) needs -- and
+it is exact enough to be worth wiring, but:
+
+* **one pinned frame is not a measurement of a reader.** The portfolio
+  frame is one video's one moment. The corpus has 40+ "My Portfolio"
+  videos, and the frame set wants one per month before the reader is
+  trusted with a series of positions.
+* **the watchlist frames are still wrong** (16/20 and 12/18 found), and
+  the watchlist is the other half of the panel.
+* the two card rows at the bottom of the 2022 frame ("HG1", "Q.1285")
+  are still read as rows: the card there follows the table closely
+  enough that the gap test does not catch it.
+
+So the panel tables, the position events (5b) and the dashboard's
+Positions tab stay unwired, and the work that would wire them is:
+(1) pin a portfolio frame per month and measure the reader on the set;
+(2) bound the detail card by the table's own prices rather than by a
+gap; (3) fix the watchlist frames' first row.
 
 The QMG project took many rounds on its equivalent
 (`src/video/positionTableScan.js` and the "column gate" work in
