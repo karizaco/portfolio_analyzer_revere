@@ -74,6 +74,68 @@ function readSegment(text) {
   };
 }
 
+const NOT_A_TICKER = new Set([
+  'THE', 'AND', 'FOR', 'YOU', 'THIS', 'THAT', 'EMA', 'LOD', 'HOD', 'USD',
+  'ETF', 'ADR', 'NASDAQ', 'AMEX', 'INC',
+]);
+
+/**
+ * Uppercase ticker-shaped tokens in one caption line.
+ *
+ * Auto-captions capitalise a heard symbol and leave the rest in sentence
+ * case, so the capitals are the evidence. "ACHL would be the entry" yields
+ * ACHL. "EMA" is the indicator label, not a holding.
+ *
+ * @param {string} text
+ * @returns {string[]}
+ */
+function tickersIn(text) {
+  const found = String(text || '').match(/\b[A-Z]{2,5}\b/g) || [];
+  return [...new Set(found.filter((token) => !NOT_A_TICKER.has(token)))];
+}
+
+/**
+ * Trades across a transcript, with the ticker taken from the next segment
+ * when this one does not name it.
+ *
+ * Measured: "I bought" and "ACHL would be the entry" are adjacent segments
+ * a few seconds apart. A ticker more than 20 seconds later belongs to a
+ * different remark and is not attached.
+ *
+ * @param {{text: string, start_sec?: number}[]} segments
+ * @returns {object[]}
+ */
+function readTrades(segments) {
+  const rows = Array.isArray(segments) ? segments : [];
+  const out = [];
+  for (let i = 0; i < rows.length; i += 1) {
+    const read = readSegment(rows[i].text);
+    if (!read) continue;
+    let tickers = tickersIn(rows[i].text);
+    let tickerFrom = 'segment';
+    const next = rows[i + 1];
+    if (!tickers.length && next) {
+      const gap = Number(next.start_sec) - Number(rows[i].start_sec);
+      const close = !Number.isFinite(gap) || gap <= 20;
+      if (close) {
+        tickers = tickersIn(next.text);
+        if (tickers.length) tickerFrom = 'next_segment';
+      }
+    }
+    out.push({
+      ...read,
+      evidence_text: String(rows[i].text || '').trim(),
+      segment_index: i,
+      start_sec: rows[i].start_sec,
+      ticker: tickers[0] || '',
+      ticker_from: tickers.length ? tickerFrom : '',
+    });
+  }
+  return out;
+}
+
 module.exports = {
   readSegment,
+  readTrades,
+  tickersIn,
 };

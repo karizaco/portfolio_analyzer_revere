@@ -47,6 +47,21 @@ function dateFromTitle(title) {
 }
 
 /**
+ * The upload_date a catalog row should carry, or '' when nothing should change.
+ *
+ * The title date wins over YouTube's upload timestamp, which can be the next
+ * day. A title with no date does not clear a date the catalog already stored.
+ *
+ * @param {{title?: string, upload_date?: string}} row
+ * @returns {string}
+ */
+function uploadDateFromTitle(row) {
+  const fromTitle = dateFromTitle(row && row.title);
+  if (!fromTitle || fromTitle === String((row && row.upload_date) || '')) return '';
+  return fromTitle;
+}
+
+/**
  * `review` when the title is a look back at finished trades, else `live`.
  *
  * @param {string} title
@@ -96,4 +111,5 @@ module.exports = {
   martinlukktVideoQuarantine,
   sessionKind,
   titleTickers,
+  uploadDateFromTitle,
 };

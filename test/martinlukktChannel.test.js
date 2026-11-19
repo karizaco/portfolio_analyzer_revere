@@ -18,6 +18,7 @@ const {
 } = require('../src/martinlukkt/channel');
 const {
   dateFromTitle,
+  uploadDateFromTitle,
   martinlukktVideoQuarantine,
   sessionKind,
   titleTickers,
@@ -39,6 +40,18 @@ test('the session date is the date in the title', () => {
   assert.equal(dateFromTitle('Oct trades | 25 Nov 2025'), '20251125');
   assert.equal(dateFromTitle('no date here'), '');
   assert.equal(dateFromTitle(''), '');
+  assert.equal(uploadDateFromTitle({
+    title: 'Oct trades | 25 Nov 2025',
+    upload_date: '20251126',
+  }), '20251125');
+  assert.equal(uploadDateFromTitle({
+    title: 'Flipped long | 4 Nov 2026',
+    upload_date: '20261104',
+  }), '');
+  assert.equal(uploadDateFromTitle({
+    title: 'no date here',
+    upload_date: '20260101',
+  }), '');
 });
 
 test('a review of finished trades is not a live session', () => {

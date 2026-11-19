@@ -65,6 +65,7 @@
     "martinlukkt:catalog:streams": "node tools/runWhiteboardWorker.js catalog --channel martinlukkt --source-url https://www.youtube.com/@martinlukkt/streams --extractor-args youtube:player_client=visios --sleep-requests 1",
     "martinlukkt:catalog:videos": "node tools/runWhiteboardWorker.js catalog --channel martinlukkt --source-url https://www.youtube.com/@martinlukkt/videos --extractor-args youtube:player_client=visios --sleep-requests 1",
     "martinlukkt:transcripts": "node tools/fetchSevcikTranscripts.js --channel martinlukkt",
+    "martinlukkt:signals": "node tools/extractMartinlukktSignals.js",
     "asym:catalog": "node tools/catalogAsymSubstack.js",
     "asym:catalog:dry": "node tools/catalogAsymSubstack.js --dry-run",
     "qmg:benchmark:curated": "node tools/runQmgCuratedBenchmark.js",
