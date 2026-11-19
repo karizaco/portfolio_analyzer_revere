@@ -527,7 +527,7 @@ source, a document source and a spreadsheet source in one corpus.
 | catalogued documents / videos | 27 / 116 |
 | videos with a session date | **76** (44 of them dated by the report number, which is chronological: seven days a number) |
 | market cards read | **10** |
-| theme-leader rows | **83**, over 55 tickers |
+| theme-leader rows | **83**, over 55 tickers, and every card's theme groups are read by COLUMN (not by the order the OCR reads them) |
 | deck notes | **65** (63 with a star rating, 65 with the author's Quick checklist) |
 | trade-log rows | **32** trades, 26 distinct tickers |
 | summary readings | **43** (32 holdings, 7 commodities, 4 prose sections) |

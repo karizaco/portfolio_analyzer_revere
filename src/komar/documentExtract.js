@@ -28,14 +28,30 @@ const path = require('node:path');
 const sharp = require('sharp');
 
 const { readMeta, extractEmbeddedImage } = require('../newsletter/pdfReader');
-const { closeWorker: closeTableWorker, readRegionText } = require('../table/tableReader');
-const { INDEX_ROWS, parseExposure, parseLeaders } = require('./cardLayout');
+const { closeWorker: closeTableWorker, readCell, readRegionText } = require('../table/tableReader');
+const {
+  INDEX_ROWS,
+  matchThemesToGroups,
+  parseExposure,
+  parseLeaderGroups,
+  parseLeaders,
+  parseThemeHeadings,
+} = require('./cardLayout');
 const { findArrowDiscs, readTrendFromDiscs } = require('./cardDiscs');
-const { readAccentTitles } = require('./cardThemes');
+const { readAccentTitleBoxes } = require('./cardThemes');
+const { loadKomarLexicon } = require('./lexicon');
 const { parseSummaryDocument } = require('./summaryLayout');
 
-/** The parser version written onto every Phase-2 row. */
-const PARSER_VERSION = 'komar-docs-3';
+/**
+ * The parser version written onto every Phase-2 row.
+ *
+ * `komar-docs-4` (2026-11-19): the card's leader GROUPS are read by
+ * COLUMN instead of by the order the OCR reads them, and the theme
+ * names are matched to the groups by position. Before this, the
+ * 2026-05-09 card's "Semis" group carried the "Data centers" leaders
+ * and the 2025 card's groups were a mixture of three columns.
+ */
+const PARSER_VERSION = 'komar-docs-4';
 
 /**
  * The OCR scale for card regions.
@@ -174,6 +190,84 @@ function toPixels(info, region) {
     top: Math.max(0, Math.round(info.height * region.top)),
     width: Math.max(1, Math.round(info.width * region.w)),
   };
+}
+
+/**
+ * Is a leader one of the corpus's own holdings?
+ *
+ * The exact form, or the form with a trailing LOWERCASE letter
+ * stripped: the 2026-03-14 card's "AAOI" reads as "AAOIl", and a
+ * ticker is uppercase, so a lowercase letter at the end is the OCR's
+ * own noise. The repair is LEXICON-CONSTRAINED -- only a form the
+ * corpus knows is accepted -- so it cannot invent a holding.
+ *
+ * @param {string} ticker
+ * @param {Set<string>} vocabulary
+ * @returns {boolean}
+ */
+function isKnownTicker(ticker, vocabulary) {
+  const value = String(ticker || '').trim();
+  if (!value) return false;
+  if (vocabulary.has(value)) return true;
+  const stripped = value.replace(/[a-z]$/, '');
+  return stripped.length >= 2 && vocabulary.has(stripped);
+}
+
+/**
+ * The corpus's own vocabulary, cached.
+ *
+ * The card leaders are the corpus's holdings, and the lexicon is the
+ * corpus's own list of them (the seed plus `config/ticker_lexicon_komar.csv`,
+ * which was built FROM these cards). So a leader the lexicon does not
+ * know is not a holding of this corpus -- it is the OCR's noise: the
+ * 2025 card's dotted borders read as "L" and "AL", and they are the
+ * ONLY two of the corpus's 57 card leaders that the lexicon does not
+ * know.
+ *
+ * @returns {Set<string>}
+ */
+let cachedLexicon = null;
+function komarLexicon() {
+  if (!cachedLexicon) cachedLexicon = loadKomarLexicon();
+  return cachedLexicon;
+}
+
+/**
+ * Read the card's THEME REGION as WORDS, in card pixels.
+ *
+ * The regions are read as text everywhere else, but the theme section
+ * needs the POSITIONS: Tesseract reads a multi-column card line by
+ * line across the width, so the "Leaders:" runs of the 2026-05-09 card
+ * arrive interleaved and the text alone cannot say which leaders
+ * belong to which column.
+ *
+ * @param {Buffer} raw
+ * @param {{width:number,height:number,channels:number}} info
+ * @returns {Promise<Array<{text:string,left:number,top:number}>>}
+ */
+async function readThemeWords(raw, info) {
+  const region = toPixels(info, CARD_REGIONS.themes);
+  const rect = {
+    bottom: region.top + region.height,
+    left: region.left,
+    right: region.left + region.width,
+    top: region.top,
+  };
+  const scale = Math.max(1, Math.min(CARD_FULL_SCALE, Math.floor(MAX_OCR_WIDTH / Math.max(1, rect.right - rect.left))));
+  try {
+    const read = await readCell(raw, info, rect, { scale });
+    return (read.words || [])
+      .map((word) => ({
+        height: (word.height || 0) / scale,
+        left: rect.left + (word.left || 0) / scale,
+        text: String(word.text || '').trim(),
+        top: rect.top + (word.top || 0) / scale,
+      }))
+      .filter((word) => word.text);
+  } catch {
+    // A region that cannot be read is skipped, not fatal.
+    return [];
+  }
 }
 
 /**
@@ -419,21 +513,64 @@ async function parseCardImage(imagePath) {
   let themes = parseThemesFromText(full);
   if (!themes.length) themes = parseThemesFromText(regions.themes);
 
-  // THE THEME NAMES COME FROM THE CARD'S ACCENT INK.
+  // THE THEME NAMES COME FROM THE CARD'S ACCENT INK, AND THE LEADER
+  // GROUPS FROM THE CARD'S COLUMNS.
   //
   // The card prints the theme names in orange, and the OCR flattens
   // the card into one line, so the name and its description and its
   // leaders end up in one string. The orange ink is what separates them.
   //
+  // AND THE ORDER IS NOT THE ORDER: Tesseract reads a multi-column
+  // card LINE BY LINE across the width, so the "Leaders:" runs of the
+  // 2026-05-09 card arrive interleaved and the text parser mixed the
+  // columns -- "Semis" got the "Data centers" leaders. So the groups
+  // are read by POSITION (the words of a column belong to the
+  // "Leaders:" anchor of that column) and the names are matched to the
+  // groups by position too.
+  //
   // The names are used ONLY when their count matches the number of
   // leader groups, because the accent ink also catches the badge and the
   // footnote, and a name that is off by one is worse than no name.
-  const accentTitles = await readAccentTitles(raw, info, {
+  const accentTitles = await readAccentTitleBoxes(raw, info, {
     minTop: Math.round(info.height * 0.45),
     scale: CARD_FULL_SCALE,
   });
-  if (accentTitles.length === themes.length) {
-    themes = themes.map((theme, index) => ({ ...theme, theme: accentTitles[index] }));
+
+  const themeWords = await readThemeWords(raw, info);
+  const groups = parseLeaderGroups(themeWords);
+  if (groups.length) {
+    // THE LEADERS ARE THE CORPUS'S OWN HOLDINGS, and the lexicon is
+    // the corpus's own list of them, so a leader the lexicon does not
+    // know is the OCR's noise (the 2025 card's dotted borders read as
+    // "L" and "AL").
+    const vocabulary = komarLexicon();
+    const clean = groups
+      .map((group) => ({
+        ...group,
+        leaders: group.leaders.filter((ticker) => isKnownTicker(ticker, vocabulary)),
+      }))
+      .filter((group) => group.leaders.length);
+    // The accent titles are usable only when there is ONE PER GROUP:
+    // the 2025 card's dotted borders make five of them for four
+    // groups, and a name that is off by one is worse than no name.
+    let names = [];
+    if (accentTitles.length === clean.length) {
+      names = matchThemesToGroups(accentTitles, clean);
+    }
+    if (!names.length || !names.every(Boolean)) {
+      // THE 2025 CARD'S ACCENT INK IS POISONED BY ITS DOTTED BORDERS,
+      // so the names come from the OCR's words instead.
+      const headings = parseThemeHeadings(themeWords, clean);
+      if (headings.length === clean.length && headings.every(Boolean)) names = headings;
+    }
+    themes = clean.map((group, index) => ({
+      leaders: group.leaders,
+      // A group whose name could not be read keeps its place and says
+      // so, rather than carrying the name of another column.
+      theme: names[index] || `Theme ${index + 1}`,
+    }));
+  } else if (accentTitles.length === themes.length) {
+    themes = themes.map((theme, index) => ({ ...theme, theme: accentTitles[index].text }));
   }
 
   const leaders = [];

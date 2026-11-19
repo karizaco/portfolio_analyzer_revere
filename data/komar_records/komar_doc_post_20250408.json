@@ -1,8 +1,8 @@
 {
   "doc_id": "komar_doc_post_20250408",
-  "generated_at": "2026-11-17T10:07:41.398Z",
+  "generated_at": "2026-11-19T09:19:26.601Z",
   "kind": "post",
-  "parser_version": "komar-docs-2",
+  "parser_version": "komar-docs-4",
   "pdf_checksum": "c558bb338b6e8529de445c917c259ade",
   "pdf_path": "komar_20260408.pdf",
   "session_date": "20250408",
@@ -20,7 +20,7 @@
       "market_trend_nasdaq": "",
       "market_trend_russell2000": "",
       "market_trend_sp500": "",
-      "parser_version": "komar-docs-2",
+      "parser_version": "komar-docs-4",
       "trend_by_horizon": {
         "nasdaq": {
           "Mid": "flat",
@@ -54,7 +54,7 @@
       "doc_id": "komar_doc_post_20250408",
       "image_xref": 19,
       "page": 2,
-      "parser_version": "komar-docs-2"
+      "parser_version": "komar-docs-4"
     },
     {
       "confidence": 0.6,
@@ -64,7 +64,17 @@
       "doc_id": "komar_doc_post_20250408",
       "image_xref": 19,
       "page": 2,
-      "parser_version": "komar-docs-2"
+      "parser_version": "komar-docs-4"
+    },
+    {
+      "confidence": 0.6,
+      "leader_index": 3,
+      "theme": "Fiber Optics",
+      "ticker": "AAOI",
+      "doc_id": "komar_doc_post_20250408",
+      "image_xref": 19,
+      "page": 2,
+      "parser_version": "komar-docs-4"
     },
     {
       "confidence": 0.6,
@@ -74,7 +84,7 @@
       "doc_id": "komar_doc_post_20250408",
       "image_xref": 19,
       "page": 2,
-      "parser_version": "komar-docs-2"
+      "parser_version": "komar-docs-4"
     },
     {
       "confidence": 0.6,
@@ -84,7 +94,17 @@
       "doc_id": "komar_doc_post_20250408",
       "image_xref": 19,
       "page": 2,
-      "parser_version": "komar-docs-2"
+      "parser_version": "komar-docs-4"
+    },
+    {
+      "confidence": 0.6,
+      "leader_index": 3,
+      "theme": "Data center",
+      "ticker": "VRT",
+      "doc_id": "komar_doc_post_20250408",
+      "image_xref": 19,
+      "page": 2,
+      "parser_version": "komar-docs-4"
     },
     {
       "confidence": 0.6,
@@ -94,7 +114,7 @@
       "doc_id": "komar_doc_post_20250408",
       "image_xref": 19,
       "page": 2,
-      "parser_version": "komar-docs-2"
+      "parser_version": "komar-docs-4"
     },
     {
       "confidence": 0.6,
@@ -104,28 +124,19 @@
       "doc_id": "komar_doc_post_20250408",
       "image_xref": 19,
       "page": 2,
-      "parser_version": "komar-docs-2"
+      "parser_version": "komar-docs-4"
     },
     {
       "confidence": 0.6,
       "leader_index": 3,
       "theme": "Space",
-      "ticker": "VRT",
-      "doc_id": "komar_doc_post_20250408",
-      "image_xref": 19,
-      "page": 2,
-      "parser_version": "komar-docs-2"
-    },
-    {
-      "confidence": 0.6,
-      "leader_index": 4,
-      "theme": "Space",
       "ticker": "SATS",
       "doc_id": "komar_doc_post_20250408",
       "image_xref": 19,
       "page": 2,
-      "parser_version": "komar-docs-2"
+      "parser_version": "komar-docs-4"
     }
   ],
-  "notes": []
+  "notes": [],
+  "summaries": []
 }

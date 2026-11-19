@@ -183,7 +183,7 @@ tables: `komar_market_cards`, `komar_theme_leaders` and `komar_deck_notes`.
 |---|---|
 | documents processed | **15** (the 7 reports + 7 posts + the trade deck) |
 | market cards read | **10** |
-| theme-leader rows | **83**, over **55 distinct tickers** |
+| theme-leader rows | **83**, over **55 distinct tickers**, with every card's theme groups read by COLUMN |
 | deck notes | **65**, of which **63** carry a star rating and **65** a checklist |
 
 ### THREE THINGS THE ARROWS TAUGHT
@@ -1424,17 +1424,17 @@ The order is **2 and 3 in parallel** -- they share nothing -- and **4 before
 
 ---
 
-## Part 10: Open questions
+## Part 10: Open questions -- ANSWERED (2026-11-19)
 
-| # | question | why it matters |
+| # | question | the answer |
 |---|---|---|
-| 1 | Is there a **with-table** variant of the Weekend-Report Summary? (`..._Summary_NoTable.pdf` implies one) | it would give per-ticker ratings directly, replacing inference |
-| 2 | Does the corpus have the **audio** for the daily/mid-week updates? | the PDF shows an `audio-message.m4a` attachment that is not in the folder |
-| 3 | Are the **Daily Update** posts' charts in the corpus at full resolution? | the PDF's chart image is 4353x2682 -- high quality -- and they are dated market reads |
-| 4 | Is `Trades-August-2025.pdf` the only trade-log deck? | one more deck per month would make the trade log a time series |
-| 5 | Should the trade-log deck be treated as **ground truth** for the panel readings? | it would let the panel reader be scored, exactly as the QMG benchmark scores the OCR |
-| 6 | The 2022-2023 era shows **MarketSmith** screens as well as TradingView | a second panel position in a second app; decide whether it is in scope |
-| 7 | Should `_finished` be merged into the catalog as one corpus, or kept as two? | the root has three old videos (43, 94, 105, 142) among the new ones |
+| 1 | Is there a **with-table** variant of the Weekend-Report Summary? | **YES, and it is already read.** The corpus holds `Weekend_Report_Summary_Corrected.pdf` beside `20250816_Julian_Komar_Weekend_Report_Summary_NoTable.pdf`, and the catalog reads BOTH: `komar_doc_summary_20250816` (21 readings) and `komar_doc_summary_20250824` (22 readings) -- 43 in all. The "Corrected" one is dated 24 August 2025 by its own content. |
+| 2 | Does the corpus have the **audio** for the daily/mid-week updates? | **NO.** Measured: zero audio files in the corpus (walked recursively, `.m4a/.mp3/.wav/.aac/.ogg`). The `audio-message.m4a` the PDF names is not there. The daily updates' text is in the PDF and that is all there is. |
+| 3 | Are the **Daily Update** posts' charts in the corpus at full resolution? | The chart image is 4353x2682 -- high quality -- and it is in the corpus. It is a chart IMAGE, so it is readable by a human and hard for the OCR (the numbers are 12 px tall in a 4353 px picture). Not read yet: the daily updates are `post` documents and only their text is parsed. |
+| 4 | Is `Trades-August-2025.pdf` the only trade-log deck? | **YES.** Measured: the corpus's 27 PDFs hold one trade-log deck, and the author does not usually post specific trade logs, so it was an exception. **So the trade log is a ONE-OFF, not a time series**, and there will be no second month of it. |
+| 5 | Should the trade-log deck be treated as **ground truth** for the panel readings? | **NO, and the reason is the calendar.** The trade log covers **2 July - 1 August 2025** and the corpus's sessions with setups start on **17 August 2025** -- the reports in between are not in the archive. So no session in the corpus falls inside the log's month, and the log cannot score a panel reading. (The panel reader is measured against the PINNED PIXELS instead -- see `docs/TODO.md`.) |
+| 6 | The 2022-2023 era shows **MarketSmith** screens as well as TradingView | **IN SCOPE** (the author's answer, 2026-11-19). It is a second panel position in a second app, so the panel geometry needs a second era for it -- which is part of the panel reader's remaining work. |
+| 7 | Should `_finished` be merged into the catalog as one corpus, or kept as two? | **MERGED, and it already is** (the author's answer, 2026-11-19): the catalog walks both folders as one corpus, and each row records the folder it came from (`komar_videos.folder`), so the three old videos in the root (43, 94, 105, 142) sit among the new ones without a second catalog. Most of the merged videos are lessons and webinars, which the scoring leaves out on purpose (evergreen teaching content, not calls with a window). |
 
 
 

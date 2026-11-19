@@ -986,6 +986,46 @@ the SAME pixels depends on what the shared worker read before it** --
 the same region read twice in one process gave "nue" and "MU" for the
 same ticker -- so the score is REPORTED and not asserted.
 
+**THE CARD'S LEADER GROUPS ARE READ BY COLUMN, NOT BY THE ORDER THE
+OCR READS THEM.** Tesseract reads a multi-column card LINE BY LINE
+across the width, so the 2026-05-09 card's three "Leaders:" runs
+arrive interleaved ("Leaders: SNDK, MU, | Leaders: CIFR, HUT, |
+Leaders: FROG," and then the three tails), and the text parser mixed
+the columns -- "Semis" got the "Data centers" leaders and "Software"
+got the tail of both of its neighbours. **The leaders were right; their
+GROUPING was wrong.** So the "Leaders:" word is now the ANCHOR of a
+column and every leader word belongs to the last anchor at or before
+it, and the theme names are matched to the groups by position (the
+title is centred in its box, so it is the NEAREST one -- a different
+rule from the leaders', which are left-aligned).
+
+**AND THE 2025 CARD'S DOTTED BORDERS ARE THE ACCENT INK TOO.** Its
+four theme boxes are drawn with a dotted border in the same colour as
+the titles, so the accent search found 32 boxes for four titles and
+the names came out as "welwg," and "{i Datacenter || Chips". **The
+discriminator is the ROWS, not the density**: a title has ink on every
+row (it is glyphs) and a dotted border has empty rows between its
+dots -- and the density does not separate them (the 2025 titles are
+thin strokes in a wide box, an ink ratio of 0.035, while a one-pixel
+fragment of a dotted border has a ratio of 1.0). Where the accent ink
+cannot be trusted, the names are read from the OCR's own words: the
+title is the topmost word-looking token in the column, above the
+"Leaders:" label.
+
+**AND THE LEADERS ARE THE CORPUS'S OWN HOLDINGS**, so the lexicon is
+the arbiter: "L" and "AL" -- the 2025 card's dotted borders read as
+letters -- are the ONLY two of the corpus's 57 card leaders that the
+lexicon does not know.
+
+**AND THE REPORT NUMBER DATES THE WEEK, NOT THE DAY.** The files'
+own timestamps are the DOWNLOAD dates and not the publication ones
+(every report up to 169 was copied on 21 August 2025 and the 2026
+series in one go on 10 May 2026), and the publication day moves inside
+the weekend (the chrome-dated 211 and 215 are four reports and 27
+calendar days apart). So a report-number date carries the WEEK's
+precision, and `session_date_precision` says so -- the dates are
+unchanged, so nothing that scores a price moved.
+
 **THE CALLS DO NOT BEAT THE INDEX.** Every setup from a
 SESSION can be scored -- 153 of them, once the report number dated the
 sessions. The 60 that come from the lessons and the webinars are left

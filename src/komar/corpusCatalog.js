@@ -418,10 +418,7 @@ function listCorpus(sourceDir) {
  *   report 226  2026-05-09    (+14 over 2 = 7.0)
  *
  * so the cadence is a WEEKLY report, and the number can date a
- * session whose own name carries no date. The 2025 series says so
- * independently: the FILES' OWN TIMESTAMPS run 188 (23 Aug) -> 199
- * (2 Nov) in exact 7-day steps, and 199 -> 211 is 84 days over 12
- * reports.
+ * session whose own name carries no date.
  *
  * THE ONE FILE THAT DISAGREES IS MISDATED, and the corpus says which:
  * `January 14 2022 Weekend-Report 51` is the only name whose date
@@ -431,11 +428,32 @@ function listCorpus(sourceDir) {
  * trusted: `dateFromReportNumber` checks each pair it uses, and the
  * caller drops the anchors that fail the same check.
  *
- * The dates it returns are the session's WEEK, not its day: the
- * reports are published on a weekend and the exact day is not
- * recoverable from the number. A week of slack is inside the noise of
- * a one-week price horizon, and the source is recorded as
- * `report_number` so a reader knows how it was dated.
+ * THE PRECISION IS A WEEK, NOT A DAY, and that is measured:
+ *
+ *   1. THE PUBLICATION DAY MOVES INSIDE THE WEEKEND. The reports
+ *      whose own PDF chrome carries the date are a week apart in the
+ *      number and, in one case, 27 days apart in the calendar
+ *      (211 on 25 January 2026 and 215 on 21 February 2026 -- four
+ *      reports, one day short of 28). So the day of the weekend
+ *      moves between Saturday and Sunday, and the number cannot say
+ *      which.
+ *   2. THE FILES' OWN TIMESTAMPS ARE NOT THE PUBLICATION DATES. They
+ *      are the DOWNLOAD dates, and they do not run in seven-day steps:
+ *      the reports up to 169 were all copied on 21 August 2025, the
+ *      2025 series was downloaded report by report (188 on 23 August,
+ *      189 on 25 August, 190 on 31 August), and the 2026 series was
+ *      copied in one go on 10 May 2026. They agree with the
+ *      interpolation to within a day for nine of the eleven reports of
+ *      the 2025 series -- which is what "downloaded the next day"
+ *      looks like -- and six days late for 188. So a file's timestamp
+ *      is not a date source, and the day is NOT recoverable from the
+ *      corpus.
+ *
+ * The date this returns is therefore the best estimate of the
+ * session's day, and its PRECISION is the week: the day carries up to
+ * three days of uncertainty. The source is recorded as
+ * `report_number` so a reader knows how it was dated, and a
+ * one-week price horizon measured from it carries that uncertainty.
  *
  * @param {number|string} reportNumber
  * @param {Array<{number: number, date: string}>} anchors - the DATED
@@ -468,7 +486,7 @@ function dateFromReportNumber(reportNumber, anchors) {
     return {
       date: toKey(toMs(before.date) + offset * 86400000),
       days_per_report: Number(days.toFixed(2)),
-      precision: 'day',
+      precision: 'week',
     };
   }
   return null;

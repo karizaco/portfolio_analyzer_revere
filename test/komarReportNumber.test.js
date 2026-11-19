@@ -46,13 +46,20 @@ test('the number dates the sessions whose own name carries no date', () => {
   const dated = dateFromReportNumber(94, ANCHORS);
   assert.ok(dated, 'report 94 is dated');
   assert.match(dated.date, /^2023/, 'and it lands in 2023');
-  // And 199, the last of the 2025 series, lands in November 2025 --
-  // and the FILES' own timestamps put it there independently: they run
-  // 188 -> 199 in exact seven-day steps, ending 2 November 2025. The
-  // interpolation lands a day later, which is inside the week's slack
-  // the dates carry.
+  // And 199, the last of the 2025 series, lands in November 2025.
   const last = dateFromReportNumber(199, ANCHORS);
   assert.ok(last.date.startsWith('202511'), `lands in November 2025, got ${last.date}`);
+});
+
+test('the precision is a WEEK, because the day moves inside the weekend', () => {
+  // The reports whose own PDF chrome carries the date are four reports
+  // and 27 calendar days apart (211 on 25 January 2026 and 215 on
+  // 21 February 2026), so the publication day moves between Saturday
+  // and Sunday. The number dates the week, not the day, and the data
+  // says so rather than claiming a precision it does not have.
+  const dated = dateFromReportNumber(94, ANCHORS);
+  assert.equal(dated.precision, 'week');
+  assert.equal(dateFromReportNumber(43, ANCHORS).precision, 'week');
 });
 
 test('the cadence is seven days a report', () => {

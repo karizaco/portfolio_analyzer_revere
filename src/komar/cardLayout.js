@@ -333,6 +333,208 @@ function readHorizons(discs) {
     .map((column, index) => HORIZONS[HORIZONS.length - columns.length + index] || `col${index}`);
 }
 
+/**
+ * The leader GROUPS of a card, read by COLUMN.
+ *
+ * THE ORDER THE OCR READS IS NOT THE ORDER THE CARD IS IN.
+ *
+ * Tesseract reads a multi-column layout LINE BY LINE across the whole
+ * width, so the three "Leaders:" runs of the 2026-05-09 card come out
+ * interleaved:
+ *
+ *   Leaders: SNDK, MU,    Leaders: CIFR, HUT,    Leaders: FROG,
+ *   INTC and more.        NBIS and more.        DDOG, TWLO and more.
+ *
+ * and the text parser -- which walks the text in the order it arrives
+ * -- therefore mixes the columns: the 2026-05-09 card's "Semis" group
+ * got the "Data centers" leaders and its "Software" group got the
+ * tail of both of its neighbours. **The leaders were right; their
+ * GROUPING was wrong.**
+ *
+ * So the groups are read by POSITION: the "Leaders:" word is the
+ * ANCHOR of a column, and every ticker word belongs to the last
+ * anchor at or before it. That is what the card says, and it does not
+ * depend on the order the words arrive in.
+ *
+ * @param {object[]} words - the theme region's words, in CARD pixels
+ * @returns {Array<{leaders: string[], x: number}>} the groups, in
+ *   column order
+ */
+function parseLeaderGroups(words) {
+  const list = Array.isArray(words) ? words : [];
+  const anchors = [];
+  for (const word of list) {
+    const text = String(word.text || '').trim();
+    if (!/^(leaders|eaders)\s*:?$/i.test(text)) continue;
+    anchors.push({
+      height: Number(word.height) || 0,
+      top: Number(word.top) || 0,
+      x: Number(word.left) || 0,
+    });
+  }
+  if (!anchors.length) return [];
+  anchors.sort((a, b) => a.x - b.x);
+
+  const groups = anchors.map((anchor) => ({
+    height: anchor.height,
+    leaders: [],
+    top: anchor.top,
+    x: anchor.x,
+  }));
+  for (const word of list) {
+    const text = String(word.text || '').trim();
+    if (!text || /^(leaders|eaders)\s*:?$/i.test(text)) continue;
+    // The card prints a dollar sign before some of the tickers, and a
+    // comma after them: "Leaders: $GEV, $AR, $VST and more."
+    //
+    // And a trailing LOWERCASE letter is the OCR's own noise: the
+    // 2026-03-14 card's "AAOI" reads as "AAOIl", and a ticker is
+    // uppercase, so the lowercase letter at the end is dropped before
+    // the shape test -- which would otherwise reject the word before
+    // the lexicon ever sees it.
+    const clean = text
+      .replace(/^\$/, '')
+      .replace(/[.,;:]$/, '')
+      .replace(/[a-z]$/, '')
+      .trim();
+    if (!clean || !isTickerShape(clean)) continue;
+    const x = Number(word.left) || 0;
+    const top = Number(word.top) || 0;
+    // The column of the word: the NEAREST anchor when it is close
+    // enough, and otherwise the last anchor before it.
+    //
+    // The NEAREST rule matters because a wrapped tail can sit a pixel
+    // LEFT of its own anchor -- the 2026-03-14 card's "AMPX," is at
+    // x 326 and its "Leaders:" label is at x 327 -- and the
+    // "last anchor before it" rule would hand the tail to the
+    // PREVIOUS column. The columns are 250 px apart, so twelve pixels
+    // of slack cannot reach the neighbour.
+    let group = null;
+    let nearest = null;
+    let nearestDistance = Infinity;
+    for (const candidate of groups) {
+      const distance = Math.abs(candidate.x - x);
+      if (distance < nearestDistance) {
+        nearest = candidate;
+        nearestDistance = distance;
+      }
+      if (candidate.x <= x + 2) group = candidate;
+    }
+    if (nearest && nearestDistance <= 12) group = nearest;
+    if (!group) continue;
+    // AND THE WORD IS NOT MORE THAN ONE LINE ABOVE ITS OWN
+    // "Leaders:" LABEL. The theme's DESCRIPTION is above it, and a
+    // description can hold a ticker-shaped word ("powered by AI theme"
+    // reads as "Al"), which would otherwise be published as a leader
+    // of that theme. The tolerance is the LABEL'S OWN HEIGHT, so it
+    // scales with the card: the 2025 card's leaders sit a few pixels
+    // ABOVE their label's top (the label is a tall capital) and the
+    // 2026 card's sit just below it.
+    if (top < group.top - group.height - 2) continue;
+    group.leaders.push(clean);
+  }
+  return groups.filter((group) => group.leaders.length);
+}
+
+/**
+ * The theme title that belongs to a leader group.
+ *
+ * The title is CENTRED in its box and the "Leaders:" line is at the
+ * box's left edge, so the two are not at the same x -- the title is
+ * the NEAREST one.
+ *
+ * @param {Array<{left: number, right: number, text: string}>} titles
+ * @param {Array<{x: number}>} groups
+ * @returns {Array<string>} the theme name for each group, or '' when
+ *   there is no title near it
+ */
+function matchThemesToGroups(titles, groups) {
+  const list = Array.isArray(titles) ? titles : [];
+  const columns = Array.isArray(groups) ? groups : [];
+  if (!list.length || !columns.length) return [];
+  return columns.map((group) => {
+    let best = '';
+    let bestDistance = Infinity;
+    for (const title of list) {
+      const centre = (Number(title.left) + Number(title.right)) / 2;
+      const distance = Math.abs(centre - group.x);
+      if (distance >= bestDistance) continue;
+      best = title.text;
+      bestDistance = distance;
+    }
+    return best;
+  });
+}
+
+/**
+ * The theme name of a leader group, from the OCR's own WORDS.
+ *
+ * THE FALLBACK FOR THE 2025 CARD.
+ *
+ * The 2025 card draws its theme boxes with a DOTTED border in the same
+ * colour as the titles, so the accent ink cannot separate them: the
+ * border and the title merge into one box, and the accent search
+ * returns five boxes for four titles ("welwg,", "{i Datacenter || Chips",
+ * "ELA"). So the name is read from the TEXT instead.
+ *
+ * The title is the topmost WORD-LOOKING token in the column, above the
+ * "Leaders:" label: on the 2025 card that is "Energy" (y 803), "Software"
+ * (798), "Datacenter" (803) and "Chips" (796) -- the descriptions are
+ * below them, and the dotted borders read as "|" and "~~", which are
+ * not words.
+ *
+ * The title is CENTRED in its box and the "Leaders:" line is at the
+ * box's left edge, so a title belongs to the NEAREST column -- which
+ * is a different rule from the leaders' (they are left-aligned, so
+ * they belong to the last anchor at or before them).
+ *
+ * @param {object[]} words - the theme region's words
+ * @param {Array<{x: number}>} groups
+ * @returns {string[]} the theme name for each group
+ */
+function parseThemeHeadings(words, groups) {
+  const list = Array.isArray(words) ? words : [];
+  const columns = Array.isArray(groups) ? groups : [];
+  if (!list.length || !columns.length) return [];
+  // The candidate heading of each column: the topmost WORD-LOOKING
+  // token above the column's "Leaders:" label.
+  const candidates = columns.map((group) => {
+    let best = '';
+    let bestTop = Infinity;
+    for (const word of list) {
+      const text = String(word.text || '').trim();
+      if (!/^[A-Z][A-Za-z]{0,20}$/.test(text)) continue;
+      const x = Number(word.left) || 0;
+      const top = Number(word.top) || 0;
+      if (top >= group.top) continue;
+      // The NEAREST column: the title is centred in its box.
+      let nearest = null;
+      let nearestDistance = Infinity;
+      for (const column of columns) {
+        const distance = Math.abs(column.x - x);
+        if (distance >= nearestDistance) continue;
+        nearest = column;
+        nearestDistance = distance;
+      }
+      if (!nearest || nearest !== group) continue;
+      if (top >= bestTop) continue;
+      best = text;
+      bestTop = top;
+    }
+    return { text: best, top: bestTop };
+  });
+
+  // THE TITLES SHARE A ROW. The card prints them side by side, so a
+  // candidate that is well below the others is not a title but the
+  // DESCRIPTION's first word ("Benefit from higher oil price." reads
+  // as "Benefit"), and a wrong name is worse than no name.
+  const tops = candidates.filter((entry) => entry.text).map((entry) => entry.top).sort((a, b) => a - b);
+  const median = tops.length ? tops[Math.floor(tops.length / 2)] : 0;
+  return candidates.map((entry) => (
+    entry.text && Math.abs(entry.top - median) <= 12 ? entry.text : ''
+  ));
+}
+
 module.exports = {
   DISC_WINDOWS,
   HORIZONS,
@@ -343,8 +545,11 @@ module.exports = {
   classifyDisc,
   discDirection,
   isTickerShape,
+  matchThemesToGroups,
   parseExposure,
+  parseLeaderGroups,
   parseLeaders,
+  parseThemeHeadings,
   parseThemes,
   readHorizons,
   readTrendRows,

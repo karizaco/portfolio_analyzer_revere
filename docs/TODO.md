@@ -9,25 +9,142 @@ without re-deriving the measurement.
 
 ### The exact DAY of a report is not recoverable from its number
 
-**What is known.** The report number is chronological -- seven days a
+**RESOLVED (2026-11-19), and the answer is "it is not recoverable" --
+with the data now SAYING so.**
+
+**What was known.** The report number is chronological -- seven days a
 number (43 = 19 Nov 2022, 50 = 8 Jan 2023, 211 = 25 Jan 2026) -- and
 `src/komar/corpusCatalog.js`'s `dateFromReportNumber` dates a session
-from it. **What is not known.** The day it lands on is the session's
+from it. **What was not known.** The day it lands on is the session's
 WEEK, not its day: the reports are published on a weekend and the
 number does not say which.
 
-**Where the day IS recoverable.** The 2025 series' own file timestamps
-run 188 (23 Aug) -> 199 (2 Nov) in exact 7-day steps, and 199's
-timestamp (2 Nov 2025) agrees with the interpolation to within a day.
-So for the sessions whose files were copied in report order, the
-timestamp IS the report date. **A fix** would date a session from its
-file's timestamp where the timestamps are monotonic in the report
-number (and fall back to the interpolation where they are not -- the
-older files were copied in bulk and their timestamps carry nothing).
+**THE PROPOSED FIX WAS REFUTED BY MEASUREMENT, and this is the
+interesting part.** The idea was to date a session from its file's own
+timestamp, because the 2025 series' timestamps looked like the report
+dates. They are not: **they are the DOWNLOAD dates.**
 
-**Why it matters.** A week's slack is inside the noise of a one-week
-price horizon, so the scoring is not wrong -- but a day-accurate date
-would make the one-week horizon exact.
+| the files | their own timestamps |
+|---|---|
+| the reports up to 169 | all of them copied on **21 August 2025** |
+| the 2025 series | 188 on 23 Aug, 189 on 25 Aug, 190 on 31 Aug, 192 on 15 Sep ... 199 on 2 Nov -- the days they were fetched |
+| the 2026 series | all of them copied in one go on **10 May 2026** |
+
+They do not run in seven-day steps (the gaps are 2, 6, 15, 6, 7, 6, 7,
+8, 7, 7 days), and they agree with the interpolation to within a day
+for nine of the eleven reports of the 2025 series -- which is what
+"downloaded the next day" looks like -- and six days late for 188. So
+dating a session from its file's timestamp would have put report 188
+six days late.
+
+**WHY THE DAY IS NOT RECOVERABLE.** The publication day moves inside
+the weekend: the reports whose own PDF chrome carries the date are a
+week apart in the number and, in one case, 27 calendar days apart (211
+on 25 January 2026 and 215 on 21 February 2026 -- four reports, one day
+short of 28). So the day of the weekend moves between Saturday and
+Sunday, and the number cannot say which.
+
+**WHAT CHANGED.** `dateFromReportNumber` now returns the precision
+**`week`**, not `day`, and the 45 report-number-dated videos carry it
+(`session_date_precision = 'week'`, `session_date_source =
+'report_number'`). The dates themselves are unchanged, so nothing that
+scores a price moved: the outcomes are the same 153 setups at the same
+59.2 %. **What the change buys is that the data no longer claims a
+precision it does not have** -- and a reader can now see that a
+one-week horizon measured from a report-number date carries up to three
+days of uncertainty.
+
+### The Komar market card's per-horizon mapping
+
+**RESOLVED (2026-11-19).** The 2026-05-09 card's leader groups were
+read in a different order from its theme names, so some leaders
+carried the wrong theme. The leaders themselves were right.
+
+**THE CAUSE, and it is not a per-horizon problem at all: THE ORDER THE
+OCR READS IS NOT THE ORDER THE CARD IS IN.** Tesseract reads a
+multi-column card LINE BY LINE across the whole width, so the card's
+three "Leaders:" runs arrive interleaved:
+
+```
+Leaders: SNDK, MU,    Leaders: CIFR, HUT,    Leaders: FROG,
+INTC and more.        NBIS and more.        DDOG, TWLO and more.
+```
+
+and the text parser -- which walks the text in the order it arrives --
+mixed the columns: "Semis" got the "Data centers" leaders, and
+"Software" got the tail of both of its neighbours.
+
+**THE FIX: READ THE GROUPS BY POSITION.** The "Leaders:" word is the
+ANCHOR of a column, and every leader word belongs to it -- the NEAREST
+anchor when it is within twelve pixels, and otherwise the last anchor
+before it. The nearest rule matters because a wrapped tail can sit a
+pixel LEFT of its own anchor: the 2026-03-14 card's "AMPX," is at x 326
+and its "Leaders:" label is at x 327, and the "last anchor before it"
+rule would hand the tail to the PREVIOUS column.
+
+And the token is cleaned before the shape test: the card prints a
+dollar sign before some tickers and a comma after them ("Leaders:
+$GEV, $AR"), and a trailing LOWERCASE letter is the OCR's own noise --
+the 2026-03-14 card's "AAOI" reads as "AAOIl", and a ticker is
+uppercase, so the lowercase letter goes before the shape test (which
+would otherwise reject the word before the lexicon ever sees it).
+
+The theme names are matched to the groups by position too (the title is
+centred in its box, so the title is the NEAREST one -- a different
+rule from the leaders', which are left-aligned).
+
+**MEASURED against the pixels** (the card was read by eye and the
+reader's output compared with it):
+
+| the card | the theme and its leaders |
+|---|---|
+| 2026-05-09 | Semis: SNDK, MU, INTC -- Data centers: CIFR, HUT, NBIS -- Software: FROG, DDOG, TWLO |
+| 2025-01-25 | Energy: GEV, AR, VST, AROC, KGS -- Software: VERX, INTA, GLBE, RBRK -- Datacenter: AVGO, CRDO, VRT, CLS -- Chips: SMTC, NVMI |
+
+Both are now **exactly** what the card shows.
+
+**AND THE LEADERS ARE THE CORPUS'S OWN HOLDINGS**, so the lexicon is
+the arbiter: a leader the lexicon does not know is the OCR's noise.
+The 2025 card's dotted borders read as "L" and "AL", and they are the
+ONLY two of the corpus's 57 card leaders that the lexicon does not
+know.
+
+### The Komar 2025 card's theme grouping
+
+**RESOLVED (2026-11-19), and it was two defects, not one.**
+
+1. **THE GROUP BOUNDARIES** were the same interleaving defect as
+   above, and are fixed by the column rule.
+2. **THE THEME NAMES COULD NOT BE READ AT ALL**, because the 2025
+   card draws its four theme boxes with a **DOTTED border in the same
+   colour as the titles**. The accent search found the borders as well
+   as the titles -- 32 boxes for four titles -- and the names that came
+   out were "welwg," and "{i Datacenter || Chips".
+
+   **The discriminator is the ROWS, not the density.** A title has ink
+   on every row (it is glyphs) and a dotted border has empty rows
+   between its dots. The density does NOT separate them: the 2025
+   titles are thin strokes in a wide box (an ink ratio of 0.035 to
+   0.070) while a one-pixel fragment of a dotted border has a ratio of
+   1.0. A box that is too small for a word is not a title either (the
+   titles are 22 px tall and the shortest is 38 px wide).
+
+   And where the accent ink cannot be trusted, the names are read from
+   the OCR's own words: the title is the topmost word-looking token in
+   the column, above the "Leaders:" label (the descriptions are below
+   it, and the dotted borders read as "|" and "~~", which are not
+   words). **And the names SHARE A ROW** -- they are printed side by
+   side -- so a candidate well below the others is not a title but the
+   description's first word, and it is refused.
+
+   **AND THE TITLE IS READ AS PURE INK.** The card prints the titles
+   in orange ON a dark green chart photograph, with a green drop
+   shadow behind them, and Tesseract reading the crop as it is sees
+   the shadow as part of the glyphs: a three-letter title with a thin
+   "il" comes back as "0)". Read as pure ink -- the accent pixels
+   black, everything else white -- the same crop reads "Oil" (which is
+   what the 2026-03-14 card's first theme is called), and the 2025
+   card's dim gold titles are read from the crop as they are.
 
 ### The panel reader, iteration 3
 
@@ -236,17 +353,3 @@ MEASUREMENT and not a new reading: the committed record stays the
 record, and the numbers above are the ones the committed corpus gives
 (**212 -> 213 setups** on exactly the same command). The word lists --
 the evidence -- stay in the working folder, untracked.
-
-### The Komar market card's per-horizon mapping
-
-**What is known.** The 2026-05-09 card's leader groups are read in a
-different order from its theme names, so some leaders carry the wrong
-theme. The leaders themselves are right. **A fix** is to read the
-leaders' group boundaries from the card's own layout rather than
-assuming the order, and to use a theme name only when its count
-matches the number of groups (which is the rule now).
-
-### The Komar 2025 card's theme grouping
-
-**What is known.** Its four theme boxes are laid out differently from
-the 2026 cards and the group boundaries are off. The leaders are right.

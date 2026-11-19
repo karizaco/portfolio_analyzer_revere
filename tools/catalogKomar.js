@@ -295,8 +295,16 @@ function buildVideoRows(videos, documentRows, sourceDir) {
   // The corpus measures it: 43 -> 2022-11-19, 50 -> 2023-01-08 (+50
   // days over 7 reports), 70 -> 2023-05-29 (+500 over 19), 211 ->
   // 2026-01-25 (+972 over 141), 226 -> 2026-05-09 (+14 over 2) -- a
-  // weekly report, and the 2025 series agrees independently through its
-  // files' own timestamps (188 -> 199 in exact 7-day steps).
+  // weekly report.
+  //
+  // AND THE PRECISION IS A WEEK, NOT A DAY (measured 2026-11-19): the
+  // publication day moves inside the weekend (the chrome-dated 211 and
+  // 215 are four reports and 27 calendar days apart), and the files'
+  // own timestamps are the DOWNLOAD dates and not the publication ones
+  // (the reports up to 169 were all copied on 21 August 2025 and the
+  // 2025 series was downloaded report by report). So a report-number
+  // date is recorded with the week's precision, and the source says how
+  // it was arrived at.
   //
   // ONE NAME DISAGREES, and it is the one the corpus calls out:
   // "January 14 2022 Weekend-Report 51" -- 50 is 8 January 2023 and

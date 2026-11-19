@@ -1,8 +1,8 @@
 {
   "doc_id": "komar_doc_report_20250125",
-  "generated_at": "2026-11-17T10:07:33.647Z",
+  "generated_at": "2026-11-19T09:19:15.363Z",
   "kind": "report",
-  "parser_version": "komar-docs-2",
+  "parser_version": "komar-docs-4",
   "pdf_checksum": "fb12fb8476a269232c9a567add72d412",
   "pdf_path": "20250125_weekend_report.pdf",
   "session_date": "20250125",
@@ -21,7 +21,7 @@
       "market_trend_nasdaq": "",
       "market_trend_russell2000": "",
       "market_trend_sp500": "",
-      "parser_version": "komar-docs-2",
+      "parser_version": "komar-docs-4",
       "trend_by_horizon": {
         "nasdaq": {
           "Long": "up",
@@ -52,153 +52,154 @@
     {
       "confidence": 0.6,
       "leader_index": 1,
-      "theme": "Theme 1",
+      "theme": "Energy",
       "ticker": "GEV",
       "doc_id": "komar_doc_report_20250125",
       "image_xref": 20,
       "page": 2,
-      "parser_version": "komar-docs-2"
+      "parser_version": "komar-docs-4"
     },
     {
       "confidence": 0.6,
       "leader_index": 2,
-      "theme": "Theme 1",
+      "theme": "Energy",
       "ticker": "AR",
       "doc_id": "komar_doc_report_20250125",
       "image_xref": 20,
       "page": 2,
-      "parser_version": "komar-docs-2"
-    },
-    {
-      "confidence": 0.6,
-      "leader_index": 1,
-      "theme": "Theme 2",
-      "ticker": "VERX",
-      "doc_id": "komar_doc_report_20250125",
-      "image_xref": 20,
-      "page": 2,
-      "parser_version": "komar-docs-2"
-    },
-    {
-      "confidence": 0.6,
-      "leader_index": 1,
-      "theme": "Theme 3",
-      "ticker": "AVGO",
-      "doc_id": "komar_doc_report_20250125",
-      "image_xref": 20,
-      "page": 2,
-      "parser_version": "komar-docs-2"
-    },
-    {
-      "confidence": 0.6,
-      "leader_index": 2,
-      "theme": "Theme 3",
-      "ticker": "VST",
-      "doc_id": "komar_doc_report_20250125",
-      "image_xref": 20,
-      "page": 2,
-      "parser_version": "komar-docs-2"
+      "parser_version": "komar-docs-4"
     },
     {
       "confidence": 0.6,
       "leader_index": 3,
-      "theme": "Theme 3",
-      "ticker": "AROC",
+      "theme": "Energy",
+      "ticker": "VST",
       "doc_id": "komar_doc_report_20250125",
       "image_xref": 20,
       "page": 2,
-      "parser_version": "komar-docs-2"
+      "parser_version": "komar-docs-4"
     },
     {
       "confidence": 0.6,
       "leader_index": 4,
-      "theme": "Theme 3",
-      "ticker": "KGS",
+      "theme": "Energy",
+      "ticker": "AROC",
       "doc_id": "komar_doc_report_20250125",
       "image_xref": 20,
       "page": 2,
-      "parser_version": "komar-docs-2"
+      "parser_version": "komar-docs-4"
     },
     {
       "confidence": 0.6,
       "leader_index": 5,
-      "theme": "Theme 3",
-      "ticker": "INTA",
+      "theme": "Energy",
+      "ticker": "KGS",
       "doc_id": "komar_doc_report_20250125",
       "image_xref": 20,
       "page": 2,
-      "parser_version": "komar-docs-2"
-    },
-    {
-      "confidence": 0.6,
-      "leader_index": 6,
-      "theme": "Theme 3",
-      "ticker": "GLBE",
-      "doc_id": "komar_doc_report_20250125",
-      "image_xref": 20,
-      "page": 2,
-      "parser_version": "komar-docs-2"
-    },
-    {
-      "confidence": 0.6,
-      "leader_index": 7,
-      "theme": "Theme 3",
-      "ticker": "RBRK",
-      "doc_id": "komar_doc_report_20250125",
-      "image_xref": 20,
-      "page": 2,
-      "parser_version": "komar-docs-2"
-    },
-    {
-      "confidence": 0.6,
-      "leader_index": 8,
-      "theme": "Theme 3",
-      "ticker": "CRDO",
-      "doc_id": "komar_doc_report_20250125",
-      "image_xref": 20,
-      "page": 2,
-      "parser_version": "komar-docs-2"
-    },
-    {
-      "confidence": 0.6,
-      "leader_index": 9,
-      "theme": "Theme 3",
-      "ticker": "VRT",
-      "doc_id": "komar_doc_report_20250125",
-      "image_xref": 20,
-      "page": 2,
-      "parser_version": "komar-docs-2"
-    },
-    {
-      "confidence": 0.6,
-      "leader_index": 10,
-      "theme": "Theme 3",
-      "ticker": "CLS",
-      "doc_id": "komar_doc_report_20250125",
-      "image_xref": 20,
-      "page": 2,
-      "parser_version": "komar-docs-2"
+      "parser_version": "komar-docs-4"
     },
     {
       "confidence": 0.6,
       "leader_index": 1,
-      "theme": "Theme 4",
-      "ticker": "SMTC",
+      "theme": "Software",
+      "ticker": "VERX",
       "doc_id": "komar_doc_report_20250125",
       "image_xref": 20,
       "page": 2,
-      "parser_version": "komar-docs-2"
+      "parser_version": "komar-docs-4"
     },
     {
       "confidence": 0.6,
       "leader_index": 2,
-      "theme": "Theme 4",
+      "theme": "Software",
+      "ticker": "INTA",
+      "doc_id": "komar_doc_report_20250125",
+      "image_xref": 20,
+      "page": 2,
+      "parser_version": "komar-docs-4"
+    },
+    {
+      "confidence": 0.6,
+      "leader_index": 3,
+      "theme": "Software",
+      "ticker": "GLBE",
+      "doc_id": "komar_doc_report_20250125",
+      "image_xref": 20,
+      "page": 2,
+      "parser_version": "komar-docs-4"
+    },
+    {
+      "confidence": 0.6,
+      "leader_index": 4,
+      "theme": "Software",
+      "ticker": "RBRK",
+      "doc_id": "komar_doc_report_20250125",
+      "image_xref": 20,
+      "page": 2,
+      "parser_version": "komar-docs-4"
+    },
+    {
+      "confidence": 0.6,
+      "leader_index": 1,
+      "theme": "Datacenter",
+      "ticker": "AVGO",
+      "doc_id": "komar_doc_report_20250125",
+      "image_xref": 20,
+      "page": 2,
+      "parser_version": "komar-docs-4"
+    },
+    {
+      "confidence": 0.6,
+      "leader_index": 2,
+      "theme": "Datacenter",
+      "ticker": "CRDO",
+      "doc_id": "komar_doc_report_20250125",
+      "image_xref": 20,
+      "page": 2,
+      "parser_version": "komar-docs-4"
+    },
+    {
+      "confidence": 0.6,
+      "leader_index": 3,
+      "theme": "Datacenter",
+      "ticker": "VRT",
+      "doc_id": "komar_doc_report_20250125",
+      "image_xref": 20,
+      "page": 2,
+      "parser_version": "komar-docs-4"
+    },
+    {
+      "confidence": 0.6,
+      "leader_index": 4,
+      "theme": "Datacenter",
+      "ticker": "CLS",
+      "doc_id": "komar_doc_report_20250125",
+      "image_xref": 20,
+      "page": 2,
+      "parser_version": "komar-docs-4"
+    },
+    {
+      "confidence": 0.6,
+      "leader_index": 1,
+      "theme": "Chips",
+      "ticker": "SMTC",
+      "doc_id": "komar_doc_report_20250125",
+      "image_xref": 20,
+      "page": 2,
+      "parser_version": "komar-docs-4"
+    },
+    {
+      "confidence": 0.6,
+      "leader_index": 2,
+      "theme": "Chips",
       "ticker": "NVMI",
       "doc_id": "komar_doc_report_20250125",
       "image_xref": 20,
       "page": 2,
-      "parser_version": "komar-docs-2"
+      "parser_version": "komar-docs-4"
     }
   ],
-  "notes": []
+  "notes": [],
+  "summaries": []
 }
