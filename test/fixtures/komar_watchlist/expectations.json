@@ -1,0 +1,23 @@
+{
+  "note": "The DAILY UPDATE'S WATCHLIST SCREENSHOT: a dated, per-ticker market read of the author's own names. The 2026 daily and mid-week updates carry a TradingView screenshot of his watchlist, one chart per ticker, each with the ticker's change and the price. The rows are read off the frame by eye.",
+  "frame": "20260429.png",
+  "md5": "f4f31a51007e09d2fa5e431299016839",
+  "size": "1080x451",
+  "session_date": "20260429",
+  "rows": [
+    { "ticker": "AAOI", "chg_pct": 5.41, "chg": 7.42, "price": null },
+    { "ticker": "CRML", "chg_pct": -3.31, "chg": -0.39, "price": 18.0 },
+    { "ticker": "FCEL", "chg_pct": 12.17, "chg": 1.21, "price": 12.0 },
+    { "ticker": "MRVL", "chg_pct": 1.5, "chg": 2.3, "price": null },
+    { "ticker": "MXL", "chg_pct": 11.23, "chg": 5.84, "price": null },
+    { "ticker": "SGML", "chg_pct": 2.38, "chg": 0.49, "price": null },
+    { "ticker": "UAMY", "chg_pct": -0.46, "chg": -0.91, "price": null },
+    { "ticker": "USAR", "chg_pct": -2.37, "chg": -0.54, "price": null },
+    { "ticker": "XNDD", "chg_pct": -4.33, "chg": -1.2, "price": null }
+  ],
+  "notes": [
+    "The screens are DARK (white text on a black chart) and the OCR needs the region inverted to read them well.",
+    "The ticker labels are THIRTY pixels tall, against the eight to thirteen of the panel video frames -- which is why this screenshot is the better source for a dated market read than the panel reader is.",
+    "Each chart carries the ticker, the date, the change, the change percentage and the price, and the panels are laid out in a grid whose shape varies with the number of names."
+  ]
+}

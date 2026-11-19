@@ -146,6 +146,66 @@ know.
    what the 2026-03-14 card's first theme is called), and the 2025
    card's dim gold titles are read from the crop as they are.
 
+### The daily updates' charts -- USEFUL, and a better source than the panel (2026-11-19)
+
+**The question was whether the daily updates' charts can be useful, and
+the answer is yes -- and they are a better path to a dated market read
+than the panel video frames are.**
+
+**WHAT THE CORPUS'S DAILY UPDATES ACTUALLY HOLD.** Seven "post"
+documents (the daily and mid-week updates), each with two kinds of
+image:
+
+| the era | what it carries | can the OCR read it? |
+|---|---|---|
+| 2025 (three updates) | a full TradingView WORKSPACE at 3156x2200 or 4353x2682 -- four panels (the Nasdaq Composite with the author's own analysis boxes, the Net Highs/Lows of All US Stocks, the % of stocks above MA 200, and the NDX distance to MA 50) | **YES** -- the boxes are clear sans-serif at 25-40 px |
+| 2026 (four updates) | the market CARD (already read) and a TradingView WATCHLIST SCREENSHOT at 1080x451 -- one chart per ticker, each with the change, the change percentage and the price | **YES** -- the ticker labels are THIRTY pixels tall |
+
+**MEASURED, ON THE 2025 WORKSPACE (the 4353x2682 chart of the
+2025-08-20 update):** the OCR reads the author's own boxes straight
+out of the pixels --
+
+```
+Summary:      Choppy Market!  50% invested  10% position size
+Mid/short-term Trends:  NASDAQ  S&P 500  Russell 2000
+```
+
+-- and the chart carries, in words, what the market cards do not: the
+breadth facts ("New net highs", "Stocks above MA 200 increase"), the
+MMTS and IBD statistics, a rally-type table (whipsaws, small losses or
+gains, money makers, life changers), the trend lengths ("4 trading
+days", "43 trading days", "81 trading days"), the net highs and lows
+(51,011), the ADRN reading (0.87) and the annotations ("Reduced
+exposure", "Increased exposure", "Buy signal 25 April", "Divergence!",
+"Stretched index").
+
+**MEASURED, ON THE 2026 WATCHLIST SCREENSHOT:** read one chart's header
+at a time and the tickers and their changes come out exactly --
+"AAOI ... +7.42 (5.41%)", "CRML ... -0.39 (3.31%)", "FCEL ... +1.21
+(12.17%)", "MRVL ... +2.30 (1.50%)".
+
+**WHY THIS MATTERS MORE THAN THE PANEL READER.** The panel's text is
+8-13 px tall and Tesseract cannot read it (the measurement set says
+so); the screenshot's ticker labels are **30 px** and it reads them
+without trouble. So the daily updates are a **dated, per-ticker market
+read of the author's own names** -- which is the thing the position
+series wants and does not have.
+
+**WHAT IS NOT DONE.** The reader for the screenshots does not exist
+yet: the panels' grid changes with the number of names, the screens
+are dark and want inverting, and the ticker label's row has to be
+found inside each panel. The frame is pinned
+(`test/fixtures/komar_watchlist/20260429.png`) with the rows read off
+it by eye (`expectations.json`), and `tools/extractKomarCharts.js`
+extracts the images out of the documents.
+
+**AND ONE FINDING WORTH RECORDING.** The document the catalog calls
+`komar_doc_post_20250408` is the file `komar_20260408.pdf` -- its
+FILENAME says 2026-04-08 and its CONTENT says 2025-04-08. The corpus's
+own rule (the document's content wins, the filename's date is kept
+beside it and the row is marked) is already in place ✓, and this is
+the first document where the two disagree by a YEAR.
+
 ### The panel reader, iteration 3 -- MEASURED ON TWELVE SESSIONS (2026-11-19)
 
 **The reader has been measured on a SET now, not on one frame.** The
