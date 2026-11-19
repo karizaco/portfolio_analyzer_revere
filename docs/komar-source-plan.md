@@ -1381,14 +1381,14 @@ Nothing existing is modified except the three files above.
 |---|---|---|
 | 0 | this document | reviewed |
 | 1 | the catalog | **DONE (2026-11-17)** -- `komar_documents` + `komar_videos` hold all 143 files, each classified by kind and dated from content where the filename lies |
-| 2 | the PDF readers | **DONE (2026-11-17)** -- the card images yield market trends, exposure and theme leaders; the decks parse to notes. The Summary PDFs are not yet read. |
+| 2 | the PDF readers | **DONE (2026-11-17)** -- the card images yield market trends, exposure and theme leaders; the decks parse to notes. **The Summary PDFs are read too (2026-11-18): 43 readings** -- 32 holdings, 7 commodities and 4 prose sections, with the author's verdict on each, and the SQUARE that reads as a letter handled. |
 | 3a | the trade-log sheet | **DONE (2026-11-17)** -- 32 trades over 26 tickers, every one of the sheet's 18 columns, checked against the sheet's own arithmetic. |
-| 3b | the video panel | the GEOMETRY is measured and pinned (2026-11-17): the region, the row pitch, the era column counts, the occlusion. The reader, the schema and the frame sampling are not built. |
+| 3b | the video panel | the GEOMETRY is measured and pinned (2026-11-17): the region, the row pitch, the era column counts, the occlusion. **The READER is built and MEASURED (2026-11-18)**: `tools/measureKomarPanel.js` scores it against the pinned expectation, and the portfolio frame reads 14 of 14 exactly. The schema and the frame sampling are not built, and the reader is unwired (see `docs/TODO.md`). |
 | 4 | the transcripts | **DONE (2026-11-17)** -- 116 videos, 3,952 minutes, ~$30 of Deepgram at `language=en`; the canonical JSON is tracked and `komar_transcripts` indexes it. |
 | 5a | the setups | **DONE (2026-11-17)** -- 213 setups over 75 transcripts, read with the shared engine and the corpus's own lexicon (73 tickers the seed lexicon does not have). One ticker the provider split across a boundary is rejoined by `src/komar/transcriptRepair.js` (2026-11-18) |
-| 5b | the positions | the panel series produces position events (needs 3b) |
-| 6 | the outcomes and the dashboard | the funnel, the conversion rates, the coverage |
-| 7 | the tests and the documentation | `AGENTS.md` / `CLAUDE.md` updated; the `komar:*` scripts documented |
+| 5b | the positions | the panel series produces position events (needs 3b -- the reader is measured but unwired) |
+| 6 | the outcomes and the dashboard | **DONE (2026-11-17)** -- the funnel, the outcomes against the prices and against SPY, the conversion (the deck's census, his own star rating against his own outcomes, his trades against the index) and the coverage. The Positions tab needs 5b. |
+| 7 | the tests and the documentation | **DONE** -- `AGENTS.md` / `CLAUDE.md` updated; the `komar:*` scripts documented; the rules pinned by `test/komar*.test.js` (12 files) and the OCR-heavy measurements by `test/manual/komarPanelReader.test.js`. |
 
 The order is **2 and 3 in parallel** -- they share nothing -- and **4 before
 5**.
