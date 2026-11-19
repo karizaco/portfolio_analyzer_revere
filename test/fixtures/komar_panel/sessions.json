@@ -1,0 +1,115 @@
+{
+  "note": "THE PANEL MEASUREMENT SET: twelve sessions, read off the frames' own pixels. One panel per session, spanning 19 months, THREE resolutions (1920x1080, 1280x720 and 2560x1440) and both panel layouts (the four-column watchlist of the 2022-2025 era and the three-column table of the later one), and both MODES (a watchlist of indices and ETFs, and a portfolio of his holdings). The reader is scored against these rows: `tools/measureKomarPanel.js`.",
+  "how_read": "Each frame's panel region was cut out and upscaled 4x and read by eye; the rows are in the order they appear, top to bottom, and the group headers are recorded where they appear.",
+  "prices": "The FOUR-COLUMN panels of the 2022-2025 era run past the right edge of the VIDEO FRAME, so their Chg% column is cut and the Last column's values are cut too -- the prices are therefore not scored on those panels and the SYMBOLS are what the reader is judged on. The three-column panels are whole.",
+  "frames": {
+    "20221119_r43": {
+      "session_date": "20221119",
+      "report_number": 43,
+      "mode": "watchlist",
+      "columns": 4,
+      "size": "1920x1080",
+      "group_headers": ["CURRENCIES", "COMMODITIES & BONDS", "STOCKS"],
+      "rows": ["EURU", "DXY", "BTCUS", "ETHUS", "XAGU", "XAUL", "USOIL", "US02", "US10", "US30", "TIP", "HYG", "UVXY", "DIA", "ARKK", "FFTY", "IWC", "IWM"]
+    },
+    "20230108_r50": {
+      "session_date": "20230108",
+      "report_number": 50,
+      "mode": "watchlist",
+      "columns": 4,
+      "size": "1920x1080",
+      "group_headers": ["STOCKS"],
+      "rows": ["US02", "US10", "US30", "HYG", "TIP", "UVXY", "ARKK", "FFTY", "DIA", "IWN", "IWM", "IWO", "VAL", "IXIC", "NAS1", "QQQ", "NYA", "SPY", "SPX", "RSP"]
+    },
+    "20230529_r70": {
+      "session_date": "20230529",
+      "report_number": 70,
+      "mode": "watchlist",
+      "columns": 4,
+      "size": "1920x1080",
+      "group_headers": ["CURRENCIES", "COMMODITIES & BONDS", "STOCKS"],
+      "rows": ["EURU", "DXY", "ETHUS", "BTCUS", "XAUL", "XAGU", "USOIL", "US01", "US02", "US10", "US30", "HYG", "TIP", "UVXY"]
+    },
+    "20231106_r94": {
+      "session_date": "20231106",
+      "report_number": 94,
+      "mode": "watchlist",
+      "columns": 4,
+      "size": "1920x1080",
+      "group_headers": ["CURRENCIES", "COMMODITIES & BONDS", "STOCKS"],
+      "rows": ["EURU", "ETHUS", "DXY", "BTCUS", "XAUL", "XAGU", "USOIL", "US01", "US02", "US10", "US30", "UVXY", "DIA", "VAL"]
+    },
+    "20240120_r105": {
+      "session_date": "20240120",
+      "report_number": 105,
+      "mode": "portfolio",
+      "columns": 4,
+      "size": "1920x1080",
+      "group_headers": [],
+      "rows": ["NVDA", "AMD", "BTC", "CRWI", "ARM", "CCJ", "SMCI", "ELF", "RHM", "AVGC", "METC", "CELH"]
+    },
+    "20240703_r129": {
+      "session_date": "20240703",
+      "report_number": 129,
+      "mode": "watchlist",
+      "columns": 4,
+      "size": "1920x1080",
+      "group_headers": ["CURRENCIES", "COMMODITIES & BONDS", "STOCKS"],
+      "rows": ["EURU", "ETHUS", "DXY", "BTCUS", "XAUL", "XAGU", "USOIL", "US01", "US02", "US10", "US30", "UVXY", "ARKK", "FFTY"]
+    },
+    "20250201_r160": {
+      "session_date": "20250201",
+      "report_number": 160,
+      "mode": "watchlist",
+      "columns": 4,
+      "size": "1920x1080",
+      "group_headers": ["COMMODITIES & BONDS", "STOCKS"],
+      "rows": ["USOIL", "NGD", "US01", "US02", "US10", "US30", "TLT", "UVXY", "ARKK", "FFTY", "DIA", "RSP", "QQEV", "NYA", "NAS1", "IXIC", "SPX", "IWM", "IWN", "IWO"]
+    },
+    "20250405_r169": {
+      "session_date": "20250405",
+      "report_number": 169,
+      "mode": "watchlist",
+      "columns": 4,
+      "size": "2560x1440",
+      "group_headers": [],
+      "rows": ["USOIL"]
+    },
+    "20250824_r189": {
+      "session_date": "20250824",
+      "report_number": 189,
+      "mode": "watchlist",
+      "columns": 3,
+      "size": "1280x720",
+      "group_headers": ["CURRENCIES", "COMMODITIES & BONDS", "STOCKS"],
+      "rows": ["EURU", "ETHUS", "DXY", "BTCUS", "BNBUS", "XAUJ", "XAGU", "USOIL", "US01", "US02", "US10", "US30", "TLT", "UVXY", "ARKK", "DIA", "RSP", "QQEW", "NYA", "NAS1", "IXIC"]
+    },
+    "20251005_r195": {
+      "session_date": "20251005",
+      "report_number": 195,
+      "mode": "watchlist",
+      "columns": 3,
+      "size": "1920x1080",
+      "group_headers": ["COMMODITIES & BONDS", "STOCKS"],
+      "rows": ["PALLA", "PLATIN", "USOIL", "US01Y", "US02Y", "US10Y", "US30Y", "TLT", "UVXY", "ARKK", "DIA", "RSP", "QQEW", "NYA", "NAS10", "IXIC", "SPX", "IWM", "IWN", "IWO"]
+    },
+    "20251019_r197": {
+      "session_date": "20251019",
+      "report_number": 197,
+      "mode": "portfolio",
+      "columns": 3,
+      "size": "1920x1080",
+      "group_headers": ["CLOSED"],
+      "rows": ["IONS", "OKLO", "MU", "AMD", "SNDK", "GRAL", "BITF", "QS", "PLUG", "VERI", "NBIS", "NB", "BBAI", "RR", "FIG", "LAC", "USAR", "CYTK", "PL", "WULF", "XAUUS"]
+    },
+    "20260509_r226": {
+      "session_date": "20260509",
+      "report_number": 226,
+      "mode": "portfolio",
+      "columns": 3,
+      "size": "1920x1080",
+      "group_headers": ["CLOSED"],
+      "rows": ["DELL", "POWL", "MU", "SNDK", "USAR", "TWLO", "CIFR"]
+    }
+  }
+}

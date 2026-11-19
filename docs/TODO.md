@@ -146,7 +146,88 @@ know.
    what the 2026-03-14 card's first theme is called), and the 2025
    card's dim gold titles are read from the crop as they are.
 
-### The panel reader, iteration 3
+### The panel reader, iteration 3 -- MEASURED ON TWELVE SESSIONS (2026-11-19)
+
+**The reader has been measured on a SET now, not on one frame.** The
+measurement set is twelve sessions -- one per dated session, spanning
+19 months, THREE resolutions (1920x1080, 1280x720 and 2560x1440), both
+panel layouts (the four-column watchlist of the 2022-2025 era and the
+three-column table of the later one) and both MODES (a watchlist of
+indices and ETFs, and a portfolio of his holdings).
+
+| | |
+|---|---|
+| the frames | `test/fixtures/komar_panel/sessions/` (12 PNGs, 6.6 MB, with a manifest) |
+| the rows they show | `test/fixtures/komar_panel/sessions.json` -- read off the frames BY EYE |
+| the tool that scores the reader | `tools/measureKomarPanel.js` |
+| the frames' provenance | `tools/extractKomarPanels.js` (samples the sessions and finds the frames where the panel is on screen), `tools/pickKomarPanels.js` (one frame per session) and `tools/pinKomarPanels.js` (copies them into the fixtures) |
+
+**THE SCORE, and it says the reader is NOT ready.**
+
+| | the era fixtures (3 frames) | the measurement set (12 sessions) |
+|---|---|---|
+| the symbols, in order | 14 / 52 (26.9 %) | **49 / 182 (26.9 %)** |
+| the symbols, found | 42 / 52 (80.8 %) | **109 / 182 (59.9 %)** |
+
+**And the set says exactly WHY, which is the value of measuring on a
+set rather than on one frame.**
+
+1. **THE 720p PANELS ARE AT THE OCR'S LIMIT.** The 2025 series' videos
+   are 1280x720 and the panel's text is about 8 px tall. Tesseract
+   reads "EURU" as "TURU" or "FURL" and "ETHUS" as "THUS" -- at every
+   scale from 4x to 12x, and with the region inverted as well as it is.
+   A human reads the same pixels without trouble. So **the positions
+   series can be built from the 1080p and 1440p sessions and NOT from
+   the 720p ones** -- and that is a property of the CORPUS, not of the
+   reader.
+2. **THE REGION READ HAS TO BE IN PIECES.** Tesseract's page analysis
+   needs a reasonable ASPECT RATIO and the panel's region is a tall
+   narrow strip (307x972 at 1080p). On the whole image the reader gets
+   the WORDS but not the GLYPHS -- the header comes back as "ia",
+   "Sy", "yO" for "Symbol", "Last", "Chg%" -- and the header cannot be
+   found at all, so the reader has no columns and reads no rows. Read
+   in pieces of a roughly square size, the same pixels come back as
+   "Symbo", "Last", "Chg" and "EURU". **But the piece boundaries split
+   the rows**, and a split row is a lost row: with the pieces the era C
+   fixture fell from 14 of 14 symbols to 9 of 14, and the measurement
+   set from 49 of 182 to 20. The pieces have to OVERLAP, and even with
+   the overlap the set stayed below the single-read score. **This is the
+   next thing to fix, and it is a real one: the 720p frames need the
+   pieces and the 1080p frames are better without them.**
+3. **THE ICON IS A BLOB, AND THE CUT HAS TO BE PER ROW.** The icon is
+   ink at the row's left and the symbol is a separate blob after it:
+   measured on the 2026-05-09 frame, the icon ends at x 1652 and the
+   symbol starts at 1672. Cutting the symbol cell at the end of the
+   ink blob makes the modern three-column frames EXACT -- the
+   2026-05-09 portfolio goes from 0 of 7 to **7 of 7** and the
+   2025-10 portfolio from 6 of 21 to **17 of 21**. But in the
+   four-column era the icon and the symbol TOUCH, the blob runs into
+   the symbol, and the cut takes the symbol with it: the era A fixture
+   fell from 16 symbols found to 7. So the cut needs to know where the
+   ICON ends and not merely where the ink ends.
+4. **THE HEADER HAS TO BE MATCHED BY NEAR, NOT BY EQUAL.** The panel's
+   labels are 9 px tall in the 720p frames and Tesseract drops a
+   letter ("Symbo" for "Symbol"), so an exact match finds no header
+   at all. The columns have to be matched by an edit distance of one
+   or two, which is what the 720p frames need.
+
+**So the reader stays UNWIRED, and the panel tables, the position
+events (5b) and the dashboard's Positions tab wait.** The measurement
+is now an instrument that every change to the reader moves, and the
+next three changes are the three defects above -- in the order: the
+icon's extent (the biggest single win, and it is already exact on the
+modern frames), then the overlapping pieces, then the near header
+match.
+
+**WHAT THE MARKETSMITH SCREENS ARE, since they are in scope.** The
+2022-2023 sessions ALSO show MarketSmith screens -- a second widget in
+a different place, with a bottom table -- and the panel this reader
+reads is the TradingView one at the right edge. So the MarketSmith
+screens are a SEPARATE reading (a different position, a different
+layout), not a fix to this one, and they are not in the measurement
+set.
+
+### The panel reader, iteration 3 (the earlier notes)
 
 **What is known.** The reader finds the region, the header, the columns
 and the rows, and reads the prices mostly right. **What is wrong.**
