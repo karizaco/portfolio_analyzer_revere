@@ -332,6 +332,17 @@ earned its keep:
   corpus's own evidence -- seven days a number, measured -- and it is
   not a shared one.
 
+And one shared module that is DATA rather than behaviour:
+`src/normalize/marketTickers.js` loads `config/ticker_company_names.csv`
+(the SEC's `company_tickers.json`, 10,411 symbols) for any reader that
+needs to know **which readings are tickers at all**. Its rule, which
+every consumer has to keep: **it is an ARBITER and never an
+ALLOW-LIST.** The file is a SNAPSHOT, so a symbol it does not know is a
+symbol that listed after it was generated -- a miss means "no
+preference", not "wrong", and a reader must not drop a name on it.
+(Measured on the watchlist's 24 distinct names: all 24 are in it.)
+Deciding what a source may REPORT is still that source's own allow-list.
+
 ## Data folder policy
 
 ### Download subdirectories (`data/video_pipeline/`)
@@ -986,6 +997,54 @@ the SAME pixels depends on what the shared worker read before it** --
 the same region read twice in one process gave "nue" and "MU" for the
 same ticker -- so the score is REPORTED and not asserted.
 
+**THE WATCHLIST SCREENSHOT IS READ, and it is the source's first
+reader that works.** The daily and mid-week updates carry a TradingView
+screenshot of the author's own watchlist; `src/komar/watchlistReader.js`
+reads **all three of the corpus's -- 30 of 30 panes, 30 of 30 tickers,
+28 of 30 changes, every sign right** -- and `npm run komar:watchlist`
+writes them to `komar_watchlist`. It is a WATCHLIST, not a position:
+nothing there says he owned the name.
+
+**THE PANE GRID IS THE FINDING.** The screens are 1080 px wide with
+**270x150** panes, and **a row that does not fill the width is
+CENTRED** -- one pane at 405, two at 270 and 540, three at 135, 405 and
+675. So the origins are a **half-pane grid**, and a reader that assumed
+four columns loses exactly those rows: two of the corpus's three
+screenshots have a partial last row. The shapes are pinned by
+`test/fixtures/komar_watchlist/expectations.json`, whose four rows were
+corrected against the pixels (XNDD is **XNDU**; UAMY's change is
+**-8.46 %**, not -0.46 %; AAOI's is **+10.19**, not +10.92; and the
+pane that reads "SOM" at 8x is **SQM**, because the Q's tail falls
+below the crop).
+
+**WHAT THE READING IS BUILT FROM**, each measured: the sign comes from
+the **ink** (the printed minus is one pixel wide, and the background
+(35, 38, 47) leans neither green nor red); the change is read at **three
+scales and the majority wins**, because the same pixels read `+1.21
+(12.17%)` at one and `+1.21 (12.27%)` at another; a ticker **the market
+does not know** is read again at a narrower width and the SEC's list
+picks (`TER` came back as `TERE`); and the screens are **inverted**
+before Tesseract sees them. **The whole-screen reading is not used at
+all** -- at 2x the 2025-04-08 frame's first change comes back as the
+word "he" (the header merged with the chart under it) and at 1x the
+tickers come back mangled, so every cell is read on its own.
+
+**THE SHAPE GUARD IS THE PART THAT WOULD BE MISSED.** The market CARD
+is 1080 px wide too and carries a "(46.04 -0.19%)" of its own, so a
+percentage test alone publishes a phantom `N28` from the 2026-05-05
+card; the separator is the **height**, because a screenshot shows whole
+panes (306, 451, 604 against the card's 692), and the full-screen
+workspaces are out by their width (4353 / 4 = 1088 px to a pane).
+
+**AND TWO NUMBERS ARE STILL WRONG**, both the printed "+" read as a "4"
+at two of the three scales: SGML's `+0.49` as `40.49` and GEV's
+`+24.97` as `424.97`. The percentage and the sign are right in both, so
+the read is sound; only the price move is 10x too large. Anchoring the
+crop on the change's own coloured ink was measured against this and
+**made it worse** -- the thin sign stroke falls below the ink threshold
+and the crop starts inside the number (`10.49`, `17.42`, `92`) -- so it
+is recorded here and not re-attempted.
+
 **THE CARD'S LEADER GROUPS ARE READ BY COLUMN, NOT BY THE ORDER THE
 OCR READS THEM.** Tesseract reads a multi-column card LINE BY LINE
 across the width, so the 2026-05-09 card's three "Leaders:" runs
@@ -1079,12 +1138,14 @@ wants it can have it.
 - `src/komar/lexicon.js` - the corpus's own tickers, and the capitalised tokens that are the lesson rather than a holding
 - `src/komar/panelLayout.js` - the panel's eras, its region, its row pitch and its occlusion
 - `src/komar/panelReader.js` - the panel reader: the region, the header, the rows and the cells (not yet trustworthy)
+- `src/komar/watchlistReader.js` - the daily updates' watchlist screenshot: the pane grid, the header crops, the sign from the ink (measured: 30/30 panes, 30/30 tickers, 28/30 changes)
 - `src/komar/transcriptRepair.js` - the ticker the provider split across a boundary, rejoined by the corpus's own lexicon
 - `src/komar/tradeLogLayout.js` - the trade-log sheet's geometry, its 18 columns and its values
 - `src/komar/schema.js` - the tables, and the columns an existing database has to grow
 - `tools/catalogKomar.js` - inventories both folders, reads the documents, probes the videos
 - `tools/extractKomarDocuments.js` - the market cards, the theme leaders and the deck notes
 - `tools/extractKomarTradeLog.js` - the trade-log sheet: 32 trades over 26 tickers
+- `tools/extractKomarWatchlist.js` - the watchlist screenshots out of the daily updates (3 screenshots, 30 panes)
 - `tools/fetchKomarTranscripts.js` - the corpus's primary text: 65.9 hours of Deepgram, priced before it is bought
 - `tools/extractKomarSignals.js` - the setups: the transcripts read with the shared engine and the corpus's own lexicon
 - `tools/analyzeKomarOutcomes.js` - the setups scored against the prices, against SPY, and the dashboard
@@ -1097,6 +1158,8 @@ npm run komar:catalog
 npm run komar:catalog:dry
 npm run komar:documents
 npm run komar:tradelog
+npm run komar:watchlist
+npm run komar:watchlist:dry
 npm run komar:transcripts
 npm run komar:transcripts:dry
 npm run komar:signals
@@ -1160,6 +1223,7 @@ The open items that are not blocked on an answer are in `docs/TODO.md` -- the pa
 - `test/komarTranscripts.test.js` — the transcript writer: the row records the language the request used, and a file with no row is re-registered rather than transcribed again
 - `test/komarLexicon.test.js` — the corpus's own tickers, and the capitalised tokens that are the lesson rather than a holding
 - `test/komarPanelLayout.test.js` — the panel's eras, its region as a fraction of every resolution, and the group headers
+- `test/komarWatchlist.test.js` — the daily updates' watchlist screenshot: the half-pane grid, the shape guard, and the three pinned frames scored against the pixels (30 panes, 30 tickers, 28 changes)
 - `test/manual/komarTradeLogRead.test.js` — the **manual** full read of the sheet (a Tesseract pass over every cell, 20 s)
 - `test/oconnellIssueKinds.test.js` — the newsletter taxonomy, read from the masthead by font size
 - `test/oconnellSetupLayout.test.js` — the setup headings, the direction, and the setup vocabulary

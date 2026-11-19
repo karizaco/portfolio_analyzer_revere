@@ -1209,6 +1209,53 @@ CREATE INDEX IF NOT EXISTS idx_komar_setups_ticker ON komar_setups(ticker);
 
 CREATE INDEX IF NOT EXISTS idx_komar_setups_video ON komar_setups(video_id);
 
+-- The WATCHLIST SCREENSHOT read out of a daily or mid-week update.
+--
+-- The 2026 daily updates carry a TradingView screenshot of the author's
+-- own watchlist: one chart per pane, each with the ticker, the date,
+-- the change and the change percentage. It is a DATED market read of
+-- the names he was watching -- the complement of `komar_setups`,
+-- which is what he SAID, and of `komar_trade_log`, which is what he
+-- HELD.
+--
+-- It is a WATCHLIST and not a position: nothing here says he owned
+-- the name. The table is the source's own for that reason, and it
+-- carries the geometry (row and column of the pane) because the
+-- screenshot's rows are centred when they do not fill the screen's
+-- width -- so (doc_id, row, column) and not (doc_id, row_index).
+--
+-- `chg` and `chg_pct` take their SIGN from the ink: the header prints
+-- the sign on the change and none on the percentage, and the printed
+-- minus is one pixel wide.
+CREATE TABLE IF NOT EXISTS komar_watchlist (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    doc_id TEXT NOT NULL,
+    page INTEGER NOT NULL DEFAULT 0,
+    image_xref INTEGER NOT NULL DEFAULT 0,
+    session_date TEXT NOT NULL DEFAULT '',
+    -- The pane's grid position in the screenshot, in source pixels.
+    row INTEGER NOT NULL DEFAULT 0,
+    column INTEGER NOT NULL DEFAULT 0,
+    ticker TEXT NOT NULL,
+    -- The change in price, signed.
+    chg REAL,
+    -- The change percentage, signed.
+    chg_pct REAL,
+    -- The three readings the change crop produced, joined. The
+    -- published value is the one two of them agreed on; the raw form
+    -- is kept so that a wrong value can be traced to its OCR.
+    raw TEXT NOT NULL DEFAULT '',
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(doc_id, row, column)
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_watchlist_doc ON komar_watchlist(doc_id);
+
+CREATE INDEX IF NOT EXISTS idx_komar_watchlist_ticker ON komar_watchlist(ticker);
+
+CREATE INDEX IF NOT EXISTS idx_komar_watchlist_date ON komar_watchlist(session_date);
+
 
 
 -- FundedMind session setups (paired from trade_signals)

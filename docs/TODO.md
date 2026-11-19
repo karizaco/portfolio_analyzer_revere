@@ -153,13 +153,14 @@ the answer is yes -- and they are a better path to a dated market read
 than the panel video frames are.**
 
 **WHAT THE CORPUS'S DAILY UPDATES ACTUALLY HOLD.** Seven "post"
-documents (the daily and mid-week updates), each with two kinds of
-image:
+documents (the daily and mid-week updates), each with one or two kinds
+of image:
 
 | the era | what it carries | can the OCR read it? |
 |---|---|---|
-| 2025 (three updates) | a full TradingView WORKSPACE at 3156x2200 or 4353x2682 -- four panels (the Nasdaq Composite with the author's own analysis boxes, the Net Highs/Lows of All US Stocks, the % of stocks above MA 200, and the NDX distance to MA 50) | **YES** -- the boxes are clear sans-serif at 25-40 px |
-| 2026 (four updates) | the market CARD (already read) and a TradingView WATCHLIST SCREENSHOT at 1080x451 -- one chart per ticker, each with the change, the change percentage and the price | **YES** -- the ticker labels are THIRTY pixels tall |
+| 2025-06-25, 2025-08-20 | a full TradingView WORKSPACE at 3156x2200 or 4353x2682 -- four panels (the Nasdaq Composite with the author's own analysis boxes, the Net Highs/Lows of All US Stocks, the % of stocks above MA 200, and the NDX distance to MA 50) | **YES** -- the boxes are clear sans-serif at 25-40 px |
+| 2025-04-08, 2026-04-15, 2026-04-29 | the market CARD (already read) and a TradingView WATCHLIST SCREENSHOT -- one chart per ticker, each with the change, the change percentage and the price | **YES** -- the ticker labels are THIRTY pixels tall |
+| 2026-05-05, 2026-05-06 | the market CARD only | not a watchlist |
 
 **MEASURED, ON THE 2025 WORKSPACE (the 4353x2682 chart of the
 2025-08-20 update):** the OCR reads the author's own boxes straight
@@ -179,25 +180,81 @@ days", "43 trading days", "81 trading days"), the net highs and lows
 exposure", "Increased exposure", "Buy signal 25 April", "Divergence!",
 "Stretched index").
 
-**MEASURED, ON THE 2026 WATCHLIST SCREENSHOT:** read one chart's header
-at a time and the tickers and their changes come out exactly --
-"AAOI ... +7.42 (5.41%)", "CRML ... -0.39 (3.31%)", "FCEL ... +1.21
-(12.17%)", "MRVL ... +2.30 (1.50%)".
+### The watchlist screenshot reader -- BUILT AND MEASURED (2026-11-19)
 
-**WHY THIS MATTERS MORE THAN THE PANEL READER.** The panel's text is
-8-13 px tall and Tesseract cannot read it (the measurement set says
-so); the screenshot's ticker labels are **30 px** and it reads them
-without trouble. So the daily updates are a **dated, per-ticker market
-read of the author's own names** -- which is the thing the position
-series wants and does not have.
+**`src/komar/watchlistReader.js` reads all three of the corpus's
+watchlist screenshots: 30 of 30 panes, 30 of 30 tickers, 28 of 30
+changes, every sign right.** It is the first reader of the three
+(readers, transcripts, screenshots) that the corpus can actually feed.
 
-**WHAT IS NOT DONE.** The reader for the screenshots does not exist
-yet: the panels' grid changes with the number of names, the screens
-are dark and want inverting, and the ticker label's row has to be
-found inside each panel. The frame is pinned
-(`test/fixtures/komar_watchlist/20260429.png`) with the rows read off
-it by eye (`expectations.json`), and `tools/extractKomarCharts.js`
-extracts the images out of the documents.
+| | |
+|---|---|
+| the reader | `src/komar/watchlistReader.js` |
+| the three frames, pinned | `test/fixtures/komar_watchlist/20250408.png`, `20260415.png`, `20260429.png` |
+| the rows they show | `test/fixtures/komar_watchlist/expectations.json` -- read off the frames BY EYE, and four of the first readings then corrected against the pixels |
+| the test that scores it | `test/komarWatchlist.test.js` |
+| the tool | `tools/extractKomarWatchlist.js` (`npm run komar:watchlist`) |
+| the table | `komar_watchlist` |
+
+**THE PANE GRID IS THE FINDING, and a reader that did not know it
+would lose a third of the corpus.** The screens are 1080 pixels wide
+with **270x150** panes, and **a row that does not fill the width is
+CENTRED** -- one pane at 405 (the 2026-04-29 frame's last row), two at
+270 and 540 (the 2026-04-15 frame's last row), three at 135, 405 and
+675 (the 2025-04-08 frame's last row, which is LEFT-aligned at 135).
+So the origins are a **half-pane grid**, and the four-column grid
+assumption loses exactly those rows.
+
+**THE SHAPE GUARD, because the market CARD is 1080 wide too.** The
+card carries a "(46.04 -0.19%)" of its own, so a percentage test takes
+it for a header -- measured: without the guard the 2026-05-05 card
+publishes a phantom `N28`. The separator is the **height**: a
+screenshot shows whole panes, so its height is a multiple of 150
+(306, 451, 604) against 692 for the card. The full-screen workspaces
+are excluded by the width (4353 / 4 = 1088 pixels to a pane).
+
+**THE FOUR RULES THE READINGS COME FROM, each measured:**
+
+1. **The change percentage is the pane marker and the sign comes from
+   the ink.** The header prints the sign on the change and none on the
+   percentage, and the printed minus is one pixel wide -- so the sign
+   is the sum of how far the header's pixels lean green or red (the
+   background (35, 38, 47) leans neither way and contributes
+   nothing).
+2. **The change is read at three scales and the majority wins**, because
+   the same pixels read `+1.21 (12.17%)` at one scale and
+   `+1.21 (12.27%)` at another. This is the project's own rule (see
+   `tools/resolveUndatedDates.js`): two independent readings have to
+   agree before anything is written.
+3. **A ticker the market does not know is read a second time at a
+   narrower width**, and the market's own list picks between them.
+   The 52-pixel crop reads a four-letter ticker whole but can pick up
+   the date beside it -- `TER` came back as `TERE` -- and `TER` is
+   what the 40-pixel crop reads.
+4. **The screens are inverted first.** The screenshots are dark, and
+   Tesseract reads dark-on-light.
+
+**WHAT IS STILL WRONG, and it is two numbers.** Both are the printed
+"+" being read as a "4":
+
+| frame | pane | the truth | what is read | why the majority does not catch it |
+|---|---|---|---|---|
+| 20260429 | SGML | `+0.49 (2.38%)` | `40.49 (2.38%)` | scales 3 and 4 both say 40.49, scale 6 says +0.49 |
+| 20250408 | GEV | `+24.97 (2.74%)` | `424.97 (2.74%)` | scales 3 and 6 both say 424.97, scale 4 says +24.97 |
+
+The percentage and the SIGN are right in both cases, so a market read
+built on them is sound; only the price move is 10x too large. Anchoring
+the crop on the change's own coloured ink (which is where the sign is
+read from anyway) was measured against this and **made it worse**: the
+thin sign stroke falls below the ink threshold, so the crop starts
+inside the number and reads `10.49`, `17.42`, `92` -- it is recorded
+here so it is not re-attempted.
+
+**THE WHOLE-SCREEN READING IS NOT USED AT ALL**, and that is the design
+rather than an oversight: at 2x the 2025-04-08 frame's first change
+comes back as the word "he" (the header merged with the chart under
+it), and at 1x the tickers come back mangled (`AER` for AEHR). Each
+cell is read on its own instead.
 
 **AND ONE FINDING WORTH RECORDING.** The document the catalog calls
 `komar_doc_post_20250408` is the file `komar_20260408.pdf` -- its

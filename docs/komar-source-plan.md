@@ -1436,5 +1436,110 @@ The order is **2 and 3 in parallel** -- they share nothing -- and **4 before
 | 6 | The 2022-2023 era shows **MarketSmith** screens as well as TradingView | **IN SCOPE** (the author's answer, 2026-11-19). It is a second panel position in a second app, so the panel geometry needs a second era for it -- which is part of the panel reader's remaining work. |
 | 7 | Should `_finished` be merged into the catalog as one corpus, or kept as two? | **MERGED, and it already is** (the author's answer, 2026-11-19): the catalog walks both folders as one corpus, and each row records the folder it came from (`komar_videos.folder`), so the three old videos in the root (43, 94, 105, 142) sit among the new ones without a second catalog. Most of the merged videos are lessons and webinars, which the scoring leaves out on purpose (evergreen teaching content, not calls with a window). |
 
+## Phase 7 as built (2026-11-19): the WATCHLIST SCREENSHOT
+
+The daily and mid-week updates carry a TradingView screenshot of the
+author's own watchlist: one chart per pane, each with the ticker, the
+date, the change and the change percentage. It is a **dated, per-ticker
+market read of the names he was watching** -- the complement of the
+setups (what he SAID) and of the trade log (what he HELD), and the only
+artifact in the corpus that answers "what was he looking at on this
+day" for the daily cadence.
+
+```bash
+npm run komar:watchlist        # -> komar_watchlist
+npm run komar:watchlist:dry
+```
+
+**THE CORPUS HOLDS THREE OF THEM** (found by `tools/extractKomarCharts.js`,
+which extracts every embedded image over 800 px from the `post` documents):
+
+| the document | the frame | the size | the panes |
+|---|---|---|---|
+| `komar_doc_post_20250408` | `test/fixtures/komar_watchlist/20250408.png` | 1080x604 | 15 -- four rows, the last one centred at 135/405/675 |
+| `komar_doc_post_20260415` | `test/fixtures/komar_watchlist/20260415.png` | 1080x306 | 6 -- two rows, the last one centred at 270/540 |
+| `komar_doc_post_20260429` | `test/fixtures/komar_watchlist/20260429.png` | 1080x451 | 9 -- three rows, the last one a single pane at 405 |
+
+The other four `post` documents do not carry one: 2025-06-25 and
+2025-08-20 carry a full-screen TradingView WORKSPACE (3156x2200 and
+4353x2682, with the author's own analysis boxes -- a separate reader,
+see `docs/TODO.md`), and 2026-05-05 and 2026-05-06 carry the market
+CARD only.
+
+**THE MEASURED STATE: 30 of 30 panes, 30 of 30 tickers, 28 of 30
+changes, every sign right.** Scored by `test/komarWatchlist.test.js`
+against `test/fixtures/komar_watchlist/expectations.json`, whose rows
+were read off the frames by eye and then verified at high magnification
+-- which corrected four of them (see below).
+
+### What the reading is built from
+
+1. **The PANE GRID, and it is a half-pane grid.** A pane is 270x150 and
+   the screen is 1080 wide, but **a row that does not fill the width is
+   CENTRED**: one pane at 405, two at 270 and 540, three at 135, 405
+   and 675. So the origins are every multiple of 135. A four-column
+   grid loses the partial last row of two of the three frames.
+2. **Every cell is read on its own; the whole-screen reading is not used
+   at all.** Measured: read at 2x, the 2025-04-08 frame's first change
+   comes back as the word "he" (the header merged with the chart under
+   it), and at 1x the tickers come back mangled (`AER` for AEHR). A
+   pane's header read alone is legible.
+3. **The sign comes from the INK.** The header prints the sign on the
+   change and none on the percentage, and the printed minus is one
+   pixel wide. So the sign is the sum of how far the header's pixels
+   lean green or red -- the background (35, 38, 47) leans neither way
+   and contributes nothing.
+4. **The change is read at three scales and the majority wins**, because
+   the same pixels read `+1.21 (12.17%)` at one scale and
+   `+1.21 (12.27%)` at another. The project's own rule: two independent
+   readings have to agree before anything is written.
+5. **A ticker the market does not know is read a second time at a
+   narrower width**, and the SEC's list picks between them (`TER` came
+   back as `TERE`, and 40 px reads `TER`).
+6. **The screens are INVERTED first** -- white text on a black chart.
+
+### The shape guard
+
+The market CARD is 1080 px wide too and carries a "(46.04 -0.19%)" of
+its own, so a percentage test alone takes it for a header -- measured:
+without the guard the 2026-05-05 card publishes a phantom `N28`. Two
+guards, both measured on the corpus:
+
+* the **pane width** must be 270 +- 12 px (which excludes the full-screen
+  workspaces: 4353 / 4 = 1088);
+* the **height** must be a whole number of 150-px panes +- 12 (which
+  excludes the cards: 692 is not, 306 / 451 / 604 are).
+
+### What is still wrong
+
+Two numbers, both the printed "+" read as a "4" at two of the three
+scales, so the majority takes the wrong value: SGML's `+0.49` reads as
+`40.49` and GEV's `+24.97` reads as `424.97`. The percentage and the
+SIGN are right in both, so the read is sound; only the price move is
+10x too large.
+
+Anchoring the crop on the change's own coloured ink -- which is where
+the sign is read from anyway -- was measured against this and **made it
+worse**: the thin sign stroke falls below the ink threshold, so the crop
+starts inside the number and reads `10.49`, `17.42`, `92`. It is
+recorded here so it is not re-attempted.
+
+### The four readings the ground truth had to correct
+
+The first reading of `expectations.json` was taken off the whole frame,
+where a hairline or a blur is invisible. At 8x-24x the pixels say:
+
+| frame | row | was | is | why |
+|---|---|---|---|---|
+| 20260429 | the third row's pane | `XNDD` | **`XNDU`** | the fourth glyph has a ROUNDED bottom: a U, not a D |
+| 20260429 | UAMY's change | `-0.46 %` | **`-8.46 %`** | the percentage's leading digit has a waist: an 8, not a 0 |
+| 20250408 | AAOI's change | `+10.92` | **`+10.19`** | the second glyph has no left shoulder: a 1, not a 9 |
+| 20250408 | the fourth pane | `SOM` | **`SQM`** | the Q's TAIL falls below the other two glyphs, and a crop that ended above it showed an O |
+
+The OCR had read all four correctly at the wide crop, which is the
+lesson: **a hand reading is a record of a reading, and it takes the
+pixels, not the prose, to check it** -- the rule the ground-truth audit
+applied to the Qullamaggie frames.
+
 
 

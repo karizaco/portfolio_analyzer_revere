@@ -569,11 +569,19 @@ O'Connell source.
    resolution the corpus holds. Measured on one frame per era; the
    crops are pinned under `test/fixtures/komar_panel/`. The reader is
    not built yet.
+4. **The daily updates' WATCHLIST SCREENSHOTs** (three: 2025-04-08,
+   2026-04-15, 2026-04-29) -- one chart per ticker with the change and
+   the change percentage, 30 names in all. **READER BUILT AND MEASURED
+   (2026-11-19): 30 of 30 panes, 30 of 30 tickers, 28 of 30 changes,
+   every sign right** (`src/komar/watchlistReader.js`, three frames
+   pinned under `test/fixtures/komar_watchlist/`, rows in
+   `komar_watchlist`).
 
 ```bash
 npm run komar:catalog       # inventory both folders, classify every file
 npm run komar:documents     # the cards, the theme leaders, the notes, the summaries
 npm run komar:tradelog      # the trade-log sheet: 32 trades
+npm run komar:watchlist     # the watchlist screenshots: 3 screenshots, 30 panes
 npm run komar:transcripts   # 65.9 hours of Deepgram -- priced before it is bought
 npm run komar:signals       # the setups, read from the transcripts
 ```
