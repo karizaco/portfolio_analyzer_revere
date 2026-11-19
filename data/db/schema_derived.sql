@@ -1209,3 +1209,79 @@ CREATE INDEX IF NOT EXISTS idx_komar_setups_ticker ON komar_setups(ticker);
 
 CREATE INDEX IF NOT EXISTS idx_komar_setups_video ON komar_setups(video_id);
 
+
+
+-- FundedMind session setups (paired from trade_signals)
+--
+-- One row per collapsed setup on a live desk video. Week Recap videos do
+-- not create setup rows; they stamp recap_verdict / recap_evidence onto
+-- setups whose session_date falls in the recap week.
+CREATE TABLE IF NOT EXISTS fundedmind_setups (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id TEXT NOT NULL,
+    session_date TEXT NOT NULL DEFAULT '',
+    host TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    title TEXT NOT NULL DEFAULT '',
+    ticker TEXT NOT NULL,
+    side TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT '',
+    start_sec REAL,
+    end_sec REAL,
+    entry_price REAL,
+    stop_price REAL,
+    targets_json TEXT NOT NULL DEFAULT '[]',
+    ticker_from TEXT NOT NULL DEFAULT '',
+    claim_kind TEXT NOT NULL DEFAULT 'forward',
+    score REAL NOT NULL DEFAULT 0,
+    evidence_json TEXT NOT NULL DEFAULT '[]',
+    events_json TEXT NOT NULL DEFAULT '[]',
+    recap_verdict TEXT NOT NULL DEFAULT '',
+    recap_evidence TEXT NOT NULL DEFAULT '',
+    recap_video_id TEXT NOT NULL DEFAULT '',
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_fundedmind_setups_video
+    ON fundedmind_setups(video_id);
+
+CREATE INDEX IF NOT EXISTS idx_fundedmind_setups_day
+    ON fundedmind_setups(session_date);
+
+CREATE INDEX IF NOT EXISTS idx_fundedmind_setups_ticker
+    ON fundedmind_setups(ticker);
+
+CREATE INDEX IF NOT EXISTS idx_fundedmind_setups_parser
+    ON fundedmind_setups(parser_version);
+
+-- martinlukkt: a trade he stated, one row per statement.
+-- A row with no ticker is kept: the verb was read and the subject was not,
+-- and dropping it would hide the miss. trade_signals gets only the rows
+-- that name a ticker.
+CREATE TABLE IF NOT EXISTS martinlukkt_trade_actions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    parser_version TEXT NOT NULL,
+    video_id TEXT NOT NULL,
+    transcript_id INTEGER NOT NULL,
+    segment_index INTEGER NOT NULL,
+    event_time_sec REAL,
+    session_date TEXT NOT NULL DEFAULT '',
+    session_kind TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL,
+    action TEXT NOT NULL,
+    side TEXT NOT NULL DEFAULT '',
+    ticker TEXT NOT NULL DEFAULT '',
+    ticker_from TEXT NOT NULL DEFAULT '',
+    price REAL,
+    stop_price REAL,
+    verb TEXT NOT NULL DEFAULT '',
+    evidence_text TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_martinlukkt_actions_video
+    ON martinlukkt_trade_actions(video_id);
+
+CREATE INDEX IF NOT EXISTS idx_martinlukkt_actions_ticker
+    ON martinlukkt_trade_actions(ticker);

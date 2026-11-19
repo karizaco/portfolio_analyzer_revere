@@ -40,6 +40,7 @@ const DERIVED_SCHEMA_PATH = path.join(ROOT, 'data', 'db', 'schema_derived.sql');
 const DERIVED_TABLES = [
   'trade_signals',
   'sevcik_setups',
+  'fundedmind_setups',
   'sevcik_ta_features',
   'market_readings',
   'asym_articles',
@@ -63,6 +64,7 @@ const DERIVED_TABLES = [
   'discord_positions',
   'discord_trade_actions',
   'discord_episodes',
+  'martinlukkt_trade_actions',
 ];
 
 /**

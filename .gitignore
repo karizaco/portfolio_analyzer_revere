@@ -32,6 +32,7 @@ data/video_pipeline/*
 # than every VTT.
 data/video_pipeline/transcripts/*.captions.benzinga.*.vtt
 data/video_pipeline/transcripts/*.captions.martinlukkt.*.vtt
+data/video_pipeline/transcripts/*.captions.fundedmind.*.vtt
 data/video_pipeline_*/
 data/video_ocr_probe/
 data/my_videos/
