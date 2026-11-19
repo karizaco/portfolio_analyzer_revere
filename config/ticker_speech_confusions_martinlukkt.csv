@@ -1,0 +1,49 @@
+# ASR confusions for the martinlukkt corpus.
+#
+# The same shape as config/ticker_ocr_confusions.csv, but these are SPEECH
+# confusions, not OCR confusions.
+#
+# Rules:
+#   the garbled form is what the ASR wrote
+#   the canonical is what the speaker said, verified by context + Yahoo
+#   every row was verified: the canonical must appear on Yahoo Finance and
+#   the evidence must name the canonical's company or fit its profile
+#   no garbled form is in the corpus lexicon (config/ticker_lexicon_martinlukkt.csv)
+#   every canonical is in the corpus lexicon
+#   no duplicate key, no chain
+#
+# SNTK -> SNDK
+#   d=1 (T->D substitution). Evidence: "SNTK, the memory name short, I
+#   covered it" and "shorted Tesla and SNTK too". He trades MU, SNDK and
+#   DRAM. SNDK is a memory stock; SNTK is not a real ticker. SMTK (also d=1)
+#   is SmartKem, a UK OTC stock he has never mentioned.
+#
+# OANDS/OMDS/ONTS -> ONDS
+#   Each is d=1 from ONDS (Ondas Inc.). Evidence: "tried some long yesterday
+#   like OANDS", "got stopped out from the OMDS", "stopped out from". All
+#   three resolve uniquely to ONDS by the shared resolver against this lexicon.
+#
+# QPTS -> QBTS
+#   d=1. "I got stopped out from my QPTS." He trades QBTS (D-Wave Quantum).
+#
+# UBTS -> QBTS
+#   d=1. "I'm shorting UBTS after being kicked out." He trades QBTS.
+#
+# OWENQ -> OPEN
+#   d=2. "I just sold my OWENQ." OPEN is Opendoor Technologies. No other
+#   candidate is in the lexicon.
+#
+# LEFT OUT (ambiguous or unverifiable):
+#   AOI  - ambiguous (AOY vs AUI, neither is AAOI which is the likely stock)
+#   DM   - was Desktop Metal (NYSE:DM, delisted Dec 2024), not in lexicon
+#   ACHL - unresolvable, may be a delisted stock he held before the channel
+#   SKX  - ambiguous (SK vs STX in this lexicon)
+#   SNTK:SNDK and 2024 shorts --- (memory name, context clear)
+garbled,canonical,reason
+SNTK,SNDK,T->D substitution; evidence: "the memory name short"
+OANDS,ONDS,d=1; unique in corpus lexicon
+OMDS,ONDS,d=1; unique in corpus lexicon
+ONTS,ONDS,d=1; unique in corpus lexicon
+QPTS,QBTS,d=1; unique in corpus lexicon
+UBTS,QBTS,d=1; unique in corpus lexicon
+OWENQ,OPEN,d=2; unique in corpus lexicon

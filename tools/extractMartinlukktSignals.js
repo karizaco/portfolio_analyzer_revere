@@ -33,11 +33,17 @@ function readFlag(argv, flag) {
 }
 
 function replaceActions(db, videoId, transcriptId, rows) {
+  // A fresh clone gets these from schema_derived.sql. An existing database
+  // has to grow them here, the same way the shared runner grows
+  // `trade_signals.claim_kind`.
+  try { db.exec('ALTER TABLE martinlukkt_trade_actions ADD COLUMN raw_ticker TEXT NOT NULL DEFAULT ""'); } catch (_) {}
+  try { db.exec('ALTER TABLE martinlukkt_trade_actions ADD COLUMN resolve_why TEXT NOT NULL DEFAULT ""'); } catch (_) {}
   db.prepare('DELETE FROM martinlukkt_trade_actions WHERE video_id = ?').run(videoId);
   const insert = db.prepare(
     'INSERT INTO martinlukkt_trade_actions (parser_version, video_id, transcript_id, segment_index, '
     + 'event_time_sec, session_date, session_kind, kind, action, side, ticker, ticker_from, price, '
-    + 'stop_price, verb, evidence_text) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    + 'stop_price, verb, evidence_text, raw_ticker, resolve_why) '
+    + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
   );
   for (const row of rows) {
     insert.run(
@@ -57,6 +63,8 @@ function replaceActions(db, videoId, transcriptId, rows) {
       row.stop_price,
       row.verb,
       row.evidence_text,
+      row.raw_ticker,
+      row.resolve_why,
     );
   }
 }

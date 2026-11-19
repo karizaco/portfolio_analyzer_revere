@@ -1273,6 +1273,11 @@ CREATE TABLE IF NOT EXISTS martinlukkt_trade_actions (
     side TEXT NOT NULL DEFAULT '',
     ticker TEXT NOT NULL DEFAULT '',
     ticker_from TEXT NOT NULL DEFAULT '',
+    -- What the ASR wrote, beside what it resolves to. A row whose raw ticker
+    -- is not the ticker is a correction, and a row whose ticker is empty is a
+    -- mishearing the reader did not repair.
+    raw_ticker TEXT NOT NULL DEFAULT '',
+    resolve_why TEXT NOT NULL DEFAULT '',
     price REAL,
     stop_price REAL,
     verb TEXT NOT NULL DEFAULT '',

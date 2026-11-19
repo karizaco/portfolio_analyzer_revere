@@ -11,7 +11,7 @@ const { signalRows, tradesFromSegments } = require('../src/martinlukkt/signalRow
 
 const BOUGHT = [
   { start_sec: 2195, text: 'I bought' },
-  { start_sec: 2200, text: 'ACHL would be the entry was' },
+  { start_sec: 2200, text: 'MU would be the entry was' },
 ];
 
 test('a buy with the ticker in the next segment is a forward long', () => {
@@ -20,7 +20,7 @@ test('a buy with the ticker in the next segment is a forward long', () => {
     video_id: 'NUT6d6Hvbmw',
   });
   assert.equal(rows.length, 1);
-  assert.equal(rows[0].ticker, 'ACHL');
+  assert.equal(rows[0].ticker, 'MU');
   assert.equal(rows[0].action, 'buy');
   assert.equal(rows[0].bias, 'bullish');
   assert.equal(rows[0].claim_kind, 'forward');
@@ -47,6 +47,27 @@ test('a review stream is history, even when he says he bought', () => {
     video_id: 'review',
   });
   assert.equal(rows[0].claim_kind, 'retrospective');
-  assert.equal(rows[0].ticker, 'ACHL');
+  assert.equal(rows[0].ticker, 'MU');
   assert.equal(rows[0].session_kind, 'review');
+});
+
+test('a misheard name resolves to the stock he meant, and the raw read is kept', () => {
+  const rows = tradesFromSegments(
+    [{ start_sec: 10, text: "And SNTK, the memory name short, I covered it." }],
+    { title: 'Memory shorts | 28 Oct 2026', video_id: 'x' },
+  );
+  assert.equal(rows[0].ticker, 'SNDK');
+  assert.equal(rows[0].raw_ticker, 'SNTK');
+  assert.equal(rows[0].resolve_why, 'confusion');
+  assert.equal(signalRows(rows).length, 1);
+});
+
+test('a word the corpus does not know is not published as a holding', () => {
+  const rows = tradesFromSegments(
+    [{ start_sec: 10, text: 'I bought ZQXVB today.' }],
+    { title: 'Test | 28 Oct 2026', video_id: 'x' },
+  );
+  assert.equal(rows[0].ticker, '');
+  assert.equal(rows[0].raw_ticker, 'ZQXVB');
+  assert.equal(signalRows(rows).length, 0);
 });

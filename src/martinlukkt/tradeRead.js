@@ -19,9 +19,20 @@
 // entry" and "you still bought there" are not his.
 
 const { findPrices } = require('../discord/tradeActions');
+const { JARGON } = require('../discord/symbols');
 
 /** Words that make the verb after them something that has not happened. */
-const INTENT_BEFORE = /\b(?:if|unless|until|would\s+like|like\s+to|want(?:ing)?\s+to|looking\s+to|might|may|could|should|watching|consider(?:ing)?|explain|thinking(?:\s+about)?)\b/i;
+const INTENT_BEFORE = /\b(?:if|unless|until|would\s+like|like\s+to|want(?:ing)?\s+to|looking\s+to|might|may|could|should|watching|consider(?:ing)?|explain|thinking(?:\s+about)?|afraid)\b/i;
+
+/**
+ * A negation of the verb that follows it.
+ *
+ * "I'm not shorting IWM" is not a short. This is separate from INTENT_BEFORE,
+ * which is about the FUTURE ("I'm going to short"); this is about a trade he
+ * says he did NOT take. Only a negation that sits IMMEDIATELY before the
+ * verb counts, so "I was not able to buy, so I shorted X" keeps its short.
+ */
+const NEGATED = /\b(?:not|never|no longer|n't)\s*$/i;
 
 const FIRST_PERSON = /\b(?:i|i'm|im|i’ve|i've)\b/i;
 
@@ -29,9 +40,78 @@ const VERBS = [
   { action: 'stop_out', side: '', pattern: /\b(?:got\s+stopped|stopped\s+out|was\s+stopped)\b/i },
   { action: 'exit', side: '', pattern: /\b(?:covered|covering|sold|selling|closed|closing)\b/i },
   { action: 'trim', side: '', pattern: /\b(?:trimmed|trimming|reduc(?:ed|ing)\s+(?:my\s+)?exposure)\b/i },
-  { action: 'open', side: 'short', pattern: /\b(?:short(?:ed|ing)?|shorts)\b/i },
-  { action: 'open', side: 'long', pattern: /\b(?:bought|buying|long(?:ed)?)\b/i },
+  // "short" and "long" are nouns in a trading sentence as often as they are
+  // verbs: "for a short entry", "this AAP long", "the long side". The guard
+  // is the same one the Discord reader uses, plus "entry" and "position",
+  // which the corpus needed.
+  {
+    action: 'open',
+    side: 'short',
+    pattern: /\bshort(?:ed|ing)?\b(?!\s*(?:term|entry|side|set\s?ups?|watch|interest|squeeze|list|covering|position|thesis|idea))/i,
+  },
+  {
+    action: 'open',
+    side: 'long',
+    pattern: /\b(?:bought|buying)\b/i,
+  },
+  {
+    action: 'open',
+    side: 'long',
+    pattern: /\blong(?:ed|s)?\b(?!\s*(?:term|as\b|way|time|side|set\s?ups?|watch|run|weekend|ago|enough|list|entry|position|thesis|idea|and|but))/i,
+  },
 ];
+
+/** A capitals token: 2-5 letters, standing on its own. */
+const TOKEN = /(?<![A-Za-z0-9$])([A-Z]{2,5})(?![A-Za-z0-9])/g;
+
+/**
+ * The capitals tokens of a text, with the jargon and the two-word names out.
+ *
+ * A capitals token that is the first word of a NAME ("SK Hynix", "Rocket
+ * Lab") is not a symbol. The next word starts with a capital and then a
+ * lower-case letter, and the whole phrase is a company.
+ *
+ * @param {string} text
+ * @returns {{index: number, ticker: string}[]}
+ */
+function capitalTokens(text) {
+  const out = [];
+  TOKEN.lastIndex = 0;
+  let match;
+  while ((match = TOKEN.exec(text)) !== null) {
+    if (JARGON.has(match[1])) continue;
+    const rest = text.slice(match.index + match[1].length);
+    if (/^\s+[A-Z][a-z]/.test(rest)) continue;
+    out.push({ index: match.index, ticker: match[1] });
+  }
+  return out;
+}
+
+/**
+ * The ticker a trade is ABOUT.
+ *
+ * The rule is ADJACENCY, not order. Measured on the corpus: taking the first
+ * capitals token in the segment published "VWAP" (an indicator), "SK" out of
+ * "SK Hynix" (a company), and "IWM" out of "the weakness of IWM" (the
+ * market he was watching, not the name he traded). The name that belongs to
+ * the verb is the one beside it.
+ *
+ * So: the token right AFTER the verb wins; failing that, the token right
+ * BEFORE it.
+ *
+ * @param {string} text
+ * @param {number} verbIndex - where the verb starts
+ * @param {number} verbLength
+ * @returns {string}
+ */
+function subjectTicker(text, verbIndex, verbLength) {
+  const tokens = capitalTokens(text);
+  if (!tokens.length) return '';
+  const after = tokens.filter((token) => token.index >= verbIndex + verbLength);
+  const before = tokens.filter((token) => token.index < verbIndex);
+  const chosen = after.length ? after[0] : (before.length ? before[before.length - 1] : null);
+  return chosen ? chosen.ticker : '';
+}
 
 /**
  * The first-person trade in one segment, or null.
@@ -55,6 +135,7 @@ function readSegment(text) {
 
   const before = raw.slice(0, best.index);
   if (INTENT_BEFORE.test(before)) return null;
+  if (NEGATED.test(before)) return null;
   // "you still bought" is not his, even if "I" appears elsewhere.
   if (/\byou\b/i.test(before) && !/\bi\b/i.test(before)) return null;
 
@@ -70,28 +151,25 @@ function readSegment(text) {
     price: entry ? entry.value : null,
     side: best.side,
     stop_price: stopPrice,
+    subject: subjectTicker(raw, best.index, best.word.length),
     verb: best.word.toLowerCase(),
   };
 }
-
-const NOT_A_TICKER = new Set([
-  'THE', 'AND', 'FOR', 'YOU', 'THIS', 'THAT', 'EMA', 'LOD', 'HOD', 'USD',
-  'ETF', 'ADR', 'NASDAQ', 'AMEX', 'INC',
-]);
 
 /**
  * Uppercase ticker-shaped tokens in one caption line.
  *
  * Auto-captions capitalise a heard symbol and leave the rest in sentence
  * case, so the capitals are the evidence. "ACHL would be the entry" yields
- * ACHL. "EMA" is the indicator label, not a holding.
+ * ACHL. The shared jargon list refuses the indicator labels ("EMA",
+ * "VWAP", "LOD"), which are never holdings, and the two-word names ("SK
+ * Hynix") are refused by the same rule the subject uses.
  *
  * @param {string} text
  * @returns {string[]}
  */
 function tickersIn(text) {
-  const found = String(text || '').match(/\b[A-Z]{2,5}\b/g) || [];
-  return [...new Set(found.filter((token) => !NOT_A_TICKER.has(token)))];
+  return capitalTokens(text).map((token) => token.ticker);
 }
 
 /**
@@ -111,15 +189,18 @@ function readTrades(segments) {
   for (let i = 0; i < rows.length; i += 1) {
     const read = readSegment(rows[i].text);
     if (!read) continue;
-    let tickers = tickersIn(rows[i].text);
+    let ticker = read.subject || '';
     let tickerFrom = 'segment';
     const next = rows[i + 1];
-    if (!tickers.length && next) {
+    if (!ticker && next) {
       const gap = Number(next.start_sec) - Number(rows[i].start_sec);
       const close = !Number.isFinite(gap) || gap <= 20;
       if (close) {
-        tickers = tickersIn(next.text);
-        if (tickers.length) tickerFrom = 'next_segment';
+        const candidates = tickersIn(next.text);
+        if (candidates.length) {
+          ticker = candidates[0];
+          tickerFrom = 'next_segment';
+        }
       }
     }
     out.push({
@@ -127,8 +208,8 @@ function readTrades(segments) {
       evidence_text: String(rows[i].text || '').trim(),
       segment_index: i,
       start_sec: rows[i].start_sec,
-      ticker: tickers[0] || '',
-      ticker_from: tickers.length ? tickerFrom : '',
+      ticker,
+      ticker_from: ticker ? tickerFrom : '',
     });
   }
   return out;

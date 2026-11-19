@@ -12,6 +12,7 @@
 
 const { readTrades } = require('./tradeRead');
 const { dateFromTitle, sessionKind } = require('./contentFilter');
+const { resolveSpokenTicker } = require('./lexicon');
 
 const PARSER_VERSION = 'martinlukkt-signals-1';
 
@@ -26,6 +27,7 @@ function tradesFromSegments(segments, video) {
   return readTrades(segments).map((trade) => {
     const claimKind = kind === 'review' ? 'retrospective' : (trade.kind === 'plan' ? 'plan' : 'forward');
     const bias = trade.side === 'long' ? 'bullish' : (trade.side === 'short' ? 'bearish' : 'neutral');
+    const resolved = resolveSpokenTicker(trade.ticker);
     return {
       action: sharedAction(trade),
       bias,
@@ -41,6 +43,8 @@ function tradesFromSegments(segments, video) {
       price: trade.price,
       rationale: '',
       raw_action: trade.action,
+      raw_ticker: trade.ticker,
+      resolve_why: resolved.why,
       segment_end_index: trade.segment_index,
       segment_index: trade.segment_index,
       segment_start_index: trade.segment_index,
@@ -50,7 +54,7 @@ function tradesFromSegments(segments, video) {
       stop_price: trade.stop_price,
       target_price_high: null,
       target_price_low: null,
-      ticker: trade.ticker,
+      ticker: resolved.ticker,
       ticker_from: trade.ticker_from,
       transcript_id: null,
       verb: trade.verb,
@@ -68,7 +72,7 @@ function sharedAction(trade) {
   return trade.action || '';
 }
 
-/** Rows the ticker table can hold. A statement with no ticker is not one. */
+/** Rows the ticker table can hold. A statement with no resolvable ticker is not one. */
 function signalRows(trades) {
   return trades.filter((trade) => trade.ticker);
 }
