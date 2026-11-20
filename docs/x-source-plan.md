@@ -1486,6 +1486,53 @@ other source's interpretations are), and **an X run also writes a
 `catalog_runs` row** (so the one table every source writes to shows every
 source's runs).
 
+### And four in the BROWSER route (2026-11-20)
+
+The browser route is the one that has never been driven against a live
+page, so its rules were read against the plan rather than measured. Four
+of them were not implemented at all, or were implemented in a way that
+could not do what the plan says.
+
+| # | the defect | why it mattered | the fix |
+|---|---|---|---|
+| 12 | **A dense window was never split.** `splitWindow()` existed and nothing called it. | §3.7 says a window is split into weeks when its expected count is over about 400 posts, "because a long scroll is where challenges and rate limits bite". A busy account's month was one scroll of hundreds of posts. | The plan is split by the density of the windows the account has already crawled — the browser route has no count endpoint, so that is the only estimate there is. |
+| 13 | **`UserMedia` was in the capture filter, and `UserByScreenName` was not.** | A media grid is not a timeline: a media entry can carry a tweet from a moment the window does not cover. And the user lookup is what carries the account's NUMERIC id, which the page-scrape route cannot produce a record without. | `UserMedia` is out, `UserByScreenName` is in — and its ids are harvested into the handle -> id map the DOM route needs, and pinned on the account when they resolve. |
+| 14 | **The reply context was found by scanning every `div`.** | The first div whose text starts with "Replying to" is as often a CONTAINER as the marker, and then the article's own links are collected as well — so the reply policy is applied to the WRONG handle, and a wrong handle flips `self_thread` and with it whether the post is kept. | The marker is `[data-testid="reply"]`, with a fallback that rejects a div holding the article or the tweet text. |
+| 15 | **The t.co stripper's alphabet excluded `-` and `_`.** | The two routes disagreed about the same post, and the extractor read a URL as content. | The alphabet now covers both. |
+
+### And the CATALOG import tools (2026-11-20)
+
+The two import tools that write `videos` were the older generation of the
+same idea, and they carried the same class of defect the X import did.
+
+- **`tools/importQmgChannel.js` wrote NO `catalog_runs` row at all** --
+  the open defect recorded in CLAUDE.md, "a second writer of `videos`
+  with no audit row". It now writes one at the START, before the network
+  work that can fail, and fills the counters in as it goes.
+- **It could not insert a row at all.** It wrote `status = 'cataloged'`,
+  and the schema's CHECK accepts only `pending | downloading | scanning |
+  review | done | no_match | error`. Every insert failed, and the old
+  per-row loop counted the failure as neither inserted nor skipped. The
+  status is now `pending` -- the catalog's own vocabulary.
+- **It spawned a Python process PER ROW** -- 539 interpreter starts to
+  write 539 rows. It is now one batch in one process.
+- **`tools/importFlatListing.js` wrote its audit row INSIDE the
+  transaction that wrote the rows**, so an interrupted import left
+  neither. The row goes in first, in its own transaction.
+- **Its listing reader decoded the file as cp1252 ALWAYS**, which mangles
+  every non-ASCII character of a UTF-8 listing, and it detected the
+  separator PER LINE, so a title containing a tab could shift the
+  separator halfway down the file. It now decodes UTF-8 first and falls
+  back to cp1252, and detects the separator once for the file -- the
+  Python worker's rule, in `read_wanted_rows`.
+- **Both tools take `--channel`, `--source-url` and `--db`**, so the
+  channel is an argument rather than a constant and the tools can be
+  exercised against a scratch catalog.
+
+The two listing readers cannot share an implementation across the
+language boundary, so they share a RULE and a FIXTURE instead, and each
+is pinned: `test/catalogImportTools.test.js`.
+
 ### Not verified yet (needs your keys or your login)
 
 - **The real GraphQL shape.** The fixtures are synthetic, modelled on the

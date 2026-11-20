@@ -32,6 +32,15 @@ const API_QUERY_KINDS = {
 /** The browser uses one search per window; the importer applies the policy. */
 const BROWSER_QUERY_KIND = 'all_own';
 
+/**
+ * The expected count over which a browser window is split.
+ *
+ * A long scroll is where the challenges and the rate limits bite, so a
+ * dense window is cut into shorter ones. The plan's figure is "about
+ * 400 posts".
+ */
+const DENSE_WINDOW_POSTS = 400;
+
 function toDate(value) {
   const text = String(value || '').slice(0, 10);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) throw new Error(`not a date: ${value}`);
@@ -153,6 +162,54 @@ function uncoveredRanges(existing, start, end) {
 }
 
 /**
+ * The posts a window is expected to hold, from a density in posts a day.
+ *
+ * The browser route has no count endpoint, so its expected count comes
+ * from the density of the windows around it -- the only estimate there
+ * is.
+ *
+ * @param {{start: string, end: string}} window
+ * @param {number} postsPerDay
+ * @returns {number|null}
+ */
+function expectedForDensity(window, postsPerDay) {
+  const days = (Date.parse(`${window.end}T00:00:00Z`) - Date.parse(`${window.start}T00:00:00Z`)) / 86400000;
+  if (!(days > 0)) return null;
+  return Math.round(postsPerDay * days);
+}
+
+/**
+ * Split the windows whose expected count is over the threshold.
+ *
+ * A long scroll is where the challenges and the rate limits bite, so a
+ * dense window is cut into shorter ones. The threshold is the plan's:
+ * about 400 posts.
+ *
+ * @param {Array<{start: string, end: string}>} plan
+ * @param {object} options
+ * @param {number} [options.postsPerDay] - 0 means "no estimate", and nothing is split
+ * @param {number} [options.threshold]
+ * @param {'week'|'day'} [options.unit]
+ * @returns {Array<{start: string, end: string}>}
+ */
+function splitDenseWindows(plan, options = {}) {
+  const postsPerDay = Number(options.postsPerDay) || 0;
+  const threshold = Number.isFinite(options.threshold) ? options.threshold : 400;
+  const unit = options.unit || 'week';
+  if (!(postsPerDay > 0)) return plan;
+  const out = [];
+  for (const window of plan) {
+    const expected = expectedForDensity(window, postsPerDay);
+    if (expected === null || expected <= threshold) {
+      out.push(window);
+      continue;
+    }
+    out.push(...splitWindow(window, unit));
+  }
+  return out;
+}
+
+/**
  * Is a window complete? (The rule both routes share.)
  *
  * THREE THINGS MUST HOLD
@@ -197,10 +254,13 @@ function windowVerdict(input) {
 module.exports = {
   API_QUERY_KINDS,
   BROWSER_QUERY_KIND,
+  DENSE_WINDOW_POSTS,
   addUnit,
   browserSearchUrl,
+  expectedForDensity,
   planWindows,
   shift,
+  splitDenseWindows,
   splitWindow,
   uncoveredRanges,
   windowVerdict,

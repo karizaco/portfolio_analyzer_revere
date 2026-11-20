@@ -19,14 +19,24 @@ function extractVisibleArticles() {
     const link = timeEl ? timeEl.closest('a[href*="/status/"]') : article.querySelector('a[href*="/status/"]');
     const textEl = article.querySelector('[data-testid="tweetText"]');
     const social = article.querySelector('[data-testid="socialContext"]');
+    // THE REPLY CONTEXT.
+    //
+    // X marks it with [data-testid="reply"]; the older markup has a div
+    // whose text starts with "Replying to". Scanning EVERY div and taking
+    // the first match finds a CONTAINER div as often as the marker itself
+    // -- and then collects the article's own links as well, so the reply
+    // policy is applied to the wrong handle. A wrong handle here flips
+    // `self_thread`, and with it whether the post is kept at all.
+    const replyContext = article.querySelector('[data-testid="reply"]')
+      || [...article.querySelectorAll('div')].find((div) => div.childElementCount
+        && /^Replying to/.test(div.innerText || '')
+        && !div.querySelector('article')
+        && !div.querySelector('[data-testid="tweetText"]'));
     const replyingTo = [];
-    for (const div of article.querySelectorAll('div')) {
-      if (div.childElementCount && /^Replying to/.test(div.innerText || '')) {
-        for (const a of div.querySelectorAll('a[href^="/"]')) {
-          const handle = (a.getAttribute('href') || '').replace(/^\//, '');
-          if (/^[A-Za-z0-9_]{1,15}$/.test(handle)) replyingTo.push(handle);
-        }
-        break;
+    if (replyContext) {
+      for (const a of replyContext.querySelectorAll('a[href^="/"]')) {
+        const handle = (a.getAttribute('href') || '').replace(/^\//, '');
+        if (/^[A-Za-z0-9_]{1,15}$/.test(handle)) replyingTo.push(handle);
       }
     }
     out.push({

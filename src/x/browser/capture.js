@@ -16,8 +16,14 @@ const TIMELINE_OPERATIONS = new Set([
   'UserTweetsAndReplies',
   'SearchTimeline',
   'TweetDetail',
-  'UserMedia',
+  // The USER lookup. It carries no posts, but it carries the account's
+  // numeric user id -- which the page-scrape route cannot do without: a
+  // DOM record needs the user id, and the DOM carries only the handle.
+  'UserByScreenName',
 ]);
+// `UserMedia` was in this list and is NOT: it is a media grid, not a
+// timeline, and a media entry can carry a tweet the crawler never
+// scrolled to -- a post from a moment the window does not cover.
 
 const GRAPHQL_PATH = /\/i\/api\/graphql\/[A-Za-z0-9_-]+\/([A-Za-z]+)(?:\?|$)/;
 

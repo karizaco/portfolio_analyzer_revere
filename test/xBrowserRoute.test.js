@@ -15,6 +15,8 @@ const { detectStopSignal, isEmptyResult } = require('../src/x/browser/signals');
 const { createScrollTracker, jitter } = require('../src/x/browser/scroll');
 const { defaultProfileDir, isInsideRepo, timelineOperation } = require('../src/x/browser/capture');
 const { acquireLock } = require('../src/x/lock');
+const { findUserIds } = require('../src/x/normalizeGraphql');
+const { expectedForDensity, splitDenseWindows } = require('../src/x/windows');
 const { normalizeAgentRecord, normalizeDomPost, isRepostContext, isPinnedContext } = require('../src/x/normalizeDom');
 const { USER, idAt } = require('./fixtures/x/scenario');
 
@@ -79,6 +81,43 @@ test('the capture matches GraphQL by operation name, whatever the rotating query
   assert.equal(timelineOperation('https://x.com/i/api/graphql/zzz999/UserTweets?variables=1'), 'UserTweets');
   assert.equal(timelineOperation('https://x.com/i/api/graphql/abc/HomeTimeline?x=1'), null, 'not an operation we read');
   assert.equal(timelineOperation('https://x.com/home'), null);
+  // The USER lookup carries the numeric id the page-scrape route needs,
+  // and it is in the filter for that reason.
+  assert.equal(timelineOperation('https://x.com/i/api/graphql/abc/UserByScreenName?variables=1'), 'UserByScreenName');
+  // A media grid is not a timeline: it can carry a tweet from a moment
+  // the window does not cover.
+  assert.equal(timelineOperation('https://x.com/i/api/graphql/abc/UserMedia?variables=1'), null,
+    'UserMedia is a media grid, not a timeline');
+});
+
+test('a dense window is split into weeks, from the density of the windows already crawled', () => {
+  // A long scroll is where the challenges and the rate limits bite, so a
+  // window expected to hold more than about 400 posts is cut up. The
+  // browser route has no count endpoint, so the density comes from the
+  // windows the account has already crawled.
+  const plan = [{ start: '2026-01-01', end: '2026-02-01' }];
+  assert.deepEqual(splitDenseWindows(plan, { postsPerDay: 1 }), plan, 'a sparse account is not split');
+  assert.deepEqual(splitDenseWindows(plan, { postsPerDay: 0 }), plan, 'with no estimate, nothing is split');
+  const split = splitDenseWindows(plan, { postsPerDay: 30, threshold: 400, unit: 'week' });
+  assert.ok(split.length > 1, 'a dense window is split');
+  // The plan is newest first, like every window plan here.
+  const asc = [...split].sort((a, b) => (a.start < b.start ? -1 : 1));
+  assert.equal(asc[0].start, '2026-01-01');
+  assert.equal(asc[asc.length - 1].end, '2026-02-01', 'the split covers the same ground');
+  for (let i = 1; i < asc.length; i += 1) {
+    assert.equal(asc[i].start, asc[i - 1].end, 'the pieces are contiguous');
+  }
+  assert.equal(expectedForDensity({ start: '2026-01-01', end: '2026-02-01' }, 30), 930);
+});
+
+test('the web app\'s user lookup carries the numeric id the page scrape needs', () => {
+  // A DOM record needs the user id, and the page carries only the handle
+  // -- so without this response the whole page-scrape route is refused.
+  const body = { data: { user_result: { result: { rest_id: '123456789', legacy: { screen_name: 'TestTrader' } } } } };
+  const ids = findUserIds(body);
+  assert.equal(ids.get('testtrader'), '123456789');
+  const modern = { data: { user_result: { result: { rest_id: '987654321', core: { screen_name: 'OtherGuy' } } } } };
+  assert.equal(findUserIds(modern).get('otherguy'), '987654321');
 });
 
 test('the browser profile (it holds the X session) lives outside the repository by default', () => {

@@ -660,7 +660,7 @@ Results: `data/qmg_alt_batch_results.json`.
 - `src/report/t3liveReport.js` — the dashboard (`data/t3live_report.html`), written by the aggregator; reads `t3live_outcome_summary.json` when it exists
 - `tools/fetchTranscriptChunks.js` — serial, chunked, captions-only fetch over an id list; stops on a 429, and does not mistake a chunk of quarantined videos for one
 - `tools/fetchDeepgramBatch.js` — chunked Deepgram runner over an id list, for the videos with no captions; resumable (skips ids with a transcript on disk), deletes the audio after each transcript, stops when a whole chunk lands nothing
-- `tools/importFlatListing.js` — imports a flat `id<TAB>title` listing (no dates) into `videos`
+- `tools/importFlatListing.js` — imports a flat `id<TAB>title` listing (no dates) into `videos`. It writes its `catalog_runs` row **before** the transaction that writes the rows, so an interrupted import still leaves a row; and it reads the listing the way the Python worker does (UTF-8 first, cp1252 fallback, one separator for the whole file). `--db` points it at a scratch catalog.
 - `tools/surveyT3liveNames.js` — reports which spoken names resolve and which do not; writes `data/t3live_name_candidates.csv`. The rows the confirmed table has to grow.
 
 ### Benzinga (English transcript source — see § 'The Benzinga source')
@@ -2821,7 +2821,7 @@ three separate causes, and only one of them was a defect:
 | cause | rows it explains | a defect? |
 |---|---|---|
 | the table counts runs, not videos | the whole shape of it | no |
-| `tools/importQmgChannel.js` writes `videos` and **never** writes `catalog_runs` | 539 Qullamaggie rows (2026-09-19) | yes — a second writer with no audit |
+| `tools/importQmgChannel.js` writes `videos` and **never** writes `catalog_runs` | 539 Qullamaggie rows (2026-09-19) | yes — a second writer with no audit (**closed 2026-11-20**) |
 | `fill-dates` wrote its audit row only at the very end | 1,582 Revere rows (2026-10-26) | yes — the audit was lost with the run |
 
 **The third was the big one, and it is fixed.** `fill-dates` saved its data
@@ -2853,10 +2853,42 @@ what it actually managed. Pinned by
 leaves an audit row"*, which hangs the fake yt-dlp, kills the worker, and
 asserts the row is still there with `inserted_count` = the rows that landed.
 
-The second cause is still open: `tools/importQmgChannel.js` is a second writer
-of `videos` with no audit row at all. It is a one-off import script for the
-Qullamaggie channel, so the rows it wrote are real and the campaign is
-recoverable — but nothing records that it happened.
+The second cause is closed (2026-11-20): `tools/importQmgChannel.js` is no
+longer a second writer of `videos` with no audit row. It now writes a
+`catalog_runs` row **at the start**, before the network work that can fail,
+and fills the counters in as it goes — so an interrupted run still leaves a
+row, and the row says what it did. Three more defects went with it:
+
+- **The tool could not insert a row at all.** It wrote
+  `status = 'cataloged'`, and the schema's CHECK constraint accepts only
+  `pending | downloading | scanning | review | done | no_match | error`.
+  Every insert failed, and the old per-row loop caught the error and
+  counted it as neither inserted nor skipped. The status is now
+  **`pending`** — the catalog's own vocabulary: the row exists and the
+  media has not been fetched (`src/video/videoStatus.js`).
+- **The insert spawned a Python process PER ROW** — 539 interpreter
+  starts to write 539 rows. It is now ONE batch in ONE process.
+- **The channel was a constant.** `--channel` and `--source-url` are
+  arguments now, with the Qullamaggie values as the defaults.
+- **The date fetch asked for a bot-blocked client.** The tool used
+  `player_client=web_safari`, which this project's own rules call out as
+  bot-blocked — it returns nothing, so every date fetch failed. It is now
+  `mweb`, the catalog's measured fast metadata path (4.2 s a video, and
+  it works).
+
+`tools/importFlatListing.js` had the same class of defect: its audit row
+was written **inside** the transaction that wrote the rows, so an
+interrupted import left neither. The row now goes in first, in its own
+transaction, and its counters are filled in afterwards. Its listing reader
+also decoded the file as cp1252 **always**, which mangles every non-ASCII
+character of a UTF-8 listing; it now decodes UTF-8 first and falls back to
+cp1252, which is the rule the Python worker uses. Both tools take a
+`--db` path, so they can be exercised against a scratch catalog.
+
+Pinned by `test/catalogImportTools.test.js` — the audit rows, the counters,
+the UTF-8 and cp1252 titles, the literal-`\t` separator, and a
+source-level assertion that the audit row is written **before** the
+transaction that writes the rows.
 
 ### `fill-dates` builds its own work list
 

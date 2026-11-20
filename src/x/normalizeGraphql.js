@@ -216,6 +216,53 @@ function normalizeTweet(tweet, fetchedAt) {
 }
 
 /**
+ * A screen name, wherever it lives.
+ *
+ * It moved from `user.legacy.screen_name` to `user.core.screen_name` in
+ * 2025, so both are read.
+ *
+ * @param {*} user
+ * @returns {string}
+ */
+function screenNameOf(user) {
+  if (!user || typeof user !== 'object') return '';
+  return (user.core && user.core.screen_name) || (user.legacy && user.legacy.screen_name) || '';
+}
+
+/**
+ * The user ids a GraphQL response carries.
+ *
+ * The page-scrape route needs the account's NUMERIC user id, and the page
+ * carries only the handle -- so the id has to come from the web app's own
+ * user lookup (`UserByScreenName`). Without it a DOM record cannot be
+ * validated, and the whole page-scrape route is refused.
+ *
+ * The response is not a documented shape, so the walk is tolerant: a USER
+ * is an object with a `rest_id` and a screen name. A POST is not -- it has
+ * a `rest_id` too, and its author is under `core.user_results` -- so a
+ * post is never mistaken for the account it belongs to.
+ *
+ * @param {*} body
+ * @returns {Map<string, string>} handle -> user id
+ */
+function findUserIds(body) {
+  const out = new Map();
+  const walk = (node) => {
+    if (!node || typeof node !== 'object') return;
+    if (Array.isArray(node)) {
+      for (const item of node) walk(item);
+      return;
+    }
+    const id = node.rest_id ? String(node.rest_id) : '';
+    const handle = screenNameOf(node);
+    if (id && handle && !(node.core && node.core.user_results)) out.set(handle.toLowerCase(), id);
+    for (const value of Object.values(node)) walk(value);
+  };
+  walk(body);
+  return out;
+}
+
+/**
  * Normalize one captured GraphQL response body.
  *
  * @param {object} body
@@ -268,4 +315,4 @@ function findCursors(body) {
   return cursors;
 }
 
-module.exports = { collectTweetResults, findCursors, normalizeGraphqlResponse, normalizeTweet, unwrap };
+module.exports = { collectTweetResults, findCursors, findUserIds, normalizeGraphqlResponse, normalizeTweet, unwrap };

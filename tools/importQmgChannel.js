@@ -24,7 +24,6 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const dbPath       = path.resolve('data/video_pipeline/state.sqlite');
 const CHANNEL      = 'qullamaggie';
 const CHANNEL_URL  = 'https://www.youtube.com/@Qullamaggie/videos';
 const BATCH_SIZE   = 25;
@@ -36,13 +35,34 @@ const limitArg = (() => {
   const i = argv.indexOf('--limit');
   return i !== -1 ? Number(argv[i + 1]) : 0;
 })();
+const flag = (name, fallback) => {
+  const i = argv.indexOf(name);
+  return i !== -1 && argv[i + 1] ? argv[i + 1] : fallback;
+};
+// WHICH channel, and WHICH listing of it. The tool was written for the
+// Qullamaggie videos tab; both are now arguments.
+const channel    = flag('--channel', CHANNEL);
+const channelUrl = flag('--source-url', CHANNEL_URL);
+// WHERE the catalog is. A scratch copy is how the tool is tested without
+// touching the real one.
+const dbPath     = path.resolve(flag('--db', 'data/video_pipeline/state.sqlite'));
 
 // ── helpers ────────────────────────────────────────────────────────────────────
 
 const py = process.platform === 'win32' ? 'py' : 'python3';
 
+// The yt-dlp to run. A path to a SCRIPT works as well as the module, and
+// that is how the tool is exercised without touching YouTube -- the same
+// shape the Python worker is tested with.
+const YTDLP = (() => {
+  const custom = flag('--ytdlp', '');
+  if (!custom) return { cmd: py, args: ['-3', '-m', 'yt_dlp'] };
+  if (custom.endsWith('.py')) return { cmd: py, args: ['-3', custom] };
+  return { cmd: custom, args: [] };
+})();
+
 function ytdlp(args, timeout = 60) {
-  const r = spawnSync(py, ['-3', '-m', 'yt_dlp', ...args], {
+  const r = spawnSync(YTDLP.cmd, [...YTDLP.args, ...args], {
     encoding: 'utf8',
     timeout: timeout * 1000,
     stdio: ['ignore', 'pipe', 'pipe']
@@ -65,11 +85,74 @@ print(json.dumps([dict(r) for r in rows], default=str))
   return JSON.parse(r.stdout.trim() || '[]');
 }
 
-function sqliteRun(sql, params = []) {
+/**
+ * Run one statement over MANY rows, in ONE process.
+ *
+ * The insert used to spawn a Python process PER ROW -- 539 of them for a
+ * full channel -- which is 539 interpreter starts to write 539 rows.
+ */
+function sqliteRunBatch(sql, rows) {
+  if (!rows.length) return 0;
   const script = `
 import sqlite3
 conn = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
-conn.execute(${JSON.stringify(sql)}, ${JSON.stringify(params)})
+conn.executemany(${JSON.stringify(sql)}, ${JSON.stringify(rows)})
+conn.commit()
+print(conn.total_changes)
+`.trim();
+  const r = spawnSync(py, ['-3', '-c', script], { encoding: 'utf8', maxBuffer: 1024 * 1024 * 64 });
+  if (r.status !== 0) throw new Error(r.stderr || 'sqlite error');
+  return Number(String(r.stdout || '0').trim()) || 0;
+}
+
+/**
+ * Write ONE row into catalog_runs, and return its id.
+ *
+ * Every source writes a catalog_runs row, and a reader of that table
+ * expects to see every source's runs. This tool wrote NONE -- it was the
+ * documented open defect: "a second writer of `videos` with no audit row
+ * at all".
+ */
+function recordCatalogRun(row) {
+  const script = `
+import sqlite3
+conn = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
+cur = conn.execute(
+  "INSERT INTO catalog_runs (source_url, channel, command_json, raw_output_path, row_count,"
+  " inserted_count, updated_count, missing_upload_dates, malformed_rows, created_at, kind,"
+  " not_listed_count, listing_complete, row_count_kind)"
+  " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), 'live', 0, ?, 'listing_rows')",
+  (${JSON.stringify(row.source_url)}, ${JSON.stringify(row.channel)}, ${JSON.stringify(row.command_json)},
+   ${JSON.stringify(row.raw_output_path)}, ${row.row_count}, ${row.inserted_count}, ${row.updated_count},
+   ${row.missing_upload_dates}, ${row.malformed_rows}, ${row.listing_complete})
+)
+conn.commit()
+print(cur.lastrowid)
+`.trim();
+  const r = spawnSync(py, ['-3', '-c', script], { encoding: 'utf8' });
+  if (r.status !== 0) throw new Error(r.stderr || 'sqlite error');
+  return Number(String(r.stdout || '0').trim()) || 0;
+}
+
+/**
+ * Update a catalog_runs row's counters.
+ *
+ * The row is written when the run STARTS and its counters are filled in
+ * as it goes, so an interrupted run still leaves a row that says what it
+ * DID rather than what it was asked to do. (The `fill-dates` lesson: a run
+ * whose audit row was written at the END lost 1,582 rows' worth of
+ * provenance.)
+ */
+function updateCatalogRun(runId, patch) {
+  const script = `
+import sqlite3
+conn = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
+conn.execute(
+  "UPDATE catalog_runs SET inserted_count = ?, updated_count = ?, missing_upload_dates = ?,"
+  " malformed_rows = ? WHERE run_id = ?",
+  (${patch.inserted_count}, ${patch.updated_count}, ${patch.missing_upload_dates},
+   ${patch.malformed_rows}, ${runId})
+)
 conn.commit()
 print('ok')
 `.trim();
@@ -84,15 +167,16 @@ console.log('[import] Pass 1: fetching all video IDs via --flat-playlist ...');
 const raw = ytdlp([
   '--skip-download', '--ignore-errors', '--flat-playlist',
   '--print', '%(id)s\t%(upload_date)s\t%(title)s',
-  CHANNEL_URL
+  channelUrl
 ], 60);
 
 const allRows = [];
+let malformed = 0;
 for (const line of raw.split('\n')) {
   const trimmed = line.trim();
   if (!trimmed) continue;
   const [id, date, ...titleParts] = trimmed.split('\t');
-  if (!id) continue;
+  if (!id) { malformed += 1; continue; }
   const title = titleParts.join('\t').trim();
   allRows.push({ video_id: id.trim(), upload_date: date.trim() || '', title });
 }
@@ -103,13 +187,20 @@ console.log(`[import] Total IDs retrieved: ${allRows.length}`);
 
 const existing = new Map(sqliteQuery(
   `SELECT video_id, upload_date, title, video_url FROM videos WHERE channel = ?`,
-  [CHANNEL]
+  [channel]
 ).map(r => [r.video_id, r]));
 
-const newRows  = allRows.filter(r => !existing.has(r.video_id));
-const knownRows = allRows.filter(r =>  existing.has(r.video_id));
+// A video id is the table's PRIMARY KEY, so a row that is already in the
+// catalog under ANOTHER channel is not new either -- and the insert would
+// fail on it. Those are counted apart instead.
+const allIds = new Set(sqliteQuery('SELECT video_id FROM videos').map(r => r.video_id));
 
-console.log(`[import] Already in DB: ${existing.size} | New: ${newRows.length} | Known-here: ${knownRows.length}`);
+const newRows    = allRows.filter(r => !allIds.has(r.video_id));
+const knownRows  = allRows.filter(r =>  existing.has(r.video_id));
+const elsewhere  = allRows.filter(r => !existing.has(r.video_id) && allIds.has(r.video_id));
+
+console.log(`[import] Already in DB: ${existing.size} | New: ${newRows.length} | Known-here: ${knownRows.length}`
+  + `${elsewhere.length ? ` | Known under another channel: ${elsewhere.length}` : ''}`);
 
 if (dryRun) {
   console.log('[import] Dry-run — would insert:');
@@ -117,10 +208,35 @@ if (dryRun) {
     console.log(`  ${r.video_id}  "${r.title}"  date=${r.upload_date || '(none)'}`);
   }
   if (newRows.length > 20) console.log(`  ... and ${newRows.length - 20} more`);
+  console.log('[import] Dry-run writes nothing — no rows and no audit row.');
   process.exit(0);
 }
 
+// THE AUDIT ROW GOES IN NOW, BEFORE THE NETWORK WORK AND BEFORE THE ROWS.
+//
+// This tool wrote no catalog_runs row at all, so a reader of that table
+// could not see a run of it -- and an interrupted run left nothing
+// behind either. The row is written at the START and its counters are
+// filled in as the run goes, so it reports what the run DID, not what it
+// was asked to do.
+const runId = recordCatalogRun({
+  source_url: channelUrl,
+  channel,
+  command_json: JSON.stringify(process.argv.slice(1)),
+  raw_output_path: '',
+  row_count: allRows.length,
+  inserted_count: 0,
+  updated_count: 0,
+  missing_upload_dates: 0,
+  malformed_rows: malformed,
+  // A --limit listing did not cover the channel, so "not listed" proves
+  // nothing about the rows it is missing.
+  listing_complete: limitArg ? 0 : 1,
+});
+console.log(`[import] catalog_runs row ${runId} (written at the start, so an interrupted run still leaves a row)`);
+
 if (!newRows.length) {
+  updateCatalogRun(runId, { inserted_count: 0, updated_count: 0, missing_upload_dates: 0, malformed_rows: malformed });
   console.log('[import] Nothing new to insert. Exiting.');
   process.exit(0);
 }
@@ -139,7 +255,12 @@ async function fetchDatesInBatches(rows) {
       try {
         metaText = ytdlp([
           '--skip-download', '--no-warnings',
-          '--extractor-args', 'youtube:player_client=web_safari',
+          // `mweb` is the catalog's measured fast metadata path (4.2 s a
+          // video, against 8.5 s for the full client list, and it WORKS).
+          // The tool used to ask for `web_safari`, which this project's
+          // own rules call out as bot-blocked: it returns nothing, so
+          // every date fetch failed.
+          '--extractor-args', 'youtube:player_client=mweb',
           '--print', '%(id)s\t%(upload_date)s',
           `https://www.youtube.com/watch?v=${row.video_id}`,
         ], 30);
@@ -176,10 +297,11 @@ async function main() {
   try {
     channelPageText = ytdlp([
       '--skip-download', '--ignore-errors',
-      '--extractor-args', 'youtube:player_client=web_safari',
+      // `mweb`, not `web_safari` -- the same reason as the per-video pass.
+      '--extractor-args', 'youtube:player_client=mweb',
       '--flat-playlist',
       '--print', '%(upload_date)s\t%(id)s',
-      CHANNEL_URL
+      channelUrl
     ], 30);
     let resolved = 0;
     for (const line of channelPageText.split('\n')) {
@@ -201,28 +323,52 @@ async function main() {
   console.log('[import] Inserting new rows ...');
   // Use only columns that exist in the schema:
   // video_id, source_url, video_url, title, upload_date, channel
+  //
+  // The status is 'pending' -- the catalog's own vocabulary: the row
+  // exists and the media has not been fetched (src/video/videoStatus.js).
+  // The tool used to write 'cataloged', which the schema's CHECK
+  // constraint REJECTS, so the insert failed for every row and the tool
+  // inserted nothing.
+  //
+  // The rows go in as ONE batch, in ONE process. The insert used to
+  // spawn a Python process PER ROW -- 539 interpreter starts to write 539
+  // rows -- and a row that already existed aborted its own process with
+  // a UNIQUE-constraint error, which was then counted as "skipped".
   const stmt = `
 INSERT INTO videos
   (video_id, channel, title, upload_date, video_url, source_url, status, created_at, updated_at)
-VALUES (?, ?, ?, ?, ?, ?, 'cataloged', datetime('now'), datetime('now'))
+VALUES (?, ?, ?, ?, ?, ?, 'pending', datetime('now'), datetime('now'))
 `;
-  let inserted = 0;
-  let skipped = 0;
-  for (const r of newRows) {
-    const videoUrl = `https://www.youtube.com/watch?v=${r.video_id}`;
-    const srcUrl  = CHANNEL_URL;
-    try {
-      sqliteRun(stmt, [r.video_id, CHANNEL, r.title || '', r.upload_date || '', videoUrl, srcUrl]);
-      inserted++;
-    } catch (e) {
-      if (e.message.includes('UNIQUE constraint') || e.message.includes('are not unique')) {
-        skipped++;
-      } else {
-        console.error(`[import] insert failed for ${r.video_id}: ${e.message}`);
-      }
-    }
-  }
-  console.log(`[import] Done. Inserted: ${inserted} | Skipped (already exists): ${skipped} | Total in DB for ${CHANNEL}: ${existing.size + inserted - skipped}`);
+  const before = sqliteQuery(`SELECT COUNT(*) AS n FROM videos WHERE channel = ?`, [channel])[0].n;
+  const params = newRows.map((r) => [
+    r.video_id, channel, r.title || '', r.upload_date || '',
+    `https://www.youtube.com/watch?v=${r.video_id}`, channelUrl,
+  ]);
+  sqliteRunBatch(stmt, params);
+  const after = sqliteQuery(`SELECT COUNT(*) AS n FROM videos WHERE channel = ?`, [channel])[0].n;
+  const inserted = after - before;
+  // A row that is already in the catalog under ANOTHER channel is not
+  // new, and the primary key says so. It is counted apart rather than
+  // lost in an error.
+  const skipped = newRows.length - inserted + elsewhere.length;
+
+  // How many of the rows still have no date. The tool's own job is the
+  // date, so the number of rows it could not date is what the audit row
+  // has to say.
+  const stillUndated = sqliteQuery(
+    `SELECT COUNT(*) AS n FROM videos WHERE channel = ? AND (upload_date IS NULL OR upload_date = '')`,
+    [channel],
+  )[0].n;
+
+  updateCatalogRun(runId, {
+    inserted_count: inserted,
+    updated_count: 0,
+    missing_upload_dates: stillUndated,
+    malformed_rows: malformed,
+  });
+
+  console.log(`[import] Done. Inserted: ${inserted} | Skipped (already exists): ${skipped} | Total in DB for ${channel}: ${after}`);
+  console.log(`[import] catalog_runs row ${runId}: ${inserted} inserted, ${stillUndated} row(s) still without a date`);
 }
 
 main().catch(e => { console.error(e); process.exit(1); });

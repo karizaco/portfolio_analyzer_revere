@@ -23,12 +23,13 @@
  * are imported as they arrive, so an interrupted crawl keeps what it saw.
  */
 
-const { planWindows, browserSearchUrl, uncoveredRanges, windowVerdict, BROWSER_QUERY_KIND } = require('./windows');
+const { DENSE_WINDOW_POSTS, planWindows, browserSearchUrl, splitDenseWindows, uncoveredRanges, windowVerdict, BROWSER_QUERY_KIND } = require('./windows');
 const { createScrollTracker, jitter } = require('./browser/scroll');
 const { detectStopSignal, isEmptyResult } = require('./browser/signals');
 const { defaultProfileDir, isInsideRepo, stripQuery, timelineOperation } = require('./browser/capture');
 const { extractVisibleArticles, readPageState } = require('./browser/domExtract');
 const { normalizeEnvelope, saveRaw } = require('./rawStore');
+const { findUserIds } = require('./normalizeGraphql');
 const { importRecords, filteredTotal } = require('./importer');
 const { acquireLock } = require('./lock');
 const registry = require('./registry');
@@ -141,9 +142,22 @@ async function crawlBrowserWindows(options) {
   // A re-plan is reduced to the part no window covers yet, exactly as the
   // API route does it: a window that exists is covering its own range,
   // and a window that is COMPLETE is never crawled again.
+  //
+  // And a DENSE window is split first, because a long scroll is where the
+  // challenges and the rate limits bite. The density comes from the
+  // windows this account has already crawled -- the browser route has no
+  // count endpoint, so that is the only estimate there is.
   const existing = registry.windowRanges(catalogDb, account.account_id, BROWSER_QUERY_KIND, 'browser');
+  const density = registry.windowDensity(catalogDb, account.account_id, 'browser', BROWSER_QUERY_KIND);
+  const planned = splitDenseWindows(planWindows({ since, until, unit: options.unit || 'month' }), {
+    postsPerDay: density, threshold: DENSE_WINDOW_POSTS, unit: 'week',
+  });
+  if (density > 0) {
+    log(`[x-browser] @${account.handle}: ${density.toFixed(1)} posts a day observed; `
+      + `a window over ${DENSE_WINDOW_POSTS} posts is split into weeks`);
+  }
   const effective = [];
-  for (const window of planWindows({ since, until, unit: options.unit || 'month' })) {
+  for (const window of planned) {
     for (const part of uncoveredRanges(existing, window.start, window.end)) {
       effective.push({ start: part.start, end: part.end });
     }
@@ -198,6 +212,11 @@ async function crawlBrowserWindows(options) {
     }
 
     let captureIndex = 0;
+    // The handle -> user id map. The account's own id is known once the
+    // account has been looked up; the web app's own user lookup fills it
+    // in when it has not -- and without a user id the page-scrape route
+    // cannot produce a record at all.
+    const knownUsers = new Map(account.user_id ? [[account.handle, account.user_id]] : []);
     for (const window of pending.slice(0, maxWindows)) {
       registry.updateWindow(catalogDb, window.id, { status: 'running', last_run_id: runId, stop_reason: '' });
       const tracker = createScrollTracker({ windowStart: window.window_start, maxScrolls: options.maxScrolls });
@@ -218,8 +237,26 @@ async function crawlBrowserWindows(options) {
         for (const envelope of batch) {
           captureIndex += 1;
           saveRaw(rawDir, `${window.window_start}_${String(captureIndex).padStart(5, '0')}_${envelope.operation}`, envelope);
+          if (envelope.operation === 'UserByScreenName') {
+            // The user lookup carries the numeric id the DOM route needs.
+            for (const [handle, id] of findUserIds(envelope.body)) knownUsers.set(handle, id);
+            continue;
+          }
           records.push(...normalizeEnvelope(envelope).records);
           capturedHere += 1;
+        }
+        // The web app's own user lookup can resolve the account's identity
+        // where nothing else could -- so it is PINNED, and a disagreement
+        // with what the catalog already knows is refused rather than
+        // silently merged.
+        const resolved = knownUsers.get(String(account.handle).toLowerCase());
+        if (resolved && resolved !== account.user_id) {
+          try {
+            registry.resolveUserId(catalogDb, account.account_id, resolved, account.handle);
+            account = registry.getAccount(catalogDb, account.account_id);
+          } catch (error) {
+            log(`[x-browser] ${error.message}`);
+          }
         }
         let state = await pageState(page);
         if (!capturedHere && tracker.scrolls >= 3 && state.articles > 0 && !usedDom) {
@@ -232,8 +269,7 @@ async function crawlBrowserWindows(options) {
           const envelope = { route: 'web_dom', operation: 'dom', url: page.url(), status: 200, fetched_at: new Date().toISOString(), body: articles };
           captureIndex += 1;
           saveRaw(rawDir, `${window.window_start}_${String(captureIndex).padStart(5, '0')}_dom`, envelope);
-          const known = new Map(account.user_id ? [[account.handle, account.user_id]] : []);
-          records.push(...normalizeEnvelope(envelope, { knownUsers: known }).records);
+          records.push(...normalizeEnvelope(envelope, { knownUsers }).records);
         }
 
         const imported = records.length

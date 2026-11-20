@@ -344,6 +344,33 @@ function windowRanges(db, accountId, queryKind, route) {
 }
 
 /**
+ * The account's posting density, in posts a day.
+ *
+ * The browser route has no count endpoint, so its expected count comes
+ * from the density of the windows it has already crawled -- the only
+ * estimate available there.
+ *
+ * @param {import('node:sqlite').DatabaseSync} db
+ * @param {number} accountId
+ * @param {string} route
+ * @param {string} queryKind
+ * @returns {number} posts a day, or 0 when nothing has been observed
+ */
+function windowDensity(db, accountId, route, queryKind) {
+  const rows = db.prepare(`SELECT window_start, window_end, posts_seen FROM x_crawl_windows
+    WHERE account_id = ? AND route = ? AND query_kind = ? AND posts_seen > 0`).all(accountId, route, queryKind);
+  let posts = 0;
+  let days = 0;
+  for (const row of rows) {
+    const span = (Date.parse(`${row.window_end}T00:00:00Z`) - Date.parse(`${row.window_start}T00:00:00Z`)) / 86400000;
+    if (!(span > 0)) continue;
+    posts += row.posts_seen;
+    days += span;
+  }
+  return days > 0 ? posts / days : 0;
+}
+
+/**
  * Close a run, and record it in the SHARED run table.
  *
  * Every other source writes a `catalog_runs` row, so a reader of that
@@ -471,5 +498,6 @@ module.exports = {
   startRun,
   updateRun,
   updateWindow,
+  windowDensity,
   windowRanges,
 };
