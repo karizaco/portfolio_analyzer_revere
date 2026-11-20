@@ -129,9 +129,26 @@
     "komar:conversion": "node tools/analyzeKomarConversion.js",
     "komar:conversion:dry": "node tools/analyzeKomarConversion.js --dry-run",
     "komar:watchlist": "node tools/extractKomarWatchlist.js",
-    "komar:watchlist:dry": "node tools/extractKomarWatchlist.js --dry-run --json"
+    "komar:watchlist:dry": "node tools/extractKomarWatchlist.js --dry-run --json",
+    "x:help": "node tools/runXPipeline.js help",
+    "x:init": "node tools/runXPipeline.js init",
+    "x:add": "node tools/runXPipeline.js add",
+    "x:list": "node tools/runXPipeline.js list",
+    "x:status": "node tools/runXPipeline.js status",
+    "x:lookup": "node tools/runXPipeline.js lookup",
+    "x:estimate": "node tools/runXPipeline.js estimate",
+    "x:crawl:api": "node tools/runXPipeline.js crawl --route api",
+    "x:crawl:browser": "node tools/runXPipeline.js crawl --route browser",
+    "x:crawl:agentic": "node tools/runXPipeline.js crawl --route agent",
+    "x:browser:login": "node tools/runXPipeline.js browser-login",
+    "x:import": "node tools/runXPipeline.js import",
+    "x:rebuild-index": "node tools/runXPipeline.js rebuild-index",
+    "x:media": "node tools/runXPipeline.js media",
+    "x:ocr": "node tools/runXPipeline.js ocr",
+    "x:vision": "node tools/runXPipeline.js vision"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.11.0",
     "sharp": "^0.34.3",
     "tesseract.js": "^6.0.1"
   },

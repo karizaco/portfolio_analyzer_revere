@@ -271,3 +271,15 @@ data/discord_traders.html
 # QMG background-job runtime state (rewritten on every chunk).
 data/qmg_ocr_queue_progress.json
 data/qmg_download_stages.json
+
+# X (x.com) source -- docs/x-source-plan.md. The post ARCHIVE is tracked (it is
+# the record: posts get deleted and the API costs money). Raw captures, the
+# downloaded images, the rebuildable index and the crawl lock are not.
+data/x_pipeline/raw/
+data/x_pipeline/media/
+data/x_pipeline/x_index.sqlite
+data/x_pipeline/x_index.sqlite-*
+data/x_pipeline/.browser.lock
+data/x_*.csv
+data/x_*.json
+data/x_report.html

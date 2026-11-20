@@ -1,0 +1,378 @@
+'use strict';
+
+/**
+ * The X (x.com) source CLI. See docs/x-source-plan.md.
+ *
+ *   init                         create the tables and folders
+ *   add --handle H [--profile P] [--person K] [--since YYYY-MM-DD] [--replies self|none] [--kinds setups,positions]
+ *   list
+ *   status --handle H [--json]
+ *
+ *   lookup --handle H                                   API, one user read ($0.01)
+ *   estimate --handle H --budget-usd N --yes [--since D] [--until D]
+ *                                                       API count requests ($0.01 each): posts and read cost per year
+ *   crawl --route api --handle H --budget-usd N --yes [--since D] [--until D] [--unit year|month] [--max-posts N] [--incremental]
+ *   crawl --route browser --handle H [--since D] [--until D] [--unit month|week] [--max-windows N] [--window-id ID] [--report json]
+ *   crawl --route agent --handle H                      print the agentic runbook / prompt and the import command
+ *   browser-login                                       open the browser profile and log into X by hand (once)
+ *
+ *   import --handle H (--raw-dir DIR | --file FILE)     import raw captures or agent JSONL
+ *   rebuild-index                                       rebuild the untracked index from the tracked archive
+ *   media --handle H [--limit N]                        download the photos of archived posts
+ *   ocr --handle H [--limit N]                          Tesseract OCR of downloaded photos (cached)
+ *   vision --handle H --budget-usd N --yes [--limit N] [--model M]
+ *                                                       Claude vision reading of portfolio/position screenshots
+ *
+ * Credentials come from .env (never printed): X_BEARER_TOKEN for the API,
+ * ANTHROPIC_API_KEY for the vision reader.
+ */
+
+const path = require('node:path');
+
+process.removeAllListeners('warning');
+process.on('warning', () => {});
+
+const { loadEnv } = require('../src/transcript/loadEnv');
+const registry = require('../src/x/registry');
+const { openIndex, rebuildIndex, DEFAULT_INDEX_PATH } = require('../src/x/indexStore');
+const { DEFAULT_ARCHIVE_ROOT } = require('../src/x/archive');
+const { DEFAULT_RAW_ROOT, listRawFiles, makeRunTag, normalizeEnvelope, readRaw } = require('../src/x/rawStore');
+const { importRecords, filteredTotal } = require('../src/x/importer');
+
+const ROOT = path.resolve(__dirname, '..');
+
+function parseArgs(argv) {
+  const out = { _: [] };
+  for (let i = 0; i < argv.length; i += 1) {
+    const arg = argv[i];
+    if (arg.startsWith('--')) {
+      const key = arg.slice(2);
+      const next = argv[i + 1];
+      if (next === undefined || next.startsWith('--')) out[key] = true;
+      else {
+        out[key] = next;
+        i += 1;
+      }
+    } else {
+      out._.push(arg);
+    }
+  }
+  return out;
+}
+
+function fail(message, code = 1) {
+  console.error(`[x] ${message}`);
+  process.exit(code);
+}
+
+function requireAccount(catalogDb, args) {
+  if (!args.handle) fail('--handle is required');
+  const account = registry.getAccount(catalogDb, String(args.handle));
+  if (!account) fail(`@${args.handle} is not registered. Run: node tools/runXPipeline.js add --handle ${args.handle}`);
+  return account;
+}
+
+function relative(file) {
+  return path.relative(ROOT, file).replace(/\\/g, '/');
+}
+
+function apiClient() {
+  loadEnv();
+  // eslint-disable-next-line global-require
+  const { createXApiClient } = require('../src/x/apiClient');
+  return createXApiClient({
+    bearerToken: process.env.X_BEARER_TOKEN,
+    log: (line) => console.log(line),
+  });
+}
+
+function budgetFrom(args, fallbackUsd) {
+  // eslint-disable-next-line global-require
+  const { createBudget } = require('../src/x/apiBudget');
+  const budgetUsd = args['budget-usd'] === undefined ? fallbackUsd : Number(args['budget-usd']);
+  if (!(budgetUsd >= 0)) fail('--budget-usd must be a number');
+  return createBudget({ budgetUsd, maxPosts: args['max-posts'] ? Number(args['max-posts']) : undefined });
+}
+
+function finishRun(catalogDb, runId, status, stopReason = '') {
+  registry.updateRun(catalogDb, runId, { status, stop_reason: stopReason, finished_at: new Date().toISOString() });
+}
+
+async function main() {
+  const args = parseArgs(process.argv.slice(2));
+  const command = args._[0];
+  if (!command || command === 'help' || args.help) {
+    console.log(require('node:fs').readFileSync(__filename, 'utf8').split('*/')[0].replace(/^'use strict';\s*\/\*\*?/, ''));
+    return;
+  }
+
+  const catalogDb = registry.openCatalog();
+  try {
+    if (command === 'init') {
+      openIndex().close();
+      console.log(`[x] catalog tables ready in ${relative(registry.CATALOG_DB_PATH)}`);
+      console.log(`[x] index ready at ${relative(DEFAULT_INDEX_PATH)} (untracked)`);
+      console.log(`[x] archive root ${relative(DEFAULT_ARCHIVE_ROOT)} (tracked)`);
+      return;
+    }
+
+    if (command === 'add') {
+      if (!args.handle) fail('--handle is required');
+      const account = registry.addAccount(catalogDb, {
+        handle: String(args.handle),
+        profile: args.profile ? String(args.profile) : undefined,
+        personKey: args.person ? String(args.person) : undefined,
+        backfillSince: args.since ? String(args.since) : undefined,
+        includeReplies: args.replies ? String(args.replies) : undefined,
+        declaredKinds: args.kinds ? String(args.kinds) : undefined,
+        userId: args['user-id'] ? String(args['user-id']) : undefined,
+      });
+      console.log(JSON.stringify(account, null, 2));
+      return;
+    }
+
+    if (command === 'list') {
+      const rows = registry.listAccounts(catalogDb);
+      if (!rows.length) console.log('(no X accounts registered)');
+      for (const row of rows) {
+        console.log(`@${row.handle}  user=${row.user_id || '?'}  profile=${row.profile}  replies=${row.include_replies}`
+          + `  since=${row.backfill_since || 'all'}${row.person_key ? `  person=${row.person_key}` : ''}`
+          + `${row.tweet_count_at_lookup !== null ? `  posts_at_lookup=${row.tweet_count_at_lookup}` : ''}`);
+      }
+      return;
+    }
+
+    if (command === 'status') {
+      const account = requireAccount(catalogDb, args);
+      const status = registry.accountStatus(catalogDb, account.account_id);
+      const indexDb = openIndex();
+      const posts = account.user_id
+        ? indexDb.prepare(`SELECT COUNT(*) AS n, MIN(created_at) AS first, MAX(created_at) AS last,
+            SUM(media_count > 0) AS with_media FROM x_posts WHERE user_id = ?`).get(account.user_id)
+        : { n: 0 };
+      indexDb.close();
+      const payload = { account, posts, ...status };
+      if (args.json) console.log(JSON.stringify(payload, null, 2));
+      else {
+        console.log(`@${account.handle} (user ${account.user_id || 'not resolved yet'})`);
+        console.log(`  archived posts: ${posts.n}${posts.n ? ` (${posts.first} .. ${posts.last}, ${posts.with_media} with media)` : ''}`);
+        console.log(`  API spend so far (estimate): $${status.api_spend_usd.toFixed(3)}`);
+        for (const w of status.windows) {
+          console.log(`  windows ${w.route}/${w.query_kind} ${w.status}: ${w.n} (posts seen ${w.seen || 0}${w.expected ? ` of ~${w.expected}` : ''})`);
+        }
+        for (const run of status.runs) {
+          console.log(`  run ${run.id} ${run.route} ${run.status} ${run.started_at} seen=${run.posts_seen} new=${run.posts_new}`
+            + ` filtered=${run.posts_filtered} $${Number(run.api_cost_usd_est).toFixed(3)}${run.stop_reason ? ` stop=${run.stop_reason}` : ''}`);
+        }
+      }
+      return;
+    }
+
+    if (command === 'lookup') {
+      const account = requireAccount(catalogDb, args);
+      // eslint-disable-next-line global-require
+      const { lookupAccount } = require('../src/x/crawlApi');
+      const client = apiClient();
+      const runId = registry.startRun(catalogDb, { accountId: account.account_id, route: 'api', runTag: makeRunTag('lookup', account.handle) });
+      try {
+        const updated = await lookupAccount({
+          catalogDb, client, budget: budgetFrom(args, 0.05), account, runId, log: console.log,
+        });
+        finishRun(catalogDb, runId, 'ok');
+        console.log(JSON.stringify(updated, null, 2));
+      } catch (error) {
+        finishRun(catalogDb, runId, 'failed', error.message.slice(0, 300));
+        throw error;
+      }
+      return;
+    }
+
+    if (command === 'estimate') {
+      const account = requireAccount(catalogDb, args);
+      if (!args.yes) fail('estimate makes paid count requests ($0.01 each). Add --yes (and --budget-usd, default 3).');
+      // eslint-disable-next-line global-require
+      const { estimate, lookupAccount, todayUtc, ARCHIVE_START } = require('../src/x/crawlApi');
+      const client = apiClient();
+      const budget = budgetFrom(args, 3);
+      const runId = registry.startRun(catalogDb, { accountId: account.account_id, route: 'api', runTag: makeRunTag('estimate', account.handle) });
+      try {
+        let current = account;
+        if (!current.user_id) current = await lookupAccount({ catalogDb, client, budget, account: current, runId, log: console.log });
+        const since = String(args.since || current.backfill_since || ARCHIVE_START);
+        const until = String(args.until || todayUtc());
+        const result = await estimate({ catalogDb, client, budget, account: current, since, until, runId, log: console.log });
+        registry.updateRun(catalogDb, runId, { api_cost_usd_est: budget.spent });
+        finishRun(catalogDb, runId, result.complete ? 'ok' : 'partial', result.complete ? '' : 'budget');
+        console.log(`\n@${current.handle} ${since} .. ${until} (exclusive)`);
+        for (const [kind, data] of Object.entries(result.kinds)) {
+          console.log(`  ${kind.padEnd(13)} ${String(data.total).padStart(7)} posts   query: ${data.query}`);
+          for (const [year, n] of Object.entries(data.byYear).sort()) console.log(`      ${year}: ${n}`);
+        }
+        console.log(`  TOTAL ${result.posts} posts -> a full API backfill would cost about $${result.readCost}`
+          + ` (at $${budget.pricing.post_read}/post; an upper bound)`);
+        console.log(`  this estimate cost $${budget.spent.toFixed(2)} (${result.requests} count requests)`
+          + `${result.complete ? '' : ' -- INCOMPLETE, the budget ran out'}`);
+      } catch (error) {
+        finishRun(catalogDb, runId, 'failed', error.message.slice(0, 300));
+        throw error;
+      }
+      return;
+    }
+
+    if (command === 'browser-login') {
+      // eslint-disable-next-line global-require
+      const { browserLogin } = require('../src/x/crawlBrowser');
+      const result = await browserLogin({ log: console.log });
+      if (!result.loggedIn) fail('login was not completed in time');
+      return;
+    }
+
+    if (command === 'crawl') {
+      const account = requireAccount(catalogDb, args);
+      const route = String(args.route || 'api');
+      if (route === 'agent') {
+        printAgentInstructions(account);
+        return;
+      }
+      if (route === 'api') {
+        if (!args.yes) fail('an API crawl reads paid posts ($0.005 each). Run `estimate` first, then add --yes --budget-usd N.');
+        if (args['budget-usd'] === undefined) fail('--budget-usd is required for an API crawl');
+        loadEnv();
+        if (!process.env.X_BEARER_TOKEN) fail('X_BEARER_TOKEN is not set (put it in .env -- see docs/x-source-plan.md)');
+      }
+      const runTag = makeRunTag(route, account.handle);
+      const rawDir = path.join(DEFAULT_RAW_ROOT, runTag);
+      const indexDb = openIndex();
+      const runId = registry.startRun(catalogDb, { accountId: account.account_id, route, runTag, rawDir: relative(rawDir) });
+      try {
+        if (route === 'api') {
+          if (!args.yes) fail('an API crawl reads paid posts ($0.005 each). Run `estimate` first, then add --yes --budget-usd N.');
+          if (args['budget-usd'] === undefined) fail('--budget-usd is required for an API crawl');
+          // eslint-disable-next-line global-require
+          const { crawlWindows, incrementalSince, lookupAccount, todayUtc } = require('../src/x/crawlApi');
+          const client = apiClient();
+          const budget = budgetFrom(args);
+          let current = account;
+          if (!current.user_id) current = await lookupAccount({ catalogDb, client, budget, account: current, runId, log: console.log });
+          let since = args.since ? String(args.since) : undefined;
+          if (args.incremental) {
+            since = incrementalSince(catalogDb, current) || current.backfill_since || undefined;
+            if (!since) fail('nothing to increment from: no complete window yet. Run a backfill first.');
+          }
+          const until = String(args.until || todayUtc());
+          if (since && since >= until) {
+            console.log(`[x] already up to date (through ${since})`);
+            finishRun(catalogDb, runId, 'ok');
+            return;
+          }
+          const result = await crawlWindows({
+            catalogDb, indexDb, client, budget, account: current, runId, rawDir, since, until,
+            unit: args.unit ? String(args.unit) : (args.incremental ? 'month' : 'year'), log: console.log,
+          });
+          finishRun(catalogDb, runId, result.status, result.stopReason);
+          console.log(JSON.stringify({ route: 'api', handle: current.handle, ...result, spent_usd: budget.spent, run_id: runId }, null, 2));
+          return;
+        }
+        if (route === 'browser') {
+          // eslint-disable-next-line global-require
+          const { crawlBrowserWindows } = require('../src/x/crawlBrowser');
+          const report = await crawlBrowserWindows({
+            catalogDb, indexDb, account, runId, rawDir,
+            since: args.since ? String(args.since) : undefined,
+            until: args.until ? String(args.until) : undefined,
+            unit: args.unit ? String(args.unit) : undefined,
+            maxWindows: args['max-windows'] ? Number(args['max-windows']) : undefined,
+            windowId: args['window-id'] ? Number(args['window-id']) : undefined,
+            log: args.report === 'json' ? (line) => console.error(line) : console.log,
+          });
+          finishRun(catalogDb, runId, report.status, report.stop_reason);
+          console.log(JSON.stringify(report, null, 2));
+          if (report.status !== 'ok') process.exitCode = report.stop_reason === 'account_locked' ? 4 : 3;
+          return;
+        }
+        fail(`unknown route ${route} (api | browser | agent)`);
+      } catch (error) {
+        finishRun(catalogDb, runId, 'failed', String(error.message).slice(0, 300));
+        throw error;
+      } finally {
+        indexDb.close();
+      }
+    }
+
+    if (command === 'import') {
+      const account = requireAccount(catalogDb, args);
+      const files = args['raw-dir'] ? listRawFiles(path.resolve(String(args['raw-dir'])))
+        : (args.file ? [path.resolve(String(args.file))] : fail('--raw-dir or --file is required'));
+      const indexDb = openIndex();
+      const runId = registry.startRun(catalogDb, { accountId: account.account_id, route: 'import', runTag: makeRunTag('import', account.handle) });
+      const totals = { files: 0, seen: 0, new: 0, updated: 0, filtered: 0, invalid: 0, rejected: 0 };
+      try {
+        for (const file of files) {
+          let current = registry.getAccount(catalogDb, account.account_id);
+          const known = new Map(current.user_id ? [[current.handle, current.user_id]] : []);
+          for (const envelope of readRaw(file)) {
+            const { records, rejected } = normalizeEnvelope(envelope, { knownUsers: known });
+            totals.rejected += rejected.length;
+            const result = importRecords({ catalogDb, indexDb, account: current, records });
+            current = registry.getAccount(catalogDb, account.account_id);
+            totals.seen += result.seen;
+            totals.new += result.new;
+            totals.updated += result.updated;
+            totals.filtered += filteredTotal(result.filtered);
+            totals.invalid += result.invalid.length;
+            for (const bad of result.invalid.slice(0, 3)) console.error(`[x] invalid ${bad.post_id}: ${bad.errors.join('; ')}`);
+          }
+          totals.files += 1;
+        }
+        registry.updateRun(catalogDb, runId, {
+          posts_seen: totals.seen, posts_new: totals.new, posts_updated: totals.updated, posts_filtered: totals.filtered,
+        });
+        finishRun(catalogDb, runId, 'ok');
+        console.log(JSON.stringify(totals, null, 2));
+      } finally {
+        indexDb.close();
+      }
+      return;
+    }
+
+    if (command === 'rebuild-index') {
+      const result = rebuildIndex();
+      console.log(`[x] rebuilt the index from the archive: ${result.posts} posts`);
+      return;
+    }
+
+    if (command === 'media' || command === 'ocr' || command === 'vision') {
+      // eslint-disable-next-line global-require
+      const images = require('../src/x/images/runImages');
+      const account = requireAccount(catalogDb, args);
+      await images.run(command, { catalogDb, account, args, log: console.log });
+      return;
+    }
+
+    fail(`unknown command ${command}. Run: node tools/runXPipeline.js help`);
+  } finally {
+    catalogDb.close();
+  }
+}
+
+function printAgentInstructions(account) {
+  console.log(`Agentic X crawl for @${account.handle}`);
+  console.log('---------------------------------------');
+  console.log('MODE A (default) -- Claude Code supervises the scripted browser crawler.');
+  console.log('  Give Claude Code this runbook and the handle:');
+  console.log('    tools/x_pipeline/agentic_runbook.md');
+  console.log('  It runs one window at a time with:');
+  console.log(`    node tools/runXPipeline.js crawl --route browser --handle ${account.handle} --max-windows 1 --report json`);
+  console.log('  and acts on each JSON stop report. Post payloads never pass through the model.');
+  console.log('');
+  console.log('MODE B -- Claude drives the Playwright MCP browser itself (small gaps / diagnosis only).');
+  console.log('    prompt:    tools/x_pipeline/agentic_prompt.md');
+  console.log('    collector: tools/x_pipeline/collector.inpage.js');
+  console.log('  It saves captured responses under data/x_pipeline/raw/<run>/ and you then import them:');
+  console.log(`    node tools/runXPipeline.js import --handle ${account.handle} --raw-dir data/x_pipeline/raw/<run>`);
+}
+
+main().catch((error) => {
+  console.error(`[x] failed: ${error && error.message ? error.message : error}`);
+  process.exit(1);
+});

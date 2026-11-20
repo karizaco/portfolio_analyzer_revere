@@ -8150,3 +8150,67 @@ both Bloom Energy and break-even; a number is a price only where a price
 can stand) are in `docs/discord-traders.md`, and they are pinned by
 `test/discordPortfolio.test.js`, `test/discordTradeActions.test.js` and
 `test/discordEpisodes.test.js`.
+
+## The X (x.com) source -- any account, two interchangeable routes (2026-11-20)
+
+The full design and status are in `docs/x-source-plan.md`. The CLI is
+`tools/runXPipeline.js` (`npm run x:help`).
+
+**TWO ROUTES, ONE RECORD.**
+
+- **The paid API** (`X_BEARER_TOKEN`) and **the browser** (a headed,
+  persistent profile the user logs into by hand) both emit the canonical
+  `x-post-1` record (`src/x/postRecord.js`).
+- Both go through ONE importer (`src/x/importer.js`). `test/xRouteEquivalence.test.js`
+  pins that the same post normalizes identically by either route.
+- **The agentic mode** is Claude Code supervising the browser crawler
+  (`tools/x_pipeline/agentic_runbook.md`). Post payloads never pass through
+  the model.
+
+**THE REPLY POLICY IS THE USER'S DECISION.** Collect own posts, own quotes
+and own thread replies (tweetstorms). **Never collect replies to other people,
+and never reposts.** The importer enforces it, and `include_replies` accepts
+only `self` or `none`.
+
+**WHERE THE DATA LIVES**, and why it is not in the catalog (the 60 MB budget):
+
+| what | where | tracked |
+|---|---|---|
+| accounts, runs, windows, API ledger | `state.sqlite` `x_*` tables | yes |
+| the posts (the record) | `data/x_pipeline/archive/<user_id>/<YYYY>/<YYYY-MM>.jsonl`, deterministic | **yes** |
+| the index | `data/x_pipeline/x_index.sqlite`, rebuilt by `rebuild-index` | no |
+| raw captures, images | `data/x_pipeline/raw/`, `data/x_pipeline/media/` | no |
+| image readings and vision positions | `derived.sqlite` `x_image_readings`, `x_positions` | yes |
+| the browser profile (X session cookies) | **outside the repository** (`X_BROWSER_PROFILE_DIR`) | never |
+
+**THE TRAPS, each pinned by a test:**
+
+- **An X id is a 64-bit snowflake, larger than 2^53.** It is a STRING
+  everywhere. The id encodes its own timestamp, and `created_at` is checked
+  against it.
+- **The API's `text` is truncated** for a long post. The full text is in
+  `note_tweet`, which is always requested.
+- **History needs date windows.** The user timeline stops at the 3,200 newest
+  posts, so the backfill uses full-archive search per window. A window is
+  `complete` only when its route reached its natural end. **Windows never end
+  after today**, because re-reading an open window is paid twice.
+- **The API is paid per post RETURNED** ($0.005, `config/x_api_pricing.json`).
+  `estimate` prices a backfill with $0.01 count requests first. The budget
+  guard stops BEFORE a page that could cross `--budget-usd`, and the window
+  keeps its page token.
+- **The login wall moved.** A logged-out search redirects to
+  `/i/jf/onboarding/web?redirect_after_login=…` (measured 2026-11-20), so any
+  login, onboarding or signup URL, or `redirect_after_login`, means
+  `login_required`.
+- **Do not copy x_unsub's post-type test.** `[data-testid="retweet"]` is the
+  button on EVERY post. A repost is the social-context line ("… reposted").
+- **The browser crawler stops hard** on a login wall, a challenge, a 429, an
+  error page or a locked account, and never retries tighter. **One crawl per
+  X session**, enforced by `src/x/lock.js`: the process guard cannot see
+  Chromium.
+- **The vision reader is PAID** (`ANTHROPIC_API_KEY`, default model
+  `claude-opus-5-5`; `--yes` and `--budget-usd` are required).
+  - Each image is read once per (md5, reader version, model) and stored in
+    `x_image_readings`.
+  - A vision position row counts only when the same image's Tesseract OCR
+    corroborates it (`row_verified`, `src/x/images/crossCheck.js`).

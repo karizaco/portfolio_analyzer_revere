@@ -498,3 +498,141 @@ CREATE TABLE IF NOT EXISTS oconnell_issues (
 CREATE INDEX IF NOT EXISTS idx_oconnell_issues_date ON oconnell_issues(source_date);
 
 CREATE INDEX IF NOT EXISTS idx_oconnell_issues_kind ON oconnell_issues(kind);
+
+
+-- X (x.com) source tables ---------------------------------------------------
+--
+-- See docs/x-source-plan.md. Only the REGISTRY and the CRAWL AUDIT live in
+-- the catalog: they are small. The posts themselves are NOT here -- a busy
+-- account is tens of thousands of posts, and the catalog has a 60 MB budget
+-- (test/catalogSizeGuard.test.js). The posts live in the tracked JSONL
+-- archive under data/x_pipeline/archive/ (the record) and in an untracked
+-- index rebuilt from it (data/x_pipeline/x_index.sqlite).
+--
+-- An account is keyed by an internal account_id, NOT by its handle (handles
+-- get renamed and reused) and not by the numeric user id alone (the browser
+-- route can register an account before the user id is known). The user id
+-- is UNIQUE once known, and a handle that suddenly maps to a different user
+-- id is an error, never a silent re-assignment.
+
+CREATE TABLE IF NOT EXISTS x_accounts (
+    account_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    -- X's numeric user id, as TEXT (ids are not safe as JS numbers).
+    -- NULL until the first lookup or the first captured post resolves it.
+    user_id TEXT UNIQUE,
+    -- The current handle, lowercase, without the at-sign.
+    handle TEXT NOT NULL UNIQUE,
+    display_name TEXT NOT NULL DEFAULT '',
+    -- Which src/x/accounts/<profile>.js applies. 'generic' works for anyone.
+    profile TEXT NOT NULL DEFAULT 'generic',
+    -- What the account is SAID to post (setups,positions). A hint for the
+    -- reader of the dashboard, never a rule the extractor obeys.
+    declared_kinds TEXT NOT NULL DEFAULT '',
+    -- Cross-source identity: scott_redler links RedDogT3 to the T3Live
+    -- channel. Correlated evidence is compared, never pooled.
+    person_key TEXT NOT NULL DEFAULT '',
+    -- self = own posts + own thread replies (tweetstorms); never replies to
+    -- other people. The user's decision, 2026-11-20.
+    include_replies TEXT NOT NULL DEFAULT 'self'
+        CHECK (include_replies IN ('none', 'self')),
+    -- The oldest date wanted, YYYY-MM-DD (empty = everything).
+    backfill_since TEXT NOT NULL DEFAULT '',
+    protected INTEGER NOT NULL DEFAULT 0,
+    tweet_count_at_lookup INTEGER,
+    followers_at_lookup INTEGER,
+    account_created_at TEXT NOT NULL DEFAULT '',
+    looked_up_at TEXT NOT NULL DEFAULT '',
+    enabled INTEGER NOT NULL DEFAULT 1,
+    added_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS x_account_handles (
+    account_id INTEGER NOT NULL REFERENCES x_accounts(account_id),
+    handle TEXT NOT NULL,
+    first_seen_at TEXT NOT NULL,
+    last_seen_at TEXT NOT NULL,
+    PRIMARY KEY (account_id, handle)
+);
+
+
+-- One row per crawl or import INVOCATION. Written at the START and updated
+-- as the run goes, so an interrupted run still leaves a row that says what
+-- it did (the fill-dates lesson in CLAUDE.md).
+CREATE TABLE IF NOT EXISTS x_crawl_runs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    account_id INTEGER NOT NULL REFERENCES x_accounts(account_id),
+    route TEXT NOT NULL CHECK (route IN ('api', 'browser', 'agent', 'import')),
+    run_tag TEXT NOT NULL,
+    started_at TEXT NOT NULL,
+    finished_at TEXT,
+    -- running | ok | partial | blocked | failed
+    status TEXT NOT NULL DEFAULT 'running',
+    windows_planned INTEGER NOT NULL DEFAULT 0,
+    windows_complete INTEGER NOT NULL DEFAULT 0,
+    posts_seen INTEGER NOT NULL DEFAULT 0,
+    posts_new INTEGER NOT NULL DEFAULT 0,
+    posts_updated INTEGER NOT NULL DEFAULT 0,
+    posts_filtered INTEGER NOT NULL DEFAULT 0,
+    api_cost_usd_est REAL NOT NULL DEFAULT 0,
+    stop_reason TEXT NOT NULL DEFAULT '',
+    -- Repo-relative when inside the repository (the portable-path rule).
+    raw_dir TEXT NOT NULL DEFAULT '',
+    -- live | fixture
+    kind TEXT NOT NULL DEFAULT 'live'
+);
+
+
+CREATE INDEX IF NOT EXISTS idx_x_crawl_runs_account ON x_crawl_runs(account_id, started_at);
+
+
+-- The unit of work. A window is COMPLETE only when its route reached its
+-- natural end (the API ran out of pages; the browser scrolled past the
+-- window start with no stop signal). Absence from an incomplete window
+-- proves nothing -- the same rule as catalog_runs.listing_complete.
+CREATE TABLE IF NOT EXISTS x_crawl_windows (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    account_id INTEGER NOT NULL REFERENCES x_accounts(account_id),
+    -- originals | self_replies | all_own (the browser's one query)
+    query_kind TEXT NOT NULL,
+    -- ISO dates; window_end is EXCLUSIVE.
+    window_start TEXT NOT NULL,
+    window_end TEXT NOT NULL,
+    route TEXT NOT NULL CHECK (route IN ('api', 'browser', 'agent')),
+    -- pending | running | complete | partial | blocked | failed
+    status TEXT NOT NULL DEFAULT 'pending',
+    count_expected INTEGER,
+    posts_seen INTEGER NOT NULL DEFAULT 0,
+    oldest_seen TEXT NOT NULL DEFAULT '',
+    newest_seen TEXT NOT NULL DEFAULT '',
+    -- The API's pagination token, so an interrupted window resumes mid-way.
+    next_token TEXT NOT NULL DEFAULT '',
+    last_run_id INTEGER,
+    stop_reason TEXT NOT NULL DEFAULT '',
+    updated_at TEXT NOT NULL,
+    UNIQUE (account_id, query_kind, window_start, window_end, route)
+);
+
+
+CREATE INDEX IF NOT EXISTS idx_x_crawl_windows_status
+    ON x_crawl_windows(account_id, status);
+
+
+-- The API ledger: one row per paid request. The price is copied onto the
+-- row because X's prices change; the row says what was believed at the time.
+CREATE TABLE IF NOT EXISTS x_api_usage (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_id INTEGER,
+    endpoint TEXT NOT NULL,
+    requested_at TEXT NOT NULL,
+    http_status INTEGER,
+    resources_returned INTEGER NOT NULL DEFAULT 0,
+    -- post_read | user_read | counts_all_request | counts_recent_request
+    unit TEXT NOT NULL,
+    unit_price_usd REAL NOT NULL,
+    est_cost_usd REAL NOT NULL
+);
+
+
+CREATE INDEX IF NOT EXISTS idx_x_api_usage_run ON x_api_usage(run_id);

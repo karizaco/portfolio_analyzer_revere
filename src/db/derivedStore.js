@@ -65,6 +65,8 @@ const DERIVED_TABLES = [
   'discord_trade_actions',
   'discord_episodes',
   'martinlukkt_trade_actions',
+  'x_image_readings',
+  'x_positions',
 ];
 
 /**

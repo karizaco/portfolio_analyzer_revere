@@ -1337,3 +1337,83 @@ CREATE INDEX IF NOT EXISTS idx_martinlukkt_actions_video
 
 CREATE INDEX IF NOT EXISTS idx_martinlukkt_actions_ticker
     ON martinlukkt_trade_actions(ticker);
+
+
+-- X (x.com) interpretations -------------------------------------------------
+--
+-- See docs/x-source-plan.md. Derived from the tracked post archive
+-- (data/x_pipeline/archive/) and the downloaded images. A reader version on
+-- every row, evidence on every row.
+
+-- One row per (image, reader). The OCR text and the vision reading of an
+-- image. This table is ALSO the vision cache: a vision call costs money, so
+-- its answer is tracked (a fresh clone must not pay for it again) and keyed
+-- by (md5, reader, reader_version, model).
+CREATE TABLE IF NOT EXISTS x_image_readings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    md5 TEXT NOT NULL,
+    post_id TEXT NOT NULL,
+    media_key TEXT NOT NULL DEFAULT '',
+    account_id INTEGER,
+    handle TEXT NOT NULL DEFAULT '',
+    -- tesseract | vision
+    reader TEXT NOT NULL,
+    -- the prompt/parser version of that reader
+    reader_version TEXT NOT NULL,
+    -- the Claude model id for reader = vision, empty otherwise
+    model TEXT NOT NULL DEFAULT '',
+    -- chart | portfolio | watchlist | fill | text_screenshot | other | unknown
+    image_class TEXT NOT NULL DEFAULT 'unknown',
+    class_confidence REAL,
+    legend_ticker TEXT NOT NULL DEFAULT '',
+    legend_timeframe TEXT NOT NULL DEFAULT '',
+    tickers_json TEXT NOT NULL DEFAULT '[]',
+    -- the full reader output (vision: the structured JSON)
+    reading_json TEXT NOT NULL DEFAULT '{}',
+    -- ok | refused | error | skipped
+    status TEXT NOT NULL DEFAULT 'ok',
+    status_detail TEXT NOT NULL DEFAULT '',
+    input_tokens INTEGER,
+    output_tokens INTEGER,
+    cost_usd_est REAL,
+    evidence_text TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE (md5, reader, reader_version, model)
+);
+
+CREATE INDEX IF NOT EXISTS idx_x_image_readings_post ON x_image_readings(post_id);
+
+-- One row per (snapshot post, account label, side, ticker): a holdings
+-- listing as the post showed it. A vision row counts only when the OCR
+-- words of the same image corroborate it (row_verified = 1).
+CREATE TABLE IF NOT EXISTS x_positions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    parser_version TEXT NOT NULL,
+    account_id INTEGER NOT NULL,
+    handle TEXT NOT NULL,
+    snapshot_post_id TEXT NOT NULL,
+    as_of_date TEXT NOT NULL,
+    -- post_time | stated
+    as_of_basis TEXT NOT NULL DEFAULT 'post_time',
+    -- text_list | image_portfolio | image_vision
+    source TEXT NOT NULL,
+    account_label TEXT NOT NULL DEFAULT '',
+    side TEXT NOT NULL DEFAULT 'long',
+    ticker TEXT NOT NULL,
+    weight_pct REAL,
+    shares REAL,
+    avg_cost REAL,
+    market_value REAL,
+    gain_pct REAL,
+    snapshot_complete INTEGER NOT NULL DEFAULT 0,
+    row_verified INTEGER NOT NULL DEFAULT 1,
+    verify_detail TEXT NOT NULL DEFAULT '',
+    image_md5 TEXT NOT NULL DEFAULT '',
+    evidence_text TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_x_positions_snapshot ON x_positions(snapshot_post_id);
+
+CREATE INDEX IF NOT EXISTS idx_x_positions_ticker
+    ON x_positions(account_id, ticker, as_of_date);
