@@ -77,6 +77,28 @@ test('api_v2: errors[] entries (deleted / protected posts) are reported, not dro
   assert.deepEqual(errors.map((error) => error.post_id), ['1858000000000000000']);
 });
 
+test('api_v2: the deleted post\'s id is found in WHICHEVER field X puts it in', () => {
+  // X has carried the id of a failed resource in more than one field, and
+  // WHICH one has differed between API versions. A deleted post whose id
+  // was lost cannot be marked as deleted, so the reader takes the id from
+  // whichever field holds one -- and from the detail when neither does.
+  const shapes = [
+    { resource_id: '1858000000000000000', resource_type: 'tweet', title: 'Not Found Error' },
+    { value: '1858000000000000001', resource_type: 'tweet', title: 'Not Found Error' },
+    { detail: 'Could not find tweet with id: [1858000000000000002].', title: 'Not Found Error' },
+  ];
+  for (const shape of shapes) {
+    const page = apiPage();
+    page.errors = [shape];
+    const { errors } = normalizeApiV2Page(page, { fetchedAt: FETCHED });
+    assert.match(errors[0].post_id, /^18580000000000000\d\d$/, JSON.stringify(shape));
+  }
+  const page = apiPage();
+  page.errors = [{ resource_id: 'tweet', value: '1858000000000000003', resource_type: 'tweet' }];
+  assert.equal(normalizeApiV2Page(page, { fetchedAt: FETCHED }).errors[0].post_id, '1858000000000000003',
+    'a field that holds a TYPE is not mistaken for an id');
+});
+
 test('web_graphql: a tombstone is reported, and the paging cursor is found', () => {
   const { unavailable, cursors } = normalizeGraphqlResponse(graphqlTimeline(), { fetchedAt: FETCHED });
   assert.equal(unavailable.length, 1);

@@ -164,8 +164,10 @@ function normalizeTweet(tweet, fetchedAt) {
   const note = noteOf(tweet);
   const entitySource = note && note.entity_set ? note.entity_set : (legacy.entities || {});
   const { text, source } = textOf(tweet);
-  const media = ((legacy.extended_entities && legacy.extended_entities.media) || []).map((item) => ({
-    media_key: String(item.media_key || ''),
+  const media = ((legacy.extended_entities && legacy.extended_entities.media) || []).map((item, index) => ({
+    // A media item without a key still has to be identifiable: a missing
+    // key made the WHOLE post invalid, and the post was lost.
+    media_key: String(item.media_key || `media_${index}_${tweet.rest_id}`),
     type: item.type || 'photo',
     url: item.type === 'photo' ? (item.media_url_https || '') : '',
     preview_url: item.type === 'photo' ? '' : (item.media_url_https || ''),

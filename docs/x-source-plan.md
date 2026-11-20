@@ -8,6 +8,10 @@ vision reader. Not built yet: text claims, setups, positions-from-text,
 episodes, outcomes and the dashboard (Phases 6–9). See "Implementation
 status" at the end.*
 
+**The import was reviewed on 2026-11-20 and eleven defects were found and
+fixed; they are recorded in §10, because a contract that is only in the code
+is a contract nobody can check.**
+
 *"Measured" numbers come from the catalog (opened read-only), from the code, or from
 X's own developer documentation, all on 2026-11-20 (Appendix A has the commands,
 Appendix B the URLs). "Estimate" numbers are Phase 0's job to replace.*
@@ -455,8 +459,15 @@ x_accounts ──► window planner ──┬─► route A: API fetcher (paid) 
   never updated, so re-crawls do not churn the files. Later observations go to the
   untracked index (`x_post_metrics`).
 - **Field priority on merge:** `api_v2` > `web_graphql` > `agent_jsonl` > `web_dom`.
-  - A longer, untruncated text always beats a truncated one.
+  - A longer, untruncated text always beats a truncated one — *untruncated*
+    is the test, whichever route it came from, because the two routes cut
+    a long post at different points.
   - A merge never downgrades a field.
+  - **The entity lists and the edit history are UNIONED**, member by member:
+    they are sets and a list, not fields that the higher route simply
+    replaces. `is_earliest` is recomputed from the unioned history.
+  - **The cashtag marker is stripped once, in `canonicalize`**, so the two
+    routes spell a cashtag the same way.
 
 ### 3.4 Route A: the API fetcher
 
@@ -468,7 +479,7 @@ x_accounts ──► window planner ──┬─► route A: API fetcher (paid) 
 | incremental | `GET /2/users/:id/tweets?since_id=<newest archived>&exclude=retweets` (the 3,200 cap is irrelevant for a recent delta) |
 | fields | `tweet.fields=created_at,author_id,conversation_id,in_reply_to_user_id,referenced_tweets,entities,attachments,public_metrics,note_tweet,edit_history_tweet_ids,lang,possibly_sensitive`; `expansions=author_id,attachments.media_keys,referenced_tweets.id,referenced_tweets.id.author_id,in_reply_to_user_id`; `media.fields=url,preview_image_url,type,width,height,alt_text,variants`; `user.fields=username,name` |
 | pacing | honour `x-rate-limit-remaining` / `x-rate-limit-reset`; at most 1 request per second on full-archive search until measured; on 429, sleep until the reset time and never retry tighter |
-| budget | `--estimate` runs count requests per window and prints expected posts × price. A real run needs `--yes` plus `--budget-usd`/`--max-posts`, and **stops before** the request that would cross the cap. `x_api_usage` (catalog) is the ledger |
+| budget | `--estimate` runs count requests per window and prints expected posts × price. A real run needs `--yes` plus `--budget-usd`/`--max-posts`, and **stops before** the request that would cross the cap. **The cap is per account per UTC DAY**: X bills a resource once per UTC day, so the budget is seeded from the ledger's spend for today, and a run that is interrupted and resumed — or a second run the same day — does not start at $0. `x_api_usage` (catalog) is the ledger |
 | raw | every response is gzipped verbatim to `data/x_pipeline/raw/<run_tag>/api/<window>/<n>.json.gz` |
 | traps | `text` truncated without `note_tweet`; `includes.tweets` long posts too; a protected account returns nothing to an app-only token; a deleted post appears as an `errors[]` entry, not a missing row |
 
@@ -554,9 +565,20 @@ can run the same runbook with its turn and budget limits (Phase 10).
     one, they come from the observed density of neighbouring windows.
 - **A window is `complete` only when its route reached its natural end:**
   - **API:** no `next_token`, and every page is stored.
-  - **Browser:** the scroll passed the window start with no stop signal.
-  - In both cases the seen count must agree with the expected count within a tolerance,
-    when one is known. Otherwise the window is `partial`.
+  - **Browser:** the scroll passed the window start with no stop signal. A scroll that
+    brought NOTHING new, and a blank page, are STOPS and not a natural end — a stall
+    recorded as coverage means the paid route never comes back for it.
+  - **NO STOP SIGNAL** was raised. *Any* stop reason means the window is not complete,
+    not just the five named ones: only a list of known reasons used to be treated as
+    stops, so a reason outside it (`no_graphql`, `selector_drift`, `x_error_page`) could
+    still yield a "complete" window.
+  - In both cases the seen count must AGREE with the expected count within a tolerance,
+    when one is known. The agreement is TWO-SIDED: a shortfall means posts were missed
+    and a surplus means the count and the crawl disagree about the window. Otherwise
+    the window is `partial`.
+- **A re-plan is REDUCED to the part no window covers.** Extending the end of a backfill
+  by one day must not create a second window over the whole period and re-bill it; the
+  plan is cut against the ranges the existing windows already cover.
 
   That is the same idea as the catalog's `listing_complete`: absence from an incomplete
   listing proves nothing.
@@ -599,7 +621,10 @@ CREATE TABLE IF NOT EXISTS x_accounts (
     declared_kinds TEXT NOT NULL DEFAULT '',   -- 'setups,positions' -- a hint, never a rule
     person_key TEXT NOT NULL DEFAULT '',       -- cross-source identity, e.g. 'scott_redler'
     include_replies TEXT NOT NULL DEFAULT 'self'
-        CHECK (include_replies IN ('none', 'self', 'all')),
+        -- 'all' was in the first draft of this table and is NOT in the code:
+        -- replies to other people are never collected, so the policy that
+        -- drops them is the only policy. The user's decision, 2026-11-20.
+        CHECK (include_replies IN ('none', 'self')),
     backfill_since TEXT NOT NULL DEFAULT '',   -- oldest date wanted, YYYY-MM-DD
     protected INTEGER NOT NULL DEFAULT 0,
     tweet_count_at_lookup INTEGER,
@@ -668,7 +693,19 @@ x_post_media    (media_key PRIMARY KEY, post_id, idx, type, url, preview_url, wi
 x_post_metrics  (post_id, observed_at, likes, reposts, replies, quotes, views, bookmarks, via)
 x_image_ocr     (md5, engine, parser_version, text, words_json, mean_conf, ocr_at,
                  PRIMARY KEY (md5, engine, parser_version))
+-- A post X says it no longer has. It never reaches the archive -- it is an
+-- errors[] entry, not a missing row -- so without this table the fact that
+-- it was deleted is lost. An OBSERVATION, not a derived row: `rebuild-index`
+-- leaves it alone.
+x_post_deletions (post_id PRIMARY KEY, detected_at, run_id, source, detail)
 ```
+
+`x_posts` carries the references as `referenced_json` rather than in their
+own `x_post_refs` table: the references are read with the post and never
+queried on their own. The two columns the sketch above lists and the
+implementation does not have are `edited_after` (the `edit.is_earliest` flag
+carries it) and `content_md5` (the archive's own byte-identity is the
+record).
 
 `event_session` is the trading session a post belongs to, in America/New_York: before
 16:00 ET on a trading day, that day; otherwise the next trading day.
@@ -1414,6 +1451,40 @@ user ids are resolved on the first lookup or capture.
 - **Edits are counted, not eyeballed.** A test fixture claimed `ARO0` was one
   edit from `ARQQ`; it is two. The test now uses `AROQ` (one edit), the
   project's recorded misread.
+
+### Found while REVIEWING, and fixed (2026-11-20)
+
+The import was read end to end and the eleven defects below were found, each
+one reproduced by running the code before it was changed. Every fix has a
+test that fails without it.
+
+| # | the defect | why it mattered | the fix |
+|---|---|---|---|
+| 1 | **A cashtag was spelled two ways.** The API gives `NVDA`, the web GraphQL gives `$NVDA` (and `#nasa`), and nothing stripped the marker. | The interchangeability contract (§3.3) was broken, and §3.10 rule 1 makes a cashtag an *explicit ticker* — `$NVDA` matches no ticker, so every GraphQL post lost its cashtags and the archive's content depended on which route saw the post first. | The marker is stripped in `canonicalize`, once, for every route. **And the fixture was corrected** to carry the real GraphQL shape, because it had been rendering the API's shape and hiding the defect. |
+| 2 | **A deleted post's id was read from one field of the `errors[]` entry.** | §2.4 and §3.4 make the `errors[]` entry *the* mechanism for marking deletions, so an id lost there is a deletion nobody can mark. | `errorPostId()` takes the id from whichever field holds a plausible one, and from the detail's own `id: [...]` as a last resort. |
+| 3 | **A renamed account lost EVERY post.** The user id was learned only from a record whose handle matched the registered one. | A total, silent loss of the first capture of every renamed account — and the account never recovered, because the id was never learned. `otherUser` was also never surfaced, so a run that dropped everything looked like a clean run. | The identity is learned from the batch: a matching handle first, otherwise the id the capture is *unanimous* about. An ambiguous capture is REPORTED, never guessed. `otherUser` is on the run row and in the log. |
+| 4 | **A stalled browser window was recorded as COMPLETE.** "6 scrolls with nothing new" and a blank page both set `reachedEnd: true`. | §3.7 says a window is complete only when the route reached its natural end. A stall recorded as coverage means the paid route never comes back for it — the "absence from an incomplete listing proves nothing" failure, inside the plan that warns about it. | Only `passed_start` is a natural end. A stall is a stop, so the window is `partial`. |
+| 5 | **A re-plan re-read (and re-billed) the whole backfill.** | The plan's headline promise is that the cost is linear and knowable. Moving `until` forward by a day created a *new* window over the same period. `coveredByCompleteWindow()` existed and was called by nobody. | A re-plan is REDUCED to the part no window covers (`uncoveredRanges`), so only the uncovered tail is crawled. |
+| 6 | **The budget started at $0 every run.** | The ledger recorded every paid request and nothing read it back, so an interrupted run — or a second run the same day — could exceed `--budget-usd` several times over. | The budget is seeded from the ledger, so the cap is per account per UTC day, which is how X bills. |
+| 7 | **The archive was written non-atomically, and one corrupt line made it unreadable.** | The archive is the one thing here that cannot be re-fetched cheaply, and a half-written month file made the whole corpus unreadable. | Written to a sibling `.tmp` and renamed over. A corrupt line is reported and the file is *not* rewritten, so the line is not dropped. |
+| 8 | **Paths were stored as absolute, or as `../..`.** | The catalog is committed, so an absolute path names one machine's home directory and resolves nowhere on a clone. | The repository's own helper (`src/video/portablePaths.js`) is used for `raw_dir` and the archive paths. |
+| 9 | **The run row was never closed, and its cost counter disagreed with the ledger.** | `x_crawl_runs` could not answer "what happened", and `accountStatus()` reported a spend the ledger did not support. | The run is closed with a status, a stop reason and a finish time, and the lookup and the count requests are added to the run's cost. |
+| 10 | **Completeness was one-sided, and an unknown stop reason could still yield "complete".** | Only five reasons were treated as stops, so `no_graphql`, `selector_drift` and `x_error_page` fell through to "complete" — and a complete window is never crawled again. A surplus over the expected count passed too. | ANY stop reason means *not* complete, the agreement is two-sided, and `selector_drift` is a known reason. |
+| 11 | **The derived rows were not replaced with zero rows.** | The vision reader deleted an image's position rows only when the new reading *had* rows, so a reading that found nothing left the old holdings in place — how a holding nobody can see stays in a portfolio report. | The rows are always replaced when a read succeeds, including with zero rows; a refused or failed read leaves them alone. Superseded reader versions are purged on a full run only. |
+
+Four smaller ones, fixed the same way: a media item without a key and a post
+whose author was missing each lost the **whole post**; a rename onto a handle
+another account holds aborted the import with a raw `UNIQUE constraint
+failed`; `include_replies` was normalised on only one of the two paths, so an
+empty value reached the CHECK constraint; and the t.co stripper's alphabet
+excluded `-` and `_`, so the routes disagreed about the same post.
+
+Two decisions were taken at the same time and are worth naming: **the
+derived file is attached** to the X catalog (so `x_positions` and
+`x_image_readings` are reachable from the one connection, the way every
+other source's interpretations are), and **an X run also writes a
+`catalog_runs` row** (so the one table every source writes to shows every
+source's runs).
 
 ### Not verified yet (needs your keys or your login)
 

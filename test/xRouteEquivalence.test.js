@@ -35,6 +35,21 @@ test('the same post via the API and via GraphQL normalizes to the same content',
   }
 });
 
+test('a cashtag is the same value whichever route spelled it with the marker', () => {
+  // The API gives `NVDA`; the web GraphQL gives `$NVDA` and `#nasa` for a
+  // hashtag. A cashtag is an EXPLICIT ticker (the extraction rule), so
+  // `$NVDA` that matches no ticker is a lost holding -- and the archive's
+  // content would depend on which route saw the post first.
+  const api = normalizeApiV2Page(apiPage(), { fetchedAt: '2026-11-20T10:00:00.000Z' }).records
+    .find((r) => r.post_id === IDS.original);
+  const web = normalizeGraphqlResponse(graphqlTimeline(), { fetchedAt: '2026-11-20T11:00:00.000Z' }).records
+    .find((r) => r.post_id === IDS.original);
+  assert.deepEqual(api.entities.cashtags, ['NVDA', 'AMD']);
+  assert.deepEqual(web.entities.cashtags, ['NVDA', 'AMD'], 'the $ marker is stripped');
+  assert.deepEqual(web.entities.hashtags, ['nasa'], 'the # marker is stripped');
+  assert.deepEqual(api.entities, web.entities);
+});
+
 test('merging: the API wins a field, but the first sighting and first metrics never move', () => {
   const web = normalizeGraphqlResponse(graphqlTimeline(), { fetchedAt: '2026-11-19T09:00:00.000Z' }).records
     .find((r) => r.post_id === IDS.original);
@@ -48,6 +63,21 @@ test('merging: the API wins a field, but the first sighting and first metrics ne
 
   const again = mergeRecords(record, api);
   assert.equal(again.changed, false, 'merging the same capture twice changes nothing');
+});
+
+test('merging: the entity sets are UNIONED, and the order does not depend on the order of arrival', () => {
+  // A cashtag is present or it is not, so the lower route's extra cashtags
+  // must not be lost to a higher route that simply found fewer -- and the
+  // merge must not depend on which route was seen first.
+  const web = normalizeGraphqlResponse(graphqlTimeline(), { fetchedAt: '2026-11-19T09:00:00.000Z' }).records
+    .find((r) => r.post_id === IDS.original);
+  const api = normalizeApiV2Page(apiPage(), { fetchedAt: '2026-11-20T10:00:00.000Z' }).records
+    .find((r) => r.post_id === IDS.original);
+  const narrow = { ...api, entities: { ...api.entities, cashtags: ['NVDA'] } };
+  const forward = mergeRecords(narrow, web).record;
+  const backward = mergeRecords(web, narrow).record;
+  assert.deepEqual(forward.entities.cashtags, ['NVDA', 'AMD'], 'the lower route\'s extra cashtag survives');
+  assert.deepEqual(forward.entities.cashtags, backward.entities.cashtags, 'the order does not depend on the arrival order');
 });
 
 test('merging: a truncated page-scraped text never replaces the full text, and a real media key replaces a placeholder', () => {

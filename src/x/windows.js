@@ -113,7 +113,61 @@ function shift(isoDate, days) {
 }
 
 /**
+ * The parts of [start, end) that no existing window already covers.
+ *
+ * WHY THIS EXISTS
+ *
+ * A window is the unit of work and a COMPLETE window is never crawled
+ * again. So a re-plan must be REDUCED to the part that is not covered
+ * yet -- otherwise extending the end of a backfill by one day creates a
+ * NEW window for the whole period, and the crawler re-reads (and
+ * re-bills) every post in it. The API costs $0.005 a post, so "re-plan
+ * tomorrow" is not a free operation.
+ *
+ * The covered ranges are the ranges of the windows that already exist for
+ * the account and the query kind -- complete ones AND the ones still in
+ * progress, because a window being resumed is covering its own range.
+ *
+ * @param {Array<{start: string, end: string}>} existing
+ * @param {string} start
+ * @param {string} end
+ * @returns {Array<{start: string, end: string}>}
+ */
+function uncoveredRanges(existing, start, end) {
+  if (!(start < end)) return [];
+  const ranges = (existing || [])
+    .filter((range) => range && range.start < range.end)
+    .map((range) => ({ start: range.start, end: range.end }))
+    .sort((a, b) => (a.start < b.start ? -1 : (a.start > b.start ? 1 : 0)));
+  const out = [];
+  let cursor = start;
+  for (const range of ranges) {
+    if (range.end <= cursor) continue;
+    if (range.start >= end) break;
+    if (range.start > cursor) out.push({ start: cursor, end: range.start < end ? range.start : end });
+    if (range.end > cursor) cursor = range.end;
+    if (cursor >= end) break;
+  }
+  if (cursor < end) out.push({ start: cursor, end });
+  return out.filter((range) => range.start < range.end);
+}
+
+/**
  * Is a window complete? (The rule both routes share.)
+ *
+ * THREE THINGS MUST HOLD
+ *
+ * 1. The route reached the window's NATURAL END -- the API ran out of
+ *    pages, the browser scrolled past the window's start.
+ * 2. NO STOP SIGNAL was raised. ANY stop reason means the window is not
+ *    complete: only a list of five known reasons used to be treated as
+ *    stops, so a reason outside that list (`no_graphql`, `selector_drift`,
+ *    `x_error_page`) could still yield a "complete" window -- and a
+ *    window that is complete is never crawled again.
+ * 3. The seen count AGREES with the expected count, when one is known.
+ *    The agreement is TWO-SIDED: a shortfall means posts were missed, and
+ *    a surplus means the count and the crawl disagree about the window.
+ *    Both are a reason to look again.
  *
  * @param {object} input
  * @param {'api'|'browser'|'agent'} input.route
@@ -121,17 +175,21 @@ function shift(isoDate, days) {
  * @param {string} [input.stopReason] - any stop signal means NOT complete
  * @param {number} input.seen
  * @param {number|null} [input.expected] - from the counts endpoint, when known
- * @param {number} [input.tolerance] - allowed shortfall, as a fraction
+ * @param {number} [input.tolerance] - allowed disagreement, as a fraction
  * @returns {'complete'|'partial'|'blocked'}
  */
 function windowVerdict(input) {
-  if (input.stopReason && ['rate_limited', 'login_required', 'challenge', 'account_locked', 'budget'].includes(input.stopReason)) {
+  if (input.stopReason) {
+    // A stop that still reached the end is 'partial'; one that did not is
+    // 'blocked', so a caller can tell "we stopped early" from "we stopped
+    // at the boundary".
     return input.reachedEnd ? 'partial' : 'blocked';
   }
   if (!input.reachedEnd) return 'partial';
   if (Number.isFinite(input.expected) && input.expected > 0) {
     const tolerance = Number.isFinite(input.tolerance) ? input.tolerance : 0.02;
-    if (input.seen < input.expected * (1 - tolerance)) return 'partial';
+    const drift = Math.abs(input.seen - input.expected);
+    if (drift > input.expected * tolerance) return 'partial';
   }
   return 'complete';
 }
@@ -144,5 +202,6 @@ module.exports = {
   planWindows,
   shift,
   splitWindow,
+  uncoveredRanges,
   windowVerdict,
 };

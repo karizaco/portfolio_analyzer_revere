@@ -29,6 +29,51 @@ const { addMetrics, upsertPost } = require('./indexStore');
 const { getAccount, resolveUserId } = require('./registry');
 
 /**
+ * Learn the account's identity from a batch of records.
+ *
+ * THE FAULT THIS FIXES
+ *
+ * The user id was learned ONLY from a record whose handle matched the
+ * account's registered handle. A renamed account therefore never learned
+ * its user id at all: every record was rejected as "another user's", and
+ * the account stayed unidentified FOREVER -- a total, silent loss of the
+ * first capture of every renamed account.
+ *
+ * So the identity is learned from the batch, and the rule is:
+ *
+ *   - a record whose handle matches the account's is the account's;
+ *   - otherwise the account has been RENAMED, and the identity is
+ *     whatever user id the capture is UNANIMOUS about. A capture with more
+ *     than one user id is ambiguous, and an ambiguous capture is REPORTED,
+ *     never guessed -- guessing here would merge two people's posts.
+ *
+ * @param {import('node:sqlite').DatabaseSync} catalogDb
+ * @param {object} account - an x_accounts row
+ * @param {Array<object>} records - the canonical records of the batch
+ * @returns {{account: object, error: string}}
+ */
+function learnIdentity(catalogDb, account, records) {
+  if (account.user_id) return { account, error: '' };
+  const matching = records.filter((record) => normalizeHandle(record.handle) === account.handle);
+  const candidate = matching.length ? matching[0] : records[0];
+  if (!candidate) return { account, error: '' };
+  const ids = new Set(records.map((record) => record.user_id));
+  if (!matching.length && ids.size > 1) {
+    return {
+      account,
+      error: `the capture carries ${ids.size} different user ids and none of them is the registered handle `
+        + `@${account.handle}, so the account's identity cannot be learned from it`,
+    };
+  }
+  try {
+    resolveUserId(catalogDb, account.account_id, candidate.user_id, candidate.handle);
+  } catch (error) {
+    return { account, error: error.message };
+  }
+  return { account: getAccount(catalogDb, account.account_id), error: '' };
+}
+
+/**
  * Import canonical records for one account.
  *
  * @param {object} options
@@ -40,7 +85,7 @@ const { getAccount, resolveUserId } = require('./registry');
  * @param {boolean} [options.dryRun]
  * @returns {{seen: number, invalid: Array<object>, otherUser: number, filtered: object,
  *            new: number, updated: number, unchanged: number, filesWritten: number,
- *            oldest: string, newest: string, kept: Array<object>}}
+ *            oldest: string, newest: string, kept: Array<object>, identityError: string}}
  */
 function importRecords(options) {
   const { catalogDb, indexDb, records } = options;
@@ -58,34 +103,51 @@ function importRecords(options) {
     oldest: '',
     newest: '',
     kept: [],
+    identityError: '',
   };
+
+  // The identity is learned ONCE, from the batch as a whole.
+  const identity = learnIdentity(catalogDb, account, records);
+  account = identity.account;
+  out.identityError = identity.error;
 
   const own = [];
   for (const record of records) {
-    const check = validatePostRecord(record);
+    // A post whose AUTHOR is missing -- a deleted or suspended author, so
+    // the capture carries no handle -- would be invalid, and a post is
+    // never lost over a field the capture could not carry. The account's
+    // own handle is the right one: the user id is what identifies the
+    // author, and it is what the record is checked against.
+    const candidate = (!record.handle && record.user_id && record.user_id === account.user_id && account.handle)
+      ? { ...record, handle: account.handle }
+      : record;
+    const check = validatePostRecord(candidate);
     if (!check.ok) {
-      out.invalid.push({ post_id: record && record.post_id, errors: check.errors });
+      out.invalid.push({ post_id: candidate && candidate.post_id, errors: check.errors });
       continue;
     }
-    if (!account.user_id && normalizeHandle(record.handle) === account.handle) {
-      resolveUserId(catalogDb, account.account_id, record.user_id, record.handle);
-      account = getAccount(catalogDb, account.account_id);
-    }
-    if (record.user_id !== account.user_id) {
+    if (candidate.user_id !== account.user_id) {
       out.otherUser += 1;
       continue;
     }
-    if (normalizeHandle(record.handle) !== account.handle) {
+    if (normalizeHandle(candidate.handle) !== account.handle) {
       // Same user id, new handle: a rename. Follow it.
-      resolveUserId(catalogDb, account.account_id, record.user_id, record.handle);
-      account = getAccount(catalogDb, account.account_id);
+      try {
+        resolveUserId(catalogDb, account.account_id, candidate.user_id, candidate.handle);
+        account = getAccount(catalogDb, account.account_id);
+      } catch (error) {
+        // A conflict (the new handle belongs to another account) is a
+        // REJECTION of this record, not a fatal error that aborts the page.
+        out.invalid.push({ post_id: candidate.post_id, errors: [error.message] });
+        continue;
+      }
     }
-    const verdict = keepByPolicy(record, policy);
+    const verdict = keepByPolicy(candidate, policy);
     if (!verdict.keep) {
       out.filtered[verdict.reason] = (out.filtered[verdict.reason] || 0) + 1;
       continue;
     }
-    own.push(record);
+    own.push(candidate);
   }
 
   for (const record of own) {
@@ -132,4 +194,4 @@ function filteredTotal(filtered) {
   return Object.values(filtered || {}).reduce((sum, n) => sum + n, 0);
 }
 
-module.exports = { filteredTotal, importRecords };
+module.exports = { filteredTotal, importRecords, learnIdentity };

@@ -41,14 +41,24 @@ function loadPricing(file = PRICING_PATH) {
  * @param {number} options.budgetUsd - the most this run may spend
  * @param {number} [options.maxPosts] - an additional cap on posts read
  * @param {object} [options.pricing]
+ * @param {number} [options.startingSpend] - what the account already spent
+ *   today (USD). X bills a resource once per UTC DAY, so the cap is per
+ *   account per UTC day: a run that is interrupted and resumed, or a
+ *   second run the same day, must not start at $0.
+ * @param {number} [options.startingPosts] - how many posts the account
+ *   already read today.
  */
 function createBudget(options) {
   const pricing = options.pricing || loadPricing();
   const budgetUsd = Number(options.budgetUsd);
   if (!(budgetUsd >= 0)) throw new Error('a budget in USD is required (--budget-usd)');
   const maxPosts = Number.isFinite(options.maxPosts) && options.maxPosts > 0 ? options.maxPosts : Infinity;
-  let spent = 0;
-  let posts = 0;
+  let spent = Number(options.startingSpend) > 0 ? Number(options.startingSpend) : 0;
+  let posts = Number(options.startingPosts) > 0 ? Number(options.startingPosts) : 0;
+  if (spent > budgetUsd) {
+    throw new Error(`the account has already spent $${spent.toFixed(3)} today, which is over the `
+      + `$${budgetUsd.toFixed(2)} budget. Raise the budget or wait for tomorrow.`);
+  }
 
   return {
     pricing,

@@ -20,6 +20,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const { normalizeHandle } = require('./postRecord');
+const { toPortableArtifactPath } = require('../video/portablePaths');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const CATALOG_DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
@@ -32,6 +33,13 @@ function nowIso() {
 /**
  * Open the catalog and make sure the X tables exist.
  *
+ * The DERIVED file is attached too, through the repository's own helper:
+ * `x_positions` and `x_image_readings` live in it, exactly as every
+ * other source's interpretations do, and a second connection for them
+ * would be a second place to forget to write. `attachDerived` is
+ * idempotent, and a scratch catalog gets a sibling derived file rather
+ * than the production one -- the repository's rule.
+ *
  * @param {object} [options]
  * @param {string} [options.path]
  * @returns {import('node:sqlite').DatabaseSync}
@@ -39,12 +47,59 @@ function nowIso() {
 function openCatalog(options = {}) {
   // eslint-disable-next-line global-require
   const { DatabaseSync } = require('node:sqlite');
+  // eslint-disable-next-line global-require
+  const { attachDerived, derivedPathFor } = require('../db/derivedStore');
   const file = options.path || CATALOG_DB_PATH;
   fs.mkdirSync(path.dirname(file), { recursive: true });
   const db = new DatabaseSync(file);
   db.exec('PRAGMA busy_timeout = 60000');
   db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8'));
+  migrateCatalog(db);
+  // The derived file is attached WITHOUT re-running its schema when it is
+  // already there: the schema is a tracked file, and a read-only command
+  // must not rewrite it. A scratch catalog gets a sibling derived file,
+  // which does not exist yet, so it is created -- the repository's rule.
+  const derivedPath = derivedPathFor(db);
+  attachDerived(db, { createSchema: fs.existsSync(derivedPath) ? false : undefined });
   return db;
+}
+
+/**
+ * Bring a catalog that was written by an older schema up to date.
+ *
+ * `CREATE TABLE IF NOT EXISTS` does NOT add a column to a table that
+ * already exists, so a column added to the schema file is missing from a
+ * catalog that was created before it. The column is added here, guarded
+ * by the table's own definition -- the same rule the Python worker's
+ * migrations follow.
+ *
+ * @param {import('node:sqlite').DatabaseSync} db
+ */
+function migrateCatalog(db) {
+  const columns = new Set(db.prepare('PRAGMA table_info(x_crawl_runs)').all().map((row) => String(row.name)));
+  for (const [name, ddl] of [['posts_other_user', 'INTEGER NOT NULL DEFAULT 0'],
+    ['posts_rejected', 'INTEGER NOT NULL DEFAULT 0']]) {
+    if (!columns.has(name)) db.exec(`ALTER TABLE x_crawl_runs ADD COLUMN ${name} ${ddl}`);
+  }
+}
+
+/**
+ * The reply policy, as it is stored.
+ *
+ * 'self' keeps the account's own posts, its own quotes and its own thread
+ * replies; 'none' keeps only its own posts and quotes. A reply to somebody
+ * else is never collected.
+ *
+ * @param {string} [value]
+ * @returns {'self'|'none'}
+ */
+function normalizeReplies(value) {
+  const text = String(value || '').trim();
+  const policy = text || 'self';
+  if (!['self', 'none'].includes(policy)) {
+    throw new Error(`include_replies must be self or none (replies to other people are never collected), got ${value}`);
+  }
+  return policy;
 }
 
 /**
@@ -57,19 +112,20 @@ function openCatalog(options = {}) {
 function addAccount(db, input) {
   const handle = normalizeHandle(input.handle);
   if (!/^[a-z0-9_]{1,15}$/.test(handle)) throw new Error(`not an X handle: ${input.handle}`);
-  const includeReplies = input.includeReplies || 'self';
-  if (!['self', 'none'].includes(includeReplies)) {
-    throw new Error(`include_replies must be self or none (replies to other people are never collected), got ${includeReplies}`);
-  }
   const now = nowIso();
   const existing = getAccount(db, handle);
   if (existing) {
+    // The value is normalised and checked on BOTH paths: the insert path
+    // defaults an empty value to 'self', and the update path used to pass
+    // an empty string straight to the CHECK constraint, which failed with
+    // a raw SQLite error instead of a usable message.
+    const includeReplies = normalizeReplies(input.includeReplies ?? existing.include_replies);
     const patch = {
       display_name: input.displayName ?? existing.display_name,
       profile: input.profile ?? existing.profile,
       declared_kinds: input.declaredKinds ?? existing.declared_kinds,
       person_key: input.personKey ?? existing.person_key,
-      include_replies: input.includeReplies ?? existing.include_replies,
+      include_replies: includeReplies,
       backfill_since: input.backfillSince ?? existing.backfill_since,
     };
     db.prepare(`UPDATE x_accounts SET display_name = ?, profile = ?, declared_kinds = ?, person_key = ?,
@@ -88,7 +144,7 @@ function addAccount(db, input) {
     input.profile || 'generic',
     input.declaredKinds || '',
     input.personKey || '',
-    includeReplies,
+    normalizeReplies(input.includeReplies),
     input.backfillSince || '',
     now,
     now,
@@ -150,7 +206,15 @@ function resolveUserId(db, accountId, userId, handleSeen) {
   }
   const seen = normalizeHandle(handleSeen || '');
   if (seen && seen !== account.handle) {
-    // The same user id under a new handle: a RENAME. Follow it.
+    // The same user id under a new handle: a RENAME. Follow it -- unless
+    // another account already holds that handle, in which case the capture
+    // is ambiguous and the raw UNIQUE-constraint error would abort the
+    // whole import instead of naming the conflict.
+    const holder = db.prepare('SELECT account_id FROM x_accounts WHERE handle = ? AND account_id != ?').get(seen, accountId);
+    if (holder) {
+      throw new Error(`the handle @${seen} belongs to account ${holder.account_id}, so @${account.handle}'s rename `
+        + `to @${seen} cannot be applied. Resolve the two accounts by hand.`);
+    }
     db.prepare('UPDATE x_accounts SET handle = ?, updated_at = ? WHERE account_id = ?').run(seen, nowIso(), accountId);
   }
   if (seen) noteHandle(db, accountId, seen);
@@ -179,13 +243,18 @@ function recordLookup(db, accountId, user) {
  * @returns {number} run id
  */
 function startRun(db, { accountId, route, runTag, rawDir = '', kind = 'live' }) {
+  // The raw directory is STORED the repository's way: relative to the
+  // repository root when it is inside it, absolute when it is outside --
+  // because the catalog is COMMITTED, and a path naming one machine's
+  // home directory resolves nowhere on a clone.
   const result = db.prepare(`INSERT INTO x_crawl_runs (account_id, route, run_tag, started_at, raw_dir, kind)
-    VALUES (?, ?, ?, ?, ?, ?)`).run(accountId, route, runTag, nowIso(), rawDir, kind);
+    VALUES (?, ?, ?, ?, ?, ?)`).run(accountId, route, runTag, nowIso(),
+  toPortableArtifactPath(rawDir, { repoRoot: ROOT }), kind);
   return Number(result.lastInsertRowid);
 }
 
 const RUN_FIELDS = ['status', 'windows_planned', 'windows_complete', 'posts_seen', 'posts_new', 'posts_updated',
-  'posts_filtered', 'api_cost_usd_est', 'stop_reason', 'finished_at'];
+  'posts_filtered', 'posts_other_user', 'posts_rejected', 'api_cost_usd_est', 'stop_reason', 'finished_at'];
 
 /**
  * Update a run's counters/status.
@@ -202,7 +271,7 @@ function updateRun(db, runId, patch) {
  */
 function addToRun(db, runId, deltas) {
   const keys = Object.keys(deltas).filter((key) => ['posts_seen', 'posts_new', 'posts_updated', 'posts_filtered',
-    'api_cost_usd_est', 'windows_complete'].includes(key));
+    'posts_other_user', 'posts_rejected', 'api_cost_usd_est', 'windows_complete'].includes(key));
   if (!keys.length) return;
   db.prepare(`UPDATE x_crawl_runs SET ${keys.map((key) => `${key} = ${key} + ?`).join(', ')} WHERE id = ?`)
     .run(...keys.map((key) => deltas[key]), runId);
@@ -250,6 +319,106 @@ function updateWindow(db, windowId, patch) {
 }
 
 /**
+ * The ranges the account's windows already cover.
+ *
+ * Every window that exists -- complete, in progress, or failed -- covers
+ * its own range, so a re-plan is reduced to what is left. (A window that
+ * is being resumed is covering its range; without this a re-plan would
+ * create a SECOND window over the same ground and crawl it twice.)
+ *
+ * @param {import('node:sqlite').DatabaseSync} db
+ * @param {number} accountId
+ * @param {string} queryKind
+ * @param {string} route
+ * @returns {Array<{start: string, end: string}>}
+ */
+function windowRanges(db, accountId, queryKind, route) {
+  const params = [accountId, route];
+  let sql = 'SELECT window_start, window_end FROM x_crawl_windows WHERE account_id = ? AND route = ?';
+  if (queryKind) {
+    sql += ' AND query_kind = ?';
+    params.push(queryKind);
+  }
+  sql += ' ORDER BY window_start';
+  return db.prepare(sql).all(...params).map((row) => ({ start: row.window_start, end: row.window_end }));
+}
+
+/**
+ * Close a run, and record it in the SHARED run table.
+ *
+ * Every other source writes a `catalog_runs` row, so a reader of that
+ * table sees every source's runs. X keeps its own `x_crawl_runs` table
+ * (its windows and its ledger are X-shaped), but it ALSO writes one
+ * `catalog_runs` row -- otherwise an X run is invisible to the one table
+ * a reader looks at.
+ *
+ * `row_count_kind` is '' on purpose: the run counted POSTS, not the rows
+ * of a channel listing, and the column exists so that two runs whose
+ * `row_count` means different things are not compared.
+ *
+ * @param {import('node:sqlite').DatabaseSync} db
+ * @param {number} runId
+ * @param {object} options
+ * @param {string} options.status - ok | partial | blocked | failed
+ * @param {string} [options.stopReason]
+ * @param {object} [options.account] - an x_accounts row
+ * @param {string} [options.command] - the command that ran
+ * @param {string} [options.rawDir]
+ * @param {string} [options.kind] - live | fixture
+ * @returns {number|null} the catalog_runs row id
+ */
+function finishRun(db, runId, options) {
+  const status = options.status || 'ok';
+  const stopReason = options.stopReason || '';
+  updateRun(db, runId, { status, stop_reason: stopReason, finished_at: nowIso() });
+  const run = db.prepare('SELECT * FROM x_crawl_runs WHERE id = ?').get(runId);
+  if (!run) return null;
+  const complete = run.windows_planned > 0 && run.windows_complete >= run.windows_planned;
+  const account = options.account || null;
+  const result = db.prepare(`INSERT INTO catalog_runs (source_url, command_json, raw_output_path, row_count,
+      inserted_count, updated_count, missing_upload_dates, malformed_rows, created_at, channel, kind,
+      not_listed_count, listing_complete, row_count_kind)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).run(
+    account ? `https://x.com/${account.handle}` : '',
+    options.command || '',
+    toPortableArtifactPath(options.rawDir || '', { repoRoot: ROOT }),
+    run.posts_seen,
+    run.posts_new,
+    run.posts_updated,
+    0,
+    0,
+    nowIso(),
+    'x',
+    options.kind || run.kind || 'live',
+    0,
+    complete ? 1 : 0,
+    '',
+  );
+  return Number(result.lastInsertRowid);
+}
+
+/**
+ * What an account has spent on the API since a moment.
+ *
+ * X bills a resource once per UTC day, so the spending cap is per account
+ * per UTC day -- and this is what the budget is seeded from. A run that
+ * starts at $0 every time would let a day exceed its cap by however many
+ * runs were started.
+ *
+ * @param {import('node:sqlite').DatabaseSync} db
+ * @param {number} accountId
+ * @param {string} sinceIso - an ISO instant, inclusive
+ * @returns {{usd: number, posts: number}}
+ */
+function apiSpendSince(db, accountId, sinceIso) {
+  const row = db.prepare(`SELECT COALESCE(SUM(u.est_cost_usd), 0) AS usd,
+      COALESCE(SUM(CASE WHEN u.unit = 'post_read' THEN u.resources_returned ELSE 0 END), 0) AS posts
+    FROM x_api_usage u JOIN x_crawl_runs r ON r.id = u.run_id
+    WHERE r.account_id = ? AND u.requested_at >= ?`).get(accountId, sinceIso);
+  return { usd: Number(row.usd || 0), posts: Number(row.posts || 0) };
+}
+
+/**
  * Is this date range already covered by a COMPLETE window on any route?
  */
 function coveredByCompleteWindow(db, accountId, queryKinds, start, end) {
@@ -287,10 +456,13 @@ module.exports = {
   accountStatus,
   addAccount,
   addToRun,
+  apiSpendSince,
   coveredByCompleteWindow,
   ensureWindows,
+  finishRun,
   getAccount,
   listAccounts,
+  normalizeReplies,
   openCatalog,
   pendingWindows,
   recordApiUsage,
@@ -299,4 +471,5 @@ module.exports = {
   startRun,
   updateRun,
   updateWindow,
+  windowRanges,
 };

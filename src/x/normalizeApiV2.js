@@ -46,6 +46,29 @@ function entityList(entities, key, field) {
 }
 
 /**
+ * The id an `errors[]` entry is about.
+ *
+ * X's error object carries the id in more than one place, and WHICH field
+ * holds it has differed between API versions (`resource_id` in the older
+ * convention, `value` in others), so the id is taken from whichever field
+ * holds a plausible one and the detail's own "id: [...]" is the last
+ * resort. Reading ONE field alone loses the id whenever X moves it -- and
+ * a deleted post whose id was lost cannot be marked as deleted, which is
+ * the whole reason the errors[] entry exists.
+ *
+ * @param {object} error
+ * @returns {string}
+ */
+function errorPostId(error) {
+  for (const value of [error.resource_id, error.value]) {
+    const text = String(value === undefined || value === null ? '' : value);
+    if (/^\d{5,20}$/.test(text)) return text;
+  }
+  const match = /id:\s*\[(\d{5,20})\]/i.exec(String(error.detail || ''));
+  return match ? match[1] : '';
+}
+
+/**
  * Normalize one API v2 response page.
  *
  * @param {object} page - the parsed response body
@@ -63,10 +86,13 @@ function normalizeApiV2Page(page, options = {}) {
 
   const records = [];
   const errors = (page && Array.isArray(page.errors) ? page.errors : []).map((error) => ({
-    post_id: String(error.resource_id || error.value || ''),
+    post_id: errorPostId(error),
     title: String(error.title || ''),
     detail: String(error.detail || ''),
     type: String(error.type || ''),
+    // 'tweet' | 'user' | ... -- what the error is about, so a reader can
+    // tell a deleted post from a suspended author.
+    resource_type: String(error.resource_type || ''),
   }));
 
   for (const tweet of data) {
@@ -106,10 +132,13 @@ function normalizeApiV2Page(page, options = {}) {
     const mediaKeys = tweet.attachments && Array.isArray(tweet.attachments.media_keys)
       ? tweet.attachments.media_keys
       : [];
-    const media = mediaKeys.map((key) => {
+    const media = mediaKeys.map((key, index) => {
       const item = mediaByKey.get(String(key)) || { media_key: key };
+      // A media item without a key still has to be identifiable: a
+      // missing key made the WHOLE post invalid, and the post was lost.
+      const mediaKey = String(item.media_key || key || `media_${index}_${tweet.id}`);
       return {
-        media_key: String(item.media_key || key),
+        media_key: mediaKey,
         type: item.type || 'photo',
         url: item.url || '',
         preview_url: item.preview_image_url || '',
@@ -163,4 +192,4 @@ function normalizeApiV2Page(page, options = {}) {
   return { records, errors };
 }
 
-module.exports = { normalizeApiV2Page };
+module.exports = { errorPostId, normalizeApiV2Page };

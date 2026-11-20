@@ -17,8 +17,9 @@
 
 const path = require('node:path');
 
-const { API_QUERY_KINDS, planWindows, windowVerdict } = require('./windows');
+const { API_QUERY_KINDS, planWindows, uncoveredRanges, windowVerdict } = require('./windows');
 const { importRecords, filteredTotal } = require('./importer');
+const { markDeleted } = require('./indexStore');
 const { normalizeEnvelope, saveRaw } = require('./rawStore');
 const registry = require('./registry');
 
@@ -43,6 +44,8 @@ async function lookupAccount({ catalogDb, client, budget, account, runId, log = 
   registry.recordApiUsage(catalogDb, {
     runId, endpoint: 'users/by/username', httpStatus: response.status, resources: 1, ...charge,
   });
+  // The run's own cost counter: the ledger row and the run row must agree.
+  registry.addToRun(catalogDb, runId, { api_cost_usd_est: charge.cost });
   const user = response.json && response.json.data;
   if (!user) throw new Error(`no such X user: @${account.handle}`);
   registry.recordLookup(catalogDb, account.account_id, user);
@@ -80,6 +83,7 @@ async function estimate({ catalogDb, client, budget, account, since, until, runI
       registry.recordApiUsage(catalogDb, {
         runId, endpoint: 'tweets/counts/all', httpStatus: response.status, resources: 0, ...charge,
       });
+      registry.addToRun(catalogDb, runId, { api_cost_usd_est: charge.cost });
       for (const bucket of (response.json && response.json.data) || []) {
         days.push({ date: String(bucket.start).slice(0, 10), count: Number(bucket.tweet_count) || 0 });
       }
@@ -124,14 +128,25 @@ async function crawlWindows(options) {
   const from = fromClause(account);
   const windows = planWindows({ since, until, unit });
 
+  // A re-plan is REDUCED to the part no window covers yet. Without this,
+  // extending the end of a backfill by one day creates a NEW window over
+  // the whole period, and the crawler re-reads -- and re-bills -- every
+  // post in it at $0.005 a post.
+  const effective = [];
   for (const kind of Object.keys(API_QUERY_KINDS)) {
+    const existing = registry.windowRanges(catalogDb, account.account_id, kind, 'api');
     const days = options.counts && options.counts.kinds[kind] ? options.counts.kinds[kind].days : null;
+    for (const window of windows) {
+      for (const part of uncoveredRanges(existing, window.start, window.end)) {
+        effective.push({ kind, window: { start: part.start, end: part.end } });
+      }
+    }
     registry.ensureWindows(catalogDb, account.account_id, 'api', kind,
-      windows.map((window) => ({ ...window, expected: expectedFor(days, window) })));
+      effective.filter((row) => row.kind === kind).map((row) => ({ ...row.window, expected: expectedFor(days, row.window) })));
   }
-  registry.updateRun(catalogDb, runId, { windows_planned: windows.length * Object.keys(API_QUERY_KINDS).length });
+  registry.updateRun(catalogDb, runId, { windows_planned: effective.length });
 
-  const totals = { seen: 0, new: 0, updated: 0, filtered: 0 };
+  const totals = { seen: 0, new: 0, updated: 0, filtered: 0, otherUser: 0, rejected: 0, invalid: 0 };
   let windowsDone = 0;
   let stopReason = '';
   const pending = registry.pendingWindows(catalogDb, account.account_id, 'api')
@@ -183,7 +198,18 @@ async function crawlWindows(options) {
         fetched_at: response.fetchedAt, query_kind: window.query_kind, window: [window.window_start, window.window_end], body,
       };
       saveRaw(rawDir, `${window.query_kind}_${window.window_start}_${String(page).padStart(4, '0')}`, envelope);
-      const { records } = normalizeEnvelope(envelope);
+      const { records, rejected } = normalizeEnvelope(envelope);
+      // A deleted or protected post arrives as an errors[] entry, not as a
+      // missing row. It is COUNTED, so a window that quietly lost posts
+      // says so instead of looking complete -- and it is MARKED, because
+      // a deletion that is not recorded is a deletion nobody can see.
+      totals.rejected += rejected.length;
+      for (const item of rejected) {
+        if (!item.post_id) continue;
+        markDeleted(indexDb, item.post_id, {
+          detectedAt: response.fetchedAt, runId, source: 'api_v2', detail: item.reason || '',
+        });
+      }
       const result = importRecords({ catalogDb, indexDb, account: registry.getAccount(catalogDb, account.account_id), records, archiveRoot });
       seen += result.seen;
       if (result.oldest && (!oldest || result.oldest < oldest)) oldest = result.oldest;
@@ -192,9 +218,22 @@ async function crawlWindows(options) {
       totals.new += result.new;
       totals.updated += result.updated;
       totals.filtered += filteredTotal(result.filtered);
+      totals.otherUser += result.otherUser;
+      totals.invalid += result.invalid.length;
       registry.addToRun(catalogDb, runId, {
         posts_seen: result.seen, posts_new: result.new, posts_updated: result.updated, posts_filtered: filteredTotal(result.filtered),
+        posts_other_user: result.otherUser, posts_rejected: rejected.length,
       });
+      if (result.otherUser) {
+        // Posts that belong to somebody else are DROPPED by the policy, and
+        // a batch of them is what a stale handle or a wrong account looks
+        // like. It is reported, because a run that dropped everything must
+        // not look like a run that found nothing.
+        log(`[x-api] ${window.query_kind}: ${result.otherUser} post(s) belong to another user id and were not imported`);
+      }
+      if (result.identityError) {
+        log(`[x-api] ${window.query_kind}: ${result.identityError}`);
+      }
 
       nextToken = body.meta && body.meta.next_token ? body.meta.next_token : undefined;
       registry.updateWindow(catalogDb, window.id, { posts_seen: seen, oldest_seen: oldest || '', newest_seen: newest || '', next_token: nextToken || '' });

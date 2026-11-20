@@ -102,7 +102,10 @@ function normalizeDomPost(raw, options) {
     handle,
     created_at: parseXDate(raw.datetime),
     kind: isReply ? 'reply' : (quoteStatus ? 'quote' : 'original'),
-    text: normalizeText(raw.text, { isReply: false }),
+    // Every route strips a reply's leading @-addressees, or the three
+    // routes disagree about the text of a reply by that prefix -- and the
+    // merge's prefix test cannot repair a difference at the START.
+    text: normalizeText(raw.text, { isReply }),
     text_source: raw.show_more ? 'dom_truncated' : 'dom',
     in_reply_to_user_id: selfThread ? userId : null,
     in_reply_to_post_id: null,

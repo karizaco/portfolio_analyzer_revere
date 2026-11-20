@@ -45,11 +45,47 @@ function hasReading(db, md5, reader, version, model) {
 }
 
 /**
+ * Purge the rows a SUPERSEDED reader version wrote.
+ *
+ * The repository's rule: one item's rows are always replaced, and the
+ * superseded parser versions are purged on a FULL run only -- so a
+ * limited run never destroys work it did not redo.
+ *
+ * @param {import('node:sqlite').DatabaseSync} db
+ * @param {string} reader - tesseract | vision
+ * @param {string} version - the CURRENT reader version
+ * @param {string} [model] - the vision model
+ * @returns {number} rows purged
+ */
+function purgeSupersededReadings(db, reader, version, model = '') {
+  const result = reader === 'vision'
+    ? db.prepare(`DELETE FROM x_image_readings WHERE reader = 'vision' AND reader_version != ? AND model = ?`).run(version, model)
+    : db.prepare(`DELETE FROM x_image_readings WHERE reader = 'tesseract' AND reader_version != ?`).run(version);
+  return Number(result.changes || 0);
+}
+
+/**
+ * Purge the position rows a superseded parser version wrote.
+ *
+ * @param {import('node:sqlite').DatabaseSync} db
+ * @param {string} version
+ * @returns {number} rows purged
+ */
+function purgeSupersededPositions(db, version) {
+  const result = db.prepare(`DELETE FROM x_positions WHERE source = 'image_vision' AND parser_version != ?`).run(version);
+  return Number(result.changes || 0);
+}
+
+/**
  * OCR + classify every downloaded photo that has no reading yet.
  */
-async function ocrAll({ catalogDb, indexDb, account, limit, log }) {
+async function ocrAll({ catalogDb, indexDb, account, limit, full, log }) {
   attachDerived(catalogDb);
   const market = loadMarketTickers();
+  if (full) {
+    const purged = purgeSupersededReadings(catalogDb, 'tesseract', TESSERACT_READER_VERSION);
+    if (purged) log(`[x-ocr] purged ${purged} reading(s) written by an older reader version`);
+  }
   const insert = catalogDb.prepare(`INSERT OR REPLACE INTO x_image_readings (md5, post_id, media_key, account_id, handle,
       reader, reader_version, model, image_class, class_confidence, legend_ticker, legend_timeframe, tickers_json,
       reading_json, status, evidence_text) VALUES (?, ?, ?, ?, ?, 'tesseract', ?, '', ?, ?, ?, ?, ?, ?, 'ok', ?)`);
@@ -78,7 +114,7 @@ async function ocrAll({ catalogDb, indexDb, account, limit, log }) {
 /**
  * Read photos with Claude, within a budget.
  */
-async function visionAll({ catalogDb, indexDb, account, args, log }) {
+async function visionAll({ catalogDb, indexDb, account, args, full, log }) {
   if (!args.yes) throw new Error('vision is PAID (Claude API). Add --yes and --budget-usd N.');
   const budgetUsd = Number(args['budget-usd']);
   if (!(budgetUsd > 0)) throw new Error('--budget-usd N is required for vision');
@@ -88,6 +124,15 @@ async function visionAll({ catalogDb, indexDb, account, args, log }) {
   }
   attachDerived(catalogDb);
   const model = String(args.model || vision.DEFAULT_MODEL);
+  if (full) {
+    // A full run purges what an older reader version wrote; a limited run
+    // never destroys work it did not redo.
+    const purgedReadings = purgeSupersededReadings(catalogDb, 'vision', vision.VISION_VERSION, model);
+    const purgedPositions = purgeSupersededPositions(catalogDb, POSITIONS_PARSER_VERSION);
+    if (purgedReadings || purgedPositions) {
+      log(`[x-vision] purged ${purgedReadings} reading(s) and ${purgedPositions} position row(s) from an older version`);
+    }
+  }
   if (!vision.PRICES[model]) log(`[x-vision] no price on file for ${model}; costs are estimated at ${vision.DEFAULT_MODEL} rates`);
   const onlyClasses = args['only-classes'] ? new Set(String(args['only-classes']).split(',').map((s) => s.trim())) : null;
   const limit = Number(args.limit) || 200;
@@ -161,8 +206,15 @@ async function visionAll({ catalogDb, indexDb, account, args, log }) {
     else if (result.status === 'refused') totals.refused += 1;
     else totals.errors += 1;
 
-    if (result.status === 'ok' && positions.length) {
+    if (result.status === 'ok') {
       const asOf = easternParts(media.created_at).date;
+      // The rows are ALWAYS replaced, INCLUDING WITH ZERO ROWS. A reading
+      // that found no positions is still a reading, and the rows the
+      // previous reading left would otherwise survive it -- which is how a
+      // holding nobody can see stays in a portfolio report. (The
+      // repository's rule: one item's rows are always replaced, including
+      // with zero rows.) A REFUSED or FAILED read leaves the rows alone:
+      // nothing was read, so nothing is known.
       deletePositions.run(media.md5, media.post_id);
       for (const row of positions) {
         const ticker = String(row.ticker || '').toUpperCase().replace(/^\$/, '').trim();
@@ -192,10 +244,13 @@ async function visionAll({ catalogDb, indexDb, account, args, log }) {
 async function run(command, { catalogDb, account, args, log }) {
   if (!account.user_id) throw new Error(`@${account.handle} has no user id yet; crawl it first`);
   const indexDb = openIndex();
+  // A run with no --limit is a FULL run, and only a full run may purge
+  // what an older reader version wrote.
+  const full = args.limit === undefined;
   try {
     if (command === 'media') return await downloadPhotos({ indexDb, account, limit: Number(args.limit) || 500, log });
-    if (command === 'ocr') return await ocrAll({ catalogDb, indexDb, account, limit: Number(args.limit) || 2000, log });
-    if (command === 'vision') return await visionAll({ catalogDb, indexDb, account, args, log });
+    if (command === 'ocr') return await ocrAll({ catalogDb, indexDb, account, limit: Number(args.limit) || 2000, full, log });
+    if (command === 'vision') return await visionAll({ catalogDb, indexDb, account, args, full, log });
     throw new Error(`unknown image command ${command}`);
   } finally {
     indexDb.close();
@@ -203,4 +258,12 @@ async function run(command, { catalogDb, account, args, log }) {
   }
 }
 
-module.exports = { POSITIONS_PARSER_VERSION, TESSERACT_READER_VERSION, ocrAll, run, visionAll };
+module.exports = {
+  POSITIONS_PARSER_VERSION,
+  TESSERACT_READER_VERSION,
+  ocrAll,
+  purgeSupersededPositions,
+  purgeSupersededReadings,
+  run,
+  visionAll,
+};

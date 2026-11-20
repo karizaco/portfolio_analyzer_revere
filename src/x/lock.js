@@ -28,6 +28,14 @@ function isAlive(pid) {
 /**
  * Take the lock.
  *
+ * The file is created EXCLUSIVELY (`wx`), so two crawlers starting in
+ * the same instant cannot both take it -- a check-then-write leaves a
+ * window in which both pass the check and both write, which is exactly
+ * the "two crawls on one account" case the lock exists to prevent.
+ *
+ * A lock whose holder is gone is STALE and is taken over; one whose
+ * holder is alive refuses the second crawler and names the pid.
+ *
  * @param {object} [options]
  * @param {string} [options.file]
  * @param {string} [options.label]
@@ -36,17 +44,50 @@ function isAlive(pid) {
 function acquireLock(options = {}) {
   const file = options.file || DEFAULT_LOCK;
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  if (fs.existsSync(file)) {
-    let holder = null;
-    try { holder = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (_) { holder = null; }
-    if (holder && holder.pid !== process.pid && isAlive(Number(holder.pid))) {
-      const error = new Error(`another X crawl is running (pid ${holder.pid}, ${holder.label || ''}, since ${holder.started_at}). `
-        + 'Only one crawl per X session.');
-      error.code = 'locked';
-      throw error;
+  const body = JSON.stringify({ pid: process.pid, label: options.label || '', started_at: new Date().toISOString() });
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      fs.writeFileSync(file, body, { flag: 'wx' });
+      return heldLock(file);
+    } catch (error) {
+      if (error.code !== 'EEXIST') throw error;
+      const holder = readHolder(file);
+      if (holder && holder.pid !== process.pid && isAlive(Number(holder.pid))) {
+        const refused = new Error(`another X crawl is running (pid ${holder.pid}, ${holder.label || ''}, since ${holder.started_at}). `
+          + 'Only one crawl per X session.');
+        refused.code = 'locked';
+        throw refused;
+      }
+      // Stale (the holder is gone) or our own: take it over.
+      try { fs.rmSync(file, { force: true }); } catch (_) { /* gone already */ }
     }
   }
-  fs.writeFileSync(file, JSON.stringify({ pid: process.pid, label: options.label || '', started_at: new Date().toISOString() }));
+  throw new Error(`could not take the lock at ${file}`);
+}
+
+/**
+ * The lock's current holder, or null when the file is unreadable.
+ *
+ * @param {string} file
+ * @returns {object|null}
+ */
+function readHolder(file) {
+  try {
+    const parsed = JSON.parse(fs.readFileSync(file, 'utf8'));
+    return parsed && typeof parsed === 'object' ? parsed : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+/**
+ * The lock this process holds: released on exit, and only by its owner.
+ *
+ * @param {string} file
+ * @returns {{release: Function, file: string}}
+ */
+function heldLock(file) {
   let released = false;
   const release = () => {
     if (released) return;
@@ -60,4 +101,4 @@ function acquireLock(options = {}) {
   return { release, file };
 }
 
-module.exports = { DEFAULT_LOCK, acquireLock, isAlive };
+module.exports = { DEFAULT_LOCK, acquireLock, isAlive, readHolder };

@@ -575,6 +575,12 @@ CREATE TABLE IF NOT EXISTS x_crawl_runs (
     posts_new INTEGER NOT NULL DEFAULT 0,
     posts_updated INTEGER NOT NULL DEFAULT 0,
     posts_filtered INTEGER NOT NULL DEFAULT 0,
+    -- Posts that were DROPPED because they belong to another user id. A
+    -- run that dropped everything must not look like a run that found
+    -- nothing, so the count is on the row.
+    posts_other_user INTEGER NOT NULL DEFAULT 0,
+    -- Posts X says it no longer has (an errors[] entry, not a missing row).
+    posts_rejected INTEGER NOT NULL DEFAULT 0,
     api_cost_usd_est REAL NOT NULL DEFAULT 0,
     stop_reason TEXT NOT NULL DEFAULT '',
     -- Repo-relative when inside the repository (the portable-path rule).

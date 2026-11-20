@@ -61,6 +61,19 @@ test('a window is done when it scrolled past its start, or ran dry -- a scroll c
   assert.equal(jitter(1000, 2000, () => 0.5), 1500);
 });
 
+test('a stalled window is partial, not complete: a scroll that brought nothing is not the end', () => {
+  // A scroll that brought nothing new is as likely to be a lazy-loading
+  // hiccup as the end of the timeline, and completeness belongs to the
+  // window -- so a stall recorded as coverage means the paid route will
+  // never come back for it.
+  const dry = createScrollTracker({ windowStart: '2026-11-01', noNewLimit: 2 });
+  dry.observe([{ post_id: '1', created_at: '2026-11-10T00:00:00Z' }]);
+  dry.observe([{ post_id: '1', created_at: '2026-11-10T00:00:00Z' }]);
+  const stalled = dry.observe([]);
+  assert.deepEqual([stalled.done, stalled.reason, stalled.reachedEnd], [true, 'exhausted', false],
+    'a stall is a STOP, not a natural end');
+});
+
 test('the capture matches GraphQL by operation name, whatever the rotating query id', () => {
   assert.equal(timelineOperation('https://x.com/i/api/graphql/abc123XYZ/SearchTimeline?variables=%7B%7D'), 'SearchTimeline');
   assert.equal(timelineOperation('https://x.com/i/api/graphql/zzz999/UserTweets?variables=1'), 'UserTweets');

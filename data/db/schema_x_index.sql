@@ -39,11 +39,32 @@ CREATE TABLE IF NOT EXISTS x_posts (
     fidelity TEXT NOT NULL,
     first_seen_at TEXT NOT NULL,
     last_seen_at TEXT NOT NULL,
-    archive_path TEXT NOT NULL DEFAULT ''
+    archive_path TEXT NOT NULL DEFAULT '',
+    -- When X was first seen to have deleted this post. Empty until it is.
+    deleted_detected_at TEXT NOT NULL DEFAULT ''
 );
 
 CREATE INDEX IF NOT EXISTS idx_x_posts_user_time ON x_posts(user_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_x_posts_conversation ON x_posts(conversation_id);
+
+-- A post X says it no longer has.
+--
+-- A DELETED POST IS AN ENTRY IN THE API's errors[], not a missing row, so
+-- it never reaches the archive -- and without this table the fact that it
+-- was deleted is lost, which is what the deletion-compliance obligation
+-- and the survivorship analysis both need.
+--
+-- This is an OBSERVATION, not a derived row: it cannot be rebuilt from
+-- the archive, so `rebuild-index` leaves it alone.
+CREATE TABLE IF NOT EXISTS x_post_deletions (
+    post_id TEXT PRIMARY KEY,
+    detected_at TEXT NOT NULL,
+    run_id INTEGER,
+    -- 'api_v2' | 'web_graphql' | 'web_dom'
+    source TEXT NOT NULL DEFAULT '',
+    -- The error's own words, so a reader can see WHY it was not there.
+    detail TEXT NOT NULL DEFAULT ''
+);
 
 CREATE TABLE IF NOT EXISTS x_post_media (
     media_key TEXT NOT NULL,

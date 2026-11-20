@@ -23,7 +23,7 @@
  * are imported as they arrive, so an interrupted crawl keeps what it saw.
  */
 
-const { planWindows, browserSearchUrl, windowVerdict, BROWSER_QUERY_KIND } = require('./windows');
+const { planWindows, browserSearchUrl, uncoveredRanges, windowVerdict, BROWSER_QUERY_KIND } = require('./windows');
 const { createScrollTracker, jitter } = require('./browser/scroll');
 const { detectStopSignal, isEmptyResult } = require('./browser/signals');
 const { defaultProfileDir, isInsideRepo, stripQuery, timelineOperation } = require('./browser/capture');
@@ -138,8 +138,17 @@ async function crawlBrowserWindows(options) {
   const cooldown = options.cooldownMs || [20000, 45000];
   const waitOnChallengeMs = options.waitOnChallengeMs ?? 5 * 60 * 1000;
 
-  registry.ensureWindows(catalogDb, account.account_id, 'browser', BROWSER_QUERY_KIND,
-    planWindows({ since, until, unit: options.unit || 'month' }));
+  // A re-plan is reduced to the part no window covers yet, exactly as the
+  // API route does it: a window that exists is covering its own range,
+  // and a window that is COMPLETE is never crawled again.
+  const existing = registry.windowRanges(catalogDb, account.account_id, BROWSER_QUERY_KIND, 'browser');
+  const effective = [];
+  for (const window of planWindows({ since, until, unit: options.unit || 'month' })) {
+    for (const part of uncoveredRanges(existing, window.start, window.end)) {
+      effective.push({ start: part.start, end: part.end });
+    }
+  }
+  registry.ensureWindows(catalogDb, account.account_id, 'browser', BROWSER_QUERY_KIND, effective);
   const pending = registry.pendingWindows(catalogDb, account.account_id, 'browser', BROWSER_QUERY_KIND)
     .filter((window) => window.window_start >= since && window.window_end <= until)
     .filter((window) => !(options.windowId && window.id !== Number(options.windowId)));
@@ -147,7 +156,7 @@ async function crawlBrowserWindows(options) {
 
   const report = {
     route: 'browser', handle: account.handle, status: 'ok', stop_reason: '', message: '', retry_at: null,
-    windows: [], posts_seen: 0, posts_new: 0, posts_filtered: 0, run_id: runId,
+    windows: [], posts_seen: 0, posts_new: 0, posts_filtered: 0, posts_other_user: 0, run_id: runId,
   };
   if (!pending.length) {
     report.message = 'no pending browser windows in this range';
@@ -235,10 +244,18 @@ async function crawlBrowserWindows(options) {
           report.posts_seen += imported.seen;
           report.posts_new += imported.new;
           report.posts_filtered += filteredTotal(imported.filtered);
+          // Posts of another user id are dropped by the policy, and a batch
+          // of them is what a stale handle looks like. Reported, so a crawl
+          // that dropped everything does not look like one that found none.
+          report.posts_other_user += imported.otherUser;
           registry.addToRun(catalogDb, runId, {
             posts_seen: imported.seen, posts_new: imported.new, posts_updated: imported.updated,
-            posts_filtered: filteredTotal(imported.filtered),
+            posts_filtered: filteredTotal(imported.filtered), posts_other_user: imported.otherUser,
           });
+          if (imported.otherUser) {
+            log(`[x-browser] ${imported.otherUser} post(s) belong to another user id and were not imported`);
+          }
+          if (imported.identityError) log(`[x-browser] ${imported.identityError}`);
         }
         const own = records.filter((record) => record.user_id === account.user_id);
         progress = tracker.observe(own);
@@ -260,7 +277,10 @@ async function crawlBrowserWindows(options) {
           break;
         }
         if (isEmptyResult(state.bodyText) && !own.length && tracker.scrolls >= 2) {
-          progress = { done: true, reason: 'empty', reachedEnd: true };
+          // A blank page is a STOP, not a natural end: X may simply have
+          // failed to render, and a window recorded as covered because of
+          // it would never be crawled again.
+          progress = { done: true, reason: 'empty', reachedEnd: false };
         }
         if (progress.done) break;
         if (tracker.scrolls >= 3 && !capturedHere && !state.articles && !isEmptyResult(state.bodyText)) {

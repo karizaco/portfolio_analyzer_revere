@@ -221,6 +221,44 @@ test('vision: a portfolio screenshot becomes position rows, each checked against
   }
 });
 
+test('vision: a reading that finds NO rows replaces the rows the last reading left', async () => {
+  // The repository's rule: one item's rows are always replaced, INCLUDING
+  // WITH ZERO ROWS. A reading that found no positions is still a reading,
+  // and the rows the previous reading left would otherwise survive it --
+  // which is how a holding nobody can see stays in a portfolio report.
+  const s = scratch();
+  const saved = process.env.ANTHROPIC_API_KEY;
+  process.env.ANTHROPIC_API_KEY = 'test-key-not-used';
+  try {
+    const { account } = await seedImage(s);
+    const reading = {
+      image_class: 'portfolio', summary: 'Brokerage positions', account_label: 'Main', is_complete_list: true,
+      legend_ticker: '', legend_timeframe: '', tickers_visible: ['NVDA'],
+      positions: [{ ticker: 'NVDA', side: 'long', weight_pct_text: '22.4%', row_text: 'NVDA 22.4%' }],
+    };
+    const calls = [];
+    await visionAll({
+      catalogDb: s.catalogDb, indexDb: s.indexDb, account, log: () => {},
+      args: { yes: true, 'budget-usd': '1', client: fakeClaude(reading, calls) },
+    });
+    assert.equal(s.catalogDb.prepare('SELECT COUNT(*) AS n FROM x_positions').get().n, 1);
+
+    // The same image read again -- now finding nothing. The old row must
+    // go, or the pipeline would publish a holding the last read did not see.
+    s.catalogDb.prepare("DELETE FROM x_image_readings WHERE reader = 'vision'").run();
+    const empty = { ...reading, positions: [] };
+    await visionAll({
+      catalogDb: s.catalogDb, indexDb: s.indexDb, account, log: () => {},
+      args: { yes: true, 'budget-usd': '1', client: fakeClaude(empty, calls) },
+    });
+    assert.equal(s.catalogDb.prepare('SELECT COUNT(*) AS n FROM x_positions').get().n, 0,
+      'a reading with no rows replaces the rows the last reading left');
+  } finally {
+    if (saved === undefined) delete process.env.ANTHROPIC_API_KEY; else process.env.ANTHROPIC_API_KEY = saved;
+    s.close();
+  }
+});
+
 test('vision: refuses to run without --yes, and stops before an image that would cross the budget', async () => {
   const s = scratch();
   const saved = process.env.ANTHROPIC_API_KEY;

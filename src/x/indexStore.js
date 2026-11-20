@@ -35,7 +35,26 @@ function openIndex(options = {}) {
   db.exec('PRAGMA busy_timeout = 30000');
   db.exec('PRAGMA journal_mode = WAL');
   db.exec(fs.readFileSync(INDEX_SCHEMA_PATH, 'utf8'));
+  migrateIndex(db);
   return db;
+}
+
+/**
+ * Bring an index that was written by an older schema up to date.
+ *
+ * `CREATE TABLE IF NOT EXISTS` does NOT add a column to a table that
+ * already exists, so a column added to the schema file is missing from
+ * an index that was created before it. The column is added here, guarded
+ * by the table's own definition -- the same rule the Python worker's
+ * migrations follow.
+ *
+ * @param {import('node:sqlite').DatabaseSync} db
+ */
+function migrateIndex(db) {
+  const columns = db.prepare('PRAGMA table_info(x_posts)').all().map((row) => String(row.name));
+  if (!columns.includes('deleted_detected_at')) {
+    db.exec("ALTER TABLE x_posts ADD COLUMN deleted_detected_at TEXT NOT NULL DEFAULT ''");
+  }
 }
 
 /**
@@ -111,6 +130,35 @@ function upsertPost(db, record, options = {}) {
 }
 
 /**
+ * Record that X no longer has a post.
+ *
+ * A deleted post never reaches the archive -- it is an entry in the
+ * API's errors[], not a missing row -- so without this the fact that it
+ * was deleted is lost. A post we DID archive and that X later withdrew is
+ * marked on its own row too.
+ *
+ * @param {import('node:sqlite').DatabaseSync} db
+ * @param {string} postId
+ * @param {object} [options]
+ * @param {string} [options.detectedAt]
+ * @param {number|null} [options.runId]
+ * @param {string} [options.source]
+ * @param {string} [options.detail]
+ */
+function markDeleted(db, postId, options = {}) {
+  const id = String(postId || '');
+  if (!id) return;
+  const detectedAt = options.detectedAt || new Date().toISOString();
+  db.prepare(`INSERT INTO x_post_deletions (post_id, detected_at, run_id, source, detail)
+    VALUES (?, ?, ?, ?, ?) ON CONFLICT(post_id) DO UPDATE SET detected_at = excluded.detected_at,
+      run_id = excluded.run_id, source = excluded.source, detail = excluded.detail`).run(
+    id, detectedAt, options.runId ?? null, options.source || '', options.detail || '',
+  );
+  db.prepare('UPDATE x_posts SET deleted_detected_at = ? WHERE post_id = ? AND deleted_detected_at = ?')
+    .run(detectedAt, id, '');
+}
+
+/**
  * Record one observation of a post's engagement.
  *
  * @param {import('node:sqlite').DatabaseSync} db
@@ -165,6 +213,8 @@ module.exports = {
   DEFAULT_INDEX_PATH,
   INDEX_SCHEMA_PATH,
   addMetrics,
+  markDeleted,
+  migrateIndex,
   openIndex,
   rebuildIndex,
   upsertPost,

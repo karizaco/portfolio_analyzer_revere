@@ -113,6 +113,28 @@ test('windows are calendar-aligned, newest first, and never cross the bounds', (
     /from:testtrader since:2025-12-31 until:2026-02-02/);
 });
 
+test('the window verdict is two-sided, and ANY stop reason blocks completeness', () => {
+  assert.equal(windowVerdict({ route: 'api', reachedEnd: true, seen: 100, expected: 100 }), 'complete');
+  assert.equal(windowVerdict({ route: 'api', reachedEnd: true, seen: 50, expected: 100 }), 'partial', 'a shortfall means posts were missed');
+  assert.equal(windowVerdict({ route: 'api', reachedEnd: true, seen: 130, expected: 100 }), 'partial',
+    'a surplus means the count and the crawl disagree about the window');
+  assert.equal(windowVerdict({ route: 'api', reachedEnd: true, seen: 100, expected: 100, stopReason: 'selector_drift' }), 'partial',
+    'a stop reason OUTSIDE the known list still blocks completeness');
+  assert.equal(windowVerdict({ route: 'api', reachedEnd: false, seen: 100, stopReason: 'selector_drift' }), 'blocked');
+  assert.equal(windowVerdict({ route: 'browser', reachedEnd: false, seen: 50, stopReason: 'rate_limited' }), 'blocked');
+});
+
+test('the budget starts from what the account already spent today', () => {
+  // X bills a resource once per UTC DAY, so the cap is per account per
+  // UTC day. A run that is interrupted and resumed, or a second run the
+  // same day, must not start at $0.
+  const budget = createBudget({ budgetUsd: 1, pricing: PRICING, startingSpend: 0.5, startingPosts: 100 });
+  assert.equal(budget.spent, 0.5);
+  assert.equal(budget.posts, 100);
+  assert.equal(budget.searchPageSize(), 100, 'the remaining $0.50 buys 100 posts');
+  assert.throws(() => createBudget({ budgetUsd: 0.1, pricing: PRICING, startingSpend: 0.5 }), /already spent/);
+});
+
 function scratch() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'x-api-'));
   const handle = {
@@ -201,6 +223,41 @@ test('a crawl stopped by the budget resumes from the saved page token', async ()
     const resumed = log.filter((p) => p.query.includes('-is:reply'));
     assert.equal(resumed[1].nextToken, 'p2', 'the next run starts on page two, not page one');
     assert.equal(s.catalogDb.prepare("SELECT status FROM x_crawl_windows WHERE query_kind = 'originals'").get().status, 'complete');
+  } finally {
+    s.close();
+  }
+});
+
+test('a re-plan crawls only the part no window covers: a backfill is not re-billed', async () => {
+  const s = scratch();
+  try {
+    const account = registry.addAccount(s.catalogDb, { handle: 'testtrader', userId: USER.id });
+    const log = [];
+    const runA = registry.startRun(s.catalogDb, { accountId: account.account_id, route: 'api', runTag: 'a' });
+    await crawlWindows({
+      ...s, client: fakeClient(log), budget: createBudget({ budgetUsd: 5, pricing: PRICING }), account,
+      runId: runA, since: '2026-11-01', until: '2026-11-20', unit: 'year',
+    });
+    assert.ok(log.length > 0, 'the first crawl read something');
+
+    // The next day's backfill asks for one more day. Without the
+    // reduction it creates a NEW window over the whole period and reads
+    // (and bills) every post in it again.
+    const runB = registry.startRun(s.catalogDb, { accountId: account.account_id, route: 'api', runTag: 'b' });
+    const second = [];
+    await crawlWindows({
+      ...s, client: fakeClient(second), budget: createBudget({ budgetUsd: 5, pricing: PRICING }), account,
+      runId: runB, since: '2026-11-01', until: '2026-11-21', unit: 'year',
+    });
+    const originals = second.filter((p) => p.query.includes('-is:reply'));
+    assert.ok(originals.length > 0, 'the new day is crawled');
+    assert.ok(originals.every((p) => p.startTime === '2026-11-20T00:00:00Z'),
+      'only the uncovered day is crawled -- the covered one is not re-billed');
+    assert.ok(!second.some((p) => p.startTime === '2026-11-01T00:00:00Z'), 'the covered range is not read again');
+
+    const rows = s.catalogDb.prepare("SELECT window_start, window_end, status FROM x_crawl_windows WHERE query_kind = 'originals' ORDER BY window_start").all();
+    assert.deepEqual(rows.map((r) => [r.window_start, r.window_end]), [['2026-11-01', '2026-11-20'], ['2026-11-20', '2026-11-21']],
+      'the covered window is kept and the uncovered tail is a new one');
   } finally {
     s.close();
   }

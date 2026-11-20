@@ -19,6 +19,7 @@ const STOP_REASONS = {
   rate_limited: { retryable: true, message: 'X rate-limited the session. Wait for the reset before resuming; do not retry sooner.' },
   x_error_page: { retryable: true, message: 'X showed "Something went wrong". Pause, then resume.' },
   no_graphql: { retryable: true, message: 'No timeline data was captured. X may have changed its web app; diagnose with the agentic prompt.' },
+  selector_drift: { retryable: false, message: 'The page no longer carries the elements the crawler reads. X changed its web app; save a fixture and stop.' },
 };
 
 /**

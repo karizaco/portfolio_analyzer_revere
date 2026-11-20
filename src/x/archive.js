@@ -27,9 +27,25 @@ const path = require('node:path');
 
 const { canonicalize, compareIds } = require('./postRecord');
 const { mergeRecords } = require('./merge');
+const { toPortableArtifactPath } = require('../video/portablePaths');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const DEFAULT_ARCHIVE_ROOT = path.join(ROOT, 'data', 'x_pipeline', 'archive');
+
+/**
+ * A path as it is STORED: relative to the repository root when it is
+ * inside the repository, absolute when it is outside.
+ *
+ * The repository's rule, and its own helper -- a path outside the
+ * repository has no honest relative form, and `path.relative` would
+ * produce a `../..` chain that resolves nowhere on another machine.
+ *
+ * @param {string} file
+ * @returns {string}
+ */
+function portablePath(file) {
+  return toPortableArtifactPath(file, { repoRoot: ROOT });
+}
 
 /**
  * The file a record belongs in.
@@ -51,12 +67,21 @@ function archivePathFor(archiveRoot, record) {
 /**
  * Read one month file.
  *
+ * A CORRUPT LINE IS SKIPPED, not thrown.
+ *
+ * The archive is the record -- a fetched post cannot be re-fetched cheaply
+ * (the API charges for it) and the author can delete it -- so one bad line
+ * must not make the whole archive unreadable. The line is reported, and
+ * the file is NOT rewritten while it holds one: rewriting it would drop
+ * the bad line and with it whatever that line said.
+ *
  * @param {string} file
- * @returns {Map<string, object>}
+ * @returns {{records: Map<string, object>, corrupt: Array<{line: number, text: string, error: string}>}}
  */
 function readMonthFile(file) {
   const out = new Map();
-  if (!fs.existsSync(file)) return out;
+  const corrupt = [];
+  if (!fs.existsSync(file)) return { records: out, corrupt };
   const lines = fs.readFileSync(file, 'utf8').split('\n');
   lines.forEach((line, index) => {
     if (!line.trim()) return;
@@ -64,11 +89,12 @@ function readMonthFile(file) {
     try {
       record = JSON.parse(line);
     } catch (error) {
-      throw new Error(`${file}:${index + 1} is not JSON: ${error.message}`);
+      corrupt.push({ line: index + 1, text: line.slice(0, 200), error: error.message });
+      return;
     }
     out.set(String(record.post_id), record);
   });
-  return out;
+  return { records: out, corrupt };
 }
 
 /**
@@ -85,13 +111,17 @@ function serializeMonth(records) {
 /**
  * Write records into the archive, merging with what is there.
  *
- * A file is written only when its content changes.
+ * A file is written only when its content changes, and it is written
+ * ATOMICALLY: to a sibling `.tmp` file, then renamed over the original.
+ * A plain write that is interrupted half-way leaves a truncated month
+ * file, and the archive is the one thing here that cannot be re-fetched.
  *
  * @param {Array<object>} records - canonical, validated
  * @param {object} [options]
  * @param {string} [options.archiveRoot]
  * @returns {{filesWritten: number, filesUnchanged: number, postsNew: number,
  *            postsUpdated: number, postsUnchanged: number,
+ *            corruptFiles: Array<{file: string, lines: number[]}>,
  *            results: Array<{post_id: string, status: string, archive_path: string, record: object}>}}
  */
 function writeToArchive(records, options = {}) {
@@ -104,10 +134,25 @@ function writeToArchive(records, options = {}) {
   }
 
   const stats = {
-    filesWritten: 0, filesUnchanged: 0, postsNew: 0, postsUpdated: 0, postsUnchanged: 0, results: [],
+    filesWritten: 0, filesUnchanged: 0, postsNew: 0, postsUpdated: 0, postsUnchanged: 0,
+    corruptFiles: [], results: [],
   };
   for (const [file, incoming] of byFile) {
-    const month = readMonthFile(file);
+    const { records: month, corrupt } = readMonthFile(file);
+    if (corrupt.length) {
+      // The file is left exactly as it is: rewriting it would drop the
+      // corrupt line, and that line is evidence.
+      stats.corruptFiles.push({ file: portablePath(file), lines: corrupt.map((item) => item.line) });
+      for (const record of incoming) {
+        stats.results.push({
+          post_id: record.post_id,
+          status: 'skipped_corrupt',
+          archive_path: portablePath(file),
+          record,
+        });
+      }
+      continue;
+    }
     const before = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : null;
     for (const record of incoming) {
       const existing = month.get(record.post_id) || null;
@@ -120,14 +165,18 @@ function writeToArchive(records, options = {}) {
       stats.results.push({
         post_id: record.post_id,
         status,
-        archive_path: path.relative(ROOT, file).replace(/\\/g, '/'),
+        archive_path: portablePath(file),
         record: merged,
       });
     }
     const after = serializeMonth(month);
     if (after !== before) {
       fs.mkdirSync(path.dirname(file), { recursive: true });
-      fs.writeFileSync(file, after, 'utf8');
+      // Atomic: a half-written month file would make the archive
+      // unreadable, and it cannot be re-fetched.
+      const tmp = `${file}.tmp`;
+      fs.writeFileSync(tmp, after, 'utf8');
+      fs.renameSync(tmp, file);
       stats.filesWritten += 1;
     } else {
       stats.filesUnchanged += 1;
@@ -155,8 +204,8 @@ function* iterateArchive(options = {}) {
       const yearDir = path.join(userDir, year);
       for (const file of fs.readdirSync(yearDir).filter((name) => /^\d{4}-\d{2}\.jsonl$/.test(name)).sort()) {
         const full = path.join(yearDir, file);
-        const relative = path.relative(ROOT, full).replace(/\\/g, '/');
-        for (const record of readMonthFile(full).values()) yield { record, archive_path: relative };
+        const relative = portablePath(full);
+        for (const record of readMonthFile(full).records.values()) yield { record, archive_path: relative };
       }
     }
   }
@@ -166,6 +215,7 @@ module.exports = {
   DEFAULT_ARCHIVE_ROOT,
   archivePathFor,
   iterateArchive,
+  portablePath,
   readMonthFile,
   serializeMonth,
   writeToArchive,

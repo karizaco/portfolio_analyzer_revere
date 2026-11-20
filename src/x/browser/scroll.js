@@ -10,8 +10,15 @@
  *                 start -- the timeline has scrolled past the window, so
  *                 everything inside it has been on screen
  *   exhausted     N scrolls in a row brought no new post: the results ran out
- *   scroll_cap    the hard cap on scrolls was hit (NOT a natural end: the
- *                 window is then partial)
+ *   scroll_cap    the hard cap on scrolls was hit
+ *
+ * ONLY `passed_start` is a NATURAL END. The other two are STOPS, and a
+ * window that stopped is `partial`, never `complete`: a scroll that
+ * brought nothing new is as likely to be a lazy-loading hiccup as the end
+ * of the timeline, and completeness belongs to the window -- so a stall
+ * recorded as coverage means the paid route will never come back for it.
+ * That is the same failure as the catalog's `listing_complete`: absence
+ * from an incomplete listing proves nothing.
  *
  * Borrowed from x_unsub's "N scrolls with no new items" loop, with the
  * window boundary added.
@@ -57,7 +64,7 @@ function createScrollTracker(options) {
       }
       quiet = fresh ? 0 : quiet + 1;
       if (oldest && Date.parse(oldest) < startMs) return { done: true, reason: 'passed_start', reachedEnd: true, fresh };
-      if (quiet >= noNewLimit) return { done: true, reason: 'exhausted', reachedEnd: true, fresh };
+      if (quiet >= noNewLimit) return { done: true, reason: 'exhausted', reachedEnd: false, fresh };
       if (scrolls >= maxScrolls) return { done: true, reason: 'scroll_cap', reachedEnd: false, fresh };
       return { done: false, reason: '', reachedEnd: false, fresh };
     },

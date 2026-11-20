@@ -44,7 +44,8 @@ const LONG_TEXT = `${'Big picture on $SPY and semis. '.repeat(12)}Adding $SMH ov
 const POSTS = [
   {
     key: 'original', author: USER, text: 'Watching $NVDA over 145.50 &amp; $AMD under 120. Daily chart:',
-    cashtags: ['NVDA', 'AMD'], media: [{ key: '3_111', type: 'photo', url: 'https://pbs.twimg.com/media/AAA111.jpg', w: 1920, h: 1080 }],
+    cashtags: ['NVDA', 'AMD'], hashtags: ['nasa'],
+    media: [{ key: '3_111', type: 'photo', url: 'https://pbs.twimg.com/media/AAA111.jpg', w: 1920, h: 1080 }],
     tco: 'https://t.co/media111',
   },
   { key: 'long', author: USER, text: LONG_TEXT, note: true, cashtags: ['SPY', 'SMH'] },
@@ -93,10 +94,14 @@ function apiPage() {
       conversation_id: post.replyTo && post.replyTo.key ? IDS[post.replyTo.key] : (post.replyTo ? post.replyTo.id : IDS[post.key]),
       lang: 'en',
       edit_history_tweet_ids: post.editHistory ? post.editHistory.map((key) => IDS[key]) : [IDS[post.key]],
-      entities: { cashtags: post.cashtags.map((tag) => ({ tag })) },
+      entities: {
+        // The API's `tag` carries NO marker; the web GraphQL's `text` DOES.
+        cashtags: post.cashtags.map((tag) => ({ tag })),
+        hashtags: (post.hashtags || []).map((tag) => ({ tag })),
+      },
       public_metrics: { like_count: 10, retweet_count: 2, reply_count: 1, quote_count: 0, impression_count: 500, bookmark_count: 3 },
     };
-    if (post.note) tweet.note_tweet = { text: fullText, entities: { cashtags: post.cashtags.map((tag) => ({ tag })) } };
+    if (post.note) tweet.note_tweet = { text: fullText, entities: { cashtags: post.cashtags.map((tag) => ({ tag })), hashtags: (post.hashtags || []).map((tag) => ({ tag })) } };
     if (refs.length) tweet.referenced_tweets = refs;
     if (post.replyTo) tweet.in_reply_to_user_id = post.replyTo.user.id;
     if (post.media) {
@@ -142,7 +147,14 @@ function gqlTweet(post, options = {}) {
     full_text: post.note ? `${fullText.slice(0, 270)}…` : fullText,
     conversation_id_str: post.replyTo && post.replyTo.key ? IDS[post.replyTo.key] : (post.replyTo ? post.replyTo.id : IDS[post.key]),
     lang: 'en',
-    entities: { symbols: post.cashtags.map((text) => ({ text })), hashtags: [], user_mentions: [], urls: [] },
+    // The REAL GraphQL shape: a symbol's text carries the `$`, a hashtag's
+    // carries the `#`. The API spells the same thing without the marker, so
+    // the fixture is what makes the two routes comparable.
+    entities: {
+      symbols: post.cashtags.map((text) => ({ text: `$${text}` })),
+      hashtags: (post.hashtags || []).map((text) => ({ text: `#${text}` })),
+      user_mentions: [], urls: [],
+    },
     favorite_count: 11, retweet_count: 2, reply_count: 1, quote_count: 0, bookmark_count: 3,
   };
   if (post.replyTo) {
@@ -170,7 +182,7 @@ function gqlTweet(post, options = {}) {
   if (post.note) {
     tweet.note_tweet = {
       is_expandable: true,
-      note_tweet_results: { result: { text: fullText, entity_set: { symbols: post.cashtags.map((text) => ({ text })) } } },
+      note_tweet_results: { result: { text: fullText, entity_set: { symbols: post.cashtags.map((text) => ({ text: `$${text}` })) } } },
     };
   }
   if (post.quote) {

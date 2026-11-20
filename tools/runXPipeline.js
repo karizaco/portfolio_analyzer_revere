@@ -34,7 +34,7 @@ process.on('warning', () => {});
 
 const { loadEnv } = require('../src/transcript/loadEnv');
 const registry = require('../src/x/registry');
-const { openIndex, rebuildIndex, DEFAULT_INDEX_PATH } = require('../src/x/indexStore');
+const { openIndex, rebuildIndex, markDeleted, DEFAULT_INDEX_PATH } = require('../src/x/indexStore');
 const { DEFAULT_ARCHIVE_ROOT } = require('../src/x/archive');
 const { DEFAULT_RAW_ROOT, listRawFiles, makeRunTag, normalizeEnvelope, readRaw } = require('../src/x/rawStore');
 const { importRecords, filteredTotal } = require('../src/x/importer');
@@ -86,16 +86,58 @@ function apiClient() {
   });
 }
 
-function budgetFrom(args, fallbackUsd) {
+/**
+ * The spending cap for an account, for TODAY.
+ *
+ * X bills a resource once per UTC DAY, so the cap is per account per UTC
+ * day: a run that is interrupted and resumed, or a second run the same
+ * day, must not start at $0. The day's spend so far is read from the
+ * ledger and the budget starts there.
+ *
+ * @param {object} args
+ * @param {number} fallbackUsd
+ * @param {object} [account]
+ * @returns {object} the budget
+ */
+function budgetFrom(args, fallbackUsd, account) {
   // eslint-disable-next-line global-require
   const { createBudget } = require('../src/x/apiBudget');
   const budgetUsd = args['budget-usd'] === undefined ? fallbackUsd : Number(args['budget-usd']);
   if (!(budgetUsd >= 0)) fail('--budget-usd must be a number');
-  return createBudget({ budgetUsd, maxPosts: args['max-posts'] ? Number(args['max-posts']) : undefined });
+  let startingSpend = 0;
+  let startingPosts = 0;
+  if (account && account.account_id) {
+    const dayStart = `${new Date().toISOString().slice(0, 10)}T00:00:00.000Z`;
+    const spent = registry.apiSpendSince(catalogDb, account.account_id, dayStart);
+    startingSpend = spent.usd;
+    startingPosts = spent.posts;
+    if (spent.usd > 0) {
+      console.log(`[x] this account has already spent $${spent.usd.toFixed(3)} today (${spent.posts} posts); `
+        + 'the budget starts there');
+    }
+  }
+  return createBudget({
+    budgetUsd,
+    maxPosts: args['max-posts'] ? Number(args['max-posts']) : undefined,
+    startingSpend,
+    startingPosts,
+  });
 }
 
-function finishRun(catalogDb, runId, status, stopReason = '') {
-  registry.updateRun(catalogDb, runId, { status, stop_reason: stopReason, finished_at: new Date().toISOString() });
+/**
+ * Close a run, and record it in the shared `catalog_runs` table.
+ *
+ * @param {object} catalogDb
+ * @param {number} runId
+ * @param {string} status
+ * @param {string} [stopReason]
+ * @param {object} [account]
+ * @param {string} [rawDir]
+ */
+function finishRun(catalogDb, runId, status, stopReason = '', account = null, rawDir = '') {
+  registry.finishRun(catalogDb, runId, {
+    status, stopReason, account, rawDir, command: process.argv.slice(2).join(' '),
+  });
 }
 
 async function main() {
@@ -176,12 +218,12 @@ async function main() {
       const runId = registry.startRun(catalogDb, { accountId: account.account_id, route: 'api', runTag: makeRunTag('lookup', account.handle) });
       try {
         const updated = await lookupAccount({
-          catalogDb, client, budget: budgetFrom(args, 0.05), account, runId, log: console.log,
+          catalogDb, client, budget: budgetFrom(args, 0.05, account), account, runId, log: console.log,
         });
-        finishRun(catalogDb, runId, 'ok');
+        finishRun(catalogDb, runId, 'ok', '', updated);
         console.log(JSON.stringify(updated, null, 2));
       } catch (error) {
-        finishRun(catalogDb, runId, 'failed', error.message.slice(0, 300));
+        finishRun(catalogDb, runId, 'failed', error.message.slice(0, 300), account);
         throw error;
       }
       return;
@@ -193,7 +235,7 @@ async function main() {
       // eslint-disable-next-line global-require
       const { estimate, lookupAccount, todayUtc, ARCHIVE_START } = require('../src/x/crawlApi');
       const client = apiClient();
-      const budget = budgetFrom(args, 3);
+      const budget = budgetFrom(args, 3, account);
       const runId = registry.startRun(catalogDb, { accountId: account.account_id, route: 'api', runTag: makeRunTag('estimate', account.handle) });
       try {
         let current = account;
@@ -202,7 +244,7 @@ async function main() {
         const until = String(args.until || todayUtc());
         const result = await estimate({ catalogDb, client, budget, account: current, since, until, runId, log: console.log });
         registry.updateRun(catalogDb, runId, { api_cost_usd_est: budget.spent });
-        finishRun(catalogDb, runId, result.complete ? 'ok' : 'partial', result.complete ? '' : 'budget');
+        finishRun(catalogDb, runId, result.complete ? 'ok' : 'partial', result.complete ? '' : 'budget', current);
         console.log(`\n@${current.handle} ${since} .. ${until} (exclusive)`);
         for (const [kind, data] of Object.entries(result.kinds)) {
           console.log(`  ${kind.padEnd(13)} ${String(data.total).padStart(7)} posts   query: ${data.query}`);
@@ -213,7 +255,7 @@ async function main() {
         console.log(`  this estimate cost $${budget.spent.toFixed(2)} (${result.requests} count requests)`
           + `${result.complete ? '' : ' -- INCOMPLETE, the budget ran out'}`);
       } catch (error) {
-        finishRun(catalogDb, runId, 'failed', error.message.slice(0, 300));
+        finishRun(catalogDb, runId, 'failed', error.message.slice(0, 300), account);
         throw error;
       }
       return;
@@ -243,7 +285,7 @@ async function main() {
       const runTag = makeRunTag(route, account.handle);
       const rawDir = path.join(DEFAULT_RAW_ROOT, runTag);
       const indexDb = openIndex();
-      const runId = registry.startRun(catalogDb, { accountId: account.account_id, route, runTag, rawDir: relative(rawDir) });
+      const runId = registry.startRun(catalogDb, { accountId: account.account_id, route, runTag, rawDir });
       try {
         if (route === 'api') {
           if (!args.yes) fail('an API crawl reads paid posts ($0.005 each). Run `estimate` first, then add --yes --budget-usd N.');
@@ -251,8 +293,8 @@ async function main() {
           // eslint-disable-next-line global-require
           const { crawlWindows, incrementalSince, lookupAccount, todayUtc } = require('../src/x/crawlApi');
           const client = apiClient();
-          const budget = budgetFrom(args);
           let current = account;
+          const budget = budgetFrom(args, 0, current);
           if (!current.user_id) current = await lookupAccount({ catalogDb, client, budget, account: current, runId, log: console.log });
           let since = args.since ? String(args.since) : undefined;
           if (args.incremental) {
@@ -262,14 +304,14 @@ async function main() {
           const until = String(args.until || todayUtc());
           if (since && since >= until) {
             console.log(`[x] already up to date (through ${since})`);
-            finishRun(catalogDb, runId, 'ok');
+            finishRun(catalogDb, runId, 'ok', '', current, rawDir);
             return;
           }
           const result = await crawlWindows({
             catalogDb, indexDb, client, budget, account: current, runId, rawDir, since, until,
             unit: args.unit ? String(args.unit) : (args.incremental ? 'month' : 'year'), log: console.log,
           });
-          finishRun(catalogDb, runId, result.status, result.stopReason);
+          finishRun(catalogDb, runId, result.status, result.stopReason, current, rawDir);
           console.log(JSON.stringify({ route: 'api', handle: current.handle, ...result, spent_usd: budget.spent, run_id: runId }, null, 2));
           return;
         }
@@ -285,14 +327,14 @@ async function main() {
             windowId: args['window-id'] ? Number(args['window-id']) : undefined,
             log: args.report === 'json' ? (line) => console.error(line) : console.log,
           });
-          finishRun(catalogDb, runId, report.status, report.stop_reason);
+          finishRun(catalogDb, runId, report.status, report.stop_reason, account, rawDir);
           console.log(JSON.stringify(report, null, 2));
           if (report.status !== 'ok') process.exitCode = report.stop_reason === 'account_locked' ? 4 : 3;
           return;
         }
         fail(`unknown route ${route} (api | browser | agent)`);
       } catch (error) {
-        finishRun(catalogDb, runId, 'failed', String(error.message).slice(0, 300));
+        finishRun(catalogDb, runId, 'failed', String(error.message).slice(0, 300), account, rawDir);
         throw error;
       } finally {
         indexDb.close();
@@ -305,7 +347,7 @@ async function main() {
         : (args.file ? [path.resolve(String(args.file))] : fail('--raw-dir or --file is required'));
       const indexDb = openIndex();
       const runId = registry.startRun(catalogDb, { accountId: account.account_id, route: 'import', runTag: makeRunTag('import', account.handle) });
-      const totals = { files: 0, seen: 0, new: 0, updated: 0, filtered: 0, invalid: 0, rejected: 0 };
+      const totals = { files: 0, seen: 0, new: 0, updated: 0, filtered: 0, invalid: 0, rejected: 0, otherUser: 0 };
       try {
         for (const file of files) {
           let current = registry.getAccount(catalogDb, account.account_id);
@@ -313,6 +355,13 @@ async function main() {
           for (const envelope of readRaw(file)) {
             const { records, rejected } = normalizeEnvelope(envelope, { knownUsers: known });
             totals.rejected += rejected.length;
+            // A post X says it no longer has is an OBSERVATION, and it is
+            // recorded: a deletion that is not recorded is a deletion
+            // nobody can see (and the compliance pass cannot honour).
+            for (const item of rejected) {
+              if (!item.post_id) continue;
+              markDeleted(indexDb, item.post_id, { runId, source: envelope.route || '', detail: item.reason || '' });
+            }
             const result = importRecords({ catalogDb, indexDb, account: current, records });
             current = registry.getAccount(catalogDb, account.account_id);
             totals.seen += result.seen;
@@ -320,14 +369,20 @@ async function main() {
             totals.updated += result.updated;
             totals.filtered += filteredTotal(result.filtered);
             totals.invalid += result.invalid.length;
+            totals.otherUser += result.otherUser;
+            if (result.otherUser) {
+              console.error(`[x] ${result.otherUser} post(s) belong to another user id and were not imported`);
+            }
+            if (result.identityError) console.error(`[x] ${result.identityError}`);
             for (const bad of result.invalid.slice(0, 3)) console.error(`[x] invalid ${bad.post_id}: ${bad.errors.join('; ')}`);
           }
           totals.files += 1;
         }
         registry.updateRun(catalogDb, runId, {
           posts_seen: totals.seen, posts_new: totals.new, posts_updated: totals.updated, posts_filtered: totals.filtered,
+          posts_other_user: totals.otherUser, posts_rejected: totals.rejected,
         });
-        finishRun(catalogDb, runId, 'ok');
+        finishRun(catalogDb, runId, 'ok', '', account);
         console.log(JSON.stringify(totals, null, 2));
       } finally {
         indexDb.close();

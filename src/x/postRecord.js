@@ -161,8 +161,10 @@ function normalizeText(text, options = {}) {
   let out = decodeEntities(text).replace(/\r\n?/g, '\n');
   // Trailing t.co links are the media and the quoted post, which the record
   // carries as structure. A t.co link in the MIDDLE of the text is the
-  // author's own link and stays.
-  out = out.replace(/(?:\s*https:\/\/t\.co\/[A-Za-z0-9]+)+\s*$/u, '');
+  // author's own link and stays. The link's own alphabet includes `-` and
+  // `_`, so a pattern that allows only letters and digits leaves the link
+  // in the text -- and then the routes disagree about the same post.
+  out = out.replace(/(?:\s*https:\/\/t\.co\/[A-Za-z0-9_-]+)+\s*$/u, '');
   if (options.isReply) {
     // The leading @-handles of a reply are the reply's addressees, added by
     // the client. They are in entities.mentions and in_reply_to_user_id.
@@ -223,6 +225,31 @@ const FIELD_ORDER = [
 ];
 
 /**
+ * The engagement numbers, in a fixed shape.
+ *
+ * The archive's lines are supposed to be byte-identical for an unchanged
+ * post, so the metrics object is CANONICALISED here: the same keys, in
+ * the same order, whatever route produced it. Without this the same corpus
+ * imported GraphQL-first and API-first would serialise to two different
+ * byte sequences, and `git diff` would show a change that is not one.
+ *
+ * @param {object|null} metrics
+ * @returns {object|null}
+ */
+function canonicalMetrics(metrics) {
+  if (!metrics || typeof metrics !== 'object') return null;
+  return {
+    likes: metrics.likes ?? null,
+    reposts: metrics.reposts ?? null,
+    replies: metrics.replies ?? null,
+    quotes: metrics.quotes ?? null,
+    views: metrics.views ?? null,
+    bookmarks: metrics.bookmarks ?? null,
+    observed_at: metrics.observed_at || '',
+  };
+}
+
+/**
  * Build a record with every field present, in the canonical key order.
  *
  * The archive writes records with `JSON.stringify`, which keeps insertion
@@ -268,8 +295,13 @@ function canonicalize(input) {
       // whichever route (or merge) produced them.
       .sort((a, b) => (REF_ORDER[a.type] ?? 9) - (REF_ORDER[b.type] ?? 9) || compareIds(a.post_id, b.post_id)),
     entities: {
-      cashtags: uniqueInOrder((entities.cashtags || []).map((tag) => String(tag).toUpperCase())),
-      hashtags: uniqueInOrder((entities.hashtags || []).map((tag) => String(tag))),
+      // The two routes spell a cashtag differently: the API gives `NVDA`,
+      // the web GraphQL gives `$NVDA` (and `#nasa` for a hashtag). The
+      // marker is stripped HERE, once, so both routes normalise to the same
+      // value -- otherwise a GraphQL post's cashtag matches no ticker, and
+      // the archive's content depends on which route saw the post first.
+      cashtags: uniqueInOrder((entities.cashtags || []).map((tag) => String(tag).replace(/^\$/, '').toUpperCase())),
+      hashtags: uniqueInOrder((entities.hashtags || []).map((tag) => String(tag).replace(/^#/, ''))),
       mentions: uniqueInOrder((entities.mentions || []).map((name) => normalizeHandle(name))),
       urls: uniqueInOrder((entities.urls || []).map(String).filter((url) => !isStructuralUrl(url))),
     },
@@ -286,7 +318,7 @@ function canonicalize(input) {
       history_ids: historyIds,
       is_earliest: historyIds[0] === String(input.post_id),
     },
-    metrics_first_seen: input.metrics_first_seen || null,
+    metrics_first_seen: canonicalMetrics(input.metrics_first_seen),
     fetched_via: input.fetched_via || 'web_dom',
     fidelity: input.fidelity || 'partial',
     first_seen_at: input.first_seen_at || '',
@@ -369,6 +401,7 @@ module.exports = {
   KINDS,
   ROUTE_RANK,
   SCHEMA,
+  canonicalMetrics,
   canonicalize,
   compareIds,
   decodeEntities,

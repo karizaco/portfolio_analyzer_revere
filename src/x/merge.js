@@ -56,6 +56,11 @@ function stem(text) {
  * Choose the text: the higher route's, unless the lower route's text is a
  * strict extension of it.
  *
+ * A TRUNCATED text never beats an untruncated one, whichever route it
+ * came from: the API cuts a long post at 280 characters and the page
+ * scrape cuts it at "Show more", so the two routes truncate at different
+ * points and the prefix test alone would let the shorter one win.
+ *
  * @param {object} high
  * @param {object} low
  * @returns {{text: string, text_source: string}}
@@ -63,9 +68,66 @@ function stem(text) {
 function chooseText(high, low) {
   const hi = String(high.text || '');
   const lo = String(low.text || '');
+  const hiTruncated = isTruncated(high.text_source);
+  const loTruncated = isTruncated(low.text_source);
   if (!hi) return { text: lo, text_source: low.text_source };
+  if (loTruncated && !hiTruncated) return { text: hi, text_source: high.text_source };
+  if (!loTruncated && hiTruncated) return { text: lo, text_source: low.text_source };
   if (lo.length > hi.length && lo.startsWith(stem(hi))) return { text: lo, text_source: low.text_source };
   return { text: hi, text_source: high.text_source };
+}
+
+/**
+ * Is this text source a TRUNCATED reading?
+ *
+ * @param {string} textSource
+ * @returns {boolean}
+ */
+function isTruncated(textSource) {
+  return /truncated/i.test(String(textSource || ''));
+}
+
+/**
+ * The union of two entity sets, member by member.
+ *
+ * The entity lists are SETS -- a cashtag is present or it is not -- so
+ * the lower route's extra cashtags are lost if the higher route's list
+ * merely happens to be non-empty. The higher route's ORDER comes first,
+ * so the merge does not depend on which route was seen first.
+ *
+ * @param {object} high
+ * @param {object} low
+ * @returns {object}
+ */
+function mergeEntities(high, low) {
+  const out = {};
+  for (const key of ['cashtags', 'hashtags', 'mentions', 'urls']) {
+    const values = [...(high[key] || []), ...(low[key] || [])];
+    out[key] = [...new Set(values)];
+  }
+  return out;
+}
+
+/**
+ * The union of two edit histories.
+ *
+ * The history is the list of versions of a post, oldest first, so the
+ * union keeps that order and `is_earliest` is recomputed from it: a
+ * higher route that saw only the LATEST version must not hide the fact
+ * that the post was edited.
+ *
+ * @param {object} high
+ * @param {object} low
+ * @param {string} postId
+ * @returns {object}
+ */
+function mergeEdit(high, low, postId) {
+  const ids = [...new Set([
+    ...((low.edit && low.edit.history_ids) || []).map(String),
+    ...((high.edit && high.edit.history_ids) || []).map(String),
+  ])];
+  const history = ids.length ? ids : [String(postId)];
+  return { history_ids: history, is_earliest: history[0] === String(postId) };
 }
 
 /**
@@ -88,6 +150,10 @@ function mergeRecords(existing, incoming) {
   for (const field of CONTENT_FIELDS) {
     if (isEmpty(merged[field]) && !isEmpty(low[field])) merged[field] = low[field];
   }
+  // The entity lists and the edit history are SETS and a LIST: they are
+  // UNIONED, not replaced by whichever route happened to be richer.
+  merged.entities = mergeEntities(high.entities || {}, low.entities || {});
+  merged.edit = mergeEdit(high, low, incoming.post_id);
   // A real media key from a JSON route replaces a page-scraped placeholder.
   if (Array.isArray(merged.media) && merged.media.some((item) => String(item.media_key).startsWith('dom_'))
     && Array.isArray(low.media) && low.media.length && !low.media.some((item) => String(item.media_key).startsWith('dom_'))) {
@@ -99,7 +165,7 @@ function mergeRecords(existing, incoming) {
   merged.first_seen_at = firstSeen;
   merged.metrics_first_seen = existing.metrics_first_seen || incoming.metrics_first_seen || null;
   merged.fidelity = existing.fidelity === 'full' || incoming.fidelity === 'full'
-    ? (chooseText(high, low).text_source.endsWith('truncated') ? 'partial' : 'full')
+    ? (isTruncated(chooseText(high, low).text_source) ? 'partial' : 'full')
     : 'partial';
 
   const refs = new Map();
@@ -115,4 +181,4 @@ function mergeRecords(existing, incoming) {
   return { record, changed };
 }
 
-module.exports = { mergeRecords, stem };
+module.exports = { isTruncated, mergeEdit, mergeEntities, mergeRecords, stem };
