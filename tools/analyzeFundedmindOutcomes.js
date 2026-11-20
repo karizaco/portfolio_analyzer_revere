@@ -13,13 +13,13 @@ const path = require('node:path');
 const { DatabaseSync } = require('node:sqlite');
 const { attachDerived } = require('../src/db/derivedStore');
 const { createYahooPriceProvider } = require('../src/analysis/priceProvider');
+const { fundedmindPriceSymbolFor } = require('../src/fundedmind/priceSymbols');
 const {
   buildSpyBaseline,
   scoreSignalOutcome,
   shiftIsoDate,
   summarizeOutcomes,
   toIsoDate,
-  yahooSymbolFor,
 } = require('../src/sevcik/outcomeAnalysis');
 const { writeCsv } = require('../src/write/writeCsv');
 
@@ -246,7 +246,7 @@ async function main() {
   });
 
   const symbols = [...new Set([
-    ...directional.map((row) => yahooSymbolFor(row.ticker)),
+    ...directional.map((row) => fundedmindPriceSymbolFor(row.ticker)),
     'SPY',
   ].filter(Boolean))];
 
@@ -262,7 +262,7 @@ async function main() {
   const asOfDate = new Date().toISOString().slice(0, 10);
   const outcomes = [];
   for (const claim of directional) {
-    const symbol = yahooSymbolFor(claim.ticker);
+    const symbol = fundedmindPriceSymbolFor(claim.ticker);
     const weekDate = shiftIsoDate(claim.event_date, HORIZON_1W_DAYS);
     const monthDate = shiftIsoDate(claim.event_date, HORIZON_1M_DAYS);
 
