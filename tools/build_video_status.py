@@ -7,16 +7,22 @@ import sqlite3, os, re
 from pathlib import Path
 from datetime import datetime, timezone
 
-_ROOT = Path(os.environ.get('APP_ROOT', r'C:\Users\admin\Projects\portfolio_analyzer_revere'))
+import sys
+from pathlib import Path as _PathForRoots
+sys.path.insert(0, str(_PathForRoots(__file__).resolve().parent))
+from media_roots import REPO_ROOT, get_media_roots
+
+_ROOT = Path(os.environ.get('APP_ROOT', str(REPO_ROOT)))
 DB = _ROOT / "data" / "video_pipeline" / "state.sqlite"
 BASE = _ROOT / "data" / "video_pipeline"
+MEDIA = get_media_roots()
 OUT = _ROOT / "tools" / "video_status.html"
 LEXICON = _ROOT / "config" / "ticker_lexicon_seed.csv"
 
 def get_video_stats():
     stats = {}
     for subdir in ['downloads_1080p', 'downloads_hires', 'downloads']:
-        dir_path = BASE / subdir
+        dir_path = MEDIA[subdir]
         if not dir_path.exists():
             stats[subdir] = {'count': 0, 'size_gb': 0, 'files': []}
             continue
@@ -112,7 +118,7 @@ def build_video_html(stats, catalog_counts):
 
     rows_1080 = []
     for f in stats['downloads_1080p']['files']:
-        size_gb = (BASE / 'downloads_1080p' / f).stat().st_size / (1024**3)
+        size_gb = (MEDIA['downloads_1080p'] / f).stat().st_size / (1024**3)
         date = f[:8]
         vid = _extract_vid_from_stem(f.replace('.mp4', ''))
         rows_1080.append({'file': f, 'date': date, 'vid': vid, 'size_gb': size_gb})

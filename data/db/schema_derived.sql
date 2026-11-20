@@ -819,3 +819,601 @@ CREATE TABLE IF NOT EXISTS discord_episodes (
 
 CREATE INDEX IF NOT EXISTS idx_discord_episodes_ticker
     ON discord_episodes(source_name, ticker, entry_date);
+
+-- =====================================================================
+-- The Komar source ("MARKET UPDATE Premium"), read as DOCUMENTS and as
+-- MEDIA.
+--
+-- WHY IT HAS ITS OWN TABLES
+--
+-- `videos` is named for YouTube and its `status` column is an OCR
+-- pipeline's lifecycle; these files have no video id at all -- they are
+-- local files on a disk. And `trade_signals` / `market_readings` both
+-- carry a NOT NULL `transcript_id` that REFERENCES video_transcripts(id),
+-- which a local file has no way of having.
+--
+-- So this source gets its own tables, the way O'Connell and
+-- AsymTrading do, with namespaced ids (`komar_doc_*`, `komar_vid_*`).
+--
+-- WHY THE FILENAME DATE IS NOT THE SESSION DATE
+--
+-- `komar_20260408.pdf` is named 2026-04-08 and its own chrome says
+-- 2025-04-08 -- in the title AND in the URL, two independent places.
+-- The chrome wins, the filename is kept as a hint, and the
+-- disagreement is recorded rather than silently resolved.
+-- =====================================================================
+
+-- One row per document in the corpus.
+CREATE TABLE IF NOT EXISTS komar_documents (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    -- The namespaced catalog id: `komar_doc_report_20260509`.
+    doc_id TEXT NOT NULL UNIQUE,
+    -- report | post | rule | lesson | summary | deck | unknown
+    kind TEXT NOT NULL DEFAULT 'unknown',
+    title TEXT NOT NULL DEFAULT '',
+    series TEXT NOT NULL DEFAULT '',
+    -- The session the document is about. YYYYMMDD.
+    session_date TEXT NOT NULL DEFAULT '',
+    -- How exact that date is: 'day' | 'month' | ''. A document that
+    -- names only its month carries a month, and a consumer that
+    -- wants only exact dates asks for precision 'day'.
+    session_date_precision TEXT NOT NULL DEFAULT '',
+    -- filename | chrome_title | chrome_url | content | unknown
+    session_date_source TEXT NOT NULL DEFAULT '',
+    -- The date in the filename, kept when it disagrees with the chrome.
+    filename_date TEXT NOT NULL DEFAULT '',
+    -- 1 when the filename date and the document's own date disagree.
+    date_conflict INTEGER NOT NULL DEFAULT 0,
+    -- The report number a weekly session carries: "226".
+    report_number TEXT NOT NULL DEFAULT '',
+    page_count INTEGER NOT NULL DEFAULT 0,
+    source_url TEXT NOT NULL DEFAULT '',
+    print_stamp TEXT NOT NULL DEFAULT '',
+    -- The site's own chapter list, as JSON: ["12:35","41:04"].
+    chapters_json TEXT NOT NULL DEFAULT '[]',
+    -- The path RELATIVE to the corpus root. The corpus lives outside
+    -- this repository, so an absolute path would name one machine's
+    -- home directory in a tracked artifact.
+    pdf_path TEXT NOT NULL DEFAULT '',
+    pdf_bytes INTEGER NOT NULL DEFAULT 0,
+    pdf_checksum TEXT NOT NULL DEFAULT '',
+    -- 'primary' | 'machine_written'. The two summary PDFs are written
+    -- BY A MACHINE ABOUT a video; they are a derived artifact and are
+    -- never merged with the primary record.
+    provenance TEXT NOT NULL DEFAULT 'primary',
+    -- 'root' | '_finished'
+    folder TEXT NOT NULL DEFAULT '',
+    catalog_version TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_documents_date ON komar_documents(session_date);
+
+CREATE INDEX IF NOT EXISTS idx_komar_documents_kind ON komar_documents(kind);
+
+CREATE INDEX IF NOT EXISTS idx_komar_documents_report ON komar_documents(report_number);
+
+-- One row per video in the corpus.
+CREATE TABLE IF NOT EXISTS komar_videos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    -- The namespaced catalog id: `komar_vid_weekend_226_stocks_analysis`.
+    video_id TEXT NOT NULL UNIQUE,
+    -- weekend | midweek | daily | webinar | lesson | unknown
+    kind TEXT NOT NULL DEFAULT 'unknown',
+    series TEXT NOT NULL DEFAULT '',
+    title TEXT NOT NULL DEFAULT '',
+    -- The part of a weekly session: market_overview | my_portfolio |
+    -- stocks_analysis | main | part_01 | part_02.
+    part TEXT NOT NULL DEFAULT '',
+    -- 1..3, the session order of the part.
+    part_index INTEGER NOT NULL DEFAULT 0,
+    -- The report number a weekly session carries: "226".
+    report_number TEXT NOT NULL DEFAULT '',
+    -- The session the video belongs to. YYYYMMDD.
+    session_date TEXT NOT NULL DEFAULT '',
+    -- How exact that date is: 'day' | 'month' | ''. A document that
+    -- names only its month carries a month, and a consumer that
+    -- wants only exact dates asks for precision 'day'.
+    session_date_precision TEXT NOT NULL DEFAULT '',
+    -- filename | pdf_chrome | report_number | report_number_over_filename | unknown
+    session_date_source TEXT NOT NULL DEFAULT '',
+    -- The date the video's OWN NAME carries, beside the date the
+    -- session was given. They differ exactly once in the corpus:
+    -- "January 14 2022 Weekend-Report 51" is the weekend after report
+    -- 50 (8 January 2023), so the name's YEAR is a typo and the
+    -- sequence's date is the one that is kept.
+    filename_date TEXT NOT NULL DEFAULT '',
+    -- 1 when the name's date and the session's date disagree by more
+    -- than a fortnight.
+    date_conflict INTEGER NOT NULL DEFAULT 0,
+    -- The doc_id of the document that describes this session, when one
+    -- does. This is the link that gives a video its date: a weekly
+    -- session's videos are named after its report number, and only the
+    -- document carries the date.
+    session_doc_id TEXT NOT NULL DEFAULT '',
+    has_video INTEGER NOT NULL DEFAULT 1,
+    width INTEGER NOT NULL DEFAULT 0,
+    height INTEGER NOT NULL DEFAULT 0,
+    duration_sec REAL NOT NULL DEFAULT 0,
+    audio_codec TEXT NOT NULL DEFAULT '',
+    audio_channels INTEGER NOT NULL DEFAULT 0,
+    size_bytes INTEGER NOT NULL DEFAULT 0,
+    -- The change detector: "<bytes>:<mtime>". The media is 48 GB and is
+    -- never committed, so a full checksum on every run is not
+    -- affordable -- and the frame cache already uses size and mtime.
+    content_key TEXT NOT NULL DEFAULT '',
+    -- The path RELATIVE to the corpus root.
+    media_path TEXT NOT NULL DEFAULT '',
+    -- 'root' | '_finished'
+    folder TEXT NOT NULL DEFAULT '',
+    catalog_version TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_videos_date ON komar_videos(session_date);
+
+CREATE INDEX IF NOT EXISTS idx_komar_videos_kind ON komar_videos(kind);
+
+CREATE INDEX IF NOT EXISTS idx_komar_videos_report ON komar_videos(report_number);
+
+
+-- =====================================================================
+-- Komar Phase 2: document-level extraction outputs.
+--
+-- The catalog says what files exist. These tables hold what the files
+-- SAY: market card readings, deck notes and trade-log rows.
+-- =====================================================================
+
+-- The market card extracted from a report/post PDF.
+CREATE TABLE IF NOT EXISTS komar_market_cards (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    doc_id TEXT NOT NULL,
+    page INTEGER NOT NULL DEFAULT 0,
+    -- the embedded image's own xref on that page
+    image_xref INTEGER NOT NULL DEFAULT 0,
+    image_width INTEGER NOT NULL DEFAULT 0,
+    image_height INTEGER NOT NULL DEFAULT 0,
+    market_text TEXT NOT NULL DEFAULT '',
+    market_trend_nasdaq TEXT NOT NULL DEFAULT '',
+    market_trend_sp500 TEXT NOT NULL DEFAULT '',
+    market_trend_russell2000 TEXT NOT NULL DEFAULT '',
+    -- up | flat | down | unknown
+    trend_nasdaq_dir TEXT NOT NULL DEFAULT 'unknown',
+    trend_sp500_dir TEXT NOT NULL DEFAULT 'unknown',
+    trend_russell2000_dir TEXT NOT NULL DEFAULT 'unknown',
+    -- The direction per horizon, as JSON: {"Mid":"up","Short":"down"}.
+    -- The card prints two or three horizons and they can disagree,
+    -- so the per-horizon reading is kept and the *_dir columns
+    -- carry the LONGEST horizon shown.
+    trend_by_horizon_json TEXT NOT NULL DEFAULT '{}',
+    exposure_pct REAL,
+    confidence REAL NOT NULL DEFAULT 0,
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(doc_id, page, image_xref)
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_market_cards_doc ON komar_market_cards(doc_id);
+
+-- The theme leaders read from the card's "High-potential themes" list.
+CREATE TABLE IF NOT EXISTS komar_theme_leaders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    doc_id TEXT NOT NULL,
+    page INTEGER NOT NULL DEFAULT 0,
+    image_xref INTEGER NOT NULL DEFAULT 0,
+    -- e.g. Semis, Data center, Software
+    theme TEXT NOT NULL DEFAULT '',
+    ticker TEXT NOT NULL DEFAULT '',
+    -- position of ticker in that theme's list
+    leader_index INTEGER NOT NULL DEFAULT 0,
+    confidence REAL NOT NULL DEFAULT 0,
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(doc_id, page, image_xref, theme, ticker)
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_theme_leaders_doc ON komar_theme_leaders(doc_id);
+
+CREATE INDEX IF NOT EXISTS idx_komar_theme_leaders_ticker ON komar_theme_leaders(ticker);
+
+-- Notes extracted from deck pages (e.g. Trades-August-2025 per-trade slides).
+CREATE TABLE IF NOT EXISTS komar_deck_notes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    doc_id TEXT NOT NULL,
+    page INTEGER NOT NULL DEFAULT 0,
+    heading TEXT NOT NULL DEFAULT '',
+    body_text TEXT NOT NULL DEFAULT '',
+    -- Open | Closed | Journaled (where present)
+    trade_state TEXT NOT NULL DEFAULT '',
+    -- parsed from "4.5 stars"
+    stars REAL,
+    -- A/B/C trade where present
+    trade_grade TEXT NOT NULL DEFAULT '',
+    quick_checklist_json TEXT NOT NULL DEFAULT '[]',
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(doc_id, page)
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_deck_notes_doc ON komar_deck_notes(doc_id);
+
+-- The row-level trade log table from Trades-August-2025 page 2.
+--
+-- The columns are the SHEET'S OWN 18 headers, measured off the pixels
+-- on 2026-11-17 (the first shape was written from the plan's column
+-- list, which guessed: the sheet has Avg. OPENING and Avg. CLOSE price
+-- as two columns, one Risk Capital, MMTS Opening/close as words, and
+-- W/L % beside W/L R -- no MARS column, no W%L flag). The table was
+-- empty when the shape was corrected, so the old columns were dropped
+-- rather than left as dead names; src/komar/schema.js performs that
+-- reshape on an existing database only while the table has no rows.
+CREATE TABLE IF NOT EXISTS komar_trade_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    doc_id TEXT NOT NULL,
+    page INTEGER NOT NULL DEFAULT 0,
+    row_index INTEGER NOT NULL DEFAULT 0,
+    date_opened TEXT NOT NULL DEFAULT '',
+    date_closed TEXT NOT NULL DEFAULT '',
+    entry_type TEXT NOT NULL DEFAULT '',
+    ticker TEXT NOT NULL DEFAULT '',
+    avg_open_price REAL,
+    avg_close_price REAL,
+    stop_loss_price REAL,
+    stop_loss_pct REAL,
+    risk_capital_pct REAL,
+    exit_type TEXT NOT NULL DEFAULT '',
+    mmts_opening TEXT NOT NULL DEFAULT '',
+    mmts_close TEXT NOT NULL DEFAULT '',
+    wl_pct REAL,
+    wl_r REAL,
+    initial_rating REAL,
+    after_close_rating REAL,
+    review TEXT NOT NULL DEFAULT '',
+    comment TEXT NOT NULL DEFAULT '',
+    -- The sheet's own arithmetic: W/L % IS the return on the average
+    -- price, so a row can be checked against itself. A non-empty check
+    -- means the row's own numbers disagree (measured: a misread avg
+    -- close price), and `derived_fields` names the fields that were
+    -- derived from that arithmetic rather than read off the sheet.
+    reading_check TEXT NOT NULL DEFAULT '',
+    derived_fields TEXT NOT NULL DEFAULT '',
+    confidence REAL NOT NULL DEFAULT 0,
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(doc_id, page, row_index)
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_trade_log_doc ON komar_trade_log(doc_id);
+
+CREATE INDEX IF NOT EXISTS idx_komar_trade_log_ticker ON komar_trade_log(ticker);
+
+-- One row per transcribed Komar video.
+--
+-- The Komar corpus has no YouTube identity -- the files have no video
+-- id -- so it gets its own table rather than going into the
+-- `video_transcripts` table, which is the YouTube pipeline's. The
+-- transcript TEXT is the record, and it is the committed JSON under
+-- data/video_pipeline/transcripts/komar_<id>.json; this table is its
+-- index: which provider, which language, how many segments, and the
+-- checksum that makes a re-run idempotent.
+--
+-- The language is recorded because `language` selects the ACOUSTIC
+-- MODEL: the same request pointed at the wrong model produces almost
+-- no transcript at all, and a hard-coded language in the row hid that
+-- for a whole corpus once.
+CREATE TABLE IF NOT EXISTS komar_transcripts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id TEXT NOT NULL UNIQUE,
+    provider TEXT NOT NULL DEFAULT 'deepgram',
+    language TEXT NOT NULL DEFAULT '',
+    model TEXT NOT NULL DEFAULT '',
+    transcript_path TEXT NOT NULL DEFAULT '',
+    segment_count INTEGER NOT NULL DEFAULT 0,
+    duration_sec REAL NOT NULL DEFAULT 0,
+    -- The provider's own quality score, when it reports one.
+    quality_score REAL,
+    -- md5 of the transcript text, timing-independent. Two runs of the
+    -- same provider over the same audio produce the same text.
+    checksum TEXT NOT NULL DEFAULT '',
+    fetched_at TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_transcripts_language ON komar_transcripts(language);
+
+-- The WEEKEND-REPORT SUMMARY readings.
+--
+-- The two Summary PDFs are MACHINE-WRITTEN summaries of a video -- a
+-- derived artifact, and the plan is explicit that they must be
+-- labelled as one and never merged with the primary record. What they
+-- carry that nothing else in the corpus does is a dated, curated,
+-- per-ticker WATCHLIST with the author's verdict on each name.
+--
+-- `raw_subject` is the subject as the TEXT LAYER gave it: the
+-- summary prints a filled square that renders as the letter "I" and
+-- glues itself to the entry that follows, so "SBET" is read as
+-- "ISBET". The reading is beside the raw form so it can be checked.
+CREATE TABLE IF NOT EXISTS komar_summary_readings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    doc_id TEXT NOT NULL,
+    page INTEGER NOT NULL DEFAULT 1,
+    reading_index INTEGER NOT NULL DEFAULT 0,
+    -- 'holding' for a ticker, 'market' for a commodity or a prose section
+    kind TEXT NOT NULL DEFAULT '',
+    section TEXT NOT NULL DEFAULT '',
+    subject TEXT NOT NULL DEFAULT '',
+    raw_subject TEXT NOT NULL DEFAULT '',
+    name TEXT NOT NULL DEFAULT '',
+    text TEXT NOT NULL DEFAULT '',
+    verdict TEXT NOT NULL DEFAULT '',
+    stance TEXT NOT NULL DEFAULT '',
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(doc_id, page, reading_index)
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_summary_readings_doc ON komar_summary_readings(doc_id);
+
+CREATE INDEX IF NOT EXISTS idx_komar_summary_readings_subject ON komar_summary_readings(subject);
+
+-- The SETUPS: what the author SAID he was watching.
+--
+-- These are the calls, and they come from the transcripts (the corpus's
+-- primary text) through the SHARED engine
+-- (`src/sevcik/signalExtractor.js`, the same one the Sevcik, T3Live and
+-- Benzinga extractors use) with the English name finder and the Komar
+-- lexicon.
+--
+-- The table is the source's own because `trade_signals` is a YouTube
+-- table whose rows carry a NOT NULL `transcript_id` that REFERENCES
+-- `video_transcripts(id)`, and this corpus has no YouTube identity at
+-- all: the files have no video id.
+--
+-- `evidence_text` is the rule the whole project follows: a signal
+-- without the words it was read from cannot be checked.
+CREATE TABLE IF NOT EXISTS komar_setups (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id TEXT NOT NULL,
+    -- The row of `komar_transcripts` this came from.
+    transcript_id INTEGER NOT NULL DEFAULT 0,
+    ticker TEXT NOT NULL,
+    -- The name he SAID, which is not the ticker.
+    spoken_name TEXT NOT NULL DEFAULT '',
+    action TEXT NOT NULL DEFAULT '',
+    bias TEXT NOT NULL DEFAULT '',
+    strength REAL NOT NULL DEFAULT 0,
+    -- 'forward' for a call, 'retrospective' for a review of a call that
+    -- is already over.
+    claim_kind TEXT NOT NULL DEFAULT '',
+    confidence_label TEXT NOT NULL DEFAULT '',
+    confidence_score REAL NOT NULL DEFAULT 0,
+    entry_price REAL,
+    target_price_low REAL,
+    target_price_high REAL,
+    stop_price REAL,
+    horizon_text TEXT NOT NULL DEFAULT '',
+    rationale TEXT NOT NULL DEFAULT '',
+    evidence_text TEXT NOT NULL DEFAULT '',
+    segment_start_index INTEGER NOT NULL DEFAULT 0,
+    segment_end_index INTEGER NOT NULL DEFAULT 0,
+    event_time_sec REAL NOT NULL DEFAULT 0,
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(video_id, segment_start_index, ticker)
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_setups_ticker ON komar_setups(ticker);
+
+CREATE INDEX IF NOT EXISTS idx_komar_setups_video ON komar_setups(video_id);
+
+-- The WATCHLIST SCREENSHOT read out of a daily or mid-week update.
+--
+-- The 2026 daily updates carry a TradingView screenshot of the author's
+-- own watchlist: one chart per pane, each with the ticker, the date,
+-- the change and the change percentage. It is a DATED market read of
+-- the names he was watching -- the complement of `komar_setups`,
+-- which is what he SAID, and of `komar_trade_log`, which is what he
+-- HELD.
+--
+-- It is a WATCHLIST and not a position: nothing here says he owned
+-- the name. The table is the source's own for that reason, and it
+-- carries the geometry (row and column of the pane) because the
+-- screenshot's rows are centred when they do not fill the screen's
+-- width -- so (doc_id, row, column) and not (doc_id, row_index).
+--
+-- `chg` and `chg_pct` take their SIGN from the ink: the header prints
+-- the sign on the change and none on the percentage, and the printed
+-- minus is one pixel wide.
+CREATE TABLE IF NOT EXISTS komar_watchlist (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    doc_id TEXT NOT NULL,
+    page INTEGER NOT NULL DEFAULT 0,
+    image_xref INTEGER NOT NULL DEFAULT 0,
+    session_date TEXT NOT NULL DEFAULT '',
+    -- The pane's grid position in the screenshot, in source pixels.
+    row INTEGER NOT NULL DEFAULT 0,
+    column INTEGER NOT NULL DEFAULT 0,
+    ticker TEXT NOT NULL,
+    -- The change in price, signed.
+    chg REAL,
+    -- The change percentage, signed.
+    chg_pct REAL,
+    -- The three readings the change crop produced, joined. The
+    -- published value is the one two of them agreed on; the raw form
+    -- is kept so that a wrong value can be traced to its OCR.
+    raw TEXT NOT NULL DEFAULT '',
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(doc_id, row, column)
+);
+
+CREATE INDEX IF NOT EXISTS idx_komar_watchlist_doc ON komar_watchlist(doc_id);
+
+CREATE INDEX IF NOT EXISTS idx_komar_watchlist_ticker ON komar_watchlist(ticker);
+
+CREATE INDEX IF NOT EXISTS idx_komar_watchlist_date ON komar_watchlist(session_date);
+
+
+
+-- FundedMind session setups (paired from trade_signals)
+--
+-- One row per collapsed setup on a live desk video. Week Recap videos do
+-- not create setup rows; they stamp recap_verdict / recap_evidence onto
+-- setups whose session_date falls in the recap week.
+CREATE TABLE IF NOT EXISTS fundedmind_setups (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id TEXT NOT NULL,
+    session_date TEXT NOT NULL DEFAULT '',
+    host TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    title TEXT NOT NULL DEFAULT '',
+    ticker TEXT NOT NULL,
+    side TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT '',
+    start_sec REAL,
+    end_sec REAL,
+    entry_price REAL,
+    stop_price REAL,
+    targets_json TEXT NOT NULL DEFAULT '[]',
+    ticker_from TEXT NOT NULL DEFAULT '',
+    claim_kind TEXT NOT NULL DEFAULT 'forward',
+    score REAL NOT NULL DEFAULT 0,
+    evidence_json TEXT NOT NULL DEFAULT '[]',
+    events_json TEXT NOT NULL DEFAULT '[]',
+    recap_verdict TEXT NOT NULL DEFAULT '',
+    recap_evidence TEXT NOT NULL DEFAULT '',
+    recap_video_id TEXT NOT NULL DEFAULT '',
+    parser_version TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_fundedmind_setups_video
+    ON fundedmind_setups(video_id);
+
+CREATE INDEX IF NOT EXISTS idx_fundedmind_setups_day
+    ON fundedmind_setups(session_date);
+
+CREATE INDEX IF NOT EXISTS idx_fundedmind_setups_ticker
+    ON fundedmind_setups(ticker);
+
+CREATE INDEX IF NOT EXISTS idx_fundedmind_setups_parser
+    ON fundedmind_setups(parser_version);
+
+-- martinlukkt: a trade he stated, one row per statement.
+-- A row with no ticker is kept: the verb was read and the subject was not,
+-- and dropping it would hide the miss. trade_signals gets only the rows
+-- that name a ticker.
+CREATE TABLE IF NOT EXISTS martinlukkt_trade_actions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    parser_version TEXT NOT NULL,
+    video_id TEXT NOT NULL,
+    transcript_id INTEGER NOT NULL,
+    segment_index INTEGER NOT NULL,
+    event_time_sec REAL,
+    session_date TEXT NOT NULL DEFAULT '',
+    session_kind TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL,
+    action TEXT NOT NULL,
+    side TEXT NOT NULL DEFAULT '',
+    ticker TEXT NOT NULL DEFAULT '',
+    ticker_from TEXT NOT NULL DEFAULT '',
+    -- What the ASR wrote, beside what it resolves to. A row whose raw ticker
+    -- is not the ticker is a correction, and a row whose ticker is empty is a
+    -- mishearing the reader did not repair.
+    raw_ticker TEXT NOT NULL DEFAULT '',
+    resolve_why TEXT NOT NULL DEFAULT '',
+    price REAL,
+    stop_price REAL,
+    verb TEXT NOT NULL DEFAULT '',
+    evidence_text TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_martinlukkt_actions_video
+    ON martinlukkt_trade_actions(video_id);
+
+CREATE INDEX IF NOT EXISTS idx_martinlukkt_actions_ticker
+    ON martinlukkt_trade_actions(ticker);
+
+
+-- X (x.com) interpretations -------------------------------------------------
+--
+-- See docs/x-source-plan.md. Derived from the tracked post archive
+-- (data/x_pipeline/archive/) and the downloaded images. A reader version on
+-- every row, evidence on every row.
+
+-- One row per (image, reader). The OCR text and the vision reading of an
+-- image. This table is ALSO the vision cache: a vision call costs money, so
+-- its answer is tracked (a fresh clone must not pay for it again) and keyed
+-- by (md5, reader, reader_version, model).
+CREATE TABLE IF NOT EXISTS x_image_readings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    md5 TEXT NOT NULL,
+    post_id TEXT NOT NULL,
+    media_key TEXT NOT NULL DEFAULT '',
+    account_id INTEGER,
+    handle TEXT NOT NULL DEFAULT '',
+    -- tesseract | vision
+    reader TEXT NOT NULL,
+    -- the prompt/parser version of that reader
+    reader_version TEXT NOT NULL,
+    -- the Claude model id for reader = vision, empty otherwise
+    model TEXT NOT NULL DEFAULT '',
+    -- chart | portfolio | watchlist | fill | text_screenshot | other | unknown
+    image_class TEXT NOT NULL DEFAULT 'unknown',
+    class_confidence REAL,
+    legend_ticker TEXT NOT NULL DEFAULT '',
+    legend_timeframe TEXT NOT NULL DEFAULT '',
+    tickers_json TEXT NOT NULL DEFAULT '[]',
+    -- the full reader output (vision: the structured JSON)
+    reading_json TEXT NOT NULL DEFAULT '{}',
+    -- ok | refused | error | skipped
+    status TEXT NOT NULL DEFAULT 'ok',
+    status_detail TEXT NOT NULL DEFAULT '',
+    input_tokens INTEGER,
+    output_tokens INTEGER,
+    cost_usd_est REAL,
+    evidence_text TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE (md5, reader, reader_version, model)
+);
+
+CREATE INDEX IF NOT EXISTS idx_x_image_readings_post ON x_image_readings(post_id);
+
+-- One row per (snapshot post, account label, side, ticker): a holdings
+-- listing as the post showed it. A vision row counts only when the OCR
+-- words of the same image corroborate it (row_verified = 1).
+CREATE TABLE IF NOT EXISTS x_positions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    parser_version TEXT NOT NULL,
+    account_id INTEGER NOT NULL,
+    handle TEXT NOT NULL,
+    snapshot_post_id TEXT NOT NULL,
+    as_of_date TEXT NOT NULL,
+    -- post_time | stated
+    as_of_basis TEXT NOT NULL DEFAULT 'post_time',
+    -- text_list | image_portfolio | image_vision
+    source TEXT NOT NULL,
+    account_label TEXT NOT NULL DEFAULT '',
+    side TEXT NOT NULL DEFAULT 'long',
+    ticker TEXT NOT NULL,
+    weight_pct REAL,
+    shares REAL,
+    avg_cost REAL,
+    market_value REAL,
+    gain_pct REAL,
+    snapshot_complete INTEGER NOT NULL DEFAULT 0,
+    row_verified INTEGER NOT NULL DEFAULT 1,
+    verify_detail TEXT NOT NULL DEFAULT '',
+    image_md5 TEXT NOT NULL DEFAULT '',
+    evidence_text TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_x_positions_snapshot ON x_positions(snapshot_post_id);
+
+CREATE INDEX IF NOT EXISTS idx_x_positions_ticker
+    ON x_positions(account_id, ticker, as_of_date);

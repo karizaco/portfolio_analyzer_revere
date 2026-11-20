@@ -96,10 +96,11 @@ at all still fails, and reports yt-dlp's own error. Regression-tested in
 
 | Situation | Cause | Action |
 |---|---|---|
-| On the 39 known 720p-only videos | Video genuinely has no 1080p upload | Download 720p (format 136) — these IDs are hardcoded |
+| On the known 720p-only videos (54 ids in `src/video/known720pOnly.js`) | Video genuinely has no 1080p upload | Download 720p (format 136) — these IDs are hardcoded |
 | On any other video | YouTube THROTTLING — lying to block you | Do NOT download 720p. Leave in errored. Retry later with fresh cookies. |
 
-**The 39 known 720p-only video IDs (NEVER add to this list dynamically):**
+**The known 720p-only video IDs live in `src/video/known720pOnly.js` (54). Do not add to that list from an error.** Fifteen were added on 2026-11-18 only after `--list-formats` showed no video format above 720p, and only with explicit approval. The original 39:
+
 ```
 0Ew3DImAZlw, 1QtMVbPrKUw, 1X0J9XbF7I4, 3328puCDrks, 3w5BmkbsJpo,
 4UWLcS4-lbI, 6XgAT5LW9Ks, 8uyENUhiW1c, AAs9-ZO33eA, A_0Sj3Hi9Jw,
@@ -111,7 +112,7 @@ jtyYLDlgdbE, l2olCkDuHGo, n8SWEpUNylE, o3IoaGLCxz4, oRX7YeTLdRg,
 pomzmadhQV0, sUU3mXKLgok, ttKgeB-cZbY, u84s3-ehrw4
 ```
 
-**Rule: NEVER add new IDs to the 39 list based on "format unavailable" errors.** That error on a new video = throttling, not a signal to download 720p.
+**Rule: NEVER add new IDs to that list based on "format unavailable" errors.** That error on a new video = throttling, not a signal to download 720p. A `--list-formats` check after a network change, plus explicit approval, is what justified the 2026-11-18 additions.
 
 **480p/360p = never, under any circumstance.**
 
@@ -299,6 +300,48 @@ OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 KMP_DUPLICATE_LIB_OK=TRUE \
 `--low-cpu` in `runQmgOcrBatch.js` enforces `OMP_NUM_THREADS=1`, `MKL_NUM_THREADS=1`, `KMP_DUPLICATE_LIB_OK=TRUE` and caps parallelism at `--parallel 2` max. There is no acceptable reason to omit it — the machine will freeze.
 
 ---
+
+### The shared modules stay shared, and a source's quirks stay in the source
+
+`src/table/`, `src/video/`, `src/transcript/` and `src/normalize/` hold
+the code and the parameters EVERY source uses. A source's own
+peculiarity -- its lexicon, its column names, its chart layout, its
+vocabulary -- lives in that source's own module (`src/komar/…`) and
+reaches the shared code through a PARAMETER: the engine takes a
+`lexicon`, a `nameFinderFn`, a `confirmedSymbols`, a `symbolStoplist`,
+a `parserVersion`.
+
+So when a behaviour is shared but only ONE source needs it, the switch
+is a parameter in the shared module and the DECISION is the source's.
+And the rule that governs both: **a change to a shared module needs a
+measurement; a change to a source's own module needs that source's own
+measurement.** What is forbidden is a source quietly changing what the
+other sources get.
+
+Two examples from the Komar source, which is where the distinction
+earned its keep:
+
+* The trade-log sheet's gridlines are **grey**, so the shared reader
+  (which looks for near-black) finds none of them and the whole
+  2048x1715 image reads as one cell. The fix is Komar's own
+  `tradeLogLayout.js`: locate the grey lines, paint them near-black in
+  a COPY of the pixels, and hand that copy to the shared reader, which
+  is untouched.
+* The corpus needs the **report number** to date a session that its own
+  name leaves undated. That is `corpusCatalog.js`'s own rule and the
+  corpus's own evidence -- seven days a number, measured -- and it is
+  not a shared one.
+
+And one shared module that is DATA rather than behaviour:
+`src/normalize/marketTickers.js` loads `config/ticker_company_names.csv`
+(the SEC's `company_tickers.json`, 10,411 symbols) for any reader that
+needs to know **which readings are tickers at all**. Its rule, which
+every consumer has to keep: **it is an ARBITER and never an
+ALLOW-LIST.** The file is a SNAPSHOT, so a symbol it does not know is a
+symbol that listed after it was generated -- a miss means "no
+preference", not "wrong", and a reader must not drop a name on it.
+(Measured on the watchlist's 24 distinct names: all 24 are in it.)
+Deciding what a source may REPORT is still that source's own allow-list.
 
 ## Data folder policy
 
@@ -617,7 +660,7 @@ Results: `data/qmg_alt_batch_results.json`.
 - `src/report/t3liveReport.js` — the dashboard (`data/t3live_report.html`), written by the aggregator; reads `t3live_outcome_summary.json` when it exists
 - `tools/fetchTranscriptChunks.js` — serial, chunked, captions-only fetch over an id list; stops on a 429, and does not mistake a chunk of quarantined videos for one
 - `tools/fetchDeepgramBatch.js` — chunked Deepgram runner over an id list, for the videos with no captions; resumable (skips ids with a transcript on disk), deletes the audio after each transcript, stops when a whole chunk lands nothing
-- `tools/importFlatListing.js` — imports a flat `id<TAB>title` listing (no dates) into `videos`
+- `tools/importFlatListing.js` — imports a flat `id<TAB>title` listing (no dates) into `videos`. It writes its `catalog_runs` row **before** the transaction that writes the rows, so an interrupted import still leaves a row; and it reads the listing the way the Python worker does (UTF-8 first, cp1252 fallback, one separator for the whole file). `--db` points it at a scratch catalog.
 - `tools/surveyT3liveNames.js` — reports which spoken names resolve and which do not; writes `data/t3live_name_candidates.csv`. The rows the confirmed table has to grow.
 
 ### Benzinga (English transcript source — see § 'The Benzinga source')
@@ -773,6 +816,361 @@ the prose is the evidence, and a setup whose prose could not be read is stored
 with `evidence_quality: 'heading_only'` — never dropped, never guessed.
 
 `docs/oconnell-source-plan.md` is the full plan and the full measurements.
+### Komar (paid membership: video + documents + a trade log - see 'docs/komar-source-plan.md')
+
+Julian Komar publishes a paid membership, MARKET UPDATE Premium, on
+`members.julian-komar.com`. The corpus is **116 MP4** screen recordings
+(**65.9 h**, 48.3 GB) and **27 PDFs** (225 pages), in `D:\courses_nosync\julian_komar`
+and its `_finished` sub-folder.
+
+It is the **first HYBRID** source: a video source, a document source and a
+spreadsheet source in one corpus. Phase 1 (the catalog), Phase 2 (the
+document readers) and the trade-log sheet are done; the panel OCR, the
+Deepgram transcripts, the signal extraction and the dashboard are not.
+
+**THE FILENAME IS NOT THE DATE.** Two files in the corpus are wrong about
+their own date, and in both cases the document's own chrome is right:
+`komar_20260408.pdf` is named 2026-04-08 and its title AND its URL say
+2025-04-08; `Trades-August-2025.pdf` is named August and its first slide
+says "July 2025 Trades". So the catalog reads the document, prefers what the
+document says, keeps the filename's date beside it, and marks the rows where
+the two disagree (`date_conflict`). A date also carries its PRECISION: a
+document that names only its month is not dated to a day.
+
+**THE PDF IS A PRINT OF A WEB PAGE.** The text layer of a session print is
+the browser furniture only -- the title, the URL, the page number and the
+print timestamp -- and the body prose is vector outlines. Measured on
+`komar_20260509.pdf` page 2: 4 text spans against 1,295 `l` and 1,930 `c`
+operators. But the furniture is exactly what the catalog needs: it carries
+the session date, the report number, the site section (and so the document's
+kind) and the **chapter list**.
+
+**THE TREND ARROWS ARE IMAGES, AND NO OCR READS THEM.** The market card's
+arrows are coloured discs with a white glyph, and the whole-card OCR comes
+back with `"NASDAQ @ @& 2 enim"`. So the direction is read from the DISC'S
+COLOUR -- green up, amber flat, red down -- and the disc is found by its
+CENTRE, because the arrow glyph cuts it into pieces and a flood fill finds
+fragments. **The disc reading has to WIN over the text reading**: the card's
+narrative sits in the same OCR line as the index names, and one card reads
+"Market still going sideways", which made the text parser report every
+index as flat when the discs said up, up and down.
+
+**A WEEKLY SESSION IS NAMED AFTER ITS REPORT NUMBER**, and the number
+**IS** chronological: 43 = 19 Nov 2022, 50 = 8 Jan 2023, 70 = 29 May 2023,
+211 = 25 Jan 2026, 226 = 9 May 2026 -- seven days a number, and the 2025
+series agrees independently through its files' own timestamps (188 → 199
+in exact 7-day steps). The ONE name that disagrees is
+`January 14 2022 Weekend-Report 51`, whose **year is a typo**: 50 is
+8 January 2023 and 51 is the weekend after it. So the number dates the
+sessions whose own name carries no date -- **76 of the 116 videos now
+carry one** (44 from the number alone), and the source says how each
+was dated (`report_number`).
+Its three parts are `Market Overview`, `My Portfolio` and `Stocks Analysis`,
+or the older `Premium` / `Premium-01` / `Premium-02` naming. Only the
+document carries the date, so the video is LINKED to the document by report
+number.
+
+**THE TRADE LOG IS A SPREADSHEET SCREENSHOT, AND ITS GRID IS GREY.**
+`Trades-August-2025.pdf` page 2 carries a 2048x1715 image of a Google
+Sheets table: 18 columns, 32 rows, one per trade. The shared table
+reader finds a grid by NEAR-BLACK rules (luma <= 40) and this sheet's
+gridlines are **neutral grey** (measured luma 165..248), so it finds
+ZERO of them and the whole image reads as one cell. So the source has
+its own rule detection, in `src/komar/tradeLogLayout.js`: locate the
+grey lines, paint them near-black in a COPY of the pixels, and hand that
+copy to the shared reader. The shared module is not touched.
+
+Three things the grey grid does that the black one does not: the header
+is a FILL BLOCK (91px of grey) and contributes its two edge rows and no
+interior row; the W/L columns are conditionally FILLED, and a fill
+starts and ends exactly on the column rules, so both of those
+boundaries have to be recovered from the fills' own edges; and the
+`Date opened` column is filled too, which breaks its column into
+fragments that are merged across gaps of <=40px.
+
+**A CELL IS READ IN LINE ORDER, NOT LEFT-EDGE ORDER.** The sheet wraps
+"Breakout short-" / "term" and "Risk" / "Capital", and the second
+line's first character sits a pixel to the LEFT of the first line's --
+so the left-edge order read "term Breakout short-" and "Capital Risk",
+which cost four of the eighteen columns their mapping.
+
+**THE SHEET'S OWN ARITHMETIC CHECKS THE READING.** `W/L % = (avg close
+- avg opening) / avg opening * 100`, to the digit the sheet prints
+(measured on 30 of the 32 rows). So a row can be checked against itself:
+a misread price is flagged in `reading_check`, and a W/L that could not
+be read is recovered from the prices (`derived_fields`).
+
+**THE NUMBERS ARE EUROPEAN.** The decimal separator is a comma, the
+dates are day-first ("08.07.25" and "29.07.2025" both occur), and a
+number that wraps inside its cell comes back space-joined ("17,10 15"
+is 17,1015).
+
+**THE TRANSCRIPTS ARE THE CORPUS'S PRIMARY TEXT, AND THE LANGUAGE IS
+PER CALL.** The 116 videos are 65.9 hours of spoken commentary and
+there are no captions for them (they are local files), so Deepgram is
+the only route: `language='en'` is passed **per call** and the row
+records the language the request actually used. `language` selects the
+ACOUSTIC MODEL -- the wrong model produces almost no transcript, not a
+worse one -- and the module's default is `cs` (Sevcik is Czech). The
+transcripts are written as the canonical JSON under
+`data/video_pipeline/transcripts/komar_<id>.json` (TRACKED: they are the
+record), the row in `komar_transcripts` is their INDEX, and a file with
+no row is re-registered rather than transcribed again. The audio is
+deleted after every request. nova-2 at the standard rate is $0.0077 a
+minute, so the corpus is about $30 -- `--dry-run` prints the plan and
+the price before a cent is spent.
+
+**THE WEEKEND-REPORT SUMMARY IS A DERIVED ARTIFACT, AND ITS SQUARE IS
+A LETTER.** The two Summary PDFs are machine-written summaries OF a
+video -- they must be labelled as one and never merged with the primary
+record -- but they carry a dated, curated, per-ticker WATCHLIST with the
+author's VERDICT on each name, which nothing else in the corpus does.
+They are TEXT-NATIVE (no OCR). **The two files are in different
+formats**: 16 August prints `VFF (Village Farms) -- commentary. [square]
+Needs more consolidation.` and 24 August prints `DFDV: commentary.
+[square]`. **The square is a ZapfDingbats filled square that the text
+layer renders as the literal letter "I", glued to what follows it** --
+so every entry of the 24 August file but the first reads as "ISBET"
+where the ticker is SBET, and "IBMNR" where it is BMNR (the corpus's
+own trade log carries BMNR). A leading "I" on an entry that is not the
+first of its section is the square; the raw form is kept beside the
+reading (`raw_subject`). And **the extraction drops the spaces at line
+breaks**, so a verdict arrives as "Needs moreconsolidation" and the
+stance is matched with the spaces ignored.
+
+**THE SEED LEXICON DOES NOT KNOW THIS CORPUS, AND THE TRANSCRIPTS ARE
+A CHART LESSON AS MUCH AS A TRADING CALL.** The corpus names **105**
+tickers -- the trade log's 26, the cards' 55 theme leaders and the
+Summary's 30 holdings -- and only **32** of them are in the shared seed
+lexicon, so the other 73 live in `config/ticker_lexicon_komar.csv`
+(with the note saying which artifact names each). And the transcripts
+are a lesson: "EMA:797, US:255, EPS:232, IPO:97, ETF:65, MMTS:19" are
+words, not holdings. Every stopped token was checked against the SEC's
+own registrant list first, because a token that IS a registrant might
+be a holding -- "CCG is another sister stock", "NB Bancorp" -- and those
+are left alone. "EMI" is the EMA INDICATOR misheard, and "MMTS" is the
+author's own score.
+
+**THE PANEL IS THE RIGHT ~15 % OF THE SCREEN, IN EVERY ERA.** The
+on-screen table at the right edge of every Komar session: measured on
+one frame per era, its left edge is at 0.865 / 0.881 / 0.854 of the
+width, its header row at 0.13 of the height, and its **row pitch is
+25px at 1080 and 17px at 720 -- 0.023 of the height in both**, so one
+crop works at every resolution the corpus holds. The eras differ in
+one thing that matters: era A and B print **four** columns
+(`Symbol | Last | Chg | Chg%`) and era C prints three, and the header
+says **"Symbol", not "Sym"**. A group header is one of the era's OWN
+labels ("CLOSED", "DATA CENTER") and deliberately not a shape test: a
+row whose prices could not be read leaves a lone symbol, and a shape
+rule would drop the position. The webcam circle overlaps the panel's
+lower right, so a row behind it is recorded as **occluded**, not
+absent.
+
+**THE PANEL READER IS MEASURED NOW, AND IT IS STILL NOT WIRED TO A
+WRITER.** `src/komar/panelReader.js` finds the region, the header, the
+columns and the rows, and `tools/measureKomarPanel.js` scores it
+against a PINNED expectation -- `test/fixtures/komar_panel/expectations.json`
+holds the rows read off the three frames' own pixels, one frame per
+era. The before was **7 of 52 symbols in the right order (13.5 %)**;
+it is now **14 / 52 in order and 42 / 52 found**, and the **portfolio
+frame (2026) reads 14 of 14 EXACTLY**. The watchlist frames are not
+there yet (16/20 and 12/18 found), and one pinned frame is not a
+measurement of a reader, so no tool writes the panel tables and the
+dashboard's coverage funnel says the panel stage is **unknown**, not
+zero.
+
+**WHAT THE MEASUREMENT TAUGHT, and it is the interesting part.**
+(a) **The icon must be REMOVED, not cut away.** A cut lands on the
+icon's antialiased edge, and one pixel of pale blue is enough for
+Tesseract to read a letter out of it: the MU row reads "CMU" when the
+cell starts at the last saturated pixel and "MU" when it starts one
+pixel later. The icon is painted white in the OCR's own box for it.
+(b) **The CHART'S PRICE AXIS was bridging the gap** to the detail
+card, so the card was read as rows; only the panel's own columns are
+read now. (c) **A GROUP HEADER IS A ROW WITH NO NUMBERS** -- the theme
+names are the author's own (MEDICAL, DRONES, OIL / GAS / COAL) and are
+not an enumerable set, so no list of them can work. (d) **The panel's
+trailing dot is read as a final "e"** ("DIAe" -> DIA), so it is
+stripped. (e) **The icons are taller than the text**, so a cluster of
+everything chains two rows into one. And (f) **Tesseract's reading of
+the SAME pixels depends on what the shared worker read before it** --
+the same region read twice in one process gave "nue" and "MU" for the
+same ticker -- so the score is REPORTED and not asserted.
+
+**THE WATCHLIST SCREENSHOT IS READ, and it is the source's first
+reader that works.** The daily and mid-week updates carry a TradingView
+screenshot of the author's own watchlist; `src/komar/watchlistReader.js`
+reads **all three of the corpus's -- 30 of 30 panes, 30 of 30 tickers,
+28 of 30 changes, every sign right** -- and `npm run komar:watchlist`
+writes them to `komar_watchlist`. It is a WATCHLIST, not a position:
+nothing there says he owned the name.
+
+**THE PANE GRID IS THE FINDING.** The screens are 1080 px wide with
+**270x150** panes, and **a row that does not fill the width is
+CENTRED** -- one pane at 405, two at 270 and 540, three at 135, 405 and
+675. So the origins are a **half-pane grid**, and a reader that assumed
+four columns loses exactly those rows: two of the corpus's three
+screenshots have a partial last row. The shapes are pinned by
+`test/fixtures/komar_watchlist/expectations.json`, whose four rows were
+corrected against the pixels (XNDD is **XNDU**; UAMY's change is
+**-8.46 %**, not -0.46 %; AAOI's is **+10.19**, not +10.92; and the
+pane that reads "SOM" at 8x is **SQM**, because the Q's tail falls
+below the crop).
+
+**WHAT THE READING IS BUILT FROM**, each measured: the sign comes from
+the **ink** (the printed minus is one pixel wide, and the background
+(35, 38, 47) leans neither green nor red); the change is read at **three
+scales and the majority wins**, because the same pixels read `+1.21
+(12.17%)` at one and `+1.21 (12.27%)` at another; a ticker **the market
+does not know** is read again at a narrower width and the SEC's list
+picks (`TER` came back as `TERE`); and the screens are **inverted**
+before Tesseract sees them. **The whole-screen reading is not used at
+all** -- at 2x the 2025-04-08 frame's first change comes back as the
+word "he" (the header merged with the chart under it) and at 1x the
+tickers come back mangled, so every cell is read on its own.
+
+**THE SHAPE GUARD IS THE PART THAT WOULD BE MISSED.** The market CARD
+is 1080 px wide too and carries a "(46.04 -0.19%)" of its own, so a
+percentage test alone publishes a phantom `N28` from the 2026-05-05
+card; the separator is the **height**, because a screenshot shows whole
+panes (306, 451, 604 against the card's 692), and the full-screen
+workspaces are out by their width (4353 / 4 = 1088 px to a pane).
+
+**AND TWO NUMBERS ARE STILL WRONG**, both the printed "+" read as a "4"
+at two of the three scales: SGML's `+0.49` as `40.49` and GEV's
+`+24.97` as `424.97`. The percentage and the sign are right in both, so
+the read is sound; only the price move is 10x too large. Anchoring the
+crop on the change's own coloured ink was measured against this and
+**made it worse** -- the thin sign stroke falls below the ink threshold
+and the crop starts inside the number (`10.49`, `17.42`, `92`) -- so it
+is recorded here and not re-attempted.
+
+**THE CARD'S LEADER GROUPS ARE READ BY COLUMN, NOT BY THE ORDER THE
+OCR READS THEM.** Tesseract reads a multi-column card LINE BY LINE
+across the width, so the 2026-05-09 card's three "Leaders:" runs
+arrive interleaved ("Leaders: SNDK, MU, | Leaders: CIFR, HUT, |
+Leaders: FROG," and then the three tails), and the text parser mixed
+the columns -- "Semis" got the "Data centers" leaders and "Software"
+got the tail of both of its neighbours. **The leaders were right; their
+GROUPING was wrong.** So the "Leaders:" word is now the ANCHOR of a
+column and every leader word belongs to the last anchor at or before
+it, and the theme names are matched to the groups by position (the
+title is centred in its box, so it is the NEAREST one -- a different
+rule from the leaders', which are left-aligned).
+
+**AND THE 2025 CARD'S DOTTED BORDERS ARE THE ACCENT INK TOO.** Its
+four theme boxes are drawn with a dotted border in the same colour as
+the titles, so the accent search found 32 boxes for four titles and
+the names came out as "welwg," and "{i Datacenter || Chips". **The
+discriminator is the ROWS, not the density**: a title has ink on every
+row (it is glyphs) and a dotted border has empty rows between its
+dots -- and the density does not separate them (the 2025 titles are
+thin strokes in a wide box, an ink ratio of 0.035, while a one-pixel
+fragment of a dotted border has a ratio of 1.0). Where the accent ink
+cannot be trusted, the names are read from the OCR's own words: the
+title is the topmost word-looking token in the column, above the
+"Leaders:" label.
+
+**AND THE LEADERS ARE THE CORPUS'S OWN HOLDINGS**, so the lexicon is
+the arbiter: "L" and "AL" -- the 2025 card's dotted borders read as
+letters -- are the ONLY two of the corpus's 57 card leaders that the
+lexicon does not know.
+
+**AND THE REPORT NUMBER DATES THE WEEK, NOT THE DAY.** The files'
+own timestamps are the DOWNLOAD dates and not the publication ones
+(every report up to 169 was copied on 21 August 2025 and the 2026
+series in one go on 10 May 2026), and the publication day moves inside
+the weekend (the chrome-dated 211 and 215 are four reports and 27
+calendar days apart). So a report-number date carries the WEEK's
+precision, and `session_date_precision` says so -- the dates are
+unchanged, so nothing that scores a price moved.
+
+**THE CALLS DO NOT BEAT THE INDEX.** Every setup from a
+SESSION can be scored -- 153 of them, once the report number dated the
+sessions. The 60 that come from the lessons and the webinars are left
+out on purpose: evergreen teaching content is not a call with a
+window. The 153 hit **59.2 % at one week**, against **SPY at 69.7 %**
+over the same window -- an edge of **-10.5 pp** -- and the verdict is
+`possible_negative_edge`. That is the same honest result the other
+sources give. The source's real signal is the TRADE LOG: what he
+actually did, with the prices and the outcomes.
+
+**THE PROVIDER SPLITS A TICKER ACROSS A BOUNDARY, AND IT IS NOT THE
+ENDPOINTING.** "I bought into DF," | "DV. I see a lot of positive
+momentum" -- the holding was invisible to the extractor, because
+neither half is a ticker. Measured, with the provider's own WORD LIST
+kept (20 videos re-transcribed, $1.94): the provider carries "df" and
+"dv" as **two words**, so this is its **TOKENISATION**, and its
+endpointing cut no word in 2,863 boundaries -- which is why a join in
+the shared segmenter could never have repaired it. The corpus was then
+checked boundary by boundary against its own lexicon: over 50,884
+boundaries, **3 candidates and 1 real** (the others are the phrase "go
+go" and a sentence boundary after "QS"). The fix is
+`src/komar/transcriptRepair.js` -- the source's OWN module, because
+the join needs the corpus's tickers to decide: the joined form has to
+BE a ticker the corpus knows, and neither half may be one. Measured:
+**212 -> 213 setups, nothing lost, nothing invented.** The shared
+normaliser is untouched and the stored transcript is untouched.
+
+**THE PROVIDER'S TERMS PARAMETER IS MEASURED AND REJECTED.** Deepgram
+can be told the terms to expect (`keywords` on nova-2, `keyterm` on
+nova-3 -- its own error says which), and it works: with the corpus's
+tickers sent, the provider wrote "dfdv" as one word. It is rejected
+because **a terms list made of TICKERS is a hallucination machine** --
+tickers ARE ordinary words. Measured on the same video: "I got stopped
+**out**" came back as "I got stopped **OUST**", "right now **in** the"
+as "right now **INVZ** the", "this explosive **verb**" as "this
+explosive **VERB**", "a new source of **into**" as "a new source of
+**INTA**". Every one of those is a ticker the corpus really trades,
+so the error is invisible -- and a wrong holding is worse than a
+missing one. The mechanism is in the shared client
+(`requestKeyterms()`), additive and OFF by default, so a source that
+wants it can have it.
+
+- `src/komar/channel.js` - the source's identity, the namespaced ids, and the slug rule
+- `src/komar/corpusCatalog.js` - the folder walk and the filename grammar
+- `src/komar/documentLayout.js` - what a PDF IS, and what its own chrome says
+- `src/komar/cardLayout.js` - the market card's vocabulary and its colour windows
+- `src/komar/cardDiscs.js` - the trend arrows, read from pixels
+- `src/komar/cardThemes.js` - the theme names, read from the card's accent ink
+- `src/komar/documentExtract.js` - the PDF readers
+- `src/komar/summaryLayout.js` - the Weekend-Report Summary: its sections, its entries and its verdicts
+- `src/komar/lexicon.js` - the corpus's own tickers, and the capitalised tokens that are the lesson rather than a holding
+- `src/komar/panelLayout.js` - the panel's eras, its region, its row pitch and its occlusion
+- `src/komar/panelReader.js` - the panel reader: the region, the header, the rows and the cells (not yet trustworthy)
+- `src/komar/watchlistReader.js` - the daily updates' watchlist screenshot: the pane grid, the header crops, the sign from the ink (measured: 30/30 panes, 30/30 tickers, 28/30 changes)
+- `src/komar/transcriptRepair.js` - the ticker the provider split across a boundary, rejoined by the corpus's own lexicon
+- `src/komar/tradeLogLayout.js` - the trade-log sheet's geometry, its 18 columns and its values
+- `src/komar/schema.js` - the tables, and the columns an existing database has to grow
+- `tools/catalogKomar.js` - inventories both folders, reads the documents, probes the videos
+- `tools/extractKomarDocuments.js` - the market cards, the theme leaders and the deck notes
+- `tools/extractKomarTradeLog.js` - the trade-log sheet: 32 trades over 26 tickers
+- `tools/extractKomarWatchlist.js` - the watchlist screenshots out of the daily updates (3 screenshots, 30 panes)
+- `tools/fetchKomarTranscripts.js` - the corpus's primary text: 65.9 hours of Deepgram, priced before it is bought
+- `tools/extractKomarSignals.js` - the setups: the transcripts read with the shared engine and the corpus's own lexicon
+- `tools/analyzeKomarOutcomes.js` - the setups scored against the prices, against SPY, and the dashboard
+- `tools/analyzeKomarConversion.js` - the conversion: the deck's census, his own star rating against his own outcomes, and his trades against the index
+- `tools/measureKomarPanel.js` - the panel reader, scored against the pinned expectation (`node tools/measureKomarPanel.js`)
+- `data/komar_manifest.json` - the catalog's committed record of what was read
+
+```bash
+npm run komar:catalog
+npm run komar:catalog:dry
+npm run komar:documents
+npm run komar:tradelog
+npm run komar:watchlist
+npm run komar:watchlist:dry
+npm run komar:transcripts
+npm run komar:transcripts:dry
+npm run komar:signals
+npm run komar:signals:dry
+npm run komar:outcomes
+npm run komar:outcomes:dry
+```
+
+The videos are checksummed by SIZE and MTIME, not by md5: 48 GB read on every
+catalog run is not affordable, and the media is never committed anyway.
+
 ### Aggregation
 - `src/video/captureTickers.js` — which field of a capture holds its holdings (see below)
 - `src/video/probeLogDirs.js` — the three probe-log directory layouts (see below)
@@ -803,6 +1201,8 @@ with `evidence_quality: 'heading_only'` — never dropped, never guessed.
 
 ### Tests
 
+The open items that are not blocked on an answer are in `docs/TODO.md` -- the panel reader's remaining defects, the day a Komar report was published, the lessons that carry no date, and the Deepgram word-split.
+
 - `test/videoResolution.test.js` — the **mechanical ffprobe check**: every video the pipeline reads is at least 720p tall, and every file in `downloads_1080p` really is 1920×1080. It applies the rule CLAUDE.md states as a hand-applied rule, and it prints the census it found.
 - `test/chartStreamPanelCount.test.js` — the panel's own footer count, and the two traps in reading it
 - `test/chartStreamPrefilterRegion.test.js` — the prefilter measures the pixels the OCR will read
@@ -813,6 +1213,18 @@ with `evidence_quality: 'heading_only'` — never dropped, never guessed.
 - `test/manual/panelFooterInCrop.test.js` — the production crop against the panel's own footer, cut out of the tracked fixture
 - `test/sevcikSignalExtractor.test.js` — the Sevcik extractor's rules, each worded as the claim it makes
 - `test/oconnellChannel.test.js` — the O'Connell source's identity and its namespaced catalog id, including the two documents on one date that must not share one
+- `test/komarChannel.test.js` — the Komar source's identity, its namespaced ids and the slug rule
+- `test/komarCorpusCatalog.test.js` — the Komar folder walk and the filename grammar
+- `test/komarDocumentLayout.test.js` — what a Komar PDF *is*, and the date it says about itself
+- `test/komarTradeLogLayout.test.js` — the trade-log sheet's grey grid, its 18 columns and its values
+- `test/komarTradeLogSchema.test.js` — the trade-log table's shape, and the rule that a table with rows is never dropped
+- `test/komarTradeLogTool.test.js` — the trade-log writer: rows are replaced, and every row carries its check
+- `test/komarSummaryLayout.test.js` — the Weekend-Report Summary: the two formats, the square that reads as a letter, and the verdicts
+- `test/komarTranscripts.test.js` — the transcript writer: the row records the language the request used, and a file with no row is re-registered rather than transcribed again
+- `test/komarLexicon.test.js` — the corpus's own tickers, and the capitalised tokens that are the lesson rather than a holding
+- `test/komarPanelLayout.test.js` — the panel's eras, its region as a fraction of every resolution, and the group headers
+- `test/komarWatchlist.test.js` — the daily updates' watchlist screenshot: the half-pane grid, the shape guard, and the three pinned frames scored against the pixels (30 panes, 30 tickers, 28 changes)
+- `test/manual/komarTradeLogRead.test.js` — the **manual** full read of the sheet (a Tesseract pass over every cell, 20 s)
 - `test/oconnellIssueKinds.test.js` — the newsletter taxonomy, read from the masthead by font size
 - `test/oconnellSetupLayout.test.js` — the setup headings, the direction, and the setup vocabulary
 - `test/oconnellPositionLayout.test.js` — the position log's columns, the sign taken from the colour, the date, and the lot key
@@ -1098,7 +1510,8 @@ carries its reason.
 cheap and it is the whole fix:
 
 ```bash
-node -e "const fs=require('fs');const ids=[...new Set(fs.readFileSync('data/catalog_flat/t3live_no_captions.txt','utf8').split(/?
+node -e "const fs=require('fs');const ids=[...new Set(fs.readFileSync('data/catalog_flat/t3live_no_captions.txt','utf8').split(/
+?
 /).map(s=>s.split('	')[0].trim()).filter(Boolean))];
 let cap=0,dg=0,none=0;for(const id of ids){const f='data/video_pipeline/transcripts/'+id+'.json';
 if(!fs.existsSync(f)){none++;continue;}try{const d=JSON.parse(fs.readFileSync(f,'utf8'));d.provider==='deepgram'?dg++:cap++;}catch(e){none++;}}
@@ -2408,7 +2821,7 @@ three separate causes, and only one of them was a defect:
 | cause | rows it explains | a defect? |
 |---|---|---|
 | the table counts runs, not videos | the whole shape of it | no |
-| `tools/importQmgChannel.js` writes `videos` and **never** writes `catalog_runs` | 539 Qullamaggie rows (2026-09-19) | yes — a second writer with no audit |
+| `tools/importQmgChannel.js` writes `videos` and **never** writes `catalog_runs` | 539 Qullamaggie rows (2026-09-19) | yes — a second writer with no audit (**closed 2026-11-20**) |
 | `fill-dates` wrote its audit row only at the very end | 1,582 Revere rows (2026-10-26) | yes — the audit was lost with the run |
 
 **The third was the big one, and it is fixed.** `fill-dates` saved its data
@@ -2440,10 +2853,42 @@ what it actually managed. Pinned by
 leaves an audit row"*, which hangs the fake yt-dlp, kills the worker, and
 asserts the row is still there with `inserted_count` = the rows that landed.
 
-The second cause is still open: `tools/importQmgChannel.js` is a second writer
-of `videos` with no audit row at all. It is a one-off import script for the
-Qullamaggie channel, so the rows it wrote are real and the campaign is
-recoverable — but nothing records that it happened.
+The second cause is closed (2026-11-20): `tools/importQmgChannel.js` is no
+longer a second writer of `videos` with no audit row. It now writes a
+`catalog_runs` row **at the start**, before the network work that can fail,
+and fills the counters in as it goes — so an interrupted run still leaves a
+row, and the row says what it did. Three more defects went with it:
+
+- **The tool could not insert a row at all.** It wrote
+  `status = 'cataloged'`, and the schema's CHECK constraint accepts only
+  `pending | downloading | scanning | review | done | no_match | error`.
+  Every insert failed, and the old per-row loop caught the error and
+  counted it as neither inserted nor skipped. The status is now
+  **`pending`** — the catalog's own vocabulary: the row exists and the
+  media has not been fetched (`src/video/videoStatus.js`).
+- **The insert spawned a Python process PER ROW** — 539 interpreter
+  starts to write 539 rows. It is now ONE batch in ONE process.
+- **The channel was a constant.** `--channel` and `--source-url` are
+  arguments now, with the Qullamaggie values as the defaults.
+- **The date fetch asked for a bot-blocked client.** The tool used
+  `player_client=web_safari`, which this project's own rules call out as
+  bot-blocked — it returns nothing, so every date fetch failed. It is now
+  `mweb`, the catalog's measured fast metadata path (4.2 s a video, and
+  it works).
+
+`tools/importFlatListing.js` had the same class of defect: its audit row
+was written **inside** the transaction that wrote the rows, so an
+interrupted import left neither. The row now goes in first, in its own
+transaction, and its counters are filled in afterwards. Its listing reader
+also decoded the file as cp1252 **always**, which mangles every non-ASCII
+character of a UTF-8 listing; it now decodes UTF-8 first and falls back to
+cp1252, which is the rule the Python worker uses. Both tools take a
+`--db` path, so they can be exercised against a scratch catalog.
+
+Pinned by `test/catalogImportTools.test.js` — the audit rows, the counters,
+the UTF-8 and cp1252 titles, the literal-`\t` separator, and a
+source-level assertion that the audit row is written **before** the
+transaction that writes the rows.
 
 ### `fill-dates` builds its own work list
 

@@ -514,6 +514,86 @@ COLOUR, the stars are counted as SHAPES, the columns are matched GLOBALLY
 by name, and the grid's rules are filtered out of the text rather than
 erased, because they are what segments the words).
 
+## The Komar source (measured 2026-11-17)
+
+Julian Komar's **paid membership** ("MARKET UPDATE Premium"), read from
+the corpus on disk. It is the project's **first hybrid source**: a video
+source, a document source and a spreadsheet source in one corpus.
+
+| | count |
+|---|---|
+| MP4 screen recordings | **116** (65.9 hours) |
+| PDFs | **27** (225 pages) |
+| catalogued documents / videos | 27 / 116 |
+| videos with a session date | **76** (44 of them dated by the report number, which is chronological: seven days a number) |
+| market cards read | **10** |
+| theme-leader rows | **83**, over 55 tickers, and every card's theme groups are read by COLUMN (not by the order the OCR reads them) |
+| deck notes | **65** (63 with a star rating, 65 with the author's Quick checklist) |
+| trade-log rows | **32** trades, 26 distinct tickers |
+| summary readings | **43** (32 holdings, 7 commodities, 4 prose sections) |
+| transcripts | **116** of 116 videos, ~$30 of Deepgram |
+| setups (calls) | **213**, over 75 of the transcripts |
+| setups scored against the prices | **153** — every setup from a session (the 60 from the lessons and webinars are excluded on purpose: evergreen teaching content is not a call with a window) |
+| the calls' hit rate | **59.2 %** at 1 week, against **SPY at 69.7 %** — an edge of **-10.5 pp** |
+
+The corpus lives in `D:\courses_nosync\julian_komar` (and its
+`_finished` sub-folder) and **cannot be re-fetched**, so the derived
+records are committed and the media never is — the same rule as the
+O'Connell source.
+
+**The four facts that shaped the work.**
+
+1. **The filename is not the date.** Two files disagree with their own
+   content: `komar_20260408.pdf` is dated 2025-04-08 by its title *and*
+   its URL, and `Trades-August-2025.pdf` holds **July** 2025 trades —
+   every entry date in the trade log is between 2025-07-02 and
+   2025-07-29.
+2. **A PDF here is a print of a web page.** Its text layer carries the
+   browser furniture only (the title, the URL, the page number, the
+   print timestamp); the body prose is vector outlines. The furniture is
+   what the catalog needs.
+3. **The trade-log sheet's grid is GREY.** The shared table reader
+   looks for near-black rules (luma ≤ 40) and this sheet's gridlines
+   run luma 165..248, so it finds **none** of them and the whole
+   2048×1715 image reads as one cell. The source has its own rule
+   detection (`src/komar/tradeLogLayout.js`), which paints the located
+   grey lines near-black in a copy of the pixels and hands that copy to
+   the shared reader.
+4. **The trend arrows are images.** No OCR reads them: the whole-card
+   OCR of a market card comes back as `"NASDAQ @ @& 2 enim"`. The
+   direction is read from the disc's colour, and the disc is found by
+   its centre, because the white arrow glyph cuts it into pieces.
+5. **The panel is the right ~15 % of the screen, in every era**, and
+   its row pitch is a *fraction* of the height (25px at 1080, 17px at
+   720 — 0.023 of the height in both), so one crop works at every
+   resolution the corpus holds. Measured on one frame per era; the
+   crops are pinned under `test/fixtures/komar_panel/`. The reader is
+   not built yet.
+4. **The daily updates' WATCHLIST SCREENSHOTs** (three: 2025-04-08,
+   2026-04-15, 2026-04-29) -- one chart per ticker with the change and
+   the change percentage, 30 names in all. **READER BUILT AND MEASURED
+   (2026-11-19): 30 of 30 panes, 30 of 30 tickers, 28 of 30 changes,
+   every sign right** (`src/komar/watchlistReader.js`, three frames
+   pinned under `test/fixtures/komar_watchlist/`, rows in
+   `komar_watchlist`).
+
+```bash
+npm run komar:catalog       # inventory both folders, classify every file
+npm run komar:documents     # the cards, the theme leaders, the notes, the summaries
+npm run komar:tradelog      # the trade-log sheet: 32 trades
+npm run komar:watchlist     # the watchlist screenshots: 3 screenshots, 30 panes
+npm run komar:transcripts   # 65.9 hours of Deepgram -- priced before it is bought
+npm run komar:signals       # the setups, read from the transcripts
+```
+
+`docs/komar-source-plan.md` has the full plan and the full
+measurements, including the two defects the corpus hides in plain
+sight: a cell's words have to be read in **line order** (the sheet
+wraps "Breakout short-" / "term", and the left-edge order reads it
+backwards, which cost four of the eighteen columns their mapping), and
+the summary's filled square renders as the **letter "I"** and glues
+itself to the next entry, so "SBET" is read as "ISBET".
+
 ## Re-measuring
 
 Everything in § *Current state* comes from four commands:

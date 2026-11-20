@@ -2,6 +2,12 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const {
+  getDownloadDir,
+  media1080SearchDirs,
+  resolveMediaPath,
+  uniqueResolvedDirs,
+} = require('./mediaRoots');
 
 const {
   DOWNLOAD_CANDIDATE_STATUSES,
@@ -63,7 +69,8 @@ ORDER BY upload_date DESC, video_id ASC
  * The column holds absolute Windows paths written on whichever machine did
  * the download, and repo-relative paths. An absolute path from another
  * machine cannot be resolved here — it simply will not exist, which is the
- * honest answer.
+ * honest answer. Absolute paths on another local drive (D:\\...) are kept as-is
+ * so a split library still resolves.
  *
  * @param {string|null|undefined} downloadPath
  * @param {string} [cwd] - repository root, used for relative paths
@@ -71,10 +78,8 @@ ORDER BY upload_date DESC, video_id ASC
  */
 function resolveCatalogPath(downloadPath, cwd = process.cwd()) {
   if (!downloadPath) return null;
-  const normalised = String(downloadPath).replace(/\\/g, '/');
-  const marker = normalised.indexOf(REPO_DATA_MARKER);
-  if (marker !== -1) return path.resolve(cwd, normalised.slice(marker));
-  return path.resolve(cwd, downloadPath);
+  // Absolute other-drive paths (D:\\...) and repo-relative data/... paths.
+  return resolveMediaPath(downloadPath, { cwd });
 }
 
 /**
@@ -102,7 +107,10 @@ function toPortablePath(p, cwd = process.cwd()) {
 }
 
 /**
- * Does this path point into the 1080p download directory?
+ * Does this path point into the classic 1080p download directory name?
+ *
+ * Used by inventory/reporting. findHiresOnDisk no longer requires this
+ * substring — a file on D:\\ or in media_roots extra_dirs still counts.
  *
  * @param {string|null} p
  * @returns {boolean}
@@ -113,34 +121,76 @@ function isHiresPath(p) {
 }
 
 /**
- * The 1080p copy of this video that is already on disk, or null.
+ * True when a catalog pointer is the 720p library (must not skip 1080 download).
+ * @param {string|null} p
+ * @returns {boolean}
+ */
+function is720HiresLibraryPath(p) {
+  if (!p) return false;
+  return p.replace(/\\/g, '/').toLowerCase().includes('downloads_hires');
+}
+
+/**
+ * Directories to scan for an existing 1080-class file.
+ * options.dir is searched first (tests + callers that pin one folder).
+ * Then media1080SearchDirs() (primary 1080p + extra_dirs), unless options.dirs
+ * is provided.
  *
- * Two places can hold it: the name the downloader writes
- * (`<upload_date>_<video_id>.mp4`), and whatever the catalog points at —
- * which for the older rows is a different name under the same directory.
+ * @param {object} options
+ * @returns {string[]}
+ */
+function hiresSearchDirs(options = {}) {
+  const primary = [];
+  if (options.dir) primary.push(options.dir);
+  const rest = options.dirs
+    ? options.dirs
+    : (typeof options.media1080SearchDirs === 'function'
+      ? options.media1080SearchDirs()
+      : media1080SearchDirs());
+  return uniqueResolvedDirs([...primary, ...rest]);
+}
+
+/**
+ * The 1080p (or extra-root equivalent) copy of this video on disk, or null.
  *
- * A copy in `downloads_hires` is a 720p file and does NOT count: the
- * downloader exists to fetch the 1080p version.
+ * Places checked:
+ *   1. `<dir>/<upload_date>_<video_id>.mp4` across 1080 search dirs (primary
+ *      downloads_1080p + extra_dirs from media roots)
+ *   2. Catalog `download_path` when the file exists and is NOT under
+ *      downloads_hires (720p must not count as "already have 1080")
+ *
+ * A copy only in `downloads_hires` does NOT count: the 1080 downloader exists
+ * to fetch the higher-resolution version.
  *
  * @param {object} row - a catalog row
  * @param {object} [options]
- * @param {string} [options.dir] - the 1080p download directory
+ * @param {string} [options.dir] - preferred first search directory
+ * @param {string[]} [options.dirs] - override full search list
  * @param {string} [options.cwd] - repository root, used for relative paths
  * @param {(p: string) => boolean} [options.exists] - existence check
  * @param {(p: string) => number} [options.sizeOf] - size in bytes
- * @returns {string|null} the local path of the 1080p copy
+ * @returns {string|null} the local path of the 1080-class copy
  */
 function findHiresOnDisk(row, options = {}) {
   if (!row) return null;
-  const dir = options.dir || path.resolve('data', 'video_pipeline', 'downloads_1080p');
   const exists = options.exists || fs.existsSync;
   const sizeOf = options.sizeOf || ((p) => fs.statSync(p).size);
 
-  const expected = path.join(dir, `${row.upload_date ? `${row.upload_date}_` : ''}${row.video_id}.mp4`);
-  if (exists(expected) && sizeOf(expected) > MIN_FILE_BYTES) return expected;
+  const expectedName = `${row.upload_date ? `${row.upload_date}_` : ''}${row.video_id}.mp4`;
+  for (const dir of hiresSearchDirs(options)) {
+    const expected = path.join(dir, expectedName);
+    if (exists(expected) && sizeOf(expected) > MIN_FILE_BYTES) return expected;
+  }
 
   const catalogPath = resolveCatalogPath(row.download_path, options.cwd || process.cwd());
-  if (catalogPath && isHiresPath(catalogPath) && exists(catalogPath)) return catalogPath;
+  if (
+    catalogPath
+    && !is720HiresLibraryPath(catalogPath)
+    && exists(catalogPath)
+    && sizeOf(catalogPath) > MIN_FILE_BYTES
+  ) {
+    return catalogPath;
+  }
 
   return null;
 }
@@ -171,6 +221,127 @@ ORDER BY upload_date DESC, video_id ASC
 `;
 }
 
+/**
+ * Decide what still needs downloading, given the checkpoint.
+ *
+ * WHY THIS EXISTS
+ *
+ * The 1080p downloader used to ask the CHECKPOINT first:
+ *
+ *     if (checkpoint.done.some(...)) { skippedCheckpoint += 1; continue; }
+ *     const onDisk = findHiresOnDisk(row, { dir: dlDir });
+ *
+ * That ordering is the bug. `checkpoint.done` records "a download run
+ * finished this id" -- it says nothing about whether the file is still on
+ * disk. Measured on 2026-11-17: of 457 ids in the QMG 1080p checkpoint, 181
+ * had NO file anywhere on disk (D:, downloads_1080p, downloads_hires,
+ * downloads, or the Recycle Bin). All 181 came from the 2026-11-06 run.
+ * Because the checkpoint was consulted first, those 181 were skipped forever:
+ * never re-fetched, never reported as missing, and the catalog said
+ * `status='scanning'` with a `download_path` pointing into a directory that
+ * no longer held the file.
+ *
+ * The fix is the ORDER: the FILESYSTEM answers "is it already downloaded?",
+ * and the checkpoint only answers "did we already try?".
+ *
+ * THE ORDER, AND WHY
+ *
+ *   1. excluded        -- a known 720p-only video; the 1080p pass cannot
+ *                          satisfy it and must not keep re-trying it.
+ *   2. on disk        -- the work is DONE, whatever the checkpoint says.
+ *   3. errored        -- a recent attempt failed; do not retry silently.
+ *   4. blocked        -- a previous run decided this one must not proceed.
+ *   5. otherwise      -- download it. This includes the STRANDED ids: the
+ *                          checkpoint says done, the filesystem says gone.
+ *
+ * Step 2 before step 3 matters too: a video whose file is on disk is
+ * satisfied even if an earlier attempt errored, so a good file is never
+ * re-fetched because of a stale error entry.
+ *
+ * @param {object[]} rows - catalog rows (the candidate query's output)
+ * @param {object} [checkpoint] - { done, errored, blocked }
+ * @param {object} [options]
+ * @param {string} [options.dir] - preferred first search directory
+ * @param {string[]} [options.dirs] - override the full search list
+ * @param {string} [options.cwd] - repository root for relative paths
+ * @param {boolean} [options.retryErrored] - retry the errored bucket
+ * @param {string[]} [options.excludeIds] - ids this pass must not download
+ * @param {(p: string) => boolean} [options.exists]
+ * @param {(p: string) => number} [options.sizeOf]
+ * @returns {{
+ *   todo: object[],
+ *   satisfied: {row: object, path: string, alreadyInCheckpoint: boolean}[],
+ *   stranded: object[],
+ *   skippedErrored: number,
+ *   skippedBlocked: number,
+ *   skippedExcluded: number,
+ * }}
+ */
+function selectDownloadCandidates(rows, checkpoint = {}, options = {}) {
+  const {
+    dir,
+    dirs,
+    cwd,
+    exists,
+    sizeOf,
+    retryErrored = false,
+    excludeIds = [],
+    findOnDisk = findHiresOnDisk,
+  } = options;
+
+  const doneIds = new Set(
+    (Array.isArray(checkpoint.done) ? checkpoint.done : [])
+      .map((e) => (typeof e === 'string' ? e : e && e.id))
+      .filter(Boolean)
+      .map((id) => String(id))
+  );
+  const errored = (checkpoint.errored && typeof checkpoint.errored === 'object') ? checkpoint.errored : {};
+  const blocked = new Set(
+    (Array.isArray(checkpoint.blocked) ? checkpoint.blocked : []).map((id) => String(id))
+  );
+  const excluded = new Set(
+    (Array.isArray(excludeIds) ? excludeIds : []).map((id) => String(id).trim().toLowerCase())
+  );
+
+  const todo = [];
+  const satisfied = [];
+  const stranded = [];
+  let skippedErrored = 0;
+  let skippedBlocked = 0;
+  let skippedExcluded = 0;
+
+  for (const row of Array.isArray(rows) ? rows : []) {
+    const videoId = row && row.video_id;
+    if (!videoId) continue;
+    const id = String(videoId);
+
+    if (excluded.has(id.trim().toLowerCase())) { skippedExcluded += 1; continue; }
+
+    const onDisk = findOnDisk(row, { dir, dirs, cwd, exists, sizeOf });
+    if (onDisk) {
+      satisfied.push({ row, path: onDisk, alreadyInCheckpoint: doneIds.has(id) });
+      continue;
+    }
+
+    // The file is NOT on disk. A checkpoint entry claiming success is stale.
+    if (doneIds.has(id)) stranded.push(row);
+
+    if (!retryErrored && errored[id]) { skippedErrored += 1; continue; }
+    if (blocked.has(id)) { skippedBlocked += 1; continue; }
+
+    todo.push(row);
+  }
+
+  return {
+    todo,
+    satisfied,
+    stranded,
+    skippedErrored,
+    skippedBlocked,
+    skippedExcluded,
+  };
+}
+
 module.exports = {
   CANDIDATE_SQL,
   DOWNLOAD_CANDIDATE_STATUSES,
@@ -180,6 +351,8 @@ module.exports = {
   buildDownloadCandidateSql,
   findHiresOnDisk,
   isHiresPath,
+  is720HiresLibraryPath,
   resolveCatalogPath,
+  selectDownloadCandidates,
   toPortablePath,
 };

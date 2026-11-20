@@ -15,7 +15,7 @@
  *
  *   --max-frames <n>    EasyOCR frames per video (default 12). Lower it to retry
  *                       a video that hit the 40-minute timer.
- *   --max-captures <n>  captures kept per video (default 3).
+ *   --max-captures <n>  captures kept per video (default 2, production profile).
  *
  *   --cluster-rule shipped|corroborated|corroborated-strict|supported
  *                  |supported+corroborated|video-supported
@@ -32,6 +32,22 @@
 const fs = require('node:fs');
 const path = require('path');
 const { isRightSidebarDate } = require('../src/video/chartStreamCrop');
+const {
+  PROFILE_ID,
+  QMG_PRODUCTION_OCR_PROFILE,
+  productionScanFlags,
+} = require('../src/video/qmgProductionOcrProfile');
+const {
+  recordOcrScanOutcome,
+  resolveOutcomeVideoId,
+} = require('../src/video/ocrScanOutcomeStore');
+const { videoIdFromMediaPath } = require('../src/video/analysisState');
+const {
+  findMedia,
+  findMediaForDate,
+  getMediaRoots,
+  resolveMediaPath,
+} = require('../src/video/mediaRoots');
 // The child supervisor lives in the shared daemon-support module, so every
 // tool that spawns the scan tool drains its stdout the same way. It was
 // duplicated here first, and the three sibling daemons still had the
@@ -43,33 +59,32 @@ const {
 } = require('./qmg_scan_daemon_support');
 
 const ROOT = path.resolve(__dirname, '..');
-const VIDEO_DIR_1080 = path.join(ROOT, 'data', 'video_pipeline', 'downloads_1080p');
-const VIDEO_DIR_HIRES = path.join(ROOT, 'data', 'video_pipeline', 'downloads_hires');
+// Media dirs come from src/video/mediaRoots.js (repo default, or
+// PORTFOLIO_* env / data/video_pipeline/media_roots.json for another drive).
+const MEDIA = getMediaRoots();
+const VIDEO_DIR_1080 = MEDIA.downloads_1080p;
+const VIDEO_DIR_HIRES = MEDIA.downloads_hires;
 const OUT_ROOT = path.join(ROOT, 'data', 'video_scan_test', '_rerun');
 
-// Per-video timeout: EasyOCR at ~60-90s/frame × 6 frames = 360-540s; give 40 min for longer videos
+// Per-video timeout: EasyOCR at ~60-90s/frame Ã— 6 frames = 360-540s; give 40 min for longer videos
 const PER_VIDEO_TIMEOUT_MS = 40 * 60 * 1000;
 
-const BASE_FLAGS = [
-  '--prefilter-profile', 'chart_stream',
-  '--chart-stream-parser',
-  '--basename', 'qmg',
-  '--output-kind', 'snapshot',
-  '--ocr-engine', 'easyocr',
-  '--fps', '0.25',
-  '--prefilter-max-frames', '12',
-  '--max-captures', '3',
-];
+// Locked production defaults. Overrides still work via --max-frames /
+// --max-captures / --cluster-rule; the profile id is what outcomes record.
+const BASE_FLAGS = productionScanFlags();
+const DEFAULT_MAX_CAPTURES = QMG_PRODUCTION_OCR_PROFILE.maxCaptures;
+const DEFAULT_CLUSTER_RULE = QMG_PRODUCTION_OCR_PROFILE.clusterRule;
+const DEFAULT_PROFILE_ID = PROFILE_ID;
 
 // Batch-snapshot mode extracts N frames within a window of the PREFILTER'S
 // BEST-SCORING FRAME and REPLACES the uniform selection with them. That is
 // only sound when the best-scoring frame is the frame the position list is
-// visible on — and MEASURED, it is not.
+// visible on â€” and MEASURED, it is not.
 //
 // On 20230609 (production scan, 2026-11-02) the prefilter's best frame was
 // ts=3100, score 25.9, and it read ZERO holdings. The frame that read the
 // date's 13 ground-truth holdings exactly was ts=1944, whose prefilter score
-// was -3.36 — near the bottom of the six candidates. Batch mode would have
+// was -3.36 â€” near the bottom of the six candidates. Batch mode would have
 // centred on ts=3100 and OCR'd a window around it, and because it REPLACES
 // the selected rows, the good frame would never have been read at all.
 //
@@ -92,7 +107,7 @@ const BATCH_SNAPSHOT_FLAGS = [
 // --temporal-decay 0 for 2023-era (no bias, let prefilter score decide).
 //
 // The CROP is no longer set here. It used to be, with a hand-listed set of
-// 29 dates and the rectangle `0.83,0.55,0.17,0.45` — but that list missed
+// 29 dates and the rectangle `0.83,0.55,0.17,0.45` â€” but that list missed
 // 20231201 and 20231215, whose ticker column starts further LEFT still (source
 // x 1586-1613, so x=0.83 shaves the first glyph off every ticker). The crop is
 // now derived from the upload date inside the scan tool itself
@@ -101,7 +116,7 @@ const BATCH_SNAPSHOT_FLAGS = [
 //
 // The era question here comes from the SAME function the crop uses, so a date
 // can never get the sidebar crop and the floating-panel flags. An unknown
-// date is the sidebar era for both — the safer of the two, because the
+// date is the sidebar era for both â€” the safer of the two, because the
 // sidebar rectangle still contains the 2022-era floating panel.
 function getFlagsForDate(dateKey) {
   const extraFlags = [];
@@ -147,10 +162,10 @@ function setFlagValue(flags, flag, value) {
 //
 // `budget` lowers the per-video OCR budget: `maxFrames` is
 // `--prefilter-max-frames` (EasyOCR frames per video) and `maxCaptures` is
-// `--max-captures`. The defaults (12 / 3) take ~25-40 min per video on the
+// `--max-captures`. The defaults (12 / 2) take ~25-40 min per video on the
 // low-CPU path and can hit the 40-minute kill timer: 20230601 did, on
 // 2026-11-04, and wrote no probe log. A smaller budget is a retry that fits.
-function flagsForDate(dateKey, clusterRule = 'corroborated+swallowed', budget = {}) {
+function flagsForDate(dateKey, clusterRule = DEFAULT_CLUSTER_RULE, budget = {}) {
   const base = [...BASE_FLAGS];
   if (budget.maxFrames != null) setFlagValue(base, '--prefilter-max-frames', budget.maxFrames);
   if (budget.maxCaptures != null) setFlagValue(base, '--max-captures', budget.maxCaptures);
@@ -180,9 +195,10 @@ function parseArgs(argv) {
     chunk: null,
     allUnscanned: false,
     dryRun: false,
-    lowCpu: false,
+    // Production EasyOCR path defaults to low-cpu (CLAUDE.md). Opt out with --no-low-cpu.
+    lowCpu: QMG_PRODUCTION_OCR_PROFILE.lowCpu,
     runTag: null,
-    clusterRule: 'corroborated+swallowed',
+    clusterRule: DEFAULT_CLUSTER_RULE,
     maxFrames: null,
     maxCaptures: null,
     timeoutMinutes: null,
@@ -195,8 +211,9 @@ function parseArgs(argv) {
     else if (a === '--all-unscanned') args.allUnscanned = true;
     else if (a === '--dry-run') args.dryRun = true;
     else if (a === '--low-cpu') args.lowCpu = true;
+    else if (a === '--no-low-cpu') args.lowCpu = false;
     else if (a === '--run-tag') args.runTag = argv[++i] || null;
-    else if (a === '--cluster-rule') args.clusterRule = argv[++i] || 'corroborated+swallowed';
+    else if (a === '--cluster-rule') args.clusterRule = argv[++i] || DEFAULT_CLUSTER_RULE;
     else if (a === '--max-frames') args.maxFrames = parsePositiveInt(a, argv[++i]);
     else if (a === '--max-captures') args.maxCaptures = parsePositiveInt(a, argv[++i]);
     else if (a === '--timeout-minutes') args.timeoutMinutes = parsePositiveInt(a, argv[++i]);
@@ -210,18 +227,67 @@ function parseArgs(argv) {
   return args;
 }
 
-function findVideo(dateKey) {
-  // Prefer 1080p
-  const files1080 = fs.readdirSync(VIDEO_DIR_1080);
-  const match1080 = files1080.find(f => f.startsWith(dateKey + '_') && f.endsWith('.mp4'));
-  if (match1080) return { file: match1080, dir: VIDEO_DIR_1080, resolution: '1080p' };
-
-  const filesHires = fs.readdirSync(VIDEO_DIR_HIRES);
-  const matchHires = filesHires.find(f => f.startsWith(dateKey + '_') && f.endsWith('.mp4'));
-  if (matchHires) return { file: matchHires, dir: VIDEO_DIR_HIRES, resolution: '720p' };
-
-  return null;
+/**
+ * Catalog map dateKey -> { video_id, download_path } for QMG (and any channel).
+ * Lets findVideo resolve files that live only on an extra drive via download_path.
+ */
+let _catalogByDate = null;
+function loadCatalogByDate() {
+  if (_catalogByDate) return _catalogByDate;
+  _catalogByDate = new Map();
+  const dbPath = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
+  if (!fs.existsSync(dbPath)) return _catalogByDate;
+  try {
+    process.removeAllListeners('warning');
+    // eslint-disable-next-line global-require
+    const { DatabaseSync } = require('node:sqlite');
+    const db = new DatabaseSync(dbPath, { readOnly: true });
+    const rows = db.prepare(
+      `SELECT video_id, upload_date, download_path FROM videos
+       WHERE upload_date IS NOT NULL AND upload_date != '' AND upload_date != 'NA'`
+    ).all();
+    db.close();
+    for (const row of rows) {
+      const key = String(row.upload_date).trim();
+      if (!key) continue;
+      // Prefer a row whose download_path resolves on disk; otherwise keep first.
+      const prev = _catalogByDate.get(key);
+      const resolved = row.download_path ? resolveMediaPath(row.download_path) : null;
+      const onDisk = resolved && fs.existsSync(resolved);
+      if (!prev) {
+        _catalogByDate.set(key, row);
+      } else if (onDisk) {
+        const prevResolved = prev.download_path ? resolveMediaPath(prev.download_path) : null;
+        if (!(prevResolved && fs.existsSync(prevResolved))) {
+          _catalogByDate.set(key, row);
+        }
+      }
+    }
+  } catch (err) {
+    console.warn(`[runQmgOcrBatch] catalog load failed: ${err.message}`);
+  }
+  return _catalogByDate;
 }
+
+function findVideo(dateKey) {
+  const catalog = loadCatalogByDate().get(String(dateKey));
+  const hit = findMedia({
+    dateKey,
+    videoId: catalog && catalog.video_id,
+    downloadPath: catalog && catalog.download_path,
+  }) || findMediaForDate(dateKey, {
+    downloadPath: catalog && catalog.download_path,
+  });
+  if (!hit) return null;
+  return {
+    file: hit.file,
+    dir: hit.dir,
+    resolution: hit.resolution,
+    path: hit.path,
+    videoId: hit.videoId || (catalog && catalog.video_id) || null,
+  };
+}
+
 
 function loadGT() {
   return JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'qmg_ground_truth.json'), 'utf8'));
@@ -309,7 +375,7 @@ function scoreResult(log, gtEntry) {
  * Returns { status, code, stdoutTail, stderr }.
  */
 
-async function runScan(dateKey, video, runTag, clusterRule = 'corroborated+swallowed', budget = {}) {
+async function runScan(dateKey, video, runTag, clusterRule = DEFAULT_CLUSTER_RULE, budget = {}) {
   const videoPath = path.join(video.dir, video.file);
   const env = {
     ...process.env,
@@ -334,28 +400,64 @@ async function runScan(dateKey, video, runTag, clusterRule = 'corroborated+swall
   const timeoutMs = budget.timeoutMs || PER_VIDEO_TIMEOUT_MS;
   const { status, code, stdoutTail, stderr } = await superviseChild(cmd, env, {
     timeoutMs,
-    onTimeout: () => console.log(`[${dateKey}] TIMEOUT after ${timeoutMs/1000}s — killing`),
+    onTimeout: () => console.log(`[${dateKey}] TIMEOUT after ${timeoutMs/1000}s â€” killing`),
   });
 
   const elapsed = ((Date.now() - start) / 1000).toFixed(0);
 
   if (status !== 'OK') {
     console.log(`[${dateKey}] ${status} after ${elapsed}s (code=${code})`);
-    return { dateKey, status, elapsed: parseInt(elapsed), error: stderr.slice(0, 200), stdoutTail: stdoutTail.slice(-2000) };
+    const videoPathFailed = path.join(video.dir, video.file);
+    const videoIdFailed = videoIdFromMediaPath(videoPathFailed) || '';
+    const outcomeStatus = status === 'TIMEOUT' ? 'timeout' : 'error';
+    recordOcrScanOutcome({
+      videoId: videoIdFailed,
+      uploadDate: dateKey,
+      runTag,
+      profileId: DEFAULT_PROFILE_ID,
+      engine: QMG_PRODUCTION_OCR_PROFILE.engine,
+      clusterRule,
+      maxCaptures: budget.maxCaptures != null ? budget.maxCaptures : DEFAULT_MAX_CAPTURES,
+      status: outcomeStatus,
+      tickers: [],
+      elapsedMs: Date.now() - start,
+      detail: String(stderr || '').slice(0, 500),
+    });
+    return { dateKey, status, elapsed: parseInt(elapsed), error: stderr.slice(0, 200), stdoutTail: stdoutTail.slice(-2000), videoId: videoIdFailed };
   }
 
   // Read result
   const logFile = path.join(OUT_ROOT, runTag, 'ocr_probe', 'logs');
   let log = null;
+  let logPath = '';
   try {
     const files = fs.readdirSync(logFile).filter(f => f.startsWith(dateKey + '_'));
     if (files.length) {
-      log = JSON.parse(fs.readFileSync(path.join(logFile, files[0]), 'utf8'));
+      logPath = path.join(logFile, files[0]);
+      log = JSON.parse(fs.readFileSync(logPath, 'utf8'));
     }
   } catch {}
 
+  const videoIdOk = resolveOutcomeVideoId({ videoId: log && log.video_id }, videoPath);
+  const tickers = Array.isArray(log && log.merged_position_list) ? log.merged_position_list : [];
+  if (log && log.log_path) logPath = log.log_path;
+  recordOcrScanOutcome({
+    videoId: videoIdOk,
+    uploadDate: dateKey,
+    runTag,
+    profileId: DEFAULT_PROFILE_ID,
+    engine: (log && log.ocr_engine) || QMG_PRODUCTION_OCR_PROFILE.engine,
+    clusterRule,
+    maxCaptures: budget.maxCaptures != null ? budget.maxCaptures : DEFAULT_MAX_CAPTURES,
+    status: 'ok',
+    tickers,
+    logPath,
+    elapsedMs: Date.now() - start,
+    detail: '',
+  });
+
   console.log(`[${dateKey}] OK after ${elapsed}s | captures=${log?.captured_count || '?'}`);
-  return { dateKey, status: 'OK', elapsed: parseInt(elapsed), log };
+  return { dateKey, status: 'OK', elapsed: parseInt(elapsed), log, videoId: videoIdOk };
 }
 
 // Semaphore-based worker pool
@@ -406,10 +508,16 @@ async function main() {
 
   // The run tag names the RUN, and a re-run with different parameters has to
   // be distinguishable from the one it supersedes without opening the
-  // directory (CLAUDE.md, § 'Scan output directories'). The default is the
+  // directory (CLAUDE.md, Â§ 'Scan output directories'). The default is the
   // date; `--run-tag` overrides it for a run whose parameters differ.
   const runTag = args.runTag || `qmg-easyocr-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
   console.log(`\n=== QMG EasyOCR Batch ===`);
+  console.log(`Production profile: ${DEFAULT_PROFILE_ID}`);
+  console.log(`Media 1080p: ${VIDEO_DIR_1080}`);
+  console.log(`Media hires: ${VIDEO_DIR_HIRES}`);
+  if (MEDIA.extra_dirs && MEDIA.extra_dirs.length) {
+    console.log(`Media extra: ${MEDIA.extra_dirs.join('; ')}`);
+  }
   console.log(`Run tag: ${runTag}`);
   console.log(`Dates: ${dates.join(', ')}`);
   console.log(`Parallelism: ${parallel}${args.lowCpu ? ' (low-cpu mode)' : ''}`);
@@ -472,4 +580,5 @@ if (require.main === module) {
   main().catch(e => { console.error(e); process.exit(1); });
 }
 
-module.exports = { superviseChild, STDOUT_TAIL_CHARS, scoreResult, flagsForDate, parseArgs };
+module.exports = { superviseChild, STDOUT_TAIL_CHARS, scoreResult, flagsForDate, parseArgs, BASE_FLAGS, DEFAULT_PROFILE_ID, DEFAULT_MAX_CAPTURES, findVideo, VIDEO_DIR_1080, VIDEO_DIR_HIRES };
+

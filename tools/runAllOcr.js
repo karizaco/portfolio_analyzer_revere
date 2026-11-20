@@ -24,6 +24,7 @@
 //   RUN_TAG=mvp node tools/runAllOcr.js           # custom run tag
 
 const fs = require('node:fs');
+const { resolveMediaPath } = require('../src/video/mediaRoots');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
@@ -106,7 +107,8 @@ for (const row of rows) {
     } catch { /* fall through and re-run */ }
   }
 
-  if (!fs.existsSync(downloadPath)) {
+  const mediaPath = resolveMediaPath(downloadPath) || downloadPath;
+  if (!mediaPath || !fs.existsSync(mediaPath)) {
     console.log(`[run-all-ocr] SKIP ${videoId} (missing ${downloadPath})`);
     skipped += 1;
     continue;
@@ -116,7 +118,7 @@ for (const row of rows) {
   console.log(`[run-all-ocr] ${++done}/${rows.length} ${uploadDate} ${videoId} "${(title || '').slice(0, 50)}"`);
   const childArgs = [
     path.resolve('tools/scanVideoWithOcr.js'),
-    '--video', downloadPath,
+    '--video', mediaPath,
     '--date', uploadDate || 'unknown',
     '--output-root', outputRoot,
     '--run-tag', runTag,
@@ -227,7 +229,7 @@ writeRunStatus({
 });
 
 console.log('');
-console.log(`[run-all-ocr] elapsed ${totalElapsed}s · done=${done} skipped=${skipped} errored=${errored}`);
+console.log(`[run-all-ocr] elapsed ${totalElapsed}s Â· done=${done} skipped=${skipped} errored=${errored}`);
 const typeSummary = Object.entries(typeCounts).map(([k, v]) => `${k}=${v}`).join(' ');
 if (typeSummary) console.log(`[run-all-ocr] video types: ${typeSummary}`);
 console.log(`[run-all-ocr] summary at ${summaryPath}`);
@@ -306,7 +308,7 @@ function stampVideoTypeOnProbeLog(logPath, { title, uploadDate }, force) {
       upload_date: uploadDate || null
     };
     fs.writeFileSync(logPath, JSON.stringify(log, null, 2));
-    console.log(`[run-all-ocr]   ${logPath.includes('hires-smoke') ? 'smoke' : 'video'} typed → ${videoType}`);
+    console.log(`[run-all-ocr]   ${logPath.includes('hires-smoke') ? 'smoke' : 'video'} typed â†’ ${videoType}`);
     return videoType;
   } catch (e) {
     console.warn(`[run-all-ocr] WARN: failed to stamp video_type on ${logPath}: ${e.message}`);
@@ -317,3 +319,4 @@ function stampVideoTypeOnProbeLog(logPath, { title, uploadDate }, force) {
 function pad2(n) {
   return String(n).padStart(2, '0');
 }
+

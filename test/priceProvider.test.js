@@ -249,6 +249,7 @@ test('normalizeTickerSymbol keeps exchange suffixes and rewrites share classes',
   assert.equal(normalizeTickerSymbol('MONET.PR'), 'MONET.PR');
   assert.equal(normalizeTickerSymbol('RHM.DE'), 'RHM.DE');
   assert.equal(normalizeTickerSymbol('VOD.L'), 'VOD.L');
+  assert.equal(normalizeTickerSymbol('DX-Y.NYB'), 'DX-Y.NYB');
   assert.equal(normalizeTickerSymbol('BRK.B'), 'BRK-B');
   assert.equal(normalizeTickerSymbol('brk-b'), 'BRK-B');
   assert.equal(normalizeTickerSymbol('AAPL'), 'AAPL');

@@ -1,0 +1,99 @@
+{
+  "note": "WHAT THE PANEL SHOWS, read off the pinned frames' own pixels. This is the EXPECTATION the panel reader is scored against: the reader's output is compared with these rows, and the comparison is the measurement. The values are what the crop shows, so a value the crop CUTS (the era A Chg% column runs into the frame's right edge) is recorded as null and the reader is not judged on it. The group headers are recorded in the order they appear, because a header that is read as a position is a wrong holding.",
+  "how_read": "Each frame's measured crop (the manifest's own rectangle) was cut into 4x-upscaled strips and read by eye; the rows are in the order they appear, top to bottom.",
+  "frames": {
+    "eraA_51.png": {
+      "era": "A",
+      "mode": "watchlist",
+      "session_date": "20220114",
+      "header": ["Symbol", "Last", "Chg", "Chg%"],
+      "group_headers": ["STOCKS"],
+      "rows": [
+        { "symbol": "US02", "last": 4.238, "chg": 0.089, "chg_pct": 2.15 },
+        { "symbol": "US10", "last": 3.507, "chg": 0.062, "chg_pct": 1.8 },
+        { "symbol": "US30", "last": 3.612, "chg": 0.034, "chg_pct": 0.95 },
+        { "symbol": "HYG", "last": 76.64, "chg": 0, "chg_pct": 0 },
+        { "symbol": "TIP", "last": 108.17, "chg": -0.85, "chg_pct": -0.78 },
+        { "symbol": "UVXY", "last": 5.39, "chg": -0.2, "chg_pct": -3.49 },
+        { "symbol": "ARKK", "last": 35.99, "chg": 0.5, "chg_pct": 1.41 },
+        { "symbol": "FFTY", "last": 22.91, "chg": 0.24, "chg_pct": 1.06 },
+        { "symbol": "DIA", "last": 343.04, "chg": 1.04, "chg_pct": 0.3 },
+        { "symbol": "IWN", "last": 148.37, "chg": 0.7, "chg_pct": 0.47 },
+        { "symbol": "IWM", "last": 187.05, "chg": 1.22, "chg_pct": 0.66 },
+        { "symbol": "IWO", "last": 230.72, "chg": 1.84, "chg_pct": 0.84 },
+        { "symbol": "VAL", "last": 575.16, "chg": 2.5, "chg_pct": 0.44 },
+        { "symbol": "IXIC", "last": null, "chg": 78.05, "chg_pct": 0.71 },
+        { "symbol": "NAS1", "last": null, "chg": 84.85, "chg_pct": 0.74 },
+        { "symbol": "QQQ", "last": 280.97, "chg": 1.92, "chg_pct": 0.69 },
+        { "symbol": "NYA", "last": null, "chg": 58.82, "chg_pct": 0.37 },
+        { "symbol": "SPY", "last": 398.5, "chg": 1.54, "chg_pct": 0.39 },
+        { "symbol": "SPX", "last": null, "chg": 15.92, "chg_pct": 0.4 },
+        { "symbol": "RSP", "last": 149.07, "chg": 0.35, "chg_pct": 0.24 }
+      ],
+      "notes": [
+        "The LAST column is cut by the frame's right edge for IXIC, NAS1, NYA and SPX (the panel is wider than the crop the region allows).",
+        "The Chg% column is cut for TIP and UVXY.",
+        "The icons are round logos -- a flag, a lower-case i, an S, a 500 -- and the i is the one that reads as a letter."
+      ]
+    },
+    "eraB_193.png": {
+      "era": "B",
+      "mode": "watchlist",
+      "session_date": "20250921",
+      "header": ["Symbol", "Last", "Chg%"],
+      "group_headers": ["MEDICAL", "DRONES", "SEMICONDUCTORS", "OIL / GAS / COAL"],
+      "rows": [
+        { "symbol": "IONS", "last": 61.01, "chg": null, "chg_pct": -1.18 },
+        { "symbol": "JOBY", "last": 18.58, "chg": null, "chg_pct": 13.33 },
+        { "symbol": "SRFM", "last": 4.5, "chg": null, "chg_pct": -0.66 },
+        { "symbol": "DPRO", "last": 8.13, "chg": null, "chg_pct": 12.27 },
+        { "symbol": "RCAT", "last": 10.46, "chg": null, "chg_pct": 4.18 },
+        { "symbol": "ONDS", "last": 6.72, "chg": null, "chg_pct": 1.82 },
+        { "symbol": "AMBA", "last": 62.93, "chg": null, "chg_pct": 0.35 },
+        { "symbol": "RMBS", "last": 102.35, "chg": null, "chg_pct": -4.68 },
+        { "symbol": "WYFI", "last": 28.3, "chg": null, "chg_pct": 12.35 },
+        { "symbol": "LPTH", "last": 7.24, "chg": null, "chg_pct": 14.38 },
+        { "symbol": "SNDK", "last": 102.21, "chg": null, "chg_pct": 3.38 },
+        { "symbol": "AEHR", "last": 29.95, "chg": null, "chg_pct": -2.03 },
+        { "symbol": "ALAB", "last": 245.2, "chg": null, "chg_pct": -2.65 },
+        { "symbol": "AMSC", "last": 61.55, "chg": null, "chg_pct": -4.56 },
+        { "symbol": "CRDO", "last": 169.56, "chg": null, "chg_pct": -1.6 },
+        { "symbol": "LITE", "last": 168.73, "chg": null, "chg_pct": -1.62 },
+        { "symbol": "CLS", "last": 252.89, "chg": null, "chg_pct": 0.35 },
+        { "symbol": "PBF", "last": 30.13, "chg": null, "chg_pct": -1.73 }
+      ],
+      "notes": [
+        "The group headers are the author's OWN THEME names, and they are not enumerable: MEDICAL, DRONES, SEMICONDUCTORS, OIL / GAS / COAL are four of an open set.",
+        "The table ends after PBF and the DETAIL CARD follows -- the selected row's card (LPTH), the company name and a statistics widget, with the webcam circle over it."
+      ]
+    },
+    "eraC_224.png": {
+      "era": "C",
+      "mode": "portfolio",
+      "session_date": "20260425",
+      "header": ["Symbol", "Last", "Chg%"],
+      "group_headers": ["CLOSED"],
+      "rows": [
+        { "symbol": "DELL", "last": 216.09, "chg": null, "chg_pct": 1.86 },
+        { "symbol": "TER", "last": 418.08, "chg": null, "chg_pct": 4.26 },
+        { "symbol": "POWL", "last": 252.76, "chg": null, "chg_pct": 0.23 },
+        { "symbol": "MU", "last": 496.72, "chg": null, "chg_pct": 3.11 },
+        { "symbol": "SNDK", "last": 989.9, "chg": null, "chg_pct": 6.16 },
+        { "symbol": "APLD", "last": 34.98, "chg": null, "chg_pct": -3.77 },
+        { "symbol": "RKLB", "last": 79.68, "chg": null, "chg_pct": -5.82 },
+        { "symbol": "AMLX", "last": 17.04, "chg": null, "chg_pct": -1.62 },
+        { "symbol": "WULF", "last": 20.01, "chg": null, "chg_pct": -1.77 },
+        { "symbol": "CRWV", "last": 110.14, "chg": null, "chg_pct": -6.2 },
+        { "symbol": "LITE", "last": 881.64, "chg": null, "chg_pct": 4.1 },
+        { "symbol": "BW", "last": 14.5, "chg": null, "chg_pct": -7.41 },
+        { "symbol": "TH", "last": 14.25, "chg": null, "chg_pct": 1.79 },
+        { "symbol": "PL", "last": 35.44, "chg": null, "chg_pct": -7.44 }
+      ],
+      "notes": [
+        "The CLOSED group separates the open holdings from the exited ones.",
+        "The DETAIL CARD follows the table: the selected row's card (TER), the company name and a statistics widget, with the webcam circle over it.",
+        "The selected row (TER) is drawn with a box around it, and the card repeats its symbol -- so the card's symbol is a SECOND reading of a row that is already in the table."
+      ]
+    }
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "note": "The DAILY UPDATE'S WATCHLIST SCREENSHOT: a dated, per-ticker market read of the author's own names. The daily and mid-week updates carry a TradingView screenshot of his watchlist, one chart per ticker, each with the ticker's change and the change percentage. Every row was read off the frame by eye at high magnification -- and two of the first readings were then CORRECTED against the pixels (see `corrections`).",
+  "frames": [
+    {
+      "frame": "20250408.png",
+      "md5": "19ab13f7383a68560dd1d7b041261a1f",
+      "size": "1080x604",
+      "session_date": "20250408",
+      "panes": "4 across, 4 rows centred: the last row holds three, at 135, 405 and 675",
+      "rows": [
+        { "ticker": "AAOI", "row": 0, "origin": 0, "chg_pct": 8.66, "chg": 10.19 },
+        { "ticker": "AEHR", "row": 0, "origin": 270, "chg_pct": 23.26, "chg": 11.69 },
+        { "ticker": "FLY", "row": 0, "origin": 540, "chg_pct": 9.87, "chg": 3.51 },
+        { "ticker": "GEV", "row": 0, "origin": 810, "chg_pct": 2.74, "chg": 24.97 },
+        { "ticker": "GLW", "row": 150, "origin": 0, "chg_pct": 7.39, "chg": 10.98 },
+        { "ticker": "GSAT", "row": 150, "origin": 270, "chg_pct": 3.72, "chg": 2.75 },
+        { "ticker": "NBIS", "row": 150, "origin": 540, "chg_pct": 4.69, "chg": 5.5 },
+        { "ticker": "PL", "row": 150, "origin": 810, "chg_pct": 4.98, "chg": 1.75 },
+        { "ticker": "POWL", "row": 300, "origin": 0, "chg_pct": 7.59, "chg": 15.31 },
+        { "ticker": "SATL", "row": 300, "origin": 270, "chg_pct": 7.19, "chg": 0.5 },
+        { "ticker": "SATS", "row": 300, "origin": 540, "chg_pct": -1.54, "chg": -1.92 },
+        { "ticker": "SQM", "row": 300, "origin": 810, "chg_pct": 4.04, "chg": 3.17 },
+        { "ticker": "STX", "row": 450, "origin": 135, "chg_pct": 6.16, "chg": 28.87 },
+        { "ticker": "TER", "row": 450, "origin": 405, "chg_pct": 8.69, "chg": 27.84 },
+        { "ticker": "WDC", "row": 450, "origin": 675, "chg_pct": 8.47, "chg": 26.43 }
+      ]
+    },
+    {
+      "frame": "20260415.png",
+      "md5": "31a32ee000e8c6f342a582d53322b566",
+      "size": "1080x306",
+      "session_date": "20260415",
+      "panes": "4 across, 2 rows; the last row holds two, centred at 270 and 540",
+      "rows": [
+        { "ticker": "AMLX", "row": 0, "origin": 0, "chg_pct": -0.26, "chg": -0.04 },
+        { "ticker": "FLY", "row": 0, "origin": 270, "chg_pct": 1.37, "chg": 0.5 },
+        { "ticker": "MWH", "row": 0, "origin": 540, "chg_pct": 0.31, "chg": 0.11 },
+        { "ticker": "PL", "row": 0, "origin": 810, "chg_pct": 0.74, "chg": 0.25 },
+        { "ticker": "SATS", "row": 150, "origin": 270, "chg_pct": 2.51, "chg": 3.28 },
+        { "ticker": "YSS", "row": 150, "origin": 540, "chg_pct": 7.38, "chg": 2.54 }
+      ]
+    },
+    {
+      "frame": "20260429.png",
+      "md5": "f4f31a51007e09d2fa5e431299016839",
+      "size": "1080x451",
+      "session_date": "20260429",
+      "panes": "4 across, 2 full rows and a third row holding one pane, centred at 405",
+      "rows": [
+        { "ticker": "AAOI", "row": 0, "origin": 0, "chg_pct": 5.41, "chg": 7.42 },
+        { "ticker": "CRML", "row": 0, "origin": 270, "chg_pct": -3.31, "chg": -0.39 },
+        { "ticker": "FCEL", "row": 0, "origin": 540, "chg_pct": 12.17, "chg": 1.21 },
+        { "ticker": "MRVL", "row": 0, "origin": 810, "chg_pct": 1.5, "chg": 2.3 },
+        { "ticker": "MXL", "row": 150, "origin": 0, "chg_pct": 11.23, "chg": 5.84 },
+        { "ticker": "SGML", "row": 150, "origin": 270, "chg_pct": 2.38, "chg": 0.49 },
+        { "ticker": "UAMY", "row": 150, "origin": 540, "chg_pct": -8.46, "chg": -0.91 },
+        { "ticker": "USAR", "row": 150, "origin": 810, "chg_pct": -2.37, "chg": -0.54 },
+        { "ticker": "XNDU", "row": 300, "origin": 405, "chg_pct": -4.33, "chg": -1.2 }
+      ]
+    }
+  ],
+  "corrections": [
+    {
+      "frame": "20260429.png",
+      "row": "XNDU",
+      "was": "XNDD",
+      "how": "The first reading was taken off the whole frame, where the last glyph is a blur. At 8x the pixels read X N D U -- the fourth glyph has a ROUNDED bottom, which is a U and not a D. The OCR read it 'XNDU' at every crop width from 36 to 62 px and every scale from 3x to 6x, and 'XNDU' is a listed ticker, so the reading stands and the hand reading was wrong."
+    },
+    {
+      "frame": "20260429.png",
+      "row": "UAMY",
+      "was": { "chg_pct": -0.46 },
+      "how": "The first reading was taken off the whole frame, where the red ink's leading digit is a smudge. At 8x the pixels read '-0.91 (8.46%)' -- the first digit of the percentage has a waist, which is an 8 and not a 0. The OCR read 8.46 at every crop width from 40 to 60 px and every scale from 3x to 6x."
+    },
+    {
+      "frame": "20250408.png",
+      "row": "SQM",
+      "was": "SOM",
+      "how": "At 24x the pixels read S Q M -- the Q's TAIL falls below the other two glyphs and a crop that ended above it showed an 'O'. The Q is the one glyph of the three that reaches lowest, so a crop has to run to the baseline and not stop at the letters' height. SQM is a listed ticker and SOM is not, which is what the market's own list said too."
+    },
+    {
+      "frame": "20250408.png",
+      "row": "AAOI",
+      "was": { "chg": 10.92 },
+      "how": "The first reading was taken off the whole frame, where the '1' of '10.19' is a hairline. At 8x the pixels read '+10.19 (8.66%)' -- the second glyph is a 1 and not a 9, because it has no left shoulder and it sits at the same height as the 0 beside it."
+    }
+  ],
+  "notes": [
+    "The screens are DARK (white text on a black chart) and the OCR needs the region inverted to read them well.",
+    "The ticker labels are THIRTY pixels tall, against the eight to thirteen of the panel video frames -- which is why this screenshot is the better source for a dated market read than the panel reader is.",
+    "Each chart carries the ticker, the date, the change, the change percentage and the price. A row that does not fill the screen's width is CENTRED -- one pane at 405, two at 270 and 540, three at 135, 405 and 675 -- which is why the pane origins are a HALF-pane grid and not the four-column grid.",
+    "The reader does NOT read the price: it is in a box on the chart rather than in the header, and it is a reading of the chart rather than of the header."
+  ]
+}

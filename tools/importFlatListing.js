@@ -38,7 +38,6 @@ process.on('warning', () => {});
 const { DatabaseSync } = require('node:sqlite');
 
 const ROOT = path.resolve(__dirname, '..');
-const DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
 
 const argv = process.argv.slice(2);
 
@@ -47,6 +46,10 @@ function readFlag(flag) {
   if (index === -1) return '';
   return argv[index + 1] || '';
 }
+
+// WHERE the catalog is. A scratch copy is how the tool is tested without
+// touching the real one.
+const DB_PATH = path.resolve(readFlag('--db') || path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite'));
 
 const insertOnly = argv.includes('--insert-only');
 const channel = readFlag('--channel');
@@ -77,44 +80,58 @@ if (!fs.existsSync(listingPath)) {
 }
 
 function decodeListing(buffer) {
-  // yt-dlp's stdout on Windows is the console codepage. 0x92 is a right
-  // apostrophe in cp1252, and reading it as UTF-8 or latin1 stores the wrong
-  // character. Map the cp1252 0x80-0x9F range, then decode the rest as latin1.
-  const CP1252 = {
-    0x80: '€', 0x82: '‚', 0x83: 'ƒ', 0x84: '„', 0x85: '…',
-    0x86: '†', 0x87: '‡', 0x88: 'ˆ', 0x89: '‰', 0x8a: 'Š',
-    0x8b: '‹', 0x8c: 'Œ', 0x8e: 'Ž', 0x91: '‘', 0x92: '’',
-    0x93: '“', 0x94: '”', 0x95: '•', 0x96: '–', 0x97: '—',
-    0x98: '˜', 0x99: '™', 0x9a: 'š', 0x9b: '›', 0x9c: 'œ',
-    0x9e: 'ž', 0x9f: 'Ÿ',
-  };
-  let out = '';
-  for (const byte of buffer) {
-    if (byte === 0x0d) continue;
-    out += CP1252[byte] || String.fromCharCode(byte);
+  // The bytes may not be UTF-8. yt-dlp's stdout passes through the console
+  // codepage on Windows, so a title with an em-dash lands as cp1252.
+  //
+  // Decode as UTF-8 FIRST and fall back to cp1252 -- which is the rule
+  // the Python worker uses (tools/whiteboard_worker.py, read_wanted_rows).
+  // Decoding as cp1252 ALWAYS mangles every non-ASCII character of a
+  // UTF-8 listing, which is what this reader used to do.
+  let text;
+  try {
+    text = new TextDecoder('utf-8', { fatal: true }).decode(buffer);
+  } catch (_) {
+    text = new TextDecoder('windows-1252').decode(buffer);
   }
-  return out;
+  return text.replace(/\r\n?/g, '\n');
 }
 
+// The separator in a listing file is not always a tab. The listing
+// documented in CLAUDE.md is produced through a shell, and the shell hands
+// yt-dlp the two characters backslash-t, which yt-dlp prints verbatim. A
+// listing written from Python carries a real tab. Both are read, and the
+// choice is made ONCE FOR THE FILE rather than per line, so a title
+// containing a tab cannot shift the separator halfway down the file.
+// (The Python worker breaks on the first non-empty line even when that
+// line has no separator; this one takes the first line that HAS one, so a
+// malformed first line does not lose the whole file.)
+const LITERAL_TAB = '\\t';
+
 const text = decodeListing(fs.readFileSync(listingPath));
+const lines = text.split('\n');
+let separator = '';
+for (const candidate of lines) {
+  if (!candidate.trim()) continue;
+  if (candidate.includes('\t')) { separator = '\t'; break; }
+  if (candidate.includes(LITERAL_TAB)) { separator = LITERAL_TAB; break; }
+}
+if (!separator && !lines.some((line) => line.trim())) separator = '\t'; // an empty listing
+
 const rows = [];
 const seen = new Set();
 let malformed = 0;
 
-for (const rawLine of text.split(/\r?\n/)) {
+for (const rawLine of lines) {
   const line = rawLine.trim();
   if (!line) continue;
-  // A template passed through the shell often prints the two characters
-  // backslash-t instead of a tab. Accept both.
-  const tab = line.includes('\t') ? line.indexOf('\t') : line.indexOf('\\t');
-  const sepLen = line.includes('\t') ? 1 : 2;
+  const tab = line.indexOf(separator);
   if (tab < 1) {
     malformed += 1;
     continue;
   }
   const videoId = line.slice(0, tab).trim();
-  const rest = line.slice(tab + sepLen);
-  const fields = rest.split(line.includes('\t') ? '\t' : '\\t');
+  const rest = line.slice(tab + separator.length);
+  const fields = rest.split(separator);
   // The listing's shape is DETECTED, not assumed. Two layouts are in use:
   //
   //   id<TAB>title                                the plain listing
@@ -187,6 +204,35 @@ const insertListing = db.prepare(
      last_seen_at = excluded.last_seen_at`,
 );
 
+// THE AUDIT ROW GOES IN FIRST, IN ITS OWN TRANSACTION.
+//
+// It used to be written INSIDE the transaction that wrote the rows, so an
+// interrupted import left neither the rows nor the record of the run --
+// the exact failure the `fill-dates` run of 2026-10-26 made (1,582 rows
+// across 66 batches with no audit row at all). A run that is interrupted
+// must still leave a row, and that row must report what it DID.
+//
+// The counters are filled in afterwards, so a row left behind by an
+// interrupted run says "nothing was inserted" -- which is true.
+const relListing = path.relative(ROOT, listingPath).replace(/\\/g, '/');
+const auditRow = db.prepare(
+  `INSERT INTO catalog_runs (
+     source_url, channel, command_json, raw_output_path, row_count,
+     inserted_count, updated_count, missing_upload_dates, malformed_rows,
+     created_at, kind, not_listed_count, listing_complete, row_count_kind
+   ) VALUES (?, ?, ?, ?, ?, 0, 0, 0, ?, ?, 'live', 0, ?, 'listing_rows')`,
+).run(
+  sourceUrl,
+  channel,
+  JSON.stringify(process.argv.slice(1)),
+  relListing,
+  rows.length,
+  malformed,
+  now,
+  partial ? 0 : 1,
+);
+const runId = Number(auditRow.lastInsertRowid);
+
 db.exec('BEGIN');
 for (const row of rows) {
   if (insertOnly && existing.has(row.videoId)) {
@@ -213,28 +259,23 @@ for (const row of rows) {
   if (existing.has(row.videoId)) updated += 1;
   else inserted += 1;
 }
-
-const relListing = path.relative(ROOT, listingPath).replace(/\\/g, '/');
-db.prepare(
-  `INSERT INTO catalog_runs (
-     source_url, channel, command_json, raw_output_path, row_count,
-     inserted_count, updated_count, missing_upload_dates, malformed_rows,
-     created_at, kind, not_listed_count, listing_complete, row_count_kind
-   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'live', 0, ?, 'listing_rows')`,
-).run(
-  sourceUrl,
-  channel,
-  JSON.stringify(process.argv.slice(1)),
-  relListing,
-  rows.length,
-  inserted,
-  updated,
-  rows.length,
-  malformed,
-  now,
-  partial ? 0 : 1,
-);
 db.exec('COMMIT');
+
+// The rows that are STILL without a date. A flat listing supplies none,
+// so this counts the rows the catalog had a date for already -- which is
+// the number a reader wants, and not the number of rows in the file.
+db.exec('CREATE TEMP TABLE IF NOT EXISTS imported_ids (video_id TEXT PRIMARY KEY)');
+db.exec('DELETE FROM imported_ids');
+const insertId = db.prepare('INSERT OR IGNORE INTO imported_ids (video_id) VALUES (?)');
+for (const row of rows) insertId.run(row.videoId);
+const missingUploadDates = db.prepare(
+  `SELECT COUNT(*) AS n FROM videos JOIN imported_ids USING (video_id)
+   WHERE videos.upload_date IS NULL OR videos.upload_date = ''`,
+).get().n;
+
+db.prepare(
+  `UPDATE catalog_runs SET inserted_count = ?, updated_count = ?, missing_upload_dates = ? WHERE run_id = ?`,
+).run(inserted, updated, missingUploadDates, runId);
 db.close();
 
 console.log(JSON.stringify({
@@ -246,6 +287,8 @@ console.log(JSON.stringify({
   inserted,
   updated,
   malformed,
+  missing_upload_dates: missingUploadDates,
+  catalog_run_id: runId,
   listing_complete: partial ? 0 : 1,
   note: 'flat listing has no upload_date; existing dates were kept',
 }, null, 2));

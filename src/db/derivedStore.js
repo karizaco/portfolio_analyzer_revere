@@ -40,6 +40,7 @@ const DERIVED_SCHEMA_PATH = path.join(ROOT, 'data', 'db', 'schema_derived.sql');
 const DERIVED_TABLES = [
   'trade_signals',
   'sevcik_setups',
+  'fundedmind_setups',
   'sevcik_ta_features',
   'market_readings',
   'asym_articles',
@@ -49,6 +50,12 @@ const DERIVED_TABLES = [
   'asym_sectors',
   'asym_monitor_sheets',
   'asym_monitor_days',
+  'komar_documents',
+  'komar_videos',
+  'komar_market_cards',
+  'komar_theme_leaders',
+  'komar_deck_notes',
+  'komar_trade_log',
   'oconnell_setups',
   'oconnell_positions',
   'oconnell_snapshots',
@@ -57,6 +64,9 @@ const DERIVED_TABLES = [
   'discord_positions',
   'discord_trade_actions',
   'discord_episodes',
+  'martinlukkt_trade_actions',
+  'x_image_readings',
+  'x_positions',
 ];
 
 /**

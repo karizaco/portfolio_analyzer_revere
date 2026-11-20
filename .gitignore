@@ -31,6 +31,8 @@ data/video_pipeline/*
 # channels keep their VTTs tracked, so the rule names one channel rather
 # than every VTT.
 data/video_pipeline/transcripts/*.captions.benzinga.*.vtt
+data/video_pipeline/transcripts/*.captions.martinlukkt.*.vtt
+data/video_pipeline/transcripts/*.captions.fundedmind.*.vtt
 data/video_pipeline_*/
 data/video_ocr_probe/
 data/my_videos/
@@ -247,6 +249,10 @@ data/asym_sector_outcome_summary.json
 # working PNGs are the rasterised pages, and the rollups are the
 # interpretations the aggregate builds from the tracked records.
 data/oconnell_work/
+
+# The Komar source's working material: the card images extracted from
+# the PDFs, which are regenerable from the corpus at any time.
+data/komar_work/
 data/oconnell_signals.json
 data/oconnell_setups.csv
 data/oconnell_positions.csv
@@ -262,3 +268,18 @@ data/oconnell_report.html
 data/discord_traders.json
 data/discord_episodes.csv
 data/discord_traders.html
+# QMG background-job runtime state (rewritten on every chunk).
+data/qmg_ocr_queue_progress.json
+data/qmg_download_stages.json
+
+# X (x.com) source -- docs/x-source-plan.md. The post ARCHIVE is tracked (it is
+# the record: posts get deleted and the API costs money). Raw captures, the
+# downloaded images, the rebuildable index and the crawl lock are not.
+data/x_pipeline/raw/
+data/x_pipeline/media/
+data/x_pipeline/x_index.sqlite
+data/x_pipeline/x_index.sqlite-*
+data/x_pipeline/.browser.lock
+data/x_*.csv
+data/x_*.json
+data/x_report.html

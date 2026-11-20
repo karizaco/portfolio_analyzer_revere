@@ -24,10 +24,15 @@ function valueOf(flags, flag) {
   return i === -1 ? undefined : flags[i + 1];
 }
 
-test('the default budget is unchanged: 12 frames, 3 captures', () => {
+test('the default budget is unchanged: 12 frames, 2 captures', () => {
+  // 2, not 3. Commit 6eeea68 ("lock QMG production profile") moved the
+  // default to 2 -- the profile header names the drift it ended
+  // ("max-captures 2 vs 3") -- and this test still asserted the pre-lock 3,
+  // so it has been failing since. The profile is the source of truth
+  // (src/video/qmgProductionOcrProfile.js); this pins the value it holds.
   const flags = flagsForDate('20230601');
   assert.equal(valueOf(flags, '--prefilter-max-frames'), '12');
-  assert.equal(valueOf(flags, '--max-captures'), '3');
+  assert.equal(valueOf(flags, '--max-captures'), '2');
 });
 
 test('a budget lowers the frame and capture counts, and only those', () => {
@@ -50,7 +55,7 @@ test('a budget lowers the frame and capture counts, and only those', () => {
 test('either half of the budget can be set alone', () => {
   const framesOnly = flagsForDate('20230601', 'corroborated+swallowed', { maxFrames: 6 });
   assert.equal(valueOf(framesOnly, '--prefilter-max-frames'), '6');
-  assert.equal(valueOf(framesOnly, '--max-captures'), '3');
+  assert.equal(valueOf(framesOnly, '--max-captures'), '2');
 
   const capturesOnly = flagsForDate('20230601', 'corroborated+swallowed', { maxCaptures: 1 });
   assert.equal(valueOf(capturesOnly, '--prefilter-max-frames'), '12');

@@ -1,0 +1,11 @@
+{
+  "_note": "X API pay-per-use prices. Configuration, not code: X says prices are subject to change. Re-check the source before a large backfill.",
+  "source": "https://docs.x.com/x-api/getting-started/pricing",
+  "checked_at": "2026-11-20",
+  "currency": "USD",
+  "post_read": 0.005,
+  "user_read": 0.01,
+  "counts_all_request": 0.01,
+  "counts_recent_request": 0.005,
+  "same_day_dedup": true
+}

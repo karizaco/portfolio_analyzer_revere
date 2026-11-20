@@ -1,0 +1,59 @@
+{
+  "note": "One FRAME per era, from the corpus (outside the repository). The panel is read from the frame by cropping the measured region, so the fixture is the frame and not a crop of it. The crops the reader takes are recorded per frame.",
+  "region": {
+    "left": 0.84,
+    "top": 0.1,
+    "width": 0.16,
+    "height": 0.9
+  },
+  "files": [
+    {
+      "file": "eraA_51.png",
+      "era": "A",
+      "source_video": "January 14 2022 Weekend-Report 51 MARKET UPDATE Premium.mp4",
+      "at_sec": 1800,
+      "session_date": "20220114",
+      "frame_size": "1920x1080",
+      "crop": {
+        "left": 1612,
+        "top": 108,
+        "width": 307,
+        "height": 972
+      },
+      "md5": "0bb6e1dd29f8151a5066081bc5ceb272",
+      "bytes": 678735
+    },
+    {
+      "file": "eraB_193.png",
+      "era": "B",
+      "source_video": "Weekend-Report 193 MARKET UPDATE Premium.mp4",
+      "at_sec": 900,
+      "session_date": "",
+      "frame_size": "1280x720",
+      "crop": {
+        "left": 1075,
+        "top": 72,
+        "width": 204,
+        "height": 648
+      },
+      "md5": "61fee10707d8291e4f440bea26bb984b",
+      "bytes": 301003
+    },
+    {
+      "file": "eraC_224.png",
+      "era": "C",
+      "source_video": "Weekend-Report 224 - My Portfolio.mp4",
+      "at_sec": 600,
+      "session_date": "20260425",
+      "frame_size": "1920x1080",
+      "crop": {
+        "left": 1612,
+        "top": 108,
+        "width": 307,
+        "height": 972
+      },
+      "md5": "6d93abaafcecdf728cd1c88e46ecab19",
+      "bytes": 549806
+    }
+  ]
+}

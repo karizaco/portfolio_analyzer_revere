@@ -364,6 +364,48 @@ async function writeScanLog(logsDirectory, probeKey, payload) {
  * database or a video the catalog does not know are all reported and
  * then ignored.
  */
+
+/**
+ * Persist OCR outcome for queue/coverage (best-effort).
+ * Separate from analysis_state (file retention).
+ */
+function recordOcrScanOutcomeFromScan(payload) {
+  try {
+    const { recordOcrScanOutcome, resolveOutcomeVideoId } = require('../src/video/ocrScanOutcomeStore');
+    const { PROFILE_ID } = require('../src/video/qmgProductionOcrProfile');
+    const videoId = resolveOutcomeVideoId(
+      { videoId: payload.videoId || payload.video_id },
+      payload.videoPath
+    );
+    if (!videoId) return;
+    const profileId = payload.profileId
+      || (payload.prefilterProfile === 'chart_stream' && payload.ocrEngine === 'easyocr'
+        ? PROFILE_ID
+        : '');
+    const result = recordOcrScanOutcome({
+      videoId,
+      uploadDate: payload.dateKey || payload.uploadDate || '',
+      runTag: payload.runTag || '',
+      profileId,
+      engine: payload.ocrEngine || payload.engine || '',
+      clusterRule: payload.clusterRule || '',
+      maxCaptures: payload.maxCaptures,
+      status: payload.status || 'error',
+      tickers: payload.tickers || payload.merged_position_list || [],
+      logPath: payload.logPath || '',
+      elapsedMs: payload.elapsedMs,
+      detail: payload.detail || '',
+    });
+    if (result.written) {
+      console.log(`[scan] ocr_scan_outcome=${payload.status || 'error'} profile=${profileId || '(none)'} for ${videoId}`);
+    } else if (result.error) {
+      console.error(`[scan] ocr_scan_outcome not recorded: ${result.error}`);
+    }
+  } catch (error) {
+    console.error(`[scan] ocr_scan_outcome not recorded: ${error.message}`);
+  }
+}
+
 function recordAnalysisFlag(videoPath, dateKey) {
   try {
     const { flagScannedVideo } = require('../src/video/analysisStateStore');
@@ -2152,6 +2194,19 @@ async function main() {
     const logPath = await writeScanLog(logsDirectory, probeKey, result);
     result.log_path = logPath;
     if (status === 'done') recordAnalysisFlag(videoPath, dateKey);
+    recordOcrScanOutcomeFromScan({
+      videoPath,
+      videoId: result.video_id,
+      dateKey,
+      runTag: options.runTag || '',
+      prefilterProfile: options.prefilterProfile,
+      ocrEngine: options.ocrEngine,
+      maxCaptures: options.maxCapturesPerVideo,
+      status: status === 'done' ? 'ok' : (status === 'error' ? 'error' : 'partial'),
+      tickers: result.merged_position_list || [],
+      logPath: result.log_path || logPath,
+      detail: status === 'done' ? '' : String(result.message || status || ''),
+    });
     console.log(JSON.stringify(result, null, 2));
   } catch (error) {
     const errorResult = {
@@ -2163,6 +2218,19 @@ async function main() {
       status: 'error'
     };
     const logPath = await writeScanLog(logsDirectory, probeKey, errorResult);
+    recordOcrScanOutcomeFromScan({
+      videoPath,
+      videoId: errorResult.video_id,
+      dateKey,
+      runTag: options.runTag || '',
+      prefilterProfile: options.prefilterProfile,
+      ocrEngine: options.ocrEngine,
+      maxCaptures: options.maxCapturesPerVideo,
+      status: 'error',
+      tickers: [],
+      logPath,
+      detail: error.message || '',
+    });
     console.error(`[scan:${options.outputKind}] failed: ${error.message}`);
     console.error(`[scan:${options.outputKind}] details saved to ${logPath}`);
     throw error;

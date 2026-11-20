@@ -39,6 +39,61 @@ const { resolveFfmpegBin } = require('../video/ffmpegBin');
 const DEEPGRAM_API_URL = 'https://api.deepgram.com/v1/listen';
 
 /**
+ * The name of the parameter that carries the TERMS, which depends on
+ * the MODEL.
+ *
+ * Deepgram's own error says it: "`keyterm` is only supported for
+ * Nova-3 and Flux. Please use `keywords` instead." So a request that
+ * sends `keyterm` to nova-2 is refused with HTTP 400 -- which is what
+ * the first attempt at this fix did.
+ *
+ * @param {string} [model]
+ * @returns {string}
+ */
+function keytermParamName(model) {
+  const name = String(model || '').toLowerCase();
+  if (name.includes('nova-3') || name.includes('flux')) return 'keyterm';
+  return 'keywords';
+}
+
+/**
+ * The TERMS the request should favour, and why they are a PARAMETER.
+ *
+ * A ticker said out loud is the hardest thing in the corpus for a
+ * speech model: "DFDV" is four letters that sound like a word, and
+ * the model has no reason to prefer the company's ticker over a
+ * mis-hearing. Measured on the Komar corpus, the provider's own
+ * tokenisation split a holding across a boundary -- "I bought into
+ * DF," | "DV. I see a lot of positive momentum" -- and the holding
+ * was then invisible to the extractor. The provider's own WORD LIST
+ * settles the cause: it carries "df" and "dv" as two words, so this
+ * is the provider's TOKENISATION and not its endpointing, and no join
+ * in the segmenter could have repaired it.
+ *
+ * Deepgram's terms parameter is the request-level answer: the terms
+ * are given to the model as words it should expect. It is a
+ * PARAMETER and not a constant because the TERMS are a source's own:
+ * the Komar corpus knows its own tickers, and a Czech stream knows
+ * its own vocabulary. The shared client carries the mechanism and the
+ * source supplies the list, which is the same shape as every other
+ * source-specific parameter in this project.
+ *
+ * The list is EMPTY by default, so a request that says nothing about
+ * terms is the request that was always sent.
+ *
+ * @param {object} [overrides]
+ * @param {string[]|string} [overrides.keyterms] - the terms
+ * @returns {string[]}
+ */
+function requestKeyterms(overrides = {}) {
+  const raw = overrides.keyterms !== undefined
+    ? overrides.keyterms
+    : (process.env.DEEPGRAM_KEYTERMS || '');
+  const list = Array.isArray(raw) ? raw : String(raw || '').split(/[,\s]+/);
+  return list.map((term) => String(term || '').trim()).filter(Boolean);
+}
+
+/**
  * The Deepgram request parameters.
  *
  * `utterances=true` is what makes the response usable: it groups the words
@@ -209,6 +264,18 @@ async function transcribeAudio(audioPath, options = {}) {
   for (const [key, value] of Object.entries(params)) {
     url.searchParams.set(key, value);
   }
+  // The terms, one query parameter each -- Deepgram takes the terms
+  // parameter repeatedly. The PARAMETER'S NAME depends on the model
+  // (`keyterm` on nova-3 and Flux, `keywords` on nova-2 -- Deepgram's
+  // own error says so). An empty list adds nothing, so a request that
+  // says nothing about terms is the request that was always sent.
+  const terms = requestKeyterms({ keyterms: options.keyterms });
+  if (terms.length) {
+    const param = keytermParamName(params.model);
+    for (const term of terms) {
+      url.searchParams.append(param, term);
+    }
+  }
 
   const audio = fs.readFileSync(audioPath);
   const retries = Number.isInteger(options.retries) ? options.retries : DEFAULT_RETRIES;
@@ -309,7 +376,9 @@ module.exports = {
   deepgramLanguage,
   extractAudio,
   hasDeepgramKey,
+  keytermParamName,
   requestParams,
+  requestKeyterms,
   sanitizeErrorBody,
   transcribeAudio,
 };
