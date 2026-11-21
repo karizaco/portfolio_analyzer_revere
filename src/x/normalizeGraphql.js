@@ -128,7 +128,9 @@ function normalizeTweet(tweet, fetchedAt) {
   const quotedResult = tweet.quoted_status_result && tweet.quoted_status_result.result;
   const quoted = quotedResult ? unwrap(quotedResult).tweet : null;
 
-  const repostedId = reposted ? String(reposted.rest_id) : null;
+  const repostedId = reposted
+    ? String(reposted.rest_id)
+    : (legacy.retweeted_status_id_str ? String(legacy.retweeted_status_id_str) : null);
   const inReplyTo = legacy.in_reply_to_status_id_str ? String(legacy.in_reply_to_status_id_str) : null;
   const quotedId = quoted
     ? String(quoted.rest_id)
