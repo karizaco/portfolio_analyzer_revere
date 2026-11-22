@@ -66,6 +66,7 @@ const DERIVED_TABLES = [
   'discord_episodes',
   'clement_posts',
   'clement_ideas',
+  'clement_daily_plans',
   'martinlukkt_trade_actions',
   'x_image_readings',
   'x_positions',

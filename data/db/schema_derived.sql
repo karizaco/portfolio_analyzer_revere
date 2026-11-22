@@ -1464,3 +1464,32 @@ CREATE INDEX IF NOT EXISTS idx_clement_ideas_message
     ON clement_ideas(message_id);
 CREATE INDEX IF NOT EXISTS idx_clement_ideas_ticker
     ON clement_ideas(ticker, as_of_date);
+
+CREATE TABLE IF NOT EXISTS clement_daily_plans (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    parser_version TEXT NOT NULL,
+    source_name TEXT NOT NULL DEFAULT 'clement',
+    message_id INTEGER,
+    discord_message_id TEXT NOT NULL DEFAULT '',
+    attachment_id TEXT NOT NULL DEFAULT '',
+    as_of_date TEXT NOT NULL DEFAULT '',
+    split_x INTEGER,
+    split_frac REAL,
+    split_method TEXT NOT NULL DEFAULT '',
+    daily_buy_signal INTEGER,
+    weekly_buy_signal INTEGER,
+    above_rising_5dma INTEGER,
+    traction_last_5 INTEGER,
+    net_52w_hl_positive INTEGER,
+    technical_theme TEXT NOT NULL DEFAULT '',
+    focus_themes TEXT NOT NULL DEFAULT '',
+    situational_awareness TEXT NOT NULL DEFAULT '',
+    emotional_analysis TEXT NOT NULL DEFAULT '',
+    left_ocr_path TEXT NOT NULL DEFAULT '',
+    right_ocr_path TEXT NOT NULL DEFAULT '',
+    image_path TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_clement_daily_plans_date
+    ON clement_daily_plans(as_of_date);

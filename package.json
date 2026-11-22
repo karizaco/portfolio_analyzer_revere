@@ -96,6 +96,8 @@
     "discord:analyze": "node tools/analyzeDiscordTraders.js",
     "discord:report": "node tools/reportDiscordTraders.js",
     "discord:clement:ideas": "node tools/buildClementIdeas.js",
+    "discord:clement:daily-plans": "node tools/buildClementDailyPlansFromSplitOcr.js",
+    "discord:clement:report": "node tools/reportClement.js",
     "video:signals": "python tools/build_video_status.py",
     "sevcik:outcomes": "node tools/analyzeSevcikOutcomes.js",
     "sevcik:ta": "node tools/analyzeSevcikTa.js",

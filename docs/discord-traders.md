@@ -179,3 +179,18 @@ npm run discord:clement:ideas
 
 Parser version: `clement-captions-1`. Daily Market Plan dashboard OCR is deferred;
 setup-chart meaning is primarily in the Discord caption.
+
+### Daily Market Plan image layout (human-verified 2026-11-22)
+
+Full notes: `src/discord/clement/LAYOUT.md`.
+
+- **Split the dashboard vertically first** (white gutter between gray left
+  cells and the blue/white right tables). Important content is the **left half**.
+- **1. Market Trend** — YES/NO checklist (sample day 2026-01-09: all five YES).
+- **2. Primary Watchlist** is a **header for left-column theme/focus content**
+  (e.g. "Metal Miners, Other Commodities…"), **not** the S&P Sub-Market table.
+- **S&P 500 Sub-Market / Sub-Sector** blocks are a separate **market monitor**
+  on the **right half**.
+- Setup charts: ticker glyph is often gray-on-gray (OCR-hard); black chart
+  title carries the name (e.g. "Ethereum / TetherUS…"). Example map for
+  2025-08-21 multi-attach: `…0018.png`→ETHUSDT, `…0262.png`→IWM, `…3368.png`→TEM.
