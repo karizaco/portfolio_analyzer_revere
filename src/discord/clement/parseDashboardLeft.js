@@ -9,8 +9,10 @@
  *   3. Situational Awareness, Emotional Analysis, ...
  */
 
-const { findTickers, loadLexicon } = require('../symbols');
+const { loadLexicon } = require('../symbols');
+const { loadMarketTickers } = require('../../normalize/marketTickers');
 const { normalizeTicker } = require('./parseCaption');
+const { repairOcrTicker } = require('../shared/ocrConfusables');
 
 const MONTHS = {
   jan: 1, january: 1, feb: 2, february: 2, mar: 3, march: 3,
@@ -115,16 +117,17 @@ function parseDashboardLeft(text, options = {}) {
     }
   }
 
-  // Also cashtags anywhere on left
-  for (const hit of findTickers(raw, { known })) {
-    const t = normalizeTicker(hit.ticker);
+  // Only explicit $ cashtags from the left half (not bare OCR prose words).
+  // Full-text findTickers() was pulling THE/A/TO/FOR from commentary.
+  for (const m of raw.matchAll(/\$([A-Za-z]{1,5})\b/g)) {
+    const t = repairOcrTicker(normalizeTicker(m[1]));
     if (!t) continue;
     if (!ideas.some((x) => x.ticker === t)) {
       ideas.push({
         ticker: t,
-        role: hit.dollar ? 'watch' : 'mention',
+        role: 'watch',
         note: '',
-        confidence: hit.dollar ? 'high' : 'medium',
+        confidence: 'high',
         source: 'dashboard_left_ocr',
       });
     }
@@ -165,22 +168,32 @@ function extractYesNo(s) {
  * @param {string} note
  */
 function pushList(ideas, listText, role, known, note) {
-  // tokens separated by space or comma
+  const market = loadMarketTickers();
+  const STOP = new Set([
+    'NIL', 'NONE', 'THE', 'AND', 'FOR', 'TO', 'OF', 'ON', 'IN', 'AT', 'A', 'AN',
+    'IS', 'IT', 'BE', 'OR', 'AS', 'BY', 'UP', 'SO', 'IF', 'MY', 'ME', 'WE', 'NO',
+    'YES', 'ALL', 'NOT', 'OUT', 'NOW', 'DAY', 'LOW', 'HIGH', 'LATE', 'STAGE',
+    'BASE', 'BASES', 'INTO', 'FROM', 'WITH', 'THIS', 'THAT', 'HAVE', 'HAS',
+    'WANT', 'WATCH', 'LONG', 'SHORT', 'FOCUS', 'LIST', 'THEME', 'SETUP', 'VCP',
+  ]);
+  // tokens separated by space or comma; require \$ or lexicon/market hit
   const parts = String(listText).split(/[\s,/;]+/).map((p) => p.trim()).filter(Boolean);
   for (const part of parts) {
-    let t = part.replace(/^\$/, '').toUpperCase();
+    const dollar = part.startsWith('$');
+    let t = repairOcrTicker(part.replace(/^\$/, ''));
     if (!/^[A-Z]{1,5}$/.test(t)) continue;
-    if (t === 'NIL' || t === 'NONE') continue;
-    // accept if known or looks like ticker list context (Focus List is a slot)
+    if (STOP.has(t)) continue;
+    if (!dollar && !known.has(t) && !market.has(t)) continue;
     ideas.push({
       ticker: t,
       role,
       note: String(note || '').slice(0, 300),
-      confidence: known.has(t) ? 'high' : 'medium',
+      confidence: dollar || known.has(t) ? 'high' : 'medium',
       source: 'dashboard_left_ocr',
     });
   }
 }
+
 
 /**
  * @param {string[]} lines

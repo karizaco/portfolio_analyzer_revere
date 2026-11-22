@@ -207,3 +207,17 @@ Full notes: `src/discord/clement/LAYOUT.md`.
 6. **Chart titles** — `src/discord/clement/chartTitleResolve.js` (name→ticker; gray glyphs skipped)
 
 Dashboard split: white gutter ~42.5% width; left = plan/watchlist, right = S&P monitor.
+
+## Additive cross-trader layers (2026-11-22)
+
+No rebuild of core `discord_positions` / episodes / clement_posts required.
+
+| Command | Writes |
+|---|---|
+| `npm run discord:attachment-hints` | `discord_attachment_hints` (Ariel/Drendel image-thin msgs) |
+| `npm run discord:clement:focus-episodes` | `clement_focus_episodes` |
+| `npm run discord:regime-join` | `regime_book_days` |
+| `npm run discord:exposures` | `trader_exposures` (projection) |
+| `npm run discord:additive` | all four in order |
+
+Shared ticker OCR repairs: `src/discord/shared/ocrConfusables.js`.

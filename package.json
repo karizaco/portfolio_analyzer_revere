@@ -150,7 +150,12 @@
     "x:rebuild-index": "node tools/runXPipeline.js rebuild-index",
     "x:media": "node tools/runXPipeline.js media",
     "x:ocr": "node tools/runXPipeline.js ocr",
-    "x:vision": "node tools/runXPipeline.js vision"
+    "x:vision": "node tools/runXPipeline.js vision",
+    "discord:additive": "node tools/buildDiscordAdditiveLayers.js",
+    "discord:exposures": "node tools/buildTraderExposures.js",
+    "discord:attachment-hints": "node tools/buildDiscordAttachmentHints.js",
+    "discord:clement:focus-episodes": "node tools/buildClementFocusEpisodes.js",
+    "discord:regime-join": "node tools/buildRegimeBookJoin.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.11.0",
