@@ -1,11 +1,11 @@
 ﻿"""Batch-split + left/right EasyOCR for Clement Daily Market Plan images.
 
-Low resource:
-  - one image at a time (no parallel workers)
-  - OMP/MKL threads = 1
-  - EasyOCR gpu=False
-  - resize halves to max width 1100 before OCR
-  - skip stems that already have _LEFT.txt (resume-safe)
+Low resource defaults:
+  - one image at a time inside a single process
+  - OMP/MKL threads = 1, EasyOCR gpu=False
+  - resume-safe SKIP if outputs exist
+  - exclusive per-image .claim files so a SECOND process cannot OCR the
+    same stem (atomic O_CREAT|O_EXCL). Stale claims from dead PIDs are stolen.
 
 Usage:
   py -3 tools/clementBatchDashboardOcr.py
@@ -25,7 +25,6 @@ os.environ['MKL_NUM_THREADS'] = '1'
 os.environ['OPENBLAS_NUM_THREADS'] = '1'
 os.environ['NUMEXPR_NUM_THREADS'] = '1'
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
-# discourage GPU
 os.environ['CUDA_VISIBLE_DEVICES'] = ''
 
 import numpy as np
@@ -36,6 +35,7 @@ MEDIA = ROOT / 'data/discord_pipeline/media/clement'
 OUT = MEDIA / 'ocr_split_batch'
 OUT.mkdir(parents=True, exist_ok=True)
 PROGRESS = OUT / 'progress.jsonl'
+PID_FILE = OUT / 'batch_pids.json'
 
 
 def find_vertical_split(img: Image.Image) -> dict:
@@ -119,11 +119,7 @@ def ocr_pil(reader, img: Image.Image, tmp: Path) -> dict:
 
 def list_targets(limit: int | None):
     rows = [json.loads(l) for l in (MEDIA / 'manifest.jsonl').read_text(encoding='utf-8').splitlines() if l.strip()]
-    large = [
-        r for r in rows
-        if (r.get('width') or 0) >= 2800 and (r.get('height') or 0) >= 2000
-    ]
-    # prefer unique message dashboards: keep largest attachment per message if multiple
+    large = [r for r in rows if (r.get('width') or 0) >= 2800 and (r.get('height') or 0) >= 2000]
     by_msg = {}
     for r in large:
         mid = str(r.get('message_id') or '')
@@ -137,6 +133,112 @@ def list_targets(limit: int | None):
     return out
 
 
+def _pid_alive(pid: int) -> bool:
+    if pid <= 0:
+        return False
+    try:
+        # Windows: os.kill(pid, 0) may not exist the same way; use OpenProcess via ctypes-free check
+        import ctypes
+        kernel32 = ctypes.windll.kernel32  # type: ignore[attr-defined]
+        PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+        handle = kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, 0, pid)
+        if handle:
+            kernel32.CloseHandle(handle)
+            return True
+        return False
+    except Exception:
+        # Fallback: assume alive to avoid two workers stealing aggressively on error
+        try:
+            os.kill(pid, 0)
+            return True
+        except Exception:
+            return False
+
+
+def try_claim(stem: str) -> Path | None:
+    """Atomically claim a stem. Returns claim path or None if another live worker holds it."""
+    claim = OUT / f'{stem}.claim'
+    my_pid = os.getpid()
+    while True:
+        try:
+            fd = os.open(str(claim), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            try:
+                os.write(fd, f'{my_pid}\n{time.time()}\n'.encode('utf-8'))
+            finally:
+                os.close(fd)
+            return claim
+        except FileExistsError:
+            try:
+                text = claim.read_text(encoding='utf-8', errors='ignore').strip().splitlines()
+                holder = int(text[0]) if text else -1
+            except Exception:
+                holder = -1
+            if holder == my_pid:
+                return claim
+            if holder > 0 and _pid_alive(holder):
+                return None  # someone else is working
+            # stale claim — remove and retry
+            try:
+                claim.unlink()
+            except OSError:
+                return None
+        except OSError:
+            return None
+
+
+def release_claim(claim: Path | None) -> None:
+    if not claim:
+        return
+    try:
+        if claim.exists():
+            text = claim.read_text(encoding='utf-8', errors='ignore')
+            if text.startswith(str(os.getpid())):
+                claim.unlink()
+    except OSError:
+        pass
+
+
+def outputs_complete(stem: str) -> bool:
+    return (
+        (OUT / f'{stem}_LEFT.txt').exists()
+        and (OUT / f'{stem}_RIGHT.txt').exists()
+        and (OUT / f'{stem}_meta.json').exists()
+    )
+
+
+def record_pid_file() -> None:
+    """Best-effort single-writer PID record for status tools."""
+    rec = {
+        'role': 'python_worker',
+        'pid': os.getpid(),
+        'started_at': time.strftime('%Y-%m-%dT%H:%M:%S'),
+        'cmd': 'tools/clementBatchDashboardOcr.py',
+    }
+    try:
+        existing = []
+        if PID_FILE.exists():
+            try:
+                existing = json.loads(PID_FILE.read_text(encoding='utf-8'))
+                if not isinstance(existing, list):
+                    existing = [existing]
+            except Exception:
+                existing = []
+        # drop dead pids
+        live = []
+        for e in existing:
+            try:
+                pid = int(e.get('pid') or 0)
+            except Exception:
+                continue
+            if pid == os.getpid() or _pid_alive(pid):
+                if pid != os.getpid():
+                    live.append(e)
+        live.append(rec)
+        PID_FILE.write_text(json.dumps(live, indent=2), encoding='utf-8')
+    except Exception as exc:
+        print(f'pid_file warn: {exc}', flush=True)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--limit', type=int, default=0)
@@ -144,29 +246,53 @@ def main():
     args = ap.parse_args()
 
     targets = list_targets(args.limit or None)
-    print(f'targets={len(targets)} out={OUT}', flush=True)
+    print(f'targets={len(targets)} out={OUT} pid={os.getpid()}', flush=True)
+    record_pid_file()
 
     import easyocr
     print('loading easyocr (cpu, single-thread)...', flush=True)
     reader = easyocr.Reader(['en'], gpu=False, verbose=False)
     print('ready', flush=True)
 
-    done = skipped = failed = 0
+    done = skipped = claimed_else = failed = 0
     for i, row in enumerate(targets, 1):
         rel = row['local_path']
         path = ROOT / rel
         stem = path.stem
-        left_txt = OUT / f'{stem}_LEFT.txt'
-        if left_txt.exists() and (OUT / f'{stem}_RIGHT.txt').exists() and (OUT / f'{stem}_meta.json').exists():
+        if outputs_complete(stem):
             print(f'[{i}/{len(targets)}] SKIP {stem}', flush=True)
             skipped += 1
+            # clear leftover claim if any
+            release_claim(OUT / f'{stem}.claim') if False else None
+            cpath = OUT / f'{stem}.claim'
+            if cpath.exists():
+                try:
+                    cpath.unlink()
+                except OSError:
+                    pass
             continue
+
+        claim = try_claim(stem)
+        if claim is None:
+            print(f'[{i}/{len(targets)}] CLAIMED_BY_OTHER {stem}', flush=True)
+            claimed_else += 1
+            continue
+
         if not path.exists():
             print(f'[{i}/{len(targets)}] MISSING {rel}', flush=True)
             failed += 1
+            release_claim(claim)
             continue
+
         t0 = time.time()
         try:
+            # Re-check after claim (another worker may have finished)
+            if outputs_complete(stem):
+                print(f'[{i}/{len(targets)}] SKIP_AFTER_CLAIM {stem}', flush=True)
+                skipped += 1
+                release_claim(claim)
+                continue
+
             md5 = file_md5(path)
             img = Image.open(path)
             split = find_vertical_split(img)
@@ -184,6 +310,7 @@ def main():
                 'message_id': row.get('message_id'),
                 'attachment_id': row.get('attachment_id'),
                 'split': split,
+                'worker_pid': os.getpid(),
                 'left': {'line_count': left_ocr['line_count'], 'mean_conf': left_ocr['mean_conf']},
                 'right': {'line_count': right_ocr['line_count'], 'mean_conf': right_ocr['mean_conf']},
                 'elapsed_s': round(time.time() - t0, 1),
@@ -194,20 +321,32 @@ def main():
             done += 1
             print(
                 f'[{i}/{len(targets)}] OK {stem} split={split["split_frac"]} '
-                f'L={left_ocr["line_count"]} R={right_ocr["line_count"]} {meta["elapsed_s"]}s',
+                f'L={left_ocr["line_count"]} R={right_ocr["line_count"]} {meta["elapsed_s"]}s pid={os.getpid()}',
                 flush=True,
             )
         except Exception as exc:
             failed += 1
             print(f'[{i}/{len(targets)}] FAIL {stem} {type(exc).__name__}: {exc}', flush=True)
+        finally:
+            release_claim(claim)
+
         time.sleep(max(0.0, args.sleep))
 
-    # write summary index for build tool (compatible with split_summary.json shape)
     summary = []
     for meta_path in sorted(OUT.glob('*_meta.json')):
-        summary.append(json.loads(meta_path.read_text(encoding='utf-8')))
+        try:
+            summary.append(json.loads(meta_path.read_text(encoding='utf-8')))
+        except Exception:
+            pass
     (OUT / 'split_summary.json').write_text(json.dumps(summary, indent=2), encoding='utf-8')
-    print(json.dumps({'done': done, 'skipped': skipped, 'failed': failed, 'total_meta': len(summary)}, indent=2), flush=True)
+    print(json.dumps({
+        'pid': os.getpid(),
+        'done': done,
+        'skipped': skipped,
+        'claimed_by_other': claimed_else,
+        'failed': failed,
+        'total_meta': len(summary),
+    }, indent=2), flush=True)
 
 
 if __name__ == '__main__':
