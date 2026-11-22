@@ -95,45 +95,20 @@ def _write_jsonl(messages: list[dict], out_path: Path) -> int:
 
 
 def _persist_session(session_path: Path, url: str) -> bool:
-    """Open the existing storage_state in a fresh context, navigate once so
-    cookies/localStorage are materialised, then write storage_state back to disk.
+    """No-op for session writes.
 
-    Returns True if the save succeeded. If Playwright is unavailable the call
-    is a silent no-op (returns False).
+    Session persistence is done inside ``browser_driver.scrape_channel`` from
+    the LIVE headed context the user logged into. A previous version of this
+    function launched a *headless* browser with the old state and overwrote
+    the session file with anonymous cookies — wiping a successful login.
     """
-    if not PLAYWRIGHT_AVAILABLE:
-        return False
-    try:
-        from playwright.sync_api import sync_playwright
-    except Exception as exc:
-        print(f"{SELECTOR_LOG} playwright import failed during persist: {exc}",
-              file=sys.stderr)
-        return False
-
-    existing = None
     if session_path.exists():
-        try:
-            existing = json.loads(session_path.read_text(encoding="utf-8"))
-        except Exception:
-            existing = None
+        print(f"{SELECTOR_LOG} session file present at {session_path} "
+              f"(saved by browser_driver during scrape)")
+        return True
+    print(f"{SELECTOR_LOG} no session file at {session_path} — login may have failed")
+    return False
 
-    session_path.parent.mkdir(parents=True, exist_ok=True)
-    with sync_playwright() as pw:
-        browser = pw.chromium.launch(headless=True)
-        try:
-            context = browser.new_context(storage_state=existing)
-            try:
-                page = context.new_page()
-                page.goto(url, wait_until="domcontentloaded", timeout=30000)
-            except Exception as exc:
-                print(f"{SELECTOR_LOG} navigate during persist failed: {exc}",
-                      file=sys.stderr)
-            state = context.storage_state()
-            session_path.write_text(json.dumps(state), encoding="utf-8")
-            print(f"{SELECTOR_LOG} saved session to {session_path}")
-            return True
-        finally:
-            browser.close()
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -146,7 +121,7 @@ def main(argv: list[str] | None = None) -> int:
 
     raw_messages = scrape_channel(
         url=args.url,
-        session_state_path=str(session_path) if session_path.exists() else None,
+        session_state_path=str(session_path),  # driver creates/updates after login
         messages=args.messages,
         login_timeout=args.login_timeout_seconds,
         scroll_pause_ms=args.scroll_pause_ms,

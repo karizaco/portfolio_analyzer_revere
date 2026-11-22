@@ -283,3 +283,7 @@ data/x_pipeline/.browser.lock
 data/x_*.csv
 data/x_*.json
 data/x_report.html
+
+# Discord attachment media (re-downloadable via tools/clementBackfillAndDownload.py; ~90MB+ binary)
+data/discord_pipeline/media/
+

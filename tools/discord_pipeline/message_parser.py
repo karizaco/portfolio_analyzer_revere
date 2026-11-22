@@ -10,7 +10,13 @@ import re
 from datetime import datetime, timezone
 from typing import Any
 
-ID_RE = re.compile(r'id="(?:message-id-|message-)(?P<id>[0-9]{17,20})"')
+ID_RE = re.compile(
+    r'id="(?:'
+    r'message-id-|'
+    r'chat-messages-[0-9]{17,20}-|'  # chat-messages-<channel>-<message>
+    r'message-(?![s-])'              # message-<id>, but not "messages-"
+    r')(?P<id>[0-9]{17,20})"'
+)
 SNOWFLAKE_RE = re.compile(r"[0-9]{17,20}")
 
 REQUIRED_MESSAGE_KEYS = (
@@ -37,17 +43,30 @@ EMPTY_MESSAGE: dict[str, Any] = {
 
 
 def parse_message_id(text: str) -> str:
-    """Extract a Discord message snowflake from an ``id`` attr or HTML fragment."""
+    """Extract a Discord message snowflake from an ``id`` attr or HTML fragment.
+
+    Prefer explicit message id attributes. Never return a bare first snowflake
+    from the fragment — channel ids also match ``[0-9]{17,20}`` and that bug
+    collapsed every Clement message onto the channel id.
+    """
     if not text:
         return ""
+    m = re.search(
+        r'id="chat-messages-[0-9]{17,20}-([0-9]{17,20})"',
+        text,
+    )
+    if m:
+        return m.group(1)
+    m = re.search(r'data-list-item-id="chat-messages___([0-9]{17,20})"', text)
+    if m:
+        return m.group(1)
+    m = re.search(r'data-message-id="([0-9]{17,20})"', text)
+    if m:
+        return m.group(1)
     m = ID_RE.search(text)
     if m:
         return m.group("id")
-    m = re.search(r'data-message-id="(?P<id>[0-9]{17,20})"', text)
-    if m:
-        return m.group("id")
-    m = SNOWFLAKE_RE.search(text)
-    return m.group(0) if m else ""
+    return ""
 
 
 def parse_iso8601(value: str) -> str:
