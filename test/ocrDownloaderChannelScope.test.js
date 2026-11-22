@@ -107,10 +107,14 @@ test('a known handle is still inferred without --channel', { skip: !PY && 'no py
     'import whiteboard_worker as w',
     "print(w.infer_channel_from_url('https://www.youtube.com/@Benzinga/streams'))",
     "print(w.CHANNEL_SOURCE_URLS['benzinga'])",
+    "print(w.infer_channel_from_url('https://www.youtube.com/@FundedMind/streams'))",
+    "print(w.CHANNEL_SOURCE_URLS['fundedmind'])",
   ].join('\n');
   const r = spawnSync(PY.cmd, [...PY.args, '-c', script], { encoding: 'utf8' });
   assert.equal(r.status, 0, r.stderr);
   const lines = r.stdout.trim().split(/\r?\n/);
   assert.equal(lines[0], 'benzinga');
   assert.equal(lines[1], 'https://www.youtube.com/@Benzinga/streams');
+  assert.equal(lines[2], 'fundedmind');
+  assert.equal(lines[3], 'https://www.youtube.com/@FundedMind/streams');
 });

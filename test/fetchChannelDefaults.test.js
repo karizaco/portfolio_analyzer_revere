@@ -50,6 +50,7 @@ test('every registered channel has its own caption languages and model', () => {
     T3LIVE_CHANNEL: { subLangs: 'en', deepgramLanguage: 'en' },
     BENZINGA_CHANNEL: { subLangs: 'en', deepgramLanguage: 'en' },
     MARTINLUKKT_CHANNEL: { subLangs: 'en', deepgramLanguage: 'en' },
+    FUNDEDMIND_CHANNEL: { subLangs: 'sk-orig,cs-orig,cs,en', deepgramLanguage: 'cs' },
   };
   for (const [channel, expected] of Object.entries(defaults)) {
     const block = new RegExp(`\\[${channel}\\]:\\s*\\{[^}]*\\}`, 'm').exec(SOURCE);
@@ -84,6 +85,7 @@ test('suffixed channels keep channel name in the raw VTT', () => {
     T3LIVE_CHANNEL: '',
     BENZINGA_CHANNEL: 'benzinga',
     MARTINLUKKT_CHANNEL: 'martinlukkt',
+    FUNDEDMIND_CHANNEL: 'fundedmind',
   };
   for (const [channel, suffix] of Object.entries(defaults)) {
     const block = new RegExp(`\\[${channel}\\]:\\s*\\{[^}]*\\}`, 'm').exec(SOURCE);

@@ -749,7 +749,12 @@ def build_catalog_command(args: argparse.Namespace) -> list[str]:
     # Drop --flat-playlist so yt-dlp resolves per-video metadata (otherwise
     # upload_date is reported as "NA"). Keep --skip-download so we never pull
     # bytes during the catalog pass.
-    command.extend(['--skip-download', '--ignore-errors', '--js-runtimes', 'node'])
+    command.extend([
+        '--skip-download',
+        '--ignore-errors',
+        '--ignore-no-formats-error',
+        '--js-runtimes', 'node',
+    ])
 
     if args.limit:
         command.extend(['--playlist-end', str(args.limit)])
@@ -2378,6 +2383,7 @@ def fetch_dates_for(entries: list[tuple[str, str]], args: argparse.Namespace) ->
             '--batch-file', handle.name,
             '--skip-download',
             '--ignore-errors',
+            '--ignore-no-formats-error',
             '--js-runtimes', 'node',
             '--extractor-args', args.extractor_args,
             '--print', '%(id)s\t%(upload_date)s\t%(title)s',
@@ -2719,6 +2725,20 @@ def command_fill_dates(args: argparse.Namespace) -> int:
                 batch_inserted, batch_updated = upsert_catalog_rows(
                     connection, source_url, batch_rows, channel=effective_channel
                 )
+                # video_date_resolution.video_id FKs to videos. Future-event
+                # and other unresolved ids are not in batch_rows, so insert
+                # title-only stubs BEFORE recording outcomes or the FK fails
+                # and aborts the whole fill (observed on FundedMind batch 1).
+                if batch_missing:
+                    missing_title_map = {video_id: title for video_id, title in batch}
+                    missing_entries = [
+                        (video_id, missing_title_map.get(video_id, ''))
+                        for video_id in batch_missing
+                    ]
+                    titles_written_batch, titles_inserted_batch = persist_missing_titles(
+                        connection, missing_entries, source_url, effective_channel
+                    )
+                    batch_inserted += titles_inserted_batch
                 if diagnostic.get('item_outcomes'):
                     record_date_resolution_outcomes(connection, diagnostic['item_outcomes'], run_id)
                 inserted += batch_inserted
@@ -2853,10 +2873,16 @@ def infer_channel_from_url(source_url: str) -> str:
     # Benzinga is a TRANSCRIPT source too (src/benzinga/channel.js).
     if '@benzinga' in lowered:
         return 'benzinga'
-    # martinlukkt is a TRANSCRIPT source (src/martinlukkt/channel.js).
-    # A playlist URL carries no handle, so it must be catalogued with --channel.
+    # martinlukkt is a TRANSCRIPT source: spoken trade actions, English
+    # auto-captions, no confirmed on-screen position list yet
+    # (src/martinlukkt/channel.js). A playlist URL carries no handle, so it
+    # is not recognised here and must be catalogued with --channel.
     if '@martinlukkt' in lowered:
         return 'martinlukkt'
+    # FundedMind is a TRANSCRIPT source: Czech multi-host live desks on
+    # /streams (src/fundedmind/channel.js). Not in OCR_CHANNELS.
+    if '@fundedmind' in lowered:
+        return 'fundedmind'
     return ''
 
 
@@ -2906,8 +2932,12 @@ CHANNEL_SOURCE_URLS = {
     # Benzinga's daily PreMarket Playbook and The Drift are live streams. The
     # /videos tab is catalogued separately (see src/benzinga/channel.js).
     'benzinga': 'https://www.youtube.com/@Benzinga/streams',
-    # The /videos tab is catalogued separately.
+    # martinlukkt's corpus is the streams tab (113 past livestreams). The
+    # /videos tab holds two more long uploads and is catalogued separately.
     'martinlukkt': 'https://www.youtube.com/@martinlukkt/streams',
+    # FundedMind's corpus is the streams tab (multi-host Czech live desks).
+    # The /videos tab is education/interviews and is catalogued separately.
+    'fundedmind': 'https://www.youtube.com/@FundedMind/streams',
 }
 
 
@@ -2989,11 +3019,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     catalog_parser.add_argument(
         '--extractor-args',
-        default='youtube:player_client=ios,android,web_safari,web',
-        help='yt-dlp extractor args passed to the catalog command. The default '
-             'ios+android+web_safari+web client set is the most permissive '
-             'metadata-fetcher for Revere-style channels; the catalog defaults '
-             'match the download defaults.',
+        default='youtube:player_client=mweb',
+        help='yt-dlp extractor args passed to the catalog command. Default is '
+             'mweb: it resolves upload_date/title on current yt-dlp without a '
+             'PO token. visios is not in older yt-dlp builds (skipped as '
+             'unsupported); web/ios often fail with format-unavailable and '
+             'print zero catalog rows.',
     )
     catalog_parser.add_argument(
         '--sleep-requests',

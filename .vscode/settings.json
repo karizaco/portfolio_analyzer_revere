@@ -29,5 +29,15 @@
         "statusBar.inactiveBackground": "#42b883"
     },
     "peacock.color": "#42b883",
-    "python.terminal.useEnvFile": true
+    "python.terminal.useEnvFile": true,
+    "python.analysis.exclude": [
+        "**/node_modules",
+        "**/__pycache__",
+        "data/**",
+        "artifacts/**",
+        "test/fixtures/**",
+        "tools/paddle_env/**",
+        "tools/paddle311_env/**",
+        "tools/paddle312_env/**"
+    ]
 }
