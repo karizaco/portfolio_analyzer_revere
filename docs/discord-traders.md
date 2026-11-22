@@ -164,3 +164,18 @@ the weaker of the two claims — but it is the weaker CLAIM that wins.
   inherit the previous message's ticker and are MARKED as inherited
   (`ticker_inferred`).
 - 8 episodes have no price.
+
+## Clement (`clement` / cletibals) — caption ideas (2026-11-22)
+
+Fourth Discord source on the same guild. Messages live in `discord_messages`;
+image files stay under gitignored `data/discord_pipeline/media/clement/`.
+
+Parsed layer (captions only): `clement_posts` + `clement_ideas` in
+`derived.sqlite`. Rebuild with:
+
+```bash
+npm run discord:clement:ideas
+```
+
+Parser version: `clement-captions-1`. Daily Market Plan dashboard OCR is deferred;
+setup-chart meaning is primarily in the Discord caption.

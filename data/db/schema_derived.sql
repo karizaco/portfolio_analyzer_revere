@@ -1417,3 +1417,50 @@ CREATE INDEX IF NOT EXISTS idx_x_positions_snapshot ON x_positions(snapshot_post
 
 CREATE INDEX IF NOT EXISTS idx_x_positions_ticker
     ON x_positions(account_id, ticker, as_of_date);
+
+-- Clement (cletibals) caption-derived posts and ideas.
+CREATE TABLE IF NOT EXISTS clement_posts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    parser_version TEXT NOT NULL,
+    source_name TEXT NOT NULL DEFAULT 'clement',
+    message_id INTEGER NOT NULL,
+    discord_message_id TEXT NOT NULL DEFAULT '',
+    posted_at TEXT NOT NULL DEFAULT '',
+    as_of_date TEXT NOT NULL DEFAULT '',
+    as_of_source TEXT NOT NULL DEFAULT '',
+    post_kind TEXT NOT NULL DEFAULT 'other',
+    title TEXT NOT NULL DEFAULT '',
+    body TEXT NOT NULL DEFAULT '',
+    image_count INTEGER NOT NULL DEFAULT 0,
+    primary_attachment_id TEXT NOT NULL DEFAULT '',
+    idea_count INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_clement_posts_date
+    ON clement_posts(as_of_date, post_kind);
+CREATE INDEX IF NOT EXISTS idx_clement_posts_message
+    ON clement_posts(message_id);
+
+CREATE TABLE IF NOT EXISTS clement_ideas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    parser_version TEXT NOT NULL,
+    source_name TEXT NOT NULL DEFAULT 'clement',
+    message_id INTEGER NOT NULL,
+    discord_message_id TEXT NOT NULL DEFAULT '',
+    as_of_date TEXT NOT NULL DEFAULT '',
+    ticker TEXT NOT NULL DEFAULT '',
+    role TEXT NOT NULL DEFAULT 'mention',
+    theme TEXT NOT NULL DEFAULT '',
+    note TEXT NOT NULL DEFAULT '',
+    confidence TEXT NOT NULL DEFAULT 'medium',
+    source TEXT NOT NULL DEFAULT 'caption',
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_clement_ideas_date_ticker
+    ON clement_ideas(as_of_date, ticker);
+CREATE INDEX IF NOT EXISTS idx_clement_ideas_message
+    ON clement_ideas(message_id);
+CREATE INDEX IF NOT EXISTS idx_clement_ideas_ticker
+    ON clement_ideas(ticker, as_of_date);
