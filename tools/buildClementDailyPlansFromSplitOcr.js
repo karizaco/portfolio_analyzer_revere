@@ -34,9 +34,11 @@ function ynInt(v) {
 
 function main() {
   const dirFlag = process.argv.indexOf('--dir');
-  const dir = path.resolve(
-    dirFlag >= 0 ? process.argv[dirFlag + 1] : path.join(ROOT, 'data/discord_pipeline/media/clement/ocr_split_probe'),
-  );
+  const defaultDir = fs.existsSync(path.join(ROOT, 'data/discord_pipeline/media/clement/ocr_split_batch', 'split_summary.json'))
+    || fs.existsSync(path.join(ROOT, 'data/discord_pipeline/media/clement/ocr_split_batch'))
+    ? path.join(ROOT, 'data/discord_pipeline/media/clement/ocr_split_batch')
+    : path.join(ROOT, 'data/discord_pipeline/media/clement/ocr_split_probe');
+  const dir = path.resolve(dirFlag >= 0 ? process.argv[dirFlag + 1] : defaultDir);
   if (!fs.existsSync(dir)) {
     throw new Error(`split OCR dir not found: ${dir}`);
   }

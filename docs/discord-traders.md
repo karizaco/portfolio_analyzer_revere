@@ -194,3 +194,16 @@ Full notes: `src/discord/clement/LAYOUT.md`.
 - Setup charts: ticker glyph is often gray-on-gray (OCR-hard); black chart
   title carries the name (e.g. "Ethereum / TetherUS…"). Example map for
   2025-08-21 multi-attach: `…0018.png`→ETHUSDT, `…0262.png`→IWM, `…3368.png`→TEM.
+
+## Clement pipeline phases (status)
+
+1. **Captions** — `npm run discord:clement:ideas` → `clement_posts` / `clement_ideas`
+2. **Analytics** — `npm run discord:clement:analytics` → watchlist/theme stats
+3. **Dashboard OCR (split)** — `npm run discord:clement:ocr-batch`  
+   sequential EasyOCR, CPU only, 1 image at a time, resume-safe  
+   output: `data/discord_pipeline/media/clement/ocr_split_batch/`
+4. **Daily plans from left OCR** — `npm run discord:clement:daily-plans`
+5. **Report** — `npm run discord:clement:report`
+6. **Chart titles** — `src/discord/clement/chartTitleResolve.js` (name→ticker; gray glyphs skipped)
+
+Dashboard split: white gutter ~42.5% width; left = plan/watchlist, right = S&P monitor.

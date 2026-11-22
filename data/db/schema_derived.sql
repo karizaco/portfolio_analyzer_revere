@@ -1493,3 +1493,29 @@ CREATE TABLE IF NOT EXISTS clement_daily_plans (
 
 CREATE INDEX IF NOT EXISTS idx_clement_daily_plans_date
     ON clement_daily_plans(as_of_date);
+
+CREATE TABLE IF NOT EXISTS clement_watchlist_stats (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    parser_version TEXT NOT NULL,
+    ticker TEXT NOT NULL,
+    mentions INTEGER NOT NULL DEFAULT 0,
+    long_ideas INTEGER NOT NULL DEFAULT 0,
+    short_ideas INTEGER NOT NULL DEFAULT 0,
+    focus_or_watch INTEGER NOT NULL DEFAULT 0,
+    first_date TEXT NOT NULL DEFAULT '',
+    last_date TEXT NOT NULL DEFAULT '',
+    span_days INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_clement_watchlist_ticker ON clement_watchlist_stats(ticker);
+
+CREATE TABLE IF NOT EXISTS clement_theme_stats (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    parser_version TEXT NOT NULL,
+    theme TEXT NOT NULL,
+    mentions INTEGER NOT NULL DEFAULT 0,
+    tickers TEXT NOT NULL DEFAULT '',
+    first_date TEXT NOT NULL DEFAULT '',
+    last_date TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);

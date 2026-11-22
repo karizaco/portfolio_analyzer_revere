@@ -67,6 +67,8 @@ const DERIVED_TABLES = [
   'clement_posts',
   'clement_ideas',
   'clement_daily_plans',
+  'clement_watchlist_stats',
+  'clement_theme_stats',
   'martinlukkt_trade_actions',
   'x_image_readings',
   'x_positions',
