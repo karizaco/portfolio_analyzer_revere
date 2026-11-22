@@ -1,0 +1,3 @@
+# The X archive is the record, and re-importing it must leave it byte-identical,
+# so it is LF on every checkout whatever core.autocrlf says.
+data/x_pipeline/archive/**/*.jsonl text eol=lf

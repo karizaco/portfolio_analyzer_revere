@@ -23,10 +23,19 @@ const { normalizeHandle } = require('./postRecord');
  *
  * Splitting them is the cost lever: `from:h` alone would also return (and
  * bill) every reply to somebody else, which the policy then throws away.
+ *
+ * `from:` takes the numeric user id (it survives a rename), but `to:` MUST
+ * take the HANDLE. Measured 2026-11-21 on @RedDogT3, October 2026:
+ * `from:455824771 is:reply to:455824771` counted 0, while
+ * `from:RedDogT3 is:reply to:RedDogT3` counted 8 (of 48 replies in all).
+ * X's docs say `to:` accepts an id; it silently matches nothing. Every
+ * tweetstorm would have been lost, for all four accounts, without an error.
+ *
+ * @type {{[kind: string]: (from: string, handle?: string) => string}}
  */
 const API_QUERY_KINDS = {
-  originals: (handle) => `from:${handle} -is:retweet -is:reply`,
-  self_replies: (handle) => `from:${handle} is:reply to:${handle}`,
+  originals: (from) => `from:${from} -is:retweet -is:reply`,
+  self_replies: (from, handle) => `from:${from} is:reply to:${normalizeHandle(handle || from)}`,
 };
 
 /** The browser uses one search per window; the importer applies the policy. */

@@ -15,7 +15,7 @@ const { detectStopSignal, isEmptyResult } = require('../src/x/browser/signals');
 const { createScrollTracker, jitter } = require('../src/x/browser/scroll');
 const { defaultProfileDir, isInsideRepo, timelineOperation } = require('../src/x/browser/capture');
 const { acquireLock } = require('../src/x/lock');
-const { findUserIds } = require('../src/x/normalizeGraphql');
+const { findUserIds, timelineTerminated } = require('../src/x/normalizeGraphql');
 const { expectedForDensity, splitDenseWindows } = require('../src/x/windows');
 const { normalizeAgentRecord, normalizeDomPost, isRepostContext, isPinnedContext } = require('../src/x/normalizeDom');
 const { USER, idAt } = require('./fixtures/x/scenario');
@@ -74,6 +74,43 @@ test('a stalled window is partial, not complete: a scroll that brought nothing i
   const stalled = dry.observe([]);
   assert.deepEqual([stalled.done, stalled.reason, stalled.reachedEnd], [true, 'exhausted', false],
     'a stall is a STOP, not a natural end');
+});
+
+test('a scroll still crossing loaded posts is not quiet: tall posts must not end the window early', () => {
+  // @StockSavvyShay, 2026-11-21: one page of 20 tall posts, 7 wheel turns,
+  // and the window was declared "exhausted" before the page's end -- where
+  // the next page would have been requested -- was ever reached.
+  const tracker = createScrollTracker({ windowStart: '2026-11-14', noNewLimit: 3 });
+  tracker.observe([{ post_id: '1', created_at: '2026-11-20T00:00:00Z' }], { atBottom: false });
+  for (let i = 0; i < 10; i += 1) {
+    assert.equal(tracker.observe([], { atBottom: false }).done, false, 'crossing loaded posts is not a stall');
+  }
+  tracker.observe([], { atBottom: true });
+  tracker.observe([], { atBottom: true });
+  assert.equal(tracker.observe([], { atBottom: true }).reason, 'exhausted', 'at the bottom, nothing new three times: a stall');
+});
+
+test('X\'s own end-of-results instruction is a search window\'s natural end', () => {
+  // The first live window (2026-11-21): one post, then a page with only
+  // the cursors and this instruction. A date-bounded search never reaches
+  // past the window's start, so without it no search window could ever be
+  // complete -- every one would stall into "exhausted".
+  const lastPage = {
+    data: { search_by_raw_query: { search_timeline: { timeline: { instructions: [
+      { type: 'TimelineReplaceEntry', entry_id_to_replace: 'cursor-top-1', entry: { entryId: 'cursor-top-1', content: { cursorType: 'Top', value: 'T' } } },
+      { type: 'TimelineReplaceEntry', entry_id_to_replace: 'cursor-bottom-0', entry: { entryId: 'cursor-bottom-0', content: { cursorType: 'Bottom', value: 'B' } } },
+      { type: 'TimelineTerminateTimeline', direction: 'Bottom' },
+    ] } } } },
+  };
+  assert.equal(timelineTerminated(lastPage), true);
+  assert.equal(timelineTerminated({ data: { instructions: [{ type: 'TimelineTerminateTimeline', direction: 'Top' }] } }), false,
+    'the TOP end says nothing about older results');
+  assert.equal(timelineTerminated({ data: { instructions: [{ type: 'TimelineAddEntries', entries: [] }] } }), false);
+
+  const tracker = createScrollTracker({ windowStart: '2026-11-01', noNewLimit: 6 });
+  tracker.observe([{ post_id: idAt('2026-11-21T02:53:53Z'), created_at: '2026-11-21T02:53:53.000Z' }]);
+  const end = tracker.observe([], { terminated: true });
+  assert.deepEqual([end.done, end.reason, end.reachedEnd], [true, 'end_of_results', true]);
 });
 
 test('the capture matches GraphQL by operation name, whatever the rotating query id', () => {
@@ -192,4 +229,104 @@ test('the agent JSONL contract refuses guessed ids and relative times', () => {
     { knownUsers: KNOWN }).reason, /absolute ISO-8601/);
   assert.equal(normalizeAgentRecord({ post_id: '1858123456789', handle: 'Stranger', created_at: '2026-11-18T14:32:08Z', kind: 'original' },
     { knownUsers: KNOWN }).reason, 'user_id_unknown');
+});
+
+// ---------------------------------------------------------------------------
+// The session, carried over from a browser where the user is logged in
+// (src/x/browser/cookies.js). X refused the crawler's own login on
+// 2026-11-21 ("We've temporarily limited your login").
+// ---------------------------------------------------------------------------
+
+const {
+  cookiesFromEditorExport, describeProblem, ensureSessionCookies, readCookieExport, sessionCookiesFromEnv,
+} = require('../src/x/browser/cookies');
+const { launchOptions } = require('../src/x/crawlBrowser');
+
+const FAKE_AUTH = 'a1b2c3d4e5f60718293a4b5c6d7e8f9012345678';
+const FAKE_CT0 = '0f1e2d3c4b5a69788796a5b4c3d2e1f0';
+
+test('the .env session becomes the two X cookies, and a pasted "name=" or quotes are cleaned off', () => {
+  const { cookies, missing, malformed } = sessionCookiesFromEnv(
+    { X_AUTH_TOKEN: `auth_token=${FAKE_AUTH}`, X_CT0: `"${FAKE_CT0}"` }, { nowS: 1_800_000_000 },
+  );
+  assert.deepEqual(missing, []);
+  assert.deepEqual(malformed, []);
+  const auth = cookies.find((c) => c.name === 'auth_token');
+  const ct0 = cookies.find((c) => c.name === 'ct0');
+  assert.equal(auth.value, FAKE_AUTH);
+  assert.equal(ct0.value, FAKE_CT0);
+  assert.equal(auth.domain, '.x.com');
+  assert.equal(auth.httpOnly, true, 'auth_token is HttpOnly, as X sets it');
+  assert.equal(ct0.httpOnly, false, 'ct0 is read by the web app itself');
+  assert.ok(auth.secure && ct0.secure);
+  assert.ok(auth.expires > 1_800_000_000, 'a persistent profile only keeps a cookie that expires');
+});
+
+test('a missing or garbled session cookie is NAMED, and its value never appears in the message', () => {
+  const missing = sessionCookiesFromEnv({ X_AUTH_TOKEN: FAKE_AUTH, X_CT0: '' });
+  assert.deepEqual(missing.missing, ['ct0']);
+  assert.match(describeProblem(missing), /ct0 \(X_CT0 in \.env\)/);
+
+  const garbled = `${FAKE_AUTH}; ct0=${FAKE_CT0}`;
+  const bad = sessionCookiesFromEnv({ X_AUTH_TOKEN: garbled, X_CT0: FAKE_CT0 });
+  assert.deepEqual(bad.malformed, ['auth_token'], 'a whole cookie header is not a cookie value');
+  const message = describeProblem(bad);
+  assert.match(message, /X_AUTH_TOKEN/);
+  assert.equal(message.includes(FAKE_AUTH), false, 'no value in the message');
+  assert.equal(message.includes(FAKE_CT0), false, 'no value in the message');
+});
+
+test('a Cookie-Editor export keeps only the X cookies, in Playwright\'s shape', () => {
+  const { cookies, missing } = cookiesFromEditorExport([
+    { domain: '.x.com', name: 'auth_token', value: FAKE_AUTH, path: '/', httpOnly: true, secure: true, sameSite: 'no_restriction', expirationDate: 1_900_000_000.5 },
+    { domain: '.x.com', name: 'ct0', value: FAKE_CT0, path: '/', httpOnly: false, secure: true, sameSite: 'lax', expirationDate: 1_900_000_000 },
+    { domain: 'x.com', hostOnly: true, name: 'lang', value: 'en', path: '/', session: true, sameSite: 'unspecified' },
+    { domain: '.twitter.com', name: 'guest_id', value: 'v1%3A123', path: '/', sameSite: 'no_restriction', secure: false },
+    { domain: '.google.com', name: 'NID', value: 'should-not-travel', path: '/' },
+  ]);
+  assert.deepEqual(missing, []);
+  assert.deepEqual(cookies.map((c) => c.name).sort(), ['auth_token', 'ct0', 'guest_id', 'lang']);
+  const byName = Object.fromEntries(cookies.map((c) => [c.name, c]));
+  assert.equal(byName.auth_token.sameSite, 'None');
+  assert.equal(byName.auth_token.expires, 1_900_000_000);
+  assert.equal(byName.ct0.sameSite, 'Lax');
+  assert.equal(byName.lang.domain, 'x.com', 'a host-only cookie keeps its exact host');
+  assert.equal(byName.lang.expires, -1, 'a session cookie stays a session cookie');
+  assert.equal(byName.guest_id.secure, true, 'Chromium refuses SameSite=None without Secure');
+  assert.deepEqual(cookiesFromEditorExport([{ domain: '.x.com', name: 'ct0', value: FAKE_CT0 }]).missing, ['auth_token']);
+});
+
+test('a cookie export inside the repository is refused: it holds the X session', () => {
+  const inside = path.join(__dirname, '..', 'data', 'x_pipeline', 'cookies.json');
+  assert.throws(() => readCookieExport(inside), /inside the repository/);
+});
+
+test('the session cookies are added only when the profile lacks them or holds a different session', async () => {
+  const { cookies } = sessionCookiesFromEnv({ X_AUTH_TOKEN: FAKE_AUTH, X_CT0: FAKE_CT0 });
+  function fakeContext(present) {
+    const added = [];
+    return {
+      added,
+      cookies: async () => present,
+      addCookies: async (list) => { added.push(...list); },
+    };
+  }
+  const empty = fakeContext([]);
+  assert.equal((await ensureSessionCookies(empty, cookies)).injected, true);
+  assert.equal(empty.added.length, 2);
+
+  const same = fakeContext([{ name: 'auth_token', value: FAKE_AUTH }, { name: 'ct0', value: FAKE_CT0 }]);
+  assert.equal((await ensureSessionCookies(same, cookies)).injected, false);
+  assert.equal(same.added.length, 0);
+
+  const stale = fakeContext([{ name: 'auth_token', value: 'f'.repeat(40) }, { name: 'ct0', value: FAKE_CT0 }]);
+  assert.equal((await ensureSessionCookies(stale, cookies)).injected, true, 'the .env session wins over a stale profile');
+});
+
+test('the crawler browser is headed and does not announce itself as automated', () => {
+  const options = launchOptions('msedge');
+  assert.equal(options.headless, false);
+  assert.equal(options.channel, 'msedge');
+  assert.ok(options.ignoreDefaultArgs.includes('--enable-automation'));
+  assert.ok(options.args.includes('--disable-blink-features=AutomationControlled'));
 });

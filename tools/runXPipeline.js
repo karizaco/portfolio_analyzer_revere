@@ -14,17 +14,21 @@
  *   crawl --route api --handle H --budget-usd N --yes [--since D] [--until D] [--unit year|month] [--max-posts N] [--incremental]
  *   crawl --route browser --handle H [--since D] [--until D] [--unit month|week] [--max-windows N] [--window-id ID] [--report json]
  *   crawl --route agent --handle H                      print the agentic runbook / prompt and the import command
+ *   browser-import-cookies [--file EXPORT.json]          carry an existing X session into the profile: X_AUTH_TOKEN
+ *                                                       and X_CT0 from .env (or a Cookie-Editor export), then check it
  *   browser-login                                       open the browser profile and log into X by hand (once)
  *
  *   import --handle H (--raw-dir DIR | --file FILE)     import raw captures or agent JSONL
  *   rebuild-index                                       rebuild the untracked index from the tracked archive
  *   media --handle H [--limit N]                        download the photos of archived posts
  *   ocr --handle H [--limit N]                          Tesseract OCR of downloaded photos (cached)
- *   vision --handle H --budget-usd N --yes [--limit N] [--model M]
- *                                                       Claude vision reading of portfolio/position screenshots
+ *   vision --handle H --budget-usd N --yes [--limit N] [--provider minimax|anthropic] [--model M]
+ *                                                       vision reading of portfolio/position screenshots (MiniMax by
+ *                                                       default: MiniMax-M3.1-Flash, or --model MiniMax-M3)
  *
  * Credentials come from .env (never printed): X_BEARER_TOKEN for the API,
- * ANTHROPIC_API_KEY for the vision reader.
+ * X_AUTH_TOKEN + X_CT0 (the session cookies) for the browser, and
+ * MINIMAX_API_KEY for the vision reader (ANTHROPIC_API_KEY with --provider anthropic).
  */
 
 const path = require('node:path');
@@ -38,6 +42,7 @@ const { openIndex, rebuildIndex, markDeleted, DEFAULT_INDEX_PATH } = require('..
 const { DEFAULT_ARCHIVE_ROOT } = require('../src/x/archive');
 const { DEFAULT_RAW_ROOT, listRawFiles, makeRunTag, normalizeEnvelope, readRaw } = require('../src/x/rawStore');
 const { importRecords, filteredTotal } = require('../src/x/importer');
+const { describeProblem, readCookieExport, sessionCookiesFromEnv } = require('../src/x/browser/cookies');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -76,6 +81,27 @@ function relative(file) {
   return path.relative(ROOT, file).replace(/\\/g, '/');
 }
 
+/**
+ * The X session cookies: from a Cookie-Editor export (--file) or from
+ * .env (X_AUTH_TOKEN, X_CT0). Fails naming the cookies -- never a value.
+ */
+function sessionCookiesOrFail(args) {
+  let result;
+  if (args.file) {
+    try {
+      result = readCookieExport(String(args.file));
+    } catch (error) {
+      return fail(error.message);
+    }
+  } else {
+    loadEnv();
+    result = sessionCookiesFromEnv();
+  }
+  const problem = describeProblem(result);
+  if (problem) fail(`the X session cookies are not usable -- ${problem}`);
+  return result.cookies;
+}
+
 function apiClient() {
   loadEnv();
   // eslint-disable-next-line global-require
@@ -94,12 +120,13 @@ function apiClient() {
  * day, must not start at $0. The day's spend so far is read from the
  * ledger and the budget starts there.
  *
+ * @param {object} catalogDb
  * @param {object} args
  * @param {number} fallbackUsd
  * @param {object} [account]
  * @returns {object} the budget
  */
-function budgetFrom(args, fallbackUsd, account) {
+function budgetFrom(catalogDb, args, fallbackUsd, account) {
   // eslint-disable-next-line global-require
   const { createBudget } = require('../src/x/apiBudget');
   const budgetUsd = args['budget-usd'] === undefined ? fallbackUsd : Number(args['budget-usd']);
@@ -218,7 +245,7 @@ async function main() {
       const runId = registry.startRun(catalogDb, { accountId: account.account_id, route: 'api', runTag: makeRunTag('lookup', account.handle) });
       try {
         const updated = await lookupAccount({
-          catalogDb, client, budget: budgetFrom(args, 0.05, account), account, runId, log: console.log,
+          catalogDb, client, budget: budgetFrom(catalogDb, args, 0.05, account), account, runId, log: console.log,
         });
         finishRun(catalogDb, runId, 'ok', '', updated);
         console.log(JSON.stringify(updated, null, 2));
@@ -235,7 +262,7 @@ async function main() {
       // eslint-disable-next-line global-require
       const { estimate, lookupAccount, todayUtc, ARCHIVE_START } = require('../src/x/crawlApi');
       const client = apiClient();
-      const budget = budgetFrom(args, 3, account);
+      const budget = budgetFrom(catalogDb, args, 3, account);
       const runId = registry.startRun(catalogDb, { accountId: account.account_id, route: 'api', runTag: makeRunTag('estimate', account.handle) });
       try {
         let current = account;
@@ -258,6 +285,19 @@ async function main() {
         finishRun(catalogDb, runId, 'failed', error.message.slice(0, 300), account);
         throw error;
       }
+      return;
+    }
+
+    if (command === 'browser-import-cookies') {
+      // eslint-disable-next-line global-require
+      const { importSession } = require('../src/x/crawlBrowser');
+      const result = await importSession({ cookies: sessionCookiesOrFail(args), log: console.log });
+      console.log(JSON.stringify(result, null, 2));
+      if (!result.loggedIn) {
+        fail(`X did not accept the session (${result.stop_reason}). Copy fresh auth_token and ct0 values from a `
+          + 'window where you are logged in, and do not log out of that window.', 3);
+      }
+      if (args.file) console.log('[x] the session is in the profile now -- delete the cookie export file.');
       return;
     }
 
@@ -294,7 +334,7 @@ async function main() {
           const { crawlWindows, incrementalSince, lookupAccount, todayUtc } = require('../src/x/crawlApi');
           const client = apiClient();
           let current = account;
-          const budget = budgetFrom(args, 0, current);
+          const budget = budgetFrom(catalogDb, args, 0, current);
           if (!current.user_id) current = await lookupAccount({ catalogDb, client, budget, account: current, runId, log: console.log });
           let since = args.since ? String(args.since) : undefined;
           if (args.incremental) {
@@ -318,8 +358,12 @@ async function main() {
         if (route === 'browser') {
           // eslint-disable-next-line global-require
           const { crawlBrowserWindows } = require('../src/x/crawlBrowser');
+          loadEnv();
+          const session = sessionCookiesFromEnv();
           const report = await crawlBrowserWindows({
             catalogDb, indexDb, account, runId, rawDir,
+            // The .env session, when one is there; otherwise the profile's own.
+            sessionCookies: session.missing.length || session.malformed.length ? [] : session.cookies,
             since: args.since ? String(args.since) : undefined,
             until: args.until ? String(args.until) : undefined,
             unit: args.unit ? String(args.unit) : undefined,

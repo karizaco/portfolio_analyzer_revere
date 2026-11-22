@@ -291,6 +291,37 @@ function normalizeGraphqlResponse(body, options = {}) {
 }
 
 /**
+ * Did X say the timeline has NO MORE results below?
+ *
+ * The web app's last page of a search carries
+ * `{"type": "TimelineTerminateTimeline", "direction": "Bottom"}` and no
+ * posts (measured on a live SearchTimeline capture, 2026-11-21). It is
+ * X's own end-of-results statement, and on a date-bounded search -- where
+ * the results never reach past the window's start -- it is the ONLY
+ * natural end there is.
+ *
+ * @param {*} body
+ * @returns {boolean}
+ */
+function timelineTerminated(body) {
+  let terminated = false;
+  const walk = (node) => {
+    if (terminated || !node || typeof node !== 'object') return;
+    if (Array.isArray(node)) {
+      node.forEach(walk);
+      return;
+    }
+    if (node.type === 'TimelineTerminateTimeline' && node.direction === 'Bottom') {
+      terminated = true;
+      return;
+    }
+    for (const value of Object.values(node)) walk(value);
+  };
+  walk(body);
+  return terminated;
+}
+
+/**
  * The timeline's paging cursors, when present (a `cursor-bottom` entry
  * means there is more to scroll).
  *
@@ -315,4 +346,6 @@ function findCursors(body) {
   return cursors;
 }
 
-module.exports = { collectTweetResults, findCursors, findUserIds, normalizeGraphqlResponse, normalizeTweet, unwrap };
+module.exports = {
+  collectTweetResults, findCursors, findUserIds, normalizeGraphqlResponse, normalizeTweet, timelineTerminated, unwrap,
+};

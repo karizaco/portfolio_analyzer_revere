@@ -196,7 +196,7 @@ test('vision: a portfolio screenshot becomes position rows, each checked against
     const logs = [];
     const first = await visionAll({
       catalogDb: s.catalogDb, indexDb: s.indexDb, account, log: (l) => logs.push(l),
-      args: { yes: true, 'budget-usd': '1', client: fakeClaude(reading, calls) },
+      args: { provider: 'anthropic', yes: true, 'budget-usd': '1', client: fakeClaude(reading, calls) },
     });
     assert.equal(calls.length, 1);
     assert.equal(first.read, 1);
@@ -211,7 +211,7 @@ test('vision: a portfolio screenshot becomes position rows, each checked against
 
     const again = await visionAll({
       catalogDb: s.catalogDb, indexDb: s.indexDb, account, log: () => {},
-      args: { yes: true, 'budget-usd': '1', client: fakeClaude(reading, calls) },
+      args: { provider: 'anthropic', yes: true, 'budget-usd': '1', client: fakeClaude(reading, calls) },
     });
     assert.equal(calls.length, 1, 'the same image is not read (or paid for) twice');
     assert.equal(again.skipped, 1);
@@ -239,7 +239,7 @@ test('vision: a reading that finds NO rows replaces the rows the last reading le
     const calls = [];
     await visionAll({
       catalogDb: s.catalogDb, indexDb: s.indexDb, account, log: () => {},
-      args: { yes: true, 'budget-usd': '1', client: fakeClaude(reading, calls) },
+      args: { provider: 'anthropic', yes: true, 'budget-usd': '1', client: fakeClaude(reading, calls) },
     });
     assert.equal(s.catalogDb.prepare('SELECT COUNT(*) AS n FROM x_positions').get().n, 1);
 
@@ -249,7 +249,7 @@ test('vision: a reading that finds NO rows replaces the rows the last reading le
     const empty = { ...reading, positions: [] };
     await visionAll({
       catalogDb: s.catalogDb, indexDb: s.indexDb, account, log: () => {},
-      args: { yes: true, 'budget-usd': '1', client: fakeClaude(empty, calls) },
+      args: { provider: 'anthropic', yes: true, 'budget-usd': '1', client: fakeClaude(empty, calls) },
     });
     assert.equal(s.catalogDb.prepare('SELECT COUNT(*) AS n FROM x_positions').get().n, 0,
       'a reading with no rows replaces the rows the last reading left');
@@ -269,12 +269,139 @@ test('vision: refuses to run without --yes, and stops before an image that would
     const calls = [];
     const result = await visionAll({
       catalogDb: s.catalogDb, indexDb: s.indexDb, account, log: () => {},
-      args: { yes: true, 'budget-usd': '0.001', client: fakeClaude({ positions: [] }, calls) },
+      args: { provider: 'anthropic', yes: true, 'budget-usd': '0.001', client: fakeClaude({ positions: [] }, calls) },
     });
     assert.equal(calls.length, 0, 'not one paid call when the budget cannot cover one image');
     assert.equal(result.read, 0);
   } finally {
     if (saved === undefined) delete process.env.ANTHROPIC_API_KEY; else process.env.ANTHROPIC_API_KEY = saved;
+    s.close();
+  }
+});
+
+// ---------------------------------------------------------------------------
+// The MiniMax reader -- the default provider since 2026-11-21 (the user
+// chose it over the Claude API). A FAKE fetch; no network.
+// ---------------------------------------------------------------------------
+
+const minimax = require('../src/x/images/visionMinimax');
+const { resolveProvider } = require('../src/x/images/runImages');
+
+const MM_KEY = 'mm-test-key-0123456789abcdef';
+const MM_READING = {
+  image_class: 'portfolio', summary: 'Positions', account_label: '', is_complete_list: true,
+  legend_ticker: '', legend_timeframe: '', tickers_visible: ['NVDA', 'AMD'],
+  positions: [
+    { ticker: 'NVDA', side: 'long', weight_pct_text: '22.4%', market_value_text: '', shares_text: '', avg_cost_text: '', gain_pct_text: '', row_text: 'NVDA 22.4%' },
+    { ticker: 'AMD', side: 'long', weight_pct_text: '14.1%', market_value_text: '', shares_text: '', avg_cost_text: '', gain_pct_text: '', row_text: 'AMD 14.1%' },
+  ],
+};
+
+function mmResponse(content, extra = {}) {
+  return {
+    model: 'MiniMax-M3.1-Flash',
+    choices: [{ finish_reason: 'stop', message: { role: 'assistant', content } }],
+    usage: { prompt_tokens: 1000, completion_tokens: 400, prompt_tokens_details: { cached_tokens: 100 } },
+    base_resp: { status_code: 0, status_msg: '' },
+    ...extra,
+  };
+}
+
+function fakeMinimaxFetch(body, calls, status = 200) {
+  return async (url, init) => {
+    calls.push({ url, init });
+    return { status, text: async () => (typeof body === 'string' ? body : JSON.stringify(body)) };
+  };
+}
+
+test('MiniMax is the default provider, and Claude stays available by name', () => {
+  assert.equal(resolveProvider(undefined).PROVIDER, 'minimax');
+  assert.equal(resolveProvider('anthropic').PROVIDER, 'anthropic');
+  assert.throws(() => resolveProvider('gpt'), /unknown vision provider/);
+});
+
+test('the MiniMax request: the image as a data URL, the schema in the instructions, the key only in the header', async () => {
+  const calls = [];
+  const client = minimax.createClient({ env: { MINIMAX_API_KEY: MM_KEY }, fetchImpl: fakeMinimaxFetch(mmResponse(JSON.stringify(MM_READING)), calls) });
+  assert.equal(client.baseUrl, 'https://api.minimax.io/v1');
+  assert.equal(JSON.stringify(client).includes(MM_KEY), false, 'the key is not on the client object');
+  const body = minimax.buildRequest({ imageBase64: 'AAAA', mediaType: 'image/png', postText: 'my portfolio' });
+  await client.post(body);
+  assert.equal(calls[0].url, 'https://api.minimax.io/v1/chat/completions');
+  assert.equal(calls[0].init.headers.Authorization, `Bearer ${MM_KEY}`);
+  const sent = JSON.parse(calls[0].init.body);
+  assert.equal(sent.model, 'MiniMax-M3.1-Flash');
+  assert.equal(sent.messages[1].content[0].type, 'image_url');
+  assert.match(sent.messages[1].content[0].image_url.url, /^data:image\/png;base64,AAAA$/);
+  assert.match(sent.messages[0].content, /"image_class"/, 'the schema travels in the instructions');
+  assert.equal(calls[0].init.body.includes(MM_KEY), false, 'the key is never in the body');
+
+  const china = minimax.createClient({ env: { MINIMAX_API_KEY: MM_KEY, MINIMAX_BASE_URL: 'https://api.minimaxi.com/v1/' }, fetchImpl: async () => ({}) });
+  assert.equal(china.baseUrl, 'https://api.minimaxi.com/v1');
+  assert.throws(() => minimax.createClient({ env: {} }), /MINIMAX_API_KEY is not set/);
+  assert.throws(() => minimax.createClient({ env: { MINIMAX_API_KEY: MM_KEY, MINIMAX_BASE_URL: 'http://plain' } }), /https/);
+});
+
+test('a MiniMax answer is parsed through thinking and fences, and checked against the schema', () => {
+  const fence = '`'.repeat(3);
+  const wrapped = `<think>The image shows a table.</think>\n${fence}json\n${JSON.stringify(MM_READING)}\n${fence}`;
+  const ok = minimax.parseResponse(mmResponse(wrapped));
+  assert.equal(ok.status, 'ok');
+  assert.deepEqual(ok.reading.positions.map((p) => p.ticker), ['NVDA', 'AMD']);
+  assert.deepEqual(ok.usage, { input_tokens: 900, output_tokens: 400, cache_read_input_tokens: 100 });
+
+  // A missing text field reads as '' (the instructions' own rule); an extra key is dropped.
+  const sparse = { ...MM_READING, extra: 1, positions: [{ ticker: 'NVDA', side: 'long', row_text: 'NVDA' }] };
+  const filled = minimax.parseResponse(mmResponse(JSON.stringify(sparse)));
+  assert.equal(filled.status, 'ok');
+  assert.equal(filled.reading.positions[0].weight_pct_text, '');
+  assert.equal('extra' in filled.reading, false);
+
+  // A wrong class or a wrong type is an error, never a half-read row.
+  assert.equal(minimax.parseResponse(mmResponse(JSON.stringify({ ...MM_READING, image_class: 'meme' }))).status, 'error');
+  assert.equal(minimax.parseResponse(mmResponse(JSON.stringify({ ...MM_READING, positions: 'NVDA' }))).status, 'error');
+  assert.equal(minimax.parseResponse(mmResponse('I cannot read this image.')).status, 'error');
+  assert.equal(minimax.parseResponse({ choices: [{ finish_reason: 'length', message: { content: '{' } }] }).detail, 'max_tokens');
+  assert.equal(minimax.parseResponse({ choices: [{ finish_reason: 'content_filter', message: { content: '' } }] }).status, 'refused');
+});
+
+test('a MiniMax error inside an HTTP 200 stops the run like a 401 or 402 would, and no key leaks into it', async () => {
+  const noMoney = minimax.createClient({
+    env: { MINIMAX_API_KEY: MM_KEY },
+    fetchImpl: fakeMinimaxFetch({ base_resp: { status_code: 1008, status_msg: `insufficient balance for ${MM_KEY}` } }, []),
+  });
+  await assert.rejects(noMoney.post({}), (error) => error.status === 402 && !error.message.includes(MM_KEY));
+  const badKey = minimax.createClient({
+    env: { MINIMAX_API_KEY: MM_KEY },
+    fetchImpl: fakeMinimaxFetch(`{"error":"invalid Authorization: Bearer ${MM_KEY}"}`, [], 401),
+  });
+  await assert.rejects(badKey.post({}), (error) => error.status === 401 && !error.message.includes(MM_KEY));
+});
+
+test('the MiniMax cost comes from the observed usage at the model\'s own price', () => {
+  assert.equal(minimax.costOf({ input_tokens: 1e6, output_tokens: 0 }, 'MiniMax-M3'), 0.3);
+  assert.equal(minimax.costOf({ input_tokens: 0, output_tokens: 1e6 }, 'MiniMax-M3.1-Flash'), 0.6);
+  assert.equal(minimax.costOf({ input_tokens: 0, output_tokens: 0, cache_read_input_tokens: 1e6 }, 'MiniMax-M3.1-Flash'), 0.015);
+});
+
+test('vision with the default provider (MiniMax) stores the reading under its own version and verifies the rows', async () => {
+  const s = scratch();
+  try {
+    const { account } = await seedImage(s);
+    const calls = [];
+    const client = { post: async (body) => { calls.push(body); return mmResponse(JSON.stringify(MM_READING)); } };
+    const result = await visionAll({
+      catalogDb: s.catalogDb, indexDb: s.indexDb, account, log: () => {},
+      args: { yes: true, 'budget-usd': '0.05', client },
+    });
+    assert.equal(calls.length, 1);
+    assert.equal(result.read, 1);
+    assert.equal(result.verified, 2);
+    const stored = s.catalogDb.prepare("SELECT reader_version, model, cost_usd_est FROM x_image_readings WHERE reader = 'vision'").get();
+    assert.equal(stored.reader_version, minimax.VISION_VERSION);
+    assert.equal(stored.model, 'MiniMax-M3.1-Flash');
+    assert.equal(stored.cost_usd_est, minimax.costOf({ input_tokens: 900, output_tokens: 400, cache_read_input_tokens: 100 }, 'MiniMax-M3.1-Flash'));
+  } finally {
     s.close();
   }
 });

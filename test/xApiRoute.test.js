@@ -108,7 +108,9 @@ test('windows are calendar-aligned, newest first, and never cross the bounds', (
   assert.equal(windowVerdict({ route: 'api', reachedEnd: true, seen: 50, expected: 100 }), 'partial');
   assert.equal(windowVerdict({ route: 'browser', reachedEnd: false, seen: 50, stopReason: 'rate_limited' }), 'blocked');
   assert.equal(API_QUERY_KINDS.originals('123'), 'from:123 -is:retweet -is:reply');
-  assert.equal(API_QUERY_KINDS.self_replies('123'), 'from:123 is:reply to:123');
+  // `to:` takes the HANDLE: `to:<numeric id>` silently counted 0 self-replies
+  // where the handle counted 8 (@RedDogT3, October 2026, measured 2026-11-21).
+  assert.equal(API_QUERY_KINDS.self_replies('123', 'TestTrader'), 'from:123 is:reply to:testtrader');
   assert.match(decodeURIComponent(browserSearchUrl('TestTrader', { start: '2026-01-01', end: '2026-02-01' })),
     /from:testtrader since:2025-12-31 until:2026-02-02/);
 });
@@ -184,6 +186,10 @@ test('the window crawler pages through, imports as it goes, bills each page, and
     assert.equal(result.status, 'ok');
     assert.equal(log.filter((p) => p.query.includes('-is:reply')).length, 2, 'two pages');
     assert.equal(log[1].nextToken, 'p2', 'the second page asks for the token the first returned');
+    const selfReplyQueries = log.filter((p) => p.query.includes(' is:reply')).map((p) => p.query);
+    assert.ok(selfReplyQueries.length > 0);
+    assert.ok(selfReplyQueries.every((q) => q === `from:${USER.id} is:reply to:testtrader`),
+      `the crawler's self-reply query names the handle in to: (${selfReplyQueries[0]})`);
     assert.ok(log.every((p) => p.endTime === '2026-11-20T00:00:00Z'), 'a window never ends after today');
     const windows = s.catalogDb.prepare('SELECT query_kind, status FROM x_crawl_windows ORDER BY query_kind').all();
     assert.deepEqual(windows.map((w) => w.status), ['complete', 'complete']);

@@ -66,6 +66,14 @@ function readPageState() {
       'iframe[src*="arkoselabs"], iframe[src*="challenges.cloudflare.com"], #arkose_iframe, #challenge-running',
     )),
     articles: document.querySelectorAll('article[data-testid="tweet"]').length,
+    // Is the viewport within about a screen of the end of what is loaded?
+    // Only THERE can a scroll that brought nothing mean "no more results":
+    // a page of 20 tall posts (images, quotes) takes many more wheel turns
+    // to cross than a page of short ones, and every one of those turns
+    // brings nothing new (measured 2026-11-21: @StockSavvyShay stalled on
+    // page one, 20 posts, while @BoujeeFinances's short posts paged fine).
+    atBottom: (window.innerHeight + window.scrollY)
+      >= (document.documentElement ? document.documentElement.scrollHeight : 0) - Math.max(window.innerHeight, 900),
   };
 }
 /* eslint-enable no-undef */

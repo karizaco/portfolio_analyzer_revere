@@ -29,13 +29,37 @@ const { detectStopSignal, isEmptyResult } = require('./browser/signals');
 const { defaultProfileDir, isInsideRepo, stripQuery, timelineOperation } = require('./browser/capture');
 const { extractVisibleArticles, readPageState } = require('./browser/domExtract');
 const { normalizeEnvelope, saveRaw } = require('./rawStore');
-const { findUserIds } = require('./normalizeGraphql');
+const { findUserIds, timelineTerminated } = require('./normalizeGraphql');
 const { importRecords, filteredTotal } = require('./importer');
 const { acquireLock } = require('./lock');
+const { ensureSessionCookies } = require('./browser/cookies');
 const registry = require('./registry');
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * The launch options of the persistent, headed browser.
+ *
+ * Playwright starts Chromium with `--enable-automation`, which sets
+ * `navigator.webdriver` and shows the "controlled by automated software"
+ * bar -- and X answered the first live login from such a browser with
+ * "We've temporarily limited your login" (2026-11-21). The crawler is a
+ * person-paced reader of public posts, and nothing here is meant to look
+ * like anything else; the flag only made X treat a normal session as a bot.
+ *
+ * @param {string|undefined} channel - 'msedge', 'chrome' or undefined (bundled)
+ * @returns {object}
+ */
+function launchOptions(channel) {
+  return {
+    headless: false,
+    channel,
+    viewport: { width: 1280, height: 950 },
+    ignoreDefaultArgs: ['--enable-automation'],
+    args: ['--disable-blink-features=AutomationControlled'],
+  };
 }
 
 /**
@@ -58,11 +82,7 @@ async function launchBrowser(options = {}) {
   for (const channel of ['msedge', 'chrome', undefined]) {
     try {
       // eslint-disable-next-line no-await-in-loop
-      const context = await chromium.launchPersistentContext(profileDir, {
-        headless: false,
-        channel,
-        viewport: { width: 1280, height: 950 },
-      });
+      const context = await chromium.launchPersistentContext(profileDir, launchOptions(channel));
       log(`[x-browser] launched ${channel || 'bundled chromium'} with profile ${profileDir}`);
       return context;
     } catch (error) {
@@ -115,6 +135,47 @@ async function browserLogin(options = {}) {
       await sleep(2000);
     }
     return { loggedIn: false };
+  } finally {
+    await context.close();
+  }
+}
+
+/**
+ * Carry an existing X session into the crawler's profile, and check it.
+ *
+ * The user is logged in to X in their own browser; the session cookies
+ * (from .env or a Cookie-Editor export, see src/x/browser/cookies.js) are
+ * added to the persistent profile, and the home page tells whether X
+ * accepts them. No password is ever typed, and no value is ever logged.
+ *
+ * @param {object} options
+ * @param {object[]} options.cookies
+ * @param {string} [options.profileDir]
+ * @param {Function} [options.log]
+ * @returns {Promise<{loggedIn: boolean, injected: boolean, stop_reason: string, message: string}>}
+ */
+async function importSession(options) {
+  const log = options.log || console.log;
+  const context = await launchBrowser({ profileDir: options.profileDir, log });
+  try {
+    const result = await ensureSessionCookies(context, options.cookies);
+    log(`[x-browser] ${result.reason}`);
+    const page = context.pages()[0] || await context.newPage();
+    await page.goto('https://x.com/home', { waitUntil: 'domcontentloaded', timeout: 60000 });
+    let loggedIn = false;
+    for (let i = 0; i < 10 && !loggedIn; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await sleep(2000);
+      // eslint-disable-next-line no-await-in-loop
+      loggedIn = await isLoggedIn(page);
+    }
+    const signal = loggedIn ? { stop: false, reason: '', message: '' } : detectStopSignal(await pageState(page));
+    return {
+      loggedIn,
+      injected: result.injected,
+      stop_reason: loggedIn ? '' : (signal.reason || 'login_required'),
+      message: loggedIn ? 'X accepts the session' : (signal.message || 'X did not accept the session cookies'),
+    };
   } finally {
     await context.close();
   }
@@ -183,6 +244,13 @@ async function crawlBrowserWindows(options) {
   let lastStatus = null;
   let rateLimitReset = null;
   try {
+    // The session the user pasted into .env wins over whatever the profile
+    // held: it is the explicit answer, and a stale profile cookie would
+    // otherwise read as "login required".
+    if (options.sessionCookies && options.sessionCookies.length) {
+      const injected = await ensureSessionCookies(context, options.sessionCookies);
+      if (injected.injected) log(`[x-browser] ${injected.reason}`);
+    }
     const page = context.pages()[0] || await context.newPage();
     page.on('response', async (res) => {
       const operation = timelineOperation(res.url());
@@ -234,6 +302,7 @@ async function crawlBrowserWindows(options) {
       for (;;) {
         const batch = queue.splice(0, queue.length);
         const records = [];
+        let terminated = false;
         for (const envelope of batch) {
           captureIndex += 1;
           saveRaw(rawDir, `${window.window_start}_${String(captureIndex).padStart(5, '0')}_${envelope.operation}`, envelope);
@@ -242,6 +311,8 @@ async function crawlBrowserWindows(options) {
             for (const [handle, id] of findUserIds(envelope.body)) knownUsers.set(handle, id);
             continue;
           }
+          // X's own "nothing more below": the search window's natural end.
+          if (envelope.operation === 'SearchTimeline' && timelineTerminated(envelope.body)) terminated = true;
           records.push(...normalizeEnvelope(envelope).records);
           capturedHere += 1;
         }
@@ -294,7 +365,7 @@ async function crawlBrowserWindows(options) {
           if (imported.identityError) log(`[x-browser] ${imported.identityError}`);
         }
         const own = records.filter((record) => record.user_id === account.user_id);
-        progress = tracker.observe(own);
+        progress = tracker.observe(own, { terminated, atBottom: state.atBottom });
 
         signal = detectStopSignal({ ...state, graphqlStatus: lastStatus, rateLimitReset });
         if (signal.stop && signal.reason === 'challenge' && waitOnChallengeMs > 0) {
@@ -367,4 +438,6 @@ async function crawlBrowserWindows(options) {
   }
 }
 
-module.exports = { browserLogin, crawlBrowserWindows, launchBrowser };
+module.exports = {
+  browserLogin, crawlBrowserWindows, importSession, launchBrowser, launchOptions,
+};

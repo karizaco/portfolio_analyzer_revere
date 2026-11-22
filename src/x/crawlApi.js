@@ -67,7 +67,7 @@ async function estimate({ catalogDb, client, budget, account, since, until, runI
   let requests = 0;
   let complete = true;
   for (const [kind, build] of Object.entries(API_QUERY_KINDS)) {
-    const query = build(from);
+    const query = build(from, account.handle);
     const days = [];
     let nextToken;
     do {
@@ -154,7 +154,7 @@ async function crawlWindows(options) {
 
   outer:
   for (const window of pending) {
-    const query = API_QUERY_KINDS[window.query_kind](from);
+    const query = API_QUERY_KINDS[window.query_kind](from, account.handle);
     let nextToken = window.next_token || undefined;
     let seen = Number(window.posts_seen) || 0;
     let oldest = window.oldest_seen;

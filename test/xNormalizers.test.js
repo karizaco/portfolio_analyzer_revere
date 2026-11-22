@@ -105,3 +105,34 @@ test('web_graphql: a tombstone is reported, and the paging cursor is found', () 
   assert.match(unavailable[0].reason, /deleted/);
   assert.equal(cursors.bottom, 'DAABCgABGc');
 });
+
+test('web_graphql: a REAL captured SearchTimeline page normalizes completely (live shape, 2026-11-21)', () => {
+  // The other GraphQL fixtures were modelled on the known structure; this
+  // one is a real capture of the browser crawler's first live session,
+  // trimmed to five posts. If X changes the shape, this is what fails.
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const capture = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'x', 'real_search_timeline_chickengenius_2026-10.json'), 'utf8'));
+  const { records, unavailable } = normalizeGraphqlResponse(capture.body, { fetchedAt: capture.fetched_at });
+  assert.equal(unavailable.length, 0);
+  assert.equal(records.length, 5);
+  for (const record of records) {
+    assert.deepEqual(validatePostRecord(record), { ok: true, errors: [] }, `${record.post_id} is a valid x-post-1 record`);
+    assert.equal(record.handle, 'chickengenius');
+    assert.equal(record.user_id, '1027041315110842368');
+    assert.equal(record.fidelity, 'full');
+  }
+  const byId = Object.fromEntries(records.map((r) => [r.post_id, r]));
+  const buy = byId['2108547145498276146'];
+  assert.equal(buy.kind, 'original');
+  assert.deepEqual(buy.entities.cashtags, ['LEU'], 'the cashtag arrives without its $ (the web shape is "$LEU")');
+  assert.equal(buy.media.length, 1);
+  assert.equal(buy.media[0].type, 'photo');
+  const threadReply = byId['2108548379844465040'];
+  assert.equal(threadReply.kind, 'reply');
+  assert.equal(threadReply.self_thread, true, 'a reply to his own post is a tweetstorm, and the policy keeps it');
+  assert.equal(byId['2114914774496710921'].self_thread, false, 'a reply to somebody else: the policy drops it');
+  assert.equal(byId['2114913418713190885'].text_source, 'note_tweet', 'a long post is read in full, not truncated');
+  assert.equal(byId['2107639919686681005'].kind, 'quote');
+  assert.ok(byId['2107639919686681005'].quoted_post_id, 'a quote names the post it quotes');
+});

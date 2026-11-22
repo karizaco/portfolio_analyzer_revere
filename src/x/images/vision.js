@@ -32,9 +32,13 @@
  * request that is still refused is recorded as `refused`, not retried.
  */
 
+const PROVIDER = 'anthropic';
 const VISION_VERSION = 'x-vision-1';
 const DEFAULT_MODEL = 'claude-opus-5-5';
 const MAX_LONG_EDGE = 1568;
+const KEY_ENV = ['ANTHROPIC_API_KEY', 'ANTHROPIC_AUTH_TOKEN'];
+/** The first budget estimate, before a real reading is observed. */
+const FIRST_ESTIMATE_TOKENS = { input: 2500, output: 1500 };
 
 /** Prices per million tokens, from the Claude model table (cached 2026-11-03). Configuration-like; re-check before big runs. */
 const PRICES = {
@@ -233,7 +237,10 @@ async function readImage(input) {
 
 module.exports = {
   DEFAULT_MODEL,
+  FIRST_ESTIMATE_TOKENS,
+  KEY_ENV,
   PRICES,
+  PROVIDER,
   READING_SCHEMA,
   SYSTEM_PROMPT,
   VISION_VERSION,

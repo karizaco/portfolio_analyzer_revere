@@ -8240,8 +8240,31 @@ only `self` or `none`.
   error page or a locked account, and never retries tighter. **One crawl per
   X session**, enforced by `src/x/lock.js`: the process guard cannot see
   Chromium.
-- **The vision reader is PAID** (`ANTHROPIC_API_KEY`, default model
-  `claude-opus-5-5`; `--yes` and `--budget-usd` are required).
+- **The X session is NOT a login.** X answered the crawler's own login with
+  "We've temporarily limited your login" (2026-11-21), because Playwright's
+  `--enable-automation` marks the browser as a bot. Instead:
+  - the session cookies (`X_AUTH_TOKEN`, `X_CT0` in `.env`), copied by the
+    user from a browser where they are logged in, are injected into the
+    profile;
+  - `browser-import-cookies` checks that X accepts them;
+  - the crawler launches with `--enable-automation` removed;
+  - a cookie value is never printed, and a cookie export inside the
+    repository is refused.
+- **`.env` holds the X token, the X session and the MiniMax key.** It is
+  ignored, `test/xGitPolicy.test.js` asserts it was never tracked, and a
+  local `.git/hooks/pre-commit` refuses a commit that stages it.
+- **The vision reader is PAID** (`--yes` and `--budget-usd` are required).
+  It is **MiniMax** by default (`MINIMAX_API_KEY`; `MiniMax-M3.1-Flash`, or
+  `--model MiniMax-M3`), because the user chose not to use the Claude API
+  (2026-11-21). `--provider anthropic` keeps the Claude reader.
+  - MiniMax documents no schema-constrained output, so the schema travels
+    in the instructions and the answer is validated in
+    `src/x/images/visionMinimax.js`. A wrong type is an error, never a
+    half-read row.
+  - MiniMax can report an error inside an HTTP 200 (`base_resp`: 1004
+    auth, 1008 balance); it is mapped to 401/402 and stops the run.
+  - Measured: a synthetic three-row portfolio was read exactly, for
+    $0.0004 per image in 7 s.
   - Each image is read once per (md5, reader version, model) and stored in
     `x_image_readings`.
   - A vision position row counts only when the same image's Tesseract OCR

@@ -41,3 +41,13 @@ test('the browser profile with the X session is outside the repository unless ex
   assert.equal(isInsideRepo(defaultProfileDir({ LOCALAPPDATA: 'C:\\Users\\someone\\AppData\\Local' })), false);
   assert.equal(isInsideRepo(defaultProfileDir({})), false);
 });
+
+test('.env (the X token, the X session cookies, the MiniMax key) is ignored and has never been committed', (t) => {
+  if (ignored('.env') === null) {
+    t.skip('git is not available');
+    return;
+  }
+  assert.equal(ignored('.env'), true, '.env must stay in .gitignore');
+  const tracked = execFileSync('git', ['ls-files', '--', '.env'], { cwd: ROOT, encoding: 'utf8' }).trim();
+  assert.equal(tracked, '', '.env must not be tracked (git rm --cached .env, then rotate every key in it)');
+});

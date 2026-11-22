@@ -6,7 +6,8 @@
  *   media   download the account's photos (free, public CDN)
  *   ocr     Tesseract every downloaded photo once (free; cached by md5),
  *           classify it (v1 heuristic) and record the reading
- *   vision  read photos with Claude (PAID; needs --yes and --budget-usd),
+ *   vision  read photos with a vision model -- MiniMax by default, Claude
+ *           with --provider anthropic (PAID; needs --yes and --budget-usd),
  *           store the structured reading, and turn portfolio rows into
  *           x_positions -- each row checked against the same image's OCR
  *
@@ -27,6 +28,7 @@ const { OCR_VERSION, closeWorker, ocrMedia } = require('./ocr');
 const { CLASSIFIER_VERSION, classifyFromOcr } = require('./classify');
 const { parsePrinted, verifyRow } = require('./crossCheck');
 const vision = require('./vision');
+const visionMinimax = require('./visionMinimax');
 
 const ROOT = path.resolve(__dirname, '..', '..', '..');
 const TESSERACT_READER_VERSION = `${OCR_VERSION}+${CLASSIFIER_VERSION}`;
@@ -112,35 +114,52 @@ async function ocrAll({ catalogDb, indexDb, account, limit, full, log }) {
 }
 
 /**
- * Read photos with Claude, within a budget.
+ * The vision providers. MiniMax is the default (the user's decision,
+ * 2026-11-21: no Anthropic API); Claude stays available with
+ * `--provider anthropic`.
+ */
+const PROVIDERS = { minimax: visionMinimax, anthropic: vision };
+const DEFAULT_PROVIDER = 'minimax';
+
+function resolveProvider(name) {
+  const key = String(name || DEFAULT_PROVIDER).toLowerCase();
+  const provider = PROVIDERS[key];
+  if (!provider) throw new Error(`unknown vision provider ${name} (${Object.keys(PROVIDERS).join(' | ')})`);
+  return provider;
+}
+
+/**
+ * Read photos with a vision model, within a budget.
  */
 async function visionAll({ catalogDb, indexDb, account, args, full, log }) {
-  if (!args.yes) throw new Error('vision is PAID (Claude API). Add --yes and --budget-usd N.');
+  const provider = resolveProvider(args.provider);
+  if (!args.yes) throw new Error(`vision is PAID (${provider.PROVIDER} API). Add --yes and --budget-usd N.`);
   const budgetUsd = Number(args['budget-usd']);
   if (!(budgetUsd > 0)) throw new Error('--budget-usd N is required for vision');
   loadEnv();
-  if (!process.env.ANTHROPIC_API_KEY && !process.env.ANTHROPIC_AUTH_TOKEN) {
-    throw new Error('ANTHROPIC_API_KEY is not set. Put it in .env (ANTHROPIC_API_KEY=...) -- see docs/x-source-plan.md');
+  if (!args.client && !provider.KEY_ENV.some((name) => process.env[name])) {
+    throw new Error(`${provider.KEY_ENV[0]} is not set. Put it in .env (${provider.KEY_ENV[0]}=...) -- see docs/x-source-plan.md`);
   }
   attachDerived(catalogDb);
-  const model = String(args.model || vision.DEFAULT_MODEL);
+  const model = String(args.model || provider.DEFAULT_MODEL);
   if (full) {
     // A full run purges what an older reader version wrote; a limited run
     // never destroys work it did not redo.
-    const purgedReadings = purgeSupersededReadings(catalogDb, 'vision', vision.VISION_VERSION, model);
+    const purgedReadings = purgeSupersededReadings(catalogDb, 'vision', provider.VISION_VERSION, model);
     const purgedPositions = purgeSupersededPositions(catalogDb, POSITIONS_PARSER_VERSION);
     if (purgedReadings || purgedPositions) {
       log(`[x-vision] purged ${purgedReadings} reading(s) and ${purgedPositions} position row(s) from an older version`);
     }
   }
-  if (!vision.PRICES[model]) log(`[x-vision] no price on file for ${model}; costs are estimated at ${vision.DEFAULT_MODEL} rates`);
+  if (!provider.PRICES[model]) log(`[x-vision] no price on file for ${model}; costs are estimated at ${provider.DEFAULT_MODEL} rates`);
   const onlyClasses = args['only-classes'] ? new Set(String(args['only-classes']).split(',').map((s) => s.trim())) : null;
   const limit = Number(args.limit) || 200;
-  const client = args.client || vision.createClient();
+  const client = args.client || provider.createClient();
   const market = loadMarketTickers();
-  const price = vision.PRICES[model] || vision.PRICES[vision.DEFAULT_MODEL];
-  // A conservative first estimate (≈2.5k input + 1.5k output tokens), replaced by what is observed.
-  let estimate = (2500 * price.input + 1500 * price.output) / 1e6;
+  const price = provider.PRICES[model] || provider.PRICES[provider.DEFAULT_MODEL];
+  // A conservative first estimate (the provider's own token guess), replaced by what is observed.
+  const guess = provider.FIRST_ESTIMATE_TOKENS || { input: 2500, output: 1500 };
+  let estimate = (guess.input * price.input + guess.output * price.output) / 1e6;
   let spent = 0;
   const totals = { read: 0, refused: 0, errors: 0, positions: 0, verified: 0, skipped: 0 };
 
@@ -157,7 +176,7 @@ async function visionAll({ catalogDb, indexDb, account, args, full, log }) {
 
   const seenMd5 = new Set();
   for (const media of downloadedPhotos(indexDb, account, limit)) {
-    if (seenMd5.has(media.md5) || hasReading(catalogDb, media.md5, 'vision', vision.VISION_VERSION, model)) {
+    if (seenMd5.has(media.md5) || hasReading(catalogDb, media.md5, 'vision', provider.VISION_VERSION, model)) {
       totals.skipped += 1;
       continue;
     }
@@ -180,13 +199,14 @@ async function visionAll({ catalogDb, indexDb, account, args, full, log }) {
     let result;
     try {
       // eslint-disable-next-line no-await-in-loop
-      result = await vision.readImage({
+      result = await provider.readImage({
         client, file: path.resolve(ROOT, media.local_path), model, postText: media.post_text,
       });
     } catch (error) {
       const status = error && error.status;
       log(`[x-vision] API error${status ? ` ${status}` : ''}: ${String(error.message || error).slice(0, 200)}`);
-      if (status === 401 || status === 403 || status === 429 || status === 400) break;
+      // 402 is MiniMax's "insufficient balance": every next image would fail the same way.
+      if (status === 401 || status === 402 || status === 403 || status === 429 || status === 400) break;
       totals.errors += 1;
       continue;
     }
@@ -197,7 +217,7 @@ async function visionAll({ catalogDb, indexDb, account, args, full, log }) {
     const evidence = result.status === 'ok'
       ? [reading.summary || '', ...positions.map((row) => row.row_text || row.ticker)].join(' | ').slice(0, 1500)
       : `(${result.status}: ${result.detail})`;
-    insertReading.run(media.md5, media.post_id, media.media_key, account.account_id, account.handle, vision.VISION_VERSION, model,
+    insertReading.run(media.md5, media.post_id, media.media_key, account.account_id, account.handle, provider.VISION_VERSION, model,
       reading.image_class || 'unknown', reading.legend_ticker || '', reading.legend_timeframe || '',
       JSON.stringify(reading.tickers_visible || []), JSON.stringify(reading), result.status, result.detail || '',
       result.usage.input_tokens ?? null, result.usage.output_tokens ?? null, result.cost, evidence || '(empty)');
@@ -259,7 +279,9 @@ async function run(command, { catalogDb, account, args, log }) {
 }
 
 module.exports = {
+  DEFAULT_PROVIDER,
   POSITIONS_PARSER_VERSION,
+  resolveProvider,
   TESSERACT_READER_VERSION,
   ocrAll,
   purgeSupersededPositions,

@@ -1412,8 +1412,22 @@ npm run x:outcomes && npm run x:report                 # data/x_report.html
 
 ```text
 X_BEARER_TOKEN=<the app's Bearer Token from console.x.com -> your app -> Keys and tokens>
-ANTHROPIC_API_KEY=<a Claude API key, for the vision reader>
+X_AUTH_TOKEN=<the auth_token cookie of a browser where you are logged into X>
+X_CT0=<the ct0 cookie of the same browser>
+MINIMAX_API_KEY=<a MiniMax API key, for the vision reader (the default provider)>
+# MINIMAX_BASE_URL=https://api.minimaxi.com/v1   only for a China-platform MiniMax account
+# ANTHROPIC_API_KEY=<only for vision --provider anthropic>
 ```
+
+**Verified 2026-11-21:**
+
+- the bearer token: `lookup` of @BoujeeFinances returned user 1862978892241444864 and 16,074 posts;
+- the session cookies: `browser-import-cookies` reported "X accepts the session";
+- MiniMax: a synthetic portfolio was read exactly, for $0.0004.
+
+The crawler's own login is not used: X answered it with "We've temporarily
+limited your login". The `.env` is ignored, a test asserts it was never
+tracked, and a local pre-commit hook refuses it.
 
 ### What is built
 
@@ -1532,6 +1546,64 @@ same idea, and they carried the same class of defect the X import did.
 The two listing readers cannot share an implementation across the
 language boundary, so they share a RULE and a FIXTURE instead, and each
 is pinned: `test/catalogImportTools.test.js`.
+
+### Stage 1 measurements (2026-11-21, live)
+
+**Accounts (lookup, then counts over 2025-11-01..2026-11-21):**
+
+| account | posts ever | followers | originals in 12 months | API backfill cost |
+|---|---|---|---|---|
+| @chickengenius | 3,015 | 247k | 112 | $0.56 |
+| @BoujeeFinances | 16,074 | 13k | 1,490 | $7.45 |
+| @RedDogT3 | 138,546 | 271k | 6,490 | $32.45 |
+| @StockSavvyShay | 41,749 | 464k | 10,211 | $51.05 |
+
+The self-reply column of the estimate read **0** for every account. That
+is the `to:<id>` defect below, not the accounts.
+
+**One browser window per account.** All four completed, with 0 rejected
+records and every record at full fidelity.
+
+| account | window | seen | kept | dropped (replies to others) |
+|---|---|---|---|---|
+| @chickengenius | 2026-10 | 20 | 12 | 8 |
+| @BoujeeFinances | 2026-11-01..21 | 108 | 69 | 39 |
+| @StockSavvyShay | 2026-11-14..21 | 300 (97 scrolls, ~11 min) | 263 | 37 |
+| @RedDogT3 | 2026-11-14..21 | 180 (44 scrolls) | 144 | 36 |
+
+**Route equivalence, measured.** @chickengenius October by API returned
+10 originals and 2 self-replies: exactly the 12 post ids the browser had
+kept. No post was found by one route and missed by the other.
+
+**The search timezone.** `since:2026-09-30` returned a post at
+2026-09-30T00:42Z, which is still Sep 29 in New York. So X does not cut
+days in US time: it uses UTC or a zone east of it. The one-day overlap
+covers either case.
+
+**The real GraphQL shape** matched the synthetic fixtures; no normalizer
+fix was needed. A trimmed real capture is pinned as
+`test/fixtures/x/real_search_timeline_chickengenius_2026-10.json`.
+
+**Five defects found by the live run, each fixed with a test:**
+
+1. **`to:<numeric id>` silently matches nothing.** On @RedDogT3 for
+   October 2026, the id form counted 0 self-replies and the handle form
+   counted 8 (of 48 replies). Every API crawl would have lost every
+   tweetstorm. `self_replies` now puts the HANDLE in `to:`.
+2. **A date-bounded search can never "pass its start"**, so every window
+   ended `exhausted`, which counts as partial. X's last page carries
+   `TimelineTerminateTimeline` (direction Bottom); that is now the natural
+   end, `end_of_results`.
+3. **Tall posts ended a window early.** One page of 20 posts with images
+   and quotes takes more than 6 wheel turns to cross, and each turn
+   counted as "quiet". @StockSavvyShay stalled at 20 posts; after the fix,
+   the same week read 300. A turn now counts as quiet only at the bottom
+   of the loaded page.
+4. **`budgetFrom()` read a `catalogDb` that was not in scope**, so every
+   paid command failed before sending anything.
+5. **The crawler's own login was refused** ("temporarily limited"). The
+   session now comes from the user's browser cookies, and the
+   automation flag is removed.
 
 ### Not verified yet (needs your keys or your login)
 
