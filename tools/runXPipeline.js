@@ -13,9 +13,11 @@
  *                                                       API count requests ($0.01 each): posts and read cost per year
  *   crawl --route api --handle H --budget-usd N --yes [--since D] [--until D] [--unit year|month] [--max-posts N] [--incremental]
  *   crawl --route browser --handle H [--since D] [--until D] [--unit month|week] [--max-windows N] [--window-id ID]
- *         [--concurrency 1|2] [--headed] [--report json]
+ *         [--concurrency 1|2] [--headed] [--query all|split] [--report json]
  *                                                       free (the user's own session, no API credits); headless by
- *                                                       default, --headed shows the window; at most 2 tabs at once
+ *                                                       default, --headed shows the window; at most 2 tabs at once;
+ *                                                       --query split searches originals and self-replies apart, so
+ *                                                       replies to other people are never fetched
  *   crawl --route agent --handle H                      print the agentic runbook / prompt and the import command
  *   browser-import-cookies [--file EXPORT.json] [--headed]
  *                                                       carry an existing X session into the profile: X_AUTH_TOKEN
@@ -361,6 +363,7 @@ async function main() {
           return;
         }
         if (route === 'browser') {
+          if (args.query !== undefined && !['all', 'split'].includes(String(args.query))) fail('--query is all or split');
           // eslint-disable-next-line global-require
           const { crawlBrowserWindows } = require('../src/x/crawlBrowser');
           loadEnv();
@@ -378,6 +381,7 @@ async function main() {
             // never more than two tabs at once (clamped in src/x/browser/pacing.js).
             headless: !args.headed,
             concurrency: args.concurrency ? Number(args.concurrency) : 1,
+            queryMode: args.query === 'split' ? 'split' : 'all_own',
             log: args.report === 'json' ? (line) => console.error(line) : console.log,
           });
           finishRun(catalogDb, runId, report.status, report.stop_reason, account, rawDir);

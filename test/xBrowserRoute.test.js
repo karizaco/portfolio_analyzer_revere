@@ -466,12 +466,14 @@ function fakeBrowser({ lockedTab = -1, headers = {} } = {}) {
   return { context, pages, visits };
 }
 
-async function crawlWithFake(fake, extra = {}) {
+async function crawlWithFake(fake, options = {}) {
+  const { prepare, ...extra } = options;
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'x-tabs-'));
   const catalogDb = registry.openCatalog({ path: path.join(dir, 'state.sqlite') });
   const indexDb = openIndex({ path: path.join(dir, 'x_index.sqlite') });
   try {
     const account = registry.addAccount(catalogDb, { handle: 'chickengenius', userId: CHICKEN_ID });
+    if (prepare) prepare(catalogDb, account);
     const runId = registry.startRun(catalogDb, { accountId: account.account_id, route: 'browser', runTag: 'tabs' });
     const lockFile = path.join(dir, '.browser.lock');
     const report = await crawlBrowserWindows({
@@ -482,7 +484,7 @@ async function crawlWithFake(fake, extra = {}) {
       lockFile, log: () => {}, ...extra,
     });
     const windows = catalogDb.prepare(
-      "SELECT window_start, status, stop_reason FROM x_crawl_windows WHERE route = 'browser' ORDER BY window_start",
+      "SELECT window_start, query_kind, status, stop_reason FROM x_crawl_windows WHERE route = 'browser' ORDER BY window_start, query_kind",
     ).all();
     const archived = indexDb.prepare('SELECT COUNT(*) AS n FROM x_posts').get().n;
     return { report, windows, archived, lockLeft: fs.existsSync(lockFile) };
@@ -544,4 +546,49 @@ test('an allowance spent past the gate\'s patience stops the crawl with the rese
   assert.ok(!windows.some((w) => w.status === 'running'), JSON.stringify(windows));
   assert.equal(windows.filter((w) => w.status === 'pending').length, windows.length - 1);
   assert.equal(report.allowance.lowest_remaining, 0);
+});
+
+const { browserSearchUrl, BROWSER_SPLIT_KINDS } = require('../src/x/windows');
+
+const searchQuery = (url) => new URL(url).searchParams.get('q');
+
+test("the split queries ask only for what is kept: originals without replies, and the account's replies to itself", () => {
+  const range = { start: '2026-10-01', end: '2026-11-01' };
+  assert.equal(searchQuery(browserSearchUrl('ChickenGenius', range)), 'from:chickengenius since:2026-09-30 until:2026-11-02');
+  assert.equal(searchQuery(browserSearchUrl('ChickenGenius', range, 'originals')),
+    'from:chickengenius -filter:replies since:2026-09-30 until:2026-11-02');
+  assert.equal(searchQuery(browserSearchUrl('ChickenGenius', range, 'self_replies')),
+    'from:chickengenius filter:replies to:chickengenius since:2026-09-30 until:2026-11-02',
+    'to: takes the HANDLE -- to:<numeric id> matches nothing');
+  assert.deepEqual(BROWSER_SPLIT_KINDS, ['originals', 'self_replies']);
+  assert.throws(() => browserSearchUrl('x', range, 'everything'), /unknown browser query kind/);
+});
+
+test('switching to the split queries retires unfinished all_own windows and never refetches a complete one', async () => {
+  const fake = fakeBrowser();
+  const { report, windows } = await crawlWithFake(fake, {
+    queryMode: 'split',
+    prepare(catalogDb, account) {
+      registry.ensureWindows(catalogDb, account.account_id, 'browser', 'all_own', [
+        { start: '2026-10-01', end: '2026-10-08' }, { start: '2026-10-08', end: '2026-10-15' },
+      ]);
+      const [done] = registry.pendingWindows(catalogDb, account.account_id, 'browser', 'all_own')
+        .filter((w) => w.window_start === '2026-10-01');
+      registry.updateWindow(catalogDb, done.id, { status: 'complete' });
+    },
+  });
+  assert.equal(report.status, 'ok', report.message);
+  const allOwn = windows.filter((w) => w.query_kind === 'all_own');
+  assert.deepEqual(allOwn.map((w) => [w.window_start, w.status]), [['2026-10-01', 'complete']],
+    'the unfinished all_own window is gone; the complete one is the record of its range');
+  const queries = fake.visits.map((v) => searchQuery(v.url));
+  assert.ok(queries.length > 0);
+  assert.ok(queries.every((q) => /-filter:replies|filter:replies to:chickengenius/.test(q)), queries.join(' | '));
+  assert.ok(!queries.some((q) => q.includes('since:2026-09-30')), 'the range a complete all_own window covers is not fetched again');
+  for (const kind of BROWSER_SPLIT_KINDS) {
+    const ofKind = windows.filter((w) => w.query_kind === kind);
+    assert.ok(ofKind.length >= 3, `${kind} windows were planned`);
+    assert.ok(ofKind.every((w) => w.status === 'complete'), JSON.stringify(ofKind));
+  }
+  assert.ok(report.windows.every((w) => BROWSER_SPLIT_KINDS.includes(w.kind)));
 });

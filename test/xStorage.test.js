@@ -344,6 +344,11 @@ test('runs and windows: recorded at the start, resumable, counted as they go', (
     assert.equal(run.status, 'running', 'an interrupted run still leaves its row');
     assert.equal(run.posts_seen, 7);
     assert.equal(registry.pendingWindows(s.catalogDb, account.account_id, 'api').length, 1);
+    // A window a stop cut short is resumable: only `complete` is done.
+    for (const status of ['blocked', 'partial', 'failed', 'running']) {
+      registry.updateWindow(s.catalogDb, pending[1].id, { status });
+      assert.equal(registry.pendingWindows(s.catalogDb, account.account_id, 'api').length, 1, `${status} is still to do`);
+    }
   } finally {
     s.close();
   }

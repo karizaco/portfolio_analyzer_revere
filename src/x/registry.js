@@ -294,18 +294,38 @@ function ensureWindows(db, accountId, route, queryKind, windows) {
 }
 
 /**
- * Windows still to do, newest first.
+ * Windows still to do, newest first: everything that is not `complete`.
+ *
+ * `blocked` is a window a STOP cut short before it reached its end -- a
+ * 429, an X error page, a lost connection, the other tab's stop. It was
+ * missing from this list, so such a window was never crawled again, and
+ * because it still covers its range the planner never re-planned it
+ * either: a permanent, silent gap (found 2026-11-22).
  */
 function pendingWindows(db, accountId, route, queryKind) {
   const params = [accountId, route];
   let sql = `SELECT * FROM x_crawl_windows WHERE account_id = ? AND route = ?
-    AND status IN ('pending', 'running', 'partial', 'failed')`;
+    AND status IN ('pending', 'running', 'partial', 'blocked', 'failed')`;
   if (queryKind) {
     sql += ' AND query_kind = ?';
     params.push(queryKind);
   }
   sql += ' ORDER BY window_start DESC, query_kind';
   return db.prepare(sql).all(...params);
+}
+
+/**
+ * Remove an account's UNFINISHED windows of one query kind, and return how
+ * many went. Used when the browser switches from the one `all_own` query to
+ * the split queries: an unfinished `all_own` window would otherwise go on
+ * "covering" its range, so the split windows would never be planned there.
+ * A `complete` window stays -- it is the record that its range is done --
+ * and the posts an unfinished one imported stay in the archive.
+ */
+function dropUnfinishedWindows(db, accountId, route, queryKind) {
+  const result = db.prepare(`DELETE FROM x_crawl_windows WHERE account_id = ? AND route = ? AND query_kind = ?
+    AND status != 'complete'`).run(accountId, route, queryKind);
+  return Number(result.changes || 0);
 }
 
 const WINDOW_FIELDS = ['status', 'count_expected', 'posts_seen', 'oldest_seen', 'newest_seen', 'next_token',
@@ -332,13 +352,14 @@ function updateWindow(db, windowId, patch) {
  * @param {string} route
  * @returns {Array<{start: string, end: string}>}
  */
-function windowRanges(db, accountId, queryKind, route) {
+function windowRanges(db, accountId, queryKind, route, options = {}) {
   const params = [accountId, route];
   let sql = 'SELECT window_start, window_end FROM x_crawl_windows WHERE account_id = ? AND route = ?';
   if (queryKind) {
     sql += ' AND query_kind = ?';
     params.push(queryKind);
   }
+  if (options.completeOnly) sql += " AND status = 'complete'";
   sql += ' ORDER BY window_start';
   return db.prepare(sql).all(...params).map((row) => ({ start: row.window_start, end: row.window_end }));
 }
@@ -485,6 +506,7 @@ module.exports = {
   addToRun,
   apiSpendSince,
   coveredByCompleteWindow,
+  dropUnfinishedWindows,
   ensureWindows,
   finishRun,
   getAccount,

@@ -6,7 +6,7 @@
  *
  *   node tools/x_pipeline/runBrowserBackfill.js --handles chickengenius,BoujeeFinances
  *        [--session-windows 12] [--break-minutes 10] [--concurrency 1] [--headed]
- *        [--since D] [--until D]
+ *        [--since D] [--until D] [--query all|split]
  *
  * Each SESSION is one `runXPipeline.js crawl --route browser` with a window
  * cap. Between sessions there is a break, and an account is finished when a
@@ -17,9 +17,16 @@
  *
  * - `rate_limited` with a retry time: it waits until X's own reset (plus a
  *   few minutes) and goes on. That is X's schedule, not a retry.
- * - ANY other stop (a login wall, a challenge, an error page, a locked
- *   account, a crash): it stops for good and exits non-zero, so a person
- *   looks before anything else runs.
+ * - A lost connection, X's "Something went wrong" page, or a session that
+ *   ended without a report (`network_error`, `x_error_page`, `no_graphql`,
+ *   a crash): it waits 10, 20, then 30 minutes and tries again, up to six
+ *   times in a row. This is what lets the computer sleep or hibernate
+ *   mid-crawl. The process is frozen while asleep, so no retry is spent
+ *   then; on waking, the page in flight fails, its window stays resumable,
+ *   and the next session picks it up.
+ * - ANY other stop (a login wall, a challenge, a locked account): it stops
+ *   for good and exits non-zero, so a person looks before anything else
+ *   runs.
  * - Two sessions in a row that completed no window: it stops, because
  *   something is wrong that a third session would not fix.
  *
@@ -47,6 +54,15 @@ function parseArgs(argv) {
 }
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Stops that are about the connection or X's page, not about the account.
+const TRANSIENT = new Set(['network_error', 'x_error_page', 'no_graphql']);
+const MAX_TRANSIENT_IN_A_ROW = 6;
+// A lost connection is waited out for 10, 20, then 30 minutes. X's own
+// error page gets three times longer (30, 60, 90): on 2026-11-22 it appeared
+// after about 80 searches in 80 minutes, well inside the published
+// allowance, so it may be a softer limit of X's, and that gets more room.
+const transientWaitMs = (attempt, reason) => Math.min(attempt, 3) * (reason === 'network_error' ? 10 : 30) * 60 * 1000;
 const stamp = () => new Date().toISOString().replace(/\.\d+Z$/, 'Z');
 
 /** One crawl session; resolves to its JSON report, or null when there was none. */
@@ -54,6 +70,7 @@ function crawlSession(handle, args) {
   const argv = [CLI, 'crawl', '--route', 'browser', '--handle', handle,
     '--max-windows', String(args.sessionWindows), '--concurrency', String(args.concurrency), '--report', 'json'];
   if (args.headed) argv.push('--headed');
+  if (args.query) argv.push('--query', args.query);
   if (args.since) argv.push('--since', args.since);
   if (args.until) argv.push('--until', args.until);
   return new Promise((resolve) => {
@@ -75,7 +92,7 @@ async function main() {
   const raw = parseArgs(process.argv.slice(2));
   if (!raw.handles) {
     console.error('usage: runBrowserBackfill.js --handles a,b,c [--session-windows 12] [--break-minutes 10] '
-      + '[--concurrency 1] [--headed] [--since D] [--until D]');
+      + '[--concurrency 1] [--headed] [--since D] [--until D] [--query all|split]');
     process.exit(2);
   }
   const args = {
@@ -86,6 +103,7 @@ async function main() {
     headed: Boolean(raw.headed),
     since: raw.since ? String(raw.since) : '',
     until: raw.until ? String(raw.until) : '',
+    query: raw.query ? String(raw.query) : '',
   };
   const logFile = path.join(ROOT, 'data', 'x_pipeline', 'raw', `backfill_${stamp().replace(/[-:]/g, '')}.jsonl`);
   fs.mkdirSync(path.dirname(logFile), { recursive: true });
@@ -94,13 +112,28 @@ async function main() {
   for (const handle of args.handles) {
     totals[handle] = { sessions: 0, windows_complete: 0, windows_other: 0, posts_new: 0, posts_filtered: 0 };
     let idle = 0;
+    let transient = 0;
+    // Wait and try again after a transient stop; false once the budget is spent.
+    const retryLater = async (why) => {
+      transient += 1;
+      if (transient > MAX_TRANSIENT_IN_A_ROW) {
+        console.log(`[backfill] @${handle}: ${why} -- ${MAX_TRANSIENT_IN_A_ROW} times in a row, stopping.`);
+        return false;
+      }
+      const waitMs = transientWaitMs(transient);
+      console.log(`[backfill] @${handle}: ${why}; trying again in ${Math.round(waitMs / 60000)} min `
+        + `(${transient} of ${MAX_TRANSIENT_IN_A_ROW}).`);
+      await sleep(waitMs);
+      return true;
+    };
     for (;;) {
       console.log(`[backfill] ${stamp()} @${handle}: session ${totals[handle].sessions + 1}`);
       // eslint-disable-next-line no-await-in-loop
       const { code, report } = await crawlSession(handle, args);
       fs.appendFileSync(logFile, `${JSON.stringify({ at: stamp(), handle, code, report })}\n`);
       if (!report) {
-        console.log(`[backfill] @${handle}: the crawl ended (exit ${code}) without a report -- stopping.`);
+        // eslint-disable-next-line no-await-in-loop
+        if (await retryLater(`the crawl ended (exit ${code}) without a report`)) continue;
         process.exitCode = 1;
         return finish(totals, logFile);
       }
@@ -121,18 +154,30 @@ async function main() {
           await sleep(waitMs);
           continue;
         }
+        if (TRANSIENT.has(report.stop_reason)) {
+          // eslint-disable-next-line no-await-in-loop
+          if (await retryLater(`${report.stop_reason}: ${report.message}`)) continue;
+          process.exitCode = 3;
+          return finish(totals, logFile);
+        }
         console.log(`[backfill] @${handle}: STOPPED (${report.stop_reason}): ${report.message}`);
         process.exitCode = 3;
         return finish(totals, logFile);
       }
+      transient = 0;
       if (!report.windows.length) break; // nothing pending: this account is done
       idle = complete ? 0 : idle + 1;
       if (idle >= 2) {
-        console.log(`[backfill] @${handle}: two sessions completed no window -- stopping.`);
-        process.exitCode = 3;
-        return finish(totals, logFile);
+        // A window that keeps stalling stays pending for a later run; it
+        // must not hold up the other accounts.
+        console.log(`[backfill] @${handle}: two sessions completed no window -- moving on; `
+          + 'the unfinished windows stay pending.');
+        break;
       }
-      if (!/left for the next session/.test(report.message || '')) break;
+      // Done only when nothing was left for later AND every window this
+      // session touched completed: a partial window needs another session.
+      const left = /left for the next session/.test(report.message || '');
+      if (!left && complete === report.windows.length) break;
       console.log(`[backfill] break ${Math.round(args.breakMs / 60000)} min (${report.message})`);
       // eslint-disable-next-line no-await-in-loop
       await sleep(args.breakMs);

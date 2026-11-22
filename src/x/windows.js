@@ -42,6 +42,27 @@ const API_QUERY_KINDS = {
 const BROWSER_QUERY_KIND = 'all_own';
 
 /**
+ * The browser's search queries, by query kind.
+ *
+ * `all_own` is every post of the account, and its replies to OTHER people
+ * come with it -- the importer then drops them (the reply policy). That
+ * costs search allowance for posts that are thrown away: measured on
+ * @BoujeeFinances (2026-11-22), 1,205 of 1,448 own posts in five weeks
+ * were replies to others, 83 %.
+ *
+ * The SPLIT queries ask only for what is kept, the way the API route
+ * does: the originals (quotes included, replies excluded) and the
+ * account's replies to ITSELF -- its threads. `to:` takes the HANDLE:
+ * `to:<numeric id>` silently matches nothing (measured 2026-11-21).
+ */
+const BROWSER_SPLIT_KINDS = ['originals', 'self_replies'];
+const BROWSER_QUERIES = {
+  all_own: (h) => `from:${h}`,
+  originals: (h) => `from:${h} -filter:replies`,
+  self_replies: (h) => `from:${h} filter:replies to:${h}`,
+};
+
+/**
  * The expected count over which a browser window is split.
  *
  * A long scroll is where the challenges and the rate limits bite, so a
@@ -116,11 +137,13 @@ function splitWindow(window, unit = 'week') {
  * @param {{start: string, end: string}} window
  * @returns {string}
  */
-function browserSearchUrl(handle, window) {
+function browserSearchUrl(handle, window, kind = BROWSER_QUERY_KIND) {
   const h = normalizeHandle(handle);
   const since = shift(window.start, -1);
   const until = shift(window.end, 1);
-  const query = `from:${h} since:${since} until:${until}`;
+  const build = BROWSER_QUERIES[kind];
+  if (!build) throw new Error(`unknown browser query kind: ${kind}`);
+  const query = `${build(h)} since:${since} until:${until}`;
   return `https://x.com/search?q=${encodeURIComponent(query)}&src=typed_query&f=live`;
 }
 
@@ -262,7 +285,9 @@ function windowVerdict(input) {
 
 module.exports = {
   API_QUERY_KINDS,
+  BROWSER_QUERIES,
   BROWSER_QUERY_KIND,
+  BROWSER_SPLIT_KINDS,
   DENSE_WINDOW_POSTS,
   addUnit,
   browserSearchUrl,

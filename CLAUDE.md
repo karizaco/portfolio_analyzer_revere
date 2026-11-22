@@ -8259,6 +8259,13 @@ only `self` or `none`.
     reset as its retry time.
   - A stop on one tab ends the session for both. The other tab's window is
     left `blocked` (`sibling_stop`), never `complete`.
+- **A `blocked` window is still to do.** `pendingWindows` returns everything
+  that is not `complete`. It used to leave `blocked` out, and since a window
+  still covers its range, a stopped window was then a permanent gap.
+- **`--query split`** searches originals (`-filter:replies`) and self-replies
+  (`filter:replies to:H`) instead of every post. Replies to other people are
+  then never fetched; they were 83 % of @BoujeeFinances's posts. A complete
+  `all_own` window still covers its range for both split kinds.
 - **The X session is NOT a login.** X answered the crawler's own login with
   "We've temporarily limited your login" (2026-11-21), because Playwright's
   `--enable-automation` marks the browser as a bot. Instead:

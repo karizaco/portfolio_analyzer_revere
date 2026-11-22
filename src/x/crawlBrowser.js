@@ -34,7 +34,7 @@
  * are imported as they arrive, so an interrupted crawl keeps what it saw.
  */
 
-const { DENSE_WINDOW_POSTS, planWindows, browserSearchUrl, splitDenseWindows, uncoveredRanges, windowVerdict, BROWSER_QUERY_KIND } = require('./windows');
+const { DENSE_WINDOW_POSTS, planWindows, browserSearchUrl, splitDenseWindows, uncoveredRanges, windowVerdict, BROWSER_QUERY_KIND, BROWSER_SPLIT_KINDS } = require('./windows');
 const { createScrollTracker, jitter } = require('./browser/scroll');
 const { detectStopSignal, isEmptyResult } = require('./browser/signals');
 const { defaultProfileDir, isInsideRepo, stripQuery, timelineOperation } = require('./browser/capture');
@@ -51,6 +51,22 @@ const LAUNCH_ARGS = ['--disable-blink-features=AutomationControlled'];
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * A navigation or input that threw: no connection, a timeout, or a computer
+ * that slept with the page open. Retryable, and never a natural end.
+ *
+ * @param {Error} error
+ * @returns {{reason: string, message: string, retryAt: null}}
+ */
+function networkStop(error) {
+  const detail = String((error && error.message) || error || '').split('\n')[0].slice(0, 160);
+  return {
+    reason: 'network_error',
+    message: `a page could not load (${detail}); the connection dropped or the computer slept. Resume once it is back.`,
+    retryAt: null,
+  };
 }
 
 /**
@@ -269,25 +285,48 @@ async function crawlBrowserWindows(options) {
   // challenges and the rate limits bite. The density comes from the
   // windows this account has already crawled -- the browser route has no
   // count endpoint, so that is the only estimate there is.
-  const existing = registry.windowRanges(catalogDb, account.account_id, BROWSER_QUERY_KIND, 'browser');
-  const density = registry.windowDensity(catalogDb, account.account_id, 'browser', BROWSER_QUERY_KIND);
-  const planned = splitDenseWindows(planWindows({ since, until, unit: options.unit || 'month' }), {
-    postsPerDay: density, threshold: DENSE_WINDOW_POSTS, unit: 'week',
-  });
-  if (density > 0) {
-    log(`[x-browser] @${account.handle}: ${density.toFixed(1)} posts a day observed; `
-      + `a window over ${DENSE_WINDOW_POSTS} posts is split into weeks`);
+  //
+  // THE QUERY: `all_own` (one search, the default) or `split` (the
+  // originals and the self-replies as two searches, without the replies to
+  // other people that `all_own` fetches only for the importer to drop).
+  // Switching an account to `split` retires its UNFINISHED `all_own`
+  // windows; a COMPLETE `all_own` window still covers its range for both
+  // split kinds, so nothing done is fetched again.
+  const split = options.queryMode === 'split';
+  const kinds = split ? BROWSER_SPLIT_KINDS : [BROWSER_QUERY_KIND];
+  if (split) {
+    const dropped = registry.dropUnfinishedWindows(catalogDb, account.account_id, 'browser', BROWSER_QUERY_KIND);
+    if (dropped) log(`[x-browser] @${account.handle}: ${dropped} unfinished all_own window(s) replaced by the split queries`);
   }
-  const effective = [];
-  for (const window of planned) {
-    for (const part of uncoveredRanges(existing, window.start, window.end)) {
-      effective.push({ start: part.start, end: part.end });
+  const doneByAllOwn = split
+    ? registry.windowRanges(catalogDb, account.account_id, BROWSER_QUERY_KIND, 'browser', { completeOnly: true })
+    : [];
+  let pending = [];
+  for (const kind of kinds) {
+    const existing = [...registry.windowRanges(catalogDb, account.account_id, kind, 'browser'), ...doneByAllOwn]
+      .sort((a, b) => a.start.localeCompare(b.start));
+    const density = registry.windowDensity(catalogDb, account.account_id, 'browser', kind);
+    const planned = splitDenseWindows(planWindows({ since, until, unit: options.unit || 'month' }), {
+      postsPerDay: density, threshold: DENSE_WINDOW_POSTS, unit: 'week',
+    });
+    if (density > 0) {
+      log(`[x-browser] @${account.handle} ${kind}: ${density.toFixed(1)} posts a day observed; `
+        + `a window over ${DENSE_WINDOW_POSTS} posts is split into weeks`);
     }
+    const effective = [];
+    for (const window of planned) {
+      for (const part of uncoveredRanges(existing, window.start, window.end)) {
+        effective.push({ start: part.start, end: part.end });
+      }
+    }
+    registry.ensureWindows(catalogDb, account.account_id, 'browser', kind, effective);
+    pending.push(...registry.pendingWindows(catalogDb, account.account_id, 'browser', kind));
   }
-  registry.ensureWindows(catalogDb, account.account_id, 'browser', BROWSER_QUERY_KIND, effective);
-  const pending = registry.pendingWindows(catalogDb, account.account_id, 'browser', BROWSER_QUERY_KIND)
+  pending = pending
     .filter((window) => window.window_start >= since && window.window_end <= until)
-    .filter((window) => !(options.windowId && window.id !== Number(options.windowId)));
+    .filter((window) => !(options.windowId && window.id !== Number(options.windowId)))
+    // Newest first, and a range's two split queries next to each other.
+    .sort((a, b) => b.window_start.localeCompare(a.window_start) || a.query_kind.localeCompare(b.query_kind));
   registry.updateRun(catalogDb, runId, { windows_planned: pending.length });
 
   const report = {
@@ -320,7 +359,13 @@ async function crawlBrowserWindows(options) {
     const first = context.pages()[0] || await context.newPage();
     const firstTap = attachCapture(first, rateGate);
 
-    await first.goto('https://x.com/home', { waitUntil: 'domcontentloaded', timeout: 60000 });
+    try {
+      await first.goto('https://x.com/home', { waitUntil: 'domcontentloaded', timeout: 60000 });
+    } catch (error) {
+      const stop = networkStop(error);
+      Object.assign(report, { status: 'blocked', stop_reason: stop.reason, message: stop.message });
+      return report;
+    }
     await nap(3000);
     const signal = detectStopSignal({ ...(await pageState(first)), graphqlStatus: firstTap.lastStatus, rateLimitReset: firstTap.rateLimitReset });
     if (signal.stop || !(await isLoggedIn(first))) {
@@ -374,12 +419,20 @@ async function crawlBrowserWindows(options) {
       let progress = { done: false, reason: '', reachedEnd: false };
       tap.queue.length = 0;
       tap.lastStatus = null;
-      log(`[x-browser] @${account.handle} ${window.window_start}..${window.window_end}`);
-      await page.goto(browserSearchUrl(account.handle, { start: window.window_start, end: window.window_end }),
-        { waitUntil: 'domcontentloaded', timeout: 60000 });
+      const kind = window.query_kind || BROWSER_QUERY_KIND;
+      log(`[x-browser] @${account.handle} ${window.window_start}..${window.window_end}${kind === BROWSER_QUERY_KIND ? '' : ` (${kind})`}`);
+      // A page that cannot load (no connection; a computer waking from sleep
+      // with its sockets gone) is a STOP: the window is left `blocked`, which
+      // is resumable, and a later session crawls it again.
+      try {
+        await page.goto(browserSearchUrl(account.handle, { start: window.window_start, end: window.window_end }, kind),
+          { waitUntil: 'domcontentloaded', timeout: 60000 });
+      } catch (error) {
+        windowStop = networkStop(error);
+      }
       await nap(jitter(3000, 5000));
 
-      for (;;) {
+      while (!windowStop) {
         const batch = tap.queue.splice(0, tap.queue.length);
         const records = [];
         let terminated = false;
@@ -496,7 +549,12 @@ async function crawlBrowserWindows(options) {
           break;
         }
 
-        await page.mouse.wheel(0, jitter(1200, 1800));
+        try {
+          await page.mouse.wheel(0, jitter(1200, 1800));
+        } catch (error) {
+          windowStop = networkStop(error);
+          break;
+        }
         await nap(jitter(pause[0], pause[1]));
       }
 
@@ -512,7 +570,7 @@ async function crawlBrowserWindows(options) {
       });
       if (verdict === 'complete') registry.addToRun(catalogDb, runId, { windows_complete: 1 });
       report.windows.push({
-        id: window.id, start: window.window_start, end: window.window_end, status: verdict,
+        id: window.id, start: window.window_start, end: window.window_end, kind, status: verdict,
         posts: tracker.seen, scrolls: tracker.scrolls, end_reason: windowStop ? windowStop.reason : progress.reason,
         fidelity: usedDom ? 'partial' : 'full',
       });

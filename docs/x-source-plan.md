@@ -1650,11 +1650,31 @@ others dropped.
   completed nothing.
 - Each session's report goes to `data/x_pipeline/raw/backfill_*.jsonl`.
 
-**A possible saving, not taken:** 75% of @BoujeeFinances's posts are replies
-to other people. The search returns them, so they cost allowance, and the
-importer then drops them. Searching `-filter:replies` plus a separate
-self-reply query (as the API route does) would save roughly 350 pages, about
-2 hours, but it needs a second browser query kind.
+**The split query (`--query split`).** @BoujeeFinances turned out to post
+340–440 times a week, and **83 % of it is replies to other people** (1,205 of
+1,448 own posts in five weeks). The `all_own` search returns those replies,
+so they cost allowance, and the importer then drops them.
+
+The split mode searches `from:H -filter:replies` (originals and quotes) and
+`from:H filter:replies to:H` (the account's own threads) as two query kinds,
+the way the API route does. Switching an account retires its unfinished
+`all_own` windows, while a complete `all_own` window still covers its range
+for both kinds. For Boujee it should cut about 15 hours of crawling to about
+one. **To verify live before use:** split-crawl @chickengenius over months the
+`all_own` crawl already completed (on `--since` dates outside the complete
+windows), and require the same kept post ids.
+
+**Two defects the first unattended run exposed:**
+- **A `blocked` window was never retried.** `pendingWindows` left it out, and
+  the planner treated its range as covered: a permanent, silent gap. The
+  first Boujee session left one (`x_error_page`), and it is now resumable.
+- **A failed navigation crashed the session.** A lost connection, or a wake
+  from hibernation, now leaves the window `blocked` with `network_error`.
+  The driver waits 10/20/30 minutes for a network error and 30/60/90 for
+  X's error page, up to six times in a row.
+
+X's error page appeared after about 80 searches in 80 minutes, well inside
+the published allowance. It may be a softer limit of X's.
 
 ### Not verified yet (needs your keys or your login)
 
