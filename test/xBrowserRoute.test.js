@@ -330,3 +330,218 @@ test('the crawler browser is headed and does not announce itself as automated', 
   assert.ok(options.ignoreDefaultArgs.includes('--enable-automation'));
   assert.ok(options.args.includes('--disable-blink-features=AutomationControlled'));
 });
+
+// ---------------------------------------------------------------------------
+// Headless, two tabs, and X's own allowance (2026-11-22)
+
+const { headlessUserAgent, crawlBrowserWindows } = require('../src/x/crawlBrowser');
+const { MAX_CONCURRENCY, clampConcurrency, createRateGate } = require('../src/x/browser/pacing');
+const { readPageState, extractVisibleArticles } = require('../src/x/browser/domExtract');
+const registry = require('../src/x/registry');
+const { openIndex } = require('../src/x/indexStore');
+
+test('a headless crawl carries the browser\'s own user agent with "HeadlessChrome" corrected, and a desktop screen', () => {
+  const measured = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+    + 'HeadlessChrome/158.0.0.0 Safari/537.36 Edg/158.0.0.0';
+  const ua = headlessUserAgent(measured);
+  assert.equal(ua, measured.replace('HeadlessChrome/', 'Chrome/'));
+  assert.doesNotMatch(ua, /Headless/);
+  assert.equal(headlessUserAgent(ua), ua, 'a headed user agent is left alone');
+
+  const options = launchOptions('msedge', { headless: true, userAgent: ua });
+  assert.equal(options.headless, true);
+  assert.equal(options.userAgent, ua);
+  assert.deepEqual(options.screen, { width: 1920, height: 1080 });
+  assert.ok(options.ignoreDefaultArgs.includes('--enable-automation'));
+  const headed = launchOptions('msedge');
+  assert.equal(headed.userAgent, undefined, 'a headed browser sends its own user agent');
+  assert.equal(headed.screen, undefined);
+});
+
+test('at most two tabs crawl at once, whatever is asked (the user\'s cap)', () => {
+  assert.equal(MAX_CONCURRENCY, 2);
+  assert.equal(clampConcurrency(undefined), 1);
+  assert.equal(clampConcurrency(0), 1);
+  assert.equal(clampConcurrency('x'), 1);
+  assert.equal(clampConcurrency(1), 1);
+  assert.equal(clampConcurrency(2), 2);
+  assert.equal(clampConcurrency(5), 2);
+});
+
+test('the rate gate holds at the reserve until X\'s reset, and only then', () => {
+  const now = 1_800_000_000_000;
+  const resetS = now / 1000 + 600;
+  const gate = createRateGate({ reserve: 3, maxWaitMs: 16 * 60 * 1000, marginMs: 1000 });
+  assert.equal(gate.waitMs(now), 0, 'nothing known yet: no hold');
+  assert.equal(gate.observe({}), false, 'a response without the headers is not an allowance');
+
+  gate.observe({ 'x-rate-limit-limit': '50', 'x-rate-limit-remaining': '10', 'x-rate-limit-reset': String(resetS) });
+  assert.equal(gate.waitMs(now), 0, 'allowance left: no hold');
+  gate.observe({ 'x-rate-limit-limit': '50', 'x-rate-limit-remaining': '3', 'x-rate-limit-reset': String(resetS) });
+  assert.equal(gate.waitMs(now), 600_000 + 1000, 'at the reserve: hold until the reset');
+  // Two tabs: a response that arrives late with MORE left does not undo the hold.
+  gate.observe({ 'x-rate-limit-limit': '50', 'x-rate-limit-remaining': '7', 'x-rate-limit-reset': String(resetS) });
+  assert.ok(gate.waitMs(now) > 0);
+  assert.equal(gate.waitMs(resetS * 1000), 0, 'once the reset has passed, the next response says what is left');
+  // A later reset is a new window.
+  gate.observe({ 'x-rate-limit-limit': '50', 'x-rate-limit-remaining': '49', 'x-rate-limit-reset': String(resetS + 900) });
+  assert.equal(gate.waitMs(now), 0);
+  const snap = gate.snapshot();
+  assert.equal(snap.limit, 50);
+  assert.equal(snap.lowest_remaining, 3);
+  assert.equal(snap.responses_with_allowance, 4);
+});
+
+test('the rate gate announces a hold once per reset, so two tabs log it once', () => {
+  const gate = createRateGate({ reserve: 3 });
+  gate.observe({ 'x-rate-limit-remaining': '1', 'x-rate-limit-reset': '1800000600' });
+  assert.equal(gate.announce(), true);
+  assert.equal(gate.announce(), false);
+  gate.observe({ 'x-rate-limit-remaining': '0', 'x-rate-limit-reset': '1800001500' });
+  assert.equal(gate.announce(), true);
+});
+
+const REAL_TIMELINE = JSON.parse(fs.readFileSync(
+  path.join(__dirname, 'fixtures', 'x', 'real_search_timeline_chickengenius_2026-10.json'), 'utf8',
+));
+const CHICKEN_ID = '1027041315110842368';
+const TERMINATE = {
+  data: { search_by_raw_query: { search_timeline: { timeline: { instructions: [
+    { type: 'TimelineTerminateTimeline', direction: 'Bottom' },
+  ] } } } },
+};
+
+/**
+ * A fake browser: every search page answers with the real capture, and
+ * every scroll with X's end-of-results. `lockedTab` makes one tab's page
+ * read as a locked account; `headers` is the allowance every answer carries.
+ */
+function fakeBrowser({ lockedTab = -1, headers = {} } = {}) {
+  const pages = [];
+  const visits = [];
+  function makePage(index) {
+    const listeners = [];
+    let url = 'about:blank';
+    const emit = (json) => {
+      const res = {
+        url: () => 'https://x.com/i/api/graphql/q1d/SearchTimeline?variables=%7B%7D',
+        status: () => 200,
+        headers: () => headers,
+        json: async () => json,
+      };
+      for (const fn of listeners) fn(res);
+    };
+    return {
+      on(event, fn) { if (event === 'response') listeners.push(fn); },
+      async goto(target) {
+        url = target;
+        if (/\/search\?/.test(target)) {
+          visits.push({ tab: index, url: target });
+          emit(REAL_TIMELINE);
+        }
+      },
+      url: () => url,
+      async evaluate(fn) {
+        if (fn === readPageState) {
+          const locked = index === lockedTab && /\/search\?/.test(url);
+          return {
+            url, title: 'X', hasChallengeFrame: false, articles: 5, atBottom: true,
+            bodyText: locked ? 'Your account has been locked.' : 'posts',
+          };
+        }
+        if (fn === extractVisibleArticles) return [];
+        return true; // the logged-in check
+      },
+      mouse: { async wheel() { emit(TERMINATE); } },
+    };
+  }
+  pages.push(makePage(0));
+  const context = {
+    pages: () => pages.slice(),
+    async newPage() { const page = makePage(pages.length); pages.push(page); return page; },
+    async cookies() { return []; },
+    async addCookies() {},
+    async close() {},
+  };
+  return { context, pages, visits };
+}
+
+async function crawlWithFake(fake, extra = {}) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'x-tabs-'));
+  const catalogDb = registry.openCatalog({ path: path.join(dir, 'state.sqlite') });
+  const indexDb = openIndex({ path: path.join(dir, 'x_index.sqlite') });
+  try {
+    const account = registry.addAccount(catalogDb, { handle: 'chickengenius', userId: CHICKEN_ID });
+    const runId = registry.startRun(catalogDb, { accountId: account.account_id, route: 'browser', runTag: 'tabs' });
+    const lockFile = path.join(dir, '.browser.lock');
+    const report = await crawlBrowserWindows({
+      catalogDb, indexDb, account, runId,
+      rawDir: path.join(dir, 'raw'), archiveRoot: path.join(dir, 'archive'),
+      since: '2026-10-01', until: '2026-11-01', unit: 'week', maxWindows: 10,
+      launch: async () => fake.context, sleep: () => new Promise((resolve) => setImmediate(resolve)),
+      lockFile, log: () => {}, ...extra,
+    });
+    const windows = catalogDb.prepare(
+      "SELECT window_start, status, stop_reason FROM x_crawl_windows WHERE route = 'browser' ORDER BY window_start",
+    ).all();
+    const archived = indexDb.prepare('SELECT COUNT(*) AS n FROM x_posts').get().n;
+    return { report, windows, archived, lockLeft: fs.existsSync(lockFile) };
+  } finally {
+    catalogDb.close();
+    indexDb.close();
+    fs.rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+  }
+}
+
+test('two tabs share the windows: every window is crawled once, by one of the tabs, and completes', async () => {
+  const fake = fakeBrowser();
+  const { report, windows, archived, lockLeft } = await crawlWithFake(fake, { concurrency: 2 });
+  assert.equal(report.status, 'ok', report.message);
+  assert.equal(report.concurrency, 2);
+  assert.ok(windows.length >= 4, 'October in weeks');
+  assert.ok(windows.every((w) => w.status === 'complete'), JSON.stringify(windows));
+  const urls = fake.visits.map((v) => v.url);
+  assert.equal(new Set(urls).size, urls.length, 'no window was crawled twice');
+  assert.equal(urls.length, windows.length);
+  assert.deepEqual([...new Set(fake.visits.map((v) => v.tab))].sort(), [0, 1], 'both tabs crawled');
+  const single = await crawlWithFake(fakeBrowser(), {});
+  assert.ok(single.archived > 0);
+  assert.equal(archived, single.archived, 'the same posts seen by two tabs are archived once');
+  assert.deepEqual(report.windows.map((w) => w.start), [...report.windows.map((w) => w.start)].sort());
+  assert.equal(lockLeft, false, 'the lock is released');
+});
+
+test('a crawl asked for five tabs opens two; one asked for nothing opens one', async () => {
+  const many = await crawlWithFake(fakeBrowser(), { concurrency: 5 });
+  assert.equal(many.report.concurrency, 2);
+  const fake = fakeBrowser();
+  const one = await crawlWithFake(fake, {});
+  assert.equal(one.report.concurrency, 1);
+  assert.deepEqual([...new Set(fake.visits.map((v) => v.tab))], [0]);
+});
+
+test('a stop on one tab ends the session for both, and no window is left running or recorded as covered', async () => {
+  const { report, windows } = await crawlWithFake(fakeBrowser({ lockedTab: 1 }), { concurrency: 2 });
+  assert.equal(report.status, 'failed');
+  assert.equal(report.stop_reason, 'account_locked');
+  assert.ok(!windows.some((w) => w.status === 'running'), JSON.stringify(windows));
+  const locked = windows.filter((w) => w.stop_reason === 'account_locked');
+  assert.equal(locked.length, 1);
+  assert.notEqual(locked[0].status, 'complete');
+  assert.ok(windows.some((w) => w.status === 'pending'), 'the windows nobody reached stay pending');
+});
+
+test('an allowance spent past the gate\'s patience stops the crawl with the reset as its retry time', async () => {
+  const resetS = Math.floor(Date.now() / 1000) + 3600;
+  const headers = { 'x-rate-limit-limit': '50', 'x-rate-limit-remaining': '0', 'x-rate-limit-reset': String(resetS) };
+  const fake = fakeBrowser({ headers });
+  const { report, windows } = await crawlWithFake(fake, { concurrency: 1, maxRateWaitMs: 60_000 });
+  assert.equal(report.stop_reason, 'rate_limited');
+  assert.equal(report.retry_at, new Date(resetS * 1000).toISOString());
+  // The first window may finish on the answer that spent the allowance; the
+  // next one is never opened, so it costs X nothing and stays pending.
+  assert.equal(fake.visits.length, 1, 'no search page was opened after the allowance ran out');
+  assert.ok(!windows.some((w) => w.status === 'running'), JSON.stringify(windows));
+  assert.equal(windows.filter((w) => w.status === 'pending').length, windows.length - 1);
+  assert.equal(report.allowance.lowest_remaining, 0);
+});

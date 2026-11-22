@@ -1605,6 +1605,57 @@ fix was needed. A trimmed real capture is pinned as
    session now comes from the user's browser cookies, and the
    automation flag is removed.
 
+### Stage 2: how the backfill runs (2026-11-22)
+
+**The user's decisions:**
+- All four accounts by the **browser**, which costs no API credits. The API
+  stays for spot checks.
+- The browser is **hidden** (headless).
+- **At most two** crawl windows at once.
+
+**Why not the API for @chickengenius:** it would cost $0.56 and be quicker,
+but the route cross-check had already passed (12/12). The completeness check
+now compares against the 12-month original counts that `estimate` already
+bought (table above), at no further cost.
+
+**Headless, measured.** A headless Edge differs from a headed one only in its
+user agent (`HeadlessChrome/158`). These are identical:
+- the client hints (`Chromium 158 | Not.A/Brand 24 | Microsoft Edge 158`);
+- `sec-ch-ua`;
+- `navigator.webdriver` (false).
+
+So the crawler sends the browser's own user agent with that one word
+corrected. The first headless window (@BoujeeFinances October) completed
+normally: `passed_start`, 780 own posts seen, 198 kept, 579 replies to
+others dropped.
+
+**X's search allowance bounds the crawl, not the scrolling:**
+- Every SearchTimeline response says `x-rate-limit-limit: 50` per 15-minute
+  window, per account.
+- One tab fetched **39 pages in 4 minutes** (about 146 per 15 minutes), three
+  times the allowance.
+- So a second tab adds no speed. The two-tab mode exists (`--concurrency 2`,
+  clamped to 2), but the backfill runs **one tab**.
+- The rate gate holds the scrolling at a **reserve of 10** until X's reset.
+  The crawl therefore never meets a 429, and leaves the user some searches.
+- At about 40 pages (≈800 posts) per 15 minutes, the four accounts' roughly
+  27,000 own posts (replies to others included, which the search returns and
+  the importer drops) take **about 8–11 hours**.
+
+**The driver:**
+- `tools/x_pipeline/runBrowserBackfill.js` runs sessions of 12 windows with a
+  10-minute break between them.
+- It waits out a `rate_limited` stop until X's own reset.
+- It stops for good on any other stop signal, or after two sessions that
+  completed nothing.
+- Each session's report goes to `data/x_pipeline/raw/backfill_*.jsonl`.
+
+**A possible saving, not taken:** 75% of @BoujeeFinances's posts are replies
+to other people. The search returns them, so they cost allowance, and the
+importer then drops them. Searching `-filter:replies` plus a separate
+self-reply query (as the API route does) would save roughly 350 pages, about
+2 hours, but it needs a second browser query kind.
+
 ### Not verified yet (needs your keys or your login)
 
 - **The real GraphQL shape.** The fixtures are synthetic, modelled on the

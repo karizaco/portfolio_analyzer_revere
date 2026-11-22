@@ -12,9 +12,13 @@
  *   estimate --handle H --budget-usd N --yes [--since D] [--until D]
  *                                                       API count requests ($0.01 each): posts and read cost per year
  *   crawl --route api --handle H --budget-usd N --yes [--since D] [--until D] [--unit year|month] [--max-posts N] [--incremental]
- *   crawl --route browser --handle H [--since D] [--until D] [--unit month|week] [--max-windows N] [--window-id ID] [--report json]
+ *   crawl --route browser --handle H [--since D] [--until D] [--unit month|week] [--max-windows N] [--window-id ID]
+ *         [--concurrency 1|2] [--headed] [--report json]
+ *                                                       free (the user's own session, no API credits); headless by
+ *                                                       default, --headed shows the window; at most 2 tabs at once
  *   crawl --route agent --handle H                      print the agentic runbook / prompt and the import command
- *   browser-import-cookies [--file EXPORT.json]          carry an existing X session into the profile: X_AUTH_TOKEN
+ *   browser-import-cookies [--file EXPORT.json] [--headed]
+ *                                                       carry an existing X session into the profile: X_AUTH_TOKEN
  *                                                       and X_CT0 from .env (or a Cookie-Editor export), then check it
  *   browser-login                                       open the browser profile and log into X by hand (once)
  *
@@ -291,7 +295,8 @@ async function main() {
     if (command === 'browser-import-cookies') {
       // eslint-disable-next-line global-require
       const { importSession } = require('../src/x/crawlBrowser');
-      const result = await importSession({ cookies: sessionCookiesOrFail(args), log: console.log });
+      // Headless unless --headed: nothing here needs a person at the window.
+      const result = await importSession({ cookies: sessionCookiesOrFail(args), log: console.log, headless: !args.headed });
       console.log(JSON.stringify(result, null, 2));
       if (!result.loggedIn) {
         fail(`X did not accept the session (${result.stop_reason}). Copy fresh auth_token and ct0 values from a `
@@ -369,6 +374,10 @@ async function main() {
             unit: args.unit ? String(args.unit) : undefined,
             maxWindows: args['max-windows'] ? Number(args['max-windows']) : undefined,
             windowId: args['window-id'] ? Number(args['window-id']) : undefined,
+            // The user's choices (2026-11-22): no window on their screen, and
+            // never more than two tabs at once (clamped in src/x/browser/pacing.js).
+            headless: !args.headed,
+            concurrency: args.concurrency ? Number(args.concurrency) : 1,
             log: args.report === 'json' ? (line) => console.error(line) : console.log,
           });
           finishRun(catalogDb, runId, report.status, report.stop_reason, account, rawDir);

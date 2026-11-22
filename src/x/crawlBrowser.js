@@ -3,17 +3,28 @@
 /**
  * Route B1: the scripted browser crawler.
  *
- * It drives a HEADED browser with a persistent profile the user logged into
- * by hand (`browser-login`), opens the X search page for one date window at
- * a time (`from:<handle> since:… until:…`, Latest tab), scrolls at human
- * pace, and CAPTURES the GraphQL timeline responses the web app fetches --
- * the same structured posts the API returns. The page itself is read only
- * as a fallback.
+ * It drives a browser with a persistent profile that holds the user's own
+ * X session (`browser-import-cookies`), opens the X search page for one date
+ * window at a time (`from:<handle> since:… until:…`, Latest tab), scrolls at
+ * human pace, and CAPTURES the GraphQL timeline responses the web app
+ * fetches -- the same structured posts the API returns. The page itself is
+ * read only as a fallback.
+ *
+ * HEADLESS, BY THE USER'S CHOICE (2026-11-22): the crawl runs with no window
+ * on the user's screen. A headless Edge announces itself as `HeadlessChrome`
+ * in its user agent and in nothing else that was measured -- the client
+ * hints (`Chromium 158 | Not.A/Brand 24 | Microsoft Edge 158`), the
+ * `sec-ch-ua` header and `navigator.webdriver` (false) are those of a
+ * headed one -- so the user agent is set to the browser's OWN string with
+ * that one word corrected. `browser-login` stays headed: a person types there.
  *
  * WHAT KEEPS THE USER'S ACCOUNT SAFE (docs/x-source-plan.md §3.5)
  *
- * - headed, never headless; one crawl per session (src/x/lock.js);
+ * - one crawl per session (src/x/lock.js), and at most TWO tabs in it
+ *   (src/x/browser/pacing.js, the user's cap);
  * - jittered pauses between scrolls and a cool-down between windows;
+ * - X's own allowance read from every search response, and the scrolling
+ *   held at the reserve until it resets -- slowing down before a 429;
  * - a hard STOP on a login wall, a challenge, a 429, an error page or a
  *   locked account (src/x/browser/signals.js), with the window left
  *   resumable and the reason recorded -- never a tighter retry;
@@ -33,7 +44,10 @@ const { findUserIds, timelineTerminated } = require('./normalizeGraphql');
 const { importRecords, filteredTotal } = require('./importer');
 const { acquireLock } = require('./lock');
 const { ensureSessionCookies } = require('./browser/cookies');
+const { clampConcurrency, createRateGate } = require('./browser/pacing');
 const registry = require('./registry');
+
+const LAUNCH_ARGS = ['--disable-blink-features=AutomationControlled'];
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -49,24 +63,65 @@ function sleep(ms) {
  * person-paced reader of public posts, and nothing here is meant to look
  * like anything else; the flag only made X treat a normal session as a bot.
  *
+ * A headless launch also carries the corrected user agent (see the header)
+ * and a desktop-sized screen, because a headless screen is the viewport's
+ * size and no desktop monitor is 1280x950.
+ *
  * @param {string|undefined} channel - 'msedge', 'chrome' or undefined (bundled)
+ * @param {object} [extra]
+ * @param {boolean} [extra.headless]
+ * @param {string} [extra.userAgent]
  * @returns {object}
  */
-function launchOptions(channel) {
-  return {
-    headless: false,
+function launchOptions(channel, extra = {}) {
+  const options = {
+    headless: Boolean(extra.headless),
     channel,
     viewport: { width: 1280, height: 950 },
     ignoreDefaultArgs: ['--enable-automation'],
-    args: ['--disable-blink-features=AutomationControlled'],
+    args: [...LAUNCH_ARGS],
   };
+  if (extra.headless) {
+    options.screen = { width: 1920, height: 1080 };
+    if (extra.userAgent) options.userAgent = extra.userAgent;
+  }
+  return options;
 }
 
 /**
- * Launch the persistent, headed browser.
+ * The user agent a headed copy of the same browser sends: the headless one
+ * with `HeadlessChrome/` read as `Chrome/`, everything else untouched.
+ *
+ * @param {string} userAgent
+ * @returns {string}
+ */
+function headlessUserAgent(userAgent) {
+  return String(userAgent || '').replace(/HeadlessChrome\//g, 'Chrome/');
+}
+
+/**
+ * Ask the browser itself what it is, in a throwaway headless instance that
+ * touches no profile, so the version in the corrected user agent is the
+ * installed one and never a constant that goes stale.
+ */
+async function probeUserAgent(chromium, channel) {
+  const browser = await chromium.launch({
+    headless: true, channel, ignoreDefaultArgs: ['--enable-automation'], args: [...LAUNCH_ARGS],
+  });
+  try {
+    const page = await browser.newPage();
+    return headlessUserAgent(await page.evaluate(() => navigator.userAgent));
+  } finally {
+    await browser.close().catch(() => {});
+  }
+}
+
+/**
+ * Launch the persistent browser: headed by default, headless on request.
  *
  * @param {object} options
  * @param {string} [options.profileDir]
+ * @param {boolean} [options.headless]
  * @param {Function} [options.log]
  */
 async function launchBrowser(options = {}) {
@@ -78,12 +133,15 @@ async function launchBrowser(options = {}) {
       + 'Set X_BROWSER_PROFILE_DIR to a folder outside the repository.');
   }
   const log = options.log || (() => {});
+  const headless = Boolean(options.headless);
   let lastError = null;
   for (const channel of ['msedge', 'chrome', undefined]) {
     try {
       // eslint-disable-next-line no-await-in-loop
-      const context = await chromium.launchPersistentContext(profileDir, launchOptions(channel));
-      log(`[x-browser] launched ${channel || 'bundled chromium'} with profile ${profileDir}`);
+      const userAgent = headless ? await probeUserAgent(chromium, channel) : undefined;
+      // eslint-disable-next-line no-await-in-loop
+      const context = await chromium.launchPersistentContext(profileDir, launchOptions(channel, { headless, userAgent }));
+      log(`[x-browser] launched ${channel || 'bundled chromium'}${headless ? ' (headless, no window)' : ''} with profile ${profileDir}`);
       return context;
     } catch (error) {
       lastError = error;
@@ -156,7 +214,7 @@ async function browserLogin(options = {}) {
  */
 async function importSession(options) {
   const log = options.log || console.log;
-  const context = await launchBrowser({ profileDir: options.profileDir, log });
+  const context = await launchBrowser({ profileDir: options.profileDir, log, headless: options.headless });
   try {
     const result = await ensureSessionCookies(context, options.cookies);
     log(`[x-browser] ${result.reason}`);
@@ -199,6 +257,9 @@ async function crawlBrowserWindows(options) {
   const pause = options.pauseMs || [1500, 3500];
   const cooldown = options.cooldownMs || [20000, 45000];
   const waitOnChallengeMs = options.waitOnChallengeMs ?? 5 * 60 * 1000;
+  const stagger = options.staggerMs || [10000, 25000];
+  // A test drives the loop with a fake browser and an instant clock.
+  const nap = options.sleep || sleep;
 
   // A re-plan is reduced to the part no window covers yet, exactly as the
   // API route does it: a window that exists is covering its own range,
@@ -238,11 +299,16 @@ async function crawlBrowserWindows(options) {
     return report;
   }
 
-  const lock = acquireLock({ label: `browser @${account.handle}` });
-  const context = await launchBrowser({ profileDir: options.profileDir, log });
-  const queue = [];
-  let lastStatus = null;
-  let rateLimitReset = null;
+  const concurrency = clampConcurrency(options.concurrency);
+  const lock = acquireLock({ file: options.lockFile, label: `browser @${account.handle}${concurrency > 1 ? ` (${concurrency} tabs)` : ''}` });
+  const context = options.launch
+    ? await options.launch()
+    : await launchBrowser({ profileDir: options.profileDir, log, headless: options.headless });
+  // X's search allowance belongs to the ACCOUNT, so the tabs share one gate.
+  const rateGate = createRateGate({ reserve: options.rateReserve, maxWaitMs: options.maxRateWaitMs });
+  // What the tabs share: the first stop (it ends the session for both), a
+  // hold while one tab waits out a challenge, and the raw-capture counter.
+  const shared = { stop: null, hold: false, captureIndex: 0 };
   try {
     // The session the user pasted into .env wins over whatever the profile
     // held: it is the explicit answer, and a stale profile cookie would
@@ -251,61 +317,75 @@ async function crawlBrowserWindows(options) {
       const injected = await ensureSessionCookies(context, options.sessionCookies);
       if (injected.injected) log(`[x-browser] ${injected.reason}`);
     }
-    const page = context.pages()[0] || await context.newPage();
-    page.on('response', async (res) => {
-      const operation = timelineOperation(res.url());
-      if (!operation) return;
-      const status = res.status();
-      lastStatus = status;
-      if (status === 429) {
-        rateLimitReset = res.headers()['x-rate-limit-reset'] || null;
-        return;
-      }
-      if (status !== 200) return;
-      try {
-        const body = await res.json();
-        queue.push({
-          route: 'web_graphql', operation, url: stripQuery(res.url()), status, fetched_at: new Date().toISOString(), body,
-        });
-      } catch (_) { /* a body that is not JSON carries no posts */ }
-    });
+    const first = context.pages()[0] || await context.newPage();
+    const firstTap = attachCapture(first, rateGate);
 
-    await page.goto('https://x.com/home', { waitUntil: 'domcontentloaded', timeout: 60000 });
-    await sleep(3000);
-    let signal = detectStopSignal({ ...(await pageState(page)), graphqlStatus: lastStatus, rateLimitReset });
-    if (signal.stop || !(await isLoggedIn(page))) {
+    await first.goto('https://x.com/home', { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await nap(3000);
+    const signal = detectStopSignal({ ...(await pageState(first)), graphqlStatus: firstTap.lastStatus, rateLimitReset: firstTap.rateLimitReset });
+    if (signal.stop || !(await isLoggedIn(first))) {
       const reason = signal.stop ? signal : detectStopSignal({ url: 'https://x.com/i/flow/login' });
       Object.assign(report, { status: 'blocked', stop_reason: reason.reason, message: reason.message });
       return report;
     }
 
-    let captureIndex = 0;
     // The handle -> user id map. The account's own id is known once the
     // account has been looked up; the web app's own user lookup fills it
     // in when it has not -- and without a user id the page-scrape route
     // cannot produce a record at all.
     const knownUsers = new Map(account.user_id ? [[account.handle, account.user_id]] : []);
-    for (const window of pending.slice(0, maxWindows)) {
+
+    /**
+     * Hold until X's search allowance allows another request. Returns a
+     * stop when the wait is longer than the gate will sit out.
+     */
+    async function respectAllowance() {
+      const wait = rateGate.waitMs(Date.now());
+      if (!wait) return null;
+      const allowance = rateGate.snapshot();
+      if (wait > rateGate.maxWaitMs) {
+        return {
+          reason: 'rate_limited',
+          message: `X's search allowance is spent until ${allowance.reset_at}; resume after it, not sooner.`,
+          retryAt: allowance.reset_at,
+        };
+      }
+      if (rateGate.announce()) {
+        log(`[x-browser] X's search allowance is down to ${allowance.remaining} of ${allowance.limit}; `
+          + `holding ${Math.round(wait / 1000)} s until it resets (${allowance.reset_at})`);
+      }
+      await nap(wait + jitter(2000, 8000));
+      return null;
+    }
+
+    /** One window, on one tab, from the search page to its verdict. */
+    async function crawlWindow(page, tap, window) {
+      const before = await respectAllowance();
+      if (before) {
+        // Stopped before the window started: it stays pending, untouched.
+        if (!shared.stop) shared.stop = before;
+        return;
+      }
       registry.updateWindow(catalogDb, window.id, { status: 'running', last_run_id: runId, stop_reason: '' });
       const tracker = createScrollTracker({ windowStart: window.window_start, maxScrolls: options.maxScrolls });
       let capturedHere = 0;
       let usedDom = false;
       let windowStop = null;
       let progress = { done: false, reason: '', reachedEnd: false };
-      queue.length = 0;
-      lastStatus = null;
+      tap.queue.length = 0;
+      tap.lastStatus = null;
       log(`[x-browser] @${account.handle} ${window.window_start}..${window.window_end}`);
       await page.goto(browserSearchUrl(account.handle, { start: window.window_start, end: window.window_end }),
         { waitUntil: 'domcontentloaded', timeout: 60000 });
-      await sleep(jitter(3000, 5000));
+      await nap(jitter(3000, 5000));
 
       for (;;) {
-        const batch = queue.splice(0, queue.length);
+        const batch = tap.queue.splice(0, tap.queue.length);
         const records = [];
         let terminated = false;
         for (const envelope of batch) {
-          captureIndex += 1;
-          saveRaw(rawDir, `${window.window_start}_${String(captureIndex).padStart(5, '0')}_${envelope.operation}`, envelope);
+          shared.captureIndex += 1;
+          saveRaw(rawDir, `${window.window_start}_${String(shared.captureIndex).padStart(5, '0')}_${envelope.operation}`, envelope);
           if (envelope.operation === 'UserByScreenName') {
             // The user lookup carries the numeric id the DOM route needs.
             for (const [handle, id] of findUserIds(envelope.body)) knownUsers.set(handle, id);
@@ -338,11 +418,13 @@ async function crawlBrowserWindows(options) {
         if (usedDom) {
           const articles = await page.evaluate(extractVisibleArticles).catch(() => []);
           const envelope = { route: 'web_dom', operation: 'dom', url: page.url(), status: 200, fetched_at: new Date().toISOString(), body: articles };
-          captureIndex += 1;
-          saveRaw(rawDir, `${window.window_start}_${String(captureIndex).padStart(5, '0')}_dom`, envelope);
+          shared.captureIndex += 1;
+          saveRaw(rawDir, `${window.window_start}_${String(shared.captureIndex).padStart(5, '0')}_dom`, envelope);
           records.push(...normalizeEnvelope(envelope, { knownUsers }).records);
         }
 
+        // The import is synchronous, so two tabs can never interleave inside
+        // one batch: each lands whole in the archive and the index.
         const imported = records.length
           ? importRecords({ catalogDb, indexDb, account, records, archiveRoot })
           : null;
@@ -367,17 +449,20 @@ async function crawlBrowserWindows(options) {
         const own = records.filter((record) => record.user_id === account.user_id);
         progress = tracker.observe(own, { terminated, atBottom: state.atBottom });
 
-        signal = detectStopSignal({ ...state, graphqlStatus: lastStatus, rateLimitReset });
+        let signal = detectStopSignal({ ...state, graphqlStatus: tap.lastStatus, rateLimitReset: tap.rateLimitReset });
         if (signal.stop && signal.reason === 'challenge' && waitOnChallengeMs > 0) {
+          // The other tab waits too: a challenge is the session's, not the page's.
+          shared.hold = true;
           log(`[x-browser] ${signal.message} Waiting up to ${Math.round(waitOnChallengeMs / 60000)} min.`);
           const deadline = Date.now() + waitOnChallengeMs;
           while (signal.stop && Date.now() < deadline) {
             // eslint-disable-next-line no-await-in-loop
-            await sleep(5000);
+            await nap(5000);
             // eslint-disable-next-line no-await-in-loop
             state = await pageState(page);
             signal = detectStopSignal({ ...state, graphqlStatus: null, rateLimitReset: null });
           }
+          shared.hold = false;
         }
         if (signal.stop) {
           windowStop = signal;
@@ -395,8 +480,24 @@ async function crawlBrowserWindows(options) {
           break;
         }
 
+        // The other tab hit a challenge: wait with it. It stopped the
+        // session: this window is left resumable, never recorded as covered.
+        while (shared.hold && !shared.stop) {
+          // eslint-disable-next-line no-await-in-loop
+          await nap(2000);
+        }
+        if (shared.stop) {
+          windowStop = { reason: 'sibling_stop', message: 'the other tab stopped the session', retryAt: null };
+          break;
+        }
+        const held = await respectAllowance();
+        if (held) {
+          windowStop = held;
+          break;
+        }
+
         await page.mouse.wheel(0, jitter(1200, 1800));
-        await sleep(jitter(pause[0], pause[1]));
+        await nap(jitter(pause[0], pause[1]));
       }
 
       const verdict = windowVerdict({
@@ -415,20 +516,44 @@ async function crawlBrowserWindows(options) {
         posts: tracker.seen, scrolls: tracker.scrolls, end_reason: windowStop ? windowStop.reason : progress.reason,
         fidelity: usedDom ? 'partial' : 'full',
       });
-      log(`[x-browser]   -> ${verdict}: ${tracker.seen} own posts in ${tracker.scrolls} scrolls (${progress.reason || windowStop.reason})`);
-
-      if (windowStop) {
-        Object.assign(report, {
-          status: windowStop.reason === 'account_locked' ? 'failed' : 'blocked',
-          stop_reason: windowStop.reason,
-          message: windowStop.message,
-          retry_at: windowStop.retryAt || null,
-        });
-        break;
-      }
-      await sleep(jitter(cooldown[0], cooldown[1]));
+      log(`[x-browser]   -> ${window.window_start}..${window.window_end} ${verdict}: ${tracker.seen} own posts `
+        + `in ${tracker.scrolls} scrolls (${progress.reason || windowStop.reason})`);
+      // The first real stop ends the session for every tab.
+      if (windowStop && windowStop.reason !== 'sibling_stop' && !shared.stop) shared.stop = windowStop;
     }
-    if (report.status === 'ok' && pending.length > maxWindows) {
+
+    const todo = pending.slice(0, maxWindows);
+    let next = 0;
+    const take = () => (shared.stop || next >= todo.length ? null : todo[next++]);
+    async function lane(page, tap, slot) {
+      // The second tab starts a little later, as a person opening it would.
+      if (slot > 0) await nap(jitter(stagger[0], stagger[1]));
+      for (let window = take(); window; window = take()) {
+        // eslint-disable-next-line no-await-in-loop
+        await crawlWindow(page, tap, window);
+        if (shared.stop) return;
+        // eslint-disable-next-line no-await-in-loop
+        if (next < todo.length) await nap(jitter(cooldown[0], cooldown[1]));
+      }
+    }
+    const lanes = [lane(first, firstTap, 0)];
+    if (concurrency > 1 && todo.length > 1) {
+      const second = await context.newPage();
+      lanes.push(lane(second, attachCapture(second, rateGate), 1));
+    }
+    await Promise.all(lanes);
+
+    report.windows.sort((a, b) => a.start.localeCompare(b.start));
+    report.concurrency = lanes.length;
+    report.allowance = rateGate.snapshot();
+    if (shared.stop) {
+      Object.assign(report, {
+        status: shared.stop.reason === 'account_locked' ? 'failed' : 'blocked',
+        stop_reason: shared.stop.reason,
+        message: shared.stop.message,
+        retry_at: shared.stop.retryAt || null,
+      });
+    } else if (pending.length > maxWindows) {
       report.message = `${pending.length - maxWindows} window(s) left for the next session (cap ${maxWindows} per session)`;
     }
     return report;
@@ -438,6 +563,38 @@ async function crawlBrowserWindows(options) {
   }
 }
 
+/**
+ * Listen to one tab's GraphQL timeline responses: queue the bodies, note
+ * the last status, and feed every search response's allowance to the gate.
+ *
+ * @param {object} page
+ * @param {object} rateGate
+ * @returns {{queue: object[], lastStatus: number|null, rateLimitReset: string|null}}
+ */
+function attachCapture(page, rateGate) {
+  const tap = { queue: [], lastStatus: null, rateLimitReset: null };
+  page.on('response', async (res) => {
+    const operation = timelineOperation(res.url());
+    if (!operation) return;
+    const status = res.status();
+    tap.lastStatus = status;
+    const headers = res.headers();
+    if (operation === 'SearchTimeline') rateGate.observe(headers);
+    if (status === 429) {
+      tap.rateLimitReset = headers['x-rate-limit-reset'] || null;
+      return;
+    }
+    if (status !== 200) return;
+    try {
+      const body = await res.json();
+      tap.queue.push({
+        route: 'web_graphql', operation, url: stripQuery(res.url()), status, fetched_at: new Date().toISOString(), body,
+      });
+    } catch (_) { /* a body that is not JSON carries no posts */ }
+  });
+  return tap;
+}
+
 module.exports = {
-  browserLogin, crawlBrowserWindows, importSession, launchBrowser, launchOptions,
+  attachCapture, browserLogin, crawlBrowserWindows, headlessUserAgent, importSession, launchBrowser, launchOptions,
 };

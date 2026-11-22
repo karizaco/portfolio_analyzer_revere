@@ -8190,9 +8190,9 @@ The full design and status are in `docs/x-source-plan.md`. The CLI is
 
 **TWO ROUTES, ONE RECORD.**
 
-- **The paid API** (`X_BEARER_TOKEN`) and **the browser** (a headed,
-  persistent profile the user logs into by hand) both emit the canonical
-  `x-post-1` record (`src/x/postRecord.js`).
+- **The paid API** (`X_BEARER_TOKEN`) and **the browser** (a persistent
+  profile carrying the user's own X session, free of API credits) both emit
+  the canonical `x-post-1` record (`src/x/postRecord.js`).
 - Both go through ONE importer (`src/x/importer.js`). `test/xRouteEquivalence.test.js`
   pins that the same post normalizes identically by either route.
 - **The agentic mode** is Claude Code supervising the browser crawler
@@ -8240,6 +8240,25 @@ only `self` or `none`.
   error page or a locked account, and never retries tighter. **One crawl per
   X session**, enforced by `src/x/lock.js`: the process guard cannot see
   Chromium.
+- **The crawl runs HEADLESS, with at most TWO tabs** (the user's choices,
+  2026-11-22). `--headed` shows the window. `--concurrency 2` opens a second
+  tab in the same browser and session, and the cap is clamped in
+  `src/x/browser/pacing.js`.
+  - A headless Edge differs from a headed one only in its user agent
+    (`HeadlessChrome/`). The client hints, `sec-ch-ua` and
+    `navigator.webdriver` were measured identical, so the crawler sends the
+    browser's own user agent with that one word corrected.
+- **X's search allowance is 50 pages per 15 minutes per ACCOUNT**, and ONE
+  tab fetches about 146 (measured 2026-11-22). So the allowance bounds a
+  crawl, and a second tab only drains it faster.
+  - Every SearchTimeline response carries `x-rate-limit-remaining` and
+    `x-rate-limit-reset`. The rate gate holds the scrolling at a reserve of 10
+    until the reset, so the crawl slows down before X answers 429 and leaves
+    the user some searches.
+  - A hold longer than 16 minutes stops the crawl with `rate_limited` and the
+    reset as its retry time.
+  - A stop on one tab ends the session for both. The other tab's window is
+    left `blocked` (`sibling_stop`), never `complete`.
 - **The X session is NOT a login.** X answered the crawler's own login with
   "We've temporarily limited your login" (2026-11-21), because Playwright's
   `--enable-automation` marks the browser as a bot. Instead:
