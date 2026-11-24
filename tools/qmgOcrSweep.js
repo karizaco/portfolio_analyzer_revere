@@ -104,8 +104,13 @@ function acquireLock() {
     const pid = parseInt(fs.readFileSync(LOCK_FILE, 'utf8').trim(), 10);
     let alive = false;
     try {
-      execSync(`tasklist /FI "PID eq ${pid}" /NH`, { stdio: 'pipe' });
-      alive = true;
+      const out = execSync(`tasklist /FI "PID eq ${pid}" /NH`, { stdio: 'pipe' }).toString();
+      // tasklist exits 0 even when NOTHING matches the filter — it prints
+      // "INFO: No tasks are running which match the specified criteria."
+      // to stdout. Testing only the exit status therefore reports a dead
+      // pid as alive, and the lock can never be cleared. A crashed sweep
+      // then blocks every later run forever.
+      alive = !/No tasks are running/i.test(out) && /\S/.test(out.trim());
     } catch (_) {}
     if (alive) {
       console.error('[sweep] another sweep is running (pid ' + pid + ')');
