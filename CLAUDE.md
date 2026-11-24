@@ -1049,19 +1049,36 @@ produced by the dead-clusterer path, which both missed real positions and
 invented garbage clusters.
 
 The re-parse is **not yet applied in place** — `data/qmg_reparse_trust_20261025.json`
-holds the sidecar. Applying it needs explicit approval naming the logs, because it
-overwrites existing scan results:
+holds the sidecar. Applying it rewrites 100 existing scan logs, so it needs
+explicit approval.
+
+**Apply it with `--apply`, not `--write`.** `--write` picks the logs to rewrite
+with a filesystem scan, so the set of files it touches is decided at run time.
+`--apply` takes the set from the sidecar's keys instead — exactly the logs that
+were reviewed, and nothing else:
 
 ```bash
-node tools/reparseOcrLogs.js --write --exclude "qmg-sweep-20261025" \
-  --out data/qmg_reparse_trust_20261025.json
-# undo:
+node tools/reparseOcrLogs.js --apply data/qmg_reparse_trust_20261025.json
+# undo (exact, verified):
 node tools/reparseOcrLogs.js --restore data/qmg_reparse_trust_20261025.json
 ```
 
-Always `--exclude` the run tag of a sweep that is currently running: the sweep
-writes each log once, when its video finishes, and rewriting one at that moment
-loses the sweep's result.
+`--apply` has two guards, both of which **skip** a log rather than write it:
+the log's current merged list must still equal the sidecar's `before` (the log
+has not changed since the sidecar was taken), and re-running the parser over the
+log's stored OCR must reproduce the sidecar's `after` (the parser has not
+changed since it was taken).
+
+The sidecar is the undo. `--restore` puts back `merged_position_list`,
+`merged_raw_token_clusters`, and each candidate's `chart_stream.position_list`
+and `tickers`. Verified on scratch copies of three real logs: apply then restore
+reproduces the original files identically.
+
+**Do not `--write` over a log a running sweep is producing.** The sweep writes
+each log once, when its video finishes, and rewriting one at that moment loses
+the sweep's result. `--exclude "<run-tag>"` skips a whole run's logs; the
+sidecar was taken with `qmg-sweep-20261025` excluded, so those logs stay out of
+it.
 
 ### Trusted-column accept path (added 2026-10-25) — the single biggest recall win
 
