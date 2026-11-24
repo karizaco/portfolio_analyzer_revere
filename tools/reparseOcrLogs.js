@@ -62,6 +62,9 @@ const OUT = flag('--out', null);
 // Restore the logs from a sidecar produced by --out. This is the undo for
 // an in-place --write.
 const RESTORE = flag('--restore', null);
+// Apply a sidecar to exactly the logs it names. No filesystem scan: the set
+// of files to rewrite comes from the sidecar's keys.
+const APPLY = flag('--apply', null);
 // Reproduce the pre-2026-10-25 accept path (no trusted column, lexicon-only
 // cluster canonicals) instead of the current one.
 const LEGACY = argv.includes('--legacy');
@@ -250,6 +253,97 @@ const uniqueFiles = files.filter((f) => {
   return true;
 });
 const gt = loadGT();
+
+// --- Apply ------------------------------------------------------------------
+//
+// Apply a sidecar to the logs it names. Unlike `--write`, this makes NO
+// filesystem scan: the set of files to rewrite comes entirely from the
+// sidecar's keys, so the scope is exactly the reviewed list and nothing else.
+//
+// Two guards, both of which skip a log rather than write it:
+//   1. the log's current merged list must still equal the sidecar's `before`
+//      (the log has not changed since the sidecar was taken), and
+//   2. re-running the parser over the log's stored OCR must reproduce the
+//      sidecar's `after` (the parser has not changed since it was taken).
+//
+// The sidecar itself remains the undo: `--restore <sidecar>` puts every log
+// back exactly as it was.
+
+if (APPLY) {
+  let payload;
+  try {
+    payload = JSON.parse(fs.readFileSync(APPLY, 'utf8'));
+  } catch (err) {
+    console.error('[reparse] cannot read sidecar ' + APPLY + ': ' + err.message);
+    process.exit(1);
+  }
+  let applied = 0;
+  let skipped = 0;
+  let missing = 0;
+  const skippedDetail = [];
+  for (const [rel, entry] of Object.entries(payload)) {
+    const file = path.join(ROOT, rel);
+    if (!fs.existsSync(file)) {
+      missing++;
+      continue;
+    }
+    let log;
+    try {
+      log = JSON.parse(fs.readFileSync(file, 'utf8'));
+    } catch (err) {
+      skipped++;
+      skippedDetail.push(rel + ' (unreadable: ' + err.message + ')');
+      continue;
+    }
+    // Guard 1: the log must still hold the values the sidecar replaced.
+    const current = (log.merged_position_list || []).join(',');
+    const expected = (entry.before || []).join(',');
+    if (current !== expected) {
+      skipped++;
+      skippedDetail.push(rel + ' (changed since the sidecar was taken)');
+      continue;
+    }
+    // Guard 2: the parser must still reproduce what the sidecar recorded.
+    const result = reparse(log);
+    if (!result) {
+      skipped++;
+      skippedDetail.push(rel + ' (no stored OCR to replay)');
+      continue;
+    }
+    const recomputed = (result.merged || []).join(',');
+    const wanted = (entry.after || []).join(',');
+    if (recomputed !== wanted) {
+      skipped++;
+      skippedDetail.push(rel + ' (the parser no longer reproduces the sidecar)');
+      continue;
+    }
+    if (!result.merged.length && (log.merged_position_list || []).length) {
+      // Never regress: an empty result would replace a good list with nothing.
+      skipped++;
+      skippedDetail.push(rel + ' (the re-parse produced an empty list)');
+      continue;
+    }
+    const byFrame = new Map(result.perFrame.map((f) => [f.frameIndex, f]));
+    for (const c of log.top_candidates || []) {
+      const f = byFrame.get(c.frame_index);
+      if (!f || !c.chart_stream) continue;
+      c.chart_stream.position_list = f.positionList;
+      c.tickers = f.positionList;
+    }
+    log.merged_position_list = result.merged;
+    log.merged_raw_token_clusters = result.clusters;
+    fs.writeFileSync(file, JSON.stringify(log, null, 2));
+    applied++;
+  }
+  console.log('[reparse] applied to ' + applied + ' logs named by ' + APPLY);
+  if (missing) console.log('[reparse] ' + missing + ' named logs are no longer on disk');
+  if (skipped) {
+    console.log('[reparse] skipped ' + skipped + ' logs:');
+    for (const s of skippedDetail) console.log('   ' + s);
+  }
+  console.log('[reparse] undo with: node tools/reparseOcrLogs.js --restore ' + APPLY);
+  process.exit(0);
+}
 
 // --- Restore -----------------------------------------------------------------
 
