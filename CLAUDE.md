@@ -582,6 +582,14 @@ filters candidates through `!state.failed[c.id]`, so once a video is recorded as
 failed it is skipped on every later pass — a transient failure becomes permanent.
 Clear `data/qmg_ocr_sweep.json`'s `failed` map (keep `done`) to re-queue them.
 
+**An ERROR log is not a scan.** `collectTargets()` used to add a video to its
+"already scanned" set from any EasyOCR log, including one with
+`status: "error"` and zero candidates. That suppressed the video from the work
+list forever, so a single transient failure (e.g. "ffmpeg frame extraction
+failed" under disk/IO contention) was unrecoverable. Only a log that actually
+captured frames counts now. The sweep's `failed` map still prevents a spin
+loop: the video is retried once, then recorded as failed if it fails again.
+
 **Stopping the sweep with TaskStop kills the shell wrapper, not the node
 grandchild.** The scan keeps running and keeps writing logs; the state file
 therefore stops advancing, so the next sweep starts from a stale in-memory view.
