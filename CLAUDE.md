@@ -408,15 +408,34 @@ engine, or frame density.
 
 ### Re-download progress
 
-Measured 2026-10-23 with `node tools/ledgerStatus.js`.
+Measured 2026-11-24 against `data/_lost_videos_ledger.json` (718 entries).
+**Every qullamaggie video is recovered.** Only revere remains.
 
 | Scope | Recovered | Remaining |
 |---|---|---|
-| qullamaggie @1080p | 249 | 254 |
-| qullamaggie @720p-scope | 21 | 5 |
-| qullamaggie @720p — the hardcoded 39 | 38 | 0 |
-| revere @720p-scope | 0 | 151 |
-| **Total** | **308 / 718** | **410** |
+| qullamaggie @1080p | 502 | 0 |
+| qullamaggie @720p-scope | 26 | 0 |
+| qullamaggie @720p — the hardcoded 39 | 39 | 0 |
+| revere @720p-scope | 140 | 11 |
+| **Total** | **707 / 718** | **11** |
+
+Two of the 11 remaining are **bogus placeholder ids** (`abc123`, `def456`) that
+were added to the ledger by mistake — they are not real YouTube ids, so they can
+never download. The real remaining set is **9 revere videos**, each ~0.09 GiB.
+
+> The ledger also counts one video in two scopes (541 + 26 + 151 = 718, but the
+> ledger's 718 entries include both placeholders). Use the ledger, not the live
+> SQLite `download_path`, to decide what is still missing — resetting a row
+> clears its path, which silently drops in-flight rows from the plan.
+
+**There are NO 1080p/720p duplicates.** `downloads_720p` holds exactly the 39
+known 720p-only videos and `downloads_1080p` shares none of them, so nothing is
+eligible for deletion under "delete the 720p copy once the 1080p exists".
+
+Note the two naming conventions in the media dirs — `20260912_7t50ZiB7-Bk.mp4`
+(date-prefixed, from the earlier run) and `-3qtA_s7g9c.mp4` (bare video id, from
+the later run). A filename regex that expects a date prefix will silently miss
+the bare-id files.
 
 To continue, repeat the same three steps for the next batch of ids:
 
@@ -439,15 +458,20 @@ file with ffprobe. Use it for a single batch:
 node tools/redownloadLostQmg.js --batch 30 --media-root "C:/Users/Admin/Projects/portfolio_analyzer_revere_media"
 ```
 
-**Disk is the binding constraint**: ~157 GB free on C:, and the remaining ~410 videos
-need ~119 GiB — the 285 qullamaggie files at the measured 0.37 GiB average (~106 GiB),
-plus the 151 revere files at ~0.09 GiB each (~14 GiB), since revere uploads are much
-shorter. It fits, but only just. The `frames/` subdirectories under
-`data/video_scan_test/_rerun/` hold regenerable OCR intermediate PNGs (45,038 of them,
-5.5 GiB) and are the cheapest thing to reclaim — but they are **not** covered by
-`tools/prune_old_probes.js`, which only handles `data/video_ocr_probe/`. The scan
-*results* (`logs/*.json`) and snapshots live outside `frames/` and are untouched by
-that cleanup.
+**Disk is now the binding constraint, and it is tight.** C: sat at **20 GB free
+(98% used)** on 2026-11-24, with the media dir holding 236 GB of the 933 GB in
+use — the rest of the volume is the user's own files and is not ours to touch.
+The remaining 9 revere videos need ~0.9 GB, which just fits. The downloader
+enforces a floor itself: pass `--min-free-gb 20` and it stops before dipping
+below it. The project's own footprint is small (`data/` is 2.3 GB total), so
+reclaiming space means deleting media, not project artifacts.
+
+The `frames/` subdirectories under `data/video_scan_test/_rerun/` hold
+regenerable OCR intermediate PNGs and are the cheapest thing to reclaim — but
+they are **not** covered by `tools/prune_old_probes.js`, which only handles
+`data/video_ocr_probe/`. The scan *results* (`logs/*.json`) and snapshots live
+outside `frames/` and are untouched by that cleanup. Stale `frames/` dirs from a
+crashed run are safe to delete once you have confirmed no scan is using them.
 
 ### OCR on the restored media — validated 2026-10-24
 
@@ -545,6 +569,24 @@ reading the tickers off the frames.
 - A lock file (`data/qmg_ocr_sweep.lock`) keeps two sweeps from running at
   once; a stale lock (dead pid) is cleared automatically.
 - `--max-videos N` bounds a session; the sweep is safe to stop and restart.
+
+**The stale-lock check must look at tasklist's OUTPUT, not its exit code.**
+`tasklist /FI "PID eq N" /NH` exits **0 even when nothing matches** — it prints
+`INFO: No tasks are running which match the specified criteria.` to stdout.
+Testing only the exit status therefore reports a dead pid as alive, and a crashed
+sweep blocks every later run forever. `acquireLock()` now greps stdout for that
+marker.
+
+**A failed video is never retried until the `failed` map is cleared.** The sweep
+filters candidates through `!state.failed[c.id]`, so once a video is recorded as
+failed it is skipped on every later pass — a transient failure becomes permanent.
+Clear `data/qmg_ocr_sweep.json`'s `failed` map (keep `done`) to re-queue them.
+
+**Stopping the sweep with TaskStop kills the shell wrapper, not the node
+grandchild.** The scan keeps running and keeps writing logs; the state file
+therefore stops advancing, so the next sweep starts from a stale in-memory view.
+Check `tasklist | findstr node.exe` before restarting, and use the lock file to
+see whether a sweep is really running.
 
 ```bash
 node tools/qmgOcrSweep.js --dry-run                    # show the work list
@@ -746,6 +788,26 @@ CHART_STREAM_REGION_FRACTION_DEFAULT = '0.86,0.62,0.14,0.22'   ← x,y,w,h (y = 
 
 This is defined in `src/video/ocrScanArgs.js` and is the default `phashRegionFraction` for the
 `chart_stream` prefilter profile. The crop covers x ∈ [86%, 100%] and y ∈ [62%, 84%] of the frame.
+
+**The short crop is the right one — do not "upgrade" it to the tall
+`0.86,0.55,0.14,0.45`.** An earlier comparison appeared to show the tall crop was
+much better (49% vs 34% GT recall), but that was an artifact: the runs that used
+the tall crop (`qmg-batch-a`, `qmg-batch2`, `qmg-batch3`) are exactly the runs that
+stored **OCR text only, with no word boxes**. The trusted-column accept path needs
+word boxes to know where a token sits, so those logs score 0 regardless of crop.
+
+Re-measured with `node tools/cropRecall.js` (which now replays with the current
+production accept path and restricts to logs that stored word boxes), paired over
+the 8 dates scanned with both crops (69 GT tickers):
+
+| crop | recall | FP |
+|---|---|---|
+| `0.86,0.55,0.14,0.45` (tall) | 46/69 = 67% | 20 |
+| `0.86,0.62,0.14,0.22` (short, default) | 46/69 = 67% | 18 |
+
+A tie on recall, slightly better precision on the short crop, and about half the
+OCR pixels. The tall crop also includes chart-area text, which adds noise under
+the trusted-column path.
 
 **The crop region and the OCR crop width are different things.** The OCR engine receives a
 *further* crop of that region, upscaled:
@@ -964,6 +1026,104 @@ vs. the re-parse):
 |---|---|---|---|
 | stored | 247/459 (54%) | 234 | 793 |
 | re-parsed | 242/459 (53%) | **81** | 499 |
+
+**Re-parsed again on 2026-10-25 with the trusted-column accept path** (see
+"Trusted-column accept path" above) — 100 logs replayed, 93 merged lists changed.
+Over the 52 of them that have ground truth (459 GT tickers):
+
+| | recall | FP |
+|---|---|---|
+| stored (old accept path) | 247/459 = 54% | 234 |
+| re-parsed (trusted column) | **297/459 = 65%** | **137** |
+
+Recall up 11 points *and* false positives down by 97 — the old stored lists were
+produced by the dead-clusterer path, which both missed real positions and
+invented garbage clusters.
+
+The re-parse is **not yet applied in place** — `data/qmg_reparse_trust_20261025.json`
+holds the sidecar. Applying it needs explicit approval naming the logs, because it
+overwrites existing scan results:
+
+```bash
+node tools/reparseOcrLogs.js --write --exclude "qmg-sweep-20261025" \
+  --out data/qmg_reparse_trust_20261025.json
+# undo:
+node tools/reparseOcrLogs.js --restore data/qmg_reparse_trust_20261025.json
+```
+
+Always `--exclude` the run tag of a sweep that is currently running: the sweep
+writes each log once, when its video finishes, and rewriting one at that moment
+loses the sweep's result.
+
+### Trusted-column accept path (added 2026-10-25) — the single biggest recall win
+
+**The QMG position-list ticker column is LEFT-ALIGNED**: every row shares one left
+edge (measured 732-740px across 20 consecutive rows in a 1345px EasyOCR crop;
+402-404px in another video), while chart-area junk sits ~300px to the left.
+
+The accept path did not use that. It required a token to be in the seed lexicon OR
+to have a readable price to its right, and the `else if (inListColumn)` branch —
+the one that could have rescued a token whose word box *proves* it is in the
+column — was effectively dead, because `inListTickers` only counts price-aligned
+rows and EasyOCR garbles most of the numbers (2 of 13 rows on the measured
+20211019 frame).
+
+Three independent losses fell out of that:
+
+1. **The accept path.** A token in the ticker column was rejected whenever it was
+   neither in the lexicon nor next to a readable price — even when its word box
+   proved it was a position.
+2. **Filter B.** The band was the median row ± 8 line heights, but a 14-row panel
+   spans ~22 line heights, so it clipped the first two and last three rows. On
+   20220419 that rejected BOIL, JNUG, REGN, VERU and KOLD — five of fourteen real
+   positions.
+3. **The clusterer.** `clusterRawOcrTokens` required a lexicon match for a
+   canonical, which deleted real positions missing from the seed (GUSH, KOLD, AGQ,
+   REGN, CWEB) and rewrote near-misses (VERU → VERV).
+
+The fix is opt-in via `ocr._columnTrust` and is **on** for the EasyOCR
+chart-stream path in `tools/scanVideoWithOcr.js`:
+
+| flag | value | effect |
+|---|---|---|
+| `_columnTrust` | `true` | enable the trusted-column accept path |
+| `_columnTrustMinLeft` | `6` | how many words must share the column's left edge before it is trusted |
+| `_columnTrustRaw` | `true` | keep the token the OCR read instead of rewriting it to an edit-distance near-miss |
+| `_columnTrustNeedNumber` | `true` | the row must carry a 3+ digit number to the right of the ticker |
+| `_columnTrustNumberMinDigits` | `3` | digits required for that number |
+
+- `columnLeftCount` counts the ticker-shaped words sharing the column's dominant
+  left edge. Unlike `columnTokenCount` it does not depend on EasyOCR having read
+  the numbers, so it is a usable confidence signal.
+- `rowNumberTickers` records which column rows carry a 3+ digit number to the
+  right. A real position row always does; the panel's column-header row
+  ("Sym | Change | Vol | Buzz") does not. This is what keeps "Sym" out — the
+  header sits at the same x as the ticker column, and the edit-distance
+  correction was turning SYM into SPYM (53 of 90 added false positives).
+- In trusted mode the Filter B band is derived from the column's own vertical
+  extent instead of a median-centred window.
+- The clusterer gains `keepUnknown` / `keepUnknownMinFrames`: a token that is
+  NOT in the seed lexicon survives when it persists across enough distinct
+  frames. The seed lexicon is a seed, not a census.
+
+**Measured** on the ground-truth corpus (102 logs / 898 GT tickers) with
+`tools/compareColumnGate.js`, replaying the stored OCR:
+
+| arm | recall | FP |
+|---|---|---|
+| `base` | 476/898 = 53% | 206 |
+| `inloop` (previous production) | 476/898 = 53% | 158 |
+| `tnum6k3d3` (this change) | **583/898 = 65%** | 269 |
+
++22 points of recall for +111 false positives; precision 75% → 68%. Many of those
+"false positives" are real QMG positions missing from an incomplete ground truth
+(GUSH, KOLD, A, FX, ERX, ATR, INA, SOUN all appear as FPs but are real holdings).
+
+Verified end-to-end on 20220419: 6/14 → 13/14 GT tickers, with only LMT still
+missing (the OCR read "LT").
+
+Diagnostic fields: `chart_stream.column_filter` now also carries
+`column_left_count`, `dominant_left` and `column_trust_active`.
 
 ### Panel-boundary gate (positions / watchlist)
 
