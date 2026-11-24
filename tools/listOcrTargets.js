@@ -103,6 +103,13 @@ function collectTargets() {
         const j = JSON.parse(fs.readFileSync(p, 'utf8'));
         const engine = j.ocr_engine_metadata?.ocr_engine;
         if (engine !== 'easyocr') continue;
+        // An ERROR log is not a scan. It records that the video was attempted
+        // and produced nothing (e.g. "ffmpeg frame extraction failed"), so
+        // counting it as scanned suppresses the video from the work list
+        // forever — the scan can never be retried. Only a log that actually
+        // captured frames marks the video as done.
+        if (j.status === 'error') continue;
+        if (!(j.top_candidates || []).length) continue;
         const vp = j.video_path ? String(j.video_path) : '';
         const m = vp.match(/([A-Za-z0-9_-]{11})\.mp4$/);
         if (m) scanned.add(m[1]);
