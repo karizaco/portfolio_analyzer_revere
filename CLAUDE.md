@@ -8295,3 +8295,27 @@ only `self` or `none`.
     `x_image_readings`.
   - A vision position row counts only when the same image's Tesseract OCR
     corroborates it (`row_verified`, `src/x/images/crossCheck.js`).
+
+**THE 12-MONTH BACKFILL IS DONE (2026-11-25)** for @RedDogT3 (5,187 own
+posts), @StockSavvyShay (9,182), @BoujeeFinances (1,569) and @chickengenius
+(125), all windows complete, committed (`3af5d78`, `e4ed36d`). The driver is
+`tools/x_pipeline/runBrowserBackfill.js`; the full result and lessons are in
+`docs/x-source-plan.md` § *The 12-month backfill result*.
+
+- **The computer sleeping pauses the crawl**, and the first page after a wake
+  always fails. The driver detects the sleep (a wall-clock jump), waits 5
+  minutes and does not count it as a failure; a session that completed a
+  window restarts the error count. Pinned by `test/xBrowserBackfill.test.js`.
+- **A `partial` window is retried and completes** (X cuts a busy week short
+  when the allowance is nearly used).
+- **`--query split` FAILED its live check: do NOT use it.** Its self-reply
+  search missed 6 of @chickengenius's 11 thread continuations.
+  `tools/x_pipeline/checkSplitQuery.js` re-crawls a finished range into a
+  scratch catalog/index/archive (the real ones are only read) and diffs the
+  archives; any fix to split mode must pass it.
+- **Misclassified replies:** 24 archived `original`/`quote` posts sit inside
+  another conversation with no reply fields (about 5 are probably replies to
+  other people). Fix the classifier before scoring.
+- **Commit the catalog from a snapshot** (`VACUUM INTO` a scratch file, check
+  `integrity_check`, then `git update-index --cacheinfo`) whenever a crawl may
+  be writing to it, and stage explicit paths only.

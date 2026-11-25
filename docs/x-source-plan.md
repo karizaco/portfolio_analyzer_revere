@@ -1660,9 +1660,9 @@ The split mode searches `from:H -filter:replies` (originals and quotes) and
 the way the API route does. Switching an account retires its unfinished
 `all_own` windows, while a complete `all_own` window still covers its range
 for both kinds. For Boujee it should cut about 15 hours of crawling to about
-one. **To verify live before use:** split-crawl @chickengenius over months the
-`all_own` crawl already completed (on `--since` dates outside the complete
-windows), and require the same kept post ids.
+one. **Verified live on 2026-11-24, and it FAILED** (see § *The 12-month
+backfill result* below): do not use `--query split` until its self-reply
+search is fixed. `tools/x_pipeline/checkSplitQuery.js` is the check.
 
 **Two defects the first unattended run exposed:**
 - **A `blocked` window was never retried.** `pendingWindows` left it out, and
@@ -1675,6 +1675,65 @@ windows), and require the same kept post ids.
 
 X's error page appeared after about 80 searches in 80 minutes, well inside
 the published allowance. It may be a softer limit of X's.
+
+### The 12-month backfill result (2026-11-22 to 2026-11-25)
+
+All four accounts were crawled by the headless browser, one tab, from
+2025-11-01 (committed in `3af5d78` and `e4ed36d`):
+
+| account | own posts archived | weekly windows | how long |
+|---|---|---|---|
+| @RedDogT3 | 5,187 | 63, all complete | about 10 h |
+| @StockSavvyShay | 9,182 | 64, all complete | about 2 days, mostly asleep |
+| @BoujeeFinances | 1,569 | 59, all complete | about 15 h |
+| @chickengenius | 125 | 14, all complete | minutes |
+
+The archive is 19.8 MB of tracked JSONL; the catalog stays under the budget.
+
+**Lessons, each one measured:**
+
+- **Hibernation pauses the crawl, and the first page after a wake always
+  fails** (three times in one day, each within two minutes of the wake). The
+  driver counted those failures and escalated to a 90-minute wait after a
+  one-hour sleep. It now notices a sleep as a wall-clock jump between two
+  30-second ticks, waits 5 minutes for the network and does not count the
+  stop; a session that completed a window restarts the error count. Pinned by
+  `test/xBrowserBackfill.test.js`. (The process is frozen while the computer
+  sleeps, so no crawl runs then: the wall time of a backfill is the awake time
+  plus the sleeps.)
+- **A window X cuts short is `partial` and is retried.** On a busy week X
+  stopped returning results partway (`exhausted`), at the moments the crawl
+  had used most of the allowance. A retry in a later batch completed every
+  one of them (Shay: 4 of 4).
+- **X's own results are the completeness check, not the estimate.** The
+  `estimate` counts were for ALL posts; the archive keeps own posts and own
+  threads only, so the archive is smaller by design.
+
+**`--query split` FAILED its live check, and is not to be used.**
+`tools/x_pipeline/checkSplitQuery.js` re-crawls an account's finished range
+with the split queries into a SCRATCH catalog, index and archive (the real
+ones are only read) and compares the two archives post by post. On
+@chickengenius (386 days, both split queries 100 % complete):
+
+| | `all_own` archive | split archive |
+|---|---|---|
+| own posts | 124 | 116 |
+| self-thread continuations | 11 | 5 |
+
+Eight posts were lost: **six of her own thread continuations** (the
+`filter:replies to:H` search found only 5 of her 11; the missed ones are
+"Link to last update:" and image-only follow-ups to her portfolio threads, the
+posts that matter most for her) and two replies to OTHER people.
+
+**Those two are the other finding.** `all_own` had kept them as originals
+because X delivered them without the reply fields, so the importer could not
+tell. Across the four archives, **24 posts are `original`/`quote` posts that
+sit inside another conversation with no reply fields** (chickengenius 2,
+StockSavvyShay 10, BoujeeFinances 4, RedDogT3 8). In 19 of them the
+conversation root is one of the account's own archived posts (probably thread
+continuations); about 5 are probably replies to other people. This is to be
+fixed in the classifier (treat a post whose conversation root is another
+user's post as a reply) before anything is scored.
 
 ### Not verified yet (needs your keys or your login)
 
