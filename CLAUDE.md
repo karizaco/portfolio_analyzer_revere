@@ -1048,14 +1048,31 @@ Recall up 11 points *and* false positives down by 97 — the old stored lists we
 produced by the dead-clusterer path, which both missed real positions and
 invented garbage clusters.
 
-The re-parse is **not yet applied in place** — `data/qmg_reparse_trust_20261025.json`
-holds the sidecar. Applying it rewrites 100 existing scan logs, so it needs
-explicit approval.
+The re-parse **was applied on 2026-11-25** (after explicit approval): 99 of the 100
+logs were rewritten; 1 was skipped by the never-regress guard and kept its
+previous list. Measured on disk afterwards:
 
-**Apply it with `--apply`, not `--write`.** `--write` picks the logs to rewrite
-with a filesystem scan, so the set of files it touches is decided at run time.
-`--apply` takes the set from the sidecar's keys instead — exactly the logs that
-were reviewed, and nothing else:
+| | recall | FP |
+|---|---|---|
+| before the apply | 247/459 = 54% | 234 |
+| after the apply | **297/459 = 65%** | **144** |
+
+Split by crop, the win is on both, so it is not an artifact of one crop:
+
+| crop | logs | GT tickers | recall | FP |
+|---|---|---|---|---|
+| tall `0.86,0.55,0.14,0.45` | 35 | 310 | 162 (52%) → **205 (66%)** | 155 → **87** |
+| short `0.86,0.62,0.14,0.22` | 17 | 149 | 85 (57%) → **92 (62%)** | 79 → **50** |
+
+The one skipped log (`20230518_20230518_1ajizxskfym`) is a tall-crop video where
+the new parser read a different ticker on every frame, so the clusterer's
+`minFrequency: 2` left no consensus and the merged list came out empty. The
+guard kept the old list rather than replacing a result with nothing.
+
+**Apply a re-parse with `--apply`, not `--write`.** `--write` picks the logs to
+rewrite with a filesystem scan, so the set of files it touches is decided at run
+time. `--apply` takes the set from the sidecar's keys instead — exactly the
+logs that were reviewed, and nothing else:
 
 ```bash
 node tools/reparseOcrLogs.js --apply data/qmg_reparse_trust_20261025.json
@@ -1067,7 +1084,8 @@ node tools/reparseOcrLogs.js --restore data/qmg_reparse_trust_20261025.json
 the log's current merged list must still equal the sidecar's `before` (the log
 has not changed since the sidecar was taken), and re-running the parser over the
 log's stored OCR must reproduce the sidecar's `after` (the parser has not
-changed since it was taken).
+changed since it was taken). A third guard refuses to replace a non-empty list
+with an empty one.
 
 The sidecar is the undo. `--restore` puts back `merged_position_list`,
 `merged_raw_token_clusters`, and each candidate's `chart_stream.position_list`
