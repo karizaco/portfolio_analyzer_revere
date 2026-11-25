@@ -608,6 +608,33 @@ output when there is no ground truth to score against.
 **"Already scanned" must be tracked per VIDEO, not per date.** Several videos
 share an interpolated date, so a date-keyed set hides all but one of them.
 
+**Status as of 2026-11-25**: the sweep has 106 videos done and 0 failed, with
+~370 candidates still to go. It runs in the background at `--parallel 2`; each
+video takes 150-450 s. Its state lives in `data/qmg_ocr_sweep.json` (`done` and
+`failed` maps) and it is safe to stop and restart — the work list is derived
+from what is on disk, so a scanned video drops out on the next pass.
+
+**The crop is chosen per date**, not globally (`cropForDate` in
+`tools/runQmgOcrBatch.js`):
+
+| date | crop | why |
+|---|---|---|
+| `>= 20231201` | `0.80,0.60,0.20,0.26` | the position column moved left and up |
+| `>= 20230501` | `0.83,0.55,0.17,0.45` | the table widened in May 2023 |
+| earlier | `0.86,0.62,0.14,0.22` | the default short crop |
+
+70 older logs were scanned before this rule existed and carry a crop that does
+not match their date. Re-scanning them is **not** worth the EasyOCR hours: the
+paired crop comparison shows the tall and short crops tie on recall (46/69
+each) with the short crop slightly better on precision.
+
+**Early-2021 and late-2021 videos legitimately produce short lists.** The
+sweep's first 106 videos run 4-13 tickers, and the thin ones are the 2021
+transition period, when the position list really did hold three or four names
+(ENPH, LCID, SEDG, TSLA, RIVN — a coherent QMG basket for November 2021). A
+video with 0 tickers has `captures=0` and never found a qualifying frame;
+those are the pre-chart-stream months.
+
 ---
 
 ## Testing
@@ -721,10 +748,13 @@ Results: `data/qmg_alt_batch_results.json` and `data/video_scan_batch_remaining_
 - `tools/aggregateScanResults.js` — merge scan output into `analysis.json`
 - `tools/aggregateOcrTimeline.js` — merge into `timeline.json`
 - `tools/viewTimeline.html` — interactive timeline viewer
+- `data/compile_results.js` — build `tools/qmg_ocr_results.html` from every scan
+  log on disk; the run-tag list is discovered, not hardcoded
 
 ### Offline analysis tools (no video, no OCR — seconds instead of minutes)
 - `tools/reparseOcrLogs.js` — re-derive `merged_position_list` from the OCR already stored
-  in scan logs; `--write` to persist, `--gt` to score against ground truth
+  in scan logs; `--apply <sidecar>` to persist to exactly the logs a sidecar names,
+  `--restore <sidecar>` to undo, `--gt` to score against ground truth
 - `tools/compareColumnGate.js` — A/B the accept-path column gate against the GT
 - `tools/compareMergeModes.js` — A/B the stored merged list against the multi-frame clusterer
 - `tools/listOcrTargets.js` — videos on disk with a date, no GT, and no EasyOCR log yet
