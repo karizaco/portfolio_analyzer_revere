@@ -1,0 +1,1006 @@
+{
+ "data/video_scan_test/_rerun/qmg-sweep-20261025/ocr_probe/logs/20211203_skslwupz3pq_c3f7bcf0_snapshot.json": {
+  "date_key": "20211203",
+  "before": [
+   "P",
+   "TSLA",
+   "UVXY"
+  ],
+  "after": [
+   "P",
+   "TSLA",
+   "UVXY"
+  ],
+  "changed": false,
+  "before_per_frame": [
+   {
+    "frame_index": 2,
+    "position_list": [
+     "P",
+     "TSLA",
+     "UVXY",
+     "X"
+    ]
+   },
+   {
+    "frame_index": 3,
+    "position_list": [
+     "P",
+     "TSLA",
+     "UVXY",
+     "X"
+    ]
+   },
+   {
+    "frame_index": 1,
+    "position_list": [
+     "LSU",
+     "P",
+     "TSLA",
+     "UVXY",
+     "X"
+    ]
+   },
+   {
+    "frame_index": 0,
+    "position_list": [
+     "P",
+     "TSLA",
+     "UVXY",
+     "X"
+    ]
+   }
+  ],
+  "before_clusters": [
+   {
+    "canonical": "P",
+    "members": [
+     "P",
+     "X"
+    ],
+    "frequency": 8
+   },
+   {
+    "canonical": "TSLA",
+    "members": [
+     "TSLA"
+    ],
+    "frequency": 4
+   },
+   {
+    "canonical": "UVXY",
+    "members": [
+     "UVXY"
+    ],
+    "frequency": 4
+   }
+  ],
+  "per_frame": [
+   {
+    "frame_index": 2,
+    "timestamp": 181,
+    "position_list": [
+     "P",
+     "TSLA",
+     "UVXY",
+     "X"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 3,
+    "timestamp": 191,
+    "position_list": [
+     "P",
+     "TSLA",
+     "UVXY",
+     "X"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 1,
+    "timestamp": 171,
+    "position_list": [
+     "LSU",
+     "P",
+     "TSLA",
+     "UVXY",
+     "X"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 0,
+    "timestamp": 161,
+    "position_list": [
+     "P",
+     "TSLA",
+     "UVXY",
+     "X"
+    ],
+    "parse_status": "ok"
+   }
+  ],
+  "clusters": [
+   {
+    "canonical": "P",
+    "frameCount": 4,
+    "frequency": 8,
+    "members": [
+     "P",
+     "X"
+    ]
+   },
+   {
+    "canonical": "TSLA",
+    "frameCount": 4,
+    "frequency": 4,
+    "members": [
+     "TSLA"
+    ]
+   },
+   {
+    "canonical": "UVXY",
+    "frameCount": 4,
+    "frequency": 4,
+    "members": [
+     "UVXY"
+    ]
+   }
+  ]
+ },
+ "data/video_scan_test/_rerun/qmg-sweep-20261025/ocr_probe/logs/20211205_xloqjzyosnk_d53ec42f_snapshot.json": {
+  "date_key": "20211205",
+  "before": [
+   "KLAC",
+   "TSLA",
+   "X"
+  ],
+  "after": [
+   "KLAC",
+   "TSLA",
+   "X"
+  ],
+  "changed": false,
+  "before_per_frame": [
+   {
+    "frame_index": 1,
+    "position_list": [
+     "FTSLA",
+     "LAC",
+     "X"
+    ]
+   },
+   {
+    "frame_index": 2,
+    "position_list": [
+     "LAC",
+     "TSLA",
+     "X"
+    ]
+   },
+   {
+    "frame_index": 3,
+    "position_list": [
+     "LC",
+     "TSLA",
+     "X"
+    ]
+   },
+   {
+    "frame_index": 0,
+    "position_list": [
+     "TSLA",
+     "X"
+    ]
+   }
+  ],
+  "before_clusters": [
+   {
+    "canonical": "TSLA",
+    "members": [
+     "FTSLA",
+     "TSLA"
+    ],
+    "frequency": 4
+   },
+   {
+    "canonical": "KLAC",
+    "members": [
+     "LAC",
+     "LC"
+    ],
+    "frequency": 3
+   },
+   {
+    "canonical": "X",
+    "members": [
+     "X"
+    ],
+    "frequency": 4
+   }
+  ],
+  "per_frame": [
+   {
+    "frame_index": 1,
+    "timestamp": 291,
+    "position_list": [
+     "FTSLA",
+     "LAC"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 2,
+    "timestamp": 301,
+    "position_list": [
+     "LAC",
+     "TSLA",
+     "X"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 3,
+    "timestamp": 311,
+    "position_list": [
+     "LC",
+     "TSLA",
+     "X"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 0,
+    "timestamp": 281,
+    "position_list": [
+     "TSLA",
+     "X"
+    ],
+    "parse_status": "ok"
+   }
+  ],
+  "clusters": [
+   {
+    "canonical": "TSLA",
+    "frameCount": 4,
+    "frequency": 4,
+    "members": [
+     "FTSLA",
+     "TSLA"
+    ]
+   },
+   {
+    "canonical": "KLAC",
+    "frameCount": 3,
+    "frequency": 3,
+    "members": [
+     "LAC",
+     "LC"
+    ]
+   },
+   {
+    "canonical": "X",
+    "frameCount": 3,
+    "frequency": 3,
+    "members": [
+     "X"
+    ]
+   }
+  ]
+ },
+ "data/video_scan_test/_rerun/qmg-sweep-20261025/ocr_probe/logs/20211208_eqdwqfhzaz4_5fc1c802_snapshot.json": {
+  "date_key": "20211208",
+  "before": [
+   "BA",
+   "DVN",
+   "FCX",
+   "FSE",
+   "HOOAA",
+   "SOXL",
+   "TSLA"
+  ],
+  "after": [
+   "DVN",
+   "FCX",
+   "RBLX",
+   "SOXL",
+   "TSLA"
+  ],
+  "changed": true,
+  "before_per_frame": [
+   {
+    "frame_index": 2,
+    "position_list": [
+     "BA",
+     "DVN",
+     "FCX",
+     "FSE",
+     "HOOAA",
+     "SOXL",
+     "TSLA"
+    ]
+   },
+   {
+    "frame_index": 1,
+    "position_list": [
+     "DVN",
+     "FCX",
+     "FIDOR",
+     "JSSE",
+     "RBLX",
+     "SOXL",
+     "TSLA"
+    ]
+   },
+   {
+    "frame_index": 3,
+    "position_list": [
+     "AOAI",
+     "DVN",
+     "FCX",
+     "JSX",
+     "SOXL",
+     "TSLA"
+    ]
+   },
+   {
+    "frame_index": 0,
+    "position_list": [
+     "DVN",
+     "FCX",
+     "RBLX",
+     "SOXL",
+     "TSLA"
+    ]
+   }
+  ],
+  "before_clusters": [],
+  "per_frame": [
+   {
+    "frame_index": 2,
+    "timestamp": 117,
+    "position_list": [
+     "BA",
+     "DVN",
+     "FCX",
+     "FSE",
+     "HOOAA",
+     "SOXL",
+     "TSLA"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 1,
+    "timestamp": 107,
+    "position_list": [
+     "DVN",
+     "FCX",
+     "FIDOR",
+     "JSSE",
+     "RBLX",
+     "SOXL",
+     "TSLA"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 3,
+    "timestamp": 127,
+    "position_list": [
+     "AOAI",
+     "DVN",
+     "FCX",
+     "JSX",
+     "SOXL",
+     "TSLA"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 0,
+    "timestamp": 97,
+    "position_list": [
+     "DVN",
+     "FCX",
+     "RBLX",
+     "SOXL",
+     "TSLA"
+    ],
+    "parse_status": "ok"
+   }
+  ],
+  "clusters": [
+   {
+    "canonical": "DVN",
+    "frameCount": 4,
+    "frequency": 4,
+    "members": [
+     "DVN"
+    ]
+   },
+   {
+    "canonical": "FCX",
+    "frameCount": 4,
+    "frequency": 4,
+    "members": [
+     "FCX"
+    ]
+   },
+   {
+    "canonical": "SOXL",
+    "frameCount": 4,
+    "frequency": 4,
+    "members": [
+     "SOXL"
+    ]
+   },
+   {
+    "canonical": "TSLA",
+    "frameCount": 4,
+    "frequency": 4,
+    "members": [
+     "TSLA"
+    ]
+   },
+   {
+    "canonical": "RBLX",
+    "frameCount": 2,
+    "frequency": 2,
+    "members": [
+     "RBLX"
+    ]
+   }
+  ]
+ },
+ "data/video_scan_test/_rerun/qmg-sweep-20261025/ocr_probe/logs/20211210_i2twozphzqu_b47e0fa5_snapshot.json": {
+  "date_key": "20211210",
+  "before": [
+   "AOOR",
+   "FCX",
+   "ISIG",
+   "LAC",
+   "OO",
+   "TSLA",
+   "TURI"
+  ],
+  "after": [
+   "FCX",
+   "KLAC",
+   "TSLA"
+  ],
+  "changed": true,
+  "before_per_frame": [
+   {
+    "frame_index": 3,
+    "position_list": [
+     "AOOR",
+     "FCX",
+     "ISIG",
+     "LAC",
+     "OO",
+     "TSLA",
+     "TURI"
+    ]
+   },
+   {
+    "frame_index": 0,
+    "position_list": [
+     "FCX",
+     "GSII",
+     "LAC",
+     "MA",
+     "OA",
+     "TSLA"
+    ]
+   },
+   {
+    "frame_index": 1,
+    "position_list": [
+     "F",
+     "FCX",
+     "LAC",
+     "OCJ",
+     "TSLA",
+     "ZES"
+    ]
+   },
+   {
+    "frame_index": 2,
+    "position_list": [
+     "JA",
+     "JNAI",
+     "OCUSE"
+    ]
+   }
+  ],
+  "before_clusters": [],
+  "per_frame": [
+   {
+    "frame_index": 3,
+    "timestamp": 2539,
+    "position_list": [
+     "FCX",
+     "ISIG",
+     "LAC",
+     "TSLA"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 0,
+    "timestamp": 2509,
+    "position_list": [
+     "FCX",
+     "GSII",
+     "LAC",
+     "TSLA"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 1,
+    "timestamp": 2519,
+    "position_list": [
+     "F",
+     "FCX",
+     "LAC",
+     "OCJ",
+     "TSLA",
+     "ZES"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 2,
+    "timestamp": 2529,
+    "position_list": [
+     "JA",
+     "JNAI",
+     "OCUSE"
+    ],
+    "parse_status": "ok"
+   }
+  ],
+  "clusters": [
+   {
+    "canonical": "FCX",
+    "frameCount": 3,
+    "frequency": 3,
+    "members": [
+     "FCX"
+    ]
+   },
+   {
+    "canonical": "KLAC",
+    "frameCount": 3,
+    "frequency": 3,
+    "members": [
+     "LAC"
+    ]
+   },
+   {
+    "canonical": "TSLA",
+    "frameCount": 3,
+    "frequency": 3,
+    "members": [
+     "TSLA"
+    ]
+   }
+  ]
+ },
+ "data/video_scan_test/_rerun/qmg-sweep-20261025/ocr_probe/logs/20211213_-fi5dutcwtm_49a3ec62_snapshot.json": {
+  "date_key": "20211213",
+  "before": [
+   "ASAN",
+   "HAD",
+   "TSLA",
+   "X"
+  ],
+  "after": [
+   "ALAB",
+   "KLAC",
+   "TSLA",
+   "X"
+  ],
+  "changed": true,
+  "before_per_frame": [
+   {
+    "frame_index": 0,
+    "position_list": [
+     "ASAN",
+     "HAD",
+     "TSLA",
+     "X"
+    ]
+   },
+   {
+    "frame_index": 3,
+    "position_list": [
+     "LC",
+     "PFE",
+     "TSLA",
+     "X"
+    ]
+   },
+   {
+    "frame_index": 1,
+    "position_list": [
+     "ASAN",
+     "LAC",
+     "TSLA",
+     "X"
+    ]
+   },
+   {
+    "frame_index": 2,
+    "position_list": [
+     "DTS",
+     "EOTA",
+     "PFE",
+     "TSLA",
+     "X"
+    ]
+   }
+  ],
+  "before_clusters": [],
+  "per_frame": [
+   {
+    "frame_index": 0,
+    "timestamp": 1185,
+    "position_list": [
+     "ASAN",
+     "HAD",
+     "TSLA",
+     "X"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 3,
+    "timestamp": 1215,
+    "position_list": [
+     "LC",
+     "PFE",
+     "TSLA",
+     "X"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 1,
+    "timestamp": 1195,
+    "position_list": [
+     "ASAN",
+     "LAC",
+     "TSLA",
+     "X"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 2,
+    "timestamp": 1205,
+    "position_list": [
+     "DTS",
+     "EOTA",
+     "PFE",
+     "TSLA",
+     "X"
+    ],
+    "parse_status": "ok"
+   }
+  ],
+  "clusters": [
+   {
+    "canonical": "ALAB",
+    "frameCount": 2,
+    "frequency": 2,
+    "members": [
+     "ASAN"
+    ]
+   },
+   {
+    "canonical": "TSLA",
+    "frameCount": 4,
+    "frequency": 4,
+    "members": [
+     "TSLA"
+    ]
+   },
+   {
+    "canonical": "X",
+    "frameCount": 4,
+    "frequency": 4,
+    "members": [
+     "X"
+    ]
+   },
+   {
+    "canonical": "KLAC",
+    "frameCount": 2,
+    "frequency": 2,
+    "members": [
+     "LAC",
+     "LC"
+    ]
+   }
+  ]
+ },
+ "data/video_scan_test/_rerun/qmg-sweep-20261025/ocr_probe/logs/20211214_4avkury3zvk_2d486e18_snapshot.json": {
+  "date_key": "20211214",
+  "before": [
+   "ASAN",
+   "DA",
+   "PFE",
+   "TSLA",
+   "X"
+  ],
+  "after": [
+   "ALAB",
+   "TSLA",
+   "X"
+  ],
+  "changed": true,
+  "before_per_frame": [
+   {
+    "frame_index": 3,
+    "position_list": [
+     "ASAN",
+     "DA",
+     "PFE",
+     "TSLA",
+     "X"
+    ]
+   },
+   {
+    "frame_index": 1,
+    "position_list": [
+     "AGA",
+     "ASAN",
+     "TSLA",
+     "X"
+    ]
+   },
+   {
+    "frame_index": 2,
+    "position_list": [
+     "ASAN",
+     "LC",
+     "TSLA",
+     "X"
+    ]
+   },
+   {
+    "frame_index": 0,
+    "position_list": [
+     "AAON",
+     "PIE",
+     "TSLA",
+     "X"
+    ]
+   }
+  ],
+  "before_clusters": [],
+  "per_frame": [
+   {
+    "frame_index": 3,
+    "timestamp": 583,
+    "position_list": [
+     "ASAN",
+     "PFE",
+     "TSLA"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 1,
+    "timestamp": 563,
+    "position_list": [
+     "AGA",
+     "ASAN",
+     "TSLA",
+     "X"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 2,
+    "timestamp": 573,
+    "position_list": [
+     "ASAN",
+     "LC",
+     "TSLA",
+     "X"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 0,
+    "timestamp": 553,
+    "position_list": [
+     "AAON",
+     "PIE",
+     "TSLA",
+     "X"
+    ],
+    "parse_status": "ok"
+   }
+  ],
+  "clusters": [
+   {
+    "canonical": "ALAB",
+    "frameCount": 3,
+    "frequency": 3,
+    "members": [
+     "ASAN"
+    ]
+   },
+   {
+    "canonical": "TSLA",
+    "frameCount": 4,
+    "frequency": 4,
+    "members": [
+     "TSLA"
+    ]
+   },
+   {
+    "canonical": "X",
+    "frameCount": 3,
+    "frequency": 3,
+    "members": [
+     "X"
+    ]
+   }
+  ]
+ },
+ "data/video_scan_test/_rerun/qmg-sweep-20261025/ocr_probe/logs/20211215_m-05qqa2fbq_9c234e90_snapshot.json": {
+  "date_key": "20211215",
+  "before": [
+   "ASAN",
+   "DOA",
+   "LI",
+   "P",
+   "PE",
+   "TSLA",
+   "X"
+  ],
+  "after": [
+   "ALAB",
+   "P",
+   "TSLA"
+  ],
+  "changed": true,
+  "before_per_frame": [
+   {
+    "frame_index": 3,
+    "position_list": [
+     "ASAN",
+     "DOA",
+     "LI",
+     "P",
+     "PE",
+     "TSLA",
+     "X"
+    ]
+   },
+   {
+    "frame_index": 2,
+    "position_list": [
+     "ASAN",
+     "OND",
+     "P",
+     "S",
+     "TSLA",
+     "X"
+    ]
+   },
+   {
+    "frame_index": 1,
+    "position_list": [
+     "AS",
+     "ASAN",
+     "OODI",
+     "P",
+     "RE",
+     "TSLA",
+     "X"
+    ]
+   },
+   {
+    "frame_index": 0,
+    "position_list": [
+     "ASAN",
+     "HON",
+     "P",
+     "TSLA",
+     "X"
+    ]
+   }
+  ],
+  "before_clusters": [],
+  "per_frame": [
+   {
+    "frame_index": 3,
+    "timestamp": 227,
+    "position_list": [
+     "ASAN",
+     "LI",
+     "PE",
+     "TSLA"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 2,
+    "timestamp": 217,
+    "position_list": [
+     "ASAN",
+     "OND",
+     "P",
+     "S",
+     "TSLA",
+     "X"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 1,
+    "timestamp": 207,
+    "position_list": [
+     "AS",
+     "ASAN",
+     "OODI",
+     "P",
+     "RE",
+     "TSLA",
+     "X"
+    ],
+    "parse_status": "ok"
+   },
+   {
+    "frame_index": 0,
+    "timestamp": 197,
+    "position_list": [
+     "ASAN",
+     "HON",
+     "P",
+     "TSLA",
+     "X"
+    ],
+    "parse_status": "ok"
+   }
+  ],
+  "clusters": [
+   {
+    "canonical": "ALAB",
+    "frameCount": 4,
+    "frequency": 4,
+    "members": [
+     "ASAN"
+    ]
+   },
+   {
+    "canonical": "P",
+    "frameCount": 4,
+    "frequency": 8,
+    "members": [
+     "P",
+     "PE",
+     "S",
+     "X"
+    ]
+   },
+   {
+    "canonical": "TSLA",
+    "frameCount": 4,
+    "frequency": 4,
+    "members": [
+     "TSLA"
+    ]
+   }
+  ]
+ }
+}

@@ -36,3 +36,11 @@ state.sqlite2
 # Transient download-run artifacts
 data/_download_*.log
 data/_target_ids.txt
+
+# Transient scan-run logs and lock files
+data/*.log
+data/*.lock
+data/*.err
+
+# Profile-comparison scan output (same kind as data/video_scan_test/)
+data/video_profile_runs/
