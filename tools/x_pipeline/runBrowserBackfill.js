@@ -19,11 +19,18 @@
  *   few minutes) and goes on. That is X's schedule, not a retry.
  * - A lost connection, X's "Something went wrong" page, or a session that
  *   ended without a report (`network_error`, `x_error_page`, `no_graphql`,
- *   a crash): it waits 10, 20, then 30 minutes and tries again, up to six
- *   times in a row. This is what lets the computer sleep or hibernate
- *   mid-crawl. The process is frozen while asleep, so no retry is spent
- *   then; on waking, the page in flight fails, its window stays resumable,
- *   and the next session picks it up.
+ *   a crash): it waits and tries again, up to six times in a row -- 10, 20,
+ *   then 30 minutes for a lost connection, 30, 60, then 90 for the others.
+ *   A session that completed a window before it failed restarts that count,
+ *   because the failure followed progress, not a run of failures.
+ * - THE COMPUTER SLEPT during the session: it waits 5 minutes for the
+ *   network to come back and tries again, and the stop does not count.
+ *   The process is frozen while asleep; on waking, the page in flight fails
+ *   (measured three times on 2026-11-23, each within two minutes of the
+ *   wake), its window stays resumable, and the next session picks it up.
+ *   Counting those failures cost a 90-minute wait after a one-hour
+ *   hibernation. A sleep is detected as a jump in the wall clock between
+ *   two 30-second ticks.
  * - ANY other stop (a login wall, a challenge, a locked account): it stops
  *   for good and exits non-zero, so a person looks before anything else
  *   runs.
@@ -63,6 +70,28 @@ const MAX_TRANSIENT_IN_A_ROW = 6;
 // after about 80 searches in 80 minutes, well inside the published
 // allowance, so it may be a softer limit of X's, and that gets more room.
 const transientWaitMs = (attempt, reason) => Math.min(attempt, 3) * (reason === 'network_error' ? 10 : 30) * 60 * 1000;
+// After a sleep, the wait is for the network to come back, not for X.
+const WAKE_WAIT_MS = 5 * 60 * 1000;
+// A tick is due every 30 s; a gap this long means the machine was asleep.
+const TICK_MS = 30 * 1000;
+const SLEEP_GAP_MS = 3 * 60 * 1000;
+
+/**
+ * What to do after a transient stop.
+ *
+ *   attempt     the transient stops counted so far for this account
+ *   reason      the stop reason (`network_error` waits less than the others)
+ *   slept       the computer slept during the session
+ *   progressed  the session completed at least one window before it stopped
+ *
+ * Returns the new count, the wait, and whether the stop was counted.
+ */
+function transientPlan({ attempt, reason, slept, progressed }) {
+  if (slept) return { attempt, waitMs: WAKE_WAIT_MS, counted: false };
+  const next = progressed ? 1 : attempt + 1;
+  return { attempt: next, waitMs: transientWaitMs(next, reason), counted: true };
+}
+
 const stamp = () => new Date().toISOString().replace(/\.\d+Z$/, 'Z');
 
 /** One crawl session; resolves to its JSON report, or null when there was none. */
@@ -109,31 +138,43 @@ async function main() {
   fs.mkdirSync(path.dirname(logFile), { recursive: true });
   const totals = {};
 
+  // The wall clock jumps when the machine sleeps; a 30-second tick sees it.
+  const clock = { last: Date.now(), sleptAt: 0 };
+  const tick = () => {
+    const now = Date.now();
+    if (now - clock.last > SLEEP_GAP_MS) clock.sleptAt = now;
+    clock.last = now;
+  };
+  setInterval(tick, TICK_MS).unref();
+
   for (const handle of args.handles) {
     totals[handle] = { sessions: 0, windows_complete: 0, windows_other: 0, posts_new: 0, posts_filtered: 0 };
     let idle = 0;
     let transient = 0;
     // Wait and try again after a transient stop; false once the budget is spent.
-    const retryLater = async (why) => {
-      transient += 1;
-      if (transient > MAX_TRANSIENT_IN_A_ROW) {
+    const retryLater = async (why, { reason = '', slept = false, progressed = false } = {}) => {
+      const plan = transientPlan({ attempt: transient, reason, slept, progressed });
+      transient = plan.attempt;
+      if (plan.counted && transient > MAX_TRANSIENT_IN_A_ROW) {
         console.log(`[backfill] @${handle}: ${why} -- ${MAX_TRANSIENT_IN_A_ROW} times in a row, stopping.`);
         return false;
       }
-      const waitMs = transientWaitMs(transient);
-      console.log(`[backfill] @${handle}: ${why}; trying again in ${Math.round(waitMs / 60000)} min `
-        + `(${transient} of ${MAX_TRANSIENT_IN_A_ROW}).`);
-      await sleep(waitMs);
+      const note = plan.counted ? `${transient} of ${MAX_TRANSIENT_IN_A_ROW}` : 'the computer slept; not counted';
+      console.log(`[backfill] @${handle}: ${why}; trying again in ${Math.round(plan.waitMs / 60000)} min (${note}).`);
+      await sleep(plan.waitMs);
       return true;
     };
     for (;;) {
       console.log(`[backfill] ${stamp()} @${handle}: session ${totals[handle].sessions + 1}`);
+      const startedAt = Date.now();
       // eslint-disable-next-line no-await-in-loop
       const { code, report } = await crawlSession(handle, args);
-      fs.appendFileSync(logFile, `${JSON.stringify({ at: stamp(), handle, code, report })}\n`);
+      tick();
+      const slept = clock.sleptAt >= startedAt;
+      fs.appendFileSync(logFile, `${JSON.stringify({ at: stamp(), handle, code, slept, report })}\n`);
       if (!report) {
         // eslint-disable-next-line no-await-in-loop
-        if (await retryLater(`the crawl ended (exit ${code}) without a report`)) continue;
+        if (await retryLater(`the crawl ended (exit ${code}) without a report`, { slept })) continue;
         process.exitCode = 1;
         return finish(totals, logFile);
       }
@@ -156,7 +197,8 @@ async function main() {
         }
         if (TRANSIENT.has(report.stop_reason)) {
           // eslint-disable-next-line no-await-in-loop
-          if (await retryLater(`${report.stop_reason}: ${report.message}`)) continue;
+          if (await retryLater(`${report.stop_reason}: ${report.message}`,
+            { reason: report.stop_reason, slept, progressed: complete > 0 })) continue;
           process.exitCode = 3;
           return finish(totals, logFile);
         }
@@ -192,7 +234,11 @@ function finish(totals, logFile) {
   console.log(`[backfill] session reports: ${path.relative(ROOT, logFile)}`);
 }
 
-main().catch((error) => {
-  console.error(`[backfill] failed: ${error.message}`);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(`[backfill] failed: ${error.message}`);
+    process.exit(1);
+  });
+}
+
+module.exports = { transientPlan, transientWaitMs, WAKE_WAIT_MS, MAX_TRANSIENT_IN_A_ROW };
