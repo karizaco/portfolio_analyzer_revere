@@ -32,23 +32,29 @@ for (const [dk, val] of Object.entries(gtData)) {
 
 // ─── Probe log sources ────────────────────────────────────────────────────────
 // PROBE_ROOT = repo/data/video_scan_test/_rerun, snapshots at <tag>/snapshots
+//
+// The source list is DISCOVERED, not hardcoded. A hardcoded list goes stale
+// the moment a new run finishes — the OCR sweep alone adds a run tag per
+// session, and those logs are the point of the sweep. Scanning the run
+// directory means the report always covers everything on disk.
 const PROBE_ROOT = path.join(ROOT, 'data', 'video_scan_test', '_rerun');
-const SOURCES = [
-  'qmg-batch-a',
-  'qmg-five-ideas-test_qmg-easyocr-v1',
-  'qmg-batch2_qmg-easyocr-v1',
-  'qmg-batch3_qmg-easyocr-v1',
-  'qmg-batch-g',
-  'qmg-batch-h',
-  'qmg-batch-i',
-  'qmg-easyocr-20261011',
-  'qmg-easyocr-20261012',
-  'qmg-easyocr-20261017',
-].map(tag => ({
-  tag,
-  logDir: path.join(PROBE_ROOT, tag, 'ocr_probe', 'logs'),
-  snapDir: path.join(PROBE_ROOT, tag, 'snapshots'),
-}));
+const SOURCES = (() => {
+  let tags = [];
+  try {
+    tags = fs.readdirSync(PROBE_ROOT, { withFileTypes: true })
+      .filter(e => e.isDirectory())
+      .map(e => e.name);
+  } catch (_) {
+    return [];
+  }
+  return tags
+    .map(tag => ({
+      tag,
+      logDir: path.join(PROBE_ROOT, tag, 'ocr_probe', 'logs'),
+      snapDir: path.join(PROBE_ROOT, tag, 'snapshots'),
+    }))
+    .filter(src => fs.existsSync(src.logDir));
+})();
 
 // ─── Snapshot path resolution ────────────────────────────────────────────────
 // snapRel is relative from OUTPUT_HTML's dir (tools/) to the snapshot file
@@ -58,18 +64,25 @@ function snapRel(snapAbs) {
 }
 
 // ─── Load captures from all probe logs ───────────────────────────────────────
-const allCaptures = []; // { dk, tag, ci, c, log }
+const allCaptures = []; // { dk, tag, ci, c, log, videoId, mtime }
 
 for (const src of SOURCES) {
   if (!fs.existsSync(src.logDir)) continue;
   const logFiles = fs.readdirSync(src.logDir).filter(f => f.endsWith('.json'));
   for (const lf of logFiles) {
     try {
-      const log = JSON.parse(fs.readFileSync(path.join(src.logDir, lf), 'utf8'));
+      const abs = path.join(src.logDir, lf);
+      const log = JSON.parse(fs.readFileSync(abs, 'utf8'));
       const dk = log.date_key || '';
+      // The video id, so the same video scanned under several run tags is
+      // recognised as one video. Filenames are date-prefixed or bare.
+      const vm = String(log.video_path || '').match(/([A-Za-z0-9_-]{11})\.mp4$/);
+      const videoId = vm ? vm[1] : `${dk}|${src.tag}|${lf}`;
+      let mtime = 0;
+      try { mtime = fs.statSync(abs).mtimeMs; } catch (_) {}
       const caps = log.captures || [];
       caps.forEach((c, ci) => {
-        allCaptures.push({ dk, tag: src.tag, ci, c, log });
+        allCaptures.push({ dk, tag: src.tag, ci, c, log, videoId, mtime });
       });
     } catch (_) {}
   }
@@ -93,19 +106,74 @@ function escHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
-// Group captures by (dk, tag) for deduplication
+// Group captures by VIDEO for deduplication.
+//
+// The same video is often scanned under more than one run tag — the OCR
+// sweep's retries, the paired crop comparisons, the batch runs. Grouping by
+// (date, tag) therefore listed the same video once per tag. Grouping by the
+// video id lists it once.
+//
+// Which log to keep: most captures first (a richer capture set beats a
+// poorer one), then the most merged tickers, then the most recently written.
 const byKey = {};
 for (const cap of allCaptures) {
-  const key = `${cap.dk}|${cap.tag}`;
+  const key = cap.videoId;
   if (!byKey[key]) byKey[key] = [];
   byKey[key].push(cap);
 }
 
-// For each (dk, tag), pick the version with most captures
+function logRank(cap) {
+  const log = cap.log || {};
+  return [
+    (log.captures || []).length,
+    (log.merged_position_list || []).length,
+    cap.mtime,
+  ];
+}
+
 const deduped = {};
 for (const [key, caps] of Object.entries(byKey)) {
-  caps.sort((a, b) => ((b.log || {}).captures || []).length - ((a.log || {}).captures || []).length);
+  caps.sort((a, b) => {
+    const ra = logRank(a), rb = logRank(b);
+    for (let i = 0; i < ra.length; i++) {
+      if (ra[i] !== rb[i]) return rb[i] - ra[i];
+    }
+    return 0;
+  });
   deduped[key] = caps[0];
+}
+
+// ─── Which video owns each snapshot ──────────────────────────────────────────
+//
+// Snapshots are named by DATE, not by video: `qmg_<date>.png`. Several videos
+// share a date (the interpolated dates), so when two videos with the same date
+// are scanned into the SAME run tag, the second overwrites the first's
+// snapshot. Linking the file by date alone therefore shows one video's image
+// next to another video's tickers.
+//
+// The snapshot that survives is the one written last, so the owner of a
+// (run tag, date) is the log with the newest mtime. A row whose video is not
+// the owner gets no image rather than the wrong one.
+const snapshotOwner = new Map();  // "<tag>|<date>" -> mtime of the owning log
+{
+  const byTagDate = new Map();
+  for (const cap of allCaptures) {
+    const k = `${cap.tag}|${cap.dk}`;
+    if (!byTagDate.has(k)) byTagDate.set(k, []);
+    byTagDate.get(k).push(cap);
+  }
+  for (const [k, caps] of byTagDate) {
+    const newest = Math.max(...caps.map(c => c.mtime));
+    const contenders = caps.filter(c => c.mtime === newest);
+    // An exact tie means two logs claim the same write time, so which one
+    // wrote the file last is unknowable. Give the image to neither.
+    snapshotOwner.set(k, contenders.length === 1 ? newest : null);
+  }
+}
+
+function ownsSnapshot(cap) {
+  const owner = snapshotOwner.get(`${cap.tag}|${cap.dk}`);
+  return owner != null && owner === cap.mtime;
 }
 
 const videoRows = [];
@@ -122,7 +190,9 @@ for (const [key, cap] of Object.entries(deduped)) {
       SOURCES.find(s => s.tag === tag)?.snapDir || '',
       snapFile
     );
-    const snapR = snapRel(snapAbs);
+    // Only link the image if this video owns the date's snapshot — otherwise
+    // the file on disk is a DIFFERENT video's frame.
+    const snapR = ownsSnapshot(cap) ? snapRel(snapAbs) : null;
 
     const tickers = Array.isArray(c.tickers) ? c.tickers : [];
     const layout = c.screen_layout || '—';
@@ -156,7 +226,8 @@ for (const [key, cap] of Object.entries(deduped)) {
 
     videoRows.push({
       dateKey: dk,
-      videoId: dk,
+      videoId: cap.videoId,
+      runTag: tag,
       snapRel: snapR,
       snapFile,
       conf,
@@ -184,10 +255,10 @@ for (const [key, cap] of Object.entries(deduped)) {
 videoRows.sort((a, b) => b.dateKey.localeCompare(a.dateKey) || a.ts - b.ts);
 
 // ─── Aggregate stats ─────────────────────────────────────────────────────────
-const totalVideos = new Set(videoRows.map(r => r.dateKey)).size;
+const totalVideos = new Set(videoRows.map(r => r.videoId)).size;
 const totalCaptures = videoRows.length;
 const gtRows = videoRows.filter(r => r.gtTickers);
-const gtVideos = new Set(gtRows.map(r => r.dateKey));
+const gtVideos = new Set(gtRows.map(r => r.videoId));
 let totalGT = 0, totalHits = 0;
 gtRows.forEach(r => {
   totalGT += r.gtTickers.length;
@@ -337,7 +408,8 @@ function filterRow(r) {
   const gtFilter = document.getElementById('filterGT').value;
   if (confThresh && (r.conf == null || r.conf < confThresh)) return false;
   if (tickerFilter && !r.tickers.some(t => t === tickerFilter)) return false;
-  if (videoFilter && !r.dateKey.includes(videoFilter)) return false;
+  if (videoFilter && !r.dateKey.includes(videoFilter) &&
+      !String(r.videoId || '').toLowerCase().includes(videoFilter.toLowerCase())) return false;
   if (layoutFilter && r.layout !== layoutFilter) return false;
   if (gtFilter === 'gt' && !r.gtTickers) return false;
   if (gtFilter === 'nogt' && r.gtTickers) return false;
@@ -378,7 +450,7 @@ function render() {
     tr.innerHTML = \`
       <td class="row-actions"><button class="expand-btn" onclick="toggleDetail(this)">+</button></td>
       <td>\${i + 1}</td>
-      <td><span class="count-badge">\${r.dateKey}</span> \${gtBadge}</td>
+      <td><span class="count-badge">\${r.dateKey}</span> <span class="run-date">\${r.videoId}</span> \${gtBadge}</td>
       <td><span class="run-date">\${r.runDate}</span></td>
       <td><span class="ts">\${r.tsHms}</span></td>
       <td><span class="conf-cell" style="\${confColorStyle}">\${r.confStr}</span></td>
@@ -420,7 +492,9 @@ function render() {
               <div class="meta-item"><span class="meta-key">Position List</span><span class="meta-val">\${(r.positionList || []).join(', ') || '—'}</span></div>
               <div class="meta-item"><span class="meta-key">Price Action</span><span class="meta-val" style="font-size:11px;">\${r.priceAction}</span></div>
               <div class="meta-item"><span class="meta-key">ph_overlay</span><span class="meta-val" style="font-size:10px;">\${r.phOv}</span></div>
-              <div class="meta-item"><span class="meta-key">Video</span><span class="meta-val">\${r.dateKey}</span></div>
+              <div class="meta-item"><span class="meta-key">Video</span><span class="meta-val">\${r.videoId}</span></div>
+              <div class="meta-item"><span class="meta-key">Date key</span><span class="meta-val">\${r.dateKey}</span></div>
+              <div class="meta-item"><span class="meta-key">Run</span><span class="meta-val">\${r.runTag}</span></div>
             </div>
             <div class="detail-section">
               <span class="detail-label">Full OCR Text</span>
