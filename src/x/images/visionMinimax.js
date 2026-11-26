@@ -115,7 +115,7 @@ function buildRequest(input) {
     model: input.model || DEFAULT_MODEL,
     // MiniMax's temperature range is (0, 1]; a low value keeps the copy literal.
     temperature: 0.1,
-    max_tokens: 8000,
+    max_tokens: 16000,
     messages: [
       { role: 'system', content: INSTRUCTIONS },
       {
