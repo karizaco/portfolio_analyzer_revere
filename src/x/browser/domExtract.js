@@ -14,10 +14,19 @@
 /* eslint-disable no-undef */
 function extractVisibleArticles() {
   const out = [];
-  for (const article of document.querySelectorAll('article[data-testid="tweet"]')) {
+  // X dropped the `tweet` test id (measured 2026-11-26): the articles render
+  // with no test id at all, but each post still links to its own /status/ id.
+  const tagged = document.querySelectorAll('article[data-testid="tweet"]');
+  // A quoted post renders as an article INSIDE the quoting post's article, and
+  // reading it as its own post publishes the quoted author's words under the
+  // wrong account and, being older, ends the window early.
+  const articles = [...(tagged.length ? tagged : document.querySelectorAll('article'))]
+    .filter((a) => !a.parentElement.closest('article') && a.querySelector('a[href*="/status/"]'));
+  for (const article of articles) {
     const timeEl = article.querySelector('time[datetime]');
     const link = timeEl ? timeEl.closest('a[href*="/status/"]') : article.querySelector('a[href*="/status/"]');
-    const textEl = article.querySelector('[data-testid="tweetText"]');
+    const textEl = article.querySelector('[data-testid="tweetText"]')
+      || [...article.querySelectorAll('div[dir="auto"]')].find((d) => (d.className || '').includes('whitespace-pre-wrap'));
     const social = article.querySelector('[data-testid="socialContext"]');
     // THE REPLY CONTEXT.
     //
@@ -45,7 +54,8 @@ function extractVisibleArticles() {
       text: textEl ? textEl.innerText : '',
       social_context: social ? social.innerText : '',
       replying_to: replyingTo,
-      media: [...article.querySelectorAll('[data-testid="tweetPhoto"] img')].map((img) => img.src),
+      media: [...article.querySelectorAll('[data-testid="tweetPhoto"] img, img[src*="pbs.twimg.com/media/"]')]
+        .map((img) => img.src).filter((src, i, all) => all.indexOf(src) === i),
       show_more: Boolean(article.querySelector('[data-testid="tweet-text-show-more-link"]')),
     });
   }
@@ -65,7 +75,8 @@ function readPageState() {
     hasChallengeFrame: Boolean(document.querySelector(
       'iframe[src*="arkoselabs"], iframe[src*="challenges.cloudflare.com"], #arkose_iframe, #challenge-running',
     )),
-    articles: document.querySelectorAll('article[data-testid="tweet"]').length,
+    articles: document.querySelectorAll('article[data-testid="tweet"]').length
+      || [...document.querySelectorAll('article')].filter((a) => a.querySelector('a[href*="/status/"]')).length,
     // Is the viewport within about a screen of the end of what is loaded?
     // Only THERE can a scroll that brought nothing mean "no more results":
     // a page of 20 tall posts (images, quotes) takes many more wheel turns

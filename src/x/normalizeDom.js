@@ -26,6 +26,7 @@ const {
   normalizeHandle,
   normalizeText,
   parseXDate,
+  snowflakeTime,
 } = require('./postRecord');
 
 const STATUS_PATH = /\/([A-Za-z0-9_]{1,15})\/status\/(\d{5,20})/;
@@ -96,11 +97,14 @@ function normalizeDomPost(raw, options) {
     url: item.url,
   }));
 
+  // The page no longer carries a <time> element (measured 2026-11-26), so the
+  // date comes from the id, which encodes it exactly.
+  const idMs = snowflakeTime(status[2]);
   const record = canonicalize({
     post_id: status[2],
     user_id: userId,
     handle,
-    created_at: parseXDate(raw.datetime),
+    created_at: parseXDate(raw.datetime) || (idMs ? new Date(idMs).toISOString() : ''),
     kind: isReply ? 'reply' : (quoteStatus ? 'quote' : 'original'),
     // Every route strips a reply's leading @-addressees, or the three
     // routes disagree about the text of a reply by that prefix -- and the
