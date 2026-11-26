@@ -36,8 +36,16 @@ def register_source(
     channel_id: str,
     guild_id: str,
     channel_kind: str = "text",
+    author_id: str = "",
 ) -> int:
-    """Insert a source (no-op on duplicate name). Returns the row id."""
+    """Insert a source (no-op on duplicate name). Returns the row id.
+
+    ``author_id`` names whose messages the channel is about, and empty
+    means every author. A SHARED channel names one person here, and the
+    ingest skips the other authors' messages: plechac's two channels carry
+    about 40 members each and his messages are 1,840 of the 14,100 in
+    them.
+    """
     if not name or not channel_id or not guild_id:
         raise ValueError("name, channel_id, and guild_id are all required")
     if channel_kind not in {"text", "thread", "forum"}:
@@ -51,9 +59,9 @@ def register_source(
 
     cursor = connection.execute(
         """INSERT OR IGNORE INTO discord_sources
-               (name, channel_id, guild_id, channel_kind, added_at, enabled)
-           VALUES (?, ?, ?, ?, ?, 1)""",
-        (name, channel_id, guild_id, channel_kind, utc_now_iso()),
+               (name, channel_id, guild_id, channel_kind, author_id, added_at, enabled)
+           VALUES (?, ?, ?, ?, ?, ?, 1)""",
+        (name, channel_id, guild_id, channel_kind, author_id or "", utc_now_iso()),
     )
     connection.commit()
     if cursor.lastrowid:

@@ -124,7 +124,21 @@ async function main() {
       const file = path.join(CACHE_DIR, `${symbol}.json`);
       if (fs.existsSync(file)) {
         const entry = JSON.parse(fs.readFileSync(file, 'utf8'));
-        series = { bars: (entry.prices || []).map((point) => ({ close: point.price, date: point.date, high: point.high, low: point.low, open: point.open })) };
+        // `barsOf` reads `bar.price` -- the provider's shape -- and drops
+        // every bar without one. The cache stores the price under
+        // `price`, so the cached bars carry BOTH names: a cached bar
+        // without `price` is dropped, and the episode is written back
+        // with no price at all.
+        series = {
+          bars: (entry.prices || []).map((point) => ({
+            close: point.price,
+            date: point.date,
+            high: point.high,
+            low: point.low,
+            open: point.open,
+            price: point.price,
+          })),
+        };
       }
     } else {
       series = await provider.getOhlcvSeries(symbol, from, to);
@@ -216,8 +230,20 @@ async function main() {
   };
 
   const bySource = {};
-  for (const source of ['drendel', 'ariel-long', 'ariel-short']) {
+  // Every source that has episodes. The three English traders come first
+  // and in their own order; a source with its own parser -- plechac --
+  // follows, so the summary grows without this tool having to know the
+  // name.
+  const knownSources = ['drendel', 'ariel-long', 'ariel-short'];
+  const sourceNames = [
+    ...knownSources,
+    ...[...new Set(scored.map((row) => row.source_name))]
+      .filter((name) => !knownSources.includes(name))
+      .sort(),
+  ];
+  for (const source of sourceNames) {
     const rows = scored.filter((row) => row.source_name === source);
+    if (!rows.length) continue;
     const byBasis = {};
     for (const basis of ['snapshots', 'actions']) {
       const subset = rows.filter((row) => row.basis === basis);
@@ -225,9 +251,18 @@ async function main() {
     }
     const trading = rows.filter((row) => row.account === ACCOUNT_TRADING && row.basis === 'snapshots');
     const vibe = rows.filter((row) => row.account === ACCOUNT_VIBE);
+    // The books, by the account the episodes carry. Drendel has two
+    // (trading and Vibe) and plechac has two (his main book and the
+    // "risky" one), and the two are separate positions.
+    const byAccount = {};
+    for (const account of [...new Set(rows.map((row) => row.account).filter(Boolean))].sort()) {
+      const subset = rows.filter((row) => row.account === account);
+      if (subset.length) byAccount[account] = summarise(subset);
+    }
     bySource[source] = {
       all: summarise(rows),
       by_basis: byBasis,
+      by_account: byAccount,
       trading_account: trading.length ? summarise(trading) : null,
       vibe_account: vibe.length ? summarise(vibe) : null,
     };
@@ -497,6 +532,52 @@ async function main() {
     else firstMover.same_day += 1;
   }
 
+  // --- the POSTED books ----------------------------------------------------
+  //
+  // A snapshot is a position list the trader posted himself, and it is a
+  // different thing from an episode: an episode is priced from the entry
+  // and the exit, and a snapshot is what the book looked like on the day
+  // he posted it. plechac's portfolio channel carries his broker's own
+  // screen -- the XTB positions table -- so his RISKY book is posted with
+  // its WEIGHTS, which is the one thing the trade channel cannot give.
+  //
+  // The weights are reported as they were posted, and the sum is reported
+  // so a reader can see whether the snapshot is whole: the table's own
+  // "Celkem" row says 100 %.
+  const postedBooks = {};
+  for (const sourceName of [...new Set(positions.map((row) => row.source_name))].sort()) {
+    const rows = positions.filter((row) => row.source_name === sourceName);
+    if (!rows.length) continue;
+    const byAccount = {};
+    for (const account of [...new Set(rows.map((row) => row.account).filter(Boolean))].sort()) {
+      const held = rows.filter((row) => row.account === account);
+      const dates = [...new Set(held.map((row) => row.as_of_date))].sort();
+      const latest = dates.length ? dates[dates.length - 1] : '';
+      const snapshot = latest ? held.filter((row) => row.as_of_date === latest) : [];
+      const weights = snapshot.map((row) => row.weight_pct).filter((value) => value !== null);
+      byAccount[account] = {
+        snapshots: dates.length,
+        first_date: dates[0] || '',
+        latest_date: latest,
+        positions: snapshot.length,
+        weighted: weights.length,
+        weight_sum_pct: weights.length
+          ? Number(weights.reduce((total, value) => total + value, 0).toFixed(2))
+          : null,
+        top: snapshot
+          .filter((row) => row.weight_pct !== null)
+          .sort((a, b) => b.weight_pct - a.weight_pct)
+          .slice(0, 12)
+          .map((row) => ({ ticker: row.ticker, weight_pct: row.weight_pct, stated_price: row.stated_price })),
+      };
+    }
+    postedBooks[sourceName] = {
+      positions: rows.length,
+      snapshots: new Set(rows.map((row) => row.as_of_date)).size,
+      by_account: byAccount,
+    };
+  }
+
   // --- the other sources --------------------------------------------------
   const signalRows = db.prepare(`
     SELECT video_id, ticker, action, bias, confidence_score, event_time_sec, evidence_text, parser_version
@@ -526,9 +607,27 @@ async function main() {
     }
   }
 
+  // DAVID MONOSZON's calls are a DIFFERENT artifact from a position
+  // history -- he publishes no positions and no sizes -- so they are
+  // scored by their own tool (`tools/analyzeDiscordMonoszon.js`) and
+  // attached here for the report.
+  //
+  // The file is OPTIONAL: the report renders without it, and the
+  // dashboard grows when it is there.
+  let monoszon = null;
+  const monoszonPath = path.join(OUT_DIR, 'discord_monoszon.json');
+  if (fs.existsSync(monoszonPath)) {
+    try {
+      monoszon = JSON.parse(fs.readFileSync(monoszonPath, 'utf8'));
+    } catch (error) {
+      log(`[discord] could not read ${monoszonPath}: ${error.message}`);
+    }
+  }
+
   const payload = {
     generated_at: new Date().toISOString(),
     price_range: { from, to },
+    monoszon,
     sources: bySource,
     drendel_accounts: accountCompare,
     curves: {
@@ -541,6 +640,7 @@ async function main() {
       stop: stopRule,
       size: sizeRule,
     },
+    posted_books: postedBooks,
     overlap: { ...overlap, first_mover: firstMover },
     cross_source: crossSource,
     coverage: {

@@ -92,7 +92,8 @@
     "discord:ingest:jsonl": "node tools/runDiscordIngest.js ingest-jsonl",
     "discord:ingest:browser": "node tools/runDiscordIngest.js ingest-browser",
     "discord:signals": "python tools/build_discord_status.py",
-    "discord:positions": "node tools/buildDiscordPositions.js",
+    "discord:positions": "node tools/buildDiscordPositions.js && node tools/buildDiscordPlechacPositions.js",
+    "discord:plechac:positions": "node tools/buildDiscordPlechacPositions.js",
     "discord:analyze": "node tools/analyzeDiscordTraders.js",
     "discord:report": "node tools/reportDiscordTraders.js",
     "discord:clement:ideas": "node tools/buildClementIdeas.js",
@@ -155,7 +156,11 @@
     "discord:exposures": "node tools/buildTraderExposures.js",
     "discord:attachment-hints": "node tools/buildDiscordAttachmentHints.js",
     "discord:clement:focus-episodes": "node tools/buildClementFocusEpisodes.js",
-    "discord:regime-join": "node tools/buildRegimeBookJoin.js"
+    "discord:regime-join": "node tools/buildRegimeBookJoin.js",
+    "discord:attachments": "node tools/fetchDiscordAttachments.js",
+    "discord:plechac:portfolios": "node tools/parsePlechacPortfolios.js",
+    "discord:monoszon:readings": "node tools/buildDiscordMonoszonReadings.js",
+    "discord:monoszon:outcomes": "node tools/analyzeDiscordMonoszon.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.11.0",

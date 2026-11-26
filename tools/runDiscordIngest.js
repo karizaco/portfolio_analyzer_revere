@@ -91,10 +91,16 @@ function commandAddSource(argv) {
   const guildId = readFlag(argv, '--guild-id')
     || process.env.DISCORD_DEFAULT_GUILD_ID || '';
   const kind = readFlag(argv, '--kind') || 'text';
+  // Whose messages the channel is about. Empty means every author, which
+  // is what a channel nobody else posts in is. A SHARED channel names one
+  // person here, and the ingest skips the rest: plechac's two channels
+  // carry about 40 members each and his messages are 1,840 of the 14,100
+  // in them.
+  const authorId = readFlag(argv, '--author-id') || '';
   if (!name || !channelId || !guildId) {
     console.error(
       'Usage: node tools/runDiscordIngest.js add-source <name> <channel_id> ' +
-      '--guild-id <guild_id> [--kind text|thread|forum]');
+      '--guild-id <guild_id> [--kind text|thread|forum] [--author-id <id>]');
     process.exit(1);
   }
   const script = `
@@ -105,7 +111,8 @@ conn.row_factory = sqlite3.Row
 row_id = register_source(conn, ${JSON.stringify(name)},
                          ${JSON.stringify(channelId)},
                          ${JSON.stringify(guildId)},
-                         ${JSON.stringify(kind)})
+                         ${JSON.stringify(kind)},
+                         ${JSON.stringify(authorId)})
 conn.close()
 print(json.dumps({
     'source_id': row_id,
@@ -113,6 +120,7 @@ print(json.dumps({
     'channel_id': ${JSON.stringify(channelId)},
     'guild_id': ${JSON.stringify(guildId)},
     'channel_kind': ${JSON.stringify(kind)},
+    'author_id': ${JSON.stringify(authorId)},
 }, indent=2))
 `;
   const r = runPythonScript(script);

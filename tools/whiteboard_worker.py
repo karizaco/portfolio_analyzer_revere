@@ -431,6 +431,30 @@ def _apply_migrations(connection: sqlite3.Connection) -> None:
         )
         connection.commit()
 
+    # Version 11: whose messages a Discord channel is about.
+    #
+    # Every other Discord source in this project is effectively one person
+    # posting in their own channel, so the ingest never had to say "and
+    # only his messages". Plechac's two channels are shared with about
+    # forty members each, and his messages are 1,840 of the 14,100 in
+    # them.
+    #
+    # `author_id` is empty for a channel that is about everybody, which is
+    # what every existing source is, and names one person otherwise. The
+    # ingest skips the other authors' messages.
+    if current < 11:
+        columns = {
+            row['name'] for row in connection.execute('PRAGMA table_info(discord_sources)')
+        }
+        if 'author_id' not in columns:
+            connection.execute(
+                "ALTER TABLE discord_sources ADD COLUMN author_id TEXT NOT NULL DEFAULT ''"
+            )
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_version (version) VALUES (11)"
+        )
+        connection.commit()
+
 
 def initialize_schema(connection: sqlite3.Connection) -> None:
     """Load and execute data/db/schema.sql, then run any pending data migrations."""

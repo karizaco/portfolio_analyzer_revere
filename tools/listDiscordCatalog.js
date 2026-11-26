@@ -39,7 +39,7 @@ ${sourceName ? `filters.append('s.name = ?'); params.append(${JSON.stringify(sou
 where = ('WHERE ' + ' AND '.join(filters)) if filters else ''
 rows = [dict(r) for r in conn.execute(
     'SELECT s.id, s.name, s.channel_id, s.guild_id, s.channel_kind, '
-    's.enabled, s.added_at, s.last_run_at, s.last_message_id, '
+    's.author_id, s.enabled, s.added_at, s.last_run_at, s.last_message_id, '
     '(SELECT COUNT(*) FROM discord_messages m WHERE m.source_id = s.id) AS message_count, '
     '(SELECT COUNT(*) FROM discord_messages m WHERE m.source_id = s.id AND m.has_tickers = 1) AS ticker_count '
     'FROM discord_sources s ' + where + ' ORDER BY s.id', params
@@ -88,14 +88,14 @@ if (!data.rows.length) {
 }
 
 const headers = [
-  'id', 'name', 'channel_id', 'channel_kind', 'enabled',
+  'id', 'name', 'channel_id', 'channel_kind', 'author', 'enabled',
   'message_count', 'ticker_count', 'last_message_id', 'last_run_at'
 ];
 console.log(`| ${headers.join(' | ')} |`);
 console.log(`|${headers.map(() => '---').join('|')}|`);
 for (const r of data.rows) {
   const cells = [
-    r.id, r.name, r.channel_id, r.channel_kind, r.enabled ? 'yes' : 'no',
+    r.id, r.name, r.channel_id, r.channel_kind, r.author_id || 'all', r.enabled ? 'yes' : 'no',
     r.message_count, r.ticker_count,
     r.last_message_id || '—', r.last_run_at || '—',
   ];

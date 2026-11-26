@@ -80,13 +80,19 @@ def import_messages(source_name: str, channel_id: str, token: str, limit: int = 
     conn = sqlite3.connect(DB)
     cur = conn.cursor()
 
-    cur.execute("SELECT id FROM discord_sources WHERE name = ?", (source_name,))
+    cur.execute("SELECT id, author_id FROM discord_sources WHERE name = ?", (source_name,))
     row = cur.fetchone()
     if not row:
         print(f"ERROR: source '{source_name}' not found in discord_sources table", file=sys.stderr)
         print("Run: node tools/runDiscordIngest.js add-source <name> <channel_id> --guild-id <guild_id>", file=sys.stderr)
         sys.exit(1)
     source_id = row[0]
+    # A channel can be shared, and the source can be about ONE author in
+    # it: `discord_sources.author_id` says whose messages the channel is
+    # about, and empty means every author. Plechac's two channels carry
+    # about 40 members each and his messages are 1,840 of the 14,100 in
+    # them, so the filter is also what keeps the catalog small.
+    source_author_id = (row[1] or "").strip()
 
     print(f"Fetching messages for source '{source_name}' (channel {channel_id})...", file=sys.stderr)
     messages = fetch_messages(channel_id, token, limit)
@@ -97,6 +103,7 @@ def import_messages(source_name: str, channel_id: str, token: str, limit: int = 
 
     imported = 0
     skipped = 0
+    skipped_other_author = 0
     now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     new_last_id = last_id_on_disk
 
@@ -108,8 +115,11 @@ def import_messages(source_name: str, channel_id: str, token: str, limit: int = 
 
         content = msg.get("content", "") or ""
         author = msg.get("author", {})
-        author_id = author.get("id", "0")
+        msg_author_id = author.get("id", "0")
         author_name = author.get("username", "unknown")
+        if source_author_id and msg_author_id and msg_author_id != source_author_id:
+            skipped_other_author += 1
+            continue
         posted_at = msg.get("timestamp", "")
         tickers = extract_tickers(content)
         ticker_str = ",".join(tickers) if tickers else ""
@@ -119,7 +129,7 @@ def import_messages(source_name: str, channel_id: str, token: str, limit: int = 
             INSERT OR IGNORE INTO discord_messages
             (source_id, discord_message_id, author_id, author_name, content, posted_at, ingested_at, has_tickers, ticker_list, raw_json)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (source_id, msg_id, author_id, author_name, content, posted_at, now, 1 if tickers else 0, ticker_str, raw_json))
+        """, (source_id, msg_id, msg_author_id, author_name, content, posted_at, now, 1 if tickers else 0, ticker_str, raw_json))
 
         if int(msg_id) > int(new_last_id):
             new_last_id = msg_id
@@ -137,6 +147,8 @@ def import_messages(source_name: str, channel_id: str, token: str, limit: int = 
     conn.close()
 
     print(f"Imported {imported} new messages, skipped {skipped} old ones", file=sys.stderr)
+    if skipped_other_author:
+        print(f"Skipped {skipped_other_author} messages by other authors", file=sys.stderr)
     print(f"Last message ID: {new_last_id}", file=sys.stderr)
     return imported, skipped
 

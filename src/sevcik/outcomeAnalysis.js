@@ -1,5 +1,7 @@
 ﻿'use strict';
 
+const { normalizeTickerSymbol } = require('../analysis/priceProvider');
+
 // Score Sevcik signals against subsequent market moves.
 //
 // A signal is a claim about direction. The only way to know whether the claim
@@ -56,14 +58,13 @@ function yahooSymbolFor(ticker) {
     ASML: 'ASML.AS',
     // IPR is residual noise in this corpus; leave unmapped.
   };
-  if (aliases[raw]) return aliases[raw];
-  if (aliases[upper]) return aliases[upper];
-  // Keep exchange suffixes dotted; only share-class dots become dashes.
-  const match = upper.match(/^([A-Z0-9]+)[\.\-]([A-Z]{1,4})$/);
-  if (!match) return upper;
-  const exchanges = new Set(['PR','DE','L','TO','HK','PA','AS','SW','MI','MC','VI','ST','CO','HE','OL','T','AX','F']);
-  if (exchanges.has(match[2])) return match[1] + '.' + match[2];
-  return match[1] + '-' + match[2];
+  if (aliases[raw]) return normalizeTickerSymbol(aliases[raw]);
+  if (aliases[upper]) return normalizeTickerSymbol(aliases[upper]);
+  // The exchange suffixes and the VENDOR's own spelling of them are ONE
+  // rule, and the price provider is where it lives: `RHM.XETRA` and
+  // `RHM.DE` are one instrument, `EVO.ST` is Stockholm and not a share
+  // class, and this function used to get both wrong.
+  return normalizeTickerSymbol(upper);
 }
 
 /**

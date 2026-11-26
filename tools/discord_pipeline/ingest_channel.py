@@ -189,7 +189,7 @@ def _insert_message(connection: sqlite3.Connection, *, source_id: int,
 def ingest_source(connection: sqlite3.Connection, *, name: str, limit: int,
                   api_base: str) -> int:
     row = connection.execute(
-        "SELECT id, channel_id, last_message_id FROM discord_sources WHERE name = ?",
+        "SELECT id, channel_id, last_message_id, author_id FROM discord_sources WHERE name = ?",
         (name,)).fetchone()
     if row is None:
         print(f"[discord] source {name!r} not registered. Use "
@@ -199,6 +199,10 @@ def ingest_source(connection: sqlite3.Connection, *, name: str, limit: int,
     source_id = int(row["id"])
     channel_id = str(row["channel_id"])
     cursor_before = str(row["last_message_id"] or "") or None
+    # A channel can be shared, and the source can be about ONE author in
+    # it: `discord_sources.author_id` names whose messages the channel is
+    # about, and empty means every author.
+    source_author_id = str(row["author_id"] or "").strip()
 
     token = os.environ.get("DISCORD_BOT_TOKEN", "").strip()
     if not token:
@@ -231,6 +235,11 @@ def ingest_source(connection: sqlite3.Connection, *, name: str, limit: int,
                     if oldest_id is None or msg_id < oldest_id:
                         oldest_id = msg_id
                     fetched_total += 1
+                if source_author_id:
+                    author = raw.get("author") if isinstance(raw, dict) else None
+                    author_id = str((author or {}).get("id") or "")
+                    if author_id and author_id != source_author_id:
+                        continue
                 try:
                     if _insert_message(connection, source_id=source_id, raw=raw):
                         page_new += 1

@@ -208,6 +208,292 @@ Full notes: `src/discord/clement/LAYOUT.md`.
 
 Dashboard split: white gutter ~42.5% width; left = plan/watchlist, right = S&P monitor.
 
+## Plechac (`plechac`) — a Czech private investor (2026-11-26)
+
+**WHO HE IS.** `petrplechactradecz`, author id `882261479036973126`, in
+two channels of the TradeCZ server (guild `917782018992009256`):
+
+| source | channel | what it is | his messages |
+|---|---|---|---|
+| `plechac-trades` | `977152752838918144` "realizované⋅investice" | what he DID | 266 |
+| `plechac-talk` | `928591421500428319` "akcie-a-etf" | what he THINKS | 1,779 |
+
+**BOTH CHANNELS ARE SHARED**, with about forty members each, so the
+ingest FILTERS BY AUTHOR. `discord_sources.author_id` says whose messages
+the channel is about, and empty means every author — which is what every
+other source here is. The filter is also what keeps the catalog small:
+2,045 of his messages against the 14,100 in the two channels.
+
+**THE CORPUS.** 2,045 messages, 2025-12-21 → 2026-11-25. The parser
+reads **380 actions** and **93 distinct holdings**; the chain gives **84
+episodes**.
+
+**TWO BOOKS.** A main book and a "RISKY" one, and the book is a property
+of the STATEMENT, not of the message: "Dobírám na risky portfoliu Uber a
+Circle | Na hlavním jsem kosmeticky doplnil" puts one name in each. 45 of
+his actions are in the risky book, and only five names are risky-only
+(ASTS, CAT, CRWV, GRPN, ZETU).
+
+### The parser is his own (`src/discord/plechac/`)
+
+He writes Czech, so the vocabulary is his and the parser is his. Four
+rules are not the shared ones:
+
+1. **THE LINE IS THE UNIT, NOT THE MESSAGE.** He writes a message as a
+   list of statements, one per line, and a line of names CONTINUES the
+   verb above it: "Dobral jsem akcie, které dneska trpí / RollsRoyce /
+   Samsung / LEU / BABA" is four purchases.
+2. **"BERU" PLUS A PROFIT IS A REDUCTION.** It is his most common verb
+   (34 of 233 messages in the trade channel) and it means three things:
+   a purchase, a top-up, and taking a profit. **12** messages pair it
+   with "zisk" or "profit", and every one of them is a REDUCTION.
+   Reading them as buys would publish twelve wrong holdings.
+3. **A CLOSE OF A PART IS A TRIM.** "Zavřel jsem trochu Samsung, OXY,
+   DELL" closes a part of three positions, and the positions are still
+   open afterwards.
+4. **`\b` IS ASCII, AND CZECH BREAKS IT.** `\b` after a word ending in
+   a diacritic is not a boundary, so `/\bdokup\b/` MATCHES "dokupů" and
+   `/\bcelé\b/` NEVER MATCHES. The same defect the Sevcik extractor
+   had. Every pattern here uses a Unicode lookaround instead.
+
+A name behind a dash or an ellipsis is not the subject of the trade:
+"Zavřel jsem opět trochu B - barrick mining" is a trade in B, and the
+name behind the dash says what B is.
+
+### What he does NOT publish
+
+No stops (0 mentions of "stop" or "zastav" in the corpus), no ATR
+multiples, and no weights — only qualitative sizes ("trochu", "kousek",
+"celé pozice") and nine percentages. So the returns are MODELLED from
+closes, like every other source here.
+
+### The names
+
+`config/ticker_names_plechac.csv` is his own confirmed table: the
+company names he writes (with their Czech case endings) and the symbols
+he writes that are NOT the symbol Yahoo wants (`BRK` → `BRK-B`, `KLA` →
+`KLAC`, `CNRL` → `CNQ`, `RR` → `RR.L`, `CSU` → `CSU.TO`). A name that is
+not there is left unresolved, and that is how the table grows.
+
+What is NOT a holding, each read in the message it came from: `SAAS`
+(Czech "software as a service"), `AI` (the theme, not C3.ai), `IBKR` /
+`XTB` / `Bitpanda` / `Alocano` / `eToro` (BROKERS), `MSCI` (an index),
+`RISKY` (the book), `METU` (ambiguous: he writes META for Meta Platforms
+ten times, and METU is a real leveraged ETF).
+
+### The other two channels, and the portfolio screenshots (2026-11-26)
+
+He writes in four channels of the same shared server, and the ingest
+filters by author, so the catalog carries only his messages:
+
+| source | channel | what it is |
+|---|---|---|
+| `plechac-trades` | 977152752838918144 `realizované investice` | what he actually did — 266 messages |
+| `plechac-talk` | 928591421500428319 `akcie-a-etf` | commentary — 1,779 messages |
+| `plechac-portfolia` | 1104753899610583050 `portfolia` | **the portfolio state** — 50 messages |
+| `plechac-komodity` | 987078000426237982 `komodity` | his commodity trades — 1,783 messages, back to 2022 |
+
+The `komodity` channel reaches back to **2022-06**, two years before the
+trades channel starts, and the import's max-id watermark skipped the older
+tail: 4,097 messages had to be fetched by hand to reach it.
+
+**THE PORTFOLIO CHANNEL CARRIES THE BROKER'S OWN SCREEN.** He posts
+screenshots of his positions, and the image is the record of WHAT the
+book holds — the trade channel says what he traded, and a position's
+**size** is a thing only the screenshot carries. The images are
+downloaded into `data/discord_pipeline/media/<source>/<message_id>/`, and
+the row that ties an image to its message is in `discord_attachments`, a
+table of its own.
+
+**THE READABLE FORMAT IS THE XTB `POZICE` TABLE**, and it is read
+whole: 15 positions, and their weights add up to **exactly 100.00 %** —
+which is the table's own `Celkem` row saying so. Two of its columns are
+what the trade channel cannot give: the **WEIGHT** (VÁHA) and the
+average cost (NÁK. CENA).
+
+Four things had to be right for that reading, and each was measured:
+
+1. **THE HEADER IS LEFT-ALIGNED AND THE NUMBERS ARE RIGHT-ALIGNED.** The
+   header words' centres are TICKER 168, KUSY 690, NÁK.CENA 942,
+   AKT.CENA 1456, HODNOTA 1762, P&L 2146, P&L % 2413, VÁHA 2612 — and
+   the data words' centres are within 50 px of them. A column built from
+   the header's LEFT edge drops a number that sits 20 px to the left of
+   it, so the anchor is the CENTRE and a value belongs to the NEAREST
+   column.
+2. **THE BROKER'S MINUS SIGN IS NOT READ.** `"-24,53 $"` comes back as
+   `"~24,53 $"` and `"-0,26%"` as `"F0,26%"`, so the SIGN of the P&L is
+   taken from the prices and never from the glyph.
+3. **THE PRINTED P&L % IS MISREAD** on that very screenshot — three of
+   fifteen rows: `"-3,98%"` reads `"73,98%"`, `"131,93%"` reads
+   `"4131,93%"` and `"11,19%"` reads `"411,19%"`. So the P&L is
+   **DERIVED** from the prices, and the row is CHECKED against its own
+   arithmetic (`value = units x price`, `P&L = units x (price - average
+   cost)`). A row that does not add up is `unverified` and says so: on
+   the measured screenshot the RHM row's average-cost cell holds two
+   numbers, so no cost is published for it at all.
+4. **THE LOGO IS NOT A TICKER.** Every row carries a round company logo
+   to the left of the ticker, and a logo is a picture, so the ticker is
+   taken from the column the header defines.
+
+**THE VENDOR WRITES THE EXCHANGE, AND YAHOO WRITES ITS OWN NAME FOR IT.**
+The broker's screen says `RHM XETRA`, `IDUS.LSE`, `MC.PA`, `EVO.ST`,
+`IGLN.UK`; Yahoo says `RHM.DE`, `IDUS.L`, `MC.PA`, `EVO.ST`, `IGLN.L`.
+Measured 2026-11-26: **every** `.XETRA` and `.LSE` form returns HTTP 404
+from Yahoo and every one of its equivalents resolves. So the translation
+lives in `normalizeTickerSymbol()` (`src/analysis/priceProvider.js`),
+which is where the symbol that is FETCHED is decided, and the plechac
+name table carries the same mapping so the RECORD has one ticker per
+instrument.
+
+**THE OTHER SCREENSHOTS ARE NOT READ YET.** The corpus holds 14
+attachments: one XTB positions table (read), one performance chart, one
+grid of holding cards, one `My Holdings` table and four narrow ticker
+strips. The images are all kept on the machine that fetched them, and
+Discord's own URLs expire, so the media is the only copy -- which is why
+the reader is pinned by a FROZEN fixture of the OCR words
+(`test/fixtures/plechac_portfolio/`) rather than by a live image.
+
+### The WRONG-INSTRUMENT CLASS, and what the probe found (2026-11-26)
+
+Every ticker in `config/ticker_names_plechac.csv` was probed against Yahoo,
+one by one, and the answer is not always the instrument he means. Three
+were wrong, and a wrong instrument is a wrong PRICE on a real holding:
+
+| he writes | Yahoo's bare form is | his instrument is |
+|---|---|---|
+| `EVO` | **Evotec SE** (NMS) | `EVO.ST` (Evolution AB, Stockholm) |
+| `BTC` | the **Grayscale Bitcoin Mini Trust** | `BTC-USD` (bitcoin) |
+| `LVMH` | 404 | `MC.PA` (LVMH, Paris) |
+| `3CP.F` | -- | `1810.HK` (Xiaomi) -- **not** BYD, which is `1211.HK` |
+
+**AND THE TOKEN HAS TO CARRY THE VENDOR'S SUFFIX.** The broker writes
+`IGLN.UK` and `NGAS.UK`, and a token that stopped at the dot read only
+the TAIL -- so `IGLN.UK` was published as the holding `UK`, which Yahoo
+resolves to Ucommune International. The token may now carry a dot or a
+dash, and the two rows are in the table.
+
+**THE ONE THAT LOOKED LIKE A MISREAD WAS NOT.** `UUUU` is not a garble:
+it is Energy Fuels Inc, the small uranium and gas company he writes
+about ("Je\u0161t\u011b EQT a UUUU - plyn a uran", "relativn\u011b mal\u00e1 spole\u010dnost,
+st\u00e1le zraniteln\u00e1, ale nab\u00edz\u00ed expozici i do kritick\u00fdch materi\u00e1l\u016f"). A
+rule that said "UUUU is not a ticker" would have deleted a real holding.
+
+### Commands
+
+| command | what it does |
+|---|---|
+| `npm run discord:plechac:positions` | `tools/buildDiscordPlechacPositions.js` — the parsed layers |
+| `npm run discord:positions` | the English traders' builder, then his |
+| `npm run discord:analyze` | prices every episode, including his |
+| `npm run discord:report` | the dashboard, with his books in the table |
+| `npm run discord:attachments` | `tools/fetchDiscordAttachments.js` — the screenshots |
+| `npm run discord:plechac:portfolios` | `tools/parsePlechacPortfolios.js` — the positions table |
+
+The rows carry `source_name = 'plechac'`, and each builder deletes only
+its own source's rows, so a rebuild of either one leaves the other's
+alone.
+
+## David Monoszon (`monoszon`) — calls about indexes, not positions (2026-11-26)
+
+`⚡｜indexy` (1057197663285678241) in the same TradeCZ server, and
+he is the dominant poster in it: **2,955 of the last 4,000 messages**,
+2025-07 → 2026-11. The ingest filters by his author id
+(`621658520491655176`), so the source is his messages and nobody else's.
+
+**HE PUBLISHES NO POSITION LIST AND NO SIZE.** He trades the index
+futures intraday and says only "malý size", "třetinovým size". So
+this is NOT another position source, and it is not in the traders' table
+of the dashboard. What it is: a TAPE of calls about indexes, sector ETFs
+and commodities, and those calls can be scored against the instrument.
+
+| | |
+|---|---|
+| messages ingested | **4,500** |
+| readings | **90** — 69 forward, 15 retrospective, 6 live positions |
+| measured precision | **88.4 %** (a hand-labelled sample of all 69) |
+| 1-week hit rate | **57.4 %** (68 scored) against **63.2 %** for the same call on SPY |
+| 1-month hit rate | **54.5 %** (66 scored) against **62.1 %** for the same call on SPY |
+
+**SO HE DOES NOT BEAT THE INDEX EITHER**, and that is the honest result:
+it is the same result Sevcik, T3Live and Benzinga give. The excess at
+one week is **+0.07 pp** with a 95 % interval of **±0.56 pp**, so the
+calls and the index are indistinguishable.
+
+### The module is his own (`src/discord/monoszon/`)
+
+`subjects.js` is the instrument table and `parser.js` is the Czech
+reader. Six rules are not the shared ones, and each was measured:
+
+1. **THE TENSE IS CARRIED BY THE VERB, NOT BY THE DIRECTION WORD.**
+   "long" and "short" are nouns in Czech and they do not conjugate, so
+   the tense of a call is carried by the verb around it. Measured over
+   his 4,500 messages, **179** carry a subject and a direction word in
+   the same sentence, and the rest of the parser is about deciding which
+   of those 179 are about the FUTURE.
+2. **"BY" IS NOT A PAST TENSE.** "to by byl bearish scénář" is a SCENARIO and
+   "abych změnil na bearish" is a condition; Czech writes the
+   conditional with "by", so a past form right after a "by" is
+   conditional. Without that, nine of his best calls land in the
+   retrospective bucket.
+3. **A REGIME IS NOT A CALL.** "v bull marketu nečekám až na tick na target",
+   "po ukončení bear marketu 2022", "v třetině komoditním bull cyklu". A direction word
+   followed by a regime word is skipped — and the word is taken WITHOUT
+   its punctuation, or "bull cyklu," does not match a pattern anchored
+   at the end of the word.
+4. **"SHORT COVERING" IS A SQUEEZE, AND A SQUEEZE IS UP.** The two words
+   are read together, because "short" alone says the opposite — and the
+   Czech case ending rides on the noun ("short coveringu"), so a
+   `\bcovering\b` misses it and reads the opposite.
+5. **AN OPTION SPREAD REVERSES THE DIRECTION.** "já budu nakupovat put
+   spready na SPX 6580" is a BEARISH call on SPX, and reading the
+   "nakupovat" as bullish gets it exactly wrong. Buying a put spread is
+   bearish; buying a call spread is bullish.
+6. **"SI" IS MATCHED CASE-SENSITIVELY AND NOTHING ELSE IS.** In Czech
+   "si" is the reflexive pronoun, and a case-INSENSITIVE "SI" matched
+   it on **421** messages and published the silver future as the subject
+   of sentences about nothing at all. He writes the silver future in
+   capitals (once) and the pronoun in lower case (421 times). Every
+   OTHER instrument he writes in BOTH cases — `SPX` 105 caps / 173
+   lower, `NQ` 224 / 111, `QQQ` 37 / 17, `SPY` 29 / 24 — so every other
+   subject is matched in both.
+
+**THE SUBJECT IS WHAT THE DIRECTION HANGS OFF**, and it is the one the
+direction is NEAREST to: "v momentě kdy by to dnes prodejci vzali pod 6220
+tak bullish teze padá" is a BEARISH call on SPX, because "prodejci" is the
+word that hangs off "SPX" and "bullish teze" is the thesis falling.
+
+**THE ENTRY IS THE CLOSE ON THE DAY HE WROTE IT.** He names a level
+("abych změnil na bearish, potřeboval bych vidět spx uzavírat pod 6550")
+and the level is recorded with the reading — but the price model enters
+at the close, because the entry model is close-to-close and a limit
+level is not a fill. A call made intraday is therefore scored from the
+close of the day, which leaves the day's own move out of the measured
+return.
+
+**THE SCORING GATE IS IN THE DATA, NOT IN THE READER.** `claim_kind` is
+`forward` (scored), `retrospective` ("dnes byl krásný long na GC" — a
+fact) or `present` ("dnes uzavírám třetinu BTAL longu" — a position he
+holds, which has already had its move). A query that wants the scorable
+calls says `WHERE claim_kind = 'forward'`.
+
+**A CALL ON THE S&P 500 FUTURE IS SCORED ON SPY**, so its excess against
+SPY is zero by construction; the hit rate is the number that means
+something there. That is said in the payload rather than left for the
+reader to discover.
+
+### Commands
+
+| command | what it does |
+|---|---|
+| `npm run discord:monoszon:readings` | `tools/buildDiscordMonoszonReadings.js` — the readings |
+| `npm run discord:monoszon:outcomes` | `tools/analyzeDiscordMonoszon.js` — the scoring |
+| `npm run discord:report` | the dashboard, with his calls in their own section |
+
+The readings live in `monoszon_readings`, a table of their own: a
+reading is not a trade, so it is not in `discord_trade_actions`, and it
+has no video, so it is not in the shared `market_readings` either. The
+Clement source is the precedent for a chat source with its own tables.
+
 ## Additive cross-trader layers (2026-11-22)
 
 No rebuild of core `discord_positions` / episodes / clement_posts required.

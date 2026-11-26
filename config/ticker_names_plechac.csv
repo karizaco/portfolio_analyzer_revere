@@ -1,0 +1,202 @@
+# The names and symbols petrplechactradecz writes, and what they are.
+#
+# WHY THIS TABLE EXISTS
+#
+# Plechac writes Czech, and he writes COMPANY NAMES as often as symbols:
+# "Samsungu", "Intelu", "Grabu", "Constelation Software", "Rolls".
+# The shared name table (config/ticker_company_names.csv) is the SEC's own
+# registrant list, so it carries US legal-entity names only -- it resolves
+# Intel and Netflix, and it resolves NOTHING for Samsung, Rolls-Royce,
+# Constellation Software or Rheinmetall.
+#
+# So this is the SOURCE'S OWN confirmed table, measured off his corpus
+# (2025-12-21 .. 2026-11-25, 1,840 messages by this author across two
+# channels). Every row was read in the message it came from.
+#
+# KIND
+#
+#   name     a written company name, matched case-insensitively with a
+#            trailing Czech vowel tolerated ("Intelu" -> Intel)
+#   symbol   a capitals token he writes that is NOT the symbol Yahoo wants
+#            (BRK is Berkshire's class B: BRK-B; KLA is KLA Corporation:
+#            KLAC; CNRL is Canadian Natural: CNQ)
+#
+# WHAT IS NOT HERE, AND WHY
+#
+#   Alocano, Bitpanda, XTB, IBKR, eToro   BROKERS. "Držím na Bitpandě",
+#                                          "u XTB", "Na IBRK jsem zavřel".
+#   SAAS, AI, MSCI, ATH, USD, DCA, ETF     SECTOR AND MARKET JARGON. "SAAS"
+#                                          is Czech "software as a service",
+#                                          "AI boom" is the theme, "MSCI
+#                                          world" names an index.
+#   METU                                   AMBIGUOUS. He writes META ten
+#                                          times for Meta Platforms, and
+#                                          METU is a real (leveraged) ETF, so
+#                                          the two readings cannot be told
+#                                          apart from the text. It is left
+#                                          out rather than guessed: a wrong
+#                                          holding is worse than a missing one.
+#   Indi / Indii                            AMBIGUOUS between the Indian
+#                                          market and Indi Wares.
+#
+# A name that is NOT here is left unresolved, and that is how this table
+# grows: from a message that is read, not from a guess.
+#
+spoken,ticker,kind,note
+Samsung,005930.KS,name,Korea listing 2026-03-06 "Beru ENPH, Samsung, XIAOMI"
+Samsungu,005930.KS,name,Czech case ending 2026-05-11 "Prodej 1/5 Samsungu"
+Intel,INTC,name,2026-05-08 "Zavírám Intel"
+Intelu,INTC,name,Czech case ending 2026-01-08 "Beru menší profit na Intelu"
+Citi,C,name,2026-02-04 "Vzal jsem menší zisk na Citi, WFC, INTC"
+Citi Group,C,name,2026-01-05 "Beru zisk na Citi Group částečný"
+Citigroup,C,name,2026-04-16 "zavřel jsem menší zisk na Citigroup"
+SoFi,SOFI,name,2026-03-03 "Beru SoFi minimálně"
+SoFI,SOFI,name,2026-06-09 "zobnul jsem si ZTS a SoFI"
+Grab,GRAB,name,2026-06-05 "Beru Grab"
+Grabu,GRAB,name,Czech case ending 2026-09-08 "Trochu Grabu ještě nikoho nezabilo"
+Uber,UBER,name,2026-02-04 "Dokupuji Uber"
+Adobe,ADBE,name,2026-01-14 "Přikoupil jsem ještě drobně Adobe"
+Baidu,BIDU,name,2026-06-29 "Přidávám se s Baidu nákup"
+Onsemi,ON,name,2026-06-03 "Prodal jsem Onsemi"
+Palo,PANW,name,2026-02-05 "sleduji Palo Alto"
+PaloAlto,PANW,name,2026-07-06 "zavřel jsem třetinu pozice na PaloAlto"
+Palo Alto,PANW,name,2026-05-31 "Palo Alto, Broadcom, CRWD"
+Oneok,OKE,name,2026-07-27 "zavřel jsem komplet Oneok"
+PayPal,PYPL,name,2026-01-02 "Přibral jsem PayPal a Uber"
+Pepsi,PEP,name,2026-10-01 "Dobral jsem drobek Pepsi a FSLR"
+McDonald,MCD,name,2026-07-16 "Nakoupil jsem trochu McDonald"
+Netflix,NFLX,name,2026-07-16 "Nakoupil jsem trochu Netflix"
+Netflixu,NFLX,name,Czech case ending 2026-05-21 "Přesouvám to do Netflixu"
+Visa,V,name,2026-04-28 "Visa + 4 %"
+Zscaler,ZS,name,2026-11-25 "Prodal jsem zbytek Zscaler na eToro"
+Nebius,NBIS,name,2026-02-09 "Svatá trojice IREN, Nebius a CRWV"
+Broadcom,AVGO,name,2026-08-24 "Dokoupil jsem v RISKY portfolio Broadcom a Ouster"
+Oracle,ORCL,name,2026-11-02 "Oracle -5 %"
+Nvidia,NVDA,name,2026-03-23 "Nvidia dneska peče s každým"
+NVIDIA,NVDA,name,2026-07-30 "První pozice NVIDIA"
+Meta,META,name,2026-07-23 "Zobnul jsem Meta a AMZN"
+Nike,NKE,name,2026-04-20 "Dokupuji Nike - snižuji průměrnou nákupku"
+BlackBerry,BB,name,2026-05-26 "Prodal jsem komplet BlackBerry"
+Groupon,GRPN,name,2026-05-26 "Beru celý profit na Groupon"
+Circle,CRCL,name,2026-03-31 "Dobírám na risky portfoliu Uber a Circle"
+Salesforce,CRM,name,2026-02-17 "Dobírám Centrus Energy, SoFi, Salesforce, IREN a NBIS"
+Mastercard,MA,name,2026-04-20 "je tam BRK, JPM, Visa,Mastercard"
+Elastic,ESTC,name,2026-08-27 "CRM a CRWD hodně potěšilo"
+Elanco,ELAN,name,2026-07-05 "ZTS zatím držím"
+Constelation Software,CSU.TO,name,2026-11-25 "Prodal jsem na Bitpandě | Constelation Software"
+Constelation,CSU.TO,name,Czech spelling of Constellation 2026-02-25
+Rolls,RR.L,name,2026-04-22 "Dokupuji také Rolls"
+RollsRoyce,RR.L,name,2026-03-19 "Dobral jsem akcie, které dneska trpí | RollsRoyce"
+Rheinmetall,RHM.DE,name,2026-04-16 "Nová pozice v risky portfoliu je Rheinmetall"
+Elevance,ELV,name,2026-03-18 "Elevance se příliš nehla z místa"
+Elevance health,ELV,name,2026-06-04 "Z risky portfolia jsem se zbavil Elevance health"
+Sarepta,SRPT,name,2026-02-26 "Přikupuji NU"
+Centrus,LEU,name,2026-02-17 "Dobírám Centrus Energy, SoFi, Salesforce, IREN a NBIS"
+Centrus Energy,LEU,name,2026-02-11 "Centrus Energy (LEU) ve středu před zahájením obchodování"
+Gitlab,GTLB,name,2026-08-12 "Zavřel jsem třetinu ZETA a prodal jsem zbytek Gitlab v RISKY portfoliu"
+UiPath,PATH,name,2026-11-24 "Prodal jsem zbytek UiPath, nevidím tam potenciál"
+Alcoa,AA,name,2026-08-28 "Alcoa"
+Sentinel One,S,name,2026-02-05 "Moje první pozice v S - Sentinel One"
+Sentinel,S,name,2026-03-12 "Sentinel One minus 3 %"
+SentimelOne,S,name,his spelling 2026-07-16 "Prodal jsem celý SentimelOne"
+Barrick,B,name,2026-04-20 "Zavřel jsem opět trochu B - barrick mining"
+XIAOMI,1810.HK,symbol,Hong Kong listing 2026-10-05 "Dobírám trochu XIAOMI, PEP, VST, RHM"
+Xiaomi,1810.HK,name,2026-04-13 "Drobně jsem dokoupil Uber, Race, MSFT, META, Xiaomi"
+BYD,1211.HK,symbol,Hong Kong listing 2026-06-10 "Beru Čínu: BABA a BYD"
+palantir,PLTR,name,2026-11-25 "Prodal jsem na Bitpandě | Constelation Software | Visa | palantir"
+Palantir,PLTR,name,2026-05-04 "Když stream protáhneme, můžeme okomentovat výsledky Grab, Duol, Onsemi a Palantir"
+BRK,BRK-B,symbol,Berkshire class B 2026-04-20 "je tam BRK, JPM, Visa,Mastercard"
+KLA,KLAC,symbol,KLA Corporation 2026-08-28 "KLA mi přijde z čtveřice ASML, KLA, LAM research a AMAT"
+ONEOK,OKE,symbol,ONEOK Inc 2026-01-27 "Dal jsem to do energií: ONEOK, EQT, CNRL"
+CNRL,CNQ,symbol,Canadian Natural 2026-07-23 "Prodal jsem trochu CNRL a dal to do GRAB"
+CSU,CSU.TO,symbol,Constellation Software 2026-02-25 "Přikoupil jsem PANW a dokoupil CSU"
+RR,RR.L,symbol,Rolls-Royce 2026-03-31 "(LEU, Meta, RR..)"
+RHM,RHM.DE,symbol,Rheinmetall 2026-11-18 "Dobírám zpátky trochu ASML"
+CNDX,CNDX.L,symbol,iShares Nasdaq 100 UCITS 2026-11-25 "Dokoupil jsem rovnou trochu CNDX - nasdaq"
+IQQW,IQQW.DE,symbol,iShares MSCI World UCITS 2026-11-25 "IQQW - MSCI world"
+EXUS,EXUS.MI,symbol,Xtrackers MSCI World ex USA 2026-11-25 "EXUS - dobré zhod"
+HTWO,HTWO.L,symbol,Legal & General hydrogen UCITS 2026-11-25 "HTWO - hydrogen"
+LAM,LRCX,symbol,Lam Research 2026-08-28 "ASML, KLA, LAM research a AMAT"
+LVMH,MC.PA,symbol,LVMH 2026-10-02 "Beru po dlouhe dobe dalsi pozici LVMH" -- Yahoo spells it MC.PA
+
+# ---------------------------------------------------------------------------
+# THE BROKER'S OWN SPELLINGS
+# ---------------------------------------------------------------------------
+# The XTB position screen writes the exchange it trades on, and Yahoo writes
+# its own name for the same exchange. Every one of these forms 404s on
+# Yahoo and every one of its equivalents resolves (measured 2026-11-26).
+# They are listed here so the RECORD carries one ticker per instrument: the
+# same holding must not appear under two spellings.
+RHM.XETRA,RHM.DE,symbol,Xetra cash market 2026-04-15 "Rheinmetall"
+XUS.XETRA,XUS.DE,symbol,Xetra cash market 2026-04-15
+SIE.XETRA,SIE.DE,symbol,Xetra cash market 2026-04-15
+LXI.XETRA,LXI.DE,symbol,Xetra cash market 2026-04-15
+RRU.XETRA,RRU.DE,symbol,Xetra cash market 2026-04-15 "Rolls Royce"
+URNU.XETRA,URNU.DE,symbol,Xetra cash market 2026-04-15 uranium ETF
+6.XETRA,6.DE,symbol,Xetra cash market 2026-04-15
+AMD.XETRA,AMD,symbol,Xetra cash market 2026-04-15 -- the ADR is the ticker the trades channel uses
+IQQE.XETRA,IQQE.DE,symbol,Xetra cash market 2026-04-15 emerging markets ETF
+IDUS.LSE,IDUS.L,symbol,LSE 2026-04-15 S&P 500 UCITS
+SMSN.LSE,SMSN.L,symbol,LSE 2026-04-15 Samsung
+CNDX.LSE,CNDX.L,symbol,LSE 2026-04-15 Nasdaq 100 UCITS
+NDIA.LSE,NDIA.L,symbol,LSE 2026-04-15 MSCI India UCITS
+IUFS.LSE,IUFS.L,symbol,LSE 2026-04-15 MSCI USA UCITS
+HTWO.LSE,HTWO.L,symbol,LSE 2026-04-15 hydrogen UCITS
+USPY.LSE,USPY.L,symbol,LSE 2026-04-15 S&P 500 UCITS
+EQQQ.LSE,EQQQ.L,symbol,LSE 2026-04-15 Nasdaq 100 UCITS
+KWEB.LSE,KWEB.L,symbol,LSE 2026-04-15 China internet
+R2US.LSE,R2US.L,symbol,LSE 2026-04-15 Russell 2000 UCITS
+IGLN.UK,IGLN.L,symbol,LSE 2023-10-02 "Prikoupil jsem IGLN.UK - ETF na zlato"
+MC.PA,MC.PA,symbol,Paris 2026-04-15 LVMH
+ASML.AS,ASML,symbol,Amsterdam 2026-04-15 -- the ADR is the ticker the trades channel uses
+EVO.ST,EVO.ST,symbol,Stockholm 2026-04-15
+3CP.F,1810.HK,symbol,Paris 2026-04-15 Xiaomi -- the same company as the HK line the trades channel uses
+
+# ---------------------------------------------------------------------------
+# THE COMMODITIES HE TRADES
+# ---------------------------------------------------------------------------
+# The trade channel and the commodities channel both carry commodity trades,
+# and the commodity is named in words ("Beru profit na pšenici"). Each row is
+# the commodity and the ETF it is scored with.
+#
+# The forms are written out because the Czech case ending changes the STEM
+# ("zlato" -> "zlatu"), so a stem comparison would need a rule of its own.
+zlato,GLD,commodity,gold 2026-02-24 "Vstupuji opět do zlata long CFD"
+zlatu,GLD,commodity,gold 2026-01-12 "Na zlatu beru profit z longu"
+zlata,GLD,commodity,gold
+zlatem,GLD,commodity,gold
+stříbro,SLV,commodity,silver 2026-01-23 "Zavrel jsem long na stribru"
+stříbru,SLV,commodity,silver 2026-01-23 "Zavrel jsem long na stribru"
+stříbra,SLV,commodity,silver
+ropa,USO,commodity,crude oil 2026-03-13 "ropu zavírám za 0"
+ropy,USO,commodity,crude oil
+ropu,USO,commodity,crude oil
+ropě,USO,commodity,crude oil
+ropou,USO,commodity,crude oil
+plyn,UNG,commodity,natural gas
+plynu,UNG,commodity,natural gas
+bitcoin,BTC-USD,commodity,2026-11-14 "Dobírám BTC celý den"
+bitcoinu,BTC-USD,commodity
+pšenice,WEAT,commodity,wheat 2025-04-17 "Beru profit na pšenici"
+pšenici,WEAT,commodity,wheat
+sóje,SOYB,commodity,soybeans 2026-03-17 "boby už shortuji"
+boby,SOYB,commodity,soybeans
+sójový olej,SOYB,commodity,2025-05-06 "Vstoupil jsem short do sójového oleje"
+měď,CPER,commodity,copper
+mědi,CPER,commodity,copper
+
+# ---------------------------------------------------------------------------
+# THE THREE BARE TICKERS THAT RESOLVE TO THE WRONG INSTRUMENT
+# ---------------------------------------------------------------------------
+# Measured 2026-11-26 against Yahoo, one by one: every ticker in this
+# table was probed, and these three resolve to a DIFFERENT company than
+# the one he means. A wrong instrument is a wrong price on a real
+# holding, so they are spelled out here.
+#
+#   EVO       Yahoo's bare EVO is EVOTEC SE; his is EVOLUTION AB
+#   BTC       Yahoo's bare BTC is the GRAYSCALE BITCOIN MINI TRUST;
+#             his is bitcoin
+#   NGAS.UK   the natural gas and power ETC, which Yahoo spells NGAS.L
+EVO,EVO.ST,symbol,Evolution AB Stockholm 2025-11-24 "Prikoupil jsem EVO" -- the bare EVO on Yahoo is EVOTEC SE
+BTC,BTC-USD,symbol,bitcoin 2026-11-14 "Dobiram BTC celej den" -- the bare BTC on Yahoo is the Grayscale Bitcoin Mini Trust
+NGAS.UK,NGAS.L,symbol,LSE 2023-02-23 "Zalozil jsem prvni long pozice na NGAS.UK" -- the natural gas and power ETC

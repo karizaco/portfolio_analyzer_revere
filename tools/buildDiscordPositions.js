@@ -29,6 +29,7 @@ const {
 const { parsePortfolioPost, resolveSnapshotDates, sessionDateOf } = require('../src/discord/drendelPortfolio');
 const { readActionStream } = require('../src/discord/tradeActions');
 const { loadLexicon } = require('../src/discord/symbols');
+const { loadCachedCloses } = require('../src/discord/priceCache');
 const { ensureDiscordSchema } = require('../src/discord/schema');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -40,37 +41,22 @@ function log(...args) {
   if (!json) console.error(...args);
 }
 
-/** The daily closes of the symbols in the cache, for the curve and the episodes. */
-function loadCachedCloses(symbols) {
-  const out = new Map();
-  for (const symbol of symbols) {
-    const file = path.join(CACHE_DIR, `${symbol}.json`);
-    if (!fs.existsSync(file)) continue;
-    let entry;
-    try {
-      entry = JSON.parse(fs.readFileSync(file, 'utf8'));
-    } catch {
-      continue;
-    }
-    const closes = new Map();
-    for (const point of entry.prices || []) {
-      if (Number.isFinite(point.price)) closes.set(point.date, point.price);
-    }
-    if (closes.size) out.set(symbol, closes);
-  }
-  return out;
-}
-
 function main() {
   const db = new DatabaseSync(DB_PATH);
   attachDerived(db);
   ensureDiscordSchema(db);
   const known = loadLexicon();
 
+  // The sources THIS tool owns. A source with its own parser -- plechac --
+  // writes its own rows, so the delete is scoped to these names and the
+  // other source's rows survive.
+  const owned = Object.keys(SOURCES);
+
   db.exec('BEGIN');
   try {
     for (const table of ['discord_positions', 'discord_trade_actions', 'discord_episodes']) {
-      db.exec(`DELETE FROM ${table}`);
+      const placeholders = owned.map(() => '?').join(', ');
+      db.prepare(`DELETE FROM ${table} WHERE source_name IN (${placeholders})`).run(...owned);
     }
 
     const select = db.prepare('SELECT id, content, posted_at FROM discord_messages WHERE source_id = ? ORDER BY posted_at');
@@ -216,7 +202,7 @@ function main() {
     }
 
     const symbols = [...new Set(allEpisodes.map((row) => row.ticker).filter(Boolean))];
-    const closes = loadCachedCloses([...symbols, 'SPY']);
+    const closes = loadCachedCloses([...symbols, 'SPY'], CACHE_DIR);
     const priceAt = (ticker, date) => {
       const series = closes.get(ticker);
       if (!series) return null;

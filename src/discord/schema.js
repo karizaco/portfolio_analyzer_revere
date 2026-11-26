@@ -76,6 +76,7 @@ CREATE TABLE IF NOT EXISTS discord_trade_actions (
     stated_result_pct REAL,
     atr_multiple REAL,
     verb TEXT NOT NULL DEFAULT '',
+    account TEXT NOT NULL DEFAULT '',
     content TEXT NOT NULL DEFAULT '',
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
@@ -118,6 +119,20 @@ CREATE INDEX IF NOT EXISTS idx_discord_episodes_ticker
 `;
 
 /**
+ * The columns an existing database may be missing.
+ *
+ * SQLite has no "ADD COLUMN IF NOT EXISTS", so the error is caught and
+ * ignored -- the same thing the project's other schema helpers do.
+ *
+ *   account   the BOOK a trade action belongs to. It was added for
+ *             plechac, who keeps a main book and a "risky" one; the
+ *             sources with one book leave it empty.
+ */
+const LATE_COLUMNS = [
+  { table: 'discord_trade_actions', column: 'account', type: "TEXT NOT NULL DEFAULT ''" },
+];
+
+/**
  * Make sure the tables exist.
  *
  * @param {object} db
@@ -129,7 +144,17 @@ function ensureDiscordSchema(db) {
   // split exists to keep small.
   db.exec('PRAGMA busy_timeout = 60000');
   attachDerived(db);
-  return 3;
+  let statements = 3;
+  for (const entry of LATE_COLUMNS) {
+    try {
+      db.exec(`ALTER TABLE ${entry.table} ADD COLUMN ${entry.column} ${entry.type}`);
+      statements += 1;
+    } catch {
+      // The column is already there. SQLite has no IF NOT EXISTS for
+      // ADD COLUMN, so "duplicate column name" is the success case.
+    }
+  }
+  return statements;
 }
 
-module.exports = { DDL, PARSER_VERSION, ensureDiscordSchema };
+module.exports = { DDL, LATE_COLUMNS, PARSER_VERSION, ensureDiscordSchema };

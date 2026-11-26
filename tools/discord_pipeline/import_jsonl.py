@@ -79,19 +79,25 @@ def open_input(file_arg):
 
 def resolve_source_id(conn, name):
     row = conn.execute(
-        "SELECT id FROM discord_sources WHERE name = ?", (name,)).fetchone()
+        "SELECT id, author_id FROM discord_sources WHERE name = ?", (name,)).fetchone()
     if row is None:
         sys.exit(f"[discord-jsonl] source {name!r} not registered. "
                  f"Run `node tools/runDiscordIngest.js add-source {name} "
                  f"<channel_id> --guild-id <id>` first.")
-    return int(row["id"] if isinstance(row, sqlite3.Row) else row[0])
+    source_id = int(row["id"] if isinstance(row, sqlite3.Row) else row[0])
+    # A channel can be shared, and the source can be about ONE author in
+    # it: `discord_sources.author_id` names whose messages the channel is
+    # about, and empty means every author.
+    author_id = str((row["author_id"] if isinstance(row, sqlite3.Row) else row[1]) or "").strip()
+    return source_id, author_id
 
 
-def import_lines(*, source_id, file_arg, limit, db_path):
+def import_lines(*, source_id, source_author_id, file_arg, limit, db_path):
     conn = connect(db_path)
     bootstrap_schema(conn)
     handle, label = open_input(file_arg)
     total = new = dup = err = 0
+    other_author = 0
     max_id = ""
     try:
         with handle:
@@ -119,6 +125,10 @@ def import_lines(*, source_id, file_arg, limit, db_path):
                     print(f"[discord-jsonl] line {total}: missing keys "
                           f"{missing!r}; skipping.", file=sys.stderr)
                     err += 1
+                    continue
+
+                if source_author_id and str(payload["author_id"]) != source_author_id:
+                    other_author += 1
                     continue
 
                 msg_id = str(payload["discord_message_id"])
@@ -154,6 +164,7 @@ def import_lines(*, source_id, file_arg, limit, db_path):
         conn.close()
     return {"total_lines": total, "new_rows_inserted": new,
             "duplicate_rows_skipped": dup, "errors": err,
+            "other_author_skipped": other_author,
             "label": label, "max_message_id": max_id}
 
 
@@ -184,10 +195,11 @@ def main(argv=None):
     args = parse_args(argv)
     bootstrap = connect(args.db_path)
     bootstrap_schema(bootstrap)
-    source_id = resolve_source_id(bootstrap, args.source)
+    source_id, source_author_id = resolve_source_id(bootstrap, args.source)
     bootstrap.close()
 
-    summary = import_lines(source_id=source_id, file_arg=args.file,
+    summary = import_lines(source_id=source_id, source_author_id=source_author_id,
+                           file_arg=args.file,
                            limit=max(0, args.limit), db_path=args.db_path)
 
     if not args.skip_extract:
@@ -201,6 +213,7 @@ def main(argv=None):
         "total_lines": summary["total_lines"],
         "new_rows_inserted": summary["new_rows_inserted"],
         "duplicate_rows_skipped": summary["duplicate_rows_skipped"],
+        "other_author_skipped": summary["other_author_skipped"],
         "ticker_rows_detected": ticker_rows,
         "errors": summary["errors"],
         "max_message_id": summary["max_message_id"],

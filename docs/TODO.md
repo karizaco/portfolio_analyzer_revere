@@ -551,3 +551,76 @@ MEASUREMENT and not a new reading: the committed record stays the
 record, and the numbers above are the ones the committed corpus gives
 (**212 -> 213 setups** on exactly the same command). The word lists --
 the evidence -- stay in the working folder, untracked.
+
+## The Discord traders
+
+### The other screenshot formats are not read (2026-11-26)
+
+**WHAT IS KNOWN.** The portfolio channel of plechac carries **14**
+attachments, and exactly ONE of them is read: the XTB `POZICE` table of
+2026-05-22, which the reader takes whole -- 15 positions, and the
+weights add up to the table's own 100 %.
+
+The other thirteen are three formats, and none of them is read:
+
+| the image | what it is | what is known about it |
+|---|---|---|
+| 2026-04-15, 2133x1128 | the MAIN book as a grid of CARDS: a ticker, a percentage and the company name, laid out in a masonry grid | the percentage sits in the SAME column as the ticker, just below it, so the pair is recoverable; the grid is 5-6 columns wide |
+| 2025-12-22, 6 images | a `My Holdings` table: a ticker grid, and a separate table of sectors | the tickers are in a grid with no weight column; the weight is not in these images |
+| 2023-05-08, 4 images | four narrow STRIPS of tickers (206x767, 204x701, 201x259, 992x20) | the tickers only; there is no weight |
+| 2023-05-08, one image | a PERFORMANCE CHART ("VYKONNOST VS SPY") | not a position list at all |
+
+**WHAT IS NOT KNOWN.** Whether the weights in the 2026-04-15 cards are
+the `velikost` (size) column the header names, or something else. The
+header row reads `Sektory | Regiony | Denni zmena | velikost | hodnota V
+portfoliu`, and the card percentages sit at x 2321-2570 -- which is
+where the `velikost` column would be -- but the header and the cards are
+laid out on DIFFERENT axes, and nothing has confirmed that a card's
+percentage is the book's weight.
+
+**WHAT A FIX WOULD LOOK LIKE.** A second reader beside
+`readPositionsTable`: find the ticker cells, take the percentage in the
+same column BELOW it, and check the weights against the table's own
+total -- the same check the XTB reader uses, and the same way a reading
+that does not add up is reported rather than published. The 2026-04-15
+image is the one worth building it for: it is the MAIN book, and it has
+about 96 holdings.
+
+**THE IMAGES ARE THE EVIDENCE AND THEY ARE NOT IN GIT.** The media
+directory is gitignored (as every other Discord media here), and
+Discord's own attachment URLs expire -- so the images on this machine
+are the only copy. The reader is therefore pinned by a FROZEN fixture of
+the OCR words (`test/fixtures/plechac_portfolio/`), not by a live image,
+and a new reader should be pinned the same way.
+
+### The monoszon parser's remaining defects (2026-11-26)
+
+**WHAT IS KNOWN.** The parser reads **69** forward calls out of 4,500
+messages, and a hand-labelled sample of all 69 says **88.4 %** of them
+are a call on that instrument in that direction. The eight that are not
+fall into three classes, and each one is a sentence the parser cannot
+tell from a call:
+
+1. **COMMENTARY THAT NAMES A TICKER.** "netu\u0161\u00edm, kolik kus\u016f akcie MSFT musel
+   n\u011bkdo nakoupit aby takhle vyhnal canu nahoru" is about a
+   post-market print, and the parser reads it as a bullish MSFT call.
+2. **A LIVE POSITION.** "nyn\u00ed sleduju potenci\u00e1ln\u00ed vstup long, kdy\u017e se spx bl\u00ed\u017eil k
+   6720 tak jsem podle mapy koupil 0dte calls" -- he took the trade and
+   partly closed it, and the parser reads the remaining sentence as
+   forward.
+3. **A VEHICLE RECOMMENDATION.** "pou\u017eijte SPY, tam si m\u016f\u017eete koupit jeden spread za 100usd"
+   names the instrument to trade and not a direction.
+
+**WHAT IS NOT KNOWN.** Whether the class is separable at all in Czech.
+A position-management sentence and a call about the same instrument
+differ mostly in the verb, and the parser already has a PRESENT
+vocabulary for the live ones -- "uzav\u00edr\u00e1m", "obchoduju", "m\u00e1m" -- so the
+question is whether the three classes above have a verb of their own.
+
+**WHY IT MATTERS AND WHY IT IS NOT FIXED YET.** A wrong DIRECTION
+dilutes a hit rate toward 50 %, so the error understates the source
+rather than overstating it. At 88.4 % precision the measured 1-week hit
+rate of 57.4 % is already a conservative reading of the corpus: at 100 %
+precision the same 69 calls would have to score at least as well. Fixing
+it is worth doing before the corpus grows, and the fix would be a
+vocabulary and a measurement, not a rewrite.

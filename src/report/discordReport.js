@@ -110,6 +110,18 @@ function summaryRow(label, value) {
   ];
 }
 
+/**
+ * The name of a source, as the page shows it.
+ *
+ * @param {string} name
+ * @returns {string}
+ */
+function sourceLabel(name) {
+  const known = { plechac: 'Plechac' };
+  if (known[name]) return known[name];
+  return name.charAt(0).toUpperCase() + name.slice(1);
+}
+
 const SUMMARY_HEADERS = ['book', 'closed', 'same-day', 'open', 'hit rate', 'avg', 'avg (capped)', 'median', 'avg vs SPY', 'days held'];
 
 /**
@@ -130,6 +142,17 @@ function renderDiscordReport(payload) {
   if (sources.drendel && sources.drendel.vibe_account) sourceRows.push(summaryRow('Drendel &mdash; Vibe account', sources.drendel.vibe_account));
   sourceRows.push(summaryRow('Ariel &mdash; long book', sources['ariel-long'] ? sources['ariel-long'].all : {}));
   sourceRows.push(summaryRow('Ariel &mdash; short book', sources['ariel-short'] ? sources['ariel-short'].all : {}));
+  // Every OTHER source, with its books. A source with its own parser --
+  // plechac -- is not named in this file, so it is rendered from the
+  // payload and the page grows without this file knowing its name.
+  for (const [name, source] of Object.entries(sources)) {
+    if (name === 'drendel' || name === 'ariel-long' || name === 'ariel-short') continue;
+    const label = sourceLabel(name);
+    sourceRows.push(summaryRow(`${label} &mdash; all episodes`, source.all || {}));
+    for (const [account, summary] of Object.entries(source.by_account || {})) {
+      sourceRows.push(summaryRow(`${label} &mdash; ${account} book`, summary));
+    }
+  }
 
   const accounts = payload.drendel_accounts || {};
   const tradingCurve = curves.trading_account || {};
@@ -156,6 +179,43 @@ function renderDiscordReport(payload) {
   const overlap = payload.overlap || {};
   const cross = payload.cross_source || {};
 
+  // DAVID MONOSZON -- calls, not positions.
+  //
+  // He publishes no position list and no size, so he is not in the table
+  // above: what he publishes are CALLS about indexes, sector ETFs and
+  // commodities, and those are scored against the instrument's proxy.
+  //
+  // The block is OPTIONAL: the report renders without it, and the
+  // analyze tool attaches it only when the file exists.
+  const mono = payload.monoszon || null;
+  const monoSection = mono ? renderMonoszonSection(mono) : '';
+
+  // The POSTED books: a position list a trader posted himself, with the
+  // weights he gave it. It is a different thing from an episode -- an
+  // episode is priced, a snapshot is what the book looked like that day.
+  const posted = payload.posted_books || {};
+  const postedRows = [];
+  for (const [name, book] of Object.entries(posted)) {
+    for (const [account, detail] of Object.entries(book.by_account || {})) {
+      if (!detail.positions) continue;
+      postedRows.push(`<tr><td>${escapeHtml(sourceLabel(name))}</td>`
+        + `<td>${escapeHtml(account || 'main')}</td>`
+        + `<td>${detail.snapshots}</td>`
+        + `<td>${escapeHtml(detail.latest_date || '')}</td>`
+        + `<td>${detail.positions}</td>`
+        + `<td>${detail.weight_sum_pct === null || detail.weight_sum_pct === undefined ? '&mdash;' : `${num(detail.weight_sum_pct, 2)} %`}</td>`
+        + `<td>${escapeHtml((detail.top || []).slice(0, 6).map((row) => `${row.ticker} ${num(row.weight_pct, 1)}%`).join(', '))}</td></tr>`);
+    }
+  }
+  const postedSection = postedRows.length ? `<section id="posted">
+  <div class="section-heading"><p class="kicker">THE POSTED BOOKS</p><h2>What the book looked like, as posted</h2></div>
+  <p class="description">A snapshot is a position list a trader posted himself. It is a different thing from an
+    episode: an episode is priced from an entry and an exit, and a snapshot is what the book looked like on the day
+    it was posted. The weights are the ones he gave, and the sum is reported so a reader can see whether the snapshot
+    is whole &mdash; the broker's own table says 100&nbsp;%.</p>
+  ${table(['source', 'book', 'snapshots', 'latest', 'holdings', 'weights', 'largest'], postedRows)}
+</section>` : '';
+
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -180,7 +240,7 @@ function renderDiscordReport(payload) {
 </header>
 <nav>
   <a href="#books">the books</a><a href="#accounts">drendel's two accounts</a><a href="#rules">their rules</a>
-  <a href="#together">the two traders</a><a href="#coverage">coverage &amp; caveats</a>
+  <a href="#together">the two traders</a>${postedRows.length ? '<a href="#posted">the posted books</a>' : ''}${mono ? '<a href="#monoszon">monoszon\'s calls</a>' : ''}<a href="#coverage">coverage &amp; caveats</a>
 </nav>
 
 <section id="books">
@@ -251,6 +311,9 @@ function renderDiscordReport(payload) {
     entry. It is a coincidence of names, not a claim that one source copied another.</p>
 </section>
 
+${postedSection}
+${monoSection}
+
 <section id="coverage">
   <div class="section-heading"><p class="kicker">COVERAGE</p><h2>What is measured, and what is not</h2></div>
   <table><tbody>
@@ -271,4 +334,48 @@ function renderDiscordReport(payload) {
 </body></html>`;
 }
 
-module.exports = { renderDiscordReport };
+/**
+ * David's calls, scored.
+ *
+ * @param {object} mono  the payload of `data/discord_monoszon.json`
+ * @returns {string} the section's HTML
+ */
+function renderMonoszonSection(mono) {
+  const overall = mono.overall || {};
+  const week = (overall.same_call_on_spy || {})['1w'] || {};
+  const month = (overall.same_call_on_spy || {})['1m'] || {};
+  const coverage = mono.coverage || {};
+
+  const subjectRows = Object.entries(mono.by_subject || {}).map(([subject, summary]) => {
+    const w = (summary.same_call_on_spy || {})['1w'] || {};
+    const m = (summary.same_call_on_spy || {})['1m'] || {};
+    return `<tr><td>${escapeHtml(subject)}</td><td>${num(summary.claim_count, 0)}</td>`
+      + `<td>${w.hit_rate === null || w.hit_rate === undefined ? '&mdash;' : `${num(w.hit_rate * 100, 1)}%`}</td>`
+      + `<td>${w.n || 0}</td>`
+      + `<td>${m.hit_rate === null || m.hit_rate === undefined ? '&mdash;' : `${num(m.hit_rate * 100, 1)}%`}</td>`
+      + `<td>${w.mean_excess_aligned === null || w.mean_excess_aligned === undefined ? '&mdash;' : signed(w.mean_excess_aligned * 100)}</td></tr>`;
+  });
+
+  return `<section id="monoszon">
+  <div class="section-heading"><p class="kicker">DAVID MONOSZON</p><h2>Calls about indexes, not positions</h2></div>
+  <p class="description">A third Discord source, and a different KIND of source: he publishes no position list and no
+    size &mdash; only &ldquo;mal&yacute; size&rdquo;, &ldquo;t&#345;etinov&yacute;m size&rdquo; &mdash; so there is nothing
+    to price as a holding. What he publishes is a TAPE of calls about the index futures and the ETFs around them, and those
+    are scored against the instrument: QQQ for the Nasdaq 100 future, SPY for the S&amp;P 500 future, GLD for gold.</p>
+  <div class="cards">
+    ${card('forward calls', num(overall.claim_count, 0), `of ${num(coverage.readings, 0)} readings`)}
+    ${card('hit rate, 1 week', week.hit_rate === null || week.hit_rate === undefined ? '&mdash;' : `${num(week.hit_rate * 100, 1)}%`, `${num(week.n, 0)} scored`)}
+    ${card('the same call on SPY', week.spy_same_call_hit_rate === null || week.spy_same_call_hit_rate === undefined ? '&mdash;' : `${num(week.spy_same_call_hit_rate * 100, 1)}%`, 'on the same dates')}
+    ${card('edge vs SPY', week.edge_pp === null || week.edge_pp === undefined ? '&mdash;' : `${num(week.edge_pp, 1)} pp`, 'one week')}
+  </div>
+  ${table(['subject', 'calls', '1w hit', 'n', '1m hit', 'excess 1w'], subjectRows)}
+  <p class="note">A reading is a call about the FUTURE. His retrospective calls (&ldquo;dnes byl krásn&yacute; long na
+    GC&rdquo;) and the positions he holds right now (&ldquo;dnes uzav&iacute;r&aacute;m t&#345;etinu BTAL longu&rdquo;) are
+    recorded and NOT scored: a fact has already had its move. The entry is the close on the day he wrote it &mdash; the level
+    he names is kept with the call, but a limit level is not a fill, so it is not the entry. A call on the S&amp;P 500 future
+    is scored on SPY, so its excess against SPY is zero by construction; the hit rate is the number that means something
+    there.</p>
+</section>`;
+}
+
+module.exports = { renderDiscordReport, renderMonoszonSection };

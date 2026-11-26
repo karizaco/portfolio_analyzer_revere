@@ -8183,6 +8183,176 @@ can stand) are in `docs/discord-traders.md`, and they are pinned by
 `test/discordPortfolio.test.js`, `test/discordTradeActions.test.js` and
 `test/discordEpisodes.test.js`.
 
+## Plechac (petrplechactradecz) -- a Czech private investor (2026-11-26)
+
+Two channels in the shared TradeCZ server (guild `917782018992009256`):
+`977152752838918144` ("realizované investice" - what he DID) and
+`928591421500428319` ("akcie-a-etf" - what he THINKS). Both carry about
+40 members each, so **the ingest filters by AUTHOR**:
+`discord_sources.author_id` says whose messages a channel is about, and
+empty means every author - which is what every other source here is.
+That is also what keeps the catalog small: 2,045 of his messages against
+the 14,100 in the two channels.
+
+**HIS PARSER IS HIS OWN** (`src/discord/plechac/`), because he writes
+Czech, and four rules that are not the shared ones are the whole reason:
+
+- **THE LINE IS THE UNIT, NOT THE MESSAGE.** He writes a message as a
+  list of statements, one per line, and a line of names CONTINUES the
+  verb above it.
+- **"BERU" PLUS A PROFIT IS A REDUCTION.** It is his most common verb
+  and it means three things; **12** measured messages pair it with "zisk"
+  or "profit", and every one of them is a REDUCTION. Reading them as
+  buys would publish twelve wrong holdings.
+- **A CLOSE OF A PART IS A TRIM**, so the position stays open afterwards.
+- **`\b` IS ASCII AND CZECH BREAKS IT**: `/\bdokup\b/` MATCHES "dokupu"
+  and `/\bcele\b/` NEVER MATCHES. Every pattern here uses a Unicode
+  lookaround instead.
+
+He keeps a main book and a "RISKY" one, and the book is a property of the
+STATEMENT, not of the message. His confirmed names, and the symbols he
+writes that are NOT the symbol Yahoo wants (`BRK` -> `BRK-B`, `RR` ->
+`RR.L`), are in `config/ticker_names_plechac.csv`. `SAAS`, `AI`, `MSCI`
+and the BROKERS (IBKR, XTB, Bitpanda, Alocano, eToro) are not holdings.
+
+```bash
+npm run discord:plechac:positions   # his messages -> _trade_actions / _episodes
+npm run discord:positions           # the English traders' builder, then his
+```
+
+The rows carry `source_name = 'plechac'` and each builder deletes only
+its own source's rows, so a rebuild of either leaves the other alone.
+Pinned by `test/discordPlechac.test.js`.
+
+**HE WRITES IN FOUR CHANNELS, AND TWO OF THEM CARRY HIS PORTFOLIO.**
+
+| source | channel | what it is |
+|---|---|---|
+| `plechac-trades` | 977152752838918144 | what he DID - 266 messages |
+| `plechac-talk` | 928591421500428319 | what he THINKS - 1,779 messages |
+| `plechac-portfolia` | 1104753899610583050 | **the portfolio state** - 50 messages |
+| `plechac-komodity` | 987078000426237982 | his commodity trades - 1,783 messages, back to 2022 |
+
+The `komodity` channel reaches **two years before** the trades channel
+starts, and the import's max-id watermark skipped that tail: 4,097
+messages had to be fetched by hand.
+
+**THE PORTFOLIO CHANNEL CARRIES HIS BROKER'S OWN SCREEN**, and the image
+is the record: a position's SIZE is a thing only the screenshot carries.
+The images live in `data/discord_pipeline/media/<source>/<message_id>/`
+and `discord_attachments` ties each one to its message.
+
+**THE READABLE FORMAT IS THE XTB `POZICE` TABLE**, and it is read whole:
+15 positions whose weights add up to **exactly 100.00 %** - which is the
+table's own `Celkem` row saying so. Four things had to be right, and each
+was measured:
+
+- **THE HEADER IS LEFT-ALIGNED AND THE NUMBERS ARE RIGHT-ALIGNED**, so
+  the anchor is the column's CENTRE and a value belongs to the NEAREST
+  one; a range built from the header's left edge drops a number that
+  sits 20 px to the left of it.
+- **THE BROKER'S MINUS SIGN IS NOT READ** ("-24,53 $" comes back as
+  "~24,53 $"), so the SIGN of the P&L comes from the prices.
+- **THE PRINTED P&L % IS MISREAD** on that very screenshot (three of
+  fifteen rows), so the P&L is DERIVED and the row is CHECKED against its
+  own arithmetic (`value = units x price`). A row that does not add up is
+  `unverified` and its cost is not published.
+- **THE LOGO IS NOT A TICKER**, so the ticker is taken from the column
+  the header defines.
+
+**THE VENDOR WRITES THE EXCHANGE AND YAHOO WRITES ITS OWN NAME FOR IT.**
+The broker says `RHM XETRA`, `IDUS.LSE`, `IGLN.UK`; Yahoo says
+`RHM.DE`, `IDUS.L`, `IGLN.L` - and measured 2026-11-26, every `.XETRA`
+and `.LSE` form 404s on Yahoo and every equivalent resolves. The
+translation lives in `normalizeTickerSymbol()`
+(`src/analysis/priceProvider.js`), where the symbol that is FETCHED is
+decided, so there is ONE implementation.
+
+```bash
+npm run discord:attachments         # the screenshots -> media/ + discord_attachments
+npm run discord:plechac:portfolios  # the XTB table -> discord_positions
+```
+
+Pinned by `test/discordPlechacPortfolio.test.js`, against the FROZEN
+EasyOCR words of his 2026-05-22 screenshot (no OCR in the test).
+
+**AND EVERY TICKER WAS PROBED AGAINST YAHOY, because a BARE TICKER CAN
+BE A DIFFERENT COMPANY.** Measured 2026-11-26: `EVO` on Yahoo is
+**Evotec SE**, not the Evolution AB he trades (`EVO.ST`); `BTC` is the
+**Grayscale Bitcoin Mini Trust**, not bitcoin (`BTC-USD`); `LVMH` is
+`MC.PA`; and `3CP.F` is **Xiaomi** (`1810.HK`), not BYD (`1211.HK`). A
+wrong instrument is a wrong price on a real holding.
+
+**AND THE TOKEN HAS TO CARRY THE VENDOR'S SUFFIX.** The broker writes
+`IGLN.UK` and `NGAS.UK`, and a token that stopped at the dot read only
+the TAIL -- so `IGLN.UK` was published as the holding `UK`, which Yahoo
+resolves to Ucommune International. `UUUU` is NOT a misread: it is Energy
+Fuels Inc, the small uranium and gas company he writes about.
+
+## David Monoszon (davidmonoszon) -- calls about indexes, not positions (2026-11-26)
+
+`⚡｜indexy` (1057197663285678241) in the same server, and he is the
+dominant poster in it: **2,955 of the last 4,000 messages**,
+2025-07 -> 2026-11. The ingest filters by his author id
+(`621658520491655176`).
+
+**HE PUBLISHES NO POSITION LIST AND NO SIZE** - he trades the index
+futures intraday and says only "malý size". So this is NOT another
+position source: what he publishes is a TAPE of CALLS about indexes,
+sector ETFs and commodities, and those are scored against the
+instrument (QQQ for the Nasdaq 100 future, SPY for the S&P 500 future,
+GLD for gold).
+
+| | |
+|---|---|
+| messages | **4,500** |
+| readings | **90** - 69 forward, 15 retrospective, 6 live positions |
+| measured precision | **88.4 %** (a hand-labelled sample of all 69) |
+| 1-week hit rate | **57.4 %** against **63.2 %** for the same call on SPY |
+| 1-month hit rate | **54.5 %** against **62.1 %** for the same call on SPY |
+
+**SO HE DOES NOT BEAT THE INDEX EITHER**, and the excess at one week is
++0.07 pp with a 95 % interval of ±0.56 pp - indistinguishable from zero.
+The same result Sevcik, T3Live and Benzinga give.
+
+**HIS PARSER IS HIS OWN** (`src/discord/monoszon/`), because he writes
+Czech, and six rules that are not the shared ones are the whole reason:
+
+- **THE TENSE IS CARRIED BY THE VERB, NOT BY THE DIRECTION WORD.**
+  "long" and "short" are nouns in Czech and do not conjugate. Measured
+  over his 4,500 messages, **179** carry a subject and a direction word
+  in the same sentence.
+- **"BY" IS NOT A PAST TENSE.** "to by byl bearish scénář" is a
+  SCENARIO, and Czech writes the conditional with "by".
+- **A REGIME IS NOT A CALL**: "v bull marketu", "po ukončení bear
+  marketu 2022", "v třetině komoditního bull cyklu".
+- **"SHORT COVERING" IS A SQUEEZE, AND A SQUEEZE IS UP** - the two words
+  are read together, and the Czech case ending rides on the noun
+  ("short coveringu").
+- **AN OPTION SPREAD REVERSES THE DIRECTION**: "já budu nakupovat put
+  spready na SPX 6580" is a BEARISH call on SPX.
+- **"SI" IS MATCHED CASE-SENSITIVELY AND NOTHING ELSE IS.** In Czech "si"
+  is the reflexive pronoun, and a case-INSENSITIVE "SI" matched it on
+  **421** messages. Every other instrument he writes in BOTH cases
+  (`SPX` 105 caps / 173 lower, `NQ` 224 / 111).
+
+**THE SUBJECT IS WHAT THE DIRECTION HANGS OFF**, and it is the one the
+direction is NEAREST to.
+
+**THE SCORING GATE IS IN THE DATA, NOT IN THE READER**: `claim_kind` is
+`forward` (scored), `retrospective` (a fact) or `present` (a position he
+holds, which has already had its move).
+
+```bash
+npm run discord:monoszon:readings   # his messages -> monoszon_readings
+npm run discord:monoszon:outcomes   # the readings, priced and scored
+```
+
+The readings live in `monoszon_readings`, a table of their own: a
+reading is not a trade, and it has no video. Pinned by
+`test/discordMonoszon.test.js`, whose last test measures the precision
+against the hand-labelled sample.
+
 ## The X (x.com) source -- any account, two interchangeable routes (2026-11-20)
 
 The full design and status are in `docs/x-source-plan.md`. The CLI is

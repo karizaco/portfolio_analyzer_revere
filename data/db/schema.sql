@@ -266,6 +266,12 @@ CREATE TABLE IF NOT EXISTS discord_sources (
     channel_id TEXT NOT NULL,
     guild_id TEXT NOT NULL,
     channel_kind TEXT NOT NULL DEFAULT 'text',
+    -- Whose messages the channel is about. Empty means EVERY author, which
+    -- is what a channel nobody else posts in is. A shared channel names
+    -- one person here, and the ingest skips the rest: plechac's two
+    -- channels carry about 40 members each and his messages are 1,840 of
+    -- the 14,100 in them.
+    author_id TEXT NOT NULL DEFAULT '',
     added_at TEXT NOT NULL,
     last_run_at TEXT,
     last_message_id TEXT,

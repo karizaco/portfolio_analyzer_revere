@@ -730,6 +730,71 @@ CREATE TABLE IF NOT EXISTS oconnell_ocr_cache (
     UNIQUE(source_key, source_size, source_mtime, parser_version)
 );
 
+-- David Monoszon's CALLS -- and they are calls, not positions.
+--
+-- He publishes no position list and no size, so a reading fits neither
+-- `discord_trade_actions` nor `discord_episodes`, and it has no video,
+-- so it does not fit the shared `market_readings` either. The Clement
+-- source is the precedent for a chat source with tables of its own.
+--
+-- The CLAIM KIND is the scoring gate, and it lives in the DATA rather
+-- than in the reader:
+--
+--   forward        a call about the future -- SCORED
+--   retrospective  a call about what already happened -- not scored
+--   present        a position he holds right now -- not scored
+--
+-- Every row carries the EXACT sentence it was read from, for the same
+-- reason `trade_signals.evidence_text` is NOT NULL: a call you cannot
+-- point at is a call you cannot check.
+CREATE TABLE IF NOT EXISTS monoszon_readings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    parser_version TEXT NOT NULL,
+    source_name TEXT NOT NULL DEFAULT 'monoszon',
+    message_id INTEGER NOT NULL,
+    discord_message_id TEXT NOT NULL DEFAULT '',
+    posted_at TEXT NOT NULL DEFAULT '',
+    as_of_date TEXT NOT NULL DEFAULT '',
+    -- What the reading is about.
+    --   market      an index or the tape as a whole
+    --   sector      a sector ETF
+    --   commodity   gold, silver, oil
+    --   crypto      bitcoin
+    --   bond        the long bond
+    --   stock       one of the few individual names he names
+    scope TEXT NOT NULL DEFAULT 'market',
+    -- The subject AS HE SAID IT: "NQ", "zlato", "SPX".
+    subject TEXT NOT NULL DEFAULT '',
+    -- The tradeable instrument it is scored with: QQQ for the Nasdaq
+    -- 100 future, SPY for the S&P 500 future, GLD for gold.
+    proxy_ticker TEXT NOT NULL DEFAULT '',
+    -- bullish | bearish | mixed
+    stance TEXT NOT NULL DEFAULT 'neutral',
+    -- forward | retrospective | present
+    claim_kind TEXT NOT NULL DEFAULT 'forward',
+    -- The horizon he stated: intraday | swing | 1w | 1m | 1y
+    horizon TEXT NOT NULL DEFAULT '',
+    horizon_text TEXT NOT NULL DEFAULT '',
+    -- The price level he named, when he named one. It is NOT the entry:
+    -- the price model enters at the close on the message date.
+    level TEXT NOT NULL DEFAULT '',
+    -- high | medium
+    confidence TEXT NOT NULL DEFAULT 'medium',
+    -- The EXACT sentence this reading was read from. NOT NULL.
+    evidence_text TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(message_id, subject, stance, claim_kind, parser_version)
+);
+
+CREATE INDEX IF NOT EXISTS idx_monoszon_readings_date
+    ON monoszon_readings(as_of_date, claim_kind);
+
+CREATE INDEX IF NOT EXISTS idx_monoszon_readings_proxy
+    ON monoszon_readings(proxy_ticker, as_of_date);
+
+CREATE INDEX IF NOT EXISTS idx_monoszon_readings_message
+    ON monoszon_readings(message_id);
+
 -- Discord position parse (created at runtime before this split).
 CREATE TABLE IF NOT EXISTS discord_positions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -780,6 +845,10 @@ CREATE TABLE IF NOT EXISTS discord_trade_actions (
     stated_result_pct REAL,
     atr_multiple REAL,
     verb TEXT NOT NULL DEFAULT '',
+    -- The BOOK the action belongs to. Empty for the sources that have one
+    -- book; plechac keeps a main book and a "risky" one, and the two are
+    -- separate positions.
+    account TEXT NOT NULL DEFAULT '',
     content TEXT NOT NULL DEFAULT '',
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );

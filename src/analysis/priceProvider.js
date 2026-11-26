@@ -66,12 +66,34 @@ const YAHOO_EXCHANGE_SUFFIXES = new Set([
   'SS', 'SZ', 'BO', 'NS', 'JK', 'SI', 'BR', 'LS', 'AT', 'IR', 'IC', 'F', 'NYB',
 ]);
 
+// The VENDOR's suffixes, not the market's.
+//
+// A broker writes the exchange it trades on and Yahoo writes its own name
+// for the same exchange, so the same instrument has two spellings:
+// `RHM.XETRA` and `RHM.DE`, `IDUS.LSE` and `IDUS.L`, `MC.PA` and `MC.PA`.
+//
+// Measured 2026-11-26 over every form a Czech broker's position screen
+// carried: all nine `.XETRA` forms and all ten `.LSE` forms return HTTP
+// 404 from Yahoo, and every one of their equivalents resolves. So the
+// vendor suffix is translated here, where the symbol that is FETCHED is
+// decided, and a reader may keep the broker's own spelling in its
+// record.
+const VENDOR_EXCHANGE_SUFFIXES = new Map([
+  ['LSE', 'L'],      // London Stock Exchange -> Yahoo's .L
+  ['UK', 'L'],       // and the .UK spelling of the same exchange
+  ['XETRA', 'DE'],   // the Xetra cash market -> Yahoo's .DE
+]);
+
 function normalizeTickerSymbol(ticker) {
   const raw = String(ticker || '').trim().toUpperCase();
   if (!raw) return '';
   const exchangeMatch = raw.match(/\.([A-Z]{1,4})$/);
   if (exchangeMatch && YAHOO_EXCHANGE_SUFFIXES.has(exchangeMatch[1])) {
     return raw;
+  }
+  const vendorMatch = raw.match(/\.([A-Z]{1,6})$/);
+  if (vendorMatch && VENDOR_EXCHANGE_SUFFIXES.has(vendorMatch[1])) {
+    return `${raw.slice(0, vendorMatch.index)}.${VENDOR_EXCHANGE_SUFFIXES.get(vendorMatch[1])}`;
   }
   const match = raw.match(/^([A-Z0-9]+)[\.\-]([A-Z]{1,4})$/);
   if (!match) return raw.replace(/\./g, '-');
