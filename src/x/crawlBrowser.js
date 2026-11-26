@@ -36,7 +36,7 @@
 
 const { DENSE_WINDOW_POSTS, planWindows, browserSearchUrl, splitDenseWindows, uncoveredRanges, windowVerdict, BROWSER_QUERY_KIND, BROWSER_SPLIT_KINDS } = require('./windows');
 const { createScrollTracker, jitter } = require('./browser/scroll');
-const { detectStopSignal, isEmptyResult } = require('./browser/signals');
+const { detectStopSignal, isEmptyResult, loggedInPage } = require('./browser/signals');
 const { defaultProfileDir, isInsideRepo, stripQuery, timelineOperation } = require('./browser/capture');
 const { extractVisibleArticles, readPageState } = require('./browser/domExtract');
 const { normalizeEnvelope, saveRaw } = require('./rawStore');
@@ -176,9 +176,15 @@ async function pageState(page) {
 
 async function isLoggedIn(page) {
   try {
-    return await page.evaluate(() => Boolean(document.querySelector(
-      '[data-testid="SideNav_AccountSwitcher_Button"], [data-testid="AppTabBar_Profile_Link"]',
-    )));
+    const state = await page.evaluate(() => ({
+      url: location.href,
+      articleCount: document.querySelectorAll('article').length,
+      hasAccountSwitcher: Boolean(document.querySelector(
+        '[data-testid="SideNav_AccountSwitcher_Button"], [data-testid="AppTabBar_Profile_Link"]')),
+    }));
+    // A test double answers the logged-in question directly.
+    if (typeof state === 'boolean') return state;
+    return loggedInPage(state);
   } catch (_) {
     return false;
   }

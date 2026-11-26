@@ -35,6 +35,27 @@ const STOP_REASONS = {
  * @param {string|null} [state.rateLimitReset] - epoch seconds, from x-rate-limit-reset
  * @returns {{stop: boolean, reason: string, retryable: boolean, message: string, retryAt: string|null}}
  */
+/**
+ * Is this page a logged-in X session?
+ *
+ * The sidebar buttons the first version looked for are gone: measured
+ * 2026-11-26, the logged-in home page carries neither
+ * `SideNav_AccountSwitcher_Button` nor `AppTabBar_Profile_Link`, but it
+ * renders the timeline and stays at /home. A logged-out visit does not --
+ * it is redirected to the login wall. So the timeline at /home is the
+ * evidence, and the old buttons remain as a faster positive signal.
+ *
+ * @param {object} state
+ * @param {string} [state.url]
+ * @param {number} [state.articleCount]
+ * @param {boolean} [state.hasAccountSwitcher]
+ * @returns {boolean}
+ */
+function loggedInPage(state) {
+  if (state.hasAccountSwitcher) return true;
+  return /(?:x|twitter)\.com\/home(?:[/?#]|$)/.test(String(state.url || '')) && Number(state.articleCount) > 0;
+}
+
 function detectStopSignal(state) {
   const url = String(state.url || '');
   const title = String(state.title || '').toLowerCase();
@@ -72,4 +93,4 @@ function isEmptyResult(bodyText) {
   return /no results for/i.test(String(bodyText || ''));
 }
 
-module.exports = { STOP_REASONS, detectStopSignal, isEmptyResult };
+module.exports = { STOP_REASONS, detectStopSignal, isEmptyResult, loggedInPage };

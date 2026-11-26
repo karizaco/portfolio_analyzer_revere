@@ -11,7 +11,7 @@ const os = require('node:os');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
-const { detectStopSignal, isEmptyResult } = require('../src/x/browser/signals');
+const { detectStopSignal, isEmptyResult, loggedInPage } = require('../src/x/browser/signals');
 const { createScrollTracker, jitter } = require('../src/x/browser/scroll');
 const { defaultProfileDir, isInsideRepo, timelineOperation } = require('../src/x/browser/capture');
 const { acquireLock } = require('../src/x/lock');
@@ -21,6 +21,20 @@ const { normalizeAgentRecord, normalizeDomPost, isRepostContext, isPinnedContext
 const { USER, idAt } = require('./fixtures/x/scenario');
 
 const KNOWN = new Map([['testtrader', USER.id]]);
+
+test('the logged-in home page counts even without the old sidebar buttons', () => {
+  // Measured 2026-11-26: X's home page no longer carries the
+  // SideNav_AccountSwitcher_Button / AppTabBar_Profile_Link test ids, so a
+  // check for those alone never sees a session that is logged in.
+  assert.equal(loggedInPage({ url: 'https://x.com/home', articleCount: 12, hasAccountSwitcher: false }), true);
+  assert.equal(loggedInPage({ url: 'https://x.com/home?lang=en', articleCount: 1, hasAccountSwitcher: false }), true);
+  // The old buttons remain a positive signal on any page.
+  assert.equal(loggedInPage({ url: 'https://x.com/explore', articleCount: 0, hasAccountSwitcher: true }), true);
+  // A logged-out visit is redirected to the login wall, and an empty home
+  // page is not evidence.
+  assert.equal(loggedInPage({ url: 'https://x.com/i/jf/onboarding/web?redirect_after_login=%2Fhome', articleCount: 3, hasAccountSwitcher: false }), false);
+  assert.equal(loggedInPage({ url: 'https://x.com/home', articleCount: 0, hasAccountSwitcher: false }), false);
+});
 
 test('every stop signal stops the crawl with its own reason', () => {
   const cases = [
