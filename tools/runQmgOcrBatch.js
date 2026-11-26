@@ -17,6 +17,7 @@
 const fs = require('node:fs');
 const path = require('path');
 const { spawn, execSync } = require('node:child_process');
+const { mediaVideoId } = require('./mediaVideoId.js');
 
 function readFlag(flag, argv = process.argv.slice(2)) {
   const i = argv.indexOf(flag);
@@ -204,7 +205,9 @@ function indexDir(dir) {
   }
   for (const f of entries) {
     if (!f.endsWith('.mp4')) continue;
-    const id = f.replace(/^\d+_/, '').replace(/\.mp4$/, '');
+    // Only an 8-digit upload_date is ever prefixed; a video id may itself
+    // start with digits, so `^\d+_` would truncate it.
+    const id = mediaVideoId(f);
     m.set(id, f);
   }
   return m;

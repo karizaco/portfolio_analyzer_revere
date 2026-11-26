@@ -29,6 +29,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
+const { mediaVideoId } = require('./mediaVideoId.js');
 
 const argv = process.argv.slice(2);
 const readFlag = (f) => {
@@ -73,7 +74,7 @@ function probe(file) {
 
 /** The video_id inside `<date>_<id>.mp4` or `<id>.mp4`. */
 function idOf(file) {
-  return file.replace(/^\d+_/, '').replace(/\.mp4$/, '');
+  return mediaVideoId(file);
 }
 
 if (!fs.existsSync(DIR_1080) || !fs.existsSync(DIR_720)) {

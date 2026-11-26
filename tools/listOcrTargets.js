@@ -26,6 +26,7 @@ const path = require('node:path');
 
 const ROOT = path.resolve(__dirname, '..');
 const MEDIA_ROOT = 'C:/Users/Admin/Projects/portfolio_analyzer_revere_media';
+const { mediaVideoId } = require('./mediaVideoId.js');
 
 const argv = process.argv.slice(2);
 const limit = Number(argv[argv.indexOf('--limit') + 1]) || 0;
@@ -55,7 +56,10 @@ function collectTargets() {
     }
     for (const f of files) {
       if (!f.endsWith('.mp4')) continue;
-      const id = f.replace(/^\d+_/, '').replace(/\.mp4$/, '');
+      // The downloader prefixes an 8-digit upload_date, and only that. A
+      // video id may itself start with digits ("438_cyYQ888"), so stripping
+      // `^\d+_` would truncate a real id. Strip exactly the date prefix.
+      const id = mediaVideoId(f);
       onDisk.set(id, { file: f, dir, resolution });
     }
   }

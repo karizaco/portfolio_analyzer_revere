@@ -56,6 +56,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const cp = require('node:child_process');
+const { mediaVideoId } = require('./mediaVideoId.js');
 
 const REPO = path.resolve(__dirname, '..');
 const DATA = path.join(REPO, 'data');
@@ -119,7 +120,11 @@ for (const d of ['downloads_1080p', 'downloads_720p']) {
   if (!fs.existsSync(p)) continue;
   for (const f of fs.readdirSync(p)) {
     if (!f.toLowerCase().endsWith('.mp4')) continue;
-    onDisk.add(f.replace(/^\d+_/, '').replace(/\.mp4$/i, '').toLowerCase());
+    // The downloader prefixes an 8-digit upload_date and nothing else. A video
+    // id may itself start with digits ("438_cyYQ888"), so stripping `^\d+_`
+    // would produce a truncated id that matches no row — and the video would
+    // look absent from disk.
+    onDisk.add(mediaVideoId(f).toLowerCase());
   }
 }
 
