@@ -746,6 +746,46 @@ in two pictures and adding those would double the book. That rule is
 measured (it is the one that produced 98.27 %) and it is not yet
 shipped.
 
+### The `bottom_most` prior published a WATCHLIST (measured 2026-11-28)
+
+**WHAT HAPPENED.** The `position_table` sweep of 20220131 -- the
+worst-recall date in the corpus, where the chart-stream reader reads 0 of
+1 -- found a NINETEEN-row table and published ten names from it: AAPL,
+AVGO, ENPH, HOOD, NFLX, PINS, PLUG, SPOT, SYM and TER. **None of them
+is a holding.** The ground truth says that video showed ONE holding
+(TQQQ), and the table the reader found is his WATCHLIST.
+
+**SO IT IS THE DOCUMENTED FAILURE MODE, MEASURED.** The reader's own
+documentation says that a table is published when it was "positively
+identified as the positions table", and that the `bottom_most`
+discriminator is "only a positional tie-break, not an identification" --
+and that it "can carry false positives". This is that, on a real date:
+the prior picked the watchlist and published it, because the frame had
+no readable "POSITIONS" title to identify the right table.
+
+**AND THE HEADER'S OWN WORD LEAKED IN.** "SYM" is the table's column
+heading and it was decoded as a holding. A cell that is the table's own
+header is not a holding, and the reader does not check.
+
+**WHAT THE FIX IS, and it is not a guess.** The `title` discriminator
+-- the one that reads "POSITIONS" out of the table's own title -- is
+already preferred over the prior, and the merge now prefers an
+identified table over a prior (measured: 20230609 went from 11/13 with
+NINE false positives to 11/13 with none). What is missing is the case
+where NO capture identifies a table: then the prior is the only
+reading, and it can be a watchlist.
+
+**THE SAFE RULE WOULD BE**: a table whose own heading does not say
+"TICKER" or "POSITIONS" and which has no title is not published at all.
+That costs the 2022-era floating-panel dates, where the table IS the
+positions table and its heading is the only thing that says so -- so the
+rule has to be measured on those dates before it is shipped.
+
+**WHAT IS NOT DONE.** The rule above is a MEASUREMENT to take, not a fix
+that is ready. Until it is, the reader publishes the prior's reading and
+the coverage says the discriminator, so a reader of the log can see
+that the table was a positional guess and not an identification.
+
 **WHAT IS STILL NOT READ.** The 2023-05-08 ticker STRIPS (206x767,
 204x701, 201x259, 992x20) and the 2026-08-20 picture (1227x717): four
 narrow strips of tickers with no weight column, and one picture whose

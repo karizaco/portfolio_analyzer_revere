@@ -8351,6 +8351,30 @@ in Czech (zlato -> GLD, stribro -> SLV, ropa -> USO, psenice -> WEAT);
 and the company names go through the SHARED matcher, which resolves some
 names and not others.
 
+### The `bottom_most` prior can publish a WATCHLIST (measured 2026-11-28)
+
+**THE `position_table` SWEEP FOUND IT, on the worst date in the
+corpus.** 20220131 -- where the chart-stream reader reads 0 of 1 -- the
+table reader found a nineteen-row table and published ten names from it:
+AAPL, AVGO, ENPH, HOOD, NFLX, PINS, PLUG, SPOT, SYM and TER. **None
+of them is a holding**: the table it found is his WATCHLIST, and the
+video showed one holding.
+
+**SO IT IS THE DOCUMENTED FAILURE MODE, MEASURED.** The `bottom_most`
+discriminator is "only a positional tie-break, not an identification",
+and the `title` discriminator is what identifies a table properly. Where
+NO capture can read a title, the prior is the only reading -- and it
+can be a watchlist.
+
+**AND THE HEADER'S OWN WORD LEAKED IN**: "SYM" is the table's column
+heading and it was decoded as a holding.
+
+**THE FIX IS A MEASUREMENT AND NOT YET A RULE**: a table with no
+readable title AND no "TICKER"/"POSITIONS" heading is not published at
+all. That would cost the 2022-era floating-panel dates, where the table
+IS the positions table and its heading is the only thing that says so --
+so the rule has to be measured on those dates before it ships.
+
 ### The 2025-12-22 XTB "Overview" table -- READ, and it carries the WEIGHT (2026-11-28)
 
 **THE PREMISE WAS WRONG.** The open question was whether these pictures
