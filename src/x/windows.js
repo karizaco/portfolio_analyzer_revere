@@ -44,6 +44,10 @@ const DENSE_WINDOW_POSTS = 400;
 function toDate(value) {
   const text = String(value || '').slice(0, 10);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) throw new Error(`not a date: ${value}`);
+  const parsed = new Date(`${text}T00:00:00Z`);
+  if (Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== text) {
+    throw new Error(`not a date: ${value}`);
+  }
   return text;
 }
 
@@ -60,6 +64,12 @@ function addUnit(isoDate, unit) {
 function alignStart(isoDate, unit) {
   if (unit === 'year') return `${isoDate.slice(0, 4)}-01-01`;
   if (unit === 'month') return `${isoDate.slice(0, 7)}-01`;
+  if (unit === 'week') {
+    const d = new Date(`${isoDate}T00:00:00Z`);
+    const daysSinceMonday = (d.getUTCDay() + 6) % 7;
+    d.setUTCDate(d.getUTCDate() - daysSinceMonday);
+    return d.toISOString().slice(0, 10);
+  }
   return isoDate;
 }
 
