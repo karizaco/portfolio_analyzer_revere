@@ -8184,6 +8184,56 @@ can stand) are in `docs/discord-traders.md`, and they are pinned by
 `test/discordPortfolio.test.js`, `test/discordTradeActions.test.js` and
 `test/discordEpisodes.test.js`.
 
+## The ENTRY RULE -- measured, and it is NOT why the sources lose (2026-11-27)
+
+**EVERY forward claim in this project is entered at ONE price: the close
+on the day the claim was made.** That rule had never been measured
+against an alternative, and it is applied identically to every source --
+so a systematic bias in it would be invisible in every source at once.
+
+**THE QUESTION.** Is the finding "these sources do not beat the index" a
+fact about the SOURCES or a fact about the ENTRY PRICE?
+
+**THE MEASUREMENT.** `tools/measureEntryRule.js` re-scores every forward
+claim of nine sources -- 12,940 of them -- under four entry rules, with
+the exit FIXED at the claim date so that only the entry moves:
+
+| rule | what it pays |
+|---|---|
+| `close_d0` | the close on the day of the claim (THE SHIPPED RULE) |
+| `open_d1` | the next session's open |
+| `close_d1` | the next session's close |
+| `limit_d0_1_0` | a limit 1 % better than the signal close, filled on the next session |
+
+**THE ANSWER: THE ENTRY RULE IS NOT THE REASON.** Under all three
+executable rules every source's edge against SPY is negative or
+indistinguishable from zero, and the rules differ from each other by a
+couple of percentage points at most. Sevcik: -2.4 / -2.4 / -2.5 pp at one
+week. T3Live: -3.9 / -4.5 / -4.3. Benzinga's signals: -2.9 / -2.0 /
+-1.1. Monoszon: -5.9 / -4.4 / -2.9. Martin Klass: -6.1 / -2.0 / +2.0.
+
+**SO THE "NO EDGE" FINDING SURVIVES THE QUESTION**, and it is now a
+measured conclusion rather than an artefact of one arbitrary rule.
+
+**AND THE LIMIT RULE LOOKS LIKE AN EDGE ONLY UNTIL THE DENOMINATORS
+MATCH.** A limit fills for the claim but not for SPY on most rows, and
+counting "SPY did not trade" as "SPY lost" handed the claims an edge of
+**+33 pp** that was entirely an artefact of the comparison. With both
+sides on the rows where BOTH traded, the same rule reads **-9.0 pp** on
+the same 245 comparable claims. The instrument now compares only those
+rows and reports how many had only one of the two.
+
+**THE INSTRUMENT VALIDATES ITSELF, LIKE FOR LIKE.** Eight of the nine
+sources AGREE exactly with their published numbers, and the ninth
+differs on ONE row in 4,353 -- Yahoo revised NXDR's history for that
+date between the published run and now.
+
+**AND A SHARED CSV READER WAS FIXED ON THE WAY.** A record is not a
+line: the outcome CSVs carry the raw transcript of a claim in their
+evidence column, and a line-based reader failed to parse 10,324 of
+10,324 rows of `sevcik_outcomes.csv`. `src/io/readCsv.js` now walks the
+file as a character stream.
+
 ## HariSeldon (`hariseldon`) -- a trade journal in English (2026-11-27)
 
 `verified-traders` in the `/r/RealDayTrading` server, and the source is
