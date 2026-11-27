@@ -8235,6 +8235,17 @@ identified capture, and the rule is bounded: it fires only when a
 capture actually identified a table by title, so the chart-stream path
 is unchanged.
 
+**AND IT IS CONFIRMED BY A REAL SCAN, NOT ONLY BY RE-APPLYING THE RULE
+TO THE RECORDED LOGS.** 20230609 was re-scanned with the fix:
+
+| | read | hits | false positives |
+|---|---|---|---|
+| before the fix | 20 | 11 | 9 (AMD, DDOG, DKNG, MDB, NVDA, SHOP, SMCI, UBER, ZS) |
+| **after the fix** | **11** | **11** | **none** |
+
+Recall is unchanged at 11/13 -- AI and PLTR are not in the table this
+reader found -- and the precision goes from 11/20 to **11/11**.
+
 **AND THE FIX LIFTS THE SWEEP'S PRECISION FROM 82.6 % TO 95.9 %** with
 no recall lost, because it changes exactly ONE log of the eight: the
 other seven have no title-identified table beside a prior, so they are
