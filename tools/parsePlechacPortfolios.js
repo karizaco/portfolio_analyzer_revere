@@ -38,7 +38,7 @@ const { runEasyOcr } = require('../src/ocr/easyocrAdapter');
 const { readHeatmapWithColour } = require('../src/discord/plechac/heatmapReader');
 const { mergeInto, readPositionsTable } = require('../src/discord/plechac/portfolioReader');
 const { marketTickerOf } = require('../src/discord/plechac/symbols');
-const { ACCOUNT_MAIN, ACCOUNT_RISKY } = require('../src/discord/plechac/sources');
+const { ACCOUNT_MAIN, ACCOUNT_RISKY, accountOfMessage } = require('../src/discord/plechac/sources');
 
 const ROOT = path.resolve(__dirname, '..');
 const DB_PATH = path.join(ROOT, 'data', 'video_pipeline', 'state.sqlite');
@@ -51,14 +51,16 @@ const noCache = process.argv.includes('--no-cache');
 /**
  * The book a screenshot belongs to.
  *
- * The message says which one: "Tohle je moje malé RISKY portfolio na
- * XTB". Everything else is the main book.
+ * The rule is the SOURCE's own -- `accountOfMessage` -- and it is
+ * explained there: the risky book is the one the message calls a RISKY
+ * PORTFOLIO, and a message that mentions "risky positions on another
+ * account" is about the main book.
  *
  * @param {string} text
  * @returns {string}
  */
 function accountOf(text) {
-  return /risk/i.test(String(text || '')) ? ACCOUNT_RISKY : ACCOUNT_MAIN;
+  return accountOfMessage(text);
 }
 
 async function ocrOf(file, cachePath) {
@@ -155,7 +157,7 @@ async function main() {
   ensureDiscordSchema(db);
 
   const attachments = db.prepare(`
-    SELECT a.id, a.message_id, a.local_path, a.width, a.height, a.file_name,
+    SELECT a.id, a.attachment_id, a.message_id, a.local_path, a.width, a.height, a.file_name,
            m.posted_at, m.content
       FROM discord_attachments a
       JOIN discord_messages m ON m.id = a.message_id
@@ -277,7 +279,7 @@ async function main() {
             price: null,
             avg_cost: null,
             reading_check: 'treemap',
-          }, 'discord_portfolio_treemap');
+          }, 'discord_portfolio_treemap', String(attachment.id));
         }
         detail.push({
           file: attachment.local_path,
@@ -315,7 +317,7 @@ async function main() {
     if (!byMessage.has(messageKey)) byMessage.set(messageKey, new Map());
     const messageRows = byMessage.get(messageKey);
     for (const position of read.positions) {
-      mergeInto(messageRows, position, 'discord_portfolio_screenshot');
+      mergeInto(messageRows, position, 'discord_portfolio_screenshot', String(attachment.id));
     }
 
     const asOfDate = String(attachment.posted_at).slice(0, 10);

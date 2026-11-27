@@ -210,7 +210,25 @@ function loadPlechacTable() {
       });
     }
   }
-  tableCache = { names, symbols, commodities, namePatterns };
+  // THE DOT-INSENSITIVE INDEX.
+  //
+  // The broker writes the exchange with a dot -- "IDUS.L", "EQQQ.DE",
+  // "FLXL.DE" -- and the Overview view's OCR LOSES it: "IDUSL", "EQQQDE",
+  // "FLXLDE". Those are not different holdings, they are the SAME
+  // holdings with a lost dot, and a record that says "IDUSL" is a record
+  // of a symbol the market does not have.
+  //
+  // So the table is also indexed by its keys with the dots removed, and
+  // a read that is not an exact match is looked up there. The keys stay
+  // distinct when the dots are removed (IDUS.LSE and IDUS.L would
+  // collide, and the table does not carry both).
+  const symbolsWithoutDots = new Map();
+  for (const [spoken, ticker] of symbols) {
+    const flat = spoken.replace(/\./g, '');
+    if (!symbolsWithoutDots.has(flat)) symbolsWithoutDots.set(flat, ticker);
+  }
+
+  tableCache = { names, symbols, symbolsWithoutDots, commodities, namePatterns };
   return tableCache;
 }
 
@@ -334,6 +352,9 @@ function marketTickerOf(brokerTicker) {
   if (table.symbols.has(key)) return table.symbols.get(key);
   const dotted = key.replace(/\s+/g, '.');
   if (table.symbols.has(dotted)) return table.symbols.get(dotted);
+  // The OCR lost the dot: "IDUSL" is the same holding as "IDUS.L".
+  const flat = key.replace(/\./g, '');
+  if (table.symbolsWithoutDots.has(flat)) return table.symbolsWithoutDots.get(flat);
   return key;
 }
 

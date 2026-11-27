@@ -59,6 +59,39 @@ const ACCOUNT_MAIN = 'main';
 const ACCOUNT_RISKY = 'risky';
 
 /**
+ * The book a message is about.
+ *
+ * THE RISKY BOOK IS THE ONE THE MESSAGE CALLS A RISKY PORTFOLIO, and
+ * that is the whole rule. The naive test -- "does the message contain
+ * the word risky?" -- is wrong, and it was wrong on a book of 84
+ * holdings.
+ *
+ * His 2025-12-22 message publishes his ONE PUBLIC INVESTMENT ACCOUNT:
+ * "Nize najdete me portfolio ke dni 21. 12. 2025 ... Jedna se o muj
+ * jeden investicni ucet, ktery je od zacatku veden jako verejny". And it
+ * MENTIONS the risky book in passing, on another account: "rizky pozice
+ * na dalsim XTB uctu, kde jsem posledne pridaval RACE a UBER".
+ *
+ * So the word appears in a message about the MAIN book, and the naive
+ * test filed a 84-holding book under the risky account.
+ *
+ * The rule that gets all four of his pictures right:
+ *
+ *   2025-12-22  "moje portfolio ... muj jeden investicni ucet"    -> main
+ *   2026-04-15  (no mention)                                      -> main
+ *   2026-05-22  "Tohle je moje male RISKY portfolio na XTB"        -> risky
+ *   2026-08-20  "neco malo k RISKY portfoliu"                     -> risky
+ *
+ * @param {string} text  the message
+ * @returns {'main'|'risky'}
+ */
+function accountOfMessage(text) {
+  return /risky\s*(?:portfolio|portfoliu)/i.test(String(text || ''))
+    ? ACCOUNT_RISKY
+    : ACCOUNT_MAIN;
+}
+
+/**
  * The channels, and what each one is.
  *
  * `kind` decides how strictly the parser reads the channel: the trade
@@ -101,6 +134,7 @@ const SOURCE_NAMES = Object.keys(CHANNELS);
 module.exports = {
   ACCOUNT_MAIN,
   ACCOUNT_RISKY,
+  accountOfMessage,
   AUTHOR_ID,
   AUTHOR_NAME,
   CHANNELS,

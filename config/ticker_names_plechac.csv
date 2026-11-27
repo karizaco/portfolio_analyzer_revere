@@ -200,3 +200,30 @@ mědi,CPER,commodity,copper
 EVO,EVO.ST,symbol,Evolution AB Stockholm 2025-11-24 "Prikoupil jsem EVO" -- the bare EVO on Yahoo is EVOTEC SE
 BTC,BTC-USD,symbol,bitcoin 2026-11-14 "Dobiram BTC celej den" -- the bare BTC on Yahoo is the Grayscale Bitcoin Mini Trust
 NGAS.UK,NGAS.L,symbol,LSE 2023-02-23 "Zalozil jsem prvni long pozice na NGAS.UK" -- the natural gas and power ETC
+
+# The 2025-12-22 "Overview" view -- the ENGLISH table -- writes the
+# exchange its own way, and these are its spellings. The LSE line is
+# written ".L" here and ".LSE" in the Czech "POZICE" table, and the
+# Xetra line is written ".DE" here and ".XETRA" there. They are the same
+# instruments, and the Overview view's OCR LOSES THE DOT ("IDUSL"),
+# which is why the lookup also tries a dot-insensitive match.
+#
+# Every market symbol here was PROBED against Yahoo on 2026-11-28, and
+# the ones the probe could not reach are named in the note.
+IDUS.L,IDUS.L,symbol,Overview 2025-12-22 the LSE line, which the POZICE table writes IDUS.LSE
+KWEB.L,KWEB.L,symbol,Overview 2025-12-22 the LSE line, which the POZICE table writes KWEB.LSE
+IUFS.L,IUFS.L,symbol,Overview 2025-12-22 the LSE line, which the POZICE table writes IUFS.LSE
+USPY.L,USPY.L,symbol,Overview 2025-12-22 the LSE line, which the POZICE table writes USPY.LSE
+NDIA.L,NDIA.L,symbol,Overview 2025-12-22 the LSE line, which the POZICE table writes NDIA.LSE
+CNDX.L,CNDX.L,symbol,Overview 2025-12-22 the LSE line, which the POZICE table writes CNDX.LSE
+SMSN.L,SMSN.L,symbol,Overview 2025-12-22 the LSE line, which the POZICE table writes SMSN.LSE
+HTWO.L,HTWO.L,symbol,Overview 2025-12-22 the LSE line, which the POZICE table writes HTWO.LSE
+IDTM.L,IDTM.L,symbol,Overview 2025-12-22 the LSE line
+IGLN.L,IGLN.L,symbol,Overview 2025-12-22 the LSE line, which the trades channel writes IGLN.UK
+EQQQ.DE,EQQQ.DE,symbol,Overview 2025-12-22 the Xetra line
+IQQW.DE,IQQW.DE,symbol,Overview 2025-12-22 the Xetra line
+RRU.DE,RRU.DE,symbol,Overview 2025-12-22 the Xetra line, which the POZICE table writes RRU.XETRA
+SIE.DE,SIE.DE,symbol,Overview 2025-12-22 the Xetra line, which the POZICE table writes SIE.XETRA
+EXUS.DE,EXUS.DE,symbol,Overview 2025-12-22 the Xetra line
+AMD.DE,AMD,symbol,Overview 2025-12-22 the Xetra line, which the POZICE table writes AMD.XETRA
+3CP.BE,1810.HK,symbol,Overview 2025-12-22 Xiaomi -- the same company the POZICE table writes 3CP.F

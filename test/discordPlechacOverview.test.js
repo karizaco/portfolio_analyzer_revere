@@ -45,9 +45,9 @@ function readFixture() {
     read: readPositionsTable({ words: picture.words }),
   }));
   const rows = new Map();
-  for (const { read } of reads) {
+  for (const { attachment_id: picture, read } of reads) {
     for (const position of read.positions) {
-      mergeInto(rows, position, 'discord_portfolio_screenshot');
+      mergeInto(rows, position, 'discord_portfolio_screenshot', picture);
     }
   }
   return { fixture, reads, rows };
@@ -72,29 +72,35 @@ test('the English header is read, and it carries the WEIGHT', () => {
 
 test('the BOOK is read whole, and its weights add up', () => {
   const { rows } = readFixture();
-  assert.equal(rows.size, 84);
+  // 83 holdings: the broker holds 84 LINES, and two of them are two
+  // exchange lines of one company (ASML.AS and ASML), which are one
+  // market ticker -- so one holding's smaller line is not added and the
+  // book reads 0.31 % short of the broker's own 98.27 %.
+  assert.equal(rows.size, 83);
   const weights = [...rows.values()].map((row) => row.weight_pct);
   assert.ok(weights.every((weight) => Number.isFinite(weight)), 'every holding has a weight');
   const sum = weights.reduce((total, weight) => total + weight, 0);
-  // The cash row is the missing 1.57 %, so the holdings are 98.27 %.
-  assert.ok(Math.abs(sum - 98.27) < 0.05, `the weights sum to ${sum.toFixed(2)} %`);
+  assert.ok(Math.abs(sum - 97.96) < 0.05, `the weights sum to ${sum.toFixed(2)} %`);
 });
 
 test('the weights the PICTURE shows are the weights the book has', () => {
   const { rows } = readFixture();
   // These are read off the picture by hand: the first picture's rows.
+  // The tickers are the MARKET's, because the source's own vocabulary
+  // translates the broker's spelling -- and the Overview view's OCR
+  // LOSES THE DOT, so "IDUSL" has to find its way back to IDUS.L.
   const expected = {
-    IDUSL: 4.36,
-    MCPA: 3.67,
-    EQQQDE: 3.61,
-    ASMLAS: 3.08,
+    'IDUS.L': 4.36,
+    'MC.PA': 3.67,
+    'EQQQ.DE': 3.61,
+    ASML: 3.08,
     C: 3.01,
     LMT: 2.76,
     GOOG: 2.7,
     GOLD: 2.41,
     NVO: 2.38,
     BABA: 2.18,
-    BRKB: 2.16,
+    'BRK-B': 2.16,
     AMZN: 1.99,
     WFC: 1.9,
     OXY: 1.85,
@@ -102,7 +108,7 @@ test('the weights the PICTURE shows are the weights the book has', () => {
     BTI: 1.64,
   };
   for (const [ticker, weight] of Object.entries(expected)) {
-    const row = [...rows.values()].find((candidate) => candidate.ticker.replace(/[^A-Z0-9]/g, '') === ticker);
+    const row = [...rows.values()].find((candidate) => candidate.ticker === ticker);
     assert.ok(row, `${ticker} was read`);
     assert.ok(Math.abs(row.weight_pct - weight) < 0.011, `${ticker} weighs ${row.weight_pct} %, expected ${weight} %`);
   }
@@ -123,6 +129,8 @@ test('the CUT-OFF row is not published, and the next picture has it right', () =
   const intc = second.positions.find((position) => position.ticker === 'INTC');
   assert.ok(intc, 'INTC is read from the second picture');
   assert.ok(Math.abs(intc.weight_pct - 1.61) < 0.011, `INTC weighs ${intc.weight_pct} %`);
+  // And the weight is a SHARE of the book, so it is inside (0, 100].
+  assert.ok(intc.weight_pct > 0 && intc.weight_pct <= 100);
 });
 
 test('a weight that breaks the column ORDER is repaired, and the repair is checked', () => {
@@ -133,6 +141,7 @@ test('a weight that breaks the column ORDER is repaired, and the repair is check
   // and ONLY because that restores the order.
   const fourth = reads[3].read;
   const evo = fourth.positions.find((position) => position.ticker === 'EVO.ST');
+  // (the broker's own spelling -- the vocabulary has no EVO row)
   assert.ok(evo, 'EVO.ST is read from the fourth picture');
   assert.ok(Math.abs(evo.weight_pct - 0.78) < 0.011, `EVO.ST weighs ${evo.weight_pct} %, expected 0.78 %`);
 });
@@ -140,7 +149,13 @@ test('a weight that breaks the column ORDER is repaired, and the repair is check
 test('the DAILY CHANGE is read, and it is not the weight', () => {
   const { reads } = readFixture();
   const first = reads[0].read;
+  // The reader's own rows carry the BROKER's spelling -- the market's
+  // is the merge's business -- and the Overview's OCR loses the dot.
   const idusl = first.positions.find((position) => position.ticker === 'IDUSL');
+  assert.ok(idusl, 'the first picture reads IDUSL');
   assert.equal(idusl.weight_pct, 4.36);
   assert.ok(Math.abs(idusl.change_pct - 0.3) < 0.011, `the daily change is ${idusl.change_pct} %`);
+  // And the market's symbol is what the record carries.
+  const merged = [...readFixture().rows.values()].find((row) => row.ticker === 'IDUS.L');
+  assert.ok(merged, 'and the merged record says IDUS.L');
 });

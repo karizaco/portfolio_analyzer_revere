@@ -686,10 +686,15 @@ table calls "VAHA". The six pictures are ONE treemap and FIVE
 consecutive scroll positions of the Overview table, and the table says
 "1-86 of 86".
 
-**MEASURED: 84 HOLDINGS, EVERY ONE WITH A WEIGHT, AND THE BOOK ADDS
-UP.** The weights sum to **98.27 %**, and the missing 1.57 % is the
-broker's own "$ Cash" row. That is the reader's own arithmetic
-confirming the reading.
+**MEASURED: 83 HOLDINGS, EVERY ONE WITH A WEIGHT, AND THE BOOK ADDS
+UP.** The weights sum to **97.96 %**, and the broker's own book is
+98.27 % of holdings plus a 1.57 % "$ Cash" row. The 0.31 % gap is ONE
+holding: two exchange lines of one company, one market ticker, and the
+smaller line's weight is not added to the larger one's.
+
+**AND THE OVERVIEW VIEW'S OCR LOSES THE DOT**, so "IDUSL" has to find
+its way back to IDUS.L -- which is what the source's own vocabulary is
+for, and why the lookup also tries a dot-insensitive match.
 
 **AND THE HEADER IS SPLIT OVER TWO BANDS, and the table is in ENGLISH.**
 The Czech table puts every column name on one line, but the English
@@ -726,6 +731,20 @@ facts: the treemap reads the change and no weight, and the table reads
 the weight. So the pictures of a message are read together and merged
 by ticker, and a holding a picture with a weight read wins over the
 same holding read by a picture without one.
+
+**AND THREE SYMBOLS ARE STILL THE BROKER'S OWN SPELLING**, because the
+probe could not reach them on 2026-11-28 and a symbol the market does
+not have must not be invented: `RZUS.LSE`, `FLXL.DE` and `IDU.L`. They
+are three of the 83 holdings, and the other 80 carry a market symbol.
+
+**AND THE 0.31 % GAP IS NOT YET CLOSED.** He holds two exchange lines of
+one company, the source's vocabulary maps both to the same market
+ticker, and the merge keeps the larger line's weight. The fix is to sum
+the two lines' weights -- and the sum must be taken only for two
+DIFFERENT broker symbols, because the scroll overlap shows the SAME row
+in two pictures and adding those would double the book. That rule is
+measured (it is the one that produced 98.27 %) and it is not yet
+shipped.
 
 **WHAT IS STILL NOT READ.** The 2023-05-08 ticker STRIPS (206x767,
 204x701, 201x259, 992x20) and the 2026-08-20 picture (1227x717): four

@@ -8360,10 +8360,16 @@ the Czech "POZICE" table calls "VAHA". The six pictures are ONE "My
 Holdings" treemap and FIVE consecutive scroll positions of the Overview
 table, which says "1-86 of 86".
 
-**MEASURED: 84 HOLDINGS, ALL WITH A WEIGHT, AND THE BOOK ADDS UP** --
-the weights sum to **98.27 %** and the missing 1.57 % is the broker's
-own "$ Cash" row. That is the reader's own arithmetic confirming the
-reading.
+**MEASURED: 83 HOLDINGS, ALL WITH A WEIGHT, AND THE BOOK ADDS UP** --
+the weights sum to **97.96 %**, and the broker's own book is 98.27 % of
+holdings plus a 1.57 % "$ Cash" row. The 0.31 % gap is ONE holding: he
+holds the Amsterdam line and the Nasdaq line of one company, the
+source's vocabulary maps both to the same market ticker, and the smaller
+line's weight is not added to the larger one's.
+
+**AND THE OVERVIEW VIEW'S OCR LOSES THE DOT**, so "IDUSL" has to find its
+way back to IDUS.L -- which is what the source's own vocabulary is for,
+and why the lookup also tries a dot-insensitive match.
 
 **THE HEADER IS SPLIT OVER TWO BANDS** in the English view ("Ticker"
 sits a line below the other column names) and the column names are

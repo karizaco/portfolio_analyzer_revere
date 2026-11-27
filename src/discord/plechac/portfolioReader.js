@@ -586,22 +586,60 @@ function readPositionsTable(ocr) {
  * The key is the MARKET ticker, so the same holding read by two
  * pictures is one holding.
  *
+ * AND TWO ROWS OF ONE MARKET TICKER IN THE SAME PICTURE ARE TWO LINES
+ * OF ONE HOLDING, and their weights ADD.
+ *
+ * That is not a corner case: the broker holds the Amsterdam line and
+ * the Nasdaq line of one company, and the source's own vocabulary
+ * maps both to the same market ticker (ASML.AS and ASML are both ASML).
+ * Two lines of one holding are ONE position, and its weight is their
+ * sum -- which is what makes the book's weights add up to the book's
+ * own total.
+ *
+ * And the sum is taken only when the two rows come from the SAME
+ * picture, because two DIFFERENT pictures of a scrolled table show the
+ * same row twice, and adding those would double the book.
+ *
  * @param {Map<string, object>} rows  the message's set
  * @param {object} position  the holding
  * @param {string} source  which reading it came from
+ * @param {string} [picture]  which picture the row came from
  * @returns {Map<string, object>} the set
  */
-function mergeInto(rows, position, source) {
+function mergeInto(rows, position, source, picture) {
   const ticker = marketTickerOf(position.ticker);
   if (!ticker) return rows;
   const hasWeight = Number.isFinite(position.weight_pct);
   const existing = rows.get(ticker);
   if (!existing) {
-    rows.set(ticker, { ...position, ticker, broker_symbol: position.ticker, source, hasWeight });
+    rows.set(ticker, {
+      ...position,
+      ticker,
+      broker_symbol: position.ticker,
+      source,
+      hasWeight,
+      picture: picture || '',
+    });
+    return rows;
+  }
+  // The SAME picture and the SAME holding: two LINES of one position,
+  // and the weight is their sum.
+  if (hasWeight && existing.hasWeight && picture && existing.picture === picture
+    && position.broker_symbol !== existing.broker_symbol) {
+    const merged = { ...existing, weight_pct: existing.weight_pct + position.weight_pct };
+    merged.merged_lines = (existing.merged_lines || 1) + 1;
+    rows.set(ticker, merged);
     return rows;
   }
   if (hasWeight && !existing.hasWeight) {
-    rows.set(ticker, { ...position, ticker, broker_symbol: position.ticker, source, hasWeight });
+    rows.set(ticker, {
+      ...position,
+      ticker,
+      broker_symbol: position.ticker,
+      source,
+      hasWeight,
+      picture: picture || '',
+    });
     return rows;
   }
   const merged = { ...existing };
