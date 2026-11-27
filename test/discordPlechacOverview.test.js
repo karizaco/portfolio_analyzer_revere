@@ -73,14 +73,51 @@ test('the English header is read, and it carries the WEIGHT', () => {
 test('the BOOK is read whole, and its weights add up', () => {
   const { rows } = readFixture();
   // 83 holdings: the broker holds 84 LINES, and two of them are two
-  // exchange lines of one company (ASML.AS and ASML), which are one
-  // market ticker -- so one holding's smaller line is not added and the
-  // book reads 0.31 % short of the broker's own 98.27 %.
+  // exchange lines of one company (ASML.AS and ASML), which are ONE
+  // market ticker -- so the book has 83 holdings, and the two lines'
+  // weights ADD.
   assert.equal(rows.size, 83);
   const weights = [...rows.values()].map((row) => row.weight_pct);
   assert.ok(weights.every((weight) => Number.isFinite(weight)), 'every holding has a weight');
   const sum = weights.reduce((total, weight) => total + weight, 0);
-  assert.ok(Math.abs(sum - 97.96) < 0.05, `the weights sum to ${sum.toFixed(2)} %`);
+  // The broker's own book is 98.27 % of holdings plus a 1.57 % "$ Cash"
+  // row, so the reading lands on the broker's number exactly.
+  assert.ok(Math.abs(sum - 98.27) < 0.05, `the weights sum to ${sum.toFixed(2)} %`);
+});
+
+test('TWO BROKER LINES of one holding are ONE holding, and their weights ADD', () => {
+  const { rows } = readFixture();
+  // He holds the Amsterdam line and the Nasdaq line of ASML. The
+  // Overview view's OCR drops the dot, so the Amsterdam line is read
+  // "ASMLAS" -- and the source's own vocabulary is what tells the two
+  // lines apart: "ASML.AS" is the Amsterdam line and "ASML" is the
+  // Nasdaq one, and the lossy read resolves to the Amsterdam line.
+  const asml = [...rows.values()].find((row) => row.ticker === 'ASML');
+  assert.ok(asml, 'ASML is read');
+  assert.ok(Math.abs(asml.weight_pct - 3.39) < 0.011, `ASML weighs ${asml.weight_pct} %, expected 3.39 %`);
+  assert.equal(asml.merged_lines, 2, 'and it is two broker lines');
+  assert.deepEqual(
+    asml.merged_symbols.slice().sort(),
+    ['ASML', 'ASMLAS'],
+    'the two lines are recorded',
+  );
+});
+
+test('the SCROLL OVERLAP is not added, because it is the same line read twice', () => {
+  const { rows } = readFixture();
+  // The five pictures are consecutive scroll positions of ONE table, so
+  // the same row appears in two of them. Six holdings sit in that
+  // overlap -- XOM, EVO.ST, IQQW.DE, HTWO.L, RTX, FLXLDE -- and each of
+  // them is ONE holding, not two.
+  const overlap = { 'EVO.ST': 0.78, 'IQQW.DE': 0.55, 'HTWO.L': 0.54, RTX: 0.53, FLXLDE: 0.53 };
+  for (const [ticker, weight] of Object.entries(overlap)) {
+    const row = [...rows.values()].find((candidate) => candidate.ticker === ticker);
+    assert.ok(row, `${ticker} is read`);
+    assert.ok(
+      Math.abs(row.weight_pct - weight) < 0.011,
+      `${ticker} weighs ${row.weight_pct} %, expected ${weight} % -- the overlap must not be added`,
+    );
+  }
 });
 
 test('the weights the PICTURE shows are the weights the book has', () => {
@@ -93,7 +130,7 @@ test('the weights the PICTURE shows are the weights the book has', () => {
     'IDUS.L': 4.36,
     'MC.PA': 3.67,
     'EQQQ.DE': 3.61,
-    ASML: 3.08,
+    ASML: 3.39,
     C: 3.01,
     LMT: 2.76,
     GOOG: 2.7,

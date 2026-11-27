@@ -358,11 +358,46 @@ function marketTickerOf(brokerTicker) {
   return key;
 }
 
+/**
+ * The BROKER LINE a symbol belongs to.
+ *
+ * The source's own vocabulary is keyed by the broker's spelling, and its
+ * value is the market's ticker. So a symbol resolves to the vocabulary
+ * KEY it belongs to, and that key is the line:
+ *
+ *   "ASML.AS" -> "ASML.AS"   the Amsterdam line, printed with its dot
+ *   "ASMLAS"  -> "ASML.AS"   the SAME line, read with the dot dropped
+ *   "ASML"    -> "ASML"      the Nasdaq line -- a line of its own
+ *
+ * The Overview view's OCR DROPS THE DOT ("IDUSL" for "IDUS.L"), so a
+ * lossy read and the line it came from resolve to the SAME key. And two
+ * DIFFERENT keys are two lines of the broker's own table -- which is
+ * what tells "two lines of one holding" apart from "one line read
+ * twice".
+ *
+ * @param {string} brokerSymbol
+ * @returns {string} the vocabulary key, or the symbol itself when the
+ *   vocabulary does not know it
+ */
+function canonicalBrokerLine(brokerSymbol) {
+  const table = loadPlechacTable();
+  const key = String(brokerSymbol || '').toUpperCase().trim();
+  if (table.symbols.has(key)) return key;
+  // The broker's spelling, with the OCR's dot-less form matched against
+  // the table's own keys.
+  const flat = key.replace(/\./g, '');
+  for (const spoken of table.symbols.keys()) {
+    if (spoken.replace(/\./g, '') === flat) return spoken;
+  }
+  return key;
+}
+
 module.exports = {
   NOT_HOLDINGS,
   SINGLE_LETTER_HOLDINGS,
   findHoldings,
   findUnknownCapitals,
   loadPlechacTable,
+  canonicalBrokerLine,
   marketTickerOf,
 };

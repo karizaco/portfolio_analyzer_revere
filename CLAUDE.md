@@ -8438,11 +8438,23 @@ Holdings" treemap and FIVE consecutive scroll positions of the Overview
 table, which says "1-86 of 86".
 
 **MEASURED: 83 HOLDINGS, ALL WITH A WEIGHT, AND THE BOOK ADDS UP** --
-the weights sum to **97.96 %**, and the broker's own book is 98.27 % of
-holdings plus a 1.57 % "$ Cash" row. The 0.31 % gap is ONE holding: he
-holds the Amsterdam line and the Nasdaq line of one company, the
-source's vocabulary maps both to the same market ticker, and the smaller
-line's weight is not added to the larger one's.
+the weights sum to **98.27 %**, which is the broker's own book exactly
+(the missing 1.57 % is the "$ Cash" row). 83 holdings out of 84 LINES,
+because two of the lines are two exchange lines of one company.
+
+**AND THE TWO LINES OF ONE HOLDING ADD, and the source's own vocabulary
+is what tells them apart.** He holds the Amsterdam line and the Nasdaq
+line of ASML, and both map to the market ticker ASML. The Overview
+view's OCR DROPS THE DOT, so the Amsterdam line is read "ASMLAS" -- and
+the vocabulary's keys ARE the broker's spellings, so "ASML.AS" and
+"ASML" are two LINES while "ASMLAS" resolves to "ASML.AS" and is the
+same line read badly. Two lines of one holding are ONE position and
+their weights add, which is what closes the book's 0.31 % gap.
+
+**AND THE SCROLL OVERLAP DOES NOT ADD, because it is the same line read
+twice.** The five pictures are consecutive scroll positions of one table,
+so six holdings appear in two of them -- and one line read twice is one
+line, not two.
 
 **AND THE OVERVIEW VIEW'S OCR LOSES THE DOT**, so "IDUSL" has to find its
 way back to IDUS.L -- which is what the source's own vocabulary is for,

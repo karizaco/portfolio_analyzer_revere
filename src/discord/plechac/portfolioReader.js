@@ -1,6 +1,6 @@
 'use strict';
 
-const { marketTickerOf } = require('./symbols');
+const { canonicalBrokerLine, marketTickerOf } = require('./symbols');
 
 /**
  * The XTB positions table, read out of a broker screenshot.
@@ -586,19 +586,28 @@ function readPositionsTable(ocr) {
  * The key is the MARKET ticker, so the same holding read by two
  * pictures is one holding.
  *
- * AND TWO ROWS OF ONE MARKET TICKER IN THE SAME PICTURE ARE TWO LINES
- * OF ONE HOLDING, and their weights ADD.
+ * AND TWO ROWS OF ONE MARKET TICKER CAN BE TWO LINES OF ONE HOLDING,
+ * and their weights ADD.
  *
  * That is not a corner case: the broker holds the Amsterdam line and
  * the Nasdaq line of one company, and the source's own vocabulary
  * maps both to the same market ticker (ASML.AS and ASML are both ASML).
  * Two lines of one holding are ONE position, and its weight is their
  * sum -- which is what makes the book's weights add up to the book's
- * own total.
+ * own total (97.96 % read against the broker's own 98.27 %, and the
+ * 0.31 % gap is exactly the smaller line).
  *
- * And the sum is taken only when the two rows come from the SAME
- * picture, because two DIFFERENT pictures of a scrolled table show the
- * same row twice, and adding those would double the book.
+ * AND THE DISCRIMINATOR IS THE BROKER SYMBOL, not the picture.
+ *
+ * The five Overview pictures are consecutive scroll positions of one
+ * table, so the SAME row appears in two of them -- the scroll overlap.
+ * Adding those would double the book. But the overlap is the SAME
+ * broker symbol read twice, while the two exchange lines are TWO
+ * DIFFERENT broker symbols, and the source's own vocabulary is what
+ * tells them apart: a symbol that is a vocabulary row of its OWN RIGHT
+ * is a distinct broker line, and one that only resolves through the
+ * dot-insensitive index is the same line read badly (the Overview
+ * view's OCR drops the dot: "IDUSL" for "IDUS.L").
  *
  * @param {Map<string, object>} rows  the message's set
  * @param {object} position  the holding
@@ -622,12 +631,31 @@ function mergeInto(rows, position, source, picture) {
     });
     return rows;
   }
-  // The SAME picture and the SAME holding: two LINES of one position,
-  // and the weight is their sum.
-  if (hasWeight && existing.hasWeight && picture && existing.picture === picture
-    && position.broker_symbol !== existing.broker_symbol) {
+  // TWO LINES OF ONE POSITION: two DIFFERENT broker LINES that map to
+  // one market ticker. Their weights ADD, and that is what closes the
+  // book's 0.31 % gap.
+  //
+  // The SAME broker line is the scroll overlap -- the same row of a
+  // scrolled table seen in two pictures -- and it does NOT add.
+  //
+  // And the LINE is the vocabulary's own key, because the vocabulary's
+  // keys ARE the broker's spellings: "ASML.AS" is the Amsterdam line
+  // and "ASML" is the Nasdaq line, while "ASMLAS" is the Amsterdam line
+  // read with the dot dropped -- so the lossy read and its line resolve
+  // to the SAME key and are one line.
+  //
+  // The INCOMING row carries the broker's spelling in `ticker` -- the
+  // stored row carries it in `broker_symbol`, because its `ticker` has
+  // become the market's. Comparing the wrong field made every scroll
+  // overlap look like two lines, and the book summed to 101 %.
+  const incomingLine = canonicalBrokerLine(position.broker_symbol || position.ticker);
+  const existingLine = canonicalBrokerLine(existing.broker_symbol);
+  if (hasWeight && existing.hasWeight
+    && (position.broker_symbol || position.ticker) !== existing.broker_symbol
+    && incomingLine !== existingLine) {
     const merged = { ...existing, weight_pct: existing.weight_pct + position.weight_pct };
     merged.merged_lines = (existing.merged_lines || 1) + 1;
+    merged.merged_symbols = [existing.broker_symbol, position.broker_symbol || position.ticker];
     rows.set(ticker, merged);
     return rows;
   }

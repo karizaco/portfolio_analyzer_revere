@@ -687,10 +687,16 @@ consecutive scroll positions of the Overview table, and the table says
 "1-86 of 86".
 
 **MEASURED: 83 HOLDINGS, EVERY ONE WITH A WEIGHT, AND THE BOOK ADDS
-UP.** The weights sum to **97.96 %**, and the broker's own book is
-98.27 % of holdings plus a 1.57 % "$ Cash" row. The 0.31 % gap is ONE
-holding: two exchange lines of one company, one market ticker, and the
-smaller line's weight is not added to the larger one's.
+UP.** The weights sum to **98.27 %**, which is the broker's own book
+exactly (the missing 1.57 % is the "$ Cash" row). 83 holdings out of
+84 LINES, because two of them are two exchange lines of one company --
+and their weights ADD, which is what closes the gap.
+
+**AND THE SOURCE'S OWN VOCABULARY IS WHAT TELLS THE TWO LINES APART.**
+The Overview view's OCR drops the dot, so the Amsterdam line of ASML is
+read "ASMLAS"; the vocabulary's keys ARE the broker's spellings, so
+"ASML.AS" and "ASML" are two LINES while "ASMLAS" resolves to
+"ASML.AS" and is the same line read badly.
 
 **AND THE OVERVIEW VIEW'S OCR LOSES THE DOT**, so "IDUSL" has to find
 its way back to IDUS.L -- which is what the source's own vocabulary is
@@ -737,14 +743,13 @@ probe could not reach them on 2026-11-28 and a symbol the market does
 not have must not be invented: `RZUS.LSE`, `FLXL.DE` and `IDU.L`. They
 are three of the 83 holdings, and the other 80 carry a market symbol.
 
-**AND THE 0.31 % GAP IS NOT YET CLOSED.** He holds two exchange lines of
-one company, the source's vocabulary maps both to the same market
-ticker, and the merge keeps the larger line's weight. The fix is to sum
-the two lines' weights -- and the sum must be taken only for two
-DIFFERENT broker symbols, because the scroll overlap shows the SAME row
-in two pictures and adding those would double the book. That rule is
-measured (it is the one that produced 98.27 %) and it is not yet
-shipped.
+**AND THE 0.31 % GAP IS CLOSED (2026-11-28).** The two lines of one
+holding now add, and the book reads 98.27 % -- the broker's own number.
+The discriminator is the source's own vocabulary: its keys are the
+broker's spellings, so "ASML.AS" and "ASML" are two LINES while
+"ASMLAS" (the Amsterdam line with the dot dropped by the OCR) resolves
+to "ASML.AS" and is the same line read badly. The scroll overlap is the
+same line read twice, and it does not add.
 
 ### The replay pools two readers, and the number was a mixture (2026-11-28)
 
