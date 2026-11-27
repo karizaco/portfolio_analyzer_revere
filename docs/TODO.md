@@ -746,6 +746,30 @@ in two pictures and adding those would double the book. That rule is
 measured (it is the one that produced 98.27 %) and it is not yet
 shipped.
 
+### The replay pools two readers, and the number was a mixture (2026-11-28)
+
+**DONE.** The `position_table` sweep added a second reader to the
+corpus, and the replay tool pooled the two -- so a date scanned once per
+reader was counted as one reading contributed to by two scanners, and the
+table reader's false positives counted against the chart-stream reader's
+score.
+
+**MEASURED over `data/video_scan_test/_rerun`:**
+
+| | hits | recall | precision |
+|---|---|---|---|
+| the chart-stream reader alone | 431/460 | 93.7 % | **78.9 %** |
+| the table reader alone | 60/64 | 93.8 % | **84.5 %** |
+| **the two pooled** | 432/460 | 93.9 % | **76.3 %** |
+
+The tool now reports each reader's own measurement with its own
+denominator, and labels the pooled number as a mixture. A log whose
+captures came from both readers is its own bucket.
+
+**AND THE `rebuilt_current` ARM IS THE CHART-STREAM PARSER, ALWAYS**, so
+its `position_table` rows are NOT the table reader's own reading. The
+tool says so on every run.
+
 ### The `bottom_most` prior published a WATCHLIST (measured 2026-11-28)
 
 **WHAT HAPPENED.** The `position_table` sweep of 20220131 -- the

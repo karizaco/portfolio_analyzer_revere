@@ -8351,6 +8351,59 @@ in Czech (zlato -> GLD, stribro -> SLV, ropa -> USO, psenice -> WEAT);
 and the company names go through the SHARED matcher, which resolves some
 names and not others.
 
+### The corpus holds TWO readers now, and the replay's number was a MIXTURE (2026-11-28)
+
+**THE `position_table` SWEEP ADDED A SECOND READER TO THE CORPUS, and
+the replay tool pooled the two.** A date's predictions are pooled as the
+union of its logs -- and a date scanned once per reader has TWO
+readings, not one reading contributed to by two scanners. Pooling them
+made the **table reader's false positives count against the chart-stream
+reader's score**.
+
+**MEASURED over `data/video_scan_test/_rerun`, before the fix:**
+
+| | hits | recall | precision |
+|---|---|---|---|
+| the chart-stream reader alone | 431/460 | 93.7 % | **78.9 %** |
+| the table reader alone | 60/64 | 93.8 % | **84.5 %** |
+| **the two pooled** | 432/460 | 93.9 % | **76.3 %** |
+
+So the pooled precision is materially worse than **either** reader's own,
+and it is worse **because of the mixing** -- not because either reader
+got worse.
+
+**A LOG'S READER IS ITS CAPTURES' `ticker_source`**, and the vocabulary
+is the reader's own: 'position_table' for a frame the table reader
+published, 'chart_stream' for a frame the legacy crop reader published.
+An old log that predates the table reader has no `ticker_source` at all,
+and it is a chart-stream reading. **And A LOG WHOSE CAPTURES CAME FROM
+BOTH IS A MIXTURE** -- the scan tool's merge takes a table capture's own
+holdings and a legacy capture's cluster consensus -- so it is its own
+bucket, not one of the two.
+
+**THE TOOL NOW REPORTS EACH READER'S OWN MEASUREMENT**, with its own
+denominator, and says that the pooled number is a mixture:
+
+```
+recorded          : dates scored 54  recall 93.9%  (432/460)  precision 76.3%  (432/566)
+  recorded / chart_stream  : dates 54  recall 93.7%  (431/460)  precision 78.9%  (431/546)
+  recorded / position_table: dates  7  recall 93.8%  (60/64)  precision 84.5%  (60/71)
+  recorded / mixed         : dates  2  recall 83.3%  (10/12)  precision 45.5%  (10/22)
+```
+
+**AND THE `rebuilt_current` ARM IS THE CHART-STREAM PARSER, ALWAYS**, so
+its rows under `position_table` are NOT the table reader's own reading:
+they say what the chart-stream parser makes of a table frame's words.
+The tool says so on every run.
+
+**AND THE POOLED TOTALS STILL COUNT THE GROUND TRUTH ONCE PER DATE**,
+which is the rule the tool already had for counting it once per LOG --
+counting it once per READER would double it for a date both read.
+
+Pinned by `test/evalParserReplayReader.test.js`, on synthetic logs: the
+real corpus is untracked, so a test asserting the real numbers would
+fail on a fresh clone.
+
 ### The `bottom_most` prior can publish a WATCHLIST (measured 2026-11-28)
 
 **THE `position_table` SWEEP FOUND IT, on the worst date in the

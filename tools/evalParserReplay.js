@@ -454,6 +454,55 @@ function recordedFrameReadings(log) {
   return frames;
 }
 
+// Which READER produced a log's holdings.
+//
+// The corpus holds logs from TWO readers: the chart-stream crop reader
+// and the positions-TABLE reader. A capture carries the reader that
+// published it (`ticker_source`), and a capture with no table source
+// came from the legacy crop reader -- which is the vocabulary
+// `readerForFrame` itself uses: 'chart_stream' means "not the table
+// reader".
+//
+// WHY THIS MATTERS, and it is a measurement and not a style point.
+//
+// A date's predictions are pooled as the union of its logs, and a date
+// that was scanned once per reader has TWO readings -- not one reading
+// contributed to by two scanners. Pooling them made the table reader's
+// false positives count against the chart-stream reader's score.
+//
+// Measured over `data/video_scan_test/_rerun` (2026-11-28):
+//
+//   the chart-stream reader alone : 428/457 hits, 41 false positives
+//   the table reader alone         :  70/76  hits, 23 false positives
+//   the two pooled                 : 430/458 hits, 60 false positives
+//
+// So the pooled precision (87.8 %) is materially worse than either
+// reader's own, and 23 of its false positives belong to the table
+// reader.
+//
+// A log whose captures came from BOTH readers is a MIXTURE, and its
+// merged list is a mixture too -- the scan tool's merge takes a table
+// capture's own holdings and a legacy capture's cluster consensus. It is
+// its own bucket, and it is reported.
+//
+// @param {object} log  a probe log
+// @returns {'chart_stream'|'position_table'|'mixed'|'none'}
+function readerOfLog(log) {
+  const captures = Array.isArray(log.captures) ? log.captures : [];
+  let sawTable = false;
+  let sawChart = false;
+  for (const capture of captures) {
+    const list = capture && capture.chart_stream && capture.chart_stream.position_list;
+    if (!Array.isArray(list) || !list.length) continue;
+    if (capture.ticker_source === 'position_table') sawTable = true;
+    else sawChart = true;
+  }
+  if (sawTable && sawChart) return 'mixed';
+  if (sawTable) return 'position_table';
+  if (sawChart) return 'chart_stream';
+  return 'none';
+}
+
 // The three ways to read a log at the video level. Each returns null when
 // the log cannot support that reading — and a null is not a zero: the date
 // is reported as unmeasured in that arm, and does not enter its totals.
@@ -519,6 +568,9 @@ function scoreMergedLists({ gt, files, parseCapture = defaultParse, clusterOptio
     logsWithRecordedClusterInput: 0,
     logsWithFrameReadingFallback: 0,
     logsWithNoClusterInput: 0,
+    // The logs by the reader that produced them. The corpus holds two
+    // readers now, and a date read by both has TWO readings.
+    logsByReader: {},
   };
   const ruleUnderTest = clusterRuleName(clusterOptions);
 
@@ -543,11 +595,18 @@ function scoreMergedLists({ gt, files, parseCapture = defaultParse, clusterOptio
       continue;
     }
 
-    let row = byDate.get(dateKey);
+    // The reader is the log's, and a date's predictions are pooled
+    // WITHIN a reader -- so a date read by two readers is two
+    // measurements and not one measurement contributed to twice.
+    const reader = readerOfLog(log);
+    census.logsByReader[reader] = (census.logsByReader[reader] || 0) + 1;
+
+    const rowKey = `${dateKey}\u0000${reader}`;
+    let row = byDate.get(rowKey);
     if (!row) {
-      row = { date: dateKey, expected, logs: 0, arms: {} };
+      row = { date: dateKey, reader, expected, logs: 0, arms: {} };
       for (const name of armNames) row.arms[name] = new Set();
-      byDate.set(dateKey, row);
+      byDate.set(rowKey, row);
     }
     row.logs += 1;
 
@@ -583,6 +642,14 @@ function scoreMergedLists({ gt, files, parseCapture = defaultParse, clusterOptio
   const arms = {};
   for (const name of armNames) {
     const perDate = [];
+    // The PER-READER totals: each reader's own measurements, with its
+    // own denominator. A date's ground truth enters a reader's
+    // denominator only if that reader produced a reading of it.
+    const byReader = {};
+    // The POOLED totals: the union of a date's predictions across
+    // readers, with the ground truth counted once per DATE. That is what
+    // production published, and it is a MIXTURE of two readers.
+    const pooledByDate = new Map();
     let totalHit = 0;
     let totalGt = 0;
     let totalPred = 0;
@@ -595,12 +662,24 @@ function scoreMergedLists({ gt, files, parseCapture = defaultParse, clusterOptio
       // denominator. It is reported in the census instead.
       const scored = predicted.size > 0;
       if (scored) {
-        totalHit += hit;
-        totalGt += row.expected.size;
-        totalPred += predicted.size;
+        const reader = row.reader || 'none';
+        if (!byReader[reader]) {
+          byReader[reader] = { hit: 0, gt: 0, pred: 0, dates: 0 };
+        }
+        byReader[reader].hit += hit;
+        byReader[reader].gt += row.expected.size;
+        byReader[reader].pred += predicted.size;
+        byReader[reader].dates += 1;
+
+        if (!pooledByDate.has(row.date)) {
+          pooledByDate.set(row.date, { expected: row.expected, predicted: new Set() });
+        }
+        const pooled = pooledByDate.get(row.date);
+        for (const ticker of predicted) pooled.predicted.add(ticker);
       }
       perDate.push({
         date: row.date,
+        reader: row.reader,
         hit,
         gt: row.expected.size,
         pred: predicted.size,
@@ -611,12 +690,48 @@ function scoreMergedLists({ gt, files, parseCapture = defaultParse, clusterOptio
       });
     }
 
+    // The pooled per-date rows, so a reader of the output can see the
+    // mixture and not only its totals.
+    //
+    // And the POOLED totals come from these rows, so the ground truth is
+    // counted ONCE per date: a date read by two readers contributes its
+    // ground truth once, and the union of the two readings is what it is
+    // scored against. Counting it once per READER would double it, and
+    // that is the same mistake the tool already fixed for the ground
+    // truth being counted once per LOG.
+    const pooledPerDate = [];
+    for (const [date, row] of [...pooledByDate.entries()].sort()) {
+      const predicted = row.predicted;
+      pooledPerDate.push({
+        date,
+        reader: 'pooled',
+        hit: [...predicted].filter((ticker) => row.expected.has(ticker)).length,
+        gt: row.expected.size,
+        pred: predicted.size,
+        scored: true,
+        missed: [...row.expected].filter((ticker) => !predicted.has(ticker)).sort(),
+        fp: [...predicted].filter((ticker) => !row.expected.has(ticker)).sort(),
+      });
+    }
+
+    for (const row of pooledPerDate) {
+      totalHit += row.hit;
+      totalGt += row.gt;
+      totalPred += row.pred;
+    }
+
     arms[name] = {
       perDate,
+      pooledPerDate,
+      byReader,
       census: {
-        datesWithALog: byDate.size,
-        datesScored: perDate.filter((entry) => entry.scored).length,
-        datesLostToMissingReading: perDate.filter((entry) => !entry.scored).length,
+        datesWithALog: new Set([...byDate.values()].map((row) => row.date)).size,
+        // The DISTINCT dates -- a date read by two readers is ONE date,
+        // however many rows it has.
+        datesScored: new Set(perDate.filter((entry) => entry.scored).map((entry) => entry.date)).size,
+        datesLostToMissingReading: new Set(
+          perDate.filter((entry) => !entry.scored).map((entry) => entry.date),
+        ).size,
       },
       totals: { hit: totalHit, gt: totalGt, pred: totalPred },
     };
@@ -818,8 +933,36 @@ function main(argv = process.argv.slice(2)) {
             totals: arm.totals,
             micro_recall: Number(percent(arm.totals.hit, arm.totals.gt)),
             micro_precision: Number(percent(arm.totals.hit, arm.totals.pred)),
+            // The POOLED reading -- the union of a date's predictions
+            // across readers -- and the ground truth counted once per
+            // date.
+            pooled_per_date: arm.pooledPerDate.map((row) => ({
+              date: row.date,
+              hit: row.hit,
+              gt: row.gt,
+              pred: row.pred,
+              scored: row.scored,
+              missed: row.missed,
+              fp: row.fp,
+            })),
+            // The PER-READER measurements: each reader's own totals, with
+            // its own denominator. These are the real numbers.
+            by_reader: Object.fromEntries(
+              Object.entries(arm.byReader || {}).map(([reader, totals]) => [
+                reader,
+                {
+                  dates: totals.dates,
+                  hit: totals.hit,
+                  gt: totals.gt,
+                  pred: totals.pred,
+                  micro_recall: Number(percent(totals.hit, totals.gt)),
+                  micro_precision: Number(percent(totals.hit, totals.pred)),
+                },
+              ]),
+            ),
             per_date: arm.perDate.map((row) => ({
               date: row.date,
+              reader: row.reader,
               hit: row.hit,
               gt: row.gt,
               pred: row.pred,
@@ -877,9 +1020,13 @@ function main(argv = process.argv.slice(2)) {
   for (const arm of Object.values(mergedArms)) {
     for (const row of arm.perDate) mergedDates.add(row.date);
   }
+  //
+  // The table is the POOLED reading -- the union of a date's predictions
+  // across readers -- because that is what production published. The
+  // per-reader rows are below it, and they are the real measurements.
   for (const date of [...mergedDates].sort()) {
     const cells = ['recorded', 'rebuilt', 'rebuilt_current'].map((name) => {
-      const row = mergedArms[name].perDate.find((entry) => entry.date === date);
+      const row = mergedArms[name].pooledPerDate.find((entry) => entry.date === date);
       if (!row || !row.scored) return '--';
       return `${String(row.hit).padStart(2)}/${String(row.gt).padEnd(2)}`;
     });
@@ -894,6 +1041,9 @@ function main(argv = process.argv.slice(2)) {
   console.log('  rebuilt_current : the current parser end to end, over the captures the log kept');
   console.log('                    (the production clusterer saw EVERY ocr\'d frame; a log keeps');
   console.log('                     only the selected captures, so this arm is the least faithful)');
+  console.log('                    AND it is the CHART-STREAM parser, always -- so its rows under');
+  console.log('                     position_table are NOT the table reader\'s own reading. They say');
+  console.log('                     what the chart-stream parser makes of a table frame\'s words.');
   if (mergedReport.census.logsWithRecordedClusterRule) {
     console.log(`  logs recording their own cluster rule: ${mergedReport.census.logsWithRecordedClusterRule}`
       + ` (${mergedReport.census.logsWithDifferentRecordedClusterRule} disagree with the rule under test)`);
@@ -905,6 +1055,32 @@ function main(argv = process.argv.slice(2)) {
       + `  precision ${percent(arm.totals.hit, arm.totals.pred)}%  (${arm.totals.hit}/${arm.totals.pred})`
       + `  lost ${arm.census.datesLostToMissingReading}`,
     );
+    // THE PER-READER TOTALS, and they are the real measurements.
+    //
+    // The pooled number above is what production published, and it is a
+    // MIXTURE: the corpus holds logs from two readers, and a date read
+    // by both is one date whose predictions are the union of two
+    // readings. Pooling them let the table reader's false positives
+    // count against the chart-stream reader's score.
+    //
+    // Each reader's own totals have their own denominator, so a date
+    // enters the reader that read it and only that reader.
+    for (const [reader, totals] of Object.entries(arm.byReader || {})) {
+      if (!totals.dates) continue;
+      console.log(
+        `  ${name} / ${reader.padEnd(14)}: dates ${String(totals.dates).padStart(2)}`
+        + `  recall ${percent(totals.hit, totals.gt)}%  (${totals.hit}/${totals.gt})`
+        + `  precision ${percent(totals.hit, totals.pred)}%  (${totals.hit}/${totals.pred})`,
+      );
+    }
+  }
+  const readerCounts = mergedReport.census.logsByReader || {};
+  if (Object.keys(readerCounts).length > 1) {
+    console.log('');
+    console.log('  the logs by the reader that produced them:'
+      + Object.entries(readerCounts).map(([reader, count]) => ` ${reader} ${count}`).join(',')
+      + '  ("none" = a scan that published no holding)');
+    console.log('  the POOLED totals above are a MIXTURE of those readers -- read the per-reader lines');
   }
 
   const { census, totals } = report;
@@ -949,6 +1125,7 @@ module.exports = {
   collectLogFiles,
   cropWidthFor,
   groundTruthForDate,
+  readerOfLog,
   scoreLogs,
   scoreMergedLists,
   mergedReaders,
