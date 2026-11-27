@@ -220,6 +220,35 @@ function aliasMapForLayout(layoutEra) {
   return merged;
 }
 
+/**
+ * The alias map a LAYOUT brings of its OWN, and not the shared table's.
+ *
+ * The shared table's rows are the chart-stream reader's IN-COLUMN
+ * rescue, and the table reader has its own decoder -- a lexicon plus a
+ * character confusion model -- so the shared rows would not apply to it
+ * the same way. What the table reader needs is the LAYOUT's own rows:
+ * the date-scoped rules that say "in THIS layout, this garbled form is
+ * that holding".
+ *
+ * The NFU case is the one that matters: the table reader read the
+ * 20220606 and 20220607 tables and published NFU where the pixels show
+ * NFLX, because the distance-1 repair invents NFU from the cell -- and
+ * NFU is a real seed ticker, which is exactly why the shared table
+ * cannot carry the row.
+ *
+ * @param {string|null} layoutEra  the era name
+ * @returns {Map<string, string>} the era's own rows
+ */
+function eraAliasMapForLayout(layoutEra) {
+  const layoutPath = layoutEra ? LAYOUT_CONFUSION_CSVS[layoutEra] : null;
+  if (!layoutPath) return new Map();
+  const cacheKey = `era:${activeConfusionCsv}|${layoutPath}`;
+  if (layoutConfusionCache.has(cacheKey)) return layoutConfusionCache.get(cacheKey);
+  const map = readConfusionCsv(layoutPath);
+  layoutConfusionCache.set(cacheKey, map);
+  return map;
+}
+
 function loadOcrConfusionMap() {
   if (cachedConfusionMap && cachedConfusionMapPath === activeConfusionCsv) return cachedConfusionMap;
   const map = new Map();
@@ -2505,6 +2534,7 @@ module.exports = {
   readPanelRowCount,
   setOcrConfusionCsvPath,
   aliasMapForLayout,
+  eraAliasMapForLayout,
   LAYOUT_CONFUSION_CSVS,
   TICKER_BLOCKLIST
 };

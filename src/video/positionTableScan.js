@@ -617,6 +617,8 @@ function reconcileTitleHeader(selection, narrowEval, ladder) {
  * @param {string} framePath  a frame at the SOURCE resolution
  * @param {object} [options]
  * @param {number} [options.frameBudgetMs]  wall-clock budget for this frame
+ * @param {Map<string, string>} [options.aliases]  the LAYOUT's own alias
+ *   rows -- a garbled form that is a misread in this layout only
  * @returns {Promise<object>} the reading; `found` says whether a positions
  *   table was located at all
  */
@@ -820,7 +822,7 @@ async function readPositionTable(framePath, options = {}) {
     return { index: i, hypotheses };
   }).slice(dataStart);
 
-  const decoded = decodeRows(rows, { lexicon, confusion });
+  const decoded = decodeRows(rows, { lexicon, confusion, aliases: options.aliases });
   const tickers = decoded.map((d) => d.ticker).filter(Boolean);
   const rejected = decoded.filter((d) => !d.ticker);
 
@@ -882,15 +884,39 @@ async function readPositionTable(framePath, options = {}) {
  * decoder refuses a substitution the confusion model has not seen, and an
  * unexplained one-character difference must not be turned into some other
  * ticker.
+ *
+ * A LAYOUT-SCOPED ALIAS is applied to the decoded ticker, and it is the
+ * same rule the chart-stream reader uses: a garbled form that is a
+ * misread in THIS layout only. The canonical has to be in the lexicon,
+ * so an alias can never introduce a ticker the market does not have.
  */
 function decodeRows(rows, options = {}) {
+  const aliases = options.aliases instanceof Map ? options.aliases : new Map();
+  // The lexicon is the OBJECT `loadDecodeLexiconSync()` returns -- it
+  // carries `tickers` and a `tickerSet` -- and a bare Set is accepted
+  // too, because the alias only needs the membership test.
+  const lexicon = options.lexicon && options.lexicon.tickerSet
+    ? options.lexicon.tickerSet
+    : (options.lexicon instanceof Set
+      ? options.lexicon
+      : new Set((options.lexicon && options.lexicon.tickers) || []));
   return (rows || []).map((row) => {
     const decoded = decodeCell(row.hypotheses || [], options);
+    let ticker = decoded ? decoded.ticker : null;
+    let aliasedFrom = '';
+    if (ticker && aliases.has(ticker)) {
+      const canonical = aliases.get(ticker);
+      if (canonical && (!lexicon.size || lexicon.has(canonical))) {
+        aliasedFrom = ticker;
+        ticker = canonical;
+      }
+    }
     return {
       raw: (row.hypotheses || []).map((h) => h.text).join('|'),
-      ticker: decoded ? decoded.ticker : null,
+      ticker,
       cost: decoded ? decoded.cost : Infinity,
-      confidence: decoded ? decoded.confidence : 0
+      confidence: decoded ? decoded.confidence : 0,
+      aliased_from: aliasedFrom
     };
   });
 }

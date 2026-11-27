@@ -38,6 +38,7 @@ const { createProbeKey, parseArgs, parseFractionalRegion, printHelp } = require(
 const {
   chartStreamCropFractionForDate,
   chartStreamPrefilterRegionForDate,
+  eraAliasMapForLayout,
   layoutAliasEraForDate,
 } = require('../src/video/chartStreamCrop');
 const { PREFILTER_PROFILE_DEFAULT } = require('../src/config/schema');
@@ -798,6 +799,13 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
   // profile supplies it, and `phashRegionFraction` is the fallback for
   // callers that do not.
   const legacyCropFraction = chartStreamCropFraction || phashRegionFraction;
+  // The LAYOUT ERA is the date's, and it says which misreads are
+  // misreads in THIS layout only. It is computed once and used by BOTH
+  // readers: the chart-stream one has always had it, and the TABLE one
+  // needs it because the date-scoped rules (NFU -> NFLX on the
+  // 20220606-20220608 floating panel) are exactly the rules the table
+  // decoder was missing.
+  const layoutEra = layoutAliasEraForDate(dateKey);
   if (positionTableParser) {
     // The positions-TABLE reader runs first: it LOCATES the table and reads
     // it from the source pixels, which is the only way to read the 2023-era
@@ -808,7 +816,11 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
       const table = await readPositionTable(framePath, {
         engine: ocrEngine,
         frameBudgetMs: tableFrameBudgetMs || undefined,
-        pythonPath: options.pythonPath
+        pythonPath: options.pythonPath,
+        // The LAYOUT's own alias rows, and not the shared table's: the
+        // shared rows are the chart-stream reader's in-column rescue and
+        // the table reader has its own decoder.
+        aliases: eraAliasMapForLayout(layoutEra)
       });
       // The reading is kept even when it found nothing: `reason` says WHY
       // no table was claimed, which is the only way to tell "this frame has
@@ -856,7 +868,7 @@ async function buildSnapshotCandidate(framePath, frameIndex, dateKey, fps, stats
     const easyOcrOpts = {
       videoPath,
       timestamp: explicitTimestamp != null ? explicitTimestamp : stats.timestamp,
-      layoutEra: layoutAliasEraForDate(dateKey),
+      layoutEra,
     };
     // Retain the exact panel crop the engine reads, so OCR settings can be
     // re-benchmarked without re-scanning. Name it by timestamp so the crop is
