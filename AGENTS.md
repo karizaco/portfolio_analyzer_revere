@@ -8184,6 +8184,42 @@ can stand) are in `docs/discord-traders.md`, and they are pinned by
 `test/discordPortfolio.test.js`, `test/discordTradeActions.test.js` and
 `test/discordEpisodes.test.js`.
 
+## The `position_table` sweep -- MEASURED, and it reads the table exactly (2026-11-27)
+
+**THE POSITION LIST HAS TWO LAYOUTS** in the Qullamaggie corpus: the
+chart-stream overlay (the `chart_stream` profile) and the TradingView
+TABLE (the `position_table` profile). The table reader needs the source
+frame at NATIVE resolution -- the table's ticker glyphs are ~6.8 source
+px tall, and at 1280 they are ~4.5 px and the panel reads as "US / D /
+WCU / W / KOCO" instead of "UPST / DVN / NRGU / MOS / TQQQ" -- and each
+frame costs TWO EasyOCR batches.
+
+**THE MEASUREMENT, and it is the best reading in the corpus.**
+20230608, read with the `position_table` profile:
+
+| | |
+|---|---|
+| the ground truth | 13 holdings |
+| the reading | **13 holdings, 0 false positives** |
+| recall / precision | **100 % / 100 %** |
+| the wall clock | **13.7 minutes** for the video |
+
+And `tools/evalParserReplay.js` now scores it: 20230608 reads **13/13**
+in the project's own replay, and the two false positives the per-date
+row shows (APOQ, POSI) come from that date's OTHER FOUR logs, not from
+this one.
+
+**THE TOOL.** `npm run qmg:table:sweep -- --dates <list>` drives it,
+because `tools/runQmgOcrBatch.js` cannot: its flags come from the
+production chart-stream profile, and the table profile REFUSES
+`--ocr-frame-width` and any `--output-kind` other than `snapshot`,
+because in table mode they can only produce a silently wrong result.
+The sweep follows the rules the profile's cost demands -- ONE video
+first, a chunk and not a sweep, low CPU always, and a timeout that
+kills the PROCESS TREE, because a scan tool's ffmpeg and EasyOCR
+grandchildren do not die with their parent on Windows and the orphans
+stall the next video's I/O.
+
 ## The ENTRY RULE -- measured, and it is NOT why the sources lose (2026-11-27)
 
 **EVERY forward claim in this project is entered at ONE price: the close
