@@ -589,6 +589,32 @@ async function main() {
       const latest = dates.length ? dates[dates.length - 1] : '';
       const snapshot = latest ? held.filter((row) => row.as_of_date === latest) : [];
       const weights = snapshot.map((row) => row.weight_pct).filter((value) => value !== null);
+
+      // EVERY SNAPSHOT, and not only the latest.
+      //
+      // The latest snapshot is not the whole book: a source can post a
+      // rich snapshot and then a poorer one later, and the dashboard
+      // would show only the poorer one. plechac's 2025-12-22 "Overview"
+      // table is 83 holdings ALL WITH WEIGHTS, and his 2026-04-15
+      // treemap is 64 holdings with NO weight -- so the latest snapshot
+      // is the one that says least, and showing only it hides the
+      // better reading entirely.
+      const snapshotsDetail = dates.map((date) => {
+        const onDate = held.filter((row) => row.as_of_date === date);
+        const dateWeights = onDate.map((row) => row.weight_pct).filter((value) => value !== null);
+        return {
+          date,
+          positions: onDate.length,
+          weighted: dateWeights.length,
+          weight_sum_pct: dateWeights.length
+            ? Number(dateWeights.reduce((total, value) => total + value, 0).toFixed(2))
+            : null,
+          // The readings the rows came from -- a picture can be a table
+          // (which carries the weight) or a treemap (which does not).
+          sources: [...new Set(onDate.map((row) => row.as_of_source).filter(Boolean))].sort(),
+        };
+      });
+
       byAccount[account] = {
         snapshots: dates.length,
         first_date: dates[0] || '',
@@ -598,6 +624,12 @@ async function main() {
         weight_sum_pct: weights.length
           ? Number(weights.reduce((total, value) => total + value, 0).toFixed(2))
           : null,
+        // The RICHEST snapshot, and its date -- the reader wants to know
+        // how much of the book has ever been visible.
+        richest: snapshotsDetail.slice().sort(
+          (a, b) => b.positions - a.positions || (b.weighted - a.weighted),
+        )[0] || null,
+        snapshots_detail: snapshotsDetail,
         top: snapshot
           .filter((row) => row.weight_pct !== null)
           .sort((a, b) => b.weight_pct - a.weight_pct)

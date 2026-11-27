@@ -207,11 +207,39 @@ function renderDiscordReport(payload) {
   for (const [name, book] of Object.entries(posted)) {
     for (const [account, detail] of Object.entries(book.by_account || {})) {
       if (!detail.positions) continue;
+      // THE RICHEST SNAPSHOT AND THE LATEST, because the latest one is
+      // not the whole book: a source can post a rich snapshot and a
+      // poorer one later, and the latest says least. plechac's
+      // 2025-12-22 "Overview" table is 83 holdings ALL WITH WEIGHTS and
+      // his 2026-04-15 treemap is 64 with none -- so the dashboard has
+      // to show both, and only both.
+      //
+      // Two and not all of them, because a source with 174 snapshots
+      // would otherwise fill the cell with a list nobody reads.
+      const allSnapshots = detail.snapshots_detail || [];
+      const richest = detail.richest || null;
+      const shown = [];
+      for (const entry of [richest, ...allSnapshots.slice().reverse()]) {
+        if (!entry) continue;
+        if (shown.some((existing) => existing.date === entry.date)) continue;
+        shown.push(entry);
+        if (shown.length >= 2) break;
+      }
+      const snapshotDetail = shown.map((entry) => {
+        const sum = entry.weight_sum_pct === null || entry.weight_sum_pct === undefined
+          ? '&mdash;'
+          : `${num(entry.weight_sum_pct, 2)} %`;
+        return `${escapeHtml(entry.date)}: ${entry.positions} holdings`
+          + ` (${entry.weighted} weighted, ${sum})`;
+      }).join('<br>')
+        + (allSnapshots.length > shown.length
+          ? `<br><span class="muted">and ${allSnapshots.length - shown.length} more</span>`
+          : '');
       postedRows.push(`<tr><td>${escapeHtml(sourceLabel(name))}</td>`
         + `<td>${escapeHtml(account || 'main')}</td>`
         + `<td>${detail.snapshots}</td>`
         + `<td>${escapeHtml(detail.latest_date || '')}</td>`
-        + `<td>${detail.positions}</td>`
+        + `<td>${snapshotDetail || detail.positions}</td>`
         + `<td>${detail.weight_sum_pct === null || detail.weight_sum_pct === undefined ? '&mdash;' : `${num(detail.weight_sum_pct, 2)} %`}</td>`
         + `<td>${escapeHtml((detail.top || []).slice(0, 6).map((row) => `${row.ticker} ${num(row.weight_pct, 1)}%`).join(', '))}</td></tr>`);
     }
@@ -222,7 +250,10 @@ function renderDiscordReport(payload) {
     episode: an episode is priced from an entry and an exit, and a snapshot is what the book looked like on the day
     it was posted. The weights are the ones he gave, and the sum is reported so a reader can see whether the snapshot
     is whole &mdash; the broker's own table says 100&nbsp;%.</p>
-  ${table(['source', 'book', 'snapshots', 'latest', 'holdings', 'weights', 'largest'], postedRows)}
+  <p class="description">The RICHEST snapshot and the latest one are both listed, and not the latest alone: a source
+    can post a rich snapshot and a poorer one later, and the latest says least. plechac's 2025-12-22
+    &quot;Overview&quot; table is 83 holdings all with weights and his 2026-04-15 treemap is 64 with none.</p>
+  ${table(['source', 'book', 'snapshots', 'latest', 'the richest and the latest', 'latest\'s weights', 'largest'], postedRows)}
 </section>` : '';
 
   return `<!doctype html>
