@@ -2125,8 +2125,30 @@ async function main() {
           if (c.ticker_source === 'position_table') return c.tickers || [];
           return consensusForMerge || (c.tickers || []);
         });
+        // A table IDENTIFIED BY ITS TITLE outranks a table that was only a
+        // POSITIONAL PRIOR, and the two must not be merged together.
+        //
+        // The reader's own documentation says `bottom_most` "is only a
+        // positional tie-break, not an identification" -- and a prior that
+        // picks the wrong table publishes the CHART AREA beside the real
+        // list. Measured on the 2026-11-27 position_table sweep: 20230609
+        // had one capture that read the real table (title "POSIIC") and
+        // one that published a 29-row prior, and merging the two gave
+        // 11/13 with NINE false positives. Publishing the identified
+        // capture alone gives the SAME 11/13 with NONE.
+        //
+        // The rule is bounded: it fires only when a capture actually
+        // identified a table by title, and the chart-stream path has no
+        // such capture, so it is unchanged there.
+        const identified = captureSummaries.filter((c) => {
+          const table = c.chart_stream && c.chart_stream.position_table;
+          return table && table.discriminator === 'title';
+        });
+        const toMerge = identified.length
+          ? identified.map((c) => c.tickers || [])
+          : lists;
         const raw = mergeMultiplePositionLists(
-          lists,
+          toMerge,
           { minOccurrences: options.positionMergeMinOccurrences }
         );
         return raw.filter((t) => !TICKER_BLOCKLIST.has(t));

@@ -8210,8 +8210,8 @@ stall the next video's I/O.
 
 | | |
 |---|---|
-| the ground truth | 62 holdings over the eight dates |
-| the reading | **57 hits (91.9 % recall), 12 false positives (82.6 % precision)** |
+| the ground truth | 75 holdings over the eight dates |
+| the reading | **70 hits (93.3 % recall), 3 false positives (95.9 % precision)** |
 | the wall clock | **557-965 s a video** (9.3-16 min) |
 
 **THREE DATES ARE EXACT** -- 20220222 (7/7), 20220323 (11/11) and
@@ -8233,6 +8233,12 @@ alone gives **the SAME 11/13 with NONE**. The merge now prefers the
 identified capture, and the rule is bounded: it fires only when a
 capture actually identified a table by title, so the chart-stream path
 is unchanged.
+
+**AND THE FIX LIFTS THE SWEEP'S PRECISION FROM 82.6 % TO 95.9 %** with
+no recall lost, because it changes exactly ONE log of the eight: the
+other seven have no title-identified table beside a prior, so they are
+untouched. The three false positives that remain are the documented
+ones -- UVXY on 20220218 and NFU on 20220606 and 20220607.
 
 **AND THE HONEST CAVEAT, WHICH IS THE POINT OF MEASURING IT.** The
 chart-stream reader ALREADY reads most of these dates exactly --
