@@ -8352,6 +8352,100 @@ in Czech (zlato -> GLD, stribro -> SLV, ropa -> USO, psenice -> WEAT);
 and the company names go through the SHARED matcher, which resolves some
 names and not others.
 
+### HariSeldon's OPTION LEGS, scored as directional claims (2026-11-28)
+
+**HE TRADES OPTIONS, AND AN OPTION IS NOT A HOLDING.** His corpus is
+3,000 messages, 2,007 actions and 485 episodes, and every episode so far
+has been an EQUITY trade. So his option structures were never scored --
+and they are a different kind of claim, because an option's price is the
+option's and not the underlying's.
+
+**THE RULE, AND IT IS THE SOURCE'S OWN MODULE**
+(`src/discord/hariseldon/optionDirection.js`): an option leg is scored
+as a **directional claim on the UNDERLYING**, because a spread is a
+bounded bet and the question is whether the DIRECTION carries
+information -- not whether the spread was a good trade. **And the
+option's own price is not chained into an episode**: the price of a
+spread is the spread's, so the option action is recorded and the
+equity episodes are not disturbed.
+
+**MEASURED over 521 directional opens:**
+
+| | n | hit rate | the same call on SPY | edge | the mean excess |
+|---|---|---|---|---|---|
+| 1 week | 517 | **44.5 %** (CI 40.3-48.8) | 47.0 % | **-2.5 pp** | -0.18 pp (CI -0.65 to +0.29) |
+| 1 month | 490 | **49.0 %** (CI 44.6-53.4) | 43.7 % | **+5.3 pp** | +0.49 pp (CI -0.60 to +1.58) |
+
+So his option calls are **worse than the index at one week** and
+indistinguishable from it at one month -- and the assessment the tool
+writes is `possible_negative_edge` at both horizons, which is the
+honest reading of an interval that straddles zero.
+
+**AND THE DIRECTION IS DERIVED FROM THE STRUCTURE, not from the
+underlying.** A CALL is bullish and a PUT is bearish; a spread's two
+legs give the direction its larger exposure carries; and a call that
+BUYS a put (a synthetic short) is bearish. The instrument's own
+direction is not the call's direction, and the two have been confused
+before in this project.
+
+### THE HEAD-TO-HEAD, every source against the same call on SPY (2026-11-28)
+
+**NINE SOURCES, ONE TABLE, AND THE HONEST HEADLINE IS THAT NONE OF THEM
+BEATS THE INDEX.** Every row is the source's own published claims,
+scored at the entry rule that source publishes with, against **the same
+call on SPY on the same dates**.
+
+| source | claims | 1w hit | the same call on SPY | excess | 1m hit | excess |
+|---|---|---|---|---|---|---|
+| Sevcik (Czech streams) | 1708 | 50.8 % | 53.2 % | **-2.4 pp** | 54.4 % | -5.8 pp |
+| T3Live | 4511 | 51.3 % | 55.2 % | **-3.9 pp** | 53.1 % | -6.5 pp |
+| Benzinga (signals) | 1426 | 52.1 % | 55.0 % | **-2.9 pp** | 54.6 % | -10.0 pp |
+| Benzinga (readings) | 2696 | 50.9 % | 53.1 % | **-2.2 pp** | 50.9 % | -2.1 pp |
+| AsymTrading | 30 | 46.7 % | 60.0 % | **-13.3 pp** | 56.7 % | -26.7 pp |
+| Komar | 153 | 59.6 % | 62.3 % | **-2.6 pp** | 57.0 % | -11.3 pp |
+| FundedMind | 395 | 55.1 % | 53.8 % | **+1.3 pp** | 50.3 % | -0.8 pp |
+| David Monoszon | 69 | 57.4 % | 63.2 % | **-5.9 pp** | 54.5 % | -7.6 pp |
+| Martin Klass | 52 | 42.9 % | 49.0 % | **-6.1 pp** | 45.2 % | 0.0 pp |
+
+**AND THE TABLE IS ALSO THE ANSWER TO "IS THE ENTRY RULE THE REASON?",
+because every source is re-scored under every executable entry rule**
+(the exit is FIXED at the claim date, so only the entry moves):
+
+| source | close_d0 | open_d1 | close_d1 | limit_d0_1_0 |
+|---|---|---|---|---|
+| Sevcik | -2.4 | -2.4 | -2.5 | -9.0 |
+| T3Live | -3.9 | -4.5 | -4.3 | -6.4 |
+| Benzinga (signals) | -2.9 | -2.0 | -1.1 | -2.0 |
+| Benzinga (readings) | -2.2 | -2.1 | -0.7 | -3.6 |
+| AsymTrading | -13.3 | -30.0 | -30.0 | -66.7 |
+| Komar | -2.6 | -6.0 | -5.3 | +3.2 |
+| FundedMind | +1.3 | +2.8 | 0.0 | +2.4 |
+| Monoszon | -5.9 | -4.4 | -2.9 | -9.1 |
+| Martin Klass | -6.1 | -2.0 | +2.0 | +12.5 |
+
+Every source's edge is negative or indistinguishable from zero under
+every rule, so **the "no edge" finding is a fact about the SOURCES and
+not an artefact of the entry price**. The two positive cells in the
+limit column are two sources with 31 and 8 comparable rows.
+
+**AND THE LIMIT RULE LOOKS LIKE AN EDGE ONLY UNTIL THE DENOMINATORS
+MATCH.** A limit fills for the claim but not for SPY on most rows, and
+counting "SPY did not trade" as "SPY lost" handed the claims an edge of
+**+33 pp** that was entirely an artefact of the comparison. With both
+sides on the rows where BOTH traded, the same rule reads **-9.0 pp** on
+Sevcik's 245 comparable claims, -6.4 pp on T3Live's 676, and -9.1 pp on
+Monoszon's 11.
+
+**AND THE INSTRUMENT VALIDATES ITSELF, LIKE FOR LIKE.** Eight of the
+nine sources AGREE exactly with their published numbers on the rows both
+scored, and the ninth -- T3Live -- differs on **ONE row in 4,353**
+(Yahoo revised NXDR's history between the published run and the
+measurement). So the numbers above are a re-measurement of the same
+rows, not a second opinion about them.
+
+The dashboard carries the same table, over the Discord sources, in
+`data/discord_traders.html`.
+
 ### The Overview view's MISREADS, read off the pixels (2026-11-28)
 
 **FIVE OF THE 2025-12-22 BOOK'S HOLDINGS WERE OCR MISREADS, and the

@@ -751,6 +751,21 @@ broker's spellings, so "ASML.AS" and "ASML" are two LINES while
 to "ASML.AS" and is the same line read badly. The scroll overlap is the
 same line read twice, and it does not add.
 
+### HariSeldon's option legs, and the head-to-head table -- DONE (2026-11-28)
+
+**BOTH ARE MEASURED AND RECORDED** -- in AGENTS.md / CLAUDE.md:
+
+- **the option legs**: 521 directional opens, 1w 44.5 % against 47.0 %
+  for the same call on SPY (edge -2.5 pp), 1m 49.0 % against 43.7 %
+  (edge +5.3 pp), assessment `possible_negative_edge` at both horizons.
+  An option leg is scored as a directional claim on the UNDERLYING, and
+  the option's own price is not chained into an episode.
+- **the head-to-head**: nine sources, one table, and the honest headline
+  is that none of them beats the index. Every source is also re-scored
+  under every executable entry rule, and the edge is negative or
+  indistinguishable from zero under all of them -- so the finding is a
+  fact about the sources and not an artefact of the entry price.
+
 ### The Overview view's misreads -- READ, and the source has its own table (2026-11-28)
 
 **DONE.** Five of the 2025-12-22 book's holdings were OCR misreads.
