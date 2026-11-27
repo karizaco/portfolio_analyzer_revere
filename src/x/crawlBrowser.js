@@ -373,8 +373,23 @@ async function crawlBrowserWindows(options) {
       return report;
     }
     await nap(3000);
-    const signal = detectStopSignal({ ...(await pageState(first)), graphqlStatus: firstTap.lastStatus, rateLimitReset: firstTap.rateLimitReset });
-    if (signal.stop || !(await isLoggedIn(first))) {
+    let signal = detectStopSignal({ ...(await pageState(first)), graphqlStatus: firstTap.lastStatus, rateLimitReset: firstTap.rateLimitReset });
+    let loggedIn = await isLoggedIn(first);
+    // After a wake the home page is slow. A real logout redirects away from
+    // /home, so a page that is still there is not a logout -- it has not
+    // rendered yet. Measured 2026-11-26: a 3-second check right after a wake
+    // reported login_required for a session that was logged in.
+    if (!signal.stop && !loggedIn) {
+      const deadline = Date.now() + 20000;
+      while (!loggedIn && Date.now() < deadline) {
+        // eslint-disable-next-line no-await-in-loop
+        await nap(2000);
+        // eslint-disable-next-line no-await-in-loop
+        loggedIn = await isLoggedIn(first);
+      }
+      signal = detectStopSignal({ ...(await pageState(first)), graphqlStatus: firstTap.lastStatus, rateLimitReset: firstTap.rateLimitReset });
+    }
+    if (signal.stop || !loggedIn) {
       const reason = signal.stop ? signal : detectStopSignal({ url: 'https://x.com/i/flow/login' });
       Object.assign(report, { status: 'blocked', stop_reason: reason.reason, message: reason.message });
       return report;
