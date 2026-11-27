@@ -8184,7 +8184,7 @@ can stand) are in `docs/discord-traders.md`, and they are pinned by
 `test/discordPortfolio.test.js`, `test/discordTradeActions.test.js` and
 `test/discordEpisodes.test.js`.
 
-## The `position_table` sweep -- MEASURED, and it reads the table exactly (2026-11-27)
+## The `position_table` sweep -- MEASURED over eight videos (2026-11-27)
 
 **THE POSITION LIST HAS TWO LAYOUTS** in the Qullamaggie corpus: the
 chart-stream overlay (the `chart_stream` profile) and the TradingView
@@ -8193,21 +8193,6 @@ frame at NATIVE resolution -- the table's ticker glyphs are ~6.8 source
 px tall, and at 1280 they are ~4.5 px and the panel reads as "US / D /
 WCU / W / KOCO" instead of "UPST / DVN / NRGU / MOS / TQQQ" -- and each
 frame costs TWO EasyOCR batches.
-
-**THE MEASUREMENT, and it is the best reading in the corpus.**
-20230608, read with the `position_table` profile:
-
-| | |
-|---|---|
-| the ground truth | 13 holdings |
-| the reading | **13 holdings, 0 false positives** |
-| recall / precision | **100 % / 100 %** |
-| the wall clock | **13.7 minutes** for the video |
-
-And `tools/evalParserReplay.js` now scores it: 20230608 reads **13/13**
-in the project's own replay, and the two false positives the per-date
-row shows (APOQ, POSI) come from that date's OTHER FOUR logs, not from
-this one.
 
 **THE TOOL.** `npm run qmg:table:sweep -- --dates <list>` drives it,
 because `tools/runQmgOcrBatch.js` cannot: its flags come from the
@@ -8219,6 +8204,43 @@ first, a chunk and not a sweep, low CPU always, and a timeout that
 kills the PROCESS TREE, because a scan tool's ffmpeg and EasyOCR
 grandchildren do not die with their parent on Windows and the orphans
 stall the next video's I/O.
+
+**THE CHUNK IS DONE, and the table reader is real.** Eight videos --
+20220218, 20220222, 20220323, 20220606, 20220607, 20221104, 20230608 and
+20230609 -- read with the `position_table` profile:
+
+| | |
+|---|---|
+| the ground truth | 62 holdings over the eight dates |
+| the reading | **57 hits (91.9 % recall), 12 false positives (82.6 % precision)** |
+| the wall clock | **557-965 s a video** (9.3-16 min) |
+
+**THREE DATES ARE EXACT** -- 20220222 (7/7), 20220323 (11/11) and
+20221104 (1/1) -- and 20230608 is 13/13 with 0 false positives.
+
+**THE TWO REMAINING LIMITS ARE THE DOCUMENTED ONES.** 20220218's extra
+name is UVXY, which the ground-truth audit already records as "a wrong
+cell read as a real ticker". And 20220606 and 20220607 publish NFU
+where the screenshot shows NFLX -- the date-scoped NFU rescue, which
+the chart-stream path has and the table path does not.
+
+**AND ONE NEW DEFECT, FOUND AND FIXED: A PRIOR MUST NOT JOIN AN
+IDENTIFICATION.** 20230609 had one capture that read the real table
+(title "POSIIC") and one that published a 29-row `bottom_most` PRIOR --
+and the reader's own documentation says `bottom_most` "is only a
+positional tie-break, not an identification". Merging the two gave
+**11/13 with NINE false positives**; publishing the identified capture
+alone gives **the SAME 11/13 with NONE**. The merge now prefers the
+identified capture, and the rule is bounded: it fires only when a
+capture actually identified a table by title, so the chart-stream path
+is unchanged.
+
+**AND THE HONEST CAVEAT, WHICH IS THE POINT OF MEASURING IT.** The
+chart-stream reader ALREADY reads most of these dates exactly --
+20230609 reads 13/13, 20220607 reads 9/9, 20220323 reads 11/11. **So
+the table reader's marginal value is NOT on these dates**; it is on the
+dates where the chart-stream reader fails, and the sweep's value is
+knowing WHICH those are rather than re-reading everything.
 
 ## The ENTRY RULE -- measured, and it is NOT why the sources lose (2026-11-27)
 
