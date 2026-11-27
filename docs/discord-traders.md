@@ -353,6 +353,77 @@ Discord's own URLs expire, so the media is the only copy -- which is why
 the reader is pinned by a FROZEN fixture of the OCR words
 (`test/fixtures/plechac_portfolio/`) rather than by a live image.
 
+### The 2025-12-22 "Overview" table -- 83 holdings, ALL WITH WEIGHTS (2026-11-28)
+
+**THE SIX PICTURES OF THAT MESSAGE ARE ONE TREEMAP AND FIVE SCROLL
+POSITIONS OF THE XTB "Overview" TABLE**, and the table says "1-86 of 86".
+The weight is in a column called **"Allocation"** -- the same column the
+Czech "POZICE" table calls "VAHA" -- so the premise that these pictures
+carry no weight was wrong.
+
+**MEASURED: 83 HOLDINGS, EVERY ONE WITH A WEIGHT, AND THE WEIGHTS SUM TO
+98.27 %**, which is the broker's own book exactly (the missing 1.57 % is
+the "$ Cash" row).
+
+Three things had to be right, and each one is a wrong-number trap:
+
+1. **THE HEADER IS SPLIT OVER TWO BANDS.** The Czech table puts every
+   column name on one line, but the English "Overview" view puts "Ticker"
+   on the line BELOW the others, so the columns are found in the band
+   above the ticker band too.
+2. **THE DAILY CHANGE GETS ITS OWN COLUMN**, because it is a different
+   fact: "1D Gain %" is today and "Unr. Gain %" is the unrealised gain.
+   A reader that took the wrong percentage column would publish a
+   CHANGE as a weight.
+3. **THE CUT-OFF ROW IS THE TRAP.** Each picture's last row is cut off
+   by the image edge and the OCR reads its numbers without their points
+   ("0.78 %" as "78 %", "1.61 %" as "161 %"). So a weight outside
+   (0, 100] is IMPOSSIBLE and the row is rejected, and a weight that
+   breaks the column's SORTED order is repaired by dividing it by 100 --
+   but only when that restores the order.
+
+**AND TWO LINES OF ONE HOLDING ADD, and the source's own vocabulary is
+what tells them apart.** He holds the Amsterdam line and the Nasdaq line
+of ASML, and both map to the market ticker ASML. The vocabulary's keys
+ARE the broker's spellings, so "ASML.AS" and "ASML" are two LINES while
+"ASMLAS" -- the Amsterdam line with the dot dropped by the OCR --
+resolves to "ASML.AS" and is the same line read badly. Two lines of one
+holding are ONE position and their weights add; the scroll overlap is
+the same line read twice and it does NOT add.
+
+**AND THE ACCOUNT RULE WAS WRONG, ON A BOOK OF 84 HOLDINGS.** The rule
+was "does the message contain the word risky?". His 2025-12-22 message
+publishes his ONE PUBLIC INVESTMENT ACCOUNT and mentions the risky book
+in passing, on another account -- so the naive test filed his main book
+under the risky account. The rule is now "the risky book is the one the
+message calls a RISKY PORTFOLIO".
+
+**AND FIVE OF THE HOLDINGS WERE OCR MISREADS, read off the pixels.** The
+Overview view's ticker column carries the COMPANY'S NAME under each
+ticker, so a reading can be checked against the instrument it names:
+
+| the OCR read | the picture says | the company |
+|---|---|---|
+| `IQQEDE` | IQQE.DE | iShares MSCI Emerging Markets |
+| `IOGPL` | IOGP.L | iShares Oil & Gas Producers UCITS ETF |
+| `IDUPL` | IDUP.L | iShares US Property Yield UCITS ETF |
+| `IDTLL` | IDTL.L | iShares $ Treasury UCITS ETF |
+| `FLXLDE` | FLXI.DE | Franklin Liberty |
+
+Every one of the five was also probed against Yahoo, and all five
+resolve. So the source has its own PICTURE-READING confusion table
+(`config/ticker_ocr_confusions_plechac.csv`), separate from the
+vocabulary: **the vocabulary says what the BROKER writes and the
+confusion table says what the OCR READS.** It is applied only to a
+picture reading.
+
+**81 OF THE 83 HOLDINGS NOW CARRY A SYMBOL YAHOO CAN PRICE.** The two
+that do not are `RZUS.L` (1.07 %) and `DOC1` (0.73 %) -- 1.80 % of the
+book -- and both were read off the pixels ("Digital Angel Corp" for
+DOC1), and Yahoo has no price series for either under any spelling that
+was tried. So they keep the broker's own spelling: a holding that cannot
+be priced is a holding that cannot be scored.
+
 ### The WRONG-INSTRUMENT CLASS, and what the probe found (2026-11-26)
 
 Every ticker in `config/ticker_names_plechac.csv` was probed against Yahoo,
@@ -554,6 +625,42 @@ inside one session, and the model reads that as a flat 0 %. They are
 counted apart, exactly as the same-day trades of the other traders are,
 and the hit rate is over the 175 that were held longer than a day.
 
+### His OPTION LEGS, scored as directional claims (2026-11-28)
+
+**HE TRADES OPTIONS, AND AN OPTION IS NOT A HOLDING.** Every episode so
+far has been an EQUITY trade, so his option structures were never
+scored -- and they are a different kind of claim, because an option's
+price is the option's and not the underlying's.
+
+**THE RULE, IN THE SOURCE'S OWN MODULE**
+(`src/discord/hariseldon/optionDirection.js`): an option leg is scored
+as a **directional claim on the UNDERLYING**, because a spread is a
+bounded bet and the question is whether the DIRECTION carries
+information -- not whether the spread was a good trade. **And the
+option's own price is not chained into an episode**: the price of a
+spread is the spread's, so the option action is recorded and the equity
+episodes are not disturbed.
+
+**MEASURED over 521 directional opens:**
+
+| | n | hit rate | the same call on SPY | edge | the mean excess |
+|---|---|---|---|---|---|
+| 1 week | 517 | **44.5 %** (CI 40.3-48.8) | 47.0 % | **-2.5 pp** | -0.18 pp (CI -0.65 to +0.29) |
+| 1 month | 490 | **49.0 %** (CI 44.6-53.4) | 43.7 % | **+5.3 pp** | +0.49 pp (CI -0.60 to +1.58) |
+
+So his option calls are **worse than the index at one week** and
+indistinguishable from it at one month, and the assessment the tool
+writes is `possible_negative_edge` at both horizons.
+
+**AND THE DIRECTION IS DERIVED FROM THE STRUCTURE, not from the
+underlying.** A CALL is bullish and a PUT is bearish; a spread's two
+legs give the direction its larger exposure carries; and a call that
+BUYS a put (a synthetic short) is bearish.
+
+```bash
+node tools/analyzeDiscordHariSeldonOptions.js
+```
+
 ## Martin Klass (`martinklass`) -- a daily digest of the earnings (2026-11-27)
 
 Two channels of his own server (1334510084231004202): `trading`
@@ -626,6 +733,47 @@ of a point, where the glyph is the only witness.
 sector labels. The cross-check against the trade channel, bounded to
 the screenshot's date: the screenshot holds 63 names, the trade channel
 named 62 by then, and **29 are in both**.
+
+## THE HEAD-TO-HEAD, every source against the same call on SPY (2026-11-28)
+
+**NINE SOURCES, ONE TABLE, AND THE HONEST HEADLINE IS THAT NONE OF THEM
+BEATS THE INDEX.** Every row is the source's own published claims,
+scored at the entry rule that source publishes with, against **the same
+call on SPY on the same dates**.
+
+| source | claims | 1w hit | the same call on SPY | excess | 1m hit | excess |
+|---|---|---|---|---|---|---|
+| Sevcik (Czech streams) | 1708 | 50.8 % | 53.2 % | **-2.4 pp** | 54.4 % | -5.8 pp |
+| T3Live | 4511 | 51.3 % | 55.2 % | **-3.9 pp** | 53.1 % | -6.5 pp |
+| Benzinga (signals) | 1426 | 52.1 % | 55.0 % | **-2.9 pp** | 54.6 % | -10.0 pp |
+| Benzinga (readings) | 2696 | 50.9 % | 53.1 % | **-2.2 pp** | 50.9 % | -2.1 pp |
+| AsymTrading | 30 | 46.7 % | 60.0 % | **-13.3 pp** | 56.7 % | -26.7 pp |
+| Komar | 153 | 59.6 % | 62.3 % | **-2.6 pp** | 57.0 % | -11.3 pp |
+| FundedMind | 395 | 55.1 % | 53.8 % | **+1.3 pp** | 50.3 % | -0.8 pp |
+| David Monoszon | 69 | 57.4 % | 63.2 % | **-5.9 pp** | 54.5 % | -7.6 pp |
+| Martin Klass | 52 | 42.9 % | 49.0 % | **-6.1 pp** | 45.2 % | 0.0 pp |
+
+**AND IT IS ALSO THE ANSWER TO "IS THE ENTRY RULE THE REASON?",** because
+every source is re-scored under every executable entry rule with the
+exit FIXED at the claim date, so only the entry moves -- and every
+source's edge is negative or indistinguishable from zero under all of
+them. So the "no edge" finding is a fact about the SOURCES and not an
+artefact of the entry price.
+
+**AND THE INSTRUMENT VALIDATES ITSELF, LIKE FOR LIKE.** Eight of the
+nine sources AGREE exactly with their published numbers on the rows both
+scored, and the ninth -- T3Live -- differs on **ONE row in 4,353**
+(Yahoo revised NXDR's history between the published run and the
+measurement).
+
+```bash
+node tools/measureEntryRule.js        # writes data/entry_rule_measurement.json
+```
+
+The dashboard carries the same table over the Discord sources, in
+`data/discord_traders.html`, and the posted-books table shows the
+RICHEST snapshot of each book and not only the latest one -- because the
+latest is not always the whole book.
 
 ## Additive cross-trader layers (2026-11-22)
 
