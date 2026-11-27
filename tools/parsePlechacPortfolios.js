@@ -36,7 +36,7 @@ const { ensureDiscordSchema } = require('../src/discord/schema');
 const { preprocessChartStreamRawToBuffer } = require('../src/ocr/ocrImage');
 const { runEasyOcr } = require('../src/ocr/easyocrAdapter');
 const { readHeatmapWithColour } = require('../src/discord/plechac/heatmapReader');
-const { readPositionsTable } = require('../src/discord/plechac/portfolioReader');
+const { mergeInto, readPositionsTable } = require('../src/discord/plechac/portfolioReader');
 const { marketTickerOf } = require('../src/discord/plechac/symbols');
 const { ACCOUNT_MAIN, ACCOUNT_RISKY } = require('../src/discord/plechac/sources');
 
@@ -189,8 +189,23 @@ async function main() {
     unverified: 0,
     heatmaps: 0,
     heatmap_holdings: 0,
+    messages: 0,
+    merged_positions: 0,
   };
   const detail = [];
+
+  // The positions of ONE MESSAGE, merged across its pictures.
+  //
+  // A message can carry several pictures of the SAME book: the 2025-12-22
+  // one carries a treemap and FIVE scroll positions of the Overview
+  // table, and the table carries the WEIGHT that the treemap cannot.
+  // So the pictures of a message are read together and merged by
+  // ticker, and a holding that a picture with a weight read wins over
+  // the same holding read by a picture without one.
+  const byMessage = new Map();
+  // The date and the account are the MESSAGE's, and every picture of a
+  // message carries the same one.
+  const messageMeta = new Map();
 
   for (const attachment of attachments) {
     summary.images += 1;
@@ -247,6 +262,23 @@ async function main() {
         summary.heatmap_holdings += heatmap.holdings.length;
         const asOfDate = String(attachment.posted_at).slice(0, 10);
         const account = accountOf(attachment.content);
+        // The treemap joins the message's set too: it is the same book,
+        // read from a picture that carries the CHANGE and not the weight.
+        if (!byMessage.has(attachment.message_id)) byMessage.set(attachment.message_id, new Map());
+        if (!messageMeta.has(attachment.message_id)) {
+          messageMeta.set(attachment.message_id, { as_of_date: asOfDate, account });
+        }
+        const messageRows = byMessage.get(attachment.message_id);
+        for (const holding of heatmap.holdings) {
+          mergeInto(messageRows, {
+            ticker: holding.ticker,
+            weight_pct: null,
+            change_pct: holding.change_pct,
+            price: null,
+            avg_cost: null,
+            reading_check: 'treemap',
+          }, 'discord_portfolio_treemap');
+        }
         detail.push({
           file: attachment.local_path,
           date: asOfDate,
@@ -262,37 +294,6 @@ async function main() {
             sector: holding.sector,
           })),
         });
-        if (!dryRun) {
-          db.exec('BEGIN');
-          try {
-            for (const holding of heatmap.holdings) {
-              insert.run(
-                PARSER_VERSION,
-                SOURCE,
-                attachment.message_id,
-                asOfDate,
-                'discord_portfolio_treemap',
-                account,
-                holding.ticker,
-                // NO WEIGHT: the treemap prints the DAILY CHANGE and
-                // draws the size, and the size is the value in the
-                // portfolio and not a percentage of it.
-                null,
-                '',
-                `treemap leaf; broker symbol ${holding.broker_ticker}`
-                  + `; daily change ${holding.change_pct}%`
-                  + `; sector ${holding.sector || 'not read'}`,
-                `daily change ${holding.change_pct}%`,
-                JSON.stringify(heatmap.coverage),
-                `XTB portfolio treemap, ${asOfDate}, ${account} book`,
-              );
-            }
-            db.exec('COMMIT');
-          } catch (error) {
-            db.exec('ROLLBACK');
-            throw error;
-          }
-        }
         continue;
       }
       detail.push({
@@ -309,8 +310,19 @@ async function main() {
     if (read.coverage && read.coverage.complete) summary.complete += 1;
     summary.unverified += read.positions.filter((position) => position.reading_check !== 'ok').length;
 
+    // The Czech "POZICE" table. Its rows join the message's set.
+    const messageKey = attachment.message_id;
+    if (!byMessage.has(messageKey)) byMessage.set(messageKey, new Map());
+    const messageRows = byMessage.get(messageKey);
+    for (const position of read.positions) {
+      mergeInto(messageRows, position, 'discord_portfolio_screenshot');
+    }
+
     const asOfDate = String(attachment.posted_at).slice(0, 10);
     const account = accountOf(attachment.content);
+    if (!messageMeta.has(attachment.message_id)) {
+      messageMeta.set(attachment.message_id, { as_of_date: asOfDate, account });
+    }
     detail.push({
       file: attachment.local_path,
       date: asOfDate,
@@ -327,28 +339,43 @@ async function main() {
       })),
     });
 
-    if (dryRun) continue;
+    // The rows are NOT written here: they are in the message's set, and
+    // the message's set is written once, after every picture of it has
+    // been read.
+  }
+
+  // --- the MERGED rows, one per message ----------------------------------
+  for (const [messageId, rows] of byMessage) {
+    summary.messages += 1;
+    summary.merged_positions += rows.size;
+  }
+  if (!dryRun) {
     db.exec('BEGIN');
     try {
-      for (const position of read.positions) {
-        const ticker = marketTickerOf(position.ticker);
-        insert.run(
-          PARSER_VERSION,
-          SOURCE,
-          attachment.message_id,
-          asOfDate,
-          'discord_portfolio_screenshot',
-          account,
-          ticker,
-          position.weight_pct,
-          position.avg_cost,
-          `broker symbol ${position.ticker}; units ${position.units === null ? '' : position.units}`
-            + `; price ${position.price === null ? '' : position.price}`
-            + `; check ${position.reading_check}`,
-          position.pnl_pct === null ? '' : `pnl ${position.pnl_pct}%`,
-          JSON.stringify(read.coverage),
-          `XTB positions screenshot, ${asOfDate}, ${account} book`,
-        );
+      for (const [messageId, rows] of byMessage) {
+        const meta = messageMeta.get(messageId);
+        if (!meta) continue;
+        for (const row of rows.values()) {
+          insert.run(
+            PARSER_VERSION,
+            SOURCE,
+            messageId,
+            meta.as_of_date,
+            row.source,
+            meta.account,
+            row.ticker,
+            row.weight_pct === null || row.weight_pct === undefined ? null : row.weight_pct,
+            row.avg_cost === null || row.avg_cost === undefined ? '' : row.avg_cost,
+            `broker symbol ${row.broker_symbol || row.ticker}`
+              + `; units ${row.units === null || row.units === undefined ? '' : row.units}`
+              + `; price ${row.price === null || row.price === undefined ? '' : row.price}`
+              + `; daily change ${row.change_pct === null || row.change_pct === undefined ? '' : `${row.change_pct}%`}`
+              + `; check ${row.reading_check || ''}`,
+            row.pnl_pct === null || row.pnl_pct === undefined ? '' : `pnl ${row.pnl_pct}%`,
+            JSON.stringify(row.coverage || {}),
+            `XTB portfolio picture, ${meta.as_of_date}, ${meta.account} book`,
+          );
+        }
       }
       db.exec('COMMIT');
     } catch (error) {

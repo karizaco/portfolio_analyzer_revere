@@ -8352,6 +8352,40 @@ in Czech (zlato -> GLD, stribro -> SLV, ropa -> USO, psenice -> WEAT);
 and the company names go through the SHARED matcher, which resolves some
 names and not others.
 
+### The 2025-12-22 XTB "Overview" table -- READ, and it carries the WEIGHT (2026-11-28)
+
+**THE PREMISE WAS WRONG.** The open question was whether these pictures
+carry a weight at all, and they do: they are the XTB "Overview" table,
+and the weight is in a column called **"Allocation"** -- the same column
+the Czech "POZICE" table calls "VAHA". The six pictures are ONE "My
+Holdings" treemap and FIVE consecutive scroll positions of the Overview
+table, which says "1-86 of 86".
+
+**MEASURED: 84 HOLDINGS, ALL WITH A WEIGHT, AND THE BOOK ADDS UP** --
+the weights sum to **98.27 %** and the missing 1.57 % is the broker's
+own "$ Cash" row. That is the reader's own arithmetic confirming the
+reading.
+
+**THE HEADER IS SPLIT OVER TWO BANDS** in the English view ("Ticker"
+sits a line below the other column names) and the column names are
+English: "Allocation" the weight, "Last" the price, "Avg Cost" the
+average cost, "Unr. Gain %" the unrealised gain. **And the DAILY
+CHANGE gets its own column**, because "1D Gain %" is today and it is
+exactly what the treemap prints -- a reader that took the wrong
+percentage column would publish a CHANGE as a weight.
+
+**THE CUT-OFF ROW IS THE TRAP, and it is caught two ways.** Each
+picture's last row is cut off by the image edge and the OCR reads its
+numbers without their points ("0.78 %" as "78 %", "1.61 %" as "161 %").
+So a weight outside (0, 100] is IMPOSSIBLE and the row is REJECTED,
+and a weight that breaks the column's SORTED order is a misread and is
+repaired by dividing it by 100 -- but only when that restores the
+order. The repaired row is the one the next picture has right.
+
+**AND THE PICTURES OF A MESSAGE ARE MERGED INTO ONE BOOK**, because they
+do not all carry the same facts: the treemap reads the change and no
+weight, and the table reads the weight.
+
 ### The 2026-04-15 treemap (2026-11-27)
 
 The portfolio channel carries a TREEMAP of the whole book beside the XTB

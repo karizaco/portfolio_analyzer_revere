@@ -1,5 +1,7 @@
 'use strict';
 
+const { marketTickerOf } = require('./symbols');
+
 /**
  * The XTB positions table, read out of a broker screenshot.
  *
@@ -96,16 +98,30 @@
 
 const HEADER_COLUMNS = [
   { key: 'ticker', pattern: /\bTICKER\b/i },
-  { key: 'units', pattern: /\bKUSY\b/i },
-  { key: 'avg_cost', pattern: /\bNAK\b.*\bCENA\b/i },
-  { key: 'price', pattern: /\bAKT\b.*\bCENA\b/i },
-  { key: 'value', pattern: /\bHODNOTA\b/i },
+  { key: 'units', pattern: /\bKUSY\b|\bSHARES\b/i },
+  { key: 'avg_cost', pattern: /\bNAK\b.*\bCENA\b|\bAVG\b/i },
+  { key: 'price', pattern: /\bAKT\b.*\bCENA\b|\bLAST\b/i },
+  { key: 'value', pattern: /\bHODNOTA\b|\bMARKET\b.*\bVALUE\b/i },
   // The header reads "P&L" as "PBL" and "P&L %" as "PeL %" -- so the
   // pattern is loose on the letter between the P and the L, and the two
   // columns are told apart by the PERCENT SIGN.
-  { key: 'pnl_amount', pattern: /\bP.{0,2}L\b/i, exclude: /%/ },
-  { key: 'pnl_pct', pattern: /P.{0,2}L\s*%/i },
-  { key: 'weight_pct', pattern: /\bVAHA\b/i },
+  //
+  // The English "Overview" view names the same facts differently: the
+  // unrealised gain is "Unr. Gain %" and "Unr. Gain", and its DAILY
+  // change is "1D Gain %" -- which is a DIFFERENT fact, and it gets its
+  // own column rather than being mistaken for the P&L.
+  { key: 'pnl_amount', pattern: /\bP.{0,2}L\b|\bUNR\b.*\bGAIN\b/i, exclude: /%/ },
+  { key: 'pnl_pct', pattern: /P.{0,2}L\s*%|\bUNR\b.*\bGAIN\b.*%/i },
+  { key: 'change_pct', pattern: /\b1D\b.*\bGAIN\b.*%/i },
+  // THE WEIGHT. The Czech table calls it "VAHA" and the English one
+  // calls it "Allocation", and they are the same column: the share of
+  // the book that the holding is worth.
+  //
+  // And the English table has TWO percentage columns that are NOT the
+  // weight -- "1D Gain %" and "Unr. Gain %" -- so a reader that took
+  // the wrong one would publish a change as a weight. The weight is
+  // "Allocation" and nothing else.
+  { key: 'weight_pct', pattern: /\bVAHA\b|\bALLOCATION\b/i },
   { key: 'date_changed', pattern: /\bDEN\b/i },
 ];
 
@@ -412,8 +428,25 @@ function readPositionsTable(ocr) {
     return { positions: [], columns: [], coverage: null, unread: ['no TICKER header'] };
   }
 
+  // 1b. The header can be SPLIT over two bands.
+  //
+  // The Czech table puts every column name on one line, but the English
+  // "Overview" view puts "Ticker" on the line BELOW the others -- the
+  // ticker column's label sits lower because the sort arrow is beside
+  // it. So the words of the band ABOVE the ticker band are the header
+  // words too, and the columns are found in the union.
+  //
+  // Only the band immediately above is taken, and a word that matches
+  // no header pattern cannot become a column, so a stray word is
+  // harmless.
+  const headerBandIndex = rows.indexOf(headerRow);
+  const headerWords = [
+    ...(headerBandIndex > 0 ? rows[headerBandIndex - 1].words : []),
+    ...headerRow.words,
+  ];
+
   // 2. The columns, from the header words.
-  const columns = findColumns(headerRow.words);
+  const columns = findColumns(headerWords);
   const columnByKey = new Map(columns.map((column) => [column.key, column]));
   if (!columnByKey.has('ticker') || !columnByKey.has('weight_pct')) {
     return {
@@ -431,6 +464,10 @@ function readPositionsTable(ocr) {
 
   const positions = [];
   let tableTotalPct = null;
+  // The weight of the row above, which is what the column's ORDER says
+  // the next one may not exceed.
+  let previousWeight = null;
+  let weightRepaired = false;
 
   for (const row of rows) {
     if (row.centre <= headerRow.centre) continue;
@@ -445,6 +482,15 @@ function readPositionsTable(ocr) {
       .find((word) => TICKER_SHAPE.test(String(word.text).toUpperCase()) && /[A-Z]/.test(String(word.text)));
 
     const cells = assignCells(row, columns, tickerWord);
+
+    // A ROW HAS NUMBERS. The company name sits on its own line under the
+    // ticker in both of the broker's views, so the OCR puts it in a band
+    // of its own -- and a name in capitals ("BARRICK GOLD",
+    // "AMAZON.COM") matches the ticker shape. A band with no number in
+    // it is not a row, and a name is not a holding.
+    const hasNumber = [...cells.values()].some((cell) => /\d/.test(cell.text || ''));
+    if (!hasNumber) continue;
+
     const numberOf = (key) => {
       const cell = cells.get(key);
       return cell ? parseCellNumber(cell.text) : null;
@@ -462,10 +508,45 @@ function readPositionsTable(ocr) {
     }
     if (!tickerWord) continue;
 
+    // THE WEIGHT, and the two things that can be wrong with it.
+    //
+    // 1. A weight is a share of the book, so it is at most 100 %.
+    //
+    // 2. The column is SORTED -- the biggest holding is at the top of the
+    //    picture -- and the English "Overview" view is a SCROLLED
+    //    picture whose LAST row is cut off by the image's edge. The OCR
+    //    reads that row's numbers WITHOUT their points: "0.78 %" comes
+    //    back as "78 %" and "1.61 %" as "161 %".
+    //
+    // So a weight that breaks the order is a misread, and the repair is
+    // to divide it by 100 -- but ONLY when that restores the order. A
+    // weight that cannot be repaired is REJECTED, because a wrong
+    // weight in a portfolio record is worse than a missing holding.
+    const weightText = cells.get('weight_pct');
+    let weightParsed = weightText ? parsePercent(weightText.text) : null;
+    if (Number.isFinite(weightParsed)) {
+      if (weightParsed <= 0 || weightParsed > 100) {
+        unread.push(`${String(tickerWord.text).toUpperCase()}: weight ${weightParsed} is outside (0, 100]`);
+        continue;
+      }
+      if (previousWeight !== null && weightParsed > previousWeight) {
+        const repaired = weightParsed / 100;
+        if (repaired > 0 && repaired <= previousWeight) {
+          weightParsed = repaired;
+          weightRepaired = true;
+        } else {
+          unread.push(`${String(tickerWord.text).toUpperCase()}: weight ${weightParsed} breaks the order and cannot be repaired`);
+          continue;
+        }
+      }
+      previousWeight = weightParsed;
+    }
+
     const ticker = String(tickerWord.text).toUpperCase().replace(/\s+/g, ' ').trim();
     positions.push(checkRow({
       ticker,
-      weight_pct: percentOf('weight_pct'),
+      weight_pct: Number.isFinite(weightParsed) ? weightParsed : percentOf('weight_pct'),
+      change_pct: percentOf('change_pct'),
       pnl_pct_read: percentOf('pnl_pct'),
       pnl_amount: numberOf('pnl_amount'),
       units: numberOf('units'),
@@ -491,6 +572,46 @@ function readPositionsTable(ocr) {
   return { positions, columns, coverage, unread };
 }
 
+/**
+ * Merge one holding into a message's set.
+ *
+ * A message can carry SEVERAL pictures of the same book, and they do not
+ * all carry the same facts: the 2025-12-22 message carries a treemap
+ * (which reads the DAILY CHANGE and no weight) and FIVE scroll positions
+ * of the Overview table (which read the WEIGHT). So a holding that a
+ * picture with a weight read wins over the same holding read by a
+ * picture without one, and a fact that one picture read and the other
+ * did not is kept.
+ *
+ * The key is the MARKET ticker, so the same holding read by two
+ * pictures is one holding.
+ *
+ * @param {Map<string, object>} rows  the message's set
+ * @param {object} position  the holding
+ * @param {string} source  which reading it came from
+ * @returns {Map<string, object>} the set
+ */
+function mergeInto(rows, position, source) {
+  const ticker = marketTickerOf(position.ticker);
+  if (!ticker) return rows;
+  const hasWeight = Number.isFinite(position.weight_pct);
+  const existing = rows.get(ticker);
+  if (!existing) {
+    rows.set(ticker, { ...position, ticker, broker_symbol: position.ticker, source, hasWeight });
+    return rows;
+  }
+  if (hasWeight && !existing.hasWeight) {
+    rows.set(ticker, { ...position, ticker, broker_symbol: position.ticker, source, hasWeight });
+    return rows;
+  }
+  const merged = { ...existing };
+  for (const key of ['weight_pct', 'avg_cost', 'price', 'change_pct', 'pnl_pct']) {
+    if (!Number.isFinite(merged[key]) && Number.isFinite(position[key])) merged[key] = position[key];
+  }
+  rows.set(ticker, merged);
+  return rows;
+}
+
 module.exports = {
   HEADER_COLUMNS,
   bandRows,
@@ -498,6 +619,7 @@ module.exports = {
   checkRow,
   closeEnough,
   findColumns,
+  mergeInto,
   parseCellNumber,
   parseNumber,
   parsePercent,

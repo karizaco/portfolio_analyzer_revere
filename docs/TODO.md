@@ -649,7 +649,7 @@ The other thirteen are three formats, and none of them is read:
 | the image | what it is | what is known about it |
 |---|---|---|
 | 2026-04-15, 2133x1128 | the MAIN book as a grid of CARDS: a ticker, a percentage and the company name, laid out in a masonry grid | the percentage sits in the SAME column as the ticker, just below it, so the pair is recoverable; the grid is 5-6 columns wide |
-| 2025-12-22, 6 images | a `My Holdings` table: a ticker grid, and a separate table of sectors | the tickers are in a grid with no weight column; the weight is not in these images |
+| 2025-12-22, 6 images | **READ (2026-11-28): one "My Holdings" TREEMAP and FIVE scroll positions of the XTB "Overview" table** | the Overview table carries the weight, in a column called "Allocation" -- the same column the Czech table calls "VAHA" |
 | 2023-05-08, 4 images | four narrow STRIPS of tickers (206x767, 204x701, 201x259, 992x20) | the tickers only; there is no weight |
 | 2023-05-08, one image | a PERFORMANCE CHART ("VYKONNOST VS SPY") | not a position list at all |
 
@@ -675,6 +675,62 @@ Discord's own attachment URLs expire -- so the images on this machine
 are the only copy. The reader is therefore pinned by a FROZEN fixture of
 the OCR words (`test/fixtures/plechac_portfolio/`), not by a live image,
 and a new reader should be pinned the same way.
+
+### The 2025-12-22 "Overview" table -- READ, and it carries the WEIGHT (2026-11-28)
+
+**THE PREMISE WAS WRONG, AND THE PICTURES SAY SO.** The open question was
+"the tickers are in a grid with no weight column; the weight is not in
+these images". **It is the XTB "Overview" table and the weight IS there**,
+in a column called "Allocation" -- the same column the Czech "POZICE"
+table calls "VAHA". The six pictures are ONE treemap and FIVE
+consecutive scroll positions of the Overview table, and the table says
+"1-86 of 86".
+
+**MEASURED: 84 HOLDINGS, EVERY ONE WITH A WEIGHT, AND THE BOOK ADDS
+UP.** The weights sum to **98.27 %**, and the missing 1.57 % is the
+broker's own "$ Cash" row. That is the reader's own arithmetic
+confirming the reading.
+
+**AND THE HEADER IS SPLIT OVER TWO BANDS, and the table is in ENGLISH.**
+The Czech table puts every column name on one line, but the English
+"Overview" view puts "Ticker" on the line BELOW the others, so the
+columns are found in the band above the ticker band too. The column
+names are English: "Allocation" is the weight, "Last" the price, "Avg
+Cost" the average cost, and "Unr. Gain %" the unrealised gain.
+
+**AND THE DAILY CHANGE GETS ITS OWN COLUMN, because it is a different
+fact.** The English table has "1D Gain %" -- today's change, which is
+exactly what the treemap prints -- and "Unr. Gain %", the unrealised
+gain. **A reader that took the wrong one would publish a CHANGE as a
+weight**, so "1D Gain %" is its own column and the weight is
+"Allocation" and nothing else.
+
+**THE CUT-OFF ROW IS THE TRAP, and it is caught two ways.** Each
+picture's LAST row is cut off by the image edge, and the OCR reads that
+row's numbers without their points: "0.78 %" comes back as "78 %" and
+"1.61 %" as "161 %". So:
+
+1. **A weight outside (0, 100] is IMPOSSIBLE** -- a weight is a share
+   of the book -- and the row is REJECTED. That catches the "161".
+2. **The column is SORTED**, so a weight that breaks the order is a
+   misread, and it is repaired by dividing it by 100 -- but ONLY when
+   that restores the order. That catches the "78", which is inside the
+   bound and would otherwise have been published.
+
+The repaired row is the one the NEXT picture has right, so the repair is
+confirmed by a second reading of the same holding.
+
+**AND THE PICTURES ARE MERGED INTO ONE BOOK.** A message can carry
+several pictures of the same book, and they do not all carry the same
+facts: the treemap reads the change and no weight, and the table reads
+the weight. So the pictures of a message are read together and merged
+by ticker, and a holding a picture with a weight read wins over the
+same holding read by a picture without one.
+
+**WHAT IS STILL NOT READ.** The 2023-05-08 ticker STRIPS (206x767,
+204x701, 201x259, 992x20) and the 2026-08-20 picture (1227x717): four
+narrow strips of tickers with no weight column, and one picture whose
+format is not yet identified.
 
 ### The monoszon parser's remaining defects (2026-11-26)
 

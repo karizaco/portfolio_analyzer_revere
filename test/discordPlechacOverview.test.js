@@ -1,0 +1,146 @@
+'use strict';
+
+// plechac's 2025-12-22 XTB "Overview" pictures: the ENGLISH table, and
+// it is the one that carries the WEIGHT.
+//
+// The fixture is the EasyOCR read of the five pictures, frozen: the
+// reader is measured against the words it will really see, and the test
+// costs no OCR.
+//
+// THE FIVE PICTURES ARE ONE TABLE, SCROLLED
+//
+// The table says "1-86 of 86" and the pictures are consecutive scroll
+// positions of it, so the BOOK is read by merging them: one row per
+// holding, and a holding a picture with a weight read wins over the same
+// holding read by a picture without one.
+//
+// AND THE MERGE IS CHECKED BY THE BOOK'S OWN ARITHMETIC: the weights
+// have to add up. They do -- 98.27 % across 84 holdings, and the cash
+// row is the missing 1.57 %.
+//
+// THE CUT-OFF ROW IS THE TRAP
+//
+// Each picture's LAST row is cut off by the image's edge, and the OCR
+// reads that row's numbers without their decimal points: "0.78 %" comes
+// back as "78 %" and "1.61 %" as "161 %". The weight is the one that
+// breaks, and the reader must not publish it.
+
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const test = require('node:test');
+
+const {
+  mergeInto,
+  readPositionsTable,
+} = require('../src/discord/plechac/portfolioReader');
+
+const ROOT = path.resolve(__dirname, '..');
+const FIXTURE = path.join(ROOT, 'test', 'fixtures', 'plechac_portfolio', 'xtb_overview_20251222.json');
+
+function readFixture() {
+  const fixture = JSON.parse(fs.readFileSync(FIXTURE, 'utf8'));
+  const reads = fixture.pictures.map((picture) => ({
+    attachment_id: picture.attachment_id,
+    read: readPositionsTable({ words: picture.words }),
+  }));
+  const rows = new Map();
+  for (const { read } of reads) {
+    for (const position of read.positions) {
+      mergeInto(rows, position, 'discord_portfolio_screenshot');
+    }
+  }
+  return { fixture, reads, rows };
+}
+
+test('the English header is read, and it carries the WEIGHT', () => {
+  const { reads } = readFixture();
+  const first = reads[0].read;
+  // The columns are found from the header words, and the weight column is
+  // the English "Allocation" -- the same column the Czech table calls
+  // "VAHA".
+  const weight = first.columns.find((column) => column.key === 'weight_pct');
+  assert.ok(weight, 'the weight column is found');
+  assert.ok(/ALLOCATION/i.test(weight.text), `the weight column is Allocation, got ${weight.text}`);
+  // And the daily change is its OWN column, because it is a different
+  // fact: "1D Gain %" is today, and "Unr. Gain %" is the unrealised
+  // gain.
+  const change = first.columns.find((column) => column.key === 'change_pct');
+  assert.ok(change, 'the daily change column is found');
+  assert.notEqual(change.text, weight.text, 'the change is not the weight');
+});
+
+test('the BOOK is read whole, and its weights add up', () => {
+  const { rows } = readFixture();
+  assert.equal(rows.size, 84);
+  const weights = [...rows.values()].map((row) => row.weight_pct);
+  assert.ok(weights.every((weight) => Number.isFinite(weight)), 'every holding has a weight');
+  const sum = weights.reduce((total, weight) => total + weight, 0);
+  // The cash row is the missing 1.57 %, so the holdings are 98.27 %.
+  assert.ok(Math.abs(sum - 98.27) < 0.05, `the weights sum to ${sum.toFixed(2)} %`);
+});
+
+test('the weights the PICTURE shows are the weights the book has', () => {
+  const { rows } = readFixture();
+  // These are read off the picture by hand: the first picture's rows.
+  const expected = {
+    IDUSL: 4.36,
+    MCPA: 3.67,
+    EQQQDE: 3.61,
+    ASMLAS: 3.08,
+    C: 3.01,
+    LMT: 2.76,
+    GOOG: 2.7,
+    GOLD: 2.41,
+    NVO: 2.38,
+    BABA: 2.18,
+    BRKB: 2.16,
+    AMZN: 1.99,
+    WFC: 1.9,
+    OXY: 1.85,
+    TSM: 1.68,
+    BTI: 1.64,
+  };
+  for (const [ticker, weight] of Object.entries(expected)) {
+    const row = [...rows.values()].find((candidate) => candidate.ticker.replace(/[^A-Z0-9]/g, '') === ticker);
+    assert.ok(row, `${ticker} was read`);
+    assert.ok(Math.abs(row.weight_pct - weight) < 0.011, `${ticker} weighs ${row.weight_pct} %, expected ${weight} %`);
+  }
+});
+
+test('the CUT-OFF row is not published, and the next picture has it right', () => {
+  const { reads } = readFixture();
+  // The first picture's last row is cut off: the OCR reads its weight as
+  // "161" and the row is REJECTED.
+  const first = reads[0].read;
+  assert.ok(
+    first.unread.some((line) => /weight 161 is outside/.test(line)),
+    `the cut-off row is rejected, and the reader says so: ${JSON.stringify(first.unread)}`,
+  );
+  assert.ok(!first.positions.some((position) => position.weight_pct > 100), 'no impossible weight is published');
+  // And the SECOND picture has that holding, read properly.
+  const second = reads[1].read;
+  const intc = second.positions.find((position) => position.ticker === 'INTC');
+  assert.ok(intc, 'INTC is read from the second picture');
+  assert.ok(Math.abs(intc.weight_pct - 1.61) < 0.011, `INTC weighs ${intc.weight_pct} %`);
+});
+
+test('a weight that breaks the column ORDER is repaired, and the repair is checked', () => {
+  const { reads } = readFixture();
+  // The fourth picture's cut-off row reads "78 %" where the picture
+  // shows "0.78 %" -- a hundred times too big, and it breaks the
+  // descending order of the column. It is repaired by dividing by 100,
+  // and ONLY because that restores the order.
+  const fourth = reads[3].read;
+  const evo = fourth.positions.find((position) => position.ticker === 'EVO.ST');
+  assert.ok(evo, 'EVO.ST is read from the fourth picture');
+  assert.ok(Math.abs(evo.weight_pct - 0.78) < 0.011, `EVO.ST weighs ${evo.weight_pct} %, expected 0.78 %`);
+});
+
+test('the DAILY CHANGE is read, and it is not the weight', () => {
+  const { reads } = readFixture();
+  const first = reads[0].read;
+  const idusl = first.positions.find((position) => position.ticker === 'IDUSL');
+  assert.equal(idusl.weight_pct, 4.36);
+  assert.ok(Math.abs(idusl.change_pct - 0.3) < 0.011, `the daily change is ${idusl.change_pct} %`);
+});
