@@ -76,6 +76,30 @@ function mediaDirAbs(dirName) {
 // Legacy relative root kept for exports/tests that still join path pieces.
 const MEDIA_ROOT = path.join('data', 'video_pipeline');
 
+/**
+ * Where the media directories are, for a given working directory.
+ *
+ * THE REPOSITORY'S OWN MEDIA ROOTS ARE ABSOLUTE, because they can be on
+ * another drive -- the 1080p library lives on D: -- so they are used as
+ * they are and the catalog's pointers to them are absolute too (which is
+ * what the catalog's own path rule says: a path outside the repository
+ * keeps its absolute form).
+ *
+ * ANY OTHER WORKING DIRECTORY gets the legacy relative layout under it,
+ * and that is what makes the tool testable at all: without it a test
+ * that passes a scratch directory still scanned the REAL media roots,
+ * and found 712 files where it meant to find one.
+ *
+ * @param {string} cwd  the working directory
+ * @param {object} [options]  an explicit `mediaDir` resolver wins
+ * @returns {(dirName: string) => string}
+ */
+function mediaDirResolver(cwd, options = {}) {
+  if (typeof options.mediaDir === 'function') return options.mediaDir;
+  if (path.resolve(cwd) === path.resolve(ROOT)) return (dir) => mediaDirAbs(dir);
+  return (dir) => path.join(cwd, MEDIA_ROOT, dir);
+}
+
 // A download smaller than this is a truncated file, not a video.
 const MIN_FILE_BYTES = 1024 * 1024;
 
@@ -144,9 +168,10 @@ function locateMedia(row, options = {}) {
   const pointer = resolveCatalogPath(row.download_path, cwd) || null;
   const pointerPresent = isRealFile(pointer, exists, sizeOf);
 
+  const mediaDir = mediaDirResolver(cwd, options);
   let own = null;
   for (const dir of dirs) {
-    const candidate = path.join(mediaDirAbs(dir), downloaderFileName(row));
+    const candidate = path.join(mediaDir(dir), downloaderFileName(row));
     if (isRealFile(candidate, exists, sizeOf)) { own = candidate; break; }
   }
   const ownPresent = own !== null;
@@ -224,9 +249,10 @@ function unclaimedFiles(rows, options = {}) {
     if (pointer) claimed.add(path.resolve(pointer).toLowerCase());
   }
 
+  const mediaDir = mediaDirResolver(cwd, options);
   const out = [];
   for (const dir of dirs) {
-    const full = mediaDirAbs(dir);
+    const full = mediaDir(dir);
     for (const name of listDir(full)) {
       if (!name.toLowerCase().endsWith('.mp4')) continue;
       const abs = path.resolve(full, name);

@@ -2664,6 +2664,7 @@ def command_fill_dates(args: argparse.Namespace) -> int:
 
     rows: list[dict] = []
     missing: list[str] = []
+    titles_written_total = 0
     diagnostics: list[dict] = []
     inserted = 0
     updated = 0
@@ -2762,6 +2763,18 @@ def command_fill_dates(args: argparse.Namespace) -> int:
                     titles_written_batch, titles_inserted_batch = persist_missing_titles(
                         connection, missing_entries, source_url, effective_channel
                     )
+                    # The run's TITLES WRITTEN counter accumulates here.
+                    #
+                    # There are two passes that write the missing titles: one
+                    # per batch, and one at the end of the run for the videos
+                    # no batch handled. The per-batch pass is the one that
+                    # does the work -- it inserts the title-only row -- and
+                    # the end-of-run pass then finds the title already there
+                    # and skips it. So the end-of-run count was OVERWRITING
+                    # a count of 1 with a count of 0, and the run reported
+                    # that it wrote no title for the very videos whose title
+                    # it had just written.
+                    titles_written_total += titles_written_batch
                     batch_inserted += titles_inserted_batch
                 if diagnostic.get('item_outcomes'):
                     record_date_resolution_outcomes(connection, diagnostic['item_outcomes'], run_id)
@@ -2827,14 +2840,17 @@ def command_fill_dates(args: argparse.Namespace) -> int:
         for video_id, title in wanted
         if video_id in set(missing)
     ]
-    titles_written = 0
+    titles_written = titles_written_total
     titles_inserted = 0
     if missing_entries:
         with connect_database(db_path) as connection:
             initialize_schema(connection)
-            titles_written, titles_inserted = persist_missing_titles(
+            written_here, titles_inserted = persist_missing_titles(
                 connection, missing_entries, source_url, effective_channel
             )
+            # ADDED, and not assigned: the per-batch pass already wrote the
+            # titles it wrote, and this pass finds them and skips them.
+            titles_written += written_here
 
     # The final state of the run: the videos it could not resolve, and the
     # rows it added on the way -- including the ones it added for the videos

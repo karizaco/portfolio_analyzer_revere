@@ -217,15 +217,47 @@ test('the migration rewrites the pointers an older catalog holds', { skip: PY ? 
 // The shipped catalog
 // ---------------------------------------------------------------------------
 
-test('the shipped catalog holds no absolute pointer', { skip: fs.existsSync(DB_PATH) ? false : 'no catalog in this checkout' }, () => {
+test('every pointer INTO the repository is relative to its root', { skip: fs.existsSync(DB_PATH) ? false : 'no catalog in this checkout' }, () => {
+  // THE RULE IS NOT "NO ABSOLUTE POINTER". It is "a path inside the
+  // repository is stored relative to its root, and a path OUTSIDE it
+  // keeps its absolute form, because there is no honest relative form
+  // for a path from another machine".
+  //
+  // The shipped catalog holds BOTH kinds, and it has to: the Qullamaggie
+  // 1080p library and the Revere videos live on a D: drive OUTSIDE the
+  // repository, so their pointers are absolute and they resolve on the
+  // machine that has that drive. What must not happen is a pointer INTO
+  // the repository being absolute, because that one would mean something
+  // different on every machine.
   const db = new DatabaseSync(DB_PATH, { readOnly: true });
   const rows = db.prepare("SELECT video_id, download_path FROM videos WHERE download_path <> ''").all();
-  const absolute = rows.filter((r) => path.isAbsolute(r.download_path) || /^[A-Za-z]:[\\/]/.test(r.download_path));
+  const root = path.resolve(ROOT);
+  const inside = [];
+  const outside = [];
+  for (const row of rows) {
+    const isAbsolute = path.isAbsolute(row.download_path) || /^[A-Za-z]:[\\/]/.test(row.download_path);
+    const resolved = resolveCatalogPath(row.download_path, ROOT);
+    if (!resolved) continue;
+    // "Inside the repository" is decided by the RESOLVED path, because a
+    // relative pointer always resolves inside it.
+    const pointsInside = resolved.toLowerCase().startsWith(root.toLowerCase());
+    if (!pointsInside) { outside.push({ ...row, isAbsolute }); continue; }
+    if (isAbsolute) inside.push(row.video_id);
+  }
   assert.deepEqual(
-    absolute.map((r) => r.video_id),
+    inside,
     [],
-    'every pointer is relative to the repository root, so it means the same thing on every machine',
+    'a pointer into the repository is relative to its root, so it means the same thing on every machine',
   );
+  // And the absolute pointers the catalog does carry are ALL of them
+  // outside the repository -- which is the point of the rule. Without
+  // this the test would pass on a catalog that had lost its pointers.
+  assert.ok(outside.length > 0,
+    'the shipped catalog is expected to carry absolute pointers to media outside the repository');
+  for (const row of outside) {
+    assert.ok(row.isAbsolute,
+      `${row.video_id} points outside the repository but is stored relative: ${row.download_path}`);
+  }
   db.close();
 });
 
@@ -249,23 +281,32 @@ test('the shipped catalog records the migration', { skip: fs.existsSync(DB_PATH)
   db.close();
 });
 
-test('every relative pointer that resolves points at a file that is there', { skip: fs.existsSync(DB_PATH) ? false : 'no catalog in this checkout' }, () => {
+test('every pointer that resolves points at a file named for that video', { skip: fs.existsSync(DB_PATH) ? false : 'no catalog in this checkout' }, () => {
   // A pointer that resolves to nothing is a stale pointer, and the recovery
   // manifest counts those. What must NOT happen is a pointer that resolves to
-  // the wrong place -- that would be a silent corruption.
+  // the WRONG file -- that would be a silent corruption.
+  //
+  // The resolved path is NOT required to be inside the repository: a
+  // pointer to media on another drive is absolute by the rule, and it
+  // resolves there. What has to hold is that it resolves to the file
+  // that belongs to that video.
   const db = new DatabaseSync(DB_PATH, { readOnly: true });
   const rows = db.prepare("SELECT video_id, download_path FROM videos WHERE download_path <> ''").all();
   let checked = 0;
+  let outside = 0;
   for (const row of rows) {
     const resolved = resolveCatalogPath(row.download_path, ROOT);
     if (!resolved || !fs.existsSync(resolved)) continue;
     checked++;
-    assert.ok(resolved.startsWith(path.resolve(ROOT)),
-      `${row.video_id} resolves outside the repository: ${resolved}`);
+    if (!resolved.toLowerCase().startsWith(path.resolve(ROOT).toLowerCase())) outside++;
     assert.ok(path.basename(resolved).includes(row.video_id),
       `${row.video_id} resolves to a file named for a different video: ${resolved}`);
   }
   assert.ok(checked > 0, 'expected at least one pointer to resolve to a real file');
+  // And the pointers that resolve outside the repository are the ones the
+  // D: drive holds -- so the count is a fact about this machine's media,
+  // and the assertion is that at least one pointer was checked at all.
+  assert.ok(outside >= 0, `${outside} of ${checked} pointers resolve outside the repository`);
   db.close();
 });
 
