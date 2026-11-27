@@ -166,7 +166,8 @@
     "discord:martinklass:outcomes": "node tools/analyzeDiscordMartinKlass.js",
     "discord:hariseldon:options": "node tools/analyzeDiscordHariSeldonOptions.js",
     "discord:entryrule": "node tools/measureEntryRule.js",
-    "discord:plechac:heatmap": "node tools/parsePlechacPortfolios.js"
+    "discord:plechac:heatmap": "node tools/parsePlechacPortfolios.js",
+    "qmg:table:sweep": "node tools/runQmgPositionTableSweep.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.11.0",
