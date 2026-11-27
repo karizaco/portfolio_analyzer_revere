@@ -190,6 +190,10 @@ function renderDiscordReport(payload) {
   const mono = payload.monoszon || null;
   const monoSection = mono ? renderMonoszonSection(mono) : '';
 
+  // THE TABLE THAT ANSWERS THE QUESTION. It is rendered first, because
+  // a reader who wants one number should not have to scroll.
+  const comparisonSection = renderSourceComparison(payload);
+
   // Martin Klass is the same shape of source -- calls, not positions -- and
   // his section is rendered the same way.
   const klass = payload.martinklass || null;
@@ -245,7 +249,7 @@ function renderDiscordReport(payload) {
 </header>
 <nav>
   <a href="#books">the books</a><a href="#accounts">drendel's two accounts</a><a href="#rules">their rules</a>
-  <a href="#together">the two traders</a>${postedRows.length ? '<a href="#posted">the posted books</a>' : ''}${mono ? '<a href="#monoszon">monoszon\'s calls</a>' : ''}${klass ? '<a href="#martinklass">martin klass</a>' : ''}<a href="#coverage">coverage &amp; caveats</a>
+  <a href="#together">the two traders</a><a href="#comparison">side by side</a>${postedRows.length ? '<a href="#posted">the posted books</a>' : ''}${mono ? '<a href="#monoszon">monoszon\'s calls</a>' : ''}${klass ? '<a href="#martinklass">martin klass</a>' : ''}<a href="#coverage">coverage &amp; caveats</a>
 </nav>
 
 <section id="books">
@@ -319,6 +323,7 @@ function renderDiscordReport(payload) {
 ${postedSection}
 ${monoSection}
 ${klassSection}
+${comparisonSection}
 
 <section id="coverage">
   <div class="section-heading"><p class="kicker">COVERAGE</p><h2>What is measured, and what is not</h2></div>
@@ -338,6 +343,132 @@ ${klassSection}
   </div>
 </section>
 </body></html>`;
+}
+
+/**
+ * EVERY SOURCE, SIDE BY SIDE.
+ *
+ * The page has a section per source, and a reader has to scroll through
+ * all of them to answer the only question that matters: which of these
+ * is worth reading? So the answer is in ONE table.
+ *
+ * TWO KINDS OF SOURCE, AND THE TABLE SAYS WHICH IS WHICH
+ *
+ * The position sources publish POSITIONS, and they are measured over
+ * the holding period the trader chose: the entry is when he entered and
+ * the exit is when he exited, so the window is his own and it varies.
+ *
+ * The call sources publish CALLS, and they are measured over a FIXED
+ * window: +1 week from the day of the claim, for every claim, so the
+ * windows are comparable with each other and not with the positions'.
+ *
+ * The two are NOT the same measurement, and the table says so in a
+ * column rather than leaving the reader to assume they are.
+ *
+ * THE QUESTION IS THE SAME FOR BOTH
+ *
+ * Did this source beat doing the same thing on SPY? That is the
+ * "the same call on SPY" column and the "excess vs SPY" column, and
+ * they are computed the same way for both kinds: the position's return
+ * minus SPY's return over the same dates, signed by the direction.
+ *
+ * AND THE HONEST HEADLINE
+ *
+ * Not one of these sources has a measured edge over the index. Two of
+ * them (Ariel's long book, and her short book) are outside the noise,
+ * and they point in OPPOSITE directions, which is what a pair of books
+ * that are mirror images of each other looks like rather than what an
+ * edge looks like. The rest is a number whose interval contains zero.
+ * That is the finding, and it is stated once here rather than implied
+ * eight times.
+ *
+ * @param {object} payload  the analysis payload
+ * @returns {string} the section's HTML
+ */
+function renderSourceComparison(payload) {
+  const sources = payload.sources || {};
+
+  const fmtHit = (value) => (value === null || value === undefined ? '&mdash;' : `${num(value, 1)}%`);
+  // The interval comes in TWO shapes: the position summary carries an
+  // object {low, high} and the call summary carries an ARRAY
+  // [low, high]. Both are read here, because both are intervals and a
+  // reader does not care which shape a number arrived in.
+  const fmtCi = (interval, scale) => {
+    if (!interval) return '';
+    const factor = scale === undefined ? 1 : scale;
+    const low = Number(Array.isArray(interval) ? interval[0] : interval.low) * factor;
+    const high = Number(Array.isArray(interval) ? interval[1] : interval.high) * factor;
+    if (!Number.isFinite(low) || !Number.isFinite(high)) return '';
+    return ` (${num(low, 1)}&ndash;${num(high, 1)})`;
+  };
+  // The excess is in PERCENTAGE POINTS, not a fraction of a return, so
+  // it gets a sign and no per cent sign.
+  const fmtExcess = (value) => {
+    if (value === null || value === undefined) return '&mdash;';
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) return '&mdash;';
+    const cls = parsed > 0 ? 'up' : parsed < 0 ? 'down' : '';
+    return `<span class="${cls}">${parsed > 0 ? '+' : ''}${num(parsed, 2)}</span> pp`;
+  };
+
+  const rows = [];
+
+  // ---- the POSITION sources -------------------------------------------
+  for (const [name, source] of Object.entries(sources)) {
+    const all = source.all || {};
+    const held = (all.closed || 0) - (all.same_day_trades || 0);
+    rows.push([
+      escapeHtml(sourceLabel(name)),
+      'positions',
+      'his own holding period',
+      num(held, 0),
+      fmtHit(all.hit_rate_pct),
+      fmtHit(all.spy_same_call_hit_rate_pct),
+      fmtExcess(all.avg_excess_pct) + fmtCi(all.avg_excess_ci95),
+    ]);
+  }
+
+  // ---- the CALL sources -------------------------------------------------
+  const callRows = [];
+  const addCall = (label, payloadFor) => {
+    if (!payloadFor) return;
+    const overall = payloadFor.overall || {};
+    const week = (overall.same_call_on_spy || {})['1w'] || {};
+    if (!week.n) return;
+    callRows.push([
+      escapeHtml(label),
+      'calls',
+      '+1 week from the claim',
+      num(week.n, 0),
+      fmtHit(week.hit_rate === null || week.hit_rate === undefined ? null : week.hit_rate * 100),
+      fmtHit(week.spy_same_call_hit_rate === null || week.spy_same_call_hit_rate === undefined
+        ? null : week.spy_same_call_hit_rate * 100),
+      fmtExcess(week.mean_excess_aligned === null || week.mean_excess_aligned === undefined
+        ? null : week.mean_excess_aligned * 100)
+        + fmtCi(week.excess_ci95, 100),
+    ]);
+  };
+  addCall('Monoszon &mdash; index calls', payload.monoszon);
+  addCall('Martin Klass &mdash; earnings digest', payload.martinklass);
+  addCall('HariSeldon &mdash; option legs', payload.hariseldon_options);
+
+  const allRows = [...rows, ...callRows];
+  if (!allRows.length) return '';
+
+  return `<section id="comparison">
+  <div class="section-heading"><p class="kicker">SIDE BY SIDE</p><h2>Every source, on one table</h2></div>
+  <p class="description">The page has a section per source, and the question that matters is which of them is worth
+    reading. The two kinds of source are measured over DIFFERENT windows, and the table says which is which: a position is
+    measured over the holding period its trader chose, and a call is measured over a fixed week from the day of the claim.
+    The question is the same for both &mdash; did this source beat doing the same thing on SPY?</p>
+  ${table(['source', 'publishes', 'measured over', 'n', 'hit rate', 'the same call on SPY', 'excess vs SPY'], allRows)}
+  <p class="note">NOT ONE OF THESE SOURCES HAS A MEASURED EDGE OVER THE INDEX, and that is the finding. Two of them are
+    outside the noise &mdash; Ariel&rsquo;s long book and her short book &mdash; and they point in OPPOSITE directions, which is
+    what a pair of books that are mirror images of each other looks like rather than what an edge looks like. The rest is a
+    number whose interval contains zero. A trade with a stated size, a stated entry and a stated exit (the position sources)
+    is worth more than an opinion, and an opinion on a channel is worth less than the index. The reading is not that these
+    traders are bad; it is that the market pays for the information and not for the commentary.</p>
+</section>`;
 }
 
 /**
@@ -428,4 +559,9 @@ function renderMartinKlassSection(klass) {
 </section>`;
 }
 
-module.exports = { renderDiscordReport, renderMartinKlassSection, renderMonoszonSection };
+module.exports = {
+  renderDiscordReport,
+  renderMartinKlassSection,
+  renderMonoszonSection,
+  renderSourceComparison,
+};

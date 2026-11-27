@@ -554,6 +554,89 @@ the evidence -- stay in the working folder, untracked.
 
 ## The Discord traders
 
+### The 2026-04-15 treemap -- READ, and the premise REFUTED (2026-11-27)
+
+**RESOLVED, and the open question is answered in the opposite direction
+to the one the plan assumed.**
+
+**WHAT WAS ASSUMED.** The plan was to read the main book's card grid and
+"take the percentage in the same column BELOW the ticker" as the
+position's WEIGHT, and then check the weights against the table's own
+total. **The percentage is not the weight.** It is the DAILY CHANGE.
+
+**THE ARITHMETIC THAT SETTLES IT, and it is the screenshot's own.**
+
+1. **A WEIGHT CAN NEVER BE NEGATIVE, and three leaves carry a negative
+   percentage** -- MC.PA at -0.28 %, EQT at -0.07 %, NDIA.LSE at -0.11 %.
+   A size cannot be negative, and a daily change can.
+2. **The header says what the two encodings are**: "Denni zmena ·
+   velikost = hodnota v portfoliu" -- the DAILY CHANGE is what is
+   PRINTED, and the size is what is DRAWN. The leaf's AREA is its value
+   in the portfolio, and the value is not printed anywhere.
+3. **The screenshot's own arithmetic agrees**: the sector's aggregate
+   (+1.04 % for Technologie) is close to the MEAN of its leaves'
+   changes, and nowhere near their SUM.
+
+**SO THE WEIGHT IS NOT PRINTED IN THIS PICTURE, and the reader does not
+publish one.** Publishing the daily change as the weight would be a
+wrong number in a portfolio record, and a weight is what a portfolio
+record is for. The 65 rows the treemap contributes carry the daily
+change and the sector, and their weight is NULL.
+
+**WHAT WAS ALSO FOUND, and it was a live defect: THE OCR LOSES THE
+BROKER'S MINUS SIGN.** The minus is a thin dash, and the OCR dropped it
+on **12 of the 64 leaves** -- JPM's tile reads "-1.71 %" and the OCR
+read "+1.71 %", MU's reads "-2.70 %" and the OCR read "+2.70 %". And the
+OTHER OCR pass lost the SAME minus on the SAME leaves, so their
+agreement was not evidence.
+
+**THE SIGN IS THEREFORE READ FROM THE LEAF'S COLOUR**, which is the
+project's own pattern (the O'Connell reader takes the sign from the
+colour; the XTB reader takes it from the prices). The treemap's scale
+is "-4 % ... +4 %", red for a loss and green for a gain, and the
+percentage is WHITE TEXT on that background. Measured on the
+screenshot:
+
+| the tile | its colour |
+|---|---|
+| green | rgb(26, 65, 45) |
+| red | rgb(75, 31, 32) |
+| flat | rgb(45, 51, 59) |
+
+A SATURATED tile settles the sign and a FLAT one does not: the leaves
+whose change is under about a tenth of a point are drawn flat, and for
+those the glyph is the only witness. The reader says which it used, in
+`sign_source`.
+
+**AND THE PICTURE WAS NOT EVEN READ IN FULL.** The pipeline's OCR
+region is the chart-stream overlay -- the LEFT 70 % of the image -- and
+this is a full-width treemap, so 30 % of the book had never been looked
+at. The treemap is now OCR'd WHOLE, which costs about six minutes a
+picture, so it runs only for a picture wider than 2000 px: the treemap
+is 2133, the XTB table is 1387, the "My Holdings" pictures are
+1846-1861, and the ticker strips are 201-992.
+
+**WHAT WAS READ.** 65 of the screenshot's 96 positions, across 7 of the
+13 sector labels, with the daily change of each. The six sector labels
+the OCR missed are the cost of the misses: a leaf whose GROUP's label was
+not read is assigned to the nearest group above it, and its sector is
+then wrong. The coverage is published with the reading.
+
+**AND THE CROSS-CHECK, which is the real test of the reader.** The
+screenshot says WHAT HE HELD; the trade channel says WHAT HE TRADED.
+Bounded to the screenshot's own date: the screenshot holds 63 names, the
+trade channel named 62 on or before that date, and **29 are in both**.
+So the reader finds real tickers -- names an INDEPENDENT source also
+names -- and the two sources overlap on less than half of each other,
+which is what two views of a book that changed over four years look
+like.
+
+**WHAT IS STILL NOT READ.** The 2025-12-22 "My Holdings" pictures (six
+of them) are a THIRD format -- a ticker grid with a separate sector
+table -- and they have no reader yet. The XTB reader finds their header
+and reports "header without VAHA", which is right: there is no weight
+column in them either.
+
 ### The other screenshot formats are not read (2026-11-26)
 
 **WHAT IS KNOWN.** The portfolio channel of plechac carries **14**

@@ -163,7 +163,10 @@
     "discord:monoszon:outcomes": "node tools/analyzeDiscordMonoszon.js",
     "discord:hariseldon:positions": "node tools/buildDiscordHariSeldonPositions.js",
     "discord:martinklass:readings": "node tools/buildDiscordMartinKlassReadings.js",
-    "discord:martinklass:outcomes": "node tools/analyzeDiscordMartinKlass.js"
+    "discord:martinklass:outcomes": "node tools/analyzeDiscordMartinKlass.js",
+    "discord:hariseldon:options": "node tools/analyzeDiscordHariSeldonOptions.js",
+    "discord:entryrule": "node tools/measureEntryRule.js",
+    "discord:plechac:heatmap": "node tools/parsePlechacPortfolios.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.11.0",

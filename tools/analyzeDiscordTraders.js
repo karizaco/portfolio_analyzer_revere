@@ -58,6 +58,25 @@ function mean(values) {
   return values.reduce((total, value) => total + value, 0) / values.length;
 }
 
+/**
+ * The 95 % interval of a MEAN.
+ *
+ * The hit rate's interval is a Wilson interval, because a proportion is
+ * bounded. The EXCESS is a mean of signed returns and is not bounded,
+ * so it gets the ordinary standard error.
+ *
+ * @param {number[]} values
+ * @returns {{low: number, high: number}|null}
+ */
+function meanInterval(values, z = 1.96) {
+  if (!values.length) return null;
+  const average = mean(values);
+  if (values.length < 2) return { low: Number(average.toFixed(2)), high: Number(average.toFixed(2)) };
+  const variance = values.reduce((total, value) => total + (value - average) ** 2, 0) / (values.length - 1);
+  const half = z * Math.sqrt(variance / values.length);
+  return { low: Number((average - half).toFixed(2)), high: Number((average + half).toFixed(2)) };
+}
+
 function wilson(hits, n, z = 1.96) {
   if (!n) return null;
   const p = hits / n;
@@ -203,6 +222,7 @@ async function main() {
     const wins = held.filter((row) => row.return_pct > 0).length;
     const interval = wilson(wins, held.length);
     const excess = held.filter((row) => row.excess_pct !== null);
+    const spyScored = held.filter((row) => row.spy_return_pct !== null);
     const excessOpen = open.filter((row) => row.excess_pct !== null);
     // The mean is outlier-driven: one long SOXL hold is +947% and it moves
     // an average. The winsorised mean (the extreme 2% of trades moved to the
@@ -222,6 +242,20 @@ async function main() {
       winsorised_avg_return_pct: clipped.length ? Number(mean(clipped).toFixed(2)) : null,
       median_return_pct: held.length ? Number(median(held.map((row) => row.return_pct)).toFixed(2)) : null,
       avg_excess_pct: excess.length ? Number(mean(excess.map((row) => row.excess_pct)).toFixed(2)) : null,
+      // THE SAME CALL ON SPY, and the excess's interval, so that every
+      // source in the dashboard can be put in ONE table. The position
+      // sources measure their own holding period and the call sources
+      // measure a fixed horizon, and the columns say which is which --
+      // but the question is the same for both: did this source beat
+      // doing the same thing on SPY?
+      //
+      // `spy_return_pct` is ALREADY signed by the position's direction,
+      // so "SPY did the same thing" is simply a positive number.
+      spy_same_call_hit_rate_pct: spyScored.length
+        ? Number(((spyScored.filter((row) => row.spy_return_pct > 0).length / spyScored.length) * 100).toFixed(1))
+        : null,
+      spy_same_call_n: spyScored.length,
+      avg_excess_ci95: meanInterval(excess.map((row) => row.excess_pct)),
       avg_holding_days: held.length ? Number(mean(held.map((row) => row.holding_days).filter((value) => value !== null)).toFixed(1)) : null,
       median_holding_days: held.length ? median(held.map((row) => row.holding_days).filter((value) => value !== null)) : null,
       open_marked_avg_pct: open.length ? Number(mean(open.map((row) => row.return_pct)).toFixed(2)) : null,
@@ -636,11 +670,25 @@ async function main() {
     }
   }
 
+  // HariSeldon's OPTION legs: the direction of his option structures,
+  // scored on the underlying. The same shape of source again -- claims
+  // about the future -- and the same shape of payload.
+  let hariseldonOptions = null;
+  const hariseldonOptionsPath = path.join(OUT_DIR, 'discord_hariseldon_options.json');
+  if (fs.existsSync(hariseldonOptionsPath)) {
+    try {
+      hariseldonOptions = JSON.parse(fs.readFileSync(hariseldonOptionsPath, 'utf8'));
+    } catch (error) {
+      log(`[discord] could not read ${hariseldonOptionsPath}: ${error.message}`);
+    }
+  }
+
   const payload = {
     generated_at: new Date().toISOString(),
     price_range: { from, to },
     monoszon,
     martinklass,
+    hariseldon_options: hariseldonOptions,
     sources: bySource,
     drendel_accounts: accountCompare,
     curves: {

@@ -601,6 +601,32 @@ Czech, and four rules are not the shared ones:
    market's own registrant file -- and which resolves some names and not
    others ("CrowdStrike" yes, "Ambarella" no).
 
+### The 2026-04-15 treemap -- the main book, and its sector (2026-11-27)
+
+The portfolio channel carries a TREEMAP of the whole book as well as the
+XTB table: a full-width picture divided into SECTOR groups, every leaf
+one holding, with the ticker, the day's CHANGE and the company name.
+
+**THE PERCENTAGE IS THE DAILY CHANGE AND NOT THE WEIGHT**, and that is
+what the pixels say. A weight can never be negative, and three leaves
+carry a negative percentage; the header's own sentence separates the two
+("Denni zmena · velikost = hodnota v portfoliu" -- the change is
+printed, the size is drawn); and the sector's aggregate is a weighted
+average of its leaves' changes and nowhere near their sum. **So the
+treemap contributes NO weight**, and its 65 rows carry a NULL weight.
+
+**THE SIGN COMES FROM THE COLOUR**, because the OCR loses the broker's
+minus dash on 12 of the 64 leaves -- and so does the OTHER OCR pass, on
+the SAME leaves, so their agreement is not evidence. The tile's
+background carries it: green rgb(26, 65, 45), red rgb(75, 31, 32), and
+a FLAT tile rgb(45, 51, 59) for the leaves whose change is a fraction
+of a point, where the glyph is the only witness.
+
+**MEASURED.** 65 of the screenshot's 96 positions, across 7 of the 13
+sector labels. The cross-check against the trade channel, bounded to
+the screenshot's date: the screenshot holds 63 names, the trade channel
+named 62 by then, and **29 are in both**.
+
 ## Additive cross-trader layers (2026-11-22)
 
 No rebuild of core `discord_positions` / episodes / clement_posts required.

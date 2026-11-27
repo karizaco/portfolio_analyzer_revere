@@ -8227,6 +8227,36 @@ in Czech (zlato -> GLD, stribro -> SLV, ropa -> USO, psenice -> WEAT);
 and the company names go through the SHARED matcher, which resolves some
 names and not others.
 
+### The 2026-04-15 treemap (2026-11-27)
+
+The portfolio channel carries a TREEMAP of the whole book beside the XTB
+table: a full-width picture divided into SECTOR groups, every leaf one
+holding with the ticker, the day's CHANGE and the company name.
+
+**THE PERCENTAGE IS THE DAILY CHANGE AND NOT THE WEIGHT** -- a weight
+can never be negative and three leaves carry a negative percentage, the
+header says "Denni zmena · velikost = hodnota v portfoliu" (the change
+is printed, the size is drawn), and the sector's aggregate is a
+weighted average of its leaves' changes and not their sum. **So the
+treemap contributes NO weight**: its rows carry a NULL weight and the
+daily change in the annotation.
+
+**THE SIGN IS READ FROM THE LEAF'S COLOUR**, because the OCR loses the
+broker's minus dash on 12 of the 64 leaves -- and the other OCR pass
+loses the SAME one on the SAME leaves, so their agreement is not
+evidence. Green rgb(26, 65, 45), red rgb(75, 31, 32), and a FLAT tile
+rgb(45, 51, 59) where the glyph is the only witness.
+
+**THE PICTURE HAD NEVER BEEN READ IN FULL**: the pipeline's OCR region
+is the chart-stream overlay (the LEFT 70 %), and 30 % of the book was
+outside it. The treemap is OCR'd whole now, and only for a picture
+wider than 2000 px, because the whole-image OCR costs six minutes.
+
+**MEASURED.** 65 of the screenshot's 96 positions, 7 of the 13 sector
+labels, and the cross-check against the trade channel bounded to the
+screenshot's date: the screenshot holds 63 names, the trade channel
+named 62 by then, and **29 are in both**.
+
 ## Plechac (petrplechactradecz) -- a Czech private investor (2026-11-26)
 
 Two channels in the shared TradeCZ server (guild `917782018992009256`):
