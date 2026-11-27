@@ -107,9 +107,9 @@ test('the SCROLL OVERLAP is not added, because it is the same line read twice', 
   const { rows } = readFixture();
   // The five pictures are consecutive scroll positions of ONE table, so
   // the same row appears in two of them. Six holdings sit in that
-  // overlap -- XOM, EVO.ST, IQQW.DE, HTWO.L, RTX, FLXLDE -- and each of
+  // overlap -- XOM, EVO.ST, IQQW.DE, HTWO.L, RTX, FLXI.DE -- and each of
   // them is ONE holding, not two.
-  const overlap = { 'EVO.ST': 0.78, 'IQQW.DE': 0.55, 'HTWO.L': 0.54, RTX: 0.53, FLXLDE: 0.53 };
+  const overlap = { 'EVO.ST': 0.78, 'IQQW.DE': 0.55, 'HTWO.L': 0.54, RTX: 0.53, 'FLXI.DE': 0.53 };
   for (const [ticker, weight] of Object.entries(overlap)) {
     const row = [...rows.values()].find((candidate) => candidate.ticker === ticker);
     assert.ok(row, `${ticker} is read`);
@@ -125,7 +125,9 @@ test('the weights the PICTURE shows are the weights the book has', () => {
   // These are read off the picture by hand: the first picture's rows.
   // The tickers are the MARKET's, because the source's own vocabulary
   // translates the broker's spelling -- and the Overview view's OCR
-  // LOSES THE DOT, so "IDUSL" has to find its way back to IDUS.L.
+  // LOSES THE DOT, so "IDUSL" has to find its way back to IDUS.L, while
+  // the misreads the source's own confusion table carries take the
+  // OCR's "IQQEDE" to the market's "IQQE.DE".
   const expected = {
     'IDUS.L': 4.36,
     'MC.PA': 3.67,

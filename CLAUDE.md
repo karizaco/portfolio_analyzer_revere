@@ -8351,6 +8351,45 @@ in Czech (zlato -> GLD, stribro -> SLV, ropa -> USO, psenice -> WEAT);
 and the company names go through the SHARED matcher, which resolves some
 names and not others.
 
+### The Overview view's MISREADS, read off the pixels (2026-11-28)
+
+**FIVE OF THE 2025-12-22 BOOK'S HOLDINGS WERE OCR MISREADS, and the
+picture says what they are.** The Overview view's ticker column carries
+the COMPANY'S NAME under each ticker, so a reading can be checked
+against the instrument it names -- and the crop of the column answers
+the question the OCR could not.
+
+| the OCR read | the picture says | the company | the market's symbol |
+|---|---|---|---|
+| `IQQEDE` | **IQQE.DE** | iShares MSCI Emerging Markets | IQQE.DE |
+| `IOGPL` | **IOGP.L** | iShares Oil & Gas Producers UCITS ETF | IOGP.L |
+| `IDUPL` | **IDUP.L** | iShares US Property Yield UCITS ETF | IDUP.L |
+| `IDTLL` | **IDTL.L** | iShares $ Treasury UCITS ETF | IDTL.L |
+| `FLXLDE` | **FLXI.DE** | Franklin Liberty | FLXI.DE |
+
+**AND EVERY ONE OF THE FIVE WAS ALSO PROBED AGAINST YAHOO** -- because a
+symbol the market does not have must not be invented, and all five
+resolve with a price on 2025-12-19.
+
+**SO THE SOURCE HAS ITS OWN PICTURE-READING CONFUSION TABLE**, in
+`config/ticker_ocr_confusions_plechac.csv`, and it is SEPARATE from the
+vocabulary because it answers a different question: **the vocabulary
+says what the BROKER writes, and the confusion table says what the OCR
+READS.** The table is applied only to a picture reading -- the trades
+channel's spoken names never go through it.
+
+**MEASURED: 81 OF THE 83 HOLDINGS NOW CARRY A SYMBOL YAHOO CAN PRICE.**
+The two that do not are `RZUS.L` (1.07 %) and `DOC1` (0.73 %) -- 1.80 %
+of the book -- and both were read off the pixels ("Digital Angel Corp"
+for DOC1), and **Yahoo has no price series for either** under any
+spelling that was tried. So they keep the broker's own spelling, which
+is the honest state: a holding that cannot be priced is a holding that
+cannot be scored, and a symbol the market does not have is a wrong
+holding.
+
+**AND A MISREAD AND THE LINE IT CAME FROM ARE ONE LINE**, so the merge
+cannot add a holding's weight to itself.
+
 ### The corpus holds TWO readers now, and the replay's number was a MIXTURE (2026-11-28)
 
 **THE `position_table` SWEEP ADDED A SECOND READER TO THE CORPUS, and

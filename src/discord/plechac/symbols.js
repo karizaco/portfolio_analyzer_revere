@@ -112,6 +112,7 @@ const NOT_HOLDINGS = new Set([
 const CZECH_VOWEL = /[aeiouáéíóúůěý]$/u;
 
 let tableCache = null;
+let pictureConfusions = null;
 
 /**
  * Split a CSV line that may contain quoted fields.
@@ -178,6 +179,54 @@ function nameForms(spoken) {
  *   commodities: Set<string>, namePatterns: {pattern: RegExp, ticker: string,
  *   kind: string}[]}}
  */
+// The PICTURE-READING confusion table.
+//
+// This is the source's OWN table of the misreads the broker's screens
+// produce, and it is separate from the vocabulary because it answers a
+// different question. The vocabulary says what the BROKER writes; this
+// says what the OCR READS.
+//
+// Every row was verified twice: off the PIXELS of the picture, and
+// against Yahoo, so a symbol the market does not have cannot enter the
+// table. The Overview view's own ticker column carries the company's
+// name under each ticker, so the reading can be checked against the
+// instrument it names.
+//
+// The misreads are the Overview view's own: it prints "IQQE.DE" and the
+// OCR reads "IQQEDE"; it prints "IOGP.L" and the OCR reads "IOGPL".
+//
+// And it is applied ONLY to a PICTURE reading -- the trades channel's
+// spoken names never go through it.
+const CONFUSIONS_PATH = path.join(
+  __dirname, '..', '..', '..', 'config', 'ticker_ocr_confusions_plechac.csv',
+);
+
+/**
+ * Read the confusion table: the OCR's read -> the broker's spelling.
+ *
+ * @returns {Map<string, string>}
+ */
+function loadPictureConfusions() {
+  if (pictureConfusions) return pictureConfusions;
+  pictureConfusions = new Map();
+  let text = '';
+  try {
+    text = fs.readFileSync(CONFUSIONS_PATH, 'utf8');
+  } catch {
+    return pictureConfusions;
+  }
+  for (const line of text.split(/\r?\n/)) {
+    if (!line.trim() || line.startsWith('#')) continue;
+    // The note is quoted, so the split has to respect the quotes.
+    const cells = splitCsvLine(line);
+    if (cells.length < 2) continue;
+    const garbled = cells[0].trim().toUpperCase();
+    const canonical = cells[1].trim().toUpperCase();
+    if (garbled && canonical && garbled !== canonical) pictureConfusions.set(garbled, canonical);
+  }
+  return pictureConfusions;
+}
+
 function loadPlechacTable() {
   if (tableCache) return tableCache;
   const names = new Map();
@@ -348,7 +397,12 @@ function findUnknownCapitals(text, known) {
  */
 function marketTickerOf(brokerTicker) {
   const table = loadPlechacTable();
-  const key = String(brokerTicker || '').toUpperCase().trim();
+  let key = String(brokerTicker || '').toUpperCase().trim();
+  // THE PICTURE'S OWN MISREAD FIRST: the confusion table maps what the
+  // OCR READ to what the broker PRINTS, and the vocabulary then maps
+  // what the broker prints to the market's ticker.
+  const confusions = loadPictureConfusions();
+  if (confusions.has(key)) key = confusions.get(key);
   if (table.symbols.has(key)) return table.symbols.get(key);
   const dotted = key.replace(/\s+/g, '.');
   if (table.symbols.has(dotted)) return table.symbols.get(dotted);
@@ -381,7 +435,12 @@ function marketTickerOf(brokerTicker) {
  */
 function canonicalBrokerLine(brokerSymbol) {
   const table = loadPlechacTable();
-  const key = String(brokerSymbol || '').toUpperCase().trim();
+  let key = String(brokerSymbol || '').toUpperCase().trim();
+  // The picture's own misread first, so the misread and the line it
+  // came from are ONE line -- and the merge cannot add a holding's
+  // weight to itself.
+  const confusions = loadPictureConfusions();
+  if (confusions.has(key)) key = confusions.get(key);
   if (table.symbols.has(key)) return key;
   // The broker's spelling, with the OCR's dot-less form matched against
   // the table's own keys.
@@ -399,5 +458,6 @@ module.exports = {
   findUnknownCapitals,
   loadPlechacTable,
   canonicalBrokerLine,
+  loadPictureConfusions,
   marketTickerOf,
 };

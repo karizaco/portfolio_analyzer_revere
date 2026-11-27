@@ -44,6 +44,17 @@ test('TWO broker lines of one company are TWO lines', () => {
 });
 
 test('a symbol the vocabulary does not know is its own line', () => {
-  assert.equal(canonicalBrokerLine('FLXLDE'), 'FLXLDE');
+  // RZUS.LSE is Rolls-Royce Hydrogen's LSE line: the broker writes it,
+  // the source's vocabulary has no row for it, and Yahoo has no price
+  // series for it either -- so it stays the broker's own spelling.
   assert.equal(canonicalBrokerLine('RZUS.LSE'), 'RZUS.LSE');
+  assert.equal(canonicalBrokerLine('RZUS.L'), 'RZUS.L');
+});
+
+test('a MISREAD resolves to the line it came from', () => {
+  // The picture confusion table maps what the OCR READ to what the
+  // broker PRINTS, and the canonical line follows it -- so a misread
+  // and its line are one line and the merge cannot double it.
+  assert.equal(canonicalBrokerLine('FLXLDE'), 'FLXI.DE');
+  assert.equal(canonicalBrokerLine('IQQEDE'), 'IQQE.DE');
 });

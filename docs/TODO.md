@@ -751,6 +751,32 @@ broker's spellings, so "ASML.AS" and "ASML" are two LINES while
 to "ASML.AS" and is the same line read badly. The scroll overlap is the
 same line read twice, and it does not add.
 
+### The Overview view's misreads -- READ, and the source has its own table (2026-11-28)
+
+**DONE.** Five of the 2025-12-22 book's holdings were OCR misreads.
+Read off the pixels -- the Overview view prints the company's name under
+each ticker, so the reading can be checked against the instrument it
+names -- and verified against Yahoo:
+
+| the OCR read | the picture says | the company |
+|---|---|---|
+| `IQQEDE` | **IQQE.DE** | iShares MSCI Emerging Markets |
+| `IOGPL` | **IOGP.L** | iShares Oil & Gas Producers UCITS ETF |
+| `IDUPL` | **IDUP.L** | iShares US Property Yield UCITS ETF |
+| `IDTLL` | **IDTL.L** | iShares $ Treasury UCITS ETF |
+| `FLXLDE` | **FLXI.DE** | Franklin Liberty |
+
+**AND THE SOURCE HAS ITS OWN PICTURE-READING CONFUSION TABLE**
+(`config/ticker_ocr_confusions_plechac.csv`), separate from the
+vocabulary: the vocabulary says what the BROKER writes and the confusion
+table says what the OCR READS. It is applied only to a picture reading.
+
+**MEASURED: 81 OF 83 HOLDINGS CARRY A SYMBOL YAHOO CAN PRICE.** The two
+that do not -- `RZUS.L` (1.07 %) and `DOC1` (0.73 %) -- were read off the
+pixels ("Digital Angel Corp" for DOC1) and Yahoo has no price series
+for either under any spelling that was tried, so they keep the broker's
+own spelling.
+
 ### The replay pools two readers, and the number was a mixture (2026-11-28)
 
 **DONE.** The `position_table` sweep added a second reader to the
