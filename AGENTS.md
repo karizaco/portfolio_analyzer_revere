@@ -8184,6 +8184,49 @@ can stand) are in `docs/discord-traders.md`, and they are pinned by
 `test/discordPortfolio.test.js`, `test/discordTradeActions.test.js` and
 `test/discordEpisodes.test.js`.
 
+## HariSeldon (`hariseldon`) -- a trade journal in English (2026-11-27)
+
+`verified-traders` in the `/r/RealDayTrading` server, and the source is
+ONE account posting under FOUR names (`*HariSeldon*`, `Twitter:
+RealDayTrading`, `HSeldon2020`, `OptionStalker`) -- the Reddit and
+Twitter accounts are WEBHOOKS under his identity. **So the source needs a
+DEDUPE**: measured, 97 of his 126 messages in the sample have a mirror
+within 15 minutes, and the rule keeps the RICHER post.
+
+**THE PRICE IS THE FIRST NUMBER AFTER THE TICKER, and that was MEASURED:**
+within 5 % of the exit price in 101 of 110 entry/exit pairs, against 124
+of 481 for the second number (a size or a strike). Four rules came out
+of the measurement: ".98 profit per share" is 0.98 and not 98; a PROFIT
+is not a price; an OPTION is not an equity (a spread's price is the
+spread's, so an option action is recorded and NOT chained into an
+episode); and the futures carry Yahoo's symbol (`/ES` is `ES=F`).
+
+**MEASURED.** 3,000 messages, 194 mirrors dropped, 2,007 actions, **485
+episodes**, hit rate **58.9 %** (CI 51.5-65.9), excess over SPY
+**0.00 %**. **He is an intraday trader**: 285 of his 460 closed
+episodes are same-day and the close-to-close model reads them as flat,
+so they are counted apart.
+
+## Martin Klass (`martinklass`) -- a daily digest of the earnings (2026-11-27)
+
+Two channels of his own server, **1,013 messages** in all. The
+`investování` channel posts the day's earnings and every one of those
+messages reports what ALREADY HAPPENED, so those readings are RECORDED
+(149) and NOT scored; only the **52 forward claims** are, with a
+**measured precision of 75.0 %**.
+
+**MEASURED.** 1 week **42.0 %** against **48.0 %** for the same call on
+SPY; 1 month 44.2 % against 44.2 %. He does not beat the index. And the
+number is late by construction: his forward readings are published AFTER
+the news that moved the name.
+
+**THE PARSER IS HIS OWN** (`src/discord/martinklass/`), because he writes
+Czech: the HEADLINE decides the subject and the body cannot steal it;
+the direction has to be in the subject's OWN SENTENCE; the commodities are
+in Czech (zlato -> GLD, stribro -> SLV, ropa -> USO, psenice -> WEAT);
+and the company names go through the SHARED matcher, which resolves some
+names and not others.
+
 ## Plechac (petrplechactradecz) -- a Czech private investor (2026-11-26)
 
 Two channels in the shared TradeCZ server (guild `917782018992009256`):

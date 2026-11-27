@@ -190,6 +190,11 @@ function renderDiscordReport(payload) {
   const mono = payload.monoszon || null;
   const monoSection = mono ? renderMonoszonSection(mono) : '';
 
+  // Martin Klass is the same shape of source -- calls, not positions -- and
+  // his section is rendered the same way.
+  const klass = payload.martinklass || null;
+  const klassSection = klass ? renderMartinKlassSection(klass) : '';
+
   // The POSTED books: a position list a trader posted himself, with the
   // weights he gave it. It is a different thing from an episode -- an
   // episode is priced, a snapshot is what the book looked like that day.
@@ -240,7 +245,7 @@ function renderDiscordReport(payload) {
 </header>
 <nav>
   <a href="#books">the books</a><a href="#accounts">drendel's two accounts</a><a href="#rules">their rules</a>
-  <a href="#together">the two traders</a>${postedRows.length ? '<a href="#posted">the posted books</a>' : ''}${mono ? '<a href="#monoszon">monoszon\'s calls</a>' : ''}<a href="#coverage">coverage &amp; caveats</a>
+  <a href="#together">the two traders</a>${postedRows.length ? '<a href="#posted">the posted books</a>' : ''}${mono ? '<a href="#monoszon">monoszon\'s calls</a>' : ''}${klass ? '<a href="#martinklass">martin klass</a>' : ''}<a href="#coverage">coverage &amp; caveats</a>
 </nav>
 
 <section id="books">
@@ -313,6 +318,7 @@ function renderDiscordReport(payload) {
 
 ${postedSection}
 ${monoSection}
+${klassSection}
 
 <section id="coverage">
   <div class="section-heading"><p class="kicker">COVERAGE</p><h2>What is measured, and what is not</h2></div>
@@ -378,4 +384,48 @@ function renderMonoszonSection(mono) {
 </section>`;
 }
 
-module.exports = { renderDiscordReport, renderMonoszonSection };
+/**
+ * Martin Klass: the same shape of source -- calls, not positions.
+ *
+ * @param {object} klass  the payload of `data/discord_martinklass.json`
+ * @returns {string} the section's HTML
+ */
+function renderMartinKlassSection(klass) {
+  const overall = klass.overall || {};
+  const week = (overall.same_call_on_spy || {})['1w'] || {};
+  const coverage = klass.coverage || {};
+
+  const subjectRows = Object.entries(klass.by_subject || {}).map(([subject, summary]) => {
+    const w = (summary.same_call_on_spy || {})['1w'] || {};
+    const m = (summary.same_call_on_spy || {})['1m'] || {};
+    return `<tr><td>${escapeHtml(subject)}</td><td>${num(summary.claim_count, 0)}</td>`
+      + `<td>${w.hit_rate === null || w.hit_rate === undefined ? '&mdash;' : `${num(w.hit_rate * 100, 1)}%`}</td>`
+      + `<td>${w.n || 0}</td>`
+      + `<td>${m.hit_rate === null || m.hit_rate === undefined ? '&mdash;' : `${num(m.hit_rate * 100, 1)}%`}</td>`
+      + `<td>${w.mean_excess_aligned === null || w.mean_excess_aligned === undefined ? '&mdash;' : signed(w.mean_excess_aligned * 100)}</td></tr>`;
+  });
+
+  return `<section id="martinklass">
+  <div class="section-heading"><p class="kicker">MARTIN KLASS</p><h2>A daily digest of the earnings, and the calls inside it</h2></div>
+  <p class="description">A fourth Discord source, and a NEWSLETTER rather than a journal: his
+    <strong>investov&aacute;n&iacute;</strong> channel posts the day's earnings, one message per company, and his
+    <strong>trading</strong> channel carries his own commentary. He publishes no position list and no size, so a reading is
+    scored against the instrument it is about.</p>
+  <div class="cards">
+    ${card('forward calls', num(overall.claim_count, 0), `of ${num(coverage.readings, 0)} readings`)}
+    ${card('hit rate, 1 week', week.hit_rate === null || week.hit_rate === undefined ? '&mdash;' : `${num(week.hit_rate * 100, 1)}%`, `${num(week.n, 0)} scored`)}
+    ${card('the same call on SPY', week.spy_same_call_hit_rate === null || week.spy_same_call_hit_rate === undefined ? '&mdash;' : `${num(week.spy_same_call_hit_rate * 100, 1)}%`, 'on the same dates')}
+    ${card('edge vs SPY', week.edge_pp === null || week.edge_pp === undefined ? '&mdash;' : `${num(week.edge_pp, 1)} pp`, 'one week')}
+  </div>
+  ${table(['subject', 'calls', '1w hit', 'n', '1m hit', 'excess 1w'], subjectRows)}
+  <p class="note">ONLY THE FORWARD CLAIMS ARE SCORED. His digest reports what ALREADY HAPPENED &mdash;
+    &ldquo;&#128683; Ambarella se pot&yacute;k&aacute; s nedostatkem pam&#345;&scaron;ov&yacute;ch &ccedil;ip&#363;, akcie
+    v&yacute;razn&#283; klesaj&iacute;&rdquo; &mdash; and a result cannot be scored, because the price has already moved by
+    the time the claim is written. Those readings are RECORDED and not scored: they are the context that makes the forward
+    ones readable. The forward readings are published AFTER the news that moved the name, so the close-to-close model
+    enters after the move &mdash; which is late by construction, and it says so. The measured precision of the forward
+    readings is 73.3 % (a hand-labelled sample of all 60).</p>
+</section>`;
+}
+
+module.exports = { renderDiscordReport, renderMartinKlassSection, renderMonoszonSection };

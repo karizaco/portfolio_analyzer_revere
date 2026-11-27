@@ -795,6 +795,40 @@ CREATE INDEX IF NOT EXISTS idx_monoszon_readings_proxy
 CREATE INDEX IF NOT EXISTS idx_monoszon_readings_message
     ON monoszon_readings(message_id);
 
+-- Martin Klass's calls -- and they are READINGS, not trades. He publishes
+-- no position list and no size, so there is nothing to price as a
+-- holding. The claim kind is the scoring gate: `forward` is an
+-- expectation and is scored, `reported` is a result that has already
+-- happened and is recorded but NOT scored, because the price has already
+-- moved by the time the claim is written.
+CREATE TABLE IF NOT EXISTS martinklass_readings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    parser_version TEXT NOT NULL,
+    source_name TEXT NOT NULL DEFAULT 'martinklass',
+    message_id INTEGER NOT NULL,
+    discord_message_id TEXT NOT NULL DEFAULT '',
+    posted_at TEXT NOT NULL DEFAULT '',
+    as_of_date TEXT NOT NULL DEFAULT '',
+    channel TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT 'market',
+    subject TEXT NOT NULL DEFAULT '',
+    proxy_ticker TEXT NOT NULL DEFAULT '',
+    stance TEXT NOT NULL DEFAULT 'neutral',
+    claim_kind TEXT NOT NULL DEFAULT 'forward',
+    horizon TEXT NOT NULL DEFAULT '',
+    horizon_text TEXT NOT NULL DEFAULT '',
+    confidence TEXT NOT NULL DEFAULT 'medium',
+    evidence_text TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(message_id, subject, stance, claim_kind, parser_version)
+);
+
+CREATE INDEX IF NOT EXISTS idx_martinklass_readings_date
+    ON martinklass_readings(as_of_date, claim_kind);
+
+CREATE INDEX IF NOT EXISTS idx_martinklass_readings_proxy
+    ON martinklass_readings(proxy_ticker, as_of_date);
+
 -- Discord position parse (created at runtime before this split).
 CREATE TABLE IF NOT EXISTS discord_positions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

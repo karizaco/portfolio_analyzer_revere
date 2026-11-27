@@ -624,10 +624,23 @@ async function main() {
     }
   }
 
+  // Martin Klass is the same shape of source -- calls, not positions --
+  // and his payload is attached the same way.
+  let martinklass = null;
+  const martinklassPath = path.join(OUT_DIR, 'discord_martinklass.json');
+  if (fs.existsSync(martinklassPath)) {
+    try {
+      martinklass = JSON.parse(fs.readFileSync(martinklassPath, 'utf8'));
+    } catch (error) {
+      log(`[discord] could not read ${martinklassPath}: ${error.message}`);
+    }
+  }
+
   const payload = {
     generated_at: new Date().toISOString(),
     price_range: { from, to },
     monoszon,
+    martinklass,
     sources: bySource,
     drendel_accounts: accountCompare,
     curves: {

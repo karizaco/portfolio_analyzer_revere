@@ -494,6 +494,113 @@ reading is not a trade, so it is not in `discord_trade_actions`, and it
 has no video, so it is not in the shared `market_readings` either. The
 Clement source is the precedent for a chat source with its own tables.
 
+## HariSeldon (`hariseldon`) -- a trade journal in English (2026-11-27)
+
+`verified-traders` in the `/r/RealDayTrading` server (1058604837467607100),
+and the source is ONE account that posts under FOUR names: `*HariSeldon*`
+(1,927 messages), `Twitter: RealDayTrading` (637), `HSeldon2020` (416) and
+`OptionStalker` (20). They are all one Discord user id -- 1058608380173889537
+-- because the Reddit and Twitter accounts are WEBHOOKS posting under his
+identity.
+
+**SO THE SOURCE NEEDS A DEDUPE, and the mirrors are the reason.** His own
+post is "Exit $NKE `36.52` with .98 profit per share" and the Twitter mirror
+is "Exit NKE with .98 profit per share". **Measured: 97 of his 126 messages
+in the sample have a mirror within 15 minutes**, and 146 of his 1,927
+messages in the whole corpus do. The rule is to keep the RICHER post -- the
+one with the price -- because that is the one the episode is priced from.
+
+**WHAT HE POSTS.** Plain text, and the format is regular:
+
+```text
+Long $NKE `35.5322` $35.55 - 1,000 Shares
+Exit $RBLX `51.665` with $1.02 profit per share (1,000)
+Short $SPY PDS $730/$720 for $3.08 - 10 Contract - expires Friday
+Long $NVDA `165.96` Lottos CDS $167.5/$170 - for .83 - 20 Contracts
+I sold the $AMD $500 Calls (again) this time for $8.55 - expiring tomorrow
+Bought back the sold Calls for $4 profit per contract (5 Contract)
+I added to another 250 Shares, 750 Total now for an average price of $109.68
+```
+
+**THE PRICE IS THE FIRST NUMBER AFTER THE TICKER, and that was MEASURED.**
+Over the entry/exit pairs that state a profit, the first number after the
+ticker is within 5 % of the exit price in **101 of 110** pairs (median
+0.50 %), while the second number is within 5 % in 124 of 481 (median
+distance **78 %**) -- the second number is the SIZE or a STRIKE.
+
+**AND THE FOUR RULES THAT WERE FIXED BY MEASUREMENT:**
+
+1. **".98 profit per share" is 0.98 and not 98.** A number that may start
+   with a decimal point, or the exit's price is read as 98 and the P&L is
+   taken for a fill.
+2. **A PROFIT IS NOT A PRICE.** "Exit $MRNA with $1.32 profit per contract
+   (15)" states no price at all, and the number there is the profit.
+3. **AN OPTION IS NOT AN EQUITY.** A spread's price is the SPREAD's price
+   and not the underlying's, so an option action is recorded and NOT
+   chained into a position episode -- the episode model prices a position
+   from the underlying's closes, and the two prices are not the same
+   number. The option's price is the LAST number before the size.
+4. **THE FUTURES CARRY YAHOO'S SYMBOL.** "Exit /ES" is the S&P future and
+   Yahoo spells it `ES=F`; `ES` on its own is Eversource Energy.
+
+**MEASURED.** 3,000 messages, 194 mirrors dropped, **2,007 actions**
+(1,307 equity and 700 option) and **485 episodes**, all priced. The
+hit rate is **58.9 %** (95 % CI 51.5-65.9) with the excess over SPY at
+**0.00 %**.
+
+**AND HE IS AN INTRADAY TRADER, WHICH THE CLOSE-TO-CLOSE MODEL CANNOT
+SEE.** 285 of his 460 closed episodes are SAME-DAY: he opens and closes
+inside one session, and the model reads that as a flat 0 %. They are
+counted apart, exactly as the same-day trades of the other traders are,
+and the hit rate is over the 175 that were held longer than a day.
+
+## Martin Klass (`martinklass`) -- a daily digest of the earnings (2026-11-27)
+
+Two channels of his own server (1334510084231004202): `trading`
+(1335565442550595594) and `investování` (1338925744147140658).
+**1,013 messages** in all, 2025-02 -> 2026-11.
+
+**THE TWO CHANNELS ARE TWO CLAIM KINDS, AND THAT IS THE WHOLE DESIGN.**
+His `investování` channel posts the day's earnings, one message per
+company, and every one of those messages reports what ALREADY HAPPENED:
+"**🛡️ Ambarella se potýká s nedostatkem paměťových čipů, akcie
+výrazně klesají**". A result cannot be scored, because the price has
+already moved by the time the claim is written -- the same rule the
+Benzinga source follows for "Wedbush's Dan Ives remains very bullish". So
+those readings are RECORDED (149 of them) and NOT scored, and they are the
+context that makes the forward ones readable.
+
+**THE FORWARD CLAIMS ARE SCORED: 52 of them**, with a **measured precision
+of 75.0 %** (a hand-labelled sample of all 52 -- the same class as the
+Benzinga readings' 75 %).
+
+**MEASURED.** 1 week: **42.0 %** against **48.0 %** for the same call on
+SPY. 1 month: 44.2 % against 44.2 %. So he does not beat the index, and
+the excess at one week is +0.65 pp -- inside the noise of 50 calls.
+
+**AND THERE IS A STRUCTURAL CAVEAT THAT MAKES THE NUMBER LATE BY
+CONSTRUCTION.** His forward readings are published AFTER the news that
+moved the name ("it fell 15 %, but I think it will bounce"), so the
+close-to-close model enters after the move.
+
+**THE PARSER IS HIS OWN** (`src/discord/martinklass/`), because he writes
+Czech, and four rules are not the shared ones:
+
+1. **THE HEADLINE DECIDES THE SUBJECT, AND THE BODY CANNOT STEAL IT.** The
+   digest's headline is the claim and the body explains it. Reading the
+   body as a second reading is what put AMZN on a message about AST
+   SpaceMobile.
+2. **THE DIRECTION HAS TO BE IN THE SUBJECT'S OWN SENTENCE.** A digest
+   message names a company and then talks about several others, and a
+   direction word from the next paragraph is not a claim about this one.
+3. **THE COMMODITIES ARE IN CZECH** -- zlato (GLD), stribro (SLV), ropa
+   (USO), psenice (WEAT) -- and the case ending changes the word, so the
+   forms are written out. A call on gold is a call on GLD here, and GLD
+   is the gold MINERS' equity and not the gold price.
+4. **THE COMPANY NAMES GO THROUGH THE SHARED MATCHER**, which is the
+   market's own registrant file -- and which resolves some names and not
+   others ("CrowdStrike" yes, "Ambarella" no).
+
 ## Additive cross-trader layers (2026-11-22)
 
 No rebuild of core `discord_positions` / episodes / clement_posts required.

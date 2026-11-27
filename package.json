@@ -160,7 +160,10 @@
     "discord:attachments": "node tools/fetchDiscordAttachments.js",
     "discord:plechac:portfolios": "node tools/parsePlechacPortfolios.js",
     "discord:monoszon:readings": "node tools/buildDiscordMonoszonReadings.js",
-    "discord:monoszon:outcomes": "node tools/analyzeDiscordMonoszon.js"
+    "discord:monoszon:outcomes": "node tools/analyzeDiscordMonoszon.js",
+    "discord:hariseldon:positions": "node tools/buildDiscordHariSeldonPositions.js",
+    "discord:martinklass:readings": "node tools/buildDiscordMartinKlassReadings.js",
+    "discord:martinklass:outcomes": "node tools/analyzeDiscordMartinKlass.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.11.0",
