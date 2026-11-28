@@ -19,6 +19,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
+const { mediaRoot } = require('./mediaRoot.js');
 
 const argv = process.argv.slice(2);
 const readFlag = (f) => {
@@ -26,8 +27,7 @@ const readFlag = (f) => {
   return i === -1 ? null : argv[i + 1];
 };
 
-const MEDIA_ROOT = readFlag('--media-root')
-  || 'C:/Users/Admin/Projects/portfolio_analyzer_revere_media';
+const MEDIA_ROOT = mediaRoot(readFlag('--media-root'));
 const quiet = argv.includes('--quiet');
 const TOLERANCE = 4;
 

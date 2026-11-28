@@ -25,8 +25,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const ROOT = path.resolve(__dirname, '..');
-const MEDIA_ROOT = 'C:/Users/Admin/Projects/portfolio_analyzer_revere_media';
 const { mediaVideoId } = require('./mediaVideoId.js');
+const { mediaRoot } = require('./mediaRoot.js');
+
+const MEDIA_ROOT = mediaRoot();
 
 const argv = process.argv.slice(2);
 const limit = Number(argv[argv.indexOf('--limit') + 1]) || 0;

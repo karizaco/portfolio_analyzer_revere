@@ -30,6 +30,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const { mediaVideoId } = require('./mediaVideoId.js');
+const { mediaRoot } = require('./mediaRoot.js');
 
 const argv = process.argv.slice(2);
 const readFlag = (f) => {
@@ -37,8 +38,7 @@ const readFlag = (f) => {
   return i === -1 ? null : argv[i + 1];
 };
 
-const MEDIA_ROOT = readFlag('--media-root')
-  || 'C:/Users/Admin/Projects/portfolio_analyzer_revere_media';
+const MEDIA_ROOT = mediaRoot(readFlag('--media-root'));
 const DIR_1080 = path.join(MEDIA_ROOT, 'downloads_1080p');
 const DIR_720 = path.join(MEDIA_ROOT, 'downloads_720p');
 const execute = argv.includes('--execute');

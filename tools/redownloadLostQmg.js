@@ -29,6 +29,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
+const { mediaRoot } = require('./mediaRoot.js');
 
 const argv = process.argv.slice(2);
 const batchSize = Number(readFlag(argv, '--batch')) || 30;
@@ -38,8 +39,7 @@ const dryRun = argv.includes('--dry-run');
 const cookiesFile = readFlag(argv, '--cookies') || 'data/youtube_cookies.txt';
 
 const PROJECT = path.resolve(__dirname, '..');
-const MEDIA_ROOT = readFlag(argv, '--media-root')
-  || 'C:/Users/Admin/Projects/portfolio_analyzer_revere_media';
+const MEDIA_ROOT = mediaRoot(readFlag(argv, '--media-root'));
 const DL_1080 = path.join(MEDIA_ROOT, 'downloads_1080p');
 const DL_720 = path.join(MEDIA_ROOT, 'downloads_720p');
 const DB = path.join(PROJECT, 'data', 'video_pipeline', 'state.sqlite');

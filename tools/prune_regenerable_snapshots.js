@@ -57,10 +57,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const cp = require('node:child_process');
 const { mediaVideoId } = require('./mediaVideoId.js');
+const { mediaRoot } = require('./mediaRoot.js');
 
 const REPO = path.resolve(__dirname, '..');
 const DATA = path.join(REPO, 'data');
-const DEFAULT_MEDIA_ROOT = 'C:/Users/Admin/Projects/portfolio_analyzer_revere_media';
+const DEFAULT_MEDIA_ROOT = mediaRoot();
 const LIVE_RUN_TAG = 'qmg-sweep-20261025';
 
 // Ground-truth benchmark fixtures: the benchmark resolves the WIDEST candidate

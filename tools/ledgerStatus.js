@@ -16,10 +16,10 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
+const { mediaRoot } = require('./mediaRoot.js');
 
 const PROJECT = path.resolve(__dirname, '..');
-const MEDIA_ROOT = readFlag('--media-root')
-  || 'C:/Users/Admin/Projects/portfolio_analyzer_revere_media';
+const MEDIA_ROOT = mediaRoot(readFlag('--media-root'));
 const LEDGER = path.join(PROJECT, 'data', '_lost_videos_ledger.json');
 const DB = path.join(PROJECT, 'data', 'video_pipeline', 'state.sqlite');
 const PY = process.platform === 'win32' ? 'py' : 'python3';

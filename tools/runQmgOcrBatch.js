@@ -18,6 +18,7 @@ const fs = require('node:fs');
 const path = require('path');
 const { spawn, execSync } = require('node:child_process');
 const { mediaVideoId } = require('./mediaVideoId.js');
+const { mediaRoot } = require('./mediaRoot.js');
 
 function readFlag(flag, argv = process.argv.slice(2)) {
   const i = argv.indexOf(flag);
@@ -28,8 +29,7 @@ const ROOT = path.resolve(__dirname, '..');
 // The media lives OUTSIDE the git working tree since the 2026-10-21 loss —
 // see CLAUDE.md. The old in-tree paths are kept only as a fallback so this
 // runner still works on a machine that has never been cleaned out.
-const MEDIA_ROOT = readFlag('--media-root')
-  || 'C:/Users/Admin/Projects/portfolio_analyzer_revere_media';
+const MEDIA_ROOT = mediaRoot(readFlag('--media-root'));
 const VIDEO_DIR_1080 = path.join(MEDIA_ROOT, 'downloads_1080p');
 const VIDEO_DIR_720 = path.join(MEDIA_ROOT, 'downloads_720p');
 const VIDEO_DIR_HIRES = path.join(MEDIA_ROOT, 'downloads_720p');

@@ -27,6 +27,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
+const { mediaRoot } = require('./mediaRoot.js');
 
 const argv = process.argv.slice(2);
 const limit = Number(readFlag(argv, '--limit')) || 30;
@@ -59,11 +60,11 @@ if (![720, 1080].includes(height)) {
 const formatCode = String(height === 720 ? '136' : '137');
 
 const dbPath = path.resolve('data/video_pipeline/state.sqlite');
-// Where the mp4s land. Defaults to the historic in-tree location, but the
-// 2026-10-21 loss showed the media must NOT live inside the git working tree
-// — a sparse-checkout prune took 718 untracked mp4s with it and git could
-// not restore them. Pass --dl-dir to redirect the downloads outside the repo.
-const dlDir = path.resolve(readFlag(argv, '--dl-dir') || 'data/video_pipeline/downloads_1080p');
+// Where the mp4s land. The 2026-10-21 loss showed the media must NOT live
+// inside the git working tree — a sparse-checkout prune took 718 untracked
+// mp4s with it and git could not restore them. The default is therefore the
+// out-of-tree media root (D:, 1.4 TB free), never data/video_pipeline/.
+const dlDir = path.resolve(readFlag(argv, '--dl-dir') || path.join(mediaRoot(), 'downloads_1080p'));
 const checkpointPath = path.join(dlDir, '_qmg_1080p_checkpoint.json');
 
 if (!fs.existsSync(dbPath)) {
@@ -235,10 +236,18 @@ for (const row of todo) {
   const expected = path.join(dlDir, `${uploadDate ? uploadDate + '_' : ''}${videoId}.mp4`);
   if (r.status !== 0 || !fs.existsSync(expected) || fs.statSync(expected).size < 1024 * 1024) {
     errored += 1;
+    // "Sign in to confirm your age" is NOT throttling. It means the video is
+    // genuinely age-restricted and the cookie file has no logged-in session
+    // (no SID/HSID/APISID) to confirm the age. Retrying with the same
+    // cookies fails identically, so it is recorded as its own reason.
+    const output = `${r.stdout || ''}\n${r.stderr || ''}`;
+    const ageRestricted = /Sign in to confirm your age|age-restricted/i.test(output);
     checkpoint.errored[videoId] = {
       upload_date: uploadDate,
       last_error_at: new Date().toISOString(),
       exit_code: r.status,
+      reason: ageRestricted ? 'age_restricted' : 'download_failed',
+      needs_login_cookies: ageRestricted,
       failed_on: RUN_MACHINE,
     };
     saveCheckpoint();

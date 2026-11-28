@@ -34,9 +34,11 @@ const IRREPLACEABLE = [
   'downloads_1080p',
   'downloads_hires',
   'state.sqlite',
-  // The out-of-tree media directory the re-downloads land in. It is a sibling
-  // of the project, so it must be named explicitly — a bare "outside the
-  // project" rule would cover it, but naming it makes the intent obvious.
+  // The out-of-tree media directory the re-downloads land in. It moved from
+  // C:/Users/Admin/Projects/portfolio_analyzer_revere_media (a sibling of the
+  // project) to D:/projects/portfolio_analyzer_revere_media on 2026-11-26,
+  // because C: was at 99% capacity. Matching the bare directory name covers
+  // both locations, so a recursive delete of either one is refused.
   'portfolio_analyzer_revere_media',
 ];
 

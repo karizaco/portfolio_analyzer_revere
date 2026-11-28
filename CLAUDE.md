@@ -196,13 +196,19 @@ OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 KMP_DUPLICATE_LIB_OK=TRUE \
 
 ## Data folder policy
 
-### Download subdirectories (`data/video_pipeline/`)
+### Download subdirectories
+
+**The media now lives on `D:`, NOT under `data/video_pipeline/`.** See
+"The media lives OUTSIDE the git working tree" below.
 
 | Directory | Preferred Resolution | Notes |
 |---|---|---|
-| `downloads/` | 720p | Historically held mixed qullamaggie+revere; currently empty after cleanup |
-| `downloads_hires/` | 720p | Mixed: ~98 revere + ~12 qullamaggie + ~19 unknown (verify via SQLite before deleting) |
-| `downloads_1080p/` | 1080p | qullamaggie 1080p (format 137); verify via ffprobe before assuming resolution |
+| `D:/projects/portfolio_analyzer_revere_media/downloads_1080p/` | 1080p | 677 files: 502 qullamaggie + 149 revere + the 3 new revere + 3 new qullamaggie. Verify by ffprobe before assuming resolution — revere's 1080p uploads are 1670×1080 / 1728×1080 / 1920×1078, **not** 1920×1080 |
+| `D:/projects/portfolio_analyzer_revere_media/downloads_720p/` | 720p | exactly the 39 hardcoded no-1080p videos, 1280×720. **No overlap with downloads_1080p** — there are no duplicates to delete |
+
+The old in-tree `data/video_pipeline/downloads*` directories are historical; the
+`data/video_pipeline/` tree now holds only `state.sqlite` (tracked) and the
+`downloads_*` paths inside it are stale.
 
 Verify channel via SQLite: `SELECT video_id, channel FROM videos WHERE video_id IN (...)`
 Use ffprobe to verify actual resolution — never assume from directory name or filesize.
@@ -283,21 +289,44 @@ sparse-checkout set.** To materialise files, use `git checkout -- <path>`.
 Re-downloaded videos go to:
 
 ```
-C:/Users/Admin/Projects/portfolio_analyzer_revere_media/downloads_1080p/
+D:/projects/portfolio_analyzer_revere_media/downloads_1080p/
+D:/projects/portfolio_analyzer_revere_media/downloads_720p/
 ```
 
-This is a **sibling** of the repo, not a child of it, and that is the point. Verified on
-2026-10-21: `git status` sees 0 entries there, `git ls-files` tracks 0 files there, and
-a full `git clean -ndx` preview lists **0** of them. Even if sparse-checkout were
-re-enabled and pruned the working tree, git has no path to these files. This removes
-the failure mode structurally, rather than relying on the hook to never fire.
+This is on a **different drive** from the repo, not a sibling of it, and that is the
+point. Verified on 2026-10-21: `git status` sees 0 entries in the media tree,
+`git ls-files` tracks 0 files there, and a full `git clean -ndx` preview lists **0** of
+them. Even if sparse-checkout were re-enabled and pruned the working tree, git has no
+path to these files. This removes the failure mode structurally, rather than relying
+on the hook to never fire.
 
-`state.sqlite` stores absolute `download_path` values, so pointing the tooling at the
-new directory needs no code change:
+**The media root moved from C: to D: on 2026-11-26.** It was
+`C:/Users/Admin/Projects/portfolio_analyzer_revere_media`, then C: hit 99% capacity
+(17.5 GB free) with 236 GB of video on it. It now lives on `D:` (1.1 TB free).
+**All 720 files / 253,657,185,935 bytes were copied and verified** — equal file
+counts, per-file size match, equal total bytes, and a 15-file ffprobe sample that
+still decoded — *before* the source was removed. C: went from 17.5 GB free to
+**253 GB free**.
+
+`tools/mediaRoot.js` is the single source of truth for the location:
+
+```js
+const { mediaRoot } = require('./mediaRoot.js');
+const MEDIA_ROOT = mediaRoot();   // --media-root flag → $MEDIA_ROOT → D:/projects/portfolio_analyzer_revere_media
+```
+
+Every media-touching tool resolves its paths through it, so **do not hardcode a
+drive letter** in a new tool. `tools/removeMovedMedia.js` performs the
+verification-gated removal used for the move (it refuses to delete anything unless
+the destination holds a complete, decodable copy) — use it for any future
+relocation rather than `rm -rf`.
+
+`state.sqlite` stores absolute `download_path` values, so a relocation needs the
+paths repointed (that is what `C:/tmp/rewire_db.py` did for all 716 rows):
 
 ```bash
-node tools/downloadQmg1080p.js --limit 30 --dl-dir "C:/Users/Admin/Projects/portfolio_analyzer_revere_media/downloads_1080p"
-node tools/scanVideoWithOcr.js --video-dir "C:/Users/Admin/Projects/portfolio_analyzer_revere_media/downloads_1080p" --file <path> ...
+node tools/downloadQmg1080p.js --limit 30 --dl-dir "D:/projects/portfolio_analyzer_revere_media/downloads_1080p"
+node tools/scanVideoWithOcr.js --video-dir "D:/projects/portfolio_analyzer_revere_media/downloads_1080p" --file <path> ...
 ```
 
 ### Re-downloading a lost video
@@ -334,7 +363,7 @@ directory so they are not mistaken for 1080p media:
 
 ```bash
 node tools/downloadQmg1080p.js --limit 40 --height 720 --only-ids <the 39 ids> \
-  --dl-dir "C:/Users/Admin/Projects/portfolio_analyzer_revere_media/downloads_720p" \
+  --dl-dir "D:/projects/portfolio_analyzer_revere_media/downloads_720p" \
   --cookies data/youtube_cookies.txt
 ```
 
@@ -400,7 +429,7 @@ Measured 2026-10-21 with `tools/snapshotCensus.js` and `tools/snapshotCoverage.j
 |---|---|
 | OCR **text** results | **Intact.** 767 `logs/*_snapshot.json` files under `data/`, 390 with a non-empty `merged_position_list`, 80 distinct date-keys with ticker output. 475 Tesseract, 90 EasyOCR. |
 | Snapshot **images** | **582 of 756 usable** (527 @1920px, 55 @1280px). The 174 low-res ones (640px prefilter samples) come only from `qmg-ocr-20260917-v2` and `qmg-ocr-20260917-missing19`. Every `_rerun` batch dir is 100% usable. |
-| **Videos** | **308 of 718 re-downloaded** into the out-of-tree media dir: 269 @1080p + 39 @720p. All verified by ffprobe — never inferred from filesize. 410 still to go. |
+| **Videos** | **716 of 718 re-downloaded** into the out-of-tree media dir (now on `D:`): 677 @1080p + 39 @720p. All verified by ffprobe — never inferred from filesize. The 2 that remain are the bogus ids `abc123` / `def456`, which were never real videos. |
 
 **The extracted tickers were not lost** — re-downloading the videos is not required to
 keep the OCR results. Re-download only if you need to re-run OCR at a different crop,
@@ -408,20 +437,21 @@ engine, or frame density.
 
 ### Re-download progress
 
-Measured 2026-11-24 against `data/_lost_videos_ledger.json` (718 entries).
-**Every qullamaggie video is recovered.** Only revere remains.
+Measured 2026-11-28 against `data/_lost_videos_ledger.json` (718 entries).
+**The lost set is fully recovered.** There is nothing left to download.
 
 | Scope | Recovered | Remaining |
 |---|---|---|
 | qullamaggie @1080p | 502 | 0 |
 | qullamaggie @720p-scope | 26 | 0 |
 | qullamaggie @720p — the hardcoded 39 | 39 | 0 |
-| revere @720p-scope | 140 | 11 |
-| **Total** | **707 / 718** | **11** |
+| revere @720p-scope | 149 | 2 |
+| **Total** | **716 / 718** | **2** |
 
-Two of the 11 remaining are **bogus placeholder ids** (`abc123`, `def456`) that
-were added to the ledger by mistake — they are not real YouTube ids, so they can
-never download. The real remaining set is **9 revere videos**, each ~0.09 GiB.
+The 2 remaining are **bogus placeholder ids** (`abc123`, `def456`) that were added
+to the ledger by mistake — they are not valid YouTube ids (6 characters), so they
+can never download. **716 distinct video ids are on disk across
+`downloads_1080p` and `downloads_720p`.**
 
 > The ledger also counts one video in two scopes (541 + 26 + 151 = 718, but the
 > ledger's 718 entries include both placeholders). Use the ledger, not the live
@@ -432,10 +462,17 @@ never download. The real remaining set is **9 revere videos**, each ~0.09 GiB.
 known 720p-only videos and `downloads_1080p` shares none of them, so nothing is
 eligible for deletion under "delete the 720p copy once the 1080p exists".
 
-Note the two naming conventions in the media dirs — `20260912_7t50ZiB7-Bk.mp4`
-(date-prefixed, from the earlier run) and `-3qtA_s7g9c.mp4` (bare video id, from
-the later run). A filename regex that expects a date prefix will silently miss
-the bare-id files.
+**Video ids must be parsed with `tools/mediaVideoId.js`, not a `^\d+_` regex.**
+The downloader writes `<upload_date>_<video_id>.mp4` when the catalog has an
+upload date, and a bare `<video_id>.mp4` when it does not — 517 of 716 files are
+bare. A `^\d+_` strip **truncates ids that legitimately start with digits**
+(`438_cyYQ888` → `cyYQ888`, `0_inu2Isf4k` → `inu2Isf4k`), which makes real videos
+look absent from disk. Strip exactly the 8-digit date prefix:
+
+```js
+const { mediaVideoId } = require('./mediaVideoId.js');
+const id = mediaVideoId(fileName);   // '20220218_Cd_IXyHwO3o.mp4' -> 'Cd_IXyHwO3o'
+```
 
 To continue, repeat the same three steps for the next batch of ids:
 
@@ -443,7 +480,7 @@ To continue, repeat the same three steps for the next batch of ids:
 py -3 tools/resetLostVideoRows.py --ids <comma-separated ids> --dry-run
 py -3 tools/resetLostVideoRows.py --ids <comma-separated ids>
 node tools/downloadQmg1080p.js --limit 30 --only-ids <same ids> \
-  --dl-dir "C:/Users/Admin/Projects/portfolio_analyzer_revere_media/downloads_1080p" \
+  --dl-dir "D:/projects/portfolio_analyzer_revere_media/downloads_1080p" \
   --cookies data/youtube_cookies.txt
 ```
 
@@ -455,16 +492,14 @@ command after an interruption picks up exactly the stragglers.
 file with ffprobe. Use it for a single batch:
 
 ```bash
-node tools/redownloadLostQmg.js --batch 30 --media-root "C:/Users/Admin/Projects/portfolio_analyzer_revere_media"
+node tools/redownloadLostQmg.js --batch 30 --media-root "D:/projects/portfolio_analyzer_revere_media"
 ```
 
-**Disk is now the binding constraint, and it is tight.** C: sat at **20 GB free
-(98% used)** on 2026-11-24, with the media dir holding 236 GB of the 933 GB in
-use — the rest of the volume is the user's own files and is not ours to touch.
-The remaining 9 revere videos need ~0.9 GB, which just fits. The downloader
-enforces a floor itself: pass `--min-free-gb 20` and it stops before dipping
-below it. The project's own footprint is small (`data/` is 2.3 GB total), so
-reclaiming space means deleting media, not project artifacts.
+**Disk is no longer the binding constraint.** Moving the media to `D:` on
+2026-11-26 took C: from **17.5 GB free (99% used)** to **253 GB free (74% used)**
+— 236 GiB reclaimed. `D:` has **1.1 TB free**. The 20 GB floor still applies to
+every disk-consuming operation (the user set it explicitly), but it is not
+binding at either location any more.
 
 The `frames/` subdirectories under `data/video_scan_test/_rerun/` hold
 regenerable OCR intermediate PNGs and are the cheapest thing to reclaim — but
@@ -472,6 +507,45 @@ they are **not** covered by `tools/prune_old_probes.js`, which only handles
 `data/video_ocr_probe/`. The scan *results* (`logs/*.json`) and snapshots live
 outside `frames/` and are untouched by that cleanup. Stale `frames/` dirs from a
 crashed run are safe to delete once you have confirmed no scan is using them.
+
+### Genuine age restrictions need a LOGGED-IN cookie session — not a retry
+
+**CLAUDE.md used to say "age restriction = fake = rate-limited". That is wrong
+in general, and it was wrong on 2026-11-27.** The rule conflated two different
+failures. The diagnostic that separates them:
+
+| Test | Result | Conclusion |
+|---|---|---|
+| A known-good video from the same channel, same cookies, same client, same minute | lists format 137 normally | the session is **not** throttled |
+| Another video from the same channel | `"Sign in to confirm your age"` | that video is **genuinely age-restricted** |
+
+A rate limit produces `"This content isn't available, try again later"` /
+`"rate-limited by YouTube for up to an hour"` on *every* request. A genuine age
+gate produces `"Sign in to confirm your age"` on *specific* videos while others
+download normally.
+
+**The root cause of a real age-gate failure is an anonymous cookie file.**
+`data/youtube_cookies.txt` currently carries only visitor cookies (`VISITOR_INFO1_LIVE`,
+`YSC`, `PREF`, `SOCS`, …) and **no `SID`, `HSID`, `SSID`, `APISID`, `SAPISID` or
+`__Secure-3PSID`** — i.e. no logged-in session, so nothing can confirm an age
+gate. `--cookies-from-browser firefox` / `chrome` does not help unless the
+browser itself is logged in to a verified account; `edge` fails with
+`Failed to decrypt with DPAPI`.
+
+**What worked on 2026-11-27:** the 3 revere videos (`aM57wbGKKqE`, `OYIhZ4gjwL0`,
+`YiEcAWyATLA`) downloaded fine on the same cookies, while 3 qullamaggie videos
+(`te9tmNOA38I`, `xNL-i3acbVk`, `fhH3wxpQxxE`) failed on every client
+(`visionos`, `mweb`, `ios`, `web_safari`, `tv`, `tv_simply`, `web`) with the
+identical error. Those 3 need a **fresh cookie export from a logged-in,
+age-verified browser session** — a retry with the same anonymous cookies will
+fail identically.
+
+**`WinError 10048` ("Only one usage of each socket address") is a different
+problem** — the machine's ephemeral port pool is exhausted by *other*
+applications' TIME_WAIT sockets (21k on 2026-11-27, mostly from the user's own
+Grok Bot / TradingView / Firefox / IBKR TWS, not from our downloads). It is
+transient and a retry succeeds: `tools/retryOneDownload.js` retries with backoff
+and aborts early on the age-restriction error, which is not transient.
 
 ### OCR on the restored media — validated 2026-10-24
 
@@ -482,7 +556,7 @@ the restored files work end-to-end with the OCR pipeline. Run tag
 ```bash
 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 KMP_DUPLICATE_LIB_OK=TRUE \
 node tools/scanVideoWithOcr.js \
-  --video "C:/Users/Admin/Projects/portfolio_analyzer_revere_media/downloads_1080p/20220218_Cd_IXyHwO3o.mp4" \
+  --video "D:/projects/portfolio_analyzer_revere_media/downloads_1080p/20220218_Cd_IXyHwO3o.mp4" \
   --date 20220218 --output-root data/video_scan_20261024 --run-tag qmg-restore-20261024 \
   --prefilter-profile chart_stream --chart-stream-parser --basename qmg \
   --output-kind snapshot --ocr-engine easyocr --fps 0.25 --prefilter-max-frames 12 \
@@ -608,7 +682,7 @@ output when there is no ground truth to score against.
 **"Already scanned" must be tracked per VIDEO, not per date.** Several videos
 share an interpolated date, so a date-keyed set hides all but one of them.
 
-**Status as of 2026-11-25**: the sweep has 106 videos done and 0 failed, with
+**Status as of 2026-11-27**: the sweep has 144 videos done and 0 failed, with
 ~370 candidates still to go. It runs in the background at `--parallel 2`; each
 video takes 150-450 s. Its state lives in `data/qmg_ocr_sweep.json` (`done` and
 `failed` maps) and it is safe to stop and restart — the work list is derived
@@ -643,7 +717,7 @@ those are the pre-chart-stream months.
 npm test        # node --test test/*.test.js
 ```
 
-192 tests, all passing (as of 2026-10-21).
+197 tests, all passing (as of 2026-11-27).
 
 ### Ground-truth benchmark fixtures — read before trusting a recall number
 
@@ -730,10 +804,11 @@ scan daemon must use:
   Without this, a broken run silently destroyed a good results file (this happened to
   `data/qmg_comparison_results.json` on 2026-10-19).
 
-**Disk space is a live constraint.** `data/video_pipeline/downloads_1080p` alone is ~215 GB and
-`data/video_scan_test/_rerun` grows by ~400 MB per video. The `frames/` subdirectory of each
-run tag holds regenerable intermediate PNGs and is the cheapest thing to reclaim — but it is
-not covered by `tools/prune_old_probes.js` (which only handles `data/video_ocr_probe/`).
+**Disk space is no longer tight.** The media moved to `D:` (1.1 TB free) on 2026-11-26;
+C: has 253 GB free. `data/video_scan_test/_rerun` still grows by ~400 MB per video, and
+the `frames/` subdirectory of each run tag holds regenerable intermediate PNGs — the
+cheapest thing to reclaim, but it is not covered by `tools/prune_old_probes.js` (which
+only handles `data/video_ocr_probe/`).
 
 Batch files: `data/qmg_alt_batch.json` (alt) and `data/video_scan_batch_remaining.json` (baseline).
 Results: `data/qmg_alt_batch_results.json` and `data/video_scan_batch_remaining_results.json`.
@@ -789,8 +864,9 @@ node tools/runWhiteboardWorker.js catalog --channel qullamaggie --source-url htt
 # Download hires
 node tools/downloadHiresBatch.js --only-ids <ids> --height 720
 
-# OCR scan (qullamaggie)
-node tools/scanVideoWithOcr.js --video-dir data/video_pipeline/downloads_hires/ --file <video.mp4> \
+# OCR scan (qullamaggie) — the media is on D:
+node tools/scanVideoWithOcr.js \
+  --video-dir "D:/projects/portfolio_analyzer_revere_media/downloads_1080p" --file <video.mp4> \
   --prefilter-profile chart_stream --chart-stream-parser --basename qmg --output-kind snapshot
 
 # Aggregate
