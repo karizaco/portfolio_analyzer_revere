@@ -4,7 +4,8 @@
 
 const fs = require('fs');
 const path = require('path');
-const { spawn, execSync } = require('child_process');
+const { execSync } = require('child_process');
+const { superviseChild } = require('./qmg_scan_daemon_support');
 
 const ROOT = path.resolve(__dirname, '..');
 const VIDEO_DIR = path.join(ROOT, 'data/video_pipeline/downloads_hires');
@@ -22,38 +23,57 @@ function parseArgs(argv) {
   return args;
 }
 
-function runScan(videoId, videoPath, dateKey, runTag, options) {
-  return new Promise((resolve) => {
-    const cmd = [
-      'node', path.join(ROOT, 'tools', 'scanVideoWithOcr.js'),
-      '--video', videoPath,
-      '--date', dateKey,
-      '--basename', 'revere',
-      '--output-kind', 'whiteboard',
-      '--output-root', OUT_ROOT,
-      '--run-tag', runTag,
-      '--max-captures', String(options.maxCaptures),
-      '--fps', String(options.fps),
-      '--prefilter-max-frames', String(options.prefilterMaxFrames),
-    ];
-    const child = spawn(cmd[0], cmd.slice(1), { stdio: ['ignore', 'pipe', 'pipe'] });
-    let stdout = '';
-    let stderr = '';
-    child.stdout.on('data', (d) => { stdout += d.toString(); });
-    child.stderr.on('data', (d) => { stderr += d.toString(); });
-    const killTimer = setTimeout(() => {
-      child.kill('SIGTERM');
-      resolve({ videoId, dateKey, stdout, stderr, status: -1, timedOut: true });
-    }, 600 * 1000);
-    child.on('close', (code) => {
-      clearTimeout(killTimer);
-      resolve({ videoId, dateKey, stdout, stderr, status: code, timedOut: false });
-    });
-    child.on('error', (err) => {
-      clearTimeout(killTimer);
-      resolve({ videoId, dateKey, stdout, stderr, status: -1, timedOut: false, error: err.message });
-    });
+/**
+ * Was the scan a success?
+ *
+ * The answer comes from the PROBE LOG on disk, not from the child's stdout.
+ * The scan tool prints its whole result object to stdout at the very end,
+ * and `status` sits AFTER the huge `captures` array in that object — so a
+ * bounded stdout tail cannot be trusted to carry it. The probe log is the
+ * authoritative record anyway (CLAUDE.md: the log on disk is what a reader
+ * consumes), and it is written BEFORE the tool's final console.log, so it
+ * exists even on the run that used to hang.
+ */
+function readProbeStatus(runTag, dateKey) {
+  const logsDir = path.join(OUT_ROOT, runTag, 'ocr_probe', 'logs');
+  try {
+    const file = fs.readdirSync(logsDir).find((f) => f.startsWith(`${dateKey}_`) && f.endsWith('.json'));
+    if (!file) return null;
+    const log = JSON.parse(fs.readFileSync(path.join(logsDir, file), 'utf8'));
+    return log.status || null;
+  } catch (_) {
+    return null;
+  }
+}
+
+async function runScan(videoId, videoPath, dateKey, runTag, options) {
+  const cmd = [
+    'node', path.join(ROOT, 'tools', 'scanVideoWithOcr.js'),
+    '--video', videoPath,
+    '--date', dateKey,
+    '--basename', 'revere',
+    '--output-kind', 'whiteboard',
+    '--output-root', OUT_ROOT,
+    '--run-tag', runTag,
+    '--max-captures', String(options.maxCaptures),
+    '--fps', String(options.fps),
+    '--prefilter-max-frames', String(options.prefilterMaxFrames),
+  ];
+  // superviseChild() DRAINS the child's stdout and kills the whole process
+  // TREE on timeout. See tools/qmg_scan_daemon_support.js.
+  const { status, code, stdoutTail, stderr } = await superviseChild(cmd, process.env, {
+    timeoutMs: 600 * 1000,
   });
+  const probeStatus = readProbeStatus(runTag, dateKey);
+  return {
+    videoId,
+    dateKey,
+    stdout: stdoutTail,
+    stderr,
+    status: status === 'TIMEOUT' ? -1 : (code === null ? -1 : code),
+    timedOut: status === 'TIMEOUT',
+    probeStatus,
+  };
 }
 
 function sleep(ms) {
@@ -100,7 +120,11 @@ async function main(argv) {
       promise.then((r) => {
         const idx = running.indexOf(promise);
         if (idx >= 0) running.splice(idx, 1);
-        const ok = r.status === 0 || (r.stdout && r.stdout.includes('"status": "done"'));
+        // A scan counts as OK when the tool exited cleanly, or when its probe
+        // log says it finished — the log is written before the tool's final
+        // console.log, so a run that used to hang after writing its log
+        // still counts as what it was: a successful scan.
+        const ok = r.status === 0 || r.probeStatus === 'done';
         if (ok) {
           console.log(`OK`);
         } else if (r.timedOut) {

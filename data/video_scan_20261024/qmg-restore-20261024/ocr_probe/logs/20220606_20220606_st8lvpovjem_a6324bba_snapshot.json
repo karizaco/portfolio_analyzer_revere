@@ -1,0 +1,3708 @@
+{
+  "basename": "qmg",
+  "channel": "qmg",
+  "chart_stream_parser": true,
+  "date_key": "20220606",
+  "output_kind": "snapshot",
+  "pipeline_profile": "legacy",
+  "phash_region": null,
+  "phash_region_fraction": {
+    "x": 0.86,
+    "y": 0.62,
+    "w": 0.14,
+    "h": 0.22
+  },
+  "prefilter_profile": "chart_stream",
+  "temporal_decay": 1800,
+  "video_path": "C:\\Users\\Admin\\Projects\\portfolio_analyzer_revere_media\\downloads_1080p\\20220606_ST8lvpOVjeM.mp4",
+  "captured_count": 1,
+  "captures": [
+    {
+      "chart_stream": {
+        "confidence": 1,
+        "parse_status": "ok",
+        "position_list": [
+          "CBIO",
+          "DOL",
+          "INA",
+          "LABU",
+          "NFU",
+          "OON",
+          "OTNA",
+          "SIGA",
+          "UCO",
+          "VLO"
+        ],
+        "price_action": "",
+        "tickers_rejected": 11,
+        "column_filter": {
+          "column_width": 50,
+          "dominant_x": 513,
+          "in_list_token_count": 5
+        },
+        "bbox_filter": {
+          "y_median": 589,
+          "line_height": 54,
+          "y_min": 157,
+          "y_max": 1021,
+          "rejected_count": 1
+        },
+        "panel_gate": null,
+        "tickers_rejected_list": [
+          "A",
+          "S",
+          "SYMS",
+          "PRC",
+          "BUZZ",
+          "E",
+          "SYM",
+          "OAN",
+          "ARITH",
+          "FOM",
+          "X"
+        ]
+      },
+      "confusion_with_nearby": [
+        {
+          "frame_index": 6,
+          "timestamp": 45.42857142857143,
+          "prefilter_score": 27.59,
+          "score": 28.27,
+          "score_breakdown": null,
+          "screen_layout": "chart"
+        }
+      ],
+      "frame_index": 7,
+      "frame_path": "C:\\Users\\Admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-restore-20261024\\ocr_probe\\frames\\20220606_20220606_st8lvpovjem_a6324bba_snapshot\\ocr\\ocr_000008.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": 48,
+      "observed_date": null,
+      "ocr_confidence": 0.5041173149813424,
+      "ocr_profile": "",
+      "ocr_text": "7eenn uachin\nA Positions S Syms +X\nPrc Buzz Macoen\nE, Sym Oan Dol\n60,00\nLABU 6,653 2,63| 15,99\nINA 43723 3133 844\nNFU  1673 043 5,64\n58,00\nVLO 40763 02 405|\nCBIO 0c03 ~0z| 78,10\nUCO otna 2,33 504\nArith SIGA oon 8,83 16,35\nFom",
+      "ocr_text_snippet": "7eenn uachin A Positions S Syms +X Prc Buzz Macoen E, Sym Oan Dol 60,00 LABU 6,653 2,63| 15,99 INA 43723 3133 844 NFU 1673 043 5,64 58,00 VLO 40763 02 405| CBIO 0c03 ~0z| 78,10 UCO otna 2,33 504 Ar...",
+      "ocr_words": [
+        {
+          "text": "7eenn uachin",
+          "left": 368,
+          "top": 26,
+          "width": 348,
+          "height": 51,
+          "conf": 0.003963399198518035,
+          "line": 0
+        },
+        {
+          "text": "A",
+          "left": 358,
+          "top": 106,
+          "width": 48,
+          "height": 54,
+          "conf": 0.8802013396198163,
+          "line": 1
+        },
+        {
+          "text": "+X",
+          "left": 1227,
+          "top": 103,
+          "width": 117,
+          "height": 62,
+          "conf": 0.2746932925519026,
+          "line": 1
+        },
+        {
+          "text": "Positions",
+          "left": 439,
+          "top": 105,
+          "width": 232,
+          "height": 60,
+          "conf": 0.9976764286010502,
+          "line": 1
+        },
+        {
+          "text": "S",
+          "left": 794,
+          "top": 110,
+          "width": 52,
+          "height": 52,
+          "conf": 0.2077609453327165,
+          "line": 1
+        },
+        {
+          "text": "Syms",
+          "left": 912,
+          "top": 110,
+          "width": 112,
+          "height": 52,
+          "conf": 0.30997833609580994,
+          "line": 1
+        },
+        {
+          "text": "Macoen",
+          "left": 1079,
+          "top": 192,
+          "width": 204,
+          "height": 42,
+          "conf": 0.007103001357316293,
+          "line": 2
+        },
+        {
+          "text": "Prc Buzz",
+          "left": 846,
+          "top": 198,
+          "width": 182,
+          "height": 56,
+          "conf": 0.6837862819535769,
+          "line": 2
+        },
+        {
+          "text": "Oan",
+          "left": 664,
+          "top": 204,
+          "width": 137,
+          "height": 49,
+          "conf": 0.044948311423423,
+          "line": 3
+        },
+        {
+          "text": "Sym",
+          "left": 447,
+          "top": 201,
+          "width": 102,
+          "height": 62,
+          "conf": 0.9971721172332764,
+          "line": 3
+        },
+        {
+          "text": "E,",
+          "left": 347.31343420861634,
+          "top": 206.11906469908024,
+          "width": 87.37313158276731,
+          "height": 54.76187060183952,
+          "conf": 0.024765114200279305,
+          "line": 3
+        },
+        {
+          "text": "Dol",
+          "left": 1077,
+          "top": 223,
+          "width": 75,
+          "height": 41,
+          "conf": 0.030231087461250104,
+          "line": 3
+        },
+        {
+          "text": "60,00",
+          "left": 136,
+          "top": 240,
+          "width": 138,
+          "height": 54,
+          "conf": 0.6246661082831317,
+          "line": 4
+        },
+        {
+          "text": "LABU",
+          "left": 454,
+          "top": 290,
+          "width": 120,
+          "height": 54,
+          "conf": 0.9987228512763977,
+          "line": 5
+        },
+        {
+          "text": "6,653",
+          "left": 708,
+          "top": 290,
+          "width": 138,
+          "height": 54,
+          "conf": 0.8570595784028645,
+          "line": 5
+        },
+        {
+          "text": "15,99",
+          "left": 1182,
+          "top": 290,
+          "width": 122,
+          "height": 56,
+          "conf": 0.7870531886638754,
+          "line": 5
+        },
+        {
+          "text": "2,63|",
+          "left": 962,
+          "top": 292,
+          "width": 112,
+          "height": 54,
+          "conf": 0.393569892532889,
+          "line": 5
+        },
+        {
+          "text": "INA",
+          "left": 452,
+          "top": 382,
+          "width": 104,
+          "height": 52,
+          "conf": 0.6646903653289798,
+          "line": 6
+        },
+        {
+          "text": "844",
+          "left": 1202,
+          "top": 380,
+          "width": 100,
+          "height": 56,
+          "conf": 0.6657214149672902,
+          "line": 6
+        },
+        {
+          "text": "43723",
+          "left": 679,
+          "top": 376,
+          "width": 167,
+          "height": 66,
+          "conf": 0.04261838793933482,
+          "line": 6
+        },
+        {
+          "text": "3133",
+          "left": 940,
+          "top": 382,
+          "width": 134,
+          "height": 56,
+          "conf": 0.024892747402191162,
+          "line": 6
+        },
+        {
+          "text": "NFU",
+          "left": 452,
+          "top": 472,
+          "width": 122,
+          "height": 52,
+          "conf": 0.6102034440987335,
+          "line": 7
+        },
+        {
+          "text": "043",
+          "left": 962,
+          "top": 472,
+          "width": 114,
+          "height": 54,
+          "conf": 0.3997326047496876,
+          "line": 7
+        },
+        {
+          "text": "5,64",
+          "left": 1204,
+          "top": 472,
+          "width": 100,
+          "height": 54,
+          "conf": 0.9991397857666016,
+          "line": 7
+        },
+        {
+          "text": "",
+          "left": 688,
+          "top": 488,
+          "width": 26,
+          "height": 26,
+          "conf": 0,
+          "line": 7
+        },
+        {
+          "text": "1673",
+          "left": 712,
+          "top": 474,
+          "width": 134,
+          "height": 54,
+          "conf": 0.46614620089530945,
+          "line": 7
+        },
+        {
+          "text": "58,00",
+          "left": 138,
+          "top": 530,
+          "width": 138,
+          "height": 54,
+          "conf": 0.65281409539963,
+          "line": 8
+        },
+        {
+          "text": "VLO",
+          "left": 452,
+          "top": 562,
+          "width": 100,
+          "height": 54,
+          "conf": 0.67466462659543,
+          "line": 9
+        },
+        {
+          "text": "40763",
+          "left": 684,
+          "top": 562,
+          "width": 160,
+          "height": 56,
+          "conf": 0.18094483994404256,
+          "line": 9
+        },
+        {
+          "text": "405|",
+          "left": 1202,
+          "top": 562,
+          "width": 102,
+          "height": 56,
+          "conf": 0.31784239411354065,
+          "line": 9
+        },
+        {
+          "text": "02",
+          "left": 964,
+          "top": 564,
+          "width": 112,
+          "height": 54,
+          "conf": 0.9784253891132474,
+          "line": 9
+        },
+        {
+          "text": "CBIO",
+          "left": 452,
+          "top": 650,
+          "width": 114,
+          "height": 56,
+          "conf": 0.8553732633590698,
+          "line": 10
+        },
+        {
+          "text": "0c03",
+          "left": 710,
+          "top": 652,
+          "width": 138,
+          "height": 54,
+          "conf": 0.19065503776073456,
+          "line": 10
+        },
+        {
+          "text": "~0z|",
+          "left": 940,
+          "top": 654,
+          "width": 134,
+          "height": 50,
+          "conf": 0.03698889538645744,
+          "line": 10
+        },
+        {
+          "text": "78,10",
+          "left": 1184,
+          "top": 652,
+          "width": 120,
+          "height": 54,
+          "conf": 0.859599033338942,
+          "line": 10
+        },
+        {
+          "text": "otna",
+          "left": 700,
+          "top": 742,
+          "width": 146,
+          "height": 52,
+          "conf": 0.0367550291121006,
+          "line": 11
+        },
+        {
+          "text": "504",
+          "left": 1204,
+          "top": 742,
+          "width": 98,
+          "height": 52,
+          "conf": 0.9299184846585741,
+          "line": 11
+        },
+        {
+          "text": "UCO",
+          "left": 454,
+          "top": 742,
+          "width": 106,
+          "height": 56,
+          "conf": 0.9722086523868689,
+          "line": 11
+        },
+        {
+          "text": "2,33",
+          "left": 964,
+          "top": 744,
+          "width": 112,
+          "height": 54,
+          "conf": 0.3195363280452883,
+          "line": 11
+        },
+        {
+          "text": "SIGA",
+          "left": 452,
+          "top": 832,
+          "width": 112,
+          "height": 54,
+          "conf": 0.9841675758361816,
+          "line": 12
+        },
+        {
+          "text": "oon",
+          "left": 708,
+          "top": 832,
+          "width": 140,
+          "height": 54,
+          "conf": 0.022708324265752124,
+          "line": 12
+        },
+        {
+          "text": "16,35",
+          "left": 1184,
+          "top": 832,
+          "width": 120,
+          "height": 56,
+          "conf": 0.9585358149371284,
+          "line": 12
+        },
+        {
+          "text": "8,83",
+          "left": 962,
+          "top": 834,
+          "width": 114,
+          "height": 54,
+          "conf": 0.14351177215576172,
+          "line": 12
+        },
+        {
+          "text": "Arith",
+          "left": 132,
+          "top": 836,
+          "width": 145,
+          "height": 67,
+          "conf": 0.9947927455645409,
+          "line": 12
+        },
+        {
+          "text": "Fom",
+          "left": 136,
+          "top": 1086,
+          "width": 122,
+          "height": 50,
+          "conf": 0.07522333186954613,
+          "line": 13
+        }
+      ],
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "bf29f2a1d264ccd0",
+      "phash_overlay": "d02f25216df6d2d1",
+      "phash_region": {
+        "x": 0.86,
+        "y": 0.62,
+        "w": 0.14,
+        "h": 0.22
+      },
+      "prefilter_profile": "chart_stream",
+      "prefilter_score": 27.59,
+      "prefilter_stats": {
+        "brightRatio": 0.011111111111111112,
+        "darkRatio": 0.9547222222222222,
+        "edgeRatio": 0.10942689562575084,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1319,
+        "horizontalEdgeRatio": 0.09320896049749135,
+        "meanLuma": 17.06277777777778,
+        "rowDensity": 3,
+        "multiColStripeCount": 0,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 159,
+        "midToneRatioTicker": 0.8333333333333334,
+        "stdDev": 37.41135935716073,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1778,
+        "verticalEdgeRatio": 0.1256448307540103,
+        "timestamp": 46
+      },
+      "score": 28.28,
+      "score_breakdown": null,
+      "screen_layout": "chart",
+      "tickers": [
+        "CBIO",
+        "DOL",
+        "INA",
+        "LABU",
+        "NFU",
+        "OON",
+        "OTNA",
+        "SIGA",
+        "UCO",
+        "VLO"
+      ],
+      "timestamp": 46,
+      "timestamp_hms": "00:00:46",
+      "output_path": "C:\\Users\\Admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-restore-20261024\\snapshots\\qmg_20220606.png"
+    }
+  ],
+  "frame_count": 759,
+  "frame_error_count": 0,
+  "frame_errors": [],
+  "max_captures_per_video": 3,
+  "nearest_ffmpeg_keyframe_lookups_skipped": false,
+  "nearest_ffmpeg_keyframe_pts_total": 571,
+  "ocr_engine_metadata": {
+    "ocr_engine": "easyocr",
+    "tesseract_version": "6.0.1",
+    "language": "eng",
+    "dpi": 300,
+    "psm": null,
+    "preserve_interword_spaces": "1",
+    "deskew": false
+  },
+  "ocr_frame_count": 8,
+  "ocr_frame_width": 1280,
+  "output_path": "C:\\Users\\Admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-restore-20261024\\snapshots\\qmg_20220606.png",
+  "prefilter_best_score": 27.59,
+  "review_threshold": 4,
+  "sample_frame_width": 640,
+  "status": "done",
+  "strong_threshold": 6,
+  "top_candidate": {
+    "chart_stream": {
+      "confidence": 1,
+      "parse_status": "ok",
+      "position_list": [
+        "CBIO",
+        "DOL",
+        "INA",
+        "LABU",
+        "NFU",
+        "OON",
+        "OTNA",
+        "SIGA",
+        "UCO",
+        "VLO"
+      ],
+      "price_action": "",
+      "tickers_rejected": 11,
+      "column_filter": {
+        "column_width": 50,
+        "dominant_x": 513,
+        "in_list_token_count": 5
+      },
+      "bbox_filter": {
+        "y_median": 589,
+        "line_height": 54,
+        "y_min": 157,
+        "y_max": 1021,
+        "rejected_count": 1
+      },
+      "panel_gate": null,
+      "tickers_rejected_list": [
+        "A",
+        "S",
+        "SYMS",
+        "PRC",
+        "BUZZ",
+        "E",
+        "SYM",
+        "OAN",
+        "ARITH",
+        "FOM",
+        "X"
+      ]
+    },
+    "confusion_with_nearby": [
+      {
+        "frame_index": 6,
+        "timestamp": 45.42857142857143,
+        "prefilter_score": 27.59,
+        "score": 28.27,
+        "score_breakdown": null,
+        "screen_layout": "chart"
+      }
+    ],
+    "frame_index": 7,
+    "frame_path": "C:\\Users\\Admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-restore-20261024\\ocr_probe\\frames\\20220606_20220606_st8lvpovjem_a6324bba_snapshot\\ocr\\ocr_000008.png",
+    "is_intro_card": false,
+    "issue_codes": [],
+    "low_res_frame_path": null,
+    "nearest_ffmpeg_keyframe_ts": 48,
+    "observed_date": null,
+    "ocr_confidence": 0.5041173149813424,
+    "ocr_profile": "",
+    "ocr_text": "7eenn uachin\nA Positions S Syms +X\nPrc Buzz Macoen\nE, Sym Oan Dol\n60,00\nLABU 6,653 2,63| 15,99\nINA 43723 3133 844\nNFU  1673 043 5,64\n58,00\nVLO 40763 02 405|\nCBIO 0c03 ~0z| 78,10\nUCO otna 2,33 504\nArith SIGA oon 8,83 16,35\nFom",
+    "ocr_text_snippet": "7eenn uachin A Positions S Syms +X Prc Buzz Macoen E, Sym Oan Dol 60,00 LABU 6,653 2,63| 15,99 INA 43723 3133 844 NFU 1673 043 5,64 58,00 VLO 40763 02 405| CBIO 0c03 ~0z| 78,10 UCO otna 2,33 504 Ar...",
+    "ocr_words": [
+      {
+        "text": "7eenn uachin",
+        "left": 368,
+        "top": 26,
+        "width": 348,
+        "height": 51,
+        "conf": 0.003963399198518035,
+        "line": 0
+      },
+      {
+        "text": "A",
+        "left": 358,
+        "top": 106,
+        "width": 48,
+        "height": 54,
+        "conf": 0.8802013396198163,
+        "line": 1
+      },
+      {
+        "text": "+X",
+        "left": 1227,
+        "top": 103,
+        "width": 117,
+        "height": 62,
+        "conf": 0.2746932925519026,
+        "line": 1
+      },
+      {
+        "text": "Positions",
+        "left": 439,
+        "top": 105,
+        "width": 232,
+        "height": 60,
+        "conf": 0.9976764286010502,
+        "line": 1
+      },
+      {
+        "text": "S",
+        "left": 794,
+        "top": 110,
+        "width": 52,
+        "height": 52,
+        "conf": 0.2077609453327165,
+        "line": 1
+      },
+      {
+        "text": "Syms",
+        "left": 912,
+        "top": 110,
+        "width": 112,
+        "height": 52,
+        "conf": 0.30997833609580994,
+        "line": 1
+      },
+      {
+        "text": "Macoen",
+        "left": 1079,
+        "top": 192,
+        "width": 204,
+        "height": 42,
+        "conf": 0.007103001357316293,
+        "line": 2
+      },
+      {
+        "text": "Prc Buzz",
+        "left": 846,
+        "top": 198,
+        "width": 182,
+        "height": 56,
+        "conf": 0.6837862819535769,
+        "line": 2
+      },
+      {
+        "text": "Oan",
+        "left": 664,
+        "top": 204,
+        "width": 137,
+        "height": 49,
+        "conf": 0.044948311423423,
+        "line": 3
+      },
+      {
+        "text": "Sym",
+        "left": 447,
+        "top": 201,
+        "width": 102,
+        "height": 62,
+        "conf": 0.9971721172332764,
+        "line": 3
+      },
+      {
+        "text": "E,",
+        "left": 347.31343420861634,
+        "top": 206.11906469908024,
+        "width": 87.37313158276731,
+        "height": 54.76187060183952,
+        "conf": 0.024765114200279305,
+        "line": 3
+      },
+      {
+        "text": "Dol",
+        "left": 1077,
+        "top": 223,
+        "width": 75,
+        "height": 41,
+        "conf": 0.030231087461250104,
+        "line": 3
+      },
+      {
+        "text": "60,00",
+        "left": 136,
+        "top": 240,
+        "width": 138,
+        "height": 54,
+        "conf": 0.6246661082831317,
+        "line": 4
+      },
+      {
+        "text": "LABU",
+        "left": 454,
+        "top": 290,
+        "width": 120,
+        "height": 54,
+        "conf": 0.9987228512763977,
+        "line": 5
+      },
+      {
+        "text": "6,653",
+        "left": 708,
+        "top": 290,
+        "width": 138,
+        "height": 54,
+        "conf": 0.8570595784028645,
+        "line": 5
+      },
+      {
+        "text": "15,99",
+        "left": 1182,
+        "top": 290,
+        "width": 122,
+        "height": 56,
+        "conf": 0.7870531886638754,
+        "line": 5
+      },
+      {
+        "text": "2,63|",
+        "left": 962,
+        "top": 292,
+        "width": 112,
+        "height": 54,
+        "conf": 0.393569892532889,
+        "line": 5
+      },
+      {
+        "text": "INA",
+        "left": 452,
+        "top": 382,
+        "width": 104,
+        "height": 52,
+        "conf": 0.6646903653289798,
+        "line": 6
+      },
+      {
+        "text": "844",
+        "left": 1202,
+        "top": 380,
+        "width": 100,
+        "height": 56,
+        "conf": 0.6657214149672902,
+        "line": 6
+      },
+      {
+        "text": "43723",
+        "left": 679,
+        "top": 376,
+        "width": 167,
+        "height": 66,
+        "conf": 0.04261838793933482,
+        "line": 6
+      },
+      {
+        "text": "3133",
+        "left": 940,
+        "top": 382,
+        "width": 134,
+        "height": 56,
+        "conf": 0.024892747402191162,
+        "line": 6
+      },
+      {
+        "text": "NFU",
+        "left": 452,
+        "top": 472,
+        "width": 122,
+        "height": 52,
+        "conf": 0.6102034440987335,
+        "line": 7
+      },
+      {
+        "text": "043",
+        "left": 962,
+        "top": 472,
+        "width": 114,
+        "height": 54,
+        "conf": 0.3997326047496876,
+        "line": 7
+      },
+      {
+        "text": "5,64",
+        "left": 1204,
+        "top": 472,
+        "width": 100,
+        "height": 54,
+        "conf": 0.9991397857666016,
+        "line": 7
+      },
+      {
+        "text": "",
+        "left": 688,
+        "top": 488,
+        "width": 26,
+        "height": 26,
+        "conf": 0,
+        "line": 7
+      },
+      {
+        "text": "1673",
+        "left": 712,
+        "top": 474,
+        "width": 134,
+        "height": 54,
+        "conf": 0.46614620089530945,
+        "line": 7
+      },
+      {
+        "text": "58,00",
+        "left": 138,
+        "top": 530,
+        "width": 138,
+        "height": 54,
+        "conf": 0.65281409539963,
+        "line": 8
+      },
+      {
+        "text": "VLO",
+        "left": 452,
+        "top": 562,
+        "width": 100,
+        "height": 54,
+        "conf": 0.67466462659543,
+        "line": 9
+      },
+      {
+        "text": "40763",
+        "left": 684,
+        "top": 562,
+        "width": 160,
+        "height": 56,
+        "conf": 0.18094483994404256,
+        "line": 9
+      },
+      {
+        "text": "405|",
+        "left": 1202,
+        "top": 562,
+        "width": 102,
+        "height": 56,
+        "conf": 0.31784239411354065,
+        "line": 9
+      },
+      {
+        "text": "02",
+        "left": 964,
+        "top": 564,
+        "width": 112,
+        "height": 54,
+        "conf": 0.9784253891132474,
+        "line": 9
+      },
+      {
+        "text": "CBIO",
+        "left": 452,
+        "top": 650,
+        "width": 114,
+        "height": 56,
+        "conf": 0.8553732633590698,
+        "line": 10
+      },
+      {
+        "text": "0c03",
+        "left": 710,
+        "top": 652,
+        "width": 138,
+        "height": 54,
+        "conf": 0.19065503776073456,
+        "line": 10
+      },
+      {
+        "text": "~0z|",
+        "left": 940,
+        "top": 654,
+        "width": 134,
+        "height": 50,
+        "conf": 0.03698889538645744,
+        "line": 10
+      },
+      {
+        "text": "78,10",
+        "left": 1184,
+        "top": 652,
+        "width": 120,
+        "height": 54,
+        "conf": 0.859599033338942,
+        "line": 10
+      },
+      {
+        "text": "otna",
+        "left": 700,
+        "top": 742,
+        "width": 146,
+        "height": 52,
+        "conf": 0.0367550291121006,
+        "line": 11
+      },
+      {
+        "text": "504",
+        "left": 1204,
+        "top": 742,
+        "width": 98,
+        "height": 52,
+        "conf": 0.9299184846585741,
+        "line": 11
+      },
+      {
+        "text": "UCO",
+        "left": 454,
+        "top": 742,
+        "width": 106,
+        "height": 56,
+        "conf": 0.9722086523868689,
+        "line": 11
+      },
+      {
+        "text": "2,33",
+        "left": 964,
+        "top": 744,
+        "width": 112,
+        "height": 54,
+        "conf": 0.3195363280452883,
+        "line": 11
+      },
+      {
+        "text": "SIGA",
+        "left": 452,
+        "top": 832,
+        "width": 112,
+        "height": 54,
+        "conf": 0.9841675758361816,
+        "line": 12
+      },
+      {
+        "text": "oon",
+        "left": 708,
+        "top": 832,
+        "width": 140,
+        "height": 54,
+        "conf": 0.022708324265752124,
+        "line": 12
+      },
+      {
+        "text": "16,35",
+        "left": 1184,
+        "top": 832,
+        "width": 120,
+        "height": 56,
+        "conf": 0.9585358149371284,
+        "line": 12
+      },
+      {
+        "text": "8,83",
+        "left": 962,
+        "top": 834,
+        "width": 114,
+        "height": 54,
+        "conf": 0.14351177215576172,
+        "line": 12
+      },
+      {
+        "text": "Arith",
+        "left": 132,
+        "top": 836,
+        "width": 145,
+        "height": 67,
+        "conf": 0.9947927455645409,
+        "line": 12
+      },
+      {
+        "text": "Fom",
+        "left": 136,
+        "top": 1086,
+        "width": 122,
+        "height": 50,
+        "conf": 0.07522333186954613,
+        "line": 13
+      }
+    ],
+    "output_kind": "snapshot",
+    "parsed_observations": [],
+    "parsed_row_count": 0,
+    "phash": "bf29f2a1d264ccd0",
+    "phash_overlay": "d02f25216df6d2d1",
+    "phash_region": {
+      "x": 0.86,
+      "y": 0.62,
+      "w": 0.14,
+      "h": 0.22
+    },
+    "prefilter_profile": "chart_stream",
+    "prefilter_score": 27.59,
+    "prefilter_stats": {
+      "brightRatio": 0.011111111111111112,
+      "darkRatio": 0.9547222222222222,
+      "edgeRatio": 0.10942689562575084,
+      "horizontalComparisons": 14151,
+      "horizontalEdgeHits": 1319,
+      "horizontalEdgeRatio": 0.09320896049749135,
+      "meanLuma": 17.06277777777778,
+      "rowDensity": 3,
+      "multiColStripeCount": 0,
+      "brightColumnLeft": 0,
+      "brightColumnRight": 159,
+      "midToneRatioTicker": 0.8333333333333334,
+      "stdDev": 37.41135935716073,
+      "verticalComparisons": 14151,
+      "verticalEdgeHits": 1778,
+      "verticalEdgeRatio": 0.1256448307540103,
+      "timestamp": 46
+    },
+    "score": 28.28,
+    "score_breakdown": null,
+    "screen_layout": "chart",
+    "tickers": [
+      "CBIO",
+      "DOL",
+      "INA",
+      "LABU",
+      "NFU",
+      "OON",
+      "OTNA",
+      "SIGA",
+      "UCO",
+      "VLO"
+    ],
+    "timestamp": 46,
+    "timestamp_hms": "00:00:46"
+  },
+  "top_candidates": [
+    {
+      "chart_stream": {
+        "confidence": 1,
+        "parse_status": "ok",
+        "position_list": [
+          "CBIO",
+          "INA",
+          "LABU",
+          "NFU",
+          "SIGA",
+          "UCO",
+          "VLO"
+        ],
+        "price_action": "",
+        "tickers_rejected": 11,
+        "column_filter": {
+          "column_width": 50,
+          "dominant_x": 513,
+          "in_list_token_count": 5
+        },
+        "bbox_filter": {
+          "y_median": 589,
+          "line_height": 54,
+          "y_min": 157,
+          "y_max": 1021,
+          "rejected_count": 1
+        },
+        "panel_gate": null,
+        "tickers_rejected_list": [
+          "A",
+          "S",
+          "SYMS",
+          "PRC",
+          "BUZZ",
+          "E",
+          "SYM",
+          "OAN",
+          "ARITH",
+          "FOM",
+          "X"
+        ]
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 7,
+      "frame_path": "C:\\Users\\Admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-restore-20261024\\ocr_probe\\frames\\20220606_20220606_st8lvpovjem_a6324bba_snapshot\\ocr\\ocr_000008.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0.5041173149813424,
+      "ocr_profile": "",
+      "ocr_text": "7eenn uachin\nA Positions S Syms +X\nPrc Buzz Macoen\nE, Sym Oan Dol\n60,00\nLABU 6,653 2,63| 15,99\nINA 43723 3133 844\nNFU  1673 043 5,64\n58,00\nVLO 40763 02 405|\nCBIO 0c03 ~0z| 78,10\nUCO otna 2,33 504\nArith SIGA oon 8,83 16,35\nFom",
+      "ocr_text_snippet": "7eenn uachin A Positions S Syms +X Prc Buzz Macoen E, Sym Oan Dol 60,00 LABU 6,653 2,63| 15,99 INA 43723 3133 844 NFU 1673 043 5,64 58,00 VLO 40763 02 405| CBIO 0c03 ~0z| 78,10 UCO otna 2,33 504 Ar...",
+      "ocr_words": [
+        {
+          "text": "7eenn uachin",
+          "left": 368,
+          "top": 26,
+          "width": 348,
+          "height": 51,
+          "conf": 0.003963399198518035,
+          "line": 0
+        },
+        {
+          "text": "A",
+          "left": 358,
+          "top": 106,
+          "width": 48,
+          "height": 54,
+          "conf": 0.8802013396198163,
+          "line": 1
+        },
+        {
+          "text": "+X",
+          "left": 1227,
+          "top": 103,
+          "width": 117,
+          "height": 62,
+          "conf": 0.2746932925519026,
+          "line": 1
+        },
+        {
+          "text": "Positions",
+          "left": 439,
+          "top": 105,
+          "width": 232,
+          "height": 60,
+          "conf": 0.9976764286010502,
+          "line": 1
+        },
+        {
+          "text": "S",
+          "left": 794,
+          "top": 110,
+          "width": 52,
+          "height": 52,
+          "conf": 0.2077609453327165,
+          "line": 1
+        },
+        {
+          "text": "Syms",
+          "left": 912,
+          "top": 110,
+          "width": 112,
+          "height": 52,
+          "conf": 0.30997833609580994,
+          "line": 1
+        },
+        {
+          "text": "Macoen",
+          "left": 1079,
+          "top": 192,
+          "width": 204,
+          "height": 42,
+          "conf": 0.007103001357316293,
+          "line": 2
+        },
+        {
+          "text": "Prc Buzz",
+          "left": 846,
+          "top": 198,
+          "width": 182,
+          "height": 56,
+          "conf": 0.6837862819535769,
+          "line": 2
+        },
+        {
+          "text": "Oan",
+          "left": 664,
+          "top": 204,
+          "width": 137,
+          "height": 49,
+          "conf": 0.044948311423423,
+          "line": 3
+        },
+        {
+          "text": "Sym",
+          "left": 447,
+          "top": 201,
+          "width": 102,
+          "height": 62,
+          "conf": 0.9971721172332764,
+          "line": 3
+        },
+        {
+          "text": "E,",
+          "left": 347.31343420861634,
+          "top": 206.11906469908024,
+          "width": 87.37313158276731,
+          "height": 54.76187060183952,
+          "conf": 0.024765114200279305,
+          "line": 3
+        },
+        {
+          "text": "Dol",
+          "left": 1077,
+          "top": 223,
+          "width": 75,
+          "height": 41,
+          "conf": 0.030231087461250104,
+          "line": 3
+        },
+        {
+          "text": "60,00",
+          "left": 136,
+          "top": 240,
+          "width": 138,
+          "height": 54,
+          "conf": 0.6246661082831317,
+          "line": 4
+        },
+        {
+          "text": "LABU",
+          "left": 454,
+          "top": 290,
+          "width": 120,
+          "height": 54,
+          "conf": 0.9987228512763977,
+          "line": 5
+        },
+        {
+          "text": "6,653",
+          "left": 708,
+          "top": 290,
+          "width": 138,
+          "height": 54,
+          "conf": 0.8570595784028645,
+          "line": 5
+        },
+        {
+          "text": "15,99",
+          "left": 1182,
+          "top": 290,
+          "width": 122,
+          "height": 56,
+          "conf": 0.7870531886638754,
+          "line": 5
+        },
+        {
+          "text": "2,63|",
+          "left": 962,
+          "top": 292,
+          "width": 112,
+          "height": 54,
+          "conf": 0.393569892532889,
+          "line": 5
+        },
+        {
+          "text": "INA",
+          "left": 452,
+          "top": 382,
+          "width": 104,
+          "height": 52,
+          "conf": 0.6646903653289798,
+          "line": 6
+        },
+        {
+          "text": "844",
+          "left": 1202,
+          "top": 380,
+          "width": 100,
+          "height": 56,
+          "conf": 0.6657214149672902,
+          "line": 6
+        },
+        {
+          "text": "43723",
+          "left": 679,
+          "top": 376,
+          "width": 167,
+          "height": 66,
+          "conf": 0.04261838793933482,
+          "line": 6
+        },
+        {
+          "text": "3133",
+          "left": 940,
+          "top": 382,
+          "width": 134,
+          "height": 56,
+          "conf": 0.024892747402191162,
+          "line": 6
+        },
+        {
+          "text": "NFU",
+          "left": 452,
+          "top": 472,
+          "width": 122,
+          "height": 52,
+          "conf": 0.6102034440987335,
+          "line": 7
+        },
+        {
+          "text": "043",
+          "left": 962,
+          "top": 472,
+          "width": 114,
+          "height": 54,
+          "conf": 0.3997326047496876,
+          "line": 7
+        },
+        {
+          "text": "5,64",
+          "left": 1204,
+          "top": 472,
+          "width": 100,
+          "height": 54,
+          "conf": 0.9991397857666016,
+          "line": 7
+        },
+        {
+          "text": "",
+          "left": 688,
+          "top": 488,
+          "width": 26,
+          "height": 26,
+          "conf": 0,
+          "line": 7
+        },
+        {
+          "text": "1673",
+          "left": 712,
+          "top": 474,
+          "width": 134,
+          "height": 54,
+          "conf": 0.46614620089530945,
+          "line": 7
+        },
+        {
+          "text": "58,00",
+          "left": 138,
+          "top": 530,
+          "width": 138,
+          "height": 54,
+          "conf": 0.65281409539963,
+          "line": 8
+        },
+        {
+          "text": "VLO",
+          "left": 452,
+          "top": 562,
+          "width": 100,
+          "height": 54,
+          "conf": 0.67466462659543,
+          "line": 9
+        },
+        {
+          "text": "40763",
+          "left": 684,
+          "top": 562,
+          "width": 160,
+          "height": 56,
+          "conf": 0.18094483994404256,
+          "line": 9
+        },
+        {
+          "text": "405|",
+          "left": 1202,
+          "top": 562,
+          "width": 102,
+          "height": 56,
+          "conf": 0.31784239411354065,
+          "line": 9
+        },
+        {
+          "text": "02",
+          "left": 964,
+          "top": 564,
+          "width": 112,
+          "height": 54,
+          "conf": 0.9784253891132474,
+          "line": 9
+        },
+        {
+          "text": "CBIO",
+          "left": 452,
+          "top": 650,
+          "width": 114,
+          "height": 56,
+          "conf": 0.8553732633590698,
+          "line": 10
+        },
+        {
+          "text": "0c03",
+          "left": 710,
+          "top": 652,
+          "width": 138,
+          "height": 54,
+          "conf": 0.19065503776073456,
+          "line": 10
+        },
+        {
+          "text": "~0z|",
+          "left": 940,
+          "top": 654,
+          "width": 134,
+          "height": 50,
+          "conf": 0.03698889538645744,
+          "line": 10
+        },
+        {
+          "text": "78,10",
+          "left": 1184,
+          "top": 652,
+          "width": 120,
+          "height": 54,
+          "conf": 0.859599033338942,
+          "line": 10
+        },
+        {
+          "text": "otna",
+          "left": 700,
+          "top": 742,
+          "width": 146,
+          "height": 52,
+          "conf": 0.0367550291121006,
+          "line": 11
+        },
+        {
+          "text": "504",
+          "left": 1204,
+          "top": 742,
+          "width": 98,
+          "height": 52,
+          "conf": 0.9299184846585741,
+          "line": 11
+        },
+        {
+          "text": "UCO",
+          "left": 454,
+          "top": 742,
+          "width": 106,
+          "height": 56,
+          "conf": 0.9722086523868689,
+          "line": 11
+        },
+        {
+          "text": "2,33",
+          "left": 964,
+          "top": 744,
+          "width": 112,
+          "height": 54,
+          "conf": 0.3195363280452883,
+          "line": 11
+        },
+        {
+          "text": "SIGA",
+          "left": 452,
+          "top": 832,
+          "width": 112,
+          "height": 54,
+          "conf": 0.9841675758361816,
+          "line": 12
+        },
+        {
+          "text": "oon",
+          "left": 708,
+          "top": 832,
+          "width": 140,
+          "height": 54,
+          "conf": 0.022708324265752124,
+          "line": 12
+        },
+        {
+          "text": "16,35",
+          "left": 1184,
+          "top": 832,
+          "width": 120,
+          "height": 56,
+          "conf": 0.9585358149371284,
+          "line": 12
+        },
+        {
+          "text": "8,83",
+          "left": 962,
+          "top": 834,
+          "width": 114,
+          "height": 54,
+          "conf": 0.14351177215576172,
+          "line": 12
+        },
+        {
+          "text": "Arith",
+          "left": 132,
+          "top": 836,
+          "width": 145,
+          "height": 67,
+          "conf": 0.9947927455645409,
+          "line": 12
+        },
+        {
+          "text": "Fom",
+          "left": 136,
+          "top": 1086,
+          "width": 122,
+          "height": 50,
+          "conf": 0.07522333186954613,
+          "line": 13
+        }
+      ],
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "bf29f2a1d264ccd0",
+      "phash_overlay": "d02f25216df6d2d1",
+      "phash_region": {
+        "x": 0.86,
+        "y": 0.62,
+        "w": 0.14,
+        "h": 0.22
+      },
+      "prefilter_profile": "chart_stream",
+      "prefilter_score": 27.59,
+      "prefilter_stats": {
+        "brightRatio": 0.011111111111111112,
+        "darkRatio": 0.9547222222222222,
+        "edgeRatio": 0.10942689562575084,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1319,
+        "horizontalEdgeRatio": 0.09320896049749135,
+        "meanLuma": 17.06277777777778,
+        "rowDensity": 3,
+        "multiColStripeCount": 0,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 159,
+        "midToneRatioTicker": 0.8333333333333334,
+        "stdDev": 37.41135935716073,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1778,
+        "verticalEdgeRatio": 0.1256448307540103,
+        "timestamp": 46
+      },
+      "score": 28.28,
+      "score_breakdown": null,
+      "screen_layout": "chart",
+      "tickers": [
+        "CBIO",
+        "INA",
+        "LABU",
+        "NFU",
+        "SIGA",
+        "UCO",
+        "VLO"
+      ],
+      "timestamp": 46,
+      "timestamp_hms": "00:00:46"
+    },
+    {
+      "chart_stream": {
+        "confidence": 1,
+        "parse_status": "ok",
+        "position_list": [
+          "CBIO",
+          "INA",
+          "LABU",
+          "NFU",
+          "SIGA",
+          "UCO",
+          "VLO"
+        ],
+        "price_action": "",
+        "tickers_rejected": 11,
+        "column_filter": {
+          "column_width": 50,
+          "dominant_x": 513,
+          "in_list_token_count": 5
+        },
+        "bbox_filter": {
+          "y_median": 589,
+          "line_height": 54,
+          "y_min": 157,
+          "y_max": 1021,
+          "rejected_count": 1
+        },
+        "panel_gate": null,
+        "tickers_rejected_list": [
+          "A",
+          "S",
+          "SYMS",
+          "PRC",
+          "BUZZ",
+          "E",
+          "SYM",
+          "OAN",
+          "ARITH",
+          "FOM",
+          "X"
+        ]
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 5,
+      "frame_path": "C:\\Users\\Admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-restore-20261024\\ocr_probe\\frames\\20220606_20220606_st8lvpovjem_a6324bba_snapshot\\ocr\\ocr_000006.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0.4951718206946556,
+      "ocr_profile": "",
+      "ocr_text": "7enn uachin\nA Positions S Syms +X\nPrc Buzz Macoen\nE, Sym Oan Der\n60,00\nLABU 6,653 2,63 15,99\nINA 43723 3133 844\nNFU  1673 043 5,64\n58,00\nVLO 40763 02 405|\nCBIO 0c03 ~0z| 78,10\nUCO otna 2,33 504\nArith SIGA oon 8,83 16,35\nFom",
+      "ocr_text_snippet": "7enn uachin A Positions S Syms +X Prc Buzz Macoen E, Sym Oan Der 60,00 LABU 6,653 2,63 15,99 INA 43723 3133 844 NFU 1673 043 5,64 58,00 VLO 40763 02 405| CBIO 0c03 ~0z| 78,10 UCO otna 2,33 504 Arit...",
+      "ocr_words": [
+        {
+          "text": "7enn uachin",
+          "left": 368,
+          "top": 26,
+          "width": 348,
+          "height": 51,
+          "conf": 0.007927438113963379,
+          "line": 0
+        },
+        {
+          "text": "A",
+          "left": 358,
+          "top": 106,
+          "width": 48,
+          "height": 52,
+          "conf": 0.3160796412705622,
+          "line": 1
+        },
+        {
+          "text": "+X",
+          "left": 1227,
+          "top": 103,
+          "width": 117,
+          "height": 62,
+          "conf": 0.2746932925519026,
+          "line": 1
+        },
+        {
+          "text": "Positions",
+          "left": 439,
+          "top": 105,
+          "width": 232,
+          "height": 60,
+          "conf": 0.9976764286010502,
+          "line": 1
+        },
+        {
+          "text": "S",
+          "left": 794,
+          "top": 110,
+          "width": 52,
+          "height": 52,
+          "conf": 0.2077609453327165,
+          "line": 1
+        },
+        {
+          "text": "Syms",
+          "left": 912,
+          "top": 110,
+          "width": 112,
+          "height": 52,
+          "conf": 0.30997833609580994,
+          "line": 1
+        },
+        {
+          "text": "Macoen",
+          "left": 1079,
+          "top": 192,
+          "width": 204,
+          "height": 42,
+          "conf": 0.007103001357316293,
+          "line": 2
+        },
+        {
+          "text": "Prc Buzz",
+          "left": 846,
+          "top": 198,
+          "width": 182,
+          "height": 56,
+          "conf": 0.6837862819535769,
+          "line": 2
+        },
+        {
+          "text": "Oan",
+          "left": 664,
+          "top": 204,
+          "width": 137,
+          "height": 49,
+          "conf": 0.044948311423423,
+          "line": 3
+        },
+        {
+          "text": "Sym",
+          "left": 447,
+          "top": 201,
+          "width": 102,
+          "height": 62,
+          "conf": 0.9971721172332764,
+          "line": 3
+        },
+        {
+          "text": "E,",
+          "left": 347.31343420861634,
+          "top": 206.11906469908024,
+          "width": 87.37313158276731,
+          "height": 54.76187060183952,
+          "conf": 0.026926425563522614,
+          "line": 3
+        },
+        {
+          "text": "Der",
+          "left": 1075,
+          "top": 223,
+          "width": 77,
+          "height": 41,
+          "conf": 0.023093177266055358,
+          "line": 3
+        },
+        {
+          "text": "60,00",
+          "left": 136,
+          "top": 240,
+          "width": 138,
+          "height": 54,
+          "conf": 0.5506047000051475,
+          "line": 4
+        },
+        {
+          "text": "LABU",
+          "left": 454,
+          "top": 290,
+          "width": 120,
+          "height": 54,
+          "conf": 0.9987228512763977,
+          "line": 5
+        },
+        {
+          "text": "6,653",
+          "left": 708,
+          "top": 290,
+          "width": 138,
+          "height": 54,
+          "conf": 0.8570595784028645,
+          "line": 5
+        },
+        {
+          "text": "15,99",
+          "left": 1182,
+          "top": 290,
+          "width": 122,
+          "height": 56,
+          "conf": 0.7972881682799055,
+          "line": 5
+        },
+        {
+          "text": "2,63",
+          "left": 962,
+          "top": 292,
+          "width": 112,
+          "height": 54,
+          "conf": 0.7241758424243474,
+          "line": 5
+        },
+        {
+          "text": "INA",
+          "left": 452,
+          "top": 382,
+          "width": 104,
+          "height": 52,
+          "conf": 0.6646903653289798,
+          "line": 6
+        },
+        {
+          "text": "844",
+          "left": 1202,
+          "top": 380,
+          "width": 100,
+          "height": 56,
+          "conf": 0.6614706705579153,
+          "line": 6
+        },
+        {
+          "text": "43723",
+          "left": 679,
+          "top": 376,
+          "width": 167,
+          "height": 66,
+          "conf": 0.0399754153493737,
+          "line": 6
+        },
+        {
+          "text": "3133",
+          "left": 940,
+          "top": 382,
+          "width": 134,
+          "height": 56,
+          "conf": 0.029641445726156235,
+          "line": 6
+        },
+        {
+          "text": "NFU",
+          "left": 452,
+          "top": 472,
+          "width": 122,
+          "height": 52,
+          "conf": 0.618565734094972,
+          "line": 7
+        },
+        {
+          "text": "043",
+          "left": 962,
+          "top": 472,
+          "width": 114,
+          "height": 54,
+          "conf": 0.43427802185106235,
+          "line": 7
+        },
+        {
+          "text": "5,64",
+          "left": 1204,
+          "top": 472,
+          "width": 100,
+          "height": 54,
+          "conf": 0.9991397857666016,
+          "line": 7
+        },
+        {
+          "text": "",
+          "left": 688,
+          "top": 488,
+          "width": 26,
+          "height": 26,
+          "conf": 0,
+          "line": 7
+        },
+        {
+          "text": "1673",
+          "left": 712,
+          "top": 474,
+          "width": 134,
+          "height": 54,
+          "conf": 0.46614620089530945,
+          "line": 7
+        },
+        {
+          "text": "58,00",
+          "left": 138,
+          "top": 530,
+          "width": 138,
+          "height": 54,
+          "conf": 0.4711148666940245,
+          "line": 8
+        },
+        {
+          "text": "VLO",
+          "left": 452,
+          "top": 562,
+          "width": 100,
+          "height": 54,
+          "conf": 0.7180047786053284,
+          "line": 9
+        },
+        {
+          "text": "40763",
+          "left": 684,
+          "top": 562,
+          "width": 160,
+          "height": 56,
+          "conf": 0.18094483994404256,
+          "line": 9
+        },
+        {
+          "text": "405|",
+          "left": 1202,
+          "top": 562,
+          "width": 102,
+          "height": 56,
+          "conf": 0.31784239411354065,
+          "line": 9
+        },
+        {
+          "text": "02",
+          "left": 964,
+          "top": 564,
+          "width": 112,
+          "height": 54,
+          "conf": 0.9767972164974277,
+          "line": 9
+        },
+        {
+          "text": "CBIO",
+          "left": 452,
+          "top": 650,
+          "width": 114,
+          "height": 56,
+          "conf": 0.8659101724624634,
+          "line": 10
+        },
+        {
+          "text": "0c03",
+          "left": 710,
+          "top": 652,
+          "width": 138,
+          "height": 54,
+          "conf": 0.19065503776073456,
+          "line": 10
+        },
+        {
+          "text": "~0z|",
+          "left": 940,
+          "top": 654,
+          "width": 134,
+          "height": 50,
+          "conf": 0.03698889538645744,
+          "line": 10
+        },
+        {
+          "text": "78,10",
+          "left": 1184,
+          "top": 652,
+          "width": 120,
+          "height": 54,
+          "conf": 0.8618825892707115,
+          "line": 10
+        },
+        {
+          "text": "otna",
+          "left": 700,
+          "top": 742,
+          "width": 146,
+          "height": 52,
+          "conf": 0.0367550291121006,
+          "line": 11
+        },
+        {
+          "text": "504",
+          "left": 1204,
+          "top": 742,
+          "width": 98,
+          "height": 52,
+          "conf": 0.9299184846585741,
+          "line": 11
+        },
+        {
+          "text": "UCO",
+          "left": 454,
+          "top": 741,
+          "width": 106,
+          "height": 56,
+          "conf": 0.976157076271709,
+          "line": 11
+        },
+        {
+          "text": "2,33",
+          "left": 964,
+          "top": 744,
+          "width": 112,
+          "height": 54,
+          "conf": 0.3195363280452883,
+          "line": 11
+        },
+        {
+          "text": "SIGA",
+          "left": 452,
+          "top": 832,
+          "width": 112,
+          "height": 54,
+          "conf": 0.9833694696426392,
+          "line": 12
+        },
+        {
+          "text": "oon",
+          "left": 708,
+          "top": 832,
+          "width": 140,
+          "height": 54,
+          "conf": 0.02390635320400237,
+          "line": 12
+        },
+        {
+          "text": "16,35",
+          "left": 1184,
+          "top": 832,
+          "width": 120,
+          "height": 56,
+          "conf": 0.9528677167368469,
+          "line": 12
+        },
+        {
+          "text": "8,83",
+          "left": 962,
+          "top": 834,
+          "width": 114,
+          "height": 54,
+          "conf": 0.13598860800266266,
+          "line": 12
+        },
+        {
+          "text": "Arith",
+          "left": 132,
+          "top": 836,
+          "width": 145,
+          "height": 67,
+          "conf": 0.9947927455645409,
+          "line": 12
+        },
+        {
+          "text": "Fom",
+          "left": 136,
+          "top": 1086,
+          "width": 122,
+          "height": 50,
+          "conf": 0.07522333186954613,
+          "line": 13
+        }
+      ],
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "bf29f2a1d264ccd0",
+      "phash_overlay": "d02f24217df6d2d1",
+      "phash_region": {
+        "x": 0.86,
+        "y": 0.62,
+        "w": 0.14,
+        "h": 0.22
+      },
+      "prefilter_profile": "chart_stream",
+      "prefilter_score": 27.59,
+      "prefilter_stats": {
+        "brightRatio": 0.011111111111111112,
+        "darkRatio": 0.9547222222222222,
+        "edgeRatio": 0.10942689562575084,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1319,
+        "horizontalEdgeRatio": 0.09320896049749135,
+        "meanLuma": 17.06277777777778,
+        "rowDensity": 3,
+        "multiColStripeCount": 0,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 159,
+        "midToneRatioTicker": 0.8333333333333334,
+        "stdDev": 37.41135935716073,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1778,
+        "verticalEdgeRatio": 0.1256448307540103,
+        "timestamp": 44.857142857142854
+      },
+      "score": 28.27,
+      "score_breakdown": null,
+      "screen_layout": "chart",
+      "tickers": [
+        "CBIO",
+        "INA",
+        "LABU",
+        "NFU",
+        "SIGA",
+        "UCO",
+        "VLO"
+      ],
+      "timestamp": 44.857142857142854,
+      "timestamp_hms": "00:00:45"
+    },
+    {
+      "chart_stream": {
+        "confidence": 1,
+        "parse_status": "ok",
+        "position_list": [
+          "CBIO",
+          "INA",
+          "LABU",
+          "NFU",
+          "SIGA",
+          "UCO",
+          "VLO"
+        ],
+        "price_action": "",
+        "tickers_rejected": 11,
+        "column_filter": {
+          "column_width": 50,
+          "dominant_x": 513,
+          "in_list_token_count": 5
+        },
+        "bbox_filter": {
+          "y_median": 589,
+          "line_height": 54,
+          "y_min": 157,
+          "y_max": 1021,
+          "rejected_count": 1
+        },
+        "panel_gate": null,
+        "tickers_rejected_list": [
+          "A",
+          "S",
+          "SYMS",
+          "PRC",
+          "BUZZ",
+          "E",
+          "SYM",
+          "OAN",
+          "ARITH",
+          "FOM",
+          "X"
+        ]
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 6,
+      "frame_path": "C:\\Users\\Admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-restore-20261024\\ocr_probe\\frames\\20220606_20220606_st8lvpovjem_a6324bba_snapshot\\ocr\\ocr_000007.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0.49179385472153075,
+      "ocr_profile": "",
+      "ocr_text": "7enn Machin\nA Positions S Syms +X\nPrc Buzz Macoen\nE, Sym Oan Dol\n60,00\nLABU 6,653 2,63| 15,99\nINA 43723 3133 844\nNFU  1673 043 5,64\n58,00\nVLO 40763 02 405|\nCBIO 0c03 ~0z| 78,10\nUCO otna 2,33 504\nArith SIGA oon 8,83 16,35\nFom",
+      "ocr_text_snippet": "7enn Machin A Positions S Syms +X Prc Buzz Macoen E, Sym Oan Dol 60,00 LABU 6,653 2,63| 15,99 INA 43723 3133 844 NFU 1673 043 5,64 58,00 VLO 40763 02 405| CBIO 0c03 ~0z| 78,10 UCO otna 2,33 504 Ari...",
+      "ocr_words": [
+        {
+          "text": "7enn Machin",
+          "left": 368,
+          "top": 26,
+          "width": 348,
+          "height": 51,
+          "conf": 0.007786826291518016,
+          "line": 0
+        },
+        {
+          "text": "A",
+          "left": 358,
+          "top": 106,
+          "width": 48,
+          "height": 54,
+          "conf": 0.3102863095309085,
+          "line": 1
+        },
+        {
+          "text": "+X",
+          "left": 1227,
+          "top": 103,
+          "width": 117,
+          "height": 62,
+          "conf": 0.2746932925519026,
+          "line": 1
+        },
+        {
+          "text": "Positions",
+          "left": 439,
+          "top": 105,
+          "width": 232,
+          "height": 60,
+          "conf": 0.9976764286010502,
+          "line": 1
+        },
+        {
+          "text": "S",
+          "left": 794,
+          "top": 110,
+          "width": 52,
+          "height": 52,
+          "conf": 0.2077609453327165,
+          "line": 1
+        },
+        {
+          "text": "Syms",
+          "left": 912,
+          "top": 110,
+          "width": 112,
+          "height": 52,
+          "conf": 0.30997833609580994,
+          "line": 1
+        },
+        {
+          "text": "Macoen",
+          "left": 1079,
+          "top": 192,
+          "width": 204,
+          "height": 42,
+          "conf": 0.007103001357316293,
+          "line": 2
+        },
+        {
+          "text": "Prc Buzz",
+          "left": 846,
+          "top": 198,
+          "width": 182,
+          "height": 56,
+          "conf": 0.6837862819535769,
+          "line": 2
+        },
+        {
+          "text": "Oan",
+          "left": 664,
+          "top": 204,
+          "width": 137,
+          "height": 49,
+          "conf": 0.044948311423423,
+          "line": 3
+        },
+        {
+          "text": "Sym",
+          "left": 447,
+          "top": 201,
+          "width": 102,
+          "height": 62,
+          "conf": 0.9971721172332764,
+          "line": 3
+        },
+        {
+          "text": "E,",
+          "left": 347.31343420861634,
+          "top": 206.11906469908024,
+          "width": 87.37313158276731,
+          "height": 54.76187060183952,
+          "conf": 0.02276207449755785,
+          "line": 3
+        },
+        {
+          "text": "Dol",
+          "left": 1077,
+          "top": 223,
+          "width": 75,
+          "height": 41,
+          "conf": 0.030231087461250104,
+          "line": 3
+        },
+        {
+          "text": "60,00",
+          "left": 136,
+          "top": 240,
+          "width": 138,
+          "height": 54,
+          "conf": 0.5595893502875416,
+          "line": 4
+        },
+        {
+          "text": "LABU",
+          "left": 454,
+          "top": 290,
+          "width": 120,
+          "height": 54,
+          "conf": 0.9987228512763977,
+          "line": 5
+        },
+        {
+          "text": "6,653",
+          "left": 708,
+          "top": 290,
+          "width": 138,
+          "height": 54,
+          "conf": 0.8570595784028645,
+          "line": 5
+        },
+        {
+          "text": "15,99",
+          "left": 1182,
+          "top": 290,
+          "width": 122,
+          "height": 56,
+          "conf": 0.7972881682799055,
+          "line": 5
+        },
+        {
+          "text": "2,63|",
+          "left": 962,
+          "top": 292,
+          "width": 112,
+          "height": 54,
+          "conf": 0.393569892532889,
+          "line": 5
+        },
+        {
+          "text": "INA",
+          "left": 452,
+          "top": 382,
+          "width": 104,
+          "height": 52,
+          "conf": 0.6646903653289798,
+          "line": 6
+        },
+        {
+          "text": "844",
+          "left": 1202,
+          "top": 380,
+          "width": 100,
+          "height": 56,
+          "conf": 0.6614706705579153,
+          "line": 6
+        },
+        {
+          "text": "43723",
+          "left": 679,
+          "top": 376,
+          "width": 167,
+          "height": 66,
+          "conf": 0.0399754153493737,
+          "line": 6
+        },
+        {
+          "text": "3133",
+          "left": 940,
+          "top": 382,
+          "width": 134,
+          "height": 56,
+          "conf": 0.029641445726156235,
+          "line": 6
+        },
+        {
+          "text": "NFU",
+          "left": 452,
+          "top": 472,
+          "width": 122,
+          "height": 52,
+          "conf": 0.618565734094972,
+          "line": 7
+        },
+        {
+          "text": "043",
+          "left": 962,
+          "top": 472,
+          "width": 114,
+          "height": 54,
+          "conf": 0.43427802185106235,
+          "line": 7
+        },
+        {
+          "text": "5,64",
+          "left": 1204,
+          "top": 472,
+          "width": 100,
+          "height": 54,
+          "conf": 0.9991397857666016,
+          "line": 7
+        },
+        {
+          "text": "",
+          "left": 688,
+          "top": 488,
+          "width": 26,
+          "height": 26,
+          "conf": 0,
+          "line": 7
+        },
+        {
+          "text": "1673",
+          "left": 712,
+          "top": 474,
+          "width": 134,
+          "height": 54,
+          "conf": 0.46614620089530945,
+          "line": 7
+        },
+        {
+          "text": "58,00",
+          "left": 138,
+          "top": 530,
+          "width": 138,
+          "height": 54,
+          "conf": 0.646958367750167,
+          "line": 8
+        },
+        {
+          "text": "VLO",
+          "left": 452,
+          "top": 562,
+          "width": 100,
+          "height": 54,
+          "conf": 0.7180047786053284,
+          "line": 9
+        },
+        {
+          "text": "40763",
+          "left": 684,
+          "top": 562,
+          "width": 160,
+          "height": 56,
+          "conf": 0.18094483994404256,
+          "line": 9
+        },
+        {
+          "text": "405|",
+          "left": 1202,
+          "top": 562,
+          "width": 102,
+          "height": 56,
+          "conf": 0.31784239411354065,
+          "line": 9
+        },
+        {
+          "text": "02",
+          "left": 964,
+          "top": 564,
+          "width": 112,
+          "height": 54,
+          "conf": 0.9767972164974277,
+          "line": 9
+        },
+        {
+          "text": "CBIO",
+          "left": 452,
+          "top": 650,
+          "width": 114,
+          "height": 56,
+          "conf": 0.8659101724624634,
+          "line": 10
+        },
+        {
+          "text": "0c03",
+          "left": 710,
+          "top": 652,
+          "width": 138,
+          "height": 54,
+          "conf": 0.19065503776073456,
+          "line": 10
+        },
+        {
+          "text": "~0z|",
+          "left": 940,
+          "top": 654,
+          "width": 134,
+          "height": 50,
+          "conf": 0.03698889538645744,
+          "line": 10
+        },
+        {
+          "text": "78,10",
+          "left": 1184,
+          "top": 652,
+          "width": 120,
+          "height": 54,
+          "conf": 0.8618825892707115,
+          "line": 10
+        },
+        {
+          "text": "otna",
+          "left": 700,
+          "top": 742,
+          "width": 146,
+          "height": 52,
+          "conf": 0.0367550291121006,
+          "line": 11
+        },
+        {
+          "text": "504",
+          "left": 1204,
+          "top": 742,
+          "width": 98,
+          "height": 52,
+          "conf": 0.9299184846585741,
+          "line": 11
+        },
+        {
+          "text": "UCO",
+          "left": 454,
+          "top": 741,
+          "width": 106,
+          "height": 56,
+          "conf": 0.976157076271709,
+          "line": 11
+        },
+        {
+          "text": "2,33",
+          "left": 964,
+          "top": 744,
+          "width": 112,
+          "height": 54,
+          "conf": 0.3195363280452883,
+          "line": 11
+        },
+        {
+          "text": "SIGA",
+          "left": 452,
+          "top": 832,
+          "width": 112,
+          "height": 54,
+          "conf": 0.9833694696426392,
+          "line": 12
+        },
+        {
+          "text": "oon",
+          "left": 708,
+          "top": 832,
+          "width": 140,
+          "height": 54,
+          "conf": 0.024014033372296285,
+          "line": 12
+        },
+        {
+          "text": "16,35",
+          "left": 1184,
+          "top": 832,
+          "width": 120,
+          "height": 56,
+          "conf": 0.9528677167368469,
+          "line": 12
+        },
+        {
+          "text": "8,83",
+          "left": 962,
+          "top": 834,
+          "width": 114,
+          "height": 54,
+          "conf": 0.13598860800266266,
+          "line": 12
+        },
+        {
+          "text": "Arith",
+          "left": 132,
+          "top": 836,
+          "width": 145,
+          "height": 67,
+          "conf": 0.9947927455645409,
+          "line": 12
+        },
+        {
+          "text": "Fom",
+          "left": 136,
+          "top": 1086,
+          "width": 122,
+          "height": 50,
+          "conf": 0.07522333186954613,
+          "line": 13
+        }
+      ],
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "bf29f2a1d264ccd0",
+      "phash_overlay": "d02f25216df6d2d1",
+      "phash_region": {
+        "x": 0.86,
+        "y": 0.62,
+        "w": 0.14,
+        "h": 0.22
+      },
+      "prefilter_profile": "chart_stream",
+      "prefilter_score": 27.59,
+      "prefilter_stats": {
+        "brightRatio": 0.011111111111111112,
+        "darkRatio": 0.9547222222222222,
+        "edgeRatio": 0.10942689562575084,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1319,
+        "horizontalEdgeRatio": 0.09320896049749135,
+        "meanLuma": 17.06277777777778,
+        "rowDensity": 3,
+        "multiColStripeCount": 0,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 159,
+        "midToneRatioTicker": 0.8333333333333334,
+        "stdDev": 37.41135935716073,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1778,
+        "verticalEdgeRatio": 0.1256448307540103,
+        "timestamp": 45.42857142857143
+      },
+      "score": 28.27,
+      "score_breakdown": null,
+      "screen_layout": "chart",
+      "tickers": [
+        "CBIO",
+        "INA",
+        "LABU",
+        "NFU",
+        "SIGA",
+        "UCO",
+        "VLO"
+      ],
+      "timestamp": 45.42857142857143,
+      "timestamp_hms": "00:00:45"
+    },
+    {
+      "chart_stream": {
+        "confidence": 1,
+        "parse_status": "ok",
+        "position_list": [
+          "CBIO",
+          "INA",
+          "LABU",
+          "NFU",
+          "SIGA",
+          "UCO",
+          "VLO"
+        ],
+        "price_action": "",
+        "tickers_rejected": 12,
+        "column_filter": {
+          "column_width": 50,
+          "dominant_x": 513,
+          "in_list_token_count": 5
+        },
+        "bbox_filter": {
+          "y_median": 678,
+          "line_height": 54,
+          "y_min": 246,
+          "y_max": 1110,
+          "rejected_count": 1
+        },
+        "panel_gate": null,
+        "tickers_rejected_list": [
+          "A",
+          "S",
+          "SYMS",
+          "PRC",
+          "BUZZ",
+          "E",
+          "SYM",
+          "OANT",
+          "DOL",
+          "ARITH",
+          "FOM",
+          "X"
+        ]
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 4,
+      "frame_path": "C:\\Users\\Admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-restore-20261024\\ocr_probe\\frames\\20220606_20220606_st8lvpovjem_a6324bba_snapshot\\ocr\\ocr_000005.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0.5125302653224844,
+      "ocr_profile": "",
+      "ocr_text": "Tennuatchin\n65,00 A Positions S Syms +X\nPrc Buzz Macoen\nE, Sym Oant Dol\nLABU 6,653 2,63 15,99\nINA 43723 3133 844\n63,00 NFU  1673 043 5,64\nVLO 40763 02 405|\nCBIO 0c03 ~0z| 78,10\nUCO otna 2,33 504\nArith SIGA oon 8,83 16,35\nFom",
+      "ocr_text_snippet": "Tennuatchin 65,00 A Positions S Syms +X Prc Buzz Macoen E, Sym Oant Dol LABU 6,653 2,63 15,99 INA 43723 3133 844 63,00 NFU 1673 043 5,64 VLO 40763 02 405| CBIO 0c03 ~0z| 78,10 UCO otna 2,33 504 Ari...",
+      "ocr_words": [
+        {
+          "text": "Tennuatchin",
+          "left": 368,
+          "top": 26,
+          "width": 348,
+          "height": 50,
+          "conf": 0.006675553517729753,
+          "line": 0
+        },
+        {
+          "text": "65,00",
+          "left": 136,
+          "top": 104,
+          "width": 140,
+          "height": 56,
+          "conf": 0.9176093400966137,
+          "line": 1
+        },
+        {
+          "text": "A",
+          "left": 358,
+          "top": 106,
+          "width": 48,
+          "height": 54,
+          "conf": 0.3102863095309085,
+          "line": 1
+        },
+        {
+          "text": "+X",
+          "left": 1227,
+          "top": 103,
+          "width": 117,
+          "height": 62,
+          "conf": 0.2746932925519026,
+          "line": 1
+        },
+        {
+          "text": "Positions",
+          "left": 439,
+          "top": 105,
+          "width": 232,
+          "height": 60,
+          "conf": 0.9976764286010502,
+          "line": 1
+        },
+        {
+          "text": "S",
+          "left": 794,
+          "top": 110,
+          "width": 52,
+          "height": 52,
+          "conf": 0.2077609453327165,
+          "line": 1
+        },
+        {
+          "text": "Syms",
+          "left": 912,
+          "top": 110,
+          "width": 112,
+          "height": 52,
+          "conf": 0.30997833609580994,
+          "line": 1
+        },
+        {
+          "text": "Macoen",
+          "left": 1079,
+          "top": 192,
+          "width": 204,
+          "height": 42,
+          "conf": 0.007103001357316293,
+          "line": 2
+        },
+        {
+          "text": "Prc Buzz",
+          "left": 846,
+          "top": 198,
+          "width": 182,
+          "height": 56,
+          "conf": 0.6837862819535769,
+          "line": 2
+        },
+        {
+          "text": "Oant",
+          "left": 664,
+          "top": 204,
+          "width": 137,
+          "height": 49,
+          "conf": 0.017554443329572678,
+          "line": 3
+        },
+        {
+          "text": "Sym",
+          "left": 447,
+          "top": 201,
+          "width": 102,
+          "height": 62,
+          "conf": 0.9971721172332764,
+          "line": 3
+        },
+        {
+          "text": "E,",
+          "left": 347.31343420861634,
+          "top": 206.11906469908024,
+          "width": 87.37313158276731,
+          "height": 54.76187060183952,
+          "conf": 0.02562333775369439,
+          "line": 3
+        },
+        {
+          "text": "Dol",
+          "left": 1077,
+          "top": 223,
+          "width": 75,
+          "height": 41,
+          "conf": 0.030231087461250104,
+          "line": 3
+        },
+        {
+          "text": "LABU",
+          "left": 454,
+          "top": 290,
+          "width": 120,
+          "height": 54,
+          "conf": 0.9988245964050293,
+          "line": 4
+        },
+        {
+          "text": "6,653",
+          "left": 708,
+          "top": 290,
+          "width": 138,
+          "height": 54,
+          "conf": 0.8570595784028645,
+          "line": 4
+        },
+        {
+          "text": "15,99",
+          "left": 1182,
+          "top": 290,
+          "width": 122,
+          "height": 56,
+          "conf": 0.7972881682799055,
+          "line": 4
+        },
+        {
+          "text": "2,63",
+          "left": 962,
+          "top": 292,
+          "width": 112,
+          "height": 54,
+          "conf": 0.7241758424243474,
+          "line": 4
+        },
+        {
+          "text": "INA",
+          "left": 452,
+          "top": 382,
+          "width": 104,
+          "height": 52,
+          "conf": 0.6777949830674637,
+          "line": 5
+        },
+        {
+          "text": "844",
+          "left": 1202,
+          "top": 380,
+          "width": 100,
+          "height": 56,
+          "conf": 0.6614706705579153,
+          "line": 5
+        },
+        {
+          "text": "43723",
+          "left": 679,
+          "top": 376,
+          "width": 167,
+          "height": 66,
+          "conf": 0.0399754153493737,
+          "line": 5
+        },
+        {
+          "text": "3133",
+          "left": 940,
+          "top": 382,
+          "width": 134,
+          "height": 56,
+          "conf": 0.029641445726156235,
+          "line": 5
+        },
+        {
+          "text": "NFU",
+          "left": 452,
+          "top": 472,
+          "width": 122,
+          "height": 52,
+          "conf": 0.6359596318562722,
+          "line": 6
+        },
+        {
+          "text": "043",
+          "left": 962,
+          "top": 472,
+          "width": 114,
+          "height": 54,
+          "conf": 0.43427802185106235,
+          "line": 6
+        },
+        {
+          "text": "5,64",
+          "left": 1204,
+          "top": 472,
+          "width": 100,
+          "height": 54,
+          "conf": 0.9991397857666016,
+          "line": 6
+        },
+        {
+          "text": "",
+          "left": 688,
+          "top": 488,
+          "width": 26,
+          "height": 26,
+          "conf": 0,
+          "line": 6
+        },
+        {
+          "text": "1673",
+          "left": 712,
+          "top": 474,
+          "width": 134,
+          "height": 54,
+          "conf": 0.46614620089530945,
+          "line": 6
+        },
+        {
+          "text": "63,00",
+          "left": 135,
+          "top": 475,
+          "width": 142,
+          "height": 60,
+          "conf": 0.8817551250480168,
+          "line": 6
+        },
+        {
+          "text": "VLO",
+          "left": 452,
+          "top": 562,
+          "width": 100,
+          "height": 54,
+          "conf": 0.7180047786053284,
+          "line": 7
+        },
+        {
+          "text": "40763",
+          "left": 684,
+          "top": 562,
+          "width": 160,
+          "height": 56,
+          "conf": 0.18094483994404256,
+          "line": 7
+        },
+        {
+          "text": "405|",
+          "left": 1202,
+          "top": 562,
+          "width": 102,
+          "height": 56,
+          "conf": 0.31784239411354065,
+          "line": 7
+        },
+        {
+          "text": "02",
+          "left": 964,
+          "top": 564,
+          "width": 112,
+          "height": 54,
+          "conf": 0.9767972164974277,
+          "line": 7
+        },
+        {
+          "text": "CBIO",
+          "left": 452,
+          "top": 650,
+          "width": 114,
+          "height": 56,
+          "conf": 0.8659101724624634,
+          "line": 8
+        },
+        {
+          "text": "0c03",
+          "left": 710,
+          "top": 652,
+          "width": 138,
+          "height": 54,
+          "conf": 0.19065503776073456,
+          "line": 8
+        },
+        {
+          "text": "~0z|",
+          "left": 940,
+          "top": 654,
+          "width": 134,
+          "height": 50,
+          "conf": 0.043048251420259476,
+          "line": 8
+        },
+        {
+          "text": "78,10",
+          "left": 1184,
+          "top": 652,
+          "width": 120,
+          "height": 54,
+          "conf": 0.8618825892707115,
+          "line": 8
+        },
+        {
+          "text": "otna",
+          "left": 700,
+          "top": 742,
+          "width": 146,
+          "height": 52,
+          "conf": 0.0367550291121006,
+          "line": 9
+        },
+        {
+          "text": "504",
+          "left": 1204,
+          "top": 742,
+          "width": 98,
+          "height": 52,
+          "conf": 0.9233266529584332,
+          "line": 9
+        },
+        {
+          "text": "UCO",
+          "left": 454,
+          "top": 742,
+          "width": 106,
+          "height": 56,
+          "conf": 0.9708127805756132,
+          "line": 9
+        },
+        {
+          "text": "2,33",
+          "left": 964,
+          "top": 744,
+          "width": 112,
+          "height": 54,
+          "conf": 0.3195363280452883,
+          "line": 9
+        },
+        {
+          "text": "SIGA",
+          "left": 452,
+          "top": 832,
+          "width": 112,
+          "height": 54,
+          "conf": 0.9833694696426392,
+          "line": 10
+        },
+        {
+          "text": "oon",
+          "left": 708,
+          "top": 832,
+          "width": 140,
+          "height": 54,
+          "conf": 0.02390635320400237,
+          "line": 10
+        },
+        {
+          "text": "16,35",
+          "left": 1184,
+          "top": 832,
+          "width": 120,
+          "height": 56,
+          "conf": 0.95669201799266,
+          "line": 10
+        },
+        {
+          "text": "8,83",
+          "left": 962,
+          "top": 834,
+          "width": 114,
+          "height": 54,
+          "conf": 0.12217174470424652,
+          "line": 10
+        },
+        {
+          "text": "Arith",
+          "left": 132,
+          "top": 836,
+          "width": 145,
+          "height": 67,
+          "conf": 0.9947927455645409,
+          "line": 10
+        },
+        {
+          "text": "Fom",
+          "left": 136,
+          "top": 1086,
+          "width": 122,
+          "height": 50,
+          "conf": 0.07522333186954613,
+          "line": 11
+        }
+      ],
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "bf2972a8d265ccd0",
+      "phash_overlay": "d02f262969f3d3c1",
+      "phash_region": {
+        "x": 0.86,
+        "y": 0.62,
+        "w": 0.14,
+        "h": 0.22
+      },
+      "prefilter_profile": "chart_stream",
+      "prefilter_score": 27.59,
+      "prefilter_stats": {
+        "brightRatio": 0.011111111111111112,
+        "darkRatio": 0.9547222222222222,
+        "edgeRatio": 0.10942689562575084,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1319,
+        "horizontalEdgeRatio": 0.09320896049749135,
+        "meanLuma": 17.06277777777778,
+        "rowDensity": 3,
+        "multiColStripeCount": 0,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 159,
+        "midToneRatioTicker": 0.8333333333333334,
+        "stdDev": 37.41135935716073,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1778,
+        "verticalEdgeRatio": 0.1256448307540103,
+        "timestamp": 44.285714285714285
+      },
+      "score": 26.53,
+      "score_breakdown": null,
+      "screen_layout": "chart",
+      "tickers": [
+        "CBIO",
+        "INA",
+        "LABU",
+        "NFU",
+        "SIGA",
+        "UCO",
+        "VLO"
+      ],
+      "timestamp": 44.285714285714285,
+      "timestamp_hms": "00:00:44"
+    },
+    {
+      "chart_stream": {
+        "confidence": 1,
+        "parse_status": "ok",
+        "position_list": [
+          "CBIO",
+          "INA",
+          "LABU",
+          "NFU",
+          "SIGA",
+          "UCO",
+          "VLO"
+        ],
+        "price_action": "",
+        "tickers_rejected": 12,
+        "column_filter": {
+          "column_width": 50,
+          "dominant_x": 510,
+          "in_list_token_count": 5
+        },
+        "bbox_filter": {
+          "y_median": 678,
+          "line_height": 54,
+          "y_min": 246,
+          "y_max": 1110,
+          "rejected_count": 1
+        },
+        "panel_gate": null,
+        "tickers_rejected_list": [
+          "A",
+          "SYMS",
+          "PRC",
+          "BUZZ",
+          "KACRE",
+          "SYM",
+          "EOJN",
+          "DN",
+          "INA",
+          "ARITH",
+          "JOM",
+          "X"
+        ]
+      },
+      "confusion_with_nearby": [],
+      "frame_index": 0,
+      "frame_path": "C:\\Users\\Admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20261024\\qmg-restore-20261024\\ocr_probe\\frames\\20220606_20220606_st8lvpovjem_a6324bba_snapshot\\ocr\\ocr_000001.png",
+      "is_intro_card": false,
+      "issue_codes": [],
+      "low_res_frame_path": null,
+      "nearest_ffmpeg_keyframe_ts": null,
+      "observed_date": null,
+      "ocr_confidence": 0.4892355818662656,
+      "ocr_profile": "",
+      "ocr_text": "7enn Maichin\n70,00\nA Positions Syms +X\nPrc Buzz Kacre\n6, Sym Eojn Dn\nLABU 6, 653 42,63| 15,99\n69,00\nINA ~3aer 133 844\nNFU 1673 3043 5,64\nVLO ~0,763 023 4051\n68,00\nCBIO 0c036 ~02 78,10\nUCO onaa 2,33 5,04\nArith SIGA o6a 8,83 16,35\nJom",
+      "ocr_text_snippet": "7enn Maichin 70,00 A Positions Syms +X Prc Buzz Kacre 6, Sym Eojn Dn LABU 6, 653 42,63| 15,99 69,00 INA ~3aer 133 844 NFU 1673 3043 5,64 VLO ~0,763 023 4051 68,00 CBIO 0c036 ~02 78,10 UCO onaa 2,33...",
+      "ocr_words": [
+        {
+          "text": "7enn Maichin",
+          "left": 366,
+          "top": 26,
+          "width": 348,
+          "height": 50,
+          "conf": 0.004949767607703368,
+          "line": 0
+        },
+        {
+          "text": "70,00",
+          "left": 138,
+          "top": 52,
+          "width": 138,
+          "height": 56,
+          "conf": 0.9778812342519502,
+          "line": 1
+        },
+        {
+          "text": "A",
+          "left": 358,
+          "top": 106,
+          "width": 48,
+          "height": 52,
+          "conf": 0.3755301250226353,
+          "line": 2
+        },
+        {
+          "text": "+X",
+          "left": 1227,
+          "top": 103,
+          "width": 117,
+          "height": 62,
+          "conf": 0.3124517534550745,
+          "line": 2
+        },
+        {
+          "text": "Positions",
+          "left": 439,
+          "top": 105,
+          "width": 232,
+          "height": 60,
+          "conf": 0.9994424599056687,
+          "line": 2
+        },
+        {
+          "text": "Syms",
+          "left": 912,
+          "top": 110,
+          "width": 112,
+          "height": 52,
+          "conf": 0.3954870104789734,
+          "line": 2
+        },
+        {
+          "text": "Kacre",
+          "left": 1077,
+          "top": 192,
+          "width": 204,
+          "height": 42,
+          "conf": 0.0051606016720293765,
+          "line": 3
+        },
+        {
+          "text": "Prc Buzz",
+          "left": 846,
+          "top": 199,
+          "width": 182,
+          "height": 55,
+          "conf": 0.9543843079769059,
+          "line": 3
+        },
+        {
+          "text": "Eojn",
+          "left": 630,
+          "top": 204,
+          "width": 169,
+          "height": 49,
+          "conf": 0.013469350524246693,
+          "line": 4
+        },
+        {
+          "text": "Sym",
+          "left": 447,
+          "top": 201,
+          "width": 102,
+          "height": 62,
+          "conf": 0.9993137723388934,
+          "line": 4
+        },
+        {
+          "text": "6,",
+          "left": 346.262538605064,
+          "top": 204.1094703550758,
+          "width": 89.47492278987204,
+          "height": 56.78105928984837,
+          "conf": 0.006433258580397737,
+          "line": 4
+        },
+        {
+          "text": "Dn",
+          "left": 1075,
+          "top": 223,
+          "width": 77,
+          "height": 41,
+          "conf": 0.08646067912906874,
+          "line": 4
+        },
+        {
+          "text": "6, 653",
+          "left": 707,
+          "top": 291,
+          "width": 136,
+          "height": 50,
+          "conf": 0.4266165623833726,
+          "line": 5
+        },
+        {
+          "text": "LABU",
+          "left": 454,
+          "top": 290,
+          "width": 120,
+          "height": 54,
+          "conf": 0.9979995489120483,
+          "line": 5
+        },
+        {
+          "text": "42,63|",
+          "left": 938,
+          "top": 292,
+          "width": 136,
+          "height": 52,
+          "conf": 0.13957577223247206,
+          "line": 5
+        },
+        {
+          "text": "15,99",
+          "left": 1183,
+          "top": 289,
+          "width": 122,
+          "height": 62,
+          "conf": 0.9943268185188691,
+          "line": 5
+        },
+        {
+          "text": "69,00",
+          "left": 136,
+          "top": 334,
+          "width": 140,
+          "height": 56,
+          "conf": 0.7625077237437856,
+          "line": 6
+        },
+        {
+          "text": "INA",
+          "left": 452,
+          "top": 382,
+          "width": 104,
+          "height": 52,
+          "conf": 0.7902479306033361,
+          "line": 7
+        },
+        {
+          "text": "~3aer",
+          "left": 682,
+          "top": 382,
+          "width": 162,
+          "height": 52,
+          "conf": 0.00289165092538848,
+          "line": 7
+        },
+        {
+          "text": "844",
+          "left": 1202,
+          "top": 382,
+          "width": 100,
+          "height": 54,
+          "conf": 0.5897412588909552,
+          "line": 7
+        },
+        {
+          "text": "133",
+          "left": 963,
+          "top": 381,
+          "width": 114,
+          "height": 60,
+          "conf": 0.26080953327517403,
+          "line": 7
+        },
+        {
+          "text": "NFU",
+          "left": 452,
+          "top": 472,
+          "width": 122,
+          "height": 52,
+          "conf": 0.8549227224359992,
+          "line": 8
+        },
+        {
+          "text": "3043",
+          "left": 940,
+          "top": 472,
+          "width": 134,
+          "height": 52,
+          "conf": 0.058841485530138016,
+          "line": 8
+        },
+        {
+          "text": "5,64",
+          "left": 1204,
+          "top": 472,
+          "width": 100,
+          "height": 54,
+          "conf": 0.9989770650863647,
+          "line": 8
+        },
+        {
+          "text": "1673",
+          "left": 712,
+          "top": 472,
+          "width": 134,
+          "height": 56,
+          "conf": 0.6556079387664795,
+          "line": 8
+        },
+        {
+          "text": "VLO",
+          "left": 454,
+          "top": 562,
+          "width": 98,
+          "height": 54,
+          "conf": 0.3938565228362808,
+          "line": 9
+        },
+        {
+          "text": "~0,763",
+          "left": 683,
+          "top": 561,
+          "width": 164,
+          "height": 60,
+          "conf": 0.15769228131051802,
+          "line": 9
+        },
+        {
+          "text": "023",
+          "left": 962,
+          "top": 564,
+          "width": 114,
+          "height": 54,
+          "conf": 0.3742110870399229,
+          "line": 9
+        },
+        {
+          "text": "4051",
+          "left": 1201,
+          "top": 561,
+          "width": 104,
+          "height": 60,
+          "conf": 0.17198008307840043,
+          "line": 9
+        },
+        {
+          "text": "68,00",
+          "left": 136,
+          "top": 616,
+          "width": 140,
+          "height": 56,
+          "conf": 0.4667517569982985,
+          "line": 10
+        },
+        {
+          "text": "CBIO",
+          "left": 452,
+          "top": 650,
+          "width": 116,
+          "height": 56,
+          "conf": 0.9008034467697144,
+          "line": 11
+        },
+        {
+          "text": "0c036",
+          "left": 710,
+          "top": 652,
+          "width": 138,
+          "height": 54,
+          "conf": 0.1783384930826748,
+          "line": 11
+        },
+        {
+          "text": "78,10",
+          "left": 1184,
+          "top": 652,
+          "width": 120,
+          "height": 54,
+          "conf": 0.8480436192125501,
+          "line": 11
+        },
+        {
+          "text": "~02",
+          "left": 940,
+          "top": 654,
+          "width": 134,
+          "height": 54,
+          "conf": 0.19952373712024143,
+          "line": 11
+        },
+        {
+          "text": "UCO",
+          "left": 452,
+          "top": 741,
+          "width": 108,
+          "height": 56,
+          "conf": 0.9832686685813464,
+          "line": 12
+        },
+        {
+          "text": "onaa",
+          "left": 706,
+          "top": 744,
+          "width": 140,
+          "height": 50,
+          "conf": 0.0162977147847414,
+          "line": 12
+        },
+        {
+          "text": "5,04",
+          "left": 1206,
+          "top": 744,
+          "width": 98,
+          "height": 52,
+          "conf": 0.6198044957342741,
+          "line": 12
+        },
+        {
+          "text": "2,33",
+          "left": 964,
+          "top": 744,
+          "width": 112,
+          "height": 54,
+          "conf": 0.26874223351478577,
+          "line": 12
+        },
+        {
+          "text": "SIGA",
+          "left": 450,
+          "top": 832,
+          "width": 114,
+          "height": 54,
+          "conf": 0.9807737469673157,
+          "line": 13
+        },
+        {
+          "text": "o6a",
+          "left": 707,
+          "top": 834,
+          "width": 138,
+          "height": 50,
+          "conf": 0.03471564623573847,
+          "line": 13
+        },
+        {
+          "text": "16,35",
+          "left": 1184,
+          "top": 832,
+          "width": 120,
+          "height": 56,
+          "conf": 0.6036844832411457,
+          "line": 13
+        },
+        {
+          "text": "8,83",
+          "left": 962,
+          "top": 834,
+          "width": 114,
+          "height": 54,
+          "conf": 0.24562041461467743,
+          "line": 13
+        },
+        {
+          "text": "Arith",
+          "left": 131,
+          "top": 836,
+          "width": 147,
+          "height": 66,
+          "conf": 0.9853747116034087,
+          "line": 13
+        },
+        {
+          "text": "Jom",
+          "left": 138,
+          "top": 1058,
+          "width": 122,
+          "height": 54,
+          "conf": 0.432852127141718,
+          "line": 14
+        }
+      ],
+      "output_kind": "snapshot",
+      "parsed_observations": [],
+      "parsed_row_count": 0,
+      "phash": "bf2952a3d264bcd0",
+      "phash_overlay": "d02f272d7df4d0c0",
+      "phash_region": {
+        "x": 0.86,
+        "y": 0.62,
+        "w": 0.14,
+        "h": 0.22
+      },
+      "prefilter_profile": "chart_stream",
+      "prefilter_score": 27.59,
+      "prefilter_stats": {
+        "brightRatio": 0.011111111111111112,
+        "darkRatio": 0.9547222222222222,
+        "edgeRatio": 0.10942689562575084,
+        "horizontalComparisons": 14151,
+        "horizontalEdgeHits": 1319,
+        "horizontalEdgeRatio": 0.09320896049749135,
+        "meanLuma": 17.06277777777778,
+        "rowDensity": 3,
+        "multiColStripeCount": 0,
+        "brightColumnLeft": 0,
+        "brightColumnRight": 159,
+        "midToneRatioTicker": 0.8333333333333334,
+        "stdDev": 37.41135935716073,
+        "verticalComparisons": 14151,
+        "verticalEdgeHits": 1778,
+        "verticalEdgeRatio": 0.1256448307540103,
+        "timestamp": 42
+      },
+      "score": 23.52,
+      "score_breakdown": null,
+      "screen_layout": "chart",
+      "tickers": [
+        "CBIO",
+        "INA",
+        "LABU",
+        "NFU",
+        "SIGA",
+        "UCO",
+        "VLO"
+      ],
+      "timestamp": 42,
+      "timestamp_hms": "00:00:42"
+    }
+  ],
+  "top_rejected_candidates": [],
+  "whiteboard_segments": [
+    {
+      "capture_count": 1,
+      "end_ts": 46,
+      "end_hms": "00:00:46",
+      "is_intro_card": false,
+      "layout": "chart",
+      "peak_frame_index": 7,
+      "peak_score": 28.28,
+      "start_hms": "00:00:46",
+      "start_ts": 46
+    }
+  ],
+  "merged_position_list": [
+    "CBIO",
+    "INA",
+    "LABU",
+    "NFU",
+    "SIGA",
+    "UCO",
+    "VLO"
+  ],
+  "merged_raw_token_list": [],
+  "merged_raw_token_clusters": [
+    {
+      "canonical": "CBIO",
+      "frameCount": 5,
+      "frequency": 5,
+      "members": [
+        "CBIO"
+      ]
+    },
+    {
+      "canonical": "INA",
+      "frameCount": 5,
+      "frequency": 5,
+      "members": [
+        "INA"
+      ]
+    },
+    {
+      "canonical": "LABU",
+      "frameCount": 5,
+      "frequency": 5,
+      "members": [
+        "LABU"
+      ]
+    },
+    {
+      "canonical": "NFU",
+      "frameCount": 5,
+      "frequency": 5,
+      "members": [
+        "NFU"
+      ]
+    },
+    {
+      "canonical": "SIGA",
+      "frameCount": 5,
+      "frequency": 5,
+      "members": [
+        "SIGA"
+      ]
+    },
+    {
+      "canonical": "UCO",
+      "frameCount": 5,
+      "frequency": 5,
+      "members": [
+        "UCO"
+      ]
+    },
+    {
+      "canonical": "VLO",
+      "frameCount": 5,
+      "frequency": 5,
+      "members": [
+        "VLO"
+      ]
+    }
+  ]
+}

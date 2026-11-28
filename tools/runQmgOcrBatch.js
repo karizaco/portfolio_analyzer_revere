@@ -12,34 +12,44 @@
  *   node tools/runQmgOcrBatch.js --dates 20220218,20220318,20220321,20220323,20220330 --parallel 4
  *   node tools/runQmgOcrBatch.js --chunk 1 --parallel 4
  *   node tools/runQmgOcrBatch.js --all-unscanned --parallel 4
+ *
+ *   --cluster-rule shipped|corroborated|corroborated-strict|supported
+ *                  |supported+corroborated|video-supported
+ *                  |video-supported+corroborated|swallowed
+ *                  |corroborated+swallowed
+ *     Which canonical-selection rule the clusterer runs. The names are the
+ *     ones `tools/evalParserReplay.js --cluster-rule` uses, so a measurement
+ *     and the scan that follows it are named the same way. Default
+ *     `corroborated` (the current production default). Use `shipped` only
+ *     when reproducing pre-2026-11-03 output.
  */
 
 const fs = require('node:fs');
 const path = require('path');
-const { spawn, execSync } = require('node:child_process');
-const { mediaVideoId } = require('./mediaVideoId.js');
+const { isRightSidebarDate } = require('../src/video/chartStreamCrop');
+// The child supervisor lives in the shared daemon-support module, so every
+// tool that spawns the scan tool drains its stdout the same way. It was
+// duplicated here first, and the three sibling daemons still had the
+// stderr-only drain that causes the deadlock.
+const { superviseChild, STDOUT_TAIL_CHARS } = require('./qmg_scan_daemon_support');
 const { mediaRoot } = require('./mediaRoot.js');
 
-function readFlag(flag, argv = process.argv.slice(2)) {
-  const i = argv.indexOf(flag);
-  return i === -1 ? null : (argv[i + 1] || '');
-}
-
 const ROOT = path.resolve(__dirname, '..');
-// The media lives OUTSIDE the git working tree since the 2026-10-21 loss —
-// see CLAUDE.md. The old in-tree paths are kept only as a fallback so this
-// runner still works on a machine that has never been cleaned out.
-const MEDIA_ROOT = mediaRoot(readFlag('--media-root'));
-const VIDEO_DIR_1080 = path.join(MEDIA_ROOT, 'downloads_1080p');
-const VIDEO_DIR_720 = path.join(MEDIA_ROOT, 'downloads_720p');
-const VIDEO_DIR_HIRES = path.join(MEDIA_ROOT, 'downloads_720p');
-const OUT_ROOT = readFlag('--output-root') || path.join(ROOT, 'data', 'video_scan_test', '_rerun');
-const RUN_TAG = readFlag('--run-tag');
+// The media lives OUTSIDE the git working tree — a `git sparse-checkout`
+// prune on 2026-10-21 destroyed ~215 GB of downloads that sat inside it,
+// and git could not restore them because they were untracked. It was moved
+// to the media root (D: by default) on 2026-11-26.
+//
+// tools/mediaRoot.js is the single source of truth: --media-root flag ->
+// $MEDIA_ROOT env -> the default. Do not hardcode a drive letter here.
+const VIDEO_DIR_1080 = path.join(mediaRoot(), 'downloads_1080p');
+const VIDEO_DIR_HIRES = path.join(mediaRoot(), 'downloads_1080p');
+const OUT_ROOT = path.join(ROOT, 'data', 'video_scan_test', '_rerun');
 
 // Per-video timeout: EasyOCR at ~60-90s/frame × 6 frames = 360-540s; give 40 min for longer videos
 const PER_VIDEO_TIMEOUT_MS = 40 * 60 * 1000;
 
-const DEFAULT_FLAGS = [
+const BASE_FLAGS = [
   '--prefilter-profile', 'chart_stream',
   '--chart-stream-parser',
   '--basename', 'qmg',
@@ -48,198 +58,132 @@ const DEFAULT_FLAGS = [
   '--fps', '0.25',
   '--prefilter-max-frames', '12',
   '--max-captures', '3',
+];
+
+// Batch-snapshot mode extracts N frames within a window of the PREFILTER'S
+// BEST-SCORING FRAME and REPLACES the uniform selection with them. That is
+// only sound when the best-scoring frame is the frame the position list is
+// visible on — and MEASURED, it is not.
+//
+// On 20230609 (production scan, 2026-11-02) the prefilter's best frame was
+// ts=3100, score 25.9, and it read ZERO holdings. The frame that read the
+// date's 13 ground-truth holdings exactly was ts=1944, whose prefilter score
+// was -3.36 — near the bottom of the six candidates. Batch mode would have
+// centred on ts=3100 and OCR'd a window around it, and because it REPLACES
+// the selected rows, the good frame would never have been read at all.
+//
+// The 2022-era measurement says the same thing: on 20220218 the best-scoring
+// prefilter frame (t=40) read 7 tickers while t=912 read 12.
+//
+// So the uniform selection is what actually finds the list, and batch mode
+// is what would throw it away. Batch mode stays OFF for the 2023-era sidebar
+// dates, where the measurement above was taken.
+const BATCH_SNAPSHOT_FLAGS = [
   '--batch-snapshots',
   '--batch-count', '8',
   '--batch-window', '4',
-  '--temporal-decay', '1800', // Boost early frames — verified better on 20220218 (6/10 vs 4/7)
 ];
-
-/**
- * Flags for one scan.
- *
- * `--batch-snapshots` overrides `--max-captures`: it OCRs exactly
- * `--batch-count` frames around the best prefilter timestamp, so the OCR
- * frame count per video is `--batch-count`, not `--max-captures`. At ~60 s
- * per EasyOCR frame that is the knob that decides how many videos an hour.
- */
-function flagsForScan(opts) {
-  const flags = DEFAULT_FLAGS.slice();
-  const set = (flag, value) => {
-    const i = flags.indexOf(flag);
-    if (i === -1) { flags.push(flag, String(value)); return; }
-    flags[i + 1] = String(value);
-  };
-  if (opts.batchCount != null) set('--batch-count', opts.batchCount);
-  if (opts.batchWindow != null) set('--batch-window', opts.batchWindow);
-  if (opts.fps != null) set('--fps', opts.fps);
-  if (opts.prefilterMaxFrames != null) set('--prefilter-max-frames', opts.prefilterMaxFrames);
-  return flags;
-}
-
-// The position-list overlay layout drifts left over time, so the default crop
-// (x=0.86, w=0.14) stops covering the ticker column. Measured on the frames
-// themselves, the ticker column sits at:
-//
-//   2022-era          frame x ~= 0.90 - 0.93   -> default crop is fine
-//   mid-2023          frame x ~= 0.846          -> needs x=0.83
-//   Dec-2023          frame x ~= 0.827 - 0.839  -> needs x=0.80
-//
-// A crop that starts to the left of the ticker column also pulls in chart
-// area, which is where the false positives come from — hence the narrowest
-// crop that still covers the column.
-//
-// See also qmg_ground_truth.json _meta: "20230518+ videos use wider table
-// layout — default crop (0.86,0.14) may cut off left edge".
-const CROP_2022 = null;                       // default crop
-const CROP_2023_MID = '0.83,0.55,0.17,0.45';  // May 2023 - Nov 2023
-const CROP_2023_LATE = '0.80,0.60,0.20,0.26'; // Dec 2023 onward
-
-/** The crop fraction to use for a date-key, or null for the default. */
-function cropForDate(dateKey) {
-  if (dateKey >= '20231201') return CROP_2023_LATE;
-  if (dateKey >= '20230501') return CROP_2023_MID;
-  return CROP_2022;
-}
 
 // 2022-era (pre-mid-2023): position lists appear early in the stream (ts=40-390).
 // 2023-era (mid-2023+): position lists appear later (ts=1940-5627).
 // Use --temporal-decay 1800 for 2022-era (boost early frames) and
 // --temporal-decay 0 for 2023-era (no bias, let prefilter score decide).
+//
+// The CROP is no longer set here. It used to be, with a hand-listed set of
+// 29 dates and the rectangle `0.83,0.55,0.17,0.45` — but that list missed
+// 20231201 and 20231215, whose ticker column starts further LEFT still (source
+// x 1586-1613, so x=0.83 shaves the first glyph off every ticker). The crop is
+// now derived from the upload date inside the scan tool itself
+// (src/video/chartStreamCrop.js), so the era rule lives in ONE place and a
+// date cannot be mis-classified by a stale list.
+//
+// The era question here comes from the SAME function the crop uses, so a date
+// can never get the sidebar crop and the floating-panel flags. An unknown
+// date is the sidebar era for both — the safer of the two, because the
+// sidebar rectangle still contains the 2022-era floating panel.
 function getFlagsForDate(dateKey) {
   const extraFlags = [];
-  const crop = cropForDate(dateKey);
-  if (crop) {
-    extraFlags.push('--phash-region-fraction', crop);
+  if (isRightSidebarDate(dateKey)) {
     extraFlags.push('--temporal-decay', '0'); // 2023-era: position list appears late
   }
-  // 2022-era gets the default --temporal-decay 1800 from DEFAULT_FLAGS
+  // 2022-era gets the default --temporal-decay 1800, which is the tool's own
+  // default (src/video/ocrScanArgs.js) rather than something set here.
   return extraFlags;
+}
+
+// The cluster rules the batch runner can ask the scan tool for.
+//
+// The NAMES are the ones `tools/evalParserReplay.js --cluster-rule` uses, so
+// the measurement and the production scan are named the same way and cannot
+// drift apart. The default is the currently selected production rule;
+// experimental alternatives stay available by explicit name.
+//
+// The corroboration rule is the default now, so `shipped` (the rule as it
+// was before 2026-11-03) has to turn it OFF explicitly -- otherwise
+// `--cluster-rule shipped` would silently run the corroborated rule.
+const CLUSTER_RULE_FLAGS = {
+  shipped: ['--no-cluster-corroboration'],
+  corroborated: [],
+  'corroborated-strict': ['--cluster-strict-corroboration'],
+  supported: ['--cluster-supported', '--no-cluster-corroboration'],
+  'supported+corroborated': ['--cluster-supported'],
+  'video-supported': ['--cluster-video-supported', '--no-cluster-corroboration'],
+  'video-supported+corroborated': ['--cluster-video-supported'],
+  swallowed: ['--cluster-swallowed-holdings', '--no-cluster-corroboration'],
+  'corroborated+swallowed': ['--cluster-swallowed-holdings'],
+};
+
+// The full flag list for one date.
+function flagsForDate(dateKey, clusterRule = 'corroborated') {
+  const flags = [...BASE_FLAGS, ...getFlagsForDate(dateKey)];
+  // Batch-snapshot mode is OFF for the 2023-era sidebar dates — see
+  // BATCH_SNAPSHOT_FLAGS above for the measurement that decided it. The
+  // 2022-era dates keep the behaviour they were scanned with.
+  if (!isRightSidebarDate(dateKey)) {
+    flags.push(...BATCH_SNAPSHOT_FLAGS);
+  }
+  flags.push(...(CLUSTER_RULE_FLAGS[clusterRule] || []));
+  return flags;
 }
 
 function parseArgs(argv) {
   const args = {
     parallel: 1,
     dates: null,
-    videos: null,
     chunk: null,
     allUnscanned: false,
     dryRun: false,
     lowCpu: false,
-    batchCount: null,
-    batchWindow: null,
-    fps: null,
-    prefilterMaxFrames: null,
+    runTag: null,
+    clusterRule: 'corroborated',
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--parallel') args.parallel = Math.max(1, parseInt(argv[++i] || '1', 10));
     else if (a === '--dates') args.dates = (argv[++i] || '').split(',').filter(Boolean);
-    else if (a === '--videos') args.videos = (argv[++i] || '').split(',').filter(Boolean);
     else if (a === '--chunk') args.chunk = parseInt(argv[++i] || '1', 10);
     else if (a === '--all-unscanned') args.allUnscanned = true;
     else if (a === '--dry-run') args.dryRun = true;
     else if (a === '--low-cpu') args.lowCpu = true;
-    else if (a === '--batch-count') args.batchCount = parseInt(argv[++i] || '8', 10);
-    else if (a === '--batch-window') args.batchWindow = parseInt(argv[++i] || '4', 10);
-    else if (a === '--fps') args.fps = argv[++i];
-    else if (a === '--prefilter-max-frames') args.prefilterMaxFrames = parseInt(argv[++i] || '12', 10);
+    else if (a === '--run-tag') args.runTag = argv[++i] || null;
+    else if (a === '--cluster-rule') args.clusterRule = argv[++i] || 'corroborated';
+  }
+  if (!Object.prototype.hasOwnProperty.call(CLUSTER_RULE_FLAGS, args.clusterRule)) {
+    throw new Error(
+      `unknown --cluster-rule: ${args.clusterRule} `
+      + `(expected one of: ${Object.keys(CLUSTER_RULE_FLAGS).join(', ')})`
+    );
   }
   return args;
 }
 
-/**
- * Map a date-key to the video file on disk.
- *
- * The re-downloaded files are named `<date>_<id>.mp4` only when the date was
- * known at download time; most are bare `<id>.mp4`. `data/qmg_video_recovery_manifest.json`
- * records the date for every one of the 718 videos, so use it to resolve the
- * bare names. Falls back to the date-prefixed filename.
- */
-const manifest = (() => {
-  try {
-    return JSON.parse(
-      fs.readFileSync(path.join(ROOT, 'data', 'qmg_video_recovery_manifest.json'), 'utf8')
-    ).videos || [];
-  } catch (_) {
-    return [];
-  }
-})();
-
-const byDate = new Map();
-for (const v of manifest) {
-  if (!v.date || v.channel !== 'qullamaggie') continue;
-  if (!byDate.has(v.date)) byDate.set(v.date, []);
-  byDate.get(v.date).push(v.video_id);
-}
-
-// Videos with no date on file get one interpolated from the playlist order
-// (tools/qmgVideoDates.js). That covers the majority of the channel, which
-// is what makes it possible to OCR videos that have no ground truth.
-const DATE_FILE = readFlag('--date-file')
-  || 'data/qmg_video_dates.json';
-let dateOf = new Map();   // video_id -> YYYYMMDD
-try {
-  const inferred = JSON.parse(
-    fs.readFileSync(path.join(ROOT, DATE_FILE), 'utf8')
-  );
-  for (const [id, entry] of Object.entries(inferred)) {
-    const d = typeof entry === 'string' ? entry : entry.date;
-    if (!d || !/^\d{8}$/.test(d)) continue;
-    dateOf.set(id, d);
-    if (!byDate.has(d)) byDate.set(d, []);
-    if (!byDate.get(d).includes(id)) byDate.get(d).push(id);
-  }
-} catch (_) {
-  console.error('[batch] no ' + DATE_FILE + ' — run tools/qmgVideoDates.js ' +
-    'to reach videos that have no date on file.');
-}
-
-/** Every video_id on disk, per directory, keyed by bare id. */
-function indexDir(dir) {
-  const m = new Map();
-  let entries;
-  try {
-    entries = fs.readdirSync(dir);
-  } catch (_) {
-    return m;
-  }
-  for (const f of entries) {
-    if (!f.endsWith('.mp4')) continue;
-    // Only an 8-digit upload_date is ever prefixed; a video id may itself
-    // start with digits, so `^\d+_` would truncate it.
-    const id = mediaVideoId(f);
-    m.set(id, f);
-  }
-  return m;
-}
-
-let index1080 = null;
-let index720 = null;
-
 function findVideo(dateKey) {
-  if (index1080 === null) {
-    index1080 = indexDir(VIDEO_DIR_1080);
-    index720 = indexDir(VIDEO_DIR_720);
-  }
-
-  const ids = byDate.get(dateKey) || [];
-  for (const id of ids) {
-    if (index1080.has(id)) {
-      return { file: index1080.get(id), dir: VIDEO_DIR_1080, resolution: '1080p', videoId: id };
-    }
-  }
-  for (const id of ids) {
-    if (index720.has(id)) {
-      return { file: index720.get(id), dir: VIDEO_DIR_720, resolution: '720p', videoId: id };
-    }
-  }
-
-  // Fall back to a date-prefixed filename (e.g. for videos not in the manifest).
-  const files1080 = fs.existsSync(VIDEO_DIR_1080) ? fs.readdirSync(VIDEO_DIR_1080) : [];
+  // Prefer 1080p
+  const files1080 = fs.readdirSync(VIDEO_DIR_1080);
   const match1080 = files1080.find(f => f.startsWith(dateKey + '_') && f.endsWith('.mp4'));
   if (match1080) return { file: match1080, dir: VIDEO_DIR_1080, resolution: '1080p' };
 
-  const filesHires = fs.existsSync(VIDEO_DIR_HIRES) ? fs.readdirSync(VIDEO_DIR_HIRES) : [];
+  const filesHires = fs.readdirSync(VIDEO_DIR_HIRES);
   const matchHires = filesHires.find(f => f.startsWith(dateKey + '_') && f.endsWith('.mp4'));
   if (matchHires) return { file: matchHires, dir: VIDEO_DIR_HIRES, resolution: '720p' };
 
@@ -248,21 +192,6 @@ function findVideo(dateKey) {
 
 function loadGT() {
   return JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'qmg_ground_truth.json'), 'utf8'));
-}
-
-/** Locate a video_id on disk, preferring the 1080p copy. */
-function findVideoById(videoId) {
-  if (index1080 === null) {
-    index1080 = indexDir(VIDEO_DIR_1080);
-    index720 = indexDir(VIDEO_DIR_720);
-  }
-  if (index1080.has(videoId)) {
-    return { file: index1080.get(videoId), dir: VIDEO_DIR_1080, resolution: '1080p', videoId };
-  }
-  if (index720.has(videoId)) {
-    return { file: index720.get(videoId), dir: VIDEO_DIR_720, resolution: '720p', videoId };
-  }
-  return null;
 }
 
 function getUnscannedDates(gt) {
@@ -303,7 +232,18 @@ function walkDir(dir, out) {
 }
 
 function scoreResult(log, gtEntry) {
-  const gtSet = new Set(Object.values(gtEntry).flat());
+  const gtTickers = [];
+  if (Array.isArray(gtEntry)) {
+    gtTickers.push(...gtEntry);
+  } else if (gtEntry && typeof gtEntry === 'object') {
+    // Ground truth has both legacy capture arrays and the newer capture
+    // objects ({ tickers, crop }). Never include crop coordinates as tickers.
+    for (const capture of Object.values(gtEntry)) {
+      if (Array.isArray(capture)) gtTickers.push(...capture);
+      else if (capture && Array.isArray(capture.tickers)) gtTickers.push(...capture.tickers);
+    }
+  }
+  const gtSet = new Set(gtTickers);
   const merged = new Set(log.merged_position_list || []);
   const hit = [...merged].filter(t => gtSet.has(t));
   const miss = [...gtSet].filter(t => !merged.has(t));
@@ -320,7 +260,23 @@ function scoreResult(log, gtEntry) {
   };
 }
 
-async function runScan(dateKey, video, runTag, extraFlags = [], baseFlags = DEFAULT_FLAGS) {
+/**
+ * Spawn a child and supervise it until it exits or the timeout fires.
+ *
+ * The child's stdout MUST be drained here. A Windows pipe holds about 64 KB,
+ * and the scan tool prints its whole result object to stdout at the end --
+ * hundreds of kilobytes. An undrained stdout blocks the child AFTER it has
+ * written a complete probe log and BEFORE its `finally` block runs, so the
+ * child never exits, `close` never fires, the kill timer fires instead, and
+ * the batch records a TIMEOUT for a video that was read successfully.
+ *
+ * The implementation is shared with the other scan daemons -- see
+ * tools/qmg_scan_daemon_support.js.
+ *
+ * Returns { status, code, stdoutTail, stderr }.
+ */
+
+async function runScan(dateKey, video, runTag, clusterRule = 'corroborated') {
   const videoPath = path.join(video.dir, video.file);
   const env = {
     ...process.env,
@@ -336,82 +292,36 @@ async function runScan(dateKey, video, runTag, extraFlags = [], baseFlags = DEFA
     '--date', dateKey,
     '--output-root', OUT_ROOT,
     '--run-tag', runTag,
-    ...baseFlags,
-    ...extraFlags,
+    ...flagsForDate(dateKey, clusterRule),
   ];
 
-  return new Promise((resolve) => {
-    console.log(`[${dateKey}] Starting ${video.file} (${video.resolution})`);
-    const start = Date.now();
-    const child = spawn(cmd[0], cmd.slice(1), { env, stdio: ['ignore', 'pipe', 'pipe'] });
+  console.log(`[${dateKey}] Starting ${video.file} (${video.resolution})`);
+  const start = Date.now();
 
-    let killed = false;
-    const killTimer = setTimeout(() => {
-      console.log(`[${dateKey}] TIMEOUT after ${PER_VIDEO_TIMEOUT_MS/1000}s — killing`);
-      killed = true;
-      // On Windows, kill process tree
-      try {
-        execSync(`taskkill /PID ${child.pid} /T /F`, { stdio: 'ignore' });
-      } catch {}
-      child.kill('SIGTERM');
-    }, PER_VIDEO_TIMEOUT_MS);
-
-    let stderr = '';
-    child.stderr.on('data', d => { stderr += d.toString(); });
-    // Drain stdout. scanVideoWithOcr.js prints the whole scan result as one
-    // JSON blob, which is larger than the 64 KB pipe buffer — if nobody reads
-    // it the child blocks on write() and never exits. Two videos hung this
-    // way on 2026-10-24: the OCR completed and the log was written, but the
-    // process sat there until the timeout killed it.
-    child.stdout.on('data', () => {});
-
-    child.on('close', (code) => {
-      clearTimeout(killTimer);
-      const elapsed = ((Date.now() - start) / 1000).toFixed(0);
-      const status = killed ? 'TIMEOUT' : code === 0 ? 'OK' : 'ERROR';
-
-      // Read result
-      const logFile = path.join(OUT_ROOT, runTag, 'ocr_probe', 'logs');
-      let log = null;
-      try {
-        // Several videos can share an interpolated date, so match the log by
-        // video id, not just by the date prefix.
-        const stem = video.videoId.toLowerCase();
-        const files = fs.readdirSync(logFile).filter((f) =>
-          f.startsWith(dateKey + '_') && f.toLowerCase().includes(stem));
-        const picked = files[0] ||
-          fs.readdirSync(logFile).filter((f) => f.startsWith(dateKey + '_'))[0];
-        if (picked) {
-          log = JSON.parse(fs.readFileSync(path.join(logFile, picked), 'utf8'));
-        }
-      } catch {}
-
-      // A scan that wrote its log but then hung (see the stdout-drain note
-      // above) is a SUCCESS, not a failure — the OCR result is on disk. Only
-      // report TIMEOUT/ERROR when there is no usable log.
-      if (log && log.status !== 'error') {
-        console.log(`[${dateKey}] OK after ${elapsed}s | captures=${log.captured_count || '?'}` +
-          (killed ? ' (recovered: log was written before the timeout)' : ''));
-        resolve({ dateKey, status: 'OK', elapsed: parseInt(elapsed), log });
-        return;
-      }
-
-      if (killed || code !== 0) {
-        console.log(`[${dateKey}] ${status} after ${elapsed}s (code=${code})`);
-        resolve({ dateKey, status, elapsed: parseInt(elapsed), error: stderr.slice(0, 200) });
-        return;
-      }
-
-      console.log(`[${dateKey}] OK after ${elapsed}s | captures=${log?.captured_count || '?'}`);
-      resolve({ dateKey, status: 'OK', elapsed: parseInt(elapsed), log });
-    });
-
-    child.on('error', (err) => {
-      clearTimeout(killTimer);
-      console.log(`[${dateKey}] SPAWN ERROR: ${err.message}`);
-      resolve({ dateKey, status: 'ERROR', error: err.message });
-    });
+  const { status, code, stdoutTail, stderr } = await superviseChild(cmd, env, {
+    timeoutMs: PER_VIDEO_TIMEOUT_MS,
+    onTimeout: () => console.log(`[${dateKey}] TIMEOUT after ${PER_VIDEO_TIMEOUT_MS/1000}s — killing`),
   });
+
+  const elapsed = ((Date.now() - start) / 1000).toFixed(0);
+
+  if (status !== 'OK') {
+    console.log(`[${dateKey}] ${status} after ${elapsed}s (code=${code})`);
+    return { dateKey, status, elapsed: parseInt(elapsed), error: stderr.slice(0, 200), stdoutTail: stdoutTail.slice(-2000) };
+  }
+
+  // Read result
+  const logFile = path.join(OUT_ROOT, runTag, 'ocr_probe', 'logs');
+  let log = null;
+  try {
+    const files = fs.readdirSync(logFile).filter(f => f.startsWith(dateKey + '_'));
+    if (files.length) {
+      log = JSON.parse(fs.readFileSync(path.join(logFile, files[0]), 'utf8'));
+    }
+  } catch {}
+
+  console.log(`[${dateKey}] OK after ${elapsed}s | captures=${log?.captured_count || '?'}`);
+  return { dateKey, status: 'OK', elapsed: parseInt(elapsed), log };
 }
 
 // Semaphore-based worker pool
@@ -435,51 +345,36 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
   const gt = loadGT();
 
-  // Build the work list. A job is (dateKey, video) — several videos can share
-  // an interpolated date, so targeting by date alone only ever reaches one of
-  // them. --videos takes explicit ids; --dates keeps the older behaviour of
-  // scanning the first on-disk match for each date.
-  let jobs = [];
-  if (args.videos) {
-    for (const id of args.videos) {
-      const video = findVideoById(id);
-      const dateKey = dateOf.get(id);
-      if (!video) { console.error('  ' + id + ': not on disk'); continue; }
-      if (!dateKey) { console.error('  ' + id + ': no date'); continue; }
-      jobs.push({ date: dateKey, video });
-    }
-  } else if (args.dates) {
-    for (const d of args.dates) {
-      const video = findVideo(d);
-      if (video) jobs.push({ date: d, video });
-    }
+  // Build date list
+  let dates;
+  if (args.dates) {
+    dates = args.dates;
   } else if (args.allUnscanned) {
-    jobs = getUnscannedDates(gt)
-      .map((d) => ({ date: d, video: findVideo(d) }))
-      .filter((j) => j.video !== null);
+    dates = getUnscannedDates(gt);
   } else if (args.chunk) {
     const unscanned = getUnscannedDates(gt);
     const chunkSize = 5;
     const start = (args.chunk - 1) * chunkSize;
-    jobs = unscanned.slice(start, start + chunkSize)
-      .map((d) => ({ date: d, video: findVideo(d) }))
-      .filter((j) => j.video !== null);
+    dates = unscanned.slice(start, start + chunkSize);
   } else {
     console.error('Usage: node runQmgOcrBatch.js --dates d1,d2 [--parallel N]');
-    console.error('   or: node runQmgOcrBatch.js --videos id1,id2 [--parallel N]');
     console.error('   or: node runQmgOcrBatch.js --all-unscanned [--parallel N]');
     console.error('   or: node runQmgOcrBatch.js --chunk N [--parallel N]');
     console.error('   or: node runQmgOcrBatch.js --low-cpu --chunk N [--parallel N]');
+    console.error('   --run-tag <tag>   names the output directory (default qmg-easyocr-<date>)');
     process.exit(1);
   }
-  const dates = jobs.map((j) => j.date);
 
   // Cap parallelism when --low-cpu is set (single-threaded EasyOCR can't benefit from more)
   const parallel = args.lowCpu
     ? Math.min(args.parallel, 2)
     : args.parallel;
 
-  const runTag = RUN_TAG || `qmg-easyocr-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
+  // The run tag names the RUN, and a re-run with different parameters has to
+  // be distinguishable from the one it supersedes without opening the
+  // directory (CLAUDE.md, § 'Scan output directories'). The default is the
+  // date; `--run-tag` overrides it for a run whose parameters differ.
+  const runTag = args.runTag || `qmg-easyocr-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`;
   console.log(`\n=== QMG EasyOCR Batch ===`);
   console.log(`Run tag: ${runTag}`);
   console.log(`Dates: ${dates.join(', ')}`);
@@ -487,8 +382,9 @@ async function main() {
   console.log(`Output: ${OUT_ROOT}/${runTag}/\n`);
 
   if (args.dryRun) {
-    for (const j of jobs) {
-      console.log(`  ${j.date}  ${j.video.videoId}  ${j.video.file} (${j.video.resolution})`);
+    for (const d of dates) {
+      const v = findVideo(d);
+      console.log(`  ${d}: ${v ? v.file + ' (' + v.resolution + ')' : 'NOT FOUND'}`);
     }
     return;
   }
@@ -496,9 +392,11 @@ async function main() {
   // Ensure output dir exists
   fs.mkdirSync(path.join(OUT_ROOT, runTag), { recursive: true });
 
-  const baseFlags = flagsForScan(args);
+  const jobs = dates.map(d => ({ date: d, video: findVideo(d) }))
+    .filter(j => j.video !== null);
+
   const results = await runPool(jobs, parallel, async ({ date, video }, idx) => {
-    return runScan(date, video, runTag, getFlagsForDate(date), baseFlags);
+    return runScan(date, video, runTag, args.clusterRule);
   });
 
   // Report
@@ -510,21 +408,20 @@ async function main() {
       continue;
     }
     const gtEntry = gt[r.dateKey];
-    if (!gtEntry) {
-      // No ground truth for this date — still report what was read. The
-      // tickers are the point; the score is simply not computable yet.
-      const merged = r.log.merged_position_list || [];
-      console.log(`  ${r.dateKey}: (no GT) ${merged.length} ticker(s): ` +
-        (merged.join(',') || 'none') + ` | time=${r.elapsed}s`);
-      continue;
-    }
+    if (!gtEntry) continue;
     const s = scoreResult(r.log, gtEntry);
     totalHit += s.hit;
     totalGt += s.hit + s.miss;
     totalFp += s.fp;
-    console.log(`  ${r.dateKey}: recall=${s.recall} (${s.recallPct}%) | miss=${s.missTickers.join(',') || 'none'} | FP=${s.fpTickers.join(',') || 'none'} | time=${r.elapsed}s`);
+    console.log(`  ${r.dateKey}: recall=${s.recall} (${s.recallPct}%) | FP=${s.fpTickers.join(',') || 'none'} | time=${r.elapsed}s`);
   }
   console.log(`\nOverall: ${totalHit}/${totalGt} = ${Math.round(100*totalHit/totalGt)}% recall, ${totalFp} FPs`);
 }
 
-main().catch(e => { console.error(e); process.exit(1); });
+// Only run the batch when this file is the entry point. A test that requires
+// the module to reach `superviseChild` must not start a scan.
+if (require.main === module) {
+  main().catch(e => { console.error(e); process.exit(1); });
+}
+
+module.exports = { superviseChild, STDOUT_TAIL_CHARS, scoreResult };

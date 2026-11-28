@@ -3,17 +3,19 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
 import re
 import sqlite3
 import subprocess
 import sys
+import tempfile
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 import shutil
 
 WORKSPACE_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PIPELINE_ROOT = WORKSPACE_ROOT / 'data' / 'video_pipeline'
-SCHEMA_VERSION = 1
 SCHEMA_SQL_PATH = WORKSPACE_ROOT / 'data' / 'db' / 'schema.sql'
 REFERENCE_SUFFIXES = {'.jpg', '.jpeg', '.pgm', '.png', '.webp'}
 VIDEO_SUFFIXES = {'.mp4', '.mov', '.mkv', '.m4v', '.webm'}
@@ -100,6 +102,18 @@ def _apply_migrations(connection: sqlite3.Connection) -> None:
     # Version 1: backfill `channel` on `videos` and `catalog_runs` from
     # `source_url` so legacy rows get a channel label.
     if current < 1:
+        # The backfills below name `channel`, so the column has to exist
+        # first. A database written by an older worker may not have it --
+        # and an UPDATE against a missing column aborts the whole migration,
+        # which leaves the database unopenable rather than half-migrated.
+        for table in ('videos', 'catalog_runs'):
+            columns = {
+                row['name'] for row in connection.execute(f'PRAGMA table_info({table})')
+            }
+            if 'channel' not in columns:
+                connection.execute(
+                    f'ALTER TABLE {table} ADD COLUMN channel TEXT NOT NULL DEFAULT \'\''
+                )
         connection.execute(
             "UPDATE videos SET channel = 'revere' "
             "WHERE channel = '' AND source_url LIKE '%@revereasset%'"
@@ -124,6 +138,173 @@ def _apply_migrations(connection: sqlite3.Connection) -> None:
         )
         connection.execute(
             "INSERT OR IGNORE INTO schema_version (version) VALUES (1)"
+        )
+        connection.commit()
+
+    # Version 2: make `catalog_runs` portable and honest.
+    #
+    # `raw_output_path` held an absolute Windows path, so every pointer in the
+    # run history resolved on the machine that made the run and nowhere else.
+    # A path inside the repository is rewritten relative to the repository
+    # root; a path from another machine has no such form and is left alone --
+    # converting it would only make it wrong in a different way.
+    #
+    # `kind` separates a real catalog run from a test fixture. The fixtures
+    # used `example.com/mock-playlist`, which is self-labelling, but they
+    # still made up four of the twenty-eight rows in the audit table, and a
+    # reader had to know that to discount them.
+    if current < 2:
+        columns = {
+            row['name'] for row in connection.execute('PRAGMA table_info(catalog_runs)')
+        }
+        if 'kind' not in columns:
+            connection.execute(
+                "ALTER TABLE catalog_runs ADD COLUMN kind TEXT NOT NULL DEFAULT 'live'"
+            )
+        connection.execute(
+            "UPDATE catalog_runs SET kind = 'fixture' "
+            "WHERE source_url NOT LIKE '%youtube.com%'"
+        )
+        prefix = str(WORKSPACE_ROOT)
+        rows = connection.execute(
+            'SELECT run_id, raw_output_path FROM catalog_runs'
+        ).fetchall()
+        for row in rows:
+            stored = row['raw_output_path'] or ''
+            if not stored.lower().startswith(prefix.lower()):
+                continue
+            relative = stored[len(prefix):].lstrip('\\/').replace('\\', '/')
+            connection.execute(
+                'UPDATE catalog_runs SET raw_output_path = ? WHERE run_id = ?',
+                (relative, row['run_id']),
+            )
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_version (version) VALUES (2)"
+        )
+        connection.commit()
+
+    # Version 3: make the stored paths portable.
+    #
+    # `videos.download_path` is the same defect version 2 fixed on a bigger
+    # column: 392 of its 716 pointers were absolute Windows paths, so they
+    # resolved on the machine that wrote them and nowhere else. The column is
+    # the catalog's record of where a download landed, and it is committed to
+    # git, so a path that only means something on one machine is a pointer
+    # that points at nothing for everyone else.
+    #
+    # `worker_settings` stores this machine's absolute paths the same way.
+    # Those rows are rewritten too. Nothing reads them yet, so the change
+    # cannot break a consumer -- but the next reader would have inherited the
+    # defect, and that is the moment to fix it.
+    if current < 3:
+        for row in connection.execute(
+            'SELECT video_id, download_path FROM videos'
+        ).fetchall():
+            stored = row['download_path'] or ''
+            if not stored:
+                continue
+            portable = portable_stored_path(stored)
+            if portable != stored:
+                connection.execute(
+                    'UPDATE videos SET download_path = ? WHERE video_id = ?',
+                    (portable, row['video_id']),
+                )
+        for row in connection.execute(
+            'SELECT setting_key, setting_value FROM worker_settings'
+        ).fetchall():
+            stored = row['setting_value'] or ''
+            if not stored:
+                continue
+            portable = portable_stored_path(stored)
+            if portable != stored:
+                connection.execute(
+                    'UPDATE worker_settings SET setting_value = ?, updated_at = ? '
+                    'WHERE setting_key = ?',
+                    (portable, utc_now_iso(), row['setting_key']),
+                )
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_version (version) VALUES (3)"
+        )
+        connection.commit()
+
+    # Version 4: record how many catalog rows a run's listing did not contain.
+    #
+    # A channel's `/videos` listing is the channel's ground truth of what it
+    # currently shows, so a row the catalog holds and the listing does not is
+    # worth reporting: the video may have been deleted, made private, or
+    # turned into a Short or a members-only upload. It is an OBSERVATION and
+    # not proof of deletion, so nothing is deleted -- the count goes in the
+    # run's audit row and the ids go in the run's JSON summary.
+    if current < 4:
+        columns = {
+            row['name'] for row in connection.execute('PRAGMA table_info(catalog_runs)')
+        }
+        if 'not_listed_count' not in columns:
+            connection.execute(
+                'ALTER TABLE catalog_runs ADD COLUMN not_listed_count INTEGER NOT NULL DEFAULT 0'
+            )
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_version (version) VALUES (4)"
+        )
+        connection.commit()
+
+    # Version 5: say whether a run's listing covered the whole channel.
+    #
+    # `not_listed_count` on its own is not interpretable: a run that was
+    # truncated reports every row it did not list, and the number means
+    # nothing without knowing that. `listing_complete` is 1 when the run's
+    # listing was the channel's whole listing, and 0 when it was truncated or
+    # a video failed. 0 is also the value for a run recorded before this
+    # column existed: such a run made no such claim.
+    if current < 5:
+        columns = {
+            row['name'] for row in connection.execute('PRAGMA table_info(catalog_runs)')
+        }
+        if 'listing_complete' not in columns:
+            connection.execute(
+                'ALTER TABLE catalog_runs ADD COLUMN listing_complete INTEGER NOT NULL DEFAULT 0'
+            )
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_version (version) VALUES (5)"
+        )
+        connection.commit()
+
+    # Version 6: say what `row_count` counts.
+    #
+    # The column means two different things depending on the run: for a
+    # `catalog` run it is the number of rows the channel listing yielded, and
+    # for a `fill-dates` run it is the number of videos in the work list. A
+    # reader of the audit table could not tell which, and the two are not
+    # comparable.
+    #
+    # The old rows are reconstructed from the artifact each run wrote -- the
+    # snapshot's file name says which kind of run it was -- rather than
+    # guessed. A run whose artifact name says neither keeps the empty string:
+    # it made no such claim.
+    if current < 6:
+        columns = {
+            row['name'] for row in connection.execute('PRAGMA table_info(catalog_runs)')
+        }
+        if 'row_count_kind' not in columns:
+            connection.execute(
+                "ALTER TABLE catalog_runs ADD COLUMN row_count_kind TEXT NOT NULL DEFAULT ''"
+            )
+        for row in connection.execute(
+            "SELECT run_id, raw_output_path FROM catalog_runs WHERE row_count_kind = ''"
+        ).fetchall():
+            name = os.path.basename(str(row['raw_output_path'] or '').replace('\\', '/'))
+            if name.startswith('catalog_'):
+                kind = 'listing_rows'
+            elif name.startswith(('listing_', 'fill_dates_')):
+                kind = 'work_list_videos'
+            else:
+                continue
+            connection.execute(
+                'UPDATE catalog_runs SET row_count_kind = ? WHERE run_id = ?',
+                (kind, row['run_id']),
+            )
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_version (version) VALUES (6)"
         )
         connection.commit()
 
@@ -152,6 +333,17 @@ def set_setting(connection: sqlite3.Connection, key: str, value: str) -> None:
         (key, value, utc_now_iso()),
     )
     connection.commit()
+
+
+def set_path_setting(connection: sqlite3.Connection, key: str, value: str | Path) -> None:
+    """Store a path setting so it survives being checked out elsewhere.
+
+    `worker_settings` held this machine's absolute paths, which made them
+    meaningless on any other machine. A path inside the repository is stored
+    relative to the repository root; one outside it keeps its absolute form,
+    because there is no honest relative form for it.
+    """
+    set_setting(connection, key, portable_stored_path(value))
 
 
 def summarize_status(connection: sqlite3.Connection) -> dict[str, int]:
@@ -301,13 +493,21 @@ def fetch_latest_catalog_run(connection: sqlite3.Connection) -> dict[str, object
             updated_count,
             missing_upload_dates,
             malformed_rows,
-            created_at
+            created_at,
+            kind
         FROM catalog_runs
         ORDER BY run_id DESC
         LIMIT 1
         '''
     ).fetchone()
-    return dict(row) if row else None
+    if not row:
+        return None
+    result = dict(row)
+    # The stored path is relative to the repository so it means the same thing
+    # on every machine; the one handed back here is absolute, because the
+    # person reading it wants to open the file.
+    result['raw_output_path'] = resolve_portable_path(result.get('raw_output_path') or '')
+    return result
 
 
 def command_import_local(args: argparse.Namespace) -> int:
@@ -337,7 +537,7 @@ def command_import_local(args: argparse.Namespace) -> int:
 
     with connect_database(db_path) as connection:
         initialize_schema(connection)
-        set_setting(connection, 'last_local_video_dir', str(video_directory))
+        set_setting(connection, 'last_local_video_dir', portable_stored_path(video_directory))
         inserted, updated, imported_rows = upsert_local_video_rows(
             connection,
             source_directory=video_directory,
@@ -364,9 +564,9 @@ def command_init(args: argparse.Namespace) -> int:
 
     with connect_database(db_path) as connection:
         initialize_schema(connection)
-        set_setting(connection, 'pipeline_root', str(pipeline_root))
+        set_path_setting(connection, 'pipeline_root', pipeline_root)
         for name, target in paths.items():
-            set_setting(connection, f'path_{name}', str(target))
+            set_path_setting(connection, f'path_{name}', target)
 
     print(json.dumps({
         'db_path': str(db_path),
@@ -443,6 +643,9 @@ def build_catalog_command(args: argparse.Namespace) -> list[str]:
     if args.extractor_args:
         command.extend(['--extractor-args', args.extractor_args])
 
+    if getattr(args, 'sleep_requests', 0):
+        command.extend(['--sleep-requests', str(args.sleep_requests)])
+
     command.extend([
         '--print',
         '%(id)s\t%(upload_date)s\t%(title)s',
@@ -473,10 +676,20 @@ def parse_catalog_line(line: str) -> dict[str, str] | None:
     }
 
 
-def write_catalog_snapshot(catalog_directory: Path, content: str) -> Path:
-    snapshot_path = catalog_directory / f'catalog_{utc_timestamp_slug()}.tsv'
+def write_catalog_snapshot(catalog_directory: Path, content: str, stderr: str = '') -> tuple[Path, Path]:
+    """Write the catalog rows, and yt-dlp's stderr, as a pair of sibling files.
+
+    The stderr file is what tells you WHICH videos the run failed on. On a
+    partial run yt-dlp prints one "ERROR: [youtube] <id>: ..." line per
+    failed video, and that list is exactly what the next run has to go and
+    fetch -- without it, a partial import only says how MANY are missing.
+    """
+    slug = utc_timestamp_slug()
+    snapshot_path = catalog_directory / f'catalog_{slug}.tsv'
     snapshot_path.write_text(content, encoding='utf-8')
-    return snapshot_path
+    stderr_path = catalog_directory / f'catalog_{slug}.stderr.txt'
+    stderr_path.write_text(stderr, encoding='utf-8')
+    return snapshot_path, stderr_path
 
 
 def write_log_file(log_directory: Path, stem: str, stdout: str, stderr: str) -> Path:
@@ -503,20 +716,89 @@ def build_command_prefix(command_bin: str) -> list[str]:
     return [command_bin]
 
 
+def portable_path(path: Path) -> str:
+    """A path that still means something on another machine.
+
+    The catalog's snapshot paths used to be absolute Windows paths, so every
+    pointer in the run history resolved on the machine that made the run and
+    nowhere else. A path inside the repository is stored relative to the
+    repository root; a path outside it -- a test's temporary directory, say --
+    has no such form and keeps its absolute one.
+    """
+    try:
+        return path.resolve().relative_to(WORKSPACE_ROOT).as_posix()
+    except ValueError:
+        return str(path)
+
+
+def portable_stored_path(value: str | Path | None) -> str:
+    """Store a path so it still means something on another machine.
+
+    `portable_path` takes a `Path`; this takes whatever a caller happens to
+    have -- a string from a command line, a `Path` from the filesystem -- and
+    returns the form that should go in the database.
+
+    A path that is already relative is left alone: it is already portable, and
+    guessing at its base would only make it wrong.
+    """
+    if value is None:
+        return ''
+    text = str(value)
+    if not text:
+        return text
+    candidate = Path(text)
+    if not candidate.is_absolute():
+        return text
+    return portable_path(candidate)
+
+
+def resolve_portable_path(stored: str) -> str:
+    """Turn a stored path back into one you can open.
+
+    The inverse of `portable_path`: a relative path is resolved against the
+    repository root, an absolute one is left alone.
+    """
+    if not stored:
+        return stored
+    candidate = Path(stored)
+    if candidate.is_absolute():
+        return str(candidate)
+    return str((WORKSPACE_ROOT / candidate).resolve())
+
+
+def catalog_run_kind(source_url: str) -> str:
+    """Whether a catalog run was a real one or a test fixture.
+
+    The worker's fixtures point at `example.com/mock-playlist`. They are
+    self-labelling, but they still made up four of the twenty-eight rows in the
+    audit table, and a reader had to know that to discount them.
+    """
+    return 'live' if 'youtube.com' in (source_url or '').lower() else 'fixture'
+
+
 def record_catalog_run(
     connection: sqlite3.Connection,
     *,
     channel: str = '',
     command: list[str],
     inserted: int,
+    listing_complete: bool = False,
     malformed_rows: int,
     missing_upload_dates: int,
+    not_listed_count: int = 0,
     raw_output_path: Path,
     row_count: int,
+    row_count_kind: str = '',
     source_url: str,
     updated: int,
-) -> None:
-    connection.execute(
+) -> int:
+    """Record a catalog run.
+
+    Returns the new row's `run_id`, so a caller that records the run BEFORE
+    the work starts can refresh the row's counters afterwards with
+    `update_catalog_run`.
+    """
+    cursor = connection.execute(
         '''
         INSERT INTO catalog_runs (
             source_url,
@@ -528,21 +810,73 @@ def record_catalog_run(
             updated_count,
             missing_upload_dates,
             malformed_rows,
-            created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            created_at,
+            kind,
+            not_listed_count,
+            listing_complete,
+            row_count_kind
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''',
         (
             source_url,
             channel,
             json.dumps(command),
-            str(raw_output_path),
+            portable_path(raw_output_path),
             row_count,
             inserted,
             updated,
             missing_upload_dates,
             malformed_rows,
             utc_now_iso(),
+            catalog_run_kind(source_url),
+            not_listed_count,
+            1 if listing_complete else 0,
+            row_count_kind,
         ),
+    )
+    connection.commit()
+    return int(cursor.lastrowid)
+
+
+def update_catalog_run(
+    connection: sqlite3.Connection,
+    *,
+    run_id: int,
+    inserted: int | None = None,
+    missing_upload_dates: int | None = None,
+    row_count: int | None = None,
+    updated: int | None = None,
+) -> None:
+    """Refresh the counters of a run that has already been recorded.
+
+    A run can be recorded before the work starts, so a run that is cut short
+    still leaves a row. This is what keeps that row honest: the counters
+    are refreshed as the work lands, so an interrupted run reports what it
+    managed to do rather than what it was asked to do.
+
+    Every counter is optional, so a caller can refresh one without
+    touching the others.
+    """
+    assignments: list[str] = []
+    values: list[object] = []
+    if inserted is not None:
+        assignments.append('inserted_count = ?')
+        values.append(inserted)
+    if missing_upload_dates is not None:
+        assignments.append('missing_upload_dates = ?')
+        values.append(missing_upload_dates)
+    if row_count is not None:
+        assignments.append('row_count = ?')
+        values.append(row_count)
+    if updated is not None:
+        assignments.append('updated_count = ?')
+        values.append(updated)
+    if not assignments:
+        return
+    values.append(run_id)
+    connection.execute(
+        'UPDATE catalog_runs SET ' + ', '.join(assignments) + ' WHERE run_id = ?',
+        values,
     )
     connection.commit()
 
@@ -564,7 +898,7 @@ def update_video_row(
 
     if download_path is not None:
         assignments.append('download_path = ?')
-        values.append(download_path)
+        values.append(portable_stored_path(download_path))
 
     if error is not None:
         assignments.append('error = ?')
@@ -572,7 +906,7 @@ def update_video_row(
 
     if output_path is not None:
         assignments.append('output_path = ?')
-        values.append(output_path)
+        values.append(portable_stored_path(output_path))
 
     if review_reason is not None:
         assignments.append('review_reason = ?')
@@ -1085,14 +1419,14 @@ def upsert_local_video_rows(
                 str(source_directory),
                 video_path.name,
                 upload_date,
-                str(video_path),
+                portable_stored_path(video_path),
                 timestamp,
                 timestamp,
             ),
         )
 
         imported_rows.append({
-            'download_path': str(video_path),
+            'download_path': portable_stored_path(video_path),
             'source_file': video_path.name,
             'upload_date': upload_date,
             'video_id': video_id,
@@ -1281,7 +1615,7 @@ def command_scan(args: argparse.Namespace) -> int:
 
     with connect_database(db_path) as connection:
         for row in selected_rows:
-            download_path = Path(row['download_path'])
+            download_path = Path(resolve_portable_path(row['download_path']))
             if not download_path.exists():
                 message = f'Download file is missing: {download_path}'
                 update_video_row(connection, video_id=row['video_id'], status='error', error=message)
@@ -1444,9 +1778,18 @@ def upsert_catalog_rows(connection: sqlite3.Connection, source_url: str, rows: l
                 updated_at
             ) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, ?)
             ON CONFLICT(video_id) DO UPDATE SET
-                source_url = excluded.source_url,
-                video_url = excluded.video_url,
-                title = excluded.title,
+                source_url = CASE
+                    WHEN excluded.source_url <> '' THEN excluded.source_url
+                    ELSE videos.source_url
+                END,
+                video_url = CASE
+                    WHEN excluded.video_url <> '' THEN excluded.video_url
+                    ELSE videos.video_url
+                END,
+                title = CASE
+                    WHEN excluded.title <> '' THEN excluded.title
+                    ELSE videos.title
+                END,
                 upload_date = CASE
                     WHEN excluded.upload_date <> '' THEN excluded.upload_date
                     ELSE videos.upload_date
@@ -1478,6 +1821,46 @@ def upsert_catalog_rows(connection: sqlite3.Connection, source_url: str, rows: l
     return inserted, updated
 
 
+def find_not_listed(
+    connection: sqlite3.Connection,
+    *,
+    channel: str,
+    listed_video_ids: set[str],
+) -> list[str]:
+    """The catalog's rows for this channel that the listing did not contain.
+
+    A channel's `/videos` listing is what the channel currently shows, so a
+    row the catalog holds and the listing does not is worth reporting. It is
+    NOT proof of deletion: a video that became a Short, a livestream or
+    members-only content is not listed there either, and neither is one the
+    run failed to fetch. So nothing is deleted -- the caller reports it.
+    """
+    rows = connection.execute(
+        'SELECT video_id FROM videos WHERE channel = ? ORDER BY video_id',
+        (channel,),
+    ).fetchall()
+    return [row['video_id'] for row in rows if row['video_id'] not in listed_video_ids]
+
+
+def listing_is_complete(args: argparse.Namespace, stderr_text: str) -> bool:
+    """Could this run's listing have missed a video the channel has?
+
+    Three ways it can: the run was truncated (`--limit`, `--playlist-items`),
+    it stopped early (yt-dlp's exit code), or a single video failed -- which
+    `--ignore-errors` turns into a line on stderr and an exit code of 0.
+
+    A run that cannot be shown to be complete may still report rows it did
+    not list, but the report has to say so.
+    """
+    if getattr(args, 'limit', 0):
+        return False
+    if getattr(args, 'playlist_items', ''):
+        return False
+    if 'ERROR' in (stderr_text or ''):
+        return False
+    return True
+
+
 def command_catalog(args: argparse.Namespace) -> int:
     pipeline_root = resolve_pipeline_root(args.pipeline_root)
     db_path = resolve_db_path(pipeline_root, args.db_path)
@@ -1494,10 +1877,6 @@ def command_catalog(args: argparse.Namespace) -> int:
 
     command = build_catalog_command(args)
     result = subprocess.run(command, capture_output=True, text=True, check=False)
-    if result.returncode != 0:
-        message = result.stderr.strip() or result.stdout.strip() or 'yt-dlp catalog command failed.'
-        print(message, file=sys.stderr)
-        return result.returncode
 
     rows = []
     malformed_lines = []
@@ -1509,27 +1888,56 @@ def command_catalog(args: argparse.Namespace) -> int:
             malformed_lines.append(raw_line)
 
     if not rows:
-        print('No catalog rows were returned by yt-dlp.', file=sys.stderr)
-        return 1
+        # Nothing usable came back, so there is nothing to import. Report
+        # yt-dlp's own failure, which is the more useful message.
+        message = result.stderr.strip() or result.stdout.strip() or 'yt-dlp catalog command failed.'
+        print(message, file=sys.stderr)
+        return result.returncode or 1
+
+    # Write the snapshot BEFORE reporting, so the warning can point at the
+    # file that names the videos the run failed on.
+    snapshot_path, stderr_path = write_catalog_snapshot(paths['catalog'], result.stdout, result.stderr)
+
+    if result.returncode != 0:
+        # yt-dlp failed on SOME videos but printed complete records for the
+        # others. Those records are good — a per-video failure on video 600
+        # does not invalidate videos 1..599 — so they are imported, and the
+        # failure is reported rather than swallowed. The next run fills the
+        # gap. (A full Qullamaggie catalog is ~3.5 h; bailing here once cost
+        # all of it when DNS blipped near the end.)
+        print(
+            f'WARNING: yt-dlp exited {result.returncode} but printed {len(rows)} usable rows; '
+            'importing them. The videos it failed on are missing and need another run. '
+            f'yt-dlp named them here: {stderr_path}',
+            file=sys.stderr,
+        )
 
     missing_upload_dates = sum(1 for row in rows if not row['upload_date'])
-    snapshot_path = write_catalog_snapshot(paths['catalog'], result.stdout)
 
     with connect_database(db_path) as connection:
         initialize_schema(connection)
         set_setting(connection, 'source_url', args.source_url)
         set_setting(connection, 'channel', effective_channel)
-        set_setting(connection, 'last_catalog_output_path', str(snapshot_path))
+        set_path_setting(connection, 'last_catalog_output_path', snapshot_path)
         set_setting(connection, 'last_catalog_import_at', utc_now_iso())
         inserted, updated = upsert_catalog_rows(connection, args.source_url, rows, channel=effective_channel)
+        not_listed = find_not_listed(
+            connection,
+            channel=effective_channel,
+            listed_video_ids={row['video_id'] for row in rows},
+        )
+        listing_complete = listing_is_complete(args, result.stderr)
         record_catalog_run(
             connection,
             command=command,
             inserted=inserted,
             malformed_rows=len(malformed_lines),
             missing_upload_dates=missing_upload_dates,
+            not_listed_count=len(not_listed),
+            listing_complete=listing_complete,
             raw_output_path=snapshot_path,
             row_count=len(rows),
+            row_count_kind='listing_rows',
             source_url=args.source_url,
             updated=updated,
             channel=effective_channel,
@@ -1540,19 +1948,569 @@ def command_catalog(args: argparse.Namespace) -> int:
         'channel': effective_channel,
         'db_path': str(db_path),
         'inserted': inserted,
+        'listing_complete': listing_complete,
         'malformed_rows': len(malformed_lines),
         'missing_upload_dates': missing_upload_dates,
+        'not_listed_count': len(not_listed),
+        'not_listed_video_ids': not_listed[:50],
         'pipeline_root': str(pipeline_root),
         'raw_output_path': str(snapshot_path),
         'source_url': args.source_url,
-        'status': 'ok',
+        'status': 'ok' if result.returncode == 0 else 'partial',
         'updated': updated,
         'yt_dlp_command': command,
+        'yt_dlp_returncode': result.returncode,
+        'yt_dlp_stderr_path': str(stderr_path),
     }, indent=2))
+
+    if not_listed:
+        qualification = (
+            "This run's listing covered the whole channel, so these are the rows the "
+            'channel no longer shows.'
+            if listing_complete else
+            "This run's listing was NOT complete -- it was truncated, or a video failed "
+            '-- so a row missing from it proves nothing here.'
+        )
+        print(
+            f'NOTE: {len(not_listed)} catalog row(s) for {effective_channel} were not in this '
+            f'run\'s listing. {qualification} A video missing from a /videos listing may '
+            'have become a Short, a livestream or members-only content -- it is not proof '
+            'of deletion, and nothing was deleted.',
+            file=sys.stderr,
+        )
 
     if malformed_lines:
         print(json.dumps({'malformed_examples': malformed_lines[:5]}, indent=2), file=sys.stderr)
 
+    return 0
+
+
+# The separator in a listing file is not always a tab. The listing documented in
+# CLAUDE.md is produced through a shell, and the shell hands yt-dlp the two
+# characters backslash-t, which yt-dlp prints verbatim. A listing written from
+# Python carries a real tab. Both are read, and the choice is made once per
+# file rather than per line, so a title containing a tab cannot shift the
+# separator halfway down the file.
+LITERAL_TAB = chr(92) + 't'
+
+
+def read_wanted_rows(path: str) -> list[tuple[str, str]]:
+    """Read a TSV of `video_id<TAB>title` — the videos whose metadata is missing.
+
+    The same reader serves the channel listing and the work list built from it;
+    they have the same shape.
+
+    Two traps this survives, both of them real on this machine:
+
+    * The separator may be a real tab or a literal backslash-t. Splitting a
+      literal-tab listing on a real tab yields one field per line, and the
+      whole line -- id AND title -- becomes the video_id.
+    * The bytes may not be UTF-8. yt-dlp's stdout passes through the console
+      codepage on Windows, so a title with an em-dash lands as cp1252 and
+      decoding it as UTF-8 mangles every such title in the file. Decode as
+      UTF-8 first and fall back to cp1252 rather than replacing the characters.
+    """
+    with open(path, 'rb') as handle:
+        raw = handle.read()
+    try:
+        text = raw.decode('utf-8')
+    except UnicodeDecodeError:
+        text = raw.decode('cp1252', errors='replace')
+
+    separator = ''
+    for candidate in text.splitlines():
+        if not candidate.strip():
+            continue
+        if '\t' in candidate:
+            separator = '\t'
+        elif LITERAL_TAB in candidate:
+            separator = LITERAL_TAB
+        break
+    if not separator:
+        return []
+
+    wanted: list[tuple[str, str]] = []
+    seen: set[str] = set()
+    for line in text.splitlines():
+        if not line.strip():
+            continue
+        parts = line.split(separator, 1)
+        video_id = parts[0].strip()
+        if not video_id or video_id in seen:
+            continue
+        seen.add(video_id)
+        title = parts[1].strip() if len(parts) > 1 else ''
+        wanted.append((video_id, title))
+    return wanted
+
+
+def build_wanted_from_listing(
+    connection: sqlite3.Connection,
+    listing: list[tuple[str, str]],
+    *,
+    refresh: bool = False,
+) -> list[tuple[str, str]]:
+    """The listing's videos whose upload_date the database does not have.
+
+    The listing is the channel's ground truth of what exists; the database is
+    the record of what has been dated. The difference is the work list, and
+    deriving it here is what makes the gap-fill runnable from a fresh clone --
+    the listing plus the database are the only two inputs, and both are
+    reproducible.
+
+    With `refresh`, the videos that already have a date are wanted too. A date
+    that was resolved wrongly is otherwise permanent: the skip is what makes a
+    second pass cheap, but it is also what makes the error unfalsifiable.
+    """
+    dated = set() if refresh else {
+        row['video_id'] for row in connection.execute(
+            "SELECT video_id FROM videos WHERE COALESCE(upload_date, '') <> ''"
+        )
+    }
+    wanted: list[tuple[str, str]] = []
+    seen: set[str] = set()
+    for video_id, title in listing:
+        if video_id in dated or video_id in seen:
+            continue
+        seen.add(video_id)
+        wanted.append((video_id, title))
+    return wanted
+
+
+def fetch_channel_listing(
+    source_url: str,
+    args: argparse.Namespace,
+) -> tuple[list[tuple[str, str]], str, list[str]]:
+    """Ask YouTube for a channel's video list: id and title, no dates.
+
+    One yt-dlp invocation over the channel URL, so the listing costs one call
+    rather than one call per video. The template carries a REAL tab, which is
+    the difference between a listing this reader can parse and the
+    shell-produced one it has to special-case.
+
+    Returns the parsed rows, the raw stdout, and the command that produced
+    them.
+    """
+    command = build_yt_dlp_prefix(args.yt_dlp_bin) + [
+        '--flat-playlist',
+        '--skip-download',
+        '--ignore-errors',
+        '--js-runtimes', 'node',
+        '--extractor-args', args.listing_extractor_args,
+        '--print', '%(id)s\t%(title)s',
+        source_url,
+    ]
+    env = dict(os.environ)
+    env['PYTHONIOENCODING'] = 'utf-8'
+    result = subprocess.run(
+        command,
+        capture_output=True,
+        text=True,
+        encoding='utf-8',
+        errors='replace',
+        check=False,
+        env=env,
+    )
+
+    rows: list[tuple[str, str]] = []
+    seen: set[str] = set()
+    for line in result.stdout.splitlines():
+        if not line.strip():
+            continue
+        parts = line.split('\t', 1)
+        video_id = parts[0].strip()
+        if not video_id or video_id in seen:
+            continue
+        seen.add(video_id)
+        title = parts[1].strip() if len(parts) > 1 else ''
+        rows.append((video_id, title))
+    return rows, result.stdout, command
+
+
+def persist_missing_titles(
+    connection: sqlite3.Connection,
+    entries: list[tuple[str, str]],
+    source_url: str,
+    channel: str,
+) -> tuple[int, int]:
+    """Store the title of a video whose date could not be fetched.
+
+    A video the channel listing names but that yt-dlp will not resolve -- an
+    age-restricted upload, say -- is still a video, and its title is known from
+    the listing. The database has a column for it. Leaving that column empty
+    means the one piece of information about such a video exists only in a
+    scratch file that is not in version control.
+
+    A title is only written where the database has none. The listing is a
+    lossy copy of the titles -- the Windows console codepage drops emoji -- so
+    a good title already in the database is never replaced by a worse one.
+
+    Returns `(titles_written, rows_inserted)`. The two are different counts:
+    a title written onto a row that already exists is a title written but not
+    a new catalog row, and only the second one belongs in a run's
+    `inserted_count`.
+    """
+    written = 0
+    inserted = 0
+    timestamp = utc_now_iso()
+    for video_id, title in entries:
+        if not title:
+            continue
+        row = connection.execute(
+            'SELECT title FROM videos WHERE video_id = ?',
+            (video_id,),
+        ).fetchone()
+        if row is None:
+            connection.execute(
+                '''
+                INSERT INTO videos (
+                    video_id, source_url, video_url, title, upload_date,
+                    channel, status, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, '', ?, 'pending', ?, ?)
+                ''',
+                (
+                    video_id,
+                    source_url,
+                    f'https://www.youtube.com/watch?v={video_id}',
+                    title,
+                    channel,
+                    timestamp,
+                    timestamp,
+                ),
+            )
+            written += 1
+            inserted += 1
+            continue
+        if (row['title'] or '').strip():
+            continue
+        connection.execute(
+            'UPDATE videos SET title = ?, updated_at = ? WHERE video_id = ?',
+            (title, timestamp, video_id),
+        )
+        written += 1
+    connection.commit()
+    return written, inserted
+
+
+def fetch_dates_for(entries: list[tuple[str, str]], args: argparse.Namespace) -> tuple[list[dict], list[str]]:
+    """Fetch upload_date for a batch of videos.
+
+    One yt-dlp invocation over a batch file of `watch?v=` URLs. The client set
+    matters more than anything else here. Measured on the same videos:
+    `mweb` alone took 4.2 s per video, `mweb,ios,android,web` took 8.5 s, and
+    `ios,android,web` took 123 s on the 181-video Qullamaggie list. yt-dlp
+    queries EVERY client in the list, so a longer list costs time on every
+    video, not only on the ones that fail. `web` alone and `web_safari,web`
+    both fail outright, and the blocked `web_safari` costs a full failed
+    attempt per video.
+    """
+    handle = tempfile.NamedTemporaryFile('w', suffix='.txt', delete=False, encoding='utf-8')
+    try:
+        for video_id, _title in entries:
+            handle.write(f'https://www.youtube.com/watch?v={video_id}\n')
+        handle.close()
+
+        command = build_yt_dlp_prefix(args.yt_dlp_bin) + [
+            '--batch-file', handle.name,
+            '--skip-download',
+            '--ignore-errors',
+            '--js-runtimes', 'node',
+            '--extractor-args', args.extractor_args,
+            '--print', '%(id)s\t%(upload_date)s\t%(title)s',
+        ]
+
+        # yt-dlp's stdout is UTF-8, but on Windows Python encodes it with the
+        # console codepage, which mangles any title outside ASCII. Pin the
+        # child's encoding and decode the parent side the same way.
+        env = dict(os.environ)
+        env['PYTHONIOENCODING'] = 'utf-8'
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            encoding='utf-8',
+            errors='replace',
+            check=False,
+            env=env,
+        )
+    finally:
+        try:
+            os.unlink(handle.name)
+        except OSError:
+            pass
+
+    titles = {video_id: title for video_id, title in entries}
+    rows: list[dict] = []
+    resolved: set[str] = set()
+    for raw_line in result.stdout.splitlines():
+        parsed = parse_catalog_line(raw_line)
+        if not parsed:
+            continue
+        resolved.add(parsed['video_id'])
+        if not parsed['title']:
+            parsed['title'] = titles.get(parsed['video_id'], '')
+        rows.append(parsed)
+
+    missing = [video_id for video_id, _ in entries if video_id not in resolved]
+    return rows, missing
+
+
+def command_fill_dates(args: argparse.Namespace) -> int:
+    """Fill in the upload_date of videos the catalog listed but could not resolve.
+
+    The catalog resolves every video of a channel one at a time, so a channel
+    with thousands of videos takes hours and a per-video failure leaves a row
+    with no metadata at all. This command takes the list of videos that are
+    still missing a date and resolves them directly, in parallel batches.
+
+    Each video costs ~4 s of network wait and ~0.001 s of CPU, so the work is
+    free in CPU terms and parallelises cleanly.
+
+    The work is saved per BATCH, not at the end. A run over thousands of
+    videos is long enough to be worth interrupting -- the client set can be
+    tuned, the machine is busy, the user wants it stopped -- and a batch that
+    has been written is not lost when the run stops. `catalog` has the same
+    property: a partial run is kept.
+    """
+    pipeline_root = resolve_pipeline_root(args.pipeline_root)
+    db_path = resolve_db_path(pipeline_root, args.db_path)
+    paths = ensure_layout(pipeline_root)
+
+    if not db_path.exists():
+        print('Worker state is missing. Run `npm run video:init` first.', file=sys.stderr)
+        return 1
+
+    wanted: list[tuple[str, str]] = []
+    listing: list[tuple[str, str]] = []
+    listing_output = ''
+    listing_command: list[str] = []
+
+    effective_channel = args.channel or infer_channel_from_url(args.source_url or '')
+    if not effective_channel:
+        print('Could not tell which channel this is: pass --channel.', file=sys.stderr)
+        return 1
+
+    with connect_database(db_path) as connection:
+        initialize_schema(connection)
+        source_url = resolve_channel_source_url(connection, effective_channel, args.source_url)
+
+        # The listing is the channel's ground truth of what exists. It can be
+        # fetched here or read from a file; either way the work list is derived
+        # from it and the database, so nothing outside the repository is needed
+        # to decide what is still missing.
+        if args.build_listing:
+            if not source_url:
+                print('Could not tell which channel to list: pass --channel.', file=sys.stderr)
+                return 1
+            listing, listing_output, listing_command = fetch_channel_listing(source_url, args)
+            print(f'Listed {len(listing)} videos from {source_url}.', file=sys.stderr)
+        elif args.from_listing:
+            listing = read_wanted_rows(args.from_listing)
+            print(f'Read {len(listing)} videos from {args.from_listing}.', file=sys.stderr)
+
+        if args.input:
+            wanted = read_wanted_rows(args.input)
+        else:
+            wanted = build_wanted_from_listing(connection, listing, refresh=args.refresh)
+
+        if not wanted:
+            print('Nothing to fill: there is no video left without a date.', file=sys.stderr)
+            return 1
+
+        # A video that already has a date needs nothing. Skipping them makes a
+        # second pass cheap: run the fast client over the whole list, then run
+        # the slower fallbacks over the same list and only the stragglers are
+        # fetched.
+        #
+        # `--refresh` turns that skip off. The upsert already overwrites a
+        # date with a freshly resolved one, so all this flag has to do is
+        # stop the work list from dropping the row before it gets there.
+        already_dated = {
+            row['video_id'] for row in connection.execute(
+                "SELECT video_id FROM videos WHERE COALESCE(upload_date, '') <> ''"
+            )
+        }
+        # The dates as they stand before the run, so the report can say how
+        # many of them the refresh actually changed.
+        dates_before = {
+            row['video_id']: row['upload_date'] for row in connection.execute(
+                "SELECT video_id, upload_date FROM videos"
+            )
+        }
+    requested = len(wanted)
+    if args.refresh:
+        skipped = []
+    else:
+        skipped = [video_id for video_id, _ in wanted if video_id in already_dated]
+        wanted = [(video_id, title) for video_id, title in wanted if video_id not in already_dated]
+
+    jobs = max(1, args.jobs)
+    batch_size = max(1, args.batch_size)
+    batches = [wanted[i:i + batch_size] for i in range(0, len(wanted), batch_size)]
+    print(
+        f'Filling {len(wanted)} videos for {effective_channel} '
+        f'in {len(batches)} batches of up to {batch_size}, {jobs} at a time '
+        f'(client set: {args.extractor_args}); '
+        + ('refreshing, so rows that already have a date are re-read.'
+           if args.refresh else f'{len(skipped)} already have a date.'),
+        file=sys.stderr,
+    )
+
+    rows: list[dict] = []
+    missing: list[str] = []
+    inserted = 0
+    updated = 0
+    attempted = 0
+
+    # The run is recorded BEFORE the work starts, and its counters are
+    # refreshed as the work lands.
+    #
+    # The data is saved per batch, so a run that is cut short keeps
+    # everything it managed to do. The RECORD of the run used to be written
+    # only at the very end, so a run that stopped in the middle left its
+    # rows in the catalog with no audit row at all -- the work survived and
+    # its provenance did not.
+    #
+    # That is not hypothetical. The 2026-10-26 gap-fill inserted 1,659
+    # Revere rows across 66 batches; the first batch is catalog_runs row 26,
+    # and the other 1,582 rows are accounted for by no audit row at all. The
+    # catalog's largest population event was invisible in the table that
+    # exists to record it.
+    #
+    # The artifact is the listing when the run fetched one -- that is what
+    # the run actually read -- and the work list otherwise. Both are known
+    # before the work starts, which is why the row can be written first.
+    slug = utc_timestamp_slug()
+    if listing_output:
+        snapshot_path = paths['catalog'] / f'listing_{slug}.tsv'
+        snapshot_path.write_text(listing_output, encoding='utf-8')
+    else:
+        snapshot_path = paths['catalog'] / f'fill_dates_{slug}.tsv'
+        snapshot_path.write_text(
+            ''.join(f'{video_id}\t{title}\n' for video_id, title in wanted),
+            encoding='utf-8',
+        )
+    run_command = listing_command or ['fill-dates', '--input', args.input or '']
+    if args.refresh and not listing_command:
+        run_command = run_command + ['--refresh']
+
+    with connect_database(db_path) as connection:
+        initialize_schema(connection)
+        set_setting(connection, 'channel', effective_channel)
+        if source_url:
+            set_setting(connection, 'source_url', source_url)
+        run_id = record_catalog_run(
+            connection,
+            channel=effective_channel,
+            command=run_command,
+            inserted=0,
+            malformed_rows=0,
+            missing_upload_dates=0,
+            raw_output_path=snapshot_path,
+            row_count=requested,
+            row_count_kind='work_list_videos',
+            source_url=source_url,
+            updated=0,
+        )
+
+        with ThreadPoolExecutor(max_workers=jobs) as pool:
+            futures = {pool.submit(fetch_dates_for, batch, args): batch for batch in batches}
+            for future in as_completed(futures):
+                batch = futures[future]
+                try:
+                    batch_rows, batch_missing = future.result()
+                except Exception as error:  # noqa: BLE001 - one bad batch must not sink the run
+                    batch_rows, batch_missing = [], [video_id for video_id, _ in batch]
+                    print(f'  batch failed: {error}', file=sys.stderr)
+
+                # Saved as each batch lands, so the work survives a stop.
+                batch_inserted, batch_updated = upsert_catalog_rows(
+                    connection, source_url, batch_rows, channel=effective_channel
+                )
+                inserted += batch_inserted
+                updated += batch_updated
+                rows.extend(batch_rows)
+                missing.extend(batch_missing)
+                attempted += len(batch)
+
+                # The audit row keeps step with the data, so a run that
+                # stops here reports what it DID, not what it was asked to
+                # do.
+                update_catalog_run(
+                    connection,
+                    run_id=run_id,
+                    inserted=inserted,
+                    missing_upload_dates=len(missing),
+                    updated=updated,
+                )
+
+                set_setting(connection, 'last_catalog_import_at', utc_now_iso())
+                print(
+                    f'  {attempted}/{len(wanted)} attempted, {len(rows)} dated, '
+                    f'{len(missing)} still missing',
+                    file=sys.stderr,
+                )
+
+    dated = sum(1 for row in rows if row['upload_date'])
+
+    # How many dates the refresh actually changed. "Re-read 1,814 videos and
+    # 0 dates changed" is a different claim from "re-read 1,814 videos", and
+    # only the first one says the refresh was worth its requests.
+    dates_changed = 0
+    if args.refresh:
+        for row in rows:
+            fresh = row.get('upload_date') or ''
+            if fresh and dates_before.get(row['video_id']) != fresh:
+                dates_changed += 1
+
+    # A video whose date could not be resolved is still a video, and its title
+    # is known from the listing. Store it, so the fact that this video exists
+    # does not depend on a scratch file that is not in version control.
+    missing_entries = [
+        (video_id, title)
+        for video_id, title in wanted
+        if video_id in set(missing)
+    ]
+    titles_written = 0
+    titles_inserted = 0
+    if missing_entries:
+        with connect_database(db_path) as connection:
+            initialize_schema(connection)
+            titles_written, titles_inserted = persist_missing_titles(
+                connection, missing_entries, source_url, effective_channel
+            )
+
+    # The final state of the run: the videos it could not resolve, and the
+    # rows it added on the way -- including the ones it added for the videos
+    # it could not date at all.
+    inserted += titles_inserted
+    with connect_database(db_path) as connection:
+        initialize_schema(connection)
+        update_catalog_run(
+            connection,
+            run_id=run_id,
+            inserted=inserted,
+            missing_upload_dates=len(missing),
+            updated=updated,
+        )
+
+    print(json.dumps({
+        'channel': effective_channel,
+        'dated': dated,
+        'inserted': inserted,
+        'jobs': jobs,
+        'refresh': bool(args.refresh),
+        'dates_changed': dates_changed,
+        'requested': requested,
+        'attempted': attempted,
+        'skipped': len(skipped),
+        'still_missing': missing,
+        'still_missing_count': len(missing),
+        'titles_only': len(rows) - dated,
+        'titles_written': titles_written,
+        'titles_inserted': titles_inserted,
+        'updated': updated,
+    }, indent=2))
     return 0
 
 
@@ -1567,6 +2525,38 @@ def infer_channel_from_url(source_url: str) -> str:
     if '@qullamaggie' in lowered or '/qullamaggie' in lowered:
         return 'qullamaggie'
     return ''
+
+
+# The logical channel name is NOT the YouTube handle, and the two do not
+# round-trip. 'revere' is listed at @revereasset -- @revere is a DIFFERENT,
+# unrelated channel, and the two return completely disjoint video IDs. So a
+# channel URL is never built by interpolating the slug; it is looked up here,
+# or taken from --source-url, or read back from the database.
+CHANNEL_SOURCE_URLS = {
+    'revere': 'https://www.youtube.com/@revereasset/videos',
+    'qullamaggie': 'https://www.youtube.com/@Qullamaggie/videos',
+}
+
+
+def resolve_channel_source_url(connection: sqlite3.Connection, channel: str, explicit: str = '') -> str:
+    """The channel URL a video's source_url should carry.
+
+    An explicit --source-url wins. Otherwise the known handle for the channel
+    is used, and only for a channel with no known handle is the URL read back
+    from the rows the database already holds. The channel slug is never
+    interpolated into a URL -- that produced a source_url pointing at an
+    unrelated channel.
+    """
+    if explicit:
+        return explicit
+    known = CHANNEL_SOURCE_URLS.get(channel)
+    if known:
+        return known
+    row = connection.execute(
+        "SELECT source_url FROM videos WHERE channel = ? AND COALESCE(source_url, '') <> '' LIMIT 1",
+        (channel,),
+    ).fetchone()
+    return row['source_url'] if row else ''
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -1632,7 +2622,95 @@ def build_parser() -> argparse.ArgumentParser:
              'metadata-fetcher for Revere-style channels; the catalog defaults '
              'match the download defaults.',
     )
+    catalog_parser.add_argument(
+        '--sleep-requests',
+        type=float,
+        default=0.0,
+        help='Seconds to sleep between yt-dlp requests. A full Qullamaggie '
+             'catalog is ~700 metadata requests back to back; spacing them out '
+             'keeps the run off the rate limiter and off the DNS resolver, and '
+             'leaves the request budget free for a download running on another '
+             'machine at the same time.',
+    )
     catalog_parser.set_defaults(handler=command_catalog)
+
+    fill_dates_parser = subparsers.add_parser(
+        'fill-dates',
+        help='Resolve the upload_date of a list of videos that the catalog could not.',
+    )
+    fill_dates_parser.add_argument(
+        '--input',
+        default='',
+        help='TSV of video_id<TAB>title — the videos whose metadata is still missing. '
+             'Optional when the work list is derived from a listing instead.',
+    )
+    fill_dates_parser.add_argument(
+        '--from-listing',
+        default='',
+        help='Derive the work list from a channel listing TSV (id<TAB>title) and the '
+             'database: the videos the listing names that the database has no date for.',
+    )
+    fill_dates_parser.add_argument(
+        '--build-listing',
+        action='store_true',
+        help='Fetch the channel listing with yt-dlp first, then fill. This needs '
+             'nothing but the channel and the database, so the gap-fill runs on a '
+             'fresh clone.',
+    )
+    fill_dates_parser.add_argument(
+        '--listing-extractor-args',
+        default='youtube:player_client=mweb',
+        help='yt-dlp extractor args for the channel listing.',
+    )
+    fill_dates_parser.add_argument(
+        '--channel',
+        default='',
+        help='Logical channel name written to videos.channel.',
+    )
+    fill_dates_parser.add_argument(
+        '--source-url',
+        default='',
+        help='Source URL recorded on the rows. Defaults to the channel URL.',
+    )
+    fill_dates_parser.add_argument('--yt-dlp-bin', default='yt-dlp', help='Path to the yt-dlp executable.')
+    fill_dates_parser.add_argument(
+        '--jobs',
+        type=int,
+        default=4,
+        help='How many yt-dlp batches to run in parallel. Each video is ~4 s of '
+             'network wait and ~0.001 s of CPU, so this scales without costing CPU.',
+    )
+    fill_dates_parser.add_argument(
+        '--batch-size',
+        type=int,
+        default=25,
+        help='How many videos one yt-dlp invocation covers. Small batches save '
+             'their rows as they finish, so a long run shows progress and can '
+             'be interrupted without losing the work already done.',
+    )
+    fill_dates_parser.add_argument(
+        '--refresh',
+        action='store_true',
+        help='Re-read the videos that already have a date, and overwrite the '
+             'date with the freshly resolved one. Without this a row whose '
+             'date was resolved wrongly keeps it forever: nothing ever reads '
+             'a row that already has a date, so the error is permanent. The '
+             'cost is one metadata request per video in the work list.',
+    )
+    fill_dates_parser.add_argument(
+        '--extractor-args',
+        default='youtube:player_client=mweb',
+        help='yt-dlp extractor args for the per-video fetch. `mweb` alone is '
+             'the fast path: 4.2 s per video against 123 s for the '
+             'ios,android,web set, and 8.5 s for the two combined (measured '
+             'on the same 8 videos -- yt-dlp queries EVERY client in the '
+             'list, so extra clients cost time on every video, not only on '
+             'the ones that fail). Run the command a second time with '
+             '--extractor-args youtube:player_client=ios,android,web for the '
+             'videos `mweb` could not resolve; videos that already have a '
+             'date are skipped, so that pass only fetches the stragglers.',
+    )
+    fill_dates_parser.set_defaults(handler=command_fill_dates)
 
     import_local_parser = subparsers.add_parser('import-local', help='Register local sample videos for direct scanning.')
     import_local_parser.add_argument('--video-dir', required=True, help='Directory containing readable local video files.')

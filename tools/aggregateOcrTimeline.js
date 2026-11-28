@@ -11,13 +11,18 @@
 //   node tools/aggregateOcrTimeline.js <run-tag>[,<run-tag>...]
 //
 // Reads:
-//   data/video_scan_<YYYYMMDD>/<run-tag>/<run-tag>/ocr_probe/logs/*.json
+//   data/video_scan_<YYYYMMDD>/<run-tag>/ocr_probe/logs/*.json          (flat)
+//   data/video_scan_<YYYYMMDD>/<run-tag>/<run-tag>/ocr_probe/logs/*.json (doubled)
+//   data/video_scan_<YYYYMMDD>/ocr_probe/logs/*.json                    (legacy root)
+//   — the first layout that exists wins; see src/video/probeLogDirs.js.
 // Writes:
 //   data/video_scan_<YYYYMMDD>/<run-tag>/timeline.json  (uses FIRST tag as
 //     the output directory; subsequent tags are merged into the same output).
 
 const fs = require('node:fs');
 const path = require('node:path');
+
+const { resolveLogsDirectory } = require('../src/video/probeLogDirs');
 
 // Optional --date-tag YYYYMMDD flag (defaults to today's UTC). Lets the script
 // aggregate scans from prior dates — e.g. a `qmg-ocr-20260917-missing19` run
@@ -53,11 +58,24 @@ if (!/^\d{8}$/.test(dateKey)) {
   process.exit(1);
 }
 
+/**
+ * The directory a run tag's probe logs actually live in, or null.
+ *
+ * A run tag's logs live under one of THREE layouts — flat, doubled (the
+ * parallelOcrScan.py layout, where the tag appears twice) and the legacy
+ * root-level one. This tool used to resolve only the flat layout, so it
+ * could not find the logs of any doubled-layout run: every run with a
+ * committed timeline.json uses the doubled layout, and the tool exited 1
+ * with "No probe logs found" before writing anything.
+ *
+ * The list is shared with tools/aggregateScanResults.js via
+ * src/video/probeLogDirs.js, so the two cannot drift apart again.
+ */
 function resolveProbeLogsBase(tag) {
-  return path.resolve('data', `video_scan_${dateKey}`, tag, 'ocr_probe', 'logs');
+  return resolveLogsDirectory(path.resolve('data', `video_scan_${dateKey}`), tag);
 }
 
-const missingTags = tags.filter((tag) => !fs.existsSync(resolveProbeLogsBase(tag)));
+const missingTags = tags.filter((tag) => !resolveProbeLogsBase(tag));
 if (missingTags.length === tags.length) {
   console.error(`No probe logs found for any of: ${tags.join(', ')} under data/video_scan_${dateKey}/. Run 'npm run video:scan-ocr' or 'tools/runAllOcr.js' first, or pass --date-tag to point at a prior scan date.`);
   process.exit(1);
@@ -100,7 +118,7 @@ const untypedVideos = [];
 let processedFiles = 0;
 for (const tag of tags) {
   const probeLogsBase = resolveProbeLogsBase(tag);
-  if (!fs.existsSync(probeLogsBase)) continue;
+  if (!probeLogsBase) continue;
   const files = fs.readdirSync(probeLogsBase).filter((f) => f.endsWith('.json'));
   console.log(`[aggregate-timeline] ${files.length} probe logs in ${probeLogsBase} (tag=${tag})`);
 

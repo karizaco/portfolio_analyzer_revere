@@ -147,9 +147,29 @@ function parseScreenshot({ metadata, ocr }) {
   });
 
   const fallbackBottomLine = extractBottomLine(ocr.bottomText || '');
-  const bottomLine = extractBottomLine(bottomLineRaw) || fallbackBottomLine;
+  const bottomLineRawValue = extractBottomLine(bottomLineRaw);
+  const bottomLine = bottomLineRawValue || fallbackBottomLine;
   const resolvedBottomLineRaw = bottomLineRaw || (fallbackBottomLine ? `BOTTOM LINE: ${fallbackBottomLine}` : '');
+
+  // The bottom line has TWO sources: the "BOTTOM LINE:" line in the main
+  // text, and the preprocessed `ocr.bottomText` fallback. When both produce
+  // a value and they DISAGREE, the main line still wins — but a reader must
+  // be able to tell "one clean reading" from "two sources disagreed and one
+  // was chosen". Without this the disagreement was silent, and every
+  // downstream consumer (the aggregator, repairHoldings, the CSV writers,
+  // the HTML report) saw a clean parse.
+  //
+  // Both sides must be non-empty: one source alone is not a disagreement,
+  // and `MISSING_BOTTOM_LINE` already covers the both-empty case.
+  // `extractBottomLine` calls `normalizeWhitespace`, so the values are
+  // already trimmed and internally collapsed — only case can still differ.
+  const hasMainLineValue = !!bottomLineRawValue;
+  const hasFallbackValue = !!fallbackBottomLine;
+  const bottomLineConflict = hasMainLineValue && hasFallbackValue
+    && bottomLineRawValue.toUpperCase() !== fallbackBottomLine.toUpperCase();
+
   const issues = [];
+  appendIssue(issues, bottomLineConflict, 'BOTTOM_LINE_CONFLICT');
   appendIssue(issues, !gro.holdings.length, 'MISSING_GRO_HOLDINGS');
   appendIssue(issues, !gro.metricsRaw, 'MISSING_GRO_ACTION_LINE');
   appendIssue(issues, layoutType === 'gro_turbo' && !turbo.holdings.length, 'MISSING_TURBO_HOLDINGS');

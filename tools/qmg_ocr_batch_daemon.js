@@ -14,9 +14,9 @@
  *   node tools/qmg_ocr_batch_daemon.js b
  */
 
-const { spawn } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
+const { superviseChild } = require('./qmg_scan_daemon_support');
 
 const ROOT = path.resolve(__dirname, '..');
 const BATCH = process.argv[2] || 'a';
@@ -100,36 +100,33 @@ async function runScan(videoId, date) {
   const videoPath = path.join(ROOT, 'data/video_pipeline/downloads_1080p', videoFile);
   const started = Date.now();
 
-  return new Promise((resolve) => {
-    const child = spawn('node', [
-      path.join(ROOT, 'tools/scanVideoWithOcr.js'),
-      '--video', videoPath,
-      '--date', date,
-      ...SCAN_FLAGS,
-    ], { stdio: ['ignore', 'pipe', 'pipe'] });
+  // superviseChild() DRAINS the child's stdout. The scan tool prints its
+  // whole result object to stdout at the very end -- hundreds of kilobytes --
+  // and a Windows pipe holds about 64 KB. An undrained stdout blocks the
+  // child AFTER it has written a complete probe log and BEFORE its `finally`
+  // block runs, so the child never exits and this daemon records a timeout
+  // for a video that was read successfully. See tools/qmg_scan_daemon_support.js.
+  const { status, code, stdoutTail, stderr } = await superviseChild(
+    ['node', path.join(ROOT, 'tools/scanVideoWithOcr.js'), '--video', videoPath, '--date', date, ...SCAN_FLAGS],
+    process.env,
+    { timeoutMs: TIMEOUT_MS }
+  );
 
-    let stderr = '';
-    child.stderr.on('data', (d) => { stderr += d.toString(); });
+  const elapsed = ((Date.now() - started) / 1000).toFixed(1);
 
-    const killTimer = setTimeout(() => {
-      child.kill('SIGTERM');
-      resolve({ videoId, date, status: 'timeout', elapsed: (Date.now() - started) / 1000 });
-    }, TIMEOUT_MS);
-
-    child.on('close', (code) => {
-      clearTimeout(killTimer);
-      const elapsed = ((Date.now() - started) / 1000).toFixed(1);
-      if (code !== 0) {
-        resolve({ videoId, date, status: `exit_${code}`, elapsed: Number(elapsed) });
-      } else {
-        resolve({ videoId, date, status: 'ok', elapsed: Number(elapsed) });
-      }
-    });
-    child.on('error', (err) => {
-      clearTimeout(killTimer);
-      resolve({ videoId, date, status: `error_${err.message}`, elapsed: (Date.now() - started) / 1000 });
-    });
-  });
+  if (status === 'OK') {
+    return { videoId, date, status: 'ok', elapsed: Number(elapsed) };
+  }
+  if (status === 'TIMEOUT') {
+    return { videoId, date, status: 'timeout', elapsed: Number(elapsed) };
+  }
+  return {
+    videoId,
+    date,
+    status: code === null ? `error_${stderr.slice(0, 80)}` : `exit_${code}`,
+    elapsed: Number(elapsed),
+    stdoutTail: stdoutTail.slice(-2000),
+  };
 }
 
 function saveResults() {

@@ -76,6 +76,39 @@ function loadSeedLexiconSync(configDirectory) {
   return cachedLexicon;
 }
 
+/**
+ * The lexicon used by the lexicon-constrained decoder.
+ *
+ * The SEED lexicon is a curated allowlist of tickers that may show up in the
+ * position list. The OBSERVED lexicon holds tickers that were actually seen
+ * in the position list (they are in the ground truth) but are not in the
+ * seed — the seed was never exhaustive.
+ *
+ * The two are kept apart on purpose. The whole-panel parser reads the chart
+ * as well as the panel, so widening ITS allowlist lets chart noise through
+ * ("AR" appears as a false positive in the 2023 sidebar layouts). The
+ * decoder reads one cell at a time and never sees chart ink, so widening its
+ * lexicon is safe there.
+ */
+function loadDecodeLexiconSync(configDirectory) {
+  const resolvedDirectory = path.resolve(
+    configDirectory || path.join(__dirname, '..', '..', 'config')
+  );
+  const seed = loadSeedLexiconSync(resolvedDirectory);
+  const observedPath = path.join(resolvedDirectory, 'ticker_lexicon_observed.csv');
+  let observed = [];
+  if (fs.existsSync(observedPath)) {
+    observed = loadTickersFromCsv(observedPath);
+  }
+  const tickers = [...new Set([...seed.tickers, ...observed])].sort();
+  return {
+    csvPath: seed.csvPath,
+    csvPaths: [...seed.csvPaths, observedPath],
+    tickers,
+    tickerSet: new Set(tickers),
+  };
+}
+
 function buildSeedReferenceScores(configDirectory) {
   const { tickers } = loadSeedLexiconSync(configDirectory);
   const knowledge = buildTickerKnowledge({ seedTickers: tickers, rows: [] });
@@ -184,6 +217,7 @@ module.exports = {
   buildSeedReferenceScores,
   clearTickerScanCache,
   extractTickersFromOcrText,
+  loadDecodeLexiconSync,
   loadSeedLexiconSync
 };
 

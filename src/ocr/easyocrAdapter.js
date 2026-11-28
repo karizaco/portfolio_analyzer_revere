@@ -1,11 +1,25 @@
 'use strict';
 
-// Adapter that spawns the EasyOCR Python wrapper (_easyocr_ocr.py) and
-// returns a Tesseract-compatible OCR result object compatible with the
-// downstream parser (parseChartStream.js expects { text, lines, words[] }).
+// Adapter that spawns a Python OCR wrapper and returns a Tesseract-compatible
+// OCR result object compatible with the downstream parser (parseChartStream.js
+// expects { text, lines, words[] }).
 //
 // Used as an alternative OCR engine when Tesseract produces too-garbled
 // text for QMG position lists. See _easyocr_ocr.py for the Python side.
+//
+// ENGINES. Two are registered, and they are NOT interchangeable copies:
+//
+//   easyocr   — CNN+ResNet/LSTM/CTC recogniser. Accurate on clean text,
+//               weaker on 6px-tall ticker glyphs.
+//   rapidocr  — PP-OCR's detector+recogniser (ONNX). A different
+//               architecture, so it makes DIFFERENT mistakes.
+//
+// That difference is the point. EasyOCR's mis-reads on the position list are
+// STABLE — the same pixels give the same wrong ticker at every scale and
+// every resampling — because the information is not in the picture. A second
+// pass with the same recogniser cannot fix that; a second recogniser can,
+// because it fails somewhere else. The decoder (src/normalize/tickerDecode.js)
+// then prefers the reading both engines agree on.
 //
 // On Windows, EasyOCR 1.7.2+ ships wheels for Python 3.9 through 3.14,
 // so any modern Python works. The legacy "Python 3.11 required" guidance
@@ -28,11 +42,11 @@ const DEFAULT_PYTHON_CANDIDATES = [
   'C:/Python314/python.exe',
 ];
 
-function pythonHasEasyOCR(pythonExe) {
+function pythonHasModule(pythonExe, moduleName) {
   try {
     const { execSync } = require('node:child_process');
-    execSync(`"${pythonExe}" -c "import easyocr; print('ok')"`, {
-      timeout: 10000,
+    execSync(`"${pythonExe}" -c "import ${moduleName}; print('ok')"`, {
+      timeout: 20000,
       stdio: ['ignore', 'pipe', 'pipe'],
       env: { ...process.env, KMP_DUPLICATE_LIB_OK: 'TRUE' },
     });
@@ -42,37 +56,138 @@ function pythonHasEasyOCR(pythonExe) {
   }
 }
 
-function pickPython(explicitPath) {
+// Keep the old name working for callers that only ever meant EasyOCR.
+const pythonHasEasyOCR = (pythonExe) => pythonHasModule(pythonExe, 'easyocr');
+
+function pickPython(explicitPath, engine = 'easyocr') {
+  const spec = ENGINE_SPECS[engine] || ENGINE_SPECS.easyocr;
   if (explicitPath && fs.existsSync(explicitPath)) return explicitPath;
   const envPath = process.env.EASYOCR_PYTHON;
   if (envPath && fs.existsSync(envPath)) return envPath;
   for (const candidate of DEFAULT_PYTHON_CANDIDATES) {
-    if (fs.existsSync(candidate) && pythonHasEasyOCR(candidate)) return candidate;
+    if (fs.existsSync(candidate) && pythonHasModule(candidate, spec.module)) return candidate;
   }
   return 'python'; // PATH fallback — verified to have EasyOCR earlier in this session
 }
 
-// Resolve the Python wrapper script. Lives in tools/_easyocr_ocr.py relative
+// Resolve the Python wrapper script. Lives in tools/<wrapper> relative
 // to the project root (two dirs up from src/ocr/).
-function resolveWrapperPath() {
-  // src/ocr/easyocrAdapter.js → ../../tools/_easyocr_ocr.py
-  return path.resolve(__dirname, '..', '..', 'tools', '_easyocr_ocr.py');
+function resolveWrapperPath(engine = 'easyocr') {
+  const spec = ENGINE_SPECS[engine] || ENGINE_SPECS.easyocr;
+  // src/ocr/easyocrAdapter.js → ../../tools/<wrapper>
+  return path.resolve(__dirname, '..', '..', 'tools', spec.wrapper);
+}
+
+// Detection/recognition tuning forwarded to `_easyocr_ocr.py` as `key=value`
+// args. Omitting a key leaves EasyOCR's own default in place, so production
+// scans are unaffected unless a caller opts in.
+const READTEXT_TUNING_KEYS = [
+  'width_ths',
+  'height_ths',
+  'add_margin',
+  'contrast_ths',
+  'adjust_contrast',
+  'mag_ratio',
+  'allowlist',
+  'text_threshold',
+  'low_text',
+  'link_threshold',
+  // Recogniser-only mode: the caller knows where the text is, so the
+  // detector is skipped. On 6px-tall ticker glyphs the detector drops the
+  // leading letter of a ticker ("FCX" -> "KX").
+  'recognize_only',
+  'text_score',
+  'beamWidth',
+];
+
+// RapidOCR's knobs have different names, and it has no equivalent of
+// EasyOCR's `recognize_only` — its `use_det: false` recognises the whole
+// image as one box, which is the same idea.
+const RAPIDOCR_TUNING_KEYS = [
+  'allowlist',
+  'use_det',
+  'det_box_thresh',
+  'det_limit_side_len',
+  'use_angle_cls',
+  'drop_score',
+];
+
+// The registered Python OCR engines. `module` is the Python package that must
+// be importable for the engine to be usable on a given interpreter.
+const ENGINE_SPECS = {
+  easyocr: {
+    wrapper: '_easyocr_ocr.py',
+    module: 'easyocr',
+    tuningKeys: READTEXT_TUNING_KEYS,
+    // The recogniser's own timeout budget, per image.
+    defaultTimeoutMs: 600000,
+  },
+  rapidocr: {
+    wrapper: '_rapidocr_ocr.py',
+    module: 'rapidocr_onnxruntime',
+    tuningKeys: RAPIDOCR_TUNING_KEYS,
+    defaultTimeoutMs: 180000,
+  },
+};
+
+function buildEasyOcrArgs(imagePath, options = {}) {
+  const spec = ENGINE_SPECS[options.engine] || ENGINE_SPECS.easyocr;
+  const args = [imagePath];
+  for (const key of spec.tuningKeys) {
+    if (options[key] === undefined || options[key] === null) continue;
+    args.push(`${key}=${typeof options[key] === 'object'
+      ? JSON.stringify(options[key])
+      : String(options[key])}`);
+  }
+  return args;
 }
 
 function runEasyOcr(imagePath, options = {}) {
-  const python = pickPython(options.pythonPath);
-  const scriptPath = resolveWrapperPath();
+  return runEasyOcrBatch([imagePath], options)
+    .then((results) => {
+      const result = results[0];
+      if (result && result.error) {
+        throw new Error(`EasyOCR: ${result.error}${result.traceback ? `\n${result.traceback}` : ''}`);
+      }
+      return result;
+    });
+}
+
+// OCR many images in ONE process. EasyOCR loads an ~80MB model per process, so
+// the previous one-spawn-per-frame shape spent more wall-clock loading models
+// than reading text — a 12-frame scan paid 12 model loads. Batch mode loads
+// once and costs only recognition time per image.
+//
+// Returns an array in the same order as `imagePaths`. A per-image failure is
+// reported as `{ error }` at that index rather than failing the whole batch.
+function runEasyOcrBatch(imagePaths, options = {}) {
+  const engine = options.engine || 'easyocr';
+  const spec = ENGINE_SPECS[engine] || ENGINE_SPECS.easyocr;
+  const python = pickPython(options.pythonPath, engine);
+  const scriptPath = resolveWrapperPath(engine);
+  if (!Array.isArray(imagePaths) || !imagePaths.length) {
+    return Promise.resolve([]);
+  }
   return new Promise((resolve, reject) => {
-    if (!fs.existsSync(imagePath)) {
-      reject(new Error(`EasyOCR: image not found: ${imagePath}`));
+    const missing = imagePaths.filter((p) => !fs.existsSync(p));
+    if (missing.length === imagePaths.length) {
+      reject(new Error(`${engine}: image not found: ${missing[0]}`));
       return;
     }
-    const child = spawn(python, [scriptPath, imagePath], {
+    const args = [scriptPath];
+    for (const imagePath of imagePaths) {
+      args.push(...buildEasyOcrArgs(imagePath, { ...options, engine }));
+    }
+    const child = spawn(python, args, {
       stdio: ['ignore', 'pipe', 'pipe'],
       // Low-CPU env is MANDATORY (see CLAUDE.md): EasyOCR's PyTorch/OpenMP
       // backend otherwise spawns one thread per core per process and
       // saturates the whole machine. Enforced here — at the single choke
       // point for every EasyOCR call — so no caller can forget it.
+      //
+      // RapidOCR runs ONNX Runtime rather than PyTorch, but the same pinning
+      // applies: its intra-op thread pool is sized from the core count, and
+      // a corpus sweep runs several OCR processes at once.
       env: {
         ...process.env,
         OMP_NUM_THREADS: '1',
@@ -84,30 +199,40 @@ function runEasyOcr(imagePath, options = {}) {
     let stderr = '';
     child.stdout.on('data', (d) => { stdout += d.toString(); });
     child.stderr.on('data', (d) => { stderr += d.toString(); });
+    // One process now serves the whole batch, so the budget has to cover
+    // recognition for every image, not just one (~60-150s each on CPU) plus the
+    // one-time model load.
+    const perImageMs = options.timeoutMs || spec.defaultTimeoutMs;
+    const totalMs = Math.ceil(perImageMs * imagePaths.length) + 120000;
     const killTimer = setTimeout(() => {
       child.kill('SIGTERM');
-      reject(new Error(`EasyOCR timeout after ${options.timeoutMs || 600000}ms\nstderr: ${stderr}`));
-    }, options.timeoutMs || 600000);
+      reject(new Error(`${engine} timeout after ${totalMs}ms for ${imagePaths.length} image(s)\nstderr: ${stderr}`));
+    }, totalMs);
     child.on('close', (code) => {
       clearTimeout(killTimer);
       if (code !== 0) {
-        reject(new Error(`EasyOCR exited with code ${code}\nstderr: ${stderr}\nstdout: ${stdout.slice(0, 500)}`));
+        reject(new Error(`${engine} exited with code ${code}\nstderr: ${stderr}\nstdout: ${stdout.slice(0, 500)}`));
         return;
       }
       try {
         const parsed = JSON.parse(stdout);
-        if (parsed.error) {
-          reject(new Error(`EasyOCR returned error: ${parsed.error}\nstderr: ${stderr}`));
+        if (!Array.isArray(parsed)) {
+          // Single-image mode: the wrapper emits a bare object.
+          if (parsed && parsed.error) {
+            reject(new Error(`${engine} returned error: ${parsed.error}\nstderr: ${stderr}`));
+            return;
+          }
+          resolve([parsed]);
           return;
         }
         resolve(parsed);
       } catch (e) {
-        reject(new Error(`EasyOCR: failed to parse JSON: ${e.message}\nstdout(first 500): ${stdout.slice(0, 500)}`));
+        reject(new Error(`${engine}: failed to parse JSON: ${e.message}\nstdout(first 500): ${stdout.slice(0, 500)}`));
       }
     });
     child.on('error', (err) => {
       clearTimeout(killTimer);
-      reject(new Error(`EasyOCR spawn error: ${err.message}`));
+      reject(new Error(`${engine} spawn error: ${err.message}`));
     });
   });
 }
@@ -130,11 +255,13 @@ function adaptToParserSchema(easyocrResult, options = {}) {
   const confidence = confs.length
     ? confs.reduce((a, b) => a + b, 0) / confs.length
     : 0;
+  // The wrapper names its own engine; fall back to the requested one.
+  const engine = String(easyocrResult._engine || options.engine || 'easyocr');
   return {
     text: String(easyocrResult.text || ''),
     lines: Array.isArray(easyocrResult.lines) ? easyocrResult.lines : [],
     words: words.map((w) => ({
-      lineKey: `easy:${Number(w.line || 0)}`,
+      lineKey: `${engine}:${Number(w.line || 0)}`,
       text: String(w.text || ''),
       left: Number(w.left || 0),
       top: Number(w.top || 0),
@@ -144,11 +271,25 @@ function adaptToParserSchema(easyocrResult, options = {}) {
       line: Number(w.line || 0),
     })),
     confidence,
-    _engine: 'easyocr',
-    // cropWidth used by identifyPositionListColumn in parseChartStream.js to scale
-    // X_POSITION_LIST_MIN. Measured from the OCR input image by the caller.
+    _engine: engine,
+    // Width of the image EasyOCR actually read, in pixels — the caller measures
+    // it from the crop it produced. Not hardcoded: the upscale factor depends on
+    // source resolution and crop fraction, so it varies per run. (The position
+    // column gate in parseChartStream.js no longer branches on this value, but
+    // it is kept for diagnostics.)
     _cropWidth: Number.isFinite(options.cropWidth) ? options.cropWidth : null,
   };
 }
 
-module.exports = { runEasyOcr, adaptToParserSchema, pickPython, resolveWrapperPath };
+module.exports = {
+  runEasyOcr,
+  runEasyOcrBatch,
+  adaptToParserSchema,
+  pickPython,
+  resolveWrapperPath,
+  buildEasyOcrArgs,
+  pythonHasModule,
+  READTEXT_TUNING_KEYS,
+  RAPIDOCR_TUNING_KEYS,
+  ENGINE_SPECS,
+};

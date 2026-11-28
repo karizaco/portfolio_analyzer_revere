@@ -62,7 +62,7 @@ recall = |captured tickers ∩ GT tickers| / |GT tickers|
 FPs     = |captured tickers ∖ GT tickers|  (unique)
 ```
 
-Script: `data/_summarize_existing.py` — accepts a base dir + date list.
+Script: `tools/summarize_existing.py` — accepts a base dir + date list.
 
 ## Why is the new prefilter worse?
 
@@ -118,7 +118,7 @@ distractors. But it now **prefers the wrong kind of "good" frame**.
 ## Files
 
 - Wrapper: `tools/scanAllGtVideos.js` (modified for parallelism + correct GT recall)
-- Aggregator: `data/_summarize_existing.py` (correct recall / FP counting)
+- Aggregator: `tools/summarize_existing.py` (correct recall / FP counting)
 - Old run probe logs: `data/video_scan_20260923/qmg-1080p-ocr-v2/`
 - New run probe logs: `data/video_scan_test/_rerun/`
 - Comparison raw data: `data/video_scan_test/_rerun_6gt_v2.log`
@@ -132,8 +132,8 @@ node tools/scanAllGtVideos.js \
   --parallel 3 --fps 1 --max-captures 3 --prefilter-max-frames 12
 
 # Summarize
-py -3 data/_summarize_existing.py data/video_scan_test/_rerun rerun_
+py -3 tools/summarize_existing.py data/video_scan_test/_rerun rerun_
 
 # Compare against legacy
-py -3 data/_summarize_existing.py data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2 -
+py -3 tools/summarize_existing.py data/video_scan_20260923/qmg-1080p-ocr-v2/qmg-1080p-ocr-v2 -
 ```

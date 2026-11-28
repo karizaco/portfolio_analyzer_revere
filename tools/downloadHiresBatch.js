@@ -12,11 +12,24 @@
 // pipeline picks them up automatically.
 //
 // Resumability:
-//   1. SQLite `status='done'` rows are skipped.
-//   2. Already-on-disk hires mp4s are skipped (also flipped to `status='done'`).
+//   1. SQLite `status='done'` rows are skipped — a `done` row has been OCR'd,
+//      so there is nothing here for a downloader to do.
+//   2. Already-on-disk hires mp4s are skipped. The row's status is set to
+//      `scanning`, NOT to `done`: `scanning` is the state that means "the
+//      media is on disk, the OCR queue has not run on it yet", and it is what
+//      tools/runAllOcr.js selects.
 //   3. A checkpoint file (`_download_checkpoint.json`) remembers which ids
 //      have succeeded and which have errored. Re-running the script mid-batch
 //      picks up exactly where it left off, even after a hard kill.
+//
+// THE TRAP IN RULE 1
+// `done` records that a pass finished. It says nothing about whether the file
+// is still on disk. A row that was OCR'd and whose mp4 was later deleted is
+// therefore skipped here forever: neither re-fetched nor reported as
+// missing. That was true of 21 rows on 2026-10-29 — all Revere, all pointing
+// into the `downloads/` directory the 2026-10-21 cleanup removed.
+// `tools/reconcileCatalogStatus.js` is the repair; see src/video/videoStatus.js
+// for what each status means.
 //
 // Usage:
 //   node tools/downloadHiresBatch.js                  # 30 most-recent at 720p
@@ -27,6 +40,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
+
+const { buildDownloadCandidateSql, toPortablePath } = require('../src/video/downloadCandidates');
 
 const argv = process.argv.slice(2);
 const limit = Number(readFlag(argv, '--limit')) || 30;
@@ -57,6 +72,10 @@ const formatCode = String({ 360: 134, 480: 135, 720: 136, 1080: 137 }[height]);
 const dbPath = path.resolve('data/video_pipeline/state.sqlite');
 const dlDir = path.resolve('data/video_pipeline/downloads_hires');
 const checkpointPath = path.join(dlDir, '_download_checkpoint.json');
+// The repository root, derived from the database's own location
+// (`<root>/data/video_pipeline/state.sqlite`). Stored paths are relative to
+// it, so it is what they have to be resolved against.
+const repoRoot = path.resolve(path.dirname(dbPath), '..', '..');
 
 if (!fs.existsSync(dbPath)) {
   console.error(`No SQLite at ${dbPath}. Run 'npm run video:init' first.`);
@@ -79,15 +98,13 @@ const py = process.platform === 'win32' ? 'py' : 'python3';
 const pathCondition = onlyIds.size
     ? "(download_path IS NOT NULL OR download_path = '')"
     : "download_path IS NOT NULL";
+const candidateSql = buildDownloadCandidateSql({ pathCondition });
 const script = `
 import json, sqlite3, sys
 c = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
 c.row_factory = sqlite3.Row
 rows = c.execute(
-    "SELECT video_id, upload_date, title, download_path FROM videos "
-    "WHERE status IN ('pending','scanning','error') AND ${pathCondition} "
-    "AND upload_date IS NOT NULL AND upload_date != 'NA' "
-    "ORDER BY upload_date DESC, video_id ASC"
+    ${JSON.stringify(candidateSql)}
 ).fetchall()
 out = [dict(r) for r in rows]
 json.dump(out, sys.stdout)
@@ -195,10 +212,14 @@ console.log(`[hires] to resume: re-run with the same args (the same checkpoint w
 console.log(`[hires] to retry the errored list: --retry-errored`);
 
 function finalizeRow(videoId, hiresPath) {
+  // The catalog is committed to git, so the pointer it holds has to mean
+  // something on another machine: a path inside the repository is stored
+  // relative to its root.
+  const stored = toPortablePath(hiresPath, repoRoot);
   const update = `
 import sqlite3
 c = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
-c.execute("UPDATE videos SET download_path=?, status='scanning', error='' WHERE video_id=?", (${JSON.stringify(hiresPath)}, ${JSON.stringify(videoId)}))
+c.execute("UPDATE videos SET download_path=?, status='scanning', error='' WHERE video_id=?", (${JSON.stringify(stored)}, ${JSON.stringify(videoId)}))
 c.commit()
 `;
   const u = spawnSync(py, ['-3', '-c', update], { encoding: 'utf8' });

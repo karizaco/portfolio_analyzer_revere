@@ -67,7 +67,7 @@ const PIPELINE_PROFILES = Object.freeze({
     title: 'QMG crop-region experiment',
     family: 'qmg',
     status: 'runnable-option-bundle',
-    description: 'Chart-stream experiment that applies the tighter validated overlay crop from the QMG crop analysis notes.',
+    description: 'Chart-stream experiment that applies the tighter validated overlay crop from the QMG crop analysis notes. The crop is pinned EXPLICITLY here, which is what this bundle is for: it reproduces a historical experiment rectangle. It is NOT the shipped default — the default is era-conditional (src/video/chartStreamCrop.js), and an explicit --phash-region-fraction suppresses that.',
     references: ['docs/qmg-ocr-crop-analysis.md'],
     scanArgv: [
       '--output-kind', 'snapshot',

@@ -349,7 +349,7 @@ function scoreChartLikeness(stats) {
   return 0;
 }
 
-function summarizeLumaBuffer(buffer, width, height) {
+function summarizeLumaBuffer(buffer, width, height, region) {
   let total = 0;
   let totalSquares = 0;
   let brightPixels = 0;
@@ -363,15 +363,41 @@ function summarizeLumaBuffer(buffer, width, height) {
   // and bottom ~45% of the frame). Count row density AND mid-tone density
   // (chart candle highlights) ONLY in that region to avoid the high-contrast
   // photo overlay in Google Drive etc.
-  const tickerColLeft = Math.floor(width * 0.85);
+  //
+  // The `position_table` profile widens this rectangle upward, because the
+  // 2023-era sidebar puts the table higher up the frame (measured x
+  // 1606-1648, y 444-708 of 1920x1080 — docs/qmg-positions-layout-findings.md,
+  // § 'Measured geometry per corpus frame').
+  const tickerLeft = region && Number.isFinite(region.left) ? region.left : 0.85;
+  const tickerTop = region && Number.isFinite(region.top) ? region.top : 0.55;
+  const tickerColLeft = Math.floor(width * tickerLeft);
   const tickerColRight = width;
-  const tickerRowTop = Math.floor(height * 0.55);
+  const tickerRowTop = Math.floor(height * tickerTop);
   const tickerRowBottom = height;
   // Mid-tone density: count pixels in 51-150 brightness range within the
   // ticker region. The position list has ticker text (mid-tone) on dark
   // background; a clean Google Drive frame has almost no mid-tone pixels.
   let midToneTicker = 0;
   let totalTickerPixels = 0;
+  // The ticker REGION's own area, and the mid-tone pixels inside it, counted
+  // independently of the bright-pixel branch below.
+  //
+  // The comment above and the name `midToneRatioTicker` both describe "the
+  // fraction of the ticker rectangle that is mid-tone" — but the counters in
+  // the branch below cannot supply that: they are nested inside
+  // `if (value >= 130)`, so `totalTickerPixels` counts only the region's
+  // BRIGHT pixels and `midToneTicker` counts only those that are merely
+  // bright (130-150). The ratio is therefore "of the bright pixels here, how
+  // many are just-bright" — a different quantity, and one whose denominator is
+  // 7 or 17 pixels at the prefilter's 160x90 scale.
+  //
+  // These two counters compute the quantity the name describes, WITHOUT
+  // changing any existing number. `midToneRatioTickerRegion` is a DIAGNOSTIC:
+  // nothing scores it yet, because doing so changes the scale of every tuned
+  // constant in scoreFramePrefilter. tools/measurePrefilterRegion.js measures
+  // what the corrected signal's ranking would be.
+  let tickerRegionPixels = 0;
+  let tickerMidTonePixels = 0;
   const rowTopsByCol = new Array(width).fill(0);
   let rowTransitions = 0;
   // Track leftmost & rightmost bright column for ticker-column detection.
@@ -420,6 +446,16 @@ function summarizeLumaBuffer(buffer, width, height) {
             rowTopsByCol[columnIndex] += 1;
           }
         }
+      }
+    }
+
+    // The region's own area and its mid-tone content — every pixel, not just
+    // the bright ones. See the comment on the counter declarations.
+    if (rowIndex >= tickerRowTop && rowIndex < tickerRowBottom &&
+        columnIndex >= tickerColLeft && columnIndex < tickerColRight) {
+      tickerRegionPixels += 1;
+      if (value >= 51 && value <= 150) {
+        tickerMidTonePixels += 1;
       }
     }
   }
@@ -480,6 +516,12 @@ function summarizeLumaBuffer(buffer, width, height) {
     brightColumnLeft: leftmostBright,
     brightColumnRight: rightmostBright,
     midToneRatioTicker: totalTickerPixels > 0 ? midToneTicker / totalTickerPixels : 0,
+    // The quantity `midToneRatioTicker` is NAMED for: the fraction of the
+    // ticker RECTANGLE that is mid-tone. It is a diagnostic until a wide
+    // measurement says it should be scored — scoring it changes the scale of
+    // every tuned constant in scoreFramePrefilter.
+    midToneRatioTickerRegion: tickerRegionPixels > 0 ? tickerMidTonePixels / tickerRegionPixels : 0,
+    tickerRegionPixels,
     stdDev: Math.sqrt(variance),
     verticalComparisons,
     verticalEdgeHits,
@@ -487,20 +529,32 @@ function summarizeLumaBuffer(buffer, width, height) {
   };
 }
 
-async function analyzeFrameBeforeOcr(framePath) {
+async function analyzeFrameBeforeOcr(framePath, region, options = {}) {
+  // The prefilter's working resolution. 160x90 is the pipeline's default and
+  // every tuned constant in scoreFramePrefilter was fitted at that scale.
+  //
+  // It is also the scale at which the sidebar era's signals stop meaning
+  // anything: the 2023-era ticker rectangle is 29x29 prefilter pixels, so
+  // `midToneRatioTicker`'s denominator is 7 or 17, and the row/stripe signals
+  // are inverted (measured 2026-11-02, CLAUDE.md § 'The prefilter's
+  // rectangle'). The override exists so that ALTERNATIVE resolutions can be
+  // MEASURED without changing what the pipeline does; the pipeline still
+  // calls this with no options.
+  const width = Number(options.width) > 0 ? Math.trunc(options.width) : PREFILTER_WIDTH;
+  const height = Number(options.height) > 0 ? Math.trunc(options.height) : PREFILTER_HEIGHT;
   const { data, info } = await sharp(framePath)
     .flatten({ background: '#ffffff' })
     .grayscale()
     .resize({
       background: '#ffffff',
       fit: 'contain',
-      height: PREFILTER_HEIGHT,
-      width: PREFILTER_WIDTH
+      height,
+      width
     })
     .raw()
     .toBuffer({ resolveWithObject: true });
 
-  return summarizeLumaBuffer(data, info.width, info.height);
+  return summarizeLumaBuffer(data, info.width, info.height, region);
 }
 
 function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporalDecay = Infinity, timestamp = undefined) {
@@ -593,7 +647,8 @@ function scoreFramePrefilter(stats, outputKind, profile = 'whiteboard', temporal
   // Revere whiteboard scans pick their capture by a completely different
   // signal. Applying it to whiteboard would silently re-rank every Revere
   // capture toward the first 30 minutes of the stream.
-  if (isFinite(temporalDecay) && temporalDecay > 0 && profile === 'chart_stream') {
+  if (isFinite(temporalDecay) && temporalDecay > 0
+    && (profile === 'chart_stream' || profile === 'position_table')) {
     const tsCandidate = timestamp !== undefined ? timestamp : (stats && stats.timestamp);
     const ts = Number(tsCandidate);
     if (Number.isFinite(ts)) {
@@ -703,6 +758,59 @@ const PREFILTER_PROFILES = Object.freeze({
     snapshotEdgeBoostCap: 2,
     // Positive boost: chart-likeness is GOOD. Score 0–6 instead of -6 to 0.
     chartLikenessBoost: 8,
+    prefilterThresholdDefault: 8
+  }),
+  // The positions TABLE reader (src/video/positionTableScan.js). Same
+  // content as chart_stream — a TradingView candlestick frame with the
+  // position list in the right-hand panel — but read by a different
+  // pipeline, so it gets its own profile.
+  //
+  // The one real difference is the ticker rectangle. chart_stream watches
+  // the bottom-right corner, which is where the 2022-era floating panel
+  // sits. The 2023-era SIDEBAR puts the table much higher up (measured
+  // x 1606-1648, y 444-708 of 1920x1080 —
+  // docs/qmg-positions-layout-findings.md, § 'Measured geometry per corpus
+  // frame'), so the rectangle is
+  // widened upward and leftward to cover both layouts.
+  //
+  // The weights are inherited from chart_stream rather than tuned from
+  // scratch: the table reader validates its own input (it looks for a
+  // title bar and refuses to claim a table it cannot identify), so the
+  // prefilter only has to get the frames into the right neighbourhood.
+  position_table: Object.freeze({
+    brightWeight: 4,
+    brightTarget: 0.04,
+    brightSlope: 30,
+    darkWeight: 3,
+    darkTarget: 0.55,
+    darkSlope: 20,
+    edgeWeight: 3,
+    edgeTarget: 0.10,
+    edgeSlope: 100,
+    stdDevWeight: 3,
+    stdDevTarget: 55,
+    stdDevSlope: 12,
+    rowDensityWeight: 10,
+    rowDensityTarget: 150,
+    rowDensitySlope: 0.05,
+    multiColStripeCountWeight: 20,
+    multiColStripeCountTarget: 3,
+    midToneWeight: 30,
+    midToneTarget: 0.5,
+    midToneSlope: 0.2,
+    meanLumaFloor: 30,
+    meanLumaPenalty: 6,
+    brightRatioFloor: 0.005,
+    brightRatioPenalty: 6,
+    darkRatioFloor: 0.20,
+    darkRatioFloorPenalty: 4,
+    darkRatioCeil: 0.92,
+    darkRatioCeilPenalty: 6,
+    snapshotEdgeBoost: 25,
+    snapshotEdgeBoostCap: 2,
+    chartLikenessBoost: 8,
+    // The rectangle the mid-tone and row-density signals are measured in.
+    tickerRegion: Object.freeze({ left: 0.78, top: 0.28 }),
     prefilterThresholdDefault: 8
   }),
   // Tale of the Tape (ToTT) format: the Positions table sits in the
@@ -941,6 +1049,64 @@ function selectFramesForOcr(prefilterRows, options = {}) {
   return [...selected.values()].sort((left, right) => left.frameIndex - right.frameIndex);
 }
 
+/**
+ * Swap the best-scoring prefilter frame into a selected frame set.
+ *
+ * WHY THIS EXISTS
+ *
+ * `selectFramesForOcr` reserves its budget for a uniform time-stride, and
+ * the stride-based reserve is sized to keep each stride under ~10 s of
+ * video. For a long video that reserve alone fills the whole budget, so
+ * the SEED branch never runs -- and the seed branch is the only part of
+ * the selector that consults the prefilter score. The frames that get
+ * OCR'd are therefore a blind stride, and `--prefilter-threshold` has no
+ * effect at all.
+ *
+ * Measured on 20220218 (689 frames sampled at 0.25 fps, chart_stream
+ * defaults): the 12 selected frames are a 228-second stride, and the
+ * best-scoring frame in the video -- t=132 s, score 22.27 -- is not one
+ * of them. Five of the twelve score below the profile's own absolute
+ * threshold of 8, and the last four score below zero.
+ *
+ * WHAT IT DOES
+ *
+ * The frame the profile scored highest takes the slot of the LEAST legible
+ * selected frame. The best frame is gated by the profile's threshold, with
+ * the same 60 % relaxation `selectFramesForOcr` applies, so a video whose
+ * frames all score low gets no swap.
+ *
+ * The eviction rule is "lowest score", NOT the table profile's "nearest
+ * frame". The table profile's budget is 3 frames taken seconds apart, so
+ * its nearest uniform frame is redundant with the best one; the
+ * chart-stream frames are MINUTES apart, so no selected frame is redundant
+ * with another, and the one that should give up its slot is the least
+ * legible one.
+ *
+ * `selectedRows` is mutated in place and returned, so the caller keeps
+ * its reference to the array it passes to the OCR stage.
+ *
+ * @returns {{swapped: boolean, evicted: object|null, index: number, threshold: number}}
+ */
+function swapInBestPrefilterFrame(selectedRows, bestRow, options = {}) {
+  const minScore = Number(options.minScore || 0);
+  const bestScore = Number(bestRow && bestRow.prefilterScore || 0);
+  const effectiveThreshold = bestScore >= minScore ? minScore : minScore * 0.6;
+  const noSwap = { swapped: false, evicted: null, index: -1, threshold: effectiveThreshold };
+  if (!Array.isArray(selectedRows) || !selectedRows.length || !bestRow) return noSwap;
+  if (selectedRows.some((row) => row.frameIndex === bestRow.frameIndex)) return noSwap;
+  if (!(bestScore >= effectiveThreshold)) return noSwap;
+
+  let evictIndex = 0;
+  for (let index = 1; index < selectedRows.length; index += 1) {
+    if (Number(selectedRows[index].prefilterScore || 0) < Number(selectedRows[evictIndex].prefilterScore || 0)) {
+      evictIndex = index;
+    }
+  }
+  const evicted = selectedRows[evictIndex];
+  selectedRows[evictIndex] = bestRow;
+  return { swapped: true, evicted, index: evictIndex, threshold: effectiveThreshold };
+}
+
 function inferDateKey(videoPath, explicitDateKey = '') {
   const normalizedExplicit = String(explicitDateKey || '').trim();
   if (/^20\d{6}$/.test(normalizedExplicit)) {
@@ -1001,6 +1167,8 @@ function allocateOutputPath(outputRoot, outputKind, dateKey, suffix = null, base
 
 module.exports = {
   PREFILTER_PROFILES,
+  PREFILTER_WIDTH,
+  PREFILTER_HEIGHT,
   TEXT_DENSITY_KEYWORDS,
   allocateOutputPath,
   analyzeFrameBeforeOcr,
@@ -1015,6 +1183,7 @@ module.exports = {
   scoreChartLikeness,
   scoreFramePrefilter,
   scoreSnapshotCandidate,
+  swapInBestPrefilterFrame,
   scoreTextDensity,
   scoreWhiteboardCandidate,
   scoreWhiteboardCandidateBreakdown,

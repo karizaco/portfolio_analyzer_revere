@@ -1,6 +1,9 @@
 {
   "run_tag": "ocr-20260914",
-  "generated_at": "2026-09-14T11:26:41.568Z",
+  "run_tags": [
+    "ocr-20260914"
+  ],
+  "generated_at": "2026-10-29T04:56:23.160Z",
   "totals": {
     "videos": 7,
     "videos_with_captures": 7,
@@ -13,7 +16,14 @@
       "dmi": 6,
       "structured_whiteboard": 6
     },
+    "video_type_counts": {
+      "untagged": 7
+    },
+    "channel_counts": {
+      "revere": 7
+    },
     "unique_tickers": 10,
+    "unique_chart_stream_tickers": 0,
     "top_tickers": [
       {
         "ticker": "BE",
@@ -55,12 +65,53 @@
         "ticker": "CF",
         "count": 1
       }
+    ],
+    "untyped_videos": [
+      {
+        "video_id": "m0pv73rv2qo",
+        "upload_date": "20260509",
+        "channel": "revere"
+      },
+      {
+        "video_id": "klxyb7imwpi",
+        "upload_date": "20260511",
+        "channel": "revere"
+      },
+      {
+        "video_id": "beidyftv-ly",
+        "upload_date": "20260512",
+        "channel": "revere"
+      },
+      {
+        "video_id": "ekcshohf-bu",
+        "upload_date": "20260513",
+        "channel": "revere"
+      },
+      {
+        "video_id": "-e2av8iaafw",
+        "upload_date": "20260514",
+        "channel": "revere"
+      },
+      {
+        "video_id": "n89ebeo-wdo",
+        "upload_date": "20260515",
+        "channel": "revere"
+      },
+      {
+        "video_id": "xyk7t3tzrp0",
+        "upload_date": "20260516",
+        "channel": "revere"
+      }
     ]
   },
   "per_video": [
     {
       "upload_date": "20260509",
       "video_id": "m0pv73rv2qo",
+      "video_type": "untagged",
+      "video_type_label": "untagged",
+      "channel": "revere",
+      "output_kind": "4d3be925",
       "captures": 2,
       "max_score": 27.84,
       "mean_score": 26.91,
@@ -72,11 +123,16 @@
       ],
       "has_dmi_intro": true,
       "ticker_union": [],
+      "chart_stream_tickers": [],
       "segments": 1
     },
     {
       "upload_date": "20260511",
       "video_id": "klxyb7imwpi",
+      "video_type": "untagged",
+      "video_type_label": "untagged",
+      "channel": "revere",
+      "output_kind": "7fe9dec4",
       "captures": 3,
       "max_score": 100.22,
       "mean_score": 91.61,
@@ -93,11 +149,16 @@
         "MU",
         "TEM"
       ],
+      "chart_stream_tickers": [],
       "segments": 3
     },
     {
       "upload_date": "20260512",
       "video_id": "beidyftv-ly",
+      "video_type": "untagged",
+      "video_type_label": "untagged",
+      "channel": "revere",
+      "output_kind": "37a24c5b",
       "captures": 3,
       "max_score": 100.2,
       "mean_score": 78.7,
@@ -116,11 +177,16 @@
         "BE",
         "URA"
       ],
+      "chart_stream_tickers": [],
       "segments": 2
     },
     {
       "upload_date": "20260513",
       "video_id": "ekcshohf-bu",
+      "video_type": "untagged",
+      "video_type_label": "untagged",
+      "channel": "revere",
+      "output_kind": "504d35b0",
       "captures": 3,
       "max_score": 88.93,
       "mean_score": 74.65,
@@ -141,11 +207,16 @@
         "NBIS",
         "TAN"
       ],
+      "chart_stream_tickers": [],
       "segments": 2
     },
     {
       "upload_date": "20260514",
       "video_id": "-e2av8iaafw",
+      "video_type": "untagged",
+      "video_type_label": "untagged",
+      "channel": "revere",
+      "output_kind": "59a9d93a",
       "captures": 3,
       "max_score": 99.61,
       "mean_score": 94.21,
@@ -163,11 +234,16 @@
         "TAN",
         "UPRO"
       ],
+      "chart_stream_tickers": [],
       "segments": 1
     },
     {
       "upload_date": "20260515",
       "video_id": "n89ebeo-wdo",
+      "video_type": "untagged",
+      "video_type_label": "untagged",
+      "channel": "revere",
+      "output_kind": "27686e39",
       "captures": 3,
       "max_score": 90.12,
       "mean_score": 72.18,
@@ -183,11 +259,16 @@
         "CF",
         "URA"
       ],
+      "chart_stream_tickers": [],
       "segments": 2
     },
     {
       "upload_date": "20260516",
       "video_id": "xyk7t3tzrp0",
+      "video_type": "untagged",
+      "video_type_label": "untagged",
+      "channel": "revere",
+      "output_kind": "8d835a1a",
       "captures": 2,
       "max_score": 42.4,
       "mean_score": 39.78,
@@ -199,6 +280,7 @@
       ],
       "has_dmi_intro": true,
       "ticker_union": [],
+      "chart_stream_tickers": [],
       "segments": 1
     }
   ],
@@ -214,6 +296,9 @@
       },
       "ticker_union": [],
       "segments": 1,
+      "video_type_counts": {
+        "untagged": 1
+      },
       "mean_score": 26.91,
       "ticker_union_size": 0
     },
@@ -233,6 +318,9 @@
         "TEM"
       ],
       "segments": 3,
+      "video_type_counts": {
+        "untagged": 1
+      },
       "mean_score": 91.61,
       "ticker_union_size": 4
     },
@@ -251,6 +339,9 @@
         "URA"
       ],
       "segments": 2,
+      "video_type_counts": {
+        "untagged": 1
+      },
       "mean_score": 78.7,
       "ticker_union_size": 2
     },
@@ -271,6 +362,9 @@
         "TAN"
       ],
       "segments": 2,
+      "video_type_counts": {
+        "untagged": 1
+      },
       "mean_score": 74.65,
       "ticker_union_size": 4
     },
@@ -291,6 +385,9 @@
         "UPRO"
       ],
       "segments": 1,
+      "video_type_counts": {
+        "untagged": 1
+      },
       "mean_score": 94.21,
       "ticker_union_size": 5
     },
@@ -309,6 +406,9 @@
         "URA"
       ],
       "segments": 2,
+      "video_type_counts": {
+        "untagged": 1
+      },
       "mean_score": 72.18,
       "ticker_union_size": 3
     },
@@ -323,6 +423,9 @@
       },
       "ticker_union": [],
       "segments": 1,
+      "video_type_counts": {
+        "untagged": 1
+      },
       "mean_score": 39.78,
       "ticker_union_size": 0
     }

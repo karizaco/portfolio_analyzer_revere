@@ -37,9 +37,17 @@ function printHelp() {
     '  --prefilter-max-frames <n> Maximum frames to OCR, default 60',
     '  --prefilter-neighbors <n>  Neighbor frames kept around strong prefilter hits, default 1',
     '  --strong-threshold <n>     Autosave score threshold, default 6',
+    '  --table-frame-budget-ms <n>  Wall-clock budget for one frame of the positions-TABLE reader, default 900000 (15 min). The per-image OCR timeout is derived from it.',
     '  --review-threshold <n>     Review score threshold, default 4',
     '  --max-captures <n>         Maximum screenshots to save per video, default 3',
-    '  --cluster-min-frequency <n> Minimum per-canonical frame count for multi-frame OCR token voting, default 1 (set to 2 to filter single-frame garbles)',
+    '  --cluster-min-frequency <n> Minimum per-canonical frame count for multi-frame OCR token voting, default 2 (set to 1 to allow single-frame garbles)',
+    '  --cluster-corroboration     Require a CORRECTED cluster canonical to be within edit distance 1 of at least one cluster member. ON by default: measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule corroborated) and over a production scan, it removes a false positive and loses no holding. Use --no-cluster-corroboration to turn it off.',
+    '  --no-cluster-corroboration   Turn the corroboration rule OFF, reproducing the pre-2026-11-03 behaviour: a corrected canonical is published even when nothing corroborates it.',
+    '  --cluster-supported          Prefer the cluster canonical the VIDEO actually read, breaking ties between equally-close candidates. Off by default: it changes which holdings a scan publishes, so it is measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule supported) before it is switched on.',
+    '  --cluster-video-supported    Prefer the cluster canonical the VIDEO actually read, whatever its edit distance. Off by default: it is measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule video-supported) before it is switched on.',
+    '  --cluster-strict-corroboration  Enable corroboration and require the proximity test alone; the video\'s own reading of a ticker does NOT count. Off by default: measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule corroborated-strict).',
+    '  --cluster-swallowed-holdings  Publish a cluster\'s OTHER lexicon tickers as well as its canonical, when the video read them in enough frames to be holdings of their own. Off by default: it is measured over the recorded logs (node tools/evalParserReplay.js --cluster-rule swallowed) before it is switched on.',
+    '  --cluster-swallowed-min-frames <n>  How many frames the video must read a swallowed ticker for it to be published. Default 4. Measured over the recorded logs; see the docs.',
     '  --position-merge-min-occurrences <n>  Min capture count for position merge, default 1 (set to 2 for intersection mode)',
     '  --progress-interval <n>    Report OCR progress every N frames, default 10',
     '  --batch-snapshots          Extract a batch of N frames within ±W seconds of the best-scoring frame. All frames show the same position list state, so multi-frame merge is valid. Use with --batch-count and --batch-window.',
@@ -49,13 +57,14 @@ function printHelp() {
     '  --ocr-engine <name>        OCR engine: tesseract (default) | easyocr. EasyOCR reads QMG position lists much more accurately (~95% recall vs ~25%) at the cost of ~60s/frame vs ~1-2s. Only applies to chart-stream parser mode.',
     '  --top-candidates <n>       Include the top N candidate timestamps in the result, default 5',
     '  --keep-frames              Keep sampled intermediate frames',
+    '  --keep-ocr-crops           Keep the cropped position-list panel PNGs that get fed to the OCR engine (under ocr_probe/crops/). Lets OCR settings be re-benchmarked without a full re-scan.',
     '  --skip-keyframes           Do not invoke ffprobe to locate the nearest keyframe per capture',
     '  --confusion-radius <n>     Adjacent-frame lookup window for confusion_with_nearby, default 1',
-    '  --prefilter-profile <p>    whiteboard | chart_stream | tale_of_the_tape (drives prefilter score table + keyword guard)',
+    '  --prefilter-profile <p>    whiteboard | chart_stream | tale_of_the_tape | position_table (drives prefilter score table + keyword guard)',
     '  --basename <name>          Snapshot PNG prefix + screenshot discovery stem, default "revere"',
     '  --phash-region <x,y,w,h>  Region in pixels for the overlay pHash (optional)',
     '  --phash-hamming-max <n>    Max Hamming distance for overlay pHash dedup, default 6',
-    '  --phash-region-fraction <xf,yf,wf,hf> Fractional overlay region (0..1); chart_stream default "0.86,0.62,0.14,0.22"',
+    '  --phash-region-fraction <xf,yf,wf,hf> Fractional overlay region (0..1); chart_stream default depends on the layout era (see src/video/chartStreamCrop.js)',
     '  --temporal-decay <secs>    Seconds over which early-frame boost decays to zero, default 1800',
     '  --chart-stream-parser      Replace the GRO/TURBO whiteboard parser with parseChartStream',
     '  --help                     Show this help text',
@@ -63,11 +72,38 @@ function printHelp() {
   ].join('\n'));
 }
 
-// Default fractional overlay region for chart-stream OCR. Qullamaggie's
-// position-list overlay sits in the bottom-right corner of a streamed chart frame.
-const CHART_STREAM_REGION_FRACTION_DEFAULT = '0.86,0.62,0.14,0.22';
+// Default fractional overlay region for chart-stream OCR.
+//
+// It is NOT one rectangle: Qullamaggie changed the layout of his position
+// list between 2023-01-26 and 2023-05-18, and the two layouts put their
+// ticker column in different places. The rectangles, the measurement behind
+// them and the era boundary live in src/video/chartStreamCrop.js — this
+// module only chooses between them, so it stays free of the OCR stack.
+const {
+  CHART_STREAM_CROP_FLOATING_PANEL,
+  CHART_STREAM_CROP_RIGHT_SIDEBAR,
+  CHART_STREAM_RIGHT_SIDEBAR_FROM,
+  chartStreamCropFractionForDate,
+  isRightSidebarDate
+} = require('./chartStreamCrop');
 // Tale-of-the-Tape position list sits center-right in the frame (x≈50-95%, y≈55-98%)
 const TALE_OF_THE_TAPE_CROP_FRACTION = '0.50,0.55,0.45,0.43';
+// The positions-TABLE reader does not use a fixed crop at all — it LOCATES
+// the table in the frame. This region is only the overlay pHash, used to
+// tell one capture from another, so it covers the whole right-hand strip
+// where the table can be in either the 2022 or the 2023 layout.
+const POSITION_TABLE_REGION_FRACTION = '0.78,0.28,0.22,0.72';
+// Wall-clock budget for ONE frame of the positions-TABLE reader. The reader
+// spends two OCR batches per frame (a title probe over every candidate
+// column, then a ticker read over the winner), so the per-image timeout has
+// to be derived from the number of images rather than fixed — a fixed
+// timeout would let a frame with many candidate columns run for an hour.
+//
+// The value is duplicated from DEFAULT_FRAME_BUDGET_MS in
+// src/video/positionTableScan.js on purpose: the args module stays free of
+// the OCR stack (sharp + the EasyOCR adapter), so requiring it here would
+// pull a subprocess-spawning module into every CLI parse.
+const TABLE_FRAME_BUDGET_MS_DEFAULT = 900000;
 
 function parseFractionalRegion(raw) {
   if (!raw) return null;
@@ -101,12 +137,28 @@ function buildDefaultOptions(defaultOutputRoot) {
     batchWindowSeconds: 4,
     chartStreamParser: false,
     clusterMinFrequency: 2,
+    // The corroboration rule is ON by default. It removes a false positive
+    // the clusterer invented (AAPL on 20230605) and loses no holding --
+    // measured over the recorded logs AND over a production scan.
+    //
+    // `null` means "not specified", so the flag can tell "explicitly off"
+    // from "not mentioned": `--no-cluster-corroboration` turns it off, and
+    // the scan tool records which rule actually ran.
+    clusterCorroboration: null,
+    clusterSupported: false,
+    clusterVideoSupported: false,
+    clusterStrictCorroboration: false,
+    clusterSwallowedHoldings: false,
+    clusterSwallowedMinFrames: 4,
     confusionRadius: 1,
     ffmpegBin: 'ffmpeg',
     fps: 0.25,
+    keepOcrCrops: false,
     maxCapturesPerVideo: 3,
     ocrEngine: 'tesseract',
+    nativeOcrFrame: false,
     positionMergeMinOccurrences: 1,
+    positionTableParser: false,
     ocrFrameWidth: 1280,
     outputKind: 'whiteboard',
     outputRoot: defaultOutputRoot,
@@ -124,6 +176,7 @@ function buildDefaultOptions(defaultOutputRoot) {
     sampleWidth: 640,
     skipKeyframes: false,
     strongThreshold: 6,
+    tableFrameBudgetMs: null,
     temporalDecay: 1800,
     topCandidates: 5
   };
@@ -211,6 +264,10 @@ function parseArgs(argv, overrides = {}) {
         options.strongThreshold = Number(nextValue);
         index += 1;
         break;
+      case '--table-frame-budget-ms':
+        options.tableFrameBudgetMs = Number(nextValue);
+        index += 1;
+        break;
       case '--review-threshold':
         options.reviewThreshold = Number(nextValue);
         index += 1;
@@ -221,6 +278,28 @@ function parseArgs(argv, overrides = {}) {
         break;
       case '--cluster-min-frequency':
         options.clusterMinFrequency = Number(nextValue);
+        index += 1;
+        break;
+      case '--cluster-corroboration':
+        options.clusterCorroboration = true;
+        break;
+      case '--no-cluster-corroboration':
+        options.clusterCorroboration = false;
+        break;
+      case '--cluster-supported':
+        options.clusterSupported = true;
+        break;
+      case '--cluster-video-supported':
+        options.clusterVideoSupported = true;
+        break;
+      case '--cluster-strict-corroboration':
+        options.clusterStrictCorroboration = true;
+        break;
+      case '--cluster-swallowed-holdings':
+        options.clusterSwallowedHoldings = true;
+        break;
+      case '--cluster-swallowed-min-frames':
+        options.clusterSwallowedMinFrames = Number(nextValue);
         index += 1;
         break;
       case '--position-merge-min-occurrences':
@@ -256,6 +335,9 @@ function parseArgs(argv, overrides = {}) {
         break;
       case '--keep-frames':
         options.keepFrames = true;
+        break;
+      case '--keep-ocr-crops':
+        options.keepOcrCrops = true;
         break;
       case '--skip-keyframes':
         options.skipKeyframes = true;
@@ -360,6 +442,11 @@ function parseArgs(argv, overrides = {}) {
     throw new Error('`--confusion-radius` must be zero or a positive number.');
   }
 
+  if (options.tableFrameBudgetMs !== null
+    && (!Number.isFinite(options.tableFrameBudgetMs) || options.tableFrameBudgetMs <= 0)) {
+    throw new Error('`--table-frame-budget-ms` must be a positive number.');
+  }
+
   if (!['tesseract', 'easyocr'].includes(options.ocrEngine)) {
     throw new Error(`Unsupported OCR engine: ${options.ocrEngine}. Use 'tesseract' or 'easyocr'.`);
   }
@@ -372,7 +459,7 @@ function parseArgs(argv, overrides = {}) {
     throw new Error('`--phash-hamming-max` must be an integer between 0 and 64.');
   }
 
-  if (!['whiteboard', 'chart_stream', 'tale_of_the_tape'].includes(options.prefilterProfile)) {
+  if (!['whiteboard', 'chart_stream', 'tale_of_the_tape', 'position_table'].includes(options.prefilterProfile)) {
     throw new Error(`Unsupported prefilter profile: ${options.prefilterProfile}`);
   }
 
@@ -394,7 +481,14 @@ function parseArgs(argv, overrides = {}) {
   }
 
   if (options.prefilterProfile === 'chart_stream' && !options.phashRegion && !options.phashRegionFraction) {
-    options.phashRegionFraction = parseFractionalRegion(CHART_STREAM_REGION_FRACTION_DEFAULT);
+    // The crop is chosen by the layout era, which is read off the upload
+    // date. `--date` may not have been given — the scan tool resolves it from
+    // the filename later and re-derives the crop then, so the region chosen
+    // here is only the fallback for a date that is not known yet.
+    options.chartStreamCropDefaulted = true;
+    options.phashRegionFraction = parseFractionalRegion(
+      chartStreamCropFractionForDate(options.dateKey)
+    );
   }
 
   // tale_of_the_tape uses the center-right crop for the Positions table.
@@ -402,19 +496,87 @@ function parseArgs(argv, overrides = {}) {
     options.phashRegionFraction = parseFractionalRegion(TALE_OF_THE_TAPE_CROP_FRACTION);
   }
 
+  // The positions-TABLE reader locates the table itself, so it needs no
+  // fixed crop — but it does need a pHash region to tell captures apart.
+  if (options.prefilterProfile === 'position_table' && !options.phashRegion && !options.phashRegionFraction) {
+    options.phashRegionFraction = parseFractionalRegion(POSITION_TABLE_REGION_FRACTION);
+  }
+
+  // The crop the LEGACY chart-stream reader OCRs.
+  //
+  // In every profile except position_table this is the pHash region, which
+  // is what the legacy reader has always been given. In table mode it is
+  // NOT: the table profile's region is a capture-dedup rectangle covering
+  // the whole right-hand strip, five times the area of the chart_stream
+  // crop and in the wrong place for the legacy column filter. The legacy
+  // reader is the chart-stream reader, so it gets the chart-stream crop.
+  //
+  // It also cannot be null: `runChartStreamOcr` destructures it, and in
+  // table mode `--phash-region` (a PIXEL region) leaves the fractional one
+  // unset — which used to crash the fail-safe path with a TypeError.
+  options.chartStreamCropFraction = options.prefilterProfile === 'position_table'
+    ? parseFractionalRegion(chartStreamCropFractionForDate(options.dateKey))
+    : options.phashRegionFraction;
+
   // chart_stream and tale_of_the_tape prefilters use the chart-stream parser.
   if (options.prefilterProfile === 'chart_stream' || options.prefilterProfile === 'tale_of_the_tape') {
     options.chartStreamParser = true;
   }
 
+  // The positions-TABLE reader has its own pipeline, but it publishes its
+  // result in the chart_stream shape, so the aggregator needs to be told.
+  if (options.prefilterProfile === 'position_table') {
+    options.chartStreamParser = true;
+    options.positionTableParser = true;
+    // The table's glyphs are ~6.8 SOURCE px tall. A 1280-wide OCR frame
+    // makes them ~4.5 px and the panel reads as "US / D / WCU / W / KOCO"
+    // instead of "UPST / DVN / NRGU / MOS / TQQQ" — so the table reader
+    // needs the source pixels. This is not a preference: at 1280 the table
+    // is not readable at all.
+    //
+    // So an explicit --ocr-frame-width is REFUSED rather than honoured:
+    // in table mode the flag can only downscale the reader's input, never
+    // improve on it, and honouring it would produce a silent, empty
+    // result.
+    if (argv.includes('--ocr-frame-width')) {
+      throw new Error(
+        '`--prefilter-profile position_table` cannot be combined with `--ocr-frame-width`: '
+        + 'the table reader needs the source pixels, and a downscaled frame is not readable.'
+      );
+    }
+    options.nativeOcrFrame = true;
+    // The table reader is EasyOCR-only: it reads a narrow, upscaled strip
+    // of the source frame, which is precisely what Tesseract's
+    // document-trained model is worst at. Asking for Tesseract here would
+    // silently run EasyOCR anyway, so it is refused instead.
+    if (argv.includes('--ocr-engine') && options.ocrEngine !== 'easyocr') {
+      throw new Error(
+        '`--prefilter-profile position_table` requires the easyocr engine: the table '
+        + 'reader reads an upscaled strip of the source frame, which tesseract cannot read.'
+      );
+    }
+    options.ocrEngine = 'easyocr';
+    // The table reader lives in the snapshot branch of the scan. With any
+    // other output kind it would be silently ignored, which is worse than
+    // being told the combination does not work.
+    if (options.outputKind !== 'snapshot') {
+      throw new Error(
+        '`--prefilter-profile position_table` requires `--output-kind snapshot`: '
+        + 'the table reader is part of the snapshot path.'
+      );
+    }
+  }
+
   // chart_stream profile frames score 8-12 on valid dark position-list frames.
-  // Lower the prefilter threshold to match the profile's own floor (8) so
-  // frames scoring 8-9 are not excluded before OCR.
+  // Lower the prefilter threshold to match the profile's own floor so frames
+  // scoring 8-9 are not excluded before OCR. This is safe because the OCR frame
+  // budget is capped separately (prefilterMaxFrames below) — a lower threshold
+  // widens the candidate pool, and selectFramesForOcr still takes only the
+  // highest-scoring N, so wall-clock cost does not grow.
   //
-  // The guard must check whether the user PASSED the flag, not whether the
-  // key exists in `options` — buildDefaultOptions always populates both
-  // keys, so an `'x' in options` test is always true and the override
-  // would never fire.
+  // The guard must check whether the user PASSED the flag, not whether the key
+  // exists in `options` — buildDefaultOptions always populates both keys, so an
+  // `'x' in options` test is always true and the override would never fire.
   if (options.prefilterProfile === 'chart_stream' && !argv.includes('--prefilter-threshold')) {
     options.prefilterThreshold = 8;
   }
@@ -423,6 +585,36 @@ function parseArgs(argv, overrides = {}) {
   // clusterer has enough data to filter single-frame OCR garbles.
   if (options.prefilterProfile === 'chart_stream' && !argv.includes('--max-captures')) {
     options.maxCapturesPerVideo = 2;
+  }
+
+  // Cap the OCR frame budget for chart_stream. EasyOCR runs ~60s/frame, so the
+  // default 60-frame budget would mean a ~60 min/video scan. selectFramesForOcr
+  // picks the highest-scoring frames, so 12 gives the same capture quality as
+  // 60 at 1/5 the wall cost. Callers can still raise it via --prefilter-max-frames.
+  if (options.prefilterProfile === 'chart_stream' && !argv.includes('--prefilter-max-frames')) {
+    options.prefilterMaxFrames = 12;
+  }
+
+  // The positions-TABLE reader costs two OCR batches per frame (a title
+  // probe over every candidate column, then a ticker read over the winner),
+  // so the frame budget is much smaller than chart_stream's 12. Three
+  // frames is enough for the multi-frame merge to have something to agree
+  // on; the table itself does not change between them.
+  if (options.prefilterProfile === 'position_table' && !argv.includes('--prefilter-threshold')) {
+    options.prefilterThreshold = 8;
+  }
+  if (options.prefilterProfile === 'position_table' && !argv.includes('--prefilter-max-frames')) {
+    options.prefilterMaxFrames = 3;
+  }
+  if (options.prefilterProfile === 'position_table' && !argv.includes('--max-captures')) {
+    options.maxCapturesPerVideo = 2;
+  }
+
+  // The table reader's per-frame wall-clock budget. It is what bounds the
+  // per-image OCR timeout, so it is the knob that keeps a frame with many
+  // candidate columns from running for an hour.
+  if (options.prefilterProfile === 'position_table' && !argv.includes('--table-frame-budget-ms')) {
+    options.tableFrameBudgetMs = TABLE_FRAME_BUDGET_MS_DEFAULT;
   }
 
   return options;
@@ -438,12 +630,18 @@ function createProbeKey(videoPath, dateKey, outputKind) {
 }
 
 module.exports = {
-  CHART_STREAM_REGION_FRACTION_DEFAULT,
+  CHART_STREAM_CROP_FLOATING_PANEL,
+  CHART_STREAM_CROP_RIGHT_SIDEBAR,
+  CHART_STREAM_RIGHT_SIDEBAR_FROM,
   DEFAULT_OUTPUT_ROOT,
   PIPELINE_PROFILE_DEFAULT,
+  POSITION_TABLE_REGION_FRACTION,
   SUPPORTED_PIPELINE_PROFILES,
+  TABLE_FRAME_BUDGET_MS_DEFAULT,
   TALE_OF_THE_TAPE_CROP_FRACTION,
   createProbeKey,
+  chartStreamCropFractionForDate,
+  isRightSidebarDate,
   parseArgs,
   parseFractionalRegion,
   parsePixelRegion,

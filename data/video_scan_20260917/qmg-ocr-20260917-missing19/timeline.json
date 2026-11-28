@@ -1,235 +1,419 @@
 {
-  "summary": {
-    "run_tag": "qmg-ocr-20260917-missing19",
-    "date_tag": "20260917",
-    "total_files": 47,
-    "processed_files": 7,
-    "total_videos": 7,
-    "total_videos_with_captures": 7,
-    "total_captures": 8,
-    "video_type_counts": {},
+  "run_tag": "qmg-ocr-20260917-missing19",
+  "run_tags": [
+    "qmg-ocr-20260917-missing19"
+  ],
+  "generated_at": "2026-10-29T04:56:23.617Z",
+  "totals": {
+    "videos": 7,
+    "videos_with_captures": 7,
+    "captures": 8,
+    "layouts": {
+      "tale_of_the_tape": 5,
+      "chart": 3
+    },
+    "segment_layouts": {
+      "tale_of_the_tape": 5,
+      "chart": 3
+    },
+    "video_type_counts": {
+      "untagged": 7
+    },
     "channel_counts": {
       "qmg": 7
     },
-    "whiteboard_segment_distribution": {
-      "1": 6,
-      "2": 1
-    },
-    "daily": [
+    "unique_tickers": 5,
+    "unique_chart_stream_tickers": 4,
+    "top_tickers": [
       {
-        "date": "20220218",
-        "videos": 1,
-        "captures": 1,
-        "with_captures": 1
+        "ticker": "ON",
+        "count": 6
       },
       {
-        "date": "20220228",
-        "videos": 1,
-        "captures": 2,
-        "with_captures": 1
+        "ticker": "BE",
+        "count": 5
       },
       {
-        "date": "20220301",
-        "videos": 1,
-        "captures": 1,
-        "with_captures": 1
+        "ticker": "LI",
+        "count": 3
       },
       {
-        "date": "20220323",
-        "videos": 1,
-        "captures": 1,
-        "with_captures": 1
+        "ticker": "U",
+        "count": 1
       },
       {
-        "date": "20220412",
-        "videos": 1,
-        "captures": 1,
-        "with_captures": 1
+        "ticker": "FANG",
+        "count": 1
+      }
+    ],
+    "untyped_videos": [
+      {
+        "video_id": "cd_ixyhwo3o",
+        "upload_date": "20220218",
+        "channel": "qmg"
       },
       {
-        "date": "20220421",
-        "videos": 1,
-        "captures": 1,
-        "with_captures": 1
+        "video_id": "ux2b8famule",
+        "upload_date": "20220228",
+        "channel": "qmg"
       },
       {
-        "date": "20220425",
-        "videos": 1,
-        "captures": 1,
-        "with_captures": 1
+        "video_id": "bypiofqbhvq",
+        "upload_date": "20220301",
+        "channel": "qmg"
+      },
+      {
+        "video_id": "xsk8dd6eoea",
+        "upload_date": "20220323",
+        "channel": "qmg"
+      },
+      {
+        "video_id": "bnpcapjdaz4",
+        "upload_date": "20220412",
+        "channel": "qmg"
+      },
+      {
+        "video_id": "bml5ml24crg",
+        "upload_date": "20220421",
+        "channel": "qmg"
+      },
+      {
+        "video_id": "s6jdprmrgck",
+        "upload_date": "20220425",
+        "channel": "qmg"
       }
     ]
   },
   "per_video": [
     {
-      "video_id": "cd_ixyhwo3o",
       "upload_date": "20220218",
-      "title": "",
+      "video_id": "cd_ixyhwo3o",
+      "video_type": "untagged",
+      "video_type_label": "untagged",
       "channel": "qmg",
-      "video_type": null,
-      "output_kind": "snapshot",
-      "capture_count": 1,
-      "chart_stream_capture_count": 0,
-      "whiteboard_segment_count": 1,
-      "captures": [
+      "output_kind": "dee3273e",
+      "captures": 1,
+      "max_score": 14.45,
+      "mean_score": 14.45,
+      "layouts": [
         {
-          "timestamp": 2156,
-          "score": 14.45,
-          "layout": null,
-          "tickers": [
-            "BE",
-            "LI",
-            "ON"
-          ]
+          "layout": "tale_of_the_tape",
+          "count": 1
         }
       ],
-      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\logs\\20220218_20220218_cd_ixyhwo3o_dee3273e_snapshot.json"
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "BE",
+        "LI",
+        "ON"
+      ],
+      "chart_stream_tickers": [
+        "ON"
+      ],
+      "segments": 1
     },
     {
-      "video_id": "ux2b8famule",
       "upload_date": "20220228",
-      "title": "",
+      "video_id": "ux2b8famule",
+      "video_type": "untagged",
+      "video_type_label": "untagged",
       "channel": "qmg",
-      "video_type": null,
-      "output_kind": "snapshot",
-      "capture_count": 2,
-      "chart_stream_capture_count": 0,
-      "whiteboard_segment_count": 2,
-      "captures": [
+      "output_kind": "f3c32eed",
+      "captures": 2,
+      "max_score": 13.05,
+      "mean_score": 13,
+      "layouts": [
         {
-          "timestamp": 1400,
-          "score": 13.05,
-          "layout": null,
-          "tickers": [
-            "BE"
-          ]
-        },
-        {
-          "timestamp": 2800,
-          "score": 12.95,
-          "layout": null,
-          "tickers": [
-            "ON",
-            "U"
-          ]
+          "layout": "chart",
+          "count": 2
         }
       ],
-      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\logs\\20220228_20220228_ux2b8famule_f3c32eed_snapshot.json"
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "BE",
+        "ON",
+        "U"
+      ],
+      "chart_stream_tickers": [
+        "BE",
+        "U"
+      ],
+      "segments": 2
     },
     {
-      "video_id": "bypiofqbhvq",
       "upload_date": "20220301",
-      "title": "",
+      "video_id": "bypiofqbhvq",
+      "video_type": "untagged",
+      "video_type_label": "untagged",
       "channel": "qmg",
-      "video_type": null,
-      "output_kind": "snapshot",
-      "capture_count": 1,
-      "chart_stream_capture_count": 0,
-      "whiteboard_segment_count": 1,
-      "captures": [
+      "output_kind": "a0a040ff",
+      "captures": 1,
+      "max_score": 12.75,
+      "mean_score": 12.75,
+      "layouts": [
         {
-          "timestamp": 792,
-          "score": 12.75,
-          "layout": null,
-          "tickers": [
-            "LI",
-            "ON"
-          ]
+          "layout": "chart",
+          "count": 1
         }
       ],
-      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\logs\\20220301_20220301_bypiofqbhvq_a0a040ff_snapshot.json"
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "LI",
+        "ON"
+      ],
+      "chart_stream_tickers": [
+        "ON"
+      ],
+      "segments": 1
     },
     {
-      "video_id": "xsk8dd6eoea",
       "upload_date": "20220323",
-      "title": "",
+      "video_id": "xsk8dd6eoea",
+      "video_type": "untagged",
+      "video_type_label": "untagged",
       "channel": "qmg",
-      "video_type": null,
-      "output_kind": "snapshot",
-      "capture_count": 1,
-      "chart_stream_capture_count": 0,
-      "whiteboard_segment_count": 1,
-      "captures": [
+      "output_kind": "12946d43",
+      "captures": 1,
+      "max_score": 13.1,
+      "mean_score": 13.1,
+      "layouts": [
         {
-          "timestamp": 960,
-          "score": 13.1,
-          "layout": null,
-          "tickers": [
-            "BE"
-          ]
+          "layout": "tale_of_the_tape",
+          "count": 1
         }
       ],
-      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\logs\\20220323_20220323_xsk8dd6eoea_12946d43_snapshot.json"
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "BE"
+      ],
+      "chart_stream_tickers": [
+        "BE"
+      ],
+      "segments": 1
     },
     {
-      "video_id": "bnpcapjdaz4",
       "upload_date": "20220412",
-      "title": "",
+      "video_id": "bnpcapjdaz4",
+      "video_type": "untagged",
+      "video_type_label": "untagged",
       "channel": "qmg",
-      "video_type": null,
-      "output_kind": "snapshot",
-      "capture_count": 1,
-      "chart_stream_capture_count": 0,
-      "whiteboard_segment_count": 1,
-      "captures": [
+      "output_kind": "61e32b8a",
+      "captures": 1,
+      "max_score": 12.5,
+      "mean_score": 12.5,
+      "layouts": [
         {
-          "timestamp": 1560,
-          "score": 12.5,
-          "layout": null,
-          "tickers": [
-            "BE",
-            "LI",
-            "ON"
-          ]
+          "layout": "tale_of_the_tape",
+          "count": 1
         }
       ],
-      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\logs\\20220412_20220412_bnpcapjdaz4_61e32b8a_snapshot.json"
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "BE",
+        "LI",
+        "ON"
+      ],
+      "chart_stream_tickers": [
+        "ON"
+      ],
+      "segments": 1
     },
     {
-      "video_id": "bml5ml24crg",
       "upload_date": "20220421",
-      "title": "",
+      "video_id": "bml5ml24crg",
+      "video_type": "untagged",
+      "video_type_label": "untagged",
       "channel": "qmg",
-      "video_type": null,
-      "output_kind": "snapshot",
-      "capture_count": 1,
-      "chart_stream_capture_count": 0,
-      "whiteboard_segment_count": 1,
-      "captures": [
+      "output_kind": "07b710e6",
+      "captures": 1,
+      "max_score": 12.9,
+      "mean_score": 12.9,
+      "layouts": [
         {
-          "timestamp": 1672,
-          "score": 12.9,
-          "layout": null,
-          "tickers": [
-            "BE",
-            "ON"
-          ]
+          "layout": "tale_of_the_tape",
+          "count": 1
         }
       ],
-      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\logs\\20220421_20220421_bml5ml24crg_07b710e6_snapshot.json"
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "BE",
+        "ON"
+      ],
+      "chart_stream_tickers": [
+        "ON"
+      ],
+      "segments": 1
     },
     {
-      "video_id": "s6jdprmrgck",
       "upload_date": "20220425",
-      "title": "",
+      "video_id": "s6jdprmrgck",
+      "video_type": "untagged",
+      "video_type_label": "untagged",
       "channel": "qmg",
-      "video_type": null,
-      "output_kind": "snapshot",
-      "capture_count": 1,
-      "chart_stream_capture_count": 0,
-      "whiteboard_segment_count": 1,
-      "captures": [
+      "output_kind": "f709e343",
+      "captures": 1,
+      "max_score": 16.5,
+      "mean_score": 16.5,
+      "layouts": [
         {
-          "timestamp": 1148,
-          "score": 16.5,
-          "layout": null,
-          "tickers": [
-            "FANG",
-            "ON"
-          ]
+          "layout": "tale_of_the_tape",
+          "count": 1
         }
       ],
-      "log_path": "C:\\Users\\admin\\Projects\\portfolio_analyzer_revere\\data\\video_scan_20260917\\qmg-ocr-20260917-missing19\\qmg-ocr-20260917-missing19\\ocr_probe\\logs\\20220425_20220425_s6jdprmrgck_f709e343_snapshot.json"
+      "has_dmi_intro": false,
+      "ticker_union": [
+        "FANG",
+        "ON"
+      ],
+      "chart_stream_tickers": [
+        "FANG",
+        "ON"
+      ],
+      "segments": 1
+    }
+  ],
+  "per_day": [
+    {
+      "date": "20220218",
+      "captures": 1,
+      "videos": 1,
+      "max_score": 14.45,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "tale_of_the_tape": 1
+      },
+      "ticker_union": [
+        "BE",
+        "LI",
+        "ON"
+      ],
+      "segments": 1,
+      "video_type_counts": {
+        "untagged": 1
+      },
+      "mean_score": 14.45,
+      "ticker_union_size": 3
+    },
+    {
+      "date": "20220228",
+      "captures": 2,
+      "videos": 1,
+      "max_score": 13.05,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "chart": 2
+      },
+      "ticker_union": [
+        "BE",
+        "ON",
+        "U"
+      ],
+      "segments": 2,
+      "video_type_counts": {
+        "untagged": 1
+      },
+      "mean_score": 13,
+      "ticker_union_size": 3
+    },
+    {
+      "date": "20220301",
+      "captures": 1,
+      "videos": 1,
+      "max_score": 12.75,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "chart": 1
+      },
+      "ticker_union": [
+        "LI",
+        "ON"
+      ],
+      "segments": 1,
+      "video_type_counts": {
+        "untagged": 1
+      },
+      "mean_score": 12.75,
+      "ticker_union_size": 2
+    },
+    {
+      "date": "20220323",
+      "captures": 1,
+      "videos": 1,
+      "max_score": 13.1,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "tale_of_the_tape": 1
+      },
+      "ticker_union": [
+        "BE"
+      ],
+      "segments": 1,
+      "video_type_counts": {
+        "untagged": 1
+      },
+      "mean_score": 13.1,
+      "ticker_union_size": 1
+    },
+    {
+      "date": "20220412",
+      "captures": 1,
+      "videos": 1,
+      "max_score": 12.5,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "tale_of_the_tape": 1
+      },
+      "ticker_union": [
+        "BE",
+        "LI",
+        "ON"
+      ],
+      "segments": 1,
+      "video_type_counts": {
+        "untagged": 1
+      },
+      "mean_score": 12.5,
+      "ticker_union_size": 3
+    },
+    {
+      "date": "20220421",
+      "captures": 1,
+      "videos": 1,
+      "max_score": 12.9,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "tale_of_the_tape": 1
+      },
+      "ticker_union": [
+        "BE",
+        "ON"
+      ],
+      "segments": 1,
+      "video_type_counts": {
+        "untagged": 1
+      },
+      "mean_score": 12.9,
+      "ticker_union_size": 2
+    },
+    {
+      "date": "20220425",
+      "captures": 1,
+      "videos": 1,
+      "max_score": 16.5,
+      "has_dmi_intro_count": 0,
+      "layouts": {
+        "tale_of_the_tape": 1
+      },
+      "ticker_union": [
+        "FANG",
+        "ON"
+      ],
+      "segments": 1,
+      "video_type_counts": {
+        "untagged": 1
+      },
+      "mean_score": 16.5,
+      "ticker_union_size": 2
     }
   ]
 }

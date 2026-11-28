@@ -18,6 +18,24 @@ data/video_scan_*/fix-final/screenshots/
 data/video_scan_*/**/ocr_probe/frames/
 # Test runs and probes — temporary artifacts
 data/video_scan_test/
+# The same family, spelled out: a one-off crop/frame experiment. Nothing
+# outside the directory references it, and the frames it was cut from live
+# under the gitignored data/video_scan_test/ tree.
+data/video_scan_1080p_test/
+# Captured stdout of a one-off run. Every video id in these is already in
+# the catalog, and the tool that produced them is tools/fetchCaptions.js --
+# its real output goes to data/video_pipeline/transcripts/.
+data/fetch_captions_*.log
+# Scratch written at the root of data/ by one-off download campaigns: the
+# stdout of the parallel workers, and the id slices that split the work
+# between them. Every id in them is in the catalog.
+data/.download_logs/
+data/.download_slices.json
+data/_*.txt
+# Scratch output roots the e2e scan tests create under data/. They are removed
+# in a finally block, but an interrupted run leaves them behind.
+data/video_ocr_e2e_*/
+data/video_ocr_chart_e2e_*/
 **/__pycache__/
 data/discord_pipeline/.cache/
 # Bundled binaries
@@ -44,3 +62,45 @@ data/*.err
 
 # Profile-comparison scan output (same kind as data/video_scan_test/)
 data/video_profile_runs/
+# Scratch written at the repository ROOT during one-off investigations. The
+# findings live in docs/ and in the src/ modules; the scratch itself is
+# recoverable from git history, so it does not belong in the tree.
+# Anchored at the root on purpose: tools/ and test/ keep their own
+# underscore-prefixed helpers on purpose.
+/PLAN_*.md
+/Usersadmin.claudeplans*.md
+/*.log
+/_*.js
+/_*.py
+/debug_*.py
+# One-off diagnostic scripts written at the repo root while working out the
+# Qullamaggie position-list geometry. Their findings live in
+# docs/qmg-positions-layout-findings.md and the src/video/position*.js modules.
+dbg_*.js
+dbg_*.cjs
+# Throwaway diagnostic scripts written while chasing a specific bug.
+*_tmp.js
+*_tmp.cjs
+*Tmp.js
+# Manual crop of position-panel regions, kept only for visual inspection.
+# No tool writes these; the frames they were cut from live under the
+# gitignored data/video_scan_test/ tree.
+data/qmg_corpus_crops/
+# Labelled corpus built by tools/buildPositionCorpus.js. It is a tool output,
+# so it stays out of git by default — BUT it cannot be rebuilt from a clean
+# clone, because the frames it was measured from live under the gitignored
+# data/video_scan_test/ tree. Once it has entries, commit it explicitly:
+#   git add -f data/qmg_position_corpus.json
+data/qmg_position_corpus.json
+# Channel listings and the work lists built from them, used to fill in the
+# upload_date of videos the catalog could not resolve. Both are regenerated
+# in a couple of minutes with one yt-dlp --flat-playlist call.
+data/catalog_flat/
+# The OCR of the frames tools/evalRevere.js replays. It is a cache, written by
+#   node tools/evalRevere.js --replay --ocr-cache data/revere_ocr_cache.json
+# and its only purpose is to let two parser versions be compared over the SAME
+# OCR -- Tesseract is not deterministic, so a re-OCR would mix parser change
+# with OCR noise. It cannot be rebuilt on a fresh clone (the media is not in
+# git), so commit it explicitly if it is ever worth sharing:
+#   git add -f data/revere_ocr_cache.json
+data/revere_ocr_cache.json

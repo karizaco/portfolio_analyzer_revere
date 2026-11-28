@@ -5,8 +5,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
-const { checkFreeSpace, lowCpuEnv, writeResults } = require('./qmg_scan_daemon_support');
+const { checkFreeSpace, lowCpuEnv, superviseChild, writeResults } = require('./qmg_scan_daemon_support');
 
 const ROOT = path.resolve(__dirname, '..');
 const BATCH_FILE = path.join(ROOT, 'data', 'qmg_comparison_batch.json');
@@ -70,32 +69,41 @@ async function runScan(video, flags, label) {
   console.log(`[${label}] Starting ${date} ${path.basename(file)}`);
   const start = Date.now();
 
-  return new Promise((resolve) => {
-    const child = spawn('node', [path.join(ROOT, 'tools', 'scanVideoWithOcr.js'), '--video', file, '--date', date, ...flags], { stdio: ['ignore', 'pipe', 'pipe'], env: lowCpuEnv() });
-    let stderr = '';
-    child.stderr.on('data', (d) => { stderr += d.toString(); });
-    const timer = setTimeout(() => {
-      child.kill('SIGTERM');
-      console.log(`[${label}] TIMEOUT ${date} ${video_id}`);
-      resolve({ videoId: video_id, date, status: 'timeout', label });
-    }, TIMEOUT_MS);
-    child.on('close', (code) => {
-      clearTimeout(timer);
-      const elapsed = ((Date.now() - start) / 1000).toFixed(0);
-      if (code === 0) {
-        console.log(`[${label}] OK ${date} ${video_id} after ${elapsed}s`);
-        resolve({ videoId: video_id, date, status: 'ok', elapsed: Number(elapsed), label });
-      } else {
-        console.log(`[${label}] ERROR ${date} ${video_id} exit ${code}`);
-        resolve({ videoId: video_id, date, status: 'error', label, error: `exit ${code}`, stderr: stderr.slice(-200) });
-      }
-    });
-    child.on('error', (err) => {
-      clearTimeout(timer);
-      console.log(`[${label}] SPAWN ERR ${date} ${video_id} ${err.message}`);
-      resolve({ videoId: video_id, date, status: 'error', label, error: err.message });
-    });
-  });
+  // superviseChild() DRAINS the child's stdout. The scan tool prints its
+  // whole result object to stdout at the very end -- hundreds of kilobytes --
+  // and a Windows pipe holds about 64 KB. An undrained stdout blocks the
+  // child AFTER it has written a complete probe log and BEFORE its `finally`
+  // block runs, so the child never exits and this daemon records a TIMEOUT
+  // for a video that was read successfully. See tools/qmg_scan_daemon_support.js.
+  const { status, code, stdoutTail, stderr } = await superviseChild(
+    ['node', path.join(ROOT, 'tools', 'scanVideoWithOcr.js'), '--video', file, '--date', date, ...flags],
+    lowCpuEnv(),
+    {
+      timeoutMs: TIMEOUT_MS,
+      onTimeout: () => console.log(`[${label}] TIMEOUT ${date} ${video_id}`),
+    }
+  );
+
+  const elapsed = ((Date.now() - start) / 1000).toFixed(0);
+
+  if (status === 'OK') {
+    console.log(`[${label}] OK ${date} ${video_id} after ${elapsed}s`);
+    return { videoId: video_id, date, status: 'ok', elapsed: Number(elapsed), label };
+  }
+  if (status === 'TIMEOUT') {
+    return { videoId: video_id, date, status: 'timeout', label, elapsed: Number(elapsed) };
+  }
+  console.log(`[${label}] ERROR ${date} ${video_id} exit ${code}`);
+  return {
+    videoId: video_id,
+    date,
+    status: 'error',
+    label,
+    elapsed: Number(elapsed),
+    error: `exit ${code}`,
+    stderr: stderr.slice(-200),
+    stdoutTail: stdoutTail.slice(-2000),
+  };
 }
 
 async function getMergedList(logPath) {

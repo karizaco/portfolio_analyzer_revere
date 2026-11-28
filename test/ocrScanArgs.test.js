@@ -257,3 +257,106 @@ test('non chart_stream profiles keep the global defaults', () => {
   assert.equal(options.prefilterThreshold, 14);
   assert.equal(options.maxCapturesPerVideo, 3);
 });
+
+// ---------------------------------------------------------------------------
+// The positions-TABLE profile
+// ---------------------------------------------------------------------------
+
+test('the position_table profile sets up the table reader', () => {
+  const options = parseArgs([
+    '--video', '/tmp/a.mp4',
+    '--prefilter-profile', 'position_table',
+    '--output-kind', 'snapshot'
+  ], { defaultOutputRoot: TEST_OUTPUT_ROOT });
+
+  assert.equal(options.positionTableParser, true);
+  assert.equal(options.chartStreamParser, true, 'the table result is published in the chart_stream shape');
+  assert.equal(options.nativeOcrFrame, true, 'the table glyphs are ~6.8 source px tall');
+  assert.equal(options.ocrEngine, 'easyocr');
+  assert.equal(options.prefilterMaxFrames, 3);
+  assert.equal(options.maxCapturesPerVideo, 2);
+  assert.equal(options.tableFrameBudgetMs, 900000);
+});
+
+test('the legacy reader is given the chart-stream crop, not the table region', () => {
+  // The table profile's pHash region is a capture-dedup rectangle over the
+  // whole right-hand strip. The LEGACY reader is the chart-stream reader,
+  // so it must read the chart-stream crop — and the crop it gets must not
+  // be null, because `runChartStreamOcr` destructures it.
+  //
+  // The chart-stream crop is ERA-CONDITIONAL (src/video/chartStreamCrop.js).
+  // No `--date` is given here, so the crop is the sidebar-era one — which is
+  // also the fallback for an unknown date.
+  const options = parseArgs([
+    '--video', '/tmp/a.mp4',
+    '--prefilter-profile', 'position_table',
+    '--output-kind', 'snapshot'
+  ], { defaultOutputRoot: TEST_OUTPUT_ROOT });
+
+  assert.deepEqual(options.chartStreamCropFraction, { x: 0.82, y: 0.6, w: 0.18, h: 0.32 });
+  assert.notDeepEqual(options.chartStreamCropFraction, options.phashRegionFraction);
+});
+
+test('the legacy reader\'s chart-stream crop follows the upload date', () => {
+  // The 2022-era layout is a floating bottom-right panel; the 2023-era one
+  // is a table docked to the right edge, and its column starts further left.
+  const panel = parseArgs([
+    '--video', '/tmp/a.mp4',
+    '--prefilter-profile', 'position_table',
+    '--output-kind', 'snapshot',
+    '--date', '20220218'
+  ], { defaultOutputRoot: TEST_OUTPUT_ROOT });
+
+  const sidebar = parseArgs([
+    '--video', '/tmp/a.mp4',
+    '--prefilter-profile', 'position_table',
+    '--output-kind', 'snapshot',
+    '--date', '20230609'
+  ], { defaultOutputRoot: TEST_OUTPUT_ROOT });
+
+  assert.deepEqual(panel.chartStreamCropFraction, { x: 0.86, y: 0.6, w: 0.14, h: 0.28 });
+  assert.deepEqual(sidebar.chartStreamCropFraction, { x: 0.82, y: 0.6, w: 0.18, h: 0.32 });
+});
+
+test('a pixel --phash-region still leaves the legacy reader a crop', () => {
+  // `--phash-region` is a PIXEL region, so it leaves the fractional one
+  // unset. The legacy crop used to be read from the fractional one, which
+  // made the fail-safe path crash with a TypeError.
+  const options = parseArgs([
+    '--video', '/tmp/a.mp4',
+    '--prefilter-profile', 'position_table',
+    '--output-kind', 'snapshot',
+    '--phash-region', '1600,300,120,420'
+  ], { defaultOutputRoot: TEST_OUTPUT_ROOT });
+
+  assert.equal(options.phashRegionFraction, null);
+  assert.deepEqual(options.chartStreamCropFraction, { x: 0.82, y: 0.6, w: 0.18, h: 0.32 });
+});
+
+test('the position_table profile refuses a non-snapshot output kind', () => {
+  assert.throws(
+    () => parseArgs([
+      '--video', '/tmp/a.mp4',
+      '--prefilter-profile', 'position_table'
+    ], { defaultOutputRoot: TEST_OUTPUT_ROOT }),
+    /requires `--output-kind snapshot`/
+  );
+});
+
+test('--table-frame-budget-ms overrides the frame budget', () => {
+  const options = parseArgs([
+    '--video', '/tmp/a.mp4',
+    '--prefilter-profile', 'position_table',
+    '--output-kind', 'snapshot',
+    '--table-frame-budget-ms', '600000'
+  ], { defaultOutputRoot: TEST_OUTPUT_ROOT });
+
+  assert.equal(options.tableFrameBudgetMs, 600000);
+});
+
+test('parseArgs rejects a non-positive --table-frame-budget-ms', () => {
+  assert.throws(
+    () => parseArgs(['--video', '/tmp/a.mp4', '--table-frame-budget-ms', '0'], { defaultOutputRoot: TEST_OUTPUT_ROOT }),
+    /`--table-frame-budget-ms` must be a positive number/
+  );
+});

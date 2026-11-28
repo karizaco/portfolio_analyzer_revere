@@ -12,11 +12,22 @@
 // pipeline picks them up automatically.
 //
 // Resumability:
-//   1. SQLite `status='done'` rows are skipped.
-//   2. Already-on-disk hires mp4s are skipped (also flipped to `status='done'`).
+//   1. SQLite `status='done'` rows are skipped — a `done` row has been OCR'd,
+//      so there is nothing here for a downloader to do.
+//   2. Already-on-disk 1080p mp4s are skipped. The row's status is set to
+//      `scanning`, NOT to `done`: `scanning` is the state that means "the
+//      media is on disk, the OCR queue has not run on it yet", and it is what
+//      tools/runAllOcr.js selects.
 //   3. A checkpoint file (`_download_checkpoint.json`) remembers which ids
 //      have succeeded and which have errored. Re-running the script mid-batch
 //      picks up exactly where it left off, even after a hard kill.
+//
+// THE TRAP IN RULE 1
+// `done` records that a pass finished. It says nothing about whether the file
+// is still on disk. A row that was OCR'd and whose mp4 was later deleted is
+// therefore skipped here forever: neither re-fetched nor reported as
+// missing. `tools/reconcileCatalogStatus.js` is the repair; see
+// src/video/videoStatus.js for what each status means.
 //
 // Usage:
 //   node tools/downloadQmg1080p.js                 # qullamaggie 1080p
@@ -28,6 +39,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const { mediaRoot } = require('./mediaRoot.js');
+
+const { CANDIDATE_SQL, findHiresOnDisk, toPortablePath } = require('../src/video/downloadCandidates');
+// The candidate query's status list lives in src/video/videoStatus.js, which
+// is where each status's meaning is written down.
 
 const argv = process.argv.slice(2);
 const limit = Number(readFlag(argv, '--limit')) || 30;
@@ -66,6 +81,10 @@ const dbPath = path.resolve('data/video_pipeline/state.sqlite');
 // out-of-tree media root (D:, 1.4 TB free), never data/video_pipeline/.
 const dlDir = path.resolve(readFlag(argv, '--dl-dir') || path.join(mediaRoot(), 'downloads_1080p'));
 const checkpointPath = path.join(dlDir, '_qmg_1080p_checkpoint.json');
+// The repository root, derived from the database's own location
+// (`<root>/data/video_pipeline/state.sqlite`). Stored paths are relative to
+// it, so it is what they have to be resolved against.
+const repoRoot = path.resolve(path.dirname(dbPath), '..', '..');
 
 if (!fs.existsSync(dbPath)) {
   console.error(`No SQLite at ${dbPath}. Run 'npm run video:init' first.`);
@@ -151,6 +170,7 @@ const script = `
 import json, sqlite3, sys
 c = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
 c.row_factory = sqlite3.Row
+<<<<<<< HEAD
 channel_filter = ${JSON.stringify(channel)}
 if channel_filter and channel_filter != "any":
     rows = c.execute(
@@ -166,6 +186,9 @@ else:
         "WHERE status IN ('pending','scanning','pending') AND download_path NOT LIKE '%downloads_1080p%' "
         "ORDER BY upload_date DESC, video_id ASC"
     ).fetchall()
+=======
+rows = c.execute(${JSON.stringify(CANDIDATE_SQL)}).fetchall()
+>>>>>>> origin/fix/cluster-overrides-capture-tickers
 out = [dict(r) for r in rows]
 json.dump(out, sys.stdout)
 `;
@@ -183,21 +206,36 @@ if (onlyIds.size) {
   console.log(`[qmg1080] after explicit allow-list: ${allRows.length} rows`);
 }
 
+// The catalog's `download_path` is a POINTER, and it goes stale: it records
+// where a file was when some machine downloaded it, and nothing updates it
+// when the file is later deleted. Of the 541 QMG rows that point into
+// downloads_1080p, only 27 still resolve on disk — the other 514 are
+// pointers to files that are gone.
+//
+// So "is this video already downloaded?" has to be answered by the
+// FILESYSTEM, not by the string in the column. The old query answered it
+// with `download_path NOT LIKE '%downloads_1080p%'`, which excluded every
+// row whose pointer mentioned the target directory — including the 514
+// whose file is gone. That selected 47 of 588 QMG rows and made the
+// missing videos impossible to re-fetch with the tool meant to fetch them.
+//
+// The selection logic lives in src/video/downloadCandidates.js so it can be
+// tested without running a download.
 const todo = [];
 let skippedDone = 0;
 let skippedDisk = 0;
 let skippedCheckpoint = 0;
 let skippedErrored = 0;
 for (const row of allRows) {
-  const { video_id: videoId, upload_date: uploadDate } = row;
+  const { video_id: videoId } = row;
   if (checkpoint.done.some((e) => (typeof e === 'string' ? e : e.id) === videoId)) { skippedCheckpoint += 1; continue; }
   if (!retryErrored && checkpoint.errored[videoId]) { skippedErrored += 1; continue; }
   if (checkpoint.blocked.includes(videoId)) { skippedErrored += 1; continue; }
-  const expected = path.join(dlDir, `${uploadDate ? uploadDate + '_' : ''}${videoId}.mp4`);
-  if (fs.existsSync(expected) && fs.statSync(expected).size > 1024 * 1024) {
+  const onDisk = findHiresOnDisk(row, { dir: dlDir });
+  if (onDisk) {
     skippedDisk += 1;
-    finalizeRow(videoId, expected);
-    checkpoint.done.push(videoId);
+    finalizeRow(videoId, onDisk);
+    checkpoint.done.push(stampMachine(videoId));
     continue;
   }
   todo.push(row);
@@ -283,10 +321,14 @@ console.log(`[qmg1080] to resume: re-run with the same args (the same checkpoint
 console.log(`[qmg1080] to retry the errored list: --retry-errored`);
 
 function finalizeRow(videoId, hiresPath) {
+  // The catalog is committed to git, so the pointer it holds has to mean
+  // something on another machine: a path inside the repository is stored
+  // relative to its root.
+  const stored = toPortablePath(hiresPath, repoRoot);
   const update = `
 import sqlite3
 c = sqlite3.connect(r"${dbPath.replace(/\\/g, '/')}")
-c.execute("UPDATE videos SET download_path=?, status='scanning', error='' WHERE video_id=?", (${JSON.stringify(hiresPath)}, ${JSON.stringify(videoId)}))
+c.execute("UPDATE videos SET download_path=?, status='scanning', error='' WHERE video_id=?", (${JSON.stringify(stored)}, ${JSON.stringify(videoId)}))
 c.commit()
 `;
   const u = spawnSync(py, ['-3', '-c', update], { encoding: 'utf8' });

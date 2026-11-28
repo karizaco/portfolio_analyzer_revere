@@ -206,7 +206,7 @@ Note: GT crop for 20220323 was only 201px tall, missing top rows (BOIL, JNUG, NU
 
 ## Key Files
 
-- `src/video/ocrScanArgs.js` — `CHART_STREAM_REGION_FRACTION_DEFAULT = '0.87,0.58,0.13,0.40'`
+- `src/video/chartStreamCrop.js` — the shipped chart-stream crop, **era-conditional**: `0.86,0.60,0.14,0.28` (2022-era floating panel) and `0.82,0.60,0.18,0.32` (2023-era right sidebar). The rectangles above are the historical measurements this file records.
 - `src/parse/parseChartStream.js` — position-list-aware column filter + edit-distance correction + `|` stripping
 - `src/ocr/ocrImage.js` — exposes per-word TSV positions in OCR result.words
 - `src/normalize/tickerScan.js` — O(1) `tickerSet` lookup

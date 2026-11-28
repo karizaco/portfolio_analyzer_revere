@@ -36,8 +36,16 @@
 // This deliberately does NOT reimplement the GRO/TURBO parser — chart-stream
 // videos don't have a portfolio summary, just ticker positions.
 
-const { extractTickersFromOcrText, loadSeedLexiconSync, clearTickerScanCache } = require('../normalize/tickerScan');
+const {
+  extractTickersFromOcrText,
+  loadSeedLexiconSync,
+  loadDecodeLexiconSync,
+  clearTickerScanCache
+} = require('../normalize/tickerScan');
 const { STRICT_TICKER_PATTERN } = require('../normalize/tickerExtraction');
+
+const fs = require('node:fs');
+const path = require('node:path');
 
 // Tickers that appear frequently in OCR output but never in ground truth.
 // Applied at three levels: per-frame accepted list, clusterer canonical filter,
@@ -46,9 +54,15 @@ const { STRICT_TICKER_PATTERN } = require('../normalize/tickerExtraction');
 //
 // NOTE: P, SPYM, BKR, BOIL were previously blocklisted but are real tickers
 // and should NOT be removed from the lexicon. They are here for documentation
-// only; FREY is the only ticker confirmed as a persistent false positive
-// that is not a legitimate QMG trading candidate.
-const TICKER_BLOCKLIST = new Set(['FREY']);
+// only.
+//
+// ATR (Average True Range) is NOT a ticker at all — it is the indicator label
+// rendered at the bottom of every chart in every video. It surfaced as a false
+// positive in 4 GT dates (20230602/20230605/20230608/20230609) purely because it
+// sits inside the crop with numbers around it. Do not re-add it to the lexicon
+// on the grounds that "ATR is a real ticker" — it is a real ticker symbol, just
+// never a position on Qullamaggie's list.
+const TICKER_BLOCKLIST = new Set(['FREY', 'ATR']);
 
 // Maximum edit distance for OCR character correction. Tested 3 on 2026-09-29
 // (might catch GOVX→"BGO" which needs 3 edits) — added FPs to non-peak frames
@@ -63,6 +77,68 @@ const SINGLE_LETTER_TICKERS = new Set([
 // Matches OCR-split prices:  $ 412.50  ($ split from digits by whitespace)
 // Also matches:  $412.50,  412.50,  HIGH/LOW/CLOSE/TARGET/STOP/BID/ASK
 const PRICE_TOKEN_PATTERN = /\$\s*\d+(?:\.\d+)?|\d+\.\d+|\b(?:high|low|close|target|stop|bid|ask)\b/i;
+
+// Curated OCR-confusion aliases: garbled form -> canonical ticker.
+//
+// Needed because a systematic misread can land on ANOTHER VALID ticker, in
+// which case neither the lexicon check nor edit-distance correction fires —
+// `findCloseTickerMatch` returns null for anything already in the lexicon, so
+// the garble is emitted verbatim and counts as a false positive while the real
+// ticker counts as a miss.
+//
+// Every entry here is mined from measured output, not guessed: each garbled
+// form appeared as a false positive and its canonical counterpart was in the
+// same frame's ground truth. They all encode the same two overlay-font
+// confusions — Q rendered as O, and T rendered as I.
+//
+// Applied ONLY to tokens that landed in the position-list column, so a
+// coincidental match in chart text is never rewritten.
+//
+// Sourced from config/ticker_ocr_confusions.csv.
+const DEFAULT_OCR_CONFUSION_CSV = path.resolve(__dirname, '..', '..', 'config', 'ticker_ocr_confusions.csv');
+let activeConfusionCsv = DEFAULT_OCR_CONFUSION_CSV;
+let cachedConfusionMap = null;
+let cachedConfusionMapPath = null;
+
+// Point the alias reader at a different table and return the path it was
+// using before, so a caller can restore it.
+//
+// The reason this exists: the map is cached at module level, so a
+// before/after measurement of the alias table used to require editing
+// config/ticker_ocr_confusions.csv in place -- and the file is shared, so
+// two measurements in the same tree raced each other. That happened: the
+// table flipped between its 20-line and 29-line forms mid-measurement
+// twice, which is how a wrong "before" column got reported once.
+//
+// The cache is keyed by the resolved path, so two tables can be used in
+// ONE process, in either order.
+function setOcrConfusionCsvPath(nextPath) {
+  const previous = activeConfusionCsv;
+  activeConfusionCsv = nextPath ? String(nextPath) : DEFAULT_OCR_CONFUSION_CSV;
+  return previous;
+}
+
+function loadOcrConfusionMap() {
+  if (cachedConfusionMap && cachedConfusionMapPath === activeConfusionCsv) return cachedConfusionMap;
+  const map = new Map();
+  try {
+    const raw = fs.readFileSync(activeConfusionCsv, 'utf8');
+    let isHeader = true;
+    for (const line of raw.split(/\r?\n/)) {
+      if (isHeader) {
+        isHeader = false;
+        if (/^garbled\s*,/i.test(line)) continue;
+      }
+      const [garbled, canonical] = line.split(',').map((v) => String(v || '').trim().toUpperCase());
+      if (garbled && canonical && garbled !== canonical) map.set(garbled, canonical);
+    }
+  } catch {
+    // Missing config is not fatal — the parser just loses alias repair.
+  }
+  cachedConfusionMap = map;
+  cachedConfusionMapPath = activeConfusionCsv;
+  return map;
+}
 
 function normalizeWhitespace(value) {
   return String(value || '').replace(/\s+/g, ' ').trim();
@@ -109,6 +185,148 @@ function findCloseTickerMatch(token, lexicon) {
   return best;
 }
 
+// The corrections a cluster's members ADMIT, and the evidence for each.
+//
+// The shipped rule has two strategies, tried in order over the whole cluster:
+// Strategy 2 (a 4+ character member whose closest lexicon ticker shares two
+// prefix characters) and Strategy 3 (a 3-character member whose closest
+// lexicon ticker is within edit distance 1). This helper collects the
+// candidates of BOTH -- and it collects ALL of them per member, not just the
+// one `findCloseTickerMatch` returns.
+//
+// That difference is the whole point. `findCloseTickerMatch` names ONE
+// ticker per member, and which one it names is decided by a tie-break
+// ("prefer the longer ticker") over tickers that are EQUALLY close. On
+// 20230605 the member `ARCO` is two edits from BOTH `ARQQ` and `ARKG`, and
+// the tie-break picked whichever the lexicon lists first -- so the
+// correction that the video actually corroborates never entered the
+// comparison at all.
+//
+// The admissibility rules are the shipped ones, per member:
+//
+//   - a 4+ character member needs two shared prefix characters;
+//   - a 3-character member needs distance <= 1.
+//
+// `videoFrequency` maps a token to the number of DISTINCT FRAMES it was read
+// in. It is the video's own evidence about a ticker: a candidate the video
+// read ITSELF, in some other frame, is a holding this video really has --
+// and a candidate the video never read, anywhere, is a name the clusterer
+// made up.
+//
+// The measured instance (20230605): the cluster {AACO, ARCO} was published as
+// `AAPL`, which appears in NO reading of that video. The two members' own
+// corrections are
+//
+//   AACO -> AAPL   (2 edits: C->P, O->L)   support 0 -- the video never read AAPL
+//   AACO -> AAL    (2 edits)                 support 0
+//   ARCO -> ARQQ   (2 edits: C->Q, O->Q)   support 6 -- the video read ARQQ
+//   ARCO -> ARKG   (2 edits)                 support 0
+//
+// so the corrections are all the SAME distance, and "closest" does not
+// discriminate between them at all. What discriminates is the SUPPORT.
+function clusterCorrectionCandidates(members, lexicon, videoFrequency) {
+  const candidates = [];
+  members.forEach((m, memberIndex) => {
+    // The shipped rule never corrects a member shorter than 3 characters:
+    // Strategy 2 needs 4+, Strategy 3 needs exactly 3.
+    if (m.length < 3) return;
+    // Strategy 2 allows a correction up to MAX_OCR_EDIT_DISTANCE away;
+    // Strategy 3 allows only distance 1.
+    const maxDistance = m.length >= 4 ? MAX_OCR_EDIT_DISTANCE : 1;
+
+    // The member's OWN minimum distance -- the distance the shipped rule's
+    // `findCloseTickerMatch` would have found. Candidates further away than
+    // this are not the member's correction, so they are not candidates at
+    // all.
+    let best = Infinity;
+    for (const ticker of lexicon.tickers) {
+      const distance = levenshtein(m, ticker);
+      // Distance 0 is a READING (the member IS the ticker), and Strategy 1
+      // has already handled it by the time this runs.
+      if (distance === 0 || distance > maxDistance) continue;
+      if (distance < best) best = distance;
+    }
+    if (best === Infinity) return;
+
+    // Every ticker AT that distance, subject to the same admissibility test
+    // the shipped rule applies to the one it picked.
+    //
+    // This is where the shipped rule's tie-break ("prefer the longer
+    // ticker") used to decide, among candidates that are EQUALLY close. The
+    // supported rule needs all of them, because the video's own reading --
+    // not the length of the ticker -- is what tells them apart.
+    for (const ticker of lexicon.tickers) {
+      if (levenshtein(m, ticker) !== best) continue;
+      if (m.length >= 4) {
+        let sharedPrefix = 0;
+        const limit = Math.min(3, m.length, ticker.length);
+        for (let i = 0; i < limit; i++) {
+          if (m[i] === ticker[i]) sharedPrefix += 1;
+        }
+        if (sharedPrefix < 2) continue;
+      }
+      candidates.push({
+        member: m,
+        memberIndex,
+        canonical: ticker,
+        distance: best,
+        // How many frames of THIS video read the candidate ticker as itself.
+        support: (videoFrequency && videoFrequency.get(ticker)) || 0,
+      });
+    }
+  });
+  return candidates;
+}
+
+// Choose the canonical for a cluster from its admissible corrections.
+//
+// The shipped choice is the FIRST member's correction, with Strategy 2 tried
+// over the whole cluster before Strategy 3. That is a member-order decision.
+//
+// The SUPPORTED choice asks the video instead. Two orderings, because the
+// two pieces of evidence can disagree and the corpus is what settles which
+// way to rank them:
+//
+//   distanceFirst (the `supported` rule)
+//     Closer first, and the video's support only breaks a TIE. This is the
+//     conservative one: it changes the published ticker only when two
+//     candidates are EQUALLY close, which is the measured 20230605
+//     situation. A one-glyph correction is strong evidence in its own right,
+//     so this never moves a cluster off one in order to reach a farther
+//     candidate.
+//
+//   supportFirst (the `video-supported` rule)
+//     The video's support dominates. A candidate the video demonstrably held
+//     beats a closer candidate it never read -- at the cost of being able to
+//     move a cluster off a correct one-glyph correction.
+//
+// The tie-break after that is the shipped one: the earlier member, then the
+// longer ticker.
+//
+// OFF by default. Both change which holdings a scan publishes, so they are
+// measured over the recorded logs before either replaces anything:
+// `node tools/evalParserReplay.js --cluster-rule supported` and
+// `--cluster-rule video-supported`.
+function selectSupportedCorrection(candidates, supportFirst) {
+  if (!candidates.length) return null;
+  const better = (a, b) => {
+    if (supportFirst && a.support !== b.support) return a.support > b.support;
+    if (a.distance !== b.distance) return a.distance < b.distance;
+    if (!supportFirst && a.support !== b.support) return a.support > b.support;
+    if (a.memberIndex !== b.memberIndex) return a.memberIndex < b.memberIndex;
+    // A tie between two tickers for the SAME member: mirror
+    // `findCloseTickerMatch`'s own tie-break and prefer the longer ticker,
+    // so the two agree wherever the shipped rule was already right.
+    return a.canonical.length > b.canonical.length;
+  };
+  let best = candidates[0];
+  for (const c of candidates) {
+    if (c === best) continue;
+    if (better(c, best)) best = c;
+  }
+  return best.canonical;
+}
+
 function countTickerOccurrences(ocrText) {
   const counts = new Map();
   for (const token of String(ocrText || '').split(/[\s,;:()\[\]{}<>\/\\|]+/)) {
@@ -121,8 +339,17 @@ function countTickerOccurrences(ocrText) {
   return counts;
 }
 
+// A ticker's text comes from the OCR, so it can carry regex metacharacters:
+// "1.02(-0.20" is a real reading from a whiteboard frame, and an unbalanced
+// "(" interpolated into a pattern throws "Unterminated group" — which took
+// down the whole parse, not just the one token.
+function escapeRegExp(value) {
+  return String(value == null ? '' : value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function hasPriceNear(ocrText, ticker) {
   if (!ocrText) return false;
+  if (!ticker) return false;
   // Search for the ticker as a whole word; accept up to 25 trailing chars
   // (the OCR frequently splits dollar prices from the symbol, e.g. "GOVX | +1827%").
   // Supports both dot-decimals (14.86) and comma-decimals (7,36) which EasyOCR
@@ -135,7 +362,7 @@ function hasPriceNear(ocrText, ticker) {
   //   +1827%     — percent change
   //   HIGH/LOW/CLOSE/etc. — financial keywords
   const proximityPattern = new RegExp(
-    `\\b${ticker}\\b[^A-Z0-9.]{0,25}(`
+    `\\b${escapeRegExp(ticker)}\\b[^A-Z0-9.]{0,25}(`
       + `\\$\\s*\\d|`
       + `\\d+(?:[.,]\\d+)+(?:\\.\\d+)?|`
       + `\\b\\d{4,6}\\b|`                       // bare 4-6 digit price (e.g. 28M → 28M is not, but 28 alone could be)
@@ -196,19 +423,245 @@ function findPanelBoundaries(words) {
   return { positionsLine, watchlistLine };
 }
 
-function identifyPositionListColumn(words, cropWidth = null, engine = null, options = {}) {
-  if (!Array.isArray(words) || !words.length) {
-    return {
-      inListTickers: new Set(),
-      inColumnTickers: new Set(),
-      rowNumberTickers: new Set(),
-      columnIsPriceAligned: false,
-      columnTokenCount: 0,
-      columnLeftCount: 0,
-      dominantColumnX: null,
-      dominantLeft: null,
-      columnWidth: 0
+// The panel's OWN row count.
+//
+// The positions panel prints its row count in its footer:
+//
+//   N Items in Personal WatchList          the whole list
+//   1 Item in Personal WatchList           singular when the total is one
+//   K of N Items in Personal WatchList     a row is selected; K is that row's
+//                                          INDEX, not a scroll range
+//
+// N is the number of rows ON SCREEN. The panel is not scrolled — all N rows
+// are visible at once — which makes N an INDEPENDENT check on a reading: a
+// reading with a different number of tickers than the panel says has provably
+// dropped a row or invented one.
+//
+// That is exactly the invariant the 2026-11-01 ground-truth audit used to find
+// eight classes of defect in the hand-made ground truth (see CLAUDE.md § 'The
+// Qullamaggie ground truth, verified against its pixels'), and it had never
+// been applied to the PARSER's own output. The panel states its row count; the
+// parser has an opinion about that count; the two can be compared for free.
+//
+// This is a DIAGNOSTIC, and deliberately not a repair.
+//
+// The count comes from OCR like everything else, and the failure mode of
+// ACTING on a misread count is asymmetric in the worst way: a count read LOW
+// would truncate a correct reading, and that is precisely the case where
+// acting on it would do the most damage. Dropping rows is also the project's
+// own stated preference against — a wrong holding in a portfolio report is
+// worse than a missing one, and a truncated reading loses REAL holdings.
+//
+// So the count is REPORTED, and the disagreement is visible. Whether a
+// disagreement can be repaired safely is a separate question that needs its
+// own measurement, and it is measured on the replay corpus the same way every
+// other change in this file was measured.
+//
+// Which footer is the positions table's?
+//
+// "Personal WatchList" does NOT identify the panel: in the 2022-era layout the
+// frame carries THREE right-hand widgets and TWO of them print that wording.
+// The footer alone therefore cannot say which panel a count came from.
+//
+// The bound that does is the panel's own HEADER. Every row of the positions
+// table — and therefore its footer — is BELOW the "A - Positions" header, and
+// the other widgets' footers are ABOVE it. So a footer below that header is
+// the bottom-most widget's footer, which is the positions table by
+// construction. That is the same rule the ground-truth audit settled on.
+//
+// Returns `{ count, line, text }` or null.
+function readPanelRowCount(words, positionsLine, positionsHeaderY) {
+  if (!Array.isArray(words) || !words.length) return null;
+
+  // Group the words by their OCR line, keeping each line's words in reading
+  // order.
+  const lines = new Map();
+  for (const w of words) {
+    const line = w.line;
+    if (!Number.isFinite(line)) continue;
+    if (!lines.has(line)) lines.set(line, []);
+    lines.get(line).push(w);
+  }
+
+  let best = null;
+  for (const [line, lineWords] of lines) {
+    // The footer must be BELOW the positions header. When the header was not
+    // detected there is no bound to apply, and no count is reported — a count
+    // with no way to tell which panel it came from is worse than no count.
+    if (positionsLine == null && positionsHeaderY == null) return null;
+    if (positionsLine != null && line <= positionsLine) continue;
+    if (positionsHeaderY != null) {
+      const belowHeader = lineWords.some((w) => {
+        if (!Number.isFinite(w.top)) return false;
+        const y = w.top + (Number.isFinite(w.height) ? w.height : 0) / 2;
+        return y > positionsHeaderY;
+      });
+      if (!belowHeader) continue;
+    }
+
+    lineWords.sort((a, b) => (a.left || 0) - (b.left || 0));
+    const cleaned = lineWords.map((w) => String(w.text || '').replace(/[^A-Za-z0-9]/g, ''));
+
+    // The footer has to look like a watchlist footer. The plain
+    // "N Items in WatchList" form belongs to the middle screener panel, and it
+    // is above the positions header anyway; requiring a watch-shaped token
+    // keeps it out even when the line bound is unavailable.
+    if (!cleaned.some((t) => /WATCH|WATCHIST|WOTCH/i.test(t))) continue;
+
+    // The word that names the unit: "Item" / "Items". The count is the digit
+    // group IMMEDIATELY before it, so "5 of 7 Items" gives 7 (the total) and
+    // not 5 (the selected row's index).
+    const itemIndex = cleaned.findIndex((t) => /^[IL]?TEMS?$/i.test(t));
+    if (itemIndex < 0) continue;
+
+    let count = null;
+    for (let i = itemIndex - 1; i >= 0 && i >= itemIndex - 3; i -= 1) {
+      const digits = cleaned[i].replace(/[^0-9]/g, '');
+      if (digits) {
+        const parsed = parseInt(digits, 10);
+        if (Number.isFinite(parsed) && parsed <= 200) { count = parsed; break; }
+      }
+    }
+    if (count == null) continue;
+
+    // The BOTTOM-most matching footer is the positions table's, so the last
+    // one wins.
+    best = {
+      count,
+      line,
+      text: lineWords.map((w) => String(w.text || '').trim()).filter(Boolean).join(' '),
     };
+  }
+  return best;
+}
+
+// How many row pitches a gap may span and still be "the row the OCR skipped"
+// rather than "a different widget".
+//
+// Measured on the corpus: a list row the OCR read as a bare digit (a row read
+// as "4") leaves a 272 px hole = three pitches, and a 2.5-pitch limit split
+// the run there and dropped the real holding PLTR above the hole. A 3.5-pitch
+// limit keeps the run whole. The limit is safe because the panel's
+// "A - Positions" header is an independent upper bound — a token every one of
+// whose occurrences is above that header is rejected whatever the run says —
+// and the measured corpus totals are identical at 2.5 and at 3.5.
+const POSITION_LIST_ROW_GAP_LIMIT = 3.5;
+
+// Select the position list's OWN rows out of the column's candidate words.
+//
+// The column detector finds the stack's x; this finds its vertical extent.
+// A position list is a CONTIGUOUS vertical stack of rows at a constant pitch
+// (~90 px in the 5x-scaled EasyOCR crop), and that stack — not a window
+// around a median — is what a position-aware filter has to be built on.
+//
+// The old Filter B window was `yMedian +/- 8 * lineHeight`, where lineHeight
+// is the median word HEIGHT (~54 px) where the intent was ROWS (~90 px
+// apart): the window spanned only ~4.8 rows either side of the median, so it
+// clipped the first and last row of any list longer than that. Measured
+// corpus-wide, that window dropped 50 ground-truth holdings.
+//
+// The run is found by splitting the column's words wherever the gap between
+// two consecutive ROWS is wider than a row pitch. A gap of up to
+// POSITION_LIST_ROW_GAP_LIMIT pitches is still "the row the OCR skipped" and
+// stays inside the run; anything wider starts a new run. The longest run is
+// the list; a tie is broken by the price-aligned rows, which certainly carry a
+// price to their right.
+// A "one-glyph cell" is a cell the OCR read as a SINGLE character.
+//
+// The token is the CLEANED text (both the column's members and the
+// candidates are upper-cased and stripped of everything but A-Z, 0-9 and "."
+// before they reach here, and STRICT_TICKER_PATTERN then rejects anything
+// carrying a digit). So the test is simply "exactly one letter and nothing
+// else" -- which is stricter than counting the letters in the token, and does
+// not depend on the cleaning rules of another module.
+//
+// This matters: a garbage cell like "~09r3" carries ONE letter, so a
+// letter-count would score it as a one-glyph cell and inflate the count that
+// decides a genuine one-letter holding's fate.
+function isOneGlyphToken(token) {
+  return typeof token === 'string' && /^[A-Z]$/.test(token);
+}
+
+function selectPositionListRun(members, splitLimit = POSITION_LIST_ROW_GAP_LIMIT) {  if (!Array.isArray(members) || members.length < 2) return null;
+  // Group the column's words into ROWS first.
+  //
+  // Two words on the same OCR line are the SAME row of the table — a ticker
+  // and its price, or a chart annotation sitting beside the ticker. Counting
+  // them as two rows halves the pitch estimate: on the 20220323 Tesseract
+  // capture the row pitch is ~48 px, but the same-row pairs (5-8 px apart)
+  // dragged it down to 8 px, and a run found at that pitch is two rows wide.
+  const byLine = new Map();
+  for (const m of members) {
+    const key = Number.isFinite(m.line) ? `L${m.line}` : `Y${Math.round(m.yCenter)}`;
+    if (!byLine.has(key)) byLine.set(key, []);
+    byLine.get(key).push(m);
+  }
+  const rows = [...byLine.values()].map((group) => {
+    const ys = group.map((g) => g.yCenter).sort((a, b) => a - b);
+    return {
+      members: group,
+      y: ys[Math.floor(ys.length / 2)],
+      priced: group.some((g) => g.priceAligned),
+    };
+  }).sort((a, b) => a.y - b.y);
+  if (rows.length < 2) return null;
+
+  const gaps = [];
+  for (let i = 1; i < rows.length; i += 1) {
+    const gap = rows[i].y - rows[i - 1].y;
+    if (gap > 0) gaps.push(gap);
+  }
+  if (!gaps.length) return null;
+  const sortedGaps = [...gaps].sort((a, b) => a - b);
+  // The row pitch is the QUARTILE of the gaps, not their median: a single
+  // wide separation (the gap between two panels) drags a short gap list's
+  // median into the space BETWEEN the two clusters, and the pitch has to
+  // land on the cluster that is actually the list.
+  const quartile = sortedGaps[Math.floor(sortedGaps.length * 0.25)];
+  const tight = gaps.filter((g) => g <= quartile * 2.5).sort((a, b) => a - b);
+  const pitch = tight.length ? tight[Math.floor(tight.length / 2)] : quartile;
+  if (!Number.isFinite(pitch) || pitch <= 0) return null;
+  const limit = pitch * splitLimit;
+  const runs = [];
+  let current = [rows[0]];
+  for (let i = 1; i < rows.length; i += 1) {
+    const gap = rows[i].y - rows[i - 1].y;
+    if (gap > limit) {
+      runs.push(current);
+      current = [rows[i]];
+    } else {
+      current.push(rows[i]);
+    }
+  }
+  runs.push(current);
+  // The longest run is the list. A tie is broken by the price-aligned rows,
+  // which are the rows that certainly carry a price to their right.
+  let best = null;
+  let bestPriced = -1;
+  for (const run of runs) {
+    const priced = run.filter((r) => r.priced).length;
+    if (!best || run.length > best.length || (run.length === best.length && priced > bestPriced)) {
+      best = run;
+      bestPriced = priced;
+    }
+  }
+  if (!best || best.length < 2) return null;
+  const entries = best.flatMap((r) => r.members);
+  return {
+    words: new Set(entries.map((m) => m.word)),
+    entries,
+    rows: best.length,
+    top: best[0].y,
+    bottom: best[best.length - 1].y,
+    pitch,
+    size: entries.length,
+    runs: runs.length,
+  };
+}
+
+function identifyPositionListColumn(words, cropWidth = null, engine = null) {
+  if (!Array.isArray(words) || !words.length) {
+    return { inListTickers: new Set(), dominantColumnX: null, dominantColumnLeft: null, columnWidth: 0 };
   }
 
   // Detect panel boundaries via keyword matching. If both headers found,
@@ -240,21 +693,27 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null, opti
     const lineText = sameLineWords.map(x => x.text).join(' ');
     // Look for percent tokens ("+1.45%", "-0.08%") or dollar prices anywhere.
     // Supports comma-decimals (7,36) and dot-decimals (14.86) which EasyOCR
-    // produces on non-US keyboards.
-    const priceMatches = lineText.match(/[+\-]?\d+(?:[.,]\d+)?\s*%|[+\-]?\d+[.,]\d+|\$\s*\d/g);
+    // produces on non-US keyboards, plus the bare-integer columns the 2022-era
+    // QMG UI renders ("374935", "0953"). The bare-integer alternative used to
+    // be absent here, which made whole 2022-era position rows fail the
+    // price-alignment test and get deleted (NRGU, MOS on 20220218).
+    const priceMatches = lineText.match(/[+\-]?\d+(?:[.,]\d+)?\s*%|[+\-]?\d+[.,]\d+|\$\s*\d|\d{2,}/g);
     if (priceMatches && priceMatches.length) {
       const tickerXs = sameLineWords
         .filter(x => STRICT_TICKER_PATTERN.test((x.text||'').toUpperCase().replace(/[^A-Z0-9.]/g,'')))
         .map(x => ({ left: x.left, right: x.left + x.width }));
-      // QMG position-list rows show prices as decimals (e.g. 550.34), not
-      // bare integers. The bare-integer fallback `^\d{2,4}$` was admitting
-      // chart-axis labels like 3500, 700 as "price" tokens, which made the
-      // lineRightHasPrice check fire on chart-area lines and admitted
-      // 2-3 char ticker-shape tokens (BE, ON, LI, PL) as position-list rows.
-      // Filter A catches single-frame ones, but persistent FPs across
-      // multiple frames survive. Drop the bare-integer pattern.
-      // Support comma-decimals (7,36) and dot-decimals (14.86).
-      const priceWords = sameLineWords.filter(x => /[%\$]|^\d+(?:[.,]\d+)$/.test(x.text));
+      // Price tokens to the RIGHT of the ticker. Three UI generations are in
+      // the corpus:
+      //   - 2022-era: bare integers in separate columns ("374935", "0953")
+      //   - 2023-era: comma-decimals ("7,36", "726,78")
+      //   - percent / dollar forms ("+1827%", "$412")
+      // The bare-integer fallback used to be dropped because chart-axis labels
+      // (3500, 700) counted as "price" and let chart tokens in. That is now
+      // handled structurally by the column gate in parseChartStreamPositionList:
+      // a chart-axis token is not in the position-list column, so it is rejected
+      // regardless of what sits to its right. Re-admitting bare integers is what
+      // lets 2022-era rows (NRGU, MOS) survive — they were being dropped whole.
+      const priceWords = sameLineWords.filter(x => /[%\$]|^\d+(?:[.,]\d+)*$/.test(x.text));
       let maxTickerLeft = Math.max(0, ...tickerXs.map(t => t.left));
       let minPriceRight = Infinity;
       for (const p of priceWords) {
@@ -283,27 +742,26 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null, opti
   // and would otherwise leak through as FPs).
   const priceAlignedTickers = [];
   const tickerWords = [];
-  // Every ticker-shaped word, regardless of the panel gate. The column
-  // MEMBERSHIP test (used by the optional accept-path gate) must not depend
-  // on the panel gate: a mis-detected "POSITIONS" header can exclude the
-  // very row we want to keep, and a gate built on the same restricted set
-  // would then reject a genuine position. The panel gate still shapes the
-  // column DETECTION (dominantX), which is where it helps.
-  const allTickerWords = [];
   for (const w of words) {
     const upper = (w.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
     if (!upper) continue;
     if (!STRICT_TICKER_PATTERN.test(upper)) continue;
+    if (!lineIsInPanel(w.line)) continue;
     const center = w.left + w.width / 2;
     const entry = {
       center,
       left: w.left,
       line: w.line,
       right: w.left + w.width,
-      text: upper
+      text: upper,
+      // The original word, so a filter can ask "is THIS occurrence in the
+      // list's row stack" and not merely "is some occurrence of this ticker
+      // somewhere near the list".
+      word: w,
+      yCenter: Number.isFinite(w.top)
+        ? w.top + (Number.isFinite(w.height) ? w.height : 0) / 2
+        : null,
     };
-    allTickerWords.push(entry);
-    if (!lineIsInPanel(w.line)) continue;
     tickerWords.push(entry);
     if (lineRightHasPrice.get(w.line)) {
       priceAlignedTickers.push(entry);
@@ -320,16 +778,6 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null, opti
   // bucket of all ticker-shape words if not enough price-aligned candidates.
   let dominantX;
   let dominantCount;
-  // The LEFT edge of the column, not its center.
-  //
-  // The QMG overlay renders the ticker column left-aligned: every ticker in
-  // the column starts at the same x (measured on the 20220421 EasyOCR
-  // frame: 732, 733, 733, 733, 734, 734, 734, 734, 735, 736, 736 across
-  // fourteen consecutive rows), while the CENTER varies with the length of
-  // the ticker — "X" centers at 757 and "URNM" at 807 for the same left
-  // edge. A center-based band therefore misses short tickers, which is
-  // exactly where the ground truth has single-letter positions.
-  let dominantLeft;
   // Whether the column was found by price alignment (strong evidence) or by
   // the densest-bucket fallback (weak evidence). Only the weak path is
   // subject to the X-coordinate gate below.
@@ -339,8 +787,6 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null, opti
     dominantX = xs[Math.floor(xs.length / 2)];
     dominantCount = priceAlignedTickers.length;
     columnIsPriceAligned = true;
-    const lefts = priceAlignedTickers.map(t => t.left).sort((a, b) => a - b);
-    dominantLeft = lefts[Math.floor(lefts.length / 2)];
   } else {
     // Fallback to densest-bucket heuristic (preserves previous behavior for
     // frames where no line has a clear price-on-right pattern).
@@ -348,27 +794,15 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null, opti
     const buckets = new Map();
     for (const tw of tickerWords) {
       const bucket = Math.floor(tw.center / bucketWidth) * bucketWidth;
-      if (!buckets.has(bucket)) buckets.set(bucket, []);
-      buckets.get(bucket).push(tw);
+      buckets.set(bucket, (buckets.get(bucket) || 0) + 1);
     }
-    const sortedBuckets = [...buckets.entries()].sort((a, b) => b[1].length - a[1].length);
+    const sortedBuckets = [...buckets.entries()].sort((a, b) => b[1] - a[1]);
     const topBucket = sortedBuckets[0];
-    if (!topBucket || topBucket[1].length < 2) {
-      return {
-        inListTickers: new Set(),
-        inColumnTickers: new Set(),
-        columnIsPriceAligned: false,
-        columnTokenCount: 0,
-        columnLeftCount: 0,
-        dominantColumnX: null,
-        dominantLeft: null,
-        columnWidth: 0
-      };
+    if (!topBucket || topBucket[1] < 2) {
+      return { inListTickers: new Set(), dominantColumnX: null, dominantColumnLeft: null, columnWidth: 0 };
     }
     dominantX = topBucket[0] + bucketWidth / 2;
-    dominantCount = topBucket[1].length;
-    const lefts = topBucket[1].map(t => t.left).sort((a, b) => a - b);
-    dominantLeft = lefts[Math.floor(lefts.length / 2)];
+    dominantCount = topBucket[1];
   }
 
   // Column width in the scaled OCR image. Position list tickers cluster
@@ -379,77 +813,41 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null, opti
   // labels, candle wicks) which lands well outside this window.
   const columnWidth = 50;
 
-  // Require both: ticker in the column AND price-on-right on the same line.
-  // This filters chart y-axis labels where prices are on the LEFT of the
-  // ticker-shape word ("25.00 | Bs | 8+"), and chart header words
-  // (SYM/Cran/Pre/Buzz) that happen to land at column x.
-  const inListTickers = new Set();
-  // Every ticker-shaped word that lands in the column, whether or not its
-  // line had a price to the right. The optional accept-path gate uses this:
-  // a token in the SHARES or PRICE column is not a position, whatever the
-  // text-based price-nearby check says about it.
-  const inColumnTickers = new Set();
-  // The left-edge tolerance is tighter than the center tolerance: real
-  // ticker lefts in the same column cluster within a few pixels (measured
-  // 732-736 across fourteen consecutive rows), so a narrow band still keeps
-  // every real position while excluding anything merely nearby.
-  const leftTolerance = Number.isFinite(options.leftTolerance)
-    ? options.leftTolerance
-    : columnWidth / 2;
-  for (const tw of allTickerWords) {
-    if (dominantLeft != null && Math.abs(tw.left - dominantLeft) <= leftTolerance) {
-      inColumnTickers.add(tw.text);
-    }
-  }
-  // How many ticker-shaped words share the dominant left edge. This is the
-  // confidence signal for the column: the position list is a tight
-  // left-aligned column, so a dozen words at the same left edge is strong
-  // evidence that the column was located correctly. `inListTickers` is NOT
-  // a good confidence signal — it only counts rows where a price was read to
-  // the right of the ticker, and EasyOCR garbles most of those numbers.
-  let columnLeftCount = 0;
-  if (dominantLeft != null) {
-    for (const tw of allTickerWords) {
-      if (Math.abs(tw.left - dominantLeft) <= leftTolerance) columnLeftCount++;
-    }
-  }
-  for (const tw of tickerWords) {
-    if (Math.abs(tw.center - dominantX) <= columnWidth / 2) {
-      if (lineRightHasPrice.get(tw.line)) {
-        inListTickers.add(tw.text);
-      }
-    }
-  }
+  // inListTickers: ticker-shaped words that sit in the dominant column.
+  //
+  // Column membership is the primary structural signal — chart-area text
+  // (y-axis labels at the far left, header words Sym/Pre/Buzz at other x)
+  // simply is not in this column. Price-on-right used to be a REQUIRED
+  // co-condition, but it is format-specific and silently deleted whole
+  // position rows on the 2022-era UI where prices render as bare integers
+  // ("374935") rather than decimals ("726,78") or percents. On 20220218 that
+  // requirement dropped NRGU and MOS — both real GT tickers the OCR read
+  // perfectly. Prefer price-aligned rows, but fall back to pure column
+  // membership when the price heuristic finds too few of them.
+  const columnMembers = tickerWords.filter(
+    (tw) => Math.abs(tw.center - dominantX) <= columnWidth / 2
+  );
+  const priceAlignedMembers = columnMembers.filter((tw) => lineRightHasPrice.get(tw.line));
+  const inListTickers = new Set(
+    (priceAlignedMembers.length >= 3 ? priceAlignedMembers : columnMembers).map((tw) => tw.text)
+  );
 
-  // Which band words sit on a ROW that carries data?
+  // The column's LEFT edge: the median left of the column's own members.
   //
-  // The panel's column-header row ("Sym | Change | Vol | Buzz") sits at
-  // almost exactly the same x as the ticker column — measured: "Sym" at
-  // left=397 while the position rows run 402-404. So a left-edge band
-  // test alone admits the header word, and the edit-distance correction
-  // then maps SYM onto a real ticker (SPYM, distance 1), which is how a
-  // false positive gets a plausible-looking name.
+  // A position list is a LEFT-aligned table, so every ticker in it starts at
+  // the same x no matter how many characters it has. The column's CENTRE
+  // therefore drifts with the ticker's length, and a short garbled ticker
+  // ("A" for "AI") sits far to the left of the column's median centre even
+  // though it starts in exactly the same place as every other ticker.
   //
-  // A real position row, by contrast, always has numbers to the right of
-  // the ticker (shares, then price). The header row has none — the "9" in
-  // "Sym 9 Change Vol Buzz" is a single digit, and the panel's price
-  // matcher deliberately ignores bare integers. Requiring a 2+ digit
-  // number to the right separates the header row from the data rows
-  // without depending on the header being read correctly.
-  const rowNumberTickers = new Set();
-  if (dominantLeft != null) {
-    const minDigits = Number.isFinite(options.numberMinDigits) ? options.numberMinDigits : 2;
-    const numberPattern = new RegExp('^\\d{' + minDigits + '}');
-    for (const tw of allTickerWords) {
-      if (Math.abs(tw.left - dominantLeft) > leftTolerance) continue;
-      const hasNumber = words.some((w) => {
-        if (w.line !== tw.line) return false;
-        if (!(w.left > tw.left)) return false;
-        return numberPattern.test((w.text || '').trim());
-      });
-      if (hasNumber) rowNumberTickers.add(tw.text);
-    }
-  }
+  // Measured on the 20230609 capture: every ticker in the column starts at
+  // x 515-518 and the one-character "A" starts at x 518 too, but its centre
+  // is 545 against a median centre of 581.5 -- 36.5 px away, more than the
+  // 25 px the centre test allows.
+  const columnLefts = columnMembers.map((tw) => tw.left).sort((a, b) => a - b);
+  const dominantColumnLeft = columnLefts.length
+    ? columnLefts[Math.floor(columnLefts.length / 2)]
+    : null;
 
   // X-coordinate gate: the QMG position list occupies the rightmost portion of
   // the frame (crop x=0.86 → position list starts at ~86% of crop width).
@@ -472,64 +870,63 @@ function identifyPositionListColumn(words, cropWidth = null, engine = null, opti
   // - EasyOCR  (1344px crop): dominantX ≈ 780px for position-list tickers → 600
   //   (safe: 600 < 780, and chart-area dominantX ≈ 400-500 in EasyOCR crops)
   //
-  // The earlier proportional formula 1150 * cropWidth/750 was calibrated for
-  // Tesseract's 750px crop and produced physically impossible values for
-  // EasyOCR's 1344px crop (2061px threshold in a 1344px image — the gate fires
-  // on EVERY frame, disabling the column filter entirely).
+  // Confidence gate: is `dominantX` a genuine stacked position-list column?
   //
-  // The two engines need separate constants because their crops cover
-  // different parts of the frame and their word boxes anchor differently:
-  // Tesseract's chart-stream crop is a fixed 250px region upscaled 3x, so it
-  // is always 750px wide regardless of source resolution. EasyOCR's crop is
-  // a fraction of the source frame upscaled 5x, so its width IS
-  // resolution-dependent (1344px at 1080p, ~894px at 720p) — the EasyOCR
-  // threshold is scaled from its 1344px reference so 720p sources still work.
+  // An absolute x-coordinate threshold cannot work here. Qullamaggie moved the
+  // panel between video eras and the crop width changed with it, so no fixed px
+  // value survives both ends of the corpus:
+  //   - 2022-era, crop w=0.14 (1344px wide): position column at x≈777
+  //   - 2023-era, crop w=0.17 (1632px wide): position column at x≈575
+  // A threshold of 600 passes the first and rejects the second; 500 does the
+  // reverse. Either way the whole column filter is silently disabled on one era
+  // (the log shows `col_filter: null`, which is the tell).
   //
-  // Engine detection uses the OCR result's `_engine` field, not the crop
-  // width: a 720p EasyOCR crop is 894px, which the old `cropWidth > 1000`
-  // heuristic misclassified as Tesseract.
-  const EASYOCR_REFERENCE_CROP_WIDTH = 1344;
-  const EASYOCR_POSITION_LIST_MIN = 600;
-  const TESSERACT_POSITION_LIST_MIN = 505;
-  const isEasyOCR = engine === 'easyocr';
-  const X_POSITION_LIST_MIN = cropWidth == null
-    ? TESSERACT_POSITION_LIST_MIN
-    : isEasyOCR
-      ? Math.round(EASYOCR_POSITION_LIST_MIN * (cropWidth / EASYOCR_REFERENCE_CROP_WIDTH))
-      : TESSERACT_POSITION_LIST_MIN;
-  if (!columnIsPriceAligned && dominantX < X_POSITION_LIST_MIN) {
-    return {
-      inListTickers: new Set(),
-      inColumnTickers: new Set(),
-      rowNumberTickers: new Set(),
-      columnIsPriceAligned: false,
-      columnTokenCount: 0,
-      columnLeftCount: 0,
-      dominantColumnX: null,
-      dominantLeft: null,
-      columnWidth: 0
-    };
+  // So test the SHAPE rather than the position. A real position list is a tight
+  // vertical stack: several ticker-shaped words inside one narrow x-window,
+  // spread down several distinct rows. Chart text and axis labels never stack
+  // that way regardless of era or crop.
+  //
+  // A column that is already price-aligned is trusted outright — those rows
+  // have a price token to the right of the ticker, which is the strongest
+  // single indicator and costs nothing to check.
+  const stackMembers = tickerWords.filter(
+    (tw) => Math.abs(tw.center - dominantX) <= columnWidth / 2
+  );
+  const stackLines = new Set(stackMembers.map((tw) => tw.line));
+  const stackIsReal = stackMembers.length >= 4 && stackLines.size >= 4;
+  if (!stackIsReal && !(columnIsPriceAligned && priceAlignedTickers.length >= 2)) {
+    return { inListTickers: new Set(), dominantColumnX: null, dominantColumnLeft: null, columnWidth: 0, listRun: null };
   }
+
+  // The list's OWN rows, for Filter B's vertical bound.
+  //
+  // The column's x is not a sufficient bound on its own: a scanner-panel or
+  // chart token can sit at exactly the position list's x and still be nothing
+  // of the kind. The rows of the list are a contiguous stack at a constant
+  // pitch, and that stack is what a position-aware filter must be built on.
+  //
+  // Membership uses the UNION of the left-edge and centre tests, for the same
+  // reason the curated-alias rescue uses it: the table is left-aligned, so a
+  // short garbled ticker starts where every other ticker starts even though
+  // its centre sits far to the left of theirs.
+  const unionColumnMembers = tickerWords.filter((tw) => {
+    if (!Number.isFinite(tw.yCenter)) return false;
+    if (dominantColumnLeft == null) return Math.abs(tw.center - dominantX) <= columnWidth / 2;
+    return Math.abs(tw.left - dominantColumnLeft) <= columnWidth / 2
+      || Math.abs(tw.center - dominantX) <= columnWidth / 2;
+  });
+  const priceAlignedLines = new Set(priceAlignedMembers.map((tw) => tw.line));
+  const listRun = selectPositionListRun(
+    unionColumnMembers.map((tw) => ({ ...tw, priceAligned: priceAlignedLines.has(tw.line) }))
+  );
 
   return {
     columnWidth,
     dominantColumnX: dominantX,
+    dominantColumnLeft,
     inListTickers,
-    // Diagnostic + gate inputs.
-    inColumnTickers,
-    // Band words that sit on a row carrying a 2+ digit number to the right.
-    rowNumberTickers,
-    columnIsPriceAligned,
-    // How many DISTINCT rows were confirmed as position rows (a
-    // ticker-shaped word in this band with a price to its right). This is
-    // the confidence measure for the column: two or more such rows means
-    // we know where the ticker column is.
-    columnTokenCount: inListTickers.size,
-    // How many ticker-shaped words share the dominant LEFT edge. Unlike
-    // columnTokenCount this does not depend on EasyOCR having read the
-    // numbers to the right of the ticker, which it usually has not.
-    columnLeftCount,
-    dominantLeft,
+    stackLines: stackLines.size,
+    listRun,
   };
 }
 
@@ -642,111 +1039,87 @@ function parseChartStreamPositionList({ ocr } = {}) {
   // price-nearby + lexicon + edit-distance behavior so existing callers
   // keep working.
   const hasWordPositions = words && words.length > 0;
-  const {
-    inListTickers,
-    dominantColumnX,
-    columnWidth,
-    inColumnTickers,
-    rowNumberTickers,
-    columnIsPriceAligned,
-    columnTokenCount,
-    columnLeftCount,
-    dominantLeft,
-  } = hasWordPositions
-    ? identifyPositionListColumn(words, ocr._cropWidth || null, ocr._engine || null, {
-      leftTolerance: ocr._columnGateTolerance,
-      numberMinDigits: ocr._columnTrustNumberMinDigits,
-    })
-    : {
-      inListTickers: new Set(),
-      dominantColumnX: null,
-      columnWidth: 0,
-      inColumnTickers: new Set(),
-      rowNumberTickers: new Set(),
-      columnIsPriceAligned: false,
-      columnTokenCount: 0,
-      columnLeftCount: 0,
-      dominantLeft: null,
-    };
+  const { inListTickers, dominantColumnX, dominantColumnLeft, columnWidth, listRun } = hasWordPositions
+    ? identifyPositionListColumn(words, ocr._cropWidth || null, ocr._engine || null)
+    : { inListTickers: new Set(), dominantColumnX: null, dominantColumnLeft: null, columnWidth: 0, listRun: null };
 
-  // Optional accept-path column gate.
+  // Column membership for the GATE.
   //
-  // The QMG position list is three columns of text: ticker | shares | price.
-  // The accept path below is text-based ("is this token in the lexicon, or
-  // does a price-like token follow it in the OCR text?"), which cannot tell
-  // the ticker column from the shares column or the price column — so a
-  // garbled shares value ("0,9483" → "OST") or a stray price-column letter
-  // ("U", "X") is admitted as a position.
+  // `inListTickers` is the PRICE-ALIGNED subset of the column: a ticker is
+  // a member of it only when its row carries a readable price to the right.
+  // That conflates two independent facts -- where the ticker is, and whether
+  // the price cell beside it was read cleanly -- and the price cell is
+  // exactly the cell that gets garbled.
   //
-  // When the column detector is confident — the column was found by price
-  // alignment and at least two rows confirmed it (a ticker-shaped word in
-  // the band with a price to its right) — a token that does not land in
-  // that column cannot be a position, whatever the text says.
+  // Measured on the 20220330 capture: NFLX, REGN, COPX and NUGT are read
+  // perfectly (conf 0.92, 0.96, 0.51, 0.50) and sit at x 711-714, exactly
+  // where every other ticker in the column sits -- but their price cells read
+  // "0s63 ~0383", "C00 08re", "~00r ~0229" and "30.1933| ~0583", none of
+  // which passes the strict price-word filter. So the four left the
+  // price-aligned subset, the column gate rejected them, and the holding
+  // was lost before Filter B -- which tests row-stack membership and would
+  // have kept all four -- ever saw them.
   //
-  // The gate is RELATIVE to the detected column, so it does not care where
-  // in the frame the column sits — which is what varies between videos.
+  // The row stack is the better evidence of column membership, and the
+  // parser already computes it: Filter B asks exactly this question of the
+  // accepted set. The gate asks it first, so the answer has to exist first.
   //
-  // `ocr._columnGate` selects how the gate is applied:
-  //   false            — off
-  //   'post'           — after Filter B (keeps Filter B's y-band stable)
-  //   'inloop'         — inside the accept loop (rejects earlier)
-  //   true / undefined — 'inloop' (default)
-  //
-  // 'inloop' is the default because it measured strictly better on the
-  // ground-truth benchmark: same recall (476/898) with 158 false positives
-  // instead of 206. 'post' costs recall (448/898) for a similar FP cut.
-  // See tools/compareColumnGate.js to reproduce the measurement.
-  const columnGateMode = ocr._columnGate === false ? null
-    : (ocr._columnGate === 'post' || ocr._columnGate === 'inloop') ? ocr._columnGate
-      : 'inloop';
-  // `columnTokenCount` is the number of distinct rows confirmed as position
-  // rows (a ticker-shaped word in the column band with a price to its right).
-  // Requiring two of them is what makes the gate safe: the column is only
-  // trusted once two independent rows agree on where it is.
-  const columnGateActive = columnGateMode != null
-    && columnIsPriceAligned
-    && columnTokenCount >= (Number.isFinite(ocr._columnGateMinTokens) ? ocr._columnGateMinTokens : 2)
-    && dominantColumnX != null
-    && dominantLeft != null;
+  // The gate's membership is therefore the UNION of the two: the
+  // price-aligned column members, plus the tickers on the list's own rows.
+  // The union is used for the GATE only. The accept-as-read branch below
+  // stays on the price-aligned set, because a run member can be a header
+  // word rather than a holding -- on the 20220330 capture the run contains
+  // the "Sym" header, which is not a position, and admitting it verbatim
+  // would publish a false positive.
+  const listRunMembers = new Set();
+  if (listRun && listRun.rows >= 3 && Array.isArray(listRun.entries)) {
+    for (const entry of listRun.entries) {
+      if (entry && entry.text) listRunMembers.add(entry.text);
+    }
+  }
+  const columnGateMembers = new Set(inListTickers);
+  for (const ticker of listRunMembers) columnGateMembers.add(ticker);
 
-  // Trusted-column mode (opt-in via `ocr._columnTrust`).
+  // How many of the column's own rows read as a SINGLE glyph.
   //
-  // The gate above only fires when the column was found by PRICE ALIGNMENT,
-  // i.e. when EasyOCR happened to read a number to the right of the ticker.
-  // On the real QMG overlay it usually did not: on the measured 20211019
-  // frame only 2 of 13 position rows had a readable price. So `inListTickers`
-  // is nearly empty, the accept path's `else if (inListColumn)` branch is
-  // effectively dead, and every position that is neither in the seed
-  // lexicon nor next to a price-like token is rejected — even when its
-  // word box sits exactly in the ticker column.
+  // A one-glyph cell is ambiguous: it is either a genuine one-letter ticker
+  // or a multi-glyph cell the OCR collapsed into one glyph, and the shape
+  // cannot tell the two apart -- "X" (a real holding on 20220301, 20220323
+  // and 20220412) and "U" (the LI row collapsed on 20230522) are both one
+  // glyph about 42 px wide in the Sym column.
   //
-  // The spatial signal is much stronger than the price signal: the QMG
-  // ticker column is LEFT-ALIGNED, so all its rows share one left edge
-  // (measured 732-740px across 20 consecutive rows in a 1345px EasyOCR
-  // crop), while chart-area junk sits ~300px to the left. `columnLeftCount`
-  // counts the ticker-shaped words that share the detected left edge; a
-  // dozen of them is decisive evidence that the column was located
-  // correctly.
+  // The COLUMN settles it, by its own consistency. Only four US tickers have
+  // a single letter (F, T, V, X), so a position list holding TWO of them is
+  // far less likely than a panel that collapses two cells -- and a panel that
+  // collapses one cell is likely to collapse another.
   //
-  // When the column is trusted, a token that lands in it is accepted even
-  // if it is not in the lexicon and has no price nearby — preferring an
-  // edit-distance correction to a real ticker when one exists.
+  // Measured on the replay corpus, the one-glyph run-only class is five
+  // readings: X on 20220301 (conf 0.980), X on 20220323 (0.963) and X on
+  // 20220412 (0.914) -- three hits, each the ONLY one-glyph member of its
+  // column -- and U on 20230522 (0.616 and 0.743, two captures of one date),
+  // the collapsed LI row, in a column that also holds the collapsed AI row.
   //
-  // `ocr._columnTrustMinLeft` tunes how many words must share the left
-  // edge before the column is trusted (default 4).
-  const columnTrustMinLeft = Number.isFinite(ocr._columnTrustMinLeft)
-    ? ocr._columnTrustMinLeft
-    : 4;
-  const columnTrustActive = ocr._columnTrust === true
-    && dominantLeft != null
-    && columnLeftCount >= columnTrustMinLeft;
+  // Confidence cannot do this job. U reads at 0.616 on one capture and
+  // 0.743 on the other, so any threshold low enough to catch it also catches
+  // the 0.534-confidence QBTS hit on 20230602 -- and the corpus mixes OCR
+  // engines, whose confidence scales are not comparable anyway.
+  let singleGlyphColumnMembers = 0;
+  for (const ticker of listRunMembers) {
+    if (isOneGlyphToken(ticker)) singleGlyphColumnMembers += 1;
+  }
 
   // Build per-ticker line + word lookups from raw OCR word positions.
   // - tickerLineMap: ticker → array of line indices (used by Filter G)
   // - tickerWordMap: ticker → first raw word record with bbox (used by Filter B)
+  // - tickerWordsMap: ticker → EVERY raw word record with that text (used by
+  //   Filter B's row-stack test, which asks "does ANY occurrence of this
+  //   ticker sit on one of the list's own rows?"). A ticker can be read more
+  //   than once in a frame — on its own row, and again in a scanner panel
+  //   above it — and the first occurrence alone is not always the holding.
   // These are skipped when the OCR engine does not surface per-word positions.
   const tickerLineMap = new Map();
   const tickerWordMap = new Map();
+  const tickerWordsMap = new Map();
   if (hasWordPositions) {
     for (const w of words) {
       const upper = (w.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
@@ -756,6 +1129,8 @@ function parseChartStreamPositionList({ ocr } = {}) {
         tickerLineMap.get(upper).push(w.line);
       }
       if (!tickerWordMap.has(upper)) tickerWordMap.set(upper, w);
+      if (!tickerWordsMap.has(upper)) tickerWordsMap.set(upper, []);
+      tickerWordsMap.get(upper).push(w);
     }
   }
 
@@ -782,6 +1157,27 @@ function parseChartStreamPositionList({ ocr } = {}) {
   const panelGateActive = positionsLine != null
     && watchlistLine != null
     && watchlistLine > positionsLine;
+
+  // The y of the "A - Positions" header, when one was detected.
+  //
+  // The header is the panel's OWN upper bound, and it is independent of the
+  // row pitch: every row of the position list is BELOW it, and the scanner
+  // panel above it is not part of the list. The run's own extent cannot
+  // supply this bound — it is derived from the list's rows, so a panel above
+  // the list is separated from it by a gap the run has to guess at.
+  let positionsHeaderY = null;
+  if (hasWordPositions && positionsLine != null) {
+    for (const w of words) {
+      if (w.line !== positionsLine) continue;
+      if (!Number.isFinite(w.top)) continue;
+      const y = w.top + (Number.isFinite(w.height) ? w.height : 0) / 2;
+      if (positionsHeaderY == null || y > positionsHeaderY) positionsHeaderY = y;
+    }
+  }
+  // The same rule the column detector uses: the watchlist bound only counts
+  // when the watchlist header is BELOW the positions header.
+  const watchlistBelowPositions = watchlistLine != null
+    && (positionsLine == null || watchlistLine > positionsLine);
   // Partial boundary heuristic: when only one boundary is detected, use y-coordinates
   // to estimate the other. The position list is typically 10-15 rows tall; if we
   // detect positionsLine but not watchlistLine, reject rows far below it.
@@ -834,6 +1230,9 @@ function parseChartStreamPositionList({ ocr } = {}) {
   }
 
   const occurrenceCounts = countTickerOccurrences(text);
+  // Column gate is a whole-frame decision (does the detector trust its own
+  // column?), so compute it once here rather than per token.
+  const columnGateActive = dominantColumnX != null && inListTickers.size >= 3;
   const accepted = [];
   const rejected = [];
   // canonicalToRawTicker: when edit-distance correction produces a canonical
@@ -859,19 +1258,89 @@ function parseChartStreamPositionList({ ocr } = {}) {
       }
       continue;
     }
-    // Position-list-aware filter: when word positions are reliable
-    // (Tesseract), require the ticker to be in the dominant ticker column.
-    // When word positions are unreliable (EasyOCR — different x-center
-    // distribution), skip the column check and rely on lexicon +
-    // price-nearby signals. The column detector result is still computed
-    // for diagnostics (column_filter field in output) but no longer
-    // gates acceptance.
-    const inListColumn = inListTickers.has(ticker);
-    // A token that lands in a confidently-detected ticker column. Unlike
-    // `inListColumn` (which needs a readable price to the right) this only
-    // needs the word box to sit in the left-aligned ticker column.
-    const inTrustedColumn = columnTrustActive && inColumnTickers.has(ticker);
-    if (inLexicon || priceNearby) {
+    // Position-list-aware filter: require the ticker to be in the dominant
+    // ticker column when the column detector is confident.
+    //
+    // The `inLexicon || priceNearby` branch used to accept column-agnostically.
+    // That leaks badly on EasyOCR frames because `hasPriceNear` matches against
+    // the ENTIRE flattened OCR text: a ticker at the end of one line happily
+    // matches a price at the start of the next line, so every ticker in the
+    // frame looks "price-nearby" and chart-header noise (BROS, ONKS, FX)
+    // walks straight in. Verified on 20220218: precision fell 86% → 40%.
+    //
+    // The column filter is the structural signal that actually distinguishes a
+    // position-list row from chart noise — real rows put the ticker in a tight
+    // vertical column with a price to its right. Gate on it whenever the
+    // detector found a column with enough evidence (>= 3 in-list tokens), and
+    // fall back to the old column-agnostic behaviour when it did not, so
+    // sparse/garbled frames are not penalised.
+    // In the dominant column but NOT in the lexicon: this is almost certainly
+      // an OCR garble of a real ticker, so run edit-distance correction FIRST
+      // and only fall back to accepting the raw token. Previously the
+      // `inLexicon || priceNearby` test came first, and because hasPriceNear
+      // scans the whole flattened text it fired on nearly every token — so
+      // garbles were accepted verbatim (FX for FCX, TTOCQ for TQQQ) and never
+      // reached the corrector below.
+      const inListColumn = inListTickers.has(ticker);
+      // The gate's membership test: the price-aligned column members PLUS
+      // the tickers on the list's own rows. A garbled PRICE cell must not
+      // decide whether a perfectly-read ticker belongs to the column.
+      const inColumnGate = columnGateMembers.has(ticker);
+      // A token the ROW STACK admitted but a readable price did not: it sits on
+      // a position-list row and the price cell beside it was garbled.
+      const runOnly = inColumnGate && !inListColumn;
+      if (columnGateActive && !inColumnGate && !(inLexicon && inListTickers.size >= 6)) {
+        // Column detector is confident and this token is not a position-list row.
+        // Reject it before the lexicon/price-nearby path can admit it.
+        rejected.push(ticker);
+        continue;
+      }
+      if (inLexicon || priceNearby) {
+      // A run-only member is a position-list row whose TICKER cell was read
+      // and whose PRICE cell was not -- 20220330's NFLX, REGN, COPX and NUGT
+      // all read at conf 0.50-0.96, with the price cells garbled ("0s63",
+      // "C00", "~0229"). The row stack says it is a position; `hasPriceNear`
+      // says nothing about it, because it scans the ENTIRE flattened text and
+      // happily matches a ticker at the end of one line against a price at
+      // the start of the next.
+      //
+      // So a run-only member has to be vouched for by the LEXICON. The
+      // price-nearby test alone published "OI" on 20220412: a 0.076-confidence
+      // garbage read of the LMT row, which the alias rescue cannot fix
+      // because "OI" is not a recorded misread of anything. The curated
+      // rescue still reaches the run-only members it should -- "WHX" on
+      // 20220412 and "A" on 20230522 are both run-only and both not in the
+      // lexicon, and both are rescued to LHX and AI from the words
+      // themselves, after this loop.
+      if (runOnly && !inLexicon) {
+        rejected.push(ticker);
+        continue;
+      }
+      // A one-glyph cell in a column that holds ANOTHER one-glyph cell is not
+      // taken at face value. The column has demonstrated that it collapses
+      // cells, so a one-glyph read in it is a collapse until proven
+      // otherwise.
+      //
+      // There is no price-aligned escape hatch, and it is worth saying why:
+      // the column detector measures a cell's CENTRE, and in a left-aligned
+      // table a one-glyph cell's centre sits ~44 px left of a four-glyph
+      // cell's -- outside the detector's +-25 px column window. So a
+      // one-glyph token can never be price-aligned, and the row stack is the
+      // ONLY evidence that admits it. This rule is therefore the only thing
+      // that decides a one-glyph read's fate.
+      //
+      // The curated rescue still reaches the cells this rejects: it works on
+      // the words themselves, so the collapsed AI row on 20230522 ("A") is
+      // still rescued to AI after this loop. What it cannot reach is the
+      // collapsed LI row ("U"), because "U" is a genuine ticker (a holding on
+      // 20221117) and the alias table's invariant forbids a row that would
+      // rewrite it. That row stays missed, which is the project's own
+      // preference: a wrong holding is worse than a missing one.
+      if (runOnly && singleGlyphColumnMembers >= 2
+          && isOneGlyphToken(ticker)) {
+        rejected.push(ticker);
+        continue;
+      }
       // Filter G: panel-line reject gate. If panel boundaries were
       // detected, reject any ticker whose ONLY occurrences have lines
       // outside the position-list panel (chart-area above the panel, or
@@ -887,94 +1356,103 @@ function parseChartStreamPositionList({ ocr } = {}) {
           continue;
         }
       }
-      // Lexicon match OR price-nearby: accept (column-agnostic).
+      // Lexicon match OR price-nearby: accept.
       // Chart-area text like "Arith", "Sym", "Cran" doesn't match the
       // seed lexicon so it stays rejected.
-      //
-      // The optional column gate is applied here only in 'inloop' mode — see
-      // the post-Filter-B pass below. Applying it inside the loop changes
-      // which tickers reach Filter B, which changes Filter B's median y,
-      // which changes which tickers survive. Applying it after Filter B
-      // keeps the y-band computation stable.
-      if (columnGateMode === 'inloop' && columnGateActive && !inColumnTickers.has(ticker)) {
-        rejected.push(ticker);
-        continue;
-      }
       accepted.push(ticker);
-    } else if (inListColumn || inTrustedColumn) {
-      // In-column ticker that's NOT in the lexicon: try OCR character
-      // correction via edit distance (INUG→JNUG, XX→X, FCX→FCX).
-      //
-      // A ticker in a TRUSTED column but not price-aligned is a different
-      // case: the word box proves it sits in the position-list column, so
-      // it IS a position. Preferring the edit-distance correction there
-      // replaces the true ticker with a near-miss (GUSH→GUSY, and the
-      // panel header SYM→SPYM), so the raw token is preferred instead
-      // when `ocr._columnTrustRaw` is set.
-      if (inTrustedColumn && !inListColumn) {
-        // The panel gate still applies: the "Personal WatchList" panel
-        // below the position list has the SAME left-aligned column, so a
-        // watchlist ticker is in the column band too. Filter G is what
-        // separates the two panels.
-        if (panelGateActive) {
-          const linesForTicker = tickerLineMap.get(ticker);
-          const inPanel = linesForTicker && linesForTicker.some((l) => lineIsInPanel(l));
-          if (!inPanel) {
-            rejected.push(ticker);
-            continue;
-          }
-        }
-        // The column-header row ("Sym | Change | Vol | Buzz") shares the
-        // ticker column's x. A real position row carries a 2+ digit number
-        // to the right of the ticker; the header row does not.
-        if (ocr._columnTrustNeedNumber === true && !rowNumberTickers.has(ticker)) {
-          rejected.push(ticker);
-          continue;
-        }
-        if (ocr._columnTrustRaw === true) {
-          if (!accepted.includes(ticker)) {
-            accepted.push(ticker);
-          } else {
-            rejected.push(ticker);
-          }
-          continue;
-        }
-      }
-      const correction = findCloseTickerMatch(ticker, lexicon);
-      if (correction) {
-        if (!accepted.includes(correction)) {
-          canonicalToRawTicker.set(correction, ticker);
-          accepted.push(correction);
-        } else {
-          rejected.push(ticker);
-        }
-      } else if (inTrustedColumn) {
-        // No correction exists — the token is not a near-miss of any
-        // known ticker. In a TRUSTED column that is fine: the word box
-        // proves it sits in the position-list ticker column, so it is a
-        // position whose ticker is simply not in the seed lexicon.
-        accepted.push(ticker);
-      } else {
-        rejected.push(ticker);
-      }
+    } else if (inListColumn) {
+      // In the position-list column, but neither a known ticker nor
+      // price-nearby. The column gate has already established this is a real
+      // row, so this is a ticker missing from the seed lexicon rather than
+      // chart noise — accept it as read rather than discard it. (MOS on
+      // 20220218 was being dropped here, costing a real GT hit.)
+      accepted.push(ticker);
     } else {
       rejected.push(ticker);
     }
   }
 
-  // Filter B: position-aware bounding-box y-range filter.
-  // Real position-list tickers share a consistent y-range (one row per
-  // ticker in the position-list column). Chart-area tokens (NVDA on a
-  // chart-axis label, AMD/INTC/MU in a sub-plot annotation, MSTR/COIN
-  // bleeding from chart overlay) have bboxes that fall outside this
-  // range. Compute the median y-center of accepted tickers' bboxes
-  // and reject any ticker whose y-center falls outside [yMedian - 2*lineHeight,
-  // yMedian + 2*lineHeight].
+  // Post-pass: repair garbled in-column tickers.
   //
-  // Requires at least 2 accepted tickers to compute median. Falls back
-  // to skipping the filter when fewer accepted tickers exist (rare —
-  // these are sparse single-ticker frames where position-aware filtering
-  // would be unreliable).
+  // A token that landed in the position-list column but is NOT in the lexicon
+  // is almost certainly an OCR garble of a real ticker (FX→FCX, TTOCQ→TQQQ,
+  // TSUA→TSLA). hasPriceNear scans the whole flattened text so these tokens
+  // were already accepted verbatim on the branch above and never reached the
+  // edit-distance corrector. Correct them here, but only at distance 1 and
+  // only when the correction is unambiguous — at distance 2 findCloseTickerMatch
+  // starts inventing tickers (UPST→KLAC, DWAC→SPOT), which costs more recall
+  // than the repair gains.
+  if (columnGateActive) {
+    const confusionMap = loadOcrConfusionMap();
+    for (let i = accepted.length - 1; i >= 0; i -= 1) {
+      const raw = accepted[i];
+      if (!inListTickers.has(raw)) continue;
+      // Curated confusion alias first — this is the only path that can repair a
+      // garble that happens to BE a valid ticker (AROQ→ARQQ, IOI→IOT).
+      const aliased = confusionMap.get(raw);
+      if (aliased && lexicon.tickerSet.has(aliased) && !accepted.includes(aliased)) {
+        canonicalToRawTicker.set(aliased, raw);
+        accepted[i] = aliased;
+        continue;
+      }
+      if (lexicon.tickerSet.has(raw)) continue;
+      let best = null;
+      let bestDist = Infinity;
+      for (const candidate of lexicon.tickers) {
+        if (Math.abs(candidate.length - raw.length) > 1) continue;
+        const dist = levenshtein(raw, candidate);
+        if (dist < bestDist || (dist === bestDist && candidate.length > best.length)) {
+          bestDist = dist;
+          best = candidate;
+        }
+      }
+      if (best && bestDist === 1 && !accepted.includes(best)) {
+        canonicalToRawTicker.set(best, raw);
+        accepted[i] = best;
+      }
+    }
+  }
+
+  // Filter B: the position-aware vertical bound.
+  //
+  // A position list is one row per ticker in the position-list column, and
+  // the rows are a CONTIGUOUS vertical stack at a constant pitch. Chart-area
+  // tokens (NVDA on a chart-axis label, AMD/INTC/MU in a sub-plot annotation,
+  // MSTR/COIN bleeding from chart overlay) and scanner-panel tokens sit
+  // outside that stack. Filter B is what keeps them out of the reading.
+  //
+  // The rule this replaced was a window around the median of the accepted
+  // tickers' bbox centres: [yMedian - 8*lineHeight, yMedian + 8*lineHeight].
+  // `lineHeight` is the median word HEIGHT (~54 px) where the intent was ROWS
+  // (~90 px apart), so the window spanned only ~4.8 rows either side of the
+  // median and clipped the first and last row of any list longer than about
+  // nine rows. Measured corpus-wide, that window dropped 50 ground-truth
+  // holdings.
+  //
+  // The rule now is the list's OWN ROWS (`listRun`, above) plus the panel's
+  // own upper bound — nothing above the "A - Positions" header is a
+  // position. A ticker is a holding when ONE of its OCR occurrences sits on
+  // one of the stack's rows; "one of" matters, because a ticker read both on
+  // its own row and again in a widget above it is a holding, and the first
+  // occurrence alone would lose it.
+  //
+  // Measured with the no-OCR replay (`node tools/evalParserReplay.js`).
+  // Both columns below use the SAME config files (the 2026-11-01 seed and
+  // observed lexicons, and the alias table WITHOUT the four rows added the
+  // same day), so the difference is the rule and nothing else:
+  //
+  //   corpus          legacy window            this rule
+  //   default (8)     75/85/76  88.2 / 98.7%   80/85/81  94.1 / 98.8%
+  //   wide (17)      123/168/143 73.2 / 86.0%  128/168/149 76.2 / 85.9%
+  //
+  // (hit / ground-truth / predicted, then micro recall and precision.)
+  //
+  // With the four alias rows and the 16 new seed rows in place as well, the
+  // shipped figures are 80/85/81 (94.1 / 98.8%) on the default roots and
+  // 132/168/151 (78.6 / 87.4%) on the wide corpus.
+  //
+  // When the column could not be identified there are no rows to test
+  // against, and the legacy window is the only thing left to fall back on.
   let bboxFilterInfo = null;
   if (hasWordPositions && accepted.length >= 2) {
     const acceptedBboxes = [];
@@ -982,7 +1460,7 @@ function parseChartStreamPositionList({ ocr } = {}) {
       const rawTicker = canonicalToRawTicker.get(ticker) || ticker;
       const w = tickerWordMap.get(rawTicker);
       if (w && Number.isFinite(w.top) && Number.isFinite(w.height) && w.height > 0) {
-        acceptedBboxes.push({ ticker, yCenter: w.top + w.height / 2 });
+        acceptedBboxes.push({ ticker, yCenter: w.top + w.height / 2, xLeft: w.left });
       }
     }
     if (acceptedBboxes.length >= 2) {
@@ -995,42 +1473,38 @@ function parseChartStreamPositionList({ ocr } = {}) {
       const lineHeight = lineHeights.length
         ? lineHeights[Math.floor(lineHeights.length / 2)]
         : 20;  // fallback for sparse words
-      // Position lists are sorted by market cap (largest → smallest, top → bottom
-      // of the UI panel). The tickers form a contiguous vertical stack with
-      // roughly equal spacing. Use ±8×lineHeight (~448px for lineHeight=56)
-      // as the accept range around the median y-center. Calibrated on the 20230518
-      // case where position-list tickers span 744-1314px (PLTR at top, APLD at
-      // bottom) — ±8× gives yMin=665, yMax=1561, accepting all GT tickers.
-      // A tighter ±2× range (~112px) clipped the top and bottom rows of the
-      // position list, losing 15-25% of tickers. The wider range comfortably
-      // covers 10+ row position lists. Chart-area bleed FPs that land outside
-      // this range are handled by the lexicon filter and clusterer.
+      // The legacy window, kept only as the fallback for a frame whose column
+      // could not be identified.
       const yMin = yMedian - 8 * lineHeight;
       const yMax = yMedian + 8 * lineHeight;
-      // In trusted-column mode the accept path has already restricted the
-      // list to the ticker column, so the median-centred band is the wrong
-      // shape: a 14-row panel spans ~22 line heights, and a ±8-line band
-      // around the middle clips the first two and last three rows.
-      //
-      // Measured on 20220419 (crop 0.86,0.55,0.14,0.45): the panel rows run
-      // y=418 (BOIL) to y=1593 (KOLD) with a 52px line height, the median
-      // row sits at 961, and the ±8 band [545, 1377] rejected BOIL, JNUG,
-      // REGN, VERU and KOLD — five of the fourteen real positions.
-      //
-      // In trust mode the band is derived from the column's own vertical
-      // extent instead, padded by one line height on each side.
-      let yMinFinal = yMin;
-      let yMaxFinal = yMax;
-      if (columnTrustActive && acceptedBboxes.length >= 2) {
-        yMinFinal = Math.min(...acceptedBboxes.map((b) => b.yCenter)) - lineHeight;
-        yMaxFinal = Math.max(...acceptedBboxes.map((b) => b.yCenter)) + lineHeight;
-      }
       const withinBbox = new Set();
-      for (const { ticker, yCenter } of acceptedBboxes) {
-        if (yCenter >= yMinFinal && yCenter <= yMaxFinal) {
-          withinBbox.add(ticker);
-        } else {
+      if (listRun && listRun.words.size >= 2) {
+        for (const { ticker } of acceptedBboxes) {
+          const raw = canonicalToRawTicker.get(ticker) || ticker;
+          const occurrences = tickerWordsMap.get(raw) || [];
+          // The panel's own upper bound: a token every one of whose
+          // occurrences is above the "A - Positions" header is not a
+          // position, whatever the run says. This is what separates a
+          // scanner panel above the list (TAN on 20230523, BABA and HAL on
+          // 20230602) from the list itself.
+          const allAboveHeader = positionsHeaderY != null
+            && occurrences.length > 0
+            && occurrences.every((w) => {
+              const y = w.top + (Number.isFinite(w.height) ? w.height : 0) / 2;
+              return Number.isFinite(w.top) && y < positionsHeaderY;
+            });
+          if (allAboveHeader) { rejected.push(ticker); continue; }
+          const inRun = occurrences.some((w) => listRun.words.has(w));
+          if (inRun) { withinBbox.add(ticker); continue; }
           rejected.push(ticker);
+        }
+      } else {
+        for (const { ticker, yCenter } of acceptedBboxes) {
+          if (yCenter >= yMin && yCenter <= yMax) {
+            withinBbox.add(ticker);
+          } else {
+            rejected.push(ticker);
+          }
         }
       }
       // Re-filter accepted in place, preserving order
@@ -1040,26 +1514,122 @@ function parseChartStreamPositionList({ ocr } = {}) {
         }
       }
       bboxFilterInfo = {
+        rule: listRun && listRun.words.size >= 2 ? 'list_rows' : 'y_window',
+        list_rows: listRun
+          ? {
+            rows: listRun.rows,
+            members: listRun.size,
+            top: Math.round(listRun.top),
+            bottom: Math.round(listRun.bottom),
+            pitch: Math.round(listRun.pitch),
+            runs: listRun.runs,
+            positions_header_y: positionsHeaderY == null ? null : Math.round(positionsHeaderY),
+          }
+          : null,
         y_median: yMedian,
         line_height: lineHeight,
-        y_min: yMinFinal,
-        y_max: yMaxFinal,
-        rejected_count: acceptedBboxes.length - withinBbox.size
+        y_min: yMin,
+        y_max: yMax,
+        rejected_count: acceptedBboxes.length - withinBbox.size,
+        rejected_tickers: acceptedBboxes.filter((b) => !withinBbox.has(b.ticker)).map((b) => b.ticker),
       };
     }
   }
 
-  // Column gate, 'post' variant: the same rule as the accept-loop variant,
-  // but applied after Filter B. Filter B derives its y-band from the median
-  // of the accepted tickers, so gating inside the accept loop shifts that
-  // median — which is why 'inloop' and 'post' do not agree on the same
-  // frames, and why the two were measured separately.
-  if (columnGateMode === 'post' && columnGateActive) {
-    for (let i = accepted.length - 1; i >= 0; i -= 1) {
-      if (!inColumnTickers.has(accepted[i])) {
-        rejected.push(accepted[i]);
-        accepted.splice(i, 1);
+  // Curated-alias rescue.
+  //
+  // A recorded, human-verified misread of a position-list ticker that sits
+  // INSIDE the detected column IS that ticker. The column gate cannot see it
+  // on its own: `inListTickers` is the PRICE-ALIGNED subset of the column,
+  // and a row whose price is garbled is not price-aligned even when its
+  // ticker sits exactly where every other ticker sits. Such a token is
+  // rejected at the gate, so the holding is lost before the repair pass
+  // above ever sees it.
+  //
+  // It runs AFTER the repair pass so that a garble the repair pass already
+  // replaced in place is not joined by its canonical — the two spellings of
+  // one holding must never both appear in the reading. An earlier attempt
+  // did exactly that and paid for it twice: the raw survived as a duplicate
+  // false positive, and the extra entries shifted Filter B's median y and
+  // evicted real holdings that were already in the reading.
+  if (columnGateActive && hasWordPositions) {
+    const confusionMap = loadOcrConfusionMap();
+    for (const word of words) {
+      const raw = String(word.text || '').toUpperCase().replace(/[^A-Z0-9.]/g, '');
+      if (!raw) continue;
+      const canonical = confusionMap.get(raw);
+      if (!canonical) continue;
+      if (!lexicon.tickerSet.has(canonical)) continue;
+      // The panel test here is the panel's OWN bounds, not the parser's
+      // "implied bottom" heuristic. That heuristic GUESSES where the list
+      // ends — fifteen rows below the header — and the lists in this corpus
+      // are longer than that, so it cuts the rows off exactly where the
+      // recoverable ones are. The parser does not apply it to the accepted
+      // set either, so applying it here would hold the rescue to a rule
+      // the rest of the parser does not keep.
+      //
+      // The watchlist bound is the one that matters: the Personal WatchList
+      // panel sits at the SAME x as the position list, so a row below it is
+      // a watchlist row however well it lines up. And the watchlist bound
+      // only applies when the watchlist header is BELOW the positions
+      // header — a stray "Watch..." token above the panel would otherwise
+      // act as a lower bound and reject every real row.
+      if (positionsLine != null && word.line <= positionsLine) continue;
+      if (watchlistBelowPositions && word.line >= watchlistLine) continue;
+      const center = word.left + word.width / 2;
+      // The token's LEFT edge is compared with the column's LEFT edge, not
+      // its centre with the column's median centre. The position list is a
+      // left-aligned table, so a short garbled ticker starts where every
+      // other ticker starts even though its centre sits far to the left of
+      // theirs -- measured on 20230609: every ticker in the column starts at
+      // x 515-518 and the one-character "A" starts at x 518 too, but its
+      // centre is 545 against a median centre of 581.5, so the centre test
+      // rejected it before the alias was ever consulted.
+      //
+      // The centre test is kept as an ALTERNATIVE, not replaced: this
+      // corpus's tables are left-aligned, but a right-aligned or centred
+      // layout would be judged by its centres, and the union of the two
+      // tests cannot reject a token the old gate accepted.
+      const tokenLeft = word.left || 0;
+      const insideColumn = dominantColumnLeft != null
+        ? (Math.abs(tokenLeft - dominantColumnLeft) <= columnWidth / 2
+            || Math.abs(center - dominantColumnX) <= columnWidth / 2)
+        : Math.abs(center - dominantColumnX) <= columnWidth / 2;
+      if (!insideColumn) continue;
+      // The vertical span the other tickers established is NOT used as a
+      // gate here. The span is computed from the accepted rows, and the rows
+      // worth rescuing are exactly the ones that are NOT accepted — a
+      // garbled price is why they were left out — so the span is missing
+      // them by construction, and testing against it rejects the top and
+      // bottom rows of the list precisely because they are the rows whose
+      // price was garbled. Measured on the replay corpus, the check refused
+      // all eight rescuable holdings and no other candidate.
+      //
+      // The column x, the panel and the curated alias are the evidence here.
+      // The alias set is a short, curated table and every row is a recorded
+      // misread against a real frame, so the blast radius is bounded by the file.
+      // The garble itself is in the reading: replace it, never join it.
+      const rawIndex = accepted.indexOf(raw);
+      if (rawIndex >= 0) {
+        if (accepted.includes(canonical)) {
+          // The canonical is already there; the garble is a second spelling
+          // of the same holding and is dropped, not published.
+          accepted.splice(rawIndex, 1);
+        } else {
+          accepted[rawIndex] = canonical;
+        }
+        const rejectedIndex = rejected.indexOf(raw);
+        if (rejectedIndex >= 0) rejected.splice(rejectedIndex, 1);
+        continue;
       }
+      if (accepted.includes(canonical)) continue;
+      // The garble never reached the reading — the column gate rejected it,
+      // or the ticker-shape test rejected it for carrying a digit (QBT5,
+      // GSI1, GS11, which are not ticker-shaped and so are never candidates
+      // at all). The canonical takes its place.
+      accepted.push(canonical);
+      const rejectedIndex = rejected.indexOf(raw);
+      if (rejectedIndex >= 0) rejected.splice(rejectedIndex, 1);
     }
   }
 
@@ -1124,24 +1694,31 @@ function parseChartStreamPositionList({ ocr } = {}) {
   // returning so downstream merge/cluster steps never see them.
   const filteredAccepted = accepted.filter((t) => !TICKER_BLOCKLIST.has(t));
 
+  // The panel's own row count, and how the reading compares with it.
+  //
+  // This is a self-check, and it is the panel's own statement rather than the
+  // parser's: the footer says how many rows are on screen, and the reading
+  // says how many tickers it found. `count_delta` is the difference.
+  //
+  //   delta  0   the reading has the panel's row count
+  //   delta < 0   the reading is SHORT — a row was dropped
+  //   delta > 0   the reading is LONG — a row was invented
+  //
+  // A delta of 0 does NOT mean the reading is right: two tickers can be
+  // confused for one another and the count still matches. It means the reading
+  // is not *provably* wrong, which is a weaker and more honest claim.
+  //
+  // The count is reported, never acted on. See `readPanelRowCount`.
+  const panelCountInfo = readPanelRowCount(words, positionsLine, positionsHeaderY);
+  const panelCount = panelCountInfo ? panelCountInfo.count : null;
+  const panelCountDelta = panelCount != null ? filteredAccepted.length - panelCount : null;
+
   return {
     column_filter: dominantColumnX != null ? {
       column_width: columnWidth,
       dominant_x: dominantColumnX,
-      in_list_token_count: inListTickers.size,
-      // Diagnostics for the optional accept-path column gate.
-      column_is_price_aligned: columnIsPriceAligned,
-      column_token_count: columnTokenCount,
-      // How many ticker-shaped words share the dominant left edge — the
-      // confidence signal for the column when EasyOCR has not read the
-      // prices to the right of the tickers.
-      column_left_count: columnLeftCount,
-      // The LEFT edge of the detected column. Every position-list ticker
-      // shares this x, so it is the anchor for the column-band test.
-      dominant_left: dominantLeft,
-      column_gate_active: columnGateActive,
-      // True when the accept path trusted the detected column.
-      column_trust_active: columnTrustActive
+      dominant_left: dominantColumnLeft,
+      in_list_token_count: inListTickers.size
     } : null,
     confidence,
     ocr_executed: true, // OCR ran and produced candidates; they were all rejected
@@ -1166,6 +1743,15 @@ function parseChartStreamPositionList({ ocr } = {}) {
     // filter ran (at least 2 accepted tickers with bbox info available).
     bbox_filter: bboxFilterInfo
     ,
+    // Diagnostic: the panel's OWN row count, read from its footer, and the
+    // difference between it and the reading. `null` when the footer was not
+    // read (no header detected, or the footer line was not recognised).
+    //
+    // This is a self-check on the reading, not a filter: the count is never
+    // used to add or drop a ticker. See `readPanelRowCount` for why.
+    panel_count: panelCount,
+    panel_count_delta: panelCountDelta,
+    panel_count_footer: panelCountInfo ? panelCountInfo.text : null,
     zoom_ticker_strip: ocr && ocr.zoomTickerStrip ? {
       candidate_count: zoomStripCandidates.length,
       candidates: zoomStripCandidates.slice(0, 20).map((candidate) => candidate.ticker),
@@ -1311,7 +1897,7 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
     }
   }
   if (frequency.size === 0) {
-    return { clusters: [], merged_list: [] };
+    return { clusters: [], merged_list: [], dropped: [] };
   }
 
   // Step 3: Union-Find clustering — tokens within maxDistance of each
@@ -1330,8 +1916,15 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
     const ra = find(a), rb = find(b);
     if (ra !== rb) parent.set(ra, rb);
   }
+  // Every token starts as its own root. The initialisation has to happen
+  // BEFORE the comparison loop: `parent.set(tokens[i], tokens[i])` inside
+  // the loop resets a token that an earlier iteration had already merged
+  // into another cluster, which splits that cluster again and makes the
+  // result depend on the order the tokens happened to arrive in.
+  for (const token of tokens) {
+    parent.set(token, token);
+  }
   for (let i = 0; i < tokens.length; i += 1) {
-    parent.set(tokens[i], tokens[i]);
     for (let j = i + 1; j < tokens.length; j += 1) {
       if (Math.abs(tokens[i].length - tokens[j].length) > maxDistance) continue;
       if (levenshtein(tokens[i], tokens[j]) <= maxDistance) {
@@ -1355,13 +1948,6 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
   const minFrequency = Number.isFinite(options.minFrequency)
     ? options.minFrequency
     : 2;
-  // Keep clusters whose token is not in the seed lexicon, as long as the
-  // token is seen in at least this many distinct frames. The lexicon is a
-  // seed, not a census — see Strategy 1b below.
-  const keepUnknown = options.keepUnknown === true;
-  const keepUnknownMinFrames = Number.isFinite(options.keepUnknownMinFrames)
-    ? options.keepUnknownMinFrames
-    : 3;
 
   // Step 5: pick canonical per cluster.
   // - If any cluster member is in the seed lexicon, prefer that.
@@ -1374,6 +1960,10 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
   //   single-frame OCR garbles (VIO→VLO, NFU→NFLX, INA→TNA, BUCO→UCO)
   //   and chart-area tickers that bleed in briefly.
   const clusters = [];
+  // The clusters that were dropped, and why. Populated only when the caller
+  // asks for it (`explainDropped`), because it is a diagnostic and the probe
+  // log does not need it by default.
+  const droppedClusters = [];
   for (const [, members] of groups) {
     members.sort((a, b) => {
       const aLex = lexicon.tickerSet.has(a) ? 1 : 0;
@@ -1387,13 +1977,124 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
     // Find canonical: prefer direct lexicon match, fall back to
     // edit-distance lookup against the seed lexicon.
     let canonical = null;
+    // Strategy 1: direct lexicon match
+    for (const m of members) {
+      if (lexicon.tickerSet.has(m)) { canonical = m; break; }
+    }
+    if (!canonical) {
+      if (options.preferSupportedCorrection || options.preferVideoSupport) {
+        // The SUPPORTED choice: among the cluster's admissible corrections,
+        // prefer the one the VIDEO actually read. See
+        // `selectSupportedCorrection` for the measured instance this exists
+        // for, and for the two orderings it can use.
+        canonical = selectSupportedCorrection(
+          clusterCorrectionCandidates(members, lexicon, frequency),
+          options.preferVideoSupport === true
+        );
+      } else {
+        for (const m of members) {
+          if (m.length < 4) continue;
+          const corr = findCloseTickerMatch(m, lexicon);
+          if (!corr) continue;
+          let sharedPrefix = 0;
+          const limit = Math.min(3, m.length, corr.length);
+          for (let i = 0; i < limit; i++) {
+            if (m[i] === corr[i]) sharedPrefix += 1;
+          }
+          if (sharedPrefix >= 2) { canonical = corr; break; }
+        }
+        // Strategy 3: 3-char member with d=1 to the correction
+        if (!canonical) {
+          for (const m of members) {
+            if (m.length !== 3) continue;
+            const corr = findCloseTickerMatch(m, lexicon);
+            if (!corr) continue;
+            const d = levenshtein(m, corr);
+            if (d <= 1) { canonical = corr; break; }
+          }
+        }
+      }
+    }
+    if (!canonical) {
+      if (options.explainDropped) {
+        droppedClusters.push({ members: [...members].sort(), canonical: null, reason: 'no_canonical' });
+      }
+      continue;
+    }
+    // A CORRECTED canonical -- one that is NOT a member of this cluster --
+    // is the clusterer NAMING a ticker that no frame of the video read. That
+    // is the defect class that publishes a wrong holding, and it is not the
+    // same thing as a miss.
+    //
+    // The corroboration rule: a corrected canonical must be within edit
+    // distance 1 of AT LEAST ONE cluster member. A member at distance 1 is
+    // the ordinary case (INA -> TNA is distance 1). A correction that is only
+    // reachable at distance 2 from every member is a guess dressed as a
+    // repair, because at distance 2 there are usually SEVERAL plausible
+    // canonicals and which one is chosen is decided by a tie-break
+    // ("prefer the longer ticker") rather than by the pixels.
+    //
+    // The measured instance: on 20230605 the cluster {AACO, ARCO} was
+    // published as `AAPL`, a seed ticker that is in NO capture's reading of
+    // that video. AACO is 2 edits from AAPL and 2 from AAL; the longer-on-a-
+    // tie rule chose AAPL, and the merged list published a holding the video
+    // never showed. No member of that cluster is within distance 1 of AAPL.
+    //
+    // This rule DISCARDS such a cluster. `preferSupportedCorrection` RESOLVES
+    // it instead: the cluster's OTHER member, ARCO, is 2 edits from ARQQ --
+    // the holding the panel actually showed, and one the video read in six
+    // frames -- so asking which correction the VIDEO supports recovers the
+    // holding rather than throwing it away. The two rules answer the same
+    // question -- "is this canonical corroborated?" -- and the second one
+    // answers it with the right ticker when it can.
+    //
+    // OFF by default: the rule has to be MEASURED before it replaces the
+    // shipped behaviour -- tightening it also stops corrections that are
+    // real. `node tools/evalParserReplay.js --cluster-rule corroborated`
+    // measures it over the recorded logs, with no OCR and no change to the
+    // shared config files.
+    if (options.requireDistanceOneCorroboration && !members.includes(canonical)) {
+      let closest = Infinity;
+      for (const m of members) {
+        const d = levenshtein(m, canonical);
+        if (d < closest) closest = d;
+      }
+      // A canonical the VIDEO read itself is corroborated by the video, even
+      // when it is two edits from every member of this cluster. That is the
+      // 20230605 case: ARQQ was read in six frames of that video, and the
+      // cluster's member ARCO is two edits from it.
+      //
+      // Whether that counts as corroboration is a SEPARATE question from
+      // whether the correction is close, and the two are measured apart:
+      // `corroborationAllowsVideoSupport: false` demands the proximity test
+      // alone.
+      const videoSupport = frequency.get(canonical) || 0;
+      const videoSupportCounts = options.corroborationAllowsVideoSupport !== false;
+      if (closest > 1 && !(videoSupportCounts && videoSupport > 0)) {
+        if (options.explainDropped) {
+          droppedClusters.push({
+            members: [...members].sort(),
+            canonical,
+            reason: 'uncorroborated_correction',
+            distance: closest
+          });
+        }
+        continue;
+      }
+    }
+    // Blocklist filter: never surface a blocklisted ticker as canonical even
+    // if all other cluster signals pass. Applied after canonical selection so
+    // we don't waste effort on blocklisted clusters, but before Filter A.
+    if (TICKER_BLOCKLIST.has(canonical)) {
+      if (options.explainDropped) {
+        droppedClusters.push({ members: [...members].sort(), canonical, reason: 'blocklisted' });
+      }
+      continue;
+    }
     // Filter A: compute distinct-frame count for the cluster (union of
     // frame sets across all members). This catches single-frame OCR
     // garbles (e.g. VIO→VLO cluster only spans the 1 frame where VIO
     // appeared) and chart-area bleed (MARA in 1 frame gets filtered).
-    //
-    // Computed BEFORE canonical selection because the "keep unknown
-    // tokens" rule below is gated on the frame count.
     const clusterFrames = new Set();
     for (const m of members) {
       const frames = tokenFrameIndices.get(m);
@@ -1401,79 +2102,212 @@ function clusterRawOcrTokens(frameTexts, options = {}) {
         for (const fi of frames) clusterFrames.add(fi);
       }
     }
-    // Strategy 1: direct lexicon match
-    for (const m of members) {
-      if (lexicon.tickerSet.has(m)) { canonical = m; break; }
-    }
-    // Strategy 1b: keep the token as read.
-    //
-    // The seed lexicon is a seed, not a census — QMG holds positions in
-    // tickers that are not in it (GUSH, KOLD, AGQ, REGN, CWEB all appear in
-    // real position lists). The clusterer's lexicon requirement silently
-    // deleted them: on 20220419 the parser found BOIL, JNUG, NUGT, GUSH,
-    // KOLD, VERU in EVERY captured frame, and the clusterer returned none
-    // of GUSH, KOLD or VERU — GUSH and KOLD are not in the lexicon, and
-    // VERU was rewritten to the lexicon entry VERV (edit distance 1).
-    //
-    // When the per-frame parser has already confirmed the ticker column
-    // (the trusted-column mode), a token that survives in that many
-    // frames IS a position, whatever the lexicon says. So with
-    // `keepUnknown` the raw token becomes the canonical and the
-    // edit-distance rewrite is skipped.
-    if (!canonical && keepUnknown && clusterFrames.size >= keepUnknownMinFrames) {
-      canonical = members[0];
-    }
-    // Strategy 2: 4+ char member with >= 2 shared prefix chars
-    if (!canonical) {
-      for (const m of members) {
-        if (m.length < 4) continue;
-        const corr = findCloseTickerMatch(m, lexicon);
-        if (!corr) continue;
-        let sharedPrefix = 0;
-        const limit = Math.min(3, m.length, corr.length);
-        for (let i = 0; i < limit; i++) {
-          if (m[i] === corr[i]) sharedPrefix += 1;
-        }
-        if (sharedPrefix >= 2) { canonical = corr; break; }
+    if (clusterFrames.size < minFrequency) {
+      if (options.explainDropped) {
+        droppedClusters.push({
+          members: [...members].sort(),
+          canonical,
+          reason: 'filter_a',
+          frames: clusterFrames.size,
+          minFrequency
+        });
       }
+      continue;
     }
-    // Strategy 3: 3-char member with d=1 to the correction
-    if (!canonical) {
-      for (const m of members) {
-        if (m.length !== 3) continue;
-        const corr = findCloseTickerMatch(m, lexicon);
-        if (!corr) continue;
-        const d = levenshtein(m, corr);
-        if (d <= 1) { canonical = corr; break; }
-      }
-    }
-    if (!canonical) continue;
-    // Blocklist filter: never surface a blocklisted ticker as canonical even
-    // if all other cluster signals pass. Applied after canonical selection so
-    // we don't waste effort on blocklisted clusters, but before Filter A.
-    if (TICKER_BLOCKLIST.has(canonical)) continue;
-    if (clusterFrames.size < minFrequency) continue;
     const totalFreq = members.reduce((s, m) => s + (frequency.get(m) || 0), 0);
+    // The SWALLOWED-HOLDING rule: a cluster can hold TWO distinct lexicon
+    // tickers that are one edit apart, and the second one is swallowed by
+    // the canonical.
+    //
+    // The recorded instance: on 20230522 and 20230523 the cluster table says
+    // { canonical: "AI", members: ["AI", "LI"] } -- and BOTH `AI` and `LI` are
+    // rows of that video's panel. They are one edit apart, so the clusterer
+    // merged two different cells and published one of them; the other was
+    // never published at all.
+    //
+    // The guard is what makes it safe. The swallowed ticker is published only
+    // when the video read IT -- in enough frames of its own. The count is the
+    // member's OWN frame count, not the cluster's: the canonical's frames
+    // must not be credited to the swallowed ticker, or every member of a
+    // well-attested cluster would look well-attested.
+    //
+    // The measured discriminator over the production cluster tables: a
+    // swallowed ticker read in >= 4 frames of its own is a holding, one read
+    // in <= 3 is a one-off garble (`NFU`, which is not a holding of its
+    // video). Publishing every lexicon ticker in a cluster, with no guard, is
+    // measured and REJECTED: it adds 24 false positives over the corpus.
+    const extraCanonicals = [];
+    if (options.publishSwallowedHoldings) {
+      for (const m of members) {
+        if (m === canonical) continue;
+        if (!lexicon.tickerSet.has(m)) continue;
+        const ownFrames = (tokenFrameIndices.get(m) || new Set()).size;
+        if (ownFrames < options.swallowedHoldingMinFrames) continue;
+        extraCanonicals.push(m);
+      }
+    }
     clusters.push({
       canonical,
       frameCount: clusterFrames.size,
       frequency: totalFreq,
-      members: members.sort()
+      members: members.sort(),
+      // The other lexicon tickers this cluster swallowed, and which of them
+      // the rule published anyway. The counts are the EVIDENCE for the
+      // decision, so they are recorded: without them a later reader cannot
+      // tell why one swallowed ticker was published and another was not.
+      extraCanonicals,
+      swallowedEvidence: members
+        .filter((m) => m !== canonical && lexicon.tickerSet.has(m))
+        .map((m) => ({
+          ticker: m,
+          ownFrames: (tokenFrameIndices.get(m) || new Set()).size,
+          published: extraCanonicals.includes(m),
+        })),
     });
   }
 
   // Step 6: build merged list. The Filter A pass above already filtered
   // clusters by minFrequency; this is just the canonical → merged list.
+  //
+  // A cluster's EXTRA canonicals are published too -- that is the whole point
+  // of the swallowed-holding rule: `LI` was a holding of that video, and
+  // naming only `AI` lost it.
   const seen = new Set();
   const merged = [];
   for (const c of clusters) {
-    if (seen.has(c.canonical)) continue;
-    seen.add(c.canonical);
-    merged.push(c.canonical);
+    if (!seen.has(c.canonical)) {
+      seen.add(c.canonical);
+      merged.push(c.canonical);
+    }
+    for (const extra of c.extraCanonicals || []) {
+      if (seen.has(extra)) continue;
+      seen.add(extra);
+      merged.push(extra);
+    }
   }
   merged.sort();
 
-  return { clusters, merged_list: merged };
+  return { clusters, merged_list: merged, dropped: droppedClusters };
+}
+
+// The VIDEO-level reading: the multi-frame clusterer's consensus.
+//
+// `merged_position_list` is the artifact the production consumers read
+// (tools/runQmgOcrBatch.js and tools/aggregateScanResults.js), and it is the
+// only reading that is repaired across frames. It has also disagreed with
+// the per-capture reading three times on record -- `REGN`, `U` and `AAPL` --
+// so it has to be measurable on its own.
+//
+// The recipe lives here, not in either caller, because there are two callers
+// that must not drift apart:
+//
+//   * tools/scanVideoWithOcr.js -- production. It builds the per-frame input
+//     from every OCR'd frame's position list.
+//   * tools/evalParserReplay.js -- the offline replay, which rebuilds the
+//     merged reading from a recorded log so a parser change can be measured
+//     in seconds instead of 8-13 minutes of EasyOCR per video.
+//
+// A replay that clustered differently from production would be measuring a
+// parser that does not exist.
+//
+// `input` is one string per frame: that frame's readings, joined. The
+// snapshot branch of the scan tool joins a frame's `position_list` with
+// spaces; the whiteboard branch passes raw OCR text, which is why this
+// helper takes strings rather than token arrays.
+//
+// `minFrequency` is Filter A's threshold. When it is not given, the snapshot
+// branch's rule applies: two frames by default, relaxed to one when only a
+// single frame contributes -- the case where a filter that demands two
+// would throw the whole consensus away.
+function clusterVideoLevelReadings(input, options = {}) {
+  const frames = (Array.isArray(input) ? input : []).filter(
+    (text) => typeof text === 'string' && text.trim()
+  );
+  const minFrequency = Number.isFinite(options.minFrequency)
+    ? options.minFrequency
+    : Math.min(options.defaultMinFrequency || 2, Math.max(1, frames.length));
+  if (!frames.length) {
+    return { merged_list: [], clusters: [], dropped: [], minFrequency, frames: 0 };
+  }
+  const result = clusterRawOcrTokens(frames, {
+    maxDistance: options.maxDistance || 1,
+    minTokenLength: options.minTokenLength || 2,
+    minFrequency,
+    lexicon: options.lexicon || loadDecodeLexiconSync(),
+    // Both OFF unless the caller asks. The corroboration rule changes which
+    // holdings a scan publishes, so it has to be measured before it is
+    // switched on -- see `clusterRawOcrTokens`.
+    requireDistanceOneCorroboration: options.requireDistanceOneCorroboration === true,
+    corroborationAllowsVideoSupport: options.corroborationAllowsVideoSupport !== false,
+    preferSupportedCorrection: options.preferSupportedCorrection === true,
+    preferVideoSupport: options.preferVideoSupport === true,
+    publishSwallowedHoldings: options.publishSwallowedHoldings === true,
+    swallowedHoldingMinFrames: Number.isFinite(options.swallowedHoldingMinFrames)
+      ? options.swallowedHoldingMinFrames
+      : 4,
+    explainDropped: options.explainDropped === true
+  });
+  return {
+    merged_list: result.merged_list,
+    clusters: result.clusters,
+    dropped: result.dropped || [],
+    minFrequency,
+    frames: frames.length
+  };
+}
+
+// The NAME of a cluster rule.
+//
+// One implementation, used by BOTH the scan tool and the replay tool: the
+// replay compares a log's recorded rule against the rule it is applying, so
+// the two have to name the same combination the same way.
+//
+// They DID drift, twice. The first time the strict flag was checked BEFORE
+// the supported one, so `supported+corroborated` under the strict flag was
+// misnamed `corroborated-strict`. The second time the two named the
+// swallowed rule differently (`swallowed+corroborated` against
+// `corroborated+swallowed`), and a scan naming one of them died at
+// startup.
+//
+// The switches are the RESOLVED booleans -- the caller resolves any
+// tri-state (the scan tool's `--no-cluster-corroboration` against its
+// on-by-default) before calling this.
+function clusterRuleName(options = {}) {
+  const parts = [];
+  if (options.preferVideoSupport === true) parts.push('video-supported');
+  else if (options.preferSupportedCorrection === true) parts.push('supported');
+  if (options.requireDistanceOneCorroboration === true) {
+    parts.push(options.corroborationAllowsVideoSupport === false ? 'corroborated-strict' : 'corroborated');
+  }
+  if (options.publishSwallowedHoldings === true) parts.push('swallowed');
+  return parts.length ? parts.join('+') : 'shipped';
+}
+
+// Resolve the cluster-rule OPTIONS into the switches the rule runs on.
+//
+// The scan tool's CLI option is a TRI-STATE for the corroboration rule:
+// `null` means "not mentioned", and the rule is ON by default, so
+// `--no-cluster-corroboration` has to be able to turn it off. The strict
+// flag is the VARIANT of that rule, so it implies corroboration.
+//
+// Resolving it in ONE place -- here -- means the clusterer, the rule name
+// and the batch runner's flag table cannot disagree about which rule a scan
+// ran. They have.
+function resolveClusterRuleOptions(options = {}) {
+  const strict = options.clusterStrictCorroboration === true;
+  const corroboration = options.clusterCorroboration === null
+    ? true
+    : options.clusterCorroboration === true;
+  return {
+    requireDistanceOneCorroboration: corroboration || strict,
+    corroborationAllowsVideoSupport: !strict,
+    preferSupportedCorrection: options.clusterSupported === true,
+    preferVideoSupport: options.clusterVideoSupported === true,
+    publishSwallowedHoldings: options.clusterSwallowedHoldings === true,
+    swallowedHoldingMinFrames: Number.isFinite(options.clusterSwallowedMinFrames)
+      ? options.clusterSwallowedMinFrames
+      : 4,
+  };
 }
 
 module.exports = {
@@ -1482,8 +2316,13 @@ module.exports = {
   findCloseTickerMatch,
   mergeMultiplePositionLists,
   clusterRawOcrTokens,
+  clusterVideoLevelReadings,
+  clusterRuleName,
+  resolveClusterRuleOptions,
   extractZoomStripTickerCandidates,
   parseChartStreamPositionList,
   extractAllTickerCandidates,
+  readPanelRowCount,
+  setOcrConfusionCsvPath,
   TICKER_BLOCKLIST
 };

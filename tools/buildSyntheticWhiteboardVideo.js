@@ -13,59 +13,16 @@
 //   test/fixtures/references/reference_board_white.png
 
 const fs = require('node:fs');
-const os = require('node:os');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
+
+const { resolveFfmpegBin } = require('../src/video/ffmpegBin');
 
 const WORKSPACE_ROOT = path.resolve(__dirname, '..');
 const FIXTURE_VIDEO = path.join(WORKSPACE_ROOT, 'test', 'fixtures', 'local_20260104_sample_real.mp4');
 const FIXTURE_TEXT_HEAVY_VIDEO = path.join(WORKSPACE_ROOT, 'test', 'fixtures', 'local_20260104_sample_text_heavy.mp4');
 const FIXTURE_REFERENCE = path.join(WORKSPACE_ROOT, 'test', 'fixtures', 'references', 'reference_board_white.png');
 const FIXTURE_REFERENCE_DIR = path.dirname(FIXTURE_REFERENCE);
-
-const DEFAULT_WIN_FFMPEG_PATHS = [
-  'C:/ffmpeg/bin/ffmpeg.exe',
-  'C:/Program Files/ffmpeg/bin/ffmpeg.exe'
-];
-
-function resolveFfmpegBin() {
-  if (process.env.FFMPEG_BIN && fs.existsSync(process.env.FFMPEG_BIN)) {
-    return process.env.FFMPEG_BIN;
-  }
-
-  const which = require('node:child_process').spawnSync('where', ['ffmpeg'], { encoding: 'utf8' });
-  if (which.status === 0 && which.stdout) {
-    const first = which.stdout.split(/\r?\n/).map((line) => line.trim()).find(Boolean);
-    if (first) {
-      return first;
-    }
-  }
-
-  for (const candidate of DEFAULT_WIN_FFMPEG_PATHS) {
-    if (fs.existsSync(candidate)) {
-      return candidate;
-    }
-  }
-
-  const wingetRoot = path.join(os.homedir(), 'AppData', 'Local', 'Microsoft', 'WinGet', 'Packages');
-  if (fs.existsSync(wingetRoot)) {
-    const matches = fs.readdirSync(wingetRoot, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory() && entry.name.startsWith('Gyan.FFmpeg'))
-      .flatMap((entry) => {
-        const vendorRoot = path.join(wingetRoot, entry.name);
-        return fs.readdirSync(vendorRoot, { withFileTypes: true })
-          .filter((child) => child.isDirectory())
-          .map((child) => path.join(vendorRoot, child.name, 'bin', 'ffmpeg.exe'));
-      })
-      .filter((candidate) => fs.existsSync(candidate))
-      .sort();
-    if (matches.length) {
-      return matches[matches.length - 1];
-    }
-  }
-
-  return 'ffmpeg';
-}
 
 function runFfmpeg(ffmpegBin, args) {
   const result = spawnSync(ffmpegBin, args, { encoding: 'utf8', stdio: 'pipe' });
