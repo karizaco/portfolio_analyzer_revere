@@ -411,27 +411,54 @@ Rules:
 ## Testing
 
 ```bash
-npm test              # everything except the OCR benchmark (1194 tests, ~55 s)
+npm test              # everything except the OCR benchmark (1,847 tests, ~4 min)
 npm run test:benchmark  # test/qmgGroundTruth.test.js alone (EasyOCR; ~2-25 min, see below)
 npm run test:all        # everything, benchmark included -- FAILS under contention
 ```
 
-**THE SUITE RUNS 8 TEST FILES AT A TIME, NOT 98.** Node's test runner
-starts **one process per test file**, and this repository has 98 of them
-— so `node --test <all the files>` is ~97 node processes at once, a 4×
-oversubscription of a 24-core machine. `tools/runTests.js` now passes
-`--test-concurrency=8`: a third of the cores, so the suite leaves room
-for the rest of the work instead of starving it. Override with
-`TEST_CONCURRENCY`. Measured: 97 files, 8 at a time, 1186/1186 in 53 s.
+**THE SUITE RUNS 4 TEST FILES AT A TIME, NOT 174.** Node's test runner
+starts **one process per test file**, and this repository has 174 of them
+— so `node --test <all the files>` is ~173 node processes at once, a 7×
+oversubscription of a 24-core machine. `tools/runTests.js` passes
+`--test-concurrency=4`, and **4 IS NOT A TUNING CHOICE**: the project's
+**own** process guard refuses a command while the project has node ≥ 6
+or python ≥ 4 processes running (`.claude/hooks/limit-processes.ps1`).
+A concurrency of 8 put the suite **above its own guard's limit**, and
+the failures were the result. Override with `TEST_CONCURRENCY` — and
+note that 6 or more puts the run above the guard's limit, which is what
+`test/processGuardHook.test.js` asserts.
+
+**AND THE SUITE HAS FILES THAT NEED THE MACHINE TO ITSELF, and the set
+is LOAD-DEPENDENT.** Four of them run OCR and are named in the runner
+(`SERIAL`): `oconnellGroundTruth`, `scanVideoWithOcr.e2e`,
+`komarWatchlist` and `panelFooterReader`. Others build a fresh-clone
+catalog, spawn workers, or measure the process guard — and one of them
+failing in a parallel batch does not mean it is broken.
+
+**SO THE RUNNER RE-RUNS WHATEVER FAILED, ONE FILE AT A TIME, and the
+run's verdict is the re-run's.** Measured 2026-11-28: a run at a
+concurrency of 8 failed eight files, a run at 4 failed two, and a run at
+4 on a quieter machine failed three — **and every one of them passed on
+its own.** A fixed list would be a list of the failures that happened
+once, so there is none: the re-run finds them.
 
 **An AGENT MUST NOT RUN `npm test` ITSELF.** The process guard refuses
 it — see § *Process budget*. Run the files you need instead:
 
 ```bash
-node --test --test-concurrency=8 test/<file>.test.js
+node --test --test-concurrency=4 test/<file>.test.js
 ```
 
-1194 tests, all passing (as of 2026-11-13).
+**AND `test/processTools.test.js` KILLS `node.exe`, so it must not run
+beside anything of yours.** It is the test that starts a real node
+process and a real python process, runs the kill helper, and asserts
+that the node died and the python survived. **It took a sweep of mine
+down mid-run on 2026-11-28**, and it left `src/asym/channel.js`
+pointing at a dead localhost port, because another test rewrites that
+tracked file in place (now fixed — see § *The AsymTrading source*).
+
+1,847 tests, all passing (measured 2026-11-28; 174 test files, of
+which one is the benchmark).
 
 **A third suite exists, and it is MANUAL.** `test/manual/qmgEraPrefilterScan.test.js`
 is the era-conditional crop and the era-conditional prefilter rectangle, run
