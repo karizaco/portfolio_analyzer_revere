@@ -42,8 +42,10 @@ function downloadedPhotos(indexDb, account, limit) {
 }
 
 function hasReading(db, md5, reader, version, model) {
+  // An error is not a reading. Leaving it in the table used to make the
+  // image look done, so a cut-off portfolio screenshot was never tried again.
   return Boolean(db.prepare(`SELECT 1 FROM x_image_readings WHERE md5 = ? AND reader = ? AND reader_version = ?
-    AND model = ?`).get(md5, reader, version, model || ''));
+    AND model = ? AND status != 'error'`).get(md5, reader, version, model || ''));
 }
 
 /**

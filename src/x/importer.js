@@ -23,7 +23,7 @@
  * deleted post -- an incomplete window proves nothing.
  */
 
-const { keepByPolicy, normalizeHandle, validatePostRecord } = require('./postRecord');
+const { classifyUnlabelledReply, keepByPolicy, normalizeHandle, validatePostRecord } = require('./postRecord');
 const { writeToArchive } = require('./archive');
 const { addMetrics, upsertPost } = require('./indexStore');
 const { getAccount, resolveUserId } = require('./registry');
@@ -111,6 +111,17 @@ function importRecords(options) {
   account = identity.account;
   out.identityError = identity.error;
 
+  // A reply X did not label is recognised by its conversation id. The root
+  // has to be known before the policy runs, so the batch and the archive
+  // are both consulted.
+  const ownPostIds = new Set(records.filter((r) => r && r.user_id === account.user_id).map((r) => String(r.post_id)));
+  const missingRoots = [...new Set(records.map((r) => r && r.conversation_id).filter((id) => id && !ownPostIds.has(String(id))))];
+  if (indexDb && missingRoots.length && account.user_id) {
+    const found = indexDb.prepare(`SELECT post_id FROM x_posts WHERE user_id = ? AND post_id IN (${missingRoots.map(() => '?').join(',')})`)
+      .all(account.user_id, ...missingRoots);
+    for (const row of found) ownPostIds.add(String(row.post_id));
+  }
+
   const own = [];
   for (const record of records) {
     // A post whose AUTHOR is missing -- a deleted or suspended author, so
@@ -142,12 +153,13 @@ function importRecords(options) {
         continue;
       }
     }
-    const verdict = keepByPolicy(candidate, policy);
+    const labelled = classifyUnlabelledReply(candidate, ownPostIds);
+    const verdict = keepByPolicy(labelled, policy);
     if (!verdict.keep) {
       out.filtered[verdict.reason] = (out.filtered[verdict.reason] || 0) + 1;
       continue;
     }
-    own.push(candidate);
+    own.push(labelled);
   }
 
   for (const record of own) {

@@ -36,11 +36,15 @@ function extractVisibleArticles() {
     // -- and then collects the article's own links as well, so the reply
     // policy is applied to the wrong handle. A wrong handle here flips
     // `self_thread`, and with it whether the post is kept at all.
+    const replyDivs = [...article.querySelectorAll('div')].filter((div) => div.childElementCount
+      && /^Replying to/.test(div.innerText || '')
+      && !div.querySelector('article')
+      && !div.querySelector('[data-testid="tweetText"]'));
+    // The shortest match is the line itself. A parent whose text also starts
+    // with "Replying to" contains the author's own links, and those would
+    // make a reply to somebody else look like the author's thread.
     const replyContext = article.querySelector('[data-testid="reply"]')
-      || [...article.querySelectorAll('div')].find((div) => div.childElementCount
-        && /^Replying to/.test(div.innerText || '')
-        && !div.querySelector('article')
-        && !div.querySelector('[data-testid="tweetText"]'));
+      || replyDivs.sort((a, b) => a.innerText.length - b.innerText.length)[0];
     const replyingTo = [];
     if (replyContext) {
       for (const a of replyContext.querySelectorAll('a[href^="/"]')) {

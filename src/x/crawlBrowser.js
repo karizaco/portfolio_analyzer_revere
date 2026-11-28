@@ -550,8 +550,20 @@ async function crawlBrowserWindows(options) {
         }
         if (progress.done) break;
         if (tracker.scrolls >= 3 && !capturedHere && !state.articles && !isEmptyResult(state.bodyText)) {
-          windowStop = { reason: 'no_graphql', message: 'nothing on the page and nothing captured', retryAt: null };
-          break;
+          // A slow page looks empty. Measured 2026-11-27: three scrolls right
+          // after a wake saw no posts, and the window was left partial. Wait
+          // for the posts to render before calling the page empty.
+          const deadline = Date.now() + 15000;
+          while (!state.articles && Date.now() < deadline) {
+            // eslint-disable-next-line no-await-in-loop
+            await nap(2000);
+            // eslint-disable-next-line no-await-in-loop
+            state = await pageState(page);
+          }
+          if (!state.articles) {
+            windowStop = { reason: 'no_graphql', message: 'nothing on the page and nothing captured', retryAt: null };
+            break;
+          }
         }
 
         // The other tab hit a challenge: wait with it. It stopped the

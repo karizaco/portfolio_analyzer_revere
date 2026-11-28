@@ -7,7 +7,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const {
-  canonicalize, compareIds, isPostId, keepByPolicy, normalizeText, parseXDate, snowflakeTime, validatePostRecord,
+  canonicalize, classifyUnlabelledReply, compareIds, isPostId, keepByPolicy, normalizeText, parseXDate, snowflakeTime, validatePostRecord,
 } = require('../src/x/postRecord');
 const { idAt } = require('./fixtures/x/scenario');
 
@@ -45,6 +45,29 @@ test('both date forms parse: ISO and the legacy web-app form', () => {
   assert.equal(parseXDate('Wed Nov 18 14:32:08 +0000 2026'), '2026-11-18T14:32:08.000Z');
   assert.equal(parseXDate('2026-11-18T14:32:08Z'), '2026-11-18T14:32:08.000Z');
   assert.equal(parseXDate('2h'), '', 'a relative time is not a date');
+});
+
+test('a reply X did not label is a reply, and only an own thread is kept', () => {
+  const created = '2026-11-18T14:32:08.000Z';
+  const root = idAt(created, 1);
+  const reply = valid({
+    post_id: idAt(created, 2),
+    conversation_id: root,
+    kind: 'original',
+    text: '@someone Agree',
+  });
+  const ownThread = classifyUnlabelledReply(reply, new Set([root]));
+  assert.equal(ownThread.kind, 'reply');
+  assert.equal(ownThread.self_thread, true);
+  assert.equal(keepByPolicy(ownThread).keep, true);
+
+  const other = classifyUnlabelledReply(reply, new Set());
+  assert.equal(other.self_thread, false);
+  assert.equal(keepByPolicy(other).reason, 'reply_to_other');
+
+  const post = valid();
+  const untouched = classifyUnlabelledReply({ ...post, conversation_id: post.post_id, text: 'my own post' }, new Set());
+  assert.equal(untouched.kind, 'original', 'a post whose conversation is itself is not a reply');
 });
 
 test('text is normalised the same way on every route', () => {

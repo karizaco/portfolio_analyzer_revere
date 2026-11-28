@@ -372,6 +372,40 @@ function validatePostRecord(record) {
 }
 
 /**
+ * A reply X did not label.
+ *
+ * Measured 2026-11-26: the web app sometimes sends a reply with no
+ * `in_reply_to` fields at all. The only evidence is that its conversation
+ * id is a DIFFERENT post, and the text starts with @someone. Stored as an
+ * original, it is scored as the account's own call.
+ *
+ * The conversation id is the thread's first post. If that post is one of
+ * the account's own, this is a thread continuation and it is kept. If it
+ * is not, and the text addresses somebody, it is a reply to somebody else
+ * and the reply policy drops it. Anything else is left alone: a wrong
+ * holding is worse than a missing one, and so is dropping a holding on a
+ * guess.
+ *
+ * @param {object} record
+ * @param {Set<string>} ownPostIds - the account's own post ids, this batch and already archived
+ * @returns {object}
+ */
+function classifyUnlabelledReply(record, ownPostIds) {
+  if (!record || record.in_reply_to_post_id) return record;
+  if (!record.conversation_id || record.conversation_id === record.post_id) return record;
+  if (record.kind !== 'original' && record.kind !== 'quote') return record;
+  const ownRoot = ownPostIds instanceof Set && ownPostIds.has(String(record.conversation_id));
+  const addressed = /^@[A-Za-z0-9_]{1,15}\b/.test(String(record.text || '').trim());
+  if (!ownRoot && !addressed) return record;
+  return {
+    ...record,
+    kind: 'reply',
+    self_thread: Boolean(ownRoot),
+    in_reply_to_post_id: String(record.conversation_id),
+  };
+}
+
+/**
  * Does the account's reply policy keep this post?
  *
  * 'self' (the user's decision, 2026-11-20): own posts, own quotes, and own
@@ -408,6 +442,7 @@ module.exports = {
   isPostId,
   isStructuralUrl,
   keepByPolicy,
+  classifyUnlabelledReply,
   normalizeHandle,
   normalizeText,
   parseXDate,
