@@ -8484,6 +8484,55 @@ holding.
 **AND A MISREAD AND THE LINE IT CAME FROM ARE ONE LINE**, so the merge
 cannot add a holding's weight to itself.
 
+### The `position_table` SWEEP'S HYPOTHESIS IS REFUTED (2026-11-28)
+
+**THE SWEEP ASKED "does the table reader help where the chart-stream
+reader fails?", and the answer is NO.** Fifteen dates were swept -- the
+eight of the first chunk and the seven of the second (20220421 hit the
+40-minute timeout) -- and the table reader is **worse in BOTH recall and
+precision** on every one of them.
+
+**THE MEASUREMENT** (`node tools/compareReaders.js --swept`, the two
+readers separated by their run tag and by their captures'
+`ticker_source`):
+
+| | hits | recall | false positives | precision |
+|---|---|---|---|---|
+| **the chart-stream reader** | **116/126** | **92.1 %** | **5** | **95.9 %** |
+| the table reader | 108/126 | 85.7 % | 16 | 87.1 % |
+
+**AND ON THE DATES THE SWEEP WAS AIMED AT -- the chart-stream reader's
+weakest -- the table reader is EQUAL OR WORSE ON EVERY ONE:**
+
+| date | the truth | the chart-stream reader | the table reader |
+|---|---|---|---|
+| 20220126 | 2 | 1/2 | **0/2** |
+| 20220131 | 1 | 0/1, 1 FP | **0/1, 11 FP** |
+| 20220228 | 6 | 6/6 | 6/6 |
+| 20220405 | 16 | **13/16** | 12/16 |
+| 20220406 | 8 | **7/8** | 6/8 |
+| 20221117 | 6 | **5/6** | 4/6 |
+| 20231215 | 12 | **11/12** | 10/12 |
+
+**THE TABLE READER'S PRECISION ADVANTAGE IS ON TWO DATES ONLY**
+(20220222 and 20230608, both zero false positives against the
+chart-stream reader's one), **and it costs ELEVEN false positives on
+20220131.**
+
+**AND TWO OF ITS SIXTEEN FALSE POSITIVES ARE ALREADY FIXED**: the
+`NFU` on 20220606 and 20220607 is the date-scoped layout alias, and
+the table reader applies it now (the sweep's logs predate that fix).
+So the shipped reader's number is **14**, and still worse than the
+chart-stream reader's 5.
+
+**SO THE REMAINING 48-DATE SWEEP IS NOT WORTH 10-16 HOURS OF EASYOCR.**
+The hypothesis is refuted on fifteen dates, the reader costs two EasyOCR
+passes a frame, and the thing it was built for -- the 2023-era
+right-sidebar layout -- is already read by the chart-stream reader's
+era-conditional crop. **The time is better spent on the chart-stream
+reader**, and the remaining open item is the one the sweep FOUND:
+the `bottom_most` prior publishing a WATCHLIST.
+
 ### The corpus holds TWO readers now, and the replay's number was a MIXTURE (2026-11-28)
 
 **THE `position_table` SWEEP ADDED A SECOND READER TO THE CORPUS, and

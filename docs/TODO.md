@@ -816,6 +816,43 @@ captures came from both readers is its own bucket.
 its `position_table` rows are NOT the table reader's own reading. The
 tool says so on every run.
 
+### The `position_table` sweep -- REFUTED, and it should STOP (2026-11-28)
+
+**DONE, and the answer is NO.** The sweep asked "does the table reader
+help where the chart-stream reader fails?", and over fifteen swept dates
+the table reader is worse in BOTH recall and precision:
+
+| | hits | recall | false positives | precision |
+|---|---|---|---|---|
+| the chart-stream reader | **116/126** | **92.1 %** | **5** | **95.9 %** |
+| the table reader | 108/126 | 85.7 % | 16 | 87.1 % |
+
+**AND ON THE DATES THE SWEEP WAS AIMED AT** -- the chart-stream
+reader's weakest -- the table reader is equal or worse on EVERY ONE
+(20220126 0/2 against 1/2, 20220131 0/1 with ELEVEN false positives
+against one, 20220405 12/16 against 13/16, 20220406 6/8 against 7/8,
+20221117 4/6 against 5/6, 20231215 10/12 against 11/12).
+
+**AND TWO OF ITS SIXTEEN FALSE POSITIVES ARE ALREADY FIXED** -- the
+`NFU` on 20220606 and 20220607 is the date-scoped layout alias, which
+the table reader applies now. So the shipped reader reads 14, and still
+loses to the chart-stream reader's 5.
+
+**SO THE REMAINING 48-DATE SWEEP SHOULD NOT BE RUN.** Ten to sixteen
+hours of EasyOCR on a hypothesis refuted on fifteen dates, for a reader
+that costs two OCR passes a frame.
+
+**WHAT THE SWEEP DID FIND, and it is worth more than the sweep:** the
+`bottom_most` prior published his WATCHLIST on 20220131, and the
+header's own word "SYM" leaked in as a holding. The fix -- a table with
+no readable title AND no TICKER or POSITIONS heading is not published
+at all -- is still to be MEASURED on the 2022-era floating-panel dates,
+where the table IS the positions table and its heading is the only
+thing that says so.
+
+`20220421` hit the 40-minute timeout; the process tree was killed and
+no orphans were left.
+
 ### The `bottom_most` prior published a WATCHLIST (measured 2026-11-28)
 
 **WHAT HAPPENED.** The `position_table` sweep of 20220131 -- the
