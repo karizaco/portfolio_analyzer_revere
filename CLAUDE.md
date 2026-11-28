@@ -100,7 +100,11 @@ The current session has been rate-limited by YouTube for up to an hour.
 
 ### YouTube throttling: "age restriction" and "format not available"
 
-**"Age restriction" = fake = rate-limited.** When YouTube says "Sign in to confirm your age" or "This content is age-restricted", it means YOU HAVE BEEN RATE-LIMITED. This is not a real age gate. Fix: fresh cookies from Firefox Cookie-Editor (while logged in), wait 30-60 min.
+**"Sign in to confirm your age" = a GENUINE age gate, not throttling.** An age
+restriction needs a **logged-in, age-verified cookie session** — a fresh anonymous
+cookie export will not help, and no amount of waiting will either. See
+"Genuine age restrictions need a LOGGED-IN cookie session" below for the full
+diagnostic; that section supersedes the older rule in this file.
 
 **"Requested format is not available" = two different situations:**
 
@@ -203,8 +207,8 @@ OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 KMP_DUPLICATE_LIB_OK=TRUE \
 
 | Directory | Preferred Resolution | Notes |
 |---|---|---|
-| `D:/projects/portfolio_analyzer_revere_media/downloads_1080p/` | 1080p | 677 files: 502 qullamaggie + 149 revere + the 3 new revere + 3 new qullamaggie. Verify by ffprobe before assuming resolution — revere's 1080p uploads are 1670×1080 / 1728×1080 / 1920×1078, **not** 1920×1080 |
-| `D:/projects/portfolio_analyzer_revere_media/downloads_720p/` | 720p | exactly the 39 hardcoded no-1080p videos, 1280×720. **No overlap with downloads_1080p** — there are no duplicates to delete |
+| `D:/projects/portfolio_analyzer_revere_media/downloads_1080p/` | 1080p | 683 files (230 GB): 531 qullamaggie + 152 revere. Verify by ffprobe before assuming resolution — revere's 1080p uploads are 1670×1080 / 1728×1080 / 1920×1078, **not** 1920×1080 |
+| `D:/projects/portfolio_analyzer_revere_media/downloads_720p/` | 720p | exactly the 39 hardcoded no-1080p videos, 1280×720 (8.8 GB). **No overlap with downloads_1080p** — there are no duplicates to delete |
 
 The old in-tree `data/video_pipeline/downloads*` directories are historical; the
 `data/video_pipeline/` tree now holds only `state.sqlite` (tracked) and the
@@ -429,7 +433,7 @@ Measured 2026-10-21 with `tools/snapshotCensus.js` and `tools/snapshotCoverage.j
 |---|---|
 | OCR **text** results | **Intact.** 767 `logs/*_snapshot.json` files under `data/`, 390 with a non-empty `merged_position_list`, 80 distinct date-keys with ticker output. 475 Tesseract, 90 EasyOCR. |
 | Snapshot **images** | **582 of 756 usable** (527 @1920px, 55 @1280px). The 174 low-res ones (640px prefilter samples) come only from `qmg-ocr-20260917-v2` and `qmg-ocr-20260917-missing19`. Every `_rerun` batch dir is 100% usable. |
-| **Videos** | **716 of 718 re-downloaded** into the out-of-tree media dir (now on `D:`): 677 @1080p + 39 @720p. All verified by ffprobe — never inferred from filesize. The 2 that remain are the bogus ids `abc123` / `def456`, which were never real videos. |
+| **Videos** | **716 of 718 re-downloaded** into the out-of-tree media dir (now on `D:`): 683 @1080p + 39 @720p = 722 files. All verified by ffprobe — never inferred from filesize. The 2 that remain are the bogus ids `abc123` / `def456`, which were never real videos. |
 
 **The extracted tickers were not lost** — re-downloading the videos is not required to
 keep the OCR results. Re-download only if you need to re-run OCR at a different crop,
@@ -464,7 +468,7 @@ eligible for deletion under "delete the 720p copy once the 1080p exists".
 
 **Video ids must be parsed with `tools/mediaVideoId.js`, not a `^\d+_` regex.**
 The downloader writes `<upload_date>_<video_id>.mp4` when the catalog has an
-upload date, and a bare `<video_id>.mp4` when it does not — 517 of 716 files are
+upload date, and a bare `<video_id>.mp4` when it does not — 521 of 722 files are
 bare. A `^\d+_` strip **truncates ids that legitimately start with digits**
 (`438_cyYQ888` → `cyYQ888`, `0_inu2Isf4k` → `inu2Isf4k`), which makes real videos
 look absent from disk. Strip exactly the 8-digit date prefix:
@@ -542,10 +546,26 @@ fail identically.
 
 **`WinError 10048` ("Only one usage of each socket address") is a different
 problem** — the machine's ephemeral port pool is exhausted by *other*
-applications' TIME_WAIT sockets (21k on 2026-11-27, mostly from the user's own
-Grok Bot / TradingView / Firefox / IBKR TWS, not from our downloads). It is
-transient and a retry succeeds: `tools/retryOneDownload.js` retries with backoff
-and aborts early on the age-restriction error, which is not transient.
+applications' TIME_WAIT sockets (23k against a 16,384-port range on 2026-11-27,
+mostly from the user's own Grok Bot / TradingView / Firefox / IBKR TWS, not from
+our downloads). It is transient and a retry succeeds:
+`tools/retryOneDownload.js` retries with backoff (30s, 60s, 90s, 120s, capped
+at 180s) and aborts early on the age-restriction error, which is not transient.
+It takes `--ids id1,id2,...` to retry a whole batch in one process. Widening the
+ephemeral range with `netsh int ipv4 set dynamicport tcp` needs admin rights and
+is a persistent system-wide change — do not attempt it without the user asking.
+
+**Final state of the 21 videos blocked on 2026-11-27** (classified with
+`--list-formats` on each, not from the error text alone):
+
+| count | category | what happened |
+|---|---|---|
+| 3 | real 1080p available | downloaded and ffprobe-verified at 1920×1080: `30ksgwzWboo` (20230602), `uTMK9uhQZCc`, `uZFKiMA3M1I` |
+| 3 | genuinely age-restricted | `te9tmNOA38I`, `xNL-i3acbVk`, `fhH3wxpQxxE` — need a logged-in, age-verified cookie export |
+| 15 | no 1080p upload exists | only 360p/720p in the format ladder; 1080p is not available for these |
+
+None of the 21 are on the hardcoded 39-item 720p-only list, and none were
+downgraded to 720p.
 
 ### OCR on the restored media — validated 2026-10-24
 
@@ -682,7 +702,7 @@ output when there is no ground truth to score against.
 **"Already scanned" must be tracked per VIDEO, not per date.** Several videos
 share an interpolated date, so a date-keyed set hides all but one of them.
 
-**Status as of 2026-11-27**: the sweep has 144 videos done and 0 failed, with
+**Status as of 2026-11-28**: the sweep has 176 videos done and 0 failed, with
 ~370 candidates still to go. It runs in the background at `--parallel 2`; each
 video takes 150-450 s. Its state lives in `data/qmg_ocr_sweep.json` (`done` and
 `failed` maps) and it is safe to stop and restart — the work list is derived
