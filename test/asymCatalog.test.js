@@ -29,7 +29,6 @@ const { spawn, spawnSync } = require('node:child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const TOOL = path.join(ROOT, 'tools', 'catalogAsymSubstack.js');
-const CHANNEL_MODULE = path.join(ROOT, 'src', 'asym', 'channel.js');
 const FIXTURES = path.join(ROOT, 'test', 'fixtures', 'asym');
 const FREE_DIR = path.join(FIXTURES, 'free');
 
@@ -135,11 +134,14 @@ async function runCatalog() {
   const api = await startFakeApi(dir);
 
   // The tool reads the base URL from src/asym/channel.js, so it is
-  // pointed at the fake for the run. The original is restored after.
-  const original = fs.readFileSync(CHANNEL_MODULE, 'utf8');
-  fs.writeFileSync(CHANNEL_MODULE, original.replace(
-    /https:\/\/asymtrading\.substack\.com/g, `http://127.0.0.1:${api.port}`,
-  ));
+  // pointed at the fake for the run -- BY THE ENVIRONMENT, and not by
+  // rewriting the file.
+  //
+  // Rewriting it in place was a hazard: the file is TRACKED, and the
+  // restore happened in a `finally`, so a test process that was KILLED
+  // left the source pointing at a dead localhost port -- and the real
+  // AsymTrading pipeline then walked an address that does not exist.
+  // That happened on 2026-11-28.
 
   // And it is pointed at the scratch catalog the same way.
   const toolPath = path.join(ROOT, 'tools', 'tmpAsymCatalogTest.js');
@@ -154,9 +156,9 @@ async function runCatalog() {
       cwd: ROOT,
       encoding: 'utf8',
       timeout: 120000,
+      env: { ...process.env, ASYM_PUBLICATION_URL: `http://127.0.0.1:${api.port}` },
     });
   } finally {
-    fs.writeFileSync(CHANNEL_MODULE, original);
     fs.rmSync(toolPath, { force: true });
     api.stop();
   }
@@ -292,10 +294,6 @@ test('running the catalog twice does not duplicate anything', async (t) => {
 
   // Run the tool again against the same scratch catalog.
   const api = await startFakeApi(dir);
-  const original = fs.readFileSync(CHANNEL_MODULE, 'utf8');
-  fs.writeFileSync(CHANNEL_MODULE, original.replace(
-    /https:\/\/asymtrading\.substack\.com/g, `http://127.0.0.1:${api.port}`,
-  ));
   const toolPath = path.join(ROOT, 'tools', 'tmpAsymCatalogTest2.js');
   fs.writeFileSync(toolPath, fs.readFileSync(TOOL, 'utf8').replace(
     /const DB_PATH = path\.join\(ROOT, 'data', 'video_pipeline', 'state\.sqlite'\);/,
@@ -304,9 +302,9 @@ test('running the catalog twice does not duplicate anything', async (t) => {
   try {
     spawnSync(process.execPath, [toolPath, '--json', '--pause-ms', '0'], {
       cwd: ROOT, encoding: 'utf8', timeout: 120000,
+      env: { ...process.env, ASYM_PUBLICATION_URL: `http://127.0.0.1:${api.port}` },
     });
   } finally {
-    fs.writeFileSync(CHANNEL_MODULE, original);
     fs.rmSync(toolPath, { force: true });
     api.stop();
   }
@@ -330,10 +328,6 @@ test('a dry run writes nothing', async (t) => {
   fresh.close();
 
   const api = await startFakeApi(dir);
-  const original = fs.readFileSync(CHANNEL_MODULE, 'utf8');
-  fs.writeFileSync(CHANNEL_MODULE, original.replace(
-    /https:\/\/asymtrading\.substack\.com/g, `http://127.0.0.1:${api.port}`,
-  ));
   const toolPath = path.join(ROOT, 'tools', 'tmpAsymDryTest.js');
   fs.writeFileSync(toolPath, fs.readFileSync(TOOL, 'utf8').replace(
     /const DB_PATH = path\.join\(ROOT, 'data', 'video_pipeline', 'state\.sqlite'\);/,
@@ -343,9 +337,9 @@ test('a dry run writes nothing', async (t) => {
   try {
     result = spawnSync(process.execPath, [toolPath, '--json', '--dry-run', '--pause-ms', '0'], {
       cwd: ROOT, encoding: 'utf8', timeout: 120000,
+      env: { ...process.env, ASYM_PUBLICATION_URL: `http://127.0.0.1:${api.port}` },
     });
   } finally {
-    fs.writeFileSync(CHANNEL_MODULE, original);
     fs.rmSync(toolPath, { force: true });
     api.stop();
   }

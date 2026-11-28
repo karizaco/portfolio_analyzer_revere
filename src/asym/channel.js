@@ -54,8 +54,23 @@
 /** The logical channel name, as stored in `videos.channel`. */
 const ASYM_CHANNEL = 'asymtrading';
 
-/** The publication's canonical host. */
-const ASYM_PUBLICATION_URL = 'https://asymtrading.substack.com';
+/**
+ * The publication's canonical host.
+ *
+ * AND IT IS OVERRIDABLE BY THE ENVIRONMENT, and that is what lets a test
+ * point the catalog at a fake API WITHOUT REWRITING THIS FILE.
+ *
+ * The file was rewritten in place before, and the test restored it in a
+ * `finally` -- so a test process that was KILLED left the tracked source
+ * pointing at a dead localhost port, and the real AsymTrading pipeline
+ * then walked an address that does not exist. That happened on
+ * 2026-11-28, when `test/processTools.test.js` killed node.exe
+ * processes and took a sibling test down mid-rewrite.
+ *
+ * So a test that needs a different host sets an ENVIRONMENT VARIABLE
+ * and touches nothing on disk.
+ */
+const ASYM_PUBLICATION_URL = process.env.ASYM_PUBLICATION_URL || 'https://asymtrading.substack.com';
 
 /**
  * Substack's numeric publication id.
@@ -142,7 +157,11 @@ function asymPostId(videoId) {
  */
 function isAsymSourceUrl(sourceUrl) {
   const lowered = String(sourceUrl || '').toLowerCase();
-  return lowered.includes('asymtrading.substack.com');
+  // The CONFIGURED host, and the canonical one -- so the check holds
+  // whichever host the publication is being read from.
+  const configured = ASYM_PUBLICATION_URL.toLowerCase()
+    .replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+  return lowered.includes(configured) || lowered.includes('asymtrading.substack.com');
 }
 
 /**
